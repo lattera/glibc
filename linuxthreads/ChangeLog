@@ -1,3 +1,8 @@
+2000-12-06  Wolfram Gloger  <wg@malloc.de>
+
+	* join.c (pthread_detach): Allow case where the thread has already
+	terminated.
+
 2000-12-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Don't set mips2.

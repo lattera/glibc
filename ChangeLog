@@ -1,3 +1,10 @@
+2000-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/Makefile [$(subdir)==misc]
+	(sysdep_routines): Add uitrunc.
+	* sysdeps/unix/sysv/aix/uitrunc.c: New file.
+	Patches by Michael Keezer <mkeezer@redhat.com>.
+
 2000-12-06  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/ioctl.c (__ioctl): Don't clobber ARG as we copy in
