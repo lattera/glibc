@@ -1,3 +1,7 @@
+2001-08-09  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Add check for GCC 3.x.
+
 2001-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wfileops.c (_IO_wfile_seekoff): Don't even try to handle

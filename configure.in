@@ -636,6 +636,27 @@ test -n "$aux_missing" && AC_MSG_WARN([
 CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 AC_SUBST(CCVERSION)
 
+case $CCVERSION in
+  3.*) gcc3=yes;;
+esac
+
+if test x"$gcc3" = xyes; then
+    echo "\
+*** This version of GNU libc cannot be compiled by GCC 3.x.
+*** GCC 3.x will generate a library that is binary incompatible to
+*** older and future releases of GNU libc.
+*** You should compile this GNU libc release by an older GCC version
+*** or wait for the next GNU libc release."
+  if test $enable_sanity = yes; then
+    echo "\
+*** If you really mean to use GCC 3.x, run configure again
+*** using the extra parameter \`--disable-sanity-checks'."
+    exit 1
+  else
+    echo "\
+*** This configuration is not supported by the GNU libc developers."
+  fi
+fi
 # if using special system headers, find out the compiler's sekrit
 # header directory and add that to the list.  NOTE: Only does the right
 # thing on a system that doesn't need fixincludes.  (Not presently a problem.)
