@@ -1,3 +1,9 @@
+2003-08-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/cache.c (save_cache): Don't write beyond end of file_entries
+	buffer.
+	Duplicate last old cache entry if the count would be odd.
+
 2003-08-25  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/posix_fadvise64.c: Cast arguments of
