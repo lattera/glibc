@@ -77,10 +77,12 @@ struct _IO_codecvt __libio_codecvt =
 };
 
 
+#ifdef _LIBC
 static struct __gconv_trans_data libio_translit =
 {
   .__trans_fct = __gconv_transliterate
 };
+#endif
 
 
 /* Return orientation of stream.  If mode is nonzero try to change
@@ -102,19 +104,20 @@ _IO_fwide (fp, mode)
   /* Set the orientation appropriately.  */
   if (mode > 0)
     {
+      struct _IO_codecvt *cc = fp->_codecvt = &fp->_wide_data->_codecvt;
+
       fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
       fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
-
-      /* Clear the state.  We start all over again.  */
-      memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
-      memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
 
       /* Get the character conversion functions based on the currently
 	 selected locale for LC_CTYPE.  */
 #ifdef _LIBC
       {
 	struct gconv_fcts fcts;
-	struct _IO_codecvt *cc = fp->_codecvt = &fp->_wide_data->_codecvt;
+
+	/* Clear the state.  We start all over again.  */
+	memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
+	memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
 
 	__wcsmbs_clone_conv (&fcts);
 
@@ -140,11 +143,43 @@ _IO_fwide (fp, mode)
 	cc->__cd_out.__cd.__data[0].__flags = __GCONV_IS_LAST;
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
-	/* XXX For now no transliteration.  */
+	/* And now the transliteration.  */
+#ifdef _LIBC
 	cc->__cd_out.__cd.__data[0].__trans = &libio_translit;
+#else
+	cc->__cd_out.__cd.__data[0].__trans = NULL;
+#endif
       }
 #else
-# error "somehow determine this from LC_CTYPE"
+# ifdef _GLIBCPP_USE_WCHAR_T
+      {
+	/* Determine internal and external character sets.
+
+	   XXX For now we make our life easy: we assume a fixed internal
+	   encoding (as most sane systems have; hi HP/UX!).  If somebody
+	   cares about systems which changing internal charsets they
+	   should come up with a solution for the determination of the
+	   currently used internal character set.  */
+	const char *internal_ccs = _G_INTERNAL_CCS;
+	const char *external_ccs = NULL;
+
+#  ifdef HAVE_NL_LANGINFO
+	external_ccs = nl_langinfo (CODESET);
+#  endif
+	if (external_ccs == NULL)
+	  external_ccs = "ISO-8859-1";
+
+	cc->__cd_in = iconv_open (internal_ccs, external_ccs);
+	if (cc->__cd_in != (iconv_t) -1)
+	  cc->__cd_out = iconv_open (external_ccs, internal_ccs);
+
+	if (cc->__cd_in == (iconv_t) -1 || cc->__cd_out == (iconv_t) -1)
+	  /* XXX */
+	  abort ();
+      }
+# else
+#  error "somehow determine this from LC_CTYPE"
+# endif
 #endif
 
       /* From now on use the wide character callback functions.  */
@@ -205,8 +240,26 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       break;
     }
 #else
+# ifdef _GLIBCPP_USE_WCHAR_T
+  size_t res;
+  const char *from_start_copy = (const char *) from_start;
+  size_t from_len = from_end - from_start;
+  char *to_start_copy = to_start;
+  size_t to_len = to_end - to_start;
+  res = iconv (codecvt->__cd_out, &from_start_copy, &from_len,
+	       &to_start_copy, &to_len);
+
+  if (res == 0 || from_len == 0)
+    result = __codecvt_ok;
+  else if (to_len < codecvt->__codecvt_do_max_length (codecvt))
+    result = __codecvt_partial;
+  else
+    result = __codecvt_error;
+
+# else
   /* Decide what to do.  */
   result = __codecvt_error;
+# endif
 #endif
 
   return result;
@@ -251,8 +304,23 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       break;
     }
 #else
+# ifdef _GLIBCPP_USE_WCHAR_T
+  size_t res;
+  char *to_start_copy = (char *) to_start;
+  size_t to_len = to_end - to_start;
+
+  res = iconv (codecvt->__cd_out, NULL, NULL, &to_start_copy, &to_len);
+
+  if (res == 0)
+    result = __codecvt_ok;
+  else if (to_len < codecvt->__codecvt_do_max_length (codecvt))
+    result = __codecvt_partial;
+  else
+    result = __codecvt_error;
+# else
   /* Decide what to do.  */
   result = __codecvt_error;
+# endif
 #endif
 
   return result;
@@ -300,8 +368,28 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
       break;
     }
 #else
+# ifdef _GLIBCPP_USE_WCHAR_T
+  size_t res;
+  const char *from_start_copy = (const char *) from_start;
+  size_t from_len = from_end - from_start;
+  char *to_start_copy = (char *) from_start;
+  size_t to_len = to_end - to_start;
+
+  res = iconv (codecvt->__cd_in, &from_start_copy, &from_len,
+	       &to_start_copy, &to_len);
+
+  if (res == 0)
+    result = __codecvt_ok;
+  else if (to_len == 0)
+    result = __codecvt_partial;
+  else if (from_len < codecvt->__codecvt_do_max_length (codecvt))
+    result = __codecvt_partial;
+  else
+    result = __codecvt_error;
+# else
   /* Decide what to do.  */
   result = __codecvt_error;
+# endif
 #endif
 
   return result;
@@ -359,8 +447,21 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 
   result = cp - (const unsigned char *) from_start;
 #else
+# ifdef _GLIBCPP_USE_WCHAR_T
+  const char *from_start_copy = (const char *) from_start;
+  size_t from_len = from_end - from_start;
+  wchar_t to_buf[max];
+  size_t res;
+  char *to_start = (char *) to_buf;
+
+  res = iconv (codecvt->__cd_in, &from_start_copy, &from_len,
+	       &to_start, &max);
+
+  result = from_start_copy - (char *) from_start;
+# else
   /* Decide what to do.  */
   result = 0;
+# endif
 #endif
 
   return result;

@@ -33,6 +33,23 @@
 #include <string.h>
 
 
+#ifndef _LIBC
+# define _IO_new_do_write _IO_do_write
+# define _IO_new_file_attach _IO_file_attach
+# define _IO_new_file_close_it _IO_file_close_it
+# define _IO_new_file_finish _IO_file_finish
+# define _IO_new_file_fopen _IO_file_fopen
+# define _IO_new_file_init _IO_file_init
+# define _IO_new_file_setbuf _IO_file_setbuf
+# define _IO_new_file_sync _IO_file_sync
+# define _IO_new_file_overflow _IO_file_overflow
+# define _IO_new_file_seekoff _IO_file_seekoff
+# define _IO_new_file_underflow _IO_file_underflow
+# define _IO_new_file_write _IO_file_write
+# define _IO_new_file_xsputn _IO_file_xsputn
+#endif
+
+
 _IO_FILE *
 _IO_wfile_setbuf (fp, p, len)
      _IO_FILE *fp;

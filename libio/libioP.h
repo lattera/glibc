@@ -256,7 +256,7 @@ typedef int (*_IO_stat_t) __PMT ((_IO_FILE *, void *));
 /* The 'showmany' hook can be used to get an image how much input is
    available.  In many cases the answer will be 0 which means unknown
    but some cases one can provide real information.  */
-typedef size_t (*_IO_showmanyc_t) __PMT ((_IO_FILE *));
+typedef int (*_IO_showmanyc_t) __PMT ((_IO_FILE *));
 #define _IO_SHOWMANYC(FP) JUMP0 (__showmanyc, FP)
 #define _IO_WSHOWMANYC(FP) WJUMP0 (__showmanyc, FP)
 
@@ -404,7 +404,7 @@ extern int _IO_default_stat __P ((_IO_FILE *, void *));
 extern _IO_off64_t _IO_default_seek __P ((_IO_FILE *, _IO_off64_t, int));
 extern int _IO_default_sync __P ((_IO_FILE *));
 #define _IO_default_close ((_IO_close_t) _IO_default_sync)
-extern size_t _IO_default_showmanyc __P ((_IO_FILE *));
+extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
@@ -433,13 +433,19 @@ extern int _IO_new_fsetpos64 __P ((_IO_FILE *, const _IO_fpos64_t *));
 extern int _IO_old_fsetpos64 __P ((_IO_FILE *, const _IO_fpos64_t *));
 
 
-#define _IO_do_flush(_f) \
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+# define _IO_do_flush(_f) \
   ((_f)->_mode <= 0							      \
    ? _IO_do_write(_f, (_f)->_IO_write_base,				      \
 		  (_f)->_IO_write_ptr-(_f)->_IO_write_base)		      \
    : _IO_wdo_write(_f, (_f)->_wide_data->_IO_write_base,		      \
 		   ((_f)->_wide_data->_IO_write_ptr			      \
 		    - (_f)->_wide_data->_IO_write_base)))
+#else
+# define _IO_do_flush(_f) \
+   _IO_do_write(_f, (_f)->_IO_write_base,				      \
+		(_f)->_IO_write_ptr-(_f)->_IO_write_base)
+#endif
 #define _IO_old_do_flush(_f) \
   _IO_old_do_write(_f, (_f)->_IO_write_base, \
 		   (_f)->_IO_write_ptr-(_f)->_IO_write_base)
@@ -708,14 +714,22 @@ extern int _IO_vscanf __P ((const char *, _IO_va_list));
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 # else
-#  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+#  if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD,\
 	 NULL, WDP, 0 }
+#  else
+#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD,\
+	 0 }
+#  endif
 # endif
 #else
 # ifdef _IO_USE_OLD_IO_FILE
@@ -724,11 +738,19 @@ extern int _IO_vscanf __P ((const char *, _IO_va_list));
 	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD }
 # else
-#  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+#  if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
 	 NULL, WDP, 0 }
+#  else
+#   define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
+       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
+	 0 }
+#  endif
 # endif
 #endif
 

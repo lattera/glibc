@@ -28,6 +28,7 @@
 #define _IO_STDIO_H
 
 #include <_G_config.h>
+/* ALL of these should be defined in _G_config.h */
 #define _IO_pos_t _G_fpos_t /* obsolete */
 #define _IO_fpos_t _G_fpos_t
 #define _IO_fpos64_t _G_fpos64_t
@@ -197,6 +198,7 @@ enum __codecvt_result
   __codecvt_noconv
 };
 
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 /* The order of the elements in the following struct must match the order
    of the virtual functions in the libstdc++ codecvt class.  */
 struct _IO_codecvt
@@ -243,14 +245,19 @@ struct _IO_wide_data
 				   backup area */
   wchar_t *_IO_save_end;	/* Pointer to end of non-current get area. */
 
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   __mbstate_t _IO_state;
   __mbstate_t _IO_last_state;
+#endif
   struct _IO_codecvt _codecvt;
 
   wchar_t _shortbuf[1];
 
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   struct _IO_jump_t *_wide_vtable;
+#endif
 };
+#endif
 
 struct _IO_FILE {
   int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
@@ -297,9 +304,14 @@ struct _IO_FILE_complete
 #endif
 #if defined _G_IO_IO_FILE_VERSION && _G_IO_IO_FILE_VERSION == 0x20001
   _IO_off64_t _offset;
+# if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   /* Wide character stream stuff.  */
   struct _IO_codecvt *_codecvt;
   struct _IO_wide_data *_wide_data;
+# else
+  void *__pad1;
+  void *__pad2;
+# endif
   int _mode;
   /* Make sure we don't get into trouble again.  */
   char _unused2[15 * sizeof (int) - 2 * sizeof (void *)];
@@ -414,30 +426,10 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
 
 extern int _IO_getc (_IO_FILE *__fp) __THROW;
 extern int _IO_putc (int __c, _IO_FILE *__fp) __THROW;
-extern _IO_wint_t _IO_getwc (_IO_FILE *__fp) __THROW;
-extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp) __THROW;
 extern int _IO_feof (_IO_FILE *__fp) __THROW;
 extern int _IO_ferror (_IO_FILE *__fp) __THROW;
 
 extern int _IO_peekc_locked (_IO_FILE *__fp) __THROW;
-
-extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
-#if __GNUC__ >= 2
-/* A special optimized version of the function above.  It optimizes the
-   case of initializing an unoriented byte stream.  */
-# define _IO_fwide(__fp, __mode) \
-  ({ int __result = (__mode);						      \
-     if (__result < 0)							      \
-       {								      \
-	 if ((__fp)->_mode == 0)					      \
-	   /* We know that all we have to do is to set the flag.  */	      \
-	   (__fp)->_mode = -1;						      \
-	 __result = (__fp)->_mode;					      \
-       }								      \
-     else								      \
-       __result = _IO_fwide (__fp, __result);				      \
-     __result; })
-#endif
 
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
@@ -460,21 +452,44 @@ extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 
 extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
 			_IO_va_list, int *__restrict) __THROW;
-extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
-			 _IO_va_list, int *__restrict) __THROW;
 extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
 			 _IO_va_list) __THROW;
-extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
-			  _IO_va_list) __THROW;
 extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t) __THROW;
-extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
 extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
 
 extern _IO_off64_t _IO_seekoff (_IO_FILE *, _IO_off64_t, int, int) __THROW;
 extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int) __THROW;
 
 extern void _IO_free_backup_area (_IO_FILE *) __THROW;
+
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+extern _IO_wint_t _IO_getwc (_IO_FILE *__fp) __THROW;
+extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp) __THROW;
+extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
+# if __GNUC__ >= 2
+/* A special optimized version of the function above.  It optimizes the
+   case of initializing an unoriented byte stream.  */
+#  define _IO_fwide(__fp, __mode) \
+  ({ int __result = (__mode);						      \
+     if (__result < 0)							      \
+       {								      \
+	 if ((__fp)->_mode == 0)					      \
+	   /* We know that all we have to do is to set the flag.  */	      \
+	   (__fp)->_mode = -1;						      \
+	 __result = (__fp)->_mode;					      \
+       }								      \
+     else								      \
+       __result = _IO_fwide (__fp, __result);				      \
+     __result; })
+# endif
+
+extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
+			 _IO_va_list, int *__restrict) __THROW;
+extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
+			  _IO_va_list) __THROW;
+extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
+#endif
 
 #ifdef __cplusplus
 }

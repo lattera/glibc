@@ -55,6 +55,20 @@ extern int errno;
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
+#else
+# define _IO_new_do_write _IO_do_write
+# define _IO_new_file_attach _IO_file_attach
+# define _IO_new_file_close_it _IO_file_close_it
+# define _IO_new_file_finish _IO_file_finish
+# define _IO_new_file_fopen _IO_file_fopen
+# define _IO_new_file_init _IO_file_init
+# define _IO_new_file_setbuf _IO_file_setbuf
+# define _IO_new_file_sync _IO_file_sync
+# define _IO_new_file_overflow _IO_file_overflow
+# define _IO_new_file_seekoff _IO_file_seekoff
+# define _IO_new_file_underflow _IO_file_underflow
+# define _IO_new_file_write _IO_file_write
+# define _IO_new_file_xsputn _IO_file_xsputn
 #endif
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
@@ -146,12 +160,14 @@ _IO_new_file_close_it (fp)
       _IO_setg (fp, NULL, NULL, NULL);
       _IO_setp (fp, NULL, NULL);
     }
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   else
     {
       _IO_wsetb (fp, NULL, NULL, 0);
       _IO_wsetg (fp, NULL, NULL, NULL);
       _IO_wsetp (fp, NULL, NULL);
     }
+#endif
 
   _IO_un_link ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
@@ -768,7 +784,7 @@ _IO_file_stat (fp, st)
 #ifdef _G_FSTAT64
   return _G_FSTAT64 (fp->_fileno, (struct _G_stat64 *) st);
 #else
-  return fstat (fp->_fileno, (struct _G_stat64 *) st);
+  return fstat (fp->_fileno, (struct stat *) st);
 #endif
 }
 
@@ -1016,6 +1032,7 @@ struct _IO_jump_t _IO_file_jumps =
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
+#ifdef _LIBC
 versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);
@@ -1029,3 +1046,4 @@ versioned_symbol (libc, _IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_underflow, _IO_file_underflow, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
+#endif

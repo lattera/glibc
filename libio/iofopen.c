@@ -27,7 +27,11 @@
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
-#include <shlib-compat.h>
+#ifdef _LIBC
+# include <shlib-compat.h>
+#else
+# define _IO_new_fopen fopen
+#endif
 
 _IO_FILE *
 _IO_new_fopen (filename, mode)
@@ -48,7 +52,11 @@ _IO_new_fopen (filename, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
+#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
+#else
+  _IO_no_init (&new_f->fp.file, 1, 0, NULL, NULL);
+#endif
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   _IO_file_init (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
@@ -61,6 +69,8 @@ _IO_new_fopen (filename, mode)
   return NULL;
 }
 
+#ifdef _LIBC
 strong_alias (_IO_new_fopen, __new_fopen)
 versioned_symbol (libc, _IO_new_fopen, _IO_fopen, GLIBC_2_1);
 versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);
+#endif

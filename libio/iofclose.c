@@ -30,6 +30,9 @@
 #if _LIBC
 # include "../iconv/gconv_int.h"
 # include <shlib-compat.h>
+#else
+# define SHLIB_COMPAT(a, b, c) 0
+# define _IO_new_fclose fclose
 #endif
 
 int
@@ -87,6 +90,8 @@ _IO_new_fclose (fp)
   return status;
 }
 
+#ifdef _LIBC
 versioned_symbol (libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
 strong_alias (_IO_new_fclose, __new_fclose)
 versioned_symbol (libc, __new_fclose, fclose, GLIBC_2_1);
+#endif

@@ -1,3 +1,20 @@
+2000-08-13  Ulrich Drepper  <drepper@redhat.com>
+	    Benjamin Koznik  <bkoz@redhat.com>
+
+	* libio/fileops.c: Merge with libstdc++-v3.
+	* libio/genops.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofwide.c: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/libioP.h: Likewise.
+	* libio/stdfiles.c: Likewise.
+	* libio/stdio.c: Likewise.
+	* libio/wfileops.c: Likewise.
+	* libio/wgenops.c: Likewise.
+
+	* libio/Versions: Export functions needed by libstdc++-v3 in GLIBC_2.2.
+
 2000-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/localedef.c: Implement --prefix option to allow

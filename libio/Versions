@@ -103,6 +103,16 @@ libc {
   GLIBC_2.2 {
     # functions used in libstdc++
     _IO_fgetpos; _IO_fgetpos64; _IO_fsetpos; _IO_fsetpos64;
+    _IO_wdo_write; _IO_wfile_jumps; _IO_wfile_overflow; _IO_wfile_seekoff;
+    _IO_wfile_setbuf; _IO_wfile_sync; _IO_wfile_underflow; _IO_wfile_xsputn;
+    _IO_adjust_wcolumn; _IO_free_wbackup_area; _IO_init_wmarker;
+    _IO_least_wmarker; _IO_seekwmark; _IO_sputbackwc; _IO_sungetwc;
+    _IO_switch_to_main_wget_area; _IO_switch_to_wbackup_area;
+    _IO_switch_to_wget_mode; _IO_unsave_wmarkers; _IO_wdefault_doallocate;
+    _IO_wdefault_finish; _IO_wdefault_pbackfail; _IO_wdefault_setbuf;
+    _IO_wdefault_uflow; _IO_wdefault_xsgetn; _IO_wdefault_xsputn;
+    _IO_wdoallocbuf; _IO_wmarker_delta; _IO_wsetb; __woverflow; __wuflow;
+    __wunderflow;
 
     # LinuxThreads uses this protected interface
     _IO_iter_begin; _IO_iter_end; _IO_iter_next; _IO_iter_file;
