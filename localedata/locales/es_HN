@@ -1,5 +1,6 @@
 comment_char %
 escape_char  /
+repertoiremap mnemonic.ds
 %
 % Spanish language locale for Honduras
 % Source: RAP

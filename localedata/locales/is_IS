@@ -1,5 +1,6 @@
 comment_char %
 escape_char  /
+repertoiremap mnemonic.ds
 
 % Icelandic Language Locale for Iceland
 % Source: Stadlarad I'slands

@@ -58,6 +58,7 @@ char *xstrdup (const char *__str);
 struct localedef_t *
 locfile_read (const char *filename, struct charset_t *charset)
 {
+  struct repertoire_t *repertoire = NULL;
   struct linereader *ldfile;
   struct localedef_t *result;
   int state;
@@ -80,7 +81,8 @@ locfile_read (const char *filename, struct charset_t *charset)
 	  char *i18npath = __secure_getenv ("I18NPATH");
 	  if (i18npath != NULL && *i18npath != '\0')
 	    {
-	      char path[strlen (filename) + 1 + strlen (i18npath) + 1];
+	      char path[strlen (filename) + 1 + strlen (i18npath)
+		        + sizeof ("/locales/") - 1];
 	      char *next;
 	      i18npath = strdupa (i18npath);
 
@@ -88,7 +90,7 @@ locfile_read (const char *filename, struct charset_t *charset)
 	      while (ldfile == NULL
 		     && (next = strsep (&i18npath, ":")) != NULL)
 		{
-		  stpcpy (stpcpy (stpcpy (path, next), "/"), filename);
+		  stpcpy (stpcpy (stpcpy (path, next), "/locales/"), filename);
 
 		  ldfile = lr_open (path, locfile_hash);
 		}
@@ -249,27 +251,132 @@ argument to `%s' must be a single character"),
 		ldfile->comment_char = *arg->val.str.start;
 	      break;
 
+	    case tok_repertoiremap:
+	      /* We need an argument.  */
+	      arg = lr_token (ldfile, charset);
+
+	      if (arg->tok != tok_ident)
+		{
+		  SYNTAX_ERROR (_("bad argument"));
+		  continue;
+		}
+
+	      if (repertoiremap == NULL)
+		{
+		  repertoiremap = memcpy (xmalloc (arg->val.str.len + 1),
+					  arg->val.str.start,
+					  arg->val.str.len);
+		  ((char *) repertoiremap)[arg->val.str.len] = '\0';
+		}
+
+	      lr_ignore_rest (ldfile, 1);
+	      continue;
+
 	    case tok_lc_ctype:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 2;
 	      break;
 
 	    case tok_lc_collate:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 10;
 	      break;
 
 	    case tok_lc_monetary:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 20;
 	      break;
 
 	    case tok_lc_numeric:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 30;
 	      break;
 
 	    case tok_lc_time:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 40;
 	      break;
 
 	    case tok_lc_messages:
+	      if (repertoire == NULL)
+		{
+		  /* Read the repertoire map now.  */
+		  if (repertoiremap == NULL)
+		    /* This is fatal.  */
+		    error (4, 0,
+			   _("no repertoire map specified: cannot proceed"));
+
+		  repertoire = repertoire_read (repertoiremap);
+		  if (repertoire == NULL)
+		    /* This is also fatal.  */
+		    error (4, errno, _("cannot read repertoire map `%s'"),
+			   repertoiremap);
+		}
 	      state = 50;
 	      break;
 

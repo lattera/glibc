@@ -1,5 +1,6 @@
 comment_char %
 escape_char  /
+repertoiremap mnemonic.ds
 %
 % Spanish language locale for Paraguay
 % Source: RAP
@@ -15,7 +16,7 @@ escape_char  /
 % Date: 1997-11-05
 % Application: general
 % Users: general
-% Repertoiremap: mnemonic,ds
+% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.

@@ -1,5 +1,6 @@
 escape_char /
 comment_char %
+repertoiremap mnemonic.ds
 
 % English language locale for Denmark
 %

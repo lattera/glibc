@@ -38,68 +38,63 @@ extern void *xmalloc (size_t __n);
 
 
 /* Simple keyword hashing for the repertoiremap.  */
-static struct repertoire_t *parse_repertoiremap (const char *filename);
 static const struct keyword_t *repertoiremap_hash (const char *str, int len);
 
 
 struct repertoire_t *
 repertoire_read (const char *filename)
 {
-  const char *pathnfile;
-  struct repertoire_t *result = NULL;
-
-  if (euidaccess (filename, R_OK) >= 0)
-    pathnfile = filename;
-  else if (filename[0] != '/')
-    {
-      char *cp = xmalloc (strlen (filename) + sizeof CHARMAP_PATH + 1);
-      stpcpy (stpcpy (stpcpy (cp, CHARMAP_PATH), "/"), filename);
-
-      pathnfile = (const char *) cp;
-    }
-  else
-    pathnfile = NULL;
-
-  if (pathnfile != NULL)
-    {
-      result = parse_repertoiremap (pathnfile);
-
-      if (result == NULL && !be_quiet)
-	error (0, errno, _("repertoire map file `%s' not found"), filename);
-    }
-
-  return result;
-}
-
-
-static struct repertoire_t *
-parse_repertoiremap (const char *filename)
-{
-  struct linereader *cmfile;
+  struct linereader *repfile;
   struct repertoire_t *result;
   int state;
   char *from_name = NULL;
   char *to_name = NULL;
 
   /* Determine path.  */
-  cmfile = lr_open (filename, repertoiremap_hash);
-  if (cmfile == NULL)
+  repfile = lr_open (filename, repertoiremap_hash);
+  if (repfile == NULL)
     {
       if (strchr (filename, '/') == NULL)
 	{
-	  /* Look in the systems charmap directory.  */
-	  char *buf = xmalloc (strlen (filename) + 1
-			       + sizeof (REPERTOIREMAP_PATH));
+	  char *i18npath = __secure_getenv ("I18NPATH");
+	  if (i18npath != NULL && *i18npath != '\0')
+	    {
+	      char path[strlen (filename) + 1 + strlen (i18npath)
+		        + sizeof ("/repertoiremaps/") - 1];
+	      char *next;
+	      i18npath = strdupa (i18npath);
 
-	  stpcpy (stpcpy (stpcpy (buf, REPERTOIREMAP_PATH), "/"), filename);
-	  cmfile = lr_open (buf, repertoiremap_hash);
 
-	  if (cmfile == NULL)
-	    free (buf);
+	      while (repfile == NULL
+		     && (next = strsep (&i18npath, ":")) != NULL)
+		{
+		  stpcpy (stpcpy (stpcpy (path, next), "/repertoiremaps/"),
+			  filename);
+
+		  repfile = lr_open (path, repertoiremap_hash);
+		}
+	    }
+
+	  if (repfile == NULL)
+	    {
+	      /* Look in the systems charmap directory.  */
+	      char *buf = xmalloc (strlen (filename) + 1
+				   + sizeof (REPERTOIREMAP_PATH));
+
+	      stpcpy (stpcpy (stpcpy (buf, REPERTOIREMAP_PATH), "/"),
+		      filename);
+	      repfile = lr_open (buf, repertoiremap_hash);
+
+	      if (repfile == NULL)
+		free (buf);
+	    }
 	}
 
-      if (cmfile == NULL)
-	return NULL;
+      if (repfile == NULL)
+	{
+	  error (0, errno, _("repertoire map file `%s' not found"), filename);
+	  return NULL;
+	}
     }
 
   /* Allocate room for result.  */
@@ -122,7 +117,7 @@ parse_repertoiremap (const char *filename)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (cmfile, NULL);
+      struct token *now = lr_token (repfile, NULL);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -141,40 +136,40 @@ parse_repertoiremap (const char *filename)
 	  if (nowtok == tok_escape_char || nowtok == tok_comment_char)
 	    {
 	      /* We know that we need an argument.  */
-	      arg = lr_token (cmfile, NULL);
+	      arg = lr_token (repfile, NULL);
 
 	      if (arg->tok != tok_ident)
 		{
-		  lr_error (cmfile, _("syntax error in prolog: %s"),
+		  lr_error (repfile, _("syntax error in prolog: %s"),
 			    _("bad argument"));
 
-		  lr_ignore_rest (cmfile, 0);
+		  lr_ignore_rest (repfile, 0);
 		  continue;
 		}
 
 	      if (arg->val.str.len != 1)
 		{
-		  lr_error (cmfile, _("\
+		  lr_error (repfile, _("\
 argument to <%s> must be a single character"),
 			    nowtok == tok_escape_char ? "escape_char"
 						      : "comment_char");
 
-		  lr_ignore_rest (cmfile, 0);
+		  lr_ignore_rest (repfile, 0);
 		  continue;
 		}
 
 	      if (nowtok == tok_escape_char)
-		cmfile->escape_char = *arg->val.str.start;
+		repfile->escape_char = *arg->val.str.start;
 	      else
-		cmfile->comment_char = *arg->val.str.start;
+		repfile->comment_char = *arg->val.str.start;
 
-	      lr_ignore_rest (cmfile, 1);
+	      lr_ignore_rest (repfile, 1);
 	      continue;
 	    }
 
 	  if (nowtok == tok_charids)
 	    {
-	      lr_ignore_rest (cmfile, 1);
+	      lr_ignore_rest (repfile, 1);
 
 	      state = 2;
 	      continue;
@@ -199,11 +194,11 @@ argument to <%s> must be a single character"),
 
 	  if (nowtok != tok_bsymbol)
 	    {
-	      lr_error (cmfile,
+	      lr_error (repfile,
 			_("syntax error in repertoire map definition: %s"),
 			_("no symbolic name given"));
 
-	      lr_ignore_rest (cmfile, 0);
+	      lr_ignore_rest (repfile, 0);
 	      continue;
 	    }
 
@@ -238,20 +233,20 @@ argument to <%s> must be a single character"),
 	  errno = 0;
 	  if (nowtok != tok_ucs2 && nowtok != tok_ucs4)
 	    {
-	      lr_error (cmfile,
+	      lr_error (repfile,
 			_("syntax error in repertoire map definition: %s"),
 			_("no <Uxxxx> or <Uxxxxxxxx> value given"));
 
-	      lr_ignore_rest (cmfile, 0);
+	      lr_ignore_rest (repfile, 0);
 	      continue;
 	    }
 
 	  /* We've found a new valid definition.  */
-	  charset_new_char (cmfile, &result->char_table, 4,
+	  charset_new_char (repfile, &result->char_table, 4,
 			    now->val.charcode.val, from_name, to_name);
 
 	  /* Ignore the rest of the line.  */
-	  lr_ignore_rest (cmfile, 0);
+	  lr_ignore_rest (repfile, 0);
 
 	  from_name = NULL;
 	  to_name = NULL;
@@ -261,29 +256,29 @@ argument to <%s> must be a single character"),
 	case 4:
 	  if (nowtok != tok_bsymbol)
 	    {
-	      lr_error (cmfile,
+	      lr_error (repfile,
 			_("syntax error in repertoire map definition: %s"),
 			_("no symbolic name given for end of range"));
 
-	      lr_ignore_rest (cmfile, 0);
+	      lr_ignore_rest (repfile, 0);
 	      state = 2;
 	      continue;
 	    }
 
 	  /* Copy the to-name in a safe place.  */
 	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    cmfile->token.val.str.start,
-					    cmfile->token.val.str.len);
+					    repfile->token.val.str.start,
+					    repfile->token.val.str.len);
 
 	  state = 5;
 	  continue;
 
 	case 90:
 	  if (nowtok != tok_charids)
-	    lr_error (cmfile, _("\
+	    lr_error (repfile, _("\
 `%1$s' definition does not end with `END %1$s'"), "CHARIDS");
 
-	  lr_ignore_rest (cmfile, nowtok == tok_charids);
+	  lr_ignore_rest (repfile, nowtok == tok_charids);
 	  break;
 	}
 
@@ -291,9 +286,9 @@ argument to <%s> must be a single character"),
     }
 
   if (state != 2 && state != 90 && !be_quiet)
-    error (0, 0, _("%s: premature end of file"), cmfile->fname);
+    error (0, 0, _("%s: premature end of file"), repfile->fname);
 
-  lr_close (cmfile);
+  lr_close (repfile);
 
   return result;
 }
@@ -304,8 +299,8 @@ repertoiremap_hash (const char *str, int len)
 {
   static const struct keyword_t wordlist[0] =
   {
-    {"escape_char",      tok_escape_char,     1},
-    {"comment_char",     tok_comment_char,    1},
+    {"escape_char",      tok_escape_char,     0},
+    {"comment_char",     tok_comment_char,    0},
     {"CHARIDS",          tok_charids,         0},
     {"END",              tok_end,             0},
   };

@@ -1,9 +1,82 @@
 1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Install repertoire maps.
-	* localedata/mnemonic.ds: Moved into repertoiremaps subdir.
-	* localedata/repertoiremaps/charids.894: New file.
-	* localedata/repertoiremaps/mnemonic.ds: New file.
+	* mnemonic.ds: Moved into repertoiremaps subdir.
+	* repertoiremaps/charids.894: New file.
+	* repertoiremaps/mnemonic.ds: New file.
+
+	* sort-test.sh: Adapt for most recent changes in localedef.
+	* tst-fmon.sh: Likewise.
+	* tst-locale.sh: Likewise.
+
+	* locales/POSIX: Add repertoiremap definition.
+	* locales/cs_CZ: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/de_AT: Likewise.
+	* locales/de_BE: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/de_DE: Likewise.
+	* locales/de_LU: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/en_CA,2.5: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_DK.com: Likewise.
+	* locales/en_GB: Likewise.
+	* locales/en_IE: Likewise.
+	* locales/en_NZ: Likewise.
+	* locales/en_US: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_ES: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/et_EE: Likewise.
+	* locales/eu_ES: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fo_FO: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CA: Likewise.
+	* locales/fr_CA,2.13: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/fr_LU: Likewise.
+	* locales/ga_IE: Likewise.
+	* locales/gr_GR: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/iw_IL: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/no_NO: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/sv_FI: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/zh_CN: Likewise.
 
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 

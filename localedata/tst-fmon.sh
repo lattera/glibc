@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing the implementation of strfmon(3).
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 #
@@ -32,7 +32,7 @@ for l in $lang; do
     cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
     cn=locales/$cns
     fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-    I18NPATH=./locales \
+    I18NPATH=. \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns

@@ -21,6 +21,9 @@
 	* locale/programs/locfile.h: Likewise.
 	* locale/programs/stringtrans.c: Likewise.
 
+	* locale/programs/locfile.c: Interpret I18NPATH value as base of
+	path, extended with "/locales/".
+
 1998-04-18  Philip Blundell  <Philip.Blundell@pobox.com>
 
 	* sysdeps/arm/memset.S: Fix off by one error.

@@ -11,7 +11,7 @@ for l in $lang; do
   cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
   cn=locales/$cns
   fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-  I18NPATH=./locales ${common_objpfx}elf/ld.so --library-path $common_objpfx \
+  I18NPATH=. ${common_objpfx}elf/ld.so --library-path $common_objpfx \
    ${common_objpfx}locale/localedef --quiet -i $cn -f $fn \
    ${common_objpfx}localedata/$cns
 done

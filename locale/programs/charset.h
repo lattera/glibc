@@ -37,9 +37,6 @@ struct width_rule
 
 struct charset_t
 {
-  const char *repertoiremap;
-  struct repertoire_t *repertoire;
-
   const char *code_set_name;
   int mb_cur_min;
   int mb_cur_max;

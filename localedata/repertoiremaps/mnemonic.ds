@@ -1,4 +1,4 @@
-<escape_char> /
+escape_char /
 <NUL>	<U0000>	NULL (NUL)
 <SOH>	<U0001>	START OF HEADING (SOH)
 <STX>	<U0002>	START OF TEXT (STX)

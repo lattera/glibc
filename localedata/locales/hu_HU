@@ -1,5 +1,6 @@
 comment_char %
 escape_char  /
+repertoiremap mnemonic.ds
 %
 % Hungarian Language Locale for Hungary
 % Source: RAP
@@ -15,7 +16,7 @@ escape_char  /
 % Date: 1996-10-15
 % Application: general
 % Users: general
-% Repertoiremap: mnemonic,ds
+% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-2
 % Distribution and use is free, also
 % for commercial purposes.

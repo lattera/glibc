@@ -1,7 +1,7 @@
-<escape_char> /
+escape_char /
 # Charids refering to ISO 10646/Correspondance des caract<e!>res avec ISO 10646
 # Version: 1994-08-25
-#<comment_char> #
+#comment_char #
 CHARIDS
 <NUL>   <U0000>  # NULL / NUL
 <SOH>   <U0001>  # START OF HEADING / D<E'>BUT D'ENT<E/>>TE

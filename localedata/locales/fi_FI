@@ -1,5 +1,6 @@
 escape_char	/
 comment_char    %
+repertoiremap mnemonic.ds
 
 % Finnish language locale for Finland
 % sorting according to SFS 4600 (1986-06-09)

@@ -1,5 +1,6 @@
 escape_char  /
 comment_char  %
+repertoiremap mnemonic.ds
 % Irish language locale for Ireland
 % Source: NSAI
 % Address: Glasnevin, Dublin 9, Ireland
@@ -12,7 +13,7 @@ comment_char  %
 % Revision: 4.3
 % Date: 1996-10-15
 % Users: general
-% Repertoiremap: mnemonic,ds
+% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.

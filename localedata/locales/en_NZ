@@ -1,5 +1,6 @@
 escape_char  /
 comment_char  %
+repertoiremap mnemonic.ds
 
 % English language locale for New Zealand
 % Source: RAP
@@ -14,7 +15,7 @@ comment_char  %
 % Revision: 4.3
 % Date: 1997-11-05
 % Users: general
-% Repertoiremap: mnemonic,ds
+% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.

@@ -211,8 +211,6 @@ parse_charmap (const char *filename)
   memset (result, '\0', sizeof (struct charset_t));
   /* The default DEFAULT_WIDTH is 1.  */
   result->width_default = 1;
-  /* Let the user overwrite the repertoire map we use.  */
-  result->repertoiremap = repertoiremap;
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -269,17 +267,6 @@ parse_charmap (const char *filename)
 
 	      lr_ignore_rest (cmfile, 1);
 
-	      /* Read the repertoire map now.  */
-	      if (result->repertoiremap == NULL)
-		/* This is fatal.  */
-		error (4, 0, _("no repertoire map specified: cannot proceed"));
-
-	      result->repertoire = repertoire_read (result->repertoiremap);
-	      if (result->repertoire == NULL)
-		/* This is also fatal.  */
-		error (4, errno, _("cannot read repertoire map `%s'"),
-		       result->repertoiremap);
-
 	      state = 2;
 	      continue;
 	    }
@@ -288,7 +275,7 @@ parse_charmap (const char *filename)
 	      && nowtok != tok_mb_cur_min && nowtok != tok_escape_char
 	      && nowtok != tok_comment_char && nowtok != tok_g0esc
 	      && nowtok != tok_g1esc && nowtok != tok_g2esc
-	      && nowtok != tok_g3esc && nowtok != tok_repertoiremap)
+	      && nowtok != tok_g3esc)
 	    {
 	      lr_error (cmfile, _("syntax error in prolog: %s"),
 			_("illegal definition"));
@@ -316,18 +303,6 @@ parse_charmap (const char *filename)
 	      result->code_set_name = obstack_copy0 (&result->mem_pool,
 						     arg->val.str.start,
 						     arg->val.str.len);
-
-	      lr_ignore_rest (cmfile, 1);
-	      continue;
-
-	    case tok_repertoiremap:
-	      if (arg->tok != tok_ident)
-		goto badarg;
-
-	      if (result->repertoiremap == NULL)
-		result->repertoiremap = obstack_copy0 (&result->mem_pool,
-						       arg->val.str.start,
-						       arg->val.str.len);
 
 	      lr_ignore_rest (cmfile, 1);
 	      continue;

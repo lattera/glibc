@@ -26,10 +26,11 @@ test_locale ()
     charmap=$1
     input=$2
     out=$3
-    I18NPATH=./locales \
+    rep=$4
+    I18NPATH=. \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
-    ${common_objpfx}localedata/$out
+      --repertoire-map $rep ${common_objpfx}localedata/$out
 
     if [ $? -ne 0 ]; then
 	echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
@@ -40,13 +41,13 @@ test_locale ()
 
 # I take this out for now since it is a known problem
 # (see [PR libc/229] and [PR libc/454]. --drepper
-# test_locale IBM437 de_DE de_DE.437
-test_locale tests/test1.cm tests/test1.def test1
-test_locale tests/test2.cm tests/test2.def test2
-test_locale tests/test3.cm tests/test3.def test3
-test_locale tests/test4.cm tests/test4.def test4
+# test_locale IBM437 de_DE de_DE.437 mnemonic.ds
+test_locale tests/test1.cm tests/test1.def test1 mnemonic.ds
+test_locale tests/test2.cm tests/test2.def test2 mnemonic.ds
+test_locale tests/test3.cm tests/test3.def test3 mnemonic.ds
+test_locale tests/test4.cm tests/test4.def test4 mnemonic.ds
 # I know that multi-byte charsets do not yet work. --drepper
-# test_locale tests/test5.cm tests/test5.def test5
+# test_locale tests/test5.cm tests/test5.def test5 mnemonic.ds
 
 exit 0
 
