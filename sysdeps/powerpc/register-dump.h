@@ -21,16 +21,26 @@
 #include <stdio-common/_itoa.h>
 
 /* This prints out the information in the following form: */
-static const char dumpform[] =
-"Register dump:\n\
-r0 =0000000% sp =0000000% r2 =0000000% r3 =0000000% r4 =0000000% r5 =0000000%
-r6 =0000000% r7 =0000000% r8 =0000000% r9 =0000000% r10=0000000% r11=0000000%
-r12=0000000% r13=0000000% r14=0000000% r15=0000000% r16=0000000% r17=0000000%
-r18=0000000% r19=0000000% r20=0000000% r21=0000000% r22=0000000% r23=0000000%
-r24=0000000% r25=0000000% r26=0000000% r27=0000000% r28=0000000% r29=0000000%
-r30=0000000% r31=0000000% sr0=0000000% msr=0000000% r3*=0000000% ctr=0000000%
-lr =0000000% xer=0000000% ccr=0000000% sr1=0000000% trap=0000000%
-address of fault=0000000% dsisr=0000000%\n";
+static const char dumpform[] = "\
+Register dump:
+fp0-3:   0000030%0000031% 0000032%0000033% 0000034%0000035% 0000036%0000037%
+fp4-7:   0000038%0000039% 000003a%000003b% 000003c%000003d% 000003e%000003f%
+fp8-11:  0000040%0000041% 0000042%0000043% 0000044%0000045% 0000046%0000047%
+fp12-15: 0000048%0000049% 000004a%000004b% 000004c%000004d% 000004e%000004f%
+fp16-19: 0000050%0000051% 0000052%0000053% 0000054%0000055% 0000056%0000057%
+fp20-23: 0000058%0000059% 000005a%000005b% 000005c%000005d% 000005e%000005f%
+fp24-27: 0000060%0000061% 0000062%0000063% 0000064%0000065% 0000066%0000067%
+fp28-31: 0000068%0000069% 000006a%000006b% 000006c%000006d% 000006e%000006f%
+r0 =0000000% sp =0000001% r2 =0000002% r3 =0000003%  trap=0000028%
+r4 =0000004% r5 =0000005% r6 =0000006% r7 =0000007%   sr0=0000020% sr1=0000021%
+r8 =0000008% r9 =0000009% r10=000000a% r11=000000b%   dar=0000029% dsi=000002a%
+r12=000000c% r13=000000d% r14=000000e% r15=000000f%   r3*=0000022%
+r16=0000010% r17=0000011% r18=0000012% r19=0000013%
+r20=0000014% r21=0000015% r22=0000016% r23=0000017%    lr=0000024% xer=0000025%
+r24=0000018% r25=0000019% r26=000001a% r27=000001b%    mq=0000027% ctr=0000023%
+r28=000001c% r29=000001d% r30=000001e% r31=000001f%  fscr=0000071% ccr=0000026%
+";
+
 /* Most of the fields are self-explanatory.  'sr0' is the next
    instruction to execute, from SRR0, which may have some relationship
    with the instruction that caused the exception.  'r3*' is the value
@@ -66,8 +76,8 @@ address of fault=0000000% dsisr=0000000%\n";
    00C00 - System call exception (for instance, kill(3)).
    00E00 - FP assist exception (optional FP instructions, etc.)
 
-   'address of fault' is the memory location that wasn't mapped
-   (from the DAR). 'dsisr' has the following bits under trap 00300:
+   'dar' is the memory location, for traps 00300, 00400, 00600, 00A00.
+   'dsisr' has the following bits under trap 00300:
    0 - direct-store error exception
    1 - no page table entry for page
    4 - memory access not permitted
@@ -82,23 +92,24 @@ address of fault=0000000% dsisr=0000000%\n";
    the instruction without actually having to read it from memory.
 */
 
+#define xtoi(x) (x >= 'a' ? x + 10 - 'a' : x - '0')
+
 static void
-register_dump (int fd, void **ctx)
+register_dump (int fd, struct sigcontext *ctx)
 {
   char buffer[sizeof(dumpform)];
-  char *bufferpos = buffer;
-  int i = 0;
+  char *bufferpos;
+  unsigned regno;
+  unsigned *regs = (unsigned *)(ctx->regs);
 
   memcpy(buffer, dumpform, sizeof(dumpform));
 
-  ctx += 8;	/* FIXME!!!!  Why is this necessary?  Is it necessary?  */
-
   /* Generate the output.  */
-  while ((bufferpos = memchr (bufferpos, '%', sizeof(dumpform))))
+  while ((bufferpos = memchr (buffer, '%', sizeof(dumpform))))
     {
-      *bufferpos++ = '0';
-      _itoa_word ((unsigned long int)(ctx[i]), bufferpos, 16, 0);
-      i++;
+      regno = xtoi (bufferpos[-1]) | xtoi (bufferpos[-2]) << 4;
+      memset (bufferpos-2, '0', 3);
+      _itoa_word (regs[regno], bufferpos+1, 16, 0);
     }
 
   /* Write the output.  */

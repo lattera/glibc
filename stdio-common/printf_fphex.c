@@ -1,6 +1,6 @@
 /* Print floating point number in hexadecimal notation according to
    ISO C 9X.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -244,16 +244,26 @@ __printf_fphex (FILE *fp,
 
       exponent = fpnum.dbl.ieee.exponent;
 
-      if (exponent == 0 ? !zero_mantissa : exponent < IEEE754_DOUBLE_BIAS)
+      if (exponent == 0)
 	{
-	  expnegative = 1;
-	  exponent = -(exponent - IEEE754_DOUBLE_BIAS);
+	  if (zero_mantissa)
+	    expnegative = 0;
+	  else
+	    {
+	      /* This is a denormalized number.  */
+	      expnegative = 1;
+	      exponent = -(1 - IEEE754_DOUBLE_BIAS);
+	    }
+	}
+      else if (exponent >= IEEE754_DOUBLE_BIAS)
+	{
+	  expnegative = 0;
+	  exponent -= IEEE754_DOUBLE_BIAS;
 	}
       else
 	{
-	  expnegative = 0;
-	  if (exponent != 0)
-	    exponent -= IEEE754_DOUBLE_BIAS;
+	  expnegative = 1;
+	  exponent = -(exponent - IEEE754_DOUBLE_BIAS);
 	}
     }
   else
@@ -282,20 +292,30 @@ __printf_fphex (FILE *fp,
       /* We use a full nibble for the leading digit.  */
       leading = *numstr++;
 
-      /* We have 3 bits from the mantissa in the leading nibble.  */
+      /* We have 3 bits from the mantissa in the leading nibble.
+	 Therefore we are here using `IEEE854_LONG_DOUBLE_BIAS + 3'.  */
       exponent = fpnum.ldbl.ieee.exponent;
 
-      if (exponent == 0 ? !zero_mantissa
-	  : exponent < IEEE854_LONG_DOUBLE_BIAS + 3)
+      if (exponent == 0)
 	{
-	  expnegative = 1;
-	  exponent = -(exponent - (IEEE854_LONG_DOUBLE_BIAS + 3));
+	  if (zero_mantissa)
+	    expnegative = 0;
+	  else
+	    {
+	      /* This is a denormalized number.  */
+	      expnegative = 1;
+	      exponent = -(1 - (IEEE854_LONG_DOUBLE_BIAS + 3));
+	    }
+	}
+      else if (exponent >= IEEE854_LONG_DOUBLE_BIAS + 3)
+	{
+	  expnegative = 0;
+	  exponent -= IEEE854_LONG_DOUBLE_BIAS + 2;
 	}
       else
 	{
-	  expnegative = 0;
-	  if (exponent != 0)
-	    exponent -= IEEE854_LONG_DOUBLE_BIAS + 3;
+	  expnegative = 1;
+	  exponent = -(exponent - (IEEE854_LONG_DOUBLE_BIAS + 3));
 	}
     }
 

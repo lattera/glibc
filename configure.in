@@ -451,7 +451,7 @@ AC_CHECK_PROG_VER(MSGFMT, msgfmt gmsgfmt, --version,
   [0.[1-9][0-9].* | [1-9].*], MSGFMT=: aux_missing=t)
 AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
   [GNU texinfo.* \([0-9][0-9.]*\)],
-  [3.1[1-9] | 3.[2-9][0-9]], MAKEINFO=: aux_missing=t)
+  [1.6[89] | 1.7[0-9]], MAKEINFO=: aux_missing=t)
 
 if test -n "$critic_missing"; then
 AC_MSG_ERROR([
@@ -576,7 +576,7 @@ AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,
   echo '* Prog: (prog).   Program.'
   echo 'END-INFO-DIR-ENTRY') >conftest.d/prog.info
   if $INSTALL_INFO --info-dir=conftest.d conftest.d/prog.info >&AC_FD_CC 2>&1
-  then 
+  then
     if grep -s 'i-d-s works' conftest.d/dir >/dev/null
     then libc_cv_old_debian_install_info=no
     else libc_cv_old_debian_install_info=yes

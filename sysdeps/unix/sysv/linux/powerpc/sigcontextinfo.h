@@ -16,9 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/ptrace.h>
+#include <signal.h>
 
-#define SIGCONTEXT void **
-#define GET_PC(ctx)	((ctx)[PT_NIP])
-#define GET_FRAME(ctx)	(*(void **)(ctx)[PT_R1])
-#define GET_STACK(ctx)	((ctx)[PT_R1])
+#define SIGCONTEXT struct sigcontext *
+#define GET_PC(ctx)	((void *)((ctx)->regs->nip))
+#define GET_FRAME(ctx)	(*(void **)((ctx)->regs->gpr[1]))
+#define GET_STACK(ctx)	((void *)((ctx)->regs->gpr[1]))

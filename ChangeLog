@@ -1,3 +1,30 @@
+1998-11-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_fphex.c (__printf_fphex): Correct printing
+	of denormalized numbers.
+
+1998-10-06  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_load_address): Suppress
+	another parentheses warning, make nano-optimisation.
+
+	* sysdeps/powerpc/dl-machine.h (_dl_runtime_resolve): Preserve
+	saved LR on stack so _mcount works.
+	(_dl_prof_resolve): Likewise.
+	* sysdeps/powerpc/register-dump.h: Print FPRs.  Adjust for correct
+	signal handler calling convention.
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: Adjust for
+	correct signal handler calling convention---more like x86 linux and
+	mklinux, less like linux-ppc versions between 2.1 and 2.1.126.
+
+1998-11-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Correct allowed makeinfo version.
+
+1998-11-17  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/bits/mathdef.h: Fix typo.
+
 1998-11-17  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Prototype the syscall
@@ -11,7 +38,7 @@
 
 1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
 
-	* intl/locale.alias: Change `japanese' alais to match X11R6's.
+	* intl/locale.alias: Change `japanese' alias to match X11R6's.
 	Add `japanese.euc' alias.
 
 	* manual/Makefile (%.info): Set LANGUAGE and LC_ALL explicitly to C

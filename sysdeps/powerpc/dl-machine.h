@@ -91,8 +91,7 @@ elf_machine_load_address (void)
   /* So now work out the difference between where the branch actually points,
      and the offset of that location in memory from the start of the file.  */
   return ((Elf32_Addr)branchaddr - *got
-	  + (*branchaddr & 0x3fffffc
-	     | (int)(*branchaddr << 6 & 0x80000000) >> 6));
+	  + ((int)(*branchaddr << 6 & 0xffffff00) >> 6));
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
@@ -111,7 +110,7 @@ elf_machine_load_address (void)
 _dl_runtime_resolve:
  # We need to save the registers used to pass parameters, and register 0,
  # which is used by _mcount; the registers are saved in a stack frame.
-	stwu 1,-48(1)
+	stwu 1,-64(1)
 	stw 0,12(1)
 	stw 3,16(1)
 	stw 4,20(1)
@@ -123,7 +122,7 @@ _dl_runtime_resolve:
 	mflr 0
  # We also need to save some of the condition register fields.
 	stw 7,32(1)
-	stw 0,52(1)
+	stw 0,48(1)
 	stw 8,36(1)
 	mfcr 0
 	stw 9,40(1)
@@ -133,7 +132,7 @@ _dl_runtime_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr 3
  # Put the registers back...
-	lwz 0,52(1)
+	lwz 0,48(1)
 	lwz 10,44(1)
 	lwz 9,40(1)
 	mtlr 0
@@ -147,7 +146,7 @@ _dl_runtime_resolve:
 	lwz 3,16(1)
 	lwz 0,12(1)
  # ...unwind the stack frame, and jump to the PLT entry we updated.
-	addi 1,1,48
+	addi 1,1,64
 	bctr
 	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve
 
@@ -157,7 +156,7 @@ _dl_runtime_resolve:
 _dl_prof_resolve:
  # We need to save the registers used to pass parameters, and register 0,
  # which is used by _mcount; the registers are saved in a stack frame.
-	stwu 1,-48(1)
+	stwu 1,-64(1)
         stw 0,12(1)
 	stw 3,16(1)
 	stw 4,20(1)
@@ -169,7 +168,7 @@ _dl_prof_resolve:
 	mflr 5
  # We also need to save some of the condition register fields.
 	stw 7,32(1)
-	stw 5,52(1)
+	stw 5,48(1)
 	stw 8,36(1)
 	mfcr 0
 	stw 9,40(1)
@@ -179,7 +178,7 @@ _dl_prof_resolve:
  # 'fixup' returns the address we want to branch to.
 	mtctr 3
  # Put the registers back...
-	lwz 0,52(1)
+	lwz 0,48(1)
 	lwz 10,44(1)
 	lwz 9,40(1)
 	mtlr 0
@@ -193,7 +192,7 @@ _dl_prof_resolve:
 	lwz 3,16(1)
         lwz 0,12(1)
  # ...unwind the stack frame, and jump to the PLT entry we updated.
-	addi 1,1,48
+	addi 1,1,64
 	bctr
 	.size	 _dl_prof_resolve,.-_dl_prof_resolve
  # Undo '.section text'.
