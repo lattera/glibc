@@ -30,6 +30,9 @@ ENTRY (__sigsetjmp)
 	sfmea	f4, 4, [r0]!
 	stmia	r0, {v1-v6, sl, fp, sp, lr}
 
+	/* Restore pointer to jmp_buf */
+	sub	r0, r0, #48
+
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
 END (__setjmp)

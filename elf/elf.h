@@ -267,7 +267,7 @@ typedef struct
 #define SHT_GNU_verneed	 0x6ffffffe	/* Version needs section.  */
 #define SHT_GNU_versym	 0x6fffffff	/* Version symbol table.  */
 #define SHT_HISUNW	 0x6fffffff	/* Sun-specific high bound.  */
-#define SHT_HIOS	 0x60000000	/* End OS-specific type */
+#define SHT_HIOS	 0x6fffffff	/* End OS-specific type */
 #define SHT_LOPROC	 0x70000000	/* Start of processor-specific */
 #define SHT_HIPROC	 0x7fffffff	/* End of processor-specific */
 #define SHT_LOUSER	 0x80000000	/* Start of application-specific */

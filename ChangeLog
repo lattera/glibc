@@ -1,3 +1,30 @@
+1998-08-14 10:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.tex: Update.
+
+1998-08-07  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/backtrace.c: New file.
+
+1998-08-14  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/fpu/setjmp.S: Correct value of R0 before calling
+	sigjmp_save.
+	* sysdeps/arm/elf/setjmp.S: Obsolete, deleted.
+
+1998-08-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (install-symbolic-link): Fix spelling.
+
+1998-08-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/elf.h (SHT_HIOS): Fix value.
+
+1998-08-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/regex.c (WIDE_CHAR_SUPPORT): Don't generate defined as
+	part of the expansion, this is undefined by the standard.
+
 1998-08-13 19:41  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/getconf.c: Add support for systems with incomplete confname.h.

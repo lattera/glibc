@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.218 1998/07/22 10:59:56 drepper Exp $
+% $Id: texinfo.tex,v 2.219 1998/08/15 02:38:13 drepper Exp $
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -27,10 +27,10 @@
 % reports; you can get the latest version from:
 %   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
 %   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
-%   (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
+%   (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/GNUinfo/FTP)
 %   ftp://tug.org/tex/texinfo.tex
 %   ftp://ctan.org/macros/texinfo/texinfo.tex
-%   (and all CTAN mirrors, finger ctan@tug.org for a list).
+%   (and all CTAN mirrors, finger ctan@ctan.org for a list).
 % The texinfo.tex in the texinfo distribution itself could well be out
 % of date, so if that's what you're using, please check.
 % 
@@ -40,7 +40,7 @@
 % 
 % To process a Texinfo manual with TeX, it's most reliable to use the
 % texi2dvi shell script that comes with the distribution.  For simple
-% manuals, you can get away with:
+% manuals, however, you can get away with:
 %   tex foo.texi
 %   texindex foo.??
 %   tex foo.texi
@@ -58,7 +58,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.218 $
+\deftexinfoversion$Revision: 2.219 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -959,9 +959,17 @@ where each line of input produces a line of output.}
 
 % @value{foo} gets the text saved in variable foo.
 %
-\def\value{\begingroup
-  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
-  \valuexxx}
+{
+  \catcode`\_ = \active
+  %
+  % We might end up with active _ or - characters in the argument if
+  % we're called from @code, as @code{@value{foo-bar_}}.  So \let any
+  % such active characters to their normal equivalents.
+  \gdef\value{\begingroup
+    \catcode`\-=12 \catcode`\_=12
+    \indexbreaks \let_\normalunderscore
+    \valuexxx}
+}
 \def\valuexxx#1{\expandablevalue{#1}\endgroup}
 
 % We have this subroutine so that we can handle at least some @value's
@@ -1190,8 +1198,8 @@ where each line of input produces a line of output.}
 \setfont\ninett\ttshape{9}{1000}
 \setfont\ninettsl\ttslshape{10}{900}
 \setfont\indrm\rmshape{9}{1000}
-\setfont\indit\slshape{9}{1000}
-\let\indsl=\indit
+\setfont\indit\itshape{9}{1000}
+\setfont\indsl\slshape{9}{1000}
 \let\indtt=\ninett
 \let\indttsl=\ninettsl
 \let\indsf=\indrm
@@ -1340,13 +1348,14 @@ where each line of input produces a line of output.}
 % \smartitalic{ARG} outputs arg in italics, followed by an italic correction
 % unless the following character is such as not to need one.
 \def\smartitalicx{\ifx\next,\else\ifx\next-\else\ifx\next.\else\/\fi\fi\fi}
-\def\smartitalic#1{{\sl #1}\futurelet\next\smartitalicx}
+\def\smartslanted#1{{\sl #1}\futurelet\next\smartitalicx}
+\def\smartitalic#1{{\it #1}\futurelet\next\smartitalicx}
 
 \let\i=\smartitalic
-\let\var=\smartitalic
-\let\dfn=\smartitalic
+\let\var=\smartslanted
+\let\dfn=\smartslanted
 \let\emph=\smartitalic
-\let\cite=\smartitalic
+\let\cite=\smartslanted
 
 \def\b#1{{\bf #1}}
 \let\strong=\b
@@ -1413,20 +1422,18 @@ where each line of input produces a line of output.}
 % and arrange explicitly to hyphenate at a dash.
 %  -- rms.
 {
-\catcode`\-=\active
-\catcode`\_=\active
-\catcode`\|=\active
-\global\def\code{\begingroup \catcode`\-=\active \let-\codedash \catcode`\_=\active \let_\codeunder \codex}
-% The following is used by \doprintindex to insure that long function names
-% wrap around.  It is necessary for - and _ to be active before the index is
-% read from the file, as \entry parses the arguments long before \code is
-% ever called.  -- mycroft
-% _ is always active; and it shouldn't be \let = to an _ that is a
-% subscript character anyway. Then, @cindex @samp{_} (for example)
-% fails.  --karl
-\global\def\indexbreaks{%
-  \catcode`\-=\active \let-\realdash
-}
+  \catcode`\-=\active
+  \catcode`\_=\active
+  %
+  \global\def\code{\begingroup
+    \catcode`\-=\active \let-\codedash
+    \catcode`\_=\active \let_\codeunder
+    \codex
+  }
+  %
+  % If we end up with any active - characters when handling the index,
+  % just treat them as a normal -.
+  \global\def\indexbreaks{\catcode`\-=\active \let-\realdash}
 }
 
 \def\realdash{-}
