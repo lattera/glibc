@@ -1,3 +1,10 @@
+2003-04-05  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/sr_YU [LC_MONETARY]: Change int_curr_symbol from 'YUN'
+	to 'YUM' to match changes commited to ISO-4217 2002-02-13 and get
+	the locale building again.
+	* locales/sr_YU@cyrillic: Likewise.
+
 2003-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/mn_MN: Fix country_post and country_ab2.
