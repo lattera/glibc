@@ -1,5 +1,16 @@
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Consolidate writing of the
+	request with one writev call.  Protect all read calls with
+	TEMP_FAILURE_RETRY.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+
+	* nscd/hstcache.c: Use extend_alloca to reallocate alloca'd buffer.
+	Protect writev calls with TEMP_FAILURE_RETRY.
+	* nscd/grpcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 	* nscd/hstcache.c (addhstbynamev6): Don't interpret hostname as
 	IPv6 address in debug output.
 

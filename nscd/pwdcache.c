@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <errno.h>
 #include <error.h>
 #include <pwd.h>
@@ -101,7 +102,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 
       total = sizeof (notfound);
 
-      written = writev (fd, &iov_notfound, 1);
+      written = TEMP_FAILURE_RETRY (writev (fd, &iov_notfound, 1));
 
       copy = malloc (req->key_len);
       if (copy == NULL)
@@ -223,10 +224,11 @@ addpwbyname (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
+#define INCR 1024
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += INCR;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -240,19 +242,9 @@ addpwbyname (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[pwddb])
@@ -305,10 +297,10 @@ addpwbyuid (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += 1024;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -322,19 +314,9 @@ addpwbyuid (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[pwddb])

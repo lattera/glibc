@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
@@ -103,7 +104,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 
       total = sizeof (notfound);
 
-      written = writev (fd, &iov_notfound, 1);
+      written = TEMP_FAILURE_RETRY (writev (fd, &iov_notfound, 1));
 
       copy = malloc (req->key_len);
       if (copy == NULL)
@@ -315,10 +316,11 @@ addhstbyname (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
+#define INCR 1024
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += INCR;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -332,19 +334,9 @@ addhstbyname (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[hstdb])
@@ -392,10 +384,10 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += INCR;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -409,19 +401,9 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[hstdb])
@@ -450,7 +432,7 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
   bool use_malloc = false;
 
   if (__builtin_expect (debug_level > 0, 0))
-    dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
+    dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *) key);
 
   if (secure[hstdb])
     {
@@ -465,10 +447,10 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += INCR;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -482,19 +464,9 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[hstdb])
@@ -542,10 +514,10 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
     {
       char *old_buffer = buffer;
       errno = 0;
-      buflen += 1024;
 
       if (__builtin_expect (buflen > 32768, 0))
 	{
+	  buflen += INCR;
 	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
 	  if (buffer == NULL)
 	    {
@@ -559,19 +531,9 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
 	  use_malloc = true;
 	}
       else
-	{
-	  buffer = (char *) alloca (buflen);
-#if _STACK_GROWS_DOWN
-	  if (buffer + buflen == old_buffer)
-	    buflen = 2 * buflen - 1024;
-#elif _STACK_GROWS_UP
-	  if (old_buffer + buflen - 1024 == buffer)
-	    {
-	      buffer = old_buffer;
-	      buflen = 2 * buflen - 1024;
-	    }
-#endif
-	}
+	/* Allocate a new buffer on the stack.  If possible combine it
+	   with the previously allocated buffer.  */
+	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
   if (secure[hstdb])

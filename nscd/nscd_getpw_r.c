@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -96,6 +96,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   request_header req;
   pw_response_header pw_resp;
   ssize_t nbytes;
+  struct iovec vec[2];
 
   if (sock == -1)
     {
@@ -106,21 +107,21 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   req.version = NSCD_VERSION;
   req.type = type;
   req.key_len = keylen;
-  nbytes = __write (sock, &req, sizeof (request_header));
-  if (nbytes != sizeof (request_header))
+
+  vec[0].iov_base = &req;
+  vec[0].iov_len = sizeof (request_header);
+  vec[1].iov_base = (void *) key;
+  vec[1].iov_len = keylen;
+
+  nbytes = (size_t) TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
+  if (nbytes != sizeof (request_header) + keylen)
     {
       __close (sock);
       return -1;
     }
 
-  nbytes = __write (sock, key, keylen);
-  if (nbytes != keylen)
-    {
-      __close (sock);
-      return -1;
-    }
-
-  nbytes = __read (sock, &pw_resp, sizeof (pw_response_header));
+  nbytes = TEMP_FAILURE_RETRY (__read (sock, &pw_resp,
+				       sizeof (pw_response_header)));
   if (nbytes != sizeof (pw_response_header))
     {
       __close (sock);
@@ -168,7 +169,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       /* get pw_pshell */
       resultbuf->pw_shell = p;
 
-      nbytes = __read (sock, buffer, total);
+      nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
 
       __close (sock);
 

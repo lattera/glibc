@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -123,6 +123,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   hst_response_header hst_resp;
   request_header req;
   ssize_t nbytes;
+  struct iovec vec[4];
 
   if (sock == -1)
     {
@@ -133,21 +134,21 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   req.version = NSCD_VERSION;
   req.type = type;
   req.key_len = keylen;
-  nbytes = __write (sock, &req, sizeof (request_header));
-  if (nbytes != sizeof (request_header))
+
+  vec[0].iov_base = &req;
+  vec[0].iov_len = sizeof (request_header);
+  vec[1].iov_base = (void *) key;
+  vec[1].iov_len = req.key_len;
+
+  nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
+  if ((size_t) nbytes != sizeof (request_header) + req.key_len)
     {
       __close (sock);
       return -1;
     }
 
-  nbytes = __write (sock, key, req.key_len);
-  if (nbytes != req.key_len)
-    {
-      __close (sock);
-      return -1;
-    }
-
-  nbytes = __read (sock, &hst_resp, sizeof (hst_response_header));
+  nbytes = TEMP_FAILURE_RETRY (__read (sock, &hst_resp,
+				       sizeof (hst_response_header)));
   if (nbytes != sizeof (hst_response_header))
     {
       __close (sock);
@@ -164,7 +165,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
   if (hst_resp.found == 1)
     {
-      struct iovec vec[4];
       uint32_t *aliases_len;
       char *cp = buffer;
       uintptr_t align1;
@@ -263,7 +263,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	}
       resultbuf->h_addr_list[cnt] = NULL;
 
-      if ((size_t) __readv (sock, vec, n) != total_len)
+      if ((size_t) TEMP_FAILURE_RETRY (__readv (sock, vec, n)) != total_len)
 	{
 	  __close (sock);
 	  return -1;
@@ -284,8 +284,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	goto no_room;
 
       /* And finally read the aliases.  */
-      if ((size_t) __read (sock, resultbuf->h_aliases[0], total_len)
-	  != total_len)
+      if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf->h_aliases[0],
+					       total_len)) != total_len)
 	{
 	  __close (sock);
 	  return -1;

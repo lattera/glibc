@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -114,13 +114,15 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   vec[1].iov_base = (void *) key;
   vec[1].iov_len = keylen;
 
-  if ((size_t) __writev (sock, vec, 2) != sizeof (request_header) + keylen)
+  nbytes = (size_t) TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
+  if (nbytes != sizeof (request_header) + keylen)
     {
       __close (sock);
       return -1;
     }
 
-  nbytes = __read (sock, &gr_resp, sizeof (gr_response_header));
+  nbytes = TEMP_FAILURE_RETRY (__read (sock, &gr_resp,
+				       sizeof (gr_response_header)));
   if (nbytes != sizeof (gr_response_header))
     {
       __close (sock);
@@ -182,7 +184,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
 
       /* Get this data.  */
-      if ((size_t) __readv (sock, vec, 2) != total_len)
+      if ((size_t) TEMP_FAILURE_RETRY (__readv (sock, vec, 2)) != total_len)
 	{
 	  __close (sock);
 	  return -1;
@@ -203,7 +205,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       if (total_len > buflen)
 	goto no_room;
 
-      if (__read (sock, resultbuf->gr_mem[0], total_len) != total_len)
+      if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
+					       total_len)) != total_len)
 	{
 	  __close (sock);
 	  /* The `errno' to some value != ERANGE.  */
