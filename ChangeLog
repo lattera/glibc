@@ -1,3 +1,7 @@
+2003-01-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/libm-test-ulps: Regenerated.
+
 2003-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (INTERNAL_SYSCALL,
