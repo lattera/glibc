@@ -163,32 +163,24 @@ dl_open_worker (void *a)
   const char *file = args->file;
   int mode = args->mode;
   struct link_map *new, *l;
-  const char *dst;
   int lazy;
   unsigned int i;
 #ifdef USE_TLS
   bool any_tls;
 #endif
+  struct link_map *call_map = NULL;
 
   /* Check whether _dl_open() has been called from a valid DSO.  */
   if (__check_caller (args->caller_dl_open, allow_libc|allow_libdl) != 0)
     GLRO(dl_signal_error) (0, "dlopen", NULL, N_("invalid caller"));
 
-  /* Maybe we have to expand a DST.  */
-  dst = strchr (file, '$');
-  if (__builtin_expect (dst != NULL, 0))
+  /* Determine the caller's map if necessary.  This is needed in case
+     we have a DST or when the file name has no path in which case we
+     need to look along the RUNPATH/RPATH of the caller.  */
+  const char *dst = strchr (file, '$');
+  if (dst != NULL || strchr (file, '/') == NULL)
     {
       const void *caller_dlopen = args->caller_dlopen;
-      size_t len = strlen (file);
-      size_t required;
-      struct link_map *call_map;
-      char *new_file;
-
-      /* DSTs must not appear in SUID/SGID programs.  */
-      if (__libc_enable_secure)
-	/* This is an error.  */
-	GLRO(dl_signal_error) (0, "dlopen", NULL,
-			       N_("DST not allowed in SUID/SGID programs"));
 
       /* We have to find out from which object the caller is calling.  */
       call_map = NULL;
@@ -205,6 +197,21 @@ dl_open_worker (void *a)
       if (call_map == NULL)
 	/* In this case we assume this is the main application.  */
 	call_map = GL(dl_loaded);
+    }
+
+  /* Maybe we have to expand a DST.  */
+  if (__builtin_expect (dst != NULL, 0))
+    {
+      size_t len = strlen (file);
+      size_t required;
+      char *new_file;
+
+      /* DSTs must not appear in SUID/SGID programs.  */
+      if (__libc_enable_secure)
+	/* This is an error.  */
+	GLRO(dl_signal_error) (0, "dlopen", NULL,
+			       N_("DST not allowed in SUID/SGID programs"));
+
 
       /* Determine how much space we need.  We have to allocate the
 	 memory locally.  */
@@ -223,10 +230,15 @@ dl_open_worker (void *a)
 
       /* Now we have a new file name.  */
       file = new_file;
+
+      /* It does not matter whether call_map is set even if we
+	 computed it only because of the DST.  Since the path contains
+	 a slash the value is not used.  See dl-load.c.  */
     }
 
   /* Load the named object.  */
-  args->map = new = GLRO(dl_map_object) (NULL, file, 0, lt_loaded, 0, mode);
+  args->map = new = GLRO(dl_map_object) (call_map, file, 0, lt_loaded, 0,
+					 mode | __RTLD_CALLMAP);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */

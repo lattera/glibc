@@ -1,5 +1,13 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object): If __RTLD_CALLMAP flag is set,
+	reset loader before the actual loading.
+	* elf/dl-open.c (dl_open_worker): If file name contains no path
+	element determine map of caller.  Pass caller map in this case to
+	_dl_map_object.  Set __RTLD_CALLMAP in mode.
+	* include/dlfcn.h (__RTLD_CALLMAP): Define.  [BZ #116]
+	Patch by Greg Wolodkin <greg@mathworks.com>.
+
 	* misc/syslog.c (openlog_internal): Always try both UDP and TCP.
 	[BZ #108]  Patch mainly by Bjorn Andersson <bjorn@iki.fi>.
 

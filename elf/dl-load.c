@@ -1914,6 +1914,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	}
     }
 
+  /* In case the LOADER information has only been provided to get to
+     the appropriate RUNPATH/RPATH information we do not need it
+     anymore.  */
+  if (mode & __RTLD_CALLMAP)
+    loader = NULL;
+
   if (__builtin_expect (fd, 0) == -1)
     {
       if (trace_mode

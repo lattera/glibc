@@ -391,8 +391,6 @@ __libc_res_nquerydomain(res_state statp,
 	const char *longname = nbuf;
 	int n, d;
 
-	write(2,"<<aaaa\n",7);
-
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
 		printf(";; res_nquerydomain(%s, %s, %d, %d)\n",
@@ -423,11 +421,8 @@ __libc_res_nquerydomain(res_state statp,
 		}
 		sprintf(nbuf, "%s.%s", name, domain);
 	}
-	int r = (__libc_res_nquery(statp, longname, class, type, answer,
+	return (__libc_res_nquery(statp, longname, class, type, answer,
 				  anslen, answerp));
-	write(2,">>aaaa\n",7);
-	return r;
-
 }
 
 int
