@@ -1,5 +1,10 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (tests): Add filter.  Add rules to generate filter.
+	* elf/filter.c: New file.
+	* elf/filtmod1.c: New file.
+	* elf/filtmod2.c: New file.
+
 	* elf/rtld.c: Define _dl_bind_not variable.
 	(process_envvars): Recognize LD_BIND_NOT and set _dl_bind_not.
 	* elf/dl-support.c: Likewise.

@@ -85,7 +85,7 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1 order $(tests-vis-$(have-protected)) noload \
+	constload1 order $(tests-vis-$(have-protected)) noload filter \
 	$(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen))
 tests-vis-yes = vismain
@@ -96,7 +96,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
 		$(modules-nodelete-$(have-z-nodelete)) \
-		$(modules-nodlopen-$(have-z-nodlopen))
+		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -243,6 +243,7 @@ $(objpfx)dep1.so: $(objpfx)dep2.so $(objpfx)dep4.so
 $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
 $(objpfx)dep4.so: $(objpfx)dep3.so
 $(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
+$(objpfx)filtmod1.so: $(objpfx)filtmod2.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -313,3 +314,6 @@ $(objpfx)nodelete.out: $(objpfx)nodelmod1.so $(objpfx)nodelmod2.so \
 LDFLAGS-nodlopenmod.so = -Wl,--enable-new-dtags,-z,nodlopen
 $(objpfx)nodlopen: $(libdl)
 $(objpfx)nodlopen.out: $(objpfx)nodlopenmod.so
+
+LDFLAGS-filtmod1.so = -Wl,-F,$(objpfx)filtmod2.so
+$(objpfx)filter: $(objpfx)filtmod1.so
