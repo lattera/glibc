@@ -1,6 +1,8 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,15 +16,82 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
-#include <argz.h>
+#if defined _LIBC && (defined __ARGZ_COUNT || defined __ARGZ_STRINGIFY)
+# include <argz.h>
+#endif
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "loadinfo.h"
+
+/* Define function which are usually not available.  */
+
+#if !defined _LIBC && !defined __ARGZ_COUNT
+/* Returns the number of strings in ARGZ.  */
+static size_t __argz_count __P ((const char *argz, size_t len));
+
+static size_t
+__argz_count (argz, len)
+     const char *argz;
+     size_t len;
+{
+  size_t count = 0;
+  while (len > 0)
+    {
+      size_t part_len = strlen(argz);
+      argz += part_len + 1;
+      len -= part_len + 1;
+      count++;
+    }
+  return count;
+}
+#endif	/* !_LIBC && !__ARGZ_COUNT */
+
+#if !defined _LIBC && !defined __ARGZ_STRINGIFY
+/* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
+   except the last into the character SEP.  */
+static void __argz_stringify __P ((char *argz, size_t len, int sep));
+
+static void
+__argz_stringify (argz, len, sep)
+     char *argz;
+     size_t len;
+     int sep;
+{
+  while (len > 0)
+    {
+      size_t part_len = strlen(argz);
+      argz += part_len;
+      len -= part_len + 1;
+      if (len > 0)
+	*argz++ = sep;
+    }
+}
+#endif	/* !_LIBC && !__ARGZ_COUNT */
+
+#if !defined _LIBC && !defined __ARGZ_NEXT
+static char *
+__argz_next (char *argz, size_t argz_len, const char *entry)
+{
+  if (entry)
+    {
+      if (entry < argz + argz_len)
+        entry = strchr (entry, '\0') + 1;
+
+      return entry >= argz + argz_len ? NULL : (char *) entry;
+    }
+  else
+    if (argz_len > 0)
+      return argz;
+    else
+      return 0;
+}
+#endif
+
 
 /* Return number of bits set in X.  */
 static int pop __P ((int x));
@@ -40,7 +109,7 @@ pop (x)
   return x;
 }
 
-
+
 struct loaded_l10nfile *
 _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 		    territory, codeset, normalized_codeset, modifier, special,

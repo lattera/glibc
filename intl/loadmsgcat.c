@@ -1,6 +1,8 @@
 /* loadmsgcat.c -- load needed message catalogs
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,8 +16,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -160,7 +162,7 @@ _nl_load_domain (domain_file)
     }
 
   domain_file->data
-    = (struct loaded_domain *) malloc (sizeof (struct loaded_domain *));
+    = (struct loaded_domain *) malloc (sizeof (struct loaded_domain));
   if (domain_file->data == NULL)
     return;
 

@@ -680,7 +680,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       /* If there was a call to resume above in SIGCONT processing
 	 and we've left a thread suspended, now's the time to
 	 set it going. */
-      if (act == handle && ss_suspended)
+      if (ss_suspended)
 	{
 	  err = __thread_resume (ss->thread);
 	  assert_perror (err);

@@ -1,13 +1,39 @@
+Mon Jun  3 21:03:54 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* malloc/mcheck.c (freehook, reallochook): Handle null pointer args.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): When setting ACT to
+	`ignore, resume the thread if SS_SUSPENDED, regardless of old action.
+
+Sun Jun  2 20:14:30 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/linereader.c (lr_open): Don't pass NULL to
+	xstrdup; fix memory leak.
+	(lr_close): Fix memory leak.
+
 Mon Jun  3 15:58:22 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 
-	* hurdsig.c (_hurd_internal_post_signal): When turning the action
+	* hurd/hurdsig.c (_hurd_internal_post_signal): When turning the action
  	for a HANDLE signal to IGNORE because the signal is blocked, clean
  	up any pending suspension left over from a call to resume.
+
+Mon Jun  3 01:29:53 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/link.h (struct link_map): Replace l_deps_loaded flag member with
+	`struct link_map **l_searchlist'.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Make SYMBOL_SCOPE arg an array
+	of two link_map ptrs.  Search the maps in the l_searchlist of each
+	of the two elts that is non-null.
+	* elf/dl-reloc.c (_dl_relocate_object): Pass proper SCOPE array.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/rtld.c (dl_main): Likewise.
 
 Mon Jun  3 00:30:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Take new arg RELOC_ADDR and
 	don't allow a defn resolving to that address.
+
 	* elf/link.h: Update prototype and comment.
 	* elf/dl-runtime.c (fixup): Define local `resolve' function and pass
 	it to elf_machine_relplt.

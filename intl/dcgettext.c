@@ -1,6 +1,8 @@
 /* dcgettext.c -- implementation of the dcgettext(3) function
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,8 +16,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -160,6 +162,42 @@ static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname));
 
 
+/* For those loosing systems which don't have `alloca' we have to add
+   some additional code emulating it.  */
+#ifdef HAVE_ALLOCA
+/* Nothing has to be done.  */
+# define ADD_BLOCK(list, address) /* nothing */
+# define FREE_BLOCKS(list) /* nothing */
+#else
+struct block_list
+{
+  void *address;
+  struct block_list *next;
+};
+# define ADD_BLOCK(list, addr)						      \
+  do {									      \
+    struct block_list *newp = (struct block_list *) malloc (sizeof (*newp));  \
+    /* If we cannot get a free block we cannot add the new element to	      \
+       the list.  */							      \
+    if (newp != NULL) {							      \
+      newp->address = (addr);						      \
+      newp->next = (list);						      \
+      (list) = newp;							      \
+    }									      \
+  } while (0)
+# define FREE_BLOCKS(list)						      \
+  do {									      \
+    while (list != NULL) {						      \
+      struct block_list *old = list;					      \
+      list = list->next;						      \
+      free (old);							      \
+    }									      \
+  } while (0)
+# undef alloca
+# define alloca(size) (malloc (size))
+#endif	/* have alloca */
+
+
 /* Names for the libintl functions are a problem.  They must not clash
    with existing names and they should follow ANSI C.  But this source
    code is also used in GNU C Library where the names have a __
@@ -178,6 +216,9 @@ DCGETTEXT (domainname, msgid, category)
      const char *msgid;
      int category;
 {
+#ifndef HAVE_ALLOCA
+  struct block_list *alloca_list = NULL;
+#endif
   struct loaded_l10nfile *domain;
   struct binding *binding;
   const char *categoryname;
@@ -227,12 +268,14 @@ DCGETTEXT (domainname, msgid, category)
       path_max += 2;		/* The getcwd docs say to do this.  */
 
       dirname = (char *) alloca (path_max + dirname_len);
+      ADD_BLOCK (block_list, dirname);
 
       errno = 0;
       while ((ret = getcwd (dirname, path_max)) == NULL && errno == ERANGE)
 	{
 	  path_max += PATH_INCR;
 	  dirname = (char *) alloca (path_max + dirname_len);
+	  ADD_BLOCK (block_list, dirname);
 	  errno = 0;
 	}
 
@@ -240,6 +283,7 @@ DCGETTEXT (domainname, msgid, category)
 	{
 	  /* We cannot get the current working directory.  Don't signal an
 	     error but simply return the default string.  */
+	  FREE_BLOCKS (block_list);
 	  errno = saved_errno;
 	  return (char *) msgid;
 	}
@@ -262,6 +306,7 @@ DCGETTEXT (domainname, msgid, category)
 
   xdomainname = (char *) alloca (strlen (categoryname)
 				 + strlen (domainname) + 5);
+  ADD_BLOCK (block_list, xdomainname);
   /* We don't want libintl.a to depend on any other library.  So we
      avoid the non-standard function stpcpy.  In GNU C Library this
      function is available, though.  Also allow the symbol HAVE_STPCPY
@@ -279,6 +324,7 @@ DCGETTEXT (domainname, msgid, category)
 
   /* Creating working area.  */
   single_locale = (char *) alloca (strlen (categoryvalue) + 1);
+  ADD_BLOCK (block_list, single_locale);
 
 
   /* Search for the given string.  This is a loop because we perhaps
@@ -310,6 +356,7 @@ DCGETTEXT (domainname, msgid, category)
       if (strcmp (single_locale, "C") == 0
 	  || strcmp (single_locale, "POSIX") == 0)
 	{
+	  FREE_BLOCKS (block_list);
 	  errno = saved_errno;
 	  return (char *) msgid;
 	}
@@ -338,6 +385,7 @@ DCGETTEXT (domainname, msgid, category)
 
 	  if (retval != NULL)
 	    {
+	      FREE_BLOCKS (block_list);
 	      errno = saved_errno;
 	      return retval;
 	    }
