@@ -1,3 +1,204 @@
+Sat Sep  7 05:15:45 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+ 	* libio/iofdopen: Initialize _lock field only if _IO_MTSAFE_IO.
+	* libio/iofopen: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/memstream.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vdprintf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+
+Sat Sep  7 03:55:47 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (soversions.mk): Also use shlib-versions files
+	in add-on directories.
+	* config.make.in (config-defines): Remove.  Not used anymore.
+	(defines): New variable.  Initiliazed by @DEFINES@.
+	* configure.in: Add AC_SUBST(DEFINES).
+
+	* libio/Makefile (routines): When compiling reentrant libc add
+ 	clearerr_u, feof_u, ferror_u, fputc_u, getc_u, getchar_u,
+ 	iofflush_u, putc_u, putchar_u, ioflockfile.
+	(CPPFLAGS): Add -D_IO_MTSAFE_IO for reentrant libc.
+
+	* sysdeps/stub/libc-lock.h: Add stubs for __libc_cleanup_region_start
+	and __libc_cleanup_region_end.
+
+	* sysdeps/unix/i386/sysdep.S [_LIBC_REENTRANT]: Set errno
+ 	using __errno_location function.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S [_LIBC_REENTRANT]: Set errno
+	using __errno_location function.
+	(__errno_location): New function.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h [PIC]: Add second
+ 	syscall_error handler for reentrant libc.
+
+	* sysdeps/unix/opendir.c: Remove unneeded `;'.
+
+	* libio.h [_IO_MTSAFE_IO]: Include <pthread.h>.
+	[!_IO_MTSAFE_IO]: Define _IO_flockfile and _IO_funlockfile
+	as empty macros.
+	* libioP.h: Include <libc-lock.h>.
+	* libio/stdio.h: Add prototypes for *_locked and *_unlocked
+	functions.
+
+	* libio/clearerr.c: Use _IO_ protected versions of flockfile
+	and funlockfile to be namespace clean.
+
+	* libio/genops.c: Use __libc_lock_* macros for handling lock.
+
+	* libio/iofdopen: Add initialization of _lock in _IO_FILE.
+	* libio/iofopen: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/memstream.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vdprintf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+
+	* libio/fgetc.c: Use __libc_cleanup_region_* macros instead
+	of flockfile etc.
+	* libio/fputc.c: Likewise.
+	* libio/freopen.c: Likewise.
+	* libio/fseek.c: Likewise.
+	* libio/getc.c: Likewise.
+	* libio/getchar.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofflush.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofputs.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/putc.c: Likewise.
+	* libio/putchar.c: Likewise.
+	* libio/rewind.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+
+	* libio/clearerr_u.c: Correct alias name.
+	* libio/ferror_u.c: Likewise.
+	* libio/fileno.c: Likewise.
+	* libio/fputc_u.c: Likewise.
+	* libio/getc.c: Likewise.
+	* libio/getc_u.c: Likewise.
+	* libio/getchar.c: Likewise.
+	* libio/getchar_u.c: Likewise.
+	* libio/putc.c: Likewise.
+	* libio/putchar.c: Likewise.
+
+	* libio/feof_u.c: Undefine macro with name of function before
+ 	definition of function itself.
+
+	* libio/ioflockfile.c: New file.  Implementation of flockfile and
+ 	funlockfile.
+
+	* libio/putchar_u.c: Fix typo.  Use stdout instead of fp.
+
+	* malloc/malloc.h: Don't include <libc-lock.h> and don't declare
+ 	_malloc_loc.
+
+	* malloc/free.c: Include <libc-lock.h>.
+	* malloc/realloc.c: Likewise.
+	* malloc/malloc-find.c: Likewise.
+	* malloc/malloc-size.c: Likewise.
+	* malloc/malloc-walk.c: Likewise.
+	* malloc/memalign.c: Likewise.
+	* malloc/malloc.c: Likewise.
+
+	* sysdeps/i386/dl-machine.h: Correct clearing of _dl_starting_up.
+
+Fri Sep  6 19:38:49 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/libc-lock.h: Define __libc_lock_critical_start
+	and __libc_lock_critical_end as empty macros.
+
+	* malloc/malloc.h: Don't include <libc-lock.h> and don't declare
+	__libc_malloc_lock.
+	* malloc/free.c: Include <libc-lock.h>.
+	* malloc/malloc-find.c: Likewise.
+	* malloc/malloc-size.c: Likewise.
+	* malloc/malloc-walk.c: Likewise.
+	* malloc/malloc.c: Likewise.
+	* malloc/memalign.c: Likewise.
+	* malloc/realloc.c: Likewise.
+
+	* Makefile: Undo change from Mon Sep  2 22:15:14 1996.  No more
+	extra_solibs pass.
+	* Rules: Likewise.
+	* extra-lib.mk: Likewise.
+	* manual/Makefile: Likewise.
+
+	* db/Makefile (makedb): Choose dependecies based on build-shared.
+	Patch by Andres Schwab.
+
+	* sysdeps/posix/sysconf.c: Don't use PTHREAD_DESTRUCTOR_ITERATIONS
+ 	but _POSIX_THREAD_DESTRUCTOR_ITERATIONS.
+
+	* sysdeps/unix/sysv/linux/errnos.h: New file.
+	* sysdeps/unix/sysv/linux/schedbits.h: New file.
+	* sysdeps/unix/sysv/linux/waitflags.h: New file.
+
+	* sysdeps/unix/sysv/linux/gnu/types.h: Add definition of `key_t'.
+
+Fri Sep  6 08:26:31 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rpm/template: Fix typo in %build section.
+
+Fri Sep  6 03:31:07 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/errnos.h: Don't define errno macro when
+	building libc without thread support.
+	* resolv/netdb.h: Likewise for h_errno macro.
+
+Thu Sep  5 23:01:48 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc-symbols.h: Add new macro weak_const_function.  It's like
+	weak_function, but the function is additionally marked as const.
+	* features.h: Only include <sys/cdefs.h> if !__ASSEMBLER__.
+
+Thu Sep  5 22:55:49 1996  Richard Henderson  <rth@tamu.edu>
+
+	* inet/herrno.c (__h_errno_location): New function.
+	(h_errno): Make strong_alias __h_errno so that we can access
+	the variable even if `h_errno' is a macro.
+	* resolv/netdb.h: Define macro h_errno to access thread specific
+	version of h_errno variable.  Declare alias __h_errno for h_errno.
+	* resolv/res_query (h_errno): Remove definition.
+	* sysdeps/unix/sysv/linux/errnos.h [!__ASSEMBLER__ && __USE_REENTRANT]:
+ 	Add macro `errno' to get thread specific variable.
+	* sysdeps/unix/alpha/sysdep.S [_LIBC_REENTRANT]: Set errno using
+ 	__errno_location function.
+	(__errno_location): New function.
+
+Thu Sep  5 21:08:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/gnu/types.h: Remove definition of key_t.
+	* sysdeps/generic/gnu/types.h: Move it to here.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Add Linux specific
+	definition of key_t.
+
+	* sysdeps/unix/sysv/linux/waitflags.h: New file.  Linux specific
+	definitions.
+	* sysdeps/unix/sysv/linux/schedbits.h: New file.  Include
+	clone prototypes and associated flags.
+
+Thu Sep  5 08:58:47 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/elf/start.S: Make _start global again.
+
 Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/init-first.c (__libc_argc, __libc_argv):
@@ -7,7 +208,7 @@ Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	available, pass __libc_argv in call to __proc_set_arg_locations.
 
 	* gmon/gmon.c (write_hist): Call __profile_frequency instead of
-	hertz. 
+	hertz.
 	(hertz): Delete function.
 	* gmon/Makefile (routines): Add `prof-freq'.
 	* sysdeps/generic/prof-freq.c: New file.
@@ -22,10 +223,10 @@ Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* Rules (generated): Restore reference to $(generated).
 
 	* mach/Machrules (mig.uh, mig.__h): Don't include $(user-MIGFLAGS)
-	here. 
+	here.
 
  	* malloc/free.c (free): __lib_malloc_lock -> __libc_malloc_lock.
-	
+
 	* malloc/free.c: Provide extern decl of __libc_malloc_lock.
 	* malloc/realloc.c: Likewise.
 	* malloc/malloc-find.c: Likewise.
@@ -161,6 +362,11 @@ Sat Aug 31 03:07:39 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/l10nflist.c (_nl_normalize_codeset): We convert to lower
  	case, so don't prepend uppercase `ISO' for only numeric arg.
+
+Wed Sep  4 16:16:13 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/send.c (__send): De-ANSI-fy.
+	* sysdeps/mach/hurd/sendto.c (sendto): Likewise.
 
 Tue Sep  3 11:16:07 1996  Thomas Bushnell/ n/BSG  <thomas@gnu.ai.mit.edu>
 

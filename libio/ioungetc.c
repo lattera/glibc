@@ -33,9 +33,10 @@ _IO_ungetc (c, fp)
   CHECK_FILE (fp, EOF);
   if (c == EOF)
     return EOF;
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_sputbackc (fp, (unsigned char) c);
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 

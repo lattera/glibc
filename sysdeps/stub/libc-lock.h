@@ -48,5 +48,11 @@ Cambridge, MA 02139, USA.  */
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME)
 
+/* Start critical region with cleanup.  */
+#define __libc_cleanup_region_start(FCT, ARG)
+
+/* End critical region with cleanup.  */
+#define __libc_cleanup_region_end(DOIT)
+
 
 #endif	/* libc-lock.h */

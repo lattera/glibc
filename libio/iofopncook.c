@@ -128,7 +128,11 @@ fopencookie (cookie, mode, io_functions)
      _IO_cookie_io_functions_t io_functions;
 {
   int read_write;
-  struct _IO_cookie_file *cfile;
+  struct locked_FILE
+  {
+    struct _IO_cookie_file cfile;
+    _IO_lock_t lock;
+  } *new_f;
 
   switch (*mode++)
     {
@@ -147,21 +151,21 @@ fopencookie (cookie, mode, io_functions)
   if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))
     read_write &= _IO_IS_APPENDING;
 
-  cfile  = (struct _IO_cookie_file *) malloc (sizeof (struct _IO_cookie_file));
-  if (cfile == NULL)
+  new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
+  if (new_f == NULL)
     return NULL;
+  new_f->cfile.file._lock = &new_f->lock;
 
-  _IO_init (&cfile->file, 0);
-  _IO_JUMPS (&cfile->file) = &_IO_cookie_jumps;
-  cfile->cookie = cookie;
-  cfile->io_functions = io_functions;
+  _IO_init (&new_f->cfile.file, 0);
+  _IO_JUMPS (&new_f->cfile.file) = &_IO_cookie_jumps;
+  new_f->cfile.cookie = cookie;
+  new_f->cfile.io_functions = io_functions;
 
-  _IO_file_init(&cfile->file);
+  _IO_file_init(&new_f->cfile.file);
 
-  cfile->file._IO_file_flags =
-    _IO_mask_flags (&cfile->file, read_write,
+  new_f->cfile.file._IO_file_flags =
+    _IO_mask_flags (&new_f->cfile.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return &cfile->file;
+  return &new_f->cfile.file;
 }
-

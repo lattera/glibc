@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,26 +27,46 @@ Cambridge, MA 02139, USA.  */
 	.globl errno
 	.type errno,@object
 	.size errno,4
-errno:	.space 4
+errno:	.zero 4
 	.globl _errno
 	.type _errno,@object
 _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
 	.text
 
-/* The following code is not used at all in the shared library.
-   The PIC system call stubs set errno themselves.  */
+/* The following code is only used in the shared library when we
+   compile the reentrant version.  Otherwise each system call defines
+   each own version.  */
 
-#ifndef	PIC
+#ifndef PIC
 
 /* The syscall stubs jump here when they detect an error.
    The code for Linux is almost identical to the canonical Unix/i386
    code, except that the error number in %eax is negated.  */
 
-.globl __syscall_error
+	.globl	__syscall_error
+	.type	__syscall_error,@function
 __syscall_error:
 	negl %eax
 
 #define __syscall_error __syscall_error_1
 #include <sysdeps/unix/i386/sysdep.S>
 
+#endif	/* !PIC */
+
+
+#ifdef	_LIBC_REENTRANT
+	.globl	__errno_location
+	.type	__errno_location,@function
+__errno_location:
+#ifdef PIC
+	call .L2
+.L2:	popl %ecx
+	addl $_GLOBAL_OFFSET_TABLE_+[.-.L2], %ecx
+	movl errno@GOT(%ecx), %eax
+#else
+	movl $errno, %eax
+#endif
+	ret
+.Lfe1:
+	.size	__errno_location, .Lfe1-__errno_location
 #endif

@@ -31,14 +31,15 @@ int
 getchar ()
 {
   int result;
+  __libc_cleanup_region_start (&_IO_funlockfile, stdin);
   _IO_flockfile (stdin);
   result = _IO_getc_unlocked (stdin);
-  _IO_funlockfile (stdin);
+  __libc_cleanup_region_end (1);
   return result;
 }
 
 #ifdef _IO_MTSAFE_IO
 # undef getchar_locked
 
-weak_alias (getchar_locked, getchar)
+weak_alias (getchar, getchar_locked)
 #endif

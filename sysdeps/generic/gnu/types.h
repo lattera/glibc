@@ -83,5 +83,8 @@ typedef unsigned long __fd_mask;
 #define	__FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
 #define	__FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
 
+#ifdef __USE_SVID
+typedef long int key_t;
+#endif
 
 #endif /* gnu/types.h */

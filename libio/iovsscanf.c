@@ -30,6 +30,8 @@ DEFUN(_IO_vsscanf, (string, format, args),
       const char *string AND const char *format AND _IO_va_list args)
 {
   _IO_strfile sf;
+  _IO_lock_t lock;
+  sf._f._lock = &lock;
   _IO_init((_IO_FILE*)&sf, 0);
   _IO_JUMPS((_IO_FILE*)&sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE*)&sf, (char*)string, 0, NULL);

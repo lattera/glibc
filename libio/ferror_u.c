@@ -24,6 +24,8 @@ the executable file might be covered by the GNU General Public License. */
 #include "libioP.h"
 #include "stdio.h"
 
+#undef ferror_unlocked
+
 int
 ferror_unlocked (fp)
      _IO_FILE* fp;

@@ -28,7 +28,7 @@ alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 ifeq (,$(filter $(lib),$(extra-libs-others)))
 lib-noranlib: $(alltypes-$(lib))
 ifeq (yes,$(build-shared))
-extra_solibs: $(objpfx)$(lib).so$($(lib).so-version)
+lib-noranlib: $(objpfx)$(lib).so$($(lib).so-version)
 endif
 else
 others: $(alltypes-$(lib))
@@ -37,7 +37,7 @@ endif
 # The linked shared library is never a dependent of lib-noranlib,
 # because linking it will depend on libc.so already being built.
 ifneq (,$(filter .so,$(object-suffixes-$(lib))))
-extra_solibs: $(objpfx)$(lib).so
+others: $(objpfx)$(lib).so
 endif
 
 

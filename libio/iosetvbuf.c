@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -37,6 +37,7 @@ _IO_setvbuf (fp, buf, mode, size)
 {
   int result;
   CHECK_FILE (fp, EOF);
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   switch (mode)
     {
@@ -88,7 +89,7 @@ _IO_setvbuf (fp, buf, mode, size)
     }
   result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
 unlock_return:
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 

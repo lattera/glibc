@@ -45,21 +45,44 @@ Cambridge, MA 02139, USA.  */
     testl %eax, %eax;							      \
     jl syscall_error;
 
-#ifndef	PIC
+#ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #else
 /* Store (- %eax) into errno through the GOT.  */
+#ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
+syscall_error:								      \
+  pushl %ebx;								      \
+  call 0f;								      \
+0:popl %ebx;								      \
+  xorl %edx, %edx;							      \
+  addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx;				      \
+  subl %eax, %edx;							      \
+  movl errno@GOT(%ebx), %ecx;						      \
+  movl %edx, (%ecx);							      \
+  pushl %edx;								      \
+  call __errno_location@PLT;						      \
+  popl %ecx;								      \
+  popl %ebx;								      \
+  movl %ecx, (%eax);							      \
+  movl $-1, %eax;							      \
+  ret;
+#else
+#define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
 syscall_error:								      \
   call 0f;								      \
 0:popl %ecx;								      \
-  negl %eax;								      \
+  xorl %edx, %edx;							      \
   addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ecx;				      \
+  subl %eax, %edx;							      \
   movl errno@GOT(%ecx), %ecx;						      \
-  movl %eax, (%ecx);							      \
+  movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
   ret;
-#endif
+#endif	/* _LIBC_REENTRANT */
+#endif	/* PIC */
 
 /* Linux takes system call arguments in registers:
 

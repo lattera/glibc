@@ -26,14 +26,15 @@ putchar (c)
      int c;
 {
   int result;
+  __libc_cleanup_region_start (&_IO_funlockfile, _IO_stdout);
   _IO_flockfile (_IO_stdout);
   result = _IO_putc_unlocked (c, _IO_stdout);
-  _IO_funlockfile (_IO_stdout);
+  __libc_cleanup_region_end (1);
   return result;
 }
 
 #ifdef _IO_MTSAFE_IO
 # undef putchar_locked
 
-weak_alias (putchar_locked, putchar)
+weak_alias (putchar, putchar_locked)
 #endif

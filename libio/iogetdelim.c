@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1994 Free Software Foundation
+Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -54,6 +54,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       return -1;
     }
   CHECK_FILE (fp, -1);
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (_IO_ferror_unlocked (fp))
     {
@@ -115,7 +116,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
   result = cur_len;
 
 unlock_return:
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Definitions of flag bits for `waitpid' et al.
+Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -13,22 +14,17 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
-#include <features.h>
+#ifndef	_WAITFLAGS_H
 
-/* We need to have the error status variable of the resolver
-   accessible in the libc.  */
-int __h_errno;
-strong_alias (__h_errno, h_errno)
+#define	_WAITFLAGS_H	1
 
-/* When threaded, h_errno may be a per-process variable.  */
-#ifdef __USE_REENTRANT
-int
-weak_const_function
-__h_errno_location (void)
-{
-  return &__h_errno;
-}
-#endif
+/* Bits in the third argument to `waitpid'.  */
+#define	WNOHANG		1	/* Don't block waiting.  */
+#define	WUNTRACED	2	/* Report status of stopped children.  */
+
+#define __WCLONE	0x80000000 /* Wait for cloned process.  */
+
+#endif	/* waitflags.h */

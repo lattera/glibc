@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,17 +36,40 @@ syscall_error:
 	cmpl $EWOULDBLOCK_sys, %eax /* Is it the old EWOULDBLOCK?  */
 	jne notb		/* Branch if not.  */
 	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
-#endif
 notb:
+#endif
 #ifndef	PIC
 	movl %eax, C_SYMBOL_NAME(errno)
+#ifdef	_LIBC_REENTRANT
+	pushl %eax
+	call __errno_location
+	popl %ecx
+	movl %ecx, (%eax)
+#endif
 #else
 	/* The caller has pushed %ebx and then set it up to
 	   point to the GOT before calling us through the PLT.  */
 	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
+
+#ifndef	_LIBC_REENTRANT
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
 	movl %eax, (%ecx)
+#else
+	movl %eax, (%ecx)
+	pushl %eax
+	call C_SYMBOL_NAME(__errno_location@PLT)
+	popl %ecx
+	/* Pop %ebx value saved before jumping here.  */
+	popl %ebx
+	movl %ecx, (%eax)
+#endif
 #endif
 	movl $-1, %eax
 	ret
+
+#ifdef	__ELF__
+#undef	__syscall_error
+.Lfe2:
+	.size	__syscall_error, .Lfe2-__syscall_error
+#endif

@@ -36,4 +36,4 @@ __fputc_unlocked (c, fp)
   return _IO_putc_unlocked (c, fp);
 }
 
-weak_alias (fputc_unlocked, __fputc_unlocked)
+weak_alias (__fputc_unlocked, fputc_unlocked)

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993 Free Software Foundation
+Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -32,6 +32,7 @@ _IO_gets (buf)
   _IO_size_t count;
   int ch;
 
+  __libc_cleanup_region_start (&_IO_funlockfile, _IO_stdin);
   _IO_flockfile (_IO_stdin);
   ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)
@@ -45,7 +46,7 @@ _IO_gets (buf)
       if (_IO_stdin->_IO_file_flags & _IO_ERR_SEEN)
 	return NULL;
     }
-  _IO_funlockfile (_IO_stdin);
+  __libc_cleanup_region_end (1);
   buf[count] = 0;
   return buf;
 }

@@ -39,4 +39,8 @@ CFLAGS-hash_func.c := -Wno-unused
 # The db code outsmarts the compiler frequently.
 override CFLAGS += -Wno-uninitialized
 
-LDLIBS-makedb := db/libdb
+ifeq ($(build_shared),yes)
+$(objpfx)makedb: $(objpfx)libdb.so$(libdb.so-version)
+else
+$(objpfx)makedb: $(objpfx)libdb.a
+endif

@@ -160,7 +160,9 @@ Cambridge, MA 02139, USA.  */
 
 
 /* This is here only because every header file already includes this one.  */
+#ifndef __ASSEMBLER__
 #include <sys/cdefs.h>
+#endif
 
 /* This is here only because every header file already includes this one.  */
 #ifndef _LIBC

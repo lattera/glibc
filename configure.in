@@ -668,6 +668,8 @@ fi
 AC_SUBST(profile)
 AC_SUBST(omitfp)
 
+AC_SUBST(DEFINES)
+
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=
 else

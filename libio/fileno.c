@@ -42,6 +42,6 @@ fileno (fp)
    it only accesses once a single variable and this is already atomic
    (at least at thread level).  */
 
-weak_alias (fileno_unlocked, fileno)
-weak_alias (fileno_locked, fileno)
+weak_alias (fileno, fileno_unlocked)
+weak_alias (fileno, fileno_locked)
 #endif

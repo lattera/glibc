@@ -21,15 +21,16 @@ the resulting executable to be covered by the GNU General Public License.
 This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
-#include "stdio.h"
 #include "libioP.h"
+#include "stdio.h"
 
 void
 rewind (fp)
      _IO_FILE* fp;
 {
   CHECK_FILE (fp, );
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   _IO_rewind (fp);
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
 }

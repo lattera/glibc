@@ -27,4 +27,4 @@ __clearerr_unlocked (fp)
   _IO_clearerr (fp);
 }
 
-weak_alias (clearerr_unlocked, __clearerr_unlocked)
+weak_alias (__clearerr_unlocked, clearerr_unlocked)

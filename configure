@@ -1754,6 +1754,8 @@ fi
 
 
 
+
+
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=
 else
@@ -1912,6 +1914,7 @@ s%@elf@%$elf%g
 s%@shared@%$shared%g
 s%@profile@%$profile%g
 s%@omitfp@%$omitfp%g
+s%@DEFINES@%$DEFINES%g
 
 CEOF
 EOF

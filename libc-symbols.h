@@ -202,6 +202,7 @@ extern const char _libc_intl_domainname[];
 /* This comes between the return type and function name in
    a function definition to make that definition weak.  */
 #define weak_function __attribute__ ((weak))
+#define weak_const_function __attribute__ ((weak, __const__))
 
 #endif	/* HAVE_WEAK_SYMBOLS.  */
 #endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
@@ -213,6 +214,7 @@ extern const char _libc_intl_domainname[];
    directive for the function symbol, and a `.weak' directive in addition
    will produce an error from the assembler.  */
 #define weak_function /* empty */
+#define weak_const_function /* empty */
 #endif
 
 

@@ -43,6 +43,17 @@ __BEGIN_DECLS
 /* Error status for non-reentrant lookup functions.  */
 extern int h_errno;
 
+#if defined __USE_REENTRANT && (!defined _LIBC || defined _LIBC_REENTRANT)
+/* Function to access thread specific `h_errno' variable.  */
+extern int *__h_errno_location __P ((void)) __attribute__ ((__const__));
+
+/* An alias name for above variable.  */
+extern int __h_errno;
+
+/* Use a macro to access always the thread specific `h_errno' variable.  */
+#define h_errno (*__h_errno_location ())
+#endif
+
 /* Possible values left in `h_errno'.  */
 #define	NETDB_INTERNAL	-1	/* See errno.  */
 #define	NETDB_SUCCESS	0	/* No problem.  */

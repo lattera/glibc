@@ -39,7 +39,11 @@ _IO_fdopen (fd, mode)
 {
   int read_write;
   int posix_mode = 0;
-  struct _IO_FILE_plus *fp;
+  struct locked_FILE
+  {
+    struct _IO_FILE_plus fp;
+    _IO_lock_t lock;
+  } *new_f;
   int fd_flags;
 
   switch (*mode++)
@@ -97,28 +101,29 @@ _IO_fdopen (fd, mode)
     }
 #endif
 
-  fp = (struct _IO_FILE_plus *) malloc (sizeof (struct _IO_FILE_plus));
-  if (fp == NULL)
+  new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
+  if (new_f == NULL)
     return NULL;
-  _IO_init (&fp->file, 0);
-  _IO_JUMPS (&fp->file) = &_IO_file_jumps;
-  _IO_file_init (&fp->file);
+  new_f->fp.file._lock = &new_f->lock;
+  _IO_init (&new_f->fp.file, 0);
+  _IO_JUMPS (&new_f->fp.file) = &_IO_file_jumps;
+  _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
-  fp->vtable = NULL;
+  new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_attach (&fp->file, fd) == NULL)
+  if (_IO_file_attach (&new_f->fp.file, fd) == NULL)
     {
-      _IO_un_link (&fp->file);
-      free (fp);
+      _IO_un_link (&new_f->fp.file);
+      free (new_f);
       return NULL;
     }
-  fp->file._flags &= ~_IO_DELETE_DONT_CLOSE;
+  new_f->fp.file._flags &= ~_IO_DELETE_DONT_CLOSE;
 
-  fp->file._IO_file_flags =
-    _IO_mask_flags (&fp->file, read_write,
+  new_f->fp.file._IO_file_flags =
+    _IO_mask_flags (&new_f->fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return (_IO_FILE *) fp;
+  return (_IO_FILE *) &new_f->fp;
 }
 
 weak_alias (_IO_fdopen, fdopen)

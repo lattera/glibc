@@ -149,10 +149,18 @@ _IO_FILE *
 DEFUN(_IO_popen, (command, mode),
       const char *command AND const char *mode)
 {
-  _IO_proc_file *fpx = (_IO_proc_file*)malloc(sizeof(_IO_proc_file));
-  _IO_FILE *fp = (_IO_FILE*)fpx;
-  if (fp == NULL)
+  struct locked_FILE
+  {
+    struct _IO_proc_file fpx;
+    _IO_lock_t lock;
+  } *new_f;
+  _IO_FILE *fp;
+
+  new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
+  if (new_f == NULL)
     return NULL;
+  new_f->fpx.file.file._lock = &new_f->lock;
+  fp = (_IO_FILE*)&new_f->fpx;
   _IO_init(fp, 0);
   _IO_JUMPS(fp) = &_IO_proc_jumps;
   _IO_file_init(fp);
@@ -161,7 +169,7 @@ DEFUN(_IO_popen, (command, mode),
 #endif
   if (_IO_proc_open (fp, command, mode) != NULL)
     return fp;
-  free (fpx);
+  free (new_f);
   return NULL;
 }
 

@@ -150,6 +150,7 @@ typedef struct
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
+#include <pthread.h>
 typedef pthread_mutex_t _IO_lock_t;
 #else
 typedef void _IO_lock_t;
@@ -272,10 +273,10 @@ extern int _IO_putc_locked __P ((int, _IO_FILE *));
 extern void _IO_flockfile __P ((_IO_FILE *));
 extern void _IO_funlockfile __P ((_IO_FILE *));
 
-#if !defined(_REENTRANT) && !defined(_THREAD_SAFE)
+#ifndef _IO_MTSAFE_IO
 # define _IO_flockfile(FILE) /**/
 # define _IO_funlockfile(FILE) /**/
-#endif /* _REENTRANT || _THREAD_SAFE */
+#endif /* !_IO_MTSAFE_IO */
 
 
 extern int _IO_vfscanf __P((_IO_FILE*, const char*, _IO_va_list, int*));

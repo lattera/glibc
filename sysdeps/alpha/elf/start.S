@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 	.text
 	.align 3
+	.globl _start
 	.ent _start, 0
 _start:
 	.frame fp, 0, zero

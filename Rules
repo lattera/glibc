@@ -107,14 +107,13 @@ $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
-	subdir_clean subdir_mostlyclean extra_solibs
+	subdir_clean subdir_mostlyclean
 subdir_mostlyclean: mostlyclean
 subdir_clean: clean
 subdir_distclean: distclean
 subdir_realclean: realclean
 realclean: distclean
 distclean: clean
-extra_solibs:
 
 .PHONY: subdir_echo-headers
 subdir_echo-headers: echo-headers

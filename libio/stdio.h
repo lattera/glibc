@@ -206,39 +206,51 @@ extern const char *const _sys_errlist[];
 #endif
 
 /* Handle locking of streams.  */
-#if defined(_REENTRANT) || defined(_THREAD_SAFE)
+#ifdef __USE_REENTRANT
+extern void clearerr_locked __P ((FILE *));
 extern void clearerr_unlocked __P ((FILE *));
-extern void fileno_unlocked __P ((FILE *));
+extern int feof_locked __P ((FILE *));
+extern int feof_unlocked __P ((FILE *));
+extern int ferror_locked __P ((FILE*));
+extern int ferror_unlocked __P ((FILE*));
+extern int fileno_locked __P ((FILE *));
+extern int fileno_unlocked __P ((FILE *));
 extern void flockfile __P ((FILE *));
 extern void funlockfile __P ((FILE *));
 extern int fclose_unlocked __P ((FILE *));
+extern int fflush_locked __P ((FILE *));
 extern int fflush_unlocked __P ((FILE *));
 extern size_t fread_unlocked __P ((void *, size_t, size_t, FILE *));
 extern size_t fwrite_unlocked __P ((const void *, size_t, size_t, FILE *));
 
+extern int fputc_locked __P ((int, FILE*));
+extern int fputc_unlocked __P ((int, FILE*));
+extern int getc_locked __P ((FILE *));
+extern int getc_unlocked __P ((FILE *));
+extern int getchar_locked __P ((void));
+extern int getchar_unlocked __P ((void));
+extern int putc_locked __P ((int, FILE *));
+extern int putc_unlocked __P ((int, FILE *));
+extern int putchar_locked __P ((int));
+extern int putchar_unlocked __P ((int));
+
 # define getc_unlocked(fp) _IO_getc_unlocked (fp)
-# define getc_locked(fp) _IO_fgetc (fp)
+# define getc_locked(fp) fgetc (fp)
 # define getchar_unlocked() getc_unlocked (stdin)
 # define getchar_locked() getc_locked (stdin)
 # define getc(fp) getc_locked (fp)
 
-# define putc_unlocked(c, fp) _IO_putc_unlocked (c, fp)
-# define putc_locked(c, fp) _IO_putc_locked (c, fp)
+# define putc_unlocked(c, fp) putc_unlocked (c, fp)
+# define putc_locked(c, fp) putc_locked (c, fp)
 # define putchar_unlocked(c) putc_unlocked (c, stdout)
 # define putchar_locked(c) putc_locked (c, stdout)
 # define putc(c, fp) putc_locked (c, fp)
-
-# define feof_unlocked(fp) _IO_feof_unlocked (fp)
-# define ferror_unlocked(fp) _IO_ferror_unlocked (fp)
 
 #else
 # define getc(fp) _IO_getc_unlocked (fp)
 # define putc(c, fp) _IO_putc_unlocked (c, fp)
 
-#endif /* _REENTRANT || _THREAD_SAFE */
-
-#define flockfile(FILE) _IO_flockfile (FILE)
-#define funlockfile(FILE) _IO_funlockfile (FILE)
+#endif /* __USE_REENTRANT */
 
 #define putchar(c) putc (c, stdout)
 #define getchar() getc (stdin)

@@ -133,7 +133,7 @@ _dl_start_user:\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	movl _dl_skip_args@GOT(%ebx), %eax\n\
-	movl (%eax),%eax\n\
+	movl (%eax), %eax\n\
 	# Pop the original argument count.\n\
 	popl %ecx\n\
 	# Subtract _dl_skip_args from it.\n\
@@ -151,7 +151,7 @@ _dl_start_user:\n\
 	call _dl_init_next@PLT\n\
 	addl $4, %esp # Pop argument.\n\
 	# Check for zero return, when out of initializers.\n\
-	testl %eax,%eax\n\
+	testl %eax, %eax\n\
 	jz 1f\n\
 	# Call the shared object initializer function.\n\
 	# NOTE: We depend only on the registers (%ebx, %esi and %edi)\n\
@@ -164,7 +164,8 @@ _dl_start_user:\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	jmp 0b\n\
 1:	# Clear the startup flag.\n\
-	movl $0, _dl_starting_up@GOT(%ebx)\n\
+	movl _dl_starting_up@GOT(%ebx), %eax\n\
+	movl $0, (%eax)\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\

@@ -35,6 +35,7 @@ _IO_fclose (fp)
 
   CHECK_FILE(fp, EOF);
 
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
     status = _IO_file_close_it (fp);
@@ -46,7 +47,7 @@ _IO_fclose (fp)
       fp->_IO_file_flags = 0;
       free(fp);
     }
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return status;
 }
 

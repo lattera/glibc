@@ -35,4 +35,4 @@ __getc_unlocked (fp)
   return _IO_getc_unlocked (fp);
 }
 
-weak_alias (getc_unlocked, __getc_unlocked)
+weak_alias (__getc_unlocked, getc_unlocked)

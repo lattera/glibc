@@ -32,6 +32,7 @@ _IO_fsetpos (fp, posp)
 {
   int result;
   CHECK_FILE (fp, EOF);
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (_IO_seekpos (fp, *posp, _IOS_INPUT|_IOS_OUTPUT) == _IO_pos_BAD)
     {
@@ -44,7 +45,7 @@ _IO_fsetpos (fp, posp)
     }
   else
     result = 0;
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 

@@ -11,7 +11,7 @@ Source: glibc-@VERSION@.tar.gz
 
 %build
 configure --prefix=@prefix@
-if test x@prefix@ = /usr; then
+if test x@prefix@ = x/usr; then
   cat >configparms <<EOF
 slibdir=/lib
 sysconfdir=/etc

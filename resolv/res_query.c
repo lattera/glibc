@@ -87,7 +87,7 @@ static char rcsid[] = "$Id$";
 #endif
 
 char *__hostalias __P((const char *));
-int h_errno;
+
 
 /*
  * Formulate a normal query, send, and await answer.

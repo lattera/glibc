@@ -32,20 +32,25 @@ _IO_fopen (filename, mode)
      const char *filename;
      const char *mode;
 {
-  struct _IO_FILE_plus *fp =
-    (struct _IO_FILE_plus *) malloc (sizeof (struct _IO_FILE_plus));
-  if (fp == NULL)
+  struct locked_FILE
+  {
+    struct _IO_FILE_plus fp;
+    _IO_lock_t lock;
+  } *new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
+
+  if (new_f == NULL)
     return NULL;
-  _IO_init (&fp->file, 0);
-  _IO_JUMPS (&fp->file) = &_IO_file_jumps;
-  _IO_file_init (&fp->file);
+  new_f->fp.file._lock = &new_f->lock;
+  _IO_init (&new_f->fp.file, 0);
+  _IO_JUMPS (&new_f->fp.file) = &_IO_file_jumps;
+  _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
-  fp->vtable = NULL;
+  new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen (&fp->file, filename, mode) != NULL)
-        return (_IO_FILE *) fp;
-  _IO_un_link (&fp->file);
-  free (fp);
+  if (_IO_file_fopen (&new_f->fp.file, filename, mode) != NULL)
+        return (_IO_FILE *) &new_f->fp;
+  _IO_un_link (&new_f->fp.file);
+  free (new_f);
   return NULL;
 }
 

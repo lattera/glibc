@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+Copyright (C) 1996 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -23,14 +23,21 @@ This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
 #include "libioP.h"
-#include "stdio.h"
+#include <libc-lock.h>
 
-#undef getchar_unlocked
-
-int
-__getchar_unlocked ()
+void
+_IO_flockfile (s)
+     _IO_FILE *s;
 {
-  return _IO_getc_unlocked (stdin);
+  __libc_lock_lock (s->_lock);
 }
+weak_alias (_IO_flockfile, flockfile)
 
-weak_alias (__getchar_unlocked, getchar_unlocked)
+
+void
+_IO_funlockfile (s)
+     _IO_FILE *s;
+{
+  __libc_lock_unlock (s->_lock);
+}
+weak_alias (_IO_funlockfile, funlockfile)

@@ -26,7 +26,7 @@ endif
 
 # This is the default target; it makes everything except the tests.
 .PHONY: all
-all: lib extra_solibs others
+all: lib others
 
 define autoconf-it
 @-rm -f $@.new
@@ -73,9 +73,9 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 
 # These are the targets that are made by making them in each subdirectory.
-+subdir_targets	:= subdir_lib extra_solibs objects objs others		\
-		   subdir_mostlyclean subdir_clean subdir_distclean	\
-		   subdir_realclean tests subdir_lint.out		\
++subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
+		   subdir_clean subdir_distclean subdir_realclean	\
+		   tests subdir_lint.out				\
 		   subdir_distinfo					\
 		   subdir_echo-headers subdir_echo-distinfo		\
 		   subdir_install					\

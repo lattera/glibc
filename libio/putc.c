@@ -28,14 +28,15 @@ putc (c, fp)
 {
   int result;
   CHECK_FILE (fp, EOF);
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_putc_unlocked (c, fp);
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 
 #ifdef _IO_MTSAFE_IO
 # undef putc_locked
 
-weak_alias (putc_locked, putc)
+weak_alias (putc, putc_locked)
 #endif

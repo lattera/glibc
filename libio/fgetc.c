@@ -31,8 +31,9 @@ fgetc (fp)
 {
   int result;
   CHECK_FILE (fp, EOF);
-  flockfile (fp);
+  __libc_cleanup_region_start (_IO_funlockfile, fp);
+  _IO_flockfile (fp);
   result = _IO_getc_unlocked (fp);
-  funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }

@@ -79,6 +79,10 @@ Cambridge, MA 02139, USA.  */
          return EOF;							      \
        }								      \
     } while (0)
+# define LOCK_STREAM(S)							      \
+  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, (S));    \
+  _IO_flockfile (S)
+# define UNLOCK_STREAM __libc_cleanup_region_end (1)
 #else
 # define ungetc(c, s)	(--read_in, ungetc (c, s))
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
@@ -105,8 +109,18 @@ Cambridge, MA 02139, USA.  */
 	  return EOF;							      \
 	}								      \
     } while (0)
+#if 1
+      /* XXX For now !!! */
 # define flockfile(S) /* nothing */
 # define funlockfile(S) /* nothing */
+# define LOCK_STREAM(S)
+# define UNLOCK_STREAM
+#else
+# define LOCK_STREAM(S)							      \
+  __libc_cleanup_region_start (&__funlockfile, (S));			      \
+  __flockfile (S)
+# define UNLOCK_STREAM __libc_cleanup_region_start (1)
+#endif
 #endif
 
 
@@ -194,7 +208,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 
   /* Lock the stream.  */
-  flockfile (s);
+  LOCK_STREAM (s);
 
   /* Run through the format string.  */
   while (*f != '\0')
@@ -440,6 +454,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  else
 	    while (--width > 0 && inchar () != EOF);
+
+	  if (width > 0)
+	    /* I.e., EOF was read.  */
+	    --read_in;
 
 	  if (!(flags & SUPPRESS))
 	    ++done;
@@ -842,7 +860,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     }
 
   /* Unlock stream.  */
-  funlockfile (s);
+  UNLOCK_STREAM;
 
   return done;
 }

@@ -101,6 +101,9 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
+# define flockfile(S) _IO_flockfile (S)
+/* This macro must be without parameter!  Don't change it.  */
+# define funlockfile _IO_funlockfile
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -398,7 +401,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 
 #define process_arg(fspec)						      \
-      /* Start real work.  We know about all flag and modifiers and	      \
+      /* Start real work.  We know about all flags and modifiers and	      \
 	 now process the wanted format specifier.  */			      \
     LABEL (form_percent):						      \
       /* Write a literal "%".  */					      \
@@ -846,6 +849,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   f = lead_str_end = find_spec (format, &mbstate);
 
   /* Lock stream.  */
+  __libc_cleanup_region_start ((void (*) (void *)) &funlockfile, s);
   flockfile (s);
 
   /* Write the literal text before the first format.  */
@@ -854,10 +858,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* If we only have to print a simple string, return now.  */
   if (*f == L_('\0'))
-    {
-      funlockfile (s);
-      return done;
-    }
+    goto all_done;
 
   /* Process whole format string.  */
   do
@@ -1025,8 +1026,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (spec == L_('\0'))
 	    {
 	      /* The format string ended before the specifier is complete.  */
-	      funlockfile (s);
-	      return -1;
+	      done = -1;
+	      goto all_done;
 	    }
 
 	  /* If we are in the fast loop force entering the complicated
@@ -1042,11 +1043,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     }
   while (*f != L_('\0'));
 
-  /* Unlock stream.  */
-  funlockfile (s);
-
-  /* We processed the whole format without any positional parameters.  */
-  return done;
+  /* Unlock stream and return.  */
+  goto all_done;
 
   /* Here starts the more complex loop to handle positional parameters.  */
 do_positional:
@@ -1289,8 +1287,8 @@ do_positional:
 		 of chars.  */
 	      if (function_done < 0)
 		{
-		  funlockfile (s);
-		  return -1;
+		  done = -1;
+		  goto all_done;
 		}
 
 	      done += function_done;
@@ -1305,8 +1303,9 @@ do_positional:
       }
   }
 
+all_done:
   /* Unlock the stream.  */
-  funlockfile (s);
+  __libc_cleanup_region_end (1);
 
   return done;
 }

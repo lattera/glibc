@@ -16,8 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include "strfile.h"
 #include "libioP.h"
+#include "strfile.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,26 +64,30 @@ open_memstream (bufloc, sizeloc)
      char **bufloc;
      _IO_size_t *sizeloc;
 {
-  struct _IO_FILE_memstream *fp;
+  struct locked_FILE
+  {
+    struct _IO_FILE_memstream fp;
+    _IO_lock_t lock;
+  } *new_f;
   char *buf;
 
-  fp = (struct _IO_FILE_memstream *)
-    malloc (sizeof (struct _IO_FILE_memstream));
-  if (fp == NULL)
+  new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
+  if (new_f == NULL)
     return NULL;
+  new_f->fp._sf._f._lock = &new_f->lock;
 
   buf = ALLOC_BUF (_IO_BUFSIZ);
-  _IO_init (&fp->_sf._f, 0);
-  _IO_JUMPS (&fp->_sf._f) = &_IO_mem_jumps;
-  _IO_str_init_static (&fp->_sf._f, buf, _IO_BUFSIZ, buf);
-  fp->_sf._f._flags &= ~_IO_USER_BUF;
-  fp->_sf._s._allocate_buffer = (_IO_alloc_type) malloc;
-  fp->_sf._s._free_buffer = (_IO_free_type) free;
+  _IO_init (&new_f->fp._sf._f, 0);
+  _IO_JUMPS (&new_f->fp._sf._f) = &_IO_mem_jumps;
+  _IO_str_init_static (&new_f->fp._sf._f, buf, _IO_BUFSIZ, buf);
+  new_f->fp._sf._f._flags &= ~_IO_USER_BUF;
+  new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
+  new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
 
-  fp->bufloc = bufloc;
-  fp->sizeloc = sizeloc;
+  new_f->fp.bufloc = bufloc;
+  new_f->fp.sizeloc = sizeloc;
 
-  return &fp->_sf._f;
+  return &new_f->fp._sf._f;
 }
 
 

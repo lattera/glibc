@@ -523,17 +523,23 @@ ifeq (yes, $(build-shared))
 # version numbers to use when we install shared objects on this system.
 -include $(common-objpfx)soversions.mk
 $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
+			       $(wildcard $(patsubst %, $(..)%/shlib-versions,\
+							$(add-ons))) \
 			       $(common-objpfx)config.make
-	sed 's/#.*$$//' $< | while read conf versions; do \
-	  test -n "$$versions" || continue; \
-	  case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
-	    for v in $$versions; do \
-	      lib=`echo $$v | sed 's/=.*$$//'`; \
-	      if eval "test -z \"\$$vers_lib$$lib\""; then \
-		eval vers_lib$${lib}=yes; \
-		echo $$v | sed "s/^.*=/$$lib.so-version=./";  \
-	      fi; \
-	  done ;; esac; done > $@T; exit 0
+	(file="$(..)shlib-versions \
+	       $(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons)))"; \
+	 for f in $$file; do \
+	 sed 's/#.*$$//' $$f | while read conf versions; do \
+	   test -n "$$versions" || continue; \
+	   case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
+	     for v in $$versions; do \
+	       lib=`echo $$v | sed 's/=.*$$//'`; \
+	       if eval "test -z \"\$$vers_lib$$lib\""; then \
+		 eval vers_lib$${lib}=yes; \
+		 echo $$v | sed "s/^.*=/$$lib.so-version=./";  \
+	       fi; \
+	   done ;; esac; done; \
+	 done;) > $@T; exit 0
 	mv -f $@T $@
 
 # Get $(version) defined with the release version number.

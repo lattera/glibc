@@ -25,6 +25,6 @@ int
 putchar_unlocked (c)
      int c;
 {
-  CHECK_FILE (fp, EOF);
-  return _IO_putc_unlocked (c, fp);
+  CHECK_FILE (stdout, EOF);
+  return _IO_putc_unlocked (c, stdout);
 }

@@ -24,9 +24,9 @@ clearerr (fp)
      FILE *fp;
 {
   CHECK_FILE (fp, /*nothing*/);
-  flockfile (fp);
+  _IO_flockfile (fp);
   _IO_clearerr (fp);
-  funlockfile (fp);
+  _IO_funlockfile (fp);
 }
 
 #ifdef _IO_MTSAFE_IO

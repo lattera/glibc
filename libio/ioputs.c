@@ -30,13 +30,14 @@ _IO_puts (str)
 {
   int result;
   _IO_size_t len = strlen (str);
-  _IO_flockfile (fp);
+  __libc_cleanup_region_start (&_IO_funlockfile, _IO_stdout);
+  _IO_flockfile (_IO_stdout);
   if (_IO_sputn (_IO_stdout, str, len) == len
       && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)
     result = len + 1;
   else
     result = EOF;
-  _IO_funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
 weak_alias (_IO_puts, puts)

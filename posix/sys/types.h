@@ -114,12 +114,6 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 #endif
 
 
-#ifdef __USE_SVID
-/* Data type for key value used in System V IPC functions.  */
-typedef long int key_t;
-#endif
-
-
 #ifdef	__USE_BSD
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 #include <endian.h>

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -22,8 +22,8 @@ the resulting executable to be covered by the GNU General Public License.
 This exception does not however invalidate any other reasons why
 the executable file might be covered by the GNU General Public License. */
 
-#include "stdio.h"
 #include "libioP.h"
+#include "stdio.h"
 
 int
 fseek (fp, offset, whence)
@@ -33,8 +33,9 @@ fseek (fp, offset, whence)
 {
   int result;
   CHECK_FILE (fp, -1);
-  flockfile (fp);
+  __libc_cleanup_region_start (&_IO_funlockfile, fp);
+  _IO_flockfile (fp);
   result = _IO_fseek (fp, offset, whence);
-  funlockfile (fp);
+  __libc_cleanup_region_end (1);
   return result;
 }
