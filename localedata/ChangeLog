@@ -1,3 +1,10 @@
+2000-11-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/translit_neutral: Add more entries.  Mostly from Markus Kuhn.
+	* locales/translit_compat: Add a few ligatures.
+	* locales/translit_combining: Add a few plain ASCII alternatives.
+	* locales/translit_fraction: Likewise.  Surround with spaces.
+
 2000-10-29  Bruno Haible  <haible@clisp.cons.org>
 
 	* locales/translit_hangul: New file.

@@ -1,17 +1,19 @@
 escape_char /
 comment_char %
 
-% Transliterations of compatibility characters.
+% Transliterations of compatibility characters and ligatures.
 % Generated through
 %   $ grep '^[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;<compat>[^;]*;' UnicodeData.txt | \
 %     sed -e 's/^\([^;]*\);\([^;]*\);[^;]*;[^;]*;[^;]*;<compat> \([^;]*\);.*$/<U\1> "<U\3>"% \2/' | grep -v '0020 03[0-6][0-9A-F]' | sed -e 'h' -e 's/^\([^%]*\)% .*$/\1/' -e 's/\([0-9A-F]\) \([0-9A-F]\)/\1><U\2/g' -e 'x' -e 's/^[^%]*\(% .*\)$/\1/' -e 'G'
+% and
+%   $ grep '[^;]*;[^;]*LIGATURE[^;]*;' UnicodeData.txt
 
 LC_CTYPE
 
 translit_start
 
 % MICRO SIGN
-<U00B5> "<U03BC>"
+<U00B5> "<U03BC>";<U0075>
 % LATIN CAPITAL LIGATURE IJ
 <U0132> "<U0049><U004A>"
 % LATIN SMALL LIGATURE IJ
@@ -21,7 +23,11 @@ translit_start
 % LATIN SMALL LETTER L WITH MIDDLE DOT
 <U0140> "<U006C><U00B7>"
 % LATIN SMALL LETTER N PRECEDED BY APOSTROPHE
-<U0149> "<U02BC><U006E>"
+<U0149> "<U02BC><U006E>";"<U0027><U006E>"
+% LATIN CAPITAL LIGATURE OE
+<U0152> "<U004F><U0045>"
+% LATIN SMALL LIGATURE OE
+<U0153> "<U006F><U0065>"
 % LATIN SMALL LETTER LONG S
 <U017F> "<U0073>"
 % LATIN CAPITAL LETTER DZ WITH CARON
@@ -66,6 +72,12 @@ translit_start
 <U03F2> "<U03C2>"
 % ARMENIAN SMALL LIGATURE ECH YIWN
 <U0587> "<U0565><U0582>"
+% HEBREW LIGATURE YIDDISH DOUBLE VAV
+<U05F0> "<U05D5><U05D5>"
+% HEBREW LIGATURE YIDDISH VAV YOD
+<U05F1> "<U05D5><U05D9>"
+% HEBREW LIGATURE YIDDISH DOUBLE YOD
+<U05F2> "<U05D9><U05D9>"
 % ARABIC LETTER HIGH HAMZA ALEF
 <U0675> "<U0627><U0674>"
 % ARABIC LETTER HIGH HAMZA WAW
