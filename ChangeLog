@@ -1,3 +1,9 @@
+2005-02-14  Roland McGrath  <roland@redhat.com>
+
+	[BZ #720]
+	* sysdeps/unix/sysv/linux/sys/kd.h: Don't leave _LINUX_TYPES_H defined
+	if it wasn't originally.
+
 2005-02-14  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove the duplicated
