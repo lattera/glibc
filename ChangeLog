@@ -4,6 +4,11 @@
 
 2002-12-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): Handle relocation dependencies among
+	the to-be-deleted objects right away instead of later separately.
+	The latter fails because the scope data structures of the DSO
+	might already have gone.
+
 	* elf/Makefile: Add rules to build and run reldep8 test.
 	* elf/reldep8.c: New file.
 	* elf/reldep8mod1.c: New file.
