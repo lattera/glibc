@@ -1,3 +1,8 @@
+1999-08-23  Andreas Schwab  <schwab@suse.de>
+
+	* signals.c (pthread_sighandler): Add SIGCONTEXT_EXTRA_ARGS to
+	call to signal handler.
+
 1999-08-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_reset_main_thread): Undo last change.

@@ -38,6 +38,10 @@ routines	:=							      \
 
 include ../Makeconfig
 
+ifeq ($(stdio),libio)
+routines += vfwprintf vfwscanf
+endif
+
 install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
@@ -65,7 +69,6 @@ $(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
 	$(do-install)
 
 ifeq ($(stdio),libio)
-routines += vfwprintf vfwscanf
 ifneq (,$(filter %REENTRANT, $(defines)))
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif

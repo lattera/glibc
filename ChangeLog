@@ -1,3 +1,7 @@
+1999-08-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile: Mode addition to routines to the right place.
+
 1999-08-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h: New file.  Neccessary
@@ -13,10 +17,8 @@
 	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h:
-	Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h:
-	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h: Likewise.
 
 1999-08-23  Ulrich Drepper  <drepper@cygnus.com>
 
