@@ -1,0 +1,50 @@
+/* Copyright (C) 1992, 1994, 1997, 2003, 2004 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+/* Copy of sysdeps/generic/sigjmp.c modified for backward compatibility
+   with old non AltiVec/VMX setjmp.  */
+
+#include <bits/wordsize.h>
+#include <shlib-compat.h>
+#if !defined NOT_IN_libc && defined SHARED
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
+#  include <stddef.h>
+#  include <novmxsetjmp.h>
+#  include <signal.h>
+
+/* This function is called by the `sigsetjmp' macro
+   before doing a `__setjmp' on ENV[0].__jmpbuf.
+   Always return zero.  */
+
+int
+__novmx__sigjmp_save (__novmx__sigjmp_buf env, int savemask)
+{
+  env[0].__mask_was_saved = (savemask &&
+			     __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
+					    &env[0].__saved_mask) == 0);
+
+  return 0;
+}
+
+#  if __WORDSIZE == 64
+symbol_version (__novmx__sigjmp_save,__sigjmp_save,GLIBC_2.3);
+#  else
+symbol_version (__novmx__sigjmp_save,__sigjmp_save,GLIBC_2.0);
+#  endif /* __WORDSIZE == 64  */
+# endif /* SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */
+#endif /* !NOT_IN_libc && SHARED  */

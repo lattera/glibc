@@ -1,6 +1,6 @@
 /* Linuxthreads - a simple clone()-based implementation of Posix        */
 /* threads for Linux.                                                   */
-/* Copyright (C) 1998 Xavier Leroy (Xavier.Leroy@inria.fr)              */
+/* Copyright (C) 1998, 2004 Xavier Leroy (Xavier.Leroy@inria.fr)        */
 /*                                                                      */
 /* This program is free software; you can redistribute it and/or        */
 /* modify it under the terms of the GNU Library General Public License  */
@@ -18,14 +18,6 @@
 #include <setjmp.h>
 #include "pthread.h"
 #include "internals.h"
-
-/* These functions are not declared anywhere since they shouldn't be
-   used at another place but here.  */
-extern void __libc_siglongjmp (sigjmp_buf env, int val)
-     __attribute__ ((noreturn));
-extern void __libc_longjmp (sigjmp_buf env, int val)
-     __attribute__ ((noreturn));
-
 
 void __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
 {
@@ -58,15 +50,3 @@ void __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
       && _JMPBUF_UNWINDS(target, THREAD_GETMEM(self, p_in_sighandler)))
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
-
-#ifdef SHARED
-void siglongjmp (sigjmp_buf env, int val)
-{
-  __libc_siglongjmp (env, val);
-}
-
-void longjmp (jmp_buf env, int val)
-{
-  __libc_longjmp (env, val);
-}
-#endif

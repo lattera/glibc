@@ -1,3 +1,84 @@
+2004-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: New file.
+	* sysdeps/powerpc/powerpc64/__longjmp.S [NOT_IN_libc](__longjmp):
+	Non-versioned __longjmp for rtld-__longjmp.
+	[!NOT_IN_libc](__vmx__longjmp): Add VMX reg support and define as
+	default version of __longjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)]
+	(__novmx__longjmp): Original version of __longjmp.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S [NOT_IN_libc](_setjmp):
+	Non-versioned _setjmp for rtld-_setjmp.
+	[!NOT_IN_libc](__vmx_setjmp): Branch to __vmx__sigsetjmp and define
+	as default version of _setjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)]
+	(__novmx_setjmp): Original version of _setjmp.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S (__vmxsetjmp): Branch to
+	__vmx__sigsetjmp and define as default version of setjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)]
+	(__novmxsetjmp): Original version of setjmp.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: New file.
+	* sysdeps/powerpc/powerpc64/setjmp.S [NOT_IN_libc](__setjmp):
+	Non-versioned __sigsetjmp for rtld-setjmp.
+	[!NOT_IN_libc](__vmx__sigsetjmp): Add VMX reg support and define
+	as default version of __sigsetjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)]
+	(__novmx__sigsetjmp): Original version of __sigsetjmp.
+
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: New File
+	* sysdeps/powerpc/powerpc32/__longjmp.S [NOT_IN_libc](__longjmp):
+	Non-versioned __longjmp for rtld-__longjmp.
+	[!NOT_IN_libc](__vmx__longjmp): Add VMX reg support and define as
+	default version of __longjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmx__longjmp): Original version of __longjmp.
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S [NOT_IN_libc](_setjmp):
+	Non-versioned _setjmp for rtld-_setjmp.
+	[!NOT_IN_libc](__vmx_setjmp): Branch to __vmx__sigsetjmp and define
+	as default version of _setjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmx_setjmp): Original version of _setjmp.
+	* sysdeps/powerpc/powerpc32/bsd-setjmp.S (__vmxsetjmp): Branch to
+	__vmx__sigsetjmp and define as default version of setjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmxsetjmp): Original version of setjmp.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S [NOT_IN_libc](__longjmp):
+	Non-versioned __longjmp for rtld-__longjmp.
+	[!NOT_IN_libc](__vmx__longjmp): Add VMX reg support and define as
+	default version of __longjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmx__longjmp): Original version of __longjmp.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S [NOT_IN_libc](__setjmp):
+	Non-versioned __sigsetjmp for rtld-setjmp.
+	[!NOT_IN_libc](__vmx__sigsetjmp): Add VMX reg support and define
+	as default version of __sigsetjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmx__sigsetjmp): Original version of __sigsetjmp.
+	* sysdeps/powerpc/powerpc32/setjmp-common.S: New file.
+	* sysdeps/powerpc/powerpc32/setjmp.S [NOT_IN_libc](__setjmp):
+	Non-versioned __sigsetjmp for rtld-setjmp.
+	[!NOT_IN_libc](__vmx__sigsetjmp): Add VMX reg support and define
+	as default version of __sigsetjmp.
+	[SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)]
+	(__novmx__sigsetjmp): Original version of __sigsetjmp.
+
+	* sysdeps/powerpc/Dist: New File.
+	* sysdeps/powerpc/Makefile (sysdep_routines): Add novmx-longjmp.c
+	and novmx-sigjmp.c
+	* sysdeps/powerpc/Versions (libc): To GLIBC_2.3_4 add _longjmp,
+	__sigsetjmp, _setjmp, longjmp, and setjmp. To GLIBC_PRIVATE add
+	__novmx__libc_longjmp, __novmx__libc_siglongjmp, __vmx__libc_longjmp,
+	and __vmx__libc_siglongjmp.
+	* sysdeps/powerpc/bits/setjmp.h: Define JB_VRSAVE, JB_VRS, and adjust
+	JB_SIZE to add VMX regs to __jmp_buf.
+	* sysdeps/powerpc/longjmp.c: New file.
+	* sysdeps/powerpc/novmxsetjmp.h: New file.
+	* sysdeps/powerpc/novmx-longjmp.c: New file.
+	* sysdeps/powerpc/novmx-sigjmp.c: New file.
+	* sysdeps/powerpc/sigjmp.c: New file.
+
 2004-02-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c (__lrintf, lrintf):

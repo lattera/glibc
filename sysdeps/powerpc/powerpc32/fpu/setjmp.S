@@ -1,5 +1,5 @@
-/* setjmp for PowerPC.
-   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* non alitivec (old) version of setjmp for PowerPC.
+   Copyright (C)  1995-1997,1999,2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,56 +17,28 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
-#define _ASM
-#define _SETJMP_H
-#include <bits/setjmp.h>
-#include <bp-sym.h>
-#include <bp-asm.h>
+#include <libc-symbols.h>
+#include <rtld-global-offsets.h>
+#include <shlib-compat.h>
 
-ENTRY (BP_SYM (__sigsetjmp))
-	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+#if defined NOT_IN_libc
+/* Build a none versioned object for rtld-*.  */
+# include "setjmp-common.S"
 
-	stw  r1,(JB_GPR1*4)(3)
-	mflr r0
-	stw  r14,((JB_GPRS+0)*4)(3)
-	stfd fp14,((JB_FPRS+0*2)*4)(3)
-	stw  r0,(JB_LR*4)(3)
-	stw  r15,((JB_GPRS+1)*4)(3)
-	stfd fp15,((JB_FPRS+1*2)*4)(3)
-	mfcr r0
-	stw  r16,((JB_GPRS+2)*4)(3)
-	stfd fp16,((JB_FPRS+2*2)*4)(3)
-	stw  r0,(JB_CR*4)(3)
-	stw  r17,((JB_GPRS+3)*4)(3)
-	stfd fp17,((JB_FPRS+3*2)*4)(3)
-	stw  r18,((JB_GPRS+4)*4)(3)
-	stfd fp18,((JB_FPRS+4*2)*4)(3)
-	stw  r19,((JB_GPRS+5)*4)(3)
-	stfd fp19,((JB_FPRS+5*2)*4)(3)
-	stw  r20,((JB_GPRS+6)*4)(3)
-	stfd fp20,((JB_FPRS+6*2)*4)(3)
-	stw  r21,((JB_GPRS+7)*4)(3)
-	stfd fp21,((JB_FPRS+7*2)*4)(3)
-	stw  r22,((JB_GPRS+8)*4)(3)
-	stfd fp22,((JB_FPRS+8*2)*4)(3)
-	stw  r23,((JB_GPRS+9)*4)(3)
-	stfd fp23,((JB_FPRS+9*2)*4)(3)
-	stw  r24,((JB_GPRS+10)*4)(3)
-	stfd fp24,((JB_FPRS+10*2)*4)(3)
-	stw  r25,((JB_GPRS+11)*4)(3)
-	stfd fp25,((JB_FPRS+11*2)*4)(3)
-	stw  r26,((JB_GPRS+12)*4)(3)
-	stfd fp26,((JB_FPRS+12*2)*4)(3)
-	stw  r27,((JB_GPRS+13)*4)(3)
-	stfd fp27,((JB_FPRS+13*2)*4)(3)
-	stw  r28,((JB_GPRS+14)*4)(3)
-	stfd fp28,((JB_FPRS+14*2)*4)(3)
-	stw  r29,((JB_GPRS+15)*4)(3)
-	stfd fp29,((JB_FPRS+15*2)*4)(3)
-	stw  r30,((JB_GPRS+16)*4)(3)
-	stfd fp30,((JB_FPRS+16*2)*4)(3)
-	stw  r31,((JB_GPRS+17)*4)(3)
-	stfd fp31,((JB_FPRS+17*2)*4)(3)
-	b JUMPTARGET (BP_SYM (__sigjmp_save))
-END (BP_SYM (__sigsetjmp))
+#else /* !NOT_IN_libc */
+/* Build a versioned object for libc.  */
+default_symbol_version (__vmx__sigsetjmp,__sigsetjmp,GLIBC_2.3.4)
+# define __sigsetjmp __vmx__sigsetjmp
+# define __sigjmp_save __vmx__sigjmp_save
+# include "setjmp-common.S"
+
+# if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
+#  define __NO_VMX__
+#  undef __sigsetjmp
+#  undef __sigjmp_save
+symbol_version (__novmx__sigsetjmp,__sigsetjmp,GLIBC_2.0)
+#  define __sigsetjmp __novmx__sigsetjmp
+#  define __sigjmp_save __novmx__sigjmp_save
+#  include "setjmp-common.S"
+# endif
+#endif /* !NOT_IN_libc */

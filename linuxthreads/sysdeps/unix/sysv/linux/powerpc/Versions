@@ -1,0 +1,5 @@
+libpthread {
+  GLIBC_2.3.4 {
+    longjmp;  siglongjmp;
+  }
+}

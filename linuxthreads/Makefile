@@ -49,7 +49,8 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptw-lseek64 ptw-llseek ptw-msync ptw-nanosleep \
 		       ptw-open ptw-open64 ptw-pause ptw-pread ptw-pread64 \
 		       ptw-pwrite ptw-pwrite64 ptw-tcdrain ptw-wait \
-		       ptw-waitpid pt-system old_pthread_atfork pthread_atfork
+		       ptw-waitpid pt-system old_pthread_atfork pthread_atfork \
+		       ptcleanup
 # Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
 omit-deps = $(unix-syscalls:%=ptw-%)
 

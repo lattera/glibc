@@ -1,5 +1,5 @@
-/* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  PowerPC version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+/* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  PowerPC32/64 version.
+   Copyright (C) 1994,1997,1999,2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,40 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+#include <shlib-compat.h>
+#include <libc-symbols.h>
+#include <sysdep.h>
+#include <bp-sym.h>
 
-/* This code was moved into setjmp.S to solve a double stub call problem. 
-   @local would have worked but it is not supported in PowerPC64 asm.  */
+#if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
+
+/* We need 2 copies of identicatal code for the  setjmp's as gas complains
+  erronously about having multiple versions of setjmp this eliminates the
+  need for the strong alias of __setjmp to setjmp which
+  does not support versioning i.e. another gas unimplemented feature. */
+symbol_version (__novmx__setjmp,__setjmp,GLIBC_2.3)
+symbol_version (__novmxsetjmp,setjmp,GLIBC_2.3)
+
+ENTRY (BP_SYM (__novmxsetjmp))
+	li r4,1			/* Set second argument to 1.  */
+	b JUMPTARGET (BP_SYM (__novmx__sigsetjmp))
+END (BP_SYM (__novmxsetjmp))
+
+ENTRY (BP_SYM (__novmx__setjmp))
+	li r4,1			/* Set second argument to 1.  */
+	b JUMPTARGET (BP_SYM (__novmx__sigsetjmp))
+END (BP_SYM (__novmx__setjmp))
+#endif  /*  defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4) */
+
+default_symbol_version (__vmx__setjmp,__setjmp,GLIBC_2.3.4)
+default_symbol_version (__vmxsetjmp,setjmp,GLIBC_2.3.4)
+
+ENTRY (BP_SYM (__vmxsetjmp))
+	li r4,1			/* Set second argument to 1.  */
+	b JUMPTARGET (BP_SYM (__vmx__sigsetjmp))
+END (BP_SYM (__vmxsetjmp))
+
+ENTRY (BP_SYM (__vmx__setjmp))
+	li r4,1			/* Set second argument to 1.  */
+	b JUMPTARGET (BP_SYM (__vmx__sigsetjmp))
+END (BP_SYM (__vmx__setjmp))

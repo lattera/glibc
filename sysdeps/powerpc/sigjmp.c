@@ -1,5 +1,4 @@
-/* AltiVec/VMX (new) version of __longjmp for PowerPC.
-   Copyright (C)  1995-1997,1999,2000,2003,2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +16,31 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <libc-symbols.h>
-#include <shlib-compat.h>
+/* Versioned copy of sysdeps/generic/sigjmp.c modified for AltiVec support.  */
+
+#include  <shlib-compat.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <signal.h>
+
+/* This function is called by the `sigsetjmp' macro
+   before doing a `__setjmp' on ENV[0].__jmpbuf.
+   Always return zero.  */
+
+int
+__vmx__sigjmp_save (sigjmp_buf env, int savemask)
+{
+  env[0].__mask_was_saved = (savemask &&
+			     __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
+					    &env[0].__saved_mask) == 0);
+
+  return 0;
+}
 
 #if defined NOT_IN_libc
 /* Build a none versioned object for rtld-*.  */
-# include "__longjmp-common.S"
-
-#else /* !NOT_IN_libc */
+strong_alias (__vmx__sigjmp_save,__sigjmp_save)
+#else
 /* Build a versioned object for libc.  */
-default_symbol_version (__vmx__longjmp,__longjmp,GLIBC_2.3.4);
-# define __longjmp  __vmx__longjmp
-# include "__longjmp-common.S"
-
-# if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
-#  define __NO_VMX__
-symbol_version (__novmx__longjmp,__longjmp,GLIBC_2.0);
-#  undef __longjmp
-#  define __longjmp  __novmx__longjmp
-#  include "__longjmp-common.S"
-# endif
-#endif /* !NOT_IN_libc */
+default_symbol_version (__vmx__sigjmp_save,__sigjmp_save,GLIBC_2.3.4);
+#endif

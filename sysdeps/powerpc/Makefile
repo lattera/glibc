@@ -18,6 +18,12 @@ sysdep_routines += dl-machine
 sysdep-rtld-routines += dl-machine
 endif
 
+ifeq ($(subdir),setjmp)
+ifeq (yes,$(build-shared))
+sysdep_routines += novmx-longjmp novmx-sigjmp
+endif
+endif
+
 ifeq ($(subdir),csu)
 # get offset to rtld_global._dl_hwcap
 gen-as-const-headers += rtld-global-offsets.sym

@@ -4,3 +4,14 @@ libm {
     __fe_dfl_env; __fe_enabled_env; __fe_nonieee_env; __fe_nomask_env;
   }
 }
+
+libc {
+  GLIBC_2.3.4 {
+    _longjmp; __sigsetjmp; _setjmp;
+    longjmp; setjmp;
+  }
+  GLIBC_PRIVATE {
+    __novmx__libc_longjmp; __novmx__libc_siglongjmp;
+    __vmx__libc_longjmp; __vmx__libc_siglongjmp;
+  }
+}

@@ -1,3 +1,13 @@
+2004-02-10  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* Makefile (libpthread-routines): Add ptcleanup.
+	* ptlongjmp.c: Removed.
+	* ptcleanup.c: Copied __pthread_cleanup_upto to here. New file.
+	* sysdeps/pthread/ptlongjmp.c: Copied longjmp to here. New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: New file.
+	Version longjmp, siglongjmp for GLIBC_2.3.4.
+	* sysdeps/unix/sysv/linux/powerpc/ptlongjmp.c: New File.
+
 2004-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* spinlock.c (__pthread_lock): Fix contraint to avoid warning.
