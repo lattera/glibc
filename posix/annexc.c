@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -615,12 +615,12 @@ static struct header
 /* Format string to build command to invoke compiler.  */
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
-%s -E -dM -D_POSIX_SOURCE -D_LIBC %s \
+%s -E -dM -D_POSIX_SOURCE %s \
 -isystem `%s --print-prog-name=include` - > %s";
 
 static const char testfmt[] = "\
 echo \"#include <unistd.h>\n#if !defined %s || %s == -1\n#error not defined\n#endif\n\" |\
-%s -E -dM -D_POSIX_SOURCE -D_LIBC %s \
+%s -E -dM -D_POSIX_SOURCE %s \
 -isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
 
