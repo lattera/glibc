@@ -417,8 +417,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
     /* Make sure the store in wait_node.next completes before performing
        the compare-and-swap */
     MEMORY_BARRIER();
-  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
-                             &lock->__spinlock));
+  } while(! __compare_and_swap(&lock->__status, oldstatus, newstatus));
 
   /* Suspend. Note that unlike in __pthread_lock, we don't worry
      here about spurious wakeup. That's because this lock is not
@@ -487,8 +486,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
     /* Make sure the store in wait_node.next completes before performing
        the compare-and-swap */
     MEMORY_BARRIER();
-  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
-                             &lock->__spinlock));
+  } while(! __compare_and_swap(&lock->__status, oldstatus, newstatus));
 #endif
 
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
