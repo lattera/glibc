@@ -105,7 +105,7 @@ static inline ElfW(Addr)
 elf_machine_dynamic (void)
 {
   register ElfW(Addr) gp __asm__ ("$28");
-  return elf_mips_got_from_gpreg (gp);
+  return *elf_mips_got_from_gpreg (gp);
 }
 
 
