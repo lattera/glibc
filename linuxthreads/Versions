@@ -21,14 +21,7 @@ libc {
     # Internal libc interface to libpthread
     __libc_internal_tsd_get; __libc_internal_tsd_set;
     __libc_internal_tsd_address; __libc_alloca_cutoff;
-  }
-}
-
-ld {
-  GLIBC_PRIVATE {
-    # Internal libc interface to libpthread
-    __libc_internal_tsd_get; __libc_internal_tsd_set;
-    __libc_internal_tsd_address;
+    __libc_dl_error_tsd;
   }
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -33,7 +33,8 @@ const double val_double[] =
 {
   -.10000E+02, 0.20000E+02, 0.25000E+01, 0.40000E+01, 0.50000E+01, 0.12500E+01,
   0.10000E+02, 0.20000E+02, 0.25000E+01, 0.40000E+01, 0.50000E+01, 0.12500E+01,
-  -1234567E01, 98765432E09, 12345678901, 98765432109, 12345678901, 98765432109,
+  -1234567E01, 98765432E09, 12345678901.0, 98765432109.0, 12345678901.0,
+    98765432109.0,
   -0.1000E+02, 0.20000E+02, 0.25000E+01, 0.40000E+01, 0.50000E+01, 0.12500E+01
 };
 

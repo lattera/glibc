@@ -1,3 +1,20 @@
+2002-10-09  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_maybe_call): New macro.
+	Under [__PIC__], call the function via the pointer fetched for
+	comparison rather than a call by name that uses the PLT.
+	(__libc_lock_init, __libc_rwlock_init, __libc_lock_fini)
+	(__libc_rwlock_fini, __libc_lock_lock, __libc_rwlock_rdlock)
+	(__libc_rwlock_wrlock, __libc_lock_trylock, __libc_rwlock_tryrdlock)
+	(__libc_rwlock_trywrlock, __libc_lock_unlock, __libc_rwlock_unlock)
+	(__libc_key_create, __libc_getspecific, __libc_setspecific)
+	(__libc_atfork): Use it.
+
+	* pthread.c [SHARED] (__libc_dl_error_tsd): New function.
+	(pthread_initialize) [SHARED]: Set _dl_error_catch_tsd to that.
+	* Versions (libc: GLIBC_PRIVATE): Add __libc_dl_error_tsd.
+	(ld: GLIBC_PRIVATE): Set removed.
+
 2002-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/execve.c: New file.

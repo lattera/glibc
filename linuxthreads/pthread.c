@@ -418,6 +418,19 @@ __pthread_init_max_stacksize(void)
     }
 }
 
+#ifdef SHARED
+# if USE___THREAD
+/* When using __thread for this, we do it in libc so as not
+   to give libpthread its own TLS segment just for this.  */
+extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
+# else
+static void ** __attribute__ ((const))
+__libc_dl_error_tsd (void)
+{
+  return &thread_self ()->p_libc_specific[_LIBC_TSD_KEY_DL_ERROR];
+}
+# endif
+#endif
 
 static void pthread_initialize(void)
 {
@@ -498,6 +511,10 @@ static void pthread_initialize(void)
     __on_exit (pthread_onexit_process, NULL);
   /* How many processors.  */
   __pthread_smp_kernel = is_smp_system ();
+
+#ifdef SHARED
+  GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
+#endif
 }
 
 void __pthread_initialize(void)

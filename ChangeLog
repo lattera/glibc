@@ -1,3 +1,8 @@
+2002-10-11  Roland McGrath  <roland@redhat.com>
+
+	* stdio-common/tst-sscanf.c (val_double): Append .0 to large whole
+	number literals, so they are doubles instead of ints.
+
 2002-10-09  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/bits/libc-tsd.h [USE___THREAD]: Conditional
