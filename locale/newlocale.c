@@ -1,5 +1,5 @@
 /* Return a reference to locale information record.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -54,7 +54,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     category_mask = (1 << __LC_LAST) - 1 - (1 << LC_ALL);
 
   /* Sanity check for CATEGORY argument.  */
-  if ((category_mask & ~((1 << LC_ALL) - 1 - (1 << LC_ALL))) != 0)
+  if ((category_mask & ~((1 << __LC_LAST) - 1 - (1 << LC_ALL))) != 0)
     ERROR_RETURN;
 
   /* `newlocale' does not support asking for the locale name. */
@@ -63,28 +63,25 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
   /* Allocate memory for the result.  */
   if (base != NULL)
-    {
-      if (base != NULL)
-	return base;
-
-      result = *base;
-    }
+    result = *base;
   else
     {
-      /* Fill with pointers to C locale data to .  */
+      /* Fill with pointers to C locale data.  */
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if (cnt != LC_ALL)
 	  result.__locales[cnt] = _nl_C[cnt];
+    }
 
-      /* If no category is to be set we return BASE if available or a
-	 dataset using the C locale data.  */
-      if (category_mask == 0)
-	{
-	  result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
-	  *result_ptr = result;
+  /* If no category is to be set we return BASE if available or a
+     dataset using the C locale data.  */
+  if (category_mask == 0)
+    {
+      result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
+      if (result_ptr == NULL)
+	return NULL;
+      *result_ptr = result;
 
-	  goto update;
-	}
+      goto update;
     }
 
   /* We perhaps really have to load some data.  So we determine the
@@ -175,12 +172,12 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
  update:
   {
     union locale_data_value *ctypes = result_ptr->__locales[LC_CTYPE]->values;
-  result_ptr->__ctype_b = (const unsigned short int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)] .string);
-  result_ptr->__ctype_tolower = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string);
-  result_ptr->__ctype_toupper = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string);
+    result_ptr->__ctype_b = (const unsigned short int *)
+      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)].string);
+    result_ptr->__ctype_tolower = (const int *)
+      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string);
+    result_ptr->__ctype_toupper = (const int *)
+      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string);
   }
 
   return result_ptr;

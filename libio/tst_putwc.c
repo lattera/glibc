@@ -101,6 +101,16 @@ do_test (void)
       res = 1;
     }
 
+  /* Next test: write a bit more than a few bytes.  */
+  fp = fopen (outname, "w");
+  if (fp == NULL)
+    error (EXIT_FAILURE, errno, "cannot open temporary file");
+
+  for (n = 0; n < 4098; ++n)
+    putwc (n & 255, fp);
+
+  fclose (fp);
+
   return res;
 }
 

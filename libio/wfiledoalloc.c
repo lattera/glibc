@@ -82,7 +82,7 @@ _IO_wfile_doallocate (fp)
   if (fp->_fileno < 0 || _IO_SYSSTAT (fp, &st) < 0)
     {
       couldbetty = 0;
-      size = _IO_BUFSIZ * sizeof (wchar_t);
+      size = _IO_BUFSIZ;
 #if 0
       /* do not try to optimise fseek() */
       fp->_flags |= __SNPT;
@@ -92,13 +92,12 @@ _IO_wfile_doallocate (fp)
     {
       couldbetty = S_ISCHR (st.st_mode);
 #if _IO_HAVE_ST_BLKSIZE
-      size = ((st.st_blksize <= 0 ? _IO_BUFSIZ : st.st_blksize)
-	      * sizeof (wchar_t));
+      size = st.st_blksize <= 0 ? _IO_BUFSIZ : st.st_blksize;
 #else
-      size = _IO_BUFSIZ * sizeof (wchar_t);
+      size = _IO_BUFSIZ;
 #endif
     }
-  ALLOC_WBUF (p, size, EOF);
+  ALLOC_WBUF (p, size * sizeof (wchar_t), EOF);
   _IO_wsetb (fp, p, p + size, 1);
   if (couldbetty && isatty (fp->_fileno))
     fp->_flags |= _IO_LINE_BUF;

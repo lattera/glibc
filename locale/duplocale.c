@@ -1,5 +1,5 @@
 /* Duplicate handle for selection of locales.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -42,12 +42,13 @@ __duplocale (__locale_t dataset)
   if (result != NULL)
     {
       int cnt;
-      for (cnt = 0; cnt < LC_ALL; ++cnt)
-	{
-	  result->__locales[cnt] = dataset->__locales[cnt];
-	  if (result->__locales[cnt]->usage_count < MAX_USAGE_COUNT)
-	    ++result->__locales[cnt]->usage_count;
-	}
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (cnt != LC_ALL)
+	  {
+	    result->__locales[cnt] = dataset->__locales[cnt];
+	    if (result->__locales[cnt]->usage_count < MAX_USAGE_COUNT)
+	      ++result->__locales[cnt]->usage_count;
+	  }
     }
 
   /* It's done.  */

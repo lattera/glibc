@@ -60,8 +60,8 @@ __md5_crypt_r (key, salt, buffer, buflen)
   size_t key_len;
   size_t cnt;
   char *cp;
-  int key_copied = 0;
-  int salt_copied = 0;
+  char *copied_key = NULL;
+  char *copied_salt = NULL;
 
   /* Find beginning of salt string.  The prefix should normally always
      be present.  Just in case it is not.  */
@@ -75,21 +75,21 @@ __md5_crypt_r (key, salt, buffer, buflen)
   if ((key - (char *) 0) % __alignof__ (md5_uint32) != 0)
     {
       char *tmp = (char *) alloca (key_len + __alignof__ (md5_uint32));
-      key = memcpy (tmp + __alignof__ (md5_uint32)
-		    - (tmp - (char *) 0) % __alignof__ (md5_uint32),
-		    key, key_len);
+      key = copied_key =
+	memcpy (tmp + __alignof__ (md5_uint32)
+		- (tmp - (char *) 0) % __alignof__ (md5_uint32),
+		key, key_len);
       assert ((key - (char *) 0) % __alignof__ (md5_uint32) == 0);
-      key_copied = 1;
     }
 
   if ((salt - (char *) 0) % __alignof__ (md5_uint32) != 0)
     {
       char *tmp = (char *) alloca (salt_len + __alignof__ (md5_uint32));
-      salt = memcpy (tmp + __alignof__ (md5_uint32)
-		     - (tmp - (char *) 0) % __alignof__ (md5_uint32),
-		     salt, salt_len);
+      salt = copied_salt =
+	memcpy (tmp + __alignof__ (md5_uint32)
+		- (tmp - (char *) 0) % __alignof__ (md5_uint32),
+		salt, salt_len);
       assert ((salt - (char *) 0) % __alignof__ (md5_uint32) == 0);
-      salt_copied = 1;
     }
 
   /* Prepare for the real work.  */
@@ -225,10 +225,10 @@ __md5_crypt_r (key, salt, buffer, buflen)
   __md5_finish_ctx (&ctx, alt_result);
   memset (&ctx, '\0', sizeof (ctx));
   memset (&alt_ctx, '\0', sizeof (alt_ctx));
-  if (key_copied)
-    memset ((char *) key, '\0', key_len);
-  if (salt_copied)
-    memset ((char *) salt, '\0', salt_len);
+  if (copied_key != NULL)
+    memset (copied_key, '\0', key_len);
+  if (copied_salt != NULL)
+    memset (copied_salt, '\0', salt_len);
 
   return buffer;
 }

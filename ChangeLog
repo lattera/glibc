@@ -1,3 +1,29 @@
+2000-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/wfiledoalloc.c (_IO_wfile_doallocate): Measure size
+	in wide characters, not bytes.
+	* libio/tst_putwc.c (do_test): Add test for writing lots of data
+	into file.
+
+2000-07-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/nl_langinfo.c (nl_langinfo): Accept items belonging to the
+	new categories LC_PAPER, LC_NAME, LC_ADDRESS, LC_TELEPHONE,
+	LC_MEASUREMENT, LC_IDENTIFICATION.
+
+	* locale/xlocale.h (struct __locale_struct): Increase size of
+	__locales array.
+	* locale/duplocale.c (__duplocale): Copy newly added categories as
+	well.
+	* locale/freelocale.c (__freelocale): Free newly added categories.
+	* locale/newlocale.c (__newlocale): Fix typo in sanity check.
+	If a base is given, use it, don't simply return it.
+
+2000-07-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* crypt/md5-crypt.c (__md5_crypt_r): Avoid gcc warnings: Use pointer
+	variables, copied_key and copied_salt, instead of boolean variables.
+
 2000-07-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Fix offset

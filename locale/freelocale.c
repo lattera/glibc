@@ -1,5 +1,5 @@
 /* Free data allocated by a call to setlocale_r
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -37,8 +37,8 @@ __freelocale (__locale_t dataset)
   /* We modify global data.  */
   __libc_lock_lock (__libc_setlocale_lock);
 
-  for (cnt = 0; cnt < LC_ALL; ++cnt)
-    if (dataset->__locales[cnt]->usage_count != UNDELETABLE)
+  for (cnt = 0; cnt < __LC_LAST; ++cnt)
+    if (cnt != LC_ALL && dataset->__locales[cnt]->usage_count != UNDELETABLE)
       /* We can remove the data.  */
       _nl_remove_locale (cnt, dataset->__locales[cnt]);
 

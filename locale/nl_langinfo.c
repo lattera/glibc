@@ -33,7 +33,7 @@ nl_langinfo (item)
   unsigned int index = _NL_ITEM_INDEX (item);
   const struct locale_data *data;
 
-  if (category < 0 || category >= LC_ALL)
+  if (category < 0 || category == LC_ALL || category >= __LC_LAST)
     /* Bogus category: bogus item.  */
     return (char *) "";
 

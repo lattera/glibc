@@ -1,5 +1,5 @@
 /* Definition of locale datatype.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,7 +27,8 @@
    go away without warning.  */
 typedef struct __locale_struct
 {
-  struct locale_data *__locales[6];	/* XXX LC_ALL should be used here */
+  /* Note: LC_ALL is not a valid index into this array.  */
+  struct locale_data *__locales[13]; /* 13 = __LC_LAST. */
 
   /* To increase the speed of this solution we add some special members.  */
   const unsigned short int *__ctype_b;
