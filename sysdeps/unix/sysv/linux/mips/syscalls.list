@@ -56,14 +56,12 @@ s_ftruncate64	ftruncate64 ftruncate64	i:iiii	__syscall_ftruncate64
 s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd
 s_getdents	getdents getdents	i:ipi	__syscall_getdents
 s_getdents64	getdents getdents64	i:ipi	__syscall_getdents64
-s_getpmsg	getpmsg	getpmsg		i:ipppp	__syscall_getpmsg
 s_getpriority	getpriority getpriority	i:ii	__syscall_getpriority
 s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
 s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
 s_pread64	pread64	pread		i:ibniii __syscall_pread
-s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
 s_pwrite64	pwrite64 pwrite		i:ibniii __syscall_pwrite
 s_readahead	EXTRA	readahead	i:iiii	__syscall_readahead
