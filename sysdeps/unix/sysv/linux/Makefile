@@ -125,4 +125,8 @@ ifeq ($(subdir),dirent)
 sysdep_routines += getdents64
 endif
 
+ifeq ($(subdir),nis)
+CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
+endif
+
 common-generated += bits/stdio_lim.h bits/stdio_lim.d

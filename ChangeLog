@@ -1,3 +1,13 @@
+1998-01-30 22:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==nis]: Define
+	CFLAGS-ypclnt.c to -DUSE_BINDINGDIR=1.
+
+1998-01-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Try at first to use the binding file from ypbind
+	before using RPC.
+
 1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/memory.texi (Heap Consistency Checking): mcheck is
