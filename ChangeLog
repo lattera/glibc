@@ -1,5 +1,7 @@
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/da.po: New file.
+
 	* manual/arith.texi (Rounding Functions): Fix documentation of trunc.
 	Patch by Steven G. Johnson <stevenj@gil-galad.mit.edu>.
 
