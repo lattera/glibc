@@ -330,20 +330,20 @@ this element might stay undefined since it is not used.
 To search in a hashing table created using @code{hcreate} the
 @code{hsearch} function must be used.  This function can perform simple
 search for an element (if @var{action} has the @code{FIND}) or it can
-alternatively insert the key element into the hashing table, possibly
-replacing a previous value (if @var{action} is @code{ENTER}).
+alternatively insert the key element into the hashing table.  Entries
+are never replaced.
 
 The key is denoted by a pointer to an object of type @code{ENTRY}.  For
 locating the corresponding position in the hashing table only the
 @code{key} element of the structure is used.
 
-The return value depends on the @var{action} parameter value.  If it is
-@code{FIND} the value is a pointer to the matching element in the
-hashing table or @code{NULL} if no matching element exists.  If
-@var{action} is @code{ENTER} the return value is only @code{NULL} if the
-programs runs out of memory while adding the new element to the table.
-Otherwise the return value is a pointer to the element in the hashing
-table which contains newly added element based on the data in @var{key}.
+If an entry with matching key is found the @var{action} parameter is
+irrelevant.  The found entry is returned.  If no matching entry is found
+and the @var{action} parameter has the value @code{FIND} the function
+returns a @code{NULL} pointer.  If no entry is found and the
+@var{action} parameter has the value @code{ENTER} a new entry is added
+to the hashing table which is initialized with the parameter @var{item}.
+A pointer to the newly added entry is returned.
 @end deftypefun
 
 As mentioned before the hashing table used by the functions described so

@@ -1,5 +1,9 @@
 2002-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/signal.texi (Process Signal Mask): Document that
+	pthread_sigmask, not sigprocmask, must be used in MT programs.
+	Patch by Bertold Kolics <Bertold.Kolics@Sun.COM>.
+
 	* misc/hsearch_r.c (hsearch_r): Don't insert anything if entry is
 	found.
 	* misc/Makefile (tests): Add tst-hsearch.
