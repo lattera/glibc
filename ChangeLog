@@ -1,3 +1,17 @@
+1998-09-01 15:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/Makefile: Include Makeconfig before testing config-sysdirs.
+
+	* malloc/mtrace.c: Add bug report address.  Update email address.
+	Add more @XXX@ to print correct address size.
+
+	* elf/dl-addr.c (_dl_addr): Make sure that map to be examined is
+	really initialized.
+
+	* elf/dl-close.c (_dl_close): Use l_map_start and l_map_end info
+	for munmap call instead of examining phdr again.
+	Free all malloc()ed strings and arrays.
+
 1998-08-09  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/powerpc/Makefile [subdir=elf]: Add new files split out of

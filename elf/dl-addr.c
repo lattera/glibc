@@ -34,7 +34,9 @@ _dl_addr (const void *address, Dl_info *info)
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;
   for (l = _dl_loaded; l; l = l->l_next)
-    if (addr >= l->l_addr && (!match || match->l_addr < l->l_addr))
+    if (l->l_addr != 0	/* Make sure we do not currently set this map up
+			   in this moment.  */
+	&& addr >= l->l_addr && (!match || match->l_addr < l->l_addr))
       match = l;
 
   if (match)

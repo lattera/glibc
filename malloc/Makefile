@@ -44,6 +44,8 @@ extra-objs = mcheck-init.o libmcheck.a
 # Include the cleanup handler.
 aux := set-freeres
 
+include ../Makeconfig
+
 # The AWK script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
 install-bin = mtrace

@@ -89,11 +89,6 @@ _dl_close (struct link_map *map)
   for (i = 0; i < nsearchlist; ++i)
     --list[i]->l_opencount;
 
-  if (map->l_origin != NULL)
-    free ((char *) map->l_origin);
-  /* The name always is allocated.  */
-  free (map->l_name);
-
   /* Check each element of the search list to see if all references to
      it are gone.  */
   for (i = 0; i < nsearchlist; ++i)
@@ -101,12 +96,10 @@ _dl_close (struct link_map *map)
       struct link_map *imap = list[i];
       if (imap->l_opencount == 0 && imap->l_type == lt_loaded)
 	{
+	  struct libname_list *lnp;
+
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
-	  const ElfW(Phdr) *ph;
-	  const ElfW(Phdr) *first, *last;
-	  ElfW(Addr) mapstart, mapend;
-
 	  if (imap->l_global)
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
@@ -122,22 +115,11 @@ _dl_close (struct link_map *map)
 	      --_dl_global_scope_end;
 	    }
 
-	  /* We can unmap all the maps at once.  We just have to determine
-	     the length and the `munmap' call does the rest.  */
-	  first = last = NULL;
-	  for (ph = imap->l_phdr; ph < imap->l_phdr + imap->l_phnum; ++ph)
-	    if (ph->p_type == PT_LOAD)
-	      {
-		if (first == NULL)
-		  first = ph;
-		last = ph;
-	      }
-
-	  /* Now we have all the information we need for the unmapping.
-	     See the method used in `_dl_map_object_from_fd'.  */
-	  mapstart = first->p_vaddr & ~(first->p_align - 1);
-	  mapend = last->p_vaddr + last->p_memsz;
-	  __munmap ((caddr_t) (imap->l_addr + mapstart), mapend - mapstart);
+	  /* We can unmap all the maps at once.  We determined the
+	     length when we loaded the object and `munmap' call does
+	     the rest.  */
+	  __munmap ((void *) imap->l_map_start,
+		    imap->l_map_end - imap->l_map_start);
 
 	  /* Finally, unlink the data structure and free it.  */
 #ifdef PIC
@@ -155,6 +137,23 @@ _dl_close (struct link_map *map)
 	    imap->l_next->l_prev = imap->l_prev;
 	  if (imap->l_searchlist && imap->l_searchlist != list)
 	    free (imap->l_searchlist);
+
+	  if (imap->l_versions != NULL)
+	    free (imap->l_versions);
+	  if (imap->l_origin != NULL)
+	    free ((char *) imap->l_origin);
+
+	  /* These names always is allocated.  */
+	  free (imap->l_name);
+	  lnp = imap->l_libname;
+	  do
+	    {
+	      free (lnp->name);
+	      lnp = lnp->next;
+	    }
+	  while (lnp != NULL);
+	  free (imap->l_libname);
+
 	  free (imap);
 	}
     }

@@ -29,6 +29,8 @@ sub usage {
     print "Usage: mtrace [OPTION]... [Binary] MtraceData\n";
     print "  --help       print this help, then exit\n";
     print "  --version    print version number, then exit\n";
+    print "\n";
+    print "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
     exit 0;
 }
 
@@ -42,10 +44,10 @@ arglist: while (@ARGV) {
 	$ARGV[0] eq "--vers" || $ARGV[0] eq "--versi" ||
 	$ARGV[0] eq "--versio" || $ARGV[0] eq "--version") {
 	print "mtrace (GNU $PACKAGE) $VERSION\n";
-	print "Copyright (C) 1997 Free Software Foundation, Inc.\n";
+	print "Copyright (C) 1997, 1998 Free Software Foundation, Inc.\n";
 	print "This is free software; see the source for copying conditions.  There is NO\n";
 	print "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
-	print "Written by Ulrich Drepper <drepper\@gnu.ai.mit.edu>\n";
+	print "Written by Ulrich Drepper <drepper\@gnu.org>\n";
 
 	exit 0;
     } elsif ($ARGV[0] eq "--h" || $ARGV[0] eq "--he" || $ARGV[0] eq "--hel" ||
@@ -125,7 +127,7 @@ while (<DATA>) {
     SWITCH: {
 	if ($cols[$n] eq "+") {
 	    if (defined $allocated{$allocaddr}) {
-		printf ("+ %#010x Alloc %d duplicate: %s %s\n",
+		printf ("+ %#0@XXX@x Alloc %d duplicate: %s %s\n",
 			hex($allocaddr), $nr, $wherewas{$allocaddr}, $where);
 	    } else {
 		$allocated{$allocaddr}=$howmuch;
@@ -138,7 +140,7 @@ while (<DATA>) {
 		undef $allocated{$allocaddr};
 		undef $wherewas{$allocaddr};
 	    } else {
-		printf ("- %#010x Free %d was never alloc'd %s\n",
+		printf ("- %#0@XXX@x Free %d was never alloc'd %s\n",
 			hex($allocaddr), $nr, &location($where));
 	    }
 	    last SWITCH;
@@ -148,14 +150,14 @@ while (<DATA>) {
 		undef $allocated{$allocaddr};
 		undef $wherewas{$allocaddr};
 	    } else {
-		printf ("- %#010x Realloc %d was never alloc'd %s\n",
+		printf ("- %#0@XXX@x Realloc %d was never alloc'd %s\n",
 			hex($allocaddr), $nr, &location($where));
 	    }
 	    last SWITCH;
 	}
 	if ($cols[$n] eq ">") {
 	    if (defined $allocated{$allocaddr}) {
-		printf ("+ %#010x Realloc %d duplicate: %#010x %s %s\n",
+		printf ("+ %#0@XXX@x Realloc %d duplicate: %#010x %s %s\n",
 			hex($allocaddr), $nr, $allocated{$allocaddr},
 			$wherewas{$allocaddr}, &location($where));
 	    } else {
