@@ -37,8 +37,9 @@ __curbrk: .skip 8
 #endif
 
 	.text
-LEAF(__brk, 0)
+LEAF(__brk, 8)
 	ldgp	gp, 0(t12)
+	subq	sp, 8, sp
 #ifdef PROF
 	.set noat
 	lda	AT, _mcount
@@ -47,8 +48,13 @@ LEAF(__brk, 0)
 #endif
 	.prologue 1
 
+	/* Save the requested brk across the system call.  */
+	stq	a0, 0(sp)
+
 	ldiq	v0, __NR_brk
 	call_pal PAL_callsys
+
+	ldq	a0, 0(sp)
 
 	/* Be prepared for an OSF-style brk.  */
 	bne	a3, $err1
@@ -62,11 +68,13 @@ LEAF(__brk, 0)
 	/* Update __curbrk and return cleanly.  */
 	mov	zero, v0
 $ok:	stq	a0, __curbrk
+	addq	sp, 8, sp
 	ret
 
 	/* What a horrible way to die.  */
 $err0:	ldi	v0, ENOMEM
-$err1:	jmp	zero, __syscall_error
+$err1:	addq	sp, 8, sp
+	jmp	zero, __syscall_error
 
 	END(__brk)
 
