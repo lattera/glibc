@@ -687,12 +687,13 @@ __stpcpy_small (char *__dest,
 
 /* Compare N characters of S1 and S2.  */
 #ifndef _HAVE_STRING_ARCH_strncmp
-# define strncmp(s1, s2, n) \
-  (__extension__ (__builtin_constant_p (s1) && strlen (s1) < ((size_t) (n))   \
-		  ? strcmp (s1, s2)					      \
-		  : (__builtin_constant_p (s2) && strlen (s2) < ((size_t) (n))\
-		     ? strcmp (s1, s2)					      \
-		     : strncmp (s1, s2, n))))
+# define strncmp(s1, s2, n)						      \
+  (__extension__ (__builtin_constant_p (n)				      \
+		  && ((__builtin_constant_p (s1)			      \
+		       && strlen (s1) < ((size_t) (n)))			      \
+		      || (__builtin_constant_p (s2)			      \
+			  && strlen (s2) < ((size_t) (n))))		      \
+		  ? strcmp (s1, s2) : strncmp (s1, s2, n)))
 #endif
 
 
