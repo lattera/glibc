@@ -597,6 +597,24 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	  || dfa->init_state_begbuf == NULL, 0))
     return REG_NOMATCH;
 
+#ifdef DEBUG
+  /* We assume front-end functions already check them.  */
+  assert (start + range >= 0 && start + range <= length);
+#endif
+
+  /* If initial states with non-begbuf contexts have no elements,
+     the regex must be anchored.  If preg->newline_anchor is set,
+     we'll never use init_state_nl, so do not check it.  */
+  if (dfa->init_state->nodes.nelem == 0
+      && dfa->init_state_word->nodes.nelem == 0
+      && (dfa->init_state_nl->nodes.nelem == 0
+	  || !preg->newline_anchor))
+    {
+      if (start != 0 && start + range != 0)
+        return REG_NOMATCH;
+      start = range = 0;
+    }
+
   re_node_set_init_empty (&empty_set);
   memset (&mctx, '\0', sizeof (re_match_context_t));
 
@@ -629,11 +647,6 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
     }
   else
     mctx.state_log = NULL;
-
-#ifdef DEBUG
-  /* We assume front-end functions already check them.  */
-  assert (start + range >= 0 && start + range <= length);
-#endif
 
   match_first = start;
   input.tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
