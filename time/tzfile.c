@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,10 +284,11 @@ __tzfile_read (const char *file)
     {
       int type = type_idxs[--i];
       int dst = types[type].isdst;
-      int idx = types[type].idx;
 
       if (__tzname[dst] == NULL)
 	{
+	  int idx = types[type].idx;
+
 	  __tzname[dst] = __tzstring (&zone_names[idx]);
 
 	  if (__tzname[1 - dst] != NULL)
@@ -313,14 +314,15 @@ __tzfile_read (const char *file)
     {
       int stdoff_set = 0, dstoff_set = 0;
       rule_stdoff = rule_dstoff = 0;
-      for (i = 0; i < num_transitions; ++i)
+      i = num_transitions - 1;
+      do
 	{
 	  if (!stdoff_set && !types[type_idxs[i]].isdst)
 	    {
 	      stdoff_set = 1;
 	      rule_stdoff = types[type_idxs[i]].offset;
 	    }
-	  if (!dstoff_set && types[type_idxs[i]].isdst)
+	  else if (!dstoff_set && types[type_idxs[i]].isdst)
 	    {
 	      dstoff_set = 1;
 	      rule_dstoff = types[type_idxs[i]].offset;
@@ -328,6 +330,8 @@ __tzfile_read (const char *file)
 	  if (stdoff_set && dstoff_set)
 	    break;
 	}
+      while (i-- > 0);
+
       if (!dstoff_set)
 	rule_dstoff = rule_stdoff;
     }
