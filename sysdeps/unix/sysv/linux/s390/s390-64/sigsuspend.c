@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
 extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
@@ -34,7 +34,16 @@ __sigsuspend (set)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigsuspend)
 weak_alias (__sigsuspend, sigsuspend)

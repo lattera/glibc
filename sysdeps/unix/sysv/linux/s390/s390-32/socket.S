@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 /* &%/$&!! preprocessor */
@@ -73,6 +73,12 @@ ENTRY(__socket)
 	st      %r3,0x64(0,%r15)        /* store into parameter list */
 	st      %r2,0x60(0,%r15)
 #endif
+
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P (%r4)
+	jne	L(socket_cancel)
+#endif
+
 	/* load subcode for socket syscall */
 	lhi     %r2,P(SOCKOP_,socket)
 	la      %r3,0x60(0,%r15)        /* load address of parameter list */
@@ -80,6 +86,7 @@ ENTRY(__socket)
 	/* Do the system call trap.  */
 	svc     SYS_ify(socketcall)
 
+4:
 	l       %r15,0(0,%r15)          /* load back chain */
 	lm      %r6,15,24(%r15)         /* load registers */
 
@@ -91,7 +98,35 @@ ENTRY(__socket)
 	/* Successful; return the syscall's value.  */
 	br      %r14
 
-PSEUDO_END (__socket)
+#if defined NEED_CANCELLATION && defined CENABLE
+L(socket_cancel):
+	basr	%r13,0
+1:	l	%r1,2f-1b(%r13)
+	/* call CENABLE.  */
+	bas	%r14,0(%r13,%r1)
+	lr	%r0,%r2
+
+	/* load subcode for socket syscall */
+	lhi     %r2,P(SOCKOP_,socket)
+	la      %r3,0x60(0,%r15)        /* load address of parameter list */
+
+	/* Do the system call trap.  */
+	svc     SYS_ify(socketcall)
+
+	l	%r3,3f-1b(%r13)
+	lr	%r12,%r2
+	lr	%r2,%r0
+	/* call CDISABLE.  */
+	bas     %r14,0(%r13,%r3)
+	lr	%r2,%r12
+	j	4b
+
+2:	.long	CENABLE-1b
+3:	.long	CDISABLE-1b
+#endif
+
+	SYSCALL_ERROR_HANDLER
+END (__socket)
 
 #ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)

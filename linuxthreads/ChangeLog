@@ -1,3 +1,11 @@
+2003-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h: New file.
+	* sysdeps/s390/Makefile: New file.
+	* sysdeps/s390/tcb-offsets.sym: New file.
+	* sysdeps/s390/tls.h: New file.
+
 2003-01-03  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: New file.

@@ -1,7 +1,18 @@
+2003-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S: Add support for
+	cancellation handling.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c: Likewise.
+
+2003-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/system.c (cancel_handler): Correct
+	order of parameters passed to kill.
+
 2003-01-04  Andreas Schwab  <schwab@suse.de>
 
-	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Add nanosecond
-	fields.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Add nanosecond fields.
 
 2002-01-03  Paul Eggert  <eggert@twinsun.com>
 

@@ -1,0 +1,96 @@
+/* Copyright (C) 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+#include <tls.h>
+#ifndef __ASSEMBLER__
+# include <linuxthreads/internals.h>
+#endif
+
+#if !defined NOT_IN_libc || defined IS_IN_libpthread
+
+# undef PSEUDO
+# define PSEUDO(name, syscall_name, args)				      \
+	.text;								      \
+ENTRY(name)								      \
+	SINGLE_THREAD_P							      \
+	jne	L(pseudo_cancel);					      \
+	DO_CALL(syscall_name, args);					      \
+	lghi	%r4,-4095;						      \
+	clgr	%r2,%r4;						      \
+	jnl	SYSCALL_ERROR_LABEL;					      \
+	br	%r14;							      \
+L(pseudo_cancel):							      \
+	STM_##args							      \
+	stmg	%r13,%r15,104(%r15);					      \
+	aghi	%r15,-192;						      \
+	brasl	%r14,CENABLE;						      \
+	lr	%r0,%r2;						      \
+	LM_##args							      \
+	DO_CALL(syscall_name, args);					      \
+	lgr	%r13,%r2;						      \
+	lr	%r2,%r0;						      \
+	brasl	%r14,CDISABLE;						      \
+	lgr	%r2,%r13;						      \
+	lmg	%r13,%r15,104+192(%r15);				      \
+	lghi	%r4,-4095;						      \
+	clgr	%r2,%r4;						      \
+	jnl	SYSCALL_ERROR_LABEL;					      \
+L(pseudo_end):
+
+# ifdef IS_IN_libpthread
+#  define CENABLE	__pthread_enable_asynccancel
+#  define CDISABLE	__pthread_disable_asynccancel
+#  define __local_multiple_threads	__pthread_multiple_threads
+# else
+#  define CENABLE	__libc_enable_asynccancel
+#  define CDISABLE	__libc_disable_asynccancel
+#  define __local_multiple_threads	__libc_multiple_threads
+# endif
+
+#define STM_0		/* Nothing */
+#define STM_1		stg %r2,16(%r15);
+#define STM_2		stmg %r2,%r3,16(%r15);
+#define STM_3		stmg %r2,%r4,16(%r15);
+#define STM_4		stmg %r2,%r5,16(%r15);
+#define STM_5		stmg %r2,%r5,16(%r15);
+
+#define LM_0		/* Nothing */
+#define LM_1		lg %r2,16+192(%r15);
+#define LM_2		lmg %r2,%r3,16+192(%r15);
+#define LM_3		lmg %r2,%r4,16+192(%r15);
+#define LM_4		lmg %r2,%r5,16+192(%r15);
+#define LM_5		lmg %r2,%r5,16+192(%r15);
+
+# ifndef __ASSEMBLER__
+extern int __local_multiple_threads attribute_hidden;
+#  define SINGLE_THREAD_P \
+  __builtin_expect (__local_multiple_threads == 0, 1)
+# else
+#  define SINGLE_THREAD_P \
+	larl	%r1,__local_multiple_threads;				      \
+	icm	%r0,15,0(%r1);
+# endif
+
+#elif !defined __ASSEMBLER__
+
+/* This code should never be used but we define it anyhow.  */
+# define SINGLE_THREAD_P (1)
+
+#endif

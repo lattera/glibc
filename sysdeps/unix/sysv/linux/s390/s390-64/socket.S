@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 /* &%/$&!! preprocessor */
@@ -73,6 +73,12 @@ ENTRY(__socket)
         stg     %r3,168(%r15)           /* Store into parameter list.  */
 	stg     %r2,160(%r15)
 #endif
+
+#if defined NEED_CANCELLATION && defined CENABLE
+	SINGLE_THREAD_P
+	jne	L(socket_cancel)
+#endif
+
         /* Load subcode for socket syscall.  */
         lghi    %r2,P(SOCKOP_,socket)
 	la      %r3,160(%r15)           /* Load address of parameter list.  */
@@ -80,6 +86,7 @@ ENTRY(__socket)
         /* Do the system call trap.  */
         svc     SYS_ify(socketcall)
 
+4:
         lg      %r15,0(%r15)            /* Load back chain.  */
         lmg     %r6,15,48(%r15)         /* Load registers.  */
 
@@ -90,6 +97,26 @@ ENTRY(__socket)
  
 	/* Successful; return the syscall's value.  */
 	br      %r14
+
+#if defined NEED_CANCELLATION && defined CENABLE
+L(socket_cancel):
+	brasl	%r14,CENABLE
+	lr	%r0,%r2
+
+	/* Load subcode for socket syscall.  */
+	lghi	%r2,P(SOCKOP_,socket)
+	la	%r3,160(%r15)		/* Load address of parameter list.  */
+
+	/* Do the system call trap.  */
+	svc	SYS_ify(socketcall)
+
+	lgr	%r12,%r2
+	lr	%r2,%r0
+	brasl	%r14,CDISABLE
+
+	lgr	%r2,%r12
+	j	4b
+#endif
 
 PSEUDO_END (__socket)
 
