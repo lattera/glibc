@@ -130,7 +130,7 @@ elf_machine_load_address (void)
 }
 
 /* The MSB of got[1] of a gnu object is set to identify gnu objects.  */
-#ifdef _ABI64 && _MIPS_SIM == _ABI64
+#if defined _ABI64 && _MIPS_SIM == _ABI64
 # define ELF_MIPS_GNU_GOT1_MASK	0x8000000000000000L
 #else
 # define ELF_MIPS_GNU_GOT1_MASK	0x80000000L
