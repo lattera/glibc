@@ -597,7 +597,6 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      /* Found the translation of MSGID1 in domain DOMAIN:
 		 starting at RETVAL, RETLEN bytes.  */
 	      FREE_BLOCKS (block_list);
-	      __set_errno (saved_errno);
 #if defined HAVE_TSEARCH || defined _LIBC
 	      if (foundp == NULL)
 		{
@@ -636,6 +635,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		  (*foundp)->translation_length = retlen;
 		}
 #endif
+	      __set_errno (saved_errno);
+
 	      /* Now deal with plural.  */
 	      if (plural)
 		retval = plural_lookup (domain, n, retval, retlen);
