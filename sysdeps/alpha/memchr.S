@@ -169,4 +169,4 @@ $not_found:
 
         END(__memchr)
 
-weak_alias (__stpcpy, stpcpy)
+weak_alias (__memchr, memchr)
