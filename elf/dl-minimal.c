@@ -60,7 +60,8 @@ malloc (size_t n)
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
       assert (n <= pagesize);
-      page = mmap (0, pagesize, PROT_READ|PROT_WRITE, MAP_ANON, _dl_zerofd, 0);
+      page = mmap (0, pagesize, PROT_READ|PROT_WRITE,
+		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
       assert (page != (caddr_t) -1);
       if (page != alloc_end)
 	alloc_ptr = page;

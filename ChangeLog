@@ -1,3 +1,7 @@
+Sun Dec 10 09:56:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dl-minimal.c (malloc): Use MAP_PRIVATE in mmap call.
+
 Fri Dec  8 13:04:51 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/error.c, locale/error.h: Files removed.
