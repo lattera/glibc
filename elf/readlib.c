@@ -50,7 +50,7 @@ struct known_names
 
 static struct known_names interpreters [] =
 {
-  {"/lib/" LD_LINUX_SO, FLAG_ELF_LIBC6},
+  {"/lib/" LD_SO, FLAG_ELF_LIBC6},
   {"/lib/ld-linux.so.1", FLAG_ELF_LIBC5}
 };
 
