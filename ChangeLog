@@ -1,3 +1,9 @@
+2003-03-25  Jiro SEKIBA  <jir@yamato.ibm.com>
+
+	* iconvdata/euc-tw.c (from_euc_tw): Fix return value of TO_LOOP.
+	* iconvdata/bug-iconv4.c: New file.
+	* iconvdata/Makefile (tests): Add bug-iconv4.
+
 2003-03-25  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Avoid looking up protected
