@@ -1,3 +1,8 @@
+2002-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/tst-atime.c (do_test): Make sure noatime flag isn't set
+	for filesystem.
+
 2002-09-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bug-regex11.c: New test.
