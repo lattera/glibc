@@ -99,21 +99,15 @@ TST_MBRLEN tst_mbrlen_loc [] = {
       { /*----------------- #01 -----------------*/
 	{
 	  {
-	    { 1, "\317\302",   1,		   0, 0 },
-#ifdef SHOJI_IS_RIGHT
-	    { 0, "",	   0,		   0, 0 },
-#else
-	    /* XXX This test depends on the internal state being empty.
-	       XXX Therefore we must explicitly clean it.  */
-	    { 0, "",	   0,		   0, 1 },
-#endif
-	    { 1, "\317\302",   USE_MBCURMAX,   0, 0 },
+	    { 1, "\317\302",   1,		   1, 1 },
+	    { 0, "",	       0,		   1, 0 },
+	    { 1, "\317\302",   USE_MBCURMAX,	   1, 1 },
 	  }
 	},
 	{
 	  {
 	    { 0,		1, -2,		     },
-	    { 0,		1,  0,		     },
+	    { 0,		1, -1,		     },
 	    { 0,		1,  2,		     },
 	  }
 	}

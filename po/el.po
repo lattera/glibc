@@ -1,5 +1,5 @@
 # Greek(Hellenic) messages for the GNU libc.
-# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # Nikos Mavroyanopoulos <nmav@hellug.gr>, 1999, 2000.
 # Simos Xenitellis <S.Xenitellis@rhbnc.ac.uk>, 1999, 2000, 2001.
 #
@@ -245,12 +245,10 @@ msgstr "%.*s: η παράμετρος ARGP_HELP_FMT απαιτεί τιμή"
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Άγνωστη παράμετρος ARGP_HELP_FMT"
 
-#: locale/programs/ld-address.c:576 locale/programs/ld-collate.c:2593
-#: locale/programs/ld-collate.c:3719 locale/programs/ld-ctype.c:2110
-#: locale/programs/ld-ctype.c:2847 locale/programs/ld-identification.c:440
-#: locale/programs/ld-measurement.c:232 locale/programs/ld-messages.c:326
-#: locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:300
-#: locale/programs/ld-numeric.c:370 locale/programs/ld-paper.c:233
+#: locale/programs/ld-address.c:576 locale/programs/ld-collate.c:2593 locale/programs/ld-collate.c:3719
+#: locale/programs/ld-ctype.c:2110 locale/programs/ld-ctype.c:2847 locale/programs/ld-identification.c:440
+#: locale/programs/ld-measurement.c:232 locale/programs/ld-messages.c:326 locale/programs/ld-monetary.c:934
+#: locale/programs/ld-name.c:300 locale/programs/ld-numeric.c:370 locale/programs/ld-paper.c:233
 #: locale/programs/ld-telephone.c:308 locale/programs/ld-time.c:1172
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
@@ -426,8 +424,7 @@ msgstr "%s: Περισσότερες από μία -y επιλογές καθορίστηκαν\n"
 msgid "%s: Too many arguments\n"
 msgstr "%s: Πάρα πολλά ορίσματα\n"
 
-#: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483
-#: locale/programs/ld-collate.c:499
+#: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483 locale/programs/ld-collate.c:499
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr ""
@@ -437,8 +434,8 @@ msgstr ""
 msgid "%s: `%s' must be a character"
 msgstr "%s: το `%s' πρέπει να είναι ένας απλός χαρακτήρας"
 
-#: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276
-#: locale/programs/ld-address.c:309 locale/programs/ld-address.c:321
+#: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276 locale/programs/ld-address.c:309
+#: locale/programs/ld-address.c:321
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
 msgstr ""
@@ -483,11 +480,10 @@ msgstr ""
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:2910 locale/programs/ld-ctype.c:2994
-#: locale/programs/ld-ctype.c:3014 locale/programs/ld-ctype.c:3035
-#: locale/programs/ld-ctype.c:3056 locale/programs/ld-ctype.c:3077
-#: locale/programs/ld-ctype.c:3098 locale/programs/ld-ctype.c:3138
-#: locale/programs/ld-ctype.c:3159 locale/programs/ld-ctype.c:3226
+#: locale/programs/ld-ctype.c:2910 locale/programs/ld-ctype.c:2994 locale/programs/ld-ctype.c:3014
+#: locale/programs/ld-ctype.c:3035 locale/programs/ld-ctype.c:3056 locale/programs/ld-ctype.c:3077
+#: locale/programs/ld-ctype.c:3098 locale/programs/ld-ctype.c:3138 locale/programs/ld-ctype.c:3159
+#: locale/programs/ld-ctype.c:3226
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr ""
@@ -502,11 +498,10 @@ msgstr ""
 msgid "%s: character `%s' not defined in charmap while needed as default value"
 msgstr "ο χαρακτήρας `%s' δεν ορίστηκε ενώ χρειάζεται σαν προκαθορισμένη τιμή"
 
-#: locale/programs/ld-ctype.c:2989 locale/programs/ld-ctype.c:3009
-#: locale/programs/ld-ctype.c:3051 locale/programs/ld-ctype.c:3072
-#: locale/programs/ld-ctype.c:3093 locale/programs/ld-ctype.c:3133
-#: locale/programs/ld-ctype.c:3154 locale/programs/ld-ctype.c:3221
-#: locale/programs/ld-ctype.c:3263 locale/programs/ld-ctype.c:3288
+#: locale/programs/ld-ctype.c:2989 locale/programs/ld-ctype.c:3009 locale/programs/ld-ctype.c:3051
+#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3093 locale/programs/ld-ctype.c:3133
+#: locale/programs/ld-ctype.c:3154 locale/programs/ld-ctype.c:3221 locale/programs/ld-ctype.c:3263
+#: locale/programs/ld-ctype.c:3288
 #, fuzzy, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "ο χαρακτήρας `%s' δεν ορίστηκε ενώ χρειάζεται σαν προκαθορισμένη τιμή"
@@ -517,14 +512,12 @@ msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: η εντολή ήταν '%s', το αποτέλεσμα ήταν %d\n"
 
 #: locale/programs/ld-time.c:225
-#, fuzzy, c-format
+#, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
-msgstr ""
-"η κατευθυντήρια σημαία στο αλφαριθμιτικό %d στο πεδίο `era' στην\n"
-"κατηγορία `%s' δεν είναι '+' ούτε '-'"
+msgstr "%s: η κατευθυντήρια σημαία στο αλφαριθμιτικό %Zd στο πεδίο `era' δεν είναι '+' ούτε '-'"
 
 #: locale/programs/ld-time.c:237
-#, fuzzy, c-format
+#, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: η κατευθυντήρια σημαία στο αλφαριθμιτικό %Zd στο πεδίο `era' δεν είναι ένας μόνος χαρακτήρας"
 
@@ -568,28 +561,23 @@ msgstr "%s: Σφάλμα στο μηχανισμό κατάστασης"
 msgid "%s: field `%s' declared more than once"
 msgstr ""
 
-#: locale/programs/ld-ctype.c:1525 locale/programs/ld-ctype.c:1650
-#: locale/programs/ld-ctype.c:1756 locale/programs/ld-ctype.c:2346
-#: locale/programs/ld-ctype.c:3329
+#: locale/programs/ld-ctype.c:1525 locale/programs/ld-ctype.c:1650 locale/programs/ld-ctype.c:1756
+#: locale/programs/ld-ctype.c:2346 locale/programs/ld-ctype.c:3329
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr ""
 
-#: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205
-#: locale/programs/ld-address.c:230 locale/programs/ld-address.c:259
-#: locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
+#: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205 locale/programs/ld-address.c:230
+#: locale/programs/ld-address.c:259 locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
 #, c-format
 msgid "%s: field `%s' must not be empty"
 msgstr ""
 
-#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:197
-#: locale/programs/ld-address.c:224 locale/programs/ld-address.c:284
-#: locale/programs/ld-address.c:303 locale/programs/ld-address.c:315
-#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:244
-#: locale/programs/ld-monetary.c:260 locale/programs/ld-name.c:104
-#: locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127
-#: locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109
-#: locale/programs/ld-telephone.c:105
+#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:197 locale/programs/ld-address.c:224
+#: locale/programs/ld-address.c:284 locale/programs/ld-address.c:303 locale/programs/ld-address.c:315
+#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260
+#: locale/programs/ld-name.c:104 locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127
+#: locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105
 #, fuzzy, c-format
 msgid "%s: field `%s' not defined"
 msgstr "το πεδίο `%s' στην κατηγορία `%s' δεν ορίστηκε"
@@ -625,12 +613,10 @@ msgstr ""
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: μη αποδεκτή επιλογή -- %c\n"
 
-#: locale/programs/ld-address.c:573 locale/programs/ld-collate.c:3717
-#: locale/programs/ld-ctype.c:2844 locale/programs/ld-identification.c:437
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:324
-#: locale/programs/ld-monetary.c:932 locale/programs/ld-name.c:298
-#: locale/programs/ld-numeric.c:368 locale/programs/ld-paper.c:231
-#: locale/programs/ld-telephone.c:306 locale/programs/ld-time.c:1170
+#: locale/programs/ld-address.c:573 locale/programs/ld-collate.c:3717 locale/programs/ld-ctype.c:2844
+#: locale/programs/ld-identification.c:437 locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:324
+#: locale/programs/ld-monetary.c:932 locale/programs/ld-name.c:298 locale/programs/ld-numeric.c:368
+#: locale/programs/ld-paper.c:231 locale/programs/ld-telephone.c:306 locale/programs/ld-time.c:1170
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr ""
@@ -639,16 +625,15 @@ msgstr ""
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
 msgstr ""
 
-#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126
-#: locale/programs/ld-telephone.c:150
+#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126 locale/programs/ld-telephone.c:150
 #, fuzzy, c-format
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "μη έγκυρη διαδικασία διαφυγής στο τέλος του αλφαριθμιτικού"
 
 #: locale/programs/ld-time.c:250
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
-msgstr "μη έγκυρος αριθμός για αντιστάθμιση στo αλφαριθμιτικό %d στο πεδίο `era' στην κατηγορία `%s'"
+msgstr "%s: μη έγκυρος αριθμός για αντιστάθμιση στo αλφαριθμιτικό %Zd στο πεδίο `era' "
 
 #: locale/programs/ld-collate.c:3143
 #, c-format
@@ -661,14 +646,14 @@ msgid "%s: invalid option -- %c\n"
 msgstr "%s: μη έγκυρη επιλογή -- %c\n"
 
 #: locale/programs/ld-time.c:309
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
-msgstr "μη έγκυρη ημερομηνία έναρξης στο αλφαριθμιτικό %d στο πεδίο `era'στην κατηγορία `%s'"
+msgstr "%s: μη έγκυρη ημερομηνία έναρξης στο αλφαριθμιτικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-time.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "μη έγκυρη ημερομηνία τερματισμού στο αλφαριθμιτικό %d στο πεδίο `era'στην κατηγορία `%s'"
+msgstr "%s: μη έγκυρη ημερομηνία τερματισμού στο αλφαριθμιτικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-measurement.c:112
 #, fuzzy, c-format
@@ -680,8 +665,7 @@ msgstr "%s: πανικός: Μη έγκυρη l_value %d\n"
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "το πεδίο `%s' στην κατηγορία `%s' δεν ορίστηκε"
 
-#: locale/programs/ld-collate.c:3223 locale/programs/ld-collate.c:3346
-#: locale/programs/ld-collate.c:3695
+#: locale/programs/ld-collate.c:3223 locale/programs/ld-collate.c:3346 locale/programs/ld-collate.c:3695
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr ""
@@ -697,14 +681,14 @@ msgid "%s: missing `reorder-sections-end' keyword"
 msgstr ""
 
 #: locale/programs/ld-time.c:435
-#, fuzzy, c-format
+#, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
-msgstr "λείπει η διαμόρφωση εποχής στο αλφαριθμιτικό %d στο `era' πεδίοστην κατηγορία `%s'"
+msgstr "%s: λείπει η διαμόρφωση εποχής στο αλφαριθμιτικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-time.c:423
-#, fuzzy, c-format
+#, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
-msgstr "λείπει το όνομα της εποχής στο αλφαριθμιτικό %d στο `era' πεδίοστην κατηγορία `%s'"
+msgstr "%s: λείπει το όνομα της εποχής στο αλφαριθμιτικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-collate.c:3119
 #, fuzzy, c-format
@@ -782,14 +766,14 @@ msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "ο χάρτης χαρακτήρων `%s' ορίστηκε ήδη"
 
 #: locale/programs/ld-collate.c:3297
-#, fuzzy, c-format
+#, c-format
 msgid "%s: order for collating element %.*s not yet defined"
-msgstr "σύμβολο για πολυχαρακτήρα στοιχείου παραβολής `%.*s' διπλασιάζει τον ορισμότου στοιχείου"
+msgstr ""
 
 #: locale/programs/ld-collate.c:3281
-#, fuzzy, c-format
+#, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
-msgstr "Τα χαρακτηριστικά της βαρύτητας ταξινόμισης για σύμβολο παραβολής δεν βγάζει νόημα"
+msgstr ""
 
 #: sunrpc/rpc_main.c:289
 #, c-format
@@ -801,14 +785,11 @@ msgstr "%s: η έξοδος θα επικαλύψει το %s\n"
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: πανικός: Μη έγκυρη l_value %d\n"
 
-#: locale/programs/charmap.c:838 locale/programs/ld-address.c:592
-#: locale/programs/ld-collate.c:2590 locale/programs/ld-collate.c:3735
-#: locale/programs/ld-ctype.c:2107 locale/programs/ld-ctype.c:2864
-#: locale/programs/ld-identification.c:456
-#: locale/programs/ld-measurement.c:248 locale/programs/ld-messages.c:342
-#: locale/programs/ld-monetary.c:950 locale/programs/ld-name.c:316
-#: locale/programs/ld-numeric.c:386 locale/programs/ld-paper.c:249
-#: locale/programs/ld-telephone.c:324 locale/programs/ld-time.c:1188
+#: locale/programs/charmap.c:838 locale/programs/ld-address.c:592 locale/programs/ld-collate.c:2590
+#: locale/programs/ld-collate.c:3735 locale/programs/ld-ctype.c:2107 locale/programs/ld-ctype.c:2864
+#: locale/programs/ld-identification.c:456 locale/programs/ld-measurement.c:248 locale/programs/ld-messages.c:342
+#: locale/programs/ld-monetary.c:950 locale/programs/ld-name.c:316 locale/programs/ld-numeric.c:386
+#: locale/programs/ld-paper.c:249 locale/programs/ld-telephone.c:324 locale/programs/ld-time.c:1188
 #: locale/programs/locfile.h:103 locale/programs/repertoire.c:325
 #, c-format
 msgid "%s: premature end of file"
@@ -820,14 +801,14 @@ msgid "%s: section `%.*s' not known"
 msgstr ""
 
 #: locale/programs/ld-time.c:337
-#, fuzzy, c-format
+#, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
-msgstr "η ημερομηνία έναρξης δεν είναι έγκυρη στο αλφαριθμιτικό %d στο πεδίο `era' στην κατηγορία `%s'"
+msgstr "%s: η ημερομηνία έναρξης δεν είναι έγκυρη στο αλφαριθμιτικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-time.c:414
-#, fuzzy, c-format
+#, c-format
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
-msgstr "η ημερομηνία τερματισμού δεν είναι έγκυρη στην αλυσίδα %d στο πεδίο `era' στην κατηγορία `%s'"
+msgstr "%s: η ημερομηνία τερματισμού δεν είναι έγκυρη στο αλφαριθμητικό %Zd στο πεδίο `era'"
 
 #: locale/programs/ld-collate.c:1248
 #, c-format
@@ -839,15 +820,12 @@ msgstr ""
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr ""
 
-#: locale/programs/ld-address.c:583 locale/programs/ld-collate.c:518
-#: locale/programs/ld-collate.c:570 locale/programs/ld-collate.c:865
-#: locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2581
-#: locale/programs/ld-collate.c:3726 locale/programs/ld-ctype.c:1840
-#: locale/programs/ld-ctype.c:2098 locale/programs/ld-ctype.c:2673
-#: locale/programs/ld-ctype.c:2855 locale/programs/ld-identification.c:447
-#: locale/programs/ld-measurement.c:239 locale/programs/ld-messages.c:333
-#: locale/programs/ld-monetary.c:941 locale/programs/ld-name.c:307
-#: locale/programs/ld-numeric.c:377 locale/programs/ld-paper.c:240
+#: locale/programs/ld-address.c:583 locale/programs/ld-collate.c:518 locale/programs/ld-collate.c:570
+#: locale/programs/ld-collate.c:865 locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2581
+#: locale/programs/ld-collate.c:3726 locale/programs/ld-ctype.c:1840 locale/programs/ld-ctype.c:2098
+#: locale/programs/ld-ctype.c:2673 locale/programs/ld-ctype.c:2855 locale/programs/ld-identification.c:447
+#: locale/programs/ld-measurement.c:239 locale/programs/ld-messages.c:333 locale/programs/ld-monetary.c:941
+#: locale/programs/ld-name.c:307 locale/programs/ld-numeric.c:377 locale/programs/ld-paper.c:240
 #: locale/programs/ld-telephone.c:315 locale/programs/ld-time.c:1179
 #, c-format
 msgid "%s: syntax error"
@@ -954,12 +932,12 @@ msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: μη αναγνωρίσιμη επιλογή `--%s'\n"
 
 #: timezone/zic.c:443
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
 "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
-"%s: η χρήση είναι %s [ -s ] [ -v ] [ -l τοπική ώρα ] [ -p posix κανόνες ]\n"
+"%s: η χρήση είναι %s [ -s ] [ -v ] [ -l τοπική ώρα ] [ -p κανόνες posix ] \\\n"
 "\t[ -d κατάλογος ] [ -L δευτερόλεπτα αναπήδησης ] [ -y τύπος έτους ] [ αρχείο ... ]\n"
 
 #: timezone/zdump.c:175
@@ -968,39 +946,39 @@ msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: η χρήση είναι %s [ -v ] [ -c διακοπή ] ονομασία ζώνης ...\n"
 
 #: locale/programs/ld-messages.c:121 locale/programs/ld-messages.c:154
-#, fuzzy, c-format
+#, c-format
 msgid "%s: value for field `%s' must not be an empty string"
-msgstr "η τιμή για το πεδίο `%s' στην κατηγορία `%s' δεν πρέπει να είναι κενό αλφαριθμιτικό"
+msgstr "%s: η τιμή για το πεδίο `%s' δεν πρέπει να είναι ένα κενό αλφαριθμητικό"
 
 #: locale/programs/ld-monetary.c:250 locale/programs/ld-numeric.c:119
-#, fuzzy, c-format
+#, c-format
 msgid "%s: value for field `%s' must not be the empty string"
-msgstr "η τιμή για το πεδίο `%s' στην κατηγορία `%s' δεν πρέπει να είναι κενό αλφαριθμιτικό"
+msgstr "%s: η τιμή για το πεδίο `%s' δεν πρέπει να είναι το κενό αλφαριθμιτικό"
 
 #: locale/programs/ld-monetary.c:232
-#, fuzzy, c-format
+#, c-format
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
-msgstr "η τιμή του πεδίου `int_curr_symbol' στην κατηγορία `LC_MONETARY' δενσυμφωνεί με έγκυρο όνομα σύμφωνα με το ISO 4217"
+msgstr "%s: η τιμή του πεδίου `int_curr_symbol' δε συμφωνεί με έγκυρο όνομα κατά το ISO 4217"
 
 #: locale/programs/ld-monetary.c:224
-#, fuzzy, c-format
+#, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
-msgstr "η τιμή του πεδίου `int_curr_symbol' στην κατηγορία `LC_MONETARY' έχει λάθος μήκος"
+msgstr "%s: η τιμή του πεδίου `int_curr_symbol' έχει λάθος μήκος"
 
 #: locale/programs/ld-monetary.c:857 locale/programs/ld-numeric.c:334
-#, fuzzy, c-format
+#, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
-msgstr "οι τιμές για το πεδίο `%s' στην κατηγορία `%s' πρέπει να είναι μικρότερες του 127"
+msgstr "%s: οι τιμές για το πεδίο `%s' πρέπει να είναι μικρότερες από 127"
 
 #: locale/programs/ld-time.c:488
-#, fuzzy, c-format
+#, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
-msgstr "οι τιμές για το πεδίο `%s' στην κατηγορία `%s' πρέπει να είναι μικρότερες του 127"
+msgstr "%s: οι τιμές για το πεδίο `%s' δεν πρέπει να είναι μεγαλύτερες από %d"
 
 #: locale/programs/ld-time.c:472 locale/programs/ld-time.c:480
-#, fuzzy, c-format
+#, c-format
 msgid "%s: values of field `%s' must not be larger than %d"
-msgstr "οι τιμές για το πεδίο `%s' στην κατηγορία `%s' πρέπει να είναι μικρότερες του 127"
+msgstr "%s: οι τιμές του πεδίου `%s' δεν πρέπει να είναι μεγαλύτερες από %d"
 
 #: locale/programs/ld-collate.c:850
 #, c-format
@@ -1050,8 +1028,7 @@ msgstr ""
 "-o ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...\n"
 "[ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...]"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:797
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
+#: stdio-common/../sysdeps/gnu/errlist.c:797 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
 msgid ".lib section in a.out corrupted"
 msgstr "Το τμήμα .lib στο a.out είναι κατεστραμμένο"
 
@@ -1099,14 +1076,12 @@ msgstr "Ακυρώθηκε"
 msgid "Access Rights : "
 msgstr "Δικαιώματα Προσπέλασης :"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:793
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
+#: stdio-common/../sysdeps/gnu/errlist.c:793 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
 msgid "Accessing a corrupted shared library"
 msgstr "Προσπελαύνεται μια κατεστραμμένη διαμοιραζόμενη βιβλιοθήκη"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: stdio-common/../sysdeps/gnu/errlist.c:367
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
+#: stdio-common/../sysdeps/gnu/errlist.c:367 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
 msgid "Address already in use"
 msgstr "Η διεύθυνση υποδοχής είναι ήδη σε χρήση"
 
@@ -1124,8 +1099,7 @@ msgstr "Δεν υποστηρίζετε από το πρωτόκολλο η οικογένεια διευθύνσεων"
 msgid "Address family not supported by protocol family"
 msgstr "Η οικογένεια διευθύνσεων δεν υποστηρίζεται από την οικογένεια πρωτοκόλλου"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:761
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
+#: stdio-common/../sysdeps/gnu/errlist.c:761 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
 msgid "Advertise error"
 msgstr "Σφάλμα διαφήμισης"
 
@@ -1188,8 +1162,7 @@ msgstr "ΠΛΑΣΤΟ ΑΝΤΙΚΕΙΜΕΝΟ\n"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS In the GNU system, this error never happens; you get a signal instead.
-#: stdio-common/../sysdeps/gnu/errlist.c:115
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
+#: stdio-common/../sysdeps/gnu/errlist.c:115 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
 msgid "Bad address"
 msgstr "Εσφαλμένη διεύθυνση"
 
@@ -1208,8 +1181,7 @@ msgstr "Εσφαλμένος περιγραφέας αρχείου"
 msgid "Bad file number"
 msgstr "Εσφαλμένος αριθμός αρχείου"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:749
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
+#: stdio-common/../sysdeps/gnu/errlist.c:749 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
 msgid "Bad font file format"
 msgstr "Εσφαλμένη διαμόρφωση αρχείου γραμματοσειράς"
 
@@ -1244,8 +1216,7 @@ msgstr "Δυαδικά δεδομένα\n"
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: stdio-common/../sysdeps/gnu/errlist.c:122
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
+#: stdio-common/../sysdeps/gnu/errlist.c:122 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
 msgid "Block device required"
 msgstr "Απαιτείται συσκευή μπλοκ"
 
@@ -1258,10 +1229,8 @@ msgstr "Πρόβλημα στην εκλογή εκπομπής"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: stdio-common/../sysdeps/gnu/errlist.c:235
-#: stdio-common/../sysdeps/unix/siglist.c:39
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62
-#: sysdeps/generic/siglist.h:39
+#: stdio-common/../sysdeps/gnu/errlist.c:235 stdio-common/../sysdeps/unix/siglist.c:39
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62 sysdeps/generic/siglist.h:39
 msgid "Broken pipe"
 msgstr "Διακοπείσα σωλήνωση"
 
@@ -1281,8 +1250,7 @@ msgstr "Ξεπεράστηκε το όριο χρόνου της CPU"
 msgid "Cache expired"
 msgstr "Τα περιεχόμενα της λανθάνουσας μνήμης έληξαν"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:789
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
+#: stdio-common/../sysdeps/gnu/errlist.c:789 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
 msgid "Can not access a needed shared library"
 msgstr "Δεν είναι δυνατή η προσπέλαση μιας αναγκαίας διαμοιραζόμενης βιβλιοθήκης"
 
@@ -1374,8 +1342,7 @@ msgstr "Δεν είναι δυνατό να δεσμευτεί μνήμη"
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: stdio-common/../sysdeps/gnu/errlist.c:374
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
+#: stdio-common/../sysdeps/gnu/errlist.c:374 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
 msgid "Cannot assign requested address"
 msgstr "Δεν είναι δυνατή η εκχώρηση της ζητηθήσας διεύθυνσης"
 
@@ -1397,9 +1364,9 @@ msgid "Cannot have more than one file generation flag!\n"
 msgstr "Δε μπορεί να υπάρχουν περισσότερες από μια σημαίες δημιουργίας αρχείου!\n"
 
 #: elf/readlib.c:117
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot mmap file %s.\n"
-msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
+msgstr "Αδυναμία μεταφοράς στη μνήμη (mmap) του αρχείου %s.\n"
 
 #: sunrpc/pmap_rmt.c:361
 msgid "Cannot receive reply to broadcast"
@@ -1451,8 +1418,7 @@ msgstr ""
 msgid "Changing access rights of %s to 0644 failed"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:689
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
+#: stdio-common/../sysdeps/gnu/errlist.c:689 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
 msgid "Channel number out of range"
 msgstr "Ο αριθμός των καναλιών είναι έξω από τα όρια"
 
@@ -1473,8 +1439,7 @@ msgstr "Τα διαπιστευτήρια του εξυπηρετούμενου είναι πολύ αδύναμα"
 msgid "Columns             :\n"
 msgstr "Στήλες              :\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:769
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
+#: stdio-common/../sysdeps/gnu/errlist.c:769 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
 msgid "Communication error on send"
 msgstr "Σφάλμα επικοινωνίας κατά την αποστολή"
 
@@ -1493,23 +1458,20 @@ msgstr ""
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: stdio-common/../sysdeps/gnu/errlist.c:452
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
+#: stdio-common/../sysdeps/gnu/errlist.c:452 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
 msgid "Connection refused"
 msgstr "Απόρριψη σύνδεσης"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: stdio-common/../sysdeps/gnu/errlist.c:402
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
+#: stdio-common/../sysdeps/gnu/errlist.c:402 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
 msgid "Connection reset by peer"
 msgstr "Η σύνδεση έκλεισε από το ταίρι"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: stdio-common/../sysdeps/gnu/errlist.c:446
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
+#: stdio-common/../sysdeps/gnu/errlist.c:446 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
 msgid "Connection timed out"
 msgstr "Λήξη σύνδεσης"
 
@@ -1521,10 +1483,8 @@ msgstr "Συνεχίζεται"
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Μετατροπή της κωδικοποίησης δοθέντων αρχείων από μια κωδικοποίηση σε άλλη."
 
-#: catgets/gencat.c:246 elf/ldconfig.c:264 elf/sprof.c:355
-#: iconv/iconv_prog.c:351 locale/programs/locale.c:269
-#: locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90
-#: nss/getent.c:63 posix/getconf.c:751
+#: catgets/gencat.c:246 elf/ldconfig.c:264 elf/sprof.c:355 iconv/iconv_prog.c:351 locale/programs/locale.c:269
+#: locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90 nss/getent.c:63 posix/getconf.c:751
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -1566,8 +1526,7 @@ msgstr "Σύνδεσμος μεταξύ συσκευών"
 msgid "DATAFILE [OUTFILE]"
 msgstr ""
 
-#: nis/nss_nisplus/nisplus-publickey.c:96
-#: nis/nss_nisplus/nisplus-publickey.c:172
+#: nis/nss_nisplus/nisplus-publickey.c:96 nis/nss_nisplus/nisplus-publickey.c:172
 #, c-format
 msgid "DES entry for netname %s not unique\n"
 msgstr "Η καταχώρηση DES για το όνομα δικτύου %s δεν είναι μοναδική\n"
@@ -1611,8 +1570,7 @@ msgstr "Εξ ορισμού δικαιώματα Προσπέλασης :\n"
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: stdio-common/../sysdeps/gnu/errlist.c:430
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
+#: stdio-common/../sysdeps/gnu/errlist.c:430 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
 msgid "Destination address required"
 msgstr "Απαιτείται διεύθυνση προορισμού"
 
@@ -1643,8 +1601,7 @@ msgstr "Κατάλογος     : %s\n"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: stdio-common/../sysdeps/gnu/errlist.c:481
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
+#: stdio-common/../sysdeps/gnu/errlist.c:481 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
 msgid "Directory not empty"
 msgstr "Ο κατάλογος δεν είναι κενός"
 
@@ -1862,8 +1819,7 @@ msgstr "Σφάλμα στο υποσύστημα RPC"
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
 msgstr "Σφάλμα στην προσπέλαση αρχείου ψυχρής εκκίνησης του NIS+. Είναι το NIS+ εγκατεστημένο;"
 
-#: string/../sysdeps/mach/_strerror.c:58
-#: sysdeps/mach/hurd/mips/dl-machine.c:68
+#: string/../sysdeps/mach/_strerror.c:58 sysdeps/mach/hurd/mips/dl-machine.c:68
 msgid "Error in unknown error system: "
 msgstr "Σφάλμα σε άγνωστο σύστημα σφαλμάτων: "
 
@@ -1881,8 +1837,7 @@ msgstr "Ανταλλαγή πλήρης"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: stdio-common/../sysdeps/gnu/errlist.c:76
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
+#: stdio-common/../sysdeps/gnu/errlist.c:76 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
 msgid "Exec format error"
 msgstr "Σφάλμα στη διαμόρφωση του εκτελέσιμου"
 
@@ -1908,15 +1863,13 @@ msgstr ""
 msgid "File %s is too small, not checked."
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:781
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
+#: stdio-common/../sysdeps/gnu/errlist.c:781 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "File descriptor in bad state"
 msgstr "Ο περιγραφέας αρχείου σε κακή κατάσταση"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: stdio-common/../sysdeps/gnu/errlist.c:135
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
+#: stdio-common/../sysdeps/gnu/errlist.c:135 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
 msgid "File exists"
 msgstr "Το αρχείο υπάρχει"
 
@@ -1935,8 +1888,7 @@ msgstr "Το κλείδωμα αρχείου κατέληξε σε σφάλμα αδιεξόδου"
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: stdio-common/../sysdeps/gnu/errlist.c:465
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
+#: stdio-common/../sysdeps/gnu/errlist.c:465 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
 msgid "File name too long"
 msgstr "Πολύ μεγάλο όνομα αρχείου"
 
@@ -1949,8 +1901,7 @@ msgid "File table overflow"
 msgstr "Υπερχείλιση πίνακα αρχείου"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: stdio-common/../sysdeps/gnu/errlist.c:203
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
+#: stdio-common/../sysdeps/gnu/errlist.c:203 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
 msgid "File too large"
 msgstr "Πολύ μεγάλο αρχείο"
 
@@ -2071,8 +2022,7 @@ msgstr "Δε βρέθηκε το \"%d\" στην λανθάνουσα μνήμη κωδικών!"
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη ομάδας!"
 
-#: nscd/hstcache.c:299 nscd/hstcache.c:341 nscd/hstcache.c:386
-#: nscd/hstcache.c:430
+#: nscd/hstcache.c:299 nscd/hstcache.c:341 nscd/hstcache.c:386 nscd/hstcache.c:430
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη συστημάτων!"
@@ -2083,8 +2033,7 @@ msgid "Haven't found \"%s\" in password cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη κωδικών!"
 
 #. TRANS The remote host for a requested network connection is down.
-#: stdio-common/../sysdeps/gnu/errlist.c:470
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
+#: stdio-common/../sysdeps/gnu/errlist.c:470 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
 msgid "Host is down"
 msgstr "Το σύστημα δε λειτουργεί"
 
@@ -2108,8 +2057,7 @@ msgstr "IOT παγίδα"
 msgid "IVY"
 msgstr "IVY"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:645
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
+#: stdio-common/../sysdeps/gnu/errlist.c:645 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
 msgid "Identifier removed"
 msgstr "Προσδιοριστής αφαιρέθηκε"
 
@@ -2131,8 +2079,7 @@ msgid "Illegal object type for operation"
 msgstr "Ακατάλληλο είδος αντικειμένου για τη λειτουργία"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: stdio-common/../sysdeps/gnu/errlist.c:214
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
+#: stdio-common/../sysdeps/gnu/errlist.c:214 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
 msgid "Illegal seek"
 msgstr "Παράνομη αναζήτηση"
 
@@ -2147,8 +2094,7 @@ msgstr "Ακατάλληλο είδος αρχείου ή διαμόρφωσης"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: stdio-common/../sysdeps/gnu/errlist.c:189
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
+#: stdio-common/../sysdeps/gnu/errlist.c:189 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
 msgid "Inappropriate ioctl for device"
 msgstr "Ακατάλληλο ioctl για συσκευή"
 
@@ -2207,8 +2153,7 @@ msgstr "Διακοπή"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: stdio-common/../sysdeps/gnu/errlist.c:48
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
+#: stdio-common/../sysdeps/gnu/errlist.c:48 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
 msgid "Interrupted system call"
 msgstr "Διακοπείσα κλήση συστήματος"
 
@@ -2218,8 +2163,7 @@ msgstr "Η διακοπείσα κλήση συστήματος θα πρέπει να επανακινηθεί"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: stdio-common/../sysdeps/gnu/errlist.c:165
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
+#: stdio-common/../sysdeps/gnu/errlist.c:165 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
 msgid "Invalid argument"
 msgstr "Μη έγκυρη παράμετρος"
 
@@ -2292,8 +2236,7 @@ msgstr "Μη έγκυρος περιγραφέας αίτησης"
 msgid "Invalid server verifier"
 msgstr "Μη έγκυρος εξακριβωτής(verifier) διακομιστή"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:741
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
+#: stdio-common/../sysdeps/gnu/errlist.c:741 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
 msgid "Invalid slot"
 msgstr "Μη έγκυρη οπή"
 
@@ -2303,8 +2246,7 @@ msgstr "Ακύρωση των περιεχομένων της συγκεκριμένης λανθάνουσας μνήμης"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: stdio-common/../sysdeps/gnu/errlist.c:159
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
+#: stdio-common/../sysdeps/gnu/errlist.c:159 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
 msgid "Is a directory"
 msgstr "Είναι κατάλογος"
 
@@ -2333,33 +2275,27 @@ msgstr "ΣΥΝΔΕΣΜΟΣ\n"
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "Η ΤΟΠΙΚΗ καταχώρηση για την ΤΑΥΤ. %d στο κατάλογο %s δεν είναι μοναδική\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:717
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
+#: stdio-common/../sysdeps/gnu/errlist.c:717 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
 msgid "Level 2 halted"
 msgstr "Επίπεδο 2 σταμάτησε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:693
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
+#: stdio-common/../sysdeps/gnu/errlist.c:693 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
 msgid "Level 2 not synchronized"
 msgstr "Επίπεδο 2 δεν συγχρονίστηκε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:697
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
+#: stdio-common/../sysdeps/gnu/errlist.c:697 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
 msgid "Level 3 halted"
 msgstr "Επίπεδο 3 σταμάτησε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:701
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
+#: stdio-common/../sysdeps/gnu/errlist.c:701 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
 msgid "Level 3 reset"
 msgstr "Επίπεδο 3 επαναφέρθηκε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:657
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
+#: stdio-common/../sysdeps/gnu/errlist.c:657 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
 msgid "Link has been severed"
 msgstr "Ο σύνδεσμος έσπασε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:705
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
+#: stdio-common/../sysdeps/gnu/errlist.c:705 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
 msgid "Link number out of range"
 msgstr "Ο αριθμός σύνδεσμου είναι έξω από το όριο"
 
@@ -2384,8 +2320,7 @@ msgstr "Δεν έχει οριστεί το όνομα τοπικού τομέα"
 msgid "Local resource allocation failure"
 msgstr "Αποτυχία δέσμευσης τοπικών πόρων"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:753
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
+#: stdio-common/../sysdeps/gnu/errlist.c:753 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
 msgid "Machine is not on the network"
 msgstr "Το μηχάνημα δεν είναι στο δίκτυο"
 
@@ -2423,8 +2358,7 @@ msgstr "Οι πίνακες μηνυμάτων είναι πλήρεις"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: stdio-common/../sysdeps/gnu/errlist.c:318
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
+#: stdio-common/../sysdeps/gnu/errlist.c:318 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
 msgid "Message too long"
 msgstr "Υπερβολικά μεγάλο μήνυμα"
 
@@ -2449,8 +2383,7 @@ msgstr "Η λειτουργία τροποποίησης απέτυχε"
 msgid "Modify output format:"
 msgstr "Μορφή εξόδου τροποποίησης:"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:649
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
+#: stdio-common/../sysdeps/gnu/errlist.c:649 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
 msgid "Multihop attempted"
 msgstr "Προσπάθεια multihop"
 
@@ -2458,8 +2391,7 @@ msgstr "Προσπάθεια multihop"
 msgid "Must specify user name for server-user option"
 msgstr ""
 
-#: catgets/gencat.c:111 catgets/gencat.c:115 locale/programs/localedef.c:115
-#: nscd/nscd.c:83
+#: catgets/gencat.c:111 catgets/gencat.c:115 locale/programs/localedef.c:115 nscd/nscd.c:83
 msgid "NAME"
 msgstr "ΟΝΟΜΑ"
 
@@ -2518,8 +2450,7 @@ msgstr "Λανθάνουσα Υπηρεσία Εξυπηρέτησης Αντιστοιχιών Ονομάτων."
 msgid "Name not served by this server"
 msgstr "Το όνομα αυτό δε προσφέρεται από αυτόν το εξυπηρετητή"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:777
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
+#: stdio-common/../sysdeps/gnu/errlist.c:777 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
 msgid "Name not unique on network"
 msgstr "Το όνομα δεν είναι μοναδικό στο δίκτυο"
 
@@ -2555,20 +2486,17 @@ msgid "Network dropped connection on reset"
 msgstr "Το δίκτυο έριξε την σύνδεση κατά την επαναφορά"
 
 #. TRANS A socket operation failed because the network was down.
-#: stdio-common/../sysdeps/gnu/errlist.c:379
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
+#: stdio-common/../sysdeps/gnu/errlist.c:379 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
 msgid "Network is down"
 msgstr "Το δίκτυο δε λειτουργεί"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: stdio-common/../sysdeps/gnu/errlist.c:385
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
+#: stdio-common/../sysdeps/gnu/errlist.c:385 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
 msgid "Network is unreachable"
 msgstr "Το δίκτυο δεν είναι προσπελάσιμο"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:713
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
+#: stdio-common/../sysdeps/gnu/errlist.c:713 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
 msgid "No CSI structure available"
 msgstr "Δεν είναι διαθέσιμη η CSI δομή(structure)"
 
@@ -2591,8 +2519,7 @@ msgstr "Κανένα anode"
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: stdio-common/../sysdeps/gnu/errlist.c:409
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
+#: stdio-common/../sysdeps/gnu/errlist.c:409 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
 msgid "No buffer space available"
 msgstr "Δεν υπάρχει διαθέσιμος χώρος ενταμίευσης"
 
@@ -2604,22 +2531,18 @@ msgstr "ο χαρακτήρας <SP> δεν ορίστηκε στον χάρτη χαρακτήρων"
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: stdio-common/../sysdeps/gnu/errlist.c:90
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
+#: stdio-common/../sysdeps/gnu/errlist.c:90 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
 msgid "No child processes"
 msgstr "Καμιά θυγατρική διεργασία"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:653
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
+#: stdio-common/../sysdeps/gnu/errlist.c:653 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
 msgid "No data available"
 msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα"
 
-#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1500
-#: locale/programs/ld-ctype.c:407 locale/programs/ld-identification.c:132
-#: locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98
-#: locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94
-#: locale/programs/ld-numeric.c:99 locale/programs/ld-paper.c:91
-#: locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:160
+#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1500 locale/programs/ld-ctype.c:407
+#: locale/programs/ld-identification.c:132 locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98
+#: locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94 locale/programs/ld-numeric.c:99
+#: locale/programs/ld-paper.c:91 locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:160
 #, fuzzy, c-format
 msgid "No definition for %s category found"
 msgstr "Οι ορισμοί πηγή βρίσκονται στο ΑΡΧΕΙΟ"
@@ -2649,8 +2572,7 @@ msgstr "Κανένα ταίριασμα"
 msgid "No medium found"
 msgstr "Δεν βρέθηκε μέσο"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:661
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
+#: stdio-common/../sysdeps/gnu/errlist.c:661 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
 msgid "No message of desired type"
 msgstr "Κανένα μήνυμα επιθυμητού τύπου"
 
@@ -2671,22 +2593,19 @@ msgid "No remote programs registered.\n"
 msgstr "Κανένα απομακρυσμένο πρόγραμμα δεν δηλώθηκε.\n"
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: stdio-common/../sysdeps/gnu/errlist.c:475
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
+#: stdio-common/../sysdeps/gnu/errlist.c:475 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
 msgid "No route to host"
 msgstr "Δεν υπάρχει διαδρομή στο σύστημα"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: stdio-common/../sysdeps/gnu/errlist.c:209
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
+#: stdio-common/../sysdeps/gnu/errlist.c:209 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
 msgid "No space left on device"
 msgstr "Δεν έμεινε καθόλου χώρος στη συσκευή"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: stdio-common/../sysdeps/gnu/errlist.c:148
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
+#: stdio-common/../sysdeps/gnu/errlist.c:148 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
 msgid "No such device"
 msgstr "Δεν υπάρχει τέτοια συσκευή"
 
@@ -2695,16 +2614,14 @@ msgstr "Δεν υπάρχει τέτοια συσκευή"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: stdio-common/../sysdeps/gnu/errlist.c:62
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
+#: stdio-common/../sysdeps/gnu/errlist.c:62 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
 msgid "No such device or address"
 msgstr "Δεν υπάρχει τέτοια συσκευή ή διεύθυνση"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: stdio-common/../sysdeps/gnu/errlist.c:32
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
+#: stdio-common/../sysdeps/gnu/errlist.c:32 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
 msgid "No such file or directory"
 msgstr "Δεν υπάρχει τέτοιο αρχείο ή κατάλογος"
 
@@ -2717,8 +2634,7 @@ msgid "No such map in server's domain"
 msgstr "Δεν υπάρχει τέτοιος χάρτης στον τομέα του διακομιστή"
 
 #. TRANS No process matches the specified process ID.
-#: stdio-common/../sysdeps/gnu/errlist.c:37
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
+#: stdio-common/../sysdeps/gnu/errlist.c:37 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
 msgid "No such process"
 msgstr "Δεν υπάρχει τέτοια διεργασία"
 
@@ -2743,8 +2659,7 @@ msgid "Not a data message"
 msgstr "Δεν είναι μήνυμα δεδομένων"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: stdio-common/../sysdeps/gnu/errlist.c:153
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
+#: stdio-common/../sysdeps/gnu/errlist.c:153 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
 msgid "Not a directory"
 msgstr "Δεν είναι κατάλογος"
 
@@ -2776,8 +2691,7 @@ msgstr "Δε βρέθηκε, κανένα τέτοιο όνομα"
 msgid "Not master server for this domain"
 msgstr "Δεν υπάρχει κύριος εξυπηρετητής για αυτόν τον τομέα"
 
-#: nis/nis_error.c:40
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
+#: nis/nis_error.c:40 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
 msgid "Not owner"
 msgstr "Δεν είναι ιδιοκτήτης"
 
@@ -2841,8 +2755,7 @@ msgstr "Τύπος Αντικειμένου :"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on the GNU system, making this error code impossible.)
-#: stdio-common/../sysdeps/gnu/errlist.c:515
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
+#: stdio-common/../sysdeps/gnu/errlist.c:515 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
 msgid "Object is remote"
 msgstr "Το αντικείμενο είναι απομακρυσμένο"
 
@@ -2864,8 +2777,7 @@ msgstr "Μόνο ο διαχειριστής επιτρέπετε να χρησιμοποιήσει αυτήν την επιλογή!"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: stdio-common/../sysdeps/gnu/errlist.c:307
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
+#: stdio-common/../sysdeps/gnu/errlist.c:307 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
 msgid "Operation already in progress"
 msgstr "Η λειτουργία εκτελείται ήδη"
 
@@ -2889,8 +2801,7 @@ msgstr "Η λειτουργία δεν επιτρέπεται"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: stdio-common/../sysdeps/gnu/errlist.c:351
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
+#: stdio-common/../sysdeps/gnu/errlist.c:351 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
 msgid "Operation not supported"
 msgstr "Η λειτουργία δεν υποστηρίζεται"
 
@@ -2906,8 +2817,7 @@ msgstr "Η λειτουργία δεν υποστηρίζεται στην άλλη άκρη της μεταφοράς δεδομένων"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: stdio-common/../sysdeps/gnu/errlist.c:301
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
+#: stdio-common/../sysdeps/gnu/errlist.c:301 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
 msgid "Operation now in progress"
 msgstr "Η λειτουργία βρίσκεται τώρα σε εκτέλεση"
 
@@ -2954,8 +2864,7 @@ msgstr "Ιδιοκτήτης   : %s\n"
 msgid "PRIVATE\n"
 msgstr "ΙΔΙΩΤΙΚΟ\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:757
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
+#: stdio-common/../sysdeps/gnu/errlist.c:757 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
 msgid "Package not installed"
 msgstr "Το πακέτο δεν εγκαταστάθηκε"
 
@@ -2978,8 +2887,7 @@ msgid "Path `%s' given more than once"
 msgstr ""
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:39 nis/ypclnt.c:816
-#: stdio-common/../sysdeps/gnu/errlist.c:109
+#: nis/nis_error.c:39 nis/ypclnt.c:816 stdio-common/../sysdeps/gnu/errlist.c:109
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
 msgid "Permission denied"
 msgstr "Άρνηση πρόσβασης"
@@ -3020,19 +2928,16 @@ msgstr "Πιθανόν δε βρέθηκε"
 msgid "Profiling timer expired"
 msgstr "Ο χρονομετρητής βελτιστοποίησης έληξε"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:709
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
+#: stdio-common/../sysdeps/gnu/errlist.c:709 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
 msgid "Protocol driver not attached"
 msgstr "Ο οδηγός πρωτοκόλλου δεν έχει προσκολληθεί"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:677
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
+#: stdio-common/../sysdeps/gnu/errlist.c:677 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
 msgid "Protocol error"
 msgstr "Σφάλμα πρωτοκόλλου"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: stdio-common/../sysdeps/gnu/errlist.c:356
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
+#: stdio-common/../sysdeps/gnu/errlist.c:356 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
 msgid "Protocol family not supported"
 msgstr "Η οικογένεια πρωτοκόλλου δεν υποστηρίζεται"
 
@@ -3045,14 +2950,12 @@ msgstr "Δεν είναι διαθέσιμο το πρωτόκολλο"
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: stdio-common/../sysdeps/gnu/errlist.c:336
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
+#: stdio-common/../sysdeps/gnu/errlist.c:336 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
 msgid "Protocol not supported"
 msgstr "Το πρωτόκολλο δεν υποστηρίζεται"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: stdio-common/../sysdeps/gnu/errlist.c:323
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
+#: stdio-common/../sysdeps/gnu/errlist.c:323 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
 msgid "Protocol wrong type for socket"
 msgstr "Λάθος τύπος πρωτοκόλου για την υποδοχή(socket)"
 
@@ -3191,8 +3094,7 @@ msgid "Read configuration data from NAME"
 msgstr "Ανάγνωση δεδομένων ρύθμισης από το ΟΝΟΜΑ"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: stdio-common/../sysdeps/gnu/errlist.c:219
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
+#: stdio-common/../sysdeps/gnu/errlist.c:219 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
 msgid "Read-only file system"
 msgstr "Αναγνώσιμο-μόνο σύστημα αρχείων"
 
@@ -3205,13 +3107,11 @@ msgstr "Σήμα πραγματικού-χρόνου %d"
 msgid "Regular expression too big"
 msgstr "Πολύ μεγάλη κανονική έκφραση"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:829
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
+#: stdio-common/../sysdeps/gnu/errlist.c:829 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
 msgid "Remote I/O error"
 msgstr "Απομακρυσμένο σφάλμα εισόδου/εξόδου"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:785
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
+#: stdio-common/../sysdeps/gnu/errlist.c:785 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
 msgid "Remote address changed"
 msgstr "Η απομακρυσμένη διεύθυνση άλλαξε"
 
@@ -3238,9 +3138,8 @@ msgstr "Αναπαραγωγή :\n"
 msgid "Report bugs to %s.\n"
 msgstr "Αναφέρατε σφάλματα στο %s.\n"
 
-#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:337
-#: locale/programs/locale.c:256 locale/programs/localedef.c:297
-#: malloc/memusagestat.c:602
+#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:337 locale/programs/locale.c:256
+#: locale/programs/localedef.c:297 malloc/memusagestat.c:602
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr "Αναφέρατε σφάλματα χρησιμοποιώντας το `glibcbug' πρόγραμμα στο <bugs@gnu.org>.\n"
 
@@ -3301,8 +3200,7 @@ msgstr "Ο πόρος χάθηκε"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: stdio-common/../sysdeps/gnu/errlist.c:280
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
+#: stdio-common/../sysdeps/gnu/errlist.c:280 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
 msgid "Resource temporarily unavailable"
 msgstr "Ο πόρος είναι προσωρινά μη διαθέσιμος"
 
@@ -3364,20 +3262,17 @@ msgid "Signal 0"
 msgstr "Σήμα 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: stdio-common/../sysdeps/gnu/errlist.c:312
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
+#: stdio-common/../sysdeps/gnu/errlist.c:312 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
 msgid "Socket operation on non-socket"
 msgstr "Λειτουργία υποδοχής σε μη-υποδοχή"
 
 #. TRANS The socket type is not supported.
-#: stdio-common/../sysdeps/gnu/errlist.c:341
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
+#: stdio-common/../sysdeps/gnu/errlist.c:341 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
 msgid "Socket type not supported"
 msgstr "Ο τύπος της υποδοχής δεν υποστηρίζεται"
 
 #. TRANS A network connection was aborted locally.
-#: stdio-common/../sysdeps/gnu/errlist.c:395
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
+#: stdio-common/../sysdeps/gnu/errlist.c:395 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
 msgid "Software caused connection abort"
 msgstr "Το λογισμικό προκάλεσε ακύρωση σύνδεσης"
 
@@ -3389,8 +3284,7 @@ msgstr "Συγγνώμη. Δεν είστε διαχειριστής\n"
 msgid "Source definitions are found in FILE"
 msgstr "Οι ορισμοί πηγή βρίσκονται στο ΑΡΧΕΙΟ"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:765
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
+#: stdio-common/../sysdeps/gnu/errlist.c:765 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
 msgid "Srmount error"
 msgstr "Σφάλμα srmount"
 
@@ -3402,8 +3296,7 @@ msgstr "Σφάλμα στοίβας"
 #. TRANS system which is due to file system rearrangements on the server host.
 #. TRANS Repairing this condition usually requires unmounting and remounting
 #. TRANS the NFS file system on the local host.
-#: stdio-common/../sysdeps/gnu/errlist.c:507
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
+#: stdio-common/../sysdeps/gnu/errlist.c:507 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
 msgid "Stale NFS file handle"
 msgstr "Μη έγκυρος πια NFS χειριστής αρχείου"
 
@@ -3436,13 +3329,11 @@ msgstr "Σταμάτησε (έξοδος tty)"
 msgid "Streams pipe error"
 msgstr "Σφάλμα σωλήνωσης ροής"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:813
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
+#: stdio-common/../sysdeps/gnu/errlist.c:813 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
 msgid "Structure needs cleaning"
 msgstr "Η δομή χρειάζεται καθάρισμα"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:786 nis/ypclnt.c:860 posix/regex.c:1084
-#: stdio-common/../sysdeps/gnu/errlist.c:20
+#: nis/nis_error.c:29 nis/ypclnt.c:786 nis/ypclnt.c:860 posix/regex.c:1084 stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Επιτυχία"
 
@@ -3513,8 +3404,7 @@ msgstr "Τερματίστηκε"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
-#: stdio-common/../sysdeps/gnu/errlist.c:198
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
+#: stdio-common/../sysdeps/gnu/errlist.c:198 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
 msgid "Text file busy"
 msgstr "Αρχείο κειμένου σε χρήση"
 
@@ -3544,10 +3434,9 @@ msgstr ""
 
 #: nis/nis_print.c:224
 msgid "Time to live : "
-msgstr "Χρόνος ζωής :"
+msgstr "Χρόνος ζωής : "
 
-#: stdio-common/../sysdeps/gnu/errlist.c:681
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
+#: stdio-common/../sysdeps/gnu/errlist.c:681 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
 msgid "Timer expired"
 msgstr "Ο χρονομετρητής έληξε"
 
@@ -3568,8 +3457,7 @@ msgstr "Υπερβολικά πολλά επίπεδα συμβολικών συνδέσμων"
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: stdio-common/../sysdeps/gnu/errlist.c:226
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
+#: stdio-common/../sysdeps/gnu/errlist.c:226 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
 msgid "Too many links"
 msgstr "Υπερβολικά πολλοί σύνδεσμοι"
 
@@ -3580,8 +3468,7 @@ msgstr "Υπερβολικά πολλοί σύνδεσμοι"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: stdio-common/../sysdeps/gnu/errlist.c:176
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
+#: stdio-common/../sysdeps/gnu/errlist.c:176 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
 msgid "Too many open files"
 msgstr "Υπερβολικά πολλά ανοικτά αρχεία"
 
@@ -3600,15 +3487,13 @@ msgid "Too many processes"
 msgstr "Υπερβολικά πολλές διεργασίες"
 
 #. TRANS ???
-#: stdio-common/../sysdeps/gnu/errlist.c:440
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
+#: stdio-common/../sysdeps/gnu/errlist.c:440 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
 msgid "Too many references: cannot splice"
 msgstr "Υπερβολικά πολλοί παραπομπείς: αδυναμία ματίσματος"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: stdio-common/../sysdeps/gnu/errlist.c:494
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
+#: stdio-common/../sysdeps/gnu/errlist.c:494 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
 msgid "Too many users"
 msgstr "Υπερβολικά πολλοί χρήστες"
 
@@ -3629,8 +3514,7 @@ msgstr "Ο μεταφραστής πέθανε"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: stdio-common/../sysdeps/gnu/errlist.c:415
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
+#: stdio-common/../sysdeps/gnu/errlist.c:415 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
 msgid "Transport endpoint is already connected"
 msgstr "Η άκρη μεταφοράς είναι ήδη συνδεδεμένη"
 
@@ -3638,8 +3522,7 @@ msgstr "Η άκρη μεταφοράς είναι ήδη συνδεδεμένη"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: stdio-common/../sysdeps/gnu/errlist.c:423
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
+#: stdio-common/../sysdeps/gnu/errlist.c:423 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
 msgid "Transport endpoint is not connected"
 msgstr "Η άκρη μεταφοράς δεν είναι συνδεδεμένη"
 
@@ -3701,8 +3584,7 @@ msgstr "Άγνωστη βάση δεδομένων: %s\n"
 msgid "Unknown error"
 msgstr "Άγνωστο σφάλμα"
 
-#: string/../sysdeps/generic/_strerror.c:48
-#: string/../sysdeps/mach/_strerror.c:88
+#: string/../sysdeps/generic/_strerror.c:48 string/../sysdeps/mach/_strerror.c:88
 #: sysdeps/mach/hurd/mips/dl-machine.c:83
 msgid "Unknown error "
 msgstr "Άγνωστο σφάλμα "
@@ -3799,8 +3681,7 @@ msgstr "Καθοριζόμενο από τον χρήστη σήμα 1"
 msgid "User defined signal 2"
 msgstr "Καθοριζόμενο από τον χρήστη σήμα 2"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:673
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
+#: stdio-common/../sysdeps/gnu/errlist.c:673 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
 msgid "Value too large for defined data type"
 msgstr "Η τιμή είναι πολύ μεγάλη για καθορισμένο τύπο δεδομένων"
 
@@ -3844,10 +3725,8 @@ msgstr ""
 msgid "Writing of cache data failed."
 msgstr ""
 
-#: catgets/gencat.c:251 elf/ldconfig.c:269 elf/sprof.c:361
-#: iconv/iconv_prog.c:356 locale/programs/locale.c:274
-#: locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95
-#: nss/getent.c:68 posix/getconf.c:756
+#: catgets/gencat.c:251 elf/ldconfig.c:269 elf/sprof.c:361 iconv/iconv_prog.c:356 locale/programs/locale.c:274
+#: locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95 nss/getent.c:68 posix/getconf.c:756
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Εγγράφηκε από %s.\n"
@@ -3915,8 +3794,7 @@ msgstr ""
 msgid "`%.*s' already defined in repertoire"
 msgstr ""
 
-#: locale/programs/charmap.c:599 locale/programs/locfile.h:96
-#: locale/programs/repertoire.c:314
+#: locale/programs/charmap.c:599 locale/programs/locfile.h:96 locale/programs/repertoire.c:314
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "Ο ορισμός `%1$s' δεν τελειώνει με `END %1$s'"
@@ -3965,8 +3843,8 @@ msgstr "auth_none.c - Μοιραίο λάθος παράταξης"
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: η μνήμη εξαντλήθηκε\n"
 
-#: locale/programs/charmap.c:364 locale/programs/locfile.c:118
-#: locale/programs/locfile.c:145 locale/programs/repertoire.c:176
+#: locale/programs/charmap.c:364 locale/programs/locfile.c:118 locale/programs/locfile.c:145
+#: locale/programs/repertoire.c:176
 msgid "bad argument"
 msgstr "κακό όρισμα"
 
@@ -4068,8 +3946,7 @@ msgstr "αδυναμία επεξεργασίας των προδιαγραφών σειράς"
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr ""
 
-#: elf/dl-load.c:418 elf/dl-load.c:518 elf/dl-load.c:546 elf/dl-load.c:593
-#: elf/dl-load.c:685
+#: elf/dl-load.c:418 elf/dl-load.c:518 elf/dl-load.c:546 elf/dl-load.c:593 elf/dl-load.c:685
 #, fuzzy
 msgid "cannot create cache for search path"
 msgstr "Δεν είναι δυνατή η δημιουργία υποδοχής για εκπομπή rpc"
@@ -4132,7 +4009,7 @@ msgstr "δε βρέθηκε κανένας προεπεξεργαστής C (cpp)\n"
 #: nscd/connections.c:225
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
-msgstr "δε μπορεί να εξυπηρετηθεί η αίτηση παλαιάς έκδοσης %d· η τρέχουσα έκδοση είναι %d"
+msgstr "δε μπορεί να εξυπηρετηθεί η αίτηση παλαιάς έκδοσης %d, η τρέχουσα έκδοση είναι %d"
 
 #: elf/sprof.c:670
 msgid "cannot load profiling data"
@@ -4171,8 +4048,8 @@ msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
 msgid "cannot open input file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
 
-#: locale/programs/localedef.c:203 locale/programs/localedef.c:218
-#: locale/programs/localedef.c:513 locale/programs/localedef.c:533
+#: locale/programs/localedef.c:203 locale/programs/localedef.c:218 locale/programs/localedef.c:513
+#: locale/programs/localedef.c:533
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου ορισμού locale `%s'"
@@ -4213,7 +4090,7 @@ msgstr "αδυναμία ανάγνωσης καταλόγου του χάρτη χαρακτήρων `%s'"
 
 #: nscd/connections.c:125
 msgid "cannot read configuration file; this is fatal"
-msgstr "αδυναμία ανάγνωσης αρχείου ρυθμίσεων· αυτό είναι μοιραίο"
+msgstr "αδυναμία ανάγνωσης αρχείου ρυθμίσεων, αυτό είναι μοιραίο"
 
 #: elf/dl-load.c:838 elf/dl-load.c:1244
 #, fuzzy
@@ -4704,8 +4581,7 @@ msgstr "μη έγκυρη κατάσταση για την dlopen()"
 msgid "invalid month name"
 msgstr "μη έγκυρο όνομα μήνα"
 
-#: locale/programs/charmap.c:969 locale/programs/ld-collate.c:2869
-#: locale/programs/repertoire.c:418
+#: locale/programs/charmap.c:969 locale/programs/ld-collate.c:2869 locale/programs/repertoire.c:418
 #, fuzzy
 msgid "invalid names for character range"
 msgstr "μη έγκυρα ονόματα για το πεδίο χαρακτήρων"
@@ -4805,8 +4681,7 @@ msgstr "η μνήμη πειράχτηκε πριν από το δεσμευμένο μπλοκ\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "η μνήμη πειράχτηκε μετά το τέλος του δεσμευμένου μπλοκ\n"
 
-#: locale/programs/locfile.c:334 locale/programs/xmalloc.c:70
-#: malloc/obstack.c:477 posix/getconf.c:809
+#: locale/programs/locfile.c:334 locale/programs/xmalloc.c:70 malloc/obstack.c:477 posix/getconf.c:809
 msgid "memory exhausted"
 msgstr "η μνήμη εξαντλήθηκε"
 
@@ -4831,10 +4706,8 @@ msgstr "κανόνας χωρίς όνομα"
 msgid "neither original nor target encoding specified"
 msgstr "δεν έχει οριστεί ούτε αρχική ούτε τελική κωδικοποίηση"
 
-#: nis/nss_nisplus/nisplus-publickey.c:281
-#: nis/nss_nisplus/nisplus-publickey.c:287
-#: nis/nss_nisplus/nisplus-publickey.c:346
-#: nis/nss_nisplus/nisplus-publickey.c:355
+#: nis/nss_nisplus/nisplus-publickey.c:281 nis/nss_nisplus/nisplus-publickey.c:287
+#: nis/nss_nisplus/nisplus-publickey.c:346 nis/nss_nisplus/nisplus-publickey.c:355
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
 msgstr "netname2user: (ανατρέξιμο nis+): %s\n"
@@ -4901,13 +4774,13 @@ msgstr ""
 msgid "no output file produced because warning were issued"
 msgstr "δεν παράχθηκε αρχείο εξόδου επειδή εκδόθηκαν προειδοποιήσεις"
 
-#: locale/programs/charmap.c:488 locale/programs/charmap.c:668
-#: locale/programs/charmap.c:764 locale/programs/repertoire.c:231
+#: locale/programs/charmap.c:488 locale/programs/charmap.c:668 locale/programs/charmap.c:764
+#: locale/programs/repertoire.c:231
 msgid "no symbolic name given"
 msgstr "δεν δώθηκε συμβολικό όνομα"
 
-#: locale/programs/charmap.c:575 locale/programs/charmap.c:723
-#: locale/programs/charmap.c:806 locale/programs/repertoire.c:297
+#: locale/programs/charmap.c:575 locale/programs/charmap.c:723 locale/programs/charmap.c:806
+#: locale/programs/repertoire.c:297
 msgid "no symbolic name given for end of range"
 msgstr "δεν δώθηκε συμβολικό όνομα για το τέλος πεδίου"
 
@@ -5016,9 +4889,8 @@ msgstr "το αρχείο δεδομένων προφίλ `%s' δεν ταιριάζει με το διαμοιραζόμενο αντικ
 msgid "program %lu is not available\n"
 msgstr "το πρόγραμμα %lu δεν είναι διαθέσιμο\n"
 
-#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
-#: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
-#: sunrpc/rpcinfo.c:510
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333 sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453
+#: sunrpc/rpcinfo.c:476 sunrpc/rpcinfo.c:510
 #, c-format
 msgid "program %lu version %lu is not available\n"
 msgstr "το πρόγραμμα %lu έκδοσης %lu δεν είναι διαθέσιμο\n"
@@ -5234,28 +5106,24 @@ msgstr ""
 msgid "symbol `%s' not defined"
 msgstr "άγνωστο σύμβολο `%.*s': γραμμή αγνοήθηκε"
 
-#: locale/programs/ld-ctype.c:1955 locale/programs/ld-ctype.c:2006
-#: locale/programs/ld-ctype.c:2048
+#: locale/programs/ld-ctype.c:1955 locale/programs/ld-ctype.c:2006 locale/programs/ld-ctype.c:2048
 #, fuzzy
 msgid "syntax error"
 msgstr "Σφάλμα στον δίαυλο(bus)"
 
-#: locale/programs/charmap.c:487 locale/programs/charmap.c:541
-#: locale/programs/charmap.c:573 locale/programs/charmap.c:667
-#: locale/programs/charmap.c:722 locale/programs/charmap.c:763
+#: locale/programs/charmap.c:487 locale/programs/charmap.c:541 locale/programs/charmap.c:573
+#: locale/programs/charmap.c:667 locale/programs/charmap.c:722 locale/programs/charmap.c:763
 #: locale/programs/charmap.c:804
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "συντακτικό σφάλμα στο ορισμό του %s: %s"
 
-#: locale/programs/charmap.c:346 locale/programs/charmap.c:363
-#: locale/programs/repertoire.c:175
+#: locale/programs/charmap.c:346 locale/programs/charmap.c:363 locale/programs/repertoire.c:175
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr "συντακτικό σφάλμα στον πρόλογο: %s"
 
-#: locale/programs/repertoire.c:230 locale/programs/repertoire.c:271
-#: locale/programs/repertoire.c:296
+#: locale/programs/repertoire.c:230 locale/programs/repertoire.c:271 locale/programs/repertoire.c:296
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr "συντακτικό σφάλμα στον ορισμό του πίνακα ρεπερτορίου: %s"
@@ -5407,9 +5275,9 @@ msgid "value for <%s> must be 1 or greater"
 msgstr "η τιμή για το %s πρέπει να είναι ακέραιος"
 
 #: locale/programs/charmap.c:411
-#, fuzzy, c-format
+#, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
-msgstr "η τιμή του <mb_cur_max> πρέπει να είναι μεγαλύτερη της τιμής του <mb_cur_min>"
+msgstr "η τιμή του <%s> πρέπει να είναι ίση ή μεγαλύτερη της τιμής <%s>"
 
 #: timezone/zic.c:433
 msgid "warning: "
@@ -5595,7 +5463,7 @@ msgstr "yp_update: αδυναμία λήψης διεύθυνσης διακομιστή\n"
 #~ msgid "collation element `%.*s' appears more than once: ignore line"
 #~ msgstr ""
 #~ "Το στοιχείο παραβολής `%.*s' εμφανίζεται περισσότερες από μία φορές:\n"
-#~ "αγνοείται η γραμμή"
+#~ " αγνοείται η γραμμή"
 
 #~ msgid "collation symbol `%.*s' appears more than once: ignore line"
 #~ msgstr ""

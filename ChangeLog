@@ -1,3 +1,12 @@
+2001-05-21  Bruno Haible  <haible@clisp.cons.org>
+
+	* wcsmbs/mbrtowc.c (mbrtowc): Remove local variable 'flush', always
+	use 0 instead, and rely on the converter to do the flush.
+	* wcsmbs/tst-mbrtowc.c (utf8_test_1): New function, taken from
+	utf8_test.
+	(utf8_test_2, utf8_test_3): New function.
+	(utf8_test): Call utf8_test_1, utf8_test_2, utf8_test_3.
+
 2001-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-close.c (_dl_close): Save imap->l_reldeps, not map->l_reldeps.

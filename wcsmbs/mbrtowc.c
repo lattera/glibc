@@ -42,7 +42,6 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   size_t dummy;
   const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
-  int flush = 0;
 
   /* Set information for this step.  */
   data.__invocation_counter = 0;
@@ -58,7 +57,6 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
       outbuf = (char *) buf;
       s = "";
       n = 1;
-      flush = 1;
     }
 
   /* Tell where we want the result.  */
@@ -72,7 +70,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   inbuf = (const unsigned char *) s;
   status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
 			(__wcsmbs_gconv_fcts.towc, &data, &inbuf, inbuf + n,
-			 NULL, &dummy, flush, 1));
+			 NULL, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the

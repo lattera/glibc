@@ -27,24 +27,18 @@
 
 static int check_ascii (const char *locname);
 
-/* Test for mbrtowc, contributed by Markus Kuhn <mkuhn@acm.org>.  */
+/* UTF-8 single byte feeding test for mbrtowc(),
+   contributed by Markus Kuhn <mkuhn@acm.org>.  */
 static int
-utf8_test (void)
+utf8_test_1 (void)
 {
-  /* UTF-8 single byte feeding test for mbrtowc().  */
   wchar_t wc;
   mbstate_t s;
-  const char *locale = "de_DE.UTF-8";
 
-  if (!setlocale (LC_CTYPE, locale))
-    {
-      fprintf (stderr, "locale '%s' not available!\n", locale);
-      exit (1);
-    }
   wc = 42;			/* arbitrary number */
   memset (&s, 0, sizeof (s));	/* get s into initial state */
-  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) - 2);	/* 1st byte processed */
-  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) - 2);	/* 2nd byte processed */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
   assert (wc == 42);		/* no value has not been stored into &wc yet */
   assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
   assert (wc == 0x2260);	/* E2 89 A0 = U+2260 (not equal) decoded correctly */
@@ -52,6 +46,93 @@ utf8_test (void)
   assert (wc == 0);		/* test final byte decoding */
 
   return 0;
+}
+
+/* Test for NUL byte processing via empty string.  */
+static int
+utf8_test_2 (void)
+{
+  wchar_t wc;
+  mbstate_t s;
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (NULL, "", 1, &s) == 0); /* valid terminator */
+  assert (mbsinit (&s));
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (NULL, "", 1, &s) == (size_t) -1); /* invalid terminator */
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
+  assert (mbrtowc (NULL, "", 1, &s) == (size_t) -1); /* invalid terminator */
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (mbrtowc (NULL, "", 1, &s) == 0); /* valid terminator */
+  assert (mbsinit (&s));
+
+  return 0;
+}
+
+/* Test for NUL byte processing via NULL string.  */
+static int
+utf8_test_3 (void)
+{
+  wchar_t wc;
+  mbstate_t s;
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (NULL, NULL, 0, &s) == 0); /* valid terminator */
+  assert (mbsinit (&s));
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (NULL, NULL, 0, &s) == (size_t) -1); /* invalid terminator */
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
+  assert (mbrtowc (NULL, NULL, 0, &s) == (size_t) -1); /* invalid terminator */
+
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) -2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) -2);	/* 2nd byte processed */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (mbrtowc (NULL, NULL, 0, &s) == 0); /* valid terminator */
+  assert (mbsinit (&s));
+
+  return 0;
+}
+
+static int
+utf8_test (void)
+{
+  const char *locale = "de_DE.UTF-8";
+  int error = 0;
+
+  if (!setlocale (LC_CTYPE, locale))
+    {
+      fprintf (stderr, "locale '%s' not available!\n", locale);
+      exit (1);
+    }
+
+  error |= utf8_test_1 ();
+  error |= utf8_test_2 ();
+  error |= utf8_test_3 ();
+
+  return error;
 }
 
 
