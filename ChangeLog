@@ -1,3 +1,11 @@
+2000-06-12  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__sgn1l): Add __extension__.
+
+2000-06-11  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/i386/fpu/Versions: New file.
+
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv.h (__gconv_trans_context_fct): Remove two

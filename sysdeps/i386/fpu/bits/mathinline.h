@@ -506,7 +506,8 @@ __inline_mathcodeNP (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x)
 __inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
-  union { long double __xld; unsigned int __xi[3]; } __n = { __xld: __x };  \
+  __extension__ union { long double __xld; unsigned int __xi[3]; } __n =      \
+    { __xld: __x };							      \
   __n.__xi[2] = (__n.__xi[2] & 0x8000) | 0x3fff;			      \
   __n.__xi[1] = 0x80000000;						      \
   __n.__xi[0] = 0;							      \
