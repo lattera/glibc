@@ -1,3 +1,18 @@
+2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/es.po: Update from translation team.
+	* po/fr.po: Likewise.
+
+	* stdio-common/tfformat.c (sprint_doubles): A test for %F format.
+
+	* stdio-common/printf_fp.c (__printf_fp): Correct check for %F format
+	when determining type of format.
+	Patch by James Antill <james@and.org> [PR libc/2787].
+
+2002-03-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/bsd/ftime.c (ftime): Don't return 1000 in millitm.
+
 2002-03-11  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurd/threadvar.h: Include <features.h> for __THROW macro.
