@@ -75,7 +75,7 @@ others		+= ldconfig
 install-rootsbin += ldconfig
 endif
 
-tests = loadtest restest1 preloadtest
+tests = loadtest restest1 preloadtest loadfail
 
 include ../Rules
 
@@ -203,7 +203,7 @@ $(objpfx)sprof: $(objpfx)libdl.a
 endif
 
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1
+		testobj1_1 failobj
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 
@@ -216,6 +216,7 @@ LDLIBS-testobj3.so = -ldl
 LDLIBS-testobj4.so = -ldl
 LDLIBS-testobj5.so = -ldl
 LDLIBS-testobj6.so = -ldl
+LDLIBS-failobj.so = $(objpfx)testobj6.so
 
 $(test-modules): $(objpfx)%.so: %.c
 	$(build-module)
@@ -233,6 +234,11 @@ $(objpfx)restest1.out: $(test-modules)
 $(objpfx)preloadtest.out: $(test-modules)
 LDFLAGS-preloadtest = -rdynamic $(objpfx)testobj6.so
 preloadtest-ENV = LD_PRELOAD=testobj1.so:testobj2.so:testobj3.so:testobj4.so:testobj5.so
+
+$(objpfx)loadfail: $(objpfx)libdl.so
+LDFLAGS-loadfail = -rdynamic
+
+$(objpfx)loadfile.out: $(objpfx)failobj.so
 
 # muwahaha
 
