@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,6 +75,6 @@
 /* These are the hard limits of the kernel.  These values should not be
    used directly at user level.  */
 #define __SIGRTMIN	32
-#define __SIGRTMAX	(_NSIG - 1)
+#define __SIGRTMAX	_NSIG
 
 #endif	/* <signal.h> included.  */
