@@ -2,6 +2,7 @@
 #include <locale.h>
 #include <wchar.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* MB_CUR_MAX multibyte ones (6 UTF+0080, in this case) */
 static const char string[] = "\
