@@ -71,8 +71,8 @@
     DO_CALL (syscall_name, args);
 
 #define PSEUDO_RET_NOERRNO						      \
-    RETINSTR(movcc, pc, lr);						      \
-    nop
+    RETINSTR(mov, pc, lr);
+
 #undef ret_NOERRNO
 #define ret_NOERRNO PSEUDO_RET_NOERRNO
 

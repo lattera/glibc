@@ -1,3 +1,17 @@
+2003-03-27  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_RET_NOERRNO): Use
+	unconditional mov.  Remove nop.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_VFORK_SYSCALL): Define for kernel 2.4 on arm.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Elide compatibility code
+	when __ASSUME_VFORK_SYSCALL is defined.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Likewise for
+	__ASSUME_MMAP2_SYSCALL.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise for
+	__ASSUME_REALTIME_SIGNALS.
+
 2003-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (ELF_RTYPE_CLASS_COPY): Define to 2
