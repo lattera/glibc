@@ -1,7 +1,11 @@
 1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/i686/mempcpy.S: Fix typos.
+
 	* sysdeps/i386/i686/memset.S: New file.
 	* sysdeps/i386/i686/bzero.S: New file.
+	* sysdeps/i386/i686/strcmp.S: New file.
+	* sysdeps/i386/i686/memcpy.S: New file.
 
 	* sysdeps/unix/sysv/linux/Makefile [subdir=time] (sysdep_routines):
 	Add ntp_adjtime and ntp_gettime.

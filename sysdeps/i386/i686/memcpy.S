@@ -1,8 +1,8 @@
-/* Copy memory block and return pointer to following byte.
+/* Copy memory block and return pointer to beginning of destination block
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Copyright (C) 1999 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,14 +22,14 @@
 #include <sysdep.h>
 #include "asm-syntax.h"
 
-/* mempcpy:
+/* memcpy:
 	INPUT PARAMETER:
 	dest		(sp + 4)
 	src		(sp + 8)
 	len		(sp + 12)
 */
 
-ENTRY(__mempcpy)
+ENTRY(memcpy)
 	movl	12(%esp), %ecx
 	movl	%edi, %eax
 	movl	4(%esp), %edi
@@ -44,8 +44,8 @@ ENTRY(__mempcpy)
 	movsw
 2:	rep
 	movsl
-	xchgl	%edi, %eax
+	movl	%eax, %edi
 	movl	%edx, %esi
+	movl	4(%esp), %eax
 	ret
-END(__mempcpy)
-weak_alias (__mempcpy, mempcpy)
+END(memcpy)

@@ -2,6 +2,7 @@
    Highly optimized version for ix86, x>=6.
    Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -69,7 +70,10 @@ ENTRY (memset)
 	rep
 	stosb
 
-1:	movl	8(%esp), %eax
+1:
+#ifndef memset
+	movl	8(%esp), %eax
+#endif
 	popl	%edi
 	ret
 END (memset)

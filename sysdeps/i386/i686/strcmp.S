@@ -1,8 +1,7 @@
-/* Copy memory block and return pointer to following byte.
-   For Intel 80x86, x>=6.
+/* Highly optimized version for ix86, x>=6.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,30 +21,28 @@
 #include <sysdep.h>
 #include "asm-syntax.h"
 
-/* mempcpy:
-	INPUT PARAMETER:
-	dest		(sp + 4)
-	src		(sp + 8)
-	len		(sp + 12)
+/*
+   INPUT PARAMETERS:
+   s1          (sp + 4)
+   s2          (sp + 8)
 */
 
-ENTRY(__mempcpy)
-	movl	12(%esp), %ecx
-	movl	%edi, %eax
-	movl	4(%esp), %edi
-	movl	%esi, %edx
-	movl	8(%esp), %esi
-	cld
-	shrl	$1, %ecx
-	jnc	1f
-	movsb
-1:	shrl	$1, %ecx
-	jnc	2f
-	movsw
-2:	rep
-	movsl
-	xchgl	%edi, %eax
-	movl	%edx, %esi
-	ret
-END(__mempcpy)
-weak_alias (__mempcpy, mempcpy)
+
+        .text
+ENTRY (strcmp)
+	movl	4(%esp), %ecx
+	movl	8(%esp), %edx
+1:	movb	(%ecx), %al
+	incl	%ecx
+	cmpb	(%edx), %al
+	jne	2f
+	incl	%edx
+	testb	%al, %al
+	jnz	1b
+	xorl	%eax, %eax
+	jmp	3f
+2:	movl	$1, %eax
+	ja	3f
+	negl	%eax
+3:	ret
+END (strcmp)
