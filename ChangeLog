@@ -1,7 +1,10 @@
 1998-04-26  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconvdata/gconv-modules: Add entry for ISO-2022-JP and
-	ISO-2022-JP-2.
+	* iconvdata/Makefile: Add rules for ISO-2022-KR.
+	* iconvdata/iso-2022-kr.c: New file.
+
+	* iconvdata/gconv-modules: Add entry for ISO-2022-JP, ISO-2022-JP-2,
+	and ISO-2022-KR.
 
 1998-04-25 18:39  Ulrich Drepper  <drepper@cygnus.com>
 

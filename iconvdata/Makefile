@@ -31,7 +31,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423 IBM424 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
-	   CP874 CP737 CP775
+	   CP874 CP737 CP775 ISO-2022-KR
 ifneq ($(PERL),no)
 modules += KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM437	 \
@@ -143,6 +143,7 @@ EUC-JP-routines := eucjp
 EUC-CN-routines := euccn
 EUC-TW-routines := euctw
 ISO-2022-JP-routines := iso-2022-jp
+ISO-2022-KR-routines := iso-2022-kr
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
@@ -163,7 +164,9 @@ $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
 
 LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
-			 $(objpfx)libCNS.so
+			 $(objpfx)libCNS.so $(objpfx)libKSC.so
+LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)ISO-2022-JP.so: $(objpfx)libKSC.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
@@ -193,7 +196,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c ibm1026.c	    \
 	      ibm1047.c cp1250.c cp1251.c cp1252.c cp1253.c cp1254.c	    \
 	      cp1255.c cp1256.c cp1257.c cp874.c cp874.h cp737.c cp737.h    \
-	      cp775.c cp775.h iso-2022-jp.c
+	      cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

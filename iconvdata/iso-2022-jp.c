@@ -54,6 +54,7 @@ struct gap
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
   enum variant var = ((struct iso2022jp_data *) step->data)->var;	      \
+  int save_state;							      \
   int set = data->statep->count;
 #define END_LOOP \
   data->statep->count = set;
@@ -81,7 +82,6 @@ struct iso2022jp_data
 {
   enum direction dir;
   enum variant var;
-  mbstate_t save_state;
 };
 
 
@@ -211,11 +211,9 @@ gconv_end (struct gconv_step *data)
    and retore the state.  */
 #define SAVE_RESET_STATE(Save) \
   if (Save)								      \
-    ((struct iso2022jp_data *) step->data)->save_state.count		      \
-      = data->statep->count;						      \
+    save_set = set;							      \
   else									      \
-    data->statep->count							      \
-      = ((struct iso2022jp_data *) step->data)->save_state.count
+    set = save_set
 
 
 /* First define the conversion function from ISO-2022-JP to UCS4.  */
