@@ -1,3 +1,12 @@
+2003-03-15  Roland McGrath  <roland@redhat.com>
+
+	* thread_db.h (td_err_e): Add TD_NOTLS and TD_TLSDEFER.
+	(td_thr_tlsbase): Declare it.
+	* td_thr_tlsbase.c: New file.
+	* Makefile (libthread_db-routines): Add it.
+	* Versions (libthread_db: GLIBC_2.3.3): New set, add td_thr_tlsbase.
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Use td_thr_tlsbase.
+
 2003-03-14  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Use `header.' prefix.
