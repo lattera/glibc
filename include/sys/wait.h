@@ -13,5 +13,6 @@ extern __pid_t __wait (__WAIT_STATUS __stat_loc);
 extern __pid_t __wait3 (__WAIT_STATUS __stat_loc,
 			int __options, struct rusage * __usage);
 extern __pid_t __wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc,
-			int __options, struct rusage *__usage);
+			int __options, struct rusage *__usage)
+			attribute_hidden;
 #endif
