@@ -1,5 +1,22 @@
 Wed Jul 26 02:00:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* csu/Makefile [$(elf)=yes] (have-initfini): Set to yes.
+	[$(have-initfini)=yes]: Test this rather than $(elf) for crtstuff.
+	[start-installed-name-rule]: If this is defined, elide rule for
+	$(objpfx)$(start-installed-name).
+	* sysdeps/unix/sysv/sco3.2.4/Makefile [$(subdir)=csu]
+ 	(start-installed-rule, start-installed-name-rule): New variables;
+ 	specify crt1.o, created by our own rule.
+	($(objpfx)crt1.o): New rule.
+	* configure.in: Require autoconf 2.4.2 or later.  Change all
+ 	AC_CACHE_VAL uses to use new AC_CACHE_CHECK macro instead;
+ 	prettify some messages.
+	[$elf!=yes] (libc_cv_have_initfini): New test for `.init' and `.fini'
+	sections.
+	* munch-tmpl.c [HAVE_INITFINI]: Call _init and atexit (_fini) in
+ 	this case rather than #ifdef HAVE_ELF.
+	* config.h.in (HAVE_INITFINI): New macro.
+
 	* stdio/vfscanf.c (conv_error): Simplify expression to avoid
  	"value computed is not used" warning.
 

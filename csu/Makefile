@@ -48,6 +48,11 @@ else
 # In the ELF universe, crt0.o is called crt1.o, and there are 
 # some additional bizarre files.
 start-installed-name = crt1.o
+have-initfini = yes
+
+endif
+
+ifeq (yes,$(have-initfini))
 
 # These are the special initializer/finalizer files.  They are always the
 # first and last file in the link.  crti.o ... crtn.o define the global
@@ -82,11 +87,13 @@ endif
 
 include ../Rules
 
+ifndef start-installed-name-rule
 # The startfile is installed under different names, so we just call our
 # source file `start.c' and copy to the installed name after compiling.
 $(objpfx)$(start-installed-name): $(objpfx)start.o
 	-rm -f $@
 	ln $< $@
+endif
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.

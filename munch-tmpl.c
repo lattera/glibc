@@ -29,12 +29,12 @@ __libc_init (argc, argv, envp)
 {
   CALLS
 
-#ifdef HAVE_ELF
+#ifdef HAVE_INITFINI
     {
       /* These functions are defined in crti.o to run the .init and .fini
-	 sections, which are used for initializers in ELF.  */
+	 sections, which are used for initializers and finalizers.  */
       extern void _init __P ((void)), _fini __P ((void));
-      atexit (_fini);		/* Arrange for _fini to run at exit.  */
+      atexit (&_fini);		/* Arrange for _fini to run at exit.  */
       _init ();
     }
 #endif

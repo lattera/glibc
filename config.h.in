@@ -11,6 +11,9 @@
    linker being used.  Set by --with-weak-symbols.  */
 #undef	HAVE_WEAK_SYMBOLS
 
+/* Define if not using ELF, but `.init' and `.fini' sections are available.  */
+#undef	HAVE_INITFINI
+
 /* Define if using the GNU assembler, gas.  */
 #undef	HAVE_GNU_AS
 

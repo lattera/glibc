@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.2)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.4.2)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
 AC_CONFIG_HEADER(config.h)
 
@@ -72,8 +72,7 @@ esac
 
 # Compute the list of sysdep directories for this configuration.
 sysdep_dir=$srcdir/sysdeps
-AC_MSG_CHECKING(sysdep dirs)
-AC_CACHE_VAL(libc_cv_sysdirs, [dnl
+AC_CACHE_CHECK(sysdep dirs, libc_cv_sysdirs, [dnl
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
@@ -267,7 +266,6 @@ $name"
 done
 libc_cv_sysdirs="$sysnames"])
 AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
-AC_MSG_RESULT(${sysnames})
 
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh"; then
@@ -280,8 +278,7 @@ AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 AC_PROG_CPP
 
-AC_MSG_CHECKING(signed size_t type)
-AC_CACHE_VAL(libc_cv_signed_size_t, [dnl
+AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
 if eval "$ac_cpp conftest.c 2>/dev/null" \
@@ -291,7 +288,6 @@ else
   libc_cv_signed_size_t=yes
 fi
 rm -f conftest*])
-AC_MSG_RESULT($libc_cv_signed_size_t)
 if test $libc_cv_signed_size_t = yes; then
   dnl Do this by hand instead of AC_DEFINE so can add #undef to avoid warnings.
   cat >> confdefs.h <<\EOF
@@ -300,8 +296,7 @@ if test $libc_cv_signed_size_t = yes; then
 EOF
 fi
 
-AC_MSG_CHECKING(libc-friendly stddef.h)
-AC_CACHE_VAL(libc_cv_friendly_stddef, [dnl
+AC_CACHE_CHECK(for libc-friendly stddef.h, libc_cv_friendly_stddef, [dnl
 AC_TRY_COMPILE(dnl
 [#define __need_size_t
 #define __need_wchar_t
@@ -314,14 +309,13 @@ AC_TRY_COMPILE(dnl
 if (&size == NULL || &wchar == NULL) abort ();],
                libc_cv_friendly_stddef=yes,
                libc_cv_friendly_stddef=no)])
-AC_MSG_RESULT($libc_cv_friendly_stddef)
 if test $libc_cv_friendly_stddef = yes; then
   config_vars="$config_vars
 override stddef.h = # The installed <stddef.h> seems to be libc-friendly."
 fi
 
-AC_MSG_CHECKING(whether we need to use -P to assemble .S files)
-AC_CACHE_VAL(libc_cv_need_minus_P, [dnl
+AC_CACHE_CHECK(whether we need to use -P to assemble .S files,
+	       libc_cv_need_minus_P, [dnl
 cat > conftest.S <<EOF
 #include "confdefs.h"
 /* Nothing whatsoever.  */
@@ -332,14 +326,13 @@ else
   libc_cv_need_minus_P=yes
 fi
 rm -f conftest*])
-AC_MSG_RESULT($libc_cv_need_minus_P)
 if test $libc_cv_need_minus_P = yes; then
   config_vars="$config_vars
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-AC_MSG_CHECKING(for assembler global-symbol directive)
-AC_CACHE_VAL(libc_cv_asm_global_directive, [dnl
+AC_CACHE_CHECK(for assembler global-symbol directive,
+	       libc_cv_asm_global_directive, [dnl
 libc_cv_asm_global_directive=UNKNOWN
 for ac_globl in .globl .global; do
   cat > conftest.s <<EOF
@@ -353,15 +346,13 @@ EOF
   rm -f conftest*
   test $libc_cv_asm_global_directive != UNKNOWN && break
 done])
-AC_MSG_RESULT($libc_cv_asm_global_directive)
 if test $libc_cv_asm_global_directive = UNKNOWN; then
   AC_MSG_ERROR(cannot determine asm global directive)
 else
   AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
 fi
 
-AC_MSG_CHECKING(for .set assembler directive)
-AC_CACHE_VAL(libc_cv_asm_set_directive, [dnl
+AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
 .text
 foo: .long 0
@@ -381,11 +372,21 @@ else
   libc_cv_asm_set_directive=no
 fi
 rm -f conftest*])
-AC_MSG_RESULT($libc_cv_asm_set_directive)
 if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
+if test $elf != yes; then
+  AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
+		 [AC_TRY_COMPILE(, [asm (".section .init");
+				    asm (".section .fini");],
+				 libc_cv_have_initfini=yes,
+				 libc_cv_have_initfini=no)])
+  AC_SUBST(libc_cv_have_initfini)dnl
+  if test $libc_cv_have_initfini = yes; then
+    AC_DEFINE(HAVE_INITFINI)
+  fi
+fi
 
 # sysdeps configure fragments may set these with files to be linked below.
 libc_link_dests=
@@ -428,8 +429,7 @@ AC_DEFUN(LIBC_KERNEL_ID, [dnl
     fi
 ])dnl
 
-  AC_MSG_CHECKING(OS release for uname)
-  AC_CACHE_VAL(libc_cv_uname_release, [dnl
+  AC_CACHE_CHECK(OS release for uname, libc_cv_uname_release, [dnl
 AC_REQUIRE([LIBC_KERNEL_ID])dnl
 changequote(,)dnl
   kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
@@ -445,11 +445,9 @@ changequote([,])dnl
   else
     libc_cv_uname_release=unknown
   fi])
-  AC_MSG_RESULT($libc_cv_uname_release)
   uname_release="$libc_cv_uname_release"
 
-  AC_MSG_CHECKING(OS version for uname)
-  AC_CACHE_VAL(libc_cv_uname_version, [dnl
+  AC_CACHE_CHECK(OS version for uname, libc_cv_uname_version, [dnl
 AC_REQUIRE([LIBC_KERNEL_ID])dnl
 changequote(,)dnl
   kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
@@ -459,7 +457,6 @@ changequote([,])dnl
   else
     libc_cv_uname_version=unknown
   fi])
-  AC_MSG_RESULT($libc_cv_uname_version)
   uname_version="$libc_cv_uname_version"
 
 AC_SUBST(uname_sysname) AC_SUBST(uname_release) AC_SUBST(uname_version)dnl

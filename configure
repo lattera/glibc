@@ -2,7 +2,7 @@
 
 # From configure.in CVSid
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.4 
+# Generated automatically using autoconf version 2.4.2 
 # Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -54,6 +54,18 @@ target=NONE
 verbose=
 x_includes=NONE
 x_libraries=NONE
+bindir='${exec_prefix}/bin'
+sbindir='${exec_prefix}/sbin'
+libexecdir='${exec_prefix}/libexec'
+datadir='${prefix}/share'
+sysconfdir='${prefix}/etc'
+sharedstatedir='${prefix}/com'
+localstatedir='${prefix}/var'
+libdir='${exec_prefix}/lib'
+includedir='${prefix}/include'
+oldincludedir='/usr/include'
+infodir='${prefix}/info'
+mandir='${prefix}/man'
 
 # Initialize some other variables.
 subdirs=
@@ -78,9 +90,14 @@ do
 
   case "$ac_option" in
 
-  -build | --build | --buil | --bui | --bu | --b)
+  -bindir | --bindir | --bindi | --bind | --bin | --bi)
+    ac_prev=bindir ;;
+  -bindir=* | --bindir=* | --bindi=* | --bind=* | --bin=* | --bi=*)
+    bindir="$ac_optarg" ;;
+
+  -build | --build | --buil | --bui | --bu)
     ac_prev=build ;;
-  -build=* | --build=* | --buil=* | --bui=* | --bu=* | --b=*)
+  -build=* | --build=* | --buil=* | --bui=* | --bu=*)
     build="$ac_optarg" ;;
 
   -cache-file | --cache-file | --cache-fil | --cache-fi \
@@ -89,6 +106,12 @@ do
   -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
   | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* | --c=*)
     cache_file="$ac_optarg" ;;
+
+  -datadir | --datadir | --datadi | --datad | --data | --dat | --da)
+    ac_prev=datadir ;;
+  -datadir=* | --datadir=* | --datadi=* | --datad=* | --data=* | --dat=* \
+  | --da=*)
+    datadir="$ac_optarg" ;;
 
   -disable-* | --disable-*)
     ac_feature=`echo $ac_option|sed -e 's/-*disable-//'`
@@ -140,12 +163,26 @@ Configuration:
 Directory and file names:
   --prefix=PREFIX         install architecture-independent files in PREFIX
                           [$ac_default_prefix]
-  --exec-prefix=PREFIX    install architecture-dependent files in PREFIX
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
                           [same as prefix]
+  --bindir=DIR            user executables in DIR [EPREFIX/bin]
+  --sbindir=DIR           system admin executables in DIR [EPREFIX/sbin]
+  --libexecdir=DIR        program executables in DIR [EPREFIX/libexec]
+  --datadir=DIR           read-only architecture-independent data in DIR [PREFIX/share]
+  --sysconfdir=DIR        read-only single-machine data in DIR [PREFIX/etc]
+  --sharedstatedir=DIR    modifiable architecture-independent data in DIR [PREFIX/com]
+  --localstatedir=DIR     modifiable single-machine data in DIR [PREFIX/var]
+  --libdir=DIR            object code libraries in DIR [EPREFIX/lib]
+  --includedir=DIR        C header files in DIR [PREFIX/include]
+  --oldincludedir=DIR     C header files for non-gcc in DIR [/usr/include]
+  --infodir=DIR           info documentation in DIR [PREFIX/info]
+  --mandir=DIR            man documentation in DIR [PREFIX/man]
   --srcdir=DIR            find the sources in DIR [configure dir or ..]
   --program-prefix=PREFIX prepend PREFIX to installed program names
   --program-suffix=SUFFIX append SUFFIX to installed program names
   --program-transform-name=PROGRAM run sed PROGRAM on installed program names
+EOF
+    cat << EOF
 Host type:
   --build=BUILD           configure for building on BUILD [BUILD=HOST]
   --host=HOST             configure for HOST [guessed]
@@ -166,6 +203,44 @@ EOF
   -host=* | --host=* | --hos=* | --ho=*)
     host="$ac_optarg" ;;
 
+  -includedir | --includedir | --includedi | --included | --include \
+  | --includ | --inclu | --incl | --inc)
+    ac_prev=includedir ;;
+  -includedir=* | --includedir=* | --includedi=* | --included=* | --include=* \
+  | --includ=* | --inclu=* | --incl=* | --inc=*)
+    includedir="$ac_optarg" ;;
+
+  -infodir | --infodir | --infodi | --infod | --info | --inf)
+    ac_prev=infodir ;;
+  -infodir=* | --infodir=* | --infodi=* | --infod=* | --info=* | --inf=*)
+    infodir="$ac_optarg" ;;
+
+  -libdir | --libdir | --libdi | --libd)
+    ac_prev=libdir ;;
+  -libdir=* | --libdir=* | --libdi=* | --libd=*)
+    libdir="$ac_optarg" ;;
+
+  -libexecdir | --libexecdir | --libexecdi | --libexecd | --libexec \
+  | --libexe | --libex | --libe)
+    ac_prev=libexecdir ;;
+  -libexecdir=* | --libexecdir=* | --libexecdi=* | --libexecd=* | --libexec=* \
+  | --libexe=* | --libex=* | --libe=*)
+    libexecdir="$ac_optarg" ;;
+
+  -localstatedir | --localstatedir | --localstatedi | --localstated \
+  | --localstate | --localstat | --localsta | --localst \
+  | --locals | --local | --loca | --loc | --lo)
+    ac_prev=localstatedir ;;
+  -localstatedir=* | --localstatedir=* | --localstatedi=* | --localstated=* \
+  | --localstate=* | --localstat=* | --localsta=* | --localst=* \
+  | --locals=* | --local=* | --loca=* | --loc=* | --lo=*)
+    localstatedir="$ac_optarg" ;;
+
+  -mandir | --mandir | --mandi | --mand | --man | --ma | --m)
+    ac_prev=mandir ;;
+  -mandir=* | --mandir=* | --mandi=* | --mand=* | --man=* | --ma=* | --m=*)
+    mandir="$ac_optarg" ;;
+
   -nfp | --nfp | --nf)
     # Obsolete; use --without-fp.
     with_fp=no ;;
@@ -177,6 +252,15 @@ EOF
   -no-recursion | --no-recursion | --no-recursio | --no-recursi \
   | --no-recurs | --no-recur | --no-recu | --no-rec | --no-re | --no-r)
     no_recursion=yes ;;
+
+  -oldincludedir | --oldincludedir | --oldincludedi | --oldincluded \
+  | --oldinclude | --oldinclud | --oldinclu | --oldincl | --oldinc \
+  | --oldin | --oldi | --old | --ol | --o)
+    ac_prev=oldincludedir ;;
+  -oldincludedir=* | --oldincludedir=* | --oldincludedi=* | --oldincluded=* \
+  | --oldinclude=* | --oldinclud=* | --oldinclu=* | --oldincl=* | --oldinc=* \
+  | --oldin=* | --oldi=* | --old=* | --ol=* | --o=*)
+    oldincludedir="$ac_optarg" ;;
 
   -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
     ac_prev=prefix ;;
@@ -218,6 +302,23 @@ EOF
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+    ac_prev=sbindir ;;
+  -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+  | --sbi=* | --sb=*)
+    sbindir="$ac_optarg" ;;
+
+  -sharedstatedir | --sharedstatedir | --sharedstatedi \
+  | --sharedstated | --sharedstate | --sharedstat | --sharedsta \
+  | --sharedst | --shareds | --shared | --share | --shar \
+  | --sha | --sh)
+    ac_prev=sharedstatedir ;;
+  -sharedstatedir=* | --sharedstatedir=* | --sharedstatedi=* \
+  | --sharedstated=* | --sharedstate=* | --sharedstat=* | --sharedsta=* \
+  | --sharedst=* | --shareds=* | --shared=* | --share=* | --shar=* \
+  | --sha=* | --sh=*)
+    sharedstatedir="$ac_optarg" ;;
+
   -site | --site | --sit)
     ac_prev=site ;;
   -site=* | --site=* | --sit=*)
@@ -228,6 +329,13 @@ EOF
   -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
     srcdir="$ac_optarg" ;;
 
+  -sysconfdir | --sysconfdir | --sysconfdi | --sysconfd | --sysconf \
+  | --syscon | --sysco | --sysc | --sys | --sy)
+    ac_prev=sysconfdir ;;
+  -sysconfdir=* | --sysconfdir=* | --sysconfdi=* | --sysconfd=* | --sysconf=* \
+  | --syscon=* | --sysco=* | --sysc=* | --sys=* | --sy=*)
+    sysconfdir="$ac_optarg" ;;
+
   -target | --target | --targe | --targ | --tar | --ta | --t)
     ac_prev=target ;;
   -target=* | --target=* | --targe=* | --targ=* | --tar=* | --ta=* | --t=*)
@@ -237,7 +345,7 @@ EOF
     verbose=yes ;;
 
   -version | --version | --versio | --versi | --vers)
-    echo "configure generated by autoconf version 2.4"
+    echo "configure generated by autoconf version 2.4.2"
     exit 0 ;;
 
   -with-* | --with-*)
@@ -402,9 +510,12 @@ fi
 
 ac_ext=c
 # CFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext 1>&5 2>&5'
-ac_link='${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS 1>&5 2>&5'
+ac_cpp='echo $CPP $CPPFLAGS 1>&5;
+$CPP $CPPFLAGS'
+ac_compile='echo ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext 1>&5;
+${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext 1>&5 2>&5'
+ac_link='echo ${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS 1>&5;
+${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS 1>&5 2>&5'
 
 if (echo "testing\c"; echo 1,2,3) | grep c >/dev/null; then
   # Stardent Vistra SVR4 grep lacks -e, says ghazi@caip.rutgers.edu.
@@ -434,8 +545,8 @@ config_vars=
 
 # Check for a --with-gmp argument and set gmp-srcdir in config.make.
 # Check whether --with-gmp or --without-gmp was given.
-withval="$with_gmp"
-if test -n "$withval"; then
+if test "${with_gmp+set}" = set; then
+  withval="$with_gmp"
   case "$with_gmp" in
 yes) { echo "configure: error: --with-gmp requires an argument; use --with-gmp=DIRECTORY" 1>&2; exit 1; } ;;
 ''|no) ;;
@@ -447,32 +558,32 @@ fi
 
 
 # Check whether --with-fp or --without-fp was given.
-withval="$with_fp"
-if test -n "$withval"; then
+if test "${with_fp+set}" = set; then
+  withval="$with_fp"
   with_fp=$withval
 else
   with_fp=yes
 fi
 
 # Check whether --with-gnu-binutils or --without-gnu-binutils was given.
-withval="$with_gnu_binutils"
-if test -n "$withval"; then
+if test "${with_gnu_binutils+set}" = set; then
+  withval="$with_gnu_binutils"
   gnu_binutils=$withval
 else
   gnu_binutils=no
 fi
 
 # Check whether --with-gnu-ld or --without-gnu-ld was given.
-withval="$with_gnu_ld"
-if test -n "$withval"; then
+if test "${with_gnu_ld+set}" = set; then
+  withval="$with_gnu_ld"
   gnu_ld=$withval
 else
   gnu_ld=no
 fi
 
 # Check whether --with-gnu-as or --without-gnu-as was given.
-withval="$with_gnu_as"
-if test -n "$withval"; then
+if test "${with_gnu_as+set}" = set; then
+  withval="$with_gnu_as"
   gnu_as=$withval
 else
   gnu_as=no
@@ -480,16 +591,16 @@ fi
 
 test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
 # Check whether --with-elf or --without-elf was given.
-withval="$with_elf"
-if test -n "$withval"; then
+if test "${with_elf+set}" = set; then
+  withval="$with_elf"
   elf=$withval
 else
   elf=no
 fi
 
 # Check whether --with-weak-symbols or --without-weak-symbols was given.
-withval="$with_weak_symbols"
-if test -n "$withval"; then
+if test "${with_weak_symbols+set}" = set; then
+  withval="$with_weak_symbols"
   weak=$withval
 else
   weak=no
@@ -497,24 +608,24 @@ fi
 
 
 # Check whether --enable-shared or --disable-shared was given.
-enableval="$enable_shared"
-if test -n "$enableval"; then
+if test "${enable_shared+set}" = set; then
+  enableval="$enable_shared"
   shared=$enableval
 else
   shared=default
 fi
 
 # Check whether --enable-profile or --disable-profile was given.
-enableval="$enable_profile"
-if test -n "$enableval"; then
+if test "${enable_profile+set}" = set; then
+  enableval="$enable_profile"
   profile=$enableval
 else
   profile=yes
 fi
 
 # Check whether --enable-omitfp or --disable-omitfp was given.
-enableval="$enable_omitfp"
-if test -n "$enableval"; then
+if test "${enable_omitfp+set}" = set; then
+  enableval="$enable_omitfp"
   omitfp=$enableval
 else
   omitfp=no
@@ -777,8 +888,8 @@ done
 libc_cv_sysdirs="$sysnames"
 fi
 
+echo "$ac_t""$libc_cv_sysdirs" 1>&4
  sysnames="$libc_cv_sysdirs"
-echo "$ac_t""${sysnames}" 1>&4
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -819,10 +930,17 @@ else
     esac
   done
   IFS="$ac_save_ifs"
-  # As a last resort, use the slow shell script.
-  test -z "$ac_cv_path_install" && ac_cv_path_install="$ac_install_sh"
+
 fi
-  INSTALL="$ac_cv_path_install"
+  if test "${ac_cv_path_install+set}" = set; then
+    INSTALL="$ac_cv_path_install"
+  else
+    # As a last resort, use the slow shell script.  We don't cache a
+    # path for INSTALL within a source directory, because that will
+    # break other packages using the cache if that directory is
+    # removed, or if the path is relative.
+    INSTALL="$ac_install_sh"
+  fi
 fi
 echo "$ac_t""$INSTALL" 1>&4
 
@@ -870,7 +988,7 @@ else
   ac_cv_prog_CC="$CC" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in $PATH; do
+  for ac_dir in gcc; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_CC="${ac_tool_prefix}gcc"
@@ -900,7 +1018,7 @@ else
   ac_cv_prog_AR="$AR" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in $PATH; do
+  for ac_dir in ar; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_AR="${ac_tool_prefix}ar"
@@ -960,7 +1078,7 @@ else
   ac_cv_prog_RANLIB="$RANLIB" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in $PATH; do
+  for ac_dir in :; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_RANLIB="ranlib"
@@ -998,7 +1116,7 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1002 "configure"
+#line 1120 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1012,7 +1130,7 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1016 "configure"
+#line 1134 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1038,7 +1156,7 @@ fi
 echo "$ac_t""$CPP" 1>&4
 
 
-echo $ac_n "checking signed size_t type""... $ac_c" 1>&4
+echo $ac_n "checking for signed size_t type""... $ac_c" 1>&4
 if eval "test \"`echo '$''{'libc_cv_signed_size_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
@@ -1061,12 +1179,12 @@ if test $libc_cv_signed_size_t = yes; then
 EOF
 fi
 
-echo $ac_n "checking libc-friendly stddef.h""... $ac_c" 1>&4
+echo $ac_n "checking for libc-friendly stddef.h""... $ac_c" 1>&4
 if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1070 "configure"
+#line 1188 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1183,6 +1301,40 @@ EOF
 
 fi
 
+if test $elf != yes; then
+  echo $ac_n "checking for .init and .fini sections""... $ac_c" 1>&4
+if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1311 "configure"
+#include "confdefs.h"
+
+int main() { return 0; }
+int t() {
+asm (".section .init");
+				    asm (".section .fini");
+; return 0; }
+EOF
+if eval $ac_compile; then
+  rm -rf conftest*
+  libc_cv_have_initfini=yes
+else
+  rm -rf conftest*
+  libc_cv_have_initfini=no
+fi
+rm -f conftest*
+
+fi
+
+echo "$ac_t""$libc_cv_have_initfini" 1>&4
+    if test $libc_cv_have_initfini = yes; then
+    cat >> confdefs.h <<\EOF
+#define HAVE_INITFINI 1
+EOF
+
+  fi
+fi
 
 # sysdeps configure fragments may set these with files to be linked below.
 libc_link_dests=
@@ -1214,7 +1366,7 @@ if test "$uname" = generic; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&4
-  if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
+if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
     kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
@@ -1231,11 +1383,11 @@ else
   fi
 fi
 
-  echo "$ac_t""$libc_cv_uname_release" 1>&4
+echo "$ac_t""$libc_cv_uname_release" 1>&4
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&4
-  if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
+if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
     kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
@@ -1246,7 +1398,7 @@ else
   fi
 fi
 
-  echo "$ac_t""$libc_cv_uname_version" 1>&4
+echo "$ac_t""$libc_cv_uname_version" 1>&4
   uname_version="$libc_cv_uname_version"
 
     config_uname=config-name.h:config-name.in
@@ -1373,7 +1525,7 @@ do
     echo "running \${CONFIG_SHELL-/bin/sh} $0 $ac_configure_args --no-create --no-recursion"
     exec \${CONFIG_SHELL-/bin/sh} $0 $ac_configure_args --no-create --no-recursion ;;
   -version | --version | --versio | --versi | --vers | --ver | --ve | --v)
-    echo "$CONFIG_STATUS generated by autoconf version 2.4"
+    echo "$CONFIG_STATUS generated by autoconf version 2.4.2"
     exit 0 ;;
   -help | --help | --hel | --he | --h)
     echo "\$ac_cs_usage"; exit 0 ;;
@@ -1400,6 +1552,18 @@ s%@LIBS@%$LIBS%g
 s%@exec_prefix@%$exec_prefix%g
 s%@prefix@%$prefix%g
 s%@program_transform_name@%$program_transform_name%g
+s%@bindir@%$bindir%g
+s%@sbindir@%$sbindir%g
+s%@libexecdir@%$libexecdir%g
+s%@datadir@%$datadir%g
+s%@sysconfdir@%$sysconfdir%g
+s%@sharedstatedir@%$sharedstatedir%g
+s%@localstatedir@%$localstatedir%g
+s%@libdir@%$libdir%g
+s%@includedir@%$includedir%g
+s%@oldincludedir@%$oldincludedir%g
+s%@infodir@%$infodir%g
+s%@mandir@%$mandir%g
 s%@host@%$host%g
 s%@host_alias@%$host_alias%g
 s%@host_cpu@%$host_cpu%g
@@ -1417,6 +1581,7 @@ s%@CC@%$CC%g
 s%@AR@%$AR%g
 s%@RANLIB@%$RANLIB%g
 s%@CPP@%$CPP%g
+s%@libc_cv_have_initfini@%$libc_cv_have_initfini%g
 s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
