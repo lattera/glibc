@@ -1,3 +1,7 @@
+2000-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Strip out "unknown" from configuration names.
+
 2000-09-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/powerpc/Subdirs: New file, adds soft-fp.
@@ -321,7 +325,7 @@
 
 2000-09-04  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconvdata/run-iconv-test.sh: Add code to immediate stop the
+	* iconvdata/run-iconv-test.sh: Add code to immediately stop the
 	script when ^C is hit.
 
 	* locale/programs/localedef.c (construct_output_path): Correct
