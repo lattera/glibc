@@ -1,5 +1,11 @@
 Thu Mar 28 14:22:51 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* MakeTAGS (XGETTEXTFLAGS-siglist.pot, XGETTEXTFLAGS-errlist.pot): Add
+	--no-location.
+	(all-pot): Replace $(subdirs) files with $P/subdirs.pot.
+	($P/subdirs.pot): New target.
+	($P/SYS_libc.pot): Add -n switch.
+
 	* locale/locale.h (LC_*): Values reordered to match Linux libc.
 
 	* sysdeps/mach/hurd/kill.c: If proc_pid2task gives us MACH_PORT_NULL

@@ -146,16 +146,26 @@ $P/siglist.pot: $(common-objpfx)siglist.c; $(extract)
 $P/errlist.pot: $(..)sysdeps/mach/hurd/errlist.c; $(extract)
 
 # Extract all strings from these files; their strings are not marked.
-XGETTEXTFLAGS-siglist.pot = -a
-XGETTEXTFLAGS-errlist.pot = -a
+# Their surroundings are also not interesting.
+XGETTEXTFLAGS-siglist.pot = -a --no-location
+XGETTEXTFLAGS-errlist.pot = -a --no-location
 
-all-pot = $P/libc-top.pot $(subdirs:%=$P/%.pot) \
+all-pot = $P/libc-top.pot $P/subdirs.pot \
 	  $P/siglist.pot $P/errlist.pot
 
 ifndef subdir
+# Collect all the subdir messages, massaging the file names in comments
+# to include the subdir name.
+$P/subdirs.pot: $(subdirs:%=$P/%.pot)
+	@rm -f $@.new
+	(for d in $(subdirs); \
+	 do sed "s%^#: %&$$d/%" $P/$$d.pot; done) > $@.new
+	mv -f $@.new $@
+
+# Combine all the messages into the final sorted template translation file.
 $P/SYS_libc.pot: $(all-pot)
 	@rm -f $@.new
-	$(XGETTEXT) -d - --omit-header $^ > $@.new
+	$(XGETTEXT) -d - -n -s --omit-header $^ > $@.new
 	mv -f $@.new $@
 	test ! -d CVS || cvs ci -m'Regenerated from source files' $@
 
