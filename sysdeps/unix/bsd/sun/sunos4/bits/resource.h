@@ -22,6 +22,8 @@
    and `setrlimit' are not system calls, these are the values used by the C
    library to emulate them.  */
 
+#include <bits/types.h>
+
 /* Kinds of resource limit.  */
 enum __rlimit_resource
   {
@@ -52,19 +54,47 @@ enum __rlimit_resource
 #define	RLIMIT_NOFILE	RLIMIT_NOFILE
 #define	RLIMIT_OFILE	RLIMIT_OFILE
 
-    RLIM_NLIMITS,
-
-    RLIM_INFINITY = 0x7fffffff /* Value to indicate that there is no limit.  */
-#define RLIM_INFINITY RLIM_INFINITY
+    RLIM_NLIMITS
   };
+
+/* Value to indicate that there is no limit.  */
+#ifndef __USE_FILE_OFFSET64
+# define RLIM_INFINITY 0x7fffffff
+#else
+# define RLIM_INFINITY 0x7fffffffffffffffL
+#endif
+
+#ifdef __USE_LARGEFILE64
+# define RLIM64_INFINITY 0x7fffffffffffffffL
+#endif
+
+
+/* Type to represent quantities in resource limits.  */
+#ifndef __USE_FILE_OFFSET64
+typedef __rlim_t rlim_t;
+#else
+typedef __rlim64_t rlim_t;
+#endif
 
 struct rlimit
   {
     /* The current (soft) limit.  */
-    int rlim_cur;
+    rlim_t rlim_cur;
     /* The hard limit.  */
-    int rlim_max;
+    rlim_t rlim_max;
   };
+
+#ifdef __USE_LARGEFILE64
+typedef __rlim64_t rlim64_t;
+
+struct rlimit64
+  {
+    /* The current (soft) limit.  */
+    rlim64_t rlim_cur;
+    /* The hard limit.  */
+    rlim64_t rlim_max;
+  };
+#endif
 
 /* Whose usage statistics do you want?  */
 enum __rusage_who
