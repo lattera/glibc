@@ -476,10 +476,7 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
       if (((exceptions & IGNORE_ZERO_INF_SIGN) == 0)
 	  && (computed == 0.0 && expected == 0.0
 	      && signbit(computed) != signbit (expected)))
-	{
-	  ok = 0;
-	  print_ulps (test_name, ulp);
-	}
+	ok = 0;
       else if (ulp <= max_ulp)
 	ok = 1;
       else

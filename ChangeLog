@@ -1,3 +1,10 @@
+1999-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* math/gen-libm-test.pl (parse_ulps): Ignore 0 has ulp.
+
+	* math/libm-test.inc (check_float_internal): Don't print ulps for
+	wrong sign of zero.
+
 1999-10-20  Andreas Jaeger  <aj@suse.de>
 
 	* manual/socket.texi (Address Formats): Describe usage of AF_UNIX

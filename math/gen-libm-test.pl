@@ -33,7 +33,7 @@
 #   It represents the underlying floating point type (float, double or long
 #   double) and if inline functions (the leading i stands for inline)
 #   are used.
-# $results{$test}{$type}{"fail"}{$float} is defined and has a 1 if 
+# $results{$test}{$type}{"fail"}{$float} is defined and has a 1 if
 # the test is expected to fail
 # $results{$test}{$type}{"ulp"}{$float} is defined and has a delta as value
 
@@ -50,7 +50,7 @@ use vars qw (%beautify @all_floats);
 use vars qw ($output_dir $ulps_file);
 
 # all_floats is sorted and contains all recognised float types
-@all_floats = ('double', 'float', 'idouble', 
+@all_floats = ('double', 'float', 'idouble',
 	       'ifloat', 'ildouble', 'ldouble');
 
 %beautify =
@@ -508,11 +508,6 @@ sub parse_ulps {
       }
       s/^.+\"(.*)\".*$/$1/;
       $test = $_;
-      if ($type =~ /^real|imag$/) {
-	$results{$test}{'type'} = 'complex';
-      } elsif ($type eq 'normal') {
-	$results{$test}{'type'} = 'normal';
-      }
       next;
     }
     if (/^Function: /) {
@@ -526,21 +521,25 @@ sub parse_ulps {
 	$type = 'normal';
       }
       ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
-      if ($type =~ /^real|imag$/) {
-	$results{$test}{'type'} = 'complex';
-      } elsif ($type eq 'normal') {
-	$results{$test}{'type'} = 'normal';
-      }
       next;
     }
     if (/^i?(float|double|ldouble):/) {
       ($float, $eps) = split /\s*:\s*/,$_,2;
+
       if ($eps eq 'fail') {
 	$results{$test}{$type}{'fail'}{$float} = 1;
 	$results{$test}{'has_fails'} = 1;
+      } elsif ($eps eq "0") {
+	# ignore
+	next;
       } else {
 	$results{$test}{$type}{'ulp'}{$float} = $eps;
 	$results{$test}{'has_ulps'} = 1;
+      }
+      if ($type =~ /^real|imag$/) {
+	$results{$test}{'type'} = 'complex';
+      } elsif ($type eq 'normal') {
+	$results{$test}{'type'} = 'normal';
       }
       next;
     }
@@ -587,8 +586,8 @@ sub print_ulps_file {
 	}
 	foreach $float (@all_floats) {
 	  if (exists $results{$test}{$type}{'ulp'}{$float}) {
-	    print NEWULP "$float: ", 
-	    &clean_up_number ($results{$test}{$type}{'ulp'}{$float}), 
+	    print NEWULP "$float: ",
+	    &clean_up_number ($results{$test}{$type}{'ulp'}{$float}),
 	    "\n";
 	  }
 	  if (exists $results{$test}{$type}{'fail'}{$float}) {
@@ -612,8 +611,8 @@ sub print_ulps_file {
 	}
 	foreach $float (@all_floats) {
 	  if (exists $results{$fct}{$type}{'ulp'}{$float}) {
-	    print NEWULP "$float: ", 
-	    &clean_up_number ($results{$fct}{$type}{'ulp'}{$float}), 
+	    print NEWULP "$float: ",
+	    &clean_up_number ($results{$fct}{$type}{'ulp'}{$float}),
 	    "\n";
 	  }
 	  if (exists $results{$fct}{$type}{'fail'}{$float}) {
@@ -639,7 +638,7 @@ sub get_ulps {
       return "0";
     }
     $res = 'BUILD_COMPLEX (';
-    $res .= (exists $results{$test}{'real'}{'ulp'}{$float} 
+    $res .= (exists $results{$test}{'real'}{'ulp'}{$float}
 	     ? $results{$test}{'real'}{'ulp'}{$float} : "0");
     $res .= ', ';
     $res .= (exists $results{$test}{'imag'}{'ulp'}{$float}
@@ -662,7 +661,7 @@ sub get_failure {
       return "0";
     }
     $res = 'BUILD_COMPLEX_INT (';
-    $res .= (exists $results{$test}{'real'}{'fail'}{$float} 
+    $res .= (exists $results{$test}{'real'}{'fail'}{$float}
 	     ? $results{$test}{'real'}{'fail'}{$float} : "0");
     $res .= ', ';
     $res .= (exists $results{$test}{'imag'}{'fail'}{$float}
