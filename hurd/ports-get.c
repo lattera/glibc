@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,9 @@ _hurd_ports_get (unsigned int which, mach_port_t *result)
     return EINVAL;
   if (which >= INIT_PORT_MAX || _hurd_ports_getters[which] == NULL)
     return HURD_PORT_USE (&_hurd_ports[which],
-			  __mach_port_mod_refs (__mach_task_self (),
-						(*result = port),
-						MACH_PORT_RIGHT_SEND,
-						+1));
+			  (*result = port) == MACH_PORT_NULL ? 0 
+			  : __mach_port_mod_refs (__mach_task_self (),
+						  port, MACH_PORT_RIGHT_SEND,
+						  +1));
   return (*_hurd_ports_getters[which]) (result);
 }
