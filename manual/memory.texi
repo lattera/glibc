@@ -611,6 +611,20 @@ The block was already freed.
 @end table
 @end deftp
 
+Another possibility to check for and guard against bugs in the use of
+@code{malloc}, @code{realloc} and @code{free} is to set the environment
+variable @code{MALLOC_CHECK_}.  When @code{MALLOC_CHECK_} is set, a
+special (less efficient) implementation is used which is designed to be
+tolerant against simple errors, such as double calls of @code{free} with
+the same argument, or overruns of a single byte (off-by-one bugs).  Not
+all such errors can be proteced against, however, and memory leaks can
+result.  If @code{MALLOC_CHECK_} is set to @code{0}, any detected heap
+corruption is silently ignored; if set to @code{1}, a diagnostic is
+printed on @code{stderr}; if set to @code{2}, @code{abort} is called
+immediately.  This can be useful because otherwise a crash may happen
+much later, and the true cause for the problem is then very hard to
+track down.
+
 @node Hooks for Malloc
 @subsection Storage Allocation Hooks
 @cindex allocation hooks, for @code{malloc}

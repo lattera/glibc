@@ -1,3 +1,26 @@
+1998-03-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Heap Consistency Checking): Document
+	MALLOC_CHECK_.  Based on a text by Wolfram Gloger.
+
+1998-03-18 17:11  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* manual/Makefile: Add missing rules.
+
+1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/Makefile (generated): Define to remove all stamp files.
+
+	* sysdeps/generic/strsep.c: Also undefine __strsep.
+
+	* string/strdup.c: Undefine __strdup and strdup first.
+	* string/strndup.c: Likewise.
+
+	* string/bits/string2.h: Correct strtok_r and strsep.
+	Add strndup optimization.
+
+	* sysdeps/generic/strsep.c: Little optimization.
+
 1998-03-18 14:25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h: Add optimization for strdup.

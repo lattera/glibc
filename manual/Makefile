@@ -69,6 +69,12 @@ endef
 libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)
 libc.dvi: texinfo.tex
 
+%.info: %.texinfo
+	$(MAKEINFO) $<
+
+%.dvi: %.texinfo
+	$(TEXI2DVI) $<
+
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(chapters) $(chapters-incl)
@@ -81,7 +87,7 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texi: xtract-typefun.awk $(chapters) $(chapters-incl)
+dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
 	(echo "@dircategory GNU C library functions";			\
 	 echo "@direntry";						\
 	 $(GAWK) -f $^ | sort;						\

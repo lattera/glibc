@@ -710,8 +710,8 @@ strnlen (__const char *__string, size_t __maxlen)
 		  ? (((__const unsigned char *) (sep))[0] != '\0'	      \
 		     && ((__const unsigned char *) (sep))[1] == '\0'	      \
 		     ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)  \
-		     : strtok_r (s, sep, nextp))			      \
-		  : strtok_r (s, sep, nextp)))
+		     : __strtok_r (s, sep, nextp))			      \
+		  : __strtok_r (s, sep, nextp)))
 
 __STRING_INLINE char *__strtok_r_1c (char *__s, char __sep, char **__nextp);
 __STRING_INLINE char *
@@ -740,7 +740,7 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
   return __result;
 }
 # if defined __USE_POSIX || defined __USE_MISC
-#  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
+#  define strtok_r(s, sep, nextp) __strtok_r ((s), (sep), (nextp))
 # endif
 #endif
 
@@ -845,7 +845,7 @@ __strsep_g (char **__s, __const char *__reject)
   return __retval;
 }
 # ifdef __USE_BSD
-#  define strsep(s, reject) __strsep (s, reject)
+#  define strsep(s, reject) __strsep ((s), (reject))
 # endif
 #endif
 
@@ -857,18 +857,49 @@ __strsep_g (char **__s, __const char *__reject)
 # include <stdlib.h>
 
 # define __strdup(s) \
-  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)
-		  ? (((__const unsigned char *) (s))[0] == '\0'
-		     ? return (char *) calloc (1, 1);
-		     : ({ size_t len = strlen (s) + 1;
-			  char *retval = (char *) malloc (len);
-			  if (retval != NULL)
-			    retval = (char *) memcpy (retval, s, len);
-			  retval; }))
-		  : strdup (s)))
+  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
+		  ? (((__const unsigned char *) (s))[0] == '\0'		      \
+		     ? (char *) calloc (1, 1)				      \
+		     : ({ size_t __len = strlen (s) + 1;		      \
+			  char *__retval = (char *) malloc (__len);	      \
+			  if (__retval != NULL)				      \
+			    __retval = (char *) memcpy (__retval, s, __len);  \
+			  __retval; }))					      \
+		  : __strdup (s)))
 
 # if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 #  define strdup(s) __strdup (s)
+# endif
+#endif
+
+
+#if !defined _HAVE_STRING_ARCH_strndup && !defined __STRICT_ANSI__
+
+/* We need the memory allocation functions.  Including this header is
+   not allowed. */
+# include <stdlib.h>
+
+# define __strndup(s, n) \
+  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
+		  ? (((__const unsigned char *) (s))[0] == '\0'		      \
+		     ? (char *) calloc (1, 1)				      \
+		     : ({ size_t __len = strlen (s) + 1;		      \
+			  size_t __n = (n);				      \
+			  char *__retval;				      \
+			  if (__n < __len)				      \
+			    __len = __n;				      \
+			  __retval = (char *) malloc (__len);		      \
+			  if (__retval != NULL)				      \
+			    {						      \
+			      __retval[__len - 1] = '\0';		      \
+			      __retval = (char *) memcpy (__retval, s,	      \
+							  __len - 1);	      \
+			    }						      \
+			  __retval; }))					      \
+		  : __strndup ((s), (n))))
+
+# ifdef __GNU_SOURCE
+#  define strndup(s, n) __strndup ((s), (n))
 # endif
 #endif
 

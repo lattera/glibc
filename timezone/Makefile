@@ -39,6 +39,7 @@ tzfiles := $(tzbases) $(tzlinks)
 # northamerica.
 distribute += $(tzfiles) leapseconds pacificnew simplebackw
 
+generated := $(addprefix z.,$(tzfiles))
 install-sbin := zic zdump
 
 generated-dirs = testdata
