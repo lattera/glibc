@@ -28,7 +28,9 @@
 #include <bp-checks.h>
 
 #include <kernel-features.h>
+#ifndef NO_SGIDEFS_H
 #include <sgidefs.h>
+#endif
 
 #ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
 # ifdef __NR_pwrite
