@@ -1,3 +1,11 @@
+2000-11-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update.
+
+2000-11-10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Updated.
+
 2000-11-10  Andreas Jaeger  <aj@suse.de>
 
 	* elf/ldconfig.c (create_links): Fix alloca calculation.
