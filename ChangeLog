@@ -1,3 +1,9 @@
+2003-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: When recognizing multibyte characters in
+	string reset the byte counter after mbrtowc reported it is not a
+	partial character.  Reported by Al Viro <aviro@redhat.com>.
+
 2003-01-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: Include
