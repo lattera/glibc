@@ -1,3 +1,10 @@
+Wed Oct 18 03:33:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/_strerror.c: Declare _sys_errlist and _sys_nerr.
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): For magic
+	`fd/', pass the right pointer to strtol to parse the number.
+
 Tue Oct 17 23:00:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/_strerror.c: Include stdio-common/_itoa.h instead

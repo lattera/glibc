@@ -170,7 +170,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  char *end;
 		  int save = errno;
 		  errno = 0;
-		  fd = (int) strtol (retryname, &end, 10);
+		  fd = (int) strtol (&retryname[3], &end, 10);
 		  if (end == NULL || errno || /* Malformed number.  */
 		      /* Check for excess text after the number.  A slash
 			 is valid; it ends the component.  Anything else
