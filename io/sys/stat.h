@@ -310,47 +310,53 @@ extern int __xmknod __P ((int __ver, __const char *__path,
 			  __mode_t __mode, __dev_t *__dev));
 
 #if defined __GNUC__ && __GNUC__ >= 2
-/* Inlined versions of the real stat and mknod functions.  */
+/* Inlined versions of the real stat and mknod functions.
 
-extern __inline__ int stat (__const char *__path, struct stat *__statbuf)
+   We have to use __P here since we need definitions matching the
+   declarations above.  */
+
+extern __inline__ int stat __P ((__const char *__path, struct stat *__statbuf))
 {
   return __xstat (_STAT_VER, __path, __statbuf);
 }
 
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern __inline__ int lstat (__const char *__path, struct stat *__statbuf)
+extern __inline__ int lstat __P ((__const char *__path,
+				  struct stat *__statbuf))
 {
   return __lxstat (_STAT_VER, __path, __statbuf);
 }
 # endif
 
-extern __inline__ int fstat (int __fd, struct stat *__statbuf)
+extern __inline__ int fstat __P ((int __fd, struct stat *__statbuf))
 {
   return __fxstat (_STAT_VER, __fd, __statbuf);
 }
 
 # if defined __USE_MISC || defined __USE_BSD
-extern __inline__ int mknod (__const char *__path, __mode_t __mode,
-			     __dev_t __dev)
+extern __inline__ int mknod __P ((__const char *__path, __mode_t __mode,
+				  __dev_t __dev))
 {
   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
 }
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern __inline__ int stat64 (__const char *__path, struct stat64 *__statbuf)
+extern __inline__ int stat64 __P ((__const char *__path,
+				   struct stat64 *__statbuf))
 {
   return __xstat64 (_STAT_VER, __path, __statbuf);
 }
 
 #  if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern __inline__ int lstat64 (__const char *__path, struct stat64 *__statbuf)
+extern __inline__ int lstat64 __P ((__const char *__path,
+				    struct stat64 *__statbuf))
 {
   return __lxstat64 (_STAT_VER, __path, __statbuf);
 }
 #  endif
 
-extern __inline__ int fstat64 (int __fd, struct stat64 *__statbuf)
+extern __inline__ int fstat64 __P ((int __fd, struct stat64 *__statbuf))
 {
   return __fxstat64 (_STAT_VER, __fd, __statbuf);
 }

@@ -315,7 +315,7 @@ _dl_start_user:
 	.word	_dl_fini(GOT)
 .L_STACK_END:
 	.word	__libc_stack_end(GOT)
-.L_MAIN_SEARCHLIST
+.L_MAIN_SEARCHLIST:
 	.word	_dl_main_searchlist(GOT)
 .previous\n\
 ");

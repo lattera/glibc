@@ -106,6 +106,7 @@
 #define Q_SYNC     0x0600	/* sync disk copy of a filesystems quotas */
 #define Q_SETQLIM  0x0700	/* set limits */
 #define Q_GETSTATS 0x0800	/* get collected stats */
+#define Q_RSQUASH  0x1000	/* set root_squash option */
 
 /*
  * The following structure defines the format of the disk quota file

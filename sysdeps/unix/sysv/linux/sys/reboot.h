@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
    bits in the argument to the `reboot' system call.  */
 
 #ifndef _SYS_REBOOT_H
-
 #define _SYS_REBOOT_H	1
+
 #include <features.h>
 
 /* Perform a hard reset now.  */
@@ -35,6 +35,9 @@
 
 /* Disable reboot using Ctrl-Alt-Delete keystroke.  */
 #define RB_DISABLE_CAD	0
+
+/* Stop system and switch power off if possible.  */
+#define RB_POWER_OFF	0x4321fedc
 
 __BEGIN_DECLS
 

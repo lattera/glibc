@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SGTTY_H
-#define	_SGTYY_H	1
+#define	_SGTTY_H	1
 
 #include <features.h>
 

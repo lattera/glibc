@@ -78,7 +78,9 @@ union fooround {long x; double d;};
 
 /* The functions allocating more room by calling `obstack_chunk_alloc'
    jump to the handler pointed to by `obstack_alloc_failed_handler'.
-   This variable by default points to the internal function
+   This can be set to a user defined function which should either
+   abort gracefully or use longjump - but shouldn't return.  This
+   variable by default points to the internal function
    `print_and_abort'.  */
 #if defined (__STDC__) && __STDC__
 static void print_and_abort (void);
@@ -142,9 +144,8 @@ struct obstack *_obstack;
    CHUNKFUN is the function to use to allocate chunks,
    and FREEFUN the function to free them.
 
-   Return nonzero if successful, zero if out of memory.
-   To recover from an out of memory error,
-   free up some memory, then call this again.  */
+   Return nonzero if successful, calls obstack_alloc_failed_handler if
+   allocation fails.  */
 
 int
 _obstack_begin (h, size, alignment, chunkfun, freefun)

@@ -141,6 +141,16 @@
 
 #endif
 
+/* It is possible to compile containing GCC extensions even if GCC is
+   run in pedantic mode if the uses are carefully marked using the
+   `__extension__' keyword.  But this is not generally available before
+   version 2.8.  */
+#if !defined __GNUC__ || __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
+
+# define __extension__		/* Ignore */
+
+#endif
+
 /* No current version of gcc knows the `restrict' keyword.  Define it
    for now unconditionally to the empty string.  */
 #define __restrict

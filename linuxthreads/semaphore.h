@@ -16,6 +16,7 @@
 #define _SEMAPHORE_H    1
 
 #include <features.h>
+#include <sys/types.h>
 
 #include <limits.h>
 

@@ -23,36 +23,47 @@
 
 #define	__need_time_t
 #include <time.h>
-
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
 #define ACCT_COMM 16
 
+/*
+  comp_t is a 16-bit "floating" point number with a 3-bit base 8
+  exponent and a 13-bit fraction. See linux/kernel/acct.c for the
+  specific encoding system used.
+*/
+
+typedef u_int16_t comp_t;
+
 struct acct
   {
-    char ac_comm[ACCT_COMM];		/* Accounting command name.  */
-    time_t ac_utime;			/* Accounting user time.  */
-    time_t ac_stime;			/* Accounting system time.  */
-    time_t ac_etime;			/* Accounting elapsed time.  */
-    time_t ac_btime;			/* Beginning time.  */
-    unsigned short int ac_uid;		/* Accounting user ID.  */
-    unsigned short int ac_gid;		/* Accounting group ID.  */
-    unsigned short int ac_tty;		/* Controlling tty.  */
-    /* Please note that the value of the `ac_tty' field, a device number,
-       is encoded differently in the kernel and for the libc dev_t type.  */
-    char ac_flag;			/* Accounting flag.  */
-    long int ac_minflt;			/* Accounting minor pagefaults.  */
-    long int ac_majflt;			/* Accounting major pagefaults.  */
-    long int ac_exitcode;		/* Accounting process exitcode.  */
+    char ac_flag;			/* Accounting flags.  */
+    u_int16_t ac_uid;			/* Accounting user ID.  */
+    u_int16_t ac_gid;			/* Accounting group ID.  */
+    u_int16_t ac_tty;			/* Controlling tty.  */
+    u_int32_t ac_btime;			/* Beginning time.  */
+    comp_t ac_utime;			/* Accounting user time.  */
+    comp_t ac_stime;			/* Accounting system time.  */
+    comp_t ac_etime;			/* Accounting elapsed time.  */
+    comp_t ac_mem;			/* Accounting average memory usage.  */
+    comp_t ac_io;			/* Accounting chars transferred.  */
+    comp_t ac_rw;			/* Accounting blocks read or written.  */
+    comp_t ac_minflt;			/* Accounting minor pagefaults.  */
+    comp_t ac_majflt;			/* Accounting major pagefaults.  */
+    comp_t ac_swaps;			/* Accounting number of swaps.  */
+    u_int32_t ac_exitcode;		/* Accounting process exitcode.  */
+    char ac_comm[ACCT_COMM+1];		/* Accounting command name.  */
+    char ac_pad[10];			/* Accounting padding bytes.  */
   };
 
 enum
   {
-    AFORK = 0001,		/* Has executed fork, but no exec.  */
-    ASU = 0002,			/* Used super-user privileges.  */
-    ACORE = 0004,		/* Dumped core.  */
-    AXSIG = 0010		/* Killed by a signal.  */
+    AFORK = 0x01,		/* Has executed fork, but no exec.  */
+    ASU = 0x02,			/* Used super-user privileges.  */
+    ACORE = 0x08,		/* Dumped core.  */
+    AXSIG = 0x10		/* Killed by a signal.  */
   };
 
 #define AHZ     100

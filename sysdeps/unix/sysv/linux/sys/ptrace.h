@@ -18,8 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_PTRACE_H
-
 #define _SYS_PTRACE_H	1
+
 #include <features.h>
 
 __BEGIN_DECLS
@@ -100,6 +100,7 @@ enum __ptrace_request
 
   /* Continue and stop at the next (return from) syscall.  */
   PTRACE_SYSCALL = 24,
+#define PTRACE_SYSCALL PTRACE_SYSCALL
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values

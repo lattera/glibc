@@ -254,8 +254,9 @@ int obstack_memory_used (struct obstack *obstack);
    so we do not declare them.  */
 
 /* Error handler called when `obstack_chunk_alloc' failed to allocate
-   more memory.  This can be set to a user defined function.  The
-   default action is to print a message and abort.  */
+   more memory.  This can be set to a user defined function which
+   should either abort gracefully or use longjump - but shouldn't
+   return.  The default action is to print a message and abort.  */
 #if defined __STDC__ && __STDC__
 extern void (*obstack_alloc_failed_handler) (void);
 #else

@@ -1,17 +1,74 @@
-1998-10-01  Philip Blundell  <pb@nexus.co.uk> 
- 
-	* sysdeps/arm/machine-gmon.h: Correct args to mcount().  Patch 
-	from Scott Bambrough. 
- 
-	* sysdeps/unix/sysv/linux/arm/register-dump.h: New file. 
- 
-	* libio/libioP.h (FILEBUF_LITERAL) [! _IO_MTSAFE_IO]: Don't 
-	include the lock member. 
- 
-1998-09-03  Philip Blundell  <pb@nexus.co.uk> 
- 
-	* sysdeps/arm/fpu/__longjmp.S: Cope with fussy assembler. 
- 
+1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/swap.h (SWAP_FLAG_PREFER,
+	SWAP_FLAG_PRIO_MASK,SWAP_FLAG_PRIO_SHIFT): Added.
+	Remove inclusion of <linux/swap.h>.
+
+1998-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/sys/stat.h: Use __P in definitions of inline stat functions
+	so that they match the declaration.
+
+1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/quota.h (Q_RSQUASH): Added.
+
+1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/acct.h: Bring in sync with current
+	linux 2.1 version.
+
+1998-10-02  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/dl-machine.h: Fix typo in last change.
+
+	* sysdeps/arm/bits/huge_val.h: New file.
+
+1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/reboot.h (RB_POWER_OFF): Added.
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (PTRACE_SYSCALL): Add
+	define.
+
+1998-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c (__getcwd): Use temporary variable to
+	store result of realloc instead of using BUF.
+
+1998-10-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/sgtty.h (_SGTTY_H): Correct spelling.
+	Reported by Rouben Rostamian <rostamian@umbc.edu> [PR libc/817].
+
+1998-10-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Obstacks): Document
+	obstack_alloc_failed_handler usage.
+
+	* malloc/obstack.h: Enhance comment about
+	obstack_alloc_failed_handler usage.
+	* malloc/obstack.c: Likewise.
+
+1998-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/sys/cdefs.h (__extension__): Define as empty if no gcc or
+	gcc before 2.8 is used.
+
+1998-10-01  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/machine-gmon.h: Correct args to mcount().  Patch
+	from Scott Bambrough.
+
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: New file.
+
+	* libio/libioP.h (FILEBUF_LITERAL) [! _IO_MTSAFE_IO]: Don't
+	include the lock member.
+
+1998-09-03  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/fpu/__longjmp.S: Cope with fussy assembler.
+
 1998-10-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/zic.c: Update from tzcode1998h.
@@ -30,31 +87,31 @@
 	* sysdeps/wordsize-32/stdint.h: Likewise.
 	* wcsmbs/wchar.h: Likewise.
 
-1998-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de> 
- 
-	* string/bits/string2.h (__string2_1bptr_p): Don't use a statement 
-	expression. 
-	(__mempcpy, strcpy, __stpcpy, strcmp, strcspn, strspn, strpbrk, 
-	__strsep): Greatly reduce size of expansion by combining common 
-	expressions. 
-	(__mempcpy_small, __strcpy_small, __stpcpy_small): Convert to 
-	inline function. 
-	(__mempcpy_args, __strcpy_args, __stpcpy_args): New macros, used 
-	by the above definitions. 
- 
-1998-09-27  Geoff Keating  <geoffk@ozemail.com.au> 
- 
-	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: New file, use 
-	correct struct ipc_perm definition.  
- 
-1998-09-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
- 
-	* nis/ypclnt.c (yp_all): Close UDP socket und give CLIENT handle free. 
- 
+1998-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h (__string2_1bptr_p): Don't use a statement
+	expression.
+	(__mempcpy, strcpy, __stpcpy, strcmp, strcspn, strspn, strpbrk,
+	__strsep): Greatly reduce size of expansion by combining common
+	expressions.
+	(__mempcpy_small, __strcpy_small, __stpcpy_small): Convert to
+	inline function.
+	(__mempcpy_args, __strcpy_args, __stpcpy_args): New macros, used
+	by the above definitions.
+
+1998-09-27  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: New file, use
+	correct struct ipc_perm definition.
+
+1998-09-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c (yp_all): Close UDP socket und give CLIENT handle free.
+
 1998-09-29  Cristian Gafton  <gafton@redhat.com>
 
-	* sysdeps/unix/sysv/linux/alpha/ioperm.c: List Ruffian in platforms[]. 
-	* sysdeps/unix/sysv/linux/net/if_shaper.h: New file. 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: List Ruffian in platforms[].
+	* sysdeps/unix/sysv/linux/net/if_shaper.h: New file.
 	* sysdeps/unix/sysv/linux/Dist: Add net/if_shaper.h.
 	* sysdeps/unix/sysv/linux/Makefile [subdirs=inet] (sysdep_headers):
 	Add net/if_shaper.h.

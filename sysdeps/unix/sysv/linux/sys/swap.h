@@ -1,5 +1,5 @@
 /* Calls to enable and disable swapping on specified locations.  Linux version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,12 @@
 #define _SYS_SWAP_H	1
 #include <features.h>
 
-/* Get constants from kernel headers.  */
-#include <linux/swap.h>
+/* The swap priority is encoded as:
+   (prio << SWAP_FLAG_PRIO_SHIFT) & SWAP_FLAG_PRIO_MASK
+*/
+#define	SWAP_FLAG_PREFER	0x8000	/* Set if swap priority is specified. */
+#define	SWAP_FLAG_PRIO_MASK	0x7fff
+#define	SWAP_FLAG_PRIO_SHIFT	0
 
 __BEGIN_DECLS
 
