@@ -1,3 +1,7 @@
+2001-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in: Enforce optimization to be used.
+
 2001-09-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_gethst_r.c: Don't expect IPv6 addresses for IPv4 lookup.

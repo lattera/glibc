@@ -1,3 +1,7 @@
+#ifndef __OPTIMIZE__
+# error "glibc cannot be compiled without optimization"
+#endif
+
 /* Define if using GNU ld, with support for weak symbols in a.out,
    and for symbol set and warning messages extensions in a.out and ELF.
    This implies HAVE_WEAK_SYMBOLS; set by --with-gnu-ld.  */
