@@ -15,7 +15,7 @@ GLIBC_2.0 {
 
     _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
 
-    __libc_pid; __libc_uid;
+    __libc_pid;
 
     # This is for sparc only.
     .div; .mul; .rem; .udiv; .umul; .urem;

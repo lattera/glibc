@@ -1,5 +1,8 @@
 1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/pthread/pthread.h (PTHREAD_RWLOCK_INITIALIZER): Correct
+	for new definition of pthread_rwlock_t.
+
 	* spinlock.c: Correct test whether to compile
 	__pthread_compare_and_swap or not.
 

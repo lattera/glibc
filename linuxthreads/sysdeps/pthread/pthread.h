@@ -46,7 +46,7 @@ typedef struct _pthread_descr_struct *_pthread_descr;
 /* Fast locks (not abstract because mutexes and conditions aren't abstract). */
 struct _pthread_fastlock
 {
-  long status;                  /* "Free" or "taken" or head of waiting list */
+  long int status;              /* "Free" or "taken" or head of waiting list */
   int spinlock;                 /* For compare-and-swap emulation */
 };
 
@@ -91,7 +91,7 @@ typedef struct
 } pthread_rwlock_t;
 
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { 0, 0, 0, {0, 0}, {0, 0},						      \
+  { {0, 0}, 0, NULL, NULL, NULL,					      \
     PTHREAD_RWLOCK_DEFAULT_NP, PTHREAD_PROCESS_PRIVATE }
 #endif
 

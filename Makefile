@@ -308,5 +308,6 @@ headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
 		sys/kernel_termios.h sys/msq_buf.h sys/sem_buf.h 	\
 		sys/shm_buf.h sys/socketcall.h
 
+.PHONY: remove-old-headers
 remove-old-headers:
 	rm -f $(addprefix $(inst_includedir)/, $(headers2_0))

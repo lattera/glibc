@@ -1115,6 +1115,7 @@ if test ${old_glibc_headers} = yes; then
   AC_MSG_WARN(*** During \"make install\" old headers from glibc 2.0.x will)
   AC_MSG_WARN(*** be removed.)
 fi
+AC_SUBST(old_glibc_headers)
 
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)

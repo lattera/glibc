@@ -1983,7 +1983,7 @@ open_pty_pair (int *amaster, int *aslave)
   if (name == NULL)
     goto close_master;
 
-  slave open (name, O_RDWR);
+  slave = open (name, O_RDWR);
   if (slave == -1)
     goto close_master;
 
@@ -2043,9 +2043,9 @@ device instead.
 @comment BSD
 @deftypefun int forkpty (int *@var{amaster}, char *@var{name}, struct termios *@var{termp}, struct winsize *@var{winp})
 This function is similar to the @code{openpty} function, but in
-addition, forks creates a new process (@pxref{Creating a Process}) and
-makes the newly opened slave pseudo-terminal device the controlling
-terminal (@pxref{Controlling Terminal}) for the child process.
+addition, forks a new process (@pxref{Creating a Process}) and makes the
+newly opened slave pseudo-terminal device the controlling terminal
+(@pxref{Controlling Terminal}) for the child process.
 
 If the operation is successful, there are then both parent and child
 processes and both see @code{forkpty} return, but with different values:
