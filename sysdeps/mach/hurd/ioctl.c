@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <mach/notify.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
 #include <hurd/ioctl.h>
 #include <mach/mig_support.h>
 
@@ -82,6 +83,10 @@ __ioctl (int fd, unsigned long int request, ...)
 
       if (_IOC_INOUT (request) & IOC_IN)
 	{
+	  /* We don't want to advance ARG since it will be used to copy out
+             too if IOC_OUT is also set.  */
+	  void *argptr = arg;
+
 	  /* Pack an argument into the message buffer.  */
 	  void in (unsigned int count, enum __ioctl_datum type)
 	    {
@@ -90,10 +95,10 @@ __ioctl (int fd, unsigned long int request, ...)
 		  void *p = &t[1];
 		  const size_t len = count * typesize ((unsigned int) type);
 		  *t = io2mach_type (count, type);
-		  memcpy (p, arg, len);
-		  arg += len;
+		  p = __mempcpy (p, argptr, len);
+		  argptr += len;
 		  p += len;
-		  p = (void *) (((unsigned long int) p + sizeof (*t) - 1)
+		  p = (void *) (((uintptr_t) p + sizeof (*t) - 1)
 				& ~(sizeof (*t) - 1));
 		  t = p;
 		}
@@ -232,7 +237,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	      memcpy (store, t, len);
 	      if (update != NULL)
 		*update += len;
-	      t = (void *) (((unsigned long int) t + len + sizeof (*t) - 1)
+	      t = (void *) (((uintptr_t) t + len + sizeof (*t) - 1)
 			    & ~(sizeof (*t) - 1));
 	    }
 	  return 0;
