@@ -80,7 +80,8 @@ static reg_errcode_t parse_bracket_element (bracket_elem_t *elem,
 					    re_string_t *regexp,
 					    re_token_t *token, int token_len,
 					    re_dfa_t *dfa,
-					    reg_syntax_t syntax);
+					    reg_syntax_t syntax,
+					    int accept_hyphen);
 static reg_errcode_t parse_bracket_symbol (bracket_elem_t *elem,
 					  re_string_t *regexp,
 					  re_token_t *token);
@@ -2986,6 +2987,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   if (token->type == OP_CLOSE_BRACKET)
     token->type = CHARACTER;
 
+  int first_round = 1;
   while (1)
     {
       bracket_elem_t start_elem, end_elem;
@@ -2997,43 +2999,50 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
       start_elem.opr.name = start_name_buf;
       ret = parse_bracket_element (&start_elem, regexp, token, token_len, dfa,
-				   syntax);
+				   syntax, first_round);
       if (BE (ret != REG_NOERROR, 0))
 	{
 	  *err = ret;
 	  goto parse_bracket_exp_free_return;
 	}
+      first_round = 0;
 
+      /* Get information about the next token.  We need it in any case.  */
       token_len = peek_token_bracket (token, regexp, syntax);
-      if (BE (token->type == END_OF_RE, 0))
+
+      /* Do not check for ranges if we know they are not allowed.  */
+      if (start_elem.type != CHAR_CLASS && start_elem.type != EQUIV_CLASS)
 	{
-	  *err = REG_EBRACK;
-	  goto parse_bracket_exp_free_return;
-	}
-      if (token->type == OP_CHARSET_RANGE)
-	{
-	  re_string_skip_bytes (regexp, token_len); /* Skip '-'.  */
-	  token_len2 = peek_token_bracket (&token2, regexp, syntax);
 	  if (BE (token->type == END_OF_RE, 0))
 	    {
-	      *err = REG_BADPAT;
+	      *err = REG_EBRACK;
 	      goto parse_bracket_exp_free_return;
 	    }
-	  if (token2.type == OP_CLOSE_BRACKET)
+	  if (token->type == OP_CHARSET_RANGE)
 	    {
-	      /* We treat the last '-' as a normal character.  */
-	      re_string_skip_bytes (regexp, -token_len);
-	      token->type = CHARACTER;
+	      re_string_skip_bytes (regexp, token_len); /* Skip '-'.  */
+	      token_len2 = peek_token_bracket (&token2, regexp, syntax);
+	      if (BE (token2.type == END_OF_RE, 0))
+		{
+		  *err = REG_EBRACK;
+		  goto parse_bracket_exp_free_return;
+		}
+	      if (token2.type == OP_CLOSE_BRACKET)
+		{
+		  /* We treat the last '-' as a normal character.  */
+		  re_string_skip_bytes (regexp, -token_len);
+		  token->type = CHARACTER;
+		}
+	      else
+		is_range_exp = 1;
 	    }
-	  else
-	    is_range_exp = 1;
 	}
 
       if (is_range_exp == 1)
 	{
 	  end_elem.opr.name = end_name_buf;
 	  ret = parse_bracket_element (&end_elem, regexp, &token2, token_len2,
-				       dfa, syntax);
+				       dfa, syntax, 1);
 	  if (BE (ret != REG_NOERROR, 0))
 	    {
 	      *err = ret;
@@ -3041,11 +3050,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	    }
 
 	  token_len = peek_token_bracket (token, regexp, syntax);
-	  if (BE (token->type == END_OF_RE, 0))
-	    {
-	      *err = REG_BADPAT;
-	      goto parse_bracket_exp_free_return;
-	    }
+
 	  *err = build_range_exp (sbcset,
 #ifdef RE_ENABLE_I18N
 				  mbcset, &range_alloc,
@@ -3109,6 +3114,11 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	      assert (0);
 	      break;
 	    }
+	}
+      if (BE (token->type == END_OF_RE, 0))
+	{
+	  *err = REG_EBRACK;
+	  goto parse_bracket_exp_free_return;
 	}
       if (token->type == OP_CLOSE_BRACKET)
 	break;
@@ -3177,13 +3187,15 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 /* Parse an element in the bracket expression.  */
 
 static reg_errcode_t
-parse_bracket_element (elem, regexp, token, token_len, dfa, syntax)
+parse_bracket_element (elem, regexp, token, token_len, dfa, syntax,
+		       accept_hyphen)
      bracket_elem_t *elem;
      re_string_t *regexp;
      re_token_t *token;
      int token_len;
      re_dfa_t *dfa;
      reg_syntax_t syntax;
+     int accept_hyphen;
 {
 #ifdef RE_ENABLE_I18N
   int cur_char_size;
@@ -3200,6 +3212,17 @@ parse_bracket_element (elem, regexp, token, token_len, dfa, syntax)
   if (token->type == OP_OPEN_COLL_ELEM || token->type == OP_OPEN_CHAR_CLASS
       || token->type == OP_OPEN_EQUIV_CLASS)
     return parse_bracket_symbol (elem, regexp, token);
+  if (BE (token->type == OP_CHARSET_RANGE, 0) && !accept_hyphen)
+    {
+      /* A '-' must only appear as anything but a range indicator before
+	 the closing bracket.  Everything else is an error.  */
+      re_token_t token2;
+      (void) peek_token_bracket (&token2, regexp, syntax);
+      if (token2.type != OP_CLOSE_BRACKET)
+	/* The actual error value is not standardized since this whole
+	   case is undefined.  But ERANGE makes good sense.  */
+	return REG_ERANGE;
+    }
   elem->type = SB_CHAR;
   elem->opr.ch = token->opr.c;
   return REG_NOERROR;

@@ -75,8 +75,7 @@ run_a_test (int id, const struct a_test * t)
 	    regfree (&r);
 	  last_pattern = NULL;
 	  regerror (err, &r, errmsg, 100);
-	  printf ("test %d\n", id);
-	  puts (errmsg);
+	  printf (" FAIL: %s.\n", errmsg);
 	  return 1;
 	}
       else if (t->expected == 2)
