@@ -77,7 +77,7 @@ union des_block {
 	char c[8];
 };
 typedef union des_block des_block;
-extern bool_t xdr_des_block __P ((XDR *__xdrs, des_block *__blkp));
+extern bool_t xdr_des_block (XDR *__xdrs, des_block *__blkp) __THROW;
 
 /*
  * Authentication info.  Opaque to client.
@@ -97,12 +97,12 @@ struct AUTH {
   struct opaque_auth ah_verf;
   union des_block ah_key;
   struct auth_ops {
-    void (*ah_nextverf) __PMT ((AUTH *));
-    int  (*ah_marshal) __PMT ((AUTH *, XDR *));	/* nextverf & serialize */
-    int  (*ah_validate) __PMT ((AUTH *, struct opaque_auth *));
+    void (*ah_nextverf) (AUTH *);
+    int  (*ah_marshal) (AUTH *, XDR *);		/* nextverf & serialize */
+    int  (*ah_validate) (AUTH *, struct opaque_auth *);
 						/* validate verifier */
-    int  (*ah_refresh) __PMT ((AUTH *));	/* refresh credentials */
-    void (*ah_destroy) __PMT ((AUTH *));     	/* destroy this structure */
+    int  (*ah_refresh) (AUTH *);		/* refresh credentials */
+    void (*ah_destroy) (AUTH *); 	    	/* destroy this structure */
   } *ah_ops;
   caddr_t ah_private;
 };
@@ -158,16 +158,15 @@ extern struct opaque_auth _null_auth;
  *	int len;
  *	int *aup_gids;
  */
-extern AUTH *authunix_create __P ((char *__machname, __uid_t __uid,
-				   __gid_t __gid, int __len,
-				   __gid_t *__aup_gids));
-extern AUTH *authunix_create_default __P ((void));
-extern AUTH *authnone_create __P ((void));
-extern AUTH *authdes_create __P ((const char *__servername, u_int __window,
-				  struct sockaddr *__syncaddr,
-				  des_block *__ckey));
-extern AUTH *authdes_pk_create __P ((const char *, netobj *, u_int,
-				     struct sockaddr *, des_block *));
+extern AUTH *authunix_create (char *__machname, __uid_t __uid, __gid_t __gid,
+			      int __len, __gid_t *__aup_gids) __THROW;
+extern AUTH *authunix_create_default (void) __THROW;
+extern AUTH *authnone_create (void) __THROW;
+extern AUTH *authdes_create (const char *__servername, u_int __window,
+			     struct sockaddr *__syncaddr, des_block *__ckey)
+     __THROW;
+extern AUTH *authdes_pk_create (const char *, netobj *, u_int,
+				struct sockaddr *, des_block *) __THROW;
 
 
 #define AUTH_NONE	0		/* no authentication */
@@ -183,31 +182,31 @@ extern AUTH *authdes_pk_create __P ((const char *, netobj *, u_int,
  *  Netname manipulating functions
  *
  */
-extern int getnetname __P ((char *));
-extern int host2netname __P ((char *, __const char *, __const char *));
-extern int user2netname __P ((char *, __const uid_t, __const char *));
-extern int netname2user __P ((__const char *, uid_t *, gid_t *, int *,
-			      gid_t *));
-extern int netname2host __P ((__const char *, char *, __const int));
+extern int getnetname (char *) __THROW;
+extern int host2netname (char *, __const char *, __const char *) __THROW;
+extern int user2netname (char *, __const uid_t, __const char *) __THROW;
+extern int netname2user (__const char *, uid_t *, gid_t *, int *, gid_t *)
+     __THROW;
+extern int netname2host (__const char *, char *, __const int) __THROW;
 
 /*
  *
  * These routines interface to the keyserv daemon
  *
  */
-extern int key_decryptsession __P ((char *, des_block *));
-extern int key_decryptsession_pk __P ((char *, netobj *, des_block *));
-extern int key_encryptsession __P ((char *, des_block *));
-extern int key_encryptsession_pk __P ((char *, netobj *, des_block *));
-extern int key_gendes __P ((des_block *));
-extern int key_setsecret __P ((char *));
-extern int key_secretkey_is_set __P ((void));
-extern int key_get_conv __P ((char *, des_block *));
+extern int key_decryptsession (char *, des_block *) __THROW;
+extern int key_decryptsession_pk (char *, netobj *, des_block *) __THROW;
+extern int key_encryptsession (char *, des_block *) __THROW;
+extern int key_encryptsession_pk (char *, netobj *, des_block *) __THROW;
+extern int key_gendes (des_block *) __THROW;
+extern int key_setsecret (char *) __THROW;
+extern int key_secretkey_is_set (void) __THROW;
+extern int key_get_conv (char *, des_block *) __THROW;
 
 /*
  * XDR an opaque authentication struct.
  */
-extern bool_t xdr_opaque_auth __P ((XDR *, struct opaque_auth *));
+extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *) __THROW;
 
 __END_DECLS
 

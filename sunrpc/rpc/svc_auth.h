@@ -46,8 +46,8 @@ __BEGIN_DECLS
 /*
  * Server side authenticator
  */
-extern enum auth_stat _authenticate __P ((struct svc_req *__rqst,
-					  struct rpc_msg *__msg));
+extern enum auth_stat _authenticate (struct svc_req *__rqst,
+				     struct rpc_msg *__msg) __THROW;
 
 __END_DECLS
 

@@ -56,7 +56,7 @@ __BEGIN_DECLS
   __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
   __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
 #define __MATHDECL_1(type, function,suffix, args) \
-  extern type __MATH_PRECNAME(function,suffix) args
+  extern type __MATH_PRECNAME(function,suffix) args __THROW
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
@@ -269,9 +269,9 @@ struct exception
   };
 
 # ifdef __cplusplus
-extern int matherr __P ((struct __exception *__exc));
+extern int matherr (struct __exception *__exc) throw ();
 # else
-extern int matherr __P ((struct exception *__exc));
+extern int matherr (struct exception *__exc);
 # endif
 
 # define X_TLOSS	1.41484755040568800000e+16

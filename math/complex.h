@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ __BEGIN_DECLS
   __MATHDECL_1(type, function, args); \
   __MATHDECL_1(type, __CONCAT(__,function), args)
 #define __MATHDECL_1(type, function, args) \
-  extern type __MATH_PRECNAME(function) args
+  extern type __MATH_PRECNAME(function) args __THROW
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name)	name

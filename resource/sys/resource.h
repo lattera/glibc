@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 94, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,56 +29,56 @@ __BEGIN_DECLS
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int getrlimit __P ((enum __rlimit_resource __resource,
-			   struct rlimit *__rlimits));
+extern int getrlimit (enum __rlimit_resource __resource,
+		      struct rlimit *__rlimits) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (getrlimit, __P ((enum __rlimit_resource __resource,
-					struct rlimit *__rlimits)),
+extern int __REDIRECT (getrlimit, (enum __rlimit_resource __resource,
+				   struct rlimit *__rlimits) __THROW,
 		       getrlimit64);
 # else
 #  define getrlimit getrlimit64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int getrlimit64 __P ((enum __rlimit_resource __resource,
-			     struct rlimit64 *__rlimits));
+extern int getrlimit64 (enum __rlimit_resource __resource,
+			struct rlimit64 *__rlimits) __THROW;
 #endif
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int setrlimit __P ((enum __rlimit_resource __resource,
-			   __const struct rlimit *__rlimits));
+extern int setrlimit (enum __rlimit_resource __resource,
+		      __const struct rlimit *__rlimits) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (setrlimit, __P ((enum __rlimit_resource __resource,
-					__const struct rlimit *__rlimits)),
+extern int __REDIRECT (setrlimit, (enum __rlimit_resource __resource,
+				   __const struct rlimit *__rlimits) __THROW,
 		       setrlimit64);
 # else
 #  define setrlimit setrlimit64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int setrlimit64 __P ((enum __rlimit_resource __resource,
-			     __const struct rlimit64 *__rlimits));
+extern int setrlimit64 (enum __rlimit_resource __resource,
+			__const struct rlimit64 *__rlimits) __THROW;
 #endif
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
+extern int getrusage (enum __rusage_who __who, struct rusage *__usage) __THROW;
 
 /* Return the highest priority of any process specified by WHICH and WHO
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
-extern int getpriority __P ((enum __priority_which __which, int __who));
+extern int getpriority (enum __priority_which __which, int __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
-extern int setpriority __P ((enum __priority_which __which, int __who,
-			     int __prio));
+extern int setpriority (enum __priority_which __which, int __who, int __prio)
+     __THROW;
 
 __END_DECLS
 

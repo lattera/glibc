@@ -1,5 +1,5 @@
 /* Functions for storing Ethernet addresses in ASCII and mapping to hostnames.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,26 +28,26 @@
 __BEGIN_DECLS
 
 /* Convert 48 bit Ethernet ADDRess to ASCII.  */
-extern char *ether_ntoa __P ((__const struct ether_addr *__addr));
-extern char *ether_ntoa_r __P ((__const struct ether_addr *__addr,
-				char *__buf));
+extern char *ether_ntoa (__const struct ether_addr *__addr) __THROW;
+extern char *ether_ntoa_r (__const struct ether_addr *__addr, char *__buf)
+     __THROW;
 
 /* Convert ASCII string S to 48 bit Ethernet address.  */
-extern struct ether_addr *ether_aton __P ((__const char *__asc));
-extern struct ether_addr *ether_aton_r __P ((__const char *__asc,
-					     struct ether_addr *__addr));
+extern struct ether_addr *ether_aton (__const char *__asc) __THROW;
+extern struct ether_addr *ether_aton_r (__const char *__asc,
+					struct ether_addr *__addr) __THROW;
 
 /* Map 48 bit Ethernet number ADDR to HOSTNAME.  */
-extern int ether_ntohost __P ((char *__hostname,
-			       __const struct ether_addr *__addr));
+extern int ether_ntohost (char *__hostname, __const struct ether_addr *__addr)
+     __THROW;
 
 /* Map HOSTNAME to 48 bit Ethernet address.  */
-extern int ether_hostton __P ((__const char *__hostname,
-			       struct ether_addr *__addr));
+extern int ether_hostton (__const char *__hostname, struct ether_addr *__addr)
+     __THROW;
 
 /* Scan LINE and set ADDR and HOSTNAME.  */
-extern int ether_line __P ((__const char *__line, struct ether_addr *__addr,
-			    char *__hostname));
+extern int ether_line (__const char *__line, struct ether_addr *__addr,
+		       char *__hostname) __THROW;
 
 __END_DECLS
 

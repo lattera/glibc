@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,55 +46,55 @@ __BEGIN_DECLS
 #endif
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetospeed __P ((__const struct termios *__termios_p));
+extern speed_t cfgetospeed (__const struct termios *__termios_p) __THROW;
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetispeed __P ((__const struct termios *__termios_p));
+extern speed_t cfgetispeed (__const struct termios *__termios_p) __THROW;
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetospeed __P ((struct termios *__termios_p, speed_t __speed));
+extern int cfsetospeed (struct termios *__termios_p, speed_t __speed) __THROW;
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetispeed __P ((struct termios *__termios_p, speed_t __speed));
+extern int cfsetispeed (struct termios *__termios_p, speed_t __speed) __THROW;
 
 #ifdef	__USE_BSD
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
-extern int cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
+extern int cfsetspeed (struct termios *__termios_p, speed_t __speed) __THROW;
 #endif
 
 
 /* Put the state of FD into *TERMIOS_P.  */
-extern int tcgetattr __P ((int __fd, struct termios *__termios_p));
+extern int tcgetattr (int __fd, struct termios *__termios_p) __THROW;
 
 /* Set the state of FD to *TERMIOS_P.
    Values for OPTIONAL_ACTIONS (TCSA*) are in <bits/termios.h>.  */
-extern int tcsetattr __P ((int __fd, int __optional_actions,
-			   __const struct termios *__termios_p));
+extern int tcsetattr (int __fd, int __optional_actions,
+		      __const struct termios *__termios_p) __THROW;
 
 
 #ifdef	__USE_BSD
 /* Set *TERMIOS_P to indicate raw mode.  */
-extern void cfmakeraw __P ((struct termios *__termios_p));
+extern void cfmakeraw (struct termios *__termios_p) __THROW;
 #endif
 
 /* Send zero bits on FD.  */
-extern int tcsendbreak __P ((int __fd, int __duration));
+extern int tcsendbreak (int __fd, int __duration) __THROW;
 
 /* Wait for pending output to be written on FD.  */
-extern int tcdrain __P ((int __fd));
+extern int tcdrain (int __fd) __THROW;
 
 /* Flush pending data on FD.
    Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <bits/termios.h>.  */
-extern int tcflush __P ((int __fd, int __queue_selector));
+extern int tcflush (int __fd, int __queue_selector) __THROW;
 
 /* Suspend or restart transmission on FD.
    Values for ACTION (TC[IO]{OFF,ON}) are in <bits/termios.h>.  */
-extern int tcflow __P ((int __fd, int __action));
+extern int tcflow (int __fd, int __action) __THROW;
 
 
 #ifdef __USE_UNIX98
 /* Get process group ID for session leader for controlling terminal FD.  */
-extern __pid_t tcgetsid __P ((int __fd));
+extern __pid_t tcgetsid (int __fd) __THROW;
 #endif
 
 

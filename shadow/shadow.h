@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,50 +55,50 @@ struct spwd
 
 
 /* Open database for reading.  */
-extern void setspent __P ((void));
+extern void setspent (void) __THROW;
 
 /* Close database.  */
-extern void endspent __P ((void));
+extern void endspent (void) __THROW;
 
 /* Get next entry from database, perhaps after opening the file.  */
-extern struct spwd *getspent __P ((void));
+extern struct spwd *getspent (void) __THROW;
 
 /* Get shadow entry matching NAME.  */
-extern struct spwd *getspnam __P ((__const char *__name));
+extern struct spwd *getspnam (__const char *__name) __THROW;
 
 /* Read shadow entry from STRING.  */
-extern struct spwd *sgetspent __P ((__const char *__string));
+extern struct spwd *sgetspent (__const char *__string) __THROW;
 
 /* Read next shadow entry from STREAM.  */
-extern struct spwd *fgetspent __P ((FILE *__stream));
+extern struct spwd *fgetspent (FILE *__stream) __THROW;
 
 /* Write line containing shadow password entry to stream.  */
-extern int putspent __P ((__const struct spwd *__p, FILE *__stream));
+extern int putspent (__const struct spwd *__p, FILE *__stream) __THROW;
 
 
 #ifdef __USE_MISC
 /* Reentrant versions of some of the functions above.  */
-extern int getspent_r __P ((struct spwd *__result_buf, char *__buffer,
-			    size_t __buflen, struct spwd **__result));
+extern int getspent_r (struct spwd *__result_buf, char *__buffer,
+		       size_t __buflen, struct spwd **__result) __THROW;
 
-extern int getspnam_r __P ((__const char *__name, struct spwd *__result_buf,
-			    char *__buffer, size_t __buflen,
-			    struct spwd **__result));
+extern int getspnam_r (__const char *__name, struct spwd *__result_buf,
+		       char *__buffer, size_t __buflen,
+		       struct spwd **__result)__THROW;
 
-extern int sgetspent_r __P ((__const char *__string, struct spwd *__result_buf,
-			     char *__buffer, size_t __buflen,
-			     struct spwd **__result));
+extern int sgetspent_r (__const char *__string, struct spwd *__result_buf,
+			char *__buffer, size_t __buflen,
+			struct spwd **__result) __THROW;
 
-extern int fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
-			     char *__buffer, size_t __buflen,
-			     struct spwd **__result));
+extern int fgetspent_r (FILE *__stream, struct spwd *__result_buf,
+			char *__buffer, size_t __buflen,
+			struct spwd **__result) __THROW;
 #endif	/* misc */
 
 /* Protect password file against multi writers.  */
-extern int lckpwdf __P ((void));
+extern int lckpwdf (void) __THROW;
 
 /* Unlock password file.  */
-extern int ulckpwdf __P ((void));
+extern int ulckpwdf (void) __THROW;
 
 __END_DECLS
 

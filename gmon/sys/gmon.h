@@ -165,11 +165,11 @@ extern struct gmonparam _gmonparam;
 __BEGIN_DECLS
 
 /* Set up data structures and start profiling.  */
-extern void __monstartup __P ((u_long __lowpc, u_long __highpc));
-extern void monstartup __P ((u_long __lowpc, u_long __highpc));
+extern void __monstartup (u_long __lowpc, u_long __highpc) __THROW;
+extern void monstartup (u_long __lowpc, u_long __highpc) __THROW;
 
 /* Clean up profiling and write out gmon.out.  */
-extern void _mcleanup __P ((void));
+extern void _mcleanup (void) __THROW;
 
 __END_DECLS
 

@@ -43,8 +43,6 @@
    functions.  */
 # define __PMT(args)	args
 
-# define __DOTS		, ...
-
 #else	/* Not GCC.  */
 
 # define __inline		/* No inline functions.  */
@@ -53,21 +51,17 @@
 
 #  define __P(args)	args
 #  define __PMT(args)	args
-#  define __const	const
-#  define __signed	signed
-#  define __volatile	volatile
-#  define __DOTS	, ...
 
 # else	/* Not ANSI C or C++.  */
 
 #  define __P(args)	()	/* No prototypes.  */
 #  define __PMT(args)	()
-#  define __const		/* No ANSI C keywords.  */
-#  define __signed
-#  define __volatile
-#  define __DOTS
 
 # endif	/* ANSI C or C++.  */
+
+# define __const	const
+# define __signed	signed
+# define __volatile	volatile
 
 #endif	/* GCC.  */
 
@@ -95,11 +89,11 @@
    old programs may lose if they use the new keywords as identifiers), but
    those names are not available under -traditional.  We define them to
    their __ versions, which are taken care of above.  */
-#ifdef	__USE_BSD
-# define const		__const
-# define signed		__signed
-# define volatile	__volatile
-#endif
+# ifdef	__USE_BSD
+#  define const		__const
+#  define signed		__signed
+#  define volatile	__volatile
+# endif
 
 #endif	/* __STDC__ */
 

@@ -36,16 +36,16 @@ typedef __ssize_t ssize_t;
 __BEGIN_DECLS
 
 /* Formatting a monetary value according to the current locale.  */
-extern ssize_t strfmon __P ((char *__restrict __s, size_t __maxsize,
-			     __const char *__restrict __format, ...));
+extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
+			__const char *__restrict __format, ...) __THROW;
 
 #ifdef __USE_GNU
 # include <xlocale.h>
 
 /* Formatting a monetary value according to the current locale.  */
-extern ssize_t __strfmon_l __P ((char *__restrict __s, size_t __maxsize,
-				 __locale_t loc,
-				 __const char *__restrict __format, ...));
+extern ssize_t __strfmon_l (char *__restrict __s, size_t __maxsize,
+			    __locale_t loc,
+			    __const char *__restrict __format, ...) __THROW;
 #endif
 
 __END_DECLS

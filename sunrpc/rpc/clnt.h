@@ -133,17 +133,16 @@ typedef struct CLIENT CLIENT;
 struct CLIENT {
   AUTH	*cl_auth;		 /* authenticator */
   struct clnt_ops {
-    enum clnt_stat (*cl_call) __PMT ((CLIENT *, u_long, xdrproc_t,
-				      caddr_t, xdrproc_t,
-				      caddr_t, struct timeval));
+    enum clnt_stat (*cl_call) (CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t,
+			       caddr_t, struct timeval);
 			       	/* call remote procedure */
-    void (*cl_abort) __PMT ((void));  /* abort a call */
-    void (*cl_geterr) __PMT ((CLIENT *, struct rpc_err *));
+    void (*cl_abort) (void);	/* abort a call */
+    void (*cl_geterr) (CLIENT *, struct rpc_err *);
 				/* get specific error code */
-    bool_t (*cl_freeres) __PMT ((CLIENT *, xdrproc_t, caddr_t));
+    bool_t (*cl_freeres) (CLIENT *, xdrproc_t, caddr_t);
 				/* frees results */
-    void (*cl_destroy) __PMT ((CLIENT *)); /* destroy this structure */
-    bool_t (*cl_control) __PMT ((CLIENT *, int, char *));
+    void (*cl_destroy) (CLIENT *); /* destroy this structure */
+    bool_t (*cl_control) (CLIENT *, int, char *);
 				/* the ioctl() of rpc */
   } *cl_ops;
   caddr_t cl_private;		/* private stuff */
@@ -278,8 +277,8 @@ struct CLIENT {
  *	u_long prog;
  *	u_long vers;
  */
-extern CLIENT *clntraw_create __P ((__const u_long __prog,
-				    __const u_long __vers));
+extern CLIENT *clntraw_create (__const u_long __prog, __const u_long __vers)
+     __THROW;
 
 
 /*
@@ -292,8 +291,9 @@ extern CLIENT *clntraw_create __P ((__const u_long __prog,
  *	u_ong vers;	-- version number
  *	char *prot;	-- protocol
  */
-extern CLIENT *clnt_create __P ((__const char *__host, __const u_long __prog,
-				 __const u_long __vers, __const char *__prot));
+extern CLIENT *clnt_create (__const char *__host, __const u_long __prog,
+			    __const u_long __vers, __const char *__prot)
+     __THROW;
 
 
 /*
@@ -307,10 +307,9 @@ extern CLIENT *clnt_create __P ((__const char *__host, __const u_long __prog,
  *	u_int sendsz;
  *	u_int recvsz;
  */
-extern CLIENT *clnttcp_create __P ((struct sockaddr_in *__raddr,
-				    u_long __prog, u_long __version,
-				    int *__sockp, u_int __sendsz,
-				    u_int __recvsz));
+extern CLIENT *clnttcp_create (struct sockaddr_in *__raddr, u_long __prog,
+			       u_long __version, int *__sockp, u_int __sendsz,
+			       u_int __recvsz) __THROW;
 
 /*
  * UDP based rpc.
@@ -333,15 +332,13 @@ extern CLIENT *clnttcp_create __P ((struct sockaddr_in *__raddr,
  *	u_int sendsz;
  *	u_int recvsz;
  */
-extern CLIENT *clntudp_create __P ((struct sockaddr_in *__raddr,
-				    u_long __program, u_long __version,
-				    struct timeval __wait_resend,
-				    int *__sockp));
-extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
-				       u_long __program, u_long __version,
-				       struct timeval __wait_resend,
-				       int *__sockp, u_int __sendsz,
-				       u_int __recvsz));
+extern CLIENT *clntudp_create (struct sockaddr_in *__raddr, u_long __program,
+			       u_long __version, struct timeval __wait_resend,
+			       int *__sockp) __THROW;
+extern CLIENT *clntudp_bufcreate (struct sockaddr_in *__raddr,
+				  u_long __program, u_long __version,
+				  struct timeval __wait_resend, int *__sockp,
+				  u_int __sendsz, u_int __recvsz) __THROW;
 
 
 /*
@@ -355,35 +352,34 @@ extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
  *      u_int sendsz;
  *      u_int recvsz;
  */
-extern CLIENT *clntunix_create  __P ((struct sockaddr_un *__raddr,
-				      u_long __program, u_long __version,
-				      int *__sockp, u_int __sendsz,
-				      u_int __recvsz));
+extern CLIENT *clntunix_create  (struct sockaddr_un *__raddr, u_long __program,
+				 u_long __version, int *__sockp,
+				 u_int __sendsz, u_int __recvsz) __THROW;
 
 
-extern int callrpc __P ((__const char *__host, __const u_long __prognum,
-			 __const u_long __versnum, __const u_long __procnum,
-			 __const xdrproc_t __inproc, __const char *__in,
-			 __const xdrproc_t __outproc, char *__out));
-extern int _rpc_dtablesize __P ((void));
+extern int callrpc (__const char *__host, __const u_long __prognum,
+		    __const u_long __versnum, __const u_long __procnum,
+		    __const xdrproc_t __inproc, __const char *__in,
+		    __const xdrproc_t __outproc, char *__out) __THROW;
+extern int _rpc_dtablesize (void) __THROW;
 
 /*
  * Print why creation failed
  */
-extern void clnt_pcreateerror __P ((__const char *__msg));	/* stderr */
-extern char *clnt_spcreateerror __P ((__const char *__msg));	/* string */
+extern void clnt_pcreateerror (__const char *__msg) __THROW;	/* stderr */
+extern char *clnt_spcreateerror(__const char *__msg) __THROW;	/* string */
 
 /*
  * Like clnt_perror(), but is more verbose in its output
  */
-extern void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
+extern void clnt_perrno (enum clnt_stat __num) __THROW;		/* stderr */
 
 /*
  * Print an English error message, given the client error code
  */
-extern void clnt_perror __P ((CLIENT *__clnt, __const char *__msg));
+extern void clnt_perror (CLIENT *__clnt, __const char *__msg) __THROW;
 							/* stderr */
-extern char *clnt_sperror __P ((CLIENT *__clnt, __const char *__msg));
+extern char *clnt_sperror (CLIENT *__clnt, __const char *__msg) __THROW;
 							/* string */
 
 /*
@@ -401,19 +397,19 @@ extern struct rpc_createerr rpc_createerr;
 /*
  * Copy error message to buffer.
  */
-extern char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
+extern char *clnt_sperrno (enum clnt_stat __num) __THROW;	/* string */
 
 /*
  * get the port number on the host for the rpc program,version and proto
  */
-extern int getrpcport __P ((__const char * __host, u_long __prognum,
-			   u_long __versnum, u_int proto));
+extern int getrpcport (__const char * __host, u_long __prognum,
+		       u_long __versnum, u_int proto) __THROW;
 
 /*
  * get the local host's IP address without consulting
  * name service library functions
  */
-extern void get_myaddress __P ((struct sockaddr_in *));
+extern void get_myaddress (struct sockaddr_in *) __THROW;
 
 #define UDPMSGSIZE	8800	/* rpc imposed limit on udp msg size */
 #define RPCSMALLMSGSIZE	400	/* a more reasonable packet size */

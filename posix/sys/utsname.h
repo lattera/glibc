@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ struct utsname
 
 
 /* Put information about the system in NAME.  */
-extern int uname __P ((struct utsname *__name));
+extern int uname (struct utsname *__name) __THROW;
 
 
 __END_DECLS

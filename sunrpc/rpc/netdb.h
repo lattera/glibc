@@ -50,23 +50,23 @@ struct rpcent
   int r_number;		/* RPC program number.  */
 };
 
-extern void setrpcent __P ((int _stayopen));
-extern void endrpcent __P ((void));
-extern struct rpcent *getrpcbyname __P ((__const char *__name));
-extern struct rpcent *getrpcbynumber __P ((int __number));
-extern struct rpcent *getrpcent __P ((void));
+extern void setrpcent (int __stayopen) __THROW;
+extern void endrpcent (void) __THROW;
+extern struct rpcent *getrpcbyname (__const char *__name) __THROW;
+extern struct rpcent *getrpcbynumber (int __number) __THROW;
+extern struct rpcent *getrpcent (void) __THROW;
 
 #ifdef __USE_MISC
-extern int getrpcbyname_r __P ((__const char *__name,
-				struct rpcent *__result_buf, char *__buffer,
-				size_t __buflen, struct rpcent **__result));
+extern int getrpcbyname_r (__const char *__name, struct rpcent *__result_buf,
+			   char *__buffer, size_t __buflen,
+			   struct rpcent **__result) __THROW;
 
-extern int getrpcbynumber_r __P ((int __number, struct rpcent *__result_buf,
-				  char *__buffer, size_t __buflen,
-				  struct rpcent **__result));
+extern int getrpcbynumber_r (int __number, struct rpcent *__result_buf,
+			     char *__buffer, size_t __buflen,
+			     struct rpcent **__result) __THROW;
 
-extern int getrpcent_r __P ((struct rpcent *__result_buf, char *__buffer,
-			     size_t __buflen, struct rpcent **__result));
+extern int getrpcent_r (struct rpcent *__result_buf, char *__buffer,
+			size_t __buflen, struct rpcent **__result) __THROW;
 #endif
 
 __END_DECLS

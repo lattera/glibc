@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,8 +57,8 @@ typedef __pid_t pid_t;
    the actual function definitions.  */
 
 # if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
-#  define __WAIT_STATUS		__ptr_t
-#  define __WAIT_STATUS_DEFN	__ptr_t
+#  define __WAIT_STATUS		void *
+#  define __WAIT_STATUS_DEFN	void *
 # else
 /* This works in GCC 2.6.1 and later.  */
 typedef union
@@ -107,8 +107,8 @@ typedef enum
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
-extern __pid_t __wait __P ((__WAIT_STATUS __stat_loc));
-extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
+extern __pid_t __wait (__WAIT_STATUS __stat_loc) __THROW;
+extern __pid_t wait (__WAIT_STATUS __stat_loc) __THROW;
 
 #ifdef	__USE_BSD
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
@@ -128,8 +128,7 @@ extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
    return PID and store the dead child's status in STAT_LOC.
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is
    set in OPTIONS, return status for stopped children; otherwise don't.  */
-extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
-			     int __options));
+extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options) __THROW;
 
 #if defined __USE_SVID || defined __USE_XOPEN
 # define __need_siginfo_t
@@ -142,8 +141,8 @@ extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
    If the WNOHANG bit is set in OPTIONS, and that child
    is not already dead, clear *INFOP and return 0.  If successful, store
    exit code and status in *INFOP.  */
-extern int waitid __P ((idtype_t __idtype, __id_t __id, siginfo_t *__infop,
-			int __options));
+extern int waitid (idtype_t __idtype, __id_t __id, siginfo_t *__infop,
+		   int __options) __THROW;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -156,8 +155,8 @@ struct rusage;
    nil, store information about the child's resource usage there.  If the
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
-extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
-			   int __options, struct rusage * __usage));
+extern __pid_t wait3 (__WAIT_STATUS __stat_loc, int __options,
+		      struct rusage * __usage) __THROW;
 #endif
 
 #ifdef __USE_BSD
@@ -166,8 +165,8 @@ extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
 struct rusage;
 
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,
-			   int __options, struct rusage *__usage));
+extern __pid_t wait4 (__pid_t __pid, __WAIT_STATUS __stat_loc, int __options,
+		      struct rusage *__usage) __THROW;
 #endif /* Use BSD.  */
 
 

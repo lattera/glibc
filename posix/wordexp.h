@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,11 +58,11 @@ enum
   };
 
 /* Do word expansion of WORDS into PWORDEXP.  */
-extern int wordexp __P ((__const char *__restrict __words,
-			 wordexp_t *__restrict __pwordexp, int __flags));
+extern int wordexp (__const char *__restrict __words,
+		    wordexp_t *__restrict __pwordexp, int __flags) __THROW;
 
 /* Free the storage allocated by a `wordexp' call.  */
-extern void wordfree __P ((wordexp_t *__wordexp));
+extern void wordfree (wordexp_t *__wordexp) __THROW;
 
 __END_DECLS
 

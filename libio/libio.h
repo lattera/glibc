@@ -201,26 +201,26 @@ enum __codecvt_result
    of the virtual functions in the libstdc++ codecvt class.  */
 struct _IO_codecvt
 {
-  void (*__codecvt_destr) __PMT ((struct _IO_codecvt *));
-  enum __codecvt_result (*__codecvt_do_out) __PMT ((struct _IO_codecvt *,
-						    __mbstate_t *,
-						    const wchar_t *,
-						    const wchar_t *,
-						    const wchar_t **, char *,
-						    char *, char **));
-  enum __codecvt_result (*__codecvt_do_unshift) __PMT ((struct _IO_codecvt *,
-							__mbstate_t *, char *,
-							char *, char **));
-  enum __codecvt_result (*__codecvt_do_in) __PMT ((struct _IO_codecvt *,
-						   __mbstate_t *,
-						   const char *, const char *,
-						   const char **, wchar_t *,
-						   wchar_t *, wchar_t **));
-  int (*__codecvt_do_encoding) __PMT ((struct _IO_codecvt *));
-  int (*__codecvt_do_always_noconv) __PMT ((struct _IO_codecvt *));
-  int (*__codecvt_do_length) __PMT ((struct _IO_codecvt *, __mbstate_t *,
-				     const char *, const char *, _IO_size_t));
-  int (*__codecvt_do_max_length) __PMT ((struct _IO_codecvt *));
+  void (*__codecvt_destr) (struct _IO_codecvt *);
+  enum __codecvt_result (*__codecvt_do_out) (struct _IO_codecvt *,
+					     __mbstate_t *,
+					     const wchar_t *,
+					     const wchar_t *,
+					     const wchar_t **, char *,
+					     char *, char **);
+  enum __codecvt_result (*__codecvt_do_unshift) (struct _IO_codecvt *,
+						 __mbstate_t *, char *,
+						 char *, char **);
+  enum __codecvt_result (*__codecvt_do_in) (struct _IO_codecvt *,
+					    __mbstate_t *,
+					    const char *, const char *,
+					    const char **, wchar_t *,
+					    wchar_t *, wchar_t **);
+  int (*__codecvt_do_encoding) (struct _IO_codecvt *);
+  int (*__codecvt_do_always_noconv) (struct _IO_codecvt *);
+  int (*__codecvt_do_length) (struct _IO_codecvt *, __mbstate_t *,
+			      const char *, const char *, _IO_size_t);
+  int (*__codecvt_do_max_length) (struct _IO_codecvt *);
 
   _IO_iconv_t __cd_in;
   _IO_iconv_t __cd_out;
@@ -329,8 +329,7 @@ extern _IO_FILE *_IO_stderr;
 
 /* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
    Return number of bytes read.  */
-typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
-				       size_t __nbytes));
+typedef __ssize_t __io_read_fn (void *__cookie, char *__buf, size_t __nbytes);
 
 /* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
    unless there is an error.  Return number of bytes written, or -1 if
@@ -338,8 +337,8 @@ typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
    opened for append (__mode.__append set), then set the file pointer
    to the end of the file and then do the write; if not, just write at
    the current file pointer.  */
-typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
-				      size_t __n));
+typedef __ssize_t __io_write_fn (void *__cookie, __const char *__buf,
+				 size_t __n);
 
 /* Move COOKIE's file position to *POS bytes from the
    beginning of the file (if W is SEEK_SET),
@@ -347,10 +346,10 @@ typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek_fn __PMT ((__ptr_t __cookie, _IO_off_t __pos, int __w));
+typedef int __io_seek_fn (void *__cookie, _IO_off_t __pos, int __w);
 
 /* Close COOKIE.  */
-typedef int __io_close_fn __PMT ((__ptr_t __cookie));
+typedef int __io_close_fn (void *__cookie);
 
 
 #ifdef _GNU_SOURCE
@@ -385,12 +384,12 @@ struct _IO_cookie_file
 extern "C" {
 #endif
 
-extern int __underflow __P ((_IO_FILE *));
-extern int __uflow __P ((_IO_FILE *));
-extern int __overflow __P ((_IO_FILE *, int));
-extern _IO_wint_t __wunderflow __P ((_IO_FILE *));
-extern _IO_wint_t __wuflow __P ((_IO_FILE *));
-extern _IO_wint_t __woverflow __P ((_IO_FILE *, _IO_wint_t));
+extern int __underflow (_IO_FILE *) __THROW;
+extern int __uflow (_IO_FILE *) __THROW;
+extern int __overflow (_IO_FILE *, int) __THROW;
+extern _IO_wint_t __wunderflow (_IO_FILE *) __THROW;
+extern _IO_wint_t __wuflow (_IO_FILE *) __THROW;
+extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t) __THROW;
 
 #define _IO_getc_unlocked(_fp) \
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow (_fp) \
@@ -415,16 +414,16 @@ extern _IO_wint_t __woverflow __P ((_IO_FILE *, _IO_wint_t));
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
 
-extern int _IO_getc __P ((_IO_FILE *__fp));
-extern int _IO_putc __P ((int __c, _IO_FILE *__fp));
-extern _IO_wint_t _IO_getwc __P ((_IO_FILE *__fp));
-extern _IO_wint_t _IO_putwc __P ((wchar_t __wc, _IO_FILE *__fp));
-extern int _IO_feof __P ((_IO_FILE *__fp));
-extern int _IO_ferror __P ((_IO_FILE *__fp));
+extern int _IO_getc (_IO_FILE *__fp) __THROW;
+extern int _IO_putc (int __c, _IO_FILE *__fp) __THROW;
+extern _IO_wint_t _IO_getwc (_IO_FILE *__fp) __THROW;
+extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp) __THROW;
+extern int _IO_feof (_IO_FILE *__fp) __THROW;
+extern int _IO_ferror (_IO_FILE *__fp) __THROW;
 
-extern int _IO_peekc_locked __P ((_IO_FILE *__fp));
+extern int _IO_peekc_locked (_IO_FILE *__fp) __THROW;
 
-extern int _IO_fwide __P ((_IO_FILE *__fp, int __mode));
+extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
 #if __GNUC__ >= 2
 /* A special optimized version of the function above.  It optimizes the
    case of initializing an unoriented byte stream.  */
@@ -446,9 +445,9 @@ extern int _IO_fwide __P ((_IO_FILE *__fp, int __mode));
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
 	((_fp)->_IO_write_ptr - (_fp)->_IO_write_base)
 
-extern void _IO_flockfile __P ((_IO_FILE *));
-extern void _IO_funlockfile __P ((_IO_FILE *));
-extern int _IO_ftrylockfile __P ((_IO_FILE *));
+extern void _IO_flockfile (_IO_FILE *) __THROW;
+extern void _IO_funlockfile (_IO_FILE *) __THROW;
+extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 
 #ifdef _IO_MTSAFE_IO
 # define _IO_peekc(_fp) _IO_peekc_locked (_fp)
@@ -461,24 +460,23 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 # define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
 
-extern int _IO_vfscanf __P ((_IO_FILE * __restrict, const char * __restrict,
-			     _IO_va_list, int *__restrict));
-extern int _IO_vfwscanf __P ((_IO_FILE * __restrict,
-			      const wchar_t * __restrict,
-			      _IO_va_list, int *__restrict));
-extern int _IO_vfprintf __P ((_IO_FILE *__restrict, const char *__restrict,
-			      _IO_va_list));
-extern int _IO_vfwprintf __P ((_IO_FILE *__restrict, const wchar_t *__restrict,
-			       _IO_va_list));
-extern _IO_ssize_t _IO_padn __P ((_IO_FILE *, int, _IO_ssize_t));
-extern _IO_ssize_t _IO_wpadn __P ((_IO_FILE *, wint_t, _IO_ssize_t));
-extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
+extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
+			_IO_va_list, int *__restrict) __THROW;
+extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
+			 _IO_va_list, int *__restrict) __THROW;
+extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
+			 _IO_va_list) __THROW;
+extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
+			  _IO_va_list) __THROW;
+extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t) __THROW;
+extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t) __THROW;
+extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t) __THROW;
 
-extern _IO_off64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
-extern _IO_off64_t _IO_seekpos __P ((_IO_FILE *, _IO_off64_t, int));
+extern _IO_off64_t _IO_seekoff (_IO_FILE *, _IO_off64_t, int, int) __THROW;
+extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int) __THROW;
 
-extern void _IO_free_backup_area __P ((_IO_FILE *));
-extern void _IO_free_wbackup_area __P ((_IO_FILE *));
+extern void _IO_free_backup_area (_IO_FILE *) __THROW;
+extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,67 +132,65 @@ enum
 
 /* Allow user to specify optimization.  */
 #ifdef __USE_GNU
-extern void aio_init __P ((__const struct aioinit *__init));
+extern void aio_init (__const struct aioinit *__init) __THROW;
 #endif
 
 
 #ifndef __USE_FILE_OFFSET64
 /* Enqueue read request for given number of bytes and the given priority.  */
-extern int aio_read __P ((struct aiocb *__aiocbp));
+extern int aio_read (struct aiocb *__aiocbp) __THROW;
 /* Enqueue write request for given number of bytes and the given priority.  */
-extern int aio_write __P ((struct aiocb *__aiocbp));
+extern int aio_write (struct aiocb *__aiocbp) __THROW;
 
 /* Initiate list of I/O requests.  */
-extern int lio_listio __P ((int __mode,
-			    struct aiocb *__const __list[],
-			    int __nent, struct sigevent *__restrict __sig));
+extern int lio_listio (int __mode, struct aiocb *__const __list[],
+		       int __nent, struct sigevent *__restrict __sig) __THROW;
 
 /* Retrieve error status associated with AIOCBP.  */
-extern int aio_error __P ((__const struct aiocb *__aiocbp));
+extern int aio_error (__const struct aiocb *__aiocbp) __THROW;
 /* Return status associated with AIOCBP.  */
-extern __ssize_t aio_return __P ((struct aiocb *__aiocbp));
+extern __ssize_t aio_return (struct aiocb *__aiocbp) __THROW;
 
 /* Try to cancel asynchronous I/O requests outstanding against file
    descriptor FILDES.  */
-extern int aio_cancel __P ((int __fildes, struct aiocb *__aiocbp));
+extern int aio_cancel (int __fildes, struct aiocb *__aiocbp) __THROW;
 
 /* Suspend calling thread until at least one of the asynchronous I/O
    operations referenced by LIST has completed.  */
-extern int aio_suspend __P ((__const struct aiocb *__const __list[],
-			     int __nent,
-			     __const struct timespec *__restrict __timeout));
+extern int aio_suspend (__const struct aiocb *__const __list[], int __nent,
+			__const struct timespec *__restrict __timeout) __THROW;
 
 /* Force all operations associated with file desriptor described by
    `aio_fildes' member of AIOCBP.  */
-extern int aio_fsync __P ((int __operation, struct aiocb *__aiocbp));
+extern int aio_fsync (int __operation, struct aiocb *__aiocbp) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (aio_read, __P ((struct aiocb *__aiocbp)), aio_read64);
-extern int __REDIRECT (aio_write, __P ((struct aiocb *__aiocbp)), aio_write64);
+extern int __REDIRECT (aio_read, (struct aiocb *__aiocbp) __THROW, aio_read64);
+extern int __REDIRECT (aio_write, (struct aiocb *__aiocbp) __THROW,
+		       aio_write64);
 
 extern int __REDIRECT (lio_listio,
-		       __P ((int __mode,
-			     struct aiocb *__const __restrict __list[],
-			     int __nent, struct sigevent *__restrict __sig)),
+		       (int __mode, struct aiocb *__const __restrict __list[],
+			int __nent, struct sigevent *__restrict __sig) __THROW,
 		       lio_listio64);
 
-extern int __REDIRECT (aio_error, __P ((__const struct aiocb *__aiocbp)),
+extern int __REDIRECT (aio_error, (__const struct aiocb *__aiocbp) __THROW,
 		       aio_error64);
-extern __ssize_t __REDIRECT (aio_return, __P ((struct aiocb *__aiocbp)),
+extern __ssize_t __REDIRECT (aio_return, (struct aiocb *__aiocbp) __THROW,
 			     aio_return64);
 
-extern int __REDIRECT (aio_cancel, __P ((int __fildes,
-					 struct aiocb *__aiocbp)),
+extern int __REDIRECT (aio_cancel,
+		       (int __fildes, struct aiocb *__aiocbp) __THROW,
 		       aio_cancel64);
 
 extern int __REDIRECT (aio_suspend,
-		       __P ((__const struct aiocb *__const __restrict __list[],
-			     int __nent,
-			     __const struct timespec *__restrict __timeout)),
+		       (__const struct aiocb *__const __restrict __list[],
+			int __nent,
+			__const struct timespec *__restrict __timeout) __THROW,
 		       aio_suspend64);
 
-extern int __REDIRECT (aio_fsync __P ((int __operation,
-				       struct aiocb *__aiocbp)),
+extern int __REDIRECT (aio_fsync,
+		       (int __operation, struct aiocb *__aiocbp) __THROW,
 		       aio_fsync64);
 
 # else
@@ -208,23 +206,23 @@ extern int __REDIRECT (aio_fsync __P ((int __operation,
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern int aio_read64 __P ((struct aiocb64 *__aiocbp));
-extern int aio_write64 __P ((struct aiocb64 *__aiocbp));
+extern int aio_read64 (struct aiocb64 *__aiocbp) __THROW;
+extern int aio_write64 (struct aiocb64 *__aiocbp) __THROW;
 
-extern int lio_listio64 __P ((int __mode,
-			      struct aiocb64 *__const __list[], int __nent,
-			      struct sigevent *__restrict __sig));
+extern int lio_listio64 (int __mode, struct aiocb64 *__const __list[],
+			 int __nent, struct sigevent *__restrict __sig)
+     __THROW;
 
-extern int aio_error64 __P ((__const struct aiocb64 *__aiocbp));
-extern __ssize_t aio_return64 __P ((struct aiocb64 *__aiocbp));
+extern int aio_error64 (__const struct aiocb64 *__aiocbp) __THROW;
+extern __ssize_t aio_return64 (struct aiocb64 *__aiocbp) __THROW;
 
-extern int aio_cancel64 __P ((int __fildes, struct aiocb64 *__aiocbp));
+extern int aio_cancel64 (int __fildes, struct aiocb64 *__aiocbp) __THROW;
 
-extern int aio_suspend64 __P ((__const struct aiocb64 *__const __list[],
-			       int __nent,
-			       __const struct timespec *__restrict __timeout));
+extern int aio_suspend64 (__const struct aiocb64 *__const __list[], int __nent,
+			  __const struct timespec *__restrict __timeout)
+     __THROW;
 
-extern int aio_fsync64 __P ((int __operation, struct aiocb64 *__aiocbp));
+extern int aio_fsync64 (int __operation, struct aiocb64 *__aiocbp) __THROW;
 #endif
 
 __END_DECLS

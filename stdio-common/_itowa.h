@@ -27,8 +27,8 @@
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-extern wchar_t *_itowa __P ((unsigned long long int value, wchar_t *buflim,
-			     unsigned int base, int upper_case));
+extern wchar_t *_itowa (unsigned long long int value, wchar_t *buflim,
+			unsigned int base, int upper_case);
 
 static inline wchar_t *
 __attribute__ ((unused))

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ enum
 __BEGIN_DECLS
 
 /* Control process limits according to CMD.  */
-extern long int ulimit __P ((int __cmd, ...));
+extern long int ulimit (int __cmd, ...) __THROW;
 
 __END_DECLS
 

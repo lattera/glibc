@@ -201,12 +201,12 @@ struct __db_env {
 	int		 db_lorder;	/* Byte order. */
 
 					/* Error message callback. */
-	void (*db_errcall) __P((const char *, char *));
+	void (*db_errcall) (const char *, char *);
 	FILE		*db_errfile;	/* Error message file stream. */
 	const char	*db_errpfx;	/* Error message prefix. */
 	int		 db_verbose;	/* Generate debugging messages. */
 	int		 db_panic;	/* Panic flag, callback function. */
-	void (*db_paniccall) __P((DB_ENV *, int));
+	void (*db_paniccall) (DB_ENV *, int);
 
 	/* User paths. */
 	char		*db_home;	/* Database home. */
@@ -237,7 +237,7 @@ struct __db_env {
 	DB_TXNMGR	*tx_info;	/* Return from txn_open(). */
 	u_int32_t	 tx_max;	/* Maximum number of transactions. */
 	int (*tx_recover)		/* Dispatch function for recovery. */
-	    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+	    (DB_LOG *, DBT *, DB_LSN *, int, void *);
 
 	/*
 	 * XA support.
@@ -293,23 +293,23 @@ struct __db_info {
 	size_t		 db_pagesize;	/* Underlying page size. */
 
 					/* Local heap allocation. */
-	void *(*db_malloc) __P((size_t));
+	void *(*db_malloc) (size_t);
 	int (*dup_compare)		/* Duplicate compare function. */
-	    __P((const DBT *, const DBT *));
+	    (const DBT *, const DBT *);
 
 	/* Btree access method. */
 	u_int32_t	 bt_maxkey;	/* Maximum keys per page. */
 	u_int32_t	 bt_minkey;	/* Minimum keys per page. */
 	int (*bt_compare)		/* Comparison function. */
-	    __P((const DBT *, const DBT *));
+	    (const DBT *, const DBT *);
 	size_t (*bt_prefix)		/* Prefix function. */
-	    __P((const DBT *, const DBT *));
+	    (const DBT *, const DBT *);
 
 	/* Hash access method. */
 	u_int32_t 	 h_ffactor;	/* Fill factor. */
 	u_int32_t	 h_nelem;	/* Number of elements. */
 	u_int32_t      (*h_hash)	/* Hash function. */
-	    __P((const void *, u_int32_t));
+	    (const void *, u_int32_t);
 
 	/* Recno access method. */
 	int		 re_pad;	/* Fixed-length padding byte. */
@@ -423,23 +423,23 @@ struct __db {
 	size_t	  pgsize;		/* Logical page size of file. */
 
 					/* Local heap allocation. */
-	void *(*db_malloc) __P((size_t));
+	void *(*db_malloc) (size_t);
 	int (*dup_compare)		/* Duplicate compare function. */
-	    __P((const DBT *, const DBT *));
+	    (const DBT *, const DBT *);
 	u_int32_t (*h_hash)		/* Hash function. */
-	    __P((const void *, u_int32_t));
+	    (const void *, u_int32_t);
 
 					/* Functions. */
-	int (*am_close)	__P((DB *));
-	int (*close)	__P((DB *, u_int32_t));
-	int (*cursor)	__P((DB *, DB_TXN *, DBC **, u_int32_t));
-	int (*del)	__P((DB *, DB_TXN *, DBT *, u_int32_t));
-	int (*fd)	__P((DB *, int *));
-	int (*get)	__P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
-	int (*join)	__P((DB *, DBC **, u_int32_t, DBC **));
-	int (*put)	__P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
-	int (*stat)	__P((DB *, void *, void *(*)(size_t), u_int32_t));
-	int (*sync)	__P((DB *, u_int32_t));
+	int (*am_close)	(DB *);
+	int (*close)	(DB *, u_int32_t);
+	int (*cursor)	(DB *, DB_TXN *, DBC **, u_int32_t);
+	int (*del)	(DB *, DB_TXN *, DBT *, u_int32_t);
+	int (*fd)	(DB *, int *);
+	int (*get)	(DB *, DB_TXN *, DBT *, DBT *, u_int32_t);
+	int (*join)	(DB *, DBC **, u_int32_t, DBC **);
+	int (*put)	(DB *, DB_TXN *, DBT *, DBT *, u_int32_t);
+	int (*stat)	(DB *, void *, void *(*)(size_t), u_int32_t);
+	int (*sync)	(DB *, u_int32_t);
 
 #define	DB_AM_CDB	0x000001	/* Concurrent Access Methods. */
 #define	DB_AM_DUP	0x000002	/* DB_DUP (internal). */
@@ -491,12 +491,12 @@ struct __dbc {
 	DBT rkey;			/* Returned key. */
 	DBT rdata;			/* Returned data. */
 
-	int (*c_am_close) __P((DBC *));
-	int (*c_am_destroy) __P((DBC *));
-	int (*c_close) __P((DBC *));
-	int (*c_del) __P((DBC *, u_int32_t));
-	int (*c_get) __P((DBC *, DBT *, DBT *, u_int32_t));
-	int (*c_put) __P((DBC *, DBT *, DBT *, u_int32_t));
+	int (*c_am_close) (DBC *);
+	int (*c_am_destroy) (DBC *);
+	int (*c_close) (DBC *);
+	int (*c_del) (DBC *, u_int32_t);
+	int (*c_get) (DBC *, DBT *, DBT *, u_int32_t);
+	int (*c_put) (DBC *, DBT *, DBT *, u_int32_t);
 
 	void	 *internal;		/* Access method private. */
 
@@ -556,15 +556,14 @@ struct __db_h_stat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int   db_appinit __P((const char *, char * const *, DB_ENV *, u_int32_t));
-int   db_appexit __P((DB_ENV *));
-int   db_jump_set __P((void *, int));
-int   db_open __P((const char *,
-	  DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **));
-int   db_value_set __P((int, int));
-char *db_version __P((int *, int *, int *));
-int   db_xa_open __P((const char *,
-	  DBTYPE, u_int32_t, int, DB_INFO *, DB **));
+int   db_appinit (const char *, char * const *, DB_ENV *, u_int32_t);
+int   db_appexit (DB_ENV *);
+int   db_jump_set (void *, int);
+int   db_open (const char *,
+	       DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **);
+int   db_value_set (int, int);
+char *db_version (int *, int *, int *);
+int   db_xa_open (const char *, DBTYPE, u_int32_t, int, DB_INFO *, DB **);
 #if defined(__cplusplus)
 }
 #endif
@@ -674,22 +673,21 @@ struct __db_lock_stat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	  lock_close __P((DB_LOCKTAB *));
-int	  lock_detect __P((DB_LOCKTAB *, u_int32_t, u_int32_t));
-int	  lock_get __P((DB_LOCKTAB *,
-	    u_int32_t, u_int32_t, const DBT *, db_lockmode_t, DB_LOCK *));
-int	  lock_id __P((DB_LOCKTAB *, u_int32_t *));
-int	  lock_open __P((const char *,
-	    u_int32_t, int, DB_ENV *, DB_LOCKTAB **));
-int	  lock_put __P((DB_LOCKTAB *, DB_LOCK));
-int	  lock_tget __P((DB_LOCKTAB *,
-	    DB_TXN *, u_int32_t, const DBT *, db_lockmode_t, DB_LOCK *));
-int	  lock_stat __P((DB_LOCKTAB *, DB_LOCK_STAT **, void *(*)(size_t)));
-int	  lock_unlink __P((const char *, int, DB_ENV *));
-int	  lock_vec __P((DB_LOCKTAB *,
-	    u_int32_t, u_int32_t, DB_LOCKREQ *, int, DB_LOCKREQ **));
-int	  lock_tvec __P((DB_LOCKTAB *,
-	    DB_TXN *, u_int32_t, DB_LOCKREQ *, int, DB_LOCKREQ **));
+int	  lock_close (DB_LOCKTAB *);
+int	  lock_detect (DB_LOCKTAB *, u_int32_t, u_int32_t);
+int	  lock_get (DB_LOCKTAB *,
+	    u_int32_t, u_int32_t, const DBT *, db_lockmode_t, DB_LOCK *);
+int	  lock_id (DB_LOCKTAB *, u_int32_t *);
+int	  lock_open (const char *, u_int32_t, int, DB_ENV *, DB_LOCKTAB **);
+int	  lock_put (DB_LOCKTAB *, DB_LOCK);
+int	  lock_tget (DB_LOCKTAB *,
+	    DB_TXN *, u_int32_t, const DBT *, db_lockmode_t, DB_LOCK *);
+int	  lock_stat (DB_LOCKTAB *, DB_LOCK_STAT **, void *(*)(size_t));
+int	  lock_unlink (const char *, int, DB_ENV *);
+int	  lock_vec (DB_LOCKTAB *,
+	    u_int32_t, u_int32_t, DB_LOCKREQ *, int, DB_LOCKREQ **);
+int	  lock_tvec (DB_LOCKTAB *,
+	    DB_TXN *, u_int32_t, DB_LOCKREQ *, int, DB_LOCKREQ **);
 #if defined(__cplusplus)
 }
 #endif
@@ -739,18 +737,18 @@ struct __db_log_stat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 log_archive __P((DB_LOG *, char **[], u_int32_t, void *(*)(size_t)));
-int	 log_close __P((DB_LOG *));
-int	 log_compare __P((const DB_LSN *, const DB_LSN *));
-int	 log_file __P((DB_LOG *, const DB_LSN *, char *, size_t));
-int	 log_flush __P((DB_LOG *, const DB_LSN *));
-int	 log_get __P((DB_LOG *, DB_LSN *, DBT *, u_int32_t));
-int	 log_open __P((const char *, u_int32_t, int, DB_ENV *, DB_LOG **));
-int	 log_put __P((DB_LOG *, DB_LSN *, const DBT *, u_int32_t));
-int	 log_register __P((DB_LOG *, DB *, const char *, DBTYPE, u_int32_t *));
-int	 log_stat __P((DB_LOG *, DB_LOG_STAT **, void *(*)(size_t)));
-int	 log_unlink __P((const char *, int, DB_ENV *));
-int	 log_unregister __P((DB_LOG *, u_int32_t));
+int	 log_archive (DB_LOG *, char **[], u_int32_t, void *(*)(size_t));
+int	 log_close (DB_LOG *);
+int	 log_compare (const DB_LSN *, const DB_LSN *);
+int	 log_file (DB_LOG *, const DB_LSN *, char *, size_t);
+int	 log_flush (DB_LOG *, const DB_LSN *);
+int	 log_get (DB_LOG *, DB_LSN *, DBT *, u_int32_t);
+int	 log_open (const char *, u_int32_t, int, DB_ENV *, DB_LOG **);
+int	 log_put (DB_LOG *, DB_LSN *, const DBT *, u_int32_t);
+int	 log_register (DB_LOG *, DB *, const char *, DBTYPE, u_int32_t *);
+int	 log_stat (DB_LOG *, DB_LOG_STAT **, void *(*)(size_t));
+int	 log_unlink (const char *, int, DB_ENV *);
+int	 log_unregister (DB_LOG *, u_int32_t);
 #if defined(__cplusplus)
 }
 #endif
@@ -816,23 +814,23 @@ struct __db_mpool_fstat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	memp_close __P((DB_MPOOL *));
-int	memp_fclose __P((DB_MPOOLFILE *));
-int	memp_fget __P((DB_MPOOLFILE *, db_pgno_t *, u_int32_t, void *));
-int	memp_fopen __P((DB_MPOOL *, const char *,
-	    u_int32_t, int, size_t, DB_MPOOL_FINFO *, DB_MPOOLFILE **));
-int	memp_fput __P((DB_MPOOLFILE *, void *, u_int32_t));
-int	memp_fset __P((DB_MPOOLFILE *, void *, u_int32_t));
-int	memp_fsync __P((DB_MPOOLFILE *));
-int	memp_open __P((const char *, u_int32_t, int, DB_ENV *, DB_MPOOL **));
-int	memp_register __P((DB_MPOOL *, int,
+int	memp_close (DB_MPOOL *);
+int	memp_fclose (DB_MPOOLFILE *);
+int	memp_fget (DB_MPOOLFILE *, db_pgno_t *, u_int32_t, void *);
+int	memp_fopen (DB_MPOOL *, const char *,
+	    u_int32_t, int, size_t, DB_MPOOL_FINFO *, DB_MPOOLFILE **);
+int	memp_fput (DB_MPOOLFILE *, void *, u_int32_t);
+int	memp_fset (DB_MPOOLFILE *, void *, u_int32_t);
+int	memp_fsync (DB_MPOOLFILE *);
+int	memp_open (const char *, u_int32_t, int, DB_ENV *, DB_MPOOL **);
+int	memp_register (DB_MPOOL *, int,
 	    int (*)(db_pgno_t, void *, DBT *),
-	    int (*)(db_pgno_t, void *, DBT *)));
-int	memp_stat __P((DB_MPOOL *,
-	    DB_MPOOL_STAT **, DB_MPOOL_FSTAT ***, void *(*)(size_t)));
-int	memp_sync __P((DB_MPOOL *, DB_LSN *));
-int	memp_trickle __P((DB_MPOOL *, int, int *));
-int	memp_unlink __P((const char *, int, DB_ENV *));
+	    int (*)(db_pgno_t, void *, DBT *));
+int	memp_stat (DB_MPOOL *,
+	    DB_MPOOL_STAT **, DB_MPOOL_FSTAT ***, void *(*)(size_t));
+int	memp_sync (DB_MPOOL *, DB_LSN *);
+int	memp_trickle (DB_MPOOL *, int, int *);
+int	memp_unlink (const char *, int, DB_ENV *);
 #if defined(__cplusplus)
 }
 #endif
@@ -879,16 +877,16 @@ struct __db_txn_stat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	  txn_abort __P((DB_TXN *));
-int	  txn_begin __P((DB_TXNMGR *, DB_TXN *, DB_TXN **));
-int	  txn_checkpoint __P((const DB_TXNMGR *, u_int32_t, u_int32_t));
-int	  txn_commit __P((DB_TXN *));
-int	  txn_close __P((DB_TXNMGR *));
-u_int32_t txn_id __P((DB_TXN *));
-int	  txn_open __P((const char *, u_int32_t, int, DB_ENV *, DB_TXNMGR **));
-int	  txn_prepare __P((DB_TXN *));
-int	  txn_stat __P((DB_TXNMGR *, DB_TXN_STAT **, void *(*)(size_t)));
-int	  txn_unlink __P((const char *, int, DB_ENV *));
+int	  txn_abort (DB_TXN *);
+int	  txn_begin (DB_TXNMGR *, DB_TXN *, DB_TXN **);
+int	  txn_checkpoint (const DB_TXNMGR *, u_int32_t, u_int32_t);
+int	  txn_commit (DB_TXN *);
+int	  txn_close (DB_TXNMGR *);
+u_int32_t txn_id (DB_TXN *);
+int	  txn_open (const char *, u_int32_t, int, DB_ENV *, DB_TXNMGR **);
+int	  txn_prepare (DB_TXN *);
+int	  txn_stat (DB_TXNMGR *, DB_TXN_STAT **, void *(*)(size_t));
+int	  txn_unlink (const char *, int, DB_ENV *);
 #if defined(__cplusplus)
 }
 #endif
@@ -942,16 +940,16 @@ typedef struct {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 __db_dbm_close __P((void));
-int	 __db_dbm_dbrdonly __P((void));
-int	 __db_dbm_delete __P((datum));
-int	 __db_dbm_dirf __P((void));
-datum	 __db_dbm_fetch __P((datum));
-datum	 __db_dbm_firstkey __P((void));
-int	 __db_dbm_init __P((char *));
-datum	 __db_dbm_nextkey __P((datum));
-int	 __db_dbm_pagf __P((void));
-int	 __db_dbm_store __P((datum, datum));
+int	 __db_dbm_close (void);
+int	 __db_dbm_dbrdonly (void);
+int	 __db_dbm_delete (datum);
+int	 __db_dbm_dirf (void);
+datum	 __db_dbm_fetch (datum);
+datum	 __db_dbm_firstkey (void);
+int	 __db_dbm_init (char *);
+datum	 __db_dbm_nextkey (datum);
+int	 __db_dbm_pagf (void);
+int	 __db_dbm_store (datum, datum);
 #if defined(__cplusplus)
 }
 #endif
@@ -977,18 +975,18 @@ int	 __db_dbm_store __P((datum, datum));
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 __db_ndbm_clearerr __P((DBM *));
-void	 __db_ndbm_close __P((DBM *));
-int	 __db_ndbm_delete __P((DBM *, datum));
-int	 __db_ndbm_dirfno __P((DBM *));
-int	 __db_ndbm_error __P((DBM *));
-datum	 __db_ndbm_fetch __P((DBM *, datum));
-datum	 __db_ndbm_firstkey __P((DBM *));
-datum	 __db_ndbm_nextkey __P((DBM *));
-DBM	*__db_ndbm_open __P((const char *, int, int));
-int	 __db_ndbm_pagfno __P((DBM *));
-int	 __db_ndbm_rdonly __P((DBM *));
-int	 __db_ndbm_store __P((DBM *, datum, datum, int));
+int	 __db_ndbm_clearerr (DBM *);
+void	 __db_ndbm_close (DBM *);
+int	 __db_ndbm_delete (DBM *, datum);
+int	 __db_ndbm_dirfno (DBM *);
+int	 __db_ndbm_error (DBM *);
+datum	 __db_ndbm_fetch (DBM *, datum);
+datum	 __db_ndbm_firstkey (DBM *);
+datum	 __db_ndbm_nextkey (DBM *);
+DBM	*__db_ndbm_open (const char *, int, int);
+int	 __db_ndbm_pagfno (DBM *);
+int	 __db_ndbm_rdonly (DBM *);
+int	 __db_ndbm_store (DBM *, datum, datum, int);
 #if defined(__cplusplus)
 }
 #endif
@@ -1017,9 +1015,9 @@ typedef struct entry {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 __db_hcreate __P((size_t));
-void	 __db_hdestroy __P((void));
-ENTRY	*__db_hsearch __P((ENTRY, ACTION));
+int	 __db_hcreate (size_t);
+void	 __db_hdestroy (void);
+ENTRY	*__db_hsearch (ENTRY, ACTION);
 #if defined(__cplusplus)
 }
 #endif

@@ -671,9 +671,11 @@ ifeq (yes, $(build-shared))
 ifndef avoid-generated
 $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 			       $(wildcard $(patsubst %, $(..)%/shlib-versions,\
-							$(add-ons))) \
+							$(add-ons) \
+							$(subdirs))) \
 			       $(common-objpfx)config.make
 	(file="$(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons))) \
+	       $(wildcard $(patsubst %,$(..)%/shlib-versions,$(subdirs))) \
 	       $(..)shlib-versions"; \
 	 for f in $$file; do \
 	   sed 's/#.*$$//' $$f | while read conf versions; do \

@@ -206,14 +206,14 @@ compile (char *__restrict instring, char *__restrict expbuf,
    found in the buffer starting at EXPBUF.  `loc1' will return the
    first character matched and `loc2' points to the next unmatched
    character.  */
-extern int step __P ((__const char *__restrict __string,
-		      __const char *__restrict __expbuf));
+extern int step (__const char *__restrict __string,
+		 __const char *__restrict __expbuf) __THROW;
 
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
-extern int advance __P ((__const char *__restrict __string,
-			 __const char *__restrict __expbuf));
+extern int advance (__const char *__restrict __string,
+		    __const char *__restrict __expbuf) __THROW;
 
 
 __END_DECLS

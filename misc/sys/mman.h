@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 #include <bits/mman.h>
 
 /* Return value of `mmap' in case of an error.  */
-#define MAP_FAILED	((__ptr_t) -1)
+#define MAP_FAILED	((void *) -1)
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
@@ -41,60 +41,60 @@ __BEGIN_DECLS
    deallocates any previous mapping for the affected region.  */
 
 #ifndef __USE_FILE_OFFSET64
-extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off_t __offset));
+extern void *mmap (void *__addr, size_t __len, int __prot,
+		   int __flags, int __fd, __off_t __offset) __THROW;
 #else
-extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off_t __offset))
+extern void *mmap (void *__addr, size_t __len, int __prot,
+		   int __flags, int __fd, __off_t __offset) __THROW
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
-extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off64_t __offset));
+extern void *mmap64 (void *__addr, size_t __len, int __prot,
+		     int __flags, int __fd, __off64_t __offset) __THROW;
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int munmap __P ((__ptr_t __addr, size_t __len));
+extern int munmap (void *__addr, size_t __len) __THROW;
 
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
-extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
+extern int mprotect (void *__addr, size_t __len, int __prot) __THROW;
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  Flags are from the MS_* set.  */
-extern int msync __P ((__ptr_t __addr, size_t __len, int __flags));
+extern int msync (void *__addr, size_t __len, int __flags) __THROW;
 
 #ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
-extern int madvise __P ((__ptr_t __addr, size_t __len, int __advice));
+extern int madvise (void *__addr, size_t __len, int __advice) __THROW;
 #endif
 
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
-extern int mlock __P ((__const __ptr_t __addr, size_t __len));
+extern int mlock (__const void *__addr, size_t __len) __THROW;
 
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
-extern int munlock __P ((__const __ptr_t __addr, size_t __len));
+extern int munlock (__const void *__addr, size_t __len) __THROW;
 
 /* Cause all currently mapped pages of the process to be memory resident
    until unlocked by a call to the `munlockall', until the process exits,
    or until the process calls `execve'.  */
-extern int mlockall __P ((int __flags));
+extern int mlockall (int __flags) __THROW;
 
 /* All currently mapped pages of the process' address space become
    unlocked.  */
-extern int munlockall __P ((void));
+extern int munlockall (void) __THROW;
 
 #ifdef __USE_MISC
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
    NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
    differ from ADDR.  */
-extern __ptr_t mremap __P ((__ptr_t __addr, size_t __old_len,
-			    size_t __new_len, int __may_move));
+extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
+		     int __may_move) __THROW;
 #endif
 
 __END_DECLS

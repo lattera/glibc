@@ -368,7 +368,7 @@ __mempcpy_small (void *__dest, char __src1,
 
 /* Return pointer to C in S.  */
 #ifndef _HAVE_STRING_ARCH_strchr
-extern __ptr_t __rawmemchr (const __ptr_t __s, int __c);
+extern void *__rawmemchr (const void *__s, int __c);
 # define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
 		  ? (char *) __rawmemchr (s, c)				      \

@@ -45,14 +45,13 @@ struct sembuf
 __BEGIN_DECLS
 
 /* Semaphore control operation.  */
-extern int semctl __P ((int __semid, int __semnum, int __cmd, ...));
+extern int semctl (int __semid, int __semnum, int __cmd, ...) __THROW;
 
 /* Get semaphore.  */
-extern int semget __P ((key_t __key, int __nsems, int __semflg));
+extern int semget (key_t __key, int __nsems, int __semflg) __THROW;
 
 /* Operate on semaphore.  */
-extern int semop __P ((int __semid, struct sembuf *__sops,
-		       size_t __nsops));
+extern int semop (int __semid, struct sembuf *__sops, size_t __nsops) __THROW;
 
 __END_DECLS
 

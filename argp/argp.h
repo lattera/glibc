@@ -36,23 +36,6 @@
 typedef int error_t;
 # define __error_t_defined
 #endif
-
-#ifndef __P
-# ifdef __cplusplus
-#  if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
-#   define __P(args)	args throw ()
-#  else
-#   define __P(args)	args
-#  endif
-#  define __PMT(args)	args
-# elif defined __STDC__ && __STDC__ > 0
-#  define __P(args)	args
-#  define __PMT(args)	args
-# else
-#  define __P(args)	()
-#  define __PMT(args)	()
-# endif
-#endif
 
 #ifdef  __cplusplus
 extern "C" {
@@ -133,8 +116,8 @@ struct argp_state;		/* " */
 struct argp_child;		/* " */
 
 /* The type of a pointer to an argp parsing function.  */
-typedef error_t (*argp_parser_t) __PMT ((int key, char *arg,
-					 struct argp_state *state));
+typedef error_t (*argp_parser_t) (int key, char *arg,
+				  struct argp_state *state);
 
 /* What to return for unrecognized keys.  For special ARGP_KEY_ keys, such
    returns will simply be ignored.  For user keys, this error will be turned
@@ -247,8 +230,7 @@ struct argp
      has been done, so if any of the replacement text also needs translation,
      that should be done by the filter function.  INPUT is either the input
      supplied to argp_parse, or NULL, if argp_help was called directly.  */
-  char *(*help_filter) __PMT ((int __key, __const char *__text,
-			       void *__input));
+  char *(*help_filter) (int __key, __const char *__text, void *__input);
 
   /* If non-zero the strings used in the argp library are translated using
      the domain described by this string.  Otherwise the currently installed
@@ -391,15 +373,14 @@ struct argp_state
    routine returned a non-zero value, it is returned; otherwise 0 is
    returned.  This function may also call exit unless the ARGP_NO_HELP flag
    is set.  INPUT is a pointer to a value to be passed in to the parser.  */
-extern error_t argp_parse __P ((__const struct argp *__restrict __argp,
-				int __argc, char **__restrict __argv,
-				unsigned __flags, int *__restrict __arg_index,
-				void *__restrict __input));
-extern error_t __argp_parse __P ((__const struct argp *__restrict __argp,
-				  int __argc, char **__restrict __argv,
-				  unsigned __flags,
-				  int *__restrict __arg_index,
-				  void *__restrict __input));
+extern error_t argp_parse (__const struct argp *__restrict __argp,
+			   int __argc, char **__restrict __argv,
+			   unsigned __flags, int *__restrict __arg_index,
+			   void *__restrict __input) __THROW;
+extern error_t __argp_parse (__const struct argp *__restrict __argp,
+			     int __argc, char **__restrict __argv,
+			     unsigned __flags, int *__restrict __arg_index,
+			     void *__restrict __input) __THROW;
 
 /* Global variables.  */
 
@@ -414,9 +395,9 @@ extern __const char *argp_program_version;
    calls this function with a stream to print the version to and a pointer to
    the current parsing state, and then exits (unless the ARGP_NO_EXIT flag is
    used).  This variable takes precedent over ARGP_PROGRAM_VERSION.  */
-extern void (*argp_program_version_hook) __PMT ((FILE *__restrict __stream,
-						 struct argp_state *__restrict
-						 __state));
+extern void (*argp_program_version_hook) (FILE *__restrict __stream,
+					  struct argp_state *__restrict
+					  __state);
 
 /* If defined or set by the user program, it should point to string that is
    the bug-reporting address for the program.  It will be printed by
@@ -461,12 +442,12 @@ extern error_t argp_err_exit_status;
 
 /* Output a usage message for ARGP to STREAM.  FLAGS are from the set
    ARGP_HELP_*.  */
-extern void argp_help __P ((__const struct argp *__restrict __argp,
-			    FILE *__restrict __stream,
-			    unsigned __flags, char *__restrict __name));
-extern void __argp_help __P ((__const struct argp *__restrict __argp,
-			      FILE *__restrict __stream, unsigned __flags,
-			      char *__name));
+extern void argp_help (__const struct argp *__restrict __argp,
+		       FILE *__restrict __stream,
+		       unsigned __flags, char *__restrict __name) __THROW;
+extern void __argp_help __P (__const struct argp *__restrict __argp,
+			     FILE *__restrict __stream, unsigned __flags,
+			     char *__name) __THROW;
 
 /* The following routines are intended to be called from within an argp
    parsing routine (thus taking an argp_state structure as the first
@@ -478,27 +459,25 @@ extern void __argp_help __P ((__const struct argp *__restrict __argp,
 
 /* Output, if appropriate, a usage message for STATE to STREAM.  FLAGS are
    from the set ARGP_HELP_*.  */
-extern void argp_state_help __P ((__const struct argp_state *__restrict
-				  __state,
-				  FILE *__restrict __stream,
-				  unsigned int __flags));
-extern void __argp_state_help __P ((__const struct argp_state *__restrict
-				    __state,
-				    FILE *__restrict __stream,
-				    unsigned int __flags));
+extern void argp_state_help (__const struct argp_state *__restrict __state,
+			     FILE *__restrict __stream,
+			     unsigned int __flags) __THROW;
+extern void __argp_state_help (__const struct argp_state *__restrict __state,
+			       FILE *__restrict __stream,
+			       unsigned int __flags) __THROW;
 
 /* Possibly output the standard usage message for ARGP to stderr and exit.  */
-extern void argp_usage __P ((__const struct argp_state *__state));
-extern void __argp_usage __P ((__const struct argp_state *__state));
+extern void argp_usage (__const struct argp_state *__state) __THROW;
+extern void __argp_usage (__const struct argp_state *__state) __THROW;
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
    message, then exit (1).  */
-extern void argp_error __P ((__const struct argp_state *__restrict __state,
-			     __const char *__restrict __fmt, ...))
+extern void argp_error (__const struct argp_state *__restrict __state,
+			__const char *__restrict __fmt, ...) __THROW
      __attribute__ ((__format__ (__printf__, 2, 3)));
-extern void __argp_error __P ((__const struct argp_state *__restrict __state,
-			       __const char *__restrict __fmt, ...))
+extern void __argp_error (__const struct argp_state *__restrict __state,
+			  __const char *__restrict __fmt, ...) __THROW
      __attribute__ ((__format__ (__printf__, 2, 3)));
 
 /* Similar to the standard gnu error-reporting function error(), but will
@@ -509,31 +488,32 @@ extern void __argp_error __P ((__const struct argp_state *__restrict __state,
    difference between this function and argp_error is that the latter is for
    *parsing errors*, and the former is for other problems that occur during
    parsing but don't reflect a (syntactic) problem with the input.  */
-extern void argp_failure __P ((__const struct argp_state *__restrict __state,
-			       int __status, int __errnum,
-			       __const char *__restrict __fmt, ...))
+extern void argp_failure (__const struct argp_state *__restrict __state,
+			  int __status, int __errnum,
+			  __const char *__restrict __fmt, ...) __THROW
      __attribute__ ((__format__ (__printf__, 4, 5)));
-extern void __argp_failure __P ((__const struct argp_state *__restrict __state,
-				 int __status, int __errnum,
-				 __const char *__restrict __fmt, ...))
+extern void __argp_failure (__const struct argp_state *__restrict __state,
+			    int __status, int __errnum,
+			    __const char *__restrict __fmt, ...) __THROW
      __attribute__ ((__format__ (__printf__, 4, 5)));
 
 /* Returns true if the option OPT is a valid short option.  */
-extern int _option_is_short __P ((__const struct argp_option *__opt));
-extern int __option_is_short __P ((__const struct argp_option *__opt));
+extern int _option_is_short (__const struct argp_option *__opt) __THROW;
+extern int __option_is_short (__const struct argp_option *__opt) __THROW;
 
 /* Returns true if the option OPT is in fact the last (unused) entry in an
    options array.  */
-extern int _option_is_end __P ((__const struct argp_option *__opt));
-extern int __option_is_end __P ((__const struct argp_option *__opt));
+extern int _option_is_end (__const struct argp_option *__opt) __THROW;
+extern int __option_is_end (__const struct argp_option *__opt) __THROW;
 
 /* Return the input field for ARGP in the parser corresponding to STATE; used
    by the help routines.  */
-extern void *_argp_input __P ((__const struct argp *__restrict __argp,
-			       __const struct argp_state *__restrict __state));
-extern void *__argp_input __P ((__const struct argp *__restrict __argp,
-				__const struct argp_state *__restrict
-				__state));
+extern void *_argp_input (__const struct argp *__restrict __argp,
+			  __const struct argp_state *__restrict __state)
+     __THROW;
+extern void *__argp_input (__const struct argp *__restrict __argp,
+			   __const struct argp_state *__restrict __state)
+     __THROW;
 
 #ifdef __USE_EXTERN_INLINES
 

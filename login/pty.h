@@ -1,5 +1,5 @@
 /* Functions for pseudo TTY handling.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,13 +31,13 @@ __BEGIN_DECLS
 /* Create pseudo tty master slave pair with NAME and set terminal
    attributes according to TERMP and WINP and return handles for both
    ends in AMASTER and ASLAVE.  */
-extern int openpty __P ((int *__amaster, int *__aslave, char *__name,
-			 struct termios *__termp, struct winsize *__winp));
+extern int openpty (int *__amaster, int *__aslave, char *__name,
+		    struct termios *__termp, struct winsize *__winp) __THROW;
 
 /* Create child process and establish the slave pseudo terminal as the
    child's controlling terminal.  */
-extern int forkpty __P ((int *__amaster, char *__name,
-			 struct termios *__termp, struct winsize *__winp));
+extern int forkpty (int *__amaster, char *__name,
+		    struct termios *__termp, struct winsize *__winp) __THROW;
 
 __END_DECLS
 

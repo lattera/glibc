@@ -72,8 +72,8 @@ struct authunix_parms
     __gid_t *aup_gids;
   };
 
-extern bool_t xdr_authunix_parms __P ((XDR *__xdrs,
-				       struct authunix_parms *__p));
+extern bool_t xdr_authunix_parms (XDR *__xdrs, struct authunix_parms *__p)
+     __THROW;
 
 /*
  * If a response verifier has flavor AUTH_SHORT,

@@ -34,30 +34,30 @@
 __BEGIN_DECLS
 
 /* Set scheduling parameters for a process.  */
-extern int sched_setparam __P ((__pid_t __pid,
-				__const struct sched_param *__param));
+extern int sched_setparam (__pid_t __pid, __const struct sched_param *__param)
+     __THROW;
 
 /* Retrieve scheduling parameters for a particular process.  */
-extern int sched_getparam __P ((__pid_t __pid, struct sched_param *__param));
+extern int sched_getparam (__pid_t __pid, struct sched_param *__param) __THROW;
 
 /* Set scheduling algorithm and/or parameters for a process.  */
-extern int sched_setscheduler __P ((__pid_t __pid, int __policy,
-				    __const struct sched_param *__param));
+extern int sched_setscheduler (__pid_t __pid, int __policy,
+			       __const struct sched_param *__param) __THROW;
 
 /* Retrieve scheduling algorithm for a particular purpose.  */
-extern int sched_getscheduler __P ((__pid_t __pid));
+extern int sched_getscheduler (__pid_t __pid) __THROW;
 
 /* Yield the processor.  */
-extern int sched_yield __P ((void));
+extern int sched_yield (void) __THROW;
 
 /* Get maximum priority value for a scheduler.  */
-extern int sched_get_priority_max __P ((int __algorithm));
+extern int sched_get_priority_max (int __algorithm) __THROW;
 
 /* Get minimum priority value for a scheduler.  */
-extern int sched_get_priority_min __P ((int __algorithm));
+extern int sched_get_priority_min (int __algorithm) __THROW;
 
 /* Get the SCHED_RR interval for the named process.  */
-extern int sched_rr_get_interval __P ((__pid_t __pid, struct timespec *__t));
+extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 __END_DECLS
 

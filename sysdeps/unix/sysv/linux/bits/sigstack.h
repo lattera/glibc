@@ -1,5 +1,5 @@
 /* sigstack, sigaltstack definitions.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /* Structure describing a signal stack (obsolete).  */
 struct sigstack
   {
-    __ptr_t ss_sp;		/* Signal stack pointer.  */
+    void *ss_sp;		/* Signal stack pointer.  */
     int ss_onstack;		/* Nonzero if executing on this stack.  */
   };
 
@@ -49,7 +49,7 @@ enum
 /* Alternate, preferred interface.  */
 typedef struct sigaltstack
   {
-    __ptr_t ss_sp;
+    void *ss_sp;
     int ss_flags;
     size_t ss_size;
   } stack_t;

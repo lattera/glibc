@@ -1,5 +1,5 @@
 /* Definitions for getting information about a filesystem.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,33 +29,34 @@ __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
 #ifndef __USE_FILE_OFFSET64
-extern int statfs __P ((__const char *__file, struct statfs *__buf));
+extern int statfs (__const char *__file, struct statfs *__buf) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (statfs, __P ((__const char *__file,
-				     struct statfs *__buf)), statfs64);
+extern int __REDIRECT (statfs,
+		       (__const char *__file, struct statfs *__buf) __THROW,
+		       statfs64);
 # else
 #  define statfs statfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int statfs64 __P ((__const char *__file, struct statfs64 *__buf));
+extern int statfs64 (__const char *__file, struct statfs64 *__buf) __THROW;
 #endif
 
 /* Return information about the filesystem containing the file FILDES
    refers to.  */
 #ifndef __USE_FILE_OFFSET64
-extern int fstatfs __P ((int __fildes, struct statfs *__buf));
+extern int fstatfs (int __fildes, struct statfs *__buf) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (fstatfs, __P ((int __fildes, struct statfs *__buf)),
+extern int __REDIRECT (fstatfs, (int __fildes, struct statfs *__buf) __THROW,
 		       fstatfs64);
 # else
 #  define fstatfs fstatfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int fstatfs64 __P ((int __fildes, struct statfs64 *__buf));
+extern int fstatfs64 (int __fildes, struct statfs64 *__buf) __THROW;
 #endif
 
 __END_DECLS

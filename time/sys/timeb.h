@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ struct timeb
 
 /* Fill in TIMEBUF with information about the current time.  */
 
-extern int ftime __P ((struct timeb *__timebuf));
+extern int ftime (struct timeb *__timebuf);
 
 __END_DECLS
 

@@ -136,72 +136,72 @@ struct sigevent;
 
 /* Time used by the program so far (user time + system time).
    The result / CLOCKS_PER_SECOND is program time in seconds.  */
-extern clock_t clock __P ((void));
+extern clock_t clock (void) __THROW;
 
 /* Return the current time and put it in *TIMER if TIMER is not NULL.  */
-extern time_t time __P ((time_t *__timer));
+extern time_t time (time_t *__timer) __THROW;
 
 /* Return the difference between TIME1 and TIME0.  */
-extern double difftime __P ((time_t __time1, time_t __time0))
-     __attribute__ ((__const__));
+extern double difftime (time_t __time1, time_t __time0)
+     __THROW __attribute__ ((__const__));
 
 /* Return the `time_t' representation of TP and normalize TP.  */
-extern time_t mktime __P ((struct tm *__tp));
+extern time_t mktime (struct tm *__tp) __THROW;
 
 
 /* Format TP into S according to FORMAT.
    Write no more than MAXSIZE characters and return the number
    of characters written, or 0 if it would exceed MAXSIZE.  */
-extern size_t strftime __P ((char *__restrict __s, size_t __maxsize,
-			     __const char *__restrict __format,
-			     __const struct tm *__restrict __tp));
+extern size_t strftime (char *__restrict __s, size_t __maxsize,
+			__const char *__restrict __format,
+			__const struct tm *__restrict __tp) __THROW;
 
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
    The return value is a pointer to the first unparsed character in S.  */
-extern char *strptime __P ((__const char *__s, __const char *__fmt,
-			    struct tm *__tp));
+extern char *strptime (__const char *__s, __const char *__fmt, struct tm *__tp)
+     __THROW;
 # endif
 
 
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
-extern struct tm *gmtime __P ((__const time_t *__timer));
+extern struct tm *gmtime (__const time_t *__timer) __THROW;
 
 /* Return the `struct tm' representation
    of *TIMER in the local timezone.  */
-extern struct tm *localtime __P ((__const time_t *__timer));
+extern struct tm *localtime (__const time_t *__timer) __THROW;
 
 # if defined __USE_POSIX || defined __USE_MISC
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
-extern struct tm *gmtime_r __P ((__const time_t *__restrict __timer,
-				 struct tm *__restrict __tp));
+extern struct tm *gmtime_r (__const time_t *__restrict __timer,
+			    struct tm *__restrict __tp) __THROW;
 
 /* Return the `struct tm' representation of *TIMER in local time,
    using *TP to store the result.  */
-extern struct tm *localtime_r __P ((__const time_t *__restrict __timer,
-				    struct tm *__restrict __tp));
+extern struct tm *localtime_r (__const time_t *__restrict __timer,
+			       struct tm *__restrict __tp) __THROW;
 # endif	/* POSIX or misc */
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime __P ((__const struct tm *__tp));
+extern char *asctime (__const struct tm *__tp) __THROW;
 
 /* Equivalent to `asctime (localtime (timer))'.  */
-extern char *ctime __P ((__const time_t *__timer));
+extern char *ctime (__const time_t *__timer) __THROW;
 
 # if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant versions of the above functions.  */
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *asctime_r __P ((__const struct tm *__restrict __tp,
-			     char *__restrict __buf));
+extern char *asctime_r (__const struct tm *__restrict __tp,
+			char *__restrict __buf) __THROW;
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
-extern char *ctime_r __P ((__const time_t *__restrict __timer,
-			   char *__restrict __buf));
+extern char *ctime_r (__const time_t *__restrict __timer,
+		      char *__restrict __buf) __THROW;
 # endif	/* POSIX or misc */
 
 
@@ -217,7 +217,7 @@ extern char *tzname[2];
 
 /* Set time conversion information from the TZ environment variable.
    If TZ is not defined, a locale-dependent default is used.  */
-extern void tzset __P ((void));
+extern void tzset (void) __THROW;
 # endif
 
 # if defined __USE_SVID || defined __USE_XOPEN
@@ -228,7 +228,7 @@ extern long int timezone;
 # ifdef __USE_SVID
 /* Set the system time to *WHEN.
    This call is restricted to the superuser.  */
-extern int stime __P ((__const time_t *__when));
+extern int stime (__const time_t *__when) __THROW;
 # endif
 
 
@@ -243,50 +243,51 @@ extern int stime __P ((__const time_t *__when));
    localtime package.  These are included only for compatibility.  */
 
 /* Like `mktime', but for TP represents Universal Time, not local time.  */
-extern time_t timegm __P ((struct tm *__tp));
+extern time_t timegm (struct tm *__tp) __THROW;
 
 /* Another name for `mktime'.  */
-extern time_t timelocal __P ((struct tm *__tp));
+extern time_t timelocal (struct tm *__tp) __THROW;
 
 /* Return the number of days in YEAR.  */
-extern int dysize __P ((int __year));
+extern int dysize (int __year) __THROW;
 # endif
 
 
 # ifdef __USE_POSIX199309
 /* Pause execution for a number of nanoseconds.  */
-extern int nanosleep __P ((__const struct timespec *__requested_time,
-			   struct timespec *__remaining));
+extern int nanosleep (__const struct timespec *__requested_time,
+		      struct timespec *__remaining) __THROW;
 
 
 /* Get resolution of clock CLOCK_ID.  */
-extern int clock_getres __P ((clockid_t __clock_id, struct timespec *__res));
+extern int clock_getres (clockid_t __clock_id, struct timespec *__res) __THROW;
 
 /* Get current value of clock CLOCK_ID and store it in TP.  */
-extern int clock_gettime __P ((clockid_t __clock_id, struct timespec *__tp));
+extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) __THROW;
 
 /* Set clock CLOCK_ID to value TP.  */
-extern int clock_settime __P ((clockid_t __clock_id,
-			       __const struct timespec *__tp));
+extern int clock_settime (clockid_t __clock_id, __const struct timespec *__tp)
+     __THROW;
 
 
 /* Create new per-process timer using CLOCK_ID.  */
-extern int timer_create __P ((clockid_t __clock_id, struct sigevent *__evp,
-			      timer_t *__timerid));
+extern int timer_create (clockid_t __clock_id, struct sigevent *__evp,
+			 timer_t *__timerid) __THROW;
 
 /* Delete timer TIMERID.  */
-extern int timer_delete __P ((timer_t __timerid));
+extern int timer_delete (timer_t __timerid) __THROW;
 
 /* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
-extern int timer_settime __P ((timer_t __timerid, int __flags,
-			       __const struct itimerspec *__value,
-			       struct itimerspec *__ovalue));
+extern int timer_settime (timer_t __timerid, int __flags,
+			  __const struct itimerspec *__value,
+			  struct itimerspec *__ovalue) __THROW;
 
 /* Get current value of timer TIMERID and store it in VLAUE.  */
-extern int timer_gettime __P ((timer_t __timerid, struct itimerspec *__value));
+extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
+     __THROW;
 
 /* Get expiration overrun for timer TIMERID.  */
-extern int timer_getoverrun __P ((timer_t __timerid));
+extern int timer_getoverrun (timer_t __timerid) __THROW;
 # endif
 
 
@@ -308,7 +309,7 @@ extern int getdate_err;
    representing the value.  The templates from the file identified by
    the environment variable DATEMSK are used.  In case of an error
    `getdate_err' is set.  */
-extern struct tm *getdate __P ((__const char *__string));
+extern struct tm *getdate (__const char *__string) __THROW;
 # endif
 
 # ifdef __USE_GNU
@@ -317,8 +318,8 @@ extern struct tm *getdate __P ((__const char *__string));
    variant.  The functionality is the same.  The result is returned in
    the buffer pointed to by RESBUFP and in case of an error the return
    value is != 0 with the same values as given above for `getdate_err'.  */
-extern int getdate_r __P ((__const char *__restrict __string,
-			   struct tm *__restrict __resbufp));
+extern int getdate_r (__const char *__restrict __string,
+		      struct tm *__restrict __resbufp) __THROW;
 # endif
 
 

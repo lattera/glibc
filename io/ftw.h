@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,59 +86,57 @@ struct FTW
 
 
 /* Convenient types for callback functions.  */
-typedef int (*__ftw_func_t) __PMT ((__const char *__filename,
-				    __const struct stat *__status,
-				    int __flag));
+typedef int (*__ftw_func_t) (__const char *__filename,
+			     __const struct stat *__status, int __flag);
 #ifdef __USE_LARGEFILE64
-typedef int (*__ftw64_func_t) __PMT ((__const char *__filename,
-				      __const struct stat64 *__status,
-				      int __flag));
+typedef int (*__ftw64_func_t) (__const char *__filename,
+			       __const struct stat64 *__status, int __flag);
 #endif
 #ifdef __USE_XOPEN_EXTENDED
-typedef int (*__nftw_func_t) __PMT ((__const char *__filename,
-				     __const struct stat *__status, int __flag,
-				     struct FTW *__info));
+typedef int (*__nftw_func_t) (__const char *__filename,
+			      __const struct stat *__status, int __flag,
+			      struct FTW *__info);
 # ifdef __USE_LARGEFILE64
-typedef int (*__nftw64_func_t) __PMT ((__const char *__filename,
-				       __const struct stat64 *__status,
-				       int __flag, struct FTW *__info));
+typedef int (*__nftw64_func_t) (__const char *__filename,
+				__const struct stat64 *__status,
+				int __flag, struct FTW *__info);
 # endif
 #endif
 
 /* Call a function on every element in a directory tree.  */
 #ifndef __USE_FILE_OFFSET64
-extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
-		     int __descriptors));
+extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors)
+     __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (ftw, __P ((__const char *__dir, __ftw_func_t __func,
-				  int __descriptors)), ftw64);
+extern int __REDIRECT (ftw, (__const char *__dir, __ftw_func_t __func,
+			     int __descriptors) __THROW, ftw64);
 # else
 #  define ftw ftw64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int ftw64 __P ((__const char *__dir, __ftw64_func_t __func,
-		       int __descriptors));
+extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
+		  int __descriptors) __THROW;
 #endif
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Call a function on every element in a directory tree.  FLAG allows
    to specify the behaviour more detailed.  */
 # ifndef __USE_FILE_OFFSET64
-extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
-		      int __descriptors, int __flag));
+extern int nftw (__const char *__dir, __nftw_func_t __func, int __descriptors,
+		 int __flag) __THROW;
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (nftw, __P ((__const char *__dir, __nftw_func_t __func,
-				   int __descriptors, int __flag)), nftw64);
+extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
+			      int __descriptors, int __flag) __THROW, nftw64);
 #  else
 #   define nftw nftw64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int nftw64 __P ((__const char *__dir, __nftw64_func_t __func,
-			int __descriptors, int __flag));
+extern int nftw64 (__const char *__dir, __nftw64_func_t __func,
+		   int __descriptors, int __flag) __THROW;
 # endif
 #endif
 

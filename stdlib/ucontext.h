@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,14 +29,14 @@
 __BEGIN_DECLS
 
 /* Get user context and store it in variable pointed to by UCP.  */
-extern int getcontext __P ((ucontext_t *__ucp));
+extern int getcontext (ucontext_t *__ucp) __THROW;
 
 /* Set user context from information of variable pointed to by UCP.  */
-extern int setcontext __P ((__const ucontext_t *__ucp));
+extern int setcontext (__const ucontext_t *__ucp) __THROW;
 
 /* Save current context in context variable pointed to by OUCP and set
    context from variable pointed to by UCP.  */
-extern int swapcontext __P ((ucontext_t *__oucp, __const ucontext_t *__ucp));
+extern int swapcontext (ucontext_t *__oucp, __const ucontext_t *__ucp) __THROW;
 
 /* Manipulate user context UCP to continue with calling functions FUNC
    and the ARGC-1 parameters following ARGC when the context is used
@@ -44,8 +44,8 @@ extern int swapcontext __P ((ucontext_t *__oucp, __const ucontext_t *__ucp));
 
    We cannot say anything about the parameters FUNC takes; `void'
    is as good as any other choice.  */
-extern void makecontext __P ((ucontext_t *__ucp, void (*__func) (void),
-			      int __argc, ...));
+extern void makecontext (ucontext_t *__ucp, void (*__func) (void),
+			 int __argc, ...) __THROW;
 
 __END_DECLS
 

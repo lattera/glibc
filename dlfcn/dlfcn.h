@@ -44,29 +44,29 @@ __BEGIN_DECLS
 
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
-extern void *dlopen __P ((__const char *__file, int __mode));
+extern void *dlopen (__const char *__file, int __mode) __THROW;
 
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */
-extern int dlclose __P ((void *__handle));
+extern int dlclose (void *__handle) __THROW;
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
-extern void *dlsym __P ((void *__restrict __handle,
-			 __const char *__restrict __name));
+extern void *dlsym (void *__restrict __handle,
+		    __const char *__restrict __name) __THROW;
 
 #ifdef __USE_GNU
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
-extern void *dlvsym __P ((void *__restrict __handle,
-			  __const char *__restrict __name,
-			  __const char *__restrict __version));
+extern void *dlvsym (void *__restrict __handle,
+		     __const char *__restrict __name,
+		     __const char *__restrict __version) __THROW;
 #endif
 
 /* When any of the above functions fails, call this function
    to return a string describing the error.  Each call resets
    the error string so that a following call returns null.  */
-extern char *dlerror __P ((void));
+extern char *dlerror (void) __THROW;
 
 #ifdef __USE_GNU
 /* Fill in *INFO with the following information about ADDRESS.
@@ -78,7 +78,7 @@ typedef struct
     __const char *dli_sname;	/* Name of nearest symbol.  */
     void *dli_saddr;		/* Exact value of nearest symbol.  */
   } Dl_info;
-extern int dladdr __P ((const void *__address, Dl_info *__info));
+extern int dladdr (const void *__address, Dl_info *__info) __THROW;
 
 /* To support profiling of shared objects it is a good idea to call
    the function found using `dlsym' using the following macro since
@@ -94,7 +94,7 @@ extern int dladdr __P ((const void *__address, Dl_info *__info));
   (_dl_mcount_wrapper_check (fctp), (*(fctp)) args)
 
 /* This function calls the profiling functions.  */
-extern void _dl_mcount_wrapper_check __P ((void *__selfpc));
+extern void _dl_mcount_wrapper_check (void *__selfpc) __THROW;
 #endif
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.
    This is the internal name for `sigsetjmp'.  */
-extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
+extern int __sigsetjmp (jmp_buf __env, int __savemask) __THROW;
 
 #ifndef	__FAVOR_BSD
 /* Set ENV to the current position and return 0, not saving the signal mask.
@@ -67,14 +67,14 @@ extern int __sigsetjmp __P ((jmp_buf __env, int __savemask));
 
 /* Jump to the environment saved in ENV, making the
    `setjmp' call there return VAL, or 1 if VAL is 0.  */
-extern void longjmp __P ((jmp_buf __env, int __val))
-     __attribute__ ((__noreturn__));
+extern void longjmp (jmp_buf __env, int __val)
+     __THROW __attribute__ ((__noreturn__));
 #if defined __USE_BSD || defined __USE_XOPEN
 /* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
    the signal mask.  But it is how ENV was saved that determines whether
    `longjmp' restores the mask; `_longjmp' is just an alias.  */
-extern void _longjmp __P ((jmp_buf __env, int __val))
-     __attribute__ ((__noreturn__));
+extern void _longjmp (jmp_buf __env, int __val)
+     __THROW __attribute__ ((__noreturn__));
 #endif
 
 
@@ -92,8 +92,8 @@ typedef jmp_buf sigjmp_buf;
    sigsetjmp call there return VAL, or 1 if VAL is 0.
    Restore the signal mask if that sigsetjmp call saved it.
    This is just an alias `longjmp'.  */
-extern void siglongjmp __P ((sigjmp_buf __env, int __val))
-     __attribute__ ((__noreturn__));
+extern void siglongjmp (sigjmp_buf __env, int __val)
+     __THROW __attribute__ ((__noreturn__));
 #endif /* Use POSIX.  */
 
 __END_DECLS

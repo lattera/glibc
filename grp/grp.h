@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,31 +57,31 @@ struct group
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Rewind the group-file stream.  */
-extern void setgrent __P ((void));
+extern void setgrent (void) __THROW;
 
 /* Close the group-file stream.  */
-extern void endgrent __P ((void));
+extern void endgrent (void) __THROW;
 
 /* Read an entry from the group-file stream, opening it if necessary.  */
-extern struct group *getgrent __P ((void));
+extern struct group *getgrent (void) __THROW;
 #endif
 
 #ifdef	__USE_SVID
 /* Read a group entry from STREAM.  */
-extern struct group *fgetgrent __P ((FILE *__stream));
+extern struct group *fgetgrent (FILE *__stream) __THROW;
 #endif
 
 #ifdef __USE_GNU
 /* Write the given entry onto the given stream.  */
-extern int putgrent __P ((__const struct group *__restrict __p,
-			  FILE *__restrict __f));
+extern int putgrent (__const struct group *__restrict __p,
+		     FILE *__restrict __f) __THROW;
 #endif
 
 /* Search for an entry with a matching group ID.  */
-extern struct group *getgrgid __P ((__gid_t __gid));
+extern struct group *getgrgid (__gid_t __gid) __THROW;
 
 /* Search for an entry with a matching group name.  */
-extern struct group *getgrnam __P ((__const char *__name));
+extern struct group *getgrnam (__const char *__name) __THROW;
 
 #if defined __USE_POSIX || defined __USE_MISC
 
@@ -100,30 +100,29 @@ extern struct group *getgrnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int getgrent_r __P ((struct group *__restrict __resultbuf,
-			    char *__restrict __buffer, size_t __buflen,
-			    struct group **__restrict __result));
+extern int getgrent_r (struct group *__restrict __resultbuf,
+		       char *__restrict __buffer, size_t __buflen,
+		       struct group **__restrict __result) __THROW;
 # endif
 
 /* Search for an entry with a matching group ID.  */
-extern int getgrgid_r __P ((__gid_t __gid,
-			    struct group *__restrict __resultbuf,
-			    char *__restrict __buffer, size_t __buflen,
-			    struct group **__restrict __result));
+extern int getgrgid_r (__gid_t __gid, struct group *__restrict __resultbuf,
+		       char *__restrict __buffer, size_t __buflen,
+		       struct group **__restrict __result) __THROW;
 
 /* Search for an entry with a matching group name.  */
-extern int getgrnam_r __P ((__const char *__restrict __name,
-			    struct group *__restrict __resultbuf,
-			    char *__restrict __buffer, size_t __buflen,
-			    struct group **__restrict __result));
+extern int getgrnam_r (__const char *__restrict __name,
+		       struct group *__restrict __resultbuf,
+		       char *__restrict __buffer, size_t __buflen,
+		       struct group **__restrict __result) __THROW;
 
 # ifdef	__USE_SVID
 /* Read a group entry from STREAM.  This function is not standardized
    an probably never will.  */
-extern int fgetgrent_r __P ((FILE *__restrict __stream,
-			     struct group *__restrict __resultbuf,
-			     char *__restrict __buffer, size_t __buflen,
-			     struct group **__restrict __result));
+extern int fgetgrent_r (FILE *__restrict __stream,
+			struct group *__restrict __resultbuf,
+			char *__restrict __buffer, size_t __buflen,
+			struct group **__restrict __result) __THROW;
 # endif
 
 #endif	/* POSIX or reentrant */
@@ -135,12 +134,12 @@ extern int fgetgrent_r __P ((FILE *__restrict __stream,
 # include <stddef.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-extern int setgroups __P ((size_t __n, __const __gid_t *__groups));
+extern int setgroups (size_t __n, __const __gid_t *__groups) __THROW;
 
 /* Initialize the group set for the current user
    by reading the group database and using all groups
    of which USER is a member.  Also include GROUP.  */
-extern int initgroups __P ((__const char *__user, __gid_t __group));
+extern int initgroups (__const char *__user, __gid_t __group) __THROW;
 
 #endif /* Use BSD.  */
 

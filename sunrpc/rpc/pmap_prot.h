@@ -94,14 +94,14 @@ struct pmap {
 	long unsigned pm_port;
 };
 
-extern bool_t xdr_pmap __P ((XDR *__xdrs, struct pmap *__regs));
+extern bool_t xdr_pmap (XDR *__xdrs, struct pmap *__regs) __THROW;
 
 struct pmaplist {
 	struct pmap	pml_map;
 	struct pmaplist *pml_next;
 };
 
-extern bool_t xdr_pmaplist __P ((XDR *__xdrs, struct pmaplist **__rp));
+extern bool_t xdr_pmaplist (XDR *__xdrs, struct pmaplist **__rp) __THROW;
 
 __END_DECLS
 

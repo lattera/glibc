@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,15 +37,15 @@ typedef void *nl_catd;
 typedef int nl_item;
 
 /* Open message catalog for later use, returning descriptor.  */
-extern nl_catd catopen __P ((__const char *__cat_name, int __flag));
+extern nl_catd catopen (__const char *__cat_name, int __flag) __THROW;
 
 /* Return translation with NUMBER in SET of CATALOG; if not found
    return STRING.  */
-extern char *catgets __P ((nl_catd __catalog, int __set, int __number,
-			   __const char *__string));
+extern char *catgets (nl_catd __catalog, int __set, int __number,
+		      __const char *__string) __THROW;
 
 /* Close message CATALOG.  */
-extern int catclose __P ((nl_catd __catalog));
+extern int catclose (nl_catd __catalog) __THROW;
 
 __END_DECLS
 

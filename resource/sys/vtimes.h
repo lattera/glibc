@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ struct vtimes
 /* If CURRENT is not NULL, write statistics for the current process into
    *CURRENT.  If CHILD is not NULL, write statistics for all terminated child
    processes into *CHILD.  Returns 0 for success, -1 for failure.  */
-extern int vtimes __P ((struct vtimes * __current, struct vtimes * __child));
+extern int vtimes (struct vtimes * __current, struct vtimes * __child) __THROW;
 
 __END_DECLS
 

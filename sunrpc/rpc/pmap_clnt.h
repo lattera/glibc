@@ -45,8 +45,7 @@
 
 __BEGIN_DECLS
 
-typedef bool_t (*resultproc_t) __PMT ((caddr_t resp,
-				       struct sockaddr_in *raddr));
+typedef bool_t (*resultproc_t) (caddr_t resp, struct sockaddr_in *raddr);
 
 /*
  * Usage:
@@ -70,30 +69,29 @@ typedef bool_t (*resultproc_t) __PMT ((caddr_t resp,
  *		address if the responder to the broadcast.
  */
 
-extern bool_t pmap_set __P ((__const u_long __program, __const u_long __vers,
-			     int __protocol, u_short __port));
-extern bool_t pmap_unset __P ((__const u_long __program, __const u_long __vers));
-extern struct pmaplist *pmap_getmaps __P ((struct sockaddr_in *__address));
-extern enum clnt_stat pmap_rmtcall __P ((struct sockaddr_in *__addr,
-					 __const u_long __prog,
-					 __const u_long __vers,
-					 __const u_long __proc,
-					 xdrproc_t __xdrargs,
-					 caddr_t __argsp, xdrproc_t __xdrres,
-					 caddr_t __resp, struct timeval __tout,
-					 u_long *__port_ptr));
-extern enum clnt_stat clnt_broadcast __P ((__const u_long __prog,
-					   __const u_long __vers,
-					   __const u_long __proc,
-					   xdrproc_t __xargs,
-					   caddr_t __argsp,
-					   xdrproc_t __xresults,
-					   caddr_t __resultsp,
-					   resultproc_t __eachresult));
-extern u_short pmap_getport __P ((struct sockaddr_in *__address,
-				  __const u_long __program,
-				  __const u_long __version,
-				  u_int __protocol));
+extern bool_t pmap_set (__const u_long __program, __const u_long __vers,
+			int __protocol, u_short __port) __THROW;
+extern bool_t pmap_unset (__const u_long __program, __const u_long __vers)
+     __THROW;
+extern struct pmaplist *pmap_getmaps (struct sockaddr_in *__address) __THROW;
+extern enum clnt_stat pmap_rmtcall (struct sockaddr_in *__addr,
+				    __const u_long __prog,
+				    __const u_long __vers,
+				    __const u_long __proc,
+				    xdrproc_t __xdrargs,
+				    caddr_t __argsp, xdrproc_t __xdrres,
+				    caddr_t __resp, struct timeval __tout,
+				    u_long *__port_ptr) __THROW;
+extern enum clnt_stat clnt_broadcast (__const u_long __prog,
+				      __const u_long __vers,
+				      __const u_long __proc, xdrproc_t __xargs,
+				      caddr_t __argsp, xdrproc_t __xresults,
+				      caddr_t __resultsp,
+				      resultproc_t __eachresult) __THROW;
+extern u_short pmap_getport (struct sockaddr_in *__address,
+			     __const u_long __program,
+			     __const u_long __version, u_int __protocol)
+     __THROW;
 
 __END_DECLS
 

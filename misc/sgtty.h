@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +30,10 @@ struct sgttyb;
 __BEGIN_DECLS
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
-extern int gtty __P ((int __fd, struct sgttyb *__params));
+extern int gtty patch(int __fd, struct sgttyb *__params) __THROW;
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
-extern int stty __P ((int __fd, __const struct sgttyb *__params));
+extern int stty (int __fd, __const struct sgttyb *__params) __THROW;
 
 
 __END_DECLS

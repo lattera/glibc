@@ -82,7 +82,7 @@ extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 #define	__isascii(c)	(((c) & ~0x7f) == 0)	/* If C is a 7 bit value.  */
 #define	__toascii(c)	((c) & 0x7f)		/* Mask off high bits.  */
 
-#define	__exctype(name)	extern int name __P ((int))
+#define	__exctype(name)	extern int name (int) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c);
@@ -106,27 +106,45 @@ __exctype (isblank);
 
 
 /* Return the lowercase version of C.  */
-extern int tolower __P ((int __c));
+extern int tolower (int __c) __THROW;
 
 /* Return the uppercase version of C.  */
-extern int toupper __P ((int __c));
+extern int toupper (int __c) __THROW;
 
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 
 /* Return nonzero iff C is in the ASCII set
    (i.e., is no more than 7 bits wide).  */
-extern int isascii __P ((int __c));
+extern int isascii (int __c) __THROW;
 
 /* Return the part of C that is in the ASCII set
    (i.e., the low-order 7 bits of C).  */
-extern int toascii __P ((int __c));
+extern int toascii (int __c) __THROW;
 
 /* These are the same as `toupper' and `tolower' except that they do not
    check the argument for being in the range of a `char'.  */
 __exctype (_toupper);
 __exctype (_tolower);
 #endif /* Use SVID or use misc.  */
+
+/* This code is needed for the optimized mapping functions.  */
+#define __tobody(c, f, a, args) \
+  (__extension__							      \
+   ({ int __res;							      \
+      if (sizeof (c) > 1)						      \
+	{								      \
+	  if (__builtin_constant_p (c))					      \
+	    {								      \
+	      int __c = (c);						      \
+	      __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
+	    }								      \
+	  else								      \
+	    __res = f args;						      \
+	}								      \
+      else								      \
+	__res = a[(int) (c)];						      \
+      __res; }))
 
 #ifndef	__NO_CTYPE
 # define isalnum(c)	__isctype((c), _ISalnum)
@@ -161,25 +179,8 @@ toupper (int __c) __THROW
 # endif
 
 # if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
-#  define __tobody(c, f, a) \
-  (__extension__							      \
-   ({ int __res;							      \
-      if (sizeof (c) > 1)						      \
-	{								      \
-	  if (__builtin_constant_p (c))					      \
-	    {								      \
-	      int __c = (c);						      \
-	      __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
-	    }								      \
-	  else								      \
-	    __res = f (c);						      \
-	}								      \
-      else								      \
-	__res = a[(int) (c)];						      \
-      __res; }))
-
-#  define tolower(c) __tobody (c, tolower, __ctype_tolower)
-#  define toupper(c) __tobody (c, toupper, __ctype_toupper)
+#  define tolower(c) __tobody (c, tolower, __ctype_tolower, (c))
+#  define toupper(c) __tobody (c, toupper, __ctype_toupper, (c))
 # endif	/* Optimizing gcc */
 
 # if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
@@ -211,13 +212,12 @@ toupper (int __c) __THROW
 
 /* These definitions are similar to the ones above but all functions
    take as an argument a handle for the locale which shall be used.  */
-# define __isctype_l(c, type, locale) \
+# ifdef __OPTIMIZE__
+#  define __isctype_l(c, type, locale) \
   ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
+# endif
 
-# define __tolower_l(c, locale)	((int) (locale)->__ctype_tolower[(int) (c)])
-# define __toupper_l(c, locale)	((int) (locale)->__ctype_toupper[(int) (c)])
-
-# define __exctype_l(name)	extern int name __P ((int, __locale_t))
+# define __exctype_l(name)	extern int name (int, __locale_t) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c, locale_t *locale);
@@ -239,10 +239,17 @@ __exctype_l (__isblank_l);
 
 
 /* Return the lowercase version of C in locale L.  */
-extern int __tolower_l __P ((int __c, __locale_t __l));
+extern int __tolower_l (int __c, __locale_t __l) __THROW;
 
 /* Return the uppercase version of C.  */
-extern int __toupper_l __P ((int __c, __locale_t __l));
+extern int __toupper_l (int __c, __locale_t __l) __THROW;
+
+# if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
+#  define __tolower_l(c, locale) \
+  __tobody (c, __tolower_l, (locale)->__ctype_tolower, (c, locale))
+#  define __toupper_l(c, locale) \
+  __tobody (c, __toupper_l, (locale)->__ctype_toupper, (c, locale))
+# endif	/* Optimizing gcc */
 
 
 # ifndef __NO_CTYPE

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-extern char *_itoa __P ((unsigned long long int value, char *buflim,
-			 unsigned int base, int upper_case));
+extern char *_itoa (unsigned long long int value, char *buflim,
+		    unsigned int base, int upper_case);
 
 static inline char * __attribute__ ((unused))
 _itoa_word (unsigned long value, char *buflim,

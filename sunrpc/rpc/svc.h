@@ -77,18 +77,18 @@ struct SVCXPRT {
   int xp_sock;
   u_short xp_port;		/* associated port number */
   const struct xp_ops {
-    bool_t	(*xp_recv) __PMT ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+    bool_t	(*xp_recv) (SVCXPRT *__xprt, struct rpc_msg *__msg);
 				/* receive incoming requests */
-    enum xprt_stat (*xp_stat) __PMT ((SVCXPRT *__xprt));
+    enum xprt_stat (*xp_stat) (SVCXPRT *__xprt);
 				/* get transport status */
-    bool_t	(*xp_getargs) __PMT ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				      caddr_t args_ptr)); /* get arguments */
-    bool_t	(*xp_reply) __PMT ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+    bool_t	(*xp_getargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
+			       caddr_t args_ptr); /* get arguments */
+    bool_t	(*xp_reply) (SVCXPRT *__xprt, struct rpc_msg *__msg);
 				/* send reply */
-    bool_t	(*xp_freeargs) __PMT ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				       caddr_t args_ptr));
+    bool_t	(*xp_freeargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
+				caddr_t args_ptr);
 				/* free mem allocated for args */
-    void	(*xp_destroy) __PMT ((SVCXPRT *__xprt));
+    void	(*xp_destroy) (SVCXPRT *__xprt);
 				/* destroy this struct */
   } *xp_ops;
   int		xp_addrlen;	 /* length of remote address */
@@ -156,7 +156,7 @@ struct svc_req {
 
 #ifndef __DISPATCH_FN_T
 #define __DISPATCH_FN_T
-typedef void (*__dispatch_fn_t) __PMT ((struct svc_req*, SVCXPRT*));
+typedef void (*__dispatch_fn_t) (struct svc_req*, SVCXPRT*);
 #endif
 
 /*
@@ -169,9 +169,9 @@ typedef void (*__dispatch_fn_t) __PMT ((struct svc_req*, SVCXPRT*));
  *	void (*dispatch)();
  *	rpcprot_t protocol;  like TCP or UDP, zero means do not register
  */
-extern bool_t svc_register __P ((SVCXPRT *__xprt, rpcprog_t __prog,
-				 rpcvers_t __vers, __dispatch_fn_t __dispatch,
-				 rpcprot_t __protocol));
+extern bool_t svc_register (SVCXPRT *__xprt, rpcprog_t __prog,
+			    rpcvers_t __vers, __dispatch_fn_t __dispatch,
+			    rpcprot_t __protocol) __THROW;
 
 /*
  * Service un-registration
@@ -180,7 +180,7 @@ extern bool_t svc_register __P ((SVCXPRT *__xprt, rpcprog_t __prog,
  *	rpcprog_t prog;
  *	rpcvers_t vers;
  */
-extern void svc_unregister __P ((rpcprog_t __prog, rpcvers_t __vers));
+extern void svc_unregister (rpcprog_t __prog, rpcvers_t __vers) __THROW;
 
 /*
  * Transport registration.
@@ -188,7 +188,7 @@ extern void svc_unregister __P ((rpcprog_t __prog, rpcvers_t __vers));
  * xprt_register(xprt)
  *	SVCXPRT *xprt;
  */
-extern void xprt_register __P ((SVCXPRT *__xprt));
+extern void xprt_register (SVCXPRT *__xprt) __THROW;
 
 /*
  * Transport un-register
@@ -196,7 +196,7 @@ extern void xprt_register __P ((SVCXPRT *__xprt));
  * xprt_unregister(xprt)
  *	SVCXPRT *xprt;
  */
-extern void xprt_unregister __P ((SVCXPRT *__xprt));
+extern void xprt_unregister (SVCXPRT *__xprt) __THROW;
 
 
 /*
@@ -225,23 +225,23 @@ extern void xprt_unregister __P ((SVCXPRT *__xprt));
  * deadlock the caller and server processes!
  */
 
-extern bool_t	svc_sendreply __P ((SVCXPRT *xprt, xdrproc_t __xdr_results,
-				    caddr_t __xdr_location));
+extern bool_t	svc_sendreply (SVCXPRT *xprt, xdrproc_t __xdr_results,
+			       caddr_t __xdr_location) __THROW;
 
-extern void	svcerr_decode __P ((SVCXPRT *__xprt));
+extern void	svcerr_decode (SVCXPRT *__xprt) __THROW;
 
-extern void	svcerr_weakauth __P ((SVCXPRT *__xprt));
+extern void	svcerr_weakauth (SVCXPRT *__xprt) __THROW;
 
-extern void	svcerr_noproc __P ((SVCXPRT *__xprt));
+extern void	svcerr_noproc (SVCXPRT *__xprt) __THROW;
 
-extern void	svcerr_progvers __P ((SVCXPRT *__xprt, rpcvers_t __low_vers,
-				      rpcvers_t __high_vers));
+extern void	svcerr_progvers (SVCXPRT *__xprt, rpcvers_t __low_vers,
+				 rpcvers_t __high_vers) __THROW;
 
-extern void	svcerr_auth __P ((SVCXPRT *__xprt, enum auth_stat __why));
+extern void	svcerr_auth (SVCXPRT *__xprt, enum auth_stat __why) __THROW;
 
-extern void	svcerr_noprog __P ((SVCXPRT *__xprt));
+extern void	svcerr_noprog (SVCXPRT *__xprt) __THROW;
 
-extern void	svcerr_systemerr __P ((SVCXPRT *__xprt));
+extern void	svcerr_systemerr (SVCXPRT *__xprt) __THROW;
 
 /*
  * Lowest level dispatching -OR- who owns this process anyway.
@@ -268,12 +268,12 @@ extern fd_set svc_fdset;
  * a small program implemented by the svc_rpc implementation itself;
  * also see clnt.h for protocol numbers.
  */
-extern void svc_getreq __P ((int __rdfds));
-extern void svc_getreq_common __P ((const int __fd));
-extern void svc_getreqset __P ((fd_set *__readfds));
-extern void svc_getreq_poll __P ((struct pollfd *, const int));
-extern void svc_exit __P ((void));
-extern void svc_run __P ((void));
+extern void svc_getreq (int __rdfds) __THROW;
+extern void svc_getreq_common (const int __fd) __THROW;
+extern void svc_getreqset (fd_set *__readfds) __THROW;
+extern void svc_getreq_poll (struct pollfd *, const int) __THROW;
+extern void svc_exit (void) __THROW;
+extern void svc_run (void) __THROW;
 
 /*
  * Socket to use on svcxxx_create call to get default socket
@@ -287,27 +287,27 @@ extern void svc_run __P ((void));
 /*
  * Memory based rpc for testing and timing.
  */
-extern SVCXPRT *svcraw_create __P ((void));
+extern SVCXPRT *svcraw_create (void) __THROW;
 
 /*
  * Udp based rpc.
  */
-extern SVCXPRT *svcudp_create __P ((int __sock));
-extern SVCXPRT *svcudp_bufcreate __P ((int __sock, u_int __sendsz,
-				       u_int __recvsz));
+extern SVCXPRT *svcudp_create (int __sock) __THROW;
+extern SVCXPRT *svcudp_bufcreate (int __sock, u_int __sendsz, u_int __recvsz)
+     __THROW;
 
 /*
  * Tcp based rpc.
  */
-extern SVCXPRT *svctcp_create __P ((int __sock, u_int __sendsize,
-				    u_int __recvsize));
+extern SVCXPRT *svctcp_create (int __sock, u_int __sendsize, u_int __recvsize)
+     __THROW;
 
 
 /*
  * Unix based rpc.
  */
-extern SVCXPRT *svcunix_create __P ((int __sock, u_int __sendsize,
-				     u_int __recvsize, char *__path));
+extern SVCXPRT *svcunix_create (int __sock, u_int __sendsize, u_int __recvsize,
+				char *__path) __THROW;
 
 
 __END_DECLS

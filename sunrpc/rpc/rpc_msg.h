@@ -170,7 +170,7 @@ struct rpc_msg {
  * 	XDR *xdrs;
  * 	struct rpc_msg *cmsg;
  */
-extern bool_t	xdr_callmsg __P ((XDR *__xdrs, struct rpc_msg *__cmsg));
+extern bool_t	xdr_callmsg (XDR *__xdrs, struct rpc_msg *__cmsg) __THROW;
 
 /*
  * XDR routine to pre-serialize the static part of a rpc message.
@@ -178,7 +178,7 @@ extern bool_t	xdr_callmsg __P ((XDR *__xdrs, struct rpc_msg *__cmsg));
  * 	XDR *xdrs;
  * 	struct rpc_msg *cmsg;
  */
-extern bool_t	xdr_callhdr __P ((XDR *__xdrs, struct rpc_msg *__cmsg));
+extern bool_t	xdr_callhdr (XDR *__xdrs, struct rpc_msg *__cmsg) __THROW;
 
 /*
  * XDR routine to handle a rpc reply.
@@ -186,7 +186,7 @@ extern bool_t	xdr_callhdr __P ((XDR *__xdrs, struct rpc_msg *__cmsg));
  * 	XDR *xdrs;
  * 	struct rpc_msg *rmsg;
  */
-extern bool_t	xdr_replymsg __P ((XDR *__xdrs, struct rpc_msg *__rmsg));
+extern bool_t	xdr_replymsg (XDR *__xdrs, struct rpc_msg *__rmsg) __THROW;
 
 /*
  * Fills in the error part of a reply message.
@@ -194,8 +194,8 @@ extern bool_t	xdr_replymsg __P ((XDR *__xdrs, struct rpc_msg *__rmsg));
  * 	struct rpc_msg *msg;
  * 	struct rpc_err *error;
  */
-extern void	_seterr_reply __P ((struct rpc_msg *__msg,
-				    struct rpc_err *__error));
+extern void	_seterr_reply (struct rpc_msg *__msg, struct rpc_err *__error)
+     __THROW;
 
 __END_DECLS
 

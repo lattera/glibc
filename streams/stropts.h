@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,38 +29,38 @@
 __BEGIN_DECLS
 
 /* Test whether FILDES is associated with a STREAM-based file.  */
-extern int isastream __P ((int __fildes));
+extern int isastream (int __fildes) __THROW;
 
 /* Receive next message from a STREAMS file.  */
-extern int getmsg __P ((int __fildes, struct strbuf *__ctlptr,
-			struct strbuf *__dataptr, int *__flagsp));
+extern int getmsg (int __fildes, struct strbuf *__ctlptr,
+		   struct strbuf *__dataptr, int *__flagsp) __THROW;
 
 /* Receive next message from a STREAMS file, with *FLAGSP allowing to
    control which message.  */
-extern int getpmsg __P ((int __fildes, struct strbuf *__ctlptr,
-			 struct strbuf *__dataptr, int *__bandp,
-			 int *__flagsp));
+extern int getpmsg (int __fildes, struct strbuf *__ctlptr,
+		    struct strbuf *__dataptr, int *__bandp, int *__flagsp)
+     __THROW;
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    One argument may follow; its presence and type depend on REQUEST.
    Return value depends on REQUEST.  Usually -1 indicates error.  */
-extern int ioctl __P ((int __fd, unsigned long int __request, ...));
+extern int ioctl (int __fd, unsigned long int __request, ...) __THROW;
 
 /* Send a message on a STREAM.  */
-extern int putmsg __P ((int __fildes, __const struct strbuf *__ctlptr,
-			__const struct strbuf *__dataptr, int __flags));
+extern int putmsg (int __fildes, __const struct strbuf *__ctlptr,
+		   __const struct strbuf *__dataptr, int __flags) __THROW;
 
 /* Send a message on a STREAM to the BAND.  */
-extern int putpmsg __P ((int __fildes, __const struct strbuf *__ctlptr,
-			 __const struct strbuf *__dataptr, int __band,
-			 int __flags));
+extern int putpmsg (int __fildes, __const struct strbuf *__ctlptr,
+		    __const struct strbuf *__dataptr, int __band, int __flags)
+     __THROW;
 
 /* Attach a STREAMS-based file descriptor FILDES to a file PATH in the
    file system name space.  */
-extern int fattach __P ((int __fildes, __const char *__path));
+extern int fattach (int __fildes, __const char *__path) __THROW;
 
 /* Detach a name PATH from a STREAMS-based file descriptor.  */
-extern int fdetach __P ((__const char *__path));
+extern int fdetach (__const char *__path) __THROW;
 
 __END_DECLS
 

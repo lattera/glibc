@@ -3,6 +3,7 @@
 	* manager.c (__pthread_manager) [REQ_POST]: Use __new_sem_post
 	directly instead of calling sem_post which should not be necessary
 	but is faster and might help in some case to work around problems.
+	Patch by khendricks@ivey.uwo.ca [libc/1382].
 
 1999-10-08  Andreas Schwab  <schwab@suse.de>
 

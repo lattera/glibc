@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,10 +94,10 @@ struct lconv
 
 
 /* Set and/or return the current locale.  */
-extern char *setlocale __P ((int __category, __const char *__locale));
+extern char *setlocale (int __category, __const char *__locale) __THROW;
 
 /* Return the numeric/monetary information for the current locale.  */
-extern struct lconv *localeconv __P ((void));
+extern struct lconv *localeconv (void) __THROW;
 
 #ifdef	__USE_GNU
 /* The concept of one static locale per category is not very well
@@ -120,17 +120,16 @@ extern struct lconv *localeconv __P ((void));
    I.e., 1 << LC_CTYPE means to load data for this category.  If
    BASE is non-null the appropriate category information in the BASE
    record is replaced.  */
-extern __locale_t __newlocale __P ((int __category_mask,
-				    __const char *__locale,
-				    __locale_t __base));
+extern __locale_t __newlocale (int __category_mask, __const char *__locale,
+			       __locale_t __base) __THROW;
 
 /* Return a duplicate of the set of locale in DATASET.  All usage
    counters are increased if necessary.  */
-extern __locale_t __duplocale __P ((__locale_t __dataset));
+extern __locale_t __duplocale (__locale_t __dataset) __THROW;
 
 /* Free the data associated with a locale dataset previously returned
    by a call to `setlocale_r'.  */
-extern void __freelocale __P ((__locale_t __dataset));
+extern void __freelocale (__locale_t __dataset) __THROW;
 #endif
 
 __END_DECLS

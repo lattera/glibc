@@ -60,25 +60,24 @@ struct printf_info
    The function should return the number of characters written,
    or -1 for errors.  */
 
-typedef int printf_function __PMT ((FILE *__stream,
-				    __const struct printf_info *__info,
-				    __const void *__const *__args));
+typedef int printf_function (FILE *__stream,
+			     __const struct printf_info *__info,
+			     __const void *__const *__args);
 
 /* Type of a printf specifier-arginfo function.
    INFO gives information about the format specification.
    N, ARGTYPES, and return value are as for printf_parse_format.  */
 
-typedef int printf_arginfo_function __PMT ((__const struct printf_info *__info,
-					    size_t __n,
-					    int *__argtypes));
+typedef int printf_arginfo_function (__const struct printf_info *__info,
+				     size_t __n, int *__argtypes);
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be
    specified to determine how many arguments a SPEC conversion requires and
    what their types are.  */
 
-extern int register_printf_function __P ((int __spec, printf_function __func,
-					  printf_arginfo_function __arginfo));
+extern int register_printf_function (int __spec, printf_function __func,
+				     printf_arginfo_function __arginfo);
 
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
@@ -92,9 +91,8 @@ extern int register_printf_function __P ((int __spec, printf_function __func,
    array it is passed with the types of the arguments it wants, and return
    the number of arguments it wants.  */
 
-extern size_t parse_printf_format __P ((__const char *__restrict __fmt,
-					size_t __n,
-					int *__restrict __argtypes));
+extern size_t parse_printf_format (__const char *__restrict __fmt, size_t __n,
+				   int *__restrict __argtypes) __THROW;
 
 
 /* Codes returned by `parse_printf_format' for basic types.
@@ -131,14 +129,14 @@ enum
    of magnitude used for numbers ('k' for kilo, 'm' for mega etc).  If
    the format specifier is a uppercase character powers of 1000 are
    used.  Otherwise powers of 1024.  */
-extern int printf_size __P ((FILE *__restrict __fp,
-			     __const struct printf_info *__info,
-			     __const void *__const *__restrict __args));
+extern int printf_size (FILE *__restrict __fp,
+			__const struct printf_info *__info,
+			__const void *__const *__restrict __args) __THROW;
 
 /* This is the appropriate argument information function for `printf_size'.  */
-extern int printf_size_info __P ((__const struct printf_info *__restrict
-				  __info, size_t __n,
-				  int *__restrict __argtypes));
+extern int printf_size_info (__const struct printf_info *__restrict
+			     __info, size_t __n, int *__restrict __argtypes)
+     __THROW;
 
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ enum __vlimit_resource
 
 /* Set the soft limit for RESOURCE to be VALUE.
    Returns 0 for success, -1 for failure.  */
-extern int vlimit __P ((enum __vlimit_resource __resource, int __value));
+extern int vlimit (enum __vlimit_resource __resource, int __value) __THROW;
 
 
 __END_DECLS

@@ -250,12 +250,12 @@ typedef __intptr_t intptr_t;
 #define	F_OK	0		/* Test for existence.  */
 
 /* Test for access to NAME using the real UID and real GID.  */
-extern int access __P ((__const char *__name, int __type));
+extern int access (__const char *__name, int __type) __THROW;
 
 #ifdef __USE_GNU
 /* Test for access to NAME using the effective UID and GID
    (as normal file operations use).  */
-extern int euidaccess __P ((__const char *__name, int __type));
+extern int euidaccess (__const char *__name, int __type) __THROW;
 #endif
 
 
@@ -279,59 +279,60 @@ extern int euidaccess __P ((__const char *__name, int __type));
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
-extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
+extern __off_t __lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #ifndef __USE_FILE_OFFSET64
-extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
+extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #else
 # ifdef __REDIRECT
 extern __off64_t __REDIRECT (lseek,
-			     __P ((int __fd, __off64_t __offset,
-				   int __whence)),
+			     (int __fd, __off64_t __offset, int __whence)
+			     __THROW,
 			     lseek64);
 # else
 #  define lseek lseek64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
+extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence) __THROW;
 #endif
 
 /* Close the file descriptor FD.  */
-extern int __close __P ((int __fd));
-extern int close __P ((int __fd));
+extern int __close (int __fd) __THROW;
+extern int close (int __fd) __THROW;
 
 /* Read NBYTES into BUF from FD.  Return the
    number read, -1 for errors or 0 for EOF.  */
-extern ssize_t __read __P ((int __fd, __ptr_t __buf, size_t __nbytes));
-extern ssize_t read __P ((int __fd, __ptr_t __buf, size_t __nbytes));
+extern ssize_t __read (int __fd, void *__buf, size_t __nbytes) __THROW;
+extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __THROW;
 
 /* Write N bytes of BUF to FD.  Return the number written, or -1.  */
-extern ssize_t __write __P ((int __fd, __const __ptr_t __buf, size_t __n));
-extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
+extern ssize_t __write (int __fd, __const void *__buf, size_t __n) __THROW;
+extern ssize_t write (int __fd, __const void *__buf, size_t __n) __THROW;
 
 #ifdef __USE_UNIX98
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
-extern ssize_t __pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			       __off64_t __offset));
+extern ssize_t __pread64 (int __fd, void *__buf, size_t __nbytes,
+			  __off64_t __offset) __THROW;
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
-extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
-				__off64_t __offset));
+extern ssize_t __pwrite64 (int __fd, __const void *__buf, size_t __n,
+			   __off64_t __offset) __THROW;
 
 # ifndef __USE_FILE_OFFSET64
-extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			   __off_t __offset));
-extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
-			    __off_t __offset));
+extern ssize_t pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+     __THROW;
+extern ssize_t pwrite (int __fd, __const void *__buf, size_t __n,
+		       __off_t __offset) __THROW;
 # else
 #  ifdef __REDIRECT
-extern ssize_t __REDIRECT (pread, __P ((int __fd, __ptr_t __buf,
-					size_t __nbytes,__off64_t __offset)),
+extern ssize_t __REDIRECT (pread, (int __fd, void *__buf, size_t __nbytes,
+				   __off64_t __offset) __THROW,
 			   pread64);
-extern ssize_t __REDIRECT (pwrite, __P ((int __fd, __const __ptr_t __buf,
-					 size_t __nbytes, __off64_t __offset)),
+extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
+				    size_t __nbytes, __off64_t __offset)
+			   __THROW,
 			pwrite64);
 #  else
 #   define pread pread64
@@ -340,10 +341,10 @@ extern ssize_t __REDIRECT (pwrite, __P ((int __fd, __const __ptr_t __buf,
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			     __off64_t __offset));
-extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
-			      __off64_t __offset));
+extern ssize_t pread64 (int __fd, void *__buf, size_t __nbytes,
+			__off64_t __offset) __THROW;
+extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
+			 __off64_t __offset) __THROW;
 # endif
 #endif
 
@@ -351,7 +352,7 @@ extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
    If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
-extern int pipe __P ((int __pipedes[2]));
+extern int pipe (int __pipedes[2]) __THROW;
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -360,7 +361,7 @@ extern int pipe __P ((int __pipedes[2]));
    There is no return value to indicate an error, but you can set `errno'
    to 0 and check its value after calling `alarm', and this might tell you.
    The signal may come late due to processor scheduling.  */
-extern unsigned int alarm __P ((unsigned int __seconds));
+extern unsigned int alarm (unsigned int __seconds) __THROW;
 
 /* Make the process sleep for SECONDS seconds, or until a signal arrives
    and is not ignored.  The function returns the number of seconds less
@@ -369,49 +370,49 @@ extern unsigned int alarm __P ((unsigned int __seconds));
    SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
-extern unsigned int sleep __P ((unsigned int __seconds));
+extern unsigned int sleep (unsigned int __seconds) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set an alarm to go off (generating a SIGALRM signal) in VALUE
    microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
    timer is reset to go off every INTERVAL microseconds thereafter.
    Returns the number of microseconds remaining before the alarm.  */
-extern __useconds_t ualarm __P ((__useconds_t __value,
-				 __useconds_t __interval));
+extern __useconds_t ualarm (__useconds_t __value, __useconds_t __interval)
+     __THROW;
 
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
    or ignored.  */
-extern void usleep __P ((__useconds_t __useconds));
+extern void usleep (__useconds_t __useconds) __THROW;
 #endif
 
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets `errno' to EINTR.  */
-extern int pause __P ((void));
+extern int pause (void) __THROW;
 
 
 /* Change the owner and group of FILE.  */
-extern int chown __P ((__const char *__file, __uid_t __owner,
-		       __gid_t __group));
+extern int chown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the owner and group of the file that FD is open on.  */
-extern int fchown __P ((int __fd, __uid_t __owner, __gid_t __group));
+extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
 
 
 /* Change owner and group of FILE, if it is a symbolic
    link the ownership of the symbolic link is changed.  */
-extern int lchown __P ((__const char *__file, __uid_t __owner,
-			__gid_t __group));
+extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
+     __THROW;
 
 #endif /* Use BSD || X/Open Unix.  */
 
 /* Change the process's working directory to PATH.  */
-extern int chdir __P ((__const char *__path));
+extern int chdir (__const char *__path) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the process's working directory to the one FD is open on.  */
-extern int fchdir __P ((int __fd));
+extern int fchdir (int __fd) __THROW;
 #endif
 
 /* Get the pathname of the current working directory,
@@ -421,28 +422,28 @@ extern int fchdir __P ((int __fd));
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
-extern char *getcwd __P ((char *__buf, size_t __size));
+extern char *getcwd (char *__buf, size_t __size) __THROW;
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the current directory name.
    If the environment variable `PWD' is set, and its value is correct,
    that value is used.  */
-extern char *get_current_dir_name __P ((void));
+extern char *get_current_dir_name (void) __THROW;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
-extern char *getwd __P ((char *__buf));
+extern char *getwd (char *__buf) __THROW;
 #endif
 
 
 /* Duplicate FD, returning a new file descriptor on the same file.  */
-extern int dup __P ((int __fd));
+extern int dup (int __fd) __THROW;
 
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
-extern int dup2 __P ((int __fd, int __fd2));
+extern int dup2 (int __fd, int __fd2) __THROW;
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
@@ -453,47 +454,46 @@ extern char **environ;
 
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-extern int execve __P ((__const char *__path, char *__const __argv[],
-			char *__const __envp[]));
+extern int execve (__const char *__path, char *__const __argv[],
+		   char *__const __envp[]) __THROW;
 
 #ifdef __USE_GNU
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
-extern int fexecve __P ((int __fd,
-			 char *__const __argv[], char *__const __envp[]));
-
+extern int fexecve (int __fd, char *__const __argv[], char *__const __envp[])
+     __THROW;
 #endif
 
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
-extern int execv __P ((__const char *__path, char *__const __argv[]));
+extern int execv (__const char *__path, char *__const __argv[]) __THROW;
 
 /* Execute PATH with all arguments after PATH until a NULL pointer,
    and the argument after that for environment.  */
-extern int execle __P ((__const char *__path, __const char *__arg, ...));
+extern int execle (__const char *__path, __const char *__arg, ...) __THROW;
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */
-extern int execl __P ((__const char *__path, __const char *__arg, ...));
+extern int execl (__const char *__path, __const char *__arg, ...) __THROW;
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
-extern int execvp __P ((__const char *__file, char *__const __argv[]));
+extern int execvp (__const char *__file, char *__const __argv[]) __THROW;
 
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
-extern int execlp __P ((__const char *__file, __const char *__arg, ...));
+extern int execlp (__const char *__file, __const char *__arg, ...) __THROW;
 
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Add INC to priority of the current process.  */
-extern int nice __P ((int __inc));
+extern int nice (int __inc) __THROW;
 #endif
 
 
 /* Terminate program execution with the low-order 8 bits of STATUS.  */
-extern void _exit __PMT ((int __status)) __attribute__ ((__noreturn__));
+extern void _exit (int __status) __attribute__ ((__noreturn__));
 
 
 /* Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
@@ -502,51 +502,51 @@ extern void _exit __PMT ((int __status)) __attribute__ ((__noreturn__));
 #include <bits/confname.h>
 
 /* Get file-specific configuration information about PATH.  */
-extern long int pathconf __P ((__const char *__path, int __name));
+extern long int pathconf (__const char *__path, int __name) __THROW;
 
 /* Get file-specific configuration about descriptor FD.  */
-extern long int fpathconf __P ((int __fd, int __name));
+extern long int fpathconf (int __fd, int __name) __THROW;
 
 /* Get the value of the system variable NAME.  */
-extern long int sysconf __P ((int __name));
+extern long int sysconf (int __name) __THROW;
 
 #ifdef	__USE_POSIX2
 /* Get the value of the string-valued system variable NAME.  */
-extern size_t confstr __P ((int __name, char *__buf, size_t __len));
+extern size_t confstr (int __name, char *__buf, size_t __len) __THROW;
 #endif
 
 
 /* Get the process ID of the calling process.  */
-extern __pid_t __getpid __P ((void));
-extern __pid_t getpid __P ((void));
+extern __pid_t __getpid (void) __THROW;
+extern __pid_t getpid (void) __THROW;
 
 /* Get the process ID of the calling process's parent.  */
-extern __pid_t getppid __P ((void));
+extern __pid_t getppid (void) __THROW;
 
 /* Get the process group ID of the calling process.
    This function is different on old BSD. */
 #ifndef __FAVOR_BSD
-extern __pid_t getpgrp __P ((void));
+extern __pid_t getpgrp (void) __THROW;
 #else
 # ifdef __REDIRECT
-extern __pid_t __REDIRECT (getpgrp, __P ((__pid_t __pid)), __getpgid);
+extern __pid_t __REDIRECT (getpgrp, (__pid_t __pid) __THROW, __getpgid);
 # else
 #  define getpgrp __getpgid
 # endif
 #endif
 
 /* Get the process group ID of process PID.  */
-extern __pid_t __getpgid __P ((__pid_t __pid));
+extern __pid_t __getpgid (__pid_t __pid) __THROW;
 #ifdef __USE_XOPEN_EXTENDED
-extern __pid_t getpgid __P ((__pid_t __pid));
+extern __pid_t getpgid (__pid_t __pid) __THROW;
 #endif
 
 
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
-extern int __setpgid __P ((__pid_t __pid, __pid_t __pgid));
-extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
+extern int __setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
+extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Both System V and BSD have `setpgrp' functions, but with different
@@ -563,13 +563,13 @@ extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
 /* Set the process group ID of the calling process to its own PID.
    This is exactly the same as `setpgid (0, 0)'.  */
-extern int setpgrp __P ((void));
+extern int setpgrp (void) __THROW;
 
 # else
 
 /* Another name for `setpgid' (above).  */
 #  ifdef __REDIRECT
-extern int __REDIRECT (setpgrp, __P ((__pid_t __pid, __pid_t __pgrp)),
+extern int __REDIRECT (setpgrp, (__pid_t __pid, __pid_t __pgrp) __THROW,
 		       setpgid);
 #  else
 #   define setpgrp setpgid
@@ -581,143 +581,143 @@ extern int __REDIRECT (setpgrp, __P ((__pid_t __pid, __pid_t __pgrp)),
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
-extern __pid_t setsid __P ((void));
+extern __pid_t setsid (void) __THROW;
 
 #ifdef __USE_XOPEN_EXTENDED
 /* Return the session ID of the given process.  */
-extern __pid_t getsid __P ((__pid_t __pid));
+extern __pid_t getsid (__pid_t __pid) __THROW;
 #endif
 
 /* Get the real user ID of the calling process.  */
-extern __uid_t getuid __P ((void));
+extern __uid_t getuid (void) __THROW;
 
 /* Get the effective user ID of the calling process.  */
-extern __uid_t geteuid __P ((void));
+extern __uid_t geteuid (void) __THROW;
 
 /* Get the real group ID of the calling process.  */
-extern __gid_t getgid __P ((void));
+extern __gid_t getgid (void) __THROW;
 
 /* Get the effective group ID of the calling process.  */
-extern __gid_t getegid __P ((void));
+extern __gid_t getegid (void) __THROW;
 
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
-extern int getgroups __P ((int __size, __gid_t __list[]));
+extern int getgroups (int __size, __gid_t __list[]) __THROW;
 
 #ifdef	__USE_GNU
 /* Return nonzero iff the calling process is in group GID.  */
-extern int group_member __P ((__gid_t __gid));
+extern int group_member (__gid_t __gid) __THROW;
 #endif
 
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
-extern int setuid __P ((__uid_t __uid));
+extern int setuid (__uid_t __uid) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
-extern int setreuid __P ((__uid_t __ruid, __uid_t __euid));
+extern int setreuid (__uid_t __ruid, __uid_t __euid) __THROW;
 #endif
 
 #ifdef	__USE_BSD
 /* Set the effective user ID of the calling process to UID.  */
-extern int seteuid __P ((__uid_t __uid));
+extern int seteuid (__uid_t __uid) __THROW;
 #endif /* Use BSD.  */
 
 /* Set the group ID of the calling process to GID.
    If the calling process is the super-user, set the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
-extern int setgid __P ((__gid_t __gid));
+extern int setgid (__gid_t __gid) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
-extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
+extern int setregid (__gid_t __rgid, __gid_t __egid) __THROW;
 #endif
 
 #ifdef __USE_BSD
 /* Set the effective group ID of the calling process to GID.  */
-extern int setegid __P ((__gid_t __gid));
+extern int setegid (__gid_t __gid) __THROW;
 #endif /* Use BSD.  */
 
 
 /* Clone the calling process, creating an exact copy.
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-extern __pid_t __fork __P ((void));
-extern __pid_t fork __P ((void));
+extern __pid_t __fork (void) __THROW;
+extern __pid_t fork (void) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-extern __pid_t vfork __P ((void));
+extern __pid_t vfork (void) __THROW;
 #endif /* Use BSD. */
 
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
-extern char *ttyname __P ((int __fd));
+extern char *ttyname (int __fd) __THROW;
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, otherwise an error number.  */
-extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
+extern int ttyname_r (int __fd, char *__buf, size_t __buflen) __THROW;
 
 /* Return 1 if FD is a valid descriptor associated
    with a terminal, zero if not.  */
-extern int isatty __P ((int __fd));
+extern int isatty (int __fd) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Return the index into the active-logins file (utmp) for
    the controlling terminal.  */
-extern int ttyslot __P ((void));
+extern int ttyslot (void) __THROW;
 #endif
 
 
 /* Make a link to FROM named TO.  */
-extern int link __P ((__const char *__from, __const char *__to));
+extern int link (__const char *__from, __const char *__to) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Make a symbolic link to FROM named TO.  */
-extern int symlink __P ((__const char *__from, __const char *__to));
+extern int symlink (__const char *__from, __const char *__to) __THROW;
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-extern int readlink __P ((__const char *__path, char *__buf, size_t __len));
+extern int readlink (__const char *__path, char *__buf, size_t __len) __THROW;
 #endif /* Use BSD.  */
 
 /* Remove the link NAME.  */
-extern int unlink __P ((__const char *__name));
+extern int unlink (__const char *__name) __THROW;
 
 /* Remove the directory PATH.  */
-extern int rmdir __P ((__const char *__path));
+extern int rmdir (__const char *__path) __THROW;
 
 
 /* Return the foreground process group ID of FD.  */
-extern __pid_t tcgetpgrp __P ((int __fd));
+extern __pid_t tcgetpgrp (int __fd) __THROW;
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
-extern int tcsetpgrp __P ((int __fd, __pid_t __pgrp_id));
+extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
 
 
 /* Return the login name of the user.  */
-extern char *getlogin __P ((void));
+extern char *getlogin (void) __THROW;
 #ifdef __USE_REENTRANT
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
-extern int getlogin_r __P ((char *__name, size_t __name_len));
+extern int getlogin_r (char *__name, size_t __name_len) __THROW;
 #endif
 
 #ifdef	__USE_BSD
 /* Set the login name returned by `getlogin'.  */
-extern int setlogin __P ((__const char *__name));
+extern int setlogin (__const char *__name) __THROW;
 #endif
 
 
@@ -735,35 +735,35 @@ extern int setlogin __P ((__const char *__name));
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-extern int gethostname __P ((char *__name, size_t __len));
+extern int gethostname (char *__name, size_t __len) __THROW;
 
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
-extern int sethostname __P ((__const char *__name, size_t __len));
+extern int sethostname (__const char *__name, size_t __len) __THROW;
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */
-extern int sethostid __P ((long int __id));
+extern int sethostid (long int __id) __THROW;
 
 
 /* Get and set the NIS (aka YP) domain name, if any.
    Called just like `gethostname' and `sethostname'.
    The NIS domain name is usually the empty string when not using NIS.  */
-extern int getdomainname __P ((char *__name, size_t __len));
-extern int setdomainname __P ((__const char *__name, size_t __len));
+extern int getdomainname (char *__name, size_t __len) __THROW;
+extern int setdomainname (__const char *__name, size_t __len) __THROW;
 
 
 /* Make all changes done to FD actually appear on disk.  */
-extern int fsync __P ((int __fd));
+extern int fsync (int __fd) __THROW;
 
 
 /* Revoke access permissions to all processes currently communicating
    with the control terminal, and then send a SIGHUP signal to the process
    group of the control terminal.  */
-extern int vhangup __P ((void));
+extern int vhangup (void) __THROW;
 
 /* Revoke the access of all descriptors currently open on FILE.  */
-extern int revoke __P ((__const char *__file));
+extern int revoke (__const char *__file) __THROW;
 
 
 /* Enable statistical profiling, writing samples of the PC into at most
@@ -771,34 +771,34 @@ extern int revoke __P ((__const char *__file));
    is enabled, the system examines the user PC and increments
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
-extern int profil __P ((unsigned short int *__sample_buffer, size_t __size,
-			size_t __offset, unsigned int __scale));
+extern int profil (unsigned short int *__sample_buffer, size_t __size,
+		   size_t __offset, unsigned int __scale) __THROW;
 
 
 /* Turn accounting on if NAME is an existing file.  The system will then write
    a record for each process as it terminates, to this file.  If NAME is NULL,
    turn accounting off.  This call is restricted to the super-user.  */
-extern int acct __P ((__const char *__name));
+extern int acct (__const char *__name) __THROW;
 
 /* Make PATH be the root directory (the starting point for absolute paths).
    This call is restricted to the super-user.  */
-extern int chroot __P ((__const char *__path));
+extern int chroot (__const char *__path) __THROW;
 
 
 /* Successive calls return the shells listed in `/etc/shells'.  */
-extern char *getusershell __P ((void));
-extern void endusershell __P ((void)); /* Discard cached info.  */
-extern void setusershell __P ((void)); /* Rewind and re-read the file.  */
+extern char *getusershell (void) __THROW;
+extern void endusershell (void) __THROW; /* Discard cached info.  */
+extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
 
 
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
-extern char *getpass __P ((__const char *__prompt));
+extern char *getpass (__const char *__prompt) __THROW;
 
 /* Put the program in the background, and dissociate from the controlling
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
-extern int daemon __P ((int __nochdir, int __noclose));
+extern int daemon (int __nochdir, int __noclose) __THROW;
 
 #endif /* Use BSD || X/Open.  */
 
@@ -806,54 +806,54 @@ extern int daemon __P ((int __nochdir, int __noclose));
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
 /* Return the current machine's Internet number.  */
-extern long int gethostid __P ((void));
+extern long int gethostid (void) __THROW;
 
 /* Make all changes done to all files actually appear on disk.  */
-extern int sync __P ((void));
+extern int sync (void) __THROW;
 
 
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
-extern int __getpagesize __P ((void));
-extern int getpagesize __P ((void));
+extern int __getpagesize (void) __THROW;
+extern int getpagesize (void) __THROW;
 
 
 /* Truncate FILE to LENGTH bytes.  */
 #ifndef __USE_FILE_OFFSET64
-extern int truncate __P ((__const char *__file, __off_t __length));
+extern int truncate (__const char *__file, __off_t __length) __THROW;
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (truncate,
-		       __P ((__const char *__file, __off64_t __length)),
+		       (__const char *__file, __off64_t __length) __THROW,
 		       truncate64);
 # else
 #  define truncate truncate64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int truncate64 __P ((__const char *__file, __off64_t __length));
+extern int truncate64 (__const char *__file, __off64_t __length) __THROW;
 #endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
-extern int __ftruncate __P ((int __fd, __off_t __length));
+extern int __ftruncate (int __fd, __off_t __length) __THROW;
 #ifndef __USE_FILE_OFFSET64
-extern int ftruncate __P ((int __fd, __off_t __length));
+extern int ftruncate (int __fd, __off_t __length) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (ftruncate, __P ((int __fd, __off64_t __length)),
+extern int __REDIRECT (ftruncate, (int __fd, __off64_t __length) __THROW,
 		       ftruncate64);
 # else
 #  define ftruncate ftruncate64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int ftruncate64 __P ((int __fd, __off64_t __length));
+extern int ftruncate64 (int __fd, __off64_t __length) __THROW;
 #endif
 
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
-extern int getdtablesize __P ((void));
+extern int getdtablesize (void) __THROW;
 
 #endif /* Use BSD || X/Open Unix.  */
 
@@ -862,7 +862,7 @@ extern int getdtablesize __P ((void));
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
-extern int brk __P ((__ptr_t __addr));
+extern int brk (void *__addr) __THROW;
 
 # define __need_ptrdiff_t
 # include <stddef.h>
@@ -871,8 +871,8 @@ extern int brk __P ((__ptr_t __addr));
    If successful, returns the address the previous end of data space
    (i.e. the beginning of the new space, if DELTA > 0);
    returns (void *) -1 for errors (with errno set).  */
-extern __ptr_t __sbrk __P ((ptrdiff_t __delta));
-extern __ptr_t sbrk __P ((ptrdiff_t __delta));
+extern void *__sbrk (ptrdiff_t __delta) __THROW;
+extern void *sbrk (ptrdiff_t __delta) __THROW;
 #endif
 
 
@@ -887,7 +887,7 @@ extern __ptr_t sbrk __P ((ptrdiff_t __delta));
 
    In Mach, all system calls take normal arguments and always return an
    error code (zero for success).  */
-extern long int syscall __P ((long int __sysno, ...));
+extern long int syscall (long int __sysno, ...) __THROW;
 
 #endif	/* Use misc.  */
 
@@ -907,17 +907,17 @@ extern long int syscall __P ((long int __sysno, ...));
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
 # ifndef __USE_FILE_OFFSET64
-extern int lockf __P ((int __fd, int __cmd, __off_t __len));
+extern int lockf (int __fd, int __cmd, __off_t __len) __THROW;
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (lockf, __P ((int __fd, int __cmd, __off64_t __len)),
+extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len) __THROW,
 		       lockf64);
 #  else
 #   define lockf lockf64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));
+extern int lockf64 (int __fd, int __cmd, __off64_t __len) __THROW;
 # endif
 #endif /* Use misc and F_LOCK not already defined.  */
 
@@ -938,7 +938,7 @@ extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 /* Synchronize at least the data part of a file with the underlying
    media.  */
-extern int fdatasync __P ((int __fildes));
+extern int fdatasync (int __fildes) __THROW;
 #endif /* Use POSIX199309 */
 
 
@@ -946,21 +946,21 @@ extern int fdatasync __P ((int __fildes));
    be defined here.  */
 #ifdef	__USE_XOPEN
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
-extern char *crypt __P ((__const char *__key, __const char *__salt));
+extern char *crypt (__const char *__key, __const char *__salt) __THROW;
 
 /* Setup DES tables according KEY.  */
-extern void setkey __P ((__const char *__key));
+extern void setkey (__const char *__key) __THROW;
 
 /* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
    block in place.  */
-extern void encrypt __P ((char *__block, int __edflag));
+extern void encrypt (char *__block, int __edflag) __THROW;
 
 
 /* Swab pairs bytes in the first N bytes of the area pointed to by
    FROM and copy the result to TO.  The value of TO must not be in the
    range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
    is without partner.  */
-extern void swab __P ((__const __ptr_t __from, __ptr_t __to, ssize_t __n));
+extern void swab (__const void *__from, void *__to, ssize_t __n) __THROW;
 #endif
 
 
@@ -968,14 +968,14 @@ extern void swab __P ((__const __ptr_t __from, __ptr_t __to, ssize_t __n));
    to be here.  They are also found in <stdio.h>.  */
 #ifdef __USE_XOPEN
 /* Return the name of the controlling terminal.  */
-extern char *ctermid __P ((char *__s));
+extern char *ctermid (char *__s) __THROW;
 
 /* Return the name of the current user.  This function should not be
    used and might go away some time.  */
-extern char *cuserid __P ((char *__s));
+extern char *cuserid (char *__s) __THROW;
 
 /* Rename file OLD to NEW.  */
-extern int rename __P ((__const char *__old, __const char *__new));
+extern int rename (__const char *__old, __const char *__new) __THROW;
 #endif
 
 
@@ -992,9 +992,9 @@ extern int rename __P ((__const char *__old, __const char *__new));
    handlers are called in LIFO order (last added with PTHREAD_ATFORK,
    first called before FORK), and the PARENT and CHILD handlers are called
    in FIFO (first added, first called). */
-extern int pthread_atfork __P ((void (*__prepare) (void),
-				void (*__parent) (void),
-				void (*__child) (void)));
+extern int pthread_atfork (void (*__prepare) (void),
+			   void (*__parent) (void),
+			   void (*__child) (void)) __THROW;
 #endif
 
 __END_DECLS

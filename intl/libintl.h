@@ -1,6 +1,6 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -35,32 +35,32 @@ __BEGIN_DECLS
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-extern char *gettext __P ((__const char *__msgid));
+extern char *gettext (__const char *__msgid) __THROW;
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
-extern char *dgettext __P ((__const char *__domainname,
-			    __const char *__msgid));
-extern char *__dgettext __P ((__const char *__domainname,
-			      __const char *__msgid));
+extern char *dgettext (__const char *__domainname,
+		       __const char *__msgid) __THROW;
+extern char *__dgettext (__const char *__domainname,
+			 __const char *__msgid) __THROW;
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
-extern char *dcgettext __P ((__const char *__domainname,
-			     __const char *__msgid, int __category));
-extern char *__dcgettext __P ((__const char *__domainname,
-			       __const char *__msgid, int __category));
+extern char *dcgettext (__const char *__domainname,
+			__const char *__msgid, int __category) __THROW;
+extern char *__dcgettext (__const char *__domainname,
+			  __const char *__msgid, int __category) __THROW;
 
 
 /* Set the current default message catalog to DOMAINNAME.
    If DOMAINNAME is null, return the current default.
    If DOMAINNAME is "", reset to the default of "messages".  */
-extern char *textdomain __P ((__const char *__domainname));
+extern char *textdomain (__const char *__domainname) __THROW;
 
 /* Specify that the DOMAINNAME message catalog will be found
    in DIRNAME rather than in the system locale data base.  */
-extern char *bindtextdomain __P ((__const char *__domainname,
-				  __const char *__dirname));
+extern char *bindtextdomain (__const char *__domainname,
+			     __const char *__dirname) __THROW;
 
 
 /* Optimized version of the function above.  */

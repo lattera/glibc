@@ -99,52 +99,54 @@ struct tm;
 __BEGIN_DECLS
 
 /* Copy SRC to DEST.  */
-extern wchar_t *wcscpy __P ((wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src));
+extern wchar_t *wcscpy (wchar_t *__restrict __dest,
+			__const wchar_t *__restrict __src) __THROW;
 /* Copy no more than N wide-characters of SRC to DEST.  */
-extern wchar_t *wcsncpy __P ((wchar_t *__restrict __dest,
-			      __const wchar_t *__restrict __src, size_t __n));
+extern wchar_t *wcsncpy (wchar_t *__restrict __dest,
+			 __const wchar_t *__restrict __src, size_t __n)
+     __THROW;
 
 /* Append SRC onto DEST.  */
-extern wchar_t *wcscat __P ((wchar_t *__restrict __dest,
-			     __const wchar_t *__restrict __src));
+extern wchar_t *wcscat (wchar_t *__restrict __dest,
+			__const wchar_t *__restrict __src) __THROW;
 /* Append no more than N wide-characters of SRC onto DEST.  */
-extern wchar_t *wcsncat __P ((wchar_t *__restrict __dest,
-			      __const wchar_t *__restrict __src, size_t __n));
+extern wchar_t *wcsncat (wchar_t *__restrict __dest,
+			 __const wchar_t *__restrict __src, size_t __n)
+     __THROW;
 
 /* Compare S1 and S2.  */
-extern int wcscmp __P ((__const wchar_t *__s1, __const wchar_t *__s2));
+extern int wcscmp (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
 /* Compare N wide-characters of S1 and S2.  */
-extern int wcsncmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-			 size_t __n));
+extern int wcsncmp (__const wchar_t *__s1, __const wchar_t *__s2, size_t __n)
+     __THROW;
 
 #ifdef __USE_GNU
 /* Compare S1 and S2, ignoring case.  */
-extern int wcscasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2));
+extern int wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int wcsncasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-                             size_t __n));
+extern int wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
+			size_t __n) __THROW;
 
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
 # include <xlocale.h>
 
-extern int __wcscasecmp_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-				__locale_t __loc));
+extern int __wcscasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
+			   __locale_t __loc) __THROW;
 
-extern int __wcsncasecmp_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-				 size_t __n, __locale_t __loc));
+extern int __wcsncasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
+			    size_t __n, __locale_t __loc) __THROW;
 #endif
 
 /* Compare S1 and S2, both interpreted as appropriate to the
    LC_COLLATE category of the current locale.  */
-extern int wcscoll __P ((__const wchar_t *__s1, __const wchar_t *__s2));
+extern int wcscoll (__const wchar_t *__s1, __const wchar_t *__s2) __THROW;
 /* Transform S2 into array pointed to by S1 such that if wcscmp is
    applied to two transformed strings the result is the as applying
    `wcscoll' to the original strings.  */
-extern size_t wcsxfrm __P ((wchar_t *__restrict __s1,
-			    __const wchar_t *__restrict __s2, size_t __n));
+extern size_t wcsxfrm (wchar_t *__restrict __s1,
+		       __const wchar_t *__restrict __s2, size_t __n) __THROW;
 
 #ifdef __USE_GNU
 /* Similar to the two functions above but take the information from
@@ -152,118 +154,121 @@ extern size_t wcsxfrm __P ((wchar_t *__restrict __s1,
 
 /* Compare S1 and S2, both interpreted as appropriate to the
    LC_COLLATE category of the given locale.  */
-extern int __wcscoll_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-			     __locale_t __loc));
+extern int __wcscoll_l (__const wchar_t *__s1, __const wchar_t *__s2,
+			__locale_t __loc) __THROW;
 /* Transform S2 into array pointed to by S1 such that if wcscmp is
    applied to two transformed strings the result is the as applying
    `wcscoll' to the original strings.  */
-extern size_t __wcsxfrm_l __P ((wchar_t *__s1, __const wchar_t *__s2,
-				size_t __n, __locale_t __loc));
+extern size_t __wcsxfrm_l (wchar_t *__s1, __const wchar_t *__s2,
+			   size_t __n, __locale_t __loc) __THROW;
 
 /* Duplicate S, returning an identical malloc'd string.  */
-extern wchar_t *wcsdup __P ((__const wchar_t *__s));
+extern wchar_t *wcsdup (__const wchar_t *__s) __THROW;
 #endif
 
 /* Find the first occurrence of WC in WCS.  */
-extern wchar_t *wcschr __P ((__const wchar_t *__wcs, wchar_t __wc));
+extern wchar_t *wcschr (__const wchar_t *__wcs, wchar_t __wc) __THROW;
 /* Find the last occurrence of WC in WCS.  */
-extern wchar_t *wcsrchr __P ((__const wchar_t *__wcs, wchar_t __wc));
+extern wchar_t *wcsrchr (__const wchar_t *__wcs, wchar_t __wc) __THROW;
 
 #ifdef __USE_GNU
 /* This funciton is similar to `wcschr'.  But it returns a pointer to
    the closing NUL wide character in case C is not found in S.  */
-extern wchar_t *wcschrnul __P ((__const wchar_t *__s, wchar_t __wc));
+extern wchar_t *wcschrnul (__const wchar_t *__s, wchar_t __wc) __THROW;
 #endif
 
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters not in REJECT.  */
-extern size_t wcscspn __P ((__const wchar_t *__wcs,
-			    __const wchar_t *__reject));
+extern size_t wcscspn (__const wchar_t *__wcs, __const wchar_t *__reject)
+     __THROW;
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters in  ACCEPT.  */
-extern size_t wcsspn __P ((__const wchar_t *__wcs, __const wchar_t *__accept));
+extern size_t wcsspn (__const wchar_t *__wcs, __const wchar_t *__accept)
+     __THROW;
 /* Find the first occurrence in WCS of any character in ACCEPT.  */
-extern wchar_t *wcspbrk __P ((__const wchar_t *__wcs,
-			      __const wchar_t *__accept));
+extern wchar_t *wcspbrk (__const wchar_t *__wcs, __const wchar_t *__accept)
+     __THROW;
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern wchar_t *wcsstr __P ((__const wchar_t *__haystack,
-			     __const wchar_t *__needle));
+extern wchar_t *wcsstr (__const wchar_t *__haystack, __const wchar_t *__needle)
+     __THROW;
 
 #if defined __USE_XOPEN && !defined __USE_UNIX98
 /* Another name for `wcsstr' from XPG4.  */
-extern wchar_t *wcswcs __P ((__const wchar_t *__haystack,
-			     __const wchar_t *__needle));
+extern wchar_t *wcswcs (__const wchar_t *__haystack, __const wchar_t *__needle)
+     __THROW;
 #endif
 
 /* Divide WCS into tokens separated by characters in DELIM.  */
-extern wchar_t *wcstok __P ((wchar_t *__restrict __s,
-			     __const wchar_t *__restrict __delim,
-			     wchar_t **__restrict __ptr));
+extern wchar_t *wcstok (wchar_t *__restrict __s,
+			__const wchar_t *__restrict __delim,
+			wchar_t **__restrict __ptr) __THROW;
 
 /* Return the number of wide characters in S.  */
-extern size_t __wcslen __P ((__const wchar_t *__s));
-extern size_t wcslen __P ((__const wchar_t *__s));
+extern size_t __wcslen (__const wchar_t *__s) __THROW;
+extern size_t wcslen (__const wchar_t *__s) __THROW;
 
 #ifdef __USE_GNU
 /* Return the number of wide characters in S, but at most MAXLEN.  */
-extern size_t wcsnlen __P ((__const wchar_t *__s, size_t __maxlen));
+extern size_t wcsnlen (__const wchar_t *__s, size_t __maxlen) __THROW;
 #endif
 
 
 /* Search N wide characters of S for C.  */
-extern wchar_t *wmemchr __P ((__const wchar_t *__s, wchar_t __c, size_t __n));
+extern wchar_t *wmemchr (__const wchar_t *__s, wchar_t __c, size_t __n)
+     __THROW;
 
 /* Compare N wide characters of S1 and S2.  */
-extern int wmemcmp __P ((__const wchar_t *__restrict __s1,
-			 __const wchar_t *__restrict __s2, size_t __n));
+extern int wmemcmp (__const wchar_t *__restrict __s1,
+		    __const wchar_t *__restrict __s2, size_t __n) __THROW;
 
 /* Copy N wide characters of SRC to DEST.  */
-extern wchar_t *wmemcpy __P ((wchar_t *__restrict __s1,
-			      __const wchar_t *__restrict __s2, size_t __n));
+extern wchar_t *wmemcpy (wchar_t *__restrict __s1,
+			 __const wchar_t *__restrict __s2, size_t __n) __THROW;
 
 /* Copy N wide characters of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
-extern wchar_t *wmemmove __P ((wchar_t *__s1, __const wchar_t *__s2,
-			       size_t __n));
+extern wchar_t *wmemmove (wchar_t *__s1, __const wchar_t *__s2, size_t __n)
+     __THROW;
 
 /* Set N wide characters of S to C.  */
-extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
+extern wchar_t *wmemset (wchar_t *__s, wchar_t __c, size_t __n) __THROW;
 
 #ifdef __USE_GNU
 /* Copy N wide characters of SRC to DEST and return pointer to following
    wide character.  */
-extern wchar_t *wmempcpy __P ((wchar_t *__restrict __s1,
-			       __const wchar_t *__restrict __s2, size_t __n));
+extern wchar_t *wmempcpy (wchar_t *__restrict __s1,
+			  __const wchar_t *__restrict __s2, size_t __n)
+     __THROW;
 #endif
 
 
 /* Determine whether C constitutes a valid (one-byte) multibyte
    character.  */
-extern wint_t btowc __P ((int __c));
+extern wint_t btowc (int __c) __THROW;
 
 /* Determine whether C corresponds to a member of the extended
    character set whose multibyte representation is a single byte.  */
-extern int wctob __P ((wint_t __c));
+extern int wctob (wint_t __c) __THROW;
 
 /* Determine whether PS points to an object representing the initial
    state.  */
-extern int mbsinit __P ((__const mbstate_t *__ps));
+extern int mbsinit (__const mbstate_t *__ps) __THROW;
 
 /* Write wide character representation of multibyte character pointed
    to by S to PWC.  */
-extern size_t mbrtowc __P ((wchar_t *__restrict __pwc,
-			    __const char *__restrict __s, size_t __n,
-			    mbstate_t *__p));
+extern size_t mbrtowc (wchar_t *__restrict __pwc,
+		       __const char *__restrict __s, size_t __n,
+		       mbstate_t *__p) __THROW;
 
 /* Write multibyte representation of wide character WC to S.  */
-extern size_t wcrtomb __P ((char *__restrict __s, wchar_t __wc,
-			    mbstate_t *__restrict __ps));
+extern size_t wcrtomb (char *__restrict __s, wchar_t __wc,
+		       mbstate_t *__restrict __ps) __THROW;
 
 /* Return number of bytes in multibyte character pointed to by S.  */
-extern size_t __mbrlen __P ((__const char *__restrict __s, size_t __n,
-			     mbstate_t *__restrict __ps));
-extern size_t mbrlen __P ((__const char *__restrict __s, size_t __n,
-			   mbstate_t *__restrict __ps));
+extern size_t __mbrlen (__const char *__restrict __s, size_t __n,
+			mbstate_t *__restrict __ps) __THROW;
+extern size_t mbrlen (__const char *__restrict __s, size_t __n,
+		      mbstate_t *__restrict __ps) __THROW;
 
 #if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
     && defined __USE_EXTERN_INLINES
@@ -276,98 +281,99 @@ extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
 
 /* Write wide character representation of multibyte character string
    SRC to DST.  */
-extern size_t mbsrtowcs __P ((wchar_t *__restrict __dst,
-			      __const char **__restrict __src,
-			      size_t __len, mbstate_t *__restrict __ps));
+extern size_t mbsrtowcs (wchar_t *__restrict __dst,
+			 __const char **__restrict __src, size_t __len,
+			 mbstate_t *__restrict __ps) __THROW;
 
 /* Write multibyte character representation of wide character string
    SRC to DST.  */
-extern size_t wcsrtombs __P ((char *__restrict __dst,
-			      __const wchar_t **__restrict __src,
-			      size_t __len, mbstate_t *__restrict __ps));
+extern size_t wcsrtombs (char *__restrict __dst,
+			 __const wchar_t **__restrict __src, size_t __len,
+			 mbstate_t *__restrict __ps) __THROW;
 
 
 #ifdef	__USE_GNU
 /* Write wide character representation of at most NMC bytes of the
    multibyte character string SRC to DST.  */
-extern size_t mbsnrtowcs __P ((wchar_t *__restrict __dst,
-			       __const char **__restrict __src, size_t __nmc,
-			       size_t __len, mbstate_t *__restrict __ps));
+extern size_t mbsnrtowcs (wchar_t *__restrict __dst,
+			  __const char **__restrict __src, size_t __nmc,
+			  size_t __len, mbstate_t *__restrict __ps) __THROW;
 
 /* Write multibyte character representation of at most NWC characters
    from the wide character string SRC to DST.  */
-extern size_t wcsnrtombs __P ((char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
-			       size_t __nwc, size_t __len,
-			       mbstate_t *__restrict __ps));
+extern size_t wcsnrtombs (char *__restrict __dst,
+			  __const wchar_t **__restrict __src,
+			  size_t __nwc, size_t __len,
+			  mbstate_t *__restrict __ps) __THROW;
 #endif	/* use GNU */
 
 
 /* The following functions are extensions found in X/Open CAE.  */
 #ifdef __USE_XOPEN
 /* Determine number of column positions required for C.  */
-extern int wcwidth __P ((wint_t __c));
+extern int wcwidth (wint_t __c) __THROW;
 
 /* Determine number of column positions required for first N wide
    characters (or fewer if S ends before this) in S.  */
-extern int wcswidth __P ((__const wchar_t *__s, size_t __n));
+extern int wcswidth (__const wchar_t *__s, size_t __n) __THROW;
 #endif	/* Use X/Open.  */
 
 
 /* Convert initial portion of the wide string NPTR to `double'
    representation.  */
-extern double wcstod __P ((__const wchar_t *__restrict __nptr,
-			   wchar_t **__restrict __endptr));
+extern double wcstod (__const wchar_t *__restrict __nptr,
+		      wchar_t **__restrict __endptr) __THROW;
 
 #ifdef __USE_ISOC9X
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
-extern float wcstof __P ((__const wchar_t *__restrict __nptr,
-			  wchar_t **__restrict __endptr));
-extern __long_double_t wcstold __P ((__const wchar_t *__restrict __nptr,
-				     wchar_t **__restrict __endptr));
+extern float wcstof (__const wchar_t *__restrict __nptr,
+		     wchar_t **__restrict __endptr) __THROW;
+extern long double wcstold (__const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr) __THROW;
 #endif /* C9x */
 
 
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
-extern long int wcstol __P ((__const wchar_t *__restrict __nptr,
-			     wchar_t **__restrict __endptr, int __base));
+extern long int wcstol (__const wchar_t *__restrict __nptr,
+			wchar_t **__restrict __endptr, int __base) __THROW;
 
 /* Convert initial portion of wide string NPTR to `unsigned long int'
    representation.  */
-extern unsigned long int wcstoul __P ((__const wchar_t *__restrict __nptr,
-				       wchar_t **__restrict __endptr,
-				       int __base));
+extern unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
+				  wchar_t **__restrict __endptr, int __base)
+     __THROW;
 
 #if defined __GNUC__ && defined __USE_GNU
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
 __extension__
-extern long long int wcstoq __P ((__const wchar_t *__restrict __nptr,
-				  wchar_t **__restrict __endptr, int __base));
+extern long long int wcstoq (__const wchar_t *__restrict __nptr,
+			     wchar_t **__restrict __endptr, int __base)
+     __THROW;
 
 /* Convert initial portion of wide string NPTR to `unsigned long long int'
    representation.  */
 __extension__
-extern unsigned long long int wcstouq __P ((__const wchar_t *__restrict __nptr,
-					    wchar_t **__restrict __endptr,
-					    int __base));
+extern unsigned long long int wcstouq (__const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __base) __THROW;
 #endif /* GCC and use GNU.  */
 
 #if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_GNU)
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
 __extension__
-extern long long int wcstoll __P ((__const wchar_t *__restrict __nptr,
-				   wchar_t **__restrict __endptr, int __base));
+extern long long int wcstoll (__const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr, int __base)
+     __THROW;
 
 /* Convert initial portion of wide string NPTR to `unsigned long long int'
    representation.  */
 __extension__
-extern unsigned long long int wcstoull __P ((__const wchar_t *
-					     __restrict __nptr,
-					     wchar_t **__restrict __endptr,
-					     int __base));
+extern unsigned long long int wcstoull (__const wchar_t *__restrict __nptr,
+					wchar_t **__restrict __endptr,
+					int __base) __THROW;
 #endif /* ISO C 9X or GCC and GNU.  */
 
 #ifdef __USE_GNU
@@ -388,83 +394,78 @@ extern unsigned long long int wcstoull __P ((__const wchar_t *
 
 /* Special versions of the functions above which take the locale to
    use as an additional parameter.  */
-extern long int __wcstol_l __P ((__const wchar_t *__restrict __nptr,
-				 wchar_t **__restrict __endptr, int __base,
-				 __locale_t __loc));
+extern long int __wcstol_l (__const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr, int __base,
+			    __locale_t __loc) __THROW;
 
-extern unsigned long int __wcstoul_l __P ((__const wchar_t *__restrict __nptr,
-					   wchar_t **__restrict __endptr,
-					   int __base, __locale_t __loc));
-
-__extension__
-extern long long int __wcstoll_l __P ((__const wchar_t *__restrict __nptr,
-				       wchar_t **__restrict __endptr,
-				       int __base, __locale_t __loc));
+extern unsigned long int __wcstoul_l (__const wchar_t *__restrict __nptr,
+				      wchar_t **__restrict __endptr,
+				      int __base, __locale_t __loc) __THROW;
 
 __extension__
-extern unsigned long long int __wcstoull_l __P ((__const wchar_t *__restrict
-						 __nptr,
-						 wchar_t **__restrict __endptr,
-						 int __base,
-						 __locale_t __loc));
+extern long long int __wcstoll_l (__const wchar_t *__restrict __nptr,
+				  wchar_t **__restrict __endptr,
+				  int __base, __locale_t __loc) __THROW;
 
-extern double __wcstod_l __P ((__const wchar_t *__restrict __nptr,
-			       wchar_t **__restrict __endptr,
-			       __locale_t __loc));
+__extension__
+extern unsigned long long int __wcstoull_l (__const wchar_t *__restrict __nptr,
+					    wchar_t **__restrict __endptr,
+					    int __base, __locale_t __loc)
+     __THROW;
 
-extern float __wcstof_l __P ((__const wchar_t *__restrict __nptr,
-			      wchar_t **__restrict __endptr,
-			      __locale_t __loc));
+extern double __wcstod_l (__const wchar_t *__restrict __nptr,
+			  wchar_t **__restrict __endptr, __locale_t __loc)
+     __THROW;
 
-extern __long_double_t __wcstold_l __P ((__const wchar_t *__restrict __nptr,
-					 wchar_t **__restrict __endptr,
-					 __locale_t __loc));
+extern float __wcstof_l (__const wchar_t *__restrict __nptr,
+			 wchar_t **__restrict __endptr, __locale_t __loc)
+     __THROW;
+
+extern long double __wcstold_l (__const wchar_t *__restrict __nptr,
+				wchar_t **__restrict __endptr,
+				__locale_t __loc) __THROW;
 #endif /* GNU */
 
 
 /* The internal entry points for `wcstoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */
-extern double __wcstod_internal __P ((__const wchar_t *__restrict __nptr,
-				      wchar_t **__restrict __endptr,
-				      int __group));
-extern float __wcstof_internal __P ((__const wchar_t *__restrict __nptr,
-				     wchar_t **__restrict __endptr,
-				     int __group));
-extern __long_double_t __wcstold_internal __P ((__const wchar_t *
-						__restrict __nptr,
-						wchar_t **__restrict __endptr,
-						int __group));
+extern double __wcstod_internal (__const wchar_t *__restrict __nptr,
+				 wchar_t **__restrict __endptr, int __group)
+     __THROW;
+extern float __wcstof_internal (__const wchar_t *__restrict __nptr,
+				wchar_t **__restrict __endptr, int __group)
+     __THROW;
+extern long double __wcstold_internal (__const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __group) __THROW;
 
 #ifndef __wcstol_internal_defined
-extern long int __wcstol_internal __P ((__const wchar_t *__restrict __nptr,
-					wchar_t **__restrict __endptr,
-					int __base, int __group));
+extern long int __wcstol_internal (__const wchar_t *__restrict __nptr,
+				   wchar_t **__restrict __endptr,
+				   int __base, int __group) __THROW;
 # define __wcstol_internal_defined	1
 #endif
 #ifndef __wcstoul_internal_defined
-extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
-						  __restrict __nptr,
-						  wchar_t **
-						  __restrict __endptr,
-						  int __base, int __group));
+extern unsigned long int __wcstoul_internal (__const wchar_t *__restrict __npt,
+					     wchar_t **__restrict __endptr,
+					     int __base, int __group) __THROW;
 # define __wcstoul_internal_defined	1
 #endif
 #ifndef __wcstoll_internal_defined
 __extension__
-extern long long int __wcstoll_internal __P ((__const wchar_t *
-					      __restrict __nptr,
-					      wchar_t **__restrict __endptr,
-					      int __base, int __group));
+extern long long int __wcstoll_internal (__const wchar_t *__restrict __nptr,
+					 wchar_t **__restrict __endptr,
+					 int __base, int __group) __THROW;
 # define __wcstoll_internal_defined	1
 #endif
 #ifndef __wcstoull_internal_defined
 __extension__
-extern unsigned long long int __wcstoull_internal __P ((__const wchar_t *
-							__restrict __nptr,
-							wchar_t **
-							__restrict __endptr,
-							int __base,
-							int __group));
+extern unsigned long long int __wcstoull_internal (__const wchar_t *
+						   __restrict __nptr,
+						   wchar_t **
+						   __restrict __endptr,
+						   int __base,
+						   int __group) __THROW;
 # define __wcstoull_internal_defined	1
 #endif
 
@@ -488,8 +489,8 @@ extern __inline unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
 extern __inline float wcstof (__const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr) __THROW
 { return __wcstof_internal (__nptr, __endptr, 0); }
-extern __inline __long_double_t wcstold (__const wchar_t *__restrict __nptr,
-					 wchar_t **__restrict __endptr) __THROW
+extern __inline long double wcstold (__const wchar_t *__restrict __nptr,
+				     wchar_t **__restrict __endptr) __THROW
 { return __wcstold_internal (__nptr, __endptr, 0); }
 
 
@@ -511,12 +512,12 @@ extern __inline unsigned long long int wcstouq (__const wchar_t *
 #ifdef	__USE_GNU
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
-extern wchar_t *wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
+extern wchar_t *wcpcpy (wchar_t *__dest, __const wchar_t *__src) __THROW;
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the last character written into DEST.  */
-extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
-			      size_t __n));
+extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
+     __THROW;
 #endif	/* use GNU */
 
 
@@ -524,135 +525,135 @@ extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 #ifdef __USE_ISOC9X
 
 /* Select orientation for stream.  */
-extern int fwide __P ((FILE *__fp, int __mode));
+extern int fwide (FILE *__fp, int __mode) __THROW;
 
 
 /* Write formatted output to STREAM.  */
-extern int fwprintf __P ((FILE *__restrict __stream,
-			  __const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wprintf__, 2, 3))) */;
+extern int fwprintf (FILE *__restrict __stream,
+		     __const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 2, 3))) */;
 /* Write formatted output to stdout.  */
-extern int wprintf __P ((__const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wprintf__, 1, 2))) */;
+extern int wprintf (__const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 1, 2))) */;
 /* Write formatted output of at most N characters to S.  */
-extern int swprintf __P ((wchar_t *__restrict __s, size_t __n,
-			  __const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wprintf__, 3, 4))) */;
+extern int swprintf (wchar_t *__restrict __s, size_t __n,
+		     __const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 3, 4))) */;
 
 /* Write formatted output to S from argument list ARG.  */
-extern int vfwprintf __P ((FILE *__restrict __s,
-			   __const wchar_t *__restrict __format,
-			   __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
+extern int vfwprintf (FILE *__restrict __s,
+		      __const wchar_t *__restrict __format,
+		      __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
 /* Write formatted output to stdout from argument list ARG.  */
-extern int vwprintf __P ((__const wchar_t *__restrict __format,
-			  __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wprintf__, 1, 0))) */;
+extern int vwprintf (__const wchar_t *__restrict __format,
+		     __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 1, 0))) */;
 /* Write formatted output of at most N character to S from argument
    list ARG.  */
-extern int vswprintf __P ((wchar_t *__restrict __s, size_t __n,
-			   __const wchar_t *__restrict __format,
-			   __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
+extern int vswprintf (wchar_t *__restrict __s, size_t __n,
+		      __const wchar_t *__restrict __format,
+		      __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
 
 /* Read formatted input from STREAM.  */
-extern int fwscanf __P ((FILE *__restrict __stream,
-			 __const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+extern int fwscanf (FILE *__restrict __stream,
+		    __const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 /* Read formatted input from stdin.  */
-extern int wscanf __P ((__const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
+extern int wscanf (__const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
 /* Read formatted input from S.  */
-extern int swscanf __P ((__const wchar_t *__restrict __s,
-			 __const wchar_t *__restrict __format, ...))
-     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+extern int swscanf (__const wchar_t *__restrict __s,
+		    __const wchar_t *__restrict __format, ...)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 
 /* Read formatted input from S into argument list ARG.  */
-extern int vfwscanf __P ((FILE *__restrict __s,
-			  __const wchar_t *__restrict __format,
-			  __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+extern int vfwscanf (FILE *__restrict __s,
+		     __const wchar_t *__restrict __format,
+		     __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 /* Read formatted input from stdin into argument list ARG.  */
-extern int vwscanf __P ((__const wchar_t *__restrict __format,
-			 __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
+extern int vwscanf (__const wchar_t *__restrict __format,
+		    __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
 /* Read formatted input from S into argument list ARG.  */
-extern int vswscanf __P ((__const wchar_t *__restrict __s,
-			  __const wchar_t *__restrict __format,
-			  __gnuc_va_list __arg))
-     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+extern int vswscanf (__const wchar_t *__restrict __s,
+		     __const wchar_t *__restrict __format,
+		     __gnuc_va_list __arg)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 
 
 /* Read a character from STREAM.  */
-extern wint_t fgetwc __P ((FILE *__stream));
-extern wint_t getwc __P ((FILE *__stream));
+extern wint_t fgetwc (FILE *__stream);
+extern wint_t getwc (FILE *__stream);
 
 /* Read a character from stdin.  */
-extern wint_t getwchar __P ((void));
+extern wint_t getwchar (void);
 
 #ifdef __USE_GNU
 /* These are defined to be equivalent to the `char' functions defined
    in POSIX.1:1996.  */
-extern wint_t getwc_unlocked __P ((FILE *__stream));
-extern wint_t getwchar_unlocked __P ((void));
+extern wint_t getwc_unlocked (FILE *__stream);
+extern wint_t getwchar_unlocked (void);
 
 /* This is the wide character version of a GNU extension.  */
-extern wint_t fgetwc_unlocked __P ((FILE *__stream));
+extern wint_t fgetwc_unlocked (FILE *__stream);
 #endif /* Use POSIX or MISC.  */
 
 
 /* Write a character to STREAM.  */
-extern wint_t fputwc __P ((wchar_t __wc, FILE *__stream));
-extern wint_t putwc __P ((wchar_t __wc, FILE *__stream));
+extern wint_t fputwc (wchar_t __wc, FILE *__stream);
+extern wint_t putwc (wchar_t __wc, FILE *__stream);
 
 /* Write a character to stdout.  */
-extern wint_t putwchar __P ((wchar_t __wc));
+extern wint_t putwchar (wchar_t __wc);
 
 #ifdef __USE_GNU
 /* Faster version when locking is not necessary.  */
-extern wint_t fputwc_unlocked __P ((wchar_t __wc, FILE *__stream));
+extern wint_t fputwc_unlocked (wchar_t __wc, FILE *__stream);
 
 /* These are defined to be equivalent to the `char' functions defined
    in POSIX.1:1996.  */
-extern wint_t putwc_unlocked __P ((wchar_t __wc, FILE *__stream));
-extern wint_t putwchar_unlocked __P ((wchar_t __wc));
+extern wint_t putwc_unlocked (wchar_t __wc, FILE *__stream);
+extern wint_t putwchar_unlocked (wchar_t __wc);
 #endif
 
 
 /* Get a newline-terminated wide character string of finite length
    from STREAM.  */
-extern wchar_t *fgetws __P ((wchar_t *__restrict __ws, int __n,
-			     FILE *__restrict __stream));
+extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
+			FILE *__restrict __stream);
 
 #ifdef __USE_GNU
 /* This function does the same as `fgetws' but does not lock the stream.  */
-extern wchar_t *fgetws_unlocked __P ((wchar_t *__restrict __ws, int __n,
-				      FILE *__restrict __stream));
+extern wchar_t *fgetws_unlocked (wchar_t *__restrict __ws, int __n,
+				 FILE *__restrict __stream);
 #endif
 
 
 /* Write a string to STREAM.  */
-extern int fputws __P ((__const wchar_t *__restrict __ws,
-			FILE *__restrict __stream));
+extern int fputws (__const wchar_t *__restrict __ws,
+		   FILE *__restrict __stream);
 
 #ifdef __USE_GNU
 /* This function does the same as `fputws' but does not lock the stream.  */
-extern int fputws_unlocked __P ((__const wchar_t *__restrict __ws,
-				 FILE *__restrict __stream));
+extern int fputws_unlocked (__const wchar_t *__restrict __ws,
+			    FILE *__restrict __stream);
 #endif
 
 
 /* Push a character back onto the input buffer of STREAM.  */
-extern wint_t ungetwc __P ((wint_t __wc, FILE *__stream));
+extern wint_t ungetwc (wint_t __wc, FILE *__stream);
 
 
 /* Format TP into S according to FORMAT.
    Write no more than MAXSIZE wide characters and return the number
    of wide characters written, or 0 if it would exceed MAXSIZE.  */
-extern size_t wcsftime __P ((wchar_t *__restrict __s, size_t __maxsize,
-			     __const wchar_t *__restrict __format,
-			     __const struct tm *__restrict __tp));
+extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
+			__const wchar_t *__restrict __format,
+			__const struct tm *__restrict __tp);
 #endif /* Use ISO C9x. */
 
 /* The X/Open standard demands that most of the functions defined in

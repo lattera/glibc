@@ -34,66 +34,67 @@ __BEGIN_DECLS
 
 
 /* Copy N bytes of SRC to DEST.  */
-extern __ptr_t memcpy __P ((__ptr_t __restrict __dest,
-			    __const __ptr_t __restrict __src, size_t __n));
+extern void *memcpy (void *__restrict __dest,
+		     __const void *__restrict __src, size_t __n) __THROW;
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
-extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
-			     size_t __n));
+extern void *memmove (void *__dest, __const void *__src, size_t __n)
+     __THROW;
 
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
    or NULL if C was not found in the first N bytes of SRC.  */
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN
-extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
-			     int __c, size_t __n));
+extern void *memccpy (void *__dest, __const void *__src, int __c, size_t __n)
+     __THROW;
 #endif /* SVID.  */
 
 
 /* Set N bytes of S to C.  */
-extern __ptr_t memset __P ((__ptr_t __s, int __c, size_t __n));
+extern void *memset (void *__s, int __c, size_t __n) __THROW;
 
 /* Compare N bytes of S1 and S2.  */
-extern int memcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2,
-			size_t __n));
+extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
+     __THROW;
 
 /* Search N bytes of S for C.  */
-extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
+extern void *memchr (__const void *__s, int __c, size_t __n) __THROW;
 
 #ifdef __USE_GNU
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
-extern __ptr_t rawmemchr __P ((__const __ptr_t __s, int __c));
+extern void *rawmemchr (__const void *__s, int __c) __THROW;
 
 /* Search N bytes of S for the final occurrence of C.  */
-extern __ptr_t memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
+extern void *memrchr (__const void *__s, int __c, size_t __n) __THROW;
 #endif
 
 
 /* Copy SRC to DEST.  */
-extern char *strcpy __P ((char *__restrict __dest,
-			  __const char *__restrict __src));
+extern char *strcpy (char *__restrict __dest, __const char *__restrict __src)
+     __THROW;
 /* Copy no more than N characters of SRC to DEST.  */
-extern char *strncpy __P ((char *__restrict __dest,
-			   __const char *__restrict __src, size_t __n));
+extern char *strncpy (char *__restrict __dest,
+		      __const char *__restrict __src, size_t __n) __THROW;
 
 /* Append SRC onto DEST.  */
-extern char *strcat __P ((char *__restrict __dest,
-			  __const char *__restrict __src));
+extern char *strcat (char *__restrict __dest, __const char *__restrict __src)
+     __THROW;
 /* Append no more than N characters from SRC onto DEST.  */
-extern char *strncat __P ((char *__restrict __dest,
-			   __const char *__restrict __src, size_t __n));
+extern char *strncat (char *__restrict __dest, __const char *__restrict __src,
+		      size_t __n) __THROW;
 
 /* Compare S1 and S2.  */
-extern int strcmp __P ((__const char *__s1, __const char *__s2));
+extern int strcmp (__const char *__s1, __const char *__s2) __THROW;
 /* Compare N characters of S1 and S2.  */
-extern int strncmp __P ((__const char *__s1, __const char *__s2, size_t __n));
+extern int strncmp (__const char *__s1, __const char *__s2, size_t __n)
+     __THROW;
 
 /* Compare the collated forms of S1 and S2.  */
-extern int strcoll __P ((__const char *__s1, __const char *__s2));
+extern int strcoll (__const char *__s1, __const char *__s2) __THROW;
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
-extern size_t strxfrm __P ((char *__restrict __dest,
-			    __const char *__restrict __src, size_t __n));
+extern size_t strxfrm (char *__restrict __dest,
+		       __const char *__restrict __src, size_t __n) __THROW;
 
 #ifdef __USE_GNU
 /* The following functions are equivalent to the both above but they
@@ -102,24 +103,24 @@ extern size_t strxfrm __P ((char *__restrict __dest,
 # include <xlocale.h>
 
 /* Compare the collated forms of S1 and S2 using rules from L.  */
-extern int __strcoll_l __P ((__const char *__s1, __const char *__s2,
-			     __locale_t __l));
+extern int __strcoll_l (__const char *__s1, __const char *__s2, __locale_t __l)
+     __THROW;
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
-extern size_t __strxfrm_l __P ((char *__dest, __const char *__src, size_t __n,
-				__locale_t __l));
+extern size_t __strxfrm_l (char *__dest, __const char *__src, size_t __n,
+			   __locale_t __l) __THROW;
 #endif
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Duplicate S, returning an identical malloc'd string.  */
-extern char *__strdup __P ((__const char *__s));
-extern char *strdup __P ((__const char *__s));
+extern char *__strdup (__const char *__s) __THROW;
+extern char *strdup (__const char *__s) __THROW;
 #endif
 
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
 #if defined __USE_GNU
-extern char *strndup __P ((__const char *__string, size_t __n));
+extern char *strndup (__const char *__string, size_t __n) __THROW;
 #endif
 
 #if defined __USE_GNU && defined __GNUC__
@@ -146,178 +147,177 @@ extern char *strndup __P ((__const char *__string, size_t __n));
 #endif
 
 /* Find the first occurrence of C in S.  */
-extern char *strchr __P ((__const char *__s, int __c));
+extern char *strchr (__const char *__s, int __c) __THROW;
 /* Find the last occurrence of C in S.  */
-extern char *strrchr __P ((__const char *__s, int __c));
+extern char *strrchr (__const char *__s, int __c) __THROW;
 
 #ifdef __USE_GNU
 /* This funciton is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
-extern char *strchrnul __P ((__const char *__s, int __c));
+extern char *strchrnul (__const char *__s, int __c) __THROW;
 #endif
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-extern size_t strcspn __P ((__const char *__s, __const char *__reject));
+extern size_t strcspn (__const char *__s, __const char *__reject) __THROW;
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-extern size_t strspn __P ((__const char *__s, __const char *__accept));
+extern size_t strspn (__const char *__s, __const char *__accept) __THROW;
 /* Find the first occurrence in S of any character in ACCEPT.  */
-extern char *strpbrk __P ((__const char *__s, __const char *__accept));
+extern char *strpbrk (__const char *__s, __const char *__accept) __THROW;
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern char *strstr __P ((__const char *__haystack, __const char *__needle));
+extern char *strstr (__const char *__haystack, __const char *__needle) __THROW;
 
 #ifdef __USE_GNU
 /* Similar to `strstr' but this function ignores the case of both strings.  */
-extern char *__strcasestr __P ((__const char *__haystack,
-				__const char *__needle));
-extern char *strcasestr __P ((__const char *__haystack,
-			      __const char *__needle));
+extern char *__strcasestr (__const char *__haystack, __const char *__needle)
+     __THROW;
+extern char *strcasestr (__const char *__haystack, __const char *__needle)
+     __THROW;
 #endif
 
 /* Divide S into tokens separated by characters in DELIM.  */
-extern char *strtok __P ((char *__restrict __s,
-			  __const char *__restrict __delim));
+extern char *strtok (char *__restrict __s, __const char *__restrict __delim)
+     __THROW;
 
 /* Divide S into tokens separated by characters in DELIM.  Information
    passed between calls are stored in SAVE_PTR.  */
-extern char *__strtok_r __P ((char *__restrict __s,
-			      __const char *__restrict __delim,
-			      char **__restrict __save_ptr));
+extern char *__strtok_r (char *__restrict __s,
+			 __const char *__restrict __delim,
+			 char **__restrict __save_ptr) __THROW;
 #if defined __USE_POSIX || defined __USE_MISC
-extern char *strtok_r __P ((char *__restrict __s,
-			    __const char *__restrict __delim,
-			    char **__restrict __save_ptr));
+extern char *strtok_r (char *__restrict __s, __const char *__restrict __delim,
+		       char **__restrict __save_ptr) __THROW;
 #endif
 
 #ifdef __USE_GNU
 /* Find the first occurrence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
-extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,
-			    __const __ptr_t __needle, size_t __needlelen));
+extern void *memmem (__const void *__haystack, size_t __haystacklen,
+		     __const void *__needle, size_t __needlelen) __THROW;
 
 /* Copy N bytes of SRC to DEST, return pointer to bytes after the
    last written byte.  */
-extern __ptr_t __mempcpy __P ((__ptr_t __restrict __dest,
-			       __const __ptr_t __restrict __src, size_t __n));
-extern __ptr_t mempcpy __P ((__ptr_t __restrict __dest,
-			     __const __ptr_t __restrict __src, size_t __n));
+extern void *__mempcpy (void *__restrict __dest,
+			__const void *__restrict __src, size_t __n) __THROW;
+extern void *mempcpy (void *__restrict __dest,
+		      __const void *__restrict __src, size_t __n) __THROW;
 #endif
 
 
 /* Return the length of S.  */
-extern size_t strlen __P ((__const char *__s));
+extern size_t strlen (__const char *__s) __THROW;
 
 #ifdef	__USE_GNU
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
-extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
+extern size_t strnlen (__const char *__string, size_t __maxlen) __THROW;
 #endif
 
 
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
-extern char *strerror __P ((int __errnum));
+extern char *strerror (int __errnum) __THROW;
 #ifdef	__USE_MISC
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
    most BUFLEN bytes of BUF will be used.  */
-extern char *__strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
-extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
+extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
+extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
 #endif
 
 /* We define this function always since `bzero' is sometimes needed when
    the namespace rules does not allow this.  */
-extern void __bzero __P ((__ptr_t __s, size_t __n));
+extern void __bzero (void *__s, size_t __n) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
-extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
+extern void bcopy (__const void *__src, void *__dest, size_t __n) __THROW;
 
 /* Set N bytes of S to 0.  */
-extern void bzero __P ((__ptr_t __s, size_t __n));
+extern void bzero (void *__s, size_t __n) __THROW;
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
-extern int bcmp __P ((__const __ptr_t __s1, __const __ptr_t __s2, size_t __n));
+extern int bcmp (__const void *__s1, __const void *__s2, size_t __n) __THROW;
 
 /* Find the first occurrence of C in S (same as strchr).  */
-extern char *index __P ((__const char *__s, int __c));
+extern char *index (__const char *__s, int __c) __THROW;
 
 /* Find the last occurrence of C in S (same as strrchr).  */
-extern char *rindex __P ((__const char *__s, int __c));
+extern char *rindex (__const char *__s, int __c) __THROW;
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
-extern int __ffs __P ((int __i)) __attribute__ ((const));
-extern int ffs __P ((int __i)) __attribute__ ((const));
+extern int __ffs (int __i) __THROW __attribute__ ((const));
+extern int ffs (int __i) __THROW __attribute__ ((const));
 
 /* The following two functions are non-standard but necessary for non-32 bit
    platforms.  */
 # ifdef	__USE_GNU
-extern int ffsl __P ((long int __l)) __attribute__ ((const));
+extern int ffsl (long int __l) __THROW __attribute__ ((const));
 #  ifdef __GNUC__
-__extension__ extern int ffsll __P ((long long int __ll))
-     __attribute__ ((const));
+__extension__ extern int ffsll (long long int __ll)
+     __THROW __attribute__ ((const));
 #  endif
 # endif
 
 /* Compare S1 and S2, ignoring case.  */
-extern int __strcasecmp __P ((__const char *__s1, __const char *__s2));
-extern int strcasecmp __P ((__const char *__s1, __const char *__s2));
+extern int __strcasecmp (__const char *__s1, __const char *__s2) __THROW;
+extern int strcasecmp (__const char *__s1, __const char *__s2) __THROW;
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
-			     size_t __n));
+extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
+     __THROW;
 #endif /* Use BSD or X/Open Unix.  */
 
 #ifdef	__USE_GNU
 /* Again versions of a few functions which use the given locale instead
    of the global one.  */
-extern int __strcasecmp_l __P ((__const char *__s1, __const char *__s2,
-				__locale_t __loc));
+extern int __strcasecmp_l (__const char *__s1, __const char *__s2,
+			   __locale_t __loc) __THROW;
 
-extern int __strncasecmp_l __P ((__const char *__s1, __const char *__s2,
-				 size_t __n, __locale_t __loc));
+extern int __strncasecmp_l (__const char *__s1, __const char *__s2,
+			    size_t __n, __locale_t __loc) __THROW;
 #endif
 
 #ifdef	__USE_BSD
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
-extern char *strsep __P ((char **__restrict __stringp,
-			  __const char *__restrict __delim));
+extern char *strsep (char **__restrict __stringp,
+		     __const char *__restrict __delim) __THROW;
 #endif
 
 #ifdef	__USE_GNU
 /* Compare S1 and S2 as strings holding name & indices/version numbers.  */
-extern int strverscmp __P ((__const char *__s1, __const char *__s2));
+extern int strverscmp (__const char *__s1, __const char *__s2) __THROW;
 
 /* Return a string describing the meaning of the signal number in SIG.  */
-extern char *strsignal __P ((int __sig));
+extern char *strsignal (int __sig) __THROW;
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
-extern char *__stpcpy __P ((char *__restrict __dest,
-			    __const char *__restrict __src));
-extern char *stpcpy __P ((char *__restrict __dest,
-			  __const char *__restrict __src));
+extern char *__stpcpy (char *__restrict __dest, __const char *__restrict __src)
+     __THROW;
+extern char *stpcpy (char *__restrict __dest, __const char *__restrict __src)
+     __THROW;
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the last character written into DEST.  */
-extern char *__stpncpy __P ((char *__restrict __dest,
-			     __const char *__restrict __src, size_t __n));
-extern char *stpncpy __P ((char *__restrict __dest,
-			   __const char *__restrict __src, size_t __n));
+extern char *__stpncpy (char *__restrict __dest,
+			__const char *__restrict __src, size_t __n) __THROW;
+extern char *stpncpy (char *__restrict __dest,
+		      __const char *__restrict __src, size_t __n) __THROW;
 
 /* Sautee STRING briskly.  */
-extern char *strfry __P ((char *__string));
+extern char *strfry (char *__string) __THROW;
 
 /* Frobnicate N bytes of S.  */
-extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
+extern void *memfrob (void *__s, size_t __n) __THROW;
 
 # ifndef basename
 /* Return the file name within directory of FILENAME.  We don't
    declare the function if the `basename' macro is available (defined
    in <libgen.h>) which makes the XPG version of this function
    available.  */
-extern char *basename __P ((__const char *__filename));
+extern char *basename (__const char *__filename) __THROW;
 # endif
 #endif
 

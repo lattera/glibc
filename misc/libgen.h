@@ -24,7 +24,7 @@
 __BEGIN_DECLS
 
 /* Return directory part of PATH or "." if none is available.  */
-extern char *dirname __P ((char *__path));
+extern char *dirname (char *__path) __THROW;
 
 /* Return final component of PATH.
 
@@ -32,7 +32,7 @@ extern char *dirname __P ((char *__path));
    modify its argument.  Therefore we normally use the GNU version (in
    <string.h>) and only if this header is included make the XPG
    version available under the real name.  */
-extern char *__xpg_basename __P ((char *__path));
+extern char *__xpg_basename (char *__path) __THROW;
 #define basename	__xpg_basename
 
 __END_DECLS

@@ -42,17 +42,17 @@ struct qelem
 
 
 /* Insert ELEM into a doubly-linked list, after PREV.  */
-extern void insque __P ((void *__elem, void *__prev));
+extern void insque (void *__elem, void *__prev) __THROW;
 
 /* Unlink ELEM from the doubly-linked list that it is in.  */
-extern void remque __P ((void *__elem));
+extern void remque (void *__elem) __THROW;
 #endif
 
 
 /* For use with hsearch(3).  */
 #ifndef __COMPAR_FN_T
 # define __COMPAR_FN_T
-typedef int (*__compar_fn_t) __PMT ((__const __ptr_t, __const __ptr_t));
+typedef int (*__compar_fn_t) (__const void *, __const void *);
 
 # ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
@@ -85,13 +85,13 @@ struct _ENTRY;
    ACTION is `FIND' return found entry or signal error by returning
    NULL.  If ACTION is `ENTER' replace existing data (if any) with
    ITEM.data.  */
-extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
+extern ENTRY *hsearch (ENTRY __item, ACTION __action) __THROW;
 
 /* Create a new hashing table which will at most contain NEL elements.  */
-extern int hcreate __P ((size_t __nel));
+extern int hcreate (size_t __nel) __THROW;
 
 /* Destroy current internal hashing table.  */
-extern void hdestroy __P ((void));
+extern void hdestroy (void) __THROW;
 
 #ifdef __USE_GNU
 /* Data type for reentrant functions.  */
@@ -104,10 +104,10 @@ struct hsearch_data
 
 /* Reentrant versions which can handle multiple hashing tables at the
    same time.  */
-extern int hsearch_r __P ((ENTRY __item, ACTION __action, ENTRY **__retval,
-			   struct hsearch_data *__htab));
-extern int hcreate_r __P ((size_t __nel, struct hsearch_data *__htab));
-extern void hdestroy_r __P ((struct hsearch_data *__htab));
+extern int hsearch_r (ENTRY __item, ACTION __action, ENTRY **__retval,
+		      struct hsearch_data *__htab) __THROW;
+extern int hcreate_r (size_t __nel, struct hsearch_data *__htab) __THROW;
+extern void hdestroy_r (struct hsearch_data *__htab) __THROW;
 #endif
 
 
@@ -127,50 +127,47 @@ VISIT;
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP and insert a new element if not found.  */
-extern void *tsearch __PMT ((__const void *__key, void **__rootp,
-			     __compar_fn_t __compar));
+extern void *tsearch (__const void *__key, void **__rootp,
+		      __compar_fn_t __compar);
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP.  If no matching entry is available return NULL.  */
-extern void *tfind __PMT ((__const void *__key, void *__const *__rootp,
-			   __compar_fn_t __compar));
+extern void *tfind (__const void *__key, void *__const *__rootp,
+		    __compar_fn_t __compar);
 
 /* Remove the element matching KEY from the tree pointed to by *ROOTP.  */
-extern void *tdelete __PMT ((__const void *__key, void **__rootp,
-			     __compar_fn_t __compar));
+extern void *tdelete (__const void *__key, void **__rootp,
+		      __compar_fn_t __compar);
 
 #ifndef __ACTION_FN_T
 # define __ACTION_FN_T
-typedef void (*__action_fn_t) __PMT ((__const void *__nodep,
-				      VISIT __value,
-				      int __level));
+typedef void (*__action_fn_t) (__const void *__nodep, VISIT __value,
+			       int __level);
 #endif
 
 /* Walk through the whole tree and call the ACTION callback for every node
    or leaf.  */
-extern void twalk __PMT ((__const void *__root, __action_fn_t __action));
+extern void twalk (__const void *__root, __action_fn_t __action);
 
 #ifdef __USE_GNU
 /* Callback type for function to free a tree node.  If the keys are atomic
    data this function should do nothing.  */
-typedef void (*__free_fn_t) __PMT ((void *__nodep));
+typedef void (*__free_fn_t) (void *__nodep);
 
 /* Destroy the whole tree, call FREEFCT for each node or leaf.  */
-extern void tdestroy __PMT ((void *__root, __free_fn_t __freefct));
+extern void tdestroy (void *__root, __free_fn_t __freefct);
 #endif
 
 
 /* Perform linear search for KEY by comparing by COMPAR in an array
    [BASE,BASE+NMEMB*SIZE).  */
-extern void *lfind __PMT ((__const void *__key, __const void *__base,
-			   size_t *__nmemb, size_t __size,
-			   __compar_fn_t __compar));
+extern void *lfind (__const void *__key, __const void *__base,
+		    size_t *__nmemb, size_t __size, __compar_fn_t __compar);
 
 /* Perform linear search for KEY by comparing by COMPAR function in
    array [BASE,BASE+NMEMB*SIZE) and insert entry if not found.  */
-extern void *lsearch __PMT ((__const void *__key, void *__base,
-			     size_t *__nmemb, size_t __size,
-			     __compar_fn_t __compar));
+extern void *lsearch (__const void *__key, void *__base,
+		      size_t *__nmemb, size_t __size, __compar_fn_t __compar);
 
 __END_DECLS
 

@@ -33,7 +33,7 @@
 
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())
-extern int __getpagesize __P ((void));
+extern int __getpagesize (void) __THROW;
 
 
 /* The following System V style IPC functions implement a shared memory
@@ -42,16 +42,17 @@ extern int __getpagesize __P ((void));
 __BEGIN_DECLS
 
 /* Shared memory control operation.  */
-extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));
+extern int shmctl (int __shmid, int __cmd, struct shmid_ds *__buf) __THROW;
 
 /* Get shared memory segment.  */
-extern int shmget __P ((key_t __key, size_t __size, int __shmflg));
+extern int shmget (key_t __key, size_t __size, int __shmflg) __THROW;
 
 /* Attach shared memory segment.  */
-extern void *shmat __P ((int __shmid, __const void *__shmaddr, int __shmflg));
+extern void *shmat (int __shmid, __const void *__shmaddr, int __shmflg)
+     __THROW;
 
 /* Detach shared memory segment.  */
-extern int shmdt __P ((__const void *__shmaddr));
+extern int shmdt (__const void *__shmaddr) __THROW;
 
 __END_DECLS
 

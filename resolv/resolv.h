@@ -166,19 +166,15 @@ struct __res_state {
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
 
-typedef res_sendhookact (*res_send_qhook)__PMT((struct sockaddr_in * const *ns,
-						const u_char **query,
-						int *querylen,
-						u_char *ans,
-						int anssiz,
-						int *resplen));
+typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *ns,
+					   const u_char **query, int *querylen,
+					   u_char *ans, int anssiz,
+					   int *resplen);
 
-typedef res_sendhookact (*res_send_rhook)__PMT((const struct sockaddr_in *ns,
-						const u_char *query,
-						int querylen,
-						u_char *ans,
-						int anssiz,
-						int *resplen));
+typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
+					   const u_char *query, int querylen,
+					   u_char *ans, int anssiz,
+					   int *resplen);
 
 struct res_sym {
 	int	number;		/* Identifying number, like T_MX */
@@ -239,56 +235,57 @@ extern const struct res_sym __p_type_syms[];
 #endif
 
 __BEGIN_DECLS
-int		res_hnok __P((const char *));
-int		res_ownok __P((const char *));
-int		res_mailok __P((const char *));
-int		res_dnok __P((const char *));
-int		sym_ston __P((const struct res_sym *, char *, int *));
-const char *	sym_ntos __P((const struct res_sym *, int, int *));
-const char *	sym_ntop __P((const struct res_sym *, int, int *));
-int		b64_ntop __P((u_char const *, size_t, char *, size_t));
-int		b64_pton __P((char const *, u_char *, size_t));
-int		loc_aton __P((const char *, u_char *));
-const char *	loc_ntoa __P((const u_char *, char *));
-int		dn_skipname __P((const u_char *, const u_char *));
-void		fp_resstat __P((struct __res_state *, FILE *));
-void		fp_query __P((const u_char *, FILE *));
-void		fp_nquery __P((const u_char *, int, FILE *));
-const char *	hostalias __P((const char *));
-void		putlong __P((u_int32_t, u_char *));
-void		putshort __P((u_int16_t, u_char *));
-const char *	p_class __P((int));
-const char *	p_time __P((u_int32_t));
-const char *	p_type __P((int));
-void		p_query __P((const u_char *));
-const u_char *	p_cdnname __P((const u_char *, const u_char *, int, FILE *));
-const u_char *	p_cdname __P((const u_char *, const u_char *, FILE *));
-const u_char *	p_fqnname __P((const u_char *cp, const u_char *msg,
-			       int, char *, int));
-const u_char *	p_fqname __P((const u_char *, const u_char *, FILE *));
-const u_char *	p_rr __P((const u_char *, const u_char *, FILE *));
-const char *	p_option __P((u_long option));
-char *		p_secstodate __P((u_long));
-int		dn_count_labels __P((char *));
-int		dn_comp __P((const char *, u_char *, int,
-			     u_char **, u_char **));
-int		dn_expand __P((const u_char *, const u_char *, const u_char *,
-			       char *, int));
-int		res_init __P((void));
-u_int		res_randomid __P((void));
-int		res_query __P((const char *, int, int, u_char *, int));
-int		res_search __P((const char *, int, int, u_char *, int));
-int		res_querydomain __P((const char *, const char *, int, int,
-				     u_char *, int));
-int		res_mkquery __P((int, const char *, int, int, const u_char *, int,
-				 const u_char *, u_char *, int));
-int		res_send __P((const u_char *, int, u_char *, int));
-int		res_isourserver __P((const struct sockaddr_in *));
-int		res_nameinquery __P((const char *, int, int,
-				     const u_char *, const u_char *));
-int		res_queriesmatch __P((const u_char *, const u_char *,
-				      const u_char *, const u_char *));
-void		res_close __P((void));
+int		res_hnok (const char *) __THROW;
+int		res_ownok (const char *) __THROW;
+int		res_mailok (const char *) __THROW;
+int		res_dnok (const char *) __THROW;
+int		sym_ston (const struct res_sym *, char *, int *) __THROW;
+const char *	sym_ntos (const struct res_sym *, int, int *) __THROW;
+const char *	sym_ntop (const struct res_sym *, int, int *) __THROW;
+int		b64_ntop (u_char const *, size_t, char *, size_t) __THROW;
+int		b64_pton (char const *, u_char *, size_t) __THROW;
+int		loc_aton (const char *, u_char *) __THROW;
+const char *	loc_ntoa (const u_char *, char *) __THROW;
+int		dn_skipname (const u_char *, const u_char *) __THROW;
+void		fp_resstat (struct __res_state *, FILE *) __THROW;
+void		fp_query (const u_char *, FILE *) __THROW;
+void		fp_nquery (const u_char *, int, FILE *) __THROW;
+const char *	hostalias (const char *) __THROW;
+void		putlong (u_int32_t, u_char *) __THROW;
+void		putshort (u_int16_t, u_char *) __THROW;
+const char *	p_class (int) __THROW;
+const char *	p_time (u_int32_t) __THROW;
+const char *	p_type (int) __THROW;
+void		p_query (const u_char *) __THROW;
+const u_char *	p_cdnname (const u_char *, const u_char *, int, FILE *)
+     __THROW;
+const u_char *	p_cdname (const u_char *, const u_char *, FILE *) __THROW;
+const u_char *	p_fqnname (const u_char *cp, const u_char *msg,
+			   int, char *, int) __THROW;
+const u_char *	p_fqname (const u_char *, const u_char *, FILE *) __THROW;
+const u_char *	p_rr (const u_char *, const u_char *, FILE *) __THROW;
+const char *	p_option (u_long option) __THROW;
+char *		p_secstodate (u_long) __THROW;
+int		dn_count_labels (char *) __THROW;
+int		dn_comp (const char *, u_char *, int,
+			     u_char **, u_char **) __THROW;
+int		dn_expand (const u_char *, const u_char *, const u_char *,
+			   char *, int) __THROW;
+int		res_init (void) __THROW;
+u_int		res_randomid (void) __THROW;
+int		res_query (const char *, int, int, u_char *, int) __THROW;
+int		res_search (const char *, int, int, u_char *, int) __THROW;
+int		res_querydomain (const char *, const char *, int, int,
+				 u_char *, int) __THROW;
+int		res_mkquery (int, const char *, int, int, const u_char *, int,
+			     const u_char *, u_char *, int) __THROW;
+int		res_send (const u_char *, int, u_char *, int) __THROW;
+int		res_isourserver (const struct sockaddr_in *) __THROW;
+int		res_nameinquery (const char *, int, int,
+				 const u_char *, const u_char *) __THROW;
+int		res_queriesmatch (const u_char *, const u_char *,
+				  const u_char *, const u_char *) __THROW;
+void		res_close (void) __THROW;
 __END_DECLS
 
 #endif /* resolv.h */

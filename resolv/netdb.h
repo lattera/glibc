@@ -47,7 +47,7 @@ __BEGIN_DECLS
 extern int h_errno;
 
 /* Function to get address of global `h_errno' variable.  */
-extern int *__h_errno_location __P ((void)) __attribute__ ((__const__));
+extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 
 #ifdef _LIBC
 # ifdef _LIBC_REENTRANT
@@ -82,10 +82,10 @@ __set_h_errno (int __err)
 
 /* Print error indicated by `h_errno' variable on standard error.  STR
    if non-null is printed before the error string.  */
-extern void herror __P ((__const char *__str));
+extern void herror (__const char *__str) __THROW;
 
 /* Return string associated with error ERR_NUM.  */
-extern __const char *hstrerror __P ((int __err_num));
+extern __const char *hstrerror (int __err_num) __THROW;
 
 
 
@@ -102,39 +102,38 @@ struct hostent
 
 /* Open host data base files and mark them as staying open even after
    a later search if STAY_OPEN is non-zero.  */
-extern void sethostent __P ((int __stay_open));
+extern void sethostent (int __stay_open) __THROW;
 
 /* Close host data base files and clear `stay open' flag.  */
-extern void endhostent __P ((void));
+extern void endhostent (void) __THROW;
 
 /* Get next entry from host data base file.  Open data base if
    necessary.  */
-extern struct hostent *gethostent __P ((void));
+extern struct hostent *gethostent (void) __THROW;
 
 /* Return entry from host data base which address match ADDR with
    length LEN and type TYPE.  */
-extern struct hostent *gethostbyaddr __P ((__const char *__addr, size_t __len,
-					   int __type));
+extern struct hostent *gethostbyaddr (__const char *__addr, size_t __len,
+				      int __type) __THROW;
 
 /* Return entry from host data base for host with NAME.  */
-extern struct hostent *gethostbyname __P ((__const char *__name));
+extern struct hostent *gethostbyname (__const char *__name) __THROW;
 
 /* Return entry from host data base for host with NAME.  AF must be
    set to the address type which is `AF_INET' for IPv4 or `AF_INET6'
    for IPv6.  */
-extern struct hostent *gethostbyname2 __P ((__const char *__name, int __af));
+extern struct hostent *gethostbyname2 (__const char *__name, int __af) __THROW;
 
 #ifdef __USE_UNIX98
 /* Return entry from host data base which address match ADDR with
    length LEN and type TYPE in newly allocated buffer.  */
-extern struct hostent *getipnodebyaddr __P ((__const char *__addr,
-					     size_t __len, int __type,
-					     int *__error_num));
+extern struct hostent *getipnodebyaddr (__const char *__addr, size_t __len,
+					int __type, int *__error_num) __THROW;
 
 /* Return entry from host data base for host with NAME and newly allocated
    buffer.  FLAGS is some combination of the following AI_* values.  */
-extern struct hostent *getipnodebyname __P ((__const char *__name, int __type,
-					     int __flags, int *__error_num));
+extern struct hostent *getipnodebyname (__const char *__name, int __type,
+					int __flags, int *__error_num) __THROW;
 
 # define AI_V4MAPPED	1	/* IPv4-mapped addresses are acceptable.  */
 # define AI_ALL		2	/* Return both IPv4 and IPv6 addresses.  */
@@ -144,7 +143,7 @@ extern struct hostent *getipnodebyname __P ((__const char *__name, int __type,
 
 /* Free structure returned by previous `getipnodebyaddr' or `getipnodebyname'
    call.  */
-extern void freehostent __P ((struct hostent *__ptr));
+extern void freehostent (struct hostent *__ptr) __THROW;
 
 #endif
 
@@ -154,29 +153,29 @@ extern void freehostent __P ((struct hostent *__ptr));
    argument is a pointer to a variable which gets the value which
    would be stored in the global variable `herrno' by the
    non-reentrant functions.  */
-extern int gethostent_r __P ((struct hostent *__restrict __result_buf,
-			      char *__restrict __buf, size_t __buflen,
-			      struct hostent **__restrict __result,
-			      int *__restrict __h_errnop));
+extern int gethostent_r (struct hostent *__restrict __result_buf,
+			 char *__restrict __buf, size_t __buflen,
+			 struct hostent **__restrict __result,
+			 int *__restrict __h_errnop) __THROW;
 
-extern int gethostbyaddr_r __P ((__const char *__restrict __addr, size_t __len,
-				 int __type,
-				 struct hostent *__restrict __result_buf,
-				 char *__restrict __buf, size_t __buflen,
-				 struct hostent **__restrict __result,
-				 int *__restrict __h_errnop));
+extern int gethostbyaddr_r (__const char *__restrict __addr, size_t __len,
+			    int __type,
+			    struct hostent *__restrict __result_buf,
+			    char *__restrict __buf, size_t __buflen,
+			    struct hostent **__restrict __result,
+			    int *__restrict __h_errnop) __THROW;
 
-extern int gethostbyname_r __P ((__const char *__restrict __name,
-				 struct hostent *__restrict __result_buf,
-				 char *__restrict __buf, size_t __buflen,
-				 struct hostent **__restrict __result,
-				 int *__restrict __h_errnop));
+extern int gethostbyname_r (__const char *__restrict __name,
+			    struct hostent *__restrict __result_buf,
+			    char *__restrict __buf, size_t __buflen,
+			    struct hostent **__restrict __result,
+			    int *__restrict __h_errnop) __THROW;
 
-extern int gethostbyname2_r __P ((__const char *__restrict __name, int __af,
-				  struct hostent *__restrict __result_buf,
-				  char *__restrict __buf, size_t __buflen,
-				  struct hostent **__restrict __result,
-				  int *__restrict __h_errnop));
+extern int gethostbyname2_r (__const char *__restrict __name, int __af,
+			     struct hostent *__restrict __result_buf,
+			     char *__restrict __buf, size_t __buflen,
+			     struct hostent **__restrict __result,
+			     int *__restrict __h_errnop) __THROW;
 #endif	/* misc */
 
 
@@ -193,22 +192,22 @@ struct netent
 
 /* Open network data base files and mark them as staying open even
    after a later search if STAY_OPEN is non-zero.  */
-extern void setnetent __P ((int __stay_open));
+extern void setnetent (int __stay_open) __THROW;
 
 /* Close network data base files and clear `stay open' flag.  */
-extern void endnetent __P ((void));
+extern void endnetent (void) __THROW;
 
 /* Get next entry from network data base file.  Open data base if
    necessary.  */
-extern struct netent *getnetent __P ((void));
+extern struct netent *getnetent (void) __THROW;
 
 /* Return entry from network data base which address match NET and
    type TYPE.  */
-extern struct netent *getnetbyaddr __P ((unsigned long int __net,
-					 int __type));
+extern struct netent *getnetbyaddr (unsigned long int __net, int __type)
+     __THROW;
 
 /* Return entry from network data base for network with NAME.  */
-extern struct netent *getnetbyname __P ((__const char *__name));
+extern struct netent *getnetbyname (__const char *__name) __THROW;
 
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
@@ -216,22 +215,22 @@ extern struct netent *getnetbyname __P ((__const char *__name));
    argument is a pointer to a variable which gets the value which
    would be stored in the global variable `herrno' by the
    non-reentrant functions.  */
-extern int getnetent_r __P ((struct netent *__restrict __result_buf,
-			     char *__restrict __buf, size_t __buflen,
-			     struct netent **__restrict __result,
-			     int *__restrict __h_errnop));
+extern int getnetent_r (struct netent *__restrict __result_buf,
+			char *__restrict __buf, size_t __buflen,
+			struct netent **__restrict __result,
+			int *__restrict __h_errnop) __THROW;
 
-extern int getnetbyaddr_r __P ((unsigned long int __net, int __type,
-				struct netent *__restrict __result_buf,
-				char *__restrict __buf, size_t __buflen,
-				struct netent **__restrict __result,
-				int *__restrict __h_errnop));
+extern int getnetbyaddr_r (unsigned long int __net, int __type,
+			   struct netent *__restrict __result_buf,
+			   char *__restrict __buf, size_t __buflen,
+			   struct netent **__restrict __result,
+			   int *__restrict __h_errnop) __THROW;
 
-extern int getnetbyname_r __P ((__const char *__restrict __name,
-				struct netent *__restrict __result_buf,
-				char *__restrict __buf, size_t __buflen,
-				struct netent **__restrict __result,
-				int *__restrict __h_errnop));
+extern int getnetbyname_r (__const char *__restrict __name,
+			   struct netent *__restrict __result_buf,
+			   char *__restrict __buf, size_t __buflen,
+			   struct netent **__restrict __result,
+			   int *__restrict __h_errnop) __THROW;
 #endif	/* misc */
 
 
@@ -246,42 +245,43 @@ struct servent
 
 /* Open service data base files and mark them as staying open even
    after a later search if STAY_OPEN is non-zero.  */
-extern void setservent __P ((int __stay_open));
+extern void setservent (int __stay_open) __THROW;
 
 /* Close service data base files and clear `stay open' flag.  */
-extern void endservent __P ((void));
+extern void endservent (void) __THROW;
 
 /* Get next entry from service data base file.  Open data base if
    necessary.  */
-extern struct servent *getservent __P ((void));
+extern struct servent *getservent (void) __THROW;
 
 /* Return entry from network data base for network with NAME and
    protocol PROTO.  */
-extern struct servent *getservbyname __P ((__const char *__name,
-					   __const char *__proto));
+extern struct servent *getservbyname (__const char *__name,
+				      __const char *__proto) __THROW;
 
 /* Return entry from service data base which matches port PORT and
    protocol PROTO.  */
-extern struct servent *getservbyport __P ((int __port, __const char *__proto));
+extern struct servent *getservbyport (int __port, __const char *__proto)
+     __THROW;
 
 
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
-extern int getservent_r __P ((struct servent *__restrict __result_buf,
-			      char *__restrict __buf, size_t __buflen,
-			      struct servent **__restrict __result));
+extern int getservent_r (struct servent *__restrict __result_buf,
+			 char *__restrict __buf, size_t __buflen,
+			 struct servent **__restrict __result) __THROW;
 
-extern int getservbyname_r __P ((__const char *__restrict __name,
-				 __const char *__restrict __proto,
-				 struct servent *__restrict __result_buf,
-				 char *__restrict __buf, size_t __buflen,
-				 struct servent **__restrict __result));
+extern int getservbyname_r (__const char *__restrict __name,
+			    __const char *__restrict __proto,
+			    struct servent *__restrict __result_buf,
+			    char *__restrict __buf, size_t __buflen,
+			    struct servent **__restrict __result) __THROW;
 
-extern int getservbyport_r __P ((int __port, __const char *__restrict __proto,
-				 struct servent *__restrict __result_buf,
-				 char *__restrict __buf, size_t __buflen,
-				 struct servent **__restrict __result));
+extern int getservbyport_r (int __port, __const char *__restrict __proto,
+			    struct servent *__restrict __result_buf,
+			    char *__restrict __buf, size_t __buflen,
+			    struct servent **__restrict __result) __THROW;
 #endif	/* misc */
 
 
@@ -295,63 +295,63 @@ struct protoent
 
 /* Open protocol data base files and mark them as staying open even
    after a later search if STAY_OPEN is non-zero.  */
-extern void setprotoent __P ((int __stay_open));
+extern void setprotoent (int __stay_open) __THROW;
 
 /* Close protocol data base files and clear `stay open' flag.  */
-extern void endprotoent __P ((void));
+extern void endprotoent (void) __THROW;
 
 /* Get next entry from protocol data base file.  Open data base if
    necessary.  */
-extern struct protoent *getprotoent __P ((void));
+extern struct protoent *getprotoent (void) __THROW;
 
 /* Return entry from protocol data base for network with NAME.  */
-extern struct protoent *getprotobyname __P ((__const char *__name));
+extern struct protoent *getprotobyname (__const char *__name) __THROW;
 
 /* Return entry from protocol data base which number is PROTO.  */
-extern struct protoent *getprotobynumber __P ((int __proto));
+extern struct protoent *getprotobynumber (int __proto) __THROW;
 
 
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
-extern int getprotoent_r __P ((struct protoent *__restrict __result_buf,
+extern int getprotoent_r (struct protoent *__restrict __result_buf,
+			  char *__restrict __buf, size_t __buflen,
+			  struct protoent **__restrict __result) __THROW;
+
+extern int getprotobyname_r (__const char *__restrict __name,
+			     struct protoent *__restrict __result_buf,
+			     char *__restrict __buf, size_t __buflen,
+			     struct protoent **__restrict __result) __THROW;
+
+extern int getprotobynumber_r (int __proto,
+			       struct protoent *__restrict __result_buf,
 			       char *__restrict __buf, size_t __buflen,
-			       struct protoent **__restrict __result));
-
-extern int getprotobyname_r __P ((__const char *__restrict __name,
-				  struct protoent *__restrict __result_buf,
-				  char *__restrict __buf, size_t __buflen,
-				  struct protoent **__restrict __result));
-
-extern int getprotobynumber_r __P ((int __proto,
-				    struct protoent *__restrict __result_buf,
-				    char *__restrict __buf, size_t __buflen,
-				    struct protoent **__restrict __result));
+			       struct protoent **__restrict __result) __THROW;
 #endif	/* misc */
 
 
 /* Establish network group NETGROUP for enumeration.  */
-extern int setnetgrent __P ((__const char *__netgroup));
+extern int setnetgrent (__const char *__netgroup) __THROW;
 
 /* Free all space allocated by previous `setnetgrent' call.  */
-extern void endnetgrent __P ((void));
+extern void endnetgrent (void) __THROW;
 
 /* Get next member of netgroup established by last `setnetgrent' call
    and return pointers to elements in HOSTP, USERP, and DOMAINP.  */
-extern int getnetgrent __P ((char **__restrict __hostp,
-			     char **__restrict __userp,
-			     char **__restrict __domainp));
+extern int getnetgrent (char **__restrict __hostp,
+			char **__restrict __userp,
+			char **__restrict __domainp) __THROW;
 
 /* Test whether NETGROUP contains the triple (HOST,USER,DOMAIN).  */
-extern int innetgr __P ((__const char *__netgroup, __const char *__host,
-			 __const char *__user, __const char *domain));
+extern int innetgr (__const char *__netgroup, __const char *__host,
+		    __const char *__user, __const char *domain) __THROW;
 
 #ifdef	__USE_MISC
 /* Reentrant version of `getnetgrent' where result is placed in BUFFER.  */
-extern int getnetgrent_r __P ((char **__restrict __hostp,
-			       char **__restrict __userp,
-			       char **__restrict __domainp,
-			       char *__restrict __buffer, size_t __buflen));
+extern int getnetgrent_r (char **__restrict __hostp,
+			  char **__restrict __userp,
+			  char **__restrict __domainp,
+			  char *__restrict __buffer, size_t __buflen) __THROW;
 #endif	/* misc */
 
 
@@ -362,32 +362,33 @@ extern int getnetgrent_r __P ((char **__restrict __hostp,
    connection is returned.  The caller must have the right to use a
    reserved port.  When the function returns *AHOST contains the
    official host name.  */
-extern int rcmd __P ((char **__restrict __ahost, unsigned short int __rport,
-		      __const char *__restrict __locuser,
-		      __const char *__restrict __remuser,
-		      __const char *__restrict __cmd, int *__restrict __fd2p));
+extern int rcmd (char **__restrict __ahost, unsigned short int __rport,
+		 __const char *__restrict __locuser,
+		 __const char *__restrict __remuser,
+		 __const char *__restrict __cmd, int *__restrict __fd2p)
+     __THROW;
 
 /* Call `rexecd' at port RPORT on remote machine *AHOST to execute
    CMD.  The process runs at the remote machine using the ID of user
    NAME whose cleartext password is PASSWD.  In *FD2P the descriptor
    to the socket for the connection is returned.  When the function
    returns *AHOST contains the official host name.  */
-extern int rexec __P ((char **__restrict __ahost, int __rport,
-		       __const char *__restrict __name,
-		       __const char *__restrict __pass,
-		       __const char *__restrict __cmd,
-		       int *__restrict __fd2p));
+extern int rexec (char **__restrict __ahost, int __rport,
+		  __const char *__restrict __name,
+		  __const char *__restrict __pass,
+		  __const char *__restrict __cmd, int *__restrict __fd2p)
+     __THROW;
 
 /* Check whether user REMUSER on system RHOST is allowed to login as LOCUSER.
    If SUSER is not zero the user tries to become superuser.  Return 0 if
    it is possible.  */
-extern int ruserok __P ((__const char *__rhost, int __suser,
-			 __const char *__remuser, __const char *__locuser));
+extern int ruserok (__const char *__rhost, int __suser,
+		    __const char *__remuser, __const char *__locuser) __THROW;
 
 /* Try to allocate reserved port, returning a descriptor for a socket opened
    at this port or -1 if unsuccessful.  The search for an available port
    will start at ALPORT and continues with lower numbers.  */
-extern int rresvport __P ((int *__alport));
+extern int rresvport (int *__alport) __THROW;
 #endif
 
 
@@ -435,23 +436,22 @@ struct addrinfo
 
 /* Translate name of a service location and/or a service name to set of
    socket addresses.  */
-extern int getaddrinfo __P ((__const char *__restrict __name,
-			     __const char *__restrict __service,
-			     __const struct addrinfo *__restrict __req,
-			     struct addrinfo **__restrict __pai));
+extern int getaddrinfo (__const char *__restrict __name,
+			__const char *__restrict __service,
+			__const struct addrinfo *__restrict __req,
+			struct addrinfo **__restrict __pai) __THROW;
 
 /* Free `addrinfo' structure AI including associated storage.  */
-extern void freeaddrinfo __P ((struct addrinfo *__ai));
+extern void freeaddrinfo (struct addrinfo *__ai) __THROW;
 
 /* Convert error return from getaddrinfo() to a string.  */
-extern char *gai_strerror __P  ((int __ecode));
+extern char *gai_strerror (int __ecode) __THROW;
 
 /* Translate a socket address to a location and service name.  */
-extern int getnameinfo __P ((__const struct sockaddr *__restrict __sa,
-			     socklen_t __salen,
-			     char *__restrict __host, size_t __hostlen,
-			     char *__restrict __serv, size_t __servlen,
-			     int __flags));
+extern int getnameinfo (__const struct sockaddr *__restrict __sa,
+			socklen_t __salen, char *__restrict __host,
+			size_t __hostlen, char *__restrict __serv,
+			size_t __servlen, int __flags) __THROW;
 
 #endif	/* POSIX */
 

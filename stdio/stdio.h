@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,8 +74,8 @@ typedef struct
 
 /* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
    Return number of bytes read.  */
-typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
-				       size_t __nbytes));
+typedef __ssize_t __io_read_fn (__ptr_t __cookie, char *__buf,
+				size_t __nbytes);
 
 /* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
    unless there is an error.  Return number of bytes written, or -1 if
@@ -83,8 +83,8 @@ typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
    opened for append (__mode.__append set), then set the file pointer
    to the end of the file and then do the write; if not, just write at
    the current file pointer.  */
-typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
-				      size_t __n));
+typedef __ssize_t __io_write_fn (__ptr_t __cookie, __const char *__buf,
+				 size_t __n);
 
 /* Move COOKIE's file position to *POS bytes from the
    beginning of the file (if W is SEEK_SET),
@@ -92,14 +92,14 @@ typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek_fn __PMT ((__ptr_t __cookie, fpos_t *__pos, int __w));
+typedef int __io_seek_fn (__ptr_t __cookie, fpos_t *__pos, int __w);
 
 /* Close COOKIE.  */
-typedef int __io_close_fn __PMT ((__ptr_t __cookie));
+typedef int __io_close_fn (__ptr_t __cookie);
 
 /* Return the file descriptor associated with COOKIE,
    or -1 on error.  There need not be any associated file descriptor.  */
-typedef int __io_fileno_fn __PMT ((__ptr_t __cookie));
+typedef int __io_fileno_fn (__ptr_t __cookie);
 
 #ifdef __USE_GNU
 /* User-visible names for the above.  */
@@ -139,9 +139,9 @@ typedef struct
 typedef struct
 {
   /* Make room in the input buffer.  */
-  int (*__input) __PMT ((FILE *__stream));
+  int (*__input) (FILE *__stream);
   /* Make room in the output buffer.  */
-  void (*__output) __PMT ((FILE *__stream, int __c));
+  void (*__output) (FILE *__stream, int __c);
 } __room_functions;
 
 extern __const __io_functions __default_io_functions;
@@ -151,10 +151,10 @@ extern __const __room_functions __default_room_functions;
 /* Default close function.  */
 extern __io_close_fn __stdio_close;
 /* Open FILE with mode M, store cookie in *COOKIEPTR.  */
-extern int __stdio_open __P ((__const char *__file, __io_mode __m,
-			      __ptr_t *__cookieptr));
+extern int __stdio_open (__const char *__file, __io_mode __m,
+			 void **__cookieptr) __THROW;
 /* Put out an error message for when stdio needs to die.  */
-extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
+extern void __stdio_errmsg (__const char *__msg, size_t __len) __THROW;
 
 
 
@@ -216,12 +216,12 @@ struct __stdio_file
 #define	__clearerr(stream)	((stream)->__error = (stream)->__eof = 0)
 
 /* Nuke STREAM, making it unusable but available for reuse.  */
-extern void __invalidate __P ((FILE *__stream));
+extern void __invalidate (FILE *__stream) __THROW;
 
 /* Make sure STREAM->__offset and STREAM->__target are initialized.
    Returns 0 if successful, or EOF on
    error (but doesn't set STREAM->__error).  */
-extern int __stdio_check_offset __P ((FILE *__stream));
+extern int __stdio_check_offset (FILE *__stream) __THROW;
 
 
 /* The possibilities for the third argument to `setvbuf'.  */
@@ -279,23 +279,23 @@ extern FILE *stdin, *stdout, *stderr;
 
 
 /* Remove file FILENAME.  */
-extern int remove __P ((__const char *__filename));
+extern int remove (__const char *__filename) __THROW;
 /* Rename file OLD to NEW.  */
-extern int rename __P ((__const char *__old, __const char *__new));
+extern int rename (__const char *__old, __const char *__new) __THROW;
 
 
 /* Create a temporary file and open it read/write.  */
-extern FILE *tmpfile __P ((void));
+extern FILE *tmpfile (void) __THROW;
 #ifdef __USE_LARGEFILE64
-extern FILE *tmpfile64 __P ((void));
+extern FILE *tmpfile64 (void) __THROW;
 #endif
 /* Generate a temporary filename.  */
-extern char *tmpnam __P ((char *__s));
+extern char *tmpnam (char *__s) __THROW;
 
 #ifdef __USE_REENTRANT
 /* This is the reentrant variant of `tmpnam'.  The only difference is
    that it does not allow S to be NULL.  */
-extern char *tmpnam_r __P ((char *__s));
+extern char *tmpnam_r (char *__s) __THROW;
 #endif
 
 
@@ -307,38 +307,38 @@ extern char *tmpnam_r __P ((char *__s));
    If not and if DIR is not NULL, that value is checked.  If that fails,
    P_tmpdir is tried and finally "/tmp".  The storage for the filename
    is allocated by `malloc'.  */
-extern char *tempnam __P ((__const char *__dir, __const char *__pfx));
+extern char *tempnam (__const char *__dir, __const char *__pfx) __THROW;
 #endif
 
 
 /* This performs actual output when necessary, flushing
    STREAM's buffer and optionally writing another character.  */
-extern int __flshfp __P ((FILE *__stream, int __c));
+extern int __flshfp (FILE *__stream, int __c) __THROW;
 
 
 /* Close STREAM.  */
-extern int fclose __P ((FILE *__stream));
+extern int fclose (FILE *__stream) __THROW;
 /* Flush STREAM, or all streams if STREAM is NULL.  */
-extern int fflush __P ((FILE *__stream));
+extern int fflush (FILE *__stream) __THROW;
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
-extern int fflush_unlocked __P ((FILE *__stream));
+extern int fflush_unlocked (FILE *__stream) __THROW;
 #endif
 
 #ifdef __USE_GNU
 /* Close all streams.  */
-extern int __fcloseall __P ((void));
-extern int fcloseall __P ((void));
+extern int __fcloseall (void) __THROW;
+extern int fcloseall (void) __THROW;
 #endif
 
 
 /* Open a file and create a new stream for it.  */
-extern FILE *fopen __P ((__const char *__filename, __const char *__modes));
+extern FILE *fopen (__const char *__filename, __const char *__modes) __THROW;
 /* Open a file, replacing an existing stream with it. */
-extern FILE *freopen __P ((__const char *__restrict __filename,
-			   __const char *__restrict __modes,
-			   FILE *__restrict __stream));
+extern FILE *freopen (__const char *__restrict __filename,
+		      __const char *__restrict __modes,
+		      FILE *__restrict __stream) __THROW;
 
 /* Return a new, zeroed, stream.
    You must set its cookie and io_mode.
@@ -349,69 +349,67 @@ extern FILE *freopen __P ((__const char *__restrict __filename,
    The target is set to -1, meaning it will be set to the offset
    before the target is needed.
    Returns NULL if a stream can't be created.  */
-extern FILE *__newstream __P ((void));
+extern FILE *__newstream (void) __THROW;
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
-extern FILE *__fdopen __P ((int __fd, __const char *__modes));
-extern FILE *fdopen __P ((int __fd, __const char *__modes));
+extern FILE *__fdopen (int __fd, __const char *__modes) __THROW;
+extern FILE *fdopen (int __fd, __const char *__modes) __THROW;
 #endif
 
 #ifdef	__USE_GNU
 /* Create a new stream that refers to the given magic cookie,
    and uses the given functions for input and output.  */
-extern FILE *fopencookie __P ((__ptr_t __magic_cookie, __const char *__modes,
-			       __io_functions __io_funcs));
+extern FILE *fopencookie (void *__magic_cookie, __const char *__modes,
+			  __io_functions __io_funcs) __THROW;
 
 /* Create a new stream that refers to a memory buffer.  */
-extern FILE *fmemopen __P ((__ptr_t __s, size_t __len, __const char *__modes));
+extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes) __THROW;
 
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-extern FILE *open_memstream __P ((char **__bufloc, size_t *__sizeloc));
+extern FILE *open_memstream (char **__bufloc, size_t *__sizeloc) __THROW;
 #endif
 
 
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use buffer BUF, of size BUFSIZ.  */
-extern void setbuf __P ((FILE *__restrict __stream, char *__restrict __buf));
+extern void setbuf (FILE *__restrict __stream, char *__restrict __buf) __THROW;
 /* Make STREAM use buffering mode MODE.
    If BUF is not NULL, use N bytes of it for buffering;
    else allocate an internal buffer N bytes long.  */
-extern int setvbuf __P ((FILE *__restrict __stream, char *__restrict __buf,
-			 int __modes, size_t __n));
+extern int setvbuf (FILE *__restrict __stream, char *__restrict __buf,
+		    int __modes, size_t __n) __THROW;
 
 #ifdef	__USE_BSD
 /* If BUF is NULL, make STREAM unbuffered.
    Else make it use SIZE bytes of BUF for buffering.  */
-extern void setbuffer __P ((FILE *__stream, char *__buf, size_t __size));
+extern void setbuffer (FILE *__stream, char *__buf, size_t __size) __THROW;
 
 /* Make STREAM line-buffered.  */
-extern void setlinebuf __P ((FILE *__stream));
+extern void setlinebuf (FILE *__stream) __THROW;
 #endif
 
 
 /* Write formatted output to STREAM.  */
-extern int fprintf __P ((FILE *__restrict __stream,
-			 __const char *__restrict __format, ...));
+extern int fprintf (FILE *__restrict __stream,
+		    __const char *__restrict __format, ...) __THROW;
 /* Write formatted output to stdout.  */
-extern int printf __P ((__const char *__restrict __format, ...));
+extern int printf (__const char *__restrict __format, ...) __THROW;
 /* Write formatted output to S.  */
-extern int sprintf __P ((char *__restrict __s,
-			 __const char *__restrict __format, ...));
+extern int sprintf (char *__restrict __s, __const char *__restrict __format,
+		    ...) __THROW;
 
 /* Write formatted output to S from argument list ARG.  */
-extern int vfprintf __P ((FILE *__restrict __s,
-			  __const char *__restrict __format,
-			  __gnuc_va_list __arg));
+extern int vfprintf (FILE *__restrict __s, __const char *__restrict __format,
+		     __gnuc_va_list __arg) __THROW;
 /* Write formatted output to stdout from argument list ARG.  */
-extern int vprintf __P ((__const char *__restrict __format,
-			 __gnuc_va_list __arg));
+extern int vprintf (__const char *__restrict __format, __gnuc_va_list __arg)
+     ___THROW;
 /* Write formatted output to S from argument list ARG.  */
-extern int vsprintf __P ((char *__restrict __s,
-			  __const char *__restrict __format,
-			  __gnuc_va_list __arg));
+extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
+		     __gnuc_va_list __arg) __THROW;
 
 #ifdef	__OPTIMIZE__
 extern __inline int
@@ -423,68 +421,67 @@ vprintf (const char *__restrict __fmt, __gnuc_va_list __arg) __THROW
 
 #if defined __USE_BSD || defined __USE_ISOC9X
 /* Maximum chars of output to write in MAXLEN.  */
-extern int __snprintf __P ((char *__s, size_t __maxlen,
-			    __const char *__format, ...))
-     __attribute__ ((__format__ (__printf__, 3, 4)));
-extern int snprintf __P ((char *__s, size_t __maxlen,
-			  __const char *__format, ...))
-     __attribute__ ((__format__ (__printf__, 3, 4)));
+extern int __snprintf (char *__s, size_t __maxlen,
+		       __const char *__format, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 4)));
+extern int snprintf (char *__s, size_t __maxlen, __const char *__format, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 4)));
 
-extern int __vsnprintf __P ((char *__s, size_t __maxlen,
-			     __const char *__format, __gnuc_va_list __arg))
-     __attribute__ ((__format__ (__printf__, 3, 0)));
-extern int vsnprintf __P ((char *__s, size_t __maxlen,
-			   __const char *__format, __gnuc_va_list __arg))
-     __attribute__ ((__format__ (__printf__, 3, 0)));
+extern int __vsnprintf (char *__s, size_t __maxlen,
+			__const char *__format, __gnuc_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 0)));
+extern int vsnprintf (char *__s, size_t __maxlen,
+		      __const char *__format, __gnuc_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 3, 0)));
 #endif
 
 #ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
-extern int vasprintf __P ((char **__restrict __ptr,
-			   __const char *__restrict __f, __gnuc_va_list __arg))
-     __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int __asprintf __P ((char **__restrict __ptr,
-			    __const char *__restrict __fmt, ...))
-     __attribute__ ((__format__ (__printf__, 2, 3)));
-extern int asprintf __P ((char **__restrict __ptr,
-			  __const char *__restrict __fmt, ...))
-     __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int vasprintf (char **__restrict __ptr,
+		      __const char *__restrict __f, __gnuc_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int __asprintf (char **__restrict __ptr,
+		       __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int asprintf (char **__restrict __ptr,
+		     __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
 
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf __P ((int __fd, __const char *__restrict __fmt,
-			  __gnuc_va_list __arg))
-     __attribute__ ((__format__ (__printf__, 2, 0)));
-extern int dprintf __P ((int __fd, __const char *__restrict __fmt, ...))
-     __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int vdprintf (int __fd, __const char *__restrict __fmt,
+		     __gnuc_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf (int __fd, __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
 #endif
 
 
 /* Read formatted input from STREAM.  */
-extern int fscanf __P ((FILE *__restrict __stream,
-			__const char *__restrict __format, ...));
+extern int fscanf (FILE *__restrict __stream,
+		   __const char *__restrict __format, ...) __THROW;
 /* Read formatted input from stdin.  */
-extern int scanf __P ((__const char *__restrict __format, ...));
+extern int scanf (__const char *__restrict __format, ...) __THROW;
 /* Read formatted input from S.  */
-extern int sscanf __P ((__const char *__restrict __s,
-			__const char *__restrict __format, ...));
+extern int sscanf (__const char *__restrict __s,
+		   __const char *__restrict __format, ...) __THROW;
 
 #ifdef	__USE_ISOC9X
 /* Read formatted input from S into argument list ARG.  */
-extern int __vfscanf __P ((FILE *__s, __const char *__format,
-			   __gnuc_va_list __arg));
-extern int vfscanf __P ((FILE *__s, __const char *__format,
-			 __gnuc_va_list __arg));
+extern int __vfscanf (FILE *__s, __const char *__format,
+		      __gnuc_va_list __arg) __THROW;
+extern int vfscanf (FILE *__s, __const char *__format,
+		    __gnuc_va_list __arg) __THROW;
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int __vscanf __P ((__const char *__format, __gnuc_va_list __arg));
-extern int vscanf __P ((__const char *__format, __gnuc_va_list __arg));
+extern int __vscanf (__const char *__format, __gnuc_va_list __arg) __THROW;
+extern int vscanf (__const char *__format, __gnuc_va_list __arg) __THROW;
 
 /* Read formatted input from S into argument list ARG.  */
-extern int __vsscanf __P ((__const char *__s, __const char *__format,
-			   __gnuc_va_list __arg));
-extern int vsscanf __P ((__const char *__s, __const char *__format,
-			 __gnuc_va_list __arg));
+extern int __vsscanf (__const char *__s, __const char *__format,
+		      __gnuc_va_list __arg) __THROW;
+extern int vsscanf (__const char *__s, __const char *__format,
+		    __gnuc_va_list __arg) __THROW;
 
 
 #ifdef	__OPTIMIZE__
@@ -509,15 +506,15 @@ vsscanf (const char *__s, const char *__fmt, __gnuc_va_list __arg) __THROW
 
 /* This does actual reading when necessary, filling STREAM's
    buffer and returning the first character in it.  */
-extern int __fillbf __P ((FILE *__stream));
+extern int __fillbf (FILE *__stream) __THROW;
 
 
 /* Read a character from STREAM.  */
-extern int fgetc __P ((FILE *__stream));
-extern int getc __P ((FILE *__stream));
+extern int fgetc (FILE *__stream) __THROW;
+extern int getc (FILE *__stream) __THROW;
 
 /* Read a character from stdin.  */
-extern int getchar __P ((void));
+extern int getchar (void) __THROW;
 
 /* The C standard explicitly says this can
    re-evaluate its argument, so it does. */
@@ -539,8 +536,8 @@ getchar (void) __THROW
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* These are defined in POSIX.1:1996.  */
-extern int getc_unlocked __P ((FILE *__stream));
-extern int getchar_unlocked __P ((void));
+extern int getc_unlocked (FILE *__stream) __THROW;
+extern int getchar_unlocked (void) __THROW;
 
 # ifdef __OPTIMIZE__
 extern __inline int
@@ -559,11 +556,11 @@ getchar_unlocked (void) __THROW
 
 
 /* Write a character to STREAM.  */
-extern int fputc __P ((int __c, FILE *__stream));
-extern int putc __P ((int __c, FILE *__stream));
+extern int fputc (int __c, FILE *__stream) __THROW;
+extern int putc (int __c, FILE *__stream) __THROW;
 
 /* Write a character to stdout.  */
-extern int putchar __P ((int __c));
+extern int putchar (int __c) __THROW;
 
 
 /* The C standard explicitly says this can
@@ -587,7 +584,7 @@ putchar (int __c) __THROW
 
 #ifdef __USE_MISC
 /* Faster version when locking is not necessary.  */
-extern int fputc_unlocked __P ((int __c, FILE *__stream));
+extern int fputc_unlocked (int __c, FILE *__stream) __THROW;
 
 # ifdef __OPTIMIZE__
 extern __inline int
@@ -600,8 +597,8 @@ fputc_unlocked (int __c, FILE *__stream) __THROW
 
 #if defined __USE_POSIX || defined __USE_MISC
 /* These are defined in POSIX.1:1996.  */
-extern int putc_unlocked __P ((int __c, FILE *__stream));
-extern int putchar_unlocked __P ((int __c));
+extern int putc_unlocked (int __c, FILE *__stream) __THROW;
+extern int putchar_unlocked (int __c) __THROW;
 
 # ifdef __OPTIMIZE__
 extern __inline int
@@ -621,26 +618,26 @@ putchar_unlocked (int __c) __THROW
 
 #if defined __USE_SVID || defined __USE_MISC
 /* Get a word (int) from STREAM.  */
-extern int getw __P ((FILE *__stream));
+extern int getw (FILE *__stream) __THROW;
 
 /* Write a word (int) to STREAM.  */
-extern int putw __P ((int __w, FILE *__stream));
+extern int putw (int __w, FILE *__stream) __THROW;
 #endif
 
 
 /* Get a newline-terminated string of finite length from STREAM.  */
-extern char *fgets __P ((char *__restrict __s, int __n,
-			 FILE *__restrict __stream));
+extern char *fgets (char *__restrict __s, int __n,
+		    FILE *__restrict __stream) __THROW;
 
 #ifdef __USE_GNU
 /* This function does the same as `fgets' but does not lock the stream.  */
-extern char *fgets_unlocked __P ((char *__restrict __s, int __n,
-				  FILE *__restrict __stream));
+extern char *fgets_unlocked (char *__restrict __s, int __n,
+			     FILE *__restrict __stream) __THROW;
 #endif
 
 /* Get a newline-terminated string from stdin, removing the newline.
    DO NOT USE THIS FUNCTION!!  There is no limit on how much it will read.  */
-extern char *gets __P ((char *__s));
+extern char *gets (char *__s) __THROW;
 
 
 #ifdef	__USE_GNU
@@ -651,14 +648,14 @@ extern char *gets __P ((char *__s));
    NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
-ssize_t __getdelim __P ((char **__lineptr, size_t *__n,
-			 int __delimiter, FILE *__stream));
-ssize_t getdelim __P ((char **__lineptr, size_t *__n,
-		       int __delimiter, FILE *__stream));
+ssize_t __getdelim (char **__lineptr, size_t *__n,
+		    int __delimiter, FILE *__stream) __THROW;
+ssize_t getdelim (char **__lineptr, size_t *__n,
+		  int __delimiter, FILE *__stream) __THROW;
 
 /* Like `getdelim', but reads up to a newline.  */
-ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
-ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
+ssize_t __getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW;
+ssize_t getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW;
 
 #ifdef	__OPTIMIZE__
 extern __inline ssize_t
@@ -671,59 +668,60 @@ getline (char **__lineptr, size_t *__n, FILE *__stream) __THROW
 
 
 /* Write a string to STREAM.  */
-extern int fputs __P ((__const char *__restrict __s,
-		       FILE *__restrict __stream));
+extern int fputs (__const char *__restrict __s, FILE *__restrict __stream)
+     __THROW;
 
 #ifdef __USE_GNU
 /* This function does the same as `fputs' but does not lock the stream.  */
-extern int fputs_unlocked __P ((__const char *__restrict __s,
-				FILE *__restrict __stream));
+extern int fputs_unlocked (__const char *__restrict __s,
+			   FILE *__restrict __stream) __THROW;
 #endif
 
 /* Write a string, followed by a newline, to stdout.  */
-extern int puts __P ((__const char *__s));
+extern int puts (__const char *__s) __THROW;
 
 
 /* Push a character back onto the input buffer of STREAM.  */
-extern int ungetc __P ((int __c, FILE *__stream));
+extern int ungetc (int __c, FILE *__stream) __THROW;
 
 
 /* Read chunks of generic data from STREAM.  */
-extern size_t fread __P ((__ptr_t __restrict __ptr, size_t __size,
-			  size_t __n, FILE *__restrict __stream));
+extern size_t fread (void *__restrict __ptr, size_t __size,
+		     size_t __n, FILE *__restrict __stream) __THROW;
 /* Write chunks of generic data to STREAM.  */
-extern size_t fwrite __P ((__const __ptr_t __restrict __ptr, size_t __size,
-			   size_t __n, FILE *__restrict __s));
+extern size_t fwrite (__const void *__restrict __ptr, size_t __size,
+		      size_t __n, FILE *__restrict __s) __THROW;
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not necessary.  */
-extern size_t fread_unlocked __P ((void *__restrict __ptr, size_t __size,
-				   size_t __n, FILE *__restrict __stream));
-extern size_t fwrite_unlocked __P ((__const void *__restrict __ptr,
-				    size_t __size, size_t __n,
-				    FILE *__restrict __stream));
+extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
+			      size_t __n, FILE *__restrict __stream) __THROW;
+extern size_t fwrite_unlocked (__const void *__restrict __ptr,
+			       size_t __size, size_t __n,
+			       FILE *__restrict __stream) __THROW;
 #endif
 
 
 /* Seek to a certain position on STREAM.  */
-extern int fseek __P ((FILE *__stream, long int __off, int __whence));
+extern int fseek (FILE *__stream, long int __off, int __whence) __THROW;
 /* Return the current position of STREAM.  */
-extern long int ftell __P ((FILE *__stream));
+extern long int ftell (FILE *__stream) __THROW;
 /* Rewind to the beginning of STREAM.  */
-extern void rewind __P ((FILE *__stream));
+extern void rewind (FILE *__stream) __THROW;
 
 /* Get STREAM's position.  */
-extern int fgetpos __P ((FILE *__restrict __stream, fpos_t *__restrict __pos));
+extern int fgetpos (FILE *__restrict __stream, fpos_t *__restrict __pos)
+     __THROW;
 /* Set STREAM's position.  */
-extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
+extern int fsetpos (FILE *__stream, __const fpos_t *__pos) __THROW;
 
 
 /* Clear the error and EOF indicators for STREAM.  */
-extern void clearerr __P ((FILE *__stream));
+extern void clearerr (FILE *__stream) __THROW;
 /* Return the EOF indicator for STREAM.  */
-extern int feof __P ((FILE *__stream));
+extern int feof (FILE *__stream) __THROW;
 /* Return the error indicator for STREAM.  */
-extern int ferror __P ((FILE *__stream));
+extern int ferror (FILE *__stream) __THROW;
 
 #ifdef	__OPTIMIZE__
 #define	feof(stream)	((stream)->__eof != 0)
@@ -732,9 +730,9 @@ extern int ferror __P ((FILE *__stream));
 
 #ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
-extern void clearerr_unlocked __P ((FILE *__stream));
-extern int feof_unlocked __P ((FILE *__stream));
-extern int ferror_unlocked __P ((FILE *__stream));
+extern void clearerr_unlocked (FILE *__stream) __THROW;
+extern int feof_unlocked (FILE *__stream) __THROW;
+extern int ferror_unlocked (FILE *__stream) __THROW;
 
 # ifdef	__OPTIMIZE__
 #  define feof_unlocked(stream)		((stream)->__eof != 0)
@@ -743,39 +741,39 @@ extern int ferror_unlocked __P ((FILE *__stream));
 #endif
 
 /* Print a message describing the meaning of the value of errno.  */
-extern void perror __P ((__const char *__s));
+extern void perror (__const char *__s) __THROW;
 
 
 #ifdef	__USE_POSIX
 /* Return the system file descriptor for STREAM.  */
-extern int fileno __P ((FILE *__stream));
+extern int fileno (FILE *__stream) __THROW;
 #endif /* Use POSIX.  */
 
 #ifdef __USE_MISC
 /* Faster version when locking is not required.  */
-extern int fileno_unlocked __P ((FILE *__stream));
+extern int fileno_unlocked (FILE *__stream) __THROW;
 #endif
 
 
 #if (defined __USE_POSIX2 || defined __USE_SVID || defined __USE_BSD || \
      defined __USE_MISC)
 /* Create a new stream connected to a pipe running the given command.  */
-extern FILE *popen __P ((__const char *__command, __const char *__modes));
+extern FILE *popen (__const char *__command, __const char *__modes) __THROW;
 
 /* Close a stream opened by popen and return the status of its child.  */
-extern int pclose __P ((FILE *__stream));
+extern int pclose (FILE *__stream) __THROW;
 #endif
 
 
 #ifdef	__USE_POSIX
 /* Return the name of the controlling terminal.  */
-extern char *ctermid __P ((char *__s));
+extern char *ctermid (char *__s) __THROW;
 #endif
 
 
 #ifdef __USE_XOPEN
 /* Return the name of the current user.  */
-extern char *cuserid __P ((char *__s));
+extern char *cuserid (char *__s) __THROW;
 #endif
 
 
@@ -783,14 +781,13 @@ extern char *cuserid __P ((char *__s));
 struct obstack;			/* See <obstack.h>.  */
 
 /* Open a stream that writes to OBSTACK.  */
-extern FILE *open_obstack_stream __P ((struct obstack *__obstack));
+extern FILE *open_obstack_stream (struct obstack *__obstack) __THROW;
 
 /* Write formatted output to an obstack.  */
-extern int obstack_printf __P ((struct obstack *__obstack,
-				__const char *__format, ...));
-extern int obstack_vprintf __P ((struct obstack *__obstack,
-				 __const char *__format,
-				 __gnuc_va_list __args));
+extern int obstack_printf (struct obstack *__obstack,
+			   __const char *__format, ...) __THROW;
+extern int obstack_vprintf (struct obstack *__obstack, __const char *__format,
+			    __gnuc_va_list __args) __THROW;
 #endif
 
 
@@ -798,14 +795,14 @@ extern int obstack_vprintf __P ((struct obstack *__obstack,
 /* These are defined in POSIX.1:1996.  */
 
 /* Acquire ownership of STREAM.  */
-extern void flockfile __P ((FILE *__stream));
+extern void flockfile (FILE *__stream) __THROW;
 
 /* Try to acquire ownership of STREAM but do not block if it is not
    possible.  */
-extern int ftrylockfile __P ((FILE *__stream));
+extern int ftrylockfile (FILE *__stream) __THROW;
 
 /* Relinquish the ownership granted for STREAM.  */
-extern void funlockfile __P ((FILE *__stream));
+extern void funlockfile (FILE *__stream) __THROW;
 #endif /* POSIX || misc */
 
 #if defined __USE_XOPEN && !defined __USE_GNU

@@ -151,122 +151,120 @@ do {								\
 #include <math_ldbl.h>
 
 /* ieee style elementary functions */
-extern double __ieee754_sqrt __P((double));
-extern double __ieee754_acos __P((double));
-extern double __ieee754_acosh __P((double));
-extern double __ieee754_log __P((double));
-extern double __ieee754_atanh __P((double));
-extern double __ieee754_asin __P((double));
-extern double __ieee754_atan2 __P((double,double));
-extern double __ieee754_exp __P((double));
-extern double __ieee754_exp2 __P((double));
-extern double __ieee754_exp10 __P((double));
-extern double __ieee754_cosh __P((double));
-extern double __ieee754_fmod __P((double,double));
-extern double __ieee754_pow __P((double,double));
-extern double __ieee754_lgamma_r __P((double,int *));
-extern double __ieee754_gamma_r __P((double,int *));
-extern double __ieee754_lgamma __P((double));
-extern double __ieee754_gamma __P((double));
-extern double __ieee754_log10 __P((double));
-extern double __ieee754_sinh __P((double));
-extern double __ieee754_hypot __P((double,double));
-extern double __ieee754_j0 __P((double));
-extern double __ieee754_j1 __P((double));
-extern double __ieee754_y0 __P((double));
-extern double __ieee754_y1 __P((double));
-extern double __ieee754_jn __P((int,double));
-extern double __ieee754_yn __P((int,double));
-extern double __ieee754_remainder __P((double,double));
-extern int32_t __ieee754_rem_pio2 __P((double,double*));
-extern double __ieee754_scalb __P((double,double));
+extern double __ieee754_sqrt (double);
+extern double __ieee754_acos (double);
+extern double __ieee754_acosh (double);
+extern double __ieee754_log (double);
+extern double __ieee754_atanh (double);
+extern double __ieee754_asin (double);
+extern double __ieee754_atan2 (double,double);
+extern double __ieee754_exp (double);
+extern double __ieee754_exp2 (double);
+extern double __ieee754_exp10 (double);
+extern double __ieee754_cosh (double);
+extern double __ieee754_fmod (double,double);
+extern double __ieee754_pow (double,double);
+extern double __ieee754_lgamma_r (double,int *);
+extern double __ieee754_gamma_r (double,int *);
+extern double __ieee754_lgamma (double);
+extern double __ieee754_gamma (double);
+extern double __ieee754_log10 (double);
+extern double __ieee754_sinh (double);
+extern double __ieee754_hypot (double,double);
+extern double __ieee754_j0 (double);
+extern double __ieee754_j1 (double);
+extern double __ieee754_y0 (double);
+extern double __ieee754_y1 (double);
+extern double __ieee754_jn (int,double);
+extern double __ieee754_yn (int,double);
+extern double __ieee754_remainder (double,double);
+extern int32_t __ieee754_rem_pio2 (double,double*);
+extern double __ieee754_scalb (double,double);
 
 /* fdlibm kernel function */
-extern double __kernel_standard __P((double,double,int));
-extern double __kernel_sin __P((double,double,int));
-extern double __kernel_cos __P((double,double));
-extern double __kernel_tan __P((double,double,int));
-extern int    __kernel_rem_pio2 __P((double*,double*,int,int,int,
-				     const int32_t*));
+extern double __kernel_standard (double,double,int);
+extern double __kernel_sin (double,double,int);
+extern double __kernel_cos (double,double);
+extern double __kernel_tan (double,double,int);
+extern int    __kernel_rem_pio2 (double*,double*,int,int,int, const int32_t*);
 
 
 /* ieee style elementary float functions */
-extern float __ieee754_sqrtf __P((float));
-extern float __ieee754_acosf __P((float));
-extern float __ieee754_acoshf __P((float));
-extern float __ieee754_logf __P((float));
-extern float __ieee754_atanhf __P((float));
-extern float __ieee754_asinf __P((float));
-extern float __ieee754_atan2f __P((float,float));
-extern float __ieee754_expf __P((float));
-extern float __ieee754_exp2f __P((float));
-extern float __ieee754_exp10f __P((float));
-extern float __ieee754_coshf __P((float));
-extern float __ieee754_fmodf __P((float,float));
-extern float __ieee754_powf __P((float,float));
-extern float __ieee754_lgammaf_r __P((float,int *));
-extern float __ieee754_gammaf_r __P((float,int *));
-extern float __ieee754_lgammaf __P((float));
-extern float __ieee754_gammaf __P((float));
-extern float __ieee754_log10f __P((float));
-extern float __ieee754_sinhf __P((float));
-extern float __ieee754_hypotf __P((float,float));
-extern float __ieee754_j0f __P((float));
-extern float __ieee754_j1f __P((float));
-extern float __ieee754_y0f __P((float));
-extern float __ieee754_y1f __P((float));
-extern float __ieee754_jnf __P((int,float));
-extern float __ieee754_ynf __P((int,float));
-extern float __ieee754_remainderf __P((float,float));
-extern int32_t __ieee754_rem_pio2f __P((float,float*));
-extern float __ieee754_scalbf __P((float,float));
+extern float __ieee754_sqrtf (float);
+extern float __ieee754_acosf (float);
+extern float __ieee754_acoshf (float);
+extern float __ieee754_logf (float);
+extern float __ieee754_atanhf (float);
+extern float __ieee754_asinf (float);
+extern float __ieee754_atan2f (float,float);
+extern float __ieee754_expf (float);
+extern float __ieee754_exp2f (float);
+extern float __ieee754_exp10f (float);
+extern float __ieee754_coshf (float);
+extern float __ieee754_fmodf (float,float);
+extern float __ieee754_powf (float,float);
+extern float __ieee754_lgammaf_r (float,int *);
+extern float __ieee754_gammaf_r (float,int *);
+extern float __ieee754_lgammaf (float);
+extern float __ieee754_gammaf (float);
+extern float __ieee754_log10f (float);
+extern float __ieee754_sinhf (float);
+extern float __ieee754_hypotf (float,float);
+extern float __ieee754_j0f (float);
+extern float __ieee754_j1f (float);
+extern float __ieee754_y0f (float);
+extern float __ieee754_y1f (float);
+extern float __ieee754_jnf (int,float);
+extern float __ieee754_ynf (int,float);
+extern float __ieee754_remainderf (float,float);
+extern int32_t __ieee754_rem_pio2f (float,float*);
+extern float __ieee754_scalbf (float,float);
 
 /* float versions of fdlibm kernel functions */
-extern float __kernel_sinf __P((float,float,int));
-extern float __kernel_cosf __P((float,float));
-extern float __kernel_tanf __P((float,float,int));
-extern int   __kernel_rem_pio2f __P((float*,float*,int,int,int,
-				     const int32_t*));
+extern float __kernel_sinf (float,float,int);
+extern float __kernel_cosf (float,float);
+extern float __kernel_tanf (float,float,int);
+extern int   __kernel_rem_pio2f (float*,float*,int,int,int, const int32_t*);
 
 
 /* ieee style elementary long double functions */
-extern long double __ieee754_sqrtl __P((long double));
-extern long double __ieee754_acosl __P((long double));
-extern long double __ieee754_acoshl __P((long double));
-extern long double __ieee754_logl __P((long double));
-extern long double __ieee754_atanhl __P((long double));
-extern long double __ieee754_asinl __P((long double));
-extern long double __ieee754_atan2l __P((long double,long double));
-extern long double __ieee754_expl __P((long double));
-extern long double __ieee754_exp2l __P((long double));
-extern long double __ieee754_exp10l __P((long double));
-extern long double __ieee754_coshl __P((long double));
-extern long double __ieee754_fmodl __P((long double,long double));
-extern long double __ieee754_powl __P((long double,long double));
-extern long double __ieee754_lgammal_r __P((long double,int *));
-extern long double __ieee754_gammal_r __P((long double,int *));
-extern long double __ieee754_lgammal __P((long double));
-extern long double __ieee754_gammal __P((long double));
-extern long double __ieee754_log10l __P((long double));
-extern long double __ieee754_sinhl __P((long double));
-extern long double __ieee754_hypotl __P((long double,long double));
-extern long double __ieee754_j0l __P((long double));
-extern long double __ieee754_j1l __P((long double));
-extern long double __ieee754_y0l __P((long double));
-extern long double __ieee754_y1l __P((long double));
-extern long double __ieee754_jnl __P((int,long double));
-extern long double __ieee754_ynl __P((int,long double));
-extern long double __ieee754_remainderl __P((long double,long double));
-extern int   __ieee754_rem_pio2l __P((long double,long double*));
-extern long double __ieee754_scalbl __P((long double,long double));
+extern long double __ieee754_sqrtl (long double);
+extern long double __ieee754_acosl (long double);
+extern long double __ieee754_acoshl (long double);
+extern long double __ieee754_logl (long double);
+extern long double __ieee754_atanhl (long double);
+extern long double __ieee754_asinl (long double);
+extern long double __ieee754_atan2l (long double,long double);
+extern long double __ieee754_expl (long double);
+extern long double __ieee754_exp2l (long double);
+extern long double __ieee754_exp10l (long double);
+extern long double __ieee754_coshl (long double);
+extern long double __ieee754_fmodl (long double,long double);
+extern long double __ieee754_powl (long double,long double);
+extern long double __ieee754_lgammal_r (long double,int *);
+extern long double __ieee754_gammal_r (long double,int *);
+extern long double __ieee754_lgammal (long double);
+extern long double __ieee754_gammal (long double);
+extern long double __ieee754_log10l (long double);
+extern long double __ieee754_sinhl (long double);
+extern long double __ieee754_hypotl (long double,long double);
+extern long double __ieee754_j0l (long double);
+extern long double __ieee754_j1l (long double);
+extern long double __ieee754_y0l (long double);
+extern long double __ieee754_y1l (long double);
+extern long double __ieee754_jnl (int,long double);
+extern long double __ieee754_ynl (int,long double);
+extern long double __ieee754_remainderl (long double,long double);
+extern int   __ieee754_rem_pio2l (long double,long double*);
+extern long double __ieee754_scalbl (long double,long double);
 
 /* long double versions of fdlibm kernel functions */
-extern long double __kernel_sinl __P((long double,long double,int));
-extern long double __kernel_cosl __P((long double,long double));
-extern long double __kernel_tanl __P((long double,long double,int));
-extern void __kernel_sincosl __P((long double,long double,
-				  long double *,long double *, int));
-extern int   __kernel_rem_pio2l __P((long double*,long double*,int,int,
-				     int,const int*));
+extern long double __kernel_sinl (long double,long double,int);
+extern long double __kernel_cosl (long double,long double);
+extern long double __kernel_tanl (long double,long double,int);
+extern void __kernel_sincosl (long double,long double,
+			      long double *,long double *, int);
+extern int   __kernel_rem_pio2l (long double*,long double*,int,int,
+				 int,const int*);
 
 #endif /* _MATH_PRIVATE_H_ */

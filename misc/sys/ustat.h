@@ -1,5 +1,5 @@
 /* Header describing obsolete `ustat' interface.
-   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 
 __BEGIN_DECLS
 
-extern int ustat __P ((__dev_t __dev, struct ustat *__ubuf));
+extern int ustat (__dev_t __dev, struct ustat *__ubuf) __THROW;
 
 __END_DECLS
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,28 +37,27 @@ struct aliasent
 
 
 /* Open alias data base files.  */
-extern void setaliasent __P ((void));
+extern void setaliasent (void) __THROW;
 
 /* Close alias data base files.  */
-extern void endaliasent __P ((void));
+extern void endaliasent (void) __THROW;
 
 /* Get the next entry from the alias data base.  */
-extern struct aliasent *getaliasent __P ((void));
+extern struct aliasent *getaliasent (void) __THROW;
 
 /* Get the next entry from the alias data base and put it in RESULT_BUF.  */
-extern int getaliasent_r __P ((struct aliasent *__restrict __result_buf,
-			       char *__restrict __buffer,
-			       size_t __buflen,
-			       struct aliasent **__restrict __result));
+extern int getaliasent_r (struct aliasent *__restrict __result_buf,
+			  char *__restrict __buffer, size_t __buflen,
+			  struct aliasent **__restrict __result) __THROW;
 
 /* Get alias entry corresponding to NAME.  */
-extern struct aliasent *getaliasbyname __P ((__const char *__name));
+extern struct aliasent *getaliasbyname (__const char *__name) __THROW;
 
 /* Get alias entry corresponding to NAME and put it in RESULT_BUF.  */
-extern int getaliasbyname_r __P ((__const char *__restrict __name,
-				  struct aliasent *__restrict __result_buf,
-				  char *__restrict __buffer, size_t __buflen,
-				  struct aliasent **__restrict __result));
+extern int getaliasbyname_r (__const char *__restrict __name,
+			     struct aliasent *__restrict __result_buf,
+			     char *__restrict __buffer, size_t __buflen,
+			     struct aliasent **__restrict __result) __THROW;
 
 __END_DECLS
 

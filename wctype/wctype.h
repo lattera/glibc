@@ -99,58 +99,58 @@ __BEGIN_DECLS
 
 /* Test for any wide character for which `iswalpha' or `iswdigit' is
    true.  */
-extern int iswalnum __P ((wint_t __wc));
+extern int iswalnum (wint_t __wc) __THROW;
 
 /* Test for any wide character for which `iswupper' or 'iswlower' is
    true, or any wide character that is one of a locale-specific set of
    wide-characters for which none of `iswcntrl', `iswdigit',
    `iswpunct', or `iswspace' is true.  */
-extern int iswalpha __P ((wint_t __wc));
+extern int iswalpha (wint_t __wc) __THROW;
 
 /* Test for any control wide character.  */
-extern int iswcntrl __P ((wint_t __wc));
+extern int iswcntrl (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a decimal-digit
    character.  */
-extern int iswdigit __P ((wint_t __wc));
+extern int iswdigit (wint_t __wc) __THROW;
 
 /* Test for any wide character for which `iswprint' is true and
    `iswspace' is false.  */
-extern int iswgraph __P ((wint_t __wc));
+extern int iswgraph (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a lowercase letter
    or is one of a locale-specific set of wide characters for which
    none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswlower __P ((wint_t __wc));
+extern int iswlower (wint_t __wc) __THROW;
 
 /* Test for any printing wide character.  */
-extern int iswprint __P ((wint_t __wc));
+extern int iswprint (wint_t __wc) __THROW;
 
 /* Test for any printing wide character that is one of a
    locale-specific et of wide characters for which neither `iswspace'
    nor `iswalnum' is true.  */
-extern int iswpunct __P ((wint_t __wc));
+extern int iswpunct (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a locale-specific
    set of wide characters for which none of `iswalnum', `iswgraph', or
    `iswpunct' is true.  */
-extern int iswspace __P ((wint_t __wc));
+extern int iswspace (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to an uppercase letter
    or is one of a locale-specific set of wide character for which none
    of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswupper __P ((wint_t __wc));
+extern int iswupper (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a hexadecimal-digit
    character equivalent to that performed be the functions described
    in the previous subclause.  */
-extern int iswxdigit __P ((wint_t __wc));
+extern int iswxdigit (wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a standard blank
    wide character or a locale-specific set of wide characters for
    which `iswalnum' is false.  */
 # ifdef __USE_GNU
-extern int iswblank __P ((wint_t __wc));
+extern int iswblank (wint_t __wc) __THROW;
 # endif
 
 /*
@@ -159,13 +159,13 @@ extern int iswblank __P ((wint_t __wc));
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t __wctype __P ((__const char *__property));
-extern wctype_t wctype __P ((__const char *__property));
+extern wctype_t __wctype (__const char *__property) __THROW;
+extern wctype_t wctype (__const char *__property) __THROW;
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
-extern int __iswctype __P ((wint_t __wc, wctype_t __desc));
-extern int iswctype __P ((wint_t __wc, wctype_t __desc));
+extern int __iswctype (wint_t __wc, wctype_t __desc) __THROW;
+extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
 
 #if __GNUC__ >= 2 && defined __OPTIMIZE__
 /* The tables are always organized in a way which allows direct access
@@ -227,13 +227,13 @@ extern unsigned int *__ctype32_b;
 typedef __const __int32_t *wctrans_t;
 
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
-extern wint_t towlower __P ((wint_t __wc));
+extern wint_t towlower (wint_t __wc) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
-extern wint_t towupper __P ((wint_t __wc));
+extern wint_t towupper (wint_t __wc) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
-extern wint_t __towctrans __P ((wint_t __wc, wctrans_t __desc));
+extern wint_t __towctrans (wint_t __wc, wctrans_t __desc) __THROW;
 
 __END_DECLS
 
@@ -252,10 +252,10 @@ __BEGIN_DECLS
 
 /* Construct value that describes a mapping between wide characters
    identified by the string argument PROPERTY.  */
-extern wctrans_t wctrans __P ((__const char *__property));
+extern wctrans_t wctrans (__const char *__property) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
-extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
+extern wint_t towctrans (wint_t __wc, wctrans_t __desc) __THROW;
 
 # ifdef __USE_GNU
 /* Declare the interface to extended locale model.  */
@@ -263,67 +263,67 @@ extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 
 /* Test for any wide character for which `iswalpha' or `iswdigit' is
    true.  */
-extern int __iswalnum_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswalnum_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character for which `iswupper' or 'iswlower' is
    true, or any wide character that is one of a locale-specific set of
    wide-characters for which none of `iswcntrl', `iswdigit',
    `iswpunct', or `iswspace' is true.  */
-extern int __iswalpha_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswalpha_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any control wide character.  */
-extern int __iswcntrl_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswcntrl_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to a decimal-digit
    character.  */
-extern int __iswdigit_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswdigit_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character for which `iswprint' is true and
    `iswspace' is false.  */
-extern int __iswgraph_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswgraph_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to a lowercase letter
    or is one of a locale-specific set of wide characters for which
    none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int __iswlower_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswlower_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any printing wide character.  */
-extern int __iswprint_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswprint_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any printing wide character that is one of a
    locale-specific et of wide characters for which neither `iswspace'
    nor `iswalnum' is true.  */
-extern int __iswpunct_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswpunct_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to a locale-specific
    set of wide characters for which none of `iswalnum', `iswgraph', or
    `iswpunct' is true.  */
-extern int __iswspace_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswspace_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to an uppercase letter
    or is one of a locale-specific set of wide character for which none
    of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int __iswupper_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswupper_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to a hexadecimal-digit
    character equivalent to that performed be the functions described
    in the previous subclause.  */
-extern int __iswxdigit_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswxdigit_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Test for any wide character that corresponds to a standard blank
    wide character or a locale-specific set of wide characters for
    which `iswalnum' is false.  */
-extern int __iswblank_l __P ((wint_t __wc, __locale_t __locale));
+extern int __iswblank_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t __wctype_l __P ((__const char *__property,
-				 __locale_t __locale));
+extern wctype_t __wctype_l (__const char *__property, __locale_t __locale)
+     __THROW;
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
-extern int __iswctype_l __P ((wint_t __wc, wctype_t __desc,
-			      __locale_t __locale));
+extern int __iswctype_l (wint_t __wc, wctype_t __desc, __locale_t __locale)
+     __THROW;
 
 
 /*
@@ -331,14 +331,14 @@ extern int __iswctype_l __P ((wint_t __wc, wctype_t __desc,
  */
 
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
-extern wint_t __towlower_l __P ((wint_t __wc, __locale_t __locale));
+extern wint_t __towlower_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
-extern wint_t __towupper_l __P ((wint_t __wc, __locale_t __locale));
+extern wint_t __towupper_l (wint_t __wc, __locale_t __locale) __THROW;
 
 /* Map the wide character WC using the mapping described by DESC.  */
-extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
-				  __locale_t __locale));
+extern wint_t __towctrans_l (wint_t __wc, wctrans_t __desc,
+			     __locale_t __locale) __THROW;
 
 # endif /* Use GNU.  */
 
