@@ -36,7 +36,8 @@ repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 					   $(wildcard repertoiremaps/*))
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
-	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5
+	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
+	     tst-ctype
 #test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1 \
 #	      hr_HR.ISO-8859-2 # once it is fixed: cs_CZ.ISO-8859-2
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1
@@ -60,7 +61,7 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
-	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh
+	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -87,9 +88,9 @@ CFLAGS-tst-trans.c = -Wno-format
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 .PHONY: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans \
-	do-tst-mbswcs
+	do-tst-mbswcs do-tst-ctype
 tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans \
-       do-tst-mbswcs
+       do-tst-mbswcs do-tst-ctype
 do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		 $(test-input-data)
 	$(SHELL) -e $< $(common-objpfx) $(test-input)
@@ -103,6 +104,8 @@ do-tst-trans: tst-trans.sh $(objpfx)tst-trans
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 	       $(objpfx)tst-mbswcs3 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5
+	$(SHELL) -e $< $(common-objpfx)
+do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test
 	$(SHELL) -e $< $(common-objpfx)
 endif
 endif
