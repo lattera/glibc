@@ -18,12 +18,19 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* mp_limb_t mpn_submul_1 (mp_ptr res_ptr, mp_srcptr s1_ptr,
                            mp_size_t s1_size, mp_limb_t s2_limb)
    Calculate res-s1*s2 and put result back in res; return carry.  */
 
-ENTRY(__mpn_submul_1)
+ENTRY (BP_SYM (__mpn_submul_1))
+#if __BOUNDED_POINTERS__
+	slwi r10,r5,2		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (r3, r8, r9, r10)
+	CHECK_BOUNDS_BOTH_WIDE (r4, r8, r9, r10)
+#endif
 	mtctr	r5
 
 	lwz	r0,0(r4)
@@ -49,4 +56,4 @@ L(0):	lwzu	r0,4(r4)
 L(1):	stw	r8,4(r3)
 	addze	r3,r10
 	blr
-END(__mpn_submul_1)
+END (BP_SYM (__mpn_submul_1))

@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* INPUT PARAMETERS
    res_ptr	r3
@@ -25,7 +27,12 @@
    size		r5
    cnt		r6  */
 
-ENTRY(__mpn_rshift)
+ENTRY (BP_SYM (__mpn_rshift))
+#if __BOUNDED_POINTERS__
+	slwi r10,r5,2		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (r3, r8, r9, r10)
+	CHECK_BOUNDS_BOTH_WIDE (r4, r8, r9, r10)
+#endif
 	mtctr	r5		# copy size into CTR
 	addi	r7,r3,-4	# move adjusted res_ptr to free return reg
 	subfic	r8,r6,32
@@ -53,4 +60,4 @@ L(1):	srw	r0,r11,r6
 L(2):	srw	r0,r10,r6
 	stw	r0,4(r7)
 	blr
-END(__mpn_rshift)
+END (BP_SYM (__mpn_rshift))

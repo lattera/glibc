@@ -4,6 +4,26 @@
 
 2000-06-30  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/powerpc/bp-asm.h: New file.
+	* sysdeps/powerpc/__longjmp.S:  Check bounds.
+	Wrap extern symbols in BP_SYM ().
+	* sysdeps/powerpc/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/setjmp.S: Likewise.
+	* sysdeps/powerpc/add_n.S: Likewise.
+	* sysdeps/powerpc/addmul_1.S: Likewise.
+	* sysdeps/powerpc/lshift.S: Likewise.
+	* sysdeps/powerpc/rshift.S: Likewise.
+	* sysdeps/powerpc/mul_1.S: Likewise.
+	* sysdeps/powerpc/sub_n.S: Likewise.
+	* sysdeps/powerpc/submul_1.S: Likewise.
+	* sysdeps/powerpc/strlen.S: Likewise.
+	* sysdeps/powerpc/memset.S: Likewise.
+	* sysdeps/powerpc/stpcpy.S: Likewise.
+	* sysdeps/powerpc/strcmp.S: Likewise.
+	* sysdeps/powerpc/strcpy.S: Likewise.
+	* sysdeps/powerpc/elf/bzero.S: Likewise.
+
 	* sysdeps/powerpc/stpcpy.S: Define & use symbolic register names.
 	Line up operands column with tabs.
 

@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* mp_limb_t mpn_sub_n (mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr,
                         mp_size_t size)
@@ -27,7 +29,15 @@
    possible 2-unrolled inner loop will not be.  Also, watch out for the
    alignment...  */
 
-EALIGN(__mpn_sub_n,3,1)
+EALIGN (BP_SYM (__mpn_sub_n), 3, 1)
+
+#if __BOUNDED_POINTERS__
+	slwi r10,r6,2		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (r3, r8, r9, r10)
+	CHECK_BOUNDS_BOTH_WIDE (r4, r8, r9, r10)
+	CHECK_BOUNDS_BOTH_WIDE (r5, r8, r9, r10)
+#endif
+
 /* Set up for loop below.  */
 	mtcrf 0x01,r6
 	srwi. r7,r6,1
@@ -65,4 +75,4 @@ L(0):
 L(1):	subfe r3,r3,r3
 	neg   r3,r3
 	blr
-END(__mpn_sub_n)
+END (BP_SYM (__mpn_sub_n))

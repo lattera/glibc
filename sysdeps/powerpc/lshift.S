@@ -18,11 +18,19 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* mp_limb_t mpn_lshift (mp_ptr wp, mp_srcptr up, mp_size_t usize,
   			 unsigned int cnt)  */
 
-EALIGN(__mpn_lshift,3,0)
+EALIGN (BP_SYM (__mpn_lshift), 3, 0)
+
+#if __BOUNDED_POINTERS__
+	slwi r10,r5,2		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (r3, r8, r9, r10)
+	CHECK_BOUNDS_BOTH_WIDE (r4, r8, r9, r10)
+#endif
 	mtctr	r5		# copy size into CTR
 	cmplwi	cr0,r5,16	# is size < 16
 	slwi	r0,r5,2
@@ -120,4 +128,4 @@ L(n):	lwzu	r10,-4(r4);						\
 	DO_LSHIFT(30)
 	DO_LSHIFT(31)
 
-END(__mpn_lshift)
+END (BP_SYM (__mpn_lshift))

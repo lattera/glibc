@@ -1,5 +1,5 @@
 /* setjmp for PowerPC.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,12 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
-ENTRY (__sigsetjmp)
+ENTRY (BP_SYM (__sigsetjmp))
+	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+
 	stw  r1,(JB_GPR1*4)(3)
 	mflr r0
 	stw  r2,(JB_GPR2*4)(3)
@@ -65,5 +69,5 @@ ENTRY (__sigsetjmp)
 	stfd fp30,((JB_FPRS+16*2)*4)(3)
 	stw  r31,((JB_GPRS+17)*4)(3)
 	stfd fp31,((JB_FPRS+17*2)*4)(3)
-	b JUMPTARGET(__sigjmp_save)
-END (__sigsetjmp)
+	b JUMPTARGET (BP_SYM (__sigjmp_save))
+END (BP_SYM (__sigsetjmp))

@@ -1,5 +1,5 @@
 /* longjmp for PowerPC.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,12 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
-ENTRY (__longjmp)
+ENTRY (BP_SYM (__longjmp))
+	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
+
 	lwz r1,(JB_GPR1*4)(r3)
 	lwz r2,(JB_GPR2*4)(r3)
 	lwz r0,(JB_LR*4)(r3)
@@ -67,4 +71,4 @@ ENTRY (__longjmp)
 	lfd fp31,((JB_FPRS+17*2)*4)(r3)
 	mr r3,r4
 	blr
-END (__longjmp)
+END (BP_SYM (__longjmp))

@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* __ptr_t [r3] memset (__ptr_t s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
@@ -26,13 +28,21 @@
    cache line (256 bits). There is a special case for setting cache lines
    to 0, to take advantage of the dcbz instruction.  */
 
-EALIGN (memset, 5, 1)
+EALIGN (BP_SYM (memset), 5, 1)
 
 #define rTMP	r0
-#define	rRTN	r3	/* initial value of 1st argument */
-#define rCHR	r4	/* char to set in each byte */
-#define rLEN	r5	/* length of region to set */
-#define rMEMP	r6	/* address at which we are storing */
+#define rRTN	r3	/* initial value of 1st argument */
+#if __BOUNDED_POINTERS__
+# define rMEMP0	r4	/* original value of 1st arg */
+# define rCHR	r5	/* char to set in each byte */
+# define rLEN	r6	/* length of region to set */
+# define rMEMP	r10	/* address at which we are storing */
+#else
+# define rMEMP0	r3	/* original value of 1st arg */
+# define rCHR	r4	/* char to set in each byte */
+# define rLEN	r5	/* length of region to set */
+# define rMEMP	r6	/* address at which we are storing */
+#endif
 #define rALIGN	r7	/* number of bytes we are setting now (when aligning) */
 #define rMEMP2	r8
 
@@ -40,21 +50,30 @@ EALIGN (memset, 5, 1)
 #define rNEG64	r8	/* constant -64 for clearing with dcbz */
 #define rNEG32	r9	/* constant -32 for clearing with dcbz */
 
+#if __BOUNDED_POINTERS__
+	cmplwi	cr1, rRTN, 0
+	CHECK_BOUNDS_BOTH_WIDE (rMEMP0, rTMP, rTMP2, rLEN)
+	beq	cr1, L(b0)
+	STORE_RETURN_VALUE (rMEMP0)
+	STORE_RETURN_BOUNDS (rTMP, rTMP2)
+L(b0):
+#endif
+
 /* take care of case for size <= 4  */
 	cmplwi	cr1, rLEN, 4
-	andi.	rALIGN, rRTN, 3
-	mr	rMEMP, rRTN
+	andi.	rALIGN, rMEMP0, 3
+	mr	rMEMP, rMEMP0
 	ble-	cr1, L(small)
 /* align to word boundary  */
 	cmplwi	cr5, rLEN, 31
 	rlwimi	rCHR, rCHR, 8, 16, 23
 	beq+	L(aligned)	/* 8th instruction from .align */
-	mtcrf	0x01, rRTN
+	mtcrf	0x01, rMEMP0
 	subfic	rALIGN, rALIGN, 4
 	add	rMEMP, rMEMP, rALIGN
 	sub	rLEN, rLEN, rALIGN
 	bf+	31, L(g0)
-	stb	rCHR, 0(rRTN)
+	stb	rCHR, 0(rMEMP0)
 	bt	30, L(aligned)
 L(g0):	sth	rCHR, -2(rMEMP)	/* 16th instruction from .align */
 /* take care of case for size < 31 */
@@ -207,4 +226,4 @@ L(medium_28t):
 	stw	rCHR, -4(rMEMP)
 	stw	rCHR, -8(rMEMP)
 	blr
-END(memset)
+END (BP_SYM (memset))

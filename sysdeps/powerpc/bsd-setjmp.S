@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  PowerPC version.
-   Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,11 +22,12 @@
    in setjmp doesn't clobber the state restored by longjmp.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
 
-ENTRY (__setjmp)
+ENTRY (BP_SYM (__setjmp))
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET(__sigsetjmp)
-END (__setjmp)
+	b JUMPTARGET(BP_SYM (__sigsetjmp))
+END (BP_SYM (__setjmp))
 
-	.globl setjmp
-	.set setjmp,__setjmp
+	.globl BP_SYM (setjmp)
+	.set BP_SYM (setjmp), BP_SYM (__setjmp)
