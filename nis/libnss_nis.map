@@ -14,11 +14,11 @@ GLIBC_2.0 {
     _nss_nis_getpwnam_r; _nss_nis_getpwuid_r; _nss_nis_getrpcbyname_r;
     _nss_nis_getrpcbynumber_r; _nss_nis_getrpcent_r; _nss_nis_getsecretkey;
     _nss_nis_getservbyname_r; _nss_nis_getservbyport_r; _nss_nis_getservent_r;
-    _nss_nis_getspent_r; _nss_nis_getspnam_r; _nss_nis_netname2user;
-    _nss_nis_setaliasent; _nss_nis_setetherent; _nss_nis_setgrent;
-    _nss_nis_sethostent; _nss_nis_setnetent; _nss_nis_setnetgrent;
-    _nss_nis_setprotoent; _nss_nis_setpwent; _nss_nis_setrpcent;
-    _nss_nis_setservent; _nss_nis_setspent;
+    _nss_nis_getspent_r; _nss_nis_getspnam_r; _nss_nis_initgroups;
+    _nss_nis_netname2user; _nss_nis_setaliasent; _nss_nis_setetherent;
+    _nss_nis_setgrent; _nss_nis_sethostent; _nss_nis_setnetent;
+    _nss_nis_setnetgrent; _nss_nis_setprotoent; _nss_nis_setpwent;
+    _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
 
   local:
     *;

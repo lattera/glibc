@@ -127,5 +127,8 @@ int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
 int __nss_next (service_user **ni, const char *fct_name, void **fctp,
 		int status, int all_values);
 
+/* Search for the service described in NI for a function named FCT_NAME
+   and return a pointer to this function if successful.  */
+void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 #endif	/* nsswitch.h */

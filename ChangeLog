@@ -1,3 +1,36 @@
+1998-06-10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile: Add nis-initgroups and compat-initgroups.
+	* nis/libnss_compat.map: Add _nss_compat_initgroups.
+	* nis/libnss_nis.map: Add _nss_nis_initgroups.
+	* nis/nss_compat/compat-initgroups.c: New, faster then getgrent().
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* libc-work/nss/nsswitch.c: Rename nss_lookup_function to
+	__nss_lookup_function and make it public.
+	* grp/initgroups.c: Rewrite, to use initgroups function from NSS
+	module if exists, else use old method.
+
+1998-06-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY_r.c (lookup_function): Correct return in type
+	definition.
+	* nss/getXXent_r.c (set_function, end_function, get_function):
+	Likewise.  Reported by Thorsten Kukuk.
+
+	* sysdeps/unix/sysv/linux/sigstack.c: Mark sigstack as dangerous.
+
+1998-06-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sparc/Dist: Follow change from
+	1998-06-16 and distribute kernel_termios.h.
+
+	* nis/Makefile (distribute): Add nis_xdr.h.
+
+1998-06-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sigstack.c (sigstack): Disable for
+	kernels that don't have sigaltstack.
+
 1998-06-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/bits/sem.h: Don't define union semun.

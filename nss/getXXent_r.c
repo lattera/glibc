@@ -85,14 +85,14 @@
 #endif
 
 /* Prototype for the setXXXent functions we use here.  */
-typedef int (*set_function) (STAYOPEN);
+typedef enum nss_status (*set_function) (STAYOPEN);
 
 /* Prototype for the endXXXent functions we use here.  */
-typedef int (*end_function) (void);
+typedef enum nss_status (*end_function) (void);
 
 /* Prototype for the setXXXent functions we use here.  */
-typedef int (*get_function) (LOOKUP_TYPE *, char *, size_t, int *
-			     H_ERRNO_PARM);
+typedef enum nss_status (*get_function) (LOOKUP_TYPE *, char *, size_t, int *
+					 H_ERRNO_PARM);
 
 
 /* This handle for the NSS data base is shared between all

@@ -23,7 +23,7 @@ subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
 distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
-			nisplus-parser.h nis_cache2.h
+			nisplus-parser.h nis_cache2.h nis_xdr.h
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
@@ -55,10 +55,11 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_clone_res
 libnsl-map	= libnsl.map
 
-libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd) nisplus-parser
+libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd initgroups) \
+			   nisplus-parser
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
-libnss_nis-routines	:= $(addprefix nis-,$(databases))
+libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups
 libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
 libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser

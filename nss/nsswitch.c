@@ -35,8 +35,6 @@
 #include "nsswitch.h"
 
 /* Prototypes for the local functions.  */
-static void *nss_lookup_function (service_user *ni, const char *fct_name)
-     internal_function;
 static name_database *nss_parse_file (const char *fname) internal_function;
 static name_database_entry *nss_getline (char *line) internal_function;
 static service_user *nss_parse_service_list (const char *line)
@@ -140,7 +138,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 int
 __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
 {
-  *fctp = nss_lookup_function (*ni, fct_name);
+  *fctp = __nss_lookup_function (*ni, fct_name);
 
   while (*fctp == NULL
 	 && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
@@ -148,7 +146,7 @@ __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
     {
       *ni = (*ni)->next;
 
-      *fctp = nss_lookup_function (*ni, fct_name);
+      *fctp = __nss_lookup_function (*ni, fct_name);
     }
 
   return *fctp != NULL ? 0 : (*ni)->next == NULL ? 1 : -1;
@@ -187,7 +185,7 @@ __nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
     {
       *ni = (*ni)->next;
 
-      *fctp = nss_lookup_function (*ni, fct_name);
+      *fctp = __nss_lookup_function (*ni, fct_name);
     }
   while (*fctp == NULL
 	 && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
@@ -310,9 +308,8 @@ known_compare (const void *p1, const void *p2)
 }
 
 
-static void *
-internal_function
-nss_lookup_function (service_user *ni, const char *fct_name)
+void *
+__nss_lookup_function (service_user *ni, const char *fct_name)
 {
   void **found, *result;
 

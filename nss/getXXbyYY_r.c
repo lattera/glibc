@@ -82,8 +82,8 @@
 
 
 /* Type of the lookup function we need here.  */
-typedef int (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *, size_t,
-				int * H_ERRNO_PARM);
+typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
+					    size_t, int * H_ERRNO_PARM);
 
 /* Some usages of this file might use this variable.  */
 extern struct __res_state _res;

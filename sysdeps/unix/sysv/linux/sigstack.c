@@ -19,8 +19,10 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <signal.h>
+#include <sys/syscall.h>
 
 
+#ifdef __NR_sigaltstack
 int
 sigstack (ss, oss)
      const struct sigstack *ss;
@@ -59,3 +61,8 @@ sigstack (ss, oss)
 
   return result;
 }
+
+link_warning (sigstack, "the `sigstack' function is dangerous.  `sigaltstack' should be used instead.")
+#else
+# include <sysdeps/generic/sigstack.c>
+#endif

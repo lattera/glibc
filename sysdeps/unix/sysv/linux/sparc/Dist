@@ -1,2 +1,2 @@
-sys/kernel_termios.h
+kernel_termios.h
 sys/trap.h
