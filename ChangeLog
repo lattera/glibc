@@ -1,5 +1,8 @@
 1999-01-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/Makefile (tests): Add test-vfork.
+	* posix/test-vfork.c: New file by Andreas Schwab.
+
 	* manual/charset.texi: More misspelling fixes.
 	Reported by Tom Tromey <tromey@cygnus.com>.
 
