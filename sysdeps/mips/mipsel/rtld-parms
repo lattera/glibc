@@ -1,0 +1,3 @@
+ifndef rtld-oformat
+rtld-oformat = elf32-littlemips
+endif

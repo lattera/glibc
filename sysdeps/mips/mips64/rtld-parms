@@ -1,0 +1,3 @@
+ifndef rtld-wordsize
+rtld-wordsize = 64
+endif
