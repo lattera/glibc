@@ -1,3 +1,18 @@
+2004-12-01  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (free_dfa_content, init_dfa): Remove
+	references to re_dfa_t's subexps field.
+	(parse_sub_exp, parse_expression): Do not use it.  Use
+	completed_bkref_map instead.
+	(create_initial_state, peek_token): Store a backreference \N
+	with opr.idx = N-1.
+	* posix/regexec.c (proceed_next_node, check_dst_limits, get_subexp):
+	Likewise.
+	(check_subexp_limits): Remove useless condition.
+	* posix/regex_internal.h (re_subexp_t): Remove.
+	(re_dfa_t): Remove subexps and subexps_alloc field, add
+	completed_bkref_map.
+
 2004-12-05  Roland McGrath  <roland@frob.com>
 
 	* Makeconfig: Comment typo fix.
