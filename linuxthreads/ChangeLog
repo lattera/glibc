@@ -17,7 +17,11 @@
 	* signals.c: Likewise.
 	* spinlock.c: Likewise.
 	* spinlock.h: Likewise.
+	* sysdeps/pthread/pthread.h: Likewise.
 	Patches by Xavier leroy.
+
+	* sysdeps/i386/pt-machine.h: When compiling for i686 don't test for
+	xchgcmp instruction, it is available.
 
 1998-06-25  Ulrich Drepper  <drepper@cygnus.com>
 
