@@ -56,6 +56,7 @@ libresolv {
     __res_hostalias; __res_mkquery; __res_nmkquery; __res_nquery;
     __res_nquerydomain; __res_nsearch; __res_nsend; __res_query;
     __res_querydomain; __res_search;
+  }
 }
 
 libnss_dns {

@@ -4,5 +4,6 @@ libc {
     _q_fle; _q_flt; _q_fne; _q_itoq; _q_mul; _q_neg; _q_qtod; _q_qtoi;
     _q_qtos; _q_qtou; _q_sqrt; _q_stoq; _q_sub;
     _q_utoq; 
-    _q_lltoq; _q_qtoll; _q_qtoull; _q_ulltoq; 
+    _q_lltoq; _q_qtoll; _q_qtoull; _q_ulltoq;
+  }
 }
