@@ -1,5 +1,9 @@
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/iofopen.c (_IO_fopen): Pass correct value as fourth
+	parameter to _IO_file_fopen.
+	* libio/iofopen64.c (_IO_fopen64): Likewise.
+
 	* po/sv.po: Update from translation team.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add __vfork

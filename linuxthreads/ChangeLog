@@ -1,3 +1,18 @@
+1999-01-24  H.J. Lu  <hjl@gnu.org>
+
+	* manager.c (__pthread_manager): Delete __pthread_sig_debug
+	from mask if __pthread_sig_debug > 0.
+	(pthread_handle_create): Increment __pthread_handles_num.
+
+	* manager.c (pthread_handle_create): Don't pass CLONE_PTRACE to clone.
+	* pthread.c (__pthread_initialize_manager): Likewise.
+
+	* pthread.c (pthread_initialize): Use __libc_allocate_rtsig (1)
+	instead of __libc_allocate_rtsig (2).
+	(__pthread_initialize_manager): Send __pthread_sig_debug to gdb
+	instead of __pthread_sig_cancel.
+	(pthread_handle_sigdebug): Fix comments.
+
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_allocate_stack): Set

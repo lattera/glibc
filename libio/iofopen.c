@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ _IO_new_fopen (filename, mode)
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen (&new_f->fp.file, filename, mode, 0) != NULL)
+  if (_IO_file_fopen (&new_f->fp.file, filename, mode, 1) != NULL)
     return (_IO_FILE *) &new_f->fp;
   _IO_un_link (&new_f->fp.file);
   free (new_f);
