@@ -4,6 +4,8 @@
 
 2002-08-21  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/_mcount.S: Fix assembler.
+
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: Generate bits/syscall.h
 	with biarch support.
 
