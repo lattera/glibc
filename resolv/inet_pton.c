@@ -81,7 +81,6 @@ inet_pton4(src, dst)
 	const char *src;
 	u_char *dst;
 {
-	static const char digits[] = "0123456789";
 	int saw_digit, octets, ch;
 	u_char tmp[INADDRSZ], *tp;
 
@@ -89,10 +88,9 @@ inet_pton4(src, dst)
 	octets = 0;
 	*(tp = tmp) = 0;
 	while ((ch = *src++) != '\0') {
-		const char *pch;
 
-		if ((pch = strchr(digits, ch)) != NULL) {
-			u_int new = *tp * 10 + (pch - digits);
+		if (ch >= '0' && ch <= '9') {
+			u_int new = *tp * 10 + (ch - '0');
 
 			if (new > 255)
 				return (0);
@@ -136,14 +134,13 @@ inet_pton6(src, dst)
 	const char *src;
 	u_char *dst;
 {
-	static const char xdigits_l[] = "0123456789abcdef",
-			  xdigits_u[] = "0123456789ABCDEF";
+	static const char xdigits[] = "0123456789abcdef";
 	u_char tmp[IN6ADDRSZ], *tp, *endp, *colonp;
-	const char *xdigits, *curtok;
+	const char *curtok;
 	int ch, saw_xdigit;
 	u_int val;
 
-	memset((tp = tmp), '\0', IN6ADDRSZ);
+	tp = memset(tmp, '\0', IN6ADDRSZ);
 	endp = tp + IN6ADDRSZ;
 	colonp = NULL;
 	/* Leading :: requires some special handling. */
@@ -153,11 +150,10 @@ inet_pton6(src, dst)
 	curtok = src;
 	saw_xdigit = 0;
 	val = 0;
-	while ((ch = *src++) != '\0') {
+	while ((ch = tolower (*src++)) != '\0') {
 		const char *pch;
 
-		if ((pch = strchr((xdigits = xdigits_l), ch)) == NULL)
-			pch = strchr((xdigits = xdigits_u), ch);
+		pch = strchr(xdigits, ch);
 		if (pch != NULL) {
 			val <<= 4;
 			val |= (pch - xdigits);

@@ -1,5 +1,8 @@
 1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/inet_pton.c (inet_pton4): Little optimizations.
+	(inet_pton6): Likewise.
+
 	* nss/getXXbyYY_r.c: Include assert.h.
 	* nss/getXXbyYY.c: Likewise.
 
