@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,12 +26,6 @@ Cambridge, MA 02139, USA.  */
 #define	NOID
 #include <tzfile.h>
 
-#ifndef	HAVE_GNU_LD
-#define	__tzname	tzname
-#define	__daylight	daylight
-#define	__timezone	timezone
-#endif
-
 int __use_tzfile = 0;
 
 struct ttinfo
@@ -39,7 +33,8 @@ struct ttinfo
     long int offset;		/* Seconds east of GMT.  */
     unsigned char isdst;	/* Used to set tm_isdst.  */
     unsigned char idx;		/* Index into `zone_names'.  */
-    unsigned char isstd;	/* Transition times are standard time.  */
+    unsigned char isstd;	/* Transition times are in standard time.  */
+    unsigned char isgmt;	/* Transition times are in GMT.  */
   };
 
 struct leap
@@ -67,7 +62,7 @@ static struct leap *leaps = NULL;
 void
 DEFUN(__tzfile_read, (file), CONST char *file)
 {
-  size_t num_isstd;
+  size_t num_isstd, num_isgmt;
   register FILE *f;
   struct tzhead tzhead;
   size_t chars;
@@ -113,10 +108,11 @@ DEFUN(__tzfile_read, (file), CONST char *file)
     goto lose;
 
   num_transitions = (size_t) uc2ul(tzhead.tzh_timecnt);
-  num_types = (size_t) uc2ul(tzhead.tzh_typecnt);
-  chars = (size_t) uc2ul(tzhead.tzh_charcnt);
-  num_leaps = (size_t) uc2ul(tzhead.tzh_leapcnt);
-  num_isstd = (size_t) uc2ul(tzhead.tzh_ttisstdcnt);
+  num_types = (size_t) uc2ul (tzhead.tzh_typecnt);
+  chars = (size_t) uc2ul (tzhead.tzh_charcnt);
+  num_leaps = (size_t) uc2ul (tzhead.tzh_leapcnt);
+  num_isstd = (size_t) uc2ul (tzhead.tzh_ttisstdcnt);
+  num_isgmt = (size_t) uc2ul (tzhead.tzh_ttisgmtcnt);
 
   if (num_transitions > 0)
     {
@@ -188,6 +184,16 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   while (i < num_types)
     types[i++].isstd = 0;
 
+  for (i = 0; i < num_isgmt; ++i)
+    {
+      char c = getc(f);
+      if (c == EOF)
+	goto lose;
+      types[i].isgmt = c != 0;
+    }
+  while (i < num_types)
+    types[i++].isgmt = 0;
+
   (void) fclose(f);
 
   compute_tzname_max (chars);
@@ -199,12 +205,18 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   (void) fclose(f);
 }
 
+/* The user specified a hand-made timezone, but not its DST rules.
+   We will use the names and offsets from the user, and the rules
+   from the TZDEFRULES file.  */
+
 void
 DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
       char *std AND char *dst AND
       long int stdoff AND long int dstoff)
 {
   size_t stdlen, dstlen, i;
+  long int rule_offset, rule_stdoff, rule_dstoff;
+  int isdst;
 
   __tzfile_read (TZDEFRULES);
   if (!__use_tzfile)
@@ -216,8 +228,10 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
       return;
     }
 
+  /* Ignore the zone names read from the file.  */
   free (zone_names);
 
+  /* Use the names the user specified.  */
   stdlen = strlen (std) + 1;
   dstlen = strlen (dst) + 1;
   zone_names = malloc (stdlen + dstlen);
@@ -229,19 +243,60 @@ DEFUN(__tzfile_default, (std, dst, stdoff, dstoff),
   memcpy (zone_names, std, stdlen);
   memcpy (&zone_names[stdlen], dst, dstlen);
 
-  for (i = 0; i < num_types; ++i)
-    if (types[i].isdst)
-      {
-	types[i].idx = stdlen;
-	if (dst[0] != '\0')
-	  types[i].offset = dstoff;
-      }
-    else
-      {
-	types[i].idx = 0;
-	if (dst[0] != '\0')
-	  types[i].offset = stdoff;
-      }
+  /* Find the standard and daylight time offsets used by the rule file.
+     We choose the offsets in the types of each flavor that are
+     transitioned to earliest in time.  */
+  rule_dstoff = 0;
+  for (i = 0; i < num_transitions; ++i)
+    {
+      if (!rule_stdoff && !types[type_idxs[i]].isdst)
+	rule_stdoff = types[type_idxs[i]].offset;
+      if (!rule_dstoff && types[type_idxs[i]].isdst)
+	rule_dstoff = types[type_idxs[i]].offset;
+      if (rule_stdoff && rule_dstoff)
+	break;
+    }
+
+  /* Now correct the transition times for the user-specified standard and
+     daylight offsets from GMT.  */
+  isdst = 0;
+  rule_offset = rule_offset;
+  for (i = 0; i < num_transitions; ++i)
+    {
+      struct ttinfo *trans_type = &types[type_idxs[i]];
+
+      /* We will use only types 0 (standard) and 1 (daylight).
+	 Fix up this transition to point to whichever matches
+	 the flavor of its original type.  */
+      type_idxs[i] = trans_type->isdst;
+
+      if (trans_type->isgmt)
+	/* The transition time is in GMT.  No correction to apply.  */ ;
+      else if (isdst && !trans_type->isstd)
+	/* The type says this transition is in "local wall clock time", and
+	   wall clock time as of the previous transition was DST.  Correct
+	   for the difference between the rule's DST offset and the user's
+	   DST offset.  */
+	transitions[i] += dstoff - rule_dstoff;
+      else
+	/* This transition is in "local wall clock time", and wall clock
+	   time as of this iteration is non-DST.  Correct for the
+	   difference between the rule's standard offset and the user's
+	   standard offset.  */
+	transitions[i] += stdoff - rule_stdoff;
+
+      /* The DST state of "local wall clock time" for the next iteration is
+	 as specified by this transition.  */
+      isdst = trans_type->isdst;
+    }
+
+  /* Reset types 0 and 1 to describe the user's settings.  */
+  types[0].idx = 0;
+  types[0].offset = stdoff;
+  types[0].isdst = 0;
+  types[1].idx = stdlen;
+  types[1].offset = dstoff;
+  types[1].isdst = 1;
 
   compute_tzname_max (stdlen + dstlen);
 }
