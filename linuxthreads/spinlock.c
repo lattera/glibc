@@ -30,7 +30,7 @@ static inline void __pthread_release(int * spinlock)
 {
   WRITE_MEMORY_BARRIER();
   *spinlock = __LT_SPINLOCK_INIT;
-  __asm __volatile ("" : "=m" (*spinlock) : "0" (*spinlock));
+  __asm __volatile ("" : "=m" (*spinlock) : "m" (*spinlock));
 }
 
 
@@ -106,7 +106,7 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 #ifdef BUSY_WAIT_NOP
       BUSY_WAIT_NOP;
 #endif
-      __asm __volatile ("" : "=m" (lock->__status) : "0" (lock->__status));
+      __asm __volatile ("" : "=m" (lock->__status) : "m" (lock->__status));
     }
 
     lock->__spinlock += (spin_count - lock->__spinlock) / 8;

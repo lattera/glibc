@@ -1,5 +1,10 @@
 2004-01-22  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/ieee754/dbl-64/e_pow.c (log2): Rename to my_log2 to
+	avoid warnings for builtin function log2.
+
+2004-01-22  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Add proper unwind
 	information.
 

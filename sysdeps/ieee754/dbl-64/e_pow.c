@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001, 2002 Free Software Foundation
+ * Copyright (C) 2001, 2002, 2004 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,7 @@
 /*                                                                         */
 /*  FUNCTIONS: upow                                                        */
 /*             power1                                                      */
-/*             log2                                                        */
+/*             my_log2                                                        */
 /*             log1                                                        */
 /*             checkint                                                    */
 /* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
@@ -46,7 +46,7 @@
 
 double __exp1(double x, double xx, double error);
 static double log1(double x, double *delta, double *error);
-static double log2(double x, double *delta, double *error);
+static double my_log2(double x, double *delta, double *error);
 double __slowpow(double x, double y,double z);
 static double power1(double x, double y);
 static int checkint(double x);
@@ -159,7 +159,7 @@ double __ieee754_pow(double x, double y) {
 /**************************************************************************/
 static double power1(double x, double y) {
   double z,a,aa,error, t,a1,a2,y1,y2;
-  z = log2(x,&aa,&error);
+  z = my_log2(x,&aa,&error);
   t = y*134217729.0;
   y1 = t - (t-y);
   y2 = y - y1;
@@ -272,7 +272,7 @@ static double log1(double x, double *delta, double *error) {
 /* Computing log(x)(x is left argument).The result is return double + delta.*/
 /* The result is bounded by error (right argument)                           */
 /****************************************************************************/
-static double log2(double x, double *delta, double *error) {
+static double my_log2(double x, double *delta, double *error) {
   int i,j,m;
 #if 0
   int n;
