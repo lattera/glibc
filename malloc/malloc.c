@@ -4131,6 +4131,13 @@ _int_free(mstate av, Void_t* mem)
     p = mem2chunk(mem);
     size = chunksize(p);
 
+    /* Little security check which won't hurt performance: the
+       allocator never wrapps around at the end of the address space.
+       Therefore we can exclude some size values which might appear
+       here by accident or by "design" from some intruder.  */
+    if ((uintptr_t) p > (uintptr_t) -size)
+      return;
+
     check_inuse_chunk(av, p);
 
     /*

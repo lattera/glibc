@@ -1,5 +1,8 @@
 2003-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_free): Add cheap test for some invalid
+	block sizes.
+
 	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Fix typo in
 	syscall name.
 
