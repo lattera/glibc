@@ -61,8 +61,8 @@
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */
-#define MS_SYNC		0		/* Synchronous memory sync.  */
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
+#define MS_SYNC		4		/* Synchronous memory sync.  */
 
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
