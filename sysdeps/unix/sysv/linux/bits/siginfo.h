@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/SPARC version.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -257,6 +257,9 @@ enum
 #  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
 # endif
 
+/* Forward declaration of the `pthread_attr_t' type.  */
+struct __pthread_attr_s;
+
 typedef struct sigevent
   {
     sigval_t sigev_value;
@@ -270,7 +273,7 @@ typedef struct sigevent
 	struct
 	  {
 	    void (*_function) (sigval_t);	  /* Function to start.  */
-	    void *_attribute;			  /* Really pthread_attr_t.  */
+	    struct __pthread_attr_s *_attribute;  /* Really pthread_attr_t.  */
 	  } _sigev_thread;
       } _sigev_un;
   } sigevent_t;

@@ -16,7 +16,7 @@ type {struct sigevent}
 element {struct sigevent} int sigev_notify
 element {struct sigevent} int sigev_signo
 element {struct sigevent} {union sigval} sigev_value
-element {struct sigevent} {void(*)(union sigval)} sigev_notify_function
+element {struct sigevent} {void(*} sigev_notify_function )(union sigval)
 element {struct sigevent} {pthread_attr_t*} sigev_notify_attributes
 
 constant SIGEV_NONE
@@ -54,7 +54,7 @@ constant SIGPROF
 constant SIGSYS
 constant SIGTRAP
 constant SIGURG
-constant SIGVALRM
+constant SIGVTALRM
 constant SIGXCPU
 constant SIGXFSZ
 

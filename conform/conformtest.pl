@@ -55,6 +55,7 @@ $CFLAGS{"XOPEN2K"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 # Some headers need a bit more attention.
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
 $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
+$mustprepend{'signal.h'} = "#include <pthread.h>\n";
 $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 
 # Make a hash table from this information.

@@ -38,7 +38,7 @@ typedef struct _pthread_descr_struct *_pthread_descr;
 
 
 /* Attributes for threads.  */
-typedef struct
+typedef struct __pthread_attr_s
 {
   int __detachstate;
   int __schedpolicy;

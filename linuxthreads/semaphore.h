@@ -33,8 +33,8 @@ typedef struct
 {
   struct
   {
-    long int status;
-    int spinlock;
+    long int __status;
+    int __spinlock;
   } __sem_lock;
   int __sem_value;
   _pthread_descr __sem_waiting;

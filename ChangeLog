@@ -1,8 +1,18 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Define $mustprepend{"signal.h"}.
+	* conform/data/signal.h-data: Fix sigev_notify_function entry.
+	Fix typo (SIGVALRM -> SIGVTALRM).
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Define sigev_notify_attr
+	with real type.
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/siginfo.h: Likewise.
+
 	* conform/conformtest.pl: Implement optional-element.  Define
 	$mustprepend{"sched.h"}.
-
 	* conform/data/sched.h-data: Make sporadic scheduler definitions
 	optional.
 
