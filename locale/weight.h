@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -52,7 +52,7 @@ typedef struct weight_t
 #define collate_undefined \
   (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_UNDEFINED))
 #define collate_rules \
-  (_NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
+  ((u_int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
 
 
 static __inline int get_weight (const STRING_TYPE **str, weight_t *result);
@@ -69,7 +69,7 @@ get_weight (const STRING_TYPE **str, weight_t *result)
       const size_t level_size = collate_hash_size * (collate_nrules + 1);
       size_t level;
 
-      slot = (ch * (collate_nrules + 1)) % collate_hash_size;
+      slot = (ch % collate_hash_size) * (collate_nrules + 1);
 
       level = 0;
       while (__collate_table[slot] != (u_int32_t) ch)

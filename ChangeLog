@@ -1,3 +1,12 @@
+1997-02-11 05:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/weight.h (collate_rules): It's an u_int32_t array.
+	(get_weight): Compute initial SLOT value correctly.
+
+1997-02-10 17:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz-ctsep.c: Initialize *LEN when successful.
+
 1997-02-09 02:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.2.
@@ -24,6 +33,10 @@
 	* stdio/vsnprintf.c: Likewise.
 	Reported by Philip Blundell <pjb27@cam.ac.uk>.
 
+	* libio/vsnprintf.c: If MAXLEN is 0 return 0.
+	* stdio/vsnprintf.c: Likewise.
+	Reported by Philip Blundell <pjb27@cam.ac.uk>.
+
 1997-02-07 17:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/sysd-stdio.c: Include <errno.h>.
@@ -34,6 +47,10 @@
 1997-02-07 17:41  Philip Blundell <pjb27@cam.ac.uk>
 
 	* sysdeps/unix/sysv/linux/socketbits.h: Fix typo.
+
+1997-02-06 13:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rellns-sh: No need to check for existance of first parameter.
 
 1997-02-06 13:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

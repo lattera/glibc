@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -57,6 +57,8 @@ __argz_create_sep (const char *string, int delim, char **argz, size_t *len)
 	  *argz = NULL;
 	  *len = 0;
 	}
+
+      *len = nlen;
     }
   else
     {
