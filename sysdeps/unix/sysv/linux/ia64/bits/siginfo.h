@@ -34,7 +34,7 @@ typedef union sigval
   } sigval_t;
 
 # define __SI_MAX_SIZE     128
-# define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 3)
+# define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 4)
 
 typedef struct siginfo
   {
@@ -130,8 +130,10 @@ enum
 # define SI_TIMER	SI_TIMER
   SI_QUEUE,			/* Sent by sigqueue.  */
 # define SI_QUEUE	SI_QUEUE
-  SI_USER			/* Sent by kill, sigsend, raise.  */
+  SI_USER,			/* Sent by kill, sigsend, raise.  */
 # define SI_USER	SI_USER
+  SI_KERNEL = 0x80		/* Send by kernel.  */
+#define SI_KERNEL	SI_KERNEL
 };
 
 
@@ -152,8 +154,10 @@ enum
 # define ILL_PRVREG	ILL_PRVREG
   ILL_COPROC,			/* Coprocessor error.  */
 # define ILL_COPROC	ILL_COPROC
-  ILL_BADSTK			/* Internal stack error.  */
+  ILL_BADSTK,			/* Internal stack error.  */
 # define ILL_BADSTK	ILL_BADSTK
+  ILL_BADIADDR			/* Unimplemented instruction address. */
+# define ILL_BADIADDR	ILL_BADIADDR
 
 # ifdef __USE_GNU
    , ILL_BREAK
@@ -201,6 +205,10 @@ enum
 # define SEGV_MAPERR	SEGV_MAPERR
   SEGV_ACCERR			/* Invalid permissions for mapped object.  */
 # define SEGV_ACCERR	SEGV_ACCERR
+# ifdef __USE_GNU
+  , SEGV_PSTKOVF		/* Paragraph stack overflow. */
+# define SEGV_PSTKOVF	__SEGV_PSTKOVF
+# endif
 };
 
 /* `si_code' values for SIGBUS signal.  */
@@ -273,7 +281,7 @@ enum
 
 /* Structure to transport application-defined values with signals.  */
 # define __SIGEV_MAX_SIZE	64
-# define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
+# define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
 
 typedef struct sigevent
   {
