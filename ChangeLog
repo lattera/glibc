@@ -1,3 +1,10 @@
+2004-02-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c: Declare __cache_line_size as
+	weak extern.
+	(__elf_machine_runtime_setup): Invalidate the instruction cache over
+	the whole range of the PLT.
+
 2004-02-06  Andreas Schwab  <schwab@suse.de>
 
 	* posix/regcomp.c (build_range_exp): Fix off-by-one.

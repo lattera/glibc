@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995-2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,11 @@
 #include <elf/dynamic-link.h>
 #include <dl-machine.h>
 #include <stdio-common/_itoa.h>
+
+/* The value __cache_line_size is defined in memset.S and is initialised
+   by _dl_sysdep_start via DL_PLATFORM_INIT.  */
+extern int __cache_line_size;
+weak_extern (__cache_line_size)
 
 /* Because ld.so is now versioned, these functions can be in their own file;
    no relocations need to be done to call them.
@@ -304,14 +309,30 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	 there may be a little overlap at the start and the end.
 
 	 Assumes that dcbst and icbi apply to lines of 16 bytes or
-	 more.  Current known line sizes are 16, 32, and 128 bytes.  */
+	 more.  Current known line sizes are 16, 32, and 128 bytes.
+	 The following gets the __cache_line_size, when available.  */
+
+      /* Default minimum 4 words per cache line.  */
+      int line_size_words = 4;
+
+      /* Don't try this until ld.so has relocated itself!  */
+      int *line_size_ptr = &__cache_line_size;
+      if (lazy && line_size_ptr != NULL)
+	{
+	  /*  Verify that __cache_line_size is defined and set.  */
+	  if (*line_size_ptr != 0)
+	    /* Convert bytes to words.  */
+	    line_size_words = *line_size_ptr / 4;
+	}
 
       size_modified = lazy ? rel_offset_words : 6;
-      for (i = 0; i < size_modified; i += 4)
-	PPC_DCBST (plt + i);
+      for (i = 0; i < size_modified; i += line_size_words)
+        PPC_DCBST (plt + i);
       PPC_DCBST (plt + size_modified - 1);
       PPC_SYNC;
-      PPC_ICBI (plt);
+
+      for (i = 0; i < size_modified; i += line_size_words)
+        PPC_ICBI (plt + i);
       PPC_ICBI (plt + size_modified - 1);
       PPC_ISYNC;
     }
