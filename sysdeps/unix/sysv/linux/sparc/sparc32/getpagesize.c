@@ -24,15 +24,17 @@
 
 /* If we are not a static program, this value is collected from the system
    via the AT_PAGESZ auxiliary argument.  If we are a static program, we
-   have to guess.  We should _really_ get Linux a proper sysconf()...  */
+   use the getpagesize system call.  */
 
-extern size_t _dl_pagesize;
+size_t _dl_pagesize;
+
+extern size_t __syscall_getpagesize(void);
 
 int
 __getpagesize ()
 {
   if (_dl_pagesize == 0)
-    _dl_pagesize = EXEC_PAGESIZE;
+    _dl_pagesize = __syscall_getpagesize();
   return _dl_pagesize;
 }
 

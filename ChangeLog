@@ -1,3 +1,13 @@
+1998-06-27  David S. Miller  <davem@pierdol.cobaltmicro.com>
+
+        * sysdeps/sparc/sparc32/dl-machine.h (elf_machine_matches_host):
+        Cleanup weak_extern usage for _dl_hwcap and _dl_hwcap_mask.
+        (elf_machine_fixup_plt): Likewise.
+        * sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c: When
+	_dl_pagesize not set, use system call to always get correct answer.
+        * sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list
+        (__syscall_getpagesize): Add
+
 1998-06-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_send.c (res_send): Fix typo.
