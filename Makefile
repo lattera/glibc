@@ -220,7 +220,7 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  := README INSTALL NOTES COPYING.LIB COPYING NEWS		\
+distribute  := README INSTALL FAQ NOTES COPYING.LIB COPYING NEWS	\
 	       ChangeLog ChangeLog.[0-9]				\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk				\

@@ -1,5 +1,6 @@
 Fri May 10 18:36:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makefile (distribute): Add FAQ.
 	* FAQ: New file contributed by drepper.
 
 	* time/Makefile (headers): Add timebits.h.
