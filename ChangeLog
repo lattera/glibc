@@ -1,4 +1,12 @@
+2000-03-31  Andreas Schwab  <schwab@suse.de>
+
+	* string/strfry.c: Declare STATE as array of char instead of int
+	and do not initialize it (done by initstate_r).  Pass correct
+	size.
+
 2000-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Fix typo in comment.
 
 	* sysdeps/i386/dl-machine.h (RTLD_START): Squeeze one more
 	instruction out of the code.

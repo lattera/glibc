@@ -29,9 +29,9 @@ strfry (char *string)
 
   if (!init)
     {
-      static int state[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+      static char state[32];
       rdata.state = NULL;
-      __initstate_r (time ((time_t *) NULL), state, 8, &rdata);
+      __initstate_r (time ((time_t *) NULL), state, sizeof (state), &rdata);
       init = 1;
     }
 
