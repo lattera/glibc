@@ -1,3 +1,7 @@
+2001-03-11  Andreas Jaeger  <aj@suse.de>
+
+	* elf/elf.h (EM_*): Synch with official list.
+
 2001-03-07  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/bits/fenv.h (FE_NONIEEE_ENV): New macro.
