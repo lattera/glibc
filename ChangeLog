@@ -1,3 +1,8 @@
+Tue Mar  5 12:14:57 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Also don't fault just
+	because some fdmask is 0.
+
 Mon Mar  4 17:35:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/select.c (__select):
