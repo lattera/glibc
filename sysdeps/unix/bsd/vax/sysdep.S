@@ -21,12 +21,14 @@ Cambridge, MA 02139, USA.  */
 .globl _errno
 .globl syscall_error
 syscall_error:
+#ifdef EWOULDBLOCK_sys
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
 	   EWOULDBLOCK_sys is the original number.  */
 	cmpl r0, $EWOULDBLOCK_sys
 	bne 0f
 	movl $EAGAIN, r0
+#endif
 0:	movl r0, _errno
 	mnegl $1, r0
 	ret
