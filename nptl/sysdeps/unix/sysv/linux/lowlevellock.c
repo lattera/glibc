@@ -28,8 +28,11 @@ void
 __lll_lock_wait (int *futex, int val)
 {
   do
+    {
       lll_futex_wait (futex, val + 1);
-  while ((val = __lll_add (futex, 1)) != 0);
+      val = __lll_add (futex, 1);
+    }
+  while (val != 0);
   *futex = 2;
 }
 hidden_proto (__lll_lock_wait)
