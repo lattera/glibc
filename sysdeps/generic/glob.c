@@ -650,13 +650,12 @@ glob (pattern, flags, errfunc, pglob)
 		    pwbuflen = 1024;
 		  pwtmpbuf = (char *) __alloca (pwbuflen);
 
-		  success = 1;
 		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
 			 != 0)
 		    {
 		      if (errno != ERANGE)
 			{
-			  success = 0;
+			  p = NULL;
 			  break;
 			}
 		      pwbuflen *= 2;
@@ -665,9 +664,8 @@ glob (pattern, flags, errfunc, pglob)
 		    }
 #   else
 		  p = getpwnam (name);
-		  success = p != NULL;
 #   endif
-		  if (success)
+		  if (p != NULL)
 		    home_dir = p->pw_dir;
 		}
 	    }

@@ -91,7 +91,8 @@ gethostid ()
 
   /* To get the IP address we need to know the host name.  */
   while (__gethostbyname_r (hostname, &hostbuf, buffer, buflen, &hp, &herr)
-	 != 0)
+	 != 0
+	 || hp == NULL)
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       return 0;
     else

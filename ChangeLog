@@ -1,3 +1,14 @@
+1999-06-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Handle failing call to
+	getxxbyYY_r functions correctly for non-existing entry.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+
 1999-06-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* pwd/Makefile (tests): Add rules for tst-getpw.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,6 +135,12 @@ extern int fgetpwent_r __P ((FILE *__restrict __stream,
 
 #endif	/* POSIX or reentrant */
 
+#ifdef __USE_GNU
+/* Re-construct the password-file line for the given uid
+   in the given buffer.  This knows the format that the caller
+   will expect, but this need not be the format of the password file.  */
+extern int getpw __P ((__uid_t __uid, char *__buffer));
+#endif
 
 __END_DECLS
 

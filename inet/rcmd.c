@@ -80,7 +80,8 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	hstbuflen = 1024;
 	tmphstbuf = __alloca (hstbuflen);
 	while (__gethostbyname_r (*ahost, &hostbuf, tmphstbuf, hstbuflen,
-				  &hp, &herr) != 0)
+				  &hp, &herr) != 0
+	       || hp == NULL)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    {
 	      __set_h_errno (herr);
@@ -270,7 +271,8 @@ ruserok(rhost, superuser, ruser, luser)
 	buffer = __alloca (buflen);
 
 	while (__gethostbyname_r (rhost, &hostbuf, buffer, buflen, &hp, &herr)
-	       != 0)
+	       != 0
+	       || hp == NULL)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    return -1;
 	  else
@@ -370,7 +372,8 @@ iruserok2 (raddr, superuser, ruser, luser, rhost)
       char *buffer = __alloca (buflen);
       uid_t uid;
 
-      if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd))
+      if (__getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) != 0
+	  || pwd == NULL)
 	return -1;
 
       dirlen = strlen (pwd->pw_dir);
@@ -469,7 +472,8 @@ __icheckhost (raddr, lhost, rhost)
 	buffer = __alloca (buflen);
 	save_errno = errno;
 	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
-	       != 0)
+	       != 0
+	       || hp = NULL)
 		if (herr != NETDB_INTERNAL || errno != ERANGE)
 			return (0);
 		else {

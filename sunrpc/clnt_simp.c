@@ -105,7 +105,8 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
       buflen = 1024;
       buffer = __alloca (buflen);
       while (__gethostbyname_r (host, &hostbuf, buffer, buflen,
-				&hp, &herr) != 0)
+				&hp, &herr) != 0
+	     || hp == NULL)
 	if (herr != NETDB_INTERNAL || errno != ERANGE)
 	  return (int) RPC_UNKNOWNHOST;
 	else
