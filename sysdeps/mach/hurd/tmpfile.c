@@ -1,5 +1,5 @@
 /* Open a stdio stream on an anonymous temporary file.  Hurd version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,9 @@
 #include <stdio.h>
 #include <hurd.h>
 #include <hurd/fs.h>
+#include <hurd/fd.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #ifdef USE_IN_LIBIO
 # include <iolibio.h>
@@ -37,6 +39,7 @@ tmpfile (void)
 {
   error_t err;
   file_t file;
+  int fd;
   FILE *f;
 
   /* Get a port to the directory that will contain the file.  */
@@ -51,10 +54,16 @@ tmpfile (void)
   if (err)
     return __hurd_fail (err), NULL;
 
-  /* Open a stream on the port to the unnamed file.
+  /* Get a file descriptor for that port.  POSIX.1 requires that streams
+     returned by tmpfile allocate file descriptors as fopen would.  */
+  fd = _hurd_intern_fd (file, O_RDWR, 1); /* dealloc on error */
+  if (fd < 0)
+    return NULL;
+
+  /* Open a stream on the unnamed file.
      It will cease to exist when this stream is closed.  */
-  if ((f = __fopenport (file, "w+b")) == NULL)
-    __mach_port_deallocate (__mach_task_self (), file);
+  if ((f = __fdopen (fd, "w+b")) == NULL)
+    __close (fd);
 
   return f;
 }
