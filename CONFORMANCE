@@ -1,0 +1,127 @@
+Conformance of the GNU libc with various standards
+==================================================
+
+The GNU libc is designed to be conformant with existing standard as
+far as possible.  TO ensure this I've run various tests.  The results
+are presented here.
+
+
+Open Group's hdrchk
+-------------------
+
+The hdrchk test suite is available from the Open Group at
+
+	ftp://ftp.rdg.opengroup.org/pub/unsupported/stdtools/hdrchk/
+
+I've last run the suite on 1998-07-08 on a Linux/ix86 system with the
+following results [*]:
+
+	FIPS		No reported problems
+
+	POSIX90		No reported problems
+
+	XPG3		No reported problems
+
+	XPG4		The wide character I/O stuff is missing in glibc.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*** Starting wchar.h
+Missing: extern wint_t  fgetwc();
+Missing: extern wchar_t *fgetws();
+Missing: extern wint_t  fputwc();
+Missing: extern int     fputws();
+Missing: extern wint_t  getwc();
+Missing: extern wint_t  getwchar();
+Missing: extern wint_t  putwc();
+Missing: extern wchar_t putwchar();
+Missing: extern wint_t  ungetwc();
+Missing: extern size_t  wcsftime();
+*** Completed wchar.h
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+			Beside this a problem in stdio.h is reported but
+			this is only because the scripts don't understand
+			the sometimes complex constructs in the header.
+
+	POSIX96		Same as UNIX98 [see below].
+	UNIX98		Quite a lot of problems, almost all due to limitations
+			of the Linux kernel (2.1.108):
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*** Starting mqueue.h
+Missing #include file: mqueue.h
+*** Completed mqueue.h
+*** Starting semaphore.h
+Missing: #define SEM_FAILED (-1)
+Missing: extern int  sem_close();
+Missing: extern sem_t *sem_open();
+Missing: extern int  sem_unlink();
+*** Completed semaphore.h
+*** Starting signal.h
+Missing: #define        SIGSYS  (-1)
+*** Completed signal.h
+*** Starting sys/mman.h
+Missing: extern int shm_open();
+Missing: extern int shm_unlink();
+*** Completed sys/mman.h
+*** Starting sys/stat.h
+Missing: #define        S_TYPEISMQ      (-1)
+Missing: #define        S_TYPEISSEM     (-1)
+Missing: #define        S_TYPEISSHM     (-1)
+*** Completed sys/stat.h
+*** Starting sys/types.h
+Missing: typedef        <type>  clockid_t;
+Missing: typedef        <type>  timer_t;
+*** Completed sys/types.h
+*** Starting time.h
+Missing: #define        CLOCK_REALTIME  (-1)
+Missing: #define        TIMER_ABSTIME   (-1)
+Missing: extern int     clock_getres();
+Missing: extern int     clock_gettime();
+Missing: extern int     clock_settime();
+Missing: struct itimerspec { <members> };
+Missing: extern int     timer_create();
+Missing: extern int     timer_delete();
+Missing: extern int     timer_getoverrun();
+Missing: extern int     timer_gettime();
+Missing: extern int     timer_settime();
+*** Completed time.h
+*** Starting unistd.h
+Missing: #define        _POSIX_MESSAGE_PASSING          (-1)
+Missing: #define        _POSIX_SEMAPHORES               (-1)
+Missing: #define        _POSIX_SHARED_MEMORY_OBJECTS            (-1)
+Missing: #define        _POSIX_TIMERS           (-1)
+*** Completed unistd.h
+*** Starting wchar.h
+Missing: extern wint_t  fgetwc();
+Missing: extern wchar_t *fgetws();
+Missing: extern wint_t  fputwc();
+Missing: extern int     fputws();
+Missing: extern int     fwide();
+Missing: extern int     fwprintf();
+Missing: extern int     fwscanf();
+Missing: extern wint_t  getwc();
+Missing: extern wint_t  getwchar();
+Missing: extern wint_t  putwc();
+Missing: extern wchar_t putwchar();
+Missing: extern int     swprintf();
+Missing: extern int     swscanf();
+Missing: extern wint_t  ungetwc();
+Missing: extern int     vfwprintf();
+Missing: extern int     vswprintf();
+Missing: extern int     vwprintf();
+Missing: extern size_t  wcsftime();
+Missing: extern wchar_t *wcswcs();
+Missing: extern int     wprintf();
+Missing: extern int     wscanf();
+*** Completed wchar.h
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+			Only the `wchar.h' problems result from glibc
+			defficiencies since we still don't support wide
+			character I/O.
+
+[*] Since the scripts are not clever enough for the way gcc handles
+include files (namely, putting some of them in gcc-local directory) I
+copied over the iso646.h, float.h, and stddef.h headers and ignored the
+problems resulting from the splitted limits.h file).

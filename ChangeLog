@@ -1,3 +1,17 @@
+1998-07-16 20:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/Makefile (routines): Add backtracesymsfd.
+	Add rules to generate libSegFault.
+	* debug/Versions: Add __backtrace_symbols_fd and backtrace_symbols_fd.
+	* debug/execinfo.h: Declare backtrace_symbols_fd.
+	* sysdeps/generic/backtracesymsfd.c: New file.
+	* sysdeps/generic/elf/backtracesymsfd.c: New file.
+	* sysdeps/generic/segfault.c: New file.
+	* sysdeps/generic/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h: New file.
+
+	* sysdeps/generic/elf/backtracesyms.c: Remove unneeded +.
+
 1998-07-16 19:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (process_envvars): Also recognize on as LD_BIND_NOW value.

@@ -23,10 +23,21 @@ subdir	:= debug
 
 headers	:= execinfo.h
 
-routines := backtrace backtracesyms
+routines := backtrace backtracesyms backtracesymsfd
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 
 tests = backtrace-tst
 
+extra-libs	= libSegFault
+extra-libs-others = $(extra-libs)
+
+libSegFault-routines = segfault
+libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
+
 include ../Rules
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(objpfx)libSegFault.so: $(common-objpfx)libc.so $(common-objpfx)elf/ld.so

@@ -34,6 +34,15 @@ extern int backtrace __P ((void **__array, int __size));
 extern char **__backtrace_symbols __P ((void *__const *__array, int __size));
 extern char **backtrace_symbols __P ((void *__const *__array, int __size));
 
+
+/* This function is similar to backtrace_symbols() but it writes the result
+   immediately to a file and can therefore also be used in situations where
+   malloc() is not usable anymore.  */
+extern void __backtrace_symbols_fd __P ((void *__const *__array, int __size,
+					 int __fd));
+extern void backtrace_symbols_fd __P ((void *__const *__array, int __size,
+				       int __fd));
+
 __END_DECLS
 
 #endif /* execinfo.h  */

@@ -55,9 +55,9 @@ __backtrace_symbols (array, size)
 		  + (info[cnt].dli_sname
 		     ? strlen (info[cnt].dli_sname) + 3 + WORD_WIDTH + 3
 		     : 1)
-		  + WORD_WIDTH + 6);
+		  + WORD_WIDTH + 5);
       else
-	total += 6 + WORD_WIDTH;
+	total += 5 + WORD_WIDTH;
     }
 
   /* Allocate memory for the result.  */
@@ -80,7 +80,7 @@ __backtrace_symbols (array, size)
 	      else
 		sprintf (buf, "-0x%x", info[cnt].dli_saddr - array[cnt]);
 
-	      last += 1 + sprintf (last, "%s%s%s%s%s[+%p]",
+	      last += 1 + sprintf (last, "%s%s%s%s%s[%p]",
 				   info[cnt].dli_fname ?: "",
 				   info[cnt].dli_sname ? "(" : "",
 				   info[cnt].dli_sname ?: "",
@@ -89,7 +89,7 @@ __backtrace_symbols (array, size)
 				   array[cnt]);
 	    }
 	  else
-	    last += 1 + sprintf (last, "[+%p]", array[cnt]);
+	    last += 1 + sprintf (last, "[%p]", array[cnt]);
 	}
     }
 
