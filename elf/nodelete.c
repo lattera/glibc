@@ -41,7 +41,7 @@ do_test (void)
   p = dlopen ("nodelmod1.so", RTLD_LAZY);
   if (p == NULL)
     {
-      puts ("failed to load \"nodelmod1.so\"");
+      printf ("failed to load \"nodelmod1.so\": %s\n", dlerror ());
       result = 1;
     }
   else
@@ -89,7 +89,7 @@ do_test (void)
   p = dlopen ("nodelmod2.so", RTLD_LAZY | RTLD_NODELETE);
   if (p == NULL)
     {
-      puts ("failed to load \"nodelmod2.so\"");
+      printf ("failed to load \"nodelmod2.so\": %s\n", dlerror ());
       result = 1;
     }
   else
@@ -129,6 +129,56 @@ do_test (void)
 	    {
 	      /* We caught an segmentation fault.  */
 	      puts ("\"nodelmod2.so\" got deleted");
+	      result = 1;
+	    }
+	}
+    }
+
+  p = dlopen ("nodelmod3.so", RTLD_LAZY);
+  if (p == NULL)
+    {
+      printf ("failed to load \"nodelmod3.so\": %s\n", dlerror ());
+      result = 1;
+    }
+  else
+    {
+      int *(*fctp) (void);
+
+      puts ("succeeded loading \"nodelmod3.so\"");
+
+      fctp = dlsym (p, "addr");
+      if (fctp == NULL)
+	{
+	  puts ("failed to get address of \"addr\" in \"nodelmod3.so\"");
+	  result = 1;
+	}
+      else
+	{
+	  int *varp = fctp ();
+
+	  *varp = -1;
+
+	  /* Now close the object.  */
+	  if (dlclose (p) != 0)
+	    {
+	      puts ("failed to close \"nodelmod3.so\"");
+	      result = 1;
+	    }
+	  else if (! sigsetjmp (jmpbuf, 1))
+	    {
+	      /* Access the variable again.  */
+	      if (*varp != -1)
+		{
+		  puts ("\"var_in_mod4\" value not correct");
+		  result = 1;
+		}
+	      else
+		puts ("-z nodelete in dependency succeeded");
+	    }
+	  else
+	    {
+	      /* We caught an segmentation fault.  */
+	      puts ("\"nodelmod4.so\" got deleted");
 	      result = 1;
 	    }
 	}

@@ -98,7 +98,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen))
 modules-vis-yes = vismod1 vismod2 vismod3
-modules-nodelete-yes = nodelmod1 nodelmod2
+modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 
@@ -242,6 +242,7 @@ $(objpfx)failobj.so: $(objpfx)testobj6.so
 $(objpfx)dep1.so: $(objpfx)dep2.so $(objpfx)dep4.so
 $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
 $(objpfx)dep4.so: $(objpfx)dep3.so
+$(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -304,8 +305,10 @@ LDFLAGS-noload = -rdynamic
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
 LDFLAGS-nodelmod1.so = -Wl,--enable-new-dtags,-z,nodelete
+LDFLAGS-nodelmod4.so = -Wl,--enable-new-dtags,-z,nodelete
 $(objpfx)nodelete: $(libdl)
-$(objpfx)nodelete.out: $(objpfx)nodelmod1.so $(objpfx)nodelmod2.so
+$(objpfx)nodelete.out: $(objpfx)nodelmod1.so $(objpfx)nodelmod2.so \
+		       $(objpfx)nodelmod3.so
 
 LDFLAGS-nodlopenmod.so = -Wl,--enable-new-dtags,-z,nodlopen
 $(objpfx)nodlopen: $(libdl)

@@ -1,6 +1,14 @@
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile: Add no modules for nodelete test.
+	* elf/nodelmod3.c: New file.
+	* elf/nodelmod4.c: New file.
+	* elf/nodelete.c: Also test case where dependency of dlopen() object
+	is marked nodelete.
+
 	* elf/Makefile (tests): Add nodlopen.  Add rules to generate nodlopen.
+	* elf/nodlopen.c: New file.
+	* elf/nodlopenmod.c: New file.
 	* include/dlfcn.h: Define __RTLD_DLOPEN.
 	* elf/dl-load.c (_dl_map_object_from_fd): If DF_1_NOOPEN is set
 	and this is a dlopen() call, do not load the binary.
