@@ -38,6 +38,13 @@ routines = $(dist-routines) obstack
 install-lib := libmcheck.a
 non-lib.a := libmcheck.a
 
+# Additional library.
+extra-libs = libmemprof
+extra-libs-others = $(extra-libs)
+
+libmemprof-routines = memprof
+libmemprof-inhibit-o = $(filter-out .os,$(object-suffixes))
+
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
 
@@ -59,6 +66,19 @@ else
 address-width=18
 endif
 endif
+
+# If the gd library is available we build the `memprofstat' program.
+ifneq ($(LIBGD),no)
+install-bin += memprofstat
+endif
+
+# Another goal which can be used to override the configure decision.
+.PHONY: do-memprofstat
+do-memprofstat: $(objpfx)memprofstat
+
+memprofstat-modules = memprofstat
+$(objpfx)memprofstat: $(memprofstat-modules:%=$(objpfx)%.o)
+	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz
 
 include ../Rules
 

@@ -32,6 +32,20 @@ yes)
 gettext-srcdir = $withval" ;;
 esac
 ])
+# Check for a --with-gd argument and set libgd-LDFLAGS in config.make.
+AC_ARG_WITH(gd, dnl
+  --with-gd=DIR           find libgd include dir and library with prefix DIR,
+	    [dnl
+case "$with_gd" in
+yes|''|no) config_vars="$config_vars
+libgd-LDFLAGS =" ;;
+*) config_vars="$config_vars
+CFLAGS-memprofstat.c = -I$withval/include
+libgd-LDFLAGS = -L$withval/lib"
+   libgd_include="-I$withval/include"
+   libgd_ldflags="-L$withval/lib" ;;
+esac
+])
 
 dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(fp, dnl
@@ -1083,6 +1097,20 @@ if test "$libc_cv_gcc_subtract_local_labels" = yes; then
   AC_DEFINE(HAVE_SUBTRACT_LOCAL_LABELS)
 fi
 
+dnl Check whether we have the gd library available.
+AC_MSG_CHECKING(for libgd)
+old_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS $libgd_include"
+old_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS $libgd_ldflags"
+old_LIBS="$LIBS"
+LIBS="$LIBS -lgd -lpng -lz"
+AC_TRY_LINK([#include <gd.h>], [gdImagePng (0, 0)], LIBGD=yes, LIBGD=no)
+CFLAGS="$old_CFLAGS"
+LDFLAGS="$old_LDFLAGS"
+LIBS="$old_LIBS"
+AC_MSG_RESULT($LIBGD)
+AC_SUBST(LIBGD)
 
 ### End of automated tests.
 ### Now run sysdeps configure fragments.

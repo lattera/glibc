@@ -1,3 +1,13 @@
+1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Accept --with-gd option and set all libgd-LDFLAGS,
+	CFLAGS-memprofstat.c, and LIBGD variables.
+	* config.make.in: Add LIBGD.
+	* malloc/Makefile: Add rules to generate libmemprof.so and
+	memprofstat.
+	* malloc/memprof.c: New file.
+	* malloc/memprofstat.c: New file.
+
 1999-10-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/nsap_addr.c (inet_nsap_addr): Little optimization.
