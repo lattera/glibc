@@ -71,12 +71,6 @@ _init:
 .L23:
 	.long	__gmon_start__
 #endif
-	.data
-	.global __fpscr_values
-__fpscr_values:
-	.long   0
-	.long   0x80000
-	.previous
 1:
 	ALIGN
 	END_INIT

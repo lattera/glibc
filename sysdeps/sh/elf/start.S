@@ -89,3 +89,7 @@ __data_start:
 	.long 0
 	.weak data_start
 	data_start = __data_start
+	.global __fpscr_values
+__fpscr_values:
+	.long   0
+	.long   0x80000

@@ -22,6 +22,7 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H   1
 
+#ifndef __ASSEMBLER__
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
@@ -71,5 +72,6 @@ struct _pthread_descr_struct;
 #define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
 #define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
 #define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
+#endif /* __ASSEMBLER__ */
 
 #endif /* pt-machine.h */

@@ -1,3 +1,9 @@
+2002-10-02  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/pt-machine.h: Make C code ifndef'ed with __ASSEMBLER__.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/smp.h: New file.
+
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/tst-timer.c (main): Clear

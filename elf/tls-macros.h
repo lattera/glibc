@@ -166,12 +166,11 @@
 	  "mov.l 0f,r12\n\t"						      \
 	  "add r0,r12\n\t"						      \
 	  "mov.l 1f,r4\n\t"						      \
-	  "add r12,r4\n\t"						      \
 	  "mova 2f,r0\n\t"						      \
 	  "mov.l 2f,r1\n\t"						      \
 	  "add r0,r1\n\t"						      \
 	  "jsr @r1\n\t"							      \
-	  " nop\n\t"							      \
+	  " add r12,r4\n\t"						      \
 	  "mov.l 3f,%0\n\t"						      \
 	  "bra 4f\n\t"							      \
 	  " add r0,%0\n\t"						      \
@@ -191,12 +190,11 @@
 	  "mov.l 0f,r12\n\t"						      \
 	  "add r0,r12\n\t"						      \
 	  "mov.l 1f,r4\n\t"						      \
-	  "add r12,r4\n\t"						      \
 	  "mova 2f,r0\n\t"						      \
 	  "mov.l 2f,r1\n\t"						      \
 	  "add r0,r1\n\t"						      \
 	  "jsr @r1\n\t"							      \
-	  " nop\n\t"							      \
+	  " add r12,r4\n\t"						      \
 	  "bra 3f\n\t"							      \
 	  " mov r0,%0\n\t"						      \
 	  ".align 2\n\t"						      \

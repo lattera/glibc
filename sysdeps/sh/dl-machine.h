@@ -573,14 +573,15 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_SH_TLS_TPOFF32:
 	  /* The offset is positive, afterward from the thread pointer.  */
 # ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = map->l_tls_offset + sym->st_value;
+	  *reloc_addr = map->l_tls_offset + sym->st_value + reloc->r_addend;
 # else
 	  /* We know the offset of object the symbol is contained in.
 	     It is a positive value which will be added to the thread
 	     pointer.  To get the variable position in the TLS block
 	     we add the offset from that of the TLS block.  */
-	  if (sym_map != NULL && sym != NULL)
-	    *reloc_addr = sym_map->l_tls_offset + sym->st_value;
+	  *reloc_addr
+	    = ((sym == NULL ? 0 : sym_map->l_tls_offset + sym->st_value)
+	       + reloc->r_addend);
 # endif
 	  break;
 #endif	/* use TLS */

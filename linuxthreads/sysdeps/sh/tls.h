@@ -20,6 +20,7 @@
 #ifndef _TLS_H
 #define _TLS_H
 
+#ifndef __ASSEMBLER__
 #include <stddef.h>
 
 #include <pt-machine.h>
@@ -109,5 +110,6 @@ typedef struct
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
 
 #endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
+#endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */
