@@ -1,3 +1,209 @@
+1997-03-08 05:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/Makefile (routines): Add argp-eexst.
+	* argp/argp-ba.c (argp_program_bug_address): Make `const'.
+	* argp/argp-eexst.c: New file.  Define exit status variable.
+	* argp/argp-help.c (__argp_state_help): Use argp_err_exit_status
+	variable instead of always exiting with value 1.
+	* argp/argp-pv.c (argp_program_version): Make `const'.
+	* argp/argp.h: Declare argp_err_exit_status.
+	Patches by Miles Bader <miles@gnu.ai.mit.edu>.
+
+	* locale/programs/localedef.c: Use argp_err_exit_status to
+	terminate with correct value.
+
+	* inet/rcmd.c (iruserok): Use euidaccess instead of half-hearted
+	switching of UID before opening .rhosts.
+
+	* libio/vsnprintf.c: Change implementation to follow ISO C 9X
+	proposal.  The return value now is always the number of characters
+	which would be written if enough space is available.
+	* manual/stdio.texi: Update description for new behaviour.
+
+	* locale/locale.h (__locale_t): Don't use __locale_t for struct
+	name and pointer to struct since old gccs cannot keep the namespaces
+	apart.  Rename struct to __locale_struct.
+	* locale/duplocale.h: Likewise.
+	* locale/newlocale.h: Likewise.
+
+	* math/Makefile (headers): Add complex.h and cmathcalls.h.
+	(routines): Remove w_cabs.  Add conj, cimag, creal, and cabs.
+	* math/math.h: Undefine __MATHDECL_1, __MATHDECL, and __MATHCALL
+	after use.
+	(signgam): Move declaration to here from mathcalls.h.
+	* math/mathcalls.h (cabs, __cabs_complex, signgam): Remove definition.
+	Correct comment for fmin and fmax.
+	Start implementing complex math function from ISO C 9X.
+	* math/complex.h: New file.
+	* math/cmathcalls.h: New file.
+	* math/cabs.c: New file.
+	* math/cabsf.c: New file.
+	* math/cabsl.c: New file.
+	* math/cimag.c: New file.
+	* math/cimagf.c: New file.
+	* math/cimagl.c: New file.
+	* math/conj.c: New file.
+	* math/conjf.c: New file.
+	* math/conjl.c: New file.
+	* math/creal.c: New file.
+	* math/crealf.c: New file.
+	* math/creall.c: New file.
+	* sysdeps/libm-ieee754/w_cabs.c: Removed.
+	* sysdeps/libm-ieee754/w_cabsf.c: Removed.
+	* sysdeps/libm-ieee754/w_cabsl.c: Removed.
+
+	* posix/regex.c: Merge with regex sources from Arnold Robbins'
+	version in GNU awk.
+	* posix/regex.h: Likewise.
+
+	Add regex test suite by Tom Lord.
+	* posix/Makefile (distribute): Add TESTS, TESTS2C.sed, and testcases.h.
+	(tests): Add runtests.
+	(before-compile): Add testcases.h.
+	(testcases.h): New rule to generate header with tests.
+	* posix/TESTS: New file.
+	* posix/TESTS2C.sed.: New file.
+	* posix/runtests.c: New file.
+	* posix/testcases.h: New file.
+
+	* sysdeps/unix/sysv/linux/poll.c: Test whether poll syscall is
+	available and use fall-back implementation if not.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Sort entries.
+
+	* time/ialloc.c: Update from tzcode1997c.
+	* time/private.h: Likewise.
+	* time/scheck.c: Likewise.
+	* time/tzselect.ksh: Likewise.
+	* time/zdump.c: Likewise.
+	* time/zic.c: Likewise.
+
+	* time/tzfile.c: Pretty print.
+
+1997-03-06 07:37  Geoff Keating  <geoffk@ozemail.com.au>
+
+	Port to powerpc-*-linux-gnu.  Slightly tested, under MkLinux,
+	on a 601.
+
+	* sysdeps/powerpc/Implies: Added.
+	* sysdeps/powerpc/__longjmp.S: Added.
+	* sysdeps/powerpc/__math.h: Added.
+	* sysdeps/powerpc/bsd-_setjmp.S: Added.
+	* sysdeps/powerpc/bsd-setjmp.S: Added.
+	* sysdeps/powerpc/dl-machine.h: Added.
+	* sysdeps/powerpc/ffs.c: Added.
+	* sysdeps/powerpc/fpu_control.h: Added.
+	* sysdeps/powerpc/jmp_buf.h: Added.
+	* sysdeps/powerpc/setjmp.S: Added.
+	* sysdeps/powerpc/strlen.s: Added.
+	* sysdeps/powerpc/elf/start.c: Added.
+	* sysdeps/powerpc/fpu_control.h: Added.
+	* sysdeps/powerpc/jmp_buf.h: Added.
+
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Added.
+	* sysdeps/unix/sysv/linux/powerpc/_exit.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/brk.c: Added.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.h: Added.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl-types.h: Added.
+	* sysdeps/unix/sysv/linux/powerpc/profil.c: Added.
+	* sysdeps/unix/sysv/linux/powerpc/sigreturn.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Added.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.c: Added.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Added.
+	* sysdeps/unix/sysv/linux/powerpc/termbits.h: Added.
+	* sysdeps/unix/sysv/linux/powerpc/sys/syscall.h: Added.
+
+1997-03-05 05:24  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* elf/dl-runtime.c (fixup): Add ELF_FIXUP_RETURNS_ADDRESS switch,
+	because knowing the first instruction of a PowerPC PLT trampoline
+	is not very helpful.
+
+1997-03-04 08:04  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* elf/dl-load.c (ELF_PREFERRED_ADDRESS, ELF_PREFERRED_ADDRESS_DATA,
+	ELF_FIXED_ADDRESS): Added. These are for dl-machine.h to indicate
+	a preference as to where executables should be loaded.
+
+1997-02-28 08:50  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* elf/elf.h: Add in all those PowerPC reloc types.
+
+1997-02-24 07:12  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* stdio-common/vfscanf.c: Use __va_copy if available.
+
+1997-03-06 13:50  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/malloc.c (mprotect) [_LIBC]: Define as __mprotect to
+	clean up namespace.
+
+1997-03-07 14:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_fpclassify.c (__fpclassify): Don't use
+	non-existing GET_WORDS macro, use EXTRACT_WORDS.
+	Reported by Andres Schwab <schwab@issan.informatik.uni-dortmund.de>.
+
+1997-03-07 05:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: The user- and
+	kernel-level sigaction structure is different.  handle this
+	correctly.
+	Bug report by Andres Jaeger <jaeger@informatik.uni-kl.de>.
+
+1997-03-06 05:55  David Engel  <david@sw.ods.com>
+
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Also
+	recognize cache entries with flag == 3.
+
+1997-03-06 01:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/netinet/in.h (INADDR_NONE): Cast to unsigned int.
+	(INADDR_LOOPBACK): Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+
+	* manual/socket.texi: Correct types of INADDR_* constants from
+	unsigned long to unsigned.
+
+1997-03-05 23:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/antarctica: Update from tzdata1997c.
+	* time/asia: Likewise.
+	* time/zone.tab: Likewise.
+
+1997-03-05 00:43  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in (libc_cv_asm_symver_directive,
+	libc_cv_ld_version_script_option): Remove unknown instruction from
+	assembler test file.
+
+1997-03-04 19:14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Update feature tests to use
+	__USE_ISOC9X.
+	[__USE_ISOC9X]: Define __log2 and __exp2 inlines.
+	(fabs): Remove defininition, it is a gcc builtin.
+	(sqrt, __sqrt): Remove definition, they have wrappers in libm.
+
+1997-03-04 10:11  H.J. Lu  <hjl@lucon.org>
+
+	* sunrpc/Makefile ($(objpfx)rpc-proto.c): Create subdir before
+	generating file.
+
+1997-03-05 03:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/rcmd.c (__ivaliduser): Don't use getline, but __getline
+	instead to avoid namespace problems.
+	Reported by David Mosberger-Tang <davidm@AZStarNet.COM>.
+
+1997-03-03 19:01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/utmp_file.c: Fix previous change.  Make portable by
+	checking the _HAVE_UT_* feature macros.
+
 1997-03-04 04:31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules: Add rules to handle versioning.
@@ -205,13 +411,6 @@
 	* math/math.h: Include <__math.h> if __NO_MATH_INLINES is not
 	defined and we want optimization.
 
-1997-02-27 01:13  Ulrich Drepper  <drepper@cygnus.com>
-
-	* sysdeps/generic/netinet/in.h (htonl, htons, ntohl, ntohs): Change
-	prototypes to use types with explicit width.  `unsigned long' is
-	different on 64 bit systems.
-	Suggested by a sun <asun@zoology.washington.edu>.
-
 1997-02-02 19:53  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* misc/getpass.c: Don't disable canonical input.
@@ -225,7 +424,7 @@
 	* libio/genops.c (_IO_default_finish): Add second parameter, which
 	is ignored.
 	* libio/memstream.c (_IO_mem_finish): Likewise.
-	* libio/fileops.c (_IO_mem_finish): Likewise.
+	* libio/fileops.c (_IO_file_finish): Likewise.
 	* libio/strops.c (_IO_str_finish): Likewise.  All callers changed.
 
 1997-02-27 00:23  H.J. Lu  <hjl@lucon.org>

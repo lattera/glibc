@@ -77,7 +77,8 @@ _dl_load_cache_lookup (const char *name)
     }
 
   for (i = 0; i < cache->nlibs; ++i)
-    if (cache->libs[i].flags == 1 && /* ELF library entry.  */
+    if ((cache->libs[i].flags == 1 ||
+	 cache->libs[i].flags == 3) && /* ELF library entry.  */
 	/* Make sure string table indices are not bogus before using them.  */
 	cache->libs[i].key < cachesize - sizeof *cache &&
 	cache->libs[i].value < cachesize - sizeof *cache &&

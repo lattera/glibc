@@ -127,13 +127,13 @@ struct in_addr
 /* Address to send to all hosts.  */
 #define	INADDR_BROADCAST	((unsigned) 0xffffffff)
 /* Address indicating an error return.  */
-#define	INADDR_NONE		0xffffffff
+#define	INADDR_NONE		((unsigned) 0xffffffff)
 
 /* Network number for local host loopback.  */
 #define	IN_LOOPBACKNET	127
 /* Address to loopback in software to local host.  */
 #ifndef INADDR_LOOPBACK
-#define	INADDR_LOOPBACK	0x7f000001	/* Internet address 127.0.0.1.  */
+#define	INADDR_LOOPBACK	((unsigned) 0x7f000001)	/* Inet address 127.0.0.1.  */
 #endif
 
 

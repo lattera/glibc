@@ -1479,9 +1479,9 @@ the @var{size} argument specifies the maximum number of characters to
 produce.  The trailing null character is counted towards this limit, so
 you should allocate at least @var{size} characters for the string @var{s}.
 
-The return value is the number of characters stored, not including the
-terminating null.  If this value equals @code{@var{size} - 1}, then
-there was not enough space in @var{s} for all the output.  You should
+The return value is the number of characters which are generated for the
+given input.  If this value is greater than @var{size}, not all
+characters from the result have been stored in @var{s}.  You should
 try again with a bigger output string.  Here is an example of doing
 this:
 
@@ -1495,21 +1495,24 @@ make_message (char *name, char *value)
   /* @r{Guess we need no more than 100 chars of space.} */
   int size = 100;
   char *buffer = (char *) xmalloc (size);
+  int nchars;
 @end group
 @group
-  while (1)
+ /* @r{Try to print in the allocated space.} */
+  nchars = snprintf (buffer, size, "value of %s is %s",
+                     name, value);
+@end group
+@group
+  if (nchars) >= size)
     @{
-      /* @r{Try to print in the allocated space.} */
-      int nchars = snprintf (buffer, size,
-                             "value of %s is %s",
-                             name, value);
-      /* @r{If that worked, return the string.} */
-      if (nchars < size)
-        return buffer;
-      /* @r{Else try again with twice as much space.} */
-      size *= 2;
-      buffer = (char *) xrealloc (size, buffer);
+      /* @r{Reallocate buffer now that we know how much space is needed.} */
+      buffer = (char *) xrealloc (buffer, nchars + 1);
+
+      /* @r{Try again.} */
+      snprintf (buffer, size, "value of %s is %s", name, value);
     @}
+  /* @r{The last call worked, return the string.} */
+  return buffer;
 @}
 @end group
 @end smallexample

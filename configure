@@ -1605,7 +1605,7 @@ if eval "test \"`echo '$''{'libc_cv_asm_symver_directive'+set}'`\" = set"; then
 else
   cat > conftest.s <<EOF
 .text
-_sym: ret
+_sym:
 .symver _sym,sym@VERS
 EOF
 if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&5 2>&5; then
@@ -1625,7 +1625,7 @@ else
   if test $libc_cv_asm_symver_directive = yes; then
   cat > conftest.s <<EOF
 .text
-_sym: ret
+_sym:
 .symver _sym,sym@VERS
 EOF
   cat > conftest.map <<EOF
@@ -2069,7 +2069,7 @@ EOF
 # Ultrix sh set writes to stderr and can't be redirected directly,
 # and sets the high bit in the cache file unless we assign to the vars.
 (set) 2>&1 |
-  case `(ac_space=' '; set | grep ac_space) 2>&1` in
+  case `(ac_space=' '; set) 2>&1` in
   *ac_space=\ *)
     # `set' does not quote correctly, so add quotes (double-quote substitution
     # turns \\\\ into \\, and sed turns \\ into \).

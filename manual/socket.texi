@@ -747,7 +747,7 @@ host address number as an @code{unsigned long int}.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_LOOPBACK
+@deftypevr Macro {unsigned int} INADDR_LOOPBACK
 You can use this constant to stand for ``the address of this machine,''
 instead of finding its actual address.  It is the Internet address
 @samp{127.0.0.1}, which is usually called @samp{localhost}.  This
@@ -759,7 +759,7 @@ talking to itself.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_ANY
+@deftypevr Macro {unsigned int} INADDR_ANY
 You can use this constant to stand for ``any incoming address,'' when
 binding to an address.  @xref{Setting Address}.  This is the usual
 address to give in the @code{sin_addr} member of @w{@code{struct
@@ -768,14 +768,14 @@ sockaddr_in}} when you want to accept Internet connections.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_BROADCAST
+@deftypevr Macro {unsigned int} INADDR_BROADCAST
 This constant is the address you use to send a broadcast message.
 @c !!! broadcast needs further documented
 @end deftypevr
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned long int} INADDR_NONE
+@deftypevr Macro {unsigned int} INADDR_NONE
 This constant is returned by some functions to indicate an error.
 @end deftypevr
 

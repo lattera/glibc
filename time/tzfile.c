@@ -120,7 +120,7 @@ __tzfile_read (const char *file)
 	 and which is not the system wide default TZDEFAULT.  */
       if (__libc_enable_secure
 	  && ((*file == '/'
-	       && memcmp (file, TZDEFAULT, sizeof (TZDEFAULT) - 1)
+	       && memcmp (file, TZDEFAULT, sizeof TZDEFAULT)
 	       && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1))
 	      || strstr (file, "../") != NULL))
 	/* This test is certainly a bit too restrictive but it should

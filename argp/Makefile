@@ -24,7 +24,7 @@ subdir	:= argp
 headers		= argp.h
 distribute	= argp-fmtstream.h argp-namefrob.h
 routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
-				     pvh xinl)
+				     pvh xinl eexst)
 
 tests		= argp-test
 

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.25";
+static char	elsieid[] = "@(#)zdump.c	7.26";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -111,19 +111,28 @@ static char	elsieid[] = "@(#)zdump.c	7.25";
 #define TZ_DOMAIN "tz"
 #endif /* !defined TZ_DOMAIN */
 
+#ifndef P
+#ifdef __STDC__
+#define P(x)	x
+#endif /* defined __STDC__ */
+#ifndef __STDC__
+#define P(x)	()
+#endif /* !defined __STDC__ */
+#endif /* !defined P */
+
 extern char **	environ;
-extern int	getopt();
+extern int	getopt P((int argc, char * const argv[],
+			  const char * options));
 extern char *	optarg;
 extern int	optind;
-extern time_t	time();
 extern char *	tzname[2];
 
-static char *	abbr();
-static long	delta();
-static time_t	hunt();
-static int	longest;
+static char *	abbr P((struct tm * tmp));
+static long	delta P((struct tm * newp, struct tm * oldp));
+static time_t	hunt P((char * name, time_t lot, time_t	hit));
+static size_t	longest;
 static char *	progname;
-static void	show();
+static void	show P((char * zone, time_t t, int v));
 
 int
 main(argc, argv)
@@ -191,8 +200,7 @@ _("%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"),
 		fakeenv = (char **) malloc((size_t) ((i + 2) *
 			sizeof *fakeenv));
 		if (fakeenv == NULL ||
-			(fakeenv[0] = (char *) malloc((size_t) (longest +
-				4))) == NULL) {
+			(fakeenv[0] = (char *) malloc(longest + 4)) == NULL) {
 					(void) perror(progname);
 					(void) exit(EXIT_FAILURE);
 		}
@@ -326,8 +334,6 @@ struct tm *	oldp;
 	return result;
 }
 
-extern struct tm *	localtime();
-
 static void
 show(zone, t, v)
 char *	zone;
@@ -336,7 +342,7 @@ int	v;
 {
 	struct tm *	tmp;
 
-	(void) printf("%-*s  ", longest, zone);
+	(void) printf("%-*s  ", (int) longest, zone);
 	if (v)
 		(void) printf("%.24s GMT = ", asctime(gmtime(&t)));
 	tmp = localtime(&t);

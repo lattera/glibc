@@ -153,7 +153,11 @@ fixup (
   *_dl_global_scope_end = NULL;
 
   /* Return the address that was written by the relocation.  */
+#ifdef ELF_FIXUP_RETURNS_ADDRESS
+  return (ElfW(Addr))(l->l_addr + reloc->r_offset);
+#else
   return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
+#endif
 }
 
 

@@ -1,26 +1,31 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
 #include <errno.h>
 #include <stddef.h>
 #include <signal.h>
+
+/* The difference here is that the sigaction structure used in the
+   kernel is not the same as we use in the libc.  Therefore we must
+   translate it here.  */
+#include <kernel_sigaction.h>
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -28,15 +33,17 @@ Cambridge, MA 02139, USA.  */
 int
 __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  struct sigaction newact;
+  struct kernel_sigaction k_newact, k_oldact;
   int result;
 
   if (act)
     {
-      newact = *act;
-      newact.sa_restorer = ((act->sa_flags & SA_NOMASK)
-			    ? &&restore_nomask : &&restore);
-      act = &newact;
+      k_newact.sa_handler = act->sa_handler;
+      k_newact.sa_mask = act->sa_mask.__val[0];
+      k_newact.sa_flags = act->sa_flags;
+
+      k_newact.sa_restorer = ((act->sa_flags & SA_NOMASK)
+			      ? &&restore_nomask : &&restore);
     }
 
   asm volatile ("pushl %%ebx\n"
@@ -44,13 +51,23 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 		"int $0x80\n"
 		"popl %%ebx"
 		: "=a" (result)
-		: "0" (SYS_ify (sigaction)), "r" (sig), "c" (act), "d" (oact));
+		: "0" (SYS_ify (sigaction)), "r" (sig),
+		  "c" (act ? &k_newact : 0), "d" (oact ? &k_oldact : 0));
 
   if (result < 0)
     {
       __set_errno (-result);
       return -1;
     }
+
+  if (oact)
+    {
+      oact->sa_handler = k_oldact.sa_handler;
+      oact->sa_mask.__val[0] = k_oldact.sa_mask;
+      oact->sa_flags = k_oldact.sa_flags;
+      oact->sa_restorer = k_oldact.sa_restorer;
+    }
+
   return 0;
 
  restore:

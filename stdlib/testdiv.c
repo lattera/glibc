@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 int
-main ()
+main (void)
 {
   int i, j;
   while (scanf ("%d %d\n", &i, &j) == 2)

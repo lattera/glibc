@@ -109,7 +109,7 @@ static const struct argp_option options[] =
   { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
-  { "verbose", 'V', NULL, 0, N_("print more messages") },
+  { "verbose", 'V', NULL, 0, N_("Print more messages") },
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -164,10 +164,8 @@ main (int argc, char *argv[])
   textdomain (_libc_intl_domainname);
 
   /* Parse and process arguments.  */
+  argp_err_exit_status = 4;
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
-
-  /* XXX POSIX is violated since for unknown option a exit value > 3
-     must be used.  */
 
   /* POSIX.2 requires to be verbose about missing characters in the
      character map.  */
@@ -176,11 +174,8 @@ main (int argc, char *argv[])
   if (argc - remaining != 1)
     {
       /* We need exactly one non-option parameter.  */
-      argp_help (&argp, stdout, ARGP_HELP_SEE,
+      argp_help (&argp, stdout, ARGP_HELP_SEE | ARGP_HELP_EXIT_ERR,
 		 program_invocation_short_name);
-
-      /* XXX Currently POSIX is violated.  We must exit with code 4
-	 but the argp_help function currently does not allow this.  */
       exit (4);
     }
 

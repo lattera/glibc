@@ -240,7 +240,7 @@ struct argp
 					     TEXT is NULL for this key.  */
 /* Explanatory note emitted when duplicate option arguments have been
    suppressed.  */
-#define ARGP_KEY_HELP_DUP_ARGS_NOTE 0x2000005 
+#define ARGP_KEY_HELP_DUP_ARGS_NOTE 0x2000005
 
 /* When an argp has a non-zero CHILDREN field, it should point to a vector of
    argp_child structures, each of which describes a subsidiary argp.  */
@@ -379,7 +379,7 @@ extern error_t __argp_parse __P ((__const struct argp *__argp,
    option --version is added (unless the ARGP_NO_HELP flag is used), which
    will print this string followed by a newline and exit (unless the
    ARGP_NO_EXIT flag is used).  Overridden by ARGP_PROGRAM_VERSION_HOOK.  */
-extern const char *argp_program_version;
+extern __const char *argp_program_version;
 
 /* If defined or set by the user program to a non-zero value, then a default
    option --version is added (unless the ARGP_NO_HELP flag is used), which
@@ -395,6 +395,10 @@ extern void (*argp_program_version_hook) __P ((FILE *__stream,
    standard help messages), embedded in a sentence that says something like
    `Report bugs to ADDR.'.  */
 __const extern char *argp_program_bug_address;
+
+/* The exit status that argp will use when exiting due to a parsing error.
+   If not defined or set by the user program, this defaults to 1.  */
+extern error_t argp_err_exit_status;
 
 /* Flags for argp_help.  */
 #define ARGP_HELP_USAGE		0x01 /* a Usage: message. */

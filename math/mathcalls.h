@@ -178,14 +178,6 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 /* Return the remainder of X/Y.  */
 __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
 
-struct __MATH_PRECNAME(__cabs_complex,)
-{
-  _Mdouble_ x, y;
-};
-
-/* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL (cabs,, (struct __MATH_PRECNAME(__cabs_complex,)));
-
 
 /* Return the fractional part of X after dividing out `ilogb (X)'.  */
 __MATHCALL (significand,, (_Mdouble_ __x));
@@ -225,9 +217,6 @@ __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
 __MATHCALL (gamma,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
-
-/* This variable is used by `gamma' and `lgamma'.  */
-extern int signgam;
 
 #ifdef __USE_MISC
 /* Reentrant versions of gamma and lgamma.  Those functions use the global
@@ -279,10 +268,10 @@ __MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
 /* Return positive difference between X and Y.  */
 __MATHCALL (fdim,, (_Mdouble_ __x, _Mdouble_ __y));
 
-/* Return minimum numeric value from X and Y.  */
+/* Return maximum numeric value from X and Y.  */
 __MATHCALL (fmax,, (_Mdouble_ __x, _Mdouble_ __y));
 
-/* Return maximum numeric value from X and Y.  */
+/* Return minimum numeric value from X and Y.  */
 __MATHCALL (fmin,, (_Mdouble_ __x, _Mdouble_ __y));
 
 

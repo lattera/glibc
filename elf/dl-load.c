@@ -67,6 +67,18 @@ int _dl_zerofd = -1;
 #define ANONFD _dl_zerofd
 #endif
 
+/* Handle situations where we have a preferred location in memory for
+   the shared objects.  */
+#ifdef ELF_PREFERRED_ADDRESS_DATA
+ELF_PREFERRED_ADDRESS_DATA;
+#endif
+#ifndef ELF_PREFERRED_ADDRESS
+#define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) (mapstartpref)
+#endif
+#ifndef ELF_FIXED_ADDRESS
+#define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
+#endif
+
 size_t _dl_pagesize;
 
 
@@ -315,11 +327,16 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	   So we map the first segment without MAP_FIXED, but with its
 	   extent increased to cover all the segments.  Then we remove
 	   access from excess portion, and there is known sufficient space
-	   there to remap from the later segments.  */
+	   there to remap from the later segments.
+
+	   As a refinement, sometimes we have an address that we would
+	   prefer to map such objects at; but this is only a preference,
+	   the OS can do whatever it likes. */
  	caddr_t mapat;
-	mapat = map_segment (c->mapstart,
-			     loadcmds[nloadcmds - 1].allocend - c->mapstart,
-			     c->prot, 0, c->mapoff);
+	ElfW(Addr) mappref;
+	size_t maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
+	mappref = ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart);
+	mapat = map_segment (mappref, maplength, c->prot, 0, c->mapoff);
 	l->l_addr = (ElfW(Addr)) mapat - c->mapstart;
 
 	/* Change protection on the excess portion to disallow all access;
@@ -331,6 +348,12 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
 		    0);
 	goto postmap;
+      }
+    else
+      {
+	/* Notify ELF_PREFERRED_ADDRESS that we have to load this one
+	   fixed.  */
+	ELF_FIXED_ADDRESS (loader, c->mapstart);
       }
 
     while (c < &loadcmds[nloadcmds])

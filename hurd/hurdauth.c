@@ -40,7 +40,7 @@ _S_msg_add_auth (mach_port_t me,
 
   if (err = __USEPORT (AUTH,
 		       __auth_makeauth (port,
-					&addauth, 1, MACH_MSG_TYPE_MOVE_SEND,
+					&addauth, MACH_MSG_TYPE_MOVE_SEND, 1,
 					NULL, 0,
 					NULL, 0,
 					NULL, 0,
@@ -108,7 +108,7 @@ _S_msg_del_auth (mach_port_t me,
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port,
-			NULL, 0, MACH_MSG_TYPE_COPY_SEND,
+			NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 			newu, nu,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newg, ng,

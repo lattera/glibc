@@ -11,23 +11,20 @@
 # you can use either of the following free programs instead:
 #
 #	Bourne-Again shell (bash)
-#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/bash-2.0.tar.gz>
-#	(or any later version)
+#	<URL:ftp://ftp.gnu.ai.mit.edu/pub/gnu/>
 #
 #	Public domain ksh
-#	<URL:ftp://ftp.cs.mun.ca:/pub/pdksh/pdksh.tar.gz>
+#	<URL:ftp://ftp.cs.mun.ca/pub/pdksh/pdksh.tar.gz>
 #
 # This script also uses several features of modern awk programs.
 # If your host lacks awk, or has an old awk that does not conform to Posix.2,
 # you can use either of the following free programs instead:
 #
 #	GNU awk (gawk)
-#	<URL:ftp://prep.ai.mit.edu:/pub/gnu/gawk-3.0.2.tar.gz>
-#	(or any later version)
+#	<URL:ftp://ftp.gnu.ai.mit.edu/pub/gnu/>
 #
 #	mawk
-#	<URL:ftp://oxy.edu/public/mawk1.2.2.tar.gz>
-#	(or any later version)
+#	<URL:ftp://ftp.whidbey.net/pub/brennan/>
 
 
 # Specify default values for environment variables if they are unset.
@@ -57,7 +54,7 @@ newline='
 IFS=$newline
 
 
-# Work around a bash bug, where $PS3 is sent to stdout.
+# Work around a bug in bash 1.14.7 and earlier, where $PS3 is sent to stdout.
 case $(echo 1 | (select x in x; do break; done) 2>/dev/null) in
 ?*) PS3=
 esac

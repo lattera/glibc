@@ -96,6 +96,15 @@ __BEGIN_DECLS
 #endif /* __STDC__ || __GNUC__ */
 
 #endif	/* Use misc or ISO C 9X.  */
+#undef	__MATHDECL_1
+#undef	__MATHDECL
+#undef	__MATHCALL
+
+
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
+/* This variable is used by `gamma' and `lgamma'.  */
+extern int signgam;
+#endif
 
 
 /* ISO C 9X defines some generic macros which work on any data type.  */

@@ -87,8 +87,10 @@ setutent_file (int reset)
 	}
       file_offset = 0;
 
+#if _HAVE_UT_TYPE - 0
       /* Make sure the entry won't match.  */
       last_entry.ut_type = -1;
+#endif
     }
   else if (reset)
     {
@@ -97,8 +99,10 @@ setutent_file (int reset)
       /* Remember we are at beginning of file.  */
       file_offset = 0;
 
+#if _HAVE_UT_TYPE - 0
       /* Make sure the entry won't match.  */
       last_entry.ut_type = -1;
+#endif
     }
 
   return 1;
@@ -213,7 +217,9 @@ static int
 proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
 {
   return
-    ((entry->ut_type == INIT_PROCESS
+    (
+#if _HAVE_UT_TYPE - 0
+     (entry->ut_type == INIT_PROCESS
       || entry->ut_type == LOGIN_PROCESS
       || entry->ut_type == USER_PROCESS
       || entry->ut_type == DEAD_PROCESS)
@@ -223,14 +229,19 @@ proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
       || match->ut_type == USER_PROCESS
       || match->ut_type == DEAD_PROCESS)
      &&
-     (entry->ut_id && match->ut_id
-      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
-      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0));
+#endif
+#if _HAVE_UT_ID - 0
+     strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+#else
+     strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
+#endif
+     );
 }
 
 static int
 internal_getut_r (const struct utmp *id, struct utmp *buffer)
 {
+#if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
       || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
     {
@@ -254,6 +265,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	}
     }
   else
+#endif /* _HAVE_UT_TYPE */
     {
       /* Search for the next entry with the specified ID and with type
 	 INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
@@ -270,7 +282,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	    }
 	  file_offset += sizeof (struct utmp);
 
-	  if (proc_utmp_eq (&buffer, id))
+	  if (proc_utmp_eq (buffer, id))
 	    break;
 	}
     }
@@ -322,12 +334,16 @@ pututline_file (const struct utmp *data)
 
   /* Find the correct place to insert the data.  */
   if (file_offset > 0
-      && ((last_entry.ut_type == data->ut_type
+      && (
+#if _HAVE_UT_TYPE - 0
+	  (last_entry.ut_type == data->ut_type
 	   && (last_entry.ut_type == RUN_LVL
 	       || last_entry.ut_type == BOOT_TIME
 	       || last_entry.ut_type == OLD_TIME
 	       || last_entry.ut_type == NEW_TIME))
-	  || proc_utmp_eq (&last_entry, data)))
+	  ||
+#endif
+	  proc_utmp_eq (&last_entry, data)))
     found = 1;
   else
     found = internal_getut_r (data, &buffer);

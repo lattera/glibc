@@ -38,7 +38,7 @@ __duplocale (__locale_t dataset)
   __libc_lock_lock (__libc_setlocale_lock);
 
   /* Get memory.  */
-  result = (__locale_t) malloc (sizeof (struct __locale_t));
+  result = (__locale_t) malloc (sizeof (struct __locale_struct));
   if (result != NULL)
     {
       int cnt;

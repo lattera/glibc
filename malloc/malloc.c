@@ -835,6 +835,7 @@ Void_t *(*__morecore)() = __default_morecore;
 #define mmap    __mmap
 #define munmap  __munmap
 #define mremap  __mremap
+#define mprotect __mprotect
 #undef malloc_getpagesize
 #define malloc_getpagesize __getpagesize()
 

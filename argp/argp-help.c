@@ -156,7 +156,7 @@ fill_in_uparams (const struct argp_state *state)
 		arg++;
 		SKIPWS (arg);
 	      }
-	    
+
 	    if (unspec)
 	      if (var[0] == 'n' && var[1] == 'o' && var[2] == '-')
 		{
@@ -878,7 +878,7 @@ arg (const struct argp_option *real, const char *req_fmt, const char *opt_fmt,
 /* Helper functions for hol_entry_help.  */
 
 /* State used during the execution of hol_help.  */
-struct hol_help_state 
+struct hol_help_state
 {
   /* PREV_ENTRY should contain the previous entry printed, or 0.  */
   struct hol_entry *prev_entry;
@@ -1600,7 +1600,7 @@ __argp_state_help (const struct argp_state *state, FILE *stream, unsigned flags)
       if (!state || ! (state->flags & ARGP_NO_EXIT))
 	{
 	  if (flags & ARGP_HELP_EXIT_ERR)
-	    exit (1);
+	    exit (argp_err_exit_status);
 	  if (flags & ARGP_HELP_EXIT_OK)
 	    exit (0);
 	}
@@ -1612,7 +1612,7 @@ weak_alias (__argp_state_help, argp_state_help)
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
-   message, then exit (1).  */
+   message, then exit (ARGP_ERR_EXIT_STATUS).  */
 void
 __argp_error (const struct argp_state *state, const char *fmt, ...)
 {

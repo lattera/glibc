@@ -155,6 +155,7 @@ $(objpfx)rpc-proto.d: $(objpfx)%.d: $(objpfx)%.c
 # Special file to generate dependencies for the RPC service objects.
 # Collect all include directives from the source files.
 $(objpfx)rpc-proto.c: $(rpcsvc:%=rpcsvc/%)
+	$(make-target-directory)
 	{ echo '#include <rpc/types.h>'; \
 	  echo '#include <rpc/xdr.h>'; \
 	  echo '#include <rpc/rpc.h>'; \

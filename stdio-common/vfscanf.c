@@ -163,8 +163,7 @@ int
 __vfscanf (FILE *s, const char *format, va_list argptr)
 #endif
 {
-  va_list arg = (va_list) argptr;
-
+  va_list arg;
   register const char *f = format;
   register unsigned char fc;	/* Current character of the format.  */
   register size_t done = 0;	/* Assignments done.  */
@@ -224,6 +223,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     }									    \
   while (0)
 
+#ifdef __va_copy
+  __va_copy (arg, argptr);
+#else
+  arg = (va_list) argptr;
+#endif
+
   ARGCHECK (s, format);
 
   /* Figure out the decimal point character.  */
@@ -245,23 +250,34 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       /* Extract the next argument, which is of type TYPE.
 	 For a %N$... spec, this is the Nth argument from the beginning;
 	 otherwise it is the next argument after the state now in ARG.  */
-#if 0
-      /* XXX Possible optimization.  */
+#ifdef __va_copy
 # define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+			 ({ unsigned int pos = argpos;			      \
+			    va_list arg;				      \
+			    __va_copy (arg, argptr);			      \
+			    while (--pos > 0)				      \
+			      (void) va_arg (arg, void *);		      \
+			    va_arg (arg, type);				      \
+			  }))
+#else
+# if 0
+      /* XXX Possible optimization.  */
+#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
 			 ({ va_list arg = (va_list) argptr;		      \
 			    arg = (va_list) ((char *) arg		      \
 					     + (argpos - 1)		      \
 					     * __va_rounded_size (void *));   \
 			    va_arg (arg, type);				      \
 			 }))
-#else
-# define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+# else
+#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
 			 ({ unsigned int pos = argpos;			      \
 			    va_list arg = (va_list) argptr;		      \
 			    while (--pos > 0)				      \
 			      (void) va_arg (arg, void *);		      \
 			    va_arg (arg, type);				      \
 			  }))
+# endif
 #endif
 
       if (!isascii (*f))

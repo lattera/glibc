@@ -42,7 +42,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 {
   /* Intermediate memory for result.  */
   const char *newnames[LC_ALL];
-  struct __locale_t result;
+  struct __locale_struct result;
   __locale_t result_ptr;
   char *locale_path;
   size_t locale_path_len;
@@ -79,7 +79,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	 dataset using the C locale data.  */
       if (category_mask == 0)
 	{
-	  result_ptr = (__locale_t) malloc (sizeof (struct __locale_t));
+	  result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
 	  *result_ptr = result;
 
 	  goto update;
@@ -158,7 +158,7 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   if (base == NULL)
     {
       /* Allocate new structure.  */
-      result_ptr = (__locale_t) malloc (sizeof (struct __locale_t));
+      result_ptr = (__locale_t) malloc (sizeof (struct __locale_struct));
       if (result_ptr == NULL)
 	return NULL;
 

@@ -492,7 +492,7 @@ fi
 AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
 [cat > conftest.s <<EOF
 .text
-_sym: ret
+_sym:
 .symver _sym,sym@VERS
 EOF
 if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
@@ -505,7 +505,7 @@ AC_CACHE_CHECK(for ld --version-script, libc_cv_ld_version_script_option, [dnl
 if test $libc_cv_asm_symver_directive = yes; then
   cat > conftest.s <<EOF
 .text
-_sym: ret
+_sym:
 .symver _sym,sym@VERS
 EOF
   cat > conftest.map <<EOF

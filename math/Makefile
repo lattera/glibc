@@ -21,7 +21,8 @@
 subdir		:= math
 
 # Installed header files.
-headers		:= math.h mathcalls.h __math.h huge_val.h nan.h fpu_control.h
+headers		:= math.h mathcalls.h __math.h huge_val.h nan.h		\
+		   fpu_control.h complex.h cmathcalls.h
 
 # Internal header files.
 distribute	:= math_private.h machine/asm.h machine/endian.h
@@ -43,10 +44,11 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb 		\
 	     s_modf s_nextafter s_rint s_scalbn s_significand		\
 	     s_sin s_tan s_tanh w_acos w_acosh w_asin			\
-	     w_atan2 w_atanh w_cabs w_cosh w_drem w_exp w_fmod w_gamma	\
+	     w_atan2 w_atanh w_cosh w_drem w_exp w_fmod w_gamma		\
 	     w_gamma_r w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
-	     s_signbit s_fpclassify s_fmax s_fmin s_fdim
+	     s_signbit s_fpclassify s_fmax s_fmin s_fdim		\
+	     conj cimag creal cabs
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))

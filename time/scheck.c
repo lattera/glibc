@@ -1,15 +1,12 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)scheck.c	8.13";
+static char	elsieid[] = "@(#)scheck.c	8.14";
 #endif /* !defined lint */
 #endif /* !defined NOID */
 
 /*LINTLIBRARY*/
 
 #include "private.h"
-
-extern char *	imalloc P((int n));
-extern void	ifree P((char * p));
 
 char *
 scheck(string, format)

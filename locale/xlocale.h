@@ -25,7 +25,7 @@
    (almost) opaque type for the user level programs.  The file and
    this data structure is not standardized.  Don't rely on it.  It can
    go away without warning.  */
-typedef struct __locale_t
+typedef struct __locale_struct
 {
   struct locale_data *__locales[6];	/* XXX LC_ALL should be used here */
 

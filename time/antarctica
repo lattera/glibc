@@ -1,4 +1,4 @@
-# @(#)antarctica	7.6
+# @(#)antarctica	7.7
 
 # From Paul Eggert (1997-01-20):
 # To keep things manageable, we list only locations occupied year-round;
@@ -79,7 +79,7 @@ Zone Indian/Kerguelen	0	-	___	1950	# Port-aux-Francais
 			5:00	-	TFT	# ISO code TF Time
 #
 # year-round base in the main continent
-# Dumont-d'Urville, Terre Adelie (Adelie Land), -6040+14001, since 1956-11
+# Dumont-d'Urville, Terre Adelie (Adelie Land), -6640+14001, since 1956-11
 #
 # Another base at Port-Martin, 50km east, began operation in 1947.
 # It was destroyed by fire on 1952-01-14.

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1994 Free Software Foundation
+Copyright (C) 1994, 1997 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -25,6 +25,73 @@ the executable file might be covered by the GNU General Public License. */
 #include "libioP.h"
 #include "strfile.h"
 
+
+typedef struct
+{
+  _IO_strfile f;
+  /* This is used for the characters which do not fit in the buffer
+     provided by the user.  */
+  char overflow_buf[64];
+} _IO_strnfile;
+
+
+static int
+_IO_strn_overflow (_IO_FILE* fp, int c)
+{
+  /* When we come to here this means the user supplied buffer is
+     filled.  But since we must return the number of characters which
+     would have been written in total we must provide a buffer for
+     further use.  We can do this by writing on and on in the overflow
+     buffer in the _IO_strnfile structure.  */
+  _IO_strnfile *snf = (_IO_strnfile *) fp;
+
+  if (fp->_IO_buf_base != snf->overflow_buf)
+    {
+      /* Terminate the string.  We know that there is room for at
+	 least one more character since we initialized the stream with
+	 a size to make this possible.  */
+      *fp->_IO_write_ptr = '\0';
+
+      _IO_setb (fp, snf->overflow_buf,
+		snf->overflow_buf + sizeof (snf->overflow_buf), 0);
+
+      fp->_IO_write_base = snf->overflow_buf;
+      fp->_IO_read_base = snf->overflow_buf;
+      fp->_IO_read_ptr = snf->overflow_buf;
+      fp->_IO_read_end = snf->overflow_buf + sizeof (snf->overflow_buf);
+    }
+
+  fp->_IO_write_ptr = snf->overflow_buf;
+  fp->_IO_write_end = snf->overflow_buf;
+
+  /* Since we are not really interested in storing the characters
+     which do not fit in the buffer we simply ignore it.  */
+  return c;
+}
+
+
+static struct _IO_jump_t _IO_strn_jumps = {
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, _IO_str_finish),
+  JUMP_INIT(overflow, _IO_strn_overflow),
+  JUMP_INIT(underflow, _IO_str_underflow),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_str_pbackfail),
+  JUMP_INIT(xsputn, _IO_default_xsputn),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(seekoff, _IO_str_seekoff),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, _IO_default_setbuf),
+  JUMP_INIT(sync, _IO_default_sync),
+  JUMP_INIT(doallocate, _IO_default_doallocate),
+  JUMP_INIT(read, _IO_default_read),
+  JUMP_INIT(write, _IO_default_write),
+  JUMP_INIT(seek, _IO_default_seek),
+  JUMP_INIT(close, _IO_default_close),
+  JUMP_INIT(stat, _IO_default_stat)
+};
+
+
 int
 _IO_vsnprintf (string, maxlen, format, args)
      char *string;
@@ -32,22 +99,28 @@ _IO_vsnprintf (string, maxlen, format, args)
      const char *format;
      _IO_va_list args;
 {
-  _IO_strfile sf;
+  _IO_strnfile sf;
   int ret;
 #ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
-  sf._sbf._f._lock = &lock;
+  sf.f._sbf._f._lock = &lock;
 #endif
 
-  /* We need to handle the special case where MAXLEN is 0.  */
+  /* We need to handle the special case where MAXLEN is 0.  Use the
+     overflow buffer right from the start.  */
   if (maxlen == 0)
-    return 0;
+    {
+      string = sf.overflow_buf;
+      maxlen = sizeof (sf.overflow_buf);
+    }
 
   _IO_init ((_IO_FILE *) &sf, 0);
-  _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;
+  _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_strn_jumps;
   _IO_str_init_static ((_IO_FILE *) &sf, string, maxlen - 1, string);
   ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
-  *((_IO_FILE *) &sf)->_IO_write_ptr = '\0';
+
+  if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
+    *sf.f._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
 weak_alias (_IO_vsnprintf, __vsnprintf)

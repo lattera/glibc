@@ -22,7 +22,9 @@
 
 extern int __syscall_poll __P ((struct pollfd *fds, unsigned int nfds,
 				int timeout));
-extern int __emulate_poll __P ((struct pollfd *fds, unsigned long int nfds,
+weak_extern (__syscall_poll)
+
+static int __emulate_poll __P ((struct pollfd *fds, unsigned long int nfds,
 				int timeout));
 
 /* The real implementation.  */
@@ -33,13 +35,17 @@ poll (fds, nfds, timeout)
      int timeout;
 {
   static int must_emulate = 0;
+  int (*syscall) __P ((struct pollfd *, unsigned int, int)) = __syscall_poll;
 
   if (!must_emulate)
     {
-      int retval = __syscall_poll (fds, nfds, timeout);
+      if (syscall)
+	{
+	  int retval = __syscall_poll (fds, nfds, timeout);
 
-      if (retval >= 0 || errno != ENOSYS)
-	return retval;
+	  if (retval >= 0 || errno != ENOSYS)
+	    return retval;
+	}
 
       must_emulate = 1;
     }
@@ -49,5 +55,5 @@ poll (fds, nfds, timeout)
 
 
 /* Get the emulation code.  */
-#define poll(fds, nfds, timeout) __emulate_poll (fds, nfds, timeout)
+#define poll(fds, nfds, timeout) static __emulate_poll (fds, nfds, timeout)
 #include <sysdeps/unix/bsd/poll.c>

@@ -27,7 +27,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h      \
 	   sched.h schedbits.h re_comp.h wait.h
 
-distribute := confstr.h
+distribute := confstr.h TESTS TESTS2C.sed testcases.h
 
 routines :=								      \
 	uname								      \
@@ -49,11 +49,13 @@ routines :=								      \
 	getaddrinfo gai_strerror
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm
+tests		:= tstgetopt testfnm runtests
 others		:= getconf
 install-bin	:= getconf
 install-lib	:= libposix.a
 gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
+
+before-compile	:= testcases.h
 
 include ../Rules
 
@@ -62,6 +64,11 @@ CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a
+
+testcases.h: TESTS TESTS2C.sed
+	sed -f TESTS2C.sed < $< > $@T
+	mv -f $@T $@
+	test ! -d CVS || cvs commit -mRegenerated $@
 
 # Make the standalone glob/fnmatch package.
 
