@@ -1,3 +1,9 @@
+1998-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (_ioperm): Map all ports
+	starting from 0 not only from `from'.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 1998-02-16 17:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Recognize --library-path parameter and

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger.
 
@@ -416,8 +416,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	      __set_errno (ENODEV);
 	      return -1;
 	    }
-	  addr  = port_to_cpu_addr (from, io.sys, 1);
-	  addr &= PAGE_MASK;
+	  addr  = port_to_cpu_addr (0, io.sys, 1);
 	  len = port_to_cpu_addr (MAX_PORT, io.sys, 1) - addr;
 	  io.base =
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
