@@ -1,3 +1,9 @@
+Mon Jun  3 15:58:22 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
+
+	* hurdsig.c (_hurd_internal_post_signal): When turning the action
+ 	for a HANDLE signal to IGNORE because the signal is blocked, clean
+ 	up any pending suspension left over from a call to resume.
+
 Mon Jun  3 00:30:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Take new arg RELOC_ADDR and
