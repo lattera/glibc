@@ -143,9 +143,11 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
      asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
      _dtv; })
 
+#include <mach/machine/thread_status.h>
+
 /* Set up TLS in the new thread of a fork child, copying from our own.  */
 static inline error_t __attribute__ ((unused))
-_hurd_tls_fork (thread_t child, struct machine_thread_state *state)
+_hurd_tls_fork (thread_t child, struct i386_thread_state *state)
 {
   /* Fetch the selector set by _hurd_tls_init.  */
   int sel;
