@@ -132,7 +132,7 @@ static bin_tree_t *create_tree (re_dfa_t *dfa,
 				re_token_type_t type, int index);
 static bin_tree_t *re_dfa_add_tree_node (re_dfa_t *dfa,
 					 bin_tree_t *left, bin_tree_t *right,
-					 re_token_t)
+					 const re_token_t *token)
   __attribute ((noinline));
 static bin_tree_t *duplicate_tree (const bin_tree_t *src, re_dfa_t *dfa);
 
@@ -1426,11 +1426,7 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
      int *new_idx, org_idx;
      unsigned int constraint;
 {
-  re_token_t dup;
-  int dup_idx;
-
-  dup = dfa->nodes[org_idx];
-  dup_idx = re_dfa_add_node (dfa, dup, 1);
+  int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
   if (BE (dup_idx == -1, 0))
     return REG_ESPACE;
   dfa->nodes[dup_idx].constraint = constraint;
@@ -1929,7 +1925,7 @@ parse (regexp, preg, syntax, err)
   tree = parse_reg_exp (regexp, preg, &current_token, syntax, 0, err);
   if (BE (*err != REG_NOERROR && tree == NULL, 0))
     return NULL;
-  eor = re_dfa_add_tree_node (dfa, NULL, NULL, current_token);
+  eor = re_dfa_add_tree_node (dfa, NULL, NULL, &current_token);
   if (tree != NULL)
     root = create_tree (dfa, tree, eor, CONCAT, 0);
   else
@@ -1979,7 +1975,7 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
 	}
       else
 	branch = NULL;
-      tree = re_dfa_add_tree_node (dfa, tree, branch, alt_token);
+      tree = re_dfa_add_tree_node (dfa, tree, branch, &alt_token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2058,7 +2054,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
   switch (token->type)
     {
     case CHARACTER:
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2072,7 +2068,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	    {
 	      bin_tree_t *mbc_remain;
 	      fetch_token (token, regexp, syntax);
-	      mbc_remain = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+	      mbc_remain = re_dfa_add_tree_node (dfa, NULL, NULL, token);
 	      tree = create_tree (dfa, tree, mbc_remain, CONCAT, 0);
 	      if (BE (mbc_remain == NULL || tree == NULL, 0))
 		{
@@ -2101,7 +2097,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  return NULL;
 	}
       dfa->used_bkref_map |= 1 << (token->opr.idx - 1);
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2144,7 +2140,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 
       /* Then we can these characters as normal characters.  */
       token->type = CHARACTER;
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2162,11 +2158,11 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	{
 	  bin_tree_t *tree_first, *tree_last;
 	  token->opr.ctx_type = WORD_FIRST;
-	  tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+	  tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
 	  token->opr.ctx_type = WORD_LAST;
-	  tree_last = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+	  tree_last = re_dfa_add_tree_node (dfa, NULL, NULL, token);
 	  token->type = OP_ALT;
-	  tree = re_dfa_add_tree_node (dfa, tree_first, tree_last, *token);
+	  tree = re_dfa_add_tree_node (dfa, tree_first, tree_last, token);
 	  if (BE (tree_first == NULL || tree_last == NULL || tree == NULL, 0))
 	    {
 	      *err = REG_ESPACE;
@@ -2175,7 +2171,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	}
       else
 	{
-	  tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+	  tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
 	  if (BE (tree == NULL, 0))
 	    {
 	      *err = REG_ESPACE;
@@ -2189,7 +2185,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       fetch_token (token, regexp, syntax);
       return tree;
     case OP_PERIOD:
-      tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+      tree = re_dfa_add_tree_node (dfa, NULL, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -2289,7 +2285,7 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
   dfa->subexps[cur_nsub].start = dfa->nodes_len;
   dfa->subexps[cur_nsub].end = -1;
 
-  left_par = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+  left_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
   if (BE (left_par == NULL, 0))
     {
       *err = REG_ESPACE;
@@ -2312,7 +2308,7 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
       *err = REG_EPAREN;
       return NULL;
     }
-  right_par = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
+  right_par = re_dfa_add_tree_node (dfa, NULL, NULL, token);
   dfa->subexps[cur_nsub].end = dfa->nodes_len;
   tree = ((tree == NULL) ? right_par
 	  : create_tree (dfa, tree, right_par, CONCAT, 0));
@@ -2398,14 +2394,14 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 	  if (start > 0)
 	    {
 	      elem = duplicate_tree (elem, dfa);
-	      work_tree = re_dfa_add_tree_node (dfa, elem, NULL, dup_token);
+	      work_tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
 	      tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
 	      if (BE (elem == NULL || work_tree == NULL || tree == NULL, 0))
 		goto parse_dup_op_espace;
 	    }
 	  else
 	    {
-	      tree = re_dfa_add_tree_node (dfa, elem, NULL, dup_token);
+	      tree = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
 	      if (BE (tree == NULL, 0))
 		goto parse_dup_op_espace;
 	    }
@@ -2423,14 +2419,14 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 	  if (start > 0)
 	    {
 	      elem = duplicate_tree (elem, dfa);
-	      elem = re_dfa_add_tree_node (dfa, elem, NULL, dup_token);
+	      elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
 	      tree = create_tree (dfa, tree, elem, CONCAT, 0);
 	      if (BE (elem == NULL || tree == NULL, 0))
 		goto parse_dup_op_espace;
 	    }
 	  else
 	    {
-	      tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, dup_token);
+	      tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
 	      if (BE (tree == NULL, 0))
 		goto parse_dup_op_espace;
 	    }
@@ -2448,7 +2444,7 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
     }
   else
     {
-      tree = re_dfa_add_tree_node (dfa, tree, NULL, *token);
+      tree = re_dfa_add_tree_node (dfa, tree, NULL, token);
       if (BE (tree == NULL, 0))
 	{
 	  *err = REG_ESPACE;
@@ -3130,7 +3126,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
   /* Build a tree for simple bracket.  */
   br_token.type = SIMPLE_BRACKET;
   br_token.opr.sbcset = sbcset;
-  work_tree = re_dfa_add_tree_node (dfa, NULL, NULL, br_token);
+  work_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
   if (BE (work_tree == NULL, 0))
     goto parse_bracket_exp_espace;
 
@@ -3159,12 +3155,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	}
       br_token.type = COMPLEX_BRACKET;
       br_token.opr.mbcset = mbcset;
-      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, br_token);
+      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
       if (BE (mbc_tree == NULL, 0))
 	goto parse_bracket_exp_espace;
       /* Then join them by ALT node.  */
       alt_token.type = OP_ALT;
-      work_tree = re_dfa_add_tree_node (dfa, work_tree, mbc_tree, alt_token);
+      work_tree = re_dfa_add_tree_node (dfa, work_tree, mbc_tree, &alt_token);
       if (BE (mbc_tree != NULL, 1))
 	return work_tree;
     }
@@ -3534,7 +3530,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
   /* Build a tree for simple bracket.  */
   br_token.type = SIMPLE_BRACKET;
   br_token.opr.sbcset = sbcset;
-  tree = re_dfa_add_tree_node (dfa, NULL, NULL, br_token);
+  tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
   if (BE (tree == NULL, 0))
     goto build_word_op_espace;
 
@@ -3547,12 +3543,12 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
       br_token.type = COMPLEX_BRACKET;
       br_token.opr.mbcset = mbcset;
       dfa->has_mb_node = 1;
-      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, br_token);
+      mbc_tree = re_dfa_add_tree_node (dfa, NULL, NULL, &br_token);
       if (BE (mbc_tree == NULL, 0))
 	goto build_word_op_espace;
       /* Then join them by ALT node.  */
       alt_token.type = OP_ALT;
-      tree = re_dfa_add_tree_node (dfa, tree, mbc_tree, alt_token);
+      tree = re_dfa_add_tree_node (dfa, tree, mbc_tree, &alt_token);
       if (BE (mbc_tree != NULL, 1))
 	return tree;
     }
@@ -3666,9 +3662,9 @@ re_dfa_add_tree_node (dfa, left, right, token)
      re_dfa_t *dfa;
      bin_tree_t *left;
      bin_tree_t *right;
-     re_token_t token;
+     const re_token_t *token;
 {
-  int new_idx = re_dfa_add_node (dfa, token, 0);
+  int new_idx = re_dfa_add_node (dfa, *token, 0);
 
   if (new_idx == -1)
     return NULL;

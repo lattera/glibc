@@ -1,5 +1,10 @@
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regcomp.c (duplicate_node): Remove unnecessary local variable.
+
+	* posix/regcomp.c (re_dfa_add_tree_node): Make fourth parameter a
+	pointer.  Adjust callers.
+
 	* posix/regcomp.c (fetch_token): Change interface to match
 	peek_token.  This avoid some copying and reduces code size.
 
