@@ -22,12 +22,12 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <wchar.h>
 #include <bits/libc-lock.h>
 #include <sys/param.h>
 #include "_itoa.h"
-#include "_i18n_itoa.h"
 #include <locale/localeinfo.h>
 
 /* This code is shared between the standard stdio implementation found
@@ -70,7 +70,7 @@
 #  define UCHAR_T	unsigned char
 #  define INT_T		int
 #  define L_(Str)	Str
-#  define ISDIGIT(Ch)	isdigit (Ch)
+#  define ISDIGIT(Ch)	((unsigned int) ((Ch) - '0') < 10)
 
 #  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar) \
@@ -80,16 +80,15 @@
 #  define ORIENT	if (s->_vtable_offset == 0 && _IO_fwide (s, -1) != -1)\
 			  return -1
 # else
-# include "_itowa.h"
-# include "_i18n_itowa.h"
-
 #  define vfprintf	_IO_vfwprintf
 #  define CHAR_T	wchar_t
 /* This is a hack!!!  There should be a type uwchar_t.  */
 #  define UCHAR_T	unsigned int /* uwchar_t */
 #  define INT_T		wint_t
 #  define L_(Str)	L##Str
-#  define ISDIGIT(Ch)	iswdigit (Ch)
+#  define ISDIGIT(Ch)	((unsigned int) ((Ch) - L'0') < 10)
+
+#  include "_itowa.h"
 
 #  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar) \
@@ -100,11 +99,11 @@
 
 #  define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
 #  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
-#  define _i18n_itoa(Val, Buf) _i18n_itowa (Val, Buf)
-#  define _i18n_itoa_word(Val, Buf) _i18n_itowa_word (Val, Buf)
 #  undef EOF
 #  define EOF WEOF
 # endif
+
+# include "_i18n_number.h"
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -638,20 +637,19 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      string = workend;						      \
 	      if (base == 8 && alt)					      \
-		*string-- = L_('0');					      \
+		*--string = L_('0');					      \
 	    }								      \
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      if (use_outdigits && base == 10)				      \
-	        string = _i18n_itoa (number.longlong, workend + 1);	      \
-	      else							      \
-	        string = _itoa (number.longlong, workend + 1, base,	      \
-			        spec == L_('X'));			      \
-	      string -= 1;						      \
+	      string = _itoa (number.longlong, workend, base,		      \
+			      spec == L_('X'));				      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
 				       thousands_sep);			      \
+									      \
+	      if (use_outdigits && base == 10)				      \
+		string = _i18n_number_rewrite (string, workend);	      \
 	    }								      \
 	  /* Simplify further test for num != 0.  */			      \
 	  number.word = number.longlong != 0;				      \
@@ -695,26 +693,25 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      string = workend;						      \
 	      if (base == 8 && alt)					      \
-		*string-- = L_('0');					      \
+		*--string = L_('0');					      \
 	    }								      \
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      if (use_outdigits && base == 10)				      \
-	        string = _i18n_itoa_word (number.word, workend + 1);	      \
-	      else							      \
-	        string = _itoa_word (number.word, workend + 1, base,	      \
-				     spec == L_('X'));			      \
-	      string -= 1;						      \
+	      string = _itoa_word (number.word, workend, base,		      \
+				   spec == L_('X'));			      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
 				       thousands_sep);			      \
+									      \
+	      if (use_outdigits && base == 10)				      \
+		string = _i18n_number_rewrite (string, workend);	      \
 	    }								      \
 	}								      \
 									      \
       if (prec <= workend - string && number.word != 0 && alt && base == 8)   \
 	/* Add octal marker.  */					      \
-	*string-- = L_('0');						      \
+	*--string = L_('0');						      \
 									      \
       prec = MAX (0, prec - (workend - string));			      \
 									      \
@@ -751,7 +748,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  width += prec;						      \
 	  PAD (L_('0'));						      \
 									      \
-	  outstring (string + 1, workend - string);			      \
+	  outstring (string, workend - string);				      \
 									      \
 	  break;							      \
 	}								      \
@@ -790,7 +787,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	      width = temp;						      \
 	    }								      \
 									      \
-	  outstring (string + 1, workend - string);			      \
+	  outstring (string, workend - string);				      \
 									      \
 	  PAD (L_(' '));						      \
 	  break;							      \
@@ -1325,7 +1322,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       UCHAR_T pad = L_(' ');/* Padding character.  */
       CHAR_T spec;
 
-      workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T) - 1];
+      workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
 
       /* Get current character in format string.  */
       JUMP (*++f, step0_jumps);
@@ -1410,7 +1407,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
 	  workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-		     + (width + 31));
+		     + (width + 32));
       }
       JUMP (*f, step1_jumps);
 
@@ -1422,7 +1419,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	/* We have to use a special buffer.  The "32" is just a safe
 	   bet for all the output which is not counted in the width.  */
 	workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
-		   + (width + 31));
+		   + (width + 32));
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
@@ -1451,7 +1448,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = 0;
       if (prec > width
 	  && prec + 32 > sizeof (work_buffer) / sizeof (work_buffer[0]))
-	workend = alloca (spec + 32) + (spec + 31);
+	workend = alloca (spec + 32) + (spec + 32);
       JUMP (*f, step2_jumps);
 
       /* Process 'h' modifier.  There might another 'h' following.  */
@@ -1749,7 +1746,7 @@ do_positional:
 	if (MAX (prec, width) + 32 > sizeof (work_buffer) / sizeof (CHAR_T))
 	  workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
 					* sizeof (CHAR_T))
-		     + (MAX (prec, width) + 31));
+		     + (MAX (prec, width) + 32));
 
 	/* Process format specifiers.  */
 	while (1)
@@ -1826,7 +1823,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
   int done = 0;
   CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
   CHAR_T *const workend
-    = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T) - 1];
+    = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)];
   register CHAR_T *w;
 
   outchar (L_('%'));
@@ -1848,16 +1845,16 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
   if (info->width != 0)
     {
-      w = _itoa_word (info->width, workend + 1, 10, 0);
-      while (w <= workend)
+      w = _itoa_word (info->width, workend, 10, 0);
+      while (w < workend)
 	outchar (*w++);
     }
 
   if (info->prec != -1)
     {
       outchar (L_('.'));
-      w = _itoa_word (info->prec, workend + 1, 10, 0);
-      while (w <= workend)
+      w = _itoa_word (info->prec, workend, 10, 0);
+      while (w < workend)
 	outchar (*w++);
     }
 
@@ -1896,24 +1893,24 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 
   /* Copy existing string so that nothing gets overwritten.  */
   src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
-  s = (CHAR_T *) __mempcpy (src, w + 1,
-			    (rear_ptr - w) * sizeof (CHAR_T)) - 1;
+  s = (CHAR_T *) __mempcpy (src, w,
+			    (rear_ptr - w) * sizeof (CHAR_T));
   w = rear_ptr;
 
   /* Process all characters in the string.  */
-  while (s >= src)
+  while (s > src)
     {
-      *w-- = *s--;
+      *--w = *--s;
 
-      if (--len == 0 && s >= src)
+      if (--len == 0 && s > src)
 	{
 	  /* A new group begins.  */
 #ifdef COMPILE_WPRINTF
-	  *w-- = thousands_sep;
+	  *--w = thousands_sep;
 #else
 	  int cnt = tlen;
 	  do
-	    *w-- = thousands_sep[--cnt];
+	    *--w = thousands_sep[--cnt];
 	  while (cnt > 0);
 #endif
 
@@ -1930,8 +1927,8 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
 	      /* No further grouping to be done.
 		 Copy the rest of the number.  */
 	      do
-		*w-- = *s--;
-	      while (s >= src);
+		*--w = *--s;
+	      while (s > src);
 	      break;
 	    }
 	}

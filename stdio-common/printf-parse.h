@@ -172,42 +172,48 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
     }
 
   /* Check for spec modifiers.  */
-  while (*format == L_(' ') || *format == L_('+') || *format == L_('-') ||
-	 *format == L_('#') || *format == L_('0') || *format == L_('\''))
-    switch (*format++)
-      {
-      case L_(' '):
-	/* Output a space in place of a sign, when there is no sign.  */
-	spec->info.space = 1;
-	break;
-      case L_('+'):
-	/* Always output + or - for numbers.  */
-	spec->info.showsign = 1;
-	break;
-      case L_('-'):
-	/* Left-justify things.  */
-	spec->info.left = 1;
-	break;
-      case L_('#'):
-	/* Use the "alternate form":
-	   Hex has 0x or 0X, FP always has a decimal point.  */
-	spec->info.alt = 1;
-	break;
-      case L_('0'):
-	/* Pad with 0s.  */
-	spec->info.pad = '0';
-	break;
-      case L_('\''):
-	/* Show grouping in numbers if the locale information
-	   indicates any.  */
-	spec->info.group = 1;
-	break;
-      case L_('I'):
-	/* Use the internationalized form of the output.  Currently
-	   means to use the `outdigits' of the current locale.  */
-	spec->info.i18n = 1;
-	break;
-      }
+  do
+    {
+      switch (*format)
+	{
+	case L_(' '):
+	  /* Output a space in place of a sign, when there is no sign.  */
+	  spec->info.space = 1;
+	  continue;
+	case L_('+'):
+	  /* Always output + or - for numbers.  */
+	  spec->info.showsign = 1;
+	  continue;
+	case L_('-'):
+	  /* Left-justify things.  */
+	  spec->info.left = 1;
+	  continue;
+	case L_('#'):
+	  /* Use the "alternate form":
+	     Hex has 0x or 0X, FP always has a decimal point.  */
+	  spec->info.alt = 1;
+	  continue;
+	case L_('0'):
+	  /* Pad with 0s.  */
+	  spec->info.pad = '0';
+	  continue;
+	case L_('\''):
+	  /* Show grouping in numbers if the locale information
+	     indicates any.  */
+	  spec->info.group = 1;
+	  continue;
+	case L_('I'):
+	  /* Use the internationalized form of the output.  Currently
+	     means to use the `outdigits' of the current locale.  */
+	  spec->info.i18n = 1;
+	  continue;
+	default:
+	  break;
+	}
+      break;
+    }
+  while (*++format);
+
   if (spec->info.left)
     spec->info.pad = ' ';
 

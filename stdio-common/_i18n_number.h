@@ -1,8 +1,6 @@
-/* Internal function for converting integers to string using locale
-   specific digits.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,23 +17,33 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _I18N_ITOA_H
-#define _I18N_ITOA_H
-#include <sys/cdefs.h>
-
 #include "../locale/outdigits.h"
+#include "../locale/outdigitswc.h"
 
-
-extern char *_i18n_itoa (unsigned long long int value, char *buflim);
-
-static inline char *
-_i18n_itoa_word (unsigned long int value, char *buflim)
+static CHAR_T *
+_i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 {
-  do
-    buflim = outdigit_value (buflim, value % 10);
-  while ((value /= 10) != 0);					      \
+  CHAR_T *src, *s;
 
-  return buflim;
+  /* Copy existing string so that nothing gets overwritten.  */
+  src = (CHAR_T *) alloca ((rear_ptr - w) * sizeof (CHAR_T));
+  s = (CHAR_T *) __mempcpy (src, w,
+			    (rear_ptr - w) * sizeof (CHAR_T));
+  w = rear_ptr;
+
+  /* Process all characters in the string.  */
+  while (--s >= src)
+    {
+      if (*s >= '0' && *s <= '9')
+	{
+	  if (sizeof (CHAR_T) == 1)
+	    w = (CHAR_T *) outdigit_value ((char *) w, *s - '0');
+	  else
+	    *--w = (CHAR_T) outdigitwc_value (*s - '0');
+	}
+      else
+	*--w = *s;
+    }
+
+  return w;
 }
-
-#endif	/* _i18n_itoa.h */

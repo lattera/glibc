@@ -2274,7 +2274,8 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 			  lr_error (ldfile, _("\
 %s: field `%s' does not contain exactly ten entries"),
 			    "LC_CTYPE", "outdigit");
-			  goto err_label;
+			  lr_ignore_rest (ldfile, 0);
+			  break;
 			}
 
 		      ctype->mboutdigits[ctype->outdigits_act] = seq;
@@ -2781,6 +2782,12 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 	  seq = charmap_find_value (charmap, tmp, 1);
 	  if (seq == NULL)
 	    {
+	      char buf[10];
+	      sprintf (buf, "U%08X", ch);
+	      seq = charmap_find_value (charmap, buf, 9);
+	    }
+	  if (seq == NULL)
+	    {
 	      if (!be_quiet)
 		error (0, 0, _("\
 %s: character `%s' not defined in charmap while needed as default value"),
@@ -3133,6 +3140,12 @@ character `%s' not defined while needed as default value"),
 	  seq_from = charmap_find_value (charmap, &tmp[1], 1);
 	  if (seq_from == NULL)
 	    {
+	      char buf[10];
+	      sprintf (buf, "U%08X", ch);
+	      seq_from = charmap_find_value (charmap, buf, 9);
+	    }
+	  if (seq_from == NULL)
+	    {
 	      if (!be_quiet)
 		error (0, 0, _("\
 %s: character `%s' not defined while needed as default value"),
@@ -3150,6 +3163,12 @@ character `%s' not defined while needed as default value"),
 	      /* This conversion is implementation defined.  */
 	      tmp[1] = (char) (ch + ('A' - 'a'));
 	      seq_to = charmap_find_value (charmap, &tmp[1], 1);
+	      if (seq_to == NULL)
+		{
+		  char buf[10];
+		  sprintf (buf, "U%08X", ch + ('A' - 'a'));
+		  seq_to = charmap_find_value (charmap, buf, 9);
+		}
 	      if (seq_to == NULL)
 		{
 		  if (!be_quiet)
@@ -3191,9 +3210,13 @@ character `%s' not defined while needed as default value"),
 	  ctype->map256_collection[1][ctype->map256_collection[0][cnt]] = cnt;
     }
 
-  if (ctype->outdigits_act == 0)
+  if (ctype->outdigits_act != 10)
     {
-      for (cnt = 0; cnt < 10; ++cnt)
+      if (ctype->outdigits_act != 0)
+	error (0,0, _("%s: field `%s' does not contain exactly ten entries"),
+	       "LC_CTYPE", "outdigit");
+
+      for (cnt = ctype->outdigits_act; cnt < 10; ++cnt)
 	{
 	  ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
 							 digits + cnt, 1);

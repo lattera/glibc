@@ -1,3 +1,24 @@
+2000-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_i18n_itoa.c: Removed.
+	* stdio-common/_i18n_itoa.h: Removed.
+	* stdio-common/_i18n_itowa.c: Removed.
+	* stdio-common/_i18n_itowa.h: Removed.
+	* stdio-common/_i18n_number.h: New file.
+	* stdio-common/Depend: New file.
+	* stdio-common/printf-parse.h: Handle I modifier correctly.  Optimize.
+	* stdio-common/vfprintf.c: Rewrite buffer handling for integer
+	printing.  Change printing of numbers with locale specific digits to
+	use new code in _i18n_number.h.
+
+	* stdio-common/bug13.c: Improve messages.
+
+	* locale/programs/ld-ctype.c (ctype_read): Improve error message.
+	(set_class_defaults): Always search also for Uxxxx names.
+	Detect insufficient number of outdigits.
+
+	* locale/Makefile (C-translit.h): Use mv not $(move-if-changed).
+
 2000-07-27  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/C-ctype.c (_nl_C_LC_CTYPE): Swap the two names in

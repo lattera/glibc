@@ -50,7 +50,7 @@ test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
-ld-test-names := test1 test2 test3 test4 test5 test6
+ld-test-names := test1 test2 test3 test4 test5 test6 test7
 ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)) \
 				   $(addsuffix .ds,test5 test6) \
@@ -92,7 +92,7 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
 		     tst_wctype tst_wcwidth
 
-tests = $(locale_test_suite)
+tests = $(locale_test_suite) tst-digits
 endif
 
 # Files to install.
@@ -176,6 +176,7 @@ $(objpfx)tst-langinfo.out: tst-langinfo.sh $(objpfx)tst-langinfo \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
+$(objpfx)tst-digits.out: $(objpfx)tst-locale.out
 endif
 
 # Sometimes the whole collection of locale files should be installed.
@@ -241,3 +242,4 @@ tst_wctomb-ENV = $(TEST_MBWC_ENV)
 tst_wctrans-ENV = $(TEST_MBWC_ENV)
 tst_wctype-ENV = $(TEST_MBWC_ENV)
 tst_wcwidth-ENV = $(TEST_MBWC_ENV)
+tst-digits-ENV = $(TEST_MBWC_ENV)

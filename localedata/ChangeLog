@@ -1,3 +1,14 @@
+2000-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (ld-test-names): Add test7.
+	(tests): Add tst-digits.  Add dependency and environment variable.
+	* tst-digits.c: New file.
+	* tst-locale.sh: Generate test7 locale.
+	* tests/test7.cm: New file.
+	* tests/test7.def: New file.
+
+	* tst-locale.sh: Add dropped test6 locale.
+
 2000-07-27  Bruno Haible  <haible@clisp.cons.org>
 
 	* tests-mbwc/tgn_locdef.h (TST_LOC_C): New macro.

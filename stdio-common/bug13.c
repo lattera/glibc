@@ -11,7 +11,7 @@ main (void)
 #define TEST(nr, result, format, args...) \
   if (sprintf (buf, format, ## args) != result)				      \
     {									      \
-      printf ("test %d failed\n", nr);					      \
+      printf ("test %d failed (\"%s\",  %d)\n", nr, buf, result);	      \
       res = 1;								      \
     }
 
