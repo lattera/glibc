@@ -48,7 +48,7 @@ routines	:=							      \
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-fopenloc	      \
-	tst-fgetws tst-ungetwc1
+	tst-fgetws tst-ungetwc1 tst-ungetwc2
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.
@@ -85,6 +85,7 @@ tst-fopenloc-ENV = LOCPATH=$(common-objpfx)localedata \
 		   MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
 tst-fgetws-ENV = LOCPATH=$(common-objpfx)localedata
 tst-ungetwc1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-ungetwc2-ENV = LOCPATH=$(common-objpfx)localedata
 
 generated = tst-fopenloc.mtrace tst-fopenloc.check
 

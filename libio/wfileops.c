@@ -458,7 +458,28 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 			   == fp->_wide_data->_IO_write_ptr));
 
   if (mode == 0)
-    dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
+    {
+      /* XXX For wide stream with backup store it is not very
+	 reasonable to determine the offset.  The pushed-back
+	 character might require a state change and we need not be
+	 able to compute the initial state by reverse transformation
+	 since there is no guarantee of symmetry.  So we don't even
+	 try and return an error.  */
+      if (_IO_in_backup (fp))
+	{
+	  if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
+	    {
+	      __set_errno (EINVAL);
+	      return -1;
+	    }
+
+	  /* There is no more data in the backup buffer.  We can
+	     switch back.  */
+	  _IO_switch_to_main_wget_area (fp);
+	}
+
+      dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
+    }
 
   /* Flush unwritten characters.
      (This may do an unneeded write if we seek within the buffer.
@@ -466,7 +487,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
      egptr to ptr.  That can't be done in the current design,
      which assumes file_ptr() is eGptr.  Anyway, since we probably
      end up flushing when we close(), it doesn't make much difference.)
-     FIXME: simulate mem-papped files. */
+     FIXME: simulate mem-mapped files. */
 
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base
       || _IO_in_put_mode (fp))
@@ -509,12 +530,13 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 	{
 	  int nread;
 
-	  delta = fp->_wide_data->_IO_read_ptr - fp->_wide_data->_IO_read_end;
+	  delta = fp->_wide_data->_IO_read_ptr - fp->_wide_data->_IO_read_base;
 	  fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
 	  nread = (*cv->__codecvt_do_length) (cv, &fp->_wide_data->_IO_state,
 					      fp->_IO_read_base,
 					      fp->_IO_read_end, delta);
 	  fp->_IO_read_ptr = fp->_IO_read_base + nread;
+	  fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;
 	  offset -= fp->_IO_read_end - fp->_IO_read_base - nread;
 	}
 
@@ -651,6 +673,10 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
       fp->_offset = result;
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
+      _IO_wsetg (fp, fp->_wide_data->_IO_buf_base,
+		 fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base);
+      _IO_wsetp (fp, fp->_wide_data->_IO_buf_base,
+		 fp->_wide_data->_IO_buf_base);
     }
   return result;
 

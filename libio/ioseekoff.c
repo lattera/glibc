@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
+#include <stdlib.h>
 #include <libioP.h>
 #include <errno.h>
 #ifndef errno
@@ -58,7 +59,12 @@ _IO_seekoff (fp, offset, dir, mode)
   if (mode != 0 && _IO_have_backup (fp))
     {
       if (dir == _IO_seek_cur && _IO_in_backup (fp))
-	offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+	{
+	  if (fp->_vtable_offset != 0 || fp->_mode <= 0)
+	    offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+	  else
+	    abort ();
+	}
       _IO_free_backup_area (fp);
     }
 
