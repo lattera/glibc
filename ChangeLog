@@ -1,5 +1,9 @@
 2004-01-15  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Use _dl_argv_internal.
+
+2004-01-15  Richard Henderson  <rth@redhat.com>
+
 	* sysdeps/unix/sysv/linux/alpha/Makefile [stdlib]: Process
 	ucontext-offsets.sym.
 	* sysdeps/unix/sysv/linux/alpha/getcontext.S: New file.
