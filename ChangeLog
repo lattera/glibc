@@ -1,3 +1,10 @@
+2003-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c: Add support to use alternative decimal
+	digits.
+	* stdio-common/vfprintf.c (vfprintf): Pass use_outdigits flags to
+	__printf_fp.  Patch by Hamed Malek <hamed@bamdad.org>.
+
 2003-12-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone) [PIC]: Save PIC,

@@ -817,6 +817,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 					.group = group,			      \
 					.pad = pad,			      \
 					.extra = 0,			      \
+					.i18n = use_outdigits,		      \
 					.wide = sizeof (CHAR_T) != 1 };	      \
 									      \
 	    if (is_long_double)						      \
