@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -35,6 +36,48 @@ static off_t file_offset;
 
 /* Cache for the last read entry.  */
 static struct utmp last_entry;
+
+
+/* Locking timeout.  */
+#ifndef TIMEOUT
+# define TIMEOUT 1
+#endif
+
+/* Do-nothing handler for locking timeout.  */
+static void timeout_handler (int signum) {};
+
+#define LOCK_FILE(fd, type) \
+{                                                                       \
+  struct flock fl;                                                      \
+  struct sigaction action, old_action;                                  \
+  unsigned int old_timeout;                                             \
+                                                                        \
+  /* Cancel any existing alarm.  */                                     \
+  old_timeout = alarm (0);                                              \
+                                                                        \
+  /* Establish signal handler.  */                                      \
+  action.sa_handler = timeout_handler;                                  \
+  sigemptyset (&action.sa_mask);                                        \
+  action.sa_flags = 0;                                                  \
+  sigaction (SIGALRM, &action, &old_action);                            \
+                                                                        \
+  alarm (TIMEOUT);                                                      \
+                                                                        \
+  /* Try to get the lock.  */                                           \
+  memset (&fl, '\0', sizeof (struct flock));                            \
+  fl.l_type = (type);                                                 \
+  fl.l_whence = SEEK_SET;                                               \
+  fcntl ((fd), F_SETLKW, &fl)
+
+#define UNLOCK_FILE(fd) \
+  /* Unlock the file.  */                                               \
+  fl.l_type = F_UNLCK;                                                  \
+  fcntl ((fd), F_SETLKW, &fl);                                          \
+                                                                        \
+  /* Reset the signal handler and alarm.  */                            \
+  sigaction (SIGALRM, &old_action, NULL);                               \
+  alarm (old_timeout);                                                  \
+} while (0)
 
 
 /* Functions defined here.  */
@@ -100,7 +143,6 @@ static int
 getutent_r_file (struct utmp *buffer, struct utmp **result)
 {
   ssize_t nbytes;
-  struct flock fl;			/* Information struct for locking.  */
 
   assert (file_fd >= 0);
 
@@ -111,26 +153,12 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
       return -1;
     }
 
-  /* XXX The following is not perfect.  Instead of locking the file itself
-     Marek Michalkiewicz <marekm@i17linuxb.ists.pwr.wroc.pl> suggests to
-     use an extra locking file.  */
-  /* XXX I think using an extra locking file does not solve the
-     problems.  Instead we should set an alarm, which causes fcntl to
-     fail, as in ../nis/lckcache.c.
-     Mark Kettenis <kettenis@phys.uva.nl>.  */
-
-  /* Try to get the lock.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_RDLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLK, &fl);
+  LOCK_FILE (file_fd, F_RDLCK);
 
   /* Read the next entry.  */
   nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
 
-  /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLKW, &fl);
+  UNLOCK_FILE (file_fd);
 
   if (nbytes != sizeof (struct utmp))
     {
@@ -180,13 +208,8 @@ static int
 internal_getut_r (const struct utmp *id, struct utmp *buffer)
 {
   int result = -1;
-  struct flock fl;
 
-  /* Try to get the lock.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_RDLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLKW, &fl);
+  LOCK_FILE (file_fd, F_RDLCK);
 
 #if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
@@ -237,9 +260,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
   result = 0;
 
 unlock_return:
-  /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLK, &fl);
+  UNLOCK_FILE (file_fd);
 
   return result;
 }
@@ -278,8 +299,6 @@ static int
 getutline_r_file (const struct utmp *line, struct utmp *buffer,
 		  struct utmp **result)
 {
-  struct flock fl;
-
   assert (file_fd >= 0);
 
   if (file_offset == -1l)
@@ -288,11 +307,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
       return -1;
     }
 
-  /* Try to get the lock.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_RDLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLKW, &fl);
+  LOCK_FILE (file_fd, F_RDLCK);
 
   while (1)
     {
@@ -322,9 +337,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   *result = buffer;
 
 unlock_return:
-  /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLK, &fl);
+  UNLOCK_FILE (file_fd);
 
   return ((*result == NULL) ? -1 : 0);
 }
@@ -333,7 +346,6 @@ unlock_return:
 static struct utmp *
 pututline_file (const struct utmp *data)
 {
-  struct flock fl;			/* Information struct for locking.  */
   struct utmp buffer;
   struct utmp *pbuf;
   int found;
@@ -356,11 +368,7 @@ pututline_file (const struct utmp *data)
   else
     found = internal_getut_r (data, &buffer);
 
-  /* Try to lock the file.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_WRLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (file_fd, F_SETLK, &fl);
+  LOCK_FILE (file_fd, F_WRLCK);
 
   if (found < 0)
     {
@@ -401,9 +409,7 @@ pututline_file (const struct utmp *data)
     }
 
  unlock_return:
-   /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (file_fd, F_SETLK, &fl);
+  UNLOCK_FILE (file_fd);
 
   return pbuf;
 }
@@ -423,7 +429,6 @@ static int
 updwtmp_file (const char *file, const struct utmp *utmp)
 {
   int result = -1;
-  struct flock fl;
   off_t offset;
   int fd;
 
@@ -432,11 +437,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   if (fd < 0)
     return -1;
 
-  /* Try to get the lock.  */
-  memset (&fl, '\0', sizeof (struct flock));
-  fl.l_type = F_WRLCK;
-  fl.l_whence = SEEK_SET;
-  fcntl (fd, F_SETLK, &fl);
+  LOCK_FILE (fd, F_WRLCK);
 
   /* Remember original size of log file.  */
   offset = lseek (fd, 0, SEEK_END);
@@ -461,9 +462,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   result = 0;
 
 unlock_return:
-  /* And unlock the file.  */
-  fl.l_type = F_UNLCK;
-  fcntl (fd, F_SETLKW, &fl);
+  UNLOCK_FILE (fd);
 
   /* Close WTMP file.  */
   close (fd);

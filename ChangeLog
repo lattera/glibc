@@ -1,3 +1,13 @@
+1998-04-25  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/utmp_file.c (TIMEOUT): New macro.
+	(timeout_handler): New function.
+	(LOCK_FILE, UNLOCK_FILE): New macros.
+	Implement file locking with timeout.
+	(getutent_r_file, internal_getut_r, getutline_r_file,
+	pututline_file, updwtmp_file): Use LOCK_FILE and UNLOCK_FILE for
+	locking.
+
 1998-05-18 11:38  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/run-iconv-test.sh: Extend library-path by iconvdata
