@@ -24,8 +24,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int
-main (void)
+
+static int
+do_test (void)
 {
   pthread_t me = pthread_self ();
 
@@ -58,3 +59,6 @@ main (void)
 
   return 1;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

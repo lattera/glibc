@@ -1,3 +1,7 @@
+2003-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fork4.c: Use test-skeleton.c.
+
 2003-03-14  Roland McGrath  <roland@redhat.com>
 
 	* init.c: Fix typo "#eli" for "#else".
@@ -38,6 +42,9 @@
 	value directly.
 
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (start_thread): Use CALL_THREAD_FCT if defined.
+	* sysdeps/i386/tls.h: Define CALL_THREAD_FCT.
 
 	* pthread_create.c (start_thread): setjmp is expected to return 0.
 
