@@ -3147,7 +3147,7 @@ CFLAGS="$CFLAGS $libgd_include"
 old_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $libgd_ldflags"
 old_LIBS="$LIBS"
-LIBS="$LIBS -lgd -lpng -lz"
+LIBS="$LIBS -lgd -lpng -lz -lm"
 cat > conftest.$ac_ext <<EOF
 #line 3153 "configure"
 #include "confdefs.h"

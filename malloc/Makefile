@@ -80,7 +80,7 @@ do-memusagestat: $(objpfx)memusagestat
 
 memusagestat-modules = memusagestat
 $(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
-	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz
+	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz -lm
 
 include ../Rules
 

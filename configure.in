@@ -1243,7 +1243,7 @@ CFLAGS="$CFLAGS $libgd_include"
 old_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $libgd_ldflags"
 old_LIBS="$LIBS"
-LIBS="$LIBS -lgd -lpng -lz"
+LIBS="$LIBS -lgd -lpng -lz -lm"
 AC_TRY_LINK([#include <gd.h>], [gdImagePng (0, 0)], LIBGD=yes, LIBGD=no)
 CFLAGS="$old_CFLAGS"
 LDFLAGS="$old_LDFLAGS"
