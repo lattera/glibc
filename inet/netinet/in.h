@@ -230,10 +230,10 @@ struct ipv6_mreq
    this was a short-sighted decision since on different systems the types
    may have different representations but the values are always the same.  */
 
-extern uint32_t ntohl __P ((uint32_t __netlong));
-extern uint16_t ntohs __P ((uint16_t __netshort));
-extern uint32_t htonl __P ((uint32_t __hostlong));
-extern uint16_t htons __P ((uint16_t __hostshort));
+extern uint32_t ntohl __P ((uint32_t __netlong)) __attribute__ ((__const__));
+extern uint16_t ntohs __P ((uint16_t __netshort)) __attribute__ ((__const__));
+extern uint32_t htonl __P ((uint32_t __hostlong)) __attribute__ ((__const__));
+extern uint16_t htons __P ((uint16_t __hostshort)) __attribute__ ((__const__));
 
 #include <endian.h>
 

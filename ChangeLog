@@ -1,3 +1,7 @@
+1999-05-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h: Mark ntoh* and hton* as constant functions.
+
 1999-05-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/stdio.texi: Fix some typos.
