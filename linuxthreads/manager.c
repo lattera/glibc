@@ -38,6 +38,9 @@ struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
 { { LOCK_INITIALIZER, &__pthread_initial_thread, 0},
   { LOCK_INITIALIZER, &__pthread_manager_thread, 0}, /* All NULLs */ };
 
+/* For debugging purposes put the maximum number of threads in a variable.  */
+const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
+
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
 int __pthread_nonstandard_stacks = 0;

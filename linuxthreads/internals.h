@@ -63,6 +63,13 @@ struct pthread_start_args {
   ((PTHREAD_KEYS_MAX + PTHREAD_KEY_2NDLEVEL_SIZE - 1) \
    / PTHREAD_KEY_2NDLEVEL_SIZE)
 
+typedef void (*destr_function)(void *);
+
+struct pthread_key_struct {
+  int in_use;                   /* already allocated? */
+  destr_function destr;         /* destruction routine */
+};
+
 
 #define PTHREAD_START_ARGS_INITIALIZER { NULL, NULL, {{0, }}, 0, { 0 } }
 

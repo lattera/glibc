@@ -1,5 +1,8 @@
 1999-09-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manager.c (__linuxthreads_pthread_threads_max): New variable.
+	* specific.c (__linuxthreads_pthread_keys_max): New variable.
+
 	* condvar.c (pthread_cond_timedwait_relative): Never return with
 	EINTR.  Patch by Andreas Schwab.
 
@@ -8,6 +11,12 @@
 	* signals.c (sigaction): Correct last patch.  Don't select
 	pthread_sighandler_rt based on the signal number but instead of
 	the SA_SIGINFO flag.
+
+1999-09-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* specific.c: Move definitions of struct pthread_key_struct and
+	destr_function to ...
+	* internals.h: ...here.
 
 1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
 

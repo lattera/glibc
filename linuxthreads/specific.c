@@ -20,17 +20,13 @@
 #include "pthread.h"
 #include "internals.h"
 
-typedef void (*destr_function)(void *);
-
 /* Table of keys. */
-
-struct pthread_key_struct {
-  int in_use;                   /* already allocated? */
-  destr_function destr;         /* destruction routine */
-};
 
 static struct pthread_key_struct pthread_keys[PTHREAD_KEYS_MAX] =
   { { 0, NULL } };
+
+/* For debugging purposes put the maximum number of keys in a variable.  */
+const int __linuxthreads_pthread_keys_max = PTHREAD_KEYS_MAX;
 
 /* Mutex to protect access to pthread_keys */
 
