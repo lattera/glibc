@@ -1,3 +1,11 @@
+2003-09-10  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr):
+	Don't use c_ispeed under [! _HAVE_STRUCT_TERMIOS_C_ISPEED].
+	Don't use c_ospeed under [! _HAVE_STRUCT_TERMIOS_C_OSPEED].
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Likewise.
+	Reported by Daniel Jacobowitz  <drow@mvista.com>.
+
 2003-09-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/Makefile (strop-tests): Add memccpy.
