@@ -1,3 +1,37 @@
+Wed May 17 16:50:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	Merged 1003.2 locale and localedef programs by Ulrich Drepper.
+	* locale/charmap.c: New file.
+	* locale/collate.c: New file.
+	* locale/config.h: New file.
+	* locale/ctype.c: New file.
+	* locale/ctypedump.c: New file.
+	* locale/hash.c: New file.
+	* locale/hash.h: New file.
+	* locale/iso-4217.def: New file.
+	* locale/keyword.gperf: New file.
+	* locale/keyword.h: New file.
+	* locale/libintl.h: New file.
+	* locale/locale.c: New file.
+	* locale/localedef.c: New file.
+	* locale/localedef.h: New file.
+	* locale/locfile-lex.c: New file.
+	* locale/locfile-parse.c: New file.
+	* locale/messages.c: New file.
+	* locale/monetary.c: New file.
+	* locale/numeric.c: New file.
+	* locale/token.h: New file.
+
+	* posix/regex.c, posix/regex.h: New files, incorporated from GNU regex.
+	* posix/Makefile (headers): Add regex.h.
+	(routines): Add regex.
+	(gpl2lgpl): Add regex.c and regex.h.
+
+Tue May 16 17:35:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/loadlocale.c: Expect macro LOCALE_PATH to be defined,
+ 	instead of hard-coding "/share/locale".
+
 Sat May 13 02:16:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* configure.in (os=gnu*): Always set elf=yes, not just for os=gnu*elf*.

@@ -101,6 +101,10 @@ DEFINE_CATEGORY (LC_TIME, "LC_TIME",
 		  { D_FMT,      "d_fmt",      std, string },
 		  { T_FMT,      "t_fmt",      std, string },
 		  { T_FMT_AMPM, "t_fmt_ampm", std, string },
+		  { ERA,        "era",        opt, string },
+		  { ERA_YEAR,   "era_year",   opt, string },
+		  { ERA_D_FMT,  "era_d_fmt",  opt, string },
+		  { ALT_DIGITS, "alt_digits", opt, stringarray,  0, 100 },
 		  { 0 }
 		  ), NO_POSTLOAD, NULL, NULL, NULL )
 

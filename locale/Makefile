@@ -21,10 +21,36 @@
 #
 subdir	:= locale
 
-headers		:= locale.h
-distribute	:= localeinfo.h categories.def
-routines	:= setlocale loadlocale localeconv
-categories	:= ctype messages monetary numeric time collate
+headers		= locale.h
+distribute	= localeinfo.h categories.def \
+		  $(localedef-modules:=.c) $(locale-modules:=.c) \
+		  $(lib-modules:=.c) config.h hash.h iso-4217.def \
+		  keyword.gperf keyword.h localedef.h token.h
+routines	= setlocale loadlocale localeconv nl_langinfo
+categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%)
+others		= localedef locale
+install-bin	= localedef locale
+extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
+		  $(lib-modules:=.o)
+
+localedef-modules	:= charmap locfile-lex locfile-parse ctype \
+			   monetary messages collate numeric
+locale-modules		:= ctypedump
+lib-modules		:= error hash xmalloc
+
+
+GPERF = gperf
+GPERFFLAGS = -acCgopt -k1,2,5,$$
 
 include ../Rules
+
+keyword.h: keyword.gperf
+	$(GPERF) $(GPERFFLAGS) $< > $@.new
+	mv -f $@.new $@
+
+$(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
+$(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
+$(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
+
+CPPFLAGS += -DLOCALE_PATH='"$(localedir)"' -DCHARMAP_PATH='"$(nlsdir)/charmap"'

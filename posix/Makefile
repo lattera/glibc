@@ -22,7 +22,7 @@
 subdir	:= posix
 
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	\
-	   glob.h wordexp.h fnmatch.h gnu/types.h getopt.h		\
+	   glob.h regex.h wordexp.h fnmatch.h gnu/types.h getopt.h	\
 	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h	\
 	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h
 
@@ -40,7 +40,7 @@ routines :=								      \
 	getpgid setpgid getpgrp setsid					      \
 	getlogin setlogin						      \
 	pathconf sysconf fpathconf					      \
-	glob fnmatch							      \
+	glob fnmatch regex						      \
 	confstr								      \
 	getopt getopt1
 aux		:= init-posix environ
@@ -48,7 +48,7 @@ tests		:= tstgetopt testfnm
 others		:= getconf
 install-bin	:= getconf
 install-lib	:= libposix.a
-gpl2lgpl := getopt.c getopt1.c getopt.h	# Frob these guys' copying notices.
+gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 include ../Rules
 

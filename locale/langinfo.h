@@ -145,8 +145,10 @@ typedef enum
   _NL_NUM_LC_MESSAGES,
 
   /* Stubs for unfinished categories.  */
-  _NL_NUM_LC_COLLATE = 0,
+  _NL_NUM_LC_COLLATE = _NL_ITEM (LC_COLLATE, 0),
 
+  /* This marks the highest value used.  */
+  _NL_NUM
 } nl_item;
 
 

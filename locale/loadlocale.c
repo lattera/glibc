@@ -69,13 +69,14 @@ _nl_load_locale (int category, char **name)
     }
 
   {
-    const char localedir[] = "/share/locale/"; /* XXX */
     const char *catname = _nl_category_names[category];
     size_t namelen = strlen (*name);
     size_t catlen = strlen (catname);
-    char file[sizeof localedir + namelen + catlen * 2 + 4];
-    sprintf (file, "%s%s/%s",
-	     strchr (*name, '/') != NULL ? "" : localedir, *name, catname);
+    char file[sizeof LOCALE_PATH + 1 + namelen + catlen * 2 + 4];
+    if (strchr (*name, '/') != NULL)
+      sprintf (file, "%s/%s", *name, catname);
+    else
+      sprintf (file, "%s/%s/%s", LOCALE_PATH, *name, catname);
     fd = __open (file, O_RDONLY);
     if (fd < 0)
       return NULL;

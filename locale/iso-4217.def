@@ -1,0 +1,36 @@
+/*
+ * Defines the valid international currency symbols according to ISO-4217.
+ * This is used in monetary.c(monetary_check).
+ *
+ * !!! The list has to be sorted !!!
+ */
+DEFINE_INT_CURR("ATS ")		/* Austria  */
+DEFINE_INT_CURR("BEF ")		/* Belgium  */
+DEFINE_INT_CURR("CAD ")		/* Canada  */
+DEFINE_INT_CURR("CHF ")		/* Switzerland  */
+DEFINE_INT_CURR("DEM ")		/* Germany  */
+DEFINE_INT_CURR("DKK ")		/* Denmark  */
+DEFINE_INT_CURR("EEK ")		/* Estonia  */
+DEFINE_INT_CURR("ESP ")		/* Spain  */
+DEFINE_INT_CURR("FIM ")		/* Finland  */
+DEFINE_INT_CURR("FRF ")		/* France  */
+DEFINE_INT_CURR("GBP ")		/* Great Britain  */
+DEFINE_INT_CURR("GRD ")		/* Greece  */
+DEFINE_INT_CURR("HRD ")		/* Croatia  */
+DEFINE_INT_CURR("HUF ")		/* Hungary  */
+DEFINE_INT_CURR("IEP ")		/* Ireland  */
+DEFINE_INT_CURR("ILS ")		/* Israel  */
+DEFINE_INT_CURR("ISK ")		/* Iceland  */
+DEFINE_INT_CURR("ITL ")		/* Italy  */
+DEFINE_INT_CURR("LTL ")		/* Lithuania  */
+DEFINE_INT_CURR("LUF ")		/* Luxemburg  */
+DEFINE_INT_CURR("LVL ")		/* Latvia  */
+DEFINE_INT_CURR("NLG ")		/* Netherlands  */
+DEFINE_INT_CURR("NOK ")		/* Norway  */
+DEFINE_INT_CURR("PLZ ")		/* Poland  */
+DEFINE_INT_CURR("PTE ")		/* Portugal  */
+DEFINE_INT_CURR("ROL ")		/* Romania  */
+DEFINE_INT_CURR("RUR ")		/* Russia  */
+DEFINE_INT_CURR("SEK ")		/* Sweden  */
+DEFINE_INT_CURR("SIT ")		/* Slovenia  */
+DEFINE_INT_CURR("USD ")		/* United States  */

@@ -1,0 +1,77 @@
+%{
+/* `strncmp' is used for comparison.  */
+#include <string.h>
+
+/* This file defines `enum token'.  */
+#include "token.h"
+%}
+struct locale_keyword { char *name; enum token token_id; };
+%%
+END,               TOK_END
+IGNORE,            TOK_IGNORE
+LC_COLLATE,        _NL_NUM_LC_COLLATE
+LC_CTYPE,          _NL_NUM_LC_CTYPE
+LC_MESSAGES,       _NL_NUM_LC_MESSAGES
+LC_MONETARY,       _NL_NUM_LC_MONETARY
+LC_NUMERIC,        _NL_NUM_LC_NUMERIC
+LC_TIME,           _NL_NUM_LC_TIME
+UNDEFINED,         TOK_UNDEFINED
+abday,             ABDAY_1
+abmon,             ABMON_1
+alpha,             TOK_ALPHA
+alt_digits,        ALT_DIGITS
+am_pm,             AM_STR
+backward,          TOK_BACKWARD
+blank,             TOK_BLANK
+cntrl,             TOK_CNTRL
+collating_element, TOK_COLLATING_ELEMENT
+collating_symbol,  TOK_COLLATING_SYMBOL
+comment_char,      TOK_COMMENT_CHAR
+copy,              TOK_COPY
+currency_symbol,   CURRENCY_SYMBOL
+d_fmt,             D_FMT
+d_t_fmt,           D_T_FMT
+day,               DAY_1
+decimal_point,     DECIMAL_POINT
+digit,             TOK_DIGIT
+era,               ERA
+era_d_fmt,         ERA_D_FMT
+era_year,          ERA_YEAR
+escape_char,       TOK_ESCAPE_CHAR
+forward,           TOK_FORWARD
+frac_digits,       FRAC_DIGITS
+from,              TOK_FROM
+graph,             TOK_GRAPH
+grouping,          GROUPING
+int_curr_symbol,   INT_CURR_SYMBOL
+int_frac_digits,   INT_FRAC_DIGITS
+lower,             TOK_LOWER
+mon,               MON_1
+mon_decimal_point, MON_DECIMAL_POINT
+mon_grouping,      MON_GROUPING
+mon_thousands_sep, MON_THOUSANDS_SEP
+n_cs_precedes,     N_CS_PRECEDES
+n_sep_by_space,    N_SEP_BY_SPACE
+n_sign_posn,       N_SIGN_POSN
+negative_sign,     NEGATIVE_SIGN
+noexpr,            NOEXPR
+nostr,             NOSTR
+order_end,         TOK_ORDER_END
+order_start,       TOK_ORDER_START
+p_cs_precedes,     P_CS_PRECEDES
+p_sep_by_space,    P_SEP_BY_SPACE
+p_sign_posn,       P_SIGN_POSN
+position,          TOK_POSITION
+positive_sign,     POSITIVE_SIGN
+print,             TOK_PRINT
+punct,             TOK_PUNCT
+space,             TOK_SPACE
+t_fmt,             T_FMT
+t_fmt_ampm,        T_FMT_AMPM
+thousands_sep,     THOUSANDS_SEP
+tolower,           TOK_TOLOWER
+toupper,           TOK_TOUPPER
+upper,             TOK_UPPER
+xdigit,            TOK_XDIGIT
+yesexpr,           YESEXPR
+yesstr,            YESSTR
