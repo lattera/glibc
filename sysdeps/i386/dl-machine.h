@@ -389,6 +389,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
    MAP is the object containing the reloc.  */
 
 static inline void
+__attribute ((always_inline))
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 void *const reloc_addr_arg)
@@ -639,6 +640,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #endif	/* !RTLD_BOOTSTRAP */
 
 static inline void
+__attribute ((always_inline))
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  void *const reloc_addr_arg)
 {

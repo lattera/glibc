@@ -2229,6 +2229,7 @@ process_envvars (enum mode *modep)
 
 /* Print the various times we collected.  */
 static void
+__attribute ((noinline))
 print_statistics (hp_timing_t *rtld_total_timep)
 {
 #ifndef HP_TIMING_NONAVAIL

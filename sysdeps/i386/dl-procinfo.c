@@ -1,5 +1,5 @@
 /* Data for i386 version of processor capability information.
-   Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -24,7 +24,7 @@
    If anything should be added here check whether the size of each string
    is still ok with the given array size.
 
-   All the #ifdefs in the definitions ar equite irritating but
+   All the #ifdefs in the definitions are quite irritating but
    necessary if we want to avoid duplicating the information.  There
    are three different modes:
 
@@ -41,7 +41,7 @@
   */
 
 #ifndef PROCINFO_CLASS
-#define PROCINFO_CLASS
+# define PROCINFO_CLASS
 #endif
 
 #if !defined PROCINFO_DECL && defined SHARED

@@ -1,3 +1,31 @@
+2004-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldconfig.c: Define PROCINFO_CLASS as static before including
+	ldsodefs.h.
+	* sysdeps/generic/ldsodefs.h: Only define PROCINFO_CLASS if it is not
+	already defined.
+	* sysdeps/i386/dl-procinfo.c: Define PROCINFO_CALLS only if not
+	already defined.
+
+	* elf/rtld.c (print_statistics): Mark with noinline attribute.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Mark with always_inline
+	attribute.
+	(elf_machine_rel_relative): Likewise.
+
+	* include/string.h: Add libc_hidden_proto for __strtok_r and
+	__strsep_g.
+	* sysdeps/generic/strsep.c: Add libc_hidden_def.
+	* sysdeps/generic/strtok_r.c: Likewise.
+	* sysdeps/i386/strtok_r.S: Add alias for internal symbol.
+	* sysdeps/i386/i686/strtok_r.S: Likewise.
+	* sysdeps/x86_64/strtok_r.S: Likewise.
+
+2004-07-09  Alexandre Oliva  <aoliva@redhat.com>
+
+	* inet/getnetgrent_r.c (internal_setnetgrent): Make it hidden
+	instead of internal-linkage, such that we can alias to it.
+	(internal_endnetgrent, internal_getnetgrent_r): Likewise.
+
 2004-07-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fcntl.c (__fcntl_nocancel): Move attribute

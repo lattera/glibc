@@ -424,7 +424,9 @@ struct rtld_global_ro
 
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
-#define PROCINFO_CLASS EXTERN
+#ifndef PROCINFO_CLASS
+# define PROCINFO_CLASS EXTERN
+#endif
 #include <dl-procinfo.c>
 
   /* Names of shared object for which the RPATH should be ignored.  */

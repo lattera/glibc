@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,7 +133,10 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
   return status == NSS_STATUS_SUCCESS;
 }
 
-static int
+int internal_setnetgrent (const char *group, struct __netgrent *datap);
+libc_hidden_proto (internal_setnetgrent)
+
+int
 internal_setnetgrent (const char *group, struct __netgrent *datap)
 {
   /* Free list of all netgroup names from last run.  */
@@ -141,6 +144,7 @@ internal_setnetgrent (const char *group, struct __netgrent *datap)
 
   return __internal_setnetgrent_reuse (group, datap, &errno);
 }
+libc_hidden_def (internal_setnetgrent)
 strong_alias (internal_setnetgrent, __internal_setnetgrent)
 
 int
@@ -158,7 +162,10 @@ setnetgrent (const char *group)
 }
 
 
-static void
+void internal_endnetgrent (struct __netgrent *datap);
+libc_hidden_proto (internal_endnetgrent)
+
+void
 internal_endnetgrent (struct __netgrent *datap)
 {
   service_user *old_nip;
@@ -186,6 +193,7 @@ internal_endnetgrent (struct __netgrent *datap)
   /* Now free list of all netgroup names from last run.  */
   free_memory (datap);
 }
+libc_hidden_def (internal_endnetgrent)
 strong_alias (internal_endnetgrent, __internal_endnetgrent)
 
 
@@ -200,7 +208,12 @@ endnetgrent (void)
 }
 
 
-static int
+int internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
+			    struct __netgrent *datap,
+			    char *buffer, size_t buflen, int *errnop);
+libc_hidden_proto (internal_getnetgrent_r)
+
+int
 internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
 			  char *buffer, size_t buflen, int *errnop)
@@ -286,6 +299,7 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 
   return status == NSS_STATUS_SUCCESS ? 1 : 0;
 }
+libc_hidden_def (internal_getnetgrent_r)
 strong_alias (internal_getnetgrent_r, __internal_getnetgrent_r)
 
 /* The real entry point.  */
