@@ -188,13 +188,15 @@ enum
 									      \
     /* Use the UCS4 table for single byte.  */				      \
     cp = __ucs4_to_ibm937sb[ch];					      \
-    if (__builtin_expect (ch >= sizeof (__ucs4_to_ibm937sb)		      \
-			  / sizeof (__ucs4_to_ibm937sb[0]), 0)		      \
+    if (__builtin_expect (ch >= (sizeof (__ucs4_to_ibm937sb)		      \
+				 / sizeof (__ucs4_to_ibm937sb[0])), 0)	      \
 	|| (__builtin_expect (cp[0], '\1') == '\0' && ch != 0))		      \
       {									      \
 	/* Use the UCS4 table for double byte.  */			      \
 	cp = __ucs4_to_ibm937db[ch];					      \
-	if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
+	if (__builtin_expect (ch >= (sizeof (__ucs4_to_ibm937db)	      \
+				     / sizeof (__ucs4_to_ibm937db[0])), 0)    \
+	    || __builtin_expect (cp[0], '\1') == '\0')			      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -209,12 +211,12 @@ enum
 	    if (curcs == sb)						      \
 	      {								      \
 		*outptr++ = SO;						      \
-		if (__builtin_expect (outptr == outend, 0))		      \
-		  {							      \
-		    result = __GCONV_FULL_OUTPUT;			      \
-		    break;						      \
-		  }							      \
 		curcs = db;						      \
+	      }								      \
+	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+	      {								      \
+		result = __GCONV_FULL_OUTPUT;				      \
+		break;							      \
 	      }								      \
 	    *outptr++ = cp[0];						      \
 	    *outptr++ = cp[1];						      \
@@ -225,13 +227,13 @@ enum
 	if (curcs == db)						      \
 	  {								      \
 	    *outptr++ = SI;						      \
+	    curcs = sb;							      \
 	    if (__builtin_expect (outptr == outend, 0))			      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
-	curcs = sb;							      \
 	*outptr++ = cp[0];						      \
       }									      \
 									      \
