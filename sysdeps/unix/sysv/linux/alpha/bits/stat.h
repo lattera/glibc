@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,10 +101,11 @@ struct stat64
 #define	__S_IFLNK	0120000	/* Symbolic link.  */
 #define	__S_IFSOCK	0140000	/* Socket.  */
 
-/* POSIX.1b objects.  */
-#define __S_TYPEISMQ(buf) (0)
-#define __S_TYPEISSEM(buf) (0)
-#define __S_TYPEISSHM(buf) (0)
+/* POSIX.1b objects.  Note that these macros always evaluate to zero.  But
+   they do it by enforcing the correct use of the macros.  */
+#define __S_TYPEISMQ(buf)  ((buf)->st_mode - (buf)->st_mode)
+#define __S_TYPEISSEM(buf) ((buf)->st_mode - (buf)->st_mode)
+#define __S_TYPEISSHM(buf) ((buf)->st_mode - (buf)->st_mode)
 
 /* Protection bits.  */
 
