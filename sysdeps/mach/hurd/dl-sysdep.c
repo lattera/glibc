@@ -44,6 +44,36 @@ extern char **_environ;
 
 struct hurd_startup_data *_dl_hurd_data;
 
+unsigned int __hurd_threadvar_max = _HURD_THREADVAR_MAX;
+static unsigned long int threadvars[_HURD_THREADVAR_MAX];
+unsigned long int __hurd_threadvar_stack_offset
+  = (unsigned long int) &threadvars;
+
+
+/* XXX loser kludge for vm_map kernel bug */
+static vm_address_t fmha;
+static vm_size_t fmhs;
+static void unfmh(){
+__vm_deallocate(__mach_task_self(),fmha,fmhs);}
+static void fmh() {
+    error_t err;int x;mach_port_t p;
+    vm_address_t a=0x08000000U,max=VM_MAX_ADDRESS;
+    while (!(err=__vm_region(__mach_task_self(),&a,&fmhs,&x,&x,&x,&x,&p,&x))){
+      __mach_port_deallocate(__mach_task_self(),p);
+      if (a+fmhs>=0x80000000U){
+	max=a;break;}
+      fmha=a+=fmhs;}
+    if (err) assert(err==KERN_NO_SPACE);
+    fmhs=max-fmha;
+    err = __vm_map (__mach_task_self (),
+		    &fmha, fmhs, 0, 0, MACH_PORT_NULL, 0, 1,
+		    VM_PROT_NONE, VM_PROT_NONE, VM_INHERIT_COPY);
+    assert_perror(err);
+  }
+/* XXX loser kludge for vm_map kernel bug */
+
+
+
 Elf32_Addr
 _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const Elf32_Phdr *phdr, Elf32_Word phent,
@@ -62,6 +92,7 @@ _dl_sysdep_start (void **start_argptr,
 
       _dl_secure = _dl_hurd_data->flags & EXEC_SECURE;
 
+unfmh();			/* XXX */
       /* Call elf/rtld.c's main program.  It will set everything
 	 up and leave us to transfer control to USER_ENTRY.  */
       (*dl_main) ((const Elf32_Phdr *) _dl_hurd_data->phdr,
@@ -85,28 +116,14 @@ _dl_sysdep_start (void **start_argptr,
   /* Set up so we can do RPCs.  */
   __mach_init ();
 
+fmh();				/* XXX */
+
   /* See hurd/hurdstartup.c; this deals with getting information
      from the exec server and slicing up the arguments.
      Then it will call `go', above.  */
   _hurd_startup (start_argptr, &go);
 
   LOSE;
-}
-
-/* This is called when all other dynamic linking is finished, before the
-   dynamic linker re-relocates itself when ld.so itself appears in a
-   DT_NEEDED entry.  It is called whether of not ld.so is being linked in.
-
-   We take this opportunity to deallocate the reply port and task-self send
-   right user reference we have acquired, since they will not be used again
-   before the library and user code runs.  The C library will acquire its
-   own ports in its initialization.  */
-
-void
-_dl_sysdep_prepare_for_ld_reloc (void)
-{
-  __mig_dealloc_reply_port (__mig_get_reply_port ());
-  __mach_port_deallocate (__mach_task_self (), __mach_task_self ());
 }
 
 int
@@ -415,7 +432,7 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   mapaddr = (vm_address_t) addr;
   errno = __vm_map (__mach_task_self (),
-		    &mapaddr, (vm_size_t) len, (vm_address_t) 0,
+		    &mapaddr, (vm_size_t) len, 0 /*ELF_MACHINE_USER_ADDRESS_MASK*/,
 		    !(flags & MAP_FIXED),
 		    (mach_port_t) fd, (vm_offset_t) offset,
 		    flags & (MAP_COPY|MAP_PRIVATE),

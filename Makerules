@@ -492,12 +492,15 @@ $(INSTALL_PROGRAM) $< $@.new
 mv -f $@.new $@
 endef
 
-install-lib.so := libc.so $(filter %.so,$(install-lib:%_pic.a=%.so))
+install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
 install-lib := $(filter-out %.so,$(install-lib))
 ifeq (yes,$(build-shared))
-install: $(foreach so,$(install-lib.so),\
+install: $(libdir)/libc.so$(libc.so-version)
+install-no-libc.a: $(foreach so,$(install-lib.so),\
   $(libdir)/$(patsubst $(libprefix)lib%,lib$(libprefix)%,\
 		       $(libprefix)$(so))$($(so)-version))
+
+install-lib.so += libc.so
 $(foreach v,$(sort $(foreach so,$(install-lib.so),.so$($(so)-version))),\
 	  $(libdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
 	$(do-install-program)

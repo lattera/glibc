@@ -158,33 +158,29 @@ _hurd_startup (void **argptr, void (*main) (int *data))
   {
     struct hurd_startup_data *d = (void *) &envp[envc + 1];
 
-    /* XXX hardcoded until exec_startup changes */
-#ifdef PIC
-#if 0
-    const Elf32_Ehdr *ehdr = (const void *) 0x08000000;
-    vm_address_t phdr = 0x08000000 + ehdr->e_phoff;
-    vm_size_t phdrsz = ehdr->e_phnum * ehdr->e_phentsize;
-    vm_address_t user_entry = ehdr->e_entry;
-#else
-    vm_address_t phdr = 0;
-    vm_size_t phdrsz = 0;
-extern void _start();
-    vm_address_t user_entry = (vm_address_t) &_start;
-#endif
-#else
-    vm_address_t phdr = 0;
-    vm_size_t phdrsz = 0;
-    vm_address_t user_entry = 0;
-#endif
-
     if ((void *) d != argv[0])
       {
 	*d = data;
 	_hurd_init_dtable = d->dtable;
 	_hurd_init_dtablesize = d->dtablesize;
-	d->phdr = phdr;
-	d->phdrsz = phdrsz;
-	d->user_entry = user_entry;
+
+    /* XXX hardcoded kludge until exec_startup changes */
+	{
+	  extern void _start();
+	  vm_address_t page = 0;
+	  vm_size_t size = 0;
+	  if (__vm_read (__mach_task_self (),
+			 0x08000000, __vm_page_size, &page, &size) == 0)
+	    {
+	      const Elf32_Ehdr *ehdr = (const void *) 0x08000000;
+	      d->phdr = 0x08000000 + ehdr->e_phoff;
+	      d->phdrsz = ehdr->e_phnum * ehdr->e_phentsize;
+	      d->user_entry = ehdr->e_entry;
+	      __vm_deallocate (__mach_task_self (), page, size);
+	    }
+	  else
+	    d->user_entry = (Elf32_Addr) &_start;
+	}
       }
 
     (*main) (argcptr);

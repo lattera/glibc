@@ -54,7 +54,7 @@ open_path (const char *name, size_t namelen,
 	   const char *dirpath,
 	   char **realname)
 {
-  char buf[strlen (dirpath) + 1 + namelen];
+  char *buf;
   const char *p;
   int fd;
 
@@ -65,6 +65,7 @@ open_path (const char *name, size_t namelen,
       return -1;
     }
 
+  buf = alloca (strlen (dirpath) + 1 + namelen);
   do
     {
       dirpath = p;
@@ -166,7 +167,8 @@ _dl_map_object (struct link_map *loader, const char *name,
       fd = -1;
       if (loader && loader->l_info[DT_RPATH])
 	trypath ((const char *) (loader->l_addr +
-				 loader->l_info[DT_RPATH]->d_un.d_ptr));
+				 loader->l_info[DT_STRTAB]->d_un.d_ptr +
+				 loader->l_info[DT_RPATH]->d_un.d_val));
       if (fd == -1 && ! _dl_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
       if (fd == -1)

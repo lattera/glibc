@@ -1,3 +1,46 @@
+Thu Jun  8 02:50:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/rtld.c [! NDEBUG] (__assert_perror_fail): New function.
+
+	* hurd/hurdstartup.c (_hurd_startup): Fancier kludge to guess phdr
+ 	and user entry point addresses.
+
+	* elf/dl-load.c (open_path): Don't do strlen on DIRPATH if it's null.
+	(_dl_map_object): DT_RPATH value is relative to DT_STRTAB value.
+
+	* Makerules (install-lib.so): Don't include libc.so.
+	[$(build-shared)=yes] (install): Depend on the installed libc.so file.
+	[$(build-shared)=yes] (install-no-libc.a): Make this, rather than
+	install, depend on the installed $(install-lib.so) files.
+	[$(build-shared)=yes] (install-lib.so): Append libc.so after that rule.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Add kludge to
+ 	allocate high addresses to avoid random mappings appearing there.
+	(mmap): Comment out mask; always pass zero.
+
+Tue Jun  6 13:34:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_USER_ADDRESS_MASK): New macro.
+	* sysdeps/mach/hurd/dl-sysdep.c (mmap): Use it as mask in vm_map call.
+
+	* elf/dl-error.c (_dl_catch_error): Clear *ERRSTRING and *OBJNAME
+ 	when successful.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (threadvars): New static variable.
+	(__hurd_threadvar_max, __hurd_threadvar_stack_offset): Define these
+	variables, using the `threadvars' buffer.
+
+	* elf/dl-reloc.c: Don't dereference L->l_prev when it's null.
+	* sysdeps/i386/dl-runtime.c: Likewise.
+
+	* elf/rtld.c (dl_main): Add missing NULL terminating argument in
+ 	_dl_sysdep_fatal call.
+	(__assert_fail): Likewise.
+
+	* locale/Makefile (localedef-modules): Renamed ctype to
+ 	locale-ctype so as not to conflict with the object file for
+ 	ctype/ctype.c in the build directory.
+
 Mon Jun  5 04:02:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/elf.h (ELFMAG): Use \177 instead of \x7f.  It seems GCC
@@ -15,6 +58,8 @@ Thu Jun  1 12:17:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* elf/rtld.c: Initialize RTLD_MAP.l_type.
 	* elf/dl-reloc.c (_dl_relocate_object): Clear LAZY if relocating
  	the dynamic linker itself.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): If MAP->l_type is
+ 	lt_interpreter, first undo relocation done during bootstrapping.
 
 Tue May 30 15:52:32 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 

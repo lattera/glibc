@@ -34,7 +34,7 @@ install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)
 
-localedef-modules	:= charmap locfile-lex locfile-parse ctype \
+localedef-modules	:= charmap locfile-lex locfile-parse locale-ctype \
 			   monetary messages collate numeric
 locale-modules		:= ctypedump
 lib-modules		:= error hash xmalloc

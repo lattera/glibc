@@ -54,8 +54,9 @@ _dl_runtime_resolve (Elf32_Word reloc_offset)
   real_next = l->l_next;
   if (l->l_info[DT_SYMBOLIC])
     {
-      l->l_prev->l_next = real_next;
       l->l_next = _dl_loaded;
+      if (l->l_prev)
+	l->l_prev->l_next = real_next;
       scope = l;
     }
   else
@@ -67,7 +68,8 @@ _dl_runtime_resolve (Elf32_Word reloc_offset)
   
   /* Restore list frobnication done above for DT_SYMBOLIC.  */
   l->l_next = real_next;
-  l->l_prev->l_next = l;
+  if (l->l_prev)
+    l->l_prev->l_next = l;
 
   /* Apply the relocation with that value.  */
   elf_machine_rel (l, reloc, loadbase, definer);

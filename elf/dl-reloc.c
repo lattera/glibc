@@ -69,7 +69,8 @@ _dl_relocate_object (struct link_map *l, int lazy)
     real_next = l->l_next;
     if (l->l_info[DT_SYMBOLIC])
       {
-	l->l_prev->l_next = real_next;
+	if (l->l_prev)
+	  l->l_prev->l_next = real_next;
 	l->l_next = _dl_loaded;
 	scope = l;
       }
@@ -88,7 +89,8 @@ _dl_relocate_object (struct link_map *l, int lazy)
 
     /* Restore list frobnication done above for DT_SYMBOLIC.  */
     l->l_next = real_next;
-    l->l_prev->l_next = l;
+    if (l->l_prev)
+      l->l_prev->l_next = l;
   }
 
   if (l->l_info[DT_JMPREL] && lazy)

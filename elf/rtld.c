@@ -144,8 +144,8 @@ command line to load and run an ELF executable file; this is like executing\n\
 that file itself, but always uses this helper program from the file you\n\
 specified, instead of the helper program file specified in the executable\n\
 file you run.  This is mostly of use for maintainers to test new versions\n\
-of this helper program; chances are you did not intend to run this program.\n"
-			      );
+of this helper program; chances are you did not intend to run this program.\n",
+			      NULL);
 
 	  rtld_command = 1;
 	  interpreter_name = _dl_argv[0];
@@ -289,9 +289,25 @@ __assert_fail (const char *assertion,
   _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
 		    file, ": ", _itoa (line, buf + sizeof buf - 1, 10, 0),
 		    ": ", function ?: "", function ? ": " : "",
-		    "Assertion `", assertion, "' failed!\n");
+		    "Assertion `", assertion, "' failed!\n",
+		    NULL);
 
 }
 weak_symbol (__assert_fail)
+
+void
+__assert_perror_fail (int errnum,
+		      const char *file, unsigned int line,
+		      const char *function)
+{
+  char buf[64];
+  buf[sizeof buf - 1] = '\0';
+  _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
+		    file, ": ", _itoa (line, buf + sizeof buf - 1, 10, 0),
+		    ": ", function ?: "", function ? ": " : "",
+		    "Unexpected error: ", strerror (errnum), "\n", NULL);
+
+}
+weak_symbol (__assert_perror_fail)
 
 #endif

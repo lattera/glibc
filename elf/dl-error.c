@@ -46,6 +46,7 @@ _dl_catch_error (const char **errstring,
   if (errcode == 0)
     {
       (*operate) ();
+      *errstring = *objname = NULL;
       return 0;
     }
 

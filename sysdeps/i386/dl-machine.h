@@ -88,10 +88,22 @@ elf_machine_rel (struct link_map *map,
       *reloc_addr = sym_value;
       break;
     case R_386_32:
+      if (map->l_type == lt_interpreter)
+	{
+	  /* Undo the relocation done here during bootstrapping.  Now we will
+	     relocate it anew, possibly using a binding found in the user
+	     program or a loaded library rather than the dynamic linker's
+	     built-in definitions used while loading those libraries.  */
+	  const Elf32_Sym *const dlsymtab
+	    = (void *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+	  *reloc_addr -= (map->l_addr +
+			  dlsymtab[ELF32_R_SYM (reloc->r_info)].st_value);
+	}
       *reloc_addr += sym_value;
       break;
     case R_386_RELATIVE:
-      *reloc_addr += map->l_addr;
+      if (map->l_type != lt_interpreter) /* Already done in dynamic linker.  */
+	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
       *reloc_addr = sym_value - (Elf32_Addr) reloc_addr;
@@ -140,6 +152,12 @@ elf_machine_runtime_setup (struct link_map *l)
      the offset on the stack, and then jump to the resolved address.  */
   got[2] = (Elf32_Addr) &_dl_runtime_resolve;
 }
+
+
+/* Mask identifying addresses reserved for the user program,
+   where the dynamic linker should not map anything.  */
+#define ELF_MACHINE_USER_ADDRESS_MASK	0xf8000000UL
+
 
 
 /* Initial entry point code for the dynamic linker.
