@@ -1,5 +1,9 @@
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.2.6): Add __errno_location.
+
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.S [USE_TLS && HAVE___THREAD]:
 	Define errno in .tbss.
 	* sysdeps/unix/x86_64/sysdep.S [USE_TLS && HAVE___THREAD]: Use TLS

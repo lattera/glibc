@@ -21,6 +21,10 @@ ld {
     _exit; _hurd_intr_rpc_mach_msg;
     abort;
   }
+  GLIBC_2.2.6 {
+    # this also must be shared with libc.
+    __errno_location;
+  }
   GLIBC_PRIVATE {
     _dl_init_first;
 
