@@ -135,6 +135,7 @@ CHARMAP
 <!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
 <'?>                   /x7E   <U007E> TILDE
 <DT>                   /x7F   <U007F> DELETE (DEL)
+<Eu>                   /x80   <U20AC> EURO SIGN
 <.9>                   /x82   <U201A> SINGLE LOW-9 QUOTATION MARK
 <f2>                   /x83   <U0192> LATIN SMALL LETTER F WITH HOOK
 <:9>                   /x84   <U201E> DOUBLE LOW-9 QUOTATION MARK
@@ -233,12 +234,12 @@ CHARMAP
 <c,>                   /xE7   <U00E7> LATIN SMALL LETTER C WITH CEDILLA
 <e!>                   /xE8   <U00E8> LATIN SMALL LETTER E WITH GRAVE
 <e'>                   /xE9   <U00E9> LATIN SMALL LETTER E WITH ACUTE
-<e;>                   /xEA   <U0119> LATIN SMALL LETTER E WITH OGONEK
+<e/>>                  /xEA   <U00EA> LATIN SMALL LETTER E WITH CIRCUMFLEX
 <e:>                   /xEB   <U00EB> LATIN SMALL LETTER E WITH DIAERESIS
-<e.>                   /xEC   <U0117> LATIN SMALL LETTER E WITH DOT ABOVE
+<e!>                   /xEC   <U00EC> LATIN SMALL LETTER E WITH GRAVE
 <i'>                   /xED   <U00ED> LATIN SMALL LETTER I WITH ACUTE
 <i/>>                  /xEE   <U00EE> LATIN SMALL LETTER I WITH CIRCUMFLEX
-<i->                   /xEF   <U012B> LATIN SMALL LETTER I WITH MACRON
+<i:>                   /xEF   <U00EF> LATIN SMALL LETTER I WITH DIAERESIS
 <g(>                   /xF0   <U011F> LATIN SMALL LETTER G WITH BREVE
 <n?>                   /xF1   <U00F1> LATIN SMALL LETTER N WITH TILDE
 <o!>                   /xF2   <U00F2> LATIN SMALL LETTER O WITH GRAVE

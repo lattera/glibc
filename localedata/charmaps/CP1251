@@ -143,6 +143,7 @@ CHARMAP
 <.3>                   /x85   <U2026> HORIZONTAL ELLIPSIS
 <//->                  /x86   <U2020> DAGGER
 <//=>                  /x87   <U2021> DOUBLE DAGGER
+<Eu>                   /x88   <U20AC> EURO SIGN
 <%0>                   /x89   <U2030> PER MILLE SIGN
 <LJ>                   /x8A   <U0409> CYRILLIC CAPITAL LETTER LJE
 <<1>                   /x8B   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK

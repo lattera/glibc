@@ -135,12 +135,14 @@ CHARMAP
 <!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
 <'?>                   /x7E   <U007E> TILDE
 <DT>                   /x7F   <U007F> DELETE (DEL)
+<Eu>                   /x80   <U20AC> EURO SIGN
 <.9>                   /x82   <U201A> SINGLE LOW-9 QUOTATION MARK
 <f2>                   /x83   <U0192> LATIN SMALL LETTER F WITH HOOK
 <:9>                   /x84   <U201E> DOUBLE LOW-9 QUOTATION MARK
 <.3>                   /x85   <U2026> HORIZONTAL ELLIPSIS
 <//->                  /x86   <U2020> DAGGER
 <//=>                  /x87   <U2021> DOUBLE DAGGER
+<1/>>                  /x88   <U02C6> MODIFIER LETTER CIRCUMFLEX ACCENT
 <%0>                   /x89   <U2030> PER MILLE SIGN
 <<1>                   /x8B   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK
 <'6>                   /x91   <U2018> LEFT SINGLE QUOTATION MARK
@@ -150,12 +152,14 @@ CHARMAP
 <sb>                   /x95   <U2022> BULLET
 <-N>                   /x96   <U2013> EN DASH
 <-M>                   /x97   <U2014> EM DASH
+<1?>                   /x98   <U02DC> SMALL TILDE
 <TM>                   /x99   <U2122> TRADE MARK SIGN
 </>1>                  /x9B   <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
 <NS>                   /xA0   <U00A0> NO-BREAK SPACE
+<!I>                   /xA1   <U00A1> INVERTED EXCLAMATION MARK
 <Ct>                   /xA2   <U00A2> CENT SIGN
 <Pd>                   /xA3   <U00A3> POUND SIGN
-<Cu>                   /xA4   <U00A4> CURRENCY SIGN
+<NSh>                  /xA4   <U20AA> NEW SHEQEL SIGN
 <Ye>                   /xA5   <U00A5> YEN SIGN
 <BB>                   /xA6   <U00A6> BROKEN BAR
 <SE>                   /xA7   <U00A7> SECTION SIGN
@@ -166,7 +170,7 @@ CHARMAP
 <NO>                   /xAC   <U00AC> NOT SIGN
 <-->                   /xAD   <U00AD> SOFT HYPHEN
 <Rg>                   /xAE   <U00AE> REGISTERED SIGN
-<'->                   /xAF   <U203E> OVERLINE
+<'m>                   /xAF   <U00AF> MACRON
 <DG>                   /xB0   <U00B0> DEGREE SIGN
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
 <2S>                   /xB2   <U00B2> SUPERSCRIPT TWO
@@ -182,7 +186,31 @@ CHARMAP
 <14>                   /xBC   <U00BC> VULGAR FRACTION ONE QUARTER
 <12>                   /xBD   <U00BD> VULGAR FRACTION ONE HALF
 <34>                   /xBE   <U00BE> VULGAR FRACTION THREE QUARTERS
-<=2>                   /xDF   <U2017> DOUBLE LOW LINE
+<?I>                   /xBF   <U00BF> INVERTED QUESTION MARK
+<.H:>                  /xC0   <U05B0> HEBREW POINT SHEVA
+<.H:.:>                /xC1   <U05B1> HEBREW POINT HATAF SEGOL
+<.H-:>                 /xC2   <U05B2> HEBREW POINT HATAF PATAH
+<.HT:>                 /xC3   <U05B3> HEBREW POINT HATAF QAMATS
+<.H.>                  /xC4   <U05B4> HEBREW POINT HIRIQ
+<.H..>                 /xC5   <U05B5> HEBREW POINT TSERE
+<.H:.>                 /xC6   <U05B6> HEBREW POINT SEGOL
+<.H->                  /xC7   <U05B7> HEBREW POINT PATAH
+<.HT>                  /xC8   <U05B8> HEBREW POINT QAMATS
+<'H.HL>                /xC9   <U05B9> HEBREW POINT HOLAM
+<.H...>                /xCB   <U05BB> HEBREW POINT QUBUTS
+<.MH>                  /xCC   <U05BC> HEBREW POINT DAGESH OR MAPIQ
+<.H!>                  /xCD   <U05BD> HEBREW POINT METEG
+<H.->                  /xCE   <U05BE> HEBREW PUNCTUATION MAQAF
+<'H->                  /xCF   <U05BF> HEBREW POINT RAFE
+<H.!>                  /xD0   <U05C0> HEBREW PUNCTUATION PASEQ
+<'H.R>                 /xD1   <U05C1> HEBREW POINT SHIN DOT
+<'H.L>                 /xD2   <U05C2> HEBREW POINT SIN DOT
+<H.:>                  /xD3   <U05C3> HEBREW PUNCTUATION SOF PASUQ
+<W+W+>                 /xD4   <U05F0> HEBREW LIGATURE YIDDISH DOUBLE VAV
+<W+J+>                 /xD5   <U05F1> HEBREW LIGATURE YIDDISH VAV YOD
+<J+J+>                 /xD6   <U05F2> HEBREW LIGATURE YIDDISH DOUBLE YOD
+<H.'>                  /xD7   <U05F3> HEBREW PUNCTUATION GERESH
+<H.">                  /xD8   <U05F4> HEBREW PUNCTUATION GERSHAYIM
 <A+>                   /xE0   <U05D0> HEBREW LETTER ALEF
 <B+>                   /xE1   <U05D1> HEBREW LETTER BET
 <G+>                   /xE2   <U05D2> HEBREW LETTER GIMEL

@@ -3,7 +3,7 @@
 <escape_char> /
 % version: 1.0
 % repertoiremap: mnemonic,ds
-%  source: CEN/TC304 N283 
+%  source: CEN/TC304 N283
 
 % alias WINBALTRIM
 CHARMAP
@@ -135,6 +135,7 @@ CHARMAP
 <!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
 <'?>                   /x7E   <U007E> TILDE
 <DT>                   /x7F   <U007F> DELETE (DEL)
+<Eu>                   /x80   <U20AC> EURO SIGN
 <.9>                   /x82   <U201A> SINGLE LOW-9 QUOTATION MARK
 <:9>                   /x84   <U201E> DOUBLE LOW-9 QUOTATION MARK
 <.3>                   /x85   <U2026> HORIZONTAL ELLIPSIS
@@ -142,6 +143,9 @@ CHARMAP
 <//=>                  /x87   <U2021> DOUBLE DAGGER
 <%0>                   /x89   <U2030> PER MILLE SIGN
 <<1>                   /x8B   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+<':>                   /x8D   <U00A8> DIAERESIS
+<'<>                   /x8E   <U02C7> CARON (Mandarin Chinese third tone)
+<',>                   /x8F   <U00B8> CEDILLA
 <'6>                   /x91   <U2018> LEFT SINGLE QUOTATION MARK
 <'9>                   /x92   <U2019> RIGHT SINGLE QUOTATION MARK
 <"6>                   /x93   <U201C> LEFT DOUBLE QUOTATION MARK
@@ -151,6 +155,8 @@ CHARMAP
 <-M>                   /x97   <U2014> EM DASH
 <TM>                   /x99   <U2122> TRADE MARK SIGN
 </>1>                  /x9B   <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+<'m>                   /x9D   <U00af> MACRON
+<';>                   /x9E   <U02DB> OGONEK
 <NS>                   /xA0   <U00A0> NO-BREAK SPACE
 <Ct>                   /xA2   <U00A2> CENT SIGN
 <Pd>                   /xA3   <U00A3> POUND SIGN
@@ -169,6 +175,7 @@ CHARMAP
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
 <2S>                   /xB2   <U00B2> SUPERSCRIPT TWO
 <3S>                   /xB3   <U00B3> SUPERSCRIPT THREE
+<''>                   /xB4   <U00B4> ACUTE ACCENT
 <My>                   /xB5   <U00B5> MICRO SIGN
 <PI>                   /xB6   <U00B6> PILCROW SIGN
 <.M>                   /xB7   <U00B7> MIDDLE DOT
@@ -243,6 +250,7 @@ CHARMAP
 <u:>                   /xFC   <U00FC> LATIN SMALL LETTER U WITH DIAERESIS
 <z.>                   /xFD   <U017C> LATIN SMALL LETTER Z WITH DOT ABOVE
 <z<>                   /xFE   <U017E> LATIN SMALL LETTER Z WITH CARON
+<'.>                   /xFF   <U02D9> DOT ABOVE (Mandarin Chinese light tone)
 <NUL>                  /x00   <U0000> NUL
 <SOH>                  /x01   <U0001> START OF HEADING (SOH)
 <STX>                  /x02   <U0002> START OF TEXT (STX)

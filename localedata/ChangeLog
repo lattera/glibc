@@ -1,3 +1,14 @@
+1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/CP1257: Add some marks.
+	* charmaps/CP1256: Update from Unicode page.
+	* charmaps/CP1255: Lots of punctuation character changes.
+	* charmaps/CP1254: Add Euro character.  Fix a few lowercase characters.
+	* charmaps/CP1253: Add Euro character.
+	* charmaps/CP1252: Add Euro character and z caron.
+	* charmaps/CP1251: Add Euro character.
+	* charmaps/CP1250: Add Euro character.
+
 1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/hr_HR: Various corrections.

@@ -135,23 +135,23 @@ CHARMAP
 <!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
 <'?>                   /x7E   <U007E> TILDE
 <DT>                   /x7F   <U007F> DELETE (DEL)
-<,+>                   /x80   <U060C> ARABIC COMMA
-<0a>                   /x81   <U0660> ARABIC-INDIC DIGIT ZERO
+<Eu>                   /x80   <U20AC> EURO SIGN
+<p+>                   /x81   <U067E> ARABIC LETTER PEH
 <.9>                   /x82   <U201A> SINGLE LOW-9 QUOTATION MARK
-<1a>                   /x83   <U0661> ARABIC-INDIC DIGIT ONE
+<f2>                   /x83   <U0192> LATIN SMALL LETTER F WITH HOOK
 <:9>                   /x84   <U201E> DOUBLE LOW-9 QUOTATION MARK
 <.3>                   /x85   <U2026> HORIZONTAL ELLIPSIS
 <//->                  /x86   <U2020> DAGGER
 <//=>                  /x87   <U2021> DOUBLE DAGGER
-<2a>                   /x88   <U0662> ARABIC-INDIC DIGIT TWO
-<3a>                   /x89   <U0663> ARABIC-INDIC DIGIT THREE
-<4a>                   /x8A   <U0664> ARABIC-INDIC DIGIT FOUR
+<1/>>                  /x88   <U02C6> MODIFIER LETTER CIRCUMFLEX ACCENT
+<%0>                   /x89   <U2030> PER MILLE SIGN
+<tt+>                  /x8a   <U0679> ARABIC LETTER TTEH
 <<1>                   /x8B   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK
-<5a>                   /x8C   <U0665> ARABIC-INDIC DIGIT FIVE
-<6a>                   /x8D   <U0666> ARABIC-INDIC DIGIT SIX
-<7a>                   /x8E   <U0667> ARABIC-INDIC DIGIT SEVEN
-<8a>                   /x8F   <U0668> ARABIC-INDIC DIGIT EIGHT
-<9a>                   /x90   <U0669> ARABIC-INDIC DIGIT NINE
+<OE>                   /x8C   <U0152> LATIN CAPITAL LIGATURE OE
+<tc>                   /x8D   <U0686> ARABIC LETTER TCHEH
+<zj>                   /x8E   <U0698> ARABIC LETTER JEH
+<dd+>                  /x8F   <U0688> ARABIC LETTER DDAL
+<gf>                   /x90   <U06AF> ARABIC LETTER GAF
 <'6>                   /x91   <U2018> LEFT SINGLE QUOTATION MARK
 <'9>                   /x92   <U2019> RIGHT SINGLE QUOTATION MARK
 <"6>                   /x93   <U201C> LEFT DOUBLE QUOTATION MARK
@@ -159,108 +159,110 @@ CHARMAP
 <sb>                   /x95   <U2022> BULLET
 <-N>                   /x96   <U2013> EN DASH
 <-M>                   /x97   <U2014> EM DASH
-<;+>                   /x98   <U061B> ARABIC SEMICOLON
+<kh+>                  /x98   <U06A9> ARABIC LETTER KEHEH
 <TM>                   /x99   <U2122> TRADE MARK SIGN
-<?+>                   /x9A   <U061F> ARABIC QUESTION MARK
+<rr+>                  /x9A   <U0691> ARABIC LETTER RREH
 </>1>                  /x9B   <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
-<H'>                   /x9C   <U0621> ARABIC LETTER HAMZA
-<aM>                   /x9D   <U0622> ARABIC LETTER ALEF WITH MADDA ABOVE
-<aH>                   /x9E   <U0623> ARABIC LETTER ALEF WITH HAMZA ABOVE
-<Y:>                   /x9F   <U0178> LATIN CAPITAL LETTER Y WITH DIAERESIS
+<oe>                   /x9C   <U0153> LATIN SMALL LIGATURE OE
+<0NJ>                  /x9D   <U200C> ZERO WIDTH NON-JOINER
+<0J>                   /x9E   <U200D> ZERO WIDTH JOINER
+<ng+>                  /x9F   <U06BA> ARABIC LETTER NOON
 <NS>                   /xA0   <U00A0> NO-BREAK SPACE
-<wH>                   /xA1   <U0624> ARABIC LETTER WAW WITH HAMZA ABOVE
-<ah>                   /xA2   <U0625> ARABIC LETTER ALEF WITH HAMZA BELOW
+<,A>                   /xA1   <U060C> ARABIC COMMA
+<Ct>                   /xA2   <U00A2> CENT SIGN
 <Pd>                   /xA3   <U00A3> POUND SIGN
 <Cu>                   /xA4   <U00A4> CURRENCY SIGN
-<yH>                   /xA5   <U0626> ARABIC LETTER YEH WITH HAMZA ABOVE
+<Ye>                   /xA5   <U00A5> YEN SIGN
 <BB>                   /xA6   <U00A6> BROKEN BAR
 <SE>                   /xA7   <U00A7> SECTION SIGN
-<a+>                   /xA8   <U0627> ARABIC LETTER ALEF
+<':>                   /xA8   <U00A8> DIAERESIS
 <Co>                   /xA9   <U00A9> COPYRIGHT SIGN
-<b+>                   /xAA   <U0628> ARABIC LETTER BEH
+<hd>                   /xAA   <U06BE> ARABIC LETTER HEH DOACHASHMEE
 <<<>                   /xAB   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 <NO>                   /xAC   <U00AC> NOT SIGN
 <-->                   /xAD   <U00AD> SOFT HYPHEN
 <Rg>                   /xAE   <U00AE> REGISTERED SIGN
-<p+>                   /xAF   <U067E> ARABIC LETTER PEH
+<'m>                   /xAF   <U00AF> MACRON
 <DG>                   /xB0   <U00B0> DEGREE SIGN
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
-<tm>                   /xB2   <U0629> ARABIC LETTER TEH MARBUTA
-<t+>                   /xB3   <U062A> ARABIC LETTER TEH
-<tk>                   /xB4   <U062B> ARABIC LETTER THEH
+<2S>                   /xB2   <U00B2> SUPERSCRIPT TWO
+<3S>                   /xB3   <U00B3> SUPERSCRIPT THREE
+<''>                   /xB4   <U00B4> ACUTE ACCENT
 <My>                   /xB5   <U00B5> MICRO SIGN
 <PI>                   /xB6   <U00B6> PILCROW SIGN
 <.M>                   /xB7   <U00B7> MIDDLE DOT
-<g+>                   /xB8   <U062C> ARABIC LETTER JEEM
-<tc>                   /xB9   <U0686> ARABIC LETTER TCHEH
-<hk>                   /xBA   <U062D> ARABIC LETTER HAH
+<',>                   /xB8   <U00B8> CEDILLA
+<1S>                   /xB9   <U00B9> SUPERSCRIPT ONE
+<;+>                   /xBA   <U061B> ARABIC SEMICOLON
 </>/>>                 /xBB   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
-<x+>                   /xBC   <U062E> ARABIC LETTER KHAH
-<d+>                   /xBD   <U062F> ARABIC LETTER DAL
-<dk>                   /xBE   <U0630> ARABIC LETTER THAL
-<r+>                   /xBF   <U0631> ARABIC LETTER REH
-<A!>                   /xC0   <U00C0> LATIN CAPITAL LETTER A WITH GRAVE
-<z+>                   /xC1   <U0632> ARABIC LETTER ZAIN
-<A/>>                  /xC2   <U00C2> LATIN CAPITAL LETTER A WITH CIRCUMFLEX
-<zj>                   /xC3   <U0698> ARABIC LETTER JEH
-<s+>                   /xC4   <U0633> ARABIC LETTER SEEN
-<sn>                   /xC5   <U0634> ARABIC LETTER SHEEN
-<c+>                   /xC6   <U0635> ARABIC LETTER SAD
-<C,>                   /xC7   <U00C7> LATIN CAPITAL LETTER C WITH CEDILLA
-<E!>                   /xC8   <U00C8> LATIN CAPITAL LETTER E WITH GRAVE
-<E'>                   /xC9   <U00C9> LATIN CAPITAL LETTER E WITH ACUTE
-<E/>>                  /xCA   <U00CA> LATIN CAPITAL LETTER E WITH CIRCUMFLEX
-<E:>                   /xCB   <U00CB> LATIN CAPITAL LETTER E WITH DIAERESIS
-<dd>                   /xCC   <U0636> ARABIC LETTER DAD
-<tj>                   /xCD   <U0637> ARABIC LETTER TAH
-<I/>>                  /xCE   <U00CE> LATIN CAPITAL LETTER I WITH CIRCUMFLEX
-<I:>                   /xCF   <U00CF> LATIN CAPITAL LETTER I WITH DIAERESIS
-<zh>                   /xD0   <U3113> BOPOMOFO LETTER ZH
-<e+>                   /xD1   <U0639> ARABIC LETTER AIN
-<i+>                   /xD2   <U063A> ARABIC LETTER GHAIN
-<++>                   /xD3   <U0640> ARABIC TATWEEL
-<O/>>                  /xD4   <U00D4> LATIN CAPITAL LETTER O WITH CIRCUMFLEX
-<f+>                   /xD5   <U0641> ARABIC LETTER FEH
-<q+>                   /xD6   <U0642> ARABIC LETTER QAF
+<14>                   /xBC   <U00BC> VULGAR FRACTION ONE QUARTER
+<12>                   /xBD   <U00BD> VULGAR FRACTION ONE HALF
+<34>                   /xBE   <U00BE> VULGAR FRACTION THREE QUARTERS
+<?+>                   /xBF   <U061F> ARABIC QUESTION MARK
+<hg>                   /xC0   <U06C1> ARABIC LETTER HEH GOAL
+<H'>                   /xC1   <U0621> ARABIC LETTER HAMZA
+<aM>                   /xC2   <U0622> ARABIC LETTER ALEF WITH MADDA ABOVE
+<aH>                   /xC3   <U0623> ARABIC LETTER ALEF WITH HAMZA ABOVE
+<wH>                   /xC4   <U0624> ARABIC LETTER WAW WITH HAMZA ABOVE
+<ah>                   /xC5   <U0625> ARABIC LETTER ALEF WITH HAMZA BELOW
+<yH>                   /xC6   <U0626> ARABIC LETTER YEH WITH HAMZA ABOVE
+<a+>                   /xC7   <U0627> ARABIC LETTER ALEF
+<b+>                   /xC8   <U0628> ARABIC LETTER BEH
+<tm>                   /xC9   <U0629> ARABIC LETTER TEH MARBUTA
+<t+>                   /xCA   <U062A> ARABIC LETTER TEH
+<tk>                   /xCB   <U062B> ARABIC LETTER THEH
+<g+>                   /xCC   <U062C> ARABIC LETTER JEEM
+<hk>                   /xCD   <U062D> ARABIC LETTER HAH
+<x+>                   /xCE   <U062E> ARABIC LETTER KHAH
+<d+>                   /xCF   <U062F> ARABIC LETTER DAL
+<dk>                   /xD0   <U0630> ARABIC LETTER THAL
+<r+>                   /xD1   <U0631> ARABIC LETTER REH
+<z+>                   /xD2   <U0632> ARABIC LETTER ZAIN
+<s+>                   /xD3   <U0633> ARABIC LETTER SEEN
+<sn>                   /xD4   <U0634> ARABIC LETTER SHEEN
+<c+>                   /xD5   <U0635> ARABIC LETTER SAD
+<dd>                   /xD6   <U0636> ARABIC LETTER DAD
 <*X>                   /xD7   <U00D7> MULTIPLICATION SIGN
-<k+>                   /xD8   <U0643> ARABIC LETTER KAF
-<U!>                   /xD9   <U00D9> LATIN CAPITAL LETTER U WITH GRAVE
-<gf>                   /xDA   <U06AF> ARABIC LETTER GAF
-<U/>>                  /xDB   <U00DB> LATIN CAPITAL LETTER U WITH CIRCUMFLEX
-<U:>                   /xDC   <U00DC> LATIN CAPITAL LETTER U WITH DIAERESIS
-<l+>                   /xDD   <U0644> ARABIC LETTER LAM
-<m+>                   /xDE   <U0645> ARABIC LETTER MEEM
-<n+>                   /xDF   <U0646> ARABIC LETTER NOON
+<tj>                   /xD8   <U0637> ARABIC LETTER TAH
+<zH>                   /xD9   <U0638> ARABIC LETTER ZAH
+<e+>                   /xDA   <U0639> ARABIC LETTER AIN
+<i+>                   /xDB   <U063A> ARABIC LETTER GHAIN
+<++>                   /xDC   <U0640> ARABIC TATWEEL
+<f+>                   /xDD   <U0641> ARABIC LETTER FEH
+<q+>                   /xDE   <U0642> ARABIC LETTER QAF
+<k+>                   /xDF   <U0643> ARABIC LETTER KAF
 <a!>                   /xE0   <U00E0> LATIN SMALL LETTER A WITH GRAVE
-<h+>                   /xE1   <U0647> ARABIC LETTER HEH
+<l+>                   /xE1   <U0644> ARABIC LETTER LAM
 <a/>>                  /xE2   <U00E2> LATIN SMALL LETTER A WITH CIRCUMFLEX
-<hH>                   /xE3   <U0681> ARABIC LETTER HAH WITH HAMZA ABOVE
-<w+>                   /xE4   <U0648> ARABIC LETTER WAW
-<j+>                   /xE5   <U0649> ARABIC LETTER ALEF MAKSURA
-<y+>                   /xE6   <U064A> ARABIC LETTER YEH
+<m+>                   /xE3   <U0645> ARABIC LETTER MEEM
+<n+>                   /xE4   <U0646> ARABIC LETTER NOON
+<h+>                   /xE5   <U0647> ARABIC LETTER HEH
+<w+>                   /xE6   <U0648> ARABIC LETTER WAW
 <c,>                   /xE7   <U00E7> LATIN SMALL LETTER C WITH CEDILLA
 <e!>                   /xE8   <U00E8> LATIN SMALL LETTER E WITH GRAVE
 <e'>                   /xE9   <U00E9> LATIN SMALL LETTER E WITH ACUTE
 <e/>>                  /xEA   <U00EA> LATIN SMALL LETTER E WITH CIRCUMFLEX
 <e:>                   /xEB   <U00EB> LATIN SMALL LETTER E WITH DIAERESIS
-<:+>                   /xEC   <U064B> ARABIC FATHATAN
-<"+>                   /xED   <U064C> ARABIC DAMMATAN
+<j+>                   /xEC   <U0649> ARABIC LETTER ALEF MAKSURA
+<y+>                   /xED   <U064A> ARABIC LETTER YEH
 <i/>>                  /xEE   <U00EE> LATIN SMALL LETTER I WITH CIRCUMFLEX
 <i:>                   /xEF   <U00EF> LATIN SMALL LETTER I WITH DIAERESIS
-<=+>                   /xF0   <U064D> ARABIC KASRATAN
-<//+>                  /xF1   <U064E> ARABIC FATHA
-<'+>                   /xF2   <U064F> ARABIC DAMMA
-<1+>                   /xF3   <U0650> ARABIC KASRA
+<:+>                   /xF0   <U064B> ARABIC FATHATAN
+<"+>                   /xF1   <U064C> ARABIC DAMMATAN
+<=+>                   /xF2   <U064D> ARABIC KASRATAN
+<//+>                  /xF3   <U064E> ARABIC FATHA
 <o/>>                  /xF4   <U00F4> LATIN SMALL LETTER O WITH CIRCUMFLEX
-<3+>                   /xF5   <U0651> ARABIC SHADDA
-<0+>                   /xF6   <U0652> ARABIC SUKUN
+<'+>                   /xF5   <U064F> ARABIC DAMMA
+<1+>                   /xF6   <U0650> ARABIC KASRA
 <-:>                   /xF7   <U00F7> DIVISION SIGN
+<3+>                   /xF8   <U0651> ARABIC SHADDA
 <u!>                   /xF9   <U00F9> LATIN SMALL LETTER U WITH GRAVE
+<0+>                   /xFA   <U0652> ARABIC SUKUN
 <u/>>                  /xFB   <U00FB> LATIN SMALL LETTER U WITH CIRCUMFLEX
 <u:>                   /xFC   <U00FC> LATIN SMALL LETTER U WITH DIAERESIS
 <LR>                   /xFD   <U200E> LEFT-TO-RIGHT MARK
 <RL>                   /xFE   <U200F> RIGHT-TO-LEFT MARK
-<y:>                   /xFF   <U00FF> LATIN SMALL LETTER Y WITH DIAERESIS
+<yb>                   /xff   <U06D2> ARABIC LETTER YEH BARREE
 <NUL>                  /x00   <U0000> NUL
 <SOH>                  /x01   <U0001> START OF HEADING (SOH)
 <STX>                  /x02   <U0002> START OF TEXT (STX)
