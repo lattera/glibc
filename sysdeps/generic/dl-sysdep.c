@@ -93,6 +93,9 @@ _dl_sysdep_start (void **start_argptr,
 #  define set_seen(tag) seen |= M ((tag)->a_type)
 # endif
 #endif
+#ifndef __ASSUME_VSYSCALL
+  ElfW(Word) new_sysinfo = 0;
+#endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
 			  _dl_auxv);
@@ -146,7 +149,11 @@ _dl_sysdep_start (void **start_argptr,
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
+# ifndef __ASSUME_VSYSCALL
+	new_sysinfo = av->a_un.a_val;
+# else
 	GL(dl_sysinfo) = av->a_un.a_val;
+# endif
 	break;
       case AT_SYSINFO_EHDR:
 	GL(dl_sysinfo_dso) = av->a_un.a_ptr;
@@ -167,7 +174,7 @@ _dl_sysdep_start (void **start_argptr,
       /* Fill in the values we have not gotten from the kernel through the
 	 auxiliary vector.  */
 # ifndef HAVE_AUX_XID
-# define SEE(UID, var, uid) \
+#  define SEE(UID, var, uid) \
    if ((seen & M (AT_##UID)) == 0) var ^= __get##uid ()
       SEE (UID, uid, uid);
       SEE (EUID, uid, euid);
@@ -184,6 +191,12 @@ _dl_sysdep_start (void **start_argptr,
 #ifndef HAVE_AUX_PAGESIZE
   if (GL(dl_pagesize) == 0)
     GL(dl_pagesize) = __getpagesize ();
+#endif
+
+#ifndef __ASSUME_VSYSCALL
+  /* Only set the sysinfo value if we also have the vsyscall DSO.  */
+  if (GL(dl_sysinfo_dso) != 0)
+    GL(dl_sysinfo) = new_sysinfo;
 #endif
 
 #ifdef DL_SYSDEP_INIT

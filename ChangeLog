@@ -1,5 +1,11 @@
 2003-07-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Don't set
+	GL(dl_sysinfo) unles GL(dl_sysinfo_dso) is also set.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_VSYSCALL only for 2.5.69 and up since this is when the
+	vsyscall DSO was added.
+
 	* posix/bits/posix1_lim.h (_POSIX_NGROUPS_MAX): Define to 8 or 0
 	depending on selected standard.
 	(NGROUPS_MAX): Define to 8 if not defined.
