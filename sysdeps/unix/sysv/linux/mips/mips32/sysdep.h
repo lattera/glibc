@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _LINUX_MIPS_SYSDEP_H
-#define _LINUX_MIPS_SYSDEP_H 1
+#ifndef _LINUX_MIPS_MIPS32_SYSDEP_H
+#define _LINUX_MIPS_MIPS32_SYSDEP_H 1
 
 /* There is some commonality.  */
-#include <sysdeps/unix/mips/sysdep.h>
+#include <sysdeps/unix/mips/mips32/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
@@ -279,4 +279,4 @@
 
 #endif /* __ASSEMBLER__ */
 
-#endif /* linux/mips/sysdep.h */
+#endif /* linux/mips/mips32/sysdep.h */

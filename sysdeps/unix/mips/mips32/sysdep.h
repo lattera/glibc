@@ -18,48 +18,35 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/mips/sysdep.h>
 
-#ifdef __ASSEMBLER__
-
-#include <regdef.h>
-
-#define ENTRY(name) \
-  .globl name;								      \
+/* Note that while it's better structurally, going back to call __syscall_error
+   can make things confusing if you're debugging---it looks like it's jumping
+   backwards into the previous fn.  */
+#ifdef __PIC__
+#define PSEUDO(name, syscall_name, args) \
   .align 2;								      \
-  .ent name,0;								      \
-  name##:
-
-#undef END
-#define	END(function)                                   \
-		.end	function;		        \
-		.size	function,.-function
-
-#define ret	j ra ; nop
-
-#define PSEUDO_END(sym) .end sym; .size sym,.-sym
-
-#define PSEUDO_NOERRNO(name, syscall_name, args)	\
-  .align 2;						\
-  ENTRY(name)						\
-  .set noreorder;					\
-  li v0, SYS_ify(syscall_name);				\
-  syscall
-
-#undef PSEUDO_END_NOERRNO
-#define PSEUDO_END_NOERRNO(sym) .end sym; .size sym,.-sym
-
-#define ret_NOERRNO ret
-
-#define r0	v0
-#define r1	v1
-/* The mips move insn is d,s.  */
-#define MOVE(x,y)	move y , x
-
-#if _MIPS_SIM == _MIPS_SIM_ABI32 || _MIPS_SIM == _MIPS_SIM_ABIO64
-# define L(label) $L ## label
+  99: la t9,__syscall_error;						      \
+  jr t9;								      \
+  ENTRY(name)								      \
+  .set noreorder;							      \
+  .cpload t9;								      \
+  li v0, SYS_ify(syscall_name);						      \
+  syscall;								      \
+  .set reorder;								      \
+  bne a3, zero, 99b;							      \
+L(syse1):
 #else
-# define L(label) .L ## label
-#endif
-
+#define PSEUDO(name, syscall_name, args) \
+  .set noreorder;							      \
+  .align 2;								      \
+  99: j __syscall_error;						      \
+  nop;									      \
+  ENTRY(name)								      \
+  .set noreorder;							      \
+  li v0, SYS_ify(syscall_name);						      \
+  syscall;								      \
+  .set reorder;								      \
+  bne a3, zero, 99b;							      \
+L(syse1):
 #endif

@@ -22,7 +22,6 @@
 
 #ifdef __ASSEMBLER__
 
-# undef PSEUDO
 /* Note that while it's better structurally, going back to call __syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
