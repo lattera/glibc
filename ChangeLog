@@ -1,5 +1,11 @@
 2000-03-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/skeleton.c: Define access macros with u suffix.  Adjust
+	#if expression for use of unaligned function to the one used in
+	the definition of these functions.
+	* iconv/gconv_simple.c (internal_ucs4_loop_unaligned): New function.
+	(internal_ucs4le_loop_unaligned): New function.
+
 	* elf/Makefile (distribute): Add dep1.c, dep2.c, dep3.c, and dep4.c.
 	(tests): Add order.
 	(module-names): Add dep1, dep2, dep3, and dep4.
@@ -78,7 +84,7 @@
 	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
 
 2000-03-29  Andreas Jaeger  <aj@suse.de>,
-            Ralf Baechle <ralf@uni-koblenz.de>
+	    Ralf Baechle <ralf@uni-koblenz.de>
 
 	* Makeconfig: Introduce new variable SHARED to mark code used in
 	the shared library.

@@ -122,30 +122,30 @@ static int to_object;
    loops we have other definitions which allow optimized access.  */
 #ifdef _STRING_ARCH_unaligned
 /* We can handle unaligned memory access.  */
-# define get16(addr) *((uint16_t *) (addr))
-# define get32(addr) *((uint32_t *) (addr))
+# define get16u(addr) *((uint16_t *) (addr))
+# define get32u(addr) *((uint32_t *) (addr))
 
 /* We need no special support for writing values either.  */
-# define put16(addr, val) *((uint16_t *) (addr)) = (val)
-# define put32(addr, val) *((uint32_t *) (addr)) = (val)
+# define put16u(addr, val) *((uint16_t *) (addr)) = (val)
+# define put32u(addr, val) *((uint32_t *) (addr)) = (val)
 #else
 /* Distinguish between big endian and little endian.  */
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define get16(addr) \
+#  define get16u(addr) \
      (((__const unsigned char *) (addr))[1] << 8			      \
       | ((__const unsigned char *) (addr))[0])
-#  define get32(addr) \
+#  define get32u(addr) \
      (((((__const unsigned char *) (addr))[3] << 8			      \
 	| ((__const unsigned char *) (addr))[2]) << 8			      \
        | ((__const unsigned char *) (addr))[1]) << 8			      \
       | ((__const unsigned char *) (addr))[0])
 
-#  define put16(addr, val) \
+#  define put16u(addr, val) \
      ({ uint16_t __val = (val);						      \
 	((unsigned char *) (addr))[0] = __val;				      \
 	((unsigned char *) (addr))[1] = __val >> 8;			      \
 	(void) 0; })
-#  define put32(addr, val) \
+#  define put32u(addr, val) \
      ({ uint32_t __val = (val);						      \
 	((unsigned char *) (addr))[0] = __val;				      \
 	__val >>= 8;							      \
@@ -156,21 +156,21 @@ static int to_object;
 	((unsigned char *) (addr))[3] = __val;				      \
 	(void) 0; })
 # else
-#  define get16(addr) \
+#  define get16u(addr) \
      (((__const unsigned char *) (addr))[0] << 8			      \
       | ((__const unsigned char *) (addr))[1])
-#  define get32(addr) \
+#  define get32u(addr) \
      (((((__const unsigned char *) (addr))[0] << 8			      \
 	| ((__const unsigned char *) (addr))[1]) << 8			      \
        | ((__const unsigned char *) (addr))[2]) << 8			      \
       | ((__const unsigned char *) (addr))[3])
 
-#  define put16(addr, val) \
+#  define put16u(addr, val) \
      ({ uint16_t __val = (val);						      \
 	((unsigned char *) (addr))[1] = __val;				      \
 	((unsigned char *) (addr))[2] = __val >> 8;			      \
 	(void) 0; })
-#  define put32(addr, val) \
+#  define put32u(addr, val) \
      ({ uint32_t __val = (val);						      \
 	((unsigned char *) (addr))[3] = __val;				      \
 	__val >>= 8;							      \
@@ -351,7 +351,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 				  data->__statep, step->__data, &converted
 				  EXTRA_LOOP_ARGS);
 	    }
-#ifndef _STRING_ARCH_unaligned
+#if !defined _STRING_ARCH_unaligned \
+    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
+    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
 	  else
 	    {
 	      if (FROM_DIRECTION)

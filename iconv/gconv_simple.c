@@ -99,6 +99,52 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   return result;
 }
 
+#ifndef _STRING_ARCH_unaligned
+static inline int
+internal_ucs4_loop_unaligned (const unsigned char **inptrp,
+			      const unsigned char *inend,
+			      unsigned char **outptrp, unsigned char *outend,
+			      mbstate_t *state, void *data, size_t *converted)
+{
+  const unsigned char *inptr = *inptrp;
+  unsigned char *outptr = *outptrp;
+  size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
+  int result;
+
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+  /* Sigh, we have to do some real work.  */
+  size_t cnt;
+
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
+    {
+      outptr[0] = inptr[3];
+      outptr[1] = inptr[2];
+      outptr[2] = inptr[1];
+      outptr[3] = inptr[0];
+    }
+
+  *inptrp = inptr;
+  *outptrp = outptr;
+# elif __BYTE_ORDER == __BIG_ENDIAN
+  /* Simply copy the data.  */
+  *inptrp = inptr + n_convert * 4;
+  *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
+# else
+#  error "This endianess is not supported."
+# endif
+
+  /* Determine the status.  */
+  if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
+  else if (*inptrp == inend)
+    result = __GCONV_EMPTY_INPUT;
+  else
+    result = __GCONV_INCOMPLETE_INPUT;
+
+  return result;
+}
+#endif
+
 #include <iconv/skeleton.c>
 
 
@@ -150,6 +196,53 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 
   return result;
 }
+
+#ifndef _STRING_ARCH_unaligned
+static inline int
+internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
+				const unsigned char *inend,
+				unsigned char **outptrp, unsigned char *outend,
+				mbstate_t *state, void *data,
+				size_t *converted)
+{
+  const unsigned char *inptr = *inptrp;
+  unsigned char *outptr = *outptrp;
+  size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
+  int result;
+
+# if __BYTE_ORDER == __BIG_ENDIAN
+  /* Sigh, we have to do some real work.  */
+  size_t cnt;
+
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
+    {
+      outptr[0] = inptr[3];
+      outptr[1] = inptr[2];
+      outptr[2] = inptr[1];
+      outptr[3] = inptr[0];
+    }
+
+  *inptrp = inptr;
+  *outptrp = outptr;
+# elif __BYTE_ORDER == __LITTLE_ENDIAN
+  /* Simply copy the data.  */
+  *inptrp = inptr + n_convert * 4;
+  *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
+# else
+#  error "This endianess is not supported."
+# endif
+
+  /* Determine the status.  */
+  if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
+  else if (*inptrp == inend)
+    result = __GCONV_EMPTY_INPUT;
+  else
+    result = __GCONV_INCOMPLETE_INPUT;
+
+  return result;
+}
+#endif
 
 #include <iconv/skeleton.c>
 
