@@ -13,16 +13,16 @@ Sun Jun  2 22:28:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 Fri May 31 11:48:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* linewrap.c (lwupdate): New function, mostly was __line_wrap_update.
-	Use POINT_COL field instead of POINT.
+	* stdio/linewrap.c (lwupdate): New function, mostly was
+	__line_wrap_update.  Use POINT_COL field instead of POINT.
 	(__line_wrap_output): Use lwupdate.
 	(__line_wrap_update): New function.
 	(ensure_unwrapped, ensure_wrapped): New functions.
 	(line_wrap_set_lmargin, line_wrap_set_rmargin,
 	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
 
-	* linewrap.h (struct line_wrap_data): Rename POINT field to POINT_COL.
-	Add POINT_OFFS field.
+	* stdio/linewrap.h (struct line_wrap_data): Rename POINT field to
+	POINT_COL.  Add POINT_OFFS field.
 	(__line_wrap_update): New decl.
 	(line_wrap_set_lmargin, line_wrap_set_rmargin,
 	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
