@@ -44,8 +44,6 @@ register double
 volatile void
 __longjmp (const jmp_buf env, int val)
 {
-  register long int retval asm ("$0");
-
   /* Restore the integer registers.  */
   r9 = env[0].__9;
   r10 = env[0].__10;
@@ -69,20 +67,30 @@ __longjmp (const jmp_buf env, int val)
   /* Set the return PC to that of setjmp's caller.  */
   retpc = env[0].__pc;
 
-  /* Return VAL (or 1 if VAL is zero) to setjmp's caller.  */
-  retval = val ?: 1;
-
   /* Restore the FP and SP of setjmp's caller.  */
   fp = env[0].__fp;
   sp = env[0].__sp;
 
-  /* We use an asm here rather than a normal C return statement
+  /* Return VAL (or 1 if VAL is zero) to setjmp's caller.
+
+     We use an asm here rather than a normal C return statement
      just in case the compiler wanted to do some stack frobnication
      in the function epilogue.  Since we have already restored
      precisely the FP and SP the desired environment needs,
      we must avoid the compiler doing anything with the stack.  */
+
   while (1)
-    /* The loop is just to avoid `volatile function does return' warnings.
-       The instruction will only be executed once.  */
-    asm volatile ("ret $31, (%0), 1" : : "r" (retpc));
+    {
+      /* The loop is just to avoid `volatile function does return' warnings.
+	 The instruction will only be executed once.  */
+
+      register long int retval asm ("$0");
+
+      asm volatile
+	("cmoveq %1, 1, %0\n\t"	/* $0 = val ?: 1; */
+	 "ret $31, (%2), 1"	/* return $0 */
+	 : "=r" (retval)
+	 /* The "0" constraint should force VAL into $0.  */
+	 : "0" (val), "r" (retpc));
+    }
 }
