@@ -75,7 +75,9 @@ extern int select __P ((int __nfds, __fd_set *__readfds,
 			__fd_set *__writefds, __fd_set *__exceptfds,
 			struct timeval *__timeout));
 
-#ifdef __USE_POSIX
+#ifdef __USE_GNU
+/* XXX Once/if POSIX.1g gets official this prototype will be available
+   when defining __USE_POSIX.  */
 /* Same as above only that the TIMEOUT value is given with higher
    resolution.  This version should be used.  */
 extern int pselect __P ((int __nfds, __fd_set *__readfds,

@@ -1,3 +1,22 @@
+1998-11-02 16:12 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/generic/bits/signum.h: Define signals with their
+	historical numbers when those are in the 1-15 range and
+	consistent across platforms.
+	Define compatibility aliases (SIGIOT, SIGCLD) if __USE_MISC.
+	Define SIG_DFL, SIG_IGN, SIG_ERR as numeric constants cast
+	appropriately instead of with fake function declarations
+	(would cause link errors).
+	If __USE_UNIX98, define SIG_HOLD.
+
+1998-10-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/sigaction.h (sigaction): Use
+	union only if __USE_POSIX199309 is defined.
+
+	* misc/sys/select.h (pselect): Declared only if __USE_GNU is
+	defined.
+
 1998-11-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/mktime.c (__mktime_internal): Handle broken down times
@@ -37,9 +56,9 @@
 
 1998-11-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-        * sysdeps/unix/sysv/linux/netatalk/at.h: Include <linux/atalk.h>
-        before <sys/socket.h> to make sockaddr_at available to
-        <sys/socket.h>.
+	* sysdeps/unix/sysv/linux/netatalk/at.h: Include <linux/atalk.h>
+	before <sys/socket.h> to make sockaddr_at available to
+	<sys/socket.h>.
 
 	* posix/glob.h: Remove __P from parameter lists of declarations.
 
