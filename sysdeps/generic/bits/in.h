@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,6 @@
 #ifndef _NETINET_IN_H
 # error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
 #endif
-
-/* Link numbers.  */
-#define	IMPLINK_IP		155
-#define	IMPLINK_LOWEXPER	156
-#define	IMPLINK_HIGHEXPER	158
-
 
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
    The first word in the comment at the right is the data type used;
