@@ -620,6 +620,13 @@ extern long int gethostid __P ((void));
 extern int sethostid __P ((long int __id));
 
 
+/* Get and set the NIS (aka YP) domain name, if any.
+   Called just like `gethostname' and `sethostname'.
+   The NIS domain name is usually the empty string when not using NIS.  */
+extern int getdomainname __P ((char *__name, size_t __len));
+extern int setdomainname __P ((__const char *__name, size_t __len));
+
+
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
 extern size_t __getpagesize __P ((void));

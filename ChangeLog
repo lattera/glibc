@@ -1,3 +1,15 @@
+Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/rtld.c: Define RTLD_BOOTSTRAP before #include "dynamic-link.h".
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove weak decl for
+	_dl_rtld_map.
+	(RESOLVE): New macro, defined differently based on [RTLD_BOOTSTRAP].
+	(elf_machine_rel): Use it instead of testing fn ptr arg at runtime.
+	(elf_machine_rel: case R_386_32) [! RTLD_BOOTSTRAP]: Declare
+	_dl_rtld_map weak only here.
+
+	* posix/unistd.h [__USE_BSD]: Declare getdomainname, setdomainname.
+
 Wed Jul  3 16:29:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* nss/getXXbyYY_r.c (REENTRANT_NAME): Cast FCT in __nss_next call.

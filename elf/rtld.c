@@ -18,11 +18,16 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <link.h>
-#include "dynamic-link.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "../stdio-common/_itoa.h"
+
+
+/* This #define produces dynamic linking inline functions for
+   bootstrap relocation instead of general-purpose relocation.  */
+#define RTLD_BOOTSTRAP
+#include "dynamic-link.h"
 
 
 #ifdef RTLD_START

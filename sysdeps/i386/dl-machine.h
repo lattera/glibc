@@ -79,49 +79,56 @@ elf_machine_rel (struct link_map *map,
 					int noplt))
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  Elf32_Addr loadbase, undo;
-  weak_symbol (_dl_rtld_map);	/* Defined in rtld.c, but not in libc.a.  */
+  Elf32_Addr loadbase;
+
+#ifdef RTLD_BOOTSTRAP
+#define RESOLVE(noplt) map->l_addr
+#else
+#define RESOLVE(noplt) (*resolve) (&sym, (Elf32_Addr) reloc_addr, noplt)
+#endif
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_386_COPY:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (0);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_386_GLOB_DAT:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (0);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_JMP_SLOT:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 1) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (1);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_32:
-      if (resolve && map == &_dl_rtld_map)
-	/* Undo the relocation done here during bootstrapping.  Now we will
-	   relocate it anew, possibly using a binding found in the user
-	   program or a loaded library rather than the dynamic linker's
-	   built-in definitions used while loading those libraries.  */
-	undo = map->l_addr + sym->st_value;
-      else
-	undo = 0;
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
-      *reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
-      break;
+      {
+	Elf32_Addr undo = 0;
+#ifndef RTLD_BOOTSTRAP
+	/* This is defined in rtld.c, but nowhere in the static libc.a;
+	   make the reference weak so static programs can still link.  This
+	   declaration cannot be done when compiling rtld.c (i.e.  #ifdef
+	   RTLD_BOOTSTRAP) because rtld.c contains the common defn for
+	   _dl_rtld_map, which is incompatible with a weak decl in the same
+	   file.  */
+	weak_symbol (_dl_rtld_map);
+	if (map == &_dl_rtld_map)
+	  /* Undo the relocation done here during bootstrapping.  Now we will
+	     relocate it anew, possibly using a binding found in the user
+	     program or a loaded library rather than the dynamic linker's
+	     built-in definitions used while loading those libraries.  */
+	  undo = map->l_addr + sym->st_value;
+#endif
+	loadbase = RESOLVE (0);
+	*reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
+	break;
+      }
     case R_386_RELATIVE:
       if (!resolve || map != &_dl_rtld_map) /* Already done in rtld itself.  */
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (0);
       *reloc_addr += ((sym ? (loadbase + sym->st_value) : 0) -
 		      (Elf32_Addr) reloc_addr);
       break;
@@ -131,6 +138,8 @@ elf_machine_rel (struct link_map *map,
       assert (! "unexpected dynamic reloc type");
       break;
     }
+
+#undef RESOLVE
 }
 
 static inline void
