@@ -1,3 +1,12 @@
+2000-04-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Only declare __pthread_rwlock_*
+	if __USE_UNIX98.
+
+2000-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* Versions: Use ld instead of ld.so.
+
 2000-04-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h (struct sigcontext):

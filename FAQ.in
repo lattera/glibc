@@ -1083,9 +1083,6 @@ the one library cannot be read by functions from the other library.  Sorry,
 but this is what a major release is for.  It's better to have a cut now than
 having no means to support the new techniques later.
 
-{MK} There is however a (partial) solution for this problem.  Please take a
-look at the file `login/README.utmpd'.
-
 ??	Where are the DST_* constants found in <sys/time.h> on many
 	systems?
 

@@ -1,3 +1,9 @@
+2000-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/stdio.texi: Give advise about handling error when using
+	stream functions.
+	Patch by Michael Deutschmann <michael@talamasca.ocis.net>.
+
 2000-04-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/ld-ctype.c (ctype_output): Set size of the idx
