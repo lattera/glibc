@@ -36,9 +36,9 @@ extern int __use_tzfile attribute_hidden;
 
 extern void __tzfile_read (const char *file, size_t extra,
 			   char **extrap);
-extern int __tzfile_compute (time_t timer, int use_localtime,
-			     long int *leap_correct, int *leap_hit,
-			     struct tm *tp);
+extern void __tzfile_compute (time_t timer, int use_localtime,
+			      long int *leap_correct, int *leap_hit,
+			      struct tm *tp);
 extern void __tzfile_default (const char *std, const char *dst,
 			      long int stdoff, long int dstoff);
 

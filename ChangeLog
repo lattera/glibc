@@ -1,3 +1,43 @@
+2003-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_compute): Change return value type to
+	void.  Adjust return statements.
+	* include/time.h (__tzfile_compute): Adjust prototype.
+
+2003-02-01  Jim Meyering  <jim@meyering.net>
+
+	* time/tzset.c (__tz_convert): Remove dead code; __tzfile_compute
+	always returns 1.
+
+2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c
+	[!__ASSUME_NEW_PRCTL_SYSCALL]: Noop prctl syscall and set ENOSYS.
+
+2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
+	[!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Generate ENOSYS stub.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	[!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	[!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	[!__ASSUME_NEW_RT_SIGRETURN_SYSCALL]: Likewise.
+
+2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Change arch_minimum_kernel
+	back to 2.4.19 for powerpc64.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_NEW_PRCTL_SYSCALL): Define for powerpc64.
+	(__ASSUME_NEW_RT_SIGRETURN_SYSCALL): Define for powerpc64.
+
+2003-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcscpy.c (wcscpy): Add alternative implementation for
+	platforms with strange alignment requirements on wchar_t.
+
 2003-01-31  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove __GI_*

@@ -22,8 +22,10 @@
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
+#include <asm/errno.h>
 
 ENTRY(__swapcontext)
+#ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   std  r0,(SIGCONTEXT_GP_REGS+(PT_R0*8))(r3)
   std  r1,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
   mflr  r0
@@ -128,7 +130,7 @@ ENTRY(__swapcontext)
   addi  r5,r3,UCONTEXT_SIGMASK
   addi  r4,r4,UCONTEXT_SIGMASK
   li    r3,SIG_SETMASK
-  bl    .sigprocmask
+  bl    JUMPTARGET(sigprocmask)
   nop
   cmpdi  r3,0
   bne   L(error_exit)
@@ -251,6 +253,20 @@ L(do_sigret):
   li   r0,SYS_ify(rt_sigreturn)
   sc
   /* No return.  */
+#else
+  /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
+  mflr r0
+  std  r0,FRAME_LR_SAVE(r1)
+  stdu r1,-128(r1)
+  li   r3,ENOSYS
+  bl   JUMPTARGET(__syscall_error)
+  nop
+  li   r3,-1
+  ld   r0,128+FRAME_LR_SAVE(r1)  
+  addi r1,r1,128
+  mtlr r0
+  blr
+#endif  
 
 PSEUDO_END(__swapcontext)
 

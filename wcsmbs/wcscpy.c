@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -17,10 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <wchar.h>
-
-#define __need_ptrdiff_t
 #include <stddef.h>
+#include <wchar.h>
 
 
 /* Copy SRC to DEST.  */
@@ -29,16 +27,33 @@ wcscpy (dest, src)
      wchar_t *dest;
      const wchar_t *src;
 {
-  wchar_t *wcp = (wchar_t *) src;
   wint_t c;
-  const ptrdiff_t off = dest - src - 1;
+  wchar_t *wcp;
 
-  do
+  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
     {
-      c = *wcp++;
-      wcp[off] = c;
+      const ptrdiff_t off = dest - src - 1;
+
+      wcp = (wchar_t *) src;
+
+      do
+	{
+	  c = *wcp++;
+	  wcp[off] = c;
+	}
+      while (c != L'\0');
     }
-  while (c != L'\0');
+  else
+    {
+      wcp = dest;
+
+      do
+	{
+	  c = *src++;
+	  *wcp++ = c;
+	}
+      while (c != L'\0');
+    }
 
   return dest;
 }

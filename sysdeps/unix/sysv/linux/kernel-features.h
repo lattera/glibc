@@ -210,6 +210,19 @@
 # define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
+/* Starting with 2.4.21 PowerPC64 implements the new prctl syscall.
+   This allows applications to get/set the Floating Point Exception Mode.  */
+#if __LINUX_KERNEL_VERSION >= (132096+21) && defined __powerpc64__
+# define __ASSUME_NEW_PRCTL_SYSCALL		1
+#endif
+
+/* Starting with 2.4.21 PowerPC64 implements the new rt_sigreturn syscall.
+   The new rt_sigreturn takes an ucontext pointer allowing rt_sigreturn
+   to be used in the set/swapcontext implementation.  */
+#if __LINUX_KERNEL_VERSION >= (132096+21) && defined __powerpc64__
+# define __ASSUME_NEW_RT_SIGRETURN_SYSCALL		1
+#endif
+
 /* On x86, the set_thread_area syscall was introduced in 2.5.29, but its
    semantics was changed in 2.5.30, and again after 2.5.31.  */
 #if __LINUX_KERNEL_VERSION >= 132384 && defined __i386__

@@ -22,8 +22,10 @@
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
+#include <asm/errno.h>
 
 ENTRY(__makecontext)
+#ifdef __ASSUME_NEW_RT_SIGRETURN_SYSCALL
   /* Save parameters into the parameter save area of callers frame.  */
   std  r3,FRAME_PARM1_SAVE(r1) /* ucontext_t *ucp  */
   std  r4,FRAME_PARM2_SAVE(r1) /* void (*func)(void)  */
@@ -156,6 +158,20 @@ L(gotexitcodeaddr):
   addi  r1,r1,128
   mtlr  r0
   blr
+#else
+  /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
+  mflr r0
+  std  r0,FRAME_LR_SAVE(r1)
+  stdu r1,-128(r1)
+  li   r3,ENOSYS
+  bl   JUMPTARGET(__syscall_error)
+  nop
+  li   r3,-1
+  ld   r0,128+FRAME_LR_SAVE(r1)  
+  addi r1,r1,128
+  mtlr r0
+  blr
+#endif
 END(__makecontext)
 
 weak_alias(__makecontext, makecontext)
