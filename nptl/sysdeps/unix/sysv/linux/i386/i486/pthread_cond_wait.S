@@ -83,7 +83,7 @@ __condvar_cleanup:
 #endif
 	call	__lll_mutex_unlock_wake
 
-	/* Lock the mutex unless asnychronous cancellation is in effect.  */
+	/* Lock the mutex unless asynchronous cancellation is in effect.  */
 2:	testl	$2, (%esi)
 	jne	3f
 
