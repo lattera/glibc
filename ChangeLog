@@ -1,5 +1,7 @@
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/C-ctype.c: Fix typo in char class name.
+
 	* configure.in: Allow user so specify --enable-kernel=current.
 
 1999-11-12  Thorsten Kukuk  <kukuk@suse.de>

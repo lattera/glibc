@@ -357,7 +357,7 @@ const struct locale_data _nl_C_LC_CTYPE =
 	      "left_to_right\0" "right_to_left\0" "num_terminator\0"
 	      "num_separator\0" "segment_separator\0" "block_separator\0"
 	      "direction_control\0" "sym_swap_layout\0" "char_shape_selector\0"
-	      "num_share_selector\0" "non_spacing\0" "non_spacing_level3\0"
+	      "num_shape_selector\0" "non_spacing\0" "non_spacing_level3\0"
 	      "r_connect\0" "no_connect\0" "no_connect-space\0"
 	      "vowel_connect\0" },
     { string: "tolower\0" "toupper\0" "tosymmetric\0" },
