@@ -130,4 +130,4 @@ register_dump (int fd, struct sigcontext *ctx)
 }
 
 
-#define REGISTER_DUMP register_dump (fd, &ctx)
+#define REGISTER_DUMP register_dump (fd, ctx)
