@@ -49,6 +49,7 @@ typedef struct siginfo
     int si_errno;		/* If non-zero, an errno value associated with
 				   this signal, as defined in <errno.h>.  */
     int si_code;		/* Signal code.  */
+    int __pad0;			/* Explicit padding.  */
 
     union
       {

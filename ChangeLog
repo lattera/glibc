@@ -1,3 +1,8 @@
+2001-04-13  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Add __pad0 to
+	explicitly pad struct siginfo instead of relying on compiler padding.
+
 2001-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/Dist: Add elf/entry.h.
