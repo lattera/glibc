@@ -1,3 +1,14 @@
+1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/ieee754/dbl2mpn.c: Changed '#include "ieee754.h"' to
+	'#include <ieee754.h>'.  ARM port has its own version of 'ieee754.h'
+	due to its big endian floating point format.
+	* sysdeps/ieee754/ldbl2mpn.c: Likewise.
+	* sysdeps/ieee754/mpn2dbl.c: Likewise.
+	* sysdeps/ieee754/mpn2ldbl.c: Likewise.
+	* sysdeps/ieee754/mpn2flt.c: Likewise.
+	Patch by Scott Bambrough <scottb@corelcomputer.com>.
+
 1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/adjtime.c: Undo last change.

@@ -18,7 +18,7 @@
 
 #include "gmp.h"
 #include "gmp-impl.h"
-#include "ieee754.h"
+#include <ieee754.h>
 #include <float.h>
 
 /* Convert a multi-precision integer of the needed number of bits (53 for

@@ -19,7 +19,7 @@
 #include "gmp.h"
 #include "gmp-impl.h"
 #include "longlong.h"
-#include "ieee754.h"
+#include <ieee754.h>
 #include <float.h>
 #include <stdlib.h>
 
