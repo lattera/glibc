@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <error.h>
 #include <errno.h>
+#include <sys/resource.h>
 
 /* Prototype for our test function.  */
 extern void do_prepare (int argc, char *argv[]);
@@ -70,6 +71,11 @@ do_prepare (int argc, char *argv[])
 
   if (fd == -1)
     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
+
+  if (setrlimit64 (RLIMIT_FSIZE, &((const struct rlimit64)
+                                   { RLIM_INFINITY, RLIM_INFINITY }))
+      == -1)
+    error (EXIT_FAILURE, errno, "cannot reset file size limits");
 }
 
 int

@@ -1,4 +1,8 @@
-2000-10-21  Geoffrey Keating  <geoffk@cygnus.com>
+2000-10-24  Geoffrey Keating  <geoffk@cygnus.com>
+
+	* io/test-lfs.c (do_prepare): Call setrlimit64, in case the user
+	has a limit set---for instance, a limit of 2^31 bytes, which can't
+	easily be reset by non-LFS-aware shells.
 
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Define PAGE_SHIFT
 	explicitly rather than getting it from <asm/page.h>.
