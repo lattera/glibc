@@ -83,7 +83,7 @@ include $(common-objpfx)config.make
 # changes and so config.status would be run every time; the dependence of
 # config.make should suffice to force regeneration and re-exec, and the new
 # image will notice if config.h changed.
-$(common-objpfx)config.make: $(common-objpfx)config.status
+$(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
 # Force the user to configure before making.
