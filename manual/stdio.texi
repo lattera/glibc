@@ -18,6 +18,7 @@ representing a communications channel to a file, device, or process.
 * Opening Streams::             How to create a stream to talk to a file.
 * Closing Streams::             Close a stream when you are finished with it.
 * Streams and Threads::         Issues with streams in threaded programs.
+* Streams and I18N::            Streams in internationalized applications.
 * Simple Output::               Unformatted output by characters and lines.
 * Character Input::             Unformatted input by characters and words.
 * Line Input::                  Reading a line or a record from a stream.
@@ -116,8 +117,8 @@ described in @ref{File System Interface}.)  Most other operating systems
 provide similar mechanisms, but the details of how to use them can vary.
 
 In the GNU C library, @code{stdin}, @code{stdout}, and @code{stderr} are
-normal variables which you can set just like any others.  For example, to redirect
-the standard output to a file, you could do:
+normal variables which you can set just like any others.  For example,
+to redirect the standard output to a file, you could do:
 
 @smallexample
 fclose (stdout);
@@ -128,6 +129,9 @@ Note however, that in other systems @code{stdin}, @code{stdout}, and
 @code{stderr} are macros that you cannot assign to in the normal way.
 But you can use @code{freopen} to get the effect of closing one and
 reopening it.  @xref{Opening Streams}.
+
+The three streams @code{stdin}, @code{stdout}, and @code{stderr} are not
+unoriented at program start (@pxref{Streams and I18N}).
 
 @node Opening Streams
 @section Opening Streams
@@ -637,6 +641,144 @@ This function is especially useful when program code has to be used
 which is written without knowledge about the @code{_unlocked} functions
 (or if the programmer was to lazy to use them).
 
+@node Streams and I18N
+@section Streams in Internationalized Applications
+
+@w{ISO C90} introduced the new type @code{wchar_t} to allow handling
+larger character sets.  What was missing was a possibility to output
+strings of @code{wchar_t} directly.  One had to convert them into
+multibyte strings using @code{mbstowcs} (there was no @code{mbsrtowcs}
+yet) and then use the normal stream functions.  While this is doable it
+is very cumbersome since performing the conversions is not trivial and
+greatly increases program complexity and size.
+
+The Unix standard early on (I think in XPG4.2) introduced two additional
+format specifiers for the @code{printf} and @code{scanf} families of
+functions.  Printing and reading of single wide characters was made
+possible using the @code{%C} specifier and wide character strings can be
+handled with @code{%S}.  These modifiers behave just like @code{%c} and
+@code{%s} only that they expect the corresponding argument to have the
+wide character type and that the wide character and string are
+transformed into/from multibyte strings before being used.
+
+This was a beginning but it is still not good enough.  Not always is it
+desirable to use @code{printf} and @code{scanf}.  The other, smaller and
+faster functions cannot handle wide characters.  Second, it is not
+possible to have a format string for @code{printf} and @code{scanf}
+consisting of wide characters.  The result is that format strings would
+have to be generated if they have to contain non-basic characters.
+
+@cindex C++ streams
+@cindex streams, C++
+In the @w{Amendment 1} to @w{ISO C90} a whole new set of functions was
+added to solve the problem.  Most of the stream functions got a
+counterpart which take a wide character or wide character string instead
+of a character or string respectively.  The new functions operate on the
+same streams (like @code{stdout}).  This is different from the model of
+the C++ runtime library where separate streams for wide and normal I/O
+are used.
+
+@cindex orientation, stream
+@cindex stream orientation
+Being able to use the same stream for wide and normal operations comes
+with a restriction: a stream can be used either for wide operations or
+for normal operations.  Once it is decided there is no way back.  Only a
+call to @code{freopen} or @code{freopen64} can reset the
+@dfn{orientation}.  The orientation can be decided in three ways:
+
+@itemize @bullet
+@item
+If any of the normal character functions is used (this includes the
+@code{fread} and @code{fwrite} functions) the steam is marked as not
+wide oriented.
+
+@item
+If any of the wide character functions is used the stream is marked as
+wide oriented
+
+@item
+The @code{fwide} function can be used to set the orientation either way.
+@end itemize
+
+It is important to never mix the use of wide and not wide operations on
+a stream.  There are no diagnostics issued.  The application behavior
+will simply be strange or the application will simply crash.  The
+@code{fwide} function can help avoiding this.
+
+@comment wchar.h
+@comment ISO
+@deftypefun int fwide (FILE *@var{stream}, int @var{mode})
+
+The @code{fwide} function can use used to set and query the state of the
+orientation of the stream @var{stream}.  If the @var{mode} parameter has
+a positive value the streams get wide oriented, for negative values
+narrow oriented.  It is not possible to overwrite previous orientations
+with @code{fwide}.  I.e., if the stream @var{stream} was already
+oriented before the call nothing is done.
+
+If @var{mode} is zero the current orientation state is queried and
+nothing is changed.
+
+The @code{fwide} function returns a negative value, zero, or a positive
+value if the stream is narrow, not at all, or wide oriented
+respectively.
+
+This function was introduced in @w{Amendment 1} to @w{ISO C90} and is
+declared in @file{wchar.h}.
+@end deftypefun
+
+It is generally a good idea to orient a stream as early as possible.
+This can prevent surprise especially for the standard streams
+@code{stdin}, @code{stdout}, and @code{stderr}.  If some library
+function in some situations uses one of these streams and this use
+orients the stream in a different way the rest of the application
+expects it one might end up with hard to reproduce errors.  Remember
+that no errors are signal if the streams are used incorrectly.  Leaving
+a stream unoriented after creation is normally only necessary for
+library functions which create streams which can be used in different
+contexts.
+
+When writing code which uses streams and which can be used in different
+contexts it is important to query the orientation of the stream before
+using it (unless the rules of the library interface demand a specific
+orientation).  The following little, silly function illustrates this.
+
+@smallexample
+void
+print_f (FILE *fp)
+@{
+  if (fwide (fp, 0) > 0)
+    /* @r{Positive return value means wide orientation.}  */
+    fputwc (L'f', fp);
+  else
+    fputc ('f', fp);
+@}
+@end smallexample
+
+Note that in this case the function @code{print_f} decides about the
+orientation of the stream if it was unoriented before (will not happen
+if the advise above is followed).
+
+The encoding used for the @code{wchar_t} values is unspecified and the
+user must not make any assumptions about it.  For I/O of @code{wchar_t}
+values this means that it is impossible to write these values directly
+to the stream.  This is not what follows from the @w{ISO C} locale model
+either.  What happens instead is that the bytes read from or written to
+the underlying media are first converted into the internal encoding
+chosen by the implementation for @code{wchar_t}.  The external encoding
+is determined by the @code{LC_CTYPE} category of the current locale or
+by the @samp{ccs} part of the mode specification given to @code{fopen},
+@code{fopen64}, @code{freopen}, or @code{freopen64}.  How and when the
+conversion happens is unspecified and it happens invisible to the user.
+
+Since a stream is created in the unoriented state it has at that point
+no conversion associated with it.  The conversion which will be used is
+determined by the @code{LC_CTYPE} category selected at the time the
+stream is oriented.  If the locales are changed at the runtime this
+might produce surprising results unless one pays attention.  This is
+just another good reason to orient the stream explicitly as soon as
+possible, perhaps with a call to @code{fwide}.
+
 @node Simple Output
 @section Simple Output by Characters or Lines
 
@@ -644,8 +786,10 @@ which is written without knowledge about the @code{_unlocked} functions
 This section describes functions for performing character- and
 line-oriented output.
 
-These functions are declared in the header file @file{stdio.h}.
+These narrow streams functions are declared in the header file
+@file{stdio.h} and the wide stream functions in @file{wchar.h}.
 @pindex stdio.h
+@pindex wchar.h
 
 @comment stdio.h
 @comment ISO
@@ -656,12 +800,30 @@ The @code{fputc} function converts the character @var{c} to type
 character @var{c} is returned.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t fputwc (wchar_t @var{wc}, FILE *@var{stream})
+The @code{fputwc} function writes the wide character @var{wc} to the
+stream @var{stream}.  @code{WEOF} is returned if a write error occurs;
+otherwise the character @var{wc} is returned.
+@end deftypefun
+
 @comment stdio.h
 @comment POSIX
 @deftypefun int fputc_unlocked (int @var{c}, FILE *@var{stream})
 The @code{fputc_unlocked} function is equivalent to the @code{fputc}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment wchar.h
+@comment POSIX
+@deftypefun wint_t fputwc_unlocked (wint_t @var{wc}, FILE *@var{stream})
+The @code{fputwc_unlocked} function is equivalent to the @code{fputwc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -674,12 +836,32 @@ general rule for macros.  @code{putc} is usually the best function to
 use for writing a single character.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t putwc (wchar_t @var{wc}, FILE *@var{stream})
+This is just like @code{fputwc}, except that it can be implement as
+a macro, making it faster.  One consequence is that it may evaluate the
+@var{stream} argument more than once, which is an exception to the
+general rule for macros.  @code{putwc} is usually the best function to
+use for writing a single wide character.
+@end deftypefun
+
 @comment stdio.h
 @comment POSIX
 @deftypefun int putc_unlocked (int @var{c}, FILE *@var{stream})
 The @code{putc_unlocked} function is equivalent to the @code{putc}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun wint_t putwc_unlocked (wchar_t @var{wc}, FILE *@var{stream})
+The @code{putwc_unlocked} function is equivalent to the @code{putwc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -689,12 +871,29 @@ The @code{putchar} function is equivalent to @code{putc} with
 @code{stdout} as the value of the @var{stream} argument.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t putchar (wchar_t @var{wc})
+The @code{putwchar} function is equivalent to @code{putwc} with
+@code{stdout} as the value of the @var{stream} argument.
+@end deftypefun
+
 @comment stdio.h
 @comment POSIX
 @deftypefun int putchar_unlocked (int @var{c})
 The @code{putchar_unlocked} function is equivalent to the @code{putchar}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun wint_t putwchar_unlocked (wchar_t @var{wc})
+The @code{putwchar_unlocked} function is equivalent to the @code{putwchar}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -720,10 +919,32 @@ fputs ("hungry?\n", stdout);
 outputs the text @samp{Are you hungry?} followed by a newline.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int fputws (const wchar_t *@var{ws}, FILE *@var{stream})
+The function @code{fputws} writes the wide character string @var{ws} to
+the stream @var{stream}.  The terminating null character is not written.
+This function does @emph{not} add a newline character, either.  It
+outputs only the characters in the string.
+
+This function returns @code{WEOF} if a write error occurs, and otherwise
+a non-negative value.
+@end deftypefun
+
 @comment stdio.h
 @comment GNU
 @deftypefun int fputs_unlocked (const char *@var{s}, FILE *@var{stream})
 The @code{fputs_unlocked} function is equivalent to the @code{fputs}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun int fputws_unlocked (const wchar_t *@var{ws}, FILE *@var{stream})
+The @code{fputws_unlocked} function is equivalent to the @code{fputws}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 
@@ -761,21 +982,25 @@ recommend you use @code{fwrite} instead (@pxref{Block Input/Output}).
 @section Character Input
 
 @cindex reading from a stream, by characters
-This section describes functions for performing character-oriented input.
-These functions are declared in the header file @file{stdio.h}.
+This section describes functions for performing character-oriented
+input.  These narrow streams functions are declared in the header file
+@file{stdio.h} and the wide character functions are declared in
+@file{wchar.h}.
 @pindex stdio.h
+@pindex wchar.h
 
-These functions return an @code{int} value that is either a character of
-input, or the special value @code{EOF} (usually -1).  It is important to
-store the result of these functions in a variable of type @code{int}
-instead of @code{char}, even when you plan to use it only as a
-character.  Storing @code{EOF} in a @code{char} variable truncates its
-value to the size of a character, so that it is no longer
-distinguishable from the valid character @samp{(char) -1}.  So always
-use an @code{int} for the result of @code{getc} and friends, and check
-for @code{EOF} after the call; once you've verified that the result is
-not @code{EOF}, you can be sure that it will fit in a @samp{char}
-variable without loss of information.
+These functions return an @code{int} or @code{wint_t} value (for narrow
+and wide stream functions respectively) that is either a character of
+input, or the special value @code{EOF}/@code{WEOF} (usually -1).  For
+the narrow stream functions it is important to store the result of these
+functions in a variable of type @code{int} instead of @code{char}, even
+when you plan to use it only as a character.  Storing @code{EOF} in a
+@code{char} variable truncates its value to the size of a character, so
+that it is no longer distinguishable from the valid character
+@samp{(char) -1}.  So always use an @code{int} for the result of
+@code{getc} and friends, and check for @code{EOF} after the call; once
+you've verified that the result is not @code{EOF}, you can be sure that
+it will fit in a @samp{char} variable without loss of information.
 
 @comment stdio.h
 @comment ISO
@@ -786,12 +1011,30 @@ the stream @var{stream} and returns its value, converted to an
 @code{EOF} is returned instead.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t fgetwc (FILE *@var{stream})
+This function reads the next wide character from the stream @var{stream}
+and returns its value.  If an end-of-file condition or read error
+occurs, @code{WEOF} is returned instead.
+@end deftypefun
+
 @comment stdio.h
 @comment POSIX
 @deftypefun int fgetc_unlocked (FILE *@var{stream})
 The @code{fgetc_unlocked} function is equivalent to the @code{fgetc}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun wint_t fgetwc_unlocked (FILE *@var{stream})
+The @code{fgetwc_unlocked} function is equivalent to the @code{fgetwc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment stdio.h
@@ -804,6 +1047,15 @@ optimized, so it is usually the best function to use to read a single
 character.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t getwc (FILE *@var{stream})
+This is just like @code{fgetwc}, except that it is permissible for it to
+be implemented as a macro that evaluates the @var{stream} argument more
+than once.  @code{getwc} can be highly optimized, so it is usually the
+best function to use to read a single wide character.
+@end deftypefun
+
 @comment stdio.h
 @comment POSIX
 @deftypefun int getc_unlocked (FILE *@var{stream})
@@ -812,10 +1064,27 @@ function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 @end deftypefun
 
+@comment wchar.h
+@comment GNU
+@deftypefun wint_t getwc_unlocked (FILE *@var{stream})
+The @code{getwc_unlocked} function is equivalent to the @code{getwc}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
 @comment stdio.h
 @comment ISO
 @deftypefun int getchar (void)
 The @code{getchar} function is equivalent to @code{getc} with @code{stdin}
+as the value of the @var{stream} argument.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t getwchar (void)
+The @code{getwchar} function is equivalent to @code{getwc} with @code{stdin}
 as the value of the @var{stream} argument.
 @end deftypefun
 
@@ -827,9 +1096,20 @@ function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 @end deftypefun
 
+@comment wchar.h
+@comment GNU
+@deftypefun wint_t getwchar_unlocked (void)
+The @code{getwchar_unlocked} function is equivalent to the @code{getwchar}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
 Here is an example of a function that does input using @code{fgetc}.  It
 would work just as well using @code{getc} instead, or using
-@code{getchar ()} instead of @w{@code{fgetc (stdin)}}.
+@code{getchar ()} instead of @w{@code{fgetc (stdin)}}.  The code would
+also work the same for the wide character stream functions.
 
 @smallexample
 int
@@ -873,7 +1153,7 @@ way to distinguish this from an input word with value -1.
 @node Line Input
 @section Line-Oriented Input
 
-Since many programs interpret input on the basis of lines, it's
+Since many programs interpret input on the basis of lines, it is
 convenient to have functions to read a line of text from a stream.
 
 Standard C has functions to do this, but they aren't very safe: null
@@ -969,10 +1249,45 @@ a null character, you should either handle it properly or print a clear
 error message.  We recommend using @code{getline} instead of @code{fgets}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} fgetws (wchar_t *@var{ws}, int @var{count}, FILE *@var{stream})
+The @code{fgetws} function reads wide characters from the stream
+@var{stream} up to and including a newline character and stores them in
+the string @var{ws}, adding a null wide character to mark the end of the
+string.  You must supply @var{count} wide characters worth of space in
+@var{ws}, but the number of characters read is at most @var{count}
+@minus{} 1.  The extra character space is used to hold the null wide
+character at the end of the string.
+
+If the system is already at end of file when you call @code{fgetws}, then
+the contents of the array @var{ws} are unchanged and a null pointer is
+returned.  A null pointer is also returned if a read error occurs.
+Otherwise, the return value is the pointer @var{ws}.
+
+@strong{Warning:} If the input data has a null wide character (which are
+null bytes in the input stream), you can't tell.  So don't use
+@code{fgetws} unless you know the data cannot contain a null.  Don't use
+it to read files edited by the user because, if the user inserts a null
+character, you should either handle it properly or print a clear error
+message.
+@comment XXX We need getwline!!!
+@end deftypefun
+
 @comment stdio.h
 @comment GNU
 @deftypefun {char *} fgets_unlocked (char *@var{s}, int @var{count}, FILE *@var{stream})
 The @code{fgets_unlocked} function is equivalent to the @code{fgets}
+function except that it does not implicitly lock the stream if the state
+is @code{FSETLOCKING_INTERNAL}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} fgetws_unlocked (wchar_t *@var{ws}, int @var{count}, FILE *@var{stream})
+The @code{fgetws_unlocked} function is equivalent to the @code{fgetws}
 function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 
@@ -1103,6 +1418,13 @@ Unreading a character on a stream that is at end of file clears the
 end-of-file indicator for the stream, because it makes the character of
 input available.  After you read that character, trying to read again
 will encounter end of file.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun wint_t ungetwc (wint_t @var{wc}, FILE *@var{stream})
+The @code{ungetwc} function behaves just like @code{ungetc} just that it
+pushes back a wide character.
 @end deftypefun
 
 Here is an example showing the use of @code{getc} and @code{ungetc} to
@@ -1463,8 +1785,16 @@ Conversions}, for details.
 @item @samp{%c}
 Print a single character.  @xref{Other Output Conversions}.
 
+@item @samp{%C}
+This is an alias for @samp{%lc} which is supported for compatibility
+with the Unix standard.
+
 @item @samp{%s}
 Print a string.  @xref{Other Output Conversions}.
+
+@item @samp{%S}
+This is an alias for @samp{%ls} which is supported for compatibility
+with the Unix standard.
 
 @item @samp{%p}
 Print the value of a pointer.  @xref{Other Output Conversions}.
@@ -1584,6 +1914,10 @@ This modifier was introduced in @w{ISO C99}.
 Specifies that the argument is a @code{long int} or @code{unsigned long
 int}, as appropriate.  Two @samp{l} characters is like the @samp{L}
 modifier, below.
+
+If used with @samp{%c} or @samp{%s} the corresponding parameter is
+considered as a wide character or wide character string respectively.
+This use of @samp{l} was introduced in @w{Amendment 1} to @w{ISO C90}.
 
 @item L
 @itemx ll
@@ -1785,11 +2119,13 @@ Notice how the @samp{%g} conversion drops trailing zeros.
 
 This section describes miscellaneous conversions for @code{printf}.
 
-The @samp{%c} conversion prints a single character.  The @code{int}
-argument is first converted to an @code{unsigned char}.  The @samp{-}
-flag can be used to specify left-justification in the field, but no
-other flags are defined, and no precision or type modifier can be given.
-For example:
+The @samp{%c} conversion prints a single character.  In case there is no
+@samp{l} modifier the @code{int} argument is first converted to an
+@code{unsigned char}.  Then, if used in a wide stream function, the
+character is converted into the corresponding wide character.  The
+@samp{-} flag can be used to specify left-justification in the field,
+but no other flags are defined, and no precision or type modifier can be
+given.  For example:
 
 @smallexample
 printf ("%c%c%c%c%c", 'h', 'e', 'l', 'l', 'o');
@@ -1798,9 +2134,16 @@ printf ("%c%c%c%c%c", 'h', 'e', 'l', 'l', 'o');
 @noindent
 prints @samp{hello}.
 
-The @samp{%s} conversion prints a string.  The corresponding argument
-must be of type @code{char *} (or @code{const char *}).  A precision can
-be specified to indicate the maximum number of characters to write;
+If there is a @samp{l} modifier present the argument is expected to be
+of type @code{wint_t}.  If used in a multibyte function the wide
+character is converted into a multibyte character before being added to
+the output.  In this case more than one output byte can be produced.
+
+The @samp{%s} conversion prints a string.  If no @samp{l} modifier is
+present the corresponding argument must be of type @code{char *} (or
+@code{const char *}).  If used in a wide stream function the string is
+first converted in a wide character string.  A precision can be
+specified to indicate the maximum number of characters to write;
 otherwise characters in the string up to but not including the
 terminating null character are written to the output stream.  The
 @samp{-} flag can be used to specify left-justification in the field,
@@ -1813,6 +2156,8 @@ printf ("%3s%-6s", "no", "where");
 
 @noindent
 prints @samp{ nowhere }.
+
+If there is a @samp{l} modifier present the argument is expected to be of type @code{wchar_t} (or @code{const wchar_t *}).
 
 If you accidentally pass a null pointer as the argument for a @samp{%s}
 conversion, the GNU library prints it as @samp{(null)}.  We think this
@@ -1911,10 +2256,26 @@ control of the template string @var{template} to the stream
 negative value if there was an output error.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int wprintf (const wchar_t *@var{template}, @dots{})
+The @code{wprintf} function prints the optional arguments under the
+control of the wide template string @var{template} to the stream
+@code{stdout}.  It returns the number of wide characters printed, or a
+negative value if there was an output error.
+@end deftypefun
+
 @comment stdio.h
 @comment ISO
 @deftypefun int fprintf (FILE *@var{stream}, const char *@var{template}, @dots{})
 This function is just like @code{printf}, except that the output is
+written to the stream @var{stream} instead of @code{stdout}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int fwprintf (FILE *@var{stream}, const wchar_t *@var{template}, @dots{})
+This function is just like @code{wprintf}, except that the output is
 written to the stream @var{stream} instead of @code{stdout}.
 @end deftypefun
 
@@ -1940,6 +2301,30 @@ given in a conversion specification is only a @emph{minimum} value.
 
 To avoid this problem, you can use @code{snprintf} or @code{asprintf},
 described below.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun int swprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, @dots{})
+This is like @code{wprintf}, except that the output is stored in the
+wide character array @var{ws} instead of written to a stream.  A null
+wide character is written to mark the end of the string.  The @var{size}
+argument specifies the maximum number of characters to produce.  The
+trailing null character is counted towards this limit, so you should
+allocate at least @var{size} wide characters for the string @var{ws}.
+
+The return value is the number of characters which would be generated
+for the given input, excluding the trailing null.  If this value is
+greater or equal to @var{size}, not all characters from the result have
+been stored in @var{ws}.  You should try again with a bigger output
+string.
+
+Note that the corresponding narrow stream function takes fewer
+parameters.  @code{swprintf} in fact corresponds to the @code{snprintf}
+function.  Since the @code{sprintf} function can be dangerous and should
+be avoided the @w{ISO C} committee refused to make the same mistake
+again and decided to not define an function exactly corresponding to
+@code{sprintf}.
 @end deftypefun
 
 @comment stdio.h
@@ -2119,6 +2504,14 @@ a variable number of arguments directly, it takes an argument list
 pointer @var{ap}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int vwprintf (const wchar_t *@var{template}, va_list @var{ap})
+This function is similar to @code{wprintf} except that, instead of taking
+a variable number of arguments directly, it takes an argument list
+pointer @var{ap}.
+@end deftypefun
+
 @comment stdio.h
 @comment ISO
 @deftypefun int vfprintf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
@@ -2126,11 +2519,25 @@ This is the equivalent of @code{fprintf} with the variable argument list
 specified directly as for @code{vprintf}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int vfwprintf (FILE *@var{stream}, const wchar_t *@var{template}, va_list @var{ap})
+This is the equivalent of @code{fwprintf} with the variable argument list
+specified directly as for @code{vwprintf}.
+@end deftypefun
+
 @comment stdio.h
 @comment ISO
 @deftypefun int vsprintf (char *@var{s}, const char *@var{template}, va_list @var{ap})
 This is the equivalent of @code{sprintf} with the variable argument list
 specified directly as for @code{vprintf}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun int vswprintf (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, va_list @var{ap})
+This is the equivalent of @code{swprintf} with the variable argument list
+specified directly as for @code{vwprintf}.
 @end deftypefun
 
 @comment stdio.h
@@ -2993,17 +3400,50 @@ Matches an optionally signed floating-point number.  @xref{Numeric Input
 Conversions}.
 
 @item @samp{%s}
+
 Matches a string containing only non-whitespace characters.
-@xref{String Input Conversions}.
+@xref{String Input Conversions}.  The presence of the @samp{l} modifier
+determines whether the output is stored as a wide character string or a
+multibyte string.  If @samp{%s} is used in a wide character function the
+string is converted as with multiple calls to @code{wcrtomb} into a
+multibyte string.  This means that the buffer must provide room for
+@code{MB_CUR_MAX} bytes for each wide character read.  In case
+@samp{%ls} is used in a multibyte function the result is converted into
+wide characters as with multiple calls of @code{mbrtowc} before being
+stored in the user provided buffer.
+
+@item @samp{%S}
+This is an alias for @samp{%ls} which is supported for compatibility
+with the Unix standard.
 
 @item @samp{%[}
 Matches a string of characters that belong to a specified set.
-@xref{String Input Conversions}.
+@xref{String Input Conversions}.  The presence of the @samp{l} modifier
+determines whether the output is stored as a wide character string or a
+multibyte string.  If @samp{%[} is used in a wide character function the
+string is converted as with multiple calls to @code{wcrtomb} into a
+multibyte string.  This means that the buffer must provide room for
+@code{MB_CUR_MAX} bytes for each wide character read.  In case
+@samp{%l[} is used in a multibyte function the result is converted into
+wide characters as with multiple calls of @code{mbrtowc} before being
+stored in the user provided buffer.
 
 @item @samp{%c}
 Matches a string of one or more characters; the number of characters
 read is controlled by the maximum field width given for the conversion.
 @xref{String Input Conversions}.
+
+If the @samp{%c} is used in a wide stream function the read value is
+converted from a wide character to the corresponding multibyte character
+before storing it.  Note that this conversion can produce more than one
+byte of output and therefore the provided buffer be large enough for up
+to @code{MB_CUR_MAX} bytes for each character.  If @samp{%lc} is used in
+a multibyte function the input is treated as a multibyte sequence (and
+not bytes) and the result is converted as with calls to @code{mbrtowc}.
+
+@item @samp{%C}
+This is an alias for @samp{%lc} which is supported for compatibility
+with the Unix standard.
 
 @item @samp{%p}
 Matches a pointer value in the same implementation-defined format used
@@ -3083,6 +3523,11 @@ This modifier was introduced in @w{ISO C99}.
 Specifies that the argument is a @code{long int *} or @code{unsigned
 long int *}.  Two @samp{l} characters is like the @samp{L} modifier, below.
 
+If used with @samp{%c} or @samp{%s} the corresponding parameter is
+considered as a pointer to a wide character or wide character string
+respectively.  This use of @samp{l} was introduced in @w{Amendment 1} to
+@w{ISO C90}.
+
 @need 100
 @item ll
 @itemx L
@@ -3142,15 +3587,17 @@ Otherwise the longest prefix with a correct form is processed.
 @subsection String Input Conversions
 
 This section describes the @code{scanf} input conversions for reading
-string and character values: @samp{%s}, @samp{%[}, and @samp{%c}.
+string and character values: @samp{%s}, @samp{%S}, @samp{%[}, @samp{%c},
+and @samp{%C}.
 
 You have two options for how to receive the input from these
 conversions:
 
 @itemize @bullet
 @item
-Provide a buffer to store it in.  This is the default.  You
-should provide an argument of type @code{char *}.
+Provide a buffer to store it in.  This is the default.  You should
+provide an argument of type @code{char *} or @code{wchar_t *} (the
+latter of the @samp{l} modifier is present).
 
 @strong{Warning:} To make a robust program, you must make sure that the
 input (plus its terminating null) cannot possibly exceed the size of the
@@ -3175,6 +3622,13 @@ reads precisely the next @var{n} characters, and fails if it cannot get
 that many.  Since there is always a maximum field width with @samp{%c}
 (whether specified, or 1 by default), you can always prevent overflow by
 making the buffer long enough.
+@comment Is character == byte here???  --drepper
+
+If the format is @samp{%lc} or @samp{%C} the function stores wide
+characters which are converted using the conversion determined at the
+time the stream was opened from the external byte stream.  The number of
+bytes read from the medium is limited by @code{MB_CUR_LEN * @var{n}} but
+at most @var{n} wide character get stored in the output string.
 
 The @samp{%s} conversion matches a string of non-whitespace characters.
 It skips and discards initial whitespace, but stops when it encounters
@@ -3196,6 +3650,14 @@ reading the same input with the conversion @samp{%10s} produces
 then the number of characters read is limited only by where the next
 whitespace character appears.  This almost certainly means that invalid
 input can make your program crash---which is a bug.
+
+The @samp{%ls} and @samp{%S} format are handled just like @samp{%s}
+except that the external byte sequence is converted using the conversion
+associated with the stream to wide characters with their own encoding.
+A width or precision specified with the format do not directly determine
+how many bytes are read from the stream since they measure wide
+characters.  But an upper limit can be computed by multiplying the value
+of the width or precision by @code{MB_CUR_MAX}.
 
 To read in characters that belong to an arbitrary set of your choice,
 use the @samp{%[} conversion.  You specify the set between the @samp{[}
@@ -3239,6 +3701,10 @@ initial whitespace.
 @item %25[a-z]
 Matches up to 25 lowercase characters.
 @end table
+
+As for @samp{%c} and @samp{%s} the @samp{%[} format is also modified to
+produce wide characters if the @samp{l} modifier is present.  All what
+is said about @samp{%ls} above is true for @samp{%l[}.
 
 One more reminder: the @samp{%s} and @samp{%[} conversions are
 @strong{dangerous} if you don't specify a maximum width or use the
@@ -3334,10 +3800,31 @@ including matches against whitespace and literal characters in the
 template, then @code{EOF} is returned.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int wscanf (const wchar_t *@var{template}, @dots{})
+The @code{wscanf} function reads formatted input from the stream
+@code{stdin} under the control of the template string @var{template}.
+The optional arguments are pointers to the places which receive the
+resulting values.
+
+The return value is normally the number of successful assignments.  If
+an end-of-file condition is detected before any matches are performed,
+including matches against whitespace and literal characters in the
+template, then @code{WEOF} is returned.
+@end deftypefun
+
 @comment stdio.h
 @comment ISO
 @deftypefun int fscanf (FILE *@var{stream}, const char *@var{template}, @dots{})
 This function is just like @code{scanf}, except that the input is read
+from the stream @var{stream} instead of @code{stdin}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int fwscanf (FILE *@var{stream}, const wchar_t *@var{template}, @dots{})
+This function is just like @code{wscanf}, except that the input is read
 from the stream @var{stream} instead of @code{stdin}.
 @end deftypefun
 
@@ -3350,8 +3837,21 @@ end of the string is treated as an end-of-file condition.
 
 The behavior of this function is undefined if copying takes place
 between objects that overlap---for example, if @var{s} is also given
-as an argument to receive a string read under control of the @samp{%s}
-conversion.
+as an argument to receive a string read under control of the @samp{%s},
+@samp{%S}, or @samp{%[} conversion.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int swscanf (const wchar_t *@var{ws}, const char *@var{template}, @dots{})
+This is like @code{wscanf}, except that the characters are taken from the
+null-terminated string @var{ws} instead of from a stream.  Reaching the
+end of the string is treated as an end-of-file condition.
+
+The behavior of this function is undefined if copying takes place
+between objects that overlap---for example, if @var{ws} is also given as
+an argument to receive a string read under control of the @samp{%s},
+@samp{%S}, or @samp{%[} conversion.
 @end deftypefun
 
 @node Variable Arguments Input
@@ -3364,29 +3864,51 @@ These functions are analogous to the @code{vprintf} series of output
 functions.  @xref{Variable Arguments Output}, for important
 information on how to use them.
 
-@strong{Portability Note:} The functions listed in this section are GNU
-extensions.
+@strong{Portability Note:} The functions listed in this section were
+introduced in @w{ISO C99} and were before available as GNU extensions.
 
 @comment stdio.h
-@comment GNU
+@comment ISO
 @deftypefun int vscanf (const char *@var{template}, va_list @var{ap})
 This function is similar to @code{scanf}, but instead of taking
 a variable number of arguments directly, it takes an argument list
 pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int vwscanf (const wchar_t *@var{template}, va_list @var{ap})
+This function is similar to @code{wscanf}, but instead of taking
+a variable number of arguments directly, it takes an argument list
+pointer @var{ap} of type @code{va_list} (@pxref{Variadic Functions}).
+@end deftypefun
+
 @comment stdio.h
-@comment GNU
+@comment ISO
 @deftypefun int vfscanf (FILE *@var{stream}, const char *@var{template}, va_list @var{ap})
 This is the equivalent of @code{fscanf} with the variable argument list
 specified directly as for @code{vscanf}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun int vfwscanf (FILE *@var{stream}, const wchar_t *@var{template}, va_list @var{ap})
+This is the equivalent of @code{fwscanf} with the variable argument list
+specified directly as for @code{vwscanf}.
+@end deftypefun
+
 @comment stdio.h
-@comment GNU
+@comment ISO
 @deftypefun int vsscanf (const char *@var{s}, const char *@var{template}, va_list @var{ap})
 This is the equivalent of @code{sscanf} with the variable argument list
 specified directly as for @code{vscanf}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int vswscanf (const wchar_t *@var{s}, const wchar_t *@var{template}, va_list @var{ap})
+This is the equivalent of @code{swscanf} with the variable argument list
+specified directly as for @code{vwscanf}.
 @end deftypefun
 
 In GNU C, there is a special construct you can use to let the compiler
@@ -3409,16 +3931,26 @@ check indicators that are part of the internal state of the stream
 object, indicators set if the appropriate condition was detected by a
 previous I/O operation on that stream.
 
-These symbols are declared in the header file @file{stdio.h}.
-@pindex stdio.h
-
 @comment stdio.h
 @comment ISO
 @deftypevr Macro int EOF
-This macro is an integer value that is returned by a number of functions
-to indicate an end-of-file condition, or some other error situation.
-With the GNU library, @code{EOF} is @code{-1}.  In other libraries, its
-value may be some other negative number.
+This macro is an integer value that is returned by a number of narrow
+stream functions to indicate an end-of-file condition, or some other
+error situation.  With the GNU library, @code{EOF} is @code{-1}.  In
+other libraries, its value may be some other negative number.
+
+This symbol is declared in @file{stdio.h}.
+@end deftypevr
+
+@comment wchar.h
+@comment ISO
+@deftypevr Macro int WEOF
+This macro is an integer value that is returned by a number of wide
+stream functions to indicate an end-of-file condition, or some other
+error situation.  With the GNU library, @code{WEOF} is @code{-1}.  In
+other libraries, its value may be some other negative number.
+
+This symbol is declared in @file{wchar.h}.
 @end deftypevr
 
 @comment stdio.h
@@ -3426,6 +3958,8 @@ value may be some other negative number.
 @deftypefun int feof (FILE *@var{stream})
 The @code{feof} function returns nonzero if and only if the end-of-file
 indicator for the stream @var{stream} is set.
+
+This symbol is declared in @file{stdio.h}.
 @end deftypefun
 
 @comment stdio.h
@@ -3436,6 +3970,8 @@ function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 
 This function is a GNU extension.
+
+This symbol is declared in @file{stdio.h}.
 @end deftypefun
 
 @comment stdio.h
@@ -3444,6 +3980,8 @@ This function is a GNU extension.
 The @code{ferror} function returns nonzero if and only if the error
 indicator for the stream @var{stream} is set, indicating that an error
 has occurred on a previous operation on the stream.
+
+This symbol is declared in @file{stdio.h}.
 @end deftypefun
 
 @comment stdio.h
@@ -3454,6 +3992,8 @@ function except that it does not implicitly lock the stream if the state
 is @code{FSETLOCKING_INTERNAL}.
 
 This function is a GNU extension.
+
+This symbol is declared in @file{stdio.h}.
 @end deftypefun
 
 In addition to setting the error indicator associated with the stream,
