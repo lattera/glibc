@@ -100,11 +100,12 @@ cross_compiling=$ac_cv_prog_cc_cross
 AC_DEFUN(LIBC_PROG_FOO_GNU,
 [# Most GNU programs take a -v and spit out some text including
 # the word 'GNU'.  Some try to read stdin, so give them /dev/null.
-if $1 -v </dev/null 2>&1 | grep GNU > /dev/null 2>&1; then
+if $1 -o conftest -v </dev/null 2>&1 | grep GNU > /dev/null 2>&1; then
   $2
 else
   $3
-fi])
+fi
+rm -fr contest*])
 
 AC_DEFUN(LIBC_PROG_BINUTILS,
 [# Was a --with-binutils option given?
