@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ const char *const __new_sys_siglist[NSIG] =
 #include "siglist.h"
 #undef init_sig
 };
+strong_alias (__new_sys_siglist, _sys_siglist_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 asm (".type __old_sys_siglist,%object;.size __old_sys_siglist,"
