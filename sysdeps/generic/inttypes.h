@@ -29,7 +29,9 @@
 
 /* Get a definition for wchar_t.  But we must not define wchar_t itself.  */
 #ifndef ____gwchar_t_defined
-# ifdef __WCHAR_TYPE__
+# ifdef __cplusplus
+#  define __gwchar_t wchar_t
+# elif defined __WCHAR_TYPE__
 typedef __WCHAR_TYPE__ __gwchar_t;
 # else
 #  defined __need_wchar_t

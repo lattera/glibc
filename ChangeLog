@@ -1,3 +1,20 @@
+2001-09-01  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/elf/Dist: Remove file.
+	* sysdeps/alpha/elf/Makefile: Remove file.
+	* sysdeps/alpha/elf/crtbegin.S: Remove file.
+	* sysdeps/alpha/elf/crtend.S: Remove file.
+	* sysdeps/alpha/elf/initfini.c: New file.
+
+2001-09-01  Mark Kettenis  <kettenis@gnu.org>
+
+	* iconv/tst-iconv1.c: Include <stddef.h> for wchar_t.
+	* iconv/tst-iconv3.c: Likewise.
+
+2001-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/inttypes.h (__gwchar_t): Define to wchar_t for C++.
+
 2001-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_cache.c: Rename variable cache to __gconv_cache and
@@ -10,7 +27,7 @@
 2001-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strptime.c (strptime_internal): Recognize 'l' format and
-	handle it like 'I' for symmatry with strftime.
+	handle it like 'I' for symmetry with strftime.
 
 2001-08-31  Richard Henderson  <rth@redhat.com>
 
