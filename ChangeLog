@@ -1,5 +1,8 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/rtld.c (_dl_start): Initialize bootstrap_map.l_info to zero.
+	[PR libc/1165].
+
 	* configure.in: Search for programs with prefix gnu* and g* first.
 	[PR libc/1104].
 

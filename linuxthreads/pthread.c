@@ -635,6 +635,7 @@ static void pthread_handle_sigdebug(int sig)
 void __pthread_reset_main_thread()
 {
   pthread_descr self = thread_self();
+  struct sigaction sa;
 
   if (__pthread_manager_request != -1) {
     /* Free the thread manager stack */
@@ -645,6 +646,18 @@ void __pthread_reset_main_thread()
     __libc_close(__pthread_manager_reader);
     __pthread_manager_request = __pthread_manager_reader = -1;
   }
+
+  /* Reset the signal handlers behaviour for the signals the
+     implementation uses since this would be passed to the new
+     process.  */
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sa.sa_handler = SIG_DFL;
+  __sigaction(__pthread_sig_restart, &sa, NULL);
+  __sigaction(__pthread_sig_cancel, &sa, NULL);
+  if (__pthread_sig_debug > 0)
+    __sigaction(__pthread_sig_debug, &sa, NULL);
+
   /* Update the pid of the main thread */
   THREAD_SETMEM(self, p_pid, __getpid());
   /* Make the forked thread the main thread */
