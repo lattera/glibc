@@ -124,7 +124,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
  err_out:
 #ifdef USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
-    (void) fwprintf (stderr, L"%s", buf);
+    (void) __fwprintf (stderr, L"%s", buf);
   else
 #endif
     (void) fputs (buf, stderr);
@@ -148,7 +148,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp_l)
     {
       if (svc_sendreply (transp_l, (xdrproc_t)xdr_void, (char *) NULL) == FALSE)
 	{
-	  write (STDERR_FILENO, "xxx\n", 4);
+	  __write (STDERR_FILENO, "xxx\n", 4);
 	  exit (1);
 	}
       return;

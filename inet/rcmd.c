@@ -206,7 +206,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    NULL, 0,
 				    NI_NUMERICHOST);
 
-			asprintf (&buf, _("connect to address %s: "), paddr);
+			__asprintf (&buf, _("connect to address %s: "), paddr);
 #ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
 				__fwprintf(stderr, L"%s", buf);
@@ -220,7 +220,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 				    paddr, sizeof(paddr),
 				    NULL, 0,
 				    NI_NUMERICHOST);
-			asprintf (&buf, _("Trying %s...\n"), paddr);
+			__asprintf (&buf, _("Trying %s...\n"), paddr);
 #ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
 				__fwprintf (stderr, L"%s", buf);
@@ -267,8 +267,8 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		if (__write(s, num, strlen(num)+1) != (ssize_t)strlen(num)+1) {
 			char *buf = NULL;
 
-			asprintf (&buf,
-				  _("rcmd: write (setting up stderr): %m\n"));
+			__asprintf (&buf, _("\
+rcmd: write (setting up stderr): %m\n"));
 #ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
 				__fwprintf(stderr, L"%s", buf);
@@ -286,10 +286,10 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			char *buf = NULL;
 
 			if (errno != 0)
-				asprintf(&buf,
-				  _("rcmd: poll (setting up stderr): %m\n"));
+				__asprintf(&buf,
+				    _("rcmd: poll (setting up stderr): %m\n"));
 			else
-				asprintf(&buf,
+				__asprintf(&buf,
 			     _("poll: protocol failure in circuit setup\n"));
 #ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
@@ -331,7 +331,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		if (rport >= IPPORT_RESERVED || rport < IPPORT_RESERVED / 2){
 			char *buf = NULL;
 
-			asprintf(&buf,
+			__asprintf(&buf,
 			     _("socket: protocol failure in circuit setup\n"));
 #ifdef USE_IN_LIBIO
 			if (_IO_fwide (stderr, 0) > 0)
@@ -351,9 +351,9 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 		char *buf = NULL;
 
 		if (n == 0)
-			asprintf(&buf, _("rcmd: %s: short read"), *ahost);
+			__asprintf(&buf, _("rcmd: %s: short read"), *ahost);
 		else
-			asprintf(&buf, "rcmd: %s: %m\n", *ahost);
+			__asprintf(&buf, "rcmd: %s: %m\n", *ahost);
 #ifdef USE_IN_LIBIO
 		if (_IO_fwide (stderr, 0) > 0)
 			__fwprintf (stderr, L"%s", buf);

@@ -77,7 +77,7 @@ convert_and_print (const char *format, __gnuc_va_list ap)
       memset (&st, '\0', sizeof (st));
       tmp =format;
     }
-  while ((res = mbsrtowcs (wformat, &tmp, len, &st)) == len);
+  while ((res = __mbsrtowcs (wformat, &tmp, len, &st)) == len);
 
   if (res == (size_t) -1)
     /* The string cannot be converted.  */

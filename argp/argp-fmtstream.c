@@ -100,7 +100,7 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
     {
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (fs->stream, 0) > 0)
-	fwprintf (fs->stream, L"%.*s", (int) (fs->p - fs->buf), fs->buf);
+	__fwprintf (fs->stream, L"%.*s", (int) (fs->p - fs->buf), fs->buf);
       else
 #endif
 	fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
@@ -286,8 +286,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 		{
 #ifdef USE_IN_LIBIO
 		  if (_IO_fwide (fs->stream, 0) > 0)
-		    fwprintf (fs->stream, L"%.*s\n",
-			      (int) (nl - fs->buf), fs->buf);
+		    __fwprintf (fs->stream, L"%.*s\n",
+				(int) (nl - fs->buf), fs->buf);
 		  else
 #endif
 		    {

@@ -47,7 +47,7 @@ freopen64 (filename, mode, fp)
   _IO_flockfile (fp);
   if (filename == NULL && _IO_fileno (fp) >= 0)
     {
-      fd = dup (_IO_fileno (fp));
+      fd = __dup (_IO_fileno (fp));
       if (fd != -1)
 	filename = fd_to_filename (fd);
     }
@@ -57,7 +57,7 @@ freopen64 (filename, mode, fp)
     result->_mode = 0;
   if (fd != -1)
     {
-      close (fd);
+      __close (fd);
       if (filename != NULL)
 	free ((char *) filename);
     }

@@ -1,4 +1,32 @@
+2001-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/svc_simple.c (universal): Use __write instead of write.
+
+	* wcsmbs/wcscoll.c: Also define __wcscoll.
+	* include/wchar.h: Declare __wcscoll.
+
+	* libio/fwprintf.c: Use __vfwprintf instead of vfwprintf.
+	* libio/vwprintf.c: Likewise.
+	* libio/wprintf.c: Likewise.
+
+	* iconv/gconv_cache.c: Use __munmap instead of munmap.
+
 2001-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c [_LIBC] (convert_mbs_to_wcs): Use __mbrtowc
+	instead of mbrtowc.
+	[_LIBC]: Use __iswctype instead of iswctype, __wcslen instead of
+	wcslen, and __wcscoll instead of wcscoll.
+
+	* sysdeps/unix/sockatmark.c (sockatmark): Use __ioctl instead of ioctl.
+
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c (__gai_sigqueue): Use
+	__getuid instead of getuid.
+
+	* stdio-common/perror.c (perror): Use __close instead of close.
+	* iconv/gconv_cache.c (__gconv_load_cache): Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
 
 	* libio/tst-ungetwc2.c (main): Define str const.
 

@@ -149,7 +149,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 
 #ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stderr, 0) > 0)
-	    fwprintf (stderr, L"%s", buf);
+	    __fwprintf (stderr, L"%s", buf);
 	  else
 #endif
 	    fputs (buf, stderr);
@@ -167,7 +167,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 
 #ifdef USE_IN_LIBIO
 	  if (_IO_fwide (stderr, 0) > 0)
-	    fwprintf (stderr, L"%s", buf);
+	    __fwprintf (stderr, L"%s", buf);
 	  else
 #endif
 	    fputs (buf, stderr);
@@ -194,7 +194,7 @@ arg_service_list (const char *fname, int line_num, const char *args,
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
-		fwprintf (stderr, L"%s", buf);
+		__fwprintf (stderr, L"%s", buf);
 	      else
 #endif
 		fputs (buf, stderr);
@@ -234,7 +234,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
-		fwprintf (stderr, L"%s", buf);
+		__fwprintf (stderr, L"%s", buf);
 	      else
 #endif
 		fputs (buf, stderr);
@@ -259,7 +259,7 @@ arg_trimdomain_list (const char *fname, int line_num, const char *args,
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)
-		fwprintf (stderr, L"%s", buf);
+		__fwprintf (stderr, L"%s", buf);
 	      else
 #endif
 		fputs (buf, stderr);
@@ -321,7 +321,7 @@ arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L"%s", buf);
+	__fwprintf (stderr, L"%s", buf);
       else
 #endif
 	fputs (buf, stderr);
@@ -368,7 +368,7 @@ parse_line (const char *fname, int line_num, const char *str)
 
 #ifdef USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
-	fwprintf (stderr, L"%s", buf);
+	__fwprintf (stderr, L"%s", buf);
       else
 #endif
 	fputs (buf, stderr);
@@ -393,7 +393,7 @@ parse_line (const char *fname, int line_num, const char *str)
 
 	    __asprintf (&buf,
 			_("%s: line %d: ignoring trailing garbage `%s'\n"),
-		      fname, line_num, str);
+			fname, line_num, str);
 
 #ifdef USE_IN_LIBIO
 	    if (_IO_fwide (stderr, 0) > 0)

@@ -8,6 +8,7 @@ extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2)
 extern int __wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
 			  size_t __n)
      __attribute_pure__;
+extern int __wcscoll (__const wchar_t *__s1, __const wchar_t *__s2);
 extern size_t __wcslen (__const wchar_t *__s) __attribute_pure__;
 extern size_t __wcsnlen (__const wchar_t *__s, size_t __maxlen)
      __attribute_pure__;

@@ -1798,7 +1798,7 @@ envsubst:
 	      const char *str = pattern;
 
 	      if (str[0] == '\0')
-		str = gettext ("parameter null or not set");
+		str = _("parameter null or not set");
 
 #ifdef USE_IN_LIBIO
 	      if (_IO_fwide (stderr, 0) > 0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,7 +25,7 @@
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
 # define STRCOLL __wcscoll_l
 #else
-# define STRCOLL wcscoll
+# define STRCOLL __wcscoll
 #endif
 #define STRCMP wcscmp
 #define STRLEN __wcslen
@@ -35,3 +35,7 @@
 #define WIDE_CHAR_VERSION 1
 
 #include "../string/strcoll.c"
+
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+weak_alias (__wcscoll, wcscoll)
+#endif

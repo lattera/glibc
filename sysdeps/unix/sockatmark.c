@@ -24,5 +24,5 @@ int
 sockatmark (fd)
      int fd;
 {
-  return ioctl (fd, SIOCATMARK);
+  return __ioctl (fd, SIOCATMARK);
 }

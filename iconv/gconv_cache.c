@@ -63,7 +63,7 @@ __gconv_load_cache (void)
       || st.st_size < sizeof (struct gconvcache_header))
     {
     close_and_exit:
-      close (fd);
+      __close (fd);
       return -1;
     }
 
@@ -100,7 +100,7 @@ __gconv_load_cache (void)
     }
 
   /* We don't need the file descriptor anymore.  */
-  close (fd);
+  __close (fd);
 
   /* Check the consistency.  */
   header = (struct gconvcache_header *) cache;
@@ -121,7 +121,7 @@ __gconv_load_cache (void)
 	}
 #ifdef _POSIX_MAPPED_FILES
       else
-	munmap (cache, cache_size);
+	__munmap (cache, cache_size);
 #endif
       cache = NULL;
 
@@ -444,7 +444,7 @@ free_mem (void)
     free (cache);
 #ifdef _POSIX_MAPPED_FILES
   else
-    munmap (cache, cache_size);
+    __munmap (cache, cache_size);
 #endif
 }
 

@@ -30,7 +30,7 @@ __fwprintf (FILE *stream, const wchar_t *format, ...)
   int done;
 
   va_start (arg, format);
-  done = vfwprintf (stream, format, arg);
+  done = __vfwprintf (stream, format, arg);
   va_end (arg);
 
   return done;
