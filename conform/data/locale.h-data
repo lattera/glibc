@@ -15,7 +15,7 @@ element {struct lconv} char n_sign_posn
 element {struct lconv} {char*} positive_sign
 element {struct lconv} char p_cs_precedes
 element {struct lconv} char p_sep_by_space
-element {struct lconv} char p_sign_pos
+element {struct lconv} char p_sign_posn
 element {struct lconv} {char*} thousands_sep
 
 constant NULL
@@ -28,7 +28,8 @@ macro LC_MONETARY
 macro LC_NUMERIC
 macro LC_TIME
 
-function {struct lconv*) localeconv (void)
+function {struct lconv*} localeconv (void)
 function {char*} setlocale (int, const char*)
 
 allow LC_*
+allow *_t

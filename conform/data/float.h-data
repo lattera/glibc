@@ -37,3 +37,5 @@ macro LDBL_EPSILON
 macro FLT_MIN
 macro DBL_MIN
 macro LDBL_MIN
+
+allow *_t

@@ -1,1 +1,3 @@
 macro assert
+
+allow *_t

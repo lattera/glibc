@@ -15,6 +15,7 @@ constant M_SQRT1_2
 
 constant MAXFLOAT
 constant HUGE_VAL
+#endif
 
 function double acos (double)
 function double asin (double)
@@ -43,11 +44,11 @@ function double gamma (double)
 function double hypot (double, double)
 function double j0 (double)
 function double j1 (double)
-function double jn (double)
+function double jn (int, double)
 function double lgamma (double)
 function double y0 (double)
 function double y1 (double)
-function double yn (double)
+function double yn (int, double)
 function int isnan (double)
 function double acosh (double)
 function double asinh (double)
@@ -156,3 +157,5 @@ allow nextafterl
 allow remainderl
 allow rintl
 allow scalbl
+
+allow *_t

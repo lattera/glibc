@@ -58,4 +58,6 @@ constant CRNCYSTR
 function {char*} nl_langinfo (nl_item)
 
 allow-header nl_types.h
+
+allow *_t
 #endif

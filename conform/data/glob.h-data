@@ -5,7 +5,7 @@ element glob_t {char**} gl_pathv
 element glob_t size_t gl_offs
 
 constant GLOB_APPEND
-constant GLOB_DOOFS
+constant GLOB_DOOFFS
 constant GLOB_ERR
 constant GLOB_MARK
 constant GLOB_NOCHECK
@@ -18,8 +18,9 @@ constant GLOB_NOSPACE
 constant GLOB_NOSYS
 
 function int glob (const char*, int, int (*) (const char*, int), glob_t*)
-function void globfree (glob_t)
+function void globfree (glob_t *)
 
 allow gl_*
 allow GLOB_*
+allow *_t
 #endif

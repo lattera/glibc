@@ -29,10 +29,18 @@
 
 #ifdef	__GNUC__
 
-# define HUGE_VAL \
+# if __GNUC_PREREQ(2,95)
+
+#  define HUGE_VAL (0x1.0p2047)
+
+# else
+
+#  define HUGE_VAL \
   (__extension__							      \
    ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; })   \
     { __l: 0x7ff0000000000000ULL }).__d)
+
+# endif
 
 #else /* not GCC */
 
@@ -50,51 +58,60 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 #ifdef __USE_ISOC9X
 
-# ifdef __GNUC__
+# if __GNUC_PREREQ(2,95)
 
-#  define HUGE_VALF \
+#  define HUGE_VALF (0x1.0p255)
+#  define HUGE_VALL (0x1.0p32767)
+
+# else
+
+#  ifdef __GNUC__
+
+#   define HUGE_VALF \
   (__extension__							      \
    ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })    \
     { __l: 0x7f800000UL }).__d)
 
-# else /* not GCC */
+#  else /* not GCC */
 
 typedef union { unsigned char __c[4]; float __f; } __huge_valf_t;
 
-#  define __HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
+#   define __HUGE_VALF_bytes	{ 0x7f, 0x80, 0, 0 }
 
 static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
-#  define HUGE_VALF	(__huge_valf.__f)
+#   define HUGE_VALF	(__huge_valf.__f)
 
-# endif	/* GCC.  */
+#  endif /* GCC.  */
 
-#if __WORDSIZE == 32
+#  if __WORDSIZE == 32
 
 /* Sparc32 has IEEE 754 64bit long double */
-# define HUGE_VALL HUGE_VAL
+#   define HUGE_VALL HUGE_VAL
 
-#else
+#  else
 
 /* Sparc64 uses IEEE 754 128bit long double */
 
-#ifdef	__GNUC__
+#   ifdef __GNUC__
 
-# define HUGE_VALL \
+#    define HUGE_VALL \
   (__extension__									\
    ((union { struct { unsigned long __h, __l; } __i; long double __d; })		\
     { __i: { __h: 0x7fff000000000000UL, __l: 0 } }).__d)
-              
-#else /* not GCC */
+
+#   else /* not GCC */
 
 typedef union { unsigned char __c[16]; long double __d; } __huge_vall_t;
 
-# define __HUGE_VALL_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+#    define __HUGE_VALL_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
-# define HUGE_VALL	(__huge_vall.__d)
+#    define HUGE_VALL	(__huge_vall.__d)
 
-#endif	/* GCC.  */
+#   endif /* GCC.  */
 
-#endif
+#  endif
+
+# endif /* GCC 2.95.  */
 
 #endif /* __USE_ISOC9X.  */

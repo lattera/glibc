@@ -6,4 +6,6 @@ constant FNM_NOESCAPE
 constant FNM_NOSYS
 
 function int fnmatch (const char*, const char*, int)
+
+allow *_t
 #endif

@@ -8,4 +8,6 @@ function {void*} dlopen (const char*, int)
 function {void*} dlsym (void *, const char*)
 function int dlclose (void*)
 function {char*} dlerror (void)
+
+allow *_t
 #endif

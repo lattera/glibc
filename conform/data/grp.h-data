@@ -18,5 +18,6 @@ function void endgrent (void)
 function void setgrent (void)
 # endif
 
-allow gr_
+allow gr_*
+allow *_t
 #endif

@@ -1,5 +1,16 @@
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/libgen.h: Don't take basename macro as taking arguments.
+
+	* sysdeps/arm/bits/huge_val.h: Use hexadecimal floating-point constants
+	for gcc >= 2.95.
+	* sysdeps/i386/bits/huge_val.h: Likewise.
+	* sysdeps/i386/bits/huge_val.h: Likewise.
+	* sysdeps/ieee754/bits/huge_val.h: Likewise.
+	* sysdeps/m68k/bits/huge_val.h: Likewise.
+	* sysdeps/sparc/sparc32/fpu/bits/huge_val.h: Likewise.
+	* sysdeps/sparc/sparc64/fpu/bits/huge_val.h: Likewise.
+
 	* conform/Makefile: New file.
 	* conform/conformtest.pl: New file.
 	* conform/data/aio.h-data: New file.

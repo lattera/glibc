@@ -9,3 +9,5 @@ macro or
 macro or_eq
 macro xor
 macro xor_eq
+
+allow *_t

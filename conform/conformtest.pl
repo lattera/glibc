@@ -1,10 +1,12 @@
 #! /usr/bin/perl
 
 $CC = "gcc";
-$CFLAGS = "-I. -D_XOPEN_SOURCE=500";
+$CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 
 # List of the headers we are testing.
-@headers = ("fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",
+@headers = ("math.h", "locale.h", "libgen.h", "langinfo.h", "iso646.h",
+	    "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
+	    "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",
 	    "ctype.h", "cpio.h", "assert.h", "aio.h");
 
 # These are the ISO C9x keywords.
@@ -341,7 +343,7 @@ while ($#headers >= 0) {
       # Generate a program to test for availability of this function.
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "#include <$h>\n";
-      print TESTFILE "#undef $fname\n";
+      # print TESTFILE "#undef $fname\n";
       print TESTFILE "$rettype (*foobarbaz) $args = $fname;\n";
       close (TESTFILE);
 
@@ -351,7 +353,7 @@ while ($#headers >= 0) {
       # Generate a program to test for the type of this function.
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "#include <$h>\n";
-      print TESTFILE "#undef $fname\n";
+      # print TESTFILE "#undef $fname\n";
       print TESTFILE "extern $rettype (*foobarbaz) $args;\n";
       print TESTFILE "extern __typeof__ (&$fname) foobarbaz;\n";
       close (TESTFILE);

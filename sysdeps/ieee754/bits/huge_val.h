@@ -1,6 +1,6 @@
 /* `HUGE_VAL' constants for IEEE 754 machines (where it is infinity).
    Used by <stdlib.h> and <math.h> functions for overflow.
-   Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,18 @@
 
 #ifdef	__GNUC__
 
-# define HUGE_VAL \
+# if __GNUC_PREREQ(2,95)
+
+#  define HUGE_VAL (0x1.0p2047)
+
+# else
+
+#  define HUGE_VAL \
   (__extension__							      \
    ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; })   \
     { __l: 0x7ff0000000000000ULL }).__d)
+
+# endif
 
 #else /* not GCC */
 
@@ -58,10 +66,18 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 # ifdef __GNUC__
 
-#  define HUGE_VALF \
+#  if __GNUC_PREREQ(2,95)
+
+#   define HUGE_VALF (0x1.0p255f)
+
+#  else
+
+#   define HUGE_VALF \
   (__extension__							      \
    ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })    \
     { __l: 0x7f800000UL }).__d)
+
+#  endif
 
 # else /* not GCC */
 

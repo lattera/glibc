@@ -11,3 +11,4 @@ type uintptr_t
 
 allow PRI*
 allow SCN*
+allow *_t
