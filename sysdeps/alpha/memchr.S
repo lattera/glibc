@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -37,7 +37,7 @@ For correctness consider that:
         .set noreorder
         .set noat
 
-ENTRY(memchr)
+ENTRY(__memchr)
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
@@ -167,4 +167,6 @@ $not_found:
 	mov	zero, v0	#-e0	:
 	ret			# .. e1 :
 
-        END(memchr)
+        END(__memchr)
+
+weak_alias (__stpcpy, stpcpy)

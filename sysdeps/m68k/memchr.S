@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in the
    first N bytes of STR.
    For Motorola 68000.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -24,7 +24,7 @@
 #include "asm-syntax.h"
 
 	TEXT
-ENTRY(memchr)
+ENTRY(__memchr)
 	/* Save the callee-saved registers we use.  */
 	moveml	R(d2)-R(d4),MEM_PREDEC(sp)
 
@@ -223,6 +223,6 @@ L(L9:)
 	movel	R(a0),R(d0)
 	moveml	MEM_POSTINC(sp),R(d2)-R(d4)
 	rts
-END(strchr)
+END(__memchr)
 
-weak_alias (strchr, index)
+weak_alias (__memchr, memchr)
