@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -25,6 +25,7 @@
 
 /* check_ptr checks that a pointer is in the mmaped file and doesn't
    point outside it.  */
+#undef check_ptr
 #define check_ptr(ptr)						\
 do								\
   {								\
