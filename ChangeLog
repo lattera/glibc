@@ -1,5 +1,9 @@
 2003-01-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/s_significandl.c (__significandl): Really
+	return significand and not the exponent.
+	Reported by Nelson H. F. Beebe <beebe@math.utah.edu>.
+
 	* elf/dl-misc.c (_dl_debug_vdprintf): Help PPC port by explcitly
 	taking address of iov in INTERNAL_SYSCALL call.  Patch by Franz Sirl.
 
