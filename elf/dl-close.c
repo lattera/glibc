@@ -55,7 +55,7 @@ _dl_close (void *_map)
     /* Nope.  Do nothing.  */
     return;
 
-  if (map->l_opencount == 0)
+  if (__builtin_expect (map->l_opencount, 1) == 0)
     _dl_signal_error (0, map->l_name, N_("shared object not open"));
 
   /* Acquire the lock.  */
@@ -150,7 +150,7 @@ _dl_close (void *_map)
 
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
-	  if (imap->l_global)
+	  if (__builtin_expect (imap->l_global, 0))
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
 	      int cnt = _dl_main_searchlist->r_nlist;
@@ -228,7 +228,7 @@ _dl_close (void *_map)
 
   /* Now we can perhaps also remove the modules for which we had
      dependencies because of symbol lookup.  */
-  if (rellist != NULL)
+  if (__builtin_expect (rellist != NULL, 0))
     {
       while (nrellist-- > 0)
 	_dl_close (rellist[nrellist]);
@@ -238,7 +238,7 @@ _dl_close (void *_map)
 
   free (list);
 
-  if (_dl_global_scope_alloc != 0
+  if (__builtin_expect (_dl_global_scope_alloc, 0) != 0
       && _dl_main_searchlist->r_nlist == _dl_initial_searchlist.r_nlist)
     {
       /* All object dynamically loaded by the program are unloaded.  Free
