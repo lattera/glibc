@@ -1,5 +1,5 @@
 /* Notify initiator of AIO request.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -25,7 +25,7 @@
 
 int
 internal_function
-__aio_notify_only (struct sigevent *sigev)
+__aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
 {
   int result = 0;
 
@@ -51,7 +51,8 @@ __aio_notify_only (struct sigevent *sigev)
     }
   else if (sigev->sigev_notify == SIGEV_SIGNAL)
     /* We have to send a signal.  */
-    if (__aio_sigqueue (sigev->sigev_signo, sigev->sigev_value) < 0)
+    if (__aio_sigqueue (sigev->sigev_signo, sigev->sigev_value, caller_pid)
+	< 0)
       result = -1;
 
   return result;
@@ -65,7 +66,7 @@ __aio_notify (struct requestlist *req)
   struct waitlist *waitlist;
   struct aiocb *aiocbp = &req->aiocbp->aiocb;
 
-  if (__aio_notify_only (&aiocbp->aio_sigevent) != 0)
+  if (__aio_notify_only (&aiocbp->aio_sigevent, req->caller_pid) != 0)
     {
       /* XXX What shall we do if already an error is set by
 	 read/write/fsync?  */
@@ -89,7 +90,7 @@ __aio_notify (struct requestlist *req)
 	   this request is the last one, send the signal.  */
 	if (*waitlist->counterp == 0)
 	  {
-	    __aio_notify_only (waitlist->sigevp);
+	    __aio_notify_only (waitlist->sigevp, waitlist->caller_pid);
 	    /* This is tricky.  See lio_listio.c for the reason why
 	       this works.  */
 	    free ((void *) waitlist->counterp);

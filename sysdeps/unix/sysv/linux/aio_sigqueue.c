@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,10 @@ extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
 /* Return any pending signal or wait for one for the given time.  */
 int
-__aio_sigqueue (sig, val)
+__aio_sigqueue (sig, val, caller_pid)
      int sig;
      const union sigval val;
+     pid_t caller_pid;
 {
   siginfo_t info;
 
@@ -42,7 +43,7 @@ __aio_sigqueue (sig, val)
   info.si_signo = sig;
   info.si_errno = 0;
   info.si_code = SI_ASYNCIO;
-  info.si_pid = getpid ();
+  info.si_pid = caller_pid;
   info.si_uid = getuid ();
   info.si_value = val;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,9 @@ struct waitlist
     volatile int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
+    /* XXX See requestlist, it's used to work around the broken signal
+       handling in Linux.  */
+    pid_t caller_pid;
   };
 
 
@@ -75,6 +78,10 @@ struct requestlist
 
     /* Pointer to the actual data.  */
     aiocb_union *aiocbp;
+
+    /* PID of the initiator thread.
+       XXX This is only necessary for the broken signal handling on Linux.  */
+    pid_t caller_pid;
 
     /* List of waiting processes.  */
     struct waitlist *waiting;
@@ -104,9 +111,11 @@ extern void __aio_free_request (struct requestlist *req) internal_function;
 extern void __aio_notify (struct requestlist *req) internal_function;
 
 /* Notify initiator of request.  */
-extern int __aio_notify_only (struct sigevent *sigev) internal_function;
+extern int __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
+     internal_function;
 
 /* Send the signal.  */
-extern int __aio_sigqueue (int sig, const union sigval val) internal_function;
+extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
+     internal_function;
 
 #endif /* aio_misc.h */

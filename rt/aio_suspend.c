@@ -1,5 +1,5 @@
 /* Suspend until termination of a requests.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -64,6 +64,7 @@ aio_suspend (list, nent, timeout)
 	    waitlist[cnt].next = requestlist[cnt]->waiting;
 	    waitlist[cnt].counterp = &dummy;
 	    waitlist[cnt].sigevp = NULL;
+	    waitlist[cnt].caller_pid = 0;	/* Not needed.  */
 	    requestlist[cnt]->waiting = &waitlist[cnt];
 	    none = 0;
 	  }

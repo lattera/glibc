@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,7 @@
 #include <aio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "aio_misc.h"
 
@@ -77,8 +78,17 @@ lio_listio (mode, list, nent, sig)
     {
       /* We don't have anything to do except signalling if we work
 	 asynchronously.  */
+
+      /* Release the mutex.  We do this before raising a signal since the
+	 signal handler might do a `siglongjmp' and then the mutex is
+	 locked forever.  */
+      pthread_mutex_unlock (&__aio_requests_mutex);
+
       if (mode == LIO_NOWAIT)
-	__aio_notify_only (sig);
+	__aio_notify_only (sig,
+			   sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0);
+
+      return result;
     }
   else if (mode == LIO_WAIT)
     {
@@ -95,6 +105,7 @@ lio_listio (mode, list, nent, sig)
 	    waitlist[cnt].next = requests[cnt]->waiting;
 	    waitlist[cnt].counterp = &total;
 	    waitlist[cnt].sigevp = NULL;
+	    waitlist[cnt].caller_pid = 0;	/* Not needed.  */
 	    requests[cnt]->waiting = &waitlist[cnt];
 	    ++total;
 	  }
@@ -130,6 +141,7 @@ lio_listio (mode, list, nent, sig)
 	}
       else
 	{
+	  pid_t caller_pid = sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0;
 	  total = 0;
 
 	  for (cnt = 0; cnt < nent; ++cnt)
@@ -140,6 +152,7 @@ lio_listio (mode, list, nent, sig)
 		waitlist->list[cnt].next = requests[cnt]->waiting;
 		waitlist->list[cnt].counterp = &waitlist->counter;
 		waitlist->list[cnt].sigevp = &waitlist->sigev;
+		waitlist->list[cnt].caller_pid = caller_pid;
 		requests[cnt]->waiting = &waitlist->list[cnt];
 		++total;
 	      }

@@ -1,3 +1,24 @@
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Take extra parameter and
+	initialize si_pid from it.
+	* sysdeps/generic/aio_sigqueue.c (__aio_sigqueue): Take extra
+	parameter.
+	* rt/aio_misc.c (__aio_enqueue_request): Initialize caller_pid.
+	* rt/aio_misc.h (struct waitlist): Add caller_pid element.
+	(struct requestlist): Likewise.
+	Adjust prototypes of __aio_notify_only and __aio_sigqueue.
+	* rt/notify.c (__aio_notify_only): Take extra parameter.  Pass it
+	to __aio_sigqueue.
+	(__aio_notify): Pass caller PID to __aio_notify_only.
+	* rt/aio_suspend.c: Initialize caller_pid.
+	* rt/lio_listio.c: Likewise.
+	* rt/lio_listio64.c: Likewise.
+
+	* rt/lio_listio.c: If nothing has to be done free mutex before
+	signalling.
+	* rt/lio_listio64.c: Likewise.
+
 1999-08-10  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Cleanup out-of-

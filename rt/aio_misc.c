@@ -265,6 +265,8 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       return NULL;
     }
   newp->aiocbp = aiocbp;
+  newp->caller_pid = (aiocbp->aiocb.aio_sigevent.sigev_notify == SIGEV_SIGNAL
+		      ? getpid () : 0);
   newp->waiting = NULL;
 
   aiocbp->aiocb.__abs_prio = prio;
