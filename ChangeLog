@@ -1,3 +1,18 @@
+1998-10-30 18:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_conf.c (__gconv_read_conf): Don't define as
+	internal_function since it is called through a pointer.
+	* iconv/gconv_db.c (free_derivation): Likewise.
+	* iconv/gconv_int.h: Adjust prototype od __gconv_read_conf.
+
+	* posix/wordexp.c: Add internal_function to parse_backtick definition.
+	* rt/aio_misc.c: Add internal_function to __aio_free_request,
+	__aio_find_req, __aio_find_req_fd, and __aio_enqueue_request
+	definitions.
+	* rt/aio_notify.c: Add internal_function to __aio_notify_only and
+	__aio_notify definitions.
+	* wcsmbsload.c: Add internal_function to __wcsmbs_load_conv definition.
+
 1998-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makerules (build-shlib): Add -O to generate optimized shared

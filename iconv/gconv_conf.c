@@ -381,7 +381,6 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 /* Read all configuration files found in the user-specified and the default
    path.  */
 void
-internal_function
 __gconv_read_conf (void)
 {
   const char *user_path = __secure_getenv ("GCONV_PATH");

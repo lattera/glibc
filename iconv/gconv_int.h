@@ -112,8 +112,7 @@ extern int __gconv_find_transform (const char *__toset, const char *__fromset,
      internal_function;
 
 /* Read all the configuration data and cache it.  */
-extern void __gconv_read_conf (void)
-     internal_function;
+extern void __gconv_read_conf (void);
 
 /* Comparison function to search alias.  */
 extern int __gconv_alias_compare (const void *__p1, const void *__p2);

@@ -137,6 +137,7 @@ getfct (const char *to, const char *from)
 
 /* Load conversion functions for the currently selected locale.  */
 void
+internal_function
 __wcsmbs_load_conv (const struct locale_data *new_category)
 {
   /* We must modify global data.  */

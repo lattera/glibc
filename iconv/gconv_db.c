@@ -147,7 +147,6 @@ add_derivation (const char *fromset, const char *toset,
 }
 
 static void
-internal_function
 free_derivation (void *p)
 {
   struct known_derivation *deriv = (struct known_derivation *) p;

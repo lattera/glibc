@@ -1867,6 +1867,7 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_backtick (char **word, size_t *word_length, size_t *max_length,
 		const char *words, size_t *offset, int flags,
 		wordexp_t *pwordexp, const char *ifs, const char *ifs_white)
