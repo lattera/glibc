@@ -1,5 +1,5 @@
 /* Report on what a thread in our task is waiting for.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,51 +26,57 @@
 #include "thread_state.h"
 #include "intr-msg.h"
 
-static void
-describe_number (string_t description, const char *flavor, unsigned long int i)
+static char *
+describe_number (string_t description, const char *flavor, long int i)
 {
   unsigned long int j;
-  char *p = __stpcpy (description, flavor);
+  char *p = flavor ? description : __stpcpy (description, flavor);
+  char *end;
+
+  /* Handle sign.  */
+  if (i < 0)
+    {
+      i = -i;
+      *p++ = '-';
+    }
 
   /* Allocate space for the number at the end of DESCRIPTION.  */
   for (j = i; j >= 10; j /= 10)
     p++;
-  p[1] = '\0';
+  end = p + 1;
+  *end = '\0';
 
   do
     {
       *p-- = '0' + i % 10;
       i /= 10;
     } while (i != 0);
-  assert (*p == '#');
+
+  return end;
 }
 
-static void
+static char *
 describe_port (string_t description, mach_port_t port)
 {
   int i;
 
+  if (port == MACH_PORT_NULL)
+    return __stpcpy (description, "(null)");
+  if (port == MACH_PORT_DEAD)
+    return __stpcpy (description, "(dead)");
+
   if (port == __mach_task_self ())
-    {
-      strcpy (description, "task-self");
-      return;
-    }
+    return __stpcpy (description, "task-self");
 
   for (i = 0; i < _hurd_nports; ++i)
     if (port == _hurd_ports[i].port)
-      {
-	describe_number (description, "init#", i);
-	return;
-      }
+      return describe_number (description, "init#", i);
 
   if (_hurd_init_dtable)
     {
       for (i = 0; i < _hurd_init_dtablesize; ++i)
 	if (port == _hurd_init_dtable[i])
-	  {
-	    describe_number (description, "fd#", i);
-	    return;
-	  }
+	  return describe_number (description, "fd#", i);
     }
   else if (_hurd_dtable)
     {
@@ -78,18 +84,12 @@ describe_port (string_t description, mach_port_t port)
 	if (_hurd_dtable[i] == NULL)
 	  continue;
 	else if (port == _hurd_dtable[i]->port.port)
-	  {
-	    describe_number (description, "fd#", i);
-	    return;
-	  }
+	  return describe_number (description, "fd#", i);
 	else if (port == _hurd_dtable[i]->ctty.port)
-	  {
-	    describe_number (description, "bgfd#", i);
-	    return;
-	  }
+	  return describe_number (description, "bgfd#", i);
     }
 
-  describe_number (description, "port#", port);
+  return describe_number (description, "port#", port);
 }
 
 
@@ -146,12 +146,68 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 	  assert (count == MACHINE_THREAD_STATE_COUNT);
 	  if (SYSCALL_EXAMINE (&state, msgid))
 	    {
+	      mach_port_t send_port, rcv_port;
+	      mach_msg_option_t option;
+	      mach_msg_timeout_t timeout;
+
 	      /* Blocked in a system call.  */
-	      if (*msgid == -25)
-		/* mach_msg system call.  Examine its parameters.  */
-		describe_port (description, MSG_EXAMINE (&state, msgid));
-	      else
-		strcpy (description, "kernel");
+	      if (*msgid == -25
+		  /* mach_msg system call.  Examine its parameters.  */
+		  && MSG_EXAMINE (&state, msgid, &send_port, &rcv_port,
+				  &option, &timeout) == 0)
+		{
+		  char *p;
+		  if (send_port != MACH_PORT_NULL && *msgid != 0)
+		    {
+		      /* For the normal case of RPCs, we consider the
+			 destination port to be the interesting thing
+			 whether we are in fact sending or receiving at the
+			 moment.  That tells us who we are waiting for the
+			 reply from.  */
+		      if (send_port == ss->intr_port)
+			{
+			  /* This is a Hurd interruptible RPC.
+			     Mark it by surrounding the port description
+			     string with [...] brackets.  */
+			  description[0] = '[';
+			  p = describe_port (description + 1, send_port);
+			  *p++ = ']';
+			  *p = '\0';
+			}
+		      else
+			(void) describe_port (description, send_port);
+		    }
+		  else if (rcv_port != MACH_PORT_NULL)
+		    {
+		      /* This system call had no send port, but had a
+			 receive port.  The msgid we extracted is then just
+			 some garbage or perhaps the msgid of the last
+			 message this thread received, but it's not a
+			 helpful thing to return.  */
+		      strcpy (describe_port (description, rcv_port), ":rcv");
+		      *msgid = 0;
+		    }
+		  else if ((option & (MACH_RCV_MSG|MACH_RCV_TIMEOUT))
+			   == (MACH_RCV_MSG|MACH_RCV_TIMEOUT))
+		    {
+		      /* A receive with no valid port can be used for a
+			 pure timeout.  Report the timeout value (counted
+			 in milliseconds); note this is the original total
+			 time, not the time remaining.  */
+		      strcpy (describe_number (description, 0, timeout), "ms");
+		      *msgid = 0;
+		    }
+		  else
+		    {
+		      strcpy (description, "mach_msg");
+		      *msgid = 0;
+		    }
+		}
+	      else		/* Some other system call.  */
+		{
+		  (void) describe_number (description, "syscall#", *msgid);
+		  *msgid = 0;
+		}
 	    }
 	  else
 	    description[0] = '\0';

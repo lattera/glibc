@@ -83,23 +83,35 @@ struct mach_msg_trap_args
   };
 
 
-static inline mach_port_t
-MSG_EXAMINE (struct i386_thread_state *state, int *msgid)
+static inline int
+MSG_EXAMINE (struct i386_thread_state *state, int *msgid,
+	     mach_port_t *rcv_name, mach_port_t *send_name,
+	     mach_msg_option_t *option, mach_msg_timeout_t *timeout)
 {
   const struct mach_msg_trap_args *args = (const void *) state->uesp;
   mach_msg_header_t *msg;
-  mach_port_t send_port;
 
   if (_hurdsig_catch_memory_fault (args))
-    return MACH_PORT_NULL;
+    return -1;
   msg = args->msg;
+  *option = args->option;
+  *timeout = args->timeout;
+  *rcv_name = args->rcv_name;
   _hurdsig_end_catch_fault ();
 
-  if (_hurdsig_catch_memory_fault (msg))
-    return MACH_PORT_NULL;
-  send_port = msg->msgh_remote_port;
-  *msgid = msg->msgh_id;
-  _hurdsig_end_catch_fault ();
+  if (msg == 0)
+    {
+      *send_name = MACH_PORT_NULL;
+      *msgid = 0;
+    }
+  else
+    {
+      if (_hurdsig_catch_memory_fault (msg))
+	return -1;
+      *send_name = msg->msgh_remote_port;
+      *msgid = msg->msgh_id;
+      _hurdsig_end_catch_fault ();
+    }
 
-  return send_port;
+  return 0;
 }

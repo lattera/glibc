@@ -429,6 +429,81 @@ __hurd_file_name_split (error_t (*use_init_port)
 }
 weak_alias (__hurd_file_name_split, hurd_file_name_split)
 
+/* This is the same as hurd_file_name_split, except that it ignores
+   trailing slashes (so *NAME is never "").  */
+error_t
+__hurd_directory_name_split (error_t (*use_init_port)
+			     (int which, error_t (*operate) (file_t)),
+			     file_t (*get_dtable_port) (int fd),
+			     error_t (*lookup)
+			     (file_t dir, char *name, int flags, mode_t mode,
+			      retry_type *do_retry, string_t retry_name,
+			      mach_port_t *result),
+			     const char *file_name,
+			     file_t *dir, char **name)
+{
+  error_t addref (file_t crdir)
+    {
+      *dir = crdir;
+      return __mach_port_mod_refs (__mach_task_self (),
+				   crdir, MACH_PORT_RIGHT_SEND, +1);
+    }
+
+  const char *lastslash = strrchr (file_name, '/');
+
+  if (lastslash != NULL && lastslash[1] == '\0')
+    {
+      /* Trailing slash doesn't count.  Look back further.  */
+
+      /* Back up over all trailing slashes.  */
+      while (lastslash > file_name && *lastslash == '/')
+	--lastslash;
+
+      /* Find the last one earlier in the string, before the trailing ones.  */
+#if __GLIBC__ > 2 || __GLIBC_MINOR__ >= 2
+      lastslash = __memrchr (file_name, '/', lastslash - file_name);
+#else
+      /* Keep backing up, looking for a slash.  */
+      do
+	if (lastslash == file_name)
+	  {
+	    /* Hit the start with no slash.  */
+	    lastslash = NULL;
+	    break;
+	  }
+      while (*lastslash-- != '/');
+#endif
+    }
+
+  if (lastslash != NULL)
+    {
+      if (lastslash == file_name)
+	{
+	  /* "/foobar" => crdir + "foobar".  */
+	  *name = (char *) file_name + 1;
+	  return (*use_init_port) (INIT_PORT_CRDIR, &addref);
+	}
+      else
+	{
+	  /* "/dir1/dir2/.../file".  */
+	  char dirname[lastslash - file_name + 1];
+	  memcpy (dirname, file_name, lastslash - file_name);
+	  dirname[lastslash - file_name] = '\0';
+	  *name = (char *) lastslash + 1;
+	  return
+	    __hurd_file_name_lookup (use_init_port, get_dtable_port, lookup,
+				     dirname, 0, 0, dir);
+	}
+    }
+  else
+    {
+      /* "foobar" => cwdir + "foobar".  */
+      *name = (char *) file_name;
+      return (*use_init_port) (INIT_PORT_CWDIR, &addref);
+    }
+}
+weak_alias (__hurd_directory_name_split, hurd_directory_name_split)
+
 
 file_t
 __file_name_lookup (const char *file_name, int flags, mode_t mode)
@@ -457,6 +532,19 @@ __file_name_split (const char *file_name, char **name)
   return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
 }
 weak_alias (__file_name_split, file_name_split)
+
+file_t
+__directory_name_split (const char *directory_name, char **name)
+{
+  error_t err;
+  file_t result;
+
+  err = __hurd_directory_name_split (&_hurd_ports_use, &__getdport, 0,
+				     directory_name, &result, name);
+
+  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
+}
+weak_alias (__directory_name_split, directory_name_split)
 
 
 file_t

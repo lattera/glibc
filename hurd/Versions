@@ -107,4 +107,11 @@ libc {
     # s*
     seteuids;
   }
+  GLIBC_2.1.3 {
+    # d*
+    directory_name_split;
+
+    # h*
+    hurd_directory_name_split;
+  }
 }

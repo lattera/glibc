@@ -180,6 +180,12 @@ extern int seteuids (int __n, const uid_t *__uidset);
 extern file_t __file_name_split (const char *file, char **name);
 extern file_t file_name_split (const char *file, char **name);
 
+/* Split DIRECTORY into a parent directory and a name within the directory.
+   This is the same as file_name_split, but ignores trailing slashes.  */
+
+extern file_t __directory_name_split (const char *file, char **name);
+extern file_t directory_name_split (const char *file, char **name);
+
 /* Open a port to FILE with the given FLAGS and MODE (see <fcntl.h>).
    The file lookup uses the current root and working directory.
    Returns a port to the file if successful; otherwise sets `errno'
