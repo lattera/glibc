@@ -1699,7 +1699,6 @@ if test -z "$enable_hacker_mode"; then
 fi
 
 # Brain dead PowerPC box with absolutely no FPU.
-echo $host
 case "$machine-$host_os" in
   powerpc*-*soft)
     with_fp=no
@@ -4780,7 +4779,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 4783 "configure"
+#line 4782 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5083,7 +5082,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5086 "configure"
+#line 5085 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5182,7 +5181,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5185 "configure"
+#line 5184 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5250,7 +5249,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5253 "configure"
+#line 5252 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

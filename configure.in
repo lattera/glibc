@@ -305,7 +305,6 @@ if test -z "$enable_hacker_mode"; then
 fi
 
 # Brain dead PowerPC box with absolutely no FPU.
-echo $host
 case "$machine-$host_os" in
   powerpc*-*soft)
     with_fp=no

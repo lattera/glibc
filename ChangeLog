@@ -1,3 +1,9 @@
+2002-10-18  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Remove bogus echo included in
+	2002-10-08  Aldy Hernandez  <aldyh@redhat.com> change.
+	* configure: Regenerated.
+
 2002-10-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pathconf.h (statfs_link_max): Add inline.
