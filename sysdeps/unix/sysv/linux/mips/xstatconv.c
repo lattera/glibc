@@ -1,5 +1,5 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1997,1998,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
 	/* Convert to current kernel version of `struct stat'.  */
 	buf->st_dev = kbuf->st_dev;
-	buf->st_pad1[0]  = 0; buf->st_pad1[1]  = 0; buf->st_pad1[2]  = 0;
+	buf->st_pad1[0] = 0; buf->st_pad1[1] = 0; buf->st_pad1[2] = 0;
 	buf->st_ino = kbuf->st_ino;
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
@@ -50,15 +50,15 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
-	
+
 	buf->st_atime = kbuf->st_atime; buf->__reserved0 = 0;
 	buf->st_mtime = kbuf->st_mtime; buf->__reserved1 = 0;
 	buf->st_ctime = kbuf->st_ctime; buf->__reserved2 = 0;
-	
-	buf->st_pad4[0] = 0; buf->st_pad4[1] = 0;
-	buf->st_pad4[2] = 0; buf->st_pad4[3] = 0;
-	buf->st_pad4[4] = 0; buf->st_pad4[5] = 0;
-	buf->st_pad4[6] = 0; buf->st_pad4[7] = 0;
+
+	buf->st_pad5[0] = 0; buf->st_pad5[1] = 0;
+	buf->st_pad5[2] = 0; buf->st_pad5[3] = 0;
+	buf->st_pad5[4] = 0; buf->st_pad5[5] = 0;
+	buf->st_pad5[6] = 0; buf->st_pad5[7] = 0;
       }
       break;
 
@@ -83,14 +83,14 @@ xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	struct stat64 *buf = ubuf;
 
 	buf->st_dev = kbuf->st_dev;
-	buf->st_pad1[0]  = 0; buf->st_pad1[1]  = 0; buf->st_pad1[2]  = 0;
+	buf->st_pad1[0] = 0; buf->st_pad1[1] = 0; buf->st_pad1[2] = 0;
 	buf->st_ino = kbuf->st_ino;
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-	buf->st_pad2[0] = 0; buf->st_pad2[1] = 0;
+	buf->st_pad2[0] = 0; buf->st_pad2[1] = 0; buf->st_pad2[2] = 0;
 	buf->st_pad3 = 0;
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
