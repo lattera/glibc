@@ -1,5 +1,7 @@
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: New file.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: New file.
