@@ -1,3 +1,22 @@
+2000-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/Makefile [$(subdir)==misc]
+	(sysdep_routines): Add restf and savef.
+	* sysdeps/unix/sysv/aix/restf.c: New file.
+	* sysdeps/unix/sysv/aix/savef.c: New file.
+	Patches by Michael Keezer <mkeezer@redhat.com>.
+
+	* sysdeps/unix/opendir.c (__opendir): Don't use o_directory_works
+	if O_DIRECTORY is not defined.
+	Patch by Michael Keezer <mkeezer@redhat.com>.
+
+	* include/libc-symbols.h (C_SYMBOL_DOT_NAME): Define.
+	Patch by Michael Keezer <mkeezer@redhat.com>.
+
+	* locale/programs/linereader.c (get_toplvl_escape): Recognize more
+	than 4 bytes in escape sequence.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 2000-12-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Don't

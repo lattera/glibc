@@ -120,11 +120,15 @@ __opendir (const char *name)
      O_DIRECTORY flag is honored by the kernel.  */
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
     goto lose;
-  if (o_directory_works <= 0
-      && __builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
+#ifdef O_DIRECTORY
+  if (o_directory_works <= 0)
+#endif
     {
-      save_errno = ENOTDIR;
-      goto lose;
+      if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
+	{
+	  save_errno = ENOTDIR;
+	  goto lose;
+	}
     }
 
   if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)

@@ -80,6 +80,10 @@
 # define ASM_LINE_SEP ;
 #endif
 
+#ifndef C_SYMBOL_DOT_NAME
+# define C_SYMBOL_DOT_NAME(name) .##name
+#endif
+
 #ifndef __ASSEMBLER__
 /* GCC understands weak symbols and aliases; use its interface where
    possible, instead of embedded assembly language.  */
