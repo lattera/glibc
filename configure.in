@@ -351,10 +351,32 @@ if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
 else
   libc_cv_asm_set_directive=no
 fi
-rm -f contest*])
+rm -f conftest*])
 AC_MSG_RESULT($libc_cv_asm_set_directive)
 if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
+fi
+
+AC_MSG_CHECKING(for assembler global-symbol directive)
+AC_CACHE_VAL(libc_cv_asm_global_directive, [dnl
+libc_cv_asm_global_directive=UNKNOWN
+for ac_globl in .globl .global; do
+  cat > conftest.s <<EOF
+.text
+${ac_globl} foo
+foo: .long 0
+EOF
+  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+    libc_cv_asm_global_directive=${ac_globl}
+  fi
+  rm -f conftest*
+  test $libc_cv_asm_global_directive != UNKNOWN && break
+done])
+AC_MSG_RESULT($libc_cv_asm_global_directive)
+if test $libc_cv_asm_global_directive = UNKNOWN; then
+  AC_MSG_ERROR(cannot determine asm global directive)
+else
+  AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
 fi
 
 

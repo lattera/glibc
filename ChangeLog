@@ -1,3 +1,12 @@
+Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* configure.in (libc_cv_asm_global_directive): New check to define
+ 	ASM_GLOBAL_DIRECTIVE.
+	* config.h.in: Add #undef ASM_GLOBAL_DIRECTIVE.
+
+	* sysdeps/unix/make_errlist.c (main): Don't generate "#ifdef
+ 	HAVE_WEAK_SYMBOLS" #defns.
+
 Mon Apr 17 12:02:49 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/alpha/strlen.c (strlen): Fix cmpbge insn, and returning

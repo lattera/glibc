@@ -17,6 +17,10 @@
 /* Define if the assembler supports the `.set' directive.  */
 #undef	HAVE_ASM_SET_DIRECTIVE
 
+/* Define to the name of the assembler's directive for
+   declaring a symbol global (default `.globl').  */
+#undef	ASM_GLOBAL_DIRECTIVE
+
 /* ELF has weak symbols, and with GNU ld a.out does too.  */
 #ifndef HAVE_WEAK_SYMBOLS
 #if defined (HAVE_ELF) || defined (HAVE_GNU_LD)
