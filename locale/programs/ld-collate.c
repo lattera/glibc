@@ -317,6 +317,9 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	  valid = 1;
 	}
 
+      if (valid)
+	arg = lr_token (ldfile, charmap, repertoire);
+
       if (arg->tok == tok_eof || arg->tok == tok_eol || arg->tok == tok_comma
 	  || arg->tok == tok_semicolon)
 	{

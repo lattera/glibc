@@ -1,3 +1,8 @@
+1999-09-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c (read_directions): Read new token
+	after accepting sorting rule.
+
 1999-09-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Fix
