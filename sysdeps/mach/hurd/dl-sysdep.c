@@ -34,6 +34,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/term.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <sys/stat.h>
 
 #include "dl-machine.h"
 
@@ -264,8 +265,11 @@ _dl_sysdep_message (const char *msg, ...)
    dynamic linker re-relocates itself to be user-visible (for -ldl),
    it will get the user's definition (i.e. usually libc's).  */
 
-int weak_function
-__open (const char *file_name, int mode, ...)
+/* Open FILE_NAME and return a read-mmapable port in MEMOBJ_RD for it, or
+   return an error.  If STAT is non-zero, stat the file into that stat buffer.  */
+static error_t
+open_file (const char *file_name, int mode,
+	   mach_port_t *memobj_rd, struct stat *stat)
 {
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
@@ -282,9 +286,9 @@ __open (const char *file_name, int mode, ...)
   while (file_name[0] == '/')
     file_name++;
 
-  if (err = __dir_lookup (startdir, file_name, mode, 0,
+  if (err = __dir_lookup (startdir, (char *)file_name, mode, 0,
 			  &doretry, retryname, &fileport))
-    return __hurd_fail (err);
+    return err;
 
   dealloc_dir = 0;
   nloops = 0;
@@ -294,7 +298,7 @@ __open (const char *file_name, int mode, ...)
       if (dealloc_dir)
 	__mach_port_deallocate (__mach_task_self (), startdir);
       if (err)
-	return __hurd_fail (err);
+	return err;
 
       switch (doretry)
 	{
@@ -311,34 +315,40 @@ __open (const char *file_name, int mode, ...)
 	  }
 	  __mach_port_deallocate (__mach_task_self (), fileport);
 	  if (err)
-	    return __hurd_fail (err);
+	    return err;
 	  fileport = newpt;
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
 #ifdef SYMLOOP_MAX
 	  if (nloops++ >= SYMLOOP_MAX)
-	    return __hurd_fail (ELOOP);
+	    return ELOOP;
 #endif
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
 	  if (retryname[0] == '\0')
 	    {
-	      mach_port_t memobj_rd, memobj_wr;
+	      mach_port_t memobj_wr;
 
 	      dealloc_dir = 1;
 
 	    opened:
 	      /* We have the file open.  Now map it.  */
-	      err = __io_map (fileport, &memobj_rd, &memobj_wr);
+
+	      if (stat)
+		err = __io_stat (fileport, stat);
+	      if (! err)
+		err = __io_map (fileport, memobj_rd, &memobj_wr);
+
 	      if (dealloc_dir)
 		__mach_port_deallocate (__mach_task_self (), fileport);
 	      if (err)
-		return __hurd_fail (err);
+		return err;
+
 	      if (memobj_wr != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), memobj_wr);
 
-	      return (int) memobj_rd;
+	      return 0;
 	    }
 
 	  startdir = fileport;
@@ -371,13 +381,13 @@ __open (const char *file_name, int mode, ...)
 		     valid; it ends the component.  Anything else does not
 		     name a numeric file descriptor.  */
 		  if (*p != '/' && *p != '\0')
-		    return __hurd_fail (ENOENT);
+		    return ENOENT;
 		  if (fd < 0 || fd >= _dl_hurd_data->dtablesize ||
 		      _dl_hurd_data->dtable[fd] == MACH_PORT_NULL)
 		    /* If the name was a proper number, but the file
 		       descriptor does not exist, we return EBADF instead
 		       of ENOENT.  */
-		    return __hurd_fail (EBADF);
+		    return EBADF;
 		  fileport = _dl_hurd_data->dtable[fd];
 		  if (*p == '\0')
 		    {
@@ -458,12 +468,12 @@ __open (const char *file_name, int mode, ...)
 
 		  case '\0':
 		    if (err = opentty (&fileport))
-		      return __hurd_fail (err);
+		      return err;
 		    dealloc_dir = 1;
 		    goto opened;
 		  case '/':
 		    if (err = opentty (&startdir))
-		      return __hurd_fail (err);
+		      return err;
 		    dealloc_dir = 1;
 		    strcpy (retryname, &retryname[4]);
 		    break;
@@ -476,17 +486,28 @@ __open (const char *file_name, int mode, ...)
 
 	    default:
 	    bad_magic:
-	      return __hurd_fail (EGRATUITOUS);
+	      return EGRATUITOUS;
 	    }
 	  break;
 
 	default:
-	  return __hurd_fail (EGRATUITOUS);
+	  return EGRATUITOUS;
 	}
 
-      err = __dir_lookup (startdir, file_name, mode, 0,
+      err = __dir_lookup (startdir, (char *)file_name, mode, 0,
 			  &doretry, retryname, &fileport);
     }
+}
+
+int weak_function
+__open (const char *file_name, int mode, ...)
+{
+  mach_port_t memobj_rd;
+  error_t err = open_file (file_name, mode, &memobj_rd, 0);
+  if (err)
+    return __hurd_fail (err);
+  else
+    return (int)memobj_rd;
 }
 
 int weak_function
@@ -549,7 +570,36 @@ _exit (int status)
     __mach_task_self_ = (__mach_task_self) ();
 }
 
+/* Read the whole contents of FILE into new mmap'd space with given
+   protections.  The size of the file is returned in SIZE.  */
+void *
+_dl_sysdep_read_whole_file (const char *file, size_t *size, int prot)
+{
+  struct stat stat;
+  mach_port_t memobj_rd;
+  void *contents;
+  error_t err = open_file (file, O_RDONLY, &memobj_rd, &stat);
 
+  if (! err)
+    {
+      /* Map a copy of the file contents.  */
+      contents = __mmap (0, stat.st_size, prot, MAP_COPY, memobj_rd, 0);
+      if (contents == (void *)-1)
+	contents = 0;
+      else
+	*size = stat.st_size;
+
+      __mach_port_deallocate (__mach_task_self (), memobj_rd);
+    }
+  else
+    {
+      __hurd_fail (err);
+      contents = 0;
+    }
+
+  return contents;
+}
+
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is
    weak, the real defn in libc.so will override it if we are linked into
