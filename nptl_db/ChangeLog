@@ -1,3 +1,8 @@
+2003-06-19  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_event_enable.c (td_thr_event_enable): Use proper type `bool'
+	for value written into inferior's `report_events'.
+
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_event_getmsg.c (td_thr_event_getmsg): Splice the thread out
