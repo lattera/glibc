@@ -1541,6 +1541,22 @@ _IO_file_xsgetn_maybe_mmap (fp, data, n)
   return _IO_XSGETN (fp, data, n);
 }
 
+#ifdef _LIBC
+versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_finish, _IO_file_finish, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_fopen, _IO_file_fopen, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_init, _IO_file_init, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_setbuf, _IO_file_setbuf, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_sync, _IO_file_sync, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_overflow, _IO_file_overflow, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_underflow, _IO_file_underflow, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
+versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
+#endif
+
 struct _IO_jump_t _IO_file_jumps =
 {
   JUMP_INIT_DUMMY,
@@ -1613,19 +1629,3 @@ struct _IO_jump_t _IO_file_jumps_maybe_mmap =
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
-
-#ifdef _LIBC
-versioned_symbol (libc, _IO_new_do_write, _IO_do_write, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_attach, _IO_file_attach, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_close_it, _IO_file_close_it, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_finish, _IO_file_finish, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_fopen, _IO_file_fopen, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_init, _IO_file_init, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_setbuf, _IO_file_setbuf, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_sync, _IO_file_sync, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_overflow, _IO_file_overflow, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_underflow, _IO_file_underflow, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
-versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
-#endif
