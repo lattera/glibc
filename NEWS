@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1999-06-16
+GNU C Library NEWS -- history of user-visible changes.  1999-08-25
 
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -14,6 +14,13 @@ Version 2.2
 * Update from Berkeley db 2.7.5.
 
 * Wide character I/O streams implemented by Ulrich Drepper.
+
+* functions from the extended socket API added by Ulrich Drepper.
+
+
+Version 2.1.2
+
+* bug fixes
 
 
 Version 2.1.1

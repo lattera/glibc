@@ -1,5 +1,10 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/sysv4/solaris2/getdents.c: New file.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/dirent.h: New file.
+
 	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Move
 	old_siocfifconf definition to toplevel.
 	(__protocol_available): Remove old_siocfifconf definition.
