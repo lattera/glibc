@@ -1,5 +1,5 @@
 /* Code to enable profiling at program startup.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,12 @@ extern void _start, etext;
    mechanism.  We link this file together with start.o to produce gcrt1.o,
    so this constructor will be first in the list.  */
 
-void __gmon_start__ (void) __attribute__ ((constructor));
+extern void __gmon_start__ (void) __attribute__ ((constructor));
 #else
 /* In ELF and COFF, we cannot use the normal constructor mechanism to call
    __gmon_start__ because gcrt1.o appears before crtbegin.o in the link.
    Instead crti.o calls it specially (see initfini.c).  */
+extern void __gmon_start__ (void);
 #endif
 
 void
