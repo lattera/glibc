@@ -1,3 +1,8 @@
+2003-12-17  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (tst-cancelx7-ARGS): New variable.
+	Reportd by Greg Schafer <gschafer@zip.com.au>.
+
 2003-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (tests): Add tst-stack3.  Depend on $(objpfx)tst-stack3-mem.
