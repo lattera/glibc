@@ -164,14 +164,14 @@ internal_gid_from_group (void *context, const char *groupname, gid_t *group)
 }
 
 enum nss_status
-_nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
-                        long int *size, gid_t *groups, long int limit,
-                        int *errnop)
+_nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
+			    long int *size, gid_t **groupsp, int *errnop)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
   char **list = NULL;
   char *p;
   void *context;
+  gid_t *groups = *groupsp;
 
   context = _nss_hesiod_init ();
   if (context == NULL)
@@ -185,11 +185,24 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
       return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
     }
 
-  if (!internal_gid_in_list (groups, group, *start) && *start < limit)
-    groups[(*start)++] = group;
+  if (!internal_gid_in_list (groups, group, *start))
+    {
+      if (__builtin_expect (*start == *size, 0))
+	{
+	  /* Need a bigger buffer.  */
+	  gid_t *newgroups;
+	  newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+	  if (newgroups == NULL)
+	    goto done;
+	  *groupsp = groups = newgroups;
+	  *size *= 2;
+	}
+
+      groups[(*start)++] = group;
+    }
 
   p = *list;
-  while (*p != '\0' && *start < limit)
+  while (*p != '\0')
     {
       char *endp;
       char *q;
@@ -214,12 +227,26 @@ _nss_hesiod_initgroups (const char *user, gid_t group, long int *start,
 
 	  if (status == NSS_STATUS_SUCCESS
 	      && !internal_gid_in_list (groups, group, *start))
-	    groups[(*start)++] = group;
+	    {
+	      if (__builtin_expect (*start == *size, 0))
+		{
+		  /* Need a bigger buffer.  */
+		  gid_t *newgroups;
+		  newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+		  if (newgroups == NULL)
+		    goto done;
+		  *groupsp = groups = newgroups;
+		  *size *= 2;
+		}
+
+	      groups[(*start)++] = group;
+	    }
 	}
 
       p = q;
     }
 
+ done:
   hesiod_free_list (context, list);
   hesiod_end (context);
 

@@ -1,5 +1,21 @@
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c (initgroups): Don't limit the possible number
+	of groups to NGROUPS_MAX.  Allow dynamic resizing.  Loop around
+	the setgroups call while the call fails and descrease the number
+	of groups each round.
+	The name of the initgroups function in the NSS modules changed.
+	(compat_call): Adapt for dynamic resizing.
+	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups_dyn):
+	Implement dynamic resizing.
+	* nis/nss_compat/compat-initgroups.c (_nss_compat_initgroups_dyn):
+	Likewise.
+	* nis/nss_nis/compat-initgroups.c (_nss_nis_initgroups_dyn): Likewise.
+	* hesiod/Versions: Change exported interface name.
+	* nis/Versions: Change exported interface name.
+
+2000-07-23  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/iso-639.def: Some errors corrected.
 	Patch by Keld Simonsen.
 

@@ -49,7 +49,7 @@ extern service_user *__nss_group_database;
 
 static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
-	     long int *size, gid_t *groups, long int limit, int *errnop)
+	     long int *size, gid_t **groupsp, int *errnop)
 {
   struct group grpbuf;
   size_t buflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
@@ -58,6 +58,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   set_function setgrent_fct;
   get_function getgrent_fct;
   end_function endgrent_fct;
+  gid_t *groups = *groupsp;
 
   getgrent_fct = __nss_lookup_function (nip, "getgrent_r");
   if (getgrent_fct == NULL)
@@ -97,21 +98,19 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
             if (strcmp (*m, user) == 0)
               {
                 /* Matches user.  Insert this group.  */
-                if (*start == *size && limit <= 0)
+                if (__builtin_expect (*start == *size, 0))
                   {
                     /* Need a bigger buffer.  */
-                    groups = realloc (groups, 2 * *size * sizeof (*groups));
-                    if (groups == NULL)
+		    gid_t *newgroups;
+                    newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+                    if (newgroups == NULL)
                       goto done;
+		    *groupsp = groups = newgroups;
                     *size *= 2;
                   }
 
                 groups[*start] = grpbuf.gr_gid;
                 *start += 1;
-
-                if (*start == limit)
-                  /* Can't take any more groups; stop searching.  */
-                  goto done;
 
                 break;
               }
@@ -149,10 +148,9 @@ initgroups (user, group)
   long int start = 1;
   long int size;
   gid_t *groups;
+  int result;
 #ifdef NGROUPS_MAX
-# define limit NGROUPS_MAX
-
-  size = limit;
+  size = NGROUPS_MAX;
 #else
   long int limit = __sysconf (_SC_NGROUPS_MAX);
 
@@ -181,19 +179,19 @@ initgroups (user, group)
 
   while (! no_more)
     {
-      fct = __nss_lookup_function (nip, "initgroups");
+      fct = __nss_lookup_function (nip, "initgroups_dyn");
 
       if (fct == NULL)
 	{
-	  status = compat_call (nip, user, group, &start, &size, groups,
-				limit, &errno);
+	  status = compat_call (nip, user, group, &start, &size, &groups,
+				&errno);
 
 	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
 	    break;
 	}
       else
-	status = DL_CALL_FCT (fct, (user, group, &start, &size, groups, limit,
-				     &errno));
+	status = DL_CALL_FCT (fct, (user, group, &start, &size, &groups,
+				    &errno));
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
@@ -209,6 +207,11 @@ initgroups (user, group)
 	nip = nip->next;
     }
 
-  return setgroups (start, groups);
+  /* Try to set the maximum number of groups the kernel can handle.  */
+  do
+    result = setgroups (start, groups);
+  while (result == -1 && errno == EINVAL && --start > 0);
+
+  return result;
 #endif
 }

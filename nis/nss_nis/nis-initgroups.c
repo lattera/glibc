@@ -137,15 +137,15 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_initgroups (const char *user, gid_t group, long int *start,
-		     long int *size, gid_t *groups, long int limit,
-		     int *errnop)
+_nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
+			 long int *size, gid_t **groupsp, int *errnop)
 {
   struct group grpbuf, *g;
   size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
   enum nss_status status;
   intern_t intern = { NULL, NULL };
+  gid_t *groups = *groupsp;
 
   status = internal_setgrent (&intern);
   if (status != NSS_STATUS_SUCCESS)
@@ -177,21 +177,19 @@ _nss_nis_initgroups (const char *user, gid_t group, long int *start,
             if (strcmp (*m, user) == 0)
               {
                 /* Matches user.  Insert this group.  */
-                if (*start == *size && limit <= 0)
+                if (*start == *size)
                   {
                     /* Need a bigger buffer.  */
-		    groups = realloc (groups, 2 * *size * sizeof (*groups));
-		    if (groups == NULL)
+		    gid_t *newgroups;
+		    newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+		    if (newgroups == NULL)
 		      goto done;
+		    *groupsp = groups = newgroups;
                     *size *= 2;
                   }
 
                 groups[*start] = g->gr_gid;
 		*start += 1;
-
-                if (*start == limit)
-                  /* Can't take any more groups; stop searching.  */
-                  goto done;
 
                 break;
               }

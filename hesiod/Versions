@@ -8,7 +8,7 @@ libnss_hesiod {
     _nss_hesiod_getservbyname_r;
   }
   GLIBC_2.2 {
-    _nss_hesiod_initgroups;
+    _nss_hesiod_initgroups_dyn;
     _nss_hesiod_getservbyport_r;
     _nss_hesiod_setprotoent; _nss_hesiod_endprotoent;
     _nss_hesiod_getprotobyname_r; _nss_hesiod_getprotobynumber_r;

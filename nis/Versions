@@ -64,8 +64,11 @@ libnss_compat {
     _nss_compat_endgrent; _nss_compat_endpwent; _nss_compat_endspent;
     _nss_compat_getgrent_r; _nss_compat_getgrgid_r; _nss_compat_getgrnam_r;
     _nss_compat_getpwent_r; _nss_compat_getpwnam_r; _nss_compat_getpwuid_r;
-    _nss_compat_getspent_r; _nss_compat_getspnam_r; _nss_compat_initgroups;
+    _nss_compat_getspent_r; _nss_compat_getspnam_r;
     _nss_compat_setgrent; _nss_compat_setpwent; _nss_compat_setspent;
+  }
+  GLIBC_2.2 {
+    _nss_compat_initgroups_dyn;
   }
 }
 
@@ -85,14 +88,14 @@ libnss_nis {
     _nss_nis_getpwnam_r; _nss_nis_getpwuid_r; _nss_nis_getrpcbyname_r;
     _nss_nis_getrpcbynumber_r; _nss_nis_getrpcent_r; _nss_nis_getsecretkey;
     _nss_nis_getservbyname_r; _nss_nis_getservbyport_r; _nss_nis_getservent_r;
-    _nss_nis_getspent_r; _nss_nis_getspnam_r; _nss_nis_initgroups;
+    _nss_nis_getspent_r; _nss_nis_getspnam_r;
     _nss_nis_netname2user; _nss_nis_setaliasent; _nss_nis_setetherent;
     _nss_nis_setgrent; _nss_nis_sethostent; _nss_nis_setnetent;
     _nss_nis_setnetgrent; _nss_nis_setprotoent; _nss_nis_setpwent;
     _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
   }
   GLIBC_2.2 {
-    _nss_nis_getipnodebyname_r;
+    _nss_nis_getipnodebyname_r; _nss_nis_initgroups_dyn;
   }
 }
 
