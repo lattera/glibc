@@ -669,31 +669,32 @@ show_info (const char *name)
     }
 
   for (cat_no = 0; cat_no < NCATEGORIES; ++cat_no)
-    {
-      size_t item_no;
+    if (cat_no != LC_ALL)
+      {
+	size_t item_no;
 
-      if (strcmp (name, category[cat_no].name) == 0)
-	/* Print the whole category.  */
-	{
-	  if (show_category_name != 0)
-	    puts (category[cat_no].name);
-
-	  for (item_no = 0; item_no < category[cat_no].number; ++item_no)
-	    print_item (&category[cat_no].item_desc[item_no]);
-
-	  return;
-	}
-
-      for (item_no = 0; item_no < category[cat_no].number; ++item_no)
-	if (strcmp (name, category[cat_no].item_desc[item_no].name) == 0)
+	if (strcmp (name, category[cat_no].name) == 0)
+	  /* Print the whole category.  */
 	  {
 	    if (show_category_name != 0)
 	      puts (category[cat_no].name);
 
-	    print_item (&category[cat_no].item_desc[item_no]);
+	    for (item_no = 0; item_no < category[cat_no].number; ++item_no)
+	      print_item (&category[cat_no].item_desc[item_no]);
+
 	    return;
 	  }
-    }
+
+	for (item_no = 0; item_no < category[cat_no].number; ++item_no)
+	  if (strcmp (name, category[cat_no].item_desc[item_no].name) == 0)
+	    {
+	      if (show_category_name != 0)
+		puts (category[cat_no].name);
+
+	      print_item (&category[cat_no].item_desc[item_no]);
+	      return;
+	    }
+      }
 
   /* The name is not a standard one.
      For testing and perhaps advanced use allow some more symbols.  */
