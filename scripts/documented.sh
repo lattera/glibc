@@ -3,8 +3,8 @@ bindir=$1
 
 VERSION=1.0
 
-egrep -h @deftypefunx? *.texi ../linuxthreads/*.texi |
-sed -e 's/@deftypefunx*[[:space:]]*\({[^{]*}\|[[:alnum:]_]*\)[[:space:]]*\([[:alnum:]_]*\).*/\2/' -e '/^@/d' |
+egrep -h @deftypefu?nx? *.texi ../linuxthreads/*.texi |
+sed -e 's/@deftypefunx*[[:space:]]*\({[^{]*}\|[[:alnum:]_]*\)[[:space:]]*\([[:alnum:]_]*\).*/\2/' -e 's/@deftypefn {[^}]*function}*[[:space:]]*\({[^{]*}\|[[:alnum:]_]*\)[[:space:]]*\([[:alnum:]_]*\).*/\2/' -e '/^@/d' |
 sed -e '/^obstack_/d' -e '/^\([lf]\|\)stat\(\|64\)$/d' -e '/^mknod$/d' |
 sed -e '/^signbit$/d' -e '/^sigsetjmp$/d' |
 sed -e '/^pthread_cleanup/d' -e '/^IFTODT$/d' -e '/^DTTOIF$/d' |
