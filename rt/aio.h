@@ -132,7 +132,6 @@ enum
 
 /* Allow user to specify optimization.  */
 #ifdef __USE_GNU
-extern void __aio_init __P ((__const struct aioinit *__init));
 extern void aio_init __P ((__const struct aioinit *__init));
 #endif
 

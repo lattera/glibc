@@ -51,7 +51,7 @@ __pathconf (const char *path, int name)
       struct statfs fsbuf;
 
       /* Determine the filesystem type.  */
-      if (__statfs (fd, &fsbuf) < 0)
+      if (__statfs (path, &fsbuf) < 0)
 	/* not possible, return the default value.  */
 	return LINK_MAX;
 

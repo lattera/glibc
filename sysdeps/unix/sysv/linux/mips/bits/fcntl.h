@@ -49,9 +49,6 @@
 
 #define O_NDELAY	O_NONBLOCK
 
-/* XXX missing */
-#define O_LARGEFILE	0
-
 /* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */
 #define F_GETFD		1	/* Get file descriptor flags.  */
