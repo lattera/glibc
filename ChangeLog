@@ -1,3 +1,10 @@
+2001-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sched.h: Define sched_priority as __sched_priority.
+	* sysdeps/generic/bits/sched.h (struct sched_param): Rename element
+	to __sched_priority.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/clock_getcpuclockid.c: Include <time.h> instead
