@@ -25,7 +25,7 @@ struct sigcontext
 #define	SPARC_MAXREGWINDOW 31	/* Maximum usable register windows.  */
     int sc_sp, sc_pc, sc_npc, sc_psr, sc_g1, sc_o0;
     int sc_wbcnt;		/* Number of outstanding windows.  */
-    PTR sc_spbuf[SPARC_MAXREGWINDOW]; /* SP's for each window.  */
+    __ptr_t sc_spbuf[SPARC_MAXREGWINDOW]; /* SP's for each window.  */
     int sc_wbuf[SPARC_MAXREGWINDOW][16]; /* Saved register windows.  */
   };
 
