@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <libintl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
