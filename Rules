@@ -112,14 +112,14 @@ binaries-shared = $(filter-out $(binaries-static), $(binaries-all))
 
 ifneq "$(strip $(binaries-shared))" ""
 $(addprefix $(objpfx),$(binaries-shared)): %: %.o \
-  $(sort $(filter $(common-objpfx)libc%,$(link-libc))) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link)
 endif
 
 ifneq "$(strip $(binaries-static))" ""
 $(addprefix $(objpfx),$(binaries-static)): %: %.o \
-  $(sort $(filter $(common-objpfx)libc%,$(link-libc-static))) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc-static))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-static)
 endif
