@@ -858,32 +858,36 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      {
 			/* We have to enlarge the buffer if the `a' flag
 			   was given.  */
-			str = (char *) realloc (*strptr, strsize * 2);
-			if (str == NULL)
+			size_t strleng = str - *strptr;
+			char *newstr;
+
+			newstr = (char *) realloc (*strptr, strsize * 2);
+			if (newstr == NULL)
 			  {
 			    /* Can't allocate that much.  Last-ditch
 			       effort.  */
-			    str = (char *) realloc (*strptr, strsize + 1);
-			    if (str == NULL)
+			    newstr = (char *) realloc (*strptr,
+						       strleng + MB_CUR_MAX);
+			    if (newstr == NULL)
 			      {
 				/* We lose.  Oh well.  Terminate the
 				   string and stop converting,
 				   so at least we don't skip any input.  */
-				((char *) (*strptr))[strsize - 1] = '\0';
+				((char *) (*strptr))[strleng] = '\0';
 				++done;
 				conv_error ();
 			      }
 			    else
 			      {
-				*strptr = (char *) str;
-				str += strsize;
-				++strsize;
+				*strptr = newstr;
+				str = newstr + strleng;
+				strsize = strleng + MB_CUR_MAX;
 			      }
 			  }
 			else
 			  {
-			    *strptr = (char *) str;
-			    str += strsize;
+			    *strptr = newstr;
+			    str = newstr + strleng;
 			    strsize *= 2;
 			  }
 		      }
@@ -950,28 +954,30 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      && str + n >= *strptr + strsize)
 		    {
 		      /* Enlarge the buffer.  */
-		      str = (char *) realloc (*strptr,
-					      (str + n + 1) - *strptr);
-		      if (str == NULL)
+		      size_t strleng = str - *strptr;
+		      char *newstr;
+
+		      newstr = (char *) realloc (*strptr, strleng + n + 1);
+		      if (newstr == NULL)
 			{
 			  /* We lose.  Oh well.  Terminate the string
 			     and stop converting, so at least we don't
 			     skip any input.  */
-			  ((char *) (*strptr))[strsize - 1] = '\0';
+			  ((char *) (*strptr))[strleng] = '\0';
 			  ++done;
 			  conv_error ();
 			}
 		      else
 			{
-			  *strptr = (char *) str;
-			  str = ((char *) *strptr) + strsize;
-			  strsize = (str + n + 1) - *strptr;
+			  *strptr = newstr;
+			  str = newstr + strleng;
+			  strsize = strleng + n + 1;
 			}
 		    }
 
 		  str = __mempcpy (str, buf, n);
 #endif
-		  *str = '\0';
+		  *str++ = '\0';
 
 		  if ((flags & MALLOC) && str - *strptr != strsize)
 		    {
@@ -1028,8 +1034,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			    /* Can't allocate that much.  Last-ditch
                                effort.  */
 			    wstr = (wchar_t *) realloc (*strptr,
-							(strsize
-							 + sizeof (wchar_t)));
+							(strsize + 1)
+							* sizeof (wchar_t));
 			    if (wstr == NULL)
 			      {
 				/* We lose.  Oh well.  Terminate the string
@@ -2030,8 +2036,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			      /* Can't allocate that much.  Last-ditch
 				 effort.  */
 			      wstr = (wchar_t *)
-				realloc (*strptr, (strsize
-						   + sizeof (wchar_t)));
+				realloc (*strptr, (strsize + 1)
+						  * sizeof (wchar_t));
 			      if (wstr == NULL)
 				{
 				  /* We lose.  Oh well.  Terminate the string
@@ -2227,32 +2233,36 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  && str + MB_CUR_MAX >= *strptr + strsize)
 			{
 			  /* Enlarge the buffer.  */
-			  str = (char *) realloc (*strptr, 2 * strsize);
-			  if (str == NULL)
+			  size_t strleng = str - *strptr;
+			  char *newstr;
+
+			  newstr = (char *) realloc (*strptr, 2 * strsize);
+			  if (newstr == NULL)
 			    {
 			      /* Can't allocate that much.  Last-ditch
 				 effort.  */
-			      str = (char *) realloc (*strptr, strsize + 1);
-			      if (str == NULL)
+			      newstr = (char *) realloc (*strptr,
+							 strleng + MB_CUR_MAX);
+			      if (newstr == NULL)
 				{
 				  /* We lose.  Oh well.  Terminate the string
 				     and stop converting, so at least we don't
 				     skip any input.  */
-				  (*strptr)[strsize - 1] = '\0';
+				  ((char *) (*strptr))[strleng] = '\0';
 				  ++done;
 				  conv_error ();
 				}
 			      else
 				{
-				  *strptr = str;
-				  str += strsize;
-				  ++strsize;
+				  *strptr = newstr;
+				  str = newstr + strleng;
+				  strsize = strleng + MB_CUR_MAX;
 				}
 			    }
 			  else
 			    {
-			      *strptr = str;
-			      str += strsize;
+			      *strptr = newstr;
+			      str = newstr + strleng;
 			      strsize *= 2;
 			    }
 			}
@@ -2336,28 +2346,30 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      && str + n >= *strptr + strsize)
 		    {
 		      /* Enlarge the buffer.  */
-		      str = (char *) realloc (*strptr,
-					      (str + n + 1) - *strptr);
-		      if (str == NULL)
+		      size_t strleng = str - *strptr;
+		      char *newstr;
+
+		      newstr = (char *) realloc (*strptr, strleng + n + 1);
+		      if (newstr == NULL)
 			{
 			  /* We lose.  Oh well.  Terminate the string
 			     and stop converting, so at least we don't
 			     skip any input.  */
-			  ((char *) (*strptr))[strsize - 1] = '\0';
+			  ((char *) (*strptr))[strleng] = '\0';
 			  ++done;
 			  conv_error ();
 			}
 		      else
 			{
-			  *strptr = (char *) str;
-			  str = ((char *) *strptr) + strsize;
-			  strsize = (str + n + 1) - *strptr;
+			  *strptr = newstr;
+			  str = newstr + strleng;
+			  strsize = strleng + n + 1;
 			}
 		    }
 
 		  str = __mempcpy (str, buf, n);
 #endif
-		  *str = '\0';
+		  *str++ = '\0';
 
 		  if ((flags & MALLOC) && str - *strptr != strsize)
 		    {
