@@ -1,3 +1,7 @@
+2001-06-26  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdioctl.c: Include <string.h> for memcpy decl.
+
 2001-07-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/sysv4/solaris2/configure.in: Remove check for
