@@ -11,6 +11,7 @@ settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 setpgid		-	setpgrp		2	__setpgid	setpgid setpgrp
 setregid	-	setregid	2	__setregid	setregid
 setreuid	-	setreuid	2	__setreuid	setreuid
+sigaction	-	sigaction	3	__sigaction	sigaction
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 truncate	-	truncate	2	truncate
 vhangup		-	vhangup		1	vhangup

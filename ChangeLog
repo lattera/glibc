@@ -44,6 +44,11 @@ Sat Feb 10 13:09:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 
 Tue Feb 13 00:12:12 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* elf/dl-runtime.c (fixup) [ELF_MACHINE_RUNTIME_FIXUP_ARGS]: Let
+	this macro declare extra leading args.
+
+	* Makerules [$(elf)=yes] (ar-symtab-name): Define to empty.
+
 	* sysdeps/i386/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE,
 	elf_machine_relplt): New macros.
 	* elf/dl-runtime.c: New file.
