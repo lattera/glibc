@@ -73,6 +73,7 @@ struct termios
 #define IXANY	0x00000800
 #define IXOFF	0x00001000
 #define IMAXBEL	0x00002000
+#define IUTF8	0x00004000
 
 /* c_oflag bits */
 #define OPOST	0x00000001
