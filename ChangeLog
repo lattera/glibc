@@ -3,6 +3,7 @@
 	* iconvdata/Makefile: Add rules to build KOI8-T module.
 	* iconvdata/koi8-t.c: New file.
 	* iconvdata/gconv-modules: Add entries for KOI8-T.
+	* iconvdata/tst-tables.sh: Add KOI8-T.
 
 	* locale/iso-639.def: Correct Javanese 2 letter code.  Add Tonga.
 	Add Tigrinya.

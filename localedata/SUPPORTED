@@ -23,9 +23,12 @@ ar_TN/ISO-8859-6 \
 ar_YE/ISO-8859-6 \
 be_BY/CP1251 \
 bg_BG/CP1251 \
+br_FR/ISO-8859-1 \
+bs_BA/ISO-8859-2 \
 ca_ES/ISO-8859-1 \
 ca_ES@euro/ISO-8859-15 \
 cs_CZ/ISO-8859-2 \
+cy_GB/ISO-8859-14 \
 da_DK/ISO-8859-1 \
 de_AT/ISO-8859-1 \
 de_AT@euro/ISO-8859-15 \
@@ -110,6 +113,7 @@ ko_KR.UTF-8/UTF-8 \
 kw_GB/ISO-8859-1 \
 lt_LT/ISO-8859-13 \
 lv_LV/ISO-8859-13 \
+mi_NZ/ISO-8859-13 \
 mk_MK/ISO-8859-5 \
 mr_IN/UTF-8 \
 ms_MY/ISO-8859-1 \
@@ -120,6 +124,7 @@ nl_NL/ISO-8859-1 \
 nl_NL@euro/ISO-8859-15 \
 nn_NO/ISO-8859-1 \
 no_NO/ISO-8859-1 \
+oc_FR/ISO-8859-1 \
 pl_PL/ISO-8859-2 \
 pt_BR/ISO-8859-1 \
 pt_PT/ISO-8859-1 \
@@ -138,10 +143,15 @@ sv_FI@euro/ISO-8859-15 \
 sv_SE/ISO-8859-1 \
 ta_IN/UTF-8 \
 te_IN/UTF-8 \
+tg_TJ/KOI8-T \
 th_TH/TIS-620 \
+tl_PH/ISO-8859-1 \
 tr_TR/ISO-8859-9 \
 uk_UA/KOI8-U \
+ur_PK/UTF-8 \
+uz_UZ/ISO-8859-1 \
 vi_VN/UTF-8 \
+yi_US/CP1255 \
 zh_CN/GB2312 \
 zh_CN.GB18030/GB18030 \
 zh_CN.GBK/GBK \

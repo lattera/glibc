@@ -76,6 +76,7 @@ cat <<EOF |
   #ISO_6937-2        ISO-IR-90          Handling of combining marks is broken
   KOI-8
   KOI8-R
+  KOI8-T
   LATIN-GREEK
   LATIN-GREEK-1
   HP-ROMAN8

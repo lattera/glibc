@@ -1,5 +1,7 @@
 2001-08-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add several new locales.
+
 	* charmaps/KOI8-T: New file.
 
 2001-08-02  Ulrich Drepper  <drepper@redhat.com>
