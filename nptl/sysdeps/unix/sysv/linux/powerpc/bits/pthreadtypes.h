@@ -95,7 +95,7 @@ typedef union
     unsigned long long int __woken_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
-  long int __align;
+  long long int __align;
 } pthread_cond_t;
 
 typedef union
@@ -118,6 +118,7 @@ typedef int pthread_once_t;
    structure of the attribute type is deliberately not exposed.  */
 typedef union
 {
+# if __WORDSIZE == 64
   struct
   {
     int __lock;
@@ -127,10 +128,27 @@ typedef union
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
     pthread_t __writer;
+    unsigned long int __pad1;
+    unsigned long int __pad2;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
   } __data;
+# else
+  struct
+  {
+    int __lock;
+    unsigned int __nr_readers;
+    unsigned int __readers_wakeup;
+    unsigned int __writer_wakeup;
+    unsigned int __nr_readers_queued;
+    unsigned int __nr_writers_queued;
+    /* FLAGS must stay at this position in the structure to maintain
+       binary compatibility.  */
+    unsigned int __flags;
+    pthread_t __writer;
+  } __data;
+# endif
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;
 } pthread_rwlock_t;

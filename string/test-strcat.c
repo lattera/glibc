@@ -59,8 +59,8 @@ do_one_test (impl_t *impl, char *dst, const char *src)
 
   if (HP_TIMING_AVAIL)
     {
-      hp_timing_t start __attribute ((used));
-      hp_timing_t stop __attribute ((used));
+      hp_timing_t start __attribute ((unused));
+      hp_timing_t stop __attribute ((unused));
       hp_timing_t best_time = ~ (hp_timing_t) 0;
       size_t i;
 

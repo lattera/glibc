@@ -51,7 +51,7 @@ main (int argc, char *argv[])
 
   if (setlocale (LC_ALL, argv[1]) == NULL)
     {
-      perror ("setlocale");
+      fprintf (stderr, "setlocale(LC_ALL, \"%s\"): %m\n", argv[1]);
       exit (EXIT_SETLOCALE);
     }
 

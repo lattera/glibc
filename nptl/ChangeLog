@@ -1,3 +1,18 @@
+2003-04-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
+	(__SIZEOF_PTHREAD_COND_T): Define to 48.
+	(pthread_rwlock_t): Add 16 bytes of pad instead of 8 before __flags.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h (pthread_cond_t):
+	Make __align long long instead of long.
+	(pthread_rwlock_t): Formatting.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h
+	(pthread_rwlock_t): Formatting.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(pthread_cond_t): Make __align long long instead of long.
+	(pthread_rwlock_t): Move __flags field to the same position as in
+	linuxthreads.
+
 2003-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-rwlock6.c (do_test): Use correct printf format specifiers.

@@ -1,3 +1,11 @@
+2003-05-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (mSTATs): Call ptmalloc_init if necessary.
+
+2003-04-29  Andreas Schwab  <schwab@suse.de>
+
+	* string/test-strcat.c (do_one_test): Fix attribute name.
+
 2003-04-30  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h (ucontext): Make

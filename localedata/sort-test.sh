@@ -27,6 +27,7 @@ for l in $lang; do
     echo "$l OK"
   else
     echo "$l FAIL"
+    diff -u $cns.in ${common_objpfx}localedata/$cns.xout
     status=1
   fi
 done

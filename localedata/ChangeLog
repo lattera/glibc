@@ -1,3 +1,16 @@
+2003-04-30  Petter Reinholdtsen  <pere@hungry.com>
+
+	* tst-fmon.c: Report name of locale if setlocale() fails.
+	* tst-numeric.c: Likewise.
+
+	* tst-fmon.sh: Ignore lines starting with hash '#' in the data file.
+	* tst-numeric.sh: Likewise.
+
+2003-04-30  Petter Reinholdtsen  <pere@hungry.com>
+
+	* sort-test.sh: Output 'diff -u' when sorting test failed, to make
+	it easier to find out what was wrong with the sorting order.
+
 2003-04-16  Petter Reinholdtsen  <pere@hungry.com>
 
 	* Makefile (tests): Add LC_NUMERIC test tst-numeric.out.

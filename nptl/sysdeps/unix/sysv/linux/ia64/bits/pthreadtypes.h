@@ -103,7 +103,7 @@ typedef int pthread_once_t;
    structure of the attribute type is not exposed on purpose.  */
 typedef union
 {
-struct
+  struct
   {
     int __lock;
     unsigned int __nr_readers;

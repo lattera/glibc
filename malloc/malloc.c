@@ -5090,6 +5090,8 @@ void mSTATs()
   long stat_lock_direct = 0, stat_lock_loop = 0, stat_lock_wait = 0;
 #endif
 
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   for (i=0, ar_ptr = &main_arena;; i++) {
     (void)mutex_lock(&ar_ptr->mutex);
     mi = mALLINFo(ar_ptr);

@@ -94,7 +94,7 @@ typedef union
     unsigned long long int __woken_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
-  long int __align;
+  long long int __align;
 } pthread_cond_t;
 
 typedef union
@@ -118,7 +118,7 @@ typedef int pthread_once_t;
 typedef union
 {
 # if __WORDSIZE == 64
-struct
+  struct
   {
     int __lock;
     unsigned int __nr_readers;

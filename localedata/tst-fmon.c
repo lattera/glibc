@@ -1,5 +1,5 @@
 /* Testing the implementation of strfmon(3).
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 
@@ -46,7 +46,7 @@ main (int argc, char *argv[])
 
   if (setlocale (LC_MONETARY, argv[1]) == NULL)
     {
-      perror ("setlocale");
+      fprintf (stderr, "setlocale(LC_MONETARY, \"%s\"): %m\n", argv[1]);
       exit (EXIT_SETLOCALE);
     }
   /* This is locale-dependent! see setlocale(3) for details */
