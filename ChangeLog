@@ -1,5 +1,16 @@
 2000-06-26  Greg McGary  <greg@mcgary.org>
 
+	* Makeconfig: Add missing comment.
+	* csu/Makefile (extra-objs, omit-deps, install-lib): Add
+	BP-flavored startup object.
+	($(objpfx)b$(start-installed-name)): New rule.
+	* include/libc-symbols.h (symbol_set_declare): Change type
+	of `__start_##set' and `__stop_##set' to pointer-to-function.
+	(symbol_set_declare): Change type of `set' to array of
+	pointer-to-function.
+	* include/set-hooks.h (RUN_HOOK): Change type of `ptr' to
+	pointer-to-function.
+
 	* string/bits/string2.h: Inhibit inlines if __BOUNDED_POINTERS__.
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add missing signatures.

@@ -634,6 +634,8 @@ bppfx = BP-
 ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'
 # to runtime bounds checking.  The bounded-pointer objects are named foo.ob.
+# We disable sibling-call optimizations so that stack traces will be complete
+# and thus aid debugging, since after all, BPs are a debugging tool.
 object-suffixes += .ob
 CPPFLAGS-.ob = -fbounded-pointers $(pic-default)
 CFLAGS-.ob = -g -O2 -fno-optimize-sibling-calls
