@@ -93,7 +93,7 @@ _dl_sysdep_start (void **start_argptr,
 #  define set_seen(tag) seen |= M ((tag)->a_type)
 # endif
 #endif
-#ifndef __ASSUME_VSYSCALL
+#if defined NEED_DL_SYSINFO && !defined __ASSUME_VSYSCALL
   ElfW(Word) new_sysinfo = 0;
 #endif
 
@@ -193,7 +193,7 @@ _dl_sysdep_start (void **start_argptr,
     GL(dl_pagesize) = __getpagesize ();
 #endif
 
-#ifndef __ASSUME_VSYSCALL
+#if defined NEED_DL_SYSINFO && !defined __ASSUME_VSYSCALL
   /* Only set the sysinfo value if we also have the vsyscall DSO.  */
   if (GL(dl_sysinfo_dso) != 0)
     GL(dl_sysinfo) = new_sysinfo;

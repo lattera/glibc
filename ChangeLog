@@ -1,3 +1,8 @@
+2003-07-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Protect new_sysinfo
+	decl and use with #ifdef NEED_DL_SYSINFO.
+
 2003-07-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Don't set
