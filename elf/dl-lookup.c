@@ -56,6 +56,9 @@ struct sym_val
     result;								      \
   })
 
+/* Statistics function.  */
+unsigned long int _dl_num_relocations;
+
 
 /* Inner part of the lookup functions.  We return a value > 0 if we
    found the symbol, the value 0 if nothing is found and < 0 if
@@ -71,6 +74,8 @@ do_lookup (const char *undef_name, unsigned long int hash,
   size_t n = scope->r_nlist;
   struct link_map *map;
 
+  ++_dl_num_relocations;
+
   for (; i < n; ++i)
     {
       const ElfW(Sym) *symtab;
@@ -79,7 +84,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
       ElfW(Symndx) symidx;
       int num_versions = 0;
       const ElfW(Sym) *sym;
-      const ElfW(Sym) *versioned_sym;
+      const ElfW(Sym) *versioned_sym = NULL;
 
       map = list[i];
 
