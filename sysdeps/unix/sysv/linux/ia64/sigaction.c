@@ -27,9 +27,10 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_rt_sigaction (int, const struct sigaction *,
-				   struct sigaction *, size_t);
+extern int __syscall_rt_sigaction (int, const struct sigaction *__unbounded,
+				   struct sigaction *__unbounded, size_t);
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  This is the definition.  */
@@ -45,7 +46,8 @@ __libc_sigaction (sig, act, oact)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigaction, 4, sig, act, oact, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigaction, 4, sig,
+			 CHECK_1opt (act), CHECK_1opt (oact), _NSIG / 8);
 }
 
 strong_alias (__libc_sigaction, __sigaction)

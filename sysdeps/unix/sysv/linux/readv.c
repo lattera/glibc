@@ -24,8 +24,9 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern ssize_t __syscall_readv (int, __const struct iovec *, int);
+extern ssize_t __syscall_readv (int, __const struct iovec *__unbounded, int);
 static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 					   int) internal_function;
 
@@ -47,7 +48,7 @@ __readv (fd, vector, count)
   int errno_saved = errno;
   ssize_t bytes_read;
 
-  bytes_read = INLINE_SYSCALL (readv, 3, fd, vector, count);
+  bytes_read = INLINE_SYSCALL (readv, 3, fd, CHECK_N (vector, count), count);
 
   if (bytes_read >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_read;

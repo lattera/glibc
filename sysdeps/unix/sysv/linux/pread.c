@@ -23,13 +23,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
 #if defined __NR_pread || __ASSUME_PREAD_SYSCALL > 0
 
 /* The order of hi, lo depends on endianness.  */
-extern ssize_t __syscall_pread (int fd, void *buf, size_t count,
+extern ssize_t __syscall_pread (int fd, void *__unbounded buf, size_t count,
 				off_t offset_hi, off_t offset_lo);
 
 # if __ASSUME_PREAD_SYSCALL == 0
@@ -48,9 +49,8 @@ __libc_pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pread, 5, fd, buf, count,
+  result = INLINE_SYSCALL (pread, 5, fd, CHECK_N (buf, count), count,
 			   __LONG_LONG_PAIR (0, offset));
-
 # if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */

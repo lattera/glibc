@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <memcopy.h>
+#include <bp-checks.h>
 
 #undef strcpy
 
@@ -29,8 +30,9 @@ strcpy (dest, src)
      const char *src;
 {
   reg_char c;
-  char *s = (char *) src;
-  const ptrdiff_t off = dest - src - 1;
+  char *__unbounded s = (char *__unbounded) CHECK_BOUNDS_LOW (src);
+  const ptrdiff_t off = CHECK_BOUNDS_LOW (dest) - s - 1;
+  size_t n;
 
   do
     {
@@ -38,6 +40,10 @@ strcpy (dest, src)
       s[off] = c;
     }
   while (c != '\0');
+
+  n = s - src;
+  CHECK_BOUNDS_HIGH (src + n);
+  CHECK_BOUNDS_HIGH (dest + n);
 
   return dest;
 }

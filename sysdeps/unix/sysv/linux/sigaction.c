@@ -35,11 +35,11 @@
    functions which have RT equivalents.  This is the definition.  */
 int __libc_missing_rt_sigs;
 
-extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
-				struct old_kernel_sigaction *);
+extern int __syscall_sigaction (int, const struct old_kernel_sigaction *__unbounded,
+				struct old_kernel_sigaction *__unbounded);
 #endif
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
-				   struct kernel_sigaction *, size_t);
+extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
+				   struct kernel_sigaction *__unbounded, size_t);
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -80,8 +80,9 @@ __libc_sigaction (sig, act, oact)
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
-			       oact ? &koact : NULL, _NSIG / 8);
+      result = INLINE_SYSCALL (rt_sigaction, 4, sig,
+			       act ? __ptrvalue (&kact) : NULL,
+			       oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
 
 # if __ASSUME_REALTIME_SIGNALS == 0
       if (result >= 0 || errno != ENOSYS)
@@ -116,8 +117,9 @@ __libc_sigaction (sig, act, oact)
       k_sigact.sa_restorer = act->sa_restorer;
 # endif
     }
-  result = INLINE_SYSCALL (sigaction, 3, sig, act ? &k_sigact : NULL,
-			   oact ? &k_osigact : NULL);
+  result = INLINE_SYSCALL (sigaction, 3, sig,
+			   act ? __ptrvalue (&k_sigact) : NULL,
+			   oact ? __ptrvalue (&k_osigact) : NULL);
   if (oact && result >= 0)
     {
       oact->sa_handler = k_osigact.k_sa_handler;

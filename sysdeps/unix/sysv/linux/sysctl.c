@@ -1,5 +1,5 @@
 /* Read or write system information.  Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +22,15 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall__sysctl (struct __sysctl_args *args);
+extern int __syscall__sysctl (struct __sysctl_args *__unbounded args);
 
 int
 __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
 	  void *newval, size_t newlen)
 {
+  /* GKM FIXME: force __sysctl_args decl to have unbounded pointers.  */
   struct __sysctl_args args =
   {
     name: name,
@@ -38,7 +40,10 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
     newval: newval,
     newlen: newlen
   };
+  CHECK_N (name, nlen);
+  CHECK_N (oldval, *oldlenp);
+  CHECK_N (newval, newlen);
 
-  return INLINE_SYSCALL (_sysctl, 1, &args);
+  return INLINE_SYSCALL (_sysctl, 1, __ptrvalue (&args));
 }
 weak_alias (__sysctl, sysctl)

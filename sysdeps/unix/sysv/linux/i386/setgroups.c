@@ -23,14 +23,16 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
 #include <linux/posix_types.h>
 #include "kernel-features.h"
 
 
-extern int __syscall_setgroups (int, const __kernel_gid_t *);
+extern int __syscall_setgroups (int, const __kernel_gid_t *__unbounded);
 
 #ifdef __NR_setgroups32
-extern int __syscall_setgroups32 (int, const __kernel_gid32_t *);
+extern int __syscall_setgroups32 (int, const __kernel_gid32_t *__unbounded);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
@@ -52,17 +54,18 @@ setgroups (size_t n, const gid_t *groups)
   else
     {
 #if __ASSUME_32BITUIDS > 0
-      return INLINE_SYSCALL (setgroups32, 2, n, groups);
+      return INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
 #else
       size_t i;
       __kernel_gid_t kernel_groups[n];
+
 # ifdef __NR_setgroups32
       if (__libc_missing_32bit_uids <= 0)
 	{
 	  int result;
 	  int saved_errno = errno;
 
-	  result = INLINE_SYSCALL (setgroups32, 2, n, groups);
+	  result = INLINE_SYSCALL (setgroups32, 2, n, CHECK_N (groups, n));
 	  if (result == 0 || errno != ENOSYS)
 	    return result;
 
@@ -72,7 +75,7 @@ setgroups (size_t n, const gid_t *groups)
 # endif /* __NR_setgroups32 */
       for (i = 0; i < n; i++)
 	{
-	  kernel_groups[i] = groups[i];
+	  kernel_groups[i] = (__ptrvalue (groups))[i];
 	  if (groups[i] != (gid_t) ((__kernel_gid_t) groups[i]))
 	    {
 	      __set_errno (EINVAL);
@@ -80,7 +83,7 @@ setgroups (size_t n, const gid_t *groups)
 	    }
 	}
 
-      return INLINE_SYSCALL (setgroups, 2, n, kernel_groups);
+      return INLINE_SYSCALL (setgroups, 2, n, CHECK_N (kernel_groups, n));
 #endif
     }
 }

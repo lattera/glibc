@@ -28,7 +28,7 @@
 #include "aio_misc.h"
 
 #ifdef __NR_rt_sigqueueinfo
-extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
+extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *__unbounded);
 
 
 /* Return any pending signal or wait for one for the given time.  */
@@ -50,7 +50,8 @@ __aio_sigqueue (sig, val, caller_pid)
   info.si_uid = getuid ();
   info.si_value = val;
 
-  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
+  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid,
+			 sig, __ptrvalue (&info));
 }
 #else
 # include <sysdeps/generic/aio_sigqueue.c>

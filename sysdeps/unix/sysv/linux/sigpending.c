@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,11 +22,12 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
-extern int __syscall_sigpending (sigset_t *);
-extern int __syscall_rt_sigpending (sigset_t *, size_t);
+extern int __syscall_sigpending (sigset_t *__unbounded);
+extern int __syscall_rt_sigpending (sigset_t *__unbounded, size_t);
 
 
 /* The variable is shared between all wrappers around signal handling
@@ -41,7 +42,7 @@ sigpending (set)
      sigset_t *set;
 {
 #if __ASSUME_REALTIME_SIGNALS > 0
-  return INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigpending, 2, CHECK_SIGSET (set), _NSIG / 8);
 #else
 # ifdef __NR_rt_pending
   /* First try the RT signals.  */
@@ -50,7 +51,7 @@ sigpending (set)
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
       int saved_errno = errno;
-      int result = INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
+      int result = INLINE_SYSCALL (rt_sigpending, 2, CHECK_SIGSET (set), _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -60,6 +61,6 @@ sigpending (set)
     }
 # endif
 
-  return INLINE_SYSCALL (sigpending, 1, set);
+  return INLINE_SYSCALL (sigpending, 1, CHECK_SIGSET (set));
 #endif
 }

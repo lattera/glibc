@@ -21,11 +21,11 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
-#include <kernel-features.h>
-#include <linux/posix_types.h>
 #include <shlib-compat.h>
+#include <bp-checks.h>
 
+#include <linux/posix_types.h>
+#include "kernel-features.h"
 
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
@@ -68,7 +68,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 	  int result;
 	  int saved_errno = errno;
 
-	  result = INLINE_SYSCALL (chown32, 3, file, owner, group);
+	  result = INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
 	  if (result == 0 || errno != ENOSYS)
 	    return result;
 
@@ -83,7 +83,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 	  return -1;
 	}
 
-      result = INLINE_SYSCALL (chown, 3, file, owner, group);
+      result = INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -95,7 +95,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
   return __lchown (file, owner, group);
 # elif __ASSUME_32BITUIDS
   /* This implies __ASSUME_LCHOWN_SYSCALL.  */
-  return INLINE_SYSCALL (chown32, 3, file, owner, group);
+  return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
 # else
   /* !__ASSUME_32BITUIDS && ASSUME_LCHOWN_SYSCALL  */
 #  ifdef __NR_chown32
@@ -104,7 +104,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (chown32, 3, file, owner, group);
+      result = INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
       if (result == 0 || errno != ENOSYS)
 	return result;
 
@@ -119,7 +119,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
       return -1;
     }
 
-  return INLINE_SYSCALL (chown, 3, file, owner, group);
+  return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 # endif
 }
 #endif
@@ -130,7 +130,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {
-  return INLINE_SYSCALL (chown, 3, file, owner, group);
+  return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 }
 #elif SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 /* Compiling for compatibiity.  */

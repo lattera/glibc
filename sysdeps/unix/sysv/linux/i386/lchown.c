@@ -21,16 +21,17 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 #include "kernel-features.h"
 
 #ifdef __NR_lchown
-extern int __syscall_lchown (const char *__file,
+extern int __syscall_lchown (const char *__unbounded __file,
 			     __kernel_uid_t __owner, __kernel_gid_t __group);
 
 # ifdef __NR_lchown32
-extern int __syscall_lchown32 (const char *__file,
+extern int __syscall_lchown32 (const char *__unbounded __file,
 			       __kernel_uid32_t __owner, __kernel_gid32_t __group);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
@@ -43,7 +44,7 @@ int
 __lchown (const char *file, uid_t owner, gid_t group)
 {
 # if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (lchown32, 3, file, owner, group);
+  return INLINE_SYSCALL (lchown32, 3, CHECK_STRING (file), owner, group);
 # else
 #  ifdef __NR_lchown32
   if (__libc_missing_32bit_uids <= 0)
@@ -51,7 +52,7 @@ __lchown (const char *file, uid_t owner, gid_t group)
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (lchown32, 3, file, owner, group);
+      result = INLINE_SYSCALL (lchown32, 3, CHECK_STRING (file), owner, group);
       if (result == 0 || errno != ENOSYS)
 	return result;
 
@@ -67,7 +68,7 @@ __lchown (const char *file, uid_t owner, gid_t group)
       return -1;
     }
 
-  return INLINE_SYSCALL (lchown, 3, file, owner, group);
+  return INLINE_SYSCALL (lchown, 3, CHECK_STRING (file), owner, group);
 # endif
 }
 

@@ -24,8 +24,9 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern ssize_t __syscall_writev (int, const struct iovec *, int);
+extern ssize_t __syscall_writev (int, const struct iovec *__unbounded, int);
 static ssize_t __atomic_writev_replacement (int, const struct iovec *,
 					    int) internal_function;
 
@@ -47,7 +48,7 @@ __writev (fd, vector, count)
   int errno_saved = errno;
   ssize_t bytes_written;
 
-  bytes_written = INLINE_SYSCALL (writev, 3, fd, vector, count);
+  bytes_written = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
 
   if (bytes_written >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_written;

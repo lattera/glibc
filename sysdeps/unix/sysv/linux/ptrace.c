@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,15 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/ptrace.h>
+#include <sys/user.h>
 #include <stdarg.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern long int __syscall_ptrace (int, pid_t, void *, void *);
+extern long int __syscall_ptrace (int, pid_t, void *__unbounded,
+				  void *__unbounded);
 
 long int
 ptrace (enum __ptrace_request request, ...)
@@ -43,7 +46,56 @@ ptrace (enum __ptrace_request request, ...)
   if (request > 0 && request < 4)
     data = &ret;
 
-  res = INLINE_SYSCALL (ptrace, 4, request, pid, addr, data);
+#if __BOUNDED_POINTERS__
+  switch (request)
+    {
+    case PTRACE_PEEKTEXT:
+    case PTRACE_PEEKDATA:
+    case PTRACE_PEEKUSER:
+    case PTRACE_POKETEXT:
+    case PTRACE_POKEDATA:
+    case PTRACE_POKEUSER:
+      CHECK_1 ((int *) addr);
+      CHECK_1 ((int *) data);
+      break;
+
+    case PTRACE_GETREGS:
+    case PTRACE_SETREGS:
+#ifdef __i386__
+      CHECK_1 ((struct user_regs_struct *) data);
+#else
+      /* We don't know the size of data, so the best we can do is ensure
+	 that `data' is valid for at least one word.  */
+      CHECK_1 ((int *) data);
+#endif
+      break;
+
+    case PTRACE_GETFPREGS:
+    case PTRACE_SETFPREGS:
+#ifdef __i386__
+      CHECK_1 ((struct user_fpregs_struct *) data);
+#else
+      /* We don't know the size of data, so the best we can do is ensure
+	 that `data' is valid for at least one word.  */
+      CHECK_1 ((int *) data);
+#endif
+      break;
+
+    case PTRACE_GETFPXREGS:
+    case PTRACE_SETFPXREGS:
+#ifdef __i386__
+      CHECK_1 ((struct user_fpxregs_struct *) data);
+#else
+      /* We don't know the size of data, so the best we can do is ensure
+	 that `data' is valid for at least one word.  */
+      CHECK_1 ((int *) data);
+#endif
+      break;
+    };
+#endif
+
+  res = INLINE_SYSCALL (ptrace, 4, request, pid,
+			__ptrvalue (addr), __ptrvalue (data));
   if (res >= 0 && request > 0 && request < 4)
     {
       __set_errno (0);

@@ -22,11 +22,14 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <shlib-compat.h>
+#include <bp-checks.h>
+
 #include "kernel-features.h"
 
 extern int __syscall_ugetrlimit (unsigned int resource,
-				 struct rlimit *rlimits);
-extern int __syscall_getrlimit (unsigned int resource, struct rlimit *rlimits);
+				 struct rlimit *__unbounded rlimits);
+extern int __syscall_getrlimit (unsigned int resource,
+				struct rlimit *__unbounded rlimits);
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */
@@ -38,14 +41,14 @@ int
 __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 {
 #ifdef __ASSUME_NEW_GETRLIMIT_SYSCALL
-  return INLINE_SYSCALL (ugetrlimit, 2, resource, rlimits);
+  return INLINE_SYSCALL (ugetrlimit, 2, resource, CHECK_1 (rlimits));
 #else
   int result;
 
 # ifdef __NR_ugetrlimit
   if (__have_no_new_getrlimit <= 0)
     {
-      result = INLINE_SYSCALL (ugetrlimit, 2, resource, rlimits);
+      result = INLINE_SYSCALL (ugetrlimit, 2, resource, CHECK_1 (rlimits));
 
       /* If the system call is available remember this fact and return.  */
       if (result != -1 || errno != ENOSYS)
@@ -60,7 +63,7 @@ __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 # endif
 
   /* Fall back to the old system call.  */
-  result = INLINE_SYSCALL (getrlimit, 2, resource, rlimits);
+  result = INLINE_SYSCALL (getrlimit, 2, resource, CHECK_1 (rlimits));
 
   if (result == -1)
     return result;

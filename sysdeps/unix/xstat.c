@@ -1,5 +1,5 @@
 /* xstat using old-style Unix stat system call.
-   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,9 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <bp-checks.h>
 
-extern int __syscall_stat (const char *, struct stat *);
+extern int __syscall_stat (const char *__unbounded, struct stat *__unbounded);
 
 int
 __xstat (int vers, const char *file, struct stat *buf)
@@ -32,6 +33,6 @@ __xstat (int vers, const char *file, struct stat *buf)
       return -1;
     }
 
-  return __syscall_stat (file, buf);
+  return __syscall_stat (CHECK_STRING (file), CHECK_1 (buf));
 }
 weak_alias (__xstat, _xstat)

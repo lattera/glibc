@@ -68,6 +68,9 @@ extern int __ubp_memchr (const char *__unbounded, int, unsigned);
      && BOUNDS_VIOLATED),					\
    __ptrvalue (ARG))
 
+#   define CHECK_SIGSET(SET) CHECK_N ((SET), _NSIG / (8 * sizeof *(SET)))
+#   define CHECK_SIGSETopt(SET) CHECK_Nopt ((SET), _NSIG / (8 * sizeof *(SET)))
+
 #  else /* !__BOUNDED_POINTERS__ */
 
 /* Do nothing if not compiling with -fbounded-pointers.  */
@@ -80,6 +83,8 @@ extern int __ubp_memchr (const char *__unbounded, int, unsigned);
 #   define CHECK_N(ARG, N) (ARG)
 #   define CHECK_Nopt(ARG, N) (ARG)
 #   define CHECK_STRING(ARG) (ARG)
+#   define CHECK_SIGSET(SET) (SET)
+#   define CHECK_SIGSETopt(SET) (SET)
 
 #  endif /* !__BOUNDED_POINTERS__ */
 

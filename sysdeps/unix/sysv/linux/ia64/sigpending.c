@@ -25,8 +25,9 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_rt_sigpending (sigset_t *, size_t);
+extern int __syscall_rt_sigpending (sigset_t *__unbounded, size_t);
 
 
 /* Change the set of blocked signals to SET,
@@ -37,5 +38,5 @@ sigpending (set)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigpending, 2, CHECK_SIGSET (set), _NSIG / 8);
 }

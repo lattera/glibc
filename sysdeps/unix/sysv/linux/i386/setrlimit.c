@@ -22,14 +22,15 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <shlib-compat.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
-#include <shlib-compat.h>
 
 extern int __syscall_setrlimit (unsigned int resource,
-				const struct rlimit *rlimits);
+				const struct rlimit *__unbounded rlimits);
 extern int __syscall_ugetrlimit (unsigned int resource,
-				 const struct rlimit *rlimits);
+				 const struct rlimit *__unbounded rlimits);
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */
@@ -41,7 +42,7 @@ int
 __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 {
 #ifdef __ASSUME_NEW_GETRLIMIT_SYSCALL
-  return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
+  return INLINE_SYSCALL (setrlimit, 2, resource, CHECK_1 (rlimits));
 #else
   struct rlimit rlimits_small;
 
@@ -51,7 +52,7 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
       /* Check if the new ugetrlimit syscall exists.  We must do this
 	 first because older kernels don't reject negative rlimit
 	 values in setrlimit.  */
-      int result = INLINE_SYSCALL (ugetrlimit, 2, resource, &rlimits_small);
+      int result = INLINE_SYSCALL (ugetrlimit, 2, resource, __ptrvalue (&rlimits_small));
       if (result != -1 || errno != ENOSYS)
 	/* The syscall exists.  */
 	__have_no_new_getrlimit = -1;
@@ -60,7 +61,7 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 	__have_no_new_getrlimit = 1;
     }
   if (__have_no_new_getrlimit < 0)
-    return INLINE_SYSCALL (setrlimit, 2, resource, rlimits);
+    return INLINE_SYSCALL (setrlimit, 2, resource, CHECK_1 (rlimits));
 # endif
 
   /* We might have to correct the limits values.  Since the old values
@@ -71,7 +72,7 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 				RLIM_INFINITY >> 1);
 
   /* Use the adjusted values.  */
-  return INLINE_SYSCALL (setrlimit, 2, resource, &rlimits_small);
+  return INLINE_SYSCALL (setrlimit, 2, resource, __ptrvalue (&rlimits_small));
 #endif
 }
 

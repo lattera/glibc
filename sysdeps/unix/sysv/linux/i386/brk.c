@@ -1,5 +1,5 @@
 /* brk system call for Linux/i386.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <sysdep.h>
 
+#include <bp-checks.h>
+
 /* This must be initialized data because commons can't have aliases.  */
 void *__curbrk = 0;
 
@@ -32,14 +34,14 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
-  void *newbrk, *scratch;
+  void *__unbounded newbrk, *__unbounded scratch;
 
   asm ("movl %%ebx, %1\n"	/* Save %ebx in scratch register.  */
        "movl %3, %%ebx\n"	/* Put ADDR in %ebx to be syscall arg.  */
        "int $0x80 # %2\n"	/* Perform the system call.  */
        "movl %1, %%ebx\n"	/* Restore %ebx from scratch register.  */
        : "=a" (newbrk), "=r" (scratch)
-       : "0" (SYS_ify (brk)), "g" (addr));
+       : "0" (SYS_ify (brk)), "g" (__ptrvalue (addr)));
 
   __curbrk = newbrk;
 

@@ -38,6 +38,77 @@
 
 2000-07-06  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/generic/bp-checks.h (CHECK_SIGSET, CHECK_SIGSETopt):
+	New macros.
+	* sysdeps/generic/strcpy.c: Add bounds checks.
+	* sysdeps/unix/fxstat.c: Likewise.
+	* sysdeps/unix/xstat.c: Likewise.
+	* sysdeps/unix/common/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/execve.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/brk.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lchown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c: Likewise.
+
 	* string/endian.h (__LONG_LONG_PAIR): New macro.
 	* sysdeps/unix/sysv/linux/ftruncate64.c: Use it.
 	* sysdeps/unix/sysv/linux/pread.c: Likewise.

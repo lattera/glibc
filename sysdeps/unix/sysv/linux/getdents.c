@@ -28,13 +28,13 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
-
-extern int __syscall_getdents (int fd, char *buf, size_t nbytes);
+extern int __syscall_getdents (int fd, char *__unbounded buf, size_t nbytes);
 
 /* For Linux we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and
@@ -84,7 +84,8 @@ __getdents (int fd, char *buf, size_t nbytes)
   dp = (struct dirent *) buf;
   skdp = kdp = __alloca (red_nbytes);
 
-  retval = INLINE_SYSCALL (getdents, 3, fd, (char *) kdp, red_nbytes);
+  retval = INLINE_SYSCALL (getdents, 3, fd,
+			   CHECK_N ((char *) kdp, red_nbytes), red_nbytes);
 
   if (retval == -1)
     return -1;

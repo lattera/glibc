@@ -23,14 +23,16 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
 #include <linux/posix_types.h>
 #include <kernel-features.h>
 
 
-extern int __syscall_getgroups(int, __kernel_gid_t *);
+extern int __syscall_getgroups (int, __kernel_gid_t *__unbounded);
 
 #ifdef __NR_getgroups32
-extern int __syscall_getgroups32 (int, __kernel_gid32_t *);
+extern int __syscall_getgroups32 (int, __kernel_gid32_t *__unbounded);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
@@ -51,7 +53,7 @@ __getgroups (int n, gid_t *groups)
   else
     {
 #if __ASSUME_32BITUIDS > 0
-      return INLINE_SYSCALL (getgroups32, 2, n, groups);
+      return INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
 #else
       int i, ngids;
       __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
@@ -61,7 +63,7 @@ __getgroups (int n, gid_t *groups)
 	  int result;
 	  int saved_errno = errno;
 
-	  result = INLINE_SYSCALL (getgroups32, 2, n, groups);
+	  result = INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
 	  if (result == 0 || errno != ENOSYS)
 	    return result;
 
@@ -70,11 +72,10 @@ __getgroups (int n, gid_t *groups)
 	}
 # endif /* __NR_getgroups32 */
 
-      ngids = INLINE_SYSCALL (getgroups, 2, n, kernel_groups);
+      ngids = INLINE_SYSCALL (getgroups, 2, n, CHECK_N (kernel_groups, n));
       if (n != 0 && ngids > 0)
 	for (i = 0; i < ngids; i++)
-	  groups[i] = kernel_groups[i];
-
+	  (__ptrvalue (groups))[i] = kernel_groups[i];
       return ngids;
 #endif
     }

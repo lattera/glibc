@@ -22,13 +22,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
 #if defined __NR_poll || __ASSUME_POLL_SYSCALL > 0
 
-extern int __syscall_poll (struct pollfd *fds, unsigned int nfds,
-			   int timeout);
+extern int __syscall_poll (struct pollfd *__unbounded fds,
+			   unsigned int nfds, int timeout);
 
 # if __ASSUME_POLL_SYSCALL == 0
 static int __emulate_poll (struct pollfd *fds, unsigned long int nfds,
@@ -48,7 +49,7 @@ __poll (fds, nfds, timeout)
   if (!must_emulate)
     {
       int errno_saved = errno;
-      int retval = INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
+      int retval = INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
 
       if (retval >= 0 || errno != ENOSYS)
 	return retval;
@@ -59,7 +60,7 @@ __poll (fds, nfds, timeout)
 
   return __emulate_poll (fds, nfds, timeout);
 # else
-  return INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
+  return INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
 # endif
 }
 weak_alias (__poll, poll)

@@ -28,15 +28,19 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
 #include "kernel-features.h"
 
 #include <xstatconv.c>
 
-extern int __syscall_stat (const char *, struct kernel_stat *);
+extern int __syscall_stat (const char *__unbounded,
+			   struct kernel_stat *__unbounded);
 
 #ifdef __NR_stat64
-extern int __syscall_stat64 (const char *, struct stat64 *);
-# if  __ASSUME_STAT64_SYSCALL == 0
+extern int __syscall_stat64 (const char *__unbounded,
+			     struct stat64 *__unbounded);
+# if __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
 extern int __have_no_stat64;
 # endif
@@ -53,14 +57,13 @@ __xstat (int vers, const char *name, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    {
-      return INLINE_SYSCALL (stat, 2, name, (struct kernel_stat *) buf);
-    }
+    return INLINE_SYSCALL (stat, 2, CHECK_STRING (name), CHECK_1 ((struct kernel_stat *) buf));
+
 #if __ASSUME_STAT64_SYSCALL > 0
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (stat64, 2, name, &buf64);
+    result = INLINE_SYSCALL (stat64, 2, CHECK_STRING (name), __ptrvalue (&buf64));
     if (result == 0)
       result = xstat32_conv (vers, &buf64, buf);
     return result;
@@ -73,7 +76,7 @@ __xstat (int vers, const char *name, struct stat *buf)
     {
       struct stat64 buf64;
 
-      result = INLINE_SYSCALL (stat64, 2, name, &buf64);
+      result = INLINE_SYSCALL (stat64, 2, CHECK_STRING (name), __ptrvalue (&buf64));
 
       if (result == 0)
 	result = xstat32_conv (vers, &buf64, buf);
@@ -83,8 +86,8 @@ __xstat (int vers, const char *name, struct stat *buf)
 
       __have_no_stat64 = 1;
     }
-# endif  
-  result = INLINE_SYSCALL (stat, 2, name, &kbuf);
+# endif
+  result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
   if (result == 0)
     result = xstat_conv (vers, &kbuf, buf);
 
@@ -94,6 +97,6 @@ __xstat (int vers, const char *name, struct stat *buf)
 
 weak_alias (__xstat, _xstat);
 #ifdef XSTAT_IS_XSTAT64
-#undef __xstat64
+# undef __xstat64
 strong_alias (__xstat, __xstat64);
 #endif

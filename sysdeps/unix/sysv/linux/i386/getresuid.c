@@ -24,17 +24,20 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
 #ifdef __NR_getresuid
 
-extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
-				__kernel_uid_t *suid);
+extern int __syscall_getresuid (__kernel_uid_t *__unbounded ruid,
+				__kernel_uid_t *__unbounded euid,
+				__kernel_uid_t *__unbounded suid);
 
 # ifdef __NR_getresuid32
-extern int __syscall_getresuid32 (__kernel_uid32_t *ruid, __kernel_uid32_t *euid,
-				  __kernel_uid32_t *suid);
+extern int __syscall_getresuid32 (__kernel_uid32_t *__unbounded ruid,
+				  __kernel_uid32_t *__unbounded euid,
+				  __kernel_uid32_t *__unbounded suid);
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
@@ -46,7 +49,8 @@ int
 getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
 {
 # if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (getresuid32, 3, ruid, euid, suid);
+  return INLINE_SYSCALL (getresuid32, 3, CHECK_1 (ruid),
+			 CHECK_1 (euid), CHECK_1 (suid));
 # else
   __kernel_uid_t k_ruid, k_euid, k_suid;
   int result;
@@ -56,7 +60,8 @@ getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
       int r;
       int saved_errno = errno;
 
-      r = INLINE_SYSCALL (getresuid32, 3, ruid, euid, suid);
+      r = INLINE_SYSCALL (getresuid32, 3, CHECK_1 (ruid),
+			  CHECK_1 (euid), CHECK_1 (suid));
       if (r == 0 || errno != ENOSYS)
 	return r;
 
@@ -65,7 +70,8 @@ getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
     }
 #  endif /* __NR_getresuid32 */
 
-  result = INLINE_SYSCALL (getresuid, 3, &k_ruid, &k_euid, &k_suid);
+  result = INLINE_SYSCALL (getresuid, 3, __ptrvalue (&k_ruid),
+			   __ptrvalue (&k_euid), __ptrvalue (&k_suid));
 
   if (result == 0)
     {

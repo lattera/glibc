@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,9 +22,10 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_rt_sigprocmask (int, const sigset_t *, sigset_t *,
-				     size_t);
+extern int __syscall_rt_sigprocmask (int, const sigset_t *__unbounded,
+				     sigset_t *__unbounded, size_t);
 
 /* Get and/or change the set of blocked signals.  */
 int
@@ -35,6 +36,7 @@ __sigprocmask (how, set, oset)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET (set),
+			 CHECK_SIGSETopt (oset), _NSIG / 8);
 }
 weak_alias (__sigprocmask, sigprocmask)

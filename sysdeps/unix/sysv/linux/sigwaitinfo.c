@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,11 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #ifdef __NR_rt_sigtimedwait
-extern int __syscall_rt_sigtimedwait (const sigset_t *, siginfo_t *,
-				      const struct timespec *, size_t);
+extern int __syscall_rt_sigtimedwait (const sigset_t *__unbounded, siginfo_t *__unbounded,
+				      const struct timespec *__unbounded, size_t);
 
 
 /* Return any pending signal or wait for one for the given time.  */
@@ -37,7 +38,8 @@ __sigwaitinfo (set, info)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, NULL, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			 CHECK_1 (info), NULL, _NSIG / 8);
 }
 weak_alias (__sigwaitinfo, sigwaitinfo)
 #else

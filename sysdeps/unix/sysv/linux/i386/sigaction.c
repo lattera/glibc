@@ -37,8 +37,8 @@
 #define SA_RESTORER 0x04000000
 
 
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
-				   struct kernel_sigaction *, size_t);
+extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
+				   struct kernel_sigaction *__unbounded, size_t);
 
 #if __ASSUME_REALTIME_SIGNALS == 0
 /* The variable is shared between all wrappers around signal handling
@@ -86,8 +86,9 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
-			       oact ? &koact : NULL, _NSIG / 8);
+      result = INLINE_SYSCALL (rt_sigaction, 4,
+			       sig, act ? __ptrvalue (&kact) : NULL,
+			       oact ? __ptrvalue (&koact) : NULL, _NSIG / 8);
 
 # if __ASSUME_REALTIME_SIGNALS == 0
       if (result >= 0 || errno != ENOSYS)
@@ -126,7 +127,8 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 		"popl %%ebx"
 		: "=a" (result)
 		: "0" (SYS_ify (sigaction)), "r" (sig),
-		  "c" (act ? &k_newact : 0), "d" (oact ? &k_oldact : 0));
+		  "c" (act ? __ptrvalue (&k_newact) : 0),
+		  "d" (oact ? __ptrvalue (&k_oldact) : 0));
 
   if (result < 0)
     {

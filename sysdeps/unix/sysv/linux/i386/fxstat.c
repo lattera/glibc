@@ -28,14 +28,16 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
 #include "kernel-features.h"
 
 #include <xstatconv.c>
 
-extern int __syscall_fstat (int, struct kernel_stat *);
+extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
 
 #ifdef __NR_stat64
-extern int __syscall_fstat64 (int, struct stat64 *);
+extern int __syscall_fstat64 (int, struct stat64 *__unbounded);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
 extern int __have_no_stat64;
@@ -52,14 +54,13 @@ __fxstat (int vers, int fd, struct stat *buf)
   int result;
 
   if (vers == _STAT_VER_KERNEL)
-    {
-      return INLINE_SYSCALL (fstat, 2, fd, (struct kernel_stat *) buf);
-    }
+    return INLINE_SYSCALL (fstat, 2, fd, CHECK_1 ((struct kernel_stat *) buf));
+
 #if __ASSUME_STAT64_SYSCALL > 0
   {
     struct stat64 buf64;
 
-    result = INLINE_SYSCALL (fstat64, 2, fd, &buf64);
+    result = INLINE_SYSCALL (fstat64, 2, fd, __ptrvalue (&buf64));
     if (result == 0)
       result = xstat32_conv (vers, &buf64, buf);
     return result;
@@ -73,19 +74,19 @@ __fxstat (int vers, int fd, struct stat *buf)
     {
       struct stat64 buf64;
 
-      result = INLINE_SYSCALL (fstat64, 2, fd, &buf64);
+      result = INLINE_SYSCALL (fstat64, 2, fd, __ptrvalue (&buf64));
 
       if (result == 0)
 	result = xstat32_conv (vers, &buf64, buf);
-      
+
       if (result != -1 || errno != ENOSYS)
 	return result;
 
       __have_no_stat64 = 1;
     }
-# endif  
+# endif
 
-  result = INLINE_SYSCALL (fstat, 2, fd, &kbuf);
+  result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
   if (result == 0)
     result = xstat_conv (vers, &kbuf, buf);
 

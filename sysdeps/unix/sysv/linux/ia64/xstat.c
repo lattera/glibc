@@ -27,14 +27,15 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_stat (const char *, struct stat *);
+extern int __syscall_stat (const char *__unbounded, struct stat *__unbounded);
 
 /* Get information about the file NAME in BUF.  */
 int
 __xstat (int vers, const char *name, struct stat *buf)
 {
-  return INLINE_SYSCALL (stat, 2, name, buf);
+  return INLINE_SYSCALL (stat, 2, name, CHECK_1 (buf));
 }
 
 weak_alias (__xstat, _xstat);

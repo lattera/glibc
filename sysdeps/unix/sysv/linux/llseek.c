@@ -24,7 +24,7 @@
 #include <sys/syscall.h>
 
 extern int __syscall__llseek (int fd, off_t offset_hi, off_t offset_lo,
-			      loff_t *result, int whence);
+			      loff_t *__unbounded result, int whence);
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 loff_t
@@ -34,7 +34,7 @@ __llseek (int fd, loff_t offset, int whence)
 
   return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
 				   (off_t) (offset & 0xffffffff),
-				   &result, whence) ?: result);
+				   __ptrvalue (&result), whence) ?: result);
 }
 weak_alias (__llseek, llseek)
 strong_alias (__llseek, __libc_lseek64)

@@ -24,16 +24,20 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
 #include "kernel-features.h"
 
 #ifdef __NR_getresgid
 
-extern int __syscall_getresgid (__kernel_gid_t *rgid, __kernel_gid_t *egid,
-				__kernel_gid_t *sgid);
+extern int __syscall_getresgid (__kernel_gid_t *__unbounded rgid,
+				__kernel_gid_t *__unbounded egid,
+				__kernel_gid_t *__unbounded sgid);
 
 # ifdef __NR_getresgid32
-extern int __syscall_getresgid32 (__kernel_gid32_t *rgid, __kernel_gid32_t *egid,
-				  __kernel_gid32_t *sgid);
+extern int __syscall_getresgid32 (__kernel_gid32_t *__unbounded rgid,
+				  __kernel_gid32_t *__unbounded egid,
+				  __kernel_gid32_t *__unbounded sgid);
 
 #  if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
@@ -47,8 +51,9 @@ int
 getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
 # if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (getresgid32, 3, rgid, egid, sgid);
-# else  
+  return INLINE_SYSCALL (getresgid32, 3, CHECK_1 (rgid),
+			 CHECK_1 (egid), CHECK_1 (sgid));
+# else
   __kernel_gid_t k_rgid, k_egid, k_sgid;
   int result;
 #  ifdef __NR_getresgid32
@@ -57,7 +62,8 @@ getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
       int r;
       int saved_errno = errno;
 
-      r = INLINE_SYSCALL (getresgid32, 3, rgid, egid, sgid);
+      r = INLINE_SYSCALL (getresgid32, 3, CHECK_1 (rgid),
+			  CHECK_1 (egid), CHECK_1 (sgid));
       if (r == 0 || errno != ENOSYS)
 	return r;
 
@@ -66,7 +72,8 @@ getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
     }
 #  endif /* __NR_getresgid32 */
 
-  result = INLINE_SYSCALL (getresgid, 3, &k_rgid, &k_egid, &k_sgid);
+  result = INLINE_SYSCALL (getresgid, 3, __ptrvalue (&k_rgid),
+			   __ptrvalue (&k_egid), __ptrvalue (&k_sgid));
 
   if (result == 0)
     {

@@ -23,13 +23,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
 /* The order of hi, lo depends on endianness.  */
-extern ssize_t __syscall_pwrite (int fd, const void *buf, size_t count,
+extern ssize_t __syscall_pwrite (int fd, const void *__unbounded buf, size_t count,
 				 off_t offset_hi, off_t offset_lo);
 
 # if __ASSUME_PWRITE_SYSCALL == 0
@@ -48,7 +49,7 @@ __libc_pwrite (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count,
+  result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count,
 			   __LONG_LONG_PAIR (0, offset));
 # if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)

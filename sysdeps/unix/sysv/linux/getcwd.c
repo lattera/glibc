@@ -1,5 +1,5 @@
 /* Determine current working directory.  Linux version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,6 +26,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
@@ -34,7 +35,7 @@
 /* Kernel 2.1.92 introduced a third way to get the current working
    directory: a syscall.  We've got to be careful that even when
    compiling under 2.1.92+ the libc still runs under older kernels. */
-extern int __syscall_getcwd (char *buf, unsigned long size);
+extern int __syscall_getcwd (char *__unbounded buf, unsigned long size);
 # define no_syscall_getcwd 0
 # define have_new_dcache 1
 /* This is a trick since we don't define generic_getcwd.  */
@@ -51,7 +52,7 @@ static char *generic_getcwd (char *buf, size_t size) internal_function;
 /* Kernel 2.1.92 introduced a third way to get the current working
    directory: a syscall.  We've got to be careful that even when
    compiling under 2.1.92+ the libc still runs under older kernels. */
-extern int __syscall_getcwd (char *buf, unsigned long size);
+extern int __syscall_getcwd (char *__unbounded buf, unsigned long size);
 static int no_syscall_getcwd;
 static int have_new_dcache;
 # else
@@ -99,7 +100,7 @@ __getcwd (char *buf, size_t size)
     {
       int retval;
 
-      retval = INLINE_SYSCALL (getcwd, 2, path, alloc_size);
+      retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
       if (retval >= 0)
 	{
 	  if (buf == NULL)

@@ -21,9 +21,11 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_execve (const char *file, char *const argv[],
-			     char *const envp[]);
+extern int __syscall_execve (const char *__unbounded file,
+			     char *__unbounded const *__unbounded argv,
+			     char *__unbounded const *__unbounded envp);
 extern void __pthread_kill_other_threads_np (void);
 weak_extern (__pthread_kill_other_threads_np)
 
@@ -37,7 +39,32 @@ __execve (file, argv, envp)
   /* If this is a threaded application kill all other threads.  */
   if (__pthread_kill_other_threads_np)
     __pthread_kill_other_threads_np ();
+#if __BOUNDED_POINTERS__
+  {
+    char **v;
+    int i;
+    char *__unbounded *__unbounded ubp_argv;
+    char *__unbounded *__unbounded ubp_envp;
+    char *__unbounded *__unbounded ubp_v;
 
+    for (v = argv; *v; v++)
+      ;
+    i = v - argv + 1;
+    ubp_argv = (char *__unbounded *__unbounded) alloca (sizeof (*ubp_argv) * i);
+    for (v = argv, ubp_v = ubp_argv; i--; v++, ubp_v++)
+      *ubp_v = CHECK_STRING (*v);
+
+    for (v = envp; *v; v++)
+      ;
+    i = v - envp + 1;
+    ubp_envp = (char *__unbounded *__unbounded) alloca (sizeof (*ubp_envp) * i);
+    for (v = envp, ubp_v = ubp_envp; i--; v++, ubp_v++)
+      *ubp_v = CHECK_STRING (*v);
+
+    return INLINE_SYSCALL (execve, 3, CHECK_STRING (file), ubp_argv, ubp_envp);
+  }
+#else
   return INLINE_SYSCALL (execve, 3, file, argv, envp);
+#endif
 }
 weak_alias (__execve, execve)
