@@ -1,5 +1,9 @@
 1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_outb): Fix output
+	parameter format string.
+	(inline_outw): Likewise.
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Include
 	string.h to get memcpy prototype and NULL definition.
 
