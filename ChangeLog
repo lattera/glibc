@@ -23,6 +23,8 @@
 	absolute use path in I18NPATH.
 
 	* stdlib/Makefile (headers): Add inttypes.h.
+	* sysdeps/wordsize-32/inttypes.h: New file.
+	* sysdeps/wordsize-64/inttypes.h: New file.
 
 	* sysdpes/generic/socketbits.h: Add PF_FILE as synonym for PF_LOCAL
 	and AF_FILE as synonym for AF_LOCAL.
