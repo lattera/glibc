@@ -391,6 +391,7 @@ _dl_open (const char *file, int mode, const void *caller)
     {
       /* Some error occurred during loading.  */
       char *local_errstring;
+      size_t len_errstring;
 
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
@@ -399,7 +400,20 @@ _dl_open (const char *file, int mode, const void *caller)
 
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */
-      local_errstring = strdupa (errstring);
+      len_errstring = strlen (errstring) + 1;
+      if (objname == errstring + len_errstring)
+	{
+	  len_errstring += strlen (objname) + 1;
+	  local_errstring = alloca (len_errstring);
+	  memcpy (local_errstring, errstring, len_errstring);
+	  objname = local_errstring + len_errstring;
+	}
+      else
+	{
+	  local_errstring = alloca (len_errstring);
+	  memcpy (local_errstring, errstring, len_errstring);
+	}
+
       if (errstring != _dl_out_of_memory)
 	free ((char *) errstring);
 

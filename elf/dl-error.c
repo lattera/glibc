@@ -88,7 +88,7 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
       else
 	{
 	  /* This is better than nothing.  */
-	  lcatch->objname = objname;
+	  lcatch->objname = "";
 	  lcatch->errstring = _dl_out_of_memory;
 	}
       longjmp (lcatch->env, errcode ?: -1);

@@ -1,3 +1,10 @@
+2000-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (_dl_open): If objname points right after errstring,
+	allocate it together with errstring using alloca.
+	* elf/dl-error.c (_dl_signal_error): If malloc failed, set objname
+	to "", because it might point to local stack.
+
 2000-12-05  H.J. Lu  <hjl@gnu.org>
 
 	* nss/Makefile (routines): Add getnssent and getnssent_r.
