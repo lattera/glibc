@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -57,7 +57,7 @@
    names equal.	 */
 # undef putc
 # define putc(c, f) (wide \
-		      ? _IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
+		      ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
 # define size_t     _IO_size_t
 # define FILE	     _IO_FILE
 #else	/* ! USE_IN_LIBIO */

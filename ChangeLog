@@ -1,5 +1,20 @@
 2001-01-02  Andreas Jaeger  <aj@suse.de>
 
+	* libio/wgenops.c (_IO_wdoallocbuf): Use correct wide access macro.
+	(_IO_switch_to_wget_mode): Likewise.
+	(_IO_sputbackwc): Likewise.
+	(_IO_sungetwc): Use wint_t for result.
+
+	* stdio-common/vfscanf.c (__vfscanf): Use WINT_T for done.
+
+	* sysdeps/generic/strtol.c (strtol): Make cnt size_t for correct
+	signedness.
+
+	* sysdeps/generic/printf_fphex.c (putc): Cast _IO_putwc_unlocked
+	to (int) to avoid warnings.
+	* stdio-common/printf_fp.c (putc): Likewise.
+	* stdio-common/printf_size.c (putc): Likewise.
+
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Make
 	constant unsigned.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -266,7 +266,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   va_list arg;
   register const CHAR_T *f = format;
   register UCHAR_T fc;	/* Current character of the format.  */
-  register size_t done = 0;	/* Assignments done.  */
+  register WINT_T done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
   register WINT_T c = 0;	/* Last char read.  */
   register int width;		/* Maximum field width.  */

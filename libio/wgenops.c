@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -403,7 +403,7 @@ _IO_wdoallocbuf (fp)
   if (fp->_wide_data->_IO_buf_base)
     return;
   if (!(fp->_flags & _IO_UNBUFFERED))
-    if (_IO_DOALLOCATE (fp) != WEOF)
+    if ((wint_t)_IO_WDOALLOCATE (fp) != WEOF)
       return;
   _IO_wsetb (fp, fp->_wide_data->_shortbuf, fp->_wide_data->_shortbuf + 1, 0);
 }
@@ -453,7 +453,7 @@ _IO_switch_to_wget_mode (fp)
      _IO_FILE *fp;
 {
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base)
-    if (_IO_OVERFLOW (fp, WEOF) == WEOF)
+    if ((wint_t)_IO_WOVERFLOW (fp, WEOF) == WEOF)
       return EOF;
   if (_IO_in_backup (fp))
     fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_backup_base;
@@ -622,7 +622,7 @@ _IO_sputbackwc (fp, c)
   else
     result = _IO_PBACKFAIL (fp, c);
 
-  if (result != EOF)
+  if (result != WEOF)
     fp->_flags &= ~_IO_EOF_SEEN;
 
   return result;
@@ -632,7 +632,7 @@ wint_t
 _IO_sungetwc (fp)
      _IO_FILE *fp;
 {
-  int result;
+  wint_t result;
 
   if (fp->_wide_data->_IO_read_ptr > fp->_wide_data->_IO_read_base)
     {
