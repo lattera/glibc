@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,14 +19,11 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
-#include <features.h>
+/* The whole purpose of this file is for GDB and GDB only.  Don't read
+   too much into it.  Don't use it for anything other than GDB unless
+   you know what you are doing.  */
 
-/* <sys/ptrace.h> and <linux/ptrace.h> both define the PTRACE_* macros.
-   This leads to compilation problems with programs which include both
-   user.h and ptrace.h (eg: GDB).  Do not include <linux/ptrace.h> here. */
-#include <asm/ptrace.h>
-
-struct user_fp
+struct user_fpregs
 {
   struct fp_reg
   {
@@ -44,9 +41,14 @@ struct user_fp
   unsigned int init_flag;
 };
 
+struct user_regs
+{
+  unsigned long int uregs[18];
+};
+
 struct user
 {
-  struct pt_regs regs;		/* General registers */
+  struct user_regs regs;	/* General registers */
   int u_fpvalid;		/* True if math co-processor being used. */
 
   unsigned long int u_tsize;	/* Text segment size (pages). */
@@ -58,13 +60,13 @@ struct user
 
   long int signal;     		/* Signal that caused the core dump. */
   int reserved;			/* No longer used */
-  struct pt_regs *u_ar0;	/* help gdb to find the general registers. */
+  struct user_regs *u_ar0;	/* help gdb to find the general registers. */
 
   unsigned long magic;		/* uniquely identify a core file */
   char u_comm[32];		/* User command that was responsible */
   int u_debugreg[8];
-  struct user_fp u_fp;		/* Floating point registers */
-  struct user_fp_struct *u_fp0;	/* help gdb to find the FP registers. */
+  struct user_fpregs u_fp;	/* Floating point registers */
+  struct user_fpregs *u_fp0;	/* help gdb to find the FP registers. */
 };
 
 #endif  /* sys/user.h */
