@@ -1,3 +1,8 @@
+2004-03-26  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nis/nis-grp.c (_nss_nis_getgrnam_r): Don't
+	set errno if group does not exist.
+
 2004-03-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Handle
