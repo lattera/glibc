@@ -1,3 +1,7 @@
+1998-06-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Makefile: Make sure test-ffs does not use builtins.
+
 1998-06-16  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* sunrpc/svc.c: Check for NULL pointer.
