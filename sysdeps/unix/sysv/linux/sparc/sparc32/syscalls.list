@@ -1,6 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-vfork		-	vfork		0	vfork
+vfork		-	vfork		0	__vfork		vfork
 
 s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_getpagesize	getpagesize getpagesize	0	__syscall_getpagesize

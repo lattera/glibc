@@ -104,6 +104,8 @@ int __pthread_manager(void *arg)
   /* Block all signals except __pthread_sig_cancel and SIGTRAP */
   sigfillset(&mask);
   sigdelset(&mask, __pthread_sig_cancel); /* for thread termination */
+  if (__pthread_sig_debug > 0)
+    sigdelset(&mask, __pthread_sig_debug); /* for debugging purposes */
   sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
@@ -162,7 +164,7 @@ int __pthread_manager(void *arg)
       case REQ_DEBUG:
         /* Make gdb aware of new thread */
 	if (__pthread_threads_debug && __pthread_sig_debug > 0)
-          raise(__pthread_sig_debug);
+	  raise(__pthread_sig_debug);
         restart(request.req_thread);
         break;
       }
@@ -375,9 +377,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Do the cloning */
   pid = __clone(pthread_start_thread, (void **) new_thread,
                 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-#ifdef CLONE_PTRACE
-                CLONE_PTRACE |
-#endif
 		__pthread_sig_cancel, new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {

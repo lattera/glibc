@@ -1,5 +1,19 @@
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/sv.po: Update from translation team.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add __vfork
+	as alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
+1999-01-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* ctype/ctype.h (toupper,tolower): Use __inline instead of inline,
+	define inline functions only when optimizing for speed and
+	__USE_EXTERN_INLINES is set.
+
+1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
 	* scripts/config.sub: Update from latest autoconf release.
 	* scripts/config.guess: Likewise.
 
@@ -41,7 +55,7 @@
 
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
-	* ctype/ctype.c (toupper): Correct variable names from lat change.
+	* ctype/ctype.c (toupper): Correct variable names from last change.
 	(tolower): Likewise.
 
 1999-01-23  Ulrich Drepper  <drepper@cygnus.com>

@@ -223,7 +223,7 @@ static void pthread_initialize(void)
   /* Allocate the signals used.  */
   __pthread_sig_restart = __libc_allocate_rtsig (1);
   __pthread_sig_cancel = __libc_allocate_rtsig (1);
-  __pthread_sig_debug = __libc_allocate_rtsig (2);
+  __pthread_sig_debug = __libc_allocate_rtsig (1);
   if (__pthread_sig_restart < 0 ||
       __pthread_sig_cancel < 0 ||
       __pthread_sig_debug < 0)
@@ -297,9 +297,6 @@ int __pthread_initialize_manager(void)
   /* Start the thread manager */
   pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
                 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND
-#ifdef CLONE_PTRACE
-		| CLONE_PTRACE
-#endif
 		, (void *)(long)manager_pipe[0]);
   if (pid == -1) {
     free(__pthread_manager_thread_bos);
@@ -311,7 +308,8 @@ int __pthread_initialize_manager(void)
   __pthread_manager_reader = manager_pipe[0]; /* reading end */
   __pthread_manager_thread.p_pid = pid;
   /* Make gdb aware of new thread manager */
-  if (__pthread_threads_debug) raise(__pthread_sig_cancel);
+  if (__pthread_threads_debug && __pthread_sig_debug > 0)
+    raise(__pthread_sig_cancel);
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
@@ -484,8 +482,8 @@ static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
   asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
   self = thread_self();
 #endif
-  THREAD_SETMEM(self, p_signal, sig); 
-  if (THREAD_GETMEM(self, p_signal_jmp) != NULL) 
+  THREAD_SETMEM(self, p_signal, sig);
+  if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
     siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
 }
 
@@ -536,7 +534,7 @@ static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
    The debugging strategy is as follows:
    On reception of a REQ_DEBUG request (sent by new threads created to
    the thread manager under debugging mode), the thread manager throws
-   __pthread_sig_cancel to itself. The debugger (if active) intercepts
+   __pthread_sig_debug to itself. The debugger (if active) intercepts
    this signal, takes into account new threads and continue execution
    of the thread manager by propagating the signal because it doesn't
    know what it is specifically done for. In the current implementation,

@@ -150,14 +150,15 @@ __exctype (_tolower);
 # define isblank(c)	__isctype((c), _ISblank)
 #endif
 
-#if __GNUC__ >= 2
-extern inline int
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
+    && defined __USE_EXTERN_INLINES
+extern __inline int
 tolower (int __c)
 {
   return __c >= -128 && __c < 256 ? __tolower (__c) : __c;
 }
 
-extern inline int
+extern __inline int
 toupper (int __c)
 {
   return __c >= -128 && __c < 256 ? __toupper (__c) : __c;
