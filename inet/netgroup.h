@@ -1,5 +1,5 @@
 /* Internal header for netgroup related functions.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,8 @@
    track which netgroups were read and which still have to be read.  */
 struct name_list
 {
-  const char *name;
   struct name_list *next;
+  char name[0];
 };
 
 

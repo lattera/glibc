@@ -78,7 +78,6 @@ free_memory (struct __netgrent *data)
     {
       struct name_list *tmp = data->known_groups;
       data->known_groups = data->known_groups->next;
-      free ((void *) tmp->name);
       free (tmp);
     }
 
@@ -86,7 +85,6 @@ free_memory (struct __netgrent *data)
     {
       struct name_list *tmp = data->needed_groups;
       data->needed_groups = data->needed_groups->next;
-      free ((void *) tmp->name);
       free (tmp);
     }
 }
@@ -116,17 +114,18 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
     }
 
   /* Add the current group to the list of known groups.  */
-  new_elem = (struct name_list *) malloc (sizeof (struct name_list));
-  if (new_elem == NULL || (new_elem->name = __strdup (group)) == NULL)
+  size_t group_len = strlen (group) + 1;
+  new_elem = (struct name_list *) malloc (sizeof (struct name_list)
+					  + group_len);
+  if (new_elem == NULL)
     {
-      if (new_elem != NULL)
-	free (new_elem);
       *errnop = errno;
       status = NSS_STATUS_TRYAGAIN;
     }
   else
     {
       new_elem->next = datap->known_groups;
+      memcpy (new_elem->name, group, group_len);
       datap->known_groups = new_elem;
     }
 
@@ -269,18 +268,16 @@ internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	    /* Really ignore.  */
 	    continue;
 
-	  namep = (struct name_list *) malloc (sizeof (struct name_list));
-	  if (namep == NULL
-	      || (namep->name = __strdup (datap->val.group)) == NULL)
-	    {
-	      /* We are out of memory.  */
-	      if (namep != NULL)
-		free (namep);
-	      status = NSS_STATUS_RETURN;
-	    }
+	  size_t group_len = strlen (datap->val.group) + 1;
+	  namep = (struct name_list *) malloc (sizeof (struct name_list)
+					       + group_len);
+	  if (namep == NULL)
+	    /* We are out of memory.  */
+	    status = NSS_STATUS_RETURN;
 	  else
 	    {
 	      namep->next = datap->needed_groups;
+	      memcpy (namep->name, datap->val.group, group_len);
 	      datap->needed_groups = namep;
 	      /* And get the next entry.  */
 	      continue;
@@ -383,20 +380,19 @@ innetgr (const char *netgroup, const char *host, const char *user,
 		      if (namep == NULL
 			  && strcmp (netgroup, entry.val.group) != 0)
 			{
+			  size_t group_len = strlen (entry.val.group) + 1;
 			  namep =
-			    (struct name_list *) malloc (sizeof (*namep));
-			  if (namep == NULL
-			      || ((namep->name = __strdup (entry.val.group))
-				  == NULL))
+			    (struct name_list *) malloc (sizeof (*namep)
+							 + group_len);
+			  if (namep == NULL)
 			    {
 			      /* Out of memory, simply return.  */
-			      if (namep != NULL)
-				free (namep);
 			      result = -1;
 			      break;
 			    }
 
 			  namep->next = needed;
+			  memcpy (namep->name, entry.val.group, group_len);
 			  needed = namep;
 			}
 		    }
@@ -454,14 +450,12 @@ innetgr (const char *netgroup, const char *host, const char *user,
     {
       struct name_list *tmp = known;
       known = known->next;
-      free ((void *) tmp->name);
       free (tmp);
     }
   while (needed != NULL)
     {
       struct name_list *tmp = needed;
       needed = needed->next;
-      free ((void *) tmp->name);
       free (tmp);
     }
 

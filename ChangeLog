@@ -1,5 +1,10 @@
 2004-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/netgroup.h (struct name_list): Replace name pointer with
+	zero-sized array.
+	* inet/getnetgrent_r.c: Adjust code for change in name_list
+	layout.  Numerous strdup and free calls removed.
+
 	* elf/sprof.c (read_symbols): When comparing aliases, prefer
 	non-hidden over hidden symbols and strong over weak symbols
 	if both don't start with '_'.
