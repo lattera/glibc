@@ -1,5 +1,9 @@
 2002-04-22  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h: New.
+
+	* sysdeps/unix/sysv/linux/x86_64/dl-cache.h: New.
+
 	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Use %rdi as temp
 	register instead of destroying %rbx.
 
