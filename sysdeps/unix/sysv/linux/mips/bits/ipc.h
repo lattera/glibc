@@ -42,6 +42,7 @@
 /* Data structure used to pass permission information to IPC operations.  */
 struct ipc_perm
   {
+    __key_t __key;			/* Key.  */
     unsigned int uid;			/* Owner's user ID.  */
     unsigned int gid;			/* Owner's group ID.  */
     unsigned int cuid;			/* Creator's user ID.  */
