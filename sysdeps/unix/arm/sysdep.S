@@ -50,7 +50,7 @@ syscall_error:
 	ldr r1, 1f
 	str r0, [r1]
 	mvn r0, $0
-	RETINSTR(mov, pc, r14)
+	DO_RET (r14)
 
 1:	.long C_SYMBOL_NAME(errno)
 #else
@@ -60,7 +60,7 @@ syscall_error:
 0:	add r2, pc, r2
 	str r0, [r1, r2]
 	mvn r0, $0
-	RETINSTR(mov, pc, r14)
+	DO_RET (r14)
 
 1:	.word _GLOBAL_OFFSET_TABLE_ - 0b - 8
 2:	.word C_SYMBOL_NAME(errno)(GOTOFF)

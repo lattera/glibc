@@ -43,7 +43,7 @@ SYSCALL__ (brk, 1)
 #endif
 	str r0, [r1]
 	mov r0, $0
-	RETINSTR(mov, pc, r14)
+	DO_RET (r14)
 #ifdef PIC
 1:	.long _GLOBAL_OFFSET_TABLE_ - 2b - 8
 _cb_addr:

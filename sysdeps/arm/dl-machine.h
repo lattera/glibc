@@ -123,7 +123,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   return lazy;
 }
 
-#if defined(__THUMB_INTERWORK__)
+#if defined(__USE_BX__)
 #define BX(x) "bx\t" #x
 #else
 #define BX(x) "mov\tpc, " #x
@@ -293,7 +293,7 @@ _dl_start_user:\n\
 	ldr	r0, .L_FINI_PROC\n\
 	add	r0, sl, r0\n\
 	@ jump to the user_s entry point\n\
-	mov	pc, r6\n\
+	" BX(r6) "\n\
 .L_GET_GOT:\n\
 	.word	_GLOBAL_OFFSET_TABLE_ - .L_GOT_GOT - 4\n\
 .L_SKIP_ARGS:\n\

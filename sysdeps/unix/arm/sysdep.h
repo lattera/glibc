@@ -24,7 +24,7 @@
 
 #ifdef __ASSEMBLER__
 
-#define ret		RETINSTR(mov, pc, r14)
+#define ret		DO_RET (r14)
 #define MOVE(a,b)	mov b,a
 
 #endif

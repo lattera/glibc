@@ -112,7 +112,7 @@ extern int __local_multiple_threads attribute_hidden;
 #   define MAYBE_SAVE_LR						\
   str lr, [sp, $-4]!;
 #   define PSEUDO_RET_MOV						\
-  RETINSTR(movcc, pc, lr);						\
+  RETINSTR(cc, lr);							\
   b PLTJMP(SYSCALL_ERROR)
 #   define PSEUDO_PROLOGUE
 #  else

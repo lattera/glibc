@@ -68,6 +68,6 @@ Llastword:				@ drop through to here once we find a
 	tstne   r2, $0x00ff0000         @ (if first three all non-zero, 4th
 	addne   r0, r0, $1              @  must be zero)
 #endif
-	RETINSTR(mov,pc,lr)
+	DO_RET(lr)
 END(strlen)
 libc_hidden_builtin_def (strlen)

@@ -1,3 +1,8 @@
+2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: Update RETINSTR use.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+
 2004-12-02  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (libpthread-nonshared): Variable removed.

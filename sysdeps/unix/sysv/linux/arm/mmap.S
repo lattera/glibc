@@ -51,7 +51,7 @@ ENTRY (__mmap)
 	ldr	r5, [sp], #4
 
 	cmn	r0, $4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error)
 
 .Linval:
@@ -83,7 +83,7 @@ ENTRY (__mmap)
 	add	sp, sp, #16
 
 	cmn	r0, $4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 	b	PLTJMP(syscall_error);
 #endif
 

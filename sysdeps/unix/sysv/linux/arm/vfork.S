@@ -32,7 +32,7 @@ ENTRY (__vfork)
 #ifdef __NR_vfork
 	swi	__NR_vfork
 	cmn	a1, #4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 
 # ifdef __ASSUME_VFORK_SYSCALL
 	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
@@ -47,7 +47,7 @@ ENTRY (__vfork)
 	/* If we don't have vfork, fork is close enough.  */
 	swi	__NR_fork
 	cmn	a1, #4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 #elif !defined __NR_vfork
 # error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"

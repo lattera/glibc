@@ -45,7 +45,7 @@ ENTRY(__clone)
 	swi	SYS_ify(clone)
 	movs	a1, a1
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
-	RETINSTR(movne, pc, lr)
+	RETINSTR(ne, lr)
 
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]

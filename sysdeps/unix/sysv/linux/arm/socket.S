@@ -91,7 +91,7 @@ ENTRY (__socket)
 
 	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
-	RETINSTR(movcc, pc, r14)
+	RETINSTR(cc, r14)
 	b PLTJMP(SYSCALL_ERROR)
 
 #if defined NEED_CANCELLATION && defined CENABLE
@@ -114,7 +114,7 @@ ENTRY (__socket)
 
 	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
-	RETINSTR(movcc, pc, r14)
+	RETINSTR(cc, r14)
 	b PLTJMP(SYSCALL_ERROR)
 #endif
 

@@ -1,3 +1,21 @@
+2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/arm/sysdep.h: Define __USE_BX__ if bx is available.
+	Use it instead of __THUMB_INTERWORK__.  Make RETINSTR take
+	only a condition and a register.
+	* sysdeps/arm/dl-machine.h: Use __USE_BX__ instead of
+	__THUMB_INTERWORK__.
+	(_dl_start_user): Use BX.
+	* sysdeps/arm/strlen.S: Use DO_RET.
+	* sysdeps/unix/arm/brk.S, sysdeps/unix/arm/fork.S,
+	sysdeps/unix/arm/sysdep.S, sysdeps/unix/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S,
+	sysdeps/unix/sysv/linux/arm/mmap.S,
+	sysdeps/unix/sysv/linux/arm/mmap64.S,
+	sysdeps/unix/sysv/linux/arm/socket.S,
+	sysdeps/unix/sysv/linux/arm/sysdep.h,
+	sysdeps/unix/sysv/linux/arm/vfork.S: Update uses of RETINSTR.
+
 2004-12-02  Roland McGrath  <roland@redhat.com>
 
 	* extra-lib.mk (object-suffixes-$(lib)): Add .oS when
