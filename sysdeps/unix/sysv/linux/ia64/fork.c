@@ -25,9 +25,10 @@ extern int __clone (int (*fn)(void *), void *ksp, unsigned long int flags,
 		  void *arg);
 
 int
-__fork (void)
+__libc_fork (void)
 {
   return __clone (NULL, NULL, SIGCHLD, 0);
 }
 
-weak_alias (__fork, fork)
+weak_alias (__libc_fork, fork)
+weak_alias (__libc_fork, __fork)

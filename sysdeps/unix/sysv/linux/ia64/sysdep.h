@@ -65,7 +65,6 @@
 	.psr abi64;				\
 	.psr lsb;				\
 	.lsb;					\
-	.proc C_SYMBOL_NAME(name);		\
 	.text;					\
 	.align 32;				\
 	.proc C_SYMBOL_NAME(name);		\

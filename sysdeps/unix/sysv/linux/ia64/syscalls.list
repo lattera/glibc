@@ -3,9 +3,9 @@
 umount2		-	umount		2	__umount2	umount2
 
 # Whee! 64-bit systems naturally implement llseek.
-llseek		EXTRA	lseek		3	__llseek	llseek __lseek64 lseek64
-pread		-	pread		4	__syscall_pread	__syscall_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		4	__syscall_pwrite	__syscall_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+llseek		EXTRA	lseek		3	__libc_lseek64	__lseek llseek __lseek64 lseek64
+pread		-	pread		4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
+pwrite		-	pwrite		4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64

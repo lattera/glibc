@@ -1,3 +1,23 @@
+2000-07-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/fork.c: Make __libc_fork the strong
+	name and add weak alias for __fork.
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Change llseek, pread
+	& pwrite to use __libc_<name> as strong names instead of
+	__syscall_<name>.
+
+	* include/sched.h: Add clone2 prototype.
+
+2000-07-26  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ENTRY): Don't declare the
+	procedure name twice.
+
+2000-07-27  Philip Blundell  <philb@gnu.org>
+
+	* malloc/malloc.c (HAVE_MREMAP): Undo change of 1997-12-04.
+
 2000-07-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Rename MSG_URG TO
