@@ -1,3 +1,9 @@
+2001-04-19  Matthew Wilcox  <willy@ldl.fc.hp.com>
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (INLINE_SYSCALL):
+	Change to return a signed result for compatibility with other
+	architectures, and correctness.
+
 2001-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_32BITUIDS):
