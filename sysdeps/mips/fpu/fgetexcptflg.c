@@ -20,27 +20,21 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
-#include <shlib-compat.h>
 
 int
-__fegetexceptflag (fexcept_t *flagp, int excepts)
+fegetexceptflag (fexcept_t *flagp, int excepts)
 {
   fexcept_t temp;
 
   /* Get the current exceptions.  */
   _FPU_GETCW (temp);
 
-  /* It is important that the CAUSE bits are not saved here.  If they
-     were, a call to fesetexceptflag() would generate an
-     exception.  */
+  /* We only save the relevant bits here. In particular, care has to be 
+     taken with the CAUSE bits, as an inadvertent restore later on could
+     generate unexpected exceptions.  */
 
   *flagp = temp & excepts & FE_ALL_EXCEPT;
 
   /* Success.  */
   return 0;
 }
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
-#endif
-versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);
