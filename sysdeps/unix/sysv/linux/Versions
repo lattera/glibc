@@ -92,6 +92,6 @@ libc {
   }
   GLIBC_2.2.1 {
     # p*
-    pivot_root
+    pivot_root;
   }
 }
