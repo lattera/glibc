@@ -51,9 +51,6 @@ _dl_allocate_static_tls (struct link_map *map)
   size_t offset;
   size_t used;
   size_t check;
-  size_t freebytes;
-  size_t n;
-  size_t blsize;
 
   /* If the alignment requirements are too high fail.  */
   if (map->l_tls_align > GL(dl_tls_static_align))
@@ -64,6 +61,10 @@ cannot allocate memory in static TLS block"));
     }
 
 # if TLS_TCB_AT_TP
+  size_t freebytes;
+  size_t n;
+  size_t blsize;
+
   freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used) - TLS_TCB_SIZE;
 
   blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;

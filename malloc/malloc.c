@@ -255,6 +255,8 @@
 #include <sys/types.h>
 #endif
 
+#include <malloc-machine.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1443,11 +1445,10 @@ int      __posix_memalign(void **, size_t, size_t);
 #endif
 
 #ifdef __cplusplus
-};  /* end of extern "C" */
+} /* end of extern "C" */
 #endif
 
 #include <malloc.h>
-#include "thread-m.h"
 
 #ifndef BOUNDED_N
 #define BOUNDED_N(ptr, sz) (ptr)

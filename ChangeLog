@@ -1,4 +1,20 @@
+2003-09-27  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c: Include <malloc-machine.h> earlier instead of
+	"thread-m.h", so that default parameters can be overridden in a
+	system-specific malloc-machine.h.  Remove extra ; from extern "C"
+	closing brace.
+	* sysdeps/generic/malloc-machine.h: New file.
+	* sysdeps/mach/hurd/malloc-machine.h: New file.
+	* malloc/thread-m.h: Removed.
+	* malloc/Makefile: Remove CFLAGS-malloc.c parameter addition, it
+	is in sysdeps/generic/malloc-machine.h now.
+
 2003-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c (_dl_allocate_static_tls): Move definition of
+	variables only used if TLS_TCB_AT_TP is defined into the #if
+	branch.
 
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Add __extension__ as
 	well to cover using long long in C90.
