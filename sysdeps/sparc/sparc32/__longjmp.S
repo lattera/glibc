@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,20 +19,27 @@
 #include <sysdep.h>
 
 #define _ASM 1
-#define _SETJMP_H
-#include <bits/setjmp.h>
-#define ENV(reg) [%g1 + (reg * 4)]
+#include <jmp_buf.h>
+#define ENV(base,reg) [%base + (reg * 4)]
+#define ST_FLUSH_WINDOWS 3
+#define RW_FP [%fp + 0x38]
 
 ENTRY(__longjmp)
 	/* Store our arguments in global registers so we can still
 	   use them while unwinding frames and their register windows.  */
+
+	ld ENV(o0,JB_FP), %g3	/* Cache target FP in register %g3.  */
 	mov %o0, %g1		/* ENV in %g1 */
      	orcc %o1, %g0, %g2	/* VAL in %g2 */
      	be,a 0f			/* Branch if zero; else skip delay slot.  */
 	 mov 1, %g2		/* Delay slot only hit if zero: VAL = 1.  */
 0:
-	/* Cache target FP in register %g3.  */
-	ld ENV(JB_FP), %g3
+	xor %fp, %g3, %o0
+	add %fp, 512, %o1
+	andncc %o0, 4095, %o0
+	bne LOC(thread)
+	 cmp %o1, %g3
+	bl LOC(thread)
 
 	/* Now we will loop, unwinding the register windows up the stack
 	   until the restored %fp value matches the target value in %g3.  */
@@ -42,23 +49,31 @@ LOC(loop):
 	bl,a LOC(loop)		/* Loop while current fp is below target.  */
 	 restore		/* Unwind register window in delay slot.  */
 	be,a LOC(found)		/* Better have hit it exactly.  */
-	 ld ENV(JB_SP), %o0	/* Delay slot: extract target SP.  */
+	 ld ENV(g1,JB_SP), %o0	/* Delay slot: extract target SP.  */
 
-LOC(bogus):
-	/* Get here only if the jmp_buf or stack is clobbered.  */
-	call C_SYMBOL_NAME(abort)
-	 nop
-	unimp 0
+LOC(thread):
+	/*
+	 * Do a "flush register windows trap".  The trap handler in the
+	 * kernel writes all the register windows to their stack slots, and
+	 * marks them all as invalid (needing to be sucked up from the
+	 * stack when used).  This ensures that all information needed to
+	 * unwind to these callers is in memory, not in the register
+	 * windows.
+	 */
+	ta	ST_FLUSH_WINDOWS
+	ld	ENV(g1,JB_PC), %o7 /* Set return PC. */
+	ld	ENV(g1,JB_SP), %fp /* Set saved SP on restore below. */
+	sub	%fp, 64, %sp	/* Allocate a register frame. */
+	st	%g3, RW_FP	/* Set saved FP on restore below. */
+	retl
+	 restore %g2, 0, %o0	/* Restore values from above register frame. */
 
 LOC(found):
 	/* We have unwound register windows so %fp matches the target.  */
-	cmp %o0, %sp		/* Check jmp_buf SP vs register window.  */
-	bge,a LOC(sp_ok)	/* Saved must not be deeper than register.  */
-	 mov %o0, %sp		/* OK, install new SP.  */
-	b,a LOC(bogus)		/* Bogus, we lose.  */
+	mov %o0, %sp		/* OK, install new SP.  */
 
 LOC(sp_ok):
-	ld ENV(JB_PC), %o0	/* Extract target return PC.  */
+	ld ENV(g1,JB_PC), %o0	/* Extract target return PC.  */
 	jmp %o0 + 8		/* Return there.  */
 	 mov %g2, %o0		/* Delay slot: set return value.  */
 

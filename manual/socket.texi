@@ -140,18 +140,17 @@ bits wide and so a de-factor standard required 32 bit variables.  This
 is important since references to variables of this type are passed to
 the kernel.
 
-But now the POSIX people came and unified the interface with their words
+But then the POSIX people came and unified the interface with the words
 "all size values are of type @code{size_t}".  But on 64 bit machines
-@code{size_t} is 64 bits wide and so variable references are not anymore
+@code{size_t} is 64 bits wide, and so variable references are not anymore
 possible.
 
-A solution is provided by the Unix98 specification which finally
-introduces a type @code{socklen_t}.  This type is used in all of the
-cases that were previously changed to use @code{size_t}.  The only
-requirement of this type is that it is an unsigned type of at least 32
-bits.  Therefore, implementations which require references to 32 bit
-variables be passed can be as happy as implementations which use right
-from the start 64 bit values.
+The Unix98 specification provides a solution by introducing a type
+@code{socklen_t}.  This type is used in all of the cases that POSIX
+changed to use @code{size_t}.  The only requirement of this type is that
+it be an unsigned type of at least 32 bits.  Therefore, implementations
+which require that references to 32 bit variables be passed can be as
+happy as implementations which use 64 bit values.
 
 
 @node Communication Styles
