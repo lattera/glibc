@@ -1,5 +1,7 @@
 2000-06-06  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/mips/elf/start.S: Trim redundant code.
+
 	* sysdeps/powerpc/memset.S: Define & use symbolic register names.
 	Use C comments throughout.  Line up operands column with tabs.
 	* sysdeps/powerpc/strchr.S: Likewise.
