@@ -28,8 +28,6 @@ __BEGIN_DECLS
 #define	__need_size_t
 #include <stddef.h>
 
-#include <stdarg.h>		/* Need va_list.  */
-
 
 struct printf_info
 {
@@ -51,23 +49,34 @@ struct printf_info
 /* Type of a printf specifier-handler function.
    STREAM is the FILE on which to write output.
    INFO gives information about the format specification.
-   Arguments can be read from ARGS.
+   ARGS is a vector of pointers to the argument data;
+   the number of pointers will be the number returned
+   by the associated arginfo function for the same INFO.
+
    The function should return the number of characters written,
    or -1 for errors.  */
 
-typedef int printf_function __P ((FILE * __stream,
-				  __const struct printf_info * __info,
-				  va_list * __args));
+typedef int printf_function __P ((FILE *__stream,
+				  __const struct printf_info *__info,
+				  __const void **__const __args));
+
+/* Type of a printf specifier-arginfo function.
+   INFO gives information about the format specification.
+   N, ARGTYPES, and return value are as for printf_parse_format.  */
+
 typedef int printf_arginfo_function __P ((__const struct printf_info * __info,
 					  size_t __n,
 					  int *__argtypes));
 
-/* Register FUNC to be called to format SPEC specifiers.
-   ARGINFO, if not NULL, is a function used by `parse_printf_format'
-   to determine how many arguments a SPEC conversion requires,
-   and what their types are.  */
+
+/* Register FUNC to be called to format SPEC specifiers; ARGINFO must be
+   specified to determine how many arguments a SPEC conversion requires and
+   what their types are, even if your program never calls
+   `parse_printf_format'.  */
+
 extern int register_printf_function __P ((int __spec, printf_function __func,
 					  printf_arginfo_function __arginfo));
+
 
 /* Parse FMT, and fill in N elements of ARGTYPES with the
    types needed for the conversions FMT specifies.  Returns
@@ -83,6 +92,7 @@ extern int register_printf_function __P ((int __spec, printf_function __func,
 extern size_t parse_printf_format __P ((__const char *__fmt,
 					size_t __n,
 					int *__argtypes));
+
 
 /* Codes returned by `parse_printf_format' for basic types.
 
