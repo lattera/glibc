@@ -301,14 +301,14 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 	      {								      \
 		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l, \
 						    &sym, l->l_scope, version,\
-						    R_MIPS_REL32, 0);	      \
+						    ELF_RTYPE_CLASS_PLT, 0);  \
 		break;							      \
 	      }								      \
 	    /* Fall through.  */					      \
 	  }								      \
 	case 0:								      \
 	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
-				     l->l_scope, R_MIPS_REL32, 0);	      \
+				     l->l_scope, ELF_RTYPE_CLASS_PLT, 0);     \
 	}								      \
 									      \
       /* Currently value contains the base load address of the object	      \
