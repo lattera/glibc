@@ -3,6 +3,10 @@ libc {
     # variables used for detecting cthreads
     _cthread_exit_routine; _cthread_init_routine;
 
+    # cthreads functions with stubs in libc
+    cthread_keycreate; cthread_getspecific; cthread_setspecific;
+    __libc_getspecific;
+
     # functions with a weak definition in the dynamic linker
     __getcwd; __mmap;
   }

@@ -8,10 +8,12 @@ libc {
     __mach_thread_self;
     __mutex_lock_solid; __mutex_unlock_solid;
     __spin_lock_solid; __spin_try_lock; __spin_unlock;
+    __mutex_init;
+    __mach_port_deallocate;
 
     # functions used by RPC stubs
     __mach_msg;
-    __mig_allocate; __mig_deallocate; __mig_deallocate_reply_port;
+    __mig_allocate; __mig_deallocate; __mig_dealloc_reply_port;
     __mig_get_reply_port; __mig_put_reply_port;
 
     # variables in normal name space
