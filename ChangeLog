@@ -1,3 +1,10 @@
+2002-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Fix comment typo.
+	Temporarily enable R_ALPHA_NONE relocs in ld.so.
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Temporarily enable
+	R_IA64_NONE relocs in ld.so.
+
 2002-09-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* README.template: Minimum Linux kernel for powerpc64 is 2.4.19.
