@@ -1408,7 +1408,6 @@ order_start <CYRIL>;forward;forward;forward;forward,position
 <U0455> <CYR-DZE>;<BAS>;<MIN>;IGNORE
 <U0438> <CYR-I>;<BAS>;<MIN>;IGNORE
 <U0456> <UKR-I>;<BAS>;<MIN>;IGNORE
-<U0406> <UKR-I>;<BAS>;<MIN>;IGNORE
 <U0457> <UKR-YI>;<BAS>;<MIN>;IGNORE
 <U0439> <CYR-IBRE>;<BAS>;<MIN>;IGNORE
 <U0458> <CYR-JE>;<BAS>;<MIN>;IGNORE
@@ -1454,6 +1453,7 @@ order_start <CYRIL>;forward;forward;forward;forward,position
 <U0417> <CYR-ZE>;<BAS>;<CAP>;IGNORE
 <U0405> <CYR-DZE>;<BAS>;<CAP>;IGNORE
 <U0418> <CYR-I>;<BAS>;<CAP>;IGNORE
+<U0406> <UKR-I>;<BAS>;<CAP>;IGNORE
 <U0407> <UKR-YI>;<BAS>;<CAP>;IGNORE
 <U0419> <CYR-IBRE>;<BAS>;<CAP>;IGNORE
 <U0408> <CYR-JE>;<BAS>;<CAP>;IGNORE
