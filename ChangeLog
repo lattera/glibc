@@ -1,5 +1,13 @@
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in (libc_cv_asm_global_directive): Indent .text in
+	test code so that the lame HPUX compiler recognizes it.
+	* sysdeps/hppa/bits/endian.h: New file.
+	* sysdeps/unix/sysv/hpux/bits/errno.h: New file.
+	* sysdeps/unix/sysv/hpux/bits/setjmp.h: New file.
+	* sysdeps/unix/sysv/hpux/bits/stat.h: New file.
+	* sysdeps/unix/sysv/hpux/bits/types.h: New file.
+
 	* sysdeps/unix/sysv/sysv4/solaris2/getdents.c: New file.
 	Patch by John Tobey <jtobey@banta-im.com>.
 
