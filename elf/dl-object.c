@@ -44,6 +44,7 @@ _dl_new_object (char *realname, const char *libname, int type)
   newname->next = NULL;
   new->l_libname = newname;
   new->l_type = type;
+  new->l_rpath_dirs = NULL;
 
   if (_dl_loaded == NULL)
     {

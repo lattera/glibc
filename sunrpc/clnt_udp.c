@@ -309,10 +309,10 @@ send_again:
 #endif /* def FD_SETSIZE */
   for (;;)
     {
-      struct timeval timeout = cu->cu_wait;
+      struct timeval cu_wait = cu->cu_wait;
       readfds = mask;
       switch (select (_rpc_dtablesize (), &readfds, (fd_set*) NULL,
-		      (fd_set*) NULL, &timeout))
+		      (fd_set*) NULL, &cu_wait))
 	{
 
 	case 0:

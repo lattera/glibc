@@ -37,7 +37,7 @@
 
 	.text
 NESTED(__clone,4*SZREG,sp)
-#ifdef __PIC__
+#ifdef PIC
 	.set		noreorder
 	.cpload		$25
 	.set		reorder

@@ -29,7 +29,7 @@
 #include <mach/mig_support.h>
 #include "hurdstartup.h"
 #include <mach/host_info.h>
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 #include <hurd/auth.h>
 #include <hurd/term.h>
 #include <stdarg.h>
@@ -187,6 +187,9 @@ unfmh();			/* XXX */
 
   /* Set up so we can do RPCs.  */
   __mach_init ();
+
+  /* Initialize frequently used global variable.  */
+  _dl_pagesize = __getpagesize ();
 
 fmh();				/* XXX */
 

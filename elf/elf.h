@@ -654,6 +654,11 @@ typedef struct
 #define AT_GID		13		/* Real gid */
 #define AT_EGID		14		/* Effective gid */
 
+/* Some more special a_type values describing the hardware.  */
+#define AT_PLATFORM	15		/* String identifying platform.  */
+#define AT_HWCAP	16		/* Machine dependent hints about
+					   processor capabilities.  */
+
 /* Motorola 68k specific definitions.  */
 
 /* m68k relocs.  */

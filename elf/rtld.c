@@ -58,6 +58,9 @@ int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 int _dl_verbose;
+const char *_dl_platform;
+size_t _dl_platformlen;
+struct r_search_path *_dl_search_paths;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -525,6 +528,10 @@ of this helper program; chances are you did not intend to run this program.\n",
 	} while (l);
       assert (i == npreloads);
     }
+
+  /* Initialize the data structures for the search paths for shared
+     objects.  */
+  _dl_init_paths ();
 
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual

@@ -23,7 +23,6 @@
 
 #include <sysdep.h>
 
-/* XXX Must this be __PIC__ ? --drepper */
 #ifdef PIC
 	.option pic2
 #endif

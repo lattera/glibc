@@ -88,7 +88,8 @@ include $(common-objpfx)config.make
 ifeq ($(elf),yes)
 binfmt-subdir = elf
 else
-binfmt-subdir =
+# This is probably better than nothing.
+binfmt-subdir = aout
 endif
 
 # Complete path to sysdep dirs.

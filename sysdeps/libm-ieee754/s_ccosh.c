@@ -32,8 +32,6 @@ __ccosh (__complex__ double x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  __real__ x = fabs (__real__ x);
-
   if (rcls >= FP_ZERO)
     {
       /* Real part is finite.  */
@@ -67,7 +65,7 @@ __ccosh (__complex__ double x)
 	{
 	  /* Imaginary part is 0.0.  */
 	  __real__ retval = HUGE_VAL;
-	  __imag__ retval = __imag__ x;
+	  __imag__ retval = __imag__ x * __copysign (1.0, __real__ x);
 	}
       else if (icls > FP_ZERO)
 	{
@@ -77,7 +75,8 @@ __ccosh (__complex__ double x)
 	  __sincos (__imag__ x, &sinix, &cosix);
 
 	  __real__ retval = __copysign (HUGE_VAL, cosix);
-	  __imag__ retval = __copysign (HUGE_VAL, sinix);
+	  __imag__ retval = (__copysign (HUGE_VAL, sinix)
+			     * __copysign (1.0, __real__ x));
 	}
       else
 	{

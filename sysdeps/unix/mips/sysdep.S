@@ -29,7 +29,7 @@
 	.set noreorder
 
 ENTRY(__syscall_error)
-#ifdef __PIC__
+#ifdef PIC
 	.set	noat
 	move	$1, $31
 	bltzal	$0, 0f

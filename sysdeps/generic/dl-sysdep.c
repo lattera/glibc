@@ -26,11 +26,14 @@
 #include <link.h>
 #include <unistd.h>
 
+#include <dl-machine.h>
 
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
+extern const char *_dl_platform;
+extern size_t _dl_platformlen;
 extern void _end;
 extern void ENTRY_POINT (void);
 
@@ -57,6 +60,7 @@ _dl_sysdep_start (void **start_argptr,
   _dl_argc = *(long *) start_argptr;
   _dl_argv = (char **) start_argptr + 1;
   _environ = &_dl_argv[_dl_argc + 1];
+  _dl_platform = NULL; /* Default to nothing known about the platform.  */
   start_argptr = (void **) _environ;
   while (*start_argptr)
     ++start_argptr;
@@ -93,6 +97,12 @@ _dl_sysdep_start (void **start_argptr,
       case AT_EGID:
 	egid = av->a_un.a_val;
 	break;
+      case AT_PLATFORM:
+	_dl_platform = av->a_un.a_ptr;
+	break;
+      case AT_HWCAP:
+	/* Well, what shall we use?  A string or an integer with bits?  */
+	break;
       }
 
   /* Linux doesn't provide us with any of these values on the stack
@@ -107,21 +117,28 @@ _dl_sysdep_start (void **start_argptr,
 
   __libc_enable_secure = uid != euid || gid != egid;
 
+  if (_dl_pagesize == 0)
+    _dl_pagesize = __getpagesize ();
+
 #ifdef DL_SYSDEP_INIT
   DL_SYSDEP_INIT;
 #endif
 
-  if (__sbrk (0) == &_end)
-    {
-      /* The dynamic linker was run as a program, and so the initial break
-	 starts just after our bss, at &_end.  The malloc in dl-minimal.c
-	 will consume the rest of this page, so tell the kernel to move the
-	 break up that far.  When the user program examines its break, it
-	 will see this new value and not clobber our data.  */
-      size_t pg = __getpagesize ();
+#ifdef DL_PLATFORM_INIT
+  DL_PLATFORM_INIT;
+#endif
 
-      __sbrk (pg - ((&_end - (void *) 0) & (pg - 1)));
-    }
+  /* Determine the length of the platform name.  */
+  if (_dl_platform != NULL)
+    _dl_platformlen = strlen (_dl_platform);
+
+  if (__sbrk (0) == &_end)
+    /* The dynamic linker was run as a program, and so the initial break
+       starts just after our bss, at &_end.  The malloc in dl-minimal.c
+       will consume the rest of this page, so tell the kernel to move the
+       break up that far.  When the user program examines its break, it
+       will see this new value and not clobber our data.  */
+    __sbrk (_dl_pagesize - ((&_end - (void *) 0) & (_dl_pagesize - 1)));
 
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;

@@ -57,11 +57,8 @@ openaux (void *a)
 
 
 
-/* We use a very special kind of list to track the three kinds paths
+/* We use a very special kind of list to track the two kinds paths
    through the list of loaded shared objects.  We have to
-
-   - go through all objects in the correct order, which includes the
-     possible recursive loading of auxiliary objects and dependencies
 
    - produce a flat list with unique members of all involved objects
 
@@ -141,7 +138,7 @@ _dl_map_object_deps (struct link_map *map,
     {
       struct link_map *l = runp->map;
 
-      if (runp->done == 0 && (l->l_info[AUXTAG] || l->l_info[DT_NEEDED]))
+      if (l->l_info[AUXTAG] || l->l_info[DT_NEEDED])
 	{
 	  const char *strtab = ((void *) l->l_addr
 				+ l->l_info[DT_STRTAB]->d_un.d_ptr);
@@ -371,6 +368,6 @@ _dl_map_object_deps (struct link_map *map,
 			  "cannot allocate symbol search list");
 
       for (nlist = 0, runp = head; runp; runp = runp->dup)
-	map->l_searchlist[nlist++] = runp->map;
+	map->l_dupsearchlist[nlist++] = runp->map;
     }
 }

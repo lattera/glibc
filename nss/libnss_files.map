@@ -22,7 +22,7 @@ GLIBC_2.0 {
     _nss_files_setgrent; _nss_files_sethostent; _nss_files_setnetent;
     _nss_files_setnetgrent; _nss_files_setprotoent; _nss_files_setpwent;
     _nss_files_setrpcent; _nss_files_setservent; _nss_files_setspent;
-    __nss_netgroup_parseline;
+    _nss_netgroup_parseline;
 
   local:
     *;

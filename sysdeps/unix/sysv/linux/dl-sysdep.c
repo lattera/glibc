@@ -27,18 +27,16 @@
 static inline void
 frob_brk (void)
 {
+  extern size_t _dl_pagesize;
   extern void _end;
   __brk (0);			/* Initialize the break.  */
   if (__sbrk (0) == &_end)
-    {
-      /* The dynamic linker was run as a program, and so the initial break
-	 starts just after our bss, at &_end.  The malloc in dl-minimal.c
-	 will consume the rest of this page, so tell the kernel to move the
-	 break up that far.  When the user program examines its break, it
-	 will see this new value and not clobber our data.  */
-      size_t pg = __getpagesize ();
-      __sbrk (pg - ((&_end - (void *) 0) & pg));
-    }
+    /* The dynamic linker was run as a program, and so the initial break
+       starts just after our bss, at &_end.  The malloc in dl-minimal.c
+       will consume the rest of this page, so tell the kernel to move the
+       break up that far.  When the user program examines its break, it
+       will see this new value and not clobber our data.  */
+    __sbrk (_dl_pagesize - ((&_end - (void *) 0) & _dl_pagesize));
 }
 
 #include <sysdeps/generic/dl-sysdep.c>

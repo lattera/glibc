@@ -44,7 +44,7 @@ elf_machine_matches_host (Elf32_Half e_machine)
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_dynamic (void)
 {
   register Elf32_Addr *got asm ("%ebx");
@@ -86,7 +86,7 @@ static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline int
+static inline int __attribute__ ((unused))
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf32_Addr *got;
@@ -232,6 +232,23 @@ _dl_start_user:\n\
 
 /* The i386 never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
+
+/* We define an initialization functions.  This is called very early in
+   _dl_sysdep_start.  */
+#define DL_PLATFORM_INIT dl_platform_init ()
+
+extern const char *_dl_platform;
+
+static inline void __attribute__ ((unused))
+dl_platform_init (void)
+{
+  if (_dl_platform == NULL)
+    /* We default to i386 since all instructions understood by the i386
+       are also understood by later processors.  */
+    _dl_platform = "i386";
+  else if (*_dl_platform == '\0')
+    _dl_platform = NULL;
+}
 
 #endif /* !dl_machine_h */
 

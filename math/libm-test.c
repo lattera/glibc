@@ -2907,10 +2907,10 @@ ccos_test (void)
 
   result = FUNC(ccos) (BUILD_COMPLEX (0.0, 0.0));
   check ("real(ccos(0 + 0i)) = 1.0", __real__ result, 1.0);
-  check ("imag(ccos(0 + 0i)) = 0", __imag__ result, 0);
+  check ("imag(ccos(0 + 0i)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(ccos(-0 + 0i)) = 1.0", __real__ result, 1.0);
-  check ("imag(ccos(-0 + 0i)) = -0", __imag__ result, minus_zero);
+  check ("imag(ccos(-0 + 0i)) = 0", __imag__ result, 0.0);
   result = FUNC(ccos) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(ccos(0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccos(0 - 0i)) = 0", __imag__ result, 0.0);
@@ -2941,13 +2941,13 @@ ccos_test (void)
 
   result = FUNC(ccos) (BUILD_COMPLEX (0.0, plus_infty));
   check_isinfp ("real(ccos(0 + i Inf)) = +Inf", __real__ result);
-  check ("imag(ccos(0 + i Inf)) = 0", __imag__ result, 0);
+  check ("imag(ccos(0 + i Inf)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccos) (BUILD_COMPLEX (0.0, minus_infty));
   check_isinfp ("real(ccos(0 - i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(0 - i Inf)) = 0", __imag__ result, 0);
   result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isinfp ("real(ccos(-0 + i Inf)) = +Inf", __real__ result);
-  check ("imag(ccos(-0 + i Inf)) = -0", __imag__ result, minus_zero);
+  check ("imag(ccos(-0 + i Inf)) = 0", __imag__ result, 0.0);
   result = FUNC(ccos) (BUILD_COMPLEX (minus_zero, minus_infty));
   check_isinfp ("real(ccos(-0 - i Inf)) = +Inf", __real__ result);
   check ("imag(ccos(-0 - i Inf)) = -0", __imag__ result, minus_zero);
@@ -2975,13 +2975,13 @@ ccos_test (void)
 
   result = FUNC(ccos) (BUILD_COMPLEX (4.625, plus_infty));
   check_isinfn ("real(ccos(4.625 + i Inf)) = -Inf", __real__ result);
-  check_isinfn ("imag(ccos(4.625 + i Inf)) = -Inf", __imag__ result);
+  check_isinfp ("imag(ccos(4.625 + i Inf)) = +Inf", __imag__ result);
   result = FUNC(ccos) (BUILD_COMPLEX (4.625, minus_infty));
   check_isinfn ("real(ccos(4.625 - i Inf)) = -Inf", __real__ result);
   check_isinfn ("imag(ccos(4.625 - i Inf)) = -Inf", __imag__ result);
   result = FUNC(ccos) (BUILD_COMPLEX (-4.625, plus_infty));
   check_isinfn ("real(ccos(-4.625 + i Inf)) = -Inf", __real__ result);
-  check_isinfp ("imag(ccos(-4.625 + i Inf)) = +Inf", __imag__ result);
+  check_isinfn ("imag(ccos(-4.625 + i Inf)) = -Inf", __imag__ result);
   result = FUNC(ccos) (BUILD_COMPLEX (-4.625, minus_infty));
   check_isinfn ("real(ccos(-4.625 - i Inf)) = -Inf", __real__ result);
   check_isinfp ("imag(ccos(-4.625 - i Inf)) = +Inf", __imag__ result);
@@ -3077,13 +3077,13 @@ ccosh_test (void)
   check ("imag(ccosh(0 + 0i)) = 0", __imag__ result, 0);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, 0.0));
   check ("real(ccosh(-0 + 0i)) = 1.0", __real__ result, 1.0);
-  check ("imag(ccosh(-0 + 0i)) = 0", __imag__ result, 0);
+  check ("imag(ccosh(-0 + 0i)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccosh) (BUILD_COMPLEX (0.0, minus_zero));
   check ("real(ccosh(0 - 0i)) = 1.0", __real__ result, 1.0);
   check ("imag(ccosh(0 - 0i)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_zero, minus_zero));
   check ("real(ccosh(-0 - 0i)) = 1.0", __real__ result, 1.0);
-  check ("imag(ccosh(-0 - 0i)) = -0", __imag__ result, minus_zero);
+  check ("imag(ccosh(-0 - 0i)) = 0", __imag__ result, 0.0);
 
   result = FUNC(ccosh) (BUILD_COMPLEX (0.0, plus_infty));
   check_isnan_exc ("real(ccosh(0 + i Inf)) = NaN plus invalid exception",
@@ -3111,13 +3111,13 @@ ccosh_test (void)
   check ("imag(ccosh(+Inf + 0i)) = 0", __imag__ result, 0);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, 0.0));
   check_isinfp ("real(ccosh(-Inf + 0i)) = +Inf", __real__ result);
-  check ("imag(ccosh(-Inf + 0i)) = 0", __imag__ result, 0);
+  check ("imag(ccosh(-Inf + 0i)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, minus_zero));
   check_isinfp ("real(ccosh(+Inf - 0i)) = +Inf", __real__ result);
   check ("imag(ccosh(+Inf - 0i)) = -0", __imag__ result, minus_zero);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, minus_zero));
   check_isinfp ("real(ccosh(-Inf - 0i)) = +Inf", __real__ result);
-  check ("imag(ccosh(-Inf - 0i)) = -0", __imag__ result, minus_zero);
+  check ("imag(ccosh(-Inf - 0i)) = 0", __imag__ result, 0.0);
 
   result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, plus_infty));
   check_isinfp_exc ("real(ccosh(+Inf + i Inf)) = +Inf plus invalid exception",
@@ -3145,13 +3145,13 @@ ccosh_test (void)
   check_isinfn ("imag(ccosh(+Inf + i4.625)) = -Inf", __imag__ result);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, 4.625));
   check_isinfn ("real(ccosh(-Inf + i4.625)) = -Inf", __real__ result);
-  check_isinfn ("imag(ccosh(-Inf + i4.625)) = -Inf", __imag__ result);
+  check_isinfp ("imag(ccosh(-Inf + i4.625)) = Inf", __imag__ result);
   result = FUNC(ccosh) (BUILD_COMPLEX (plus_infty, -4.625));
   check_isinfn ("real(ccosh(+Inf - i4.625)) = -Inf", __real__ result);
   check_isinfp ("imag(ccosh(+Inf - i4.625)) = +Inf", __imag__ result);
   result = FUNC(ccosh) (BUILD_COMPLEX (minus_infty, -4.625));
   check_isinfn ("real(ccosh(-Inf - i4.625)) = -Inf", __real__ result);
-  check_isinfp ("imag(ccosh(-Inf - i4.625)) = +Inf", __imag__ result);
+  check_isinfn ("imag(ccosh(-Inf - i4.625)) = -Inf", __imag__ result);
 
   result = FUNC(ccosh) (BUILD_COMPLEX (6.75, plus_infty));
   check_isnan_exc ("real(ccosh(6.75 + i Inf)) = NaN plus invalid exception",

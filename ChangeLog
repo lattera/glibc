@@ -1,3 +1,82 @@
+1997-07-26 04:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (distribute): Add genrtldtbl.awk.
+	(before-compile): Add rtldtbl.h.
+	(GAWK): New variable.
+	(generated): Add trusted-dirs.h and rtldtbl.h.
+	($(objpfx)rtldtbl.h): New rule.  File is needed by dl-load.c.
+	* elf/dl-load.c: Rewrite.  Now use cache and look for shared
+	objects in machine dependent directories.
+	* elf/dl-object.c (_dl_new_object): Initialize l_rpath_dirs member.
+	* elf/dl-support.c: Rename function to non_dynamic_init and add
+	initialization for _dl_platform, _dl_platformlen, _dl_pagesize
+	and call to initializer for search path.
+	* elf/elf.h: Add AT_PLATFORM and AT_HWCAP.
+	* elf/genrtldtbl.awk: New file.
+	* elf/link.h: Add type definitions and declarations for search
+	path cache.
+	* elf/rtld.c: Add definitions of variables used for search path cache.
+	* sysdeps/generic/dl-sysdep.c: Let auxiliary vector initialize
+	_dl_platform.  Initialize _dl_pagesize early and use this value.
+	* sysdeps/i386/dl-machine.h: Add code for _dl_platform handling.
+	* sysdeps/mach/hurd/dl-sysdep.c: Initialize _dl_pagesize.
+	* sysdeps/unix/sysv/linux/dl-sysdep.c: Use _dl_pagesize instead
+	of calling getpagesize.
+
+	* elf/dl-error.c (_dl_signal_error): Make message nicer.
+
+	* nss/libnss_files.map: Fix typo.
+	Reported by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>.
+
+	* sysdeps/generic/strsep.c: Optimize case where separator set contains
+	only one character.
+
+	* sysdeps/libm-ieee754/s_ccosh.c: Correct sign of result for real
+	== +-Inf.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+
+1997-07-25 09:15  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/sparc/udiv_qrnnd.S: Check PIC instead of __PIC__.
+	* sysdeps/unix/sysv/linux/sparc/__sigtrampoline.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+
+	* sysdeps/mips/bsd-_setjmp.S: Remove __PIC__ comment.
+	* sysdeps/mips/bsd-setjmp.S: Likewise.
+
+	* sysdeps/mips/dl-machine.h: Remove extra stuff.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+
+1997-07-25 18:55  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/standalone/arm/sysdep.c: New file.
+
+1997-07-25 13:25  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* aout/Makefile: New file.
+	* Makeconfig (binfmt-subdir): Assume a.out when not ELF.
+
+	* sysdeps/generic/machine-gmon.h: Add warning about limitations of
+	__builtin_return_address().
+	* sysdeps/arm/machine-gmon.h: New file, use assembly to avoid
+	above problem.
+
+1997-07-25 16:24  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Fix a typo.
+
+1997-07-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (ccos_test, ccosh_test): Fix sign in some
+	tests.
+
+1997-07-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Rename cu_wait from timeout to
+	not shadow the variable in the outer scope.
+
 1997-07-24 03:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-deps.c: Complete rewrite to handle DT_AUXILIARY correctly.

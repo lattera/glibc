@@ -91,6 +91,25 @@ struct r_found_version
     const char *filename;
   };
 
+/* We want to cache information about the searches for shared objects.  */
+
+enum r_dir_status { unknown, nonexisting, existing };
+
+struct r_search_path_elem
+  {
+    const char *dirname;
+
+    size_t dirnamelen;
+    enum r_dir_status dirstatus;
+
+    size_t machdirnamelen;
+    enum r_dir_status machdirstatus;
+
+    /* This link is only used in the `all_dirs' member of `r_search_path'.  */
+    struct r_search_path_elem *next;
+  };
+
+
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
 
@@ -163,6 +182,9 @@ struct link_map
     /* Array with version names.  */
     unsigned int l_nversions;
     struct r_found_version *l_versions;
+
+    /* Collected information about own RPATH directories.  */
+    struct r_search_path_elem **l_rpath_dirs;
   };
 
 
@@ -406,6 +428,10 @@ extern void _dl_debug_state (void);
    argument is the run-time load address of the dynamic linker, to be put
    in the `r_ldbase' member.  Returns the address of the structure.  */
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
+
+/* Initialize the basic data structure for the search paths.  */
+void _dl_init_paths (void);
+
 
 __END_DECLS
 

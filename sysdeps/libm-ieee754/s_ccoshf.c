@@ -32,8 +32,6 @@ __ccoshf (__complex__ float x)
   int rcls = fpclassify (__real__ x);
   int icls = fpclassify (__imag__ x);
 
-  __real__ x = fabsf (__real__ x);
-
   if (rcls >= FP_ZERO)
     {
       /* Real part is finite.  */
@@ -67,7 +65,7 @@ __ccoshf (__complex__ float x)
 	{
 	  /* Imaginary part is 0.0.  */
 	  __real__ retval = HUGE_VALF;
-	  __imag__ retval = __imag__ x;
+	  __imag__ retval = __imag__ x * __copysignf (1.0, __real__ x);
 	}
       else if (icls > FP_ZERO)
 	{
@@ -77,7 +75,8 @@ __ccoshf (__complex__ float x)
 	  __sincosf (__imag__ x, &sinix, &cosix);
 
 	  __real__ retval = __copysignf (HUGE_VALF, cosix);
-	  __imag__ retval = __copysignf (HUGE_VALF, sinix);
+	  __imag__ retval = (__copysignf (HUGE_VALF, sinix)
+			     * __copysignf (1.0, __real__ x));
 	}
       else
 	{

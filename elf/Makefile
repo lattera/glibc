@@ -35,15 +35,18 @@ elide-routines.so = $(dl-routines) dl-support enbl-secure
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c
+		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
+		  genrtldtbl.awk
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
 libdl-map	:= libdl.map
 
-before-compile = $(objpfx)trusted-dirs.h
+before-compile = $(objpfx)trusted-dirs.h $(objpfx)rtldtbl.h
 
+# We need GNU awk for the genrtldtbl.awk script.
+GAWK = gawk
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -51,7 +54,7 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so eval.so
-generated	= librtld.so dl-allobjs.so
+generated	= librtld.so dl-allobjs.so trusted-dirs.h rtldtbl.h
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 endif
@@ -142,6 +145,10 @@ $(objpfx)trusted-dirs.h: Makefile
 		     sed 's/:/ /g'`; do					      \
 	   echo "  \"$$dir\",";						      \
 	 done;) > $@T
+	mv -f $@T $@
+$(objpfx)rtldtbl.h: Makefile
+	$(make-target-directory)
+	echo "$(default-rpath)" | $(GAWK) -f genrtldtbl.awk > $@T
 	mv -f $@T $@
 CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
 CFLAGS-dl-load.c += -Wno-uninitialized

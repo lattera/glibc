@@ -72,7 +72,7 @@ ENTRY(____sparc_signal_trampoline)
 	or	%g0,%g0,%g1     /*Call sys_setup */
 	t	0x10
 1:
-#ifdef __PIC__
+#ifdef PIC
 	/* Save return address */
 	mov	%o7,%o4
 ___sxx:
@@ -89,7 +89,7 @@ ___syy:
 #endif
 	sethi	%hi(C_SYMBOL_NAME(____sig_table)),%o5
 	or	%o5,%lo(C_SYMBOL_NAME(____sig_table)),%o5
-#ifdef __PIC__
+#ifdef PIC
 	add	%o5,%o4,%o4
 	ld	[%o4],%o5
 #endif

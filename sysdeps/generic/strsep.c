@@ -27,8 +27,27 @@ __strsep (char **stringp, const char *delim)
   if (! begin || *begin == '\0')
     return NULL;
 
-  /* Find the end of the token.  */
-  end = strpbrk (begin, delim);
+  /* A frequent case is when the delimiter string contains only one
+     character.  Here we don't need to call the expensive `strpbrk'
+     function and instead work using `strchr'.  */
+  if (delim[0] == '\0' || delim[1] == '\0')
+    {
+      char ch = delim[0];
+
+      if (ch == '\0')
+	end = NULL;
+      else
+	{
+	  while (*begin == ch)
+	    ++begin;
+
+	  end = strchr (begin, delim[0]);
+	}
+    }
+  else
+    /* Find the end of the token.  */
+    end = strpbrk (begin, delim);
+
   if (end)
     {
       /* Terminate the token and set *STRINGP past NUL character.  */

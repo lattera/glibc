@@ -44,7 +44,7 @@ ENTRY(__udiv_qrnnd)
 	!#PROLOGUE# 1
 	st	%i1,[%fp-8]
 	ld	[%fp-8],%f10
-#ifdef __PIC__
+#ifdef PIC
 ._XL11:
 	call	._XL1
 	fitod	%f10,%f4
@@ -78,7 +78,7 @@ L249:
 	faddd	%f4,%f8,%f4
 L250:
 	fdivd	%f2,%f4,%f2
-#ifdef __PIC__
+#ifdef PIC
 ._XL22:
 	call	._XL2
 	nop

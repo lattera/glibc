@@ -302,7 +302,9 @@ init_hash(hashp, file, info)
 	if (file != NULL) {
 		if (stat(file, &statbuf))
 			return (NULL);
+#if defined _STATBUF_ST_BLKSIZE
 		hashp->BSIZE = statbuf.st_blksize;
+#endif
 		hashp->BSHIFT = __hash_log2(hashp->BSIZE);
 	}
 

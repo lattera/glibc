@@ -1,5 +1,4 @@
-/* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  MIPS version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This just does a tail-call to `__sigsetjmp (ARG, 1)'.
-   We cannot do it in C because it must be a tail-call, so frame-unwinding
-   in setjmp doesn't clobber the state restored by longjmp.  */
-
 #include <sysdep.h>
 
-#ifdef PIC
-	.option pic2
-#endif
-ENTRY (setjmp)
-	.set	noreorder
-#ifdef PIC
-	.cpload t9
-	la	t9, C_SYMBOL_NAME (__sigsetjmp)
-	jr	t9
-#else
-	j	C_SYMBOL_NAME (__sigsetjmp)
-#endif
-	li	a1, 1		/* Pass a second argument of one.  */
-	.set	reorder
-	.end	setjmp
+/* errno has to be defined somewhere, and it might as well be here.  */
+int errno = 0;
+
+/* The same goes for these magic signal functions.  This is a standalone
+   environment so we do nothing.  */
+void _sig_dfl(int sig)
+{
+}
+
+void _sig_ign(int sig)
+{
+}

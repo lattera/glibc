@@ -1,4 +1,4 @@
-/* _dl_map_object -- Map in a shared object's segments from the file.
+/* Map in a shared object's segments from the file.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,14 +17,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <link.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "dynamic-link.h"
 
 
@@ -90,6 +91,8 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 size_t _dl_pagesize;
 
+extern const char *_dl_platform;
+extern size_t _dl_platformlen;
 
 /* Local version of `strdup' function.  */
 static inline char *
@@ -102,6 +105,292 @@ local_strdup (const char *s)
     return NULL;
 
   return (char *) memcpy (new, s, len);
+}
+
+
+/* Implement cache for search path lookup.  */
+#if 0
+/* This is how generated should look like.  I'll remove this once I'm
+   sure everything works correctly.  */
+static struct r_search_path_elem rtld_search_dir1 =
+  { "/lib/", 5, unknown, 0, unknown, NULL };
+static struct r_search_path_elem rtld_search_dir2 =
+  { "/usr/lib/", 9, unknown, 0, unknown, &r ld_search_dir1 };
+
+static struct r_search_path_elem *rtld_search_dirs[] =
+{
+  &rtld_search_dir1,
+  &rtld_search_dir2,
+  NULL
+};
+
+static struct r_search_path_elem *all_dirs = &rtld_search_dir2;
+#else
+# include "rtldtbl.h"
+#endif
+
+static size_t max_dirnamelen;
+
+static inline struct r_search_path_elem **
+fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
+	      const char **trusted)
+{
+  char *cp;
+  size_t nelems = 0;
+
+  while ((cp = __strsep (&rpath, sep)) != NULL)
+    {
+      struct r_search_path_elem *dirp;
+      size_t len = strlen (cp);
+      /* Remove trailing slashes.  */
+      while (len > 1 && cp[len - 1] == '/')
+	--len;
+
+      /* Make sure we don't use untrusted directories if we run SUID.  */
+      if (trusted != NULL)
+	{
+	  const char **trun = trusted;
+
+	  /* All trusted directory must be complete name.  */
+	  if (cp[0] != '/')
+	    continue;
+
+	  while (*trun != NULL
+		 && (memcmp (*trun, cp, len) != 0 || (*trun)[len] != '\0'))
+	    ++trun;
+
+	  if (*trun == NULL)
+	    /* It's no trusted directory, skip it.  */
+	    continue;
+	}
+
+      /* Now add one.  */
+      if (len > 0)
+	cp[len++] = '/';
+
+      /* See if this directory is already known.  */
+      for (dirp = all_dirs; dirp != NULL; dirp = dirp->next)
+	if (dirp->dirnamelen == len && strcmp (cp, dirp->dirname) == 0)
+	  break;
+
+      if (dirp != NULL)
+	{
+	  /* It is available, see whether it's in our own list.  */
+	  size_t cnt;
+	  for (cnt = 0; cnt < nelems; ++cnt)
+	    if (result[cnt] == dirp)
+	      break;
+
+	  if (cnt == nelems)
+	    result[nelems++] = dirp;
+	}
+      else
+	{
+	  /* It's a new directory.  Create an entry and add it.  */
+	  dirp = (struct r_search_path_elem *) malloc (sizeof (*dirp));
+	  if (dirp == NULL)
+	    _dl_signal_error (ENOMEM, NULL,
+			      "cannot create cache for search path");
+
+	  dirp->dirnamelen = len;
+	  dirp->dirstatus = unknown;
+
+	  /* Add the name of the machine dependent directory if a machine
+	     is defined.  */
+	  if (_dl_platform != NULL)
+	    {
+	      char *tmp;
+
+	      dirp->machdirnamelen = len + _dl_platformlen + 1;
+	      tmp = (char *) malloc (len + _dl_platformlen + 2);
+	      if (tmp == NULL)
+		_dl_signal_error (ENOMEM, NULL,
+				  "cannot create cache for search path");
+	      memcpy (tmp, cp, len);
+	      memcpy (tmp + len, _dl_platform, _dl_platformlen);
+	      tmp[len + _dl_platformlen] = '/';
+	      tmp[len + _dl_platformlen + 1] = '\0';
+
+	      dirp->dirname = tmp;
+	      dirp->machdirstatus = unknown;
+
+	      if (max_dirnamelen < dirp->machdirnamelen)
+		max_dirnamelen = dirp->machdirnamelen;
+	    }
+	  else
+	    {
+	      char *tmp;
+
+	      dirp->machdirnamelen = len;
+	      dirp->machdirstatus = nonexisting;
+
+	      tmp = (char *) malloc (len + 1);
+	      if (tmp == NULL)
+		_dl_signal_error (ENOMEM, NULL,
+				  "cannot create cache for search path");
+	      memcpy (tmp, cp, len);
+	      tmp[len] = '\0';
+
+	      if (max_dirnamelen < dirp->dirnamelen)
+		max_dirnamelen = dirp->dirnamelen;
+
+	      dirp->dirname = tmp;
+	    }
+
+	  dirp->next = all_dirs;
+	  all_dirs = dirp;
+
+	  /* Put it in the result array.  */
+	  result[nelems++] = dirp;
+	}
+    }
+
+  /* Terminate the array.  */
+  result[nelems] = NULL;
+
+  return result;
+}
+
+
+static struct r_search_path_elem **
+decompose_rpath (const char *rpath, size_t additional_room)
+{
+  /* Make a copy we can work with.  */
+  char *copy = strdupa (rpath);
+  char *cp;
+  struct r_search_path_elem **result;
+  /* First count the number of necessary elements in the result array.  */
+  size_t nelems = 0;
+
+  for (cp = copy; *cp != '\0'; ++cp)
+    if (*cp == ':')
+      ++nelems;
+
+  /* Allocate room for the result.  NELEMS + 1 + ADDITIONAL_ROOM is an upper
+     limit for the number of necessary entries.  */
+  result = (struct r_search_path_elem **) malloc ((nelems + 1
+						   + additional_room + 1)
+						  * sizeof (*result));
+  if (result == NULL)
+    _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
+
+  return fillin_rpath (copy, result, ":", NULL);
+}
+
+
+void
+_dl_init_paths (void)
+{
+  struct r_search_path_elem **pelem;
+
+  /* We have in `search_path' the information about the RPATH of the
+     dynamic loader.  Now fill in the information about the applications
+     RPATH and the directories addressed by the LD_LIBRARY_PATH environment
+     variable.  */
+  struct link_map *l;
+
+  /* First determine how many elements the LD_LIBRARY_PATH contents has.  */
+  const char *llp = getenv ("LD_LIBRARY_PATH");
+  size_t nllp;
+
+  if (llp != NULL && *llp != '\0')
+    {
+      /* Simply count the number of colons.  */
+      const char *cp = llp;
+      nllp = 1;
+      while (*cp)
+	if (*cp++ == ':')
+	  ++nllp;
+    }
+  else
+    nllp = 0;
+
+  l = _dl_loaded;
+  if (l && l->l_type != lt_loaded && l->l_info[DT_RPATH])
+    {
+      /* Allocate room for the search path and fill in information from
+	 RPATH.  */
+      l->l_rpath_dirs =
+	decompose_rpath ((const char *) (l->l_addr
+					 + l->l_info[DT_STRTAB]->d_un.d_ptr
+					 + l->l_info[DT_RPATH]->d_un.d_val),
+			 nllp);
+    }
+  else
+    {
+      /* If we have no LD_LIBRARY_PATH and no RPATH we must tell this
+	 somehow to prevent we look this up again and again.  */
+      if (nllp == 0)
+	 l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
+      else
+	{
+	  l->l_rpath_dirs =
+	    (struct r_search_path_elem **) malloc ((nllp + 1)
+						   * sizeof (*l->l_rpath_dirs));
+	  if (l->l_rpath_dirs == NULL)
+	    _dl_signal_error (ENOMEM, NULL,
+			      "cannot create cache for search path");
+	  l->l_rpath_dirs[0] = NULL;
+	}
+    }
+
+  if (nllp > 0)
+    {
+      static const char *trusted_dirs[] =
+      {
+#include "trusted-dirs.h"
+	NULL
+      };
+      char *copy = strdupa (llp);
+
+      /* Decompose the LD_LIBRARY_PATH and fill in the result.
+         First search for the next place to enter elements.  */
+      struct r_search_path_elem **result = l->l_rpath_dirs;
+      while (*result != NULL)
+	++result;
+
+      /* We need to take care that the LD_LIBRARY_PATH environement
+	 variable can contain a semicolon.  */
+      (void) fillin_rpath (copy, result, ":;",
+			   __libc_enable_secure ? trusted_dirs : NULL);
+    }
+
+  /* Now set up the rest of the rtld_search_dirs.  */
+  for (pelem = rtld_search_dirs; *pelem != NULL; ++pelem)
+    {
+      struct r_search_path_elem *relem = *pelem;
+
+      if (_dl_platform != NULL)
+	{
+	  char *tmp;
+
+	  relem->machdirnamelen = relem->dirnamelen + _dl_platformlen + 1;
+	  tmp = (char *) malloc (relem->machdirnamelen + 1);
+	  if (tmp == NULL)
+	    _dl_signal_error (ENOMEM, NULL,
+			      "cannot create cache for search path");
+
+	  memcpy (tmp, relem->dirname, relem->dirnamelen);
+	  memcpy (tmp + relem->dirnamelen, _dl_platform, _dl_platformlen);
+	  tmp[relem->dirnamelen + _dl_platformlen] = '/';
+	  tmp[relem->dirnamelen + _dl_platformlen + 1] = '\0';
+
+	  relem->dirname = tmp;
+
+	  relem->machdirstatus = unknown;
+
+	  if (max_dirnamelen < relem->machdirnamelen)
+	    max_dirnamelen = relem->machdirnamelen;
+	}
+      else
+	{
+	  relem->machdirnamelen = relem->dirnamelen;
+	  relem->machdirstatus = nonexisting;
+
+	  if (max_dirnamelen < relem->dirnamelen)
+	    max_dirnamelen = relem->dirnamelen;
+	}
+    }
 }
 
 
@@ -131,7 +420,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	    l->l_next->l_prev = l->l_prev;
 	  free (l);
 	}
-      free (name);
+      free (name);	/* XXX Can this be correct? --drepper */
       free (realname);
       _dl_signal_error (code, name, msg);
     }
@@ -206,9 +495,6 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	++l->l_opencount;
 	return l;
       }
-
-  if (_dl_pagesize == 0)
-    _dl_pagesize = __getpagesize ();
 
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);
@@ -458,83 +744,87 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   return l;
 }
 
-/* Try to open NAME in one of the directories in DIRPATH.
+/* Try to open NAME in one of the directories in DIRS.
    Return the fd, or -1.  If successful, fill in *REALNAME
    with the malloc'd full directory name.  */
 
 static int
 open_path (const char *name, size_t namelen,
-	   const char *dirpath,
-	   char **realname,
-	   const char *trusted_dirs[])
+	   struct r_search_path_elem **dirs,
+	   char **realname)
 {
   char *buf;
-  const char *p;
-  int fd;
+  int fd = -1;
 
-  p = dirpath;
-  if (p == NULL || *p == '\0')
+  if (dirs == NULL || *dirs == NULL)
     {
       __set_errno (ENOENT);
       return -1;
     }
 
-  buf = __alloca (strlen (dirpath) + 1 + namelen);
+  buf = __alloca (max_dirnamelen + namelen);
   do
     {
-      size_t buflen;
-      size_t this_len;
+      struct r_search_path_elem *this_dir = *dirs;
+      size_t buflen = 0;
 
-      dirpath = p;
-      p = strpbrk (dirpath, ":;");
-      if (p == NULL)
-	p = strchr (dirpath, '\0');
-
-      this_len = p - dirpath;
-
-      /* When we run a setuid program we do not accept any directory.  */
-      if (__libc_enable_secure)
-	{
-	  /* All trusted directory must be complete name.  */
-	  if (dirpath[0] != '/')
-	    continue;
-
-	  /* If we got a list of trusted directories only accept one
-	     of these.  */
-	  if (trusted_dirs != NULL)
-	    {
-	      const char **trust = trusted_dirs;
-
-	      while (*trust !=  NULL)
-		if (memcmp (dirpath, *trust, this_len) == 0
-		    && (*trust)[this_len] == '\0')
-		  break;
-		else
-		  ++trust;
-
-	      /* If directory is not trusted, ignore this directory.  */
-	      if (*trust == NULL)
-		continue;
-	    }
-	}
-
-      if (this_len == 0)
-	{
-	  /* Two adjacent colons, or a colon at the beginning or the end of
-	     the path means to search the current directory.  */
-	  (void) memcpy (buf, name, namelen);
-	  buflen = namelen;
-	}
-      else
+      if (this_dir->machdirstatus != nonexisting)
 	{
 	  /* Construct the pathname to try.  */
-	  (void) memcpy (buf, dirpath, this_len);
-	  buf[this_len] = '/';
-	  (void) memcpy (&buf[this_len + 1], name, namelen);
-	  buflen = this_len + 1 + namelen;
+	  (void) memcpy (buf, this_dir->dirname, this_dir->machdirnamelen);
+	  (void) memcpy (buf + this_dir->machdirnamelen, name, namelen);
+	  buflen = this_dir->machdirnamelen + namelen;
+
+	  fd = __open (buf, O_RDONLY);
+	  if (this_dir->machdirstatus == unknown)
+	    if (fd != -1)
+	      this_dir->machdirstatus = existing;
+	    else
+	      {
+		/* We failed to open machine dependent library.  Let's
+		   test whether there is any directory at all.  */
+		struct stat st;
+
+		buf[this_dir->machdirnamelen - 1] = '\0';
+
+		if (stat (buf, &st) != 0 || ! S_ISDIR (st.st_mode))
+		  /* The directory does not exist ot it is no directory.  */
+		  this_dir->machdirstatus = nonexisting;
+		else
+		  this_dir->machdirstatus = existing;
+	      }
 	}
 
-      fd = __open (buf, O_RDONLY);
+      if (fd == -1 && this_dir->dirstatus != nonexisting)
+	{
+	  /* Construct the pathname to try.  */
+	  (void) memcpy (buf, this_dir->dirname, this_dir->dirnamelen);
+	  (void) memcpy (buf + this_dir->dirnamelen, name, namelen);
+	  buflen = this_dir->dirnamelen + namelen;
+
+	  fd = __open (buf, O_RDONLY);
+	  if (this_dir->dirstatus == unknown)
+	    if (fd != -1)
+	      this_dir->dirstatus = existing;
+	    else
+	      /* We failed to open library.  Let's test whether there
+		 is any directory at all.  */
+	      if (this_dir->dirnamelen <= 1)
+		this_dir->dirstatus = existing;
+	      else
+		{
+		  struct stat st;
+
+		  buf[this_dir->dirnamelen - 1] = '\0';
+
+		  if (stat (buf, &st) != 0 || ! S_ISDIR (st.st_mode))
+		    /* The directory does not exist ot it is no directory.  */
+		    this_dir->dirstatus = nonexisting;
+		  else
+		    this_dir->dirstatus = existing;
+		}
+	}
+
       if (fd != -1)
 	{
 	  *realname = malloc (buflen);
@@ -555,7 +845,7 @@ open_path (const char *name, size_t namelen,
 	/* The file exists and is readable, but something went wrong.  */
 	return -1;
     }
-  while (*p++ != '\0');
+  while (*++dirs != NULL);
 
   return -1;
 }
@@ -593,39 +883,34 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
       size_t namelen = strlen (name) + 1;
 
-      inline void trypath (const char *dirpath, const char *trusted[])
-	{
-	  fd = open_path (name, namelen, dirpath, &realname, trusted);
-	}
-
       fd = -1;
 
       /* First try the DT_RPATH of the dependent object that caused NAME
 	 to be loaded.  Then that object's dependent, and on up.  */
       for (l = loader; fd == -1 && l; l = l->l_loader)
 	if (l && l->l_info[DT_RPATH])
-	  trypath ((const char *) (l->l_addr +
-				   l->l_info[DT_STRTAB]->d_un.d_ptr +
-				   l->l_info[DT_RPATH]->d_un.d_val), NULL);
-      /* If dynamically linked, try the DT_RPATH of the executable itself.  */
-      l = _dl_loaded;
-      if (fd == -1 && l && l->l_type != lt_loaded && l->l_info[DT_RPATH])
-	trypath ((const char *) (l->l_addr +
-				 l->l_info[DT_STRTAB]->d_un.d_ptr +
-				 l->l_info[DT_RPATH]->d_un.d_val), NULL);
-      /* Try an environment variable (unless setuid).  */
-      if (fd == -1)
-	{
-	  static const char *trusted_dirs[] =
 	  {
-#include "trusted-dirs.h"
-	    NULL
-	  };
-	  const char *ld_library_path = getenv ("LD_LIBRARY_PATH");
+	    /* Make sure the cache information is available.  */
+	    if (l->l_rpath_dirs == NULL)
+	      {
+		size_t ptrval = (l->l_addr
+				 + l->l_info[DT_STRTAB]->d_un.d_ptr
+				 + l->l_info[DT_RPATH]->d_un.d_val);
+		l->l_rpath_dirs =
+		  decompose_rpath ((const char *) ptrval, 0);
+	      }
 
-	  if (ld_library_path != NULL && *ld_library_path != '\0')
-	    trypath (ld_library_path, trusted_dirs);
-	}
+	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
+	      fd = open_path (name, namelen, l->l_rpath_dirs, &realname);
+	  }
+
+      /* If dynamically linked, try the DT_RPATH of the executable itself
+	 and the LD_LIBRARY_PATH environment variable.  */
+      l = _dl_loaded;
+      if (fd == -1 && l && l->l_type != lt_loaded
+	  && l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
+	fd = open_path (name, namelen, l->l_rpath_dirs, &realname);
+
       if (fd == -1)
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
@@ -646,12 +931,10 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 		}
 	    }
 	}
+
       /* Finally, try the default path.  */
       if (fd == -1)
-	{
-	  extern const char *_dl_rpath;	/* Set in rtld.c. */
-	  trypath (_dl_rpath, NULL);
-	}
+	fd = open_path (name, namelen, rtld_search_dirs, &realname);
     }
   else
     {
