@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-   Copyright (C) 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -142,6 +142,91 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	  goto retry_receive;
 	}
       /* FALLTHROUGH */
+
+      /* These are the other codes that mean a pseudo-receive modified
+	 the message buffer and we might need to clean up the port rights.  */
+    case MACH_SEND_TIMED_OUT:
+    case MACH_SEND_INVALID_NOTIFY:
+    case MACH_SEND_NO_NOTIFY:
+    case MACH_SEND_NOTIFY_IN_PROGRESS:
+      if (MACH_MSGH_BITS_REMOTE (msg->msgh_bits) == MACH_MSG_TYPE_MOVE_SEND)
+	{
+	  __mach_port_deallocate (__mach_task_self (), msg->msgh_remote_port);
+	  msg->msgh_bits
+	    = (MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
+			       MACH_MSGH_BITS_LOCAL (msg->msgh_bits))
+	       | MACH_MSGH_BITS_OTHER (msg->msgh_bits));
+	}
+      if (msg->msgh_bits & MACH_MSGH_BITS_COMPLEX)
+	{
+	  /* Check for MOVE_SEND rights in the message.  These hold refs
+	     that we need to release in case the message is in fact never
+	     re-sent later.  Since it might in fact be re-sent, we turn
+	     these into COPY_SEND's after deallocating the extra user ref;
+	     the caller is responsible for still holding a ref to go with
+	     the original COPY_SEND right, so the resend copies it again.  */
+
+	  mach_msg_type_long_t *ty = (void *) (msg + 1);
+	  while ((void *) ty < (void *) msg + msg->msgh_size)
+	    {
+	      mach_msg_type_name_t name;
+	      mach_msg_type_size_t size;
+	      mach_msg_type_number_t number;
+
+	      inline void clean_ports (mach_port_t *ports, int dealloc)
+		{
+		  mach_msg_type_number_t i;
+		  switch (name)
+		    {
+		    case MACH_MSG_TYPE_MOVE_SEND:
+		      for (i = 0; i < number; i++)
+			__mach_port_deallocate (__mach_task_self (), *ports++);
+		      (ty->msgtl_header.msgt_longform
+		       ? ty->msgtl_name : ty->msgtl_header.msgt_name)
+			= MACH_MSG_TYPE_COPY_SEND;
+		      break;
+		    case MACH_MSG_TYPE_COPY_SEND:
+		    case MACH_MSG_TYPE_MOVE_RECEIVE:
+		      break;
+		    default:
+		      if (MACH_MSG_TYPE_PORT_ANY (name))
+			assert (! "unexpected port type in interruptible RPC");
+		    }
+		  if (dealloc)
+		    __vm_deallocate (__mach_task_self (),
+				     (vm_address_t) ports,
+				     number * sizeof (mach_port_t));
+		}
+
+	      if (ty->msgtl_header.msgt_longform)
+		{
+		  name = ty->msgtl_name;
+		  size = ty->msgtl_size;
+		  number = ty->msgtl_number;
+		  (char *) ty += sizeof (mach_msg_type_long_t);
+		}
+	      else
+		{
+		  name = ty->msgtl_header.msgt_name;
+		  size = ty->msgtl_header.msgt_size;
+		  number = ty->msgtl_header.msgt_number;
+		  (char *) ty += sizeof (mach_msg_type_t);
+		}
+
+	      if (ty->msgtl_header.msgt_inline)
+		{
+		  clean_ports ((void *) ty, 0);
+		  /* calculate length of data in bytes, rounding up */
+		  (char *) ty += (((((number * size) + 7) >> 3)
+				   + sizeof (mach_msg_type_t) - 1)
+				  &~ (sizeof (mach_msg_type_t) - 1));
+		}
+	      else
+		clean_ports (*((void **) ty)++,
+			     ty->msgtl_header.msgt_deallocate);
+	    }
+	}
+      break;
 
     case EINTR:
       /* Either the process was stopped and continued,
