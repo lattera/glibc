@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <hurd.h>
-#include <hurd/signal.h>
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <stdlib.h>
 #include <string.h>
+
+#include <cthreads.h>		/* For `struct mutex'.  */
+#include <mach.h>
+#include <mach/thread_switch.h>
+
+#include <hurd.h>
 #include <hurd/id.h>
+#include <hurd/signal.h>
+
 #include "hurdfault.h"
 #include "hurdmalloc.h"		/* XXX */
 
@@ -1267,6 +1272,15 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 #pragma weak cthread_fork
 #pragma weak cthread_detach
       cthread_detach (cthread_fork ((cthread_fn_t) &_hurd_msgport_receive, 0));
+
+      /* XXX We need the thread port for the signal thread further on
+         in this thread (see hurdfault.c:_hurdsigfault_init).
+         Therefore we block until _hurd_msgport_thread is initialized
+         by the newly created thread.  This really shouldn't be
+         necessary; we should be able to fetch the thread port for a
+         cthread from here.  */
+      while (_hurd_msgport_thread == 0)
+	__swtch_pri (0);
     }
 
   /* Receive exceptions on the signal port.  */

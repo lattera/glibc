@@ -1,3 +1,9 @@
+2000-08-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurdsig.c: Rearrange headers a bit.
+	(_hurdsig_init): Block until _hurd_msgport_thread is initialized
+	when cthreads is being used.
+
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (distribute): Add dl-osinfo.h.
