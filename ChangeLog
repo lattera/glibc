@@ -1,3 +1,7 @@
+2005-02-22  Andreas Schwab  <schwab@suse.de>
+
+	* posix/execvp.c (execvp): Fix invalid free.
+
 2005-02-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/Makefile (CFLAGS-mcheck-init.c): Add.
