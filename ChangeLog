@@ -1,3 +1,7 @@
+2000-12-22  Andreas Jaeger  <aj@suse.de>
+
+	* include/stdio.h: Add __ftrylockfile prototype.
+
 2000-12-21  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/fpu/math_ldbl.h (ieee_long_double_shape_type):
