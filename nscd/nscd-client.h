@@ -23,8 +23,12 @@
 #ifndef _NSCD_CLIENT_H
 #define _NSCD_CLIENT_H	1
 
+#include <stdbool.h>
+#include <stdint.h>
+#include <sys/types.h>
 #include <atomic.h>
 #include <nscd-types.h>
+
 
 /* Version number of the daemon interface */
 #define NSCD_VERSION 2
@@ -257,9 +261,9 @@ static inline int __nscd_drop_map_ref (struct mapped_database *map,
 
 
 /* Search the mapped database.  */
-extern const struct datahead * __nscd_cache_search (request_type type,
-						    const char *key,
-						    size_t keylen,
-						    const struct mapped_database *mapped);
+extern const struct datahead *__nscd_cache_search (request_type type,
+						   const char *key,
+						   size_t keylen,
+						   const struct mapped_database *mapped);
 
 #endif /* nscd.h */

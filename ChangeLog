@@ -1,6 +1,8 @@
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
+	* nscd/nscd-client.h: Add a few #includes.
+
 	* nscd/Makefile (nscd-modules): Add nscd_setup_thread.
 	* nscd/connections.c (nscd_run): Call setup_thread for maintenance
 	threads.
