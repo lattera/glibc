@@ -89,13 +89,8 @@
 1:	.size	C_SYMBOL_NAME(name),1b-C_SYMBOL_NAME(name)
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
-#ifdef	PROF
-/* The mcount code relies on a normal frame pointer being on the stack
-   to locate our caller, so push one just for its benefit.  */
-#define CALL_MCOUNT		/* XXX */
-#else
+/* No, don't bother.  gcc will put the call in for us.  */
 #define CALL_MCOUNT		/* Do nothing.  */
-#endif
 
 /* syscall wrappers consist of
 	#include <sysdep.h>
@@ -231,7 +226,7 @@
 	register unsigned long __r21 __asm__("r21") = (unsigned long)r21;	\
 	LOAD_ARGS_5(r26,r25,r24,r23,r22)
 
-#define ASM_ARGS_0 
+#define ASM_ARGS_0
 #define ASM_ARGS_1 , "r" (__r26)
 #define ASM_ARGS_2 , "r" (__r26), "r" (__r25)
 #define ASM_ARGS_3 , "r" (__r26), "r" (__r25), "r" (__r24)

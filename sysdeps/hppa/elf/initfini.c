@@ -59,8 +59,6 @@ __asm__ ("
 	.align 4
 	.globl _init
 	.type _init,@function
-	.proc
-	.callinfo
 _init:
 	stw	%rp,-20(%sp)
 	stwm	%r4,64(%sp)
@@ -68,25 +66,38 @@ _init:
 	bl	__gmon_start__,%rp
 	copy	%r19,%r4	/* delay slot */
 	copy	%r4,%r19
-	.align 4
-	.procend
 /*@_init_PROLOG_ENDS*/
 
 /*@_init_EPILOG_BEGINS*/
-	.section .init
-	copy	%r4,%r19
-	ldw	-84(%sp),%rp
-	bv	%r0(%rp)
-	ldwm	-64(%sp),%r4
         .text
         .align 4
         .weak   __gmon_start__
         .type    __gmon_start__,@function
+__gmon_start__:
 	.proc
 	.callinfo
-__gmon_start__:
+	.entry
         bv,n %r0(%r2)
+	.exit
 	.procend
+
+/* Here is the tail end of _init.  We put __gmon_start before this so
+   that the assembler creates the .PARISC.unwind section for us, ie.
+   with the right attributes.  */
+	.section .init
+	ldw	-84(%sp),%rp
+	copy	%r4,%r19
+	bv	%r0(%rp)
+_end_init:
+	ldwm	-64(%sp),%r4
+
+/* Our very own unwind info, because the assembler can't handle
+   functions split into two or more pieces.  */
+	.section .PARISC.unwind
+	.extern _init
+	.word	_init, _end_init
+	.byte	0x08, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08
+
 /*@_init_EPILOG_ENDS*/
 
 /*@_fini_PROLOG_BEGINS*/
@@ -94,23 +105,26 @@ __gmon_start__:
 	.align 4
 	.globl _fini
 	.type _fini,@function
-	.proc
-	.callinfo
 _fini:
 	stw	%rp,-20(%sp)
 	stwm	%r4,64(%sp)
 	stw	%r19,-32(%sp)
 	copy	%r19,%r4
-	.align 4
-	.procend
 /*@_fini_PROLOG_ENDS*/
 
 /*@_fini_EPILOG_BEGINS*/
 	.section .fini
-	copy	%r4,%r19
 	ldw	-84(%sp),%rp
+	copy	%r4,%r19
 	bv	%r0(%rp)
+_end_fini:
 	ldwm	-64(%sp),%r4
+
+	.section .PARISC.unwind
+	.extern _fini
+	.word	_fini, _end_fini
+	.byte	0x08, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08
+
 /*@_fini_EPILOG_ENDS*/
 
 /*@TRAILER_BEGINS*/

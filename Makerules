@@ -500,7 +500,7 @@ LDFLAGS-c.so += -u __register_frame
 # between libc.so and ld.so, which can make it impossible to upgrade.
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-	-Wl,-d -Wl,--whole-archive $^
+	$(LDFLAGS-c_pic.os) -Wl,-d -Wl,--whole-archive $^
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \

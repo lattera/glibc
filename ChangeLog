@@ -1,3 +1,26 @@
+2001-04-19  Alan Modra  <amodra@one.net.au>
+
+	* Makerules (libc_pic.os): Add $(LDFLAGS-c_pic.os).
+	* sysdeps/hppa/Makefile (LDFLAGS-c_pic.os): Define.
+	(CFLAGS-.os): Remove.
+
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (CALL_MCOUNT): Update comment.
+
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h (NGREG, NFPREG,
+	gregset): Correct for new kernel definitions.
+
+2001-04-19  Alan Modra  <alan@linuxcare.com.au>
+
+	* sysdeps/hppa/elf/initfini.c: Change dlt reg save to r3 and
+	generate unwind info by hand.
+
+2001-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Optimize a bit.
+
+	* configure.in: Correct regular expression for msgfmt.
+	Patch by Bruno Haible <haible@ilog.fr>.
+
 2001-04-19  Andreas Jaeger  <aj@suse.de>
 
 	* po/el.po: Add comment explaining what's broken.

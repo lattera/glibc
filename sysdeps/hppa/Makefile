@@ -1,4 +1,4 @@
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by David Huggins-Daines (dhd@debian.org)
 
@@ -17,8 +17,10 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-# We need this for all shared objects since the build process uses ld -r
-CFLAGS-.os += -ffunction-sections
+# We used to need this since the build process uses ld -r.  Now we use
+# ld -r --unique=.text* which does more or less the same thing, but better.
+# CFLAGS-.os += -ffunction-sections
+LDFLAGS-c_pic.os += -Wl,--unique=.text*
 
 ifeq ($(subdir),elf)
 dl-routines += dl-symaddr dl-fptr
