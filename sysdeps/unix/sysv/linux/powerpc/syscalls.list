@@ -3,4 +3,4 @@
 s_llseek	llseek	_llseek		5	__sys_llseek
 
 getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresuid
+getresgid	-	getresgid	3	getresgid

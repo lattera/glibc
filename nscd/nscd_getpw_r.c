@@ -71,7 +71,7 @@ nscd_open_socket (void)
   int sock;
   int saved_errno = errno;
 
-  sock = socket (PF_UNIX, SOCK_STREAM, 0);
+  sock = __socket (PF_UNIX, SOCK_STREAM, 0);
   if (sock < 0)
     {
       __set_errno (saved_errno);
@@ -80,7 +80,7 @@ nscd_open_socket (void)
 
   addr.sun_family = AF_UNIX;
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
-  if (connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
+  if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
       close (sock);
       __set_errno (saved_errno);
@@ -142,9 +142,9 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
       struct iovec vec[5];
       char *p = buffer;
 
-      if (buflen < pw_resp.pw_name_len + 1 + pw_resp.pw_passwd_len + 1
-	  + pw_resp.pw_gecos_len + 1 + pw_resp.pw_dir_len + 1
-	  + pw_resp.pw_shell_len + 1)
+      if (buflen < (pw_resp.pw_name_len + 1 + pw_resp.pw_passwd_len + 1
+		    + pw_resp.pw_gecos_len + 1 + pw_resp.pw_dir_len + 1
+		    + pw_resp.pw_shell_len + 1))
 	{
 	  __set_errno (ERANGE);
 	  close (sock);
@@ -173,14 +173,14 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
       buflen -= (pw_resp.pw_dir_len + 1);
       /* get pw_pshell */
       vec[4].iov_base = p;
-      vec[4].iov_len = pw_resp.pw_dir_len;
-      p += pw_resp.pw_dir_len + 1;
-      buflen -= (pw_resp.pw_dir_len + 1);
+      vec[4].iov_len = pw_resp.pw_shell_len;
+      p += pw_resp.pw_shell_len + 1;
+      buflen -= (pw_resp.pw_shell_len + 1);
 
       nbytes = readv (sock, vec, 5);
-      if (nbytes !=  pw_resp.pw_name_len + 1 + pw_resp.pw_passwd_len + 1 +
-	  pw_resp.pw_gecos_len + 1 + pw_resp.pw_dir_len + 1 +
-	  pw_resp.pw_shell_len + 1)
+      if (nbytes !=  (pw_resp.pw_name_len + pw_resp.pw_passwd_len
+		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
+		      + pw_resp.pw_shell_len))
 	{
 	  close (sock);
 	  return 1;

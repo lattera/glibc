@@ -117,6 +117,7 @@ main (int argc, char **argv)
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
+  signal (SIGPIPE, SIG_IGN);
 
   /* Check if we are already running. */
   if (check_pid (_PATH_NSCDPID))

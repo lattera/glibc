@@ -1,3 +1,28 @@
+1998-03-12  Matthias Urlichs <smurf@noris.de>
+
+	* nscd/nscd.c: Ignore SIGPIPE.
+
+1998-03-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/nscd_getgr_r.c: Use __ protected names.
+	* nscd/nscd_getpw_r.c: Likewise.
+
+1998-03-12  Matthias Urlichs <smurf@noris.de>
+
+	* nscd/nscd_getpw_r.c: Use pw_*_len values correctly.
+	* nscd/nscd_getpw_r.c: Fix length calculation in result check,
+	null bytes are not transmitted.
+
+1998-03-12 00:40  Franz Sirl <Franz.Sirl-kernel@lauterbach.com>
+
+	* powerpc/syscalls.list: Correct typo.
+	* alpha/syscalls.list: Likewise.
+	* mips/syscalls.list: Likewise.
+
+1998-03-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* socket/sys/socket.h: Add prototype for __socket.
+
 1998-03-11 15:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: Update help message.
