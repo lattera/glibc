@@ -24,9 +24,11 @@
 /* Type of the initializer.  */
 typedef void (*init_t) (int, char **, char **);
 
+#ifndef HAVE_INLINED_SYSCALLS
 /* Flag, nonzero during startup phase.  */
 extern int _dl_starting_up;
 extern int _dl_starting_up_internal attribute_hidden;
+#endif
 
 
 static void
@@ -143,7 +145,9 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
 
+#ifndef HAVE_INLINED_SYSCALLS
   /* Finished starting up.  */
   INTUSE(_dl_starting_up) = 0;
+#endif
 }
 INTDEF (_dl_init)

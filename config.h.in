@@ -208,6 +208,9 @@
 /* Defined of libidn is available.  */
 #undef HAVE_LIBIDN
 
+/* Define if inlined system calls are available.  */
+#undef HAVE_INLINED_SYSCALLS
+
 /*
  */
 

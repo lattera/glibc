@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -122,7 +122,7 @@ extern int __local_multiple_threads attribute_hidden;
 
 #elif !defined __ASSEMBLER__
 
-/* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION 1
 
 #endif

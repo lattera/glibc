@@ -79,6 +79,7 @@ INTDEF(_dl_argv)
 /* Nonzero if we were run directly.  */
 unsigned int _dl_skip_args attribute_relro attribute_hidden;
 
+#ifndef HAVE_INLINED_SYSCALLS
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
    must not be initialized to nonzero, because the unused dynamic
@@ -88,6 +89,7 @@ unsigned int _dl_skip_args attribute_relro attribute_hidden;
    never be called.  */
 int _dl_starting_up = 0;
 INTVARDEF(_dl_starting_up)
+#endif
 
 /* This is the structure which defines all variables global to ld.so
    (except those which cannot be added for some reason).  */
@@ -720,8 +722,10 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);
 
+#ifndef HAVE_INLINED_SYSCALLS
   /* Set up a flag which tells we are just starting.  */
   INTUSE(_dl_starting_up) = 1;
+#endif
 
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {

@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <ldsodefs.h>
+#include <sysdep.h>
 
 #include <dl-dst.h>
 
@@ -37,9 +38,11 @@ _dl_get_origin (void)
   char linkval[PATH_MAX];
   char *result;
   int len;
+  INTERNAL_SYSCALL_DECL (err);
 
-  if ((len = __readlink ("/proc/self/exe", linkval, sizeof (linkval))) > 0
-      && linkval[0] != '[')
+  len = INTERNAL_SYSCALL (readlink, err, 3, "/proc/self/exe", linkval,
+			  sizeof (linkval));
+  if (! INTERNAL_SYSCALL_ERROR_P (len, err) && len > 0 && linkval[0] != '[')
     {
       /* We can use this value.  */
       assert (linkval[0] == '/');

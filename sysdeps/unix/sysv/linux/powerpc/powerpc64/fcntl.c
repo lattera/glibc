@@ -26,6 +26,9 @@
 
 
 int
+#ifdef NO_CANCELLATION
+static inline __attribute ((always_inline))
+#endif
 __fcntl_nocancel (int fd, int cmd, ...)
 {
   va_list ap;

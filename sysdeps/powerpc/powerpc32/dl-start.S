@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995-2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,7 +83,6 @@ ENTRY(_dl_start_user)
 	lwz	r7,_dl_fini@got(r31)
 /* Now, call the start function in r30... */
 	mtctr	r30
-	lwz	r26,_dl_starting_up@got(r31)
 /* Pass the stack pointer in r1 (so far so good), pointing to a NULL value.
    (This lets our startup code distinguish between a program linked statically,
    which linux will call with argc on top of the stack which will hopefully
@@ -98,8 +97,6 @@ ENTRY(_dl_start_user)
 	stw	r31,4(r1)
 	stw	r31,8(r1)
 	stw	r31,12(r1)
-/* Clear _dl_starting_up.  */
-	stw	r31,0(r26)
 /* Go do it!  */
 	bctr
 END(_start)

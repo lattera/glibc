@@ -358,7 +358,7 @@ _dl_start_profile (void)
       return;
     }
 
-  /* We don't need the file desriptor anymore.  */
+  /* We don't need the file descriptor anymore.  */
   __close (fd);
 
   /* Pointer to data after the header.  */

@@ -194,6 +194,15 @@ elf_machine_dynamic (void)
   strong_alias (_dl_runtime_resolve, _dl_profile_resolve);
 #endif
 
+#ifdef HAVE_INLINED_SYSCALLS
+/* We do not need _dl_starting_up.  */
+# define DL_STARTING_UP_DEF
+#else
+# define DL_STARTING_UP_DEF \
+".LC__dl_starting_up:\n"  \
+"	.tc _dl_starting_up_internal[TC],_dl_starting_up_internal\n"
+#endif
+
 
 /* Initial entry point code for the dynamic linker.  The C function
    `_dl_start' is the real entry point; its return value is the user
@@ -239,17 +248,16 @@ elf_machine_dynamic (void)
 "_dl_start_user:\n"							\
 "	.quad	._dl_start_user, .TOC.@tocbase, 0\n"			\
 "	.previous\n"							\
-"	.section	\".toc\",\"aw\"\n"  \
-".LC__dl_starting_up:\n"  \
-"	.tc _dl_starting_up_internal[TC],_dl_starting_up_internal\n"  \
-".LC__rtld_global:\n"  \
-"	.tc _rtld_global[TC],_rtld_global\n"  \
-".LC__dl_argc:\n"  \
-"	.tc _dl_argc[TC],_dl_argc\n"  \
-".LC__dl_argv:\n"  \
-"	.tc _dl_argv_internal[TC],_dl_argv_internal\n"  \
-".LC__dl_fini:\n"  \
-"	.tc _dl_fini[TC],_dl_fini\n"  \
+"	.section	\".toc\",\"aw\"\n"				\
+DL_STARTING_UP_DEF							\
+".LC__rtld_global:\n"							\
+"	.tc _rtld_global[TC],_rtld_global\n"				\
+".LC__dl_argc:\n"							\
+"	.tc _dl_argc[TC],_dl_argc\n"					\
+".LC__dl_argv:\n"							\
+"	.tc _dl_argv_internal[TC],_dl_argv_internal\n"			\
+".LC__dl_fini:\n"							\
+"	.tc _dl_fini[TC],_dl_fini\n"					\
 "	.previous\n"							\
 "	.globl	._dl_start_user\n"					\
 "	.type	._dl_start_user,@function\n"				\
@@ -291,8 +299,7 @@ elf_machine_dynamic (void)
 "	addi	6,6,8\n"						\
 /* Pass a termination function pointer (in this case _dl_fini) in	\
    r7.  */								\
-"	ld	7,.LC__dl_fini@toc(2)\n"					\
-"	ld 	26,.LC__dl_starting_up@toc(2)\n"				\
+"	ld	7,.LC__dl_fini@toc(2)\n"				\
 /* Pass the stack pointer in r1 (so far so good), pointing to a NULL	\
    value.  This lets our startup code distinguish between a program	\
    linked statically, which linux will call with argc on top of the	\
@@ -307,8 +314,6 @@ elf_machine_dynamic (void)
 "	std	31,8(1)\n"						\
 "	std	31,16(1)\n"						\
 "	std	31,24(1)\n"						\
-/* Clear _dl_starting_up.  */						\
-"	stw	31,0(26)\n"						\
 /* Now, call the start function descriptor at r30...  */		\
 "	.globl	._dl_main_dispatch\n"  \
 "._dl_main_dispatch:\n"  \

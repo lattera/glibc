@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -99,30 +99,30 @@
   L(ENDFDE):								      \
   .previous
 
-#ifdef SHARED
+# ifdef SHARED
 /* NUL-terminated augmentation string.  Note "z" means there is an
    augmentation value later on.  */
-# define AUGMENTATION_STRING .string "zR"
-# define AUGMENTATION_PARAM \
+#  define AUGMENTATION_STRING .string "zR"
+#  define AUGMENTATION_PARAM \
     /* Augmentation value length.  */					      \
     .uleb128 1;								      \
     /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
     .byte 0x1b;
-# define AUGMENTATION_PARAM_FDE \
+#  define AUGMENTATION_PARAM_FDE \
     /* No augmentation data.  */					      \
     .uleb128 0;
-# define START_SYMBOL_REF(name) \
+#  define START_SYMBOL_REF(name) \
     /* PC-relative start address of the code.  */			      \
     .long L(name##START)-.
-#else
+# else
 /* No augmentation.  */
-# define AUGMENTATION_STRING .ascii "\0"
-# define AUGMENTATION_PARAM /* nothing */
-# define AUGMENTATION_PARAM_FDE /* nothing */
-# define START_SYMBOL_REF(name) \
+#  define AUGMENTATION_STRING .ascii "\0"
+#  define AUGMENTATION_PARAM /* nothing */
+#  define AUGMENTATION_PARAM_FDE /* nothing */
+#  define START_SYMBOL_REF(name) \
     /* Absolute start address of the code.  */				      \
     .long L(name##START)
-#endif
+# endif
 
 /* Callframe description for syscalls without parameters.  This is very
    simple.  The only place the stack pointer is changed is when the old
@@ -373,7 +373,7 @@
 
 #elif !defined __ASSEMBLER__
 
-/* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION 1
 
 #endif

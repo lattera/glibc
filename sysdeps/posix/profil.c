@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mostly POSIX.1 version.
-   Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,10 +62,13 @@ profil_count (void *pc)
 int
 __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
-  static struct sigaction oact;
-  static struct itimerval otimer;
   struct sigaction act;
   struct itimerval timer;
+#ifndef IS_IN_rtld
+  static struct sigaction oact;
+  static struct itimerval otimer;
+# define oact_ptr &oact
+# define otimer_ptr &otimer
 
   if (sample_buffer == NULL)
     {
@@ -88,6 +91,12 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 	  || __sigaction (SIGPROF, &oact, NULL) < 0)
 	return -1;
     }
+#else
+ /* In ld.so profiling should never be disabled once it runs.  */
+ //assert (sample_buffer != NULL);
+# define oact_ptr NULL
+# define otimer_ptr NULL
+#endif
 
   samples = sample_buffer;
   nsamples = size / sizeof *samples;
@@ -97,13 +106,13 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   act.sa_handler = (sighandler_t) &profil_counter;
   act.sa_flags = SA_RESTART;
   __sigfillset (&act.sa_mask);
-  if (__sigaction (SIGPROF, &act, &oact) < 0)
+  if (__sigaction (SIGPROF, &act, oact_ptr) < 0)
     return -1;
 
   timer.it_value.tv_sec = 0;
   timer.it_value.tv_usec = 1;
   timer.it_interval = timer.it_value;
-  return __setitimer (ITIMER_PROF, &timer, &otimer);
+  return __setitimer (ITIMER_PROF, &timer, otimer_ptr);
 }
 weak_alias (__profil, profil)
 

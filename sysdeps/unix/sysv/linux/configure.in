@@ -305,3 +305,6 @@ ${ac_prefix}/include directory out of the way.])
     AC_MSG_RESULT(ok)
   fi
 fi
+
+# We have inlined syscalls.
+AC_DEFINE(HAVE_INLINED_SYSCALLS)

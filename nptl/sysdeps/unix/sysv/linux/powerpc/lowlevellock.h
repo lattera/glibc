@@ -26,7 +26,9 @@
 #include <atomic.h>
 
 
-#define __NR_futex		221
+#ifndef __NR_futex
+# define __NR_futex		221
+#endif
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3

@@ -241,7 +241,7 @@
 
 #elif !defined __ASSEMBLER__
 
-/* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION 1
 
 #endif

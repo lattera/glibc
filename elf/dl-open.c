@@ -297,8 +297,13 @@ dl_open_worker (void *a)
 	      GLRO(dl_relocate_object) (l, l->l_scope, 1, 1);
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
-		/* We must prepare the profiling.  */
-		GLRO(dl_start_profile) ();
+		{
+		  /* We must prepare the profiling.  */
+		  GLRO(dl_start_profile) ();
+
+		  /* Prevent unloading the object.  */
+		  GL(dl_profile_map)->l_flags_1 |= DF_1_NODELETE;
+		}
 	    }
 	  else
 #endif

@@ -43,7 +43,6 @@ if test "${libc_cv_linux2010+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
@@ -172,7 +171,6 @@ echo $ECHO_N "checking for kernel header at least $minimum_kernel... $ECHO_C" >&
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
@@ -379,3 +377,9 @@ ${ac_prefix}/include directory out of the way." >&2;}
 echo "${ECHO_T}ok" >&6
   fi
 fi
+
+# We have inlined syscalls.
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_INLINED_SYSCALLS 1
+_ACEOF
+

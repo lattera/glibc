@@ -86,8 +86,10 @@ struct r_scope_elem *_dl_global_scope[2] = { &_dl_initial_searchlist, NULL };
    to be the global scope.  */
 struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 
+#ifndef HAVE_INLINED_SYSCALLS
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
+#endif
 
 /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>

@@ -1,3 +1,31 @@
+2004-07-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-init.c: Don't define and use _dl_starting_up if
+	HAVE_INLINED_SYSCALLS is defined and the variable is not used.
+	* elf/dl-support.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Use writev syscall directly
+	if HAVE_INLINED_SYSCALLS is defined.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Don't rest _dl_starting_up
+	here.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Likewise.
+	* sysdeps/unix/sysv/linux/configure.in: Define HAVE_INLINED_SYSCALLS.
+	* config.h.in: Add entry for HAVE_INLINED_SYSCALLS.
+
+	* sysdeps/posix/profil.c: If compiled for ld.so, omit code which
+	is needed to stop profiling.
+	* elf/dl-open.c (dl_open_worker): If a newly opened object is to be
+	profile make sure it cannot be unloaded.
+
+	* sysdeps/unix/sysv/linux/dl-origin.c: Inline readlink syscall.
+
+	* sysdeps/unix/sysv/linux/fcntl.c: If compiled without cancellation
+	support, make sure the helper function is inlined.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c: Likewise.
+
 2004-07-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/string.h (ffs): Add libc_hidden_builtin_proto.

@@ -247,7 +247,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
     }
 
   /* Finally write the result.  */
-#ifdef INTERNAL_SYSCALL
+#ifdef HAVE_INLINED_SYSCALLS
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (writev, err, 3, fd, &iov, niov);
 #elif RTLD_PRIVATE_ERRNO

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,9 @@ int __have_no_fcntl64;
 
 
 int
+#ifdef NO_CANCELLATION
+static inline __attribute ((always_inline))
+#endif
 __fcntl_nocancel (int fd, int cmd, ...)
 {
   va_list ap;
@@ -65,16 +68,15 @@ __fcntl_nocancel (int fd, int cmd, ...)
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_start != fl64->l_start)
 	  {
+	  eoverflow:
 	    __set_errno (EOVERFLOW);
 	    return -1;
 	  }
 	fl.l_len = (off_t) fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_len != fl64->l_len)
-	  {
-	    __set_errno (EOVERFLOW);
-	    return -1;
-	  }
+	  goto eoverflow:
+
 	fl.l_type = fl64->l_type;
 	fl.l_whence = fl64->l_whence;
 	fl.l_pid = fl64->l_pid;
@@ -101,10 +103,8 @@ __fcntl_nocancel (int fd, int cmd, ...)
 	fl.l_start = (off_t) fl64->l_start;
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_start != fl64->l_start)
-	  {
-	    __set_errno (EOVERFLOW);
-	    return -1;
-	  }
+	  goto eoverflow:
+
 	fl.l_len = (off_t)fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_len != fl64->l_len)

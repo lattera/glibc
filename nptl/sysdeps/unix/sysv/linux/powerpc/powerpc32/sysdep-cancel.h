@@ -1,5 +1,5 @@
 /* Cancellable system call stubs.  Linux/PowerPC version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>, 2003.
 
@@ -109,7 +109,7 @@
 
 #elif !defined __ASSEMBLER__
 
-/* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION 1
 
 #endif
