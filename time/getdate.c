@@ -25,6 +25,8 @@
 #include <time.h>
 #include <sys/stat.h>
 
+#define TM_YEAR_BASE 1900
+
 
 /* Prototypes for local functions.  */
 static int first_wday (int year, int mon, int wday);
@@ -225,7 +227,8 @@ __getdate_r (const char *string, struct tm *tp)
   /* Check if the day of month is within range, and if the time can be
      represented in a time_t.  We make use of the fact that the mktime
      call normalizes the struct tm.  */
-  if ((!mday_ok && !check_mday (tp->tm_year, tp->tm_mon, tp->tm_mday))
+  if ((!mday_ok && !check_mday (TM_YEAR_BASE + tp->tm_year, tp->tm_mon,
+				tp->tm_mday))
       || mktime (tp) == (time_t) -1)
     return 8;
 

@@ -1,3 +1,8 @@
+1999-09-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/getdate.c (__getdate_r): Pass correct year to check_mday.
+	Reported by Vern Staats <staatsvr@asc.hpc.mil>.
+
 1999-09-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db2/mutex/sparc.gcc (TSL_UNSET): Dereference pointer.
