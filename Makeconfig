@@ -571,13 +571,6 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 override CFLAGS	= $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
-
-# This is the macro that the implicit linking rules use.
-ifneq "$(filter -g,$(+cflags))" "" # -g is in $(+cflags)
-LDFLAGS	:= -g
-endif
-
-
 # If everything is compiled with -fPIC (implicitly) we must tell this by
 # defining the PIC symbol.
 ifeq (yes,$(build-pic-default))
