@@ -56,12 +56,16 @@ DEFINE_HOOK (_hurd_preinit_hook, (void));
 static void
 posixland_init (int argc, char **argv, char **envp)
 {
-  __libc_init (argc, argv, __environ);
+  __libc_argc = argc;
+  __libc_argv = argv;
+  __environ = envp;
+
+  __libc_init (argc, argv, envp);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment (__environ);
+  __getopt_clean_environment (envp);
 
-#ifdef PIC
+#ifdef SHARED
   __libc_global_ctors ();
 #endif
 }
@@ -73,9 +77,6 @@ init1 (int argc, char *arg0, ...)
   char **argv = &arg0;
   char **envp = &argv[argc + 1];
   struct hurd_startup_data *d;
-
-  __libc_argc = argc;
-  __libc_argv = argv;
 
   while (*envp)
     ++envp;
@@ -131,7 +132,6 @@ init (int *data)
   memset (threadvars, 0, sizeof threadvars);
   __hurd_threadvar_stack_offset = (unsigned long int) threadvars;
 
-  __environ = envp;
   while (*envp)
     ++envp;
   d = (void *) ++envp;
