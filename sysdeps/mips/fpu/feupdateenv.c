@@ -42,7 +42,7 @@ __feupdateenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
-#ifdef SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feupdateenv, __old_feupdateenv)
 compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif

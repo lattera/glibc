@@ -35,7 +35,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   /* Success.  */
   return 0;
 }
-#ifdef SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fegetexceptflag, __old_fegetexceptflag)
 compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
 #endif
