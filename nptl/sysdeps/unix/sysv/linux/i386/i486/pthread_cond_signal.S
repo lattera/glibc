@@ -42,9 +42,6 @@ __pthread_cond_signal:
 
 	pushl	%esi
 	pushl	%ebx
-#if cond_lock != 0
-	addl	$cond_lock, %ebx
-#endif
 
 	movl	12(%esp), %ebx
 
@@ -72,22 +69,16 @@ __pthread_cond_signal:
 	adcl	$0, wakeup_seq+4(%ebx)
 
 	/* Wake up one thread.  */
-	addl	$wakeup_seq-cond_lock, %ebx
+	addl	$wakeup_seq, %ebx
 	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	%ecx, %edx	/* movl $1, %edx */
 	ENTER_KERNEL
 
-	subl	$wakeup_seq-cond_lock, %ebx
-
 	/* Unlock.  */
 4:	LOCK
-#if cond_lock == 0
-	decl	(%ebx)
-#else
-	decl	cond_lock(%ebx)
-#endif
+	decl	cond_lock-wakeup_seq(%ebx)
 	jne	5f
 
 6:	xorl	%eax, %eax
@@ -107,11 +98,7 @@ __pthread_cond_signal:
 
 	/* Unlock in loop requires waekup.  */
 5:
-#if cond_lock == 0
-	movl	%ebx, %eax
-#else
-	leal	cond_lock(%ebx), %eax
-#endif
+	leal	cond_lock-wakeup_seq(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	6b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal

@@ -51,9 +51,6 @@ __pthread_cond_timedwait:
 
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
-#if cond_lock != 0
-	addl	$cond_lock, %ebx
-#endif
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -134,10 +131,10 @@ __pthread_cond_timedwait:
 	leal	4(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
-	addl	$wakeup_seq-cond_lock, %ebx
+	addl	$wakeup_seq, %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	subl	$wakeup_seq-cond_lock, %ebx
+	subl	$wakeup_seq, %ebx
 	movl	%eax, %esi
 
 	call	__pthread_disable_asynccancel

@@ -41,9 +41,6 @@
 __condvar_cleanup:
 	pushl	%ebx
 	movl	8(%esp), %ebx
-#if cond_lock != 0
-	addl	$cond_lock, %ebx
-#endif
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -70,7 +67,11 @@ __condvar_cleanup:
 	adcl	$0, woken_seq+4(%ebx)
 
 	LOCK
+#if cond_lock == 0
 	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
 	je	2f
 #if cond_lock == 0
 	movl	%ebx, %eax
@@ -96,9 +97,6 @@ __pthread_cond_wait:
 
 	xorl	%esi, %esi
 	movl	16(%esp), %ebx
-#if cond_lock != 0
-	addl	$cond_lock, %ebx
-#endif
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -153,10 +151,10 @@ __pthread_cond_wait:
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
-	addl	$wakeup_seq-cond_lock, %ebx
+	addl	$wakeup_seq, %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	subl	$wakeup_seq-cond_lock, %ebx
+	subl	$wakeup_seq, %ebx
 
 	call	__pthread_disable_asynccancel
 

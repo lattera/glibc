@@ -1,3 +1,12 @@
+2003-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Remove wrong
+	but inactive generalization.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
+	Minor optimization, remove one instruction.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Likewise.
+
 2003-02-04  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/fork.c: Correct order of parameters.
