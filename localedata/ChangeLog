@@ -1,3 +1,9 @@
+2002-05-06  Jungshik Shin  <jshin@mailaps.org>
+
+	* charmaps/UTF-8: Fix wcwidth for Hangul Conjoining medial vowels
+	and trailing consonant.
+	* charmaps/GB18030: Likewise
+
 2002-04-21  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/GB18030: Add Unicode planes 1 (scripts, symbols), 2 (CJK),

@@ -23,20 +23,26 @@ pcprofiledump=@BINDIR@/pcprofiledump
 
 # Print usage message.
 do_usage() {
-  echo >&2 $"Try \`xtrace --help' for more information."
+  printf $"Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\n"
+  exit 0
+}
+
+# Refer to --help option.
+help_info() {
+  printf >&2 $"Try \`xtrace --help' for more information.\n"
   exit 1
 }
 
 # Message for missing argument.
 do_missing_arg() {
-  echo >&2 $"xtrace: option \`$1' requires an argument"
-  do_usage
+  printf >&2 $"xtrace: option \`$1' requires an argument.\n"
+  help_info
 }
 
 # Print help message
 do_help() {
-  echo $"Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...
-Trace execution of program by printing currently executed function.
+  printf $"Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\n"
+  printf $"Trace execution of program by printing currently executed function.
 
      --data=FILE          Don't run the program, just print the data from FILE.
 
@@ -47,7 +53,7 @@ Trace execution of program by printing currently executed function.
 Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
-Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
+Report bugs using the \`glibcbug' script to <bugs@gnu.org>.\n"
   exit 0
 }
 
@@ -60,7 +66,7 @@ Written by Ulrich Drepper."
   exit 0
 }
 
-# Print out function name, file, and line number is a nice formatted way.
+# Print out function name, file, and line number in a nicely formatted way.
 format_line() {
   fct=$1
   file=${2%%:*}
@@ -100,23 +106,20 @@ while test $# -gt 0; do
   -? | --h | --he | --hel | --help)
     do_help
     ;;
-  --v | --ve | --ver | --vers | --versi | --versio | --version)
+  -V | --v | --ve | --ver | --vers | --versi | --versio | --version)
     do_version
+    ;;
+  --u | --us | --usa | --usag | --usage)
+    do_usage
     ;;
   --)
     # Stop processing arguments.
     shift
     break
     ;;
-  --help)
-    do_help
-    ;;
-  --version)
-    do_version
-    ;;
   --*)
-    echo >&2 $"xtrace: unrecognized option \`$1'"
-    do_usage
+    printf >&2 $"xtrace: unrecognized option \`$1'\n"
+    help_info
     ;;
   *)
     # Unknown option.  This means the rest is the program name and parameters.
@@ -128,25 +131,25 @@ done
 
 # See whether any arguments are left.
 if test $# -eq 0; then
-  echo >&2 $"No program name given"
-  do_usage
+  printf >&2 $"No program name given\n"
+  help_info
 fi
 
 # Determine the program name and check whether it exists.
 program=$1
 shift
 if test ! -f "$program"; then
-  echo >2& $"executable \`$program' not found"
-  do_usage
+  printf >2& $"executable \`$program' not found\n"
+  help_info
 fi
 if test ! -x "$program"; then
-  echo >&2 $"\`$program' is no executable"
-  do_usage
+  printf >&2 $"\`$program' is no executable\n"
+  help_info
 fi
 
 # We have two modes.  If a data file is given simply print the included data.
 printf "%-20s  %-*s  %6s\n" Function $(expr $COLUMNS - 30) File Line
-for i in $(seq 1 $COLUMNS); do echo -n -; done; echo
+for i in $(seq 1 $COLUMNS); do printf -; done; printf '\n'
 if test -n "$data"; then
   $pcprofiledump "$data" |
   sed 's/this = \([^,]*\).*/\1/' |
@@ -158,21 +161,26 @@ if test -n "$data"; then
     fi
   done
 else
-  fifo=$(mktemp -u ${TMPDIR:-/tmp}/xprof.XXXXXX)
+  fifo=$(mktemp -u ${TMPDIR:-/tmp}/xtrace.XXXXXX)
   mkfifo -m 0600 $fifo || exit 1
+  trap 'rm $fifo; exit 1' SIGINT SIGTERM SIGPIPE
+
   # Now start the program and let it write to the FIFO.
-  $TERMINAL_PROG -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read $fifo" &
+  $TERMINAL_PROG -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read < $fifo" &
   termpid=$!
-  $pcprofiledump $fifo |
-  sed 's/this = \([^,]*\).*/\1/' |
-  addr2line -fC -e $program |
+  $pcprofiledump -u $fifo |
+  while read line; do
+     echo $line |
+     sed 's/this = \([^,]*\).*/\1/' |
+     addr2line -fC -e $program
+  done |
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
       format_line $fct $file
     fi
   done
-  read -p "Press return to end the program."
+  read -p "Press return here to close $TERMINAL_PROG($program)."
   echo > $fifo
   rm $fifo
 fi
