@@ -32,6 +32,58 @@
 typedef void (*fini_t) (void);
 
 
+#ifdef USE_TLS
+/* Returns true we an non-empty was found.  */
+static bool
+remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp)
+{
+  if (idx - disp >= listp->len)
+    {
+      /* There must be a next entry.  Otherwise would the index be wrong.  */
+      assert (listp->next != NULL);
+
+      if (remove_slotinfo (idx, listp->next, disp + listp->len))
+	return true;
+
+      /* No non-empty entry.  Search from the end of this elements
+	 slotinfo array.  */
+      idx = disp + listp->len;
+    }
+  else
+    {
+      struct link_map *old_map = listp->slotinfo[idx - disp].map;
+      assert (old_map != NULL);
+
+      /* Mark the entry as unused.  */
+      listp->slotinfo[idx - disp].gen = GL(dl_tls_generation) + 1;
+      listp->slotinfo[idx - disp].map = NULL;
+
+      /* If this is not the last currently used entry no need to look
+	 further.  */
+      if (old_map->l_tls_modid != GL(dl_tls_max_dtv_idx))
+	return true;
+
+      assert (old_map->l_tls_modid == GL(dl_tls_max_dtv_idx));
+    }
+
+  while (idx - disp > disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0)
+    {
+      --idx;
+
+      if (listp->slotinfo[idx - disp].map != NULL)
+	{
+	  /* Found a new last used index.  */
+	  GL(dl_tls_max_dtv_idx) = idx;
+	  return true;
+	}
+    }
+
+  /* No non-entry in this list element.  */
+  return false;
+}
+#endif
+
+
 void
 internal_function
 _dl_close (void *_map)
@@ -214,25 +266,12 @@ _dl_close (void *_map)
 	     TLS.  */
 	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
 	    {
-	      /* Locate the entry in the slotinfo array.  */
-	      size_t idx = imap->l_tls_modid;
-	      struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
-
-	      while (idx >= listp->len)
-		{
-		  idx -= listp->len;
-		  listp = listp->next;
-		}
-
-	      listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
-	      listp->slotinfo[idx].map = NULL;
-
 	      any_tls = true;
 
-	      if (imap->l_tls_modid == GL(dl_tls_max_dtv_idx))
-		--GL(dl_tls_max_dtv_idx);
-	      else
-		GL(dl_tls_dtv_gaps) = true;
+	      if (! remove_slotinfo (imap->l_tls_modid,
+				     GL(dl_tls_dtv_slotinfo_list), 0))
+		/* All dynamically loaded modules with TLS are unloaded.  */
+		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
 	    }
 #endif
 

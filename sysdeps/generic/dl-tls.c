@@ -29,14 +29,15 @@
 /* We don't need any of this if TLS is not supported.  */
 #ifdef USE_TLS
 
-#include <dl-tls.h>
-#include <ldsodefs.h>
+# include <dl-tls.h>
+# include <ldsodefs.h>
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATED	((void *) -1l)
 
 
 /* Out-of-memory handler.  */
+# ifdef SHARED
 static void
 __attribute__ ((__noreturn__))
 oom (void)
@@ -52,11 +53,12 @@ cannot allocate memory for thread-local data: ABORT\n";
   /* Just in case something goes wrong with the kill.  */
   while (1)
     {
-# ifdef ABORT_INSTRUCTION
+#  ifdef ABORT_INSTRUCTION
       ABORT_INSTRUCTION;
-# endif
+#  endif
     }
 }
+# endif
 
 
 
@@ -75,16 +77,20 @@ _dl_next_tls_modid (void)
 	 start since there are no gaps at that time.  Therefore it
 	 does not matter that the dl_tls_dtv_slotinfo is not allocated
 	 yet when the function is called for the first times.  */
-      result = GL(dl_tls_static_nelem);
-      assert (result < GL(dl_tls_max_dtv_idx));
+      result = GL(dl_tls_static_nelem) + 1;
+      /* If the following would not be true we mustn't have assumed
+	 there is a gap.  */
+      assert (result <= GL(dl_tls_max_dtv_idx));
       do
 	{
 	  while (result - disp < runp->len)
-	    if (runp->slotinfo[result - disp].map == NULL)
-	      break;
+	    {
+	      if (runp->slotinfo[result - disp].map == NULL)
+		break;
 
-	  ++result;
-	  assert (result <= GL(dl_tls_max_dtv_idx) + 1);
+	      ++result;
+	      assert (result <= GL(dl_tls_max_dtv_idx) + 1);
+	    }
 
 	  if (result - disp < runp->len)
 	    break;
@@ -93,11 +99,11 @@ _dl_next_tls_modid (void)
 	}
       while ((runp = runp->next) != NULL);
 
-      if (result >= GL(dl_tls_max_dtv_idx) + 1)
+      if (result >= GL(dl_tls_max_dtv_idx))
 	{
 	  /* The new index must indeed be exactly one higher than the
 	     previous high.  */
-	  assert (result == GL(dl_tls_max_dtv_idx) + 1);
+	  assert (result == GL(dl_tls_max_dtv_idx));
 
 	  /* There is no gap anymore.  */
 	  GL(dl_tls_dtv_gaps) = false;

@@ -1,5 +1,21 @@
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (remove_slotinfo): New function.  Handles everything
+	for removing reference of module in slotinfo list.
+	(_dl_close): Use remove_slotinfo.
+	* sysdeps/generic/dl-tls.c: General pretty printing.
+	(oom): Define only if SHARED.
+	(_dl_next_tls_modid): Correct starting point for the case we assume
+	there is a gap.  Add missing instruction grouping (doh!).  Correct
+	tests for reaching maximum index.
+	* elf/Makefile: Add rules to build and run tst-tls7.
+	* elf/tst-tls7.c: New file.
+	* elf/tst-tlsmod3.c: New file.
+
+	* elf/tst-tlsmod1.c: Move #include "tls-macros.h" instead #ifdef
+	USE_TLS.
+	* elf/tst-tlsmod2.c: Likewise.
+
 	* elf/dl-close.c (_dl_close): When closing an object using TLS
 	either decrement dl_tls_max_dtv_idx or set dl_tls_dtv_gaps to
 	true.  Increment dl_tls_generation only if we closed any TLS-using

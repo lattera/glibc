@@ -1,9 +1,10 @@
 #include <stdio.h>
 
 #include <tls.h>
-#include "tls-macros.h"
 
 #ifdef USE_TLS
+#include "tls-macros.h"
+
 
 COMMON_INT_DEF(foo);
 
