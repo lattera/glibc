@@ -166,7 +166,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       /* We write the dataset before inserting it to the database
 	 since while inserting this thread might block and so would
 	 unnecessarily let the receiver wait.  */
-      written = write (fd, &data->resp, total);
+      written = TEMP_FAILURE_RETRY (write (fd, &data->resp, total));
 
       /* Compute the timeout time.  */
       t += db->postimeout;
@@ -183,7 +183,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       pthread_rwlock_unlock (&db->lock);
     }
 
-  if (written != total && debug_level > 0)
+  if (__builtin_expect (written != total, 0) && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

@@ -203,9 +203,10 @@ invalidate_cache (char *key)
     number = pwddb;
   else if (strcmp (key, "group") == 0)
     number = grpdb;
-  else if (strcmp (key, "hosts") == 0)
+  else if (__builtin_expect (strcmp (key, "hosts"), 0) == 0)
     number = hstdb;
-  else return;
+  else
+    return;
 
   if (dbs[number].enabled)
     prune_cache (&dbs[number], LONG_MAX);
@@ -216,11 +217,11 @@ invalidate_cache (char *key)
 static void
 handle_request (int fd, request_header *req, void *key, uid_t uid)
 {
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level, 0) > 0)
     dbg_log (_("handle_request: request received (Version = %d)"),
 	     req->version);
 
-  if (req->version != NSCD_VERSION)
+  if (__builtin_expect (req->version, NSCD_VERSION) != NSCD_VERSION)
     {
       if (debug_level > 0)
 	dbg_log (_("\
@@ -229,12 +230,13 @@ cannot handle old request version %d; current version is %d"),
       return;
     }
 
-  if (req->type >= GETPWBYNAME && req->type <= LASTDBREQ)
+  if (__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
+      && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
     {
       struct hashentry *cached;
       struct database *db = &dbs[serv2db[req->type]];
 
-      if (debug_level > 0)
+      if (__builtin_expect (debug_level, 0) > 0)
 	{
 	  if (req->type == GETHOSTBYADDR || req->type == GETHOSTBYADDRv6)
 	    {
@@ -256,7 +258,7 @@ cannot handle old request version %d; current version is %d"),
 	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
 					 db->disabled_iov->iov_len))
 	      != db->disabled_iov->iov_len
-	      && debug_level > 0)
+	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */
 	      char buf[256];
@@ -278,7 +280,7 @@ cannot handle old request version %d; current version is %d"),
 	  /* Hurray it's in the cache.  */
 	  if (TEMP_FAILURE_RETRY (write (fd, cached->packet, cached->total))
 	      != cached->total
-	      && debug_level > 0)
+	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */
 	      char buf[256];
@@ -293,7 +295,7 @@ cannot handle old request version %d; current version is %d"),
 
       pthread_rwlock_unlock (&db->lock);
     }
-  else if (debug_level > 0)
+  else if (__builtin_expect (debug_level, 0) > 0)
     {
       if (req->type == INVALIDATE)
 	dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
@@ -425,7 +427,7 @@ nscd_run (void *p)
 	  char buf[256];
 	  uid_t uid = 0;
 
-	  if (fd < 0)
+	  if (__builtin_expect (fd, 0) < 0)
 	    {
 	      dbg_log (_("while accepting connection: %s"),
 		       strerror_r (errno, buf, sizeof (buf)));
@@ -433,8 +435,9 @@ nscd_run (void *p)
 	    }
 
 	  /* Now read the request.  */
-	  if (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
-	      != sizeof (req))
+	  if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, &req,
+							  sizeof (req)))
+				!= sizeof (req), 0))
 	    {
 	      if (debug_level > 0)
 		dbg_log (_("short read while reading request: %s"),
@@ -469,7 +472,8 @@ nscd_run (void *p)
 	  /* It should not be possible to crash the nscd with a silly
 	     request (i.e., a terribly large key).  We limit the size
 	     to 1kb.  */
-	  if (req.key_len < 0 || req.key_len > 1024)
+	  if (__builtin_expect (req.key_len, 1) < 0
+	      || __builtin_expect (req.key_len, 1) > 1024)
 	    {
 	      if (debug_level > 0)
 		dbg_log (_("key length in request too long: %d"), req.key_len);
@@ -481,8 +485,9 @@ nscd_run (void *p)
 	      /* Get the key.  */
 	      char keybuf[req.key_len];
 
-	      if (TEMP_FAILURE_RETRY (read (fd, keybuf, req.key_len))
-		  != req.key_len)
+	      if (__builtin_expect (TEMP_FAILURE_RETRY (read (fd, keybuf,
+							      req.key_len))
+				    != req.key_len, 0))
 		{
 		  if (debug_level > 0)
 		    dbg_log (_("short read while reading request key: %s"),

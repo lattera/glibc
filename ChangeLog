@@ -1,7 +1,8 @@
 2001-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c: Print messages caused by user application
-	only if debug_level > 0.
+	only if debug_level > 0.  Add little performance improvements.
+	Use TEMP_FAILURE_RETRY around write calls.
 	* nscd/grpcache.c: Likewise.
 	* nscd/hstcache.c: Likewise.
 	* nscd/pwdcache.c: Likewise.
