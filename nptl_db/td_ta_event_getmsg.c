@@ -43,11 +43,11 @@ td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
 		 &addr, sizeof (struct pthread *)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* Read the even structure from the target.  */
   if (addr == 0)
+    /* Nothing waiting.  */
     return TD_NOMSG;
 
-  /* Read the even structure from the target.  */
+  /* Read the event structure from the target.  */
   td_eventbuf_t event;
   if (ps_pdread (ta->ph, (char *) addr + offsetof (struct pthread, eventbuf),
 		 &event, sizeof (td_eventbuf_t)) != PS_OK)
@@ -73,12 +73,13 @@ td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
 
   /* Store the pointer in the list head variable.  */
   if (ps_pdwrite (ta->ph, ta->pthread_last_event,
-		 addr, sizeof (struct pthread *)) != PS_OK)
+		  &next, sizeof (struct pthread *)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Clear the next pointer in the current descriptor.  */
+  next = NULL;
   if (ps_pdwrite (ta->ph, (char *) addr + offsetof (struct pthread, nextevent),
-		  NULL, sizeof (struct pthread *)) != PS_OK)
+		  &next, sizeof (struct pthread *)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   return TD_OK;

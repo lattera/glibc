@@ -1,3 +1,10 @@
+2002-12-06  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_event_getmsg.c (td_ta_event_getmsg): Write the NEXT pointer
+	into the inferior's __pthread_last_event variable, not a word from
+	an inferior address used in the parent.  Pass the address of a
+	null word to ps_pdwrite, not a null pointer.
+
 2002-12-04  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_get_info.c (td_thr_get_info): ti_tid is pthread_t, not a PID.
