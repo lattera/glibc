@@ -1,3 +1,12 @@
+2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (glob_in_dir): Don't blindly trust
+	readdir results; for symlinks or files of unknown type check using
+	stat whether the file exists.
+
+	* posix/tst-gnuglob.c (find_file): Handle leading "./".  Fix
+	recognition of files.
+
 2004-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tzfile.c (tzfile_mtime): New variable.

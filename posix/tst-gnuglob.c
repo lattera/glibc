@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 
 
-/* #define DEBUG */
+// #define DEBUG
 #ifdef DEBUG
 # define PRINTF(fmt, args...) printf (fmt, ##args)
 #else
@@ -106,6 +106,9 @@ find_file (const char *s)
   if (strcmp (s, ".") == 0)
     return 0;
 
+  if (s[0] == '.' && s[1] == '/')
+    s += 2;
+
   while (*s != '\0')
     {
       char *endp = strchrnul (s, '/');
@@ -126,6 +129,10 @@ find_file (const char *s)
 	  errno = ENOENT;
 	  return -1;
 	}
+
+      if (*endp == '\0')
+	return idx + 1;
+
       if (filesystem[idx].type != DT_DIR
 	  && (idx + 1 >= nfiles
 	      || filesystem[idx].level >= filesystem[idx + 1].level))
@@ -135,9 +142,6 @@ find_file (const char *s)
 	}
 
       ++idx;
-
-      if (*endp == '\0')
-	return idx;
 
       s = endp + 1;
       ++level;

@@ -1273,6 +1273,34 @@ weak_alias (__glob_pattern_p, glob_pattern_p)
 #endif /* !GLOB_ONLY_P */
 
 
+/* We put this in a separate function mainly to allow the memory
+   allocated with alloca to be recycled.  */
+#if !defined _LIBC || !defined GLOB_ONLY_P
+static int
+link_exists_p (const char *dir, size_t dirlen, const char *fname,
+	       glob_t *pglob, int flags)
+{
+  size_t fnamelen = strlen (fname);
+  char *fullname = (char *) __alloca (dirlen + 1 + fnamelen + 1);
+  struct stat st;
+  struct stat64 st64;
+
+# ifdef HAVE_MEMPCPY
+  mempcpy (mempcpy (mempcpy (fullname, dir, dirlen), "/", 1),
+	   fname, fnamelen + 1);
+# else
+  memcpy (fullname, dir, dirlen);
+  fullname[dirlen] = '/';
+  memcpy (&fullname[dirlen + 1], fname, fnamelen + 1);
+# endif
+
+  return (((flags & GLOB_ALTDIRFUNC)
+	   ? (*pglob->gl_stat) (fullname, &st)
+	   : __stat64 (fullname, &st64)) == 0);
+}
+#endif
+
+
 /* Like `glob', but PATTERN is a final pathname component,
    and matches are searched for in DIRECTORY.
    The GLOB_NOSORT bit in FLAGS is ignored.  No sorting is ever done.
@@ -1285,6 +1313,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
      int (*errfunc) (const char *, int);
      glob_t *pglob;
 {
+  size_t dirlen = strlen (directory);
   __ptr_t stream = NULL;
   struct globlink
     {
@@ -1315,7 +1344,6 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       struct stat64 st64;
 # endif
       size_t patlen = strlen (pattern);
-      size_t dirlen = strlen (directory);
       char *fullname = (char *) __alloca (dirlen + 1 + patlen + 1);
 
 # ifdef HAVE_MEMPCPY
@@ -1428,22 +1456,32 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
 		  if (fnmatch (pattern, name, fnm_flags) == 0)
 		    {
-		      struct globlink *new = (struct globlink *)
-			__alloca (sizeof (struct globlink));
-		      len = NAMLEN (d);
-		      new->name = (char *) malloc (len + 1);
-		      if (new->name == NULL)
-			goto memory_error;
-#ifdef HAVE_MEMPCPY
-		      *((char *) mempcpy ((__ptr_t) new->name, name, len))
-			= '\0';
-#else
-		      memcpy ((__ptr_t) new->name, name, len);
-		      new->name[len] = '\0';
+		      /* If the file we found is a symlink we have to
+			 make sure the target file exists.  */
+		      if (
+#ifdef HAVE_D_TYPE
+			  (d->d_type != DT_UNKNOWN && d->d_type != DT_LNK) ||
 #endif
-		      new->next = names;
-		      names = new;
-		      ++nfound;
+			  link_exists_p (directory, dirlen, name, pglob,
+					 flags))
+			{
+			  struct globlink *new = (struct globlink *)
+			    __alloca (sizeof (struct globlink));
+			  len = NAMLEN (d);
+			  new->name = (char *) malloc (len + 1);
+			  if (new->name == NULL)
+			    goto memory_error;
+#ifdef HAVE_MEMPCPY
+			  *((char *) mempcpy ((__ptr_t) new->name, name, len))
+			    = '\0';
+#else
+			  memcpy ((__ptr_t) new->name, name, len);
+			  new->name[len] = '\0';
+#endif
+			  new->next = names;
+			  names = new;
+			  ++nfound;
+			}
 		    }
 		}
 	    }
