@@ -1,3 +1,8 @@
+2001-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Fail if we
+	cannot return as many values as the user asked for.
+
 2001-02-11  Andreas Jaeger  <aj@suse.de>
 
 	* manual/resource.texi (Memory Resources): Fix typo.
