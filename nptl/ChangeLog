@@ -1,5 +1,8 @@
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Use correct
+	amount of stack correction.
+
 	* tst-fork4.c: Use test-skeleton.c.
 
 2003-03-14  Roland McGrath  <roland@redhat.com>
