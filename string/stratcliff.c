@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -192,7 +192,25 @@ main (int argc, char *argv[])
 	    }
         }
 
-      /* strncpy test */
+      /* strncpy tests */
+      adr[size-1] = 'T';
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+	{
+	  size_t len;
+
+	  for (len = 0; len < size - outer; ++len)
+	    {
+	      if (strncpy (dest, &adr[outer], len) != dest
+		  || memcmp (dest, &adr[outer], len) != 0)
+		{
+		  printf ("outer strncpy flunked for outer = %d, len = %Zd\n",
+			  outer, len);
+		  result = 1;
+		}
+	    }
+        }
+      adr[size-1] = '\0';
+
       for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
         {
           for (inner = MAX (outer, size - 64); inner < size; ++inner)
@@ -210,6 +228,16 @@ main (int argc, char *argv[])
 			  && strlen (dest) != (inner - outer)))
 		    {
 		      printf ("strncpy flunked for outer = %d, inner = %d, len = %Zd\n",
+			      outer, inner, len);
+		      result = 1;
+		    }
+		  if (strncpy (dest + 1, &adr[outer], len) != dest + 1
+		      || memcmp (dest + 1, &adr[outer],
+				 MIN (inner - outer, len)) != 0
+		      || (inner - outer < len
+			  && strlen (dest + 1) != (inner - outer)))
+		    {
+		      printf ("strncpy+1 flunked for outer = %d, inner = %d, len = %Zd\n",
 			      outer, inner, len);
 		      result = 1;
 		    }
