@@ -1,3 +1,7 @@
+2001-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/gl.po: Update from translation team.
+
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Fix handling of
