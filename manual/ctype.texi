@@ -362,7 +362,7 @@ iswctype (wc, wctype ("alnum"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex alphabetic character
@@ -386,7 +386,7 @@ iswctype (wc, wctype ("alpha"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex control character
@@ -404,7 +404,7 @@ iswctype (wc, wctype ("cntrl"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex digit character
@@ -434,7 +434,7 @@ iswctype (wc, wctype ("digit"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex graphic character
@@ -453,7 +453,7 @@ iswctype (wc, wctype ("graph"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex lower-case character
@@ -471,7 +471,7 @@ iswctype (wc, wctype ("lower"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex printing character
@@ -489,7 +489,7 @@ iswctype (wc, wctype ("print"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex punctuation character
@@ -508,7 +508,7 @@ iswctype (wc, wctype ("punct"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex whitespace character
@@ -547,7 +547,7 @@ iswctype (wc, wctype ("space"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex upper-case character
@@ -565,7 +565,7 @@ iswctype (wc, wctype ("upper"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 @cindex hexadecimal digit character
@@ -585,7 +585,7 @@ iswctype (wc, wctype ("xdigit"))
 @end smallexample
 
 @pindex wctype.h
-This function is declared in @file{wctype.h}.
+It is declared in @file{wctype.h}.
 @end deftypefun
 
 The GNu C library provides also a function which is not defined in the
@@ -734,6 +734,13 @@ If @var{wc} is an upper-case letter, @code{towlower} returns the corresponding
 lower-case letter.  If @var{wc} is not an upper-case letter,
 @var{wc} is returned unchanged.
 
+@noindent
+@code{towlower} can be implemented using
+
+@smallexample
+towctrans (wc, wctrans ("tolower"))
+@end smallexample
+
 @pindex wctype.h
 @noindent
 This function is declared in @file{wctype.h}.
@@ -744,6 +751,13 @@ This function is declared in @file{wctype.h}.
 @deftypefun wint_t towupper (wint_t @var{wc})
 If @var{wc} is a lower-case letter, @code{towupper} returns the corresponding
 upper-case letter.  Otherwise @var{wc} is returned unchanged.
+
+@noindent
+@code{towupper} can be implemented using
+
+@smallexample
+towctrans (wc, wctrans ("toupper"))
+@end smallexample
 
 @pindex wctype.h
 @noindent

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -155,8 +155,8 @@ __gen_tempname (char *tmpl, int openit, int largefile)
       if (openit)
 	{
 	  fd = (largefile
-		? __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666)
-		: __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666));
+		? __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600)
+		: __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600));
 	  if (fd >= 0)
 	    {
 	      __set_errno (save_errno);

@@ -1,5 +1,7 @@
 1999-01-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/tempname.c: Open files with mode 0600.
+
 	* ctype/Versions [GLIBC_2.0]: Export __ctype32_b.
 	* include/wctype.h: Declare __iswctype.
 	* stdio-common/vfscanf.c (__vfscanf): Use __iswspace instead of
