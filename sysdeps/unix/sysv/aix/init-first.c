@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the XCOFF startup code.  AIX version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,9 +39,6 @@ static void init (int, char **, char **) __attribute__ ((unused));
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
-
-extern fpu_control_t _dl_fpu_control;
-extern int _dl_fpu_control_set;
 
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
