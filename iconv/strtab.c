@@ -68,6 +68,24 @@ static size_t ps;
 
 extern void *xmalloc (size_t n) __attribute_malloc__;
 
+/* Prototypes for our functions that are used from iconvconfig.c.  If
+   you change these, change also iconvconfig.c.  */
+/* Create new C string table object in memory.  */
+extern struct Strtab *strtabinit (void);
+
+/* Free resources allocated for C string table ST.  */
+extern void strtabfree (struct Strtab *st);
+
+/* Add string STR (length LEN is != 0) to C string table ST.  */
+extern struct Strent *strtabadd (struct Strtab *st, const char *str,
+				 size_t len);
+
+/* Finalize string table ST and store size in *SIZE and return a pointer.  */
+extern void *strtabfinalize (struct Strtab *st, size_t *size);
+
+/* Get offset in string table for string associated with SE.  */
+extern size_t strtaboffset (struct Strent *se);
+
 
 struct Strtab *
 strtabinit (void)
