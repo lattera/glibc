@@ -50,6 +50,12 @@ struct DWstruct { Wtype low, high;};
 #endif
 typedef union { struct DWstruct s; DWtype ll; } DWunion;
 
+/* Prototypes of exported functions.  */
+extern DWtype __divdi3 (DWtype u, DWtype v);
+extern DWtype __moddi3 (DWtype u, DWtype v);
+extern UDWtype __udivdi3 (UDWtype u, UDWtype v);
+extern UDWtype __umoddi3 (UDWtype u, UDWtype v);
+
 static UDWtype
 __udivmoddi4 (UDWtype n, UDWtype d, UDWtype *rp)
 {

@@ -33,8 +33,6 @@
 # include "dl-osinfo.h"
 #endif
 
-extern void __init_misc (int, char **, char **);
-
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));
 

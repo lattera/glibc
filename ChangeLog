@@ -1,3 +1,22 @@
+2002-03-03  Andreas Jaeger  <aj@suse.de>
+
+	* elf/nodlopenmod2.c: Provide prototype to avoid warning.
+	* elf/tst-tlsmod1.c: Likewise.
+
+	* posix/regcomp.c: Get regex.h from include dir for internal
+	prototypes.
+
+	* sysdeps/unix/sysv/linux/init-first.c: Move __init_misc prototype
+	to libc-internal.h and include it.
+	* include/libc-internal.h: Add __init_misc.
+
+	* misc/init-misc.c: Include libc-internal.h for prototypes.
+
+	* sysdeps/wordsize-32/divdi3.c: Add prototypes to avoid warnings.
+
+	* misc/error.c [_LIBC]: Include libioP.h for prototype of
+	_IO_putc_internal.
+
 2002-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c: Compatibility changes to allow using the code

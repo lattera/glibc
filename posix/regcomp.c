@@ -54,7 +54,7 @@
 # define gettext_noop(String) String
 #endif
 
-#include "regex.h"
+#include <regex.h>
 #include "regex_internal.h"
 
 static reg_errcode_t re_compile_internal (regex_t *preg, const char * pattern,

@@ -12,6 +12,7 @@ VAR_INT_DEF(bar);
 VAR_INT_DECL(baz);
 #endif
 
+extern int in_dso (void);
 
 int
 in_dso (void)

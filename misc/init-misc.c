@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <string.h>
+#include <libc-internal.h>
 
 char *__progname_full = (char *) "";
 char *__progname = (char *) "";

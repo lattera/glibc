@@ -26,4 +26,7 @@ extern hp_timing_t __get_clockfreq (void);
 /* Free all allocated resources.  */
 extern void __libc_freeres (void);
 
+/* Define and initialize `__progname' et. al.  */
+extern void __init_misc (int, char **, char **);
+
 #endif /* _LIBC_INTERNAL  */

@@ -74,6 +74,7 @@ unsigned int error_message_count;
 
 # define program_name program_invocation_name
 # include <errno.h>
+# include <libio/libioP.h>
 
 /* In GNU libc we want do not want to use the common name `error' directly.
    Instead make it a weak alias.  */

@@ -3,6 +3,7 @@
 #define _THREAD_DBP_H	1
 
 #include <string.h>
+#include <unistd.h>
 #include "proc_service.h"
 #include "thread_db.h"
 #include "../linuxthreads/descr.h"
