@@ -985,7 +985,7 @@ function, so there are no specific @code{errno} values.
 
 @comment sched.h
 @comment POSIX
-@deftypefun sched_yield (void)
+@deftypefun int sched_yield (void)
 
 This function voluntarily gives up the process' claim on the CPU.
 
