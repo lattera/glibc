@@ -93,7 +93,7 @@ xdr_pmaplist (xdrs, rp)
    */
   bool_t more_elements;
   int freeing = (xdrs->x_op == XDR_FREE);
-  struct pmaplist **next = NULL;
+  struct pmaplist *next = NULL;
 
   while (TRUE)
     {
@@ -108,12 +108,12 @@ xdr_pmaplist (xdrs, rp)
        * before we free the current object ...
        */
       if (freeing)
-	next = &((*rp)->pml_next);
+	next = (*rp)->pml_next;
       if (!INTUSE(xdr_reference) (xdrs, (caddr_t *) rp,
 				  (u_int) sizeof (struct pmaplist),
 				  (xdrproc_t) INTUSE(xdr_pmap)))
 	  return FALSE;
-      rp = freeing ? next : &((*rp)->pml_next);
+      rp = freeing ? &next : &((*rp)->pml_next);
     }
 }
 INTDEF(xdr_pmaplist)

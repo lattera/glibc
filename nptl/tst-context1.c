@@ -25,11 +25,20 @@
 #include <stdlib.h>
 #include <ucontext.h>
 
-
 #define N	4
+#if __WORDSIZE == 64
+#define GUARD_PATTERN 0xdeadbeafdeadbeaf
+#else
+#define GUARD_PATTERN 0xdeadbeaf
+#endif
+
+typedef struct {
+       ucontext_t uctx;
+       unsigned long	guard[3];
+   } tst_context_t;
 
 static char stacks[N][PTHREAD_STACK_MIN];
-static ucontext_t ctx[N][2];
+static tst_context_t ctx[N][2];
 static volatile int failures;
 
 
@@ -41,6 +50,29 @@ fct (long int n)
   /* Just to use the thread local descriptor.  */
   printf ("%ld: in %s now, on_stack = %p\n", n, __FUNCTION__, on_stack);
   errno = 0;
+
+  if (ctx[n][1].uctx.uc_link != &ctx[n][0].uctx)
+    {
+      printf ("context[%ld][1] uc_link damaged, = %p\n", n,
+	      ctx[n][1].uctx.uc_link);
+      exit (1);
+    }
+
+  if ((ctx[n][0].guard[0] != GUARD_PATTERN)
+  ||  (ctx[n][0].guard[1] != GUARD_PATTERN)
+  ||  (ctx[n][0].guard[2] != GUARD_PATTERN))
+    {
+      printf ("%ld: %s context[0] overflow detected!\n", n, __FUNCTION__);
+      ++failures;
+    }
+
+  if ((ctx[n][1].guard[0] != GUARD_PATTERN)
+  ||  (ctx[n][1].guard[1] != GUARD_PATTERN)
+  ||  (ctx[n][1].guard[2] != GUARD_PATTERN))
+    {
+      printf ("%ld: %s context[1] overflow detected!\n", n, __FUNCTION__);
+      ++failures;
+    }
 
   if (n < 0 || n >= N)
     {
@@ -61,7 +93,15 @@ tf (void *arg)
 {
   int n = (int) (long int) arg;
 
-  if (getcontext (&ctx[n][1]) != 0)
+  ctx[n][0].guard[0] = GUARD_PATTERN;
+  ctx[n][0].guard[1] = GUARD_PATTERN;
+  ctx[n][0].guard[2] = GUARD_PATTERN;
+
+  ctx[n][1].guard[0] = GUARD_PATTERN;
+  ctx[n][1].guard[1] = GUARD_PATTERN;
+  ctx[n][1].guard[2] = GUARD_PATTERN;
+
+  if (getcontext (&ctx[n][1].uctx) != 0)
     {
       printf ("%d: cannot get context: %m\n", n);
       exit (1);
@@ -69,14 +109,14 @@ tf (void *arg)
 
   printf ("%d: %s: before makecontext\n", n, __FUNCTION__);
 
-  ctx[n][1].uc_stack.ss_sp = stacks[n];
-  ctx[n][1].uc_stack.ss_size = PTHREAD_STACK_MIN;
-  ctx[n][1].uc_link = &ctx[n][0];
-  makecontext (&ctx[n][1], (void (*) (void)) fct, 1, (long int) n);
+  ctx[n][1].uctx.uc_stack.ss_sp = stacks[n];
+  ctx[n][1].uctx.uc_stack.ss_size = PTHREAD_STACK_MIN;
+  ctx[n][1].uctx.uc_link = &ctx[n][0].uctx;
+  makecontext (&ctx[n][1].uctx, (void (*) (void)) fct, 1, (long int) n);
 
   printf ("%d: %s: before swapcontext\n", n, __FUNCTION__);
 
-  if (swapcontext (&ctx[n][0], &ctx[n][1]) != 0)
+  if (swapcontext (&ctx[n][0].uctx, &ctx[n][1].uctx) != 0)
     {
       ++failures;
       printf ("%d: %s: swapcontext failed\n", n, __FUNCTION__);

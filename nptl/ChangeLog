@@ -1,3 +1,11 @@
+2004-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* tst-context1.c (GUARD_PATTERN): Defined.
+	(tst_context_t): Define struct containing ucontext_t & guard words.
+	(ctx): Declare as an array of tst_context_t.
+	(fct): Verify uc_link & guard words are still valid.
+	(tf): Initialize guard words in ctx.  Adjust ctx refs for new struct.
+
 2004-06-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
