@@ -249,12 +249,13 @@ build the GNU C library:
    * EGCS 1.1.1, 1.1 or 1.0.3
 
      The GNU C library can only be compiled with the GNU C compiler
-     family.  We recommend EGCS 1.0.3 or higher.  GCC 2.8.1 and older
-     versions of EGCS may have problems, particularly on non-Intel
-     architectures.  GCC 2.7.x has catastrophic bugs and cannot be used
-     at all.  (You can use GCC 2.7.x to compile programs that use GNU
-     libc, but you may have problems, particularly with the math
-     functions.)
+     family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
+     GCC 2.8.1 cannot be used due to an incompatible implementation of
+     some internal compiler support routines; see the FAQ for details.
+     GCC 2.7.x is simply too buggy.  You can use whatever compiler you
+     like to compile programs that use GNU libc, but be aware that both
+     GCC 2.7 and 2.8 have bugs in their floating-point support that may
+     be triggered by the math library.
 
      On Alpha machines you need at least EGCS 1.1.1.  Earlier versions
      don't work reliably.
@@ -262,7 +263,7 @@ build the GNU C library:
      For PPC you might need some patches even on top of the last EGCS
      version.  See the FAQ.
 
-   * GNU `binutils' 2.9.1, or 2.9.1.0.16
+   * GNU `binutils' 2.9.1, 2.9.1.0.16, or later 2.9.1.0.x release
 
      You must use GNU binutils (as and ld) if you want to build a shared
      library.  Even if you don't, we recommend you use them anyway.  No
@@ -270,9 +271,10 @@ build the GNU C library:
 
      The quality of binutils releases has varied a bit recently.  The
      bugs are in obscure features, but glibc uses quite a few of those.
-     2.9.1 and 2.9.1.0.16 are known to work.  Versions after 2.8.1.0.23
-     may or may not work.  Older versions definitely don't.  2.9.1.0.16
-     is required on some platforms, like PPC and Arm.
+     2.9.1, 2.9.1.0.16, and later 2.9.1.0.x releases are known to
+     work.  Versions after 2.8.1.0.23 may or may not work.  Older
+     versions definitely don't.  2.9.1.0.16 or higher is required on
+     some platforms, like PPC and Arm.
 
      For PPC you might need some patches even on top of the last
      binutils version.  See the FAQ.
@@ -298,7 +300,7 @@ build the GNU C library:
 
 If you change any of the `configure.in' files you will also need
 
-   * GNU `autoconf' 2.12
+   * GNU `autoconf' 2.12 or higher
 
 and if you change any of the message translation files you will need
 
@@ -367,19 +369,19 @@ Specific advice for Linux systems
 =================================
 
    If you are installing GNU libc on a Linux system, you need to have
-the header files from a development kernel around for reference.  You
-do not need to use the development kernel, just have its headers where
-glibc can get at them.  The easiest way to do this is to unpack a
-development kernel in a directory such as `/usr/src/linux-dev'.  In that
-directory, run `make config' and accept all the defaults.  Then
-configure glibc with the option
-`--with-headers=/usr/src/linux-dev/include'.  Use the latest
-development kernel you can get your hands on.
+the header files from a 2.2 kernel around for reference.  You do not
+need to use the 2.2 kernel, just have its headers where glibc can get
+at them.  The easiest way to do this is to unpack it in a directory
+such as `/usr/src/linux-2.2.1'.  In that directory, run `make config'
+and accept all the defaults.  Then run `make include/linux/version.h'.
+Finally, configure glibc with the option
+`--with-headers=/usr/src/linux-2.2.1/include'.  Use the most recent
+kernel you can get your hands on.
 
-   An alternate tactic is to unpack the development kernel and run
-`make config' as above.  Then rename or delete `/usr/include', create a
-new `/usr/include', and make the usual symbolic links of
-`/usr/include/linux' and `/usr/include/asm' into the development kernel
+   An alternate tactic is to unpack the 2.2 kernel and run `make
+config' as above.  Then rename or delete `/usr/include', create a new
+`/usr/include', and make the usual symbolic links of
+`/usr/include/linux' and `/usr/include/asm' into the 2.2 kernel
 sources.  You can then configure glibc with no special options.  This
 tactic is recommended if you are upgrading from libc5, since you need
 to get rid of the old header files anyway.

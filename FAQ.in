@@ -60,11 +60,11 @@ a local mirror first.
 
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
-egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
-(for powerpc see ?powerpc; for ARM see ?arm).
+egcs (1.0.3 and 1.1.1) should work with the GNU C library (for powerpc see
+?powerpc; for ARM see ?arm).
 
-{ZW} You may have problems if you try to mix code compiled with
-EGCS and with GCC 2.8.1. See ?exception for details.
+{ZW} Due to problems with C++ exception handling, you must use EGCS (any
+version) to compile version 2.1 of GNU libc.  See ?exception for details.
 
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -188,7 +188,7 @@ to the root of the 2.2 tree and do `make include/linux/version.h'.
 static arrays is very slow.  The compiler will eventually finish; give it
 time.
 
-The problem is fixed in egcs 1.1 but not in earlier releases.
+The problem is fixed in egcs 1.1.
 
 ??	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
@@ -562,8 +562,7 @@ libc.  It doesn't matter what compiler you use to compile your program.
 
 For glibc 2.1, we've chosen to do it the other way around: libc.so
 explicitly provides the EH functions.  This is to prevent other shared
-libraries from doing it.  You must therefore compile glibc 2.1 with EGCS
-unless you don't care about ever importing binaries from other systems.
+libraries from doing it.  You must therefore compile glibc 2.1 with EGCS.
 Again, it doesn't matter what compiler you use for your programs.
 
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using

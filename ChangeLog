@@ -1,3 +1,11 @@
+1999-02-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtoll.c: Add alias __strtoq_internal.
+	* stdlib/strtoull.c: Add alias __strtouq_internal.
+
+	* wcsmbs/mbrtowc.c: Correct logic testing for converted NUL
+	character.  Patch by Owen Taylor <otaylor@redhat.com>.
+
 1999-02-03  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/utimes.c (__utimes): Deal with TVP being NULL.

@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -80,7 +80,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
       || status == GCONV_FULL_OUTPUT)
     {
-      if (data.outbuf != outbuf && *(wchar_t *)data.outbuf == L'\0')
+      if (data.outbuf != outbuf && *(wchar_t *)outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
 	  assert (__mbsinit (data.statep));
