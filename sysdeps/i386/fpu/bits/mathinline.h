@@ -115,19 +115,19 @@
 # if __GNUC_PREREQ (2, 8)
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
-__signbitf (float __x)
+__signbitf (float __x) __THROW
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 __MATH_INLINE int
-__signbit (double __x)
+__signbit (double __x) __THROW
 {
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
 }
 __MATH_INLINE int
-__signbitl (long double __x)
+__signbitl (long double __x) __THROW
 {
   __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
@@ -189,11 +189,11 @@ __signbitl (long double __x)
 #endif
 
 #define __inline_mathop_decl_(float_type, func, op, params...) \
-  __MATH_INLINE float_type func (float_type);				      \
+  __MATH_INLINE float_type func (float_type) __THROW;			      \
   __inline_mathop_declNP_ (float_type, func, op, params)
 
 #define __inline_mathop_declNP_(float_type, func, op, params...) \
-  __MATH_INLINE float_type func (float_type __x)			      \
+  __MATH_INLINE float_type func (float_type __x) __THROW		      \
   {									      \
     register float_type __result;					      \
     __asm __volatile__ (op : "=t" (__result) : params);			      \
@@ -242,33 +242,33 @@ __signbitl (long double __x)
 #endif
 
 #define __inline_mathcode_(float_type, func, arg, code) \
-  __MATH_INLINE float_type func (float_type);				      \
+  __MATH_INLINE float_type func (float_type) __THROW;			      \
   __inline_mathcodeNP_(float_type, func, arg, code)
 
 #define __inline_mathcodeNP_(float_type, func, arg, code) \
-  __MATH_INLINE float_type func (float_type arg)			      \
+  __MATH_INLINE float_type func (float_type arg) __THROW		      \
   {									      \
     code;								      \
   }
 
 
 #define __inline_mathcode2_(float_type, func, arg1, arg2, code) \
-  __MATH_INLINE float_type func (float_type, float_type);		      \
+  __MATH_INLINE float_type func (float_type, float_type) __THROW;	      \
   __inline_mathcodeNP2_ (float_type, func, arg1, arg2, code)
 
 #define __inline_mathcodeNP2_(float_type, func, arg1, arg2, code) \
-  __MATH_INLINE float_type func (float_type arg1, float_type arg2)	      \
+  __MATH_INLINE float_type func (float_type arg1, float_type arg2) __THROW    \
   {									      \
     code;								      \
   }
 
 #define __inline_mathcode3_(float_type, func, arg1, arg2, arg3, code) \
-  __MATH_INLINE float_type func (float_type, float_type, float_type);	      \
+  __MATH_INLINE float_type func (float_type, float_type, float_type) __THROW; \
   __inline_mathcodeNP3_(float_type, func, arg1, arg2, arg3, code)
 
 #define __inline_mathcodeNP3_(float_type, func, arg1, arg2, arg3, code) \
   __MATH_INLINE float_type func (float_type arg1, float_type arg2,	      \
-				 float_type arg3)			      \
+				 float_type arg3) __THROW		      \
   {									      \
     code;								      \
   }
@@ -331,19 +331,19 @@ __inline_mathcode (__pow2, __x, \
   *__cosx = __cosr
 
 __MATH_INLINE void
-__sincos (double __x, double *__sinx, double *__cosx)
+__sincos (double __x, double *__sinx, double *__cosx) __THROW
 {
   __sincos_code;
 }
 
 __MATH_INLINE void
-__sincosf (float __x, float *__sinx, float *__cosx)
+__sincosf (float __x, float *__sinx, float *__cosx) __THROW
 {
   __sincos_code;
 }
 
 __MATH_INLINE void
-__sincosl (long double __x, long double *__sinx, long double *__cosx)
+__sincosl (long double __x, long double *__sinx, long double *__cosx) __THROW
 {
   __sincos_code;
 }
@@ -557,7 +557,7 @@ __inline_mathcodeNP (ceil, __x, \
   return __value
 
 __MATH_INLINE double
-ldexp (double __x, int __y)
+ldexp (double __x, int __y) __THROW
 {
   __ldexp_code;
 }
@@ -619,13 +619,13 @@ __inline_mathop_declNP (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
 #endif /* __FAST_MATH__ */
 
 __MATH_INLINE float
-ldexpf (float __x, int __y)
+ldexpf (float __x, int __y) __THROW
 {
   __ldexp_code;
 }
 
 __MATH_INLINE long double
-ldexpl (long double __x, int __y)
+ldexpl (long double __x, int __y) __THROW
 {
   __ldexp_code;
 }
@@ -643,17 +643,17 @@ __inline_mathopNP (rint, "frndint")
      : "=m" (__lrintres) : "t" (__x) : "st");				      \
   return __lrintres
 __MATH_INLINE long int
-lrintf (float __x)
+lrintf (float __x) __THROW
 {
   __lrint_code;
 }
 __MATH_INLINE long int
-lrint (double __x)
+lrint (double __x) __THROW
 {
   __lrint_code;
 }
 __MATH_INLINE long int
-lrintl (long double __x)
+lrintl (long double __x) __THROW
 {
   __lrint_code;
 }
@@ -666,17 +666,17 @@ lrintl (long double __x)
      : "=m" (__llrintres) : "t" (__x) : "st");				      \
   return __llrintres
 __MATH_INLINE long long int
-llrintf (float __x)
+llrintf (float __x) __THROW
 {
   __llrint_code;
 }
 __MATH_INLINE long long int
-llrint (double __x)
+llrint (double __x) __THROW
 {
   __llrint_code;
 }
 __MATH_INLINE long long int
-llrintl (long double __x)
+llrintl (long double __x) __THROW
 {
   __llrint_code;
 }
@@ -701,7 +701,7 @@ __inline_mathcodeNP2 (drem, __x, __y, \
 
 /* This function is used in the `isfinite' macro.  */
 __MATH_INLINE int
-__finite (double __x)
+__finite (double __x) __THROW
 {
   return (__extension__
 	  (((((union { double __d; int __i[2]; }) {__d: __x}).__i[1]

@@ -1,5 +1,5 @@
 /* Inline math functions for Alpha.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang.
 
@@ -60,7 +60,7 @@
 
 #define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\
-NAME (TYPE __x, TYPE __y)						\
+NAME (TYPE __x, TYPE __y) __THROW					\
 {									\
   TYPE __z;								\
   __asm ("cpys %1, %2, %0" : "=f" (__z) : "f" (__y), "f" (__x));	\
@@ -76,14 +76,14 @@ __inline_copysign(copysign, double)
 
 
 #if __GNUC_PREREQ (2, 8)
-__MATH_INLINE float __fabsf (float __x) { return __builtin_fabsf (__x); }
-__MATH_INLINE float fabsf (float __x) { return __builtin_fabsf (__x); }
-__MATH_INLINE double __fabs (double __x) { return __builtin_fabs (__x); }
-__MATH_INLINE double fabs (double __x) { return __builtin_fabs (__x); }
+__MATH_INLINE float __fabsf (float __x) __THROW { return __builtin_fabsf (__x); }
+__MATH_INLINE float fabsf (float __x) __THROW { return __builtin_fabsf (__x); }
+__MATH_INLINE double __fabs (double __x) __THROW { return __builtin_fabs (__x); }
+__MATH_INLINE double fabs (double __x) __THROW { return __builtin_fabs (__x); }
 #else
 #define __inline_fabs(NAME, TYPE)			\
 __MATH_INLINE TYPE					\
-NAME (TYPE __x)						\
+NAME (TYPE __x) __THROW					\
 {							\
   TYPE __z;						\
   __asm ("cpys $f31, %1, %0" : "=f" (__z) : "f" (__x));	\
@@ -104,7 +104,7 @@ __inline_fabs(fabs, double)
    must be integral, as this avoids unpleasant integer overflows.  */
 
 __MATH_INLINE float
-__floorf (float __x)
+__floorf (float __x) __THROW
 {
   /* Check not zero since floor(-0) == -0.  */
   if (__x != 0 && fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
@@ -130,7 +130,7 @@ __floorf (float __x)
 }
 
 __MATH_INLINE double
-__floor (double __x)
+__floor (double __x) __THROW
 {
   if (__x != 0 && fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
     {
@@ -148,26 +148,26 @@ __floor (double __x)
   return __x;
 }
 
-__MATH_INLINE float floorf (float __x) { return __floorf(__x); }
-__MATH_INLINE double floor (double __x) { return __floor(__x); }
+__MATH_INLINE float floorf (float __x) __THROW { return __floorf(__x); }
+__MATH_INLINE double floor (double __x) __THROW { return __floor(__x); }
 
 
-__MATH_INLINE float __fdimf (float __x, float __y)
+__MATH_INLINE float __fdimf (float __x, float __y) __THROW
 {
   return __x < __y ? 0.0f : __x - __y;
 }
 
-__MATH_INLINE float fdimf (float __x, float __y)
+__MATH_INLINE float fdimf (float __x, float __y) __THROW
 {
   return __x < __y ? 0.0f : __x - __y;
 }
 
-__MATH_INLINE double __fdim (double __x, double __y)
+__MATH_INLINE double __fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0.0 : __x - __y;
 }
 
-__MATH_INLINE double fdim (double __x, double __y)
+__MATH_INLINE double fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0.0 : __x - __y;
 }

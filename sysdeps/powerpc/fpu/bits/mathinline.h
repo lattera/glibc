@@ -1,5 +1,6 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,9 +46,9 @@
 #endif  /* __cplusplus */
 
 #ifdef __USE_ISOC99
-__MATH_INLINE long int lrint (double __x);
+__MATH_INLINE long int lrint (double __x) __THROW;
 __MATH_INLINE long int
-lrint (double __x)
+lrint (double __x) __THROW
 {
   union {
     double __d;
@@ -57,9 +58,9 @@ lrint (double __x)
   return __u.__ll[1];
 }
 
-__MATH_INLINE long int lrintf (float __x);
+__MATH_INLINE long int lrintf (float __x) __THROW;
 __MATH_INLINE long int
-lrintf (float __x)
+lrintf (float __x) __THROW
 {
   union {
     double __d;
@@ -69,16 +70,16 @@ lrintf (float __x)
   return __u.__ll[1];
 }
 
-__MATH_INLINE double fdim (double __x, double __y);
+__MATH_INLINE double fdim (double __x, double __y) __THROW;
 __MATH_INLINE double
-fdim (double __x, double __y)
+fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0 : __x - __y;
 }
 
-__MATH_INLINE float fdimf (float __x, float __y);
+__MATH_INLINE float fdimf (float __x, float __y) __THROW;
 __MATH_INLINE float
-fdimf (float __x, float __y)
+fdimf (float __x, float __y) __THROW
 {
   return __x < __y ? 0 : __x - __y;
 }

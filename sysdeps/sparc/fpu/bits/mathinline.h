@@ -1,5 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
 
@@ -144,7 +144,7 @@ __signbitl (long double __x)
 #endif /* sparc64 */
 
 __MATH_INLINE double
-sqrt(double __x)
+sqrt(double __x) __THROW
 {
   register double __r;
   __asm ("fsqrtd %1,%0" : "=f" (__r) : "f" (__x));
@@ -152,7 +152,7 @@ sqrt(double __x)
 }
 
 __MATH_INLINE float
-sqrtf(float __x)
+sqrtf(float __x) __THROW
 {
   register float __r;
   __asm ("fsqrts %1,%0" : "=f" (__r) : "f" (__x));
@@ -161,7 +161,7 @@ sqrtf(float __x)
 
 #if __WORDSIZE == 64
 __MATH_INLINE long double
-sqrtl(long double __x)
+sqrtl(long double __x) __THROW
 {
   long double __r;
   extern void _Qp_sqrt(long double *, __const__ long double *);
