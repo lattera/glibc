@@ -91,7 +91,7 @@ double: 1
 idouble: 1
 
 # ccos
-Test "Imaginary part of: ccos (-2 - 3 i) == -4.1896256909688072301 - 9.1092278937553365979 i":
+Test "Imaginary part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
 float: 1
 ifloat: 1
 Test "Real part of: ccos (0.75 + 1.25 i) == 1.38173873063425888530729933139078645 - 1.09193013555397466170919531722024128 i":
@@ -104,10 +104,10 @@ float: 1
 ifloat: 1
 
 # ccosh
-Test "Real part of: ccosh (-2 - 3 i) == -3.7245455049153225654 + 0.5118225699873846088 i":
+Test "Real part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
 float: 1
 ifloat: 1
-Test "Imaginary part of: ccosh (-2 - 3 i) == -3.7245455049153225654 + 0.5118225699873846088 i":
+Test "Imaginary part of: ccosh (-2 - 3 i) == -3.72454550491532256547397070325597253 + 0.511822569987384608834463849801875634 i":
 float: 1
 ifloat: 1
 Test "Real part of: ccosh (0.75 + 1.25 i) == 0.408242591877968807788852146397499084 + 0.780365930845853240391326216300863152 i":
@@ -142,7 +142,7 @@ ifloat: 1
 Test "Imaginary part of: clog10 (-0 - inf i) == inf - pi/2*log10(e) i":
 float: 1
 ifloat: 1
-Test "Imaginary part of: clog10 (-2 - 3 i) == 0.5569716761534183846 - 0.9375544629863747085 i":
+Test "Imaginary part of: clog10 (-2 - 3 i) == 0.556971676153418384603252578971164214 - 0.937554462986374708541507952140189646 i":
 double: 1
 float: 5
 idouble: 1
@@ -236,7 +236,7 @@ idouble: 2
 ifloat: 2
 
 # csinh
-Test "Imaginary part of: csinh (-2 - 3 i) == 3.5905645899857799520 - 0.5309210862485198052 i":
+Test "Imaginary part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
 double: 1
 idouble: 1
 Test "Real part of: csinh (0.75 + 1.25 i) == 0.259294854551162779153349830618433028 + 1.22863452409509552219214606515777594 i":
@@ -255,7 +255,7 @@ float: 1
 ifloat: 1
 
 # ctan
-Test "Real part of: ctan (-2 - 3 i) == 0.0037640256415042482 - 1.0032386273536098014 i":
+Test "Real part of: ctan (-2 - 3 i) == 0.376402564150424829275122113032269084e-2 - 1.00323862735360980144635859782192726 i":
 double: 1
 idouble: 1
 Test "Imaginary part of: ctan (0.75 + 1.25 i) == 0.160807785916206426725166058173438663 + 0.975363285031235646193581759755216379 i":
@@ -263,7 +263,7 @@ double: 1
 idouble: 1
 
 # ctanh
-Test "Real part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
+Test "Real part of: ctanh (-2 - 3 i) == -0.965385879022133124278480269394560686 + 0.988437503832249372031403430350121098e-2 i":
 double: 1
 float: 2
 idouble: 1
@@ -437,12 +437,12 @@ idouble: 1
 ifloat: 1
 
 # lgamma
-Test "lgamma (0.7) == 0.26086724653166651439":
+Test "lgamma (0.7) == 0.260867246531666514385732417016759578":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "lgamma (1.2) == -0.853740900033158497197e-1":
+Test "lgamma (1.2) == -0.853740900033158497197028392998854470e-1":
 double: 1
 float: 2
 idouble: 1
@@ -497,7 +497,7 @@ ifloat: 1
 Test "tgamma (0.5) == sqrt (pi)":
 float: 1
 ifloat: 1
-Test "tgamma (0.7) == 1.29805533264755778568":
+Test "tgamma (0.7) == 1.29805533264755778568117117915281162":
 double: 1
 float: 1
 idouble: 1

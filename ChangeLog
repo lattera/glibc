@@ -1,3 +1,18 @@
+2003-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update.
+	* sysdeps/arm/libm-test-ulps: Update.
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+	* sysdeps/ia64/fpu/libm-test-ulps: Update.
+	* sysdeps/mips/fpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Update.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Update.
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2003-03-22  Roland McGrath  <roland@redhat.com>
 
 	* include/atomic.h: Put parens around all macro arguments.
