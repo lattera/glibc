@@ -657,7 +657,7 @@ file.  But subsequent output at that position will extend the file.
 Characters between the previous end of file and the new position are
 filled with zeros.  Extending the file in this way can create a
 ``hole'': the blocks of zeros are not actually allocated on disk, so the
-file takes up less space than it appears so; it is then called a
+file takes up less space than it appears to; it is then called a
 ``sparse file''.
 @cindex sparse files
 @cindex holes in files
@@ -1843,10 +1843,10 @@ If @code{aio_read} returns zero, the current status of the request
 can be queried using @code{aio_error} and @code{aio_return} functions.
 As long as the value returned by @code{aio_error} is @code{EINPROGRESS}
 the operation has not yet completed.  If @code{aio_error} returns zero,
-the operation successfully terminated, otherwise the value is to be 
-interpreted as an error code.  If the function terminated, the result of 
-the operation can be obtained using a call to @code{aio_return}.  The 
-returned value is the same as an equivalent call to @code{read} would 
+the operation successfully terminated, otherwise the value is to be
+interpreted as an error code.  If the function terminated, the result of
+the operation can be obtained using a call to @code{aio_return}.  The
+returned value is the same as an equivalent call to @code{read} would
 have returned.  Possible error codes returned by @code{aio_error} are:
 
 @table @code

@@ -1,5 +1,7 @@
 2000-10-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makeconfig (ETAGS): Remove -T flag.
+
 	* elf/dl-load.c (open_verify): Only try to load ET_DYN and ET_EXEC
 	objects.  Reject all other types.
 	(_dl_map_object_from_fd): Optimize a bit.

@@ -527,7 +527,7 @@ ifndef +mkdep
 endif
 
 # The program that makes Emacs-style TAGS files.
-ETAGS	:= etags -T
+ETAGS	:= etags
 
 # The `m4' macro processor; this is used by sysdeps/sparc/Makefile (and
 # perhaps others) to preprocess assembly code in some cases.
