@@ -179,7 +179,7 @@ __gen_tempname (char *tmpl, int kind)
 	     succeeds if __xstat fails because the name does not exist.
 	     Note the continue to bypass the common logic at the bottom
 	     of the loop.  */
-	  if (__xstat64 (_STAT_VER, tmpl, &st) < 0)
+	  if (__lxstat64 (_STAT_VER, tmpl, &st) < 0)
 	    {
 	      if (errno == ENOENT)
 		{

@@ -1,3 +1,7 @@
+2000-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/tempname.c (__gen_tempname): Use __lxstat and __xstat.
+
 2000-09-10  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/__longjmp.S (__longjmp): Correct %fp
