@@ -154,8 +154,8 @@
 	  "bra 2f\n\t"							      \
 	  " add %1,%0\n\t"						      \
 	  ".align 2\n\t"						      \
-	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
 	  "1: .long " #x "@gottpoff\n\t"				      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
 	  "2:"								      \
 	  : "=r" (__l), "=r" (__tp) : : "r0", "r12");			      \
      __l; })
@@ -171,17 +171,20 @@
 	  "add r0,r1\n\t"						      \
 	  "jsr @r1\n\t"							      \
 	  " add r12,r4\n\t"						      \
-	  "mov.l 3f,%0\n\t"						      \
 	  "bra 4f\n\t"							      \
-	  " add r0,%0\n\t"						      \
+	  " nop\n\t"							      \
 	  ".align 2\n\t"						      \
-	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
 	  "1: .long " #x "@tlsldm\n\t"					      \
 	  "2: .long __tls_get_addr@plt\n\t"				      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
+	  "4: mov.l 3f,%0\n\t"						      \
+	  "bra 5f\n\t"							      \
+	  " add r0,%0\n\t"						      \
+	  ".align 2\n\t"						      \
 	  "3: .long " #x "@dtpoff\n\t"					      \
-	  "4:"								      \
+	  "5:"								      \
 	  : "=r" (__l) : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",    \
-			   "r12", "pr", "t");					      \
+			   "r12", "pr", "t");				      \
      __l; })
 
 # define TLS_GD(x) \
@@ -198,12 +201,12 @@
 	  "bra 3f\n\t"							      \
 	  " mov r0,%0\n\t"						      \
 	  ".align 2\n\t"						      \
-	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
 	  "1: .long " #x "@tlsgd\n\t"					      \
 	  "2: .long __tls_get_addr@plt\n\t"				      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
 	  "3:"								      \
 	  : "=r" (__l) : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",    \
-			   "r12", "pr", "t");					      \
+			   "r12", "pr", "t");				      \
      __l; })
 
 #else

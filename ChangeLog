@@ -1,3 +1,11 @@
+2002-10-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* elf/tls-macros.h: Fix SH version of macros so as to match ABI syntax.
+
+2002-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (RELEASE): Change to stable.
+
 2002-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/_exit.c (__syscall_exit,
@@ -7,4 +15,4 @@
 
 	* glibc 2.3 released.
 
-See ChangeLog.12 for earlier changes.
+See ChangeLog.13 for earlier changes.
