@@ -1,3 +1,8 @@
+2001-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (rint_test): Add a few more tests for round
+	to even rounding.
+
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/pthread.h-data: Correct return type of pthread_exit.

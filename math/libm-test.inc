@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -3616,11 +3616,17 @@ rint_test (void)
   TEST_f_f (rint, plus_infty, plus_infty);
   TEST_f_f (rint, minus_infty, minus_infty);
 
-  /* Default rounding mode is round to nearest.  */
+  /* Default rounding mode is round to even.  */
   TEST_f_f (rint, 0.5, 0.0);
   TEST_f_f (rint, 1.5, 2.0);
+  TEST_f_f (rint, 2.5, 2.0);
+  TEST_f_f (rint, 3.5, 4.0);
+  TEST_f_f (rint, 4.5, 4.0);
   TEST_f_f (rint, -0.5, -0.0);
   TEST_f_f (rint, -1.5, -2.0);
+  TEST_f_f (rint, -2.5, -2.0);
+  TEST_f_f (rint, -3.5, -4.0);
+  TEST_f_f (rint, -4.5, -4.0);
 
   END (rint);
 }
