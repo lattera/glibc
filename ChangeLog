@@ -1,4 +1,8 @@
-2004-12-16  Andreas Jaeger  <aj@suse.de>
+2004-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
+2004-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc (atan2_test): Compute value with 36 digits.
 	* sysdeps/alpha/fpu/libm-test-ulps: Adjust for changed result.

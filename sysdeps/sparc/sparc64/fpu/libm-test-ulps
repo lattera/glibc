@@ -1,9 +1,11 @@
 # Begin of automatic generation
 
 # atan2
-Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994380":
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
 float: 6
 ifloat: 6
+ildouble: 1
+ldouble: 1
 Test "atan2 (-0.75, -1.0) == -2.49809154479650885165983415456218025":
 float: 3
 ifloat: 3
@@ -335,8 +337,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 1
-ldouble: 1
+ildouble: 10
+ldouble: 10
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
 ildouble: 2
 ldouble: 2
@@ -1105,8 +1107,8 @@ double: 2
 float: 4
 idouble: 2
 ifloat: 4
-ildouble: 1
-ldouble: 1
+ildouble: 10
+ldouble: 10
 
 Function: Imaginary part of "cpow":
 double: 2

@@ -32,7 +32,7 @@ ifloat: 3
 Test "atan2 (1.390625, 0.9296875) == 0.981498387184244311516296577615519772":
 float: 1
 ifloat: 1
-Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994380":
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
 float: 6
 ifloat: 6
 
@@ -155,6 +155,9 @@ ildouble: 1
 ldouble: 1
 
 # ccos
+Test "Real part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
+double: 1
+idouble: 1
 Test "Imaginary part of: ccos (-2 - 3 i) == -4.18962569096880723013255501961597373 - 9.10922789375533659797919726277886212 i":
 float: 1
 ifloat: 1
@@ -323,6 +326,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "cos (0.80190127184058835) == 0.69534156199418473":
+double: 1
+idouble: 1
 
 # cpow
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
@@ -383,6 +389,9 @@ ldouble: 1
 Test "Imaginary part of: csin (0.75 + 1.25 i) == 1.28722291002649188575873510790565441 + 1.17210635989270256101081285116138863 i":
 float: 1
 ifloat: 1
+Test "Imaginary part of: csin (-2 - 3 i) == -9.15449914691142957346729954460983256 + 4.16890695996656435075481305885375484 i":
+double: 1
+idouble: 1
 
 # csinh
 Test "Real part of: csinh (-2 - 3 i) == 3.59056458998577995201256544779481679 - 0.530921086248519805267040090660676560 i":
@@ -482,15 +491,15 @@ ifloat: 1
 double: 2
 idouble: 2
 Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 float: 1
 ifloat: 1
 double: 1
 idouble: 1
 Test "exp10 (3) == 1000":
-ildouble: 3
-ldouble: 3
+ildouble: 8
+ldouble: 8
 float: 2
 ifloat: 2
 double: 6
@@ -564,7 +573,9 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "j0 (8.0) == 0.171650807137553906090869407851972001":
+double: 2
 float: 1
+idouble: 2
 ifloat: 1
 
 # j1
@@ -609,7 +620,9 @@ ifloat: 1
 ildouble: 1
 ldouble: 1
 Test "jn (0, 8.0) == 0.171650807137553906090869407851972001":
+double: 2
 float: 1
+idouble: 2
 ifloat: 1
 Test "jn (1, 10.0) == 0.0434727461688614366697487680258592883":
 float: 2
@@ -744,6 +757,9 @@ ldouble: 1
 Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
 float: 1
 ifloat: 1
+Test "sincos (0.80190127184058835, &sin_res, &cos_res) puts 0.69534156199418473 in cos_res":
+double: 1
+idouble: 1
 
 # tan
 Test "tan (pi/4) == 1":
@@ -1117,7 +1133,9 @@ ildouble: 1
 ldouble: 1
 
 Function: Imaginary part of "csin":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: Real part of "csinh":
@@ -1181,8 +1199,8 @@ ildouble: 1
 ldouble: 1
 
 Function: "exp10":
-ildouble: 3
-ldouble: 3
+ildouble: 8
+ldouble: 8
 float: 2
 ifloat: 2
 double: 6
