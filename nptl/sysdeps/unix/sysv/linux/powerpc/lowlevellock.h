@@ -118,7 +118,10 @@ extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
     int __val = atomic_exchange_and_add (__futex, 2);			      \
     __asm __volatile (__lll_acq_instr ::: "memory");			      \
     if (__builtin_expect (__val != 0, 0))				      \
-      __lll_lock_wait (__futex, __val);					      \
+      /* Note, the val + 1 is kind of ugly here.  __lll_lock_wait will add    \
+	 1 again.  But we added 2 to the futex value so this is the right     \
+	 value which will be passed to the kernel.  */			      \
+      __lll_lock_wait (__futex, __val + 1);				      \
   })
 
 extern int __lll_timedlock_wait
