@@ -56,5 +56,8 @@ ld {
 
     # this is defined in ld.so and overridden by libc
     _dl_init_first;
+
+    # variables used elsewhere
+    _dl_out_of_memory;
   }
 }

@@ -192,6 +192,9 @@ extern const char *_dl_inhibit_rpath;
 /* Nonzero if references should be treated as weak during runtime linking.  */
 extern int _dl_dynamic_weak;
 
+/* The array with message we print as a last resort.  */
+extern const char _dl_out_of_memory[];
+
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 

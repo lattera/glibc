@@ -35,7 +35,6 @@ struct dl_action_result
 static struct dl_action_result last_result;
 static struct dl_action_result *static_buf;
 
-
 /* This is the key for the thread specific memory.  */
 static __libc_key_t key;
 
@@ -61,7 +60,8 @@ dlerror (void)
       /* We can now free the string.  */
       if (result->errstring != NULL)
 	{
-	  free ((char *) result->errstring);
+	  if (strcmp (result->errstring, "out of memory") != 0)
+	    free ((char *) result->errstring);
 	  result->errstring = NULL;
 	}
       buf = NULL;
@@ -75,7 +75,8 @@ dlerror (void)
 			 strerror (result->errcode)) != -1)
 	{
 	  /* We don't need the error string anymore.  */
-	  free ((char *) result->errstring);
+	  if (strcmp (result->errstring, "out of memory") != 0)
+	    free ((char *) result->errstring);
 	  result->errstring = buf;
 	}
 
@@ -123,7 +124,8 @@ _dlerror_run (void (*operate) (void *), void *args)
     {
       /* Free the error string from the last failed command.  This can
 	 happen if `dlerror' was not run after an error was found.  */
-      free ((char *) result->errstring);
+      if (strcmp (result->errstring, "out of memory") != 0)
+	free ((char *) result->errstring);
       result->errstring = NULL;
     }
 
@@ -153,6 +155,12 @@ init (void)
 static void
 free_key_mem (void *mem)
 {
+  struct dl_action_result *result = (struct dl_action_result *) mem;
+
+  if (result->errstring != NULL
+      && strcmp (result->errstring, "out of memory") != 0)
+    free (result->errstring);
+
   free (mem);
   __libc_setspecific (key, NULL);
 }

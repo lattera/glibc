@@ -295,7 +295,8 @@ _dl_map_object_deps (struct link_map *map,
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			free ((char *) errstring);
+			if (errstring != _dl_out_of_memory)
+			  free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */
 			continue;

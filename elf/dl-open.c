@@ -329,7 +329,8 @@ _dl_open (const char *file, int mode, const void *caller)
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */
       local_errstring = strdupa (errstring);
-      free ((char *) errstring);
+      if (errstring != _dl_out_of_memory)
+	free ((char *) errstring);
 
       /* Reraise the error.  */
       _dl_signal_error (errcode, objname, local_errstring);

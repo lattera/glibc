@@ -506,7 +506,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    {
-	      free ((char *) err_str);
+	      if (err_str != _dl_out_of_memory)
+		free ((char *) err_str);
 	      _exit (EXIT_FAILURE);
 	    }
 	}

@@ -45,6 +45,12 @@ __libc_tsd_define (static, DL_ERROR)
 #define tsd_setspecific(data)	__libc_tsd_set (DL_ERROR, (data))
 
 
+/* This message we return as a last resort.  We define the string in a
+   variable since we have to avoid freeing it and so have to enable
+   a pointer comparison.  See below and in dlfcn/dlerror.c.  */
+const char _dl_out_of_memory[] = "out of memory";
+
+
 /* This points to a function which is called when an continuable error is
    received.  Unlike the handling of `catch' this function may return.
    The arguments will be the `errstring' and `objname'.
@@ -72,6 +78,8 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
 	 stack.  The object name is always a string constant.  */
       lcatch->objname = objname;
       lcatch->errstring = strdup (errstring);
+      if (lcatch->errstring == NULL)
+	lcatch->errstring = _dl_out_of_memory;
       longjmp (lcatch->env, errcode ?: -1);
     }
   else

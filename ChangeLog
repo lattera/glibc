@@ -1,5 +1,21 @@
 2000-07-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Versions (ld): Export _dl_out_of_memory for GLIBC_2.2.
+	* dlfcn/dlerror.c (dlerror): Don't free the error string if it is the
+	report that we are out of memory.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+	* elf/dl-libc.c (dlerror_run): Likewise.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/dl-error.c: Define _dl_out_of_memory.
+	(_dl_signal_error): Return _dl_signal_error if we cannot duplicate
+	the error string.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_out_of_memory.
+
+	* dlfcn/dlerror.c (free_key_mem): Also free error string.
+
+	* iconv/loop.c: Fix comment.
+
 	* malloc/mtrace.c (tr_freehook): Return immediately if ptr is NULL.
 
 2000-07-13  Andreas Jaeger  <aj@suse.de>

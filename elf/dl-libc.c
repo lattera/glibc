@@ -42,7 +42,7 @@ dlerror_run (void (*operate) (void *), void *args)
   (void) _dl_catch_error (&objname, &last_errstring, operate, args);
 
   result = last_errstring != NULL;
-  if (result)
+  if (result && last_errstring != _dl_out_of_memory)
     free ((char *) last_errstring);
 
   return result;

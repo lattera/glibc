@@ -233,7 +233,7 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
   while (inptr != inend)
     {
       /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
-	 compiler generating better code.  It will optimized away
+	 compiler generating better code.  They will be optimized away
 	 since MIN_NEEDED_OUTPUT is always a constant.  */
       if ((MIN_NEEDED_OUTPUT != 1
 	   && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
