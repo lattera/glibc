@@ -6,10 +6,13 @@
 
 void noop (void);
 
+#define NR	2	/* Exit code of the child.  */
+
 int
 main (void)
 {
-  int pid;
+  pid_t pid;
+  int status;
 
   printf ("Before vfork\n");
   fflush (stdout);
@@ -20,12 +23,14 @@ main (void)
 	 machines where it is stored on the stack, if vfork wasn't
 	 implemented correctly, */
       noop ();
-      _exit (2);
+      _exit (NR);
     }
   else if (pid < 0)
     error (1, errno, "vfork");
   printf ("After vfork (parent)\n");
-  wait (0);
+  if (waitpid (0, &status, 0) != pid
+      || !WIFEXITED (status) || WEXITSTATUS (NR))
+    exit (1);
   exit (0);
 }
 

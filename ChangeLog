@@ -1,5 +1,8 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/test-vfork.c (main): Improve test to check for correct
+	exit code.
+
 	* sysdeps/unix/sysv/linux/i386/vfork.S: Rewrite to use clone.
 
 	* sysdeps/unix/sysv/linux/bits/sched.h: Define CLONE_VFORK.
