@@ -1,5 +1,5 @@
 /* Tests of fseek and fseeko.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/stat.h>
 
 
