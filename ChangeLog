@@ -1,5 +1,8 @@
 2001-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c: Limit string length printed in debug messages to
+	100 chars.
+
 	* configure.in: Don't warn about versioning if not on ELF system.
 
 2001-07-07  Andreas Jaeger  <aj@suse.de>

@@ -31,7 +31,7 @@ typedef unsigned char   uchar;   /* sb in libc/posix/types.h */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-+#ifndef HAVE_ELF
+#ifndef HAVE_ELF
 /* Since gcc/crtstuff.c won't define it unless the ELF format is used
    we will need to define it here.  */
 void *__dso_handle = NULL;

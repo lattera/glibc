@@ -2680,7 +2680,7 @@ else
 fi
 
 
-if test $shared != no && test $VERSIONING = no; then
+if test $elf = yes && test $shared != no && test $VERSIONING = no; then
   echo "\
 *** WARNING: You should not compile GNU libc without versioning. Not using
 *** versioning will introduce incompatibilities so that old binaries

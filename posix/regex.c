@@ -1182,6 +1182,8 @@ PREFIX(print_double_string) (where, string1, size1, string2, size2)
     printf ("(null)");
   else
     {
+      int cnt;
+
       if (FIRST_STRING_P (where))
         {
           for (this_char = where - string1; this_char < size1; this_char++)
@@ -1190,8 +1192,16 @@ PREFIX(print_double_string) (where, string1, size1, string2, size2)
           where = string2;
         }
 
+      cnt = 0;
       for (this_char = where - string2; this_char < size2; this_char++)
-        PUT_CHAR (string2[this_char]);
+	{
+	  PUT_CHAR (string2[this_char]);
+	  if (++cnt > 100)
+	    {
+	      fputs ("...", stdout);
+	      break;
+	    }
+	}
     }
 }
 
