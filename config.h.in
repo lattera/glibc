@@ -205,6 +205,9 @@
 /* Defined if the linker supports the -z relro option.  */
 #undef HAVE_Z_RELRO
 
+/* Defined of libidn is available.  */
+#undef HAVE_LIBIDN
+
 /*
  */
 

@@ -108,3 +108,6 @@ libthread_db {
 libanl {
   GLIBC_2.2.3
 }
+libcidn {
+  GLIBC_PRIVATE
+}

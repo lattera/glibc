@@ -1,4 +1,4 @@
-  /* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+  /* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -573,6 +573,11 @@ struct gaicb
 # define AI_ALL		0x0010	/* Return IPv4 mapped and IPv6 addresses.  */
 # define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
 				   returned address type..  */
+# ifdef __USE_GNU
+#  define AI_IDN	0x0040	/* IDN encode input (assuming it is encoded
+				   in the current locale's character set)
+				   before looking it up. */
+# endif
 
 /* Error values for `getaddrinfo' function.  */
 # define EAI_BADFLAGS	  -1	/* Invalid value for `ai_flags' field.  */
@@ -592,6 +597,7 @@ struct gaicb
 #  define EAI_NOTCANCELED -102	/* Request not canceled.  */
 #  define EAI_ALLDONE	  -103	/* All requests done.  */
 #  define EAI_INTR	  -104	/* Interrupted by a signal.  */
+#  define EAI_IDN_ENCODE  -105	/* IDN encoding failed.  */
 # endif
 
 # define NI_MAXHOST      1025

@@ -55,6 +55,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nsswitch.h>
 #include <not-cancel.h>
 
+extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
+#define IDNA_SUCCESS 0
+
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
 
@@ -538,6 +541,18 @@ gaih_inet (const char *name, const struct gaih_service *service,
       at->family = AF_UNSPEC;
       at->scopeid = 0;
       at->next = NULL;
+
+#ifdef HAVE_LIBIDN
+      if (req->ai_flags & AI_IDN)
+	{
+	  char *p = NULL;
+	  rc = __idna_to_ascii_lz (name, &p, 0);
+	  if (rc != IDNA_SUCCESS)
+	    return -EAI_IDN_ENCODE;
+	  name = strdupa (p);
+	  free (p);
+	}
+#endif
 
       if (inet_pton (AF_INET, name, at->addr) > 0)
 	{
@@ -1252,6 +1267,9 @@ getaddrinfo (const char *name, const char *service,
 
   if (hints->ai_flags
       & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
+#ifdef HAVE_LIBIDN
+	  |AI_IDN
+#endif
 	  |AI_ALL))
     return EAI_BADFLAGS;
 

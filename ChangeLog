@@ -1,5 +1,22 @@
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* config.h.in: Add entry for HAVE_LIBIDN.
+	* configure.in: If libidn add-on present define HAVE_LIBIDN.
+	* Versions.def: Add entry for libcidn.
+
+2004-03-07  Simon Josefsson  <jas@extundo.com>
+
+	* resolv/netdb.h [__USE_GNU]: Add new AI_IDN ai_flags for addrinfo.
+	[__USE_GNU]: Add new error code EAI_IDN_ENCODE for getaddrinfo.
+	* sysdeps/posix/getaddrinfo.c: Add prototype for __idna_to_ascii_lz
+	and define IDNA_SUCCESS.
+	(gaih_inet): If ai_flags have AI_IDN, invoke __idna_to_ascii_lz.
+	(getaddrinfo): Fix EAI_BADFLAGS test to include AI_IDN.
+	All changes only applicable when glibc is compiled with the libidn
+	add-on.
+
+2004-03-07  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ia64/dl-static.c (_dl_static_init): Call
 	_dl_lookup_symbol_x not _dl_lookup_symbol.
 

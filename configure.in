@@ -1903,6 +1903,7 @@ use_ldconfig=no
 ldd_rewrite_script=no
 libc_cv_sysconfdir=$sysconfdir
 libc_cv_gcc_unwind_find_fde=no
+libc_cv_idn=no
 
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
@@ -2043,6 +2044,10 @@ if test $shared = default; then
     # tests might become available.
     shared=no
   fi
+fi
+
+if test x"$libc_cv_idn" = xyes; then
+  AC_DEFINE(HAVE_LIBIDN)
 fi
 
 AC_CACHE_CHECK([whether -fPIC is default], pic_default,
