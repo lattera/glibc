@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -34,8 +34,9 @@
 #define SIGCANCEL		__SIGRTMIN
 
 
-/* Location of current stack frame.  */
-#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
+/* Location of current stack frame.  The frame pointer is not usable.  */
+#define CURRENT_STACK_FRAME \
+  ({ char *frame; asm ("movq %%rsp, %0" : "=r" (frame)); frame; })
 
 
 /* XXX Until we have a better place keep the definitions here.  */

@@ -1,3 +1,11 @@
+2003-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/pthreaddef.h (CURRENT_STACK_FRAME): Don't use
+	__builtin_frame_address, use stack pointer.
+
+	* sysdeps/unix/sysv/linux/jmp-unwind.c: Use CURRENT_STACK_FRAME
+	instead of __builtin_frame_pointer.
+
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-basic1.c (do_test): Add cast to avoid warning.

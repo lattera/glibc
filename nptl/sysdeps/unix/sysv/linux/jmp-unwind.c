@@ -20,6 +20,7 @@
 #include <setjmp.h>
 #include <stddef.h>
 #include <pthread-functions.h>
+#include <pthreaddef.h>
 
 extern void __pthread_cleanup_upto (__jmp_buf env, char *targetframe);
 #pragma weak __pthread_cleanup_upto
@@ -35,5 +36,5 @@ _longjmp_unwind (jmp_buf env, int val)
 #endif
 
   if (fptr != NULL)
-    fptr (env->__jmpbuf, __builtin_frame_address (0));
+    fptr (env->__jmpbuf, CURRENT_STACK_FRAME);
 }
