@@ -721,5 +721,18 @@ struct _IO_jump_t _IO_old_file_jumps =
   JUMP_INIT(stat, _IO_file_stat)
 };
 
+symbol_version (_IO_old_do_write, _IO_do_write, GLIBC_2.0);
+symbol_version (_IO_old_file_attach, _IO_file_attach, GLIBC_2.0);
+symbol_version (_IO_old_file_close_it, _IO_file_close_it, GLIBC_2.0);
+symbol_version (_IO_old_file_finish, _IO_file_finish, GLIBC_2.0);
+symbol_version (_IO_old_file_fopen, _IO_file_fopen, GLIBC_2.0);
+symbol_version (_IO_old_file_init, _IO_file_init, GLIBC_2.0);
+symbol_version (_IO_old_file_setbuf, _IO_file_setbuf, GLIBC_2.0);
+symbol_version (_IO_old_file_sync, _IO_file_sync, GLIBC_2.0);
+symbol_version (_IO_old_file_overflow, _IO_file_overflow, GLIBC_2.0);
+symbol_version (_IO_old_file_seekoff, _IO_file_seekoff, GLIBC_2.0);
+symbol_version (_IO_old_file_underflow, _IO_file_underflow, GLIBC_2.0);
+symbol_version (_IO_old_file_write, _IO_file_write, GLIBC_2.0);
+symbol_version (_IO_old_file_xsputn, _IO_file_xsputn, GLIBC_2.0);
 
 #endif /* PIC && DO_VERSIONING */

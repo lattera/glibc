@@ -105,7 +105,7 @@ extern int errno;
 
 
 void
-_IO_file_init (fp)
+_IO_new_file_init (fp)
      _IO_FILE *fp;
 {
   /* POSIX.1 allows another file handle to be used to change the position
@@ -119,7 +119,7 @@ _IO_file_init (fp)
 }
 
 int
-_IO_file_close_it (fp)
+_IO_new_file_close_it (fp)
      _IO_FILE *fp;
 {
   int write_status, close_status;
@@ -146,7 +146,7 @@ _IO_file_close_it (fp)
 }
 
 void
-_IO_file_finish (fp, dummy)
+_IO_new_file_finish (fp, dummy)
      _IO_FILE *fp;
      int dummy;
 {
@@ -192,7 +192,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
 }
 
 _IO_FILE *
-_IO_file_fopen (fp, filename, mode, is32not64)
+_IO_new_file_fopen (fp, filename, mode, is32not64)
      _IO_FILE *fp;
      const char *filename;
      const char *mode;
@@ -250,7 +250,7 @@ _IO_file_fopen (fp, filename, mode, is32not64)
 }
 
 _IO_FILE *
-_IO_file_attach (fp, fd)
+_IO_new_file_attach (fp, fd)
      _IO_FILE *fp;
      int fd;
 {
@@ -269,7 +269,7 @@ _IO_file_attach (fp, fd)
 }
 
 _IO_FILE *
-_IO_file_setbuf (fp, p, len)
+_IO_new_file_setbuf (fp, p, len)
      _IO_FILE *fp;
      char *p;
      _IO_ssize_t len;
@@ -288,7 +288,7 @@ _IO_file_setbuf (fp, p, len)
    Then mark FP as having empty buffers. */
 
 int
-_IO_do_write (fp, data, to_do)
+_IO_new_do_write (fp, data, to_do)
      _IO_FILE *fp;
      const char *data;
      _IO_size_t to_do;
@@ -322,7 +322,7 @@ _IO_do_write (fp, data, to_do)
 }
 
 int
-_IO_file_underflow (fp)
+_IO_new_file_underflow (fp)
      _IO_FILE *fp;
 {
   _IO_ssize_t count;
@@ -377,7 +377,7 @@ _IO_file_underflow (fp)
 }
 
 int
-_IO_file_overflow (f, ch)
+_IO_new_file_overflow (f, ch)
       _IO_FILE *f;
       int ch;
 {
@@ -428,7 +428,7 @@ _IO_file_overflow (f, ch)
 }
 
 int
-_IO_file_sync (fp)
+_IO_new_file_sync (fp)
      _IO_FILE *fp;
 {
   _IO_ssize_t delta;
@@ -462,7 +462,7 @@ _IO_file_sync (fp)
 }
 
 _IO_fpos64_t
-_IO_file_seekoff (fp, offset, dir, mode)
+_IO_new_file_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
@@ -664,7 +664,7 @@ _IO_file_close (fp)
 }
 
 _IO_ssize_t
-_IO_file_write (f, data, n)
+_IO_new_file_write (f, data, n)
      _IO_FILE *f;
      const void *data;
      _IO_ssize_t n;
@@ -688,7 +688,7 @@ _IO_file_write (f, data, n)
 }
 
 _IO_size_t
-_IO_file_xsputn (f, data, n)
+_IO_new_file_xsputn (f, data, n)
      _IO_FILE *f;
      const void *data;
      _IO_size_t n;
@@ -761,7 +761,7 @@ _IO_file_xsputn (f, data, n)
       dont_write = block_size >= 128 ? to_do % block_size : 0;
 
       count = to_do - dont_write;
-      if (_IO_do_write (f, s, count) == EOF)
+      if (_IO_new_do_write (f, s, count) == EOF)
 	return n - to_do;
       to_do = dont_write;
 
@@ -865,23 +865,56 @@ _IO_file_xsgetn (fp, data, n)
 struct _IO_jump_t _IO_file_jumps =
 {
   JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
+  JUMP_INIT(finish, _IO_new_file_finish),
+  JUMP_INIT(overflow, _IO_new_file_overflow),
+  JUMP_INIT(underflow, _IO_new_file_underflow),
   JUMP_INIT(uflow, _IO_default_uflow),
   JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
+  JUMP_INIT(xsputn, _IO_new_file_xsputn),
   JUMP_INIT(xsgetn, _IO_file_xsgetn),
-  JUMP_INIT(seekoff, _IO_file_seekoff),
+  JUMP_INIT(seekoff, _IO_new_file_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
+  JUMP_INIT(setbuf, _IO_new_file_setbuf),
+  JUMP_INIT(sync, _IO_new_file_sync),
   JUMP_INIT(doallocate, _IO_file_doallocate),
   JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_file_write),
+  JUMP_INIT(write, _IO_new_file_write),
   JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_file_close),
   JUMP_INIT(stat, _IO_file_stat),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
+
+
+#if defined PIC && DO_VERSIONING
+default_symbol_version (_IO_new_do_write, _IO_do_write, GLIBC_2.1);
+default_symbol_version (_IO_new_file_attach, _IO_file_attach, GLIBC_2.1);
+default_symbol_version (_IO_new_file_close_it, _IO_file_close_it, GLIBC_2.1);
+default_symbol_version (_IO_new_file_finish, _IO_file_finish, GLIBC_2.1);
+default_symbol_version (_IO_new_file_fopen, _IO_file_fopen, GLIBC_2.1);
+default_symbol_version (_IO_new_file_init, _IO_file_init, GLIBC_2.1);
+default_symbol_version (_IO_new_file_setbuf, _IO_file_setbuf, GLIBC_2.1);
+default_symbol_version (_IO_new_file_sync, _IO_file_sync, GLIBC_2.1);
+default_symbol_version (_IO_new_file_overflow, _IO_file_overflow, GLIBC_2.1);
+default_symbol_version (_IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2.1);
+default_symbol_version (_IO_new_file_underflow, _IO_file_underflow, GLIBC_2.1);
+default_symbol_version (_IO_new_file_write, _IO_file_write, GLIBC_2.1);
+default_symbol_version (_IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2.1);
+#else
+# ifdef strong_alias
+strong_alias (_IO_new_do_write, _IO_do_write);
+strong_alias (_IO_new_file_attach, _IO_file_attach);
+strong_alias (_IO_new_file_close_it, _IO_file_close_it);
+strong_alias (_IO_new_file_finish, _IO_file_finish);
+strong_alias (_IO_new_file_fopen, _IO_file_fopen);
+strong_alias (_IO_new_file_init, _IO_file_init);
+strong_alias (_IO_new_file_setbuf, _IO_file_setbuf);
+strong_alias (_IO_new_file_sync, _IO_file_sync);
+strong_alias (_IO_new_file_overflow, _IO_file_overflow);
+strong_alias (_IO_new_file_seekoff, _IO_file_seekoff);
+strong_alias (_IO_new_file_underflow, _IO_file_underflow);
+strong_alias (_IO_new_file_write, _IO_file_write);
+strong_alias (_IO_new_file_xsputn, _IO_file_xsputn);
+# endif
+#endif

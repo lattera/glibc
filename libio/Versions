@@ -83,6 +83,12 @@ libc {
     # functions used in other libraries
     _IO_fclose; _IO_fopen; _IO_fdopen; __asprintf;
 
+    # functions used in libstdc++
+    _IO_do_write; _IO_file_attach; _IO_file_close_it; _IO_file_finish;
+    _IO_file_fopen; _IO_file_init; _IO_file_overflow; _IO_file_seekoff;
+    _IO_file_setbuf; _IO_file_sync; _IO_file_underflow;
+    _IO_file_write; _IO_file_xsputn;
+
     # Changed getline function in libio.
     _IO_getline_info;
 

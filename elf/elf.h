@@ -184,7 +184,7 @@ typedef struct
 #define EM_RH32		38		/* TRW RH32 */
 #define EM_MMA		39		/* Fujitsu MMA */
 #define EM_ARM		40		/* ARM */
-#define EM_OLD_ALPHA	41		/* Digital Alpha */
+#define EM_FAKE_ALPHA	41		/* Digital Alpha */
 #define EM_SH		42		/* Hitachi SH */
 #define EM_SPARCV9	43		/* SPARC v9 64-bit */
 #define EM_TRICORE	44		/* Siemens Tricore */
@@ -1006,14 +1006,14 @@ typedef struct
 /* Symbol tables.  */
 
 /* MIPS specific values for `st_other'.  */
-#define STO_DEFAULT		0x0
-#define STO_INTERNAL		0x1
-#define STO_HIDDEN		0x2
-#define STO_PROTECTED		0x3
-#define STO_SC_ALIGN_UNUSED	0xff
+#define STO_MIPS_DEFAULT		0x0
+#define STO_MIPS_INTERNAL		0x1
+#define STO_MIPS_HIDDEN			0x2
+#define STO_MIPS_PROTECTED		0x3
+#define STO_MIPS_SC_ALIGN_UNUSED	0xff
 
 /* MIPS specific values for `st_info'.  */
-#define STB_SPLIT_COMMON	13
+#define STB_MIPS_SPLIT_COMMON		13
 
 /* Entries found in sections of type SHT_MIPS_GPTAB.  */
 
@@ -1305,6 +1305,10 @@ typedef Elf32_Addr Elf32_Conflict;
 /* Legal values for sh_flags field of Elf64_Shdr.  */
 
 #define SHF_ALPHA_GPREL		0x10000000
+
+/* Legal values for st_other field of Elf64_Sym.  */
+#define STO_ALPHA_NOPV		0x80	/* No PV required.  */
+#define STO_ALPHA_STD_GPLOAD	0x88	/* PV only used for initial ldgp.  */
 
 /* Alpha relocs.  */
 

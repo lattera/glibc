@@ -1,4 +1,69 @@
-1998-08-23  Ricahrd Henderson  <rth@cygnus.com>
+1998-08-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Versions [GLIBC_2.1]: Add
+	__modify_ldt and modify_ldt.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add modify_ldt.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Use orl $-1 instead of movl $-1 to save two bytes.
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Likewise.
+
+1998-08-17  H.J. Lu  <hjl@gnu.org>
+ 
+	* libio/Versions (_IO_do_write, _IO_file_attach, 
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
+	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.1. 
+
+	* libio/fileops.c (_IO_do_write, _IO_file_attach, 
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
+	_IO_file_write, _IO_file_xsputn): Change the prefix to 
+	"_IO_new_". Added to GLIBC_2.1. 
+ 
+	* libio/libioP.h (_IO_do_write, _IO_file_attach, 
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
+	_IO_file_write, _IO_file_xsputn): Add prototypes for the prefix 
+	"_IO_new_". 
+ 
+	* libio/oldfileops.c (_IO_do_write, _IO_file_attach, 
+	_IO_file_close_it, _IO_file_finish, _IO_file_fopen, 
+	_IO_file_init, _IO_file_overflow, _IO_file_seekoff, 
+	_IO_file_setbuf, _IO_file_sync, _IO_file_underflow, 
+	_IO_file_write, _IO_file_xsputn): Added to GLIBC_2.0. 
+ 
+1998-08-23  Richard Henderson  <rth@cygnus.com>
+
+	* Makeconfig (LDFLAGS): Remove.
+
+	* csu/initfini.c: Return to .text before __gmon_start__. 
+
+	* elf/elf.h (EM_FAKE_ALPHA): Rename from EM_OLD_ALPHA. 
+	(STO_MIPS_*): Rename from STO_*. 
+	(STB_MIPS_SPLIT_COMMON): Rename from STB_SPLIT_COMMON. 
+	(STO_ALPHA_NOPV, STO_ALPHA_STD_GPLOAD): New. 
+
+	* math/atest-exp.c (mpn_bitsize): Fix bit location calculation. 
+	(main): e3s is negative on zero. 
+	* math/atest-exp2.c: Likewise. 
+	* math/atest-sincos.c: Likewise.
+
+1998-08-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* Makerules (install): Add comment about absolute paths. 
+ 
+1998-08-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/vsnprintf.c (_IO_vsnprintf): Set first byte of destination
+	array to NUL to handle maxlen==1 case correctly.
+	Patch by HJ Lu.
+
+1998-08-23  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/alpha/elf/crtbegin.S: Fix .prologue; no pv used.
 	* sysdeps/alpha/elf/crtend.S: Likewise.

@@ -124,6 +124,7 @@ _IO_vsnprintf (string, maxlen, format, args)
 
   _IO_init ((_IO_FILE *) &sf, 0);
   _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_strn_jumps;
+  string[0] = '\0';
   _IO_str_init_static ((_IO_FILE *) &sf, string, maxlen - 1, string);
   ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
 

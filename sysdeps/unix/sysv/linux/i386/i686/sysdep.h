@@ -43,7 +43,7 @@
   popl %ecx;								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
-  movl $-1, %eax;							      \
+  orl $-1, %eax;							      \
   jmp L(pseudo_end);
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
@@ -58,7 +58,7 @@
   subl %eax, %edx;							      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
-  movl $-1, %eax;							      \
+  orl $-1, %eax;							      \
   jmp L(pseudo_end);
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */

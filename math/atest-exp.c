@@ -96,11 +96,11 @@ mpn_bitsize(const mp_limb_t *SRC_PTR, mp_size_t SIZE)
    for (i = SIZE - 1; i > 0; i--)
      if (SRC_PTR[i] != 0)
        break;
-   for (j = mpbpl - 1; j > 0; j--)
-     if ((SRC_PTR[i] & 1 << j) != 0)
+   for (j = mpbpl - 1; j >= 0; j--)
+     if ((SRC_PTR[i] & (mp_limb_t)1 << j) != 0)
        break;
 
-   return i * 32 + j;
+   return i * mpbpl + j;
 }
 
 int
@@ -141,7 +141,7 @@ main (void)
 
       e2s = mpn_bitsize (e2,SZ);
       e3s = mpn_bitsize (e3,SZ);
-      if (e3s > 1 && e2s - e3s < 54)
+      if (e3s >= 0 && e2s - e3s < 54)
 	{
 #if PRINT_ERRORS
 	  printf ("%06x ", i * (0x100000 / (1 << N2)));

@@ -83,6 +83,7 @@ _init (void)
   SECTION(".init");
 }
 asm ("END_INIT");
+SECTION(".text");
 
 /* This version of __gmon_start__ is used if no other is found.  By providing
    a default function we avoid the need to test whether the pointer is NULL,

@@ -1,5 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+modify_ldt	EXTRA	modify_ldt	3	__modify_ldt	modify_ldt
 s_chown		chown	chown		3	__syscall_chown
 s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_llseek	llseek	_llseek		5	__sys_llseek

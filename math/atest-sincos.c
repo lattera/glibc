@@ -132,11 +132,11 @@ mpn_bitsize (const mp_limb_t *SRC_PTR, mp_size_t SIZE)
    for (i = SIZE - 1; i > 0; i--)
      if (SRC_PTR[i] != 0)
        break;
-   for (j = mpbpl - 1; j > 0; j--)
-     if ((SRC_PTR[i] & 1 << j) != 0)
+   for (j = mpbpl - 1; j >= 0; j--)
+     if ((SRC_PTR[i] & (mp_limb_t)1 << j) != 0)
        break;
 
-   return i * 32 + j;
+   return i * mpbpl + j;
 }
 
 int
@@ -188,8 +188,8 @@ main (void)
       s3s = mpn_bitsize (s3, SZ);
       c2s = mpn_bitsize (c2, SZ);
       c3s = mpn_bitsize (c3, SZ);
-      if (s3s > 1 && s2s - s3s < 54
-	  || c3s > 1 && c2s - c3s < 54
+      if (s3s >= 0 && s2s - s3s < 54
+	  || c3s >= 0 && c2s - c3s < 54
 	  || 0)
 	{
 #if PRINT_ERRORS
@@ -204,8 +204,8 @@ main (void)
 	  print_mpn_hex (c2, (FRAC / 4) + 1);
 	  putchar ('\n');
 	  printf (" %c%c    ",
-		  s2s-s3s < 54 ? s2s - s3s == 53 ? 'e' : 'F' : 'P',
-		  c2s-c3s < 54 ? c2s - c3s == 53 ? 'e' : 'F' : 'P');
+		  s3s >= 0 && s2s-s3s < 54 ? s2s - s3s == 53 ? 'e' : 'F' : 'P',
+		  c3s >= 0 && c2s-c3s < 54 ? c2s - c3s == 53 ? 'e' : 'F' : 'P');
 	  print_mpn_hex (s3, (FRAC / 4) + 1);
 	  putchar (' ');
 	  print_mpn_hex (c3, (FRAC / 4) + 1);

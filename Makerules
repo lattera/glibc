@@ -688,6 +688,8 @@ ifndef subdir
 # link script.  It contains references for the various libraries we need.
 # The libc.so object is not complete since some functions are only defined
 # in libc_nonshared.a.
+# We need to use absolute paths since otherwise local copies (if they exist)  
+# of the files are taken by the linker. 
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 			$(inst_libdir)/$(patsubst %,$(libtype.oS),\
