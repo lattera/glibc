@@ -1,3 +1,22 @@
+Wed Jun 19 10:21:24 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry,
+	__hurd_file_name_lookup, __hurd_file_name_split): Add & use LOOKUP argument. 
+	Rename nested function lookup to lookup_op.
+	(__file_name_lookup, __file_name_lookup_under):
+	Pass 0 for lookup arg to __hurd_file_name_lookup.
+	(__file_name_split): Likewise for __hurd_file_name_split.
+	* hurd/path-lookup.c (hurd_file_name_path_lookup): Add LOOKUP argument.
+	Rename nested function lookup to scan_lookup.
+	(file_name_path_lookup): Pass 0 for lookup arg to
+	hurd_file_name_path_lookup.
+	* hurd/hurd/lookup.h (__hurd_file_name_lookup, hurd_file_name_lookup,
+	__hurd_file_name_lookup_retry, hurd_file_name_lookup_retry: 
+	__hurd_file_name_split, hurd_file_name_split, hurd_file_name_lookup):
+	Add LOOKUP argument.
+	* sysdeps/mach/hurd/access.c (__access): Pass 0 lookup arg to
+	__hurd_file_name_lookup.
+
 Mon Jun 17 19:09:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Make-dist (+sysdeps): Move wildcard inside loop to avoid consing

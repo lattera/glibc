@@ -89,20 +89,23 @@ file_name_path_scan (const char *file_name, const char *path,
    malloced storage containing the prefixed name.  */
 error_t
 hurd_file_name_path_lookup (error_t (*use_init_port)
-			    (int which,
-			     error_t (*operate) (mach_port_t)),
+			      (int which, error_t (*operate) (mach_port_t)),
 			    file_t (*get_dtable_port) (int fd),
+			    error_t (*lookup)
+			      (file_t dir, char *name, int flags, mode_t mode,
+			       retry_type *do_retry, string_t retry_name,
+			       mach_port_t *result),
 			    const char *file_name, const char *path,
 			    int flags, mode_t mode,
 			    file_t *result, char **prefixed_name)
 {
-  error_t lookup (const char *name)
+  error_t scan_lookup (const char *name)
     {
       return
-	__hurd_file_name_lookup (use_init_port, get_dtable_port,
+	__hurd_file_name_lookup (use_init_port, get_dtable_port, lookup,
 				 name, flags, mode, result);
     }
-  return file_name_path_scan (file_name, path, lookup, prefixed_name);
+  return file_name_path_scan (file_name, path, scan_lookup, prefixed_name);
 }
 
 file_t
@@ -112,7 +115,7 @@ file_name_path_lookup (const char *file_name, const char *path,
   error_t err;
   file_t result;
 
-  err = hurd_file_name_path_lookup (&_hurd_ports_use, &__getdport,
+  err = hurd_file_name_path_lookup (&_hurd_ports_use, &__getdport, 0,
 				    file_name, path, flags, mode,
 				    &result, prefixed_name);
 

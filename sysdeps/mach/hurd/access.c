@@ -108,7 +108,7 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 
   if (!err)
     /* Look up the file name using the modified init ports.  */
-    err = __hurd_file_name_lookup (&init_port, &__getdport,
+    err = __hurd_file_name_lookup (&init_port, &__getdport, 0,
 				   file, 0, 0, &io);
 
   /* We are done with _hurd_id.rid_auth now.  */

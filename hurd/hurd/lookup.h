@@ -31,6 +31,10 @@ Cambridge, MA 02139, USA.  */
    is consumed; the right will only be used after *OPERATE returns if
    *OPERATE has added its own user reference.
 
+   LOOKUP is a function to do the actual filesystem lookup.  It is passed the
+   same arguments that the dir_lookup rpc accepts, and if 0, __dir_lookup is
+   used.
+
    The second callback function GET_DTABLE_PORT should behave like `getdport'.
 
    All these functions return zero on success or an error code on failure.  */
@@ -44,6 +48,10 @@ error_t __hurd_file_name_lookup (error_t (*use_init_port)
 				   (int which,
 				    error_t (*operate) (mach_port_t)),
 				 file_t (*get_dtable_port) (int fd),
+				 error_t (*lookup)
+				   (file_t dir, char *name, int flags, mode_t mode,
+				    retry_type *do_retry, string_t retry_name,
+				    mach_port_t *result),
 				 const char *file_name,
 				 int flags, mode_t mode,
 				 file_t *result);
@@ -51,6 +59,10 @@ error_t hurd_file_name_lookup (error_t (*use_init_port)
 			         (int which,
 				  error_t (*operate) (mach_port_t)),
 			       file_t (*get_dtable_port) (int fd),
+			       error_t (*lookup)
+				 (file_t dir, char *name, int flags, mode_t mode,
+				  retry_type *do_retry, string_t retry_name,
+				  mach_port_t *result),
 			       const char *file_name,
 			       int flags, mode_t mode,
 			       file_t *result);
@@ -64,12 +76,20 @@ error_t __hurd_file_name_split (error_t (*use_init_port)
 				  (int which,
 				   error_t (*operate) (mach_port_t)),
 				file_t (*get_dtable_port) (int fd),
+				error_t (*lookup)
+				  (file_t dir, char *name, int flags, mode_t mode,
+				   retry_type *do_retry, string_t retry_name,
+				   mach_port_t *result),
 				const char *file_name,
 				file_t *dir, char **name);
 error_t hurd_file_name_split (error_t (*use_init_port)
 			        (int which,
 				 error_t (*operate) (mach_port_t)),
 			      file_t (*get_dtable_port) (int fd),
+			      error_t (*lookup)
+				(file_t dir, char *name, int flags, mode_t mode,
+				 retry_type *do_retry, string_t retry_name,
+				 mach_port_t *result),
 			      const char *file_name,
 			      file_t *dir, char **name);
 
@@ -84,6 +104,12 @@ error_t __hurd_file_name_lookup_retry (error_t (*use_init_port)
 				         (int which,
 					  error_t (*operate) (mach_port_t)),
 				       file_t (*get_dtable_port) (int fd),
+				       error_t (*lookup)
+				         (file_t dir, char *name,
+					  int flags, mode_t mode,
+					  retry_type *do_retry,
+					  string_t retry_name,
+					  mach_port_t *result),
 				       enum retry_type doretry,
 				       char retryname[1024],
 				       int flags, mode_t mode,
@@ -92,6 +118,12 @@ error_t hurd_file_name_lookup_retry (error_t (*use_init_port)
 				       (int which,
 					error_t (*operate) (mach_port_t)),
 				     file_t (*get_dtable_port) (int fd),
+				     error_t (*lookup)
+				       (file_t dir, char *name,
+					int flags, mode_t mode,
+					retry_type *do_retry,
+					string_t retry_name,
+					mach_port_t *result),
 				     enum retry_type doretry,
 				     char retryname[1024],
 				     int flags, mode_t mode,
@@ -122,9 +154,14 @@ error_t hurd_file_name_path_lookup (error_t (*use_init_port)
 				    (int which,
 				     error_t (*operate) (mach_port_t)),
 				    file_t (*get_dtable_port) (int fd),
+				    error_t (*lookup)
+				      (file_t dir, char *name,
+				       int flags, mode_t mode,
+				       retry_type *do_retry,
+				       string_t retry_name,
+				       mach_port_t *result),
 				    const char *file_name, const char *path,
 				    int flags, mode_t mode,
 				    file_t *result, char **prefixed_name);
-
 
 #endif	/* hurd/lookup.h */
