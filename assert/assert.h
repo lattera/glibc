@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1994-2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,33 +84,16 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 
 __END_DECLS
 
-/* For the macro definition we use gcc's __builtin_expect if possible
-   to generate good code for the non-error case.  gcc 3.0 is a good
-   enough estimate for when the feature became available.  */
-# if __GNUC_PREREQ (3, 0)
-#  define assert(expr) \
-  (__ASSERT_VOID_CAST (__builtin_expect (!!(expr), 1) ? 0 :		      \
-		       (__assert_fail (__STRING(expr), __FILE__, __LINE__,    \
-				       __ASSERT_FUNCTION), 0)))
-# else
-#  define assert(expr) \
+# define assert(expr) \
   (__ASSERT_VOID_CAST ((expr) ? 0 :					      \
 		       (__assert_fail (__STRING(expr), __FILE__, __LINE__,    \
 				       __ASSERT_FUNCTION), 0)))
-# endif
 
 # ifdef	__USE_GNU
-#  if __GNUC_PREREQ (3, 0)
-#   define assert_perror(errnum) \
-  (__ASSERT_VOID_CAST (__builtin_expect (!(errnum), 1) ? 0 :		      \
-		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
-					      __ASSERT_FUNCTION), 0)))
-#  else
-#   define assert_perror(errnum) \
+#  define assert_perror(errnum) \
   (__ASSERT_VOID_CAST (!(errnum) ? 0 :					      \
 		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
 					      __ASSERT_FUNCTION), 0)))
-#  endif
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
