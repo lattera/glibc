@@ -2211,11 +2211,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define	R_SH_TLS_DTPMOD32	149
 #define	R_SH_TLS_DTPOFF32	150
 #define	R_SH_TLS_TPOFF32	151
-#define	R_SH_TLS_GD_MOV		152
-#define	R_SH_TLS_LDM_MOV	153
-#define	R_SH_TLS_LDO_MOV	154
-#define	R_SH_TLS_IE_MOV		155
-#define	R_SH_TLS_LE_MOV		156
 #define	R_SH_GOT32		160
 #define	R_SH_PLT32		161
 #define	R_SH_COPY		162
