@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -25,7 +25,6 @@
 #include <errno.h>
 #include <libintl.h>
 #include <limits.h>
-#include <obstack.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +34,6 @@
 #include "linereader.h"
 #include "charmap.h"
 #include "charmap-dir.h"
-#include "repertoire.h"
 
 #include <assert.h>
 
@@ -53,6 +51,9 @@ static void new_width (struct linereader *cmfile, struct charmap_t *result,
 static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 			      int nbytes, char *bytes, const char *from,
 			      const char *to, int decimal_ellipsis, int step);
+
+
+bool enc_not_ascii_compatible;
 
 
 #ifdef NEED_NULL_POINTER
@@ -252,9 +253,12 @@ default character map file `%s' not found"), DEFAULT_CHARMAP));
       while (*p++ != '\0');
 
       if (failed)
-	WITH_CUR_LOCALE (fprintf (stderr, _("\
+	{
+	  WITH_CUR_LOCALE (fprintf (stderr, _("\
 character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
-				  result->code_set_name));
+				    result->code_set_name));
+	  enc_not_ascii_compatible = true;
+	}
     }
 
   return result;

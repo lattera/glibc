@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -21,6 +21,7 @@
 #define _CHARMAP_H
 
 #include <obstack.h>
+#include <stdbool.h>
 
 #include "repertoire.h"
 #include "simple-hash.h"
@@ -62,6 +63,10 @@ struct charseq
   int nbytes;
   unsigned char bytes[0];
 };
+
+
+/* True if the encoding is not ASCII compatible.  */
+extern bool enc_not_ascii_compatible;
 
 
 /* Prototypes for charmap handling functions.  */

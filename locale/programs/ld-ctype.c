@@ -340,6 +340,9 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	      ctype->map256_collection[1][cnt] = cnt;
 	    }
 
+	  if (enc_not_ascii_compatible)
+	    ctype->to_nonascii = 1;
+
 	  obstack_init (&ctype->mempool);
 	}
       else

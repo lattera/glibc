@@ -1,5 +1,35 @@
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/charmap.c (charmap_read): If encoding is found
+	not ASCII compatible, set enc_not_ascii_compatible.
+	* locale/programs/charmap.h: Declare enc_not_ascii_compatible.
+	* locale/programs/ld-ctype.c (ctype_startup): If
+	enc_not_ascii_compatible is set, initialize to_nonascii to 1.
+
+2003-11-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (process_envvars): Only honor LD_USE_LOAD_BIAS
+	if !__libc_enable_secure.
+
+	* sysdeps/generic/ldsodefs.h (_dl_use_load_bias): New _rtld_global
+	field.
+	* elf/rtld.c (_rtld_global): Initialize _dl_use_load_bias field.
+	(dl_main): Set GL(dl_use_load_bias) default.
+	(process_envvars): Set GL(dl_use_load_bias) from LD_USE_LOAD_BIAS.
+	Add EXTRA_LD_ENVVARS_13.
+	* elf/dl-support.c (_dl_use_load_bias): New variable.
+	* elf/dl-load.c (_dl_map_object_from_fd): Mask c->mapstart
+	with GL(dl_use_load_bias).
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add
+	LD_USE_LOAD_BIAS.
+	* sysdeps/unix/sysv/linux/dl-librecon.h (EXTRA_LD_ENVVARS): Remove.
+	(EXTRA_LD_ENVVARS_LINUX): Renamed to...
+	(EXTRA_LD_ENVVARS_13): ... this.  Remove case at the beginning.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h (EXTRA_LD_ENVVARS):
+	Don't undefine first.  Remove EXTRA_LD_ENVVARS_LINUX.
+
+2003-11-21  Ulrich Drepper  <drepper@redhat.com>
+
 	* posix/regcomp.c (duplicate_node): Remove unnecessary local variable.
 
 	* posix/regcomp.c (re_dfa_add_tree_node): Make fourth parameter a
