@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -21,10 +21,16 @@
 #define _ERRNO_H
 #include <bits/errno.h>
 
-	.comm errno, 4
+	.bss
+	.globl	errno
 #ifdef __ELF__
-	.type errno, @object
+	.type	errno, @object
 #endif
+	.size	errno, 4
+errno:
+	.space	4
+
+weak_alias (errno, _errno)
 
 	.set noreorder
 
