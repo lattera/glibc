@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  Alpha version.
-   Copyright (C) 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@
 
 #include <hurd/signal.h>
 #include "thread_state.h"
-#include <mach/machine/alpha_instruction.h>
 #include "hurdfault.h"
 #include <assert.h>
 
@@ -38,9 +37,8 @@ struct mach_msg_trap_args
 
 struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
-			int signo, long int sigcode,
-			int rpc_wait,
-			struct machine_thread_all_state *state)
+			int signo, struct hurd_signal_detail *detail,
+			int rpc_wait, struct machine_thread_all_state *state)
 {
   __label__ trampoline, rpc_wait_trampoline;
   void *sigsp;
@@ -51,10 +49,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       /* We have a previous sigcontext that sigreturn was about
 	 to restore when another signal arrived.  We will just base
 	 our setup on that.  */
-      if (_hurdsig_catch_fault (SIGSEGV))
-	assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
-		_hurdsig_fault_sigcode < (long int) (ss->context + 1));
-      else
+      if (! _hurdsig_catch_memory_fault (ss->context))
 	{
 	  memcpy (&state->basic, &ss->context->sc_alpha_thread_state,
 		  sizeof (state->basic));
@@ -79,6 +74,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	     later.  */
 	  ss->intr_port = ss->context->sc_intr_port;
 	}
+      _hurdsig_end_catch_fault ();
+
       /* If the sigreturn context was bogus, just ignore it.  */
       ss->context = NULL;
     }
@@ -101,10 +98,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   sigsp -= sizeof (*scp);
   scp = sigsp;
 
-  if (_hurdsig_catch_fault (SIGSEGV))
+  if (_hurdsig_catch_memory_fault (scp))
     {
-      assert (_hurdsig_fault_sigcode >= (long int) scp &&
-	      _hurdsig_fault_sigcode < (long int) (scp + 1));
       /* We got a fault trying to write the stack frame.
 	 We cannot set up the signal handler.
 	 Returning NULL tells our caller, who will nuke us with a SIGILL.  */
@@ -137,6 +132,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			       &scp->sc_alpha_float_state,
 			       sizeof (state->fpu)))
 	return NULL;
+
+      _hurdsig_end_catch_fault ();
     }
 
   /* Modify the thread state to call the trampoline code on the new stack.  */
@@ -176,14 +173,14 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 ($16..$21, $1).  Pass the handler args to the trampoline code in
 	 t8..t10 ($22.$24).  */
       state->basic.r22 = signo;
-      state->basic.r23 = sigcode;
+      state->basic.r23 = detail->code;
       state->basic.r24 = (long int) scp;
     }
   else
     {
       state->basic.pc = (long int) &&trampoline;
       state->basic.r16 = signo;
-      state->basic.r17 = sigcode;
+      state->basic.r17 = detail->code;
       state->basic.r18 = (long int) scp;
     }
 
@@ -212,7 +209,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   asm volatile
     (/* Retry the interrupted mach_msg system call.  */
      "lda $0, -25($31)\n"	/* mach_msg_trap */
-     "call_pal %0\n"		/* Magic system call instruction.  */
+     "callsys\n"		/* Magic system call instruction.  */
      /* When the sigcontext was saved, v0 was MACH_RCV_INTERRUPTED.  But
 	now the message receive has completed and the original caller of
 	the RPC (i.e. the code running when the signal arrived) needs to
@@ -225,8 +222,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	in registers t8..t10 ($22..$24).  */
      "mov $22, $16\n"
      "mov $23, $17\n"
-     "mov $24, $18\n"
-     : : "i" (op_chmk));
+     "mov $24, $18\n");
 
  trampoline:
   /* Entry point for running the handler normally.  The arguments to the

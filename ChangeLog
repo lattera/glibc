@@ -1,3 +1,15 @@
+2002-04-07  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/alpha/trampoline.c: Don't include
+	<mach/machine/alpha_instruction.h>.
+	(_hurd_setup_sighandler): Take proper arguments for current decls.
+	Update code to use _hurdsig_catch_fault.
+	Use `callsys' instruction instead of `call_pal'.
+	* sysdeps/mach/hurd/alpha/intr-msg.h: New file.
+
+	* sysdeps/mach/alpha/sysdep.h: Include <mach/alpha/asm.h>.
+	(ALIGN, at, AT, fp): New macros.
+
 2002-04-06  Roland McGrath  <roland@frob.com>
 
 	* mach/setup-thread.c (__mach_setup_thread): int -> natural_t
