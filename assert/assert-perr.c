@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1995,1996,1997,1998,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <libintl.h>
 
 
-extern const char *__assert_program_name; /* In assert.c.  */
+extern const char *__progname;
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
@@ -52,8 +52,7 @@ __assert_perror_fail (int errnum,
 
   /* Print the message.  */
   (void) fprintf (stderr, _("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		  __assert_program_name ? __assert_program_name : "",
-		  __assert_program_name ? ": " : "",
+		  __progname, __progname[0] ? ": " : "",
 		  file, line,
 		  function ? function : "", function ? ": " : "",
 		  __strerror_r (errnum, errbuf, sizeof errbuf));

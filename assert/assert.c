@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1994,1995,1996,1998,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <libintl.h>
 
 
-const char *__assert_program_name;
+extern const char *__progname;
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
@@ -50,8 +50,7 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 
   /* Print the message.  */
   (void) fprintf (stderr, _("%s%s%s:%u: %s%sAssertion `%s' failed.\n"),
-		  __assert_program_name ? __assert_program_name : "",
-		  __assert_program_name ? ": " : "",
+		  __progname, __progname[0] ? ": " : "",
 		  file, line,
 		  function ? function : "", function ? ": " : "",
 		  assertion);
@@ -59,28 +58,3 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 
   abort ();
 }
-
-#ifdef	HAVE_GNU_LD
-
-#include <string.h>
-
-static void
-set_progname (int argc, char **argv, char **envp)
-{
-  char *p;
-
-  if (argv && argv[0])
-    {
-      p = strrchr (argv[0], '/');
-      if (p == NULL)
-	__assert_program_name = argv[0];
-      else
-	__assert_program_name = p + 1;
-    }
-
-  (void) &set_progname;		/* Avoid "defined but not used" warning.  */
-}
-
-text_set_element (__libc_subinit, set_progname);
-
-#endif
