@@ -1,7 +1,7 @@
 /* Get address of thread local variable.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,14 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stddef.h>
 #include <link.h>
 #include "thread_dbP.h"
-
-
-/* Value used for dtv entries for which the allocation is delayed.  */
-# define TLS_DTV_UNALLOCATED	((void *) -1l)
-
 
 td_err_e
 td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
@@ -34,44 +28,17 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 		     void **address __attribute__ ((unused)))
 {
 #if USE_TLS
-  size_t modid;
-  union dtv pdtv, *dtvp;
-
-  LOG ("td_thr_tls_get_addr");
-
-  psaddr_t dtvpp = th->th_unique;
-#if TLS_TCB_AT_TP
-  dtvpp += offsetof (struct pthread, header.dtv);
-#elif TLS_DTV_AT_TP
-  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
-#else
-# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined."
-#endif
-
-  /* Get the DTV pointer from the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph, dtvpp, &dtvp, sizeof dtvp) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
-
   /* Read the module ID from the link_map.  */
+  size_t modid;
   if (ps_pdread (th->th_ta_p->ph,
 		 &((struct link_map *) map_address)->l_tls_modid,
 		 &modid, sizeof modid) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* Get the corresponding entry in the DTV.  */
-  if (ps_pdread (th->th_ta_p->ph, dtvp + modid,
-		 &pdtv, sizeof (union dtv)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
-
-  /* It could be that the memory for this module is not allocated for
-     the given thread.  */
-  if (pdtv.pointer == TLS_DTV_UNALLOCATED)
-    /* There is not much we can do.  */
-    return TD_NOTALLOC;
-
-  *address = (char *) pdtv.pointer + offset;
-
-  return TD_OK;
+  td_err_e result = td_thr_tlsbase (th, modid, address);
+  if (result == TD_OK)
+    *address += offset;
+  return result;
 #else
   return TD_ERR;
 #endif

@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+/* thread_db.h -- interface to libthread_db.so library for debugging -lpthread
+   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,8 +53,10 @@ typedef enum
   TD_MALLOC,	  /* Out of memory.  */
   TD_PARTIALREG,  /* Not entire register set was read or written.  */
   TD_NOXREGS,	  /* X register set not available for given thread.  */
-  TD_NOTALLOC,	  /* TLS memory not yet allocated.  */
-  TD_VERSION	  /* Version if libpthread and libthread_db do not match.  */
+  TD_TLSDEFER,	  /* Thread has not yet allocated TLS for given module.  */
+  TD_NOTALLOC = TD_TLSDEFER,
+  TD_VERSION,	  /* Version if libpthread and libthread_db do not match.  */
+  TD_NOTLS	  /* There is TLS segment in the given module.  */
 } td_err_e;
 
 
@@ -401,6 +404,11 @@ extern td_err_e td_thr_setgregs (const td_thrhandle_t *__th,
 extern td_err_e td_thr_setxregs (const td_thrhandle_t *__th,
 				 const void *__addr);
 
+
+/* Get address of the given module's TLS storage area for the given thread.  */
+extern td_err_e td_thr_tlsbase (const td_thrhandle_t *__th,
+				unsigned long int __modid,
+				psaddr_t *__base);
 
 /* Get address of thread local variable.  */
 extern td_err_e td_thr_tls_get_addr (const td_thrhandle_t *__th,
