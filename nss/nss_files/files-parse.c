@@ -22,6 +22,18 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <stdlib.h>
 
+/* These symbols are defined by the including source file:
+
+   ENTNAME -- database name of the structure and functions (hostent, pwent).
+   STRUCTURE -- struct name, define only if not ENTNAME (passwd, group).
+   DATABASE -- string of the database file's name ("hosts", "passwd").
+
+   ENTDATA -- if defined, `struct ENTDATA' is used by the parser to store
+              things pointed to by the resultant `struct STRUCTURE'.
+
+   NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
+
+   Also see files-XXX.c.  */
 
 #define CONCAT(a,b) CONCAT1(a,b)
 #define CONCAT1(a,b) a##b
@@ -83,13 +95,15 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 #define STRING_FIELD(variable, terminator_p, swallow)			      \
   {									      \
     variable = line;							      \
-    while (!terminator_p (*line))					      \
-      if (*++line == '\0')						      \
-	return 0;							      \
-    *line = '\0';							      \
-    do									      \
+    while (*line != '\0' && !terminator_p (*line))			      \
       ++line;								      \
-    while (swallow && terminator_p (*line));				      \
+    if (*line != '\0')							      \
+      {									      \
+	*line = '\0';							      \
+	do								      \
+	  ++line;							      \
+	while (swallow && terminator_p (*line));			      \
+      }									      \
   }
 
 #define INT_FIELD(variable, terminator_p, swallow, base, convert)	      \

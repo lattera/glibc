@@ -106,7 +106,7 @@ REENTRANT_NAME (ADD_PARAMS, LOOKUP_TYPE *result, char *buffer, int buflen
 	     initialize it.  */
 	  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
 	    {
-	      h_errno = NETDB_INTERNAL;
+	      *h_errnop = NETDB_INTERNAL;
 	      return NULL;
 	    }
 #endif /* need _res */

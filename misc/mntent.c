@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <mntent.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 
 /* Prepare to begin reading and/or writing mount table entries from the
    beginning of FILE.  MODE is as for `fopen'.  */
@@ -33,7 +34,9 @@ setmntent (const char *file, const char *mode)
 int
 endmntent (FILE *stream)
 {
-  return fclose (stream);
+  if (fclose (stream) != 0) 
+      return 0;
+  return 1;
 }
 
 
@@ -46,15 +49,21 @@ getmntent (FILE *stream)
   static char *buf;
   static size_t bufsiz;
   static struct mntent m;
+  ssize_t nread;
   char *head;
 
   do
     {
-      if (getline (&buf, &bufsiz, stream) < 0)
+      nread = getline (&buf, &bufsiz, stream);
+      if (nread <= 0)
 	return NULL;
 
+      if (buf[nread - 1] == '\n')	/* chop newline */
+	buf[nread - 1] = '\0';
+
       head = buf + strspn (buf, " \t");
-    } while (head[0] == '#');	/* Skip comment lines.  */
+      /* skip empty lines and comment lines:  */
+    } while (head[0] == '\0' || head[0] == '#');
     
   m.mnt_fsname = strsep (&head, " \t") ?: (char *) "";
   if (head)
@@ -66,7 +75,7 @@ getmntent (FILE *stream)
   if (head)
     head += strspn (head, " \t");
   m.mnt_opts = strsep (&head, " \t") ?: (char *) "";
-  switch (head ? sscanf (head, " %d %d\n", &m.mnt_freq, &m.mnt_passno) : 0)
+  switch (head ? sscanf (head, " %d %d ", &m.mnt_freq, &m.mnt_passno) : 0)
     {
     case 0:
       m.mnt_freq = 0;
@@ -114,4 +123,3 @@ hasmntopt (const struct mntent *mnt, const char *opt)
 
   return NULL;
 }
-

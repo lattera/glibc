@@ -40,8 +40,13 @@ LINE_PARSER
 #include GENERIC
 
 DB_LOOKUP (servbyname, 1 + strlen (name), (".%s", name),
-	   LOOKUP_NAME (s_name, s_aliases),
-	   const char *name)
+	   {
+	     /* Must match both protocol and name.  */
+	     if (strcmp (result->s_proto, proto))
+	       continue;
+	     LOOKUP_NAME (s_name, s_aliases)
+	   },
+	   const char *name, const char *proto)
 
 DB_LOOKUP (servbyport, 20, ("=%d", port),
 	   {

@@ -30,7 +30,8 @@ Cambridge, MA 02139, USA.  */
    DATABASE -- string of the database file's name ("hosts", "passwd").
 
    NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
-   MIDLINE_COMMENTS - defined iff # before \n terminates a database line.
+
+   Also see files-parse.c.
 */
 
 #define ENTNAME_r	CONCAT(ENTNAME,_r)

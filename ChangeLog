@@ -1,3 +1,50 @@
+Thu Jul 11 20:09:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/nss_files/files-service.c (getservbyname): Take second arg PROTO
+	and check it.
+
+	* nss/nss_files/files-XXX.c: Comment fix.
+
+Fri Jul 12 01:28:35 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXent_r.c (GETFUNC_NAME_STRING): Define with name
+	of reentrant function.
+	(setup): Pass additional argument with function name we are
+	looking for.
+	(SETFUNC_NAME, ENDFUNC_NAME, GETFUNC_NAME): Call setup with
+	new argument {SET,END,GET}FUNC_NAME_STRING.
+
+	* nss/getXXent.c (GETFUNC_NAME): RESULT must be static because
+	we return a pointer.
+
+Thu Jul 11 18:20:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/nss_files/files-parse.c: Add comment about things to #define.
+
+	* nss/nss_files/files-hosts.c (NEED_H_ERRNO): Define it.
+
+	* nss/nss_files/files-parse.c (STRING_FIELD): Don't flag NUL before
+	terminator char as an error.
+
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Set *H_ERRNOP, not h_errno.
+
+Thu Jul 11 03:21:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c (write_out): Move code to determine new
+	best size out of inner loop.
+
+Wed Jul 10 05:24:40 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* misc/mntent.c: Include <sys/types.h>.
+	(endmntent): Return 1 one success, 0 on failure.
+	(getmntent): Chop newline and ignore empty lines.
+
+Mon Jul  8 21:18:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RESOLVE): New macro, defined
+	differently based on [RTLD_BOOTSTRAP].
+	(elf_machine_rela): Use it instead of the fn ptr arg directly.
+
 Tue Jul  9 09:37:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/glob.h (__glob_opendir_hook, __glob_readdir_hook,

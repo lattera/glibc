@@ -57,7 +57,7 @@ LOOKUP_TYPE *
 GETFUNC_NAME (void)
 {
   static char buffer[BUFLEN];
-  LOOKUP_TYPE result;
+  static LOOKUP_TYPE result;
 
   return REENTRANT_GETNAME (&result, buffer, BUFLEN H_ERRNO_VAR);
 }

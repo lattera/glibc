@@ -670,15 +670,15 @@ write_out (struct catalog *catalog, const char *output_name,
 		}
 	      message_run = message_run->next;
 	    }
-
-	  if (act_depth * act_size <= best_total)
-	    {
-	      /* We have found a better solution.  */
-	      best_total = act_depth * act_size;
-	      best_size = act_size;
-	      best_depth = act_depth;
-	    }
 	  set_run = set_run->next;
+	}
+
+      if (act_depth * act_size <= best_total)
+	{
+	  /* We have found a better solution.  */
+	  best_total = act_depth * act_size;
+	  best_size = act_size;
+	  best_depth = act_depth;
 	}
 
       ++act_size;

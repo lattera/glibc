@@ -31,6 +31,7 @@ Cambridge, MA 02139, USA.  */
 
 #define ENTNAME		hostent
 #define DATABASE	"hosts"
+#define NEED_H_ERRNO
 
 #define ENTDATA hostent_data
 struct hostent_data
