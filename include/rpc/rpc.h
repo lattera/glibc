@@ -44,14 +44,10 @@ extern void __rpc_thread_clnt_cleanup (void);
 extern void __rpc_thread_key_cleanup (void);
 
 extern void __rpc_thread_destroy (void);
-#if USE_TLS && HAVE___THREAD
+
 __libc_tsd_define (extern, RPC_VARS)
-#endif
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
-
-libc_hidden_proto (__rpc_thread_svc_fdset)
-libc_hidden_proto (__rpc_thread_createerr)
 
 #endif /* _RPC_THREAD_SAFE_ */
 
