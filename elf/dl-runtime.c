@@ -45,7 +45,10 @@ _dl_object_relocation_scope (struct link_map *l)
 	_dl_map_object_deps (l, NULL, 0, 0);
 
       /* The primary scope is this object itself and its
-	 dependencies.  */
+	 dependencies.
+
+	 XXX This is wrong.  Only the object must be searched, not
+	 the dependencies. --drepper  */
       _dl_global_scope[0] = l;
 
       /* Secondary is the dependency tree that reached L; the object
