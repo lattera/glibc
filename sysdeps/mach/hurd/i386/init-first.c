@@ -132,11 +132,19 @@ init (int *data)
   struct hurd_startup_data *d;
   unsigned long int threadvars[_HURD_THREADVAR_MAX];
 
-  /* Provide temporary storage for thread-specific variables on the startup
-     stack so the cthreads initialization code can use them for malloc et al,
-  or so we can use malloc below for the real threadvars array.  */
+  /* Provide temporary storage for thread-specific variables on the
+     startup stack so the cthreads initialization code can use them
+     for malloc et al, or so we can use malloc below for the real
+     threadvars array.  */
   memset (threadvars, 0, sizeof threadvars);
   __hurd_threadvar_stack_offset = (unsigned long int) threadvars;
+
+  /* Since the cthreads initialization code uses malloc, and the
+     malloc initialization code needs to get at the environment, make
+     sure we can find it.  We'll need to do this again later on since
+     switching stacks changes the location where the environment is
+     stored.  */
+  __environ = envp;
 
   while (*envp)
     ++envp;

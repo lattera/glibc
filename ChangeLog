@@ -1,3 +1,8 @@
+2001-08-18  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Initialize __environ
+	before calling the cthreads initialization code.
+
 2001-08-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* argp/argp-help.c: Fix two problems introduced in last change.
