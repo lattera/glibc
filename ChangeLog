@@ -2,6 +2,8 @@
 
 	* version.h (VERSION): Bump to 2.2.93.
 
+	* sysdeps/unix/sysv/linux/x86_64/Dist: Add __start_context.S.
+
 2002-09-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): If prelinking succeeded, mark all objects
