@@ -1,3 +1,10 @@
+2002-09-26  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-load.c (_dl_dst_count, _dl_dst_substitute): Handle $LIB
+	dynamic string tag.
+	* elf/Makefile ($(objpfx)trusted-dirs.st): Make the output define
+	DL_DST_LIB based on $(slibdir).
+
 2002-10-13  Roland McGrath  <roland@frob.com>
 
 	* elf/rtld-Rules ($(objpfx)rtld-libc.a): Use $(verbose) in ar command.

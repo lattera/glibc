@@ -202,8 +202,8 @@ _dl_dst_count (const char *name, int is_path)
       ++name;
       if ((len = is_dst (start, name, "ORIGIN", is_path,
 			 INTUSE(__libc_enable_secure))) != 0
-	  || ((len = is_dst (start, name, "PLATFORM", is_path, 0))
-	      != 0))
+	  || (len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0
+	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -239,9 +239,10 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  if ((len = is_dst (start, name, "ORIGIN", is_path,
 			     INTUSE(__libc_enable_secure))) != 0)
 	    repl = l->l_origin;
-	  else if ((len = is_dst (start, name, "PLATFORM", is_path,
-				  0)) != 0)
+	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
 	    repl = GL(dl_platform);
+	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)
+	    repl = DL_DST_LIB;
 
 	  if (repl != NULL && repl != (const char *) -1)
 	    {
