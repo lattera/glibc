@@ -145,6 +145,12 @@ timeout_handler (int sig __attribute__ ((unused)))
   CLEANUP_HANDLER;
 #endif
 
+  /* If we expected this signal: good!  */
+#ifdef EXPECTED_SIGNAL
+  if (EXPECTED_SIGNAL == SIGALRM)
+    exit (0);
+#endif
+
   if (WIFSIGNALED (status) && WTERMSIG (status) == SIGKILL)
     fputs ("Timed out: killed the child process\n", stderr);
   else if (WIFSTOPPED (status))

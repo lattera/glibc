@@ -1,5 +1,8 @@
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* test-skeleton.c (timeout_handler): Allow expected signal to be
+	SIGALRM.
+
 	* wctype/wcfuncs.c: Add libc_hidden_def for iswalnum.
 
 	* sysdeps/posix/raise.c: Add libc_hidden_def for raise.

@@ -1,5 +1,9 @@
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-stdio1 and tst-stdio2.
+	* tst-stdio1.c: New file.
+	* tst-stdio2.c: New file.
+
 	* init.c (__pthread_initialize_minimal): Correct INIT_LIST_HEAD use.
 
 	* Makefile (tests): Comment out tst-locale2 for now.

@@ -131,6 +131,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-signal1 tst-signal2 tst-signal3 \
 	tst-exec1 tst-exec2 tst-exec3 \
 	tst-exit1 \
+	tst-stdio1 tst-stdio2 \
 	tst-stack1 \
 	tst-unload \
 	tst-sysconf \
