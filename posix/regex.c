@@ -1748,11 +1748,24 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
    correct places in the new one.  If extending the buffer results in it
    being larger than MAX_BUF_SIZE, then flag memory exhausted.  */
 #if __BOUNDED_POINTERS__
+# define SET_HIGH_BOUND(P) (__ptrhigh (P) = __ptrlow (P) + bufp->allocated)
 # define MOVE_BUFFER_POINTER(P) \
-  (__ptrhigh (P) = (__ptrlow (P) += incr) + bufp->allocated, \
-   __ptrvalue (P) += incr)
+  (__ptrlow (P) += incr, SET_HIGH_BOUND (P), __ptrvalue (P) += incr)
+# define ELSE_EXTEND_BUFFER_HIGH_BOUND		\
+  else						\
+    {						\
+      SET_HIGH_BOUND (b);			\
+      SET_HIGH_BOUND (begalt);			\
+      if (fixup_alt_jump)			\
+	SET_HIGH_BOUND (fixup_alt_jump);	\
+      if (laststart)				\
+	SET_HIGH_BOUND (laststart);		\
+      if (pending_exact)			\
+	SET_HIGH_BOUND (pending_exact);		\
+    }
 #else
 # define MOVE_BUFFER_POINTER(P) (P) += incr
+# define ELSE_EXTEND_BUFFER_HIGH_BOUND
 #endif
 #define EXTEND_BUFFER()							\
   do {									\
@@ -1778,6 +1791,7 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
 	if (pending_exact)						\
 	  MOVE_BUFFER_POINTER (pending_exact);				\
       }									\
+    ELSE_EXTEND_BUFFER_HIGH_BOUND					\
   } while (0)
 
 
