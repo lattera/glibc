@@ -6,7 +6,24 @@ libc {
     __register_frame_info_table;
   }
   GLIBC_2.2 {
+    # functions used in other libraries
+    __xstat64; __fxstat64; __lxstat64;
+
+    # a*
+    alphasort64;
+
+    # g*
+    getdirentries64;
     # New rlimit interface
     getrlimit; setrlimit; getrlimit64; setrlimit64;
+
+    # r*
+    readdir64; readdir64_r;
+
+    # s*
+    scandir64;
+
+    # v*
+    versionsort64;
   }
 }

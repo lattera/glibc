@@ -38,7 +38,7 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
 	/* Convert to current kernel version of `struct stat'.  */
 	buf->st_dev = kbuf->st_dev;
-#ifdef _HAVE___PAD1
+#ifdef _HAVE_STAT___PAD1
 	buf->__pad1 = 0;
 #endif
 	buf->st_ino = kbuf->st_ino;
@@ -47,28 +47,28 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-#ifdef _HAVE___PAD2
+#ifdef _HAVE_STAT___PAD2
 	buf->__pad2 = 0;
 #endif
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE___UNUSED1
+#ifdef _HAVE_STAT___UNUSED1
 	buf->__unused1 = 0;
 #endif
 	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE___UNUSED2
+#ifdef _HAVE_STAT___UNUSED2
 	buf->__unused2 = 0;
 #endif
 	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE___UNUSED3
+#ifdef _HAVE_STAT___UNUSED3
 	buf->__unused3 = 0;
 #endif
-#ifdef _HAVE___UNUSED4
+#ifdef _HAVE_STAT___UNUSED4
 	buf->__unused4 = 0;
 #endif
-#ifdef _HAVE___UNUSED5
+#ifdef _HAVE_STAT___UNUSED5
 	buf->__unused5 = 0;
 #endif
       }
@@ -96,37 +96,40 @@ xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
 	/* Convert to current kernel version of `struct stat64'.  */
 	buf->st_dev = kbuf->st_dev;
-#ifdef _HAVE___PAD1
+#ifdef _HAVE_STAT64___PAD1
 	buf->__pad1 = 0;
 #endif
 	buf->st_ino = kbuf->st_ino;
+#ifdef _HAVE_STAT64___ST_INO
+	buf->__st_ino = kbuf->st_ino;
+#endif
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-#ifdef _HAVE___PAD2
+#ifdef _HAVE_STAT64___PAD2
 	buf->__pad2 = 0;
 #endif
 	buf->st_size = kbuf->st_size;
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE___UNUSED1
+#ifdef _HAVE_STAT64___UNUSED1
 	buf->__unused1 = 0;
 #endif
 	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE___UNUSED2
+#ifdef _HAVE_STAT64___UNUSED2
 	buf->__unused2 = 0;
 #endif
 	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE___UNUSED3
+#ifdef _HAVE_STAT64___UNUSED3
 	buf->__unused3 = 0;
 #endif
-#ifdef _HAVE___UNUSED4
+#ifdef _HAVE_STAT64___UNUSED4
 	buf->__unused4 = 0;
 #endif
-#ifdef _HAVE___UNUSED5
+#ifdef _HAVE_STAT64___UNUSED5
 	buf->__unused5 = 0;
 #endif
       }
@@ -151,23 +154,48 @@ xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
     {
     case _STAT_VER_LINUX:
       {
-	/* Convert current kernel version of `struct stat64' to `struct stat'.  */
+	/* Convert current kernel version of `struct stat64' to
+           `struct stat'.  */
 	buf->st_dev = kbuf->st_dev;
-#ifdef _HAVE___PAD1
+#ifdef _HAVE_STAT___PAD1
 	buf->__pad1 = 0;
 #endif
-	buf->st_ino = kbuf->st_ino;
+#ifdef _HAVE_STAT64___ST_INO
+# if __ASSUME_ST_INO_64_BIT == 0
+	if (kbuf->st_ino == 0)
+	  buf->st_ino = kbuf->__st_ino;
+	else
+# endif
+	  {
+	    buf->st_ino = kbuf->st_ino;
+	    if (sizeof (buf->st_ino) != sizeof (kbuf->__st_ino)
+		&& buf->st_ino != kbuf->st_ino)
+	      {
+		__set_errno (EOVERFLOW);
+		return -1;
+	      }
+	  }
+#else
+	buf->st_ino = kbuf->__st_ino;
+	if (sizeof (buf->st_ino) != sizeof (kbuf->__st_ino)
+	    && buf->st_ino != kbuf->st_ino)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+#endif
 	buf->st_mode = kbuf->st_mode;
 	buf->st_nlink = kbuf->st_nlink;
 	buf->st_uid = kbuf->st_uid;
 	buf->st_gid = kbuf->st_gid;
 	buf->st_rdev = kbuf->st_rdev;
-#ifdef _HAVE___PAD2
+#ifdef _HAVE_STAT___PAD2
 	buf->__pad2 = 0;
 #endif
 	buf->st_size = kbuf->st_size;
 	/* Check for overflow.  */
-	if (buf->st_size != kbuf->st_size)
+	if (sizeof (buf->st_size) != sizeof (kbuf->st_size)
+	    && buf->st_size != kbuf->st_size)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
@@ -175,27 +203,28 @@ xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	buf->st_blksize = kbuf->st_blksize;
 	buf->st_blocks = kbuf->st_blocks;
 	/* Check for overflow.  */
-	if (buf->st_blocks != kbuf->st_blocks)
+	if (sizeof (buf->st_blocks) != sizeof (kbuf->st_blocks)
+	    && buf->st_blocks != kbuf->st_blocks)
 	  {
 	    __set_errno (EOVERFLOW);
 	    return -1;
 	  }
 	buf->st_atime = kbuf->st_atime;
-#ifdef _HAVE___UNUSED1
+#ifdef _HAVE_STAT___UNUSED1
 	buf->__unused1 = 0;
 #endif
 	buf->st_mtime = kbuf->st_mtime;
-#ifdef _HAVE___UNUSED2
+#ifdef _HAVE_STAT___UNUSED2
 	buf->__unused2 = 0;
 #endif
 	buf->st_ctime = kbuf->st_ctime;
-#ifdef _HAVE___UNUSED3
+#ifdef _HAVE_STAT___UNUSED3
 	buf->__unused3 = 0;
 #endif
-#ifdef _HAVE___UNUSED4
+#ifdef _HAVE_STAT___UNUSED4
 	buf->__unused4 = 0;
 #endif
-#ifdef _HAVE___UNUSED5
+#ifdef _HAVE_STAT___UNUSED5
 	buf->__unused5 = 0;
 #endif
       }

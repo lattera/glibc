@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-08-03
+GNU C Library NEWS -- history of user-visible changes.  2000-08-11
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -1084,7 +1084,8 @@ Version 1.04
   compiler, so the C library should now work with C++ code.
 
 * The header file <bstring.h> is gone.  <string.h> now declares bcopy,
-  bcmp, bzero, and ffs.
+  bcmp, bzero, and ffs.  (Update: nowadays these functions are declared
+  in <strings.h>.)
 
 * Mike Haertel (of GNU e?grep and malloc fame) has written a new sorting
   function which uses the `merge sort' algorithm, and is said to be
@@ -1095,14 +1096,6 @@ Version 1.04
 
 * The C library now includes Michael Glad's Ultra Fast Crypt, which
   provides the Unix `crypt' function, plus some other entry points.
-  Because of the United States export restriction on DES implementations,
-  we are distributing this code separately from the rest of the C library.
-  There is an extra distribution tar file just for crypt; it is called
-  `glibc-VERSION-crypt.tar.Z', e.g. `glibc-1.04-crypt.tar.Z'.  You can just
-  unpack the crypt distribution along with the rest of the C library and
-  build; you can also build the library without getting crypt.  Users
-  outside the USA can get the crypt distribution via anonymous FTP from
-  ftp.uni-c.dk [129.142.6.74], or another archive site outside the U.S.
 
 * The code and header files taken from 4.4 BSD have been updated with the
   latest files released from Berkeley.
@@ -1110,7 +1103,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
+Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

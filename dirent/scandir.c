@@ -21,17 +21,23 @@
 #include <string.h>
 #include <errno.h>
 
+#ifndef SCANDIR
+#define SCANDIR scandir
+#define READDIR __readdir
+#define DIRENT_TYPE struct dirent
+#endif
+
 int
-scandir (dir, namelist, select, cmp)
+SCANDIR (dir, namelist, select, cmp)
      const char *dir;
-     struct dirent ***namelist;
-     int (*select) (const struct dirent *);
+     DIRENT_TYPE ***namelist;
+     int (*select) (const DIRENT_TYPE *);
      int (*cmp) (const void *, const void *);
 {
   DIR *dp = __opendir (dir);
-  struct dirent **v = NULL;
+  DIRENT_TYPE **v = NULL;
   size_t vsize = 0, i;
-  struct dirent *d;
+  DIRENT_TYPE *d;
   int save;
 
   if (dp == NULL)
@@ -41,10 +47,10 @@ scandir (dir, namelist, select, cmp)
   __set_errno (0);
 
   i = 0;
-  while ((d = __readdir (dp)) != NULL)
+  while ((d = READDIR (dp)) != NULL)
     if (select == NULL || (*select) (d))
       {
-	struct dirent *vnew;
+	DIRENT_TYPE *vnew;
 	size_t dsize;
 
 	/* Ignore errors from select or readdir */
@@ -52,23 +58,23 @@ scandir (dir, namelist, select, cmp)
 
 	if (__builtin_expect (i == vsize, 0))
 	  {
-	    struct dirent **new;
+	    DIRENT_TYPE **new;
 	    if (vsize == 0)
 	      vsize = 10;
 	    else
 	      vsize *= 2;
-	    new = (struct dirent **) realloc (v, vsize * sizeof (*v));
+	    new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
 	    if (new == NULL)
 	      break;
 	    v = new;
 	  }
 
 	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	vnew = (struct dirent *) malloc (dsize);
+	vnew = (DIRENT_TYPE *) malloc (dsize);
 	if (vnew == NULL)
 	  break;
 
-	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
+	v[i++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
       }
 
   if (__builtin_expect (errno, 0) != 0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +17,32 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dirent.h>
-#include <unistd.h>
+#include <string.h>
 
-#ifndef GETDIRENTRIES
-# define GETDIRENTRIES getdirentries
-# define __GETDENTS __getdents
-#else
-# define off_t off64_t
-# define __lseek __lseek64
-#endif
-
-ssize_t
-GETDIRENTRIES (int fd, char *buf, size_t nbytes, off_t *basep)
+int
+__alphasort64 (const void *a, const void *b)
 {
-  off_t base = __lseek (fd, (off_t) 0, SEEK_CUR);
-  ssize_t result;
-
-  result = __GETDENTS (fd, buf, nbytes);
-
-  if (result != -1)
-    *basep = base;
-
-  return result;
+  return strcoll ((*(const struct dirent64 **) a)->d_name,
+		  (*(const struct dirent64 **) b)->d_name);
 }
+
+#include <shlib-compat.h>
+
+versioned_symbol (libc, __alphasort64, alphasort64, GLIBC_2_2);
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+
+#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
+
+int
+__old_alphasort64 (const void *a, const void *b);
+
+int
+__old_alphasort64 (const void *a, const void *b)
+{
+  return strcoll ((*(const struct __old_dirent64 **) a)->d_name,
+                    (*(const struct __old_dirent64 **) b)->d_name);
+}
+
+compat_symbol (libc, __old_alphasort64, alphasort64, GLIBC_2_1);
+#endif

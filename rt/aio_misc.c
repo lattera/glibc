@@ -36,16 +36,16 @@ static void add_request_to_runlist (struct requestlist *newrequest);
 static struct requestlist **pool;
 
 /* Number of total and allocated pool entries.  */
-static size_t pool_tab_size;
+static size_t pool_max_size;
 static size_t pool_size;
 
 /* We implement a two dimensional array but allocate each row separately.
    The macro below determines how many entries should be used per row.
    It should better be a power of two.  */
-#define ENTRIES_PER_ROW	16
+#define ENTRIES_PER_ROW	32
 
-/* The row table is incremented in units of this.  */
-#define ROW_STEP	8
+/* How many rows we allocate at once.  */
+#define ROWS_STEP	8
 
 /* List of available entries.  */
 static struct requestlist *freelist;
@@ -68,7 +68,7 @@ static int idle_thread_count;
 static struct aioinit optim =
 {
   20,	/* int aio_threads;	Maximal number of threads.  */
-  256,	/* int aio_num;		Number of expected simultanious requests. */
+  64,	/* int aio_num;		Number of expected simultanious requests. */
   0,
   0,
   0,
@@ -96,51 +96,33 @@ get_elem (void)
   if (freelist == NULL)
     {
       struct requestlist *new_row;
-      size_t new_size;
+      int cnt;
 
       assert (sizeof (struct aiocb) == sizeof (struct aiocb64));
 
-      /* Compute new size.  */
-      new_size = pool_size ? pool_size + ENTRIES_PER_ROW : optim.aio_num;
-
-      if ((new_size / ENTRIES_PER_ROW) >= pool_tab_size)
+      if (pool_size + 1 >= pool_max_size)
 	{
-	  size_t new_tab_size = new_size / ENTRIES_PER_ROW;
+	  size_t new_max_size = pool_max_size + ROWS_STEP;
 	  struct requestlist **new_tab;
 
 	  new_tab = (struct requestlist **)
-	    realloc (pool, (new_tab_size * sizeof (struct requestlist *)));
+	    realloc (pool, new_max_size * sizeof (struct requestlist *));
 
 	  if (new_tab == NULL)
 	    return NULL;
 
-	  pool_tab_size = new_tab_size;
+	  pool_max_size = new_max_size;
 	  pool = new_tab;
 	}
 
-      if (pool_size == 0)
-	{
-	  size_t cnt;
+      /* Allocat the new row.  */
+      cnt = pool_size == 0 ? optim.aio_num : ENTRIES_PER_ROW;
+      new_row = (struct requestlist *) calloc (cnt,
+					       sizeof (struct requestlist));
+      if (new_row == NULL)
+	return NULL;
 
-	  new_row = (struct requestlist *)
-	    calloc (new_size, sizeof (struct requestlist));
-
-	  if (new_row == NULL)
-	    return NULL;
-
-	  for (cnt = 0; cnt < new_size / ENTRIES_PER_ROW; ++cnt)
-	    pool[cnt] = &new_row[cnt * ENTRIES_PER_ROW];
-	}
-      else
-	{
-	  /* Allocat one new row.  */
-	  new_row = (struct requestlist *)
-	    calloc (ENTRIES_PER_ROW, sizeof (struct requestlist));
-	  if (new_row == NULL)
-	    return NULL;
-
-	  pool[new_size / ENTRIES_PER_ROW - 1] = new_row;
-	}
+      pool[pool_size++] = new_row;
 
       /* Put all the new entries in the freelist.  */
       do
@@ -148,7 +130,7 @@ get_elem (void)
 	  new_row->next_prio = freelist;
 	  freelist = new_row++;
 	}
-      while (++pool_size < new_size);
+      while (--cnt > 0);
     }
 
   result = freelist;
@@ -210,8 +192,11 @@ internal_function
 __aio_remove_request (struct requestlist *last, struct requestlist *req,
 		      int all)
 {
+  assert (req->running == yes || req->running == queued
+	  || req->running == done);
+
   if (last != NULL)
-    last->next_prio = req->next_prio;
+    last->next_prio = all ? NULL : req->next_prio;
   else
     {
       if (all || req->next_prio == NULL)
@@ -419,20 +404,25 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	  pthread_attr_init (&attr);
 	  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
+	  running = newp->running = allocated;
+
 	  /* Now try to start a thread.  */
 	  if (pthread_create (&thid, &attr, handle_fildes_io, newp) == 0)
+	    /* We managed to enqueue the request.  All errors which can
+	       happen now can be recognized by calls to `aio_return' and
+	       `aio_error'.  */
+	    ++nthreads;
+	  else
 	    {
-	      /* We managed to enqueue the request.  All errors which can
-		 happen now can be recognized by calls to `aio_return' and
-		 `aio_error'.  */
-	      running = allocated;
-	      ++nthreads;
+	      /* Reset the running flat.  The new request is not running.  */
+	      running = newp->running = yes;
+
+	      if (nthreads == 0)
+		/* We cannot create a thread in the moment and there is
+		   also no thread running.  This is a problem.  `errno' is
+		   set to EAGAIN if this is only a temporary problem.  */
+		result = -1;
 	    }
-	  else if (nthreads == 0)
-	    /* We cannot create a thread in the moment and there is
-	       also no thread running.  This is a problem.  `errno' is
-	       set to EAGAIN if this is only a temporary problem.  */
-	    result = -1;
 	}
     }
 
@@ -486,6 +476,9 @@ handle_fildes_io (void *arg)
 	pthread_mutex_lock (&__aio_requests_mutex);
       else
 	{
+	  /* Hopefully this request is marked as running.  */
+	  assert (runp->running == allocated);
+
 	  /* Update our variables.  */
 	  aiocbp = runp->aiocbp;
 	  fildes = aiocbp->aiocb.aio_fildes;
@@ -584,6 +577,11 @@ handle_fildes_io (void *arg)
 	     request.  */
 	  __aio_notify (runp);
 
+	  /* For debugging purposes we reset the running flag of the
+	     finished request.  */
+	  assert (runp->running == allocated);
+	  runp->running = done;
+
 	  /* Now dequeue the current request.  */
 	  __aio_remove_request (NULL, runp, 0);
 	  if (runp->next_prio != NULL)
@@ -672,11 +670,7 @@ free_res (void)
 {
   size_t row;
 
-  /* The first block of rows as specified in OPTIM is allocated in
-     one chunk.  */
-  free (pool[0]);
-
-  for (row = optim.aio_num / ENTRIES_PER_ROW; row < pool_tab_size; ++row)
+  for (row = 0; row < pool_max_size; ++row)
     free (pool[row]);
 
   free (pool);

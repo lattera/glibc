@@ -62,7 +62,8 @@ enum
   no,
   queued,
   yes,
-  allocated
+  allocated,
+  done
 };
 
 

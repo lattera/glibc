@@ -1,2 +1,3 @@
-#define GETDENTS64 1
+#define GETDIRENTRIES getdirentries64
+#define __GETDENTS __getdents64
 #include "getdirentries.c"

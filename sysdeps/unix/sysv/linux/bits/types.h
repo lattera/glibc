@@ -137,7 +137,7 @@ typedef __u_long __fsfilcnt_t;
 typedef __u_quad_t __fsfilcnt64_t;
 
 /* Type of file serial numbers.  */
-typedef __u_long __ino64_t;
+typedef __u_quad_t __ino64_t;
 
 /* Type of file sizes and offsets.  */
 typedef __loff_t __off64_t;

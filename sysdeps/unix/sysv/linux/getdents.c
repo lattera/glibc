@@ -51,9 +51,12 @@ struct kernel_dirent
     char d_name[256];
   };
 
-#ifdef GETDENTS64
-# define __getdents __getdents64
-# define dirent dirent64
+#ifndef __GETDENTS
+# define __GETDENTS __getdents
+# define DIRENT_TYPE struct dirent
+#endif
+#ifndef DIRENT_SET_DP_INO
+# define DIRENT_SET_DP_INO(dp, value) (dp)->d_ino = (value)
 #endif
 
 /* The problem here is that we cannot simply read the next NBYTES
@@ -66,22 +69,22 @@ struct kernel_dirent
    amount of data returned much more then the reduced buffer size.  */
 ssize_t
 internal_function
-__getdents (int fd, char *buf, size_t nbytes)
+__GETDENTS (int fd, char *buf, size_t nbytes)
 {
   off_t last_offset = -1;
   size_t red_nbytes;
   struct kernel_dirent *skdp, *kdp;
-  struct dirent *dp;
+  DIRENT_TYPE *dp;
   int retval;
-  const size_t size_diff = (offsetof (struct dirent, d_name)
+  const size_t size_diff = (offsetof (DIRENT_TYPE, d_name)
 			    - offsetof (struct kernel_dirent, d_name));
 
   red_nbytes = MIN (nbytes
-		    - ((nbytes / (offsetof (struct dirent, d_name) + 14))
+		    - ((nbytes / (offsetof (DIRENT_TYPE, d_name) + 14))
 		       * size_diff),
 		    nbytes - size_diff);
 
-  dp = (struct dirent *) buf;
+  dp = (DIRENT_TYPE *) buf;
   skdp = kdp = __alloca (red_nbytes);
 
   retval = INLINE_SYSCALL (getdents, 3, fd,
@@ -92,7 +95,7 @@ __getdents (int fd, char *buf, size_t nbytes)
 
   while ((char *) kdp < (char *) skdp + retval)
     {
-      const size_t alignment = __alignof__ (struct dirent);
+      const size_t alignment = __alignof__ (DIRENT_TYPE);
       /* Since kdp->d_reclen is already aligned for the kernel structure
 	 this may compute a value that is bigger than necessary.  */
       size_t new_reclen = ((kdp->d_reclen + size_diff + alignment - 1)
@@ -116,14 +119,14 @@ __getdents (int fd, char *buf, size_t nbytes)
 	}
 
       last_offset = kdp->d_off;
-      dp->d_ino = kdp->d_ino;
+      DIRENT_SET_DP_INO(dp, kdp->d_ino);
       dp->d_off = kdp->d_off;
       dp->d_reclen = new_reclen;
       dp->d_type = DT_UNKNOWN;
       memcpy (dp->d_name, kdp->d_name,
 	      kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
 
-      dp = (struct dirent *) ((char *) dp + new_reclen);
+      dp = (DIRENT_TYPE *) ((char *) dp + new_reclen);
       kdp = (struct kernel_dirent *) (((char *) kdp) + kdp->d_reclen);
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +17,31 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dirent.h>
-#include <unistd.h>
 
-#ifndef GETDIRENTRIES
-# define GETDIRENTRIES getdirentries
-# define __GETDENTS __getdents
-#else
-# define off_t off64_t
-# define __lseek __lseek64
+#define SCANDIR __scandir64
+#define READDIR __readdir64
+#define DIRENT_TYPE struct dirent64
+
+#include <dirent/scandir.c>
+
+#undef SCANDIR
+#undef READDIR
+#undef DIRENT_TYPE
+
+#include <shlib-compat.h>
+
+versioned_symbol (libc, __scandir64, scandir64, GLIBC_2_2);
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+
+#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
+
+#define SCANDIR __old_scandir64
+#define READDIR __old_readdir64
+#define DIRENT_TYPE struct __old_dirent64
+
+#include <dirent/scandir.c>
+
+compat_symbol (libc, __old_scandir64, scandir64, GLIBC_2_1);
+
 #endif
-
-ssize_t
-GETDIRENTRIES (int fd, char *buf, size_t nbytes, off_t *basep)
-{
-  off_t base = __lseek (fd, (off_t) 0, SEEK_CUR);
-  ssize_t result;
-
-  result = __GETDENTS (fd, buf, nbytes);
-
-  if (result != -1)
-    *basep = base;
-
-  return result;
-}

@@ -29,6 +29,7 @@
 /* And undo the hack.  */
 #undef aio_cancel64
 
+#include <assert.h>
 #include <errno.h>
 
 #include "aio_misc.h"
@@ -74,16 +75,19 @@ aio_cancel (fildes, aiocbp)
 
 	  /* Don't remove the entry if a thread is already working on it.  */
 	  if (req->running == allocated)
-	    result = AIO_NOTCANCELED;
-	  else if (req->running == yes)
+	    {
+	      result = AIO_NOTCANCELED;
+	      req = NULL;
+	    }
+	  else
 	    {
 	      /* We can remove the entry.  */
 	      __aio_remove_request (last, req, 0);
 
 	      result = AIO_CANCELED;
-	    }
 
-	  req->next_prio = NULL;
+	      req->next_prio = NULL;
+	    }
 	}
     }
   else
@@ -103,12 +107,17 @@ aio_cancel (fildes, aiocbp)
 	      old->next_prio = NULL;
 
 	      result = AIO_NOTCANCELED;
+
+	      if (req != NULL)
+		__aio_remove_request (old, req, 1);
 	    }
 	  else
-	    result = AIO_CANCELED;
+	    {
+	      result = AIO_CANCELED;
 
-	  /* We can remove the entry.  */
-	  __aio_remove_request (NULL, req, 1);
+	      /* We can remove the entry.  */
+	      __aio_remove_request (NULL, req, 1);
+	    }
 	}
     }
 
@@ -116,6 +125,7 @@ aio_cancel (fildes, aiocbp)
   while (req != NULL)
     {
       struct requestlist *old = req;
+      assert (req->running == yes || req->running == queued);
       req->aiocbp->aiocb.__error_code = ECANCELED;
       req->aiocbp->aiocb.__return_value = -1;
       __aio_notify (req);

@@ -21,4 +21,19 @@ struct kernel_stat
 #define _HAVE___UNUSED1
 #define _HAVE___UNUSED2
 
+#define _HAVE_STAT___UNUSED1
+#define _HAVE_STAT___UNUSED2
+#define _HAVE_STAT___UNUSED3
+#define _HAVE_STAT___UNUSED4
+#define _HAVE_STAT___UNUSED5
+#define _HAVE_STAT___PAD1
+#define _HAVE_STAT___PAD2
+#define _HAVE_STAT64___UNUSED1
+#define _HAVE_STAT64___UNUSED2
+#define _HAVE_STAT64___UNUSED3
+#define _HAVE_STAT64___UNUSED4
+#define _HAVE_STAT64___UNUSED5
+#define _HAVE_STAT64___PAD1
+#define _HAVE_STAT64___PAD2
+
 #define XSTAT_IS_XSTAT64 1

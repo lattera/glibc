@@ -38,6 +38,4 @@ struct glibc2_stat
     unsigned int st_gen;
   };
 
-extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
-
 #define XSTAT_IS_XSTAT64 1

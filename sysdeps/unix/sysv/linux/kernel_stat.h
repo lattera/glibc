@@ -29,3 +29,17 @@ struct kernel_stat
     unsigned long int __unused5;
 #define _HAVE___UNUSED5
   };
+
+#define _HAVE_STAT___UNUSED1
+#define _HAVE_STAT___UNUSED2
+#define _HAVE_STAT___UNUSED3
+#define _HAVE_STAT___UNUSED4
+#define _HAVE_STAT___UNUSED5
+#define _HAVE_STAT___PAD1
+#define _HAVE_STAT___PAD2
+#define _HAVE_STAT64___UNUSED1
+#define _HAVE_STAT64___UNUSED2
+#define _HAVE_STAT64___UNUSED3
+#define _HAVE_STAT64___PAD1
+#define _HAVE_STAT64___PAD2
+#define _HAVE_STAT64___ST_INO

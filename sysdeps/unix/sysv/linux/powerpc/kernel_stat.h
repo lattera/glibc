@@ -1,5 +1,5 @@
 /* Definition of `struct stat' used in the kernel.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,3 +43,17 @@ struct kernel_stat
     unsigned long int __unused5;
 #define _HAVE___UNUSED5
   };
+
+#define _HAVE_STAT___UNUSED1
+#define _HAVE_STAT___UNUSED2
+#define _HAVE_STAT___UNUSED3
+#define _HAVE_STAT___UNUSED4
+#define _HAVE_STAT___UNUSED5
+#define _HAVE_STAT___PAD1
+#define _HAVE_STAT___PAD2
+#define _HAVE_STAT64___UNUSED1
+#define _HAVE_STAT64___UNUSED2
+#define _HAVE_STAT64___UNUSED3
+#define _HAVE_STAT64___UNUSED4
+#define _HAVE_STAT64___UNUSED5
+#define _HAVE_STAT64___PAD2

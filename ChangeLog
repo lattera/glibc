@@ -1,7 +1,110 @@
+2000-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/aio_cancel.c: If canceling a specific request which is running
+	*really* do nothing.
+	* rt/aio_misc.h: Add `done' to states of a request.
+	* rt/aio_misc.c: Add several tests for the correct state.
+	Simplify request table memory handling.
+
+2000-08-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* dirent/scandir.c: Use it for scandir64 and old_scandir64 as well.
+	* dirent/scandir64.c: Move...
+	* sysdeps/generic/scandir64.c: ...here.
+	* dirent/alphasort64.c: Move...
+	* sysdeps/generic/alphasort64.c: ...here.
+	* dirent/versionsort64.c: Move...
+	* sysdeps/generic/versionsort64.c: ...here.
+	* sysdeps/unix/sysv/linux/i386/dirent/Versions (alphasort64,
+	getdirentries64, readdir64, readdir64_r, scandir64, versionsort64):
+	Export symbols at GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/powerpc/dirent/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dirent/Versions: Likewise.
+	* include/dirent.h (__readdir64_r, __scandir64, __alphasort64,
+	__versionsort64): Add prototypes.
+	* io/Versions (__xstat64, __fxstat64, __lxstat64): Export at GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/alpha/kernel_stat.h (__xstat_conv): Remove
+	unused prototype.
+	* sysdeps/unix/sysv/linux/alpha/readdir.c: Export at both GLIBC_2.1
+	and GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/alpha/readdir_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/getdents.c: New.
+	* sysdeps/unix/sysv/linux/alpha/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/bits/types.h (__ino64_t): Change to
+	__u_quad_t.
+	* sysdeps/unix/sysv/linux/bits/stat.h (struct stat, struct stat64):
+	Adjust for kernel-2.4.0-test6 layout.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat64): Export at both
+	GLIBC_2.1 and GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c (__lxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h: New.
+	* sysdeps/unix/sysv/linux/i386/readdir64.c: New.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: New.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c: New.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: New.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: New.
+	* sysdeps/unix/sysv/linux/ia64/getdents.c: New.
+	* sysdeps/unix/sysv/linux/ia64/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/ia64/readdir.c: Include alpha/readdir.c.
+	* sysdeps/unix/sysv/linux/ia64/readdir_r.c: Include alpha/readdir_r.c.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h (__ino64_t): Change to
+	__u_quad_t.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: New.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_stat.h (_HAVE_STAT*): Define.
+	* sysdeps/unix/sysv/linux/powerpc/scandir64.c: New.
+	* sysdeps/unix/sysv/linux/powerpc/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/powerpc/readdir64.c: New.
+	* sysdeps/unix/sysv/linux/powerpc/readdir64_r.c: New.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h (__ino64_t): Change to
+	__u_quad_t.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/kernel_stat.h (_HAVE_STAT*):
+	Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/readdir64.c: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/readdir64_r.c: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/scandir64.c: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h (_HAVE_STAT*):
+	Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir.c: Include
+	alpha/readdir.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir_r.c: Include
+	alpha/readdir_r.c
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getdents.c: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getdents64.c: New.
+	* sysdeps/unix/sysv/linux/fxstat64.c (__fxstat64): If
+	_HAVE_STAT64___ST_INO and __st_ino != (uint32_t)st_ino, set
+	st_ino from __st_ino.
+	* sysdeps/unix/sysv/linux/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c (__xstat64): Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c (xstat_conv, xstat64_conv,
+	xstat32_conv): Use _HAVE_STAT* macros.  If _HAVE_STAT64___ST_INO,
+	set __st_ino in addition to st_ino.
+	* sysdeps/unix/sysv/linux/kernel_stat.h (_HAVE_STAT*): Define.
+	* sysdeps/unix/sysv/linux/getdents.c: Use it for __getdents64 and
+	__old_getdents64 as well.
+	* sysdeps/unix/sysv/linux/getdirentries.c: Use it for
+	getdirentries64 and old_getdirentries64 as well.
+	* sysdeps/unix/sysv/linux/getdirentries64.c (GETDIRENTRIES,
+	__GETDENTS): Define.
+	(GETDENTS64): Remove.
+	* sysdeps/unix/sysv/linux/getdents64.c (__GETDENTS, DIRENT_TYPE):
+	Define.
+	(GETDENTS64): Remove.
+	* sysdeps/unix/sysv/linux/readdir64.c: Use sysdeps/unix/readdir.c.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: Use sysdeps/unix/readdir_r.c.
+	* sysdeps/unix/readdir.c: Use it for readdir64 and __old_readdir64
+	as well.
+	* sysdeps/unix/readdir_r.c: Use it for readdir64_r and
+	__old_readdir64_r as well.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_ST_INO_64_bit for kernel 2.4.1 and up.
+
 2000-08-08  Jes Sorensen  <jes@linuxcare.com>
 
-	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Add SI_KERNEL
-	define.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Add SI_KERNEL define.
 	Add missing ILL_BADIADDR to enum and make ILL_BREAK match the
 	define of the kernel.
 	Add missing __SEG_PSTKOVF definition.

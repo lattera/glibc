@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,18 @@
 
 #include <dirstream.h>
 
+#ifndef __READDIR_R
+# define __READDIR_R __readdir_r
+# define __GETDENTS __getdents
+# define DIRENT_TYPE struct dirent
+# define __READDIR_R_ALIAS
+#endif
 
 /* Read a directory entry from DIRP.  */
 int
-__readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
+__READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 {
-  struct dirent *dp;
+  DIRENT_TYPE *dp;
   size_t reclen;
 
   __libc_lock_lock (dirp->lock);
@@ -53,7 +59,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  maxread = dirp->allocation;
 #endif
 
-	  bytes = __getdents (dirp->fd, dirp->data, maxread);
+	  bytes = __GETDENTS (dirp->fd, dirp->data, maxread);
 	  if (bytes <= 0)
 	    {
 	      dp = NULL;
@@ -67,12 +73,12 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  dirp->offset = 0;
 	}
 
-      dp = (struct dirent *) &dirp->data[dirp->offset];
+      dp = (DIRENT_TYPE *) &dirp->data[dirp->offset];
 
 #ifdef _DIRENT_HAVE_D_RECLEN
       reclen = dp->d_reclen;
 #else
-      /* The only version of `struct dirent' that lacks `d_reclen'
+      /* The only version of `struct dirent*' that lacks `d_reclen'
 	 is fixed-size.  */
       assert (sizeof dp->d_name > 1);
       reclen = sizeof *dp;
@@ -104,4 +110,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 
   return dp != NULL ? 0 : reclen ? errno : 0;
 }
+
+#ifdef __READDIR_R_ALIAS
 weak_alias (__readdir_r, readdir_r)
+#endif

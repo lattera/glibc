@@ -36,11 +36,11 @@
 struct stat
   {
     __dev_t st_dev;			/* Device.  */
+#if __WORDSIZE == 64 || !defined __USE_FILE_OFFSET64
     unsigned short int __pad1;
-#ifndef __USE_FILE_OFFSET64
     __ino_t st_ino;			/* File serial number.	*/
 #else
-    __ino_t __st_ino;			/* 32bit file serial number.	*/
+    __ino64_t st_ino;			/* File serial number.	*/
 #endif
     __mode_t st_mode;			/* File mode.  */
     __nlink_t st_nlink;			/* Link count.  */
@@ -66,27 +66,24 @@ struct stat
     unsigned long int __unused2;
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int __unused3;
-#ifndef __USE_FILE_OFFSET64
     unsigned long int __unused4;
     unsigned long int __unused5;
-#else
-    __ino64_t st_ino;			/* File serial number.	*/
-#endif
   };
 
 #ifdef __USE_LARGEFILE64
 struct stat64
   {
     __dev_t st_dev;			/* Device.  */
-    unsigned int __pad1;
-
-    __ino_t __st_ino;			/* 32bit file serial number.	*/
+#if __WORDSIZE == 64
+    unsigned short int __pad1;
+#endif    
+    __ino64_t st_ino;			/* File serial number.	*/
     __mode_t st_mode;			/* File mode.  */
     __nlink_t st_nlink;			/* Link count.  */
     __uid_t st_uid;			/* User ID of the file's owner.	*/
     __gid_t st_gid;			/* Group ID of the file's group.*/
     __dev_t st_rdev;			/* Device number, if device.  */
-    unsigned int __pad2;
+    unsigned short int __pad2;
     __off64_t st_size;			/* Size of file, in bytes.  */
     __blksize_t st_blksize;		/* Optimal block size for I/O.  */
 
@@ -97,7 +94,8 @@ struct stat64
     unsigned long int __unused2;
     __time_t st_ctime;			/* Time of last status change.  */
     unsigned long int __unused3;
-    __ino64_t st_ino;			/* File serial number.		*/
+    unsigned long int __unused4;
+    unsigned long int __unused5;
   };
 #endif
 
