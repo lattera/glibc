@@ -39,7 +39,7 @@
 
 	.text
 	.globl _start
-	type _start,@function
+	.type _start,@function
 _start:
 	/* Load argc and argv from stack.  */
 	la	%r4,8(%r15)		# get argv

@@ -39,7 +39,7 @@
 
 	.text
 	.globl _start
-	type _start,@function
+	.type _start,@function
 _start:
 	/* Setup pointer to literal pool of _start */
 	basr    %r13,0

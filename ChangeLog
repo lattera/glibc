@@ -1,3 +1,11 @@
+2001-06-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/cris/elf/start.S: Fix a typo introduced by last patch.
+	* sysdeps/ia64/elf/start.S: Likewise.
+	* sysdeps/sh/elf/start.S: Likewise.
+	* sysdeps/s390/s390-32/elf/start.S: Likewise.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+
 2001-06-05  Matthew Wilcox  <willy@ldl.fc.hp.com>
 
 	* sysdeps/hppa/bsd-_setjmp.S: New.
