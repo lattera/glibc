@@ -41,10 +41,13 @@
 
 /* The macros are used in some of the optimized implementations below.  */
 #define __STRING_SMALL_GET16(src, idx) \
-  (((src)[idx + 1] << 8) | (src)[idx])
+  ((((__const unsigned char *) (src))[idx + 1] << 8)			      \
+   | ((__const unsigned char *) (src))[idx])
 #define __STRING_SMALL_GET32(src, idx) \
-  ((((src)[idx + 3] << 8 | (src)[idx + 2]) << 8				      \
-    | (src)[idx + 1]) << 8 | (src)[idx])
+  (((((__const unsigned char *) (src))[idx + 3] << 8			      \
+     | ((__const unsigned char *) (src))[idx + 2]) << 8			      \
+    | ((__const unsigned char *) (src))[idx + 1]) << 8			      \
+   | ((__const unsigned char *) (src))[idx])
 
 
 /* Copy N bytes of SRC to DEST.  */
@@ -230,7 +233,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 	assignments using immediate operands.  But this uses to much	      \
 	memory (7, instead of 4 bytes).  So we force the value in a	      \
 	registers.  */							      \
-     if (n == 3 || n >= 5)						      \
+     if ((n) == 3 || (n) >= 5)						      \
        __asm__ __volatile__ ("" : "=r" (__c) : "0" (__c));		      \
 									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
@@ -1650,14 +1653,15 @@ __strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%1,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "movl	%6,%%ecx\n\t"
      "repne; scasb\n\t"
      "je	1b\n"
      "2:"
-     : "=S" (__res), "=&d" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "1" (__accept), "g" (__accept_len),
-       /* Since we do not know how large the memory we access it, use a really large amount.  */
+     : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
+     : "0" (__s), "g" (__accept), "g" (__accept_len),
+       /* Since we do not know how large the memory we access it, use a
+	  really large amount.  */
        "m" ( *(struct { char __x[0xfffffff]; } *)__s),
        "m" ( *(struct { __extension__ char __x[__accept_len]; } *)__accept)
      : "cc");

@@ -1,3 +1,17 @@
+2003-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/tester.c (test_strcpy): Use the previously #if 0'ed code
+	to test void* parameters.
+
+	* sysdeps/i386/i486/bits/string.h (__STRING_SMALLL_GET16): Cast
+	source pointer before dereferencing.
+	(__STRING_SMALLL_GET32): Likewise.
+	(__memset_gc): Add missing parenthesis around macro arguments.
+	Patch by Denis Zaitsev<zzz@cd-club.ru>.
+
+	* sysdeps/i386/i486/bits/string.h (__strspn_cg): Tell the compiler
+	that %eax is modified.  Reported by Denis Zaitsev<zzz@cd-club.ru>.
+
 2003-01-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL): Undefined before
