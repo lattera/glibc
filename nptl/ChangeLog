@@ -1,5 +1,8 @@
 2003-02-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_create.c (deallocate_tsd): Mark as internal_function.
+	Add some more __builtin_expect.
+
 	* pthreadP.h: Define dummy versio of DEBUGGING_P.
 
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>

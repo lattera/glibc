@@ -107,6 +107,7 @@ __find_in_stack_list (pd)
 
 /* Deallocate POSIX thread-local-storage.  */
 static void
+internal_function
 deallocate_tsd (struct pthread *pd)
 {
   /* Maybe no data was ever allocated.  This happens often so we have
@@ -180,7 +181,8 @@ internal_function
 __free_tcb (struct pthread *pd)
 {
   /* The thread is exiting now.  */
-  if (atomic_bit_test_set (&pd->cancelhandling, TERMINATED_BIT) == 0)
+  if (__builtin_expect (atomic_bit_test_set (&pd->cancelhandling,
+					     TERMINATED_BIT) == 0, 1))
     {
       /* Remove the descriptor from the list.  */
       if (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
