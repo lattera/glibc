@@ -1,3 +1,10 @@
+2001-11-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add
+	sys/debugreg.h
+
 2001-11-15  Andreas Jaeger  <aj@suse.de>
 
 	* include/features.h (__GLIBC_HAVE_LONG_LONG): Define for
