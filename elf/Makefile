@@ -164,9 +164,11 @@ $(inst_slibdir)/$(rtld-installed-name): \
 	$(make-shlib-link)
 
 
-sh-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
-		 -e 's%@VERSION@%$(version)%g'
-bash-ldd-rewrite = $(sh-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
+common-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
+		     -e 's%@VERSION@%$(version)%g'
+sh-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%/bin/sh%g' \
+		 -e 's/\$$"/"/g;/^\#\#\#BASH-ONLY/,/\#\#\#END-BASH-ONLY/d'
+bash-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
 		   -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
 
 ifneq ($(have-bash2),yes)
@@ -185,7 +187,7 @@ sed $($(ldd-shell)-ldd-rewrite) < $< | sed -f $(ldd-rewrite-script) > $@.new
 endef
 endif
 
-$(objpfx)ldd: ldd.$(ldd-shell).in $(common-objpfx)soversions.mk \
+$(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 	      $(common-objpfx)config.make
 	$(gen-ldd)
 	chmod 555 $@.new

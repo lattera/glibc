@@ -24,9 +24,11 @@
 # run-time dynamic linker as a command and setting the environment
 # variable LD_TRACE_LOADED_OBJECTS to a non-empty value.
 
+###BASH-ONLY
 # We should be able to find the translation right at the beginning.
 TEXTDOMAIN=libc
 TEXTDOMAINDIR=@TEXTDOMAINDIR@
+###END-BASH-ONLY
 
 RTLD=@RTLD@
 warn=
