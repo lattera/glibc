@@ -282,18 +282,18 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 
 #define gethosts(_family, _type) \
  {									      \
-  int i, herrno;							      \
-  size_t tmpbuflen;							      \
+  int i;								      \
+  int herrno;								      \
   struct hostent th;							      \
-  char *tmpbuf = NULL;							      \
-  tmpbuflen = 512;							      \
   no_data = 0;								      \
-  do {									      \
-    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
+  while (1) {								      \
     rc = 0;								      \
     status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,		      \
            tmpbuflen, &rc, &herrno));					      \
-  } while (rc == ERANGE && herrno == NETDB_INTERNAL);			      \
+    if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
+      break;								      \
+    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
+  }									      \
   if (status == NSS_STATUS_SUCCESS && rc == 0)				      \
     h = &th;								      \
   else									      \
@@ -585,6 +585,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  int no_more;
 	  nss_gethostbyname2_r fct;
 	  int old_res_options;
+	  size_t tmpbuflen = 512;
+	  char *tmpbuf = alloca (tmpbuflen);
 
 	  if (__nss_hosts_database != NULL)
 	    {
@@ -622,7 +624,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  if (req->ai_family == AF_INET
 		      || req->ai_family == AF_UNSPEC
 		      || (req->ai_family == AF_INET6
-			  && (req->ai_flags & AI_V4MAPPED)))
+			  && (req->ai_flags & AI_V4MAPPED)
+			  /* Avoid generating the mapped addresses if we
+			     know we are not going to need them.  */
+			  && ((req->ai_flags & AI_ALL) || !got_ipv6)))
 		    {
 		      gethosts (AF_INET, struct in_addr);
 

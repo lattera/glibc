@@ -1,5 +1,9 @@
 2004-08-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Optimize generation of
+	v4-mapped addresses a bit.
+	(gethosts): Move alloca out of macro, so that it is done only once.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_addrtuple): Change type of
 	addr to avoid casts.
 	(gethosts): Removed.
