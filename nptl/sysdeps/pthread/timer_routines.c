@@ -1,5 +1,5 @@
-/* Helper code for POSIX timer implementation on LinuxThreads.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Helper code for POSIX timer implementation on NPTL.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
