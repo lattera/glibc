@@ -1418,12 +1418,6 @@ writing the file.  (This is unrelated to @code{st_blocks}.)
 @end table
 @end deftp
 
-  Some of the file attributes have special data type names which exist
-specifically for those attributes.  (They are all aliases for well-known
-integer types that you know and love.)  These typedef names are defined
-in the header file @file{sys/types.h} as well as in @file{sys/stat.h}.
-Here is a list of them.
-
 The extensions for the Large File Support (LFS) require even on 32 bits
 machine types which can handle file sizes up to @math{2^63}.  Therefore
 a new definition of @code{struct stat} is necessary.
@@ -1505,6 +1499,12 @@ might use this size for allocating the buffer space for reading of
 writing the file.  (This is unrelated to @code{st_blocks}.)
 @end table
 @end deftp
+
+Some of the file attributes have special data type names which exist
+specifically for those attributes.  (They are all aliases for well-known
+integer types that you know and love.)  These typedef names are defined
+in the header file @file{sys/types.h} as well as in @file{sys/stat.h}.
+Here is a list of them.
 
 @comment sys/types.h
 @comment POSIX.1
