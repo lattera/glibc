@@ -361,6 +361,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   const Elf32_Sym *const refsym = sym;
   Elf32_Addr value;
   const int r_type = ELF32_R_TYPE (reloc->r_info);
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+  struct link_map *sym_map;
+#endif
 
   if (r_type == R_PPC_RELATIVE)
     {
@@ -371,16 +374,24 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   if (__builtin_expect (r_type == R_PPC_NONE, 0))
     return;
 
+  /* binutils on ppc32 includes st_value in r_addend for relocations
+     against local symbols.  */
+  if (__builtin_expect (ELF32_ST_BIND (sym->st_info) == STB_LOCAL, 0)
+      && sym->st_shndx != SHN_UNDEF)
+    value = map->l_addr;
+  else
+    {
 #if defined USE_TLS && !defined RTLD_BOOTSTRAP
-  struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-  value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      sym_map = RESOLVE_MAP (&sym, version, r_type);
+      value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
 #else
-  value = RESOLVE (&sym, version, r_type);
+      value = RESOLVE (&sym, version, r_type);
 # ifndef RTLD_BOOTSTRAP
-  if (sym != NULL)
+      if (sym != NULL)
 # endif
-    value += sym->st_value;
+	value += sym->st_value;
 #endif
+    }
   value += reloc->r_addend;
 
   /* A small amount of code is duplicated here for speed.  In libc,
