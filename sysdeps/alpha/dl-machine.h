@@ -468,7 +468,7 @@ elf_machine_rela (struct link_map *map,
 {
   unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
@@ -480,12 +480,13 @@ elf_machine_rela (struct link_map *map,
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_ALPHA_RELATIVE, 0))
     {
-#ifndef RTLD_BOOTSTRAP
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* Already done in dynamic linker.  */
       if (map != &_dl_rtld_map)
-#endif
+# endif
 	{
 	  /* XXX Make some timings.  Maybe it's preverable to test for
 	     unaligned access and only do it the complex way if necessary.  */
@@ -500,11 +501,12 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_1, &reloc_addr_val, 8);
 	}
     }
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
   else if (__builtin_expect (r_type == R_ALPHA_NONE, 0))
     return;
-#endif
+# endif
   else
+#endif
     {
       Elf64_Addr loadbase, sym_value;
 
