@@ -1,3 +1,7 @@
+2003-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.3.3 for libpthread.
+
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-start.c [!SHARED &&

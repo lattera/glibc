@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <shlib-compat.h>                  
+#include <shlib-compat.h>
 #include "pthreadP.h"
 
 
@@ -26,11 +26,12 @@ __pthread_cond_init (cond, cond_attr)
      pthread_cond_t *cond;
      const pthread_condattr_t *cond_attr;
 {
-  /* Note that we don't need the COND-ATTR.  It contains only the
-     PSHARED flag which is unimportant here since conditional
-     variables are always usable in multiple processes.  */
+  /* Note that we don't need the PSHARED information from COND-ATTR.
+     Conditional variables are always usable in multiple processes.  */
+  struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
   cond->__data.__lock = LLL_MUTEX_LOCK_INITIALIZER;
+  cond->__data.__clock = (icond_attr->value & 0xfe) >> 1;
   cond->__data.__total_seq = 0;
   cond->__data.__wakeup_seq = 0;
   cond->__data.__woken_seq = 0;

@@ -10,6 +10,7 @@
 	* pthread_condattr_getpshared.c: Adjust for struct pthread_condattr
 	change.
 	* pthread_condattr_setpshared.c: Likewise.
+	* pthread_cond_init.c (__pthread_cond_init): Initialized __clock field.
 	* sysdeps/unix/sysv/linux/lowlevelcond.sym: Add cond_clock symbol.
 	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
 	Add __clock field.
