@@ -1,5 +1,12 @@
 2004-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* idna.c (idna_to_ascii_4z): Use strdup if available.  Unify two ifs.
+
+	* idn-stub.c: Implement __idna_to_unicode_lzlz.  Split
+	__idna_to_ascii_lz in two parts so that loading can be shared with
+	the new function.
+	* Versions (libcidn): Export idna_to_unicode_lzlz.
+
 	* Makefile (libcidn-inhibit-o): Define.  We need no archive.
 
 2004-03-08  Simon Josefsson  <jas@extundo.com>
