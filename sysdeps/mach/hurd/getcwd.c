@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,9 @@
    in SIZE bytes of BUF.  Returns NULL if the directory couldn't be
    determined or SIZE was too small.  If successful, returns BUF.  In GNU,
    if BUF is NULL, an array is allocated with `malloc'; the array is SIZE
-   bytes long, unless SIZE <= 0, in which case it is as big as necessary.  */
+   bytes long, unless SIZE <= 0, in which case it is as big as necessary.
+   If our root directory cannot be reached, the result will not begin with
+   a slash to indicate that it is relative to some unknown root directory.  */
 
 char *
 _hurd_canonicalize_directory_name_internal (file_t thisdir,
@@ -128,10 +130,19 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 	__mach_port_deallocate (__mach_task_self (), parent);
       parent = newp;
 
-      /* Get this directory's identity and figure out if it's a mount point. */
+      /* Get this directory's identity and figure out if it's a mount
+         point.  */
       if (err = __io_identity (parent, &dotid, &dotdevid, &dotino))
 	goto errlose;
       mount_point = dotdevid != thisdevid;
+
+      if (thisid == dotid)
+	{
+	  /* `..' == `.' but it is not our root directory.  */
+	  __mach_port_deallocate (__mach_task_self (), dotid);
+	  __mach_port_deallocate (__mach_task_self (), dotdevid);
+	  break;
+	}
 
       /* Search for the last directory.  */
       direntry = 0;
@@ -256,6 +267,11 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
        So the root is our current directory.  */
     *--file_namep = '/';
 
+  if (thisid != rootid)
+    /* We did not get to our root directory. The returned name should
+       not begin with a slash.  */
+    ++file_namep;
+
   memmove (file_name, file_namep, file_name + size - file_namep);
   cleanup ();
   return file_name;
@@ -291,8 +307,17 @@ __canonicalize_directory_name_internal (thisdir, buf, size)
 char *
 __getcwd (char *buf, size_t size)
 {
-  return __USEPORT (CWDIR,
-		    _hurd_canonicalize_directory_name_internal (port,
-								buf, size));
+  char *cwd =
+    __USEPORT (CWDIR,
+	       _hurd_canonicalize_directory_name_internal (port,
+							   buf, size));
+  if (cwd && cwd[0] != '/')
+    {
+      /* `cwd' is an unknown root directory.  */
+      if (buf == NULL)
+	  free (cwd);
+      return __hurd_fail (EGRATUITOUS), NULL;
+    }
+  return cwd;
 }
 weak_alias (__getcwd, getcwd)
