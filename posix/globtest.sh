@@ -324,8 +324,12 @@ ${common_objpfx}posix/globtest -q -t "$testdir" "~" |
 sort >$testout
 echo ~ | cmp - $testout >> $logfile || failed=1
 if test $failed -ne 0; then
-  echo "Tilde test failed" >> $logfile
-  result=1
+  if test -d ~; then
+    echo "Tilde test failed" >> $logfile
+    result=1
+  else
+    echo "Tilde test could not be run" >> $logfile
+  fi
 fi
 
 # Test tilde expansion with trailing slash
@@ -340,8 +344,12 @@ else
     echo ~/ | cmp - $testout >> $logfile || failed=1
 fi
 if test $failed -ne 0; then
-  echo "Tilde2 test failed" >> $logfile
-  result=1
+  if test -d ~/; then
+    echo "Tilde2 test failed" >> $logfile
+    result=1
+  else
+    echo "Tilde2 test could not be run" >> $logfile
+  fi
 fi
 
 # Test tilde expansion with username
@@ -351,8 +359,12 @@ ${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
 sort > $testout
 eval echo ~$USER | cmp - $testout >> $logfile || failed=1
 if test $failed -ne 0; then
-  echo "Tilde3 test failed" >> $logfile
-  result=1
+  if eval test -d ~$USER; then
+    echo "Tilde3 test failed" >> $logfile
+    result=1
+  else
+    echo "Tilde3 test could not be run" >> $logfile
+  fi
 fi
 
 # Tilde expansion shouldn't match a file
