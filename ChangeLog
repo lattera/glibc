@@ -1,3 +1,9 @@
+2000-11-30  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/defs.c (init_stdio): Put this on __libc_subinit
+	rather than _hurd_fd_subinit, so it happens after it's safe to use
+	libc facilities like malloc.
+
 2000-11-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/getdents.c: Add _syscall_getdents64
