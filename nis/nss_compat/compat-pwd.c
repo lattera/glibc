@@ -588,12 +588,13 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
-	  char buf[strlen (result->pw_name)];
+	  size_t len = strlen (result->pw_name);
+	  char buf[len];
 	  enum nss_status status;
 
 	  /* Store the User in the blacklist for the "+" at the end of
 	     /etc/passwd */
-	  strcpy (buf, &result->pw_name[1]);
+	  memcpy (buf, &result->pw_name[1], len);
 	  status = getpwnam_plususer (&result->pw_name[1], result, ent,
 				      buffer, buflen, errnop);
 	  blacklist_store_name (buf, ent);
@@ -942,10 +943,12 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '-' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  char buf[strlen (result->pw_name)];
+	  /* -1, because we remove first two character of pw_name.  */
+	  size_t len = strlen (result->pw_name) - 1;
+	  char buf[len];
 	  enum nss_status status;
 
-	  strcpy (buf, &result->pw_name[2]);
+	  memcpy (buf, &result->pw_name[2], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
@@ -959,10 +962,12 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] == '@'
 	  && result->pw_name[2] != '\0')
 	{
-	  char buf[strlen (result->pw_name)];
+	  /* -1, because we remove first two characters of pw_name.  */
+	  size_t len = strlen (result->pw_name) - 1;
+	  char buf[len];
 	  enum nss_status status;
 
-	  strcpy (buf, &result->pw_name[2]);
+	  memcpy (buf, &result->pw_name[2], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 
@@ -986,10 +991,11 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '-' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
-	  char buf[strlen (result->pw_name)];
+	  size_t len = strlen (result->pw_name);
+	  char buf[len];
 	  enum nss_status status;
 
-	  strcpy (buf, &result->pw_name[1]);
+	  memcpy (buf, &result->pw_name[1], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
@@ -1002,10 +1008,11 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
       if (result->pw_name[0] == '+' && result->pw_name[1] != '\0'
 	  && result->pw_name[1] != '@')
 	{
-	  char buf[strlen (result->pw_name)];
+	  size_t len = strlen (result->pw_name);
+	  char buf[len];
 	  enum nss_status status;
 
-	  strcpy (buf, &result->pw_name[1]);
+	  memcpy (buf, &result->pw_name[1], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 

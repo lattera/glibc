@@ -58,14 +58,13 @@ struct blacklist_t
 
 struct ent_t
 {
-  bool_t nis_first;
   bool_t files;
   FILE *stream;
   struct blacklist_t blacklist;
 };
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = {0, TRUE, NULL, {NULL, 0, 0}};
+static ent_t ext_ent = {TRUE, NULL, {NULL, 0, 0}};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -304,13 +303,16 @@ getgrent_next_file (struct group *result, ent_t *ent,
       if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
 	  && result->gr_name[1] != '@')
 	{
+	  size_t len = strlen (result->gr_name);
+	  char buf[len];
 	  enum nss_status status;
 
 	  /* Store the group in the blacklist for the "+" at the end of
 	     /etc/group */
-	  blacklist_store_name (&result->gr_name[1], ent);
+	  memcpy (buf, &result->gr_name[1], len);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, ent,
 				       buffer, buflen, errnop);
+	  blacklist_store_name (buf, ent);
 	  if (status == NSS_STATUS_SUCCESS)	/* We found the entry. */
 	    break;
 	  else if (status == NSS_STATUS_RETURN	/* We couldn't parse the entry */
@@ -472,7 +474,7 @@ enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = {0, TRUE, NULL, {NULL, 0, 0}};
+  ent_t ent = {TRUE, NULL, {NULL, 0, 0}};
   enum nss_status result;
 
   if (name[0] == '-' || name[0] == '+')
@@ -594,7 +596,7 @@ enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
 			char *buffer, size_t buflen, int *errnop)
 {
-  ent_t ent = {0, TRUE, NULL, {NULL, 0, 0}};
+  ent_t ent = {TRUE, NULL, {NULL, 0, 0}};
   enum nss_status result;
 
   __libc_lock_lock (lock);

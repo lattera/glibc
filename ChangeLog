@@ -1,3 +1,24 @@
+2003-06-07  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_compat/compat-grp.c: Remove unused nis_first variable
+	(getgrent_next_file) Don't store group name to early in blacklist.
+
+	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Save strlen result
+	and use memcpy instead of strcpy.
+
+2003-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_compat/compat-grp.c: Optimize several little things.  Use
+	stream unlocked.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+2003-06-27  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_compat/compat-initgroups.c: Don't use our own NIS/NIS+
+	functions, dlopen corresponding NSS module instead.
+
 2003-06-27  Jeroen Dekkers  <jeroen@dekkers.cx>
 
 	* sysdeps/mach/hurd/alpha/init-first.c: Remove call to __libc_init.
