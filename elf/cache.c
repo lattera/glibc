@@ -305,6 +305,13 @@ save_cache (const char *cache_name)
 
   if (opt_format != 2)
     {
+      /* struct cache_file_new is 64-bit aligned on some arches while
+	 only 32-bit aligned on other arches.  Duplicate last old
+	 cache entry so that new cache in ld.so.cache can be used by
+	 both.  */
+      if (opt_format != 0)
+	cache_entry_old_count = (cache_entry_old_count + 1) & ~1;
+
       /* And the list of all entries in the old format.  */
       file_entries_size = sizeof (struct cache_file)
 	+ cache_entry_old_count * sizeof (struct file_entry);
@@ -351,7 +358,7 @@ save_cache (const char *cache_name)
        entry = entry->next, ++idx_new)
     {
       /* First the library.  */
-      if (opt_format != 2)
+      if (opt_format != 2 && entry->hwcap == 0)
 	{
 	  file_entries->libs[idx_old].flags = entry->flags;
 	  /* XXX: Actually we can optimize here and remove duplicates.  */
@@ -374,7 +381,7 @@ save_cache (const char *cache_name)
       ++str;
       str_offset += len + 1;
       /* Then the path.  */
-      if (opt_format != 2)
+      if (opt_format != 2 && entry->hwcap == 0)
 	file_entries->libs[idx_old].value = str_offset + pad;
       if (opt_format != 0)
 	file_entries_new->libs[idx_new].value = str_offset;
@@ -387,6 +394,11 @@ save_cache (const char *cache_name)
       if (entry->hwcap == 0)
 	++idx_old;
     }
+
+  /* Duplicate last old cache entry if needed.  */
+  if (opt_format != 2
+      && idx_old < cache_entry_old_count)
+    file_entries->libs[idx_old] = file_entries->libs[idx_old - 1];
 
   /* Write out the cache.  */
 
