@@ -37,6 +37,10 @@ CFLAGS-gmon-start.o = -G0
 endif
 ifeq (yes,$(build-shared))
 # Compatibility
+ifeq (yes,$(have-protected))
+CPPFLAGS-divdi3.c = -DHAVE_DOT_HIDDEN
+CPPFLAGS-libgcc-compat.S = -DHAVE_DOT_HIDDEN
+endif
 sysdep_routines += divdi3 libgcc-compat
 shared-only-routines += divdi3 libgcc-compat
 endif

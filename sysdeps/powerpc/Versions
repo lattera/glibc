@@ -6,6 +6,7 @@ libc {
     __ashldi3; __ashrdi3; __lshrdi3;
     __fixdfdi; __fixunsdfdi;
     __fixsfdi; __fixunssfdi;
+    __floatdidf; __floatdisf;
   }
 }
 
