@@ -122,8 +122,9 @@ output_hostent (const char *call, struct hostent *hptr)
     {
       printf ("Call: %s returned: name: %s, addr_type: %d\n",
 	      call, hptr->h_name, hptr->h_addrtype);
-      for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
-	printf ("  alias: %s\n", *pptr);
+      if (hptr->h_aliases)
+	for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)
+	  printf ("  alias: %s\n", *pptr);
 
       for (pptr = hptr->h_addr_list; *pptr != NULL; pptr++)
 	printf ("  ip: %s\n",
