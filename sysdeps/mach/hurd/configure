@@ -2,6 +2,11 @@
 # GNU libc on the Hurd is always reentrant.
 DEFINES="$DEFINES -D_LIBC_REENTRANT"
 
+cat >> confdefs.h <<\EOF
+#define NO_HIDDEN 1
+EOF
+
+
 # Don't bother trying to generate any glue code to be compatible with the
 # existing system library, because we are the only system library.
 inhibit_glue=yes
@@ -21,12 +26,12 @@ case "$machine" in
 esac
 
 echo $ac_n "checking Hurd header version""... $ac_c" 1>&6
-echo "configure:25: checking Hurd header version" >&5
+echo "configure:30: checking Hurd header version" >&5
 if eval "test \"`echo '$''{'libc_cv_hurd_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 30 "configure"
+#line 35 "configure"
 #include "confdefs.h"
 #include <hurd/version.h>
 int main() {
@@ -37,7 +42,7 @@ int main() {
 #endif
 ; return 0; }
 EOF
-if { (eval echo configure:41: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:46: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_hurd_version=ok
 else
@@ -58,7 +63,7 @@ fi
 
 # See if mig groks `retcode'.
 echo $ac_n "checking whether $MIG supports the retcode keyword""... $ac_c" 1>&6
-echo "configure:62: checking whether $MIG supports the retcode keyword" >&5
+echo "configure:67: checking whether $MIG supports the retcode keyword" >&5
 if eval "test \"`echo '$''{'hurd_cv_mig_retcode'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -72,7 +77,7 @@ simpleroutine foobar_reply (
 	reply_port: reply_port_t;
 	err: kern_return_t, RetCode);
 EOF
-if { ac_try='CC="${CC}" ${MIG-false} -n conftest.defs 1>&5'; { (eval echo configure:76: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='CC="${CC}" ${MIG-false} -n conftest.defs 1>&5'; { (eval echo configure:81: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   hurd_cv_mig_retcode=yes
 else
   hurd_cv_mig_retcode=no

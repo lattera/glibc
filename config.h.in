@@ -143,6 +143,10 @@
    and does not need relocations.  */
 #undef	PI_STATIC_AND_HIDDEN
 
+/* Define this to disable the `hidden_proto' et al macros in
+   include/libc-symbols.h that avoid PLT slots in the shared objects.  */
+#undef	NO_HIDDEN
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */

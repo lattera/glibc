@@ -545,7 +545,7 @@
    libc_hidden_ver (__real_foo, foo)  */
 
 #if defined SHARED && defined DO_VERSIONING \
-    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
 # ifndef __ASSEMBLER__
 #  if !defined HAVE_VISIBILITY_ATTRIBUTE \
       || defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE

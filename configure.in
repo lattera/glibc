@@ -145,6 +145,13 @@ AC_ARG_WITH(tls, dnl
 [  --with-tls              enable support for TLS],
 	    usetls=$withval, usetls=no)
 
+AC_ARG_ENABLE(hidden-plt, dnl
+[  --disable-hidden-plt    do not hide internal function calls to avoid PLT],
+	      hidden=$enableval, hidden=yes)
+if test "x$hidden" = xno; then
+  AC_DEFINE(NO_HIDDEN)
+fi
+
 AC_CONFIG_SUBDIRS($add_ons)
 add_ons_pfx=
 if test x"$add_ons" != x; then
