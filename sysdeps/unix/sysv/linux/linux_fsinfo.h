@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,6 +101,9 @@
 /* Constant that identifies the `shm' filesystem.  */
 #define SHMFS_SUPER_MAGIC	0x01021994
 
+/* Constants that identify the `xfs' filesystem.  */
+#define XFS_SUPER_MAGIC		0x58465342
+
 /* Maximum link counts.  */
 #define COH_LINK_MAX		10000
 #define EXT2_LINK_MAX		32000
@@ -110,5 +113,6 @@
 #define SYSV_LINK_MAX		126     /* 127? 251? */
 #define UFS_LINK_MAX		EXT2_LINK_MAX
 #define XENIX_LINK_MAX		126     /* ?? */
+#define XFS_LINK_MAX		2147483647
 
 #endif	/* linux_fsinfo.h */
