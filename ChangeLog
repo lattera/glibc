@@ -1,3 +1,9 @@
+Thu Mar  9 17:16:53 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* configure.in: Match `osf*', not `osf1*'.
+	* configure: Likewise.
+	* sysdeps/unix/bsd/osf: Renamed to `sysdeps/unix/bsd/osf1'.
+
 Wed Mar  8 13:38:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob/configure.bat: Fixes from DJ.

@@ -568,7 +568,7 @@ gnu*)
   base_os=mach/hurd ;;
 netbsd* | 386bsd*)
   base_os=unix/bsd/bsd4.4 ;;
-osf1* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
+osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
 linux* | sysv* | isc* | esix* | sco* | minix* | irix4*)
   base_os=unix/sysv ;;
