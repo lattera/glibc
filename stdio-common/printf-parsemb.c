@@ -1,5 +1,5 @@
 /* Helper functions for parsing printf format strings.
-   Copyright (C) 1995-1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,6 +104,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
   spec->info.showsign = 0;
   spec->info.group = 0;
   spec->info.i18n = 0;
+  spec->info.extra = 0;
   spec->info.pad = ' ';
   spec->info.wide = sizeof (UCHAR_T) > 1;
 

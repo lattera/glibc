@@ -1,3 +1,8 @@
+2004-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf-parsemb.c (__parse_one_specmb): Initialize
+	info.extra.  Patch by Marcus Meissner.
+
 2004-06-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep.h (SYSCALL_ERROR_HANDLER):
