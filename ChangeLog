@@ -1,7 +1,7 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (match_prefix): Correctly match
-	partial bytes.
+	partial bytes [BZ #24].
 
 2004-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
 
