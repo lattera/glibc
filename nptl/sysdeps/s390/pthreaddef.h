@@ -29,9 +29,6 @@
 /* Alignment requirement for TCB.  */
 #define TCB_ALIGNMENT		16
 
-/* The signal used for asynchronous cancelation.  */
-#define SIGCANCEL		__SIGRTMIN
-
 
 /* Location of current stack frame.  */
 #define CURRENT_STACK_FRAME	__builtin_frame_address (0)

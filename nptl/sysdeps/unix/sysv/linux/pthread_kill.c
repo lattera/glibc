@@ -37,7 +37,7 @@ __pthread_kill (threadid, signo)
     return ESRCH;
 
   /* Disallow sending the signal we use for cancellation.  */
-  if (signo == SIGCANCEL)
+  if (signo == SIGCANCEL || signo == SIGTIMER)
     return EINVAL;
 
   /* We have a special syscall to do the work.  */

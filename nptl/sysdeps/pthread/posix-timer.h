@@ -1,5 +1,5 @@
 /* Definitions for POSIX timer implementation on top of LinuxThreads.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -94,6 +94,7 @@ extern struct thread_node __timer_signal_thread_tclk;
 
 
 /* Return pointer to timer structure corresponding to ID.  */
+#if 0
 static inline struct timer_node *
 timer_id2ptr (timer_t timerid)
 {
@@ -109,6 +110,10 @@ timer_ptr2id (struct timer_node *timer)
 {
   return timer - __timer_array;
 }
+#else
+# define timer_id2ptr(timerid) ((struct timed_node *) timerid)
+# define timer_ptr2id(timerid) ((void *) timerid)
+#endif
 
 /* Check whether timer is valid; global mutex must be held. */
 static inline int

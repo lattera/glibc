@@ -33,9 +33,6 @@ _pthread_cleanup_push (buffer, routine, arg)
   buffer->__arg = arg;
   buffer->__prev = THREAD_GETMEM (self, cleanup);
 
-  if (buffer->__prev != NULL && FRAME_LEFT (buffer, buffer->__prev))
-    buffer->__prev = NULL;
-
   THREAD_SETMEM (self, cleanup, buffer);
 }
 strong_alias (_pthread_cleanup_push, __pthread_cleanup_push)

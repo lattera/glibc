@@ -1,3 +1,63 @@
+2003-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Define SIGCANCEL and SIGTIMER.
+	* sysdeps/i386/pthreaddef.h: Remove SIGCANCEL definition.
+	* sysdeps/ia64/pthreaddef.h: Likewise.
+	* sysdeps/powerpc/pthreaddef.h: Likewise.
+	* sysdeps/s390/pthreaddef.h: Likewise.
+	* sysdeps/sh/pthreaddef.h: Likewise.
+	* sysdeps/x86_64/pthreaddef.h: Likewise.
+	* init.c (__pthread_initialize_minimal): Block SIGTIMER.
+	* sysdeps/pthread/sigaction.c: Also prevent SIGTIMER handler from
+	being changed.
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Make sure
+	SIGTIMER is not unblocked.
+	* sysdeps/unix/sysv/linux/allocrtsig.c (current_rtmin): One more
+	RT signal taken.
+	* sysdeps/unix/sysv/linux/pthread_kill.c: Do not allow SIGTIMER to
+	be send.
+	* sysdeps/pthread/posix-timer.h (timer_id2ptr, timer_ptr2id): Just
+	pass pointer through as ID.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h (TIMER_MAX): Removed.
+	* sysdeps/unix/sysv/linux/kernel-posix-timers.h: New file.
+	* sysdeps/unix/sysv/linux/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/timer_routines.c: New file.
+	* sysdeps/unix/sysv/linux/timer_settime.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/Versions: New file.
+	* sysdeps/unix/sysv/linux/ia64/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/timer_settime.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/timer_settime.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Versions: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/timer_settime.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/Versions: New file.
+	* sysdeps/unix/sysv/linux/x86_64/compat-timer.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/timer_settime.c: New file.
+
+	* pthreadP.h: Remove FRAME_LEFT definition.
+	* cleanup.c (_pthread_cleanup_push): Don't check for reference to
+	already left frame.  Programs which have this problem are not POSIX
+	compliant.
+	* cleanup_defer.c (_pthread_cleanup_push_defer): Likewise.
+
 2003-03-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/tst-timer.c: Check return values of the

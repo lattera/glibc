@@ -225,6 +225,16 @@ __pthread_initialize_minimal_internal (void)
 			   NULL, _NSIG / 8);
 
 
+  /* The kernel supported POSIX timer handling needs a signal to implement
+     SIGEV_THREAD.  We block the signal everywhere but we have to make
+     sure it is not ignored.  The signal is a realtime signal so using
+     the default handler is fine (this handler is already selected).  */
+  __sigdelset (&sa.sa_mask, SIGCANCEL);
+  __sigaddset (&sa.sa_mask, SIGTIMER);
+  (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_BLOCK, &sa.sa_mask,
+			   NULL, _NSIG / 8);
+
+
   /* Determine the default allowed stack size.  This is the size used
      in case the user does not specify one.  */
   struct rlimit limit;

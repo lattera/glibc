@@ -22,9 +22,10 @@
    exact file anyway.  */
 #ifndef LIBC_SIGACTION
 
+#include <nptl/pthreadP.h>
+
 /* We use the libc implementation but we tell it to not allow
-   SIGCANCEL to be handled.  */
-# define SIGCANCEL __SIGRTMIN
+   SIGCANCEL or SIGTIMER to be handled.  */
 # define LIBC_SIGACTION	1
 
 # include <nptl/sysdeps/pthread/sigaction.c>
@@ -35,7 +36,7 @@ __sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
-  if (sig == SIGCANCEL)
+  if (sig == SIGCANCEL || sig == SIGTIMER)
     {
       __set_errno (EINVAL);
       return -1;

@@ -1,3 +1,21 @@
+2003-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/tst-atomic.c: Adjust tests to what atomic_add_negative and
+	atomic_add_zero were supposed to do.
+	* include/atomic.h: Adjust atomic_add_negative and atomic_add_zero
+	to x86 behavior.
+
+	* sysdeps/generic/bits/typesizes.h (__TIMER_T_TYPE): Define as void*.
+	This matches the new timer implementation.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (struct siginfo): Adjust
+	timer info for what the kernel provides these days.
+	(struct sigevent): Add _tid field.
+	Define SIGEV_THREAD_ID.
+
+	* Versions.def (librt): Add GLIBC_2.3.3.
+
+	* abilist/libpthread.abilist: Update for nptl.
+
 2003-03-24  Jon Grimm  <jgrimm@us.ibm.com>
 
 	* inet/netinet/in.h: Add IPPROTO_SCTP.

@@ -178,9 +178,9 @@ do_test (void)
       ret = 1;
     }
 
-  mem = -10;
-  if (! atomic_add_negative (&mem, 12)
-      || mem != 2)
+  mem = -12;
+  if (! atomic_add_negative (&mem, 10)
+      || mem != -2)
     {
       puts ("atomic_add_negative test 1 failed");
       ret = 1;
@@ -210,9 +210,9 @@ do_test (void)
       ret = 1;
     }
 
-  mem = 0;
+  mem = -36;
   if (! atomic_add_zero (&mem, 36)
-      || mem != 36)
+      || mem != 0)
     {
       puts ("atomic_add_zero test 2 failed");
       ret = 1;
