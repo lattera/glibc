@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
@@ -379,6 +380,12 @@ yp_get_default_domain (char **outdomain)
     {
       if (getdomainname (__ypdomainname, NIS_MAXNAMELEN))
 	result = YPERR_NODOM;
+      else if (strcmp (__ypdomainname, "(none)") == 0)
+	{
+	  /* If domainname is not set, some Systems will return "(none)" */
+	  __ypdomainname[0] = '\0';
+	  result = YPERR_NODOM;
+	}
       else
 	*outdomain = __ypdomainname;
     }
@@ -397,8 +404,6 @@ __yp_check (char **domain)
 
   if (__ypdomainname[0] == '\0')
     if (yp_get_default_domain (&unused))
-      return 0;
-    else if (strcmp (__ypdomainname, "(none)") == 0)
       return 0;
 
   if (domain)

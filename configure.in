@@ -1159,8 +1159,10 @@ else
   config_makefile=Makefile
 fi
 
-VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
+VERSION=`sed -n -e 's/^#define VERSION "\([^"]*\)"/\1/p' < $srcdir/version.h`
+RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
+AC_SUBST(RELEASE)
 
 AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make; test -d bits || mkdir bits])

@@ -22,4 +22,4 @@ releases
 crypt
 linuxthreads
 
-aio
+libc.prj .libc.prcs_aux

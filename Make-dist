@@ -132,7 +132,6 @@ foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
 
 ifndef tardir
--include $(common-objpfx)version.mk
 export tardir := glibc-$(version)
 endif
 

@@ -55,8 +55,7 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 	  $(rpcsvc:%=rpcsvc/%)
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
-	    rpc-proto.c rpc-proto.d rpcgen
-generated-dirs = rpcsvc
+	    $(rpcsvc:%.x=rpcsvc/%.stmp) $rpc-proto.c rpc-proto.d rpcgen
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \

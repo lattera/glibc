@@ -1,10 +1,57 @@
+1998-05-12 12:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c: Move to ...
+	* sysdeps/generic/glob.c: ...here.
+	* posix/glob.h (glob_t): Use correct types for gl_pathc and gl_offs
+	elements.
+	* sysdeps/unix/sysv/linux/alpha/glob.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add oldglob.c.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Compile oldglob in posix
+	subdir.
+	* libc.map [GLIBC_2.1]: Add glob and globfree.
+
+1998-05-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile (generated): Restore old list.
+
+1998-05-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* rt/Makefile (tests): Define only if we have a thread library.
+
+	* nis/ypclnt.c: Add: #include <errno.h>.
+
+1998-05-10 15:39  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Define and substitute RELEASE as well as
+	VERSION.
+	* config.make.in: Add RELEASE and VERSION to be substituted.
+	* Makeconfig: Delete all references to version.mk.
+	* Make-dist: Likewise.
+	* MakeTAGS: Likewise.
+	* elf/Makefile: Likewise.
+
+1998-05-10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Move "(none)" domainname check from __yp_check to
+	yp_get_default_domain.
+
+1998-05-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/profil.c (__profil): Don't define act and timer
+	variables as static.  Patch by Joe Keane <jgk@jgk.org>.
+
+1998-05-12  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c: Fix for NO_THREADS case.
+
 1998-05-11 18:02  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):
-	Remove statfs and fstatfs.                                 
+	Remove statfs and fstatfs.
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Don't mark pread
-	and pwrite as EXTRA.                                           
-	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.        
+	and pwrite as EXTRA.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
 
 1998-05-09  Ulrich Drepper  <drepper@cygnus.com>
 

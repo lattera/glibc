@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -92,9 +92,9 @@ struct stat;
 #endif
 typedef struct
   {
-    int gl_pathc;		/* Count of paths matched by the pattern.  */
+    size_t gl_pathc;		/* Count of paths matched by the pattern.  */
     char **gl_pathv;		/* List of matched pathnames.  */
-    int gl_offs;		/* Slots to reserve in `gl_pathv'.  */
+    size_t gl_offs;		/* Slots to reserve in `gl_pathv'.  */
     int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions

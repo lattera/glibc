@@ -2870,7 +2870,9 @@ else
   config_makefile=Makefile
 fi
 
-VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
+VERSION=`sed -n -e 's/^#define VERSION "\([^"]*\)"/\1/p' < $srcdir/version.h`
+RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
+
 
 
 trap '' 1 2 15
@@ -3067,6 +3069,7 @@ s%@static_nss@%$static_nss%g
 s%@nopic_initfini@%$nopic_initfini%g
 s%@DEFINES@%$DEFINES%g
 s%@VERSION@%$VERSION%g
+s%@RELEASE@%$RELEASE%g
 
 CEOF
 EOF

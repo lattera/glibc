@@ -163,9 +163,6 @@ $P/subdirs.pot: $(subdirs:%=$P/%.pot)
 	 do sed "/^#:/s% % $$d/%g" $P/$$d.pot; done) > $@.new
 	mv -f $@.new $@
 
-# Get $(version) defined.
-include $(common-objpfx)version.mk
-
 # Combine all the messages into the final sorted template translation file.
 # The following code requires GNU date.
 $P/libc.pot: $(all-pot)

@@ -2,6 +2,9 @@
 # From $Id$.
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
+version = @VERSION@
+release = @RELEASE@
+
 # Installation prefixes.
 install_root =
 prefix = @prefix@

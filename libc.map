@@ -470,7 +470,7 @@ GLIBC_2.1 {
     __key_gendes_LOCAL;
 
     # chown interface change.
-    chown;
+    chown; glob; globfree;
 
     # Change in pthread_attr_t.
     pthread_attr_init;

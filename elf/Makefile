@@ -191,8 +191,8 @@ sed $($(ldd-shell)-ldd-rewrite) < $< | sed -f $(ldd-rewrite-script) > $@.new
 endef
 endif
 
-$(objpfx)ldd: ldd.$(ldd-shell).in $(common-objpfx)version.mk \
-	      $(common-objpfx)soversions.mk $(common-objpfx)config.make
+$(objpfx)ldd: ldd.$(ldd-shell).in $(common-objpfx)soversions.mk \
+	      $(common-objpfx)config.make
 	$(gen-ldd)
 	chmod 555 $@.new
 	mv -f $@.new $@

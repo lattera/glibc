@@ -657,15 +657,6 @@ ifndef BUILD_CC
 BUILD_CC = $(CC)
 endif
 
-# Figure out the version numbers from version.h.
-
-$(common-objpfx)version.mk: $(..)version.h $(..)Makeconfig
-	sed -n -e 's/^.*RELEASE.*"\([^"]*\)".*$$/release=\1/p' \
-	       -e 's/^.*VERSION.*"\([^"]*\)".*$$/version=\1/p' \
-	    < $< > $@-new
-	mv -f $@-new $@
-
-common-generated += version.mk
 
 ifeq (yes, $(build-shared))
 
@@ -703,11 +694,6 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 endif
 
 postclean-generated += soversions.mk
-
-ifndef avoid-generated
-# Get $(version) defined with the release version number.
--include $(common-objpfx)version.mk
-endif
 
 # Generate the header containing the names of all shared libraries.
 # We use a stamp file to avoid uncessary recompilations.
