@@ -99,7 +99,7 @@ generated += $(crtstuff:=.S) initfini.s defs.h
 omit-deps += $(crtstuff)
 
 # Special rules for the building of crti.o and crtn.o
-$(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
+$(crtstuff:%=$(objpfx)%.o): %.o: %.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
 CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions

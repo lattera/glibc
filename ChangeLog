@@ -1,3 +1,12 @@
+2003-05-04  Roland McGrath  <roland@redhat.com>
+
+	* csu/Makefile ($(objpfx)crt%.o): Replace implicit rule with a static
+	pattern rule.  The implicit rule could be ruled out when $(objpfx)
+	didn't exist at the time of its consideration (ugh!).
+
+	* Makerules (+make-deps): Fix target matching.
+	Use $(sed-remove-dotdot).
+
 2003-05-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (main): Parse config file right after parsing
