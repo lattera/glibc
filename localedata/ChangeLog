@@ -1,3 +1,8 @@
+2001-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/de_CH: Define decimal point to '.' and thousands
+	separator to ' '.  Patch by Niklaus Giger <ngiger@mus.ch>.
+
 2001-11-21  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/ISO-8859-16: Swap 0xa5 and 0xab entries.

@@ -61,8 +61,8 @@ END LC_MESSAGES
 LC_MONETARY
 int_curr_symbol           "<U0043><U0048><U0046><U0020>"
 currency_symbol           "<U0046><U0072><U002E>"
-mon_decimal_point         "<U002C>"
-mon_thousands_sep         "<U002E>"
+mon_decimal_point         "<U002E>"
+mon_thousands_sep         "<U0020>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"
@@ -77,7 +77,9 @@ n_sign_posn               4
 END LC_MONETARY
 
 LC_NUMERIC
-copy "de_DE"
+decimal_point             "<U002E>"
+thousands_sep             "<U0020>"
+grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
