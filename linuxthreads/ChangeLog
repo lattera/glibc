@@ -1,3 +1,8 @@
+2004-04-22  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/unix/sysv/linux/sh/vfork.S: Fix wrong function pointer
+	reference in PIC case.
+
 2004-04-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* oldsemaphore.c (SEM_VALUE_MAX): Remove.

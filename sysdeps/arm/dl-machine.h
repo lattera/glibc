@@ -507,9 +507,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 topbits = newvalue & 0xfe000000;
 		 if (topbits != 0xfe000000 && topbits != 0x00000000)
 		   {
-		     INTUSE (_dl_signal_error)
-		       (0, map->l_name, NULL,
-			"R_ARM_PC24 relocation out of range");
+		     _dl_signal_error (0, map->l_name, NULL,
+				       "R_ARM_PC24 relocation out of range");
 		   }
 	       }
 	     newvalue >>= 2;
@@ -588,9 +587,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 topbits = newvalue & 0xfe000000;
 		 if (topbits != 0xfe000000 && topbits != 0x00000000)
 		   {
-		     INTUSE (_dl_signal_error)
-		       (0, map->l_name, NULL,
-			"R_ARM_PC24 relocation out of range");
+		     _dl_signal_error (0, map->l_name, NULL,
+				       "R_ARM_PC24 relocation out of range");
 		   }
 	       }
 	     newvalue >>= 2;

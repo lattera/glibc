@@ -1,3 +1,9 @@
+2004-04-22  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Don't use INTUSE
+	when calling _dl_signal_error.
+	(elf_machine_rel): Likewise.
+
 2004-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Define _GI___sigsetjmp

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,11 @@
 
 ENTRY (__vfork)
 #ifdef SHARED
+	mov.l	.Lgot, r1
+	mova	.Lgot, r0
+	add	r0, r1
 	mov.l	.Lpthread_func, r0
-	mov.l	@(r0,r12), r0
+	mov.l	@(r0,r1), r0
 #else
 	mov.l	.Lpthread_create, r0
 #endif
@@ -50,6 +53,8 @@ ENTRY (__vfork)
 .L1:	.word	__NR_vfork
 	.align	2
 #ifdef SHARED
+.Lgot:
+	.long	_GLOBAL_OFFSET_TABLE_
 .Lpthread_func:
 	.long	__libc_pthread_functions@GOTOFF
 #else
