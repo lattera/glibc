@@ -1,3 +1,16 @@
+2000-09-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-cache.h: New.
+
+	* elf/cache.c (print_entry): Replace 64bit with IA-64 in message
+	for x86/IA-64 binary.
+
+2000-09-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/readelflib.c: New file.
+
+	* elf/cache.c (print_entry): Check for FLAG_IA64_LIB64.
+
 2000-09-29  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__access): New function.  Dummy
