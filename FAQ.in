@@ -48,9 +48,10 @@ ports to other operating systems are underway, although a few people have
 expressed interest.
 
 If you have a system not listed above (or in the `README' file) and you are
-really interested in porting it, contact
+really interested in porting it, see the GNU C Library web pages to learn
+how to start contributing:
 
-	<bug-glibc@gnu.org>
+	http://www.gnu.org/software/libc/resources.html
 
 ??binsize	What compiler do I need to build GNU libc?
 
