@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 #ifndef _SYS_DEBUGREG_H
 #define _SYS_DEBUGREG_H	1
+#include <bits/wordsize.h>
 
 /* Indicate the register numbers for a number of the specific
    debug registers.  Registers 0-3 contain the addresses we wish to trap on */
@@ -73,7 +74,14 @@
 
 /* The second byte to the control register has a few special
    things.  */
-#define DR_CONTROL_RESERVED (0xFC00) /* Reserved */
+
+
+
+#if __WORDSIZE == 64
+# define DR_CONTROL_RESERVED (0xFFFFFFFF0000FC00UL) /* Reserved */
+#else
+# define DR_CONTROL_RESERVED (0x00FC00U) /* Reserved */
+#endif
 #define DR_LOCAL_SLOWDOWN   (0x100)  /* Local slow the pipeline */
 #define DR_GLOBAL_SLOWDOWN  (0x200)  /* Global slow the pipeline */
 
