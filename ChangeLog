@@ -1,3 +1,8 @@
+2000-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/libintl.h (ngettext): Add missing parameter.
+	(dngettext): Likewise.
+
 2000-10-19  H.J. Lu  <hjl@gnu.org>
 
 	* elf/Makefile (distribute): Add neededtest.c, neededobj1.c,

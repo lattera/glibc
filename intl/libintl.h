@@ -101,13 +101,13 @@ extern char *bind_textdomain_codeset (__const char *__domainname,
 
 # define gettext(msgid) dgettext (NULL, msgid)
 
-# define dgettext(domainname, msgid)					      \
+# define dgettext(domainname, msgid) \
   dcgettext (domainname, msgid, LC_MESSAGES)
 
-# define ngettext(msgid, n) dngettext (NULL, msgid, n)
+# define ngettext(msgid1, msgid2, n) dngettext (NULL, msgid1, msgid2, n)
 
-# define dngettext(domainname, msgid, n)				      \
-  dcngettext (domainname, msgid, n, LC_MESSAGES)
+# define dngettext(domainname, msgid1, msgid2, n) \
+  dcngettext (domainname, msgid1, msgid2, n, LC_MESSAGES)
 
 #endif	/* Optimizing.  */
 
