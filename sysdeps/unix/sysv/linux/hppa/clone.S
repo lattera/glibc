@@ -33,18 +33,18 @@ ENTRY(__clone)
 	/* FIXME: I have no idea how profiling works on hppa. */
 
 	/* Sanity check arguments.  */
-	comib,<> 0,%arg0,.Lerror	/* no NULL function pointers */
-	ldi	EINVAL,%ret0
-	comib,<> 0,%arg1,.Lerror	/* no NULL stack pointers */
+	comib,=  0,%arg0,.Lerror        /* no NULL function pointers */
+	ldi     -EINVAL,%ret0
+	comib,=  0,%arg1,.Lerror        /* no NULL stack pointers */
 	nop
 
 	/* Save the fn ptr and arg on the new stack.  */
-	stwm	%arg3,64(%arg1)
+	stwm    %arg0,64(%arg1)
 	stw	%arg3,-60(%arg1)
 
 	/* Do the system call */
 	copy	%arg2,%arg0
-	ble	0x100(%sr7,%r0)
+	ble     0x100(%sr2,%r0)
 	ldi	__NR_clone,%r20
 
 	ldi	-4096,%r1
@@ -60,12 +60,12 @@ ENTRY(__clone)
 	/* Something bad happened -- no child created */
 .Lerror:
 	b	__syscall_error
-	nop
+	sub     %r0,%ret0,%arg0
 
 thread_start:
 	/* Load up the arguments.  */
 	ldw	-60(%sp),%arg0
-	ldwm	-64(%sp),%r22
+	ldw     -64(%sp),%r22
 
 	/* Call the user's function */
 	bl	$$dyncall,%r31
