@@ -51,7 +51,7 @@
 
 int error_count;
 
-void
+static void
 output_servent (const char *call, struct servent *sptr)
 {
   char **pptr;
@@ -68,7 +68,7 @@ output_servent (const char *call, struct servent *sptr)
 }
 
 
-void
+static void
 test_services (void)
 {
   struct servent *sptr;
@@ -112,7 +112,7 @@ test_services (void)
 }
 
 
-void
+static void
 output_hostent (const char *call, struct hostent *hptr)
 {
   char **pptr;
@@ -134,7 +134,7 @@ output_hostent (const char *call, struct hostent *hptr)
     }
 }
 
-void
+static void
 test_hosts (void)
 {
   struct hostent *hptr1, *hptr2;
@@ -202,7 +202,7 @@ test_hosts (void)
 }
 
 
-void
+static void
 output_netent (const char *call, struct netent *nptr)
 {
   char **pptr;
@@ -222,7 +222,7 @@ output_netent (const char *call, struct netent *nptr)
     }
 }
 
-void
+static void
 test_network (void)
 {
   struct netent *nptr;
@@ -253,7 +253,7 @@ test_network (void)
 }
 
 
-void
+static void
 output_protoent (const char *call, struct protoent *prptr)
 {
   char **pptr;
@@ -270,7 +270,7 @@ output_protoent (const char *call, struct protoent *prptr)
 }
 
 
-void
+static void
 test_protocols (void)
 {
   struct protoent *prptr;
@@ -292,7 +292,7 @@ test_protocols (void)
 }
 
 
-void
+static void
 output_rpcent (const char *call, struct rpcent *rptr)
 {
   char **pptr;
@@ -308,7 +308,7 @@ output_rpcent (const char *call, struct rpcent *rptr)
     }
 }
 
-void
+static void
 test_rpc (void)
 {
   struct rpcent *rptr;
@@ -329,11 +329,9 @@ test_rpc (void)
   endrpcent ();
 }
 
-/*
-  Override /etc/nsswitch.conf for this program.
-  This is mainly useful for developers
-*/
-void
+/* Override /etc/nsswitch.conf for this program.  This is mainly
+   useful for developers. */
+static void  __attribute__ ((unused))
 setdb (const char *dbname)
 {
   if (strcmp ("db", dbname))
@@ -368,5 +366,5 @@ main (void)
   else
     printf ("No visible errors occurred!\n");
 
-  exit (error_count);
+  return (error_count != 0);
 }
