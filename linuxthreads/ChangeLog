@@ -1,3 +1,8 @@
+1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_start_thread_event): Initialize p_pid already
+	here.
+
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h: Add prototype for __pthread_manager_event.

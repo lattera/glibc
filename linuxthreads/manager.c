@@ -252,6 +252,9 @@ static int pthread_start_thread_event(void *arg)
 #ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(self, self->p_nr);
 #endif
+  /* Make sure our pid field is initialized, just in case we get there
+     before our father has initialized it. */
+  THREAD_SETMEM(self, p_pid, __getpid());
   /* Get the lock the manager will free once all is correctly set up.  */
   __pthread_lock (THREAD_GETMEM(self, p_lock), NULL);
   /* Free it immediately.  */
