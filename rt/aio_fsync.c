@@ -28,6 +28,7 @@
 #include <aio.h>
 /* And undo the hack.  */
 #undef aio_fsync64
+#include <errno.h>
 
 #include "aio_misc.h"
 
@@ -35,6 +36,12 @@
 int
 aio_fsync (int op, struct aiocb *aiocbp)
 {
+  if (op != O_DSYNC && op != O_SYNC)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   return (__aio_enqueue_request ((aiocb_union *) aiocbp,
 				 op == O_SYNC ? LIO_SYNC : LIO_DSYNC) == NULL
 	  ? -1 : 0);

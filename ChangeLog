@@ -10,6 +10,8 @@
 
 	* rt/aio_misc.c: Set errno at correct place.
 
+	* rt/aio_fsync.c: Test OP parameter for correct values.
+
 1999-08-04  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/getsysstats.c (GET_NPROCS_PARSER):
