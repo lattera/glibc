@@ -1,3 +1,7 @@
+2000-12-07  Dan Pop  <Dan.Pop@cern.ch>
+
+	* sysdeps/ia64/strcpy.S: Fix a bug in a recovery code sequence.
+
 2000-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/aix/Makefile [$(subdir)==misc]

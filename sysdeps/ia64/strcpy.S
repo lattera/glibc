@@ -73,10 +73,10 @@ ENTRY(strcpy)
 .l1:					// copy -dest % 8 bytes
 	ld1	c = [src], 1		// c = *src++
 	;;
-	st1	[dest] = c, 1		// *dest++ = c  
+	st1	[dest] = c, 1		// *dest++ = c
 	cmp.eq	p6, p0 = c, r0
 (p6)	br.cond.dpnt .restore_and_exit
-	br.cloop.dptk .l1 ;;	
+	br.cloop.dptk .l1 ;;
 .dest_aligned:
 	and	sh1 = 7, src 		// sh1 = src % 8
 	mov	ar.lc = -1		// "infinite" loop
@@ -89,10 +89,10 @@ ENTRY(strcpy)
 	cmp.eq  p6, p0 = sh1, r0 	// is the src aligned?
 (p6)    br.cond.sptk .src_aligned ;;
 	ld8	r[1] = [asrc],8 ;;
-	
+
 	.align	32
-.l2:					
-	ld8.s	r[0] = [asrc], 8		
+.l2:
+	ld8.s	r[0] = [asrc], 8
 	shr.u	value = r[1], sh1 ;; 	// value = w0 >> sh1
 	czx1.r	pos = value ;;		// do we have an "early" zero
 	cmp.lt	p7, p0 = pos, thresh	// in w0 >> sh1?
@@ -112,7 +112,7 @@ ENTRY(strcpy)
 (p[0])		ld8.s	r[0] = [src], 8
 (p[MEMLAT])	chk.s	r[MEMLAT], .recovery3
 .back3:
-(p[MEMLAT])	mov	value = r[MEMLAT] 
+(p[MEMLAT])	mov	value = r[MEMLAT]
 (p[MEMLAT])	czx1.r	pos = r[MEMLAT] ;;
 (p[MEMLAT])	cmp.ne	p7, p0 = 8, pos
 (p7)		br.cond.dpnt .found0
@@ -133,7 +133,7 @@ ENTRY(strcpy)
 	br.ret.sptk.many b0
 .recovery2:
 	add	tmp = -8, asrc ;;
-	ld8	r[MEMLAT] = [tmp]
+	ld8	r[0] = [tmp]
 	br.cond.sptk .back2
 .recovery3:
 	add	tmp = -(MEMLAT + 1) * 8, src ;;
