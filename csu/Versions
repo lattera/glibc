@@ -1,16 +1,26 @@
+%include <tls.h>
+
 libc {
   GLIBC_2.0 {
-    # global variables
-    _errno;
-
     # helper functions
     __libc_init_first; __libc_start_main;
 
+%if !(USE_TLS && HAVE___THREAD)
+    # global variables
+    _errno;
+
     # variables in normal name space
     errno;
+%endif
   }
   GLIBC_2.1 {
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;
+  }
+  GLIBC_2.3 {
+%if USE_TLS && HAVE___THREAD
+    # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
+    errno;
+%endif
   }
 }

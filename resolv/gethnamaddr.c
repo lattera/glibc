@@ -633,7 +633,8 @@ gethostbyaddr(addr, len, af)
 	const u_char *uaddr = (const u_char *)addr;
 	static const u_char mapped[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0xff,0xff };
 	static const u_char tunnelled[] = { 0,0, 0,0, 0,0, 0,0, 0,0, 0,0 };
-	int n, size;
+	int n;
+	socklen_t size;
 	querybuf buf;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp = NULL;

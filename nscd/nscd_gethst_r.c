@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -263,7 +263,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	}
       resultbuf->h_addr_list[cnt] = NULL;
 
-      if (__readv (sock, vec, n) != total_len)
+      if ((size_t) __readv (sock, vec, n) != total_len)
 	{
 	  __close (sock);
 	  return -1;
@@ -284,7 +284,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	goto no_room;
 
       /* And finally read the aliases.  */
-      if (__read (sock, resultbuf->h_aliases[0], total_len) != total_len)
+      if ((size_t) __read (sock, resultbuf->h_aliases[0], total_len)
+	  != total_len)
 	{
 	  __close (sock);
 	  return -1;

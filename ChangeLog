@@ -1,3 +1,23 @@
+2002-09-24  Roland McGrath  <roland@redhat.com>
+
+	* csu/Versions: Use %include <tls.h> to get USE_TLS defined.
+	(libc: GLIBC_2.0) [USE_TLS && HAVE___THREAD]: Remove _errno, errno.
+	(libc: GLIBC_2.3) [USE_TLS && HAVE___THREAD]: Put errno here instead.
+	* resolv/Versions: Use %include <tls.h> to get USE_TLS defined.
+	(libc: GLIBC_2.0) [USE_TLS && HAVE___THREAD]: Remove _h_errno, h_errno,
+	and _res.
+	(libc: GLIBC_2.3) [USE_TLS && HAVE___THREAD]: Put h_errno, _res here.
+
+	* elf/tls-macros.h [__x86_64__] (TLS_LE, TLS_IE, TLS_LD, TLS_GD):
+	New macros for x86-64.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: File removed.
+	It was indentical to the linux/bits/time.h file.
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Add a cast to silence warning.
+
+	* resolv/gethnamaddr.c (gethostbyaddr): Use socklen_t for SIZE.
+
 2002-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/zh_CN.po: New file.

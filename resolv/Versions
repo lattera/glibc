@@ -1,7 +1,11 @@
+%include <tls.h>
+
 libc {
   GLIBC_2.0 {
+%if !(USE_TLS && HAVE___THREAD)
     # global variables
     _h_errno; _res;
+%endif
 
     # helper functions
     __h_errno_location;
@@ -10,7 +14,10 @@ libc {
     __res_randomid;
 
     # variables in normal name space
-    h_errlist; h_errno; h_nerr;
+    h_errlist; h_nerr;
+%if !(USE_TLS && HAVE___THREAD)
+    h_errno;
+%endif
 
     # h*
     herror; hstrerror;
@@ -21,6 +28,12 @@ libc {
   GLIBC_2.2 {
     # r*
     __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
+  }
+  GLIBC_2.3 {
+%if USE_TLS && HAVE___THREAD
+    # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
+    h_errno; _res;
+%endif
   }
   GLIBC_PRIVATE {
     __gai_sigqueue;

@@ -1,5 +1,5 @@
 /* Test for Pthreads/mutexes.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kurt Garloff <garloff@suse.de>, 2000.
 
@@ -38,8 +38,7 @@ struct thr_ctrl
 static void
 dump_mut (pthread_mutex_t * mut)
 {
-  int i;
-
+  size_t i;
   for (i = 0; i < sizeof (*mut); i++)
     printf (" %02x", *((unsigned char *) mut + i));
   printf ("\n");

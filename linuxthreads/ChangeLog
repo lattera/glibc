@@ -1,3 +1,11 @@
+2002-09-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/tls.h: New file.
+
+2002-09-23  Roland McGrath  <roland@redhat.com>
+
+	* Examples/ex13.c (dump_mut): int -> size_t for counter.
+
 2002-09-18  Bruno Haible  <bruno@clisp.org>
 
 	* Examples/ex10.c (thread): Fail if pthread_mutex_timedlock() returns
