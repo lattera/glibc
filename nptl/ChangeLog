@@ -1,5 +1,9 @@
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sem_init.c: Define sem_init@GLIBC_2.0.
+	* sem_destroy.c: Define sem_destroy@GLIBC_2.0.
+	* sem_getvalue.c: Define sem_getvalue@GLIBC_2.0.
+
 	* flockfile.c: Moved to...
 	* sysdeps/pthread/flockfile.c: ...here.  New file.
 	* funlockfile.c: Moved to...
