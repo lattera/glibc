@@ -136,7 +136,8 @@ __pthread_cond_wait:
 
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
-	callq	__pthread_mutex_unlock_internal
+	xorq	%rsi, %rsi
+	callq	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax
 	jne	12f

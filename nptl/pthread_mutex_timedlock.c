@@ -27,7 +27,7 @@ pthread_mutex_timedlock (mutex, abstime)
      pthread_mutex_t *mutex;
      const struct timespec *abstime;
 {
-  struct pthread *id = THREAD_ID;
+  pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
   int result = 0;
 
   /* We must not check ABSTIME here.  If the thread does not block
@@ -80,8 +80,11 @@ pthread_mutex_timedlock (mutex, abstime)
     }
 
   if (result == 0)
-    /* Record the ownership.  */
-    mutex->__data.__owner = id;
+    {
+      /* Record the ownership.  */
+      mutex->__data.__owner = id;
+      ++mutex->__data.__nusers;
+    }
 
  out:
   return result;

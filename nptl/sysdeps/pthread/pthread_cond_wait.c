@@ -82,7 +82,7 @@ __pthread_cond_wait (cond, mutex)
   lll_mutex_lock (cond->__data.__lock);
 
   /* Now we can release the mutex.  */
-  err = __pthread_mutex_unlock_internal (mutex);
+  err = __pthread_mutex_unlock_usercnt (mutex, 0);
   if (err)
     {
       lll_mutex_unlock (cond->__data.__lock);

@@ -66,10 +66,16 @@ typedef union
   {
     int __lock;
     unsigned int __count;
-    struct pthread *__owner;
+    int __owner;
+#if __WORDSIZE == 64
+    unsigned int __nusers;
+#endif
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
+#if __WORDSIZE != 64
+    unsigned int __nusers;
+#endif
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

@@ -23,14 +23,16 @@
 
 
 int
-__pthread_mutex_unlock (mutex)
+internal_function
+__pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
+     bool decr;
 {
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
     case PTHREAD_MUTEX_RECURSIVE_NP:
       /* Recursive mutex.  */
-      if (mutex->__data.__owner != THREAD_ID)
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid))
 	return EPERM;
 
       if (--mutex->__data.__count != 0)
@@ -40,7 +42,7 @@ __pthread_mutex_unlock (mutex)
 
     case PTHREAD_MUTEX_ERRORCHECK_NP:
       /* Error checking mutex.  */
-      if (mutex->__data.__owner != THREAD_ID
+      if (mutex->__data.__owner != THREAD_GETMEM (THREAD_SELF, tid)
 	  || ! lll_mutex_islocked (mutex->__data.__lock))
 	return EPERM;
       break;
@@ -54,12 +56,23 @@ __pthread_mutex_unlock (mutex)
     }
 
   /* Always reset the owner field.  */
-  mutex->__data.__owner = NULL;
+  mutex->__data.__owner = 0;
+  if (decr)
+    /* One less user.  */
+    --mutex->__data.__nusers;
 
   /* Unlock.  */
   lll_mutex_unlock (mutex->__data.__lock);
 
   return 0;
+}
+
+
+int
+__pthread_mutex_unlock (mutex)
+     pthread_mutex_t *mutex;
+{
+  return __pthread_mutex_unlock_usercnt (mutex, true);
 }
 strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 strong_alias (__pthread_mutex_unlock, __pthread_mutex_unlock_internal)

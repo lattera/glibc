@@ -25,9 +25,7 @@ int
 __pthread_mutex_destroy (mutex)
      pthread_mutex_t *mutex;
 {
-  if (__builtin_expect (mutex->__data.__kind == PTHREAD_MUTEX_ERRORCHECK_NP,
-			0)
-      && lll_mutex_trylock (mutex->__data.__lock) != 0)
+  if (mutex->__data.__nusers != 0)
     return EBUSY;
 
   return 0;

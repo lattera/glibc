@@ -248,12 +248,8 @@ union user_desc_init
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
-	  : "i" (offsetof (struct pthread, header.self)));			      \
+	  : "i" (offsetof (struct pthread, header.self)));		      \
      __self;})
-
-/* Identifier for the current thread.  THREAD_SELF is usable but
-   sometimes more expensive than necessary.  It is fine here.  */
-# define THREAD_ID THREAD_SELF
 
 
 /* Read member of the thread descriptor directly.  */

@@ -26,12 +26,13 @@ int
 __pthread_mutex_trylock (mutex)
      pthread_mutex_t *mutex;
 {
-  struct pthread *id = THREAD_ID;
+  pid_t *id;
 
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:
+      id = THREAD_GETMEM (THREAD_SELF, tid);
       /* Check whether we already hold the mutex.  */
       if (mutex->__data.__owner == id)
 	{
@@ -49,6 +50,7 @@ __pthread_mutex_trylock (mutex)
 	  /* Record the ownership.  */
 	  mutex->__data.__owner = id;
 	  mutex->__data.__count = 1;
+	  ++mutex->__data.__nusers;
 	  return 0;
 	}
       break;
@@ -63,7 +65,8 @@ __pthread_mutex_trylock (mutex)
       if (lll_mutex_trylock (mutex->__data.__lock) == 0)
 	{
 	  /* Record the ownership.  */
-	  mutex->__data.__owner = id;
+	  mutex->__data.__owner = THREAD_GETMEM (THREAD_SELF, tid);
+	  ++mutex->__data.__nusers;
 
 	  return 0;
 	}

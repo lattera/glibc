@@ -161,10 +161,6 @@ typedef struct
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
      __self;})
 
-/* Identifier for the current thread.  THREAD_SELF is usable but
-   sometimes more expensive than necessary.  It is fine here.  */
-# define THREAD_ID THREAD_SELF
-
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) \

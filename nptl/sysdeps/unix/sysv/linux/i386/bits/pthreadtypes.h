@@ -51,10 +51,11 @@ typedef union
   {
     int __lock;
     unsigned int __count;
-    struct pthread *__owner;
+    int __owner;
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
+    unsigned int __nusers;
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

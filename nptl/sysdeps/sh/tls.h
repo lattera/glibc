@@ -117,13 +117,6 @@ typedef struct
      __asm ("stc gbr,%0" : "=r" (__self));				      \
      __self - 1;})
 
-/* Identifier for the current thread.  THREAD_SELF is usable but
-   sometimes more expensive than necessary as in this case.  */
-# define THREAD_ID \
-  ({ struct pthread *__self;						      \
-     __asm ("stc gbr,%0" : "=r" (__self));				      \
-     __self;})
-
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) (descr->member)
 

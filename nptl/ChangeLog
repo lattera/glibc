@@ -1,3 +1,56 @@
+2003-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h (__pthread_mutex_init_internal): Mark hidden.
+	(__pthread_mutex_lock_internal): Likewise.
+	(__pthread_mutex_unlock_internal): Likewise.
+	(__pthread_mutex_unlock_usercnt): Declare.
+	* pthread_mutex_destroy.c: Always fail if used in any way.
+	* pthread_mutex_init.c: Update comment.
+	* pthread_mutex_lock.c: If NO_INCR is not defined adjust __nusers.
+	* pthread_mutex_timedlock.c: Adjust __nusers.
+	* pthread_mutex_trylock.c: Adjust __nusers.
+	* pthread_mutex_unlock.c: Old code is in __pthread_mutex_unlock_usercnt
+	and public interfaces are wrapper with pass additional parameter.
+	__pthread_mutex_unlock_usercnt does not adjust __nusers if second
+	parameter zero.
+	* tst-mutex8.c: New file.
+	* Makefile (tests): Add tst-mutex8.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Call
+	__pthread_mutex_unlock_usercnt.
+	* sysdeps/pthread/pthread_cond_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c: Define NO_INCR.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_mutex_t):
+	Add __nusers.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
+	* pthread_mutex_lock.c: Don't store THREAD_ID in __owner, use TID.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Adjust __nusers.
+	* pthread_mutex_unlock.c: Compare with TID not THREAD_ID.
+	* tst-mutex9.c: New file.
+	* Makefile (tests): Add tst-mutex9.
+	* sysdeps/i386/tls.h: Remove THREAD_ID definition.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_mutex_t):
+	Change type of __owner.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
 2003-06-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sem_post.c: Move to...

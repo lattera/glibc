@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -48,7 +48,8 @@ __pthread_mutex_init (mutex, mutexattr)
 
   /* Default values: mutex not used yet.  */
   // mutex->__count = 0;	already done by memset
-  // mutex->__owner = NULL;	already done by memset
+  // mutex->__owner = 0;	already done by memset
+  // mutex->__nusers = 0;	already done by memset
 
   return 0;
 }

@@ -113,10 +113,6 @@ register struct pthread *__thread_self __asm__("r13");
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF (__thread_self - 1)
 
-/* Identifier for the current thread.  THREAD_SELF is usable but
-   sometimes more expensive than necessary as in this case.  */
-# define THREAD_ID __thread_self
-
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \
   descr->member

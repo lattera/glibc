@@ -56,7 +56,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   lll_mutex_lock (cond->__data.__lock);
 
   /* Now we can release the mutex.  */
-  int err = __pthread_mutex_unlock_internal (mutex);
+  int err = __pthread_mutex_unlock_usercnt (mutex, 0);
   if (err)
     {
       lll_mutex_unlock (cond->__data.__lock);

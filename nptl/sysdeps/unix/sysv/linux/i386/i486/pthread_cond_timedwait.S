@@ -72,9 +72,8 @@ __pthread_cond_timedwait:
 	movl	%eax, dep_mutex(%ebx)
 
 	/* Unlock the mutex.  */
-	pushl	%eax
-.Lpush4:
-	call	__pthread_mutex_unlock_internal
+	xorl	%edx, %edx
+	call	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax
 	jne	16f
@@ -90,7 +89,7 @@ __pthread_cond_timedwait:
 #else
 	leal	__condvar_cleanup, %eax
 #endif
-	subl	$40, %esp
+	subl	$44, %esp
 .Lsubl:
 	leal	28(%esp), %edx
 	movl	%esp, 8(%esp)
@@ -299,15 +298,15 @@ __pthread_cond_timedwait:
 	/* The initial unlocking of the mutex failed.  */
 16:
 .LSbl3:
-	movl	%eax, (%esp)
 	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
 	subl	$1, cond_lock(%ebx)
 #endif
-	jne	17f
+	jne	18b
 
+	movl	%eax, %esi
 #if cond_lock == 0
 	movl	%ebx, %eax
 #else
@@ -315,7 +314,7 @@ __pthread_cond_timedwait:
 #endif
 	call	__lll_mutex_unlock_wake
 
-17:	popl	%eax
+	movl	%esi, %eax
 	jmp	18b
 
 #if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
@@ -411,10 +410,8 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.uleb128 20
 	.byte	0x83				# DW_CFA_offset %ebx
 	.uleb128 5
-	.byte	0x40+.Lpush4-.Lpush_ebx		# DW_CFA_advance_loc+N
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte	0x40+.Lsubl-.Lpush4		# DW_CFA_advance_loc+N
+	.byte	2				# DW_CFA_advance_loc1
+	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 64
 	.byte	3				# DW_CFA_advance_loc2

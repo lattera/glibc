@@ -31,7 +31,7 @@ int
 __pthread_mutex_lock (mutex)
      pthread_mutex_t *mutex;
 {
-  struct pthread *id = THREAD_ID;
+  pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
@@ -55,6 +55,9 @@ __pthread_mutex_lock (mutex)
 	  /* Record the ownership.  */
 	  mutex->__data.__owner = id;
 	  mutex->__data.__count = 1;
+#ifndef NO_INCR
+	  ++mutex->__data.__nusers;
+#endif
 	}
       break;
 
@@ -74,6 +77,9 @@ __pthread_mutex_lock (mutex)
       LLL_MUTEX_LOCK (mutex->__data.__lock);
       /* Record the ownership.  */
       mutex->__data.__owner = id;
+#ifndef NO_INCR
+      ++mutex->__data.__nusers;
+#endif
       break;
     }
 
