@@ -33,6 +33,8 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  cp[0] |= 0x80;
 	  cp[1] |= 0x80;
 	}
+      else
+	cp[0] = '\0';
     }
   /* XXX Think about 0x5c ; '\'.  */
   else

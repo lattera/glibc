@@ -1,3 +1,8 @@
+1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/euc-kr.c (euckr_from_ucs4): Set cp[0] to '\0' in case
+	of an error.  Patch by Changwoo Ryu <cwryu@debian.org>.
+
 1999-07-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Avoid invalid memory
