@@ -1,3 +1,8 @@
+2001-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_hout.c (pargdef): Function must take pointer to object.
+	Patch by Patrick Duval <Patrick.Duval@devinci.fr>.
+
 2001-08-28  Andreas Jaeger  <aj@suse.de>
 
 	* manual/libc-texinfo.sh: Add entry about free manuals.
