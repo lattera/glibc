@@ -1,3 +1,7 @@
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv_prog.c (main): Provide more help in case on an error.
+
 2005-02-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd.c (termination_handler): Avoid segfault if some database
