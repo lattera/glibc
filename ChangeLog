@@ -1,5 +1,7 @@
 2002-10-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/fr.po: Update from translation team.
+
 	* sysdeps/posix/system.c: Remove support for old and buggy SCO systems.
 	Optimize a bit for use in glibc.
 
