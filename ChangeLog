@@ -1,3 +1,9 @@
+Wed Apr  3 17:10:44 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* extra-lib.mk: Put libs in $(common-objpfx) instead of $(objpfx).
+	* Makerules ($(install-lib) rules): Find libs with $(common-objpfx)
+	instead of $(objpfx).
+
 Tue Apr  2 21:27:01 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* posix/glob.c (glob_pattern_p): Avoid scanning past eos if

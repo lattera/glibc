@@ -519,12 +519,12 @@ install-lib.a := $(filter lib%.a,$(install-lib))
 install-lib-non.a := $(filter-out lib%.a,$(install-lib))
 ifdef install-lib-non.a
 $(addprefix $(libdir)/$(libprefix),$(install-lib-non.a)): \
-  $(libdir)/$(libprefix)%: $(objpfx)%
+  $(libdir)/$(libprefix)%: $(common-objpfx)%
 	$(do-install)
 endif
 ifdef install-lib.a
 $(install-lib.a:lib%.a=$(libdir)/lib$(libprefix)%.a): \
-  $(libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a
+  $(libdir)/lib$(libprefix)%.a: $(common-objpfx)lib%.a
 	$(do-install)
 	$(patsubst %,$(RANLIB) $@,$(filter-out $(non-lib.a),$(<F)))
 endif
