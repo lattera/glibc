@@ -1,5 +1,5 @@
 /* Store current floating-point environment and clear exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -29,10 +29,10 @@ feholdexcept (fenv_t *envp)
   __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*envp));
 
   /* Now clear all exceptions.  */
-  fpsr = envp->status_register & ~FE_ALL_EXCEPT;
+  fpsr = envp->__status_register & ~FE_ALL_EXCEPT;
   __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
   /* And set all exceptions to non-stop.  */
-  fpcr = envp->control_register & ~(FE_ALL_EXCEPT << 6);
+  fpcr = envp->__control_register & ~(FE_ALL_EXCEPT << 6);
   __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
 
   return 1;
