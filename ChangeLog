@@ -1,5 +1,8 @@
 2001-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconvconfig.c (main): Don't write an output file if we
+	have seen an error.
+
 	* iconv/Makefile (install-bin): Add iconvconfig.
 
 2001-07-25  Jakub Jelinek  <jakub@redhat.com>

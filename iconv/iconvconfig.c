@@ -301,8 +301,11 @@ main (int argc, char *argv[])
      about them.  */
   generate_name_info ();
 
-  /* Write the output file.  */
-  status = write_output ();
+  /* Write the output file, but only if we haven't seen any error.  */
+  if (status == 0)
+    status = write_output ();
+  else
+    fputs ("No output written!\n", stderr);
 
   return status;
 }
