@@ -49,12 +49,10 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
-+ansi_dirs	:= assert ctype locale math setjmp \
-		   signal stdio stdlib malloc string time
-+posix_dirs	:= dirent grp pwd posix io termios
-+other_dirs	:= resource socket misc gnulib $(wildcard crypt) manual csu
-subdirs		:= $(strip $(+ansi_dirs) $(+posix_dirs) $(+other_dirs) \
-			   $(sysdep-subdirs))
+subdirs := csu assert ctype locale math setjmp signal stdio stdlib	\
+	   malloc string time dirent grp pwd posix io termios resource	\
+	   socket misc gnulib $(wildcard crypt) manual			\
+	   $(sysdep-subdirs)
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 # The mach and hurd subdirectories have many generated header files which

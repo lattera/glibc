@@ -1,5 +1,9 @@
 Mon Feb 20 04:04:57 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Put csu first.
+
+	* sysdeps/mach/hurd/start.c: Include unistd.h for __environ decl.
+
 	* Makeconfig [elf=yes] (+preinit, +postinit): New variables, set
  	to crt[in].o.
 	(csu-objpfx): New variable.
