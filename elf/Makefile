@@ -51,11 +51,6 @@ generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 
-# Make sure these things are built in the `make lib' pass so they can be used
-# to run programs during the `make others' pass.
-lib-noranlib: $(objpfx)$(rtld-installed-name) \
-	      $(addprefix $(objpfx),$(extra-objs))
-
 ifneq (,$(filter linux% linux,$(config-os)))
 extra-objs	+= linux-compat.so
 install-others	+= $(slibdir)/ld-linux.so.1
@@ -65,6 +60,13 @@ endif
 
 include ../Rules
 
+
+ifeq (yes, $(build-shared))
+# Make sure these things are built in the `make lib' pass so they can be used
+# to run programs during the `make others' pass.
+lib-noranlib: $(objpfx)$(rtld-installed-name) \
+	      $(addprefix $(objpfx),$(extra-objs))
+endif
 
 # Command to link into a larger single relocatable object.
 reloc-link = $(LINK.o) -nostdlib -nostartfiles -r -o $@

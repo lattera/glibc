@@ -1,5 +1,8 @@
 Tue Jun 11 15:09:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/Makefile (lib-noranlib): Move rule adding deps for ld.so et al
+	to after `include ../Rules', so $(rtld-installed-name) is defined.
+
 	* string/basename.c (basename): Cast FILENAME to char * for return.
 
 	* Makerules ($(libdir)/libc.so): Put $(rtld-installed) name between
