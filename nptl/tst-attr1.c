@@ -35,6 +35,14 @@ do_test (void)
       exit (1);
     }
 
+  pthread_mutexattr_t ma;
+
+  if (pthread_mutexattr_init (&ma) != 0)
+    {
+      puts ("mutexattr_init failed");
+      exit (1);
+    }
+
   /* XXX Remove if default value is clear.  */
   pthread_attr_setinheritsched (&a, PTHREAD_INHERIT_SCHED);
   pthread_attr_setschedpolicy (&a, SCHED_OTHER);
@@ -140,6 +148,31 @@ schedpolicy changed to %d by invalid setschedpolicy call\n", s);
 	    {
 	      printf ("\
 contentionscope changed to %d by invalid setscope call\n", s);
+	      exit (1);
+	    }
+	}
+
+      if (r != PTHREAD_PROCESS_PRIVATE && r != PTHREAD_PROCESS_SHARED)
+	{
+	  int e = pthread_mutexattr_setpshared (&ma, r);
+
+	  if (e == 0)
+	    {
+	      printf ("mutexattr_setpshared with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_mutexattr_getpshared (&ma, &s) != 0)
+	    {
+	      puts ("mutexattr_getpshared failed");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_PROCESS_PRIVATE)
+	    {
+	      printf ("\
+pshared changed to %d by invalid mutexattr_setpshared call\n", s);
 	      exit (1);
 	    }
 	}

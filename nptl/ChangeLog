@@ -1,5 +1,18 @@
 2003-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-rwlock6.c: More pthread_rwlock_timedwrlock and
+	pthread_rwlock_timedrdlock tests.
+	* tst-rwlock7.c: More pthread_rwlock_timedwrlock tests.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Check for invalid tv_nsec field.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+
+	* pthread_mutex_trylock.c (__pthread_mutex_trylock): Protect
+	recursive mutex of overflow.
+
+	* tst-attr1.c (do_test): Add test for pthread_mutexattr_setpshared.
+
 	* libc-cancellation.c (__libc_enable_asynccancel): Rwrite to avoid
 	going into an endless loop.
 	* Makefile (tests): Add tst-cancel9.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -76,6 +76,24 @@ tf (void *arg)
       pthread_exit ((void *) 1l);
     }
 
+  (void) gettimeofday (&tv, NULL);
+  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+  ts.tv_sec += 10;
+  /* Note that the following operation makes ts invalid.  */
+  ts.tv_nsec += 1000000000;
+
+  err = pthread_rwlock_timedwrlock (r, &ts);
+  if (err == 0)
+    {
+      puts ("2nd timedwrlock succeeded");
+      pthread_exit ((void *) 1l);
+    }
+  if (err != EINVAL)
+    {
+      puts ("2nd timedwrlock did not return EINVAL");
+      pthread_exit ((void *) 1l);
+    }
+
   return NULL;
 }
 
@@ -124,7 +142,7 @@ do_test (void)
       /* Get a read lock.  */
       if (pthread_rwlock_timedrdlock (&r, &ts) != 0)
 	{
-	  printf ("round %d: rwlock_wrlock failed\n", cnt);
+	  printf ("round %d: rwlock_timedrdlock failed\n", cnt);
 	  exit (1);
 	}
 

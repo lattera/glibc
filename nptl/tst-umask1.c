@@ -104,7 +104,7 @@ do_test (const char *fname)
   pthread_barrier_init (&bar, NULL, 2);
 
   pthread_t th;
-  if (pthread_create (&th, NULL, tf, fname) != 0)
+  if (pthread_create (&th, NULL, tf, (void *) fname) != 0)
     {
       puts ("cannot create thread");
       exit (1);

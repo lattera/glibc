@@ -27,6 +27,7 @@
 #define FUTEX_WAKE		1
 
 #define EAGAIN		11
+#define EINVAL		22
 #define EDEADLK		35
 #define ETIMEDOUT	110
 
@@ -69,7 +70,11 @@ pthread_rwlock_timedwrlock:
 	cmp	$0, NR_READERS(%ebp)
 	je	5f
 
-3:	incl	WRITERS_QUEUED(%ebp)
+	/* Check the value of the timeout parameter.  */
+3:	cmpl	$1000000000, 4(%edi)
+	jae	19f
+
+	incl	WRITERS_QUEUED(%ebp)
 	je	4f
 
 	LOCK
@@ -156,7 +161,7 @@ pthread_rwlock_timedwrlock:
 
 14:	cmpl	%gs:8, %eax
 	jne	3b
-	movl	$EDEADLK, %ecx
+20:	movl	$EDEADLK, %ecx
 	jmp	9b
 
 6:	movl	%ebp, %eax
@@ -180,5 +185,8 @@ pthread_rwlock_timedwrlock:
 	jmp	17b
 
 18:	movl	$ETIMEDOUT, %ecx
+	jmp	9b
+
+19:	movl	$EINVAL, %ecx
 	jmp	9b
 	.size	pthread_rwlock_timedwrlock,.-pthread_rwlock_timedwrlock
