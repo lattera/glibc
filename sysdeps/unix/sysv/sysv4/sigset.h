@@ -82,7 +82,7 @@ __sigdelset (__sigset_t *__set, int __sig)
 }
 
 extern __inline int
-__sigismember (__sigset_t *__set, int __sig)
+__sigismember (__const __sigset_t *__set, int __sig)
 {
   if (__set->__sigbits[__SSELT (__sig)] & __SSMASK (__sig))
     return 1;
