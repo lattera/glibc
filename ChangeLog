@@ -1,3 +1,7 @@
+2003-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/pl.po: Update from translation team.
+
 2003-11-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/ftw.c (NFTW_OLD_NAME, NFTW_NEW_NAME): Define.
