@@ -81,17 +81,6 @@ __m81_u(__drem)(double __x, double __y)
 }
 
 extern __inline __const double
-__m81_u(__scalb)(double __x, int __n)
-{
-  double __result;
-  if (__x == 0.0)
-    __result = __x;
-  else
-    __asm("fscale%.l %1, %0" : "=f" (__result) : "g" (__n), "0" (__x));
-  return __result;
-}
-
-extern __inline __const double
 __m81_u(ldexp)(double __x, int __e)
 {
   double __result;
