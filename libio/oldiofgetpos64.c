@@ -63,9 +63,9 @@ _IO_old_fgetpos64 (fp, posp)
 }
 
 #ifdef weak_alias
-compat_symbol (libc, _IO_old_fgetpos64, _IO_fgetpos64, GLIBC_2_0);
+compat_symbol (libc, _IO_old_fgetpos64, _IO_fgetpos64, GLIBC_2_1);
 strong_alias (_IO_old_fgetpos64, __old_fgetpos64)
-compat_symbol (libc, __old_fgetpos64, fgetpos64, GLIBC_2_0);
+compat_symbol (libc, __old_fgetpos64, fgetpos64, GLIBC_2_1);
 #endif
 
 #endif
