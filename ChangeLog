@@ -1,3 +1,8 @@
+2003-03-09  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Take 3 new args
+	used by NPTL on new kernels.  From Paul Mackerras <paulus@samba.org>.
+
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fi.po: Update from translation team.
@@ -10,7 +15,7 @@
 
 2003-03-07  Ulrich Drepper  <drepper@redhat.com>
 
-	* rt/tst-aio7.c (do_test): Give buff permanent extend, too.
+	* rt/tst-aio7.c (do_test): Give BUFF permanent extent, too.
 
 	* sysdeps/powerpc/fpu/w_sqrt.c: Fix comment.
 
