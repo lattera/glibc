@@ -740,7 +740,10 @@ static void pthread_exit_process(int retcode, void *arg)
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
     if (self == __pthread_main_thread)
-      waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
+      {
+	waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
+	free (__pthread_manager_thread_bos);
+      }
   }
 }
 

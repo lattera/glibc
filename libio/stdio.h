@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-1999, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -637,7 +637,7 @@ extern void funlockfile (FILE *__stream) __THROW;
 #endif	/* X/Open, but not issue 6 and not for GNU.  */
 
 /* If we are compiling with optimizing read this file.  It contains
-   several optizing inline functions and macros.  */
+   several optimizing inline functions and macros.  */
 #ifdef __USE_EXTERN_INLINES
 # include <bits/stdio.h>
 #endif

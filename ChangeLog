@@ -1,3 +1,8 @@
+2001-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/bits/stdio.h (printf): Define macro to map printf call to
+	fprintf which gcc can optimize.
+
 2001-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/byteswap.h (__bswap_64): Partly revert last
