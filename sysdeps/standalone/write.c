@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
 
@@ -19,7 +19,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
@@ -31,28 +30,27 @@ Cambridge, MA 02139, USA.  */
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
 ssize_t
-DEFUN(__write, (fd, buf, nbytes),
-      int fd AND CONST PTR buf AND size_t nbytes)
+__libc_write (int fd, const void *buf, size_t nbytes)
 {
   int count;
-  CONST char *data = buf;
+  const char *data = buf;
 
   if (nbytes == 0)
     return 0;
   if ( !__FD_Is_valid( fd ) || !__FD_Table[ fd ].in_use )
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
   if (buf == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
   if ( !(__FD_Table[ fd ].flags & (O_WRONLY|O_RDWR)) )  /* is it writeable? */
     {
-      errno = EBADF;
+      __set_errno (EBADF);
       return -1;
     }
 
@@ -70,5 +68,5 @@ DEFUN(__write, (fd, buf, nbytes),
   return count;
 }
 
-
-weak_alias (__write, write)
+weak_alias (__libc_write, __write)
+weak_alias (__libc_write, write)

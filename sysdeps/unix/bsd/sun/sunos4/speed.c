@@ -1,5 +1,5 @@
 /* `struct termios' speed frobnication functions.  SunOS 4 version.
-Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <errno.h>
 #include <termios.h>
 
-static CONST speed_t speeds[] =
+static const speed_t speeds[] =
   {
     0,
     50,
@@ -45,28 +44,31 @@ static CONST speed_t speeds[] =
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
-DEFUN(cfgetospeed, (termios_p), CONST struct termios *termios_p)
+cfgetospeed (termios_p)
+     const struct termios *termios_p;
 {
   return termios_p->c_cflag & CBAUD;
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
 speed_t
-DEFUN(cfgetispeed, (termios_p), CONST struct termios *termios_p)
+cfgetispeed (termios_p)
+     const struct termios *termios_p;
 {
   return (termios_p->c_cflag & CIBAUD) >> IBSHIFT;
 }
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
-DEFUN(cfsetospeed, (termios_p, speed),
-      struct termios *termios_p AND speed_t speed)
+cfsetospeed (termios_p, speed)
+     struct termios *termios_p;
+     speed_t speed;
 {
   register unsigned int i;
 
   if (termios_p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -82,20 +84,21 @@ DEFUN(cfsetospeed, (termios_p, speed),
 	return 0;
       }
 
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
 int
-DEFUN(cfsetispeed, (termios_p, speed),
-      struct termios *termios_p AND speed_t speed)
+cfsetispeed (termios_p, speed)
+     struct termios *termios_p;
+     speed_t speed;
 {
   register unsigned int i;
 
   if (termios_p == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
 
@@ -108,6 +111,6 @@ DEFUN(cfsetispeed, (termios_p, speed),
 	return 0;
       }
 
-  errno = EINVAL;
+  __set_errno (EINVAL);
   return -1;
 }

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <unistd.h>
@@ -24,16 +23,17 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 #include <sysconfig.h>
 
-extern int EXFUN(__sysconfig, (int));
+extern int __sysconfig __P ((int));
 
 /* Get the value of the system variable NAME.  */
 long int
-DEFUN(__sysconf, (name), int name)
+__sysconf (name)
+     int name;
 {
   switch (name)
     {
     default:
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return -1;
 
     case _SC_ARG_MAX:

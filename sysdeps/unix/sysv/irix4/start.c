@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,8 @@ Cambridge, MA 02139, USA.  */
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-VOLATILE int errno = 0;
+VOLATILE int __errno = 0;
+strong_alias (__errno, errno)
 
 extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
 extern int EXFUN(main, (int argc, char **argv, char **envp));

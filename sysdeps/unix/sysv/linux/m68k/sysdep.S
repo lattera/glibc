@@ -16,6 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <sysdep.h>
+
 /* Because the Linux version is in fact m68k/ELF and the start.? file
    for this system (sysdeps/m68k/elf/start.S) is also used by The Hurd
    and therefore this files must not contain the definition of the
@@ -31,6 +33,9 @@ errno:	.space 4
 	.globl _errno
 	.type _errno,@object
 _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
+	.globl __errno
+	.type __errno,@object
+__errno = errno	/* This name is expected by the MT code.  */
 	.text
 
 /* The following code is only used in the shared library when we
@@ -39,14 +44,9 @@ _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
 
 #ifndef	PIC
 
-#include <sysdep.h>
-#define _ERRNO_H
-#include <errnos.h>
-
 /* The syscall stubs jump here when they detect an error.  */
 
-.globl __syscall_error
-__syscall_error:
+ENTRY(__syscall_error)
 	neg.l %d0
 	move.l %d0, errno
 #ifdef _LIBC_REENTRANT
@@ -62,9 +62,7 @@ __syscall_error:
 	.size	__syscall_error, . - __syscall_error
 #endif /* PIC */
 
-	.globl	__errno_location
-	.type	__errno_location, @function
-__errno_location:
+ERRNO(__errno_location)
 #ifdef PIC
 	move.l	(%pc, errno@GOTPC), %a0
 #else
