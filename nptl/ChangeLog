@@ -1,5 +1,8 @@
 2003-03-23  Roland McGrath  <roland@redhat.com>
 
+	* tst-mutex5.c (do_test): Unlock before destroy, otherwise we invoke
+	undefined behavior.
+
 	* tst-join5.c (tf1, tf2): Add a cast.
 
 	* Makeconfig (includes): Append -I$(..)nptl to this variable.

@@ -142,6 +142,12 @@ do_test (void)
       return 1;
     }
 
+  if (pthread_mutex_unlock (&m) != 0)
+    {
+      puts ("final mutex_unlock failed");
+      return 1;
+    }
+
   if (pthread_mutex_destroy (&m) != 0)
     {
       puts ("mutex_destroy failed");
