@@ -1,5 +1,7 @@
 1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/ucontext.h: New file.
+
 	* locale/setlocale.c: Fix gcc warning about uninitialized variable.
 
 1999-10-12  Andreas Jaeger  <aj@suse.de>
