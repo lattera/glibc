@@ -1,5 +1,10 @@
 2000-11-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/i486/bits/string.h (strcmp): Cast arguments to
+	__strcmp_cc, __strcmp_cg, and __strcmp_gc to unsigned char *.
+	(__strcmp_cc, __strcmp_cg, __strcmp_gc): Remove casts of values here.
+	Reported by Denis Zaitsev <zzz@cd-club.ru>.
+
 	* iconvdata/utf-16.c (PREPARE_LOOP): Correct typo preventing BOM from
 	being written.
 
