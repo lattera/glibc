@@ -22,6 +22,8 @@
 
 #define ELF_MACHINE_NAME "m68k"
 
+#include <sys/param.h>
+
 #include <assert.h>
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
@@ -54,14 +56,14 @@ static inline Elf32_Addr
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("here:	lea here(%%pc), %0\n"
-       "	sub.l %#here, %0"
+  asm (".Lhere:	lea .Lhere(%%pc), %0\n"
+       "	sub.l %#.Lhere, %0"
        : "=a" (addr));
   return addr;
 }
 
 /* The `subl' insn above will contain an R_68K_RELATIVE relocation
-   entry intended to insert the run-time address of the label `here'.
+   entry intended to insert the run-time address of the label `.Lhere'.
    This will be the first relocation in the text of the dynamic
    linker; we skip it to avoid trying to modify read-only text in this
    early stage.  */
@@ -215,6 +217,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     *reloc_addr = map->l_addr + reloc->r_addend;
   else
     {
+      const Elf32_Sym *const refsym = sym;
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym)
 	value += sym->st_value;
@@ -222,7 +225,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_68K_COPY:
-	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  if (sym->st_size != refsym->st_size)
+	    {
+	      const char *strtab;
+
+	      strtab = ((void *) map->l_addr
+			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+				"' has different size in shared object, "
+				"consider re-linking\n", NULL);
+	    }
+	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
+						   refsym->st_size));
 	  break;
 	case R_68K_GLOB_DAT:
 	case R_68K_JMP_SLOT:

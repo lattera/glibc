@@ -269,9 +269,10 @@ extern int svc_fds;
  * a small program implemented by the svc_rpc implementation itself;
  * also see clnt.h for protocol numbers.
  */
-extern void	svc_getreq __P ((int __rdfds));
-extern void	svc_getreqset __P ((fd_set *readfds));
-extern void	svc_run __P ((void)); /* __attribute__ ((noreturn)) */
+extern void svc_getreq __P ((int __rdfds));
+extern void svc_getreqset __P ((fd_set *__readfds));
+extern void svc_exit __P ((void));
+extern void svc_run __P ((void));
 
 /*
  * Socket to use on svcxxx_create call to get default socket

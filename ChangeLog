@@ -1,3 +1,131 @@
+1997-05-07 16:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Check for mismatch
+	in size for copy relocation.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Likewise.
+	Patch by Roland McGrath <roland@gnu.ai.mit.edu>.
+
+1997-05-06 13:25  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdio-common/bug4.c (main): Use /tmp/bug4.test for concurrency
+	with other tests.
+	* stdio-common/bug3.c (main): Use /tmp/bug3.test for concurrency
+	with other tests.
+
+	* sunrpc/svc_run.c: svc_exit): New, defined.  (svc_run): Test for
+	svc_stop variable.
+	* sunrpc/rpc/svc.h (svc_exit): New, declared.
+
+1997-05-03 08:47  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (test_not_exception): Don't mix the internal
+	exception flags with the host defined FE_* values.  All (indirect)
+	callers of this and test_exceptions changed to pass the internal
+	flag values.
+	(csin_test): Allow invalid exception for +-Inf + i NaN.  Fix typos
+	in test names.
+	(csinh_test): Allow invalid exception for NaN +- i Inf.
+
+1997-05-03 09:21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__frexp): Don't raise invalid
+	exception on infinite value.
+	(__m81_test, __M81_COND_NAN, __M81_COND_INF, __M81_COND_NEG,
+	__M81_COND_ZERO): New definitions.
+
+	* sysdeps/m68k/e_pow.c: Raise invalid exception for NaN result.
+	Use __m81_test.
+
+	* sysdeps/m68k/s_ccosh.c: Rewritten.
+	* sysdeps/m68k/s_csinh.c: Rewritten.
+	* sysdeps/m68k/s_ccoshf.c: Don't define huge_val.
+	* sysdeps/m68k/s_ccoshl.c: Likewise.
+	* sysdeps/m68k/s_csinhf.c: Likewise.
+	* sysdeps/m68k/s_csinhl.c: Likewise.
+
+	* sysdeps/m68k/s_ccos.c: New file.
+	* sysdeps/m68k/s_ccosf.c: New file.
+	* sysdeps/m68k/s_ccosl.c: New file.
+	* sysdeps/m68k/s_csin.c: New file.
+	* sysdeps/m68k/s_csinf.c: New file.
+	* sysdeps/m68k/s_csinl.c: New file.
+
+1997-05-02 19:48  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules, manual/Makefile: Remove -$(subdir) suffix from subdir
+	stamp files to avoid problems with long file names.
+
+1997-05-03 22:24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_acoshl.c: Fix test for x < 1.
+
+	* sysdeps/libm-ieee754/e_atan2l.c: Ignore integer bit for Inf and
+	NaN.  Fix test for sign of infinite y.
+
+	* sysdeps/libm-ieee754/e_atanhl.c: Fix sign of result.
+
+	* sysdeps/libm-ieee754/e_sinhl.c: Fix test for sign of argument.
+
+1997-05-03 01:15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* csu/Makefile (extra-objs) [$(elf)=yes]: Add abi-note.o to get
+	dependencies.
+
+	* csu/abi-note.S: Replace undefined macro ALIGNARG.
+	* sysdeps/unix/sysv/linux/abi-tag.h: Don't use assembler comment
+	character.
+
+1997-05-03 22:27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_load_address): Use notation
+	for local label.
+
+1997-05-05 22:00  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile (libnsl-routines): Add a lot of new file names.
+
+	* nis/nis_names.c (nis_add): Moved from here ...
+	* nis/nis_add.c: ... to here and fix parameter flags.
+	* nis/nis_names.c (nis_lookup): Moved from here ...
+	* nis/nis_lookup.c: ... to here.
+	* nis/nis_names.c (nis_modify): Moved from here ...
+	* nis/nis_modify.c: ... to here and fix parameter flags.
+	* nis/nis_names.c (nis_remove): Moved from here ...
+	* nis/nis_remove.c: ... to here and fix parameter flags.
+	* nis/nis_names.c: Removed.
+
+	* nis/nis_subr.c (nis_domain_of): Moved from here ...
+	* nis/nis_domain_of.c: .. to here.
+	* nis/nis_subr.c (nis_domain_of_r): Moved from here ...
+	* nis/nis_domain_of_r.c: .. to here and fix pointer errors.
+
+	* nis/nis_addmember.c: New.
+	* nis/nis_checkpoint.c: New.
+	* nis/nis_creategroup.c: New.
+	* nis/nis_defaults.c: New.
+	* nis/nis_destroygroup.c: New.
+	* nis/nis_getservlist.c: New.
+	* nis/nis_ismember.c: New.
+	* nis/nis_ping.c: New.
+	* nis/nis_print_group_entry.c: New.
+	* nis/nis_removemember.c: New.
+	* nis/nis_mkdir.c: New.
+	* nis/nis_rmdir.c: New.
+	* nis/nis_verifygroup.c: New.
+
+	* nis/rpcsvc/nislib.h: Fix internal function declarations.
+
+	* nis/nis_server (nis_servstate): New.
+	* nis/nis_server (nis_stats): New.
+
+	* nis/nis_subr.c (nis_leaf_of_r): Fix buffer problems.
+
+	* nis/nis_call.c: Remove debug output.
+
+	* nis/nis_intern.c (__nis_finddirectory): Remove.
+
 1997-05-03 00:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/TESTS2C.sed: Recognize only digits in first field.  This

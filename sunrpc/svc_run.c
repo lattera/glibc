@@ -39,6 +39,16 @@ static char sccsid[] = "@(#)svc_run.c 1.1 87/10/13 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <rpc/rpc.h>
 
+static int svc_stop = 0;
+
+/* This function can be used as a signal handler to terminate the
+   server loop.  */
+void
+svc_exit (void)
+{
+  svc_stop = 1;
+}
+
 void
 svc_run (void)
 {
@@ -48,8 +58,13 @@ svc_run (void)
   int readfds;
 #endif /* def FD_SETSIZE */
 
+  svc_stop = 0;
+
   for (;;)
     {
+      if (svc_stop)
+	return;
+
 #ifdef FD_SETSIZE
       readfds = svc_fdset;
 #else

@@ -22,6 +22,8 @@
 
 #define ELF_MACHINE_NAME "i386"
 
+#include <sys/param.h>
+
 #include <assert.h>
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
@@ -252,9 +254,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     }
   else
     {
-#ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
-#endif
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym)
 	value += sym->st_value;
@@ -262,7 +262,18 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_386_COPY:
-	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  if (sym->st_size != refsym->st_size)
+	    {
+	      const char *strtab;
+
+	      strtab = ((void *) map->l_addr
+			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+				"' has different size in shared object, "
+				"consider re-linking\n", NULL);
+	    }
+	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
+						   refsym->st_size));
 	  break;
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:

@@ -22,6 +22,8 @@
 #include <assert.h>
 #include <string.h>
 #include <link.h>
+#include <sys/param.h>
+
 
 /* stuff for the PLT */
 #define PLT_INITIAL_ENTRY_WORDS 18
@@ -149,6 +151,7 @@ static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version)
 {
+  const Elf32_Sym *const refsym = sym;
   Elf32_Addr *const reloc_addr = (Elf32_Addr *)(map->l_addr + reloc->r_offset);
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
@@ -232,7 +235,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_COPY)
     {
-      memcpy (reloc_addr, (char *) finaladdr, sym->st_size);
+      if (sym->st_size != refsym->st_size)
+	{
+	  const char *strtab;
+
+	  strtab = ((void *) map->l_addr
+		    + map->l_info[DT_STRTAB]->d_un.d_ptr);
+	  _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+			    "' has different size in shared object, "
+			    "consider re-linking\n", NULL);
+	}
+      memcpy (reloc_addr, (char *) finaladdr, MIN (sym->st_size,
+						   refsym->st_size));
     }
 #endif
   else if (rinfo == R_PPC_REL32)

@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <string.h>
 #include <link.h>
+#include <sys/param.h>
 
 
 /* Some SPARC opcodes we need to use for self-modifying code.  */
@@ -113,6 +114,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else
     {
+      const Elf32_Sym *const refsym = sym;
       Elf32_Addr value;
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
@@ -128,7 +130,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_SPARC_COPY:
-	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  if (sym->st_size != refsym->st_size)
+	    {
+	      const char *strtab;
+
+	      strtab = ((void *) map->l_addr
+			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+	      _dl_sysdep_error ("Symbol `", strtab + refsym->st_name,
+				"' has different size in shared object, "
+				"consider re-linking\n", NULL);
+	    }
+	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
+						   refsym->st_size));
 	  break;
 	case R_SPARC_GLOB_DAT:
 	case R_SPARC_32:
