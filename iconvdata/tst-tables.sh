@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -173,6 +173,7 @@ cat <<EOF |
   ISO_10367-BOX
   MAC-IS
   MAC-UK
+  CP10007
   NATS-DANO
   NATS-SEFI
   WIN-SAMI-2        SAMI-WS2

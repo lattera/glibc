@@ -1,3 +1,10 @@
+2001-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add rules for CP10007.
+	* iconvdata/gconv-modules: Add entries for CP10007 ad MacCyrillic.
+	* iconvdata/cp10007.c: New file.
+	* iconvdata/tst-tables.sh: Add CP10007.
+
 2001-05-23  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/dl-machine.h (_dl_runtime_resolve): Handle newer PLT.

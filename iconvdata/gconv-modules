@@ -1324,8 +1324,17 @@ module	INTERNAL		MAC-IS//		MAC-IS		1
 
 #	from			to			module		cost
 alias	MACUK//			MAC-UK//
+alias	MACUKRAINIAN//		MAC-UK//
+alias	MAC-CYRILLIC//		MAC-UK//
+alias	MACCYRILLIC//		MAC-UK//
 module	MAC-UK//		INTERNAL		MAC-UK		1
 module	INTERNAL		MAC-UK//		MAC-UK		1
+
+#	from			to			module		cost
+alias	MS-MAC-CYRILLIC//	CP10007//
+alias	MSMACCYRILLIC//		CP10007//
+module	CP10007//		INTERNAL		CP10007		1
+module	INTERNAL		CP10007//		CP10007		1
 
 #	from			to			module		cost
 alias	ISO-IR-9-1//		NATS-DANO//
