@@ -32,6 +32,7 @@
 	.text
 ENTRY(__clone)
 	st	%r6,24(%r15)		/* store %r6 to save area */
+	cfi_offset (%r6, -72)
 	lr	%r0,%r5			/* move *arg out of the way */
 	ltr     %r1,%r2			/* check fn and move to %r1 */
 	jz      error			/* no NULL function pointers */
@@ -50,6 +51,7 @@ ENTRY(__clone)
 error:
 	lhi	%r2,-EINVAL
 	j	SYSCALL_ERROR_LABEL
+PSEUDO_END (__clone)
 	
 thread_start:
 	/* fn is in gpr 1, arg in gpr 0 */
@@ -71,5 +73,4 @@ thread_start:
 	br      %r1             /* branch to _exit -> thread termination */
 .L1:	.long   _exit - .L0
 #endif
-PSEUDO_END (__clone)
 weak_alias (__clone, clone)

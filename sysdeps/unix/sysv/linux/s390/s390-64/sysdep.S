@@ -56,13 +56,18 @@ ENTRY(__syscall_error)
 	br	%r14
 # else
 	stmg	%r13,%r15,104(%r15)
+	cfi_offset (%r15,-40)
+	cfi_offset (%r14,-48)
+	cfi_offset (%r13,-56)
 	lgr	%r0,%r15
 	aghi	%r15,-160
+	cfi_adjust_cfa_offset (160)
 	lcr	%r13,%r2
 	stg	%r0,0(%r15)
 	brasl	%r14,__errno_location
 	st	%r13,0(%r2)
 	lmg	%r13,%r15,264(%r15)
+	cfi_adjust_cfa_offset (-160)
 	lghi	%r2,-1
 	br	%r14
 #endif
@@ -97,13 +102,18 @@ ENTRY(__syscall_error)
 	br	%r14	
 # else
 	stmg	%r13,%r15,104(%r15)
+	cfi_offset (%r15,-40)
+	cfi_offset (%r14,-48)
+	cfi_offset (%r13,-56)
 	lgr	%r0,%r15
 	aghi	%r15,-160
+	cfi_adjust_cfa_offset (160)
 	lcr	%r13,%r2
 	stg	%r0,0(%r15)
 	brasl	%r14,__errno_location@PLT
 	st	%r13,0(%r2)
 	lmg	%r13,%r15,264(%r15)
+	cfi_adjust_cfa_offset (-160)
 	lghi	%r2,-1
 	br	%r14
 # endif

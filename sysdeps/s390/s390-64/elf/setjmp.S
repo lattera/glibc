@@ -34,9 +34,15 @@ END (setjmp)
 	/* Binary compatibility entry point.  */
 ENTRY(_setjmp)
         .weak  C_SYMBOL_NAME (_setjmp)
+        slgr   %r3,%r3              /* Second argument of zero.  */
+        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+END (setjmp)
 libc_hidden_def (_setjmp)
+
 ENTRY(__setjmp)
         slgr   %r3,%r3              /* Second argument of zero.  */
+        j      .Linternal_sigsetjmp /* Branch relativ to __sigsetjmp.  */
+END (setjmp)
 
 ENTRY(__sigsetjmp)
 .Linternal_sigsetjmp:

@@ -25,9 +25,20 @@
 ENTRY (syscall)
 	/* Save registers and setup stack.  */
 	stm     %r6,%r15,24(%r15)  /* save registers */
+	cfi_offset (%r15, -36)
+	cfi_offset (%r14, -40)
+	cfi_offset (%r13, -44)
+	cfi_offset (%r12, -48)
+	cfi_offset (%r11, -52)
+	cfi_offset (%r10, -56)
+	cfi_offset (%r9, -60)
+	cfi_offset (%r8, -64)
+	cfi_offset (%r7, -68)
+	cfi_offset (%r6, -72)
 	lr      %r1,%r15
 	l       %r0,4(0,%r15)      /* load eos */
 	ahi     %r15,-96           /* buy stack space */
+	cfi_adjust_cfa_offset (96)
 	st      %r1,0(0,%r15)      /* store back chain */
 	st      %r0,4(0,%r15)      /* store eos */
 
@@ -45,6 +56,7 @@ ENTRY (syscall)
 	j      3f
 2:	ex     %r1,1b-0b(%r7)      /* lsb of R1 is subsituted as SVC number */
 3:	l      %r15,0(%r15)        /* load back chain */
+	cfi_adjust_cfa_offset (-96)
 	lm     %r6,15,24(%r15)     /* load registers */
 
 	lhi    %r0,-4095

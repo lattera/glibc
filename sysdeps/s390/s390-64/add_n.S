@@ -33,6 +33,7 @@
 	.text
 ENTRY(__mpn_add_n)
 	stg    %r6,48(%r15)   # save register 6
+	cfi_offset (%r6,-112)
 	slgr   %r1,%r1
         lghi   %r0,1          # cannot use ahi to add carry, use alr
 .L0:	lg     %r6,0(%r1,%r3) # .L0 -> no carry from last add

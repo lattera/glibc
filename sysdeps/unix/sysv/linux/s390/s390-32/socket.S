@@ -47,8 +47,6 @@
 
 .globl __socket
 ENTRY(__socket)
-	cfi_startproc
-
 	/* Save registers and setup stack.  */
 	stm     %r6,%r15,24(%r15)       /* save registers */
 	cfi_offset (%r15, -36)
@@ -136,7 +134,6 @@ L(socket_cancel):
 2:	.long	CENABLE-1b
 3:	.long	CDISABLE-1b
 #endif
-	cfi_endproc
 
 	SYSCALL_ERROR_HANDLER
 END (__socket)

@@ -1,3 +1,55 @@
+2003-12-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/setjmp.S (setjmp, __setjmp): Add END
+	statements.
+	* sysdeps/s390/s390-64/elf/setjmp.S (setjmp, __setjmp): Likewise.
+	* sysdeps/s390/s390-32/sysdep.h (ENTRY): Add cfi_startproc directive.
+	(END): Add cfi_endproc directive.
+	* sysdeps/s390/s390-64/sysdep.h (ENTRY, END): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S (__socket): Remove
+	cfi_startproc and cfi_endproc directive.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S (__socket): Likewise.
+	* sysdeps/s390/s390-32/addmul_1.S (__mpn_addmul_1): Add CFI directives.
+	* sysdeps/s390/s390-32/add_n.S (__mpn_add_n): Likewise.
+	* sysdeps/s390/s390-64/add_n.S (__mpn_add_n): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Likewise.
+	* sysdeps/s390/s390-32/mul_1.S (__mpn_mul_1): Likewise.
+	* sysdeps/s390/s390-32/sub_n.S (__mpn_sub_n): Likewise.
+	* sysdeps/s390/s390-64/sub_n.S (__mpn_sub_n): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S (__mmap64): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap.S (__mmap): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap.S (__mmap): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S (__syscall_error):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S (__syscall_error):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Add CFI
+	directives. Move thread_start out of ENTRY/PSEUDO_END block to
+	make backchain terminate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+
+	* sysdeps/s390/s390-32/backtrace.c (trace_arg): New structure.
+	(unwind_backtrace, unwind_getip): New variables.
+	(init, __backchain_backtrace, backtrace_helper): New functions.
+	(__backtrace): Use unwind info for backtrace instead of backchain
+	walking if the unwind functions can be found.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/posix_fadvise64.c: New file.
+
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h (ELF_NGREG32): New #define.
+	(elf_greg_t32, elf_gregset_t32, elf_fpregset_t32): New types.
+	(elf_prstatus32, elf_prpsinfo32): New structures.
+	(prgregset32_t, prfpregset32_t, prstatus32_t, prpsinfo32_t): New types.
+
+	* scripts/data/c++-types-s390-linux-gnu.data: New file.
+	* scripts/data/c++-types-s390x-linux-gnu.data: New file.
+
 2003-11-30  Petter Reinholdtsen  <pere@hungry.com>
 
 	* stdlib/strfmon.c: Correct formatting of international currency

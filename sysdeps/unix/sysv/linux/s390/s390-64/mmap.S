@@ -27,9 +27,20 @@
 ENTRY(__mmap)
 	/* Save registers and setup stack frame.  */
         stmg    %r6,%r15,48(%r15)
+	cfi_offset (%r15,-40)
+	cfi_offset (%r14,-48)
+	cfi_offset (%r13,-56)
+	cfi_offset (%r12,-64)
+	cfi_offset (%r11,-72)
+	cfi_offset (%r10,-80)
+	cfi_offset (%r9,-88)
+	cfi_offset (%r8,-96)
+	cfi_offset (%r7,-104)
+	cfi_offset (%r6,-112)
         lgr     %r1,%r15
         lg      %r0,8(%r15)             /* Load eos.  */
         aghi    %r15,-208               /* Buy stack space.  */
+	cfi_adjust_cfa_offset (208)
         stg     %r1,0(%r15)             /* Store back chain.  */
         stg     %r0,8(%r15)             /* Store eos.  */
 
@@ -50,6 +61,7 @@ ENTRY(__mmap)
         svc     SYS_ify(mmap)
 
         lg      %r15,0(%r15)            /* Load back chain.  */
+	cfi_adjust_cfa_offset (-208)
         lmg     %r6,%r15,48(%r15)       /* Load registers.  */
 
         /* Check gpr 2 for error.  */ 

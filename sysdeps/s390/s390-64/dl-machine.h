@@ -139,12 +139,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
     .globl _dl_runtime_resolve\n\
     .type _dl_runtime_resolve, @function\n\
     .align 16\n\
+    " CFI_STARTPROC "\n\
 _dl_runtime_resolve:\n\
     # save registers\n\
     stmg   2,5,64(15)\n\
     stg	   14,96(15)\n\
     lgr	   0,15\n\
     aghi   15,-160\n\
+    " CFI_ADJUST_CFA_OFFSET(160)"\n\
     stg	   0,0(15)\n\
     # load args saved by PLT\n\
     lmg	   2,3,208(15)\n\
@@ -152,20 +154,24 @@ _dl_runtime_resolve:\n\
     lgr	   1,2		# function addr returned in r2\n\
     # restore registers\n\
     aghi   15,160\n\
+    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
     lg	   14,96(15)\n\
     lmg	   2,5,64(15)\n\
     br	   1\n\
+    " CFI_ENDPROC "\n\
     .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 \n\
     .globl _dl_runtime_profile\n\
     .type _dl_runtime_profile, @function\n\
     .align 16\n\
+    " CFI_STARTPROC "\n\
 _dl_runtime_profile:\n\
     # save registers\n\
     stmg   2,5,64(15)\n\
     stg	   14,96(15)\n\
     lgr	   0,15\n\
     aghi   15,-160\n\
+    " CFI_ADJUST_CFA_OFFSET(160)"\n\
     stg	   0,0(15)\n\
     # load args saved by PLT\n\
     lmg	   2,3,208(15)\n\
@@ -175,9 +181,11 @@ _dl_runtime_profile:\n\
     lgr	   1,2		# function addr returned in r2\n\
     # restore registers\n\
     aghi   15,160\n\
+    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
     lg	   14,96(15)\n\
     lmg	   2,5,64(15)\n\
     br	   1\n\
+    " CFI_ENDPROC "\n\
     .size _dl_runtime_profile, .-_dl_runtime_profile\n\
 ");
 #else
@@ -189,6 +197,7 @@ _dl_runtime_profile:\n\
     .type _dl_runtime_resolve, @function\n\
     .type _dl_runtime_profile, @function\n\
     .align 16\n\
+    " CFI_STARTPROC "\n\
 _dl_runtime_resolve:\n\
 _dl_runtime_profile:\n\
     # save registers\n\
@@ -196,6 +205,7 @@ _dl_runtime_profile:\n\
     stg	   14,96(15)\n\
     lgr	   0,15\n\
     aghi   15,-160\n\
+    " CFI_ADJUST_CFA_OFFSET(160)"\n\
     stg	   0,0(15)\n\
     # load args saved by PLT\n\
     lmg	   2,3,208(15)\n\
@@ -205,9 +215,11 @@ _dl_runtime_profile:\n\
     lgr	   1,2		# function addr returned in r2\n\
     # restore registers\n\
     aghi   15,160\n\
+    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
     lg	   14,96(15)\n\
     lmg	   2,5,64(15)\n\
     br	   1\n\
+    " CFI_ENDPROC "\n\
     .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
     .size _dl_runtime_profile, .-_dl_runtime_profile\n\
 ");

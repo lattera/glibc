@@ -55,8 +55,12 @@ ENTRY(__syscall_error)
 1:	.long  errno
 # else
 	stm	%r13,%r15,52(%r15)
+	cfi_offset (%r15, -36)
+	cfi_offset (%r14, -40)
+	cfi_offset (%r13, -44)
 	lr	%r0,%r15
 	ahi	%r15,-96
+	cfi_adjust_cfa_offset (96)
 	lcr	%r13,%r2
 	st	%r0,0(%r15)
 	basr	%r1,0
@@ -64,6 +68,7 @@ ENTRY(__syscall_error)
 	basr	%r14,%r1
 	st	%r13,0(%r2)
 	lm	%r13,%r15,148(%r15)
+	cfi_adjust_cfa_offset (-96)
 	lhi	%r2,-1
 	br	%r14
 1:	.long  __errno_location
@@ -103,8 +108,14 @@ ENTRY(__syscall_error)
 1:	.long	_GLOBAL_OFFSET_TABLE_-0b
 # else
 	stm	%r11,%r15,44(%r15)
+	cfi_offset (%r15, -36)
+	cfi_offset (%r14, -40)
+	cfi_offset (%r13, -44)
+	cfi_offset (%r12, -48)
+	cfi_offset (%r11, -52)
 	lr	%r0,%r15
 	ahi	%r15,-96
+	cfi_adjust_cfa_offset (96)
 	lcr	%r11,%r2
 	st	%r0,0(%r15)
 	basr	%r13,0
@@ -114,6 +125,7 @@ ENTRY(__syscall_error)
 	bas	%r14,0(%r1,%r13)
 	st	%r11,0(%r2)
 	lm	%r11,%r15,140(%r15)
+	cfi_adjust_cfa_offset (-96)
 	lhi	%r2,-1
 	br	%r14
 1:	.long _GLOBAL_OFFSET_TABLE_-0b

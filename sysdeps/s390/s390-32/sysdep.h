@@ -51,10 +51,12 @@
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(2);							      \
   C_LABEL(name)								      \
+  cfi_startproc;							      \
   CALL_MCOUNT
 
 #undef	END
 #define END(name)							      \
+  cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)						      \
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */

@@ -1,5 +1,5 @@
 /* Return backtrace of current program state.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -18,8 +18,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <bits/libc-lock.h>
+#include <dlfcn.h>
 #include <execinfo.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <unwind.h>
 
 /* This is a global variable set at program start time.  It marks the
    highest used stack address.  */
@@ -51,10 +55,31 @@ struct layout
   int empty[2];
 };
 
-int
-__backtrace (array, size)
-     void **array;
-     int size;
+struct trace_arg
+{
+  void **array;
+  int cnt, size;
+};
+
+static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
+static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
+
+static void
+init (void)
+{
+  void *handle = __libc_dlopen ("libgcc_s.so.1");
+
+  if (handle == NULL)
+    return;
+
+  unwind_backtrace = __libc_dlsym (handle, "_Unwind_Backtrace");
+  unwind_getip = __libc_dlsym (handle, "_Unwind_GetIP");
+  if (unwind_getip == NULL)
+    unwind_backtrace = NULL;
+}
+
+static int
+__backchain_backtrace (void **array, int size)
 {
   /* We assume that all the code is generated with frame pointers set.  */
   struct layout *stack;
@@ -71,11 +96,42 @@ __backtrace (array, size)
 	   out of range.  */
 	break;
 
-      array[cnt++] = stack->save_grps[8] & 0x7fffffff;
+      array[cnt++] = (void *) (stack->save_grps[8] & 0x7fffffff);
 
       stack = (struct layout *) stack->back_chain;
     }
 
   return cnt;
 }
+
+static _Unwind_Reason_Code
+backtrace_helper (struct _Unwind_Context *ctx, void *a)
+{
+  struct trace_arg *arg = a;
+
+  /* We are first called with address in the __backtrace function.
+     Skip it.  */
+  if (arg->cnt != -1)
+    arg->array[arg->cnt] = (void *) unwind_getip (ctx);
+  if (++arg->cnt == arg->size)
+    return _URC_END_OF_STACK;
+  return _URC_NO_REASON;
+}
+
+int
+__backtrace (void **array, int size)
+{
+  struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
+  __libc_once_define (static, once);
+
+  __libc_once (once, init);
+  if (unwind_backtrace == NULL)
+    return __backchain_backtrace (array, size);
+
+  if (size >= 1)
+    unwind_backtrace (backtrace_helper, &arg);
+
+  return arg.cnt != -1 ? arg.cnt : 0;
+}
+
 weak_alias (__backtrace, backtrace)

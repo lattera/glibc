@@ -32,6 +32,7 @@
 
 ENTRY(__mpn_sub_n)
 	st     %r6,24(%r15)   # save register 6
+	cfi_offset (%r6, -72)
 	sr     %r1,%r1
 	lhi    %r0,1          # cannot use ahi to add carry, use slr
 .L0:    l      %r6,0(%r1,%r3) # .L0 -> no carry from last sub

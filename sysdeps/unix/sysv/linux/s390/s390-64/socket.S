@@ -47,8 +47,6 @@
 
 .globl __socket
 ENTRY(__socket)
-	cfi_startproc
-
 	/* Save registers and setup stack.  */
         stmg    %r6,%r15,48(%r15)       /* Save registers.  */
 	cfi_offset (%r15,-40)
@@ -130,9 +128,7 @@ L(socket_cancel):
 	j	4b
 #endif
 
-	cfi_endproc
-
-PSEUDO_END (__socket)
+END (__socket)
 
 #ifndef NO_WEAK_ALIAS
 weak_alias (__socket, socket)

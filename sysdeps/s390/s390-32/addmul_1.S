@@ -33,6 +33,7 @@
 	.text
 ENTRY(__mpn_addmul_1)
 	st     %r6,24(%r15)
+	cfi_offset (%r6, -72)
 	slr    %r6,%r6            # cy_limb = 0
 .L0:	icm    %r1,15,0(%r3)      # get s1_ptr[i]
 	mr     %r0,%r5            # umul_ppmm(prod_high,prod_low,s1_ptr[j],s2_limb)
