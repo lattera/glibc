@@ -2173,6 +2173,9 @@ typedef Elf32_Addr Elf32_Conflict;
 /* Processor specific values for the Phdr p_type field.  */
 #define PT_IA_64_ARCHEXT	(PT_LOPROC + 0)	/* arch extension bits */
 #define PT_IA_64_UNWIND		(PT_LOPROC + 1)	/* ia64 unwind bits */
+#define PT_IA_64_HP_OPT_ANOT	(PT_LOOS + 0x12)
+#define PT_IA_64_HP_HSL_ANOT	(PT_LOOS + 0x13)
+#define PT_IA_64_HP_STACK	(PT_LOOS + 0x14)
 
 /* Processor specific flags for the Phdr p_flags field.  */
 #define PF_IA_64_NORECOV	0x80000000	/* spec insns w/o recovery */
