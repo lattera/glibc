@@ -117,6 +117,9 @@ libc {
 
     # new syscalls
     setaltroot; add_key; request_key; keyctl;
+
+    #errlist-compat	129
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

@@ -1,3 +1,17 @@
+2004-10-20  Roland McGrath  <roland@redhat.com>
+
+	* manual/errno.texi (Error Codes): Add ENOKEY, EKEYEXPIRED,
+	EKEYREVOKED, EKEYREJECTED.
+	* sysdeps/unix/sysv/linux/Versions (libc: GLIBC_2.3.4): New errlist.
+	* sysdeps/gnu/errlist.c: Regenerated
+
+	* sysdeps/gnu/errlist-compat.awk: Don't bail if Versions gives a count
+	higher than ERR_MAX reports.  Instead, emit a #define ERR_MAX.
+	* sysdeps/gnu/Makefile ($(objpfx)errlist-compat.h): New target.
+	(generated): Add errlist-compat.h.
+	* sysdeps/gnu/errlist.awk: Make output #include <errlist-compat.h> to
+	define ERR_MAX and use that for table size.
+
 2004-10-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add entries for setaltroot,
