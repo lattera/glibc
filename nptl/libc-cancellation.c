@@ -54,9 +54,6 @@ __libc_enable_asynccancel (void)
 
 	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
 
-	  /* The thread is exiting now.  */
-	  atomic_bit_set (&self->cancelhandling, EXITING_BIT);
-
 	  __do_cancel ();
 
 	  /* NOTREACHED */

@@ -1,3 +1,11 @@
+2003-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (sigcancel_handler): Don't set EXITING_BIT here.
+	* libc-cancellation.c (__libc_enable_asynccancel): Likewise.
+	* pthreadP.h (__do_cancel): Set EXITING_BIT here.
+	* Makefile (tests): Add tst-cancel11.
+	* tst-cancel11.c: New file.
+
 2003-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_create.c (deallocate_tsd): Clear/free memory after the last

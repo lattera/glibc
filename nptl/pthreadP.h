@@ -29,6 +29,7 @@
 #include <stackinfo.h>
 #include <internaltypes.h>
 #include <pthread-functions.h>
+#include <atomic.h>
 
 
 /* Internal variables.  */
@@ -148,6 +149,9 @@ static inline void
 __do_cancel (void)
 {
   struct pthread *self = THREAD_SELF;
+
+  /* Make sure we get no more cancellations.  */
+  atomic_bit_set (&self->cancelhandling, EXITING_BIT);
 
   /* Throw an exception.  */
   // XXX TBI
