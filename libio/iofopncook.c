@@ -37,8 +37,6 @@ static _IO_ssize_t _IO_cookie_write (register _IO_FILE* fp,
 				     const void* buf, _IO_ssize_t size);
 static _IO_off64_t _IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir);
 static int _IO_cookie_close (_IO_FILE* fp);
-_IO_FILE * _IO_fopencookie (void *cookie, const char *mode,
-			    _IO_cookie_io_functions_t io_functions);
 
 static _IO_ssize_t
 _IO_cookie_read (fp, buf, size)

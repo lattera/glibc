@@ -323,6 +323,10 @@ struct _IO_cookie_file
   _IO_cookie_io_functions_t __io_functions;
 };
 
+_IO_FILE *_IO_fopencookie (void *cookie, const char *mode,
+			   _IO_cookie_io_functions_t io_functions);
+
+
 /* Iterator type for walking global linked list of _IO_FILE objects. */
 
 typedef struct _IO_FILE *_IO_ITER;
