@@ -9,4 +9,3 @@
  * Missing flags:
 	- FOLLOW_PATH	(nis_list, not supported)
 	- ALL_RESULTS	(nis_list, not supported, needs server callback)
-	- NO_CACHE	(__do_niscall, cache not supported yet)

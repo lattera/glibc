@@ -1,5 +1,5 @@
 /* Code to enable profiling at program startup.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,7 @@ __gmon_start__ (void)
 #endif
 
   /* Start keeping profiling records.  */
-  monstartup ((u_long) &_start, (u_long) &etext);
+  __monstartup ((u_long) &_start, (u_long) &etext);
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
      collected data.  */

@@ -1,5 +1,5 @@
 /* Common code for DB-based databases in nss_db module.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,27 @@ internal_setent (int stayopen)
       db = __dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
 
       if (db == NULL)
-	status = NSS_STATUS_UNAVAIL;
+	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl ((*db->fd) (db), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl ((*db->fd) (db), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      (*db->close) (db);
+	      db = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
 
   /* Remember STAYOPEN flag.  */

@@ -193,7 +193,10 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 			      "cannot create cache for search path");
 
 	  dirp->dirnamelen = len;
-	  dirp->dirstatus = unknown;
+	  /* We have to make sure all the relative directories are never
+	     ignored.  The current directory might change and all our
+	     saved information would be void.  */
+	  dirp->dirstatus = cp[0] != '/' ? existing : unknown;
 
 	  /* Add the name of the machine dependent directory if a machine
 	     is defined.  */
@@ -212,7 +215,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	      tmp[len + _dl_platformlen + 1] = '\0';
 
 	      dirp->dirname = tmp;
-	      dirp->machdirstatus = unknown;
+	      dirp->machdirstatus = dirp->dirstatus;
 
 	      if (max_dirnamelen < dirp->machdirnamelen)
 		max_dirnamelen = dirp->machdirnamelen;

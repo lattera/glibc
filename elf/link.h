@@ -225,6 +225,11 @@ extern size_t _dl_pagesize;
 /* File descriptor referring to the zero-fill device.  */
 extern int _dl_zerofd;
 
+/* Name of the shared object to be profiled (if any).  */
+extern const char *_dl_profile;
+/* Map of shared object to be profiled.  */
+extern struct link_map *_dl_profile_map;
+
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
@@ -430,8 +435,14 @@ extern void _dl_debug_state (void);
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
 
 /* Initialize the basic data structure for the search paths.  */
-void _dl_init_paths (void);
+extern void _dl_init_paths (void);
 
+/* Gather the information needed to install the profiling tables and start
+   the timers.  */
+extern void _dl_start_profile (struct link_map *map, const char *output_dir);
+
+/* The actual functions used to keep book on the calls.  */
+extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
 __END_DECLS
 

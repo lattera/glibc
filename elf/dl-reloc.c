@@ -24,6 +24,7 @@
 #include <errno.h>
 #include "dynamic-link.h"
 
+
 void
 _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 {
@@ -65,7 +66,7 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 			  l->l_name, (flags)))
 
 #include "dynamic-link.h"
-    ELF_DYNAMIC_RELOCATE (l, lazy);
+    ELF_DYNAMIC_RELOCATE (l, lazy, 1);
   }
 
   /* Mark the object so we know this work has been done.  */

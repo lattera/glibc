@@ -76,7 +76,7 @@ elf_machine_load_address (void)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
@@ -211,10 +211,9 @@ _dl_start_user:
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const struct r_found_version *version)
+		  const Elf32_Sym *sym, const struct r_found_version *version,
+		  Elf32_Addr *const reloc_addr)
 {
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-
   if (ELF32_R_TYPE (reloc->r_info) == R_68K_RELATIVE)
     *reloc_addr = map->l_addr + reloc->r_addend;
   else

@@ -28,6 +28,7 @@
 #define __need_NULL
 #include <stddef.h>
 
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
@@ -130,25 +131,26 @@ struct msghdr
   {
     __ptr_t msg_name;		/* Address to send to/receive from.  */
     int msg_namelen;		/* Length of address data.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
+    /* XXX Should be type `socklen_t' according to POSIX.1g.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    size_t msg_controllen;	/* Ancillary data buffer length.  */
+    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
     int msg_flags;		/* Flags on received message.  */
   };
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    size_t cmsg_len;		/* Length of data in cmsg_data plus length
+    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
     unsigned char __cmsg_data[0]; /* Ancillary data.  */
+    /* XXX Perhaps this should be removed.  */
 #endif
   };
 

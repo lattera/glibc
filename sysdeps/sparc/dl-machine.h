@@ -224,7 +224,7 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *plt;
   extern void _dl_runtime_resolve (Elf32_Word);

@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <bits/libc-lock.h>
 #include "nsswitch.h"
 
@@ -72,6 +73,26 @@ internal_setent (int stayopen)
 
       if (stream == NULL)
 	status = NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl (fileno (stream), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fileno (stream), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      fclose (stream);
+	      stream = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
   else
     rewind (stream);

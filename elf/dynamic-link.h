@@ -102,11 +102,14 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
-#define ELF_DYNAMIC_RELOCATE(map, lazy)				\
-  do {								\
-    int edr_lazy = elf_machine_runtime_setup((map), (lazy));	\
-    ELF_DYNAMIC_DO_REL ((map), edr_lazy);			\
-    ELF_DYNAMIC_DO_RELA ((map), edr_lazy);			\
+#define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile) \
+  do {									      \
+    int profile = (consider_profile && _dl_profile != NULL		      \
+		   && _dl_name_match_p (_dl_profile, (map)));		      \
+    int edr_lazy = elf_machine_runtime_setup ((map), (lazy) || profile,	      \
+					      profile);			      \
+    ELF_DYNAMIC_DO_REL ((map), edr_lazy);				      \
+    ELF_DYNAMIC_DO_RELA ((map), edr_lazy);				      \
   } while (0)
 
 #endif

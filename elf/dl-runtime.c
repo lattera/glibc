@@ -137,17 +137,18 @@ fixup (
     /* Perform the specified relocation.  */
     if (l->l_info[VERSYMIDX (DT_VERSYM)])
       {
-	const ElfW(Half) * version =
+	const ElfW(Half) *version =
 	  (const ElfW(Half) *) (l->l_addr +
 				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
 	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
 
 	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			    &l->l_versions[ndx]);
+			    &l->l_versions[ndx],
+			    (void *) (l->l_addr + reloc->r_offset));
       }
     else
       elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			  NULL);
+			  NULL, (void *) (l->l_addr + reloc->r_offset));
   }
 
   *_dl_global_scope_end = NULL;
@@ -159,6 +160,70 @@ fixup (
   return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
 #endif
 }
+
+
+#ifndef PROF
+static ElfW(Addr)
+profile_fixup (
+#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+       ELF_MACHINE_RUNTIME_FIXUP_ARGS,
+#endif
+       struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
+{
+  void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
+  const ElfW(Sym) *const symtab
+    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
+  const char *strtab =
+    (const char *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
+
+  const PLTREL *const reloc
+    = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
+		      reloc_offset);
+  ElfW(Addr) result;
+
+  /* Set up the scope to find symbols referenced by this object.  */
+  struct link_map **scope = _dl_object_relocation_scope (l);
+
+  {
+    /* This macro is used as a callback from the elf_machine_relplt code.  */
+#define RESOLVE(ref, version, flags) \
+  ((version) != NULL && (version)->hash != 0				      \
+   ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, (ref), scope,     \
+				  l->l_name, (version), (flags))	      \
+   : _dl_lookup_symbol (strtab + (*ref)->st_name, (ref), scope,		      \
+			l->l_name, (flags)))
+#include "dynamic-link.h"
+
+    /* Perform the specified relocation.  */
+    if (l->l_info[VERSYMIDX (DT_VERSYM)])
+      {
+	const ElfW(Half) *version =
+	  (const ElfW(Half) *) (l->l_addr +
+				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
+
+	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			    &l->l_versions[ndx], (void *) &result);
+      }
+    else
+      elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			  NULL, (void *) &result);
+  }
+
+  *_dl_global_scope_end = NULL;
+
+  /* Return the address that was written by the relocation.  */
+#ifdef ELF_FIXUP_RETURNS_ADDRESS
+  (*mcount_fct) (retaddr, result);
+
+  return &result;	/* XXX This cannot work.  What to do??? --drepper */
+#else
+  (*mcount_fct) (retaddr, result);
+
+  return result;
+#endif
+}
+#endif
 
 
 /* This macro is defined in dl-machine.h to define the entry point called

@@ -391,7 +391,7 @@ static ElfW(Addr) _dl_preferred_address = 1
 	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
 	 be one of the above two types. These entries are set up here.  */
 static inline int
-elf_machine_runtime_setup (struct link_map *map, int lazy)
+elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 {
   if (map->l_info[DT_JMPREL])
     {
@@ -510,10 +510,10 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const struct r_found_version *version)
+		  const Elf32_Sym *sym, const struct r_found_version *version,
+		  Elf32_addr *const reloc_addr)
 {
   const Elf32_Sym *const refsym = sym;
-  Elf32_Addr *const reloc_addr = (Elf32_Addr *)(map->l_addr + reloc->r_offset);
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
 

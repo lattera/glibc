@@ -24,6 +24,7 @@
 fd_result *
 __nis_finddirectory (directory_obj *dir, const_nis_name name)
 {
+  nis_error status;
   fd_args fd_args;
   fd_result *fd_res;
 
@@ -31,13 +32,14 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
   fd_args.requester = nis_local_host();
   fd_res = calloc (1, sizeof (fd_result));
       
-  if (__do_niscall2 (dir->do_servers.do_servers_val, 
-		     dir->do_servers.do_servers_len, NIS_FINDDIRECTORY,
-		     (xdrproc_t) xdr_fd_args,
-		     (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
-		     (caddr_t) fd_res, NO_AUTHINFO|USE_DGRAM) != NIS_SUCCESS)
-    fd_res->status = NIS_RPCERROR;
-  
+  if ((status = __do_niscall2 (dir->do_servers.do_servers_val, 
+			       dir->do_servers.do_servers_len, 
+			       NIS_FINDDIRECTORY, (xdrproc_t) xdr_fd_args,
+			       (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
+			       (caddr_t) fd_res, 
+			       NO_AUTHINFO|USE_DGRAM)) != NIS_SUCCESS)
+    fd_res->status = status;
+      
   return fd_res;
 }
 

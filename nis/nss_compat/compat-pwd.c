@@ -21,6 +21,7 @@
 #include <pwd.h>
 #include <errno.h>
 #include <ctype.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <string.h>
 #include <bits/libc-lock.h>
@@ -232,6 +233,26 @@ internal_setpwent (ent_t *ent)
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      fclose (ent->stream);
+	      ent->stream = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
   else
     rewind (ent->stream);
@@ -274,7 +295,7 @@ internal_endpwent (ent_t *ent)
 
   if (ent->netgroup)
     __internal_endnetgrent (&ent->netgrdata);
-  
+
   ent->nis = ent->first = ent->netgroup = 0;
 
   if (ent->oldkey != NULL)
@@ -432,13 +453,13 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 	  give_pwd_free (&ent->pwd);
 	  return NSS_STATUS_RETURN;
 	}
-      
+
       if (user == NULL || user[0] == '-')
 	continue;
-      
+
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
-      
+
       p2len = pwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
@@ -457,7 +478,7 @@ getpwent_next_nisplus_netgr (struct passwd *result, ent_t *ent, char *group,
 	  nis_freeresult (nisres);
 	  continue;
 	}
-      if ((parse_res = _nss_nisplus_parse_pwent (nisres, result, buffer, 
+      if ((parse_res = _nss_nisplus_parse_pwent (nisres, result, buffer,
 						 buflen)) == -1)
 	{
 	  nis_freeresult (nisres);
@@ -551,7 +572,7 @@ getpwent_next_nisplus (struct passwd *result, ent_t *ent, char *buffer,
 	  if (!saved_first)
 	    nis_freeresult (saved_res);
 	}
-      
+
       if (parse_res &&
 	  in_blacklist (result->pw_name, strlen (result->pw_name), ent))
 	parse_res = 0; /* if result->pw_name in blacklist,search next entry */
@@ -592,7 +613,7 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
       bool_t saved_first;
       char *saved_oldkey;
       int saved_oldlen;
-      
+
       if (ent->first)
 	{
 	  if (yp_first (domain, "passwd.byname", &outkey, &outkeylen,
@@ -602,7 +623,7 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	      give_pwd_free (&ent->pwd);
 	      return NSS_STATUS_UNAVAIL;
 	    }
-	  
+
 	  saved_first = TRUE;
 	  saved_oldkey = ent->oldkey;
 	  saved_oldlen = ent->oldkeylen;
@@ -699,7 +720,7 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
 	  nis_freeresult (res);
 	  return status;
 	}
-      if ((parse_res = _nss_nisplus_parse_pwent (res, result, buffer, 
+      if ((parse_res = _nss_nisplus_parse_pwent (res, result, buffer,
 						 buflen)) == -1)
 	{
 	  nis_freeresult (res);
@@ -713,10 +734,10 @@ getpwent_next_file_plususer (struct passwd *result, char *buffer,
       char *domain;
       char *outval;
       int outvallen;
-      
+
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
 	return NSS_STATUS_TRYAGAIN;
-      
+
       if (yp_match (domain, "passwd.byname", &result->pw_name[1],
 		    strlen (result->pw_name) - 1, &outval, &outvallen)
 	  != YPERR_SUCCESS)

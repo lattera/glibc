@@ -118,24 +118,24 @@ extern char *strndup __P ((__const char *__string, size_t __n));
 
 #if defined __USE_GNU && defined __GNUC__
 /* Duplicate S, returning an identical alloca'd string.  */
-#define strdupa(s)							      \
+# define strdupa(s)							      \
   (__extension__							      \
     ({									      \
       __const char *__old = (s);					      \
       size_t __len = strlen (__old) + 1;				      \
       char *__new = __builtin_alloca (__len);				      \
-      memcpy (__new, __old, __len);					      \
+      (char *) memcpy (__new, __old, __len);				      \
     }))
 
 /* Return an alloca'd copy of at most N bytes of string.  */
-#define strndupa(s, n)							      \
+# define strndupa(s, n)							      \
   (__extension__							      \
     ({									      \
       __const char *__old = (s);					      \
       size_t __len = strnlen (__old, (n));				      \
       char *__new = __builtin_alloca (__len + 1);			      \
       __new[__len] = '\0';						      \
-      memcpy (__new, __old, __len);					      \
+      (char *) memcpy (__new, __old, __len);				      \
     }))
 #endif
 
@@ -182,14 +182,14 @@ extern size_t strlen __P ((__const char *__s));
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
 extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
 
-#ifdef	__OPTIMIZE__
+# ifdef	__OPTIMIZE__
 extern __inline size_t
 strnlen (__const char *__string, size_t __maxlen)
 {
   __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
   return __end ? __end - __string : __maxlen;
 }
-#endif
+# endif
 #endif
 
 
@@ -207,6 +207,7 @@ extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
 
 /* Set N bytes of S to 0.  */
+extern void __bzero __P ((__ptr_t __s, size_t __n));
 extern void bzero __P ((__ptr_t __s, size_t __n));
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */

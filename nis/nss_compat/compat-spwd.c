@@ -20,6 +20,7 @@
 #include <nss.h>
 #include <errno.h>
 #include <ctype.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <shadow.h>
 #include <string.h>
@@ -184,6 +185,26 @@ internal_setspent (ent_t *ent)
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      fclose (ent->stream);
+	      ent->stream = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
   else
     rewind (ent->stream);
@@ -305,10 +326,10 @@ getspent_next_nis_netgr (struct spwd *result, ent_t *ent, char *group,
 	  give_spwd_free (&ent->pwd);
 	  return NSS_STATUS_RETURN;
 	}
-      
+
       if (user == NULL || user[0] == '-')
 	continue;
-      
+
       if (domain != NULL && strcmp (ypdomain, domain) != 0)
 	continue;
 
@@ -651,7 +672,7 @@ getspent_next_file_plususer (struct spwd *result, char *buffer,
           nis_freeresult (res);
           return status;
         }
-      if ((parse_res = _nss_nisplus_parse_spent (res, result, buffer, 
+      if ((parse_res = _nss_nisplus_parse_spent (res, result, buffer,
 						 buflen)) == -1)
 	{
 	  nis_freeresult (res);
@@ -735,7 +756,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
           __set_errno (ERANGE);
           return NSS_STATUS_TRYAGAIN;
         }
-      
+
       if (result->sp_namp[0] != '+' && result->sp_namp[0] != '-')
 	/* This is a real entry.  */
 	break;

@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <nss.h>
 #include <grp.h>
 #include <ctype.h>
@@ -132,6 +133,26 @@ internal_setgrent (ent_t *ent)
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl (fileno (ent->stream), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fileno (ent->stream), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      fclose (ent->stream);
+	      ent->stream = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
   else
     rewind (ent->stream);
@@ -277,7 +298,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	  if (!save_nis_first)
 	    free (save_oldkey);
 	}
-      
+
       if (parse_res &&
 	  in_blacklist (result->gr_name, strlen (result->gr_name), ent))
 	parse_res = 0; /* if result->gr_name in blacklist,search next entry */
@@ -297,7 +318,7 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
     {
       nis_result *save_oldres;
       bool_t save_nis_first;
-      
+
       if (ent->nis_first)
         {
 	  save_oldres = ent->result;
@@ -324,7 +345,7 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
 	      return niserr2nss (ent->result->status);
             }
         }
-      if ((parse_res = _nss_nisplus_parse_grent (ent->result, 0, result, 
+      if ((parse_res = _nss_nisplus_parse_grent (ent->result, 0, result,
 						 buffer, buflen)) == -1)
 	{
 	  nis_freeresult (ent->result);
@@ -370,7 +391,7 @@ getgrent_next_file_plusgroup (struct group *result, char *buffer,
           nis_freeresult (res);
           return status;
         }
-      if ((parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer, 
+      if ((parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer,
 						 buflen)) == -1)
 	{
 	  __set_errno (ERANGE);

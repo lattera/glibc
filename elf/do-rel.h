@@ -63,12 +63,14 @@ elf_dynamic_do_rel (struct link_map *map,
 	    {
 	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)];
 	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
-			       &map->l_versions[ndx]);
+			       &map->l_versions[ndx],
+			       (void *) (map->l_addr + r->r_offset));
 	    }
 	}
       else
 	for (; r < end; ++r)
-	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL);
+	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
+			   (void *) (map->l_addr + r->r_offset));
     }
 }
 

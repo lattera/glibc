@@ -1,6 +1,6 @@
 /* Handle locking of NIS+ cache file.
-   Copyright (C) 1996 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library and based on shadow/lckfile.c.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,7 +30,7 @@
 
 /* How long to wait for getting the lock before returning with an
    error.  */
-#define TIMEOUT 15 /* sec */
+#define TIMEOUT 5 /* sec */
 
 
 /* File descriptor for lock file.  */
@@ -141,7 +141,7 @@ __nis_lock_cache (void)
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_RDLCK;
   fl.l_whence = SEEK_SET;
-  result = fcntl (lock_fd, F_SETLK, &fl);
+  result = fcntl (lock_fd, F_SETLKW, &fl);
 
   RETURN_CLEAR_ALARM (result);
 }

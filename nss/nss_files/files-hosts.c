@@ -50,12 +50,7 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (AF_INET6, p, entdata->host_addr) > 0)
-     {
-       result->h_addrtype = AF_INET6;
-       result->h_length = IN6ADDRSZ;
-     }
-   else if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+   if (inet_pton (AF_INET, addr, entdata->host_addr) > 0)
      {
        if (_res.options & RES_USE_INET6)
 	 {
@@ -69,6 +64,11 @@ LINE_PARSER
 	   result->h_addrtype = AF_INET;
 	   result->h_length = INADDRSZ;
 	 }
+     }
+   else if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+     {
+       result->h_addrtype = AF_INET6;
+       result->h_length = IN6ADDRSZ;
      }
    else
      /* Illegal address: ignore line.  */
@@ -85,8 +85,12 @@ LINE_PARSER
 #include "files-XXX.c"
 
 DB_LOOKUP (hostbyname, ,,
-	   LOOKUP_NAME (h_name, h_aliases),
-	   const char *name)
+	   {
+	     if (result->h_addrtype != ((_res.options & RES_USE_INET6)
+					? AF_INET6 : AF_INET))
+	       continue;
+	     LOOKUP_NAME (h_name, h_aliases)
+	   }, const char *name)
 
 DB_LOOKUP (hostbyname2, ,,
 	   {

@@ -34,7 +34,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
 
   if (dirobj == NULL)
     {
-      res = nis_lookup (dirname, EXPAND_NAME + FOLLOW_LINKS);
+      res = nis_lookup (dirname, MASTER_ONLY);
       if (res->status != NIS_SUCCESS && res->status != NIS_S_SUCCESS)
 	return;
       obj = res->objects.objects_val;
@@ -44,7 +44,11 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
 
   /* Check if obj is really a diryectory object */
   if (obj->zo_data.zo_type != DIRECTORY_OBJ)
-    abort ();
+    {
+      if (res != NULL)
+	nis_freeresult (res);
+      return;
+    }
 
   if (dirname == NULL)
     args.dir = obj->DI_data.do_name;

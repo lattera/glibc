@@ -42,6 +42,10 @@ int _dl_verbose;
 /* Structure to store information about search paths.  */
 struct r_search_path *_dl_search_paths;
 
+/* We never do profiling.  */
+const char *_dl_profile;
+struct link_map *_dl_profile_map;
+
 
 static void non_dynamic_init (void) __attribute__ ((unused));
 

@@ -20,6 +20,7 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
+#include <inttypes.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -30,19 +31,25 @@ __BEGIN_DECLS
 /* Standard well-defined IP protocols.  */
 enum
   {
-    IPPROTO_IP = 0,	 /* Dummy protocol for TCP.  */
-    IPPROTO_ICMP = 1,	 /* Internet Control Message Protocol.  */
-    IPPROTO_IGMP = 2,	 /* Internet Group Management Protocol. */
-    IPPROTO_IPIP = 4,	 /* IPIP tunnels (older KA9Q tunnels use 94).  */
-    IPPROTO_TCP = 6,	 /* Transmission Control Protocol.  */
-    IPPROTO_EGP = 8,	 /* Exterior Gateway Protocol.  */
-    IPPROTO_PUP = 12,	 /* PUP protocol.  */
-    IPPROTO_UDP = 17,	 /* User Datagram Protocol.  */
-    IPPROTO_IDP = 22,	 /* XNS IDP protocol.  */
-    IPPROTO_IPV6 = 41,   /* IPv6-in-IPv4 tunnelling.  */
-    IPPROTO_ICMPV6 = 58, /* ICMPv6.  */
-
-    IPPROTO_RAW = 255,	 /* Raw IP packets.  */
+    IPPROTO_IP = 0,	   /* Dummy protocol for TCP.  */
+    IPPROTO_HOPOPTS = 0,   /* IPv6 Hop-by-Hop options.  */
+    IPPROTO_ICMP = 1,	   /* Internet Control Message Protocol.  */
+    IPPROTO_IGMP = 2,	   /* Internet Group Management Protocol. */
+    IPPROTO_IPIP = 4,	   /* IPIP tunnels (older KA9Q tunnels use 94).  */
+    IPPROTO_TCP = 6,	   /* Transmission Control Protocol.  */
+    IPPROTO_EGP = 8,	   /* Exterior Gateway Protocol.  */
+    IPPROTO_PUP = 12,	   /* PUP protocol.  */
+    IPPROTO_UDP = 17,	   /* User Datagram Protocol.  */
+    IPPROTO_IDP = 22,	   /* XNS IDP protocol.  */
+    IPPROTO_IPV6 = 41,     /* IPv6 header.  */
+    IPPROTO_ROUTING = 43,  /* IPv6 routing header.  */
+    IPPROTO_FRAGMENT = 44, /* IPv6 fragmentation header.  */
+    IPPROTO_ESP = 50,      /* encapsulating security payload.  */
+    IPPROTO_AH = 51,       /* authentication header.  */
+    IPPROTO_ICMPV6 = 58,   /* ICMPv6.  */
+    IPPROTO_NONE = 59,     /* IPv6 no next header.  */
+    IPPROTO_DSTOPTS = 60,  /* IPv6 destination options.  */
+    IPPROTO_RAW = 255,	   /* Raw IP packets.  */
     IPPROTO_MAX
   };
 
@@ -90,7 +97,7 @@ enum
 /* Internet address.  */
 struct in_addr
   {
-    u_int32_t s_addr;
+    uint32_t s_addr;
   };
 
 
@@ -142,11 +149,11 @@ struct in6_addr
   {
     union
       {
-	u_int8_t	u6_addr8[16];
-	u_int16_t	u6_addr16[8];
-	u_int32_t	u6_addr32[4];
+	uint8_t		u6_addr8[16];
+	uint16_t	u6_addr16[8];
+	uint32_t	u6_addr32[4];
 #if (~0UL) > 0xffffffff
-	u_int64_t	u6_addr64[2];
+	uint64_t	u6_addr64[2];
 #endif
       } in6_u;
 #define s6_addr			in6_u.u6_addr8
@@ -171,13 +178,13 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 struct sockaddr_in
   {
     __SOCKADDR_COMMON (sin_);
-    unsigned short int sin_port;	/* Port number.  */
+    uint16_t sin_port;			/* Port number.  */
     struct in_addr sin_addr;		/* Internet address.  */
 
     /* Pad to size of `struct sockaddr'.  */
     unsigned char sin_zero[sizeof (struct sockaddr) -
 			   __SOCKADDR_COMMON_SIZE -
-			   sizeof (unsigned short int) -
+			   sizeof (uint16_t) -
 			   sizeof (struct in_addr)];
   };
 
@@ -185,8 +192,8 @@ struct sockaddr_in
 struct sockaddr_in6
   {
     __SOCKADDR_COMMON (sin6_);
-    u_int16_t sin6_port;	/* Transport layer port # */
-    u_int32_t sin6_flowinfo;	/* IPv6 flow information */
+    uint16_t sin6_port;		/* Transport layer port # */
+    uint32_t sin6_flowinfo;	/* IPv6 flow information */
     struct in6_addr sin6_addr;	/* IPv6 address */
   };
 
@@ -196,8 +203,8 @@ struct ipv6_mreq
     /* IPv6 multicast address of group */
     struct in6_addr ipv6mr_multiaddr;
 
-    /* local IPv6 address of interface */
-    int ipv6mr_ifindex;
+    /* local interface */
+    unsigned int ipv6mr_ifindex;
   };
 
 /* Get system-specific definitions.  */
@@ -210,10 +217,10 @@ struct ipv6_mreq
    this was a short-sighted decision since on different systems the types
    may have different representations but the values are always the same.  */
 
-extern u_int32_t ntohl __P ((u_int32_t __netlong));
-extern u_int16_t ntohs __P ((u_int16_t __netshort));
-extern u_int32_t htonl __P ((u_int32_t __hostlong));
-extern u_int16_t htons __P ((u_int16_t __hostshort));
+extern uint32_t ntohl __P ((uint32_t __netlong));
+extern uint16_t ntohs __P ((uint16_t __netshort));
+extern uint32_t htonl __P ((uint32_t __hostlong));
+extern uint16_t htons __P ((uint16_t __hostshort));
 
 #include <endian.h>
 
@@ -237,30 +244,35 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 #endif
 
 #define IN6_IS_ADDR_UNSPECIFIED(a) \
-	((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
-	 (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == 0))
+	((((uint32_t *) (a))[0] == 0) && ((uint32_t *) (a))[1] == 0) && \
+	 (((uint32_t *) (a))[2] == 0) && ((uint32_t *) (a))[3] == 0))
 
 #define IN6_IS_ADDR_LOOPBACK(a) \
-	((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
-	 (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == htonl (1)))
+	((((uint32_t *) (a))[0] == 0) && ((uint32_t *) (a))[1] == 0) && \
+	 (((uint32_t *) (a))[2] == 0) && ((uint32_t *) (a))[3] == htonl (1)))
 
 #define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *) (a))[0] == 0xff)
 
 #define IN6_IS_ADDR_LINKLOCAL(a) \
-	((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
+	((((uint32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
 
 #define IN6_IS_ADDR_SITELOCAL(a) \
-	((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
+	((((uint32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
 
 #define IN6_IS_ADDR_V4MAPPED(a) \
-	((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
-	 (((u_int32_t *) (a))[2] == htonl (0xffff)))
+	((((uint32_t *) (a))[0] == 0) && (((uint32_t *) (a))[1] == 0) && \
+	 (((uint32_t *) (a))[2] == htonl (0xffff)))
 
 #define IN6_IS_ADDR_V4COMPAT(a) \
-	((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
-	 (((u_int32_t *) (a))[2] == 0) && (ntohl (((u_int32_t *) (a))[3]) > 1))
+	((((uint32_t *) (a))[0] == 0) && (((uint32_t *) (a))[1] == 0) && \
+	 (((uint32_t *) (a))[2] == 0) && (ntohl (((uint32_t *) (a))[3]) > 1))
 
-
+#define IN6_ARE_ADDR_EQUAL(a,b) \
+	((((uint32_t *) (a))[0] == ((uint32_t *) (b))[0]) && \
+	 (((uint32_t *) (a))[1] == ((uint32_t *) (b))[2]) && \
+	 (((uint32_t *) (a))[2] == ((uint32_t *) (b))[1]) && \
+	 (((uint32_t *) (a))[3] == ((uint32_t *) (b))[3]))
+	
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
 
@@ -268,8 +280,8 @@ extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {
-    struct in6_addr ipi6_addr;    /* src/dst IPv6 address */
-    int             ipi6_ifindex; /* send/recv interface index */
+    struct in6_addr	ipi6_addr;    /* src/dst IPv6 address */
+    unsigned int	ipi6_ifindex; /* send/recv interface index */
   };
 
 __END_DECLS

@@ -36,6 +36,7 @@
 #include <sys/gmon_out.h>
 #include <sys/uio.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -60,6 +61,7 @@ static int	s_scale;
 #define ERR(s) write(2, s, sizeof(s) - 1)
 
 void moncontrol __P ((int mode));
+void __moncontrol __P ((int mode));
 static void write_hist __P ((int fd));
 static void write_call_graph __P ((int fd));
 static void write_bb_counts __P ((int fd));
@@ -70,7 +72,7 @@ static void write_bb_counts __P ((int fd));
  *	all the data structures are ready.
  */
 void
-moncontrol (mode)
+__moncontrol (mode)
      int mode;
 {
   struct gmonparam *p = &_gmonparam;
@@ -91,7 +93,7 @@ moncontrol (mode)
 
 
 void
-monstartup (lowpc, highpc)
+__monstartup (lowpc, highpc)
      u_long lowpc;
      u_long highpc;
 {
@@ -128,7 +130,7 @@ monstartup (lowpc, highpc)
       ERR(_("monstartup: out of memory\n"));
       return;
     }
-  bzero(cp, p->kcountsize + p->fromssize + p->tossize);
+  memset (cp, '\0', p->kcountsize + p->fromssize + p->tossize);
   p->tos = (struct tostruct *)cp;
   cp += p->tossize;
   p->kcount = (u_short *)cp;
@@ -158,7 +160,7 @@ monstartup (lowpc, highpc)
     } else
       s_scale = SCALE_1_TO_1;
 
-  moncontrol(1);
+  __moncontrol(1);
 }
 
 
@@ -180,8 +182,9 @@ write_hist (fd)
 
       *(char **) thdr.low_pc = (char *) _gmonparam.lowpc;
       *(char **) thdr.high_pc = (char *) _gmonparam.highpc;
-      *(int *) thdr.hist_size = _gmonparam.kcountsize / sizeof (HISTCOUNTER);
-      *(int *) thdr.prof_rate = __profile_frequency ();
+      *(int32_t *) thdr.hist_size = (_gmonparam.kcountsize
+				     / sizeof (HISTCOUNTER));
+      *(int32_t *) thdr.prof_rate = __profile_frequency ();
       strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
       thdr.dimen_abbrev = 's';
 
@@ -296,18 +299,21 @@ _mcleanup ()
     struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd;
 
-    moncontrol (0);
+    __moncontrol (0);
     fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
     if (fd < 0)
       {
-	perror ("_mcleanup: gmon.out");
+	char buf[300];
+	int errnum = errno;
+	fprintf (stderr, "_mcleanup: gmon.out: %s\n",
+		 _strerror_internal (errnum, buf, sizeof buf));
 	return;
       }
 
     /* write gmon.out header: */
-    memset (&ghdr, 0, sizeof (struct gmon_hdr));
+    memset (&ghdr, '\0', sizeof (struct gmon_hdr));
     memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
-    *(int *) ghdr.version = GMON_VERSION;
+    *(int32_t *) ghdr.version = GMON_VERSION;
     __write (fd, &ghdr, sizeof (struct gmon_hdr));
 
     /* write PC histogram: */

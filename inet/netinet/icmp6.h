@@ -19,6 +19,8 @@
 #ifndef _NETINET_ICMP6_H
 #define _NETINET_ICMP6_H 1
 
+#include <inttypes.h>
+#include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 
@@ -29,160 +31,202 @@
 #define ICMPV6_FILTER_BLOCKOTHERS	3
 #define ICMPV6_FILTER_PASSONLY		4
 
-struct icmpv6_filter
+struct icmp6_filter
   {
-    u_int32_t data[8];
+    uint32_t data[8];
   };
 
-struct icmpv6hdr
+struct icmp6_hdr 
   {
-    u_int8_t icmpv6_type;   /* type field */
-    u_int8_t icmpv6_code;   /* code field */
-    u_int16_t icmpv6_cksum;  /* checksum field */
-    union
+    uint8_t     icmp6_type;   /* type field */
+    uint8_t     icmp6_code;   /* code field */
+    uint16_t    icmp6_cksum;  /* checksum field */
+    union 
       {
-	u_int32_t un_data32[1]; /* type-specific field */
-	u_int16_t un_data16[2]; /* type-specific field */
-	u_int8_t un_data8[4];  /* type-specific field */
-      } icmpv6_dataun;
-  };
+	uint32_t  icmp6_un_data32[1]; /* type-specific field */
+	uint16_t  icmp6_un_data16[2]; /* type-specific field */
+	uint8_t   icmp6_un_data8[4];  /* type-specific field */
+      } icmp6_dataun;
+  }; 
 
-#define icmpv6_data32    icmpv6_dataun.un_data32
-#define icmpv6_data16    icmpv6_dataun.un_data16
-#define icmpv6_data8     icmpv6_dataun.un_data8
-#define icmpv6_pptr      icmpv6_data32[0]  /* parameter prob */
-#define icmpv6_mtu       icmpv6_data32[0]  /* packet too big */
-#define icmpv6_id        icmpv6_data16[0]  /* echo request/reply */
-#define icmpv6_seq       icmpv6_data16[1]  /* echo request/reply */
-#define icmpv6_maxdelay  icmpv6_data16[0]  /* mcast group membership */
+#define icmp6_data32    icmp6_dataun.icmp6_un_data32
+#define icmp6_data16    icmp6_dataun.icmp6_un_data16
+#define icmp6_data8     icmp6_dataun.icmp6_un_data8
+#define icmp6_pptr      icmp6_data32[0]  /* parameter prob */
+#define icmp6_mtu       icmp6_data32[0]  /* packet too big */
+#define icmp6_id        icmp6_data16[0]  /* echo request/reply */
+#define icmp6_seq       icmp6_data16[1]  /* echo request/reply */
+#define icmp6_maxdelay  icmp6_data16[0]  /* mcast group membership */
 
-#define ICMPV6_DEST_UNREACH             1
-#define ICMPV6_PACKET_TOOBIG            2
-#define ICMPV6_TIME_EXCEEDED            3
-#define ICMPV6_PARAMETER_PROBLEM        4
-#define ICMPV6_INFOMSG_MASK             128 /* message is info if bit set */
-#define ICMPV6_ECHOREQUEST              128
-#define ICMPV6_ECHOREPLY                129
-#define ICMPV6_MGM_QUERY                130
-#define ICMPV6_MGM_REPORT               131
-#define ICMPV6_MGM_REDUCTION            132
+#define ICMP6_DST_UNREACH             1
+#define ICMP6_PACKET_TOO_BIG          2
+#define ICMP6_TIME_EXCEEDED           3
+#define ICMP6_PARAM_PROB              4
 
-#define ICMPV6_DEST_UNREACH_NOROUTE	  0
-#define ICMPV6_DEST_UNREACH_ADMIN	  1 /* administratively prohibited */
-#define ICMPV6_DEST_UNREACH_NOTNEIGHBOR   2 /* not a neighbor (and must be) */
-#define ICMPV6_DEST_UNREACH_ADDR          3
-#define ICMPV6_DEST_UNREACH_NOPORT        4
-#define ICMPV6_TIME_EXCEED_HOPS           0 /* Hop Limit == 0 in transit */
-#define ICMPV6_TIME_EXCEED_REASSEMBLY     1 /* Reassembly time out */
-#define ICMPV6_PARAMPROB_HEADER           0 /* erroneous header field */
-#define ICMPV6_PARAMPROB_NEXTHEADER       1 /* unrecognized Next Header */
-#define ICMPV6_PARAMPROB_OPTION           2 /* unrecognized option */
+#define ICMP6_INFOMSG_MASK  0x80    /* all informational messages */
 
-#define ICMPV6_FILTER_WILLPASS(type, filterp) \
+#define ICMP6_ECHO_REQUEST          128
+#define ICMP6_ECHO_REPLY            129
+#define ICMP6_MEMBERSHIP_QUERY      130
+#define ICMP6_MEMBERSHIP_REPORT     131
+#define ICMP6_MEMBERSHIP_REDUCTION  132
+
+#define ICMP6_DST_UNREACH_NOROUTE     0 /* no route to destination */
+#define ICMP6_DST_UNREACH_ADMIN       1 /* communication with destination */
+                                        /* administratively prohibited */
+#define ICMP6_DST_UNREACH_NOTNEIGHBOR 2 /* not a neighbor */
+#define ICMP6_DST_UNREACH_ADDR        3 /* address unreachable */
+#define ICMP6_DST_UNREACH_NOPORT      4 /* bad port */
+
+#define ICMP6_TIME_EXCEED_TRANSIT     0 /* Hop Limit == 0 in transit */
+#define ICMP6_TIME_EXCEED_REASSEMBLY  1 /* Reassembly time out */
+
+#define ICMP6_PARAMPROB_HEADER        0 /* erroneous header field */
+#define ICMP6_PARAMPROB_NEXTHEADER    1 /* unrecognized Next Header */
+#define ICMP6_PARAMPROB_OPTION        2 /* unrecognized IPv6 option */
+
+#define ICMP6_FILTER_WILLPASS(type, filterp) \
 	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) == 0)
 
-#define ICMPV6_FILTER_WILLBLOCK(type, filterp) \
+#define ICMP6_FILTER_WILLBLOCK(type, filterp) \
 	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) != 0)
 
-#define ICMPV6_FILTER_SETPASS(type, filterp) \
+#define ICMP6_FILTER_SETPASS(type, filterp) \
 	((((filterp)->data[(type) >> 5]) &= ~(1 << ((type) & 31))))
 
-#define ICMPV6_FILTER_SETBLOCK(type, filterp) \
+#define ICMP6_FILTER_SETBLOCK(type, filterp) \
 	((((filterp)->data[(type) >> 5]) |=  (1 << ((type) & 31))))
 
-#define ICMPV6_FILTER_SETPASSALL(filterp) \
-	memset (filterp, 0, sizeof (struct icmpv6_filter));
+#define ICMP6_FILTER_SETPASSALL(filterp) \
+	memset (filterp, 0, sizeof (struct icmp6_filter));
 
-#define ICMPV6_FILTER_SETBLOCKALL(filterp) \
-	memset (filterp, 0xFF, sizeof (struct icmpv6_filter));
+#define ICMP6_FILTER_SETBLOCKALL(filterp) \
+	memset (filterp, 0xFF, sizeof (struct icmp6_filter));
 
-#define ND6_ROUTER_SOLICITATION		133
-#define ND6_ROUTER_ADVERTISEMENT	134
-#define ND6_NEIGHBOR_SOLICITATION	135
-#define ND6_NEIGHBOR_ADVERTISEMENT	136
-#define ND6_REDIRECT			137
+#define ND_ROUTER_SOLICIT           133
+#define ND_ROUTER_ADVERT            134
+#define ND_NEIGHBOR_SOLICIT         135
+#define ND_NEIGHBOR_ADVERT          136
+#define ND_REDIRECT                 137
 
-enum nd6_option
+struct nd_router_solicit      /* router solicitation */
   {
-    ND6_OPT_SOURCE_LINKADDR=1,
-    ND6_OPT_TARGET_LINKADDR=2,
-    ND6_OPT_PREFIX_INFORMATION=3,
-    ND6_OPT_REDIRECTED_HEADER=4,
-    ND6_OPT_MTU=5,
-    ND6_OPT_ENDOFLIST=256
+    struct icmp6_hdr  nd_rs_hdr;
+    /* could be followed by options */
   };
 
-struct nd6_router_solicit      /* router solicitation */
+#define nd_rs_type               nd_rs_hdr.icmp6_type
+#define nd_rs_code               nd_rs_hdr.icmp6_code
+#define nd_rs_cksum              nd_rs_hdr.icmp6_cksum
+#define nd_rs_reserved           nd_rs_hdr.icmp6_data32[0]
+
+struct nd_router_advert       /* router advertisement */
   {
-    struct icmpv6hdr		rsol_hdr;
+    struct icmp6_hdr  nd_ra_hdr;
+    uint32_t   nd_ra_reachable;   /* reachable time */
+    uint32_t   nd_ra_retransmit;  /* retransmit timer */
+    /* could be followed by options */
   };
 
-#define rsol_type		rsol_hdr.icmpv6_type
-#define rsol_code		rsol_hdr.icmpv6_code
-#define rsol_cksum		rsol_hdr.icmpv6_cksum
-#define rsol_reserved		rsol_hdr.icmpv6_data32[0]
+#define nd_ra_type               nd_ra_hdr.icmp6_type
+#define nd_ra_code               nd_ra_hdr.icmp6_code
+#define nd_ra_cksum              nd_ra_hdr.icmp6_cksum
+#define nd_ra_curhoplimit        nd_ra_hdr.icmp6_data8[0]
+#define nd_ra_flags_reserved     nd_ra_hdr.icmp6_data8[1]
+#define ND_RA_FLAG_MANAGED       0x80
+#define ND_RA_FLAG_OTHER         0x40
+#define nd_ra_router_lifetime    nd_ra_hdr.icmp6_data16[1]
 
-struct nd6_router_advert
+struct nd_neighbor_solicit    /* neighbor solicitation */
   {
-    struct icmpv6hdr	radv_hdr;
-    u_int32_t		radv_reachable;	 /* reachable time	*/
-    u_int32_t		radv_retransmit; /* reachable retransmit time */
+    struct icmp6_hdr  nd_ns_hdr;
+    struct in6_addr   nd_ns_target; /* target address */
+    /* could be followed by options */
   };
 
-#define radv_type		radv_hdr.icmpv6_type
-#define radv_code		radv_hdr.icmpv6_code
-#define radv_cksum		radv_hdr.icmpv6_cksum
-#define radv_maxhoplimit	radv_hdr.icmpv6_data8[0]
-#define radv_m_o_res		radv_hdr.icmpv6_data8[1]
-#define ND6_RADV_M_BIT		0x80
-#define ND6_RADV_O_BIT		0x40
-#define radv_router_lifetime	radv_hdr.icmpv6_data16[1]
+#define nd_ns_type               nd_ns_hdr.icmp6_type
+#define nd_ns_code               nd_ns_hdr.icmp6_code
+#define nd_ns_cksum              nd_ns_hdr.icmp6_cksum
+#define nd_ns_reserved           nd_ns_hdr.icmp6_data32[0]
 
-struct nd6_nsolicitation 	/* neighbor solicitation */
+struct nd_neighbor_advert     /* neighbor advertisement */
   {
-    struct icmpv6hdr	nsol6_hdr;
-    struct in6_addr	nsol6_target;
+    struct icmp6_hdr  nd_na_hdr;
+    struct in6_addr   nd_na_target; /* target address */
+    /* could be followed by options */
   };
 
-struct nd6_nadvertisement 	/* neighbor advertisement */
+#define nd_na_type               nd_na_hdr.icmp6_type
+#define nd_na_code               nd_na_hdr.icmp6_code
+#define nd_na_cksum              nd_na_hdr.icmp6_cksum
+#define nd_na_flags_reserved     nd_na_hdr.icmp6_data32[0]
+#if     BYTE_ORDER == BIG_ENDIAN
+#define ND_NA_FLAG_ROUTER        0x80000000
+#define ND_NA_FLAG_SOLICITED     0x40000000
+#define ND_NA_FLAG_OVERRIDE      0x20000000
+#else   /* BYTE_ORDER == LITTLE_ENDIAN */
+#define ND_NA_FLAG_ROUTER        0x00000080
+#define ND_NA_FLAG_SOLICITED     0x00000040
+#define ND_NA_FLAG_OVERRIDE      0x00000020
+#endif
+
+struct nd_redirect            /* redirect */
   {
-    struct icmpv6hdr	nadv6_hdr;
-    struct in6_addr	nadv6_target;
+    struct icmp6_hdr  nd_rd_hdr;
+    struct in6_addr   nd_rd_target; /* target address */
+    struct in6_addr   nd_rd_dst;    /* destination address */
+    /* could be followed by options */
+  };
+ 
+#define nd_rd_type               nd_rd_hdr.icmp6_type
+#define nd_rd_code               nd_rd_hdr.icmp6_code
+#define nd_rd_cksum              nd_rd_hdr.icmp6_cksum
+#define nd_rd_reserved           nd_rd_hdr.icmp6_data32[0]
+
+struct nd_opt_hdr             /* Neighbor discovery option header */
+  {
+    uint8_t  nd_opt_type;
+    uint8_t  nd_opt_len;        /* in units of 8 octets */
+    /* followed by option specific data */
   };
 
-#define nadv6_flags			nadv6_hdr.icmpv6_data32[0]
-#define ND6_NADVERFLAG_ISROUTER		0x80
-#define ND6_NADVERFLAG_SOLICITED	0x40
-#define ND6_NADVERFLAG_OVERRIDE		0x20
+#define  ND_OPT_SOURCE_LINKADDR       1
+#define  ND_OPT_TARGET_LINKADDR       2
+#define  ND_OPT_PREFIX_INFORMATION    3
+#define  ND_OPT_REDIRECTED_HEADER     4
+#define  ND_OPT_MTU                   5
 
-struct nd6_redirect            /* redirect */
+struct nd_opt_prefix_info     /* prefix information */
   {
-    struct icmpv6hdr	redirect_hdr;
-    struct in6_addr	redirect_target;
-    struct in6_addr	redirect_destination;
+    uint8_t   nd_opt_pi_type;
+    uint8_t   nd_opt_pi_len;
+    uint8_t   nd_opt_pi_prefix_len;
+    uint8_t   nd_opt_pi_flags_reserved;
+    uint32_t  nd_opt_pi_valid_time;
+    uint32_t  nd_opt_pi_preferred_time;
+    uint32_t  nd_opt_pi_reserved2;
+    struct in6_addr  nd_opt_pi_prefix;
   };
 
-struct nd6_opt_prefix_info     /* prefix information */
+#define ND_OPT_PI_FLAG_ONLINK        0x80
+#define ND_OPT_PI_FLAG_AUTO          0x40
+
+struct nd_opt_rd_hdr          /* redirected header */
   {
-    u_int8_t		opt_type;
-    u_int8_t		opt_length;
-    u_int8_t		opt_prefix_length;
-    u_int8_t		opt_l_a_res;
-    u_int32_t		opt_valid_life;
-    u_int32_t		opt_preferred_life;
-    u_int32_t		opt_reserved2;
-    struct in6_addr	opt_prefix;
+    uint8_t   nd_opt_rh_type;
+    uint8_t   nd_opt_rh_len;
+    uint16_t  nd_opt_rh_reserved1;
+    uint32_t  nd_opt_rh_reserved2;
+    /* followed by IP header and data */
   };
 
-#define ND6_OPT_PI_L_BIT	0x80
-#define ND6_OPT_PI_A_BIT	0x40
-
-struct nd6_opt_mtu 		/* MTU option */
+struct nd_opt_mtu             /* MTU option */
   {
-    u_int8_t		opt_type;
-    u_int8_t		opt_length;
-    u_int16_t		opt_reserved;
-    u_int32_t		opt_mtu;
+    uint8_t   nd_opt_mtu_type;
+    uint8_t   nd_opt_mtu_len;
+    uint16_t  nd_opt_mtu_reserved;
+    uint32_t  nd_opt_mtu_mtu;
   };
+
 
 #endif /* netinet/icmpv6.h */

@@ -70,7 +70,7 @@ struct gmon_cg_arc_record
     char from_pc[sizeof (char *)];	/* address within caller's body */
     char self_pc[sizeof (char *)];	/* address within callee's body */
     char count[4];			/* number of arc traversals */
-};
+  };
 
 __END_DECLS
 

@@ -96,6 +96,10 @@ nis_lookup (const_nis_name name, const u_long flags)
 	  /* XXX Implement CALLBACK here ! */
 	  ++done;
 	  break;
+	case NIS_UNAVAIL:
+	  /* NIS+ is not installed, or all servers are down */
+	  ++done;
+	  break;
 	default:
 	  /* Try the next domainname if we don't follow a link */
 	  if (count_links)

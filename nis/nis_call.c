@@ -29,30 +29,7 @@
 
 static struct timeval TIMEOUT = {10, 0};
 
-struct dir_binding
-{
-  CLIENT *clnt;                  /* RPC CLIENT handle */
-  nis_server *server_val;        /* List of servers */
-  u_int server_len;              /* # of servers */
-  u_int server_used;             /* Which server we are bind in the moment ? */
-  u_int trys;                    /* How many server have we tried ? */
-  bool_t master_only;            /* Is only binded to the master */
-  bool_t use_auth;               /* Do we use AUTH ? */
-  bool_t use_udp;                /* Do we use UDP ? */
-  time_t create;                 /* Binding creation time */
-  struct sockaddr_in addr;       /* Server's IP address */
-  int socket;                    /* Server's local socket */
-  unsigned short port;           /* Local port */
-};
-typedef struct dir_binding dir_binding;
-
-static inline u_int
-__nis_ping (const nis_server *serv, u_int serv_len)
-{
-  return 0;
-}
-
-static unsigned long
+unsigned long
 inetstr2int (const char *str)
 {
   char buffer[strlen (str) + 3];
@@ -92,12 +69,7 @@ __bind_destroy (dir_binding *bind)
 static nis_error
 __bind_next (dir_binding *bind)
 {
-  if (bind->trys >= bind->server_len)
-    return NIS_FAIL;
-  
-  bind->server_used++;
-  if (bind->server_used >= bind->server_len)
-    bind->server_used = 0;
+  u_int j;
 
   if (bind->clnt != NULL)
     {
@@ -106,8 +78,38 @@ __bind_next (dir_binding *bind)
       clnt_destroy (bind->clnt);
       bind->clnt = NULL;
     }
-  
-  return NIS_SUCCESS;
+
+  if (bind->trys >= bind->server_len)
+    return NIS_FAIL;
+
+  for (j = bind->current_ep + 1;
+       j < bind->server_val[bind->server_used].ep.ep_len; ++j)
+    if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
+		"inet") == 0)
+      if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].proto,
+		  "-") == 0)
+	{
+	  bind->current_ep = j;
+	  return NIS_SUCCESS;
+	}
+
+  ++bind->trys;
+  ++bind->server_used;
+  if (bind->server_used >= bind->server_len)
+    bind->server_used = 0;
+
+  for (j = bind->current_ep + 1;
+       j < bind->server_val[bind->server_used].ep.ep_len; ++j)
+    if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
+		"inet") == 0)
+      if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].proto,
+		  "-") == 0)
+	{
+	  bind->current_ep = j;
+	  return NIS_SUCCESS;
+	}
+
+  return NIS_FAIL;
 }
 
 static nis_error
@@ -116,7 +118,6 @@ __bind_connect (dir_binding *dbp)
   struct sockaddr_in check;
   nis_server *serv;
   int checklen;
-  u_int i;
 
   if (dbp == NULL)
     return NIS_FAIL;
@@ -125,26 +126,10 @@ __bind_connect (dir_binding *dbp)
 
   memset (&dbp->addr, '\0', sizeof (dbp->addr));
   dbp->addr.sin_family = AF_INET;
-  for (i = 0; i < serv->ep.ep_len; ++i)
-    {
-      if (strcmp (serv->ep.ep_val[i].family, "inet") == 0)
-	{
-	  if (dbp->use_udp)
-	    {
-	      if (strcmp (serv->ep.ep_val[i].proto, "udp") == 0)
-		dbp->addr.sin_addr.s_addr =
-		  inetstr2int (serv->ep.ep_val[i].uaddr);
-	      else
-		continue;
-	    }
-	  else
-	    if (strcmp (serv->ep.ep_val[i].proto, "tcp") == 0)
-	      dbp->addr.sin_addr.s_addr =
-		inetstr2int (serv->ep.ep_val[i].uaddr);
-	}
-      else
-	continue;
-    }
+
+  dbp->addr.sin_addr.s_addr =
+    inetstr2int (serv->ep.ep_val[dbp->current_ep].uaddr);
+
   if (dbp->addr.sin_addr.s_addr == 0)
     return NIS_FAIL;
 
@@ -155,15 +140,15 @@ __bind_connect (dir_binding *dbp)
   else
     dbp->clnt = clnttcp_create (&dbp->addr, NIS_PROG, NIS_VERSION,
 				 &dbp->socket, 0, 0);
-  
+
   if (dbp->clnt == NULL)
     return NIS_RPCERROR;
-  
+
   clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t)&TIMEOUT);
   /* If the program exists, close the socket */
   if (fcntl (dbp->socket, F_SETFD, 1) == -1)
     perror (_("fcntl: F_SETFD"));
-  
+
   if (dbp->use_auth)
     {
 #if defined(HAVE_SECURE_RPC)
@@ -171,7 +156,7 @@ __bind_connect (dir_binding *dbp)
 	{
 	  char netname[MAXNETNAMELEN+1];
 	  char *p;
-	  
+
 	  p = stpcpy (netname, "unix.");
 	  strncpy (p, serv->name,MAXNETNAMELEN-5);
 	  netname[MAXNETNAMELEN] = '\0';
@@ -187,7 +172,7 @@ __bind_connect (dir_binding *dbp)
 	dbp->clnt->cl_auth = authunix_create_default ();
       dbp->use_auth = TRUE;
     }
-  
+
   /* Get port for sanity checks later */
   checklen = sizeof (struct sockaddr_in);
   memset (&check, 0, checklen);
@@ -207,11 +192,11 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
 {
   dir_binding *dbp;
   u_int i;
-  
+
   dbp = calloc (1, sizeof (dir_binding));
   if (dbp == NULL)
     return NULL;
-  
+
   dbp->server_len = serv_len;
   dbp->server_val = calloc (1, sizeof (nis_server) * serv_len);
   if (dbp->server_val == NULL)
@@ -219,17 +204,34 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
       free (dbp);
       return NULL;
     }
-  
+
+  if (flags & USE_DGRAM)
+    dbp->use_udp = TRUE;
+  else
+    dbp->use_udp = FALSE;
+
+  if (flags & NO_AUTHINFO)
+    dbp->use_auth = FALSE;
+  else
+    dbp->use_auth = TRUE;
+
+  if (flags & MASTER_ONLY)
+    dbp->master_only = TRUE;
+  else
+    dbp->master_only = FALSE;
+
+  dbp->trys = 1;
+
   for (i = 0; i < serv_len; ++i)
     {
       if (serv_val[i].name != NULL)
 	dbp->server_val[i].name = strdup (serv_val[i].name);
-      
+
       dbp->server_val[i].ep.ep_len = serv_val[i].ep.ep_len;
       if (dbp->server_val[i].ep.ep_len > 0)
 	{
 	  unsigned long j;
-	  
+
 	  dbp->server_val[i].ep.ep_val =
 	    malloc (serv_val[i].ep.ep_len * sizeof (endpoint));
 	  for (j = 0; j < dbp->server_val[i].ep.ep_len; ++j)
@@ -267,24 +269,12 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
       else
 	dbp->server_val[i].pkey.n_bytes = NULL;
     }
-  
-  dbp->server_used = __nis_ping (dbp->server_val, dbp->server_len);
-  if (flags & USE_DGRAM)
-    dbp->use_udp = TRUE;
-  else
-    dbp->use_udp = FALSE;
 
-  if (flags & NO_AUTHINFO)
-    dbp->use_auth = FALSE;
-  else
-    dbp->use_auth = TRUE;
-
-  if (flags & MASTER_ONLY)
-    dbp->master_only = TRUE;
-  else
-    dbp->master_only = FALSE;
-
-  dbp->trys = 1;
+  if (__nis_findfastest (dbp) < 1)
+    {
+      __bind_destroy (dbp);
+      return NULL;
+    }
 
   return dbp;
 }
@@ -298,10 +288,11 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
   nis_error retcode;
   dir_binding *dbp;
 
-  if (flags & MASTER_ONLY) 
+  if (flags & MASTER_ONLY)
     server_len = 1;
-  
-  dbp = __bind_create (server, server_len, flags);
+
+  if ((dbp = __bind_create (server, server_len, flags)) == NULL)
+    return NIS_UNAVAIL;
   while (__bind_connect (dbp) != NIS_SUCCESS)
     {
       if (__bind_next (dbp) != NIS_SUCCESS)
@@ -315,7 +306,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
     {
     again:
       result = clnt_call (dbp->clnt, prog, xargs, req, xres, resp, TIMEOUT);
-      
+
       if (result != RPC_SUCCESS)
 	{
 	  clnt_perror (dbp->clnt, "__do_niscall2: clnt_call");
@@ -336,25 +327,56 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	    case NIS_IBREMOVE:
 	    case NIS_IBFIRST:
 	    case NIS_IBNEXT:
-	      if ((((nis_result *)xres)->status != NIS_SUCCESS) &&
-		  (((nis_result *)xres)->status != NIS_S_SUCCESS))
-		if (__bind_next (dbp) == NIS_SUCCESS)
+	      if ((((nis_result *)xres)->status == NIS_NOTFOUND) ||
+		  (((nis_result *)xres)->status == NIS_NOSUCHNAME) ||
+		  (((nis_result *)xres)->status == NIS_NOT_ME))
+		{
+		  if (__bind_next (dbp) == NIS_SUCCESS)
+		    while (__bind_connect (dbp) != NIS_SUCCESS)
+		      {
+			if (__bind_next (dbp) != NIS_SUCCESS)
+			  {
+			    __bind_destroy (dbp);
+			    return NIS_SUCCESS;
+			  }
+		      }
 		  goto again;
+		}
 	    case NIS_FINDDIRECTORY:
-	      if (((fd_result *)xres)->status != NIS_SUCCESS)
-		if (__bind_next (dbp) == NIS_SUCCESS)
+	      if ((((fd_result *)xres)->status == NIS_NOTFOUND) ||
+		  (((fd_result *)xres)->status == NIS_NOSUCHNAME) ||
+		  (((fd_result *)xres)->status == NIS_NOT_ME))
+		{
+		  if (__bind_next (dbp) == NIS_SUCCESS)
+		    while (__bind_connect (dbp) != NIS_SUCCESS)
+		      {
+			if (__bind_next (dbp) != NIS_SUCCESS)
+			  {
+			    __bind_destroy (dbp);
+			    return NIS_SUCCESS;
+			  }
+		      }
 		  goto again;
-	      break;
-#if 0
-	    case NIS_STATUS: /* nis_taglist */
-	    case NIS_SERVSTATE:
+		}
 	      break;
 	    case NIS_DUMPLOG: /* log_result */
 	    case NIS_DUMP:
+	      if ((((log_result *)xres)->lr_status == NIS_NOTFOUND) ||
+		  (((log_result *)xres)->lr_status == NIS_NOSUCHNAME) ||
+		  (((log_result *)xres)->lr_status == NIS_NOT_ME))
+		{
+		  if (__bind_next (dbp) == NIS_SUCCESS)
+		    while (__bind_connect (dbp) != NIS_SUCCESS)
+		      {
+			if (__bind_next (dbp) != NIS_SUCCESS)
+			  {
+			    __bind_destroy (dbp);
+			    return NIS_SUCCESS;
+			  }
+		      }
+		  goto again;
+		}
 	      break;
-	    case NIS_CHECKPOINT: /* cp_result */
-	      break;
-#endif
 	    default:
 	      break;
 	    }
@@ -363,12 +385,13 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	}
     }
   while ((flags & HARD_LOOKUP) && retcode == NIS_RPCERROR);
-  
-  return retcode; 
+
+  return retcode;
 }
 
 static directory_obj *
-rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
+rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
+	       nis_error *status)
 {
   fd_result *fd_res;
   XDR xdrs;
@@ -399,6 +422,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
   switch (nis_dir_cmp (domain, dir->do_name))
     {
     case SAME_NAME:
+      *status = NIS_SUCCESS;
       return dir;
     case NOT_SEQUENTIAL:
       /* NOT_SEQUENTIAL means, go one up and try it there ! */
@@ -413,6 +437,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	   domain ! (Now I understand why a root server must be a
 	   replica of the parent domain) */
 	fd_res = __nis_finddirectory (dir, ndomain);
+	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
 	    nis_free_directory (dir);
@@ -431,7 +456,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	    /* We have found a NIS+ server serving ndomain, now
 	       let us search for "name" */
 	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, flags);
+	    return rec_dirsearch (name, obj, flags, status);
 	  }
 	else
 	  {
@@ -447,7 +472,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	char leaf [strlen (name) + 3];
 	char ndomain [strlen (name) + 3];
 	char *cp;
-	
+
 	do
 	  {
 	    if (strlen (domain) == 0)
@@ -463,8 +488,9 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	cp = strchr (leaf, '\0');
 	*cp++ = '.';
 	strcpy (cp, domain);
-	
+
 	fd_res = __nis_finddirectory (dir, leaf);
+	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
 	    nis_free_directory (dir);
@@ -483,15 +509,17 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	    /* We have found a NIS+ server serving ndomain, now
 	       let us search for "name" */
 	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, flags);
+	    return rec_dirsearch (name, obj, flags, status);
 	  }
       }
     break;
     case BAD_NAME:
       nis_free_directory (dir);
+      *status = NIS_BADNAME;
       return NULL;
     }
   nis_free_directory (dir);
+  *status = NIS_FAIL;
   return NULL;
 }
 
@@ -509,19 +537,20 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 
   if ((flags & NO_CACHE) !=  NO_CACHE)
     dir = __cache_search (name);
-  
+
   if (dir == NULL)
     {
+      nis_error status;
       dir = readColdStartFile ();
       if (dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
 	return NIS_UNAVAIL;
-      
-      dir = rec_dirsearch (name, dir, flags);
+
+      dir = rec_dirsearch (name, dir, flags, &status);
       if (dir == NULL)
-	return NIS_NOTFOUND;
+	return status;
     }
 
-  if (flags & MASTER_ONLY) 
+  if (flags & MASTER_ONLY)
     {
       server = dir->do_servers.do_servers_val;
       server_len = 1;
@@ -531,11 +560,11 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
       server = dir->do_servers.do_servers_val;
       server_len = dir->do_servers.do_servers_len;
     }
-  
-  
+
+
   retcode = __do_niscall2 (server, server_len, prog, xargs, req, xres, resp,
 			   flags);
-  
+
   nis_free_directory (dir);
 
   return retcode;

@@ -68,6 +68,7 @@ typedef __key_t key_t;
 
 #define	__need_size_t
 #include <stddef.h>
+typedef size_t socklen_t;
 
 #ifdef __USE_MISC
 /* Old compatibility names for C types.  */

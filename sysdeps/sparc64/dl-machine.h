@@ -68,9 +68,9 @@ elf_machine_load_address (void)
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym, const struct r_found_version *version)
+		  const Elf64_Sym *sym, const struct r_found_version *version,
+		  Elf64_Addr *const reloc_addr)
 {
-  Elf64_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf64_Addr loadbase;
 
 #ifndef RTLD_BOOTSTRAP
@@ -200,7 +200,7 @@ elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
   extern void _dl_runtime_resolve (Elf64_Word);

@@ -53,6 +53,26 @@ _nss_db_setnetgrent (const char *group)
 
       if (db == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+      else
+	{
+	  /* We have to make sure the file is  `closed on exec'.  */
+	  int result, flags;
+
+	  result = flags = fcntl ((*db->fd) (db), F_GETFD, 0);
+	  if (result >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      result = fcntl ((*db->fd) (db), F_SETFD, flags);
+	    }
+	  if (result < 0)
+	    {
+	      /* Something went wrong.  Close the stream and return a
+		 failure.  */
+	      (*db->close) (db);
+	      db = NULL;
+	      status = NSS_STATUS_UNAVAIL;
+	    }
+	}
     }
 
   if (status == NSS_STATUS_SUCCESS)

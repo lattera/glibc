@@ -514,7 +514,7 @@ Socket Addresses
 
 Internet Domain
 
-* Internet Address Format::     How socket addresses are specified in the
+* Internet Address Formats::    How socket addresses are specified in the
                                  Internet namespace.
 * Host Addresses::              All about host addresses of Internet hosts.
 * Protocols Database::          Referring to protocols by name.

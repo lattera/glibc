@@ -22,7 +22,7 @@
 #undef	ntohs
 
 u_int16_t
-__htons (x)
+htons (x)
      u_int16_t x;
 {
 #if BYTE_ORDER == BIG_ENDIAN

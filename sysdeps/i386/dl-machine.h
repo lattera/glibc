@@ -81,16 +81,20 @@ elf_machine_load_address (void)
    destroys the passed register information.  */
 static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
      __attribute__ ((regparm (2), unused));
+static ElfW(Addr) profile_fixup (struct link_map *l, ElfW(Word) reloc_offset,
+				 ElfW(Addr) retaddr)
+     __attribute__ ((regparm (3), unused));
 #endif
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int __attribute__ ((unused))
-elf_machine_runtime_setup (struct link_map *l, int lazy)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
+  extern void _dl_runtime_profile (Elf32_Word);
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -100,9 +104,23 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
       got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
-      /* This function will get called to fix up the GOT entry indicated by
-	 the offset on the stack, and then jump to the resolved address.  */
-      got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+
+      /* The got[2] entry contains the address of a function which gets
+	 called to get the address of a so far unresolved function and
+	 jump to it.  The profiling extension of the dynamic linker allows
+	 to intercept the calls to collect information.  In this case we
+	 don't store the address in the GOT so that all future calls also
+	 end in this function.  */
+      if (profile)
+	{
+	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
+	  /* Say that we really want profiling and the timers are started.  */
+	  _dl_profile_map = l;
+	}
+      else
+	/* This function will get called to fix up the GOT entry indicated by
+	   the offset on the stack, and then jump to the resolved address.  */
+	got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
   return lazy;
@@ -126,12 +144,31 @@ _dl_runtime_resolve:
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.
 	ret $8			# Jump to function address.
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
+
+	.globl _dl_runtime_profile
+	.type _dl_runtime_profile, @function
+_dl_runtime_profile:
+	pushl %eax		# Preserve registers otherwise clobbered.
+	pushl %ecx
+	pushl %edx
+	movl 20(%esp), %ecx	# Load return address
+	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note
+	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.
+	call profile_fixup	# Call resolver.
+	popl %edx		# Get register content back.
+	popl %ecx
+	xchgl %eax, (%esp)	# Get %eax contents end store function address.
+	ret $8			# Jump to function address.
+	.size _dl_runtime_profile, .-_dl_runtime_profile
 ");
 #else
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.globl _dl_runtime_resolve
+	.globl _dl_runtime_profile
 	.type _dl_runtime_resolve, @function
+	.type _dl_runtime_profile, @function
 _dl_runtime_resolve:
+_dl_runtime_profile:
 	pushl %eax		# Preserve registers otherwise clobbered.
 	pushl %ecx
 	pushl %edx
@@ -147,6 +184,7 @@ _dl_runtime_resolve:
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.
 	ret $8			# Jump to function address.
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
+	.size _dl_runtime_profile, .-_dl_runtime_profile
 ");
 #endif
 /* The PLT uses Elf32_Rel relocs.  */
@@ -261,10 +299,9 @@ extern char **_dl_argv;
 
 static inline void
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
-		 const Elf32_Sym *sym, const struct r_found_version *version)
+		 const Elf32_Sym *sym, const struct r_found_version *version,
+		 Elf32_Addr *const reloc_addr)
 {
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-
   if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP

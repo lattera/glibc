@@ -61,6 +61,9 @@ int _dl_verbose;
 const char *_dl_platform;
 size_t _dl_platformlen;
 struct r_search_path *_dl_search_paths;
+const char *_dl_profile;
+const char *_dl_profile_output;
+struct link_map *_dl_profile_map;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -109,7 +112,7 @@ _dl_start (void *arg)
   /* Relocate ourselves so we can do normal function calls and
      data access using the global offset table.  */
 
-  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0);
+  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
 
   /* Now life is sane; we can call functions and access global data.
      Set up to use the operating system facilities, and find out from
@@ -268,6 +271,26 @@ dl_main (const ElfW(Phdr) *phdr,
 	    ? (*(getenv ("LD_BIND_NOW") ?: "") == '\0' ? 1 : 0) : -1);
   else
     lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+
+  /* See whether we want to use profiling.  */
+  _dl_profile = getenv ("LD_PROFILE");
+  if (_dl_profile != NULL)
+    if (_dl_profile[0] == '\0')
+      /* An empty string is of not much help.  Disable profiling.  */
+      _dl_profile = NULL;
+    else
+      {
+	/* OK, we have the name of a shared object we want to
+	   profile.  It's up to the user to provide a good name, it
+	   must match the file name or soname of one of the loaded
+	   objects.  Now let's see where we are supposed to place the
+	   result.  */
+	_dl_profile_output = getenv ("LD_PROFILE_OUTPUT");
+
+	if (_dl_profile_output == NULL || _dl_profile_output[0] == '\0')
+	  /* This is the default place.  */
+	  _dl_profile_output = "/var/tmp";
+      }
 
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
@@ -814,6 +837,11 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_debug_state ();
   }
 
+  /* Now enable profiling if needed.  */
+  if (_dl_profile_map != NULL)
+    /* We must prepare the profiling.  */
+    _dl_start_profile (_dl_profile_map, _dl_profile_output);
+
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */
 }
@@ -824,6 +852,8 @@ static void
 print_unresolved (int errcode __attribute__ ((unused)), const char *objname,
 		  const char *errstring)
 {
+  if (objname[0] == '\0')
+    objname = _dl_argv[0] ?: "<main program>";
   _dl_sysdep_error (errstring, "	(", objname, ")\n", NULL);
 }
 

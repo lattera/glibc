@@ -1,3 +1,111 @@
+1997-07-28 23:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/gmon-start.c (__gmon_start__): Call __monstartup not
+	monstartup.
+	* gmon/gmon.c: Rename moncontrol to __moncontrol and monstartup
+	to __monstartup.
+	* gmon/sys/gmon.h: Fix prototypes.
+	* gmon/sys/gmon_out.h: Pretty print.
+
+	* gmon/bb_exit_func.c (__bb_exit_func): Use memcpy instead of bcopy.
+	* gmon/gmon.c (__monstartup): Likewise.
+	(write_hist): Remove dependency on 32 int.
+	(_mcleanup): Don't call perror, use fprintf.
+
+	* elf/dl-load.c: Fix handling of current directory in search path.
+
+	* elf/Makefile (dl-routines): Add dl-profile.
+	* elf/dl-profile.c: New file.
+	* elf/dl-runtime.c (fixup): Add new parameter with address to store
+	relocation result in to elf_machine_relplt.
+	(profile_fixup): New function.
+	* elf/do-rel.h (elf_dynamic_do_rel): Add new parameter with address
+	to store relocation result in to elf_machine_relplt.
+	* elf/dl-support.c: Define _dl_profile and _dl_profile_map.
+	* elf/dynamic-link.h (ELF_DYNAMIC_RELOCATE): Add new parameter and
+	call elf_machine_runtime_setup with extra argument.
+	* elf/dl-reloc.c (_dl_relocate_object): Add new argument to
+	ELF_DYNAMIC_RELOCATE.
+	* elf/link.h: Add prototypes for new functions and variables.
+	* elf/rtld.c: Parse LD_PROFILE and LD_PROFILE_OUTPUT environment
+	variables and call _dl_start_profile if necessary.
+	* include/sys/gmon_out.h: New file.
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Add
+	new parameter to enable profiling.
+	(elf_machine_rela): Add new parameter to specify place to store
+	result in.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/sparc/dl-machine.h: Likewise.
+	* sysdeps/sparc64/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	(elf_machine_runtime_setup): Setup got[2] to _dl_runtime_resolve if
+	we do profiling.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Add code for _dl_runtime_profile.
+
+	* nis/nss_compat/compat-grp.c (internal_setgrent): Set FD_CLOEXEC
+	for stream on input file.
+	* nis/nss_compat/compat-pwd.c (internal_setpwent): Likewise.
+	* nis/nss_compat/compat-spwd.c (internal_setspent): Likewise.
+	* nss/nss_db/db-XXX.c (internal_setent): Likewise.
+	* nss/nss_db/db-alias.c (internal_setent): Likewise.
+	* nss/nss_db/db-netgrp.c (internal_setent): Likewise.
+	* nss/nss_files/files-XXX.c (internal_setent): Likewise.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+	* nss/nss_files/files-netgrp.c (internal_setent): Likewise.
+
+	* string/string.h: Pretty print.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Major update by John Bowman.
+	Add float and long double versions.
+
+1997-07-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (print_unresolved): Replace empty object name by main
+	program name.
+
+1997-07-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/htons.c (htons): Renamed from __htons.
+
+1997-07-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/bits/byteswap.h: New file.
+
+1997-07-27 23:50  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* inet/netinet/icmp6.h: Update for new drafts of POSIX.1g and IPv6
+	advanced API.
+	* inet/netinet/in.h: Likewise.
+	* inet/netinet/ip6.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* posix/sys/types.h: Add socklen_t.
+
+	* manual/socket.texi: Document some more IPv6 things.
+	* manual/libc.texinfo: Likewise.
+
+1997-07-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Define missing symbol.
+
+1997-07-27 14:31  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile: Add nis_findserv.
+	* nis/lckcache.c: Fix typo.
+	* nis/nis_call.c: Fix problems with multihomed servers.
+	* nis/nis_findserv.c: New file.
+	* nis/nis_intern.h: Add more prototypes.
+	* nis/nis_lookup.c (nis_lookup): Don't try the next server if network
+	is unreachable.
+	* nis/nis_table.c (nis_list): Likewise.
+	* nis/nis_ping.c (nis_ping): Use MASTER_ONLY, don't call abort()
+	in error case.
+	* nis/nis_util.c (__nis_finddirectory): Give the right error code
+	back.
+	* nis/ypclnt.c: Make sure, that all sockets are closed.
+
 1997-07-26 04:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (distribute): Add genrtldtbl.awk.
