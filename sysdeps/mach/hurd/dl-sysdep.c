@@ -215,79 +215,6 @@ _dl_sysdep_start_cleanup (void)
   __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
 
-void
-_dl_sysdep_fatal (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-
-  _exit (127);
-}
-
-
-void
-_dl_sysdep_error (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
-
-
-void
-_dl_sysdep_message (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
-
- /* Minimal open/close/mmap implementation sufficient for initial loading of
-    shared libraries.  These are weak definitions so that when the
-    dynamic linker re-relocates itself to be user-visible (for -ldl),
 /* Minimal open/close/mmap implementation sufficient for initial loading of
    shared libraries.  These are weak definitions so that when the
    dynamic linker re-relocates itself to be user-visible (for -ldl),
@@ -572,76 +499,6 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
   if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
     {
-
-void weak_function
-_dl_sysdep_fatal (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-
-  _exit (127);
-}
-
-
-void weak_function
-_dl_sysdep_error (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
-
-
-void weak_function
-_dl_sysdep_message (const char *msg, ...)
-{
-  va_list ap;
-
-  va_start (ap, msg);
-  do
-    {
-      size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
-      msg = va_arg (ap, const char *);
-    } while (msg);
-  va_end (ap);
-}
       /* XXX this is not atomic as it is in unix! */
       /* The region is already allocated; deallocate it first.  */
       err = __vm_deallocate (__mach_task_self (), mapaddr, len);
@@ -722,4 +579,74 @@ void
 _dl_show_auxv (void)
 {
   /* There is nothing to print.  Hurd has no auxiliary vector.  */
+}
+
+void weak_function
+_dl_sysdep_fatal (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      mach_msg_type_number_t nwrote;
+      do
+	{
+	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
+	    break;
+	  len -= nwrote;
+	  msg += nwrote;
+	} while (nwrote > 0);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
+
+  _exit (127);
+}
+
+
+void weak_function
+_dl_sysdep_error (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      mach_msg_type_number_t nwrote;
+      do
+	{
+	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
+	    break;
+	  len -= nwrote;
+	  msg += nwrote;
+	} while (nwrote > 0);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
+}
+
+
+void weak_function
+_dl_sysdep_message (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      mach_msg_type_number_t nwrote;
+      do
+	{
+	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
+	    break;
+	  len -= nwrote;
+	  msg += nwrote;
+	} while (nwrote > 0);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
 }

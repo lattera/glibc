@@ -29,7 +29,7 @@
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
-# if (defined HAVE_ALLOCA_H || defined _LIBC && !defined C_ALLOCA
+# if (defined HAVE_ALLOCA_H || defined _LIBC) && !defined C_ALLOCA
 #  include <alloca.h>
 # else
 #  ifdef _AIX

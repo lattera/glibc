@@ -1333,7 +1333,7 @@ echo "configure:1333: checking version of $MAKE" >&5
   ac_prog_version=`$MAKE --version 2>&1 | sed -n 's/^.*version \([0-9][0-9.]*\), by.*$/\1/p'`
   case $ac_prog_version in
     '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
-    3.75 | 3.76.[1-9] | 3.7[789]* | 3.[89]*)
+    3.75 | 3.76.[1-9]* | 3.7[789]* | 3.[89]*)
        ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
     *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
 

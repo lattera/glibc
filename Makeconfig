@@ -716,9 +716,7 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	  done;) | sort; \
 	 echo; \
 	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}
-	if test -r ${@:stmp=h} && cmp -s ${@:stmp=h} ${@:stmp=T}; \
-	then rm -f ${@:stmp=T}; \
-	else mv -f ${@:stmp=T} ${@:stmp=h}; fi
+	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 
 common-generated += gnu/lib-names.h gnu/lib-names.stmp

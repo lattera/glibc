@@ -43,13 +43,12 @@ CPPFLAGS := -DNLSPATH='"$(localedir)/%L/%N:$(localedir)/%L/LC_MESSAGES/%N:$(loca
 
 generated = de.msg de.cat
 
-.PHONY: do-gencat-test
-tests: do-gencat-test
+tests: $(objpfx)de.cat
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
-do-gencat-test: $(objpfx)de.msg $(objpfx)gencat
-	$(built-program-cmd) $(objpfx)de.cat $(objpfx)de.msg
+$(objpfx)de.cat: $(objpfx)de.msg $(objpfx)gencat
+	$(built-program-cmd) $@ $<
 
 # Generate a non-simple input file.
-$(objpfx)de.msg: $(..)/po/de.po
+$(objpfx)de.msg: $(..)po/de.po
 	sed -f xopen-msg.sed $< > $@
