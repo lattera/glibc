@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,17 @@
      asm volatile ("mov %0,$30; jmp $31, (%1); ldgp $29, 0(%1)" \
 		   : : "r" (__sp), "r" (__fn)); })
 
-#define ENTRY(name) LEAF(name, ***loser no arg count***)
-
 #define STACK_GROWTH_DOWN
 
+#define RETURN_TO(sp, pc, retval) \
+  asm volatile ("mov %0,$30; jmp $31, (%1); mov %2,$0" \
+		: : "r" (sp), "r" (pc), "r" ((long int) (retval)));
+
+#define ALIGN 3
 #include <sysdeps/mach/sysdep.h>
+
+#include <mach/alpha/asm.h>
+#undef	at
+#define at	28
+#define AT	$28
+#define fp	s6
