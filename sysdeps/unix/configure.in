@@ -71,7 +71,8 @@ for unix_function in \
   access select getgroups setgroups \
   getitimer setitimer \
   getdomainname/getdomain=bsd/bsd4.4 \
-  setdomainname/setdomain=bsd/bsd4.4
+  setdomainname/setdomain=bsd/bsd4.4 \
+  profil=bsd
 do
 
   # $unix_function  =>	$unix_syscall		$unix_srcname

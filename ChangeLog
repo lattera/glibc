@@ -1,4 +1,11 @@
+Fri Sep 22 14:24:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/Makefile: Elide sunrpc from $(subdirs) for the
+	time being.
+
 Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/configure.in: Check for `profil' syscall.
 
 	* manual/Makefile (infodir, prefix, INSTALL, INSTALL_DATA): Variables
  	removed.

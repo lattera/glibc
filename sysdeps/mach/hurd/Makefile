@@ -45,6 +45,8 @@ endif	# ! hurd-srcdir-computed
 
 ifdef in-Makerules
 
+subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
+
 # Look for header files in hurd/ under the top-level library source directory.
 includes += -I$(..)hurd
 

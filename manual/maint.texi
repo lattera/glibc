@@ -960,7 +960,7 @@ contributed by Tom Quinn.
 
 @item
 The port of the Mach and Hurd code to the MIPS architecture
-(@code{mips-@var{anything}-gnu}) was contribued by Kazumoto Kojima.
+(@code{mips-@var{anything}-gnu}) was contributed by Kazumoto Kojima.
 @end itemize
 
 @c @bye
