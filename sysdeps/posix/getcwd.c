@@ -226,7 +226,7 @@ __getcwd (buf, size)
   int prev_errno = errno;
   size_t allocated = size;
 
-  if (size == 0)
+  if (size <= 0)
     {
       if (buf != NULL)
 	{
@@ -363,7 +363,7 @@ __getcwd (buf, size)
 
 	  if ((size_t) (pathp - path) <= namlen)
 	    {
-	      if (size != 0)
+	      if (size > 0)
 		{
 		  (void) __closedir (dirstream);
 		  __set_errno (ERANGE);
