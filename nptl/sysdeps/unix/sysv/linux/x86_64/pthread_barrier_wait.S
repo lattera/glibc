@@ -110,17 +110,17 @@ pthread_barrier_wait:
 	retq
 
 1:	addq	$MUTEX, %rdi
-	call	__lll_lock_wait
+	callq	__lll_lock_wait
 	subq	$MUTEX, %rdi
 	jmp	2b
 
 4:	addq	$MUTEX, %rdi
-	call	__lll_unlock_wake
+	callq	__lll_unlock_wake
 	subq	$MUTEX, %rdi
 	jmp	5b
 
 6:	addq	$MUTEX, %rdi
-	call	__lll_unlock_wake
+	callq	__lll_unlock_wake
 	subq	$MUTEX, %rdi
 	jmp	7b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

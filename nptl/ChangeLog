@@ -1,4 +1,30 @@
+2003-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/bits/atomic.h (atomic_exchange_and_add): Swap 2nd and
+	3rd argument of __arch_compare_and_exchange_{32,64}_val_acq.
+
+	* sysdeps/unix/sysv/linux/ia64/sem_post.c: Include semaphore.h.
+	* sysdeps/unix/sysv/linux/ia64/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sem_trywait.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sem_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_post.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_trywait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_wait.c: Likewise.
+
 2003-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Return the result of the final
+	locking.  If it succeeds, the regular function return value.
+
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait):
+	Return result of the final locking.
+	* version.c (__nptl_main): Work around problems with the strange
+	INTERNAL_SYSCALL macro on ppc32.
+	* init.c (__pthread_initialize_minimal_internal): Unblock
+	SIGCANCEL in case the parent blocked it.
+	Reported by Paul Mackerras <paulus@samba.org>.
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: New file.
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: New file.

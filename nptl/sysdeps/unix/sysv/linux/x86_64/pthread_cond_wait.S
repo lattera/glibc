@@ -228,7 +228,7 @@ __pthread_cond_wait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif

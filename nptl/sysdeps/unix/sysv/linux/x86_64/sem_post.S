@@ -58,7 +58,7 @@ __new_sem_post:
 	movq	errno@gottpoff(%rip), %rdx
 	movl	$EINVAL, %fs:(%rdx)
 #else
-	call	__errno_location@plt
+	callq	__errno_location@plt
 	movl	$EINVAL, (%rax)
 #endif
 

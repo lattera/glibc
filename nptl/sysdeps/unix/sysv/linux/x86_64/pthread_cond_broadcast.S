@@ -88,7 +88,7 @@ __pthread_cond_broadcast:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
@@ -96,12 +96,12 @@ __pthread_cond_broadcast:
 
 	/* Unlock in loop requires waekup.  */
 5:	addq	$cond_lock-wakeup_seq, %rdi
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	jmp	6b
 
 	/* Unlock in loop requires waekup.  */
 7:	addq	$cond_lock-wakeup_seq, %rdi
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	subq	$cond_lock-wakeup_seq, %rdi
 	jmp	8b
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast

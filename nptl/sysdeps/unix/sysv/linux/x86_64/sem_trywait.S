@@ -55,7 +55,7 @@ __new_sem_trywait:
 	movq	errno@gottpoff(%rip), %rdx
 	movl	$EAGAIN, %fs:(%rdx)
 #else
-	call	__errno_location@plt
+	callq	__errno_location@plt
 	movl	$EAGAIN, (%rax)
 #endif
 	orl	$-1, %eax

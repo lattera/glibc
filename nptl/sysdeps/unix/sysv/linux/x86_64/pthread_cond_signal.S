@@ -78,15 +78,15 @@ __pthread_cond_signal:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
-5:	 addq	$cond_lock-wakeup_seq, %rdi
-	call	__lll_mutex_unlock_wake
+5:	addq	$cond_lock-wakeup_seq, %rdi
+	callq	__lll_mutex_unlock_wake
 	jmp	6b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,

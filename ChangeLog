@@ -1,3 +1,9 @@
+2003-03-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (__NR_pread64): Define
+	to __NR_pread if not defined.
+	(__NR_pwrite64): Define to __NR_pwrite if not defined.
+
 2003-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/system.c: New file.

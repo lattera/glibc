@@ -88,14 +88,14 @@ __pthread_once:
 	leaq	clear_once_control(%rip), %rsi
 	movq	%rdi, %rdx
 	movq	%rsp, %rdi
-	call	__pthread_cleanup_push	/* Note: no @PLT.  */
+	callq	__pthread_cleanup_push	/* Note: no @PLT.  */
 
-	call	*40(%rsp)
+	callq	*40(%rsp)
 
 	/* Pop the cleanup handler.  */
 	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
-	call	__pthread_cleanup_pop	/* Note: no @PLT.  */
+	callq	__pthread_cleanup_pop	/* Note: no @PLT.  */
 
 	addq	$32, %rsp
 

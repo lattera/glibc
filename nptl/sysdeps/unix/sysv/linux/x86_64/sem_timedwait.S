@@ -50,7 +50,7 @@ sem_timedwait:
 	jne	2b
 
 	xorl	%eax, %eax
-	ret
+	retq
 
 	/* Check whether the timeout value is valid.  */
 1:	subq	$16, %rsp
@@ -118,7 +118,7 @@ sem_timedwait:
 	movl	%eax, %fs:(%rdx)
 #else
 	movl	%eax, %edx
-	call	__errno_location@plt
+	callq	__errno_location@plt
 	movl	%edx, (%rax)
 #endif
 

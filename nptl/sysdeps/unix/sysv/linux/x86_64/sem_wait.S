@@ -65,7 +65,7 @@ __new_sem_wait:
 	movl	%eax, %fs:(%rdx)
 #else
 	movl	%eax, %edx
-	call	__errno_location@plt
+	callq	__errno_location@plt
 	movl	%edx, (%rax)
 #endif
 	orl	$-1, %eax
