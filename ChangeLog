@@ -1,3 +1,8 @@
+2003-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Remove obsolete
+	patch to check for system call errors.
+
 2002-07-24  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Yield ENODEV
