@@ -1,5 +1,5 @@
 /* Linux specific extensions to fpathconf.
-   Copyright (C) 1991,95,96,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,6 +81,9 @@ __fpathconf (fd, name)
 
 	case REISERFS_SUPER_MAGIC:
 	  return REISERFS_LINK_MAX;
+
+	case XFS_SUPER_MAGIC:
+	  return XFS_LINK_MAX;
 
 	default:
 	  return LINUX_LINK_MAX;

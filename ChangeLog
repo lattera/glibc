@@ -1,3 +1,14 @@
+2002-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c (__fpathconf): Add
+	support for reiserfs and xfs.
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (__fpathconf): Add case for
+	XFS link count.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define XFS_SUPER_MAGIC
+	and XFS_LINK_MAX.
+	Patch by Eric Sandeen <sandeen@sgi.com> [PR libc/4706].
+
 2002-10-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/libc-symbols.h (attribute_tls_model_ie): Define.
