@@ -79,9 +79,9 @@ if test $exval -eq 139 && test -f "$segv_output"; then
     IFS=$old_IFS
     ;;
   esac
-  (read line; echo "$line"
-   read line; echo "$line"
-   while read line; do
+  sed '/Backtrace/q' "$segv_output"
+  sed '1,/Backtrace/d' "$segv_output" |
+  (while read line; do
      case "$line" in
        [*) addr=`echo $line | sed 's/^\[\(.*\)\]$/\1/'`
 	   complete=`addr2line -f -e "$prog" $addr 2>/dev/null`
@@ -94,7 +94,7 @@ if test $exval -eq 139 && test -f "$segv_output"; then
         *) echo "$line"
            ;;
      esac
-   done) < "$segv_output"
+   done)
    rm -f "$segv_output"
 fi
 
