@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -181,7 +181,6 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	      *h_errnop = TRY_AGAIN;
 	      break;
 	    case NSS_STATUS_NOTFOUND:
-	      *errnop = ENOENT;
 	      *h_errnop = HOST_NOT_FOUND;
 	      break;
 	    default:
@@ -321,7 +320,6 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       else
 	{
 	  *h_errnop = HOST_NOT_FOUND;
-	  *errnop = ENOENT;
 	  return NSS_STATUS_NOTFOUND;
 	}
     }
@@ -393,10 +391,8 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 	  *errnop = errno;
 	}
       if (retval == NSS_STATUS_NOTFOUND)
-	{
-	  *h_errnop = HOST_NOT_FOUND;
-	  *errnop = ENOENT;
-	}
+	*h_errnop = HOST_NOT_FOUND;
+
       return retval;
     }
 

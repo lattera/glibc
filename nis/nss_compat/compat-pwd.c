@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -223,7 +223,6 @@ insert_passwd_adjunct (char **result, int *len, char *domain, int *errnop)
       if ((res = malloc (namelen + restlen + (endp - encrypted) + 2)) == NULL)
 	{
 	  free (result2);
-	  *errnop = ENOMEM;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -753,7 +752,6 @@ getpwent_next_nis (struct passwd *result, ent_t *ent, char *buffer,
 	    {
 	      ent->nis = 0;
 	      give_pwd_free (&ent->pwd);
-	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -862,10 +860,7 @@ getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
 	}
 
       if (in_blacklist (result->pw_name, strlen (result->pw_name), ent))
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
   else /* Use NIS */
     {
@@ -873,17 +868,11 @@ getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (yp_match (domain, "passwd.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
 	  != NSS_STATUS_SUCCESS)
@@ -910,10 +899,7 @@ getpwnam_plususer (const char *name, struct passwd *result, ent_t *ent,
 	return NSS_STATUS_TRYAGAIN;
 
       if (in_blacklist (result->pw_name, strlen (result->pw_name), ent))
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
 
   if (parse_res > 0)
@@ -949,10 +935,8 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -1027,11 +1011,7 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  if (status == NSS_STATUS_RETURN)
 	    continue;
 	  else
-	    {
-	      if (status == NSS_STATUS_NOTFOUND)
-		*errnop = ENOENT;
-	      return status;
-	    }
+	    return status;
 	}
 
       /* -user */
@@ -1171,7 +1151,6 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
 	    {
-	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
@@ -1244,10 +1223,7 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	  && result->pw_name[1] != '@')
 	{
 	  if (strcmp (&result->pw_name[1], name) == 0)
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
 	  else
 	    continue;
 	}
@@ -1298,10 +1274,7 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
 
   __libc_lock_lock (lock);
 
@@ -1379,19 +1352,13 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-        {
-          *errnop = ENOENT;
-          return NSS_STATUS_NOTFOUND;
-        }
+	return NSS_STATUS_NOTFOUND;
 
       sprintf (buf, "%lu", (unsigned long int) uid);
       if (yp_match (domain, "passwd.byuid", buf, strlen (buf),
                     &outval, &outvallen)
           != YPERR_SUCCESS)
-        {
-          *errnop = ENOENT;
-          return NSS_STATUS_NOTFOUND;
-        }
+	return NSS_STATUS_NOTFOUND;
 
       if (insert_passwd_adjunct (&outval, &outvallen, domain, errnop)
           != NSS_STATUS_SUCCESS)
@@ -1452,10 +1419,8 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
           buffer[buflen - 1] = '\xff';
           p = fgets (buffer, buflen, ent->stream);
           if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
           if (p == NULL || buffer[buflen - 1] != '\xff')
             {
               fsetpos (ent->stream, &pos);
@@ -1505,10 +1470,8 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
 	      innetgr (buf, NULL, result->pw_name, NULL))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
           continue;
         }
 
@@ -1533,10 +1496,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    }
 	  else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	      {
-		*errnop = ENOENT;
-		return NSS_STATUS_NOTFOUND;
-	      }
+	      return NSS_STATUS_NOTFOUND;
             else
               return status;
 
@@ -1555,10 +1515,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS &&
 	      innetgr (buf, NULL, result->pw_name, NULL))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
           continue;
         }
 
@@ -1583,10 +1540,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	    }
 	  else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	      {
-		*errnop = ENOENT;
-		return NSS_STATUS_NOTFOUND;
-	      }
+	      return NSS_STATUS_NOTFOUND;
             else
               return status;
 
@@ -1603,10 +1557,7 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
             break;
           else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	      {
-		*errnop = ENOENT;
-		return NSS_STATUS_NOTFOUND;
-	      }
+	      return NSS_STATUS_NOTFOUND;
             else
               return status;
         }

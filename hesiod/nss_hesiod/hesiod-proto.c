@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -67,6 +67,7 @@ lookup (const char *name, const char *type, struct protoent *proto,
   char **list, **item;
   int parse_res;
   int found;
+  int olderr = errno;
 
   context = _nss_hesiod_init ();
   if (context == NULL)
@@ -75,8 +76,10 @@ lookup (const char *name, const char *type, struct protoent *proto,
   list = hesiod_resolve (context, name, type);
   if (list == NULL)
     {
+      int err = errno;
       hesiod_end (context);
-      return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
+      __set_errno (olderr);
+      return err == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
     }
 
   linebuflen = buffer + buflen - data->linebuffer;
@@ -115,7 +118,13 @@ lookup (const char *name, const char *type, struct protoent *proto,
   hesiod_free_list (context, list);
   hesiod_end (context);
 
-  return found ? NSS_STATUS_SUCCESS : NSS_STATUS_NOTFOUND;
+  if (found == 0)
+    {
+      __set_errno (olderr);
+      return NSS_STATUS_NOTFOUND;
+    }
+
+  return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status

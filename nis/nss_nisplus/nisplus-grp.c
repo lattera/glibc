@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -180,6 +180,7 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
     {
       nis_result *result;
       char buf[strlen (name) + 24 + tablename_len];
+      int olderr = errno;
 
       sprintf (buf, "[name=%s],%s", name, tablename_val);
 
@@ -204,7 +205,10 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 	  else
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      __set_errno (olderr);
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	}
       return NSS_STATUS_SUCCESS;
     }
@@ -226,6 +230,7 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
     int parse_res;
     nis_result *result;
     char buf[36 + tablename_len];
+    int olderr = errno;
 
     sprintf (buf, "[gid=%lu],%s", (unsigned long int) gid, tablename_val);
 
@@ -234,6 +239,8 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
     if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
       {
 	enum nss_status status = niserr2nss (result->status);
+
+	__set_errno (olderr);
 
 	nis_freeresult (result);
 	return status;
@@ -245,6 +252,8 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
     nis_freeresult (result);
     if (parse_res < 1)
       {
+	__set_errno (olderr);
+
 	if (parse_res == -1)
 	  {
 	    *errnop = ERANGE;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -246,7 +246,6 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
       ent->nis = 0;
-      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -286,7 +285,6 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 	      != YPERR_SUCCESS)
 	    {
 	      ent->nis = 0;
-	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -438,17 +436,11 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (yp_match (domain, "group.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (buflen < ((size_t) outvallen + 1))
 	{
@@ -493,10 +485,8 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -636,10 +626,8 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
-	    }
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -681,10 +669,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
       if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (&result->gr_name[1], name) == 0)
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
 	  else
 	    continue;
 	}
@@ -730,10 +715,7 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
 
   __libc_lock_lock (lock);
 
@@ -789,19 +771,13 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       snprintf (buf, sizeof (buf), "%lu", (unsigned long int) gid);
 
       if (yp_match (domain, "group.bygid", buf, strlen (buf),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (buflen < ((size_t) outvallen + 1))
 	{
@@ -848,10 +824,8 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -918,10 +892,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 
 	  status = getgrgid_plusgroup (gid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
 	  else
 	    return status;
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -173,10 +173,8 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
   do
     {
       if (data->next == NULL)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       p = strncpy (buffer, data->next->val, buflen);
       while (isspace (*p))
         ++p;
@@ -270,10 +268,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
 	      if (parse_res == -1)
 		return NSS_STATUS_TRYAGAIN;
 	      else
-		{
-		  *errnop = ENOENT;
-		  return NSS_STATUS_NOTFOUND;
-		}
+		return NSS_STATUS_NOTFOUND;
 	    }
 	  else
 	    return NSS_STATUS_SUCCESS;
@@ -305,10 +300,7 @@ _nss_nis_getservbyname_r (const char *name, const char *protocol,
   internal_nis_endservent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
   else
     return status;
 }
@@ -367,10 +359,7 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
 	      if (parse_res == -1)
 		return NSS_STATUS_TRYAGAIN;
 	      else
-		{
-		  *errnop = ENOENT;
-		  return NSS_STATUS_NOTFOUND;
-		}
+		return NSS_STATUS_NOTFOUND;
 	    }
 	  else
 	    return NSS_STATUS_SUCCESS;
@@ -392,10 +381,7 @@ _nss_nis_getservbyport_r (int port, const char *protocol,
   internal_nis_endservent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
   else
     return status;
 }

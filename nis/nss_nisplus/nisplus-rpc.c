@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -283,6 +283,7 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
     {
       nis_result *result;
       char buf[strlen (name) + 255 + tablename_len];
+      int olderr = errno;
 
       /* Search at first in the alias list, and use the correct name
          for the next search */
@@ -308,6 +309,8 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 	{
 	  enum nss_status status = niserr2nss (result->status);
 
+	  __set_errno (olderr);
+
 	  nis_freeresult (result);
 	  return status;
 	}
@@ -324,6 +327,8 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 	      *errnop = ERANGE;
 	      return NSS_STATUS_TRYAGAIN;
 	    }
+
+	  __set_errno (olderr);
 	  return NSS_STATUS_NOTFOUND;
 	}
       return NSS_STATUS_SUCCESS;
@@ -346,6 +351,7 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
     int parse_res;
     nis_result *result;
     char buf[100 + tablename_len];
+    int olderr = errno;
 
     sprintf (buf, "[number=%d],%s", number, tablename_val);
 
@@ -354,6 +360,8 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
     if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
       {
 	enum nss_status status = niserr2nss (result->status);
+
+	__set_errno (olderr);
 
 	nis_freeresult (result);
 	return status;
@@ -372,7 +380,10 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
 	    return NSS_STATUS_TRYAGAIN;
 	  }
 	else
-	  return NSS_STATUS_NOTFOUND;
+	  {
+	    __set_errno (olderr);
+	    return NSS_STATUS_NOTFOUND;
+	  }
       }
     return NSS_STATUS_SUCCESS;
   }

@@ -1,5 +1,5 @@
 /* Tests for pthread_mutex_timedlock function.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ thread (void *arg)
 
 	  ts.tv_nsec += TIMEOUT_NS;
 
-	  if (ts.tv_nsec > 1000000000L) {
+	  if (ts.tv_nsec >= 1000000000L) {
 	     ts.tv_sec++;
 	     ts.tv_nsec -= 1000000000L;
 	  }

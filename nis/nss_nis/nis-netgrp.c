@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -116,10 +116,7 @@ _nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
   enum nss_status status;
 
   if (cursor == NULL)
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
 
   __libc_lock_lock (lock);
 

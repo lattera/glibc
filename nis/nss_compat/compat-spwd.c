@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -636,7 +636,6 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 	    {
 	      ent->nis = 0;
 	      give_spwd_free (&ent->pwd);
-	      *errnop = ENOENT;
 	      return NSS_STATUS_NOTFOUND;
 	    }
 
@@ -746,16 +745,12 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       if (yp_match (domain, "shadow.byname", name, strlen (name),
 		    &outval, &outvallen)  != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       if (buflen < ((size_t) outvallen + 1))
 	{
 	  free (outval);
@@ -805,10 +800,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -1016,10 +1009,8 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);
@@ -1070,10 +1061,7 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	    {
 	      if (user != NULL && user[0] != '-')
 		if (strcmp (user, name) == 0)
-		  {
-		    *errnop = ENOENT;
-		    return NSS_STATUS_NOTFOUND;
-		  }
+		  return NSS_STATUS_NOTFOUND;
 	    }
 	  __internal_endnetgrent (&netgrdata);
 	  continue;
@@ -1113,10 +1101,7 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	  && result->sp_namp[1] != '@')
 	{
 	  if (strcmp (&result->sp_namp[1], name) == 0)
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
 	  else
 	    continue;
 	}
@@ -1132,11 +1117,8 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	      status = getspnam_plususer (name, result, buffer, buflen,
 					  errnop);
 	      if (status == NSS_STATUS_RETURN)
-		{
-		  /* We couldn't parse the entry */
-		  *errnop = ENOENT;
-		  return NSS_STATUS_NOTFOUND;
-		}
+		/* We couldn't parse the entry */
+		return NSS_STATUS_NOTFOUND;
 	      else
 		return status;
 	    }
@@ -1149,10 +1131,7 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 
 	  status = getspnam_plususer (name, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
 	  else
 	    return status;
 	}
@@ -1169,10 +1148,7 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
 
   if (ni == NULL)
     {

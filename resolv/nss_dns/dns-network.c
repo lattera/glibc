@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -146,6 +146,7 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   char qbuf[MAXDNAME];
   int cnt, anslen;
   u_int32_t net2;
+  int olderr = errno;
 
   /* No net address lookup for IPv6 yet.  */
   if (type != AF_INET)
@@ -185,10 +186,11 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   if (anslen < 0)
     {
       /* Nothing found.  */
-      *errnop = errno;
-      return (errno == ECONNREFUSED
-	      || errno == EPFNOSUPPORT
-	      || errno == EAFNOSUPPORT)
+      int err = errno;
+      __set_errno (olderr);
+      return (err == ECONNREFUSED
+	      || err == EPFNOSUPPORT
+	      || err == EAFNOSUPPORT)
 	? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 

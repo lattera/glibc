@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -159,10 +159,8 @@ internal_nis_getetherent_r (struct etherent *eth, char *buffer, size_t buflen,
       char *p;
 
       if (next == NULL)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       p = strncpy (buffer, next->val, buflen);
 
       while (isspace (*p))
@@ -216,9 +214,7 @@ _nss_nis_gethostton_r (const char *name, struct etherent *eth,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_NOTFOUND)
-	*errnop = ENOENT;
-      else if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_TRYAGAIN)
         *errnop = errno;
       return retval;
     }
@@ -242,10 +238,7 @@ _nss_nis_gethostton_r (const char *name, struct etherent *eth,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
   return NSS_STATUS_SUCCESS;
 }
@@ -306,10 +299,7 @@ _nss_nis_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
   return NSS_STATUS_SUCCESS;
 }

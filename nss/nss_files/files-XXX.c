@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -191,7 +191,6 @@ internal_getent (struct STRUCTURE *result,
       if (p == NULL)
 	{
 	  /* End of file or read error.  */
-	  *errnop = ENOENT;
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}

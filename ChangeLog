@@ -1,5 +1,44 @@
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Return ENOENT if status is
+	neither SUCCESS nor TRYAGAIN [PR libc/4259].
+	* nss/nss_files/files-XXX.c (internal_getent): Don't set *errnop
+	to ENOENT if no entry is found.
+	* nis/nss_compat/compat-grp.c: Don't set errno in case of lookup
+	failure.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* resolv/nss_dns/dns-host.c: Likewise.
+	* resolv/nss_dns/dns-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Save errno around NIS calls.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+	* hesiod/nss_hesiod/hesiod-pwd.c (lookup): Preserve errno value.
+	* hesiod/nss_hesiod/hesiod-proto.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-grp.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-service.c (lookup): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: Avoid warnings by
 	declaring __restore and __restore_rt as hidden (if possible).
 

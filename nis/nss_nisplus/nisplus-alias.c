@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -274,6 +274,7 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
     {
       nis_result *result;
       char buf[strlen (name) + 30 + tablename_len];
+      int olderr = errno;
 
       sprintf (buf, "[name=%s],%s", name, tablename_val);
 
@@ -286,6 +287,8 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 					       buffer, buflen, errnop);
       if (parse_res < 1)
 	{
+	  __set_errno (olderr);
+
 	  if (parse_res == -1)
 	    return NSS_STATUS_TRYAGAIN;
 	  else

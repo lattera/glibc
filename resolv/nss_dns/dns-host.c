@@ -137,6 +137,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   int size, type, n;
   const char *cp;
   int map = 0;
+  int olderr = errno;
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     return NSS_STATUS_UNAVAIL;
@@ -175,7 +176,10 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
       enum nss_status status = (errno == ECONNREFUSED
 				? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *h_errnop = h_errno;
-      *errnop = h_errno == TRY_AGAIN ? EAGAIN : ENOENT;
+      if (h_errno == TRY_AGAIN)
+	*errnop = EAGAIN;
+      else
+	__set_errno (olderr);
 
       /* If we are looking for a IPv6 address and mapping is enabled
 	 by having the RES_USE_INET6 bit in _res.options set, we try
@@ -236,6 +240,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
   char qbuf[MAXDNAME+1], *qp = NULL;
   size_t size;
   int n, status;
+  int olderr = errno;
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     return NSS_STATUS_UNAVAIL;
@@ -300,7 +305,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
   if (n < 0)
     {
       *h_errnop = h_errno;
-      *errnop = errno;
+      __set_errno (olderr);
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
@@ -443,7 +448,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   if (__builtin_expect (qdcount, 1) != 1)
     {
       *h_errnop = NO_RECOVERY;
-      *errnop = ENOENT;
       return NSS_STATUS_UNAVAIL;
     }
   if (sizeof (struct host_data) + (ancount + 1) * sizeof (char *) >= buflen)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -270,7 +270,6 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
       ent->nis = 0;
-      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -287,7 +286,6 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
       if (ent->start == NULL || status != NSS_STATUS_SUCCESS)
 	{
 	  ent->nis = 0;
-	  *errnop = ENOENT;
 	  return NSS_STATUS_UNAVAIL;
 	}
     }
@@ -297,7 +295,6 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
     {
       if (ent->next == NULL)
         {
-          *errnop = ENOENT;
 	  ent->nis = 0;
           return NSS_STATUS_NOTFOUND;
         }
@@ -425,17 +422,11 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (yp_match (domain, "group.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (buflen < ((size_t) outvallen + 1))
 	{
@@ -483,10 +474,8 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets (buffer, buflen, ent->stream);
 	  if (p == NULL && feof (ent->stream))
-	    {
-	      *errnop = ENOENT;
-	      return NSS_STATUS_NOTFOUND;
-	    }
+	    return NSS_STATUS_NOTFOUND;
+
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
 	      fsetpos (ent->stream, &pos);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -354,6 +354,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
     {
       nis_result *result;
       char buf[strlen (name) + 255 + tablename_len];
+      int olderr = errno;
 
       /* Search at first in the alias list, and use the correct name
 	 for the next search */
@@ -383,6 +384,8 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 	      *errnop = errno;
               *herrnop = NETDB_INTERNAL;
             }
+	  else
+	    __set_errno (olderr);
 	  nis_freeresult (result);
           return retval;
         }
@@ -402,7 +405,10 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
-	return NSS_STATUS_NOTFOUND;
+	{
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
 }
 
@@ -467,6 +473,7 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
       nis_result *result;
       char buf[255 + tablename_len];
       int retval, parse_res;
+      int olderr = errno;
 
       sprintf (buf, "[addr=%s],%s",
 	       inet_ntoa (*(const struct in_addr *) addr), tablename_val);
@@ -480,6 +487,8 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 	      *errnop = errno;
               *herrnop = NETDB_INTERNAL;
             }
+	  else
+	    __set_errno (olderr);
 	  nis_freeresult (result);
           return retval;
         }
@@ -499,6 +508,9 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
-	return NSS_STATUS_NOTFOUND;
+	{
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
 }

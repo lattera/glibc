@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -312,6 +312,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
     {
       nis_result *result;
       char buf[strlen (name) + 255 + tablename_len];
+      int olderr = errno;
 
       /* Search at first in the alias list, and use the correct name
 	 for the next search */
@@ -341,6 +342,8 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 	      *errnop = errno;
 	      *herrnop = NETDB_INTERNAL;
 	    }
+	  else
+	    __set_errno (olderr);
 	  nis_freeresult (result);
 	  return retval;
 	}
@@ -360,7 +363,10 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
-	return NSS_STATUS_NOTFOUND;
+	{
+	  __set_errno (olderr);
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
 }
 
@@ -385,6 +391,7 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
     struct in_addr in;
     char buf2[256];
     int b2len;
+    int olderr = errno;
 
     in = inet_makeaddr (addr, 0);
     strcpy (buf2, inet_ntoa (in));
@@ -414,6 +421,8 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 		*errnop = errno;
 		*herrnop = NETDB_INTERNAL;
 	      }
+	    else
+	      __set_errno (olderr);
 	    nis_freeresult (result);
 	    return retval;
 	  }
@@ -433,7 +442,10 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 	    return NSS_STATUS_TRYAGAIN;
 	  }
 	else
-	  return NSS_STATUS_NOTFOUND;
+	  {
+	    __set_errno (olderr);
+	    return NSS_STATUS_NOTFOUND;
+	  }
       }
   }
 }

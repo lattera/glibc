@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -173,10 +173,8 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
   do
     {
       if (data->next == NULL)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       p = strncpy (buffer, data->next->val, buflen);
       while (isspace (*p))
         ++p;
@@ -251,10 +249,7 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
   internal_nis_endrpcent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
   else
     return status;
 }
@@ -279,9 +274,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_NOTFOUND)
-	*errnop = ENOENT;
-      else if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -306,10 +299,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
   else
     return NSS_STATUS_SUCCESS;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -119,10 +119,8 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
   do
     {
       if (intern->next == NULL)
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
+
       p = strncpy (buffer, intern->next->val, buflen);
       while (isspace (*p))
         ++p;

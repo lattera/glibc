@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999i, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -167,9 +167,7 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 				      &result, &len));
       if (retval != NSS_STATUS_SUCCESS)
 	{
-	  if (retval == NSS_STATUS_NOTFOUND)
-	    *errnop = ENOENT;
-	  else if (retval == NSS_STATUS_TRYAGAIN)
+	  if (retval == NSS_STATUS_TRYAGAIN)
             *errnop = errno;
           return retval;
         }
@@ -278,10 +276,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-	{
-	  *errnop = ENOENT;
-	  return NSS_STATUS_NOTFOUND;
-	}
+	return NSS_STATUS_NOTFOUND;
     }
 
   return NSS_STATUS_SUCCESS;

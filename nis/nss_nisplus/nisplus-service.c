@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -297,6 +297,7 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
     {
       nis_result *result;
       char buf[strlen (name) + 255 + tablename_len];
+      int olderr = errno;
 
       /* Search at first in the alias list, and use the correct name
          for the next search */
@@ -324,6 +325,8 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 	{
 	  enum nss_status status = niserr2nss (result->status);
 
+	  __set_errno (olderr);
+
 	  nis_freeresult (result);
 	  return status;
 	}
@@ -340,7 +343,10 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 	  else
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      __set_errno (olderr);
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	}
       return NSS_STATUS_SUCCESS;
     }
@@ -369,6 +375,7 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
       int parse_res;
       nis_result *result;
       char buf[60 + strlen (protocol) + tablename_len];
+      int olderr = errno;
 
       sprintf (buf, "[port=%d,proto=%s],%s",
 	       number, protocol, tablename_val);
@@ -378,6 +385,8 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);
+
+	  __set_errno (olderr);
 
 	  nis_freeresult (result);
 	  return status;
@@ -395,7 +404,10 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 	  else
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      __set_errno (olderr);
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	}
       return NSS_STATUS_SUCCESS;
     }

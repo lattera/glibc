@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -61,9 +61,7 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_NOTFOUND)
-	*errnop = ENOENT;
-      else if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -109,9 +107,7 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 
   if (retval != NSS_STATUS_SUCCESS)
     {
-      if (retval == NSS_STATUS_NOTFOUND)
-	*errnop = ENOENT;
-      else if (retval == NSS_STATUS_TRYAGAIN)
+      if (retval == NSS_STATUS_TRYAGAIN)
 	*errnop = errno;
       return retval;
     }
@@ -180,7 +176,7 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
   gidlen = 0;
 
   /* After strtoul() ep should point to the first invalid character.
-     This is the marker "," we search for the next value.  */ 
+     This is the marker "," we search for the next value.  */
   while (ep != NULL && *ep == ',')
     {
       ep++;
@@ -221,7 +217,6 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       break;			/* the successful case */
     case YPERR_DOMAIN:
     case YPERR_KEY:
-      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     case YPERR_MAP:
     default:
@@ -238,9 +233,7 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return err;
     }
   else
-    {
-      *errnop = ENOENT;
-      return NSS_STATUS_NOTFOUND;
-    }
+    return NSS_STATUS_NOTFOUND;
+
   return NSS_STATUS_SUCCESS;
 }

@@ -229,7 +229,8 @@ done:
 #ifdef POSTPROCESS
   POSTPROCESS;
 #endif
-  return status == NSS_STATUS_SUCCESS ? 0 : errno;
+  return (status == NSS_STATUS_SUCCESS
+	  ? 0 : (status == NSS_STATUS_TRYAGAIN ? EAGAIN : ENOENT));
 }
 
 
