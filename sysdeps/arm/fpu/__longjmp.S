@@ -25,12 +25,12 @@
 /* __longjmp(jmpbuf, val) */
 
 ENTRY (__longjmp)
-	movs	r2, r0
+	mov	ip, r0		/* save jmp_buf pointer */
+	
 	movs	r0, r1		/* get the return value in place */
-	moveq	r1, #1		/* can't let setjmp() return zero! */
+	moveq	r0, #1		/* can't let setjmp() return zero! */
 
-	add	r2, r2, #48
-	lfmfd	f4, 4, [r2]
+	lfmia	f4, 4, [ip] !	/* load the floating point regs */
 
-	LOADREGS(ia, r2, {v1-v6, sl, fp, sp, pc})
+	LOADREGS(ia, ip, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)
