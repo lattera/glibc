@@ -505,6 +505,16 @@ if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
 fi
 AC_PROG_LN_S
 
+# We need the physical current working directory.  We cannot use the
+# "pwd -P" shell builtin since that's not portable.  Instead we try to
+# find a pwd binary.  Note that assigning to the PWD environment
+# variable might have some interesting side effects, so we don't do
+# that.
+AC_PATH_PROG(PWD_P, pwd, no)
+if test "$PWD_P" = no; then
+  AC_MSG_ERROR(*** A pwd binary could not be found.)
+fi
+
 # These programs are version sensitive.
 AC_REQUIRE([AC_CHECK_TOOL_PREFIX])dnl
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
