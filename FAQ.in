@@ -75,7 +75,7 @@ program has the needed functionality.
 We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
 have bugs and/or are missing features.  Version 3.76 has bugs which
 appear when building big projects like GNU libc. 3.76.1 appears to work but
-some people have reported problems.  If you build GNU make 3.77 from source, 
+some people have reported problems.  If you build GNU make 3.77 from source,
 please read ?make first.
 
 ??	Do I need a special linker or assembler?
@@ -812,6 +812,25 @@ allowed to have open at any time using
 	number = sysconf (_SC_OPEN_MAX);
 
 This will work even if the kernel limits change.
+
+??	How do I get the same behavior on parsing /etc/passwd and
+	/etc/group as I have with libc5 ?
+
+{TK} The name switch setup in /etc/nsswitch.conf selected by most Linux
+distributions does not support +/- and netgroup entries in the files like
+/etc/passwd.  Though this is the preferred setup some people might have
+setups coming over from the libc5 days where it was the default to recognize
+lines like this.  To get back to the old behaviour one simply has to change
+the rules for passwd, group, and shadow in the nsswitch.conf file as
+follows:
+
+passwd: compat
+group:  compat
+shadow: compat
+
+passwd_compat: nis
+group_compat: nis
+shadow_compat: nis
 
 
 ? Source and binary incompatibilities, and what to do about them

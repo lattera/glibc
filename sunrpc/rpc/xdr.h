@@ -249,28 +249,30 @@ struct xdr_discrim
  * of external representation.
  */
 
-#define IXDR_GET_INT32(buf)           ((int32_t)ntohl(*((uint32_t *) buf)++))
-#define IXDR_PUT_INT32(buf, v)        (*((int32_t *) buf)++ \
-					= (int32_t)htonl((uint32_t)v))
+#define IXDR_GET_INT32(buf)           ((int32_t)ntohl((uint32_t)*(buf)++))
+#define IXDR_PUT_INT32(buf, v)        (*(buf)++ = (int32_t)htonl((uint32_t)v))
 #define IXDR_GET_U_INT32(buf)         ((uint32_t)IXDR_GET_INT32(buf))
 #define IXDR_PUT_U_INT32(buf, v)      IXDR_PUT_INT32((buf), ((int32_t)(v)))
 
-#define IXDR_GET_BOOL(buf)            ((bool_t)IXDR_GET_INT32(buf))
-#define IXDR_GET_ENUM(buf, t)         ((t)IXDR_GET_INT32(buf))
-#define IXDR_GET_SHORT(buf)           ((short)IXDR_GET_INT32(buf))
-#define IXDR_GET_U_SHORT(buf)         ((u_short)IXDR_GET_INT32(buf))
-
-#define IXDR_PUT_BOOL(buf, v)         IXDR_PUT_INT32((buf), ((int)(v)))
-#define IXDR_PUT_ENUM(buf, v)         IXDR_PUT_INT32((buf), ((int)(v)))
-#define IXDR_PUT_SHORT(buf, v)        IXDR_PUT_INT32((buf), ((int)(v)))
-#define IXDR_PUT_U_SHORT(buf, v)      IXDR_PUT_INT32((buf), ((int)(v)))
-
-/* This defines are removed from Sun for new platforms and shouldn't
-   be used any longer. */
+/* WARNING: The IXDR_*_LONG defines are removed by Sun for new platforms
+ * and shouldn't be used any longer. Code which use this defines or longs
+ * in the RPC code will not work on 64bit Solaris platforms !
+ */
 #define IXDR_GET_LONG(buf)	      ((long)ntohl((u_long)*((u_int32_t*)buf)++))
 #define IXDR_PUT_LONG(buf, v)         (*((u_int32_t*)(buf))++ = (long)htonl((u_long)v))
 #define IXDR_GET_U_LONG(buf)	      ((u_long)IXDR_GET_LONG(buf))
 #define IXDR_PUT_U_LONG(buf, v)	      IXDR_PUT_LONG((buf), ((long)(v)))
+
+
+#define IXDR_GET_BOOL(buf)            ((bool_t)IXDR_GET_LONG(buf))
+#define IXDR_GET_ENUM(buf, t)         ((t)IXDR_GET_LONG(buf))
+#define IXDR_GET_SHORT(buf)           ((short)IXDR_GET_LONG(buf))
+#define IXDR_GET_U_SHORT(buf)         ((u_short)IXDR_GET_LONG(buf))
+
+#define IXDR_PUT_BOOL(buf, v)         IXDR_PUT_LONG((buf), ((long)(v)))
+#define IXDR_PUT_ENUM(buf, v)         IXDR_PUT_LONG((buf), ((long)(v)))
+#define IXDR_PUT_SHORT(buf, v)        IXDR_PUT_LONG((buf), ((long)(v)))
+#define IXDR_PUT_U_SHORT(buf, v)      IXDR_PUT_LONG((buf), ((long)(v)))
 
 /*
  * These are the "generic" xdr routines.

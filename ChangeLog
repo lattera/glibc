@@ -1,3 +1,8 @@
+1998-12-16  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/rpc/xdr.h: Revert patch from 1998-12-14, partly revert
+	patch from 1998-12-01.
+
 1998-12-16  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/bits/local_lim.h (SYMLOOP_MAX): Define this #ifdef
