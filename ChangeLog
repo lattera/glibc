@@ -1,3 +1,7 @@
+2000-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/dl-cache.h (CACHEMAGIC_VERSION_NEW): Correct string.
+
 2000-10-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): When
