@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq ($(versioning),yes)
-routines += oldiofopen oldiofdopen oldiofclose oldiofclose
+routines += oldiofopen oldiofdopen oldiofclose
 endif
 
 CPPFLAGS-.o += -DIO_DEBUG

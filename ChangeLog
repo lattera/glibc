@@ -1,3 +1,35 @@
+1998-05-06 09:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Add LFS support.
+	Use correct types.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: New file.
+
+1998-05-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (elide-routines.*): Fix assignments.
+	(do-makelib): Fix typo.
+	($(subdirs-stamps)): Depend on $(objpfx)stamp.* if in parent
+	makefile.
+
+1998-05-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (sysdep-subdirs, subdirs, $(common-objpfx)sysd-dirs,
+	$(objpfx)sysd-dirs): Move them...
+	* Makeconfig: ... here.
+	* Makerules (subdirs-stamps, subdirs-stamp-o): Always define.
+	(stubs): Fix circular depedency.
+	(do-makelib): Clean up.
+	(lib): Don't depend on lib-noranlib.
+	($(objpfx)stamp.oS): Remove special case for empty
+	static-only-routines.
+	(elide-routines.o): Add $(static-only-routines).
+	(elide-routines$o): Define this instead of elide-routines.$o.
+	* manual/Makefile (stubs): Fix circular dependency.
+
+1998-05-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/Makefile (routines): Remove duplicate oldiofclose.
+
 1998-05-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/strcoll.c: Use uint32_t instead of u_int32_t.
