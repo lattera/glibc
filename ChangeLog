@@ -1,5 +1,7 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/hash-string.h: Don't include values.h.
+
 	* inet/Makefile (tests): Add tst-ether_aton.
 	* inet/tst-ether_aton.c: New file.
 
