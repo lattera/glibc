@@ -1,3 +1,7 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_DK: Correct syntax.
+
 2000-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add gv_GB.ISO-8859-1 and kw_GB.ISO-8859-1.
@@ -6,7 +10,7 @@
 
 	* locales/gv_GB: New file.
 	* locales/kw_GB: New file.
-        From Pablo Saratxaga <pablo@mandrakesoft.com>.
+	From Pablo Saratxaga <pablo@mandrakesoft.com>.
 
 2000-03-03  Ulrich Drepper  <drepper@redhat.com>
 
