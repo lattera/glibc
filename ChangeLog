@@ -12,6 +12,9 @@
 	Patch by Joe Keane <jgk@jgk.org>.
 	Optimize s == NULL case a bit.
 
+	* iconvdata/testdate/ISO-8859-10..UCS2: Update after charmap
+	correction.
+
 1998-09-10 12:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_init.c (res_init): Initialize _res.nscount and
