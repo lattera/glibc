@@ -204,6 +204,7 @@ typedef struct
 #define EM_ME16		59		/* Toyota ME16 processor */
 #define EM_ST100	60		/* STMicroelectronic ST100 processor */
 #define EM_TINYJ	61		/* Advanced Logic Corp. Tinyj emb.fam*/
+#define EM_X8664	62		/* AMD x86-64 */
 
 #define EM_FX66		66		/* Siemens FX66 microcontroller */
 #define EM_ST9PLUS	67		/* STMicroelectronics ST9+ 8/16 mc */
