@@ -1,3 +1,8 @@
+2002-02-06  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/elf/ldsodefs.h: Make sure the right <ldsodefs.h>
+	is included.
+
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/stat.h (struct stat): Add
