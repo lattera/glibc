@@ -1,7 +1,12 @@
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* intl/libintl.h (ngettext): Add missing parameter.
-	(dngettext): Likewise.
+	* elf/Makefile: Add rules to build and run unload2.
+	* elf/unload2.c: New file.
+	* elf/unload2mod.c: New file.
+	* elf/unload2dep.c: New file.
+
+	* intl/libintl.h (ngettext macro): Add missing parameter.
+	(dngettext macro): Likewise.
 
 2000-10-19  H.J. Lu  <hjl@gnu.org>
 
@@ -21,9 +26,6 @@
 	* elf/neededobj3.c: Likewise.
 
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
-
-	* elf/dl-close.c (_dl_close): Decrement reference counter for all
-	dependencies even if the DSO does not get unloaded.
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Pass pointer to ELF header
 	to elf_machine_matches_host.

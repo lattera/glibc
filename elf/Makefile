@@ -54,7 +54,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
 		   nextmod1.c nextmod2.c \
-		   neededtest.c neededobj1.c neededobj2.c neededobj3.c
+		   neededobj1.c neededobj2.c neededobj3.c \
+		   unload2mod.c unload2dep.c
 
 include ../Makeconfig
 
@@ -96,7 +97,7 @@ ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
-	$(tests-nodlopen-$(have-z-nodlopen)) neededtest
+	$(tests-nodlopen-$(have-z-nodlopen)) neededtest unload2
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -107,7 +108,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
-		neededobj1 neededobj2 neededobj3
+		neededobj1 neededobj2 neededobj3 unload2mod unload2dep
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -250,10 +251,10 @@ $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
 $(objpfx)dep4.so: $(objpfx)dep3.so
 $(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
 $(objpfx)nextmod1.so: $(libdl)
-
 $(objpfx)neededobj1.so: $(libdl)
 $(objpfx)neededobj2.so: $(objpfx)neededobj1.so $(libdl)
 $(objpfx)neededobj3.so: $(objpfx)neededobj1.so $(objpfx)neededobj2.so $(libdl)
+$(objpfx)unload2mod.so: $(objpfx)unload2dep.so
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -352,3 +353,6 @@ $(objpfx)reldep3: $(libdl)
 $(objpfx)reldep3.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod4.so
 
 $(objpfx)next: $(objpfx)nextmod1.so $(objpfx)nextmod2.so $(libdl)
+
+$(objpfx)unload2: $(libdl)
+$(objpfx)unload2.out: $(objpfx)unload2mod.so $(objpfx)unload2dep.so
