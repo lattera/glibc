@@ -25,3 +25,4 @@ __pread64 (int fd, void *buf, size_t len, off64_t off)
 {
   return kpread (fd, buf, len, off);
 }
+weak_alias (__pread64, pread64)
