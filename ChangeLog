@@ -1,3 +1,8 @@
+2004-09-08  Roland McGrath  <roland@redhat.com>
+
+	* malloc/mcheck.c: Don't use __P.
+	Use prototypes definitions for static functions.
+
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
