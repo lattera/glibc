@@ -1,5 +1,11 @@
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tls.h: Use 32-bit operations when handling segment
+	registers.  No need to mask upper 16 bits in this case.
+	* sysdeps/i386/useldt.h: Likewise.
+	(DO_SET_THREAD_AREA): We have to load %gs again even if the value
+	is the same since the GDT content changed.
+
 	* sysdeps/i386/tls.h (TLS_INIT_TP): Add new parameter and pass it on
 	to TLS_SETUP_GS_SEGMENT.
 	(TLS_SETUP_GS_SEGMENT): Add new parameter and pass it on to
