@@ -177,6 +177,7 @@ typedef struct
 #define EM_960		19		/* Intel 80960 */
 #define EM_PPC		20		/* PowerPC */
 #define EM_PPC64	21		/* PowerPC 64-bit */
+#define EM_S390		22		/* IBM S390 */
 
 #define EM_V800		36		/* NEC V800 series */
 #define EM_FR20		37		/* Fujitsu FR20 */
@@ -223,7 +224,6 @@ typedef struct
    chances of collision with official or non-GNU unofficial values.  */
 
 #define EM_ALPHA	0x9026
-#define EM_S390         0xA390		/* IBM S390 */
 
 /* Legal values for e_version (version).  */
 

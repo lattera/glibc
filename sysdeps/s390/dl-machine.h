@@ -28,12 +28,14 @@
 #include <string.h>
 #include <link.h>
 
+/* This is an older, now obsolete value.  */
+#define EM_S390_OLD	0xA390
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  return ehdr->e_machine == EM_S390;
+  return (ehdr->e_machine == EM_S390 || ehdr->e_machine == EM_S390_OLD);
 }
 
 

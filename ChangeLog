@@ -1,3 +1,11 @@
+2001-03-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/dl-machine.h (elf_machine_matches_host): Handle
+	both new and old EM_S390 values.
+	(EM_S390_OLD): New constant.
+
+	* elf/elf.h (EM_S390): Use official value.
+
 2001-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/sys/socket.h-data: Allow SO* symbols.
