@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -18,4 +18,11 @@
 
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
+endif
+
+ifeq ($(subdir),nptl)
+# P4s have problems with 4M aliasing.  We disturb the allocation of stacks
+# just enough so the subsequent allocations do not use stack address
+# (mod 4M) == 0.
+CFLAGS-pthread_create.c += -DMULTI_PAGE_ALIASING=65536
 endif

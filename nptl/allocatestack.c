@@ -417,7 +417,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd = get_cached_stack (&size, &mem);
       if (pd == NULL)
 	{
-	  /* To avoid aliasing effects on a larger scale then pages we
+	  /* To avoid aliasing effects on a larger scale than pages we
 	     adjust the allocated stack size if necessary.  This way
 	     allocations directly following each other will not have
 	     aliasing problems.  */

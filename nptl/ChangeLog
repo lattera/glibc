@@ -1,5 +1,7 @@
 2004-11-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/Makefile [nptl]: Define CFLAGS-pthread_create.c.
+
 	* Makefile (libpthread-routines): Add pthread_setschedprio.
 	* Versions [libpthread, GLIBC_2.3.4]: Add pthread_setschedprio.
 	* sysdeps/pthread/pthread.h: Declare pthread_setschedprio.
