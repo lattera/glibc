@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,15 +25,8 @@ int
 __isatty (fd)
      int fd;
 {
-  int save;
-  int is_tty;
   struct sgttyb term;
 
-  save = errno;
-  is_tty = __ioctl (fd, TIOCGETP, &term) == 0;
-  __set_errno (save);
-
-  return is_tty;
+  return __ioctl (fd, TIOCGETP, &term) == 0;
 }
-
 weak_alias (__isatty, isatty)

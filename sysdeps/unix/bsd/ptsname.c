@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,22 +53,20 @@ __ptsname_r (int fd, char *buf, size_t buflen)
     }
 
   if (!__isatty (fd))
-    {
-      __set_errno (ENOTTY);
-      return ENOTTY;
-    }
+    /* We rely on isatty to set errno properly (i.e. EBADF or ENOTTY).  */
+    return errno;
 
   if (buflen < strlen (_PATH_TTY) + 3)
     {
       __set_errno (ERANGE);
       return ERANGE;
     }
-  
+
   if (__ttyname_r (fd, buf, buflen) != 0)
     return errno;
 
   buf[sizeof (_PATH_DEV) - 1] = 't';
-  
+
   if (__stat (buf, &st) < 0)
     return errno;
 
