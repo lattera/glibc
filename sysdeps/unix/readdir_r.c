@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,02
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +41,7 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 {
   DIRENT_TYPE *dp;
   size_t reclen;
+  const int saved_errno = errno;
 
   __libc_lock_lock (dirp->lock);
 
@@ -62,6 +64,15 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 	  bytes = __GETDENTS (dirp->fd, dirp->data, maxread);
 	  if (bytes <= 0)
 	    {
+	      /* On some systems getdents fails with ENOENT when the
+		 open directory has been rmdir'd already.  POSIX.1
+		 requires that we treat this condition like normal EOF.  */
+	      if (bytes < 0 && errno == ENOENT)
+		{
+		  bytes = 0;
+		  __set_errno (saved_errno);
+		}
+
 	      dp = NULL;
 	      /* Reclen != 0 signals that an error occurred.  */
 	      reclen = bytes != 0;
