@@ -1,3 +1,7 @@
+2001-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/Makefile (install-bin): Add iconvconfig.
+
 2001-07-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile (routines): Add dl-iteratephdr and

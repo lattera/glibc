@@ -54,6 +54,7 @@ distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h \
 
 others		= iconv_prog iconvconfig
 install-others	= $(inst_bindir)/iconv
+install-bin	= iconvconfig
 
 CFLAGS-gconv_cache.c = -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
