@@ -1,3 +1,18 @@
+2001-02-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/sigcontextinfo.h (CALL_SIGHANDLER): Define.
+	* sysdeps/mach/hurd/i386/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h: Likewise.
+
 2001-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/ldbl-96/s_erfl.c: New file.

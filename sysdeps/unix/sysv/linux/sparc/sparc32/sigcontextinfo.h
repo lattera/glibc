@@ -25,3 +25,5 @@
 
 #define GET_STACK(__ctx)	((void *) (__ctx)->si_regs.u_regs[14])
 #define GET_FRAME(__ctx)	ADVANCE_STACK_FRAME (GET_STACK(__ctx))
+#define CALL_SIGHANDLER(handler, signo, ctx) \
+  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,3 +23,5 @@
 #define GET_PC(ctx)	((void *)((ctx)->regs->nip))
 #define GET_FRAME(ctx)	(*(void **)((ctx)->regs->gpr[1]))
 #define GET_STACK(ctx)	((void *)((ctx)->regs->gpr[1]))
+#define CALL_SIGHANDLER(handler, signo, ctx) \
+  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
