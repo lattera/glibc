@@ -1,3 +1,7 @@
+2001-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fts.c: Update from recent BSD source.
+
 2001-08-17  Roland McGrath  <roland@frob.com>
 
 	* stdio-common/perror.c (perror) [! USE_IN_LIBIO]: Don't use _IO_fwide.
