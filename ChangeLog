@@ -1,3 +1,38 @@
+2003-09-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (RTLD_START): Set __libc_stack_end before
+	calling _dl_start, using GOTOFF access.
+
+	* configure.in (libc_cv_z_execstack): New check.
+	* configure: Regenerated.
+	* config.make.in (have-z-execstack): New variable set by it.
+	* elf/tst-execstack.c: New file.
+	* elf/tst-execstack-mod.c: New file.
+	* elf/tst-execstack-needed.c: New file.
+	* elf/Makefile (tests-execstack-yes, modules-execstack-yes): New
+	variables.
+	(tests, modules-names): Conditionally include them.
+	(distribute): Add tst-execstack-mod.c here.
+	($(objpfx)tst-execstack, $(objpfx)tst-execstack.out): New targets.
+	(LDFLAGS-tst-execstack, LDFLAGS-tst-execstack-mod): New variables.
+	($(objpfx)tst-execstack-needed): New target.
+	(LDFLAGS-tst-execstack-needed): New variable.
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add _dl_stack_flags
+	and _dl_make_stack_executable_hook.  Declare _dl_make_stack_executable.
+	* elf/rtld.c (_rtld_global): Add initializer for _dl_stack_flags.
+	(dl_main): Reset _dl_stack_flags according to PT_GNU_STACK phdr.
+	Initialize _dl_make_stack_executable_hook.
+	* elf/dl-support.c: Define those new variables.
+	(_dl_non_dynamic_init): Scan phdrs for PT_GNU_STACK.
+	(_dl_phdr): Fix type.
+	* elf/dl-load.c (_dl_map_object_from_fd): Grok PT_GNU_STACK phdr and
+	enable execute permission for the stack if necessary.
+	* sysdeps/generic/dl-execstack.c: New file.
+	* elf/Makefile (dl-routines): Add it.
+	* elf/Versions (ld: GLIBC_PRIVATE): Add _dl_make_stack_executable.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: New file.
+
 2003-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/sprofil.c (pc_to_index): Remove inline marker.

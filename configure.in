@@ -1334,6 +1334,7 @@ EOF
     ASFLAGS_config="$ASFLAGS_config -Wa,--noexecstack"
   fi
   AC_SUBST(ASFLAGS_config)
+
   AC_CACHE_CHECK(for -z combreloc,
 		 libc_cv_z_combreloc, [dnl
   cat > conftest.c <<EOF
@@ -1363,8 +1364,25 @@ dnl look for a section named .rel.dyn.
   if test "$libc_cv_z_combreloc" = yes; then
     AC_DEFINE(HAVE_Z_COMBRELOC)
   fi
+  AC_SUBST(libc_cv_z_combreloc)
+
+  AC_CACHE_CHECK(for -z execstack,
+		 libc_cv_z_execstack, [dnl
+  cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			      -shared -o conftest.so conftest.c
+			      -Wl,-z,execstack -nostdlib
+			      1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_cv_z_execstack=yes
+  else
+    libc_cv_z_execstack=no
+  fi
+  rm -f conftest*])
+  AC_SUBST(libc_cv_z_execstack)
 fi
-AC_SUBST(libc_cv_z_combreloc)
 
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,

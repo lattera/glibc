@@ -276,18 +276,17 @@ _dl_runtime_profile:\n\
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
+	# Point %ebx at the GOT.\n\
+	call 0b\n\
+	addl $_GLOBAL_OFFSET_TABLE_, %ebx\n\
 	# Note that _dl_start gets the parameter in %eax.\n\
 	movl %esp, %eax\n\
+	# Store the highest stack address\n\
+	movl %eax, __libc_stack_end@GOTOFF(%ebx)\n\
 	call _dl_start\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
-	# Point %ebx at the GOT.\n\
-	call 0b\n\
-	addl $_GLOBAL_OFFSET_TABLE_, %ebx\n\
-	# Store the highest stack address\n\
-	movl __libc_stack_end@GOT(%ebx), %eax\n\
-	movl %esp, (%eax)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	movl _dl_skip_args@GOTOFF(%ebx), %eax\n\

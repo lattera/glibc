@@ -29,7 +29,8 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
-				  version profile conflict tls origin)
+				  version profile conflict tls origin \
+				  execstack)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
@@ -80,6 +81,7 @@ distribute	:= rtld-Rules \
 		   reldep9.c reldep9mod1.c reldep9mod2.c reldep9mod3.c \
 		   tst-array1.exp tst-array2.exp tst-array4.exp \
 		   tst-array2dep.c \
+		   tst-execstack-mod.c \
 		   check-textrel.c dl-sysdep.h
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
@@ -150,12 +152,14 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
-	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align
+	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
+	 $(tests-execstack-$(have-z-execstack))
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete nodelete2
 tests-nodlopen-yes = nodlopen nodlopen2
+tests-execstack-yes = tst-execstack tst-execstack-needed
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
@@ -178,7 +182,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod
+		tst-alignmod $(modules-execstack-$(have-z-execstack))
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -186,6 +190,7 @@ modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
 		       nodel2mod1 nodel2mod2 nodel2mod3
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
+modules-execstack-yes = tst-execstack-mod
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 # We need this variable to be sure the test modules get the right CPPFLAGS.
 test-extras += $(modules-names)
@@ -658,6 +663,16 @@ $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
 ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
+endif
+
+ifeq ($(have-z-execstack),yes)
+$(objpfx)tst-execstack: $(libdl)
+$(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
+LDFLAGS-tst-execstack = -Wl,-z,noexecstack
+LDFLAGS-tst-execstack-mod = -Wl,-z,execstack
+
+$(objpfx)tst-execstack-needed: $(objpfx)tst-execstack-mod.so
+LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
 endif
 
 $(objpfx)tst-array1.out: $(objpfx)tst-array1
