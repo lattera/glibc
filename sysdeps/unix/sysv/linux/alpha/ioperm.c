@@ -1,36 +1,36 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by David Mosberger.
+/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by David Mosberger.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* I/O access is restricted to ISA port space (ports 0..65535).
-Modern devices hopefully are sane enough not to put any performance
-critical registers in i/o space.
+   Modern devices hopefully are sane enough not to put any performance
+   critical registers in i/o space.
 
-On the first call to ioperm() or _sethae(), the entire (E)ISA port
-space is mapped into the virtual address space at address io.base.
-mprotect() calls are then used to enable/disable access to ports.  Per
-page, there are PAGE_SIZE>>IO_SHIFT I/O ports (e.g., 256 ports on a
-Low Cost Alpha based system using 8KB pages).
+   On the first call to ioperm() or _sethae(), the entire (E)ISA port
+   space is mapped into the virtual address space at address io.base.
+   mprotect() calls are then used to enable/disable access to ports.  Per
+   page, there are PAGE_SIZE>>IO_SHIFT I/O ports (e.g., 256 ports on a
+   Low Cost Alpha based system using 8KB pages).
 
-Keep in mind that this code should be able to run in a 32bit address
-space.  It is therefore unreasonable to expect mmap'ing the entire
-sparse address space would work (e.g., the Low Cost Alpha chip has an
-I/O address space that's 512MB large!).  */
+   Keep in mind that this code should be able to run in a 32bit address
+   space.  It is therefore unreasonable to expect mmap'ing the entire
+   sparse address space would work (e.g., the Low Cost Alpha chip has an
+   I/O address space that's 512MB large!).  */
 
 #include <errno.h>
 #include <fcntl.h>
@@ -66,27 +66,30 @@ I/O address space that's 512MB large!).  */
 #define CIA_SPARSE_MEM		(0xfffffc8000000000UL)
 #define CIA_DENSE_MEM		(0xfffffc8600000000UL)
 
+#define T2_IO_BASE		(0xfffffc03a0000000UL)
+#define T2_SPARSE_BASE		(0xfffffc0200000000UL)
+#define T2_DENSE_BASE		(0xfffffc03c0000000UL)
 
-enum {
-  IOSYS_JENSEN = 0, IOSYS_APECS = 1, IOSYS_CIA = 2
+typedef enum {
+  IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2
 } iosys_t;
 
 struct ioswtch {
-  void		(*sethae)(unsigned long addr);
-  void		(*outb)(unsigned char b, unsigned long port);
-  void		(*outw)(unsigned short b, unsigned long port);
-  void		(*outl)(unsigned int b, unsigned long port);
-  unsigned int	(*inb)(unsigned long port);
-  unsigned int	(*inw)(unsigned long port);
-  unsigned int	(*inl)(unsigned long port);
+  void		(*sethae)(unsigned long int addr);
+  void		(*outb)(unsigned char b, unsigned long int port);
+  void		(*outw)(unsigned short b, unsigned long int port);
+  void		(*outl)(unsigned int b, unsigned long int port);
+  unsigned int	(*inb)(unsigned long int port);
+  unsigned int	(*inw)(unsigned long int port);
+  unsigned int	(*inl)(unsigned long int port);
 };
 
 static struct platform {
-  const char	*name;
-  int		io_sys;
-  int		hae_shift;
-  unsigned long	bus_memory_base;
-  unsigned long	sparse_bus_memory_base;
+  const char	   *name;
+  int		    io_sys;
+  iosys_t	    hae_shift;
+  unsigned long	int bus_memory_base;
+  unsigned long	int sparse_bus_memory_base;
 } platform[] = {
   {"Alcor",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
   {"Avanti",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
@@ -99,27 +102,29 @@ static struct platform {
   {"Mikasa",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Mustang",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Noname",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Sable",	IOSYS_T2,	5, T2_DENSE_MEM,	T2_SPARSE_MEM},
 };
 
 
 static struct {
   struct hae {
-    unsigned long	cache;
-    unsigned long *	reg;
+    unsigned long int	cache;
+    unsigned long int *	reg;
   } hae;
-  unsigned long		base;
+  unsigned long int	base;
   struct ioswtch *	swp;
-  int			sys;
+  unsigned long int	bus_memory_base;
+  unsigned long int	sparse_bus_memory_base;
+  unsigned long int	io_base;
+  iosys_t		sys;
   int			hae_shift;
-  unsigned long		bus_memory_base;
-  unsigned long		sparse_bus_memory_base;
 } io;
 
-extern void __sethae (unsigned long);	/* we can't use asm/io.h */
+extern void __sethae (unsigned long int);	/* we can't use asm/io.h */
 
 
-static inline unsigned long
-port_to_cpu_addr (unsigned long port, int iosys, int size)
+static inline unsigned long int
+port_to_cpu_addr (unsigned long int port, iosys_t iosys, int size)
 {
   if (iosys == IOSYS_JENSEN)
     return (port << 7) + ((size - 1) << 5) + io.base;
@@ -129,7 +134,7 @@ port_to_cpu_addr (unsigned long port, int iosys, int size)
 
 
 static inline void
-inline_sethae (unsigned long addr, int iosys)
+inline_sethae (unsigned long int addr, iosys_t iosys)
 {
   if (iosys == IOSYS_JENSEN)
     {
@@ -143,7 +148,7 @@ inline_sethae (unsigned long addr, int iosys)
     }
   else
     {
-      unsigned long msb;
+      unsigned long int msb;
 
       /* no need to set hae if msb is 0: */
       msb = addr & 0xf8000000;
@@ -157,10 +162,10 @@ inline_sethae (unsigned long addr, int iosys)
 
 
 static inline void
-inline_outb (unsigned char b, unsigned long port, int iosys)
+inline_outb (unsigned char b, unsigned long int port, iosys_t iosys)
 {
   unsigned int w;
-  unsigned long addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 1);
 
   inline_sethae (0, iosys);
   asm ("insbl %2,%1,%0" : "r=" (w) : "ri" (port & 0x3), "r" (b));
@@ -170,10 +175,10 @@ inline_outb (unsigned char b, unsigned long port, int iosys)
 
 
 static inline void
-inline_outw (unsigned short b, unsigned long port, int iosys)
+inline_outw (unsigned short int b, unsigned long int port, iosys_t iosys)
 {
   unsigned int w;
-  unsigned long addr = port_to_cpu_addr (port, iosys, 2);
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 2);
 
   inline_sethae (0, iosys);
   asm ("inswl %2,%1,%0" : "r=" (w) : "ri" (port & 0x3), "r" (b));
@@ -183,9 +188,9 @@ inline_outw (unsigned short b, unsigned long port, int iosys)
 
 
 static inline void
-inline_outl (unsigned int b, unsigned long port, int iosys)
+inline_outl (unsigned int b, unsigned long int port, iosys_t iosys)
 {
-  unsigned long addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
 
   if (port >= MAX_PORT)
     return;
@@ -197,9 +202,9 @@ inline_outl (unsigned int b, unsigned long port, int iosys)
 
 
 static inline unsigned int
-inline_inb (unsigned long port, int iosys)
+inline_inb (unsigned long int port, iosys_t iosys)
 {
-  unsigned long result, addr = port_to_cpu_addr (port, iosys, 1);
+  unsigned long int result, addr = port_to_cpu_addr (port, iosys, 1);
 
   inline_sethae (0, iosys);
   result = *(vuip) addr;
@@ -209,9 +214,9 @@ inline_inb (unsigned long port, int iosys)
 
 
 static inline unsigned int
-inline_inw (unsigned long port, int iosys)
+inline_inw (unsigned long int port, iosys_t iosys)
 {
-  unsigned long result, addr = port_to_cpu_addr (port, iosys, 2);
+  unsigned long int result, addr = port_to_cpu_addr (port, iosys, 2);
 
   inline_sethae (0, iosys);
   result = *(vuip) addr;
@@ -221,9 +226,9 @@ inline_inw (unsigned long port, int iosys)
 
 
 static inline unsigned int
-inline_inl (unsigned long port, int iosys)
+inline_inl (unsigned long int port, iosys_t iosys)
 {
-  unsigned long addr = port_to_cpu_addr (port, iosys, 4);
+  unsigned long int addr = port_to_cpu_addr (port, iosys, 4);
 
   inline_sethae (0, iosys);
   return *(vuip) addr;
@@ -232,14 +237,14 @@ inline_inl (unsigned long port, int iosys)
 
 #define DCL_SETHAE(name, iosys)			\
 static void						\
-name##_sethae (unsigned long addr)			\
+name##_sethae (unsigned long int addr)			\
 {							\
   inline_sethae (addr, IOSYS_##iosys);			\
 }
 
 #define DCL_OUT(name, func, type, iosys)		\
 static void						\
-name##_##func (unsigned type b, unsigned long addr)	\
+name##_##func (unsigned type b, unsigned long int addr)	\
 {							\
   inline_##func (b, addr, IOSYS_##iosys);		\
 }
@@ -247,7 +252,7 @@ name##_##func (unsigned type b, unsigned long addr)	\
 
 #define DCL_IN(name, func, iosys)			\
 static unsigned int					\
-name##_##func (unsigned long addr)			\
+name##_##func (unsigned long int addr)			\
 {							\
   return inline_##func (addr, IOSYS_##iosys);		\
 }
@@ -255,7 +260,7 @@ name##_##func (unsigned long addr)			\
 
 DCL_SETHAE(jensen, JENSEN)
 DCL_OUT(jensen, outb, char,  JENSEN)
-DCL_OUT(jensen, outw, short, JENSEN)
+DCL_OUT(jensen, outw, short int, JENSEN)
 DCL_OUT(jensen, outl, int,   JENSEN)
 DCL_IN(jensen, inb, JENSEN)
 DCL_IN(jensen, inw, JENSEN)
@@ -266,7 +271,7 @@ DCL_IN(jensen, inl, JENSEN)
 
 DCL_SETHAE(apecs, APECS)
 DCL_OUT(apecs, outb, char,  APECS)
-DCL_OUT(apecs, outw, short, APECS)
+DCL_OUT(apecs, outw, short int, APECS)
 DCL_OUT(apecs, outl, int,   APECS)
 DCL_IN(apecs, inb, APECS)
 DCL_IN(apecs, inw, APECS)
@@ -291,6 +296,10 @@ struct ioswtch ioswtch[] = {
  * with, we first try to read the value of symlink PATH_ALPHA_SYSTYPE,
  * if that fails, we lookup the "system type" field in /proc/cpuinfo.
  * If that fails as well, we give up.
+ *
+ * If the value received from PATH_ALPHA_SYSTYPE begins with a number,
+ * assume this is a previously unsupported system and the values encode,
+ * in order, "<io_base>,<hae_shift>,<dense_base>,<sparse_base>".
  */
 static int
 init_iosys (void)
@@ -298,10 +307,21 @@ init_iosys (void)
   char systype[256];
   int i, n;
 
-  n = readlink(PATH_ALPHA_SYSTYPE, systype, sizeof(systype) - 1);
+  n = readlink (PATH_ALPHA_SYSTYPE, systype, sizeof (systype) - 1);
   if (n > 0)
     {
       systype[n] = '\0';
+      if (isdigit (systype[0]))
+	{
+	  if (sscanf (systype, "%li,%i,%li,%li", &io.io_base, &io.hae_shift,
+		      &io.bus_memory_base, &io.sparse_bus_memory_base) == 4)
+	    {
+	      io.sys = IOSYS_UNKNOWN;
+	      io.swp = &ioswtch[1];
+	      return 0;
+	    }
+	  /* else we're likely going to fail with the system match below */
+	}
     }
   else
     {
@@ -318,14 +338,14 @@ init_iosys (void)
 	  else
 	    fgets (systype, 256, fp);
 	}
-      fclose(fp);
+      fclose (fp);
 
       if (n == EOF)
 	{
 	  /* this can happen if the format of /proc/cpuinfo changes...  */
-	  fprintf(stderr,
-		  "ioperm.init_iosys(): Unable to determine system type.\n"
-		  "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
+	  fprintf (stderr,
+		   "ioperm.init_iosys(): Unable to determine system type.\n"
+		   "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
 	  __set_errno (ENODEV);
 	  return -1;
 	}
@@ -355,9 +375,9 @@ init_iosys (void)
 
 
 int
-_ioperm (unsigned long from, unsigned long num, int turn_on)
+_ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
-  unsigned long addr, len;
+  unsigned long int addr, len;
   int prot;
 
   if (!io.swp && init_iosys () < 0)
@@ -374,7 +394,7 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
     {
       if (!io.base)
 	{
-	  unsigned long base;
+	  unsigned long int base;
 	  int fd;
 
 	  io.hae.reg   = 0;		/* not used in user-level */
@@ -387,6 +407,7 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
 
 	  switch (io.sys)
 	    {
+	    case IOSYS_UNKNOWN: base = io.io_base; break;
 	    case IOSYS_JENSEN:	base = JENSEN_IO_BASE; break;
 	    case IOSYS_APECS:	base = APECS_IO_BASE; break;
 	    case IOSYS_CIA:	base = CIA_IO_BASE; break;
@@ -398,7 +419,8 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
 	  addr &= PAGE_MASK;
 	  len = port_to_cpu_addr (MAX_PORT, io.sys, 1) - addr;
 	  io.base =
-	    (unsigned long) __mmap (0, len, PROT_NONE, MAP_SHARED, fd, base);
+	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
+					fd, base);
 	  close (fd);
 	  if ((long) io.base == -1)
 	    return -1;
@@ -437,7 +459,7 @@ _iopl (unsigned int level)
 
 
 void
-_sethae (unsigned long addr)
+_sethae (unsigned long int addr)
 {
   if (!io.swp && init_iosys () < 0)
     return;
@@ -447,7 +469,7 @@ _sethae (unsigned long addr)
 
 
 void
-_outb (unsigned char b, unsigned long port)
+_outb (unsigned char b, unsigned long int port)
 {
   if (port >= MAX_PORT)
     return;
@@ -457,7 +479,7 @@ _outb (unsigned char b, unsigned long port)
 
 
 void
-_outw (unsigned short b, unsigned long port)
+_outw (unsigned short b, unsigned long int port)
 {
   if (port >= MAX_PORT)
     return;
@@ -467,7 +489,7 @@ _outw (unsigned short b, unsigned long port)
 
 
 void
-_outl (unsigned int b, unsigned long port)
+_outl (unsigned int b, unsigned long int port)
 {
   if (port >= MAX_PORT)
     return;
@@ -477,27 +499,27 @@ _outl (unsigned int b, unsigned long port)
 
 
 unsigned int
-_inb (unsigned long port)
+_inb (unsigned long int port)
 {
   return io.swp->inb (port);
 }
 
 
 unsigned int
-_inw (unsigned long port)
+_inw (unsigned long int port)
 {
   return io.swp->inw (port);
 }
 
 
 unsigned int
-_inl (unsigned long port)
+_inl (unsigned long int port)
 {
   return io.swp->inl (port);
 }
 
 
-unsigned long
+unsigned long int
 _bus_base(void)
 {
   if (!io.swp && init_iosys () < 0)
@@ -505,7 +527,7 @@ _bus_base(void)
   return io.bus_memory_base;
 }
 
-unsigned long
+unsigned long int
 _bus_base_sparse(void)
 {
   if (!io.swp && init_iosys () < 0)
