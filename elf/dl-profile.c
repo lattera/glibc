@@ -261,7 +261,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 #else
 # define EXTRA_FLAGS
 #endif
-  fd = __open (filename, O_RDWR | O_CREAT EXTRA_FLAGS, 0666);
+  fd = __open (filename, O_RDWR | O_CREAT EXTRA_FLAGS, DEFFILEMODE);
   if (fd == -1)
     {
       /* We cannot write the profiling data so don't do anything.  */

@@ -1,5 +1,12 @@
 2001-02-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Little optimizations in handling _dl_lazy.
+
+	* elf/cache.c (save_cache): Portability changes.
+	* elf/dl-profile.c (_dl_start_profile): Likewise.
+
+	* elf/sln.c: Cleanups.  Remove arbitrary limits.
+
 	* elf/dl-close.c: Replace _dl_debug_* variables with _dl_debug_mask.
 	* elf/dl-deps.c: Likewise.
 	* elf/dl-fini.c: Likewise.

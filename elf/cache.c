@@ -354,7 +354,8 @@ save_cache (const char *cache_name)
 	   temp_name);
 
   /* Create file.  */
-  fd = open (temp_name, O_CREAT|O_WRONLY|O_TRUNC|O_NOFOLLOW, 0644);
+  fd = open (temp_name, O_CREAT|O_WRONLY|O_TRUNC|O_NOFOLLOW,
+	     S_IROTH|S_IRGRP|S_IRUSR|S_IWUSR);
   if (fd < 0)
     error (EXIT_FAILURE, errno, _("Can't create temporary cache file %s"),
 	   temp_name);
@@ -385,9 +386,10 @@ save_cache (const char *cache_name)
   close (fd);
 
   /* Make sure user can always read cache file */
-  if (chmod (temp_name, 0644))
+  if (chmod (temp_name, S_IROTH|S_IRGRP|S_IRUSR|S_IWUSR))
     error (EXIT_FAILURE, errno,
-	   _("Changing access rights of %s to 0644 failed"), temp_name);
+	   _("Changing access rights of %s to %#o failed"), temp_name,
+	   S_IROTH|S_IRGRP|S_IRUSR|S_IWUSR);
 
   /* Move temporary to its final location.  */
   if (rename (temp_name, cache_name))

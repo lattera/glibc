@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
+#include <sys/stat.h>
 #include <ldsodefs.h>
 #include <stdio-common/_itoa.h>
 #include <entry.h>
@@ -51,7 +52,7 @@ enum mode { normal, list, verify, trace };
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
-static void process_envvars (enum mode *modep, int *lazyp);
+static void process_envvars (enum mode *modep);
 
 int _dl_argc;
 char **_dl_argv;
@@ -65,7 +66,7 @@ struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
-int _dl_lazy;
+int _dl_lazy = 1;
 /* XXX I know about at least one case where we depend on the old weak
    behavior (it has to do with librt).  Until we get DSO groups implemented
    we have to make this the default.  Bummer. --drepper  */
@@ -384,7 +385,7 @@ dl_main (const ElfW(Phdr) *phdr,
 #endif
 
   /* Process the environment variable which control the behaviour.  */
-  process_envvars (&mode, &_dl_lazy);
+  process_envvars (&mode);
 
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
@@ -914,7 +915,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
       else
 	{
-	  if (_dl_lazy >= 0)
+	  /* Unless LD_WARN is set warn do not about undefined symbols.  */
+	  if (_dl_lazy >= 0 && !_dl_verbose)
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;
@@ -989,7 +991,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 					      "=> ", NULL);
 
 			  if (needed != NULL
-			      && match_version (strtab+aux->vna_name, needed))
+			      && match_version (strtab + aux->vna_name,
+						needed))
 			    fname = needed->l_name;
 
 			  _dl_sysdep_message (fname ?: "not found", "\n",
@@ -1298,12 +1301,11 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
 static void
-process_envvars (enum mode *modep, int *lazyp)
+process_envvars (enum mode *modep)
 {
   char **runp = NULL;
   char *envline;
   enum mode mode = normal;
-  int bind_now = 0;
   char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
@@ -1357,7 +1359,7 @@ process_envvars (enum mode *modep, int *lazyp)
 	  /* Do we bind early?  */
 	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
 	    {
-	      bind_now = envline[12] != '\0';
+	      _dl_lazy = envline[12] == '\0';
 	      break;
 	    }
 	  if (memcmp (&envline[3], "BIND_NOT", 8) == 0)
@@ -1432,7 +1434,7 @@ process_envvars (enum mode *modep, int *lazyp)
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
-  if (__libc_enable_secure)
+  if (__builtin_expect (__libc_enable_secure, 0))
     {
       static const char *unsecure_envvars[] =
       {
@@ -1486,18 +1488,11 @@ process_envvars (enum mode *modep, int *lazyp)
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
-      _dl_debug_fd = __open (startp, flags, 0666);
+      _dl_debug_fd = __open (startp, flags, DEFFILEMODE);
       if (_dl_debug_fd == -1)
 	/* We use standard output if opening the file failed.  */
 	_dl_debug_fd = STDOUT_FILENO;
     }
-
-  /* LAZY is determined by the environment variable LD_WARN and
-     LD_BIND_NOW if we trace the binary.  */
-  if (__builtin_expect (mode, normal) == trace)
-    *lazyp = _dl_verbose ? !bind_now : -1;
-  else
-    *lazyp = !bind_now;
 
   *modep = mode;
 }

@@ -1,5 +1,5 @@
-/* `sln' program to create symboblic links between files.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* `sln' program to create symbolic links between files.
+   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <error.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -26,7 +28,7 @@
 #include <string.h>
 #include <limits.h>
 
-#if !defined(S_ISDIR) && defined(S_IFDIR)
+#if !defined S_ISDIR && defined S_IFDIR
 #define	S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
@@ -39,11 +41,11 @@ main (int argc, char **argv)
   switch (argc)
     {
     case 2:
-      return makesymlinks (argv [1]) == 0 ? 0 : 1;
+      return makesymlinks (argv [1]);
       break;
 
     case 3:
-      return makesymlink (argv [1], argv [2]) == 0 ? 0 : 1;
+      return makesymlink (argv [1], argv [2]);
       break;
 
     default:
@@ -60,70 +62,69 @@ makesymlinks (file)
 #ifndef PATH_MAX
 #define PATH_MAX 4095
 #endif
-  char buffer [PATH_MAX * 4];
-  int i, ret, len;
+  char *buffer = NULL;
+  size_t bufferlen = 0;
+  int ret;
   int lineno;
-  const char *src;
-  const char *dest;
-  const char *error;
   FILE *fp;
 
-  fp = fopen (file, "r");
-  if (fp == NULL)
+  if (strcmp (file, "-") == 0)
+    fp = stdin;
+  else
     {
-      error = strerror (errno);
-      fprintf (stderr, "%s: file open error: %s\n", file, error);
-      return -1;
+      fp = fopen (file, "r");
+      if (fp == NULL)
+	{
+	  fprintf (stderr, "%s: file open error: %m\n", file);
+	  return 1;
+	}
     }
 
   ret = 0;
   lineno = 0;
-  while (fgets (buffer, sizeof (buffer) - 1, fp))
+  while (!feof_unlocked (fp))
     {
-      lineno++;
-      src = dest = NULL;
-      buffer [sizeof (buffer) - 1] = '\0';
-      len = strlen (buffer);
-      for (i = 0; i < len && isspace (buffer [i]); i++);
-      if (i >= len)
-        {
-	  fprintf (stderr, "Fail to parse line %d: \"%s\"\n", lineno,
-	  	   buffer);
-	  ret--;
-	  continue;
-	}
+      ssize_t n = getline (&buffer, &bufferlen, fp);
+      char *src;
+      char *dest;
+      char *cp = buffer;
 
-      src = &buffer [i];
-      for (; i < len && !isspace (buffer [i]); i++);
-      if (i < len)
+      if (n < 0)
+	break;
+      if (buffer[n - 1] == '\n')
+	buffer[n - 1] = '\0';
+
+      ++lineno;
+      while (isspace (*cp))
+	++cp;
+      if (*cp == '\0')
+	/* Ignore empty lines.  */
+	continue;
+      src = cp;
+
+      do
+	++cp;
+      while (*cp != '\0' && ! isspace (*cp));
+      if (*cp != '\0')
+	*cp++ = '\0';
+
+      while (isspace (*cp))
+	++cp;
+      if (*cp == '\0')
 	{
-	  buffer [i++] = '\0';
-	  for (; i < len && isspace (buffer [i]); i++);
-	  if (i >= len)
-	    {
-	      fprintf (stderr, "No target in line %d: \"%s\"\n", lineno,
-	      	       buffer);
-	      ret--;
-	      continue;
-	    }
-	  dest = &buffer [i];
-	  for (; i < len && !isspace (buffer [i]); i++);
-	  buffer [i] = '\0';
-	}
-      else
-        {
-	  fprintf (stderr, "No target in line %d: \"%s\"\n", lineno,
-	  	   buffer);
-	  ret--;
+	  fprintf (stderr, "No target in line %d\n", lineno);
+	  ret = 1;
 	  continue;
 	}
+      dest = cp;
 
-      if (makesymlink (src, dest))
-        {
-	  fprintf (stderr, "Failed to make link from \"%s\" to \"%s\" in line %d\n",
-	  	   src, dest, lineno);
-	  ret--;
-	}
+      do
+	++cp;
+      while (*cp != '\0' && ! isspace (*cp));
+      if (*cp != '\0')
+	*cp++ = '\0';
+
+      ret |= makesymlink (src, dest);
     }
   fclose (fp);
 
@@ -145,13 +146,13 @@ makesymlink (src, dest)
 	{
 	  fprintf (stderr, "%s: destination must not be a directory\n",
 	  	   dest);
-	  return -1;
+	  return 1;
 	}
       else if (unlink (dest) && errno != ENOENT)
 	{
 	  fprintf (stderr, "%s: failed to remove the old destination\n",
 	  	   dest);
-	  return -1;
+	  return 1;
 	}
     }
   else if (errno != ENOENT)
@@ -174,7 +175,7 @@ makesymlink (src, dest)
 	  unlink (dest);
 	  fprintf (stderr, "Invalid link from \"%s\" to \"%s\": %s\n",
 	  	   src, dest, error);
-	  return -1;
+	  return 1;
 	}
       return 0;
     }
@@ -183,6 +184,6 @@ makesymlink (src, dest)
       error = strerror (errno);
       fprintf (stderr, "Invalid link from \"%s\" to \"%s\": %s\n",
       	       src, dest, error);
-      return -1;
+      return 1;
     }
 }
