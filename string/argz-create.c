@@ -34,7 +34,7 @@ __argz_create (char *const argv[], char **argz, size_t *len)
   char *p;
 
   for (argc = 0; argv[argc] != NULL; ++argc)
-    tlen += strlen (argv[argc]);
+    tlen += strlen (argv[argc]) + 1;
 
   if (tlen == 0)
     *argz = NULL;
