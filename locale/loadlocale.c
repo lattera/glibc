@@ -1,7 +1,7 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -242,6 +242,9 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 void
 _nl_unload_locale (struct locale_data *locale)
 {
+  if (locale->name != NULL)
+    free ((void *) locale->name);
+
 #ifdef _POSIX_MAPPED_FILES
   if (locale->mmaped)
     __munmap ((caddr_t) locale->filedata, locale->filesize);

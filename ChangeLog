@@ -1,5 +1,7 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/loadlocale.c (_nl_unload_locale): Free locale name.
+
 	* intl/finddomain.c (free_mem): Also free filename.
 	* locale/findlocale.c (free_mem): Likewise.
 	(_nl_find_locale): Duplicate loc_name with strdupa not strdup.
