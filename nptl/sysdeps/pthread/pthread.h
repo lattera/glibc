@@ -444,8 +444,8 @@ class __pthread_cleanup_class
   ~__pthread_cleanup_class () { if (__do_it) __cancel_routine (__cancel_arg); }
   __setdoit (int __newval) { __do_it = __newval; }
   __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
-				      &__cancel_type);
-  __restore () const { pthread_setcanceltype (__cancel_type, 0);
+				      &__cancel_type); }
+  __restore () const { pthread_setcanceltype (__cancel_type, 0); }
 };
 
 /* Install a cleanup handler: ROUTINE will be called with arguments ARG
