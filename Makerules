@@ -104,7 +104,7 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
 	(echo 'sysd-Makefile-sysdirs := $(config-sysdirs)';		      \
 	 for dir in $(config-sysdirs); do	   			      \
 	   file=$$dir/Makefile;						      \
-	   if [ -f $$file ]; then					      \
+	   if [ -f $(..)$$file ]; then					      \
 	     case $$dir in						      \
 	       /*) echo include "$$file" ;;				      \
 	       *)  echo include "\$$(..)$$file" ;;			      \
@@ -617,7 +617,7 @@ ifndef subdir
 install: $(libdir)/libc.so
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \
-		   $(common-objpfx)libc.a
+		   $(libdir)lib$(libc-name).a
 	(echo '/* Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\

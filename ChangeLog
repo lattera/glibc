@@ -184,6 +184,23 @@ Thu Oct 10 14:00:01 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/libm-ieee754/w_log10.c: Fix typo in weak_alias.
 	Reported by Matthew Jacob <mjacob@feral.com>.
 
+Thu Oct 10 17:25:55 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* Makerules (sysd-Makefile): Look for sysdep Makefiles using $(..)
+	so that it still works right if we happen to get called in a
+	subdir it still works.
+
+	* sysdeps/mach/hurd/fcntlbits.h (O_SHLOCK, O_EXLOCK): Redesignate
+	as file name translation flags.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Don't pretend
+	to do anything for O_SHLOCK or O_EXLOCK.  Those are now file name
+	translation flags.
+	
+	* Makerules ($(libdir)/libc.so): Mention the actual libc.a archive
+	name (changed according to libc-name) to avoid getting the
+	Hurd-ish linker script for libc.a when we only want the archive
+	library. 
+
 Wed Oct  9 00:24:52 1996  Jim Meyering  <meyering@asic.sc.ti.com>
 
 	* time/strftime.c: Allow old K&R compilers compile this file.
