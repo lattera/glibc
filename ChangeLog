@@ -1,3 +1,8 @@
+1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/wait3.c: Help compiling in presence of
+	__transparent_union__.  Reported by John Tobey <jtobey@banta-im.com>.
+
 1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/sparc64/add_n.S: Avoid using %g2, %g3, %g7 registers
