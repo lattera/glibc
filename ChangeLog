@@ -1,3 +1,8 @@
+2002-11-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/errno.h (__set_errno): Define as errno = val
+	unconditionally.
+
 2002-11-24  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/posix/readv.c: Include <errno.h>, use __set_errno macro.

@@ -16,7 +16,6 @@
 #  undef  errno
 #  define errno errno		/* For #ifndef errno tests.  */
 extern int errno attribute_hidden;
-#  define __set_errno(val) (errno = (val))
 
 # else
 
@@ -30,12 +29,11 @@ extern int errno attribute_hidden;
 #    define errno errno		/* For #ifndef errno tests.  */
 #   endif
 extern __thread int errno attribute_tls_model_ie;
-#   define __set_errno(val) (errno = (val))
-#  else
-#   define __set_errno(val) (*__errno_location ()) = (val)
 #  endif
 
 # endif	/* RTLD_PRIVATE_ERRNO */
+
+# define __set_errno(val) (errno = (val))
 
 #endif /* _ERRNO_H */
 
