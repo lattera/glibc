@@ -28,6 +28,7 @@ macro WIFSTOPPED
 macro WSTOPSIG
 macro WTERMSIG
 
+function void _Exit (int)
 function long a64l (const char*)
 function void abort (void)
 function int abs (int)
