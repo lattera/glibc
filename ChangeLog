@@ -1,3 +1,8 @@
+2002-04-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/loadmsgcat.c [!_LIBC] (_nl_init_domain_conv): Don't add
+	//TRANSLIT twice.
+
 2002-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Fix a few issues with the

@@ -1,5 +1,5 @@
 /* Load needed message catalogs.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -201,12 +201,13 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 #   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
        || _LIBICONV_VERSION >= 0x0105
 	  len = strlen (outcharset);
-	  {
-	    char *tmp = (char *) alloca (len + 10 + 1);
-	    memcpy (tmp, outcharset, len);
-	    memcpy (tmp + len, "//TRANSLIT", 10 + 1);
-	    outcharset = tmp;
-	  }
+	  if (len < 10 || strcmp (outcharset + len - 9, "/TRANSLIT") != 0)
+	    {
+	      char *tmp = (char *) alloca (len + 10 + 1);
+	      memcpy (tmp, outcharset, len);
+	      memcpy (tmp + len, "//TRANSLIT", 10 + 1);
+	      outcharset = tmp;
+	    }
 #   endif
 	  domain->conv = iconv_open (outcharset, charset);
 #   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
