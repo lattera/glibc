@@ -78,6 +78,8 @@
 #define PSEUDO_END_NOERRNO(name)					      \
   END (name)
 
+#define ret_NOERRNO ret
+
 #ifdef PIC
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER						      \
