@@ -1,6 +1,0 @@
-libc {
-  GLIBC_2.2 {
-    # u*
-    umount;
-  }
-}

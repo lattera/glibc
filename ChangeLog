@@ -6,6 +6,21 @@
 
 2004-10-25  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/unix/bsd/hp: Directory and all files removed.
+	These are now in the ports repository.
+	* sysdeps/unix/bsd/osf: Likewise.
+	* sysdeps/unix/bsd/sequent: Likewise.
+	* sysdeps/unix/bsd/sony: Likewise.
+	* sysdeps/unix/bsd/ultrix4: Likewise.
+	* sysdeps/unix/sysv/aix: Likewise.
+	* sysdeps/unix/sysv/hpux: Likewise.
+	* sysdeps/unix/sysv/irix4: Likewise.
+	* sysdeps/unix/sysv/isc2.2: Likewise.
+	* sysdeps/unix/sysv/minix: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4: Likewise.
+	* sysdeps/unix/sysv/sco3.2: Likewise.
+	* sysdeps/unix/sysv/sysv4: Likewise.
+
 	* configure.in (ASM_LINE_SEP): Move this setting to ...
 	* sysdeps/hppa/configure.in: ... here, new file.
 	* sysdeps/hppa/configure: New generated file.

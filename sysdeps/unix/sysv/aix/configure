@@ -1,6 +1,0 @@
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
- # Local configure fragment for sysdeps/unix/sysv/aix.
-
-# Don't bother trying to generate any glue code to be compatible with the
-# existing system library, because we are the only system library.
-inhibit_glue=yes

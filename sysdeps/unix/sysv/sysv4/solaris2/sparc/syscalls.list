@@ -1,3 +1,0 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
-
-sys-sig		-	context		2	__context_syscall	
