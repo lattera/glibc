@@ -138,7 +138,7 @@ void
 #ifdef SHARED
 __attribute ((constructor))
 #endif
-__pthread_initialize_minimal (void)
+__pthread_initialize_minimal_internal (void)
 {
 #ifndef SHARED
   /* Unlike in the dynamically linked case the dynamic linker has not
@@ -210,3 +210,5 @@ __pthread_initialize_minimal (void)
   __libc_pthread_init (&__fork_generation, __reclaim_stacks,
 		       ptr_pthread_functions);
 }
+strong_alias (__pthread_initialize_minimal_internal,
+	      __pthread_initialize_minimal)
