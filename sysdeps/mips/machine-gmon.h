@@ -24,36 +24,45 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
    and the return PC our caller will return to.  */
 #ifdef __PIC__
 #define CPLOAD ".cpload $25;"
+#define CPRESTORE ".cprestore 44\n\t"
 #else
 #define CPLOAD
+#define CPRESTORE
 #endif
 
 #define MCOUNT asm(\
-	".globl _mcount;" \
-	".align 2;" \
-	".type _mcount,@function;" \
-        "_mcount:;" \
-        ".set noreorder;" \
-        ".set noat;" \
+	".globl _mcount;\n\t" \
+	".align 2;\n\t" \
+	".type _mcount,@function;\n\t" \
+	".ent _mcount\n\t" \
+        "_mcount:\n\t" \
+        ".frame $sp,44,$31\n\t" \
+        ".set noreorder;\n\t" \
+        ".set noat;\n\t" \
         CPLOAD \
-        "sw $4,8($29);" \
-        "sw $5,12($29);" \
-        "sw $6,16($29);" \
-        "sw $7,20($29);" \
-        "sw $1,0($29);" \
-        "sw $31,4($29);" \
-        "move $5,$31;" \
-        "move $4,$1;" \
-        "jal __mcount;" \
-	"nop;" \
-        "lw $4,8($29);" \
-        "lw $5,12($29);" \
-        "lw $6,16($29);" \
-        "lw $7,20($29);" \
-        "lw $31,4($29);" \
-        "lw $1,0($29);" \
-        "addu $29,$29,8;" \
-        "j $31;" \
-        "move $31,$1;" \
-        ".set reorder;" \
-        ".set at");
+	"subu $29,$29,48;\n\t" \
+	CPRESTORE \
+        "sw $4,24($29);\n\t" \
+        "sw $5,28($29);\n\t" \
+        "sw $6,32($29);\n\t" \
+        "sw $7,36($29);\n\t" \
+        "sw $2,40($29);\n\t" \
+        "sw $1,16($29);\n\t" \
+        "sw $31,20($29);\n\t" \
+        "move $5,$31;\n\t" \
+        "move $4,$1;\n\t" \
+        "jal __mcount;\n\t" \
+        "nop;\n\t" \
+        "lw $4,24($29);\n\t" \
+        "lw $5,28($29);\n\t" \
+        "lw $6,32($29);\n\t" \
+        "lw $7,36($29);\n\t" \
+        "lw $2,40($29);\n\t" \
+        "lw $31,20($29);\n\t" \
+        "lw $1,16($29);\n\t" \
+        "addu $29,$29,56;\n\t" \
+        "j $31;\n\t" \
+        "move $31,$1;\n\t" \
+        ".set reorder;\n\t" \
+        ".set at\n\t" \
+        ".end _mcount");
