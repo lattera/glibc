@@ -1,3 +1,8 @@
+2000-08-17  Andreas Jaeger  <aj@suse.de>
+
+	* tests-mbwc/tst_funcs.h (TST_IF_RETURN): Only test errno if it
+	should have a value.
+
 2000-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1: Rearrange cyrillic and greek sections to

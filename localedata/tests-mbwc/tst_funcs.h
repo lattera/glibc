@@ -134,7 +134,9 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 #define TST_IF_RETURN(_s_func_) \
   if (err_flg == 1)							      \
     {									      \
-      if (errno_save == err_exp)					      \
+      /* If no error occured, errno is undefined. Here we check only if       \
+         errno has the right value if it should have one.  */		      \
+      if ((err_exp == 0) || (errno_save == err_exp))			      \
 	{								      \
 	  result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 1,	      \
 		  MS_PASSED);						      \
