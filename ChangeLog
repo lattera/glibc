@@ -1,3 +1,8 @@
+2000-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/system.c (__libc_system): We cannot use vfork here
+	since we call sigaction in the child.
+
 2000-08-25  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/Makefile ($(objpfx)bug-iconv1.out): Depend on

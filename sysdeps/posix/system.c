@@ -85,12 +85,12 @@ __libc_system (const char *line)
 	  return -1;
 	}
     }
-#define UNBLOCK	__sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
+# define UNBLOCK  __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
 #else
-#define UNBLOCK 0
+# define UNBLOCK 0
 #endif
 
-  pid = __vfork ();
+  pid = __fork ();
   if (pid == (pid_t) 0)
     {
       /* Child side.  */
