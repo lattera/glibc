@@ -1,3 +1,30 @@
+2002-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/test-string.h: New file.
+	* string/test-strlen.c: New file.
+	* string/test-string.h: New file.
+	* string/test-strcmp.c: New file.
+	* string/test-strchr.c: New file.
+	* string/test-strrchr.c: New file.
+	* string/test-strcpy.c: New file.
+	* string/test-stpcpy.c: New file.
+	* string/test-strncpy.c: New file.
+	* string/test-stpncpy.c: New file.
+	* string/test-strpbrk.c: New file.
+	* string/test-strcspn.c: New file.
+	* string/test-strspn.c: New file.
+	* string/test-strcat.c: New file.
+	* string/test-strncmp.c: New file.
+	* string/test-memchr.c: New file.
+	* string/test-memcmp.c: New file.
+	* string/test-memset.c: New file.
+	* string/test-memcpy.c: New file.
+	* string/test-mempcpy.c: New file.
+	* string/test-memmove.c: New file.
+	* string/Makefile (strop-tests): New variable.
+	(tests): Add strop-tests.
+	(distribute): Add test-string.h.
+
 2002-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c: Use tabs instead of spaces.
