@@ -52,7 +52,7 @@ ld {
     _dl_dst_count; _dl_dst_substitute;
   }
   GLIBC_2.2 {
-    _dl_init; _dl_load_lock; _dl_argv; _dl_nloaded;
+    _dl_init; _dl_load_lock; _dl_argv; _dl_nloaded; _dl_check_map_versions;
 
     # this is defined in ld.so and overridden by libc
     _dl_init_first;
