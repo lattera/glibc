@@ -31,6 +31,15 @@ static char fname[] = "/tmp/tst-cond12-XXXXXX";
 static int fd;
 
 
+static void prepare (void);
+#define PREPARE(argc, argv) prepare ()
+
+static int do_test (void);
+#define TEST_FUNCTION do_test ()
+
+#include "../test-skeleton.c"
+
+
 static void
 prepare (void)
 {
@@ -47,12 +56,6 @@ prepare (void)
       exit (1);
     }
 }
-#define PREPARE(argc, argv) prepare ()
-
-
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
 
 
 static int

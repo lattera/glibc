@@ -1,5 +1,7 @@
 2003-11-21  Jakub Jelinek  <jakub@redhat.com>
 
+	* posix/bug-regex11.c: And one more commented out test.
+
 	* posix/tst-rxspencer.c (mb_tests): Don't run identical multi-byte
 	tests multiple times unnecessarily.
 
