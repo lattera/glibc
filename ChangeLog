@@ -1,5 +1,9 @@
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/bits/signum.h (SIGSYS): New definition.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_IEEE802_TR): Added.
+
 	* string/stratcliff.c: Add one more strchr test for something
 	which was reported to not work
 	(which proofed to be wrong).
