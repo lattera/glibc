@@ -1,3 +1,8 @@
+2001-04-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/powerpc/dl-machine.h (ELF_MACHINE_NO_REL): Move to right
+	place.
+
 2001-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Pass
@@ -97,6 +102,9 @@
 	* resolv/res_data.c (res_isourserver): Fix cast.
 
 2001-04-02  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/hppa/umount.c: Add prototype for
+	__umount2.
 
 	* sysdeps/i386/dl-machine.h (RTLD_START): Don't use multi-line
 	strings.
