@@ -31,13 +31,15 @@
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.
    When compiling libc, the _ macro is predefined.  */
-#ifdef HAVE_LIBINTL_H
-# include <libintl.h>
-#else
-# define dgettext(domain, msgid) (msgid)
-# define gettext(msgid) (msgid)
+# if defined HAVE_LIBINTL_H || defined _LIBC
+#  include <libintl.h>
+# else
+#  define dgettext(domain, msgid) (msgid)
+#  define gettext(msgid) (msgid)
+# endif
 #endif
-#define N_(msgid) (msgid)
+#ifndef N_
+# define N_(msgid) (msgid)
 #endif
 
 #if _LIBC - 0

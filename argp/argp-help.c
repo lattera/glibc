@@ -55,7 +55,7 @@ char *alloca ();
 
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.  */
-# ifdef HAVE_LIBINTL_H
+# if defined HAVE_LIBINTL_H || defined _LIBC
 #  include <libintl.h>
 # else
 #  define dgettext(domain, msgid) (msgid)
