@@ -54,7 +54,7 @@
     cmn r0, $4096;
 
 #define PSEUDO_RET							      \
-    RETINSTR(movcc, pc, lr);						      \
+    RETINSTR(cc, lr);							      \
     b PLTJMP(SYSCALL_ERROR)
 #undef ret
 #define ret PSEUDO_RET
@@ -71,7 +71,7 @@
     DO_CALL (syscall_name, args);
 
 #define PSEUDO_RET_NOERRNO						      \
-    RETINSTR(mov, pc, lr);
+    DO_RET (lr);
 
 #undef ret_NOERRNO
 #define ret_NOERRNO PSEUDO_RET_NOERRNO

@@ -27,7 +27,7 @@ SYSCALL__ (fork, 0)
 	   R0&-1==R0, and the child gets R0&0==0.  */
 	sub r1, r1, $1
 	and r0, r0, r1
-	RETINSTR(mov, pc, r14)
+	DO_RET (r14)
 PSEUDO_END (__fork)
 libc_hidden_def (__fork)
 

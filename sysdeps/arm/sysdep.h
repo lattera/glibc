@@ -19,6 +19,11 @@
 
 #include <sysdeps/generic/sysdep.h>
 
+#if (!defined (__ARM_ARCH_2__) && !defined (__ARM_ARCH_3__) \
+     && !defined (__ARM_ARCH_3M__) && !defined (__ARM_ARCH_4__))
+# define __USE_BX__
+#endif
+
 #ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */
@@ -50,20 +55,22 @@
 #ifdef __APCS_32__
 #define LOADREGS(cond, base, reglist...)\
 	ldm##cond	base,reglist
-#define RETINSTR(instr, regs...)\
-	instr	regs
-#ifdef __THUMB_INTERWORK__
+#ifdef __USE_BX__
+#define RETINSTR(cond, reg)	\
+	bx##cond	reg
 #define DO_RET(_reg)		\
 	bx _reg
 #else
+#define RETINSTR(cond, reg)	\
+	mov##cond	pc, reg
 #define DO_RET(_reg)		\
 	mov pc, _reg
 #endif
 #else  /* APCS-26 */
 #define LOADREGS(cond, base, reglist...)\
 	ldm##cond	base,reglist^
-#define RETINSTR(instr, regs...)\
-	instr##s	regs
+#define RETINSTR(cond, reg)	\
+	mov##cond##s	pc, reg
 #define DO_RET(_reg)		\
 	movs pc, _reg
 #endif

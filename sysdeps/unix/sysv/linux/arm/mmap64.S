@@ -43,12 +43,12 @@ ENTRY (__mmap64)
 # ifdef __ASSUME_MMAP2_SYSCALL
 	ldr	r4, [sp], #4
 	ldr	r5, [sp], #4
-	RETINSTR(movcc, pc, lr)	
+	RETINSTR(cc, lr)	
 	b	PLTJMP(syscall_error)
 # else
 	ldrcc	r4, [sp], #4
 	ldrcc	r5, [sp], #4
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 	cmn	r0, $ENOSYS
 	bne	.Lerror
 	/* The current kernel does not support mmap2.  Fall back to plain
