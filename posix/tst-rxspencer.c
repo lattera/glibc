@@ -357,22 +357,34 @@ mb_tests (const char *pattern, int cflags, const char *string, int eflags,
   for (i = 1; i < 16; ++i)
     {
       char *p = letters;
-      if ((i & 1)
-	  && (strchr (pattern, 'a') || strchr (string, 'a')
-	      || strchr (pattern, 'A') || strchr (string, 'A')))
-	*p++ = 'a', *p++ = 'A';
-      if ((i & 2)
-	  && (strchr (pattern, 'b') || strchr (string, 'b')
-	      || strchr (pattern, 'B') || strchr (string, 'B')))
-        *p++ = 'b', *p++ = 'B';
-      if ((i & 4)
-	  && (strchr (pattern, 'c') || strchr (string, 'c')
-	      || strchr (pattern, 'C') || strchr (string, 'C')))
-        *p++ = 'c', *p++ = 'C';
-      if ((i & 8)
-	  && (strchr (pattern, 'd') || strchr (string, 'd')
-	      || strchr (pattern, 'D') || strchr (string, 'D')))
-        *p++ = 'd', *p++ = 'D';
+      if (i & 1)
+	{
+	  if (!strchr (pattern, 'a') && !strchr (string, 'a')
+	      && !strchr (pattern, 'A') && !strchr (string, 'A'))
+	    continue;
+	  *p++ = 'a', *p++ = 'A';
+	}
+      if (i & 2)
+	{
+	  if (!strchr (pattern, 'b') && !strchr (string, 'b')
+	      && !strchr (pattern, 'B') && !strchr (string, 'B'))
+	    continue;
+	  *p++ = 'b', *p++ = 'B';
+	}
+      if (i & 4)
+	{
+	  if (!strchr (pattern, 'c') && !strchr (string, 'c')
+	      && !strchr (pattern, 'C') && !strchr (string, 'C'))
+	    continue;
+	  *p++ = 'c', *p++ = 'C';
+	}
+      if (i & 8)
+	{
+	  if (!strchr (pattern, 'd') && !strchr (string, 'd')
+	      && !strchr (pattern, 'D') && !strchr (string, 'D'))
+	    continue;
+	  *p++ = 'd', *p++ = 'D';
+	}
       *p++ = '\0';
       sprintf (fail, "UTF-8 %s FAIL", letters);
       ret |= mb_test (pattern, cflags, string, eflags, expect, matches,
