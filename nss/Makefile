@@ -39,7 +39,7 @@ databases		= proto service hosts network grp pwd rpc ethers \
 others                  := getent
 install-bin             := getent
 
-tests			= test-netdb
+tests			= test-netdb bug-erange
 
 include ../Makeconfig
 
