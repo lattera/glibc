@@ -17,7 +17,7 @@
 	DONT_USE_BOOTSTRAP_MAP is defined.  Use GL(dl_rtld_map).  Don't
 	pass bootstrap_map to _dl_start_final in this case either.  Don't
 	pass start_time to _dl_start_final ever.
-	(_dl_start_final): Don't copy bootstrap_map of DONT_USE_BOOTSTRAP_MAP.
+	(_dl_start_final): Don't copy bootstrap_map if DONT_USE_BOOTSTRAP_MAP.
 
 	* elf/dl-deps.c (_dl_map_object_deps): Revert patch from 2002-05-28.
 	This cripples the scope lists necessary to search for symbols in
@@ -38,8 +38,8 @@
 
 	* sysdeps/x86_64/Makefile (sysdep_routines): Add _mcount.
 
-	* sysdeps/x86_64/machine-gmon.h: New.
-	* sysdeps/x86_64/_mcount.S: New.
+	* sysdeps/x86_64/machine-gmon.h: New file.
+	* sysdeps/x86_64/_mcount.S: New file.
 
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
