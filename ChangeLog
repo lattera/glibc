@@ -1,3 +1,15 @@
+1999-01-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add new ARPHRD definitions
+	from latest (2.2.0pre4) kernel.
+
+1999-01-05 Scott Bambrough  <scottb@corelcomputer.com>
+
+	* sysdeps/unix/sysv/linux/arm/sys/user.h : New file.  Fixes problem
+	on ARM platforms with programs that include <sys/user.h> and
+	<sys/ptrace.h>.  Solution suggested by Geoff Keating earlier with
+	fix for same problem on the PowerPC platform.
+
 1999-01-04  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/register-dump.h: Correct widths of

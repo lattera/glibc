@@ -1,5 +1,5 @@
 /* Definitions for Address Resolution Protocol.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -107,6 +107,8 @@ struct arphdr
 #define ARPHRD_PIMREG	779		/* PIMSM register interface.  */
 #define ARPHRD_HIPPI	780		/* High Performance Parallel I'face. */
 #define ARPHRD_ASH	781		/* (Nexus Electronics) Ash.  */
+#define ARPHRD_ECONET	782		/* Acorn Econet.  */
+#define ARPHRD_IRDA	783		/* Linux/IR.  */
 
 
 /* ARP ioctl request.  */
