@@ -1,3 +1,7 @@
+2001-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Add deltas for atan2f.
+
 2001-04-21  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Correct check for invalid
