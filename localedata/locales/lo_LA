@@ -6,18 +6,18 @@ comment_char %
 %
 % Name:         lo_LA
 % Author:       Anousak Souphavanh
-% Contact:   
+% Contact:
 % E-mail:       Anousak@muanglao.com
 % Language:     Lao
 % Territory:    Laos
 % Charset:      UTF-8
-% Revision:     1.1
-% Date:         2003-02-06
+% Revision:     1.2
+% Date:         2003-15-09
 %
 
 %
 % Copyright (C) 2002 Anousak Souphavanh
-   
+
 %
 % Permission is hereby granted, free of charge, to any person obtaining
 % a copy of this software and associated documentation files (the "Software"),
@@ -283,7 +283,6 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <U002F>        IGNORE;IGNORE;<U002F>;IGNORE          % SOLIDUS
 <U002E>       IGNORE;IGNORE;<U002E>;IGNORE         % FULL STOP
 <U0EAF>        IGNORE;IGNORE;<U0EAF>;IGNORE          % Lao CHARACTER Lao Ellipse
-<U0EC6>        IGNORE;IGNORE;<U0EC6>;IGNORE          % Lao CHARACTER mAI ko La
 <U0060> IGNORE;IGNORE;<U0060>;IGNORE   % GRAVE ACCENT
 <U005E>   IGNORE;IGNORE;<U005E>;IGNORE     % CIRCUMFLEX
 <U007E>        IGNORE;IGNORE;<U007E>;IGNORE          % TILDE
@@ -402,7 +401,7 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 %
 % Lao consonants, with leading vowels rearrangement
 %
-<U0E81>        <U0E81>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER KO 
+<U0E81>        <U0E81>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER KO
 <ko-e>           "<U0E81><U0EC0>";<BLANK>;<BLANK>;<BLANK>
 <ko-ae>          "<U0E81><U0EC1>";<BLANK>;<BLANK>;<BLANK>
 <ko-o>           "<U0E81><U0EC2>";<BLANK>;<BLANK>;<BLANK>
@@ -423,14 +422,14 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <kho-tam-ai-maimuan>  "<U0E84><U0EC3>";<BLANK>;<BLANK>;<BLANK>
 <kho-tam-ai-maimalai> "<U0E84><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
-<U0E87>        <U0E87>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER NGO 
+<U0E87>        <U0E87>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER NGO
 <ngo-e>           "<U0E87><U0EC0>";<BLANK>;<BLANK>;<BLANK>
 <ngo-ae>          "<U0E87><U0EC1>";<BLANK>;<BLANK>;<BLANK>
 <ngo-o>           "<U0E87><U0EC2>";<BLANK>;<BLANK>;<BLANK>
 <ngo-ai-maimuan>  "<U0E87><U0EC3>";<BLANK>;<BLANK>;<BLANK>
 <ngo-ai-maimalai> "<U0E87><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
-<U0E88>        <U0E88>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER CHO 
+<U0E88>        <U0E88>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER CHO
 <cho-e>           "<U0E88><U0EC0>";<BLANK>;<BLANK>;<BLANK>
 <cho-ae>          "<U0E88><U0EC1>";<BLANK>;<BLANK>;<BLANK>
 <cho-o>           "<U0E88><U0EC2>";<BLANK>;<BLANK>;<BLANK>
@@ -458,7 +457,7 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <do-ai-maimuan>  "<U0E94><U0EC3>";<BLANK>;<BLANK>;<BLANK>
 <do-ai-maimalai> "<U0E94><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
-<U0E95>        <U0E95>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER TO 
+<U0E95>        <U0E95>;<BLANK>;<BLANK>;<BLANK> % Lao CHARACTER TO
 <to-e>           "<U0E95><U0EC0>";<BLANK>;<BLANK>;<BLANK>
 <to-ae>          "<U0E95><U0EC1>";<BLANK>;<BLANK>;<BLANK>
 <to-o>           "<U0E95><U0EC2>";<BLANK>;<BLANK>;<BLANK>
@@ -607,8 +606,6 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 <mor-ai-maimuan>  "<U0EDD><U0EC3>";<BLANK>;<BLANK>;<BLANK>
 <mor-ai-maimalai> "<U0EDD><U0EC4>";<BLANK>;<BLANK>;<BLANK>
 
-<U0EAF> <U0EAF>;<BLANK>;<BLANK>;<BLANK>  % Lao CHARACTER Ellipsis
-
 
 % order of Lao vowels
 <U0EB0> <U0EB0>;<BLANK>;<BLANK>;<BLANK>  % Lao CHARACTER SAlA A
@@ -724,9 +721,9 @@ END LC_TIME
 
 LC_MESSAGES
 
-% yesexpr : begins with "y", "Y", or mo 
+% yesexpr : begins with "y", "Y", or mo
 % noexpr : begins with "n", "N", or Bo
-% yesstr = "men" = Sala ae + Mo + MAI EK + No 
+% yesstr = "men" = Sala ae + Mo + MAI EK + No
 % nostr = "Bo Men" = Letter Bo +salo Or+ MAI EK + mo+ Ma Ek+ No
 
 yesexpr "<U005E><U005B><U0079><U0059><U0EA1><U005D>"
@@ -783,5 +780,3 @@ lang_ab       "<U006C><U006F>"
 lang_term     "<U006c><U0061><U006F>"
 lang_lib      "<U006C><U0061><U006F>"
 END LC_ADDRESS
-
-

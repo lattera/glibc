@@ -1,3 +1,9 @@
+2003-09-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/Makefile (CFLAGS-cancel.c, CFLAGS-manager.c,
+	CFLAGS-pthread.c, CFLAGS-sighandler.c): Add
+	-mpreferred-stack-boundary=4.
+
 2003-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (pthread_getattr_np): Correctly fill in the stack-related

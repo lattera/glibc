@@ -31,8 +31,8 @@ __utimes (const char *file, const struct timeval tvp[2])
   if (tvp)
     {
       times = &buf;
-      buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
-      buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
+      buf.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
+      buf.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
     }
   else
     times = NULL;

@@ -1,3 +1,8 @@
+2003-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/utimes.c (__utimes): Truncate instead of round.
+	* sysdeps/unix/sysv/linux/utimes.c (__utimes): Likewise.
+
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/Makefile (sysdep-CFLAGS): If not in math or csu
