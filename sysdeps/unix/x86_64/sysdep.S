@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,10 +57,12 @@ notb:
 	movl %eax, C_SYMBOL_NAME(errno)
 # else
 	pushq %rax
+	cfi_adjust_cfa_offset(8)
 	PUSH_ERRNO_LOCATION_RETURN
 	call BP_SYM (__errno_location)
 	POP_ERRNO_LOCATION_RETURN
 	popq %rcx
+	cfi_adjust_cfa_offset(-8)
 	movl %ecx, (%rax)
 # endif
 #else
@@ -72,10 +74,12 @@ notb:
 	movl %eax, (%rcx)
 # else
 	pushq %rax
+	cfi_adjust_cfa_offset(8)
 	PUSH_ERRNO_LOCATION_RETURN
 	call C_SYMBOL_NAME (BP_SYM (__errno_location)@PLT)
 	POP_ERRNO_LOCATION_RETURN
 	popq %rcx
+	cfi_adjust_cfa_offset(-8)
 	movl %ecx, (%rax)
 # endif
 #endif

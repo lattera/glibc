@@ -1,3 +1,11 @@
+2004-01-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/__start_context.S: Add cfi directives.
+	* sysdeps/unix/x86_64/sysdep.S (__syscall_error): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+	* sysdeps/x86_64/strcspn.S: Likewise.
+	* sysdeps/x86_64/strspn.S: Likewise.
+
 2004-01-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Add cfi_endproc

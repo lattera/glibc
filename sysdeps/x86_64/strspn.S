@@ -1,7 +1,7 @@
 /* strspn (str, ss) -- Return the length of the initial segment of STR
 			which contains only characters from SS.
    For AMD x86-64.
-   Copyright (C) 1994-1997, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997,2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
    Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>.
@@ -36,6 +36,7 @@ ENTRY (strspn)
 	   table.  */
 	movq %rdi, %r8			/* Save value.  */
 	subq $256, %rsp			/* Make space for 256 bytes.  */
+	cfi_adjust_cfa_offset(256)
 	movq $32,  %rcx			/* 32*8 bytes = 256 bytes.  */
 	movq %rsp, %rdi
 	xorq %rax, %rax			/* We store 0s.  */
@@ -106,6 +107,7 @@ L(6):	incq %rax
 L(5):	incq %rax
 
 L(4):	addq $256, %rsp		/* remove stopset */
+	cfi_adjust_cfa_offset(-256)
 	subq %rdx, %rax		/* we have to return the number of valid
 				   characters, so compute distance to first
 				   non-valid character */
