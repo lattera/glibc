@@ -164,10 +164,10 @@ tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"' \
 	    -DTM_GMTOFF=tm_gmtoff -DTM_ZONE=tm_zone
 
-CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
-CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
-CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
-CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
+CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID $(tz-cflags) -DHAVE_GETTEXT
+CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags) -DHAVE_GETTEXT
+CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID -DHAVE_GETTEXT
+CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID -DHAVE_GETTEXT
 
 # We have to make sure the data for testing the tz functions is available.
 # Don't add leapseconds here since test-tz made checks that work only without

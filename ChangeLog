@@ -1,3 +1,11 @@
+2000-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/Makefile: Define HAVE_GETTEXT fir zdump.c, zic.c,
+	ialloc.c, and scheck.c.
+	* malloc/obstack.c: Always include <libintl.h> for glibc.
+	* posix/getopt.c: Likewise.
+	Reported by Petr Vandrovec <VANDROVE@vc.cvut.cz>.
+
 2000-10-15  Pete Wyckoff  <pw@osc.edu>
 
 	* Rules: Define _LIBC during generation of bits/stdio_lim.d.
