@@ -63,6 +63,9 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   if (! lookup)
     lookup = __dir_lookup;
 
+  if (file_name[0] == '\0')
+    return ENOENT;
+
   startport = (file_name[0] == '/') ? INIT_PORT_CRDIR : INIT_PORT_CWDIR;
   while (file_name[0] == '/')
     file_name++;
