@@ -1,5 +1,9 @@
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/link.h (struct link_map): Add l_soname_added bitfield.
+	* elf/dl-load.c (_dl_map_object): Remember when we added the
+	SONAME to the l_libname list and don't try it again.
+
 	* elf/dl-close.c: Decrement opencount for all dependencies which can
 	be removed even if the object is not yet unloaded.
 	* elf/dl-deps.c (_dl_map_object_deps): If dependency is already in

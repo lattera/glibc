@@ -178,6 +178,8 @@ struct link_map
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
     unsigned int l_phdr_allocated:1; /* Nonzero if the data structure pointed
 					to by `l_phdr' is allocated.  */
+    unsigned int l_soname_added:1; /* Nonzero if the SONAME is for sure in
+				      the l_libname list.  */
 
     /* Array with version names.  */
     unsigned int l_nversions;

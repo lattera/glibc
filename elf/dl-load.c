@@ -1413,7 +1413,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	{
 	  const char *soname;
 
-	  if (l->l_info[DT_SONAME] == NULL)
+	  if (__builtin_expect (l->l_soname_added, 1)
+	      || l->l_info[DT_SONAME] == NULL)
 	    continue;
 
 	  soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
@@ -1423,6 +1424,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* We have a match on a new name -- cache it.  */
 	  add_name_to_object (l, soname);
+	  l->l_soname_added = 1;
 	}
 
       /* We have a match -- bump the reference count and return it.  */
