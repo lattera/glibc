@@ -44,6 +44,7 @@ LC_MONETARY
 %this is the rupee sign
 currency_symbol      "<U09F3>"
 %currency_symbol      "<U099F><U09BE><U0995><U09BE>"
+int_curr_symbol      "<U0042><U0044><U0054><U0020>"
 mon_decimal_point    "<U002E>"
 mon_thousands_sep    "<U002C>"
 mon_grouping         3;3

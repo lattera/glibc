@@ -155,8 +155,8 @@ END LC_PAPER
 LC_TELEPHONE
 tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
 % FIXME Find tel_dom_fmt
-int_select "8~10"
-int_prefix "995"
+int_select "<U0038><U007E><U0031><U0030>"
+int_prefix "<U0039><U0039><U0035>"
 END LC_TELEPHONE
 
 LC_NAME

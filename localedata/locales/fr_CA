@@ -124,19 +124,15 @@ date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_PAPER
-height   279
-width    216
+copy "en_CA"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0031>"
+copy "en_CA"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+copy "en_CA"
 END LC_MEASUREMENT
 
 LC_NAME

@@ -24,7 +24,7 @@
 
 __fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  *flagp = (fexcept_t) __sim_exceptions;
+  *flagp = (fexcept_t) __sim_exceptions  & excepts & FE_ALL_EXCEPT;
 
   return 0;
 }

@@ -98,27 +98,11 @@ noexpr  "<U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0045><U0055><U0052><U0020>"
-currency_symbol           "<U20AC>"
-mon_decimal_point         "<U002C>"
-mon_thousands_sep         "<U0020>"
-mon_grouping              3;3
-positive_sign             ""
-negative_sign             "<U002D>"
-int_frac_digits           2
-frac_digits               2
-p_cs_precedes             0
-p_sep_by_space            1
-n_cs_precedes             0
-n_sep_by_space            1
-p_sign_posn               1
-n_sign_posn               1
+copy "fr_FR"
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
-thousands_sep             ""
-grouping                  0;0
+copy "fr_FR"
 END LC_NUMERIC
 
 LC_TIME
@@ -160,8 +144,7 @@ t_fmt_ampm "<U0025><U0049><U0065><U0025><U004D><U003A><U0025><U0053><U0020><U002
 END LC_TIME
 
 LC_PAPER
-height      297
-width       210
+copy "fr_FR"
 END LC_PAPER
 
 LC_MEASUREMENT
@@ -179,6 +162,5 @@ copy "fr_FR"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
 copy "fr_FR"
 END LC_TELEPHONE

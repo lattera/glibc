@@ -45,7 +45,7 @@ END LC_COLLATE
 LC_MONETARY
 % This is the POSIX Locale definition the LC_MONETARY category.
 int_curr_symbol       "<U0049><U004E><U0052><U0020>"
-currency_symbol       "<U0A30><U0A42><U0A2A><U0A72><U0A48>"     
+currency_symbol       "<U0A30><U0A42><U0A2A><U0A72><U0A48>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"
 mon_grouping          3
@@ -64,12 +64,7 @@ END LC_MONETARY
 
 
 LC_NUMERIC
-% This is the POSIX Locale definition for the LC_NUMERIC  category.
-%
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
-grouping               3
-%
+copy "hi_IN"
 END LC_NUMERIC
 
 
@@ -164,11 +159,7 @@ END LC_MESSAGES
 
 
 LC_PAPER
-% This is the ISO_IEC TR14652 Locale definition for the
-% LC_PAPER category
-height      297
-width       210
-
+copy "hi_IN"
 END LC_PAPER
 
 
@@ -200,18 +191,10 @@ END LC_ADDRESS
 
 
 LC_TELEPHONE
-% This is the ISO_IEC TR14652 Locale definition for the
-%
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix     "<U0039><U0031>"
-
+copy "hi_IN"
 END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% This is the ISO_IEC TR14652 Locale definition for the
-%
-measurement 1
-
+copy "hi_IN"
 END LC_MEASUREMENT

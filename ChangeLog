@@ -1,3 +1,9 @@
+2003-12-04  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fgetexcptflg.c (__fegetexceptflag): Add masking
+	of fenv.
+	* sysdeps/powerpc/nofpu/fgetexcptflg.c (__fegetexceptflag): Likewise.
+
 2003-12-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/s390-32/elf/setjmp.S (setjmp, __setjmp): Add END

@@ -70,9 +70,49 @@ LC_COLLATE
 
 % Armenian sorting is not yet on iso14651_t1
 
-copy "iso14651_t1"
-
 script <ARMENIAN>
+
+collating-symbol <ARM-AYB>
+collating-symbol <ARM-BEN>
+collating-symbol <ARM-GIM>
+collating-symbol <ARM-DA>
+collating-symbol <ARM-YECH>
+collating-symbol <ARM-ZA>
+collating-symbol <ARM-E>
+collating-symbol <ARM-AT>
+collating-symbol <ARM-TO>
+collating-symbol <ARM-ZHE>
+collating-symbol <ARM-INI>
+collating-symbol <ARM-LYUN>
+collating-symbol <ARM-KHE>
+collating-symbol <ARM-TSA>
+collating-symbol <ARM-KEN>
+collating-symbol <ARM-HO>
+collating-symbol <ARM-DZA>
+collating-symbol <ARM-GHAT>
+collating-symbol <ARM-TCHE>
+collating-symbol <ARM-MEN>
+collating-symbol <ARM-HI>
+collating-symbol <ARM-NU>
+collating-symbol <ARM-SHA>
+collating-symbol <ARM-VO>
+collating-symbol <ARM-CHA>
+collating-symbol <ARM-PE>
+collating-symbol <ARM-JE>
+collating-symbol <ARM-RA>
+collating-symbol <ARM-SE>
+collating-symbol <ARM-VEV>
+collating-symbol <ARM-TYUN>
+collating-symbol <ARM-RE>
+collating-symbol <ARM-TSO>
+collating-symbol <ARM-VYUN>
+collating-symbol <ARM-PYUR>
+collating-symbol <ARM-KE>
+collating-symbol <ARM-O>
+collating-symbol <ARM-FE>
+
+
+copy "iso14651_t1"
 
 order_start <ARMENIAN>;forward;forward;forward;forward,position
 <U0561> <ARM-AYB>;<BAS>;<MIN>;IGNORE
@@ -151,7 +191,7 @@ order_start <ARMENIAN>;forward;forward;forward;forward,position
 <U0554> <ARM-KE>;<BAS>;<CAP>;IGNORE
 <U0555> <ARM-O>;<BAS>;<CAP>;IGNORE
 <U0556> <ARM-FE>;<BAS>;<CAP>;IGNORE
-order-end
+order_end
 
 reorder-sections-after <CYRIL>
 <ARMENIAN>
@@ -255,8 +295,8 @@ END LC_PAPER
 LC_TELEPHONE
 tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
 % FIXME Find tel_dom_fmt
-int_select "00"
-int_prefix "374"
+int_select "<U0030><U0030>"
+int_prefix "<U0033><U0037><U0034>"
 END LC_TELEPHONE
 
 LC_ADDRESS
@@ -265,13 +305,18 @@ postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U006
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
 % FIXME country_name "Armenia" in Armenian
 % FIXME country_post for Armenia?
-country_ab2 "AM"
-country_ab3 "ARM"
+country_ab2 "<U0041><U004D>"
+country_ab3 "<U0041><U0052><U004D>"
 country_num 51
 % FIXME country_car  for Armenia ?
-country_isbn "99930"
+country_isbn "<U0039><U0039><U0039><U0033><U0030>"
 % FIXME lang_name Armenian in Armenian
-lang_ab "hy"
-lang_term "hye"
-lang_lib "arm"
+lang_ab "<U0068><U0079>"
+lang_term "<U0068><U0079><U0065>"
+lang_lib "<U0061><U0072><U006D>"
 END LC_ADDRESS
+
+LC_NAME
+% FIXME
+name_fmt "???"
+END LC_NAME

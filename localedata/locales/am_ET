@@ -1401,65 +1401,27 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-%
-% This is the ISO_IEC TR14652 Locale definition for the LC_MEASUREMENT category.
-%
-measurement 1
-%
+copy "ti_ET"
 END LC_MEASUREMENT
 
 
 LC_MONETARY
-%
-int_curr_symbol       "<U0045><U0054><U0042><U0020>"
-currency_symbol       "<U0024>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
-mon_grouping          3;3
-positive_sign         ""
-negative_sign         "<U002D>"
-int_frac_digits       2
-frac_digits           2
-p_cs_precedes         1
-p_sep_by_space        0
-n_cs_precedes         1
-n_sep_by_space        0
-p_sign_posn           1
-n_sign_posn           1
-%
+copy "ti_ET"
 END LC_MONETARY
 
 
 LC_NUMERIC
-%
-% This is the POSIX Locale definition for the LC_NUMERIC category.
-%
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
-grouping               3;3
-%
+copy "ti_ET"
 END LC_NUMERIC
 
 
 LC_PAPER
-%
-% This is the ISO_IEC TR14652 Locale definition for the LC_PAPER category.
-%
-height      297
-width       210
-%
+copy "ti_ET"
 END LC_PAPER
 
 
 LC_TELEPHONE
-%
-% This is the ISO_IEC TR14652 Locale definition for the LC_TELEPHONE category.
-%
-tel_dom_fmt    "<U0025><U0061><U002D><U0025><U006C>"
-tel_int_fmt    "<U0025><U0063><U002D><U0025><U0061><U002D><U0025><U006C>"
-int_prefix     "<U0032><U0035><U0031>"
-% int_select   unknown
-%
+copy "ti_ET"
 END LC_TELEPHONE
 
 

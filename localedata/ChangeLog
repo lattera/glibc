@@ -1,3 +1,68 @@
+2003-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add az_ZA.UTF-8, bn_BD, bn_IN, br_FR@euro, tt_RU, zh_SG.
+
+	* locales/aa_DJ: Add int_select.  Use copy where possible.
+	* locales/am_ET: Likewise.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_EG: Likewise.
+	* locales/ar_IN: Likewise.
+	* locales/az_AZ: Likewise.
+	* locales/be_BY: Likewise.
+	* locales/bn_BD: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/br_FR: Likewise.
+	* locales/bs_BA: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/de_AT: Likewise.
+	* locales/de_BE: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_BW: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_CR: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/et_EE: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CA: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/ka_GE: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	* locales/zh_HK: Likewise.
+
+	* locales/hy_AM: Fix some syntax errors and formatting mistakes.
+
+	* locales/tt_RU: Use copy in a few places.  Add dummy LC_NAME,
+	LC_ADDRESS, and LC_TELEPHONE definitions.
+
 2003-11-30  Petter Reinholdtsen  <pere@hungry.com>
 
 	* tst-fmon.sh: Allow quotes around the result string, to make it

@@ -245,9 +245,7 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
-thousands_sep             "<U002E>"
-grouping                  3;3
+copy "ru_RU"
 END LC_NUMERIC
 
 LC_TIME
@@ -298,10 +296,23 @@ t_fmt_ampm ""
 END LC_TIME
 
 LC_PAPER
-height      297
-width       210
+copy "ru_RU"
 END LC_PAPER
 
 LC_MEASUREMENT
-measurement 1
+copy "ru_RU"
 END LC_MEASUREMENT
+
+LC_NAME
+% FIXME
+name_fmt "???"
+END LC_NAME
+
+LC_ADDRESS
+% FIXME
+postal_fmt "???"
+END LC_ADDRESS
+
+LC_TELEPHONE
+copy "ru_RU"
+END LC_TELEPHONE
