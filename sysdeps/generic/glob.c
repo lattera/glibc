@@ -339,11 +339,7 @@ extern int getlogin_r __P ((char *, size_t));
 extern char *getlogin __P ((void));
 #endif
 
-static
-#if __GNUC__ - 0 >= 2
-inline
-#endif
-const char *next_brace_sub __P ((const char *begin));
+static const char *next_brace_sub __P ((const char *begin, int flags));
 
 #endif /* GLOB_ONLY_P */
 
@@ -357,20 +353,29 @@ static int prefix_array __P ((const char *prefix, char **array, size_t n));
 static int collated_compare __P ((const __ptr_t, const __ptr_t));
 
 
-/* Find the end of the sub-pattern in a brace expression.  We define
-   this as an inline function if the compiler permits.  */
-static
-#if __GNUC__ - 0 >= 2
-inline
-#endif
-const char *
-next_brace_sub (cp)
+/* Find the end of the sub-pattern in a brace expression.  */
+static const char *
+next_brace_sub (cp, flags)
      const char *cp;
+     int flags;
 {
   unsigned int depth = 0;
-  while (*cp != '\0' && (*cp != '}' || depth--) && (*cp != ',' || depth))
-    if (*cp++ == '{')
-      depth++;
+  while (*cp != '\0')
+    if ((flags & GLOB_NOESCAPE) == 0 && *cp == '\\')
+      {
+	if (*++cp == '\0')
+	  break;
+	++cp;
+      }
+    else
+      {
+	if ((*cp == '}' && depth-- == 0) || (*cp == ',' && depth == 0))
+	  break;
+
+	if (*cp++ == '{')
+	  depth++;
+      }
+
   return *cp != '\0' ? cp : NULL;
 }
 
@@ -410,7 +415,30 @@ glob (pattern, flags, errfunc, pglob)
 
   if (flags & GLOB_BRACE)
     {
-      const char *begin = strchr (pattern, '{');
+      const char *begin;
+
+      if (flags & GLOB_NOESCAPE)
+	begin = strchr (pattern, '{');
+      else
+	{
+	  begin = pattern;
+	  while (1)
+	    {
+	      if (*begin == '\0')
+		{
+		  begin = NULL;
+		  break;
+		}
+
+	      if (*begin == '\\' && begin[1] != '\0')
+		++begin;
+	      else if (*begin == '{')
+		break;
+
+	      ++begin;
+	    }
+	}
+
       if (begin != NULL)
 	{
 	  /* Allocate working buffer large enough for our work.  Note that
@@ -429,8 +457,8 @@ glob (pattern, flags, errfunc, pglob)
 	    {
 	      if (!(flags & GLOB_APPEND))
 		{
-		  globfree (pglob);
 		  pglob->gl_pathc = 0;
+		  pglob->gl_pathv = NULL;
 		}
 	      return GLOB_NOSPACE;
 	    }
@@ -446,7 +474,7 @@ glob (pattern, flags, errfunc, pglob)
 
 	  /* Find the first sub-pattern and at the same time find the
 	     rest after the closing brace.  */
-	  next = next_brace_sub (begin + 1);
+	  next = next_brace_sub (begin + 1, flags);
 	  if (next == NULL)
 	    {
 	      /* It is an illegal expression.  */
@@ -460,7 +488,7 @@ glob (pattern, flags, errfunc, pglob)
 	  rest = next;
 	  while (*rest != '}')
 	    {
-	      rest = next_brace_sub (rest + 1);
+	      rest = next_brace_sub (rest + 1, flags);
 	      if (rest == NULL)
 		{
 		  /* It is an illegal expression.  */
@@ -525,7 +553,7 @@ glob (pattern, flags, errfunc, pglob)
 		break;
 
 	      p = next + 1;
-	      next = next_brace_sub (p);
+	      next = next_brace_sub (p, flags);
 	      assert (next != NULL);
 	    }
 
@@ -1276,7 +1304,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       nfound = 0;
     }
   else if (meta == 0 &&
-	   ((flags & GLOB_NOESCAPE) || strchr(pattern, '\\') == NULL))
+	   ((flags & GLOB_NOESCAPE) || strchr (pattern, '\\') == NULL))
     {
       /* Since we use the normal file functions we can also use stat()
 	 to verify the file is there.  */

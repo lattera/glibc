@@ -195,12 +195,6 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 				   it internally.  */
 				*label = 0x41;
 				label = bp++;
-				/* Another simplification: always assume
-				   128 bit number.  */
-				if (bp + 16 >= eom) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
 				++src;
 				while (isxdigit (*src)) {
 					n = *src > '9' ? *src - 'a' + 10 : *src - '0';
@@ -211,6 +205,10 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz) {
 					}
 					n <<= 4;
 					n += *src > '9' ? *src - 'a' + 10 : *src - '0';
+					if (bp + 1 >= eom) {
+						__set_errno (EMSGSIZE);
+						return (-1);
+					}
 					*bp++ = n;
 					++src;
 				}

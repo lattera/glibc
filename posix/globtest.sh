@@ -5,6 +5,9 @@ elf_objpfx=$1; shift
 rtld_installed_name=$1; shift
 logfile=$common_objpfx/posix/globtest.out
 
+#CMP=cmp
+CMP="diff -u"
+
 # We have to make the paths `common_objpfx' absolute.
 case "$common_objpfx" in
   .*)
@@ -39,6 +42,12 @@ echo 3 > $testdir/-file3
 echo 4 > $testdir/~file4
 echo 5 > $testdir/.file5
 echo 6 > $testdir/'*file6'
+echo 7 > $testdir/'{file7,}'
+echo 8 > $testdir/'\{file8\}'
+echo 9 > $testdir/'\{file9\,file9b\}'
+echo 9 > $testdir/'\file9b\' #'
+echo a > $testdir/'filea,'
+echo a > $testdir/'fileb}c'
 mkdir $testdir/dir1
 mkdir $testdir/dir2
 test -d $testdir/noread || mkdir $testdir/noread
@@ -56,15 +65,21 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 `-file3'
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
 `dir1'
 `dir2'
 `file1'
 `file2'
+`filea,'
+`fileb}c'
 `link1'
 `noread'
+`{file7,}'
 `~file4'
 EOF
 if test $failed -ne 0; then
@@ -77,15 +92,21 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -s "$testdir" "*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 `-file3'
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
 `dir1'
 `dir2'
 `file1'
 `file2'
+`filea,'
+`fileb}c'
 `link1'
 `noread'
+`{file7,}'
 `~file4'
 EOF
 if test $failed -ne 0; then
@@ -98,15 +119,21 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -m "$testdir" "*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 `-file3'
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
 `dir1/'
 `dir2/'
 `file1'
 `file2'
+`filea,'
+`fileb}c'
 `link1/'
 `noread/'
+`{file7,}'
 `~file4'
 EOF
 if test $failed -ne 0; then
@@ -119,18 +146,24 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -p "$testdir" "*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 `-file3'
 `.'
 `..'
 `.file5'
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
 `dir1'
 `dir2'
 `file1'
 `file2'
+`filea,'
+`fileb}c'
 `link1'
 `noread'
+`{file7,}'
 `~file4'
 EOF
 if test $failed -ne 0; then
@@ -143,7 +176,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -b "$testdir" "file{1,2}" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `file1'
 `file2'
 EOF
@@ -156,7 +189,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -b "$testdir" "{file{1,2},-file3}" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `-file3'
 `file1'
 `file2'
@@ -170,7 +203,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -b "$testdir" "{" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -183,7 +216,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -c "$testdir" "abc" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `abc'
 EOF
 if test $failed -ne 0; then
@@ -196,7 +229,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -g "$testdir" "abc" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `abc'
 EOF
 if test $failed -ne 0; then
@@ -209,7 +242,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -g "$testdir" "abc*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -222,7 +255,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -g "$testdir" "*/does-not-exist" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -235,7 +268,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `link1/file1_1'
@@ -251,7 +284,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/1" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -264,7 +297,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `link1/file1_1'
 EOF
@@ -278,7 +311,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*?_?" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `link1/file1_1'
@@ -293,7 +326,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `link1/file1_1'
 EOF
@@ -306,7 +339,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*-/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -318,7 +351,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*-" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -331,7 +364,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/*?_?" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `link1/file1_1'
@@ -347,7 +380,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "*/file1_[12]" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `link1/file1_1'
@@ -363,7 +396,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "dir1/file1_[]12]" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 EOF
@@ -377,7 +410,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~" |
 sort >$testout
-echo ~ | cmp - $testout >> $logfile || failed=1
+echo ~ | $CMP - $testout >> $logfile || failed=1
 if test $failed -ne 0; then
   if test -d ~; then
     echo "Tilde test failed" >> $logfile
@@ -394,9 +427,9 @@ ${common_objpfx}posix/globtest -q -t "$testdir" "~/" |
 sort > $testout
 # Some shell incorrectly(?) convert ~/ into // if ~ expands to /.
 if test ~/ = //; then
-    echo / | cmp - $testout >> $logfile || failed=1
+    echo / | $CMP - $testout >> $logfile || failed=1
 else
-    echo ~/ | cmp - $testout >> $logfile || failed=1
+    echo ~/ | $CMP - $testout >> $logfile || failed=1
 fi
 if test $failed -ne 0; then
   if test -d ~/; then
@@ -412,7 +445,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
 sort > $testout
-eval echo ~$USER | cmp - $testout >> $logfile || failed=1
+eval echo ~$USER | $CMP - $testout >> $logfile || failed=1
 if test $failed -ne 0; then
   if eval test -d ~$USER; then
     echo "Tilde3 test failed" >> $logfile
@@ -427,7 +460,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -T "$testdir" "~file4" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -440,7 +473,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "\**" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 EOF
 if test $failed -ne 0; then
@@ -448,13 +481,16 @@ if test $failed -ne 0; then
   result=1
 fi
 
-# ... unless NOESCAPE is used, in which case it shouldn't match anything.
+# ... unless NOESCAPE is used, in which case it should entries with a
+# leading \.
 failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -e "$testdir" "\**" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
-GLOB_NOMATCH
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
 EOF
 if test $failed -ne 0; then
   echo "Star2 test failed" >> $logfile
@@ -466,11 +502,63 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "\*file6" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*file6'
 EOF
 if test $failed -ne 0; then
   echo "Star3 test failed" >> $logfile
+  result=1
+fi
+
+# GLOB_BRACE alone
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b "$testdir" '\{file7\,\}' |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`{file7,}'
+EOF
+if test $failed -ne 0; then
+  echo "Brace4 test failed" >> $logfile
+  result=1
+fi
+
+# GLOB_BRACE and GLOB_NOESCAPE
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b -e "$testdir" '\{file9\,file9b\}' |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`\file9b\'
+EOF
+if test $failed -ne 0; then
+  echo "Brace5 test failed" >> $logfile
+  result=1
+fi
+
+# Escaped comma
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b "$testdir" '{filea\,}' |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`filea,'
+EOF
+if test $failed -ne 0; then
+  echo "Brace6 test failed" >> $logfile
+  result=1
+fi
+
+# Escaped closing brace
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -b "$testdir" '{fileb\}c}' |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`fileb}c'
+EOF
+if test $failed -ne 0; then
+  echo "Brace7 test failed" >> $logfile
   result=1
 fi
 
@@ -479,7 +567,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -e "$testdir" "a*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -492,7 +580,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -E "$testdir" "a*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -505,7 +593,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "noread/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -517,7 +605,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "noread*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_NOMATCH
 EOF
 if test $failed -ne 0; then
@@ -535,14 +623,14 @@ if test "$user" != root; then
     ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
     ${common_objpfx}posix/globtest -E "$testdir" "noread/*" |
     sort > $testout
-    cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+    cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_ABORTED
 EOF
 
     ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
     ${common_objpfx}posix/globtest -E "$testdir" "noread*/*" |
     sort > $testout
-    cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+    cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 GLOB_ABORTED
 EOF
 if test $failed -ne 0; then
@@ -556,7 +644,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest "$testdir" "file1" "*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `file1'
@@ -573,7 +661,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -o "$testdir" "file1" "*/*" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `abc'
 `dir1/file1_1'
 `dir1/file1_2'
@@ -591,7 +679,7 @@ failed=0
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -c "$testdir" "*/blahblah" |
 sort > $testout
-cat <<"EOF" | cmp - $testout >> $logfile || failed=1
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
 `*/blahblah'
 EOF
 if test $failed -ne 0; then
