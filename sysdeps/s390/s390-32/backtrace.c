@@ -71,7 +71,7 @@ __backtrace (array, size)
 	   out of range.  */
 	break;
 
-      array[cnt++] = stack->save_grps[8];
+      array[cnt++] = stack->save_grps[8] & 0x7fffffff;
 
       stack = (struct layout *) stack->back_chain;
     }

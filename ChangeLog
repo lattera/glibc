@@ -1,3 +1,13 @@
+2003-03-21  Martin Schwidefsky  <schwidefskyde.ibm.com>
+
+	* sysdeps/s390/s390-32/backtrace.c (__backtrace): Remove high order
+	bit from backtrace addresses.
+
+2003-03-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/chown.c: Don't define any versioned
+	__chown symbols.
+
 2003-03-25  Roland McGrath  <roland@redhat.com>
 
 	* config.make.in (enable-check-abi): New variable from configure.
