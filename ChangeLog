@@ -1,3 +1,8 @@
+1999-04-23  Paul Eggert  <eggert@1twinsun.com>
+
+	* stdlib/strtoull.c: Surround strong_alias and weak_alias with
+	ifdef _LIBC.
+
 1999-04-28  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/getdents.c (__getdirentries): Remove
