@@ -49,8 +49,9 @@ typedef __ino64_t ino_t;
 # endif
 # define __ino_t_defined
 #endif
-#ifdef __USE_LARGEFILE64
+#if defined __USE_LARGEFILE64 && !defined __ino64_t_defined
 typedef __ino64_t ino64_t;
+# define __ino64_t_defined
 #endif
 
 #ifndef __dev_t_defined

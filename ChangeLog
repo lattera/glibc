@@ -1,5 +1,8 @@
 1999-08-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* dirent/dirent.h: Only define ino64_t if not already done.
+	* posix/sys/types.h: Likewise.
+
 	* ctype/ctype.h: Avoid useless #endif #if pairs.
 
 	* dirent/dirent.h: Define ino_t and ino64_t if not done already.
