@@ -293,8 +293,8 @@ extern int __REDIRECT (__fxstat, __P ((int __ver, int __fildes,
 				       struct stat *__stat_buf)), __fxstat64);
 extern int __REDIRECT (__xstat, __P ((int __ver, __const char *__filename,
 				      struct stat *__stat_buf)), __xstat64);
-extern int __REDIRECT (__lxstat __P ((int __ver, __const char *__filename,
-				      struct stat *__stat_buf)), __lxstat64);
+extern int __REDIRECT (__lxstat, __P ((int __ver, __const char *__filename,
+				       struct stat *__stat_buf)), __lxstat64);
 
 # else
 #  define __fxstat __fxstat64
