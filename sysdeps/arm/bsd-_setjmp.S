@@ -25,5 +25,5 @@
 
 ENTRY (_setjmp)
 	mov	r1, #0
-	b	C_SYMBOL_NAME(__sigsetjmp)
+	b	PLTJMP(C_SYMBOL_NAME(__sigsetjmp))
 END (_setjmp)
