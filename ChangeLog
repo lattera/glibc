@@ -1,3 +1,22 @@
+Sun Jan 26 19:40:17 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Version 2.0 net release.
+
+	* Make-dist: Don't take care for two malloc directories.
+
+Sun Jan 26 13:39:31 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Correct distribution of
+	kernel_*.h files.
+
+	* Make-dist: Don't mention new-malloc for dirs with have to be
+	processed.
+
+	* sysdeps/unix/sysv/linux/netinet/in.h (SOL_IP): Added.
+	* inet/netinet/tcp.h (SOL_TCP): Added.
+	* sysdeps/unix/sysv/linux/socketbits.h (SOL_RAW): Added.
+	Reported by a sun <asun@zoology.washington.edu>.
+
 Sun Jan 26 05:41:42 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.
@@ -15,7 +34,7 @@ Sun Jan 26 05:41:42 1997  Ulrich Drepper  <drepper@cygnus.com>
 	* malloc/Makefile (subdir): Change to malloc.
 	* sysdeps/unix/sysv/linux/configure.in: Don't set malloc anymore.
 
-	* Makefile: Add special goal to call generate only-MD5 based crypt
+	* Makefile: Add special goal to generate only-MD5 based crypt
 	library.
 	* md5-crypt/Makefile: Likewise.
 

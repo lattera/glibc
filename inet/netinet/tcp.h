@@ -33,6 +33,14 @@
  *	@(#)tcp.h	8.1 (Berkeley) 6/10/93
  */
 
+#ifndef _NETINET_TCP_H
+
+#define _NETINET_TCP_H	1
+#include <sys/cdefs.h>
+
+
+__BEGIN_DECLS
+
 typedef	unsigned int	tcp_seq;
 /*
  * TCP header.
@@ -96,3 +104,9 @@ struct tcphdr {
  */
 #define	TCP_NODELAY	0x01	/* don't delay send to coalesce packets */
 #define	TCP_MAXSEG	0x02	/* set maximum segment size */
+
+#define SOL_TCP		6	/* TCP level */
+
+__END_DECLS
+
+#endif /* netinet/tcp.h */

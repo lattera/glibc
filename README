@@ -1,4 +1,4 @@
-This directory contains the version 1.101 test release of the GNU C Library.
+This directory contains the version 2.0 test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
@@ -6,9 +6,9 @@ As of this release, the GNU C library is known to run on the following
 configurations:
 
 		*-*-gnu			GNU Hurd
-		i[3456]86-*-linux	Linux-2.0 on Intel
-		m68k-*-linux		Linux-2.0 on Motorola 680x0
-		alpha-*-linux		Linux-2.0 on DEC Alpha
+		i[3456]86-*-linux-gnu	Linux-2.0 on Intel
+		m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
+		alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
 
 
 Former releases of this library (version 1.09.1 and perhaps earlier
@@ -39,38 +39,50 @@ versions) used to run on the following configurations:
 Whether this is still true for this release is unknown.  Porting the
 library is not hard.  If you are interested in doing a port, please
 get on the mailing list by sending electronic mail to
-bug-glibc-request@prep.ai.mit.edu.
+<bug-glibc-request@prep.ai.mit.edu>.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
 provides the Unix `crypt' function, plus some other entry points.
 Because of the United States export restriction on DES implementations,
 we are distributing this code separately from the rest of the C
 library.  There is an extra distribution tar file just for crypt; it is
-called `glibc-1.101-crypt.tar.gz'.  You can just unpack the crypt
+called `glibc-crypt-2.0.tar.gz'.  You can just unpack the crypt
 distribution along with the rest of the C library and build; you can
 also build the library without getting crypt.  Users outside the USA
-can get the crypt distribution via anonymous FTP from ftp.uni-c.dk
-[129.142.6.74], or another archive site outside the USA.  Archive
+can get the crypt distribution via anonymous FTP from ftp.ifi.uio.no
+[129.240.64.21], or another archive site outside the USA.  Archive
 maintainers are encouraged to copy this distribution to their archives
-outside the USA.  Please get it from ftp.uni-c.dk; transferring this
+outside the USA.  Please get it from ftp.ifi.uio.no; transferring this
 distribution from prep.ai.mit.edu (or any other site in the USA) to a
 site outside the USA is in violation of US export laws.
 
+Beside the separate crypt tar file there are some more add-ons which can be
+used together with GNU libc.  They are designed in a way to ease the
+installation by integrating them in the libc source tree.  Simply get the
+add-ons you need and use the --enable-add-ons option of the `configure'
+script to tell where the add-ons are found.  Please read the FAQ file for
+more details.
+
 See the file INSTALL to find out how to configure, build, install, and port
-the GNU C library.
+the GNU C library.  You might also consider reading the WWW pages for the
+GNU libc at http://www.gnu.org/software/libc/libc.html.
 
 The GNU C Library is completely documented by the Texinfo manual found
 in the `manual/' subdirectory.  The manual is still being updated and
 contains some known errors and omissions; we regret that we do not have
 the resources to work on the manual as much as we would like.  Please
-send comments on the manual to bug-glibc-manual@prep.ai.mit.edu, and
+send comments on the manual to <bug-glibc-manual@prep.ai.mit.edu>, and
 not to the library bug-reporting address.
 
 The file NOTES contains a description of the feature-test macros used
 in the GNU C library, explaining how you can tell the library what
 facilities you want it to make available.
 
-Send bug reports to bug-glibc@prep.ai.mit.edu.
+We prefer to get bug reports sent using the `glibcbug' shell script which
+is install together with the rest of the GNU libc to <bugs@gnu.ai.mit.edu>.
+Simply run this shell script and fill in the information.  Nevertheless
+you can still send bug reports to <bug-glibc@prep.ai.mit.edu> as normal
+electronic mails.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions.

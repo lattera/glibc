@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 1.100\n"
-"POT-Creation-Date: 1997-01-06 15:00+0100\n"
+"Project-Id-Version: libc 2.0\n"
+"POT-Creation-Date: 1997-01-26 15:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,47 +178,47 @@ msgstr ""
 msgid "%s: error in state machine"
 msgstr ""
 
-#: posix/getopt.c:743
+#: posix/getopt.c:733
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:746
+#: posix/getopt.c:736
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:667
+#: posix/getopt.c:657
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:638
+#: posix/getopt.c:628
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:684 posix/getopt.c:858
+#: posix/getopt.c:674 posix/getopt.c:847
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:662
+#: posix/getopt.c:652
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:843
+#: posix/getopt.c:831
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:824
+#: posix/getopt.c:813
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:777 posix/getopt.c:907
+#: posix/getopt.c:766 posix/getopt.c:896
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
@@ -233,12 +233,12 @@ msgstr ""
 msgid "%s: premature end of file"
 msgstr ""
 
-#: posix/getopt.c:717
+#: posix/getopt.c:707
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:713
+#: posix/getopt.c:703
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
@@ -1839,11 +1839,11 @@ msgstr ""
 msgid "blank TO field on Link line"
 msgstr ""
 
-#: new-malloc/mcheck.c:191
+#: malloc/mcheck.c:191
 msgid "block freed twice"
 msgstr ""
 
-#: new-malloc/mcheck.c:194
+#: malloc/mcheck.c:194
 msgid "bogus mcheck_status, library is buggy"
 msgstr ""
 
@@ -2134,7 +2134,7 @@ msgid "garbage at end of character code specification"
 msgstr ""
 
 #: locale/programs/linereader.c:214
-msgid "garbage at end of digit"
+msgid "garbage at end of number"
 msgstr ""
 
 #: locale/programs/ld-time.c:183
@@ -2306,11 +2306,11 @@ msgstr ""
 msgid "malformed line ignored"
 msgstr ""
 
-#: new-malloc/mcheck.c:185
+#: malloc/mcheck.c:185
 msgid "memory clobbered before allocated block"
 msgstr ""
 
-#: new-malloc/mcheck.c:188
+#: malloc/mcheck.c:188
 msgid "memory clobbered past end of allocated block"
 msgstr ""
 
@@ -2321,11 +2321,11 @@ msgstr ""
 msgid "memory exhausted"
 msgstr ""
 
-#: new-malloc/obstack.c:462
+#: malloc/obstack.c:462
 msgid "memory exhausted\n"
 msgstr ""
 
-#: new-malloc/mcheck.c:182
+#: malloc/mcheck.c:182
 msgid "memory is consistent, library is buggy"
 msgstr ""
 
@@ -2336,7 +2336,7 @@ msgstr ""
 
 #: locale/programs/ld-time.c:337
 #, c-format
-msgid "missing era name in string %d in `era' fieldin category `%s'"
+msgid "missing era name in string %d in `era' field in category `%s'"
 msgstr ""
 
 #: time/zic.c:919

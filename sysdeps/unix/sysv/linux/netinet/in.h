@@ -164,6 +164,9 @@ struct sockaddr_in
 #define IP_ADD_MEMBERSHIP  35	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 36	/* ip_mreq; drop an IP group membership */
 
+/* To select the IP level.  */
+#define SOL_IP	0
+
 /* Structure used to describe IP options for IP_OPTIONS. The `ip_dst'
    field is used for the first-hop gateway when using a source route
    (this gets put into the header proper).  */

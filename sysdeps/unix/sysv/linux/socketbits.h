@@ -80,7 +80,8 @@ enum __socket_type
 #define	AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
-
+/* Raw IP packet level.  */
+#define SOL_RAW		255
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
