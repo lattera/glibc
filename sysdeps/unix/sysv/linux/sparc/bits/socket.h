@@ -88,6 +88,7 @@ enum __socket_type
 #define	PF_IRDA		23	/* IRDA sockets.  */
 #define	PF_PPPOX	24	/* PPPoX sockets.  */
 #define	PF_WANPIPE	25	/* Wanpipe API sockets.  */
+#define	PF_BLUETOOTH	31	/* Bluetooth sockets.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -119,6 +120,7 @@ enum __socket_type
 #define	AF_IRDA		PF_IRDA
 #define	AF_PPPOX	PF_PPPOX
 #define	AF_WANPIPE	PF_WANPIPE
+#define	AF_BLUETOOTH	PF_BLUETOOTH
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.

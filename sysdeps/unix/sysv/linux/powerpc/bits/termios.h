@@ -43,9 +43,9 @@ struct termios {
 };
 
 /* c_cc characters */
-#define VINTR 	0
-#define VQUIT 	1
-#define VERASE 	2
+#define VINTR	0
+#define VQUIT	1
+#define VERASE	2
 #define VKILL	3
 #define VEOF	4
 #define VMIN	5
@@ -54,9 +54,9 @@ struct termios {
 #define VEOL2	8
 #define VSWTC	9
 
-#define VWERASE 	10
+#define VWERASE	10
 #define VREPRINT	11
-#define VSUSP 		12
+#define VSUSP		12
 #define VSTART		13
 #define VSTOP		14
 #define VLNEXT		15
@@ -297,3 +297,4 @@ struct termio {
 #define N_SMSBLOCK	12	/* SMS block mode  */
 #define N_HDLC		13	/* synchronous HDLC  */
 #define N_SYNC_PPP	14	/* synchronous PPP  */
+#define	N_HCI		15	/* Bluetooth HCI UART  */

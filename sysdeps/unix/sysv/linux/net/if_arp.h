@@ -122,7 +122,7 @@ struct arphdr
 #define ARPHRD_FCPL	786		/* Fibrechanel public loop.  */
 #define ARPHRD_FCPFABRIC 787		/* Fibrechanel fabric.  */
 #define ARPHRD_IEEE802_TR 800		/* Magic type ident for TR.  */
-
+#define ARPHRD_IEEE80211 801		/* IEEE 802.11.  */
 
 /* ARP ioctl request.  */
 struct arpreq

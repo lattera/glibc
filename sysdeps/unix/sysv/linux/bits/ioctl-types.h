@@ -1,5 +1,5 @@
 /* Structure types for pre-termios terminal ioctls.  Linux version.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,3 +75,4 @@ struct termio
 #define N_SMSBLOCK	12	/* SMS block mode  */
 #define N_HDLC		13	/* synchronous HDLC  */
 #define N_SYNC_PPP	14	/* synchronous PPP  */
+#define	N_HCI		15	/* Bluetooth HCI UART  */
