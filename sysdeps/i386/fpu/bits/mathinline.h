@@ -604,7 +604,9 @@ __inline_mathcodeNP(logb, __x, \
 #endif
 
 #ifdef __USE_ISOC99
+#ifdef __FAST_MATH__
 __inline_mathop_declNP (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
+#endif /* __FAST_MATH__ */
 
 __MATH_INLINE float
 ldexpf (float __x, int __y)
@@ -618,9 +620,11 @@ ldexpl (long double __x, int __y)
   __ldexp_code;
 }
 
+#ifdef __FAST_MATH__
 __inline_mathcodeNP3 (fma, __x, __y, __z, return (__x * __y) + __z)
 
 __inline_mathopNP (rint, "frndint")
+#endif /* __FAST_MATH__ */
 
 #define __lrint_code \
   long int __lrintres;							      \
@@ -695,7 +699,7 @@ __finite (double __x)
 }
 
 /* Miscellaneous functions */
-
+#ifdef __FAST_MATH__
 __inline_mathcode (__coshm1, __x, \
   register long double __exm1 = __expm1l (__fabsl (__x));		      \
   return 0.5 * (__exm1 / (__exm1 + 1.0)) * __exm1)
@@ -703,6 +707,7 @@ __inline_mathcode (__coshm1, __x, \
 __inline_mathcode (__acosh1p, __x, \
   return log1pl (__x + __sqrtl (__x) * __sqrtl (__x + 2.0)))
 
+#endif /* __FAST_MATH__ */
 #endif /* __USE_MISC  */
 
 /* Undefine some of the large macros which are not used anymore.  */
