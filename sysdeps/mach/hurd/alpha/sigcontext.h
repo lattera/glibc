@@ -50,7 +50,7 @@ struct sigcontext
     long int sc_regs[31];	/* General registers $0..$30.  */
     long int sc_pc;		/* Program counter.  */
 
-    /* struct mips_exc_state */
+    /* struct alpha_exc_state */
 #define sc_alpha_exc_state sc_badvaddr
     unsigned long int sc_badvaddr;
     unsigned int sc_cause;	/* Machine-level trap code.  */
