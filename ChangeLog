@@ -1,5 +1,13 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (distribute): Add dl-osinfo.h.
+	* sysdeps/generic/dl-osinfo.h: New file.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: New file.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Use DL_SYSDEP_OSCHECK
+	if defined.
+	* sysdeps/unix/sysv/linux/init-first.c: Perform kernel version test
+	only for !SHARED case.  Get the code from dl-osinfo.h.
+
 	* stdlib/random_r.c: Cleanups.
 	* stdlib/tst-random.c: New file.
 	* stdlib/Makefile (tests): Add tst-random.

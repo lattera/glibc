@@ -47,7 +47,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   vismain.c vismod1.c vismod2.c vismod3.c \
 		   constload2.c constload3.c filtmod1.c filtmod2.c \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
-		   nodelmod3.c nodelmod4.c nodlopen.c
+		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h
 
 include ../Makeconfig
 

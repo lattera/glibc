@@ -33,6 +33,7 @@
 #include <entry.h>
 #include <dl-machine.h>
 #include <dl-procinfo.h>
+#include <dl-osinfo.h>
 
 extern int _dl_argc;
 extern char **_dl_argv;
@@ -59,7 +60,7 @@ unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 
 #ifndef DL_FIND_ARG_COMPONENTS
-#define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
+# define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
   do {								\
     void **_tmp;						\
     (argc) = *(long *) cookie;					\
@@ -87,7 +88,8 @@ _dl_sysdep_start (void **start_argptr,
   gid_t egid = 0;
   unsigned int seen;
 
-  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ, _dl_auxv);
+  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
+			  _dl_auxv);
 
   user_entry = (ElfW(Addr)) &ENTRY_POINT;
   _dl_platform = NULL; /* Default to nothing known about the platform.  */
@@ -175,6 +177,10 @@ _dl_sysdep_start (void **start_argptr,
      possible we stop the program.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
+
+#ifdef DL_SYSDEP_OSCHECK
+  DL_SYSDEP_OSCHECK (dl_fatal);
+#endif
 
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;
