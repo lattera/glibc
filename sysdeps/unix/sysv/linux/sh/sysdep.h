@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000, 2002,
+   2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
    Changed by Kaz Kojima, <kkojima@rr.iij4u.or.jp>.
@@ -243,41 +244,69 @@
 	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1), "r" (r2)
 
 #define SUBSTITUTE_ARGS_0()
-#define SUBSTITUTE_ARGS_1(arg1)					\
-	register long r4 asm ("%r4") = (long)(arg1)
-#define SUBSTITUTE_ARGS_2(arg1, arg2)				\
-	register long r4 asm ("%r4") = (long)(arg1);		\
-	register long r5 asm ("%r5") = (long)(arg2)
-#define SUBSTITUTE_ARGS_3(arg1, arg2, arg3)			\
-	register long r4 asm ("%r4") = (long)(arg1);		\
-	register long r5 asm ("%r5") = (long)(arg2);		\
-	register long r6 asm ("%r6") = (long)(arg3)
-#define SUBSTITUTE_ARGS_4(arg1, arg2, arg3, arg4)		\
-	register long r4 asm ("%r4") = (long)(arg1);		\
-	register long r5 asm ("%r5") = (long)(arg2);		\
-	register long r6 asm ("%r6") = (long)(arg3);		\
-	register long r7 asm ("%r7") = (long)(arg4)
-#define SUBSTITUTE_ARGS_5(arg1, arg2, arg3, arg4, arg5) 	\
-	register long r4 asm ("%r4") = (long)(arg1);		\
-	register long r5 asm ("%r5") = (long)(arg2);		\
-	register long r6 asm ("%r6") = (long)(arg3);		\
-	register long r7 asm ("%r7") = (long)(arg4);		\
-	register long r0 asm ("%r0") = (long)(arg5)
-#define SUBSTITUTE_ARGS_6(arg1, arg2, arg3, arg4, arg5, arg6)		\
-	register long r4 asm ("%r4") = (long)(arg1);			\
-	register long r5 asm ("%r5") = (long)(arg2);			\
-	register long r6 asm ("%r6") = (long)(arg3);			\
-	register long r7 asm ("%r7") = (long)(arg4);			\
-	register long r0 asm ("%r0") = (long)(arg5);			\
-	register long r1 asm ("%r1") = (long)(arg6)
-#define SUBSTITUTE_ARGS_7(arg1, arg2, arg3, arg4, arg5, arg6, arg7)	\
-	register long r4 asm ("%r4") = (long)(arg1);			\
-	register long r5 asm ("%r5") = (long)(arg2);			\
-	register long r6 asm ("%r6") = (long)(arg3);			\
-	register long r7 asm ("%r7") = (long)(arg4);			\
-	register long r0 asm ("%r0") = (long)(arg5)			\
-	register long r1 asm ("%r1") = (long)(arg6);			\
-	register long r2 asm ("%r2") = (long)(arg7)
+#define SUBSTITUTE_ARGS_1(arg1) \
+	long int _arg1 = (long int) (arg1);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1)
+#define SUBSTITUTE_ARGS_2(arg1, arg2) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2)
+#define SUBSTITUTE_ARGS_3(arg1, arg2, arg3) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	long int _arg3 = (long int) (arg3);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
+	register long int r6 asm ("%r6") = (long int) (_arg3)
+#define SUBSTITUTE_ARGS_4(arg1, arg2, arg3, arg4) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	long int _arg3 = (long int) (arg3);				      \
+	long int _arg4 = (long int) (arg4);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
+	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
+	register long int r7 asm ("%r7") = (long int) (_arg4)
+#define SUBSTITUTE_ARGS_5(arg1, arg2, arg3, arg4, arg5) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	long int _arg3 = (long int) (arg3);				      \
+	long int _arg4 = (long int) (arg4);				      \
+	long int _arg5 = (long int) (arg5);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
+	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
+	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
+	register long int r0 asm ("%r0") = (long int) (_arg5)
+#define SUBSTITUTE_ARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	long int _arg3 = (long int) (arg3);				      \
+	long int _arg4 = (long int) (arg4);				      \
+	long int _arg5 = (long int) (arg5);				      \
+	long int _arg6 = (long int) (arg6);				      \
+	register long int r4 asm ("%r4") = (long int)(_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
+	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
+	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
+	register long int r0 asm ("%r0") = (long int) (_arg5);		      \
+	register long int r1 asm ("%r1") = (long int) (_arg6)
+#define SUBSTITUTE_ARGS_7(arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
+	long int _arg1 = (long int) (arg1);				      \
+	long int _arg2 = (long int) (arg2);				      \
+	long int _arg3 = (long int) (arg3);				      \
+	long int _arg4 = (long int) (arg4);				      \
+	long int _arg5 = (long int) (arg5);				      \
+	long int _arg6 = (long int) (arg6);				      \
+	long int _arg7 = (long int) (arg7);				      \
+	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
+	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
+	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
+	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
+	register long int r0 asm ("%r0") = (long int) (_arg5);		      \
+	register long int r1 asm ("%r1") = (long int) (_arg6);		      \
+	register long int r2 asm ("%r2") = (long int) (_arg7)
 
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
@@ -292,16 +321,16 @@
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
-  ({								\
-    unsigned long resultvar;					\
-    register long r3 asm ("%r3") = SYS_ify (name);		\
-    SUBSTITUTE_ARGS_##nr(args);					\
-								\
-    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD		\
-		  : "=z" (resultvar)				\
-		  : "r" (r3) ASMFMT_##nr 			\
-		  : "memory");					\
-								\
+  ({									      \
+    unsigned long int resultvar;					      \
+    register long int r3 asm ("%r3") = SYS_ify (name);			      \
+    SUBSTITUTE_ARGS_##nr(args);						      \
+									      \
+    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
+		  : "=z" (resultvar)					      \
+		  : "r" (r3) ASMFMT_##nr				      \
+		  : "memory");						      \
+									      \
     (int) resultvar; })
 
 #undef INTERNAL_SYSCALL_DECL
