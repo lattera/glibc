@@ -1,3 +1,12 @@
+2000-07-05  Andreas Jaeger  <aj@suse.de>
+
+	* posix/fnmatch_loop.c (FCT): Only declare len if
+	!WIDE_CHAR_VERSION to silence GCC.
+
+	* sysdeps/generic/rawmemchr.c: Include <stdlib.h> for abort
+	prototype.
+	* sysdeps/generic/strchrnul.c: Likewise.
+
 2000-07-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/fnmatch_loop.c: Implement equivalence class handling.
