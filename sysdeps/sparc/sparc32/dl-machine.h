@@ -362,7 +362,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else
     {
+#ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
+#endif
       Elf32_Addr value;
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)

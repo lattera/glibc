@@ -197,7 +197,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     }
   else if (ELF64_R_TYPE_ID (reloc->r_info) != R_SPARC_NONE) /* Who is Wilbur? */
     {
+#ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;
+#endif
       Elf64_Addr value;
       if (sym->st_shndx != SHN_UNDEF &&
 	  ELF64_ST_BIND (sym->st_info) == STB_LOCAL)

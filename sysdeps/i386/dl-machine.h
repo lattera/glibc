@@ -319,7 +319,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     }
   else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
     {
+#ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
+#endif
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym)
 	value += sym->st_value;

@@ -1,3 +1,13 @@
+2001-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/setenv.c (unsetenv): Remove const from len.
+	* sysdeps/sparc/fpu/bits/mathinline.h (sqrt, fdim): Don't define if
+	__NO_MATH_INLINES.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Only declare refsym
+	if not RTLD_BOOTSTRAP.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/linereader.c (get_ident): Stop loop if EOF.  Use

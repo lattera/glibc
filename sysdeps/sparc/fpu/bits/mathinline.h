@@ -142,6 +142,8 @@ __signbitl (long double __x) __THROW
 
 #endif /* sparc64 */
 
+#ifndef __NO_MATH_INLINES
+
 __MATH_INLINE double
 sqrt(double __x) __THROW
 {
@@ -168,6 +170,8 @@ sqrtl(long double __x) __THROW
   return __r;
 }
 #endif /* sparc64 */
+
+#endif
 
 /* This code is used internally in the GNU libc.  */
 #ifdef __LIBC_INTERNAL_MATH_INLINES
@@ -202,6 +206,8 @@ __ieee754_sqrtl(long double __x)
 
 #ifdef __USE_ISOC99
 
+#ifndef __NO_MATH_INLINES
+
 __MATH_INLINE double fdim (double __x, double __y);
 __MATH_INLINE double
 fdim (double __x, double __y)
@@ -216,6 +222,7 @@ fdimf (float __x, float __y)
   return __x < __y ? 0 : __x - __y;
 }
 
+#endif /* !__NO_MATH_INLINES */
 #endif /* __USE_ISOC99 */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 #endif /* __GNUC__ */

@@ -267,7 +267,7 @@ int
 unsetenv (name)
      const char *name;
 {
-  const size_t len;
+  size_t len;
   char **ep;
 
   if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
