@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zdump.c	7.31";
+static char	elsieid[] = "@(#)zdump.c	7.40";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -64,16 +64,15 @@ static char	elsieid[] = "@(#)zdump.c	7.31";
 #define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
 #endif /* !defined isleap */
 
-#if HAVE_GETTEXT - 0
+#if HAVE_GETTEXT
 #include "locale.h"	/* for setlocale */
 #include "libintl.h"
-#endif /* HAVE_GETTEXT - 0 */
+#endif /* HAVE_GETTEXT */
 
 #ifndef GNUC_or_lint
 #ifdef lint
 #define GNUC_or_lint
-#endif /* defined lint */
-#ifndef lint
+#else /* !defined lint */
 #ifdef __GNUC__
 #define GNUC_or_lint
 #endif /* defined __GNUC__ */
@@ -83,8 +82,7 @@ static char	elsieid[] = "@(#)zdump.c	7.31";
 #ifndef INITIALIZE
 #ifdef GNUC_or_lint
 #define INITIALIZE(x)	((x) = 0)
-#endif /* defined GNUC_or_lint */
-#ifndef GNUC_or_lint
+#else /* !defined GNUC_or_lint */
 #define INITIALIZE(x)
 #endif /* !defined GNUC_or_lint */
 #endif /* !defined INITIALIZE */
@@ -96,11 +94,11 @@ static char	elsieid[] = "@(#)zdump.c	7.31";
 */
 
 #ifndef _
-#if HAVE_GETTEXT - 0
+#if HAVE_GETTEXT
 #define _(msgid) gettext(msgid)
-#else /* !(HAVE_GETTEXT - 0) */
+#else /* !HAVE_GETTEXT */
 #define _(msgid) msgid
-#endif /* !(HAVE_GETTEXT - 0) */
+#endif /* !HAVE_GETTEXT */
 #endif /* !defined _ */
 
 #ifndef TZ_DOMAIN
@@ -110,8 +108,7 @@ static char	elsieid[] = "@(#)zdump.c	7.31";
 #ifndef P
 #ifdef __STDC__
 #define P(x)	x
-#endif /* defined __STDC__ */
-#ifndef __STDC__
+#else /* !defined __STDC__ */
 #define P(x)	()
 #endif /* !defined __STDC__ */
 #endif /* !defined P */
@@ -129,6 +126,7 @@ static time_t	hunt P((char * name, time_t lot, time_t	hit));
 static size_t	longest;
 static char *	progname;
 static void	show P((char * zone, time_t t, int v));
+static void	dumptime P((const struct tm * tmp));
 
 int
 main(argc, argv)
@@ -150,14 +148,13 @@ char *	argv[];
 	struct tm		newtm;
 
 	INITIALIZE(cuttime);
-#if HAVE_GETTEXT - 0
-	(void) setlocale(LC_CTYPE, "");
+#if HAVE_GETTEXT
 	(void) setlocale(LC_MESSAGES, "");
 #ifdef TZ_DOMAINDIR
 	(void) bindtextdomain(TZ_DOMAIN, TZ_DOMAINDIR);
-#endif /* defined(TEXTDOMAINDIR) */
+#endif /* defined TEXTDOMAINDIR */
 	(void) textdomain(TZ_DOMAIN);
-#endif /* HAVE_GETTEXT - 0 */
+#endif /* HAVE_GETTEXT */
 	progname = argv[0];
 	for (i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--version") == 0) {
@@ -324,7 +321,7 @@ struct tm *	oldp;
 		return -delta(oldp, newp);
 	result = 0;
 	for (tmy = oldp->tm_year; tmy < newp->tm_year; ++tmy)
-		result += DAYSPERNYEAR + isleap(tmy + TM_YEAR_BASE);
+		result += DAYSPERNYEAR + isleap(tmy + (long) TM_YEAR_BASE);
 	result += newp->tm_yday - oldp->tm_yday;
 	result *= HOURSPERDAY;
 	result += newp->tm_hour - oldp->tm_hour;
@@ -344,10 +341,12 @@ int	v;
 	struct tm *	tmp;
 
 	(void) printf("%-*s  ", (int) longest, zone);
-	if (v)
-		(void) printf("%.24s UTC = ", asctime(gmtime(&t)));
+	if (v) {
+		dumptime(gmtime(&t));
+		(void) printf(" UTC = ");
+	}
 	tmp = localtime(&t);
-	(void) printf("%.24s", asctime(tmp));
+	dumptime(tmp);
 	if (*abbr(tmp) != '\0')
 		(void) printf(" %s", abbr(tmp));
 	if (v) {
@@ -370,4 +369,38 @@ struct tm *	tmp;
 		return &nada;
 	result = tzname[tmp->tm_isdst];
 	return (result == NULL) ? &nada : result;
+}
+
+static void
+dumptime(timeptr)
+register const struct tm *	timeptr;
+{
+	static const char	wday_name[][3] = {
+		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+	};
+	static const char	mon_name[][3] = {
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	};
+	register const char *	wn;
+	register const char *	mn;
+
+	/*
+	** The packaged versions of localtime and gmtime never put out-of-range
+	** values in tm_wday or tm_mon, but since this code might be compiled
+	** with other (perhaps experimental) versions, paranoia is in order.
+	*/
+	if (timeptr->tm_wday < 0 || timeptr->tm_wday >=
+		(int) (sizeof wday_name / sizeof wday_name[0]))
+			wn = "???";
+	else		wn = wday_name[timeptr->tm_wday];
+	if (timeptr->tm_mon < 0 || timeptr->tm_mon >=
+		(int) (sizeof mon_name / sizeof mon_name[0]))
+			mn = "???";
+	else		mn = mon_name[timeptr->tm_mon];
+	(void) printf("%.3s %.3s%3d %.2d:%.2d:%.2d %ld",
+		wn, mn,
+		timeptr->tm_mday, timeptr->tm_hour,
+		timeptr->tm_min, timeptr->tm_sec,
+		timeptr->tm_year + (long) TM_YEAR_BASE);
 }

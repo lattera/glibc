@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.53";
+static char	privatehid[] = "@(#)private.h	7.54";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -190,9 +190,20 @@ extern int	unlink P((const char * filename));
 ** But some newer errno.h implementations define it as a macro.
 ** Fix the former without affecting the latter.
 */
+
 #ifndef errno
 extern int errno;
 #endif /* !defined errno */
+
+/*
+** Some time.h implementations don't declare asctime_r.
+** Others might define it as a macro.
+** Fix the former without affecting the latter.
+*/
+
+#ifndef asctime_r
+extern char *	asctime_r();
+#endif
 
 /*
 ** Private function declarations.

@@ -1,5 +1,10 @@
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* timezone/asia: Update from tzdata2004e.
+	* timezone/southamerica: Likewise.
+	* timezone/private.h: Update from tzcode2004e.
+	* timezone/zdump.c: Likewise.
+
 	* stdio-common/vfscanf.c: Add support for reading localized
 	digits.  Patch mainly by Hamed Malek <hamed@bamdad.org>.
 

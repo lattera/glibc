@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: September 2002
+Status: October 2004
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@gnu.org>.
@@ -53,7 +53,7 @@ contact <bug-glibc@gnu.org>.
 
 
 [11] Write access function for netmasks, bootparams, and automount
-     databases for nss_files and nss_db module.
+     databases for nss_files, nss_nis, and nss_nisplus modules.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
 
@@ -76,7 +76,7 @@ contact <bug-glibc@gnu.org>.
 [18] Based on the sprof program we need tools to analyze the output.  The
      result should be a link map which specifies in which order the .o
      files are placed in the shared object.  This should help to improve
-     code locality and result in a smaller foorprint (in code and data
+     code locality and result in a smaller footprint (in code and data
      memory) since less pages are only used in small parts.
 
 
@@ -93,29 +93,6 @@ contact <bug-glibc@gnu.org>.
      available.
 
 
-[21] The nscd program and the stubs in the libc should be changed so
-     that each program uses only one socket connect.  Take a look at
-	http://people.redhat.com/drepper/nscd.html
-
-     An alternative approach is to use an mmap()ed file.  The idea is
-     the following:
-     - the nscd creates the hash tables and the information it stores
-       in it in a mmap()ed region.  This means no pointers must be
-       used, only offsets.
-     OR
-       if POSIX shared memory is available use a named shared memory
-       region to put the data in
-     - each program using NSS functionality tries to open the file
-       with the data.
-     - by checking some timestamp (which the nscd renews frequently)
-       the programs can test whether the file is still valid
-     - if the file is valid look through the nscd and locate the
-       appropriate hash table for the database and lookup the data.
-       If it is included we are set.
-     - if the data is not yet in the database we contact the nscd using
-       the currently implemented methods.
-
-
 [23] The `strptime' function needs to be completed.  This includes among
      other things that it must get teached about timezones.  The solution
      envisioned is to extract the timezones from the ADO timezone
@@ -127,18 +104,4 @@ contact <bug-glibc@gnu.org>.
      Australia/Canberra or if the current locale is en_AU.
 
 
-[25] Sun's nscd version implements a feature where the nscd keeps N entries
-     for each database current.  I.e., if an entries lifespan is over and
-     it is one of the N entries to be kept the nscd updates the information
-     instead of removing the entry.
-
-     How to decide about which N entries to keep has to be examined.
-     Factors should be number of uses (of course), influenced by aging.
-     Just imagine a computer used by several people.  The IDs of the current
-     user should be preferred even if the last user spent more time.
-
-
-[27] We need a second test suite with tests which cannot run during a normal
-     `make check' run.  This test suite can require root priviledges and
-     can test things like DNS (i.e., require network access),
-     user-interaction, networking in general, and probably many other things.
+[27] ...deleted...
