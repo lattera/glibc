@@ -1,5 +1,9 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (test-input): Add da_DK and hr_HR sorting tests.
+
+	* sort-test.sh: Improve error handling by printing more information.
+
 	* locales/ar_AE: New file.
 	* locales/ar_BH: New file.
 	* locales/ar_DZ: New file.
