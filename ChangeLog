@@ -1,3 +1,8 @@
+2004-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (handle_request): Print more descriptive
+	message for invalid request types.
+
 2004-08-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconvdata/ibm932.c (BODY): Avoid binary search for ch >= 0xffff.
