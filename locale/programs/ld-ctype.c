@@ -2308,10 +2308,15 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
       /* Table 2-6 in P1003.2 says that characters in class `upper' or
 	 class `lower' *must* be in class `alpha'.  */
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower);
+      unsigned long int maskw = BITw (tok_upper) | BITw (tok_lower);
+
+      for (cnt = 0; cnt < 256; ++cnt)
+	if ((ctype->class256_collection[cnt] & mask) != 0)
+	  ctype->class256_collection[cnt] |= BIT (tok_alpha);
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
-	if ((ctype->class_collection[cnt] & mask) != 0)
-	  ctype->class_collection[cnt] |= BIT (tok_alpha);
+	if ((ctype->class_collection[cnt] & maskw) != 0)
+	  ctype->class_collection[cnt] |= BITw (tok_alpha);
     }
 
   if ((ctype->class_done & BITw (tok_digit)) == 0)
@@ -2325,10 +2330,15 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
      and `digit' are automatically included in this class.  */
   {
     unsigned long int mask = BIT (tok_alpha) | BIT (tok_digit);
+    unsigned long int maskw = BITw (tok_alpha) | BITw (tok_digit);
+
+    for (cnt = 0; cnt < 256; ++cnt)
+      if ((ctype->class256_collection[cnt] & mask) != 0)
+	ctype->class256_collection[cnt] |= BIT (tok_alnum);
 
     for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
-      if ((ctype->class_collection[cnt] & mask) != 0)
-	ctype->class_collection[cnt] |= BIT (tok_alnum);
+      if ((ctype->class_collection[cnt] & maskw) != 0)
+	ctype->class_collection[cnt] |= BITw (tok_alnum);
   }
 
   if ((ctype->class_done & BITw (tok_space)) == 0)

@@ -1,5 +1,8 @@
 1999-11-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c (set_class_defaults): Set default
+	value for alpha and alnum correctly.
+
 	* locale/programs/ld-address.c (address_output): Fix output of
 	country_num.
 
