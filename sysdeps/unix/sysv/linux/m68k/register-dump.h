@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -48,7 +48,7 @@
 /* static */ void catch_segfault (int, int, struct sigcontext *);
 
 /* Dummy function so that we can use asm with arguments.  */
-static void __attribute__ ((unused))
+static void __attribute_used__
 __dummy__ (void)
 {
   asm ("\n\
@@ -64,7 +64,7 @@ catch_segfault:\n\
        : : "n" (offsetof (struct sigcontext, sc_fpstate)));
 }
 #define catch_segfault(a,b) \
-  __attribute__ ((unused)) real_catch_segfault(a,b)
+  __attribute_used__ real_catch_segfault(a,b)
 
 static void
 hexvalue (unsigned long int value, char *buf, size_t len)
