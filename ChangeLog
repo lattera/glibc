@@ -1,3 +1,8 @@
+1998-08-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_db/db-XXX.c (_nss_db_getXXX): If buffer is too small
+	decrement `entidx' to allow retrieving the same entry again.
+
 1998-08-09 22:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/ffs.c: Fix typo.  Add support for ffsl.
