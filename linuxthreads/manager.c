@@ -35,7 +35,11 @@
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
 
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
-{ { 0, &__pthread_initial_thread}, /* All NULLs */ };
+{ { 0, &__pthread_initial_thread, 0}, /* All NULLs */ };
+
+/* Indicate whether at least one thread has a user-defined stack (if 1),
+   or if all threads have stacks supplied by LinuxThreads (if 0). */
+int __pthread_nonstandard_stacks;
 
 /* Mapping from stack segment to thread descriptor. */
 /* Stack segment numbers are also indices into the __pthread_handles array. */
@@ -181,6 +185,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   size_t sseg;
   int pid;
   pthread_descr new_thread;
+  char * new_thread_bottom;
   pthread_t new_thread_id;
   void *guardaddr = NULL;
 
@@ -195,6 +200,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       if (attr == NULL || !attr->stackaddr_set)
 	{
 	  new_thread = thread_segment(sseg);
+	  new_thread_bottom = (char *) new_thread - STACK_SIZE;
 	  /* Allocate space for stack and thread descriptor. */
 	  if (mmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
 		   INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
@@ -219,7 +225,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	}
       else
 	{
-	  new_thread = (pthread_descr) attr->stackaddr - 1;
+	  new_thread = (pthread_descr) ((long) attr->stackaddr
+					& -sizeof(void *)) - 1;
+	  new_thread_bottom = (char *) attr->stackaddr - attr->stacksize;
 	  break;
 	}
     }
@@ -258,6 +266,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Initialize the thread handle */
   __pthread_handles[sseg].h_spinlock = 0; /* should already be 0 */
   __pthread_handles[sseg].h_descr = new_thread;
+  __pthread_handles[sseg].h_bottom = new_thread_bottom;
   /* Determine scheduling parameters for the thread */
   new_thread->p_start_args.schedpolicy = -1;
   if (attr != NULL) {
@@ -318,22 +327,12 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 static void pthread_free(pthread_descr th)
 {
   pthread_handle handle;
-  pthread_descr t;
-
-  /* Check that the thread th is still there -- pthread_reap_children
-     might have deallocated it already */
-  t = __pthread_main_thread;
-  do {
-    if (t == th) break;
-    t = t->p_nextlive;
-  } while (t != __pthread_main_thread);
-  if (t != th) return;
-
   ASSERT(th->p_exited);
   /* Make the handle invalid */
   handle =  thread_handle(th->p_tid);
   acquire(&handle->h_spinlock);
   handle->h_descr = NULL;
+  handle->h_bottom = (char *)(-1L);
   release(&handle->h_spinlock);
   /* If initial thread, nothing to free */
   if (th == &__pthread_initial_thread) return;
@@ -481,7 +480,7 @@ void __pthread_manager_adjust_prio(int thread_prio)
 
   if (thread_prio <= __pthread_manager_thread.p_priority) return;
   param.sched_priority =
-    thread_prio < __sched_get_priority_max(SCHED_FIFO) 
+    thread_prio < __sched_get_priority_max(SCHED_FIFO)
     ? thread_prio + 1 : thread_prio;
   __sched_setscheduler(__pthread_manager_thread.p_pid, SCHED_FIFO, &param);
   __pthread_manager_thread.p_priority = thread_prio;

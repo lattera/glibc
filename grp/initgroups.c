@@ -60,7 +60,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   end_function endgrent_fct;
 
   setgrent_fct = __nss_lookup_function (nip, "setgrent");
-  status = (*setgrent_fct) ();
+  status = _CALL_DL_FCT (setgrent_fct, ());
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
@@ -71,9 +71,10 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 
   do
     {
-      while ((status =
-	      (*getgrent_fct) (&grpbuf, tmpbuf, buflen, errnop)) ==
-	     NSS_STATUS_TRYAGAIN && *errnop == ERANGE)
+      while ((status = _CALL_DL_FCT (getgrent_fct,
+				     (&grpbuf, tmpbuf, buflen, errnop)),
+	      status == NSS_STATUS_TRYAGAIN)
+	     && *errnop == ERANGE)
         {
           buflen *= 2;
           tmpbuf = __alloca (buflen);
@@ -114,7 +115,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   while (status == NSS_STATUS_SUCCESS);
 
  done:
-  (*endgrent_fct) ();
+  _CALL_DL_FCT (endgrent_fct, ());
 
   return NSS_STATUS_SUCCESS;
 }
@@ -177,8 +178,8 @@ initgroups (user, group)
 	status = compat_call (nip, user, group, &start, &size, groups,
 			      limit, &errno);
       else
-	status = (*fct) (user, group, &start, &size, groups, limit,
-			 &errno);
+	status = _CALL_DL_FCT (fct, (user, group, &start, &size, groups, limit,
+				     &errno));
 
       if (nip->next == NULL)
 	no_more = -1;

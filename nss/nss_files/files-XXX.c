@@ -224,7 +224,16 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 
   /* Be prepared that the set*ent function was not called before.  */
   if (stream == NULL)
-    status = internal_setent (0);
+    {
+      status = internal_setent (0);
+
+      if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
+	{
+	  fclose (stream);
+	  stream = NULL;
+	  status = NSS_STATUS_UNAVAIL;
+	}
+    }
 
   if (status == NSS_STATUS_SUCCESS)
     {

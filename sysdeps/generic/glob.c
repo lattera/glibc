@@ -246,9 +246,11 @@ extern char *alloca ();
 
 /* Some system header files erroneously define these.
    We want our own definitions from <fnmatch.h> to take precedence.  */
-#undef	FNM_PATHNAME
-#undef	FNM_NOESCAPE
-#undef	FNM_PERIOD
+#ifndef __GNU_LIBRARY__
+# undef	FNM_PATHNAME
+# undef	FNM_NOESCAPE
+# undef	FNM_PERIOD
+#endif
 #include <fnmatch.h>
 
 /* Some system header files erroneously define these.

@@ -563,7 +563,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
   /* Read the header directly.  */
   readbuf = alloca (_dl_pagesize);
   readlength = __libc_read (fd, readbuf, _dl_pagesize);
-  if (readlength < sizeof(*header))
+  if (readlength < (ssize_t) sizeof(*header))
     lose (errno, "cannot read file data");
   header = (void *) readbuf;
 

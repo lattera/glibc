@@ -1,3 +1,8 @@
+1998-06-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_free): Undo patch from 980430.
+	Reported by David Wragg <dpw@doc.ic.ac.uk>.
+
 1998-06-09 15:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c: Define __pthread_manager_adjust_prio and use it to
