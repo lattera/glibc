@@ -567,10 +567,28 @@ TRANS ??? */
 #endif
 #ifdef ENOSYS
 /*
-TRANS Function not implemented.  Some functions have commands or options defined
-TRANS that might not be supported in all implementations, and this is the kind
-TRANS of error you get if you request them and they are not supported. */
+TRANS Function not implemented.  This indicates that the function called is
+TRANS not implemented at all, either in the C library itself or in the
+TRANS operating system.  When you get this error, you can be sure that this
+TRANS particular function will always fail with @code{ENOSYS} unless you
+TRANS install a new version of the C library or the operating system. */
     [ERR_REMAP (ENOSYS)] = N_("Function not implemented"),
+#endif
+#ifdef ENOTSUP
+/*
+TRANS Not supported.  A function returns this error when certain parameter
+TRANS values are valid, but the functionality they request is not available.
+TRANS This can mean that the function does not implement a particular command
+TRANS or option value or flag bit at all.  For functions that operate on some
+TRANS object given in a parameter, such as a file descriptor or a port, it
+TRANS might instead mean that only @emph{that specific object} (file
+TRANS descriptor, port, etc.) is unable to support the other parameters given;
+TRANS different file descriptors might support different ranges of parameter
+TRANS values.
+TRANS 
+TRANS If the entire function is not available at all in the implementation,
+TRANS it returns @code{ENOSYS} instead. */
+    [ERR_REMAP (ENOTSUP)] = N_("Not supported"),
 #endif
 #ifdef EILSEQ
 /*
