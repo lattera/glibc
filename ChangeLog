@@ -1,3 +1,8 @@
+1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/ctype.c (toupper): Correct variable names from lat change.
+	(tolower): Likewise.
+
 1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc_main.c (open_output): Allow better translation of

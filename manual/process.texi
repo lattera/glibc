@@ -243,15 +243,15 @@ signals and signal actions from the parent process.)
 @comment unistd.h
 @comment BSD
 @deftypefun pid_t vfork (void)
-The @code{vfork} function is similar to @code{fork} but on systems it
-is more efficient; however, there are restrictions you must follow to
+The @code{vfork} function is similar to @code{fork} but on some systems
+it is more efficient; however, there are restrictions you must follow to
 use it safely.
 
-While @code{fork} makes a complete copy of the calling process's
-address space and allows both the parent and child to execute
-independently, @code{vfork} does not make this copy.  Instead, the
-child process created with @code{vfork} shares its parent's address
-space until it calls exits or one of the @code{exec} functions.  In the
+While @code{fork} makes a complete copy of the calling process's address
+space and allows both the parent and child to execute independently,
+@code{vfork} does not make this copy.  Instead, the child process
+created with @code{vfork} shares its parent's address space until it
+calls @code{_exit} or one of the @code{exec} functions.  In the
 meantime, the parent process suspends execution.
 
 You must be very careful not to allow the child process created with

@@ -1,6 +1,6 @@
-GNU C Library NEWS -- history of user-visible changes.  1998-03-04
+GNU C Library NEWS -- history of user-visible changes.  1999-01-24
 
-Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -47,7 +47,7 @@ Version 2.1
 
 * Mark Kettenis implemented the utmpx interface and an utmp daemon.
 
-* Ulrich Drepper added character conversion functions.
+* Ulrich Drepper added character set conversion functions (iconv).
 
 * Optimized string functions have been added.
 

@@ -251,10 +251,10 @@ One auxiliary program, @file{/usr/libexec/pt_chown}, is installed setuid
 sets the permissions on a pseudoterminal so it can be used by the
 calling process.  This means programs like @code{xterm} and
 @code{screen} do not have to be setuid to get a pty.  (There may be
-other reasons why they need privileges.)  If you are using a 2.1 Linux
-kernel with the @code{devptsfs} or @code{devfs} filesystems providing
-pty slaves, you don't need this program; otherwise you do.  The source
-for @file{pt_chown} is in @file{login/programs/pt_chown.c}.
+other reasons why they need privileges.)  If you are using a 2.1 or
+newer Linux kernel with the @code{devptsfs} or @code{devfs} filesystems
+providing pty slaves, you don't need this program; otherwise you do.
+The source for @file{pt_chown} is in @file{login/programs/pt_chown.c}.
 
 @node Tools for Compilation
 @appendixsec Recommended Tools for Compilation
