@@ -131,10 +131,12 @@ extern struct hostent *gethostbyaddr (__const char *__addr, size_t __len,
 /* Return entry from host data base for host with NAME.  */
 extern struct hostent *gethostbyname (__const char *__name) __THROW;
 
+#ifdef __USE_MISC
 /* Return entry from host data base for host with NAME.  AF must be
    set to the address type which is `AF_INET' for IPv4 or `AF_INET6'
    for IPv6.  */
 extern struct hostent *gethostbyname2 (__const char *__name, int __af) __THROW;
+#endif
 
 #ifdef __USE_UNIX98
 /* Return entry from host data base which address match ADDR with
@@ -343,11 +345,11 @@ extern int getnetgrent (char **__restrict __hostp,
 			char **__restrict __userp,
 			char **__restrict __domainp) __THROW;
 
+#ifdef	__USE_MISC
 /* Test whether NETGROUP contains the triple (HOST,USER,DOMAIN).  */
 extern int innetgr (__const char *__netgroup, __const char *__host,
 		    __const char *__user, __const char *domain) __THROW;
 
-#ifdef	__USE_MISC
 /* Reentrant version of `getnetgrent' where result is placed in BUFFER.  */
 extern int getnetgrent_r (char **__restrict __hostp,
 			  char **__restrict __userp,
@@ -428,7 +430,7 @@ struct addrinfo
   int ai_family;		/* Protocol family for socket.  */
   int ai_socktype;		/* Socket type.  */
   int ai_protocol;		/* Protocol for socket.  */
-  int ai_addrlen;		/* Length of socket address.  */
+  socklen_t ai_addrlen;		/* Length of socket address.  */
   struct sockaddr *ai_addr;	/* Socket address for socket.  */
   char *ai_canonname;		/* Canonical name for service location.  */
   struct addrinfo *ai_next;	/* Pointer to next in list.  */

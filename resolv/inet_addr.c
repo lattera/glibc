@@ -74,13 +74,13 @@ static char rcsid[] = "$Id$";
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
  */
-u_int32_t
+in_addr_t
 inet_addr(cp)
 	register const char *cp;
 {
 	struct in_addr val;
 
-	if (inet_aton(cp, &val))
+	if (__inet_aton(cp, &val))
 		return (val.s_addr);
 	return (INADDR_NONE);
 }
@@ -92,13 +92,13 @@ inet_addr(cp)
  * This replaces inet_addr, the return value from which
  * cannot distinguish between failure and a local broadcast address.
  */
-int
-inet_aton(cp, addr)
+in_addr_t
+__inet_aton(cp, addr)
 	const char *cp;
 	struct in_addr *addr;
 {
-	static const u_int32_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
-	register u_int32_t val;	/* changed from u_long --david */
+	static const in_addr_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
+	register in_addr_t val;
 #ifndef _LIBC
 	register int base;
 #endif
@@ -207,3 +207,4 @@ ret_0:
 #endif
 	return (0);
 }
+weak_alias (__inet_aton, inet_aton)

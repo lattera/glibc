@@ -112,6 +112,9 @@ struct in_pktinfo
 #define IPV6_ADD_MEMBERSHIP	20
 #define IPV6_DROP_MEMBERSHIP	21
 #define IPV6_ROUTER_ALERT	22
+#define IPV6_MTU_DISCOVER	23
+#define IPV6_MTU		24
+#define IPV6_RECVERR		25
 
 #define SCM_SRCRT		IPV6_RXSRCRT
 

@@ -1,5 +1,51 @@
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/arpa/inet.h (inet_addr): Change return type to in_addr_t.
+	(inet_lnaof): Likewise.
+	(inet_netof): Likewise.
+	(inet_network): Likewise.
+	(inet_aton): Likewise.
+	(inet_makeaddr): Change parameter types to in_addr_t.
+	(inet_neta): Likewise.
+	(inet_ntop): Change type of last parameter to socklen_t.
+	(inet_aton): Only make available if __USE_MISC.
+	(inet_neta): Likewise.
+	(inet_net_ntop): Likewise.
+	(inet_net_pton): Likewise.
+	(inet_nsap_ntoa): Likewise.
+
+	* inet/in.h: Define in_port_t type.
+	Define in_addr_t type.
+	(struct in_addr): Use in_addr_t in definition.
+	(IN_CLASSA): Use cast to in_addr_t.
+	(IN_CLASSB): Likewise.
+	(IN_CLASSC): Likewise.
+	(IN_CLASSD): Likewise.
+	(IN_EXPERIMENTAL): Likewise.
+	(IN_BADCLASS): Likewise.
+	(INADDR_ANY): Likewise.
+	(INADDR_BROADCAST): Likewise.
+	(INADDR_NONE): Likewise.
+	(INADDR_LOOPBACK): Likewise.
+	(INADDR_UNSPEC_GROUP): Likewise.
+	(INADDR_ALLHOSTS_GROUP): Likewise.
+	(INADDR_ALLRTRS_GROUP): Likewise.
+	(INADDR_MAX_LOCAL_GROUP): Likewise.
+	(struct sockaddr_in): Use in_port_t for sin_port element.
+	(struct sockaddr_in6): Use in_port_t for sin6_port element.
+	Use uint8_t instead of u_int8_t.
+
+	* resolv/inet_addr.c (inet_addr): Change return type to in_addr_t.
+	Call __inet_aton instead of inet_aton.
+	(__inet_aton): Renamed from inet_aton.  Add weak alias under old name.
+
+	* resolv/netdb.h (gethostbyname2): Define only is __USE_MISC.
+	(innetgr): Likewise.
+	(struct addrinfo): Use socklen_t for ai_addrlen element.
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_MTU_DISCOVER, IPV6_MTU,
+	IPV6_RECVERR): New defines.
+
 	* include/netdb.h: Change type of first parameter of __getnetbyaddr_r.
 	* inet/getnetbyad.c: Likewise.
 	* inet/getnetbyad_r.c: Likewise.
