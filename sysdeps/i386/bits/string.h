@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i386 version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -381,17 +381,19 @@ strncat (char *__dest, __const char *__src, size_t __n)
     ("cld\n\t"
      "repne; scasb\n\t"
      "decl	%1\n\t"
-     "movl	%5,%3\n"
+     "movl	%4,%2\n"
      "1:\n\t"
-     "decl	%3\n\t"
+     "decl	%2\n\t"
      "js	2f\n\t"
      "lodsb\n\t"
      "stosb\n\t"
      "testb	%%al,%%al\n\t"
-     "jne	1b\n"
+     "jne	1b\n\t"
+     "jmp	3f\n"
      "2:\n\t"
-     "xorl	%2,%2\n\t"
-     "stosb"
+     "xorl	%3,%3\n\t"
+     "stosb\n"
+     "3:"
      : "=&S" (__d0), "=&D" (__d1), "=&c" (__d2), "=&a" (__d3)
      : "g" (__n), "0" (__src), "1" (__dest), "2" (0xffffffff), "3" (0)
      : "memory", "cc");
@@ -543,7 +545,7 @@ strcspn (__const char *__s, __const char *__reject)
      "2:\n\t"
      "popl	%%ebx"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "r" (__reject), "1" (0), "2" (0xffffffff), "3" (__s),
+     : "d" (__reject), "0" (__s), "1" (0), "2" (0xffffffff)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -632,7 +634,7 @@ strspn (__const char *__s, __const char *__accept)
      "je	1b\n"
      "2:"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
-     : "g" (__accept), "0" (__s), "a" (0), "c" (0xffffffff)
+     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -682,7 +684,7 @@ strpbrk (__const char *__s, __const char *__accept)
   register char *__res;
   __asm__ __volatile__
     ("cld\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
      "decl	%%ecx\n\t"
@@ -691,7 +693,7 @@ strpbrk (__const char *__s, __const char *__accept)
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%5,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "jne	1b\n\t"
@@ -714,7 +716,7 @@ strpbrk (__const char *__s, __const char *__accept)
 __STRING_INLINE char *
 strstr (__const char *__haystack, __const char *__needle)
 {
-  register unsigned long int __d0, __d1, __d2, __d3;
+  register unsigned long int __d0, __d1, __d2;
   register char *__res;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"

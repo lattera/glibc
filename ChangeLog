@@ -1,3 +1,9 @@
+1999-01-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/string.h: Correct several bugs in various
+	functions which never worked.
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 1999-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/charset.texi: Add many corrections.
