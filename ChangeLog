@@ -1,3 +1,23 @@
+2001-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/e_logl.c (__ieee754_logl): Make sure
+	desired exceptions are raised for exceptional values.
+	* math/libm-test.inc (acosh_test, atan_test, atan2_test, cacos_test,
+	cacosh_test, casin_test, casinh_test, catan_test, catanh_test,
+	clog_test, log_test, log1p_test, tan_test): Increase precision of
+	expected values to satisfy ldbl-128.
+	* sysdeps/alpha/fpu/libm-test-ulps: Adjust accordingly.
+	* sysdeps/arm/libm-test-ulps: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+	* sysdeps/m68k/fpu/libm-test-ulps: Likewise.
+	* sysdeps/mips/fpu/libm-test-ulps: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sh/sh4/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Likewise.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 2001-04-17  Andreas Jaeger  <aj@suse.de>
 
 	* configure.in: Move test for critical programs up.

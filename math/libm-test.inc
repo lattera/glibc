@@ -739,7 +739,7 @@ acosh_test (void)
   TEST_f_f (acosh, -1.1L, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acosh, 1, 0);
-  TEST_f_f (acosh, 7, 2.6339157938496334172L);
+  TEST_f_f (acosh, 7, 2.633915793849633417250092694615937L);
 
   END (acosh);
 }
@@ -818,7 +818,7 @@ atan_test (void)
   TEST_f_f (atan, 1, M_PI_4l);
   TEST_f_f (atan, -1, -M_PI_4l);
 
-  TEST_f_f (atan, 0.7L, 0.6107259643892086165L);
+  TEST_f_f (atan, 0.7L, 0.61072596438920861654375887649023613L);
 
   END (atan);
 }
@@ -918,11 +918,11 @@ atan2_test (void)
   TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l);
   TEST_ff_f (atan2, nan_value, nan_value, nan_value);
 
-  TEST_ff_f (atan2, 0.7L, 1.0L, 0.6107259643892086165L);
-  TEST_ff_f (atan2, -0.7L, 1.0L, -0.6107259643892086165L);
+  TEST_ff_f (atan2, 0.7L, 1, 0.61072596438920861654375887649023613L);
+  TEST_ff_f (atan2, -0.7L, 1.0L, -0.61072596438920861654375887649023613L);
   TEST_ff_f (atan2, 0.7L, -1.0L, 2.5308666892005846219L);
   TEST_ff_f (atan2, -0.7L, -1.0L, -2.5308666892005846219L);
-  TEST_ff_f (atan2, 0.4L, 0.0003L, 1.5700463269355215718L);
+  TEST_ff_f (atan2, 0.4L, 0.0003L, 1.5700463269355215717704032607580829L);
   TEST_ff_f (atan2, 1.4L, -0.93L, 2.1571487668237843755L);
 
   END (atan2);
@@ -1032,8 +1032,8 @@ cacos_test (void)
 
   TEST_c_c (cacos, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (cacos, 0.7L, 1.2L, 1.1351827477151551089L, -1.0927647857577371459L);
-  TEST_c_c (cacos, -2, -3, 2.1414491111159960199L, 1.9833870299165354323L);
+  TEST_c_c (cacos, 0.7L, 1.2L, 1.1351827477151551088992008271819053L, -1.0927647857577371459105272080819308L);
+  TEST_c_c (cacos, -2, -3, 2.1414491111159960199416055713254211L, 1.9833870299165354323470769028940395L);
 
   END (cacos, complex);
 }
@@ -1095,8 +1095,8 @@ cacosh_test (void)
 
   TEST_c_c (cacosh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (cacosh, 0.7L, 1.2L, 1.0927647857577371459L, 1.1351827477151551089L);
-  TEST_c_c (cacosh, -2, -3, -1.9833870299165354323L, 2.1414491111159960199L);
+  TEST_c_c (cacosh, 0.7L, 1.2L, 1.0927647857577371459105272080819308L, 1.1351827477151551088992008271819053L);
+  TEST_c_c (cacosh, -2, -3, -1.9833870299165354323470769028940395L, 2.1414491111159960199416055713254211L);
 
   END (cacosh, complex);
 }
@@ -1225,8 +1225,8 @@ casin_test (void)
 
   TEST_c_c (casin, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (casin, 0.7L, 1.2L, 0.4356135790797415103L, 1.0927647857577371459L);
-  TEST_c_c (casin, -2, -3, -0.5706527843210994007L, -1.9833870299165354323L);
+  TEST_c_c (casin, 0.7L, 1.2L, 0.4356135790797415103321208644578462L, 1.0927647857577371459105272080819308L);
+  TEST_c_c (casin, -2, -3, -0.57065278432109940071028387968566963L, -1.9833870299165354323470769028940395L);
 
   END (casin, complex);
 }
@@ -1289,8 +1289,8 @@ casinh_test (void)
 
   TEST_c_c (casinh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (casinh, 0.7L, 1.2L, 0.9786545955936738768L, 0.9113541895315601156L);
-  TEST_c_c (casinh, -2, -3, -1.9686379257930962917L, -0.9646585044076027920L);
+  TEST_c_c (casinh, 0.7L, 1.2L, 0.97865459559367387689317593222160964L, 0.91135418953156011567903546856170941L);
+  TEST_c_c (casinh, -2, -3, -1.9686379257930962917886650952454982L, -0.96465850440760279204541105949953237L);
 
   END (casinh, complex);
 }
@@ -1357,9 +1357,9 @@ catan_test (void)
 
   TEST_c_c (catan, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (catan, 0.7L, 1.2L, 1.0785743834118921877L, 0.5770573776534306764L);
+  TEST_c_c (catan, 0.7L, 1.2L, 1.0785743834118921877443707996386368L, 0.57705737765343067644394541889341712L);
 
-  TEST_c_c (catan, -2, -3, -1.4099210495965755225L, -0.2290726829685387662L);
+  TEST_c_c (catan, -2, -3, -1.4099210495965755225306193844604208L, -0.22907268296853876629588180294200276L);
 
   END (catan, complex);
 }
@@ -1424,8 +1424,8 @@ catanh_test (void)
 
   TEST_c_c (catanh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (catanh, 0.7L, 1.2L, 0.2600749516525135959L, 0.9702403077950989849L);
-  TEST_c_c (catanh, -2, -3, -0.1469466662255297520L, -1.3389725222944935611L);
+  TEST_c_c (catanh, 0.7L, 1.2L, 0.2600749516525135959200648705635915L, 0.97024030779509898497385130162655963L);
+  TEST_c_c (catanh, -2, -3, -0.14694666622552975204743278515471595L, -1.3389725222944935611241935759091443L);
 
   END (catanh, complex);
 }
@@ -1750,7 +1750,7 @@ clog_test (void)
   TEST_c_c (clog, nan_value, -5, nan_value, nan_value, INVALID_EXCEPTION_OK);
 
   TEST_c_c (clog, nan_value, nan_value, nan_value, nan_value);
-  TEST_c_c (clog, -2, -3, 1.2824746787307683680L, -2.1587989303424641704L);
+  TEST_c_c (clog, -2, -3, 1.2824746787307683680267437207826593L, -2.1587989303424641704769327722648368L);
 
   END (clog, complex);
 }
@@ -3103,7 +3103,7 @@ log_test (void)
   TEST_f_f (log, 1.0 / M_El, -1);
   TEST_f_f (log, 2, M_LN2l);
   TEST_f_f (log, 10, M_LN10l);
-  TEST_f_f (log, 0.7L, -0.35667494393873237891L);
+  TEST_f_f (log, 0.7L, -0.35667494393873237891263871124118447L);
 
   END (log);
 }
@@ -3164,7 +3164,7 @@ log1p_test (void)
 
   TEST_f_f (log1p, M_El - 1.0, 1);
 
-  TEST_f_f (log1p, -0.3L, -0.35667494393873237891L);
+  TEST_f_f (log1p, -0.3L, -0.35667494393873237891263871124118447L);
 
   END (log1p);
 }
@@ -3924,7 +3924,7 @@ tan_test (void)
   TEST_f_f (tan, nan_value, nan_value);
 
   TEST_f_f (tan, M_PI_4l, 1);
-  TEST_f_f (tan, 0.7L, 0.84228838046307944813L);
+  TEST_f_f (tan, 0.7L, 0.84228838046307944812813500221293775L);
 
   END (tan);
 }

@@ -106,6 +106,7 @@ static const long double logtbl[92] = {
 -2.7902661731604211834685052867305795169688E-4L,
 -1.2335696813916860754951146082826952093496E-4L,
 -3.0677461025892873184042490943581654591817E-5L,
+#define ZERO logtbl[38]
  0.0000000000000000000000000000000000000000E0L,
 -3.0359557945051052537099938863236321874198E-5L,
 -1.2081346403474584914595395755316412213151E-4L,
@@ -167,7 +168,6 @@ static const long double
   ln2a = 6.93145751953125e-1L,
   ln2b = 1.4286068203094172321214581765680755001344E-6L;
 
-
 long double
 __ieee754_logl(long double x)
 {
@@ -184,22 +184,17 @@ __ieee754_logl(long double x)
   /* log(0) = -infinity. */
   if ((k | u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
     {
-      u.parts32.w0 = 0xffff0000;
-      return u.value;
+      return -0.5L / ZERO;
     }
   /* log ( x < 0 ) = NaN */
   if (m & 0x80000000)
     {
-      u.parts32.w0 = 0x7fffffff;
-      u.parts32.w1 = 0xffffffff;
-      u.parts32.w2 = 0xffffffff;
-      u.parts32.w3 = 0xffffffff;
-      return u.value;
+      return (x - x) / ZERO;
     }
   /* log (infinity or NaN) */
   if (k >= 0x7fff0000)
     {
-      return u.value;
+      return x + x;
     }
 
   /* Extract exponent and reduce domain to 0.703125 <= u < 1.40625  */
