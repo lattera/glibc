@@ -85,7 +85,7 @@ _hurd_userlink_link (struct hurd_userlink **chainp,
 
   link->resource.next = *chainp;
   if (link->resource.next)
-    link->resource.next->thread.prevp = &link->resource.next;
+    link->resource.next->resource.prevp = &link->resource.next;
   link->resource.prevp = chainp;
   *chainp = link;
 
