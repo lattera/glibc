@@ -1,3 +1,15 @@
+2001-07-06  Paul Eggert  <eggert@twinsun.com>
+
+	* manual/argp.texi: Remove ignored LGPL copyright notice; it's
+	not appropriate for documentation anyway.
+	* manual/libc-texinfo.sh: "Library General Public License" ->
+	"Lesser General Public License".
+
+2001-07-06  Andreas Jaeger  <aj@suse.de>
+
+	* All files under GPL/LGPL version 2: Place under LGPL version
+	2.1.
+
 2001-07-05  Andreas Jaeger  <aj@suse.de>
 
 	Synch with Linux 2.4.6:
