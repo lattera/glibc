@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -58,11 +58,10 @@ wctob (c)
   /* Create the input string.  */
   inbuf[0] = c;
 
+  const unsigned char *argptr = (const unsigned char *) inptr;
   status = DL_CALL_FCT (fcts->tomb->__fct,
-			(fcts->tomb, &data,
-			 (const unsigned char **) &inptr,
-			 (const unsigned char *) &inbuf[1],
-			 NULL, &dummy, 0, 1));
+			(fcts->tomb, &data, &argptr,
+			 argptr + sizeof (inbuf[0]), NULL, &dummy, 0, 1));
 
   /* The conversion failed or the output is too long.  */
   if ((status != __GCONV_OK && status != __GCONV_FULL_OUTPUT

@@ -1,5 +1,6 @@
 /* Subroutines needed for unwinding stack frames for exception handling.  */
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+   Free Software Foundation, Inc.
    Contributed by Jason Merrill <jason@cygnus.com>.
 
 This file is part of GCC.
@@ -423,7 +424,7 @@ struct fde_accumulator
   struct fde_vector *erratic;
 };
 
-static inline int
+static int
 start_fde_sort (struct fde_accumulator *accu, size_t count)
 {
   size_t size;
@@ -461,7 +462,7 @@ fde_insert (struct fde_accumulator *accu, fde *this_fde)
    chain to determine what should be placed in the ERRATIC array, and
    what is the linear sequence.  This overlay is safe from aliasing.  */
 
-static inline void
+static void
 fde_split (struct object *ob, fde_compare_t fde_compare,
 	   struct fde_vector *linear, struct fde_vector *erratic)
 {
@@ -571,7 +572,7 @@ frame_heapsort (struct object *ob, fde_compare_t fde_compare,
 }
 
 /* Merge V1 and V2, both sorted, and put the result into V1.  */
-static inline void
+static void
 fde_merge (struct object *ob, fde_compare_t fde_compare,
 	   struct fde_vector *v1, struct fde_vector *v2)
 {
@@ -598,7 +599,7 @@ fde_merge (struct object *ob, fde_compare_t fde_compare,
     }
 }
 
-static inline void
+static void
 end_fde_sort (struct object *ob, struct fde_accumulator *accu, size_t count)
 {
   fde_compare_t fde_compare;
@@ -753,7 +754,7 @@ add_fdes (struct object *ob, struct fde_accumulator *accu, fde *this_fde)
    be faster.  We can be called multiple times, should we have failed to
    allocate a sorted fde array on a previous occasion.  */
 
-static inline void
+static void
 init_object (struct object* ob)
 {
   struct fde_accumulator accu;
@@ -876,7 +877,7 @@ linear_search_fdes (struct object *ob, fde *this_fde, void *pc)
 /* Binary search for an FDE containing the given PC.  Here are three
    implementations of increasing complexity.  */
 
-static inline fde *
+static fde *
 binary_search_unencoded_fdes (struct object *ob, void *pc)
 {
   struct fde_vector *vec = ob->u.sort;
@@ -903,7 +904,7 @@ binary_search_unencoded_fdes (struct object *ob, void *pc)
   return NULL;
 }
 
-static inline fde *
+static fde *
 binary_search_single_encoding_fdes (struct object *ob, void *pc)
 {
   struct fde_vector *vec = ob->u.sort;
@@ -933,7 +934,7 @@ binary_search_single_encoding_fdes (struct object *ob, void *pc)
   return NULL;
 }
 
-static inline fde *
+static fde *
 binary_search_mixed_encoding_fdes (struct object *ob, void *pc)
 {
   struct fde_vector *vec = ob->u.sort;

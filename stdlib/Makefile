@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@ routines	:=							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
+aux =	grouping groupingwc
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
@@ -73,7 +74,7 @@ mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
 routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
-aux := fpioconst mp_clz_tab
+aux += fpioconst mp_clz_tab
 distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
 generated += isomac isomac.out

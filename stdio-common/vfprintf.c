@@ -1294,13 +1294,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #ifdef COMPILE_WPRINTF
   /* Find the first format specifier.  */
-  f = lead_str_end = find_spec ((const UCHAR_T *) format);
+  f = lead_str_end = __find_specwc ((const UCHAR_T *) format);
 #else
   /* Put state for processing format string in initial state.  */
   memset (&mbstate, '\0', sizeof (mbstate_t));
 
   /* Find the first format specifier.  */
-  f = lead_str_end = find_spec (format, &mbstate);
+  f = lead_str_end = __find_specmb (format, &mbstate);
 #endif
 
   /* Lock stream.  */
@@ -1596,9 +1596,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
       /* Look for next format specifier.  */
 #ifdef COMPILE_WPRINTF
-      f = find_spec ((end_of_spec = ++f));
+      f = __find_specwc ((end_of_spec = ++f));
 #else
-      f = find_spec ((end_of_spec = ++f), &mbstate);
+      f = __find_specmb ((end_of_spec = ++f), &mbstate);
 #endif
 
       /* Write the following constant string.  */
@@ -1677,10 +1677,10 @@ do_positional:
 
 	/* Parse the format specifier.  */
 #ifdef COMPILE_WPRINTF
-	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg);
+	nargs += __parse_one_specwc (f, nargs, &specs[nspecs], &max_ref_arg);
 #else
-	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg,
-				 &mbstate);
+	nargs += __parse_one_specmb (f, nargs, &specs[nspecs], &max_ref_arg,
+				     &mbstate);
 #endif
       }
 

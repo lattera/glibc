@@ -1,7 +1,7 @@
 /* Determine whether string value is affirmation or negative response
    according to current locale's data.
    This file is part of the GNU C Library.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -29,11 +29,11 @@ rpmatch (response)
 {
   /* Match against one of the response patterns, compiling the pattern
      first if necessary.  */
-  auto inline int try (const int tag, const int match, const int nomatch,
-		       const char **lastp, regex_t *re);
+  auto int try (const int tag, const int match, const int nomatch,
+		const char **lastp, regex_t *re);
 
-  inline int try (const int tag, const int match, const int nomatch,
-		  const char **lastp, regex_t *re)
+  int try (const int tag, const int match, const int nomatch,
+	   const char **lastp, regex_t *re)
     {
       const char *pattern = nl_langinfo (tag);
       if (pattern != *lastp)

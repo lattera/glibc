@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -72,7 +72,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
   if (dst == NULL)
     {
       unsigned char buf[256];		/* Just an arbitrary value.  */
-      const wchar_t *inbuf = *src;
+      const unsigned char *inbuf = (const unsigned char *) *src;
       size_t dummy;
 
       result = 0;
@@ -83,7 +83,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 	  data.__outbuf = buf;
 
 	  status = DL_CALL_FCT (tomb->__fct,
-				(tomb, &data, (const unsigned char **) &inbuf,
+				(tomb, &data, &inbuf,
 				 (const unsigned char *) srcend, NULL,
 				 &dummy, 0, 1));
 

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 95, 96, 97, 98, 99, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,98,99,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ extern const char _itoa_upper_digits_internal[] attribute_hidden;
 extern const char _itoa_lower_digits[];
 extern const char _itoa_lower_digits_internal[] attribute_hidden;
 
-static inline char * __attribute__ ((unused))
+static inline char * __attribute__ ((unused, always_inline))
 _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
@@ -69,24 +69,11 @@ _itoa_word (unsigned long value, char *buflim,
 }
 #undef SPECIAL
 
-static inline char * __attribute__ ((unused))
-_fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
-{
-  char tmpbuf[sizeof (value) * 4];		/* Worst case length: base 2.  */
-  char *cp = _itoa_word (value, tmpbuf + sizeof (value) * 4, base, upper_case);
-  while (cp < tmpbuf + sizeof (value) * 4)
-    *buf++ = *cp++;
-  return buf;
-}
-
-static inline char * __attribute__ ((unused))
-_fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
-{
-  char tmpbuf[sizeof (value) * 4];		/* Worst case length: base 2.  */
-  char *cp = _itoa (value, tmpbuf + sizeof (value) * 4, base, upper_case);
-  while (cp < tmpbuf + sizeof (value) * 4)
-    *buf++ = *cp++;
-  return buf;
-}
+/* Similar to the _itoa functions, but output starts at buf and pointer
+   after the last written character is returned.  */
+extern char *_fitoa_word (unsigned long value, char *buf, unsigned int base,
+			  int upper_case) attribute_hidden;
+extern char *_fitoa (unsigned long long value, char *buf, unsigned int base,
+		     int upper_case) attribute_hidden;
 
 #endif	/* itoa.h */

@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991,92,94,95,96,97,98,99,2000,01,02
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001,2002,2003
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -374,7 +374,11 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 		    || (int) (TOUPPER (c) - L_('A') + 10) >= base))
 	      break;
 
-	  end = correctly_grouped_prefix (s, end, thousands, grouping);
+# ifdef USE_WIDE_CHAR
+	  end = __correctly_grouped_prefixwc (s, end, thousands, grouping);
+# else
+	  end = __correctly_grouped_prefixmb (s, end, thousands, grouping);
+# endif
 	}
     }
   else

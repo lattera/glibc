@@ -1,3 +1,8 @@
+2003-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/pspinlock.c (__pthread_spin_init): Fix
+	initializer [PR libc/5052].
+
 2003-06-09  Andreas Schwab  <schwab@suse.de>
 
 	* Makefile: Move inclusion of ../Rules down after extra-objs is

@@ -37,13 +37,13 @@ __fpathconf (fd, name)
   switch (name)
     {
     case _PC_LINK_MAX:
-      return statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf);
+      return __statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf);
 
     case _PC_FILESIZEBITS:
-      return statfs_filesize_max (__fstatfs (fd, &fsbuf), &fsbuf);
+      return __statfs_filesize_max (__fstatfs (fd, &fsbuf), &fsbuf);
 
     case _PC_2_SYMLINKS:
-      return statfs_symlinks (__fstatfs (fd, &fsbuf), &fsbuf);
+      return __statfs_symlinks (__fstatfs (fd, &fsbuf), &fsbuf);
 
     default:
       return posix_fpathconf (fd, name);

@@ -1,6 +1,5 @@
 /* xstat using old-style Unix stat system call.
-   Copyright (C) 1991, 1995, 1996, 1997, 1998, 2000, 2002
-   Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1998,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +30,7 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <xstatconv.c>
+#include <xstatconv.h>
 
 extern int __syscall_stat (const char *__unbounded,
 			   struct kernel_stat *__unbounded);
@@ -54,7 +53,7 @@ __xstat (int vers, const char *name, struct stat *buf)
   result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name),
 			   __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat_conv (vers, &kbuf, buf);
+    result = __xstat_conv (vers, &kbuf, buf);
 
   return result;
 #endif

@@ -51,7 +51,7 @@
 #ifndef WIDE_CHAR_VERSION
 
 /* We need UTF-8 encoding of numbers.  */
-static inline int
+static int
 utf8_encode (char *buf, int val)
 {
   int retval;

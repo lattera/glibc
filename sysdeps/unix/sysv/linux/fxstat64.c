@@ -1,5 +1,5 @@
 /* fxstat64 using old-style Unix fstat system call.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #include "kernel-features.h"
 
 #if __ASSUME_STAT64_SYSCALL == 0
-# include <xstatconv.c>
+# include <xstatconv.h>
 #endif
 
 extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
@@ -78,7 +78,7 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 # endif
   result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat64_conv (vers, &kbuf, buf);
+    result = __xstat64_conv (vers, &kbuf, buf);
 
   return result;
 #endif

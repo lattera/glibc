@@ -207,7 +207,7 @@ static const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 
 /* Return a floating point number of the needed type according to the given
    multi-precision number after possible rounding.  */
-static inline FLOAT
+static FLOAT
 round_and_return (mp_limb_t *retval, int exponent, int negative,
 		  mp_limb_t round_limb, mp_size_t round_bit, int more_bits)
 {
@@ -302,7 +302,7 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
    character od the string that is not part of the integer as the function
    value.  If the EXPONENT is small enough to be taken as an additional
    factor for the resulting number (see code) multiply by it.  */
-static inline const STRING_TYPE *
+static const STRING_TYPE *
 str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
 	    int *exponent
 #ifndef USE_WIDE_CHAR
@@ -401,10 +401,11 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
    Tege doesn't like this function so I have to write it here myself. :)
    --drepper */
 static inline void
+__attribute ((always_inline))
 __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
 		mp_limb_t limb)
 {
-  if (count == BITS_PER_MP_LIMB)
+  if (__builtin_constant_p (count) && count == BITS_PER_MP_LIMB)
     {
       /* Optimize the case of shifting by exactly a word:
 	 just copy words, with no actual bit-shifting.  */
@@ -692,7 +693,13 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 			 || (CHAR_TYPE) TOLOWER (c) != L_('p')))
       && (base != 16 && (CHAR_TYPE) TOLOWER (c) != L_('e')))
     {
-      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
+#ifdef USE_WIDE_CHAR
+      tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,
+					 grouping);
+#else
+      tp = __correctly_grouped_prefixmb (start_of_digits, cp, thousands,
+					 grouping);
+#endif
       /* If TP is at the start of the digits, there was no correctly
 	 grouped prefix of the string; so no number found.  */
       RETURN (0.0, tp == start_of_digits ? (base == 16 ? cp - 1 : nptr) : tp);
@@ -733,7 +740,13 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   if (grouping && dig_no > 0)
     {
       /* Check the grouping of the digits.  */
-      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
+#ifdef USE_WIDE_CHAR
+      tp = __correctly_grouped_prefixwc (start_of_digits, cp, thousands,
+					 grouping);
+#else
+      tp = __correctly_grouped_prefixmb (start_of_digits, cp, thousands,
+					 grouping);
+#endif
       if (cp != tp)
         {
 	  /* Less than the entire string was correctly grouped.  */

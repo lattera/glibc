@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,41 +97,5 @@ struct cache_file_new
 (((addr) + __alignof__ (struct cache_file_new) -1)	\
  & (~(__alignof__ (struct cache_file_new) - 1)))
 
-static inline int
-__attribute__ ((__unused__))
-_dl_cache_libcmp (const char *p1, const char *p2)
-{
-  while (*p1 != '\0')
-    {
-      if (*p1 >= '0' && *p1 <= '9')
-        {
-          if (*p2 >= '0' && *p2 <= '9')
-            {
-	      /* Must compare this numerically.  */
-	      int val1;
-	      int val2;
-
-	      val1 = *p1++ - '0';
-	      val2 = *p2++ - '0';
-	      while (*p1 >= '0' && *p1 <= '9')
-	        val1 = val1 * 10 + *p1++ - '0';
-	      while (*p2 >= '0' && *p2 <= '9')
-	        val2 = val2 * 10 + *p2++ - '0';
-	      if (val1 != val2)
-		return val1 - val2;
-	    }
-	  else
-            return 1;
-        }
-      else if (*p2 >= '0' && *p2 <= '9')
-        return -1;
-      else if (*p1 != *p2)
-        return *p1 - *p2;
-      else
-	{
-	  ++p1;
-	  ++p2;
-	}
-    }
-  return *p1 - *p2;
-}
+extern int _dl_cache_libcmp (const char *p1, const char *p2)
+     internal_function;

@@ -1,3 +1,148 @@
+2003-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c: Add a couple of __builtin_expect.
+
+	Remove warnings gcc 3.3 shows.
+	* argp/argp-help.c (hol_entry_short_iterate): Don't inline.
+	* elf/dl-load.c (fillin_rpath): Likewise.
+	(add_path): Likewise.
+	* elf/dl-version.c (find_needed): Always inline.
+	* elf/do-lookup.c (FCT): Don't inline.
+	* iconv/Makefile: Extend vpath to intl subdir.
+	(iconvconfig-modules): Add hash-string.
+	* iconv/gconv_charset.h (strip): Don't inline.
+	(upstr): Always inline.
+	Move __gconv_compare_alias prototype to...
+	* iconv/gconv_int.h: ...here.
+	* iconv/gconv_db.c: Don't include gconv_charset.h.
+	* iconv/gconv_conf.c (add_alias): Don't inline.
+	(insert_module): Likewise.
+	* iconv/gconv_simple.c (internal_ucs4_loop): Always inline.
+	(internal_ucs4_loop_unaligned): Likewise.
+	(internal_ucs4_loop_single): Likewise.
+	(ucs4_internal_loop): Likewise.
+	(ucs4_internal_loop_unaligned): Likewise.
+	(ucs4_internal_loop_single): Likewise.
+	(internal_ucs4le_loop): Always inline.
+	(internal_ucs4le_loop_unaligned): Likewise.
+	(internal_ucs4le_loop_single): Likewise.
+	(ucs4le_internal_loop): Likewise.
+	(ucs4le_internal_loop_unaligned): Likewise.
+	(ucs4le_internal_loop_single): Likewise.
+	* iconv/loop.c: Always inline the defined functions.
+	* iconvdata/cns11642.h: Likewise.
+	* iconvdata/cns11642l1.h: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/gb2312.h: Likewise.
+	* iconvdata/jis0201.h: Likewise.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+	* iconvdata/jisx0213.h: Likewise.
+	* iconvdata/ksc5601.h: Likewise.
+	* iconvdata/utf-7.c (base64): Don't inline.
+	* include/libc-symbols.h (symbol_set_first_element): Add cast
+	(symbol_set_end_p): Likewise.
+	* include/set-hooks (RUN_HOOK): Likewise.
+	* inet/Makefile (aux): Add ifreq.
+	* intl/Makefile (aux): Add some entries from routines.  Add
+	hash-string.
+	* intl/hash-string.c: New file.
+	* intl/hash-string.h: Remove hash_string definition.  Declare
+	__hash_string.
+	* iconv/gconv_cache.c (find_module_idx): Adjust hash_string caller.
+	* iconv/iconvconfig.c (new_name): Likewise.
+	* intl/dcigettext.c (_nl_find_msg): Likewise.
+	* intl/loadmsgcat.c (_nl_load_domain): Likewise.
+	* io/ftw.c (open_dir_stream): Always inline.
+	(process_entry): Don't inline.
+	* locale/findlocale.c: Include gconv_int.h.
+	* locale/setlocale.c (new_composite_name): Don't inline.
+	* locale/weight.h (findidx): Always inline.
+	* locale/weightwc.h (findidx): Likewise.
+	* locale/programs/linereader.c (lr_ignore_rest): Define here.
+	* locale/programs/linereader.h (lr_ignore_rest): Don't define here,
+	just declare it.
+	(lr_getc): Always inline.
+	(lr_ungetc): Likewise.
+	* nss/nss_files/files-parse.c (parse_list): Likewise.
+	* stdio-common/Makefile (aux): Add printf-parsemb and
+	printf-parsewc.
+	* stdio-common/_itoa.h (_itoa_word): Always inline.
+	(_fitoa_word, _fitoa): Don't define here, only declare.
+	* stdio-common/_itoa.c (_iftoa_word): Add here.
+	(_fitoa): Likewise.
+	* stdio-common/_itowa.h (_itowa_word): Always inline.
+	* stdio-common/printf-parse.h (read_int): Don't inline.
+	(find_spec): Don't define.
+	Declare __find_specmb and __find_specwc.
+	(parse_one_spec): Don't define.
+	Declare __parse_one_specmb and __parse_one_specwc.
+	* stdio-common/printf-parsemb.c: New file.
+	* stdio-common/printf-parsewc.c: New file.
+	* stdio-common/vfprintf.c: Update calls to find_spec and
+	parse_one_spec for new names.
+	* stdio-common/printf-prs.c: Likewise.  Define DONT_NEED_READ_INT.
+	* stdlib/Makefile (aux): Add grouping and groupingwc.
+	* stdlib/grouping.c: New file.
+	* stdlib/groupingwc.c: New file.
+	* stdlib/grouping.h (correctly_grouped_prefix): Don't define here.
+	Just prototype.
+	* stdlib/rpmatch.c (try): Don't inline.
+	* stdlib/strtod.c (round_and_return): Don't line.
+	(str_to_mpn): Likewise.
+	(__mpn_lshift_1): Always inline.  Optimize only for constant count.
+	Adjust for name change of correctly_grouped_prefix.
+	* sysdeps/generic/strtol.c: Adjust for name change of
+	correctly_grouped_prefix.
+	* string/strxfrm.c (utf8_encode): Don't inline.
+	* sysdeps/generic/dl-cache.c: Define _dl_cache_libcmp.
+	* sysdeps/generic/dl-cache.h: Just declare _dl_cache_libcmp.
+	* sysdeps/generic/ifreq.c: New file.
+	* sysdeps/unix/sysv/linux/ifreq.c: New file.
+	* sysdeps/generic/ifreq.h (__ifreq): Only declare here.
+	* sysdeps/unix/sysv/linux/ifreq.h: Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_name_match_p): Always inline.
+	* sysdeps/generic/unwind-dw2-fde.c (start_fde_sort): Don't inline.
+	(fde_split): Likewise.
+	(fde_merge): Likewise.
+	(end_fde_sort): Likewise.
+	(init_object): Likewise.
+	(binary_search_unencoded_fdes): Likewise.
+	(binary_search_single_encoding_fdes): Likewise.
+	(binary_search_mixed_encoding_fdes): Likewise.
+	* sysdeps/generic/wordexp.c (w_addchar): Don't inline.
+	* sysdeps/i386/dl-machine.c (elf_machine_runtime_setup): Always inline.
+	* sysdeps/posix/sprofil.c (profil_count): Don't inline.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add xstatconv.
+	* sysdeps/unix/sysv/linux/xstatconv.h: New file.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Don't inline the function.
+	Export them.  Prepend __ to name.
+	* sysdeps/unix/sysv/linux/Dist: Add xstatconv.h.
+	* sysdeps/unix/sysv/linux/fxstat.c: Adjust for name change of
+	conversion functions.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_link_max,
+	__statfs_filesize_max, __statfs_symlinks): Define here.  __ prepended
+	to name.  Change callers.
+	* sysdeps/unix/sysv/linux/pathconf.h (__statfs_link_max,
+	__statfs_filesize_max, __statfs_symlinks): Don't define here, just
+	declare.
+	* sysdeps/unix/sysv/linux/fpathconf.c: Change all callers.
+	* time/tzfile.c (decode): Always inline.
+	* wcsmbs/wcsnrtombs.c: Change type of inbuf to unsigned char*.
+	Remove cast in tomb function call.
+	* wcsmbs/wcsrtombs.c Likewise.
+	* wcsmbs/wcstob.c: Introduce new temp variable to take pointer in
+	tomb function call.
+
 2003-06-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/zh_CN.po: Update from translation team.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,99,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # endif
 #endif
 
+#define DONT_NEED_READ_INT
 #include "printf-parse.h"
 
 
@@ -88,10 +89,10 @@ parse_printf_format (fmt, n, argtypes)
   max_ref_arg = 0;
 
   /* Search for format specifications.  */
-  for (fmt = find_spec (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
+  for (fmt = __find_specmb (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
     {
       /* Parse this spec.  */
-      nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg, &mbstate);
+      nargs += __parse_one_specmb (fmt, nargs, &spec, &max_ref_arg, &mbstate);
 
       /* If the width is determined by an argument this is an int.  */
       if (spec.width_arg != -1 && (size_t) spec.width_arg < n)

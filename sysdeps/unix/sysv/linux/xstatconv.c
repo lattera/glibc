@@ -1,5 +1,5 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991,1995,1996,1997,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1997,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <sys/stat.h>
+#include <kernel_stat.h>
+
 #ifdef STAT_IS_KERNEL_STAT
 
 /* Dummy.  */
@@ -27,8 +31,9 @@ struct kernel_stat;
 #include <string.h>
 
 
-static inline int
-xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
+#ifndef __ASSUME_STAT64_SYSCALL
+int
+__xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
   switch (vers)
     {
@@ -97,9 +102,10 @@ xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 
   return 0;
 }
+#endif
 
-static inline int
-xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
+int
+__xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
 #ifdef XSTAT_IS_XSTAT64
   return xstat_conv (vers, kbuf, ubuf);
@@ -172,8 +178,8 @@ xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 #endif
 }
 
-static inline int
-xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
+int
+__xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 {
   switch (vers)
     {

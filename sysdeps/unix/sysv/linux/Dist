@@ -78,6 +78,7 @@ sys/ultrasound.h
 sys/user.h
 sys/vt.h
 xstatconv.c
+xstatconv.h
 getdents64.c
 umount.S
 umount2.S

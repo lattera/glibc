@@ -1,5 +1,5 @@
 /* lxstat using old-style Unix lstat system call.
-   Copyright (C) 1991,95,96,97,98,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 
 #include "kernel-features.h"
 
-#include <xstatconv.c>
+#include <xstatconv.h>
 
 extern int __syscall_lstat (const char *__unbounded,
 			    struct kernel_stat *__unbounded);
@@ -65,7 +65,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
 
     result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), __ptrvalue (&buf64));
     if (result == 0)
-      result = xstat32_conv (vers, &buf64, buf);
+      result = __xstat32_conv (vers, &buf64, buf);
     return result;
   }
 #else
@@ -79,7 +79,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
       result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), __ptrvalue (&buf64));
 
       if (result == 0)
-	result = xstat32_conv (vers, &buf64, buf);
+	result = __xstat32_conv (vers, &buf64, buf);
 
       if (result != -1 || errno != ENOSYS)
 	return result;
@@ -90,7 +90,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
 
   result = INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat_conv (vers, &kbuf, buf);
+    result = __xstat_conv (vers, &kbuf, buf);
 
   return result;
 #endif

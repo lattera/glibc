@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
    This file is part of the GNU C Library.
 
@@ -104,7 +104,7 @@ index_to_pc (unsigned long int n, size_t offset, unsigned int scale,
   return pc;
 }
 
-static inline void
+static void
 profil_count (void *pcp, int prof_uint)
 {
   struct region *region, *r = prof_info.last;

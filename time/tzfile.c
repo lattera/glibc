@@ -64,6 +64,7 @@ static struct leap *leaps;
 
 /* Decode the four bytes at PTR as a signed integer in network byte order.  */
 static inline int
+__attribute ((always_inline))
 decode (const void *ptr)
 {
   if ((BYTE_ORDER == BIG_ENDIAN) && sizeof (int) == 4)
@@ -154,7 +155,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   /* No threads reading this stream.  */
   __fsetlocking (f, FSETLOCKING_BYCALLER);
 
-  if (fread_unlocked ((void *) &tzhead, sizeof (tzhead), 1, f) != 1)
+  if (__builtin_expect (fread_unlocked ((void *) &tzhead, sizeof (tzhead),
+					1, f) != 1, 0))
     goto lose;
 
   num_transitions = (size_t) decode (tzhead.tzh_timecnt);
@@ -193,23 +195,24 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   if (sizeof (time_t) == 4)
     {
-      if (fread_unlocked (transitions, 1, (4 + 1) * num_transitions, f)
-	  != (4 + 1) * num_transitions)
+      if (__builtin_expect (fread_unlocked (transitions, 1,
+					    (4 + 1) * num_transitions, f)
+			    != (4 + 1) * num_transitions, 0))
 	goto lose;
     }
   else
     {
-      if (fread_unlocked (transitions, 4, num_transitions, f)
-	  != num_transitions
-	  || fread_unlocked (type_idxs, 1, num_transitions, f)
-	  != num_transitions)
+      if (__builtin_expect (fread_unlocked (transitions, 4, num_transitions, f)
+			    != num_transitions, 0)
+	  || __builtin_expect (fread_unlocked (type_idxs, 1, num_transitions,
+					       f) != num_transitions, 0))
 	goto lose;
     }
 
   /* Check for bogus indices in the data file, so we can hereafter
      safely use type_idxs[T] as indices into `types' and never crash.  */
   for (i = 0; i < num_transitions; ++i)
-    if (type_idxs[i] >= num_types)
+    if (__builtin_expect (type_idxs[i] >= num_types, 0))
       goto lose;
 
   if (BYTE_ORDER != BIG_ENDIAN || sizeof (time_t) != 4)
@@ -227,29 +230,33 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     {
       unsigned char x[4];
       int c;
-      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
+      if (__builtin_expect (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x),
+			    0))
 	goto lose;
       c = getc_unlocked (f);
-      if ((unsigned int) c > 1u)
+      if (__builtin_expect ((unsigned int) c > 1u, 0))
 	goto lose;
       types[i].isdst = c;
       c = getc_unlocked (f);
-      if ((size_t) c > chars) /* Bogus index in data file.  */
+      if (__builtin_expect ((size_t) c > chars, 0))
+	/* Bogus index in data file.  */
 	goto lose;
       types[i].idx = c;
       types[i].offset = (long int) decode (x);
     }
 
-  if (fread_unlocked (zone_names, 1, chars, f) != chars)
+  if (__builtin_expect (fread_unlocked (zone_names, 1, chars, f) != chars, 0))
     goto lose;
 
   for (i = 0; i < num_leaps; ++i)
     {
       unsigned char x[4];
-      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
+      if (__builtin_expect (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x),
+			    0))
 	goto lose;
       leaps[i].transition = (time_t) decode (x);
-      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
+      if (__builtin_expect (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x),
+			    0))
 	goto lose;
       leaps[i].change = (long int) decode (x);
     }
@@ -257,7 +264,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   for (i = 0; i < num_isstd; ++i)
     {
       int c = getc_unlocked (f);
-      if (c == EOF)
+      if (__builtin_expect (c == EOF, 0))
 	goto lose;
       types[i].isstd = c != 0;
     }
@@ -267,7 +274,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   for (i = 0; i < num_isgmt; ++i)
     {
       int c = getc_unlocked (f);
-      if (c == EOF)
+      if (__builtin_expect (c == EOF, 0))
 	goto lose;
       types[i].isgmt = c != 0;
     }

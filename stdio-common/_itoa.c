@@ -424,3 +424,23 @@ _itoa (value, buflim, base, upper_case)
 
   return buflim;
 }
+
+char *
+_fitoa_word (unsigned long value, char *buf, unsigned int base, int upper_case)
+{
+  char tmpbuf[sizeof (value) * 4];	      /* Worst case length: base 2.  */
+  char *cp = _itoa_word (value, tmpbuf + sizeof (value) * 4, base, upper_case);
+  while (cp < tmpbuf + sizeof (value) * 4)
+    *buf++ = *cp++;
+  return buf;
+}
+
+char *
+_fitoa (unsigned long long value, char *buf, unsigned int base, int upper_case)
+{
+  char tmpbuf[sizeof (value) * 4];	      /* Worst case length: base 2.  */
+  char *cp = _itoa (value, tmpbuf + sizeof (value) * 4, base, upper_case);
+  while (cp < tmpbuf + sizeof (value) * 4)
+    *buf++ = *cp++;
+  return buf;
+}

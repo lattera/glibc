@@ -1,5 +1,5 @@
 /* fxstat using old-style Unix fstat system call.
-   Copyright (C) 1991,1995-1998,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1998,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
-#include <xstatconv.c>
+#include <xstatconv.h>
 
 extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
 
@@ -51,7 +51,7 @@ __fxstat (int vers, int fd, struct stat *buf)
 
   result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat_conv (vers, &kbuf, buf);
+    result = __xstat_conv (vers, &kbuf, buf);
 
   return result;
 #endif

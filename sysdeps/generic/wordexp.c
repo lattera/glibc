@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -89,19 +89,18 @@ w_newword (size_t *actlen, size_t *maxlen)
   return NULL;
 }
 
-static inline char *
+static char *
 w_addchar (char *buffer, size_t *actlen, size_t *maxlen, char ch)
      /* (lengths exclude trailing zero) */
 {
-  /* Add a character to the buffer, allocating room for it if needed.
-   */
+  /* Add a character to the buffer, allocating room for it if needed.  */
 
   if (*actlen == *maxlen)
     {
       char *old_buffer = buffer;
       assert (buffer == NULL || *maxlen != 0);
       *maxlen += W_CHUNK;
-      buffer = realloc (buffer, 1 + *maxlen);
+      buffer = (char *) realloc (buffer, 1 + *maxlen);
 
       if (buffer == NULL)
 	free (old_buffer);

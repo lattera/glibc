@@ -1,5 +1,5 @@
 /* xstat64 using old-style Unix stat system call.
-   Copyright (C) 1991,95,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #include "kernel-features.h"
 
 #if __ASSUME_STAT64_SYSCALL == 0
-# include <xstatconv.c>
+# include <xstatconv.h>
 #endif
 
 extern int __syscall_stat (const char *__unbounded,
@@ -82,7 +82,7 @@ ___xstat64 (int vers, const char *name, struct stat64 *buf)
 
   result = INLINE_SYSCALL (stat, 2, CHECK_STRING (name), __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat64_conv (vers, &kbuf, buf);
+    result = __xstat64_conv (vers, &kbuf, buf);
 
   return result;
 #endif

@@ -1,5 +1,5 @@
 /* fxstat using old-style Unix fstat system call.
-   Copyright (C) 1991,95,96,97,98,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995-1998,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 
 #include "kernel-features.h"
 
-#include <xstatconv.c>
+#include <xstatconv.h>
 
 extern int __syscall_fstat (int, struct kernel_stat *__unbounded);
 
@@ -62,7 +62,7 @@ __fxstat (int vers, int fd, struct stat *buf)
 
     result = INLINE_SYSCALL (fstat64, 2, fd, __ptrvalue (&buf64));
     if (result == 0)
-      result = xstat32_conv (vers, &buf64, buf);
+      result = __xstat32_conv (vers, &buf64, buf);
     return result;
   }
 #else
@@ -77,7 +77,7 @@ __fxstat (int vers, int fd, struct stat *buf)
       result = INLINE_SYSCALL (fstat64, 2, fd, __ptrvalue (&buf64));
 
       if (result == 0)
-	result = xstat32_conv (vers, &buf64, buf);
+	result = __xstat32_conv (vers, &buf64, buf);
 
       if (result != -1 || errno != ENOSYS)
 	return result;
@@ -88,7 +88,7 @@ __fxstat (int vers, int fd, struct stat *buf)
 
   result = INLINE_SYSCALL (fstat, 2, fd, __ptrvalue (&kbuf));
   if (result == 0)
-    result = xstat_conv (vers, &kbuf, buf);
+    result = __xstat_conv (vers, &kbuf, buf);
 
   return result;
 #endif  /* __ASSUME_STAT64_SYSCALL  */
