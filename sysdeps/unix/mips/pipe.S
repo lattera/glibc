@@ -27,5 +27,6 @@ SYSCALL__ (pipe, 1)
 	j ra
 	move v0, zero
 	nop
+	.end __pipe
 
 weak_alias (__pipe, pipe)

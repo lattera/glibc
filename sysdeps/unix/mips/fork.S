@@ -25,5 +25,6 @@ SYSCALL__ (fork, 0)
 	move v0, zero
 parent:
 	ret
+	.end __fork
 
 weak_alias (__fork, fork)

@@ -68,3 +68,4 @@ ENTRY(__start)
   /* Make the value returned by main be the argument to exit.  */
   jal exit
   move a0, v0
+  .end __start

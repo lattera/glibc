@@ -29,3 +29,4 @@ ENTRY (__sigsetjmp)
 	move a3, $fp
 #endif
 	j __sigsetjmp_aux
+	.end __sigsetjmp

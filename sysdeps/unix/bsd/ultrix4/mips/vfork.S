@@ -29,5 +29,6 @@ SYSCALL__ (vfork, 0)
 parent:
 	ret
 	nop
+	.end __vfork
 
 weak_alias (__vfork, vfork)

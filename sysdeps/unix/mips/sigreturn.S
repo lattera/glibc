@@ -25,5 +25,6 @@ Cambridge, MA 02139, USA.  */
 ENTRY(__sigreturn)
 	li v0, SYS_sigreturn
 	syscall
+	.end __sigreturn
 
 weak_alias (__sigreturn, sigreturn)

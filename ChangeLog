@@ -1,8 +1,25 @@
 Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
 
+	* sysdeps/unix/mips/brk.S (__brk, __curbrk): Add .end.
+	* sysdeps/unix/mips/fork.S (fork): Likewise.
+	* sysdeps/unix/mips/pipe.S (fork): Likewise.
+	* sysdeps/unix/mips/sigreturn.S (__sigreturn): Likewise.
+	* sysdeps/unix/mips/sysdep.S (sysdep_error): Likewise.
+	* sysdeps/unix/mips/wait.S (__handler): Likewise.
+	* sysdeps/mips/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/mips/bsd-setjmp.S (setjmp): Likewise.
+	* sysdeps/unix/bsd/ultrix4/getsysinfo.S (getsysinfo): Likewise.
+	* sysdeps/unix/bsd/ultrix4/wait3.S (waitpid): Likewise.
+	* sysdeps/unix/bsd/ultrix4/waitpid.S (waitpid): Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/__handler.S (__handler): Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.S (__raw_sigvec): Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/start.S (__start): Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/vfork.S (vfork): Likewise.
+	* sysdeps/mips/bsd-_setjmp.S (setjmp): Likewise.  Use `$0'
+	instead of `zero' for the li instruction.
+
 	* sysdeps/unix/bsd/osf/alpha/start.S: Change comments to be
 	preprocessor comments, not assembler comments.
-
 	* sysdeps/unix/bsd/osf/alpha/sysdep.h (NO_UNDERSCORES): Define.
 
 Fri Apr 14 15:53:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
