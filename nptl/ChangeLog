@@ -1,3 +1,9 @@
+2003-10-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Backout 2003-10-02
+	changes.
+	(SAVE_OLDTYPE_0): Fix a typo.
+
 2003-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once):

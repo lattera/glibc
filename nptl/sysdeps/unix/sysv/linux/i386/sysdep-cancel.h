@@ -301,11 +301,11 @@
 # define ASM_SIZE_DIRECTIVE(name) L(name##END): .size name,.-name;
 
 # define SAVE_OLDTYPE_0	movl %eax, %ecx;
-# define SAVE_OLDTYPE_1	pushl %eax; L(PUSHSTATE):
-# define SAVE_OLDTYPE_2	SAVE_OLDTYPE_1
-# define SAVE_OLDTYPE_3	SAVE_OLDTYPE_1
-# define SAVE_OLDTYPE_4	SAVE_OLDTYPE_1
-# define SAVE_OLDTYPE_5	SAVE_OLDTYPE_1
+# define SAVE_OLDTYPE_1	SAVE_OLDTYPE_0
+# define SAVE_OLDTYPE_2	pushl %eax; L(PUSHSTATE):
+# define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
 
 # define PUSHCARGS_0	/* No arguments to push.  */
 # define DOCARGS_0	/* No arguments to frob.  */
@@ -314,7 +314,7 @@
 # define _POPCARGS_0	/* No arguments to pop.  */
 
 # define PUSHCARGS_1	movl %ebx, %edx; L(SAVEBX2): PUSHCARGS_0
-# define DOCARGS_1	_DOARGS_1 (8)
+# define DOCARGS_1	_DOARGS_1 (4)
 # define POPCARGS_1	POPCARGS_0; movl %edx, %ebx; L(RESTBX2):
 # define _PUSHCARGS_1	pushl %ebx; L(PUSHBX2): _PUSHCARGS_0
 # define _POPCARGS_1	_POPCARGS_0; popl %ebx; L(POPBX2):
@@ -357,8 +357,8 @@
 # endif
 # define POPSTATE_0 \
  pushl %eax; L(PUSHSTATE): movl %ecx, %eax; CDISABLE; popl %eax; L(POPSTATE):
-# define POPSTATE_1	xchgl (%esp), %eax; CDISABLE; popl %eax; L(POPSTATE):
-# define POPSTATE_2	POPSTATE_1
+# define POPSTATE_1	POPSTATE_0
+# define POPSTATE_2	xchgl (%esp), %eax; CDISABLE; popl %eax; L(POPSTATE):
 # define POPSTATE_3	POPSTATE_2
 # define POPSTATE_4	POPSTATE_3
 # define POPSTATE_5	POPSTATE_4
