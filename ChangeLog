@@ -1,3 +1,8 @@
+1999-01-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wcsmbs/wcstold_l.c: Correct last patch to include wchar.h from
+	system path.
+
 1998-12-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Use rpath $ORIGIN for modules which use any of
