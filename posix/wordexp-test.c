@@ -43,7 +43,7 @@ struct test_case_struct
     { 0, NULL, "one two", 0, 2, { "one", "two", }, IFS },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", }, IFS },
     { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", }, IFS },
-    { 0, NULL, "red , white blue", 0, 4, { "red", " ", "white", "blue", }, " ," },
+    { 0, NULL, "red , white blue", 0, 4, { "red", ",", "white", "blue", }, " ," },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", }, "" },
     { 0, NULL, "one \"two three\"", 0, 2, { "one", "two three", }, IFS },
     { 0, NULL, "one \"two three\"", 0, 2, { "one", "two three", }, "" },
@@ -60,10 +60,11 @@ struct test_case_struct
     { 0, NULL, "$(echo :abc:\\ )", 0, 2, { "", "abc", }, ": " },
     { 0, NULL, "$(echo :abc\\ )", 0, 2, { "", "abc", }, ": " },
     { 0, ":abc:", "$(echo $var)", 0, 2, { "", "abc", }, ":" },
-    { 0, NULL, ":abc:", 0, 1, { " abc ", }, ":" },
+    { 0, NULL, ":abc:", 0, 1, { ":abc:", }, ":" },
     { 0, NULL, "$(echo :abc:)def", 0, 3, { "", "abc", "def", }, ":" },
     { 0, NULL, "$(echo abc:de)f", 0, 2, { "abc", "def", }, ":" },
-    { 0, NULL, "$(echo abc:de)f:ghi", 0, 2, { "abc", "def ghi", }, ":" },
+    { 0, NULL, "$(echo abc:de)f:ghi", 0, 3, { "abc", "def", "ghi", }, ":" },
+    { 0, NULL, "abc:d$(echo ef:ghi)", 0, 3, { "abc", "def", "ghi", }, ":" },
     { 0, "abc:", "$var$(echo def:ghi)", 0, 3, { "abc", "def", "ghi", }, ":" },
     { 0, "abc:d", "$var$(echo ef:ghi)", 0, 3, { "abc", "def", "ghi", }, ":" },
     { 0, "def:ghi", "$(echo abc:)$var", 0, 3, { "abc", "def", "ghi", }, ":" },
@@ -308,7 +309,8 @@ testit (struct test_case_struct *tc)
   else
     printf ("OK\n");
 
-  wordfree (&we);
+  if (retval == 0 || retval == WRDE_NOSPACE)
+    wordfree (&we);
 
   return bzzzt;
 }

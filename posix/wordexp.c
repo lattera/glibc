@@ -56,7 +56,7 @@ extern char **__libc_argv;
 static int parse_dollars (char **word, size_t *word_length, size_t *max_length,
 			  const char *words, size_t *offset, int flags,
 			  wordexp_t *pwordexp, const char *ifs,
-			  const char *ifs_white, int quoted)
+			  const char *ifs_white, int quoted, int *fsplit)
      internal_function;
 static int parse_backtick (char **word, size_t *word_length,
 			   size_t *max_length, const char *words,
@@ -178,6 +178,78 @@ w_addword (wordexp_t *pwordexp, char *word)
       pwordexp->we_wordv[pwordexp->we_wordc] = NULL;
       return 0;
     }
+
+no_space:
+  return WRDE_NOSPACE;
+}
+
+static int
+internal_function
+field_split_word (char *word, wordexp_t *pwordexp, const char *ifs,
+		  const char *ifs_white)
+{
+  size_t field_length;
+  size_t field_maxlen;
+  char *field = w_newword (&field_length, &field_maxlen);
+  char *field_begin = word;
+  int seen_nonws_ifs = 0;
+
+  if (!word)
+    return 0;
+
+  do
+    {
+      char *field_end = field_begin;
+      char *next_field;
+      
+      /* If this isn't the first field, start a new word */
+      if (field_begin != word)
+	{
+	  if (w_addword (pwordexp, field) == WRDE_NOSPACE)
+	    goto no_space;
+
+	  field = w_newword (&field_length, &field_maxlen);
+	}
+
+      /* Skip IFS whitespace before the field */
+      field_begin += strspn (field_begin, ifs_white);
+
+      if (!seen_nonws_ifs && *field_begin == 0)
+	/* Nothing but whitespace */
+	break;
+
+      /* Search for the end of the field */
+      field_end = field_begin + strcspn (field_begin, ifs);
+
+      /* Set up pointer to the character after end of field and
+	 skip whitespace IFS after it. */
+      next_field = field_end + strspn (field_end, ifs_white);
+
+      /* Skip at most one non-whitespace IFS character after the field */
+      seen_nonws_ifs = 0;
+      if (*next_field && strchr (ifs, *next_field))
+	{
+	  seen_nonws_ifs = 1;
+	  next_field++;
+	}
+
+      /* Null-terminate it */
+      *field_end = 0;
+
+      /* Tag a copy onto the current word */
+      field = w_addstr (field, &field_length, &field_maxlen, field_begin);
+
+      if (field == NULL && *field_begin != '\0')
+	goto no_space;
+
+      field_begin = next_field;
+    }
+  while (seen_nonws_ifs || *field_begin);
+
+  if (field && w_addword (pwordexp, field))
+    goto no_space;
+
+  return 0;
 
 no_space:
   return WRDE_NOSPACE;
@@ -424,15 +496,15 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   int quoted = 0; /* 1 if singly-quoted, 2 if doubly */
   int i;
   wordexp_t glob_list; /* List of words to glob */
+  int fieldsplit = 0;
 
   glob_list.we_wordc = 0;
   glob_list.we_wordv = NULL;
   glob_list.we_offs = 0;
   for (; words[*offset] != '\0'; ++*offset)
     {
-      if ((ifs && strchr (ifs, words[*offset])) ||
-	  (!ifs && strchr (" \t\n", words[*offset])))
-	/* Reached IFS */
+      if (strchr (" \t\n", words[*offset]))
+	/* Reached end of word */
 	break;
 
       /* Sort out quoting */
@@ -468,7 +540,7 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
 	{
 	  error = parse_dollars (word, word_length, max_length, words,
 				 offset, flags, &glob_list, ifs, ifs_white,
-				 quoted == 2);
+				 quoted == 2, &fieldsplit);
 	  if (error)
 	    goto tidy_up;
 
@@ -497,8 +569,16 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
   /* Don't forget to re-parse the character we stopped at. */
   --*offset;
 
+  if (fieldsplit)
+    {
+      error = field_split_word (*word, &glob_list, ifs, ifs_white);
+      if (*word)
+	free (*word);
+    }
+  else
+    error = w_addword (&glob_list, *word);
+
   /* Glob the words */
-  error = w_addword (&glob_list, *word);
   *word = w_newword (word_length, max_length);
   for (i = 0; error == 0 && i < glob_list.we_wordc; i++)
     error = do_parse_glob (glob_list.we_wordv[i], word, word_length,
@@ -676,7 +756,8 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	{
 	case '$':
 	  error = parse_dollars (&expr, &expr_length, &expr_maxlen,
-				 words, offset, flags, NULL, NULL, NULL, 1);
+				 words, offset, flags, NULL, NULL, NULL, 1,
+				 NULL);
 	  /* The ``1'' here is to tell parse_dollars not to
 	   * split the fields.
 	   */
@@ -871,100 +952,20 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   __close (fildes[1]);
   buffer = __alloca (bufsize);
 
-  if (!pwordexp)
-    { /* Quoted - no field splitting */
-
-      while (1)
-	{
-	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
-	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
-		continue;
-	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
-		break;
-	    }
-
-	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
-	  if (*word == NULL)
-	    goto no_space;
-	}
-    }
-  else
-    /* Not quoted - split fields */
+  /* Read fildes[0] and put it into a word. */
+  while (1)
     {
-      int copying = 0;
-      /* 'copying' is:
-       *  0 when searching for first character in a field not IFS white space
-       *  1 when copying the text of a field
-       *  2 when searching for possible non-whitespace IFS
-       */
-
-      while (1)
+      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	{
+	  if (__waitpid (pid, NULL, WNOHANG) == 0)
+	    continue;
 	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
-	    {
-	      if (__waitpid (pid, NULL, WNOHANG) == 0)
-		continue;
-	      if ((__read (fildes[0], buffer, bufsize)) < 1)
-		break;
-	    }
-
-	  for (i = 0; i < buflen; ++i)
-	    {
-	      if (strchr (ifs, buffer[i]) != NULL)
-		{
-		  /* Current character is IFS */
-		  if (strchr (ifs_white, buffer[i]) == NULL)
-		    {
-		      /* Current character is IFS but not whitespace */
-		      if (copying == 2)
-			{
-			  /*            current character
-			   *                   |
-			   *                   V
-			   * eg: text<space><comma><space>moretext
-			   *
-			   * So, strip whitespace IFS (like at the start)
-			   */
-			  copying = 0;
-			  continue;
-			}
-
-		      copying = 0;
-		      /* fall through and delimit field.. */
-		    }
-		  else
-		    {
-		      /* Current character is IFS white space */
-
-		      /* If not copying a field, ignore it */
-		      if (copying != 1)
-			continue;
-
-		      /* End of field (search for non-ws IFS afterwards) */
-		      copying = 2;
-		    }
-
-		  /* First IFS white space, or IFS non-whitespace.
-		   * Delimit the field.  Nulls are converted by w_addword. */
-		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
-		    goto no_space;
-
-		  *word = w_newword (word_length, max_length);
-		  /* fall back round the loop.. */
-		}
-	      else
-		{
-		  /* Not IFS character */
-		  copying = 1;
-
-		  *word = w_addchar (*word, word_length, max_length,
-				     buffer[i]);
-		  if (*word == NULL)
-		    goto no_space;
-		}
-	    }
+	    break;
 	}
+
+      *word = w_addmem (*word, word_length, max_length, buffer, buflen);
+      if (*word == NULL)
+	goto no_space;
     }
 
   /* Bash chops off trailing newlines, which seems sensible.  */
@@ -1701,87 +1702,11 @@ envsubst:
   if (value == NULL)
     return 0;
 
-  if (quoted || !pwordexp)
-    {
-      /* Quoted - no field split */
-      *word = w_addstr (*word, word_length, max_length, value);
-      if (free_value)
-	free (value);
+  *word = w_addstr (*word, word_length, max_length, value);
+  if (free_value)
+    free (value);
 
-      return *word ? 0 : WRDE_NOSPACE;
-    }
-  else
-    {
-      /* Need to field-split */
-      char *value_copy = __strdup (value); /* Don't modify value */
-      char *field_begin = value_copy;
-      int seen_nonws_ifs = 0;
-
-      if (free_value)
-	free (value);
-
-      if (value_copy == NULL)
-	goto no_space;
-
-      do
-	{
-	  char *field_end = field_begin;
-	  char *next_field;
-
-	  /* If this isn't the first field, start a new word */
-	  if (field_begin != value_copy)
-	    {
-	      if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
-		{
-		  free (value_copy);
-		  goto no_space;
-		}
-
-	      *word = w_newword (word_length, max_length);
-	    }
-
-	  /* Skip IFS whitespace before the field */
-	  field_begin += strspn (field_begin, ifs_white);
-
-	  if (!seen_nonws_ifs && *field_begin == 0)
-	    /* Nothing but whitespace */
-	    break;
-
-	  /* Search for the end of the field */
-	  field_end = field_begin + strcspn (field_begin, ifs);
-
-	  /* Set up pointer to the character after end of field and
-             skip whitespace IFS after it. */
-	  next_field = field_end + strspn (field_end, ifs_white);
-
-	  /* Skip at most one non-whitespace IFS character after the field */
-	  seen_nonws_ifs = 0;
-	  if (*next_field && strchr (ifs, *next_field))
-	    {
-	      seen_nonws_ifs = 1;
-	      next_field++;
-	    }
-
-	  /* Null-terminate it */
-	  *field_end = 0;
-
-	  /* Tag a copy onto the current word */
-	  *word = w_addstr (*word, word_length, max_length, field_begin);
-
-	  if (*word == NULL && *field_begin != '\0')
-	    {
-	      free (value_copy);
-	      goto no_space;
-	    }
-
-	  field_begin = next_field;
-	}
-      while (seen_nonws_ifs || *field_begin);
-
-      free (value_copy);
-    }
-
-  return 0;
+  return *word ? 0 : WRDE_NOSPACE;
 
 success:
   error = 0;
@@ -1809,7 +1734,7 @@ internal_function
 parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	       const char *words, size_t *offset, int flags,
 	       wordexp_t *pwordexp, const char *ifs, const char *ifs_white,
-	       int quoted)
+	       int quoted, int *fsplit)
 {
   /* We are poised _at_ "$" */
   switch (words[1 + *offset])
@@ -1839,6 +1764,12 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	  if (words[i] == ')' && words[i + 1] == ')')
 	    {
 	      (*offset) += 3;
+
+	      /* This word is subject to field-splitting as long as
+	       * it isn't quoted. */
+	      if (fsplit)
+		*fsplit = !quoted;
+
 	      /* Call parse_arith -- 0 is for "no brackets" */
 	      return parse_arith (word, word_length, max_length, words, offset,
 				  flags, 0);
@@ -1849,11 +1780,23 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	return WRDE_CMDSUB;
 
       (*offset) += 2;
+
+      /* This word is subject to field-splitting as long as
+       * it isn't quoted. */
+      if (fsplit)
+	*fsplit = !quoted;
+
       return parse_comm (word, word_length, max_length, words, offset, flags,
 			 quoted? NULL : pwordexp, ifs, ifs_white);
 
     case '[':
       (*offset) += 2;
+
+      /* This word is subject to field-splitting as long as
+       * it isn't quoted. */
+      if (fsplit)
+	*fsplit = !quoted;
+
       /* Call parse_arith -- 1 is for "brackets" */
       return parse_arith (word, word_length, max_length, words, offset, flags,
 			  1);
@@ -1861,6 +1804,12 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
     case '{':
     default:
       ++(*offset);	/* parse_param needs to know if "{" is there */
+
+      /* This word is subject to field-splitting as long as
+       * it isn't quoted. */
+      if (fsplit)
+	*fsplit = !quoted;
+
       return parse_param (word, word_length, max_length, words, offset, flags,
 			   pwordexp, ifs, ifs_white, quoted);
     }
@@ -1948,7 +1897,7 @@ parse_dquote (char **word, size_t *word_length, size_t *max_length,
 
 	case '$':
 	  error = parse_dollars (word, word_length, max_length, words, offset,
-				 flags, pwordexp, ifs, ifs_white, 1);
+				 flags, pwordexp, ifs, ifs_white, 1, NULL);
 	  /* The ``1'' here is to tell parse_dollars not to
 	   * split the fields.  It may need to, however ("$@").
 	   */
@@ -2030,6 +1979,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   char ifs_white[4];
   char **old_wordv = pwordexp->we_wordv;
   size_t old_wordc = (flags & WRDE_REUSE) ? pwordexp->we_wordc : 0;
+  int fieldsplit_this_word = 0;
 
   if (flags & WRDE_REUSE)
     {
@@ -2100,7 +2050,8 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       *whch = '\0';
     }
 
-  for (words_offset = 0 ; words[words_offset] ; ++words_offset)
+  fieldsplit_this_word = 0;
+  for (words_offset = 0 ; ; ++words_offset)
     switch (words[words_offset])
       {
       case '\\':
@@ -2115,7 +2066,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       case '$':
 	error = parse_dollars (&word, &word_length, &max_length, words,
 			       &words_offset, flags, pwordexp, ifs, ifs_white,
-			       0);
+			       0, &fieldsplit_this_word);
 
 	if (error)
 	  goto do_error;
@@ -2136,6 +2087,8 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
 	if (error)
 	  goto do_error;
+
+	fieldsplit_this_word = 1;
 
 	break;
 
@@ -2181,7 +2134,8 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
       default:
 	/* Is it a word separator? */
-	if (strchr (" \t", words[words_offset]) == NULL)
+	if (words[words_offset] != '\0' &&
+	    strchr (" \t", words[words_offset]) == NULL)
 	  {
 	    char ch = words[words_offset];
 
@@ -2196,11 +2150,6 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	      }
 
 	    /* "Ordinary" character -- add it to word */
-
-	    /* Convert IFS chars to blanks -- bash does this */
-	    if (strchr (ifs, ch))
-	      ch = ' ';
-
 	    word = w_addchar (word, &word_length, &max_length,
 			      ch);
 	    if (word == NULL)
@@ -2215,22 +2164,29 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	/* If a word has been delimited, add it to the list. */
 	if (word != NULL)
 	  {
-	    error = w_addword (pwordexp, word);
+	    if (fieldsplit_this_word)
+	      {
+		error = field_split_word (word, pwordexp, ifs, ifs_white);
+		free (word);
+	      }
+	    else
+	      error = w_addword (pwordexp, word);
+
 	    if (error)
 	      goto do_error;
 	  }
 
+	fieldsplit_this_word = 0;
+
+	if (words[words_offset] == '\0')
+	  /* End of string. */
+	  goto end_of_string;
+
 	word = w_newword (&word_length, &max_length);
       }
 
-  /* End of string */
-
-  /* There was a word separator at the end */
-  if (word == NULL) /* i.e. w_newword */
-    return 0;
-
-  /* There was no field separator at the end */
-  return w_addword (pwordexp, word);
+end_of_string:
+  return 0;
 
 do_error:
   /* Error:

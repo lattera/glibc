@@ -1,3 +1,26 @@
+1998-09-16 00:47  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: If expansion or substitution occurs
+	anywhere in a word, the entire word is subject to field-splitting.
+
+	* posix/wordexp.c (parse_glob): Look for end of word instead of
+	end of field when deciding what to glob.
+	(field_split_word): New function, now the only place where
+	field-splitting is performed.
+	(parse_dollars): New parameter - tell the caller if
+	field-splitting should be performed on this word.
+
+	* posix/wordexp-test.c (testit): Only call wordfree if wordexp
+	succeeded (or failed with WRDE_NOSPACE).
+
+1998-09-15 19:53 1998  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (wordexp): Don't convert IFS characters to
+	blanks.
+
+	* posix/wordexp-test.c: Words not the result of expansion or
+	substitution should remain unchanged.
+
 1998-09-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dynamic-link.h [!ELF_MACHINE_PLTREL_OVERLAP]
