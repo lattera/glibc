@@ -1,5 +1,11 @@
 2002-10-18  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL, INLINE_SYSCALL1)
+	(inline_syscall_clobbers, inline_syscall0, inline_syscall1)
+	(inline_syscall2, inline_syscall3, inline_syscall4, inline_syscall5)
+	(inline_syscall6): Move these macros ...
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: ... to here.
+
 	* configure.in (libc_link_dests, libc_link_sources): Remove these
 	variables and the AC_LINK_FILES call.
 
@@ -23,6 +29,9 @@
 	* sysdeps/unix/sysv/linux/x86_64/bits/time.h: File removed.
 
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
+
+        * aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDEs for
+	_AS_PATH_SEPARATOR_PREPARE and _AS_TEST_PREPARE.
 
         * configure.in: Replace AC_FD_CC with AS_MESSAGE_LOG_FD.
         * sysdeps/alpha/elf/configure.in: Likewise.

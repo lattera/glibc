@@ -11,6 +11,8 @@ AC_PROVIDE([AC_PROG_INSTALL])dnl
 AC_PROVIDE([AC_PROG_RANLIB])dnl
 AC_PROVIDE([AC_PROG_CC])dnl
 AC_PROVIDE([AC_PROG_CPP])dnl
+AC_PROVIDE([_AS_PATH_SEPARATOR_PREPARE])dnl
+AC_PROVIDE([_AS_TEST_PREPARE])dnl
 define([AS_MESSAGE_LOG_FD],5)dnl
 define([AS_MESSAGE_FD],6)dnl
 dnl Ripped out of AS_INIT, which does more cruft we do not want.

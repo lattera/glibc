@@ -514,7 +514,7 @@ _dl_open (const char *file, int mode, const void *caller)
 
 #ifdef USE_TLS
 	  /* Maybe some of the modules which were loaded uses TLS.
-	     Since it will be removed in the folowing _dl_close call
+	     Since it will be removed in the following _dl_close call
 	     we have to mark the dtv array as having gaps to fill
 	     the holes.  This is a pessimistic assumption which won't
 	     hurt if not true.  */
