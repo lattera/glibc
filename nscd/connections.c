@@ -90,34 +90,34 @@ const char *serv2str[LASTREQ] =
 static struct database dbs[lastdb] =
 {
   [pwddb] = {
-    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    enabled: 0,
-    check_file: 1,
-    filename: "/etc/passwd",
-    module: 211,
-    disabled_iov: &pwd_iov_disabled,
-    postimeout: 3600,
-    negtimeout: 20
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .enabled = 0,
+    .check_file = 1,
+    .filename = "/etc/passwd",
+    .module = 211,
+    .disabled_iov = &pwd_iov_disabled,
+    .postimeout = 3600,
+    .negtimeout = 20
   },
   [grpdb] = {
-    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    enabled: 0,
-    check_file: 1,
-    filename: "/etc/group",
-    module: 211,
-    disabled_iov: &grp_iov_disabled,
-    postimeout: 3600,
-    negtimeout: 60
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .enabled = 0,
+    .check_file = 1,
+    .filename = "/etc/group",
+    .module = 211,
+    .disabled_iov = &grp_iov_disabled,
+    .postimeout = 3600,
+    .negtimeout = 60
   },
   [hstdb] = {
-    lock: PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
-    enabled: 0,
-    check_file: 1,
-    filename: "/etc/hosts",
-    module: 211,
-    disabled_iov: &hst_iov_disabled,
-    postimeout: 3600,
-    negtimeout: 20
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .enabled = 0,
+    .check_file = 1,
+    .filename = "/etc/hosts",
+    .module = 211,
+    .disabled_iov = &hst_iov_disabled,
+    .postimeout = 3600,
+    .negtimeout = 20
   }
 };
 

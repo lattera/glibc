@@ -67,6 +67,9 @@ libresolv {
     __res_nquerydomain; __res_nsearch; __res_nsend; __res_query;
     __res_querydomain; __res_search;
   }
+  GLIBC_2.3.2 {
+    __p_rcode;
+  };
   GLIBC_PRIVATE {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;

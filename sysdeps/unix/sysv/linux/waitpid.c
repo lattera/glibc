@@ -20,8 +20,6 @@
 #include <sysdep-cancel.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include <nptl/pthreadP.h>
-#include <tls.h>
 
 __pid_t
 __libc_waitpid (__pid_t pid, int *stat_loc, int options)

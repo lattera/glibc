@@ -41,42 +41,42 @@
 /* This is the standard reply in case the service is disabled.  */
 static const hst_response_header disabled =
 {
-  version: NSCD_VERSION,
-  found: -1,
-  h_name_len: 0,
-  h_aliases_cnt: 0,
-  h_addrtype: -1,
-  h_length: -1,
-  h_addr_list_cnt: 0,
-  error: NETDB_INTERNAL
+  .version = NSCD_VERSION,
+  .found = -1,
+  .h_name_len = 0,
+  .h_aliases_cnt = 0,
+  .h_addrtype = -1,
+  .h_length = -1,
+  .h_addr_list_cnt = 0,
+  .error = NETDB_INTERNAL
 };
 
 /* This is the struct describing how to write this record.  */
 const struct iovec hst_iov_disabled =
 {
-  iov_base: (void *) &disabled,
-  iov_len: sizeof (disabled)
+  .iov_base = (void *) &disabled,
+  .iov_len = sizeof (disabled)
 };
 
 
 /* This is the standard reply in case we haven't found the dataset.  */
 static const hst_response_header notfound =
 {
-  version: NSCD_VERSION,
-  found: 0,
-  h_name_len: 0,
-  h_aliases_cnt: 0,
-  h_addrtype: -1,
-  h_length: -1,
-  h_addr_list_cnt: 0,
-  error: HOST_NOT_FOUND
+  .version = NSCD_VERSION,
+  .found = 0,
+  .h_name_len = 0,
+  .h_aliases_cnt = 0,
+  .h_addrtype = -1,
+  .h_length = -1,
+  .h_addr_list_cnt = 0,
+  .error = HOST_NOT_FOUND
 };
 
 /* This is the struct describing how to write this record.  */
 static const struct iovec iov_notfound =
 {
-  iov_base: (void *) &notfound,
-  iov_len: sizeof (notfound)
+  .iov_base = (void *) &notfound,
+  .iov_len = sizeof (notfound)
 };
 
 

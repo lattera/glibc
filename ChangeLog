@@ -1,3 +1,30 @@
+2002-12-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/readv.c (do_readv): Use prototype defn.
+
+	* sysdeps/unix/sysv/linux/wait.c: Don't include <nptl/pthreadP.h> or
+	<tls.h> here, no need for it.
+	* sysdeps/unix/sysv/linux/waitpid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (do_fcntl): Take ARG as void *
+	parameter, not varargs parameter.
+
+	* sysdeps/generic/sysdep-cancel.h (LIBC_CANCEL_RESET): Evaluate the
+	argument so it's not an unused variable.
+
+	* resolv/resolv.h (__p_key_syms, __p_cert_syms, __p_class_syms,
+	__p_type_syms, __p_rcode_syms): Remove decls, never really intended
+	for users.
+
+	* resolv/Versions (libresolv: GLIBC_2.3.2): New set, add __p_rcode.
+
+2002-12-15  Art Haas  <ahaas@airmail.net>
+
+	* nscd/connections.c: C99 initializer conversion.
+	* nscd/grpcache.c: Same.
+	* nscd/hstcache.c: Same.
+	* nscd/pwdcache.c: Same.
+
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/fcntl.c (do_fcntl): This is the

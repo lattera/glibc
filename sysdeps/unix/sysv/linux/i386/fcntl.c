@@ -36,7 +36,7 @@ int __have_no_fcntl64;
 
 
 static int
-do_fcntl (int fd, int cmd, ...)
+do_fcntl (int fd, int cmd, void *arg)
 {
 # ifdef __NR_fcntl64
   if (! __have_no_fcntl64)

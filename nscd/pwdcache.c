@@ -37,44 +37,44 @@
 /* This is the standard reply in case the service is disabled.  */
 static const pw_response_header disabled =
 {
-  version: NSCD_VERSION,
-  found: -1,
-  pw_name_len: 0,
-  pw_passwd_len: 0,
-  pw_uid: -1,
-  pw_gid: -1,
-  pw_gecos_len: 0,
-  pw_dir_len: 0,
-  pw_shell_len: 0
+  .version = NSCD_VERSION,
+  .found = -1,
+  .pw_name_len = 0,
+  .pw_passwd_len = 0,
+  .pw_uid = -1,
+  .pw_gid = -1,
+  .pw_gecos_len = 0,
+  .pw_dir_len = 0,
+  .pw_shell_len = 0
 };
 
 /* This is the struct describing how to write this record.  */
 const struct iovec pwd_iov_disabled =
 {
-  iov_base: (void *) &disabled,
-  iov_len: sizeof (disabled)
+  .iov_base = (void *) &disabled,
+  .iov_len = sizeof (disabled)
 };
 
 
 /* This is the standard reply in case we haven't found the dataset.  */
 static const pw_response_header notfound =
 {
-  version: NSCD_VERSION,
-  found: 0,
-  pw_name_len: 0,
-  pw_passwd_len: 0,
-  pw_uid: -1,
-  pw_gid: -1,
-  pw_gecos_len: 0,
-  pw_dir_len: 0,
-  pw_shell_len: 0
+  .version = NSCD_VERSION,
+  .found = 0,
+  .pw_name_len = 0,
+  .pw_passwd_len = 0,
+  .pw_uid = -1,
+  .pw_gid = -1,
+  .pw_gecos_len = 0,
+  .pw_dir_len = 0,
+  .pw_shell_len = 0
 };
 
 /* This is the struct describing how to write this record.  */
 static const struct iovec iov_notfound =
 {
-  iov_base: (void *) &notfound,
-  iov_len: sizeof (notfound)
+  .iov_base = (void *) &notfound,
+  .iov_len = sizeof (notfound)
 };
 
 
