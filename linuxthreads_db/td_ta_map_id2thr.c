@@ -28,7 +28,7 @@ td_ta_map_id2thr (const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
   struct _pthread_descr_struct pds;
   int pthread_threads_max;
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_map_id2thr");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

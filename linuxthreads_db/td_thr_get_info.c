@@ -1,5 +1,5 @@
 /* Get thread information.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -29,7 +29,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 {
   struct _pthread_descr_struct pds;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_get_info");
 
   /* Get the thread descriptor.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,

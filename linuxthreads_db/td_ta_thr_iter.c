@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -86,7 +86,7 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 # define num 1
 #endif
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_thr_iter");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

@@ -27,7 +27,7 @@ td_ta_event_addr (const td_thragent_t *ta, td_event_e event, td_notify_t *addr)
   td_err_e res = TD_NOEVENT;
   int idx = -1;
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_event_addr");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

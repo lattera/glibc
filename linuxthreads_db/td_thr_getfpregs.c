@@ -26,7 +26,7 @@ td_thr_getfpregs (const td_thrhandle_t *th, prfpregset_t *regset)
 {
   struct _pthread_descr_struct pds;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_getfpregs");
 
   /* We have to get the state and the PID for this thread.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,

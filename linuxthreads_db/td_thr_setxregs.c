@@ -1,5 +1,5 @@
 /* Set a thread's extra state register set.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -25,6 +25,6 @@ td_err_e
 td_thr_setxregs (const td_thrhandle_t *ta, const void *addr)
 {
   /* XXX This might have to be platform specific.  */
-  LOG (__FUNCTION__);
+  LOG ("td_thr_setxregs");
   return TD_NOXREGS;
 }

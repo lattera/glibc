@@ -1,5 +1,5 @@
 /* Globally enable events.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -29,7 +29,7 @@ td_ta_set_event (ta, event)
   td_thr_events_t old_event;
   int i;
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_set_event");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

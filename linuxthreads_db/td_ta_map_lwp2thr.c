@@ -1,5 +1,5 @@
 /* Which thread is running on an lwp?
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -34,7 +34,7 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
 # define num 1
 #endif
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_map_lwp2thr");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

@@ -1,5 +1,5 @@
 /* Get a thread-specific data pointer for a thread.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -33,7 +33,7 @@ td_thr_tsd (const td_thrhandle_t *th, const thread_key_t tk, void **data)
   unsigned int idx2nd;
   void *p;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_tsd");
 
   /* Get the thread descriptor.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,

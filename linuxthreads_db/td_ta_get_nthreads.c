@@ -25,7 +25,7 @@ td_ta_get_nthreads (const td_thragent_t *ta, int *np)
 {
   psaddr_t addr;
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_get_nthreads");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

@@ -28,7 +28,7 @@ td_thr_validate (const td_thrhandle_t *th)
   int pthread_threads_max = th->th_ta_p->pthread_threads_max;
   int cnt;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_validate");
 
   /* Now get all descriptors, one after the other.  */
   for (cnt = 0; cnt < pthread_threads_max; ++cnt, ++handles)

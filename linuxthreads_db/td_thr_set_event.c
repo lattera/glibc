@@ -1,5 +1,5 @@
 /* Enable specific event for thread.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -31,7 +31,7 @@ td_thr_set_event (th, event)
   td_thr_events_t old_event;
   int i;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_set_event");
 
   /* Write the new value into the thread data structure.  */
   if (ps_pdread (th->th_ta_p->ph,

@@ -1,5 +1,5 @@
 /* Set suggested concurrency level for process.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -25,7 +25,7 @@ td_err_e
 td_ta_setconcurrency (const td_thragent_t *ta, int level)
 {
   /* This is something LinuxThreads does not support.  */
-  LOG (__FUNCTION__);
+  LOG ("td_ta_setconcurrency");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

@@ -1,5 +1,5 @@
 /* Noop, left for historical reasons.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -25,8 +25,8 @@ td_err_e
 td_log (void)
 {
   /* This interface is deprecated in the Sun interface.  We provide it
-     for compatibility but don't do anyhting ourself.  We might in
+     for compatibility but don't do anything ourself.  We might in
      future do some logging if this seems reasonable.  */
-  LOG (__FUNCTION__);
+  LOG ("td_log");
   return TD_OK;
 }

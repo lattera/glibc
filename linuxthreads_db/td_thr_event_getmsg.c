@@ -1,5 +1,5 @@
 /* Retrieve event.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -29,7 +29,7 @@ td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
 {
   td_eventbuf_t event;
 
-  LOG (__FUNCTION__);
+  LOG ("td_thr_event_getmsg");
 
   /* Read the even structure from the target.  */
   if (ps_pdread (th->th_ta_p->ph,

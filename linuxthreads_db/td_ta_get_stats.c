@@ -1,5 +1,5 @@
 /* Retrieve statistics for process.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -25,7 +25,7 @@ td_err_e
 td_ta_get_stats (const td_thragent_t *ta, td_ta_stats_t *statsp)
 {
   /* XXX We have to figure out what has to be done.  */
-  LOG (__FUNCTION__);
+  LOG ("td_ta_get_stats");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))

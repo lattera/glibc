@@ -35,7 +35,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   psaddr_t addr;
   struct agent_list *elemp;
 
-  LOG (__FUNCTION__);
+  LOG ("td_ta_new");
 
   /* Get the global event mask.  This is one of the variables which
      are new in the thread library to enable debugging.  If it is
