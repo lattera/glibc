@@ -1,3 +1,7 @@
+2004-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ca.po: Update from translation team.
+
 2004-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/shm.h: Add __BEGIN_DECLS for
