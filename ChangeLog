@@ -1,3 +1,7 @@
+1999-03-03  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-load.c (lose): Fix return type.
+
 1999-03-03  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/bits/fcntl.h
