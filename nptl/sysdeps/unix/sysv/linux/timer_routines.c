@@ -32,6 +32,14 @@
 static void *
 timer_sigev_thread (void *arg)
 {
+  /* The parent thread has all signals blocked.  This is a bit
+     surprising for user code, although valid.  We unblock all
+     signals.  */
+  sigset_t ss;
+  sigemptyset (&ss);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
+
   struct timer *tk = (struct timer *) arg;
 
   /* Call the user-provided function.  */
@@ -45,16 +53,10 @@ timer_sigev_thread (void *arg)
 static void *
 timer_helper_thread (void *arg)
 {
-  /* Block all signals.  We will only wait for the signal the kernel
-     will send.  */
+  /* Wait for the SIGTIMER signal and none else.  */
   sigset_t ss;
   sigemptyset (&ss);
   sigaddset (&ss, SIGTIMER);
-  /* SIGTIMER is the same signal as SIGCANCEL and it is therefore
-     unblocked so far.  Block it for this thread, we handle
-     cancellation explicitly.  */
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_BLOCK, &ss, NULL, _NSIG / 8);
 
   /* Endless loop of waiting for signals.  The loop is only ended when
      the thread is canceled.  */
@@ -119,12 +121,24 @@ __start_helper_thread (void)
   (void) pthread_attr_init (&attr);
   (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
 
+  /* Block all signals in the helper thread.  To do this thoroughly we
+     temporarily have to block all signals here.  */
+  sigset_t ss;
+  sigset_t oss;
+  sigfillset (&ss);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
+
   /* Create the helper thread for this timer.  */
   pthread_t th;
   int res = pthread_create (&th, &attr, timer_helper_thread, NULL);
   if (res == 0)
     /* We managed to start the helper thread.  */
     __helper_tid = ((struct pthread *) th)->tid;
+
+  /* Restore the signal mask.  */
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &oss, NULL,
+		    _NSIG / 8);
 
   /* No need for the attribute anymore.  */
   (void) pthread_attr_destroy (&attr);
