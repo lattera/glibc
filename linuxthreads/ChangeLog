@@ -2,6 +2,7 @@
 
 	* manager.c (__linuxthreads_pthread_threads_max): New variable.
 	* specific.c (__linuxthreads_pthread_keys_max): New variable.
+	(__linuxthreads_pthread_key_2ndlevel_size): New variable.
 
 	* condvar.c (pthread_cond_timedwait_relative): Never return with
 	EINTR.  Patch by Andreas Schwab.
