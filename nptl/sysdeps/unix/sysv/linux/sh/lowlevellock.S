@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,17 +38,12 @@ __lll_mutex_lock_wait:
 	mov	r5, r8
 	mov	#0, r7		/* No timeout.  */
 	mov	#FUTEX_WAIT, r5
-1:
+
 	mov	#2, r4
 	cmp/eq	r4, r6
-	bt	3f
+	bf	2f
 
-	mov	#1, r3
-	CMPXCHG (r3, @r8, r4, r2)
-	tst	r2, r2
-	bt	2f
-
-3:
+1:
 	mov	r8, r4
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
@@ -56,9 +51,9 @@ __lll_mutex_lock_wait:
 	SYSCALL_INST_PAD
 
 2:
-	mov	#0, r3
 	mov	#2, r4
-	CMPXCHG (r3, @r8, r4, r2)
+	XCHG (r4, @r8, r2)
+	tst	r2, r2
 	bf	1b
 
 	mov.l	@r15+, r8

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,119 +28,33 @@
 
 	.text
 
-	.align	5
-	.type	__condvar_cleanup, @function
-	.globl	__condvar_cleanup
-	.hidden	__condvar_cleanup
-__condvar_cleanup:
-	mov.l	r8, @-r15
-	mov.l	r9, @-r15
-	sts.l	pr, @-r15
-	mov	r4, r9
-	mov.l	@(4,r9), r8
-
-	/* Get internal lock.  */
-	mov	#0, r3
-	mov	#1, r4
-#if cond_lock != 0
-	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
-#else
-	CMPXCHG (r3, @r8, r4, r2)
-#endif
-	bt	1f
-	mov	r8, r5
-#if cond_lock != 0
-	add	#cond_lock, r5
-#endif
-	mov.l	.Lwait0, r1
-	bsrf	r1
-	 mov	r2, r4
-.Lwait0b:
-1:
-	mov	#1, r2
-	mov	#0, r3
-
-	clrt
-	mov.l	@(wakeup_seq,r8),r0
-	mov.l	@(wakeup_seq+4,r8),r1
-	addc	r2, r0
-	addc	r3, r1
-	mov.l	r0,@(wakeup_seq,r8)
-	mov.l	r1,@(wakeup_seq+4,r8)
-
-	clrt
-	mov.l	@(woken_seq,r8),r0
-	mov.l	@(woken_seq+4,r8),r1
-	addc	r2, r0
-	addc	r3, r1
-	mov.l	r0,@(woken_seq,r8)
-	mov.l	r1,@(woken_seq+4,r8)
-
-	/* Release internal lock.  */
-#if cond_lock != 0
-	DEC (@(cond_lock,r8), r2)
-#else
-	DEC (@r8, r2)
-#endif
-	tst	r2, r2
-	bt	2f
-
-	mov	r8, r4
-#if cond_lock != 0
-	add	#cond_lock, r4
-#endif
-	mov.l	.Lwake0, r1
-	bsrf	r1
-	 nop
-.Lwake0b:
-2:
-
-	/* Wake up all waiters to make sure no signal gets lost.  */
-	mov	r8, r4
-	add	#wakeup_seq, r4
-	mov	#FUTEX_WAKE, r5
-	mov	#-1, r6
-	shlr	r6		/* r6 = 0x7fffffff */
-	mov	#0, r7
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x14
-	SYSCALL_INST_PAD
-
-	mov.l	.Lmlocki1, r1
-	bsrf	r1
-	 mov.l	@(8,r9), r4
-.Lmlocki1b:
-
-	lds.l	@r15+, pr
-	mov.l	@r15+, r9
-	rts
-	 mov.l	@r15+, r8
-
-	.align	2
-.Lwait0:	
-	.long	__lll_mutex_lock_wait-.Lwait0b
-.Lwake0:
-	.long	__lll_mutex_unlock_wake-.Lwake0b
-.Lmlocki1:
-	.long	__pthread_mutex_cond_lock-.Lmlocki1b
-	.size	__condvar_cleanup, .-__condvar_cleanup
-
-
 /* int pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)  */
 	.globl	__pthread_cond_wait
 	.type	__pthread_cond_wait, @function
 	.align	5
 __pthread_cond_wait:
+.LSTARTCODE:
 	mov.l	r8, @-r15
+.Lpush_r8:
 	mov.l	r9, @-r15
+.Lpush_r9:
 	mov.l	r10, @-r15
+.Lpush_r10:
 	mov.l	r11, @-r15
+.Lpush_r11:
 	mov.l	r12, @-r15
+.Lpush_r12:
 	sts.l	pr, @-r15
+.Lpush_pr:
 	add	#-48, r15
+.Lalloc:
 	mov	r4, r8
 	mov	r5, r9
+#ifdef PIC
+	mova	.Lgot0, r0
+	mov.l	.Lgot0, r12
+	add	r0, r12
+#endif
 
 	/* Get internal lock.  */
 	mov	#0, r3
@@ -153,12 +67,21 @@ __pthread_cond_wait:
 	bt	2f
 	bra	1f
 	 nop
+#ifdef PIC
+	.align	2
+.Lgot0:
+	.long	_GLOBAL_OFFSET_TABLE_
+#endif
 
 2:	
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
+	mov.l	@(dep_mutex,r8),r0
+	cmp/eq	#-1, r0
+	bt	15f
 	mov.l	r9, @(dep_mutex,r8)
 
+15:	
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock0, r1
 	mov	#0, r5
@@ -182,28 +105,6 @@ __pthread_cond_wait:
 	mov.l	r0,@(total_seq,r8)
 	mov.l	r1,@(total_seq+4,r8)
 
-	/* Install cancellation handler.  */
-#ifdef PIC
-	mova	.Lgot0, r0
-	mov.l	.Lgot0, r12
-	add	r0, r12
-	mov.l	.Lccleanup0, r5
-	add	r12, r5
-#else
-	mov.l	.Lccleanup0, r5
-#endif
-	mov	r15, r4
-	add	#16, r4
-
-	/* Prepare structure passed to cancellation handler.  */
-	mov.l	r8, @(4,r15)
-	mov.l	r9, @(8,r15)
-
-	mov.l	.Lccpush0, r1
-	bsrf	r1
-	 mov	r15, r6
-.Lccpush0b:
-
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
@@ -218,6 +119,7 @@ __pthread_cond_wait:
 	tst	r2, r2
 	bf	3f
 4:
+.LcleanupSTART:
 	mov.l	.Lenable0, r1
 	bsrf	r1
 	 nop
@@ -238,6 +140,7 @@ __pthread_cond_wait:
 	bsrf	r1
 	 mov.l	@r15, r4
 .Ldisable0b:	
+.LcleanupEND:
 
 	/* Lock.  */
 	mov	#0, r3
@@ -255,20 +158,15 @@ __pthread_cond_wait:
 	mov.l	@(wakeup_seq,r8), r2
 	mov.l	@(wakeup_seq+4,r8), r3
 
-	cmp/hi	r11, r3
-	bt	7f
-	cmp/hi	r3, r11
-	bt	8b
-
-	cmp/hs	r2, r10
+	cmp/eq	r3, r11
+	bf	7f
+	cmp/eq	r2, r10
 	bt	8b
 7:
-	cmp/hi	r1, r3
-	bt	9f
-	cmp/hi	r3, r1
+	cmp/eq	r1, r3
+	bf	9f
+	cmp/eq	r0, r2
 	bt	8b
-	cmp/hi	r0, r2
-	bf	8b
 9:
 	mov	#1, r2
 	mov	#0, r3
@@ -290,55 +188,41 @@ __pthread_cond_wait:
 	bf	10f
 
 11:
-	/* Remove cancellation handler.  */
-	mov	r15, r4
-	add	#16, r4
-	mov.l	.Lcpop0, r1
-	bsrf	r1
-	 mov	#0, r5
-.Lcpop0b:
-
-	mov	r9, r4
 	mov.l	.Lmlocki0, r1
 	bsrf	r1
-	 nop
+	 mov	r9, r4
 .Lmlocki0b:
 	/* We return the result of the mutex_lock operation.  */
 
 14:
 	add	#48, r15
+.Lfree:	
 	lds.l	@r15+, pr
+.Lpop_pr:
 	mov.l	@r15+, r12
+.Lpop_r12:
 	mov.l	@r15+, r11
+.Lpop_r11:
 	mov.l	@r15+, r10
+.Lpop_r10:
 	mov.l	@r15+, r9
+.Lpop_r9:
 	rts
 	 mov.l	@r15+, r8
+.Lpop_r8:
 
 	.align	2
 .Lmunlock0:
 	.long	__pthread_mutex_unlock_usercnt-.Lmunlock0b
-#ifdef PIC
-.Lgot0:
-	.long	_GLOBAL_OFFSET_TABLE_
-.Lccleanup0:
-	.long	__condvar_cleanup@GOTOFF
-#else
-.Lccleanup0:
-	.long	__condvar_cleanup
-#endif
-.Lccpush0:
-	.long	__pthread_cleanup_push-.Lccpush0b
 .Lenable0:
 	.long	__pthread_enable_asynccancel-.Lenable0b
 .Ldisable0:
 	.long	__pthread_disable_asynccancel-.Ldisable0b
-.Lcpop0:
-	.long	__pthread_cleanup_pop-.Lcpop0b
 .Lmlocki0:
 	.long	__pthread_mutex_cond_lock-.Lmlocki0b
 
 1:
+.LSblSTART:
 	/* Initial locking failed.  */
 	mov	r8, r5
 #if cond_lock != 0
@@ -412,6 +296,7 @@ __pthread_cond_wait:
 13:
 	bra	14b
 	 mov.l	@(12,r15), r0
+.LSblEND:
 
 	.align	2
 .Lmwait0:
@@ -427,3 +312,270 @@ __pthread_cond_wait:
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
+
+
+	.type	__condvar_w_cleanup, @function
+__condvar_w_cleanup:
+	mov	r4, r11
+
+	/* Get internal lock.  */
+	mov	#0, r3
+	mov	#1, r4
+#if cond_lock != 0
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
+#else
+	CMPXCHG (r3, @r8, r4, r2)
+#endif
+	bt	1f
+	 nop
+
+	mov	r8, r5
+#if cond_lock != 0
+	add	#cond_lock, r5
+#endif
+	mov.l	.Lmwait3, r1
+	bsrf	r1
+	 mov	r2, r4
+.Lmwait3b:
+
+1:
+	mov	#1, r2
+	mov	#0, r3
+
+	clrt
+	mov.l	@(wakeup_seq,r8),r0
+	mov.l	@(wakeup_seq+4,r8),r1
+	addc	r2, r0
+	addc	r3, r1
+	mov.l	r0,@(wakeup_seq,r8)
+	mov.l	r1,@(wakeup_seq+4,r8)
+
+#if cond_lock != 0
+	DEC (@(cond_lock,r8), r2)
+#else
+	DEC (@r8, r2)
+#endif
+	tst	r2, r2
+	bt	2f
+
+	mov	r8, r4
+#if cond_lock != 0
+	add	#cond_lock, r4
+#endif
+	mov.l	.Lmwake3, r1
+	bsrf	r1
+	 nop
+.Lmwake3b:
+
+2:
+	/* Wake up all waiters to make sure no signal gets lost.  */
+	mov	r8, r4
+	add	#wakeup_seq, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#-1, r6
+	shlr	r6		/* r6 = 0x7fffffff */
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+
+        mov.l   .Lmlocki3, r1
+        bsrf    r1
+         mov     r9, r4
+.Lmlocki3b:
+
+.LcallUR:
+	mov.l	.Lresume, r1
+#ifdef PIC
+	add	r12, r1
+#endif
+	jsr	@r1
+	 mov	r11, r4
+	sleep
+
+	.align	2
+.Lmwait3:
+	.long   __lll_mutex_lock_wait-.Lmwait3b
+.Lmwake3:
+        .long   __lll_mutex_unlock_wake-.Lmwake3b
+.Lmlocki3:
+	.long   __pthread_mutex_cond_lock-.Lmlocki3b
+.Lresume:
+#ifdef PIC
+	.long	_Unwind_Resume@GOTOFF
+#else
+	.long	_Unwind_Resume
+#endif
+.LENDCODE:
+	.size	__condvar_w_cleanup, .-__condvar_w_cleanup
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	0xff				! @LPStart format (omit)
+	.byte	0xff				! @TType format (omit)
+	.byte	0x0b				! call-site format
+						! DW_EH_PE_sdata4
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.ualong	.LcleanupSTART-.LSTARTCODE
+	.ualong	.LcleanupEND-.LcleanupSTART
+	.ualong	__condvar_w_cleanup-.LSTARTCODE
+	.uleb128  0
+	.ualong	.LcallUR-.LSTARTCODE
+	.ualong	.LENDCODE-.LcallUR
+	.ualong	0
+	.uleb128  0
+.Lcstend:
+
+	.section .eh_frame,"a",@progbits
+.LSTARTFRAME:
+	.ualong	.LENDCIE-.LSTARTCIE		! Length of the CIE.
+.LSTARTCIE:
+	.ualong	0				! CIE ID.
+	.byte	1				! Version number.
+#ifdef SHARED
+	.string	"zPLR"				! NUL-terminated augmentation
+						! string.
+#else
+	.string	"zPL"				! NUL-terminated augmentation
+						! string.
+#endif
+	.uleb128 1				! Code alignment factor.
+	.sleb128 -4				! Data alignment factor.
+	.byte	0x11				! Return address register
+						! column.
+#ifdef SHARED
+	.uleb128 7				! Augmentation value length.
+	.byte	0x9b				! Personality: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4
+						! + DW_EH_PE_indirect
+	.ualong	DW.ref.__gcc_personality_v0-.
+	.byte	0x1b				! LSDA Encoding: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4.
+	.byte	0x1b				! FDE Encoding: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4.
+#else
+	.uleb128 6				! Augmentation value length.
+	.byte	0x0				! Personality: absolute
+	.ualong	__gcc_personality_v0
+	.byte	0x0				! LSDA Encoding: absolute
+#endif
+	.byte 0x0c				! DW_CFA_def_cfa
+	.uleb128 0xf
+	.uleb128 0
+	.align 2
+.LENDCIE:
+
+	.ualong	.LENDFDE-.LSTARTFDE		! Length of the FDE.
+.LSTARTFDE:
+	.ualong	.LSTARTFDE-.LSTARTFRAME		! CIE pointer.
+#ifdef SHARED
+	.ualong	.LSTARTCODE-.			! PC-relative start address
+						! of the code.
+#else
+	.ualong	.LSTARTCODE			! Start address of the code.
+#endif
+	.ualong	.LENDCODE-.LSTARTCODE		! Length of the code.
+	.uleb128 4				! Augmentation size
+#ifdef SHARED
+	.ualong	.LexceptSTART-.
+#else
+	.ualong	.LexceptSTART
+#endif
+	.byte	0x4
+	.ualong	.Lpush_r8-.LSTARTCODE
+	.byte	0xe
+	.uleb128 4
+	.byte	0x88
+	.uleb128 1
+	.byte	0x4
+	.ualong	.Lpush_r9-.Lpush_r8
+	.byte	0xe
+	.uleb128 8
+	.byte	0x89
+	.uleb128 2
+	.byte	0x4
+	.ualong	.Lpush_r10-.Lpush_r9
+	.byte	0xe
+	.uleb128 12
+	.byte	0x8a
+	.uleb128 3
+	.byte	0x4
+	.ualong	.Lpush_r11-.Lpush_r10
+	.byte	0xe
+	.uleb128 16
+	.byte	0x8b
+	.uleb128 4
+	.byte	0x4
+	.ualong	.Lpush_r12-.Lpush_r11
+	.byte	0xe
+	.uleb128 20
+	.byte	0x8c
+	.uleb128 5
+	.byte	0x4
+	.ualong	.Lpush_pr-.Lpush_r12
+	.byte	0xe
+	.uleb128 24
+	.byte	0x91
+	.uleb128 6
+	.byte	0x4
+	.ualong	.Lalloc-.Lpush_pr
+	.byte	0xe
+	.uleb128 72
+	.byte	0x4
+	.ualong	.Lfree-.Lalloc
+	.byte	0xe
+	.uleb128 24
+	.byte	0x4
+	.ualong	.Lpop_pr-.Lfree
+	.byte	0xe
+	.uleb128 20
+	.byte	0xd1
+	.byte	0x4
+	.ualong	.Lpop_r12-.Lpop_pr
+	.byte	0xe
+	.uleb128 16
+	.byte	0xcc
+	.byte	0x4
+	.ualong	.Lpop_r11-.Lpop_r12
+	.byte	0xe
+	.uleb128 12
+	.byte	0xcb
+	.byte	0x4
+	.ualong	.Lpop_r10-.Lpop_r11
+	.byte	0xe
+	.uleb128 8
+	.byte	0xca
+	.byte	0x4
+	.ualong	.Lpop_r9-.Lpop_r10
+	.byte	0xe
+	.uleb128 4
+	.byte	0xc9
+	.byte	0x4
+	.ualong	.Lpop_r8-.Lpop_r9
+	.byte	0xe
+	.uleb128 0
+	.byte	0xc8
+	.byte	0x4
+	.ualong	.LSblSTART-.Lpop_r8
+	.byte	0xe
+	.uleb128 72
+	.byte	0x4
+	.ualong	.LSblEND-.LSblSTART
+	.byte	0xe
+	.uleb128 72
+	.align	2
+.LENDFDE:
+
+#ifdef SHARED
+	.hidden DW.ref.__gcc_personality_v0
+	.weak   DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align 4
+	.type   DW.ref.__gcc_personality_v0, @object
+	.size   DW.ref.__gcc_personality_v0, 4
+DW.ref.__gcc_personality_v0:
+	.long   __gcc_personality_v0
+#endif

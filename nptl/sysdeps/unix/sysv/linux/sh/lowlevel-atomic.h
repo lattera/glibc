@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 
 #define _IMP1 #1
 #define _IMM1 #-1
+#define _IMM4 #-4
 #define _IMM6 #-6
 #define _IMM8 #-8
 
@@ -50,6 +51,16 @@
 	mov	_IMM6, r15; \
 98:	mov.l	mem, old; \
 	add	old, reg; \
+	mov.l	reg, mem; \
+99:	mov	r1, r15
+
+#define	XCHG(reg, mem, old) \
+	.align	2; \
+	mova	99f, r0; \
+	nop; \
+	mov	r15, r1; \
+	mov	_IMM4, r15; \
+98:	mov.l	mem, old; \
 	mov.l	reg, mem; \
 99:	mov	r1, r15
 

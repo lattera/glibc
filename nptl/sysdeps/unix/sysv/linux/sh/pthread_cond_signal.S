@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ __pthread_cond_signal:
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
 
-	/* Wake up one thread by moving it to the internal lock futex.  */
+	/* Wake up one thread.  */
 	mov	r8, r4
 	add	#wakeup_seq, r4
 	mov	#FUTEX_WAKE, r5

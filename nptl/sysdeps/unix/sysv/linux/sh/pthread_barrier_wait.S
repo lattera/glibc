@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,6 +80,23 @@ pthread_barrier_wait:
 	cmp/eq	r0, r6
 	bt	8b
 
+	/* Increment LEFT.  If this brings the count back to the
+	   initial count unlock the object.  */
+	mov	#1, r3
+	mov.l	@(INIT_COUNT,r8), r4
+	XADD	(r3, @(LEFT,r8), r2)
+	add	#-1, r4
+	cmp/eq	r2, r4
+	bf	10f
+
+	/* Release the mutex.  We cannot release the lock before
+	   waking the waiting threads since otherwise a new thread might
+	   arrive and gets waken up, too.  */
+	DEC (@(MUTEX,r8), r2)
+	tst	r2, r2
+	bf	9f
+
+10:
 	mov	#0, r0		/* != PTHREAD_BARRIER_SERIAL_THREAD */
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
@@ -88,8 +105,6 @@ pthread_barrier_wait:
 
 3:
 	/* The necessary number of threads arrived.  */
-	mov.l	@(INIT_COUNT,r8), r0
-	mov.l	r0, @(LEFT,r8)
 	mov.l	@(CURR_EVENT,r8), r1
 	add	#1, r1
 	mov.l	r1, @(CURR_EVENT,r8)
@@ -107,6 +122,15 @@ pthread_barrier_wait:
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
+
+	/* Increment LEFT.  If this brings the count back to the
+	   initial count unlock the object.  */
+	mov	#1, r3
+	mov.l	@(INIT_COUNT,r8), r4
+	XADD	(r3, @(LEFT,r8), r2)
+	add	#-1, r4
+	cmp/eq	r2, r4
+	bf	5f
 
 	/* Release the mutex.  */
 	DEC (@(MUTEX,r8), r2)
@@ -148,6 +172,16 @@ pthread_barrier_wait:
 	bra	7b
 	 mov	r9, r6
 
+9:	
+	mov	r6, r9
+	mov	r8, r4
+	mov.l	.Lwake2, r1
+	bsrf	r1
+	 add	#MUTEX, r4
+.Lwake2b:
+	bra	10b
+	 mov	r9, r6
+
 	.align	2
 .Lall:
 	.long	0x7fffffff
@@ -157,4 +191,6 @@ pthread_barrier_wait:
 	.long	__lll_mutex_unlock_wake-.Lwake0b
 .Lwake1:
 	.long	__lll_mutex_unlock_wake-.Lwake1b
+.Lwake2:
+	.long	__lll_mutex_unlock_wake-.Lwake2b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,37 +36,67 @@
 #define __socket P(__,socket)
 #endif
 
-#define PUSHARGS_1	mov.l r4,@-r15
-#define PUSHARGS_2	mov.l r5,@-r15; PUSHARGS_1
-#define PUSHARGS_3	mov.l r6,@-r15; PUSHARGS_2
-#define PUSHARGS_4	mov.l r7,@-r15; PUSHARGS_3
+#define PUSHARGS_1	mov.l r4,@-r15;	\
+			cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (r4, 0)
+#define PUSHARGS_2	mov.l r5,@-r15; \
+			cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (r5, 0); \
+			PUSHARGS_1
+#define PUSHARGS_3	mov.l r6,@-r15; \
+			cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (r6, 0); \
+			PUSHARGS_2
+#define PUSHARGS_4	mov.l r7,@-r15; \
+			cfi_adjust_cfa_offset (4); \
+			cfi_rel_offset (r7, 0); \
+			PUSHARGS_3
 #define PUSHARGS_5	PUSHARGS_4	/* Caller has already pushed arg 5 */
 #define PUSHARGS_6	PUSHARGS_4	/* Caller has already pushed arg 5,6 */
 
-#define POPARGS_1	add #4,r15
-#define POPARGS_2	add #8,r15
-#define POPARGS_3	add #12,r15
-#define POPARGS_4	add #16,r15
-#define POPARGS_5	add #16,r15
-#define POPARGS_6	add #16,r15 
+#define POPARGS_1	add #4,r15; cfi_adjust_cfa_offset (-4)
+#define POPARGS_2	add #8,r15; cfi_adjust_cfa_offset (-8)
+#define POPARGS_3	add #12,r15; cfi_adjust_cfa_offset (-12)
+#define POPARGS_4	add #16,r15; cfi_adjust_cfa_offset (-16)
+#define POPARGS_5	POPARGS_4
+#define POPARGS_6	POPARGS_4
+
+#define ADJUSTCFI_1	cfi_adjust_cfa_offset (4); \
+			cfi_offset (r4, -4)
+#define ADJUSTCFI_2	cfi_adjust_cfa_offset (8); \
+			cfi_offset (r4, -4); \
+			cfi_offset (r5, -8)
+#define ADJUSTCFI_3	cfi_adjust_cfa_offset (12); \
+			cfi_offset (r4, -4); \
+			cfi_offset (r5, -8); \
+			cfi_offset (r6, -12)
+#define ADJUSTCFI_4	cfi_adjust_cfa_offset (16); \
+			cfi_offset (r4, -4); \
+			cfi_offset (r5, -8); \
+			cfi_offset (r6, -12); \
+			cfi_offset (r7, -16)
+#define ADJUSTCFI_5	ADJUSTCFI_4
+#define ADJUSTCFI_6	ADJUSTCFI_4
 
 #ifndef NARGS
-#define NARGS 3			/* If we were called with no wrapper, this is really socket() */
+/* If we were called with no wrapper, this is really socket().  */
+#define NARGS 3
 #endif
 
 .globl __socket
+	cfi_startproc
 ENTRY (__socket)
 	/* This will not work in the case of a socket call being interrupted
 	   by a signal.  If the signal handler uses any stack the arguments
 	   to socket will be trashed.  The results of a restart of any
-	   socket call are then unpredictable. */
+	   socket call are then unpredictable.  */
 
 	/* Push args onto the stack.  */
 	P(PUSHARGS_,NARGS)
 
 #if defined NEED_CANCELLATION && defined CENABLE
 	SINGLE_THREAD_P
-	bf .Lsocket_cancel	
+	bf .Lsocket_cancel
 #endif
 
 	/* Do the system call trap.  */
@@ -94,9 +124,14 @@ ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
 .Lsocket_cancel:
 	/* Enable asynchronous cancellation.  */
+	P(ADJUSTCFI_,NARGS)
 	sts.l pr,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	CENABLE
 	lds.l @r15+,pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 
 	/* Do the system call trap.  */
 	mov #+P(SOCKOP_,socket), r4
@@ -105,10 +140,18 @@ ENTRY (__socket)
 	trapa #0x12
 
 	sts.l pr,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	mov.l r0,@-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r0, 0)
 	CDISABLE
 	mov.l @r15+,r0
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r0)
 	lds.l @r15+,pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 
 	/* Pop args off the stack */
 	P(POPARGS_,NARGS)
@@ -122,6 +165,8 @@ ENTRY (__socket)
 	bra	.Lsyscall_error
 	 nop
 #endif
+	cfi_endproc
+
 	.align 2
 .L1:
 	.long	SYS_ify(socketcall)

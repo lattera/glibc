@@ -311,7 +311,7 @@
    with support.  */
 #if __LINUX_KERNEL_VERSION >= 132416 \
     && (defined __ia64__ || defined __s390__ || defined __powerpc__ \
-	|| defined __x86_64__)
+	|| defined __x86_64__ || __sh__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif
 
@@ -349,7 +349,8 @@
    2.6.0-test3. */
 #if (__LINUX_KERNEL_VERSION >= 132427 && defined __i386__) \
     || (__LINUX_KERNEL_VERSION >= 132609 && defined __alpha__) \
-    || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__)
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __x86_64__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_TGKILL	1
 #endif
 
@@ -359,7 +360,8 @@
 #if defined __alpha__ || defined __ia64__ || defined __hppa__ \
     || defined __sparc__ \
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__) \
-    || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__)
+    || (__LINUX_KERNEL_VERSION > 132609 && defined __x86_64__) \
+    || (__LINUX_KERNEL_VERSION >= 132609 && defined __sh__)
 # define __ASSUME_UTIMES	1
 #endif
 

@@ -4,6 +4,27 @@
 	the return value to a safe register.
 	(CDISABLE): Set the function argument correctly.
 
+2004-03-17  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevel-atomic.h (XCHG): Define.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_mutex_lock_wait):
+	Rewrite so that only one locked memory operation per round is needed.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S
+	(pthread_barrier_wait): After wakeup, release lock only when the
+	last thread stopped using the barrier object.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S
+	(__pthread_cond_wait): Don't store mutex address if the current
+	value is ~0l.  Add correct cleanup support and unwind info.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Don't use requeue for pshared condvars.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: Update comment.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S (__pthread_once):
+	Add correct cleanup support and unwind info.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S (__new_sem_wait): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Add unwind
+	information for syscall wrappers.
+
 2004-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/internaltypes.h (struct pthread_attr): Add

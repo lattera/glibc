@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 	.globl	__new_sem_wait
 	.type	__new_sem_wait,@function
 	.align	5
+	cfi_startproc
 __new_sem_wait:
 	/* First check for cancellation.  */
 	stc	gbr, r0
@@ -44,9 +45,17 @@ __new_sem_wait:
 	bt	5f
 
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
 	mov.l	r10, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r10, 0)
 	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r12, 0)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (pr, 0)
 	mov	r4, r8
 3:
 	mov.l	@r8, r0
@@ -57,12 +66,9 @@ __new_sem_wait:
 	mov	r0, r4
 	add	#-1, r3
 	CMPXCHG (r4, @r8, r3, r2)
-	bf	2b
-	lds.l	@r15+, pr
-	mov.l	@r15+, r12
-	mov.l	@r15+, r10
-	mov.l	@r15+, r8
-	rts
+	bf/s	2b
+	 mov	r2, r0
+	bra	9f
 	 mov	#0, r0
 
 1:
@@ -112,13 +118,21 @@ __new_sem_wait:
 .Lerrloc0b:
 	mov.l	r8, @r0
 #endif
+	mov	#-1, r0
+9:
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	mov.l	@r15+, r10
-	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r10)
 	rts
-	 mov	#-1, r0
-
+	 mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 5:
 	/* Canceled.  */
 	stc	gbr, r0
@@ -132,6 +146,7 @@ __new_sem_wait:
 	mov.l	.Lunwind, r2
 	jmp	@r2
 	 mov.l	@(r0,r1), r4
+	cfi_endproc
 
 .Lchand:
 	.word	CANCELHANDLING - TLS_PRE_TCB_SIZE

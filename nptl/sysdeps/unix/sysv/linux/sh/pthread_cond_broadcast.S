@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,11 +79,16 @@ __pthread_cond_broadcast:
 #endif
 	tst	r2, r2
 	bf	7f
+
 8:
-	/* Wake up all threads.  */
+	/* Don't use requeue for pshared condvars.  */
+	mov	#-1, r0
+	cmp/eq	r0, r9
 	mov	r8, r4
-	add	#wakeup_seq, r4
-#ifdef __ASSUME_FUTEX_REQUEUE
+	bt/s	9f
+	 add	#wakeup_seq, r4
+
+	/* Wake up all threads.  */
 	mov	#FUTEX_REQUEUE, r5
 	mov	#1, r6
 	mov	#-1, r7
@@ -95,17 +100,9 @@ __pthread_cond_broadcast:
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x15
-#else
-	mov	#FUTEX_WAKE, r5
-	mov	#-1, r6
-	shlr	r6		/* r6 = 0x7fffffff */
-	mov	#0, r7
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x14
-#endif
 	SYSCALL_INST_PAD
 
+10:
 	mov	#0, r0
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
@@ -165,6 +162,18 @@ __pthread_cond_broadcast:
 	 nop
 .Lmwake6b:
 	bra	8b
+	 nop
+
+9:
+	mov	#FUTEX_WAKE, r5
+	mov	#-1, r6
+	shlr	r6		/* r6 = 0x7fffffff */
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+	bra	10b
 	 nop
 
 	.align	2

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,17 +36,31 @@
 	.type	__pthread_cond_timedwait, @function
 	.align	5
 __pthread_cond_timedwait:
+.LSTARTCODE:
 	mov.l	r8, @-r15
+.Lpush_r8:
 	mov.l	r9, @-r15
+.Lpush_r9:
 	mov.l	r10, @-r15
+.Lpush_r10:
 	mov.l	r11, @-r15
+.Lpush_r11:
 	mov.l	r12, @-r15
+.Lpush_r12:
 	mov.l	r13, @-r15
+.Lpush_r13:
 	sts.l	pr, @-r15
+.Lpush_pr:
 	add	#-64, r15
+.Lalloc:
 	mov	r4, r8
 	mov	r5, r9
 	mov	r6, r13
+#ifdef PIC
+	mova	.Lgot0, r0
+	mov.l	.Lgot0, r12
+	add	r0, r12
+#endif
 
 	/* Get internal lock.  */
 	mov	#0, r3
@@ -59,11 +73,21 @@ __pthread_cond_timedwait:
 	bt	2f
 	bra	1f
 	 nop
+#ifdef PIC
+	.align	2
+.Lgot0:
+	.long	_GLOBAL_OFFSET_TABLE_
+#endif
+
 2:
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
+	mov.l	@(dep_mutex,r8),r0
+	cmp/eq	#-1, r0
+	bt	17f
 	mov.l	r9, @(dep_mutex,r8)
-	
+
+17:	
 	/* Unlock the mutex.  */
 	mov.l	.Lmunlock1, r1
 	mov	#0, r5
@@ -87,50 +111,11 @@ __pthread_cond_timedwait:
 	mov.l	r0,@(total_seq,r8)
 	mov.l	r1,@(total_seq+4,r8)
 
-	/* Install cancellation handler.  */
-#ifdef PIC
-	mova	.Lgot1, r0
-	mov.l	.Lgot1, r12
-	add	r0, r12
-	mov.l	.Lccleanup1, r5
-	add	r12, r5
-#else
-	mov.l	.Lccleanup1, r5
-#endif
-	mov	r15, r4
-	add	#32, r4
-
-	/* Prepare structure passed to cancellation handler.  */
-	mov.l	r8, @(4,r15)
-	mov.l	r9, @(8,r15)
-
-	mov.l	.Lccpush1, r1
-	bsrf	r1
-	 mov	r15, r6
-.Lccpush1b:
-
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
 
-	/* Unlock.  */
-8:
-#if cond_lock != 0
-	DEC (@(cond_lock,r8), r2)
-#else
-	DEC (@r8, r2)
-#endif
-	tst	r2, r2
-	bt	4f
-	bra	3f
-	 nop
-4:
-	mov.l	.Lenable1, r1
-	bsrf	r1
-	 nop
-.Lenable1b:
-	mov.l	r0, @r15
-
+8:	
 	/* Get current time.  */
 	mov	r15, r4
 	add	#16, r4
@@ -162,6 +147,24 @@ __pthread_cond_timedwait:
 	mov.l	r2, @(16,r15)
 	mov.l	r3, @(20,r15)
 
+	/* Unlock.  */
+#if cond_lock != 0
+	DEC (@(cond_lock,r8), r2)
+#else
+	DEC (@r8, r2)
+#endif
+	tst	r2, r2
+	bt	4f
+	bra	3f
+	 nop
+4:
+.LcleanupSTART:
+	mov.l	.Lenable1, r1
+	bsrf	r1
+	 nop
+.Lenable1b:
+	mov.l	r0, @r15
+
 	mov	r15, r7
 	add	#16, r7
 	mov	#FUTEX_WAIT, r5
@@ -178,6 +181,7 @@ __pthread_cond_timedwait:
 	bsrf	r1
 	 mov.l	@r15, r4
 .Ldisable1b:
+.LcleanupEND:
 
 	/* Lock.  */
 	mov	#0, r3
@@ -195,20 +199,15 @@ __pthread_cond_timedwait:
 	mov.l	@(wakeup_seq,r8), r2
 	mov.l	@(wakeup_seq+4,r8), r3
 
-	cmp/hi	r11, r3
-	bt	7f
-	cmp/hi	r3, r11
-	bt	15f
-
-	cmp/hs	r2, r10
+	cmp/eq	r3, r11
+	bf	7f
+	cmp/eq	r2, r10
 	bt	15f
 7:
-	cmp/hi	r1, r3
-	bt	9f
-	cmp/hi	r3, r1
-	bt	15f
-	cmp/hi	r0, r2
-	bt	9f
+	cmp/eq	r1, r3
+	bf	9f
+	cmp/eq	r0, r2
+	bf	9f
 15:
 	mov.l	@(12,r15),r0
 	cmp/eq	#-ETIMEDOUT, r0
@@ -252,14 +251,6 @@ __pthread_cond_timedwait:
 	bf	10f
 
 11:
-	/* Remove cancellation handler.  */
-	mov	r15, r4
-	add	#32, r4
-	mov.l	.Lcpop1, r1
-	bsrf	r1
-	 mov	#0, r5
-.Lcpop1b:
-
 	mov	r9, r4
 	mov.l	.Lmlocki1, r1
 	bsrf	r1
@@ -273,44 +264,39 @@ __pthread_cond_timedwait:
 
 18:	
 	add	#64, r15
+.Lfree:	
 	lds.l	@r15+, pr
+.Lpop_pr:
 	mov.l	@r15+, r13
+.Lpop_r13:
 	mov.l	@r15+, r12
+.Lpop_r12:
 	mov.l	@r15+, r11
+.Lpop_r11:
 	mov.l	@r15+, r10
+.Lpop_r10:
 	mov.l	@r15+, r9
+.Lpop_r9:
 	rts
 	 mov.l	@r15+, r8
-	ret
+.Lpop_r8:
 
 .L1k:
 	.word	1000
 	.align	2
 .Lmunlock1:
 	.long	__pthread_mutex_unlock_usercnt-.Lmunlock1b
-#ifdef PIC
-.Lgot1:
-	.long	_GLOBAL_OFFSET_TABLE_
-.Lccleanup1:
-	.long	__condvar_cleanup@GOTOFF
-#else
-.Lccleanup1:
-	.long	__condvar_cleanup
-#endif
-.Lccpush1:
-	.long	__pthread_cleanup_push-.Lccpush1b
 .Lenable1:
 	.long	__pthread_enable_asynccancel-.Lenable1b
 .Ldisable1:
 	.long	__pthread_disable_asynccancel-.Ldisable1b
-.Lcpop1:
-	.long	__pthread_cleanup_pop-.Lcpop1b
 .Lmlocki1:
 	.long	__pthread_mutex_cond_lock-.Lmlocki1b
 .L1g:
 	.long	1000000000
 
 1:
+.LSblSTART:
 	/* Initial locking failed.  */
 	mov	r8, r5
 #if cond_lock != 0
@@ -384,6 +370,7 @@ __pthread_cond_timedwait:
 17:
 	bra	18b
 	 mov.l	@(24,r15), r0
+.LSblEND:
 
 	.align	2
 .Lmwait2:
@@ -399,3 +386,281 @@ __pthread_cond_timedwait:
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
+
+
+	.type	__condvar_tw_cleanup, @function
+__condvar_tw_cleanup:
+	mov	r4, r11
+
+	/* Get internal lock.  */
+	mov	#0, r3
+	mov	#1, r4
+#if cond_lock != 0
+	CMPXCHG (r3, @(cond_lock,r8), r4, r2)
+#else
+	CMPXCHG (r3, @r8, r4, r2)
+#endif
+	bt	1f
+	 nop
+
+	mov	r8, r5
+#if cond_lock != 0
+	add	#cond_lock, r5
+#endif
+	mov.l	.Lmwait5, r1
+	bsrf	r1
+	 mov	r2, r4
+.Lmwait5b:
+
+1:
+	mov	#1, r2
+	mov	#0, r3
+
+	clrt
+	mov.l	@(wakeup_seq,r8),r0
+	mov.l	@(wakeup_seq+4,r8),r1
+	addc	r2, r0
+	addc	r3, r1
+	mov.l	r0,@(wakeup_seq,r8)
+	mov.l	r1,@(wakeup_seq+4,r8)
+
+#if cond_lock != 0
+	DEC (@(cond_lock,r8), r2)
+#else
+	DEC (@r8, r2)
+#endif
+	tst	r2, r2
+	bt	2f
+
+	mov	r8, r4
+#if cond_lock != 0
+	add	#cond_lock, r4
+#endif
+	mov.l	.Lmwake5, r1
+	bsrf	r1
+	 nop
+.Lmwake5b:
+
+2:
+	/* Wake up all waiters to make sure no signal gets lost.  */
+	mov	r8, r4
+	add	#wakeup_seq, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#-1, r6
+	shlr	r6		/* r6 = 0x7fffffff */
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+
+        mov.l   .Lmlocki5, r1
+        bsrf    r1
+         mov     r9, r4
+.Lmlocki5b:
+
+.LcallUR:
+	mov.l	.Lresume, r1
+#ifdef PIC
+	add	r12, r1
+#endif
+	jsr	@r1
+	 mov	r11, r4
+	sleep
+
+	.align	2
+.Lmwait5:
+	.long   __lll_mutex_lock_wait-.Lmwait5b
+.Lmwake5:
+        .long   __lll_mutex_unlock_wake-.Lmwake5b
+.Lmlocki5:
+	.long   __pthread_mutex_cond_lock-.Lmlocki5b
+.Lresume:
+#ifdef PIC
+	.long	_Unwind_Resume@GOTOFF
+#else
+	.long	_Unwind_Resume
+#endif
+.LENDCODE:
+	.size	__condvar_tw_cleanup, .-__condvar_tw_cleanup
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	0xff				! @LPStart format (omit)
+	.byte	0xff				! @TType format (omit)
+	.byte	0x0b				! call-site format
+						! DW_EH_PE_sdata4
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.ualong	.LcleanupSTART-.LSTARTCODE
+	.ualong	.LcleanupEND-.LcleanupSTART
+	.ualong	__condvar_tw_cleanup-.LSTARTCODE
+	.uleb128  0
+	.ualong	.LcallUR-.LSTARTCODE
+	.ualong	.LENDCODE-.LcallUR
+	.ualong	0
+	.uleb128  0
+.Lcstend:
+
+	.section .eh_frame,"a",@progbits
+.LSTARTFRAME:
+	.ualong	.LENDCIE-.LSTARTCIE		! Length of the CIE.
+.LSTARTCIE:
+	.ualong	0				! CIE ID.
+	.byte	1				! Version number.
+#ifdef SHARED
+	.string	"zPLR"				! NUL-terminated augmentation
+						! string.
+#else
+	.string	"zPL"				! NUL-terminated augmentation
+						! string.
+#endif
+	.uleb128 1				! Code alignment factor.
+	.sleb128 -4				! Data alignment factor.
+	.byte	0x11				! Return address register
+						! column.
+#ifdef SHARED
+	.uleb128 7				! Augmentation value length.
+	.byte	0x9b				! Personality: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4
+						! + DW_EH_PE_indirect
+	.ualong	DW.ref.__gcc_personality_v0-.
+	.byte	0x1b				! LSDA Encoding: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4.
+	.byte	0x1b				! FDE Encoding: DW_EH_PE_pcrel
+						! + DW_EH_PE_sdata4.
+#else
+	.uleb128 6				! Augmentation value length.
+	.byte	0x0				! Personality: absolute
+	.ualong	__gcc_personality_v0
+	.byte	0x0				! LSDA Encoding: absolute
+#endif
+	.byte 0x0c				! DW_CFA_def_cfa
+	.uleb128 0xf
+	.uleb128 0
+	.align 2
+.LENDCIE:
+
+	.ualong	.LENDFDE-.LSTARTFDE		! Length of the FDE.
+.LSTARTFDE:
+	.ualong	.LSTARTFDE-.LSTARTFRAME		! CIE pointer.
+#ifdef SHARED
+	.ualong	.LSTARTCODE-.			! PC-relative start address
+						! of the code.
+#else
+	.ualong	.LSTARTCODE			! Start address of the code.
+#endif
+	.ualong	.LENDCODE-.LSTARTCODE		! Length of the code.
+	.uleb128 4				! Augmentation size
+#ifdef SHARED
+	.ualong	.LexceptSTART-.
+#else
+	.ualong	.LexceptSTART
+#endif
+	.byte	0x4
+	.ualong	.Lpush_r8-.LSTARTCODE
+	.byte	0xe
+	.uleb128 4
+	.byte	0x88
+	.uleb128 1
+	.byte	0x4
+	.ualong	.Lpush_r9-.Lpush_r8
+	.byte	0xe
+	.uleb128 8
+	.byte	0x89
+	.uleb128 2
+	.byte	0x4
+	.ualong	.Lpush_r10-.Lpush_r9
+	.byte	0xe
+	.uleb128 12
+	.byte	0x8a
+	.uleb128 3
+	.byte	0x4
+	.ualong	.Lpush_r11-.Lpush_r10
+	.byte	0xe
+	.uleb128 16
+	.byte	0x8b
+	.uleb128 4
+	.byte	0x4
+	.ualong	.Lpush_r12-.Lpush_r11
+	.byte	0xe
+	.uleb128 20
+	.byte	0x8c
+	.uleb128 5
+	.byte	0x4
+	.ualong	.Lpush_r13-.Lpush_r12
+	.byte	0xe
+	.uleb128 24
+	.byte	0x8d
+	.uleb128 6
+	.byte	0x4
+	.ualong	.Lpush_pr-.Lpush_r13
+	.byte	0xe
+	.uleb128 28
+	.byte	0x91
+	.uleb128 7
+	.byte	0x4
+	.ualong	.Lalloc-.Lpush_pr
+	.byte	0xe
+	.uleb128 92
+	.byte	0x4
+	.ualong	.Lfree-.Lalloc
+	.byte	0xe
+	.uleb128 28
+	.byte	0x4
+	.ualong	.Lpop_pr-.Lfree
+	.byte	0xe
+	.uleb128 24
+	.byte	0xd1
+	.byte	0x4
+	.ualong	.Lpop_r13-.Lpop_pr
+	.byte	0xe
+	.uleb128 20
+	.byte	0xcd
+	.byte	0x4
+	.ualong	.Lpop_r12-.Lpop_r13
+	.byte	0xe
+	.uleb128 16
+	.byte	0xcc
+	.byte	0x4
+	.ualong	.Lpop_r11-.Lpop_r12
+	.byte	0xe
+	.uleb128 12
+	.byte	0xcb
+	.byte	0x4
+	.ualong	.Lpop_r10-.Lpop_r11
+	.byte	0xe
+	.uleb128 8
+	.byte	0xca
+	.byte	0x4
+	.ualong	.Lpop_r9-.Lpop_r10
+	.byte	0xe
+	.uleb128 4
+	.byte	0xc9
+	.byte	0x4
+	.ualong	.Lpop_r8-.Lpop_r9
+	.byte	0xe
+	.uleb128 0
+	.byte	0xc8
+	.byte	0x4
+	.ualong	.LSblSTART-.Lpop_r8
+	.byte	0xe
+	.uleb128 72
+	.byte	0x4
+	.ualong	.LSblEND-.LSblSTART
+	.byte	0xe
+	.uleb128 72
+	.align	2
+.LENDFDE:
+
+#ifdef SHARED
+	.hidden DW.ref.__gcc_personality_v0
+	.weak   DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align 4
+	.type   DW.ref.__gcc_personality_v0, @object
+	.size   DW.ref.__gcc_personality_v0, 4
+DW.ref.__gcc_personality_v0:
+	.long   __gcc_personality_v0
+#endif

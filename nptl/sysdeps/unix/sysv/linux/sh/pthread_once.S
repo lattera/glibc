@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <unwindbuf.h>
 #include <sysdep.h>
 #include "lowlevel-atomic.h"
 
@@ -29,6 +30,7 @@
 	.globl	__pthread_once
 	.type	__pthread_once,@function
 	.align	5
+	cfi_startproc
 __pthread_once:
 	mov.l	@r4, r0
 	tst	#2, r0
@@ -38,20 +40,27 @@ __pthread_once:
 
 1:
 	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r12, 0)
 	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r9, 0)
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (r8, 0)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (pr, 0)
 	mov	r5, r8
+	mov	r4, r9
 
 	/* Not yet initialized or initialization in progress.
 	   Get the fork generation counter now.  */
 6:
 	mov.l	@r4, r1
-#ifdef PIC
 	mova	.Lgot, r0
 	mov.l	.Lgot, r12
 	add	r0, r12
-#endif
 
 5:
 	mov	r1, r0
@@ -97,9 +106,9 @@ __pthread_once:
 	 nop
 
 	.align	2
-#ifdef PIC
 .Lgot:
 	.long	_GLOBAL_OFFSET_TABLE_
+#ifdef PIC
 .Lfgen:	
 	.long	__fork_generation@GOTOFF
 #else
@@ -109,31 +118,40 @@ __pthread_once:
 
 3:
 	/* Call the initializer function after setting up the
-	   cancellation handler.  */
-	/* Allocate a _pthread_cleanup_buffer on stack.  */
-	add	#-16, r15
+	   cancellation handler.  Note that it is not possible here
+	   to use the unwind-based cleanup handling.  This would require
+	   that the user-provided function and all the code it calls
+	   is compiled with exceptions.  Unfortunately this cannot be
+	   guaranteed.  */
+	add	#-UNWINDBUFSIZE, r15
+	cfi_adjust_cfa_offset (UNWINDBUFSIZE)
 
-	/* Push the cleanup handler.  */
-	mov	r4, r9
-	mov	r15, r4
-	mov.l	.Lconce, r5
-#ifdef PIC
-	add	r12, r5
-#endif
+	mov.l	.Lsigsetjmp, r1
+	mov	#UWJMPBUF, r4
+	add	r15, r4
+	bsrf	r1
+	 mov	#0, r5
+.Lsigsetjmp0:
+	tst	r0, r0
+	bf	7f
+
 	mov.l	.Lcpush, r1
 	bsrf	r1
-	 mov	r9, r6
+	 mov	r15, r4
 .Lcpush0:
+
+	/* Call the user-provided initialization function.  */
 	jsr	@r8
 	 nop
 
 	/* Pop the cleanup handler.  */
-	mov	r15, r4
 	mov.l	.Lcpop, r1
 	bsrf	r1
-	 mov	#0, r5
+	 mov	r15, r4
 .Lcpop0:
-	add	#16, r15
+
+	add	#UNWINDBUFSIZE, r15
+	cfi_adjust_cfa_offset (-UNWINDBUFSIZE)
 
 	/* Sucessful run of the initializer.  Signal that we are done.  */
 	INC (@r9, r2)
@@ -150,24 +168,55 @@ __pthread_once:
 
 4:
 	lds.l	@r15+, pr
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (pr)
 	mov.l	@r15+, r8
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r8)
 	mov.l	@r15+, r9
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r9)
 	mov.l	@r15+, r12
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (r12)
 	rts
 	 mov	#0, r0
 
-	.align	2
-.Lconce:
-#ifdef PIC
-	.long	clear_once_control@GOTOFF
-#else
-	.long	clear_once_control
-#endif
-.Lcpush:
-	.long	__pthread_cleanup_push - .Lcpush0	/* Note: no @PLT.  */
-.Lcpop:
-	.long	__pthread_cleanup_pop - .Lcpop0		/* Note: no @PLT.  */
+7:
+	/* __sigsetjmp returned for the second time.  */
+	cfi_adjust_cfa_offset (UNWINDBUFSIZE+16)
+	cfi_offset (r12, -4)
+	cfi_offset (r9, -8)
+	cfi_offset (r8, -12)
+	cfi_offset (pr, -16)
+	mov	#0, r7
+	mov.l	r7, @r9
+	mov	r9, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#-1, r6
+	shlr	r6		/* r6 = 0x7fffffff */
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
 
+	mov.l	.Lunext, r1
+	bsrf	r1
+	 mov	r15, r4
+.Lunext0:
+	/* NOTREACHED */
+	sleep
+	cfi_endproc
+
+	.align	2
+.Lsigsetjmp:
+	.long	__sigsetjmp@PLT-(.Lsigsetjmp0+2-.)
+.Lcpush:
+	.long	HIDDEN_JUMPTARGET(__pthread_register_cancel)-.Lcpush0
+.Lcpop:
+	.long	HIDDEN_JUMPTARGET(__pthread_unregister_cancel)-.Lcpop0
+.Lunext:
+	.long	HIDDEN_JUMPTARGET(__pthread_unwind_next)-.Lunext0
 	.size	__pthread_once,.-__pthread_once
 
 	.globl	__pthread_once_internal
