@@ -31,6 +31,7 @@
 #include <dlfcn.h>
 #include <link.h>
 #include <dl-lookupcfg.h>
+#include <bits/libc-lock.h>
 
 __BEGIN_DECLS
 
@@ -227,6 +228,16 @@ extern struct r_search_path_elem *_dl_init_all_dirs;
 
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
+
+
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `_dl_open' and `_dl_close' in dl-close.c.
+
+   This must be a recursive lock since the initializer function of
+   the loaded object might as well require a call to this function.
+   At this time it is not anymore a problem to modify the tables.  */
+__libc_lock_define_recursive (extern, _dl_load_lock)
 
 
 /* Write message on the debug file descriptor.  The parameters are

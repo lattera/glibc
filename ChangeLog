@@ -1,5 +1,23 @@
 2001-08-22  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/generic/ldsodefs.h (_dl_load_lock): Declare it here with
+	__libc_lock_define_recursive.
+	* elf/dl-open.c: Don't declare it here any more.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-lookup.c (add_dependency): Use __libc_lock_lock_recursive and
+	__libc_lock_unlock_recursive.
+	* elf/dl-close.c (_dl_close): Likewise
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Likewise
+	* elf/dl-open.c (_dl_open): Likewise
+
+	* sysdeps/generic/bits/libc-lock.h
+	(__libc_lock_define_recursive): New macro.
+	* sysdeps/generic/bits/stdio-lock.h (_IO_lock_t): Use it.
+	(_IO_lock_lock): Use __libc_lock_lock_recursive.
+	(_IO_lock_unlock): Use __libc_lock_unlock_recursive.
+
 	* conform/conformtest.pl (checknamespace): Sort the output list.
 
 	* sysdeps/generic/bits/poll.h (POLLWRBAND): New alias for POLLOUT.

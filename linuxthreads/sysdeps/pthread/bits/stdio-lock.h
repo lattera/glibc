@@ -17,12 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <pthread.h>
+#include <bits/libc-lock.h>
 
-typedef pthread_mutex_t _IO_lock_t;
+__libc_lock_define_recursive (typedef, _IO_lock_t)
 
 /* We need recursive (counting) mutexes.  */
-#define _IO_lock_initializer PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#define _IO_lock_initializer	{PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
+
+#define _IO_lock_init(_name)	__libc_lock_init_recursive (_name)
+#define _IO_lock_fini(_name)	__libc_lock_fini_recursive (_name)
+#define _IO_lock_lock(_name)	__libc_lock_lock_recursive (_name)
+#define _IO_lock_unlock(_name)	__libc_lock_unlock_recursive (_name)
 
 
 #define _IO_cleanup_region_start(_fct, _fp) \
@@ -40,11 +45,3 @@ typedef pthread_mutex_t _IO_lock_t;
     }
 #define _IO_cleanup_region_end(_doit) \
      __libc_cleanup_region_end (_doit)
-#define _IO_lock_init(_name) \
-     __libc_lock_init_recursive (_name)
-#define _IO_lock_fini(_name) \
-     __libc_lock_fini_recursive (_name)
-#define _IO_lock_lock(_name) \
-     __libc_lock_lock (_name)
-#define _IO_lock_unlock(_name) \
-     __libc_lock_unlock (_name)

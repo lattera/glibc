@@ -58,15 +58,6 @@ extern int _dl_lazy;			/* Do we do lazy relocations?  */
 static void show_scope (struct link_map *new);
 #endif
 
-/* During the program run we must not modify the global data of
-   loaded shared object simultanously in two threads.  Therefore we
-   protect `_dl_open' and `_dl_close' in dl-close.c.
-
-   This must be a recursive lock since the initializer function of
-   the loaded object might as well require a call to this function.
-   At this time it is not anymore a problem to modify the tables.  */
-__libc_lock_define (extern, _dl_load_lock)
-
 extern size_t _dl_platformlen;
 
 /* We must be carefull not to leave us in an inconsistent state.  Thus we
@@ -349,7 +340,7 @@ _dl_open (const char *file, int mode, const void *caller)
     _dl_signal_error (EINVAL, file, N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
-  __libc_lock_lock (_dl_load_lock);
+  __libc_lock_lock_recursive (_dl_load_lock);
 
   args.file = file;
   args.mode = mode;
@@ -363,7 +354,7 @@ _dl_open (const char *file, int mode, const void *caller)
 #endif
 
   /* Release the lock.  */
-  __libc_lock_unlock (_dl_load_lock);
+  __libc_lock_unlock_recursive (_dl_load_lock);
 
   if (errstring)
     {

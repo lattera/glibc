@@ -23,8 +23,6 @@
 #include <stddef.h>
 #include <bits/libc-lock.h>
 
-__libc_lock_define (extern, _dl_load_lock)
-
 int
 __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				    size_t size, void *data), void *data)
@@ -34,7 +32,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
   int ret = 0;
 
   /* Make sure we are alone.  */
-  __libc_lock_lock (_dl_load_lock);
+  __libc_lock_lock_recursive (_dl_load_lock);
 
   for (l = _dl_loaded; l != NULL; l = l->l_next)
     {
@@ -51,7 +49,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
     }
 
   /* Release the lock.  */
-  __libc_lock_unlock (_dl_load_lock);
+  __libc_lock_unlock_recursive (_dl_load_lock);
 
   return ret;
 }

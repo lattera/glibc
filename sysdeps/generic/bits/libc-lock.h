@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
    begins with a `*'), because its storage size will not be known outside
    of libc.  */
 #define __libc_lock_define(CLASS,NAME)
+#define __libc_lock_define_recursive(CLASS,NAME)
 #define __libc_rwlock_define(CLASS,NAME)
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */

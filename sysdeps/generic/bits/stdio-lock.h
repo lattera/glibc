@@ -22,11 +22,16 @@
 
 #include <bits/libc-lock.h>
 
-__libc_lock_define (typedef, _IO_lock_t)
+__libc_lock_define_recursive (typedef, _IO_lock_t)
 
 /* We need recursive (counting) mutexes.  */
 #define _IO_lock_initializer ...
 #error libio needs recursive mutexes for _IO_MTSAFE_IO
+
+#define _IO_lock_init(_name)	__libc_lock_init_recursive (_name)
+#define _IO_lock_fini(_name)	__libc_lock_fini_recursive (_name)
+#define _IO_lock_lock(_name)	__libc_lock_lock_recursive (_name)
+#define _IO_lock_unlock(_name)	__libc_lock_unlock_recursive (_name)
 
 
 #define _IO_cleanup_region_start(_fct, _fp) \
@@ -35,14 +40,6 @@ __libc_lock_define (typedef, _IO_lock_t)
      __libc_cleanup_region_start (_fct, NULL)
 #define _IO_cleanup_region_end(_doit) \
      __libc_cleanup_region_end (_doit)
-#define _IO_lock_init(_name) \
-     __libc_lock_init_recursive (_name)
-#define _IO_lock_fini(_name) \
-     __libc_lock_fini_recursive (_name)
-#define _IO_lock_lock(_name) \
-     __libc_lock_lock (_name)
-#define _IO_lock_unlock(_name) \
-     __libc_lock_unlock (_name)
 
 
 #endif /* bits/stdio-lock.h */

@@ -61,15 +61,6 @@ struct sym_val
 /* Statistics function.  */
 unsigned long int _dl_num_relocations;
 
-/* During the program run we must not modify the global data of
-   loaded shared object simultanously in two threads.  Therefore we
-   protect `_dl_open' and `_dl_close' in dl-close.c.
-
-   This must be a recursive lock since the initializer function of
-   the loaded object might as well require a call to this function.
-   At this time it is not anymore a problem to modify the tables.  */
-__libc_lock_define (extern, _dl_load_lock)
-
 
 /* We have two different situations when looking up a simple: with or
    without versioning.  gcc is not able to optimize a single function
@@ -92,7 +83,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
   int result = 0;
 
   /* Make sure nobody can unload the object while we are at it.  */
-  __libc_lock_lock (_dl_load_lock);
+  __libc_lock_lock_recursive (_dl_load_lock);
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
@@ -174,7 +165,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
     }
 
   /* Release the lock.  */
-  __libc_lock_unlock (_dl_load_lock);
+  __libc_lock_unlock_recursive (_dl_load_lock);
 
   return result;
 }

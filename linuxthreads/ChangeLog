@@ -1,3 +1,21 @@
+2001-08-22  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h: Include <bits/libc-lock.h>
+	instead of <pthread.h>.
+	(_IO_lock_t): Define this typedef using __libc_lock_define_recursive.
+	(_IO_lock_initializer): Add braces.
+	(_IO_lock_lock): Use __libc_lock_lock_recursive.
+	(_IO_lock_unlock): Use __libc_lock_unlock_recursive.
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_recursive_t): New type.
+	(__libc_lock_define_initialized_recursive): Use it.
+	(__libc_lock_init_recursive): Likewise.
+	(__libc_lock_fini_recursive): Likewise.
+	(__libc_lock_lock_recursive): Likewise.
+	(__libc_lock_trylock_recursive): Likewise.
+	(__libc_lock_unlock_recursive): Likewise.
+	(__libc_lock_define_recursive): New macro.
+
 2001-08-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* lockfile.c (__pthread_provide_lockfile): New variable.
