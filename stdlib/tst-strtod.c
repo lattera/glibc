@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <locale.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -67,6 +69,7 @@ static const struct ltest tests[] =
 
 static void expand (char *dst, int c);
 static int long_dbl (void);
+static int locale_test (void);
 
 int
 main (int argc, char ** argv)
@@ -117,6 +120,8 @@ main (int argc, char ** argv)
 
   status |= long_dbl ();
 
+  status |= locale_test ();
+
   return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
@@ -156,4 +161,62 @@ long_dbl (void)
     return 1;
 
   return 0;
+}
+
+/* Perform a few tests in a locale with thousands separators.  */
+static int
+locale_test (void)
+{
+  static const struct
+  {
+    const char *loc;
+    const char *str;
+    double exp;
+    ptrdiff_t nread;
+  } tests[] =
+    {
+      { "de_DE.UTF-8", "1,5", 1.5, 3 },
+      { "de_DE.UTF-8", "1.5", 1.0, 1 },
+      { "de_DE.UTF-8", "1.500", 1500.0, 5 },
+      { "de_DE.UTF-8", "36.893.488.147.419.103.232", 0x1.0p65, 26 }
+    };
+#define ntests (sizeof (tests) / sizeof (tests[0]))
+  size_t n;
+  int result = 0;
+
+  puts ("\nLocale tests");
+
+  for (n = 0; n < ntests; ++n)
+    {
+      double d;
+      char *endp;
+
+      if (setlocale (LC_ALL, tests[n].loc) == NULL)
+	{
+	  printf ("cannot set locale %s\n", tests[n].loc);
+	  result = 1;
+	  continue;
+	}
+
+      /* We call __strtod_interal here instead of strtod to tests the
+	 handling of grouping.  */
+      d = __strtod_internal (tests[n].str, &endp, 1);
+      if (d != tests[n].exp)
+	{
+	  printf ("strtod(\"%s\") returns %g and not %g\n",
+		  tests[n].str, d, tests[n].exp);
+	  result = 1;
+	}
+      else if (endp - tests[n].str != tests[n].nread)
+	{
+	  printf ("strtod(\"%s\") read %td bytes and not %td\n",
+		  tests[n].str, endp - tests[n].str, tests[n].nread);
+	  result = 1;
+	}
+    }
+
+  if (result == 0)
+    puts ("all OK");
+
+  return result;
 }

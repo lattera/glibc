@@ -1,3 +1,12 @@
+2001-01-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod.c (str_to_mpn): Correct parsing of thousands
+	separators.
+	Reported by Lagardere Jean-Francois <LAGARDEREJ@thmulti.com>.
+
+	* stdlib/tst-strtod.c (locale_test): New function.
+	(main): Call locale_test.
+
 2001-01-24  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurdsig.c (_hurdsig_getenv): Remove spurious innermost
@@ -10,7 +19,7 @@
 	prototype.
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
 
-	* include/sys/sysctl.h: New.
+	* include/sys/sysctl.h: New file.
 
 2001-01-23  Andreas Jaeger  <aj@suse.de>
 
