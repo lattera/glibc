@@ -1,3 +1,8 @@
+2000-07-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/Versions: Enumerate __*_l functions individually. __wctrans_l
+	starts at GLIBC_2.2.
+
 2000-07-12  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* sysdeps/unix/sysv/linux/mips/Dist: Add sys/tas.h.
