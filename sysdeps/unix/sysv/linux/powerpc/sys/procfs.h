@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,10 +42,8 @@ typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 typedef double elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
-/* gcc doesn't support __TI__ yet */
-#if 0
-typedef unsigned __uint128_t __attribute__ (( __mode__ (__TI__)));
-#else
+/* gcc 3.1 and newer support __uint128_t.  */
+#if !__GNUC_PREREQ(3,1)
 typedef struct {
   unsigned long u[4];
 } __attribute((aligned(16))) __uint128_t;
