@@ -1,3 +1,12 @@
+1998-06-18 19:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/dcgettext.c: use complete type name.
+	* intl/hash-string.h: Likewise.
+
+	* intl/localealias.c: Undo patch from 1998-04-29.
+	* intl/l10nflist.c: Likewise.
+	* intl/loadinfo.h: Likewise.
+
 1998-06-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/elf/start.S (_start): Ensure correct alignment.

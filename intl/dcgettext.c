@@ -298,7 +298,7 @@ DCGETTEXT (domainname, msgid, category)
       size_t path_max;
       char *ret;
 
-      path_max = (unsigned) PATH_MAX;
+      path_max = (unsigned int) PATH_MAX;
       path_max += 2;		/* The getcwd docs say to do this.  */
 
       dirname = (char *) alloca (path_max + dirname_len);

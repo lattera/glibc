@@ -355,7 +355,7 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
    names.  */
 const char *
 _nl_normalize_codeset (codeset, name_len)
-     const unsigned char *codeset;
+     const char *codeset;
      size_t name_len;
 {
   int len = 0;

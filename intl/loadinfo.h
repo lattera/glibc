@@ -51,7 +51,7 @@ struct loaded_l10nfile
 };
 
 
-extern const char *_nl_normalize_codeset PARAMS ((const unsigned char *codeset,
+extern const char *_nl_normalize_codeset PARAMS ((const char *codeset,
 						  size_t name_len));
 
 extern struct loaded_l10nfile *
