@@ -1,3 +1,7 @@
+2000-08-12  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/generic/scandir64.c: Include <dirent.h>.
+
 2000-08-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Handle
