@@ -1,3 +1,8 @@
+2002-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Mark with
+	always_inline attribute.
+
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
 	* stdlib/tst-setcontext.c (main): If makecontext does nothing,
