@@ -1,3 +1,10 @@
+Fri Jun  7 11:02:22 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/login.c (tty_name): New function.
+	(login): Use it.
+	(PATH_MAX): MACRO removed.
+	<stdlib.h>: New include.
+
 Wed Jun  5 22:06:21 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Fix type of reloc
