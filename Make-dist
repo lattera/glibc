@@ -168,8 +168,6 @@ foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
 		$(sysdep-Subdir-files)
 foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
-subdirs := $(filter-out crypt,$(subdirs))
-
 +sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies syscalls.list\
 				           configure configure.in,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
@@ -187,13 +185,7 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
 .PHONY: dist
-dist: $(tardir).tar.gz $(tardir)-crypt.tar.gz
-
-$(tardir)-crypt.tar.gz: crypt/crypt.tar.gz
-	ln $< $@
-crypt/%: FORCE
-	$(MAKE) -C $(@D) $(@F)
-FORCE:
+dist: $(tardir).tar.gz
 
 subdir_dist: dist.tar
 dist.tar: $(tardir) $(+tsrcs)

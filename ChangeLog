@@ -1,5 +1,6 @@
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Make-dist (dist): Don't depend on crypt tar file.  Remove that rule.
 	* Makefile (subdirs): Remove crypt.
 	* crypt: Directory removed.  It will be made an independent library
 	distribution.
