@@ -25,6 +25,7 @@
 
 #include <libioP.h>
 #include <stdio.h>
+#include <wchar.h>
 
 int
 fwide (fp, mode)
