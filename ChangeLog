@@ -1,3 +1,9 @@
+2000-11-13  Marcus Brinkmann <marcus@gnu.org>
+
+	* hurd/get-host.c (_hurd_get_host_config): Fix possible buffer
+	underrun and make sure the result is null terminated even if there
+	is no trailing newline.
+
 2000-11-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.

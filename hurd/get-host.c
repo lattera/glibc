@@ -1,5 +1,5 @@
 /* Get a host configuration item kept as the whole contents of a file.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,10 +70,17 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
 	*buf = '\0';
       return 0;
     }
-    
+
   /* Remove newlines in case someone wrote the file by hand.  */
-  while (buf[nread - 1] == '\n')
+  while (buf[nread - 1] == '\n' && nread > 0)
     buf[--nread] = '\0';
+
+  /* Null-terminate the result if there is enough space.  */
+  if (nread < buflen)
+    buf[nread] = '\0';
+  else
+    if (buf[nread - 1] != '\0')
+      more = 1;
 
   if (more)
     /* If we didn't read the whole file, tell the caller to use a bigger
