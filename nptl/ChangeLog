@@ -1,7 +1,8 @@
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
 
-	* Makefile: Add rules to build and run tst-cond12.
+	* Makefile: Add rules to build and run tst-cond12 and tst-cond13.
 	* tst-cond12.c: New file.
+	* tst-cond13.c: New file.
 
 2003-11-17  Ulrich Drepper  <drepper@redhat.com>
 

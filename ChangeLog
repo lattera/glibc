@@ -1,3 +1,15 @@
+2003-11-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/tst-rxspencer.c (mb_tests): Don't run identical multi-byte
+	tests multiple times unnecessarily.
+
+2003-11-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex19.c (BRE, ERE): Define.
+	(tests): Add many new tests, remove UTF-8 ones.
+	(do_one_test, do_mb_tests): New functions.
+	(main): Rewritten using do_one_test and do_mb_tests.
+
 2003-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/PTESTS: Fix first test in GA143.
