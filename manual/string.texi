@@ -1077,7 +1077,7 @@ The @code{rawmemchr} function exists for just this situation which is
 surprisingly frequent.  The interface is similar to @code{memchr} except
 that the @var{size} parameter is missing.  The function will look beyond
 the end of the block pointed to by @var{block} in case the programmer
-made in error in assuming that the byte @var{c} is present in the block.
+made an error in assuming that the byte @var{c} is present in the block.
 In this case the result is unspecified.  Otherwise the return value is a
 pointer to the located byte.
 
