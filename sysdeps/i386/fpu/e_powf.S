@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -48,6 +48,9 @@ one:	.double 1.0
 	ASM_TYPE_DIRECTIVE(limit,@object)
 limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
+	ASM_TYPE_DIRECTIVE(p31,@object)
+p31:	.byte 0, 0, 0, 0, 0, 0, 0xe0, 0x41
+	ASM_SIZE_DIRECTIVE(p31)
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%ecx)
@@ -95,6 +98,14 @@ ENTRY(__ieee754_powf)
 	je	15f		// x is ±inf
 
 	fxch			// y : x
+
+	/* fistpl raises invalid exception for |y| >= 1L<<31.  */
+	fld	%st		// y : y : x
+	fabs			// |y| : y : x
+	fcompl	MO(p31)		// y : x
+	fnstsw
+	sahf
+	jnc	2f
 
 	/* First see whether `y' is a natural number.  In this case we
 	   can use a more precise algorithm.  */
