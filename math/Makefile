@@ -46,7 +46,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt e_gamma_r	\
 	     k_cos k_rem_pio2 k_sin k_tan s_asinh s_atan s_cbrt		\
 	     s_ceil s_copysign s_cos s_erf s_expm1 s_fabs s_finite	\
-	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb 		\
+	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb		\
 	     s_modf s_nextafter s_nexttoward s_rint s_scalbn s_scalbln	\
 	     s_significand s_sin s_tan s_tanh w_acos w_acosh w_asin	\
 	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_exp10 w_fmod	\
@@ -143,8 +143,6 @@ CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
 # only the fdlibm code.
 CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
 
-# Using omit-long-double-fcts is only a temporary hack.
-ifneq ($(omit-long-double-fcts),yes)
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
 # We won't compile the `long double' code at all.  Tell the `double' code
@@ -152,7 +150,6 @@ ifneq ($(long-double-fcts),yes)
 # defining those aliases, tell <math.h> to declare the `FUNCl' names with
 # `double' instead of `long double'.
 CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
-endif
 endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.
