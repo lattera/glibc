@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 .globl C_SYMBOL_NAME(__sigreturn)
 
 ENTRY (__sigaction_syscall)
-	movel $C_SYMBOL_NAME(__sigreturn), %edx
+	movl $C_SYMBOL_NAME(__sigreturn), %edx
 	DO_CALL (sigaction, 3)
 	jb syscall_error
 	ret
