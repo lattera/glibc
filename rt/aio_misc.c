@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -260,8 +260,8 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
   newp = get_elem ();
   if (newp == NULL)
     {
-      __set_errno (EAGAIN);
       pthread_mutex_unlock (&__aio_requests_mutex);
+      __set_errno (EAGAIN);
       return NULL;
     }
   newp->aiocbp = aiocbp;
