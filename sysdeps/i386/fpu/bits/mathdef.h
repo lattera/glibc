@@ -42,6 +42,6 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 # define FP_ILOGBNAN	(-2147483647 - 1)
 
 /* Number of decimal digits for the `long double' type.  */
-# define DECIMAL_DIG	18
+# define DECIMAL_DIG	21
 
 #endif	/* ISO C99 */

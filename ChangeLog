@@ -1,5 +1,8 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/bits/mathdef.h (DECIMAL_DIG): Correct value.
+	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+
 	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Hopefully fix
 	the handling of denormalized numbers.
 
