@@ -36,5 +36,5 @@ typedef long double double_t;	/* `double' expressions are evaluated as
 #define INFINITY	HUGE_VALL
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
-#define FP_ILOGB0	0
+#define FP_ILOGB0	0x80000000
 #define FP_ILOGBNAN	0x7fffffff
