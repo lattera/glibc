@@ -101,21 +101,20 @@ elf_machine_dynamic (void)
 static inline Elf32_Addr
 elf_machine_load_address (void)
 {
-  register Elf32_Addr pc __asm("%o7"), pic __asm("%l7"), got;
+  register Elf32_Addr *pc __asm ("%o7"), *got __asm ("%l7");
 
-  LOAD_PIC_REG (pic);
+  __asm ("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t"
+	 "call 1f\n\t"
+	 " add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t"
+	 "call _DYNAMIC\n\t"
+	 "call _GLOBAL_OFFSET_TABLE_\n"
+	 "1:\tadd %1, %0, %1\n\t" : "=r" (pc), "=r" (got));
 
-  /* Utilize the fact that a local .got entry will be partially
-     initialized at startup awaiting its RELATIVE fixup.  */
-
-  __asm("sethi %%hi(.Load_address),%1\n"
-        ".Load_address:\n\t"
-        "call 1f\n\t"
-        "or %1,%%lo(.Load_address),%1\n"
-        "1:\tld [%2+%1],%1"
-        : "=r"(pc), "=r"(got) : "r"(pic));
-
-  return pc - got;
+  /* got is now l_addr + _GLOBAL_OFFSET_TABLE_
+     *got is _DYNAMIC
+     pc[2]*4 is l_addr + _DYNAMIC - (long)pc - 8
+     pc[3]*4 is l_addr + _GLOBAL_OFFSET_TABLE_ - (long)pc - 12  */
+  return (Elf32_Addr) got - *got + (pc[2] - pc[3]) * 4 - 4;
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT

@@ -68,44 +68,21 @@ elf_machine_dynamic (void)
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
-  register Elf64_Addr *elf_pic_register __asm__("%l7");
+  register Elf32_Addr *pc __asm ("%o7");
+  register Elf64_Addr *got __asm ("%l7");
 
-  LOAD_PIC_REG (elf_pic_register);
+  __asm ("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t"
+         "call 1f\n\t"
+         " add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t"
+         "call _DYNAMIC\n\t"
+         "call _GLOBAL_OFFSET_TABLE_\n"
+         "1:\tadd %1, %0, %1\n\t" : "=r" (pc), "=r" (got));
 
-  /* We used to utilize the fact that a local .got entry will
-     be partially initialized at startup awaiting its RELATIVE
-     fixup:
-
-     Elf64_Addr pc, la;
-
-     __asm("sethi %%hi(.Load_address), %1\n"
-	   ".Load_address:\n\t"
-	   "rd %%pc, %0\n\t"
-	   "or %1, %%lo(.Load_address), %1\n\t"
-	   : "=r"(pc), "=r"(la));
-
-     return pc - *(Elf64_Addr *)(elf_pic_register + la);
-
-     Unfortunately as binutils tries to work around Solaris
-     dynamic linker bug which resolves R_SPARC_RELATIVE as X += B + A
-     instead of X = B + A this does not work any longer, since ld
-     clears it.
-
-     The following method relies on the fact that sparcv9 ABI maximal
-     page length is 1MB and all ELF segments on sparc64 are aligned
-     to 1MB.  Also assumes that they both fit into the first 1MB of
-     the RW segment.  This should be true for some time unless ld.so
-     grows too much, at the moment the whole stripped ld.so is 128KB
-     and only smaller part of that is in the RW segment.  */
-
-#ifdef SPARC64_DYNAMIC_BEFORE_GOT
-  /* If _DYNAMIC comes before _GLOBAL_OFFSET_TABLE_...  */
-  return ((Elf64_Addr)elf_pic_register - *elf_pic_register) & ~0xfffffUL;
-#else
-  /* ... and if _DYNAMIC comes after _GLOBAL_OFFSET_TABLE_.  */
-  return ((Elf64_Addr)elf_pic_register - *elf_pic_register + 0xfffff)
-	 & ~0xfffffUL;
-#endif
+  /* got is now l_addr + _GLOBAL_OFFSET_TABLE_
+     *got is _DYNAMIC
+     pc[2]*4 is l_addr + _DYNAMIC - (long)pc - 8
+     pc[3]*4 is l_addr + _GLOBAL_OFFSET_TABLE_ - (long)pc - 12  */
+  return (Elf64_Addr) got - *got + (Elf32_Sword) ((pc[2] - pc[3]) * 4) - 4;
 }
 
 /* We have 4 cases to handle.  And we code different code sequences
