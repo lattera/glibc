@@ -2,6 +2,14 @@ Fri Apr 26 01:55:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* malloc/mcheck.c (mabort): Use __libc_fatal only #ifdef _LIBC.
 
+Thu Apr 25 15:49:57 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c (__getcwd): When we find a match in
+	the scan for a name, avoid doing another readdir (which overwrites
+	NENTRIES, and was resulting in a bogus ENOENT).
+
+	* sysdeps/mach/hurd/fcntl.c (__fcntl): Add missing break after F_SETFL.
+
 Wed Apr 24 00:22:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* stdio/internals.c (seek_to_target): Set errno if seek function
