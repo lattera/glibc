@@ -69,6 +69,7 @@ struct cache_file
 
 #define CACHEMAGIC_NEW "glibc-ld.so.cache"
 #define CACHE_VERSION "1.1"
+#define CACHEMAGIC_VERSION_NEW CACHEMAGIC_NEW CACHE_VERSION "1.1"
 
 
 struct file_entry_new
