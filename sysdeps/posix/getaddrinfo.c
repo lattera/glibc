@@ -45,6 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assert.h>
 #include <errno.h>
 #include <netdb.h>
+#include <resolv.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -430,10 +431,21 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data;
+	  int old_res_options = _res.options;
+
+	  /* If we are looking for both IPv4 and IPv6 address we don't
+	     want the lookup functions to automatically promote IPv4
+	     addresses to IPv6 addresses.  Currently this is decided
+	     by setting the RES_USE_INET6 bit in _res.options.  */
+	  if (req->ai_family == AF_UNSPEC)
+	    _res.options &= ~RES_USE_INET6;
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	    gethosts (AF_INET6, struct in6_addr);
 	  no_inet6_data = no_data;
+
+	  if (req->ai_family == AF_UNSPEC)
+	    _res.options = old_res_options;
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    gethosts (AF_INET, struct in_addr);
