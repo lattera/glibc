@@ -702,8 +702,8 @@ especially important if the @code{FTW_CHDIR} flag for @code{nftw} was
 set since then the current directory is the one the current item is
 found in.
 @item int level
-While processing the directory the functions tracks how many directories
-have been examine to find the current item.  This nesting level is
+While processing the directory the function tracks how many directories
+have been examineed to find the current item.  This nesting level is
 @math{0} for the item given starting item (file or directory) and is
 incremented by one for each entered directory.
 @end table

@@ -1,3 +1,8 @@
+1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/filesys.texi (Working on Directory Trees): Fix typos.
+	Reported by Andries.Brouwer@cwi.nl.
+
 1999-06-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/connections.c (handle_request): Use correct type for optlen
@@ -32,9 +37,8 @@
 1999-06-23  Zack Weinberg  <zack@rabi.columbia.edu>
 
 	* libio/stdio.h: Define stdin, stdout, stderr as macros.
-	* math/complex.h: Don't define
-	CX_LIMITED_RANGE_{ON,OFF,DEFAULT}.  These are *pragmas* not
-	macros.
+	* math/complex.h: Don't define CX_LIMITED_RANGE_{ON,OFF,DEFAULT}.
+	These are *pragmas* not macros.
 	* wcsmbs/wchar.h: Fix comment.
 
 	* grp/grp.h: Use __foo_t_defined convention to typedef things
