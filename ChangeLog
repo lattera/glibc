@@ -1,3 +1,8 @@
+2001-04-12  Paul Bame  <paul_bame@hp.com>
+
+	* sysdeps/hppa/fpu/fclrexcpt.c: Clear the exception flags, not the
+	enable flags.
+
 2001-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/environments.h (_POSIX_V6_LPBIG_OFFBIG,

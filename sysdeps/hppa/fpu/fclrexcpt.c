@@ -29,7 +29,7 @@ feclearexcept (int excepts)
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
 
   /* Clear all the relevant bits. */
-  sw[0] &= ~(excepts & FE_ALL_EXCEPT);
+  sw[0] &= ~(excepts & FE_ALL_EXCEPT) << 27;
   __asm__ ("fldd 0(%0),%%fr0" : : "r" (sw));
 
   /* Success.  */
