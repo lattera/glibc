@@ -1,5 +1,8 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/zh_HK: Use zh_TW data for LC_MESSAGES.
+	* SUPPORTED: Add zh_HK.BIG5HKSCS.
+
 	* charmaps/BIG5HKSCS: Add Big5 codes.
 
 	* Makefile (test-input): Add sv_SE.ISO-8859-1.

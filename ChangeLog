@@ -1,5 +1,9 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/big5hkscs.c: Regenerated from charmap.
+	* iconvdata/testdata/BIG5HKSCS: Regenerated.
+	* iconvdata/testdata/BIG5HKSCS..UTF8: Regenerated.
+
 	* libio/fmemopen.c (fmemopen_seek): Add default case in switch
 	statement.  General cleanup.
 
