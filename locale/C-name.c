@@ -33,12 +33,12 @@ const struct locale_data _nl_C_LC_NAME attribute_hidden =
   0,
   7,
   {
-    { string: "%p%t%g%t%m%t%f" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: _nl_C_codeset }
+    { .string = "%p%t%g%t%m%t%f" },
+    { .string = "" },
+    { .string = "" },
+    { .string = "" },
+    { .string = "" },
+    { .string = "" },
+    { .string = _nl_C_codeset }
   }
 };

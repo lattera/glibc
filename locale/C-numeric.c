@@ -30,11 +30,11 @@ const struct locale_data _nl_C_LC_NUMERIC attribute_hidden =
   0,
   6,
   {
-    { string: "." },
-    { string: "" },
-    { string: "" },
-    { word: (unsigned int) L'.' },
-    { word: (unsigned int) L'\0' },
-    { string: _nl_C_codeset }
+    { .string = "." },
+    { .string = "" },
+    { .string = "" },
+    { .word = (unsigned int) L'.' },
+    { .word = (unsigned int) L'\0' },
+    { .string = _nl_C_codeset }
   }
 };

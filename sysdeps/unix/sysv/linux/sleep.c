@@ -29,7 +29,7 @@
 unsigned int
 __sleep (unsigned int seconds)
 {
-  struct timespec ts = { tv_sec: (long int) seconds, tv_nsec: 0 };
+  struct timespec ts = { .tv_sec = (long int) seconds, .tv_nsec = 0 };
   sigset_t set, oset;
   unsigned int result;
 

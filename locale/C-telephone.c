@@ -33,10 +33,10 @@ const struct locale_data _nl_C_LC_TELEPHONE attribute_hidden =
   0,
   5,
   {
-    { string: "+%c %a %l" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: _nl_C_codeset }
+    { .string = "+%c %a %l" },
+    { .string = "" },
+    { .string = "" },
+    { .string = "" },
+    { .string = _nl_C_codeset }
   }
 };

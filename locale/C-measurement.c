@@ -33,7 +33,7 @@ const struct locale_data _nl_C_LC_MEASUREMENT attribute_hidden =
   0,
   2,
   {
-    { string: "\1" },
-    { string: _nl_C_codeset }
+    { .string = "\1" },
+    { .string = _nl_C_codeset }
   }
 };

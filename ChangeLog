@@ -1,3 +1,35 @@
+2002-12-15  Art Haas  <ahaas@airmail.net>
+
+	* iconv/gconv_conf.c: Convert GCC extension initializer syntax to C99.
+	* iconvdata/gap.awk: Likewise.
+	* iconvdata/gen-8bit-gap-1.sh: Likewise.
+	* iconvdata/gen-8bit-gap.sh: Likewise.
+	* locale/C-address.c: Likewise.
+	* locale/C-collate.c: Likewise.
+	* locale/C-ctype.c: Likewise.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* nscd/connections.c: Likewise.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdlib/random.c: Likewise.
+	* sysdeps/generic/siglist.c: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/ieee754/bits/nan.h: Likewise.
+	* sysdeps/posix/sprofil.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/usleep.c: Likewise.
+
 2002-12-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/readv.c (do_readv): Use prototype defn.
@@ -17,13 +49,6 @@
 	for users.
 
 	* resolv/Versions (libresolv: GLIBC_2.3.2): New set, add __p_rcode.
-
-2002-12-15  Art Haas  <ahaas@airmail.net>
-
-	* nscd/connections.c: C99 initializer conversion.
-	* nscd/grpcache.c: Same.
-	* nscd/hstcache.c: Same.
-	* nscd/pwdcache.c: Same.
 
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 

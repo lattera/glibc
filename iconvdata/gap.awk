@@ -26,7 +26,7 @@ function tonum(str)
     {
       if (last)
 	{
-	  printf ("  { start: 0x%04x, end: 0x%04x, idx: %5d },\n",
+	  printf ("  { .start = 0x%04x, .end = 0x%04x, .idx = %5d },\n",
 		  first, last, idx);
 	  idx -= u - last - 1;
 	}
@@ -35,5 +35,5 @@ function tonum(str)
   last = u;
 }
 
-END { printf ("  { start: 0x%04x, end: 0x%04x, idx: %5d },\n",
+END { printf ("  { .start = 0x%04x, .end = 0x%04x, .idx = %5d },\n",
 	      first, last, idx); }

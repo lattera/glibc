@@ -548,27 +548,27 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
   NR_FIXED + NR_CLASSES + NR_MAPS,
   {
     /* _NL_CTYPE_CLASS */
-    { string: _nl_C_LC_CTYPE_class },
+    { .string = _nl_C_LC_CTYPE_class },
     /* _NL_CTYPE_TOUPPER */
-    { string: (const char *) _nl_C_LC_CTYPE_toupper },
+    { .string = (const char *) _nl_C_LC_CTYPE_toupper },
     /* _NL_CTYPE_GAP1 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_TOLOWER */
-    { string: (const char *) _nl_C_LC_CTYPE_tolower },
+    { .string = (const char *) _nl_C_LC_CTYPE_tolower },
     /* _NL_CTYPE_GAP2 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_CLASS32 */
-    { string: _nl_C_LC_CTYPE_class32 },
+    { .string = _nl_C_LC_CTYPE_class32 },
     /* _NL_CTYPE_GAP3 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_GAP4 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_GAP5 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_GAP6 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_CTYPE_CLASS_NAMES */
-    { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
+    { .string = "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0"
 #ifdef PREDEFINED_CLASSES
 	      "left_to_right\0" "right_to_left\0" "num_terminator\0"
@@ -580,106 +580,106 @@ const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
 #endif
     },
     /* _NL_CTYPE_MAP_NAMES */
-    { string: "toupper\0" "tolower\0"
+    { .string = "toupper\0" "tolower\0"
 #ifdef PREDEFINED_CLASSES
       "tosymmetric\0"
 #endif
     },
     /* _NL_CTYPE_WIDTH */
-    { string: (const char *) _nl_C_LC_CTYPE_width.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_width.header },
     /* _NL_CTYPE_MB_CUR_MAX */
-    { word: 1 },
+    { .word = 1 },
     /* _NL_CTYPE_CODESET_NAME */
-    { string: _nl_C_codeset },
+    { .string = _nl_C_codeset },
     /* _NL_CTYPE_TOUPPER32 */
-    { string: (const char *) &_nl_C_LC_CTYPE_toupper[128] },
+    { .string = (const char *) &_nl_C_LC_CTYPE_toupper[128] },
     /* _NL_CTYPE_TOLOWER32 */
-    { string: (const char *) &_nl_C_LC_CTYPE_tolower[128] },
+    { .string = (const char *) &_nl_C_LC_CTYPE_tolower[128] },
     /* _NL_CTYPE_CLASS_OFFSET */
-    { word: NR_FIXED },
+    { .word = NR_FIXED },
     /* _NL_CTYPE_MAP_OFFSET */
-    { word: NR_FIXED + NR_CLASSES },
+    { .word = NR_FIXED + NR_CLASSES },
     /* _NL_CTYPE_INDIGITS_MB_LEN */
-    { word: 1 },
+    { .word = 1 },
     /* _NL_CTYPE_INDIGITS0_MB .. _NL_CTYPE_INDIGITS9_MB */
-    { string: "0" },
-    { string: "1" },
-    { string: "2" },
-    { string: "3" },
-    { string: "4" },
-    { string: "5" },
-    { string: "6" },
-    { string: "7" },
-    { string: "8" },
-    { string: "9" },
+    { .string = "0" },
+    { .string = "1" },
+    { .string = "2" },
+    { .string = "3" },
+    { .string = "4" },
+    { .string = "5" },
+    { .string = "6" },
+    { .string = "7" },
+    { .string = "8" },
+    { .string = "9" },
     /* _NL_CTYPE_INDIGITS_WC_LEN */
-    { word: 1 },
+    { .word = 1 },
     /* _NL_CTYPE_INDIGITS0_WC .. _NL_CTYPE_INDIGITS9_WC */
-    { wstr: (uint32_t *) L"0" },
-    { wstr: (uint32_t *) L"1" },
-    { wstr: (uint32_t *) L"2" },
-    { wstr: (uint32_t *) L"3" },
-    { wstr: (uint32_t *) L"4" },
-    { wstr: (uint32_t *) L"5" },
-    { wstr: (uint32_t *) L"6" },
-    { wstr: (uint32_t *) L"7" },
-    { wstr: (uint32_t *) L"8" },
-    { wstr: (uint32_t *) L"9" },
+    { .wstr = (uint32_t *) L"0" },
+    { .wstr = (uint32_t *) L"1" },
+    { .wstr = (uint32_t *) L"2" },
+    { .wstr = (uint32_t *) L"3" },
+    { .wstr = (uint32_t *) L"4" },
+    { .wstr = (uint32_t *) L"5" },
+    { .wstr = (uint32_t *) L"6" },
+    { .wstr = (uint32_t *) L"7" },
+    { .wstr = (uint32_t *) L"8" },
+    { .wstr = (uint32_t *) L"9" },
     /* _NL_CTYPE_OUTDIGIT0_MB .. _NL_CTYPE_OUTDIGIT9_MB */
-    { string: "0" },
-    { string: "1" },
-    { string: "2" },
-    { string: "3" },
-    { string: "4" },
-    { string: "5" },
-    { string: "6" },
-    { string: "7" },
-    { string: "8" },
-    { string: "9" },
+    { .string = "0" },
+    { .string = "1" },
+    { .string = "2" },
+    { .string = "3" },
+    { .string = "4" },
+    { .string = "5" },
+    { .string = "6" },
+    { .string = "7" },
+    { .string = "8" },
+    { .string = "9" },
     /* _NL_CTYPE_OUTDIGIT0_WC .. _NL_CTYPE_OUTDIGIT9_WC */
-    { word: L'0' },
-    { word: L'1' },
-    { word: L'2' },
-    { word: L'3' },
-    { word: L'4' },
-    { word: L'5' },
-    { word: L'6' },
-    { word: L'7' },
-    { word: L'8' },
-    { word: L'9' },
+    { .word = L'0' },
+    { .word = L'1' },
+    { .word = L'2' },
+    { .word = L'3' },
+    { .word = L'4' },
+    { .word = L'5' },
+    { .word = L'6' },
+    { .word = L'7' },
+    { .word = L'8' },
+    { .word = L'9' },
     /* _NL_CTYPE_TRANSLIT_TAB_SIZE */
-    { word: NTRANSLIT },
+    { .word = NTRANSLIT },
     /* _NL_CTYPE_TRANSLIT_FROM_IDX */
-    { wstr: translit_from_idx },
+    { .wstr = translit_from_idx },
     /* _NL_CTYPE_TRANSLIT_FROM_TBL */
-    { wstr: (uint32_t *) translit_from_tbl },
+    { .wstr = (uint32_t *) translit_from_tbl },
     /* _NL_CTYPE_TRANSLIT_TO_IDX */
-    { wstr: translit_to_idx },
+    { .wstr = translit_to_idx },
     /* _NL_CTYPE_TRANSLIT_TO_TBL */
-    { wstr: (uint32_t *) translit_to_tbl },
+    { .wstr = (uint32_t *) translit_to_tbl },
     /* _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN */
-    { word: 1 },
+    { .word = 1 },
     /* _NL_CTYPE_TRANSLIT_DEFAULT_MISSING */
-    { wstr: (uint32_t *) L"?" },
+    { .wstr = (uint32_t *) L"?" },
     /* _NL_CTYPE_TRANSLIT_IGNORE_LEN */
-    { word: 0 },
+    { .word = 0 },
     /* _NL_CTYPE_TRANSLIT_IGNORE */
-    { wstr: NULL },
+    { .wstr = NULL },
     /* NR_CLASSES wctype_tables */
-    { string: (const char *) _nl_C_LC_CTYPE_class_upper.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_lower.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_alpha.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_digit.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_xdigit.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_space.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_print.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_graph.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_blank.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_cntrl.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_punct.header },
-    { string: (const char *) _nl_C_LC_CTYPE_class_alnum.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_upper.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_lower.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_alpha.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_digit.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_xdigit.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_space.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_print.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_graph.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_blank.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_cntrl.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_punct.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_class_alnum.header },
     /* NR_MAPS wctrans_tables */
-    { string: (const char *) _nl_C_LC_CTYPE_map_toupper.header },
-    { string: (const char *) _nl_C_LC_CTYPE_map_tolower.header }
+    { .string = (const char *) _nl_C_LC_CTYPE_map_toupper.header },
+    { .string = (const char *) _nl_C_LC_CTYPE_map_tolower.header }
   }
 };

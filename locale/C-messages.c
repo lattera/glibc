@@ -33,10 +33,10 @@ const struct locale_data _nl_C_LC_MESSAGES attribute_hidden =
   0,
   5,
   {
-    { string: "^[yY]" },
-    { string: "^[nN]" },
-    { string: "" },
-    { string: "" },
-    { string: _nl_C_codeset }
+    { .string = "^[yY]" },
+    { .string = "^[nN]" },
+    { .string = "" },
+    { .string = "" },
+    { .string = _nl_C_codeset }
   }
 };

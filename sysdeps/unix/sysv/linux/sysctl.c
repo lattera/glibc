@@ -33,12 +33,12 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
   /* GKM FIXME: force __sysctl_args decl to have unbounded pointers.  */
   struct __sysctl_args args =
   {
-    name: name,
-    nlen: nlen,
-    oldval: oldval,
-    oldlenp: oldlenp,
-    newval: newval,
-    newlen: newlen
+    .name = name,
+    .nlen = nlen,
+    .oldval = oldval,
+    .oldlenp = oldlenp,
+    .newval = newval,
+    .newlen = newlen
   };
   (void) CHECK_N (name, nlen);
   (void) CHECK_N (oldval, *oldlenp);

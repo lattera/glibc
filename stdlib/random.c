@@ -170,8 +170,8 @@ static struct random_data unsafe_state =
    in the initialization of randtbl) because the state table pointer is set
    to point to randtbl[1] (as explained below).)  */
 
-    fptr : &randtbl[SEP_3 + 1],
-    rptr : &randtbl[1],
+    .fptr = &randtbl[SEP_3 + 1],
+    .rptr = &randtbl[1],
 
 /* The following things are the pointer to the state information table,
    the type of the current generator, the degree of the current polynomial
@@ -183,13 +183,13 @@ static struct random_data unsafe_state =
    indexing every time to find the address of the last element to see if
    the front and rear pointers have wrapped.  */
 
-    state : &randtbl[1],
+    .state = &randtbl[1],
 
-    rand_type : TYPE_3,
-    rand_deg : DEG_3,
-    rand_sep : SEP_3,
+    .rand_type = TYPE_3,
+    .rand_deg = DEG_3,
+    .rand_sep = SEP_3,
 
-    end_ptr : &randtbl[sizeof (randtbl) / sizeof (randtbl[0])]
+    .end_ptr = &randtbl[sizeof (randtbl) / sizeof (randtbl[0])]
 };
 
 /* POSIX.1c requires that there is mutual exclusion for the `rand' and

@@ -23,7 +23,7 @@
 
 const char *const _sys_siglist[NSIG] =
 {
-#define init_sig(sig, abbrev, desc)   [sig] desc,
+#define init_sig(sig, abbrev, desc)   [sig] = desc,
 #include <siglist.h>
 #undef init_sig
 };
@@ -32,7 +32,7 @@ strong_alias (_sys_siglist, _sys_siglist_internal)
 
 const char *const _sys_sigabbrev[NSIG] =
 {
-#define init_sig(sig, abbrev, desc)   [sig] abbrev,
+#define init_sig(sig, abbrev, desc)   [sig] = abbrev,
 #include <siglist.h>
 #undef init_sig
 };

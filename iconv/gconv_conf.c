@@ -64,11 +64,11 @@ static struct gconv_module builtin_modules[] =
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
 			       MinF, MaxF, MinT, MaxT) \
   {									      \
-    from_string: From,							      \
-    to_string: To,							      \
-    cost_hi: Cost,							      \
-    cost_lo: INT_MAX,							      \
-    module_name: Name							      \
+    .from_string = From,						      \
+    .to_string = To,							      \
+    .cost_hi = Cost,							      \
+    .cost_lo = INT_MAX,							      \
+    .module_name = Name							      \
   },
 #define BUILTIN_ALIAS(From, To)
 

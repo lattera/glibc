@@ -33,8 +33,8 @@ const struct locale_data _nl_C_LC_PAPER attribute_hidden =
   0,
   3,
   {
-    { word: 297 },
-    { word: 210 },
-    { string: _nl_C_codeset }
+    { .word = 297 },
+    { .word = 210 },
+    { .string = _nl_C_codeset }
   }
 };

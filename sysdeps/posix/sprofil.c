@@ -61,12 +61,12 @@ static unsigned int overflow_counter;
 
 static struct region default_overflow_region =
   {
-    offset:	0,
-    nsamples:	1,
-    scale:	2,
-    sample:	{ &overflow_counter },
-    start:	0,
-    end:	~(size_t) 0
+    .offset	= 0,
+    .nsamples	= 1,
+    .scale	= 2,
+    .sample	= { &overflow_counter },
+    .start	= 0,
+    .end	= ~(size_t) 0
   };
 
 static struct prof_info prof_info;

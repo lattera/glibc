@@ -108,42 +108,42 @@ const struct locale_data _nl_C_LC_COLLATE attribute_hidden =
   19,
   {
     /* _NL_COLLATE_NRULES */
-    { word: 0 },
+    { .word = 0 },
     /* _NL_COLLATE_RULESETS */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_TABLEMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_WEIGHTMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_EXTRAMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_INDIRECTMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_GAP1 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_GAP2 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_GAP3 */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_TABLEWC */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_WEIGHTWC */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_EXTRAWC */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_INDIRECTWC */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_SYMB_HASH_SIZEMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_SYMB_TABLEMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_SYMB_EXTRAMB */
-    { string: NULL },
+    { .string = NULL },
     /* _NL_COLLATE_COLLSEQMB */
-    { string: collseqmb },
+    { .string = collseqmb },
     /* _NL_COLLATE_COLLSEQWC */
-    { string: (const char *) collseqwc },
+    { .string = (const char *) collseqwc },
     /* _NL_COLLATE_CODESET */
-    { string: _nl_C_codeset }
+    { .string = _nl_C_codeset }
   }
 };

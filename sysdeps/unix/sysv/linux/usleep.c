@@ -24,8 +24,8 @@
 int
 usleep (useconds_t useconds)
 {
-  struct timespec ts = { tv_sec: (long int) (useconds / 1000000),
-			 tv_nsec: (long int) (useconds % 1000000) * 1000ul };
+  struct timespec ts = { .tv_sec = (long int) (useconds / 1000000),
+			 .tv_nsec = (long int) (useconds % 1000000) * 1000ul };
 
   return __nanosleep (&ts, NULL);
 }

@@ -7,7 +7,7 @@ echo "};"
 echo "static const struct gap from_idx[] = {"
 sed -ne 's/^<U\(....\).*/\1/p' \
     "$@" | sort -u | $AWK -f gap.awk
-echo "  { start: 0xffff, end: 0xffff, idx:     0 }"
+echo "  { .start = 0xffff, .end = 0xffff, .idx =     0 }"
 echo "};"
 echo "static const char from_ucs4[] = {"
 sed -ne 's/^<U\(....\)>[[:space:]]*.x\(..\).*/\1 \2/p' \

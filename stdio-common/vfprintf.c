@@ -806,20 +806,20 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
-	    struct printf_info info = { prec: prec,			      \
-					width: width,			      \
-					spec: spec,			      \
-					is_long_double: is_long_double,	      \
-					is_short: is_short,		      \
-					is_long: is_long,		      \
-					alt: alt,			      \
-					space: space,			      \
-					left: left,			      \
-					showsign: showsign,		      \
-					group: group,			      \
-					pad: pad,			      \
-					extra: 0,			      \
-					wide: sizeof (CHAR_T) != 1 };	      \
+	    struct printf_info info = { .prec = prec,			      \
+					.width = width,			      \
+					.spec = spec,			      \
+					.is_long_double = is_long_double,     \
+					.is_short = is_short,		      \
+					.is_long = is_long,		      \
+					.alt = alt,			      \
+					.space = space,			      \
+					.left = left,			      \
+					.showsign = showsign,		      \
+					.group = group,			      \
+					.pad = pad,			      \
+					.extra = 0,			      \
+					.wide = sizeof (CHAR_T) != 1 };	      \
 									      \
 	    if (is_long_double)						      \
 	      the_arg.pa_long_double = va_arg (ap, long double);	      \
@@ -855,20 +855,20 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
 	if (fspec == NULL)						      \
 	  {								      \
-	    struct printf_info info = { prec: prec,			      \
-					width: width,			      \
-					spec: spec,			      \
-					is_long_double: is_long_double,	      \
-					is_short: is_short,		      \
-					is_long: is_long,		      \
-					alt: alt,			      \
-					space: space,			      \
-					left: left,			      \
-					showsign: showsign,		      \
-					group: group,			      \
-					pad: pad,			      \
-					extra: 0,			      \
-					wide: sizeof (CHAR_T) != 1 };	      \
+	    struct printf_info info = { .prec = prec,			      \
+					.width = width,			      \
+					.spec = spec,			      \
+					.is_long_double = is_long_double,     \
+					.is_short = is_short,		      \
+					.is_long = is_long,		      \
+					.alt = alt,			      \
+					.space = space,			      \
+					.left = left,			      \
+					.showsign = showsign,		      \
+					.group = group,			      \
+					.pad = pad,			      \
+					.extra = 0,			      \
+					.wide = sizeof (CHAR_T) != 1 };	      \
 									      \
 	    if (is_long_double)						      \
 	      the_arg.pa_long_double = va_arg (ap, long double);	      \
