@@ -846,7 +846,7 @@ ypprot_err (const int code)
 {
   if (code < YP_VERS || code > YP_NOKEY)
     return YPERR_YPERR;
-  return yp_2_yperr[code];
+  return yp_2_yperr[code - YP_VERS];
 }
 libnsl_hidden_def (ypprot_err)
 

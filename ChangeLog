@@ -1,3 +1,7 @@
+2004-11-12  Andreas Schwab  <schwab@suse.de>
+
+	* nis/ypclnt.c (ypprot_err): Fix "minor optimizations".
+
 2004-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add bug-regex24.
