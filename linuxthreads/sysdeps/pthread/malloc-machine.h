@@ -28,8 +28,6 @@
 
 __libc_lock_define (typedef, mutex_t)
 
-#if defined(__libc_maybe_call2)
-
 #define mutex_init(m)		\
   __libc_maybe_call2 (pthread_mutex_init, (m, NULL), (*(int *)(m) = 0))
 #define mutex_lock(m)		\
@@ -39,20 +37,6 @@ __libc_lock_define (typedef, mutex_t)
 		      (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
 #define mutex_unlock(m)		\
   __libc_maybe_call2 (pthread_mutex_unlock, (m), (*(int *)(m) = 0))
-
-#else
-
-#define mutex_init(m)		\
-  __libc_maybe_call (__pthread_mutex_init, (m, NULL), (*(int *)(m) = 0))
-#define mutex_lock(m)		\
-  __libc_maybe_call (__pthread_mutex_lock, (m), ((*(int *)(m) = 1), 0))
-#define mutex_trylock(m)	\
-  __libc_maybe_call (__pthread_mutex_trylock, (m), \
-		     (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
-#define mutex_unlock(m)		\
-  __libc_maybe_call (__pthread_mutex_unlock, (m), (*(int *)(m) = 0))
-
-#endif
 
 /* This is defined by newer gcc version unique for each module.  */
 extern void *__dso_handle __attribute__ ((__weak__));

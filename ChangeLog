@@ -9,10 +9,6 @@
 
 2003-09-27  Wolfram Gloger  <wg@malloc.de>
 
-	* sysdeps/pthread/malloc-machine.h: New file.
-
-2003-09-27  Wolfram Gloger  <wg@malloc.de>
-
 	* malloc/malloc.c: Include <malloc-machine.h> earlier instead of
 	"thread-m.h", so that default parameters can be overridden in a
 	system-specific malloc-machine.h.  Remove extra ; from extern "C"

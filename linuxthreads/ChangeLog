@@ -1,3 +1,12 @@
+2003-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/malloc-machine.h [!__libc_maybe_call2] (mutex_init,
+	mutex_lock, mutex_trylock, mutex_unlock): Remove.
+
+2003-09-27  Wolfram Gloger  <wg@malloc.de>
+
+	* sysdeps/pthread/malloc-machine.h: New file.
+
 2003-09-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* attr.c (__pthread_attr_init_2_1): Double __guardsize size
