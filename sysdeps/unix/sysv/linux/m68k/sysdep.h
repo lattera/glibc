@@ -78,7 +78,24 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef PIC
 /* Store (- %d0) into errno through the GOT.  */
+#ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
+    .type syscall_error, @function;					      \
+syscall_error:								      \
+    move.l (errno@GOTPC, %pc), %a0;					      \
+    neg.l %d0;								      \
+    move.l %d0, (%a0);							      \
+    move.l %d0, -(%sp);							      \
+    jbsr __errno_location@PLTPC						      \
+    move.l (%sp)+, (%a0);						      \
+    move.l POUND -1, %d0;						      \
+    /* Copy return value to %a0 for syscalls that are declared to return      \
+       a pointer (e.g., mmap).  */					      \
+    move.l %d0, %a0;							      \
+    rts;
+#else
+#define SYSCALL_ERROR_HANDLER						      \
+    .type syscall_error, @function;					      \
 syscall_error:								      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
@@ -88,9 +105,10 @@ syscall_error:								      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
+#endif /* _LIBC_REENTRANT */
 #else
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#endif
+#endif /* PIC */
 
 /* Linux takes system call arguments in registers:
 
