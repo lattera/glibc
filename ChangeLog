@@ -17,6 +17,7 @@
 	* intl/loadmsgcat.c (_nl_load_domain): Try to determine charset used
 	in the message file and if necessary find approrpiate
 	conversion to match currently selected charset.
+	* include/libintl.h: Declare __dgettext and __dcgettext.
 
 1999-08-20  Andreas Schwab  <schwab@suse.de>
 
