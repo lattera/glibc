@@ -238,7 +238,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
   char archivefname[prefix_len + sizeof (ARCHIVE_NAME)];
   char fname[prefix_len + sizeof (ARCHIVE_NAME) + sizeof (".XXXXXX") - 1];
-  struct oldlocrecent *oldlocrecarray;
 
   if (output_prefix)
     memcpy (archivefname, output_prefix, prefix_len);
@@ -341,9 +340,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 				       + head->locrectab_offset);
 
   /* Sort the old locrec table in order of data position.  */
-  oldlocrecarray = (struct oldlocrecent *)
-		   alloca (head->namehash_size
-			   * sizeof (struct oldlocrecent));
+  struct oldlocrecent oldlocrecarray[head->namehash_size];
   for (cnt = 0, loccnt = 0; cnt < head->namehash_size; ++cnt)
     if (oldnamehashtab[cnt].locrec_offset != 0)
       {

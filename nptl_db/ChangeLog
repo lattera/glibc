@@ -1,3 +1,8 @@
+2004-03-24  Roland McGrath  <roland@redhat.com>
+
+	* fetch-value.c (_td_locate_field): Cast DB_DESC_OFFSET to int32_t.
+	* thread_dbP.h (DB_DESC_OFFSET): Remove cast from definition.
+
 2004-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* db_info.c: Don't use TLS_TP_OFFSET in the #if, but

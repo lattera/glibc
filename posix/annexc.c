@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -794,22 +794,15 @@ get_null_defines (void)
 static int
 check_header (const struct header *header, const char **except)
 {
-  char line[BUFSIZ], *command;
+  char line[BUFSIZ], command[sizeof fmt + strlen (header->name)
+			     + 2 * strlen (CC)
+			     + strlen (INC) + strlen (macrofile)];
   FILE *input;
   int result = 0;
   int found[header->nsyms];
   int i;
 
   memset (found, '\0', header->nsyms * sizeof (int));
-  command = alloca (sizeof fmt + strlen (header->name) + 2 * strlen (CC)
-		    + strlen (INC) + strlen (macrofile));
-
-
-  if (command == NULL)
-    {
-      puts ("No more memory.");
-      exit (1);
-    }
 
   printf ("=== %s ===\n", header->name);
   sprintf (command, fmt, header->name, CC, INC, CC, macrofile);

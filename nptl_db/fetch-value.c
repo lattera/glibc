@@ -1,5 +1,5 @@
 /* Helper routines for libthread_db.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,8 @@ _td_locate_field (td_thragent_t *ta,
   if (elemsize & 0xff000000U)
     elemsize = bswap_32 (elemsize);
 
-  *address += DB_DESC_OFFSET (desc) + (elemsize / 8 * (idx - (psaddr_t) 0));
+  *address += (int32_t) DB_DESC_OFFSET (desc);
+  *address += (elemsize / 8 * (idx - (psaddr_t) 0));
   return TD_OK;
 }
 

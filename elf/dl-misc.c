@@ -88,8 +88,8 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 static void
 _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 {
-  const int niovmax = 64;
-  struct iovec iov[niovmax];
+# define NIOVMAX 64
+  struct iovec iov[NIOVMAX];
   int niov = 0;
   pid_t pid = 0;
   char pidbuf[12];
@@ -115,7 +115,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	    }
 
 	  /* Append to the output.  */
-	  assert (niov < niovmax);
+	  assert (niov < NIOVMAX);
 	  iov[niov].iov_len = 12;
 	  iov[niov++].iov_base = pidbuf;
 
@@ -128,7 +128,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	++fmt;
 
       /* Append constant string.  */
-      assert (niov < niovmax);
+      assert (niov < NIOVMAX);
       if ((iov[niov].iov_len = fmt - startp) != 0)
 	iov[niov++].iov_base = (char *) startp;
 

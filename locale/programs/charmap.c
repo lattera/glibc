@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1998-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1998-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -106,9 +106,11 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 	      char *i18npath = getenv ("I18NPATH");
 	      if (i18npath != NULL && *i18npath != '\0')
 		{
-		  char path[strlen (i18npath) + sizeof ("/charmaps")];
+		  const size_t pathlen = strlen (i18npath);
+		  char i18npathbuf[pathlen + 1];
+		  char path[pathlen + sizeof ("/charmaps")];
 		  char *next;
-		  i18npath = strdupa (i18npath);
+		  i18npath = memcpy (i18npathbuf, i18npath, pathlen + 1);
 
 		  while (cmfile == NULL
 			 && (next = strsep (&i18npath, ":")) != NULL)

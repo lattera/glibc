@@ -144,7 +144,7 @@ _dl_map_object_deps (struct link_map *map,
 		     struct link_map **preloads, unsigned int npreloads,
 		     int trace_mode, int open_mode)
 {
-  struct list known[1 + npreloads + 1];
+  struct list *known = __alloca (sizeof *known * (1 + npreloads + 1));
   struct list *runp, *tail;
   unsigned int nlist, i;
   /* Object name.  */

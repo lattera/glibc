@@ -1,5 +1,5 @@
 /* Private header for thread debug library
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ extern int __td_debug attribute_hidden;
 
 #define DB_DESC_SIZE(desc)	((desc)[0])
 #define DB_DESC_NELEM(desc)	((desc)[1])
-#define DB_DESC_OFFSET(desc)	((int32_t) (desc)[2])
+#define DB_DESC_OFFSET(desc)	((desc)[2])
 #define DB_SIZEOF_DESC		(3 * sizeof (uint32_t))
 #define DB_DEFINE_DESC(name, size, nelem, offset) \
   const uint32_t name[3] = { (size), (nelem), (offset) }

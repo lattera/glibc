@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998,1999,2000,2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -179,7 +179,7 @@ __wcsmbs_load_conv (struct locale_data *new_category)
       /* Normalize the name and add the slashes necessary for a
 	 complete lookup.  */
       complete_name = norm_add_slashes (charset_name,
-					use_translit ? "TRANSLIT" : NULL);
+					use_translit ? "TRANSLIT" : "");
 
       /* It is not necessary to use transliteration in this direction
 	 since the internal character set is supposed to be able to

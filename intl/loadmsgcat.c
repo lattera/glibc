@@ -832,7 +832,7 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 # ifdef _LIBC
 	  /* We always want to use transliteration.  */
 	  outcharset = norm_add_slashes (outcharset, "TRANSLIT");
-	  charset = norm_add_slashes (charset, NULL);
+	  charset = norm_add_slashes (charset, "");
 	  if (__gconv_open (outcharset, charset, &domain->conv,
 			    GCONV_AVOID_NOCONV)
 	      != __GCONV_OK)

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -31,10 +31,6 @@ nis_print_group_entry (const_nis_name group)
       char buf[grouplen + 50];
       char leafbuf[grouplen + 3];
       char domainbuf[grouplen + 3];
-      unsigned long mem_exp_cnt = 0, mem_imp_cnt = 0, mem_rec_cnt = 0;
-      unsigned long nomem_exp_cnt = 0, nomem_imp_cnt = 0, nomem_rec_cnt = 0;
-      char **mem_exp, **mem_imp, **mem_rec;
-      char **nomem_exp, **nomem_imp, **nomem_rec;
       nis_result *res;
       char *cp, *cp2;
       u_int i;
@@ -56,12 +52,14 @@ nis_print_group_entry (const_nis_name group)
 	  (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
 	return;
 
-      mem_exp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      mem_imp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      mem_rec = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_exp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_imp = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
-      nomem_rec = alloca (sizeof (char *) * NIS_RES_NUMOBJ (res));
+      char *mem_exp[NIS_RES_NUMOBJ (res)];
+      char *mem_imp[NIS_RES_NUMOBJ (res)];
+      char *mem_rec[NIS_RES_NUMOBJ (res)];
+      char *nomem_exp[NIS_RES_NUMOBJ (res)];
+      char *nomem_imp[NIS_RES_NUMOBJ (res)];
+      char *nomem_rec[NIS_RES_NUMOBJ (res)];
+      unsigned long mem_exp_cnt = 0, mem_imp_cnt = 0, mem_rec_cnt = 0;
+      unsigned long nomem_exp_cnt = 0, nomem_imp_cnt = 0, nomem_rec_cnt = 0;
 
       for (i = 0;
 	   i < NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len; ++i)

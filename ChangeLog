@@ -1,5 +1,27 @@
 2004-03-24  Roland McGrath  <roland@redhat.com>
 
+	* Makerules ($(common-objpfx)shlib.lds): Don't use \n in rhs of sed
+	substitutions; the semicolon terminators are enough for ld anyway.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Use alloca instead of
+	dynamically sized auto array in function already using alloca.
+	* locale/programs/ld-ctype.c (ctype_output): Likewise.
+	* locale/programs/ld-time.c (time_output): Likewise.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Use macro instead of const for
+	IOV array size.
+	* locale/programs/charmap.c (charmap_read): Avoid alloca (or strdupa)
+	when also using dynamically-sized auto array.
+	* locale/programs/locfile.c (locfile_read): Likewise.
+	* locale/programs/repertoire.c (repertoire_read): Likewise.
+	* nis/nis_print_group_entry.c (nis_print_group_entry): Likewise.
+	* locale/programs/locarchive.c (enlarge_archive): Likewise.
+	* posix/annexc.c (check_header): Likewise.
+
+	* iconv/gconv_int.h (norm_add_slashes): Don't handle null SUFFIX.
+	strlen ("") gets optimized away just as well.
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Update caller.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Likewise.
+
 	* Makefile ($(objpfx)c++-types-check.out): Reduce duplication in
 	defining this target.  Also elide -Wstrict-prototypes from CFLAGS.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -887,10 +887,11 @@ ctype_output (struct localedef_t *locale, const struct charmap_t *charmap,
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1)
 			 + ctype->nr_charclass + ctype->map_collection_nr);
-  struct iovec iov[2 + nelems + 2 * ctype->nr_charclass
-		  + ctype->map_collection_nr + 4];
+  struct iovec *iov = alloca (sizeof *iov
+			      * (2 + nelems + 2 * ctype->nr_charclass
+				 + ctype->map_collection_nr + 4));
   struct locale_file data;
-  uint32_t idx[nelems + 1];
+  uint32_t *idx = alloca (sizeof *idx * (nelems + 1));
   uint32_t default_missing_len;
   size_t elem, cnt, offset, total;
   char *cp;

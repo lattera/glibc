@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -528,10 +528,11 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	     const char *output_path)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
-		  + time->num_era - 1
-		  + 2 * 99
-		  + 2 + time->num_era * 10 - 1];
+  struct iovec *iov = alloca (sizeof *iov
+			      * (2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
+				 + time->num_era - 1
+				 + 2 * 99
+				 + 2 + time->num_era * 10 - 1));
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;

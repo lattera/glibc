@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998,1999,2000,2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -80,11 +80,12 @@ repertoire_read (const char *filename)
 	  char *i18npath = getenv ("I18NPATH");
 	  if (i18npath != NULL && *i18npath != '\0')
 	    {
-	      char path[strlen (filename) + 1 + strlen (i18npath)
+	      const size_t pathlen = strlen (i18npath);
+	      char i18npathbuf[pathlen + 1];
+	      char path[strlen (filename) + 1 + pathlen
 		        + sizeof ("/repertoiremaps/") - 1];
 	      char *next;
-	      i18npath = strdupa (i18npath);
-
+	      i18npath = memcpy (i18npathbuf, i18npath, pathlen + 1);
 
 	      while (repfile == NULL
 		     && (next = strsep (&i18npath, ":")) != NULL)

@@ -491,15 +491,15 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 PROVIDE(__start___libc_freeres_ptrs = .); \
 		 *(__libc_freeres_ptrs) \
 		 PROVIDE(__stop___libc_freeres_ptrs = .);/'\
-	      -e 's/^.*\*(\.jcr).*$$/&\n\
-		 PROVIDE(__start___libc_subfreeres = .);\n\
-		 __libc_subfreeres : { *(__libc_subfreeres) }\n\
-		 PROVIDE(__stop___libc_subfreeres = .);\n\
-		 PROVIDE(__start___libc_atexit = .);\n\
-		 __libc_atexit : { *(__libc_atexit) }\n\
-		 PROVIDE(__stop___libc_atexit = .);\n\
-		 PROVIDE(__start___libc_thread_subfreeres = .);\n\
-		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\n\
+	      -e 's/^.*\*(\.jcr).*$$/& \
+		 PROVIDE(__start___libc_subfreeres = .);\
+		 __libc_subfreeres : { *(__libc_subfreeres) }\
+		 PROVIDE(__stop___libc_subfreeres = .);\
+		 PROVIDE(__start___libc_atexit = .);\
+		 __libc_atexit : { *(__libc_atexit) }\
+		 PROVIDE(__stop___libc_atexit = .);\
+		 PROVIDE(__start___libc_thread_subfreeres = .);\
+		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\
 		 PROVIDE(__stop___libc_thread_subfreeres = .);/'
 	mv -f $@T $@
 common-generated += shlib.lds

@@ -137,7 +137,7 @@ __libc_lock_define (extern, __gconv_lock);
     char *result;							      \
     char *tmp;								      \
     size_t cnt = 0;							      \
-    size_t suffix_len = (suffix) == NULL ? 0 : strlen (suffix);		      \
+    const size_t suffix_len = strlen (suffix);				      \
 									      \
     while (*cp != '\0')							      \
       if (*cp++ == '/')							      \
@@ -153,7 +153,7 @@ __libc_lock_define (extern, __gconv_lock);
 	if (cnt < 1)							      \
 	  {								      \
 	    *tmp++ = '/';						      \
-	    if (suffix != NULL)						      \
+	    if (suffix_len != 0)					      \
 	      tmp = __mempcpy (tmp, suffix, suffix_len);		      \
 	  }								      \
       }									      \
