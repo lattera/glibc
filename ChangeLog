@@ -1,3 +1,8 @@
+2002-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (main): Improve error message for unexpected
+	signal case.
+
 2002-09-05  Roland McGrath  <roland@redhat.com>
 
 	* ctype/ctype-info.c: Renamed __ctype_old_* symbols to __ctype_*.
@@ -5,8 +10,8 @@
 
 2002-09-05  Jakub Jelinek  <jakub@redhat.com>
 
-        * wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Unlock and return in
-        case of failure.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Unlock and return in
+	case of failure.
 
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
@@ -19,7 +24,7 @@
 	* sysdeps/generic/sigset-cvt-mask.h (sigset_set_old_mask): Declutter
 	syntax.
 
-        * elf/readlib.c (process_file): Conditionalize check for QMAGIC.
+	* elf/readlib.c (process_file): Conditionalize check for QMAGIC.
 
 	* sysdeps/generic/_strerror.c (_sys_errlist, _sys_nerr): Remove
 	default definitions.
