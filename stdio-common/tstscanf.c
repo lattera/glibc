@@ -250,5 +250,20 @@ main (int argc, char **argv)
       }
   }
 
+  fputs ("Test 8:\n", stdout);
+  {
+    double d = 123456.789;
+    int res;
+
+    res = sscanf ("0x1234", "%lf", &d);
+    printf ("res = %d, d = %f\n", res, d);
+
+    if (res != 0 || d != 123456.789)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
   exit (result);
 }

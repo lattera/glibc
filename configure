@@ -1191,9 +1191,9 @@ test -z "$INSTALL_SCRIPT" && INSTALL_SCRIPT='${INSTALL_PROGRAM}'
 
 test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
-if test "$INSTALL" = "${srcdir}/install-sh -c"; then
+if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='\$(..)./install-sh -c'
+  INSTALL='\$(..)./scripts/install-sh -c'
 fi
 echo $ac_n "checking whether ln -s works""... $ac_c" 1>&6
 echo "configure:1200: checking whether ln -s works" >&5
