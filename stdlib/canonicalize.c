@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -204,12 +205,12 @@ __realpath (const char *name, char *resolved)
     --dest;
   *dest = '\0';
 
-  return resolved ? memcpy (resolved, rpath, dest - rpath + 1) : rpath;
+  assert (resolved == NULL || resolved == rpath);
+  return resolved ?: rpath;
 
 error:
-  if (resolved)
-    strcpy (resolved, rpath);
-  else
+  assert (resolved == NULL || resolved == rpath);
+  if (resolved == NULL)
     free (rpath);
   return NULL;
 }

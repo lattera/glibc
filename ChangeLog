@@ -1,5 +1,8 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/canonicalize.c (__realpath): Remove unnecessary copy
+	operations.
+
 	* nscd/nscd_conf.c (nscd_parse_file): Little optimization.
 
 2004-02-14  Thorsten Kukuk  <kukuk@suse.de>
