@@ -1,3 +1,8 @@
+2004-10-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): Avoid leaking stacks
+	if sched_priority is not between minprio and maxprio.
+
 2004-10-25  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S

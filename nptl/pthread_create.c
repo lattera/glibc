@@ -459,10 +459,12 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   err = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
   if (err != 0)
     {
-    errout:
       /* Something went wrong.  Free the resources.  */
       if (!is_detached)
-	__deallocate_stack (pd);
+	{
+	errout:
+	  __deallocate_stack (pd);
+	}
       return err;
     }
 
