@@ -1,3 +1,22 @@
+2000-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/locales/ar_AE: Remove extra <U0020> from day and abday.
+	* localedata/locales/ar_BH: Likewise.
+	* localedata/locales/ar_DZ: Likewise.
+	* localedata/locales/ar_EG: Likewise.
+	* localedata/locales/ar_IQ: Likewise.
+	* localedata/locales/ar_JO: Likewise.
+	* localedata/locales/ar_KW: Likewise.
+	* localedata/locales/ar_LB: Likewise.
+	* localedata/locales/ar_LY: Likewise.
+	* localedata/locales/ar_MA: Likewise.
+	* localedata/locales/ar_OM: Likewise.
+	* localedata/locales/ar_QA: Likewise.
+	* localedata/locales/ar_SD: Likewise.
+	* localedata/locales/ar_SY: Likewise.
+	* localedata/locales/ar_TN: Likewise.
+	* localedata/locales/ar_YE: Likewise.
+
 2000-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add mr_IN.UTF-8 and mt_MT.ISO-8859-3.
