@@ -22,9 +22,11 @@
 int
 #if defined BSD_SETJMP
 # undef setjmp
+# define savemask 1
 setjmp (jmp_buf env)
 #elif defined BSD__SETJMP
 # undef _setjmp
+# define savemask 0
 _setjmp (jmp_buf env)
 #else
 __sigsetjmp (jmp_buf env, int savemask)
@@ -53,10 +55,6 @@ __sigsetjmp (jmp_buf env, int savemask)
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 
-#if defined BSD_SETJMP || defined BSD__SETJMP
-  return 0;
-#else
   /* Save the signal mask if requested.  */
   return __sigjmp_save (env, savemask);
-#endif
 }
