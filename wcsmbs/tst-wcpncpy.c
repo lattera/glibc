@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2003.
 
@@ -17,15 +17,53 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdio.h>
 #include <wchar.h>
 
 
 int
 main (void)
 {
+  int result = 0;
+
   const wchar_t src[] = L"0";
   wchar_t dest[10];
   wmemset (dest, L'\0', 10);
-  wcpncpy (dest, src, 2);
-  return wcscmp (dest, src) != 0;
+  wchar_t *endp = wcpncpy (dest, src, 2);
+  if (wcscmp (dest, src) != 0)
+    {
+      result = 1;
+      puts ("L\"0\" string test failed");
+    }
+  if (endp != dest + 1)
+    {
+      result = 1;
+      puts ("return value of L\"0\" string call incorrect");
+    }
+
+  const wchar_t src2[] = L"abc";
+  endp = wcpncpy (dest, src2, 2);
+  if (endp != dest + 2)
+    {
+      result = 1;
+      puts ("return value of limited call incorrect");
+    }
+
+  const wchar_t src3[] = L"";
+  endp = wcpncpy (dest, src3, 2);
+  if (endp != dest)
+    {
+      result = 1;
+      puts ("return value of empty string call incorrect");
+    }
+
+  const wchar_t src4[] = L"abcdefghijklmnopqrstuvwxyz";
+  endp = wcpncpy (dest, src4, 2);
+  if (endp != dest + 2)
+    {
+      result = 1;
+      puts ("return value of long string call incorrect");
+    }
+
+  return result;
 }
