@@ -16,4 +16,7 @@ extern int __getutid_r (__const struct utmp *__id, struct utmp *__buffer,
 			struct utmp **__result);
 extern int __getutline_r (__const struct utmp *__line,
 			  struct utmp *__buffer, struct utmp **__result);
+
+libutil_hidden_proto (login_tty)
+
 #endif

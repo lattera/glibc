@@ -70,3 +70,4 @@ login_tty(fd)
 		(void) close(fd);
 	return (0);
 }
+libutil_hidden_def (login_tty)

@@ -816,6 +816,24 @@ for linking")
 # define libnsl_hidden_data_ver(local, name)
 #endif
 
+#if defined NOT_IN_libc && defined IS_IN_libnss_nisplus
+# define libnss_nisplus_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libnss_nisplus_hidden_def(name) hidden_def (name)
+# define libnss_nisplus_hidden_weak(name) hidden_weak (name)
+# define libnss_nisplus_hidden_ver(local, name) hidden_ver (local, name)
+# define libnss_nisplus_hidden_data_def(name) hidden_data_def (name)
+# define libnss_nisplus_hidden_data_weak(name) hidden_data_weak (name)
+# define libnss_nisplus_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libnss_nisplus_hidden_proto(name, attrs...)
+# define libnss_nisplus_hidden_def(name)
+# define libnss_nisplus_hidden_weak(name)
+# define libnss_nisplus_hidden_ver(local, name)
+# define libnss_nisplus_hidden_data_def(name)
+# define libnss_nisplus_hidden_data_weak(name)
+# define libnss_nisplus_hidden_data_ver(local, name)
+#endif
+
 #ifdef HAVE_BUILTIN_REDIRECTION
 # define libc_hidden_builtin_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
 # define libc_hidden_builtin_def(name) libc_hidden_def (name)
@@ -832,6 +850,24 @@ for linking")
 # ifdef __ASSEMBLER__
 #  define HIDDEN_BUILTIN_JUMPTARGET(name) JUMPTARGET(name)
 # endif
+#endif
+
+#if defined NOT_IN_libc && defined IS_IN_libutil
+# define libutil_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libutil_hidden_def(name) hidden_def (name)
+# define libutil_hidden_weak(name) hidden_weak (name)
+# define libutil_hidden_ver(local, name) hidden_ver (local, name)
+# define libutil_hidden_data_def(name) hidden_data_def (name)
+# define libutil_hidden_data_weak(name) hidden_data_weak (name)
+# define libutil_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libutil_hidden_proto(name, attrs...)
+# define libutil_hidden_def(name)
+# define libutil_hidden_weak(name)
+# define libutil_hidden_ver(local, name)
+# define libutil_hidden_data_def(name)
+# define libutil_hidden_data_weak(name)
+# define libutil_hidden_data_ver(local, name)
 #endif
 
 /* Get some dirty hacks.  */

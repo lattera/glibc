@@ -1,5 +1,16 @@
 2004-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libc-symbols.h: Define hidden attribute macros for
+	libnss_nisplus and libutil.
+	* include/utmp.h: Add libutil_hidden_proto for login_tty.
+	* login/login_tty.c: Add libutil_hidden_def.
+	* nis/nisplus-parser.h: Add libnss_nisplus_hidden_proto for parsers.
+	* nis/nss_nisplus/nisplus-parser.c: Add libnss_nisplus_hidden_def.
+	* include/pty.h: New file.
+	* include/rpcsvc/yp.h: New file.
+	* include/rpcsvc/ypclnt.h: New file.
+	* include/rpcsvc/ypupd.h: New file.
+
 	* include/libc-symbols.h: Define hidden attribute macros for libnsl.
 	* include/rpcsvc/nislib.h: Use libnsl_hidden_proto for various
 	functions.

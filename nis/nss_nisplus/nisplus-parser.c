@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -141,6 +141,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 
   return 1;
 }
+libnss_nisplus_hidden_def (_nss_nisplus_parse_pwent)
 
 int
 _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
@@ -257,6 +258,7 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
 
   return 1;
 }
+libnss_nisplus_hidden_def (_nss_nisplus_parse_grent)
 
 int
 _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
@@ -371,3 +373,4 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
 
   return 1;
 }
+libnss_nisplus_hidden_def (_nss_nisplus_parse_spent)
