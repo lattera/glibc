@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <atomicity.h>
 #include "exit.h"
+#include <fork.h>
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'
    with the same dso handle.  Otherwise, if D is NULL, do nothing.  */
@@ -41,4 +42,9 @@ __cxa_finalize (void *d)
 	    && compare_and_swap (&f->flavor, ef_cxa, ef_free))
 	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
     }
+
+  /* Remove the registered fork handlers.  */
+#ifdef UNREGISTER_ATFORK
+  UNREGISTER_ATFORK (d);
+#endif
 }

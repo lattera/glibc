@@ -33,7 +33,7 @@ distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
 	      spawn_int.h tst-getconf.sh regcomp.c regexec.c regex_internal.c \
-	      regex_internal.h
+	      regex_internal.h fork.h
 
 routines :=								      \
 	uname								      \

@@ -1,5 +1,5 @@
 /* Manage function descriptors.  IA-64 version.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -127,7 +127,7 @@ make_fdesc (Elf64_Addr ip, Elf64_Addr gp)
   unsigned int old;
   struct local *l;
 
-  asm ("addl %0 = @gprel (local), gp" : "=r" (l));
+  asm ("movl %0 = @gprel (local);; add %0 = %0, gp" : "=&r"(l));
 
   t = l->root;
   while (1)

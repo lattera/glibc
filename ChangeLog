@@ -1,3 +1,16 @@
+2002-09-19  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-fptr.c (make_fdesc): Load address of "local" via
+	a 64-bit gp-relative address to enable binaries with large data
+	sections.
+
+2002-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/cxa_finalize.c (__cxa_finalize): Call UNREGISTER_ATFORK
+	if it is defined.
+	* posix/Makefile (distribute): Add fork.h.
+	* sysdeps/generic/fork.h: New file.
+
 2002-09-29  Bruno Haible  <bruno@clisp.org>
 
 	* sysdeps/generic/utmp_file.c (LOCKING_FAILED): New macro.
