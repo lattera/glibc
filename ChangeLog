@@ -1,3 +1,7 @@
+1999-03-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdexec.c (_hurd_exec): Add missing `else' in last change.
+
 1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* stdlib/strtod.c (round_and_return): Fix rounding of denormals.
