@@ -1,3 +1,8 @@
+Sun Nov  5 16:09:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getpriority.c (getpriority): Cast
+	__vm_deallocate arg to vm_address_t.
+
 Fri Nov  3 17:27:49 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/sendto.c: Don't pass BINDING arg to
