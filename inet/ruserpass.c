@@ -99,7 +99,7 @@ ruserpass(host, aname, apass)
 	char *hdir, *buf, *tmp;
 	char myname[1024], *mydomain;
 	int t, usedefault = 0;
-	struct stat stb;
+	struct stat64 stb;
 
 	hdir = __secure_getenv("HOME");
 	if (hdir == NULL) {
@@ -176,7 +176,7 @@ next:
 			break;
 		case PASSWD:
 			if (strcmp(*aname, "anonymous") &&
-			    fstat(fileno(cfile), &stb) >= 0 &&
+			    fstat64(fileno(cfile), &stb) >= 0 &&
 			    (stb.st_mode & 077) != 0) {
 	warnx(_("Error: .netrc file is readable by others."));
 	warnx(_("Remove password or make file unreadable by others."));
@@ -195,7 +195,7 @@ next:
 			break;
 		case ACCOUNT:
 #if 0
-			if (fstat(fileno(cfile), &stb) >= 0
+			if (fstat64(fileno(cfile), &stb) >= 0
 			    && (stb.st_mode & 077) != 0) {
 	warnx("Error: .netrc file is readable by others.");
 	warnx("Remove account or make file unreadable by others.");

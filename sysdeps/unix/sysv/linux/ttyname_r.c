@@ -29,15 +29,15 @@
 #include <stdio-common/_itoa.h>
 
 static int getttyname_r (char *buf, size_t buflen,
-			 dev_t mydev, ino_t myino, int save,
+			 dev_t mydev, ino64_t myino, int save,
 			 int *dostat) internal_function;
 
 static int
 internal_function
-getttyname_r (char *buf, size_t buflen, dev_t mydev, ino_t myino,
+getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
 	      int save, int *dostat)
 {
-  struct stat st;
+  struct stat64 st;
   DIR *dirstream;
   struct dirent *d;
   size_t devlen = strlen (buf);
@@ -69,11 +69,11 @@ getttyname_r (char *buf, size_t buflen, dev_t mydev, ino_t myino,
 	cp = __stpncpy (buf + devlen, d->d_name, needed);
 	cp[0] = '\0';
 
-	if (__xstat (_STAT_VER, buf, &st) == 0
+	if (__xstat64 (_STAT_VER, buf, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
-	    && (ino_t) d->d_fileno == myino && st.st_dev == mydev
+	    && (ino64_t) d->d_fileno == myino && st.st_dev == mydev
 #endif
 	   )
 	  {
@@ -96,7 +96,7 @@ int
 __ttyname_r (int fd, char *buf, size_t buflen)
 {
   char procname[30];
-  struct stat st, st1;
+  struct stat64 st, st1;
   int dostat = 0;
   int save = errno;
   int ret;
@@ -136,14 +136,14 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       return ERANGE;
     }
 
-  if (__fxstat (_STAT_VER, fd, &st) < 0)
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
     return errno;
 
   /* Prepare the result buffer.  */
   memcpy (buf, "/dev/pts/", sizeof ("/dev/pts/"));
   buflen -= sizeof ("/dev/pts/") - 1;
 
-  if (__xstat (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (__xstat64 (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
       ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,

@@ -1,5 +1,5 @@
 /* Check if effective user id can access file
-   Copyright (C) 1990, 91, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,7 +133,7 @@ euidaccess (path, mode)
      const char *path;
      int mode;
 {
-  struct stat stats;
+  struct stat64 stats;
   int granted;
 
 #ifdef	_LIBC
@@ -155,7 +155,7 @@ euidaccess (path, mode)
     return access (path, mode);
 #endif
 
-  if (stat (path, &stats))
+  if (stat64 (path, &stats))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

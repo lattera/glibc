@@ -121,7 +121,7 @@ _nl_load_domain (domain_file)
 {
   int fd;
   size_t size;
-  struct stat st;
+  struct stat64 st;
   struct mo_file_header *data = (struct mo_file_header *) -1;
   int use_mmap = 0;
   struct loaded_domain *domain;
@@ -143,7 +143,7 @@ _nl_load_domain (domain_file)
     return;
 
   /* We must know about the size of the file.  */
-  if (__builtin_expect (fstat (fd, &st) != 0, 0)
+  if (__builtin_expect (fstat64 (fd, &st) != 0, 0)
       || __builtin_expect ((size = (size_t) st.st_size) != st.st_size, 0)
       || __builtin_expect (size < sizeof (struct mo_file_header), 0))
     {

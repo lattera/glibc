@@ -69,7 +69,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       unsigned int nstrings;
       unsigned int strindex[0];
     } *filedata;
-  struct stat st;
+  struct stat64 st;
   struct locale_data *newdata;
   int save_err;
   int mmaped = 1;
@@ -83,7 +83,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     /* Cannot open the file.  */
     return;
 
-  if (__builtin_expect (__fstat (fd, &st), 0) < 0)
+  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
     goto puntfd;
   if (__builtin_expect (S_ISDIR (st.st_mode), 0))
     {
@@ -106,7 +106,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (__builtin_expect (fd, 0) < 0)
 	return;
 
-      if (__builtin_expect (__fstat (fd, &st), 0) < 0)
+      if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
 	goto puntfd;
     }
 

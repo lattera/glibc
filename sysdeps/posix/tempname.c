@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@
 static int
 direxists (const char *dir)
 {
-  struct stat buf;
-  return __xstat (_STAT_VER, dir, &buf) == 0 && S_ISDIR (buf.st_mode);
+  struct stat64 buf;
+  return __xstat64 (_STAT_VER, dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
 /* Path search algorithm, for tmpnam, tmpfile, etc.  If DIR is
@@ -127,7 +127,7 @@ __gen_tempname (char *tmpl, int kind)
   struct timeval tv;
   int count, fd = -1;
   int save_errno = errno;
-  struct stat st;
+  struct stat64 st;
 
   len = strlen (tmpl);
   if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
@@ -179,7 +179,7 @@ __gen_tempname (char *tmpl, int kind)
 	     succeeds if __xstat fails because the name does not exist.
 	     Note the continue to bypass the common logic at the bottom
 	     of the loop.  */
-	  if (__xstat (_STAT_VER, tmpl, &st) < 0)
+	  if (__xstat64 (_STAT_VER, tmpl, &st) < 0)
 	    {
 	      if (errno == ENOENT)
 		{

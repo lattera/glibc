@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -45,7 +45,7 @@
    terminal devices.  As of Linux 2.1.115 these are no longer
    supported.  They have been replaced by major numbers 2 (masters)
    and 3 (slaves).  */
-     
+
 /* Directory where we can find the slave pty nodes.  */
 #define _PATH_DEVPTS "/dev/pts/"
 
@@ -74,7 +74,7 @@ int
 __ptsname_r (int fd, char *buf, size_t buflen)
 {
   int save_errno = errno;
-  struct stat st;
+  struct stat64 st;
   int ptyno;
 
   if (buf == NULL)
@@ -121,7 +121,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 	  return ERANGE;
 	}
 
-      if (__fstat (fd, &st) < 0)
+      if (__fxstat64 (_STAT_VER, fd, &st) < 0)
 	return errno;
 
       /* Check if FD really is a master pseudo terminal.  */
@@ -149,7 +149,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       p[2] = '\0';
     }
 
-  if (__xstat (_STAT_VER, buf, &st) < 0)
+  if (__xstat64 (_STAT_VER, buf, &st) < 0)
     return errno;
 
   /* Check if the name we're about to return really corresponds to a

@@ -31,13 +31,13 @@ int
 statvfs (const char *file, struct statvfs *buf)
 {
   struct statfs fsbuf;
-  struct stat st;
+  struct stat64 st;
 
   /* Get as much information as possible from the system.  */
   if (__statfs (file, &fsbuf) < 0)
     return -1;
 
-#define STAT(st) stat (file, st)
+#define STAT(st) stat64 (file, st)
 #include "internal_statvfs.c"
 
   /* We signal success if the statfs call succeeded.  */

@@ -91,7 +91,7 @@ initshells()
 {
 	register char **sp, *cp;
 	register FILE *fp;
-	struct stat statb;
+	struct stat64 statb;
 	int flen;
 
 	if (shells != NULL)
@@ -102,7 +102,7 @@ initshells()
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "r")) == NULL)
 		return (okshells);
-	if (fstat(fileno(fp), &statb) == -1) {
+	if (fstat64(fileno(fp), &statb) == -1) {
 		(void)fclose(fp);
 		return (okshells);
 	}

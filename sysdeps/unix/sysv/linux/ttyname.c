@@ -31,7 +31,7 @@
 char *__ttyname;
 
 static char *getttyname (const char *dev, dev_t mydev,
-			 ino_t myino, int save, int *dostat)
+			 ino64_t myino, int save, int *dostat)
      internal_function;
 
 
@@ -39,10 +39,10 @@ static char *getttyname_name;
 
 static char *
 internal_function
-getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
+getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 {
   static size_t namelen;
-  struct stat st;
+  struct stat64 st;
   DIR *dirstream;
   struct dirent *d;
   size_t devlen = strlen (dev) + 1;
@@ -76,11 +76,11 @@ getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
 	    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
 	  }
 	memcpy (&getttyname_name[devlen], d->d_name, dlen);
-	if (__xstat (_STAT_VER, getttyname_name, &st) == 0
+	if (__xstat64 (_STAT_VER, getttyname_name, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
-	    && (ino_t) d->d_fileno == myino && st.st_dev == mydev
+	    && (ino64_t) d->d_fileno == myino && st.st_dev == mydev
 #endif
 	   )
 	  {
@@ -108,7 +108,7 @@ ttyname (int fd)
 {
   static size_t buflen;
   char procname[30];
-  struct stat st, st1;
+  struct stat64 st, st1;
   int dostat = 0;
   char *name;
   int save = errno;
@@ -143,10 +143,10 @@ ttyname (int fd)
       return ttyname_buf;
     }
 
-  if (__fxstat (_STAT_VER, fd, &st) < 0)
+  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
     return NULL;
 
-  if (__xstat (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
       name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);

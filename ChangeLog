@@ -1,5 +1,31 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/rcmd.c: Use *stat64 instead of *stat internally.
+	* inet/ruserpass.c: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* io/getdirname.c: Likewise.
+	* locale/loadlocale.c: Likewise.
+	* misc/getusershell.c: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* sysdeps/posix/euidaccess.c: Likewise.
+	* sysdeps/posix/isfdtype.c: Likewise.
+	* sysdeps/posix/posix_fallocate.c: Likewise.
+	* sysdeps/posix/tempname.c: Likewise.
+	* sysdeps/unix/grantpt.c: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptsname.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+	* sysvipc/ftok.c: Likewise.
+	* time/getdate.c: Likewise.
+
+	* time/getdate.c: Add extra access test.
+
+2000-08-31  Ulrich Drepper  <drepper@redhat.com>
+
 	* version.h (VERSION): Bump to 2.1.93.
 
 	* sysdeps/unix/sysv/linux/powerpc/Dist: Add fe_nomask.c.

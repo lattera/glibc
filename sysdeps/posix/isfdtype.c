@@ -1,5 +1,5 @@
 /* Determine whether descriptor has given property.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@
 int
 isfdtype (int fildes, int fdtype)
 {
-  struct stat st;
+  struct stat64 st;
   int result;
 
   {
     int save_error = errno;
-    result = fstat (fildes, &st);
+    result = fstat64 (fildes, &st);
     __set_errno (save_error);
   }
 

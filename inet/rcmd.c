@@ -401,7 +401,7 @@ ruserok(rhost, superuser, ruser, luser)
 static FILE *
 iruserfopen (const char *file, uid_t okuser)
 {
-  struct stat st;
+  struct stat64 st;
   char *cp = NULL;
   FILE *res = NULL;
 
@@ -409,7 +409,7 @@ iruserfopen (const char *file, uid_t okuser)
      root, if writeable by anyone but the owner, or if hardlinked
      anywhere, quit.  */
   cp = NULL;
-  if (__lxstat (_STAT_VER, file, &st))
+  if (__lxstat64 (_STAT_VER, file, &st))
     cp = _("lstat failed");
   else if (!S_ISREG (st.st_mode))
     cp = _("not regular file");
@@ -418,7 +418,7 @@ iruserfopen (const char *file, uid_t okuser)
       res = fopen (file, "r");
       if (!res)
 	cp = _("cannot open");
-      else if (__fxstat (_STAT_VER, fileno (res), &st) < 0)
+      else if (__fxstat64 (_STAT_VER, fileno (res), &st) < 0)
 	cp = _("fstat failed");
       else if (st.st_uid && st.st_uid != okuser)
 	cp = _("bad owner");

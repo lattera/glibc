@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,14 +29,14 @@ char *
 get_current_dir_name (void)
 {
   char *pwd;
-  struct stat dotstat, pwdstat;
+  struct stat64 dotstat, pwdstat;
 
   pwd = getenv ("PWD");
-  if (pwd != NULL &&
-      stat (".", &dotstat) == 0 &&
-      stat (pwd, &pwdstat) == 0 &&
-      pwdstat.st_dev == dotstat.st_dev &&
-      pwdstat.st_ino == dotstat.st_ino)
+  if (pwd != NULL
+      && stat64 (".", &dotstat) == 0
+      && stat64 (pwd, &pwdstat) == 0
+      && pwdstat.st_dev == dotstat.st_dev
+      && pwdstat.st_ino == dotstat.st_ino)
     /* The PWD value is correct.  Use it.  */
     return __strdup (pwd);
 

@@ -56,10 +56,10 @@
 
 	  while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
 	    {
-	      struct stat fsst;
+	      struct stat64 fsst;
 
 	      /* Find out about the device the current entry is for.  */
-	      if (stat (mntbuf.mnt_dir, &fsst) >= 0
+	      if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
 		  && st.st_dev == fsst.st_dev)
 		{
 		  /* Bingo, we found the entry for the device FD is on.

@@ -97,7 +97,7 @@ grantpt (int fd)
   char _buf[512];
 #endif
   char *buf = _buf;
-  struct stat st;
+  struct stat64 st;
   char *grtmpbuf;
   struct group grbuf;
   size_t grbuflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
@@ -109,7 +109,7 @@ grantpt (int fd)
   if (pts_name (fd, &buf, sizeof (_buf)))
     return -1;
 
-  if (__xstat (_STAT_VER, buf, &st) < 0)
+  if (__xstat64 (_STAT_VER, buf, &st) < 0)
     goto cleanup;
 
   /* Make sure that we own the device.  */

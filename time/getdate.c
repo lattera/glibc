@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include <sys/stat.h>
 
 #define TM_YEAR_BASE 1900
@@ -110,18 +111,21 @@ __getdate_r (const char *string, struct tm *tp)
   char *result = NULL;
   time_t timer;
   struct tm tm;
-  struct stat st;
+  struct stat64 st;
   int mday_ok = 0;
 
   datemsk = getenv ("DATEMSK");
   if (datemsk == NULL || *datemsk == '\0')
     return 1;
 
-  if (stat (datemsk, &st) < 0)
+  if (stat64 (datemsk, &st) < 0)
     return 3;
 
   if (!S_ISREG (st.st_mode))
     return 4;
+
+  if (__access (datemsk, R_OK) < 0)
+    return 2;
 
   /* Open the template file.  */
   fp = fopen (datemsk, "r");

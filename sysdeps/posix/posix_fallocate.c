@@ -27,7 +27,7 @@
 int
 posix_fallocate (int fd, __off_t offset, size_t len)
 {
-  struct stat st;
+  struct stat64 st;
   struct statfs f;
   size_t step;
 
@@ -40,7 +40,7 @@ posix_fallocate (int fd, __off_t offset, size_t len)
 
   /* First thing we have to make sure is that this is really a regular
      file.  */
-  if (__fxstat (_STAT_VER, fd, &st) != 0)
+  if (__fxstat64 (_STAT_VER, fd, &st) != 0)
     return EBADF;
   if (S_ISFIFO (st.st_mode))
     return ESPIPE;

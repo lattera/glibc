@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,7 +91,7 @@ canonicalize (const char *name, char *resolved)
 
   for (start = end = name; *start; start = end)
     {
-      struct stat st;
+      struct stat64 st;
       int n;
 
       /* Skip sequence of multiple path-separators.  */
@@ -147,7 +147,7 @@ canonicalize (const char *name, char *resolved)
 	  dest = __mempcpy (dest, start, end - start);
 	  *dest = '\0';
 
-	  if (__lxstat (_STAT_VER, rpath, &st) < 0)
+	  if (__lxstat64 (_STAT_VER, rpath, &st) < 0)
 	    goto error;
 
 	  if (S_ISLNK (st.st_mode))

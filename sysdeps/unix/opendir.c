@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,98,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,7 +71,7 @@ DIR *
 __opendir (const char *name)
 {
   DIR *dirp;
-  struct stat statbuf;
+  struct stat64 statbuf;
   int fd;
   size_t allocation;
   int save_errno;
@@ -96,7 +96,7 @@ __opendir (const char *name)
       /* We first have to check whether the name is for a directory.  We
 	 cannot do this after the open() call since the open/close operation
 	 performed on, say, a tape device might have undesirable effects.  */
-      if (__xstat (_STAT_VER, name, &statbuf) < 0)
+      if (__xstat64 (_STAT_VER, name, &statbuf) < 0)
 	return NULL;
       if (! S_ISDIR (statbuf.st_mode))
 	{
@@ -111,7 +111,7 @@ __opendir (const char *name)
 
   /* Now make sure this really is a directory and nothing changed since
      the `stat' call.  */
-  if (__fstat (fd, &statbuf) < 0)
+  if (__fxstat64 (_STAT_VER, fd, &statbuf) < 0)
     goto lose;
   if (! S_ISDIR (statbuf.st_mode))
     {
