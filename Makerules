@@ -431,13 +431,13 @@ $(build-shlib-helper) \
 	  $(LDLIBS-$(@F:lib%.so=%).so) 2>&1 | \
 	  sed -e '/^=========/,/^=========/!d;/^=========/d' \
 	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-	  > $@.lds; \
-	  rm -f $@.new; \
-	  $(build-shlib-helper) -o $@ -T $@.lds \
+	  > $@.lds
+rm -f $@.new
+$(build-shlib-helper) -o $@ -T $@.lds \
 	  -Wl,--whole-archive $(csu-objpfx)abi-note.o \
 	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so); \
-	  rm -f $@.lds
+	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+rm -f $@.lds
 endef
 else
 define build-shlib

@@ -1,3 +1,8 @@
+2001-03-19  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules (build-shlib): Make sure exit codes get checked
+	properly.
+
 2001-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules (build-shlib): Remove unnecessary slashes introduced in
