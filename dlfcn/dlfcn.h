@@ -77,22 +77,6 @@ typedef struct
     void *dli_saddr;		/* Exact value of nearest symbol.  */
   } Dl_info;
 extern int dladdr (const void *__address, Dl_info *__info) __THROW;
-
-/* To support profiling of shared objects it is a good idea to call
-   the function found using `dlsym' using the following macro since
-   these calls do not use the PLT.  But this would mean the dynamic
-   loader has no chance to find out when the function is called.  The
-   macro applies the necessary magic so that profiling is possible.
-   Rewrite
-	foo = (*fctp) (arg1, arg2);
-   into
-        foo = DL_CALL_FCT (fctp, (arg1, arg2));
-*/
-# define DL_CALL_FCT(fctp, args) \
-  (_dl_mcount_wrapper_check (fctp), (*(fctp)) args)
-
-/* This function calls the profiling functions.  */
-extern void _dl_mcount_wrapper_check (void *__selfpc) __THROW;
 #endif
 
 __END_DECLS

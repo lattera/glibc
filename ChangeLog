@@ -1,3 +1,40 @@
+2000-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/start.c: Initialize __errno and add comment
+	explaining why.  Remove K&R compatibility.
+
+	* sysdeps/powerpc/fpu/s_isnan.c: Avoid using asm statement to
+	declare aliases.
+
+	* sysdeps/powerpc/Makefile: Always pass flags to compile for ppc
+	and not rs6000.
+	[$(subdir)=misc] (sysdep_routines): Add gprsave0, gprrest0,
+	gprsave1 , and gprrest1.
+	Don't pass special flags to compiler for init and gmon-start if
+	this is no ELF platform.
+
+	* sysdeps/mach/hurd/bits/statfs.h: Define _STATFS_F_NAMELEN.
+	* sysdeps/unix/sysv/linux/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/statfs.h: Likewise.
+	* sysdeps/posix/fpathconf.c: Don't unconditionally use f_namelen
+	in statfs.  Check feature macro and use f_name_max or NAME_MAX
+	instead.
+	* sysdeps/posix/pathconf.c: Likewise.
+
+	* dlfcn/dlfcn.h: Remove DL_CALL_FCT definition here.
+	* sysdeps/generic/bits/dlfcn.h: Define DL_CALL_FCT here.
+	* sysdeps/mips/bits/dlfcn.h: Define DL_CALL_FCT here.
+	* iconv/skeleton.c: If DL_CALL_FCT is not yet defined, add dumy
+	definition here.
+
+	* sysdeps/generic/libc-start.c: Fix typo in comment.
+
+	* include/set-hooks.h: Allow systems to not define
+	symbol_set_define.
+
+	* configure.in: Unify machine names rs6000 and powerpc.
+
 2000-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/Versions: Change version of __libc_freeres to 2.1 in

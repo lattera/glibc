@@ -1,5 +1,5 @@
 /* System dependent definitions for run-time dynamic loading.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,3 +35,21 @@
    The implementation does this by default and so we can define the
    value to zero.  */
 #define RTLD_LOCAL	0
+
+#ifdef __USE_GNU
+/* To support profiling of shared objects it is a good idea to call
+   the function found using `dlsym' using the following macro since
+   these calls do not use the PLT.  But this would mean the dynamic
+   loader has no chance to find out when the function is called.  The
+   macro applies the necessary magic so that profiling is possible.
+   Rewrite
+	foo = (*fctp) (arg1, arg2);
+   into
+        foo = DL_CALL_FCT (fctp, (arg1, arg2));
+*/
+# define DL_CALL_FCT(fctp, args) \
+  (_dl_mcount_wrapper_check (fctp), (*(fctp)) args)
+
+/* This function calls the profiling functions.  */
+extern void _dl_mcount_wrapper_check (void *__selfpc) __THROW;
+#endif

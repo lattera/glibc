@@ -87,6 +87,10 @@
 # include <dlfcn.h>
 #endif
 
+#ifndef DL_CALL_FCT
+# define DL_CALL_FCT(fct, args) fct args
+#endif
+
 /* The direction objects.  */
 #if DEFINE_DIRECTION_OBJECTS || DEFINE_INIT
 static int from_object;

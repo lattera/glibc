@@ -1,9 +1,18 @@
+# We always want to use the new mnemonic syntax even if we are on a RS6000
+# machine.
++cflags += -mnew-mnemonics -Wa,-mppc -mpowerpc
+asm-CPPFLAGS += -Wa,-mppc
+
 ifeq ($(subdir),math)
 libm-support += fenv_const fe_nomask
 endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += ppc-mcount
+endif
+
+ifeq ($(subdir),misc)
+sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1
 endif
 
 # On PPC, -fpic works until the GOT contains 2^15 bytes, and possibly
@@ -15,6 +24,7 @@ pic-ccflag = -fpic
 endif
 
 ifeq ($(subdir),csu)
+ifneq ($(elf),no)
 # The initfini generation code doesn't work in the presence of -fPIC, so
 # we use -fpic instead which is much better.
 CFLAGS-initfini.s = -g0 -fpic
@@ -23,6 +33,7 @@ CFLAGS-initfini.s = -g0 -fpic
 # of the library should be able to control what goes into sdata.
 CFLAGS-init.o = -G0
 CFLAGS-gmon-start.o = -G0
+endif
 endif
 
 ifeq ($(subdir),string)

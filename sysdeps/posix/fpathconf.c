@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,7 +81,17 @@ __fpathconf (fd, name)
 	    return -1;
 	  }
 	else
-	  return buf.f_namelen;
+	  {
+#ifdef _STATFS_F_NAMELEN
+	    return buf.f_namelen;
+#else
+# ifdef _STATFS_F_NAME_MAX
+	    return buf.f_name_max;
+# else
+	    return NAME_MAX;
+# endif
+#endif
+	  }
       }
 #else
       return -1;

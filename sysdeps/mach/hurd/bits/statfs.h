@@ -1,5 +1,5 @@
 /* Definition of `struct statfs', information about a filesystem.
-   Copyright (C) 1996, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,3 +82,6 @@ struct statfs64
     unsigned int f_spare[3];
   };
 #endif
+
+/* Tell code we have this member.  */
+#define _STATFS_F_NAMELEN

@@ -224,6 +224,12 @@ machine=$config_machine
 vendor=$config_vendor
 os=$config_os
 
+# config.guess on some IBM machines says `rs6000' instead of `powerpc'.
+# Unify this here.
+if test "$machine" = rs6000; then
+  machine="powerpc"
+fi
+
 ###
 ### I put this here to prevent those annoying emails from people who cannot
 ### read and try to compile glibc on unsupported platforms.  --drepper

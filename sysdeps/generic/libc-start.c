@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -103,7 +103,7 @@ check_one_fd (int fd, int mode)
 	 about to start does not accidently use this descriptor.  */
       int nullfd = __libc_open (_PATH_DEVNULL, mode);
       if (nullfd == -1)
-	/* We cannot even given an error message here since it would
+	/* We cannot even give an error message here since it would
 	   run into the same problems.  */
 	abort ();
     }
