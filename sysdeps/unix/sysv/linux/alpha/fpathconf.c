@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1998,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,6 +92,12 @@ __fpathconf (fd, name)
 	case UFS_MAGIC:
 	case UFS_CIGAM:
 	  return UFS_LINK_MAX;
+
+	case REISERFS_SUPER_MAGIC:
+	  return REISERFS_LINK_MAX;
+
+	case XFS_SUPER_MAGIC:
+	  return XFS_LINK_MAX;
 
 	default:
 	  return LINUX_LINK_MAX;
