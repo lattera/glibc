@@ -13,7 +13,7 @@
 	* rt/aio_misc.h (struct waitlist): Add caller_pid element.
 	(struct requestlist): Likewise.
 	Adjust prototypes of __aio_notify_only and __aio_sigqueue.
-	* rt/notify.c (__aio_notify_only): Take extra parameter.  Pass it
+	* rt/aio_notify.c (__aio_notify_only): Take extra parameter.  Pass it
 	to __aio_sigqueue.
 	(__aio_notify): Pass caller PID to __aio_notify_only.
 	* rt/aio_suspend.c: Initialize caller_pid.
@@ -26,8 +26,8 @@
 
 1999-08-10  H.J. Lu  <hjl@gnu.org>
 
-	* resolv/nss_dns/dns-host.c (getanswer_r): Cleanup out-of-
-	buffer handling.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Cleanup out-of-buffer
+	handling.
 
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -43,8 +43,7 @@
 
 1999-08-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* manual/install.texi (Configuring and compiling): Mention
-	CFLAGS.
+	* manual/install.texi (Configuring and compiling): Mention CFLAGS.
 
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 

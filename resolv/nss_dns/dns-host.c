@@ -191,14 +191,6 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 
 
 enum nss_status
-_nss_dns_getipnodebyname (const char *name, int af, struct hostent *result,
-			  char *buffer, size_t buflen, int *errnop,
-			  int *h_errnop)
-{
-}
-
-
-enum nss_status
 _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
 			  struct hostent *result, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
