@@ -1,3 +1,9 @@
+2004-09-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd_stat.c: Don't access dbs[cnt].head for disabled services.
+
+	* nscd/nscd.init: Fix path to socket.
+
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_helper.c (get_mapping): Correctly check cmsg length.

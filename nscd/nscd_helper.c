@@ -141,10 +141,10 @@ get_mapping (request_type type, const char *key,
   if (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, 0)) != keylen)
     goto out_close2;
 
+  mapfd = *(int *) CMSG_DATA (cmsg);
+
   if (CMSG_FIRSTHDR (&msg)->cmsg_len != CMSG_LEN (sizeof (int)))
     goto out_close;
-
-  mapfd = *(int *) CMSG_DATA (cmsg);
 
   struct stat64 st;
   if (strcmp (resdata, key) != 0

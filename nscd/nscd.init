@@ -62,7 +62,7 @@ stop () {
 	# nscd won't be able to remove these if it is running as
 	# a non-privileged user
 	rm -f /var/run/nscd/nscd.pid
-	rm -f /var/run/nscd/.socket
+	rm -f /var/run/nscd/socket
        	success $"$prog shutdown"
     else
        	failure $"$prog shutdown"

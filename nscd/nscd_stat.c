@@ -88,25 +88,29 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
 
   for (cnt = 0; cnt < lastdb; ++cnt)
     {
+      memset (&data.dbs[cnt], 0, sizeof (data.dbs[cnt]));
       data.dbs[cnt].enabled = dbs[cnt].enabled;
       data.dbs[cnt].check_file = dbs[cnt].check_file;
       data.dbs[cnt].shared = dbs[cnt].shared;
       data.dbs[cnt].persistent = dbs[cnt].persistent;
-      data.dbs[cnt].module = dbs[cnt].head->module;
       data.dbs[cnt].postimeout = dbs[cnt].postimeout;
       data.dbs[cnt].negtimeout = dbs[cnt].negtimeout;
-      data.dbs[cnt].poshit = dbs[cnt].head->poshit;
-      data.dbs[cnt].neghit = dbs[cnt].head->neghit;
-      data.dbs[cnt].posmiss = dbs[cnt].head->posmiss;
-      data.dbs[cnt].negmiss = dbs[cnt].head->negmiss;
-      data.dbs[cnt].nentries = dbs[cnt].head->nentries;
-      data.dbs[cnt].maxnentries = dbs[cnt].head->maxnentries;
-      data.dbs[cnt].datasize = dbs[cnt].head->data_size;
-      data.dbs[cnt].dataused = dbs[cnt].head->first_free;
-      data.dbs[cnt].maxnsearched = dbs[cnt].head->maxnsearched;
-      data.dbs[cnt].rdlockdelayed = dbs[cnt].head->rdlockdelayed;
-      data.dbs[cnt].wrlockdelayed = dbs[cnt].head->wrlockdelayed;
-      data.dbs[cnt].addfailed = dbs[cnt].head->addfailed;
+      if (dbs[cnt].head != NULL)
+	{
+	  data.dbs[cnt].module = dbs[cnt].head->module;
+	  data.dbs[cnt].poshit = dbs[cnt].head->poshit;
+	  data.dbs[cnt].neghit = dbs[cnt].head->neghit;
+	  data.dbs[cnt].posmiss = dbs[cnt].head->posmiss;
+	  data.dbs[cnt].negmiss = dbs[cnt].head->negmiss;
+	  data.dbs[cnt].nentries = dbs[cnt].head->nentries;
+	  data.dbs[cnt].maxnentries = dbs[cnt].head->maxnentries;
+	  data.dbs[cnt].datasize = dbs[cnt].head->data_size;
+	  data.dbs[cnt].dataused = dbs[cnt].head->first_free;
+	  data.dbs[cnt].maxnsearched = dbs[cnt].head->maxnsearched;
+	  data.dbs[cnt].rdlockdelayed = dbs[cnt].head->rdlockdelayed;
+	  data.dbs[cnt].wrlockdelayed = dbs[cnt].head->wrlockdelayed;
+	  data.dbs[cnt].addfailed = dbs[cnt].head->addfailed;
+	}
     }
 
   if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
