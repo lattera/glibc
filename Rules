@@ -66,14 +66,11 @@ dep-dummy-lib = $(objpfx)dummy.o
 define make-dummy-lib
 $(AR) cr$(verbose) $@ $<
 endef
-$(objpfx)dummy.o:
-	@rm -f $(@:.o=.c)
-	echo 'void __dummy__ () { }' > $(@:.o=.c)
-	$(CC) -c $(@:.o=.c) -o $@
-$(objpfx)empty.o:
-	@rm -f $(@:.o=.c)
-	echo '' > $(@:.o=.c)
-	$(CC) -c $(@:.o=.c) -o $@
+$(objpfx)dummy.c:
+	rm -f $@
+	echo 'void __dummy__ () { }' > $@
+$(objpfx)empty.c:
+	cp -f /dev/null $@
 generated := $(generated) dummy.o dummy.c empty.c empty.o
 
 # This makes all the auxilliary and test programs.
