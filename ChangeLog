@@ -1,3 +1,8 @@
+2002-11-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/strcat.S: Fix algorithm to align source pointer
+	correctly.
+
 2002-11-12  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ia64/dl-fptr.c [_LIBC_REENTRANT]: Include <ia64intrin.h>
