@@ -1,3 +1,10 @@
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* specific.c (pthread_key_delete): If pthread_create has not been
+	called yet, clear p_specific for the current thread.
+	* Makefile (tests): Add tst-tsd1.
+	* tst-tsd1.c: New test.
+
 2005-01-08  Andreas Jaeger  <aj@suse.de>
 
 	* pthread.c (init_one_static_tls): Adjust initialization of DTV

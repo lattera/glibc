@@ -88,9 +88,9 @@ case "$1" in
 	RETVAL=$?
 	;;
     status)
-        status nscd
+	status nscd
 	RETVAL=$?
-        ;;
+	;;
     restart)
 	restart
 	RETVAL=$?
@@ -100,9 +100,11 @@ case "$1" in
 	RETVAL=$?
 	;;
     reload)
-  	killproc /usr/sbin/nscd -HUP
+    	echo -n $"Reloading $prog: "
+	killproc /usr/sbin/nscd -HUP
 	RETVAL=$?
-        ;;
+	echo
+	;;
     *)
 	echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
 	RETVAL=1

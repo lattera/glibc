@@ -1,3 +1,8 @@
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.init (reload): Print Reloading nscd: before and a newline
+	after the status string printed by killproc.
+
 2004-11-18  Alexandre Oliva  <aoliva@redhat.com>
 
 	* manual/.cvsignore: Add dir-add.texi.
