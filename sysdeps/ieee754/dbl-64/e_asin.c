@@ -1,143 +1,623 @@
-/* @(#)e_asin.c 5.1 93/09/24 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ * IBM Accurate Mathematical Library
+ * Copyright (c) International Business Machines Corp., 2001
  *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
-   for performance improvement on pipelined processors.
-*/
+/******************************************************************/
+/*     MODULE_NAME:uasncs.c                                       */
+/*                                                                */
+/*     FUNCTIONS: uasin                                           */
+/*                uacos                                           */
+/* FILES NEEDED: dla.h endian.h mpa.h mydefs.h  usncs.h           */
+/*               doasin.c sincos32.c dosincos.c mpa.c             */
+/*               sincos.tbl  asincos.tbl  powtwo.tbl root.tbl     */
+/*                                                                */
+/* Ultimate asin/acos routines. Given an IEEE double machine      */
+/* number x, compute the correctly rounded value of               */
+/* arcsin(x)or arccos(x)  according to the function called.       */
+/* Assumption: Machine arithmetic operations are performed in     */
+/* round to nearest mode of IEEE 754 standard.                    */
+/*                                                                */
+/******************************************************************/
+#include "endian.h"
+#include "mydefs.h"
+#include "asincos.tbl"
+#include "root.tbl"
+#include "powtwo.tbl"
+#include "MathLib.h"
+#include "uasncs.h"
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_asin.c,v 1.9 1995/05/12 04:57:22 jtc Exp $";
-#endif
+void __doasin(double x, double dx, double w[]);
+void __dubsin(double x, double dx, double v[]);
+void __dubcos(double x, double dx, double v[]);
+void __docos(double x, double dx, double v[]);
+double __sin32(double x, double res, double res1);
+double __cos32(double x, double res, double res1);
 
-/* __ieee754_asin(x)
- * Method :
- *	Since  asin(x) = x + x^3/6 + x^5*3/40 + x^7*15/336 + ...
- *	we approximate asin(x) on [0,0.5] by
- *		asin(x) = x + x*x^2*R(x^2)
- *	where
- *		R(x^2) is a rational approximation of (asin(x)-x)/x^3
- *	and its remez error is bounded by
- *		|(asin(x)-x)/x^3 - R(x^2)| < 2^(-58.75)
- *
- *	For x in [0.5,1]
- *		asin(x) = pi/2-2*asin(sqrt((1-x)/2))
- *	Let y = (1-x), z = y/2, s := sqrt(z), and pio2_hi+pio2_lo=pi/2;
- *	then for x>0.98
- *		asin(x) = pi/2 - 2*(s+s*z*R(z))
- *			= pio2_hi - (2*(s+s*z*R(z)) - pio2_lo)
- *	For x<=0.98, let pio4_hi = pio2_hi/2, then
- *		f = hi part of s;
- *		c = sqrt(z) - f = (z-f*f)/(s+f) 	...f+c=sqrt(z)
- *	and
- *		asin(x) = pi/2 - 2*(s+s*z*R(z))
- *			= pio4_hi+(pio4-2s)-(2s*z*R(z)-pio2_lo)
- *			= pio4_hi+(pio4-2f)-(2s*z*R(z)-(pio2_lo+2c))
- *
- * Special cases:
- *	if x is NaN, return x itself;
- *	if |x|>1, return NaN with invalid signal.
- *
- */
+/***************************************************************************/
+/* An ultimate asin routine. Given an IEEE double machine number x         */
+/* it computes the correctly rounded (to nearest) value of arcsin(x)       */
+/***************************************************************************/
+double __ieee754_asin(double x){
+  double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2];
+  mynumber u,v;
+  int4 k,m,n,nn;
 
+  u.x = x;
+  m = u.i[HIGH_HALF];
+  k = 0x7fffffff&m;              /* no sign */
 
-#include "math.h"
-#include "math_private.h"
-#define one qS[0]
-#ifdef __STDC__
-static const double
-#else
-static double
-#endif
-huge =  1.000e+300,
-pio2_hi =  1.57079632679489655800e+00, /* 0x3FF921FB, 0x54442D18 */
-pio2_lo =  6.12323399573676603587e-17, /* 0x3C91A626, 0x33145C07 */
-pio4_hi =  7.85398163397448278999e-01, /* 0x3FE921FB, 0x54442D18 */
-	/* coefficient for R(x^2) */
-pS[] =  {1.66666666666666657415e-01, /* 0x3FC55555, 0x55555555 */
- -3.25565818622400915405e-01, /* 0xBFD4D612, 0x03EB6F7D */
-  2.01212532134862925881e-01, /* 0x3FC9C155, 0x0E884455 */
- -4.00555345006794114027e-02, /* 0xBFA48228, 0xB5688F3B */
-  7.91534994289814532176e-04, /* 0x3F49EFE0, 0x7501B288 */
-  3.47933107596021167570e-05}, /* 0x3F023DE1, 0x0DFDF709 */
-qS[] = {1.0, -2.40339491173441421878e+00, /* 0xC0033A27, 0x1C8A2D4B */
-  2.02094576023350569471e+00, /* 0x40002AE5, 0x9C598AC8 */
- -6.88283971605453293030e-01, /* 0xBFE6066C, 0x1B8D0159 */
-  7.70381505559019352791e-02}; /* 0x3FB3B8C5, 0xB12E9282 */
+  if (k < 0x3e500000) return x;  /* for x->0 => sin(x)=x */
+  /*----------------------2^-26 <= |x| < 2^ -3    -----------------*/
+  else
+  if (k < 0x3fc00000) {
+    x2 = x*x;
+    t = (((((f6*x2 + f5)*x2 + f4)*x2 + f3)*x2 + f2)*x2 + f1)*(x2*x);
+    res = x+t;         /*  res=arcsin(x) according to Taylor series  */
+    cor = (x-res)+t;
+    if (res == res+1.025*cor) return res;
+    else {
+      x1 = x+big;
+      xx = x*x;
+      x1 -= big;
+      x2 = x - x1;
+      p = x1*x1*x1;
+      s1 = a1.x*p;
+      s2 = ((((((c7*xx + c6)*xx + c5)*xx + c4)*xx + c3)*xx + c2)*xx*xx*x +
+	     ((a1.x+a2.x)*x2*x2+ 0.5*x1*x)*x2) + a2.x*p;
+      res1 = x+s1;
+      s2 = ((x-res1)+s1)+s2;
+      res = res1+s2;
+      cor = (res1-res)+s2;
+      if (res == res+1.00014*cor) return res;
+      else {
+	__doasin(x,0,w);
+	if (w[0]==(w[0]+1.00000001*w[1])) return w[0];
+	else {
+	  y=ABS(x);
+	  res=ABS(w[0]);
+	  res1=ABS(w[0]+1.1*w[1]);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }
+  /*---------------------0.125 <= |x| < 0.5 -----------------------------*/
+  else if (k < 0x3fe00000) {
+    if (k<0x3fd00000) n = 11*((k&0x000fffff)>>15);
+    else n = 11*((k&0x000fffff)>>14)+352;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+xx*(asncs.x[n+5]
+     +xx*asncs.x[n+6]))))+asncs.x[n+7];
+    t+=p;
+    res =asncs.x[n+8] +t;
+    cor = (asncs.x[n+8]-res)+t;
+    if (res == res+1.05*cor) return (m>0)?res:-res;
+    else {
+      r=asncs.x[n+8]+xx*asncs.x[n+9];
+      t=((asncs.x[n+8]-r)+xx*asncs.x[n+9])+(p+xx*asncs.x[n+10]);
+      res = r+t;
+      cor = (r-res)+t;
+      if (res == res+1.0005*cor) return (m>0)?res:-res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	__dubsin(res,z,w);
+	z=(w[0]-ABS(x))+w[1];
+	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
+	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
+	else {
+	  y=ABS(x);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3fe00000)    */
+  /*-------------------- 0.5 <= |x| < 0.75 -----------------------------*/
+  else
+  if (k < 0x3fe80000) {
+    n = 1056+((k&0x000fe000)>>11)*3;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+xx*(asncs.x[n+5]
+	   +xx*(asncs.x[n+6]+xx*asncs.x[n+7])))))+asncs.x[n+8];
+    t+=p;
+    res =asncs.x[n+9] +t;
+    cor = (asncs.x[n+9]-res)+t;
+    if (res == res+1.01*cor) return (m>0)?res:-res;
+    else {
+      r=asncs.x[n+9]+xx*asncs.x[n+10];
+      t=((asncs.x[n+9]-r)+xx*asncs.x[n+10])+(p+xx*asncs.x[n+11]);
+      res = r+t;
+      cor = (r-res)+t;
+      if (res == res+1.0005*cor) return (m>0)?res:-res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	__dubsin(res,z,w);
+	z=(w[0]-ABS(x))+w[1];
+	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
+	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
+	else {
+	  y=ABS(x);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3fe80000)    */
+  /*--------------------- 0.75 <= |x|< 0.921875 ----------------------*/
+  else
+  if (k < 0x3fed8000) {
+    n = 992+((k&0x000fe000)>>13)*13;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+xx*(asncs.x[n+5]
+     +xx*(asncs.x[n+6]+xx*(asncs.x[n+7]+xx*asncs.x[n+8]))))))+asncs.x[n+9];
+    t+=p;
+    res =asncs.x[n+10] +t;
+    cor = (asncs.x[n+10]-res)+t;
+    if (res == res+1.01*cor) return (m>0)?res:-res;
+    else {
+      r=asncs.x[n+10]+xx*asncs.x[n+11];
+      t=((asncs.x[n+10]-r)+xx*asncs.x[n+11])+(p+xx*asncs.x[n+12]);
+      res = r+t;
+      cor = (r-res)+t;
+      if (res == res+1.0008*cor) return (m>0)?res:-res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	y=hp0.x-res;
+	z=((hp0.x-y)-res)+(hp1.x-z);
+	__dubcos(y,z,w);
+	z=(w[0]-ABS(x))+w[1];
+	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
+	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
+	else {
+	  y=ABS(x);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3fed8000)    */
+  /*-------------------0.921875 <= |x| < 0.953125 ------------------------*/
+  else
+  if (k < 0x3fee8000) {
+    n = 884+((k&0x000fe000)>>13)*14;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                      xx*(asncs.x[n+5]+xx*(asncs.x[n+6]
+		      +xx*(asncs.x[n+7]+xx*(asncs.x[n+8]+
+                      xx*asncs.x[n+9])))))))+asncs.x[n+10];
+    t+=p;
+    res =asncs.x[n+11] +t;
+    cor = (asncs.x[n+11]-res)+t;
+    if (res == res+1.01*cor) return (m>0)?res:-res;
+    else {
+      r=asncs.x[n+11]+xx*asncs.x[n+12];
+      t=((asncs.x[n+11]-r)+xx*asncs.x[n+12])+(p+xx*asncs.x[n+13]);
+      res = r+t;
+      cor = (r-res)+t;
+      if (res == res+1.0007*cor) return (m>0)?res:-res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	y=(hp0.x-res)-z;
+	z=y+hp1.x;
+	y=(y-z)+hp1.x;
+	__dubcos(z,y,w);
+	z=(w[0]-ABS(x))+w[1];
+	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
+	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
+	else {
+	  y=ABS(x);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3fee8000)    */
 
-#ifdef __STDC__
-	double __ieee754_asin(double x)
-#else
-	double __ieee754_asin(x)
-	double x;
-#endif
+  /*--------------------0.953125 <= |x| < 0.96875 ------------------------*/
+  else
+  if (k < 0x3fef0000) {
+    n = 768+((k&0x000fe000)>>13)*15;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                         xx*(asncs.x[n+5]+xx*(asncs.x[n+6]
+			 +xx*(asncs.x[n+7]+xx*(asncs.x[n+8]+
+                    xx*(asncs.x[n+9]+xx*asncs.x[n+10]))))))))+asncs.x[n+11];
+    t+=p;
+    res =asncs.x[n+12] +t;
+    cor = (asncs.x[n+12]-res)+t;
+    if (res == res+1.01*cor) return (m>0)?res:-res;
+    else {
+      r=asncs.x[n+12]+xx*asncs.x[n+13];
+      t=((asncs.x[n+12]-r)+xx*asncs.x[n+13])+(p+xx*asncs.x[n+14]);
+      res = r+t;
+      cor = (r-res)+t;
+      if (res == res+1.0007*cor) return (m>0)?res:-res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	y=(hp0.x-res)-z;
+	z=y+hp1.x;
+	y=(y-z)+hp1.x;
+	__dubcos(z,y,w);
+	z=(w[0]-ABS(x))+w[1];
+	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
+	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
+	else {
+	  y=ABS(x);
+	  return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3fef0000)    */
+  /*--------------------0.96875 <= |x| < 1 --------------------------------*/
+  else
+  if (k<0x3ff00000)  {
+    z = 0.5*((m>0)?(1.0-x):(1.0+x));
+    v.x=z;
+    k=v.i[HIGH_HALF];
+    t=inroot[(k&0x001fffff)>>14]*powtwo[511-(k>>21)];
+    r=1.0-t*t*z;
+    t = t*(rt0+r*(rt1+r*(rt2+r*rt3)));
+    c=t*z;
+    t=c*(1.5-0.5*t*c);
+    y=(c+t24)-t24;
+    cc = (z-y*y)/(t+y);
+    p=(((((f6*z+f5)*z+f4)*z+f3)*z+f2)*z+f1)*z;
+    cor = (hp1.x - 2.0*cc)-2.0*(y+cc)*p;
+    res1 = hp0.x - 2.0*y;
+    res =res1 + cor;
+    if (res == res+1.003*((res1-res)+cor)) return (m>0)?res:-res;
+    else {
+      c=y+cc;
+      cc=(y-c)+cc;
+      __doasin(c,cc,w);
+      res1=hp0.x-2.0*w[0];
+      cor=((hp0.x-res1)-2.0*w[0])+(hp1.x-2.0*w[1]);
+      res = res1+cor;
+      cor = (res1-res)+cor;
+      if (res==(res+1.0000001*cor)) return (m>0)?res:-res;
+      else {
+	y=ABS(x);
+	res1=res+1.1*cor;
+	return (m>0)?sin32(y,res,res1):-sin32(y,res,res1);
+      }
+    }
+  }    /*   else  if (k < 0x3ff00000)    */
+  /*---------------------------- |x|>=1 -------------------------------*/
+  else if (k==0x3ff00000 && u.i[LOW_HALF]==0) return (m>0)?hp0.x:-hp0.x;
+  else {
+    u.i[HIGH_HALF]=0x7ff00000;
+    v.i[HIGH_HALF]=0x7ff00000;
+    u.i[LOW_HALF]=0;
+    v.i[LOW_HALF]=0;
+    return u.x/v.x;  /* NaN */
+ }
+}
+
+/*******************************************************************/
+/*                                                                 */
+/*         End of arcsine,  below is arccosine                     */
+/*                                                                 */
+/*******************************************************************/
+
+double __ieee754_acos(double x)
 {
-	double t,w,p,q,c,r,s,p1,p2,p3,q1,q2,z2,z4,z6;
-	int32_t hx,ix;
-	GET_HIGH_WORD(hx,x);
-	ix = hx&0x7fffffff;
-	if(ix>= 0x3ff00000) {		/* |x|>= 1 */
-	    u_int32_t lx;
-	    GET_LOW_WORD(lx,x);
-	    if(((ix-0x3ff00000)|lx)==0)
-		    /* asin(1)=+-pi/2 with inexact */
-		return x*pio2_hi+x*pio2_lo;
-	    return (x-x)/(x-x);		/* asin(|x|>1) is NaN */
-	} else if (ix<0x3fe00000) {	/* |x|<0.5 */
-	    if(ix<0x3e400000) {		/* if |x| < 2**-27 */
-		if(huge+x>one) return x;/* return x with inexact if x!=0*/
-	    } else {
-		t = x*x;
-#ifdef DO_NOT_USE_THIS
-		p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
-		q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
-#else
-		p1 = t*pS[0]; z2=t*t;
-		p2 = pS[1]+t*pS[2]; z4=z2*z2;
-		p3 = pS[3]+t*pS[4]; z6=z4*z2;
-		q1 = one+t*qS[1];
-		q2 = qS[2]+t*qS[3];
-		p = p1 + z2*p2 + z4*p3 + z6*pS[5];
-		q = q1 + z2*q2 + z4*qS[4];
-#endif
-		w = p/q;
-		return x+x*w;
-	    }
+  double x1,x2,xx,s1,s2,res1,p,t,res,r,cor,cc,y,c,z,w[2],eps;
+  double fc;
+  mynumber u,v;
+  int4 k,m,n,nn;
+  u.x = x;
+  m = u.i[HIGH_HALF];
+  k = 0x7fffffff&m;
+  /*-------------------  |x|<2.77556*10^-17 ----------------------*/
+  if (k < 0x3c880000) return hp0.x;
+
+  /*-----------------  2.77556*10^-17 <= |x| < 2^-3 --------------*/
+  else
+  if (k < 0x3fc00000) {
+    x2 = x*x;
+    t = (((((f6*x2 + f5)*x2 + f4)*x2 + f3)*x2 + f2)*x2 + f1)*(x2*x);
+    r=hp0.x-x;
+    cor=(((hp0.x-r)-x)+hp1.x)-t;
+    res = r+cor;
+    cor = (r-res)+cor;
+    if (res == res+1.004*cor) return res;
+    else {
+      x1 = x+big;
+      xx = x*x;
+      x1 -= big;
+      x2 = x - x1;
+      p = x1*x1*x1;
+      s1 = a1.x*p;
+      s2 = ((((((c7*xx + c6)*xx + c5)*xx + c4)*xx + c3)*xx + c2)*xx*xx*x +
+	    ((a1.x+a2.x)*x2*x2+ 0.5*x1*x)*x2) + a2.x*p;
+      res1 = x+s1;
+      s2 = ((x-res1)+s1)+s2;
+      r=hp0.x-res1;
+      cor=(((hp0.x-r)-res1)+hp1.x)-s2;
+      res = r+cor;
+      cor = (r-res)+cor;
+      if (res == res+1.00004*cor) return res;
+      else {
+	__doasin(x,0,w);
+	r=hp0.x-w[0];
+	cor=((hp0.x-r)-w[0])+(hp1.x-w[1]);
+	res=r+cor;
+	cor=(r-res)+cor;
+	if (res ==(res +1.00000001*cor)) return res;
+	else {
+	  res1=res+1.1*cor;
+	  return cos32(x,res,res1);
 	}
-	/* 1> |x|>= 0.5 */
-	w = one-fabs(x);
-	t = w*0.5;
-#ifdef DO_NOT_USE_THIS
-	p = t*(pS0+t*(pS1+t*(pS2+t*(pS3+t*(pS4+t*pS5)))));
-	q = one+t*(qS1+t*(qS2+t*(qS3+t*qS4)));
-#else
-	p1 = t*pS[0]; z2=t*t;
-	p2 = pS[1]+t*pS[2]; z4=z2*z2;
-	p3 = pS[3]+t*pS[4]; z6=z4*z2;
-	q1 = one+t*qS[1];
-	q2 = qS[2]+t*qS[3];
-	p = p1 + z2*p2 + z4*p3 + z6*pS[5];
-	q = q1 + z2*q2 + z4*qS[4];
-#endif
-	s = __ieee754_sqrt(t);
-	if(ix>=0x3FEF3333) { 	/* if |x| > 0.975 */
-	    w = p/q;
-	    t = pio2_hi-(2.0*(s+s*w)-pio2_lo);
-	} else {
-	    w  = s;
-	    SET_LOW_WORD(w,0);
-	    c  = (t-w*w)/(s+w);
-	    r  = p/q;
-	    p  = 2.0*s*r-(pio2_lo-2.0*c);
-	    q  = pio4_hi-2.0*w;
-	    t  = pio4_hi-(p-q);
+      }
+    }
+  }    /*   else  if (k < 0x3fc00000)    */
+  /*----------------------  0.125 <= |x| < 0.5 --------------------*/
+  else
+  if (k < 0x3fe00000) {
+    if (k<0x3fd00000) n = 11*((k&0x000fffff)>>15);
+    else n = 11*((k&0x000fffff)>>14)+352;
+    if (m>0) xx = x - asncs.x[n];
+    else xx = -x - asncs.x[n];
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                   xx*(asncs.x[n+5]+xx*asncs.x[n+6]))))+asncs.x[n+7];
+    t+=p;
+    y = (m>0)?(hp0.x-asncs.x[n+8]):(hp0.x+asncs.x[n+8]);
+    t = (m>0)?(hp1.x-t):(hp1.x+t);
+    res = y+t;
+    if (res == res+1.02*((y-res)+t)) return res;
+    else {
+      r=asncs.x[n+8]+xx*asncs.x[n+9];
+      t=((asncs.x[n+8]-r)+xx*asncs.x[n+9])+(p+xx*asncs.x[n+10]);
+      if (m>0)
+	{p = hp0.x-r; t = (((hp0.x-p)-r)-t)+hp1.x; }
+      else
+	{p = hp0.x+r; t = ((hp0.x-p)+r)+(hp1.x+t); }
+      res = p+t;
+      cor = (p-res)+t;
+      if (res == (res+1.0002*cor)) return res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	__docos(res,z,w);
+	z=(w[0]-x)+w[1];
+	if (z>1.0e-27) return max(res,res1);
+	else if (z<-1.0e-27) return min(res,res1);
+	else return cos32(x,res,res1);
+      }
+    }
+  }    /*   else  if (k < 0x3fe00000)    */
+
+  /*--------------------------- 0.5 <= |x| < 0.75 ---------------------*/
+  else
+  if (k < 0x3fe80000) {
+    n = 1056+((k&0x000fe000)>>11)*3;
+    if (m>0) {xx = x - asncs.x[n]; eps=1.04; }
+    else {xx = -x - asncs.x[n]; eps=1.02; }
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                   xx*(asncs.x[n+5]+xx*(asncs.x[n+6]+
+                   xx*asncs.x[n+7])))))+asncs.x[n+8];
+    t+=p;
+   y = (m>0)?(hp0.x-asncs.x[n+9]):(hp0.x+asncs.x[n+9]);
+   t = (m>0)?(hp1.x-t):(hp1.x+t);
+   res = y+t;
+   if (res == res+eps*((y-res)+t)) return res;
+   else {
+     r=asncs.x[n+9]+xx*asncs.x[n+10];
+     t=((asncs.x[n+9]-r)+xx*asncs.x[n+10])+(p+xx*asncs.x[n+11]);
+     if (m>0) {p = hp0.x-r; t = (((hp0.x-p)-r)-t)+hp1.x; eps=1.0004; }
+     else   {p = hp0.x+r; t = ((hp0.x-p)+r)+(hp1.x+t); eps=1.0002; }
+     res = p+t;
+     cor = (p-res)+t;
+     if (res == (res+eps*cor)) return res;
+     else {
+       res1=res+1.1*cor;
+       z=0.5*(res1-res);
+       __docos(res,z,w);
+       z=(w[0]-x)+w[1];
+       if (z>1.0e-27) return max(res,res1);
+       else if (z<-1.0e-27) return min(res,res1);
+       else return cos32(x,res,res1);
+     }
+   }
+  }    /*   else  if (k < 0x3fe80000)    */
+
+/*------------------------- 0.75 <= |x| < 0.921875 -------------*/
+  else
+  if (k < 0x3fed8000) {
+    n = 992+((k&0x000fe000)>>13)*13;
+    if (m>0) {xx = x - asncs.x[n]; eps = 1.04; }
+    else {xx = -x - asncs.x[n]; eps = 1.01; }
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                      xx*(asncs.x[n+5]+xx*(asncs.x[n+6]+xx*(asncs.x[n+7]+
+                      xx*asncs.x[n+8]))))))+asncs.x[n+9];
+    t+=p;
+    y = (m>0)?(hp0.x-asncs.x[n+10]):(hp0.x+asncs.x[n+10]);
+    t = (m>0)?(hp1.x-t):(hp1.x+t);
+    res = y+t;
+    if (res == res+eps*((y-res)+t)) return res;
+    else {
+      r=asncs.x[n+10]+xx*asncs.x[n+11];
+      t=((asncs.x[n+10]-r)+xx*asncs.x[n+11])+(p+xx*asncs.x[n+12]);
+      if (m>0) {p = hp0.x-r; t = (((hp0.x-p)-r)-t)+hp1.x; eps=1.0032; }
+      else   {p = hp0.x+r; t = ((hp0.x-p)+r)+(hp1.x+t); eps=1.0008; }
+      res = p+t;
+      cor = (p-res)+t;
+      if (res == (res+eps*cor)) return res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	__docos(res,z,w);
+	z=(w[0]-x)+w[1];
+	if (z>1.0e-27) return max(res,res1);
+	else if (z<-1.0e-27) return min(res,res1);
+	else return cos32(x,res,res1);
+      }
+    }
+  }    /*   else  if (k < 0x3fed8000)    */
+
+/*-------------------0.921875 <= |x| < 0.953125 ------------------*/
+  else
+  if (k < 0x3fee8000) {
+    n = 884+((k&0x000fe000)>>13)*14;
+    if (m>0) {xx = x - asncs.x[n]; eps=1.04; }
+    else {xx = -x - asncs.x[n]; eps =1.005; }
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+                   xx*(asncs.x[n+5]+xx*(asncs.x[n+6]
+		   +xx*(asncs.x[n+7]+xx*(asncs.x[n+8]+
+                   xx*asncs.x[n+9])))))))+asncs.x[n+10];
+    t+=p;
+    y = (m>0)?(hp0.x-asncs.x[n+11]):(hp0.x+asncs.x[n+11]);
+    t = (m>0)?(hp1.x-t):(hp1.x+t);
+    res = y+t;
+    if (res == res+eps*((y-res)+t)) return res;
+    else {
+      r=asncs.x[n+11]+xx*asncs.x[n+12];
+      t=((asncs.x[n+11]-r)+xx*asncs.x[n+12])+(p+xx*asncs.x[n+13]);
+      if (m>0) {p = hp0.x-r; t = (((hp0.x-p)-r)-t)+hp1.x; eps=1.0030; }
+      else   {p = hp0.x+r; t = ((hp0.x-p)+r)+(hp1.x+t); eps=1.0005; }
+      res = p+t;
+      cor = (p-res)+t;
+      if (res == (res+eps*cor)) return res;
+      else {
+	res1=res+1.1*cor;
+	z=0.5*(res1-res);
+	__docos(res,z,w);
+	z=(w[0]-x)+w[1];
+	if (z>1.0e-27) return max(res,res1);
+	else if (z<-1.0e-27) return min(res,res1);
+	else return cos32(x,res,res1);
+      }
+    }
+  }    /*   else  if (k < 0x3fee8000)    */
+
+  /*--------------------0.953125 <= |x| < 0.96875 ----------------*/
+  else
+  if (k < 0x3fef0000) {
+    n = 768+((k&0x000fe000)>>13)*15;
+    if (m>0) {xx = x - asncs.x[n]; eps=1.04; }
+    else {xx = -x - asncs.x[n]; eps=1.005;}
+    t = asncs.x[n+1]*xx;
+    p=xx*xx*(asncs.x[n+2]+xx*(asncs.x[n+3]+xx*(asncs.x[n+4]+
+            xx*(asncs.x[n+5]+xx*(asncs.x[n+6]
+	    +xx*(asncs.x[n+7]+xx*(asncs.x[n+8]+xx*(asncs.x[n+9]+
+            xx*asncs.x[n+10]))))))))+asncs.x[n+11];
+    t+=p;
+    y = (m>0)?(hp0.x-asncs.x[n+12]):(hp0.x+asncs.x[n+12]);
+   t = (m>0)?(hp1.x-t):(hp1.x+t);
+   res = y+t;
+   if (res == res+eps*((y-res)+t)) return res;
+   else {
+     r=asncs.x[n+12]+xx*asncs.x[n+13];
+     t=((asncs.x[n+12]-r)+xx*asncs.x[n+13])+(p+xx*asncs.x[n+14]);
+     if (m>0) {p = hp0.x-r; t = (((hp0.x-p)-r)-t)+hp1.x; eps=1.0030; }
+     else   {p = hp0.x+r; t = ((hp0.x-p)+r)+(hp1.x+t); eps=1.0005; }
+     res = p+t;
+     cor = (p-res)+t;
+     if (res == (res+eps*cor)) return res;
+     else {
+       res1=res+1.1*cor;
+       z=0.5*(res1-res);
+       __docos(res,z,w);
+       z=(w[0]-x)+w[1];
+       if (z>1.0e-27) return max(res,res1);
+       else if (z<-1.0e-27) return min(res,res1);
+       else return cos32(x,res,res1);
+     }
+   }
+  }    /*   else  if (k < 0x3fef0000)    */
+  /*-----------------0.96875 <= |x| < 1 ---------------------------*/
+
+  else
+  if (k<0x3ff00000)  {
+    z = 0.5*((m>0)?(1.0-x):(1.0+x));
+    v.x=z;
+    k=v.i[HIGH_HALF];
+    t=inroot[(k&0x001fffff)>>14]*powtwo[511-(k>>21)];
+    r=1.0-t*t*z;
+    t = t*(rt0+r*(rt1+r*(rt2+r*rt3)));
+    c=t*z;
+    t=c*(1.5-0.5*t*c);
+    y = (t27*c+c)-t27*c;
+    cc = (z-y*y)/(t+y);
+    p=(((((f6*z+f5)*z+f4)*z+f3)*z+f2)*z+f1)*z;
+    if (m<0) {
+      cor = (hp1.x - cc)-(y+cc)*p;
+      res1 = hp0.x - y;
+      res =res1 + cor;
+      if (res == res+1.002*((res1-res)+cor)) return (res+res);
+      else {
+	c=y+cc;
+	cc=(y-c)+cc;
+	__doasin(c,cc,w);
+	res1=hp0.x-w[0];
+	cor=((hp0.x-res1)-w[0])+(hp1.x-w[1]);
+	res = res1+cor;
+	cor = (res1-res)+cor;
+	if (res==(res+1.000001*cor)) return (res+res);
+	else {
+	  res=res+res;
+	  res1=res+1.2*cor;
+	  return cos32(x,res,res1);
 	}
-	if(hx>0) return t; else return -t;
+      }
+    }
+    else {
+      cor = cc+p*(y+cc);
+      res = y + cor;
+      if (res == res+1.03*((y-res)+cor)) return (res+res);
+      else {
+	c=y+cc;
+	cc=(y-c)+cc;
+	__doasin(c,cc,w);
+	res = w[0];
+	cor=w[1];
+	if (res==(res+1.000001*cor)) return (res+res);
+	else {
+	  res=res+res;
+	  res1=res+1.2*cor;
+	  return cos32(x,res,res1);
+	}
+      }
+    }
+  }    /*   else  if (k < 0x3ff00000)    */
+
+  /*---------------------------- |x|>=1 -----------------------*/
+  else
+  if (k==0x3ff00000 && u.i[LOW_HALF]==0) return (m>0)?0:2.0*hp0.x;
+  else {
+    u.i[HIGH_HALF]=0x7ff00000;
+    v.i[HIGH_HALF]=0x7ff00000;
+    u.i[LOW_HALF]=0;
+    v.i[LOW_HALF]=0;
+    return u.x/v.x;
+  }
 }

@@ -1,3 +1,133 @@
+2001-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	Last-bit accurate math library implementation by IBM Haifa.
+	Contributed by Abraham Ziv <ziv@il.ibm.com>, Moshe Olshansky
+	<olshansk@il.ibm.com>, Ealan Henis <ealan@il.ibm.com>, and
+	Anna Reitman <reitman@il.ibm.com>.
+	* math/Makefile (dbl-only-routines): New variable.
+	(libm-routines): Add $(dbl-only-routines).
+	* sysdeps/ieee754/dbl-64/e_acos.c: Empty, definition is in e_asin.c.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Replaced with accurate asin
+	implementation.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Replaced with accurate atan2
+	implementation.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Replaced with accurate exp
+	implementation.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Don't use __kernel_sin and
+	__kernel_cos.
+	* sysdeps/ieee754/dbl-64/e_log.c: Replaced with accurate log
+	implementation.
+	* sysdeps/ieee754/dbl-64/e_remainder.c: Replaced with accurate
+	remainder implementation.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Replaced with accurate pow
+	implementation.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c: Replaced with accurate sqrt
+	implementation.
+	* sysdeps/ieee754/dbl-64/k_cos.c: Empty, definition is in s_sin.c.
+	* sysdeps/ieee754/dbl-64/k_sin.c: Empty, definition is in s_sin.c.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Replaced with accurate atan
+	implementation.
+	* sysdeps/ieee754/dbl-64/s_cos.c: Empty, definition is in s_sin.c.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Replaced with accurate sin/cos
+	implementation.
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Rewritten to not use __kernel_sin
+	and __kernel_cos.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Replaced with accurate tan
+	implementation.
+	* sysdeps/ieee754/dbl-64/Dist: Add new non-code files.
+	* sysdeps/ieee754/dbl-64/MathLib.h: New file.
+	* sysdeps/ieee754/dbl-64/asincos.tbl: New file.
+	* sysdeps/ieee754/dbl-64/atnat.h: New file.
+	* sysdeps/ieee754/dbl-64/atnat2.h: New file.
+	* sysdeps/ieee754/dbl-64/branred.c: New file.
+	* sysdeps/ieee754/dbl-64/branred.h: New file.
+	* sysdeps/ieee754/dbl-64/dla.h: New file.
+	* sysdeps/ieee754/dbl-64/doasin.c: New file.
+	* sysdeps/ieee754/dbl-64/doasin.h: New file.
+	* sysdeps/ieee754/dbl-64/dosincos.c: New file.
+	* sysdeps/ieee754/dbl-64/dosincos.h: New file.
+	* sysdeps/ieee754/dbl-64/endian.h: New file.
+	* sysdeps/ieee754/dbl-64/halfulp.c: New file.
+	* sysdeps/ieee754/dbl-64/mpa.c: New file.
+	* sysdeps/ieee754/dbl-64/mpa.h: New file.
+	* sysdeps/ieee754/dbl-64/mpa2.h: New file.
+	* sysdeps/ieee754/dbl-64/mpatan.c: New file.
+	* sysdeps/ieee754/dbl-64/mpatan.h: New file.
+	* sysdeps/ieee754/dbl-64/mpatan2.c: New file.
+	* sysdeps/ieee754/dbl-64/mpexp.c: New file.
+	* sysdeps/ieee754/dbl-64/mpexp.h: New file.
+	* sysdeps/ieee754/dbl-64/mplog.c: New file.
+	* sysdeps/ieee754/dbl-64/mplog.h: New file.
+	* sysdeps/ieee754/dbl-64/mpsqrt.c: New file.
+	* sysdeps/ieee754/dbl-64/mpsqrt.h: New file.
+	* sysdeps/ieee754/dbl-64/mptan.c: New file.
+	* sysdeps/ieee754/dbl-64/mydefs.h: New file.
+	* sysdeps/ieee754/dbl-64/powtwo.tbl: New file.
+	* sysdeps/ieee754/dbl-64/root.tbl: New file.
+	* sysdeps/ieee754/dbl-64/sincos.tbl: New file.
+	* sysdeps/ieee754/dbl-64/sincos32.c: New file.
+	* sysdeps/ieee754/dbl-64/sincos32.h: New file.
+	* sysdeps/ieee754/dbl-64/slowexp.c: New file.
+	* sysdeps/ieee754/dbl-64/slowpow.c: New file.
+	* sysdeps/ieee754/dbl-64/uasncs.h: New file.
+	* sysdeps/ieee754/dbl-64/uatan.tbl: New file.
+	* sysdeps/ieee754/dbl-64/uexp.h: New file.
+	* sysdeps/ieee754/dbl-64/uexp.tbl: New file.
+	* sysdeps/ieee754/dbl-64/ulog.h: New file.
+	* sysdeps/ieee754/dbl-64/ulog.tbl: New file.
+	* sysdeps/ieee754/dbl-64/upow.h: New file.
+	* sysdeps/ieee754/dbl-64/upow.tbl: New file.
+	* sysdeps/ieee754/dbl-64/urem.h: New file.
+	* sysdeps/ieee754/dbl-64/uroot.h: New file.
+	* sysdeps/ieee754/dbl-64/usncs.h: New file.
+	* sysdeps/ieee754/dbl-64/utan.h: New file.
+	* sysdeps/ieee754/dbl-64/utan.tbl: New file.
+	* sysdeps/i386/fpu/branred.c: New file.
+	* sysdeps/i386/fpu/doasin.c: New file.
+	* sysdeps/i386/fpu/dosincos.c: New file.
+	* sysdeps/i386/fpu/halfulp.c: New file.
+	* sysdeps/i386/fpu/mpa.c: New file.
+	* sysdeps/i386/fpu/mpatan.c: New file.
+	* sysdeps/i386/fpu/mpatan2.c: New file.
+	* sysdeps/i386/fpu/mpexp.c: New file.
+	* sysdeps/i386/fpu/mplog.c: New file.
+	* sysdeps/i386/fpu/mpsqrt.c: New file.
+	* sysdeps/i386/fpu/mptan.c: New file.
+	* sysdeps/i386/fpu/sincos32.c: New file.
+	* sysdeps/i386/fpu/slowexp.c: New file.
+	* sysdeps/i386/fpu/slowpow.c: New file.
+	* sysdeps/ia64/fpu/branred.c: New file.
+	* sysdeps/ia64/fpu/doasin.c: New file.
+	* sysdeps/ia64/fpu/dosincos.c: New file.
+	* sysdeps/ia64/fpu/halfulp.c: New file.
+	* sysdeps/ia64/fpu/mpa.c: New file.
+	* sysdeps/ia64/fpu/mpatan.c: New file.
+	* sysdeps/ia64/fpu/mpatan2.c: New file.
+	* sysdeps/ia64/fpu/mpexp.c: New file.
+	* sysdeps/ia64/fpu/mplog.c: New file.
+	* sysdeps/ia64/fpu/mpsqrt.c: New file.
+	* sysdeps/ia64/fpu/mptan.c: New file.
+	* sysdeps/ia64/fpu/sincos32.c: New file.
+	* sysdeps/ia64/fpu/slowexp.c: New file.
+	* sysdeps/ia64/fpu/slowpow.c: New file.
+	* sysdeps/m68k/fpu/branred.c: New file.
+	* sysdeps/m68k/fpu/doasin.c: New file.
+	* sysdeps/m68k/fpu/dosincos.c: New file.
+	* sysdeps/m68k/fpu/halfulp.c: New file.
+	* sysdeps/m68k/fpu/mpa.c: New file.
+	* sysdeps/m68k/fpu/mpatan.c: New file.
+	* sysdeps/m68k/fpu/mpatan2.c: New file.
+	* sysdeps/m68k/fpu/mpexp.c: New file.
+	* sysdeps/m68k/fpu/mplog.c: New file.
+	* sysdeps/m68k/fpu/mpsqrt.c: New file.
+	* sysdeps/m68k/fpu/mptan.c: New file.
+	* sysdeps/m68k/fpu/sincos32.c: New file.
+	* sysdeps/m68k/fpu/slowexp.c: New file.
+	* sysdeps/m68k/fpu/slowpow.c: New file.
+
+	* iconvdata/gconv-modules: Add a number of alias, mostly for IBM
+	codepages.
+
 2001-03-11  Andreas Jaeger  <aj@suse.de>
 
 	* elf/elf.h (EM_*): Synch with official list.

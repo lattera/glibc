@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,42 +33,15 @@ __sincos (double x, double *sinx, double *cosx)
 
   /* |x| ~< pi/4 */
   ix &= 0x7fffffff;
-  if (ix <= 0x3fe921fb)
-    {
-      *sinx = __kernel_sin (x, 0.0, 0);
-      *cosx = __kernel_cos (x, 0.0);
-    }
-  else if (ix>=0x7ff00000)
+  if (ix>=0x7ff00000)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;
     }
   else
     {
-      /* Argument reduction needed.  */
-      double y[2];
-      int n;
-
-      n = __ieee754_rem_pio2 (x, y);
-      switch (n & 3)
-	{
-	case 0:
-	  *sinx = __kernel_sin (y[0], y[1], 1);
-	  *cosx = __kernel_cos (y[0], y[1]);
-	  break;
-	case 1:
-	  *sinx = __kernel_cos (y[0], y[1]);
-	  *cosx = -__kernel_sin (y[0], y[1], 1);
-	  break;
-	case 2:
-	  *sinx = -__kernel_sin (y[0], y[1], 1);
-	  *cosx = -__kernel_cos (y[0], y[1]);
-	  break;
-	default:
-	  *sinx = -__kernel_cos (y[0], y[1]);
-	  *cosx = __kernel_sin (y[0], y[1], 1);
-	  break;
-	}
+      *sinx = sin (x);
+      *cosx = cos (x);
     }
 }
 weak_alias (__sincos, sincos)

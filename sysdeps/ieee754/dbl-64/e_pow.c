@@ -1,356 +1,328 @@
-/* @(#)e_pow.c 5.1 93/09/24 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ * IBM Accurate Mathematical Library
+ * Copyright (c) International Business Machines Corp., 2001
  *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
-   for performance improvement on pipelined processors.
-*/
+/***************************************************************************/
+/*  MODULE_NAME: upow.c                                                    */
+/*                                                                         */
+/*  FUNCTIONS: upow                                                        */
+/*             power1                                                      */
+/*             log2                                                        */
+/*             log1                                                        */
+/*             checkint                                                    */
+/* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
+/*               halfulp.c mpexp.c mplog.c slowexp.c slowpow.c mpa.c       */
+/*                          uexp.c  upow.c  			           */
+/*               root.tbl uexp.tbl upow.tbl                                */
+/* An ultimate power routine. Given two IEEE double machine numbers y,x    */
+/* it computes the correctly rounded (to nearest) value of x^y.            */
+/* Assumption: Machine arithmetic operations are performed in              */
+/* round to nearest mode of IEEE 754 standard.                             */
+/*                                                                         */
+/***************************************************************************/
+#include "endian.h"
+#include "upow.h"
+#include "dla.h"
+#include "mydefs.h"
+#include "MathLib.h"
+#include "upow.tbl"
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_pow.c,v 1.9 1995/05/12 04:57:32 jtc Exp $";
-#endif
 
-/* __ieee754_pow(x,y) return x**y
- *
- *		      n
- * Method:  Let x =  2   * (1+f)
- *	1. Compute and return log2(x) in two pieces:
- *		log2(x) = w1 + w2,
- *	   where w1 has 53-24 = 29 bit trailing zeros.
- *	2. Perform y*log2(x) = n+y' by simulating muti-precision
- *	   arithmetic, where |y'|<=0.5.
- *	3. Return x**y = 2**n*exp(y'*log2)
- *
- * Special cases:
- *	1.  (anything) ** 0  is 1
- *	2.  (anything) ** 1  is itself
- *	3.  (anything) ** NAN is NAN
- *	4.  NAN ** (anything except 0) is NAN
- *	5.  +-(|x| > 1) **  +INF is +INF
- *	6.  +-(|x| > 1) **  -INF is +0
- *	7.  +-(|x| < 1) **  +INF is +0
- *	8.  +-(|x| < 1) **  -INF is +INF
- *	9.  +-1         ** +-INF is NAN
- *	10. +0 ** (+anything except 0, NAN)               is +0
- *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0
- *	12. +0 ** (-anything except 0, NAN)               is +INF
- *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF
- *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )
- *	15. +INF ** (+anything except 0,NAN) is +INF
- *	16. +INF ** (-anything except 0,NAN) is +0
- *	17. -INF ** (anything)  = -0 ** (-anything)
- *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)
- *	19. (-anything except 0 and inf) ** (non-integer) is NAN
- *
- * Accuracy:
- *	pow(x,y) returns x**y nearly rounded. In particular
- *			pow(integer,integer)
- *	always returns the correct integer provided it is
- *	representable.
- *
- * Constants :
- * The hexadecimal values are the intended ones for the following
- * constants. The decimal values may be used, provided that the
- * compiler will convert from decimal to binary accurately enough
- * to produce the hexadecimal values shown.
- */
+double __exp1(double x, double xx, double error);
+static double log1(double x, double *delta, double *error);
+static double log2(double x, double *delta, double *error);
+double slowpow(double x, double y,double z);
+static double power1(double x, double y);
+static int checkint(double x);
 
-#include "math.h"
-#include "math_private.h"
-#define zero      C[0]
-#define one	  C[1]
-#define two	  C[2]
-#define two53	  C[3]
-#define huge	  C[4]
-#define tiny      C[5]
-#define L1        C[6]
-#define L2        C[7]
-#define L3        C[8]
-#define L4        C[9]
-#define L5        C[10]
-#define L6        C[11]
-#define P1        C[12]
-#define P2        C[13]
-#define P3        C[14]
-#define P4        C[15]
-#define P5        C[16]
-#define lg2       C[17]
-#define lg2_h     C[18]
-#define lg2_l     C[19]
-#define ovt       C[20]
-#define cp        C[21]
-#define cp_h      C[22]
-#define cp_l      C[23]
-#define ivln2     C[24]
-#define ivln2_h   C[25]
-#define ivln2_l   C[26]
+/***************************************************************************/
+/* An ultimate power routine. Given two IEEE double machine numbers y,x    */
+/* it computes the correctly rounded (to nearest) value of X^y.            */
+/***************************************************************************/
+double __ieee754_upow(double x, double y) {
+  double z,a,aa,error, t,a1,a2,y1,y2,gor=1.0;
+  mynumber u,v;
+  int k;
+  int4 qx,qy;
+  v.x=y;
+  u.x=x;
+  if (v.i[LOW_HALF] == 0) { /* of y */
+    qx = u.i[HIGH_HALF]&0x7fffffff;
+    /* Checking  if x is not too small to compute */
+    if (((qx==0x7ff00000)&&(u.i[LOW_HALF]!=0))||(qx>0x7ff00000)) return NaNQ.x;
+    if (y == 1.0) return x;
+    if (y == 2.0) return x*x;
+    if (y == -1.0) return (x!=0)?1.0/x:NaNQ.x;
+    if (y == 0) return ((x>0)&&(qx<0x7ff00000))?1.0:NaNQ.x;
+  }
+  /* else */
+  if(((u.i[HIGH_HALF]>0 && u.i[HIGH_HALF]<0x7ff00000)||        /* x>0 and not x->0 */
+       (u.i[HIGH_HALF]==0 && u.i[LOW_HALF]!=0))  &&
+                                      /*   2^-1023< x<= 2^-1023 * 0x1.0000ffffffff */
+      (v.i[HIGH_HALF]&0x7fffffff) < 0x4ff00000) {              /* if y<-1 or y>1   */
+    z = log1(x,&aa,&error);                                 /* x^y  =e^(y log (X)) */
+    t = y*134217729.0;
+    y1 = t - (t-y);
+    y2 = y - y1;
+    t = z*134217729.0;
+    a1 = t - (t-z);
+    a2 = (z - a1)+aa;
+    a = y1*a1;
+    aa = y2*a1 + y*a2;
+    a1 = a+aa;
+    a2 = (a-a1)+aa;
+    error = error*ABS(y);
+    t = __exp1(a1,a2,1.9e16*error);     /* return -10 or 0 if wasn't computed exactly */
+    return (t>0)?t:power1(x,y);
+  }
 
-#ifdef __STDC__
-static const double
-#else
-static double
-#endif
-bp[] = {1.0, 1.5,},
-dp_h[] = { 0.0, 5.84962487220764160156e-01,}, /* 0x3FE2B803, 0x40000000 */
-dp_l[] = { 0.0, 1.35003920212974897128e-08,}, /* 0x3E4CFDEB, 0x43CFD006 */
-C[] = {
-0.0,
-1.0,
-2.0,
-9007199254740992.0	,
-1.0e300,
-1.0e-300,
-5.99999999999994648725e-01 ,
-4.28571428578550184252e-01 ,
-3.33333329818377432918e-01 ,
-2.72728123808534006489e-01 ,
-2.30660745775561754067e-01 ,
-2.06975017800338417784e-01 ,
-1.66666666666666019037e-01 ,
--2.77777777770155933842e-03 ,
-6.61375632143793436117e-05 ,
--1.65339022054652515390e-06 ,
-4.13813679705723846039e-08 ,
-6.93147180559945286227e-01 ,
-6.93147182464599609375e-01 ,
--1.90465429995776804525e-09 ,
-8.0085662595372944372e-0017 ,
-9.61796693925975554329e-01 ,
-9.61796700954437255859e-01 ,
--7.02846165095275826516e-09 ,
-1.44269504088896338700e+00 ,
-1.44269502162933349609e+00 ,
-1.92596299112661746887e-08 };
+  if (x == 0) {
+    if (ABS(y) > 1.0e20) return (y>0)?0:NaNQ.x;
+    k = checkint(y);
+    if (k == 0 || y < 0) return NaNQ.x;
+    else return (k==1)?0:x;                                            /* return 0 */
+  }
+  /* if x<0 */
+  if (u.i[HIGH_HALF] < 0) {
+    k = checkint(y);
+    if (k==0) return NaNQ.x;                              /* y not integer and x<0 */
+    return (k==1)?upow(-x,y):-upow(-x,y);                      /* if y even or odd */
+  }
+  /* x>0 */
+  qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
+  qy = v.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
 
-#ifdef __STDC__
-	double __ieee754_pow(double x, double y)
-#else
-	double __ieee754_pow(x,y)
-	double x, y;
-#endif
-{
-	double z,ax,z_h,z_l,p_h,p_l;
-	double y1,t1,t2,r,s,t,u,v,w, t12,t14,r_1,r_2,r_3;
-	int32_t i,j,k,yisint,n;
-	int32_t hx,hy,ix,iy;
-	u_int32_t lx,ly;
+  if (qx > 0x7ff00000 || (qx == 0x7ff00000 && u.i[LOW_HALF] != 0)) return NaNQ.x;
+                                                                 /*  if 0<x<2^-0x7fe */
+  if (qy > 0x7ff00000 || (qy == 0x7ff00000 && v.i[LOW_HALF] != 0)) return NaNQ.x;
+                                                                 /*  if y<2^-0x7fe   */
 
-	EXTRACT_WORDS(hx,lx,x);
-	EXTRACT_WORDS(hy,ly,y);
-	ix = hx&0x7fffffff;  iy = hy&0x7fffffff;
+  if (qx == 0x7ff00000)                              /* x= 2^-0x3ff */
+    {if (y == 0) return NaNQ.x;
+    return (y>0)?x:0; }
 
-    /* y==zero: x**0 = 1 */
-	if((iy|ly)==0) return C[1];
+  if (qy > 0x45f00000 && qy < 0x7ff00000) {
+    if (x == 1.0) return 1.0;
+    if (y>0) return (x>1.0)?INF.x:0;
+    if (y<0) return (x<1.0)?INF.x:0;
+  }
 
-    /* x==+-1 */
-	if(x == 1.0) return C[1];
-	if(x == -1.0 && isinf(y)) return C[1];
+  if (x == 1.0) return NaNQ.x;
+  if (y>0) return (x>1.0)?INF.x:0;
+  if (y<0) return (x<1.0)?INF.x:0;
+  return 0;     /* unreachable, to make the compiler happy */
+}
 
-    /* +-NaN return x+y */
-	if(ix > 0x7ff00000 || ((ix==0x7ff00000)&&(lx!=0)) ||
-	   iy > 0x7ff00000 || ((iy==0x7ff00000)&&(ly!=0)))
-		return x+y;
+/**************************************************************************/
+/* Computing x^y using more accurate but more slow log routine            */
+/**************************************************************************/
+static double power1(double x, double y) {
+  double z,a,aa,error, t,a1,a2,y1,y2;
+  z = log2(x,&aa,&error);
+  t = y*134217729.0;
+  y1 = t - (t-y);
+  y2 = y - y1;
+  t = z*134217729.0;
+  a1 = t - (t-z);
+  a2 = z - a1;
+  a = y*z;
+  aa = ((y1*a1-a)+y1*a2+y2*a1)+y2*a2+aa*y;
+  a1 = a+aa;
+  a2 = (a-a1)+aa;
+  error = error*ABS(y);
+  t = __exp1(a1,a2,1.9e16*error);
+  return (t >= 0)?t:slowpow(x,y,z);
+}
 
-    /* determine if y is an odd int when x < 0
-     * yisint = 0	... y is not an integer
-     * yisint = 1	... y is an odd int
-     * yisint = 2	... y is an even int
-     */
-	yisint  = 0;
-	if(hx<0) {
-	    if(iy>=0x43400000) yisint = 2; /* even integer y */
-	    else if(iy>=0x3ff00000) {
-		k = (iy>>20)-0x3ff;	   /* exponent */
-		if(k>20) {
-		    j = ly>>(52-k);
-		    if((u_int32_t)(j<<(52-k))==ly) yisint = 2-(j&1);
-		} else if(ly==0) {
-		    j = iy>>(20-k);
-		    if((int32_t)(j<<(20-k))==iy) yisint = 2-(j&1);
-		}
-	    }
-	}
+/****************************************************************************/
+/* Computing log(x) (x is left argument). The result is the returned double */
+/* + the parameter delta.                                                   */
+/* The result is bounded by error (rightmost argument)                      */
+/****************************************************************************/
+static double log1(double x, double *delta, double *error) {
+  int i,j,m,n;
+  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,cor,add=0;
+  mynumber u,v;
 
-    /* special value of y */
-	if(ly==0) {
-	    if (iy==0x7ff00000) {	/* y is +-inf */
-	        if(((ix-0x3ff00000)|lx)==0)
-		    return  y - y;	/* inf**+-1 is NaN */
-	        else if (ix >= 0x3ff00000)/* (|x|>1)**+-inf = inf,0 */
-		    return (hy>=0)? y: C[0];
-	        else			/* (|x|<1)**-,+inf = inf,0 */
-		    return (hy<0)?-y: C[0];
-	    }
-	    if(iy==0x3ff00000) {	/* y is  +-1 */
-		if(hy<0) return C[1]/x; else return x;
-	    }
-	    if(hy==0x40000000) return x*x; /* y is  2 */
-	    if(hy==0x3fe00000) {	/* y is  0.5 */
-		if(hx>=0)	/* x >= +0 */
-		return __ieee754_sqrt(x);
-	    }
-	}
+  u.x = x;
+  m = u.i[HIGH_HALF];
+  *error = 0;
+  *delta = 0;
+  if (m < 0x00100000)             /*  1<x<2^-1007 */
+    { x = x*t52.x; add = -52.0; u.x = x; m = u.i[HIGH_HALF];}
 
-	ax   = fabs(x);
-    /* special value of x */
-	if(lx==0) {
-	    if(ix==0x7ff00000||ix==0||ix==0x3ff00000){
-		z = ax;			/*x is +-0,+-inf,+-1*/
-		if(hy<0) z = C[1]/z;	/* z = (1/|x|) */
-		if(hx<0) {
-		    if(((ix-0x3ff00000)|yisint)==0) {
-			z = (z-z)/(z-z); /* (-1)**non-int is NaN */
-		    } else if(yisint==1)
-			z = -z;		/* (x<0)**odd = -(|x|**odd) */
-		}
-		return z;
-	    }
-	}
+  if ((m&0x000fffff) < 0x0006a09e)
+    {u.i[HIGH_HALF] = (m&0x000fffff)|0x3ff00000; two52.i[LOW_HALF]=(m>>20); }
+  else
+    {u.i[HIGH_HALF] = (m&0x000fffff)|0x3fe00000; two52.i[LOW_HALF]=(m>>20)+1; }
 
-    /* (x<0)**(non-int) is NaN */
-	if(((((u_int32_t)hx>>31)-1)|yisint)==0) return (x-x)/(x-x);
+  v.x = u.x + bigu.x;
+  uu = v.x - bigu.x;
+  i = (v.i[LOW_HALF]&0x000003ff)<<2;
+  if (two52.i[LOW_HALF] == 1023)         /* nx = 0              */
+  {
+      if (i > 1192 && i < 1208)          /* |x-1| < 1.5*2**-10  */
+      {
+	  t = x - 1.0;
+	  t1 = (t+5.0e6)-5.0e6;
+	  t2 = t-t1;
+	  e1 = t - 0.5*t1*t1;
+	  e2 = t*t*t*(r3+t*(r4+t*(r5+t*(r6+t*(r7+t*r8)))))-0.5*t2*(t+t1);
+	  res = e1+e2;
+	  *error = 1.0e-21*ABS(t);
+	  *delta = (e1-res)+e2;
+	  return res;
+      }                  /* |x-1| < 1.5*2**-10  */
+      else
+      {
+	  v.x = u.x*(ui.x[i]+ui.x[i+1])+bigv.x;
+	  vv = v.x-bigv.x;
+	  j = v.i[LOW_HALF]&0x0007ffff;
+	  j = j+j+j;
+	  eps = u.x - uu*vv;
+	  e1 = eps*ui.x[i];
+	  e2 = eps*(ui.x[i+1]+vj.x[j]*(ui.x[i]+ui.x[i+1]));
+	  e = e1+e2;
+	  e2 =  ((e1-e)+e2);
+	  t=ui.x[i+2]+vj.x[j+1];
+	  t1 = t+e;
+	  t2 = (((t-t1)+e)+(ui.x[i+3]+vj.x[j+2]))+e2+e*e*(p2+e*(p3+e*p4));
+	  res=t1+t2;
+	  *error = 1.0e-24;
+	  *delta = (t1-res)+t2;
+	  return res;
+      }
+  }   /* nx = 0 */
+  else                            /* nx != 0   */
+  {
+      eps = u.x - uu;
+      nx = (two52.x - two52e.x)+add;
+      e1 = eps*ui.x[i];
+      e2 = eps*ui.x[i+1];
+      e=e1+e2;
+      e2 = (e1-e)+e2;
+      t=nx*ln2a.x+ui.x[i+2];
+      t1=t+e;
+      t2=(((t-t1)+e)+nx*ln2b.x+ui.x[i+3]+e2)+e*e*(q2+e*(q3+e*(q4+e*(q5+e*q6))));
+      res = t1+t2;
+      *error = 1.0e-21;
+      *delta = (t1-res)+t2;
+      return res;
+  }                                /* nx != 0   */
+}
 
-    /* |y| is huge */
-	if(iy>0x41e00000) { /* if |y| > 2**31 */
-	    if(iy>0x43f00000){	/* if |y| > 2**64, must o/uflow */
-		if(ix<=0x3fefffff) return (hy<0)? C[4]*C[4]:C[5]*C[5];
-		if(ix>=0x3ff00000) return (hy>0)? C[4]*C[4]:C[5]*C[5];
-	    }
-	/* over/underflow if x is not close to one */
-	    if(ix<0x3fefffff) return (hy<0)? C[4]*C[4]:C[5]*C[5];
-	    if(ix>0x3ff00000) return (hy>0)? C[4]*C[4]:C[5]*C[5];
-	/* now |1-x| is tiny <= 2**-20, suffice to compute
-	   log(x) by x-x^2/2+x^3/3-x^4/4 */
-	    t = x-1;		/* t has 20 trailing zeros */
-	    w = (t*t)*(0.5-t*(0.3333333333333333333333-t*0.25));
-	    u = C[25]*t;	/* ivln2_h has 21 sig. bits */
-	    v = t*C[26]-w*C[24];
-	    t1 = u+v;
-	    SET_LOW_WORD(t1,0);
-	    t2 = v-(t1-u);
-	} else {
-	    double s2,s_h,s_l,t_h,t_l,s22,s24,s26,r1,r2,r3;
-	    n = 0;
-	/* take care subnormal number */
-	    if(ix<0x00100000)
-		{ax *= C[3]; n -= 53; GET_HIGH_WORD(ix,ax); }
-	    n  += ((ix)>>20)-0x3ff;
-	    j  = ix&0x000fffff;
-	/* determine interval */
-	    ix = j|0x3ff00000;		/* normalize ix */
-	    if(j<=0x3988E) k=0;		/* |x|<sqrt(3/2) */
-	    else if(j<0xBB67A) k=1;	/* |x|<sqrt(3)   */
-	    else {k=0;n+=1;ix -= 0x00100000;}
-	    SET_HIGH_WORD(ax,ix);
+/****************************************************************************/
+/* More slow but more accurate routine of log                               */
+/* Computing log(x)(x is left argument).The result is return double + delta.*/
+/* The result is bounded by error (right argument)                           */
+/****************************************************************************/
+static double log2(double x, double *delta, double *error) {
+  int i,j,m,n;
+  double uu,vv,eps,nx,e,e1,e2,t,t1,t2,res,cor,add=0;
+  double ou1,ou2,lu1,lu2,ov,lv1,lv2,a,a1,a2;
+  double y,yy,z,zz,j1,j2,j3,j4,j5,j6,j7,j8;
+  mynumber u,v;
 
-	/* compute s = s_h+s_l = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
-	    u = ax-bp[k];		/* bp[0]=1.0, bp[1]=1.5 */
-	    v = C[1]/(ax+bp[k]);
-	    s = u*v;
-	    s_h = s;
-	    SET_LOW_WORD(s_h,0);
-	/* t_h=ax+bp[k] High */
-	    t_h = C[0];
-	    SET_HIGH_WORD(t_h,((ix>>1)|0x20000000)+0x00080000+(k<<18));
-	    t_l = ax - (t_h-bp[k]);
-	    s_l = v*((u-s_h*t_h)-s_h*t_l);
-	/* compute log(ax) */
-	    s2 = s*s;
-#ifdef DO_NOT_USE_THIS
-	    r = s2*s2*(L1+s2*(L2+s2*(L3+s2*(L4+s2*(L5+s2*L6)))));
-#else
-	    r1 = C[10]+s2*C[11]; s22=s2*s2;
-	    r2 = C[8]+s2*C[9]; s24=s22*s22;
-	    r3 = C[6]+s2*C[7]; s26=s24*s22;
-            r = r3*s22 + r2*s24 + r1*s26;
-#endif
-	    r += s_l*(s_h+s);
-	    s2  = s_h*s_h;
-	    t_h = 3.0+s2+r;
-	    SET_LOW_WORD(t_h,0);
-	    t_l = r-((t_h-3.0)-s2);
-	/* u+v = s*(1+...) */
-	    u = s_h*t_h;
-	    v = s_l*t_h+t_l*s;
-	/* 2/(3log2)*(s+...) */
-	    p_h = u+v;
-	    SET_LOW_WORD(p_h,0);
-	    p_l = v-(p_h-u);
-	    z_h = C[22]*p_h;		/* cp_h+cp_l = 2/(3*log2) */
-	    z_l = C[23]*p_h+p_l*C[21]+dp_l[k];
-	/* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
-	    t = (double)n;
-	    t1 = (((z_h+z_l)+dp_h[k])+t);
-	    SET_LOW_WORD(t1,0);
-	    t2 = z_l-(((t1-t)-dp_h[k])-z_h);
-	}
+  u.x = x;
+  m = u.i[HIGH_HALF];
+  *error = 0;
+  *delta = 0;
+  add=0;
+  if (m<0x00100000) {  /* x < 2^-1022 */
+    x = x*t52.x;  add = -52.0; u.x = x; m = u.i[HIGH_HALF]; }
 
-	s = C[1]; /* s (sign of result -ve**odd) = -1 else = 1 */
-	if(((((u_int32_t)hx>>31)-1)|(yisint-1))==0)
-	    s = -C[1];/* (-ve)**(odd int) */
+  if ((m&0x000fffff) < 0x0006a09e)
+    {u.i[HIGH_HALF] = (m&0x000fffff)|0x3ff00000; two52.i[LOW_HALF]=(m>>20); }
+  else
+    {u.i[HIGH_HALF] = (m&0x000fffff)|0x3fe00000; two52.i[LOW_HALF]=(m>>20)+1; }
 
-    /* split up y into y1+y2 and compute (y1+y2)*(t1+t2) */
-	y1  = y;
-	SET_LOW_WORD(y1,0);
-	p_l = (y-y1)*t1+y*t2;
-	p_h = y1*t1;
-	z = p_l+p_h;
-	EXTRACT_WORDS(j,i,z);
-	if (j>=0x40900000) {				/* z >= 1024 */
-	    if(((j-0x40900000)|i)!=0)			/* if z > 1024 */
-		return s*C[4]*C[4];			/* overflow */
-	    else {
-		if(p_l+C[20]>z-p_h) return s*C[4]*C[4];	/* overflow */
-	    }
-	} else if((j&0x7fffffff)>=0x4090cc00 ) {	/* z <= -1075 */
-	    if(((j-0xc090cc00)|i)!=0) 		/* z < -1075 */
-		return s*C[5]*C[5];		/* underflow */
-	    else {
-		if(p_l<=z-p_h) return s*C[5]*C[5];	/* underflow */
-	    }
-	}
-    /*
-     * compute 2**(p_h+p_l)
-     */
-	i = j&0x7fffffff;
-	k = (i>>20)-0x3ff;
-	n = 0;
-	if(i>0x3fe00000) {		/* if |z| > 0.5, set n = [z+0.5] */
-	    n = j+(0x00100000>>(k+1));
-	    k = ((n&0x7fffffff)>>20)-0x3ff;	/* new k for n */
-	    t = C[0];
-	    SET_HIGH_WORD(t,n&~(0x000fffff>>k));
-	    n = ((n&0x000fffff)|0x00100000)>>(20-k);
-	    if(j<0) n = -n;
-	    p_h -= t;
-	}
-	t = p_l+p_h;
-	SET_LOW_WORD(t,0);
-	u = t*C[18];
-	v = (p_l-(t-p_h))*C[17]+t*C[19];
-	z = u+v;
-	w = v-(z-u);
-	t  = z*z;
-#ifdef DO_NOT_USE_THIS
-	t1  = z - t*(C[12]+t*(C[13]+t*(C[14]+t*(C[15]+t*C[16]))));
-#else
-	r_1 = C[15]+t*C[16]; t12 = t*t;
-	r_2 = C[13]+t*C[14]; t14 = t12*t12;
-	r_3 = t*C[12];
-	t1 = z - r_3 - t12*r_2 - t14*r_1;
-#endif
-	r  = (z*t1)/(t1-C[2])-(w+z*w);
-	z  = C[1]-(r-z);
-	GET_HIGH_WORD(j,z);
-	j += (n<<20);
-	if((j>>20)<=0) z = __scalbn(z,n);	/* subnormal output */
-	else SET_HIGH_WORD(z,j);
-	return s*z;
+  v.x = u.x + bigu.x;
+  uu = v.x - bigu.x;
+  i = (v.i[LOW_HALF]&0x000003ff)<<2;
+  /*------------------------------------- |x-1| < 2**-11-------------------------------  */
+  if ((two52.i[LOW_HALF] == 1023)  && (i == 1200))
+  {
+      t = x - 1.0;
+      EMULV(t,s3,y,yy,j1,j2,j3,j4,j5);
+      ADD2(-0.5,0,y,yy,z,zz,j1,j2);
+      MUL2(t,0,z,zz,y,yy,j1,j2,j3,j4,j5,j6,j7,j8);
+      MUL2(t,0,y,yy,z,zz,j1,j2,j3,j4,j5,j6,j7,j8);
+
+      e1 = t+z;
+      e2 = (((t-e1)+z)+zz)+t*t*t*(ss3+t*(s4+t*(s5+t*(s6+t*(s7+t*s8)))));
+      res = e1+e2;
+      *error = 1.0e-25*ABS(t);
+      *delta = (e1-res)+e2;
+      return res;
+  }
+  /*----------------------------- |x-1| > 2**-11  --------------------------  */
+  else
+  {          /*Computing log(x) according to log table                        */
+      nx = (two52.x - two52e.x)+add;
+      ou1 = ui.x[i];
+      ou2 = ui.x[i+1];
+      lu1 = ui.x[i+2];
+      lu2 = ui.x[i+3];
+      v.x = u.x*(ou1+ou2)+bigv.x;
+      vv = v.x-bigv.x;
+      j = v.i[LOW_HALF]&0x0007ffff;
+      j = j+j+j;
+      eps = u.x - uu*vv;
+      ov  = vj.x[j];
+      lv1 = vj.x[j+1];
+      lv2 = vj.x[j+2];
+      a = (ou1+ou2)*(1.0+ov);
+      a1 = (a+1.0e10)-1.0e10;
+      a2 = a*(1.0-a1*uu*vv);
+      e1 = eps*a1;
+      e2 = eps*a2;
+      e = e1+e2;
+      e2 = (e1-e)+e2;
+      t=nx*ln2a.x+lu1+lv1;
+      t1 = t+e;
+      t2 = (((t-t1)+e)+(lu2+lv2+nx*ln2b.x+e2))+e*e*(p2+e*(p3+e*p4));
+      res=t1+t2;
+      *error = 1.0e-27;
+      *delta = (t1-res)+t2;
+      return res;
+  }
+}
+
+/**********************************************************************/
+/* Routine receives a double x and checks if it is an integer. If not */
+/* it returns 0, else it returns 1 if even or -1 if odd.              */
+/**********************************************************************/
+static int checkint(double x) {
+  union {int4 i[2]; double x;} u;
+  int k,l,m,n;
+  u.x = x;
+  m = u.i[HIGH_HALF]&0x7fffffff;    /* no sign */
+  if (m >= 0x7ff00000) return 0;    /*  x is +/-inf or NaN  */
+  if (m >= 0x43400000) return 1;    /*  |x| >= 2**53   */
+  if (m < 0x40000000) return 0;     /* |x| < 2,  can not be 0 or 1  */
+  n = u.i[LOW_HALF];
+  k = (m>>20)-1023;                 /*  1 <= k <= 52   */
+  if (k == 52) return (n&1)? -1:1;  /* odd or even*/
+  if (k>20) {
+    if (n<<(k-20)) return 0;        /* if not integer */
+    return (n<<(k-21))?-1:1;
+  }
+  if (n) return 0;                  /*if  not integer*/
+  if (k == 20) return (m&1)? -1:1;
+  if (m<<(k+12)) return 0;
+  return (m<<(k+11))?-1:1;
 }

@@ -199,14 +199,14 @@ static double zero=  0.00000000000000000000e+00;
             }
         }
 	switch (n) {
-	    case 0:   y =  __kernel_sin(pi*y,zero,0); break;
+	    case 0:   y =  sin(pi*y); break;
 	    case 1:
-	    case 2:   y =  __kernel_cos(pi*(0.5-y),zero); break;
+	    case 2:   y =  cos(pi*(0.5-y)); break;
 	    case 3:
-	    case 4:   y =  __kernel_sin(pi*(one-y),zero,0); break;
+	    case 4:   y =  sin(pi*(one-y)); break;
 	    case 5:
-	    case 6:   y = -__kernel_cos(pi*(y-1.5),zero); break;
-	    default:  y =  __kernel_sin(pi*(y-2.0),zero,0); break;
+	    case 6:   y = -cos(pi*(y-1.5)); break;
+	    default:  y =  sin(pi*(y-2.0)); break;
 	    }
 	return -y;
 }

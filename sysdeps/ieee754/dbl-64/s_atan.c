@@ -1,163 +1,221 @@
-/* @(#)s_atan.c 5.1 93/09/24 */
 /*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
+ * IBM Accurate Mathematical Library
+ * Copyright (c) International Business Machines Corp., 2001
  *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-/* Modified by Naohiko Shimizu/Tokai University, Japan 1997/08/25,
-   for performance improvement on pipelined processors.
-*/
+/************************************************************************/
+/*  MODULE_NAME: atnat.c                                                */
+/*                                                                      */
+/*  FUNCTIONS:  uatan                                                   */
+/*              atanMp                                                  */
+/*              signArctan                                              */
+/*                                                                      */
+/*                                                                      */
+/*  FILES NEEDED: dla.h endian.h mpa.h mydefs.h atnat.h                 */
+/*                mpatan.c mpatan2.c mpsqrt.c                           */
+/*                uatan.tbl                                             */
+/*                                                                      */
+/* An ultimate atan() routine. Given an IEEE double machine number x    */
+/* it computes the correctly rounded (to nearest) value of atan(x).     */
+/*                                                                      */
+/* Assumption: Machine arithmetic operations are performed in           */
+/* round to nearest mode of IEEE 754 standard.                          */
+/*                                                                      */
+/************************************************************************/
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_atan.c,v 1.8 1995/05/10 20:46:45 jtc Exp $";
-#endif
+#include "dla.h"
+#include "mpa.h"
+#include "MathLib.h"
+#include "uatan.tbl"
+#include "atnat.h"
 
-/* atan(x)
- * Method
- *   1. Reduce x to positive by atan(x) = -atan(-x).
- *   2. According to the integer k=4t+0.25 chopped, t=x, the argument
- *      is further reduced to one of the following intervals and the
- *      arctangent of t is evaluated by the corresponding formula:
- *
- *      [0,7/16]      atan(x) = t-t^3*(a1+t^2*(a2+...(a10+t^2*a11)...)
- *      [7/16,11/16]  atan(x) = atan(1/2) + atan( (t-0.5)/(1+t/2) )
- *      [11/16.19/16] atan(x) = atan( 1 ) + atan( (t-1)/(1+t) )
- *      [19/16,39/16] atan(x) = atan(3/2) + atan( (t-1.5)/(1+1.5t) )
- *      [39/16,INF]   atan(x) = atan(INF) + atan( -1/t )
- *
- * Constants:
- * The hexadecimal values are the intended ones for the following
- * constants. The decimal values may be used, provided that the
- * compiler will convert from decimal to binary accurately enough
- * to produce the hexadecimal values shown.
- */
+void __mpatan(mp_no *,mp_no *,int);          /* see definition in mpatan.c */
+static double atanMp(double,const int[]);
+double __signArctan(double,double);
+/* An ultimate atan() routine. Given an IEEE double machine number x,    */
+/* routine computes the correctly rounded (to nearest) value of atan(x). */
+double atan(double x) {
 
-#include "math.h"
-#include "math_private.h"
 
-#ifdef __STDC__
-static const double atanhi[] = {
-#else
-static double atanhi[] = {
-#endif
-  4.63647609000806093515e-01, /* atan(0.5)hi 0x3FDDAC67, 0x0561BB4F */
-  7.85398163397448278999e-01, /* atan(1.0)hi 0x3FE921FB, 0x54442D18 */
-  9.82793723247329054082e-01, /* atan(1.5)hi 0x3FEF730B, 0xD281F69B */
-  1.57079632679489655800e+00, /* atan(inf)hi 0x3FF921FB, 0x54442D18 */
-};
+  double cor,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,u,u2,u3,
+         v,vv,w,ww,y,yy,y1,y2,z,zz;
+  int i,ux,dx,p;
+  static const int pr[M]={6,8,10,32};
+  number num;
 
-#ifdef __STDC__
-static const double atanlo[] = {
-#else
-static double atanlo[] = {
-#endif
-  2.26987774529616870924e-17, /* atan(0.5)lo 0x3C7A2B7F, 0x222F65E2 */
-  3.06161699786838301793e-17, /* atan(1.0)lo 0x3C81A626, 0x33145C07 */
-  1.39033110312309984516e-17, /* atan(1.5)lo 0x3C700788, 0x7AF0CBBD */
-  6.12323399573676603587e-17, /* atan(inf)lo 0x3C91A626, 0x33145C07 */
-};
+  mp_no mpt1,mpx,mpy,mpy1,mpy2,mperr;
 
-#ifdef __STDC__
-static const double aT[] = {
-#else
-static double aT[] = {
-#endif
-  3.33333333333329318027e-01, /* 0x3FD55555, 0x5555550D */
- -1.99999999998764832476e-01, /* 0xBFC99999, 0x9998EBC4 */
-  1.42857142725034663711e-01, /* 0x3FC24924, 0x920083FF */
- -1.11111104054623557880e-01, /* 0xBFBC71C6, 0xFE231671 */
-  9.09088713343650656196e-02, /* 0x3FB745CD, 0xC54C206E */
- -7.69187620504482999495e-02, /* 0xBFB3B0F2, 0xAF749A6D */
-  6.66107313738753120669e-02, /* 0x3FB10D66, 0xA0D03D51 */
- -5.83357013379057348645e-02, /* 0xBFADDE2D, 0x52DEFD9A */
-  4.97687799461593236017e-02, /* 0x3FA97B4B, 0x24760DEB */
- -3.65315727442169155270e-02, /* 0xBFA2B444, 0x2C6A6C2F */
-  1.62858201153657823623e-02, /* 0x3F90AD3A, 0xE322DA11 */
-};
+  num.d = x;  ux = num.i[HIGH_HALF];  dx = num.i[LOW_HALF];
 
-#ifdef __STDC__
-	static const double
-#else
-	static double
-#endif
-one   = 1.0,
-huge   = 1.0e300;
+  /* x=NaN */
+  if (((ux&0x7ff00000)==0x7ff00000) && (((ux&0x000fffff)|dx)!=0x00000000))
+    return x+x;
 
-#ifdef __STDC__
-	double __atan(double x)
-#else
-	double __atan(x)
-	double x;
-#endif
-{
-	double w,s1,z,s,w2,w4,s11,s12,s13,s21,s22,s23;
-	int32_t ix,hx,id;
+  /* Regular values of x, including denormals +-0 and +-INF */
+  u = (x<ZERO) ? -x : x;
+  if (u<C) {
+    if (u<B) {
+      if (u<A) {                                           /* u < A */
+         return x; }
+      else {                                               /* A <= u < B */
+        v=x*x;  yy=x*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
+        if ((y=x+(yy-U1*x)) == x+(yy+U1*x))  return y;
 
-	GET_HIGH_WORD(hx,x);
-	ix = hx&0x7fffffff;
-	if(ix>=0x44100000) {	/* if |x| >= 2^66 */
-	    u_int32_t low;
-	    GET_LOW_WORD(low,x);
-	    if(ix>0x7ff00000||
-		(ix==0x7ff00000&&(low!=0)))
-		return x+x;		/* NaN */
-	    if(hx>0) return  atanhi[3]+atanlo[3];
-	    else     return -atanhi[3]-atanlo[3];
-	} if (ix < 0x3fdc0000) {	/* |x| < 0.4375 */
-	    if (ix < 0x3e200000) {	/* |x| < 2^-29 */
-		if(huge+x>one) return x;	/* raise inexact */
-	    }
-	    id = -1;
-	} else {
-	x = fabs(x);
-	if (ix < 0x3ff30000) {		/* |x| < 1.1875 */
-	    if (ix < 0x3fe60000) {	/* 7/16 <=|x|<11/16 */
-		id = 0; x = (2.0*x-one)/(2.0+x);
-	    } else {			/* 11/16<=|x|< 19/16 */
-		id = 1; x  = (x-one)/(x+one);
-	    }
-	} else {
-	    if (ix < 0x40038000) {	/* |x| < 2.4375 */
-		id = 2; x  = (x-1.5)/(one+1.5*x);
-	    } else {			/* 2.4375 <= |x| < 2^66 */
-		id = 3; x  = -1.0/x;
-	    }
-	}}
-    /* end of argument reduction */
-	z = x*x;
-	w = z*z;
-    /* break sum from i=0 to 10 aT[i]z**(i+1) into odd and even poly */
-#ifdef DO_NOT_USE_THIS
-	s1 = z*(aT[0]+w*(aT[2]+w*(aT[4]+w*(aT[6]+w*(aT[8]+w*aT[10])))));
-	s2 = w*(aT[1]+w*(aT[3]+w*(aT[5]+w*(aT[7]+w*aT[9]))));
-	if (id<0) return x - x*(s1+s2);
-	else {
-	    z = atanhi[id] - ((x*(s1+s2) - atanlo[id]) - x);
-	    return (hx<0)? -z:z;
-	}
-#else
-	s11 = aT[8]+w*aT[10]; w2=w*w;
-	s12 = aT[4]+w*aT[6]; w4=w2*w2;
-	s13 = aT[0]+w*aT[2];
-	s21 = aT[7]+w*aT[9];
-	s22 = aT[3]+w*aT[5];
-	s23 = w*aT[1];
-	s1 = s13 + w2*s12 + w4*s11;
-	s = s23 + w2*s22 + w4*s21 + z*s1;
-	if (id<0) return x - x*(s);
-	else {
-	    z = atanhi[id] - ((x*(s) - atanlo[id]) - x);
-	    return (hx<0)? -z:z;
-	}
-#endif
+        EMULV(x,x,v,vv,t1,t2,t3,t4,t5)                       /* v+vv=x^2 */
+        s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
+        ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        MUL2(x,ZERO,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(x,ZERO,s2,ss2,s1,ss1,t1,t2)
+        if ((y=s1+(ss1-U5*s1)) == s1+(ss1+U5*s1))  return y;
+
+        return atanMp(x,pr);
+      } }
+    else {  /* B <= u < C */
+      i=(TWO52+TWO8*u)-TWO52;  i-=16;
+      z=u-cij[i][0].d;
+      yy=z*(cij[i][2].d+z*(cij[i][3].d+z*(cij[i][4].d+
+                        z*(cij[i][5].d+z* cij[i][6].d))));
+      t1=cij[i][1].d;
+      if (i<112) {
+        if (i<48)  u2=U21;    /* u < 1/4        */
+        else       u2=U22; }  /* 1/4 <= u < 1/2 */
+      else {
+        if (i<176) u2=U23;    /* 1/2 <= u < 3/4 */
+        else       u2=U24; }  /* 3/4 <= u <= 1  */
+      if ((y=t1+(yy-u2*t1)) == t1+(yy+u2*t1))  return __signArctan(x,y);
+
+      z=u-hij[i][0].d;
+      s1=z*(hij[i][11].d+z*(hij[i][12].d+z*(hij[i][13].d+
+         z*(hij[i][14].d+z* hij[i][15].d))));
+      ADD2(hij[i][9].d,hij[i][10].d,s1,ZERO,s2,ss2,t1,t2)
+      MUL2(z,ZERO,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][7].d,hij[i][8].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,ZERO,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][5].d,hij[i][6].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,ZERO,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][3].d,hij[i][4].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,ZERO,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][1].d,hij[i][2].d,s1,ss1,s2,ss2,t1,t2)
+      if ((y=s2+(ss2-U6*s2)) == s2+(ss2+U6*s2))  return __signArctan(x,y);
+
+      return atanMp(x,pr);
+    }
+  }
+  else {
+    if (u<D) { /* C <= u < D */
+      w=ONE/u;
+      EMULV(w,u,t1,t2,t3,t4,t5,t6,t7)
+      ww=w*((ONE-t1)-t2);
+      i=(TWO52+TWO8*w)-TWO52;  i-=16;
+      z=(w-cij[i][0].d)+ww;
+      yy=HPI1-z*(cij[i][2].d+z*(cij[i][3].d+z*(cij[i][4].d+
+                             z*(cij[i][5].d+z* cij[i][6].d))));
+      t1=HPI-cij[i][1].d;
+      if (i<112)  u3=U31;  /* w <  1/2 */
+      else        u3=U32;  /* w >= 1/2 */
+      if ((y=t1+(yy-u3)) == t1+(yy+u3))  return __signArctan(x,y);
+
+      DIV2(ONE,ZERO,u,ZERO,w,ww,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+      t1=w-hij[i][0].d;
+      EADD(t1,ww,z,zz)
+      s1=z*(hij[i][11].d+z*(hij[i][12].d+z*(hij[i][13].d+
+         z*(hij[i][14].d+z* hij[i][15].d))));
+      ADD2(hij[i][9].d,hij[i][10].d,s1,ZERO,s2,ss2,t1,t2)
+      MUL2(z,zz,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][7].d,hij[i][8].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,zz,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][5].d,hij[i][6].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,zz,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][3].d,hij[i][4].d,s1,ss1,s2,ss2,t1,t2)
+      MUL2(z,zz,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+      ADD2(hij[i][1].d,hij[i][2].d,s1,ss1,s2,ss2,t1,t2)
+      SUB2(HPI,HPI1,s2,ss2,s1,ss1,t1,t2)
+      if ((y=s1+(ss1-U7)) == s1+(ss1+U7))  return __signArctan(x,y);
+
+    return atanMp(x,pr);
+    }
+    else {
+      if (u<E) { /* D <= u < E */
+        w=ONE/u;   v=w*w;
+        EMULV(w,u,t1,t2,t3,t4,t5,t6,t7)
+        yy=w*v*(d3.d+v*(d5.d+v*(d7.d+v*(d9.d+v*(d11.d+v*d13.d)))));
+        ww=w*((ONE-t1)-t2);
+        ESUB(HPI,w,t3,cor)
+        yy=((HPI1+cor)-ww)-yy;
+        if ((y=t3+(yy-U4)) == t3+(yy+U4))  return __signArctan(x,y);
+
+        DIV2(ONE,ZERO,u,ZERO,w,ww,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10)
+        MUL2(w,ww,w,ww,v,vv,t1,t2,t3,t4,t5,t6,t7,t8)
+        s1=v*(f11.d+v*(f13.d+v*(f15.d+v*(f17.d+v*f19.d))));
+        ADD2(f9.d,ff9.d,s1,ZERO,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f7.d,ff7.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f5.d,ff5.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(f3.d,ff3.d,s1,ss1,s2,ss2,t1,t2)
+        MUL2(v,vv,s2,ss2,s1,ss1,t1,t2,t3,t4,t5,t6,t7,t8)
+        MUL2(w,ww,s1,ss1,s2,ss2,t1,t2,t3,t4,t5,t6,t7,t8)
+        ADD2(w,ww,s2,ss2,s1,ss1,t1,t2)
+        SUB2(HPI,HPI1,s1,ss1,s2,ss2,t1,t2)
+        if ((y=s2+(ss2-U8)) == s2+(ss2+U8))  return __signArctan(x,y);
+
+      return atanMp(x,pr);
+      }
+      else {
+        /* u >= E */
+        if (x>0) return  HPI;
+        else     return MHPI; }
+    }
+  }
+
 }
-weak_alias (__atan, atan)
+
+
+  /* Fix the sign of y and return */
+double  __signArctan(double x,double y){
+
+    if (x<ZERO) return -y;
+    else        return  y;
+}
+
+ /* Final stages. Compute atan(x) by multiple precision arithmetic */
+static double atanMp(double x,const int pr[]){
+  mp_no mpx,mpy,mpy2,mperr,mpt1,mpy1;
+  double y1,y2;
+  int i,p;
+
+for (i=0; i<M; i++) {
+    p = pr[i];
+    dbl_mp(x,&mpx,p);          __mpatan(&mpx,&mpy,p);
+    dbl_mp(u9[i].d,&mpt1,p);   mul(&mpy,&mpt1,&mperr,p);
+    add(&mpy,&mperr,&mpy1,p);  sub(&mpy,&mperr,&mpy2,p);
+    mp_dbl(&mpy1,&y1,p);       mp_dbl(&mpy2,&y2,p);
+    if (y1==y2)   return y1;
+  }
+  return y1; /*if unpossible to do exact computing */
+}
+
 #ifdef NO_LONG_DOUBLE
-strong_alias (__atan, __atanl)
-weak_alias (__atan, atanl)
+weak_alias (atan, atanl)
 #endif

@@ -1,163 +1,243 @@
-/* Double-precision floating point e^x.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-   Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
+/*
+ * IBM Accurate Mathematical Library
+ * Copyright (c) International Business Machines Corp., 2001
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+/***************************************************************************/
+/*  MODULE_NAME:uexp.c                                                     */
+/*                                                                         */
+/*  FUNCTION:uexp                                                          */
+/*           exp1                                                          */
+/*                                                                         */
+/* FILES NEEDED:dla.h endian.h mpa.h mydefs.h uexp.h                       */
+/*              mpa.c mpexp.x slowexp.c                                    */
+/*                                                                         */
+/* An ultimate exp routine. Given an IEEE double machine number x          */
+/* it computes the correctly rounded (to nearest) value of e^x             */
+/* Assumption: Machine arithmetic operations are performed in              */
+/* round to nearest mode of IEEE 754 standard.                             */
+/*                                                                         */
+/***************************************************************************/
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+#include "endian.h"
+#include  "uexp.h"
+#include "mydefs.h"
+#include "MathLib.h"
+#include "uexp.tbl"
+double __slowexp(double);
 
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+/***************************************************************************/
+/* An ultimate exp routine. Given an IEEE double machine number x          */
+/* it computes the correctly rounded (to nearest) value of e^x             */
+/***************************************************************************/
+double __ieee754_exp(double x) {
+  double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
+  mynumber junk1, junk2, binexp  = {0,0};
+  int4 k,i,j,m,n,ex;
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+  junk1.x = x;
+  m = junk1.i[HIGH_HALF];
+  n = m&hugeint;
 
-/* How this works:
-   The basic design here is from
-   Shmuel Gal and Boris Bachelis, "An Accurate Elementary Mathematical
-   Library for the IEEE Floating Point Standard", ACM Trans. Math. Soft.,
-   17 (1), March 1991, pp. 26-45.
+  if (n > smallint && n < bigint) {
 
-   The input value, x, is written as
+    y = x*log2e.x + three51.x;
+    bexp = y - three51.x;      /*  multiply the result by 2**bexp        */
 
-   x = n * ln(2)_0 + t/512 + delta[t] + x + n * ln(2)_1
+    junk1.x = y;
 
-   where:
-   - n is an integer, 1024 >= n >= -1075;
-   - ln(2)_0 is the first 43 bits of ln(2), and ln(2)_1 is the remainder, so
-     that |ln(2)_1| < 2^-32;
-   - t is an integer, 177 >= t >= -177
-   - delta is based on a table entry, delta[t] < 2^-28
-   - x is whatever is left, |x| < 2^-10
+    eps = bexp*ln_two2.x;      /* x = bexp*ln(2) + t - eps               */
+    t = x - bexp*ln_two1.x;
 
-   Then e^x is approximated as
+    y = t + three33.x;
+    base = y - three33.x;      /* t rounded to a multiple of 2**-18      */
+    junk2.x = y;
+    del = (t - base) - eps;    /*  x = bexp*ln(2) + base + del           */
+    eps = del + del*del*(p3.x*del + p2.x);
 
-   e^x = 2^n_1 ( 2^n_0 e^(t/512 + delta[t])
-               + ( 2^n_0 e^(t/512 + delta[t])
-                   * ( p(x + n * ln(2)_1)
-                       - n*ln(2)_1
-                       - n*ln(2)_1 * p(x + n * ln(2)_1) ) ) )
+    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+1023)<<20;
 
-   where
-   - p(x) is a polynomial approximating e(x)-1;
-   - e^(t/512 + delta[t]) is obtained from a table;
-   - n_1 + n_0 = n, so that |n_0| < DBL_MIN_EXP-1.
+    i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
+    j = (junk2.i[LOW_HALF]&511)<<1;
 
-   If it happens that n_1 == 0 (this is the usual case), that multiplication
-   is omitted.
-   */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-#include <stdlib.h>
-#include <float.h>
-#include <ieee754.h>
-#include <math.h>
-#include <fenv.h>
-#include <inttypes.h>
-#include <math_private.h>
+    al = coar.x[i]*fine.x[j];
+    bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
 
-extern const float __exp_deltatable[178];
-extern const double __exp_atable[355] /* __attribute__((mode(DF))) */;
+    rem=(bet + bet*eps)+al*eps;
+    res = al + rem;
+    cor = (al - res) + rem;
+    if  (res == (res+cor*err_0)) return res*binexp.x;
+    else return __slowexp(x); /*if error is over bound */
+  }
 
-static const volatile double TWO1023 = 8.988465674311579539e+307;
-static const volatile double TWOM1000 = 9.3326361850321887899e-302;
+  if (n <= smallint) return 1.0;
 
-double
-__ieee754_exp (double x)
-{
-  static const double himark = 709.7827128933840868;
-  static const double lomark = -745.1332191019412221;
-  /* Check for usual case.  */
-  if (isless (x, himark) && isgreater (x, lomark))
-    {
-      static const double THREEp42 = 13194139533312.0;
-      static const double THREEp51 = 6755399441055744.0;
-      /* 1/ln(2).  */
-      static const double M_1_LN2 = 1.442695040888963387;
-      /* ln(2), part 1 */
-      static const double M_LN2_0 = .6931471805598903302;
-      /* ln(2), part 2 */
-      static const double M_LN2_1 = 5.497923018708371155e-14;
+  if (n >= badint) {
+    if (n > infint) return(zero/zero);               /* x is NaN,  return invalid */
+    if (n < infint) return ( (x>0) ? (hhuge*hhuge) : (tiny*tiny) );
+    /* x is finite,  cause either overflow or underflow  */
+    if (junk1.i[LOW_HALF] != 0)  return (zero/zero);                /*  x is NaN  */
+    return ((x>0)?inf.x:zero );             /* |x| = inf;  return either inf or 0 */
+  }
 
-      int tval, unsafe, n_i;
-      double x22, n, t, dely, result;
-      union ieee754_double ex2_u, scale_u;
-      fenv_t oldenv;
-
-      feholdexcept (&oldenv);
-#ifdef FE_TONEAREST
-      fesetround (FE_TONEAREST);
-#endif
-
-      /* Calculate n.  */
-      n = x * M_1_LN2 + THREEp51;
-      n -= THREEp51;
-      x = x - n*M_LN2_0;
-
-      /* Calculate t/512.  */
-      t = x + THREEp42;
-      t -= THREEp42;
-      x -= t;
-
-      /* Compute tval = t.  */
-      tval = (int) (t * 512.0);
-
-      if (t >= 0)
-	x -= __exp_deltatable[tval];
-      else
-	x += __exp_deltatable[-tval];
-
-      /* Now, the variable x contains x + n*ln(2)_1.  */
-      dely = n*M_LN2_1;
-
-      /* Compute ex2 = 2^n_0 e^(t/512+delta[t]).  */
-      ex2_u.d = __exp_atable[tval+177];
-      n_i = (int)n;
-      /* 'unsafe' is 1 iff n_1 != 0.  */
-      unsafe = abs(n_i) >= -DBL_MIN_EXP - 1;
-      ex2_u.ieee.exponent += n_i >> unsafe;
-
-      /* Compute scale = 2^n_1.  */
-      scale_u.d = 1.0;
-      scale_u.ieee.exponent += n_i - (n_i >> unsafe);
-
-      /* Approximate e^x2 - 1, using a fourth-degree polynomial,
-	 with maximum error in [-2^-10-2^-28,2^-10+2^-28]
-	 less than 4.9e-19.  */
-      x22 = (((0.04166666898464281565
-	       * x + 0.1666666766008501610)
-	      * x + 0.499999999999990008)
-	     * x + 0.9999999999999976685) * x;
-      /* Allow for impact of dely.  */
-      x22 -= dely + dely*x22;
-
-      /* Return result.  */
-      fesetenv (&oldenv);
-
-      result = x22 * ex2_u.d + ex2_u.d;
-      if (!unsafe)
-	return result;
-      else
-	return result * scale_u.d;
+  y = x*log2e.x + three51.x;
+  bexp = y - three51.x;
+  junk1.x = y;
+  eps = bexp*ln_two2.x;
+  t = x - bexp*ln_two1.x;
+  y = t + three33.x;
+  base = y - three33.x;
+  junk2.x = y;
+  del = (t - base) - eps;
+  eps = del + del*del*(p3.x*del + p2.x);
+  i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
+  j = (junk2.i[LOW_HALF]&511)<<1;
+  al = coar.x[i]*fine.x[j];
+  bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
+  rem=(bet + bet*eps)+al*eps;
+  res = al + rem;
+  cor = (al - res) + rem;
+  if (m>>31) {
+    ex=junk1.i[LOW_HALF];
+    if (res < 1.0) {res+=res; cor+=cor; ex-=1;}
+    if (ex >=-1022) {
+      binexp.i[HIGH_HALF] = (1023+ex)<<20;
+      if  (res == (res+cor*err_0)) return res*binexp.x;
+      else return __slowexp(x); /*if error is over bound */
     }
-  /* Exceptional cases:  */
-  else if (isless (x, himark))
-    {
-      if (__isinf (x))
-	/* e^-inf == 0, with no error.  */
-	return 0;
-      else
-	/* Underflow */
-	return TWOM1000 * TWOM1000;
+    ex = -(1022+ex);
+    binexp.i[HIGH_HALF] = (1023-ex)<<20;
+    res*=binexp.x;
+    cor*=binexp.x;
+    eps=1.0000000001+err_0*binexp.x;
+    t=1.0+res;
+    y = ((1.0-t)+res)+cor;
+    res=t+y;
+    cor = (t-res)+y;
+    if (res == (res + eps*cor))
+    { binexp.i[HIGH_HALF] = 0x00100000;
+      return (res-1.0)*binexp.x;
     }
-  else
-    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
-    return TWO1023*x;
+    else return __slowexp(x); /*   if error is over bound    */
+  }
+  else {
+    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+767)<<20;
+    if  (res == (res+cor*err_0)) return res*binexp.x*t256.x;
+    else return __slowexp(x);
+  }
+}
+
+/************************************************************************/
+/* Compute e^(x+xx)(Double-Length number) .The routine also receive     */
+/* bound of error of previous calculation .If after computing exp       */
+/* error bigger than allows routine return non positive number          */
+/*else return   e^(x + xx)   (always positive )                         */
+/************************************************************************/
+
+double __exp1(double x, double xx, double error) {
+  double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
+  mynumber junk1, junk2, binexp  = {0,0};
+  int4 k,i,j,m,n,ex;
+
+  junk1.x = x;
+  m = junk1.i[HIGH_HALF];
+  n = m&hugeint;                 /* no sign */
+
+  if (n > smallint && n < bigint) {
+    y = x*log2e.x + three51.x;
+    bexp = y - three51.x;      /*  multiply the result by 2**bexp        */
+
+    junk1.x = y;
+
+    eps = bexp*ln_two2.x;      /* x = bexp*ln(2) + t - eps               */
+    t = x - bexp*ln_two1.x;
+
+    y = t + three33.x;
+    base = y - three33.x;      /* t rounded to a multiple of 2**-18      */
+    junk2.x = y;
+    del = (t - base) + (xx-eps);    /*  x = bexp*ln(2) + base + del      */
+    eps = del + del*del*(p3.x*del + p2.x);
+
+    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+1023)<<20;
+
+    i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
+    j = (junk2.i[LOW_HALF]&511)<<1;
+
+    al = coar.x[i]*fine.x[j];
+    bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
+
+    rem=(bet + bet*eps)+al*eps;
+    res = al + rem;
+    cor = (al - res) + rem;
+    if  (res == (res+cor*(1.0+error+err_1))) return res*binexp.x;
+    else return -10.0;
+  }
+
+  if (n <= smallint) return 1.0; /*  if x->0 e^x=1 */
+
+  if (n >= badint) {
+    if (n > infint) return(zero/zero);    /* x is NaN,  return invalid */
+    if (n < infint) return ( (x>0) ? (hhuge*hhuge) : (tiny*tiny) );
+    /* x is finite,  cause either overflow or underflow  */
+    if (junk1.i[LOW_HALF] != 0)  return (zero/zero);        /*  x is NaN  */
+    return ((x>0)?inf.x:zero );   /* |x| = inf;  return either inf or 0 */
+  }
+
+  y = x*log2e.x + three51.x;
+  bexp = y - three51.x;
+  junk1.x = y;
+  eps = bexp*ln_two2.x;
+  t = x - bexp*ln_two1.x;
+  y = t + three33.x;
+  base = y - three33.x;
+  junk2.x = y;
+  del = (t - base) + (xx-eps);
+  eps = del + del*del*(p3.x*del + p2.x);
+  i = ((junk2.i[LOW_HALF]>>8)&0xfffffffe)+356;
+  j = (junk2.i[LOW_HALF]&511)<<1;
+  al = coar.x[i]*fine.x[j];
+  bet =(coar.x[i]*fine.x[j+1] + coar.x[i+1]*fine.x[j]) + coar.x[i+1]*fine.x[j+1];
+  rem=(bet + bet*eps)+al*eps;
+  res = al + rem;
+  cor = (al - res) + rem;
+  if (m>>31) {
+    ex=junk1.i[LOW_HALF];
+    if (res < 1.0) {res+=res; cor+=cor; ex-=1;}
+    if (ex >=-1022) {
+      binexp.i[HIGH_HALF] = (1023+ex)<<20;
+      if  (res == (res+cor*(1.0+error+err_1))) return res*binexp.x;
+      else return -10.0;
+    }
+    ex = -(1022+ex);
+    binexp.i[HIGH_HALF] = (1023-ex)<<20;
+    res*=binexp.x;
+    cor*=binexp.x;
+    eps=1.00000000001+(error+err_1)*binexp.x;
+    t=1.0+res;
+    y = ((1.0-t)+res)+cor;
+    res=t+y;
+    cor = (t-res)+y;
+    if (res == (res + eps*cor))
+      {binexp.i[HIGH_HALF] = 0x00100000; return (res-1.0)*binexp.x;}
+    else return -10.0;
+  }
+  else {
+    binexp.i[HIGH_HALF] =(junk1.i[LOW_HALF]+767)<<20;
+    if  (res == (res+cor*(1.0+error+err_1)))
+      return res*binexp.x*t256.x;
+    else return -10.0;
+  }
 }

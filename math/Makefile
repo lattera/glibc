@@ -58,9 +58,13 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_catan s_casin s_ccos s_csin s_ctan s_ctanh s_cacos	\
 	     s_casinh s_cacosh s_catanh s_csqrt s_cpow s_cproj s_clog10 \
 	     s_fma s_lrint s_llrint s_lround s_llround e_exp10
+dbl-only-routines := branred doasin dosincos halfulp mpa mpatan2	\
+		     mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
+		     slowpow
 libm-routines = $(strip $(libm-support) $(libm-calls) \
 			$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
-			$(long-m-$(long-double-fcts)))
+			$(long-m-$(long-double-fcts))) \
+		$(dbl-only-routines)
 long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l))
 long-m-support = t_sincosl k_sincosl
 long-m-yes = $(long-m-routines) $(long-m-support)
