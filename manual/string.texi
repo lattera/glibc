@@ -2296,7 +2296,7 @@ this task.
 @comment XPG
 @deftypefun {char *} l64a (long int @var{n})
 This function encodes a 32-bit input value using characters from the
-basic character set.  It returns a pointer to a 6 character buffer which
+basic character set.  It returns a pointer to a 7 character buffer which
 contains an encoded version of @var{n}.  To encode a series of bytes the
 user must copy the returned string to a destination buffer.  It returns
 the empty string if @var{n} is zero, which is somewhat bizarre but
@@ -2321,13 +2321,17 @@ encode (const void *buf, size_t len)
   /* @r{We know in advance how long the buffer has to be.} */
   unsigned char *in = (unsigned char *) buf;
   char *out = malloc (6 + ((len + 3) / 4) * 6 + 1);
-  char *cp = out;
+  char *cp = out, *p;
 
   /* @r{Encode the length.} */
   /* @r{Using `htonl' is necessary so that the data can be}
-     @r{decoded even on machines with different byte order.} */
+     @r{decoded even on machines with different byte order.}
+     @r{`l64a' can return a string shorter than 6 bytes, so }
+     @r{we pad it with encoding of 0 (}'.'@r{) at the end by }
+     @r{hand.} */
 
-  cp = mempcpy (cp, l64a (htonl (len)), 6);
+  p = stpcpy (cp, l64a (htonl (len)));
+  cp = mempcpy (p, "......", 6 - (p - cp));
 
   while (len > 3)
     @{
@@ -2336,12 +2340,8 @@ encode (const void *buf, size_t len)
       n = (n << 8) | *in++;
       n = (n << 8) | *in++;
       len -= 4;
-      if (n)
-        cp = mempcpy (cp, l64a (htonl (n)), 6);
-      else
-            /* @r{`l64a' returns the empty string for n==0, so we }
-               @r{must generate its encoding (}"......"@r{) by hand.} */
-        cp = stpcpy (cp, "......");
+      p = stpcpy (cp, l64a (htonl (n)));
+      cp = mempcpy (p, "......", 6 - (p - cp));
     @}
   if (len > 0)
     @{
@@ -2352,8 +2352,7 @@ encode (const void *buf, size_t len)
           if (--len > 0)
             n = (n << 8) | *in;
         @}
-      memcpy (cp, l64a (htonl (n)), 6);
-      cp += 6;
+      cp = stpcpy (cp, l64a (htonl (n)));
     @}
   *cp = '\0';
   return out;

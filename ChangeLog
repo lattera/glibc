@@ -1,3 +1,11 @@
+2004-07-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #266]
+	* manual/string.texi (l64a): Note that the static buffer is 7 bytes
+	long.  Rewrite example code so that it takes account l64a output
+	shorter than 6 characters.
+	Reported by Julian Graham <julian.graham@aya.yale.edu>.
+
 2004-07-14  Kaz  Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/dl-machine.h: Don't reset _dl_starting_up here.

@@ -1,3 +1,9 @@
+2004-07-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Check for invalid nanosecond in
+	timeout value.
+
 2004-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build and run tst-fini1.

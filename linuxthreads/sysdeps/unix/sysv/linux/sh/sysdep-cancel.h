@@ -99,6 +99,7 @@
 # else
 #  define __local_enable_asynccancel	__librt_enable_asynccancel
 #  define __local_disable_asynccancel	__librt_disable_asynccancel
+#  define __local_multiple_threads	__librt_multiple_threads
 # endif
 
 # if defined IS_IN_librt && defined PIC
@@ -183,7 +184,8 @@ extern int __local_multiple_threads attribute_hidden;
      1:
 
 #  else
-#   define SINGLE_THREAD_P \
+#   if !defined NOT_IN_libc || defined IS_IN_libpthread
+#    define SINGLE_THREAD_P \
 	mov r12,r2; \
 	mov.l 0f,r12; \
 	mova 0f,r0; \
@@ -197,6 +199,23 @@ extern int __local_multiple_threads attribute_hidden;
      0: .long _GLOBAL_OFFSET_TABLE_; \
      1: .long __local_multiple_threads@GOTOFF; \
      2:
+#   else
+#    define SINGLE_THREAD_P \
+	mov r12,r2; \
+	mov.l 0f,r12; \
+	mova 0f,r0; \
+	add r0,r12; \
+	mov.l 1f,r0; \
+	mov.l @(r0,r12),r0; \
+	mov.l @r0,r0; \
+	mov r2,r12; \
+	bra 2f; \
+	 tst r0,r0; \
+	.align 2; \
+     0: .long _GLOBAL_OFFSET_TABLE_; \
+     1: .long __local_multiple_threads@GOT; \
+     2:
+#   endif
 #  endif
 # endif
 
