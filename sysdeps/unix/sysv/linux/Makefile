@@ -4,6 +4,10 @@ CFLAGS-init-first.c = -fkeep-inline-functions
 sysdep_routines += errno-loc
 endif
 
+ifeq ($(subdir),db2)
+CPPFLAGS += -DHAVE_LLSEEK=1
+endif
+
 ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek
 

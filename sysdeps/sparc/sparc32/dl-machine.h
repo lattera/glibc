@@ -243,7 +243,8 @@ _dl_start_user:
   /* Jump to the user's entry point and deallocate the extra stack we got.  */
 	jmp	%l0
 	 add	%sp, 6*4, %sp
-	.size   _dl_start_user,.-_dl_start_user");
+	.size   _dl_start_user,.-_dl_start_user
+.previous");
 
 #ifdef RESOLVE
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).

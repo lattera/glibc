@@ -23,41 +23,45 @@
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
-#define __FD_ZERO(fdsetp) \
+# define __FD_ZERO(fdsetp) \
   __asm__ __volatile__ ("cld ; rep ; stosl"				      \
 			: "=m" (*(__fd_set *) (fdsetp))			      \
 			: "a" (0), "c" (sizeof (__fd_set)		      \
 					/ sizeof (__fd_mask)),		      \
 			  "D" ((__fd_set *) (fdsetp))			      \
 			:"cx","di")
-#define __FD_SET(fd, fdsetp) \
+# define __FD_SET(fd, fdsetp) \
   __asm__ __volatile__ ("btsl %1,%0"					      \
-			: "=m" (*(__fd_set *) (fdsetp))			      \
-			: "r" ((int) (fd)))
-#define __FD_CLR(fd, fdsetp) \
+			: "=m" (((__fd_set *) (fdsetp))[__FDELT (fd)])	      \
+			: "r" (((int) (fd)) % __NFDBITS)		      \
+			: "cc")
+# define __FD_CLR(fd, fdsetp) \
   __asm__ __volatile__ ("btrl %1,%0"					      \
-			: "=m" (*(__fd_set *) (fdsetp))			      \
-			: "r" ((int) (fd)))
-#define __FD_ISSET(fd, fdsetp) \
+			: "=m" (((__fd_set *) (fdsetp))[__FDELT (fd)])	      \
+			: "r" (((int) (fd)) % __NFDBITS)		      \
+			: "cc")
+# define __FD_ISSET(fd, fdsetp) \
   (__extension__							      \
-   ({unsigned char __result;						      \
-     __asm__ __volatile__ ("btl %1,%2 ; setb %0"			      \
+   ({unsigned int __result;						      \
+     __asm__ __volatile__ ("btl %1,%2 ; setcb %b0; andl $1,%0"		      \
 			   : "=q" (__result)				      \
-			   : "r" ((int) (fd)), "m" (*(__fd_set *) (fdsetp))); \
+			   : "r" (((int) (fd)) % __NFDBITS),		      \
+			     "m" (((__fd_set *) (fdsetp))[__FDELT (fd)])      \
+			   : "cc");					      \
      __result; }))
 
 #else	/* ! GNU CC */
 
 /* We don't use `memset' because this would require a prototype and
    the array isn't too big.  */
-#define __FD_ZERO(set)  \
+# define __FD_ZERO(set)  \
   do {									      \
     unsigned int __i;							      \
     for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
-      ((__fd_mask *) set)[__i] = '\0';					      \
+      ((__fd_mask *) set)[__i] = 0;					      \
   } while (0)
-#define __FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
-#define __FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
-#define __FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
+# define __FD_SET(d, set)	((set)->fds_bits[__FDELT (d)] |= __FDMASK (d))
+# define __FD_CLR(d, set)	((set)->fds_bits[__FDELT (d)] &= ~__FDMASK (d))
+# define __FD_ISSET(d, set)	((set)->fds_bits[__FDELT (d)] & __FDMASK (d))
 
 #endif	/* GNU CC */

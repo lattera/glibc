@@ -52,7 +52,7 @@ typedef struct _IO_FILE FILE;
 #include <libio.h>
 
 #ifdef __cplusplus
-# define __STDIO_INLINE __inline
+# define __STDIO_INLINE inline
 #else
 # define __STDIO_INLINE extern __inline
 #endif

@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <db.h>
+#include <db_185.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>

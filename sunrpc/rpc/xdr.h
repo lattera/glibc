@@ -132,7 +132,7 @@ struct XDR
 	/* lets you reposition the stream */
 	long *(*x_inline) __P ((XDR * __xdrs, int len));
 	/* buf quick ptr to buffered data */
-	void (*x_destroy) __P ((__const XDR * __xdrs));
+	void (*x_destroy) __P ((XDR * __xdrs));
 	/* free privates of this xdr_stream */
       }
      *x_ops;
@@ -283,7 +283,7 @@ extern bool_t xdr_vector __P ((XDR * __xdrs, char *__basep, u_int __nelem,
 			       u_int __elemsize, xdrproc_t __xdr_elem));
 extern bool_t xdr_float __P ((XDR * __xdrs, float *__fp));
 extern bool_t xdr_double __P ((XDR * __xdrs, double *__dp));
-extern bool_t xdr_reference __P ((XDR * __xdrs, caddr_t * __pp, u_int __size,
+extern bool_t xdr_reference __P ((XDR * __xdrs, caddr_t * __xpp, u_int __size,
 				  xdrproc_t __proc));
 extern bool_t xdr_pointer __P ((XDR * __xdrs, char **__objpp,
 				u_int __obj_size, xdrproc_t __xdr_obj));
@@ -310,11 +310,11 @@ extern bool_t xdr_netobj __P ((XDR * __xdrs, struct netobj * __np));
 
 /* XDR using memory buffers */
 extern void xdrmem_create __P ((XDR * __xdrs, __const caddr_t __addr,
-				u_int __size, enum xdr_op __op));
+				u_int __size, enum xdr_op __xop));
 
 /* XDR using stdio library */
 extern void xdrstdio_create __P ((XDR * __xdrs, FILE * __file,
-				  enum xdr_op __op));
+				  enum xdr_op __xop));
 
 /* XDR pseudo records for tcp */
 extern void xdrrec_create __P ((XDR * __xdrs, u_int __sendsize,

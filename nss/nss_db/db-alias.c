@@ -21,7 +21,7 @@
 #include <aliases.h>
 #include <alloca.h>
 #include <ctype.h>
-#include <db.h>
+#include <db_185.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>

@@ -51,7 +51,7 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
-subdirs = csu assert ctype db locale intl catgets math setjmp signal stdlib \
+subdirs = csu assert ctype db2 locale intl catgets math setjmp signal stdlib \
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
 	  posix io termios resource misc socket sysvipc gmon gnulib \
 	  wctype manual shadow md5-crypt nss $(sysdep-subdirs) po argp \
@@ -304,7 +304,7 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
-	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in
+	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

@@ -57,10 +57,9 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("	call 1f\n"
-       "1:	popl %0\n"
-       "	subl 1b@GOT(%%ebx), %0"
-       : "=r" (addr));
+  asm ("leal _dl_start@GOTOFF(%%ebx), %0\n"
+       "subl _dl_start@GOT(%%ebx), %0"
+       : "=r" (addr) : : "cc");
   return addr;
 }
 
@@ -250,6 +249,7 @@ _dl_start_user:\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
+.previous\n\
 ");
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of

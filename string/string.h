@@ -181,15 +181,6 @@ extern size_t strlen __P ((__const char *__s));
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
 extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
-
-# ifdef	__OPTIMIZE__
-extern __inline size_t
-strnlen (__const char *__string, size_t __maxlen)
-{
-  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
-  return __end ? __end - __string : __maxlen;
-}
-# endif
 #endif
 
 
@@ -272,21 +263,32 @@ extern char *strfry __P ((char *__string));
 
 /* Frobnicate N bytes of S.  */
 extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
-#endif
 
-#if defined __USE_MISC || !defined basename
+# ifndef basename
 /* Return the file name within directory of FILENAME.  We don't
    declare the function if the `basename' macro is available (defined
    in <libgen.h>) which makes the XPG version of this function
    available.  */
 extern char *basename __P ((__const char *__filename));
+# endif
 #endif
 
 
 /* Some functions might be implemented as optimized inline assembler
-   functions.  */
-#if !defined __NO_STRING_INLINES && defined __OPTIMIZE__
+   functions.  Only include this file if we really want them.  */
+#if defined __USE_STRING_INLINES && defined __OPTIMIZE__
 # include <bits/string.h>
+#endif
+
+
+/* Now provide some generic optimizations.  */
+#if defined __GNUC__ && __GNUC__ >= 2 && defined __OPTIMIZE__
+extern __inline size_t
+strnlen (__const char *__string, size_t __maxlen)
+{
+  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
+  return __end ? __end - __string : __maxlen;
+}
 #endif
 
 __END_DECLS

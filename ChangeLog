@@ -1,3 +1,258 @@
+1997-08-10 19:17  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* nss/nss_db/db-XXX.c: Include <db_185.h> not <db.h>.  Somebody
+	should update this to use the new db API.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_db/db-alias.c: Likewise.
+	* db2/Makefile: Makefile for db-2.x in glibc.
+
+1997-08-27 21:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Makefile (before-compile): New goal.  Make sure abi-tag.h
+	is generated.
+	[$(elf)=yes] (asm-CPPFLAGS): Make sure abi-tag.h file can be found.
+
+	* Makeconfig [$(build-omitfp)=yes] (CFLAGS-.o): Add
+	-D__USE_STRING_INLINES.
+	* string/string.f: Move strnlen optimization after inclusion of
+	<bits/string.h>.  Include <bits/string.h> only if __USE_STRING_INLINES
+	is defined.
+	* sysdeps/generic/memcpy.c: Undef memcpy to allow macro of this name
+	in <bits/string.h>.
+	* sysdeps/generic/memset.c: Likewise.
+	* sysdeps/i386/string.h: i386 optimized string functions.
+	* sysdeps/i386/i486string.h: i486+ optimized string functions.
+
+	* Makefile (subdirs): Change db to db2.
+	* shlib-versions: Bump libdb verion number to 3.
+	* include/db.h: Include from db2 directory.
+	* include/db_185.h: New file.
+	* sysdeps/i386/Makefile [$(subdirs)=db2] (CPPFLAGS): Add macros
+	to provide spinlock information for db2.
+	* sysdeps/m68k/m68020/Makefile: New file.  Likewise.
+	* sysdeps/sparc/Makefile: New file.  Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdirs)=db2] (CPPFLAGS):
+	Add -DHAVE_LLSEEK.
+	* db2/config.h: Hand-edited config file for db2 in glibc.
+	* db2/compat.h: New file from db-2.3.4.
+	* db2/db.h: Likewise.
+	* db2/db_185.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/makedb.c: Likewise.
+	* db2/btree/bt_close.c: Likewise.
+	* db2/btree/bt_compare.c: Likewise.
+	* db2/btree/bt_conv.c: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_delete.c: Likewise.
+	* db2/btree/bt_open.c: Likewise.
+	* db2/btree/bt_page.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_rec.c: Likewise.
+	* db2/btree/bt_recno.c: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/btree/bt_rsearch.c: Likewise.
+	* db2/btree/bt_search.c: Likewise.
+	* db2/btree/bt_split.c: Likewise.
+	* db2/btree/bt_stat.c: Likewise.
+	* db2/btree/btree.src: Likewise.
+	* db2/common/db_appinit.c: Likewise.
+	* db2/common/db_err.c: Likewise.
+	* db2/common/db_byteorder.c: Likewise.
+	* db2/common/db_apprec.c: Likewise.
+	* db2/common/db_salloc.c: Likewise.
+	* db2/common/db_log2.c: Likewise.
+	* db2/common/db_region.c: Likewise.
+	* db2/common/db_shash.c: Likewise.
+	* db2/db/db.c: Likewise.
+	* db2/db/db.src: Likewise.
+	* db2/db/db_conv.c: Likewise.
+	* db2/db/db_dispatch.c: Likewise.
+	* db2/db/db_dup.c: Likewise.
+	* db2/db/db_overflow.c: Likewise.
+	* db2/db/db_pr.c: Likewise.
+	* db2/db/db_rec.c: Likewise.
+	* db2/db/db_ret.c: Likewise.
+	* db2/db/db_thread.c: Likewise.
+	* db2/db/db_auto.c: Likewise.
+	* db2/db185/db185.c: Likewise.
+	* db2/db185/db185_int.h: Likewise.
+	* db2/dbm/dbm.c: Likewise.
+	* db2/hash/hash.c: Likewise.
+	* db2/hash/hash.src: Likewise.
+	* db2/hash/hash_page.c: Likewise.
+	* db2/hash/hash_conv.c: Likewise.
+	* db2/hash/hash_debug.c: Likewise.
+	* db2/hash/hash_stat.c: Likewise.
+	* db2/hash/hash_rec.c: Likewise.
+	* db2/hash/hash_dup.c: Likewise.
+	* db2/hash/hash_func.c: Likewise.
+	* db2/hash/hash_auto.c: Likewise.
+	* db2/include/mp.h: Likewise.
+	* db2/include/btree.h: Likewise.
+	* db2/include/db.h.src: Likewise.
+	* db2/include/db_int.h.src: Likewise.
+	* db2/include/db_shash.h: Likewise.
+	* db2/include/db_swap.h: Likewise.
+	* db2/include/db_185.h.src: Likewise.
+	* db2/include/txn.h: Likewise.
+	* db2/include/db_am.h: Likewise.
+	* db2/include/shqueue.h: Likewise.
+	* db2/include/hash.h: Likewise.
+	* db2/include/db_dispatch.h: Likewise.
+	* db2/include/lock.h: Likewise.
+	* db2/include/db_page.h: Likewise.
+	* db2/include/log.h: Likewise.
+	* db2/include/db_auto.h: Likewise.
+	* db2/include/btree_auto.h: Likewise.
+	* db2/include/hash_auto.h: Likewise.
+	* db2/include/log_auto.h: Likewise.
+	* db2/include/txn_auto.h: Likewise.
+	* db2/include/db_ext.h: Likewise.
+	* db2/include/btree_ext.h: Likewise.
+	* db2/include/clib_ext.h: Likewise.
+	* db2/include/common_ext.h: Likewise.
+	* db2/include/hash_ext.h: Likewise.
+	* db2/include/lock_ext.h: Likewise.
+	* db2/include/log_ext.h: Likewise.
+	* db2/include/mp_ext.h: Likewise.
+	* db2/include/mutex_ext.h: Likewise.
+	* db2/include/os_ext.h: Likewise.
+	* db2/include/txn_ext.h: Likewise.
+	* db2/include/cxx_int.h: Likewise.
+	* db2/include/db_cxx.h: Likewise.
+	* db2/include/queue.h: Likewise.
+	* db2/lock/lock.c: Likewise.
+	* db2/lock/lock_conflict.c: Likewise.
+	* db2/lock/lock_util.c: Likewise.
+	* db2/lock/lock_deadlock.c: Likewise.
+	* db2/log/log.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log.src: Likewise.
+	* db2/log/log_compare.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/log/log_rec.c: Likewise.
+	* db2/log/log_archive.c: Likewise.
+	* db2/log/log_register.c: Likewise.
+	* db2/log/log_auto.c: Likewise.
+	* db2/log/log_findckp.c: Likewise.
+	* db2/mp/mp_bh.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fopen.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_fset.c: Likewise.
+	* db2/mp/mp_open.c: Likewise.
+	* db2/mp/mp_region.c: Likewise.
+	* db2/mp/mp_pr.c: Likewise.
+	* db2/mp/mp_sync.c: Likewise.
+	* db2/mutex/68020.gcc: Likewise.
+	* db2/mutex/mutex.c: Likewise.
+	* db2/mutex/README: Likewise.
+	* db2/mutex/x86.gcc: Likewise.
+	* db2/mutex/sparc.gcc: Likewise.
+	* db2/mutex/uts4.cc.s: Likewise.
+	* db2/mutex/alpha.dec: Likewise.
+	* db2/mutex/alpha.gcc: Likewise.
+	* db2/mutex/parisc.gcc: Likewise.
+	* db2/mutex/parisc.hp: Likewise.
+	* db2/os/db_os_abs.c: Likewise.
+	* db2/os/db_os_dir.c: Likewise.
+	* db2/os/db_os_fid.c: Likewise.
+	* db2/os/db_os_lseek.c: Likewise.
+	* db2/os/db_os_mmap.c: Likewise.
+	* db2/os/db_os_open.c: Likewise.
+	* db2/os/db_os_rw.c: Likewise.
+	* db2/os/db_os_sleep.c: Likewise.
+	* db2/os/db_os_stat.c: Likewise.
+	* db2/os/db_os_unlink.c: Likewise.
+	* db2/txn/txn.c: Likewise.
+	* db2/txn/txn.src: Likewise.
+	* db2/txn/txn_rec.c: Likewise.
+	* db2/txn/txn_auto.c: Likewise.
+	* db2/clib/getlong.c: Likewise.
+	* db2/progs/db_archive/db_archive.c: Likewise.
+	* db2/progs/db_checkpoint/db_checkpoint.c: Likewise.
+	* db2/progs/db_deadlock/db_deadlock.c: Likewise.
+	* db2/progs/db_dump/db_dump.c: Likewise.
+	* db2/progs/db_dump185/db_dump185.c: Likewise.
+	* db2/progs/db_load/db_load.c: Likewise.
+	* db2/progs/db_printlog/db_printlog.c: Likewise.
+	* db2/progs/db_recover/db_recover.c: Likewise.
+	* db2/progs/db_stat/db_stat.c: Likewise.
+
+	* libio/stdio.h [__cplusplus] (__STDIO_INLINE): Define as inline.
+
+	* po/de.po, po/sv.po: Update from 2.0.5 translations.
+
+	* sysdeps/unix/sysv/linux/netinet/tcp.h: Pretty print.
+
+	* sunrpc/rpc/xdr.h (XDR): Don't define argument of x_destroy callback
+	as const.
+	* sunrpc/xdr_mem.c (xdrmem_destroy): Don't define argument as const.
+	* sunrpx/xdr_rec.c (xdrrec_destroy): Likewise.
+	* sunrpx/xdr_stdio.c (xdrstdio_destroy): Likewise.
+
+1997-08-27 18:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c: Include <errno.h>.
+	Reported by Benjamin Kosnik <bkoz@cygnus.com>.
+
+1997-08-27 02:27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* abi-tags: New file.
+	* csu/Makefile (distribute): Remove abi-tag.h.
+	($(objpfx)abi-tag.h): New target.
+	* Makefile (distribute): Add abi-tags.
+	* sysdeps/unix/sysv/linux/abi-tag.h: File removed.
+	* sysdeps/mach/hurd/abi-tag.h: File removed.
+	* sysdeps/stub/abi-tag.h: File removed.
+
+1997-08-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/make-syscalls.sh: Change output so that it
+	generates compilation rules only for the currently selected object
+	suffixes.
+
+1997-08-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Switch back to previous
+	section to avoid confusing the compiler.
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/mips/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/mips/mips64/dl-machine.h (RTLD_START): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Likewise.
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_load_address): Use a GOT
+	relocation instead of a constant to avoid text relocation.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): Removed.
+	(RTLD_START): Declare global labels as functions and add size
+	directive.
+
+1997-08-25 17:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/select.h: Correct assembler versions to work even
+	for descriptors >= 32.
+
+	* stdlib/alloca.h: Don't define alloca to __alloca since if gcc
+	is used __alloca is not defined to __builtin_alloca and so might
+	not be available.
+	Reported by Uwe Ohse <uwe@ohse.de>.
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Define macros in a special
+	way if gcc is not used and so dev_t is an array.
+	Reported by Uwe Ohse <uwe@ohse.de>.
+
+1997-08-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/libc.texinfo: Reorder chapters to match logical order.
+
+1997-08-25 12:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/xdr.h: Change name of parameters in prototypes of
+	xdr_reference, xdrmem_create, and xdrstdio_create because of clash
+	with g++ internal symbols.
+	Patch by Sudish Joseph <sj@eng.mindspring.net>.
+
 1997-08-24  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* string/argz.h: Add missing __END_DECLS.
@@ -10,7 +265,7 @@
 
 	* csu/Makefile (initfini.s): Disable optimization.
 
-	* elf/dl-deps.c: Implement handling of DL_FILTER.
+	* elf/dl-deps.c: Implement handling of DT_FILTER.
 
 	* elf/dl-load.c (_dl_init_paths): Add error check.
 
@@ -1673,7 +1928,6 @@
 	* sysdeps/mips/dl-machine.h: Remove extra stuff.
 
 1997-07-06 07:18  Geoff Keating  <geoffk@ozemail.com.au>
-
 	* sysdeps/powerpc/bits/endian.h: Handle multiple endianess.
 
 	* stdlib/grouping.h: Suppress gcc warning about testing

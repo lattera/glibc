@@ -60,7 +60,7 @@ static bool_t xdrrec_putbytes (XDR *, const char *, u_int);
 static u_int xdrrec_getpos (const XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
 static long *xdrrec_inline (XDR *, int);
-static void xdrrec_destroy (const XDR *);
+static void xdrrec_destroy (XDR *);
 
 static const struct xdr_ops xdrrec_ops =
 {
@@ -404,7 +404,7 @@ xdrrec_inline (XDR *xdrs, int len)
 
 static void
 xdrrec_destroy (xdrs)
-     const XDR *xdrs;
+     XDR *xdrs;
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
 

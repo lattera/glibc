@@ -73,9 +73,8 @@ alpha-.*-linux.*	libnss_nisplus=1.1
 alpha-.*-linux.*	libnsl=1.1
 .*-.*-.*		libnsl=1
 
-# We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
-alpha-.*-linux.*	libdb=2.1
-.*-.*-.*		libdb=2
+# We use libdb.so.3 for the interface in version 2.x of the Berkeley DB code.
+.*-.*-.*		libdb=3
 
 # This defines the shared library version numbers we will install.
 alpha-.*-linux.*	libcrypt=1.1

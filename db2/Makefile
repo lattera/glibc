@@ -1,0 +1,90 @@
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+#
+#	Sub-makefile for libdb.
+#
+#	The code is lifted straight from the db 2.3.4 distribution
+#	with minimal changes.
+#
+
+subdir = db2
+
+subdir-dirs = btree common db db185 dbm hash lock log mp mutex os txn \
+	progs/db_archive progs/db_checkpoint  progs/db_deadlock \
+	progs/db_dump progs/db_dump185 progs/db_load progs/db_printlog \
+	progs/db_recover progs/db_stat clib
+
+vpath %.c $(subdir-dirs)
+
+extra-libs := libdb
+extra-libs-others := $(extra-libs)
+
+libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
+	bt_open bt_page bt_put bt_rec bt_recno bt_rsearch bt_search \
+	bt_split bt_stat btree_auto db db_appinit db_apprec \
+	db_auto \
+	db_byteorder db_conv db_dispatch db_dup db_err db_log2 \
+	db_os_abs db_os_dir db_os_fid db_os_lseek db_os_mmap \
+	db_os_open db_os_rw db_os_sleep db_os_stat db_os_unlink \
+	db_overflow db_pr db_rec db_region db_ret db_salloc \
+	db_shash db_thread hash hash_auto hash_conv hash_debug \
+	hash_dup hash_func hash_page hash_rec hash_stat lock \
+	lock_conflict lock_deadlock lock_util log log_archive \
+	log_auto log_compare log_findckp log_get log_put log_rec \
+	log_register mp_bh mp_fget mp_fopen mp_fput mp_fset \
+	mp_open mp_pr mp_region mp_sync mutex txn txn_auto \
+	txn_rec dbm db185
+
+others		:= makedb db_dump185 db_archive db_checkpoint db_deadlock \
+		db_dump db_load db_recover db_stat
+install-bin	:= makedb db_dump185 db_archive db_checkpoint db_deadlock \
+		db_dump db_load db_recover db_stat
+
+include ../Rules
+
+CPPFLAGS += -I./include -include ./compat.h
+
+$(objpfx)db_checkpoint: $(objpfx)getlong.o
+$(objpfx)db_deadlock: $(objpfx)getlong.o
+$(objpfx)db_load: $(objpfx)getlong.o
+
+ifeq ($(build-shared),yes)
+$(objpfx)makedb: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_dump185: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_archive: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_checkpoint: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_deadlock: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_dump: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_load: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_recover: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_stat: $(objpfx)libdb.so$(libdb.so-version)
+else
+$(objpfx)makedb: $(objpfx)libdb.a
+$(objpfx)db_dump185: $(objpfx)libdb.a
+$(objpfx)db_archive: $(objpfx)libdb.a
+$(objpfx)db_checkpoint: $(objpfx)libdb.a
+$(objpfx)db_deadlock: $(objpfx)libdb.a
+$(objpfx)db_dump: $(objpfx)libdb.a
+$(objpfx)db_load: $(objpfx)libdb.a
+$(objpfx)db_recover: $(objpfx)libdb.a
+$(objpfx)db_stat: $(objpfx)libdb.a
+endif
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+$(objpfx)libdb.so: $(common-objpfx)libc.so

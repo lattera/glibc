@@ -32,11 +32,12 @@ csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) \
 	     $(csu-dummies)
+before-compile = $(objpfx)abi-tag.h
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S abi-tag.h
+distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -85,6 +86,7 @@ endif
 
 ifeq (yes,$(elf))
 extra-objs += abi-note.o
+asm-CPPFLAGS += -I$(objpfx).
 endif
 
 include ../Rules
@@ -121,3 +123,15 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 	cp /dev/null $(@:.o=.c)
 	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
 	rm -f $(@:.o=.c)
+
+/ := $$/# bite me.
+$(objpfx)abi-tag.h: $(..)abi-tags
+	rm -f $@.new
+	sed 's/#.*$//;/^[ 	]*$$/d' $< | while read conf tag; do \
+	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
+		     : "$$conf"` != 0 || continue; \
+	  echo "$$tag" | sed > $@.new \
+	       's/[^0-9xXa-fA-F]/ /g;s/ *$//;s/ /,/g;s/^ */#define ABI_TAG /';\
+	done
+	if test -r $@.new; then mv -f $@.new $@; \
+	else echo >&2 'This configuration not matched in $<'; exit 1; fi

@@ -154,4 +154,6 @@ argz_next (char *__argz, size_t __argz_len, __const char *__entry)
 }
 #endif /* optimizing GCC2 */
 
+__END_DECLS
+
 #endif /* argz.h */

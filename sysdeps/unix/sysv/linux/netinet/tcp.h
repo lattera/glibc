@@ -36,78 +36,81 @@
 #ifndef _NETINET_TCP_H
 #define _NETINET_TCP_H	1
 
-#include <sys/cdefs.h>
+#include <features.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
 
 #ifdef __FAVOR_BSD
-typedef	u_int32_t	tcp_seq;
+typedef	u_int32_t tcp_seq;
 /*
  * TCP header.
  * Per RFC 793, September, 1981.
  */
-struct tcphdr {
-	u_int16_t	th_sport;		/* source port */
-	u_int16_t	th_dport;		/* destination port */
-	tcp_seq	th_seq;			/* sequence number */
-	tcp_seq	th_ack;			/* acknowledgement number */
+struct tcphdr
+  {
+    u_int16_t th_sport;		/* source port */
+    u_int16_t th_dport;		/* destination port */
+    tcp_seq th_seq;		/* sequence number */
+    tcp_seq th_ack;		/* acknowledgement number */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int8_t	th_x2:4,		/* (unused) */
-		th_off:4;		/* data offset */
+    u_int8_t th_x2:4;		/* (unused) */
+    u_int8_t th_off:4;		/* data offset */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-	u_int8_t	th_off:4,		/* data offset */
-		th_x2:4;		/* (unused) */
+    u_int8_t th_off:4;		/* data offset */
+    u_int8_t th_x2:4;		/* (unused) */
 #endif
-	u_int8_t	th_flags;
+    u_int8_t th_flags;
 #define	TH_FIN	0x01
 #define	TH_SYN	0x02
 #define	TH_RST	0x04
 #define	TH_PUSH	0x08
 #define	TH_ACK	0x10
 #define	TH_URG	0x20
-	u_int16_t	th_win;			/* window */
-	u_int16_t	th_sum;			/* checksum */
-	u_int16_t	th_urp;			/* urgent pointer */
+    u_int16_t th_win;		/* window */
+    u_int16_t th_sum;		/* checksum */
+    u_int16_t th_urp;		/* urgent pointer */
 };
 
 #else /* !__FAVOR_BSD */
-struct tcphdr {
-	u_int16_t	source;
-	u_int16_t	dest;
-	u_int32_t	seq;
-	u_int32_t	ack_seq;
+struct tcphdr
+  {
+    u_int16_t source;
+    u_int16_t dest;
+    u_int32_t seq;
+    u_int32_t ack_seq;
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int16_t	res1:4,
-		doff:4,
-		fin:1,
-		syn:1,
-		rst:1,
-		psh:1,
-		ack:1,
-		urg:1,
-		res2:2;
+    u_int16_t res1:4;
+    u_int16_t doff:4;
+    u_int16_t fin:1;
+    u_int16_t syn:1;
+    u_int16_t rst:1;
+    u_int16_t psh:1;
+    u_int16_t ack:1;
+    u_int16_t urg:1;
+    u_int16_t res2:2;
 #elif __BYTE_ORDER == __BIG_ENDIAN
-	u_int16_t	doff:4,
-		res1:4,
-		res2:2,
-		urg:1,
-		ack:1,
-		psh:1,
-		rst:1,
-		syn:1,
-		fin:1;
+    u_int16_t doff:4;
+    u_int16_t res1:4;
+    u_int16_t res2:2;
+    u_int16_t urg:1;
+    u_int16_t ack:1;
+    u_int16_t psh:1;
+    u_int16_t rst:1;
+    u_int16_t syn:1;
+    u_int16_t fin:1;
 #else
 #error	"Adjust your <bits/endian.h> defines"
-#endif	
-	u_int16_t	window;
-	u_int16_t	check;
-	u_int16_t	urg_ptr;
+#endif
+    u_int16_t window;
+    u_int16_t check;
+    u_int16_t urg_ptr;
 };
 #endif /* __FAVOR_BSD */
 
-enum {
+enum
+{
   TCP_ESTABLISHED = 1,
   TCP_SYN_SENT,
   TCP_SYN_RECV,
@@ -124,15 +127,15 @@ enum {
 #define	TCPOPT_EOL		0
 #define	TCPOPT_NOP		1
 #define	TCPOPT_MAXSEG		2
-#define    TCPOLEN_MAXSEG		4
+#define TCPOLEN_MAXSEG		4
 #define TCPOPT_WINDOW		3
-#define    TCPOLEN_WINDOW		3
+#define TCPOLEN_WINDOW		3
 #define TCPOPT_SACK_PERMITTED	4		/* Experimental */
-#define    TCPOLEN_SACK_PERMITTED	2
+#define TCPOLEN_SACK_PERMITTED	2
 #define TCPOPT_SACK		5		/* Experimental */
 #define TCPOPT_TIMESTAMP	8
-#define    TCPOLEN_TIMESTAMP		10
-#define    TCPOLEN_TSTAMP_APPA		(TCPOLEN_TIMESTAMP+2) /* appendix A */
+#define TCPOLEN_TIMESTAMP	10
+#define TCPOLEN_TSTAMP_APPA	(TCPOLEN_TIMESTAMP+2) /* appendix A */
 
 #define TCPOPT_TSTAMP_HDR	\
     (TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)

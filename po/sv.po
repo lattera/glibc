@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.0.3\n"
-"POT-Creation-Date: 1997-03-30 19:08+0200\n"
+"Project-Id-Version: libc 2.0.5\n"
+"POT-Creation-Date: 1997-08-21 04:13+0200\n"
 "PO-Revision-Date: $Date$\n"
 "Last-Translator: Jan Djärv <Jan.Djarv@mbox200.swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "       rpcinfo [ -n portnr ] -t värd prognr [ versnr ]\n"
 msgid "   program vers proto   port\n"
 msgstr "   program vers proto   port\n"
 
-#: time/zic.c:419
+#: time/zic.c:421
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (regel från \"%s\", rad %d)"
@@ -43,22 +43,22 @@ msgstr " (regel från \"%s\", rad %d)"
 msgid " done\n"
 msgstr " klar\n"
 
-#: time/zic.c:416
+#: time/zic.c:418
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "\"%s\", rad %d: %s"
 
-#: time/zic.c:943
+#: time/zic.c:947
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\"-rad och flaggan -l är ömsesidigt uteslutande"
 
-#: time/zic.c:951
+#: time/zic.c:955
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\"-rad och flaggan -p är ömsesidigt uteslutande"
 
-#: time/zic.c:754
+#: time/zic.c:758
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s i zon utan regel"
@@ -78,7 +78,7 @@ msgstr "%s%s%s:%u: %s%sOväntat fel: %s.\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sOkänd signal %d\n"
 
-#: time/zic.c:2172
+#: time/zic.c:2185
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d teckenexpanderades inte korrekt\n"
@@ -88,42 +88,42 @@ msgstr "%s: %d teckenexpanderades inte korrekt\n"
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max> måste vara större än <mb_cur_min>\n"
 
-#: time/zic.c:1443
+#: time/zic.c:1456
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Kan inte skapa %s: %s\n"
 
-#: time/zic.c:2150
+#: time/zic.c:2163
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Kan inte skapa katalog %s: %s\n"
 
-#: time/zic.c:608
+#: time/zic.c:610
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: Kan inte länka från %s till %s: %s\n"
 
-#: time/zic.c:780
+#: time/zic.c:784
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan inte öppna %s: %s\n"
 
-#: time/zic.c:1433
+#: time/zic.c:1446
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: Kan inte ta bort %s: %s\n"
 
-#: time/zic.c:849
+#: time/zic.c:853
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Fel vid stängning av %s: %s\n"
 
-#: time/zic.c:842
+#: time/zic.c:846
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: Fel vid läsning från %s\n"
 
-#: time/zic.c:1507
+#: time/zic.c:1520
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Fel vid skrivning till %s\n"
@@ -133,42 +133,42 @@ msgstr "%s: Fel vid skrivning till %s\n"
 msgid "%s: Error writing standard output "
 msgstr "%s: Fel vid skrivning till standard ut "
 
-#: time/zic.c:827
+#: time/zic.c:831
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: \"Leap\"-rad i fil %s som inte är skottsekundsfil\n"
 
-#: time/zic.c:357
+#: time/zic.c:359
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Minnet slut: %s\n"
 
-#: time/zic.c:522
+#: time/zic.c:524
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Flaggan -L given mer än en gång\n"
 
-#: time/zic.c:482
+#: time/zic.c:484
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Flaggan -d given mer än en gång\n"
 
-#: time/zic.c:492
+#: time/zic.c:494
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Flaggan -l given mer än en gång\n"
 
-#: time/zic.c:502
+#: time/zic.c:504
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Flaggan -p given mer än en gång\n"
 
-#: time/zic.c:512
+#: time/zic.c:514
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Flaggan -y given mer än en gång\n"
 
-#: time/zic.c:1872
+#: time/zic.c:1885
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: kommandot var \"%s\", resultatet blev %d\n"
@@ -223,7 +223,7 @@ msgstr "%s: flaggan \"-W %s\" är tvetydig\n"
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaggan behöver ett argument -- %c\n"
 
-#: time/zic.c:834 time/zic.c:1246 time/zic.c:1266
+#: time/zic.c:838 time/zic.c:1251 time/zic.c:1275
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panik: ogiltigt l_value %d\n"
@@ -243,7 +243,7 @@ msgstr "%s: okänd flagga \"%c%s\"\n"
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: okänd flagga \"--%s\"\n"
 
-#: time/zic.c:441
+#: time/zic.c:443
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
@@ -541,7 +541,7 @@ msgstr "Förbindelsens tid tog slut"
 msgid "Continued"
 msgstr "Återupptagen"
 
-#: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:187
+#: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:191
 #: locale/programs/localedef.c:180
 #, c-format
 msgid ""
@@ -799,11 +799,11 @@ msgstr "Avbrutet systemanrop borde omstartas"
 msgid "Invalid argument"
 msgstr "Ogiltigt argument"
 
-#: posix/regex.c:960
+#: posix/regex.c:978
 msgid "Invalid back reference"
 msgstr "Ogiltig bakåtreferens"
 
-#: posix/regex.c:958
+#: posix/regex.c:976
 msgid "Invalid character class name"
 msgstr "Ogiltigt teckenklassnamn"
 
@@ -815,11 +815,11 @@ msgstr "Ogiltiga klientreferenser"
 msgid "Invalid client verifier"
 msgstr "Ogiltig klientverifierare"
 
-#: posix/regex.c:957
+#: posix/regex.c:975
 msgid "Invalid collation character"
 msgstr "Ogiltigt kollationeringstecken"
 
-#: posix/regex.c:964
+#: posix/regex.c:982
 msgid "Invalid content of \\{\\}"
 msgstr "Ogiltigt innehåll i \\{\\}"
 
@@ -840,15 +840,15 @@ msgstr "Ogiltig växel"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ogiltig eller inte komplett flerbyte- eller brett tecken"
 
-#: posix/regex.c:967
+#: posix/regex.c:985
 msgid "Invalid preceding regular expression"
 msgstr "Ogiltigt föregående reguljärt uttryck"
 
-#: posix/regex.c:965
+#: posix/regex.c:983
 msgid "Invalid range end"
 msgstr "Ogiltigt intervallslut"
 
-#: posix/regex.c:956
+#: posix/regex.c:974
 msgid "Invalid regular expression"
 msgstr "Ogiltigt reguljärt uttryck"
 
@@ -919,7 +919,7 @@ msgstr "Allokeringsfel för lokal resurs"
 msgid "Machine is not on the network"
 msgstr "Maskinen finns inte på nätverket"
 
-#: posix/regex.c:966
+#: posix/regex.c:984
 msgid "Memory exhausted"
 msgstr "Minnet slut"
 
@@ -1008,7 +1008,7 @@ msgstr "Inga data tillgängliga"
 msgid "No locks available"
 msgstr "Inga lås tillgängliga"
 
-#: posix/regex.c:955
+#: posix/regex.c:973
 msgid "No match"
 msgstr "Ingen träff"
 
@@ -1020,7 +1020,7 @@ msgstr "Inget meddelande av önskad typ"
 msgid "No more records in map database"
 msgstr "Inga fler poster i tabelldatabasen"
 
-#: posix/regex.c:5324
+#: posix/regex.c:5434
 msgid "No previous regular expression"
 msgstr "Inget föregående reguljärt uttryck"
 
@@ -1088,7 +1088,7 @@ msgstr "Numeriskt resultat är utanför giltigt område"
 msgid "Object is remote"
 msgstr "Är ett fjärrobjekt"
 
-#: time/zic.c:1966
+#: time/zic.c:1979
 msgid "Odd number of quotation marks"
 msgstr "Ojämnt antal citationstecken"
 
@@ -1158,7 +1158,7 @@ msgstr "Åtkomst nekas"
 msgid "Power failure"
 msgstr "Strömavbrott"
 
-#: posix/regex.c:968
+#: posix/regex.c:986
 msgid "Premature end of regular expression"
 msgstr "För tidigt slut på reguljärt uttryck"
 
@@ -1321,7 +1321,7 @@ msgstr "RTLD_NEXT används i kod som inte är dynamiskt laddad"
 msgid "Read-only file system"
 msgstr "Filsystemet endast läsbart"
 
-#: posix/regex.c:969
+#: posix/regex.c:987
 msgid "Regular expression too big"
 msgstr "Reguljärt uttryck för stort"
 
@@ -1337,11 +1337,12 @@ msgstr "Fjärradress ändrades"
 msgid "Remove password or make file unreadable by others."
 msgstr "Ta bort lösenord eller gör filen oläsbar för andra"
 
-#: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:257
-#: locale/programs/localedef.c:412
+#: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:262
+#: locale/programs/localedef.c:415
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"
 msgstr ""
-"Rapportera fel med programmet \"glibcbug\" till <bug-glibc@prep.ai.mit.edu>.\n"
+"Rapportera fel med programmet \"glibcbug\" till "
+"<bug-glibc@prep.ai.mit.edu>.\n"
 "Rapportera fel på översättningen till <sv@li.org>.\n"
 
 #: nis/ypclnt.c:691
@@ -1477,7 +1478,7 @@ msgstr "Streams-rörfel"
 msgid "Structure needs cleaning"
 msgstr "Strukturen behöver städas"
 
-#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:954
+#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:972
 #: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr "Lyckat"
@@ -1561,7 +1562,7 @@ msgstr "Spårning/BPT-fälla"
 msgid "Trace/breakpoint trap"
 msgstr "Spårningsfälla"
 
-#: posix/regex.c:959
+#: posix/regex.c:977
 msgid "Trailing backslash"
 msgstr "Avslutande omvänt snedstreck"
 
@@ -1586,8 +1587,8 @@ msgstr "Transportslutpunkten är redan förbunden"
 msgid "Transport endpoint is not connected"
 msgstr "Transportslutpunkten är inte förbunden"
 
-#: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:241
-#: locale/programs/localedef.c:393
+#: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:246
+#: locale/programs/localedef.c:396
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Försök med \"%s --help\" för mer information\n"
@@ -1636,19 +1637,19 @@ msgstr "Okänt systemfel"
 msgid "Unknown ypbind error"
 msgstr "Okänt ypbind-fel"
 
-#: posix/regex.c:962
+#: posix/regex.c:980
 msgid "Unmatched ( or \\("
 msgstr "Obalanserade ( eller \\("
 
-#: posix/regex.c:970
+#: posix/regex.c:988
 msgid "Unmatched ) or \\)"
 msgstr "Obalanserade ) eller \\)"
 
-#: posix/regex.c:961
+#: posix/regex.c:979
 msgid "Unmatched [ or [^"
 msgstr "Obalanserade [ eller [^"
 
-#: posix/regex.c:963
+#: posix/regex.c:981
 msgid "Unmatched \\{"
 msgstr "Obalanserad \\{"
 
@@ -1668,7 +1669,8 @@ msgid ""
 "Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
 "       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
 "Mandatory arguments to long options are mandatory for short options too.\n"
-"  -H, --header        create C header file containing symbol definitions\n"
+"  -H, --header=NAME   create C header file NAME containing symbol "
+"definitions\n"
 "  -h, --help          display this help and exit\n"
 "      --new           do not use existing catalog, force new output file\n"
 "  -o, --output=NAME   write output to file NAME\n"
@@ -1678,9 +1680,8 @@ msgid ""
 msgstr ""
 "Användning: %s [FLAGGA]... -o UTFIL [INFIL]...\n"
 "            %s [FLAGGA]... [UTFIL [INFIL]...]\n"
-"Obligatoriska argument till långa flaggor är obligatoriska även för de "
-"korta.\n"
-"  -H, --header        skapa en C-deklarationsfil med symboldefinitioner\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de korta.\n"
+"  -H, --header=NAMN   skapa en C-deklarationsfil NAMN med symboldefinitioner\n"
 "  -h, --help          visa denna hjälptext och avsluta\n"
 "      --new           använd inte existerande katalog, gör en ny utfil\n"
 "  -o, --output=NAMN   skriv resultatet till filen NAMN\n"
@@ -1716,7 +1717,7 @@ msgstr ""
 "  -V, --version       visa versionsinformation och avsluta\n"
 "Om INFIL är -, läs indata från standard in\n"
 
-#: locale/programs/localedef.c:397
+#: locale/programs/localedef.c:400
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
@@ -1735,7 +1736,8 @@ msgid ""
 "                       locale files  : %s\n"
 msgstr ""
 "Användning: %s [FLAGGA]... namn\n"
-"Obligatoriska argument till långa flaggor är obligatoriska även för de korta.\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de "
+"korta.\n"
 "  -c, --force               skapa resultatfil även om varningar gavs\n"
 "  -h, --help                visa denna hjälptext och avsluta\n"
 "  -f, --charmap=FIL         symboliska teckennamn definieras i FIL\n"
@@ -1749,7 +1751,7 @@ msgstr ""
 "Systemets katalog för teckenuppsättningar: %s\n"
 "                               lokalfiler: %s\n"
 
-#: locale/programs/locale.c:245
+#: locale/programs/locale.c:250
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
@@ -1803,7 +1805,7 @@ msgstr "Värdet för stort för definierad datatyp"
 msgid "Virtual timer expired"
 msgstr "Alarmklocka - virtuell tid"
 
-#: time/zic.c:1871
+#: time/zic.c:1884
 msgid "Wild result from command execution"
 msgstr "Vilt resultat från kommandokörning"
 
@@ -1812,7 +1814,7 @@ msgstr "Vilt resultat från kommandokörning"
 msgid "Window changed"
 msgstr "Ändrat fönster"
 
-#: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:192
+#: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:196
 #: locale/programs/localedef.c:185
 #, c-format
 msgid "Written by %s.\n"
@@ -1840,7 +1842,7 @@ msgstr "YPBINDPROC_DOMAIN: Okänt fel\n"
 msgid "You really blew it this time"
 msgstr "Du strulade till det den här gången"
 
-#: time/zic.c:1048
+#: time/zic.c:1052
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 "Zon-fortsättningsradens sluttid är inte efter sluttiden på föregående rad"
@@ -1893,11 +1895,11 @@ msgstr "olämplig ägare av .rhosts"
 msgid "bad argument"
 msgstr "dåligt argument"
 
-#: time/zic.c:1170
+#: time/zic.c:1174
 msgid "blank FROM field on Link line"
 msgstr "tomt \"FROM\"-fält på \"Link\"-rad"
 
-#: time/zic.c:1174
+#: time/zic.c:1178
 msgid "blank TO field on Link line"
 msgstr "tomt \"TO\"-fält på \"Link\"-rad"
 
@@ -1921,7 +1923,7 @@ msgstr "utsändning: ioctl (hämta gränssnittsflaggor)"
 msgid "cache_set: victim not found"
 msgstr "cache_set: offer hittades ej"
 
-#: time/zic.c:1698
+#: time/zic.c:1711
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "kan inte avgöra tidszonsförkortning att använda just efter \"until\"-tid"
@@ -1931,7 +1933,7 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr "kan inte ändra procedurnummer %d\n"
 
-#: locale/programs/localedef.c:291
+#: locale/programs/localedef.c:294
 #, c-format
 msgid "cannot `stat' locale file `%s'"
 msgstr "kan inte ta status på lokalfil \"%s\""
@@ -1970,7 +1972,7 @@ msgstr "kan inte öppna lokaldefinitionsfil \"%s\""
 msgid "cannot open output file `%s'"
 msgstr "kan inte öppna utfil \"%s\""
 
-#: locale/programs/locfile.c:1008
+#: locale/programs/locfile.c:1020
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "kan inte öppna utfil \"%s\" för kategori \"%s\""
@@ -1979,27 +1981,27 @@ msgstr "kan inte öppna utfil \"%s\" för kategori \"%s\""
 msgid "cannot process order specification"
 msgstr "kan inte bearbeta sorteringsspecifikation"
 
-#: locale/programs/locale.c:304
+#: locale/programs/locale.c:444
 #, c-format
 msgid "cannot read character map directory `%s'"
 msgstr "kan inte läsa teckenuppsättningskatalog \"%s\""
 
-#: locale/programs/locale.c:279
+#: locale/programs/locale.c:301
 #, c-format
 msgid "cannot read locale directory `%s'"
 msgstr "kan inte läsa lokalkatalog \"%s\""
 
-#: locale/programs/localedef.c:313
+#: locale/programs/localedef.c:316
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr "kan inte läsa lokalfil \"%s\""
 
-#: locale/programs/localedef.c:338
+#: locale/programs/localedef.c:341
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "kan inte skriva utfiler till \"%s\""
 
-#: locale/programs/localedef.c:381
+#: locale/programs/localedef.c:384
 msgid "category data requested more than once: should not happen"
 msgstr "kategoridata begärd mer än en gång: borde inte inträffa"
 
@@ -2085,7 +2087,9 @@ msgstr "standardteckenuppsättningsfil \"%s\" inte hittad"
 msgid ""
 "direction flag in string %d in `era' field in category `%s' is not '+' nor "
 "'-'"
-msgstr "riktningsflagga i sträng %d i \"era\"-fält i kategori \"%s\" är varken \"+\" eller \"-\""
+msgstr ""
+"riktningsflagga i sträng %d i \"era\"-fält i kategori \"%s\" är varken \"+\" "
+"eller \"-\""
 
 #: locale/programs/ld-time.c:164
 #, c-format
@@ -2118,7 +2122,7 @@ msgstr "duplicerad nyckel"
 msgid "duplicate set definition"
 msgstr "duplicerad definition av mängd"
 
-#: time/zic.c:963
+#: time/zic.c:967
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "duplicerat zonnamn %s (fil \"%s\", rad %d)"
@@ -2167,11 +2171,11 @@ msgstr "fel vid insättning i hashtabellen"
 msgid "expect string argument for `copy'"
 msgstr "förväntar strängargument för \"copy\""
 
-#: time/zic.c:854
+#: time/zic.c:858
 msgid "expected continuation line not found"
 msgstr "förväntad fortsättningsrad ej funnen"
 
-#: locale/programs/locfile.c:1032
+#: locale/programs/locfile.c:1044
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "misslyckades skriva data för kategori \"%s\""
@@ -2227,11 +2231,11 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (hämta gränssnittskonfiguration)"
 
-#: time/zic.c:1147
+#: time/zic.c:1151
 msgid "illegal CORRECTION field on Leap line"
 msgstr "otillåtet \"CORRECTION\"-fält på \"Leap\"-rad"
 
-#: time/zic.c:1151
+#: time/zic.c:1155
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "otillåtet \"Rolling/Stationary\"-fält på \"Leap\"-rad"
 
@@ -2294,19 +2298,19 @@ msgstr ""
 msgid "incorrectly formatted file"
 msgstr "felaktigt formaterad rad"
 
-#: time/zic.c:811
+#: time/zic.c:815
 msgid "input line of unknown type"
 msgstr "inrad av okänd typ"
 
-#: time/zic.c:1760
+#: time/zic.c:1773
 msgid "internal error - addtype called with bad isdst"
 msgstr "internt fel - addtype anropad med felaktig isdst"
 
-#: time/zic.c:1768
+#: time/zic.c:1781
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "internt fel - addtype anropad med felaktig ttisgmt"
 
-#: time/zic.c:1764
+#: time/zic.c:1777
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "internt fel - addtype anropad med felaktig ttisstd"
 
@@ -2315,43 +2319,43 @@ msgstr "internt fel - addtype anropad med felaktig ttisstd"
 msgid "internal error in %s, line %u"
 msgstr "internt fel i %s, rad %u"
 
-#: time/zic.c:1019
+#: time/zic.c:1023
 msgid "invalid GMT offset"
 msgstr "ogiltigt GMT-tillägg"
 
-#: time/zic.c:1022
+#: time/zic.c:1026
 msgid "invalid abbreviation format"
 msgstr "ogiltigt förkortningsformat"
 
-#: time/zic.c:1112 time/zic.c:1313 time/zic.c:1327
+#: time/zic.c:1116 time/zic.c:1326 time/zic.c:1340
 msgid "invalid day of month"
 msgstr "ogiltig dag i månaden"
 
-#: time/zic.c:1270
+#: time/zic.c:1279
 msgid "invalid ending year"
 msgstr "ogiltigt slutår"
 
-#: time/zic.c:1084
+#: time/zic.c:1088
 msgid "invalid leaping year"
 msgstr "ogiltigt skottår"
 
-#: time/zic.c:1099 time/zic.c:1202
+#: time/zic.c:1103 time/zic.c:1206
 msgid "invalid month name"
 msgstr "ogiltigt månadsnamn"
 
-#: time/zic.c:918
+#: time/zic.c:922
 msgid "invalid saved time"
 msgstr "ogiltigt sparad tid"
 
-#: time/zic.c:1250
+#: time/zic.c:1255
 msgid "invalid starting year"
 msgstr "ogiltigt startår"
 
-#: time/zic.c:1128 time/zic.c:1230
+#: time/zic.c:1132 time/zic.c:1235
 msgid "invalid time of day"
 msgstr "ogiltig tid på dagen"
 
-#: time/zic.c:1318
+#: time/zic.c:1331
 msgid "invalid weekday name"
 msgstr "ogiltigt veckodagsnamn"
 
@@ -2363,11 +2367,11 @@ msgstr "rad efter ... måste innehålla teckendefinition"
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr "rad före ... innehåller inte definition för teckenkonstant"
 
-#: time/zic.c:791
+#: time/zic.c:795
 msgid "line too long"
 msgstr "för lång rad"
 
-#: locale/programs/localedef.c:285
+#: locale/programs/localedef.c:288
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr "lokalfil \"%s\", använd i \"copy\", inte funnen"
@@ -2386,12 +2390,12 @@ msgstr "minnet förstört efter slutet på allokerat block"
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
 #: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1442
-#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:962
+#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:974
 #: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
 msgstr "minne slut"
 
-#: malloc/obstack.c:462
+#: malloc/obstack.c:466
 msgid "memory exhausted\n"
 msgstr "minnet slut\n"
 
@@ -2409,7 +2413,7 @@ msgstr "eraformat i sträng %d i \"era\"-fält i kategori \"%s\" saknas"
 msgid "missing era name in string %d in `era' field in category `%s'"
 msgstr "eranamn i sträng %d i \"era\"-fält i kategori \"%s\" saknas"
 
-#: time/zic.c:913
+#: time/zic.c:917
 msgid "nameless rule"
 msgstr "namnlös regel"
 
@@ -2423,7 +2427,7 @@ msgstr "aldrig registrerat prog %d\n"
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr "felaktigt reguljärt uttryck för fält \"%s\" i kategori \"%s\": %s"
 
-#: time/zic.c:2086
+#: time/zic.c:2099
 msgid "no day in month matches rule"
 msgstr "ingen dag i månaden matchar regeln"
 
@@ -2435,7 +2439,7 @@ msgstr "ingen definition av \"UNDEFINED\""
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "inget annat nyckelord ska anges när \"copy\" används"
 
-#: locale/programs/localedef.c:344
+#: locale/programs/localedef.c:347
 msgid "no output file produced because warning were issued"
 msgstr "ingen utfil skapad på grund av varningar"
 
@@ -2497,7 +2501,7 @@ msgstr "rcmd: write: (sätter upp standard fel): %m\n"
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: minnet slut\n"
 
-#: time/zic.c:1821
+#: time/zic.c:1834
 msgid "repeated leap second moment"
 msgstr "upprepat skottsekundstillfälle"
 
@@ -2529,7 +2533,7 @@ msgstr "rpcinfo: kan inte kontakta portmapper"
 msgid "rpcinfo: can't contact portmapper: "
 msgstr "rpcinfo: kan inte kontakta portmapper: "
 
-#: time/zic.c:704 time/zic.c:706
+#: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
 msgstr "samma regel i flera filer"
 
@@ -2552,7 +2556,7 @@ msgid ""
 msgstr ""
 "specifikation av sorteringsvikter för kollationssymbol verkar inte vettig"
 
-#: time/zic.c:775
+#: time/zic.c:779
 msgid "standard input"
 msgstr "standard in"
 
@@ -2565,14 +2569,26 @@ msgstr "standard ut"
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
 msgstr "startdatum är otillåtet i sträng %d i \"era\"-fält i kategori \"%s\""
 
-#: time/zic.c:1274
+#: time/zic.c:1287
 msgid "starting year greater than ending year"
 msgstr "startår är större än slutår"
+
+#: time/zic.c:1261 time/zic.c:1285
+msgid "starting year too high to be represented"
+msgstr "startår för stort för att kunna representeras"
+
+#: time/zic.c:1259 time/zic.c:1283
+msgid "starting year too low to be represented"
+msgstr "startår för litet för att kunna representeras"
 
 #: locale/programs/ld-time.c:330
 #, c-format
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
 msgstr "slutdatum är otillåtet i sträng %d i \"era\"-fält i kategori \"%s\""
+
+#: sunrpc/svc_run.c:81
+msgid "svc_run: - select failed"
+msgstr "svc_run: - select misslyckades"
 
 #: sunrpc/svc_tcp.c:201 sunrpc/svc_tcp.c:206
 msgid "svc_tcp: makefd_xprt: out of memory\n"
@@ -2714,11 +2730,11 @@ msgstr "syntaxfel: inte inne i en lokaldefinition"
 msgid "this is the first definition"
 msgstr "detta är den första definitionen"
 
-#: time/zic.c:1117
+#: time/zic.c:1121
 msgid "time before zero"
 msgstr "tid före noll"
 
-#: time/zic.c:1125 time/zic.c:1986 time/zic.c:2005
+#: time/zic.c:1129 time/zic.c:1999 time/zic.c:2018
 msgid "time overflow"
 msgstr "för stort tidsvärde"
 
@@ -2734,15 +2750,15 @@ msgstr "för många tecken i teckenkodning"
 msgid "too many character classes defined"
 msgstr "för många teckenklasser definierade"
 
-#: time/zic.c:1815
+#: time/zic.c:1828
 msgid "too many leap seconds"
 msgstr "för många skottsekunder"
 
-#: time/zic.c:1787
+#: time/zic.c:1800
 msgid "too many local time types"
 msgstr "för många lokala tidstyper"
 
-#: time/zic.c:1741
+#: time/zic.c:1754
 msgid "too many transitions?!"
 msgstr "för många övergångar?!"
 
@@ -2750,7 +2766,7 @@ msgstr "för många övergångar?!"
 msgid "too many weights"
 msgstr "för många vikter"
 
-#: time/zic.c:2109
+#: time/zic.c:2122
 msgid "too many, or too long, time zone abbreviations"
 msgstr "för många eller för långa tidszonförkortningar"
 
@@ -2767,7 +2783,7 @@ msgstr "problem att svara till prog %d\n"
 msgid "two lines in a row containing `...' are not allowed"
 msgstr "två rader efter varann som har \"...\" är inte tillåtet"
 
-#: time/zic.c:1281
+#: time/zic.c:1294
 msgid "typed single year"
 msgstr "satte typ på endast ett år"
 
@@ -2807,7 +2823,7 @@ msgstr "okänd mängd \"%s\""
 msgid "unknown symbol `%.*s': line ignored"
 msgstr "okänd symbol \"%.*s\": rad ignorerad"
 
-#: time/zic.c:747
+#: time/zic.c:751
 msgid "unruly zone"
 msgstr "besvärlig zon"
 
@@ -2831,7 +2847,7 @@ msgstr "oavslutat viktnamn"
 msgid "upper limit in range is not smaller then lower limit"
 msgstr "övre gräns i intervall är inte mindre än undre gräns"
 
-#: time/zic.c:2052
+#: time/zic.c:2065
 msgid "use of 2/29 in non leap-year"
 msgstr "använder 29/2 i icke-skottår"
 
@@ -2878,13 +2894,17 @@ msgstr "värden på fält \"%s\" i kategorin \"%s\" måste vara mindre än 127"
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr "värden på fält \"%s\" i kategorin \"%s\" får inte vara noll"
 
-#: login/utmp_file.c:84
+#: login/utmp_file.c:76
 msgid "while opening UTMP file"
 msgstr "när UTMP-filen öppnades"
 
 #: catgets/gencat.c:989
 msgid "while opening old catalog file"
 msgstr "när gammal katalogfil öppnades"
+
+#: locale/programs/locale.c:341
+msgid "while preparing output"
+msgstr "när utadata förbereddes"
 
 #: db/makedb.c:354
 msgid "while reading database"
@@ -2898,23 +2918,23 @@ msgstr "när databasen skrevs"
 msgid "wrong number of arguments"
 msgstr "fel antal argument"
 
-#: time/zic.c:1075
+#: time/zic.c:1079
 msgid "wrong number of fields on Leap line"
 msgstr "fel antal fält på \"Leap\"-rad"
 
-#: time/zic.c:1166
+#: time/zic.c:1170
 msgid "wrong number of fields on Link line"
 msgstr "fel antal fält på \"Link\"-rad"
 
-#: time/zic.c:909
+#: time/zic.c:913
 msgid "wrong number of fields on Rule line"
 msgstr "fel antal fält på \"Rule\"-rad"
 
-#: time/zic.c:979
+#: time/zic.c:983
 msgid "wrong number of fields on Zone continuation line"
 msgstr "fel antal fält på \"Zone\"-fortsättningsrad"
 
-#: time/zic.c:937
+#: time/zic.c:941
 msgid "wrong number of fields on Zone line"
 msgstr "fel antal fält på \"Zone\"-rad"
 

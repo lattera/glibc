@@ -968,6 +968,11 @@ Porting the GNU C Library
 @include memory.texi
 @include ctype.texi
 @include string.texi
+@include mbyte.texi
+@include locale.texi
+@include message.texi
+@include search.texi
+@include pattern.texi
 @include io.texi
 @include stdio.texi
 @include llio.texi
@@ -977,12 +982,7 @@ Porting the GNU C Library
 @include terminal.texi
 @include math.texi
 @include arith.texi
-@include search.texi
-@include pattern.texi
 @include time.texi
-@include mbyte.texi
-@include locale.texi
-@include message.texi
 @include setjmp.texi
 @include signal.texi
 @include startup.texi

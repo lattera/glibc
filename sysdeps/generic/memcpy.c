@@ -23,6 +23,8 @@
 #include <memcopy.h>
 #include <pagecopy.h>
 
+#undef memcpy
+
 void *
 memcpy (dstpp, srcpp, len)
      void *dstpp;

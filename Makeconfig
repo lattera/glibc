@@ -554,7 +554,7 @@ ifeq (yes,$(build-omitfp))
 # library with debugging information.  The debuggable objects are named foo.og.
 object-suffixes += .og
 CFLAGS-.og = -g
-CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
+CFLAGS-.o = -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
 CFLAGS-.os += $(CFLAGS-.o)
 libtype.og = lib%_g.a
 endif

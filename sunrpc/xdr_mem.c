@@ -53,7 +53,7 @@ static bool_t xdrmem_putbytes (XDR *, const char *, u_int);
 static u_int xdrmem_getpos (const XDR *);
 static bool_t xdrmem_setpos (XDR *, u_int);
 static long *xdrmem_inline (XDR *, int);
-static void xdrmem_destroy (const XDR *);
+static void xdrmem_destroy (XDR *);
 
 static const struct xdr_ops xdrmem_ops =
 {
@@ -91,7 +91,7 @@ xdrmem_create (xdrs, addr, size, op)
  */
 
 static void
-xdrmem_destroy (const XDR *xdrs)
+xdrmem_destroy (XDR *xdrs)
 {
 }
 

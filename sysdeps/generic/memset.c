@@ -19,6 +19,8 @@
 #include <string.h>
 #include <memcopy.h>
 
+#undef memset
+
 void *
 memset (dstpp, c, len)
      void *dstpp;

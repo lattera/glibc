@@ -52,7 +52,7 @@ static bool_t xdrstdio_putbytes (XDR *, const char *, u_int);
 static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
 static long *xdrstdio_inline (XDR *, int);
-static void xdrstdio_destroy (const XDR *);
+static void xdrstdio_destroy (XDR *);
 
 /*
  * Ops vector for stdio type XDR
@@ -94,7 +94,7 @@ xdrstdio_create (xdrs, file, op)
  */
 static void
 xdrstdio_destroy (xdrs)
-     const XDR *xdrs;
+     XDR *xdrs;
 {
   (void) fflush ((FILE *) xdrs->x_private);
   /* xx should we close the file ?? */
