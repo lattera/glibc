@@ -19,10 +19,6 @@
 #include <math.h>
 #include "ieee754.h"
 
-#undef __isinfl
-#undef isinfl
-
-
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
 int
@@ -42,5 +38,5 @@ __isinfl (long double value)
   return 0;
 }
 
-INTDEF(__isinfl)
+hidden_def (__isinfl)
 weak_alias (__isinfl, isinfl);
