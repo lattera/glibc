@@ -1,4 +1,4 @@
-@node Locales, Searching and Sorting, Extended Characters, Top
+@node Locales, Message Translation, Extended Characters, Top
 @chapter Locales and Internationalization
 
 Different countries and cultures have varying conventions for how to

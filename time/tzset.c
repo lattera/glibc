@@ -312,13 +312,18 @@ __tzset_internal (always)
 	    {
 	      free (old_tz);
 	      old_tz = NULL;
+	      free (tzbuf);
 	      return;
 	    }
 	}
     }
   else
-    /* There is no DST.  */
-    tz_rules[1].name = tz_rules[0].name;
+    {
+      /* There is no DST.  */
+      tz_rules[1].name = tz_rules[0].name;
+      free (tzbuf);
+      return;
+    }
 
  done_names:
   free (tzbuf);

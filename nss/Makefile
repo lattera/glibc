@@ -62,8 +62,8 @@ distribute		+= db-XXX.c
 
 
 ifneq ($(build-static-nss),yes)
-libnss_files-inhibit-o	= $(filter-out .so,$(object-suffixes))
-libnss_db-inhibit-o	= $(filter-out .so,$(object-suffixes))
+libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
+libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif
 
 

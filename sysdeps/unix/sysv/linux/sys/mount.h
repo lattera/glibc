@@ -57,28 +57,6 @@ __BEGIN_DECLS
 #define MS_MGC_MSK 0xffff0000	/* Magic flag number mask */
 
 
-/* Note that read-only etc flags are inode-specific: setting some
-   file-system flags just means all the inodes inherit those flags by
-   default. It might be possible to override it selectively if you
-   really wanted to with some ioctl() that is not currently
-   implemented.
-
-   Exception: MS_RDONLY is always applied to the entire file system.  */
-#define IS_RDONLY(inode) \
-     (((inode)->i_sb) && ((inode)->i_sb->s_flags & MS_RDONLY))
-#define DO_UPDATE_ATIME(inode) \
-     (!((inode)->i_flags & MS_NOATIME) && !IS_RDONLY (inode))
-#define IS_NOSUID(inode) ((inode)->i_flags & MS_NOSUID)
-#define IS_NODEV(inode) ((inode)->i_flags & MS_NODEV)
-#define IS_NOEXEC(inode) ((inode)->i_flags & MS_NOEXEC)
-#define IS_SYNC(inode) ((inode)->i_flags & MS_SYNCHRONOUS)
-#define IS_MANDLOCK(inode) ((inode)->i_flags & MS_MANDLOCK)
-
-#define IS_WRITABLE(inode) ((inode)->i_flags & S_WRITE)
-#define IS_APPEND(inode) ((inode)->i_flags & S_APPEND)
-#define IS_IMMUTABLE(inode) ((inode)->i_flags & S_IMMUTABLE)
-
-
 /* The read-only stuff doesn't really belong here, but any other place
    is probably as bad and I don't want to create yet another include
    file.  */

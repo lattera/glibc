@@ -113,62 +113,85 @@ if_nameindex (void)
   int fd = opensock ();
   struct ifconf ifc;
   unsigned int rq_ifs = 4, nifs, i;
+  int rq_len;
   struct if_nameindex *idx = NULL;
+#ifdef SIOCGIFCOUNT
+  static int siocgifcount_works = 1;
+#endif
 
   if (fd < 0)
     return NULL;
+
+#ifdef SIOCGIFCOUNT
+  /* We may be able to find out how many interfaces really exist, rather
+     than guessing.  This ioctl is not present in kernels before version
+     2.1.50.  */
+  if (siocgifcount_works)
+    {
+      int serrno = errno;
+
+      if (ioctl (fd, SIOCGIFCOUNT, &nifs) < 0)
+	{
+	  if (errno == EINVAL)
+	    {
+	      siocgifcount_works = 0;
+	      __set_errno (serrno);
+	    }
+	}
+      else
+	rq_ifs = nifs + 1;
+    }
+#endif
 
   ifc.ifc_buf = NULL;
 
   /* Read all the interfaces out of the kernel.  */
   do
     {
-      rq_ifs *= 2;
-      ifc.ifc_len = rq_ifs * sizeof (struct ifreq);
-      ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
-      if (ifc.ifc_buf == NULL)
+      rq_len = ifc.ifc_len = rq_ifs * sizeof (struct ifreq);
+      ifc.ifc_buf = alloca (ifc.ifc_len);
+      if ((ifc.ifc_buf == NULL) || (ioctl (fd, SIOCGIFCONF, &ifc) < 0))
 	{
-	  close(fd);
+	  close (fd);
 	  return NULL;
 	}
-      if (ioctl (fd, SIOCGIFCONF, &ifc) < 0)
-	goto jump;
+      rq_ifs *= 2;
     }
-  while ((unsigned int) ifc.ifc_len == (rq_ifs * sizeof (struct ifreq)));
+  while (ifc.ifc_len == rq_len);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
-  ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
 
-  idx = malloc ((nifs+1) * sizeof (struct if_nameindex));
+  idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
   if (idx == NULL)
-    goto jump;
+    {
+      close (fd);
+      return NULL;
+    }
 
   for (i = 0; i < nifs; ++i)
     {
       struct ifreq *ifr = &ifc.ifc_req[i];
-      if ((idx[i].if_name = malloc (strlen (ifr->ifr_name)+1)) == NULL)
-	{
-	  free (idx);
-	  idx = NULL;
-	  goto jump;
-	}
-      strcpy (idx[i].if_name, ifr->ifr_name);
-      if (ioctl (fd, SIOGIFINDEX, ifr) < 0)
+      idx[i].if_name = __strdup (ifr->ifr_name);
+      if (idx[i].if_name == NULL
+	  || ioctl (fd, SIOGIFINDEX, ifr) < 0)
 	{
 	  int saved_errno = errno;
+	  unsigned int j;
+
+	  for (j =  0; j < i; ++j)
+	    free (idx[j].if_name);
 	  free (idx);
-	  idx = NULL;
+	  close (fd);
 	  if (saved_errno == EINVAL)
 	    __set_errno (ENOSYS);
-	  goto jump;
+	  return NULL;
 	}
       idx[i].if_index = ifr->ifr_ifindex;
     }
+
   idx[i].if_index = 0;
   idx[i].if_name = NULL;
 
-jump:
-  free (ifc.ifc_buf);
   close (fd);
   return idx;
 #endif
@@ -181,9 +204,45 @@ if_indextoname (unsigned int ifindex, char *ifname)
   __set_errno (ENOSYS);
   return NULL;
 #else
-  struct if_nameindex *idx = if_nameindex ();
+  struct if_nameindex *idx;
   struct if_nameindex *p;
   char *result = NULL;
+
+#ifdef SIOGIFNAME
+  /* We may be able to do the conversion directly, rather than searching a
+     list.  This ioctl is not present in kernels before version 2.1.50.  */
+  struct ifreq ifr;
+  int fd;
+  static int siogifname_works = 1;
+
+  if (siogifname_works)
+    {
+      int serrno = errno;
+
+      fd = opensock ();
+
+      if (fd < 0)
+	return NULL;
+
+      ifr.ifr_ifindex = ifindex;
+      if (ioctl (fd, SIOGIFNAME, &ifr) < 0)
+	{
+	  if (errno == EINVAL)
+	    siogifname_works = 0;   /* Don't make the same mistake twice. */
+	}
+      else
+	{
+	  close (fd);
+	  return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
+	}
+
+      close (fd);
+
+      __set_errno (serrno);
+    }
+#endif
+
+  idx = if_nameindex ();
 
   if (idx != NULL)
     {

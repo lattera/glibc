@@ -1,10 +1,10 @@
-/* libintl.h -- Message catalogs for internationalization.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Message catalogs for internationalization.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -71,8 +71,8 @@ extern char *__bindtextdomain __P ((__const char *__domainname,
 #if defined __OPTIMIZE__
 
 /* We need NULL for `gettext'.  */
-#define __need_NULL
-#include <stddef.h>
+# define __need_NULL
+# include <stddef.h>
 
 /* We need LC_MESSAGES for `dgettext'.  */
 # include <locale.h>

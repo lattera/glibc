@@ -39,6 +39,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
   nis_result *res;
   enum nss_status retval;
   char buf[NIS_MAXNAMELEN+2];
+  size_t slen;
   char *domain, *cptr;
   int len;
 
@@ -55,12 +56,15 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
     return NSS_STATUS_UNAVAIL;
   domain++;
 
-  snprintf (buf, NIS_MAXNAMELEN,
-	    "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
-	    netname, domain);
+  slen = snprintf (buf, NIS_MAXNAMELEN,
+		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
+		   netname, domain);
 
-  if (buf[strlen (buf)-1] != '.')
-    strcat (buf, ".");
+  if (buf[slen - 1] != '.')
+    {
+      buf[slen++] = '.';
+      buf[slen] = '\0';
+    }
 
   res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
@@ -107,6 +111,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
   nis_result *res;
   enum nss_status retval;
   char buf[NIS_MAXNAMELEN+2];
+  size_t slen;
   char *domain, *cptr;
   int len;
 
@@ -123,12 +128,15 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
     return NSS_STATUS_UNAVAIL;
   domain++;
 
-  snprintf (buf, NIS_MAXNAMELEN,
-	    "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
-	    netname, domain);
+  slen = snprintf (buf, NIS_MAXNAMELEN,
+		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
+		   netname, domain);
 
-  if (buf[strlen(buf)-1] != '.')
-    strcat(buf, ".");
+  if (buf[slen - 1] != '.')
+    {
+      buf[slen++] = '.';
+      buf[slen] = '\0';
+    }
 
   res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
@@ -187,7 +195,7 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist)
 
   if (!s || (!isdigit (*s)))
     {
-      syslog (LOG_ERR, "netname2user: missing group id list in '%s'.", s);
+      syslog (LOG_ERR, _("netname2user: missing group id list in '%s'."), s);
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -212,6 +220,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   char *domain;
   nis_result *res;
   char sname[NIS_MAXNAMELEN+1]; /*  search criteria + table name */
+  size_t slen;
   char principal[NIS_MAXNAMELEN+1];
   int len;
 
@@ -227,11 +236,15 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       (size_t) NIS_MAXNAMELEN)
     return NSS_STATUS_UNAVAIL;
 
-  snprintf (sname, NIS_MAXNAMELEN,
-	    "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
-	    netname, domain);
-  if (sname[strlen (sname) - 1] != '.')
-    strcat(sname, ".");
+  slen = snprintf (sname, NIS_MAXNAMELEN,
+		   "[auth_name=%s,auth_type=DES],cred.org_dir.%s",
+		   netname, domain);
+
+  if (sname[slen - 1] != '.')
+    {
+      sname[slen++] = '.';
+      sname[slen] = '\0';
+    }
 
   /* must use authenticated call here */
   /* XXX but we cant, for now. XXX */
@@ -250,12 +263,12 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_NOTFOUND;
     case NIS_S_NOTFOUND:
     case NIS_TRYAGAIN:
-      syslog (LOG_ERR, "netname2user: (nis+ lookup): %s\n",
+      syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
       return NSS_STATUS_TRYAGAIN;
     default:
-      syslog (LOG_ERR, "netname2user: (nis+ lookup): %s\n",
+      syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
       return NSS_STATUS_UNAVAIL;
@@ -286,17 +299,21 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
    *      LOCAL entry in **local** cred table.
    */
   domain = nis_local_directory ();
-  if ((strlen (principal)+strlen (domain)+45) >
-      (size_t) NIS_MAXNAMELEN)
+  if ((strlen (principal) + strlen (domain) + 45) > (size_t) NIS_MAXNAMELEN)
     {
       syslog (LOG_ERR, _("netname2user: principal name '%s' too long"),
 	      principal);
       return NSS_STATUS_UNAVAIL;
     }
-  sprintf (sname, "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
-	  principal, domain);
-  if (sname[strlen(sname) - 1] != '.')
-    strcat(sname, ".");
+
+  slen = sprintf (sname, "[cname=%s,auth_type=LOCAL],cred.org_dir.%s",
+		  principal, domain);
+
+  if (sname[slen - 1] != '.')
+    {
+      sname[slen++] = '.';
+      sname[slen] = '\0';
+    }
 
   /* must use authenticated call here */
   /* XXX but we cant, for now. XXX */
@@ -312,7 +329,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return NSS_STATUS_NOTFOUND;
     case NIS_S_NOTFOUND:
     case NIS_TRYAGAIN:
-      syslog (LOG_ERR, "netname2user: (nis+ lookup): %s\n",
+      syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
       return NSS_STATUS_TRYAGAIN;
@@ -320,7 +337,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
     case NIS_S_SUCCESS:
       break;   /* go and do something useful */
     default:
-      syslog (LOG_ERR, "netname2user: (nis+ lookup): %s\n",
+      syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
       return NSS_STATUS_UNAVAIL;
@@ -333,9 +350,9 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
        * Something wrong with cred table.
        * Warn user and continue.
        */
-      syslog(LOG_ALERT,
-	     _("netname2user: LOCAL entry for %s in directory %s not unique"),
-	     netname, domain);
+      syslog (LOG_ALERT,
+	      _("netname2user: LOCAL entry for %s in directory %s not unique"),
+	      netname, domain);
     }
   /* Fetch the uid */
   *uidp = atoi (ENTRY_VAL (res->objects.objects_val, 2));

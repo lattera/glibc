@@ -22,8 +22,12 @@
 
 #ifdef	_ASSERT_H
 
-#undef	_ASSERT_H
-#undef	assert
+# undef	_ASSERT_H
+# undef	assert
+
+# ifdef	__USE_GNU
+#  undef assert_perror
+# endif
 
 #endif /* assert.h	*/
 

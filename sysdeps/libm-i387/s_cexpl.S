@@ -161,8 +161,9 @@ ENTRY(__cexpl)
 	jnz	5f
 	fldl	MOX(huge_nan_null_null,%edx,1)
 	movl	4(%esp), %edx		/* Pointer to memory for result.  */
-	fstl	8(%edx)
-	fstpl	(%edx)
+	fld	%st
+	fstpt	12(%edx)
+	fstpt	(%edx)
 	ftst
 	fnstsw
 	shll	$7, %eax
@@ -188,8 +189,9 @@ ENTRY(__cexpl)
 	fsincos
 	fldl	MOX(huge_nan_null_null,%edx,1)
 	movl	4(%esp), %edx		/* Pointer to memory for result.  */
-	fstl	8(%edx)
-	fstpl	(%edx)
+	fld	%st
+	fstpt	12(%edx)
+	fstpt	(%edx)
 	ftst
 	fnstsw
 	shll	$7, %eax
@@ -237,8 +239,9 @@ ENTRY(__cexpl)
 
 	fldl	MOX(huge_nan_null_null,%edx,1)
 	fldl	MOX(huge_nan_null_null+8,%edx,1)
-	fstpt	12(%eax)
+	fxch
 	fstpt	(%eax)
+	fstpt	12(%eax)
 	ret	$4
 
 	/* The real part is NaN.  */

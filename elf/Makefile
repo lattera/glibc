@@ -30,7 +30,7 @@ dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
 				  version profile)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.so = $(dl-routines) dl-support enbl-secure
+elide-routines.os = $(dl-routines) dl-support enbl-secure
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -54,8 +54,8 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so eval.so
-generated	= librtld.so dl-allobjs.so trusted-dirs.h rtldtbl.h
+extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os
+generated	= librtld.os dl-allobjs.os trusted-dirs.h rtldtbl.h
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 endif
@@ -85,11 +85,11 @@ endif
 # Command to link into a larger single relocatable object.
 reloc-link = $(LINK.o) -nostdlib -nostartfiles -r -o $@
 
-$(objpfx)dl-allobjs.so: $(rtld-routines:%=$(objpfx)%.so)
+$(objpfx)dl-allobjs.os: $(rtld-routines:%=$(objpfx)%.os)
 	$(reloc-link) $^
 
 # Link together the dynamic linker into a single relocatable object.
-$(objpfx)librtld.so: $(objpfx)dl-allobjs.so $(common-objpfx)libc_pic.a
+$(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 # Do we need a linker script?
@@ -107,7 +107,7 @@ $(objpfx)rtld-ldscript: $(rtld-ldscript-in) $(rtld-parms)
 	    -e 's#@@rtld-entry@@#$(rtld-entry)#' \
 	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
 
-$(objpfx)ld.so: $(objpfx)librtld.so $(objpfx)rtld-ldscript
+$(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
 define rtld-link
@@ -116,7 +116,7 @@ $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  $(filter-out $(objpfx)rtld-ldscript,$^)
 endef
 else
-$(objpfx)ld.so: $(objpfx)librtld.so
+$(objpfx)ld.so: $(objpfx)librtld.os
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
 define rtld-link
@@ -186,4 +186,4 @@ endif
 # muwahaha
 
 LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
-$(objpfx)libdl.so: $(objpfx)eval.so
+$(objpfx)libdl.so: $(objpfx)eval.os

@@ -166,7 +166,7 @@ endif
 ifdef static-only-routines
 # These routines are to be omitted from the shared library object,
 # so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx)empty.o
+$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.o
 	rm -f $@
 	ln $< $@
 endif

@@ -131,6 +131,16 @@ extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 /* Rewind DIRP to the beginning of the directory.  */
 extern void rewinddir __P ((DIR *__dirp));
 
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
+# include <bits/types.h>
+
+/* Seek to position POS on DIRP.  */
+extern void seekdir __P ((DIR *__dirp, __off_t __pos));
+
+/* Return the current position of DIRP.  */
+extern __off_t telldir __P ((DIR *__dirp));
+#endif
+
 #if defined __USE_BSD || defined __USE_MISC
 
 /* Return the file descriptor used by DIRP.  */
@@ -152,15 +162,8 @@ extern int dirfd __P ((DIR *__dirp));
 #  endif
 # endif
 
-# include <bits/types.h>
 # define __need_size_t
 # include <stddef.h>
-
-/* Seek to position POS on DIRP.  */
-extern void seekdir __P ((DIR *__dirp, __off_t __pos));
-
-/* Return the current position of DIRP.  */
-extern __off_t telldir __P ((DIR *__dirp));
 
 /* Scan the directory DIR, calling SELECTOR on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,
@@ -178,7 +181,7 @@ extern int alphasort __P ((__const __ptr_t, __const __ptr_t));
 # ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
 extern int versionsort __P ((__const __ptr_t, __const __ptr_t));
-#endif
+# endif
 
 /* Read directory entries from FD into BUF, reading at most NBYTES.
    Reading starts at offset *BASEP, and *BASEP is updated with the new

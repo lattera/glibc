@@ -75,7 +75,7 @@ _dl_signal_error (int errcode,
       /* Lossage while resolving the program's own symbols is always fatal.  */
       extern char **_dl_argv;	/* Set in rtld.c at startup.  */
       _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			": error in loading shared libraries",
+			": error in loading shared libraries: ",
 			objname ?: "", objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			errcode ? strerror (errcode) : "", "\n", NULL);

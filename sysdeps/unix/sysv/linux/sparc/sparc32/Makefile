@@ -3,7 +3,7 @@ sysdep_routines += __sigtrampoline
 endif
 
 asm-CPPFLAGS=-D__ASSEMBLY__
-as-FLAGS-.so=-fPIC
+ASFLAGS-.os=-fPIC
 
 # When I get this to work, this is the right thing
 ifeq ($(subdir),elf)

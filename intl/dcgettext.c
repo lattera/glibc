@@ -2,7 +2,7 @@
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -298,10 +298,6 @@ DCGETTEXT (domainname, msgid, category)
 	  return (char *) msgid;
 	}
 
-      /* We don't want libintl.a to depend on any other library.  So
-	 we avoid the non-standard function stpcpy.  In GNU C Library
-	 this function is available, though.  Also allow the symbol
-	 HAVE_STPCPY to be defined.  */
       stpcpy (stpcpy (strchr (dirname, '\0'), "/"), binding->dirname);
     }
 
@@ -312,10 +308,7 @@ DCGETTEXT (domainname, msgid, category)
   xdomainname = (char *) alloca (strlen (categoryname)
 				 + strlen (domainname) + 5);
   ADD_BLOCK (block_list, xdomainname);
-  /* We don't want libintl.a to depend on any other library.  So we
-     avoid the non-standard function stpcpy.  In GNU C Library this
-     function is available, though.  Also allow the symbol HAVE_STPCPY
-     to be defined.  */
+
   stpcpy (stpcpy (stpcpy (stpcpy (xdomainname, categoryname), "/"),
 		  domainname),
 	  ".mo");

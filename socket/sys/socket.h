@@ -113,7 +113,7 @@ extern int connect __P ((int __fd,
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
 extern int getpeername __P ((int __fd, __SOCKADDR_ARG __addr,
-			     size_t *__len));
+			     socklen_t *__len));
 
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */

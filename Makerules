@@ -344,7 +344,8 @@ endif
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a; $(build-shlib)
+lib%.so: lib%_pic.a $(+preinit) $(+postinit)
+	$(build-shlib)
 
 ifeq ($(have-no-whole-archive),yes)
 no-whole-archive = -Wl,--no-whole-archive
@@ -352,10 +353,10 @@ else
 no-whole-archive =
 endif
 
-interp-obj = $(common-objpfx)interp.so
-$(interp-obj): $(common-objpfx)%.so: $(..)%.c
+interp-obj = $(common-objpfx)interp.os
+$(interp-obj): $(common-objpfx)%.os: $(..)%.c
 	$(compile-command.c)
-common-generated += interp.so
+common-generated += interp.os
 CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'
 
 $(common-objpfx)libc.so: $(interp-obj)
@@ -367,7 +368,8 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive $(filter-out $($(@F:.so=)-map),$^) \
+	  -Wl,--whole-archive \
+	  $(filter-out $($(@F:.so=)-map) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -382,9 +384,9 @@ LDFLAGS-c.so += -e __libc_main
 # We have a versioning file for libc.so.
 libc-map = $(..)libc.map
 # Use our own special initializer and finalizer files for libc.so.
-$(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
+$(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.a \
-			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
+			 $(elfobjdir)/sofini.os $(elfobjdir)/ld.so \
 			 $(libc-map)
 	$(build-shlib)
 ifdef libc.so-version
@@ -428,11 +430,11 @@ endif
 
 ifeq ($(build-programs),yes)
 +depfiles := $(strip $(sources:.c=.d) \
-		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.so=.o))) \
+		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
 		     $(addsuffix .d,$(others) $(tests) $(test-srcs)))
 else
 +depfiles := $(strip $(sources:.c=.d) \
-		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.so=.o))) \
+		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
 		     $(addsuffix .d,$(tests) $(test-srcs)))
 endif
 +depfiles := $(addprefix $(objpfx),\

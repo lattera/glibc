@@ -2,7 +2,7 @@
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -65,6 +65,7 @@ extern struct binding *_nl_domain_bindings;
    prefix.  So we have to make a difference here.  */
 #ifdef _LIBC
 # define BINDTEXTDOMAIN __bindtextdomain
+# define strdup(str) __strdup (str)
 #else
 # define BINDTEXTDOMAIN bindtextdomain__
 #endif
@@ -102,25 +103,36 @@ BINDTEXTDOMAIN (domainname, dirname)
 
   if (binding != NULL)
     {
-      /* The domain is already bound.  Replace the old binding.  */
-      char *new_dirname;
-
-      if (strcmp (dirname, _nl_default_dirname) == 0)
-	new_dirname = (char *) _nl_default_dirname;
-      else
+      /* The domain is already bound.  If the new value and the old
+	 one are equal we simply do nothing.  Otherwise replace the
+	 old binding.  */
+      if (strcmp (dirname, binding->dirname) != 0)
 	{
-	  size_t len = strlen (dirname) + 1;
-	  new_dirname = (char *) malloc (len);
-	  if (new_dirname == NULL)
-	    return NULL;
+	  char *new_dirname;
 
-	  memcpy (new_dirname, dirname, len);
+	  if (strcmp (dirname, _nl_default_dirname) == 0)
+	    new_dirname = (char *) _nl_default_dirname;
+	  else
+	    {
+#if defined _LIBC || defined HAVE_STRDUP
+	      new_dirname = strdup (dirname);
+	      if (new_dirname == NULL)
+		return NULL;
+#else
+	      size_t len = strlen (dirname) + 1;
+	      new_dirname = (char *) malloc (len);
+	      if (new_dirname == NULL)
+		return NULL;
+
+	      memcpy (new_dirname, dirname, len);
+#endif
+	    }
+
+	  if (binding->dirname != _nl_default_dirname)
+	    free (binding->dirname);
+
+	  binding->dirname = new_dirname;
 	}
-
-      if (strcmp (binding->dirname, _nl_default_dirname) != 0)
-        free (binding->dirname);
-
-      binding->dirname = new_dirname;
     }
   else
     {
@@ -132,21 +144,33 @@ BINDTEXTDOMAIN (domainname, dirname)
       if (new_binding == NULL)
 	return NULL;
 
+#if defined _LIBC || defined HAVE_STRDUP
+      new_binding->domainname = strdup (domainname);
+      if (new_binding->domainname == NULL)
+	return NULL;
+#else
       len = strlen (domainname) + 1;
       new_binding->domainname = (char *) malloc (len);
       if (new_binding->domainname == NULL)
-	  return NULL;
+	return NULL;
       memcpy (new_binding->domainname, domainname, len);
+#endif
 
       if (strcmp (dirname, _nl_default_dirname) == 0)
 	new_binding->dirname = (char *) _nl_default_dirname;
       else
 	{
+#if defined _LIBC || defined HAVE_STRDUP
+	  new_binding->dirname = strdup (dirname);
+	  if (new_binding->dirname == NULL)
+	    return NULL;
+#else
 	  len = strlen (dirname) + 1;
 	  new_binding->dirname = (char *) malloc (len);
 	  if (new_binding->dirname == NULL)
 	    return NULL;
 	  memcpy (new_binding->dirname, dirname, len);
+#endif
 	}
 
       /* Now enqueue it.  */

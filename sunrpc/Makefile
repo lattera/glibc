@@ -88,7 +88,7 @@ install-others += $(inst_includedir)/rpcsvc/bootparam_prot.h
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
-librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
+librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
 endif
 

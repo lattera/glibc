@@ -40,6 +40,6 @@ ifeq (,$(filter profil,$(unix-syscalls)))
 noprof += profil
 endif
 
-$(noprof:%=$(objpfx)%.po): %.po: %.o
+$(noprof:%=$(objpfx)%.op): %.op: %.o
 	rm -f $@
 	ln $< $@

@@ -16,5 +16,6 @@ ENTRY(__ieee754_remainderl)
 	fstsw	%ax
 	sahf
 	jp	1b
+	fstp	%st(1)
 	ret
 END (__ieee754_remainderl)

@@ -1,5 +1,5 @@
 # The assembler on SPARC needs the -fPIC flag even when it's assembler code.
-ASFLAGS-.so = -fPIC
+ASFLAGS-.os = -fPIC
 
 ifeq ($(subdir), csu)
 extra-objs += crtbegin.o crtend.o crtbeginS.o crtendS.o

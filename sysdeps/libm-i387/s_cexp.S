@@ -237,8 +237,9 @@ ENTRY(__cexp)
 
 	fldl	MOX(huge_nan_null_null,%edx,1)
 	fldl	MOX(huge_nan_null_null+8,%edx,1)
-	fstpl	8(%eax)
+	fxch
 	fstpl	(%eax)
+	fstpl	8(%eax)
 	ret	$4
 
 	/* The real part is NaN.  */

@@ -332,7 +332,7 @@ read_input_file (struct catalog *current, const char *fname)
 	    /* This is a comment line.  Do nothing.  */;
 	  else if (strncmp (&this_line[1], "set", 3) == 0)
 	    {
-	      int cnt = sizeof ("cnt");
+	      int cnt = sizeof ("set");
 	      int set_number;
 	      const char *symbol = NULL;
 	      while (isspace (this_line[cnt]))

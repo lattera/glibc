@@ -1,28 +1,28 @@
-/*
-Copyright (C) 1993 Free Software Foundation
+/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU IO Library.
+   Written by Per Bothner <bothner@cygnus.com>.
 
-This file is part of the GNU IO Library.  This library is free
-software; you can redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option)
-any later version.
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2, or (at
+   your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this library; see the file COPYING.  If not, write to the Free
-Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this library; see the file COPYING.  If not, write to
+   the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA.
 
-As a special exception, if you link this library with files
-compiled with a GNU compiler to produce an executable, this does not cause
-the resulting executable to be covered by the GNU General Public License.
-This exception does not however invalidate any other reasons why
-the executable file might be covered by the GNU General Public License. */
-
-/*  written by Per Bothner (bothner@cygnus.com) */
+   As a special exception, if you link this library with files
+   compiled with a GNU compiler to produce an executable, this does
+   not cause the resulting executable to be covered by the GNU General
+   Public License.  This exception does not however invalidate any
+   other reasons why the executable file might be covered by the GNU
+   General Public License.  */
 
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
@@ -80,17 +80,19 @@ typedef struct _IO_proc_file _IO_proc_file;
 static struct _IO_proc_file *proc_file_chain = NULL;
 
 _IO_FILE *
-DEFUN(_IO_proc_open, (fp, command, mode),
-      _IO_FILE* fp AND const char *command AND const char *mode)
+_IO_proc_open (fp, command, mode)
+     _IO_FILE *fp;
+     const char *command;
+     const char *mode;
 {
 #if _IO_HAVE_SYS_WAIT
   volatile int read_or_write;
   volatile int parent_end, child_end;
   int pipe_fds[2];
   _IO_pid_t child_pid;
-  if (_IO_file_is_open(fp))
+  if (_IO_file_is_open (fp))
     return NULL;
-  if (_IO_pipe(pipe_fds) < 0)
+  if (_IO_pipe (pipe_fds) < 0)
     return NULL;
   if (mode[0] == 'r')
     {
@@ -104,17 +106,17 @@ DEFUN(_IO_proc_open, (fp, command, mode),
       child_end = pipe_fds[0];
       read_or_write = _IO_NO_READS;
     }
-  ((_IO_proc_file*)fp)->pid = child_pid = _IO_fork();
+  ((_IO_proc_file *) fp)->pid = child_pid = _IO_fork ();
   if (child_pid == 0)
     {
       int child_std_end = mode[0] == 'r' ? 1 : 0;
-      _IO_close(parent_end);
+      _IO_close (parent_end);
       if (child_end != child_std_end)
 	{
-	  _IO_dup2(child_end, child_std_end);
-	  _IO_close(child_end);
+	  _IO_dup2 (child_end, child_std_end);
+	  _IO_close (child_end);
 	}
-      /* Posix.2:  "popen() shall ensure that any streams from previous
+      /* POSIX.2:  "popen() shall ensure that any streams from previous
          popen() calls that remain open in the parent process are closed
 	 in the new child process." */
       while (proc_file_chain)
@@ -123,20 +125,20 @@ DEFUN(_IO_proc_open, (fp, command, mode),
 	  proc_file_chain = proc_file_chain->next;
 	}
 
-      _IO_execl("/bin/sh", "sh", "-c", command, (char *) 0);
-      _IO__exit(127);
+      _IO_execl ("/bin/sh", "sh", "-c", command, (char *) 0);
+      _IO__exit (127);
     }
-  _IO_close(child_end);
+  _IO_close (child_end);
   if (child_pid < 0)
     {
-      _IO_close(parent_end);
+      _IO_close (parent_end);
       return NULL;
     }
-  _IO_fileno(fp) = parent_end;
+  _IO_fileno (fp) = parent_end;
 
   /* Link into proc_file_chain. */
-  ((_IO_proc_file*)fp)->next = proc_file_chain;
-  proc_file_chain = (_IO_proc_file*)fp;
+  ((_IO_proc_file *) fp)->next = proc_file_chain;
+  proc_file_chain = (_IO_proc_file *) fp;
 
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
@@ -146,8 +148,9 @@ DEFUN(_IO_proc_open, (fp, command, mode),
 }
 
 _IO_FILE *
-DEFUN(_IO_popen, (command, mode),
-      const char *command AND const char *mode)
+_IO_popen (command, mode)
+     const char *command;
+     const char *mode;
 {
   struct locked_FILE
   {
@@ -165,11 +168,11 @@ DEFUN(_IO_popen, (command, mode),
   new_f->fpx.file.file._lock = &new_f->lock;
 #endif
   fp = (_IO_FILE*)&new_f->fpx;
-  _IO_init(fp, 0);
-  _IO_JUMPS(fp) = &_IO_proc_jumps;
-  _IO_file_init(fp);
+  _IO_init (fp, 0);
+  _IO_JUMPS (fp) = &_IO_proc_jumps;
+  _IO_file_init (fp);
 #if  !_IO_UNIFIED_JUMPTABLES
-  ((struct _IO_FILE_plus*)fp)->vtable = NULL;
+  ((struct _IO_FILE_plus *) fp)->vtable = NULL;
 #endif
   if (_IO_proc_open (fp, command, mode) != NULL)
     return fp;
@@ -182,8 +185,8 @@ strong_alias (_IO_popen, popen);
 #endif
 
 int
-DEFUN(_IO_proc_close, (fp),
-      _IO_FILE *fp)
+_IO_proc_close (fp)
+     _IO_FILE *fp;
 {
   /* This is not name-space clean. FIXME! */
 #if _IO_HAVE_SYS_WAIT
@@ -195,7 +198,7 @@ DEFUN(_IO_proc_close, (fp),
   /* Unlink from proc_file_chain. */
   for ( ; *ptr != NULL; ptr = &(*ptr)->next)
     {
-      if (*ptr == (_IO_proc_file*)fp)
+      if (*ptr == (_IO_proc_file *) fp)
 	{
 	  *ptr = (*ptr)->next;
 	  status = 0;
@@ -203,7 +206,7 @@ DEFUN(_IO_proc_close, (fp),
 	}
     }
 
-  if (status < 0 || _IO_close(_IO_fileno(fp)) < 0)
+  if (status < 0 || _IO_close (_IO_fileno(fp)) < 0)
     return -1;
   /* POSIX.2 Rationale:  "Some historical implementations either block
      or ignore the signals SIGINT, SIGQUIT, and SIGHUP while waiting
@@ -211,8 +214,9 @@ DEFUN(_IO_proc_close, (fp),
      described in POSIX.2, such implementations are not conforming." */
   do
     {
-      wait_pid = _IO_waitpid (((_IO_proc_file*)fp)->pid, &wstatus, 0);
-    } while (wait_pid == -1 && errno == EINTR);
+      wait_pid = _IO_waitpid (((_IO_proc_file *) fp)->pid, &wstatus, 0);
+    }
+  while (wait_pid == -1 && errno == EINTR);
   if (wait_pid == -1)
     return -1;
   return wstatus;

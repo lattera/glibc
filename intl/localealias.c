@@ -2,7 +2,7 @@
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -82,6 +82,12 @@ void free ();
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
 # define strcasecmp __strcasecmp
+# define strdup __strdup
+
+/* We need locking here since we can be called from different palces.  */
+# include <libc-lock.h>
+
+__libc_lock_define_initialized (static, lock);
 #endif
 
 
@@ -146,7 +152,12 @@ _nl_expand_alias (name)
 {
   static const char *locale_alias_path = LOCALE_ALIAS_PATH;
   struct alias_map *retval;
+  const char *result = NULL;
   size_t added;
+
+#ifdef _LIBC
+  __libc_lock_lock (lock);
+#endif
 
   do
     {
@@ -165,7 +176,10 @@ _nl_expand_alias (name)
 
       /* We really found an alias.  Return the value.  */
       if (retval != NULL)
-	return retval->value;
+	{
+	  result = retval->value;
+	  break;
+	}
 
       /* Perhaps we can find another alias file.  */
       added = 0;
@@ -186,7 +200,11 @@ _nl_expand_alias (name)
     }
   while (added != 0);
 
-  return NULL;
+#ifdef _LIBC
+  __libc_lock_unlock (lock);
+#endif
+
+  return result;
 }
 
 
@@ -274,7 +292,15 @@ read_alias_file (fname, fname_len)
 	      if (nmap >= maxmap)
 		extend_alias_table ();
 
-	      /* We cannot depend on strdup available in the libc.  Sigh!  */
+#if defined _LIBC || defined HAVE_STRDUP
+	       map[nmap].alias = strdup (alias);
+	       map[nmap].value = strdup (value);
+	       if (map[nmap].alias == NULL || map[nmap].value == NULL)
+		{
+		  FREE_BLOCKS (block_list);
+		  return added;
+		}
+#else
 	      len = strlen (alias) + 1;
 	      tp = (char *) malloc (len);
 	      if (tp == NULL)
@@ -294,6 +320,7 @@ read_alias_file (fname, fname_len)
 		}
 	      memcpy (tp, value, len);
 	      map[nmap].value = tp;
+#endif
 
 	      ++nmap;
 	      ++added;

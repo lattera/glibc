@@ -2,7 +2,7 @@
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as

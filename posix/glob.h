@@ -1,8 +1,5 @@
 /* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
 
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
-
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
    published by the Free Software Foundation; either version 2 of the
@@ -27,17 +24,21 @@ extern "C"
 #endif
 
 #undef	__ptr_t
-#if (defined (__cplusplus) || (defined (__STDC__) && __STDC__) \
-     || defined (WINDOWS32))
-#undef	__P
-#define	__P(protos)	protos
-#define	__ptr_t	void *
+#if (defined __cplusplus || (defined __STDC__ && __STDC__) \
+     || defined WINDOWS32)
+# undef	__P
+# define __P(protos)	protos
+# define __ptr_t	void *
+# if !defined __GNUC__ || __GNUC__ < 2
+#  undef __const
+#  define __const const
+# endif
 #else /* Not C++ or ANSI C.  */
-#undef	__P
-#define	__P(protos)	()
-#undef	const
-#define	const
-#define	__ptr_t	char *
+# undef	__P
+# define __P(protos)	()
+# undef	__const
+# define __const
+# define __ptr_t	char *
 #endif /* C++ or ANSI C.  */
 
 /* Bits set in the FLAGS argument to `glob'.  */
@@ -49,17 +50,22 @@ extern "C"
 #define	GLOB_APPEND	(1 << 5)/* Append to results of a previous call.  */
 #define	GLOB_NOESCAPE	(1 << 6)/* Backslashes don't quote metacharacters.  */
 #define	GLOB_PERIOD	(1 << 7)/* Leading `.' can be matched by metachars.  */
-#define	__GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
+
+#if (!defined _POSIX_C_SOURCE || _POSIX_C_SOURCE < 2 || defined _BSD_SOURCE \
+     || defined _GNU_SOURCE)
+# define GLOB_MAGCHAR	 (1 << 8)/* Set in gl_flags if any metachars seen.  */
+# define GLOB_ALTDIRFUNC (1 << 9)/* Use gl_opendir et al functions.  */
+# define GLOB_BRACE	 (1 << 10)/* Expand "{a,b}" to "a" "b".  */
+# define GLOB_NOMAGIC	 (1 << 11)/* If no magic chars, return the pattern.  */
+# define GLOB_TILDE	 (1 <<12)/* Expand ~user and ~ to home directories.  */
+# define __GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
 			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|     \
 			 GLOB_PERIOD|GLOB_ALTDIRFUNC|GLOB_BRACE|     \
 			 GLOB_NOMAGIC|GLOB_TILDE)
-
-#if !defined (_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 2 || defined (_BSD_SOURCE) || defined (_GNU_SOURCE)
-#define	GLOB_MAGCHAR	(1 << 8)/* Set in gl_flags if any metachars seen.  */
-#define GLOB_ALTDIRFUNC	(1 << 9)/* Use gl_opendir et al functions.  */
-#define GLOB_BRACE	(1 << 10)/* Expand "{a,b}" to "a" "b".  */
-#define GLOB_NOMAGIC	(1 << 11)/* If no magic chars, return the pattern.  */
-#define GLOB_TILDE	(1 <<12)/* Expand ~user and ~ to home directories.  */
+#else
+# define __GLOB_FLAGS	(GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS| \
+			 GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND|     \
+			 GLOB_PERIOD)
 #endif
 
 /* Error returns from `glob'.  */
@@ -74,7 +80,7 @@ extern "C"
 #endif
 
 /* Structure describing a globbing run.  */
-#if !defined (_AMIGA) && !defined (VMS) /* Buggy compiler.   */
+#if !defined _AMIGA && !defined VMS /* Buggy compiler.   */
 struct stat;
 #endif
 typedef struct
@@ -88,9 +94,9 @@ typedef struct
        are used instead of the normal file access functions.  */
     void (*gl_closedir) __P ((void *));
     struct dirent *(*gl_readdir) __P ((void *));
-    __ptr_t (*gl_opendir) __P ((const char *));
-    int (*gl_lstat) __P ((const char *, struct stat *));
-    int (*gl_stat) __P ((const char *, struct stat *));
+    __ptr_t (*gl_opendir) __P ((__const char *));
+    int (*gl_lstat) __P ((__const char *, struct stat *));
+    int (*gl_stat) __P ((__const char *, struct stat *));
   } glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.
@@ -101,8 +107,8 @@ typedef struct
    `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
-extern int glob __P ((const char *__pattern, int __flags,
-		      int (*__errfunc) __P ((const char *, int)),
+extern int glob __P ((__const char *__pattern, int __flags,
+		      int (*__errfunc) __P ((__const char *, int)),
 		      glob_t *__pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */

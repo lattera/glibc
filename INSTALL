@@ -771,6 +771,10 @@ parts of the library were contributed or worked on by other people.
    * The port to Linux/m68k (`m68k-ANYTHING-linux') was contributed by
      Andreas Schwab.
 
+   * The ports to Linux/ARM (`arm-ANYTHING-linuxaout') and ARM standalone
+     (`arm-ANYTHING-none'), as well as parts of the IPv6 support code, were
+     contributed by Philip Blundell.
+
    * Richard Henderson contributed the ELF dynamic linking code and
      other support for the Alpha processor.
 

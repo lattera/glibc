@@ -1,28 +1,28 @@
-/*
-Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation
+/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+   This file is part of the GNU IO Library.
+   Written by Per Bothner <bothner@cygnus.com>.
 
-This file is part of the GNU IO Library.  This library is free
-software; you can redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option)
-any later version.
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2, or (at
+   your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this library; see the file COPYING.  If not, write to the Free
-Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this library; see the file COPYING.  If not, write to
+   the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA.
 
-As a special exception, if you link this library with files
-compiled with a GNU compiler to produce an executable, this does not cause
-the resulting executable to be covered by the GNU General Public License.
-This exception does not however invalidate any other reasons why
-the executable file might be covered by the GNU General Public License. */
-
-/* This is part of the iostream library.  Written by Per Bothner. */
+   As a special exception, if you link this library with files
+   compiled with a GNU compiler to produce an executable, this does
+   not cause the resulting executable to be covered by the GNU General
+   Public License.  This exception does not however invalidate any
+   other reasons why the executable file might be covered by the GNU
+   General Public License.  */
 
 #ifndef _IO_STDIO_H
 #define _IO_STDIO_H
@@ -43,56 +43,56 @@ the executable file might be covered by the GNU General Public License. */
 
 #ifdef _G_NEED_STDARG_H
 /* This define avoids name pollution if we're using GNU stdarg.h */
-#define __need___va_list
-#include <stdarg.h>
-#ifdef __GNUC_VA_LIST
-#undef _IO_va_list
-#define _IO_va_list __gnuc_va_list
-#endif /* __GNUC_VA_LIST */
+# define __need___va_list
+# include <stdarg.h>
+# ifdef __GNUC_VA_LIST
+#  undef _IO_va_list
+#  define _IO_va_list __gnuc_va_list
+# endif /* __GNUC_VA_LIST */
 #endif
 
 #ifndef __P
-#if _G_HAVE_SYS_CDEFS
-#include <sys/cdefs.h>
-#else
-#ifdef __STDC__
-#define __P(protos) protos
-#else
-#define __P(protos) ()
-#endif
-#endif
+# if _G_HAVE_SYS_CDEFS
+#  include <sys/cdefs.h>
+# else
+#  ifdef __STDC__
+#   define __P(protos) protos
+#  else
+#   define __P(protos) ()
+#  endif
+# endif
 #endif /*!__P*/
 
 /* For backward compatibility */
 #ifndef _PARAMS
-#define _PARAMS(protos) __P(protos)
+# define _PARAMS(protos) __P(protos)
 #endif /*!_PARAMS*/
 
 #ifndef __STDC__
-#define const
+# define const
 #endif
 #define _IO_UNIFIED_JUMPTABLES 1
 
 #if 0
-#ifdef _IO_NEED_STDARG_H
-#include <stdarg.h>
-#endif
+# ifdef _IO_NEED_STDARG_H
+#  include <stdarg.h>
+# endif
 #endif
 
 #ifndef EOF
-#define EOF (-1)
+# define EOF (-1)
 #endif
 #ifndef NULL
-#if defined __GNUG__ && \
+# if defined __GNUG__ && \
     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8))
-#define NULL (__null)
-#else
-#if !defined(__cplusplus)
-#define NULL ((void*)0)
-#else
-#define NULL (0)
-#endif
-#endif
+#  define NULL (__null)
+# else
+#  if !defined(__cplusplus)
+#   define NULL ((void*)0)
+#  else
+#   define NULL (0)
+#  endif
+# endif
 #endif
 
 #define _IOS_INPUT	1
@@ -153,7 +153,7 @@ struct _IO_jump_t;  struct _IO_FILE;
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
-#include <bits/stdio-lock.h>
+# include <bits/stdio-lock.h>
 #else
 typedef void _IO_lock_t;
 #endif
@@ -239,7 +239,8 @@ typedef struct
 } _IO_cookie_io_functions_t;
 
 /* Special file type for fopencookie function.  */
-struct _IO_cookie_file {
+struct _IO_cookie_file
+{
   struct _IO_FILE file;
   const void *vtable;
   void *cookie;
@@ -251,22 +252,22 @@ struct _IO_cookie_file {
 extern "C" {
 #endif
 
-extern int __underflow __P((_IO_FILE*));
-extern int __uflow __P((_IO_FILE*));
-extern int __overflow __P((_IO_FILE*, int));
+extern int __underflow __P ((_IO_FILE *));
+extern int __uflow __P ((_IO_FILE *));
+extern int __overflow __P ((_IO_FILE *, int));
 
 #define _IO_getc_unlocked(_fp) \
-       ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow(_fp) \
-	: *(unsigned char*)(_fp)->_IO_read_ptr++)
+       ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow (_fp) \
+	: *(unsigned char *) (_fp)->_IO_read_ptr++)
 #define _IO_peekc_unlocked(_fp) \
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end \
-	  && __underflow(_fp) == EOF ? EOF \
-	: *(unsigned char*)(_fp)->_IO_read_ptr)
+	  && __underflow (_fp) == EOF ? EOF \
+	: *(unsigned char *) (_fp)->_IO_read_ptr)
 
 #define _IO_putc_unlocked(_ch, _fp) \
    (((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end) \
-    ? __overflow(_fp, (unsigned char)(_ch)) \
-    : (unsigned char)(*(_fp)->_IO_write_ptr++ = (_ch)))
+    ? __overflow (_fp, (unsigned char) (_ch)) \
+    : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
@@ -294,32 +295,17 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 # define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
 
-/* XXX Should we allow a symbol to be defined which selects the efficient
-  implementation when the user is really sure no threaded functions ever
-  will be used?  */
-#if 1
-# define _IO_getc(_fp) _IO_getc (_fp)
-# define _IO_peekc(_fp) _IO_peekc_locked (_fp)
-# define _IO_putc(_ch, _fp) _IO_putc (_ch, _fp)
-# define _IO_feof(_fp) _IO_feof (_fp)
-# define _IO_ferror(_fp) _IO_ferror (_fp)
-#else
-# define _IO_getc(_fp) _IO_getc_unlocked (_fp)
-# define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
-# define _IO_putc(_ch, _fp) _IO_putc_unlocked (_ch, _fp)
-# define _IO_feof(_fp) _IO_feof_unlocked (_fp)
-# define _IO_ferror(_fp) _IO_ferror_unlocked (_fp)
-#endif
+#define _IO_peekc(_fp) _IO_peekc_locked (_fp)
 
-extern int _IO_vfscanf __P((_IO_FILE*, const char*, _IO_va_list, int*));
-extern int _IO_vfprintf __P((_IO_FILE*, const char*, _IO_va_list));
-extern _IO_ssize_t _IO_padn __P((_IO_FILE *, int, _IO_ssize_t));
-extern _IO_size_t _IO_sgetn __P((_IO_FILE *, void*, _IO_size_t));
+extern int _IO_vfscanf __P ((_IO_FILE *, const char *, _IO_va_list, int *));
+extern int _IO_vfprintf __P ((_IO_FILE *, const char *, _IO_va_list));
+extern _IO_ssize_t _IO_padn __P ((_IO_FILE *, int, _IO_ssize_t));
+extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
 
-extern _IO_fpos_t _IO_seekoff __P((_IO_FILE*, _IO_off_t, int, int));
-extern _IO_fpos_t _IO_seekpos __P((_IO_FILE*, _IO_fpos_t, int));
+extern _IO_fpos_t _IO_seekoff __P ((_IO_FILE *, _IO_off_t, int, int));
+extern _IO_fpos_t _IO_seekpos __P ((_IO_FILE *, _IO_fpos_t, int));
 
-extern void _IO_free_backup_area __P((_IO_FILE*));
+extern void _IO_free_backup_area __P ((_IO_FILE *));
 
 #ifdef __cplusplus
 }

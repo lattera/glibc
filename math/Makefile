@@ -80,9 +80,7 @@ tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 	test-ifloat test-idouble test-matherr test-fenv
 # We do the `long double' tests only if this data type is available and
 # distrinct from `double'.
-#
-# XXX This test is disabled for now since the functions are too buggy.
-#test-longdouble-yes = test-ldouble test-ildoubl
+test-longdouble-yes = test-ldouble test-ildoubl
 
 CFLAGS-test-float.c = -fno-inline
 CFLAGS-test-double.c = -fno-inline

@@ -94,6 +94,11 @@ size_t _dl_pagesize;
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
+/* This is a fake list to store the RPATH information for static
+   binaries.  */
+static struct r_search_path_elem **fake_path_list;
+
+
 /* Local version of `strdup' function.  */
 static inline char *
 local_strdup (const char *s)
@@ -308,6 +313,12 @@ decompose_rpath (const char *rpath, size_t additional_room)
 void
 _dl_init_paths (void)
 {
+  static const char *trusted_dirs[] =
+  {
+#include "trusted-dirs.h"
+    NULL
+  };
+
   struct r_search_path_elem **pelem;
 
   /* We have in `search_path' the information about the RPATH of the
@@ -333,53 +344,72 @@ _dl_init_paths (void)
     nllp = 0;
 
   l = _dl_loaded;
-  if (l && l->l_type != lt_loaded && l->l_info[DT_RPATH])
+  if (l != NULL)
     {
-      /* Allocate room for the search path and fill in information from
-	 RPATH.  */
-      l->l_rpath_dirs =
-	decompose_rpath ((const char *) (l->l_addr
-					 + l->l_info[DT_STRTAB]->d_un.d_ptr
-					 + l->l_info[DT_RPATH]->d_un.d_val),
-			 nllp);
+      if (l->l_type != lt_loaded && l->l_info[DT_RPATH])
+	{
+	  /* Allocate room for the search path and fill in information
+	     from RPATH.  */
+	  l->l_rpath_dirs =
+	    decompose_rpath ((const char *)
+			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
+			      + l->l_info[DT_RPATH]->d_un.d_val),
+			     nllp);
+	}
+      else
+	{
+	  /* If we have no LD_LIBRARY_PATH and no RPATH we must tell
+	     this somehow to prevent we look this up again and again.  */
+	  if (nllp == 0)
+	    l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
+	  else
+	    {
+	      l->l_rpath_dirs = (struct r_search_path_elem **)
+		malloc ((nllp + 1) * sizeof (*l->l_rpath_dirs));
+	      if (l->l_rpath_dirs == NULL)
+		_dl_signal_error (ENOMEM, NULL,
+				  "cannot create cache for search path");
+	      l->l_rpath_dirs[0] = NULL;
+	    }
+	}
+
+      /* We don't need to search the list of fake entries which is searched
+	 when no dynamic objects were loaded at this time.  */
+      fake_path_list = NULL;
+
+      if (nllp > 0)
+	{
+	  char *copy = strdupa (llp);
+
+	  /* Decompose the LD_LIBRARY_PATH and fill in the result.
+	     First search for the next place to enter elements.  */
+	  struct r_search_path_elem **result = l->l_rpath_dirs;
+	  while (*result != NULL)
+	    ++result;
+
+	  /* We need to take care that the LD_LIBRARY_PATH environment
+	     variable can contain a semicolon.  */
+	  (void) fillin_rpath (copy, result, ":;",
+			       __libc_enable_secure ? trusted_dirs : NULL);
+	}
     }
   else
     {
-      /* If we have no LD_LIBRARY_PATH and no RPATH we must tell this
-	 somehow to prevent we look this up again and again.  */
+      /* This is a statically linked program but we still have to
+	 take care for the LD_LIBRARY_PATH environment variable.  We
+	 use a fake link_map entry.  This will only contain the
+	 l_rpath_dirs information.  */
+
       if (nllp == 0)
-	 l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
+	fake_path_list = NULL;
       else
 	{
-	  l->l_rpath_dirs =
-	    (struct r_search_path_elem **) malloc ((nllp + 1)
-						   * sizeof (*l->l_rpath_dirs));
-	  if (l->l_rpath_dirs == NULL)
-	    _dl_signal_error (ENOMEM, NULL,
-			      "cannot create cache for search path");
-	  l->l_rpath_dirs[0] = NULL;
+	  fake_path_list = (struct r_search_path_elem **)
+	    malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
+
+	  (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
+			       __libc_enable_secure ? trusted_dirs : NULL);
 	}
-    }
-
-  if (nllp > 0)
-    {
-      static const char *trusted_dirs[] =
-      {
-#include "trusted-dirs.h"
-	NULL
-      };
-      char *copy = strdupa (llp);
-
-      /* Decompose the LD_LIBRARY_PATH and fill in the result.
-         First search for the next place to enter elements.  */
-      struct r_search_path_elem **result = l->l_rpath_dirs;
-      while (*result != NULL)
-	++result;
-
-      /* We need to take care that the LD_LIBRARY_PATH environement
-	 variable can contain a semicolon.  */
-      (void) fillin_rpath (copy, result, ":;",
-			   __libc_enable_secure ? trusted_dirs : NULL);
     }
 
   /* Now set up the rest of the rtld_search_dirs.  */
@@ -871,7 +901,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
-    if (_dl_name_match_p (name, l) ||
+    if (l->l_opencount > 0 && _dl_name_match_p (name, l) ||
 	/* If the requested name matches the soname of a loaded object,
 	   use that object.  */
 	(l->l_info[DT_SONAME] &&
@@ -922,6 +952,11 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
       if (fd == -1 && l && l->l_type != lt_loaded
 	  && l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
 	fd = open_path (name, namelen, l->l_rpath_dirs, &realname);
+
+      /* This is used if a static binary uses dynamic loading and there
+	 is a LD_LIBRARY_PATH given.  */
+      if (fd == -1 && fake_path_list != NULL)
+	fd = open_path (name, namelen, fake_path_list, &realname);
 
       if (fd == -1)
 	{

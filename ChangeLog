@@ -1,3 +1,192 @@
+1997-08-20 05:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/catgets.c (catclose): Use __munmap instead of munmap.
+	* catgets/gencat.c (read_input_file): Fix typo.
+
+	* dirent/dirent.h: Make seekdir and telldir available for __USE_XOPEN.
+
+	* elf/dl-load.c: Fix case of missing DT_RPATH in object which gets
+	executed (e.g., when it is a static binary).
+
+	* intl/bindtextdomain.c: Use strdup in glibc.  Correct comment.
+	* intl/dcgettext.c: Likewise.
+	* intl/dgettext.c: Likewise.
+	* intl/explodename.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/gettext.c: Likewise.
+	* intl/gettext.h: Likewise.
+	* intl/hash-string.h: Likewise.
+	* intl/l10nflist.c: Likewise.
+	* intl/libintl.h: Likewise.
+	* intl/loadinfo.h: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/textdomain.c: Likewise.
+
+	Unify libio sources with code in libg++.
+	* libio/fcloseall.c: Update and reformat copyright.  Protect use
+	of weak_alias.  Use _IO_* thread macros instead of __libc_*.
+	* libio/feof.c: Likewise.
+	* libio/feof_u.c: Likewise.
+	* libio/ferror.c: Likewise.
+	* libio/ferror_u.c: Likewise.
+	* libio/fgetc.c: Likewise.
+	* libio/filedoalloc.c: Likewise.
+	* libio/fileno.c: Likewise.
+	* libio/fileops.c: Likewise.
+	* libio/fputc.c: Likewise.
+	* libio/fputc_u.c: Likewise.
+	* libio/freopen.c: Likewise.
+	* libio/fseek.c: Likewise.
+	* libio/genops.c: Likewise.
+	* libio/getc.c: Likewise.
+	* libio/getc_u.c: Likewise.
+	* libio/getchar.c: Likewise.
+	* libio/getchar_u.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofdopen.c: Likewise.
+	* libio/iofflush.c: Likewise.
+	* libio/iofflush_u.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofopen.c: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/iofprintf.c: Likewise.
+	* libio/iofputs.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogetline.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/iopadn.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/ioseekoff.c: Likewise.
+	* libio/ioseekpos.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/iosprintf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+	* libio/iovdprintf.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/libio.h: Likewise.
+	* libio/libioP.h: Likewise.
+	* libio/obprintf.c: Likewise.
+	* libio/pclose.c: Likewise.
+	* libio/peekc.c: Likewise.
+	* libio/putc.c: Likewise.
+	* libio/putchar.c: Likewise.
+	* libio/rewind.c: Likewise.
+	* libio/setbuf.c: Likewise.
+	* libio/setlinebuf.c: Likewise.
+	* libio/stdfiles.c: Likewise.
+	* libio/stdio.c: Likewise.
+	* libio/strfile.h: Likewise.
+	* libio/strops.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vscanf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+
+	* manual/libc.texinfo: Add menu entries for chapter on message
+	translation.
+	* manual/locale.texi: Correct next entry in @node for new chapter.
+	* manual/search.texi: Likewise for previous link.
+	* manual/message.texi: New file.
+	* manual/startup.texi: Document LC_ALL, LC_MESSAGES, NLSPATH,
+	setenv, unsetenv, and clearenv.
+	* manual/string.texi: Fix typos.  Patch by Jim Meyering.
+
+	* math/Makefile (test-longdouble-yes): Enable.  We want long double
+	tests now.
+
+	Crusade against strcat.
+	* nis/nss_nisplus/nisplus-publickey.c: Remove uses of strcat.
+	* stdlib/canonicalize.c: Likewise.
+
+	* posix/glob.h: Define __const if necessary.  Use __const in all
+	prototypes.
+
+	* sysdeps/generic/stpcpy.c: Use K&R form to allow use in other
+	GNU packages.
+
+	* posix/wordexp.c: Completely reworked buffer handling for much
+	better performance.  Patch by Tim Waugh.
+
+	* socket/sys/sochet.h (getpeername): Fix type of LEN parameter,
+	it must be socklen_t.
+
+	* sysdeps/libm-i387/e_remainder.S: Pretty print.
+	* sysdeps/libm-i387/e_remainderf.S: Likewise.
+	* sysdeps/libm-i387/e_remainderl.S: Pop extra value for FPU stack.
+	* sysdeps/libm-i387/s_cexp.S: Little optimization.
+	* sysdeps/libm-i387/s_cexpl.S: Likewise.
+	* sysdep/libm-ieee754/s_csinhl.c: Include <fenv.h>.
+
+1997-08-18 15:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Fix memory leak
+	in cleanup code.
+
+1997-08-17  Paul Eggert  <eggert@twinsun.com>
+
+	* tzset.c (__tzset_internal): Fix memory leak when the user
+	specifies a TZ value that uses a default rule file.
+	Do not assume US DST rules when the user specifies
+	that there is no DST.
+
+1997-08-10 19:17  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* inet/getnameinfo.c: Tidy up.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_nametoindex): Return 0 if
+	using stub code.
+	(if_indextoname): Use SIOGIFNAME ioctl if the kernel supports it.
+	(if_nameindex): Use alloca() rather than malloc(); use
+	SIOCGIFCOUNT ioctl if the kernel supports it.
+
+1997-08-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Remove the IS_* macros,
+	they operate on internal kernel structures and have no place in a
+	user header.
+
+1997-08-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (lib%.so): Depend on $(+preinit) and $(+postinit).
+	(build-shlib): Filter them out of $^.
+
+1997-08-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-error.c (_dl_signal_error): Fix error message.
+
+1997-08-16 04:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* assert/assert.h [__USE_GNU]: Undefine assert_perror.
+	Reported by Theodore C. Belding <Ted.Belding@umich.edu>.
+
+1997-08-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig: Change object suffixes from *.[spgb]o to *.o[spgb]
+	to avoid conflict with PO files.
+	* Makerules: Likewise.
+	* Rules: Likewise.
+	* elf/Makefile: Likewise.
+	* extra-lib.mk: Likewise.
+	* gmon/Makefile: Likewise.
+	* nis/Makefile: Likewise.
+	* nss/Makefile: Likewise.
+	* resolv/Makefile: Likewise.
+	* rpm/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/sparc/elf/Makefile: Likewise.
+	* sysdeps/sparc64/elf/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Likewise.
+	(ASFLAGS-.os): Renamed from as-FLAGS.os.
+
 1997-08-14 03:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-minimal.c: Don't use relative #include paths.

@@ -278,9 +278,9 @@ character, since this is assumed to terminate the string.
 
 @menu
 * Environment Access::          How to get and set the values of
-			   environment variables.
+				 environment variables.
 * Standard Environment::        These environment variables have
-			   standard interpretations.
+                		 standard interpretations.
 @end menu
 
 @node Environment Access
@@ -290,7 +290,9 @@ character, since this is assumed to terminate the string.
 
 The value of an environment variable can be accessed with the
 @code{getenv} function.  This is declared in the header file
-@file{stdlib.h}.
+@file{stdlib.h}.  All of the following functions can be safely used in
+multi-threaded programs.  It is made sure that concurrent modifications
+to the environment do not lead to errors.
 @pindex stdlib.h
 
 @comment stdlib.h
@@ -314,11 +316,62 @@ definition is added to the environment.  Otherwise, the @var{string} is
 interpreted as the name of an environment variable, and any definition
 for this variable in the environment is removed.
 
-The GNU library provides this function for compatibility with SVID; it
-may not be available in other systems.
+This function is part of the extended Unix interface.  Since it was also
+available in old SVID libraries you should define either
+@var{_XOPEN_SOURCE} or @var{_SVID_SOURCE} before including any header.
 @end deftypefun
 
-@c !!! BSD function setenv
+
+@comment stdlib.h
+@comment BSD
+@deftypefun int setenv (const char *@var{name}, const char *@var{value}, int @var{replace})
+The @code{setenv} function can be used to add a new definition to the
+environment.  The entry with the name @var{name} is replaced by the
+value @samp{@var{name}=@var{value}}.  Please note that this is also true
+if @var{value} is the empty string.  A null pointer for the @var{value}
+parameter is illegal.  If the environment already contains an entry with
+key @var{name} the @var{replace} parameter controls the action.  If
+replace is zero, nothing happens.  otherwise the old entry is replaced
+by the new one.
+
+Please note that you cannot remove an entry completely using this function.
+
+This function is part of the BSD library.  The GNU C Library provides
+this function for compatibility but it may not be available on other
+systems.
+@end deftypefun
+
+@comment stdlib.h
+@comment BSD
+@deftypefun void unsetenv (const char *@var{name})
+Using this function one can remove an entry completely from the
+environment.  If the environment contains an entry with the key
+@var{name} this whole entry is removed.  A call to this function is
+equivalent to a call to @code{putenv} when the @var{value} part of the
+string is empty.
+
+This function is part of the BSD library.  The GNU C Library provides
+this function for compatibility but it may not be available on other
+systems.
+@end deftypefun
+
+There is one more function to modify the whole environment.  This
+function is said to be used in the POSIX.9 (POSIX bindings for Fortran
+77) and so one should expect it did made it into POSIX.1.  But this
+never happened.  But we still provide this function as a GNU extension
+to enable writing standard compliant Fortran environments.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int clearenv (void)
+The @code{clearenv} function removes all entries from the environment.
+Using @code{putenv} and @code{setenv} new entries can be added again
+later.
+
+If the function is successful it returns @code{0}.  Otherwise the return
+value is nonzero.
+@end deftypefun
+
 
 You can deal directly with the underlying representation of environment
 objects to add more variables to the environment (for example, to
@@ -444,6 +497,14 @@ attribute category environment variables, or for the @code{LANG}
 environment variable.
 @end ignore
 
+@item LC_ALL
+@cindex LC_ALL environment variable
+
+If this environment variable is set it overrides the selection for all
+the locales done using the other @code{LC_*} environment variables.  The
+value of the other @code{LC_*} environment variables is simply ignored
+in this case.
+
 @item LC_COLLATE
 @cindex LC_COLLATE environment variable
 
@@ -454,6 +515,12 @@ This specifies what locale to use for string sorting.
 
 This specifies what locale to use for character sets and character
 classification.
+
+@item LC_MESSAGES
+@cindex LC_MESSAGES environment variable
+
+This specifies what locale to use for printing messages and to parse
+reponses.
 
 @item LC_MONETARY
 @cindex LC_MONETARY environment variable
@@ -469,6 +536,12 @@ This specifies what locale to use for formatting numbers.
 @cindex LC_TIME environment variable
 
 This specifies what locale to use for formatting date/time values.
+
+@item NLSPATH
+@cindex NLSPATH environment variable
+
+This specifies the directories in which the @code{catopen} function
+looks for message translation catalogs.
 
 @item _POSIX_OPTION_ORDER
 @cindex _POSIX_OPTION_ORDER environment variable.

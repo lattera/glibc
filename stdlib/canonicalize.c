@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,6 +122,7 @@ canonicalize (const char *name, char *resolved)
 	  if (S_ISLNK (st.st_mode))
 	    {
 	      char *buf = __alloca (path_max);
+	      size_t len;
 
 	      if (++num_links > MAXSYMLINKS)
 		{
@@ -137,21 +138,22 @@ canonicalize (const char *name, char *resolved)
 	      if (!extra_buf)
 		extra_buf = __alloca (path_max);
 
-	      if ((long int) (n + strlen (end)) >= path_max)
+	      len = strlen (end);
+	      if ((long int) (n + len) >= path_max)
 		{
 		  __set_errno (ENAMETOOLONG);
 		  goto error;
 		}
 
-	      /* careful here, end may be a pointer into extra_buf... */
-	      strcat (buf, end);
+	      /* Careful here, end may be a pointer into extra_buf... */
+	      memcpy (&buf[n], end, len + 1);
 	      strcpy (extra_buf, buf);
 	      name = end = extra_buf;
 
 	      if (buf[0] == '/')
-		dest = rpath + 1;	/* it's an absolute symlink */
+		dest = rpath + 1;	/* It's an absolute symlink */
 	      else
-		/* back up to previous component, ignore if at root already: */
+		/* Back up to previous component, ignore if at root already: */
 		if (dest > rpath + 1)
 		  while ((--dest)[-1] != '/');
 	    }

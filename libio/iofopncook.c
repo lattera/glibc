@@ -1,26 +1,27 @@
-/*
-Copyright (C) 1993, 1995 Free Software Foundation
+/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU IO Library.
 
-This file is part of the GNU IO Library.  This library is free
-software; you can redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option)
-any later version.
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2, or (at
+   your option) any later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this library; see the file COPYING.  If not, write to the Free
-Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this library; see the file COPYING.  If not, write to
+   the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA.
 
-As a special exception, if you link this library with files
-compiled with a GNU compiler to produce an executable, this does not cause
-the resulting executable to be covered by the GNU General Public License.
-This exception does not however invalidate any other reasons why
-the executable file might be covered by the GNU General Public License. */
+   As a special exception, if you link this library with files
+   compiled with a GNU compiler to produce an executable, this does
+   not cause the resulting executable to be covered by the GNU General
+   Public License.  This exception does not however invalidate any
+   other reasons why the executable file might be covered by the GNU
+   General Public License.  */
 
 #include <libioP.h>
 #include <stdio.h>
@@ -39,8 +40,8 @@ static int _IO_cookie_close __P ((_IO_FILE* fp));
 
 static _IO_ssize_t
 _IO_cookie_read (fp, buf, size)
-     register _IO_FILE* fp;
-     void* buf;
+     _IO_FILE *fp;
+     void *buf;
      _IO_ssize_t size;
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -53,8 +54,8 @@ _IO_cookie_read (fp, buf, size)
 
 static _IO_ssize_t
 _IO_cookie_write (fp, buf, size)
-     register _IO_FILE* fp;
-     const void* buf;
+     _IO_FILE *fp;
+     const void *buf;
      _IO_ssize_t size;
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -88,7 +89,7 @@ _IO_cookie_seek (fp, offset, dir)
 
 static int
 _IO_cookie_close (fp)
-     _IO_FILE* fp;
+     _IO_FILE *fp;
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
 

@@ -42,19 +42,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
-#define INET6 1
-#define LOCAL 1
-#define HOSTTABLE 0
-#define RESOLVER 1
-
 #include <sys/types.h>
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#if LOCAL
 #include <sys/un.h>
 #include <sys/utsname.h>
-#endif /* LOCAL */
 #include <netdb.h>
 #include <errno.h>
 #include <string.h>
@@ -64,20 +57,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <bits/libc-lock.h>
 #include <arpa/inet.h>
 
-#ifndef AF_LOCAL
-# define AF_LOCAL AF_UNIX
-#endif /* AF_LOCAL */
-
-#if HOSTTABLE
-struct hostent *_addr2hostname_hosts (const char *, int, int);
-#endif /* HOSTTABLE */
-
 #ifndef min
 # define min(x,y) (((x) > (y)) ? (y) : (x))
 #endif /* min */
 
 
-static const char *
+static char *
 nrl_domainname (void)
 {
   static char *domain = NULL;
@@ -92,7 +77,7 @@ nrl_domainname (void)
 	{
 	  char *c;
 	  struct hostent *h, th;
-	  int tmpbuflen = 1024;
+	  size_t tmpbuflen = 1024;
 	  char *tmpbuf = alloca (tmpbuflen);
 	  int herror;
 
@@ -194,27 +179,12 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
     switch(sa->sa_family)
       {
       case AF_INET:
-#if INET6
       case AF_INET6:
-#endif /* INET6 */
 	if (!(flags & NI_NUMERICHOST))
 	  {
 	    struct hostent *h = NULL;
-#if HOSTTABLE
-# if INET6
-	    if (sa->sa_family == AF_INET6)
-	      h = _addr2hostname_hosts ((void *) &(((struct sockaddr_in6 *) sa)->sin6_addr),
-					sizeof(struct in6_addr), AF_INET6);
-	    else
-# endif /* INET6 */
-	      h = _addr2hostname_hosts ((void *)& (((struct sockaddr_in *) sa)->sin_addr),
-					sizeof(struct in_addr), AF_INET);
-#endif /* HOSTTABLE */
-
-#if RESOLVER
 	    if (h == NULL)
 	      {
-#if INET6
 		if (sa->sa_family == AF_INET6)
 		  {
 		    while (__gethostbyaddr_r ((void *) &(((struct sockaddr_in6 *) sa)->sin6_addr),
@@ -232,7 +202,8 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 			    else
 			      {
 				__set_h_errno (herrno);
-				goto fail;
+				__set_errno (serrno);
+				return -1;
 			      }
 			  }
 			else
@@ -243,7 +214,6 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 		  }
 		else
 		  {
-#endif /* INET6 */
 		    while (__gethostbyaddr_r ((void *) &(((struct sockaddr_in *)sa)->sin_addr),
 					      sizeof(struct in_addr), AF_INET,
 					      &th, tmpbuf, tmpbuflen,
@@ -261,13 +231,12 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 		      }
 		  }
 	      }
-#endif /* RESOLVER */
 
 	    if (h)
 	      {
 		if (flags & NI_NOFQDN)
 		  {
-		    const char *c;
+		    char *c;
 		    if ((c = nrl_domainname ()) && (c = strstr(h->h_name, c))
 			&& (c != h->h_name) && (*(--c) == '.'))
 		      {
@@ -282,7 +251,10 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 	  }
 
 	if (flags & NI_NAMEREQD)
-	  goto fail;
+	  {
+	    __set_errno (serrno);
+	    return -1;
+	  }
 	else
 	  {
 	    const char *c;
@@ -297,12 +269,14 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 			     (void *) &(((struct sockaddr_in *) sa)->sin_addr),
 			     host, hostlen);
 
-	    if (!c)
-	      goto fail;
+	    if (c == NULL)
+	      {
+		__set_errno (serrno);
+		return -1;
+	      }
 	  }
 	break;
 
-#if LOCAL
       case AF_LOCAL:
 	if (!(flags & NI_NUMERICHOST))
 	  {
@@ -316,11 +290,13 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 	  };
 
 	if (flags & NI_NAMEREQD)
-	  goto fail;
+	   {
+	    __set_errno (serrno);
+	    return -1;
+	  }
 
 	strncpy (host, "localhost", hostlen);
 	break;
-#endif /* LOCAL */
 
       default:
         return -1;
@@ -330,9 +306,7 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
     switch(sa->sa_family)
       {
       case AF_INET:
-#if INET6
       case AF_INET6:
-#endif /* INET6 */
 	if (!(flags & NI_NUMERICSERV))
 	  {
 	    struct servent *s, ts;
@@ -345,10 +319,13 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 		    if (errno == ERANGE)
 		      {
 			tmpbuflen *= 2;
-			tmpbuf = __alloca(tmpbuflen);
+			tmpbuf = __alloca (tmpbuflen);
 		      }
 		    else
-		      goto fail;
+		      {
+			__set_errno (serrno);
+			return -1;
+		      }
 		  }
 		else
 		  {
@@ -357,7 +334,7 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 	      }
 	    if (s)
 	      {
-		strncpy(serv, s->s_name, servlen);
+		strncpy (serv, s->s_name, servlen);
 		break;
 	      }
 	  }
@@ -365,11 +342,9 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 		  ntohs (((struct sockaddr_in *) sa)->sin_port));
 	break;
 
-#if LOCAL
       case AF_LOCAL:
 	strncpy (serv, ((struct sockaddr_un *) sa)->sun_path, servlen);
 	break;
-#endif /* LOCAL */
     }
 
   if (host && (hostlen > 0))
@@ -378,8 +353,4 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
     serv[servlen-1] = 0;
   errno = serrno;
   return 0;
-
-fail:
-  errno = serrno;
-  return -1;
-};
+}

@@ -122,6 +122,8 @@ of the GNU C Library.
 * Extended Characters::         Support for extended character sets.
 * Locales::                     The country and language can affect
                                  the behavior of library functions.
+* Message Translation::         How to make the program speak the users
+                                 language.
 * Searching and Sorting::       General searching and sorting functions.
 * Pattern Matching::            Matching wildcards and regular expressions,
                                  and shell-style ``word expansion''.
@@ -313,6 +315,11 @@ Locales and Internationalization
 * Setting the Locale::          How a program specifies the locale.
 * Standard Locales::            Locale names available on all systems.
 * Numeric Formatting::          How to format numbers for the chosen locale.
+
+Message Translation
+
+* Message catalogs a la X/Open::  The @code{catgets} family of functions.
+* The Uniforum approach::         The @code{gettext} family of functions.
 
 Searching and Sorting
 
@@ -975,6 +982,7 @@ Porting the GNU C Library
 @include time.texi
 @include mbyte.texi
 @include locale.texi
+@include message.texi
 @include setjmp.texi
 @include signal.texi
 @include startup.texi

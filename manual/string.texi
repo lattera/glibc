@@ -365,7 +365,7 @@ string has the same limitations as any block of memory allocated using
 @code{alloca}.
 
 For obvious reasons @code{strdupa} is implemented only as a macro.  I.e.,
-you cannot get the address of this function.  Despite this limitations
+you cannot get the address of this function.  Despite this limitation
 it is a useful function.  The following code shows a situation where
 using @code{malloc} would be a lot more expensive.
 
@@ -374,7 +374,7 @@ using @code{malloc} would be a lot more expensive.
 @end smallexample
 
 Please note that calling @code{strtok} using @var{path} directly is
-illegal.
+invalid.
 
 This function is only available if GNU CC is used.
 @end deftypefun

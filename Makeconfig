@@ -530,41 +530,41 @@ endif
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
 object-suffixes := .o
-all-object-suffixes := .o .so .po .go .bo
+all-object-suffixes := .o .os .op .og .ob
 libtype.o := lib%.a
 ifeq (yes,$(build-shared))
 # Under --enable-shared, we will build a shared library of PIC objects.
-# The PIC object files are named foo.so.
-object-suffixes += .so
-CPPFLAGS-.so = -DPIC
-CFLAGS-.so = -fPIC -fno-common
-libtype.so := lib%_pic.a
+# The PIC object files are named foo.os.
+object-suffixes += .os
+CPPFLAGS-.os = -DPIC
+CFLAGS-.os = -fPIC -fno-common
+libtype.os := lib%_pic.a
 endif
 ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
-# The profiled object files are named foo.po.
-object-suffixes += .po
-CPPFLAGS-.po = -DPROF
-CFLAGS-.po = -pg
-libtype.po = lib%_p.a
+# The profiled object files are named foo.op.
+object-suffixes += .op
+CPPFLAGS-.op = -DPROF
+CFLAGS-.op = -pg
+libtype.op = lib%_p.a
 endif
 ifeq (yes,$(build-omitfp))
 # Under --enable-omitfp, we build an the library optimized without
 # debugging information using -fomit-frame-pointer, and build an extra
-# library with debugging information.  The debuggable objects are named foo.go.
-object-suffixes += .go
-CFLAGS-.go = -g
+# library with debugging information.  The debuggable objects are named foo.og.
+object-suffixes += .og
+CFLAGS-.og = -g
 CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
-CFLAGS-.so += $(CFLAGS-.o)
-libtype.go = lib%_g.a
+CFLAGS-.os += $(CFLAGS-.o)
+libtype.og = lib%_g.a
 endif
 ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'
-# to runtime bounds checking.  The bounded-pointer objects are named foo.bo.
-object-suffixes += .bo
-CPPFLAGS-.bo = -DBOUNDED_POINTERS
-CFLAGS-.bo = -g -fbounded-pointers
-libtype.bo = lib%_b.a
+# to runtime bounds checking.  The bounded-pointer objects are named foo.ob.
+object-suffixes += .ob
+CPPFLAGS-.ob = -DBOUNDED_POINTERS
+CFLAGS-.ob = -g -fbounded-pointers
+libtype.ob = lib%_b.a
 endif
 
 

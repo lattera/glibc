@@ -3,7 +3,7 @@
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   the C library, however.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -146,12 +146,18 @@ _nl_find_domain (dirname, locale, domainname)
   alias_value = _nl_expand_alias (locale);
   if (alias_value != NULL)
     {
+#if defined _LIBC || defined HAVE_STRDUP
+      locale = strdup (alias_value);
+      if (locale == NULL)
+	return NULL;
+#else
       size_t len = strlen (alias_value) + 1;
       locale = (char *) malloc (len);
       if (locale == NULL)
 	return NULL;
 
       memcpy (locale, alias_value, len);
+#endif
     }
 
   /* Now we determine the single parts of the locale name.  First
