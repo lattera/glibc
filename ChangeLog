@@ -1,3 +1,10 @@
+2000-09-26  Andreas Jaeger  <aj@suse.de>
+
+	* misc/mkstemp64.c: New file.
+	* misc/Makefile (routines): Add mkstemp64.
+	* stdlib/stdlib.h: Add prototype and redirection magic.
+	* misc/Versions: Add mkstemp64.
+
 2000-09-26  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nscd/dbg_log.c (dbg_log): Add missing format string.

@@ -628,7 +628,18 @@ extern char *mktemp (char *__template) __THROW;
    they are replaced with a string that makes the filename unique.
    Returns a file descriptor open on the file for reading and writing,
    or -1 if it cannot create a uniquely-named file.  */
+# ifndef __USE_FILE_OFFSET64
 extern int mkstemp (char *__template) __THROW;
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (mkstemp, (char *__template) __THROW, mkstemp64);
+#  else
+#   define mkstemp mkstemp64
+#  endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int mkstemp64 (char *__template) __THROW;
+# endif
 #endif
 
 #ifdef __USE_BSD

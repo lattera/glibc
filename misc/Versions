@@ -107,7 +107,7 @@ libc {
     getloadavg;
 
     # m*
-    mincore; mkdtemp;
+    mincore; mkdtemp; mkstemp64;
 
     # p*
     posix_madvise;
