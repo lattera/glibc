@@ -380,10 +380,17 @@ ifndef static-start-installed-name
 static-start-installed-name = $(start-installed-name)
 endif
 
+ifeq (yesyesyes,$(build-shared)$(elf)$(have-z-combreloc))
+combreloc-LDFLAGS = -Wl,-z,combreloc
+LDFLAGS.so += $(combreloc-LDFLAGS)
+LDFLAGS-rtld += $(combreloc-LDFLAGS)
+endif
+
 # Command for linking programs with the C library.
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
+	      $(combreloc-LDFLAGS) \
 	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \

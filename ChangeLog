@@ -1,3 +1,10 @@
+2001-08-28  H.J. Lu  <hjl@gnu.org>
+
+	* Makeconfig (combreloc-LDFLAGS): New variable.
+	Add it to LDFALGS.so, LDFLAGS-rtld, and +link.
+	* config.make.in (have-z-combreloc): New variable.
+	* configure.in: Substitute libc_cv_z_combreloc.
+
 2001-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sv.po: Update from translation team.
@@ -48,8 +55,7 @@
 
 2001-08-27  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconv/strtab.c (searchstring): Use correct length for
-	comparison.
+	* iconv/strtab.c (searchstring): Use correct length for comparison.
 	(strtabadd): Account total size correct if new string has old string as
 	substring.
 

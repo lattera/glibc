@@ -40,6 +40,7 @@ have-protected = @libc_cv_asm_protected_directive@
 have-z-nodelete = @libc_cv_z_nodelete@
 have-z-nodlopen = @libc_cv_z_nodlopen@
 have-z-initfirst = @libc_cv_z_initfirst@
+have-z-combreloc = @libc_cv_z_combreloc@
 have-initfini = @libc_cv_have_initfini@
 have-Bgroup = @libc_cv_Bgroup@
 need-nopic-initfini = @nopic_initfini@

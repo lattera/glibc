@@ -1087,6 +1087,7 @@ dnl look for a section named .rel.dyn.
     AC_DEFINE(HAVE_Z_COMBRELOC)
   fi
 fi
+AC_SUBST(libc_cv_z_combreloc)
 
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
