@@ -1,3 +1,8 @@
+2004-09-09  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Don't abort if inferior's
+	descriptor is bogus.
+
 2004-05-27  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_validate.c: When we find no threads and the inferior appears
