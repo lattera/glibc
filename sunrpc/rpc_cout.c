@@ -524,11 +524,11 @@ inline_struct (definition *def, int flag)
 		    f_print (fout, "buf = XDR_INLINE (xdrs, %d * BYTES_PER_XDR_UNIT);", size);
 		  else if (size == 0)
 		    f_print (fout,
-			     "buf = XDR_INLINE (xdrs, %s * BYTES_PER_XDR_UNIT);",
+			     "buf = XDR_INLINE (xdrs, (%s) * BYTES_PER_XDR_UNIT);",
 			     sizestr);
 		  else
 		    f_print (fout,
-			     "buf = XDR_INLINE(xdrs, (%d + (%s)) * BYTES_PER_XDR_UNIT);",
+			     "buf = XDR_INLINE (xdrs, (%d + (%s)) * BYTES_PER_XDR_UNIT);",
 			     size, sizestr);
 		  f_print (fout, "\n");
 		  tabify (fout, indent + 1);
@@ -573,15 +573,15 @@ inline_struct (definition *def, int flag)
 	  /* were already looking at a xdr_inlineable structure */
 	  if (sizestr == NULL)
 	    f_print (fout,
-		     "\t\tbuf = XDR_INLINE(xdrs,%d * BYTES_PER_XDR_UNIT);",
+		     "\t\tbuf = XDR_INLINE (xdrs, %d * BYTES_PER_XDR_UNIT);",
 		     size);
 	  else if (size == 0)
 	    f_print (fout,
-		     "\t\tbuf = XDR_INLINE(xdrs,%s * BYTES_PER_XDR_UNIT);",
+		     "\t\tbuf = XDR_INLINE (xdrs, (%s) * BYTES_PER_XDR_UNIT);",
 		     sizestr);
 	  else
 	    f_print (fout,
-		     "\t\tbuf = XDR_INLINE(xdrs,(%d + %s)* BYTES_PER_XDR_UNIT);",
+		     "\t\tbuf = XDR_INLINE (xdrs, (%d + %s)* BYTES_PER_XDR_UNIT);",
 		     size, sizestr);
 	  f_print (fout, "\n\t\tif (buf == NULL) {\n");
 	  psav = cur;

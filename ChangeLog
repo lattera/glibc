@@ -1,5 +1,9 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/rpc_cout.c (inline_struct): Add missing braces in
+	generated expressions.
+	Patch by Darren McClelland <dmcclell@zetec.com>.
+
 	* timezone/Makefile (build-testdata): Set LANGUAGE and LC_ALL
 	since zic uses setlocale and gettext but we cannot make it use the
 	new locale data since zic calls a shell which might not use the
