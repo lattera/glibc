@@ -114,7 +114,7 @@ _IO_fwide (fp, mode)
 #ifdef _LIBC
       {
 	struct gconv_fcts fcts;
-	struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
+	struct _IO_codecvt *cc = fp->_codecvt = &fp->_wide_data->_codecvt;
 
 	__wcsmbs_clone_conv (&fcts);
 

@@ -1,3 +1,14 @@
+2000-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iofwide.c (_IO_fwide): Initialize fp->_codecvt as well.
+	* libio/fileops.c (_IO_new_file_fopen): Use _codecvt not from
+	_wide_data but from _IO_FILE directly.
+	* libio/iofclose.c: Likewise.
+	* libio/wfileops.c: Likewise.
+
+	* libio/genops.c (_IO_default_showmanyc): Change return type to size_t.
+	* libio/libioP.h: Change prototypes.
+
 2000-08-03  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/setjmp.S (__sigsetjmp): Pop our

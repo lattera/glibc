@@ -256,7 +256,7 @@ typedef int (*_IO_stat_t) __PMT ((_IO_FILE *, void *));
 /* The 'showmany' hook can be used to get an image how much input is
    available.  In many cases the answer will be 0 which means unknown
    but some cases one can provide real information.  */
-typedef int (*_IO_showmanyc_t) __PMT ((_IO_FILE *));
+typedef size_t (*_IO_showmanyc_t) __PMT ((_IO_FILE *));
 #define _IO_SHOWMANYC(FP) JUMP0 (__showmanyc, FP)
 #define _IO_WSHOWMANYC(FP) WJUMP0 (__showmanyc, FP)
 
@@ -404,7 +404,7 @@ extern int _IO_default_stat __P ((_IO_FILE *, void *));
 extern _IO_off64_t _IO_default_seek __P ((_IO_FILE *, _IO_off64_t, int));
 extern int _IO_default_sync __P ((_IO_FILE *));
 #define _IO_default_close ((_IO_close_t) _IO_default_sync)
-extern int _IO_default_showmanyc __P ((_IO_FILE *));
+extern size_t _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
