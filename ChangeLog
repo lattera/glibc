@@ -1,3 +1,11 @@
+2002-07-24  Roland McGrath  <roland@frob.com>
+
+	* libio/fileops.c (_IO_file_seekoff_mmap): When just examining the
+	position, calculate it to take into account an active pushback buffer.
+
+	* libio/Makefile (tests): Add bug-ungetc.
+	* libio/bug-ungetc.c: New file.
+
 2002-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-tls.c: New file.

@@ -922,8 +922,12 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
 {
   _IO_off64_t result;
 
+  /* If we are only interested in the current position, calculate it and
+     return right now.  This calculation does the right thing when we are
+     using a pushback buffer, but in the usual case has the same value as
+     (fp->_IO_read_ptr - fp->_IO_buf_base).  */
   if (mode == 0)
-    dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
+    return fp->_offset - (fp->_IO_read_end - fp->_IO_read_ptr);
 
   switch (dir)
     {
@@ -942,10 +946,6 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
   if (offset < 0)
     /* No negative offsets are valid.  */
     return EOF;
-
-  /* If we are only interested in the current position we've found it now.  */
-  if (mode == 0)
-    return offset;
 
   result = _IO_SYSSEEK (fp, offset, 0);
   if (result < 0)
