@@ -1,3 +1,11 @@
+2002-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* ctype/Makefile (routines): Add isctype.
+	* ctype/Versions (libc): Export isctype and __isctype for GLIBC_2.3.
+	* ctype/ctype.h: Add declaration of isctype.
+	* include/ctype.h: Declare __isctype.
+	* ctype/isctype.c: New file.
+
 2002-09-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (__pthread_initialize_minimal): Pass

@@ -15,4 +15,7 @@ libc {
     # global variables
     __ctype32_tolower; __ctype32_toupper;
   }
+  GLIBC_2.3 {
+    isctype; __isctype;
+  }
 }

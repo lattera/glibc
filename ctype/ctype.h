@@ -104,6 +104,11 @@ __exctype (isblank);
 __END_NAMESPACE_C99
 #endif
 
+#ifdef __USE_GNU
+/* Test C for a set of character classes according to MASK.  */
+extern int isctype (int __c, int __mask) __THROW;
+#endif
+
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 
 /* Return nonzero iff C is in the ASCII set
