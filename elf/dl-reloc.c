@@ -60,10 +60,10 @@ _dl_relocate_object (struct link_map *l, int lazy)
       = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 
 
-    Elf32_Addr resolve (const Elf32_Sym **ref)
+    Elf32_Addr resolve (const Elf32_Sym **ref, Elf32_Addr r_offset)
       {
 	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,
-				  l->l_name);
+				  l->l_name, (*ref)->st_value == r_offset);
       }
 
     real_next = l->l_next;

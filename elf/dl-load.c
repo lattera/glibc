@@ -354,8 +354,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 		if (zeroend > zeropage)
 		  /* Map the remaining zero pages in from the zero fill FD.  */
-		  mapat = mmap (zeropage, zeroend - zeropage,
-				prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
+		  mapat = mmap (zeropage, zeroend - zeropage, prot,
+				MAP_ANON|MAP_PRIVATE|MAP_FIXED|MAP_INHERIT,
 				_dl_zerofd, 0);
 	      }
 	  }

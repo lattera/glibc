@@ -23,13 +23,15 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 
 /* Search loaded objects' symbol tables for a definition of 
-   the symbol UNDEF_NAME.  Don't use a PLT defn in UNDEF_MAP, since
-   that is the object making the reference.  */
+   the symbol UNDEF_NAME.  If NOSELF is nonzero, then *REF
+   cannot satisfy the reference itself; some different binding
+   must be found.  */
 
 Elf32_Addr
 _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 		   struct link_map *symbol_scope,
-		   const char *reference_name)
+		   const char *reference_name,
+		   int noself)
 {
   unsigned long int hash = elf_hash (undef_name);
   struct link_map *map;
@@ -57,7 +59,9 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	{
 	  const Elf32_Sym *sym = &symtab[symidx];
 
-	  if (sym->st_value == 0)
+	  if (sym->st_value == 0 || /* No value.  */
+	      sym->st_shndx == SHN_UNDEF || /* PLT entry.  */
+	      (noself && sym == *ref))	/* The reference can't define it.  */
 	    continue;
 
 	  switch (ELF32_ST_TYPE (sym->st_info))
@@ -70,12 +74,6 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	      /* Not a code/data definition.  */
 	      continue;
 	    }
-
-	  if (sym->st_shndx == SHN_UNDEF)
-	    /* This is the same symbol we are looking for the value for.
-	       If it is a PLT entry, it will have a value of its own;
-	       but that is not what we are looking for.  */
-	      continue;
 
 	  if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
 	    /* Not the symbol we are looking for.  */

@@ -355,10 +355,10 @@ ifeq (yes,$(build-shared))
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
 lib%.so: lib%_pic.a
-	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< \
-		  $(LDFLAGS-$(notdir $*).so) \
+	$(LINK.o) -shared -o $@ \
+		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
 		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
-		  $(LDLIBS-$(notdir $*).so)
+		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \
 
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want

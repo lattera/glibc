@@ -64,7 +64,7 @@ _dl_runtime_resolve (Elf32_Word reloc_offset)
   
   definer = &symtab[ELF32_R_SYM (reloc->r_info)];
   loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,
-				scope, l->l_name);
+				scope, l->l_name, 0);
   
   /* Restore list frobnication done above for DT_SYMBOLIC.  */
   l->l_next = real_next;

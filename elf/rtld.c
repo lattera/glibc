@@ -258,8 +258,8 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
 		      ": error in loading shared libraries\n",
 		      errobj ?: "", errobj ? ": " : "",
-		      errstring, err ? ": " : NULL,
-		      err ? strerror (err) : NULL, NULL);
+		      errstring, err ? ": " : "",
+		      err ? strerror (err) : "", "\n", NULL);
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */

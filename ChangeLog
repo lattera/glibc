@@ -1,5 +1,23 @@
 Thu Jun  8 02:50:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* elf/dl-load.c (_dl_map_object): Add MAP_INHERIT flag in mmap
+ 	from zero fill.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Take new flag arg NOSELF;
+ 	if nonzero, don't let *REF satisfy the reference itself.
+	* elf/link.h (_dl_lookup_symbol): Add new arg NOSELF in decl.
+	* sysdeps/i386/dl-runtime.c (_dl_runtime_resolve): Pass new arg to
+ 	_dl_lookup_symbol.
+	* elf/do-rel.h (elf_dynamic_do_rel): Pass new second arg of
+ 	R->r_offset to RESOLVE callback.
+	* elf/dl-reloc.c (_dl_relocate_object: resolve): Don't let *REF
+ 	satisfy the reference itself if its value equals the reloc's
+ 	offset.
+
+	* elf/rtld.c (dl_main): Write a newline in fatal msg.
+
+	* Makerules (lib%.so: lib%_pic.a): Pass $(LDFLAGS.so).
+
 	* elf/rtld.c [! NDEBUG] (__assert_perror_fail): New function.
 
 	* hurd/hurdstartup.c (_hurd_startup): Fancier kludge to guess phdr

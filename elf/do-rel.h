@@ -37,7 +37,8 @@ Cambridge, MA 02139, USA.  */
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag, 
-		    Elf32_Addr (*resolve) (const Elf32_Sym **),
+		    Elf32_Addr (*resolve) (const Elf32_Sym **symbol,
+					   Elf32_Addr r_offset),
 		    int lazy)
 {
   const Elf32_Sym *const symtab
@@ -61,7 +62,7 @@ elf_dynamic_do_rel (struct link_map *map,
 	else
 	  {
 	    if (resolve)
-	      loadbase = (*resolve) (&definer);
+	      loadbase = (*resolve) (&definer, r->r_offset);
 	    else
 	      {
 		assert (definer->st_shndx != SHN_UNDEF);
