@@ -201,3 +201,7 @@ strong_alias (INTERNAL (REENTRANT_GETNAME), NEW (REENTRANT_GETNAME));
   versioned_symbol (libc, real, name, version)
 do_default_symbol_version (NEW (REENTRANT_GETNAME),
 			   REENTRANT_GETNAME, GLIBC_2_1_2);
+
+static_link_warning (SETFUNC_NAME)
+static_link_warning (ENDFUNC_NAME)
+static_link_warning (REENTRANT_GETNAME)

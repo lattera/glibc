@@ -1024,6 +1024,8 @@ getaddrinfo (const char *name, const char *service,
 }
 libc_hidden_def (getaddrinfo)
 
+static_link_warning (getaddrinfo)
+
 void
 freeaddrinfo (struct addrinfo *ai)
 {

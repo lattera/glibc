@@ -282,6 +282,16 @@
   link_warning (name, \
 		"warning: " #name " is not implemented and will always fail")
 
+/* Warning for linking functions calling dlopen into static binaries.  */
+#ifdef SHARED
+#define static_link_warning(name)
+#else
+#define static_link_warning(name) static_link_warning1(name)
+#define static_link_warning1(name) \
+  link_warning(name, "Using '" #name "' in statically linked applications \
+requires at runtime the shared libraries from the glibc version used \
+for linking")
+#endif
 
 /* Declare SYMBOL to be TYPE (`function' or `object') and of SIZE bytes,
    when the assembler supports such declarations (such as in ELF).

@@ -91,3 +91,5 @@ GETFUNC_NAME (void)
   __set_errno (save);
   return result;
 }
+
+static_link_warning (GETFUNC_NAME)

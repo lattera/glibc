@@ -31,7 +31,7 @@ struct kernel_stat;
 #include <string.h>
 
 
-#ifndef __ASSUME_STAT64_SYSCALL
+#if !defined __ASSUME_STAT64_SYSCALL || defined XSTAT_IS_XSTAT64
 int
 __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
@@ -108,7 +108,7 @@ int
 __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
 #ifdef XSTAT_IS_XSTAT64
-  return xstat_conv (vers, kbuf, ubuf);
+  return __xstat_conv (vers, kbuf, ubuf);
 #else
   switch (vers)
     {

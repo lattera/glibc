@@ -223,6 +223,8 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
   return result;
 }
 
+static_link_warning (getgrouplist)
+
 /* Initialize the group set for the current user
    by reading the group database and using all groups
    of which USER is a member.  Also include GROUP.  */
@@ -271,3 +273,5 @@ initgroups (const char *user, gid_t group)
   return result;
 #endif
 }
+
+static_link_warning (initgroups)

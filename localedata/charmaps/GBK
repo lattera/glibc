@@ -4,6 +4,9 @@
 <comment_char> %
 <escape_char> /
 
+% alias CP936
+% alias MS936
+% alias WINDOWS-936
 CHARMAP
 <U0000>     /x00         NULL (NUL)
 <U0001>     /x01         START OF HEADING (SOH)

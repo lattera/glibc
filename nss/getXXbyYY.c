@@ -162,3 +162,5 @@ done:
 
   return result;
 }
+
+static_link_warning (FUNCTION_NAME)

@@ -289,3 +289,5 @@ strong_alias (INTERNAL (REENTRANT_NAME), NEW (REENTRANT_NAME));
   versioned_symbol (libc, real, name, version)
 do_default_symbol_version (NEW (REENTRANT_NAME),
 			   REENTRANT_NAME, GLIBC_2_1_2);
+
+static_link_warning (REENTRANT_NAME)

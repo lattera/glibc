@@ -1,3 +1,28 @@
+2003-06-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	* include/libc-symbols.h: Add static_link_warning macro.
+	* grp/initgroups.c: Print linker warning if this function
+	is called in a static linked binary.
+	* nss/getXXbyYY.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+
+2003-06-16  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/gconv-modules (ISO-8859-15): Add aliases ISO_8859-15,
+	LATIN-9.
+	(ISO-8859-16): Add aliases ISO_8859-16:2001, ISO_8859-16.
+	(IBM1047): Add alias IBM-1047.
+	(GBK): Add aliases MS936, WINDOWS-936.
+
+2003-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/xstatconv.c (__xstat_conv): Define even if
+	defined __ASSUME_STAT64_SYSCALL && defined XSTAT_IS_XSTAT64.
+	(__xstat64_conv): Change xstat_conv to __xstat_conv.
+
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Update from current official ISO 639.
@@ -10,8 +35,7 @@
 	of MXCSR.
 	* sysdeps/i386/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
 	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Likewise.
-	Reported by Arnaud Desitter
-	<arnaud.desitter@geography.oxford.ac.uk>.
+	Reported by Arnaud Desitter <arnaud.desitter@geography.oxford.ac.uk>.
 
 	* math/tgmath.h (carg): Handle real arguments.
 	(conj): Likewise.

@@ -393,6 +393,8 @@ module	INTERNAL		ISO-8859-14//		ISO8859-14	1
 alias	ISO8859-15//		ISO-8859-15//
 alias	ISO885915//		ISO-8859-15//
 alias	ISO-IR-203//		ISO-8859-15//
+alias	ISO_8859-15//		ISO-8859-15//
+alias	LATIN-9//		ISO-8859-15//
 alias	ISO_8859-15:1998//	ISO-8859-15//
 module	ISO-8859-15//		INTERNAL		ISO8859-15	1
 module	INTERNAL		ISO-8859-15//		ISO8859-15	1
@@ -403,6 +405,8 @@ alias	ISO885916//		ISO-8859-16//
 alias	ISO-IR-226//		ISO-8859-16//
 alias	LATIN10//		ISO-8859-16//
 alias	L10//			ISO-8859-16//
+alias	ISO_8859-16:2001//	ISO-8859-16//
+alias	ISO_8859-16//		ISO-8859-16//
 module	ISO-8859-16//		INTERNAL		ISO8859-16	1
 module	INTERNAL		ISO-8859-16//		ISO8859-16	1
 
@@ -996,6 +1000,7 @@ module	IBM1046//		INTERNAL		IBM1046		1
 module	INTERNAL		IBM1046//		IBM1046		1
 
 #	from			to			module		cost
+alias	IBM-1047//		IBM1047//
 alias	CP1047//		IBM1047//
 alias	1047//			IBM1047//
 alias	OSF10020417//		IBM1047//
@@ -1122,6 +1127,8 @@ module	BIG5//			EUC-CN//		GBBIG5		1
 #	from			to			module		cost
 alias	GB13000//		GBK//
 alias	CP936//			GBK//
+alias	MS936//			GBK//
+alias	WINDOWS-936//		GBK//
 module	GBK//			INTERNAL		GBK		1
 module	INTERNAL		GBK//			GBK		1
 

@@ -1,3 +1,10 @@
+2003-06-16  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO-8859-15: Add aliases ISO_8859-15, LATIN-9.
+	* charmaps/ISO-8859-16: Add aliases ISO_8859-16:2001, ISO_8859-16.
+	* charmaps/IBM1047: Add alias IBM-1047.
+	* charmaps/GBK: Add aliases CP936, MS936, WINDOWS-936.
+
 2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/fi_FI [LC_TIME]: Correct month names to make the dates

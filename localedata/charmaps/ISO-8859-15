@@ -3,6 +3,8 @@
 <escape_char> /
 % automatically generated from the charDB
 
+% alias ISO_8859-15
+% alias LATIN-9
 CHARMAP
 <U0000>     /x00         NULL
 <U0001>     /x01         START OF HEADING
