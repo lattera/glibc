@@ -1,3 +1,8 @@
+Sat Aug 10 02:05:28 1996  Richard Henderson  <richard@twiddle.tamu.edu>
+
+	* sysdeps/libm-ieee754/s_isnan.c [NO_LONG_DOUBLE]: Add strong
+	alias to `__isnanl'.
+
 Fri Aug  9 17:38:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sys/timex.h: Include <sys/time.h> to
