@@ -1,7 +1,7 @@
 #ifndef _UNISTD_H
 # include <posix/unistd.h>
 
-libc_hidden_proto (_exit)
+libc_hidden_proto (_exit, __noreturn__)
 libc_hidden_proto (alarm)
 libc_hidden_proto (confstr)
 libc_hidden_proto (execl)

@@ -1,5 +1,9 @@
 2002-09-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libc-symbols.h: Change *hidden_proto macros to accept
+	option parameters and pass those to the attribute definition.
+	* include/unistd.h (_exit): Add __noreturn__ to libc_hidden_proto call.
+
 	* include/unistd.h: Declare __libc_pause.
 
 	* include/sys/socket.h: Declare __libc_send, __libc_recv,

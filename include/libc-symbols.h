@@ -473,16 +473,19 @@
 #if defined SHARED && defined DO_VERSIONING \
     && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
 # ifndef __ASSEMBLER__
-#  ifdef HAVE_BROKEN_VISIBILITY_ATTRIBUTE
-#   define __hidden_proto_hiddenattr
+#  if !defined HAVE_VISIBILITY_ATTRIBUTE \
+      || defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#   define __hidden_proto_hiddenattr(attrs...)
 #  else
-#   define __hidden_proto_hiddenattr attribute_hidden
+#   define __hidden_proto_hiddenattr(attrs...) \
+  __attribute__ ((visibility ("hidden"), ##attrs))
 #  endif
-#  define hidden_proto(name) __hidden_proto (name, __GI_##name)
-#  define __hidden_proto(name, internal) \
+#  define hidden_proto(name, attrs...) \
+  __hidden_proto (name, __GI_##name, ##attrs)
+#  define __hidden_proto(name, internal, attrs...) \
   extern __typeof (name) internal; \
   extern __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
-  __hidden_proto_hiddenattr;
+  __hidden_proto_hiddenattr (attrs);
 #  define __hidden_asmname(name) \
   __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
 #  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
@@ -549,7 +552,7 @@
 # endif
 #else
 # ifndef __ASSEMBLER__
-#  define hidden_proto(name)
+#  define hidden_proto(name, attrs...)
 # else
 #  define HIDDEN_JUMPTARGET(name) JUMPTARGET(name)
 # endif /* Not  __ASSEMBLER__ */
@@ -559,36 +562,36 @@
 #endif
 
 #if !defined NOT_IN_libc
-# define libc_hidden_proto(name) hidden_proto (name)
+# define libc_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libc_hidden_def(name) hidden_def (name)
 # define libc_hidden_weak(name) hidden_weak (name)
 # define libc_hidden_ver(local, name) hidden_ver (local, name)
 #else
-# define libc_hidden_proto(name)
+# define libc_hidden_proto(name, attrs...)
 # define libc_hidden_def(name)
 # define libc_hidden_weak(name)
 # define libc_hidden_ver(local, name)
 #endif
 
 #if defined NOT_IN_libc && defined IS_IN_rtld
-# define rtld_hidden_proto(name) hidden_proto (name)
+# define rtld_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define rtld_hidden_def(name) hidden_def (name)
 # define rtld_hidden_weak(name) hidden_weak (name)
 # define rtld_hidden_ver(local, name) hidden_ver (local, name)
 #else
-# define rtld_hidden_proto(name)
+# define rtld_hidden_proto(name, attrs...)
 # define rtld_hidden_def(name)
 # define rtld_hidden_weak(name)
 # define rtld_hidden_ver(local, name)
 #endif
 
 #if defined NOT_IN_libc && defined IS_IN_libm
-# define libm_hidden_proto(name) hidden_proto (name)
+# define libm_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libm_hidden_def(name) hidden_def (name)
 # define libm_hidden_weak(name) hidden_weak (name)
 # define libm_hidden_ver(local, name) hidden_ver (local, name)
 #else
-# define libm_hidden_proto(name)
+# define libm_hidden_proto(name, attrs...)
 # define libm_hidden_def(name)
 # define libm_hidden_weak(name)
 # define libm_hidden_ver(local, name)
