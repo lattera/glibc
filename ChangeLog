@@ -1,3 +1,11 @@
+1998-09-13 18:04  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/dl-machine.c (PPC_DCBST,PPC_SYNC,PPC_ISYNC,PPC_ICBI):
+	Don't mark asm `volatile'.
+	(__elf_machine_runtime_setup): Clear the last partial block in the PLT
+	from the data cache too.  Assume it isn't in the instruction cache yet.
+	(__elf_machine_fixup_plt): Clear the modified address from the caches.
+
 1998-09-12  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/generic/segfault.c (install_handler): Install signal

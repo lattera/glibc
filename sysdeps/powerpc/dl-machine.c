@@ -63,10 +63,10 @@
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
 
-#define PPC_DCBST(where) asm volatile ("dcbst 0,%0" : : "r"(where))
-#define PPC_SYNC asm volatile ("sync")
-#define PPC_ISYNC asm volatile ("sync; isync")
-#define PPC_ICBI(where) asm volatile ("icbi 0,%0" : : "r"(where))
+#define PPC_DCBST(where) asm ("dcbst 0,%0" : : "r"(where) : "memory")
+#define PPC_SYNC asm ("sync" : : : "memory")
+#define PPC_ISYNC asm volatile ("sync; isync" : : : "memory")
+#define PPC_ICBI(where) asm ("icbi 0,%0" : : "r"(where) : "memory")
 #define PPC_DIE asm volatile ("tweq 0,0")
 
 /* Use this when you've modified some code, but it won't be in the
@@ -242,7 +242,9 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 	 need to write the changes from the data cache to a
 	 second-level unified cache, then make sure that stale data in
 	 the instruction cache is removed.  (In a multiprocessor
-	 system, the effect is more complex.)
+	 system, the effect is more complex.)  Most of the PLT shouldn't
+	 be in the instruction cache, but there may be a little overlap
+	 at the start and the end.
 
 	 Assumes the cache line size is at least 32 bytes, or at least
 	 that dcbst and icbi apply to 32-byte lines. At present, all
@@ -251,9 +253,10 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       size_modified = lazy ? rel_offset_words : PLT_INITIAL_ENTRY_WORDS;
       for (i = 0; i < size_modified; i+=8)
 	PPC_DCBST (plt + i);
+      PPC_DCBST (plt + size_modified-1);
       PPC_SYNC;
-      for (i = 0; i < size_modified; i+=8)
-	PPC_ICBI (plt + i);
+      PPC_ICBI (plt);
+      PPC_ICBI (plt + size_modified-1);
       PPC_ISYNC;
     }
 
@@ -319,6 +322,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 					 + 1
 					 - PLT_LONGBRANCH_ENTRY_WORDS
 					 + PLT_INITIAL_ENTRY_WORDS)));
+	  reloc_addr += 1;  /* This is the modified address.  */
 	}
     }
   MODIFIED_CODE (reloc_addr);
