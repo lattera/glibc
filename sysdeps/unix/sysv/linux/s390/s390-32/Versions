@@ -23,5 +23,8 @@ libc {
     # v*
     versionsort64;
   }
+  GLIBC_2.3.3 {
+    posix_fadvise64;
+  }
 }
 

@@ -93,7 +93,7 @@ ENTRY (BP_SYM (__posix_fadvise64_l64))
 	movl	LENLO(%esp), %esi
 	movl	FLAGS(%esp), %edi
 
-	movl	$SYS_ify(fadvise64_64), %eax
+	movl	$SYS_ify(fadvise64), %eax
 	ENTER_KERNEL
 
 	/* Restore registers.  */
@@ -115,6 +115,18 @@ L(overflow):
 	ret
 #endif
 
-PSEUDO_END_NOERRNO (BP_SYM (__posix_fadvise64_l64))
+END (BP_SYM (__posix_fadvise64_l64))
+
+#ifdef __NR_fadvise64
+PSEUDO_ERRVAL (__posix_fadvise64_l32, posix_fadvise64, 5)
+	ret
+PSEUDO_END_ERRVAL (__posix_fadvise64_l32)
+#else
+ENTRY (BP_SYM (__posix_fadvise64_l32))
+	movl	$ENOSYS, %eax
+	ret
+END (BP_SYM (__posix_fadvise64_l32))
+#endif
 
 default_symbol_version (__posix_fadvise64_l64, posix_fadvise64, GLIBC_2.3.3)
+symbol_version (__posix_fadvise64_l32, posix_fadvise64, GLIBC_2.2)

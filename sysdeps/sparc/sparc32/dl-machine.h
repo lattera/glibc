@@ -40,12 +40,6 @@
 #define OPCODE_SAVE_SP	0x9de3bfa8 /* save %sp, -(16+6)*4, %sp */
 #define OPCODE_BA	0x30800000 /* b,a ?; add PC-rel word address */
 
-/* Protect some broken versions of gcc from misinterpreting weak addresses.  */
-#define WEAKADDR(x)	({ __typeof(x) *_px = &x;			\
-			   __asm ("" : "=r" (_px) : "0" (_px));		\
-			   _px; })
-
-
 /* Use a different preload file when running in 32-bit emulation mode
    on a 64-bit host.  */
 #define LD_SO_PRELOAD ((GL(dl_hwcap) & HWCAP_SPARC_V9) \
@@ -61,16 +55,13 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
     return 1;
   else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
-      unsigned long *hwcap;
-#ifndef SHARED
-      weak_extern (_dl_hwcap);
-      weak_extern (_dl_hwcap_mask);
-#endif
-
-      hwcap = WEAKADDR (GL(dl_hwcap));
       /* XXX The following is wrong!  Dave Miller rejected to implement it
 	 correctly.  If this causes problems shoot *him*!  */
-      return hwcap == NULL || (*hwcap & GL(dl_hwcap_mask) & HWCAP_SPARC_V9);
+#ifdef SHARED
+      return GL(dl_hwcap) & GL(dl_hwcap_mask) & HWCAP_SPARC_V9;
+#else
+      return GL(dl_hwcap) & HWCAP_SPARC_V9;
+#endif
     }
   else
     return 0;
@@ -170,17 +161,12 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
 	{
 	  /* Need to reinitialize .plt to undo prelinking.  */
-	  unsigned long *hwcap;
 	  int do_flush;
 	  Elf32_Rela *rela = (Elf32_Rela *) D_PTR (l, l_info[DT_JMPREL]);
 	  Elf32_Rela *relaend
 	    = (Elf32_Rela *) ((char *) rela
 			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
-#ifndef SHARED
-	  weak_extern (_dl_hwcap);
-#endif
-	  hwcap = WEAKADDR (GL(dl_hwcap));
-	  do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+	  do_flush = GL(dl_hwcap) & HWCAP_SPARC_FLUSH;
 
 	  /* prelink must ensure there are no R_SPARC_NONE relocs left
 	     in .rela.plt.  */
@@ -367,13 +353,7 @@ sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
 #ifndef RTLD_BOOTSTRAP
   /* Note that we don't mask the hwcap here, as the flush is essential to
      functionality on those cpu's that implement it.  */
-  unsigned long *hwcap;
-  int do_flush;
-# ifndef SHARED
-  weak_extern (_dl_hwcap);
-# endif
-  hwcap = WEAKADDR (GL(dl_hwcap));
-  do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
+  int do_flush = GL(dl_hwcap) & HWCAP_SPARC_FLUSH;
 #else
   /* Unfortunately, this is necessary, so that we can ensure
      ld.so will not execute corrupt PLT entry instructions. */

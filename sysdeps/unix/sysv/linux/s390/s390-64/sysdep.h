@@ -83,6 +83,18 @@
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
+#undef PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args)				      \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args);					      \
+    lcgr %r2,%r2
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)						      \
+  SYSCALL_ERROR_HANDLER;						      \
+  END (name)
+
 #ifndef PIC
 # define SYSCALL_ERROR_LABEL syscall_error
 # define SYSCALL_ERROR_HANDLER
@@ -156,6 +168,9 @@
     br	    14
 
 #define ret_NOERRNO							      \
+    br	    14
+
+#define ret_ERRVAL							      \
     br	    14
 
 #endif /* __ASSEMBLER__ */

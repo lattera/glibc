@@ -27,10 +27,14 @@ int
 posix_fadvise (int fd, off_t offset, off_t len, int advise)
 {
 #ifdef __NR_fadvise64
-  return INLINE_SYSCALL (fadvise64, 5, fd,
-			 __LONG_LONG_PAIR (offset >> 31, offset), len, advise);
+  INTERNAL_SYSCALL_DECL (err);
+  int ret = INTERNAL_SYSCALL (fadvise64, err, 5, fd,
+			      __LONG_LONG_PAIR (offset >> 31, offset), len,
+			      advise);
+  if (INTERNAL_SYSCALL_ERROR_P (ret, err))
+    return INTERNAL_SYSCALL_ERRNO (ret, err);
+  return 0;
 #else
-  __set_errno (ENOSYS);
-  return -1;
+  return ENOSYS;
 #endif
 }

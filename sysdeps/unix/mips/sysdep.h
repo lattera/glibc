@@ -51,6 +51,18 @@
 
 #define ret_NOERRNO ret
 
+#define PSEUDO_ERRVAL(name, syscall_name, args)	\
+  .align 2;						\
+  ENTRY(name)						\
+  .set noreorder;					\
+  li v0, SYS_ify(syscall_name);				\
+  syscall
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(sym) .end sym; .size sym,.-sym
+
+#define ret_ERRVAL ret
+
 #define r0	v0
 #define r1	v1
 /* The mips move insn is d,s.  */

@@ -44,8 +44,6 @@ pause		-	pause		Ci:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
-posix_fadvise64 -	fadvise64	Vi:iiiii	__posix_fadvise64_l32	posix_fadvise64@GLIBC_2.2
-posix_fadvise64_64 -	fadvise64_64	Vi:iiiiii __posix_fadvise64_l64	posix_fadvise64@GLIBC_2.3.3
 prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
 putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	query_module

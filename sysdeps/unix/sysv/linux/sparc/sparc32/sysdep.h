@@ -25,6 +25,7 @@
 #ifdef IS_IN_rtld
 # include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
 #endif
+#include <tls.h>
 
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
@@ -36,6 +37,7 @@
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
 #undef PSEUDO_NOERRNO
+#undef PSEUDO_ERRVAL
 #undef ENTRY
 #undef END
 #undef LOC
@@ -86,6 +88,47 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	jmpl	%i7+8, %g0;						\
 	 restore %g0, -1, %o0;						\
 	.previous;
+#elif USE___THREAD
+# ifndef NOT_IN_libc
+#  define SYSCALL_ERROR_ERRNO __libc_errno
+# else
+#  define SYSCALL_ERROR_ERRNO errno
+# endif
+# ifdef SHARED
+#  define SYSCALL_ERROR_HANDLER						\
+	.section .gnu.linkonce.t.__sparc.get_pic.l7,"ax",@progbits;	\
+	.globl __sparc.get_pic.l7;					\
+	.hidden __sparc.get_pic.l7;					\
+	.type __sparc.get_pic.l7,@function;				\
+__sparc.get_pic.l7:							\
+	retl;								\
+	 add	%o7, %l7, %l7;						\
+	.previous;							\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	save	%sp,-96,%sp;						\
+	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %l1;			\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
+	call	__sparc.get_pic.l7;					\
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
+	add	%l1, %tie_lo10(SYSCALL_ERROR_ERRNO), %l1;		\
+	ld	[%l7 + %l1], %l1, %tie_ld(SYSCALL_ERROR_ERRNO);		\
+	st	%i0, [%g7 + %l1], %tie_add(SYSCALL_ERROR_ERRNO);	\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;						\
+	.previous;
+# else
+#  define SYSCALL_ERROR_HANDLER						\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %g1;			\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_), %g2;			\
+	add	%g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;		\
+	add	%g2, %lo(_GLOBAL_OFFSET_TABLE_), %g2;			\
+	ld	[%g2 + %g1], %g1, %tie_ld(SYSCALL_ERROR_ERRNO);		\
+	st	%o0, [%g7 + %g1], %tie_add(SYSCALL_ERROR_ERRNO);	\
+	jmpl	%o7+8, %g0;						\
+	 mov	-1, %o0;						\
+	.previous;
+# endif
 #else
 # define SYSCALL_ERROR_HANDLER						\
 SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
@@ -110,6 +153,12 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	SYSCALL_ERROR_HANDLER
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)		\
+	.text;							\
+	ENTRY(name);						\
+	LOADSYSCALL(syscall_name);				\
+	ta 0x10
+
+#define PSEUDO_ERRVAL(name, syscall_name, args)			\
 	.text;							\
 	ENTRY(name);						\
 	LOADSYSCALL(syscall_name);				\

@@ -50,6 +50,9 @@
 #ifndef PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(sym)	PSEUDO_END(sym)
 #endif
+#ifndef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(sym)	PSEUDO_END(sym)
+#endif
 
 /* Wrappers around system calls should normally inline the system call code.
    But sometimes it is not possible or implemented and we use this code.  */

@@ -1,3 +1,63 @@
+2003-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (PSEUDO_ERRVAL,
+	PSEUDO_RET_ERRVAL, ret_ERRVAL, PSEUDO_END_ERRVAL): Define.
+	* sysdeps/powerpc/powerpc64/sysdep.h (PSEUDO_ERRVAL,
+	PSEUDO_RET_ERRVAL, ret_ERRVAL, PSEUDO_END_ERRVAL): Define.
+	* sysdeps/unix/alpha/sysdep.h (PSEUDO_ERRVAL,
+	ret_ERRVAL, PSEUDO_END_ERRVAL): Define.
+	* sysdeps/unix/mips/sysdep.h (PSEUDO_ERRVAL,
+	ret_ERRVAL, PSEUDO_END_ERRVAL): Define.
+	* sysdeps/unix/sparc/sysdep.h (PSEUDO_ERRVAL,
+	ret_ERRVAL): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (PSEUDO_ERRVAL,
+	PSEUDO_END_ERRVAL, ret_ERRVAL): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (PSEUDO_ERRVAL,
+	PSEUDO_END_ERRVAL, ret_ERRVAL): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (PSEUDO_ERRVAL):
+	Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h (PSEUDO_ERRVAL,
+	PSEUDO_END_ERRVAL, ret_ERRVAL): Define.
+	* sysdeps/unix/sysdep.h (PSEUDO_END_ERRVAL): Define.
+
+	* sysdeps/unix/sysv/linux/syscalls.list (posix_fadvise64,
+	posix_fadvise64_64): Remove.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (posix_fadvise64): Add
+	V flag.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (posix_fadvise64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list
+	(posix_fadvise64): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list
+	(posix_fadvise64): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list
+	(posix_fadvise64): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (posix_fadvise64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64_64.S: Moved to...
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: ...here.
+	(__posix_fadvise64_l64): Fix a typo in fadvise64 syscall invocation.
+	(__posix_fadvise64_l32): New function.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Revert last change.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions (libc): Export
+	posix_fadvise64@@GLIBC_2.3.3.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/posix_fadvise.c (posix_fadvise): Return
+	error value.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h
+	(SYSCALL_ERROR_HANDLER): Use TLS errno/__libc_errno if USE___THREAD.
+
+2003-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (WEAKADDR): Remove.
+	(elf_machine_matches_host): Remove weak extern stuff.
+	Use GL(dl_hwcap) unconditionally and GL(dl_hwcap_mask) if SHARED.
+	(elf_machine_runtime_setup, sparc_fixup_plt): Remove weak extern
+	stuff.  Use GL(dl_hwcap) unconditionally.
+
 2003-08-16  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc64/elf/start.S: Add a nop after

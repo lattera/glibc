@@ -36,6 +36,7 @@
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
 #undef PSEUDO_NOERRNO
+#undef PSEUDO_ERRVAL
 #undef ENTRY
 
 #define ENTRY(name)							\
@@ -108,12 +109,22 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	LOADSYSCALL(syscall_name);					\
 	ta	0x6d
 
+#define PSEUDO_ERRVAL(name, syscall_name, args)				\
+	.text;								\
+	ENTRY(name);							\
+	LOADSYSCALL(syscall_name);					\
+	ta	0x6d
+
 #undef PSEUDO_END
 #define PSEUDO_END(name)						\
 	.size name,.-name
 
 #undef PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name)					\
+	.size name,.-name
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)						\
 	.size name,.-name
 
 #undef END
@@ -123,6 +134,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 /* Careful here!  This "ret" define can interfere; use jmpl if unsure.  */
 #define ret		retl; nop
 #define ret_NOERRNO	retl; nop
+#define ret_ERRVAL	retl; nop
 #define r0              %o0
 #define r1              %o1
 #define MOVE(x,y)       mov x, y

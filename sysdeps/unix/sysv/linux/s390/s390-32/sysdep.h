@@ -69,6 +69,17 @@
 #define PSEUDO_END_NOERRNO(name)					      \
   END (name)
 
+#undef PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args)				      \
+  .text;                                                                      \
+  ENTRY (name)							              \
+    DO_CALL (syscall_name, args);					      \
+    lcr %r2,%r2
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)						      \
+  END (name)
+
 #ifndef PIC
 # define SYSCALL_ERROR_LABEL 0f
 # define SYSCALL_ERROR_HANDLER \
@@ -154,6 +165,9 @@
     br      14
 
 #define ret_NOERRNO							      \
+    br      14
+
+#define ret_ERRVAL							      \
     br      14
 
 #endif /* __ASSEMBLER__ */

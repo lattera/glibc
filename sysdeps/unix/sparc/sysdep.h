@@ -58,8 +58,15 @@
   mov SYS_ify(syscall_name), %g1;		\
   ta 0
 
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+  .global syscall_error;			\
+  ENTRY (name)					\
+  mov SYS_ify(syscall_name), %g1;		\
+  ta 0
+
 #define	ret		retl; nop
 #define	ret_NOERRNO	retl; nop
+#define	ret_ERRVAL	retl; nop
 #define	r0		%o0
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y
