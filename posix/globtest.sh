@@ -27,9 +27,9 @@ export LANG
 testdir=$TMPDIR/globtest-dir
 testout=$TMPDIR/globtest-out
 
-trap 'rm -fr $testdir $testout' 1 2 3 15
+trap 'chmod 777 $testdir/noread; rm -fr $testdir $testout' 1 2 3 15
 
-rm -fr $testdir
+rm -fr $testdir 2>/dev/null
 mkdir $testdir
 echo 1 > $testdir/file1
 echo 2 > $testdir/file2
@@ -39,6 +39,8 @@ echo 5 > $testdir/.file5
 echo 6 > $testdir/'*file6'
 mkdir $testdir/dir1
 mkdir $testdir/dir2
+test -d $testdir/noread || mkdir $testdir/noread
+chmod a-r $testdir/noread
 echo 1_1 > $testdir/dir1/file1_1
 echo 1_2 > $testdir/dir1/file1_2
 
@@ -56,6 +58,7 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir2'
 `file1'
 `file2'
+`noread'
 `~file4'
 EOF
 
@@ -70,6 +73,7 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir2'
 `file1'
 `file2'
+`noread'
 `~file4'
 EOF
 
@@ -84,6 +88,7 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir2/'
 `file1'
 `file2'
+`noread/'
 `~file4'
 EOF
 
@@ -101,6 +106,7 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir2'
 `file1'
 `file2'
+`noread'
 `~file4'
 EOF
 
@@ -201,6 +207,24 @@ cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_2'
 EOF
 
+# Test subdirs with [ .. ]
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest "$testdir" "*/file1_[12]" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+`dir1/file1_1'
+`dir1/file1_2'
+EOF
+
+# Test ']' inside bracket expression
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest "$testdir" "dir1/file1_[]12]" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+`dir1/file1_1'
+`dir1/file1_2'
+EOF
+
 # Test tilde expansion
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~" |
@@ -243,12 +267,58 @@ cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 EOF
 
+# Matching \*file6 should find *file6
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest "$testdir" "\*file6" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+`*file6'
+EOF
+
 # Try a recursive failed search
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -e "$testdir" "a*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
+EOF
+
+# ... with GLOB_ERR
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -E "$testdir" "a*/*" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_NOMATCH
+EOF
+
+# Try a recursive search in unreadable directory
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest "$testdir" "noread/*" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_NOMATCH
+EOF
+
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest "$testdir" "noread*/*" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_NOMATCH
+EOF
+
+# ... with GLOB_ERR
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -E "$testdir" "noread/*" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_ABORTED
+EOF
+
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -E "$testdir" "noread*/*" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_ABORTED
 EOF
 
 # Try multiple patterns (GLOB_APPEND)
@@ -279,9 +349,11 @@ sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/blahblah'
 `dir2/blahblah'
+`noread/blahblah'
 EOF
 
 if test $result -eq 0; then
+    chmod 777 $testdir/noread
     rm -fr $testdir $testout
 fi
 

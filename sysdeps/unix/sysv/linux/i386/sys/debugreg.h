@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,8 +71,18 @@
 #define DR_GLOBAL_ENABLE_MASK (0xAA) /* Set global bits for all 4 regs */
 
 /* The second byte to the control register has a few special things.
-   We can slow the instruction pipeline for instructions coming via the
-   gdt or the ldt if we want to.  I am not sure why this is an advantage */
+
+    On the i386, you should set the DR_LOCAL_SLOWDOWN or
+    DR_GLOBAL_SLOWDOWN bits if you want to know exactly which
+    instruction triggered the watchpoint.  Setting these bits causes
+    the processor to run more slowly, but leaving them clear makes it
+    treat watchpoint hits as imprecise exceptions, so you can't
+    reliably determine which instruction caused the hit.
+
+    The i486 and all later IA-32 processors ignore DR_LOCAL_SLOWDOWN
+    and DR_GLOBAL_SLOWDOWN.  They always report the exception
+    precisely, except in some rare cases, which the user can't do
+    anything about.  */
 
 #define DR_CONTROL_RESERVED (0xFC00) /* Reserved by Intel */
 #define DR_LOCAL_SLOWDOWN   (0x100)  /* Local slow the pipeline */

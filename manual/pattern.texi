@@ -142,7 +142,8 @@ extensions.
 
 @table @code
 @item gl_pathc
-The number of elements in the vector.
+The number of elements in the vector, excluding the initial null entries
+if the GLOB_DOOFFS flag is used (see gl_offs below).
 
 @item gl_pathv
 The address of the vector.  This field has type @w{@code{char **}}.

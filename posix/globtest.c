@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,9 @@ main (int argc, char *argv[])
   glob_t g;
   int quotes = 1;
 
-  while ((i = getopt (argc, argv, "bcdegmopqstT")) != -1)
+  g.gl_offs = 0;
+
+  while ((i = getopt (argc, argv, "bcdeEgmopqstT")) != -1)
     switch(i)
       {
       case 'b':
@@ -43,6 +45,9 @@ main (int argc, char *argv[])
 	break;
       case 'e':
 	glob_flags |= GLOB_NOESCAPE;
+	break;
+      case 'E':
+	glob_flags |= GLOB_ERR;
 	break;
       case 'g':
 	glob_flags |= GLOB_NOMAGIC;
@@ -96,15 +101,17 @@ main (int argc, char *argv[])
   else if (i == GLOB_NOMATCH)
     puts ("GLOB_NOMATCH");
 
-  /* If we set an offset, fill in the first field.  */
-  if (glob_flags & GLOB_DOOFFS)
+  /* If we set an offset, fill in the first field.
+     (Unless glob() has filled it in already - which is an error) */
+  if ((glob_flags & GLOB_DOOFFS) && g.gl_pathv[0] == NULL)
     g.gl_pathv[0] = (char *) "abc";
 
   /* Print out the names.  Unless otherwise specified, qoute them.  */
   if (g.gl_pathv)
     {
-      for (i = 0; i < g.gl_pathc; ++i)
-        printf ("%s%s%s\n", quotes ? "`" : "", g.gl_pathv[i],
+      for (i = 0; i < g.gl_offs + g.gl_pathc; ++i)
+        printf ("%s%s%s\n", quotes ? "`" : "",
+		g.gl_pathv[i] ? g.gl_pathv[i] : "(null)",
 		quotes ? "'" : "");
     }
   return 0;
