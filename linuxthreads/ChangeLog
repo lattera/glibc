@@ -1,3 +1,8 @@
+2000-07-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* wrapsyscall.c: Mark non-__ protected names as weak.
+	PR libc/1466.
+
 2000-07-12  Bruno Haible  <haible@clisp.cons.org>
 
 	* Examples/ex8.c: Include <sys/wait.h>, not <wait.h>.

@@ -1,3 +1,8 @@
+2000-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/xdr.c (xdr_u_long): Handle reading of unsigned long on
+	64-bit architecture correctly [PR libc/1794].
+
 2000-07-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Versions (ld): Export _dl_out_of_memory for GLIBC_2.2.

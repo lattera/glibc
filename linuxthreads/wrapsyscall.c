@@ -1,5 +1,5 @@
 /* Wrapper arpund system calls to provide cancelation points.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -41,6 +41,7 @@ const int __pthread_provide_wrappers = 0;
 #define CANCELABLE_SYSCALL(res_type, name, param_list, params) \
 res_type __libc_##name param_list;					      \
 res_type								      \
+__attribute__ ((weak))							      \
 name param_list								      \
 {									      \
   res_type result;							      \
@@ -54,6 +55,7 @@ name param_list								      \
 #define CANCELABLE_SYSCALL_VA(res_type, name, param_list, params, last_arg) \
 res_type __libc_##name param_list;					      \
 res_type								      \
+__attribute__ ((weak))							      \
 name param_list								      \
 {									      \
   res_type result;							      \

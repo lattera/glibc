@@ -181,7 +181,15 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
   switch (xdrs->x_op)
     {
     case XDR_DECODE:
-      return XDR_GETLONG (xdrs, (long *) ulp);
+      {
+	long int tmp;
+
+	if (XDR_GETLONG (xdrs, &tmp) == FALSE)
+	  return FALSE;
+
+	*ulp = (uint32_t) tmp;
+	return TRUE;
+      }
 
     case XDR_ENCODE:
       return XDR_PUTLONG (xdrs, (long *) ulp);
