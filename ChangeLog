@@ -1,5 +1,11 @@
 1998-04-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/strtof_l.c: Declare ____strtoull_l_internal.
+	* stdlib/strtod_l.c: Likewise.
+	* stdlib/strtold_l.c: Likewise.
+
+	* intl/gettextP.h [_LIBC] (SWAP): Use byteswap.h macros.
+
 	* sysdeps/i386/i486/bits/string.h: Remove unused variables.
 
 	* misc/syslog.c (closelog_internal): Set LogTag to NULL.

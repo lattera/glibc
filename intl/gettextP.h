@@ -41,6 +41,10 @@
 #endif
 
 
+#ifdef _LIBC
+# include <byteswap.h>
+# define SWAP(i) bswap_32 (i)
+#else
 static nls_uint32 SWAP PARAMS ((nls_uint32 i));
 
 static inline nls_uint32
@@ -49,6 +53,7 @@ SWAP (i)
 {
   return (i << 24) | ((i & 0xff00) << 8) | ((i >> 8) & 0xff00) | (i >> 24);
 }
+#endif
 
 
 struct loaded_domain
