@@ -290,7 +290,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 #ifdef _LIBC
   last_recognized = mode;
 #endif
-  for (i = 1; i < 4; ++i)
+  for (i = 1; i < 5; ++i)
     {
       switch (*++mode)
 	{
@@ -313,6 +313,10 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 #ifdef _LIBC
 	  last_recognized = mode;
 #endif
+	  continue;
+	case 'm':
+	  fp->_flags2 |= _IO_FLAGS2_MMAP;
+	  continue;
 	default:
 	  /* Ignore.  */
 	  continue;
