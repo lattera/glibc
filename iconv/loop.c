@@ -170,7 +170,8 @@
 
 /* To make it easier for the writers of the modules, we define a macro
    to test whether we have to ignore errors.  */
-#define ignore_errors_p() (flags & __GCONV_IGNORE_ERRORS)
+#define ignore_errors_p() \
+  (irreversible != NULL && (flags & __GCONV_IGNORE_ERRORS))
 
 
 /* Error handling with transliteration/transcription function use and
@@ -181,6 +182,12 @@
     struct __gconv_trans_data *trans;					      \
 									      \
     result = __GCONV_ILLEGAL_INPUT;					      \
+									      \
+    if (irreversible == NULL)						      \
+      /* This means we are in call from __gconv_transliterate.  In this	      \
+	 case we are not doing any error recovery outself.  */		      \
+      break;								      \
+									      \
     /* First try the transliteration methods.  */			      \
     for (trans = step_data->__trans; trans != NULL; trans = trans->__next)    \
       {									      \
@@ -197,7 +204,7 @@
     /* Next see whether we have to ignore the error.  If not, stop.  */	      \
     if (! ignore_errors_p ())						      \
       break;								      \
-    									      \
+									      \
     /* When we come here it means we ignore the character.  */		      \
     ++*irreversible;							      \
     inptr += Incr;							      \

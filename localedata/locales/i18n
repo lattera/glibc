@@ -805,7 +805,7 @@ translit_start
 % RIGHT DOUBLE QUOTATION MARK.
 <U201D> <U0022>
 
-default_missing <UFFFD>;<U003F>
+default_missing <U003F>
 
 translit_end
 

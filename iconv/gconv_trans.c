@@ -117,7 +117,7 @@ __gconv_transliterate (struct __gconv_step *step,
 				 (step, step_data, &toinptr,
 				  (const unsigned char *) &to_tbl[idx2 + len],
 				  (unsigned char **) outbufstart,
-				  irreversible, 0, 0));
+				  NULL, 0, 0));
 	      if (res != __GCONV_ILLEGAL_INPUT)
 		{
 		  /* If the conversion succeeds we have to increment the
@@ -200,7 +200,7 @@ __gconv_transliterate (struct __gconv_step *step,
 			 (step, step_data, &toinptr,
 			  (const unsigned char *) (default_missing + len),
 			  (unsigned char **) outbufstart,
-			  irreversible, 0, 0));
+			  NULL, 0, 0));
 
       if (res != __GCONV_ILLEGAL_INPUT)
 	{
