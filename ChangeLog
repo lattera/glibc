@@ -1,3 +1,10 @@
+2003-05-13  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Fix the fix from
+	2003-03-27: setjmp is NOT a leaf-routine (due to the call to
+	__sigjmp_save) so we can't keep the saved unat value in a scratch
+	register (r16).  Use loc2 instead.
+
 2003-05-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/Makefile: Do compile elf-init with PIC flag since in dynamic

@@ -86,9 +86,9 @@ libc_hidden_def (_setjmp)
 
 ENTRY(__sigsetjmp)
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(2)
-	alloc loc1=ar.pfs,2,2,2,0
-	.save ar.unat, r16
-	mov r16=ar.unat
+	alloc loc1=ar.pfs,2,3,2,0
+	.save ar.unat, loc2
+	mov loc2=ar.unat
 	;;
 	mov r17=ar.fpsr
 	mov r2=in0
@@ -97,7 +97,7 @@ ENTRY(__sigsetjmp)
 .mem.offset 8,0;	st8.spill.nta [r2]=sp,16	// r12 (sp)
 .mem.offset 0,0;	st8.spill.nta [r3]=gp,16	// r1 (gp)
 	;;
-	st8.nta [r2]=r16,16		// save caller's unat
+	st8.nta [r2]=loc2,16		// save caller's unat
 	st8.nta [r3]=r17,16		// save fpsr
 	add r8=0xa0,in0
 	;;
@@ -171,7 +171,7 @@ ENTRY(__sigsetjmp)
 	st8.nta [r3]=in0		// &__jmp_buf
 	br.call.dpnt.few rp=__sigjmp_save
 .ret0:					// force a new bundle ::q
-	mov.m ar.unat=r16		// restore caller's unat
+	mov.m ar.unat=loc2		// restore caller's unat
 	mov rp=loc0
 	mov ar.pfs=loc1
 	mov r8=0
