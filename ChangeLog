@@ -1,3 +1,15 @@
+2002-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/grpcache.c (addgrbyname): Improve buffer allocate with alloca.
+	Use realloc if too large.
+	(addgrbyid): Likewise.
+	* nscd/hstcache.c (addhstbyname): Likewise.
+	(addhstbyaddr): Likewise.
+	(addhstbynamev6): Likewise.
+	(addhstbyaddrv6): Likewise.
+	* nscd/pwdcache.c (addpwbyname): Likewise.
+	(addpwbyuid): Likewise.
+
 2002-03-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct

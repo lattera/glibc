@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <error.h>
 #include <netdb.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,6 +32,7 @@
 #include <libintl.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -289,14 +291,15 @@ addhstbyname (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 512;
-  char *buffer = alloca (buflen);
+  int buflen = 1024;
+  char *buffer = (char *) alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
-  if (debug_level > 0)
-    dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *)key);
+  if (__builtin_expect (debug_level > 0, 0))
+    dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *) key);
 
   if (secure[hstdb])
     {
@@ -309,15 +312,47 @@ addhstbyname (struct database *db, int fd, request_header *req,
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      hst = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[hstdb])
     seteuid (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid);
+
+  if (use_malloc)
+    free (buffer);
 }
 
 
@@ -329,13 +364,14 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 512;
-  char *buffer = alloca (buflen);
+  int buflen = 1024;
+  char *buffer = (char *) alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level > 0, 0))
     {
       char buf[INET_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
@@ -353,15 +389,47 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      hst = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[hstdb])
     seteuid (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid);
+
+  if (use_malloc)
+    free (buffer);
 }
 
 
@@ -373,13 +441,14 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 512;
-  char *buffer = alloca (buflen);
+  int buflen = 1024;
+  char *buffer = (char *) alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level > 0, 0))
     {
       char buf[INET6_ADDRSTRLEN];
 
@@ -398,15 +467,47 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      hst = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[hstdb])
     seteuid (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid);
+
+  if (use_malloc)
+    free (buffer);
 }
 
 
@@ -418,13 +519,14 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 512;
-  char *buffer = alloca (buflen);
+  int buflen = 1024;
+  char *buffer = (char *) alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level > 0, 0))
     {
       char buf[INET6_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
@@ -442,13 +544,45 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      hst = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[hstdb])
     seteuid (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid);
+
+  if (use_malloc)
+    free (buffer);
 }

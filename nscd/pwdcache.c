@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <error.h>
 #include <pwd.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +29,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <libintl.h>
+#include <stackinfo.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -200,14 +202,15 @@ addpwbyname (struct database *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  int buflen = 256;
-  char *buffer = alloca (buflen);
+  int buflen = 1024;
+  char *buffer = (char *) alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
   uid_t oldeuid = 0;
+  bool use_malloc = false;
 
-  if (debug_level > 0)
-    dbg_log (_("Haven't found \"%s\" in password cache!"), (char *)key);
+  if (__builtin_expect (debug_level > 0, 0))
+    dbg_log (_("Haven't found \"%s\" in password cache!"), (char *) key);
 
   if (secure[pwddb])
     {
@@ -218,15 +221,47 @@ addpwbyname (struct database *db, int fd, request_header *req,
   while (__getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      pwd = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[pwddb])
     seteuid (oldeuid);
 
   cache_addpw (db, fd, req, key, pwd, c_uid);
+
+  if (use_malloc)
+    free (buffer);
 }
 
 
@@ -239,23 +274,24 @@ addpwbyuid (struct database *db, int fd, request_header *req,
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
   int buflen = 256;
-  char *buffer = alloca (buflen);
+  char *buffer = (char *) alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
   uid_t oldeuid = 0;
   char *ep;
-  uid_t uid = strtoul ((char*) key, &ep, 10); 
-  
-  if (*(char*)key == '\0' || *ep != '\0')  /* invalid numeric uid */
+  uid_t uid = strtoul ((char *) key, &ep, 10);
+  bool use_malloc = false;
+
+  if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric uid */
     {
-      if (debug_level > 0) 
-        dbg_log (_("Invalid numeric uid \"%s\"!"), (char *)key);
+      if (debug_level > 0)
+        dbg_log (_("Invalid numeric uid \"%s\"!"), (char *) key);
 
       errno = EINVAL;
       return;
     }
 
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("Haven't found \"%d\" in password cache!"), uid);
 
   if (secure[pwddb])
@@ -267,13 +303,45 @@ addpwbyuid (struct database *db, int fd, request_header *req,
   while (__getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
+      char *old_buffer = buffer;
       errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
+      buflen += 1024;
+
+      if (__builtin_expect (buflen > 32768, 0))
+	{
+	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
+	  if (buffer == NULL)
+	    {
+	      /* We ran out of memory.  We cannot do anything but
+		 sending a negative response.  In reality this should
+		 never happen.  */
+	      pwd = NULL;
+	      buffer = old_buffer;
+	      break;
+	    }
+	  use_malloc = true;
+	}
+      else
+	{
+	  buffer = (char *) alloca (buflen);
+#if _STACK_GROWS_DOWN
+	  if (buffer + buflen == old_buffer)
+	    buflen = 2 * buflen - 1024;
+#elif _STACK_GROWS_UP
+	  if (old_buffer + buflen - 1024 == buffer)
+	    {
+	      buffer = old_buffer;
+	      buflen = 2 * buflen - 1024;
+	    }
+#endif
+	}
     }
 
   if (secure[pwddb])
     seteuid (oldeuid);
 
   cache_addpw (db, fd, req, key, pwd, c_uid);
+
+  if (use_malloc)
+    free (buffer);
 }

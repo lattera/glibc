@@ -207,14 +207,14 @@ addgrbyname (struct database *db, int fd, request_header *req,
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
   int buflen = 1024;
-  char *buffer = alloca (buflen);
+  char *buffer = (char *) alloca (buflen);
   struct group resultbuf;
   struct group *grp;
   uid_t oldeuid = 0;
   bool use_malloc = false;
 
-  if (debug_level > 0)
-    dbg_log (_("Haven't found \"%s\" in group cache!"), (char *)key);
+  if (__builtin_expect (debug_level > 0, 0))
+    dbg_log (_("Haven't found \"%s\" in group cache!"), (char *) key);
 
   if (secure[grpdb])
     {
@@ -245,7 +245,7 @@ addgrbyname (struct database *db, int fd, request_header *req,
 	}
       else
 	{
-	  buffer = alloca (buflen);
+	  buffer = (char *) alloca (buflen);
 #if _STACK_GROWS_DOWN
 	  if (buffer + buflen == old_buffer)
 	    buflen = 2 * buflen - 1024;
@@ -278,7 +278,7 @@ addgrbygid (struct database *db, int fd, request_header *req,
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
   int buflen = 1024;
-  char *buffer = alloca (buflen);
+  char *buffer = (char *) alloca (buflen);
   struct group resultbuf;
   struct group *grp;
   uid_t oldeuid = 0;
@@ -286,16 +286,16 @@ addgrbygid (struct database *db, int fd, request_header *req,
   gid_t gid = strtoul ((char *)key, &ep, 10);
   bool use_malloc = false;
 
-  if (*(char*)key == '\0' || *ep != '\0')  /* invalid numeric gid */
+  if (*(char *) key == '\0' || *ep != '\0')  /* invalid numeric gid */
     {
       if (debug_level > 0)
-        dbg_log (_("Invalid numeric gid \"%s\"!"), (char *)key);
+        dbg_log (_("Invalid numeric gid \"%s\"!"), (char *) key);
 
       errno = EINVAL;
       return;
     }
 
-  if (debug_level > 0)
+  if (__builtin_expect (debug_level > 0, 0))
     dbg_log (_("Haven't found \"%d\" in group cache!"), gid);
 
   if (secure[grpdb])
@@ -327,7 +327,7 @@ addgrbygid (struct database *db, int fd, request_header *req,
 	}
       else
 	{
-	  buffer = alloca (buflen);
+	  buffer = (char *) alloca (buflen);
 #if _STACK_GROWS_DOWN
 	  if (buffer + buflen == old_buffer)
 	    buflen = 2 * buflen - 1024;
