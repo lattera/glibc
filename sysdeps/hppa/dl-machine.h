@@ -59,11 +59,11 @@ extern int __fptr_count;
 extern Elf32_Addr __hppa_make_fptr (const struct link_map *, Elf32_Addr,
 				    struct hppa_fptr **, struct hppa_fptr *);
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf32_Half e_machine)
+elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  return e_machine == EM_PARISC;
+  return ehdr->e_machine == EM_PARISC;
 }
 
 
@@ -252,7 +252,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.text
 	.globl _start
 	.type _start,@function
-_start:	
+_start:
 	/* The kernel does not give us an initial stack frame. */
 	ldo	64(%sp),%sp
 	/* Save the relevant arguments (yes, those are the correct
@@ -357,7 +357,7 @@ _dl_start_user:
 	ldw	RT'_dl_loaded(%r1),%r26
 	ldw	0(%r26),%r26
 	/* envp = argv + argc + 1 */
-	sh2add	%r25,%r24,%r23	
+	sh2add	%r25,%r24,%r23
 	bl	_dl_init,%r2
 	ldo	4(%r23),%r23	/* delay slot */
 

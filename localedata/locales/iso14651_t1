@@ -245,6 +245,7 @@ collating-symbol <CYR-OUBRE>
 collating-symbol <CYR-EF>
 collating-symbol <CYR-HA>
 collating-symbol <CYR-TSE>
+collating-symbol <CYR-CHE>
 collating-symbol <CYR-DCHE>
 collating-symbol <CYR-SHA>
 collating-symbol <CYR-SHTSHA>
@@ -501,6 +502,7 @@ collating-symbol <CYR-YA>
 <CYR-EF>
 <CYR-HA>
 <CYR-TSE>
+<CYR-CHE>
 <CYR-DCHE>
 <CYR-SHA>
 <CYR-SHTSHA>
@@ -1428,7 +1430,7 @@ order_start <CYRIL>;forward;forward;forward;forward,position
 <U0444> <CYR-EF>;<BAS>;<MIN>;IGNORE
 <U0445> <CYR-HA>;<BAS>;<MIN>;IGNORE
 <U0446> <CYR-TSE>;<BAS>;<MIN>;IGNORE
-<U0447> <CYR-TSHE>;<BAS>;<MIN>;IGNORE
+<U0447> <CYR-CHE>;<BAS>;<MIN>;IGNORE
 <U045F> <CYR-DCHE>;<BAS>;<MIN>;IGNORE
 <U0448> <CYR-SHA>;<BAS>;<MIN>;IGNORE
 <U0449> <CYR-SHTSHA>;<BAS>;<MIN>;IGNORE
@@ -1473,7 +1475,7 @@ order_start <CYRIL>;forward;forward;forward;forward,position
 <U0424> <CYR-EF>;<BAS>;<CAP>;IGNORE
 <U0425> <CYR-HA>;<BAS>;<CAP>;IGNORE
 <U0426> <CYR-TSE>;<BAS>;<CAP>;IGNORE
-<U0427> <CYR-TSHE>;<BAS>;<CAP>;IGNORE
+<U0427> <CYR-CHE>;<BAS>;<CAP>;IGNORE
 <U040F> <CYR-DCHE>;<BAS>;<CAP>;IGNORE
 <U0428> <CYR-SHA>;<BAS>;<CAP>;IGNORE
 <U0429> <CYR-SHTSHA>;<BAS>;<CAP>;IGNORE

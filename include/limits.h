@@ -42,6 +42,8 @@
 # ifndef _LIMITS_H
 #  define _LIMITS_H	1
 
+#include <bits/wordsize.h>
+
 /* We don't have #include_next.
    Define ANSI <limits.h> for standard 32-bit words.  */
 
@@ -82,7 +84,7 @@
 #  define UINT_MAX	4294967295U
 
 /* Minimum and maximum values a `signed long int' can hold.  */
-#  ifdef __alpha__
+#  if __WORDSIZE == 64
 #   define LONG_MAX	9223372036854775807L
 #  else
 #   define LONG_MAX	2147483647L
@@ -90,7 +92,7 @@
 #  define LONG_MIN	(-LONG_MAX - 1L)
 
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
-#  ifdef __alpha__
+#  if __WORDSIZE == 64
 #   define ULONG_MAX	18446744073709551615UL
 #  else
 #   define ULONG_MAX	4294967295UL

@@ -53,11 +53,11 @@ extern int __fptr_count;
 extern Elf64_Addr __ia64_make_fptr (const struct link_map *, Elf64_Addr,
 				    struct ia64_fptr **, struct ia64_fptr *);
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf64_Word e_machine)
+elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 {
-  return e_machine == EM_IA_64;
+  return ehdr->e_machine == EM_IA_64;
 }
 
 

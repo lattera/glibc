@@ -23,11 +23,11 @@
 #include <link.h>
 
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf32_Half e_machine)
+elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  switch (e_machine)
+  switch (ehdr->e_machine)
     {
     default:
       return 0;

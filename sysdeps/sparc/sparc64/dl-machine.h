@@ -27,11 +27,11 @@
 #define ELF64_R_TYPE_ID(info)	((info) & 0xff)
 #define ELF64_R_TYPE_DATA(info) ((info) >> 8)
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf64_Half e_machine)
+elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 {
-  return e_machine == EM_SPARCV9;
+  return ehdr->e_machine == EM_SPARCV9;
 }
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the

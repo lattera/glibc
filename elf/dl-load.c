@@ -851,7 +851,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
   if (__builtin_expect (header->e_version, EV_CURRENT) != EV_CURRENT)
     LOSE (0, N_("ELF file version does not match current one"));
-  if (! __builtin_expect (elf_machine_matches_host (header->e_machine), 1))
+  if (! __builtin_expect (elf_machine_matches_host (header), 1))
     LOSE (0, N_("ELF file machine architecture does not match"));
   if (__builtin_expect (header->e_phentsize, sizeof (ElfW(Phdr)))
       != sizeof (ElfW(Phdr)))

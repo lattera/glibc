@@ -1,4 +1,56 @@
+2000-10-19  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile (distribute): Add neededtest.c, neededobj1.c,
+	neededobj2.c and neededobj3.c.
+	(tests): Add neededtest.
+	(modules-names): Add neededobj1, neededobj2 and neededobj3.
+	($(objpfx)neededobj1.so): New target.
+	($(objpfx)neededobj2.so): Likewise.
+	($(objpfx)neededobj3.so): Likewise.
+	($(objpfx)neededtest): Likewise.
+	($(objpfx)neededtest.out): Likewise.
+	* elf/neededtest.c: New. Based on the bug report from
+	Allen Bauer <kylix_rd@hotmail.com>.
+	* elf/neededobj1.c: Likewise.
+	* elf/neededobj2.c: Likewise.
+	* elf/neededobj3.c: Likewise.
+
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Decrement reference counter for all
+	dependencies even if the DSO does not get unloaded.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Pass pointer to ELF header
+	to elf_machine_matches_host.
+	* sysdeps/alpha/dl-machine.h (elf_machine_matches_host): Parameter
+	is now pointer to ELF header.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/generic/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/s390/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	Patch by Martin Schwidefsksy <schwidefsky@de.ibm.com>.
+
+2000-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/limits.h: Include bits/wordsize.h, use #if __WORDSIZE == 64
+	check instead of #ifdef __alpha__.
+	* include/bits/xopen_lim.h (WORD_BIT, LONG_BIT): Don't count on
+	INT_MAX, __INT_MAX__, LONG_MAX or __LONG_MAX__ being defined when
+	this is included.
+
+2000-10-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp-tst.sh (testout): Place output file in build
+	directory.  Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
 
 	* sysdeps/powerpc/fpu/bits/mathinline.h: Pretty print.
 

@@ -92,23 +92,54 @@
 
 
 /* Number of bits in a word of type `int'.  */
-#if INT_MAX == 32767
-# define WORD_BIT	16
-#else
-# if INT_MAX == 2147483647
-#  define WORD_BIT	32
+#ifdef INT_MAX
+# if INT_MAX == 32767
+#  define WORD_BIT	16
 # else
+#  if INT_MAX == 2147483647
+#   define WORD_BIT	32
+#  else
 /* Safe assumption.  */
-#  define WORD_BIT	64
+#   define WORD_BIT	64
+#  endif
 # endif
+#elif defined __INT_MAX__
+# if __INT_MAX__ == 32767
+#  define WORD_BIT	16
+# else
+#  if __INT_MAX__ == 2147483647
+#   define WORD_BIT	32
+#  else
+/* Safe assumption.  */
+#   define WORD_BIT	64
+#  endif
+# endif
+#else
+# define WORD_BIT	32
 #endif
 
 /* Number of bits in a word of type `long int'.  */
-#if LONG_MAX == 2147483647
-# define LONG_BIT	32
-#else
+#ifdef LONG_MAX
+# if LONG_MAX == 2147483647
+#  define LONG_BIT	32
+# else
 /* Safe assumption.  */
-# define LONG_BIT	64
+#  define LONG_BIT	64
+# endif
+#elif defined __LONG_MAX__
+# if __LONG_MAX__ == 2147483647
+#  define LONG_BIT	32
+# else
+/* Safe assumption.  */
+#  define LONG_BIT	64
+# endif
+#else
+# include <bits/wordsize.h>
+# if __WORDSIZE == 64
+#  define LONG_BIT	64
+# else
+#  define LONG_BIT	32
+# endif
 #endif
 
 #endif /* bits/xopen_lim.h */

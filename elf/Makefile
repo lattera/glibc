@@ -53,7 +53,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
-		   nextmod1.c nextmod2.c
+		   nextmod1.c nextmod2.c \
+		   neededtest.c neededobj1.c neededobj2.c neededobj3.c
 
 include ../Makeconfig
 
@@ -95,7 +96,7 @@ ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
-	$(tests-nodlopen-$(have-z-nodlopen))
+	$(tests-nodlopen-$(have-z-nodlopen)) neededtest
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -105,7 +106,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
-		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2
+		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
+		neededobj1 neededobj2 neededobj3
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -249,6 +251,10 @@ $(objpfx)dep4.so: $(objpfx)dep3.so
 $(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
 $(objpfx)nextmod1.so: $(libdl)
 
+$(objpfx)neededobj1.so: $(libdl)
+$(objpfx)neededobj2.so: $(objpfx)neededobj1.so $(libdl)
+$(objpfx)neededobj3.so: $(objpfx)neededobj1.so $(objpfx)neededobj2.so $(libdl)
+
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -257,6 +263,11 @@ $(objpfx)loadtest: $(libdl)
 LDFLAGS-loadtest = -rdynamic
 
 $(objpfx)loadtest.out: $(test-modules)
+
+$(objpfx)neededtest: $(libdl)
+
+$(objpfx)neededtest.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
+		     $(objpfx)neededobj3.so
 
 $(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so $(libdl)
 LDFLAGS-restest1 = -rdynamic

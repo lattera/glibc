@@ -43,13 +43,13 @@
 		       : "/etc/ld.so.preload")
 
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf32_Half e_machine)
+elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  if (e_machine == EM_SPARC)
+  if (ehdr->e_machine == EM_SPARC)
     return 1;
-  else if (e_machine == EM_SPARC32PLUS)
+  else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
       unsigned long *hwcap;
       weak_extern (_dl_hwcap);

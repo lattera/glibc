@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,11 +25,11 @@
 
 #include <assert.h>
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf32_Half e_machine)
+elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  return e_machine == EM_PPC;
+  return ehdr->e_machine == EM_PPC;
 }
 
 
