@@ -1,3 +1,7 @@
+2001-06-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ko.po: Update from translation team.
+
 2001-06-06  Andreas Jaeger  <aj@suse.de>
 
 	* manual/llio.texi (Memory-mapped I/O): Clarify that mapping is to
