@@ -1,3 +1,8 @@
+2001-04-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Fix missing backslash
+	in last change.
+
 2001-04-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
