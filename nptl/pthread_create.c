@@ -26,6 +26,7 @@
 #include <ldsodefs.h>
 #include <atomic.h>
 #include <libc-internal.h>
+#include <resolv.h>
 
 #include <shlib-compat.h>
 
@@ -237,6 +238,9 @@ start_thread (void *arg)
   HP_TIMING_NOW (now);
   THREAD_SETMEM (pd, cpuclock_offset, now);
 #endif
+
+  /* Initialize resolver state pointer.  */
+  __resp = &pd->res;
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */

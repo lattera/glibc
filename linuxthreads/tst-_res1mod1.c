@@ -1,5 +1,6 @@
-/* Copyright (C) 1996, 97, 98, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,31 +18,6 @@
    02111-1307 USA.  */
 
 #include <resolv.h>
-#include <tls.h>
-#include <linuxthreads/internals.h>
-#include <sysdep-cancel.h>
+#undef _res
 
-#if ! USE___THREAD
-# undef _res
-extern struct __res_state _res;
-#endif
-
-/* When threaded, _res may be a per-thread variable.  */
-struct __res_state *
-#if ! USE___THREAD
-weak_const_function
-#endif
-__res_state (void)
-{
-#if ! USE___THREAD
-  if (! SINGLE_THREAD_P)
-    {
-      pthread_descr self = thread_self();
-      return LIBC_THREAD_GETMEM (self, p_resp);
-    }
-  return &_res;
-#else
-  return __resp;
-#endif
-}
-libc_hidden_def (__res_state)
+struct __res_state _res;

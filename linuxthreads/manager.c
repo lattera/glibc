@@ -28,6 +28,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
 #include <locale.h>		/* for __uselocale */
+#include <resolv.h>		/* for __resp */
 
 #include <ldsodefs.h>
 #include "pthread.h"
@@ -287,6 +288,9 @@ pthread_start_thread(void *arg)
   /* Initialize thread-locale current locale to point to the global one.
      With __thread support, the variable's initializer takes care of this.  */
   __uselocale (LC_GLOBAL_LOCALE);
+#else
+  /* Initialize __resp.  */
+  __resp = &self->p_resp;
 #endif
   /* Make gdb aware of new thread */
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {

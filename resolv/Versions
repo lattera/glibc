@@ -4,8 +4,10 @@ libc {
   GLIBC_2.0 {
 %if !(USE_TLS && HAVE___THREAD)
     # global variables
-    _h_errno; _res;
+    _h_errno;
 %endif
+
+    _res;
 
     # helper functions
     __h_errno_location;
@@ -34,7 +36,7 @@ libc {
 
 %if USE_TLS && HAVE___THREAD
     # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
-    h_errno; _res;
+    h_errno; __resp;
 %endif
   }
 }

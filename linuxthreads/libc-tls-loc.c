@@ -43,7 +43,7 @@ __h_errno_location (void)
 struct __res_state *
 __res_state (void)
 {
-  return &_res;
+  return __resp;
 }
 
 #endif

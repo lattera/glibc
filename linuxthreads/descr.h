@@ -163,8 +163,8 @@ struct _pthread_descr_struct
   int * p_h_errnop;             /* pointer to used h_errno variable */
   int p_h_errno;                /* error returned by last netdb function */
   struct __res_state *p_resp;	/* Pointer to resolver state */
-  struct __res_state p_res;	/* per-thread resolver state */
 #endif
+  struct __res_state p_res;	/* per-thread resolver state */
   int p_userstack;		/* nonzero if the user provided the stack */
   void *p_guardaddr;		/* address of guard area or NULL */
   size_t p_guardsize;		/* size of guard area */

@@ -119,7 +119,16 @@ endif
 
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
+tests += tst-_res1
 endif
+
+modules-names = tst-_res1mod1 tst-_res1mod2
+extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+test-extras += $(modules-names)
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
+	$(build-module)
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -286,6 +295,11 @@ endif
 ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
              $(resolvobjdir)/libresolv.a
+endif
+
+ifeq (yes,$(build-shared))
+$(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
+$(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
 endif
 
 ifeq (no,$(cross-compiling))

@@ -35,7 +35,8 @@
 #ifdef HAVE_FORCED_UNWIND
 # include <unwind.h>
 #endif
-
+#define __need_res_state
+#include <resolv.h>
 
 #ifndef TCB_ALIGNMENT
 # define TCB_ALIGNMENT	sizeof (double)
@@ -235,6 +236,9 @@ struct pthread
   size_t stackblock_size;
   /* Size of the included guard area.  */
   size_t guardsize;
+
+  /* Resolver state.  */
+  struct __res_state res;
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
 

@@ -1,3 +1,17 @@
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/resolv.h (__resp): Declare.  Define to __libc_resp
+	if in libc.so.
+	(_res): If USE___THREAD, define to (*__resp).
+	* resolv/res_libc.c (_res): Normal .bss variable with compat_symbol
+	even if USE___THREAD.
+	(__resp): New __thread variable.
+	(__libc_resp): New alias.
+	* resolv/Versions (libc): Export _res@GLIBC_2.0 even if
+	USE_TLS && HAVE___THREAD.  Export __resp@@GLIBC_PRIVATE.
+	* sysdeps/generic/res-state.c (__res_state): Return __resp
+	if USE___THREAD.
+
 2003-07-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-support.c (_dl_hwcap): New variable.

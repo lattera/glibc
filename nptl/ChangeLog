@@ -1,3 +1,19 @@
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* res.c (__res_state): Return __resp.
+	* descr.h: Include resolv.h.
+	(struct pthread): Add res field.
+	* pthread_create.c: Include resolv.h.
+	(start_thread): Initialize __resp.
+	* Makefile (tests): Add tst-_res1.
+	(module-names): Add tst-_res1mod1, tst-_res1mod2.
+	($(objpfx)tst-_res1mod2.so): Depend on $(objpfx)tst-_res1mod1.so.
+	($(objpfx)tst-_res1): Depend on $(objpfx)tst-_res1mod2.so and
+	libpthread.
+	* tst-_res1.c: New file.
+	* tst-_res1mod1.c: New file.
+	* tst-_res1mod2.c: New file.
+
 2003-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/createthread.c: Don't define CLONE_STOPPED.

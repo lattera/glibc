@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 97, 98, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 97, 98, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,17 +20,26 @@
 #include <tls.h>
 
 #if ! USE___THREAD
+
 # undef _res
 extern struct __res_state _res;
-#endif
 
 /* When threaded, _res may be a per-thread variable.  */
 struct __res_state *
-#if ! USE___THREAD
 weak_const_function
-#endif
 __res_state (void)
 {
   return &_res;
 }
+
+#else
+
+struct __res_state *
+__res_state (void)
+{
+  return __resp;
+}
+
+#endif
+
 libc_hidden_def (__res_state)

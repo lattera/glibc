@@ -17,9 +17,10 @@
 #  if USE___THREAD
 #   undef _res
 #   ifndef NOT_IN_libc
-#    define _res __libc_res
+#    define __resp __libc_resp
 #   endif
-extern __thread struct __res_state _res attribute_tls_model_ie;
+#   define _res (*__resp)
+extern __thread struct __res_state *__resp attribute_tls_model_ie;
 #  endif
 # else
 #  ifndef __BIND_NOSTATIC

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,16 +18,10 @@
 
 #include <features.h>
 #include <resolv.h>
-#undef _res
-
 #include <tls.h>
-
-/* With __thread support, this per-thread variable is used in all cases.  */
-extern __thread struct __res_state _res;
-
 
 struct __res_state *
 __res_state (void)
 {
-  return &_res;
+  return __resp;
 }
