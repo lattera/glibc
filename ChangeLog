@@ -1,3 +1,8 @@
+1998-02-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/errno.h (__set_errno): Don't assign
+	to global errno variable anymore.
+
 1998-02-17 17:41  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (open_path): Take extra argument PRELOADED.

@@ -1,5 +1,5 @@
 /* Error constants.  Linux specific version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,16 +31,8 @@ extern int errno;
 extern int *__errno_location __P ((void)) __attribute__ ((__const__));
 
 #  if defined _LIBC
-#   ifdef _LIBC_REENTRANT
-static inline int
-__set_errno (int __err)
-{
-  return *__errno_location () = errno = __err;
-}
-#    define __set_errno __set_errno
-#   else /* !_LIBC_REENTRANT */
-#    define __set_errno(val) errno = (val)
-#   endif /* _LIBC_REENTRANT */
+/* We wouldn't need a special macro anymore but it is history.  */
+#   define __set_errno(val) (*__errno_location ()) = (val)
 #  endif /* _LIBC */
 
 #  if !defined _LIBC || defined _LIBC_REENTRANT
