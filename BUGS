@@ -62,6 +62,21 @@ Severity: [  *] to [***]
 
        None of these can be fixed without a rewrite.
 
+[  *]  Several (most?) collation specifications are broken.  The code which
+       is currently there is in most cases inherited from the originial
+       author (in case there is a LC_COLLATE specification in the locale
+       file) or is defined using the default (if iso14651_t1 is included).
+
+       In any case we are missing information to correct the specification.
+       If you find the specification for your language be faulty please
+       send a report with instruction on what to fix.  You don't have to
+       fix the specification yourself.
+
+       The way it finally should look like (if the generic specification
+       is not correct) can be seen in the sv_SE file.  Quite a few changes
+       on top of the generic specification can be made without duplication
+       of the whole LC_COLLATE description.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
 drepper@cygnus.com
