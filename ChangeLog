@@ -1,3 +1,8 @@
+2004-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/fclrexcpt.c (__feclearexcept): Don't touch bits
+	other than the status bits [BZ #10].
+
 2004-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	Make stream locking operations really work.

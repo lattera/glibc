@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997,99,2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -50,7 +50,7 @@ __feclearexcept (int excepts)
       __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
 
       /* Clear the relevant bits.  */
-      xnew_exc &= excepts ^ FE_ALL_EXCEPT;
+      xnew_exc &= ~excepts;
 
       /* Put the new data in effect.  */
       __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
