@@ -117,6 +117,14 @@
 /* Define if the compiler supports __attribute__ ((visibility (...))).  */
 #undef	HAVE_VISIBILITY_ATTRIBUTE
 
+/* Define if the compiler doesn't support __attribute__ ((visibility (...)))
+   together with __asm__ redirection properly.  */
+#undef	HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+
+/* Define if the compiler doesn't support __attribute__ ((alias (...)))
+   together with __asm__ redirection properly.  */
+#undef	HAVE_BROKEN_ALIAS_ATTRIBUTE
+
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 
