@@ -25,37 +25,104 @@
 #include "../kernel-features.h"
 
 
+# if __ASSUME_FCNTL64 == 0
+/* This variable is shared with all files that check for fcntl64.  */
+int __have_no_fcntl64;
+# endif
+#endif
+
 int
 __libc_fcntl (int fd, int cmd, ...)
 {
   va_list ap;
-#if __NR_fcntl64
-  int result;
-#endif
   void *arg;
 
   va_start (ap, cmd);
   arg = va_arg (ap, void *);
   va_end (ap);
 
-#if __NR_fcntl64
-  result = INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
-
-# if __ASSUME_FCNTL64 == 0
-  if (result != -1 || errno != ENOSYS)
-# endif
-    return result;
-#endif
-
-#if __ASSUME_FCNTL64 == 0
-  if (cmd == F_GETLK64 || cmd == F_SETLK64 || cmd == F_SETLKW64)
+#if __ASSUME_FCNTL64 > 0
+  return INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
+#else
+# ifdef __NR_fcntl64
+  if (! __have_no_fcntl64)
     {
-      __set_errno (EINVAL);
-      return -1;
-    }
+      int result = INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
+      if (result >= 0 || errno != ENOSYS)
+	return result;
 
-  return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
-#endif
+      __have_no_fcntl64 = 1;
+    }
+# endif
+  switch (cmd)
+    {
+    case F_GETLK64:
+      /* Convert arg from flock64 to flock and back.  */
+      {
+	struct flock fl;
+	struct flock64 *fl64 = arg;
+	int res;
+
+	fl.l_start = (off_t)fl64->l_start;
+	/* Check if we can represent the values with the smaller type.  */
+	if ((off64_t)fl.l_start != fl64->l_start)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	fl.l_len = (off_t)fl64->l_len;
+	/* Check if we can represent the values with the smaller type.  */
+	if ((off64_t)fl.l_len != fl64->l_len)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	fl.l_type = fl64->l_type;
+	fl.l_whence = fl64->l_whence;
+	fl.l_pid = fl64->l_pid;
+
+	res = INLINE_SYSCALL (fcntl, 3, fd, cmd, &fl);
+	if (res  != 0)
+	  return res;
+	/* Everything ok, convert back.  */
+	fl64->l_type = fl.l_type;
+	fl64->l_whence = fl.l_whence;
+	fl64->l_start = fl.l_start;
+	fl64->l_len = fl.l_len;
+	fl64->l_pid = fl.l_pid;
+
+	return 0;
+      }
+    case F_SETLK64:
+    case F_SETLKW64:
+      /* Try to convert arg from flock64 to flock.  */
+      {
+	struct flock fl;
+	struct flock64 *fl64 = arg;
+	fl.l_start = (off_t)fl64->l_start;
+	/* Check if we can represent the values with the smaller type.  */
+	if ((off64_t)fl.l_start != fl64->l_start)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	fl.l_len = (off_t)fl64->l_len;
+	/* Check if we can represent the values with the smaller type.  */
+	if ((off64_t)fl.l_len != fl64->l_len)
+	  {
+	    __set_errno (EOVERFLOW);
+	    return -1;
+	  }
+	fl.l_type = fl64->l_type;
+	fl.l_whence = fl64->l_whence;
+	fl.l_pid = fl64->l_pid;
+	return INLINE_SYSCALL (fcntl, 3, fd, cmd, &fl);
+      }
+    default:
+      return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
+    }
+  return -1;
+#endif  /* __ASSUME_FCNTL64  */
 }
 
 weak_alias (__libc_fcntl, __fcntl)

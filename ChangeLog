@@ -1,3 +1,10 @@
+2000-08-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): Try fcntl
+	if fnctl64 is not available for F_*LK*64.
+
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: New file.
+
 2000-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
