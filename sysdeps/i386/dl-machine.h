@@ -157,8 +157,20 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 	 the offset on the stack, and then jump to the resolved address.  */
       got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
-}
 
+  /* This code is used in dl-runtime.c to call the `fixup' function
+     and then redirect to the address it returns.  */
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
+	.globl _dl_runtime_resolve
+	.type _dl_runtime_resolve, @function
+_dl_runtime_resolve:
+	call fixup	# Args pushed by PLT.
+	addl $8, %esp	# Pop args.
+	jmp *%eax	# Jump to function address.
+");
+/* The PLT uses Elf32_Rel relocs.  */
+#define elf_machine_relplt elf_machine_rel
+}
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
