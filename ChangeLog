@@ -1,3 +1,7 @@
+2002-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/string.h: Declare strerror_r also for XPG6.
+
 2002-04-19  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/tmpfile.c: Create a file descriptor and use fdopen.
