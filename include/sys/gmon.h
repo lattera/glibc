@@ -11,5 +11,5 @@ struct __bb;
 extern void __bb_init_func (struct __bb *bb);
 extern void __bb_exit_func (void);
 
-
+extern struct gmonparam _gmonparam;
 #endif

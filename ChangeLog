@@ -1,3 +1,16 @@
+2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* gmon/Makefile (elide-routines.os): Add bb_init_func and bb_exit_func.
+	They were never exported anyway.
+
+	* gmon/gmon.c (_gmonparam): Add attribute_hidden.
+	* gmon/sys/gmon.h: Remove declaration of _gmonparam.  It wasn't
+	exported.
+	* include/sys/gmon.h: Declare _gmonparam.
+
+	* sysdeps/unix/sysv/linux/i386/getdents64.c: Don't define compatibility
+	symbols for getdents64.  They were never exported.
+
 2002-03-09  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (write_corefile): Fix swapped arguments to __dir_link.

@@ -143,7 +143,6 @@ struct gmonparam {
 	u_long		hashfraction;
 	long		log_hashfraction;
 };
-extern struct gmonparam _gmonparam;
 
 /*
  * Possible states of profiling.

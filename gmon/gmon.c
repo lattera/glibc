@@ -49,7 +49,7 @@
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
-struct gmonparam _gmonparam = { GMON_PROF_OFF };
+struct gmonparam _gmonparam attribute_hidden = { GMON_PROF_OFF };
 
 /*
  * See profil(2) where this is described:
