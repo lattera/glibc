@@ -1,3 +1,8 @@
+2001-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/strcasecmp.c (__strcasecmp): Little performance
+	patch.
+
 2001-12-05  Geoff Keating  <geoffk@redhat.com>
 
 	* scripts/cpp: Test the exit status from 'type', not 'awk'.
