@@ -126,6 +126,8 @@ elf_machine_load_address (void)
   return addr;
 }
 
+/* The MSB of got[1] of a gnu object is set to identify gnu objects.  */
+#define ELF_MIPS_GNU_GOT1_MASK 0x80000000
 
 /* Get link map for callers object containing STUB_PC.  */
 static inline struct link_map *
@@ -476,9 +478,6 @@ elf_machine_lazy_rel (struct link_map *map,
   /* Do nothing.  */
 }
 
-/* The MSB of got[1] of a gnu object is set to identify gnu objects. */
-#define ELF_MIPS_GNU_GOT1_MASK 0x80000000
-
 /* Relocate GOT. */
 static inline void
 elf_machine_got_rel (struct link_map *map, int lazy)
@@ -492,37 +491,36 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 #ifdef RTLD_BOOTSTRAP
 # define RESOLVE_GOTSYM(sym,sym_index) 0
 #else
-  /* FIXME: The macro RESOLVE_GOTSYM is not handling versioning.  */
-# define RESOLVE_GOTSYM(sym,sym_index)						\
-    ({										\
-      const ElfW(Sym) *ref = sym;						\
-      ElfW(Addr) value;								\
-										\
-      switch (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)			\
-	{									\
-	default:								\
-	  {									\
-	    const ElfW(Half) *vernum =						\
-	      (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);	\
-	    ElfW(Half) ndx = vernum[sym_index];					\
-	    const struct r_found_version *version = &l->l_versions[ndx];	\
-										\
-	    if (version->hash != 0)						\
-	      {									\
-		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,	\
-						    map,			\
-						    &ref, scope, version,	\
-						    R_MIPS_REL32);		\
-		break;								\
-	      }									\
-	    /* Fall through.  */						\
-	  }									\
-	case 0:									\
-	  value = _dl_lookup_symbol (strtab + sym->st_name, map, &ref,		\
-				     scope, R_MIPS_REL32);			\
-	}									\
-										\
-      (ref)? value + ref->st_value: 0;						\
+# define RESOLVE_GOTSYM(sym,sym_index)					  \
+    ({									  \
+      const ElfW(Sym) *ref = sym;					  \
+      ElfW(Addr) value;							  \
+									  \
+      switch (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)		  \
+	{								  \
+	default:							  \
+	  {								  \
+	    const ElfW(Half) *vernum =					  \
+	      (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);  \
+	    ElfW(Half) ndx = vernum[sym_index];				  \
+	    const struct r_found_version *version = &l->l_versions[ndx];  \
+									  \
+	    if (version->hash != 0)					  \
+	      {								  \
+		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,\
+						    map,		  \
+						    &ref, scope, version, \
+						    R_MIPS_REL32);	  \
+		break;							  \
+	      }								  \
+	    /* Fall through.  */					  \
+	  }								  \
+	case 0:								  \
+	  value = _dl_lookup_symbol (strtab + sym->st_name, map, &ref,	  \
+				     scope, R_MIPS_REL32);		  \
+	}								  \
+									  \
+      (ref)? value + ref->st_value: 0;					  \
     })
 #endif /* RTLD_BOOTSTRAP */
 
@@ -541,12 +539,11 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   
   /* Handle global got entries. */
   got += n;
-  sym = (void *) D_PTR (map, l_info[DT_SYMTAB]);
-  sym += map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
+  /* Keep track of the symbol index.  */
+  symidx = map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
+  sym = (void *) D_PTR (map, l_info[DT_SYMTAB]) + symidx;
   i = (map->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val
        - map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val);
-  /* Keep track of the symbol index.  */
-  symidx = n;
   
   while (i--)
     {
