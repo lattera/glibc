@@ -1,3 +1,9 @@
+2002-11-14  Paul Eggert  <eggert@twionsun.com>
+
+        * resolv/nss_dns/dns-network.c (getanswer_r): Check for buffer
+        overflow when skipping the question part and when unpacking
+        aliases.
+
 2002-11-15  Roland McGrath  <roland@redhat.com>
 
 	* math/Makefile (libm-calls): Remove s_copysign, s_isinf, s_isnan,

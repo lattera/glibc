@@ -283,7 +283,15 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 
   /* Skip the question part.  */
   while (question_count-- > 0)
-    cp += __dn_skipname (cp, end_of_message) + QFIXEDSZ;
+    {
+      int n = __dn_skipname (cp, end_of_message);
+      if (n < 0 || end_of_message - (cp + n) < QFIXEDSZ)
+       {
+         __set_h_errno (NO_RECOVERY);
+         return NSS_STATUS_UNAVAIL;
+       }
+      cp += n + QFIXEDSZ;
+    }
 
   alias_pointer = result->n_aliases = &net_data->aliases[0];
   *alias_pointer = NULL;
@@ -344,12 +352,15 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	      return NSS_STATUS_UNAVAIL;
 	    }
 	  cp += n;
-	  *alias_pointer++ = bp;
-	  n = strlen (bp) + 1;
-	  bp += n;
-	  linebuflen -= n;
-	  result->n_addrtype = class == C_IN ? AF_INET : AF_UNSPEC;
-	  ++have_answer;
+         if (alias_pointer + 2 < &net_data->aliases[MAX_NR_ALIASES])
+           {
+             *alias_pointer++ = bp;
+             n = strlen (bp) + 1;
+             bp += n;
+             linebuflen -= n;
+             result->n_addrtype = class == C_IN ? AF_INET : AF_UNSPEC;
+             ++have_answer;
+           }
 	}
     }
 
