@@ -24,6 +24,7 @@
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
 #include "pt-machine.h"
+#include "semaphore.h"
 
 #ifndef THREAD_GETMEM
 # define THREAD_GETMEM(descr, member) descr->member
@@ -360,3 +361,6 @@ extern int __libc_nanosleep (const struct timespec *requested_time,
 extern int __libc_read (int fd, void *buf, size_t count);
 extern pid_t __libc_waitpid (pid_t pid, int *stat_loc, int options);
 extern int __libc_write (int fd, const void *buf, size_t count);
+
+/* Prototypes for some of the new semaphore functions.  */
+extern int __new_sem_post (sem_t * sem);

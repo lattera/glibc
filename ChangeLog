@@ -1,5 +1,7 @@
 1999-10-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig: Look also in all subdirs for shlib-versions files.
+
 	* malloc/memprof.sh: Fix --help string a bit.
 
 	* argp/argp.h: Remove K&R compatiblity.
