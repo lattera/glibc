@@ -24,7 +24,23 @@
  * (a load word and zero (high 32) form).  So powerpc64 has a slightly
  * different version in sysdeps/powerpc/powerpc64/bits/atomic.h.
  */
-# define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
+({									      \
+  unsigned int __tmp;							      \
+  __asm __volatile (							      \
+		    "1:	lwarx	%0,0,%1\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stwcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	" __ARCH_ACQ_INSTR				      \
+		    : "=&r" (__tmp)					      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
+})
+
+# define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval)	      \
 ({									      \
   unsigned int __tmp;							      \
   __asm __volatile (__ARCH_REL_INSTR "\n"				      \
@@ -33,7 +49,7 @@
 		    "	bne	2f\n"					      \
 		    "	stwcx.	%3,0,%1\n"				      \
 		    "	bne-	1b\n"					      \
-		    "2:	" __ARCH_ACQ_INSTR				      \
+		    "2:	"						      \
 		    : "=&r" (__tmp)					      \
 		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
@@ -50,8 +66,17 @@
 
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
+  
+# define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
+  (abort (), 0)
 
-# define __arch_atomic_exchange_64(mem, value) \
+# define __arch_compare_and_exchange_val_64_rel(mem, newval, oldval) \
+  (abort (), (__typeof (*mem)) 0)
+
+# define __arch_atomic_exchange_64_acq(mem, value) \
+    ({ abort (); (*mem) = (value); })
+
+# define __arch_atomic_exchange_64_rel(mem, value) \
     ({ abort (); (*mem) = (value); })
 
 # define __arch_atomic_exchange_and_add_64(mem, value) \

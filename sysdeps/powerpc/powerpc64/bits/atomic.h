@@ -30,7 +30,7 @@
 # define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
 ({									      \
   unsigned int __tmp;							      \
-  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+  __asm __volatile (							      \
 		    "1:	lwarx	%0,0,%1\n"				      \
 		    "	extsw	%0,%0\n"				      \
 		    "	subf.	%0,%2,%0\n"				      \
@@ -38,6 +38,23 @@
 		    "	stwcx.	%3,0,%1\n"				      \
 		    "	bne-	1b\n"					      \
 		    "2:	" __ARCH_ACQ_INSTR				      \
+		    : "=&r" (__tmp)					      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
+})
+
+# define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval) \
+({									      \
+  unsigned int __tmp;							      \
+  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		    "1:	lwarx	%0,0,%1\n"				      \
+		    "	extsw	%0,%0\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stwcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	"						      \
 		    : "=&r" (__tmp)					      \
 		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
@@ -52,7 +69,7 @@
 # define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
 ({									      \
   unsigned long	__tmp;							      \
-  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+  __asm __volatile (							      \
 		    "1:	ldarx	%0,0,%1\n"				      \
 		    "	subf.	%0,%2,%0\n"				      \
 		    "	bne	2f\n"					      \
@@ -65,11 +82,27 @@
   __tmp != 0;								      \
 })
 
+# define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
+({									      \
+  unsigned long	__tmp;							      \
+  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		    "1:	ldarx	%0,0,%1\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stdcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	"						      \
+		    : "=&r" (__tmp)					      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
+})
+
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({									      \
       __typeof (*(mem)) __tmp;						      \
       __typeof (mem)  __memp = (mem);					      \
-      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+      __asm __volatile (						      \
 		        "1:	ldarx	%0,0,%1\n"			      \
 		        "	cmpd	%0,%2\n"			      \
 		        "	bne	2f\n"				      \
@@ -82,7 +115,38 @@
       __tmp;								      \
   })
 
-# define __arch_atomic_exchange_64(mem, value) \
+#define __arch_compare_and_exchange_val_64_rel(mem, newval, oldval) \
+  ({									      \
+      __typeof (*(mem)) __tmp;						      \
+      __typeof (mem)  __memp = (mem);					      \
+      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		        "1:	ldarx	%0,0,%1\n"			      \
+		        "	cmpd	%0,%2\n"			      \
+		        "	bne	2f\n"				      \
+		        "	stdcx.	%3,0,%1\n"			      \
+		        "	bne-	1b\n"				      \
+		        "2:	"					      \
+		        : "=&r" (__tmp)					      \
+		        : "b" (__memp), "r" (oldval), "r" (newval)	      \
+		        : "cr0", "memory");				      \
+      __tmp;								      \
+  })
+
+# define __arch_atomic_exchange_64_acq(mem, value) \
+    ({									      \
+      __typeof (*mem) __val;						      \
+      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+			"1:	ldarx	%0,0,%2\n"			      \
+			"	stdcx.	%3,0,%2\n"			      \
+			"	bne-	1b\n"				      \
+		  " " __ARCH_ACQ_INSTR					      \
+			: "=&r" (__val), "=m" (*mem)			      \
+			: "b" (mem), "r" (value), "1" (*mem)		      \
+			: "cr0", "memory");				      \
+      __val;								      \
+    })
+
+# define __arch_atomic_exchange_64_rel(mem, value) \
     ({									      \
       __typeof (*mem) __val;						      \
       __asm __volatile (__ARCH_REL_INSTR "\n"				      \
@@ -91,7 +155,7 @@
 			"	bne-	1b"				      \
 			: "=&r" (__val), "=m" (*mem)			      \
 			: "b" (mem), "r" (value), "1" (*mem)		      \
-			: "cr0");					      \
+			: "cr0", "memory");				      \
       __val;								      \
     })
 
@@ -104,7 +168,7 @@
 			"	bne-	1b"				      \
 			: "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
 			: "b" (mem), "r" (value), "2" (*mem)		      \
-			: "cr0");					      \
+			: "cr0", "memory");				      \
       __val;								      \
     })
 
@@ -119,7 +183,7 @@
 		       "2:	" __ARCH_ACQ_INSTR			      \
 		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
 		       : "b" (mem), "2" (*mem)				      \
-		       : "cr0");					      \
+		       : "cr0", "memory");				      \
      __val;								      \
   })
 
@@ -127,6 +191,12 @@
  * All powerpc64 processors support the new "light weight"  sync (lwsync).   
  */
 # define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
+/* 
+ * "light weight" sync can also be used for the release barrier.   
+ */
+# ifndef UP
+#  define __ARCH_REL_INSTR	"lwsync"
+# endif
 
 /*
  * Include the rest of the atomic ops macros which are common to both

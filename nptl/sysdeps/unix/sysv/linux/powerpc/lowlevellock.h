@@ -115,7 +115,7 @@ extern int __lll_timedlock_wait
 #define lll_mutex_unlock(lock) \
   ((void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = atomic_exchange (__futex, 0);				      \
+    int __val = atomic_exchange_rel (__futex, 0);			      \
     if (__builtin_expect (__val > 1, 0))				      \
       lll_futex_wake (__futex, 1);					      \
   }))
