@@ -1,3 +1,7 @@
+1999-05-06  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* sysdeps/sparc/sparc32/sparcv9/Dist: New file.
+
 1999-05-06  Thorsten Kukuk  <kukuk@suse.de>
 
 	* stdlib/fpioconst.c (__tens): Export also for 64bit platforms.
