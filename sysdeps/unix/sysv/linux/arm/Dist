@@ -5,6 +5,7 @@ setresuid.c
 setresgid.c
 setfsuid.c
 setfsgid.c
+sigrestorer.S
 bits/armsigctx.h
 sys/io.h
 sys/user.h
