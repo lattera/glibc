@@ -78,7 +78,21 @@
 #define PSEUDO_END_NOERRNO(name)					      \
   END (name)
 
-#define ret_NOERRNO ret
+#define ret_NOERRNO rts
+
+/* The function has to return the error code.  */
+#undef	PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args);					      \
+    negl %d0
+
+#undef	PSEUDO_END_ERRVAL
+#define	PSEUDO_END_ERRVAL(name) \
+  END (name)
+
+#define ret_ERRVAL rts
 
 #ifdef PIC
 # if RTLD_PRIVATE_ERRNO
