@@ -1,5 +1,8 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/libm-i387/s_asinhf.S: Fix typos which caused overwriting
+	stack variables.
+
 	* po/nl.po: Update from translation team.
 
 	* sysdeps/libm-i387/s_asinhf.S: Correct computing absolute value.
