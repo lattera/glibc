@@ -40,9 +40,11 @@ extern char *getenv ();
 #include <stdlib.h>
 #endif
 
+#define TRACE_BUFFER_SIZE 512
+
 static FILE *mallstream;
 static const char mallenv[]= "MALLOC_TRACE";
-static char mallbuf[BUFSIZ];	/* Buffer for the output.  */
+static char malloc_trace_buffer[TRACE_BUFFER_SIZE];
 
 __libc_lock_define_initialized (static, lock);
 
@@ -242,7 +244,7 @@ mtrace ()
       if (mallstream != NULL)
 	{
 	  /* Be sure it doesn't malloc its buffer!  */
-	  setbuf (mallstream, mallbuf);
+	  setvbuf (mallstream, malloc_trace_buffer, TRACE_BUFFER_SIZE);
 	  fprintf (mallstream, "= Start\n");
 	  tr_old_free_hook = __free_hook;
 	  __free_hook = tr_freehook;

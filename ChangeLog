@@ -1,5 +1,10 @@
 1998-04-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/byteswap.h: New file.
+
+	* malloc/mtrace.c (mtrace): Use smaller output buffer to reduce
+	.bss segment size.  Patch by Joe Keane <jgk@jgk.org>.
+
 	* inet/getnameinfo.c (getnameinfo): Change parameter to match
 	declaration.  Patch by Richard Henderson.
 
