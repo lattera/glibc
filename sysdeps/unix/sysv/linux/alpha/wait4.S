@@ -132,7 +132,7 @@ $do32:	ldi	v0, SYS_ify(osf_wait4)
 	.align 3
 $error:
 	addq	sp, 32, sp
-	jmp	zero, __syscall_error
+	SYSCALL_ERROR_HANDLER
 
 END(WAIT4)
 

@@ -27,6 +27,13 @@
 # include <regdef.h>
 #endif
 
+#include <tls.h>		/* Defines USE___THREAD.  */
+
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>         /* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
+
 #ifdef __STDC__
 #define __LABEL(x)	x##:
 #else
@@ -55,54 +62,65 @@
    label of that number between those two macros!  */
 
 #ifdef PROF
-#define PSEUDO(name, syscall_name, args)	\
-    .globl name;				\
-    .align 3;					\
-    .ent name,0;				\
-__LABEL(name)					\
-    .frame sp, 0, ra;				\
-    ldgp gp,0(pv);				\
-    .set noat;					\
-    lda AT,_mcount;				\
-    jsr AT,(AT),_mcount;			\
-    .set at;					\
-    .prologue 1;				\
-    ldiq	v0, SYS_ify(syscall_name);	\
-    .set noat;					\
-    call_pal	PAL_callsys;			\
-    .set at;					\
-    bne		a3, 1996f;			\
-3:
+# define PSEUDO_PROLOGUE			\
+	.frame sp, 0, ra;			\
+	ldgp	gp,0(pv);			\
+	.set noat;				\
+	lda	AT,_mcount;			\
+	jsr	AT,(AT),_mcount;		\
+	.set at;				\
+	.prologue 1
+# define PSEUDO_LOADGP
 #else
-#define PSEUDO(name, syscall_name, args)	\
-    .globl name;				\
-    .align 3;					\
-    .ent name,0;				\
-__LABEL(name)					\
-    .frame sp, 0, ra				\
-    .prologue 0;				\
-    ldiq	v0, SYS_ify(syscall_name);	\
-    .set noat;					\
-    call_pal	PAL_callsys;			\
-    .set at;					\
-    bne		a3, 1996f;			\
-3:
-#endif
+# define PSEUDO_PROLOGUE			\
+	.frame sp, 0, ra;			\
+	.prologue 0
+# define PSEUDO_LOADGP				\
+	br	gp, 2f;				\
+2:	ldgp	gp, 0(gp)
+#endif /* PROF */
 
-#undef PSEUDO_END
-#ifdef PROF
-#define PSEUDO_END(sym)				\
-1996:						\
-    jmp		zero, __syscall_error;		\
-    END(sym)
+#if RTLD_PRIVATE_ERRNO
+# define SYSCALL_ERROR_HANDLER			\
+	stl	v0, errno(gp)	!gprel;		\
+	lda	v0, -1;				\
+	ret
 #else
-#define PSEUDO_END(sym)				\
+# define SYSCALL_ERROR_HANDLER \
+	jmp	$31, __syscall_error
+#endif /* RTLD_PRIVATE_ERRNO */
+
+#if defined(PIC) && !RTLD_PRIVATE_ERRNO
+# define PSEUDO(name, syscall_name, args)	\
+	.globl name;				\
+	.align 4;				\
+	.ent name,0;				\
+__LABEL(name)					\
+	PSEUDO_PROLOGUE;			\
+	lda	v0, SYS_ify(syscall_name);	\
+	call_pal PAL_callsys;			\
+	bne	a3, __syscall_error !samegp;	\
+3:
+# undef PSEUDO_END
+# define PSEUDO_END(sym)  END(sym)
+#else
+# define PSEUDO(name, syscall_name, args)	\
+	.globl name;				\
+	.align 4;				\
+	.ent name,0;				\
+__LABEL(name)					\
+	lda	v0, SYS_ify(syscall_name);	\
+	call_pal PAL_callsys;			\
+	bne	a3, 1996f;			\
+3:
+
+# undef PSEUDO_END
+# define PSEUDO_END(sym)			\
 1996:						\
-    br		gp, 2f;				\
-2:  ldgp	gp, 0(gp);			\
-    jmp		zero, __syscall_error;		\
-    END(sym)
-#endif
+	PSEUDO_LOADGP;				\
+	SYSCALL_ERROR_HANDLER;			\
+	END(sym)
+#endif /* PIC && !RTLD_PRIVATE_ERRNO */
 
 #define r0	v0
 #define r1	a4
