@@ -1,3 +1,8 @@
+2004-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): If NAME is a numerical IP
+	address and AI_CANONNAME is set, return copy of NAME as ai_canonname.
+
 2004-09-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rela_relative): Replace
