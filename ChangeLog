@@ -1,3 +1,18 @@
+1998-07-20  Jose M. Moya  <josem@gnu.org>
+
+	* hurd/hurdmsg.c (_S_msg_get_env_variable): Copy getenv return
+	value.
+
+1998-07-20  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/getdomain.c: New file.
+	* sysdeps/mach/hurd/setdomain.c: New file.
+
+1998-07-20  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/bsd/sigsuspend.c: Define __sigsuspend with sigsuspend as
+	a weak alias.
+
 1998-07-20 18:23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/libioP.h: Use __PMT in typedef.

@@ -315,14 +315,24 @@ _S_msg_get_env_variable (mach_port_t msgport,
 			 char *variable,
 			 char **data, mach_msg_type_number_t *datalen)
 {
+  error_t err;
+  mach_msg_type_number_t valuelen;
   const char *value = getenv (variable);
 
   if (value == NULL)
     return ENOENT;
 
-  /* XXX this pointer might become invalid */
-  *data = value;
-  *datalen = strlen (value);
+  valuelen = strlen (value);
+  if (valuelen > *datalen)
+    {
+      if (err = __vm_allocate (__mach_task_self (), 
+			       (vm_address_t *) data, valuelen, 1))
+	return err;
+    }
+
+  memcpy (*data, value, valuelen);
+  *datalen = valuelen;
+
   return 0;
 }
 

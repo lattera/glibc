@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,40 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/utsname.h>
+#include "hurdhost.h"
 
-/* Put the name of the current host in no more than LEN bytes of NAME.
-   The result is null-terminated if LEN is large enough for the full
-   name and the terminator.  */
+/* Set the name of the current YP domain to NAME, which is LEN bytes long.
+   This call is restricted to the super-user.  */
 int
-__gethostname (name, len)
-     char *name;
+setdomainname (name, len)
+     const char *name;
      size_t len;
 {
-  struct utsname buf;
-  size_t node_len;
-
-  if (name == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  if (uname (&buf))
-    return -1;
-
-  node_len = strlen (buf.nodename) + 1;
-  if (node_len > len)
-    {
-      __set_errno (ENAMETOOLONG);
-      return -1;
-    }
-
-  memcpy (name, buf.nodename, node_len);
-  return 0;
+  /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
+  ssize_t n = _hurd_set_host_config ("/etc/nisdomain", name, len);
+  return n < 0 ? -1 : 0;
 }
-
-weak_alias (__gethostname, gethostname)
