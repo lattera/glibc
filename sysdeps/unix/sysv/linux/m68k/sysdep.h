@@ -21,6 +21,9 @@
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/m68k/sysdep.h>
 
+/* Defines RTLD_PRIVATE_ERRNO.  */
+#include <dl-sysdep.h>
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
@@ -66,9 +69,21 @@
   END (name)
 
 #ifdef PIC
+# ifdef RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER						      \
+SYSCALL_ERROR_LABEL:							      \
+    lea (errno, %pc), %a0;					      	      \
+    neg.l %d0;								      \
+    move.l %d0, (%a0);							      \
+    move.l &-1, %d0;							      \
+    /* Copy return value to %a0 for syscalls that are declared to return      \
+       a pointer (e.g., mmap).  */					      \
+    move.l %d0, %a0;							      \
+    rts;
+# else /* !RTLD_PRIVATE_ERRNO */
 /* Store (- %d0) into errno through the GOT.  */
-#ifdef _LIBC_REENTRANT
-#define SYSCALL_ERROR_HANDLER						      \
+#  if defined _LIBC_REENTRANT
+#  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
     neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
@@ -79,8 +94,8 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-#else /* !_LIBC_REENTRANT */
-#define SYSCALL_ERROR_HANDLER						      \
+#  else /* !_LIBC_REENTRANT */
+#  define SYSCALL_ERROR_HANDLER						      \
 SYSCALL_ERROR_LABEL:							      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
@@ -90,9 +105,10 @@ SYSCALL_ERROR_LABEL:							      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
     rts;
-#endif /* _LIBC_REENTRANT */
+#  endif /* _LIBC_REENTRANT */
+# endif /* RTLD_PRIVATE_ERRNO */
 #else
-#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+# define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #endif /* PIC */
 
 /* Linux takes system call arguments in registers:
