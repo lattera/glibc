@@ -51,7 +51,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
-	   ISO-2022-JP-3 TSCII IBM866NAV
+	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -84,6 +84,8 @@ LDFLAGS-UHC.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)UHC.so: $(objpfx)libKSC.so
 LDFLAGS-EUC-JP.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-JP.so: $(objpfx)libJIS.so
+LDFLAGS-EUC-JP-MS.so = $(LDFLAGS-rpath-ORIGIN)
+$(objpfx)EUC-JP-MS.so: $(objpfx)libJIS.so
 LDFLAGS-EUC-CN.so = $(LDFLAGS-rpath-ORIGIN)
 $(objpfx)EUC-CN.so: $(objpfx)libGB.so
 LDFLAGS-EUC-TW.so = $(LDFLAGS-rpath-ORIGIN)

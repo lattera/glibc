@@ -51,7 +51,9 @@
 
 	.text
 ENTRY(__socket)
+	cfi_startproc
 	stdu r1,-144(r1)
+	cfi_adjust_cfa_offset(144)
 #if NARGS >= 1
 	std  r3,stackblock(r1)
 #endif
@@ -95,6 +97,7 @@ ENTRY(__socket)
 .Lsocket_cancel:
 	mflr	r9
 	std   r9,144+16(r1)
+	cfi_offset (lr, 16)
 	CENABLE
 	std  	r3,72(r1)
 	li	  r3,P(SOCKOP_,socket)
@@ -113,6 +116,7 @@ ENTRY(__socket)
 	addi	r1,r1,144
 	PSEUDO_RET
 #endif
+	cfi_endproc
 PSEUDO_END (__socket)
 
 weak_alias (__socket, socket)

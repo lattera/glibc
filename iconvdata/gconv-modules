@@ -437,11 +437,19 @@ module	INTERNAL		ISO_6937-2//		ISO_6937-2	1
 #	from			to			module		cost
 alias	SHIFT-JIS//		SJIS//
 alias	SHIFT_JIS//		SJIS//
-alias	CP932//			SJIS//
 alias	MS_KANJI//		SJIS//
 alias	CSSHIFTJIS//		SJIS//
 module	SJIS//			INTERNAL		SJIS		1
 module	INTERNAL		SJIS//			SJIS		1
+
+#	from			to			module		cost
+alias	WINDOWS-31J//		CP932//
+alias	MS932//			CP932//
+alias	SJIS-OPEN//		CP932//
+alias	SJIS-WIN//		CP932//
+alias	CSWINDOWS31J//		CP932//
+module	CP932//			INTERNAL		CP932		1
+module	INTERNAL		CP932//			CP932		1
 
 #	from			to			module		cost
 alias	KOI8//			KOI-8//
@@ -1103,6 +1111,13 @@ module	INTERNAL		BIG5//			BIG5		1
 alias	BIG5-HKSCS//		BIG5HKSCS//
 module	BIG5HKSCS//		INTERNAL		BIG5HKSCS	1
 module	INTERNAL		BIG5HKSCS//		BIG5HKSCS	1
+
+#	from			to			module		cost
+alias	EUCJP-MS//		EUC-JP-MS//
+alias	EUCJP-OPEN//		EUC-JP-MS//
+alias	EUCJP-WIN//		EUC-JP-MS//
+module	EUC-JP-MS//		INTERNAL		EUC-JP-MS	1
+module	INTERNAL		EUC-JP-MS//		EUC-JP-MS	1
 
 #	from			to			module		cost
 alias	EUCJP//			EUC-JP//
