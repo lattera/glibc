@@ -7,8 +7,8 @@ extern int __gethostent_r (struct hostent *__restrict __result_buf,
 			   struct hostent **__restrict __result,
 			   int *__restrict __h_errnop);
 
-extern int __gethostbyaddr_r (__const char *__restrict __addr,
-			      size_t __len, int __type,
+extern int __gethostbyaddr_r (__const void *__restrict __addr,
+			      socklen_t __len, int __type,
 			      struct hostent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
 			      struct hostent **__restrict __result,

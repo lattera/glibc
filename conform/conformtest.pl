@@ -6,18 +6,20 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 # List of the headers we are testing.
 @headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
 	    "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
-	    "termios.h", "tar.h", "sys/wait.h", "sys/uio.h", "sys/types.h",
-	    "sys/times.h", "sys/timeb.h", "sys/time.h", "sys/statvfs.h",
-	    "sys/stat.h", "sys/shm.h", "sys/sem.h", "sys/resource.h",
-	    "sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h",
-	    "stropts.h", "strings.h", "string.h", "stdlib.h", "stdio.h",
-	    "stddef.h", "stdarg.h", "signal.h", "setjmp.h", "semaphore.h",
+	    "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
+	    "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
+	    "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
+	    "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
+	    "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
+	    "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
+	    "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
 	    "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
-	    "poll.h", "nl_types.h", "ndbm.h", "mqueue.h", "monetary.h",
+	    "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
+	    "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
 	    "math.h", "locale.h", "libgen.h", "langinfo.h", "iso646.h",
 	    "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h", "fnmatch.h",
 	    "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",
-	    "ctype.h", "cpio.h", "assert.h", "aio.h");
+	    "ctype.h", "cpio.h", "assert.h", "arpa/inet.h", "aio.h");
 
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',

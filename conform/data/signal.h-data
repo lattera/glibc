@@ -34,6 +34,7 @@ constant SIGFPE
 constant SIGHUP
 constant SIGILL
 constant SIGINT
+constant SIGIO
 constant SIGKILL
 constant SIGPIPE
 constant SIGQUIT

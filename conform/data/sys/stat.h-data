@@ -1,3 +1,5 @@
+#ifndef ISO
+
 type {struct stat}
 
 element {struct stat} dev_t st_dev
@@ -59,10 +61,12 @@ macro S_ISLNK
 # macro S_TYPEISMQ
 # macro S_TYPEISSEM
 # macro S_TYPEISSHM
+# macro S_TYPEISTMO
 
 function int chmod (const char*, mode_t)
 function int fchmod (int, mode_t)
 function int fstat (int, struct stat*)
+function int isfdtype (int, int)
 function int lstat (const char*, struct stat*)
 function int mkdir (const char*, mode_t)
 function int mkfifo (const char*, mode_t)
@@ -73,3 +77,4 @@ function mode_t umask (mode_t)
 allow st_*
 allow S_*
 allow *_t
+#endif

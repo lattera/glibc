@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -67,7 +67,7 @@ __nscd_gethostbyname2_r (const char *name, int af, struct hostent *resultbuf,
 
 
 int
-__nscd_gethostbyaddr_r (const char *addr, size_t len, int type,
+__nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 			struct hostent *resultbuf, char *buffer, size_t buflen,
 			int *h_errnop)
 {

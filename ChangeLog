@@ -1,7 +1,97 @@
 2000-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl (@headers): Add sys/utsname.h, sys/un.h,
+	sys/socket.h, spawn.h, netinet/tcp.h, netinet/in.h, net/if.h, and
+	arpa/inet.h.
+	* conform/data/fcntl.h-data: Add F_GETOWN, F_SETOWN,
+	SEEK_SET, SEEK_CUR, SEEK_END, S_IFMT, S_IFBLK, S_IFCHR, S_IFIFO,
+	S_IFREG, S_IFDIR, S_IFLNK, S_IFSOCK, S_IRWXU, S_IRUSR S_IWUSR,
+	S_IXUSR, S_IRWXG, S_IRGRP, S_IWGRP, S_IXGRP, S_IRWXO, S_IROTH,
+	S_IWOTH, S_IXOTH, S_ISUID, S_ISGID, S_ISVTX, POSIX_FADV_NORMAL,
+	POSIX_FADV_SEQUENTIAL, POSIX_FADV_RANDOM, POSIX_FADV_WILLNEED,
+	POSIX_FADV_DONTNEED, POSIX_FADV_NOREUSE, posix_fadvise,
+	posix_fallocate, and posix_madvise.
+	* conform/data/netdb.h-data: New file.
+	* conform/data/pthread.h-data: Add pthread_barrier_t,
+	pthread_barrierattr_t, pthread_barrier_destroy,
+	pthread_barrier_init, pthread_barrier_wait,
+	pthread_barrierattr_destroy, pthread_barrierattr_getpshared,
+	pthread_barrierattr_init, pthread_barrierattr_setpshared,
+	pthread_condattr_getclock, pthread_condattr_setclock,
+	pthread_getcpuclockid, pthread_mutex_timedlock,
+	pthread_rwlock_timedrdlock, pthread_rwlock_timedwrlock,
+	pthread_sigmask, pthread_spin_destroy, pthread_spin_init,
+	pthread_spin_lock, pthread_spin_trylock, and pthread_spin_unlock.
+	* conform/data/sched.h-data: Add sched_ss_low_priority,
+	sched_ss_repl_period, sched_ss_init_budget, sched_ss_max_repl, and
+	SCHED_SPORADIC.
+	* conform/data/semaphore.h-data: Add sem_timedwait.
+	* conform/data/signal.h-data: Add SIGIO.
+	* conform/data/spawn.h-data: New file.
+	* conform/data/stdlib.h-data: Add posix_memalign, setenv, and unsetenv.
+	* conform/data/time.h-data: Add CLOCK_PROCESS_CPUTIME_ID,
+	CLOCK_THREAD_CPUTIME_ID, clock_getcpuclockid, and clock_nanosleep.
+	Fix typo in gmtime_r definition.
+	* conform/data/unistd.h-data: Add _POSIX_ADVISORY_INFO,
+	_POSIX_ASYNCHRONOUS_IO, _POSIX_BARRIERS, _POSIX_MONOTONIC_CLOCK,
+	_POSIX_READER_WRITER_LOCKS, _POSIX_SHELL, _POSIX_SPAWN,
+	_POSIX_SPIN_LOCKS, _POSIX_SPORADIC_SERVER, _POSIX_THREAD_CPUTIME,
+	_POSIX_TYPED_MEMORY_OBJECTS, _POSIX_THREAD_SPORADIC_SERVER,
+	_XOPEN_STREAMS, _POSIX_TIMEOUTS, _POSIX2_PBS,
+	_POSIX2_PBS_ACCOUNTING, _POSIX2_PBS_CHECKPOINT,
+	_POSIX2_PBS_LOCATE, _POSIX2_PBS_MESSAGE, _POSIX2_PBS_TRACK,
+	_SC_2_PBS, _SC_2_PBS_ACCOUNTING, _SC_2_PBS_CHECKPOINT,
+	_SC_2_PBS_LOCATE, _SC_2_PBS_MESSAGE, _SC_2_PBS_TRACK,
+	_SC_BARRIERS, _SC_BASE, _SC_CLOCK_SELECTION, _SC_DEVICE_IO,
+	_SC_DEVICE_SPECIFIC, _SC_DEVICE_SPECIFIC_R, _SC_FD_MGMT, _SC_FIFO,
+	_SC_FILE_ATTRIBUTES, _SC_FILE_LOCKING, _SC_FILE_SYSTEM,
+	_SC_MEMORY_PROTECTION, _SC_MESSAGE_PASSING, _SC_MONOTONIC_CLOCK,
+	_SC_MESSAGE_PASSING, _SC_MONOTONIC_CLOCK, _SC_MULTIPLE_PROCESS,
+	_SC_NETWORKING, _SC_PIPE, _SC_READER_WRITER_LOCKS, _SC_REGEXP,
+	_SC_SHELL, _SC_SIGNALS, _SC_SINGLE_PROCESS, _SC_SPIN_LOCKS,
+	_SC_TYPED_MEMORY_OBJECTS, _SC_USER_GROUPS, _SC_USER_GROUPS_R,
+	_SC_STREAMS, _PC_REC_INCR_XFER_SIZE, _PC_REC_MAX_XFER_SIZE,
+	_PC_REC_MIN_XFER_SIZE, _PC_REC_XFER_ALIGN, setegid, seteuid.  Fix
+	typo in off_t definition.
+	* conform/data/net/if.h-data: New file.
+	* conform/data/netinet/in.h-data: New file.
+	* conform/data/netinet/tcp.h-data: New file.
+	* conform/data/sys/mman.h-data: Add POSIX_MADV_NORMAL,
+	POSIX_MADV_SEQUENTIAL, POSIX_MADV_RANDOM, POSIX_MADV_WILLNEED,
+	POSIX_MADV_DONTNEED, POSIX_TYPED_MEM_ALLOCATE,
+	POSIX_TYPED_MEM_ALLOCATE_CONTIG, POSIX_TYPED_MEM_MAP_ALLOCATABLE,
+	posix_typedmem_info, posix_mem_offset, posix_typed_mem_get_info,
+	and posix_typed_mem_open.
+	* conform/data/sys/socket.h-data: New file.
+	* conform/data/sys/stat.h-data: Add S_TYPEISTMO and isfdtype.
+	* conform/data/sys/types.h-data: Add pthread_barrier_t,
+	pthread_barrierattr_t, and pthread_spinlock_t.
+	* conform/data/sys/un.h-data: New file.
+	* conform/data/sys/utsname.h-data: New file.
+
+	* include/netdb.h (__gethostbyaddr_r): Fix types of first and second
+	parameter.
+	* inet/gethstbyad.c (gethostbyname): Likewise.
+	* inet/gethstbyad_t.c (gethostbyname_r): Likewise.
+	* inet/getipnodebyad.c (getipnodebyad): Likewise.
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyaddr_r): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_gethostbyaddr_r):
+	Likewise.
+	* nscd/gethstbyad_r.c (gethostbyaddr_r): Likewise.
+	* nscd/nscd_gethst_r.c (__nscd_gethostbyaddr_r): Likewise.
+	* nscd/nscd_proto.h (__nscd_gethostbyaddr_r): Likewise.
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyaddr_r): Likewise.
+	* resolv/gethnamaddr.c (gethostbyname): Likewise.
+	* resolv/netdb.h (struct hostent): Fix type of h_length member.
+	(gethostbyaddr, getipnodebyaddr, gethostbyaddr_r): Fix types of first
+	and second parameter.
+
 	* wcsmbs/mbrtowc.c (__mbrtowc): Set end of buffer correctly if s
 	== NULL.
+
+2000-04-29  Andreas Jaeger  <aj@suse.de>
+
+	* conform/data/arpa/inet.h-data: New file.
 
 2000-04-28  Geoff Clare <gwc@unisoft.com>
 

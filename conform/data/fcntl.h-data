@@ -7,12 +7,18 @@ constant F_SETFL
 constant F_GETLK
 constant F_SETLK
 constant F_SETLKW
+constant F_GETOWN
+constant F_SETOWN
 
 constant FD_CLOEXEC
 
 constant F_RDLCK
 constant F_UNLCK
 constant F_WRLCK
+
+constant SEEK_SET
+constant SEEK_CUR
+constant SEED_END
 
 constant O_CREAT
 constant O_EXCL
@@ -31,6 +37,38 @@ constant O_RDONLY
 constant O_RDWR
 constant O_WRONLY
 
+constant S_IFMT
+constant S_IFBLK
+constant S_IFCHR
+constant S_IFIFO
+constant S_IFREG
+constant S_IFDIR
+constant S_IFLNK
+constant S_IFSOCK
+
+constant S_IRWXU
+constant S_IRUSR
+constant S_IWUSR
+constant S_IXUSR
+constant S_IRWXG
+constant S_IRGRP
+constant S_IWGRP
+constant S_IXGRP
+constant S_IRWXO
+constant S_IROTH
+constant S_IWOTH
+constant S_IXOTH
+constant S_ISUID
+constant S_ISGID
+constant S_ISVTX
+
+constant POSIX_FADV_NORMAL
+constant POSIX_FADV_SEQUENTIAL
+constant POSIX_FADV_RANDOM
+constant POSIX_FADV_WILLNEED
+constant POSIX_FADV_DONTNEED
+constant POSIX_FADV_NOREUSE
+
 type {struct flock}
 
 element {struct flock} short l_type
@@ -46,6 +84,9 @@ type pid_t
 function int creat (const char*, mode_t)
 function int fcntl (int, int, ...)
 function int open (const char*, int, ...)
+function int posix_fadvise (int, off_t, size_t, int)
+function int posix_fallocate (int, off_t, size_t)
+function int posix_madvise (void*, size_t, int)
 
 allow-header sys/stat.h
 allow-header unistd.h

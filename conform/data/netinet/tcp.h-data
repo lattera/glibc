@@ -1,0 +1,3 @@
+#ifndef ISO
+macro TCP_NODELAY
+#endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 
 
 struct hostent *
-getipnodebyaddr (const char *addr, size_t len, int type, int *error_num)
+getipnodebyaddr (const void *addr, socklen_t len, int type, int *error_num)
 {
   size_t buffer_size;
   char *buffer;

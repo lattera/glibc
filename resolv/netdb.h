@@ -107,7 +107,7 @@ struct hostent
   char *h_name;			/* Official name of host.  */
   char **h_aliases;		/* Alias list.  */
   int h_addrtype;		/* Host address type.  */
-  int h_length;			/* Length of address.  */
+  socklen_t h_length;		/* Length of address.  */
   char **h_addr_list;		/* List of addresses from name server.  */
 #define	h_addr	h_addr_list[0]	/* Address, for backward compatibility.  */
 };
@@ -125,7 +125,7 @@ extern struct hostent *gethostent (void) __THROW;
 
 /* Return entry from host data base which address match ADDR with
    length LEN and type TYPE.  */
-extern struct hostent *gethostbyaddr (__const char *__addr, size_t __len,
+extern struct hostent *gethostbyaddr (__const void *__addr, __socklen_t __len,
 				      int __type) __THROW;
 
 /* Return entry from host data base for host with NAME.  */
@@ -141,7 +141,7 @@ extern struct hostent *gethostbyname2 (__const char *__name, int __af) __THROW;
 #ifdef __USE_UNIX98
 /* Return entry from host data base which address match ADDR with
    length LEN and type TYPE in newly allocated buffer.  */
-extern struct hostent *getipnodebyaddr (__const char *__addr, size_t __len,
+extern struct hostent *getipnodebyaddr (__const void *__addr, socklen_t __len,
 					int __type, int *__error_num) __THROW;
 
 /* Return entry from host data base for host with NAME and newly allocated
@@ -172,7 +172,7 @@ extern int gethostent_r (struct hostent *__restrict __result_buf,
 			 struct hostent **__restrict __result,
 			 int *__restrict __h_errnop) __THROW;
 
-extern int gethostbyaddr_r (__const char *__restrict __addr, size_t __len,
+extern int gethostbyaddr_r (__const void *__restrict __addr, __socklen_t __len,
 			    int __type,
 			    struct hostent *__restrict __result_buf,
 			    char *__restrict __buf, size_t __buflen,

@@ -14,6 +14,8 @@ type nlink_t
 type off_t
 type pid_t
 type pthread_attr_t
+type pthread_barrier_t
+type pthread_barrierattr_t
 type pthread_cond_t
 type pthread_condattr_t
 type pthread_key_t
@@ -22,6 +24,7 @@ type pthread_mutexattr_t
 type pthread_once_t
 type pthread_rwlock_t
 type pthread_rwlockattr_t
+type pthread_spinlock_t
 type pthread_t
 type size_t
 type ssize_t

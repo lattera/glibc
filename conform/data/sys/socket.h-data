@@ -1,0 +1,108 @@
+#ifndef ISO
+type socklen_t
+
+type sa_family_t
+
+type {struct sockaddr}
+
+element {struct sockaddr} sa_family_t sa_family
+element {struct sockaddr} char sa_data [0]
+
+type {struct sockaddr_storage}
+
+element {struct sockaddr_storage} sa_family_t ss_family
+
+type {struct msghdr}
+
+element {struct msghdr} {void*} msg_name
+element {struct msghdr} socklen_t msg_namelen
+element {struct msghdr} {struct iovec*} msg_iov
+element {struct msghdr} int msg_iovlen
+element {struct msghdr} {void*} msg_control
+element {struct msghdr} socklen_t msg_controllen
+element {struct msghdr} int msg_flags
+
+type {struct iovec}
+
+element {struct iovec} {void*} iov_base
+element {struct iovec} size_t iov_len
+
+type {struct cmsghdr}
+
+element {struct cmsghdr} socklen_t cmsg_len
+element {struct cmsghdr} int cmsg_level
+element {struct cmsghdr} int cmsg_type
+
+macro SCM_RIGHTS
+
+macro CMSG_DATA
+macro CMSG_NXTHDR
+macro CMSG_FIRSTHDR
+
+type {struct linger}
+
+element {struct linger} int l_onoff
+element {struct linger} int l_linger
+
+macro SOCK_DGRAM
+macro SOCK_STREAM
+macro SOCK_SEQPACKET
+
+macro SOL_SOCKET
+
+macro SO_ACCEPTCONN
+macro SO_BROADCAST
+macro SO_DEBUG
+macro SO_DONTROUTE
+macro SO_ERROR
+macro SO_KEEPALIVE
+macro SO_LINGER
+macro SO_OOBINLINE
+macro SO_RCVBUF
+macro SO_RCVLOWAT
+macro SO_RCVTIMEO
+macro SO_REUSEADDR
+macro SO_SNDBUF
+macro SO_SNDLOWAT
+macro SO_SNFTIMEO
+macro SO_TYPE
+
+macro SOMAXCONN
+
+macro MSG_CTRUNC
+macro MSG_DONTROUTE
+macro MSG_EOR
+macro MSG_OOB
+macro MSG_PEEK
+macro MSG_TRUNC
+macro MSG_WAITALL
+
+macro AF_UNIX
+macro AF_UNSPEC
+macro AF_INET
+macro_AF_INET6
+
+macro SHUT_RD
+macro SHUT_WR
+macro SHUT_RDWR
+
+function int accept (int, struct sockaddr*, socklen_t*)
+function int bind (int, const struct sockaddr*, socklen_t)
+function int connect (int, const struct sockaddr*, socklen_t)
+function int getpeername (int, struct sockaddr*, socklen_t*)
+function int getsockname (int, struct sockaddr*, socklen_t*)
+function int getsockopt (int, int, int, void*, socklen_t)
+function int listen (int, int)
+function ssize_t recv (int, void*, size_t, int)
+function ssize_t recvfrom (int, void*, size_t, int)
+function ssize_t recvmsg (int, struct msghdr*, int)
+function ssize_t send (int, const struct msghdr*, int)
+function ssize_t sendmsg (int, const struct msghdr*, int)
+function ssize_t sendto (int, const void*, size_t, int, const struct sockaddr*, socklen_t)
+function int setsockopt (int, int, int, const void*, socklen_t)
+function int shutdown (int, int)
+function int socket (int, int, int)
+function int socketpair (int, int, int, int)
+
+allow-header sys/uio.h
+#endif

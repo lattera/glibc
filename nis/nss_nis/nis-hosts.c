@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999  Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -359,7 +359,7 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
 }
 
 enum nss_status
-_nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int af,
+_nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
 			  struct hostent *host, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {
@@ -380,7 +380,7 @@ _nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int af,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  buf = inet_ntoa (*(struct in_addr *) addr);
+  buf = inet_ntoa (*(const struct in_addr *) addr);
 
   retval = yperr2nss (yp_match (domain, "hosts.byaddr", buf,
                                 strlen (buf), &result, &len));

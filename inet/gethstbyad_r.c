@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,7 +24,7 @@
 #define LOOKUP_TYPE	struct hostent
 #define FUNCTION_NAME	gethostbyaddr
 #define DATABASE_NAME	hosts
-#define ADD_PARAMS	const char *addr, size_t len, int type
+#define ADD_PARAMS	const void *addr, socklen_t len, int type
 #define ADD_VARIABLES	addr, len, type
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
@@ -32,9 +32,9 @@
 /* If the addr parameter is the IPv6 unspecified address no query must
    be performed.  */
 #define PREPROCESS \
-  if (__builtin_expect (len == sizeof (struct in6_addr)			      \
-			&& memcmp (&in6addr_any, addr,			      \
-				   sizeof (struct in6_addr)) == 0, 0))	      \
+  if (len == sizeof (struct in6_addr)					      \
+      && __builtin_expect (memcmp (&in6addr_any, addr,			      \
+				   sizeof (struct in6_addr)), 1) == 0)	      \
     {									      \
       *h_errnop = HOST_NOT_FOUND;					      \
       *result = NULL;							      \

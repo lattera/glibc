@@ -1,0 +1,60 @@
+#ifndef ISO
+type in_port_t
+type in_addr_t
+
+type {struct hostent}
+
+element {struct hostent} {char*} h_name
+element {struct hostent} {char**} h_aliases
+element {struct hostent} int h_addrtype
+element {struct hostent} int h_length
+element {struct hostent} {char**} h_addr_list
+
+type {struct netent}
+
+element {struct netent} {char*} n_name
+element {struct netent} {char**} n_aliases
+element {struct netent} int n_addrtype
+element {struct netent} uint32_t n_net
+
+type uint32_t
+
+type {struct protoent}
+
+element {struct protoent} {char*} p_name
+element {struct protoent} {char**} p_aliases
+element {struct protoent} int p_proto
+
+type {struct servent}
+
+element {struct servent} {char*} s_name
+element {struct servent} {char**} s_aliases
+element {struct servent} int s_port
+element {struct servent} {char*} s_proto
+
+macro IPPORT_RESERVED
+
+# variable int h_errno
+allow h_errno
+
+macro HOST_NOT_FOUND
+macro NO_DATA
+macro NO_RECOVERY
+macro TRY_AGAIN
+
+macro AI_V4MAPPED
+macro AI_ALL
+macro AI_ADDRCONFIG
+macro AI_DEFAULT
+
+function void endhostent (void)
+function void endnetent (void)
+function void endprotoent (void)
+function void endservent (void)
+function void freehostent (struct hostent*)
+function {struct hostent*} gethostbyaddr (const void*, socklen_t, int)
+function {struct hostent*} gethostbyname (const char*)
+function {struct hostent*} gethostent (void)
+function {struct hostent*} getipnodebyaddr (const void*, socklen_t, int, int*)
+
+#endif

@@ -1,0 +1,8 @@
+#ifndef ISO
+type {struct sockaddr_un}
+
+element {struct sockaddr_un} sa_family_t sun_family
+element {struct sockaddr_un} char sun_path [0]
+
+type sa_family_t
+#endif
