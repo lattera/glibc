@@ -28,7 +28,7 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    gettimeofday settimeofday adjtime tzset	 \
 	    tzfile getitimer setitimer			 \
 	    stime dysize timegm ftime			 \
-	    strptime getdate				 \
+	    getdate strptime strptime_l			 \
 	    strftime wcsftime strftime_l wcsftime_l
 distribute := datemsk
 

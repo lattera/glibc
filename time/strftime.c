@@ -302,6 +302,25 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #endif
 
 
+#if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
+/* We use this code also for the extended locale handling where the
+   function gets as an additional argument the locale which has to be
+   used.  To access the values we have to redefine the _NL_CURRENT
+   macro.  */
+# define strftime		__strftime_l
+# define wcsftime		__wcsftime_l
+# undef _NL_CURRENT
+# define _NL_CURRENT(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM , loc
+# define LOCALE_ARG , loc
+# define LOCALE_PARAM_DECL __locale_t loc;
+#else
+# define LOCALE_PARAM
+# define LOCALE_ARG
+# define LOCALE_PARAM_DECL
+#endif
+
 #ifdef COMPILE_WIDE
 # define TOUPPER(Ch) towupper (Ch)
 # define TOLOWER(Ch) towlower (Ch)
@@ -466,13 +485,18 @@ static CHAR_T const month_name[][10] =
    anywhere, so to determine how many characters would be
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 size_t
-my_strftime (s, maxsize, format, tp ut_argument)
+my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
       CHAR_T *s;
       size_t maxsize;
       const CHAR_T *format;
       const struct tm *tp;
       ut_argument_spec
+      LOCALE_PARAM_DECL
 {
+#if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
+  const struct locale_data *const current = loc->__locales[LC_TIME];
+#endif
+
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
   /* We cannot make the following values variables since we must delay
@@ -807,9 +831,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  {
 	    CHAR_T *old_start = p;
 	    size_t len = my_strftime (NULL, (size_t) -1, subfmt,
-				      tp ut_argument);
+				      tp ut_argument LOCALE_ARG);
 	    add (len, my_strftime (p, maxsize - i, subfmt,
-				   tp ut_argument));
+				   tp ut_argument LOCALE_ARG));
 
 	    if (to_uppcase)
 	      while (old_start < p)

@@ -128,7 +128,8 @@ localtime_r (t, tp)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
-   && (rp = strptime_internal (rp, (new_fmt), tm, decided, era_cnt)) != NULL)
+   && (rp = strptime_internal (rp, (new_fmt), tm,			      \
+			       decided, era_cnt LOCALE_ARG)) != NULL)
 
 
 #ifdef _LIBC
@@ -185,6 +186,27 @@ const unsigned short int __mon_yday[2][13] =
   };
 #endif
 
+#if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
+/* We use this code also for the extended locale handling where the
+   function gets as an additional argument the locale which has to be
+   used.  To access the values we have to redefine the _NL_CURRENT
+   macro.  */
+# define strptime		__strptime_l
+# undef _NL_CURRENT
+# define _NL_CURRENT(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM , locale
+# define LOCALE_ARG , locale
+# define LOCALE_PARAM_PROTO , __locale_t locale
+# define LOCALE_PARAM_DECL __locale_t locale;
+#else
+# define LOCALE_PARAM
+# define LOCALE_ARG
+# define LOCALE_PARAM_DECL
+# define LOCALE_PARAM_PROTO
+#endif
+
+
 /* Status of lookup: do we use the locale data or the raw data?  */
 enum locale_status { not, loc, raw };
 
@@ -222,24 +244,31 @@ day_of_the_year (struct tm *tm)
 		 + (tm->tm_mday - 1));
 }
 
-static char *
-#ifdef _LIBC
-internal_function
-#endif
-strptime_internal __P ((const char *rp, const char *fmt, struct tm *tm,
-			enum locale_status *decided, int era_cnt));
 
 static char *
 #ifdef _LIBC
 internal_function
 #endif
-strptime_internal (rp, fmt, tm, decided, era_cnt)
+strptime_internal __P ((const char *rp, const char *fmt, struct tm *tm,
+			enum locale_status *decided, int era_cnt
+			LOCALE_PARAM_PROTO));
+
+static char *
+#ifdef _LIBC
+internal_function
+#endif
+strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
      const char *rp;
      const char *fmt;
      struct tm *tm;
      enum locale_status *decided;
      int era_cnt;
+     LOCALE_PARAM_DECL
 {
+#if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
+  const struct locale_data *const current = locale->__locales[LC_TIME];
+#endif
+
   const char *rp_backup;
   int cnt;
   size_t val;
@@ -1023,10 +1052,11 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 
 
 char *
-strptime (buf, format, tm)
+strptime (buf, format, tm LOCALE_PARAM)
      const char *buf;
      const char *format;
      struct tm *tm;
+     LOCALE_PARAM_DECL
 {
   enum locale_status decided;
 
@@ -1035,8 +1065,8 @@ strptime (buf, format, tm)
 #else
   decided = raw;
 #endif
-  return strptime_internal (buf, format, tm, &decided, -1);
+  return strptime_internal (buf, format, tm, &decided, -1 LOCALE_ARG);
 }
-#ifdef _LIBC
+#if defined _LIBC && !defined USE_IN_EXTENDED_LOCALE_MODEL
 libc_hidden_def (strptime)
 #endif

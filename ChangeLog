@@ -1,6 +1,10 @@
 2002-08-27  Roland McGrath  <roland@redhat.com>
 
+	* time/strptime.c [USE_IN_EXTENDED_LOCALE_MODEL]: Define __strptime_l
+	instead, taking an extra __locale_t argument.
+	* time/Makefile (routines): Add strptime_l.
 	* time/time.h (__strptime_l, strptime_l): Declare them.
+	* time/strptime_l.c: New file.
 
 	* time/time.h (__strftime_l, strftime_l): Declare them.
 	* wcsmbs/wchar.h (__wcsftime_l, wcsftime_l): Declare them.
@@ -9,6 +13,8 @@
 	* time/Makefile (routines): Add strftime_l, wcsftime_l.
 	* time/Versions (libc: GLIBC_2.3): Add __strftime_l, __wcsftime_l,
 	strftime_l, wcsftime_l.
+	* time/strftime.c [USE_IN_EXTENDED_LOCALE_MODEL]: Define __strftime_l
+	or __wcsftime_l instead, taking an extra __locale_t argument.
 
 	* locale/Versions (libc: GLIBC_PRIVATE): Move __uselocale to ...
 	(libc: GLIBC_2.3): ... here.
