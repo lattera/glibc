@@ -1,5 +1,8 @@
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Prepend REG_ to enum
+	values and macros for register names.
+
 	* libio/iofopncook.c (_IO_cookie_seek): Return error only if value
 	returned by seek cookie function is -1.
 
