@@ -12,7 +12,7 @@
 
 2001-01-14  Thorsten Kukuk <kukuk@suse.de>
 
-	* sunrpc/xdr.c (xdr_long, xdr_u_long): Fix comments about this
+	* sunrpc/xdr.c (xdr_long, xdr_u_long): Fix comments about these
 	functions.
 
 2001-01-03  Jakub Jelinek  <jakub@redhat.com>
