@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -615,9 +615,9 @@ parser_finalize (struct parser *parser,
 	       group++)
 	    if (group->args_processed == 0)
 	      err = group_parse (group, &parser->state, ARGP_KEY_NO_ARGS, 0);
-	  for (group = parser->groups;
-	       group < parser->egroup && (!err || err==EBADKEY);
-	       group++)
+	  for (group = parser->egroup - 1;
+	       group >= parser->groups && (!err || err==EBADKEY);
+	       group--)
 	    err = group_parse (group, &parser->state, ARGP_KEY_END, 0);
 
 	  if (err == EBADKEY)

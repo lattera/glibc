@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 
 #include "nss_hesiod.h"
 
@@ -165,7 +166,8 @@ internal_gid_from_group (void *context, const char *groupname, gid_t *group)
 
 enum nss_status
 _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
-			    long int *size, gid_t **groupsp, int *errnop)
+			    long int *size, gid_t **groupsp, long int limit,
+			    int *errnop)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
   char **list = NULL;
@@ -191,11 +193,22 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
 	{
 	  /* Need a bigger buffer.  */
 	  gid_t *newgroups;
-	  newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+	  long int newsize;
+
+	  if (limit > 0 && *size == limit)
+	    /* We reached the maximum.  */
+	    goto done;
+
+	  if (limit <= 0)
+	    newsize = 2 * *size;
+	  else
+	    newsize = MIN (limit, 2 * *size);
+
+	  newgroups = realloc (groups, newsize * sizeof (*groups));
 	  if (newgroups == NULL)
 	    goto done;
 	  *groupsp = groups = newgroups;
-	  *size *= 2;
+	  *size = newsize;
 	}
 
       groups[(*start)++] = group;
@@ -232,11 +245,22 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
 		{
 		  /* Need a bigger buffer.  */
 		  gid_t *newgroups;
-		  newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+		  long int newsize;
+
+		  if (limit > 0 && *size == limit)
+		    /* We reached the maximum.  */
+		    goto done;
+
+		  if (limit <= 0)
+		    newsize = 2 * *size;
+		  else
+		    newsize = MIN (limit, 2 * *size);
+
+		  newgroups = realloc (groups, newsize * sizeof (*groups));
 		  if (newgroups == NULL)
 		    goto done;
 		  *groupsp = groups = newgroups;
-		  *size *= 2;
+		  *size = newsize;
 		}
 
 	      groups[(*start)++] = group;

@@ -49,7 +49,7 @@ extern service_user *__nss_group_database;
 
 static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
-	     long int *size, gid_t **groupsp, int *errnop)
+	     long int *size, gid_t **groupsp, long int limit, int *errnop)
 {
   struct group grpbuf;
   size_t buflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
@@ -102,11 +102,22 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
                   {
                     /* Need a bigger buffer.  */
 		    gid_t *newgroups;
-                    newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+		    long int newsize;
+
+		    if (limit > 0 && *size == limit)
+		      /* We reached the maximum.  */
+		      goto done;
+
+		    if (limit <= 0)
+		      newsize = 2 * *size;
+		    else
+		      newsize = MIN (limit, 2 * *size);
+
+                    newgroups = realloc (groups, newsize * sizeof (*groups));
                     if (newgroups == NULL)
                       goto done;
 		    *groupsp = groups = newgroups;
-                    *size *= 2;
+                    *size = newsize;
                   }
 
                 groups[*start] = grpbuf.gr_gid;
@@ -147,10 +158,12 @@ initgroups (user, group)
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
   long int size;
+  long int limit;
   gid_t *groups;
   int result;
 #ifdef NGROUPS_MAX
   size = NGROUPS_MAX;
+  limit = -1;
 #else
   long int limit = __sysconf (_SC_NGROUPS_MAX);
 
@@ -184,14 +197,14 @@ initgroups (user, group)
       if (fct == NULL)
 	{
 	  status = compat_call (nip, user, group, &start, &size, &groups,
-				&errno);
+				limit, &errno);
 
 	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
 	    break;
 	}
       else
 	status = DL_CALL_FCT (fct, (user, group, &start, &size, &groups,
-				    &errno));
+				    limit, &errno));
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)

@@ -1,5 +1,14 @@
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/endian.h: Explain the _*_ENDIAN constant values a bit
+	more.  Patch by scarlet@mit.edu [PR libc/1799].
+
+	* io/ftwtest-sh: Add -f parameter to chmod if -R is also given.
+	[PR libc/1792].
+
+	* argp/argp-parse.c (parser_finalize): Reverse order in which
+	parsers are run for ARGP_KEY_END.  [PR libc/1755].
+
 	* grp/initgroups.c (initgroups): Don't limit the possible number
 	of groups to NGROUPS_MAX.  Allow dynamic resizing.  Loop around
 	the setgroups call while the call fails and descrease the number

@@ -28,10 +28,10 @@ tmpdir=$tmp/ftwtest.d
 
 [ -f ${objpfx}elf/ld.so ] && ldso=${objpfx}elf/ld.so
 
-trap 'chmod -R a+x $tmpdir; rm -fr $tmpdir $testout' 1 2 3 15
+trap 'chmod -fR a+x $tmpdir; rm -fr $tmpdir $testout' 1 2 3 15
 
 if test -d $tmpdir; then
-  chmod -R a+x $tmpdir
+  chmod -fR a+x $tmpdir
   rm -fr $tmpdir
 fi
 mkdir $tmpdir
@@ -112,7 +112,7 @@ EOF
 rm $testout
 
 # For the next test everything must be readable.
-chmod -R a+x $tmpdir
+chmod -fR a+x $tmpdir
 
 LD_LIBRARY_PATH=$objpfx $ldso $testprogram --chdir $tmpdir |
     sort > $testout

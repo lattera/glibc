@@ -495,7 +495,9 @@ case ARGP_KEY_ARGS:
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_END
-There are no more command line arguments at all.
+There are no more command line arguments at all.  The parser functions
+are called in different order (means children first) for this value
+which allows each parser to clean up its state for the parent.
 
 @comment argp.h
 @comment GNU

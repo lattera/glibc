@@ -48,28 +48,11 @@ work anymore.  Porting the library is not hard.  If you are interested
 in doing a port, please contact the glibc maintainers by sending
 electronic mail to <bug-glibc@gnu.org>.
 
-The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
-provides the Unix `crypt' function, plus some other entry points.
-Because of the United States export restriction on DES
-implementations, we are distributing this code separately from the
-rest of the C library.  There is an extra distribution tar file just
-for crypt; it is called `glibc-crypt-2.1.91.tar.gz'.  You can just
-unpack the crypt distribution along with the rest of the C library and
-build; you can also build the library without getting crypt.  Users
-outside the USA can get the crypt distribution via anonymous FTP from
-ftp.gwdg.de [134.76.11.100] in the directory pub/linux/glibc, or
-another archive site outside the USA.  Archive maintainers are
-encouraged to copy this distribution to their archives outside the
-USA.  Please get it from ftp.gwdg.de; transferring this distribution
-from ftp.gnu.org (or any other site in the USA) to a site outside the
-USA is in violation of US export laws.
-
-Beside the separate crypt tar file there are some more add-ons which can be
-used together with GNU libc.  They are designed in a way to ease the
-installation by integrating them in the libc source tree.  Simply get the
-add-ons you need and use the --enable-add-ons option of the `configure'
-script to tell where the add-ons are found.  Please read the FAQ file for
-more details.
+There are some add-ons which can be used together with GNU libc.  They
+are designed in a way to ease the installation by integrating them in
+the libc source tree.  Simply get the add-ons you need and use the
+--enable-add-ons option of the `configure' script to tell where the
+add-ons are found.  Please read the FAQ file for more details.
 
 See the file INSTALL to find out how to configure, build, install, and port
 the GNU C library.  You might also consider reading the WWW pages for the

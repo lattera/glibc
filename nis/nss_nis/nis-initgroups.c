@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <sys/param.h>
 
 #include "nss-nis.h"
 
@@ -138,7 +139,8 @@ internal_getgrent_r (struct group *grp, char *buffer, size_t buflen,
 
 enum nss_status
 _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
-			 long int *size, gid_t **groupsp, int *errnop)
+			 long int *size, gid_t **groupsp, long int limit,
+			 int *errnop)
 {
   struct group grpbuf, *g;
   size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
@@ -181,11 +183,22 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
                   {
                     /* Need a bigger buffer.  */
 		    gid_t *newgroups;
-		    newgroups = realloc (groups, 2 * *size * sizeof (*groups));
+		    long int newsize;
+
+		    if (limit > 0 && *size == limit)
+		      /* We reached the maximum.  */
+		      goto done;
+
+		    if (limit <= 0)
+		      newsize = 2 * *size;
+		    else
+		      newsize = MIN (limit, 2 * *size);
+
+		    newgroups = realloc (groups, newsize * sizeof (*groups));
 		    if (newgroups == NULL)
 		      goto done;
 		    *groupsp = groups = newgroups;
-                    *size *= 2;
+                    *size = newsize;
                   }
 
                 groups[*start] = g->gr_gid;
