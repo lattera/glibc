@@ -93,16 +93,24 @@ int sigaction(int sig, const struct sigaction * act,
               struct sigaction * oact)
 {
   struct sigaction newact;
+  struct sigaction *newactp;
 
   if (sig == __pthread_sig_restart || sig == __pthread_sig_cancel)
     return EINVAL;
-  newact = *act;
-  if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL)
-    newact.sa_handler = pthread_sighandler;
-  if (__sigaction(sig, &newact, oact) == -1)
+  if (act)
+    {
+      newact = *act;
+      if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL)
+	newact.sa_handler = pthread_sighandler;
+      newactp = &newact;
+    }
+  else
+    newactp = NULL;
+  if (__sigaction(sig, newactp, oact) == -1)
     return -1;
   if (oact != NULL) oact->sa_handler = sighandler[sig];
-  sighandler[sig] = act->sa_handler;
+  if (act)
+    sighandler[sig] = act->sa_handler;
   return 0;
 }
 
