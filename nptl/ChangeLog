@@ -1,7 +1,5 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* po/tr.po: Update from translation team.
-
 	* sysdeps/unix/sysv/linux/libc_pthread_init.c
 	(__pthread_child_handler): Renamed from pthread_child_handler,
 	exported, and marked hidden.  Change all users.
