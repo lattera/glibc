@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/netinet/in.h: Make IPPROTO_ constants also macros.
+
 	* conform/conformtest.pl: Implement optional-type.
 
 	* resolv/netdb.h: Include <netinet/in.h> not <sys/socket.h>.  Include
