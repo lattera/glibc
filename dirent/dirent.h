@@ -73,9 +73,9 @@ enum
 #endif
 
 
-/* Get the system-dependent definition of `DIR',
-   the data type of directory stream objects.  */
-#include <dirstream.h>
+/* This is the data type of directory stream objects.
+   The actual structure is opaque to users.  */
+typedef struct __dirstream DIR;
 
 /* Open a directory stream on NAME.
    Return a DIR stream on the directory, or NULL if it could not be opened.  */

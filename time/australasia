@@ -1,4 +1,4 @@
-# @(#)australasia	7.21
+# @(#)australasia	7.22
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -111,7 +111,8 @@ Rule	AN	1973	1985	-	Mar	Sun>=1	3:00	0	-
 Rule	AN	1986	1989	-	Mar	Sun>=15	3:00	0	-
 Rule	AN	1986	only	-	Oct	19	2:00	1:00	-
 Rule	AN	1987	max	-	Oct	lastSun	2:00	1:00	-
-Rule	AN	1990	max	-	Mar	Sun>=1	3:00	0	-
+Rule	AN	1990	1995	-	Mar	Sun>=1	3:00	0	-
+Rule	AN	1996	max	-	Mar	lastSun	3:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Sydney	10:04:52 -	LMT	1895 Feb
 			10:00	-	EST	1917 Jan 1 0:01
@@ -700,6 +701,10 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # From Arthur David Olson (March 8, 1992):
 # Sources differ on whether DST ended March 6 or March 20 in 1988;
 # March 20 (the "confirmed" date) is in the chosen rules.
+
+# From Bradley White (1995-05-20):
+# Prem Bob Carr announced NSW will fall into line with other E states
+# and SA and continue daylight savings to the last Sun in Mar.
 
 # Yancowinna
 

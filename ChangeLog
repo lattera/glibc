@@ -1,3 +1,12 @@
+Tue Aug 29 12:35:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* time/australasia: Updated data from ADO.
+
+Mon Aug 28 17:47:11 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* dirent/dirent.h: Don't include <dirstream.h>.
+	Instead, define DIR as typedef for (undefined) `struct __dirstream'.
+
 Fri Aug 25 12:12:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dirstream.h: Define `struct __dirstream'
