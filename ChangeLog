@@ -1,3 +1,10 @@
+2000-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/clnt_gen.c (clnt_create): Don't set timeout with
+	clnt_control for any protocol.  This would make it impossible for
+	the user to provide one in clnt_call().
+	Reported by Hitoshi Guutara Maruyama <maruyama@sh.rim.or.jp>.
+
 2000-10-31  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/ia64/fpu/s_isinfl.S: New file,  - assembly based

@@ -69,9 +69,14 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
       client = clntunix_create (&sun, prog, vers, &sock, 0, 0);
       if (client == NULL)
 	return NULL;
+#if 0
+      /* This is not wanted.  This would disable the user from having
+	 a timeout in the clnt_call() call.  Only a call to cnlt_control()
+	 by the user should set the timeout value.  */
       tv.tv_sec = 25;
       tv.tv_usec = 0;
       clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+#endif
       return client;
     }
 
@@ -134,8 +139,13 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 	{
 	  return NULL;
 	}
+#if 0
+      /* This is not wanted.  This would disable the user from having
+	 a timeout in the clnt_call() call.  Only a call to cnlt_control()
+	 by the user should set the timeout value.  */
       tv.tv_sec = 25;
       clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+#endif
       break;
     case IPPROTO_TCP:
       client = clnttcp_create (&sin, prog, vers, &sock, 0, 0);
@@ -143,9 +153,14 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 	{
 	  return NULL;
 	}
+#if 0
+      /* This is not wanted.  This would disable the user from having
+	 a timeout in the clnt_call() call.  Only a call to cnlt_control()
+	 by the user should set the timeout value.  */
       tv.tv_sec = 25;
       tv.tv_usec = 0;
       clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+#endif
       break;
     default:
       rpc_createerr.cf_stat = RPC_SYSTEMERROR;
