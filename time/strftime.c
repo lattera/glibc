@@ -568,7 +568,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	case L_('%'):
 	  break;
 
-	case L_('\a'): case L_('\b'): case L_('\t'): case L_('\n'):
+	case L_('\b'): case L_('\t'): case L_('\n'):
 	case L_('\v'): case L_('\f'): case L_('\r'):
 	case L_(' '): case L_('!'): case L_('"'): case L_('#'): case L_('&'):
 	case L_('\''): case L_('('): case L_(')'): case L_('*'): case L_('+'):
