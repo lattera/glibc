@@ -70,7 +70,7 @@ hash_entry;
 /* Prototypes for local functions.  */
 static void insert_entry_2 (hash_table *htab, const void *key, size_t keylen,
 			    unsigned long hval, size_t idx, void *data);
-static size_t lookup (hash_table *htab, const void *key, size_t keylen,
+static size_t lookup (const hash_table *htab, const void *key, size_t keylen,
 		      unsigned long int hval);
 static unsigned long compute_hashval (const void *key, size_t keylen);
 static int is_prime (unsigned long int candidate);
@@ -188,7 +188,7 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
 
 int
 find_entry (htab, key, keylen, result)
-     hash_table *htab;
+     const hash_table *htab;
      const void *key;
      size_t keylen;
      void **result;
@@ -224,7 +224,7 @@ set_entry (htab, key, keylen, newval)
 
 int
 iterate_table (htab, ptr, key, keylen, data)
-     hash_table *htab;
+     const hash_table *htab;
      void **ptr;
      const void **key;
      size_t *keylen;
@@ -256,7 +256,7 @@ iterate_table (htab, ptr, key, keylen, data)
 
 static size_t
 lookup (htab, key, keylen, hval)
-     hash_table *htab;
+     const hash_table *htab;
      const void *key;
      size_t keylen;
      unsigned long int hval;
