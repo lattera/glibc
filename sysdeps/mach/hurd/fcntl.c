@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -139,6 +139,7 @@ DEFUN(__fcntl, (fd, cmd), int fd AND int cmd DOTS)
       err = HURD_FD_PORT_USE (d, __io_set_all_openmodes (port,
 							 va_arg (ap, int)));
       result = err ? __hurd_dfail (fd, err) : 0;
+      break;
 
     case F_GETOWN:		/* Get owner.  */
       if (err = HURD_FD_PORT_USE (d, __io_get_owner (port, &result)))
