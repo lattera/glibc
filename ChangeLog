@@ -1,3 +1,7 @@
+2002-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/zh_CN.po: New file.
+
 2002-09-23  Roland McGrath  <roland@redhat.com>
 
 	* catgets/open_catalog.c (__open_catalog): Don't use a value type

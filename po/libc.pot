@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.91\n"
-"POT-Creation-Date: 2002-08-28 12:41-0700\n"
+"Project-Id-Version: libc 2.2.94\n"
+"POT-Creation-Date: 2002-09-23 22:43-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,13 +158,13 @@ msgid "Resource lost"
 msgstr ""
 
 #: sysdeps/mach/hurd/mips/dl-machine.c:68
-#: string/../sysdeps/mach/_strerror.c:58
+#: string/../sysdeps/mach/_strerror.c:57
 msgid "Error in unknown error system: "
 msgstr ""
 
 #: sysdeps/mach/hurd/mips/dl-machine.c:83
-#: string/../sysdeps/generic/_strerror.c:49
-#: string/../sysdeps/mach/_strerror.c:88
+#: string/../sysdeps/generic/_strerror.c:44
+#: string/../sysdeps/mach/_strerror.c:87
 msgid "Unknown error "
 msgstr ""
 
@@ -178,12 +178,12 @@ msgstr ""
 msgid "cannot read header from `%s'"
 msgstr ""
 
-#: iconv/iconv_charmap.c:159 iconv/iconv_prog.c:255 catgets/gencat.c:288
+#: iconv/iconv_charmap.c:159 iconv/iconv_prog.c:293 catgets/gencat.c:288
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr ""
 
-#: iconv/iconv_charmap.c:177 iconv/iconv_prog.c:273
+#: iconv/iconv_charmap.c:177 iconv/iconv_prog.c:311
 #, c-format
 msgid "error while closing input `%s'"
 msgstr ""
@@ -193,91 +193,106 @@ msgstr ""
 msgid "illegal input sequence at position %Zd"
 msgstr ""
 
-#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:465
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:503
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr ""
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:508
-#: iconv/iconv_prog.c:544
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:546
+#: iconv/iconv_prog.c:582
 msgid "error while reading the input"
 msgstr ""
 
-#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:526
+#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:564
 msgid "unable to allocate buffer for input"
 msgstr ""
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "Input/Output format specification:"
 msgstr ""
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding of original text"
 msgstr ""
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "encoding for output"
 msgstr ""
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "Information:"
 msgstr ""
 
-#: iconv/iconv_prog.c:64
+#: iconv/iconv_prog.c:65
 msgid "list all known coded character sets"
 msgstr ""
 
-#: iconv/iconv_prog.c:65 locale/programs/localedef.c:128
+#: iconv/iconv_prog.c:66 locale/programs/localedef.c:128
 msgid "Output control:"
 msgstr ""
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "omit invalid characters from output"
 msgstr ""
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "output file"
 msgstr ""
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "suppress warnings"
 msgstr ""
 
-#: iconv/iconv_prog.c:69
+#: iconv/iconv_prog.c:70
 msgid "print progress information"
 msgstr ""
 
-#: iconv/iconv_prog.c:74
+#: iconv/iconv_prog.c:75
 msgid "Convert encoding of given files from one encoding to another."
 msgstr ""
 
-#: iconv/iconv_prog.c:78
+#: iconv/iconv_prog.c:79
 msgid "[FILE...]"
 msgstr ""
 
-#: iconv/iconv_prog.c:198
+#: iconv/iconv_prog.c:199
 msgid "cannot open output file"
 msgstr ""
 
-#: iconv/iconv_prog.c:220
+#: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversion from `%s' to `%s' not supported"
+msgid "conversions from `%s' and to `%s' are not supported"
 msgstr ""
 
-#: iconv/iconv_prog.c:225
+#: iconv/iconv_prog.c:246
+#, c-format
+msgid "conversion from `%s' is not supported"
+msgstr ""
+
+#: iconv/iconv_prog.c:253
+#, c-format
+msgid "conversion to `%s' is not supported"
+msgstr ""
+
+#: iconv/iconv_prog.c:257
+#, c-format
+msgid "conversion from `%s' to `%s' is not supported"
+msgstr ""
+
+#: iconv/iconv_prog.c:263
 msgid "failed to start conversion processing"
 msgstr ""
 
-#: iconv/iconv_prog.c:320
+#: iconv/iconv_prog.c:358
 msgid "error while closing output file"
 msgstr ""
 
-#: iconv/iconv_prog.c:369 iconv/iconvconfig.c:355 locale/programs/locale.c:268
+#: iconv/iconv_prog.c:407 iconv/iconvconfig.c:355 locale/programs/locale.c:268
 #: locale/programs/localedef.c:372 catgets/gencat.c:233
 #: malloc/memusagestat.c:602 debug/pcprofiledump.c:199
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr ""
 
-#: iconv/iconv_prog.c:383 iconv/iconvconfig.c:369 locale/programs/locale.c:281
+#: iconv/iconv_prog.c:421 iconv/iconvconfig.c:369 locale/programs/locale.c:281
 #: locale/programs/localedef.c:386 catgets/gencat.c:246 posix/getconf.c:904
 #: nss/getent.c:74 nscd/nscd.c:279 nscd/nscd_nischeck.c:90 elf/ldconfig.c:259
 #: elf/sprof.c:349
@@ -288,7 +303,7 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 
-#: iconv/iconv_prog.c:388 iconv/iconvconfig.c:374 locale/programs/locale.c:286
+#: iconv/iconv_prog.c:426 iconv/iconvconfig.c:374 locale/programs/locale.c:286
 #: locale/programs/localedef.c:391 catgets/gencat.c:251 posix/getconf.c:909
 #: nss/getent.c:79 nscd/nscd.c:284 nscd/nscd_nischeck.c:95 elf/ldconfig.c:264
 #: elf/sprof.c:355
@@ -296,25 +311,25 @@ msgstr ""
 msgid "Written by %s.\n"
 msgstr ""
 
-#: iconv/iconv_prog.c:418 iconv/iconv_prog.c:444
+#: iconv/iconv_prog.c:456 iconv/iconv_prog.c:482
 msgid "conversion stopped due to problem in writing the output"
 msgstr ""
 
-#: iconv/iconv_prog.c:461
+#: iconv/iconv_prog.c:499
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr ""
 
-#: iconv/iconv_prog.c:469
+#: iconv/iconv_prog.c:507
 msgid "internal error (illegal descriptor)"
 msgstr ""
 
-#: iconv/iconv_prog.c:472
+#: iconv/iconv_prog.c:510
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr ""
 
-#: iconv/iconv_prog.c:715
+#: iconv/iconv_prog.c:753
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -1767,7 +1782,7 @@ msgstr ""
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr ""
 
-#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:173
+#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:178
 #: nis/nis_error.c:29 nis/ypclnt.c:787 nis/ypclnt.c:861
 msgid "Success"
 msgstr ""
@@ -3507,71 +3522,71 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/regcomp.c:176
+#: posix/regcomp.c:181
 msgid "No match"
 msgstr ""
 
-#: posix/regcomp.c:179
+#: posix/regcomp.c:184
 msgid "Invalid regular expression"
 msgstr ""
 
-#: posix/regcomp.c:182
+#: posix/regcomp.c:187
 msgid "Invalid collation character"
 msgstr ""
 
-#: posix/regcomp.c:185
+#: posix/regcomp.c:190
 msgid "Invalid character class name"
 msgstr ""
 
-#: posix/regcomp.c:188
+#: posix/regcomp.c:193
 msgid "Trailing backslash"
 msgstr ""
 
-#: posix/regcomp.c:191
+#: posix/regcomp.c:196
 msgid "Invalid back reference"
 msgstr ""
 
-#: posix/regcomp.c:194
+#: posix/regcomp.c:199
 msgid "Unmatched [ or [^"
 msgstr ""
 
-#: posix/regcomp.c:197
+#: posix/regcomp.c:202
 msgid "Unmatched ( or \\("
 msgstr ""
 
-#: posix/regcomp.c:200
+#: posix/regcomp.c:205
 msgid "Unmatched \\{"
 msgstr ""
 
-#: posix/regcomp.c:203
+#: posix/regcomp.c:208
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
-#: posix/regcomp.c:206
+#: posix/regcomp.c:211
 msgid "Invalid range end"
 msgstr ""
 
-#: posix/regcomp.c:209
+#: posix/regcomp.c:214
 msgid "Memory exhausted"
 msgstr ""
 
-#: posix/regcomp.c:212
+#: posix/regcomp.c:217
 msgid "Invalid preceding regular expression"
 msgstr ""
 
-#: posix/regcomp.c:215
+#: posix/regcomp.c:220
 msgid "Premature end of regular expression"
 msgstr ""
 
-#: posix/regcomp.c:218
+#: posix/regcomp.c:223
 msgid "Regular expression too big"
 msgstr ""
 
-#: posix/regcomp.c:221
+#: posix/regcomp.c:226
 msgid "Unmatched ) or \\)"
 msgstr ""
 
-#: posix/regcomp.c:666
+#: posix/regcomp.c:670
 msgid "No previous regular expression"
 msgstr ""
 
@@ -5279,7 +5294,7 @@ msgstr ""
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr ""
 
-#: elf/../sysdeps/generic/readelflib.c:110
+#: elf/../sysdeps/generic/readelflib.c:109
 msgid "more than one dynamic segment\n"
 msgstr ""
 
@@ -5292,57 +5307,57 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: elf/cache.c:107
+#: elf/cache.c:105
 msgid "Unknown OS"
 msgstr ""
 
-#: elf/cache.c:111
+#: elf/cache.c:110
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ""
 
-#: elf/cache.c:137 elf/ldconfig.c:1033
+#: elf/cache.c:136 elf/ldconfig.c:1033
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr ""
 
-#: elf/cache.c:149
+#: elf/cache.c:148
 msgid "mmap of cache file failed.\n"
 msgstr ""
 
-#: elf/cache.c:153 elf/cache.c:163
+#: elf/cache.c:152 elf/cache.c:162
 msgid "File is not a cache file.\n"
 msgstr ""
 
-#: elf/cache.c:196 elf/cache.c:206
+#: elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr ""
 
-#: elf/cache.c:393
+#: elf/cache.c:392
 #, c-format
 msgid "Can't remove old temporary cache file %s"
 msgstr ""
 
-#: elf/cache.c:400
+#: elf/cache.c:399
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr ""
 
-#: elf/cache.c:408 elf/cache.c:417 elf/cache.c:421
+#: elf/cache.c:407 elf/cache.c:416 elf/cache.c:420
 msgid "Writing of cache data failed"
 msgstr ""
 
-#: elf/cache.c:425
+#: elf/cache.c:424
 msgid "Writing of cache data failed."
 msgstr ""
 
-#: elf/cache.c:432
+#: elf/cache.c:431
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr ""
 
-#: elf/cache.c:437
+#: elf/cache.c:436
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr ""
@@ -5740,7 +5755,7 @@ msgstr ""
 msgid "Cannot mmap file %s.\n"
 msgstr ""
 
-#: elf/readlib.c:155
+#: elf/readlib.c:158
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr ""
