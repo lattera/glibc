@@ -1,5 +1,7 @@
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/isomac.c: Add va_copy to allowed macros.
+
 	* po/pl.po: Updated.
 
 1999-09-17  Andreas Schwab  <schwab@suse.de>

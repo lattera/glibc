@@ -1,5 +1,5 @@
 /* Check system header files for ISO 9899:1990 (ISO C) compliance.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jens Schweikhardt <schweikh@noc.dfn.de>, 1996.
 
@@ -156,7 +156,7 @@ static char *macros[] =
   "strtol", "strtoul", "strxfrm", "swprintf", "swscanf", "system",
   "tan", "tanf", "tanh", "tanhf", "tanhl", "tanl", "time", "time_t",
   "tmpfile", "tmpnam", "tolower", "toupper", "towctrans", "towlower",
-  "towupper", "ungetc", "ungetwc", "va_arg", "va_end", "va_start",
+  "towupper", "ungetc", "ungetwc", "va_arg", "va_copy", "va_end", "va_start",
   "vfprintf", "vfwprintf", "vprintf", "vsprintf", "vswprintf",
   "vwprintf", "wchar_t", "wcrtomb", "wcscat", "wcschr", "wcscmp",
   "wcscoll", "wcscpy", "wcscspn", "wcsftime", "wcslen", "wcsncat",
