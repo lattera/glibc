@@ -29,6 +29,8 @@ extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
 
+int __libc_multiple_libcs = 1;
+
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
 

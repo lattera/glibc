@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
 
+int __libc_multiple_libcs = 1;
 
 static void
 init (int *data)

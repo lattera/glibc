@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <unistd.h>
 
+int __libc_multiple_libcs = 1;
+
 extern void __libc_init (int, char **, char **);
 
 #ifdef PIC
