@@ -1,7 +1,12 @@
+1999-10-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Remove entries caused by +-0
+	problems.
+
 1999-10-25  Thorsten Kukuk  <kukuk@suse.de>
 
-	* md5-crypt/md5.h: Remove prototypes for public interface. md5 is
-	used only internal.
+	* md5-crypt/md5.h: Remove prototypes for public interface.  md5 is
+	only used internally.
 	* md5-crypt/md5-crypt.c: Use internal names for md5 functions,
 	remove weak alias for public names.
 	* md5-crypt/md5.c: Remove weak aliase.

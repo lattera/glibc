@@ -12,10 +12,6 @@ ildouble: 1147
 ldouble: 1147
 
 # asinh
-Test "asinh (-0) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "asinh (0.7) == 0.652666566082355786":
 ildouble: 656
 ldouble: 656
@@ -34,10 +30,6 @@ ildouble: 549
 ldouble: 549
 
 # atanh
-Test "atanh (-0) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "atanh (0.7) == 0.8673005276940531944":
 double: 1
 idouble: 1
@@ -553,10 +545,6 @@ ildouble: 462
 ldouble: 462
 
 # expm1
-Test "expm1 (-0) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "expm1 (0.7) == 1.0137527074704765216":
 ildouble: 825
 ldouble: 825
@@ -747,27 +735,7 @@ ifloat: 1
 ildouble: 1688
 ldouble: 1688
 
-# nexttoward
-Test "nexttoward (-0, 0) == 0":
-double: 0
-idouble: 0
-Test "nexttoward (0, -0) == -0":
-double: 0
-idouble: 0
-
 # pow
-Test "pow (-0, 1) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
-Test "pow (-0, 11) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
-Test "pow (-0, 27) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "pow (0.7, 1.2) == 0.65180494056638638188":
 ildouble: 725
 ldouble: 725
@@ -807,10 +775,6 @@ ildouble: 0.25
 ldouble: 0.25
 
 # sinh
-Test "sinh (-0) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "sinh (0.7) == 0.75858370183953350346":
 float: 1
 ifloat: 1
@@ -834,10 +798,6 @@ double: 0.5
 idouble: 0.5
 
 # tanh
-Test "tanh (-0) == -0":
-idouble: 0
-ifloat: 0
-ildouble: 0
 Test "tanh (0.7) == 0.60436777711716349631":
 ildouble: 521
 ldouble: 521
