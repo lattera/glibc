@@ -1,3 +1,8 @@
+2001-06-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/getsockopt.c: Fix handling of returned buffer size.
+	From Robert Bihlmeyer <robbe@orcus.priv.at>.
+
 2001-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ko.po: Update from translation team.
