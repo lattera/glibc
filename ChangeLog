@@ -1,3 +1,7 @@
+Mon Jul 13 10:28:28 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/dl-envvars.h: New file.
+
 1998-07-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Make-dist (+sysdep-tsrcs): Add Versions.
