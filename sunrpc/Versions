@@ -110,6 +110,7 @@ libc {
     svc_getreq_common; svc_getreq_poll; svc_max_pollfd; svc_pollfd;
   }
   GLIBC_2.2.3 {
-    __rpc_thread_destroy;
+    __rpc_thread_destroy; __rpc_thread_svc_fdset; __rpc_thread_createerr;
+    __rpc_thread_svc_pollfd; __rpc_thread_svc_max_pollfd;
   }
 }

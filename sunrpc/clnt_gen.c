@@ -87,7 +87,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 	 || h == NULL)
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       {
-	rpc_createerr.cf_stat = RPC_UNKNOWNHOST;
+	get_rpc_createerr().cf_stat = RPC_UNKNOWNHOST;
 	return NULL;
       }
     else
@@ -102,8 +102,9 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
       /*
        * Only support INET for now
        */
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = EAFNOSUPPORT;
+      struct rpc_createerr *ce = &get_rpc_createerr ();
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = EAFNOSUPPORT;
       return NULL;
     }
   sin.sin_family = h->h_addrtype;
@@ -117,8 +118,9 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 	 || p == NULL)
     if (errno != ERANGE)
       {
-	rpc_createerr.cf_stat = RPC_UNKNOWNPROTO;
-	rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
+	struct rpc_createerr *ce = &get_rpc_createerr ();
+	ce->cf_stat = RPC_UNKNOWNPROTO;
+	ce->cf_error.re_errno = EPFNOSUPPORT;
 	return NULL;
       }
     else
@@ -163,8 +165,11 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 #endif
       break;
     default:
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = EPFNOSUPPORT;
+      {
+	struct rpc_createerr *ce = &get_rpc_createerr ();
+	ce->cf_stat = RPC_SYSTEMERROR;
+	ce->cf_error.re_errno = EPFNOSUPPORT;
+      }
       return (NULL);
     }
   return client;

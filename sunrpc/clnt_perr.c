@@ -292,22 +292,24 @@ clnt_spcreateerror (const char *msg)
   char *str = _buf ();
   char *cp;
   int len;
+  struct rpc_createerr *ce;
 
   if (str == NULL)
     return NULL;
+  ce = &get_rpc_createerr ();
   len = sprintf (str, "%s: ", msg);
   cp = str + len;
-  cp = stpcpy (cp, clnt_sperrno (rpc_createerr.cf_stat));
-  switch (rpc_createerr.cf_stat)
+  cp = stpcpy (cp, clnt_sperrno (ce->cf_stat));
+  switch (ce->cf_stat)
     {
     case RPC_PMAPFAILURE:
       cp = stpcpy (stpcpy (cp, " - "),
-		   clnt_sperrno (rpc_createerr.cf_error.re_status));
+		   clnt_sperrno (ce->cf_error.re_status));
       break;
 
     case RPC_SYSTEMERROR:
       cp = stpcpy (stpcpy (cp, " - "),
-		   __strerror_r (rpc_createerr.cf_error.re_errno,
+		   __strerror_r (ce->cf_error.re_errno,
 				 chrbuf, sizeof chrbuf));
       break;
     default:

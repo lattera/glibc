@@ -121,17 +121,19 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
   h = (CLIENT *) mem_alloc (sizeof (*h));
   if (h == NULL)
     {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
       (void) fputs (_("clntunix_create: out of memory\n"), stderr);
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = errno;
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = errno;
       goto fooy;
     }
   /*  ct = (struct ct_data *) mem_alloc (sizeof (*ct)); */
   if (ct == NULL)
     {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
       (void) fputs (_("clntunix_create: out of memory\n"), stderr);
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = errno;
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = errno;
       goto fooy;
     }
 
@@ -145,8 +147,9 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
       if (*sockp < 0
 	  || __connect (*sockp, (struct sockaddr *) raddr, len) < 0)
 	{
-	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-	  rpc_createerr.cf_error.re_errno = errno;
+	  struct rpc_createerr *ce = &get_rpc_createerr ();
+	  ce->cf_stat = RPC_SYSTEMERROR;
+	  ce->cf_error.re_errno = errno;
 	  if (*sockp != -1)
 	    __close (*sockp);
 	  goto fooy;

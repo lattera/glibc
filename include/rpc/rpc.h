@@ -48,14 +48,6 @@ extern void __rpc_thread_destroy (void);
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
 
-/*
- * Global variables
- */
-#define svc_fdset RPC_THREAD_VARIABLE(svc_fdset_s)
-#define rpc_createerr RPC_THREAD_VARIABLE(rpc_createerr_s)
-#define svc_pollfd RPC_THREAD_VARIABLE(svc_pollfd_s)
-#define svc_max_pollfd RPC_THREAD_VARIABLE(svc_max_pollfd_s)
-
 #endif /* _RPC_THREAD_SAFE_ */
 
 #endif

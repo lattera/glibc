@@ -67,4 +67,28 @@
 /* routines for parsing /etc/rpc */
 #include <rpc/netdb.h>		/* structures and routines to parse /etc/rpc */
 
+
+/* Global variables, protected for multi-threaded applications.  */
+extern fd_set *__rpc_thread_svc_fdset (void) __attribute__ ((__const__));
+#define svc_fdset (*__rpc_thread_svc_fdset ())
+
+extern struct rpc_createerr *__rpc_thread_createerr (void)
+     __attribute__ ((__const__));
+#define get_rpc_createerr() (*__rpc_thread_createerr ())
+/* The people who "engineered" RPC should bee punished for naming the
+   data structure and the variable the same.  We cannot always define the
+   macro 'rpc_createerr' because this would prevent people from defining
+   object of type 'struct rpc_createerr'.  So we leave it up to the user
+   to select transparent replacement also of this variable.  */
+#ifdef _RPC_MT_VARS
+# define rpc_createerr (*__rpc_thread_createerr ())
+#endif
+
+extern struct pollfd **__rpc_thread_svc_pollfd (void)
+     __attribute__ ((__const__));
+#define svc_pollfd (*__rpc_thread_svc_pollfd ())
+
+extern int *__rpc_thread_svc_max_pollfd (void) __attribute__ ((__const__));
+#define svc_max_pollfd (*__rpc_thread_svc_max_pollfd ())
+
 #endif /* rpc/rpc.h */

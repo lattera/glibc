@@ -1,5 +1,30 @@
 2001-03-25  Ulrich Drepper  <drepper@redhat.com>
 
+	Add changes which were in this form in the original patch by
+	Eric Norum <eric.norum@usask.ca>.
+	* include/rpc/rpc.h: Remove svc_fdset, rpc_createerr, svc_pollfd, and
+	svc_max_pollfd.
+	* sunrpc/rpc/rpc.h: Declare __rpc_thread_svc_fdset,
+	__rpc_thread_createerr, __rpc_thread_svc_pollfd, and
+	__rpc_thread_svc_max_pollfd.
+	Define svc_fdset, get_rpc_createerr, svc_pollfd, and
+	svc_max_pollfd.
+	* sunrpc/rpc_thread.c: Handle first thread special, it uses the
+	global variables.
+	Define __rpc_thread_svc_fdset, __rpc_thread_createerr,
+	__rpc_thread_svc_pollfd, and __rpc_thread_svc_max_pollfd.
+	* sunrpc/Versions [libc] (GLIBC_2.2.3): Export  __rpc_thread_svc_fdset,
+	__rpc_thread_createerr, __rpc_thread_svc_pollfd, and
+	__rpc_thread_svc_max_pollfd.
+	* sunrpc/clnt_gen.c: Replace use of rpc_createerr by call to
+	get_rpc_createerr.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): getgroups32
 	syscall checks for negative n so don't test here as well.
 

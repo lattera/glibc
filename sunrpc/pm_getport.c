@@ -70,6 +70,7 @@ pmap_getport (address, program, version, protocol)
 	      PMAPVERS, timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client != (CLIENT *) NULL)
     {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
       parms.pm_prog = program;
       parms.pm_vers = version;
       parms.pm_prot = protocol;
@@ -78,12 +79,12 @@ pmap_getport (address, program, version, protocol)
 		     (caddr_t)&parms, (xdrproc_t)xdr_u_short,
 		     (caddr_t)&port, tottimeout) != RPC_SUCCESS)
 	{
-	  rpc_createerr.cf_stat = RPC_PMAPFAILURE;
-	  clnt_geterr (client, &rpc_createerr.cf_error);
+	  ce->cf_stat = RPC_PMAPFAILURE;
+	  clnt_geterr (client, &ce->cf_error);
 	}
       else if (port == 0)
 	{
-	  rpc_createerr.cf_stat = RPC_PROGNOTREGISTERED;
+	  ce->cf_stat = RPC_PROGNOTREGISTERED;
 	}
       CLNT_DESTROY (client);
     }

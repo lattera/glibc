@@ -128,9 +128,10 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   cl = (CLIENT *) mem_alloc (sizeof (CLIENT));
   if (cl == NULL)
     {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
       (void) fprintf (stderr, _("clntudp_create: out of memory\n"));
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = errno;
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = errno;
       goto fooy;
     }
   sendsz = ((sendsz + 3) / 4) * 4;
@@ -138,9 +139,10 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
   cu = (struct cu_data *) mem_alloc (sizeof (*cu) + sendsz + recvsz);
   if (cu == NULL)
     {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
       (void) fprintf (stderr, _("clntudp_create: out of memory\n"));
-      rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-      rpc_createerr.cf_error.re_errno = errno;
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = errno;
       goto fooy;
     }
   cu->cu_outbuf = &cu->cu_inbuf[recvsz];
@@ -183,8 +185,9 @@ clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
       *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
       if (*sockp < 0)
 	{
-	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
-	  rpc_createerr.cf_error.re_errno = errno;
+	  struct rpc_createerr *ce = &get_rpc_createerr ();
+	  ce->cf_stat = RPC_SYSTEMERROR;
+	  ce->cf_error.re_errno = errno;
 	  goto fooy;
 	}
       /* attempt to bind to prov port */
