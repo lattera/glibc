@@ -58,3 +58,5 @@ __getpw (uid, buf)
   return 0;
 }
 weak_alias (__getpw, getpw)
+
+link_warning (getpw, "the `getpw' function is dangerous and should not be used.")
