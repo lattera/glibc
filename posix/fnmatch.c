@@ -191,6 +191,7 @@ __wcschrnul (s, c)
 # endif
 # define STRCHR(S, C)	strchr (S, C)
 # define STRCHRNUL(S, C) __strchrnul (S, C)
+# define STRCOLL(S1, S2) strcoll (S1, S2)
 # include "fnmatch_loop.c"
 
 
@@ -208,6 +209,7 @@ __wcschrnul (s, c)
 #  define BTOWC(C)	(C)
 #  define STRCHR(S, C)	wcschr (S, C)
 #  define STRCHRNUL(S, C) __wcschrnul (S, C)
+# define STRCOLL(S1, S2) wcscoll (S1, S2)
 
 #  undef IS_CHAR_CLASS
 #  ifdef _LIBC

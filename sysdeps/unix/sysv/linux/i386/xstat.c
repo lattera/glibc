@@ -28,6 +28,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include "kernel-features.h"
 
 #include <xstatconv.c>
 
@@ -54,10 +55,14 @@ __xstat (int vers, const char *name, struct stat *buf)
       return INLINE_SYSCALL (stat, 2, name, (struct kernel_stat *) buf);
     }
 #if __ASSUME_STAT64_SYSCALL > 0
-  result = INLINE_SYSCALL (stat64, 2, name, &buf64);
-  if (result == 0)
-    result = xstat32_conv (vers, &buf64, buf);
-  return result;
+  {
+    struct stat64 buf64;
+
+    result = INLINE_SYSCALL (stat64, 2, name, &buf64);
+    if (result == 0)
+      result = xstat32_conv (vers, &buf64, buf);
+    return result;
+  }
 #else
 # if defined __NR_stat64
   /* To support 32 bit UIDs, we have to use stat64.  The normal stat call only returns

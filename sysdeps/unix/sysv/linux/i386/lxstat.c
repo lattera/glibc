@@ -28,6 +28,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include "kernel-features.h"
 
 #include <xstatconv.c>
 
@@ -55,10 +56,14 @@ __lxstat (int vers, const char *name, struct stat *buf)
     }
 
 #if __ASSUME_STAT64_SYSCALL > 0
-  result = INLINE_SYSCALL (lstat64, 2, name, &buf64);
-  if (result == 0)
-    result = xstat32_conv (vers, &buf64, buf);
-  return result;
+  {
+    struct stat64 buf64;
+
+    result = INLINE_SYSCALL (lstat64, 2, name, &buf64);
+    if (result == 0)
+      result = xstat32_conv (vers, &buf64, buf);
+    return result;
+  }
 #else
 
 # if defined __NR_stat64

@@ -346,5 +346,6 @@ FCT (pattern, string, no_leading_period, flags)
 #undef FCT
 #undef STRCHR
 #undef STRCHRNUL
+#undef STRCOLL
 #undef L
 #undef BTOWC

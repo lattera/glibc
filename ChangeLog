@@ -1,4 +1,19 @@
+2000-01-25  Andreas Schwab  <schwab@suse.de>
+
+	* posix/testfnm.c: Add new test case.  Use FNM_PATHNAME instead of
+	FNM_FILE_NAME consistently.
+
 2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/fnmatch.c: Define STRCOLL appropriately for the loop
+	definition.
+	* posix/fnmatch_loop.c: Undefine STRCOLL.
+
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Correct code to handle
+	kernels with stat64 support.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+	Patch by SL Baur <steve@xemacs.org>.
 
 	* string/strxfrm.c: Don't count in the terminating NUL byte/word.
 
