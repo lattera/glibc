@@ -68,7 +68,7 @@ inhibit-glue = yes
 # Tell sysdeps/posix/Makefile that we create stdio_lim.h differently.
 inhibit-stdio_lim = yes
 
-$(common-objpfx)stdio_%.h $(common-objpfx)stdio_%.d: \
+$(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: \
  $(..)sysdeps/unix/sysv/linux/stdio_%.h.in
 	rm -f $(@:.h=.d) $(@:.d=.h)-t
 	echo '#include <linux/limits.h>' | \
@@ -88,6 +88,6 @@ $(common-objpfx)stdio_%.h $(common-objpfx)stdio_%.d: \
 	rm -f $(@:.d=.h)-t
 ifndef no_deps
 # Get the list of dependencies (probably /usr/include/linux/limits.h).
--include $(common-objpfx)stdio_lim.d
+-include $(common-objpfx)bits/stdio_lim.d
 endif
-common-generated += stdio_lim.h stdio_lim.d
+common-generated += bits/stdio_lim.h bits/stdio_lim.d

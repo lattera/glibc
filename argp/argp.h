@@ -29,16 +29,16 @@
 #include <errno.h>
 
 #ifndef __const
-#define __const const
+# define __const const
 #endif
 
 #ifndef __error_t_defined
 typedef int error_t;
-#define __error_t_defined
+# define __error_t_defined
 #endif
 
 #ifndef __P
-# if (defined (__STDC__) && __STDC__) || defined (__cplusplus)
+# if (defined __STDC__ && __STDC__) || defined __cplusplus
 #  define __P(args)	args
 # else
 #  define __P(args)	()
@@ -510,16 +510,16 @@ extern void *__argp_input __P ((__const struct argp *argp,
 
 #ifdef __OPTIMIZE__
 
-#if !_LIBC
-# define __argp_usage argp_usage
-# define __argp_state_help argp_state_help
-# define __option_is_short _option_is_short
-# define __option_is_end _option_is_end
-#endif
+# if !_LIBC
+#  define __argp_usage argp_usage
+#  define __argp_state_help argp_state_help
+#  define __option_is_short _option_is_short
+#  define __option_is_end _option_is_end
+# endif
 
-#ifndef ARGP_EI
-# define ARGP_EI extern inline
-#endif
+# ifndef ARGP_EI
+#  define ARGP_EI extern inline
+# endif
 
 ARGP_EI void
 __argp_usage (__const struct argp_state *__state)
@@ -545,17 +545,16 @@ __option_is_end (__const struct argp_option *__opt)
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
 }
 
-#if !_LIBC
-# undef __argp_usage
-# undef __argp_state_help
-# undef __option_is_short
-# undef __option_is_end
-#endif
-#endif /* argp.h */
+# if !_LIBC
+#  undef __argp_usage
+#  undef __argp_state_help
+#  undef __option_is_short
+#  undef __option_is_end
+# endif
 #endif /* __OPTIMIZE__ */
 
 #ifdef  __cplusplus
 }
 #endif
 
-#endif /* __ARGP_H__ */
+#endif /* argp.h */

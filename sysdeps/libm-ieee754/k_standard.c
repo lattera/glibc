@@ -826,10 +826,7 @@ static double zero = 0.0;	/* used as const */
 		exc.type = OVERFLOW;
 		exc.name = type < 100 ? "gamma" : (type < 200
 						   ? "gammaf" : "gammal");
-                if (_LIB_VERSION == _SVID_)
-                  exc.retval = HUGE;
-                else
-                  exc.retval = HUGE_VAL;
+		exc.retval = HUGE_VAL;
                 if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
                 else if (!matherr(&exc)) {
@@ -843,10 +840,7 @@ static double zero = 0.0;	/* used as const */
 		exc.type = SING;
 		exc.name = type < 100 ? "gamma" : (type < 200
 						   ? "gammaf" : "gammal");
-                if (_LIB_VERSION == _SVID_)
-                  exc.retval = HUGE;
-                else
-                  exc.retval = NAN;
+		exc.retval = HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {

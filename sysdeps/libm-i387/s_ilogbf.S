@@ -14,6 +14,7 @@ ENTRY(__ilogbf)
 	fstpl	%st
 
 	fistpl	(%esp)
+	fwait
 	popl	%eax
 
 	ret

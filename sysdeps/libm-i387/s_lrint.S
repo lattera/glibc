@@ -26,6 +26,7 @@ ENTRY(__lrint)
 	fldt	4(%esp)
 	subl	$4, %esp
 	fistpl	(%esp)
+	fwait
 	popl	%eax
 	ret
 END(__lrint)

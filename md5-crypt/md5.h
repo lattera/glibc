@@ -72,9 +72,9 @@ typedef u_int32_t md5_uint32;
 
 #undef __P
 #if defined (__STDC__) && __STDC__
-#define	__P(x) x
+# define __P(x) x
 #else
-#define	__P(x) ()
+# define __P(x) ()
 #endif
 
 /* Structure to save state of computation between the single steps.  */
@@ -143,7 +143,6 @@ extern void *md5_read_ctx __P ((const struct md5_ctx *ctx, void *resbuf));
    resulting message digest number will be written into the 16 bytes
    beginning at RESBLOCK.  */
 extern int __md5_stream __P ((FILE *stream, void *resblock));
-#endif /* md5.h */
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
    result is always in little endian byte order, so that a byte-wise
@@ -154,4 +153,4 @@ extern void *__md5_buffer __P ((const char *buffer, size_t len,
 extern void *md5_buffer __P ((const char *buffer, size_t len,
 			      void *resblock));
 
-#endif
+#endif /* md5.h */

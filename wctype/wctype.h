@@ -25,7 +25,7 @@
 #define _WCTYPE_H	1
 
 #include <features.h>
-#include <gnu/types.h>
+#include <bits/types.h>
 
 __BEGIN_DECLS
 

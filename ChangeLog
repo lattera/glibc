@@ -1,3 +1,20 @@
+1997-06-21 17:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp.h: Remove extra #endif.  Pretty print.
+	* md5-crypt/md5.h: Likewise.
+
+	* ctype/ctype.h: Don't use <gnu/types.h> but <bits/types.h>.
+	* wctype/wctype.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile: Build stdio_lim.h in correct
+	directory.
+
+	* sysdeps/libm-i387/s_ilogb.S: Add fwait to ensure we get the result.
+	* sysdeps/libm-i387/s_ilogbf.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbl.S: Likewise.
+	* sysdeps/libm-i387/s_lrint.S: Likewise.
+	* sysdeps/libm-i387/s_llrint.S: Likewise.
+
 1997-06-21 02:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* config.h.in: Add DO_STATIC_NSS.
@@ -166,21 +183,13 @@
 	* xlocale.h: Likewise.
 	* xopen_lim.h: Likewise.
 
-	* linuxthreads/sysdeps/alpha/semaphorebits.h: -> .../bits/semaphore.h.
-	* linuxthreads/sysdeps/powerpc/semaphorebits.h: Likewise.
-	* linuxthreads/sysdeps/pthread/cmpxchg/semaphorebits.h: Likewise.
-	* linuxthreads/sysdeps/pthread/no-cmpxchg/semaphorebits.h: Likewise.
-	* linuxthreads/sysdeps/pthread/libc-lock.h: -> bits/
 	* sysdeps/mach/libc-lock.h: Likewise.
 	* sysdeps/stub/libc-lock.h: Likewise.
-	* linuxthreads/sysdeps/pthread/stdio-lock.h: Likewise.
-	* linuxthreads/sysdeps/unix/sysv/linux/local_lim.h: Likewise.
 	* sysdeps/mach/hurd/local_lim.h: Likewise.
 	* sysdeps/stub/local_lim.h: Likewise.
 	* sysdeps/unix/sysv/linux/local_lim.h: Likewise.
 	* sysdeps/unix/sysv/local_lim.h: Likewise.
 	* sysdeps/unix/sysv/sco3.2/local_lim.h: Likewise.
-	* linuxthreads/sysdeps/unix/sysv/linux/posix_opt.h: Likewise.
 	* sysdeps/mach/hurd/posix_opt.h: Likewise.
 	* sysdeps/stub/posix_opt.h: Likewise.
 	* sysdeps/unix/bsd/posix_opt.h: Likewise.
@@ -405,8 +414,6 @@
 	* io/sys/stat.h: Likewise.
 	* io/sys/statfs.h: Likewise.
 	* io/utime.h: Likewise.
-	* linuxthreads/semaphore.h: Likewise.
-	* linuxthreads/sysdeps/pthread/pthread.h: Likewise.
 	* locale/locale.h: Likewise.
 	* login/pty.h: Likewise.
 	* login/utmp.h: Likewise.
@@ -490,8 +497,6 @@
 	* libio/libio.h: Likewise.
 	* libio/libioP.h: Likewise.
 	* libio/stdio.h: Likewise.
-	* linuxthreads/lockfile.c: Likewise.
-	* linuxthreads/semaphore.h: Likewise.
 	* locale/duplocale.c: Likewise.
 	* locale/freelocale.c: Likewise.
 	* locale/lc-time.c: Likewise.
@@ -642,8 +647,6 @@
 	* dirent/Makefile: Likewise.
 	* elf/Makefile: Likewise.
 	* io/Makefile: Likewise.
-	* linuxthreads/Makefile: Likewise.
-	* linuxthreads/sysdeps/pthread/Makefile: Likewise.
 	* login/Makefile: Likewise.
 	* math/Makefile: Likewise.
 	* misc/Makefile: Likewise.
@@ -4825,8 +4828,6 @@
 	* sysdeps/unix/sparc/sysdep.h: Update copyright.
 
 1997-03-19 15:13  Miguel de Icaza  <miguel@nuclecu.unam.mx>
-
-	* linuxthreads/sysdeps/sparc/pt-machine (RELEASE): Fix.
 
 	* stdlib/tst-strtol.c: Save the value of errno, printf may modify
 	it.
