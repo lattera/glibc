@@ -209,7 +209,7 @@
 #define LOAD_ARGS_c_5(r10, r11, r12, r13, mof) \
 	LOAD_ARGS_c_4(r10, r11, r12, r13)
 #define LOAD_ARGS_asm_5(r10, r11, r12, r13, mof) \
-	LOAD_ARGS_asm_4 (r10, r11, r12, r13) "move %5,$mof\n\t"
+	LOAD_ARGS_asm_4 (r10, r11, r12, r13) "move %6,$mof\n\t"
 #define ASM_CLOBBER_5 ASM_CLOBBER_4
 #define ASM_ARGS_5(r10, r11, r12, r13, mof) \
 	ASM_ARGS_4 (r10, r11, r12, r13), "g" (mof)
@@ -218,7 +218,7 @@
 	LOAD_ARGS_c_5(r10, r11, r12, r13, mof)
 #define LOAD_ARGS_asm_6(r10, r11, r12, r13, mof, srp)		\
 	LOAD_ARGS_asm_5(r10, r11, r12, r13, mof)		\
-	"move %6,$srp\n\t"
+	"move %7,$srp\n\t"
 #define ASM_CLOBBER_6 ASM_CLOBBER_5, "srp"
 #define ASM_ARGS_6(r10, r11, r12, r13, mof, srp) \
 	ASM_ARGS_5 (r10, r11, r12, r13, mof), "g" (srp)
