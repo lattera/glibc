@@ -23,6 +23,7 @@
 #include <fcntl.h>
 #include "stdio-common/_itoa.h"
 #include <hurd/term.h>
+#include <hurd/paths.h>
 
 
 /* Translate the error from dir_lookup into the error the user sees.  */
@@ -197,9 +198,24 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  struct stat st;
 		  err = __io_stat (*result, &st);
 		  if (!err
-		      && st.st_uid != 0
 		      && (st.st_mode & (S_IPTRANS|S_IATRANS)))
-		    err = ENOENT;
+		    {
+		      if (st.st_uid != 0)
+			err = ENOENT;
+		      else if (st.st_mode & S_IPTRANS)
+			{
+			  char buf[1024];
+			  char *trans = buf;
+			  size_t translen = sizeof buf;
+			  err = __file_get_translator (*result,
+						       &trans, &translen);
+			  if (!err
+			      && translen > sizeof _HURD_SYMLINK
+			      && !memcmp (trans,
+					  _HURD_SYMLINK, sizeof _HURD_SYMLINK))
+			    err = ENOENT;
+			}
+		    }
 		}
 
 	      /* We got a successful translation.  Now apply any open-time
