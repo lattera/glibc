@@ -17,6 +17,13 @@
 	* malloc/memusage.sh: Likewise.
 	* malloc/mtrace.pl: Likewise.
 
+2004-01-01  Petter Reinholdtsen  <pere@hungry.com>
+
+	* stdlib/strfmon.c: Make formatting of left-justified currency
+	values match the the POSIX standard.  When using format string
+	"[%-14#5.4n]" to print -123.45, the result should be
+	"[-$   123.4500 ]", not "[-$123.4500    ]".
+
 2004-01-01  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/Makefile (generated): New.
