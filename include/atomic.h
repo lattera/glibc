@@ -50,7 +50,7 @@
 
 #ifndef atomic_compare_and_exchange_bool_acq
 # ifdef __arch_compare_and_exchange_bool_32_acq
-#  define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+#  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
   ({ __typeof (__arch_compare_and_exchange_bool_32_acq (mem, 0, 0)) __result; \
      if (sizeof (*mem) == 1)						      \
        __result = __arch_compare_and_exchange_bool_8_acq (mem, newval,	      \
