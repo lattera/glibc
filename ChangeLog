@@ -1,7 +1,7 @@
 1999-06-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/printf-parse.h (parse_one_spec): Don't set
-	is_longlong is not necessary.
+	is_longlong if not necessary.
 
 1999-06-15  H.J. Lu  <hjl@gnu.org>
 
