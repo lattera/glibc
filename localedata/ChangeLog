@@ -1,3 +1,7 @@
+1999-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/de_DE: Correct syntax of multi-character weights.
+
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* tests/test6.c: New file.

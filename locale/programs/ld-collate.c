@@ -54,6 +54,16 @@ struct section_list
   enum coll_sort_rule *rules;
 };
 
+struct element_t;
+
+struct element_list_t
+{
+  /* Number of elements.  */
+  int cnt;
+
+  struct element_t **w;
+};
+
 /* Data type for collating element.  */
 struct element_t
 {
@@ -61,7 +71,7 @@ struct element_t
   const uint32_t *wcs;
   int order;
 
-  struct element_t **weights;
+  struct element_list_t *weights;
 
   /* Where does the definition come from.  */
   const char *file;
@@ -158,15 +168,18 @@ make_seclist_elem (struct locale_collate_t *collate, const char *string,
 
 static struct element_t *
 new_element (struct locale_collate_t *collate, const char *mbs,
-	     const uint32_t *wcs)
+	     size_t len, const uint32_t *wcs)
 {
   struct element_t *newp;
 
   newp = (struct element_t *) obstack_alloc (&collate->mempool,
 					     sizeof (*newp));
-  newp->mbs = mbs;
+  newp->mbs = obstack_copy0 (&collate->mempool, mbs, len);
   newp->wcs = wcs;
   newp->order = 0;
+
+  /* Will be allocated later.  */
+  newp->weights = NULL;
 
   newp->file = NULL;
   newp->line = 0;
@@ -404,6 +417,223 @@ read_directions (struct linereader *ldfile, struct token *arg,
 }
 
 
+static struct element_t *
+find_element (struct linereader *ldfile, struct locale_collate_t *collate,
+	      const char *str, size_t len, uint32_t *wcstr)
+{
+  struct element_t *result = NULL;
+
+  /* Search for the entries among the collation sequences already define.  */
+  if (find_entry (&collate->seq_table, str, len, (void **) &result) != 0)
+    {
+      /* Nope, not define yet.  So we see whether it is a
+         collation symbol.  */
+      void *ptr;
+
+      if (find_entry (&collate->sym_table, str, len, &ptr) == 0)
+	{
+	  /* It's a collation symbol.  */
+	  struct symbol_t *sym = (struct symbol_t *) ptr;
+	  result = sym->order;
+
+	  if (result == NULL)
+	    result = sym->order = new_element (collate, str, len, NULL);
+	}
+      else if (find_entry (&collate->elem_table, str, len,
+			   (void **) &result) != 0)
+	{
+	  /* It's also no collation element.  So it is an element defined
+	     later.  */
+	  result = new_element (collate, str, len, wcstr);
+	  if (result != NULL)
+	    /* Insert it into the sequence table.  */
+	    insert_entry (&collate->seq_table, str, len, result);
+	}
+    }
+
+  return result;
+}
+
+
+static void
+insert_weights (struct linereader *ldfile, struct element_t *elem,
+		struct charmap_t *charmap, struct repertoire_t *repertoire,
+		struct locale_collate_t *collate)
+{
+  int weight_cnt;
+  struct token *arg;
+
+  /* Initialize all the fields.  */
+  elem->file = ldfile->fname;
+  elem->line = ldfile->lineno;
+  elem->last = collate->cursor;
+  elem->next = collate->cursor ? collate->cursor->next : NULL;
+  elem->weights = (struct element_list_t *)
+    obstack_alloc (&collate->mempool, nrules * sizeof (struct element_list_t));
+  memset (elem->weights, '\0', nrules * sizeof (struct element_list_t));
+
+  if (collate->current_section->first == NULL)
+    collate->current_section->first = elem;
+  if (collate->current_section->last == collate->cursor)
+    collate->current_section->last = elem;
+
+  collate->cursor = elem;
+
+  weight_cnt = 0;
+
+  arg = lr_token (ldfile, charmap, repertoire);
+  do
+    {
+      if (arg->tok == tok_eof || arg->tok == tok_eol)
+	break;
+
+      if (arg->tok == tok_ignore)
+	{
+	  /* The weight for this level has to be ignored.  We use the
+	     null pointer to indicate this.  */
+	  elem->weights[weight_cnt].w = (struct element_t **)
+	    obstack_alloc (&collate->mempool, sizeof (struct element_t *));
+	  elem->weights[weight_cnt].w[0] = NULL;
+	  elem->weights[weight_cnt].cnt = 0;
+	}
+      else if (arg->tok == tok_bsymbol)
+	{
+	  struct element_t *val = find_element (ldfile, collate,
+						arg->val.str.startmb,
+						arg->val.str.lenmb,
+						arg->val.str.startwc);
+
+	  if (val == NULL)
+	    break;
+
+	  elem->weights[weight_cnt].w = (struct element_t **)
+	    obstack_alloc (&collate->mempool, sizeof (struct element_t *));
+	  elem->weights[weight_cnt].w[0] = val;
+	  elem->weights[weight_cnt].cnt = 1;
+	}
+      else if (arg->tok == tok_string)
+	{
+	  /* Split the string up in the individual characters and put
+	     the element definitions in the list.  */
+	  const char *cp = arg->val.str.startmb;
+	  int cnt = 0;
+	  struct element_t *charelem;
+	  void *base = obstack_base (&collate->mempool);
+
+	  if (*cp == '\0')
+	    {
+	      lr_error (ldfile, _("%s: empty weight string not allowed"),
+			"LC_COLLATE");
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  do
+	    {
+	      if (*cp == '<')
+		{
+		  /* Ahh, it's a bsymbol.  That's what we want.  */
+		  const char *startp = cp;
+
+		  while (*++cp != '>')
+		    {
+		      if (*cp == ldfile->escape_char)
+			++cp;
+		      if (*cp == '\0')
+			{
+			  /* It's a syntax error.  */
+			  obstack_free (&collate->mempool, base);
+			  goto syntax;
+			}
+		    }
+
+		    charelem = find_element (ldfile, collate, startp,
+					     cp - startp, NULL);
+		    ++cp;
+		}
+	      else
+		{
+		  /* People really shouldn't use characters directly in
+		     the string.  Especially since it's not really clear
+		     what this means.  We interpret all characters in the
+		     string as if that would be bsymbols.  Otherwise we
+		     would have to match back to bsymbols somehow and this
+		     is also not what people normally expect.  */
+		  charelem = find_element (ldfile, collate, cp++, 1, NULL);
+		}
+
+	      if (charelem == NULL)
+		{
+		  /* We ignore the rest of the line.  */
+		  lr_ignore_rest (ldfile, 0);
+		  break;
+		}
+
+	      /* Add the pointer.  */
+	      obstack_ptr_grow (&collate->mempool, charelem);
+	      ++cnt;
+	    }
+	  while (*cp != '\0');
+
+	  /* Now store the information.  */
+	  elem->weights[weight_cnt].w = (struct element_t **)
+	    obstack_finish (&collate->mempool);
+	  elem->weights[weight_cnt].cnt = cnt;
+
+	  /* We don't need the string anymore.  */
+	  free (arg->val.str.startmb);
+	}
+      else
+	{
+	syntax:
+	  /* It's a syntax error.  */
+	  lr_error (ldfile, _("%s: syntax error"), "LC_COLLATE");
+	  lr_ignore_rest (ldfile, 0);
+	  break;
+	}
+
+      arg = lr_token (ldfile, charmap, repertoire);
+      /* This better should be the end of the line or a semicolon.  */
+      if (arg->tok == tok_semicolon)
+	/* OK, ignore this and read the next token.  */
+	arg = lr_token (ldfile, charmap, repertoire);
+      else if (arg->tok != tok_eof && arg->tok != tok_eol)
+	{
+	  /* It's a syntax error.  */
+	  lr_error (ldfile, _("%s: syntax error"), "LC_COLLATE");
+	  lr_ignore_rest (ldfile, 0);
+	  break;
+	}
+    }
+  while (++weight_cnt < nrules);
+
+  if (weight_cnt < nrules)
+    {
+      /* This means the rest of the line uses the current element as
+	 the weight.  */
+      do
+	{
+	  elem->weights[weight_cnt].w = (struct element_t **)
+	    obstack_alloc (&collate->mempool, sizeof (struct element_t *));
+	  elem->weights[weight_cnt].w[0] = elem;
+	  elem->weights[weight_cnt].cnt = 1;
+	}
+      while (++weight_cnt < nrules);
+    }
+  else
+    {
+      if (arg->tok == tok_ignore || arg->tok == tok_bsymbol)
+	{
+	  /* Too many rule values.  */
+	  lr_error (ldfile, _("%s: too many values"), "LC_COLLATE");
+	  lr_ignore_rest (ldfile, 0);
+	}
+      else
+	lr_ignore_rest (ldfile, arg->tok != tok_eol && arg->tok != tok_eof);
+    }
+}
+
+
 static void
 insert_value (struct linereader *ldfile, struct token *arg,
 	      struct charmap_t *charmap, struct repertoire_t *repertoire,
@@ -413,7 +643,6 @@ insert_value (struct linereader *ldfile, struct token *arg,
   struct charseq *seq;
   uint32_t wc;
   struct element_t *elem = NULL;
-  int weight_cnt;
 
   /* First determine the wide character.  There must be such a value,
      otherwise we ignore it (if it is no collatio symbol or element).  */
@@ -438,23 +667,35 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 	  if (elem == NULL)
 	    elem = sym->order = new_element (collate, arg->val.str.startmb,
+					     arg->val.str.lenmb,
 					     arg->val.str.startwc);
 	}
       else if (find_entry (&collate->elem_table, arg->val.str.startmb,
 			   arg->val.str.lenmb, (void **) &elem) != 0)
-	/* It's also no collation element.  Therefore ignore it.  */
-	return;
+	{
+	  /* It's also no collation element.  Therefore ignore it.  */
+	  lr_ignore_rest (ldfile, 0);
+	  return;
+	}
     }
   else
     {
-      /* Otherwise the symbols stands for an character.  Make sure it is
-	 not already in the table.  */
+      /* Otherwise the symbols stands for a character.  */
+      if (find_entry (&collate->seq_table, arg->val.str.startmb,
+		      arg->val.str.lenmb, (void **) &elem) != 0)
+	{
+	  /* We have to allocate an entry.  */
+	  elem = new_element (collate, arg->val.str.startmb,
+			      arg->val.str.lenmb,
+			      arg->val.str.startwc);
 
+	  /* And add it to the table.  */
+	  if (insert_entry (&collate->seq_table, arg->val.str.startmb,
+			    arg->val.str.lenmb, elem) != 0)
+	    /* This cannot happen.  */
+	    abort ();
+	}
     }
-
-  if (elem == NULL)
-    /* XXX HACK HACK HACK */
-    return;
 
   /* Test whether this element is not already in the list.  */
   if (elem->next != NULL || (collate->cursor != NULL
@@ -463,57 +704,11 @@ insert_value (struct linereader *ldfile, struct token *arg,
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
 		arg->val.str.lenmb, arg->val.str.startmb,
 		elem->file, elem->line);
+      lr_ignore_rest (ldfile, 0);
       return;
     }
 
-  /* Initialize all the fields.  */
-  elem->file = ldfile->fname;
-  elem->line = ldfile->lineno;
-  elem->last = collate->cursor;
-  elem->next = collate->cursor ? collate->cursor->next : NULL;
-  elem->weights = (struct element_t **)
-    obstack_alloc (&collate->mempool, nrules * sizeof (struct element_t *));
-  memset (elem->weights, '\0', nrules * sizeof (struct element_t *));
-
-  if (collate->current_section->first == NULL)
-    collate->current_section->first = elem;
-  if (collate->current_section->last == collate->cursor)
-    collate->current_section->last = elem;
-
-  collate->cursor = elem;
-
-  /* Now read the rest of the line.  */
-  ldfile->return_widestr = 1;
-
-  weight_cnt = 0;
-  do
-    {
-      arg = lr_token (ldfile, charmap, repertoire);
-
-      if (arg->tok == tok_eof || arg->tok == tok_eol)
-	{
-	  /* This means the rest of the line uses the current element
-	     as the weight.  */
-	  do
-	    elem->weights[weight_cnt] = elem;
-	  while (++weight_cnt < nrules);
-
-	  return;
-	}
-
-      if (arg->tok == tok_ignore)
-	{
-	  /* The weight for this level has to be ignored.  We use the
-	     null pointer to indicate this.  */
-	}
-      else if (arg->tok == tok_bsymbol)
-	{
-
-	}
-    }
-  while (++weight_cnt < nrules);
-
-  lr_ignore_rest (ldfile, weight_cnt == nrules);
+  insert_weights (ldfile, elem, charmap, repertoire, collate);
 }
 
 
@@ -749,6 +944,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 					symbol, symbol_len,
 					new_element (collate,
 						     arg->val.str.startmb,
+						     arg->val.str.lenmb,
 						     arg->val.str.startwc))
 			  < 0)
 			lr_error (ldfile, _("\
@@ -994,6 +1190,9 @@ error while adding equivalent collating symbol"));
 
 	  /* Now read the direction names.  */
 	  read_directions (ldfile, arg, charmap, repertoire, collate);
+
+	  /* From now be need the strings untranslated.  */
+	  ldfile->translate_strings = 0;
 	  break;
 
 	case tok_order_end:
@@ -1099,7 +1298,21 @@ error while adding equivalent collating symbol"));
 
 	  if (state != 1)
 	    goto err_label;
-	  /* XXX handle UNDEFINED weight */
+
+	  /* See whether UNDEFINED already appeared somewhere.  */
+	  if (collate->undefined.next != NULL
+	      || (collate->cursor != NULL
+		  && collate->undefined.next == collate->cursor))
+	    {
+	      lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
+			9, "UNDEFINED", collate->undefined.file,
+			collate->undefined.line);
+	      lr_ignore_rest (ldfile, 0);
+	    }
+	  else
+	    /* Parse the weights.  */
+	     insert_weights (ldfile, &collate->undefined, charmap,
+			     repertoire, collate);
 	  break;
 
 	case tok_ellipsis3:

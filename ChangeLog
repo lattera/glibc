@@ -1,3 +1,8 @@
+1999-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c: Many changes to implement parsing
+	of collation definition (still not complete).
+
 1999-12-09  Andreas Jaeger  <aj@suse.de>
 
 	* nis/nss_compat/compat-pwd.c (internal_getpwuid_r): Always set
