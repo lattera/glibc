@@ -929,7 +929,7 @@ guess_grouping (unsigned int intdig_max, const char *grouping, wchar_t sepchar)
     return 0;
 
   groups = 0;
-  while (intdig_max > *grouping)
+  while (intdig_max > (unsigned int) *grouping)
     {
       ++groups;
       intdig_max -= *grouping++;
@@ -981,7 +981,7 @@ group_number (char *buf, char *bufend, unsigned int intdig_no,
       else if (*grouping == 0)
 	/* Same grouping repeats.  */
 	--grouping;
-    } while (intdig_no > *grouping);
+    } while (intdig_no > (unsigned int) *grouping);
 
   /* Copy the remaining ungrouped digits.  */
   do

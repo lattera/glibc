@@ -1,5 +1,10 @@
 Mon Mar 13 01:48:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdio/printf_fp.c (group_number): Cast *GROUPING to unsigned int
+ 	to avoid warning.
+	* sysdeps/generic/sigset.h (__SIGSETFN): Cast result of sizeof to
+ 	int to avoid warning.
+
 	Support building several flavors of objects and libraries.
 	* Makerules (libtypes, object-suffixes): New variables.
 	(libtype.*, CFLAGS-*, CPPFLAGS-*): New variables for each object

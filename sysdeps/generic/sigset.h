@@ -57,7 +57,7 @@ typedef unsigned long int __sigset_t;
   _EXTERN_INLINE int							      \
   __##NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
-    if (__sig < 1 || __sig > sizeof (__sigset_t) * 8)			      \
+    if (__sig < 1 || __sig > (int) sizeof (__sigset_t) * 8)		      \
       {									      \
 	extern int raise (int);						      \
 	return raise (-1);						      \
