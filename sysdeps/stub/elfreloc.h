@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +17,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <signal.h>
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   LOADADDR is the load address of the object; INFO is an array indexed
+   by DT_* of the .dynamic section info.  */
 
-/* Run signals handlers on the stack specified by SS (if not NULL).
-   If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-DEFUN(sigaltstack, (ss, oss),
-      CONST struct sigaltstack *ss AND struct sigaltstack *oss)
+static inline void
+elf_machine_rel (Elf32_Addr loadaddr, const Elf32_Word *info,
+		 const Elf32_Rel *reloc, Elf32_Sym *sym)
 {
-  errno = ENOSYS;
-  return -1;
+  abort ();
 }
 
-stub_warning (sigaltstack)
+static inline void
+elf_machine_rela (Elf32_Addr loadaddr, const Elf32_Word *info,
+		  const Elf32_Rela *reloc)
+{
+  abort ();
+}

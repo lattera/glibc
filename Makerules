@@ -610,7 +610,9 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 dist: distinfo $(..)Make-dist 
 	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
 
-dist: $(distribute)
+# Avoid depending on source files found in sysdeps dirs,
+# because the references affect implicit rule selection.
+dist: $(filter-out %.c %.S %.s,$(distribute))
 
 # We used to simply export all these variables, but that frequently made the
 # environment get too large.  Instead, we write all the information into

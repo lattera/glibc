@@ -55,3 +55,5 @@ DEFUN(__fpathconf, (fd, name), int fd AND int name)
 }
 
 weak_alias (__fpathconf, fpathconf)
+
+stub_warning (fpathconf)

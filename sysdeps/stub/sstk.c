@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,3 +27,5 @@ DEFUN(sstk, (increment), int increment)
   errno = ENOSYS;
   return (PTR) -1;
 }
+
+stub_warning (sstk)

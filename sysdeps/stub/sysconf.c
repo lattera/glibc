@@ -67,3 +67,5 @@ DEFUN(__sysconf, (name), int name)
 }
 
 weak_alias (__sysconf, sysconf)
+
+stub_warning (sysconf)

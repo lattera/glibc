@@ -28,3 +28,5 @@ dirfd (dirp)
   errno = ENOSYS;
   return -1;
 }
+
+stub_warning (dirfd)

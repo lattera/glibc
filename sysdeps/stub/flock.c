@@ -31,3 +31,5 @@ DEFUN(__flock, (fd, operation),
 }
 
 weak_alias (__flock, flock)
+
+stub_warning (flock)

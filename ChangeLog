@@ -1,3 +1,62 @@
+Thu Apr 27 01:24:09 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* configure.in: Unless --without-fp, prepend */fpu before each
+ 	machine dir in $mach; don't prepend FPU dirs at end.  If
+ 	--with-elf, prepend MACHINE/elf directories at end; don't insert
+ 	them into $mach.
+
+	* Makerules (dist): Filter out *.[cSs] from $(distribute) in deps.
+
+	* sysdeps/stub/clock.c: Added stub warning.
+	* sysdeps/stub/dirfd.c: Likewise.
+	* sysdeps/stub/exc2signal.c: Likewise.
+	* sysdeps/stub/fdopen.c: Likewise.
+	* sysdeps/stub/flock.c: Likewise.
+	* sysdeps/stub/fpathconf.c: Likewise.
+	* sysdeps/stub/ftruncate.c: Likewise.
+	* sysdeps/stub/gtty.c: Likewise.
+	* sysdeps/stub/isatty.c: Likewise.
+	* sysdeps/stub/killpg.c: Likewise.
+	* sysdeps/stub/madvise.c: Likewise.
+	* sysdeps/stub/mkstemp.c: Likewise.
+	* sysdeps/stub/mktemp.c: Likewise.
+	* sysdeps/stub/mprotect.c: Likewise.
+	* sysdeps/stub/msync.c: Likewise.
+	* sysdeps/stub/pathconf.c: Likewise.
+	* sysdeps/stub/poll.c: Likewise.
+	* sysdeps/stub/raise.c: Likewise.
+	* sysdeps/stub/readv.c: Likewise.
+	* sysdeps/stub/setenv.c: Likewise.
+	* sysdeps/stub/setlogin.c: Likewise.
+	* sysdeps/stub/sigaltstack.c: Likewise.
+	* sysdeps/stub/sigintr.c: Likewise.
+	* sysdeps/stub/sigstack.c: Likewise.
+	* sysdeps/stub/sleep.c: Likewise.
+	* sysdeps/stub/sstk.c: Likewise.
+	* sysdeps/stub/stime.c: Likewise.
+	* sysdeps/stub/stty.c: Likewise.
+	* sysdeps/stub/syscall.c: Likewise.
+	* sysdeps/stub/sysconf.c: Likewise.
+	* sysdeps/stub/truncate.c: Likewise.
+	* sysdeps/stub/ualarm.c: Likewise.
+	* sysdeps/stub/usleep.c: Likewise.
+	* sysdeps/stub/utimes.c: Likewise.
+	* sysdeps/stub/writev.c: Likewise.
+
+	* sysdeps/stub/libc_fatal.c: Remove __NORETURN keyword.
+
+Wed Apr 26 16:06:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/loadlocale.c (_nl_free_locale): Do nothing if DATA is null.
+
+Tue Apr 25 17:17:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): If GLOB_MARK set, stat names to find
+ 	directories and append slashes to them in final pass before
+ 	sorting.
+	(glob_in_dir): If GLOB_MARK set, just allocate the extra char for the
+	slash; never append it here.
+
 Sat Apr 22 14:48:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* mach/Machrules [interface-library]

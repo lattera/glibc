@@ -1,5 +1,5 @@
 /* Translate Mach exception codes into signal numbers.  Stub version.
-Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+
+/* This file must be modified with machine-dependent details.  */
+#error "need to write sysdeps/mach/hurd/MACHINE/exc2signal.c"
 
 /* Translate the Mach exception codes, as received in an `exception_raise' RPC,
    into a signal number and signal subcode.  */

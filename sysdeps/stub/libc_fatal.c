@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 /* Abort with an error message.  */
-__NORETURN
 void
 DEFUN(__libc_fatal, (message), CONST char *message)
 {

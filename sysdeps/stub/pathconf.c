@@ -35,3 +35,5 @@ DEFUN(__pathconf, (path, name), CONST char *path AND int name)
 }
 
 weak_alias (__pathconf, pathconf)
+
+stub_warning (pathconf)

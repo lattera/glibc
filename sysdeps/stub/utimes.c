@@ -38,3 +38,5 @@ DEFUN(__utimes, (file, tvp),
 }
 
 weak_alias (__utimes, utimes)
+
+stub_warning (utimes)

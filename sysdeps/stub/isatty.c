@@ -29,3 +29,5 @@ DEFUN(__isatty, (fd), int fd)
 }
 
 weak_alias (__isatty, isatty)
+
+stub_warning (isatty)
