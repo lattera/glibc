@@ -1,3 +1,7 @@
+2004-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/signal.h: Define __sigemptyset.
+
 2004-04-27  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.h (struct re_dfastate_t): Make

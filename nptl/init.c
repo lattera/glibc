@@ -262,7 +262,7 @@ __pthread_initialize_minimal_internal (void)
   struct sigaction sa;
   sa.sa_sigaction = sigcancel_handler;
   sa.sa_flags = SA_SIGINFO;
-  sigemptyset (&sa.sa_mask);
+  __sigemptyset (&sa.sa_mask);
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
 

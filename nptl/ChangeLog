@@ -1,3 +1,7 @@
+2004-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Use __sigemptyset.
+
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/tls.h (CALL_THREAD_FCT): Maintain 16 byte alignment of
