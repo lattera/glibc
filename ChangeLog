@@ -1,3 +1,10 @@
+2002-01-03  Paul Eggert  <eggert@twinsun.com>
+
+	* malloc/obstack.h (__INT_TO_PTR) [__STDC__]: Cast result to
+	(void *) to avoid diagnostic with native c89 on SGI IRIX 6.5
+	when compiling Bison 1.875's `bitset bset = obstack_alloc
+	(bobstack, bytes);'.  Problem reported by Nelson H. F. Beebe.
+
 2003-01-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/system.c (do_system): Correct reference counter in
