@@ -1,4 +1,16 @@
+2002-12-23  Roland McGrath  <roland@redhat.com>
+
+	* scripts/abilist.awk: Produce a more compact format, divided into
+	stanzas for each version set, the set name listed only once.
+	* scripts/extract-abilist.awk: New file.
+	* scripts/merge-abilist.awk: New file.
+	* Makerules (check-abi-%, update-abi-%): New pattern rules.
+	(update-abi, check-abi): New targets.
+	* Makefile (+subdir_targets): Add subdir_{check,update}-abi.
+
 2002-12-19  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (%.symlist): Use LC_ALL=C when running awk script.
 
 	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Cast result of
 	INTERNAL_SYSCALL.

@@ -1130,20 +1130,52 @@ ifeq ($(versioning),yes)
 # This is handy for checking against existing library binaries.
 
 %.symlist: $(..)scripts/abilist.awk %.dynsym
-	$(AWK) -f $^ > $@T
+	LC_ALL=C $(AWK) -f $^ > $@T
 	mv -f $@T $@
 
 %.dynsym: %.so
 	$(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
-tests: $(patsubst %.so,$(objpfx)%.symlist,$(install-lib.so-versioned))
+vpath %.symlist $(objpfx) $(common-objpfx)
+check-abi-%: $(..)scripts/extract-abilist.awk $(common-objpfx)config.make \
+	     %.abilist %.symlist
+	LC_ALL=C \
+	$(AWK) -f $< \
+	       -v 'config=$(config-machine)-$(config-vendor)-$(config-os)' \
+	       $(filter %.abilist,$^) \
+	| diff -pu0 - $(filter %.symlist,$^)
+
+update-abi-%: $(..)scripts/merge-abilist.awk %.abilist %.symlist
+ifndef update-abi-config
+	@echo 'Run $(MAKE) $@ update-abi-config=REGEXP'; exit 2
+else
+	LC_ALL=C $(AWK) -v config=$(update-abi-config) -f $^ > $*.abilist.new
+	mv -f $*.abilist.new $*.abilist
+	@echo '*** Now check $*.abilist changes for correctness ***'
+endif
+
+.PHONY: update-abi check-abi
+update-abi: $(patsubst %.so,update-abi-%,$(install-lib.so-versioned))
+check-abi: $(patsubst %.so,check-abi-%,$(install-lib.so-versioned))
+ifdef subdir
+subdir_check-abi: check-abi
+subdir_update-abi: update-abi
+else
+check-abi: subdir_check-abi
+update-abi: subdir_update-abi
+endif
+
+# Enable this well all the .abilist files are in place.
+#tests: check-abi
 generated += $(install-lib.so-versioned:.so=.symlist)
 
 ifeq ($(subdir),elf)
-tests: $(common-objpfx)libc.symlist
+check-abi: check-abi-libc
+update-abi: update-abi-libc
 common-generated += libc.symlist
 endif
+
 endif
 
 .PHONY: TAGS

@@ -61,7 +61,7 @@ endif # $(AUTOCONF) = no
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
 		   tests xtests subdir_lint.out				\
-		   subdir_distinfo					\
+		   subdir_update-abi subdir_check-abi subdir_distinfo	\
 		   subdir_echo-headers subdir_echo-distinfo		\
 		   subdir_install					\
 		   subdir_testclean					\

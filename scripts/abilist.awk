@@ -1,8 +1,6 @@
 # This awk script processes the output of objdump --dynamic-syms
 # into a simple format that should not change when the ABI is not changing.
 
-BEGIN { outpipe = "sort" }
-
 # Normalize columns.
 /^[0-9a-fA-F]+      / { sub(/      /, "  -   ") }
 
@@ -13,11 +11,11 @@ $4 == "*UND*" { next }
 $2 == "l" { next }
 
 $2 == "g" || $2 == "w" && NF == 7 {
-  weak = ($2 == "w") ? "weak" : "strong";
+  weak = $2;
   type = $3;
   size = $5;
   sub(/^0*/, "", size);
-  size = "0x" size;
+  size = " 0x" size;
   version = $6;
   symbol = $7;
   gsub(/[()]/, "", version);
@@ -25,24 +23,36 @@ $2 == "g" || $2 == "w" && NF == 7 {
   if (version == "GLIBC_PRIVATE") next;
 
   if (type == "D" && $4 == ".tbss") {
-    print symbol, version, weak, "TLS", size | outpipe;
+    type = "T";
   }
   else if (type == "D" && $4 == ".opd") {
-    print symbol, version, weak, "FDESC" | outpipe;
+    type = "O";
+    size = "";
   }
   else if (type == "DO" && $4 == "*ABS*") {
-    print symbol, version, weak, "ABS" | outpipe;
+    type = "A";
+    size = "";
   }
   else if (type == "DO") {
-    print symbol, version, weak, "DATA", size | outpipe;
+    type = "D";
   }
   else if (type == "DF") {
-    print symbol, version, weak, "FUNC" | outpipe;
+    type = "F";
+    size = "";
   }
   else {
-    print symbol, version, weak, "UNEXPECTED", type, $4, $5;
+    print symbol, version, weak, "?", type, $4, $5;
+    next;
   }
 
+  desc = " " symbol " " (weak == "w" ? tolower(type) : type) size;
+
+  if (version in versions) {
+    versions[version] = versions[version] "\n" desc;
+  }
+  else {
+    versions[version] = desc;
+  }
   next;
 }
 
@@ -51,4 +61,44 @@ NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
 
 {
   print "Don't grok this line:", $0
+}
+
+END {
+  nverlist = 0;
+  for (version in versions) {
+    if (nverslist == 0) {
+      verslist = version;
+      nverslist = 1;
+      continue;
+    }
+    split(verslist, s, "\n");
+    if (version < s[1]) {
+      verslist = version;
+      for (i = 1; i <= nverslist; ++i) {
+	verslist = verslist "\n" s[i];
+      }
+    }
+    else {
+      verslist = s[1];
+      for (i = 2; i <= nverslist; ++i) {
+	if (version < s[i]) break;
+	verslist = verslist "\n" s[i];
+      }
+      verslist = verslist "\n" version;
+      for (; i <= nverslist; ++i) {
+	verslist = verslist "\n" s[i];
+      }
+    }
+    ++nverslist;
+  }
+
+  split(verslist, order, "\n");
+  for (i = 1; i <= nverslist; ++i) {
+    version = order[i];
+
+    print version;
+    outpipe = "sort";
+    print versions[version] | outpipe;
+    close(outpipe);
+  }
 }
