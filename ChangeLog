@@ -1,3 +1,9 @@
+2001-04-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_y1l): Use sincos
+	instead of separate sin and cos.
+	(__ieee754_j1l): Likewise.
+
 2001-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/abort-instr.h: New file.  Code by David Mosberger.
