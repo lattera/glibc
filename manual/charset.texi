@@ -8,13 +8,14 @@
 @end macro
 @end ifnottex
 
-Character sets used in the early days of computers had only six, seven,
-or eight bits for each character.  In no case more bits than would fit
-into one byte which nowadays is almost exclusively @w{8 bits} wide.
-This of course leads to several problems once not all characters needed
-at one time can be represented by the up to 256 available characters.
-This chapter shows the functionality which was added to the C library to
-overcome this problem.
+Character sets used in the early days of computing had only six, seven,
+or eight bits for each character: there was never a case where more than
+eight bits (one byte) were used to represent a single character.  The
+limitations of this approach became more apparent as more people
+grappled with non-Roman character sets, where not all the characters
+that make up a language's character set can be represented by @math{2^8}
+choices.  This chapter shows the functionality which was added to the C
+library to correctly support multiple character sets.
 
 @menu
 * Extended Char Intro::              Introduction to Extended Characters.
@@ -30,18 +31,20 @@ overcome this problem.
 @node Extended Char Intro
 @section Introduction to Extended Characters
 
-To overcome the limitations of character sets with a 1:1 relation
-between bytes and characters people came up with a variety of solutions.
-The remainder of this section gives a few examples to help understanding
-the design decision made while developing the functionality of the @w{C
-library} to support them.
+A variety of solutions to overcome the differences between
+character sets with a 1:1 relation between bytes and characters and
+character sets with ratios of 2:1 or 4:1 exist. The remainder of this
+section gives a few examples to help understand the design decisions
+made while developing the functionality of the @w{C library}.
 
 @cindex internal representation
 A distinction we have to make right away is between internal and
 external representation.  @dfn{Internal representation} means the
 representation used by a program while keeping the text in memory.
 External representations are used when text is stored or transmitted
-through whatever communication channel.
+through whatever communication channel.  Examples of external
+representations include files lying in a directory that are going to be
+read and parsed.
 
 Traditionally there was no difference between the two representations.
 It was equally comfortable and useful to use the same one-byte
@@ -49,24 +52,24 @@ representation internally and externally.  This changes with more and
 larger character sets.
 
 One of the problems to overcome with the internal representation is
-handling text which were externally encoded using different character
+handling text which is externally encoded using different character
 sets.  Assume a program which reads two texts and compares them using
 some metric.  The comparison can be usefully done only if the texts are
 internally kept in a common format.
 
 @cindex wide character
 For such a common format (@math{=} character set) eight bits are certainly
-not enough anymore.  So the smallest entity will have to grow: @dfn{wide
-characters} will be used.  Here instead of one byte one uses two or four
-(three are not good to address in memory and more than four bytes seem
-not to be necessary).
+no longer enough.  So the smallest entity will have to grow: @dfn{wide
+characters} will now be used.  Instead of one byte, two or four will
+be used instead.  (Three are not good to address in memory and more
+than four bytes seem not to be necessary).
 
 @cindex Unicode
 @cindex ISO 10646
-As shown in some other part of this manual
+As shown in some other part of this manual,
 @c !!! Ahem, wide char string functions are not yet covered -- drepper
 there exists a completely new family of functions which can handle texts
-of this kinds in memory.  The most commonly used character set for such
+of this kind in memory.  The most commonly used character set for such
 internal wide character representations are Unicode and @w{ISO 10646}.
 The former is a subset of the later and used when wide characters are
 chosen to by 2 bytes (@math{= 16} bits) wide.  The standard names of the
@@ -75,11 +78,11 @@ chosen to by 2 bytes (@math{= 16} bits) wide.  The standard names of the
 encodings used in these cases are UCS2 (@math{= 16} bits) and UCS4
 (@math{= 32} bits).
 
-To represent wide characters the @code{char} type is certainly not
-suitable.  For this reason the @w{ISO C} standard introduces a new type
-which is designed to keep one character of a wide character string.  To
-maintain the similarity there is also a type corresponding to @code{int}
-for those functions which take a single wide character.
+To represent wide characters the @code{char} type is not suitable.  For
+this reason the @w{ISO C} standard introduces a new type which is
+designed to keep one character of a wide character string.  To maintain
+the similarity there is also a type corresponding to @code{int} for
+those functions which take a single wide character.
 
 @comment stddef.h
 @comment ISO
@@ -98,7 +101,7 @@ But for GNU systems this type is always 32 bits wide.  It is therefore
 capable to represent all UCS4 value therefore covering all of @w{ISO
 10646}.  Some Unix systems define @code{wchar_t} as a 16 bit type and
 thereby follow Unicode very strictly.  This is perfectly fine with the
-standard but it also means that to represent all characters fro Unicode
+standard but it also means that to represent all characters from Unicode
 and @w{ISO 10646} one has to use surrogate character which is in fact a
 multi-wide-character encoding.  But this contradicts the purpose of the
 @code{wchar_t} type.
@@ -183,26 +186,30 @@ defined in @file{wchar.h}.
 
 
 These internal representations present problems when it comes to storing
-and transmitting them.  Since a single wide character consists of more
+and transmittal, since a single wide character consists of more
 than one byte they are effected by byte-ordering.  I.e., machines with
 different endianesses would see different value accessing the same data.
 This also applies for communication protocols which are all byte-based
 and therefore the sender has to decide about splitting the wide
-character in bytes.  A last but not least important point is that wide
+character in bytes.  A last (but not least important) point is that wide
 characters often require more storage space than an customized byte
 oriented character set.
 
 @cindex multibyte character
-This is why most of the time an external encoding which is different
-from the internal encoding is used if the later is UCS2 or UCS4.  The
-external encoding is byte-based and can be chosen appropriately for the
-environment and for the texts to be handled.  There exists a variety of
-different character sets which can be used which is too much to be
-handled completely here.  We restrict ourself here to a description of
-the major groups.  All of the ASCII-based character sets fulfill one
-requirement: they are ``filesystem safe''.  This means that the
-character @code{'/'} is used in the encoding @emph{only} to represent
-itself.  Things are a bit different for character like EBCDIC but if the
+@cindex EBCDIC
+   For all the above reasons, an external encoding which is different
+from the internal encoding is often used if the later is UCS2 or UCS4.
+The external encoding is byte-based and can be chosen appropriately for
+the environment and for the texts to be handled.  There exist a variety
+of different character sets which can be used for this external
+encoding. Information which will not be exhaustively presented
+here--instead, a description of the major groups will suffice.  All of
+the ASCII-based character sets [_bkoz_: do you mean Roman character
+sets? If not, what do you mean here?]  fulfill one requirement: they are
+"filesystem safe".  This means that the character @code{'/'} is used in
+the encoding @emph{only} to represent itself.  Things are a bit
+different for character sets like EBCDIC (Extended Binary Coded Decimal
+Interchange Code, a character set family used by IBM) but if the
 operation system does not understand EBCDIC directly the parameters to
 system calls have to be converted first anyhow.
 
@@ -212,7 +219,7 @@ The simplest character sets are one-byte character sets.  There can be
 only up to 256 characters (for @w{8 bit} character sets) which is not
 sufficient to cover all languages but might be sufficient to handle a
 specific text.  Another reason to choose this is because of constraints
-from interaction with other programs.
+from interaction with other programs (which might not be 8-bit clean).
 
 @cindex ISO 2022
 @item
@@ -243,12 +250,12 @@ Examples for this are ISO-2022-JP, ISO-2022-KR, and ISO-2022-CN.
 @cindex ISO 6937
 Early attempts to fix 8 bit character sets for other languages using the
 Roman alphabet lead to character sets like @w{ISO 6937}.  Here bytes
-representing characters like the acute accent do not produce output on
-there on.  One has to combine them with other characters.  E.g., the
-byte sequence @code{0xc2 0x61} (non-spacing acute accent, following by
-lower-case `a') to get the ``small a with acute'' character.  To get the
-acute accent character on its on one has to write @code{0xc2 0x20} (the
-non-spacing acute followed by a space).
+representing characters like the acute accent do not produce output
+themselves: one has to combine them with other characters to get the
+desired result.  E.g., the byte sequence @code{0xc2 0x61} (non-spacing
+acute accent, following by lower-case `a') to get the ``small a with
+acute'' character.  To get the acute accent character on its on one has
+to write @code{0xc2 0x20} (the non-spacing acute followed by a space).
 
 This type of characters sets is quite frequently used in embedded
 systems such as video text.
@@ -265,29 +272,29 @@ encoding: UTF-8.  This encoding is able to represent all of @w{ISO
 There were a few other attempts to encode @w{ISO 10646} such as UTF-7
 but UTF-8 is today the only encoding which should be used.  In fact,
 UTF-8 will hopefully soon be the only external which has to be
-supported.  It proofs to be universally usable and the only disadvantage
-is that it favor Latin languages very much by making the byte string
+supported.  It proves to be universally usable and the only disadvantage
+is that it favor Roman languages very much by making the byte string
 representation of other scripts (Cyrillic, Greek, Asian scripts) longer
-than necessary if using a specific character set for these scripts.  But
-with methods like the Unicode compression scheme one can overcome these
-problems and the ever growing memory and storage capacities do the rest.
+than necessary if using a specific character set for these scripts.
+Methods like the Unicode compression scheme can alleviate these
+problems.
 @end itemize
 
-The question remaining now is: how to select the character set or
-encoding to use.  The answer is mostly: you cannot decide about it
-yourself, it is decided by the developers of the system or the majority
-of the users.  Since the goal is interoperability one has to use
-whatever the other people one works with use.  If there are no
-constraints the selection is based on the requirements the expected
-circle of users will have.  I.e., if a project is expected to only be
-used in, say, Russia it is fine to use KOI8-R or a similar character
-set.  But if at the same time people from, say, Greek are participating
-one should use a character set which allows all people to collaborate.
+The question remaining is: how to select the character set or encoding
+to use.  The answer: you cannot decide about it yourself, it is decided
+by the developers of the system or the majority of the users.  Since the
+goal is interoperability one has to use whatever the other people one
+works with use.  If there are no constraints the selection is based on
+the requirements the expected circle of users will have.  I.e., if a
+project is expected to only be used in, say, Russia it is fine to use
+KOI8-R or a similar character set.  But if at the same time people from,
+say, Greek are participating one should use a character set which allows
+all people to collaborate.
 
-A general advice here could be: go with the most general character set,
-namely @w{ISO 10646}.  Use UTF-8 as the external encoding and problems
-about users not being able to use their own language adequately are a
-thing of the past.
+The most widely useful solution seems to be: go with the most general
+character set, namely @w{ISO 10646}.  Use UTF-8 as the external encoding
+and problems about users not being able to use their own language
+adequately are a thing of the past.
 
 One final comment about the choice of the wide character representation
 is necessary at this point.  We have said above that the natural choice
@@ -314,7 +321,7 @@ standard, is unfortunately the least useful one.  In fact, these
 functions should be avoided whenever possible, especially when
 developing libraries (as opposed to applications).
 
-The second family o functions got introduced in the early Unix standards
+The second family of functions got introduced in the early Unix standards
 (XPG2) and is still part of the latest and greatest Unix standard:
 @w{Unix 98}.  It is also the most powerful and useful set of functions.
 But we will start with the functions defined in the second amendment to
@@ -370,8 +377,7 @@ We already said above that the currently selected locale for the
 by the functions we are about to describe.  Each locale uses its own
 character set (given as an argument to @code{localedef}) and this is the
 one assumed as the external multibyte encoding.  The wide character
-character set always is UCS4.  So we can see here already where the
-limitations of these conversion functions are.
+character set always is UCS4.
 
 A characteristic of each multibyte character set is the maximum number
 of bytes which can be necessary to represent one character.  This
@@ -425,8 +431,8 @@ The code in the inner loop is expected to have always enough bytes in
 the array @var{buf} to convert one multibyte character.  The array
 @var{buf} has to be sized statically since many compilers do not allow a
 variable size.  The @code{fread} call makes sure that always
-@code{MB_CUR_MAX} bytes are available in @var{buf}.  Note that it is no
-problem if @code{MB_CUR_MAX} is not a compile-time constant.
+@code{MB_CUR_MAX} bytes are available in @var{buf}.  Note that it isn't
+a problem if @code{MB_CUR_MAX} is not a compile-time constant.
 
 
 @node Keeping the state
@@ -546,7 +552,7 @@ is declared in @file{wchar.h}.
 
 Despite the limitation that the single byte value always is interpreted
 in the initial state this function is actually useful most of the time.
-Most character are either entirely single-byte character sets or they
+Most characters are either entirely single-byte character sets or they
 are extension to ASCII.  But then it is possible to write code like this
 (not that this specific example is useful):
 
@@ -563,19 +569,18 @@ itow (unsigned long int val)
       val /= 10;
     @}
   if (wcp == &buf[29])
-    *--wcp = btowc ('0');
+    *--wcp = L'0';
   return wcp;
 @}
 @end smallexample
 
-The question is why is it necessary to use such a complicated
-implementation and not simply cast L'0' to a wide character.  The answer
-is that there is no guarantee that the compiler knows about the wide
-character set used at runtime.  Even if the wide character equivalent of
-a given single-byte character is simply the equivalent to casting a
-single-byte character to @code{wchar_t} this is no guarantee that this
-is the case everywhere.
+Why is it necessary to use such a complicated implementation and not
+simply cast @code{'0' + val %10} to a wide character?  The answer is
+that there is no guarantee that one can perform this kind of arithmetic
+on the character of the character set used for @code{wchar_t}
+representation.
 
+@noindent
 There also is a function for the conversion in the other direction.
 
 @comment wchar.h
@@ -897,7 +902,7 @@ the buffer size.  Please note the @code{NULL} argument for the
 destination buffer in the new @code{wcrtomb} call; since we are not
 interested in the result at this point this is a nice way to express
 this.  The most unusual thing about this piece of code certainly is the
-duplication of the conversion state object.  But think about it: if a
+duplication of the conversion state object.  But think about this: if a
 change of the state is necessary to emit the next multibyte character we
 want to have the same shift state change performed in the real
 conversion.  Therefore we have to preserve the initial shift state
@@ -912,8 +917,8 @@ This example is only meant for educational purposes.
 The functions described in the previous section only convert a single
 character at a time.  Most operations to be performed in real-world
 programs include strings and therefore the @w{ISO C} standard also
-defines conversions on entire strings.  The defined set of functions is
-quite limited, though.  Therefore contains the GNU C library a few
+defines conversions on entire strings.  However, the defined set of
+functions is quite limited, thus the GNU C library contains a few
 extensions which are necessary in some important situations.
 
 @comment wchar.h
@@ -986,19 +991,18 @@ the newline in the original text could be something different than the
 initial shift state and therefore the first character of the next line
 is encoded using this state.  But the state in question is never
 accessible to the user since the conversion stops after the NUL byte.
-Fortunately most stateful character sets in use today require that the
-shift state after a newline is the initial state but this is no
+Most stateful character sets in use today require that the shift state
+after a newline is the initial state--but this is not a strict
 guarantee.  Therefore simply NUL terminating a piece of a running text
-is not always the adequate solution.
+is not always an adequate solution.
 
-The generic conversion
-@comment XXX reference to iconv
-interface does not have this limitation (it simply works on buffers, not
-strings) but there is another way.  The GNU C library contains a set of
-functions why take additional parameters specifying maximal number of
-bytes which are consumed from the input string.  This way the problem of
-above's example could be solved by determining the line length and
-passing this length to the function.
+The generic conversion interface (see @xref{Generic Charset Conversion})
+does not have this limitation (it simply works on buffers, not
+strings),and the GNU C library contains a set of functions which take
+additional parameters specifying the maximal number of bytes which are
+consumed from the input string.  This way the problem of
+@code{mbsrtowcs}'s example above could be solved by determining the line
+length and passing this length to the function.
 
 @comment wchar.h
 @comment ISO
@@ -1065,7 +1069,7 @@ inserting NUL bytes and the effect of NUL bytes on the conversion state.
 @end deftypefun
 
 A function to convert a multibyte string into a wide character string
-and display it could be written like this (this is no really useful
+and display it could be written like this (this is not a really useful
 example):
 
 @smallexample
@@ -1092,11 +1096,10 @@ showmbs (const char *src, FILE *fp)
 @}
 @end smallexample
 
-There is no more problem with the state after a call to
-@code{mbsnrtowcs}.  Since we don't insert characters in the strings
-which were not in there right from the beginning and we use @var{state}
-only for the conversion of the given buffer there is no problem with
-mixing the state up.
+There is no problem with the state after a call to @code{mbsnrtowcs}.
+Since we don't insert characters in the strings which were not in there
+right from the beginning and we use @var{state} only for the conversion
+of the given buffer there is no problem with altering the state.
 
 @comment wchar.h
 @comment GNU
@@ -1120,7 +1123,7 @@ helps in situations where no NUL terminated input strings are available.
 @subsection A Complete Multibyte Conversion Example
 
 The example programs given in the last sections are only brief and do
-not contain all the error checking etc.  Therefore here comes a complete
+not contain all the error checking etc.  Presented here is a complete
 and documented example.  It features the @code{mbrtowc} function but it
 should be easy to derive versions using the other functions.
 
@@ -1216,19 +1219,19 @@ are not described in the first place is that they are almost entirely
 useless.
 
 The problem is that all the functions for conversion defined in @w{ISO
-C89} use a local state.  This does not only mean that multiple
-conversions at the same time (not only when using threads) cannot be
-done.  It also means that you cannot first convert single characters and
-the strings since you cannot say the conversion functions which state to
-use.
+C89} use a local state.  This implies that multiple conversions at the
+same time (not only when using threads) cannot be done, and that you
+cannot first convert single characters and then strings since you cannot
+tell the conversion functions which state to use.
 
 These functions are therefore usable only in a very limited set of
-situation.  One most complete converting the entire string before
+situations.  One most complete converting the entire string before
 starting a new one and each string/text must be converted with the same
 function (there is no problem with the library itself; it is guaranteed
 that no library function changes the state of any of these functions).
-For these reasons it is @emph{highly} requested to use the functions
-from the last section.
+@strong{For the above reasons it is highly requested that the functions
+from the last section are used in place of non-reentrant conversion
+functions.}
 
 @menu
 * Non-reentrant Character Conversion::  Non-reentrant Conversion of Single
@@ -1456,13 +1459,13 @@ scan_string (char *s)
 @{
   int length = strlen (s);
 
-  /* @r{Initialize shift state.} */
+  /* @r{Initialize shift state.}  */
   mblen (NULL, 0);
 
   while (1)
     @{
       int thischar = mblen (s, length);
-      /* @r{Deal with end of string and invalid characters.} */
+      /* @r{Deal with end of string and invalid characters.}  */
       if (thischar == 0)
         break;
       if (thischar == -1)
@@ -1470,7 +1473,7 @@ scan_string (char *s)
           error ("invalid multibyte character");
           break;
         @}
-      /* @r{Advance past this character.} */
+      /* @r{Advance past this character.}  */
       s += thischar;
       length -= thischar;
     @}
@@ -1491,7 +1494,7 @@ common that they operate on character sets which are not directly
 specified by the functions.  The multibyte encoding used is specified by
 the currently selected locale for the @code{LC_CTYPE} category.  The
 wide character set is fixed by the implementation (in the case of GNU C
-library it always is @w{ISO 10646}.
+library it always is UCS4 encoded @w{ISO 10646}.
 
 This has of course several problems when it comes to general character
 conversion:
@@ -1533,12 +1536,12 @@ source and destination.  Only the set of available conversions is
 limiting them.  The standard does not specify that any conversion at all
 must be available.  It is a measure of the quality of the implementation.
 
-In the following text first the interface will be described.  It is here
-shortly named @code{iconv}-interface after the name of the conversion
-function.  Then the implementation is described as far as interesting to
-the advanced user who wants to extend the conversion capabilities.
-Comparisons with other implementations will show what trapfalls lie on
-the way of portable applications.
+In the following text first the interface to @code{iconv}, the
+conversion function, will be described.  Comparisons with other
+implementations will show what pitfalls lie on the way of portable
+applications.  At last, the implementation is described as far as
+interesting to the advanced user who wants to extend the conversion
+capabilities.
 
 @menu
 * Generic Conversion Interface::    Generic Character Set Conversion Interface.
@@ -1603,8 +1606,7 @@ The conversion from @var{fromcode} to @var{tocode} is not supported.
 It is not possible to use the same descriptor in different threads to
 perform independent conversions.  Within the data structures associated
 with the descriptor there is information about the conversion state.
-This must of course not be messed up by using it in different
-conversions.
+This must not be messed up by using it in different conversions.
 
 An @code{iconv} descriptor is like a file descriptor as for every use a
 new descriptor must be created.  The descriptor does not stand for all
@@ -1631,8 +1633,8 @@ effect.
 @pindex iconv.h
 This function got introduced early in the X/Open Portability Guide,
 @w{version 2}.  It is supported by all commercial Unices as it is
-required for the Unix branding.  The quality and completeness of the
-implementation varies widely, though.  The function is declared in
+required for the Unix branding.  However, the quality and completeness
+of the implementation varies widely.  The function is declared in
 @file{iconv.h}.
 @end deftypefun
 
@@ -1759,11 +1761,11 @@ This function was introduced in the XPG2 standard and is declared in the
 The definition of the @code{iconv} function is quite good overall.  It
 provides quite flexible functionality.  The only problems lie in the
 boundary cases which are incomplete byte sequences at the end of the
-input buffer and invalid input.  A third problem, which is not really a
-design problem, is the way conversions are selected.  The standard does
-not say anything about the legitimate names, a minimal set of available
-conversions.  We will see how this has negative impacts in the
-discussion of other implementations further down.
+input buffer and invalid input.  A third problem, which is not really
+a design problem, is the way conversions are selected.  The standard
+does not say anything about the legitimate names, a minimal set of
+available conversions.  We will see how this negatively impacts other
+implementations, as is demonstrated below.
 
 
 @node iconv Examples
@@ -1904,8 +1906,8 @@ of the @code{iconv} functions can lead to portability issues.
 The first thing to notice is that due to the large number of character
 sets in use it is certainly not practical to encode the conversions
 directly in the C library.  Therefore the conversion information must
-come from files outside the C library.  This is usually in one or both
-of the following ways:
+come from files outside the C library.  This is usually done in one or
+both of the following ways:
 
 @itemize @bullet
 @item
@@ -1913,9 +1915,9 @@ The C library contains a set of generic conversion functions which can
 read the needed conversion tables and other information from data files.
 These files get loaded when necessary.
 
-This solution is problematic as it is only with very much effort
-applicable to all character set (maybe it is even impossible).  The
-differences in structure of the different character sets is so large
+This solution is problematic as it requires a great deal of effort to
+apply to all character sets (potentially an infinite set).  The
+differences in the structure of the different character sets is so large
 that many different variants of the table processing functions must be
 developed.  On top of this the generic nature of these functions make
 them slower than specifically implemented functions.
@@ -1933,27 +1935,27 @@ dynamic loading must be available.
 @end itemize
 
 Some implementations in commercial Unices implement a mixture of these
-possibilities, the majority only the second solution.  This often leads
-to problems, though.  Since the modules with the conversion modules must
-be dynamically loaded the system must have this possibility for all
-programs.  But this is not the case.  At least some platforms (if not
-all) are not able to dynamically load objects if the program is linked
-statically.  This is often solved by outlawing static linking entirely
-but sure it is a weak solution.  The GNU C library does not have this
-restriction though it also uses dynamic loading.  The danger is that one
-get acquainted with this and forgets about the restriction on other
-systems.
+these possibilities, the majority only the second solution.  Using
+loadable modules moves the code out of the library itself and keeps the
+door open for extensions and improvements.  But this design is also
+limiting on some platforms since not many platforms support dynamic
+loading in statically linked programs.  On platforms without his
+capability it is therefore not possible to use this interface in
+statically linked programs.  The GNU C library has on ELF platforms no
+problems with dynamic loading in in these situations and therefore this
+point is mood.  The danger is that one gets acquainted with this and
+forgets about the restrictions on other systems.
 
 A second thing to know about other @code{iconv} implementations is that
 the number of available conversions is often very limited.  Some
-implementations provide in the standard release (not the special
-international release, if something exists) at most 100 to 200
-conversion possibilities.  This does not mean 200 different character
-sets are supported.  E.g., conversions from one character set to a set
-of, say, 10 others counts as 10 conversion.  Together with the other
-direction this makes already 20.  One can imagine the thin coverage
-these platform provide.  Some Unix vendors even provide only a handful
-of conversions which renders them useless for almost all uses.
+implementations provide in the standard release (not special
+international or developer releases) at most 100 to 200 conversion
+possibilities.  This does not mean 200 different character sets are
+supported.  E.g., conversions from one character set to a set of, say,
+10 others counts as 10 conversion.  Together with the other direction
+this makes already 20.  One can imagine the thin coverage these platform
+provide.  Some Unix vendors even provide only a handful of conversions
+which renders them useless for almost all uses.
 
 This directly leads to a third and probably the most problematic point.
 The way the @code{iconv} conversion functions are implemented on all
@@ -1976,10 +1978,10 @@ does fail according to the assumption above.  But what does the program
 do now?  The conversion is really necessary and therefore simply giving
 up is no possibility.
 
-First this is of course a nuisance.  The @code{iconv} function should
-take care of this.  But second, how should the program proceed from here
-on?  If it would try to convert to character set @math{@cal{B}} first
-the two @code{iconv_open} calls
+This is a nuisance.  The @code{iconv} function should take care of this.
+But how should the program proceed from here on?  If it would try to
+convert to character set @math{@cal{B}} first the two @code{iconv_open}
+calls
 
 @smallexample
 cd1 = iconv_open ("@math{@cal{B}}", "@math{@cal{A}}");
@@ -1995,10 +1997,10 @@ cd2 = iconv_open ("@math{@cal{C}}", "@math{@cal{B}}");
 @noindent
 will succeed but how to find @math{@cal{B}}?
 
-The answer is unfortunately: there is no general solution.  On some
+Unfortunately, the answer is: there is no general solution.  On some
 systems guessing might help.  On those systems most character sets can
-convert to and from UTF8 encoded @w{ISO 10646} or Unicode text.  Beside
-this only some very system-specific methods can help.  Since the
+convert to and from UTF8 encoded @w{ISO 10646} or Unicode text.
+Beside this only some very system-specific methods can help.  Since the
 conversion functions come from loadable modules and these modules must
 be stored somewhere in the filesystem, one @emph{could} try to find them
 and determine from the available file which conversions are available
@@ -2016,12 +2018,12 @@ routes.
 @subsection The @code{iconv} Implementation in the GNU C library
 
 After reading about the problems of @code{iconv} implementations in the
-last section it is certainly good to read here that the implementation
-in the GNU C library has none of the problems mentioned above.  But step
-by step now.  We will now address the points raised above.  The
+last section it is certainly good to note that the implementation in
+the GNU C library has none of the problems mentioned above.  What
+follows is a step-by-step analysis of the points raised above.  The
 evaluation is based on the current state of the development (as of
 January 1999).  The development of the @code{iconv} functions is not
-entirely finished by now but things can only get better.
+complete, but basic funtionality has solidified.
 
 The GNU C library's @code{iconv} implementation uses shared loadable
 modules to implement the conversions.  A very small number of
@@ -2029,48 +2031,50 @@ conversions are built into the library itself but these are only rather
 trivial conversions.
 
 All the benefits of loadable modules are available in the GNU C library
-implementation.  This is especially interesting since the interface is
+implementation.  This is especially appealing since the interface is
 well documented (see below) and it therefore is easy to write new
-conversion modules.  The drawback of using loadable object is not a
+conversion modules.  The drawback of using loadable objects is not a
 problem in the GNU C library, at least on ELF systems.  Since the
 library is able to load shared objects even in statically linked
-binaries this means that static linking needs not to be forbidden in case
-one wants to use @code{iconv}.
+binaries this means that static linking needs not to be forbidden in
+case one wants to use @code{iconv}.
 
-The second mentioned problems is the number of supported conversions.
-First, the GNU C library supports more than 150 character sets.  And the
+The second mentioned problem is the number of supported conversions.
+Currently, the GNU C library supports more than 150 character sets.  The
 way the implementation is designed the number of supported conversions
 is greater than 22350 (@math{150} times @math{149}).  If any conversion
 from or to a character set is missing it can easily be added.
 
-This high number is due to the fact that the GNU C library
-implementation of @code{iconv} does not have the third problem mentioned
-above.  I.e., whenever there is a conversion from a character set
-@math{@cal{A}} to @math{@cal{B}} and from @math{@cal{B}} to
-@math{@cal{C}} it is always possible to convert from @math{@cal{A}} to
-@math{@cal{C}} directly.  If the @code{iconv_open} returns an error and
-sets @code{errno} to @code{EINVAL} this really means there is no known
-way, directly or indirectly, to perform the wanted conversion.
+Particularly impressive as it may be, this high number is due to the
+fact that the GNU C library implementation of @code{iconv} does not have
+the third problem mentioned above.  I.e., whenever there is a conversion
+from a character set @math{@cal{A}} to @math{@cal{B}} and from
+@math{@cal{B}} to @math{@cal{C}} it is always possible to convert from
+@math{@cal{A}} to @math{@cal{C}} directly.  If the @code{iconv_open}
+returns an error and sets @code{errno} to @code{EINVAL} this really
+means there is no known way, directly or indirectly, to perform the
+wanted conversion.
 
 @cindex triangulation
 This is achieved by providing for each character set a conversion from
 and to UCS4 encoded @w{ISO 10646}.  Using @w{ISO 10646} as an
-intermediate representation it is possible to ``triangulate''.
+intermediate representation it is possible to @dfn{triangulate}, i.e.,
+converting with an intermediate representation.
 
 There is no inherent requirement to provide a conversion to @w{ISO
 10646} for a new character set and it is also possible to provide other
-conversions where neither source not destination character set is @w{ISO
+conversions where neither source nor destination character set is @w{ISO
 10646}.  The currently existing set of conversions is simply meant to
-convert all conversions which might be of interest.  What could be done
-in future is improving the speed of certain conversions.
+cover all conversions which might be of interest.
 
 @cindex ISO-2022-JP
 @cindex EUC-JP
-Since all currently available conversions use the triangulation methods
-often used conversion run unnecessarily slow.  If, e.g., somebody often
-needs the conversion from ISO-2022-JP to EUC-JP it is not the best way
-to convert the input to @w{ISO 10646} first.  The two character sets of
-interest are much more similar to each other than to @w{ISO 10646}.
+All currently available conversions use the triangulation method above,
+making conversion run unnecessarily slow.  If, e.g., somebody often
+needs the conversion from ISO-2022-JP to EUC-JP, a quicker solution
+would involve direct conversion between the two character sets, skipping
+the input to @w{ISO 10646} first.  The two character sets of interest
+are much more similar to each other than to @w{ISO 10646}.
 
 In such a situation one can easy write a new conversion and provide it
 as a better alternative.  The GNU C library @code{iconv} implementation
@@ -2124,7 +2128,7 @@ relative values of the sums of costs for all possible conversion paths.
 Below is a more precise description of the use of the cost value.
 @end itemize
 
-Coming back to the example where one has written a module to directly
+Returning to the example above where one has written a module to directly
 convert from ISO-2022-JP to EUC-JP and back.  All what has to be done is
 to put the new module, be its name ISO2022JP-EUCJP.so, in a directory
 and add a file @file{gconv-modules} with the following content in the
@@ -2135,8 +2139,8 @@ module  ISO-2022-JP//   EUC-JP//        ISO2022JP-EUCJP    1
 module  EUC-JP//        ISO-2022-JP//   ISO2022JP-EUCJP    1
 @end smallexample
 
-To see why this is enough it is necessary to understand how the
-conversion used by @code{iconv} and described in the descriptor is
+To see why this is sufficient, it is necessary to understand how the
+conversion used by @code{iconv} (and described in the descriptor) is
 selected.  The approach to this problem is quite simple.
 
 At the first call of the @code{iconv_open} function the program reads
@@ -2148,30 +2152,33 @@ them.
 @subsubsection Finding the conversion path in @code{iconv}
 
 The set of available conversions form a directed graph with weighted
-edges.  The weights on the edges are of course the costs specified in
-the @file{gconv-modules} files.  The @code{iconv_open} function
-therefore uses an algorithm suitable to search for the best path in such
-a graph and so constructs a list of conversions which must be performed
-in succession to get the transformation from the source to the
-destination character set.
+edges.  The weights on the edges are the costs specified in the
+@file{gconv-modules} files.  The @code{iconv_open} function uses an
+algorithm suitable for search for the best path in such a graph and so
+constructs a list of conversions which must be performed in succession
+to get the transformation from the source to the destination character
+set.
 
-Now it can be easily seen why the above @file{gconv-modules} files
-allows the @code{iconv} implementation to pick up the specific
-ISO-2022-JP to EUC-JP conversion module instead of the conversion coming
-with the library itself.  Since the later conversion takes two steps
-(from ISO-2022-JP to @w{ISO 10646} and then from @w{ISO 10646} to
+Explaining why the above @file{gconv-modules} files allows the
+@code{iconv} implementation to resolve the specific ISO-2022-JP to
+EUC-JP conversion module instead of the conversion coming with the
+library itself is straighforward.  Since the later conversion takes two
+steps (from ISO-2022-JP to @w{ISO 10646} and then from @w{ISO 10646} to
 EUC-JP) the cost is @math{1+1 = 2}.  But the above @file{gconv-modules}
 file specifies that the new conversion modules can perform this
 conversion with only the cost of @math{1}.
 
-A bit mysterious about the @file{gconv-modules} file above (and also the
-file coming with the GNU C library) are the names of the character sets
-specified in the @code{module} lines.  Why do almost all the names end
-in @code{//}?  And this is not all: the names can actually be regular
-expressions.  At this point of time this mystery should not be revealed.
-Sorry!  @strong{The part of the implementation where this is used is not
-yet finished.  For now please simply follow the existing examples.
-It'll become clearer once it is. --drepper}
+A mysterious piece about the @file{gconv-modules} file above (and also
+the file coming with the GNU C library) are the names of the character
+sets specified in the @code{module} lines.  Why do almost all the names
+end in @code{//}?  And this is not all: the names can actually be
+regular expressions.  At this point of time this mystery should not be
+revealed, unless you have the relevant spell-casting materials: ashes
+from an original @w{DOS 6.2} boot disk burnt in effigy, a crucifix
+blessed by St.@: Emacs, assorted herbal roots from Central America, sand
+from Cebu, etc.  Sorry!  @strong{The part of the implementation where
+this is used is not yet finished.  For now please simply follow the
+existing examples.  It'll become clearer once it is. --drepper}
 
 A last remark about the @file{gconv-modules} is about the names not
 ending with @code{//}.  There often is a character set named
@@ -2588,10 +2595,10 @@ gconv_end (struct gconv_step *data)
 @end smallexample
 @end deftypevr
 
-The most important function of course is the conversion function itself.
-It can get quite complicated for complex character sets.  But since this
-is not of interest here we will only describe a possible skeleton for
-the conversion function.
+The most important function is the conversion function itself.  It can
+get quite complicated for complex character sets.  But since this is not
+of interest here we will only describe a possible skeleton for the
+conversion function.
 
 @comment gconv.h
 @comment GNU

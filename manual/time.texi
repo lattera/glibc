@@ -1858,7 +1858,7 @@ treated with care.
 This structure is used to control and monitor kernel time in a greater
 level of detail.  It contains the following members:
 @table @code
-@item unsigned int mode
+@item unsigned int modes
 This variable controls whether and which values are set.  Several
 symbolic constants have to be combined with @emph{binary or} to specify
 the effective mode.  These constants start with @code{MOD_}.
@@ -1866,7 +1866,7 @@ the effective mode.  These constants start with @code{MOD_}.
 @item long int offset
 This value indicates the current offset of the local clock from the true
 time.  The value is given in microseconds.  If bit @code{MOD_OFFSET} is
-set in @code{mode}, the offset (and possibly other dependent values) can
+set in @code{modes}, the offset (and possibly other dependent values) can
 be set.  The offset's absolute value must not exceed @code{MAXPHASE}.
 
 @item long int frequency
@@ -1946,7 +1946,9 @@ exceeded the threshold.
 @deftypefun int ntp_adjtime (struct timex *@var{tptr})
 The @code{ntp_adjtime} function sets the structure specified by
 @var{tptr} to current values.  In addition, values passed in @var{tptr}
-can be used to replace existing settings.
+can be used to replace existing settings.  To do this the @code{modes}
+element of the @code{struct timex} must be set appropriately.  Setting
+it to zero selects reading the current state.
 
 The return value is @code{0} on success and other values on failure.  The
 following @code{errno} error conditions are defined for this function:

@@ -1,3 +1,8 @@
+1999-01-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/charset.texi: Add many corrections.
+	Patch by Benjamin Kosnik <bkoz@cygnus.com>.
+
 1999-01-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/charset.texi: Fix some typos.
