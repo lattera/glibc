@@ -583,6 +583,7 @@ struct gaicb
 #  define AI_IDN_USE_STD3_ASCII_RULES 0x0200 /* Validate strings according to
 						STD3 rules.  */
 # endif
+# define AI_NUMERICSERV	0x0400	/* Don't use name resolution.  */
 
 /* Error values for `getaddrinfo' function.  */
 # define EAI_BADFLAGS	  -1	/* Invalid value for `ai_flags' field.  */
