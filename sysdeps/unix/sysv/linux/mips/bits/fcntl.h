@@ -41,7 +41,10 @@
 #define O_ASYNC		0x1000
 
 #ifdef __USE_GNU
-# define O_DIRECTORY	0x2000	/* Must be a directory.  */
+# define O_LARGEFILE	0x2000	/* Allow large file opens.  */
+# define O_NOFOLLOW	0x4000	/* Do not follow links.  */
+# define O_DIRECT	0x8000	/* Direct disk access hint.  */
+# define O_DIRECTORY	0x10000	/* Must be a directory.  */
 #endif
 
 #define O_NDELAY	O_NONBLOCK

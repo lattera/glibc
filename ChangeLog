@@ -1,3 +1,15 @@
+1998-10-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_NOFOLLOW): New
+	macro.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (O_LARGEFILE,
+	O_NOFOLLOW, O_DIRECT): New macros.
+	(O_DIRECTORY): Correct definition according to official 2.1.126.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_DIRECTORY,
+	O_NOFOLLOW): New macros.
+
 1998-10-24  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* include/ldsodefs.h: Test HAVE_ELF instead of __ELF__.

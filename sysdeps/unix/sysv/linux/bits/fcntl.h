@@ -43,6 +43,7 @@
 
 #ifdef __USE_GNU
 # define O_DIRECTORY	040000	/* Must be a directory.  */
+# define O_NOFOLLOW	0100000	/* Do not follow links.  */
 #endif
 
 /* XXX missing */
