@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-   Copyright (C) 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -141,11 +141,11 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	  const union
 	    {
 	      mach_msg_type_t t;
-	      int i;
+	      integer_t i;
 	    } check =
 	      { t: {
 		MACH_MSG_TYPE_INTEGER_T,
-		MACH_MSG_TYPE_INTEGER_T,
+		sizeof (integer_t) * 8,
 		1,
 		TRUE,
 		FALSE,
