@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -46,6 +46,10 @@ extern nis_error __do_niscall (const_nis_name name, u_long prog,
 			       xdrproc_t xargs, caddr_t req,
 			       xdrproc_t xres, caddr_t resp,
 			       unsigned int flags, nis_cb *cb);
+extern nis_error __do_niscall3 (dir_binding *dbp, u_long prog,
+				xdrproc_t xargs, caddr_t req,
+				xdrproc_t xres, caddr_t resp,
+				unsigned int flags, nis_cb *cb);
 
 /* NIS+ callback */
 extern nis_error __nis_do_callback (struct dir_binding *bptr,

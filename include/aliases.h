@@ -17,4 +17,20 @@ extern int __old_getaliasbyname_r (__const char *__restrict __name,
 				   char *__restrict __buffer, size_t __buflen,
 				   struct aliasent **__restrict __result);
 
+#define DECLARE_NSS_PROTOTYPES(service)					     \
+extern enum nss_status _nss_ ## service ## _setaliasent (void);		     \
+extern enum nss_status _nss_ ## service ## _endaliasent (void);		     \
+extern enum nss_status _nss_ ## service ## _getaliasent_r		     \
+                       (struct aliasent *alias, char *buffer, size_t buflen, \
+			int *errnop);					     \
+extern enum nss_status _nss_ ## service ## _getaliasbyname_r		     \
+                       (const char *name, struct aliasent *alias,	     \
+			char *buffer, size_t buflen, int *errnop);
+
+
+DECLARE_NSS_PROTOTYPES (files)
+DECLARE_NSS_PROTOTYPES (nis)
+DECLARE_NSS_PROTOTYPES (nisplus)
+#undef DECLARE_NSS_PROTOTYPES
+
 #endif

@@ -115,7 +115,7 @@ internal_nis_setrpcent (intern_t *intern)
 }
 
 enum nss_status
-_nss_nis_setrpcent (void)
+_nss_nis_setrpcent (int stayopen)
 {
   enum nss_status status;
 
