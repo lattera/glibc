@@ -58,6 +58,7 @@ struct sigaction
 /* Please note that some Linux kernels versions use different values for these
    flags which is a bug in those kernel versions.  */
 #define SA_NOCLDSTOP  0x00000001 /* Don't send SIGCHLD when children stop.  */
+#define SA_NOCLDWAIT  0x00010000 /* Don't create zombie on child death.  */
 #define SA_SIGINFO    0x00000008 /* Invoke signal-catching function with
 				    three arguments instead of one.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
