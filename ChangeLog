@@ -1,3 +1,14 @@
+2000-04-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/madvise.c: Fix typos.
+
+	* sysdeps/unix/sysv/linux/mips/clone.S (error): Use __PIC__.
+
+	* sysdeps/mips/bits/setjmp.h: Remove K&R compatibility.
+
+	* sysdeps/mips/setjmp_aux.c (__sigsetjmp_aux): Silence gcc
+	warnings.
+
 2000-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/sys/statfs.h: Add prototypes for __statfs64 and __fstatfs64.
