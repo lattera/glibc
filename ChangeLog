@@ -1,3 +1,7 @@
+2004-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ca.po: Update from translation team.
+
 2004-03-20  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sched_getaffinity.c
