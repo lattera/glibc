@@ -1,3 +1,16 @@
+2000-06-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/fpu/fclrexcpt.c: Use SHLIB_COMPAT, compat_symbol and
+	versioned_symbol.
+	* sysdeps/sparc/fpu/fesetenv.c: Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c: Likewise.
+	* sysdeps/sparc/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/sparc/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/sparc/fpu/fegetenv.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: New file.
+	* shlib-versions: Make sparc64 GLIBC_2.2+ only.
+
 2000-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/printf_fp.c (__printf_fp): Don't clobber pointer which
