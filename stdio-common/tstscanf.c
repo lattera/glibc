@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -304,6 +304,33 @@ main (int argc, char **argv)
 	result = 1;
       }
   }
+
+  fputs ("Test 11:\n", stdout);
+  {
+    char uart[50];
+    int res;
+
+    res = sscanf ("uart:16550A tx:0", "uart:%31s tx:%*u", uart);
+    if (res != 1)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
+  fputs ("Test 12:\n", stdout);
+  {
+    char uart[50];
+    int res;
+
+    res = sscanf ("uart:16550A", "uart:%31s tx:%*u", uart);
+    if (res != 1)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+
 
   return result;
 }
