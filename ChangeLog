@@ -1,3 +1,9 @@
+2004-12-17  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Add support
+	for NPTL where the PID is stored at userlevel and needs to be
+	reset when CLONE_THREAD is not used.
+
 2004-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.

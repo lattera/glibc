@@ -1,3 +1,8 @@
+2004-12-17  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: New file.
+	* sysdeps/alpha/tcb-offsets.sym (TID_OFFSET): New.
+	
 2004-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/bits/local_lim.h: New file.
