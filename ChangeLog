@@ -1,3 +1,7 @@
+2001-02-10  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/gettimeofday.c: Include <stddef.h>.
+
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
 	* wctype/wcfuncs.c (func): Add prototype declarations to avoid
