@@ -1,3 +1,8 @@
+2004-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Really set ai_canonname
+	only in one entry.
+
 2004-08-13  Daniel Jacobowitz  <dan@debian.org>
 
 	* scripts/output-format.sed: Handle default case of three-argument
