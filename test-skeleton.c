@@ -1,5 +1,5 @@
 /* Skeleton for test programs.
-   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
   setbuf (stdout, NULL);
 #endif
 
-  while ((opt = getopt_long (argc, argv, "", options, NULL)) != -1)
+  while ((opt = getopt_long (argc, argv, "+", options, NULL)) != -1)
     switch (opt)
       {
       case '?':

@@ -1,3 +1,9 @@
+2003-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-exec4.
+	(tst-exec4-ARGS): Define.
+	* tst-exec4.c: New file.
+
 2003-05-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_timedlock_wait):
