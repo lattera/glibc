@@ -35,6 +35,16 @@ void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 		     int lazy, int consider_profiling)
 {
+  struct textrels
+  {
+    caddr_t start;
+    size_t len;
+    int prot;
+    struct textrels *next;
+  } *textrels = NULL;
+  /* Initialize it to make the compiler happy.  */
+  const char *errstring = NULL;
+
   if (l->l_relocated)
     return;
 
@@ -48,6 +58,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     _dl_printf ("\nrelocation processing: %s%s\n",
 		l->l_name[0] ? l->l_name : _dl_argv[0], lazy ? " (lazy)" : "");
 
+  /* DT_TEXTREL is now in level 2 and might phase out at some time.
+     But we rewrite the DT_FLAGS entry to a DT_TEXTREL entry to make
+     testing easier and therefore it will be available at all time.  */
   if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
     {
       /* Bletch.  We must make read-only segments writable
@@ -56,15 +69,36 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       for (ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
 	if (ph->p_type == PT_LOAD && (ph->p_flags & PF_W) == 0)
 	  {
-	    caddr_t mapstart = ((caddr_t) l->l_addr +
-				(ph->p_vaddr & ~(_dl_pagesize - 1)));
-	    caddr_t mapend = ((caddr_t) l->l_addr +
-			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
-			       & ~(_dl_pagesize - 1)));
-	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
-					      PROT_READ|PROT_WRITE), 0) < 0)
-	      _dl_signal_error (errno, l->l_name, NULL, N_("\
-cannot make segment writable for relocation"));
+	    struct textrels *newp;
+
+	    newp = (struct textrels *) alloca (sizeof (*newp));
+	    newp->len = (((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
+			  & ~(_dl_pagesize - 1))
+			 - (ph->p_vaddr & ~(_dl_pagesize - 1)));
+	    newp->start = ((ph->p_vaddr & ~(_dl_pagesize - 1))
+			   + (caddr_t) l->l_addr);
+
+	    if (__mprotect (newp->start, newp->len, PROT_READ|PROT_WRITE) < 0)
+	      {
+		errstring = N_("cannot make segment writable for relocation");
+	      call_error:
+		_dl_signal_error (errno, l->l_name, NULL, errstring);
+	      }
+
+#if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
+	    newp->prot = (PF_TO_PROT
+			  >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
+#else
+	    newp->prot = 0;
+	    if (ph->p_flags & PF_R)
+	      newp->prot |= PROT_READ;
+	    if (ph->p_flags & PF_W)
+	      newp->prot |= PROT_WRITE;
+	    if (ph->p_flags & PF_X)
+	      newp->prot |= PROT_EXEC;
+#endif
+	    newp->next = textrels;
+	    textrels = newp;
 	  }
     }
 
@@ -122,8 +156,6 @@ cannot make segment writable for relocation"));
 
     if (__builtin_expect (consider_profiling, 0))
       {
-	const char *errstring = NULL;
-
 	/* Allocate the array which will contain the already found
 	   relocations.  If the shared object lacks a PLT (for example
 	   if it only contains lead function) the l_info[DT_PLTRELSZ]
@@ -152,45 +184,16 @@ cannot make segment writable for relocation"));
   /* Mark the object so we know this work has been done.  */
   l->l_relocated = 1;
 
-  /* DT_TEXTREL is now in level 2 and might phase out at some time.
-     But we rewrite the DT_FLAGS entry to make testing easier and
-     therefore it will be available at all time.  */
-  if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
+  /* Undo the segment protection changes.  */
+  while (__builtin_expect (textrels != NULL, 0))
     {
-      /* Undo the protection change we made before relocating.  */
-      const ElfW(Phdr) *ph;
-      for (ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
-	if (ph->p_type == PT_LOAD && (ph->p_flags & PF_W) == 0)
-	  {
-	    caddr_t mapstart = ((caddr_t) l->l_addr +
-				(ph->p_vaddr & ~(_dl_pagesize - 1)));
-	    caddr_t mapend = ((caddr_t) l->l_addr +
-			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
-			       & ~(_dl_pagesize - 1)));
-	    int prot;
+      if (__mprotect (textrels->start, textrels->len, textrels->prot) < 0)
+	{
+	  errstring = N_("cannot restore segment prot after reloc");
+	  goto call_error;
+	}
 
-#if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
-	    prot = (PF_TO_PROT
-		    >> ((ph->p_flags & (PF_R | PF_W | PF_X)) * 4)) & 0xf;
-#else
-	    prot = 0;
-	    if (ph->p_flags & PF_R)
-	      prot |= PROT_READ;
-	    if (ph->p_flags & PF_W)
-	      prot |= PROT_WRITE;
-	    if (ph->p_flags & PF_X)
-	      prot |= PROT_EXEC;
-#endif
-
-	    if (__builtin_expect (__mprotect (mapstart, mapend - mapstart,
-					      prot), 0) < 0)
-	      _dl_signal_error (errno, l->l_name, NULL,
-				N_("can't restore segment prot after reloc"));
-
-#ifdef CLEAR_CACHE
-	    CLEAR_CACHE (mapstart, mapend);
-#endif
-	  }
+      textrels = textrels->next;
     }
 }
 

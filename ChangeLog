@@ -1,3 +1,8 @@
+2001-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c (_dl_relocate_object): Avoid iterating over
+	program header twice.  Construct list with the needed information.
+
 2001-11-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ca.po: Update from translation team.
