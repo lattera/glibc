@@ -1263,8 +1263,9 @@ static void      free_atfork();
 
 #define request2size(req, nb) \
  ((nb = (req) + (SIZE_SZ + MALLOC_ALIGN_MASK)),\
-  ((long)nb <= 0 ? 1 : ((nb < (MINSIZE + MALLOC_ALIGN_MASK) ? (nb = MINSIZE) :\
-                         (nb &= ~MALLOC_ALIGN_MASK)), 0)))
+  ((long)nb <= 0 || nb < (INTERNAL_SIZE_T) (req) \
+   ? 1 : ((nb < (MINSIZE + MALLOC_ALIGN_MASK) \
+	   ? (nb = MINSIZE) : (nb &= ~MALLOC_ALIGN_MASK)), 0)))
 
 /* Check if m has acceptable alignment */
 

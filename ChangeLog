@@ -1,5 +1,8 @@
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* malloc/malloc.c (request2size): Take care of overflow in
+	addition.
+
 	* sysdeps/posix/getcwd.c: Correct last patch.  Handle getcwd
 	(NULL, != 0) correctly.
 
