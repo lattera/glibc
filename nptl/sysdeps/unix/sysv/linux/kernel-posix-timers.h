@@ -20,13 +20,20 @@
 #include <pthread.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <sys/types.h>
 
 
 /* Nonzero if the system calls are not available.  */
 extern int __no_posix_timers attribute_hidden;
 
-/* Helper function to implement SIGEV_THREAD.  */
-extern void *__timer_helper_thread (void *arg) attribute_hidden;
+/* Callback to start helper thread.  */
+extern void __start_helper_thread (void) attribute_hidden;
+
+/* Control variable for helper thread creation.  */
+extern pthread_once_t __helper_once attribute_hidden;
+
+/* TID of the helper thread.  */
+extern pid_t __helper_tid attribute_hidden;
 
 
 /* Type of timers in the kernel.  */
@@ -50,13 +57,4 @@ struct timer
   void (*thrfunc) (sigval_t);
   sigval_t sival;
   pthread_attr_t attr;
-
-  /* Id of the helper thread.  */
-  pthread_t th;
-
-  /* Barrier used for synchronization.  */
-  pthread_barrier_t bar;
 };
-
-/* This is the signal the kernel will send to the helper thread.  */
-#define TIMER_SIG 40 /* some RT signal */
