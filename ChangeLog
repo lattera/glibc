@@ -1,5 +1,7 @@
 Mon Jul  1 13:32:42 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
+	* hurd/report-wait.c (describe_number): Make I unsigned long.
+
 	* login/login.c (login): Only Frob OLD->ut_type if getutline_r
 	actually found any entry.
 
