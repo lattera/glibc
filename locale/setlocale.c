@@ -136,7 +136,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
       {
 	const char *name = (category == LC_ALL ? newnames[i] :
 			    category == i ? newnames[0] :
-			    _nl_current_names[i]);
+			    _nl_global_locale.__names[i]);
 	last_len = strlen (name);
 	cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
 	if (i > 0 && same && strcmp (name, newnames[0]) != 0)
@@ -165,7 +165,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 	/* Add "CATEGORY=NAME;" to the string.  */
 	const char *name = (category == LC_ALL ? newnames[i] :
 			    category == i ? newnames[0] :
-			    _nl_current_names[i]);
+			    _nl_global_locale.__names[i]);
 	p = __stpcpy (p, _nl_category_names[i]);
 	*p++ = '=';
 	p = __stpcpy (p, name);
@@ -176,17 +176,17 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 }
 
 
-/* Put NAME in _nl_current_names.  */
+/* Put NAME in _nl_global_locale.__names.  */
 static inline void
 setname (int category, const char *name)
 {
-  if (_nl_current_names[category] == name)
+  if (_nl_global_locale.__names[category] == name)
     return;
 
-  if (_nl_current_names[category] != _nl_C_name)
-    free ((char *) _nl_current_names[category]);
+  if (_nl_global_locale.__names[category] != _nl_C_name)
+    free ((char *) _nl_global_locale.__names[category]);
 
-  _nl_current_names[category] = name;
+  _nl_global_locale.__names[category] = name;
 }
 
 /* Put DATA in *_nl_current[CATEGORY].  */
@@ -216,11 +216,11 @@ setlocale (int category, const char *locale)
 
   /* Does user want name of current locale?  */
   if (locale == NULL)
-    return (char *) _nl_current_names[category];
+    return (char *) _nl_global_locale.__names[category];
 
-  if (strcmp (locale, _nl_current_names[category]) == 0)
+  if (strcmp (locale, _nl_global_locale.__names[category]) == 0)
     /* Changing to the same thing.  */
-    return (char *) _nl_current_names[category];
+    return (char *) _nl_global_locale.__names[category];
 
   /* We perhaps really have to load some data.  So we determine the
      path in which to look for the data now.  The environment variable
@@ -324,7 +324,7 @@ setlocale (int category, const char *locale)
 	    /* Make a copy of locale name.  */
 	    if (newnames[category] != _nl_C_name)
 	      {
-		newnames[category] = strdup (newnames[category]);
+		newnames[category] = __strdup (newnames[category]);
 		if (newnames[category] == NULL)
 		  break;
 	      }
@@ -389,7 +389,7 @@ setlocale (int category, const char *locale)
       /* Make a copy of locale name.  */
       if (newname[0] != _nl_C_name)
 	{
-	  newname[0] = strdup (newname[0]);
+	  newname[0] = __strdup (newname[0]);
 	  if (newname[0] == NULL)
 	    goto abort_single;
 	}

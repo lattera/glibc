@@ -177,10 +177,6 @@ extern const char _nl_POSIX_name[] attribute_hidden;
 /* The standard codeset.  */
 extern const char _nl_C_codeset[] attribute_hidden;
 
-/* Name of current locale for each individual category.
-   Each is malloc'd unless it is _nl_C_name.  */
-extern const char *_nl_current_names[] attribute_hidden;
-
 /* This is the internal locale_t object that holds the global locale
    controlled by calls to setlocale.  A thread's TSD locale pointer
    points to this when `uselocale (LC_GLOBAL_LOCALE)' is in effect.  */

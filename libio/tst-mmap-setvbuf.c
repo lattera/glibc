@@ -48,7 +48,7 @@ int main (void)
   fputs (test, f);
   fclose (f);
 
-  f = fopen (name, "r");
+  f = fopen (name, "rm");
   if (f == NULL)
     {
       printf ("%u: cannot fopen temporary file: %m\n", __LINE__);

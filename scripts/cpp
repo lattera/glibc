@@ -1,22 +1,6 @@
 #! /bin/sh
-cpp=`which cpp 2>/dev/null`
-if test $? -ne 0; then
-  if type cpp 2>/dev/null >/dev/null; then
-    cpp=`type cpp 2>/dev/null | awk '{ print $NF }'`
-  else
-    cpp=`gcc -print-file-name=cpp 2>/dev/null`
-    if test $? -ne 0; then
-      if test -x /lib/cpp; then
-        cpp=/lib/cpp
-      else
-        echo "cpp not found" 1>&2
-        exit 1
-      fi
-    fi
-  fi
-fi
 
-exec $cpp $*
-Local Variables:
-mode: sh
-End:
+# This script is used solely by rpcgen when run by sunrpc/Makefile,
+# which passes CPP in the environment to tell us what to run.
+
+exec ${CPP} "$@"

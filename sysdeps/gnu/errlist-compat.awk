@@ -113,4 +113,10 @@ versioned_symbol (libc, __sys_errlist_internal, _sys_errlist, %s);\n\
 versioned_symbol (libc, _sys_nerr_internal, sys_nerr, %s);\n\
 versioned_symbol (libc, __sys_nerr_internal, _sys_nerr, %s);\n", \
     lastv, lastv, lastv, lastv;
+
+  print "\n\
+link_warning (sys_errlist, \"\
+`sys_errlist' is deprecated; use `strerror' or `strerror_r' instead\")\n\
+link_warning (sys_nerr, \"\
+`sys_nerr' is deprecated; use `strerror' or `strerror_r' instead\")";
 }

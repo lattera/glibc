@@ -1,5 +1,30 @@
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
+	* locale/xlocale.h (struct __locale_struct): New member `__names'.
+	* locale/xlocale.c (_nl_C_locobj): Update initializer.
+	* locale/global-locale.c (_nl_global_locale): Likewise.
+	* locale/duplocale.c (__duplocale): strdup __names elements.
+	* locale/freelocale.c (__freelocale): Free __names elements.
+	* locale/localename.c (_nl_current_names): Variable removed.
+	(__current_locale_name): Use _NL_CURRENT_LOCALE->__names instead.
+	* locale/localeinfo.h (_nl_current_names): Removed decl.
+	* locale/setlocale.c: Use _nl_global_locale->__names in place of
+	_nl_current_names throughout.
+
+	* locale/setlocale.c (setlocale): strdup -> __strdup (not ISO C).
+
+	* sysdeps/gnu/errlist-compat.awk: Emit link_warnings for sys_errlist
+	and sys_nerr in the output file.
+
+	* sunrpc/Makefile (rpcgen-cmd): Pass CPP in rpcgen's environment.
+	* scripts/cpp: Just use the environment variable.
+
+	* libio/tst-mmap-setvbuf.c (main): Use 'm' fopen flag.
+	* libio/tst-mmap-offend.c (do_test): Likewise.
+	* libio/tst-mmap-fflushsync.c (do_test): Likewise.
+	* libio/tst-mmap-eofsync.c (do_test): Likewise.
+	* libio/tst-mmap2-eofsync.c (do_test): Likewise.
+
 	* locale/localename.c: If the current locale is the global locale, use
 	_nl_current_names; otherwise use the locale object.
 

@@ -132,7 +132,7 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
 	$(+link)
 
 # Tell rpcgen where to find the C preprocessor.
-rpcgen-cmd = $(built-program-cmd) -Y ../scripts
+rpcgen-cmd = CPP='$(CC) -E -x c-header' $(built-program-cmd) -Y ../scripts
 
 # Install the rpc data base file.
 $(inst_sysconfdir)/rpc: etc.rpc $(+force)

@@ -38,7 +38,7 @@ do_test (void)
   int result = 0;
   int c;
 
-  f = fopen (temp_file, "r");
+  f = fopen (temp_file, "rm");
   if (f == NULL)
     {
       perror (temp_file);

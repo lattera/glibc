@@ -33,15 +33,39 @@ __locale_t
 __duplocale (__locale_t dataset)
 {
   __locale_t result;
+  int cnt;
 
   /* We modify global data.  */
   __libc_lock_lock (__libc_setlocale_lock);
 
   /* Get memory.  */
   result = (__locale_t) malloc (sizeof (struct __locale_struct));
+
+  if (result != NULL)
+    /* Duplicate the names in a separate loop first so we can
+       bail out if strdup fails and not have touched usage_counts.  */
+    for (cnt = 0; cnt < __LC_LAST; ++cnt)
+      if (cnt != LC_ALL)
+	{
+	  if (dataset->__names[cnt] == _nl_C_name)
+	    result->__names[cnt] = _nl_C_name;
+	  else
+	    {
+	      result->__names[cnt] = __strdup (dataset->__names[cnt]);
+	      if (result->__names[cnt] == NULL)
+		{
+		  while (cnt-- > 0)
+		    if (dataset->__names[cnt] != _nl_C_name)
+		      free ((char *) dataset->__names[cnt]);
+		  free (result);
+		  result = NULL;
+		  break;
+		}
+	    }
+	}
+
   if (result != NULL)
     {
-      int cnt;
       for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	if (cnt != LC_ALL)
 	  {

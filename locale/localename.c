@@ -19,22 +19,9 @@
 
 #include "localeinfo.h"
 
-/* Name of current locale for each individual category.
-   Each is malloc'd unless it is _nl_C_name.  */
-const char *_nl_current_names[] attribute_hidden =
-  {
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = _nl_C_name,
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-    [LC_ALL] = _nl_C_name		/* For LC_ALL.  */
-  };
-
 const char *
 attribute_hidden
 __current_locale_name (int category)
 {
-  return (_NL_CURRENT_LOCALE == &_nl_global_locale
-	  ? _nl_current_names[category]
-	  : _NL_CURRENT_LOCALE->__locales[category]->name);
+  return _NL_CURRENT_LOCALE->__names[category];
 }

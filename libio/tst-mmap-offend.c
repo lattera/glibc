@@ -34,7 +34,7 @@ do_test (void)
 {
   unsigned char buffer[8192];
   int result = 0;
-  FILE *f = fopen (temp_file, "r");
+  FILE *f = fopen (temp_file, "rm");
   size_t cc;
 
   if (f == NULL)
