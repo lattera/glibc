@@ -129,7 +129,7 @@ extern struct gconv_module *__gconv_modules_db;
     char *result;							      \
     char *tmp;								      \
     size_t cnt = 0;							      \
-    size_t suffix_len = suffix == NULL ? 0 : strlen (suffix);		      \
+    size_t suffix_len = (suffix) == NULL ? 0 : strlen (suffix);		      \
 									      \
     while (*cp != '\0')							      \
       if (*cp++ == '/')							      \
