@@ -1,17 +1,14 @@
 2002-05-09  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/Dist: Add sys/io.h.
-
 	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: New.
-
-	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add sys/io.h.
-
-	* sysdeps/unix/sysv/linux/x86_64/glob.c: Remove.
-	* sysdeps/unix/sysv/linux/s390/s390-64/glob.c: Remove.
-	* sysdeps/unix/sysv/linux/sparc/sparc64/glob.c: Remove.
+	* sysdeps/unix/sysv/linux/x86_64/Dist: Add it.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add it.
 
 	* sysdeps/unix/sysv/linux/ia64/glob.c: Move to ...
 	* sysdeps/wordsize-64/glob.c: ...here.
+	* sysdeps/unix/sysv/linux/x86_64/glob.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-64/glob.c: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/glob.c: Remove.
 
 2002-05-08  Roland McGrath  <roland@frob.com>
 
