@@ -143,6 +143,8 @@ please let me know.
 	execute any binaries.  What went wrong?
 3.19.	bonnie reports that char i/o with glibc 2 is much slower than with
 	libc5.  What can be done?
+3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
+	2.0.  What has changed that programs like rpm break?
 
 4. Miscellaneous
 
@@ -1496,6 +1498,22 @@ non thread safe versions.  The non thread safe functions have in glibc the
 suffix `_unlocked', for details check <stdio.h>.  Using `putc_unlocked' etc.
 instead of `putc' should give nearly the same speed with bonnie (bonnie is a
 benchmark program for measuring disk access).
+
+
+3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
+	2.0.  What has changed that programs like rpm break?
+
+{AJ} The GNU C library 2.1 uses db2 instead of db1 which was used in version
+2.0.  The internal formats of the actual db files are different.  To convert
+the db files from db1 format to db2 format, you can use the programs
+`db_dump185' and `db_load'.  Alternativly programs can be linked with db1
+using `-ldb1' instead of linking with db2 which uses `-ldb'.  Linking with
+db1 might be preferable if older programs need to access the db file.
+
+db2 supports the old db1 programming interface and also a new programming
+interface.  For compilation with the old API, <db_185.h> has to be included
+(and not <db.h>) and you can link with either `-ldb1' or `-ldb' for either
+of the db formats.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

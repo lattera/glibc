@@ -1,3 +1,9 @@
+1999-03-02  Mark Kettenis  <kettenis@gnu.org>
+
+	* Makerules (LD_FLAGS-c.so): Add -u __register_frame to force the
+	backward compatibility EH functions to be linked when using
+	gcc-2.8.1.  Patch by Zack Weinberg <zack@rabi.columbia.edu>.
+
 1999-03-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Undo last change.
