@@ -1,3 +1,12 @@
+2001-08-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps (float): Add ulps for new tests.
+
+	* math/libm-test.inc (j0_test): Add extra tests.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_j0l): Use |x|,
+	not x, in Hankel approximation.
+	Patches by Stephen L Moshier.
+
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/dl-lookupcfg.h: Add forward declaration for struct
