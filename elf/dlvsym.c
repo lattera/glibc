@@ -1,5 +1,5 @@
 /* Look up a versioned symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,6 +71,16 @@ RTLD_NEXT used in code not dynamically loaded"));
 							 l->l_local_scope,
 							 NULL, &args->version,
 							 match);
+
+      if (args->loadbase == 0)
+	{
+	  /* This means that no such symbol is defined.  In this case we
+	     have to provide a phony Elfxx_Sym entry since the value is
+	     referenced in `dlsym'.  */
+	  static const ElfW(Sym) null_result;
+
+	  args->ref = &null_result;
+	}
     }
   else
     {

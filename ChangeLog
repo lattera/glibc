@@ -1,3 +1,10 @@
+1999-02-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlsym.c (dlsym_doit): If no symbol for RTLD_NEXT is found
+	initialize ref element of args object so that dlsym does not dump
+	a core.
+	* elf/dlvsym.c (dlvsym_doit): Likewise.
+
 1999-02-03  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S: Set branch
