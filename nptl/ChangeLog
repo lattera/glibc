@@ -1,3 +1,9 @@
+2004-03-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tcb-offsets.sym: Add PID.
+	* sysdeps/unix/sysv/linux/sh/pt-vfork.S: Properly handle PID cache.
+	* sysdeps/unix/sysv/linux/sh/vfork.S: New file.
+
 2004-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: No need to

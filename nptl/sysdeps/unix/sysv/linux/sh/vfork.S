@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,11 @@ ENTRY (__vfork)
 	mov.w	.L2, r0
 	mov.l	@(r0,r2), r4
 	neg	r4, r1
+	tst	r1, r1
+	bf	1f
+	mov	#1, r1
+	rotr	r1
+1:
 	mov.l	r1, @(r0,r2)
 
 	mov.w	.L1, r3
@@ -40,7 +45,7 @@ ENTRY (__vfork)
 
 	/* Restore the old PID value in the parent.  */
 	tst	r0, r0
-	bt/s	2f
+	bt.s	2f
 	 stc	gbr, r2
 	mov.w	.L2, r0
 	mov.l	r4, @(r0,r2)
@@ -59,7 +64,7 @@ ENTRY (__vfork)
 	.word	__NR_vfork
 .L2:
 	.word	PID - TLS_PRE_TCB_SIZE
-
+	.align	2
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
 
