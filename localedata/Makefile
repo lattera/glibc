@@ -90,7 +90,7 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
 		     tst_wctype tst_wcwidth
 
-tests = $(locale_test_suite) tst-digits tst-setlocale
+tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans
 endif
 
 # Files to install.
@@ -256,3 +256,5 @@ tst_wcwidth-ENV = $(TEST_MBWC_ENV)
 tst-digits-ENV = $(TEST_MBWC_ENV)
 
 tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
+
+bug-iconv-trans-ENV = LOCPATH=$(common-objpfx)localedata

@@ -111,17 +111,18 @@ __gconv_transliterate (struct __gconv_step *step,
 	      uint_fast32_t len = 0;
 	      int res;
 	      const unsigned char *toinptr;
+	      unsigned char *outptr;
 
 	      while (to_tbl[idx2 + len] != L'\0')
 		++len;
 
 	      /* Try this input text.  */
 	      toinptr = (const unsigned char *) &to_tbl[idx2];
+	      outptr = *outbufstart;
 	      res = DL_CALL_FCT (step->__fct,
 				 (step, step_data, &toinptr,
 				  (const unsigned char *) &to_tbl[idx2 + len],
-				  (unsigned char **) outbufstart,
-				  NULL, 0, 0));
+				  &outptr, NULL, 0, 0));
 	      if (res != __GCONV_ILLEGAL_INPUT)
 		{
 		  /* If the conversion succeeds we have to increment the
@@ -132,6 +133,7 @@ __gconv_transliterate (struct __gconv_step *step,
 		      ++*irreversible;
 		      res = __GCONV_OK;
 		    }
+		  *outbufstart = outptr;
 
 		  return res;
 		}
@@ -193,6 +195,7 @@ __gconv_transliterate (struct __gconv_step *step,
       const unsigned char *toinptr = (const unsigned char *) default_missing;
       uint32_t len = _NL_CURRENT_WORD (LC_CTYPE,
 				       _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN);
+      unsigned char *outptr;
       int res;
 
       /* Test whether there is enough input.  */
@@ -200,11 +203,11 @@ __gconv_transliterate (struct __gconv_step *step,
 	return (winbuf == winbufend
 		? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);
 
+      outptr = *outbufstart;
       res = DL_CALL_FCT (step->__fct,
 			 (step, step_data, &toinptr,
 			  (const unsigned char *) (default_missing + len),
-			  (unsigned char **) outbufstart,
-			  NULL, 0, 0));
+			  &outptr, NULL, 0, 0));
 
       if (res != __GCONV_ILLEGAL_INPUT)
 	{
@@ -217,6 +220,7 @@ __gconv_transliterate (struct __gconv_step *step,
 	      *inbufp += 4;
 	      res = __GCONV_OK;
 	    }
+	  *outbufstart = outptr;
 
 	  return res;
 	}

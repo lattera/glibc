@@ -221,8 +221,13 @@ The symbols in this section are defined in the header file @file{locale.h}.
 @comment locale.h
 @comment ISO
 @deftypefun {char *} setlocale (int @var{category}, const char *@var{locale})
-The function @code{setlocale} sets the current locale for
-category @var{category} to @var{locale}.
+The function @code{setlocale} sets the current locale for category
+@var{category} to @var{locale}.  A list of all the locales the system
+provides can be created by running
+
+@smallexample
+  locale -a
+@end smallexample
 
 If @var{category} is @code{LC_ALL}, this specifies the locale for all
 purposes.  The other possible values of @var{category} specify an
@@ -239,9 +244,11 @@ Concatenation}) if you want to save it past any further calls to
 @code{setlocale}.  (The standard library is guaranteed never to call
 @code{setlocale} itself.)
 
-You should not modify the string returned by @code{setlocale}.
-It might be the same string that was passed as an argument in a
-previous call to @code{setlocale}.
+You should not modify the string returned by @code{setlocale}.  It might
+be the same string that was passed as an argument in a previous call to
+@code{setlocale}.  One requirement is that the @var{category} must be
+the same in the call the string was returned and the one when the string
+is passed in as @var{locale} parameter.
 
 When you read the current locale for category @code{LC_ALL}, the value
 encodes the entire combination of selected locales for all categories.
