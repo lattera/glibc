@@ -1,0 +1,84 @@
+#! /bin/sh
+
+# The common objpfx, used to find libraries and the dynamic loader.
+objpfx=$1
+
+# We expect one parameter which is the test program.  This must understand
+# a number options:
+#   --phys	use the FTW_PHYS flag
+#   --chdir	use the FTW_CHDIR and print the current directory in the
+#		callback
+#   --depth	use the FTW_DEPTH flag
+testprogram=$2
+
+
+# First create our scenario:
+tmp=${TMPDIR:-/tmp}
+tmpdir=$tmp/ftwtest.d
+
+trap 'rm -fr $tmpdir $testout' 1 2 3 15
+
+if test -d $tmpdir; then
+  chmod -R a+x $tmpdir
+  rm -fr $tmpdir
+fi
+mkdir $tmpdir
+mkdir $tmpdir/foo
+mkdir $tmpdir/bar
+echo > $tmpdir/baz
+mkdir $tmpdir/foo/lvl1
+echo > $tmpdir/foo/lvl1/file@1
+mkdir $tmpdir/foo/lvl1/lvl2
+echo > $tmpdir/foo/lvl1/lvl2/file@2
+mkdir $tmpdir/foo/lvl1/lvl2/lvl3
+echo > $tmpdir/foo/lvl1/lvl2/lvl3/file@3
+ln -s $tmpdir $tmpdir/foo/lvl1/lvl2/lvl3/link@3
+ln -s $tmpdir/foo/lvl1/lvl2 $tmpdir/foo/lvl1/lvl2/link@2
+ln -s $tmpdir/foo/lvl1/lvl2/lvl3/lvl4 $tmpdir/foo/lvl1/link@1
+echo > $tmpdir/bar/xo
+chmod a-x,a+r $tmpdir/bar
+
+testout=${TMPDIR:-/tmp}/ftwtest.out
+LD_LIBRARY_PATH=$objpfx $objpfx/elf/ld.so $testprogram $tmpdir |
+    sort > $testout
+
+cat <<EOF | cmp $testout - || exit 1
+base = "$tmp/", file = "ftwtest.d", flag = FTW_D
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
+EOF
+rm $testout
+
+testout=${TMPDIR:-/tmp}/ftwtest.out
+LD_LIBRARY_PATH=$objpfx $objpfx/elf/ld.so $testprogram --depth $tmpdir |
+    sort > $testout
+
+cat <<EOF | cmp $testout - || exit 1
+base = "/tmp/", file = "ftwtest.d", flag = FTW_DP
+base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_DP
+base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F
+base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_DP
+base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS
+base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN
+base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP
+base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F
+EOF
+rm $testout
+
+chmod -R a+x $tmpdir
+rm -fr $tmpdir
+
+exit 0

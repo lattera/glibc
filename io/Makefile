@@ -51,9 +51,15 @@ routines :=							      \
 static-only-routines = stat fstat lstat mknod
 
 others		:= pwd
+test-srcs	:= ftwtest
 tests		:= test-utime
+
+distribute	:= ftwtest-sh
 
 include ../Rules
 
 CFLAGS-fts.c = -Wno-uninitialized
 CFLAGS-ftw.c = -Wno-uninitialized
+
+tests: $(objpfx)ftwtest
+	$(SHELL) -e ftwtest-sh $(common-objpfx) $<

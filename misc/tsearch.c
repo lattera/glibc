@@ -300,7 +300,7 @@ weak_alias (__tsearch, tsearch)
 void *
 __tfind (key, vrootp, compar)
      const void *key;
-     const void **vrootp;
+     void *const *vrootp;
      __compar_fn_t compar;
 {
   node *rootp = (node *) vrootp;
@@ -625,3 +625,36 @@ __twalk (const void *vroot, __action_fn_t action)
     trecurse (root, action, 0);
 }
 weak_alias (__twalk, twalk)
+
+
+
+/* The standardized functions miss an important functionality: the
+   tree cannot be removed easily.  We provide a function to do this.  */
+static void
+tdestroy_recurse (node root, __free_fn_t freefct)
+{
+  if (root->left == NULL && root->right == NULL)
+    (*freefct) (root->key);
+  else
+    {
+      if (root->left != NULL)
+	tdestroy_recurse (root->left, freefct);
+      if (root->right != NULL)
+	tdestroy_recurse (root->right, freefct);
+      (*freefct) (root->key);
+    }
+  /* Free the node itself.  */
+  free (root);
+}
+
+void
+__tdestroy (void *vroot, __free_fn_t freefct)
+{
+  node root = (node) vroot;
+
+  CHECK_TREE (root);
+
+  if (root != NULL)
+    tdestroy_recurse (root, freefct);
+}
+weak_alias (__tdestroy, tdestroy)

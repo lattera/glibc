@@ -44,11 +44,13 @@ enum
   FTW_NS,		/* Unstatable file.  */
 #define FTW_NS	 FTW_NS
 
-#ifdef __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
   FTW_SL,		/* Symbolic link.  */
 # define FTW_SL	 FTW_SL
+#endif
 
+#ifdef __USE_XOPEN_EXTENDED
 /* These flags are only passed from the `nftw' function.  */
   FTW_DP,		/* Directory, all subdirs have been visited. */
 # define FTW_DP	 FTW_DP

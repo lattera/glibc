@@ -38,24 +38,44 @@ struct dir_data
   char *content;
 };
 
+struct known_object
+{
+  dev_t dev;
+  ino_t ino;
+};
+
 struct ftw_data
 {
+  /* Array with pointers to open directory streams.  */
   struct dir_data **dirstreams;
   size_t actdir;
   size_t maxdir;
 
+  /* Buffer containing name of currently processed object.  */
   char *dirbuf;
   size_t dirbufsize;
+
+  /* Passed as fourth argument to `nftw' callback.  The `base' member
+     tracks the content of the `dirbuf'.  */
   struct FTW ftw;
 
+  /* Flags passed to `nftw' function.  0 for `ftw'.  */
   int flags;
 
+  /* Conversion array for flag values.  It is the identity mapping for
+     `nftw' calls, otherwise it maps the values to those know by
+     `ftw'.  */
   int *cvt_arr;
+
+  /* Callback function.  We always use the `nftw' form.  */
   __nftw_func_t func;
 
-  struct stat st;
-
+  /* Device of starting point.  Needed for FTW_MOUNT.  */
   dev_t dev;
+
+  /* Data structure for keeping fingerprints of already processed
+     object.  This is needed when not using FTW_PHYS.  */
+  void *known_objects;
 };
 
 
@@ -74,7 +94,36 @@ static int ftw_arr[] =
 
 
 /* Forward declarations of local functions.  */
-static int ftw_dir (struct ftw_data *data);
+static int ftw_dir (struct ftw_data *data, struct stat *st);
+
+
+static int
+object_compare (const void *p1, const void *p2)
+{
+  /* We don't need a sophisticated and useful comparison.  We are only
+     interested in equality.  */
+  return memcmp (p1, p2, sizeof (struct known_object));
+}
+
+
+static inline int
+add_object (struct ftw_data *data, struct stat *st)
+{
+  struct known_object *newp = malloc (sizeof (struct known_object));
+  if (newp == NULL)
+    return -1;
+  newp->dev = st->st_dev;
+  newp->ino = st->st_ino;
+  return __tsearch (newp, &data->known_objects, object_compare) ? 0 : -1;
+}
+
+
+static inline int
+find_object (struct ftw_data *data, struct stat *st)
+{
+  struct known_object obj = { dev: st->st_dev, ino: st->st_ino };
+  return __tfind (&obj, &data->known_objects, object_compare) != NULL;
+}
 
 
 static inline int
@@ -170,6 +219,7 @@ static inline int
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen)
 {
+  struct stat st;
   int result = 0;
   int flag;
 
@@ -193,65 +243,72 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
   memcpy (data->dirbuf + data->ftw.base, name, namlen);
   data->dirbuf[data->ftw.base + namlen] = '\0';
 
-  if (((data->flags & FTW_PHYS) ? lstat : stat) (data->dirbuf, &data->st) < 0)
+  if (((data->flags & FTW_PHYS) ? lstat : stat) (data->dirbuf, &st) < 0)
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
       else if (!(data->flags & FTW_PHYS)
-	       && lstat (data->dirbuf, &data->st) == 0
-	       && S_ISLNK (data->st.st_mode))
+	       && lstat (data->dirbuf, &st) == 0
+	       && S_ISLNK (st.st_mode))
 	flag = FTW_SLN;
       else
 	flag = FTW_NS;
     }
   else
     {
-      if (S_ISDIR (data->st.st_mode))
+      if (S_ISDIR (st.st_mode))
 	flag = FTW_D;
-      else if (S_ISLNK (data->st.st_mode))
+      else if (S_ISLNK (st.st_mode))
 	flag = FTW_SL;
       else
 	flag = FTW_F;
     }
 
   if (result == 0
-      && (!(data->flags & FTW_MOUNT) || data->st.st_dev == data->dev))
+      && (!(data->flags & FTW_MOUNT) || flag == FTW_NS
+	  || st.st_dev == data->dev))
     {
-      if (flag == FTW_D)
+      if ((data->flags & FTW_PHYS) || flag == FTW_NS
+	  || (!find_object (data, &st)
+	      /* Remember the object.  */
+	      && (result = add_object (data, &st)) == 0))
 	{
-	  result = ftw_dir (data);
-
-	  if (result == 0 && (data->flags & FTW_CHDIR))
+	  if (flag == FTW_D)
 	    {
-	      /* Change back to current directory.  */
-	      int done = 0;
-	      if (dir->stream != NULL)
-		if (fchdir (dirfd (dir->stream)) == 0)
-		  done = 1;
+	      result = ftw_dir (data, &st);
 
-	      if (!done)
+	      if (result == 0 && (data->flags & FTW_CHDIR))
 		{
-		  if (data->ftw.base == 1)
-		    {
-		      if (chdir ("/") < 0)
-			result = -1;
-		    }
-		  else
-		    {
-		      /* Please note that we overwrite a slash.  */
-		      data->dirbuf[data->ftw.base - 1] = '\0';
+		  /* Change back to current directory.  */
+		  int done = 0;
+		  if (dir->stream != NULL)
+		    if (fchdir (dirfd (dir->stream)) == 0)
+		      done = 1;
 
-		      if (chdir (data->dirbuf) < 0)
-			result = -1;
+		  if (!done)
+		    {
+		      if (data->ftw.base == 1)
+			{
+			  if (chdir ("/") < 0)
+			    result = -1;
+			}
 		      else
-			data->dirbuf[data->ftw.base - 1] = '/';
+			{
+			  /* Please note that we overwrite a slash.  */
+			  data->dirbuf[data->ftw.base - 1] = '\0';
+
+			  if (chdir (data->dirbuf) < 0)
+			    result = -1;
+
+			  data->dirbuf[data->ftw.base - 1] = '/';
+			}
 		    }
 		}
 	    }
+	  else
+	    result = (*data->func) (data->dirbuf, &st, data->cvt_arr[flag],
+				    &data->ftw);
 	}
-      else
-	result = (*data->func) (data->dirbuf, &data->st, data->cvt_arr[flag],
-				&data->ftw);
     }
 
   return result;
@@ -259,27 +316,33 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 
 static int
-ftw_dir (struct ftw_data *data)
+ftw_dir (struct ftw_data *data, struct stat *st)
 {
   struct dir_data dir;
   struct dirent *d;
   int previous_base = data->ftw.base;
-  int result = 0;
+  int result;
   char *startp;
-
-  /* First, report the directory (if not depth-first).  */
-  if (!(data->flags & FTW_DEPTH))
-    {
-      result = (*data->func) (data->dirbuf, &data->st, FTW_D, &data->ftw);
-      if (result != 0)
-	return result;
-    }
 
   /* Open the stream for this directory.  This might require that
      another stream has to be closed.  */
   result = open_dir_stream (data, &dir);
   if (result != 0)
-    return result;
+    {
+      if (errno == EACCES)
+	/* We cannot read the directory.  Signal this with a special flag.  */
+	result = (*data->func) (data->dirbuf, st, FTW_DNR, &data->ftw);
+
+      return result;
+    }
+
+  /* First, report the directory (if not depth-first).  */
+  if (!(data->flags & FTW_DEPTH))
+    {
+      result = (*data->func) (data->dirbuf, st, FTW_D, &data->ftw);
+      if (result != 0)
+	return result;
+    }
 
   /* If necessary, change to this directory.  */
   if (data->flags & FTW_CHDIR)
@@ -361,12 +424,13 @@ ftw_dir (struct ftw_data *data)
     }
 
   /* Prepare the return, revert the `struct FTW' information.  */
+  data->dirbuf[data->ftw.base - 1] = '\0';
   --data->ftw.level;
   data->ftw.base = previous_base;
 
   /* Finally, if we process depth-first report the directory.  */
   if (result == 0 && (data->flags & FTW_DEPTH))
-    result = (*data->func) (data->dirbuf, &data->st, FTW_DP, &data->ftw);
+    result = (*data->func) (data->dirbuf, st, FTW_DP, &data->ftw);
 
   return result;
 }
@@ -377,9 +441,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     int flags)
 {
   struct ftw_data data;
+  struct stat st;
   int result = 0;
   int save_err;
-  char *cwd;
+  char *cwd = NULL;
   char *cp;
 
   /* First make sure the parameters are reasonable.  */
@@ -399,7 +464,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   data.dirbuf = (char *) malloc (data.dirbufsize);
   if (data.dirbuf == NULL)
     return -1;
-  cp = stpcpy (data.dirbuf, dir);
+  cp = __stpcpy (data.dirbuf, dir);
   /* Strip trailing slashes.  */
   while (cp > data.dirbuf + 1 && cp[-1] == '/')
     --cp;
@@ -425,6 +490,9 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Since we internally use the complete set of FTW_* values we need
      to reduce the value range before calling a `ftw' callback.  */
   data.cvt_arr = is_nftw ? nftw_arr : ftw_arr;
+
+  /* No object known so far.  */
+  data.known_objects = NULL;
 
   /* Now go to the directory containing the initial file/directory.  */
   if ((flags & FTW_CHDIR) && data.ftw.base > 0)
@@ -453,14 +521,14 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 
   /* Get stat info for start directory.  */
   if (result == 0)
-    if (((flags & FTW_PHYS) ? lstat : stat) (data.dirbuf, &data.st) < 0)
+    if (((flags & FTW_PHYS) ? lstat : stat) (data.dirbuf, &st) < 0)
       {
 	if (errno == EACCES)
-	  result = (*data.func) (data.dirbuf, &data.st, FTW_NS, &data.ftw);
+	  result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
 	else if (!(flags & FTW_PHYS)
 		 && errno == ENOENT
-		 && lstat (dir, &data.st) == 0 && S_ISLNK (data.st.st_mode))
-	  result = (*data.func) (data.dirbuf, &data.st, data.cvt_arr[FTW_SLN],
+		 && lstat (dir, &st) == 0 && S_ISLNK (st.st_mode))
+	  result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				 &data.ftw);
 	else
 	  /* No need to call the callback since we cannot say anything
@@ -469,16 +537,24 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
       }
     else
       {
-	if (S_ISDIR (data.st.st_mode))
+	if (S_ISDIR (st.st_mode))
 	  {
-	    data.dev = data.st.st_dev;
-	    result = ftw_dir (&data);
+	    /* Remember the device of the initial directory in case
+	       FTW_MOUNT is given.  */
+	    data.dev = st.st_dev;
+
+	    /* We know this directory now.  */
+	    if (!(flags & FTW_PHYS))
+	      result = add_object (&data, &st);
+
+	    if (result == 0)
+	      result = ftw_dir (&data, &st);
 	  }
 	else
 	  {
-	    int flag = S_ISLNK (data.st.st_mode) ? FTW_SL : FTW_F;
+	    int flag = S_ISLNK (st.st_mode) ? FTW_SL : FTW_F;
 
-	    result = (*data.func) (data.dirbuf, &data.st, data.cvt_arr[flag],
+	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[flag],
 				   &data.ftw);
 	  }
       }
@@ -494,6 +570,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 
   /* Free all memory.  */
   save_err = errno;
+  __tdestroy (data.known_objects, free);
   free (data.dirbuf);
   __set_errno (save_err);
 

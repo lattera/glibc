@@ -14,6 +14,7 @@ gpl2lgpl.sed
 distinfo
 distinfo
 
+test-include
 analysis
 docs
 

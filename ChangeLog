@@ -2,6 +2,15 @@
 
 	* io/ftw.c: Complete rewrite.  Add implementation of `nftw'.
 	* io/ftw.h: Update for new implementation and XPG4.2.
+	* io/Makefile (test-srcs): Add ftwtest.
+	(distribute): Add ftwtest-sh.
+	(tests): Call ftwtest-sh for this goal.
+	* io/ftwtest-sh: New file.  Sets up test environment, calls test
+	program and compares the result.
+	* io/ftwtest.c: Test program for ftw.
+
+	* misc/search.h: Add comments.  Declare tdestroy.
+	* misc/tsearch.c (tdestroy): New function.
 
 	* login/Makefile: Update for UTMP daemon implementation.
 
