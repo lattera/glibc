@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.94";
+static char	elsieid[] = "@(#)zic.c	7.95";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -901,9 +901,10 @@ const int		signable;
 			error(errstring);
 			return 0;
 	}
-	if (hh < 0 || hh >= HOURSPERDAY ||
+	if ((hh < 0 || hh >= HOURSPERDAY ||
 		mm < 0 || mm >= MINSPERHOUR ||
-		ss < 0 || ss > SECSPERMIN) {
+		ss < 0 || ss > SECSPERMIN) &&
+		!(hh == HOURSPERDAY && mm == 0 && ss == 0)) {
 			error(errstring);
 			return 0;
 	}

@@ -1,4 +1,4 @@
-# @(#)europe	7.56
+# @(#)europe	7.57
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -948,7 +948,7 @@ Rule	Russia	1921	only	-	Feb	14	23:00	1:00	S
 # Shanks gives 1921 Mar 21 for the following transition.
 # From Andrey A. Chernov <ache@astral.msk.su> (1993-11-12):
 # My sources says, that it is Mar 20, not 21.
-Rule	Russia	1921	only	-	Mar	20	23:00	2:00	DS
+Rule	Russia	1921	only	-	Mar	20	23:00	2:00	M # Midsummer
 Rule	Russia	1921	only	-	Sep	 1	 0:00	1:00	S
 Rule	Russia	1921	only	-	Oct	 1	 0:00	0	-
 # Act No.925 of the Council of Ministers of the USSR (1980-10-24):
@@ -1313,19 +1313,19 @@ Rule	France	1939	only	-	Nov	18	23:00s	0	-
 Rule	France	1940	only	-	Feb	25	 2:00	1:00	S
 # The French rules for 1941-1944 were not used in Paris,
 # but were used in other places (e.g. Monaco).
-Rule	France	1941	only	-	May	 5	 0:00	2:00	DS
+Rule	France	1941	only	-	May	 5	 0:00	2:00	M # Midsummer
 # Shanks says this transition occurred at Oct 6 1:00,
 # but go with Denis.Excoffier@ens.fr (1997-12-12),
 # who quotes the Ephemerides Astronomiques for 1998 from Bureau des Longitudes
 # as saying 5/10/41 22hUT.
 Rule	France	1941	only	-	Oct	 6	 0:00	1:00	S
-Rule	France	1942	only	-	Mar	 9	 0:00	2:00	DS
+Rule	France	1942	only	-	Mar	 9	 0:00	2:00	M
 Rule	France	1942	only	-	Nov	 2	 3:00	1:00	S
-Rule	France	1943	only	-	Mar	29	 2:00	2:00	DS
+Rule	France	1943	only	-	Mar	29	 2:00	2:00	M
 Rule	France	1943	only	-	Oct	 4	 3:00	1:00	S
-Rule	France	1944	only	-	Apr	 3	 2:00	2:00	DS
+Rule	France	1944	only	-	Apr	 3	 2:00	2:00	M
 Rule	France	1944	only	-	Oct	 8	 1:00	1:00	S
-Rule	France	1945	only	-	Apr	 2	 2:00	2:00	DS
+Rule	France	1945	only	-	Apr	 2	 2:00	2:00	M
 Rule	France	1945	only	-	Sep	16	 3:00	0	-
 # Shanks gives Mar 28 2:00 and Sep 26 3:00;
 # go with Excoffier's 28/3/76 0hUT and 25/9/76 23hUT.
@@ -1347,16 +1347,30 @@ Zone	Europe/Paris	0:09:21 -	LMT	1891 Mar 15  0:01
 
 # Germany
 
+# From Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk> (1998-09-29):
+# The German time zone web site by the Physikalisch-Technische
+# Bundesanstalt contains DST information back to 1916.
+#
+#	<a href="http://www.ptb.de/english/org/4/43/432/lega.htm">
+#	Realisation of Legal Time in Germany
+#	</a>
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Germany	1945	only	-	Apr	 2	2:00s	1:00	S
-Rule	Germany	1945	only	-	May	24	2:00	2:00	DS
-Rule	Germany	1945	only	-	Sep	24	3:00	1:00	S
+# Shanks says 05-24 2:00 to 09-24 3:00 for DDST; go with the PTB, who quotes
+# the Archiv fuer publizist. Arbeit (Munzinger-Archiv) 652 (Zeitsystem)
+# (1961-11-25), which gives dates only.  Guess 3:00 transition times.
+Rule	Germany	1945	only	-	May	31	3:00	2:00	M # Midsummer
+Rule	Germany	1945	only	-	Sep	23	3:00	1:00	S
 Rule	Germany	1945	only	-	Nov	18	2:00s	0	-
 Rule	Germany	1946	only	-	Apr	14	2:00s	1:00	S
-# Whitman gives 1948 Oct 31; go with Shanks.
-Rule	Germany	1946	1949	-	Oct	Sun>=1	2:00s	0	-
+# Shanks gives 1946-10-06; go with the PTB.
+Rule	Germany	1946	only	-	Oct	 7	2:00s	0	-
+Rule	Germany	1947	1949	-	Oct	Sun>=1	2:00s	0	-
 Rule	Germany	1947	only	-	Apr	 6	2:00s	1:00	S
-Rule	Germany	1947	only	-	May	11	2:00s	2:00	DS
+# The PTB gives 3:00 CET and 3:00 CEST for the midsummer transition times;
+# go with Shanks.
+Rule	Germany	1947	only	-	May	11	2:00s	2:00	M
 Rule	Germany	1947	only	-	Jun	29	3:00	1:00	S
 Rule	Germany	1948	only	-	Apr	18	2:00s	1:00	S
 Rule	Germany	1949	only	-	Apr	10	2:00s	1:00	S
@@ -1898,12 +1912,12 @@ Rule	Port	1940	only	-	Feb	24	23:00s	1:00	S
 Rule	Port	1940	1941	-	Oct	 5	23:00s	0	-
 Rule	Port	1941	only	-	Apr	 5	23:00s	1:00	S
 Rule	Port	1942	1945	-	Mar	Sat>=8	23:00s	1:00	S
-Rule	Port	1942	only	-	Apr	25	22:00s	2:00	DS
+Rule	Port	1942	only	-	Apr	25	22:00s	2:00	M # Midsummer
 Rule	Port	1942	only	-	Aug	15	22:00s	1:00	S
 Rule	Port	1942	1945	-	Oct	Sat>=24	23:00s	0	-
-Rule	Port	1943	only	-	Apr	17	22:00s	2:00	DS
+Rule	Port	1943	only	-	Apr	17	22:00s	2:00	M
 Rule	Port	1943	1945	-	Aug	Sat>=25	22:00s	1:00	S
-Rule	Port	1944	1945	-	Apr	Sat>=21	22:00s	2:00	DS
+Rule	Port	1944	1945	-	Apr	Sat>=21	22:00s	2:00	M
 Rule	Port	1946	only	-	Apr	Sat>=1	23:00s	1:00	S
 Rule	Port	1946	only	-	Oct	Sat>=1	23:00s	0	-
 Rule	Port	1947	1949	-	Apr	Sun>=1	 2:00s	1:00	S
@@ -2115,9 +2129,9 @@ Rule	Spain	1938	only	-	Mar	22	23:00s	1:00	S
 Rule	Spain	1939	only	-	Apr	15	23:00s	1:00	S
 Rule	Spain	1940	only	-	Mar	16	23:00s	1:00	S
 # Whitman says no DST 1942-1945; go with Shanks.
-Rule	Spain	1942	only	-	May	 2	22:00s	2:00	DS
+Rule	Spain	1942	only	-	May	 2	22:00s	2:00	M # Midsummer
 Rule	Spain	1942	only	-	Sep	 1	22:00s	1:00	S
-Rule	Spain	1943	1946	-	Apr	Sat>=13	22:00s	2:00	DS
+Rule	Spain	1943	1946	-	Apr	Sat>=13	22:00s	2:00	M
 Rule	Spain	1943	only	-	Oct	 3	22:00s	1:00	S
 Rule	Spain	1944	only	-	Oct	10	22:00s	1:00	S
 Rule	Spain	1945	only	-	Sep	30	 1:00	1:00	S

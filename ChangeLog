@@ -1,3 +1,9 @@
+1998-10-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/zic.c: Update from tzcode1998h.
+	* timezone/europe: Update from tzdata1998i.
+	* timezone/southamerica: Likewise.
+
 1998-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de> 
  
 	* string/bits/string2.h (__string2_1bptr_p): Don't use a statement 
