@@ -1,3 +1,39 @@
+2000-12-31  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/memusagestat.c (main): Use return instead of exit to
+	avoid warning.
+	* io/pwd.c (main): Likewise.
+	* iconvdata/tst-table-from.c (main): Likewise.
+	* ctype/test_ctype.c (main): Likewise.
+	* setjmp/tst-setjmp.c (main): Likewise.
+	* signal/tst-signal.c (main): Likewise.
+	* stdlib/tst-strtol.c (main): Likewise.
+	* stdlib/tst-strtod.c (main): Likewise.
+	* stdlib/tst-strtoll.c (main): Likewise.
+	* stdlib/tst-xpg-basename.c (main): Likewise.
+	* dirent/tst-seekdir.c (main): Likewise.
+	* grp/testgrp.c (main): Likewise.
+	* inet/test_ifindex.c (main): Likewise.
+	* io/test-utime.c (main): Likewise.
+	* posix/test-vfork.c (main): Likewise.
+	* posix/testfnm.c (main): Likewise.
+	* stdio-common/temptest.c (main): Likewise.
+	* stdio-common/test_rdwr.c (main): Likewise.
+	* stdio-common/tst-fileno.c (main): Likewise.
+	* stdio-common/tst-sscanf.c (main): Likewise.
+	* stdio-common/tstscanf.c (main): Likewise.
+	* string/bug-strncat1.c (main): Likewise.
+	* string/bug-strpbrk1.c (main): Likewise.
+	* string/bug-strspn1.c (main): Likewise.
+	* string/test-ffs.c (main): Likewise.
+	* string/tst-inlcall.c (main): Likewise.
+	* string/tst-svc.c (main): Likewise.
+	* timezone/test-tz.c (main): Likewise.
+	* wctype/test_wcfuncs.c (main): Likewise.
+	* wctype/test_wctype.c (main): Likewise.
+
+	* stdlib/tst-random.c: Add attribute noreturn to fail.
+
 2000-12-28  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (MALLOC_COPY): Handle case if source and
