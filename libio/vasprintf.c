@@ -24,6 +24,7 @@
    General Public License.  */
 
 #include <malloc.h>
+#include <string.h>
 #include "libioP.h"
 #include "stdio.h"
 #include "strfile.h"
