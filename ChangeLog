@@ -1,7 +1,12 @@
-Wed Jun 10 10:32:11 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-06-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/i386/dl-machine.h (_dl_start_user): Store stack address
+	in the variable, not its GOT slot.
+
+1998-06-10 10:32  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/bits/mathinline.h: Define __ieee754_exp10 as
- 	inline.
+	inline.
 	* sysdeps/m68k/fpu/e_exp10.c: New file.
 	* sysdeps/m68k/fpu/e_exp10f.c: New file.
 	* sysdeps/m68k/fpu/e_exp10l.c: New file.
@@ -10,7 +15,7 @@ Wed Jun 10 10:32:11 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	_dl_profile_map only if the name matches.
 	(_dl_start_user): Remember stack address.
 	* sysdeps/m68k/elf/start.S: Pass new argument to
-	__libc_start_user. 
+	__libc_start_user.
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_LABEL): New
 	definition.
