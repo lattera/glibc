@@ -8,6 +8,8 @@
 	(OFFSET_GP_GOT): New magic value.
 	(elf_mips_got_from_gpreg): Use OFFSET_GP_GOT.
 	(elf_machine_got_rel): Only declare strtab if needed.
+	(elf_machine_relplt): Removed, it's not needed.
+	(_dl_runtime_resolve): Fix \n for a comment, safe gp and not pc.
 
 	* sysdeps/mips/add_n.S: Add newline at EOF.
 	* sysdeps/mips/rshift.S: Likewise.
