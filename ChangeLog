@@ -1,3 +1,8 @@
+2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (si_segvflags):
+	Renamed from si+flags due to comflict with si_flags from <elf.h>.
+
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_getai.c: Use NO_MAPPING instead of MAP_FAILED for test

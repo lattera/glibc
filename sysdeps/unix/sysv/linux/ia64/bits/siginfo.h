@@ -122,11 +122,11 @@ typedef struct siginfo
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
 
-#ifdef __USE_GNU
+# ifdef __USE_GNU
 #  define si_imm	_sifields._sigfault._si_imm
-#  define si_flags	_sifields._sigfault._si_flags
+#  define si_segvflags	_sifields._sigfault._si_flags
 #  define si_isr	_sifields._sigfault._si_isr
-#endif
+# endif
 
 /* Values for `si_code'.  Positive values are reserved for kernel-generated
    signals.  */
