@@ -194,7 +194,7 @@ setname (int category, const char *name)
   if (_nl_current_names[category] == name)
     return;
 
-  if (category == LC_ALL && _nl_current_names[category] != _nl_C_name)
+  if (_nl_current_names[category] != _nl_C_name)
     free ((char *) _nl_current_names[category]);
 
   _nl_current_names[category] = name;
@@ -322,6 +322,14 @@ setlocale (int category, const char *locale)
 	       control over the usage.  So we mark it as un-deletable.  */
 	    if (newdata[category]->usage_count != UNDELETABLE)
 	      newdata[category]->usage_count = UNDELETABLE;
+
+	    /* Make a copy of locale name.  */
+	    if (newnames[category] != _nl_C_name)
+	      {
+		newnames[category] = strdup (newnames[category]);
+		if (newnames[category] == NULL)
+		  break;
+	      }
 	  }
 
       /* Create new composite name.  */
@@ -342,6 +350,10 @@ setlocale (int category, const char *locale)
 	     functions know about this.  */
 	  ++_nl_msg_cat_cntr;
 	}
+      else
+	for (++category; category < __LC_LAST; ++category)
+	  if (category != LC_ALL && newnames[category] != _nl_C_name)
+	    free ((char *) newnames[category]);
 
       /* Critical section left.  */
       __libc_lock_unlock (__libc_setlocale_lock);
@@ -376,10 +388,21 @@ setlocale (int category, const char *locale)
 	    newdata->usage_count = UNDELETABLE;
 	}
 
+      /* Make a copy of locale name.  */
+      if (newname[0] != _nl_C_name)
+	{
+	  newname[0] = strdup (newname[0]);
+	  if (newname[0] == NULL)
+	    goto abort_single;
+	}
+
       /* Create new composite name.  */
       composite = new_composite_name (category, newname);
       if (composite == NULL)
 	{
+	  if (newname[0] != _nl_C_name)
+	    free ((char *) newname[0]);
+
 	  /* Say that we don't have any data loaded.  */
 	abort_single:
 	  newname[0] = NULL;

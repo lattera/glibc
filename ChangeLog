@@ -1,3 +1,14 @@
+2000-11-29  H.J. Lu  <hjl@gnu.org>
+
+	* stdio-common/vfscanf.c (ORIENT): Swap the COMPILE_WSCANF case.
+
+2000-11-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/setlocale.c (setname): Free for all categories, not just
+	LC_ALL.
+	(setlocale): Store a copy of string passed by user, not the string
+	itself.
+
 2000-11-30  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/defs.c (init_stdio): Put this on __libc_subinit
@@ -16,8 +27,7 @@
 
 2000-11-29  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/hppa/brk.c (__brk): Remove unused
-	variable.
+	* sysdeps/unix/sysv/linux/hppa/brk.c (__brk): Remove unused variable.
 
 2000-11-28  Ulrich Drepper  <drepper@redhat.com>
 
