@@ -5301,16 +5301,17 @@ if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
 else
   libc_cv_gcc_dwarf2_unwind_info=no
 fi
-if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
-                            -nostdlib -nostartfiles
-                            -o conftest conftest.c -lgcc -lgcc_eh >&5'
+# Some platforms' specs put -lgcc first.  The second one doesn't hurt.
+libc_unwind_check="${CC-cc} $CFLAGS -DCHECK__register_frame_info \
+                            -nostdlib -nostartfiles -o conftest conftest.c \
+			    -lgcc -lgcc_eh -lgcc"
+if { ac_try='$libc_unwind_check >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-  if ${CC-cc} $CFLAGS -DCHECK__register_frame_info -nostdlib -nostartfiles \
-     -o conftest conftest.c -lgcc -lgcc_eh -v 2>&1 >/dev/null \
+  if $libc_unwind_check -v 2>&1 >/dev/null \
      | grep -q -- --eh-frame-hdr; then
     libc_cv_gcc_dwarf2_unwind_info=no_registry_needed
   else
@@ -5362,7 +5363,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5365 "configure"
+#line 5366 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5430,7 +5431,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5433 "configure"
+#line 5434 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
