@@ -1,3 +1,9 @@
+2002-08-22  Roland McGrath  <roland@redhat.com>
+
+	* scripts/firstversions.awk: When encountering a version newer than
+	the specified earliest version, be sure to emit the specified earliest
+	version first if any renaming of an older version to that has been.
+
 2002-08-21  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Make GCC version check require 3.[2-9]* and no others.

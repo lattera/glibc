@@ -27,20 +27,35 @@ $1 == "}" {
   if ((thislib, idx[thislib]) in firstversion) {
     # XXX relative string comparison loses if we ever have multiple digits
     # between dots in GLIBC_x.y[.z] names.
-    f = firstversion[thislib, idx[thislib]];
-    v = f;
+    f = v = firstversion[thislib, idx[thislib]];
     while ($1 >= v) {
-      firstversion[thislib, idx[thislib]] = 0;
+      delete firstversion[thislib, idx[thislib]];
       idx[thislib]++;
       if ((thislib, idx[thislib]) in firstversion)
         v = firstversion[thislib, idx[thislib]];
       else
         break;
     }
-    if ($1 >= v || $1 == f)
+    if ($1 == v || $1 == f)
+      # This version was the specified earliest version itself.
       print;
-    else
-      print $1, "=", v;
+    else if ($1 < v) {
+      # This version is older than the specified earliest version.
+      print "  " $1, "=", v;
+      # Record that V has been referred to, so we will be sure to emit it
+      # if we hit a later one without hitting V itself.
+      usedversion[thislib, v] = 1;
+    }
+    else {
+      # This version is newer than the specified earliest version.
+      # We haven't seen that version itself or else we wouldn't be here
+      # because we would have removed it from the firstversion array.
+      # If there were any earlier versions that used that one, emit it now.
+      if ((thislib, v) in usedversion) {
+        print "  " v;
+      }
+      print "  " $1;
+    }
   }
   else
     print;
