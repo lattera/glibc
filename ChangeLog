@@ -1,3 +1,8 @@
+2000-09-11  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/getloadavg.c (getloadavg): Divide instead of
+	multiply by LOAD_SCALE.
+
 2000-09-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* crypt/crypt.h (crypt, setkey, encrypt): Add __THROW.
