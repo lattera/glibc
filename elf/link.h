@@ -199,6 +199,9 @@ struct link_map
        object is the same as one already loaded.  */
     dev_t l_dev;
     ino_t l_ino;
+
+    /* Nonzero if the data structure pointed to by `l_phdr' is allocated.  */
+    int l_phdr_allocated;
   };
 
 #endif /* link.h */

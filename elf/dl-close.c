@@ -165,6 +165,9 @@ _dl_close (struct link_map *map)
 	  if (imap != map && imap->l_searchlist.r_list != NULL)
 	    free (imap->l_searchlist.r_list);
 
+	  if (imap->l_phdr_allocated)
+	    free (imap->l_phdr);
+
 	  free (imap);
 	}
     }

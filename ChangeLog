@@ -1,5 +1,11 @@
 1999-05-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/link.h (struct link_map): New field l_phdr_allocated.
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't depend on having
+	the program header being part of any loaded segment.  If it is not
+	allocate memory and set l_phdr_allocated flag.
+	* elf/dl-close.c (_dl_close): Free l_phdr if necessary.
+
 	* nss/digits_dots.c: Correct return value interpretation of
 	inet_ntoa.  Fix PR libc/1109.
 

@@ -917,6 +917,13 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 		       c->prot, MAP_FIXED, c->mapoff);
 
       postmap:
+	if (l->l_phdr == 0
+	    && c->mapoff <= header->e_phoff
+	    && (c->mapend - c->mapstart + c->mapoff
+		>= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
+	  /* Found the program header in this segment.  */
+	  l->l_phdr = (void *) (c->mapstart + header->e_phoff - c->mapoff);
+
 	if (c->allocend > c->dataend)
 	  {
 	    /* Extra zero pages should appear at the end of this segment,
@@ -963,22 +970,19 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	++c;
       }
 
-    if (l->l_phdr == 0)
+    if (l->l_phdr == NULL)
       {
-	/* There was no PT_PHDR specified.  We need to find the phdr in the
-           load image ourselves.  We assume it is in fact in the load image
-           somewhere.  */
-	for (c = loadcmds; c < &loadcmds[nloadcmds]; c++)
-	  if (c->mapoff <= header->e_phoff
-	      && (c->mapend - c->mapstart + c->mapoff
-		  >= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
-	    {
-	      ElfW(Addr) bof = l->l_addr + c->mapstart;
-	      l->l_phdr = (void *) (bof + header->e_phoff - c->mapoff);
-	      break;
-	    }
-	if (l->l_phdr == 0)
-	  LOSE (0, "program headers not contained in any loaded segment");
+	/* The program header is not contained in any of the segmenst.
+	   We have to allocate memory ourself and copy it over from
+	   out temporary place.  */
+	ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
+						  * sizeof (ElfW(Phdr)));
+	if (newp == NULL)
+	  LOSE (ENOMEM, "cannot allocate memory for program header");
+
+	l->l_phdr = memcpy (newp, phdr,
+			    (header->e_phnum * sizeof (ElfW(Phdr))));
+	l->l_phdr_allocated = 1;
       }
     else
       /* Adjust the PT_PHDR value by the runtime load address.  */
