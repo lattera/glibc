@@ -13,7 +13,7 @@
 	* pthread_create.c (deallocate_tsd): Mark as internal_function.
 	Add some more __builtin_expect.
 
-	* pthreadP.h: Define dummy versio of DEBUGGING_P.
+	* pthreadP.h: Define dummy version of DEBUGGING_P.
 
 2003-02-17  Ulrich Drepper  <drepper@redhat.com>
 
