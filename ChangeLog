@@ -1,3 +1,15 @@
+2000-10-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (add_to_global): New function.  Split out from
+	dl_open_worker.
+	(dl_open_worker): Call add_to_global not only for new objects, also for
+	previously loaded objects when (mode & RTLD_GLOBAL) and the object
+	was not yet in the global scope.
+	* elf/Makefile: Add rules to build and run lateglobal.
+	* elf/lateglobal.c: New file.
+	* elf/ltglobmod1.c: New file.
+	* elf/ltglobmod2.c: New file.
+
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h (struct link_map): Add l_soname_added bitfield.

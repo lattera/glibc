@@ -55,7 +55,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
 		   nextmod1.c nextmod2.c \
 		   neededobj1.c neededobj2.c neededobj3.c \
-		   unload2mod.c unload2dep.c
+		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c
 
 include ../Makeconfig
 
@@ -97,7 +97,7 @@ ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
-	$(tests-nodlopen-$(have-z-nodlopen)) neededtest unload2
+	$(tests-nodlopen-$(have-z-nodlopen)) neededtest unload2 lateglobal
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -108,7 +108,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodelete-$(have-z-nodelete)) \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
-		neededobj1 neededobj2 neededobj3 unload2mod unload2dep
+		neededobj1 neededobj2 neededobj3 unload2mod unload2dep \
+		ltglobmod1 ltglobmod2
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -255,6 +256,7 @@ $(objpfx)neededobj1.so: $(libdl)
 $(objpfx)neededobj2.so: $(objpfx)neededobj1.so $(libdl)
 $(objpfx)neededobj3.so: $(objpfx)neededobj1.so $(objpfx)neededobj2.so $(libdl)
 $(objpfx)unload2mod.so: $(objpfx)unload2dep.so
+$(objpfx)ltglobmod2.so: $(libdl)
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -356,3 +358,6 @@ $(objpfx)next: $(objpfx)nextmod1.so $(objpfx)nextmod2.so $(libdl)
 
 $(objpfx)unload2: $(libdl)
 $(objpfx)unload2.out: $(objpfx)unload2mod.so $(objpfx)unload2dep.so
+
+$(objpfx)lateglobal: $(libdl)
+$(objpfx)lateglobal.out: $(objpfx)ltglobmod1.so $(objpfx)ltglobmod2.so

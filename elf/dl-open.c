@@ -80,6 +80,87 @@ struct dl_open_args
   struct link_map *map;
 };
 
+
+static int
+add_to_global (struct link_map *new)
+{
+  struct link_map **new_global;
+  unsigned int to_add = 0;
+  unsigned int cnt;
+
+  /* Count the objects we have to put in the global scope.  */
+  for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
+    if (new->l_searchlist.r_list[cnt]->l_global == 0)
+      ++to_add;
+
+  /* The symbols of the new objects and its dependencies are to be
+     introduced into the global scope that will be used to resolve
+     references from other dynamically-loaded objects.
+
+     The global scope is the searchlist in the main link map.  We
+     extend this list if necessary.  There is one problem though:
+     since this structure was allocated very early (before the libc
+     is loaded) the memory it uses is allocated by the malloc()-stub
+     in the ld.so.  When we come here these functions are not used
+     anymore.  Instead the malloc() implementation of the libc is
+     used.  But this means the block from the main map cannot be used
+     in an realloc() call.  Therefore we allocate a completely new
+     array the first time we have to add something to the locale scope.  */
+
+  if (_dl_global_scope_alloc == 0)
+    {
+      /* This is the first dynamic object given global scope.  */
+      _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + to_add + 8;
+      new_global = (struct link_map **)
+	malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
+      if (new_global == NULL)
+	{
+	  _dl_global_scope_alloc = 0;
+	nomem:
+	  _dl_signal_error (ENOMEM, new->l_libname->name,
+			    N_("cannot extend global scope"));
+	  return 1;
+	}
+
+      /* Copy over the old entries.  */
+      memcpy (new_global, _dl_main_searchlist->r_list,
+	      (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
+
+      _dl_main_searchlist->r_list = new_global;
+    }
+  else if (_dl_main_searchlist->r_nlist + to_add > _dl_global_scope_alloc)
+    {
+      /* We have to extend the existing array of link maps in the
+	 main map.  */
+      new_global = (struct link_map **)
+	realloc (_dl_main_searchlist->r_list,
+		 ((_dl_global_scope_alloc + to_add + 8)
+		  * sizeof (struct link_map *)));
+      if (new_global == NULL)
+	goto nomem;
+
+      _dl_global_scope_alloc += to_add + 8;
+      _dl_main_searchlist->r_list = new_global;
+    }
+
+  /* Now add the new entries.  */
+  for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
+    {
+      struct link_map *map = new->l_searchlist.r_list[cnt];
+
+      if (map->l_global == 0)
+	{
+	  map->l_global = 1;
+	  _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist] = map;
+	  ++_dl_main_searchlist->r_nlist;
+	}
+    }
+
+  /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
+  return 0;
+}
+
+
 static void
 dl_open_worker (void *a)
 {
@@ -172,6 +253,12 @@ dl_open_worker (void *a)
 					 buf + sizeof buf - 1, 10, 0),
 			     "\n\n", NULL);
 	}
+
+      /* If the user requested the object t be in the global namespace
+	 but it is not so far, add it now.  */
+      if ((mode & RTLD_GLOBAL) && new->l_global == 0)
+	(void) add_to_global (new);
+
       /* It was already open.  */
       return;
     }
@@ -232,81 +319,10 @@ dl_open_worker (void *a)
 
   /* Now we can make the new map available in the global scope.  */
   if (mode & RTLD_GLOBAL)
-    {
-      struct link_map **new_global;
-      unsigned int to_add = 0;
-      unsigned int cnt;
-
-      /* Count the objects we have to put in the global scope.  */
-      for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
-	if (new->l_searchlist.r_list[cnt]->l_global == 0)
-	  ++to_add;
-
-      /* The symbols of the new objects and its dependencies are to be
-	 introduced into the global scope that will be used to resolve
-	 references from other dynamically-loaded objects.
-
-	 The global scope is the searchlist in the main link map.  We
-	 extend this list if necessary.  There is one problem though:
-	 since this structure was allocated very early (before the libc
-	 is loaded) the memory it uses is allocated by the malloc()-stub
-	 in the ld.so.  When we come here these functions are not used
-	 anymore.  Instead the malloc() implementation of the libc is
-	 used.  But this means the block from the main map cannot be used
-	 in an realloc() call.  Therefore we allocate a completely new
-	 array the first time we have to add something to the locale scope.  */
-
-      if (_dl_global_scope_alloc == 0)
-	{
-	  /* This is the first dynamic object given global scope.  */
-	  _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + to_add + 8;
-	  new_global = (struct link_map **)
-	    malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
-	  if (new_global == NULL)
-	    {
-	      _dl_global_scope_alloc = 0;
-	    nomem:
-	      _dl_signal_error (ENOMEM, new->l_libname->name,
-				N_("cannot extend global scope"));
-	      return;
-	    }
-
-	  /* Copy over the old entries.  */
-	  memcpy (new_global, _dl_main_searchlist->r_list,
-		  (_dl_main_searchlist->r_nlist * sizeof (struct link_map *)));
-
-	  _dl_main_searchlist->r_list = new_global;
-	}
-      else if (_dl_main_searchlist->r_nlist + to_add > _dl_global_scope_alloc)
-	{
-	  /* We have to extend the existing array of link maps in the
-	     main map.  */
-	  new_global = (struct link_map **)
-	    realloc (_dl_main_searchlist->r_list,
-		     ((_dl_global_scope_alloc + to_add + 8)
-		      * sizeof (struct link_map *)));
-	  if (new_global == NULL)
-	    goto nomem;
-
-	  _dl_global_scope_alloc += to_add + 8;
-	  _dl_main_searchlist->r_list = new_global;
-	}
-
-      /* Now add the new entries.  */
-      for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
-	{
-	  struct link_map *map = new->l_searchlist.r_list[cnt];
-
-	  if (map->l_global == 0)
-	    {
-	      map->l_global = 1;
-	      _dl_main_searchlist->r_list[_dl_main_searchlist->r_nlist] = map;
-	      ++_dl_main_searchlist->r_nlist;
-	    }
-	}
-
-      /* XXX Do we have to add something to r_dupsearchlist???  --drepper */
-    }
+    /* Move the object in the global namespace.  */
+    if (add_to_global (new) != 0)
+      /* It failed.  */
+      return;
 
   /* Mark the object as not deletable if the RTLD_NODELETE flags was
      passed.  */
