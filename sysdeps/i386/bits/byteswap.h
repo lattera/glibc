@@ -83,9 +83,9 @@
 /* Swap bytes in 64 bit value.  */
 # define __bswap_64(x) \
      ({ union { unsigned long long int __ll;				      \
-		unsigned long int __l[2]; } __v, __r;			      \
-        __v.__ll = (x);							      \
-	__r.__l[0] = __bswap_32 (__v.__l[1]);				      \
-	__r.__l[1] = __bswap_32 (__v.__l[0]);				      \
+		unsigned long int __l[2]; } __w, __r;			      \
+        __w.__ll = (x);							      \
+	__r.__l[0] = __bswap_32 (__w.__l[1]);				      \
+	__r.__l[1] = __bswap_32 (__w.__l[0]);				      \
 	__r.__ll; })
 #endif

@@ -232,7 +232,18 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 	      *p++ = '\0';
 	    }
 
-	  if (__readv (sock, vec, gr_resp.gr_mem_len) != total_len)
+	  while (i > UIO_MAXIOV)
+	    {
+	      if (__readv (sock, vec, UIO_MAXIOV) != total_len)
+		{
+		  __close (sock);
+		  return -1;
+		}
+	      vec += UIO_MAXIOV;
+	      i -= UIO_MAXIOV;
+	    }
+
+	  if (__readv (sock, vec, i) != total_len)
 	    {
 	      __close (sock);
 	      return -1;

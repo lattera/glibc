@@ -502,6 +502,14 @@ gr_send_answer (int conn, struct group *grp)
     }
 
   /* Send all the data.  */
+  while (nblocks > UIO_MAXIOV)
+    {
+      if (writev (sock[conn], vec, UIO_MAXIOV) != total_len)
+	dbg_log (_("write incomplete on send group answer: %s"),
+		 strerror (errno));
+      vec += UIO_MAXIOV;
+      nblocks -= UIO_MAXIOV;
+    }
   if (writev (sock[conn], vec, nblocks) != total_len)
     dbg_log (_("write incomplete on send group answer: %s"),
 	     strerror (errno));

@@ -1,3 +1,8 @@
+1998-07-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/byteswap.h (__bswap_64): Change __v to __w to
+	prevent conflict with __bswap_32.
+
 1998-07-24 21:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/connections.c (pw_send_answer): Make one single writev call.
