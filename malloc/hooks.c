@@ -157,15 +157,16 @@ mem2chunk_check(mem) Void_t* mem;
 
   if(!aligned_OK(mem)) return NULL;
   p = mem2chunk(mem);
-  if( (char*)p>=mp_.sbrk_base &&
-      (char*)p<(mp_.sbrk_base+main_arena.system_mem) ) {
+  if (!chunk_is_mmapped(p)) {
     /* Must be a chunk in conventional heap memory. */
-    if(chunk_is_mmapped(p) ||
-       ( (sz = chunksize(p)),
-	 ((char*)p + sz)>=(mp_.sbrk_base+main_arena.system_mem) ) ||
+    int contig = contiguous(&main_arena);
+    sz = chunksize(p);
+    if((contig &&
+	((char*)p<mp_.sbrk_base ||
+	 ((char*)p + sz)>=(mp_.sbrk_base+main_arena.system_mem) )) ||
        sz<MINSIZE || sz&MALLOC_ALIGN_MASK || !inuse(p) ||
        ( !prev_inuse(p) && (p->prev_size&MALLOC_ALIGN_MASK ||
-                            (long)prev_chunk(p)<(long)mp_.sbrk_base ||
+                            (contig && (char*)prev_chunk(p)<mp_.sbrk_base) ||
                             next_chunk(prev_chunk(p))!=p) ))
       return NULL;
     magic = MAGICBYTE(p);
@@ -213,8 +214,13 @@ top_check()
   INTERNAL_SIZE_T front_misalign, sbrk_size;
   unsigned long pagesz = malloc_getpagesize;
 
-  if((char*)t + chunksize(t) == mp_.sbrk_base + main_arena.system_mem ||
-     t == initial_top(&main_arena)) return 0;
+  if (t == initial_top(&main_arena) ||
+      (!chunk_is_mmapped(t) &&
+       chunksize(t)>=MINSIZE &&
+       prev_inuse(t) &&
+       (!contiguous(&main_arena) ||
+	(char*)t + chunksize(t) == mp_.sbrk_base + main_arena.system_mem)))
+    return 0;
 
   malloc_printerr (check_action, "malloc: top chunk is corrupt", t);
 

@@ -1,3 +1,9 @@
+2004-10-19  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/hooks.c (mem2chunk_check, top_check): Handle
+	non-contiguous arena.  Reported by Michael Dalton
+	<mwdalton@stanford.edu> [BZ #457].  Add further checks for top chunk.
+
 2004-12-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf_check_spec): Remove leading
