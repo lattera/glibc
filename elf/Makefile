@@ -38,7 +38,8 @@ rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 ld-map		= $(libc-map)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
-		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h
+		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
+		  dl-librecon.h
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)

@@ -1,6 +1,7 @@
 1998-03-29 20:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile: Fix typo.
+	(distribute): Add dl-librecon.h.
 	* elf/ldd.bash.in: Collect output of ldd --verify in verify_out.
 	* elf/ldd.sh.in: Likewise.
 	* elf/ldsodefs.h: Declare _dl_correct_cache_id.
