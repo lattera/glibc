@@ -1,5 +1,9 @@
 2004-09-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/cdefs.h: Despite what the gcc manual says, gcc 3.2
+	seems not to support the nothrow attribute.  Use it only for gcc
+	3.3 and higher.
+
 	* malloc/hooks.c (top_check): Print top chunk corruption as normal
 	error message.
 

@@ -42,7 +42,7 @@
    gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
    as non-throwing using a function attribute since programs can use
    the -fexceptions options for C code as well.  */
-# if !defined __cplusplus && __GNUC_PREREQ (3, 2)
+# if !defined __cplusplus && __GNUC_PREREQ (3, 3)
 #  define __THROW	__attribute__ ((__nothrow__))
 #  define __NTH(fct)	__attribute__ ((__nothrow__)) fct
 # else
