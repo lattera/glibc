@@ -1,4 +1,15 @@
-1998-03-01  Richard Henderson  <rth@cygnus.com>
+1998-03-01 09:11  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/ioctls.h: Don't include
+	kernel_termios.h.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h (CBAUD, CIBAUD): Fix.
+	Clean up random whitespace.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/brk.c: Tidy the asm.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Use std on the args.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.S: Fix use of .bss.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sys/ucontext.h: New file.
+
+1998-03-01 08:31  Richard Henderson  <rth@cygnus.com>
 
 	* shlib-versions: Match alpha*.
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add adjtimex.

@@ -48,18 +48,11 @@ ENTRY (__socket)
 
 	/* Drop up to 6 arguments (recvfrom) into the memory allocated by
 	   the caller for varargs, since that's really what we have.  */
-	st %o0, [%sp + 68 + 0]
-	st %o1, [%sp + 68 + 4]
+	std %o0, [%sp + 68 + 0]
 #if NARGS > 2
-	st %o2, [%sp + 68 + 8]
-#if NARGS > 3
-	st %o3, [%sp + 68 + 12]
+	std %o2, [%sp + 68 + 8]
 #if NARGS > 4
-	st %o4, [%sp + 68 + 16]
-#if NARGS > 5
-	st %o5, [%sp + 68 + 20]
-#endif
-#endif
+	std %o4, [%sp + 68 + 16]
 #endif
 #endif
 

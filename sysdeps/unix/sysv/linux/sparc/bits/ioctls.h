@@ -22,7 +22,6 @@
 
 /* Use the definitions from the kernel header files.  */
 #include <asm/ioctls.h>
-#include <kernel_termios.h>
 
 /* Oh well, this is necessary since the kernel data structure is
    different from the user-level version.  */

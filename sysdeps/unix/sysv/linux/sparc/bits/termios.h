@@ -47,11 +47,8 @@ struct termios
 #define VSWTC    7
 #define VSTART   8
 #define VSTOP    9
-
-
-
 #define VSUSP    10
-#define VDSUSP   11  /* SunOS POSIX nicety I do believe... */
+#define VDSUSP   11		/* SunOS POSIX nicety I do believe... */
 #define VREPRINT 12
 #define VDISCARD 13
 #define VWERASE  14
@@ -109,12 +106,12 @@ struct termios
 #define FFDLY	0x00008000
 #define   FF0	0x00000000
 #define   FF1	0x00008000
-#define PAGEOUT 0x00010000  /* SUNOS specific */
-#define WRAP    0x00020000  /* SUNOS specific */
+#define PAGEOUT 0x00010000	/* SUNOS specific */
+#define WRAP    0x00020000	/* SUNOS specific */
 
 /* c_cflag bit meaning */
-#define CBAUD	0x0000000f
-#define  B0	0x00000000   /* hang up */
+#define CBAUD	0x0000100f
+#define  B0	0x00000000	/* hang up */
 #define  B50	0x00000001
 #define  B75	0x00000002
 #define  B110	0x00000003
@@ -143,15 +140,14 @@ struct termios
 #define PARODD	0x00000200
 #define HUPCL	0x00000400
 #define CLOCAL	0x00000800
-/* We'll never see these speeds with the Zilogs' but for completeness... */
 #define CBAUDEX 0x00010000
 #define  B57600  0x00010001
 #define  B115200 0x00010002
 #define  B230400 0x00010003
 #define  B460800 0x00010004
-#define CIBAUD	  0x000f0000  /* input baud rate (not used) */
-#define CMSPAR	  010000000000		/* mark or space (stick) parity */
-#define CRTSCTS	  0x80000000  /* flow control */
+#define CIBAUD	0x100f0000	/* input baud rate (not used) */
+#define CMSPAR	0x40000000	/* mark or space (stick) parity */
+#define CRTSCTS	0x80000000	/* flow control */
 
 /* c_lflag bits */
 #define ISIG	0x00000001
@@ -166,7 +162,7 @@ struct termios
 #define ECHOCTL	0x00000200
 #define ECHOPRT	0x00000400
 #define ECHOKE	0x00000800
-#define DEFECHO 0x00001000  /* SUNOS thing, what is it? */
+#define DEFECHO 0x00001000	/* SUNOS thing, what is it? */
 #define FLUSHO	0x00002000
 #define PENDIN	0x00004000
 #define IEXTEN	0x00008000

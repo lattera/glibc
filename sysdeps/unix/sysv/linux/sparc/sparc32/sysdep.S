@@ -1,6 +1,6 @@
 /* Define errno */
 
-	.bss
+.section .bss
 	.globl	errno
 	.align	4
 errno:	.space	4

@@ -1,5 +1,5 @@
 /* brk system call for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx)
 
@@ -35,13 +35,12 @@ __brk (void *addr)
 {
   void *newbrk, *scratch;
 
-  asm ("mov %1, %%g1\n\t"
-       "mov %2, %%o0\n\t"
-       "t 0x10\n\t"
-       "mov %%o0, %0\n\t"
-       : "=r" (newbrk)
-       : "0" (__NR_brk), "r" (addr)
-       : "g1", "o0");
+  {
+    register void *o0 __asm__("%o0") = addr;
+    register int g1 __asm__("%g1") = __NR_brk;
+    __asm ("t 0x10" : "=r"(o0) : "r"(g1), "0"(o0) : "cc");
+    newbrk = o0;
+  }
 
   __curbrk = newbrk;
 
