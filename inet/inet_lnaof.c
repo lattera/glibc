@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)inet_lnaof.c	8.1 (Berkeley) 6/4/93";
  * internet address; handles class a/b/c network
  * number formats.
  */
-u_int32_t
+in_addr_t
 inet_lnaof(in)
 	struct in_addr in;
 {

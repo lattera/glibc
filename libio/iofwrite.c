@@ -58,5 +58,6 @@ weak_alias (_IO_fwrite, fwrite)
 libc_hidden_weak (fwrite)
 # ifndef _IO_MTSAFE_IO
 weak_alias (_IO_fwrite, fwrite_unlocked)
+libc_hidden_weak (fwrite_unlocked)
 # endif
 #endif

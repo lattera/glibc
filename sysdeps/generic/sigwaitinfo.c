@@ -26,6 +26,7 @@ __sigwaitinfo (const sigset_t *set, siginfo_t *info)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__sigwaitinfo)
 weak_alias (__sigwaitinfo, sigwaitinfo)
 
 stub_warning (sigwaitinfo)

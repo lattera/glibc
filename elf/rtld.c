@@ -560,6 +560,7 @@ match_version (const char *string, struct link_map *map)
   return 0;
 }
 
+#ifdef _LIBC_REENTRANT
 /* _dl_error_catch_tsd points to this for the single-threaded case.
    It's reset by the thread library for multithreaded programs.  */
 static void ** __attribute__ ((const))
@@ -568,6 +569,7 @@ startup_error_tsd (void)
   static void *data;
   return &data;
 }
+#endif
 
 static const char *library_path;	/* The library search path.  */
 static const char *preloadlist;		/* The list preloaded objects.  */
@@ -598,8 +600,10 @@ dl_main (const ElfW(Phdr) *phdr,
   void *tcbp;
 #endif
 
+#ifdef _LIBC_REENTRANT
   /* Explicit initialization since the reloc would just be more work.  */
   GL(dl_error_catch_tsd) = &startup_error_tsd;
+#endif
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);

@@ -80,6 +80,7 @@ __sigwait (const sigset_t *set, int *sig)
   *sig = was_sig;
   return was_sig == -1 ? -1 : 0;
 }
+libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)
 
 

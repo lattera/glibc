@@ -17,10 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <ldsodefs.h>
-#include <tls.h>
+#ifdef _LIBC_REENTRANT
 
-#ifndef SHARED
+# include <ldsodefs.h>
+# include <tls.h>
+
+# ifndef SHARED
 
 /* _dl_error_catch_tsd points to this for the single-threaded case.
    It's reset by the thread library for multithreaded programs
@@ -28,17 +30,17 @@
 static void ** __attribute__ ((const))
 startup_error_tsd (void)
 {
-#if USE___THREAD
+#  if USE___THREAD
   static __thread void *data;
-#else
+#  else
   static void *data;
-#endif
+#  endif
   return &data;
 }
 void **(*_dl_error_catch_tsd) (void) __attribute__ ((const))
      = &startup_error_tsd;
 
-#elif USE___THREAD
+# elif USE___THREAD
 
 /* libpthread sets _dl_error_catch_tsd to point to this function.
    We define it here instead of in libpthread so that it doesn't
@@ -51,4 +53,6 @@ __libc_dl_error_tsd (void)
   return &data;
 }
 
-#endif
+# endif	/* SHARED */
+
+#endif /* _LIBC_REENTRANT */

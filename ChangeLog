@@ -1,5 +1,28 @@
 2002-11-24  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/posix/readv.c: Include <errno.h>, use __set_errno macro.
+	* sysdeps/posix/writev.c: Likewise.
+	From Momchil Velikov <velco@fadata.bg>.
+
+	* elf/dl-error.c [! _LIBC_REENTRANT]: Use a static variable instead of
+	calling *GL(dl_error_catch_tsd) for a thread-local location.
+	* elf/rtld.c (startup_error_tsd): Conditionalize on [_LIBC_REENTRANT].
+	(dl_main): Same for GL(dl_error_catch_tsd) initialization.
+	* elf/dl-tsd.c: Conditionalize contents on [_LIBC_REENTRANT].
+
+	* libio/iofflush.c: Add libc_hidden_def.
+	* libio/iofwrite.c: Likewise.
+	* sysdeps/generic/sigtimedwait.c: Likewise.
+	* sysdeps/generic/sigwaitinfo.c: Likewise.
+	* sysdeps/posix/sigwait.c: Likewise.
+	Reported by Momchil Velikov <velco@fadata.bg>.
+
+	* inet/inet_lnaof.c (inet_lnaof): Change return type to in_addr_t
+	to match <arpa/inet.h> declaration.
+	* inet/inet_netof.c (inet_netof): Likewise.
+	* inet/inet_mkadr.c (inet_makeaddr): Likewise for argument types.
+	Reported by Momchil Velikov <velco@fadata.bg>.
+
 	* configure.in: Skip AUTOCONF check under --without-cvs.
 	* configure: Regenerated.
 

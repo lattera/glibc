@@ -23,6 +23,7 @@
 #include <stdbool.h>
 #include <sys/param.h>
 #include <sys/uio.h>
+#include <errno.h>
 
 /* Read data from file descriptor FD, and put the result in the
    buffers described by VECTOR, which is a vector of COUNT `struct iovec's.
@@ -46,7 +47,7 @@ __libc_readv (int fd, const struct iovec *vector, int count)
       /* Check for ssize_t overflow.  */
       if (SSIZE_MAX - bytes < vector[i].iov_len)
 	{
-	  errno = EINVAL;
+	  __set_errno (EINVAL);
 	  return -1;
 	}
       bytes += vector[i].iov_len;

@@ -57,6 +57,12 @@ INTVARDEF(_dl_out_of_memory)
    global variable.  */
 static receiver_fct receiver;
 
+#ifdef _LIBC_REENTRANT
+# define CATCH_HOOK	(*(struct catch **) (*GL(dl_error_catch_tsd)) ())
+#else
+static struct catch *catch_hook;
+# define CATCH_HOOK	catch_hook
+#endif
 
 void
 internal_function
@@ -68,7 +74,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
   if (! errstring)
     errstring = N_("DYNAMIC LINKER BUG!!!");
 
-  lcatch = *((*GL(dl_error_catch_tsd)) ());
+  lcatch = CATCH_HOOK;
   if (objname == NULL)
     objname = "";
   if (lcatch != NULL)
@@ -147,7 +153,7 @@ _dl_catch_error (const char **objname, const char **errstring,
      inefficient.  So we initialize `c' by hand.  */
   c.errstring = NULL;
 
-  void **catchp = (*GL(dl_error_catch_tsd)) ();
+  struct catch **const catchp = &CATCH_HOOK;
   old = *catchp;
   errcode = setjmp (c.env);
   if (__builtin_expect (errcode, 0) == 0)
@@ -173,7 +179,7 @@ void
 internal_function
 _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
 {
-  void **catchp = (*GL(dl_error_catch_tsd)) ();
+  struct catch **const catchp = &CATCH_HOOK;
   struct catch *old_catch;
   receiver_fct old_receiver;
 
