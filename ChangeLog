@@ -1,3 +1,8 @@
+2000-06-06  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/brk.S [!PIC]:
+	Get low part of &__curbrk with @l.
+
 2000-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/iso-2022-kr.c: Add __builtin_expect in many places.

@@ -37,7 +37,7 @@ ENTRY(__brk)
 	stw     r3,0(r5)
 #else
 	lis     r4,__curbrk@ha
-	stw     r3,__curbrk@sdarel(r4)
+	stw     r3,__curbrk@l(r4)
 #endif
 	cmplw   r6,r3
 	addi    r1,r1,16
