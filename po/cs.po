@@ -1,6 +1,6 @@
 # Czech translations for GNU libc.
 # Copyright (C) 1997 Free Software Foundation, Inc.
-# Vladimir Michl <Vladimir.Michl@upol.cz>, 1997.
+# Vladimir Michl <Vladimir.Michl@seznam.cz>, 1997.
 #
 # Thanks to:
 # Petr Kolar <Petr.Kolar@vslib.cz>
@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1999-01-14 18:57+01:00\n"
-"Last-Translator: Vladimir Michl <Vladimir.Michl@upol.cz>\n"
+"PO-Revision-Date: 1999-09-26 21:59+02:00\n"
+"Last-Translator: Vladimir Michl <Vladimir.Michl@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
@@ -133,10 +133,10 @@ msgstr "Zapsání výstup do souboru SOUBOR"
 
 #: catgets/gencat.c:115
 msgid ""
-"Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"  Generuje katalog zpráv.\\vJe-li VSTUPNÍ_SOUBOR -, vstup bude naèten ze\n"
+"  Generuje katalog zpráv.\vJe-li VSTUPNÍ_SOUBOR -, vstup bude naèten ze\n"
 "standardního vstupu. Je-li VÝSTUPNÍ_SOUBOR -, výstup bude zapsán na standardní\n"
 "výstup.\n"
 
@@ -510,7 +510,7 @@ msgid ""
 "\n"
 "  "
 msgstr ""
-"  Nasledující seznam obsahuje v¹echny známé znakové sady. To nutnì neznamená,\n"
+"  Následující seznam obsahuje v¹echny známé znakové sady. To nutnì neznamená,\n"
 "¾e v¹echny kombinace tìchto názvù mohou být pou¾ity pro argumenty Z a DO.\n"
 "Jedna znaková sada mù¾e být uvedena pod vícerými názvy (pøezdívkami).\n"
 "  Nìkteré z názvù nejsou obyèejné øetìzce, ale regulární výrazy, které\n"
@@ -2433,16 +2433,16 @@ msgid "Unmatched [ or [^"
 msgstr "Nepárová [ or [^"
 
 #: posix/regex.c:1020
-msgid "Unmatched ( or \\("
-msgstr "Nepárová ( or \\("
+msgid "Unmatched ( or \("
+msgstr "Nepárová ( or \("
 
 #: posix/regex.c:1021
-msgid "Unmatched \\{"
-msgstr "Nepárová \\{"
+msgid "Unmatched \{"
+msgstr "Nepárová \{"
 
 #: posix/regex.c:1022
-msgid "Invalid content of \\{\\}"
-msgstr "Nepøípustný obsah \\{\\}"
+msgid "Invalid content of \{\}"
+msgstr "Nepøípustný obsah \{\}"
 
 #: posix/regex.c:1023
 msgid "Invalid range end"
@@ -2465,8 +2465,8 @@ msgid "Regular expression too big"
 msgstr "Regulární výraz je pøíli¹ velký"
 
 #: posix/regex.c:1028
-msgid "Unmatched ) or \\)"
-msgstr "Nepárová ) or \\)"
+msgid "Unmatched ) or \)"
+msgstr "Nepárová ) or \)"
 
 #: posix/regex.c:5515
 msgid "No previous regular expression"
@@ -2922,11 +2922,12 @@ msgstr "Spojení bylo pøeru¹eno"
 msgid "Too many references: cannot splice"
 msgstr "Pøíli¹ mnoho odkazù - nelze spojit"
 
+# Èasový limit pro pøipojení vypr¹el
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
 #: stdio-common/../sysdeps/gnu/errlist.c:445
 msgid "Connection timed out"
-msgstr "Èasový limit pro pøipojení vypr¹el"
+msgstr "Spojení bylo pøíli¹ dlouho neaktivní"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
@@ -3774,14 +3775,14 @@ msgstr "Pou¾ití: %s vstupní_soubor\n"
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr ""
-"\t%s [-abkCLNTM][-Dnázev[=hodnota]] [-i velikost] [-I [-K sekundy]]\n"
+"	%s [-abkCLNTM][-Dnázev[=hodnota]] [-i velikost] [-I [-K sekundy]]\n"
 "           [-Y cesta] vst_soubor\n"
 
 #: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr ""
-"\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o výst_soubor]\n"
+"	%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o výst_soubor]\n"
 "           [vst_soubor]\n"
 
 #: sunrpc/rpc_main.c:1420
@@ -4067,7 +4068,7 @@ msgstr " (pravidlo z \"%s\", øádek %d)"
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
-"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+"	[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
 "%s: Pou¾ití: %s [ -s ] [ -v ] [ -l lokální_èas ]\n"
 "      [ -p posixová_pravidla ] [ -d adresáø ] [ -L pøestupných_sekund ]\n"

@@ -347,7 +347,7 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
   set_class_defaults (ctype, charmap, ctype->repertoire);
 
   /* Check according to table.  */
-  for (cnt = 0; cnt < ctype->class_collection_max; ++cnt)
+  for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
     {
       uint32_t tmp = ctype->class_collection[cnt];
 
@@ -549,7 +549,7 @@ character '%s' in class `%s' must not be in class `%s'"),
     }
 
   /* Check the input digits.  There must be a multiple of ten available.
-     In each group I could be that one or the other character is missing.
+     In each group it could be that one or the other character is missing.
      In this case the whole group must be removed.  */
   cnt = 0;
   while (cnt < ctype->mbdigits_act)
@@ -610,7 +610,7 @@ no input digits defined and none of the standard names in the charmap"));
     }
 
   /* Check the wide character input digits.  There must be a multiple
-     of ten available.  In each group I could be that one or the other
+     of ten available.  In each group it could be that one or the other
      character is missing.  In this case the whole group must be
      removed.  */
   cnt = 0;
@@ -998,7 +998,7 @@ implementation limit: no more than %d character maps allowed"),
 
 
 /* We have to be prepared that TABLE, MAX, and ACT can be NULL.  This
-   is possible if we only want ot extend the name array.  */
+   is possible if we only want to extend the name array.  */
 static uint32_t *
 find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
 	  size_t *act, uint32_t idx)
@@ -1911,7 +1911,10 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
 	  if (ignore_content)
-	    break;
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
 
 	handle_tok_digit:
 	  class_bit = _ISwdigit;
@@ -2803,7 +2806,7 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
      We use a very trivial hashing function to store the sparse
      table.  CH % TABSIZE is used as an index.  To solve multiple hits
      we have N planes.  This guarantees a fixed search time for a
-     character [N / 2].  In the following code we determine the minmum
+     character [N / 2].  In the following code we determine the minimum
      value for TABSIZE * N, where TABSIZE >= 256.  */
   size_t min_total = UINT_MAX;
   size_t act_size = 256;

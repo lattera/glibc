@@ -1,4 +1,28 @@
+1999-10-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): Fix typos in last patch.
+
+1999-10-05  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-identification.c: Fix typo in comment.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+
+	* locale/programs/ld-collate.c (read_lc_collate): Fix typo in comment.
+	(collate_read): Remove unnecessary comparisons with ignore_content.
+
+	* locale/programs/ld-ctype.c (ctype_finish): Loop only over actual
+	assigned elements.
+	(ctype_read): Remove unnecessary comparisons with ignore_content.
+	Fix typos in comments.
+
+	* locale/programs/ld-address.c (STR_ELEM): Remove unnecessary
+	comparisons with ignore_content.
+
 1999-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/cs.po: Update.
 
 	* time/time.h: Move __gmtime_r declaration to ...
 	* include/time.h: ...here.

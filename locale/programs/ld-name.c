@@ -250,7 +250,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
       if (nowtok == tok_eof)
 	break;
 
-      /* Ingore empty lines.  */
+      /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
 	  now = lr_token (ldfile, charmap, NULL);

@@ -678,7 +678,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  else
 	    {
 	      free (arg->val.str.startmb);
-	      lr_ignore_rest (ldfile, 1);
+	      lr_ignore_rest (ldfile, 0);
 	    }
 	  break;
 
@@ -3135,7 +3135,7 @@ read_lc_collate (struct linereader *ldfile, struct localedef_t *result,
       if (nowtok == tok_eof)
         break;
 
-      /* Ingore empty lines.  */
+      /* Ignore empty lines.  */
       if (nowtok == tok_eol)
         {
           now = lr_token (ldfile, charmap, NULL);
