@@ -34,3 +34,16 @@ Elf32_Addr _dl_lookup_address (const void *address);
 void _dl_unmap (struct link_map *map);
 
 #define DL_UNMAP(map) _dl_unmap (map)
+
+extern Elf32_Addr _dl_function_address (const struct link_map *map,
+					Elf32_Addr start);
+
+#define DL_FUNCTION_ADDRESS(map, addr) _dl_function_address (map, addr)
+
+/* The test for "addr & 2" below is to accomodate old binaries which
+   violated the ELF ABI by pointing DT_INIT and DT_FINI at a function
+   pointer.  */
+#define DL_DT_INIT_ADDRESS(map, addr) \
+  ((Elf32_Addr)(addr) & 2 ? (addr) : DL_FUNCTION_ADDRESS (map, addr))
+#define DL_DT_FINI_ADDRESS(map, addr) \
+  ((Elf32_Addr)(addr) & 2 ? (addr) : DL_FUNCTION_ADDRESS (map, addr))
