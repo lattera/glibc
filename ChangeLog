@@ -1,3 +1,9 @@
+2004-09-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): If determinination of
+	source address fails, initialized source_addr_len field so that
+	duplicate address recognition does not copy junk.
+
 2004-09-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/setuid.c (__setuid): Remove second
