@@ -243,12 +243,12 @@ work with object files for the target you configured for.
 @cindex installing
 
 To install the library and its header files, and the Info files of the
-manual, type @code{make install}.  This will build things if necessary,
-before installing them.  However, you should still compile everything first.
-If you are installing glibc as your primary C library, we recommend that you
-shut the system down to single-user mode first, and reboot afterward.
-This minimizes the risk of breaking things when the library changes out
-from underneath.
+manual, type @code{env LANGUAGE=C LC_ALL=C make install}.  This will
+build things if necessary, before installing them.  However, you should
+still compile everything first.  If you are installing glibc as your
+primary C library, we recommend that you shut the system down to
+single-user mode first, and reboot afterward.  This minimizes the risk
+of breaking things when the library changes out from underneath.
 
 If you're upgrading from Linux libc5 or some other C library, you need to
 replace the @file{/usr/include} with a fresh directory before installing it.

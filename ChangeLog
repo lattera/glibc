@@ -1,3 +1,24 @@
+2000-11-09  H.J. Lu  <hjl@gnu.org>
+
+	* sunrpc/Versions (GLIBC_2.1): Remove xdr_cryptkeyarg,
+	xdr_cryptkeyarg2, xdr_cryptkeyres, xdr_des_block,
+	xdr_key_netstarg, xdr_key_netstres, xdr_keybuf and
+	xdr_keystatus.
+
+	* time/Versions (GLIBC_2.1): Move getitimer to...
+	* sysdeps/unix/sysv/linux/alpha/Versions (GLIBC_2.1): ...here.
+
+2000-11-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* manual/install.texi: Recommend to set LANGUAGE=C LC_ALL-C during
+	"make install", to work around a binary incompatibility between
+	glibc 2.1 and glibc 2.2 gconv modules.
+
+2000-11-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/locale.alias: Add thai.
+	Patch by Chanop Silpa-Anan <chanop@syseng.anu.edu.au>.
+
 2000-11-07  Akim Demaille  <akim@epita.fr>
 
 	* malloc/obstack.c (obstack_grow, obstack_grow0): Rename the second
