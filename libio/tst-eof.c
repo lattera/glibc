@@ -4,35 +4,33 @@
 #include <unistd.h>
 
 
+static void do_prepare (void);
+#define PREPARE(argc, argv) do_prepare ()
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
 #include <test-skeleton.c>
 
 
+int fd;
+
+
+static void
+do_prepare (void)
+{
+  fd = create_temp_file ("tst-eof.", NULL);
+  if (fd == -1)
+    {
+      printf ("cannot create temporary file: %m\n");
+      exit (1);
+    }
+}
+
+
 static int
 do_test (void)
 {
-  char *buf;
-  int fd;
+  char buf[40];
   FILE *fp;
-
-  buf = (char *) malloc (strlen (test_dir) + sizeof "/tst-eof.XXXXXX");
-  if (buf == NULL)
-    {
-      printf ("cannot allocate memory: %m\n");
-      return 1;
-    }
-  stpcpy (stpcpy (buf, test_dir), "/tst-eof.XXXXXX");
-
-  fd = mkstemp (buf);
-  if (fd == -1)
-    {
-      printf ("cannot open temporary file: %m\n");
-      return 1;
-    }
-
-  /* Make sure it gets removed.  */
-  add_temp_file (buf);
 
   if (write (fd, "some string\n", 12) != 12)
     {

@@ -1,5 +1,8 @@
 2002-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/tst-eof.c: Rewrite to let test-skeleton.c deal with
+	creation and removal of the temp file.
+
 	* libio/bug-rewind.c: Use test skeleton.  Use create_temp_file for
 	file creation.
 	* test-skeleton.c (create_temp_file): New function.
