@@ -25,6 +25,10 @@ subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
 # Look for generated header files where they get created.
 includes += -I$(..)hurd -I$(common-objpfx)hurd/
 
+# We use the style `if (err = call(...))' a lot in the Hurd code,
+# where we have a lot of functions that return zero or an errno code.
++cflags += -Wno-parentheses
+
 # Do not use any assembly code from sysdeps/unix (and subdirectories).
 # This bypasses all the system call stubs and uses any existing posix or
 # generic C files instead.
