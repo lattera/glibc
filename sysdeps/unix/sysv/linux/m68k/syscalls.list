@@ -1,3 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_llseek	llseek	_llseek		5	__sys_llseek
+s_setgroups	setgroups setgroups	2	__syscall_setgroups
