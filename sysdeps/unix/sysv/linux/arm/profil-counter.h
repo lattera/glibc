@@ -22,5 +22,5 @@
 void
 profil_counter (int signo, struct sigcontext sc)
 {
-  profil_count ((void *) sc.eip);
+  profil_count ((void *) sc.reg.ARM_pc);
 }
