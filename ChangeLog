@@ -1,10 +1,14 @@
+2000-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/sys/param.h: Define MAXHOSTNAMELEN here.
+
 2000-12-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sys/param.h: Revert last patch.
 
 2000-12-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-        * sysdeps/unix/sysv/linux/s390/mmap64.S: Use mmap if mmap2 isn't
+	* sysdeps/unix/sysv/linux/s390/mmap64.S: Use mmap if mmap2 isn't
 	available.
 
 2000-12-05  Andreas Jaeger  <aj@suse.de>
