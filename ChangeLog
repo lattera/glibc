@@ -1,5 +1,9 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (process_dl_debug): Correct printing help message.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Implement precision handling
+	for %s.
+
 	* inet/getnetgrent_r.c (innetgr): Add int* parameter to getfct
 	definition and pass &errno in use of this variable.
 	Reported by Simon Wilkinson <simon@sxw.org.uk> [PR libc/2911].

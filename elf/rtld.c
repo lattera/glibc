@@ -258,11 +258,11 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
     if (phdr[cnt].p_type == PT_TLS)
       {
 	void *tlsblock;
-	size_t align = MAX (TLS_INIT_TCB_ALIGN,  phdr[cnt].p_align);
+	size_t align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
 
 	GL(dl_rtld_map).l_tls_blocksize = phdr[cnt].p_memsz;
 	GL(dl_rtld_map).l_tls_initimage_size = phdr[cnt].p_filesz;
-	GL(dl_rtld_map).l_tls_initimage = (void *) (bootstrap_map_p->l_addr
+	GL(dl_rtld_map).l_tls_initimage = (void *) (GL(dl_rtld_map).l_map_start
 						    + phdr[cnt].p_offset);
 
 	/* We can now allocate the initial TLS block.  This can happen
@@ -1476,8 +1476,8 @@ warning: debug option `%s' unknown; try LD_DEBUG=help\n", copy);
 Valid options for the LD_DEBUG environment variable are:\n\n");
 
       for (cnt = 0; cnt < ndebopts; ++cnt)
-	_dl_printf ("  %s%s %s\n", debopts[cnt].name,
-		    "       " + strlen (debopts[cnt].name) - 3,
+	_dl_printf ("  %.*s%s%s\n", debopts[cnt].len, debopts[cnt].name,
+		    "         " + debopts[cnt].len - 3,
 		    debopts[cnt].helptext);
 
       _dl_printf ("\n\

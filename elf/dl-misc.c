@@ -135,6 +135,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	  /* It is a format specifier.  */
 	  char fill = ' ';
 	  int width = -1;
+	  int prec = -1;
 #if LONG_MAX != INT_MAX
 	  int long_mod = 0;
 #endif
@@ -152,6 +153,13 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	    {
 	      width = va_arg (arg, int);
 	      ++fmt;
+	    }
+
+	  /* Handle precision.  */
+	  if (*fmt == '.' && fmt[1] == '*')
+	    {
+	      prec = va_arg (arg, int);
+	      fmt += 2;
 	    }
 
 	  /* Recognize the l modifier.  It is only important on some
@@ -202,6 +210,8 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	      /* Get the string argument.  */
 	      iov[niov].iov_base = va_arg (arg, char *);
 	      iov[niov].iov_len = strlen (iov[niov].iov_base);
+	      if (prec != -1)
+		iov[niov].iov_len = MIN (prec, iov[niov].iov_len );
 	      ++niov;
 	      break;
 
