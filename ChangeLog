@@ -1,3 +1,7 @@
+1999-12-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/xstrdup.c: It's _LIBC, not __LIBC.
+
 1999-12-03  Andreas Jaeger  <aj@suse.de>
 
 	* nss/getXXbyYY.c: Include <resolv.h>

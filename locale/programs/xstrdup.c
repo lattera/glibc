@@ -21,7 +21,7 @@
 # include <config.h>
 #endif
 
-#if defined STDC_HEADERS || defined HAVE_STRING_H || __LIBC
+#if defined STDC_HEADERS || defined HAVE_STRING_H || _LIBC
 # include <string.h>
 #else
 # include <strings.h>
