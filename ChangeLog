@@ -1,3 +1,8 @@
+2000-09-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include <string.h> for
+	strncpy prototype.
+
 2000-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/memchr.S: Add .pred.rel to avoid wrong assembler
