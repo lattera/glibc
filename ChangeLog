@@ -1,5 +1,6 @@
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/Makefile (tests): Add tst-ipnode.
 	* inet/tst-ipnode.c: New file.
 
 1999-08-06  Andreas Schwab  <schwab@suse.de>
