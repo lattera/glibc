@@ -720,7 +720,7 @@ search_dir (const struct dir_entry *entry)
 	  add_single_dir (new_entry, 0);
 	  continue;
 	}
-      else if (!S_ISREG (stat_buf.st_mode) && !is_link)
+      else if (!S_ISREG (lstat_buf.st_mode) && !is_link)
 	continue;
 
       if (opt_chroot && is_link)

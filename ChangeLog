@@ -1,5 +1,7 @@
 2001-06-14  Andreas Schwab  <schwab@suse.de>
 
+	* elf/ldconfig.c (search_dir): Fix check for regular file.
+
 	* sysdeps/m68k/fpu/e_log2f.c: Fix typo.
 	* sysdeps/m68k/fpu/e_log2l.c: Fix typo.
 
