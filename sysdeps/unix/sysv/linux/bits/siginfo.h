@@ -269,9 +269,6 @@ enum
 #  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
 # endif
 
-/* Forward declaration of the `pthread_attr_t' type.  */
-struct __pthread_attr_s;
-
 typedef struct sigevent
   {
     sigval_t sigev_value;
