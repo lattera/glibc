@@ -26,7 +26,7 @@ routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
 	    getgrent_r getgrgid_r getgrnam_r fgetgrent_r
 
-tests := testgrp
+tests := testgrp tst_fgetgrent
 
 include ../Rules
 

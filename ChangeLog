@@ -1,3 +1,9 @@
+1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/Makefile (tests): Add tst_fgetgrent.
+	* grp/tst_fgetgrent.c: New file.
+	Patches by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
 1999-06-07  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* db2/os/os_oflags.c (__db_oflags): Fix checking of O_ACCMODE bits to
