@@ -84,7 +84,7 @@ do_test (void)
       exit (1);
     }
 
-  setup_eintr (SIGUSR1);
+  setup_eintr (SIGUSR1, NULL);
 
   pthread_t th;
   char buf[100];

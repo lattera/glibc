@@ -28,78 +28,45 @@
 
 
 static void *
-tf2 (void *arg)
+tf (void *arg)
 {
-  return arg;
-}
+  pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_lock (&m);
+  /* This call must not return.  */
+  pthread_mutex_lock (&m);
 
-
-static void *
-tf1 (void *arg)
-{
-  while (1)
-    {
-      pthread_t th;
-
-      int e = pthread_create (&th, NULL, tf2, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_create returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
-
-      e = pthread_join (th, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_join returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_join failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
-    }
+  puts ("tf: mutex_lock returned");
+  exit (1);
 }
 
 
 static int
 do_test (void)
 {
-  setup_eintr (SIGUSR1, NULL);
+  pthread_t self = pthread_self ();
 
-  int i;
-  for (i = 0; i < 10; ++i)
+  setup_eintr (SIGUSR1, &self);
+
+  pthread_t th;
+  char buf[100];
+  int e = pthread_create (&th, NULL, tf, NULL);
+  if (e != 0)
     {
-      pthread_t th;
-      int e = pthread_create (&th, NULL, tf1, NULL);
-      if (e != 0)
-	{
-	  char buf[100];
-	  printf ("main: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
+      printf ("main: pthread_create failed: %s\n",
+	      strerror_r (e, buf, sizeof (buf)));
+      exit (1);
     }
 
-  (void) tf1 (NULL);
-  /* NOTREACHED */
+  /* This call must never return.  */
+  e = pthread_join (th, NULL);
+
+  if (e == EINTR)
+    puts ("pthread_join returned with EINTR");
 
   return 0;
 }
 
 #define EXPECTED_SIGNAL SIGALRM
-#define TIMEOUT 3
+#define TIMEOUT 1
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

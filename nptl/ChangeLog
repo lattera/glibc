@@ -1,3 +1,25 @@
+2003-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* eintr.c (setup_eintr): Add new parameter.  Pass to thread function.
+	(eintr_source): If ARG != NULL, use pthread_kill.
+	* tst-eintr1.c: Adjust for this change.
+	* tst-eintr2.c: Likewise.
+	* Makefile (tests): Add tst-eintr3 and tst-eintr4.
+	* tst-eintr3.c: New file.
+	* tst-eintr4.c: New file.
+
+2003-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* libc-cancellation.c (__libc_enable_asynccancel): Don't cancel
+	if CANCELSTATE_BITMASK is set.
+	* sysdeps/pthread/librt-cancellation.c (__librt_enable_asynccancel):
+	Likewise.
+
+	* Makefile (tests): Add tst-cancel22 and tst-cancel23.
+	(tests-reverse): Add tst-cancel23.
+	* tst-cancel22.c: New test.
+	* tst-cancel23.c: New test.
+
 2003-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-eintr1.c: Better error messages.

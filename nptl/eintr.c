@@ -44,7 +44,10 @@ eintr_source (void *arg)
 
   while (1)
     {
-      kill (getpid (), the_sig);
+      if (arg != NULL)
+	pthread_kill (*(pthread_t *) arg, the_sig);
+      else
+	kill (getpid (), the_sig);
 
       nanosleep (&ts, NULL);
     }
@@ -55,7 +58,7 @@ eintr_source (void *arg)
 
 
 static void
-setup_eintr (int sig)
+setup_eintr (int sig, pthread_t *thp)
 {
   struct sigaction sa;
   sigemptyset (&sa.sa_mask);
@@ -70,7 +73,7 @@ setup_eintr (int sig)
 
   /* Create the thread which will fire off the signals.  */
   pthread_t th;
-  if (pthread_create (&th, NULL, eintr_source, NULL) != 0)
+  if (pthread_create (&th, NULL, eintr_source, thp) != 0)
     {
       puts ("setup_eintr: pthread_create failed");
       exit (1);

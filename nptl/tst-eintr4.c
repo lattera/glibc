@@ -27,79 +27,30 @@
 #include "eintr.c"
 
 
-static void *
-tf2 (void *arg)
-{
-  return arg;
-}
-
-
-static void *
-tf1 (void *arg)
-{
-  while (1)
-    {
-      pthread_t th;
-
-      int e = pthread_create (&th, NULL, tf2, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_create returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
-
-      e = pthread_join (th, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_join returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_join failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
-    }
-}
-
-
 static int
 do_test (void)
 {
-  setup_eintr (SIGUSR1, NULL);
+  pthread_t self = pthread_self ();
 
-  int i;
-  for (i = 0; i < 10; ++i)
+  setup_eintr (SIGUSR1, &self);
+
+  pthread_barrier_t b;
+  if (pthread_barrier_init (&b, NULL, 2) != 0)
     {
-      pthread_t th;
-      int e = pthread_create (&th, NULL, tf1, NULL);
-      if (e != 0)
-	{
-	  char buf[100];
-	  printf ("main: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
+      puts ("barrier_init failed");
+      exit (1);
     }
 
-  (void) tf1 (NULL);
-  /* NOTREACHED */
+  /* This call must never return.  */
+  int e = pthread_barrier_wait (&b);
+
+  if (e == EINTR)
+    puts ("pthread_join returned with EINTR");
 
   return 0;
 }
 
 #define EXPECTED_SIGNAL SIGALRM
-#define TIMEOUT 3
+#define TIMEOUT 1
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

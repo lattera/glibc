@@ -207,7 +207,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-detach1 \
-	tst-eintr1 tst-eintr2 \
+	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 \
 	tst-tls1 tst-tls2 \
 	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
@@ -216,7 +216,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
-	tst-cancel21 \
+	tst-cancel21 tst-cancel22 tst-cancel23 \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
@@ -326,7 +326,7 @@ ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2
 endif
 # These tests are linked with libc before libpthread
-tests-reverse += tst-cancel5
+tests-reverse += tst-cancel5 tst-cancel23
 
 include ../Rules
 

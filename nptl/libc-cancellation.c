@@ -42,8 +42,9 @@ __libc_enable_asynccancel (void)
 
       if (__builtin_expect ((oldval & CANCELED_BITMASK) != 0, 0))
 	{
-	  /* If we are already exiting stop right here.  */
-	  if ((oldval & EXITING_BITMASK) != 0)
+	  /* If we are already exiting or if PTHREAD_CANCEL_DISABLED,
+	     stop right here.  */
+	  if ((oldval & (EXITING_BITMASK | CANCELSTATE_BITMASK)) != 0)
 	    break;
 
 	  int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
