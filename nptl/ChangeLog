@@ -1,5 +1,9 @@
 2002-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* allocatestack.c (get_cached_stack): Don't crash if we first
+	found a stack with a larger size then needed.
+	Reported by Hui Huang <hui.huang@sun.com>.
+
 	* Makefile (tests): Add tst-sysconf.
 	* tst-sysconf.c: New file.
 
