@@ -99,7 +99,7 @@ int __pthread_manager(void *arg)
     FD_SET(reqfd, &readfds);
     timeout.tv_sec = 2;
     timeout.tv_usec = 0;
-    n = __select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+    n = __select(reqfd + 1, &readfds, NULL, NULL, &timeout);
 
     /* Check for termination of the main thread */
     if (getppid() == 1) {
