@@ -1021,7 +1021,7 @@ _IO_default_write (fp, data, n)
   return 0;
 }
 
-int
+size_t
 _IO_default_showmanyc (fp)
      _IO_FILE *fp;
 {
