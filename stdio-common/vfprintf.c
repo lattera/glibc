@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1307,7 +1307,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Lock stream.  */
 #ifdef USE_IN_LIBIO
-  __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, s);
+  _IO_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
   _IO_flockfile (s);
 #else
   __libc_cleanup_region_start (1, (void (*) (void *)) &__funlockfile, s);
@@ -1909,10 +1909,11 @@ all_done:
   /* Unlock the stream.  */
 #ifdef USE_IN_LIBIO
   _IO_funlockfile (s);
+  _IO_cleanup_region_end (0);
 #else
   __funlockfile (s);
-#endif
   __libc_cleanup_region_end (0);
+#endif
 
   return done;
 }

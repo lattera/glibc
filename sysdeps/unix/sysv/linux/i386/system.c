@@ -40,7 +40,7 @@
 static void cancel_handler (void *arg);
 
 #define CLEANUP_HANDLER \
-  __libc_cleanup_region_start (0, cancel_handler, &pid)
+  __libc_cleanup_region_start (1, cancel_handler, &pid)
 
 #define CLEANUP_RESET \
   __libc_cleanup_region_end (0)

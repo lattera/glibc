@@ -348,12 +348,17 @@ typedef pthread_key_t __libc_key_t;
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    int _avail = PTF(_pthread_cleanup_push_defer) != NULL;		      \
-    if (_avail) {							      \
-      PTF(_pthread_cleanup_push_defer) (&_buffer, FCT, ARG);		      \
-    } else if (DOIT) {							      \
-      _buffer.__routine = (FCT);					      \
-      _buffer.__arg = (ARG);						      \
+    int _avail;								      \
+    if (DOIT) {								      \
+      _avail = PTF(_pthread_cleanup_push_defer) != NULL;		      \
+      if (_avail) {							      \
+	PTF(_pthread_cleanup_push_defer) (&_buffer, FCT, ARG);		      \
+      } else {								      \
+	_buffer.__routine = (FCT);					      \
+	_buffer.__arg = (ARG);						      \
+      }									      \
+    } else {								      \
+      _avail = 0;							      \
     }
 
 /* End critical region with cleanup.  */
