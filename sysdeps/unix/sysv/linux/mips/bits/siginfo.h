@@ -45,9 +45,9 @@ typedef union sigval
 typedef struct siginfo
   {
     int si_signo;		/* Signal number.  */
+    int si_code;		/* Signal code.  */
     int si_errno;		/* If non-zero, an errno value associated with
 				   this signal, as defined in <errno.h>.  */
-    int si_code;		/* Signal code.  */
 
     union
       {
