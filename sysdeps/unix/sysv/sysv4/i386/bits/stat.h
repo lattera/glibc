@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,6 +77,11 @@ struct stat
 /* These don't actually exist on System V, but having them doesn't hurt.  */
 #define	__S_IFLNK	0120000	/* Symbolic link.  */
 #define	__S_IFSOCK	0140000	/* Socket.  */
+
+/* POSIX.1b objects.  */
+#define __S_TYPEISMQ(buf) (0)
+#define __S_TYPEISSEM(buf) (0)
+#define __S_TYPEISSHM(buf) (0)
 
 /* Protection bits.  */
 
