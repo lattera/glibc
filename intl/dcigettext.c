@@ -30,11 +30,11 @@
 
 #include <sys/types.h>
 
-#if defined __GNUC__ && !defined C_ALLOCA
+#ifdef __GNUC__
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
-# if (defined HAVE_ALLOCA_H || defined _LIBC) && !defined C_ALLOCA
+# if defined HAVE_ALLOCA_H || defined _LIBC
 #  include <alloca.h>
 # else
 #  ifdef _AIX
@@ -55,42 +55,22 @@ extern int errno;
 # define __set_errno(val) errno = (val)
 #endif
 
-#if defined STDC_HEADERS || defined _LIBC
-# include <stddef.h>
-# include <stdlib.h>
-#else
-char *getenv ();
-# ifdef HAVE_MALLOC_H
-#  include <malloc.h>
-# else
-void free ();
-# endif
-#endif
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-#endif
-#if !HAVE_STRCHR && !defined _LIBC
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>
 #endif
 
-#if defined HAVE_LOCALE_H || defined _LIBC
-# include <locale.h>
-#endif
+#include <locale.h>
 
 #if defined HAVE_SYS_PARAM_H || defined _LIBC
 # include <sys/param.h>
 #endif
 
 #include "gettextP.h"
+#include "plural-exp.h"
 #ifdef _LIBC
 # include <libintl.h>
 #else
@@ -192,16 +172,6 @@ static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
 # define PATH_MAX _POSIX_PATH_MAX
 #endif
 
-/* XPG3 defines the result of `setlocale (category, NULL)' as:
-   ``Directs `setlocale()' to query `category' and return the current
-     setting of `local'.''
-   However it does not specify the exact format.  Neither do SUSV2 and
-   ISO C 99.  So we can use this feature only on selected systems (e.g.
-   those using GNU C Library).  */
-#ifdef _LIBC
-# define HAVE_LOCALE_NULL
-#endif
-
 /* This is the type used for the search tree where known translations
    are stored.  */
 struct known_translation_t
@@ -286,9 +256,6 @@ static char *plural_lookup PARAMS ((struct loaded_l10nfile *domain,
 				    const char *translation,
 				    size_t translation_len))
      internal_function;
-static unsigned long int plural_eval PARAMS ((struct expression *pexp,
-					      unsigned long int n))
-     internal_function;
 static const char *category_to_name PARAMS ((int category)) internal_function;
 static const char *guess_category_value PARAMS ((int category,
 						 const char *categoryname))
@@ -355,7 +322,9 @@ typedef unsigned char transmem_block_t;
 #endif
 
 /* Lock variable to protect the global data in the gettext implementation.  */
+#ifdef _LIBC
 __libc_rwlock_define_initialized (, _nl_state_lock)
+#endif
 
 /* Checking whether the binaries runs SUID must be done and glibc provides
    easier methods therefore we make a difference here.  */
@@ -374,6 +343,9 @@ static int enable_secure;
 	enable_secure = -1;						      \
     }
 #endif
+
+/* Get the function to evaluate the plural expression.  */
+#include "plural-eval.c"
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    CATEGORY locale and, if PLURAL is nonzero, search over string
@@ -479,16 +451,18 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
       path_max = (unsigned int) PATH_MAX;
       path_max += 2;		/* The getcwd docs say to do this.  */
 
-      dirname = (char *) alloca (path_max + dirname_len);
-      ADD_BLOCK (block_list, dirname);
-
-      __set_errno (0);
-      while ((ret = getcwd (dirname, path_max)) == NULL && errno == ERANGE)
+      for (;;)
 	{
-	  path_max += PATH_INCR;
 	  dirname = (char *) alloca (path_max + dirname_len);
 	  ADD_BLOCK (block_list, dirname);
+
 	  __set_errno (0);
+	  ret = getcwd (dirname, path_max);
+	  if (ret != NULL || errno != ERANGE)
+	    break;
+
+	  path_max += path_max / 2;
+	  path_max += PATH_INCR;
 	}
 
       if (ret == NULL)
@@ -983,87 +957,6 @@ plural_lookup (domain, n, translation, translation_len)
 }
 
 
-/* Function to evaluate the plural expression and return an index value.  */
-static unsigned long int
-internal_function
-plural_eval (pexp, n)
-     struct expression *pexp;
-     unsigned long int n;
-{
-  switch (pexp->nargs)
-    {
-    case 0:
-      switch (pexp->operation)
-	{
-	case var:
-	  return n;
-	case num:
-	  return pexp->val.num;
-	default:
-	  break;
-	}
-      /* NOTREACHED */
-      break;
-    case 1:
-      {
-	/* pexp->operation must be lnot.  */
-	unsigned long int arg = plural_eval (pexp->val.args[0], n);
-	return ! arg;
-      }
-    case 2:
-      {
-	unsigned long int leftarg = plural_eval (pexp->val.args[0], n);
-	if (pexp->operation == lor)
-	  return leftarg || plural_eval (pexp->val.args[1], n);
-	else if (pexp->operation == land)
-	  return leftarg && plural_eval (pexp->val.args[1], n);
-	else
-	  {
-	    unsigned long int rightarg = plural_eval (pexp->val.args[1], n);
-
-	    switch (pexp->operation)
-	      {
-	      case mult:
-		return leftarg * rightarg;
-	      case divide:
-		return leftarg / rightarg;
-	      case module:
-		return leftarg % rightarg;
-	      case plus:
-		return leftarg + rightarg;
-	      case minus:
-		return leftarg - rightarg;
-	      case less_than:
-		return leftarg < rightarg;
-	      case greater_than:
-		return leftarg > rightarg;
-	      case less_or_equal:
-		return leftarg <= rightarg;
-	      case greater_or_equal:
-		return leftarg >= rightarg;
-	      case equal:
-		return leftarg == rightarg;
-	      case not_equal:
-		return leftarg != rightarg;
-	      default:
-		break;
-	      }
-	  }
-	/* NOTREACHED */
-	break;
-      }
-    case 3:
-      {
-	/* pexp->operation must be qmop.  */
-	unsigned long int boolarg = plural_eval (pexp->val.args[0], n);
-	return plural_eval (pexp->val.args[boolarg ? 1 : 2], n);
-      }
-    }
-  /* NOTREACHED */
-  return 0;
-}
-
-
 /* Return string representation of locale CATEGORY.  */
 static const char *
 internal_function
@@ -1144,25 +1037,10 @@ guess_category_value (category, categoryname)
   /* We have to proceed with the POSIX methods of looking to `LC_ALL',
      `LC_xxx', and `LANG'.  On some systems this can be done by the
      `setlocale' function itself.  */
-#if defined _LIBC || (defined HAVE_SETLOCALE && defined HAVE_LC_MESSAGES && defined HAVE_LOCALE_NULL)
+#ifdef _LIBC
   retval = setlocale (category, NULL);
 #else
-  /* Setting of LC_ALL overwrites all other.  */
-  retval = getenv ("LC_ALL");
-  if (retval == NULL || retval[0] == '\0')
-    {
-      /* Next comes the name of the desired category.  */
-      retval = getenv (categoryname);
-      if (retval == NULL || retval[0] == '\0')
-	{
-	  /* Last possibility is the LANG environment variable.  */
-	  retval = getenv ("LANG");
-	  if (retval == NULL || retval[0] == '\0')
-	    /* We use C as the default domain.  POSIX says this is
-	       implementation defined.  */
-	    return "C";
-	}
-    }
+  retval = _nl_locale_name (category, categoryname);
 #endif
 
   return language != NULL && strcmp (retval, "C") != 0 ? language : retval;

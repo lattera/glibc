@@ -21,9 +21,7 @@
 # include <config.h>
 #endif
 
-#if defined HAVE_LOCALE_H || defined _LIBC
-# include <locale.h>
-#endif
+#include <locale.h>
 
 #include "gettextP.h"
 #ifdef _LIBC

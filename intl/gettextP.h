@@ -75,51 +75,6 @@ SWAP (i)
 #endif
 
 
-/* This is the representation of the expressions to determine the
-   plural form.  */
-struct expression
-{
-  int nargs;			/* Number of arguments.  */
-  enum operator
-  {
-    /* Without arguments:  */
-    var,			/* The variable "n".  */
-    num,			/* Decimal number.  */
-    /* Unary operators:  */
-    lnot,			/* Logical NOT.  */
-    /* Binary operators:  */
-    mult,			/* Multiplication.  */
-    divide,			/* Division.  */
-    module,			/* Module operation.  */
-    plus,			/* Addition.  */
-    minus,			/* Subtraction.  */
-    less_than,			/* Comparison.  */
-    greater_than,		/* Comparison.  */
-    less_or_equal,		/* Comparison.  */
-    greater_or_equal,		/* Comparison.  */
-    equal,			/* Comparision for equality.  */
-    not_equal,			/* Comparision for inequality.  */
-    land,			/* Logical AND.  */
-    lor,			/* Logical OR.  */
-    /* Ternary operators:  */
-    qmop			/* Question mark operator.  */
-  } operation;
-  union
-  {
-    unsigned long int num;	/* Number value for `num'.  */
-    struct expression *args[3];	/* Up to three arguments.  */
-  } val;
-};
-
-/* This is the data structure to pass information to the parser and get
-   the result in a thread-safe way.  */
-struct parse_args
-{
-  const char *cp;
-  struct expression *res;
-};
-
-
 /* The representation of an opened message catalog.  */
 struct loaded_domain
 {
@@ -238,16 +193,6 @@ extern char *bindtextdomain__ PARAMS ((const char *__domainname,
 				       const char *__dirname));
 extern char *bind_textdomain_codeset__ PARAMS ((const char *__domainname,
 						const char *__codeset));
-#endif
-
-#ifdef _LIBC
-extern void __gettext_free_exp PARAMS ((struct expression *exp))
-     internal_function;
-extern int __gettextparse PARAMS ((void *arg));
-#else
-extern void gettext_free_exp__ PARAMS ((struct expression *exp))
-     internal_function;
-extern int gettextparse__ PARAMS ((void *arg));
 #endif
 
 /* @@ begin of epilog @@ */

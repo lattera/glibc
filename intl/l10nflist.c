@@ -28,30 +28,14 @@
 # include <config.h>
 #endif
 
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef memcpy
-#  define memcpy(Dst, Src, Num) (bcopy (Src, Dst, Num), (Dst))
-# endif
-#endif
-#if !HAVE_STRCHR && !defined _LIBC
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <string.h>
 
 #if defined _LIBC || defined HAVE_ARGZ_H
 # include <argz.h>
 #endif
 #include <ctype.h>
 #include <sys/types.h>
-
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #include "loadinfo.h"
 
@@ -368,11 +352,11 @@ _nl_normalize_codeset (codeset, name_len)
   size_t cnt;
 
   for (cnt = 0; cnt < name_len; ++cnt)
-    if (isalnum (codeset[cnt]))
+    if (isalnum ((unsigned char) codeset[cnt]))
       {
 	++len;
 
-	if (isalpha (codeset[cnt]))
+	if (isalpha ((unsigned char) codeset[cnt]))
 	  only_digit = 0;
       }
 
@@ -386,9 +370,9 @@ _nl_normalize_codeset (codeset, name_len)
 	wp = retval;
 
       for (cnt = 0; cnt < name_len; ++cnt)
-	if (isalpha (codeset[cnt]))
-	  *wp++ = tolower (codeset[cnt]);
-	else if (isdigit (codeset[cnt]))
+	if (isalpha ((unsigned char) codeset[cnt]))
+	  *wp++ = tolower ((unsigned char) codeset[cnt]);
+	else if (isdigit ((unsigned char) codeset[cnt]))
 	  *wp++ = codeset[cnt];
 
       *wp = '\0';

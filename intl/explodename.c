@@ -21,15 +21,8 @@
 # include <config.h>
 #endif
 
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#endif
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 
 #include "loadinfo.h"

@@ -20,9 +20,7 @@
 #ifndef _GETTEXT_H
 #define _GETTEXT_H 1
 
-#if HAVE_LIMITS_H || _LIBC
-# include <limits.h>
-#endif
+#include <limits.h>
 
 /* @@ end of prolog @@ */
 

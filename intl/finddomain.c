@@ -24,25 +24,8 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#else
-# ifdef HAVE_MALLOC_H
-#  include <malloc.h>
-# else
-void free ();
-# endif
-#endif
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef memcpy
-#  define memcpy(Dst, Src, Num) (bcopy (Src, Dst, Num), (Dst))
-# endif
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>

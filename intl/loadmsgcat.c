@@ -51,15 +51,8 @@ char *alloca ();
 # endif
 #endif
 
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#endif
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>
@@ -81,6 +74,7 @@ char *alloca ();
 
 #include "gettext.h"
 #include "gettextP.h"
+#include "plural-exp.h"
 
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
@@ -99,16 +93,6 @@ char *alloca ();
 # define munmap __munmap
 #endif
 
-/* Names for the libintl functions are a problem.  They must not clash
-   with existing names and they should follow ANSI C.  But this source
-   code is also used in GNU C Library where the names have a __
-   prefix.  So we have to make a difference here.  */
-#ifdef _LIBC
-# define PLURAL_PARSE __gettextparse
-#else
-# define PLURAL_PARSE gettextparse__
-#endif
-
 /* For those losing systems which don't have `alloca' we have to add
    some additional code emulating it.  */
 #ifdef HAVE_ALLOCA
@@ -122,73 +106,6 @@ char *alloca ();
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
 int _nl_msg_cat_cntr;
-
-#if defined __GNUC__ \
-    || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
-
-/* These structs are the constant expression for the germanic plural
-   form determination.  It represents the expression  "n != 1".  */
-static const struct expression plvar =
-{
-  .nargs = 0,
-  .operation = var,
-};
-static const struct expression plone =
-{
-  .nargs = 0,
-  .operation = num,
-  .val =
-  {
-    .num = 1
-  }
-};
-static struct expression germanic_plural =
-{
-  .nargs = 2,
-  .operation = not_equal,
-  .val =
-  {
-    .args =
-    {
-      [0] = (struct expression *) &plvar,
-      [1] = (struct expression *) &plone
-    }
-  }
-};
-
-# define INIT_GERMANIC_PLURAL()
-
-#else
-
-/* For compilers without support for ISO C 99 struct/union initializers:
-   Initialization at run-time.  */
-
-static struct expression plvar;
-static struct expression plone;
-static struct expression germanic_plural;
-
-static void
-init_germanic_plural ()
-{
-  if (plone.val.num == 0)
-    {
-      plvar.nargs = 0;
-      plvar.operation = var;
-
-      plone.nargs = 0;
-      plone.operation = num;
-      plone.val.num = 1;
-
-      germanic_plural.nargs = 2;
-      germanic_plural.operation = not_equal;
-      germanic_plural.val.args[0] = &plvar;
-      germanic_plural.val.args[1] = &plone;
-    }
-}
-
-# define INIT_GERMANIC_PLURAL() init_germanic_plural ()
-
-#endif
 
 
 /* Initialize the codeset dependent parts of an opened message catalog.
@@ -279,8 +196,10 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 	    domain->conv = (__gconv_t) -1;
 # else
 #  if HAVE_ICONV
-	  /* When using GNU libiconv, we want to use transliteration.  */
-#   if _LIBICONV_VERSION
+	  /* When using GNU libc >= 2.2 or GNU libiconv >= 1.5,
+	     we want to use transliteration.  */
+#   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
+       || _LIBICONV_VERSION >= 0x0105
 	  len = strlen (outcharset);
 	  {
 	    char *tmp = (char *) alloca (len + 10 + 1);
@@ -290,7 +209,8 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 	  }
 #   endif
 	  domain->conv = iconv_open (outcharset, charset);
-#   if _LIBICONV_VERSION
+#   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
+       || _LIBICONV_VERSION >= 0x0105
 	  freea (outcharset);
 #   endif
 #  endif
@@ -482,56 +402,7 @@ _nl_load_domain (domain_file, domainbinding)
   nullentry = _nl_init_domain_conv (domain_file, domain, domainbinding);
 
   /* Also look for a plural specification.  */
-  if (nullentry != NULL)
-    {
-      const char *plural;
-      const char *nplurals;
-
-      plural = strstr (nullentry, "plural=");
-      nplurals = strstr (nullentry, "nplurals=");
-      if (plural == NULL || nplurals == NULL)
-	goto no_plural;
-      else
-	{
-	  /* First get the number.  */
-	  char *endp;
-	  unsigned long int n;
-	  struct parse_args args;
-
-	  nplurals += 9;
-	  while (*nplurals != '\0' && isspace (*nplurals))
-	    ++nplurals;
-#if defined HAVE_STRTOUL || defined _LIBC
-	  n = strtoul (nplurals, &endp, 10);
-#else
-	  for (endp = nplurals, n = 0; *endp >= '0' && *endp <= '9'; endp++)
-	    n = n * 10 + (*endp - '0');
-#endif
-	  domain->nplurals = n;
-	  if (nplurals == endp)
-	    goto no_plural;
-
-	  /* Due to the restrictions bison imposes onto the interface of the
-	     scanner function we have to put the input string and the result
-	     passed up from the parser into the same structure which address
-	     is passed down to the parser.  */
-	  plural += 7;
-	  args.cp = plural;
-	  if (PLURAL_PARSE (&args) != 0)
-	    goto no_plural;
-	  domain->plural = args.res;
-	}
-    }
-  else
-    {
-      /* By default we are using the Germanic form: singular form only
-         for `one', the plural form otherwise.  Yes, this is also what
-         English is using since English is a Germanic language.  */
-    no_plural:
-      INIT_GERMANIC_PLURAL ();
-      domain->plural = &germanic_plural;
-      domain->nplurals = 2;
-    }
+  EXTRACT_PLURAL_EXPRESSION (nullentry, &domain->plural, &domain->nplurals);
 }
 
 
@@ -541,7 +412,7 @@ internal_function
 _nl_unload_domain (domain)
      struct loaded_domain *domain;
 {
-  if (domain->plural != &germanic_plural)
+  if (domain->plural != &__gettext_germanic_plural)
     __gettext_free_exp (domain->plural);
 
   _nl_free_domain_conv (domain);

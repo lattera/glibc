@@ -1,3 +1,93 @@
+2001-03-04  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (DCIGETTEXT): Increment path_max proportionally.
+
+2001-10-31  Bruno Haible  <bruno@clisp.org>
+
+	* intl/plural.y: Include <stddef.h>, needed for NULL with SunOS 4 cc.
+
+2001-03-21  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (_nl_state_lock): Mark as #ifdef _LIBC. AIX 3 xlc
+	chokes on empty macro arguments.
+	* intl/plural.y: Add #pragma for alloca on AIX 3.
+
+2001-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/dcigettext.c (guess_category_value): Only implement for
+	glibc.  Otherwise rely on function _nl_locale_name which isn't
+	present in the glibc sources.
+
+2001-09-24  Bruno Haible  <bruno@clisp.org>
+
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Also enable
+	transliteration when building on a glibc system but outside glibc.
+
+2001-09-22  Bruno Haible  <bruno@clisp.org>
+
+	* intl/plural-eval.c: New file, extracted from dcigettext.c.
+	* intl/dcigettext.c (plural_eval): Remove function, moved to
+	intl/plural-eval.c.
+	(plural_lookup): Call PLURAL_EVAL instead of plural_eval.
+	Include plural-eval.c.
+
+2001-09-22  Bruno Haible  <bruno@clisp.org>
+
+	* intl/plural-exp.c (EXTRACT_PLURAL_EXPRESSION): Reject numbers that
+	don't start with a digit; nplurals must be positive.
+
+2001-09-02  Bruno Haible  <bruno@clisp.org>
+
+	* intl/plural-exp.h: New file, extracted from gettextP.h.
+	* intl/plural-exp.c: New file, extracted from loadmsgcat.c.
+	* intl/gettextP.h (struct expression, struct parse_args,
+	__gettext_free_exp, __gettextparse): Move to plural-exp.h.
+	* intl/loadmsgcat.c: Include plural-exp.h.
+	(PLURAL_PARSE): Move macro to plural-exp.h.
+	(plvar, plone, germanic_plural, INIT_GERMANIC_PLURAL): Move to
+	plural-exp.c.
+	(_nl_load_domain): Move plural handling code to plural-exp.c.  Call
+	EXTRACT_PLURAL_EXPRESSION.
+	(_nl_unload_domain): Update.
+	* intl/dcigettext.c: Include plural-exp.h.
+	* intl/plural.y: Include plural-exp.h, not gettextP.h.
+	(FREE_EXPRESSION): Move macro to plural-exp.h.
+	* intl/Makefile (routines): Add plural-exp.
+	(distribute): Add plural-exp.h.
+
+2001-07-28  Bruno Haible  <bruno@clisp.org>
+
+	* intl/l10nflist.c (_nl_normalize_codeset): Cast isalnum, isalpha,
+	isdigit, tolower argument to 'unsigned char'.
+	* intl/loadmsgcat.c (_nl_load_domain): Cast isspace argument to
+	'unsigned char'.
+	* intl/localealias.c (read_alias_file): Cast isspace argument to
+	'unsigned char'.
+
+2001-10-20  Bruno Haible  <bruno@clisp.org>
+
+	Assume strchr() exists. (Without it, intl/explodename.c wouldn't link
+	anyway.)
+	* intl/dcigettext.c (strchr): Remove fallback definition; it conflicts
+	with the variable 'index' in plural_lookup.
+	* intl/l10nflist.c (strchr): Likewise.
+	* intl/localealias.c (strchr): Likewise.
+
+	Assume <stddef.h>, <stdlib.h>, <string.h>, <locale.h> exist.
+	* intl/bindtextdom.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+	* intl/dgettext.c: Likewise.
+	* intl/dngettext.c: Likewise.
+	* intl/explodename.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/gettext.c: Likewise.
+	* intl/l10nflist.c: Likewise.
+	* intl/loadmsgcat.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/ngettext.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* intl/gettext.h: Assume <limits.h> exists.
+
 2001-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/Makefile (tests): Add scanf11.

@@ -25,15 +25,7 @@
 # define __need_NULL
 # include <stddef.h>
 #else
-# ifdef STDC_HEADERS
-#  include <stdlib.h>		/* Just for NULL.  */
-# else
-#  ifdef HAVE_STRING_H
-#   include <string.h>
-#  else
-#   define NULL ((void *) 0)
-#  endif
-# endif
+# include <stdlib.h>		/* Just for NULL.  */
 #endif
 
 #include "gettextP.h"

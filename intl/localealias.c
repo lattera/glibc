@@ -52,29 +52,8 @@ char *alloca ();
 # endif
 #endif
 
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#else
-# ifdef HAVE_MALLOC_H
-#  include <malloc.h>
-# else
-void free ();
-# endif
-#endif
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef memcpy
-#  define memcpy(Dst, Src, Num) (bcopy (Src, Dst, Num), (Dst))
-# endif
-#endif
-#if !HAVE_STRCHR && !defined _LIBC
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #include "gettextP.h"
 
@@ -277,21 +256,21 @@ read_alias_file (fname, fname_len)
 
       cp = buf;
       /* Ignore leading white space.  */
-      while (isspace (cp[0]))
+      while (isspace ((unsigned char) cp[0]))
 	++cp;
 
       /* A leading '#' signals a comment line.  */
       if (cp[0] != '\0' && cp[0] != '#')
 	{
 	  alias = cp++;
-	  while (cp[0] != '\0' && !isspace (cp[0]))
+	  while (cp[0] != '\0' && !isspace ((unsigned char) cp[0]))
 	    ++cp;
 	  /* Terminate alias name.  */
 	  if (cp[0] != '\0')
 	    *cp++ = '\0';
 
 	  /* Now look for the beginning of the value.  */
-	  while (isspace (cp[0]))
+	  while (isspace ((unsigned char) cp[0]))
 	    ++cp;
 
 	  if (cp[0] != '\0')
@@ -300,7 +279,7 @@ read_alias_file (fname, fname_len)
 	      size_t value_len;
 
 	      value = cp++;
-	      while (cp[0] != '\0' && !isspace (cp[0]))
+	      while (cp[0] != '\0' && !isspace ((unsigned char) cp[0]))
 		++cp;
 	      /* Terminate value.  */
 	      if (cp[0] == '\n')
