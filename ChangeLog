@@ -1,3 +1,11 @@
+1998-05-11 18:02  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):
+	Remove statfs and fstatfs.                                 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Don't mark pread
+	and pwrite as EXTRA.                                           
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.        
+
 1998-05-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add capget and capset.
