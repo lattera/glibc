@@ -76,6 +76,8 @@ static const char *conffile = _PATH_NSCDCONF;
 
 time_t start_time;
 
+uintptr_t pagesize_m1;
+
 static int check_pid (const char *file);
 static int write_pid (const char *file);
 
@@ -154,6 +156,9 @@ main (int argc, char **argv)
 
   /* Remember when we started.  */
   start_time = time (NULL);
+
+  /* Determine page size.  */
+  pagesize_m1 = getpagesize () - 1;
 
   /* Behave like a daemon.  */
   if (go_background)

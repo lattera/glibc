@@ -332,8 +332,13 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* If necessary, we also propagate the data to disk.  */
 	  if (db->persistent)
-	    // XXX async OK?
-	    msync (dataset, total + req->key_len, MS_ASYNC);
+	    {
+	      // XXX async OK?
+	      uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
+	      msync ((void *) pval,
+		     ((uintptr_t) dataset & pagesize_m1)
+		     + total + req->key_len, MS_ASYNC);
+	    }
 
 	  addr_list_type = (hst->h_length == NS_INADDRSZ
 			    ? GETHOSTBYADDR : GETHOSTBYADDRv6);

@@ -124,6 +124,9 @@ extern const size_t block_align;
    means unlimited.  */
 extern unsigned int reload_count;
 
+/* Pagesize minus one.  */
+extern uintptr_t pagesize_m1;
+
 /* Prototypes for global functions.  */
 
 /* nscd.c */
