@@ -55,7 +55,8 @@ chapters = $(addsuffix .texi, \
 		       intro errno memory ctype string charset locale	\
 		       message search pattern io stdio llio filesys	\
 		       pipe socket terminal math arith time setjmp	\
-		       signal startup process job nss users sysinfo conf)
+		       signal startup process job nss users sysinfo conf\
+		       crypt)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
 
@@ -69,7 +70,7 @@ examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
 			$(filter %.c.texi, $(texis)))
 
 # Kludge: implicit rule so Make knows the one command does it all.
-chapters.% top-menu.%: libc-texinfo.sh $(texis)
+chapters.% top-menu.%: libc-texinfo.sh $(texis) Makefile
 	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
 
 libc.dvi libc.pdf libc.info: chapters.texi top-menu.texi libm-err.texi

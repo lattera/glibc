@@ -1,5 +1,6 @@
+@c This node must have no pointers.
 @node Cryptographic Functions
-@c @node Cryptographic Functions, , Top, Top
+@c @node Cryptographic Functions, , System Configuration, Top
 @chapter DES Encryption and Password Handling
 @c %MENU% DES encryption and password handling
 

@@ -1,7 +1,17 @@
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* crypt/tcrypt.texi: Moved to...
+	* crypt/crypt.texi: Moved to...
 	* manual/crypt.texi: ...here.
+	* crypt/examples/genpass.c: Moved to...
+	* manual/examples/genpass.c: ...here.
+	* crypt/examples/mygenpass.c: Moved to...
+	* manual/examples/mygenpass.c: ...here.
+	* crypt/examples/testpass.c: Moved to...
+	* manual/examples/testpass.c: ...here.
+
+	* manual/Makefile (chapters): Add crypt.
+	* manual/conf.texi: Add usual header for not-last chapter.
+	* manual/crypt.texi: Add special header for last chapter.
 
 2000-02-28  Geoff Keating  <geoffk@cygnus.com>
 
@@ -9,7 +19,7 @@
 	* sysdeps/unix/sysv/linux/configure.in (inhibit_glue): Don't
 	complain if there is no crypt add-on.
 	* crypt/configure: Removed.
-	
+
 	* crypt/crypt.texi: Update documentation of US export restrictions
 	to match the 14 Jan 2000 regulations.
 
