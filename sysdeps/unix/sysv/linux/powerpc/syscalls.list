@@ -16,6 +16,7 @@ s_fstat64	fxstat64 fstat64	i:ip	__syscall_fstat64
 s_ftruncate64	ftruncate64 ftruncate64	i:iii	__syscall_ftruncate64
 s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd
 s_getdents	getdents getdents	i:ipi	__syscall_getdents
+s_getdents64	getdents getdents64	i:ipi	__syscall_getdents64
 s_getpmsg	getpmsg	getpmsg		i:ipppp	__syscall_getpmsg
 s_getpriority	getpriority getpriority	i:ii	__syscall_getpriority
 getresgid	-	getresgid	i:ppp	getresgid
