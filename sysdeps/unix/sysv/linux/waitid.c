@@ -47,10 +47,11 @@ do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   static int waitid_works;
   if (waitid_works > 0)
-    return INLINE_SYSCALL (waitid, 4, idtype, id, infop, options);
+    return INLINE_SYSCALL (waitid, 5, idtype, id, infop, options, NULL);
   if (waitid_works == 0)
     {
-      int result = INLINE_SYSCALL (waitid, 4, idtype, id, infop, options);
+      int result = INLINE_SYSCALL (waitid, 5,
+				   idtype, id, infop, options, NULL);
       if (result < 0 && errno == ENOSYS)
 	waitid_works = -1;
       else
