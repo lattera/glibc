@@ -1,3 +1,8 @@
+2002-12-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Makefile (annexc.out): Add -I../dir for all sorted-dirs.
+	* posix/annexc.c (fmt, testfmt): Remove -D_LIBC.
+
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/syslog.c (log_cleanup): New function.
