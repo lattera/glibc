@@ -122,8 +122,8 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-#  define TLS_INIT_TP(descr) \
-  do {									      \
+#  define TLS_INIT_TP(descr)						      \
+  ({									      \
     void *_descr = (descr);						      \
     tcbhead_t *head = _descr;						      \
     int __gs;								      \
@@ -133,11 +133,13 @@ typedef struct
     head->self = _descr;						      \
 									      \
     __gs = TLS_SETUP_GS_SEGMENT (_descr);				      \
-    if (__builtin_expect (__gs, 7) == -1)				      \
-      /* Nothing else we can do.  */					      \
-      asm ("hlt");							      \
-    asm ("movw %w0, %%gs" : : "q" (__gs));				      \
-  } while (0)
+    if (__builtin_expect (__gs, 7) != -1)				      \
+      {									      \
+	asm ("movw %w0, %%gs" : : "q" (__gs));				      \
+	__gs = 0;							      \
+      }									      \
+    __gs;								      \
+  })
 
 
 /* Return the address of the dtv for the current thread.  */

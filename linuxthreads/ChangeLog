@@ -1,3 +1,8 @@
+2002-08-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_INIT_TP): Use statement expression and
+	return a value as callers now expect.
+
 2002-08-11  Roland McGrath  <roland@redhat.com>
 
 	* pthread.c (__pthread_initialize_manager): Initialize

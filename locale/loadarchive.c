@@ -206,7 +206,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	 just map the whole file and be sure everything is covered.  */
 
       mapsize = (sizeof (void *) > 4 ? archive_stat.st_size
-		 : MAX (archive_stat.st_size, ARCHIVE_MAPPING_WINDOW));
+		 : MIN (archive_stat.st_size, ARCHIVE_MAPPING_WINDOW));
 
       result = __mmap64 (NULL, mapsize, PROT_READ, MAP_SHARED, fd, 0);
       if (result == MAP_FAILED)
