@@ -1,3 +1,18 @@
+Tue Jun 20 02:18:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (lib%.so: lib%_pic.a): Pass -soname switch giving the
+ 	library's name including $(libprefix) and major version number.
+
+	* locale/locale-ctype.c (allocate_arrays): Use xmalloc and bzero
+ 	in place of xcalloc.
+
+	* Makeconfig (prefix, exec_prefix, libprefix): Instead of
+ 	`ifndef', use the $(origin) function to only set these if they are
+ 	undefined, and not if they are defined to empty.
+
+	* gnu-versions.h: New file.
+	* features.h (__GNU_LIBRARY__): Increase value to 5.
+
 Wed Jun 14 03:45:24 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdio/stdio.h (__validfp): Use ({...}) rather than a comma

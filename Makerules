@@ -554,6 +554,7 @@ ifeq (yes,$(build-shared))
 # on other shared objects.
 lib%.so: lib%_pic.a
 	$(LINK.o) -shared -o $@ \
+		  -soname lib$(libprefix)$*.so$($(@F)-version) \
 		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
 		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
 		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \

@@ -534,16 +534,20 @@ allocate_arrays (void)
       char *ptr;
       int size = charmap_data.hash_size * charmap_data.hash_layers;
 
-      ctype_b = (u16 *) xcalloc (size - (-128), sizeof (u16));
+      ctype_b = xmalloc ((size - (-128)) * sizeof (u16));
+      bzero (ctype_b, (size - (-128)) * sizeof (u16));
       ctype_b += 128;
 
 
-      names_b = (i32 *) xcalloc (size, sizeof (i32));
+      names_b = xmalloc (size * sizeof (i32));
+      bzero (names_b, size * sizeof (i32));
 
-      toupper_b = (i32 *) xcalloc ((size - (-128)), sizeof  (i32));
+      toupper_b = xmalloc ((size - (-128)) * sizeof (i32));
+      bzero (toupper_b, (size - (-128)) * sizeof (i32));
       toupper_b += 128;
 
-      tolower_b = (i32 *) xcalloc ((size - (-128)), sizeof (i32));
+      tolower_b = xmalloc ((size - (-128)) * sizeof (i32));
+      bzero (tolower_b, (size - (-128)) * sizeof (i32));
       tolower_b += 128;
 
       ptr = NULL;

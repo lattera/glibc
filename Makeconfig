@@ -115,12 +115,12 @@ export sysdep_dir := $(sysdep_dir)
 
 
 # Common prefix for machine-independent installation directories.
-ifndef prefix
+ifeq ($(origin prefix),undefined) # ifndef would override explicit empty value.
 prefix = /usr/local
 endif
 
 # Common prefix for machine-dependent installation directories.
-ifndef exec_prefix
+ifeq ($(origin exec_prefix),undefined)
 exec_prefix = $(prefix)
 endif
 
@@ -133,7 +133,7 @@ endif
 # the prefix is spliced between `lib' and the name, so the linker switch
 # `-l$(libprefix)NAME' finds the library; for other files the prefix is
 # just prepended to the whole file name.
-ifndef libprefix
+ifeq ($(origin libprefix),undefined)
 libprefix =
 endif
 

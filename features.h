@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -126,8 +126,14 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
+/* This macro indicates that the installed library is the GNU C Library.
+   Its value must be incremented whenever any existing library interface
+   changes such that callers must be recompiled with the new header files.
+   This value should always coincide with the major version number used for
+   the shared C library corresponding to this set of header files.  */
+
 #undef	__GNU_LIBRARY__
-#define	__GNU_LIBRARY__	1
+#define	__GNU_LIBRARY__	5
 
 
 #if	!defined(__GNUC__) || __GNUC__ < 2
