@@ -24,6 +24,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE		/* no space for saved regs */
@@ -32,11 +33,13 @@
 #define SRC	DEST+PTR_SIZE
 
 	.text
-ENTRY (__stpcpy)
+ENTRY (BP_SYM (__stpcpy))
 	ENTER
 
 	movl DEST(%esp), %eax
 	movl SRC(%esp), %ecx
+	CHECK_BOUNDS_LOW (%eax, DEST(%esp))
+	CHECK_BOUNDS_LOW (%ecx, SRC(%esp))
 	subl %eax, %ecx		/* magic: reduce number of loop variants
 				   to one using addressing mode */
 
@@ -82,9 +85,11 @@ L(1):	addl $4, %eax		/* increment loop counter */
 L(4):	incl %eax
 L(3):	incl %eax
 L(2):
+	CHECK_BOUNDS_HIGH (%eax, DEST(%esp), jb)
+	RETURN_BOUNDED_POINTER (DEST(%esp))
 
 	LEAVE
 	RET_PTR
-END (__stpcpy)
+END (BP_SYM (__stpcpy))
 
-weak_alias (__stpcpy, stpcpy)
+weak_alias (BP_SYM (__stpcpy), BP_SYM (stpcpy))

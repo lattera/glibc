@@ -22,6 +22,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+4		/* space for 1 saved reg */
@@ -30,12 +31,13 @@
 #define CHR	STR+PTR_SIZE
 
 	.text
-ENTRY (strchr)
+ENTRY (BP_SYM (strchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
+	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -239,7 +241,8 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	jz L(1)			/* no NUL found => restart loop */
 
 L(2):	/* Return NULL.  */
-	xorl %eax, %eax		/* load NULL in return value register */
+	xorl %eax, %eax
+	RETURN_NULL_BOUNDED_POINTER
 	popl %edi		/* restore saved register content */
 
 	LEAVE
@@ -274,10 +277,13 @@ L(7):	testb %cl, %cl		/* is first byte C? */
 	/* It must be in the fourth byte and it cannot be NUL.  */
 	incl %eax
 
-L(6):	popl %edi		/* restore saved register content */
+L(6):
+	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
+	RETURN_BOUNDED_POINTER (STR(%esp))
+	popl %edi		/* restore saved register content */
 
 	LEAVE
 	RET_PTR
-END (strchr)
+END (BP_SYM (strchr))
 
-weak_alias (strchr, index)
+weak_alias (BP_SYM (strchr), BP_SYM (index))

@@ -32,6 +32,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+8		/* space for 2 saved regs */
@@ -41,7 +42,7 @@
 #define LEN	CHR+4
 
 	.text
-ENTRY (memchr)
+ENTRY (BP_SYM (memchr))
 	ENTER
 
 	/* Save callee-safe registers used in this function.  */
@@ -52,6 +53,7 @@ ENTRY (memchr)
 	movl STR(%esp), %eax	/* str: pointer to memory block.  */
 	movl CHR(%esp), %edx	/* c: byte we are looking for.  */
 	movl LEN(%esp), %esi	/* len: length of memory block.  */
+	CHECK_BOUNDS_BOTH_WIDE (%eax, STR(%esp), %esi)
 
 	/* If my must not test more than three characters test
 	   them one by one.  This is especially true for 0.  */
@@ -310,10 +312,17 @@ L(8):	testb %cl, %cl		/* test first byte in dword */
 	incl %eax		/* increment source pointer */
 
 	/* No further test needed we we know it is one of the four bytes.  */
-
-L(9):	popl %edi		/* pop saved registers */
+L(9):
+#if __BOUNDED_POINTERS__
+	/* If RTN pointer is phony, don't copy return value into it.  */
+	movl RTN(%esp), %ecx
+	testl %ecx, %ecx
+	jz L(pop)
+	RETURN_BOUNDED_POINTER (STR(%esp))
+#endif
+L(pop):	popl %edi		/* pop saved registers */
 	popl %esi
 
 	LEAVE
 	RET_PTR
-END (memchr)
+END (BP_SYM (memchr))

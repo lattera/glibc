@@ -21,16 +21,18 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define STR	PARMS
 
 	.text
-ENTRY (strlen)
+ENTRY (BP_SYM (strlen))
 	ENTER
 
 	movl STR(%esp), %ecx
+	CHECK_BOUNDS_LOW (%ecx, STR(%esp))
 	movl %ecx, %eax		/* duplicate it */
 
 	andl $3, %ecx		/* mask alignment bits */
@@ -128,8 +130,9 @@ L(3):	testb %cl, %cl		/* is first byte NUL? */
 	jz L(2)			/* yes => return pointer */
 	incl %eax		/* increment pointer */
 
-L(2):	subl STR(%esp), %eax	/* compute difference to string start */
+L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
+	subl STR(%esp), %eax	/* compute difference to string start */
 
 	LEAVE
 	ret
-END (strlen)
+END (BP_SYM (strlen))

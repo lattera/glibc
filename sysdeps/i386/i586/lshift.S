@@ -19,6 +19,7 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+16		/* space for 4 saved regs */
@@ -28,7 +29,7 @@
 #define CNT	SIZE+4
 
 	.text
-ENTRY(__mpn_lshift)
+ENTRY (BP_SYM (__mpn_lshift))
 	ENTER
 
 	pushl	%edi
@@ -40,6 +41,12 @@ ENTRY(__mpn_lshift)
 	movl	S(%esp),%esi
 	movl	SIZE(%esp),%ebx
 	movl	CNT(%esp),%ecx
+#if __BOUNDED_POINTERS__
+	shll	$2, %ebx		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (%edi, RES(%esp), %ebx)
+	CHECK_BOUNDS_BOTH_WIDE (%esi, S(%esp), %ebx)
+	shrl	$2, %ebx
+#endif
 
 /* We can use faster code for shift-by-1 under certain conditions.  */
 	cmp	$1,%ecx
@@ -222,4 +229,4 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 
 	LEAVE
 	ret
-END(__mpn_lshift)
+END (BP_SYM (__mpn_lshift))

@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 /* This file can be used for three variants of the strtok function:
@@ -56,12 +57,13 @@ save_ptr:
 #define SAVE	DELIM+PTR_SIZE
 
 	.text
-
-ENTRY (FUNCTION)
+ENTRY (BP_SYM (FUNCTION))
 	ENTER
 
 	movl STR(%esp), %edx
 	movl DELIM(%esp), %eax
+	CHECK_BOUNDS_LOW (%edx, STR(%esp))
+	CHECK_BOUNDS_LOW (%eax, DELIM(%esp))
 
 #if !defined (USE_AS_STRTOK_R) && defined (PIC)
 	pushl %ebx			/* Save PIC register.  */
@@ -169,17 +171,17 @@ L(0):
 
 L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb %cl, %cl		/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_1)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 1(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_2)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 2(%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
-	jz L(1)			/* yes => start compare loop */
+	jz L(1_3)		/* yes => start compare loop */
 	movb %cl, (%esp,%ecx)	/* set corresponding byte in stopset table */
 
 	movb 3(%eax), %cl	/* get byte from stopset */
@@ -188,7 +190,16 @@ L(2):	movb (%eax), %cl	/* get byte from stopset */
 	testb $0xff, %cl	/* is NUL char? */
 	jnz L(2)		/* no => process next dword from stopset */
 
-L(1):	leal -4(%edx), %eax	/* prepare loop */
+#if __BOUNDED_POINTERS__
+	jmp L(1_0)		/* pointer is correct for bounds check */
+L(1_3):	incl %eax		/* adjust pointer for bounds check */
+L(1_2):	incl %eax		/* ditto */
+L(1_1):	incl %eax		/* ditto */
+L(1_0):	CHECK_BOUNDS_HIGH (%eax, DELIM(%esp), jb)
+#else
+L(1_3):; L(1_2):; L(1_1):	/* fall through */
+#endif
+	leal -4(%edx), %eax	/* prepare loop */
 
 	/* We use a neat trick for the following loop.  Normally we would
 	   have to test for two termination conditions
@@ -275,10 +286,19 @@ L(return):
 	popl %ebx
 # endif
 #endif
+#if __BOUNDED_POINTERS__
+	testl %eax, %eax
+	jz L(ret)
+	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
+	RETURN_BOUNDED_POINTER (STR(%esp))
+L(ret):
+#endif
 	LEAVE
 	RET_PTR
 
 L(returnNULL):
 	xorl %eax, %eax
+	RETURN_NULL_BOUNDED_POINTER
 	jmp L(return)
-END (FUNCTION)
+
+END (BP_SYM (FUNCTION))

@@ -22,6 +22,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+8	/* space for 2 saved regs */
@@ -30,7 +31,7 @@
 #define CHR	STR+PTR_SIZE
 
 	.text
-ENTRY (strrchr)
+ENTRY (BP_SYM (strrchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers used here.  */
@@ -39,6 +40,7 @@ ENTRY (strrchr)
 	xorl %eax, %eax
 	movl STR(%esp), %esi
 	movl CHR(%esp), %ecx
+	CHECK_BOUNDS_LOW (%esi, STR(%esp))
 
 	/* At the moment %ecx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -319,11 +321,13 @@ L(26):	testb %dl, %dl		/* is third byte == NUL */
 	jne L(2)		/* no => skip */
 	leal 3(%esi), %eax	/* store address as result */
 
-L(2):	popl %esi		/* restore saved register content */
+L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
+	RETURN_BOUNDED_POINTER (STR(%esp))
+	popl %esi		/* restore saved register content */
 	popl %edi
 
 	LEAVE
 	RET_PTR
-END (strrchr)
+END (BP_SYM (strrchr))
 
-weak_alias (strrchr, rindex)
+weak_alias (BP_SYM (strrchr), BP_SYM (rindex))

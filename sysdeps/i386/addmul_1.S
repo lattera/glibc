@@ -20,6 +20,7 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+16	/* space for 4 saved regs */
@@ -34,7 +35,7 @@
 #define s2_limb ebx
 
 	.text
-ENTRY(__mpn_addmul_1)
+ENTRY (BP_SYM (__mpn_addmul_1))
 	ENTER
 
 	pushl	%edi
@@ -46,7 +47,13 @@ ENTRY(__mpn_addmul_1)
 	movl	S1(%esp), %s1_ptr
 	movl	SIZE(%esp), %sizeP
 	movl	S2LIMB(%esp), %s2_limb
-
+#if __BOUNDED_POINTERS__
+	shll	$2, %sizeP	/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (%res_ptr, RES(%esp), %sizeP)
+	CHECK_BOUNDS_BOTH_WIDE (%s1_ptr, S1(%esp), %sizeP)
+	CHECK_BOUNDS_BOTH_WIDE (%s2_limb, S2LIMB(%esp), %sizeP)
+	shrl	$2, %sizeP
+#endif
 	leal	(%res_ptr,%sizeP,4), %res_ptr
 	leal	(%s1_ptr,%sizeP,4), %s1_ptr
 	negl	%sizeP
@@ -72,4 +79,4 @@ L(oop):
 
 	LEAVE
 	ret
-END(__mpn_addmul_1)
+END (BP_SYM (__mpn_addmul_1))

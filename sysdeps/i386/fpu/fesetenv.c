@@ -19,8 +19,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
-
 #include <assert.h>
+#include <bp-sym.h>
 
 
 int
@@ -78,5 +78,5 @@ __fesetenv (const fenv_t *envp)
   return 0;
 }
 strong_alias (__fesetenv, __old_fesetenv)
-symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
-default_symbol_version (__fesetenv, fesetenv, GLIBC_2.2);
+symbol_version (BP_SYM (__old_fesetenv), BP_SYM (fesetenv), GLIBC_2.1);
+default_symbol_version (BP_SYM (__fesetenv), BP_SYM (fesetenv), GLIBC_2.2);

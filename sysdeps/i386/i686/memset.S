@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 /* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
@@ -38,13 +39,14 @@
 #endif
 
         .text
-ENTRY (memset)
+ENTRY (BP_SYM (memset))
 	ENTER
 
 	cld
 	pushl	%edi
 	movl	DEST(%esp), %edx
 	movl	LEN(%esp), %ecx
+	CHECK_BOUNDS_BOTH_WIDE (%edx, DEST(%esp), %ecx)
 #if BZERO_P
 	xorl	%eax, %eax	/* fill with 0 */
 #else
@@ -79,7 +81,8 @@ ENTRY (memset)
 
 1:
 #if !BZERO_P
-	movl	DEST(%esp), %eax
+	movl DEST(%esp), %eax	/* start address of destination is result */
+	RETURN_BOUNDED_POINTER (DEST(%esp))
 #endif
 	popl	%edi
 
@@ -89,4 +92,4 @@ ENTRY (memset)
 #else
 	RET_PTR
 #endif
-END (memset)
+END (BP_SYM (memset))

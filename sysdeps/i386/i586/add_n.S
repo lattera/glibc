@@ -20,6 +20,7 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+16		/* space for 4 saved regs */
@@ -29,7 +30,7 @@
 #define SIZE	S2+PTR_SIZE
 
 	.text
-ENTRY(__mpn_add_n)
+ENTRY (BP_SYM (__mpn_add_n))
 	ENTER
 
 	pushl	%edi
@@ -41,7 +42,13 @@ ENTRY(__mpn_add_n)
 	movl	S1(%esp),%esi
 	movl	S2(%esp),%ebx
 	movl	SIZE(%esp),%ecx
-
+#if __BOUNDED_POINTERS__
+	shll	$2, %ecx		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (%edi, RES(%esp), %ecx)
+	CHECK_BOUNDS_BOTH_WIDE (%esi, S1(%esp), %ecx)
+	CHECK_BOUNDS_BOTH_WIDE (%ebx, S2(%esp), %ecx)
+	shrl	$2, %ecx
+#endif
 	movl	(%ebx),%ebp
 
 	decl	%ecx
@@ -127,4 +134,4 @@ L(end2):
 
 	LEAVE
 	ret
-END(__mpn_add_n)
+END (BP_SYM (__mpn_add_n))

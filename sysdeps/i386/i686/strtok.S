@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80686.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,6 +21,8 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
+#include "bp-asm.h"
 
 /* This file can be used for three variants of the strtok function:
 
@@ -45,7 +47,7 @@
 save_ptr:
 	.space 4
 
-#define FUNCTION strtok
+#define FUNCTION BP_SYM (strtok)
 #endif
 
 	.text
@@ -55,7 +57,14 @@ save_ptr:
 	ret
 #endif
 
-ENTRY (FUNCTION)
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define DELIM	STR+PTR_SIZE
+#define SAVE	DELIM+PTR_SIZE
+
+ENTRY (BP_SYM (FUNCTION))
+	ENTER
 
 #if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
@@ -226,4 +235,4 @@ L(return):
 L(returnNULL):
 	xorl %eax, %eax
 	jmp L(return)
-END (FUNCTION)
+END (BP_SYM (FUNCTION))

@@ -19,6 +19,7 @@
 
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+12		/* space for 3 saved regs */
@@ -28,7 +29,7 @@
 #define CNT	SIZE+4
 
 	.text
-ENTRY(__mpn_rshift)
+ENTRY (BP_SYM (__mpn_rshift))
 	ENTER
 
 	pushl	%edi
@@ -39,7 +40,12 @@ ENTRY(__mpn_rshift)
 	movl	S(%esp),%esi
 	movl	SIZE(%esp),%edx
 	movl	CNT(%esp),%ecx
-
+#if __BOUNDED_POINTERS__
+	shll	$2, %edx		/* convert limbs to bytes */
+	CHECK_BOUNDS_BOTH_WIDE (%edi, RES(%esp), %edx)
+	CHECK_BOUNDS_BOTH_WIDE (%esi, S(%esp), %edx)
+	shrl	$2, %edx
+#endif
 	leal	-4(%edi,%edx,4),%edi
 	leal	(%esi,%edx,4),%esi
 	negl	%edx
@@ -86,4 +92,4 @@ L(end):	shrl	%cl,%ebx		/* compute most significant limb */
 
 	LEAVE
 	ret
-END(__mpn_rshift)
+END (BP_SYM (__mpn_rshift))

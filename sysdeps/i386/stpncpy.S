@@ -26,6 +26,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+4	/* space for 1 saved reg */
@@ -35,7 +36,7 @@
 #define LEN	SRC+PTR_SIZE
 
 	.text
-ENTRY (__stpncpy)
+ENTRY (BP_SYM (__stpncpy))
 	ENTER
 
 	pushl %esi
@@ -43,6 +44,8 @@ ENTRY (__stpncpy)
 	movl DEST(%esp), %eax
 	movl SRC(%esp), %esi
 	movl LEN(%esp), %ecx
+	CHECK_BOUNDS_LOW (%eax, DEST(%esp))
+	CHECK_BOUNDS_LOW (%esi, SRC(%esp))
 
 	subl %eax, %esi		/* magic: reduce number of loop variants
 				   to one using addressing mode */
@@ -137,10 +140,17 @@ L(8):
 L(3):	decl %ecx		/* all bytes written? */
 	jnz L(8)		/* no, then again */
 
-L(9):	popl %esi		/* restore saved register content */
+L(9):
+#if __BOUNDED_POINTERS__
+	addl %eax, %esi		/* undo magic: %esi now points beyond end of SRC */
+	CHECK_BOUNDS_HIGH (%esi, SRC(%esp), jb)
+	CHECK_BOUNDS_HIGH (%eax, DEST(%esp), jb)
+	RETURN_BOUNDED_POINTER (DEST(%esp))
+#endif
+	popl %esi		/* restore saved register content */
 
 	LEAVE
 	RET_PTR
-END (__stpncpy)
+END (BP_SYM (__stpncpy))
 
-weak_alias (__stpncpy, stpncpy)
+weak_alias (BP_SYM (__stpncpy), BP_SYM (stpncpy))

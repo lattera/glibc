@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+4	/* space for 1 saved reg */
@@ -27,7 +28,7 @@
 #define LEN	BLK2+PTR_SIZE
 
 	.text
-ENTRY (memcmp)
+ENTRY (BP_SYM (memcmp))
 	ENTER
 
 	pushl %esi		/* Save callee-safe registers.  */
@@ -37,6 +38,8 @@ ENTRY (memcmp)
 	movl BLK1(%esp), %esi
 	movl BLK2(%esp), %edi
 	movl LEN(%esp), %ecx
+	CHECK_BOUNDS_BOTH_WIDE (%esi, BLK1(%esp), %ecx)
+	CHECK_BOUNDS_BOTH_WIDE (%edi, BLK2(%esp), %ecx)
 
 	cld			/* Set direction of comparison.  */
 
@@ -64,7 +67,7 @@ L(1):	popl %esi		/* Restore registers.  */
 
 	LEAVE
 	ret
-END (memcmp)
+END (BP_SYM (memcmp))
 
 #undef bcmp
-weak_alias (memcmp, bcmp)
+weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))

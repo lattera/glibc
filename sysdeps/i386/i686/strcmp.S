@@ -20,6 +20,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE		/* no space for saved regs */
@@ -27,27 +28,37 @@
 #define STR2	STR1+PTR_SIZE
 
         .text
-ENTRY (strcmp)
+ENTRY (BP_SYM (strcmp))
 	ENTER
 
 	movl	STR1(%esp), %ecx
 	movl	STR2(%esp), %edx
+	CHECK_BOUNDS_LOW (%ecx, STR1(%esp))
+	CHECK_BOUNDS_LOW (%edx, STR2(%esp))
 
 L(oop):	movb	(%ecx), %al
-	incl	%ecx
 	cmpb	(%edx), %al
 	jne	L(neq)
+	incl	%ecx
 	incl	%edx
 	testb	%al, %al
 	jnz	L(oop)
 
 	xorl	%eax, %eax
+	/* when strings are equal, pointers rest one beyond
+	   the end of the NUL terminators.  */
+	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jbe)
+	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jbe)
 	jmp	L(out)
 
 L(neq):	movl	$1, %eax
-	ja	L(out)
+	ja	L(chk)
 	negl	%eax
+	/* When strings differ, pointers rest on
+	   the unequal characters.  */
+L(chk):	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jb)
+	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jb)
 
 L(out):	LEAVE
 	ret
-END (strcmp)
+END (BP_SYM (strcmp))

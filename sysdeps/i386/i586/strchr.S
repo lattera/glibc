@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 /* This version is especially optimized for the i586 (and following?)
@@ -42,7 +43,7 @@
 #define CHR	STR+PTR_SIZE
 
 	.text
-ENTRY (strchr)
+ENTRY (BP_SYM (strchr))
 	ENTER
 
 	pushl %edi		/* Save callee-safe registers.  */
@@ -53,6 +54,7 @@ ENTRY (strchr)
 
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
+	CHECK_BOUNDS_LOW (%eax, STR(%esp))
 
 	movl %eax, %edi		/* duplicate string pointer for later */
 	xorl %ecx, %ecx		/* clear %ecx */
@@ -279,7 +281,9 @@ L(5):	subl $4, %eax		/* adjust pointer */
 
 	incl %eax		/* increment pointer */
 
-L(2):	popl %ebp		/* restore saved registers */
+L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
+	RETURN_BOUNDED_POINTER (STR(%esp))
+	popl %ebp		/* restore saved registers */
 	popl %ebx
 
 	popl %esi
@@ -321,8 +325,8 @@ L(4):	subl $4, %eax		/* adjust pointer */
 	cmpb %dl, %ch		/* fourth byte == C? */
 	je L(2)			/* yes => return pointer */
 
-L(3):	xorl %eax, %eax		/* set return value = NULL */
-
+L(3):	xorl %eax, %eax
+	RETURN_NULL_BOUNDED_POINTER
 	popl %ebp		/* restore saved registers */
 	popl %ebx
 
@@ -331,7 +335,7 @@ L(3):	xorl %eax, %eax		/* set return value = NULL */
 
 	LEAVE
 	RET_PTR
-END (strchr)
+END (BP_SYM (strchr))
 
 #undef index
-weak_alias (strchr, index)
+weak_alias (BP_SYM (strchr), BP_SYM (index))

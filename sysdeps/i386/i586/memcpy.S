@@ -20,6 +20,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 /* BEWARE: `#ifdef memcpy' means that memcpy is redefined as `mempcpy',
@@ -34,7 +35,7 @@
 #define LEN	SRC+PTR_SIZE
 
         .text
-ENTRY (memcpy)
+ENTRY (BP_SYM (memcpy))
 	ENTER
 
 	pushl	%edi
@@ -43,6 +44,8 @@ ENTRY (memcpy)
 	movl	DEST(%esp), %edi
 	movl	SRC(%esp), %esi
 	movl	LEN(%esp), %ecx
+	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
+	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 	movl	%edi, %eax
 
 	/* We need this in any case.  */
@@ -112,4 +115,4 @@ L(1):	rep; movsb
 
 	LEAVE
 	RET_PTR
-END (memcpy)
+END (BP_SYM (memcpy))

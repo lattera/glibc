@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE		/* no space for saved regs */
@@ -30,14 +31,16 @@
 #define LEN	SRC+PTR_SIZE
 
 	.text
-ENTRY(__mempcpy)
+ENTRY (BP_SYM (__mempcpy))
 	ENTER
 
 	movl	LEN(%esp), %ecx
 	movl	%edi, %eax
 	movl	DEST(%esp), %edi
+	CHECK_BOUNDS_BOTH_WIDE (%edi, DEST(%esp), %ecx)
 	movl	%esi, %edx
 	movl	SRC(%esp), %esi
+	CHECK_BOUNDS_BOTH_WIDE (%esi, SRC(%esp), %ecx)
 	cld
 	shrl	$1, %ecx
 	jnc	1f
@@ -49,8 +52,9 @@ ENTRY(__mempcpy)
 	movsl
 	xchgl	%edi, %eax
 	movl	%edx, %esi
+	RETURN_BOUNDED_POINTER (DEST(%esp))
 
 	LEAVE
 	RET_PTR
-END(__mempcpy)
-weak_alias (__mempcpy, mempcpy)
+END (BP_SYM (__mempcpy))
+weak_alias (BP_SYM (__mempcpy), BP_SYM (mempcpy))

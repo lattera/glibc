@@ -20,6 +20,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-sym.h"
 #include "bp-asm.h"
 
 #define PARMS	LINKAGE+12	/* space for 3 saved regs */
@@ -34,7 +35,7 @@
 #define magic 0xfefefeff
 
 	.text
-ENTRY(STRCPY)
+ENTRY (BP_SYM (STRCPY))
 	ENTER
 
 	pushl	%edi
@@ -43,6 +44,8 @@ ENTRY(STRCPY)
 
 	movl	DEST(%esp), %edi
 	movl	SRC(%esp), %esi
+	CHECK_BOUNDS_LOW (%edi, DEST(%esp))
+	CHECK_BOUNDS_LOW (%esi, SRC(%esp))
 
 	xorl	%eax, %eax
 	leal	-1(%esi), %ecx
@@ -142,15 +145,17 @@ L(4):	movb	%dl, (%edi)
 L(end):	movb	%ah, (%edi)
 
 L(end2):
+	/* GKM FIXME: check high bounds  */
 #ifdef USE_AS_STPCPY
 	movl	%edi, %eax
 #else
 	movl	DEST(%esp), %eax
 #endif
+	RETURN_BOUNDED_POINTER (DEST(%esp))
 	popl	%ebx
 	popl	%esi
 	popl	%edi
 
 	LEAVE
 	RET_PTR
-END(STRCPY)
+END (BP_SYM (STRCPY))
