@@ -608,6 +608,13 @@ _IO_file_underflow_mmap (_IO_FILE *fp)
 {
   if (fp->_IO_read_end < fp->_IO_buf_end)
     {
+      /* A stupid requirement in POSIX says that the first read on a
+	 stream must update the atime.  Just read a single byte.  We
+	 don't have to worry about repositioning the file descriptor
+	 since the following seek defines its position anyway.  */
+      char ignore[1];
+      read (fp->_fileno, ignore, 1);
+
       if (
 # ifdef _G_LSEEK64
 	  _G_LSEEK64 (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base,
@@ -1262,12 +1269,10 @@ _IO_file_xsgetn_mmap (fp, data, n)
 	}
     }
 
-  if (have == 0)
-    {
-      if (s == (char *) data)
-	fp->_flags |= _IO_EOF_SEEN;
-    }
-  else
+  if (have < n)
+    fp->_flags |= _IO_EOF_SEEN;
+
+  if (have != 0)
     {
       have = MIN (have, n);
 #ifdef _LIBC

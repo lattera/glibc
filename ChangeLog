@@ -1,5 +1,15 @@
 2002-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/fileops.c (_IO_file_xsgetn_mmap): Always set EOF flag is
+	not enough content is available.
+	* libio/tst-eof.c: New file.
+	* libio/Makefile (tests): Add tst-eof.
+
+	* libio/fileops.c (_IO_file_underflow_mmap): Read a single byte to
+	update atime.
+	* libio/tst-atime.c: New file.
+	* libio/Makefile (tests): Add tst-atime.
+
 	* argp/argp-fmtstream.c (__argp_fmtstream_update): Avoid crash in
 	handling of overly long words.
 
