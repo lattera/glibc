@@ -1,3 +1,7 @@
+2002-09-02  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.0): Add __fxstat64.
+
 2002-09-01  Roland McGrath  <roland@redhat.com>
 
 	* ctype/ctype.h (__ctype_b, __ctype_toupper, __ctype_tolower):
