@@ -75,7 +75,7 @@ others		+= ldconfig
 install-rootsbin += ldconfig
 endif
 
-tests = loadtest
+tests = loadtest restest1
 
 include ../Rules
 
@@ -214,10 +214,12 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
 endef
 
-modules-names = testobj1 testobj2 testobj3
+modules-names = testobj1 testobj2 testobj3 testobj1_1
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 
+$(objpfx)testobj1_1.so: $(objpfx)testobj1.so
+LDLIBS-testobj1_1.so = $(objpfx)testobj1.so
 $(objpfx)testobj2.so: $(objpfx)testobj1.so
 LDLIBS-testobj2.so = $(objpfx)testobj1.so
 
@@ -228,6 +230,11 @@ $(objpfx)loadtest: $(objpfx)libdl.so
 LDFLAGS-loadtest = -rdynamic
 
 $(objpfx)loadtest.out: $(test-modules)
+
+$(objpfx)restest1: $(objpfx)libdl.so
+LDFLAGS-restest1 = -rdynamic $(objpfx)testobj1.so $(objpfx)testobj1_1.so
+
+$(objpfx)restest1.out: $(test-modules)
 
 # muwahaha
 

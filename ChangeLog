@@ -1,5 +1,9 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/restest1.c: New file.  Symbol resolution test.
+	* elf/testobj1_1.c: New file.  Module used in this test.
+	* elf/Makefile: Add rules for restest1 generation and execution.
+
 	* elf/dl-object.c (_dl_new_object): l_local_scope really gets
 	assigned the local scope.
 
