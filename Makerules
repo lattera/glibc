@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000,2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -263,35 +263,39 @@ ifeq ($(versioning),yes)
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
 common-generated += $(version-maps)
-postclean-generated += sysd-versions Versions.all abi-versions.h
+postclean-generated += sysd-versions Versions.all abi-versions.h \
+		       Versions.def.v.i Versions.def.v Versions.v.i Versions.v
 
 ifndef avoid-generated
 ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
+# See %.v/%.v.i implicit rules in Makeconfig.
+$(common-objpfx)Versions.def.v.i: $(..)Versions.def \
+				  $(wildcard $(add-ons:%=$(..)%/Versions.def))
 $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
 			      $(common-objpfx)soversions.i \
-	                      $(..)Versions.def \
-			      $(wildcard $(add-ons:%=$(..)%/Versions.def))
+			      $(common-objpfx)Versions.def.v
 	{ while read lib version setname; do \
 	    test -z "$$setname" || echo "$$lib : $$setname"; \
 	  done < $(word 2,$^); \
-	  cat $(filter-out $< $(word 2,$^),$^) \
-	  | $(preprocess-versions); \
+	  cat $(word 3,$^); \
 	} | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@
+# See %.v/%.v.i implicit rules in Makeconfig.
+$(common-objpfx)Versions.v.i: $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
+			      $(wildcard $(sysdirs:%=%/Versions)) \
+			      $(common-objpfx)abi-versions.h \
+			      $(sysd-versions-force)
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
-			       $(..)scripts/versions.awk \
-			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
-			       $(wildcard $(sysdirs:%=%/Versions)) \
-			       $(sysd-versions-force)
+			       $(common-objpfx)Versions.v \
+			       $(..)scripts/versions.awk
 	( echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
-	  cat $(filter-out $< $(word 2,$^) $(sysd-versions-force),$^) \
-	  | $(preprocess-versions) \
+	  cat $(word 2,$^) \
 	  | LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
 			    -v move_if_change='$(move-if-change)' \
-			    -f $(word 2,$^); \
+			    -f $(word 3,$^); \
 	) > $@T
 	mv -f $@T $@
 endif # avoid-generated
@@ -519,8 +523,10 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so += $(gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
+ifeq ($(unwind-find-fde),yes)
 # Force the backward compatibility EH functions to be linked.
 LDFLAGS-c.so += -u __register_frame
+endif
 # Pre-link the objects of libc_pic.a so that we can locally resolve
 # COMMON symbols before we link against ld.so.  This is because ld.so
 # contains some of libc_pic.a already, which will prevent the COMMONs
