@@ -1,3 +1,8 @@
+2004-09-12  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1) [! SHARED]: Add decls
+	missing in last change.
+
 2004-09-11  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_compat/compat-grp.c: Check that buflen is greater zero
