@@ -32,7 +32,7 @@ feholdexcept (fenv_t *envp)
   fpsr = envp->status_register & ~FE_ALL_EXCEPT;
   __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
   /* And set all exceptions to non-stop.  */
-  fpcr = envp->control_register & ~(FE_ALL_EXCEPT << 5);
+  fpcr = envp->control_register & ~(FE_ALL_EXCEPT << 6);
   __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
 
   return 1;
