@@ -1,5 +1,8 @@
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-object.c (_dl_new_object): l_local_scope really gets
+	assigned the local scope.
+
 	* posix/test-vfork.c (main): Improve test to check for correct
 	exit code.
 
@@ -12,7 +15,7 @@
 
 1999-01-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* math/tgmath.h (nexttoward): Rename nextafterx to nexttoward.
+	* math/tgmath.h: Rename nextafterx to nexttoward.
 
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 

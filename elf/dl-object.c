@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   else
     new->l_scope[idx] = &new->l_searchlist;
 
-  new->l_local_scope[0] = new->l_scope[idx];
+  new->l_local_scope[0] = &new->l_searchlist;
 
   /* Don't try to find the origin for the main map which has the name "".  */
   if (realname[0] != '\0')
