@@ -30,14 +30,14 @@
 	.align ALIGNARG(4)
 C_LABEL(_mcount)
 	/* Allocate space for 7 registers.  */
-	subq	$56,$rsp
-	movq	$rax,($rsp)
-	movq	%rcx,8($rsp)
-	movq	%rdx,16($rsp)
-	movq	%rsi,24($rsp)
-	movq	%rdi,32($rsp)
-	movq	%r8,40($rsp)
-	movq	%r9,48($rsp)
+	subq	$56,%rsp
+	movq	%rax,(%rsp)
+	movq	%rcx,8(%rsp)
+	movq	%rdx,16(%rsp)
+	movq	%rsi,24(%rsp)
+	movq	%rdi,32(%rsp)
+	movq	%r8,40(%rsp)
+	movq	%r9,48(%rsp)
 
 	/* Setup parameter for __mcount_internal.  */
 	/* selfpc is the return address on the stack.  */
@@ -51,14 +51,14 @@ C_LABEL(_mcount)
 #endif
 	/* Pop the saved registers.  Please note that `mcount' has no
 	   return value.  */
-	movq	($rsp),%r9
-	movq	8($rsp),%r8
-	movq	16($rsp),%rdi
-	movq	24($rsp),%rsi
-	movq	32($rsp),%rdx
-	movq	40($rsp),%rcx
-	movq	48($rsp),%rax
-	addq	$56,$rsp
+	movq	(%rsp),%r9
+	movq	8(%rsp),%r8
+	movq	16(%rsp),%rdi
+	movq	24(%rsp),%rsi
+	movq	32(%rsp),%rdx
+	movq	40(%rsp),%rcx
+	movq	48(%rsp),%rax
+	addq	$56,%rsp
 	ret
 
 	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(_mcount))
