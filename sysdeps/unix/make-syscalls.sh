@@ -84,8 +84,10 @@ while read file srcfile caller syscall args strong weak; do
   esac
 
   cancellable=
+  noerrno=
   case $args in
   C*) cancellable=-cancel; args=`echo $args | sed 's/C:\?//'`;;
+  E*) noerrno=_NOERRNO; args=`echo $args | sed 's/E:\?//'`;;
   esac
 
   # Derive the number of arguments from the argument signature
@@ -149,9 +151,9 @@ shared-only-routines += $file
   echo "\
 	\$(make-target-directory)
 	(echo '#include <sysdep$cancellable.h>'; \\
-	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
-	 echo '	ret'; \\
-	 echo 'PSEUDO_END($strong)'; \\
+	 echo 'PSEUDO$noerrno ($strong, $syscall, $nargs)'; \\
+	 echo '	ret$noerrno'; \\
+	 echo 'PSEUDO_END$noerrno($strong)'; \\
 	 echo 'libc_hidden_def ($strong)'; \\"
   ;;
   esac
