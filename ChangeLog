@@ -12,6 +12,7 @@
 	* nscd/nscd_stat.c: Transmit and print AVC statistics.
 	* nscd/selinux.c: New file.
 	* nscd/selinux.h: New file.
+	Patch mostly by Matthew Rickard <mjricka@epoch.ncsc.mil>.
 
 2004-09-16  Jakub Jelinek  <jakub@redhat.com>
 
