@@ -13,7 +13,6 @@
 	* ptfork.c (__fork): Revised so that the mutex is held across
 	the fork operation and while the handlers are called, and so that
 	the child resets the mutex.
-	Added calls to new functions __flockallfiles and __funlockallfiles.
 
 	* linuxthreads.texi: Updated pthread_atfork documentation to make
 	it clear that fork and pthread_atfork can't be reentered from
