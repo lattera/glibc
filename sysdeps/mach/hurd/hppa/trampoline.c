@@ -144,6 +144,12 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 calls we retry need only wait to receive the reply message.  */
       args->option &= ~MACH_SEND_MSG;
 
+      /* Limit the time to receive the reply message, in case the server
+	 claimed that `interrupt_operation' succeeded but in fact the RPC
+	 is hung.  */
+      args->option |= MACH_RCV_TIMEOUT;
+      args->timeout = _hurd_interrupted_rpc_timeout;
+
       _hurdsig_end_catch_fault ();
 
       MACHINE_THREAD_STATE_SET_PC (&state->basic, &&rpc_wait_trampoline);
@@ -221,38 +227,4 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
   /* NOTREACHED */
   return NULL;
-}
-
-/* STATE describes a thread that had intr_port set (meaning it was inside
-   HURD_EINTR_RPC), after it has been thread_abort'd.  It it looks to have
-   just completed a mach_msg_trap system call that returned
-   MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
-   being waited on.  */
-int
-_hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
-			    mach_port_t *port)
-{
-  const unsigned int *volatile pc
-    = MACHINE_THREAD_STATE_PC (&state->basic);
-  const mach_port_t *rcv_name
-    = (void *) state->r30 -32-20; /* VA_ARG4 from <mach/machine/asm.h>.  */
-
-  if (_hurdsig_catch_fault (SIGSEGV))
-    assert (_hurdsig_fault_sigcode == (long int) pc ||
-	    _hurdsig_fault_sigcode == (long int) rcv_name);
-  else
-    {
-      int rcving = (state->basic.r28 == MACH_RCV_INTERRUPTED &&
-		    pc == ???unfinished???);
-      if (rcving)
-	/* We did just return from a mach_msg_trap system call
-	   doing a message receive that was interrupted.
-	   Examine the parameters to find the receive right.  */
-	*port = *rcv_name;
-      _hurdsig_end_catch_fault ();
-      if (rcving)
-	return 1;
-    }
-
-  return 0;
 }
