@@ -1,6 +1,6 @@
 1998-04-21  Ulrich Drepper  <drepper@cygnus.com>
 
-	* ptlongjmp.c: Add prorotypes for __libc_siglongjmp and
+	* ptlongjmp.c: Add prototypes for __libc_siglongjmp and
 	__libc_longjmp.
 
 1998-04-20 14:55  Ulrich Drepper  <drepper@cygnus.com>
