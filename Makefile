@@ -253,7 +253,8 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\
-			    test-installation.pl gen-FAQ.pl versions.awk)
+			    test-installation.pl gen-FAQ.pl versions.awk\
+			    gen-sorted.awk)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

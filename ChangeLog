@@ -1,3 +1,37 @@
+1998-11-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* aclocal.m4 (LIBC_PROG_BINUTILS): Also add AR and RANLIB using the
+	same method.
+	* configure.in: Don't define AR and RANLIB here.
+
+	* inet/gethstbyad_r.c: Define NEED__RES_HCONV and POSTPROCESS for
+	host name res_hconf code.
+	* inet/gethstbynm_r.c: Likewise.
+	* nss/getXXbyYY_r.c: Include resolv/res_hconf.h if NEED__RES_HCONF
+	is defined.  Call res_hconf_init if necessary.  If POSTPROCESS is
+	defined execute the code.
+	* resolv/Makefile (routines): Add res_hconf.
+	(headers): Add res_hconf.h.
+	* resolv/res_hconf.c: Pretty print.
+	* resolv/res_hconf.h: Likewise.
+
+1998-11-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/byteswap.h: Fix typos in non-GCC
+	definitions.  Reported by Scott Bambrough <scottb@corelcomputer.com>.
+
+1998-11-20 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* math/libm-test.c: Raise some epsilons a bit.
+
+1998-11-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)sysd-sorted): Fix portability problems.
+
+1998-11-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add scripts/gen-sorted.awk.
+
 1998-11-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c (regex_compile): Handle extra long class names

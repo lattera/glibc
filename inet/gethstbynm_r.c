@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -32,6 +32,10 @@
 #define ADD_VARIABLES	name
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
+#define NEED__RES_HCONF	1
+#define POSTPROCESS \
+  if (status == NSS_STATUS_SUCCESS)					      \
+    _res_hconf_reorder_addrs (resbuf);
 
 #define HANDLE_DIGITS_DOTS	1
 #define HAVE_LOOKUP_BUFFER	1

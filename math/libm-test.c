@@ -1020,7 +1020,7 @@ atan2_test (void)
   check_eps ("atan2 (0.7,1) == 0.61072...", FUNC(atan2) (0.7,1),
 	     0.6107259643892086165L, CHOOSE(3e-17L, 0, 0));
   check_eps ("atan2 (0.4,0.0003) == 1.57004...", FUNC(atan2) (0.4, 0.0003),
-	     1.5700463269355215718L, CHOOSE(2e-19L, 0, 0));
+	     1.5700463269355215718L, CHOOSE(2e-19L, 0, 1.2e-7));
 
 }
 
@@ -1601,7 +1601,8 @@ log_test (void)
   check_eps ("log (e) == 1", FUNC(log) (M_El), 1, CHOOSE (1e-18L, 0, 9e-8L));
   check_eps ("log (1/e) == -1", FUNC(log) (1.0 / M_El), -1,
 	     CHOOSE (2e-18L, 0, 0));
-  check ("log (2) == M_LN2", FUNC(log) (2), M_LN2l);
+  check_eps ("log (2) == M_LN2", FUNC(log) (2), M_LN2l,
+	     CHOOSE (6e-20L, 0, 0));
   check_eps ("log (10) == M_LN10", FUNC(log) (10), M_LN10l,
 	     CHOOSE (1e-18L, 0, 0));
   check_eps ("log (0.7) == -0.3566749439...", FUNC(log) (0.7),
@@ -2743,11 +2744,11 @@ cexp_test (void)
   check_eps ("real(cexp(0.7 + i 1.2)) == 0.72969...", __real__ result,
 	     0.7296989091503236012L, CHOOSE(6e-17L, 2e-16, 2e-7));
   check_eps ("imag(cexp(0.7 + i 1.2)) == 1.87689...", __imag__ result,
-	     1.8768962328348102821L, CHOOSE(2e-16L, 0, 3e-7));
+	     1.8768962328348102821L, CHOOSE(2e-16L, 2.5e-16, 3e-7));
 
   result = FUNC(cexp) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cexp(-2 - i 3)) == -0.13398...", __real__ result,
-	     -0.1339809149295426134L, CHOOSE(6e-20L, 0, 2e-8));
+	     -0.1339809149295426134L, CHOOSE(6.8e-20L, 0, 2e-8));
   check_eps ("imag(cexp(-2 - i 3)) == -0.01909...", __imag__ result,
 	     -0.0190985162611351964L, CHOOSE(4e-20L, 0, 2e-9));
 }
@@ -3745,13 +3746,13 @@ cacosh_test (void)
   check_eps ("real(cacosh(0.7 + i 1.2)) == 1.09276...", __real__ result,
 	     1.0927647857577371459L, CHOOSE(4e-17L, 3e-16, 2e-7));
   check_eps ("imag(cacosh(0.7 + i 1.2)) == 1.13518...", __imag__ result,
-	 1.1351827477151551089L, CHOOSE(2e-17L, 0, 0));
+	 1.1351827477151551089L, CHOOSE(2e-17L, 0, 1.2e-7));
 
   result = FUNC(cacosh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(cacosh(-2 - i 3)) == -1.98338...", __real__ result,
 	     -1.9833870299165354323L, CHOOSE (2e-18L, 3e-16, 9e-7));
   check_eps ("imag(cacosh(-2 - i 3)) == 2.14144...", __imag__ result,
-	     2.1414491111159960199L, CHOOSE (3e-19, 5e-16, 1e-6));
+	     2.1414491111159960199L, CHOOSE (4.5e-19, 5e-16, 1e-6));
 }
 
 
@@ -4041,7 +4042,7 @@ casinh_test (void)
   check_eps ("real(casinh(-2 - i 3)) == -1.96863...", __real__ result,
 	     -1.9686379257930962917L, CHOOSE(7e-19L, 2e-15, 3e-6));
   check_eps ("imag(casinh(-2 - i 3)) == -0.96465...", __imag__ result,
-	     -0.9646585044076027920L, CHOOSE(4e-19L, 2e-15, 4e-7));
+	     -0.9646585044076027920L, CHOOSE(4e-19L, 2e-15, 4.5e-7));
 }
 
 
@@ -4333,7 +4334,7 @@ catanh_test (void)
 
   result = FUNC(catanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(catanh(0.7 + i 1.2)) == 0.26007...", __real__ result,
-	     0.2600749516525135959L, CHOOSE (2e-18, 6e-17, 0));
+	     0.2600749516525135959L, CHOOSE (2e-18, 6e-17, 3e-8));
   check_eps ("imag(catanh(0.7 + i 1.2)) == 0.97024...", __imag__ result,
 	     0.9702403077950989849L, CHOOSE (3e-17, 2e-16, 4e-7));
 
@@ -4806,7 +4807,7 @@ clog_test (void)
   check_eps ("real(clog(0.7 + i 1.2)) == 0.32876...", __real__ result,
 	     0.3287600014583970919L, CHOOSE(5e-17L, 6e-17, 3e-8));
   check_eps ("imag(clog(0.7 + i 1.2)) == 1.04272...", __imag__ result,
-	     1.0427218783685369524L, CHOOSE(2e-17L, 0, 0));
+	     1.0427218783685369524L, CHOOSE(2e-17L, 2.5e-16, 1.2e-7));
 
   result = FUNC(clog) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(clog(-2 - i 3)) == 1.28247...", __real__ result,
@@ -4988,7 +4989,7 @@ clog10_test (void)
   check_eps ("real(clog10(0.7 + i 1.2)) == 0.14277...", __real__ result,
 	     0.1427786545038868803L, CHOOSE(2e-17L, 6e-17, 2e-8));
   check_eps ("imag(clog10(0.7 + i 1.2)) == 0.45284...", __imag__ result,
-	     0.4528483579352493248L, CHOOSE(6e-18, 6e-17, 3e-8));
+	     0.4528483579352493248L, CHOOSE(6e-18, 6e-17, 6e-8));
 
   result = FUNC(clog10) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(clog10(-2 - i 3)) == 0.55697...", __real__ result,
@@ -5181,7 +5182,7 @@ cpow_test (void)
 
   result = FUNC (cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
   check_eps ("real(cpow (2 + i0), (10 + i0)) == 1024", __real__ result, 1024,
-	     CHOOSE (2e-16L, 0, 0));
+	     CHOOSE (6e-16L, 0, 0));
   check ("imag(cpow (2 + i0), (10 + i0)) == 0", __imag__ result, 0);
 
   result = FUNC (cpow) (BUILD_COMPLEX (M_El, 0), BUILD_COMPLEX (0, 2 * M_PIl));

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ to the original implementation:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <net/if.h>
 
 #include "res_hconf.h"
 
@@ -46,19 +47,21 @@ to the original implementation:
 #define ENV_MULTI	"RESOLV_MULTI"
 #define ENV_REORDER	"RESOLV_REORDER"
 
-static const char * arg_service_list (const char *, int, const char *,
-				      unsigned);
-static const char * arg_trimdomain_list (const char *, int, const char *,
-					 unsigned);
-static const char * arg_spoof (const char *, int, const char *, unsigned);
-static const char * arg_bool (const char *, int, const char *, unsigned);
+static const char *arg_service_list (const char *, int, const char *,
+				     unsigned int);
+static const char *arg_trimdomain_list (const char *, int, const char *,
+					unsigned int);
+static const char *arg_spoof (const char *, int, const char *, unsigned int);
+static const char *arg_bool (const char *, int, const char *, unsigned int);
 
-static struct cmd {
-  const char *	name;
-  const char *	(*parse_args)(const char * filename, int line_num,
-			      const char * args, unsigned arg);
-  unsigned	arg;;
-} cmd[] = {
+static struct cmd
+{
+  const char *name;
+  const char *(*parse_args) (const char * filename, int line_num,
+			     const char * args, unsigned int arg);
+  unsigned int arg;
+} cmd[] =
+{
   {"order",		arg_service_list,	0},
   {"trim",		arg_trimdomain_list,	0},
   {"spoof",		arg_spoof,		0},
@@ -68,10 +71,12 @@ static struct cmd {
   {"reorder",		arg_bool,		HCONF_FLAG_REORDER}
 };
 
+/* Structure containing the state.  */
+struct hconf _res_hconf;
 
 /* Skip white space.  */
 static const char *
-skip_ws (const char * str)
+skip_ws (const char *str)
 {
   while (isspace (*str)) ++str;
   return str;
@@ -80,29 +85,32 @@ skip_ws (const char * str)
 
 /* Skip until whitespace, comma, end of line, or comment character.  */
 static const char *
-skip_string (const char * str)
+skip_string (const char *str)
 {
-  while (*str && !isspace (*str) && *str != '#' && *str != ',') ++str;
+  while (*str && !isspace (*str) && *str != '#' && *str != ',')
+    ++str;
   return str;
 }
 
 
 static const char *
-arg_service_list (const char * fname, int line_num, const char * args,
-		  unsigned arg)
+arg_service_list (const char *fname, int line_num, const char *args,
+		  unsigned int arg)
 {
   enum Name_Service service;
-  const char * start;
+  const char *start;
   size_t len;
   int i;
-  static struct {
-    const char *	name;
-    enum Name_Service	service;
-  } svcs[] = {
-    {"bind",	SERVICE_BIND},
-    {"hosts",	SERVICE_HOSTS},
-    {"nis",	SERVICE_NIS},
-  };
+  static struct
+  {
+    const char * name;
+    enum Name_Service service;
+  } svcs[] =
+    {
+      {"bind",	SERVICE_BIND},
+      {"hosts",	SERVICE_HOSTS},
+      {"nis",	SERVICE_NIS},
+    };
 
   do
     {
@@ -113,7 +121,7 @@ arg_service_list (const char * fname, int line_num, const char * args,
       service = SERVICE_NONE;
       for (i = 0; i < sizeof (svcs) / sizeof (svcs[0]); ++i)
 	{
-	  if (strncasecmp (start, svcs[i].name, len) == 0
+	  if (__strncasecmp (start, svcs[i].name, len) == 0
 	      && len == strlen (svcs[i].name))
 	  {
 	    service = svcs[i].service;
@@ -137,7 +145,9 @@ arg_service_list (const char * fname, int line_num, const char * args,
       args = skip_ws (args);
       switch (*args)
 	{
-	case ',': case ';': case ':':
+	case ',':
+	case ';':
+	case ':':
 	  args = skip_ws (++args);
 	  if (!*args || *args == '#')
 	    {
@@ -156,8 +166,8 @@ arg_service_list (const char * fname, int line_num, const char * args,
 
 
 static const char *
-arg_trimdomain_list (const char * fname, int line_num, const char * args,
-		     unsigned flag)
+arg_trimdomain_list (const char *fname, int line_num, const char *args,
+		     unsigned int flag)
 {
   const char * start;
   size_t len;
@@ -176,7 +186,7 @@ arg_trimdomain_list (const char * fname, int line_num, const char * args,
 	  return 0;
 	}
       _res_hconf.trimdomain[_res_hconf.num_trimdomains++] =
-	  strndup (start, len);
+	__strndup (start, len);
       args = skip_ws (args);
       switch (*args)
 	{
@@ -199,21 +209,21 @@ arg_trimdomain_list (const char * fname, int line_num, const char * args,
 
 
 static const char *
-arg_spoof (const char * fname, int line_num, const char * args, unsigned flag)
+arg_spoof (const char *fname, int line_num, const char *args, unsigned flag)
 {
-  const char * start = args;
+  const char *start = args;
   size_t len;
 
   args = skip_string (args);
   len = args - start;
 
-  if (len == 3 && strncasecmp (start, "off", len) == 0)
+  if (len == 3 && __strncasecmp (start, "off", len) == 0)
     _res_hconf.flags &= ~(HCONF_FLAG_SPOOF | HCONF_FLAG_SPOOFALERT);
   else
     {
       _res_hconf.flags |= (HCONF_FLAG_SPOOF | HCONF_FLAG_SPOOFALERT);
-      if ((len == 6 && strncasecmp (start, "nowarn", len) == 0)
-	  || !(len == 4 && strncasecmp (start, "warn", len) == 0))
+      if ((len == 6 && __strncasecmp (start, "nowarn", len) == 0)
+	  || !(len == 4 && __strncasecmp (start, "warn", len) == 0))
 	_res_hconf.flags &= ~HCONF_FLAG_SPOOFALERT;
     }
   return args;
@@ -221,14 +231,14 @@ arg_spoof (const char * fname, int line_num, const char * args, unsigned flag)
 
 
 static const char *
-arg_bool (const char * fname, int line_num, const char * args, unsigned flag)
+arg_bool (const char *fname, int line_num, const char *args, unsigned flag)
 {
-  if (strncasecmp (args, "on", 2) == 0)
+  if (__strncasecmp (args, "on", 2) == 0)
     {
       args += 2;
       _res_hconf.flags |= flag;
     }
-  else if (strncasecmp (args, "off", 3) == 0)
+  else if (__strncasecmp (args, "off", 3) == 0)
     {
       args += 3;
       _res_hconf.flags &= ~flag;
@@ -244,10 +254,10 @@ arg_bool (const char * fname, int line_num, const char * args, unsigned flag)
 
 
 static void
-parse_line (const char * fname, int line_num, const char * str)
+parse_line (const char *fname, int line_num, const char *str)
 {
-  const char * start;
-  struct cmd * c = 0;
+  const char *start;
+  struct cmd *c = 0;
   size_t len;
   int i;
 
@@ -268,7 +278,7 @@ parse_line (const char * fname, int line_num, const char * str)
 	  break;
 	}
     }
-  if (!c)
+  if (c == NULL)
     {
       fprintf (stderr, "%s: line %d: bad command `%s'\n",
 	       fname, line_num, start);
@@ -300,15 +310,18 @@ parse_line (const char * fname, int line_num, const char * str)
 void
 _res_hconf_init (void)
 {
-  const char * hconf_name;
+  const char *hconf_name;
   int line_num = 0;
-  char buf[256], * end, * envval;
-  FILE * fp;
+  char buf[256], *end, *envval;
+  FILE *fp;
 
-  memset (&_res_hconf, 0, sizeof (_res_hconf));
+  if (_res_hconf.initialized)
+    return;
+
+  memset (&_res_hconf, '\0', sizeof (_res_hconf));
 
   hconf_name = getenv (ENV_HOSTCONF);
-  if (!hconf_name)
+  if (hconf_name == NULL)
     hconf_name = _PATH_HOSTCONF;
 
   fp = fopen (hconf_name, "r");
@@ -317,7 +330,7 @@ _res_hconf_init (void)
     _res_hconf.service[_res_hconf.num_services++] = SERVICE_BIND;
   else
     {
-      while (fgets (buf, sizeof (buf), fp))
+      while (fgets_unlocked (buf, sizeof (buf), fp))
 	{
 	  ++line_num;
 	  end = strchr (buf, '\n');
@@ -357,6 +370,8 @@ _res_hconf_init (void)
       _res_hconf.num_trimdomains = 0;
       arg_trimdomain_list (ENV_TRIM_OVERR, 1, envval, 0);
     }
+
+  _res_hconf.initialized = 1;
 }
 
 
@@ -365,19 +380,22 @@ _res_hconf_init (void)
    Otherwise, nothing is changed.  */
 
 void
-_res_hconf_reorder_addrs (struct hostent * hp)
+_res_hconf_reorder_addrs (struct hostent *hp)
 {
-#if defined (SIOCGIFCONF) && defined (SIOCGIFNETMASK)
+#if defined SIOCGIFCONF && defined SIOCGIFNETMASK
   static int num_ifs = -1;	/* number of interfaces */
-  static struct netaddr {
+  static struct netaddr
+  {
     int addrtype;
-    union {
-      struct {
+    union
+    {
+      struct
+      {
 	u_int32_t	addr;
 	u_int32_t	mask;
       } ipv4
     } u;
-  } * ifaddrs;
+  } *ifaddrs;
 
   if (hp->h_addrtype != AF_INET)
     return;	/* can't deal with anything but IPv4 for now... */
@@ -385,7 +403,7 @@ _res_hconf_reorder_addrs (struct hostent * hp)
   if (num_ifs <= 0)
     {
       struct ifconf ifs;
-      struct ifreq * ifr;
+      struct ifreq *ifr;
       size_t size, num;
       int sd;
 
@@ -393,7 +411,7 @@ _res_hconf_reorder_addrs (struct hostent * hp)
 
       num_ifs = 0;
 
-      sd = socket (AF_INET, SOCK_DGRAM, 0);
+      sd = __socket (AF_INET, SOCK_DGRAM, 0);
       if (sd < 0)
 	return;
 
@@ -404,18 +422,20 @@ _res_hconf_reorder_addrs (struct hostent * hp)
 	 interfaces, not memory */
       size = 0;
       ifs.ifc_buf = 0;
-      do {
-	size += 4 * sizeof (struct ifreq);
-	ifs.ifc_buf = realloc (ifs.ifs_buf, size);
-	if (!ifs.ifc_buf)
-	  {
-	    close (sd);
-	    return;
-	  }
-	ifs.ifc_len = size;
-	if (ioctl (sd, SIOCGIFCONF, &ifs) < 0)
-	  goto cleanup;
-      } while (size - ifs.ifc_len < sizeof (struct ifreq));
+      do
+	{
+	  size += 4 * sizeof (struct ifreq);
+	  ifs.ifc_buf = realloc (ifs.ifs_buf, size);
+	  if (ifs.ifc_buf == NULL)
+	    {
+	      close (sd);
+	      return;
+	    }
+	  ifs.ifc_len = size;
+	  if (__ioctl (sd, SIOCGIFCONF, &ifs) < 0)
+	    goto cleanup;
+	}
+      while (size - ifs.ifc_len < sizeof (struct ifreq));
 
       num = ifs.ifc_len / sizeof (struct ifreq);
 
@@ -424,21 +444,22 @@ _res_hconf_reorder_addrs (struct hostent * hp)
 	goto cleanup;
 
       ifr = ifs.ifc_req;
-      for (i = 0; i < num; ++i) {
-	if (ifr->ifr_addr.sa_family != AF_INET)
-	  continue;
-	ifaddrs[num_ifs].addrtype = AF_INET;
+      for (i = 0; i < num; ++i)
+	{
+	  if (ifr->ifr_addr.sa_family != AF_INET)
+	    continue;
+	  ifaddrs[num_ifs].addrtype = AF_INET;
 
-	memcpy (&ifaddrs[num_ifs].u.ipv4.addr,
-		&((struct sockaddr_in *)ifr->ifr_addr)->sin_addr, 4);
+	  memcpy (&ifaddrs[num_ifs].u.ipv4.addr,
+		  &((struct sockaddr_in *)ifr->ifr_addr)->sin_addr, 4);
 
-	if (ioctl (sd, SIOCGIFNETMASK, if) < 0)
-	  continue;
-	memcpy (&ifaddrs[num_ifs].u.ipv4.mask,
-		((struct sockaddr_in *)ifr->ifr_mask)->sin_addr, 4);
+	  if (__ioctl (sd, SIOCGIFNETMASK, if) < 0)
+	    continue;
+	  memcpy (&ifaddrs[num_ifs].u.ipv4.mask,
+		  ((struct sockaddr_in *)ifr->ifr_mask)->sin_addr, 4);
 
-	++num_ifs;	/* now we're committed to this entry */
-      }
+	  ++num_ifs;	/* now we're committed to this entry */
+	}
       /* just keep enough memory to hold all the interfaces we want: */
       ifaddrs = realloc (ifaddrs, num_ifs * sizeof (ifaddrs[0]));
 
@@ -462,9 +483,9 @@ _res_hconf_reorder_addrs (struct hostent * hp)
 
 	  if (((h_addr->s_addr ^ if_addr) & if_netmask) == 0)
 	    {
-	      void * tmp;
+	      void *tmp;
 
-	      tmp		 = hp->h_addr_list[i];
+	      tmp = hp->h_addr_list[i];
 	      hp->h_addr_list[i] = hp->h_addr_list[0];
 	      hp->h_addr_list[0] = tmp;
 	      return;
@@ -481,20 +502,20 @@ _res_hconf_reorder_addrs (struct hostent * hp)
    same domainname could be trimmed multiple times.  I believe this
    was unintentional.  */
 void
-_res_hconf_trim_domain (char * hostname)
+_res_hconf_trim_domain (char *hostname)
 {
   size_t hostname_len, trim_len;
   int i;
 
-  hostname_len = strlen(hostname);
+  hostname_len = strlen (hostname);
 
   for (i = 0; i < _res_hconf.num_trimdomains; ++i)
     {
-      const char * trim = _res_hconf.trimdomain[i];
+      const char *trim = _res_hconf.trimdomain[i];
 
-      trim_len = strlen(trim);
+      trim_len = strlen (trim);
       if (hostname_len > trim_len
-	  && strcasecmp(&hostname[hostname_len - trim_len], trim) == 0)
+	  && __strcasecmp (&hostname[hostname_len - trim_len], trim) == 0)
 	{
 	  hostname[hostname_len - trim_len] = '\0';
 	  break;
@@ -506,7 +527,7 @@ _res_hconf_trim_domain (char * hostname)
 /* Trim all hostnames/aliases in HP according to the trimdomain list.
    Notice that HP is modified inplace!  */
 void
-_res_hconf_trim_domains (struct hostent * hp)
+_res_hconf_trim_domains (struct hostent *hp)
 {
   int i;
 
@@ -517,32 +538,3 @@ _res_hconf_trim_domains (struct hostent * hp)
   for (i = 0; hp->h_aliases[i]; ++i)
     _res_hconf_trim_domain (hp->h_aliases[i]);
 }
-
-
-#if 0
-
-struct hostent *
-_hconf_gethostent (void)
-{
-}
-
-
-struct hostent *
-_hconf_gethostbyname (const char * name)
-{
-
-}
-
-
-struct hostent *
-_hconf_gethostbyaddr (const char * addr, int len, int type)
-{
-}
-
-
-struct hostent *
-_hconf_gethtbyname (const char * name)
-{
-}
-
-#endif

@@ -22,6 +22,9 @@
 #ifdef USE_NSCD
 # include <nscd/nscd_proto.h>
 #endif
+#ifdef NEED__RES_HCONF
+# include <resolv/res_hconf.h>
+#endif
 
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
@@ -153,6 +156,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	      return -1;
 	    }
 #endif /* need _res */
+#ifdef NEED__RES_HCONF
+	  if (!_res_hconf.initialized)
+	    _res_hconf_init ();
+#endif /* need _res_hconf */
 	}
     }
   else
@@ -186,6 +193,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 done:
 #endif
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
+#ifdef POSTPROCESS
+  POSTPROCESS;
+#endif
   return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
 

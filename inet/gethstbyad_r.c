@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -27,5 +27,12 @@
 #define ADD_VARIABLES	addr, len, type
 #define NEED_H_ERRNO	1
 #define NEED__RES	1
+#define NEED__RES_HCONF	1
+#define POSTPROCESS \
+  if (status == NSS_STATUS_SUCCESS)					      \
+    {									      \
+      _res_hconf_reorder_addrs (resbuf);				      \
+      _res_hconf_trim_domains (resbuf);					      \
+    }
 
 #include "../nss/getXXbyYY_r.c"

@@ -23,9 +23,9 @@ subdir	:= resolv
 
 headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
 distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
-	      Banner
+	      Banner res_hconf.h
 
-routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init
+routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init res_hconf
 
 tests = tst-aton
 

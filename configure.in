@@ -472,8 +472,6 @@ fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
 LIBC_PROG_BINUTILS
-AC_CHECK_TOOL(AR, ar)
-AC_CHECK_TOOL(RANLIB, ranlib, :)
 AC_CHECK_TOOL(MIG, mig)
 
 # if using special system headers, find out the compiler's sekrit

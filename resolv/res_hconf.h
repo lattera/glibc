@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,28 +23,32 @@
 
 #define TRIMDOMAINS_MAX	4
 
-enum Name_Service {
+enum Name_Service
+{
   SERVICE_NONE = 0,
   SERVICE_BIND, SERVICE_HOSTS, SERVICE_NIS,
   SERVICE_MAX
 };
 
-struct hconf {
-  int			num_services;
-  enum Name_Service	service[SERVICE_MAX];
-  int			num_trimdomains;
-  const char *		trimdomain[TRIMDOMAINS_MAX];
-  unsigned		flags;
+struct hconf
+{
+  int initialized;
+  int num_services;
+  enum Name_Service service[SERVICE_MAX];
+  int num_trimdomains;
+  const char *trimdomain[TRIMDOMAINS_MAX];
+  unsigned int flags;
 #  define HCONF_FLAG_INITED	(1 << 0) /* initialized? */
 #  define HCONF_FLAG_SPOOF	(1 << 1) /* refuse spoofed addresses */
 #  define HCONF_FLAG_SPOOFALERT	(1 << 2) /* syslog warning of spoofed */
 #  define HCONF_FLAG_REORDER	(1 << 3) /* list best address first */
 #  define HCONF_FLAG_MULTI	(1 << 4) /* see comments for gethtbyname() */
-} _res_hconf;
+};
+extern struct hconf _res_hconf;
 
-extern void	_res_hconf_init (void);
-extern void	_res_hconf_trim_domain (char * domain);
-extern void	_res_hconf_trim_domains (struct hostent * hp);
-extern void	_res_hconf_reorder_addrs (struct hostent * hp);
+extern void _res_hconf_init (void);
+extern void _res_hconf_trim_domain (char *domain);
+extern void _res_hconf_trim_domains (struct hostent *hp);
+extern void _res_hconf_reorder_addrs (struct hostent *hp);
 
 #endif /* _RES_HCONF_H_ */

@@ -22,9 +22,9 @@ please let me know.
 1.2.	What compiler do I need to build GNU libc?
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
-1.4.	Do I need a special linker or archiver?
+1.4.	Do I need a special linker or assembler?
 1.5.	Which compiler should I use for powerpc?
-1.6.	Do I need some more things to compile GNU C Library?
+1.6.	Do I need some more things to compile the GNU C Library?
 1.7.	What version of the Linux kernel headers should be used?
 1.8.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
@@ -58,38 +58,41 @@ please let me know.
 	functions `stat', `lstat', `fstat', and `mknod' and while
 	linking on my Linux system I get error messages.  How is
 	this supposed to work?
-2.8.	How can I compile gcc 2.7.2.1 from the gcc source code using
+2.8.	When I run an executable on one system which I compiled on
+	another, I get dynamic linker errors.  Both systems have the same
+	version of glibc installed.  What's wrong?
+2.9.	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
-2.9.	The `gencat' utility cannot process the catalog sources which
+2.10.	The `gencat' utility cannot process the catalog sources which
 	were used on my Linux libc5 based system.  Why?
-2.10.	Programs using libc have their messages translated, but other
+2.11.	Programs using libc have their messages translated, but other
 	behavior is not localized (e.g. collating order); why?
-2.11.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+2.12.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
-2.12.	I have killed ypbind to stop using NIS, but glibc
+2.13.	I have killed ypbind to stop using NIS, but glibc
 	continues using NIS.
-2.13.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
+2.14.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
 	RPC: Unable to receive; errno = Connection refused" when using NIS.
-2.14.	After installing glibc name resolving doesn't work properly.
-2.15.	How do I create the databases for NSS?
-2.16.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.15.	After installing glibc name resolving doesn't work properly.
+2.16.	How do I create the databases for NSS?
+2.17.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
-2.17.	Programs like `logname', `top', `uptime' `users', `w' and
+2.18.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
-2.18.	After upgrading to glibc 2.1 with symbol versioning I get
+2.19.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
-2.19.	When I start the program XXX after upgrading the library
+2.20.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
 	Why?  What should I do?
-2.20.	What do I need for C++ development?
-2.21.	Even statically linked programs need some shared libraries
+2.21.	What do I need for C++ development?
+2.22.	Even statically linked programs need some shared libraries
 	which is not acceptable for me.  What can I do?
-2.22.	I just upgraded my Linux system to glibc and now I get
+2.23.	I just upgraded my Linux system to glibc and now I get
 	errors whenever I try to link any program.
-2.23.	When I use nscd the machine freezes.
+2.24.	When I use nscd the machine freezes.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -188,6 +191,9 @@ may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
 (for powerpc see question question 1.5).
 
+{ZW} You may have problems if you try to mix code compiled with
+EGCS and with GCC 2.8.1. See question 2.8 for details.
+
 
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -195,32 +201,27 @@ egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
 {UD} You definitely need GNU make to translate GNU libc.  No other make
 program has the needed functionality.
 
-We recommend version GNU make version 3.75.  Versions 3.76 and 3.76.1 have
-bugs which appear when building big projects like GNU libc.  Versions before
-3.74 have bugs and/or are missing features.
+We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
+have bugs and/or are missing features.  Version 3.76 has bugs which
+appear when building big projects like GNU libc. 3.76.1 appears to work but
+some people have reported problems.
 
 
-1.4.	Do I need a special linker or archiver?
+1.4.	Do I need a special linker or assembler?
 
-{UD} You may be able to use your system linker, but GNU libc works best with
-GNU binutils.
+{ZW} If you want a shared library, you need a linker and assembler that
+understand all the features of ELF, including weak and versioned symbols.
+The static library can be compiled with less featureful tools, but lacks key
+features such as NSS.
 
-On systems where the native linker does not support weak symbols you will
-not get a fully ISO C compliant C library.  Generally speaking you should
-use the GNU binutils if they provide at least the same functionality as your
-system's tools.
+For Linux or Hurd, you want binutils 2.8.1.0.23, 2.9.1, or 2.9.1.0.15 or
+higher.  These are the only versions we've tested and found reliable.  Other
+versions after 2.8.1.0.23 may work but we don't recommend them, especially
+not when C++ is involved.  Earlier versions do not work at all.
 
-Always get the newest release of GNU binutils available.  Older releases are
-known to have bugs that prevent a successful compilation.
-
-{AJ} Please don't use binutils 2.7.  That release contains some bugs which
-might make it necessary that you've got to recompile all your glibc2
-binaries when upgrading the GNU C library.
-
-{ZW} As of release 2.1 a linker supporting symbol versions is required.  For
-Linux, get binutils-2.8.1.0.23 or later.  Other systems may have native
-linker support, but it's moot right now, because glibc has not been ported
-to them.
+Other operating systems may come with system tools that have all the
+necessary features, but this is moot because glibc hasn't been ported to
+them.
 
 
 1.5.	Which compiler should I use for powerpc?
@@ -237,7 +238,7 @@ variables.  There is a temporary patch at:
 Later versions of egcs may fix this problem.
 
 
-1.6.	Do I need some more things to compile GNU C Library?
+1.6.	Do I need some more things to compile the GNU C Library?
 
 {UD} Yes, there are some more :-).
 
@@ -247,15 +248,15 @@ Later versions of egcs may fix this problem.
   site.  (We distribute compiled message catalogs, but they may not be
   updated in patches.)
 
-* Some files depend on special tools.  E.g., files ending in .gperf
-  need a `gperf' program.  The GNU version (part of libg++) is known
-  to work while some vendor versions do not.
+* Some files are built with special tools.  E.g., files ending in .gperf
+  need a `gperf' program.  The GNU version (now available in a separate
+  package, formerly only as part of libg++) is known to work while some
+  vendor versions do not.
 
   You should not need these tools unless you change the source files.
 
-* Some scripts need perl5 - but at the moment those scripts are not
-  vital for building and installing GNU libc (some data files will not
-  be created).
+* Perl 5 is needed if you wish to test an installation of GNU libc
+  as the primary C library.
 
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
@@ -298,7 +299,7 @@ recompile libc if you ever upgrade to kernel 2.1 or 2.2.  To tell libc which
 headers to use, give configure the --with-headers switch
 (e.g. --with-headers=/usr/src/linux-2.1.107/include).
 
-Note that you must configure the 2.1 kernel if you do this; otherwise libc
+Note that you must configure the 2.1 kernel if you do this, otherwise libc
 will be unable to find <linux/version.h>.  Just copy .config from your 2.0
 kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
 new options.
@@ -307,8 +308,9 @@ new options.
 1.8.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
-{ZW} This is a problem of older GCC.  Initialization of large static arrays
-is very slow.  The compiler will eventually finish; give it time.
+{ZW} This is a problem with old versions of GCC.  Initialization of large
+static arrays is very slow.  The compiler will eventually finish; give it
+time.
 
 The problem is fixed in egcs 1.1 but not in earlier releases.
 
@@ -675,7 +677,36 @@ not a symlink to libc.so.6.  It should look something like this:
 GROUP ( libc.so.6 libc_nonshared.a )
 
 
-2.8.	How can I compile gcc 2.7.2.1 from the gcc source code using
+2.8.	When I run an executable on one system which I compiled on
+	another, I get dynamic linker errors.  Both systems have the same
+	version of glibc installed.  What's wrong?
+
+{ZW} Glibc on one of these systems was compiled with gcc 2.7 or 2.8, the
+other with egcs (any version).  Egcs has functions in its internal
+`libgcc.a' to support exception handling with C++.  They are linked into
+any program or dynamic library compiled with egcs, whether it needs them or
+not.  Dynamic libraries then turn around and export those functions again
+unless special steps are taken to prevent them.
+
+When you link your program, it resolves its references to the exception
+functions to the ones exported accidentally by libc.so.  That works fine as
+long as libc has those functions.  On the other system, libc doesn't have
+those functions because it was compiled by gcc 2.8, and you get undefined
+symbol errors.  The symbols in question are named things like
+`__register_frame_info'.
+
+For glibc 2.0, the workaround is to not compile libc with egcs.  We've also
+incorporated a patch which should prevent the EH functions sneaking into
+libc.  It doesn't matter what compiler you use to compile your program.
+
+For glibc 2.1, we've chosen to do it the other way around: libc.so
+explicitly provides the EH functions.  This is to prevent other shared
+libraries from doing it.  You must therefore compile glibc 2.1 with EGCS
+unless you don't care about ever importing binaries from other systems.
+Again, it doesn't matter what compiler you use for your programs.
+
+
+2.9.	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
@@ -683,7 +714,7 @@ But you should get at least gcc 2.8.1 or egcs 1.0.2 (or later versions)
 instead.
 
 
-2.9.	The `gencat' utility cannot process the catalog sources which
+2.10.	The `gencat' utility cannot process the catalog sources which
 	were used on my Linux libc5 based system.  Why?
 
 {UD} The `gencat' utility provided with glibc complies to the XPG standard.
@@ -718,7 +749,7 @@ files to the XPG4 form:
 -----------------------------------------------------------------------
 
 
-2.10.	Programs using libc have their messages translated, but other
+2.11.	Programs using libc have their messages translated, but other
 	behavior is not localized (e.g. collating order); why?
 
 {ZW} Translated messages are automatically installed, but the locale
@@ -731,7 +762,7 @@ set up the French Canadian locale, simply issue the command
 Please see localedata/README in the source tree for further details.
 
 
-2.11.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+2.12.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
 {TK} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START file for
@@ -744,7 +775,7 @@ package; available at
     http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html
 
 
-2.12.	I have killed ypbind to stop using NIS, but glibc
+2.13.	I have killed ypbind to stop using NIS, but glibc
 	continues using NIS.
 
 {TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files from
@@ -755,7 +786,7 @@ Until ypbind 3.4 is released, you can find a patch at
     ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc4.diff.gz
 
 
-2.13.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
+2.14.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
 	RPC: Unable to receive; errno = Connection refused" when using NIS.
 
 {TK} You need a ypbind version which is 64bit clean.  Some versions are not
@@ -764,14 +795,14 @@ you need the patch from ftp.kernel.org (See the previous question).  I don't
 know about other versions.
 
 
-2.14.	After installing glibc name resolving doesn't work properly.
+2.15.	After installing glibc name resolving doesn't work properly.
 
 {AJ} You probably should read the manual section describing nsswitch.conf
 (just type `info libc "NSS Configuration File"').  The NSS configuration
 file is usually the culprit.
 
 
-2.15.	How do I create the databases for NSS?
+2.16.	How do I create the databases for NSS?
 
 {AJ} If you have an entry "db" in /etc/nsswitch.conf you should also create
 the database files.  The glibc sources contain a Makefile which does the
@@ -782,7 +813,7 @@ database.  Currently passwd, group, ethers, protocol, rpc, services shadow
 and netgroup are implemented.
 
 
-2.16.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.17.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
 {PB} This was necessary for libc5, but is not correct when using glibc.
@@ -793,14 +824,14 @@ in place before you install glibc.  However, /usr/include/asm and
 /usr/include/linux should remain as they were.
 
 
-2.17.	Programs like `logname', `top', `uptime' `users', `w' and
+2.18.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
 
 {MK} See question 3.2.
 
 
-2.18.	After upgrading to glibc 2.1 with symbol versioning I get
+2.19.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
 
 {AJ} The problem is caused either by wrong program code or tools.  In the
@@ -814,7 +845,7 @@ price you might have to pay once for quite a number of advantages with
 symbol versioning.
 
 
-2.19.	When I start the program XXX after upgrading the library
+2.20.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
@@ -836,26 +867,26 @@ be possible that a symbol changed size when that should not have happened.
 So in case of doubt report such a warning message as a problem.
 
 
-2.20.	What do I need for C++ development?
+2.21.	What do I need for C++ development?
 
-{HJ,AJ} You need either egcs 1.1 which comes directly with libstdc++ or 
-gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++ 
-support and works directly with glibc 2.1.  If you use gcc-2.8.1 with 
-libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available 
-as: 
-	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz 
- 
-Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work 
-very well with the GNU C library due to vtable thunks.  If you're upgrading 
-from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the library 
-compiled for 2.0 is not compatible due to the new Large File Support (LFS) 
-in version 2.1. 
+{HJ,AJ} You need either egcs 1.1 which comes directly with libstdc++ or
+gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++
+support and works directly with glibc 2.1.  If you use gcc-2.8.1 with
+libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available
+as:
+	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz
+
+Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work
+very well with the GNU C library due to vtable thunks.  If you're upgrading
+from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the library
+compiled for 2.0 is not compatible due to the new Large File Support (LFS)
+in version 2.1.
 
 {UD} But since in the case of a shared libstdc++ the version numbers should
 be different existing programs will continue to work.
 
 
-2.21.	Even statically linked programs need some shared libraries
+2.22.	Even statically linked programs need some shared libraries
 	which is not acceptable for me.  What can I do?
 
 {AJ} NSS (for details just type `info libc "Name Service Switch"') won't
@@ -882,7 +913,7 @@ option is using NSS.  There is no switch anymore.  Therefore it is
 the behaviour of the programs on the system inconsistent.
 
 
-2.22.	I just upgraded my Linux system to glibc and now I get
+2.23.	I just upgraded my Linux system to glibc and now I get
 	errors whenever I try to link any program.
 
 {ZW} This happens when you have installed glibc as the primary C library but
@@ -901,15 +932,13 @@ detect these situations.  If the script reports problems, something is
 really screwed up.
 
 
-2.23.	When I use nscd the machine freezes.
+2.24.	When I use nscd the machine freezes.
 
-{UD} It is well known that you cannot use nscd with Linux 2.0.*.  There
-is functionality missing in the kernel and work-arounds are not suitable.
-Beside this some parts of the kernel are too buggy when it comes to using
-threads.
+{UD} You cannot use nscd with Linux 2.0.*.  There is functionality missing
+in the kernel and work-arounds are not suitable.  Besides, some parts of the
+kernel are too buggy when it comes to using threads.
 
-So you have the possibilities to run Linux 2.0.* or update to a higher
-version and start using nscd.
+If you need nscd, you have to use a 2.1 kernel.
 
 Note that I have at this point no information about any other platform.
 

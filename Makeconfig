@@ -789,14 +789,13 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 all-Depend-files = $(wildcard $(..)*/Depend)
 $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 			     $(common-objpfx)sysd-dirs $(..)Makeconfig
-	(if test "$(all-Depend-files)"; then				\
-	   for f in $(all-Depend-files); do				\
-	     dir=$${f%%/*};						\
-	     while read on; do						\
-	       echo "depend $$dir $$on";				\
-	     done < $$f;						\
-	   done;							\
-	 fi;								\
+	(files="$(all-Depend-files)";					\
+	 for f in $$files; do						\
+	   dir=`echo $$f | sed 's/^$(..)\(.*\)\/[^/]*$$/\1/'`;		\
+	   while read on; do						\
+	     echo "depend $$dir $$on";					\
+	   done < $$f;							\
+	 done;								\
 	 for f in $(all-subdirs); do					\
 	   echo $$f;							\
 	 done								\

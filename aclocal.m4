@@ -116,6 +116,17 @@ if test -n "$path_binutils"; then
 fi
 AS=`$CC -print-prog-name=as`
 LD=`$CC -print-prog-name=ld`
+AR=`$CC -print-prog-name=ar`
+AC_SUBST(AR)
+
+# ranlib has to be treated a bit differently since it might not exist at all.
+RANLIB=`$CC -print-prog-name=ranlib`
+if test $RANLIB = ranlib; then
+# This extra check has to happen since gcc simply echos the parameter in
+# case it cannot find the value in its own directories.
+AC_CHECK_TOOL(RANLIB, ranlib, :)
+fi
+AC_SUBST(RANLIB)
 
 # Determine whether we are using GNU binutils.
 AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,
