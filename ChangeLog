@@ -1,3 +1,8 @@
+22001-04-08  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/rpc_main.c: If we compile RPC thread safe, allow
+	rpcgen to generate thread safe code.
+
 2001-04-10  Andreas Jaeger  <aj@suse.de>
 
 	* math/test-fenv.c (initial_tests): Protect FE_TONEAREST declaration.
