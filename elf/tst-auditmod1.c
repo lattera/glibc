@@ -180,6 +180,18 @@ la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 # define La_regs La_mips_64_regs
 # define La_retval La_mips_64_retval
 # define int_retval lrv_v0
+#elif defined __sparc__ && __WORDSIZE == 32
+# define pltenter la_sparc32_gnu_pltenter
+# define pltexit la_sparc32_gnu_pltexit
+# define La_regs La_sparc32_regs
+# define La_retval La_sparc32_retval
+# define int_retval lrv_reg[0]
+#elif defined __sparc__ && __WORDSIZE == 64
+# define pltenter la_sparc64_gnu_pltenter
+# define pltexit la_sparc64_gnu_pltexit
+# define La_regs La_sparc64_regs
+# define La_retval La_sparc64_retval
+# define int_retval lrv_reg[0]
 #else
 # error "architecture specific code needed"
 #endif

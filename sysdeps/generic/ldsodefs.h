@@ -199,6 +199,10 @@ struct La_mips_32_regs;
 struct La_mips_32_retval;
 struct La_mips_64_regs;
 struct La_mips_64_retval;
+struct La_sparc32_regs;
+struct La_sparc32_retval;
+struct La_sparc64_regs;
+struct La_sparc64_retval;
 
 struct audit_ifaces
 {
@@ -270,6 +274,16 @@ struct audit_ifaces
 					 const struct La_mips_64_regs *,
 					 unsigned int *, const char *name,
 					 long int *framesizep);
+    Elf32_Addr (*sparc32_gnu_pltenter) (Elf32_Sym *, unsigned int,
+					uintptr_t *, uintptr_t *,
+					const struct La_sparc32_regs *,
+					unsigned int *, const char *name,
+					long int *framesizep);
+    Elf64_Addr (*sparc64_gnu_pltenter) (Elf64_Sym *, unsigned int,
+					uintptr_t *, uintptr_t *,
+					const struct La_sparc64_regs *,
+					unsigned int *, const char *name,
+					long int *framesizep);
   };
   union
   {
@@ -328,6 +342,16 @@ struct audit_ifaces
 					  const struct La_mips_64_regs *,
 					  struct La_mips_64_retval *,
 					  const char *);
+    unsigned int (*sparc32_gnu_pltexit) (Elf32_Sym *, unsigned int,
+					 uintptr_t *, uintptr_t *,
+					 const struct La_sparc32_regs *,
+					 struct La_sparc32_retval *,
+					 const char *);
+    unsigned int (*sparc64_gnu_pltexit) (Elf64_Sym *, unsigned int,
+					 uintptr_t *, uintptr_t *,
+					 const struct La_sparc32_regs *,
+					 struct La_sparc32_retval *,
+					 const char *);
   };
   unsigned int (*objclose) (uintptr_t *);
 
@@ -587,10 +611,10 @@ struct rtld_global_ro
   EXTERN int _dl_correct_cache_id;
 
   /* Mask for hardware capabilities that are available.  */
-  EXTERN unsigned long int _dl_hwcap;
+  EXTERN uint64_t _dl_hwcap;
 
   /* Mask for important hardware capabilities we honour. */
-  EXTERN unsigned long int _dl_hwcap_mask;
+  EXTERN uint64_t _dl_hwcap_mask;
 
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
@@ -636,6 +660,10 @@ struct rtld_global_ro
   /* The vsyscall page is a virtual DSO pre-mapped by the kernel.
      This points to its ELF header.  */
   EXTERN const ElfW(Ehdr) *_dl_sysinfo_dso;
+
+  /* At startup time we set up the normal DSO data structure for it,
+     and this points to it.  */
+  EXTERN struct link_map *_dl_sysinfo_map;
 #endif
 
 #ifdef SHARED

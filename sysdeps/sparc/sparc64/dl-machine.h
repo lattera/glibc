@@ -233,7 +233,10 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value;
 }
 
-#ifdef RESOLVE
+#define ARCH_LA_PLTENTER	sparc64_gnu_pltenter
+#define ARCH_LA_PLTEXIT		sparc64_gnu_pltexit
+
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -267,9 +270,10 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	value = map->l_addr;
       else
 	{
-	  value = RESOLVE (&sym, version, r_type);
-	  if (sym)
-	    value += sym->st_value;
+	  struct link_map *sym_map;
+
+	  sym_map = RESOLVE_MAP (&sym, version, r_type);
+	  value = (sym_map == NULL) ? 0 : (sym_map->l_addr + sym->st_value);
 	}
 #else
       value = 0;
@@ -490,74 +494,67 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       extern void _dl_runtime_profile_1 (void);
       Elf64_Addr res0_addr, res1_addr;
       unsigned int *plt = (void *) D_PTR (l, l_info[DT_PLTGOT]);
-      int i = 0;
 
-      if (! profile)
+      if (__builtin_expect(profile, 0))
+	{
+	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
+	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
+
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
+	    GL(dl_profile_map) = l;
+	}
+      else
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_resolve_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_resolve_1;
 	}
-      else
-	{
-	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
-	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
-	    GL(dl_profile_map) = l;
-	}
 
       /* PLT0 looks like:
 
-	 save	%sp, -192, %sp
-	 sethi	%hh(_dl_runtime_{resolve,profile}_0), %l0
-	 sethi	%lm(_dl_runtime_{resolve,profile}_0), %l1
-	 or	%l0, %hm(_dl_runtime_{resolve,profile}_0), %l0
-	 or	%l1, %lo(_dl_runtime_{resolve,profile}_0), %l1
-	 sllx	%l0, 32, %l0
-	 jmpl	%l0 + %l1, %l6
-	  sethi	%hi(0xffc00), %l2
+         sethi	%uhi(_dl_runtime_{resolve,profile}_0), %g4
+	 sethi	%hi(_dl_runtime_{resolve,profile}_0), %g5
+	 or	%g4, %ulo(_dl_runtime_{resolve,profile}_0), %g4
+	 or	%g5, %lo(_dl_runtime_{resolve,profile}_0), %g5
+	 sllx	%g4, 32, %g4
+	 add	%g4, %g5, %g5
+	 jmpl	%g5, %g4
+	  nop
        */
 
-      plt[0] = 0x9de3bf40;
-      plt[1] = 0x21000000 | (res0_addr >> (64 - 22));
-      plt[2] = 0x23000000 | ((res0_addr >> 10) & 0x003fffff);
-      plt[3] = 0xa0142000 | ((res0_addr >> 32) & 0x3ff);
-      plt[4] = 0xa2146000 | (res0_addr & 0x3ff);
-      plt[5] = 0xa12c3020;
-      plt[6] = 0xadc40011;
-      plt[7] = 0x250003ff;
+      plt[0] = 0x09000000 | (res0_addr >> (64 - 22));
+      plt[1] = 0x0b000000 | ((res0_addr >> 10) & 0x003fffff);
+      plt[2] = 0x88112000 | ((res0_addr >> 32) & 0x3ff);
+      plt[3] = 0x8a116000 | (res0_addr & 0x3ff);
+      plt[4] = 0x89293020;
+      plt[5] = 0x8a010005;
+      plt[6] = 0x89c14000;
+      plt[7] = 0x01000000;
 
       /* PLT1 looks like:
 
-	 save	%sp, -192, %sp
-	 sethi	%hh(_dl_runtime_{resolve,profile}_1), %l0
-	 sethi	%lm(_dl_runtime_{resolve,profile}_1), %l1
-	 or	%l0, %hm(_dl_runtime_{resolve,profile}_1), %l0
-	 or	%l1, %lo(_dl_runtime_{resolve,profile}_1), %l1
-	 sllx	%l0, 32, %l0
-	 jmpl	%l0 + %l1, %l6
-	  srlx	%g1, 12, %o1
+         sethi	%uhi(_dl_runtime_{resolve,profile}_1), %g4
+	 sethi	%hi(_dl_runtime_{resolve,profile}_1), %g5
+	 or	%g4, %ulo(_dl_runtime_{resolve,profile}_1), %g4
+	 or	%g5, %lo(_dl_runtime_{resolve,profile}_1), %g5
+	 sllx	%g4, 32, %g4
+	 add	%g4, %g5, %g5
+	 jmpl	%g5, %g4
+	  nop
        */
 
-      plt[8 + 0] = 0x9de3bf40;
-      if (__builtin_expect (((res1_addr + 4) >> 32) & 0x3ff, 0))
-	i = 1;
-      else
-	res1_addr += 4;
-      plt[8 + 1] = 0x21000000 | (res1_addr >> (64 - 22));
-      plt[8 + 2] = 0x23000000 | ((res1_addr >> 10) & 0x003fffff);
-      if (__builtin_expect (i, 0))
-	plt[8 + 3] = 0xa0142000 | ((res1_addr >> 32) & 0x3ff);
-      else
-	plt[8 + 3] = 0xa12c3020;
-      plt[8 + 4] = 0xa2146000 | (res1_addr & 0x3ff);
-      if (__builtin_expect (i, 0))
-	plt[8 + 5] = 0xa12c3020;
-      plt[8 + 5 + i] = 0xadc40011;
-      plt[8 + 6 + i] = 0x9330700c;
+      plt[8] = 0x09000000 | (res1_addr >> (64 - 22));
+      plt[9] = 0x0b000000 | ((res1_addr >> 10) & 0x003fffff);
+      plt[10] = 0x88112000 | ((res1_addr >> 32) & 0x3ff);
+      plt[11] = 0x8a116000 | (res1_addr & 0x3ff);
+      plt[12] = 0x89293020;
+      plt[13] = 0x8a010005;
+      plt[14] = 0x89c14000;
+      plt[15] = 0x01000000;
 
       /* Now put the magic cookie at the beginning of .PLT2
 	 Entry .PLT3 is unused by this implementation.  */
-      *((struct link_map **)(&plt[16 + 0])) = l;
+      *((struct link_map **)(&plt[16])) = l;
 
       if (__builtin_expect (l->l_info[VALIDX(DT_GNU_PRELINKED)] != NULL, 0)
 	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
@@ -603,68 +600,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name)	\
-  asm ("\n"						\
-"	.text\n"					\
-"	.globl	" #tramp_name "_0\n"			\
-"	.type	" #tramp_name "_0, @function\n"		\
-"	.align	32\n"					\
-"\t" #tramp_name "_0:\n"				\
-"	! sethi   %hi(1047552), %l2 - Done in .PLT0\n"	\
-"	ldx	[%l6 + 32 + 8], %o0\n"			\
-"	sub     %g1, %l6, %l0\n"			\
-"	xor     %l2, -1016, %l2\n"			\
-"	sethi   %hi(5120), %l3	! 160 * 32\n"		\
-"	add     %l0, %l2, %l0\n"			\
-"	sethi   %hi(32768), %l4\n"			\
-"	udivx   %l0, %l3, %l3\n"			\
-"	sllx    %l3, 2, %l1\n"				\
-"	add     %l1, %l3, %l1\n"			\
-"	sllx    %l1, 10, %l2\n"				\
-"	sub	%l4, 4, %l4	! No thanks to Sun for not obeying their own ABI\n" \
-"	sllx    %l1, 5, %l1\n"				\
-"	sub     %l0, %l2, %l0\n"			\
-"	udivx   %l0, 24, %l0\n"				\
-"	add     %l0, %l4, %l0\n"			\
-"	add     %l1, %l0, %l1\n"			\
-"	add     %l1, %l1, %l0\n"			\
-"	add     %l0, %l1, %l0\n"			\
-"	mov	%i7, %o2\n"				\
-"	call	" #fixup_name "\n"			\
-"	 sllx    %l0, 3, %o1\n"				\
-"	jmp	%o0\n"					\
-"	 restore\n"					\
-"	.size	" #tramp_name "_0, . - " #tramp_name "_0\n" \
-"\n"							\
-"	.globl	" #tramp_name "_1\n"			\
-"	.type	" #tramp_name "_1, @function\n"		\
-"	! tramp_name_1 + 4 needs to be .align 32\n"	\
-"\t" #tramp_name "_1:\n"				\
-"	sub	%l6, 4, %l6\n"				\
-"	! srlx	%g1, 12, %o1 - Done in .PLT1\n"		\
-"	ldx	[%l6 + 12], %o0\n"			\
-"	add	%o1, %o1, %o3\n"			\
-"	sub	%o1, 96, %o1	! No thanks to Sun for not obeying their own ABI\n" \
-"	mov	%i7, %o2\n"				\
-"	call	" #fixup_name "\n"			\
-"	 add	%o1, %o3, %o1\n"			\
-"	jmp	%o0\n"					\
-"	 restore\n"					\
-"	.size	" #tramp_name "_1, . - " #tramp_name "_1\n" \
-"	.previous\n");
-
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, fixup);
-#endif
 
 /* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela

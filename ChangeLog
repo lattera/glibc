@@ -1,3 +1,20 @@
+2005-04-04  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-trampoline.S: New file.
+	* sysdeps/sparc/sparc32/dl-machine.h: Move PLT trampolines there.
+	Use RESOLVE_MAP instead of RESOLVE to protect relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	* sysdeps/sparc/sparc64/dl-trampoline.S: New file.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): New.
+	* sysdeps/sparc/sparc64/dl-machine.h: Move PLT trampolines there.
+	Use RESOLVE_MAP instead of RESOLVE to protect relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	* sysdeps/sparc/bits/link.h: New file.
+	* sysdeps/generic/ldsodefs.h (La_sparc32_regs, La_sparc32_retval,
+	La_sparc64_regs, La_sparc64_retval): New.
+	(struct audit_ifaces): Add sparc entries.
+	* elf/tst-auditmod1.c: Add sparc entries.
+
 2005-03-27  Bruno Haible  <bruno@clisp.org>
 
 	* intl/tst-gettext3.c: New file.
