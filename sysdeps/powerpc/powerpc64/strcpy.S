@@ -1,5 +1,5 @@
 /* Optimized strcpy implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,11 @@ EALIGN (BP_SYM (strcpy), 4, 0)
 
 #define rTMP	r0
 #define rRTN	r3	/* incoming DEST arg preserved as result */
+/* Note.  The Bounded pointer support in this code is broken.  This code
+   was inherited from PPC32 and and that support was never completed.  
+   Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
+   These artifacts are left in the code as a reminder in case we need
+   bounded pointer support in the future.  */
 #if __BOUNDED_POINTERS__
 # define rDEST	r4	/* pointer to previous word in dest */
 # define rSRC	r5	/* pointer to previous word in src */
@@ -39,39 +44,44 @@ EALIGN (BP_SYM (strcpy), 4, 0)
 # define rDEST	r5	/* pointer to previous word in dest */
 #endif
 #define rWORD	r6	/* current word from src */
-#define rFEFE	r7	/* constant 0xfefefeff (-0x01010101) */
-#define r7F7F	r8	/* constant 0x7f7f7f7f */
-#define rNEG	r9	/* ~(word in s1 | 0x7f7f7f7f) */
+#define rFEFE	r7	/* constant 0xfefefefefefefeff (-0x0101010101010101) */
+#define r7F7F	r8	/* constant 0x7f7f7f7f7f7f7f7f */
+#define rNEG	r9	/* ~(word in s1 | 0x7f7f7f7f7f7f7f7f) */
 #define rALT	r10	/* alternate word from src */
 
 	CHECK_BOUNDS_LOW (rSRC, rLOW, rHIGH)
 	CHECK_BOUNDS_LOW (rDEST, rLOW, rHIGH)
 	STORE_RETURN_BOUNDS (rLOW, rHIGH)
 
+	dcbt	0,rSRC
 	or	rTMP, rSRC, rRTN
-	clrldi.	rTMP, rTMP, 62
+	clrldi.	rTMP, rTMP, 61
 #if __BOUNDED_POINTERS__
-	addi	rDEST, rDEST, -4
+	addi	rDEST, rDEST, -8
 #else
-	addi	rDEST, rRTN, -4
+	addi	rDEST, rRTN, -8
 #endif
+	dcbtst	0,rRTN
 	bne	L(unaligned)
 
 	lis	rFEFE, -0x101
 	lis	r7F7F, 0x7f7f
-	lwz	rWORD, 0(rSRC)
+	ld	rWORD, 0(rSRC)
 	addi	rFEFE, rFEFE, -0x101
 	addi	r7F7F, r7F7F, 0x7f7f
+	sldi	rTMP, rFEFE, 32
+	insrdi	r7F7F, r7F7F, 32, 0
+	add	rFEFE, rFEFE, rTMP
 	b	L(g2)
 
-L(g0):	lwzu	rALT, 4(rSRC)
-	stwu	rWORD, 4(rDEST)
+L(g0):	ldu	rALT, 8(rSRC)
+	stdu	rWORD, 8(rDEST)
 	add	rTMP, rFEFE, rALT
 	nor	rNEG, r7F7F, rALT
 	and.	rTMP, rTMP, rNEG
 	bne-	L(g1)
-	lwzu	rWORD, 4(rSRC)
-	stwu	rALT, 4(rDEST)
+	ldu	rWORD, 8(rSRC)
+	stdu	rALT, 8(rDEST)
 L(g2):	add	rTMP, rFEFE, rWORD
 	nor	rNEG, r7F7F, rWORD
 	and.	rTMP, rTMP, rNEG
@@ -79,16 +89,29 @@ L(g2):	add	rTMP, rFEFE, rWORD
 
 	mr	rALT, rWORD
 /* We've hit the end of the string.  Do the rest byte-by-byte.  */
-L(g1):	rlwinm.	rTMP, rALT, 8, 24, 31
-	stb	rTMP, 4(rDEST)
+L(g1):
+	extrdi.	rTMP, rALT, 8, 0
+	stb	rTMP, 8(rDEST)
 	beqlr-
-	rlwinm.	rTMP, rALT, 16, 24, 31
-	stb	rTMP, 5(rDEST)
+	extrdi.	rTMP, rALT, 8, 8
+	stb	rTMP, 9(rDEST)
 	beqlr-
-	rlwinm.	rTMP, rALT, 24, 24, 31
-	stb	rTMP, 6(rDEST)
+	extrdi.	rTMP, rALT, 8, 16
+	stb	rTMP, 10(rDEST)
 	beqlr-
-	stb	rALT, 7(rDEST)
+	extrdi.	rTMP, rALT, 8, 24
+	stb	rTMP, 11(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 32
+	stb	rTMP, 12(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 40
+	stb	rTMP, 13(rDEST)
+	beqlr-
+	extrdi.	rTMP, rALT, 8, 48
+	stb	rTMP, 14(rDEST)
+	beqlr-
+	stb	rALT, 15(rDEST)
 	/* GKM FIXME: check high bound.  */
 	blr
 

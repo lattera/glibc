@@ -1,3 +1,8 @@
+2003-04-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/strcmp.S: Convert to full 64-bit.
+	* sysdeps/powerpc/powerpc64/strcpy.S: Likewise.
+
 2003-04-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Avoid

@@ -1,5 +1,5 @@
 /* Optimized strcmp implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,42 +31,50 @@ EALIGN (BP_SYM(strcmp), 4, 0)
 #define rRTN	r3
 #define rSTR1	r3	/* first string arg */
 #define rSTR2	r4	/* second string arg */
+/* Note:  The Bounded pointer support in this code is broken.  This code
+   was inherited from PPC32 and and that support was never completed.  
+   Current PPC gcc does not support -fbounds-check or -fbounded-pointers.
+   These artifacts are left in the code as a reminder in case we need
+   bounded pointer support in the future.  */
 #if __BOUNDED_POINTERS__
 # define rHIGH1	r11
 # define rHIGH2 r12
 #endif
 #define rWORD1	r5	/* current word in s1 */
 #define rWORD2	r6	/* current word in s2 */
-#define rFEFE	r7	/* constant 0xfefefeff (-0x01010101) */
-#define r7F7F	r8	/* constant 0x7f7f7f7f */
-#define rNEG	r9	/* ~(word in s1 | 0x7f7f7f7f) */
+#define rFEFE	r7	/* constant 0xfefefefefefefeff (-0x0101010101010101) */
+#define r7F7F	r8	/* constant 0x7f7f7f7f7f7f7f7f */
+#define rNEG	r9	/* ~(word in s1 | 0x7f7f7f7f7f7f7f7f) */
 #define rBITDIF	r10	/* bits that differ in s1 & s2 words */
 
 	CHECK_BOUNDS_LOW (rSTR1, rTMP, rHIGH1)
 	CHECK_BOUNDS_LOW (rSTR2, rTMP, rHIGH2)
 
+	dcbt	0,rSTR1
 	or	rTMP, rSTR2, rSTR1
-	clrldi.	rTMP, rTMP, 62
+	dcbt	0,rSTR2
+	clrldi.	rTMP, rTMP, 61
 	lis	rFEFE, -0x101
 	bne	L(unaligned)
 
-	lwz	rWORD1, 0(rSTR1)
-	lwz	rWORD2, 0(rSTR2)
+	ld	rWORD1, 0(rSTR1)
+	ld	rWORD2, 0(rSTR2)
 	lis	r7F7F, 0x7f7f
 	addi	rFEFE, rFEFE, -0x101
-	clrldi	rFEFE,rFEFE,32 /* clear upper 32 */
 	addi	r7F7F, r7F7F, 0x7f7f
+	sldi	rTMP, rFEFE, 32
+	insrdi	r7F7F, r7F7F, 32, 0
+	add	rFEFE, rFEFE, rTMP
 	b	L(g1)
 
-L(g0):	lwzu	rWORD1, 4(rSTR1)
+L(g0):	ldu	rWORD1, 8(rSTR1)
 	bne	cr1, L(different)
-	lwzu	rWORD2, 4(rSTR2)
+	ldu	rWORD2, 8(rSTR2)
 L(g1):	add	rTMP, rFEFE, rWORD1
 	nor	rNEG, r7F7F, rWORD1
 
-	clrldi	rNEG,rNEG,32 /* clear upper 32 */
 	and.	rTMP, rTMP, rNEG
-	cmpw	cr1, rWORD1, rWORD2
+	cmpd	cr1, rWORD1, rWORD2
 	beq+	L(g0)
 L(endstring):
 /* OK. We've hit the end of the string. We need to be careful that
@@ -77,32 +85,34 @@ L(endstring):
 	add	rTMP, rTMP, r7F7F
 	xor.	rBITDIF, rWORD1, rWORD2
 
-	extsw.	rBITDIF,rBITDIF /* propagate sign for blt */
 	andc	rNEG, rNEG, rTMP
 	blt-	L(highbit)
-	cntlzw	rBITDIF, rBITDIF
-	cntlzw	rNEG, rNEG
+	cntlzd	rBITDIF, rBITDIF
+	cntlzd	rNEG, rNEG
 	addi	rNEG, rNEG, 7
-	cmpw	cr1, rNEG, rBITDIF
+	cmpd	cr1, rNEG, rBITDIF
 	sub	rRTN, rWORD1, rWORD2
-	extsw	rRTN, rRTN
-	bgelr+	cr1
+	blt-	cr1, L(equal)
+	sradi	rRTN, rRTN, 63
+	ori	rRTN, rRTN, 1
+	blr
 L(equal):
 	li	rRTN, 0
 	/* GKM FIXME: check high bounds.  */
 	blr
 
 L(different):
-	lwz	rWORD1, -4(rSTR1)
+	ld	rWORD1, -8(rSTR1)
 	xor.	rBITDIF, rWORD1, rWORD2
-
-	extsw.	rBITDIF,rBITDIF /* propagate sign for bgelr */
 	sub	rRTN, rWORD1, rWORD2
-	extsw	rRTN, rRTN
-	bgelr+
+	blt-	L(highbit)
+	sradi	rRTN, rRTN, 63
+	ori	rRTN, rRTN, 1
+	blr
 L(highbit):
-	ori	rRTN, rWORD2, 1
-	extsw	rRTN, rRTN
+	srdi	rWORD2, rWORD2, 56
+	srdi	rWORD1, rWORD1, 56
+	sub	rRTN, rWORD1, rWORD2
 	/* GKM FIXME: check high bounds.  */
 	blr
 
@@ -119,20 +129,18 @@ L(u0):	lbzu	rWORD1, 1(rSTR1)
 	lbzu	rWORD2, 1(rSTR2)
 L(u1):	cmpwi	cr1, rWORD1, 0
 	beq-	cr1, L(u3)
-	cmpw	rWORD1, rWORD2
+	cmpd	rWORD1, rWORD2
 	bne-	L(u3)
 	lbzu	rWORD1, 1(rSTR1)
 	lbzu	rWORD2, 1(rSTR2)
-	cmpwi	cr1, rWORD1, 0
-	cmpw	rWORD1, rWORD2
+	cmpdi	cr1, rWORD1, 0
+	cmpd	rWORD1, rWORD2
 	bne+	cr1, L(u0)
 L(u3):	sub	rRTN, rWORD1, rWORD2
-	extsw	rRTN, rRTN
 	/* GKM FIXME: check high bounds.  */
 	blr
 L(u4):	lbz	rWORD1, -1(rSTR1)
 	sub	rRTN, rWORD1, rWORD2
-	extsw	rRTN, rRTN
 	/* GKM FIXME: check high bounds.  */
 	blr
 END (BP_SYM (strcmp))
