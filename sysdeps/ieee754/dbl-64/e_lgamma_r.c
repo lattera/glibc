@@ -226,8 +226,6 @@ static double zero=  0.00000000000000000000e+00;
 
     /* purge off +-inf, NaN, +-0, and negative arguments */
 	*signgamp = 1;
-	if ((unsigned int) hx==0xfff00000&&lx==0)
-	  return x-x;
 	ix = hx&0x7fffffff;
 	if(ix>=0x7ff00000) return x*x;
 	if((ix|lx)==0) return one/fabs(x);

@@ -45,6 +45,9 @@ __ieee754_gamma_r (double x, int *signgamp)
       *signgamp = 0;
       return (x - x) / (x - x);
     }
+  if ((unsigned int) hx == 0xfff00000 && lx==0)
+    /* x == -Inf.  According to ISO this is NaN.  */
+    return x - x;
 
   /* XXX FIXME.  */
   return __ieee754_exp (__ieee754_lgamma_r (x, signgamp));
