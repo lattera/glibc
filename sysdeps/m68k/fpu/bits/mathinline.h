@@ -134,7 +134,6 @@ __inline_mathop(__significand, getman)
 #endif
 
 #ifdef __USE_ISOC99
-__inline_mathop(__log2, log2)
 __inline_mathop(__trunc, intrz)
 #endif
 
@@ -157,7 +156,6 @@ __inline_mathop(significand, getman)
 # endif
 
 # ifdef __USE_ISOC99
-__inline_mathop(log2, log2)
 __inline_mathop(trunc, intrz)
 # endif
 
