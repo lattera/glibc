@@ -1,5 +1,5 @@
 /* POSIX.1 sigaction call for Linux/SPARC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx), 1997.
 
@@ -21,6 +21,10 @@
 #include <syscall.h>
 #include <sys/signal.h>
 #include <errno.h>
+
+/* The variable is shared between all wrappers around signal handling
+   functions which have RT equivalents.  */
+int __libc_have_rt_sigs = -1;
 
 /* Commented out while I figure out what the fuck goes on */
 long ____sig_table [NSIG];

@@ -56,7 +56,8 @@ a local mirror first.
 
 You always should try to use the latest official release.  Older
 versions may not have all the features GNU libc requires.  On most
-supported platforms, 2.7.2.3 is the earliest version that works at all.
+supported platforms (for powerpc see question ?powerpc), 2.7.2.3 is
+the earliest version that works at all.
 
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -85,6 +86,27 @@ releases are known to have bugs that prevent a successful compilation.
 required.  For Linux, get binutils-2.8.1.0.17 or later.  Other systems
 may have native linker support, but it's moot right now, because glibc
 has not been ported to them.
+
+??powerpc	What tools do I need for powerpc?
+
+{GK} For a successful installation you definitely need the most recent
+tools. You can safely assume that anything earlier than binutils
+2.8.1.0.17 and egcs-1.0 will have problems. We'd advise at the moment
+binutils 2.8.1.0.18 and egcs-1.0.1.
+
+In fact, egcs 1.0.1 currently has two serious bugs that prevent a
+clean make; one relates to switch statement folding, for which there
+is a temporary patch at
+
+<http://discus.anu.edu.au/~geoffk/egcs-1.0-geoffk.diff.gz>
+
+and the other relates to 'forbidden register spilled', for which the
+workaround is to put
+
+CFLAGS-condvar.c += -fno-inline
+
+in configparms.  Later versions of egcs may fix these problems.
+
 
 ??	Do I need some more things to compile GNU C Library?
 
@@ -771,6 +793,48 @@ one can write
 
 This disables the optimization for that specific call.
 
+?? I get compiler messages "Initializer element not constant" with
+	stdin/stdout/stderr. Why?
+
+{RM,AJ} Constructs like:
+static FILE *InPtr = stdin;
+
+lead to this message. This is correct behaviour with glibc since stdin
+is not a constant expression. Please note that a strict reading of ISO
+C does not allow above constructs.
+
+One of the advantages of this is that you can assign to stdin, stdout,
+and stderr just like any other global variable (e.g. `stdout =
+my_stream;'), which can be very useful with custom streams that you
+can write with libio (but beware this is not necessarily
+portable). The reason to implement it this way were versioning
+problems with the size of the FILE structure.
+
+
+??	I can't compile with gcc -traditional (or
+	-traditional-cpp). Why?
+
+{AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
+to do so. For example constructs of the form:
+enum {foo
+#define foo foo
+}
+are  useful for debugging purpuses (you can use foo with your debugger
+that's why we need the enum) and for compatibility (other systems use
+defines and check with #ifdef).
+
+??	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
+
+{AJ} The GNU C library is compatible with the ANSI/ISO C standard.  If
+you're using `gcc -ansi', the glibc includes which are specified in
+the standard follow the standard. The ANSI/ISO C standard defines what
+has to be in the include files - and also states that nothing else
+should be in the include files (btw. you can still enable additional
+standards with feature flags).
+
+The GNU C library is conforming to ANSI/ISO C - if and only if you're
+only using the headers and library functions defined in the standard.
+
 ? Miscellaneous
 
 ??	After I changed configure.in I get `Autoconf version X.Y.
@@ -802,6 +866,7 @@ Answers were given by:
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
 {TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
+{GK} Geoffrey Keating, <Geoff.Keating@anu.edu.au>
 
 Local Variables:
  mode:outline

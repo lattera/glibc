@@ -53,7 +53,7 @@ DB_LOOKUP (servbyport, 21 + (proto ? strlen (proto) : 0),
 	   ("=%d/%s", ntohs (port), proto ?: ""),
 	   {
 	     /* Must match both port and protocol.  */
-	     if (result->s_port == ntohs (port)
+	     if (result->s_port == port
 		 && (proto == NULL
 		     || strcmp (result->s_proto, proto) == 0))
 	       break;

@@ -1,3 +1,33 @@
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Heap Consistency Checking): mcheck is
+	declared in <mcheck.h>.
+	Suggested by Jochen Voss <voss@mathematik.uni-kl.de> [PR libc/438]
+
+1998-01-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/memmem.c (memmem): An empty needle is at the
+	beginning of haystack.
+
+1998-01-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-service.c: Correct last patch.
+
+1998-01-30 21:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Define
+	__libc_have_rt_sigs.
+	* sysdeps/sparc/sparc32/__longjmp.S: Define _SETJMP_H before
+	including <bits/setjmp.h>.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	Patch from the Debian glibc/SPARC package.
+
+1997-12-12 07:57  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/alpha/bzero.S: Fix a typo.
+	* sysdeps/alpha/htonl.S: Ditto.
+	* sysdeps/alpha/htons.S: Ditto.
+
 1998-01-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/nss_nis/nis-hosts.c: Convert hostname to lowercase for NIS query.

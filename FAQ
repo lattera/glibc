@@ -24,15 +24,18 @@ please let me know.
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
 1.4.	Do I need a special linker or archiver?
-1.5.	Do I need some more things to compile GNU C Library?
-1.6.	When I run `nm -u libc.so' on the produced library I still
+1.5.	What tools do I need for powerpc?
+1.6.	Do I need some more things to compile GNU C Library?
+1.7.	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
-1.7.	What are these `add-ons'?
-1.8.	My XXX kernel emulates a floating-point coprocessor for me.
+1.8.	What are these `add-ons'?
+1.9.	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
-1.9.	When compiling GNU libc I get lots of errors saying functions
+1.10.	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
-1.10.	What's the problem with configure --enable-omitfp?
+1.11.	Why do I get messages about missing thread functions when I use
+	the librt?  I don't even use threads.
+1.12.	What's the problem with configure --enable-omitfp?
 
 2. Installation and configuration issues
 
@@ -90,6 +93,11 @@ please let me know.
 3.7.	Why don't signals interrupt system calls anymore?
 3.8.	I've got errors compiling code that uses certain string
 	functions.  Why?
+3.9.	I get compiler messages "Initializer element not constant" with
+	stdin/stdout/stderr. Why?
+3.10.	I can't compile with gcc -traditional (or
+	-traditional-cpp). Why?
+3.11.	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
 
 4. Miscellaneous
 
@@ -114,12 +122,12 @@ The systems glibc is known to work on as of this release, and most
 probably in the future, are:
 
 	*-*-gnu			GNU Hurd
-	i[3456]86-*-linux-gnu	Linux-2.0 on Intel
-	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
-	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
+	i[3456]86-*-linux-gnu	Linux-2.x on Intel
+	m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
+	alpha-*-linux-gnu	Linux-2.x on DEC Alpha
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
-	sparc-*-linux-gnu	Linux-2.0 on SPARC
-	sparc64-*-linux-gnu	Linux-2.0 on UltraSPARC
+	sparc-*-linux-gnu	Linux-2.x on SPARC
+	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 
 Ports to other Linux platforms are in development, and may in fact
 work already, but no one has sent us success reports for them.
@@ -129,7 +137,7 @@ few people have expressed interest.
 If you have a system not listed above (or in the `README' file) and
 you are really interested in porting it, contact
 
-	<bug-glibc@prep.ai.mit.edu>
+	<bug-glibc@gnu.org>
 
 
 1.2.	What compiler do I need to build GNU libc?
@@ -144,7 +152,8 @@ a local mirror first.
 
 You always should try to use the latest official release.  Older
 versions may not have all the features GNU libc requires.  On most
-supported platforms, 2.7.2.3 is the earliest version that works at all.
+supported platforms (for powerpc see question question 1.5), 2.7.2.3 is
+the earliest version that works at all.
 
 
 1.3.	When I try to compile glibc I get only error messages.
@@ -177,7 +186,28 @@ may have native linker support, but it's moot right now, because glibc
 has not been ported to them.
 
 
-1.5.	Do I need some more things to compile GNU C Library?
+1.5.	What tools do I need for powerpc?
+
+{GK} For a successful installation you definitely need the most recent
+tools. You can safely assume that anything earlier than binutils
+2.8.1.0.17 and egcs-1.0 will have problems. We'd advise at the moment
+binutils 2.8.1.0.18 and egcs-1.0.1.
+
+In fact, egcs 1.0.1 currently has two serious bugs that prevent a
+clean make; one relates to switch statement folding, for which there
+is a temporary patch at
+
+<http://discus.anu.edu.au/~geoffk/egcs-1.0-geoffk.diff.gz>
+
+and the other relates to 'forbidden register spilled', for which the
+workaround is to put
+
+CFLAGS-condvar.c += -fno-inline
+
+in configparms.  Later versions of egcs may fix these problems.
+
+
+1.6.	Do I need some more things to compile GNU C Library?
 
 {UD} Yes, there are some more :-).
 
@@ -192,6 +222,10 @@ has not been ported to them.
   to work while some vendor versions do not.
 
   You should not need these tools unless you change the source files.
+
+* Some scripts need perl5 - but at the moment those scripts are not
+  vital for building and installing GNU libc (some data files will not
+  be created).
 
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
@@ -208,14 +242,15 @@ has not been ported to them.
   very slow.
 
   James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time of
-  45h34m for a full build (shared, static, and profiled) on
-  Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and 22h48m
-  on Atari TT030 (Motorola 68030 @ 32 Mhz, 34 Mb memory)
+  45h34m for a full build (shared, static, and profiled) on Atari
+  Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and Jan Barte
+  <yann@plato.uni-paderborn.de> reports 22h48m on Atari TT030
+  (Motorola 68030 @ 32 Mhz, 34 Mb memory)
 
   If you have some more measurements let me know.
 
 
-1.6.	When I run `nm -u libc.so' on the produced library I still
+1.7.	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
 
 {UD} Yes, this is ok.  There can be several kinds of unresolved
@@ -235,7 +270,7 @@ Generally, you should make sure you find a real program which produces
 errors while linking before deciding there is a problem.
 
 
-1.7.	What are these `add-ons'?
+1.8.	What are these `add-ons'?
 
 {UD} To avoid complications with export rules or external source
 code some optional parts of the libc are distributed as separate
@@ -259,7 +294,7 @@ just about anything else.  The existing makefiles do most of the work;
 only some few stub rules must be written to get everything running.
 
 
-1.8.	My XXX kernel emulates a floating-point coprocessor for me.
+1.9.	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
 
 {ZW} An emulated FPU is just as good as a real one, as far as the C
@@ -273,7 +308,7 @@ far more trouble than it's worth: you then have to compile
 (libgcc.a for GNU C), because the calling conventions change.
 
 
-1.9.	When compiling GNU libc I get lots of errors saying functions
+1.10.	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
 
 {EY} This is *exactly* the same problem that I was having.  The
@@ -291,7 +326,24 @@ some problems of this kind.  The setting of CFLAGS is checked at the
 very beginning and if it is not usable `configure' will bark.
 
 
-1.10.	What's the problem with configure --enable-omitfp?
+1.11.	Why do I get messages about missing thread functions when I use
+	the librt?  I don't even use threads.
+
+{UD} In this case you probably mixed up your installation of the libc.
+The librt internally uses threads and it has implicit references to
+the thread library.  Normally these references are satisfied
+automatically but if the thread library belonging to the librt is not
+in the expected place one has to specify this place.  When using GNU
+ld it works like this:
+
+	gcc -o foo foo.c -Wl,-rpath-link=/some/other/dir -lrt
+
+The `/some/other/dir' should contain the matching thread library and
+`ld' will use the given path to find the implicitly referenced library
+while not disturbing any other link path order.
+
+
+1.12.	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame
 pointers. Some compilers produce buggy code for this model and
@@ -414,7 +466,7 @@ See question 3.8 for details.
 and source code.  Until this law gets abolished we cannot ship the
 cryptographic functions together with glibc.
 
-The functions are available, as an add-on (see question 1.7).  People in the
+The functions are available, as an add-on (see question 1.8).  People in the
 US may get it from the same place they got GNU libc from.  People
 outside the US should get the code from ftp://ftp.ifi.uio.no/pub/gnu,
 or another archive site outside the USA.  The README explains how to
@@ -577,7 +629,7 @@ catalog files to the XPG4 form:
 2.10.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
-{??} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
+{TK} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
 file for storing information about the NIS+ server and their public
 keys, because the nis.conf file does not contain all the necessary
 information.  You have to copy a NIS_COLD_START file from a Solaris
@@ -741,7 +793,7 @@ release is for.  It's better to have a cut now than having no means to
 support the new techniques later.
 
 {MK} There is however a (partial) solution for this problem.  Please
-take a look at the file `README.utmpd'.
+take a look at the file `login/README.utmpd'.
 
 
 3.3.	Where are the DST_* constants found in <sys/time.h> on many
@@ -789,13 +841,13 @@ results because of type conflicts.
 	still complains about redeclarations of types in the kernel
 	headers.
 
-{UD} The kernel headers before Linux 2.1.61 don't work correctly with
-glibc.  Compiling C programs is possible in most cases but C++
-programs have (due to the change of the name lookups for `struct's)
-problems.  One prominent example is `struct fd_set'.
+{UD} The kernel headers before Linux 2.1.61 and 2.0.32 don't work
+correctly with glibc.  Compiling C programs is possible in most cases
+but C++ programs have (due to the change of the name lookups for
+`struct's) problems.  One prominent example is `struct fd_set'.
 
-There might be some problems left but 2.1.61 fixes most of the known
-ones.  See the BUGS file for other known problems.
+There might be some problems left but 2.1.61/2.0.32 fix most of the
+known ones.  See the BUGS file for other known problems.
 
 
 3.7.	Why don't signals interrupt system calls anymore?
@@ -872,6 +924,50 @@ one can write
 
 This disables the optimization for that specific call.
 
+
+3.9.	I get compiler messages "Initializer element not constant" with
+	stdin/stdout/stderr. Why?
+
+{RM,AJ} Constructs like:
+static FILE *InPtr = stdin;
+
+lead to this message. This is correct behaviour with glibc since stdin
+is not a constant expression. Please note that a strict reading of ISO
+C does not allow above constructs.
+
+One of the advantages of this is that you can assign to stdin, stdout,
+and stderr just like any other global variable (e.g. `stdout =
+my_stream;'), which can be very useful with custom streams that you
+can write with libio (but beware this is not necessarily
+portable). The reason to implement it this way were versioning
+problems with the size of the FILE structure.
+
+
+3.10.	I can't compile with gcc -traditional (or
+	-traditional-cpp). Why?
+
+{AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
+to do so. For example constructs of the form:
+enum {foo
+#define foo foo
+}
+are  useful for debugging purpuses (you can use foo with your debugger
+that's why we need the enum) and for compatibility (other systems use
+defines and check with #ifdef).
+
+
+3.11.	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
+
+{AJ} The GNU C library is compatible with the ANSI/ISO C standard.  If
+you're using `gcc -ansi', the glibc includes which are specified in
+the standard follow the standard. The ANSI/ISO C standard defines what
+has to be in the include files - and also states that nothing else
+should be in the include files (btw. you can still enable additional
+standards with feature flags).
+
+The GNU C library is conforming to ANSI/ISO C - if and only if you're
+only using the headers and library functions defined in the standard.
+
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 
@@ -893,8 +989,8 @@ point where the headers are stable.  There are still lots of
 incompatible changes made and the libc headers have to follow.
 
 Also, make sure you have a suitably recent kernel.  As of the 970401
-snapshot, according to Philip Blundell <philb@gnu.ai.mit.edu>, the
-required kernel version is 2.1.30.
+snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
+required kernel version is at least 2.1.30.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -908,6 +1004,8 @@ Answers were given by:
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
+{TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
+{GK} Geoffrey Keating, <Geoff.Keating@anu.edu.au>
 
 Local Variables:
  mode:outline

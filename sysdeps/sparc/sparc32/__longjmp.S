@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <sysdep.h>
 
 #define _ASM 1
+#define _SETJMP_H
 #include <bits/setjmp.h>
 #define ENV(reg) [%g1 + (reg * 4)]
 

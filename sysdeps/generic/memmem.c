@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,8 +35,8 @@ memmem (haystack, haystack_len, needle, needle_len)
 
   if (needle_len == 0)
     /* The first occurrence of the empty string is deemed to occur at
-       the end of the string.  */
-    return (void *) &((const char *) haystack)[haystack_len - 1];
+       the beginning of the string.  */
+    return (void *) &((const char *) haystack);
 
   for (begin = (const char *) haystack; begin <= last_possible; ++begin)
     if (begin[0] == ((const char *) needle)[0] &&

@@ -549,10 +549,10 @@ to zero disables all use of @code{mmap}.
 
 You can ask @code{malloc} to check the consistency of dynamic storage by
 using the @code{mcheck} function.  This function is a GNU extension,
-declared in @file{malloc.h}.
-@pindex malloc.h
+declared in @file{mcheck.h}.
+@pindex mcheck.h
 
-@comment malloc.h
+@comment mcheck.h
 @comment GNU
 @deftypefun int mcheck (void (*@var{abortfn}) (enum mcheck_status @var{status}))
 Calling @code{mcheck} tells @code{malloc} to perform occasional
