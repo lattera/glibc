@@ -24,13 +24,6 @@ srand48_r (seedval, buffer)
      long seedval;
      struct drand48_data *buffer;
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
-
   /* The standards say we only have 32 bits.  */
   if (sizeof (long) > 4)
     seedval &= 0xffffffffl;

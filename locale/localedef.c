@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include "error.h"
 
 #include "localedef.h"

@@ -24,13 +24,6 @@ lcong48_r (param, buffer)
      unsigned short int param[7];
      struct drand48_data *buffer;
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
-
   /* Store the given values.  */
   memcpy (buffer->X, &param[0], sizeof (buffer->X));
   memcpy (buffer->a, &param[3], sizeof (buffer->a));

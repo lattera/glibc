@@ -1,4 +1,41 @@
+Wed Sep 20 18:02:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/locale.c: Include errno.h.
+	* locale/localedef.c: Likewise.
+
+Tue Sep 19 00:02:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makefile (distclean-1): Remove config.cache, config.log, config.h.
+	(parent-mostlyclean): Remove all flavors of the parent library.
+
+	* misc/mntent.c (getmntent): Skip multiple whitespace chars
+	between fields.
+
+	* hurd/hurdstartup.c (_hurd_startup): If RPC returns
+	EXEC_STACK_ARGS flag, get args from stack.
+	If args on stack but have info from RPC, relocate args on stack to make
+	space for struct hurd_startup_data.
+
 Mon Sep 18 15:06:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/dl-object.c: Include errno.h.
+	* posix/execvp.c: Likewise.
+	* dirent/scandir.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/generic/setenv.c: Likewise.
+	* stdlib/msort.c: Likewise.
+	* stdio/memstream.c: Likewise.
+	* stdio/fclose.c: Likewise.
+	* stdio/getdelim.c: Likewise.
+	* stdio/setvbuf.c: Likewise.
+	* sysdeps/ieee754/ldexp.c: Likewise.
+	* locale/locfile-parse.c: Likewise.
+
+	* stdlib/lcong48_r.c: Don't check for null argument; let it fault.
+	* stdlib/seed48_r.c: Likewise.
+	* stdlib/srand48_r.c: Likewise.
+	* stdlib/jrand48_r.c: Likewise.
+	* stdlib/nrand48_r.c: Likewise.
 
 	* Makeconfig (+gccwarn): Remove -Wbad-function-cast, which seems
 	to be useless.
@@ -77,6 +114,7 @@ Sat Sep 16 17:47:19 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* misc/efgvt_r.c: New file.  Reentrant version of [efg]cvt functions.
 	* misc/efgcvt.c: Rewrite to use reentrant functions.
+	* misc/search.h: Many decls for hsearch functions.
 	* misc/hsearch_r.c: New file.  Reentrant version of functions from
 	hsearch family.
 	* misc/hsearch.c, misc/tsearch.c: New files.

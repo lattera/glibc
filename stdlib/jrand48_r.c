@@ -25,13 +25,6 @@ jrand48_r (xsubi, buffer, result)
      struct drand48_data *buffer;
      long *result;
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (result == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
-
   /* Compute next state.  */
   if (__drand48_iterate (xsubi, buffer) < 0)
     return -1;

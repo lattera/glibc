@@ -99,13 +99,13 @@ _hurd_startup (void **argptr, void (*main) (int *data))
       __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
-  if (err || in_bootstrap == MACH_PORT_NULL)
+  if (err || in_bootstrap == MACH_PORT_NULL || (data.flags & EXEC_STACK_ARGS))
     {
       /* Either we have no bootstrap port, or the RPC to the exec server
-	 failed.  Try to snarf the args in the canonical Mach way.
+	 failed, or whoever started us up passed the flag saying args are
+	 on the stack.  Try to snarf the args in the canonical Mach way.
 	 Hopefully either they will be on the stack as expected, or the
-	 stack will be zeros so we don't crash.  Set all our other
-	 variables to have empty information.  */
+	 stack will be zeros so we don't crash.  */
 
       argcptr = (int *) argptr;
       argc = argcptr[0];
@@ -114,26 +114,12 @@ _hurd_startup (void **argptr, void (*main) (int *data))
       envc = 0;
       while (envp[envc])
 	++envc;
-
-      data.flags = 0;
-      args = env = NULL;
-      argslen = envlen = 0;
-      data.dtable = NULL;
-      data.dtablesize = 0;
-      data.portarray = NULL;
-      data.portarraysize = 0;
-      data.intarray = NULL;
-      data.intarraysize = 0;
     }
   else
-    argv = envp = NULL;
-
-
-  /* Turn the block of null-separated strings we were passed for the
-     arguments and environment into vectors of pointers to strings.  */
-
-  if (! argv)
     {
+      /* Turn the block of null-separated strings we were passed for the
+	 arguments and environment into vectors of pointers to strings.  */
+
       /* Count up the arguments so we can allocate ARGV.  */
       argc = _hurd_split_args (args, argslen, NULL);
       /* Count up the environment variables so we can allocate ENVP.  */
@@ -153,6 +139,41 @@ _hurd_startup (void **argptr, void (*main) (int *data))
       /* There was some environment.  */
       envp = &argv[argc + 1];
       _hurd_split_args (env, envlen, envp);
+    }
+
+  if (err || in_bootstrap == MACH_PORT_NULL)
+    {
+      /* Either we have no bootstrap port, or the RPC to the exec server
+	 failed.  Set all our other variables to have empty information.  */
+
+      data.flags = 0;
+      args = env = NULL;
+      argslen = envlen = 0;
+      data.dtable = NULL;
+      data.dtablesize = 0;
+      data.portarray = NULL;
+      data.portarraysize = 0;
+      data.intarray = NULL;
+      data.intarraysize = 0;
+    }
+  else if ((void *) &envp[envc + 1] == argv[0])
+    {
+      /* The arguments arrived on the stack from the kernel, but our
+	 protocol requires some space after them for a `struct
+	 hurd_startup_data'.  Move them.  */
+      struct
+	{
+	  int count;
+	  char *argv[argc + 1];
+	  char *envp[envc + 1];
+	  struct hurd_startup_data data;
+	} *args = alloca (sizeof *args);
+      if ((void *) &args[1] == (void *) argcptr)
+	args = alloca (-((char *) &args->data - (char *) args));
+      memmove (args, argcptr, (char *) &args->data - (char *) args);
+      argcptr = (void *) args;
+      argv = args->argv;
+      envp = args->envp;
     }
 
   {

@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 
 /* List of objects currently loaded.  */

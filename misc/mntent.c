@@ -53,14 +53,20 @@ getmntent (FILE *stream)
       if (getline (&buf, &bufsiz, stream) < 0)
 	return NULL;
 
-      head = buf;
+      head = buf + strspn (buf, " \t");
     } while (head[0] == '#');	/* Skip comment lines.  */
     
   m.mnt_fsname = strsep (&head, " \t") ?: (char *) "";
+  if (head)
+    head += strspn (head, " \t");
   m.mnt_dir = strsep (&head, " \t") ?: (char *) "";
+  if (head)
+    head += strspn (head, " \t");
   m.mnt_type = strsep (&head, " \t") ?: (char *) "";
+  if (head)
+    head += strspn (head, " \t");
   m.mnt_opts = strsep (&head, " \t") ?: (char *) "";
-  switch (sscanf (head, "%d %d\n", &m.mnt_freq, &m.mnt_passno))
+  switch (head ? sscanf (head, " %d %d\n", &m.mnt_freq, &m.mnt_passno) : 0)
     {
     case 0:
       m.mnt_freq = 0;

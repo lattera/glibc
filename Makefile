@@ -174,7 +174,9 @@ $(all-subdirs-targets):
 
 # Subroutines of all cleaning targets.
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
-	-rm -f $(common-objpfx)libc.a $(addprefix $(objpfx),$(install-lib))
+	-rm -f $(foreach o,$(object-suffixes),\
+		   $(common-objpfx)$(patsubst %,$(libtype$o),c)) \
+	       $(addprefix $(objpfx),$(install-lib))
 parent-clean: parent-mostlyclean common-clean
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(addprefix $(objpfx),sysd-Makefile sysd-dirs sysd-rules)
@@ -200,8 +202,8 @@ realclean distclean: parent-clean
 # Subroutine of distclean and realclean.
 distclean-1: subdir_$(distclean-1)
 	-rm -f $(config-generated)
-	-rm -f $(addprefix $(objpfx),config.status cache.cache)
-	-rm -f $(addprefix $(objpfx),config.make config-name.h)
+	-rm -f $(addprefix $(objpfx),config.status config.cache config.log)
+	-rm -f $(addprefix $(objpfx),config.make config-name.h config.h)
 ifdef objdir
 	-rm -f $(objpfx)Makefile
 endif

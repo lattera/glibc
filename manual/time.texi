@@ -241,13 +241,15 @@ These facilities are declared in the header file @file{time.h}.
 @comment time.h
 @comment ANSI
 @deftp {Data Type} time_t
-This is the data type used to represent calendar time.  In the GNU C
-library and other POSIX-compliant implementations, @code{time_t} is
-equivalent to @code{long int}.  When interpreted as an absolute time
+This is the data type used to represent calendar time.
+When interpreted as an absolute time
 value, it represents the number of seconds elapsed since 00:00:00 on
 January 1, 1970, Coordinated Universal Time.  (This date is sometimes
-referred to as the @dfn{epoch}.)
+referred to as the @dfn{epoch}.)  POSIX requires that this count
+ignore leap seconds, but on some hosts this count includes leap seconds
+if you set @code{TZ} to certain values (@pxref{TZ Variable}).
 
+In the GNU C library, @code{time_t} is equivalent to @code{long int}.
 In other systems, @code{time_t} might be either an integer or
 floating-point type.
 @end deftp
@@ -257,7 +259,8 @@ floating-point type.
 @deftypefun double difftime (time_t @var{time1}, time_t @var{time0})
 The @code{difftime} function returns the number of seconds elapsed
 between time @var{time1} and time @var{time0}, as a value of type
-@code{double}.  
+@code{double}.  The difference ignores leap seconds unless leap
+second support is enabled.
 
 In the GNU system, you can simply subtract @code{time_t} values.  But on
 other systems, the @code{time_t} data type might use some other encoding
@@ -462,8 +465,8 @@ contains at least the following members, which can appear in any order:
 @table @code
 @item int tm_sec
 This is the number of seconds after the minute, normally in the range
-@code{0} to @code{59}.  (The actual upper limit is @code{61}, to allow
-for ``leap seconds''.)
+@code{0} to @code{59}.  (The actual upper limit is @code{60}, to allow
+for leap seconds if leap second support is available.)
 @cindex leap second
 
 @item int tm_min
@@ -508,7 +511,7 @@ also think of this as the ``number of seconds west'' of GMT.  The
 @code{tm_gmtoff} field is a GNU library extension.
 
 @item const char *tm_zone
-This field is the three-letter name for the time zone that was used to
+This field is the name for the time zone that was used to
 compute this broken-down time value.  It is a GNU library extension.
 @end table
 @end deftp
@@ -521,9 +524,9 @@ The @code{localtime} function converts the calendar time pointed to by
 user's specified time zone.
 
 The return value is a pointer to a static broken-down time structure, which
-might be overwritten by subsequent calls to any of the date and time
-functions.  (But no other library function overwrites the contents of this
-object.)
+might be overwritten by subsequent calls to @code{ctime}, @code{gmtime},
+or @code{localtime}.  (But no other library function overwrites the contents
+of this object.)
 
 Calling @code{localtime} has one other effect: it sets the variable
 @code{tzname} with information about the current time zone.  @xref{Time
@@ -590,7 +593,7 @@ The abbreviations for the months are: @samp{Jan}, @samp{Feb},
 @samp{Sep}, @samp{Oct}, @samp{Nov}, and @samp{Dec}.
 
 The return value points to a statically allocated string, which might be
-overwritten by subsequent calls to any of the date and time functions.
+overwritten by subsequent calls to @code{asctime} or @code{ctime}.
 (But no other library function overwrites the contents of this
 string.)
 @end deftypefun
@@ -870,7 +873,7 @@ community of volunteers and put in the public domain.
 @comment POSIX.1
 @deftypevar char * tzname [2]
 The array @code{tzname} contains two strings, which are the standard
-three-letter names of the pair of time zones (standard and daylight
+names of the pair of time zones (standard and daylight
 savings) that the user has selected.  @code{tzname[0]} is the name of
 the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
 is the name for the time zone when daylight savings time is in use (for
@@ -893,7 +896,7 @@ depend on the time zone.
 @end deftypefun
 
 The following variables are defined for compatibility with System V
-Unix.  These variables are set by calling @code{localtime}.
+Unix.  These variables are set by calling @code{tzset}.
 
 @comment time.h
 @comment SVID
@@ -906,8 +909,10 @@ seconds.  For example, in the U.S. Eastern time zone, the value is
 @comment time.h
 @comment SVID
 @deftypevar int daylight
-This variable has a nonzero value if the standard U.S. daylight savings
-time rules apply.
+This variable has a nonzero value if daylight savings time rules apply.
+A nonzero value does not necessarily mean that daylight savings time is
+now in effect; it means only that daylight savings time is sometimes in
+effect.
 @end deftypevar
 
 @node Time Functions Example

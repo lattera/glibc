@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #include <string.h>
 #include <memcopy.h>
+#include <errno.h>
 
 static void
 DEFUN(msort_with_tmp, (b, n, s, cmp, t),

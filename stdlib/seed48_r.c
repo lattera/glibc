@@ -24,13 +24,6 @@ seed48_r (seed16v, buffer)
      unsigned short int seed16v[3];
      struct drand48_data *buffer;
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-    {
-      errno = EFAULT;
-      return -1;
-    }
-
   /* Save old value at a private place to be used as return value.  */
   memcpy (buffer->old_X, buffer->X, sizeof (buffer->X));
 

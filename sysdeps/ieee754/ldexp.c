@@ -38,6 +38,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 #include <float.h>
+#include <errno.h>
 #include "ieee754.h"
 
 double
