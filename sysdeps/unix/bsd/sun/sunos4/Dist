@@ -1,1 +1,1 @@
-__wait4_syscall.S
+sys_wait4.S
