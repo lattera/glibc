@@ -81,7 +81,7 @@ struct passwddata
 
 static void
 cache_addpw (struct database *db, int fd, request_header *req, void *key,
-	     struct passwd *pwd, uid_t owner)
+	     struct passwd *pwd, uid_t owner, int type)
 {
   ssize_t total;
   ssize_t written;
@@ -175,6 +175,11 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       cache_add (GETPWBYNAME, data->strdata, pw_name_len, data,
 		 total, data, 0, t, db, owner);
 
+      /* If the key is different from the name add a separate entry.  */
+      if (type == GETPWBYNAME && strcmp (key, data->strdata) != 0)
+	cache_add (GETPWBYNAME, key, strlen (key) + 1, data,
+		   total, data, 0, t, db, owner);
+
       cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);
@@ -244,7 +249,7 @@ addpwbyname (struct database *db, int fd, request_header *req,
   if (secure[pwddb])
     seteuid (oldeuid);
 
-  cache_addpw (db, fd, req, key, pwd, c_uid);
+  cache_addpw (db, fd, req, key, pwd, c_uid, GETPWBYNAME);
 
   if (use_malloc)
     free (buffer);
@@ -316,7 +321,7 @@ addpwbyuid (struct database *db, int fd, request_header *req,
   if (secure[pwddb])
     seteuid (oldeuid);
 
-  cache_addpw (db, fd, req, key, pwd, c_uid);
+  cache_addpw (db, fd, req, key, pwd, c_uid, GETPWBYUID);
 
   if (use_malloc)
     free (buffer);
