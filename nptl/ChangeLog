@@ -1,3 +1,8 @@
+2002-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Define
+	RTLD_CORRECT_DYNAMIC_WEAK.
+
 2002-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* forward.c (pthread_attr_init_2_0, pthread_attr_init_2_1):

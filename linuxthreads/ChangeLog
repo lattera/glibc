@@ -1,3 +1,8 @@
+2002-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* forward.c (pthread_attr_init_2_0, pthread_attr_init_2_1):
+	Use return 0 as 6th argument to FORWARD4.
+
 2002-12-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/useldt.h (FLOATING_STACKS, ARCH_STACK_MAX_SIZE): Only

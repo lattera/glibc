@@ -90,7 +90,7 @@ struct rtld_global _rtld_global =
     /* Get architecture specific initializer.  */
 #include <dl-procinfo.c>
     ._dl_debug_fd = STDERR_FILENO,
-#if 1
+#ifndef RTLD_CORRECT_DYNAMIC_WEAK
     /* XXX I know about at least one case where we depend on the old
        weak behavior (it has to do with librt).  Until we get DSO
        groups implemented we have to make this the default.

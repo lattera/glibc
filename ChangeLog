@@ -1,3 +1,8 @@
+2002-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c: Don't initialize _dl_dynamic_weak to 1 if
+	RTLD_CORRECT_DYNAMIC_WEAK is defined.
+
 2002-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/connections.c (nscd_run): Shut up warning.
