@@ -1,4 +1,21 @@
+1998-02-17 17:41  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (open_path): Take extra argument PRELOADED.
+	If PRELOADED is nonzero check in case of an SUID application
+	whether the shared object has the SUID bit set.
+	Fix some other problems with handling shared objects in system
+	specific directories.
+	(_dl_map_object): Also take extra parameter and pass it to open_path.
+	* elf/link.h (_dl_map_object): Correct prototype and comment.
+	* elf/rtld.c (dl_main): Call _dl_map_object correctly.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/dl-deps.c (openaux, _dl_map_object_deps): Likewise.
+
+	* sysdeps/libm-ieee754/s_modfl.c: Handle numbers > 1.0 correctly.
+
 1998-02-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c (modf_test): Add test for 1.5.
 
 	* sysdeps/generic/bits/select.h (__FD_ISSET): Compare result with
 	0 to get always an int.

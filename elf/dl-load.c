@@ -793,7 +793,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
    with the malloc'd full directory name.  */
 
 static int
-open_path (const char *name, size_t namelen,
+open_path (const char *name, size_t namelen, int preloaded,
 	   struct r_search_path_elem **dirs,
 	   char **realname)
 {
@@ -839,9 +839,31 @@ open_path (const char *name, size_t namelen,
 		else
 		  this_dir->machdirstatus = existing;
 	      }
-	}
+	  if (fd != -1 && preloaded && __libc_enable_secure)
+	    {
+	      /* This is an extra security effort to make sure nobody can
+		 preload broken shared objects which are in the trusted
+		 directories and so exploit the bugs.  */
+	      struct stat st;
 
-      if (fd == -1 && this_dir->dirstatus != nonexisting)
+	      if (__fxstat (_STAT_VER, fd, &st) != 0
+		  || (st.st_mode & S_ISUID) == 0)
+		{
+		  /* The shared object cannot be tested for being SUID
+		     or this bit is not set.  In this case we must not
+		     use this object.  */
+		  __close (fd);
+		  fd = -1;
+		  /* We simply ignore the file, signal this by setting
+		     the error value which would have been set by `open'.  */
+		  errno = ENOENT;
+		}
+	    }
+	}
+      else
+	errno = ENOENT;
+
+      if (fd == -1 && errno == ENOENT && this_dir->dirstatus != nonexisting)
 	{
 	  /* Construct the pathname to try.  */
 	  buflen = ((char *) __mempcpy (__mempcpy (buf, this_dir->dirname,
@@ -871,12 +893,32 @@ open_path (const char *name, size_t namelen,
 		  else
 		    this_dir->dirstatus = existing;
 		}
+	  if (fd != -1 && preloaded && __libc_enable_secure)
+	    {
+	      /* This is an extra security effort to make sure nobody can
+		 preload broken shared objects which are in the trusted
+		 directories and so exploit the bugs.  */
+	      struct stat st;
+
+	      if (__fxstat (_STAT_VER, fd, &st) != 0
+		  || (st.st_mode & S_ISUID) == 0)
+		{
+		  /* The shared object cannot be tested for being SUID
+		     or this bit is not set.  In this case we must not
+		     use this object.  */
+		  __close (fd);
+		  fd = -1;
+		  /* We simply ignore the file, signal this by setting
+		     the error value which would have been set by `open'.  */
+		  errno = ENOENT;
+		}
+	    }
 	}
 
       if (fd != -1)
 	{
 	  *realname = malloc (buflen);
-	  if (*realname)
+	  if (*realname != NULL)
 	    {
 	      memcpy (*realname, buf, buflen);
 	      return fd;
@@ -901,8 +943,8 @@ open_path (const char *name, size_t namelen,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
-_dl_map_object (struct link_map *loader, const char *name, int type,
-		int trace_mode)
+_dl_map_object (struct link_map *loader, const char *name, int preloaded,
+		int type, int trace_mode)
 {
   int fd;
   char *realname;
@@ -963,7 +1005,8 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 	      }
 
 	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
-	      fd = open_path (name, namelen, l->l_rpath_dirs, &realname);
+	      fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
+			      &realname);
 	  }
 
       /* If dynamically linked, try the DT_RPATH of the executable itself
@@ -971,12 +1014,12 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
       l = _dl_loaded;
       if (fd == -1 && l && l->l_type != lt_loaded
 	  && l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
-	fd = open_path (name, namelen, l->l_rpath_dirs, &realname);
+	fd = open_path (name, namelen, preloaded, l->l_rpath_dirs, &realname);
 
       /* This is used if a static binary uses dynamic loading and there
 	 is a LD_LIBRARY_PATH given.  */
       if (fd == -1 && fake_path_list != NULL)
-	fd = open_path (name, namelen, fake_path_list, &realname);
+	fd = open_path (name, namelen, preloaded, fake_path_list, &realname);
 
       if (fd == -1)
 	{
@@ -1001,7 +1044,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
       /* Finally, try the default path.  */
       if (fd == -1)
-	fd = open_path (name, namelen, rtld_search_dirs, &realname);
+	fd = open_path (name, namelen, preloaded, rtld_search_dirs, &realname);
     }
   else
     {

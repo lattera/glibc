@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ openaux (void *a)
 {
   struct openaux_args *args = (struct openaux_args *) a;
 
-  args->aux = _dl_map_object (args->map, args->strtab + args->d->d_un.d_val,
+  args->aux = _dl_map_object (args->map, args->strtab + args->d->d_un.d_val, 0,
 			      (args->map->l_type == lt_executable
 			       ? lt_library : args->map->l_type),
 			      args->trace_mode);
@@ -160,7 +160,7 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep
-		  = _dl_map_object (l, strtab + d->d_un.d_val,
+		  = _dl_map_object (l, strtab + d->d_un.d_val, 0,
 				    l->l_type == lt_executable ? lt_library :
 				    l->l_type, trace_mode);
 		/* Allocate new entry.  */
@@ -216,7 +216,7 @@ _dl_map_object_deps (struct link_map *map,
 		  }
 		else
 		  /* For filter objects the dependency must be available.  */
-		  args.aux = _dl_map_object (l, strtab + d->d_un.d_val,
+		  args.aux = _dl_map_object (l, strtab + d->d_un.d_val, 0,
 					     (l->l_type == lt_executable
 					      ? lt_library : l->l_type),
 					     trace_mode);

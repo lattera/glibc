@@ -61,7 +61,7 @@ _dl_open (const char *file, int mode)
   __libc_lock_lock (_dl_load_lock);
 
   /* Load the named object.  */
-  new = _dl_map_object (NULL, file, lt_loaded, 0);
+  new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
   if (new->l_searchlist)
     {
       /* It was already open.  */

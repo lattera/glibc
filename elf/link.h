@@ -296,10 +296,12 @@ extern int _dlerror_run (void (*operate) (void *), void *args);
 
 /* Open the shared object NAME and map in its segments.
    LOADER's DT_RPATH is used in searching for NAME.
-   If the object is already opened, returns its existing map.  */
+   If the object is already opened, returns its existing map.
+   For preloaded shared objects PRELOADED is set to a non-zero
+   value to allow additional security checks.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
-					const char *name, int type,
-					int trace_mode);
+					const char *name, int preloaded,
+					int type, int trace_mode);
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
