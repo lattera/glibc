@@ -146,7 +146,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
     return errno;
 
   /* We now have for sure more than one thread.  */
-  pd->header.data.multiple_threads = 1;
+  THREAD_SETMEM (THREAD_SELF, header.data.multiple_threads, 1);
 
   return 0;
 }

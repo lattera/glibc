@@ -1,5 +1,7 @@
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/libc_fatal.c: New file.
+
 	* sysdeps/generic/sysdep-cancel.h: Add dummy definitions for
 	SINGLE_THREAD_P, LIBC_CANCEL_ASYNC, and LIBC_CANCEL_RESET.
 
