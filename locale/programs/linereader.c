@@ -66,7 +66,7 @@ lr_open (const char *fname, kw_hash_fct_t hf)
   result = (struct linereader *) xmalloc (sizeof (*result));
 
   result->fp = fp;
-  result->fname = xstrdup (fname);
+  result->fname = xstrdup (fname ? : "<stdin>");
   result->buf = NULL;
   result->bufsize = 0;
   result->lineno = 1;
@@ -80,6 +80,7 @@ lr_open (const char *fname, kw_hash_fct_t hf)
     {
       int save = errno;
       fclose (result->fp);
+      free (result->fname);
       free (result);
       errno = save;
       return NULL;
@@ -107,6 +108,7 @@ void
 lr_close (struct linereader *lr)
 {
   fclose (lr->fp);
+  free (lr->fname);
   free (lr->buf);
   free (lr);
 }
