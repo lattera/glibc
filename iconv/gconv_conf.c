@@ -417,6 +417,8 @@ __gconv_get_path (void)
       char *oldp;
       char *cp;
       int nelems;
+      char *cwd;
+      size_t cwdlen;
 
       user_path = __secure_getenv ("GCONV_PATH");
       if (user_path == NULL)
@@ -425,6 +427,8 @@ __gconv_get_path (void)
 	     default path.  */
 	  gconv_path = strdupa (default_gconv_path);
 	  gconv_path_len = sizeof (default_gconv_path);
+	  cwd = NULL;
+	  cwdlen = 0;
 	}
       else
 	{
@@ -436,6 +440,8 @@ __gconv_get_path (void)
 	  __mempcpy (__mempcpy (__mempcpy (gconv_path, user_path, user_len),
 				":", 1),
 		     default_gconv_path, sizeof (default_gconv_path));
+	  cwd = __getcwd (NULL, 0);
+	  cwdlen = strlen (cwd);
 	}
 
       /* In a first pass we calculate the number of elements.  */
@@ -453,7 +459,8 @@ __gconv_get_path (void)
       /* Allocate the memory for the result.  */
       result = (struct path_elem *) malloc ((nelems + 1)
 					    * sizeof (struct path_elem)
-					    + gconv_path_len + nelems);
+					    + gconv_path_len + nelems
+					    + (nelems - 1) * (cwdlen + 1));
       if (result != NULL)
 	{
 	  char *strspace = (char *) &result[nelems + 1];
@@ -466,6 +473,12 @@ __gconv_get_path (void)
 	  do
 	    {
 	      result[n].name = strspace;
+	      if (elem[0] != '/')
+		{
+		  assert (cwd != NULL);
+		  strspace = __mempcpy (strspace, cwd, cwdlen);
+		  *strspace++ = '/';
+		}
 	      strspace = __stpcpy (strspace, elem);
 	      if (strspace[-1] != '/')
 		*strspace++ = '/';
@@ -484,6 +497,9 @@ __gconv_get_path (void)
 	}
 
       __gconv_path_elem = result ?: &empty_path_elem;
+
+      if (cwd != NULL)
+	free (cwd);
     }
 
   __libc_lock_unlock (lock);
