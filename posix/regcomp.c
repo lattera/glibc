@@ -614,7 +614,7 @@ free_dfa_content (re_dfa_t *dfa)
   re_free (dfa->word_char);
 #ifdef RE_ENABLE_I18N
   re_free (dfa->sb_char);
-#endif  
+#endif
 #ifdef DEBUG
   re_free (dfa->re_str);
 #endif
@@ -2479,7 +2479,7 @@ parse_dup_op (elem, regexp, dfa, token, syntax, err)
           mark_opt_subexp (elem, dfa);
           tree = elem = re_dfa_add_tree_node (dfa, elem, NULL, &dup_token);
 	}
-      
+
       if (BE (elem == NULL || tree == NULL, 0))
         goto parse_dup_op_espace;
 
@@ -3731,6 +3731,7 @@ static void
 mark_opt_subexp_iter (src, dfa, idx)
      const bin_tree_t *src;
      re_dfa_t *dfa;
+     int idx;
 {
   int node_idx;
 

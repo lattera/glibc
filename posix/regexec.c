@@ -455,10 +455,10 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
   if (regs_allocated == REGS_UNALLOCATED)
     { /* No.  So allocate them with malloc.  We allocate the arrays
 	 for the start and end in one block.  */
-      regs->start = re_malloc (regoff_t, 2 * need_regs);
-      if (BE (regs->start == NULL, 0))
+      regs->start = re_malloc (regoff_t, need_regs);
+      regs->end = re_malloc (regoff_t, need_regs);
+      if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
 	return REGS_UNALLOCATED;
-      regs->end = regs->start + need_regs;
       regs->num_regs = need_regs;
     }
   else if (regs_allocated == REGS_REALLOCATE)
@@ -467,13 +467,10 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
 	 leave it alone.  */
       if (BE (need_regs > regs->num_regs, 0))
 	{
-	  regs->start = re_realloc (regs->start, regoff_t, 2 * need_regs);
-	  if (BE (regs->start == NULL, 0))
-	    {
-	      regs->end = NULL;
-	      return REGS_UNALLOCATED;
-	    }
-	  regs->end = regs->start + need_regs;
+	  regs->start = re_realloc (regs->start, regoff_t, need_regs);
+	  regs->end = re_realloc (regs->end, regoff_t, need_regs);
+	  if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
+	    return REGS_UNALLOCATED;
 	  regs->num_regs = need_regs;
 	}
     }

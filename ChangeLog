@@ -1,11 +1,12 @@
 2003-12-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* posix/regexec.c (re_copy_regs): Allocate start and end array in
-	one block.
+	* posix/regcomp.c (mark_opt_subexp_iter): Declare IDX as int.
+
+	* posix/regexec.c (re_copy_regs): Fix testing for failed allocation.
 	(push_fail_stack): Add missing check for failed memory allocation.
 
 	* libio/libio.h: Use __builtin_expect in _IO_getc_unlocked,
-	_IO_peekc_unlocked, _IO_ptc_unlocked, _IO_getwc_unlocked, and
+	_IO_peekc_unlocked, _IO_putc_unlocked, _IO_getwc_unlocked, and
 	_IO_putwc_unlocked.
 
 2003-12-28  Andreas Jaeger  <aj@suse.de>
