@@ -1,5 +1,18 @@
 2000-05-02  Andreas Jaeger  <aj@suse.de>
 
+	* conform/data/tar.h-data: Add some checks for specific values.
+
+	* conform/data/stdlib.h-data: Add checks for value of EXIT_SUCCESS
+	and RAND_MAX.
+
+	* conform/data/stdio.h-data: Add checks for value of TMP_MAX and
+	FOPEN_MAX.
+
+	* conform/data/netinet/in.h-data: Add exact checks for the values
+	fo INET_ADDRSTRLEN and INET6_ADDRSTRLEN.
+
+	* conform/data/float.h-data: Add some minimal values.
+
 	* conform/conformtest.pl: Test for macros with string constants,
 	check for minimum and maximum values.
 	Add limits.h to headers.

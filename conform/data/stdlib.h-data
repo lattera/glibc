@@ -1,7 +1,7 @@
 macro EXIT_FAILURE
-macro EXIT_SUCCESS
+constant EXIT_SUCCESS 0
 macro NULL
-macro RAND_MAX
+constant RAND_MAX >= 32767
 macro MB_CUR_MAX
 
 type div_t

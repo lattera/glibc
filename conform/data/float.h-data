@@ -6,29 +6,29 @@ macro FLT_MANT_DIG
 macro DBL_MANT_DIG
 macro LDBL_MANT_DIG
 
-macro FLT_DIG
-macro DBL_DIG
-macro LDBL_DIG
+constant FLT_DIG >= 6
+constant DBL_DIG >= 10
+constant LDBL_DIG >= 10
 
 macro FLT_MIN_EXP
 macro DBL_MIN_EXP
 macro LDBL_MIN_EXP
 
-macro FLT_MIN_10_EXP
-macro DBL_MIN_10_EXP
-macro LDBL_MIN_10_EXP
+constant FLT_MIN_10_EXP <= -37
+constant DBL_MIN_10_EXP <= -37
+constant LDBL_MIN_10_EXP <= -37
 
 macro FLT_MAX_EXP
 macro DBL_MAX_EXP
 macro LDBL_MAX_EXP
 
-macro FLT_MAX_10_EXP
-macro DBL_MAX_10_EXP
-macro LDBL_MAX_10_EXP
+constant FLT_MAX_10_EXP >= 37
+constant DBL_MAX_10_EXP >= 37
+constant LDBL_MAX_10_EXP >= 37
 
-macro FLT_MAX
-macro DBL_MAX
-macro LDBL_MAX
+constant FLT_MAX >= 1.0E37
+constant DBL_MAX >= 1.0E37
+constant LDBL_MAX >= 1.0E37
 
 macro FLT_EPSILON
 macro DBL_EPSILON

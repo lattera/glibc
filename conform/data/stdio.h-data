@@ -1,6 +1,6 @@
 constant BUFSIZ
 constant FILENAME_MAX
-constant FOPEN_MAX
+constant FOPEN_MAX >= 8
 
 constant _IOFBF
 constant _IOLBF
@@ -14,7 +14,7 @@ constant SEEK_CUR
 constant SEEK_END
 constant SEEK_SET
 
-constant TMP_MAX
+constant TMP_MAX >= 10000
 
 constant EOF
 

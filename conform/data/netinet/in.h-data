@@ -51,7 +51,7 @@ macro IPPROTO_UDP
 macro INADDR_ANY
 macro INADDR_BROADCAST
 
-macro INET_ADDRSTRLEN
+constant INET_ADDRSTRLEN 16
 
 function uint32_t htonl (uint32_t)
 function uint16_t htons (uint16_t)
@@ -60,7 +60,7 @@ function uint16_t ntohs (uint16_t)
 
 allow-header arpa/inet.h
 
-macro INET6_ADDRSTRLEN
+constant INET6_ADDRSTRLEN 46
 
 macro IPV6_JOIN_GROUP
 macro IPV6_LEAVE_GROUP

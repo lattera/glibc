@@ -1,7 +1,7 @@
-constant TMAGIC
-constant TMAGLEN
-constant TVERSION
-constant TVERSLEN
+macro-str TMAGIC "ustar"
+constant TMAGLEN 6
+macro-str TVERSION "00"
+constant TVERSLEN 2
 
 constant REGTYPE
 constant AREGTYPE
@@ -13,17 +13,17 @@ constant DIRTYPE
 constant FIFOTYPE
 constant CONTTYPE
 
-constant TSUID
-constant TSGID
-constant TSVTX
-constant TUREAD
-constant TUWRITE
-constant TUEXEC
-constant TGREAD
-constant TGWRITE
-constant TGEXEC
-constant TOREAD
-constant TOWRITE
-constant TOEXEC
+constant TSUID 04000
+constant TSGID 02000
+constant TSVTX 01000
+constant TUREAD 00400
+constant TUWRITE 00200
+constant TUEXEC 00100
+constant TGREAD 00040
+constant TGWRITE 00020
+constant TGEXEC 00010
+constant TOREAD 00004
+constant TOWRITE 00002
+constant TOEXEC 00001
 
 allow *_t
