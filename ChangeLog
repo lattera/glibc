@@ -1,3 +1,9 @@
+2004-07-29  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (memcpy): Optimize
+	better for smaller than 256 byte copies.  Also, use only one
+	unrolled loop instead of two for the large copy case.
+
 2004-07-30  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/divq.S: Save t3 before it gets clobbered.
