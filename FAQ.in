@@ -1278,7 +1278,7 @@ When compiling new programs against glibc 2.1, you've got to specify the
 correct paths to the compiler (option -I with gcc) and linker (options
 --dynamic-linker, -L and --rpath).
 
-?	bonnie reports that char i/o with glibc 2 is much slower than with
+??	bonnie reports that char i/o with glibc 2 is much slower than with
 	libc5.  What can be done?
 
 {AJ} The GNU C library uses thread safe functions by default and libc5 used
