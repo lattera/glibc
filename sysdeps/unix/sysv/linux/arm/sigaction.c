@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ extern void __default_rt_sa_restorer(void);
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-__sigaction (sig, act, oact)
+__libc_sigaction (sig, act, oact)
      int sig;
      const struct sigaction *act;
      struct sigaction *oact;
@@ -147,4 +147,5 @@ __sigaction (sig, act, oact)
   return result;
 }
 
-weak_alias (__sigaction, sigaction)
+strong_alias (__libc_sigaction, __sigaction)
+weak_alias (__libc_sigaction, sigaction)
