@@ -18,35 +18,13 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
-#include "kernel-features.h"
-#include <pthread-functions.h>
+#include <setxid.h>
 
 
 int
 __setregid (gid_t rgid, gid_t egid)
 {
-  int result;
-
-  result = INLINE_SYSCALL (setregid, 2, rgid, egid);
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setregid;
-      cmd.id[0] = rgid;
-      cmd.id[1] = egid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
-#endif
-
-  return result;
+  return INLINE_SETXID_SYSCALL (setregid, 2, rgid, egid);
 }
 #ifndef __setregid
 weak_alias (__setregid, setregid)

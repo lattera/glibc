@@ -18,14 +18,8 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
+#include <setxid.h>
 #include "kernel-features.h"
-#include <pthread-functions.h>
 
 
 #ifdef __NR_setuid32
@@ -42,14 +36,14 @@ __setuid (uid_t uid)
   int result;
 
 #if __ASSUME_32BITUIDS > 0 && defined __NR_setuid32
-  result = INLINE_SYSCALL (setuid32, 1, uid);
+  result = INLINE_SETXID_SYSCALL (setuid32, 1, uid);
 #else
 # ifdef __NR_setuid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setuid32, 1, uid);
+      result = INLINE_SETXID_SYSCALL (setuid32, 1, uid);
       if (result == 0)
 	goto out;
       if (errno != ENOSYS)
@@ -67,20 +61,10 @@ __setuid (uid_t uid)
       return -1;
     }
 
-  result = INLINE_SYSCALL (setuid, 1, uid);
+  result = INLINE_SETXID_SYSCALL (setuid, 1, uid);
 # ifdef __NR_setuid32
  out:
 # endif
-#endif
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setuid32;
-      cmd.id[0] = uid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
 #endif
 
   return result;

@@ -18,34 +18,12 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
-#include "kernel-features.h"
-#include <pthread-functions.h>
-
+#include <setxid.h>
 
 int
 __setuid (uid_t uid)
 {
-  int result;
-
-  result = INLINE_SYSCALL (setuid, 1, uid);
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setuid;
-      cmd.id[0] = uid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
-#endif
-
-  return result;
+  return INLINE_SETXID_SYSCALL (setuid, 1, uid);
 }
 #ifndef __setuid
 weak_alias (__setuid, setuid)

@@ -17,13 +17,9 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
 #include <unistd.h>
-
-#include <sysdep.h>
+#include <setxid.h>
 #include "kernel-features.h"
-#include <pthread-functions.h>
 
 
 #if defined __NR_setresuid || __ASSUME_SETRESUID_SYSCALL > 0
@@ -42,10 +38,10 @@ seteuid (uid_t uid)
     }
 
 # if __ASSUME_32BITUIDS > 0 && defined __NR_setresuid32
-  result = INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
+  result = INLINE_SETXID_SYSCALL (setresuid32, 3, -1, uid, -1);
 # else
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (setresuid, 3, -1, uid, -1);
+  result = INLINE_SETXID_SYSCALL (setresuid, 3, -1, uid, -1);
 #  if __ASSUME_SETRESUID_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
@@ -54,22 +50,6 @@ seteuid (uid_t uid)
     result = __setreuid (-1, uid);
 #  endif
 # endif
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-# ifdef __NR_setresuid32
-      cmd.syscall_no = __NR_setresuid32;
-# else
-      cmd.syscall_no = __NR_setresuid;
-# endif
-      cmd.id[0] = -1;
-      cmd.id[1] = uid;
-      cmd.id[2] = -1;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
-#endif
 
   return result;
 }

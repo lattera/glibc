@@ -17,15 +17,9 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <unistd.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
+#include <setxid.h>
 #include "kernel-features.h"
-#include <pthread-functions.h>
 
 
 #ifdef __NR_setreuid32
@@ -42,14 +36,14 @@ __setreuid (uid_t ruid, uid_t euid)
   int result;
 
 #if __ASSUME_32BITUIDS > 0
-  result = INLINE_SYSCALL (setreuid32, 2, ruid, euid);
+  result = INLINE_SETXID_SYSCALL (setreuid32, 2, ruid, euid);
 #else
 # ifdef __NR_setreuid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setreuid32, 2, ruid, euid);
+      result = INLINE_SETXID_SYSCALL (setreuid32, 2, ruid, euid);
 
       if (result == 0)
 	goto out;
@@ -67,21 +61,10 @@ __setreuid (uid_t ruid, uid_t euid)
       return -1;
     }
 
-  result = INLINE_SYSCALL (setreuid, 2, ruid, euid);
+  result = INLINE_SETXID_SYSCALL (setreuid, 2, ruid, euid);
 # ifdef __NR_setreuid32
  out:
 # endif
-#endif
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setreuid32;
-      cmd.id[0] = ruid;
-      cmd.id[1] = euid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
 #endif
 
   return result;

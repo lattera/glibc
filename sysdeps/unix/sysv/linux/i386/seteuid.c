@@ -17,12 +17,9 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <unistd.h>
-
-#include <sysdep.h>
+#include <setxid.h>
 #include "kernel-features.h"
-#include <pthread-functions.h>
 
 
 #ifdef __NR_setresuid
@@ -41,7 +38,7 @@ seteuid (uid_t uid)
     }
 
 #if __ASSUME_32BITUIDS > 0
-  result = INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
+  result = INLINE_SETXID_SYSCALL (setresuid32, 3, -1, uid, -1);
 #else
   /* First try the syscall.  */
 # ifdef __NR_setresuid
@@ -56,18 +53,6 @@ seteuid (uid_t uid)
        equal to the real user ID, making it impossible to switch back.  */
 # endif
     result = __setreuid (-1, uid);
-#endif
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setresuid32;
-      cmd.id[0] = -1;
-      cmd.id[1] = uid;
-      cmd.id[2] = -1;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
 #endif
 
   return result;

@@ -1,5 +1,4 @@
-/* Copyright (C) 1998, 2000, 2003, 2004
-   Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,15 +18,8 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-#include <linux/posix_types.h>
-
+#include <setxid.h>
 #include "kernel-features.h"
-#include <pthread-functions.h>
 
 
 #ifdef __NR_setgid32
@@ -44,14 +36,14 @@ __setgid (gid_t gid)
   int result;
 
 #if __ASSUME_32BITUIDS > 0
-  result = INLINE_SYSCALL (setgid32, 1, gid);
+  result = INLINE_SETXID_SYSCALL (setgid32, 1, gid);
 #else
 # ifdef __NR_setgid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setgid32, 1, gid);
+      result = INLINE_SETXID_SYSCALL (setgid32, 1, gid);
 
       if (result == 0)
 	goto out;
@@ -70,20 +62,10 @@ __setgid (gid_t gid)
       return -1;
     }
 
-  result = INLINE_SYSCALL (setgid, 1, gid);
+  result = INLINE_SETXID_SYSCALL (setgid, 1, gid);
 # ifdef __NR_setgid32
  out:
 # endif
-#endif
-
-#if defined HAVE_PTR__NPTL_SETXID && !defined SINGLE_THREAD
-  if (result == 0 && __libc_pthread_functions.ptr__nptl_setxid != NULL)
-    {
-      struct xid_command cmd;
-      cmd.syscall_no = __NR_setgid32;
-      cmd.id[0] = gid;
-      __libc_pthread_functions.ptr__nptl_setxid (&cmd);
-    }
 #endif
 
   return result;
