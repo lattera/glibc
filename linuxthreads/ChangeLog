@@ -1,3 +1,9 @@
+2000-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* attr.c (__pthread_attr_setstack): Fix setting of __stackaddr
+	element.  Add warnings for using pthread_attr_getstackaddr and
+	pthread_attr_setstackaddr.
+
 2000-12-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* Examples/ex6.c (test_thread): Make static.
