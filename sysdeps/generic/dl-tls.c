@@ -487,15 +487,29 @@ __tls_get_addr (GET_ADDR_ARGS)
 
 		      assert (map->l_tls_modid <= newsize);
 
-		      newp = (dtv_t *) realloc (&dtv[-1],
-						(2 + newsize)
-						* sizeof (dtv_t));
-		      if (newp == NULL)
-			oom ();
+		      if (dtv == GL(dl_initial_dtv))
+			{
+			  /* This is the initial dtv that was allocated
+			     during rtld startup using the dl-minimal.c
+			     malloc instead of the real malloc.  We can't
+			     free it, we have to abandon the old storage.  */
+
+			  newp = malloc ((2 + newsize) * sizeof (dtv_t));
+			  if (newp == NULL)
+			    oom ();
+			  memcpy (newp, &dtv[-1], oldsize * sizeof (dtv_t));
+			}
+		      else
+			{
+			  newp = realloc (&dtv[-1],
+					  (2 + newsize) * sizeof (dtv_t));
+			  if (newp == NULL)
+			    oom ();
+			}
 
 		      newp[0].counter = newsize;
 
-		      /* Clear the newly allocate part.  */
+		      /* Clear the newly allocated part.  */
 		      memset (newp + 2 + oldsize, '\0',
 			      (newsize - oldsize) * sizeof (dtv_t));
 

@@ -323,8 +323,8 @@ struct rtld_global
 /* Number of additional slots in the dtv allocated.  */
 # define DTV_SURPLUS	(14)
 
-  /* True if the dtv for the initial thread was malloc()ed.  */
-  EXTERN bool _dl_initial_dtv_malloced;
+  /* Initial dtv of the main thread, not allocated with normal malloc.  */
+  EXTERN void *_dl_initial_dtv;
   /* Generation counter for the dtv.  */
   EXTERN size_t _dl_tls_generation;
 #endif

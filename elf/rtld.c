@@ -1091,6 +1091,10 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (tcbp == NULL)
 	_dl_fatal_printf ("\
 cannot allocate TLS data structures for initial thread");
+
+      /* Store for detection of the special case by __tls_get_addr
+	 so it knows not to pass this dtv to the normal realloc.  */
+      _dl_initial_dtv = GET_DTV (tcbp);
     }
 #endif
 
