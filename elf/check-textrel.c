@@ -78,7 +78,7 @@ AB(handle_file) (const char *fname, int fd)
   /* Search for the PT_DYNAMIC entry.  */
   size_t cnt;
   for (cnt = 0; cnt < phnum; ++cnt)
-    if (phdr[cnt].p_type == PT_DYNAMIC)
+    if (SWAP (phdr[cnt].p_type) == PT_DYNAMIC)
       break;
 
   if (cnt == phnum)
