@@ -28,7 +28,7 @@ headers := pthread.h semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh \
 	      tst-cancel-wrappers.sh libc-tsd.c
 
-routines := forward no-tsd libc-cancellation libc_pthread_init
+routines := forward alloca_cutoff libc-cancellation libc_pthread_init
 shared-only-routines = forward
 
 extra-libs := libpthread

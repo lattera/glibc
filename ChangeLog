@@ -1,5 +1,14 @@
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
+	* inet/herrno.c (__h_errno_location): Remove.
+	* inet/Makefile (routines): Add herrno-loc.
+	* resolv/res_libc.c (__res_state): Remove.
+	* resolv/Makefile (routines): Add res-state.
+	* sysdeps/generic/herrno-loc.c: New file.
+	* sysdeps/generic/res-state.c: New file.
+
+2002-12-27  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (I386_USE_SYSENTER):
 	Only define if USE_DL_SYSINFO is defined.
 

@@ -34,13 +34,6 @@ weak_extern (__pthread_thread_self)
 
 int __libc_multiple_threads attribute_hidden;
 
-# ifndef FLOATING_STACKS
-#  undef THREAD_GETMEM
-#  undef THREAD_SETMEM
-#  define THREAD_GETMEM(descr, member) descr->member
-#  define THREAD_SETMEM(descr, member, value) descr->member = (value)
-# endif
-
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
    They do not need to check parameters etc.  */
@@ -48,18 +41,11 @@ int
 attribute_hidden
 __libc_enable_asynccancel (void)
 {
-#ifdef FLOATING_STACKS
   pthread_descr self = thread_self();
-#else
-  pthread_descr self = __libc_maybe_call2 (pthread_thread_self, (), NULL);
-
-  if (self == NULL)
-    return PTHREAD_CANCEL_DEFERRED;
-#endif
-  int oldtype = THREAD_GETMEM(self, p_canceltype);
-  THREAD_SETMEM(self, p_canceltype, PTHREAD_CANCEL_ASYNCHRONOUS);
-  if (__builtin_expect (THREAD_GETMEM(self, p_canceled), 0) &&
-      THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)
+  int oldtype = LIBC_THREAD_GETMEM(self, p_canceltype);
+  LIBC_THREAD_SETMEM(self, p_canceltype, PTHREAD_CANCEL_ASYNCHRONOUS);
+  if (__builtin_expect (LIBC_THREAD_GETMEM(self, p_canceled), 0) &&
+      LIBC_THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)
     __libc_maybe_call2 (pthread_do_exit,
 			(PTHREAD_CANCELED, CURRENT_STACK_FRAME), 0);
   return oldtype;
@@ -69,14 +55,8 @@ void
 internal_function attribute_hidden
 __libc_disable_asynccancel (int oldtype)
 {
-#ifdef FLOATING_STACKS
   pthread_descr self = thread_self();
-#else
-  pthread_descr self = __libc_maybe_call2 (pthread_thread_self, (), NULL);
-
-  if (self != NULL)
-#endif
-    THREAD_SETMEM(self, p_canceltype, oldtype);
+  LIBC_THREAD_SETMEM(self, p_canceltype, oldtype);
 }
 
 #endif

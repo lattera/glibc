@@ -161,7 +161,7 @@ libpthread {
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __libc_internal_tsd_get; __libc_internal_tsd_set;
-    __libc_internal_tsd_address; __libc_alloca_cutoff;
+    __libc_internal_tsd_address;
     __pthread_kill_other_threads_np;
   }
 }

@@ -42,11 +42,3 @@ compat_symbol (libc, h_errno, h_errno, GLIBC_2_0);
 compat_symbol (libc, _h_errno, _h_errno, GLIBC_2_0);
 # endif
 #endif
-
-/* When threaded, h_errno may be a per-thread variable.  */
-int *
-weak_const_function
-__h_errno_location (void)
-{
-  return &h_errno;
-}

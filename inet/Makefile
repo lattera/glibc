@@ -30,7 +30,7 @@ distribute := netgroup.h
 
 routines := htonl htons		\
 	    inet_lnaof inet_mkadr	\
-	    inet_netof inet_ntoa inet_net herrno \
+	    inet_netof inet_ntoa inet_net herrno herrno-loc \
 	    gethstbyad gethstbyad_r gethstbynm gethstbynm2 gethstbynm2_r \
 	    gethstbynm_r gethstent gethstent_r \
 	    getnetbyad getnetbyad_r getnetbynm getnetent getnetent_r \

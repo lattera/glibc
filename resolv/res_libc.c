@@ -41,17 +41,6 @@ struct __res_state _res;
 compat_symbol (libc, _res, _res, GLIBC_2_0);
 # endif
 #endif
-
-/* This function is used to access the resolver state in
-   single-threaded programs.  */
-struct __res_state *
-#if ! USE___THREAD
-weak_const_function
-#endif
-__res_state (void)
-{
-  return &_res;
-}
 
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed

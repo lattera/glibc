@@ -1,5 +1,48 @@
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/bits/libc-tsd.h: Include linuxthreads/descr.h
+	and bits/libc-lock.h.
+	(__libc_internal_tsd_get, __libc_internal_tsd_set,
+	__libc_internal_tsd_address): Remove.
+	(__pthread_internal_tsd_address, __pthread_internal_tsd_get,
+	__pthread_internal_tsd_set): New weak_externs.
+	(__libc_tsd_address, __libc_tsd_get, __libc_tsd_set): Define
+	using __libc_maybe_call2.
+	(__libc_tsd_key_t): Move to ...
+	* descr.h (__libc_tsd_key_t): ...here.
+	Remove bits/libc-tsd.h include.
+	* sysdeps/pthread/errno-loc.c: New file.
+	* sysdeps/pthread/herrno-loc.c: New file.
+	* sysdeps/pthread/res-state.c: New file.
+	* libc-cancellation.c (THREAD_GETMEM, THREAD_SETMEM): Remove.
+	(__libc_enable_asynccancel, __libc_disable_asynccancel): Use
+	thread_self unconditionally.  Use LIBC_THREAD_[SG]ETMEM instead
+	of THREAD_[SG]ETMEM.
+	* specific.c (libc_internal_tsd_set): Renamed to...
+	__pthread_internal_tsd_set.  Remove static.
+	(libc_internal_tsd_get): Renamed to...
+	__pthread_internal_tsd_get.  Remove static.
+	(libc_internal_tsd_address): Renamed to...
+	__pthread_internal_tsd_address.  Remove static.
+	(__libc_internal_tsd_set, __libc_internal_tsd_get,
+	__libc_internal_tsd_address, __libc_alloca_cutoff): Remove.
+	* internals.h [!NOT_IN_libc] (LIBC_THREAD_GETMEM, LIBC_THREAD_SETMEM):
+	Define.
+	(__pthread_internal_tsd_set, __pthread_internal_tsd_get,
+	__pthread_internal_tsd_address): New prototypes.
+	(struct pthread_functions): Add
+	ptr_pthread_internal_tsd_([sg]et|address) fields.
+	[!NOT_IN_libc && !FLOATING_STACKS] (thread_self): Define.
+	* pthread.c (pthread_functions) [!USE_TLS && !HAVE___THREAD]:
+	Initialize ptr_pthread_internal_tsd_([sg]et|address) fields.
+	* Versions (libpthread): Remove __libc_alloca_cutoff@GLIBC_PRIVATE.
+	* alloca_cutoff.c: New file.
+	* no-tsd.c: Removed.
+	* Makefile (routines): Remove no-tsd.  Add alloca_cutoff.
+	* pt-system.c (system): Remove cancellation handling.
+	* tst-cancel-wrappers.sh: Allow pt-system.o* to not use the
+	cancellation routines.
+
 	* sysdeps/i386/tls.h: Include dl-sysdep.h and stdint.h.
 	(tcbhead_t): Add sysinfo field.
 	(SYSINFO_OFFSET, INIT_SYSINFO): Define.

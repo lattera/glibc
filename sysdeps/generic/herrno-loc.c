@@ -1,6 +1,5 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 97, 98, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,13 +16,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <stdlib.h>
-#include <sysdep-cancel.h>
+#include <netdb.h>
+#include <tls.h>
 
+#if ! USE___THREAD
+# undef h_errno
+extern int h_errno;
+#endif
 
-int
-system (const char *line)
+/* When threaded, h_errno may be a per-thread variable.  */
+int *
+weak_const_function
+__h_errno_location (void)
 {
-  return __libc_system (line);
+  return &h_errno;
 }

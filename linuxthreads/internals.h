@@ -43,6 +43,17 @@
 # define THREAD_SETMEM_NC(descr, member, value) descr->member = (value)
 #endif
 
+#ifndef NOT_IN_libc
+# ifdef FLOATING_STACKS
+#  define LIBC_THREAD_GETMEM(descr, member) THREAD_GETMEM (descr, member)
+#  define LIBC_THREAD_SETMEM(descr, member, value) \
+  THREAD_SETMEM (descr, member, value)
+# else
+#  define LIBC_THREAD_GETMEM(descr, member) descr->member
+#  define LIBC_THREAD_SETMEM(descr, member, value) descr->member = (value)
+# endif
+#endif
+
 typedef void (*destr_function)(void *);
 
 struct pthread_key_struct {
@@ -430,6 +441,11 @@ extern void __linuxthreads_reap_event (void);
 /* This function is called to initialize the pthread library.  */
 extern void __pthread_initialize (void);
 
+/* TSD.  */
+extern int __pthread_internal_tsd_set (int key, const void * pointer);
+extern void * __pthread_internal_tsd_get (int key);
+extern void ** __attribute__ ((__const__))
+  __pthread_internal_tsd_address (int key);
 
 /* Sighandler wrappers.  */
 extern void __pthread_sighandler(int signo, SIGCONTEXT ctx);
@@ -504,10 +520,24 @@ struct pthread_functions
   int (*ptr_pthread_setcanceltype) (int, int *);
   void (*ptr_pthread_do_exit) (void *retval, char *currentframe);
   pthread_descr (*ptr_pthread_thread_self) (void);
+  int (*ptr_pthread_internal_tsd_set) (int key, const void * pointer);
+  void * (*ptr_pthread_internal_tsd_get) (int key);
+  void ** __attribute__ ((__const__))
+    (*ptr_pthread_internal_tsd_address) (int key);
 };
 
 /* Variable in libc.so.  */
 extern struct pthread_functions __libc_pthread_functions attribute_hidden;
 extern int * __libc_pthread_init (const struct pthread_functions *functions);
+
+#if !defined NOT_IN_libc && !defined FLOATING_STACKS
+# ifdef SHARED
+#  define thread_self() \
+  (*__libc_pthread_functions.ptr_pthread_thread_self) ()
+# else
+weak_extern (__pthread_thread_self)
+#  define thread_self() __pthread_thread_self ()
+# endif
+#endif
 
 #endif /* internals.h */

@@ -1,6 +1,7 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* MT support function to get address of `errno' variable, linuxthreads
+   version.
+   Copyright (C) 1996, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,12 +19,26 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <stdlib.h>
+#include <tls.h>
 #include <sysdep-cancel.h>
 
+#if ! USE___THREAD
+#undef errno
+extern int errno;
+#endif
 
-int
-system (const char *line)
+int *
+#if ! USE___THREAD
+weak_const_function
+#endif
+__errno_location (void)
 {
-  return __libc_system (line);
+#if ! USE___THREAD && !defined NOT_IN_libc
+  if (! SINGLE_THREAD_P)
+    {
+      pthread_descr self = thread_self();
+      return LIBC_THREAD_GETMEM (self, p_errnop);
+    }
+#endif
+  return &errno;
 }

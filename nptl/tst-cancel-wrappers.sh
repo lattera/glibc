@@ -67,7 +67,8 @@ C["__xpg_sigpause"]=1
 /:$/ {
   if (seen)
     {
-      if (!seen_enable || !seen_disable)
+      # pt-system.o* in NPTL calls __libc_system directly.
+      if ((!seen_enable || !seen_disable) && !(object ~ /^pt-system.o/))
 	{
 	  printf "in '$1'(%s) %s'\''s cancellation missing\n", object, seen
 	  ret = 1

@@ -26,11 +26,5 @@
 int
 system (const char *line)
 {
-  int oldtype = CANCEL_ASYNC ();
-
-  int result = __libc_system (line);
-
-  CANCEL_RESET (oldtype);
-
-  return result;
+  return __libc_system (line);
 }

@@ -233,6 +233,11 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #ifdef SHARED
 static struct pthread_functions pthread_functions =
   {
+#if !(USE_TLS && HAVE___THREAD)
+    .ptr_pthread_internal_tsd_set = __pthread_internal_tsd_set,
+    .ptr_pthread_internal_tsd_get = __pthread_internal_tsd_get,
+    .ptr_pthread_internal_tsd_address = __pthread_internal_tsd_address,
+#endif
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
     .ptr_pthread_attr_init_2_0 = __pthread_attr_init_2_0,

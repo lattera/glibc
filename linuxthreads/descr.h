@@ -23,8 +23,16 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <hp-timing.h>
-#include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
+/* Fast thread-specific data internal to libc.  */
+enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
+			_LIBC_TSD_KEY_DL_ERROR,
+			_LIBC_TSD_KEY_RPC_VARS,
+			_LIBC_TSD_KEY_LOCALE,
+			_LIBC_TSD_KEY_CTYPE_B,
+			_LIBC_TSD_KEY_CTYPE_TOLOWER,
+			_LIBC_TSD_KEY_CTYPE_TOUPPER,
+			_LIBC_TSD_KEY_N };
 
 /* The type of thread descriptors */
 typedef struct _pthread_descr_struct *pthread_descr;
