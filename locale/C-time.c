@@ -135,7 +135,7 @@ const struct locale_data _nl_C_LC_TIME =
     { wstr: (const uint32_t *) L"" },
     { string: "\7" },
     { word: 19971130 },
-    { word: 19971130 },
+    { string: "\4" },
     { string: "\7" },
     { string: "\1" },
     { string: "\1" },

@@ -1,3 +1,12 @@
+2000-11-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/C-time.c (_nl_C_LC_TIME): Fix value for _NL_TIME_WEEK_1STWEEK.
+
+2000-11-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-paper.c (paper_output): Fix offset into width
+	field.
+
 2000-10-27  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/programs/charmap.c (charmap_read): Verify ASCII
