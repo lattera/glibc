@@ -137,6 +137,16 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
    At this time it is not anymore a problem to modify the tables.  */
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
+#ifdef USE_TLS
+/* Beginning of the list of link maps for objects which contain
+   thread-local storage sections.  This will be traversed to
+   initialize new TLS blocks.  */
+struct link_map *_dl_initimage_list;
+
+/* Count the number of modules which define TLS data.  */
+size_t _dl_tls_module_cnt;
+#endif
+
 
 #ifdef HAVE_AUX_VECTOR
 int _dl_clktck;

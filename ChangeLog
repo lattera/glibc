@@ -1,8 +1,11 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (dl_main): Read PT_TLS entry of the executable.
+	* elf/dl-load.c (_dl_map_object_from_fd): Handle PT_TLS program
+	header entry.
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
 	_dl_tls_module_cnt.
+	* elf/dl-support.c: Define _dl_initimage_list and _dl_tls_module_cnt.
 
 2002-02-04  Ulrich Drepper  <drepper@redhat.com>
 

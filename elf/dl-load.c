@@ -938,6 +938,30 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #endif
 	  }
 	  break;
+
+#ifdef USE_TLS
+	case PT_TLS:
+	  l->l_tls_blocksize = ph->p_memsz;
+	  l->l_tls_initimage_size = ph->p_filesz;
+	  /* Since we don't know the load address yet only store the
+	     offset.  We will adjust it later.  */
+	  l->l_tls_initimage = (void *) ph->p_offset;
+
+	/* This is the first element of the initialization image list.
+	   It is created as a circular list so that we can easily
+	   append to it.  */
+	  if (GL(dl_initimage_list) == NULL)
+	    GL(dl_initimage_list) = l->l_tls_nextimage = l;
+	  else
+	    {
+	      l->l_tls_nextimage = GL(dl_initimage_list);
+	      GL(dl_initimage_list) = l;
+	    }
+
+	  /* Assign the next available module ID.  */
+	  l->l_tls_modid = ++GL(dl_tls_module_cnt);
+	  break;
+#endif
 	}
 
     /* Now process the load commands and map segments into memory.  */
@@ -1006,6 +1030,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     /* Remember which part of the address space this object uses.  */
     l->l_map_start = c->mapstart + l->l_addr;
     l->l_map_end = l->l_map_start + maplength;
+
+#ifdef USE_TLS
+    /* Adjust the address of the TLS initialization image.  */
+    if (l->l_tls_initimage != NULL)
+      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+#endif
 
     while (c < &loadcmds[nloadcmds])
       {
