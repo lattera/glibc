@@ -1,3 +1,9 @@
+2000-09-07  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-collate.c (handle_ellipsis): Fix typo.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	Reported by GOTO Masanori <gotom@debian.or.jp>.
+
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-dir.
