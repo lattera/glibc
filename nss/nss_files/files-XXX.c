@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2001,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -213,8 +213,14 @@ internal_getent (struct STRUCTURE *result,
 	 || ! (parse_result = parse_line (p, result, data, buflen, errnop
 					  EXTRA_ARGS)));
 
+  if (__builtin_expect (parse_result == -1, 0))
+    {
+      H_ERRNO_SET (NETDB_INTERNAL);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
   /* Filled in RESULT with the next entry from the database file.  */
-  return parse_result == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_SUCCESS;
+  return NSS_STATUS_SUCCESS;
 }
 
 
