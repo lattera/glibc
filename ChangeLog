@@ -1,3 +1,7 @@
+2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/Makefile (distribute): Add frame.h.
+
 2000-01-05  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/frame.h: New file.
