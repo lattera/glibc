@@ -116,4 +116,6 @@ L(1):	rep; movsb
 	LEAVE
 	RET_PTR
 END (BP_SYM (memcpy))
+#if !MEMPCPY_P
 libc_hidden_builtin_def (memcpy)
+#endif
