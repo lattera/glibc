@@ -1,3 +1,8 @@
+1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Reorder expression
+	to avoid accessing global data in the usual case.
+
 1999-01-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* wcsmbs/wcstold_l.c: Correct last patch to include wchar.h from
