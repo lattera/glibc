@@ -1,3 +1,8 @@
+2004-10-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/execvp.c (execvp): Also ignore ENODEV and ETIMEDOUT errno
+	values.
+
 2004-10-20  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig ($(common-objpfx)shlib-versions.v.i): Check also
