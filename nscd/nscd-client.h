@@ -23,8 +23,10 @@
 #ifndef _NSCD_CLIENT_H
 #define _NSCD_CLIENT_H	1
 
+#include <nscd-types.h>
+
 /* Version number of the daemon interface */
-#define NSCD_VERSION 3
+#define NSCD_VERSION 2
 
 /* Path of the file where the PID of the running system is stored.  */
 #define _PATH_NSCDPID	 "/var/run/nscd.pid"
@@ -58,7 +60,7 @@ typedef enum
 /* Header common to all requests */
 typedef struct
 {
-  int version;		/* Version number of the daemon interface.  */
+  int32_t version;	/* Version number of the daemon interface.  */
   request_type type;	/* Service requested.  */
   int32_t key_len;	/* Key length.  */
 } request_header;
@@ -70,13 +72,13 @@ typedef struct
 {
   int32_t version;
   int32_t found;
-  int32_t pw_name_len;
-  int32_t pw_passwd_len;
+  nscd_ssize_t pw_name_len;
+  nscd_ssize_t pw_passwd_len;
   uid_t pw_uid;
   gid_t pw_gid;
-  int32_t pw_gecos_len;
-  int32_t pw_dir_len;
-  int32_t pw_shell_len;
+  nscd_ssize_t pw_gecos_len;
+  nscd_ssize_t pw_dir_len;
+  nscd_ssize_t pw_shell_len;
 } pw_response_header;
 
 
@@ -86,10 +88,10 @@ typedef struct
 {
   int32_t version;
   int32_t found;
-  int32_t gr_name_len;
-  int32_t gr_passwd_len;
+  nscd_ssize_t gr_name_len;
+  nscd_ssize_t gr_passwd_len;
   gid_t gr_gid;
-  int32_t gr_mem_cnt;
+  nscd_ssize_t gr_mem_cnt;
 } gr_response_header;
 
 
@@ -99,11 +101,11 @@ typedef struct
 {
   int32_t version;
   int32_t found;
-  int32_t h_name_len;
-  int32_t h_aliases_cnt;
+  nscd_ssize_t h_name_len;
+  nscd_ssize_t h_aliases_cnt;
   int32_t h_addrtype;
   int32_t h_length;
-  int32_t h_addr_list_cnt;
+  nscd_ssize_t h_addr_list_cnt;
   int32_t error;
 } hst_response_header;
 

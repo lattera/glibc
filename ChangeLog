@@ -45,12 +45,14 @@
 2000-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd-client.h (NSCD_VERSION): Bump to 3.
-	Use int32_t where appropriate.
-	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use uint32_t instead of size_t
-	where appropriate.
+	Use nscd_ssize_t where appropriate.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use nscd_ssize_t instead of
+	ssize_t where appropriate.
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
 	* nscd/hstcache.c (cache_addhst): Likewise.
 	* nscd/grpcache.c (cache_addgr): Likewise.
+	* sysdeps/generic/nscd-types.h: New file.
+	* sysdeps/alpha/nscd-types.h: New file.
 
 2000-09-29  Ulrich Drepper  <drepper@redhat.com>
 
