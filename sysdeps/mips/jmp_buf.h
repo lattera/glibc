@@ -1,7 +1,6 @@
 /* Define the machine-dependent type `jmp_buf'.  Mips version.
-
-Copyright (C) 1992 Free Software Foundation, Inc.
-Contributed by Brendan Kehoe (brendan@cs.widener.edu).
+   Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+   Contributed by Brendan Kehoe (brendan@cygnus.com).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -21,19 +20,19 @@ Cambridge, MA 02139, USA.  */
 typedef struct
   {
     /* Program counter.  */
-    PTR __pc;
+    __ptr_t __pc;
     
     /* Stack pointer.  */
-    PTR __sp;
+    __ptr_t __sp;
     
     /* Callee-saved registers s0 through s7.  */
     int __regs[8];
     
     /* The frame pointer.  */
-    PTR __fp;
+    __ptr_t __fp;
     
     /* The global pointer.  */
-    PTR __gp;
+    __ptr_t __gp;
     
     /* Floating point status register.  */
     int __fpc_csr;
@@ -41,3 +40,6 @@ typedef struct
     /* Callee-saved floating point registers.  */
     double __fpregs[6];
   } __jmp_buf[1];
+
+/* Offset to the program counter in `jmp_buf'.  */
+#define JB_PC	0
