@@ -1,3 +1,8 @@
+2002-08-30  Roland McGrath  <roland@redhat.com>
+
+	* locale/localename.c: If the current locale is the global locale, use
+	_nl_current_names; otherwise use the locale object.
+
 2002-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/fileops.c (_IO_new_file_fopen): Recognize new mode specifier
@@ -11,7 +16,9 @@
 	* libio/iofdopen.c (_IO_new_fdopen): Recognize 'm' mode specifier.
 	Enable mmap-using mode only if 'm' was set.
 
-2002-08-29  Roland McGrath  <roland@redhat.com>
+2002-08-29  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/local_lim.h (NAME_MAX): New macro.
 
 	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup: doinit):
 	Change argument type from int to intptr_t.
@@ -39,6 +46,8 @@
 	* sysdeps/unix/sysv/linux/Versions: ... here.
 
 	* mach/mach.h: Include <features.h>.
+
+2002-08-29  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-runtime.c (IN_DL_RUNTIME): Define this macro first thing.
 	* sysdeps/i386/dl-machine.h: Only declare fixup, profile_fixup and

@@ -34,9 +34,7 @@ const char *
 attribute_hidden
 __current_locale_name (int category)
 {
-#if 0
-  return _NL_CURRENT_DATA (category)->name;
-#else
-  return _nl_current_names[category];
-#endif
+  return (_NL_CURRENT_LOCALE == &_nl_global_locale
+	  ? _nl_current_names[category]
+	  : _NL_CURRENT_LOCALE->__locales[category]->name);
 }
