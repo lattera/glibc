@@ -113,7 +113,7 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
     {
       if (! be_quiet && ! nothing)
 	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "yesexpr");
-      messages->yesexpr = "";
+      messages->yesexpr = "^[yY]";
     }
   else if (messages->yesexpr[0] == '\0')
     {
@@ -146,7 +146,7 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
     {
       if (! be_quiet && ! nothing)
 	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "noexpr");
-      messages->noexpr = "";
+      messages->noexpr = "^[nN]";
     }
   else if (messages->noexpr[0] == '\0')
     {
