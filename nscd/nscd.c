@@ -23,11 +23,9 @@
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
-#include <grp.h>
 #include <libintl.h>
 #include <locale.h>
 #include <pthread.h>
-#include <pwd.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,7 +61,6 @@ int do_shutdown;
 int disabled_passwd;
 int disabled_group;
 int go_background = 1;
-const char *server_user;
 
 int secure[lastdb];
 int secure_in_use;
@@ -71,7 +68,6 @@ static const char *conffile = _PATH_NSCDCONF;
 
 static int check_pid (const char *file);
 static int write_pid (const char *file);
-static void drop_privileges (void);
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
@@ -168,10 +164,6 @@ main (int argc, char **argv)
 
   /* Init databases.  */
   nscd_init (conffile);
-
-  /* Change to unprivileged UID if specifed in config file */
-  if(server_user && !secure_in_use)
-    drop_privileges ();
 
   /* Handle incoming requests */
   start_threads ();
@@ -372,37 +364,4 @@ write_pid (const char *file)
   fclose (fp);
 
   return 0;
-}
-
-/* Look up the uid and gid associated with the user we are supposed to run
-   the server as, and then call setgid(), setgroups(), and setuid().
-   Otherwise, abort- we should not run as root if the configuration file
-   specifically tells us not to. */
-
-static void
-drop_privileges (void)
-{
-  int buflen = 256;
-  char *buffer = alloca (buflen);
-  struct passwd resultbuf;
-  struct passwd *pwd;
-
-  while (__getpwnam_r (server_user, &resultbuf, buffer, buflen, &pwd) != 0
-	 && errno == ERANGE)
-    {
-      errno = 0;
-      buflen += 256;
-      buffer = alloca (buflen);
-    }
-
-  if(!pwd)
-    {
-      dbg_log (_("Failed to look up user '%s' to run server as"),
-	       server_user);
-      exit(1);
-    }
-
-  setgroups (0, NULL);
-  setgid (pwd->pw_gid);
-  setuid (pwd->pw_uid);
 }

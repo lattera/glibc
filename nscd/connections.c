@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,7 +21,10 @@
 #include <assert.h>
 #include <error.h>
 #include <errno.h>
+#include <grp.h>
 #include <pthread.h>
+#include <pwd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <libintl.h>
@@ -34,6 +37,24 @@
 
 #include "nscd.h"
 #include "dbg_log.h"
+
+/* Wrapper functions with error checking for standard functions.  */
+extern void *xmalloc (size_t n);
+extern void *xcalloc (size_t n, size_t s);
+extern void *xrealloc (void *o, size_t n);
+
+/* Support to run nscd as an unprivileged user */
+const char *server_user;
+static uid_t server_uid;
+static gid_t server_gid;
+static gid_t *server_groups;
+#ifndef NGROUPS
+# define NGROUPS 32
+#endif
+static int server_ngroups = NGROUPS;
+
+static void begin_drop_privileges (void);
+static void finish_drop_privileges (void);
 
 
 /* Mapping of request type to database.  */
@@ -125,6 +146,19 @@ nscd_init (const char *conffile)
       dbg_log (_("cannot read configuration file; this is fatal"));
       exit (1);
     }
+
+  /* Secure mode and unprivileged mode are incompatible */
+  if (server_user != NULL && secure_in_use)
+    {
+      dbg_log (_("Cannot run nscd in secure mode as unprivileged user"));
+      exit (1);
+    }
+
+  /* Look up unprivileged uid/gid/groups before we start listening on the
+     socket  */
+  if (server_user != NULL)
+    begin_drop_privileges ();
+
   if (nthreads == -1)
     /* No configuration for this value, assume a default.  */
     nthreads = 2 * lastdb;
@@ -184,6 +218,10 @@ nscd_init (const char *conffile)
 	       strerror (errno));
       exit (1);
     }
+
+  /* Change to unprivileged uid/gid/groups if specifed in config file */
+  if (server_user != NULL)
+    finish_drop_privileges ();
 }
 
 
@@ -534,4 +572,69 @@ start_threads (void)
   pthread_attr_destroy (&attr);
 
   nscd_run ((void *) 0);
+}
+
+
+/* Look up the uid, gid, and supplementary groups to run nscd as. When
+   this function is called, we are not listening on the nscd socket yet so
+   we can just use the ordinary lookup functions without causing a lockup  */
+static void
+begin_drop_privileges (void)
+{
+  struct passwd *pwd;
+
+  pwd = getpwnam (server_user);
+
+  if (pwd == NULL)
+    {
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      error (EXIT_FAILURE, 0, _("Failed to run nscd as user '%s'"),
+	     server_user);
+    }
+
+  server_uid = pwd->pw_uid;
+  server_gid = pwd->pw_gid;
+
+  server_groups = (gid_t *) xmalloc (server_ngroups * sizeof (gid_t));
+
+  if (getgrouplist (server_user, server_gid, server_groups, &server_ngroups)
+      == 0)
+    return;
+
+  server_groups = (gid_t *) xrealloc (server_groups,
+				      server_ngroups * sizeof (gid_t));
+
+  if (getgrouplist (server_user, server_gid, server_groups, &server_ngroups)
+      == -1)
+    {
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      error (EXIT_FAILURE, errno, _("getgrouplist failed"));
+    }
+}
+
+
+/* Call setgroups(), setgid(), and setuid() to drop root privileges and
+   run nscd as the user specified in the configuration file.  */
+static void
+finish_drop_privileges (void)
+{
+  if (setgroups (server_ngroups, server_groups) == -1)
+    {
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      error (EXIT_FAILURE, errno, _("setgroups failed"));
+    }
+
+  if (setgid (server_gid) == -1)
+    {
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      perror ("setgid");
+      exit (1);
+    }
+
+  if (setuid (server_uid) == -1)
+    {
+      dbg_log (_("Failed to run nscd as user '%s'"), server_user);
+      perror ("setuid");
+      exit (1);
+    }
 }

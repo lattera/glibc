@@ -276,8 +276,8 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
     = (const void *) D_PTR (l, l_info[DT_SYMTAB]);			      \
   const char *strtab							      \
     = (const void *) D_PTR (l, l_info[DT_STRTAB]);			      \
-  const ElfW(Addr) *got							      \
-    = (const ElfW(Addr) *) D_PTR (l, l_info[DT_PLTGOT]);		      \
+  ElfW(Addr) *got							      \
+    = (ElfW(Addr) *) D_PTR (l, l_info[DT_PLTGOT]);			      \
   const ElfW(Word) local_gotno						      \
     = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;	      \
   const ElfW(Word) gotsym						      \
