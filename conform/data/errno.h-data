@@ -79,7 +79,7 @@ constant ETXTBSY
 constant EWOULDBLOCK
 constant EXDEV
 
-# variable int errno
+// variable int errno
 allow errno
 
 allow E*

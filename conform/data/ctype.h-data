@@ -16,12 +16,12 @@ function int toupper (int)
 function int isascii (int)
 function int toascii (int)
 
-# XPG says the following two are macros.  But we test a bit more strictly.
+// XPG says the following two are macros.  But we test a bit more strictly.
 function int _toupper (int)
 function int _tolower (int)
 
-# The following is not entirely correct.  It should be is[a-z]* but the
-# replacement fnmatch implementation does not grok it.
+// The following is not entirely correct.  It should be is[a-z]* but the
+// replacement fnmatch implementation does not grok it.
 allow is*
 allow to*
 

@@ -70,9 +70,9 @@ function int pthread_barrierattr_getpshared (const pthread_barrierattr_t*, int*)
 function int pthread_barrierattr_init (pthread_barrierattr_t*)
 function int pthread_barrierattr_setpshared (pthread_barrierattr_t*, int)
 function int pthread_cancel (pthread_t)
-# function int pthread_cleanup_push (void (*) (void*), void*)
+// function int pthread_cleanup_push (void (*) (void*), void*)
 macro pthread_cleanup_push
-# function int pthread_cleanup_pop (int)
+// function int pthread_cleanup_pop (int)
 macro pthread_cleanup_pop
 function int pthread_cond_broadcast (pthread_cond_t*)
 function int pthread_cond_destroy (pthread_cond_t*)
@@ -131,11 +131,11 @@ function int pthread_rwlockattr_destroy (pthread_rwlockattr_t*)
 function int pthread_rwlockattr_getpshared (const pthread_rwlockattr_t*, int*)
 function int pthread_rwlockattr_init (pthread_rwlockatttr*)
 function int pthread_rwlockattr_setpsahred (pthread_rwlockattr_t*, int)
-#endif
+# endif
 function pthread_t pthread_self (void)
 function int pthread_setcancelstate (int, int*)
 function int pthread_setcanceltype (int, int*)
-#ifndef POSIX
+# ifndef POSIX
 function int pthread_setconcurrency (int)
 # endif
 function int pthread_setschedparam (pthread_t, int, const struct sched_param*)

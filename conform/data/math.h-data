@@ -64,7 +64,7 @@ function double remainder (double, double)
 function double rint (double)
 function double scalb (double, double)
 
-# variable signgam
+// variable signgam
 allow signgam
 
 allow acosf

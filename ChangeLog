@@ -1,3 +1,12 @@
+2001-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/ctype.h-data: Use correct comment form.
+	* conform/data/errno.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/mqueue.h-data: Likewise.
+	* conform/data/netdb.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+
 2001-01-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/wordexp.h-data: Fix typo.

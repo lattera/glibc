@@ -34,7 +34,7 @@ element {struct servent} {char*} s_proto
 
 macro IPPORT_RESERVED
 
-# variable int h_errno
+// variable int h_errno
 allow h_errno
 
 macro HOST_NOT_FOUND

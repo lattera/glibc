@@ -1,5 +1,5 @@
 #ifndef ISO
-# should test for not an array type.
+// should test for not an array type.
 type mqd_t
 
 type {struct sigevent}
