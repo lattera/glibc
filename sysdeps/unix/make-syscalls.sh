@@ -62,7 +62,7 @@ EOF
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\
-	 echo 'END($strong)'; \\"
+	 echo 'PSEUDO_END($strong)'; \\"
 
   # Append any weak aliases defined for this syscall function.
   for name in $weak; do

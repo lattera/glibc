@@ -66,7 +66,13 @@ Cambridge, MA 02139, USA.  */
 #undef	__USE_GNU
 #undef	__USE_REENTRANT
 #undef	__FAVOR_BSD
+#undef	__KERNEL_STRICT_NAMES
 
+/* Suppress kernel-name space pollution unless user expressedly asks
+   for it: */
+#ifndef _LOOSE_KERNEL_NAMES
+# define __KERNEL_STRICT_NAMES
+#endif
 
 /* Always use ANSI things.  */
 #define	__USE_ANSI	1

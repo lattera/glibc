@@ -25,5 +25,6 @@ PSEUDO (__geteuid, getuid, 0)
 	MOVE(r1, r0)
 #endif
 	ret
+PSEUDO_END(__geteuid)
 
 weak_alias (__geteuid, geteuid)

@@ -108,7 +108,7 @@ xdrstdio_getlong(xdrs, lp)
 
 	if (fread((caddr_t)&mycopy, 4, 1, (FILE *)xdrs->x_private) != 1)
 		return (FALSE);
-	*(int32_t*)lp = ntohl(mycopy);
+	*lp = (int32_t) ntohl(mycopy);
 	return (TRUE);
 }
 

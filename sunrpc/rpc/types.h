@@ -52,6 +52,9 @@ extern char *malloc();
 #include <sys/types.h>
 #endif
 #include <sys/time.h>
+#include <sys/param.h>
+
+#include <netinet/in.h>
 
 #ifndef INADDR_LOOPBACK
 #define       INADDR_LOOPBACK         (u_long)0x7F000001

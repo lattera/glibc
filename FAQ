@@ -50,6 +50,7 @@ in the future are:
 
 	*-*-gnu			GNU Hurd
 	i[3456]86-*-linux	Linux-2.0 on Intel
+	alpha-*-linux		Linux on Alpha
 
 Other Linux platforms are also on the way to be supported but I need
 some success reports first.
@@ -213,6 +214,12 @@ incompatibilities:
        get_kernel_syms	get_kernel_syms	<sys/module.h>
        init_module	init_module	<sys/module.h>
        syslog		ksyslog_ctl	<sys/klog.h>
+
+* lpd: Older versions of lpd depend on an routine called _validuser().
+  The library does not provide this function, but instead provides
+  __ivaliduser() which has a slightly different interfaces.  Simply
+  upgrading to a newer lpd should fix this problem (e.g., the BSD 4.4
+  lpd is known to be working).
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 

@@ -20,3 +20,4 @@ Cambridge, MA 02139, USA.  */
 
 PSEUDO (_exit, exit, 1)
 	/* Shouldn't get here.  */
+PSEUDO_END(_exit)

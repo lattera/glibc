@@ -140,7 +140,7 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 	$(include-%.defs) | \
 	$(MIG) - /dev/null -prefix _S_ \
 	       $(MIGFLAGS) $(server-MIGFLAGS) $(MIGFLAGS-$*) \
-	       $< -user /dev/null -header /dev/null \
+	       -user /dev/null -header /dev/null \
 	       -server $(@:.h=.c) -sheader $(@:.c=.h)
 
 # To get header files that declare both the straight and __ functions,

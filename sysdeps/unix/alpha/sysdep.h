@@ -58,25 +58,27 @@ Cambridge, MA 02139, USA.  */
   .frame sp, 0, ra
 #endif
 
-/* Note that while it's better structurally, going back to set errno
-   can make things confusing if you're debugging---it looks like it's jumping
-   backwards into the previous fn.  */
+/* Mark the end of function SYM.  */
+#undef END
+#define END(sym)	.end sym
+
+/* Note that PSEUDO/PSEUDO_END use label number 1996---do not use a
+   label of that number between those two macros!  */
+ 
 #ifdef __STDC__
 #define PSEUDO(name, syscall_name, args)	\
     .globl name;				\
     .align 3;					\
     .ent name,0;				\
 						\
-1:  br		gp, 2f;				\
-2:  ldgp	gp, 0(gp);			\
-    jmp		zero, syscall_error;		\
-						\
 name##:						\
-    ldi		v0, SYS_ify(syscall_name);	\
+    .frame sp, 0, ra				\
+    .prologue 1; /* yes, we do use gp */	\
+    ldiq	v0, SYS_ify(syscall_name);	\
     .set noat;					\
     call_pal	PAL_callsys;			\
     .set at;					\
-    bne		a3, 1b;				\
+    bne		a3, 1996f;			\
 3:
 #else
 #define PSEUDO(name, syscall_name, args)	\
@@ -84,21 +86,35 @@ name##:						\
     .align 3;					\
     .ent name,0;				\
 						\
-1:  br		gp, 2f;				\
-2:  ldgp	gp, 0(gp);			\
-    jmp		zero, syscall_error;		\
-						\
 name/**/:					\
-    ldi		v0, SYS_ify(syscall_name);	\
+    .frame sp, 0, ra				\
+    .prologue 1; /* yes, we do use gp */	\
+    ldiq	v0, SYS_ify(syscall_name);	\
     .set noat;					\
     call_pal	PAL_callsys;			\
     .set at;					\
-    bne		a3, 1b;				\
+    bne		a3, 1996f;			\
 3:
 #endif
 
-#undef END
-#define END(sym)	.end sym
+#undef PSEUDO_END
+
+#ifdef PIC
+/* When building a shared library, we can use a branch since the text
+   section of the library is much smaller than 4MB.  If we ever break
+   this assumption, the linker will tell us.  */
+# define PSEUDO_END(sym)			\
+1996:						\
+    br		zero, __syscall_error;		\
+    END(sym)
+#else
+# define PSEUDO_END(sym)			\
+1996:						\
+    br		gp, 2f;				\
+2:  ldgp	gp, 0(gp);			\
+    jmp		zero, __syscall_error;		\
+    END(sym)
+#endif
 
 #define r0	v0
 #define r1	a4

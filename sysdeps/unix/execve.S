@@ -28,5 +28,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (execve, 3)
 	ret
+PSEUDO_END(execve)
 
 weak_alias (__execve, execve)

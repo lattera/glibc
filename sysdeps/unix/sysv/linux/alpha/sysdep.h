@@ -38,15 +38,15 @@ Cambridge, MA 02139, USA.  */
 # define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
-/*
- * Define some aliases for syscalls that return two values (in r0 and r1):
- */
+/* Define some aliases to make automatic syscall generation work
+   properly.  The SYS_* variants are for the benefit of the files in
+   sysdeps/unix.  */
 #define __NR_getpid	__NR_getxpid
-#define __NR_getppid	__NR_getxpid
 #define __NR_getuid	__NR_getxuid
-#define __NR_geteuid	__NR_getxuid
 #define __NR_getgid	__NR_getxgid
-#define __NR_getegid	__NR_getxgid
+#define SYS_getpid	__NR_getxpid
+#define SYS_getuid	__NR_getxuid
+#define SYS_getgid	__NR_getxgid
 
 /*
  * Some syscalls no Linux program should know about:

@@ -14,7 +14,7 @@ DEFUN_VOID(_IO_register_cleanup)
   _IO_cleanup_registration_needed = 0;
 }
 
-void (*_IO_cleanup_registration_needed)() = _IO_register_cleanup;
+void (*_IO_cleanup_registration_needed) __P((void)) = _IO_register_cleanup;
 #else
-void (*_IO_cleanup_registration_needed)() = NULL;
+void (*_IO_cleanup_registration_needed) __P((void)) = NULL;
 #endif /* _G_HAVE_ATEXIT */

@@ -99,7 +99,7 @@ xdrmem_getlong(xdrs, lp)
 
 	if ((xdrs->x_handy -= 4) < 0)
 		return (FALSE);
-	*lp = (long)ntohl((u_long)(*((int32_t *)(xdrs->x_private))));
+	*lp = (int32_t) ntohl((*((int32_t *)(xdrs->x_private))));
 	xdrs->x_private += 4;
 	return (TRUE);
 }

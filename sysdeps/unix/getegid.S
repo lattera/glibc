@@ -25,5 +25,6 @@ PSEUDO (__getegid, getgid, 0)
 	MOVE(r1, r0)
 #endif
 	ret
+PSEUDO_END(__getegid)
 
 weak_alias (__getegid, getegid)

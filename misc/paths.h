@@ -50,7 +50,7 @@
 #define	_PATH_DRUM	"/dev/drum"
 #define	_PATH_KMEM	"/dev/kmem"
 #define	_PATH_MAILDIR	"/var/mail"
-#define	_PATH_MAN	"/usr/share/man"
+#define	_PATH_MAN	"/usr/man"
 #define	_PATH_MEM	"/dev/mem"
 #define	_PATH_NOLOGIN	"/etc/nologin"
 #define	_PATH_SENDMAIL	"/usr/sbin/sendmail"

@@ -28,5 +28,6 @@ SYSCALL__ (fork, 0)
 	subl #1, r1
 	andl r1, r0
 	ret
+PSEUDO_END(fork)
 
 weak_alias (__fork, fork)

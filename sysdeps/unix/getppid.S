@@ -25,5 +25,6 @@ PSEUDO (__getppid, getpid, 0)
 	MOVE(r1, r0)
 #endif
 	ret
+PSEUDO_END(__getppid)
 
 weak_alias (__getppid, getppid)

@@ -27,7 +27,7 @@ int
 DEFUN(tcsetattr, (fd, optional_actions, termios_p),
       int fd AND int optional_actions AND CONST struct termios *termios_p)
 {
-  int cmd;
+  unsigned long cmd;
 
   switch (optional_actions)
     {

@@ -19,6 +19,109 @@ Wed Jun 19 03:24:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/setlocale.c (setlocale): Initialize local variables to
 	prevent warnings.
 
+Thu Jun 13 17:25:11 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/generic/memcmp.c: Add prototype decls for internal fns.
+
+	* locale/programs/locale.c: Include string.h.
+
+	* sunrpc/xdr_stdio.c (xdrstdio_getlong), sunrpc/xdr_rec.c
+ 	(xdrrec_getlong), sunrpc/xdr_mem.c (xdrmem_getlong): Make sure
+ 	appropriate sign-extension is performed on machines with
+ 	sizeof(long) > 4.
+
+	* sunrpc/xdr.c (xdr_int, xdr_u_int): If sizeof(long)==8 and
+ 	sizeof(int)<sizeof(long), we need to go through a temporary
+ 	variable.
+
+	* locale/programs/ld-numeric.c: Include <alloca.h>
+
+	* libio/stdio.h (__libc_fatal): Add prototype.
+
+	* libio/cleanup.c: Use __P() to declare prototype when __STDC__ is
+ 	in efect.
+
+	* libio/iopopen.c (read_or_write, parent_end, child_end): Declare
+ 	volatile to avoid "might get clobbered by longjmp" warning.
+
+	* features.h (__KERNEL_STRICT_NAMES): Define __KERNEL_STRICT_NAMES
+ 	unless _LOOSE_KERNEL_NAMES is in effect (which, with high
+ 	probability is a sure loser).
+	* sysdeps/unix/sysv/linux/gnu/types.h (__KERNEL_STRICT_NAMES): Remove.
+
+	* sysdeps/unix/bsd/osf/alpha/start.S (errno): Removed.
+	* sysdeps/unix/sysv/linux/alpha/start.S: Ditto.
+
+	* misc/paths.h (_PATH_MAN): Change from /usr/share/man to /usr/man
+	to be Linux FSSTND compliant.
+
+Mon Jun 10 17:50:31 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/pipe.S: Use PSEUDO.
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.S,
+ 	sysdeps/unix/sysv/linux/alpha/brk.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/llseek.S,
+ 	sysdeps/unix/sysv/linux/alpha/sigsuspend.S,
+ 	sysdeps/unix/sysv/linux/alpha/syscall.S: Rename syscall_error to
+ 	__syscall_error to avoid intruding application name space.
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Rename __NR_get?id
+	to SYS_get?id so that syscall stubs in sysdeps/unix define
+	these syscalls in terms of getxpid/getxuid/getxgid.
+
+	* sysdeps/unix/_exit.S, sysdeps/unix/getegid.S,
+ 	sysdeps/unix/geteuid.S, sysdeps/unix/getppid.S,
+ 	sysdeps/unix/execve.S, sysdeps/unix/fork.S,
+ 	sysdeps/unix/syscall.S: Terminate syscall with PSEUDO_END.
+
+	* sysdeps/unix/make-syscalls.sh, sysdeps/unix/sysdep.h
+ 	(PSEUDO_END): Rename END() to PSEUDO_END().
+
+	* sysdeps/unix/alpha/sysdep.h: Move error-handling code in PSEUDO
+ 	to PSEUDO_END to improve branch-prediction.  Include .frame
+ 	directive to make syscalls debugabble.
+	(PSEUDO_END): New macro.
+
+	* sysdeps/unix/alpha/sysdep.h, sysdeps/alpha/bb_init_func.S,
+ 	sysdeps/unix/sysv/linux/alpha/brk.S: Use ldiq instead of ldi since
+ 	latter is illegal under DEC Unix.
+
+	* sysdeps/unix/alpha/sysdep.S: Renamed from
+	sysdeps/unix/sysv/linux/alpha/sysdep.S.  This file works for OSF/1
+ 	as well.
+	* sysdeps/unix/bsd/osf/alpha/sysdep.S: Remove (note that the
+ 	EWOULDBLOCK -> EAGAIN mapping was unnecessary since
+ 	EWOULDBLOCK==EAGAIN under DEC Unix and Linux/Alpha).
+
+	* sysdeps/alpha/divrem.h: Use retaddr instead of ra as the return
+ 	address register in the .frame directive.
+
+	* sysdeps/alpha/copysign.c: Remove.
+
+	* sunrpc/rpc/types.h: Include <sys/param.h> and <netinet/in.h> to
+ 	avoid RPC definitions of INADDR_LOOPBACK and/or MAXHOSTNAMELEN.
+
+	* errno.h: Move __END_DECLS to correct place to make file
+ 	compilable under c++.
+
+	* dirent/dirent.h: Document _DIRENT_HAVE_D_OFF macro.  Define
+	d_ino only if <direntry.h> hasn't defined d_fileno.
+
+	* configure.in (HAVE_ASM_WEAKEXT_DIRECTIVE): Reverse order of
+	arguments to weakext to make .weakext detection work on ECOFF systems.
+
+	* FAQ: Add Linux/Alpha to list of supported platforms.  Mention
+	that _validuser() has been replaced by __ivaliduser().
+
+Thu Jun  6 21:39:38 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/bsd/sun/sunos4/tcsetattr.c (tcsetattr): Declare cmd
+ 	as unsigned long, not as int (to avoid incorrect int->long
+ 	promotion).
+
 Tue Jun 18 17:56:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Version 1.91 test release.

@@ -84,9 +84,9 @@ DEFUN(_IO_proc_open, (fp, command, mode),
       _IO_FILE* fp AND const char *command AND const char *mode)
 {
 #if _IO_HAVE_SYS_WAIT
-  int read_or_write;
+  volatile int read_or_write;
+  volatile int parent_end, child_end;
   int pipe_fds[2];
-  int parent_end, child_end;
   _IO_pid_t child_pid;
   if (_IO_file_is_open(fp))
     return NULL;

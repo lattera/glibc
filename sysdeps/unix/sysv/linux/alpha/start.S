@@ -1,5 +1,5 @@
 /* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
+   Contributed by Richard Henderson <rth@tamu.edu>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -18,81 +18,76 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-	.comm errno, 4
-#ifdef __ELF__
-	.type errno, @object
-#endif
-
 	.text
-LEAF(__start, 16)
-	lda	sp, -16(sp)
-	.prologue 0
+	.globl __start
+	.align 3
+	.ent __start, 0
+__start:
+	.frame fp, 0, zero
+	mov	zero, fp
+	br	gp, 1f
+1:	ldgp	gp, 0(gp)
+	.prologue 1
 
-	stq	zero, 8(sp)		/* terminate frame chain */
+  /* Save v0.  When starting a binary via the dynamic linker, s0
+     contains the address of the shared library termination function,
+     which we will register below with atexit() to be called by exit().
+     If we are statically linked, this will be NULL.  */
+	mov	v0, s0
 
-	br	t0, 1f
-1:	ldgp	gp, 0(t0)
-
-	mov	zero, a0		/* establish __fpu_control w/kernel */
-	jsr	ra, __setfpucw
+  /* Do essential libc initialization (sp points to argc, argv, and envp)  */
+	jsr	ra, __libc_init_first
 	ldgp	gp, 0(ra)
 
-	/* clear out errno. */
-	stl	zero, (errno)
+  /* Now that we have the proper stack frame, register library termination
+     function, if there is any:  */
 
-	ldl	a0, 16(sp)	/* get argc */
-	lda	a1, 24(sp)	/* get argv */
+	beq	s0, 1f
+	mov	s0, a0
+	jsr	ra, atexit
+	ldgp	gp, 0(ra)
+1:
 
-	/* initialize environ: */
-	lda	t0, environ
-	s8addq	a0, a1, a2
-	addq	a2, 0x8, a2
-	stq	a2, 0(t0)
+  /* Extract the arguments and environment as encoded on the stack.  */
+	ldl	a0, 0(sp)	/* get argc */
+	lda	a1, 8(sp)	/* get argv */
+	s8addq	a0, a1, a2	/* get envp */
+	addq	a2, 8, a2
+	stq	a2, _environ
 
-	mov	a0, s0
+	mov	a0, s0		/* tuck them away */
 	mov	a1, s1
 	mov	a2, s2
 
 #ifdef HAVE_INITFINI
-	/* register the _fini sections to ensure destructors get run: */
-	lda	a0, _fini
-	jsr	ra, atexit
-	ldgp	gp, 0(ra)
-
-	/* Now run the _init section of the program itself.  The _init
-	   sections of shared libraries will be run by the dynamic linker.  */
+  /* Call _init, the entry point to our own .init section.  */
 	jsr	ra, _init
 	ldgp	gp, 0(ra)
 
-	/* initialize constructors: */
-	jsr	ra, __main
+  /* Register our .fini section with atexit.  */
+	lda	a0, _fini
+	jsr	ra, atexit
 	ldgp	gp, 0(ra)
 #else
-	jsr	ra, __libc_init
+  /* initialize constructors: */
+	jsr	ra, __main
 	ldgp	gp, 0(ra)
 #endif
-
 	mov	s0, a0
 	mov	s1, a1
 	mov	s2, a2
 
+  /* Call the user's main and exit with its return value.  */
 	jsr	ra, main
 	ldgp	gp, 0(ra)
 
 	mov	v0, a0
+	jsr	ra, exit
 
-	lda	pv, exit
-	jsr	ra, (pv), 1
-	ldgp	gp, 0(ra)
-
-	/* in case exit returns: */
-
-1:	ldi	v0, __NR_exit
-	call_pal PAL_callsys
-	br	1b
-
-	.end __start
-
+  /* Die very horribly if exit returns.  Call_pal hlt is callable from
+     kernel mode only; this will result in an illegal instruction trap.  */
+	call_pal 0
+END(__start)
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

@@ -145,6 +145,8 @@ extern int ungetc __P ((int c, FILE* fp));
 extern int vfprintf __P ((FILE *fp, char __const *fmt0, _G_va_list));
 extern int vprintf __P ((char __const *fmt, _G_va_list));
 extern int vsprintf __P ((char* string, __const char* format, _G_va_list));
+extern void __libc_fatal __P ((__const char *__message))
+     __attribute__ ((__noreturn__));
 
 #ifndef __STRICT_ANSI__
 extern int dprintf __P ((int, __const char *, ...));

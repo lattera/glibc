@@ -125,7 +125,7 @@ FUNC_NAME:
 	ldq	gp, 0x10(sp)
 	lda	sp, 0x18(sp)
 #endif
-	.frame	sp, FRAME_SIZE, ra, 0
+	.frame	sp, FRAME_SIZE, retaddr, 0
 	lda	sp,-FRAME_SIZE(sp)
 	.prologue 1
 	stq	arg1,0x00(sp)

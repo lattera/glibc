@@ -1,5 +1,5 @@
-/* Copyright (C) 1992, 1993, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
+   Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,16 +16,24 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#define __NO_MATH_INLINES
+#include <sysdep.h>
+#define _ERRNO_H
+#include <errnos.h>
 
-#include <math.h>
+       .comm errno, 4
+#ifdef __ELF__
+       .type errno, @object
+#endif
 
-/* Return X with its sign changed to Y's.  */
-__inline double
-__copysign (double __x, double __y)
-{
-  __asm ("cpys %1, %2, %0" : "=f" (__x) : "f" (__y), "f" (__x));
-  return __x;
-}
+LEAF(__syscall_error, 0)
+	.prologue 1
 
-weak_alias (__copysign, copysign)
+	/* Store return value in errno... */
+	ldgp	gp, 0(t12)
+	stl	v0, errno
+
+	/* And just kick back a -1.  */
+	ldi	v0, -1
+	ret
+
+	END(__syscall_error)

@@ -84,6 +84,9 @@ typedef unsigned char byte;
 /* memcmp_bytes -- Compare A and B bytewise in the byte order of the machine.
    A and B are known to be different.
    This is needed only on little-endian machines.  */
+
+static int memcmp_bytes __P((op_t, op_t));
+
 #ifdef  __GNUC__
 __inline
 #endif
@@ -106,6 +109,8 @@ memcmp_bytes (a, b)
   return a0 - b0;
 }
 #endif
+
+static int memcmp_common_alignment __P((long, long, size_t));
 
 /* memcmp_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN `op_t'
    objects (not LEN bytes!).  Both SRCP1 and SRCP2 should be aligned for
@@ -193,6 +198,8 @@ memcmp_common_alignment (srcp1, srcp2, len)
     return CMP_LT_OR_GT (a1, b1);
   return 0;
 }
+
+static int memcmp_not_common_alignment __P((long, long, size_t));
 
 /* memcmp_not_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN
    `op_t' objects (not LEN bytes!).  SRCP2 should be aligned for memory

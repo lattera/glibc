@@ -201,14 +201,14 @@ xdrrec_getlong(xdrs, lp)
 	if (rstrm->fbtbc >= BYTES_PER_XDR_UNIT &&
 	    rstrm->in_boundry - (char *) buflp >= BYTES_PER_XDR_UNIT)
 	{
-		*lp = ntohl(*buflp);
+		*lp = (int32_t) ntohl(*buflp);
 		rstrm->fbtbc -= BYTES_PER_XDR_UNIT;
 		rstrm->in_finger += BYTES_PER_XDR_UNIT;
 	} else {
 		if (! xdrrec_getbytes(xdrs, (caddr_t) &mylong,
 				      BYTES_PER_XDR_UNIT))
 			return FALSE;
-		*lp = ntohl(mylong);
+		*lp = (int32_t) ntohl(mylong);
 	}
 	return TRUE;
 }

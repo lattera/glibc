@@ -19,10 +19,9 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_GNU_TYPES_H
 #define	_GNU_TYPES_H	1
 
-/* Get actual type definitions for architecture from kernel headers.
-   This #define tells <linux/types.h> not to define `dev_t' et al itself.  */
-#define __KERNEL_STRICT_NAMES
-#define _LINUX_TYPES_DONT_EXPORT
+#include <features.h>
+
+/* Get actual type definitions for architecture from kernel headers.  */
 #include <linux/types.h>
 
 /* Convenience types.  */

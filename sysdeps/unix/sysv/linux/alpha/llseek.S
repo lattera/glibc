@@ -18,19 +18,17 @@ Cambridge, MA 02139, USA.  */
 
 /* For compatibility only: a "long" is 64 bits on the Alpha, so
    llseek() isn't really needed.  But there are some programs out
-   there who may depend on it being around. 
-*/
+   there who may depend on it being around.  */
 
 #include <sysdep.h>
 
 	.text
 ENTRY(llseek)
-	.prologue 0
-
-	mov	a3, t0		/* save result address */
+	.prologue 1
 
 	sll	a1, 32, a1	/* build a 64 bit ofs out of 32 bit operands */
 	zap	a2, 0xf0, a2
+	mov	a3, t0		/* save result address */
 	bis	a2, a1, a1
 
 	mov	a4, a2		/* shift down whence */
@@ -44,6 +42,6 @@ ENTRY(llseek)
 
 error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 	END(llseek)

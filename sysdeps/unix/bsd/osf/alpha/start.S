@@ -18,8 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.comm errno,		4
-
 #if 0
 .sdata
 .globl STARTFRM

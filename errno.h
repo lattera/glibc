@@ -60,10 +60,9 @@ typedef int error_t;
    invoked.  These variables are set up automatically at startup based on
    the value of ARGV[0] (this works only if you use GNU ld).  */
 extern char *program_invocation_name, *program_invocation_short_name;
-#endif	/* Use GNU.  */
-
-#endif	/* errno.h included */
+#endif /* __USE_GNU */
+#endif /* _ERRNO_H */
 
 __END_DECLS
 
-#endif /* errno.h */
+#endif /* errno.h	*/

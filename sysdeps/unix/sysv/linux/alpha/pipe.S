@@ -20,23 +20,11 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-	.text
-LEAF(__pipe, 0)
-	.prologue 0
-
-	ldi	v0, __NR_pipe
-	call_pal PAL_callsys
-	bne	a3, error
-
+PSEUDO (__pipe, pipe, 0)
 	stl	r0, 0(a0)
 	stl	r1, 4(a0)
 	mov	zero, v0
 	ret
-
-error:	br	gp, 1f
-1:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
-
-	END(__pipe)
+PSEUDO_END(__pipe)
 
 weak_alias (__pipe, pipe)

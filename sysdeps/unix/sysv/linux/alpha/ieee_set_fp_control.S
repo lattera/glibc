@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 LEAF(__ieee_set_fp_control, 8)
 	lda	sp, -8(sp)
-	.prologue 0
+	.prologue 1
 
 	stq	a0, 0(sp)
 	mov	sp, a1
@@ -37,7 +37,7 @@ LEAF(__ieee_set_fp_control, 8)
 
 error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 	END(__ieee_set_fp_control)
 

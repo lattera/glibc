@@ -35,12 +35,16 @@ __BEGIN_DECLS
    member that gives the length of `d_name'.
 
    It defines the macro `_DIRENT_HAVE_D_RECLEN' iff there is a `d_reclen'
-   member that gives the size of the entire directory entry.  */
+   member that gives the size of the entire directory entry.
+
+   It defines the macro `_DIRENT_HAVE_D_OFF' iff there is a `d_off'
+   member that gives the file offset of the next directory entry.
+ */
 
 #include <direntry.h>
 
-#if defined(__USE_BSD) || defined(__USE_MISC)
-#define	d_ino		d_fileno /* Backward compatibility.  */
+#if (defined(__USE_BSD) || defined(__USE_MISC)) && !defined(d_fileno)
+#define	d_ino		d_fileno		 /* Backward compatibility.  */
 #endif
 
 /* These macros extract size information from a `struct dirent *'.

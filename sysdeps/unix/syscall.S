@@ -27,3 +27,4 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL (syscall, 1)
 	ret
+PSEUDO_END(syscall)

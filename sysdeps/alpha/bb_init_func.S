@@ -53,11 +53,11 @@ init:
 	br	pv, 1f
 1:	ldgp	gp, 0(pv)
 
-	lda	t1, __bb_head
+	ldiq	t1, __bb_head
 	lda	t3, _gmonparam
 	ldq	t2, 0(t1)
 	ldl	t3, 0(t3)		/* t3 = _gmonparam.state */
-	ldi	t0, 1
+	lda	t0, 1
 	stq	t0, ZERO_WORD(a0)	/* blocks->zero_word = 1 */
 	stq	t2, NEXT(a0)		/* blocks->next = __bb_head */
 	stq	a0, 0(t1)
