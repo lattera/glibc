@@ -37,14 +37,14 @@ main (int argc, char *argv[])
   if (tmpnam (file) == 0)
     {
       perror ("tmpnam");
-      exit (1);
+      return 1;
     }
 
   fd = creat (file, 0666);
   if (fd < 0)
     {
       perror ("creat");
-      exit (1);
+      return 1;
     }
   close (fd);
 
@@ -55,14 +55,14 @@ main (int argc, char *argv[])
     {
       perror ("utime");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   if (stat (file, &st))
     {
       perror ("stat");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   /* Test utime with NULL.
@@ -73,14 +73,14 @@ main (int argc, char *argv[])
     {
       perror ("time");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   if (utime (file, NULL))
     {
       perror ("utime NULL");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   now2 = time (NULL);
@@ -88,14 +88,14 @@ main (int argc, char *argv[])
     {
       perror ("time");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   if (stat (file, &stnow))
     {
       perror ("stat");
       remove (file);
-      exit (1);
+      return 1;
     }
 
   remove (file);
@@ -103,27 +103,27 @@ main (int argc, char *argv[])
   if (st.st_mtime != ut.modtime)
     {
       printf ("modtime %ld != %ld\n", st.st_mtime, ut.modtime);
-      exit (1);
+      return 1;
     }
 
   if (st.st_atime != ut.actime)
     {
       printf ("actime %ld != %ld\n", st.st_atime, ut.actime);
-      exit (1);
+      return 1;
     }
 
   if (stnow.st_mtime < now1 || stnow.st_mtime > now2)
     {
       printf ("modtime %ld <%ld >%ld\n", st.st_mtime, now1, now2);
-      exit (1);
+      return 1;
     }
 
   if (stnow.st_atime < now1 || stnow.st_atime > now2)
     {
       printf ("actime %ld <%ld >%ld\n", st.st_atime, now1, now2);
-      exit (1);
+      return 1;
     }
 
   puts ("Test succeeded.");
-  exit (0);
+  return 0;
 }

@@ -13,7 +13,7 @@ main (void)
 
   strspn (b++, "");
   if (b != a + 1)
-    exit (1);
+    return 1;
 
-  exit (0);
+  return 0;
 }

@@ -305,5 +305,5 @@ main (int argc, char **argv)
       }
   }
 
-  exit (result);
+  return result;
 }

@@ -44,7 +44,7 @@ const int nseq = 3;		/* number of test sequences */
 const int nrnd = 50;		/* length of each test sequence */
 const unsigned int seed[3] = { 0x12344321U, 0xEE11DD22U, 0xFEDCBA98 };
 
-void fail (const char *msg, int s, int i);
+void fail (const char *msg, int s, int i) __attribute__ ((__noreturn__));
 
 int
 main (void)

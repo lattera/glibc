@@ -113,5 +113,6 @@ main (void)
     puts ("Test FAILED!");
   else
     puts ("Test succeeded!");
-  exit (lose ? EXIT_FAILURE : EXIT_SUCCESS);
+
+  return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }

@@ -550,7 +550,7 @@ main (int argc, char *argv[])
 
   gdImageDestroy (im_out);
 
-  exit (0);
+  return 0;
 }
 
 

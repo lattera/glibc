@@ -29,7 +29,7 @@ main (void)
   int i;
 
   auto void try (int value, int expected);
-  
+
   void try (int value, int expected)
     {
       if (ffs (value) != expected)
@@ -52,5 +52,5 @@ main (void)
   else
     puts ("Test succeeded.");
 
-  exit (failures);
+  return failures;
 }

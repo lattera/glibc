@@ -24,14 +24,15 @@ static int
 check (const char *name, FILE *stream, int fd)
 {
   int sfd = fileno (stream);
-  printf ("(fileno (%s) = %d) %c= %d\n", name, sfd, sfd == fd ? '=' : '!', fd);
+  printf ("(fileno (%s) = %d) %c= %d\n", name, sfd,
+	  sfd == fd ? '=' : '!', fd);
   return sfd != fd;
 }
 
 int
 main (void)
 {
-  exit (check ("stdin", stdin, STDIN_FILENO) ||
-	check ("stdout", stdout, STDOUT_FILENO) ||
-	check ("stderr", stderr, STDERR_FILENO));
+  return (check ("stdin", stdin, STDIN_FILENO) ||
+	  check ("stdout", stdout, STDOUT_FILENO) ||
+	  check ("stderr", stderr, STDERR_FILENO));
 }

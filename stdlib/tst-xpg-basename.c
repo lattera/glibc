@@ -63,5 +63,5 @@ main (void)
 	}
     }
 
-  exit (errors);
+  return errors;
 }

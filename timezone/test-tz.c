@@ -46,11 +46,11 @@ main (int argc, char ** argv)
   if (errors == 0)
     {
       puts ("No errors.");
-      exit (EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     }
   else
     {
       printf ("%d errors.\n", errors);
-      exit (EXIT_FAILURE);
+      return EXIT_FAILURE;
     }
 }

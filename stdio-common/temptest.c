@@ -24,5 +24,5 @@ main (int argc, char *argv[])
   for (i = 0; i < 500; i++)
     remove (files[i]);
 
-  exit (0);
+  return 0;
 }

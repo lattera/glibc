@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,5 +79,5 @@ main (int argc, char *argv[])
 
   if (result == 0)
     puts ("All test successful!");
-  exit (result);
+  return result;
 }

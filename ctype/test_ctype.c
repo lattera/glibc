@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,5 +97,5 @@ main (int argc, char **argv)
   TRYEM;
 #undef TRY
 
-  exit (lose ? EXIT_FAILURE : EXIT_SUCCESS);
+  return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }

@@ -84,5 +84,5 @@ main (int argc, char *argv[])
 
   if (result == 0)
     puts ("All test successful!");
-  exit (result);
+  return result != 0;
 }

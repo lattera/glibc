@@ -37,5 +37,5 @@ main (int argc, char *argv[])
 	}
     }
 
-  exit (my_passwd && my_group ? EXIT_SUCCESS : EXIT_FAILURE);
+  return my_passwd && my_group ? EXIT_SUCCESS : EXIT_FAILURE;
 }

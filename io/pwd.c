@@ -39,5 +39,5 @@ main (void)
       free (dir);
     }
 
-  exit (dir == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
+  return (dir == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
 }

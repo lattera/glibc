@@ -77,5 +77,5 @@ main (void)
 	++errors ;
     }
 
-  exit (errors != 0);
+  return errors != 0;
 }

@@ -32,7 +32,8 @@ main (void)
   if (waitpid (0, &status, 0) != pid
       || !WIFEXITED (status) || WEXITSTATUS (status) != NR)
     exit (1);
-  exit (0);
+
+  return 0;
 }
 
 void

@@ -38,5 +38,5 @@ main (int argc, char *argv[])
 
 
   closedir (dirp);
-  exit(0);
+  return 0;
 }

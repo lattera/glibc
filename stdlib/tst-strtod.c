@@ -117,7 +117,7 @@ main (int argc, char ** argv)
 
   status |= long_dbl ();
 
-  exit (status ? EXIT_FAILURE : EXIT_SUCCESS);
+  return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 static void

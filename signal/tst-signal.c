@@ -39,5 +39,6 @@ main (void)
     }
 
   puts ("Got a signal.  Test succeeded.");
-  exit (EXIT_SUCCESS);
+
+  return EXIT_SUCCESS;
 }

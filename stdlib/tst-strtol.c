@@ -169,7 +169,7 @@ main (void)
 	}
     }
 
-  exit (status ? EXIT_FAILURE : EXIT_SUCCESS);
+  return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 static void

@@ -117,5 +117,6 @@ main (void)
       if (! tst_locale)
 	break;
     }
-  exit (result);
+
+  return result;
 }

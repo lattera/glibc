@@ -41,5 +41,5 @@ main (int argc, char *argv[])
   for (i = 0; i < count; ++i)
     puts (str[i]);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
