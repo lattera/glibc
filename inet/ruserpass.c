@@ -37,6 +37,7 @@ static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 #include <ctype.h>
 #include <err.h>
 #include <errno.h>
+#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +46,7 @@ static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 
 /* #include "ftp_var.h" */
 
-static	int token __P((void));
+static	int token (void);
 static	FILE *cfile;
 
 #define	DEFAULT	1
@@ -93,11 +94,11 @@ static const struct toktab {
 
 int
 ruserpass(host, aname, apass)
-	char *host, **aname, **apass;
+	const char *host, **aname, **apass;
 {
 	char *hdir, *buf, *tmp;
 	char myname[1024], *mydomain;
-	int t, i, c, usedefault = 0;
+	int t, usedefault = 0;
 	struct stat stb;
 
 	hdir = __secure_getenv("HOME");
@@ -157,14 +158,21 @@ next:
 		while ((t = token()) && t != MACHINE && t != DEFAULT) switch(t) {
 
 		case LOGIN:
-			if (token())
+			if (token()) {
 				if (*aname == 0) {
-					*aname = malloc((unsigned) strlen(tokval) + 1);
-					(void) strcpy(*aname, tokval);
+				  char *newp;
+				  newp = malloc((unsigned) strlen(tokval) + 1);
+				  if (newp == NULL)
+				    {
+				      warnx(_("out of memory"));
+				      goto bad;
+				    }
+				  *aname = strcpy(newp, tokval);
 				} else {
 					if (strcmp(*aname, tokval))
 						goto next;
 				}
+			}
 			break;
 		case PASSWD:
 			if (strcmp(*aname, "anonymous") &&
@@ -175,8 +183,14 @@ next:
 				goto bad;
 			}
 			if (token() && *apass == 0) {
-				*apass = malloc((unsigned) strlen(tokval) + 1);
-				(void) strcpy(*apass, tokval);
+				char *newp;
+				newp = malloc((unsigned) strlen(tokval) + 1);
+				if (newp == NULL)
+				  {
+				    warnx(_("out of memory"));
+				    goto bad;
+				  }
+				*apass = strcpy(newp, tokval);
 			}
 			break;
 		case ACCOUNT:

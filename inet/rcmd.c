@@ -81,9 +81,9 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <stdlib.h>
 
 
-int __ivaliduser __P ((FILE *, u_int32_t, const char *, const char *));
-static int __validuser2_sa __P ((FILE *, struct sockaddr *, size_t,
-				 const char *, const char *, const char *));
+int __ivaliduser (FILE *, u_int32_t, const char *, const char *);
+static int __validuser2_sa (FILE *, struct sockaddr *, size_t,
+			    const char *, const char *, const char *);
 static int ruserok2_sa (struct sockaddr *ra, size_t ralen,
 			int superuser, const char *ruser,
 			const char *luser, const char *rhost);
@@ -106,8 +106,6 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	sa_family_t af;
 {
 	char paddr[INET6_ADDRSTRLEN];
-	size_t hstbuflen;
-	char *tmphstbuf;
 	struct addrinfo hints, *res, *ai;
 	struct sockaddr_storage from;
 	struct pollfd pfd[2];
@@ -314,7 +312,7 @@ rresvport_af(alport, family)
 	struct sockaddr_storage ss;
 	int s;
 	size_t len;
-	uint16_t *sport, i;
+	uint16_t *sport;
 
 	switch(family){
 	case AF_INET:
@@ -401,7 +399,7 @@ ruserok(rhost, superuser, ruser, luser)
 
 /* Extremely paranoid file open function. */
 static FILE *
-iruserfopen (char *file, uid_t okuser)
+iruserfopen (const char *file, uid_t okuser)
 {
   struct stat st;
   char *cp = NULL;
@@ -519,7 +517,7 @@ static int ruserok_sa(ra, ralen, superuser, ruser, luser)
      int superuser;
      const char *ruser, *luser;
 {
-  ruserok2_sa(ra, ralen, superuser, ruser, luser, "-");
+  return ruserok2_sa(ra, ralen, superuser, ruser, luser, "-");
 }
 
 /* This is the exported version.  */
@@ -590,19 +588,13 @@ __ivaliduser(hostf, raddr, luser, ruser)
 /* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
 internal_function
-__checkhost_sa (ra, ralen, lhost, rhost)
-	struct sockaddr *ra;
-	size_t ralen;
-	char *lhost;
-	const char *rhost;
+__checkhost_sa (struct sockaddr *ra, size_t ralen, char *lhost,
+		const char *rhost)
 {
 	struct addrinfo hints, *res0, *res;
-	int herr;
-	int save_errno;
 	char raddr[INET6_ADDRSTRLEN];
 	int match;
 	int negate=1;    /* Multiply return with this to get -1 instead of 1 */
-	char *user;
 
 	/* Check nis netgroup.  */
 	if (strncmp ("+@", lhost, 2) == 0)
@@ -632,29 +624,29 @@ __checkhost_sa (ra, ralen, lhost, rhost)
 	hints.ai_family = ra->sa_family;
 	if (getaddrinfo(lhost, NULL, &hints, &res0) == 0){
 		/* Spin through ip addresses. */
-		for (res=res0; res; res->ai_next){
-			if (res->ai_family == ra->sa_family &&
-			    !memcmp(res->ai_addr, ra, res->ai_addrlen)){
-				match = 1;
-				break;
-			}
-		}
-		freeaddrinfo(res0);
+		for (res = res0; res; res = res->ai_next)
+		  {
+		    if (res->ai_family == ra->sa_family
+			&& !memcmp(res->ai_addr, ra, res->ai_addrlen))
+		      {
+			match = 1;
+			break;
+		      }
+		  }
+		freeaddrinfo (res0);
 	}
-	return (negate * match);
+	return negate * match;
 }
 
 /* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
 internal_function
-__icheckuser (luser, ruser)
-	const char *luser, *ruser;
+__icheckuser (const char *luser, const char *ruser)
 {
     /*
       luser is user entry from .rhosts/hosts.equiv file
       ruser is user id on remote host
       */
-    char *user;
 
     /* [-+]@netgroup */
     if (strncmp ("+@", luser, 2) == 0)
@@ -679,8 +671,7 @@ __icheckuser (luser, ruser)
  * Returns 1 for blank lines (or only comment lines) and 0 otherwise
  */
 static int
-__isempty(p)
-	char *p;
+__isempty (char *p)
 {
     while (*p && isspace (*p)) {
 	++p;

@@ -40,6 +40,7 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 #include <stdio.h>
 #include <netdb.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -58,11 +59,10 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	struct addrinfo hints, *res0;
 	const char *orig_name = name;
 	const char *orig_pass = pass;
-	u_short port;
+	u_short port = 0;
 	int s, timo = 1, s3;
 	char c;
-	int herr;
-	int gai, ok;
+	int gai;
 	char servbuff[NI_MAXSERV];
 
 	snprintf(servbuff, sizeof(servbuff), "%d", rport);
@@ -72,7 +72,8 @@ rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	hints.ai_family = af;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_CANONNAME;
-	if (gai = getaddrinfo(*ahost, servbuff, &hints, &res0)){
+	gai = getaddrinfo(*ahost, servbuff, &hints, &res0);
+	if (gai){
 		/* XXX: set errno? */
 		return -1;
 	}
@@ -148,9 +149,9 @@ retry:
 	/* We don't need the memory allocated for the name and the password
 	   in ruserpass anymore.  */
 	if (name != orig_name)
-	  free (name);
+	  free ((char *) name);
 	if (pass != orig_pass)
-	  free (pass);
+	  free ((char *) pass);
 
 	if (__read(s, &c, 1) != 1) {
 		perror(*ahost);

@@ -1,3 +1,16 @@
+2000-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/Makefile (CFLAGS-rcmd.c, CFLAGS-rexec.c, CFLAGS-ruserpass.c):
+	Removed.
+	* inet/rcmd.c: Remove __P.  Remove unused variables.
+	(iruserfopen): Make first parameter const.
+	(ruserok_sa): Return result of ruserok2_sa.
+	(__checkhost_sa): Correctly iterate through results of getaddrinfo.
+	* inet/rexec.c: Remove unused variables.  Other small cleanups.
+	* inet/ruserpass.c: Remove __P.  Remove unused variables.
+	(ruserpass): Check results of memory allocation.
+	* include/netdb.h: Add prototype for ruserpass.
+
 2000-05-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/rcmd.c (rresvport_af): Use correct port number.

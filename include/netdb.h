@@ -77,4 +77,7 @@ extern int __getnetgrent_r (char **__restrict __hostp,
 			    char **__restrict __userp,
 			    char **__restrict __domainp,
 			    char *__restrict __buffer, size_t __buflen);
+
+extern int ruserpass (const char *host, const char **aname,
+		      const char **apass);
 #endif /* !_NETDB_H */
