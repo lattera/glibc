@@ -239,8 +239,11 @@ __libc_res_nsearch(res_state statp,
 		return (__libc_res_nquery(statp, cp, class, type, answer,
 					  anslen, answerp));
 
-	printf("dots=%d, statp->ndots=%d, trailing_dot=%d, name=%s\n",
-	       (int)dots,(int)statp->ndots,(int)trailing_dot,name);
+#ifdef DEBUG
+	if (statp->options & RES_DEBUG)
+		printf("dots=%d, statp->ndots=%d, trailing_dot=%d, name=%s\n",
+		       (int)dots,(int)statp->ndots,(int)trailing_dot,name);
+#endif
 
 	/*
 	 * If there are enough dots in the name, let's just give it a

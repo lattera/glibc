@@ -97,6 +97,6 @@ struct shm_info
     unsigned long int swap_successes;
   };
 
-__END_DECLS
-
 #endif /* __USE_MISC */
+
+__END_DECLS

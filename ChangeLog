@@ -1,3 +1,19 @@
+2004-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nsearch): Protect the debugging
+	printf with #ifdef DEBUG and RES_DEBUG check.
+
+	* sysdeps/unix/sysv/linux/bits/shm.h: Move __END_DECLS after
+	__USE_MISC #endif.
+	* sysdeps/generic/bits/shm.h: Add __BEGIN_DECLS for __getpagesize
+	declaration.
+	* sysdeps/gnu/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Likewise.
+
 2004-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/ca.po: Update from translation team.
