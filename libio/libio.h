@@ -231,9 +231,8 @@ struct _IO_FILE_complete
 #endif
 #if defined _G_IO_IO_FILE_VERSION && _G_IO_IO_FILE_VERSION == 0x20001
   _IO_off64_t _offset;
-  char *_IO_save_ptr;
   /* Make sure we don't get into trouble again.  */
-  char _unused2[16 * sizeof (int) - sizeof (char *)];
+  int _unused2[16];
 #endif
 };
 

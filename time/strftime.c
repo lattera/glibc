@@ -20,11 +20,6 @@
 # include <config.h>
 #endif
 
-/* Some hosts need this in order to declare localtime_r properly.  */
-#ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
-#endif
-
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
@@ -45,12 +40,6 @@
 
 #include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
-
-/* Some systems require <unistd.h> to be included before <time.h>
-   for localtime_r to be declared properly.  */
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
 
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -153,19 +142,20 @@ extern char *tzname[];
 
 
 #ifdef _LIBC
-# define gmtime_r __gmtime_r
-# define localtime_r __localtime_r
+# define my_strftime_gmtime_r __gmtime_r
+# define my_strftime_localtime_r __localtime_r
 # define tzname __tzname
 # define tzset __tzset
 #else
-# if ! HAVE_LOCALTIME_R
-#  if ! HAVE_TM_GMTOFF
-/* Approximate gmtime_r as best we can in its absence.  */
-#   undef gmtime_r
-#   define gmtime_r my_gmtime_r
-static struct tm *gmtime_r __P ((const time_t *, struct tm *));
+
+/* If we're a strftime substitute in a GNU program, then prefer gmtime
+   to gmtime_r, since many gmtime_r implementations are buggy.
+   Similarly for localtime_r.  */
+
+# if ! HAVE_TM_GMTOFF
+static struct tm *my_strftime_gmtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-gmtime_r (t, tp)
+my_strftime_gmtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
@@ -175,14 +165,11 @@ gmtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-#  endif /* ! HAVE_TM_GMTOFF */
+# endif /* ! HAVE_TM_GMTOFF */
 
-/* Approximate localtime_r as best we can in its absence.  */
-#  undef localtime_r
-#  define localtime_r my_ftime_localtime_r
-static struct tm *localtime_r __P ((const time_t *, struct tm *));
+static struct tm *my_strftime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-localtime_r (t, tp)
+my_strftime_localtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
@@ -192,7 +179,6 @@ localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-# endif /* ! HAVE_LOCALTIME_R */
 #endif /* ! defined _LIBC */
 
 
@@ -1203,7 +1189,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 		       occurred.  */
 		    struct tm tm;
 
-		    if (! localtime_r (&lt, &tm)
+		    if (! my_strftime_localtime_r (&lt, &tm)
 			|| ((ltm.tm_sec ^ tm.tm_sec)
 			    | (ltm.tm_min ^ tm.tm_min)
 			    | (ltm.tm_hour ^ tm.tm_hour)
@@ -1213,7 +1199,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 		      break;
 		  }
 
-		if (! gmtime_r (&lt, &gtm))
+		if (! my_strftime_gmtime_r (&lt, &gtm))
 		  break;
 
 		diff = tm_diff (&ltm, &gtm);

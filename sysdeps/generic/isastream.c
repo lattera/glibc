@@ -17,16 +17,19 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stropts.h>
 
 int
 isastream (fildes)
      int fildes;
 {
-  __set_errno (ENOSYS);
-  return -1;
+  /* In general we do not have a STREAMS implementation and therefore
+     return 0.  But for invalid file descriptors we have to return an
+     error.  */
+  if (__fcntl (fildes, F_GETFD) < 0)
+    return -1;
+
+  /* No STREAM.  */
+  return 0;
 }
-
-
-stub_warning (isastream)
-#include <stub-tag.h>

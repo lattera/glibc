@@ -44,7 +44,10 @@ fgets_unlocked (buf, n, fp)
   old_error = fp->_IO_file_flags & _IO_ERR_SEEN;
   fp->_IO_file_flags &= ~_IO_ERR_SEEN;
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
-  if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
+  /* If we read in some bytes and errno is EAGAIN, that error will
+     be reported for next read. */
+  if (count == 0 || ((fp->_IO_file_flags & _IO_ERR_SEEN)
+  		     && errno != EAGAIN))
     result = NULL;
   else
     {

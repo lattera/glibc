@@ -19,8 +19,13 @@ extra-objs := $(extra-objs)
 
 # Add each flavor of library to the lists of things to build and install.
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
-extra-objs += $(foreach o,$(object-suffixes-$(lib)),\
-			$(patsubst %,%$o,$($(lib)-routines)))
+extra-objs += $(foreach o,$(object-suffixes-$(lib):.os=),\
+			$(patsubst %,%$o,$(filter-out \
+					   $($(lib)-shared-only-routines),\
+					   $($(lib)-routines))))
+ifneq (,$(filter .os,$(object-suffixes-$(lib))))
+extra-objs += $($(lib)-routines:=.os)
+endif
 alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 			     $(objpfx)$(patsubst %,$(libtype$o),\
 			     $(lib:lib%=%)))
@@ -42,12 +47,23 @@ endif
 
 
 # Use o-iterator.mk to generate a rule for each flavor of library.
+ifneq (,$(filter-out .os,$(object-suffices-$(lib))))
 define o-iterator-doit
 $(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
-  $($(lib)-routines:%=$(objpfx)%$o); $$(build-extra-lib)
+  $(patsubst %,$(objpfx)%$o,\
+	     $(filter-out $($(lib)-shared-only-routines),\
+			  $($(lib)-routines))); \
+	$$(build-extra-lib)
 endef
-object-suffixes-left = $(object-suffixes-$(lib))
-include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-$(lib)))
+object-suffixes-left = $(object-suffixes-$(lib):.os=)
+include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-$(lib):.os=))
+endif
+
+ifneq (,$(filter .os,$(object-suffixes-$(lib))))
+$(objpfx)$(patsubst %,$(libtype.os),$(lib:lib%=%)): \
+  $($(lib)-routines:%=$(objpfx)%.os)
+	$(build-extra-lib)
+endif
 
 ifeq ($(versioning),yes)
 # Add the version script to the dependencies of the shared library.

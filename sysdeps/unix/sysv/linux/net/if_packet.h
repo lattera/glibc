@@ -1,5 +1,5 @@
 /* Definitions for use with Linux SOCK_PACKET sockets.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,18 @@
 #ifndef __IF_PACKET_H
 #define __IF_PACKET_H
 
-/* For now we can just use the kernel definitions.  */
-#include <linux/if_packet.h>
+#include <features.h>
+#include <bits/sockaddr.h>
+
+/* This is the SOCK_PACKET address structure as used in Linux 2.0.
+   From Linux 2.1 the AF_PACKET interface is preferred and you should
+   consider using it in place of this one.  */
+
+struct sockaddr_pkt
+  {
+    __SOCKADDR_COMMON (spkt_);
+    unsigned char spkt_device[14];
+    unsigned short spkt_protocol;
+  };
 
 #endif

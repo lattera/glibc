@@ -599,7 +599,7 @@ ypbind.  ypbind 3.3 and older versions don't always remove these files, so
 glibc will continue to use them.  Other BSD versions seem to work correctly.
 Until ypbind 3.4 is released, you can find a patch at
 
-    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.gz
+    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc4.diff.gz
 
 ??	Under Linux/Alpha, I always get "do_ypcall: clnt_call:
 	RPC: Unable to receive; errno = Connection refused" when using NIS.
@@ -1062,6 +1062,13 @@ prior to 1.1.  I.e., egcs 1.0 to 1.0.3 are all broken (at least on Intel).
 If you have to use this compiler you must define __NO_MATH_INLINES before
 including <math.h> to prevent the inline functions from being used.  egcs 1.1
 fixes the problem.  I don't know about gcc 2.8 and 2.8.1.
+
+??	The sys/sem.h file lacks the definition of `union semun'.
+
+{UD} Nope.  This union has to be provided by the user program.  Former glibc
+versions defined this but it was an error since it does not make much sense
+when thinking about it.  The standards describing the System V IPC functions
+define it this way and therefore programs must be adopted.
 
 
 ? Miscellaneous

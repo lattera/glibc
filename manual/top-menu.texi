@@ -1149,12 +1149,10 @@ Floating Type Macros
 
 Installation
 
-* Tools for Installation::      We recommend using these tools to build.
-* Supported Configurations::    What systems the GNU C library runs on.
-* Tips for Installation::       Useful hints for the installation.
-* Reporting Bugs::              How to report bugs (if you want to
-                                get them fixed) and other troubles
-                                you may have with the GNU C library.
+* Configuring and compiling::   How to compile and test GNU libc.
+* Tools for Compilation::       You'll need these first.
+* Supported Configurations::    What it runs on, what it doesn't.
+* Reporting Bugs::              So they'll get fixed.
 
 Maintenance
 

@@ -64,13 +64,14 @@ _IO_link_in (fp)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
-static _IO_size_t _IO_least_marker __P ((_IO_FILE *fp));
+static _IO_ssize_t _IO_least_marker __P ((_IO_FILE *fp, char *end_p));
 
-static _IO_size_t
-_IO_least_marker (fp)
+static _IO_ssize_t
+_IO_least_marker (fp, end_p)
      _IO_FILE *fp;
+     char *end_p;
 {
-  _IO_ssize_t least_so_far = fp->_IO_read_end - fp->_IO_read_base;
+  _IO_ssize_t least_so_far = end_p - fp->_IO_read_base;
   struct _IO_marker *mark;
   for (mark = fp->_markers; mark != NULL; mark = mark->_next)
     if (mark->_pos < least_so_far)
@@ -94,10 +95,8 @@ _IO_switch_to_main_get_area (fp)
   tmp = fp->_IO_read_base;
   fp->_IO_read_base = fp->_IO_save_base;
   fp->_IO_save_base = tmp;
-  /* Swap _IO_read_ptr and _IO_save_ptr. */
-  tmp = fp->_IO_read_ptr;
-  fp->_IO_read_ptr = fp->_IO_save_ptr;
-  fp->_IO_save_ptr = tmp;
+  /* Set _IO_read_ptr. */
+  fp->_IO_read_ptr = fp->_IO_read_base;
 }
 
 /* Switch current get area from main get area to (end of) backup area. */
@@ -112,12 +111,11 @@ _IO_switch_to_backup_area (fp)
   tmp = fp->_IO_read_end;
   fp->_IO_read_end = fp->_IO_save_end;
   fp->_IO_save_end = tmp;
-  /* Swap _gbase and _IO_save_base. */
+  /* Swap _IO_read_base and _IO_save_base. */
   tmp = fp->_IO_read_base;
   fp->_IO_read_base = fp->_IO_save_base;
   fp->_IO_save_base = tmp;
-  /* read _IO_read_ptr.  */
-  fp->_IO_save_ptr = fp->_IO_read_ptr;
+  /* Set _IO_read_ptr.  */
   fp->_IO_read_ptr = fp->_IO_read_end;
 }
 
@@ -183,26 +181,28 @@ __overflow (f, ch)
   return _IO_OVERFLOW (f, ch);
 }
 
-static int save_for_backup __P ((_IO_FILE *fp))
+static int save_for_backup __P ((_IO_FILE *fp, char *end_p))
 #ifdef _LIBC
      internal_function
 #endif
      ;
 
-     static int
+static int
 #ifdef _LIBC
-     internal_function
+internal_function
 #endif
-save_for_backup (fp)
+save_for_backup (fp, end_p)
      _IO_FILE *fp;
+     char *end_p;
 {
-  /* Append [_IO_read_base.._IO_read_end] to backup area. */
-  int least_mark = _IO_least_marker (fp);
+  /* Append [_IO_read_base..end_p] to backup area. */
+  _IO_ssize_t least_mark = _IO_least_marker (fp, end_p);
   /* needed_size is how much space we need in the backup area. */
-  int needed_size = (fp->_IO_read_end - fp->_IO_read_base) - least_mark;
-  int current_Bsize = fp->_IO_save_end - fp->_IO_save_base;
-  int avail; /* Extra space available for future expansion. */
-  int delta;
+  _IO_size_t needed_size = (end_p - fp->_IO_read_base) - least_mark;
+  /* FIXME: Dubious arithmetic if pointers are NULL */
+  _IO_size_t current_Bsize = fp->_IO_save_end - fp->_IO_save_base;
+  _IO_size_t avail; /* Extra space available for future expansion. */
+  _IO_ssize_t delta;
   struct _IO_marker *mark;
   if (needed_size > current_Bsize)
     {
@@ -218,14 +218,14 @@ save_for_backup (fp)
 				fp->_IO_save_end + least_mark,
 				-least_mark),
 		     fp->_IO_read_base,
-		     fp->_IO_read_end - fp->_IO_read_base);
+		     end_p - fp->_IO_read_base);
 #else
 	  memcpy (new_buffer + avail,
 		  fp->_IO_save_end + least_mark,
 		  -least_mark);
 	  memcpy (new_buffer + avail - least_mark,
 		  fp->_IO_read_base,
-		  fp->_IO_read_end - fp->_IO_read_base);
+		  end_p - fp->_IO_read_base);
 #endif
 	}
       else
@@ -247,17 +247,16 @@ save_for_backup (fp)
 		   -least_mark);
 	  memcpy (fp->_IO_save_base + avail - least_mark,
 		  fp->_IO_read_base,
-		  fp->_IO_read_end - fp->_IO_read_base);
+		  end_p - fp->_IO_read_base);
 	}
       else if (needed_size > 0)
 	memcpy (fp->_IO_save_base + avail,
 		fp->_IO_read_base + least_mark,
 		needed_size);
     }
-  /* FIXME: Dubious arithmetic if pointers are NULL */
   fp->_IO_backup_base = fp->_IO_save_base + avail;
   /* Adjust all the streammarkers. */
-  delta = fp->_IO_read_end - fp->_IO_read_base;
+  delta = end_p - fp->_IO_read_base;
   for (mark = fp->_markers; mark != NULL; mark = mark->_next)
     mark->_pos -= delta;
   return 0;
@@ -280,7 +279,7 @@ __underflow (fp)
     }
   if (_IO_have_markers (fp))
     {
-      if (save_for_backup (fp))
+      if (save_for_backup (fp, fp->_IO_read_end))
 	return EOF;
     }
   else if (_IO_have_backup (fp))
@@ -305,7 +304,7 @@ __uflow (fp)
     }
   if (_IO_have_markers (fp))
     {
-      if (save_for_backup (fp))
+      if (save_for_backup (fp, fp->_IO_read_end))
 	return EOF;
     }
   else if (_IO_have_backup (fp))
@@ -817,10 +816,7 @@ _IO_seekmark (fp, mark, delta)
   else
     {
       if (!_IO_in_backup (fp))
-	{
-	  fp->_IO_read_ptr = fp->_IO_read_base;
-	  _IO_switch_to_backup_area (fp);
-	}
+	_IO_switch_to_backup_area (fp);
       fp->_IO_read_ptr = fp->_IO_read_end + mark->_pos;
     }
   return 0;
@@ -880,20 +876,28 @@ _IO_default_pbackfail (fp, c)
   else
     {
       /* Need to handle a filebuf in write mode (switch to read mode). FIXME!*/
-      if (_IO_have_backup (fp) && !_IO_in_backup (fp))
-	_IO_switch_to_backup_area (fp);
-
-      if (!_IO_have_backup (fp))
+      if (!_IO_in_backup (fp))
 	{
-	  /* No backup buffer: allocate one. */
-	  /* Use nshort buffer, if unused? (probably not)  FIXME */
-	  int backup_size = 128;
-	  char *bbuf = (char *) malloc (backup_size);
-	  if (bbuf == NULL)
-	    return EOF;
-	  fp->_IO_save_base = bbuf;
-	  fp->_IO_save_end = fp->_IO_save_base + backup_size;
-	  fp->_IO_backup_base = fp->_IO_save_end;
+	  /* We need to keep the invariant that the main get area
+	     logically follows the backup area.  */
+	  if (fp->_IO_read_ptr > fp->_IO_read_base && _IO_have_backup (fp))
+	    {
+	      if (save_for_backup (fp, fp->_IO_read_ptr))
+		return EOF;
+	    }
+	  else if (!_IO_have_backup (fp))
+	    {
+	      /* No backup buffer: allocate one. */
+	      /* Use nshort buffer, if unused? (probably not)  FIXME */
+	      int backup_size = 128;
+	      char *bbuf = (char *) malloc (backup_size);
+	      if (bbuf == NULL)
+		return EOF;
+	      fp->_IO_save_base = bbuf;
+	      fp->_IO_save_end = fp->_IO_save_base + backup_size;
+	      fp->_IO_backup_base = fp->_IO_save_end;
+	    }
+	  fp->_IO_read_base = fp->_IO_read_ptr;
 	  _IO_switch_to_backup_area (fp);
 	}
       else if (fp->_IO_read_ptr <= fp->_IO_read_base)

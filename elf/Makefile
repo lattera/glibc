@@ -40,16 +40,17 @@ distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
 		  dl-librecon.h interp.c sln.c dl-origin.h
 
+include ../Makeconfig
+
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dlopenold
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
+ifeq ($(versioning),yes)
+libdl-routines	+= dlopenold
+libdl-shared-only-routines := dlopenold
+endif
 
 before-compile = $(objpfx)trusted-dirs.h
-
-
-all: # Make this the default target; it will be defined in Rules.
-
-include ../Makeconfig
 
 ifeq ($(versioning),yes)
 ld-map		= $(common-objpfx)libc.map
