@@ -1,3 +1,8 @@
+2001-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strptime.c (strptime_internal): Recognize 'l' format and
+	handle it like 'I' for symmatry with strftime.
+
 2001-08-31  Richard Henderson  <rth@redhat.com>
 
 	* elf/dl-support.c (_dl_cpuclock_offset): Protect with NONAVAIL.

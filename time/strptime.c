@@ -463,6 +463,8 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	  tm->tm_hour = val;
 	  have_I = 0;
 	  break;
+	case 'l':
+	  /* Match hour in 12-hour clock.  GNU extension.  */
 	case 'I':
 	  /* Match hour in 12-hour clock.  */
 	  get_number (1, 12, 2);

@@ -1480,6 +1480,11 @@ format; e.g. a date passed as @code{"02:1999:9"} is acceptable, even
 though it is ambiguous without context.  As long as the format string
 @var{fmt} matches the input string the function will succeed.
 
+The user has to make sure, though, that the input can be parsed in a
+unambiguous way.  The string @code{"1999112"} can be parsed using the
+format @code{"%Y%m%d"} as 1999-1-12, 1999-11-2, or even 19991-1-2.  It
+is necessary to add appropriate separators to reliably get results.
+
 The format string consists of the same components as the format string
 of the @code{strftime} function.  The only difference is that the flags
 @code{_}, @code{-}, @code{0}, and @code{^} are not allowed.
