@@ -1,3 +1,15 @@
+1999-05-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* malloc/malloc.h: Properly handle future GCC versions.
+
+1999-05-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Change version checks to
+	use AC_EGREP_CPP.  Change sed pattern to not use alternation.  Fix
+	text of error message.
+
+	* aclocal.m4 (GLIBC_PROVIDES): Define AC_LANG to `C'.
+
 1999-05-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/filesys.texi: Extend (f)truncate documentation.
