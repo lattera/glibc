@@ -39,8 +39,10 @@ perror (const char *s)
 
   errstring = __strerror_r (errnum, buf, sizeof buf);
 
+#ifdef USE_IN_LIBIO
   if (fwide (stderr, 0) > 0)
     (void) fwprintf (stderr, L"%s%s%s\n", s, colon, errstring);
   else
+#endif
     (void) fprintf (stderr, "%s%s%s\n", s, colon, errstring);
 }
