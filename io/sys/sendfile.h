@@ -32,19 +32,19 @@ __BEGIN_DECLS
    case of error.  */
 #ifndef __USE_FILE_OFFSET64
 extern ssize_t sendfile (int __out_fd, int __in_fd, off_t *__offset,
-			 size_t __count) __THROW;
+			 size_t __count) __THROW __nonnull ((3));
 #else
 # ifdef __REDIRECT_NTH
 extern ssize_t __REDIRECT_NTH (sendfile,
 			       (int __out_fd, int __in_fd, __off64_t *__offset,
-				size_t __count), sendfile64);
+				size_t __count), sendfile64) __nonnull ((3));
 # else
 #  define sendfile sendfile64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern ssize_t sendfile64 (int __out_fd, int __in_fd, __off64_t *__offset,
-			   size_t __count) __THROW;
+			   size_t __count) __THROW __nonnull ((3));
 #endif
 
 __END_DECLS

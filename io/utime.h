@@ -44,7 +44,8 @@ struct utimbuf
 /* Set the access and modification times of FILE to those given in
    *FILE_TIMES.  If FILE_TIMES is NULL, set them to the current time.  */
 extern int utime (__const char *__file,
-		  __const struct utimbuf *__file_times) __THROW;
+		  __const struct utimbuf *__file_times)
+     __THROW __nonnull ((1, 2));
 
 __END_DECLS
 

@@ -50,35 +50,40 @@ __BEGIN_DECLS
 /* Return information about the filesystem on which FILE resides.  */
 #ifndef __USE_FILE_OFFSET64
 extern int statvfs (__const char *__restrict __file,
-		    struct statvfs *__restrict __buf) __THROW;
+		    struct statvfs *__restrict __buf)
+     __THROW __nonnull ((1, 2));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (statvfs,
 			   (__const char *__restrict __file,
-			    struct statvfs *__restrict __buf), statvfs64);
+			    struct statvfs *__restrict __buf), statvfs64)
+     __nonnull ((1, 2));
 # else
 #  define statvfs statvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int statvfs64 (__const char *__restrict __file,
-		      struct statvfs64 *__restrict __buf) __THROW;
+		      struct statvfs64 *__restrict __buf)
+     __THROW __nonnull ((1, 2));
 #endif
 
 /* Return information about the filesystem containing the file FILDES
    refers to.  */
 #ifndef __USE_FILE_OFFSET64
-extern int fstatvfs (int __fildes, struct statvfs *__buf) __THROW;
+extern int fstatvfs (int __fildes, struct statvfs *__buf)
+     __THROW __nonnull ((2));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (fstatvfs, (int __fildes, struct statvfs *__buf),
-			   fstatvfs64);
+			   fstatvfs64) __nonnull ((2));
 # else
 #  define fstatvfs fstatvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int fstatvfs64 (int __fildes, struct statvfs64 *__buf) __THROW;
+extern int fstatvfs64 (int __fildes, struct statvfs64 *__buf)
+     __THROW __nonnull ((2));
 #endif
 
 __END_DECLS

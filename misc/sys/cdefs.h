@@ -242,6 +242,14 @@
 # define __attribute_format_strfmon__(a,b) /* Ignore */
 #endif
 
+/* The nonull function attribute allows to mark pointer parameters which
+   must not be NULL.  */
+#if __GNUC_PREREQ (3,3)
+# define __nonnull(params) __attribute__ ((__nonnull__ params))
+#else
+# define __nonnull(params)
+#endif
+
 /* It is possible to compile containing GCC extensions even if GCC is
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before

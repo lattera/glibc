@@ -9,6 +9,28 @@ Version 2.3.4
 
 * Support for RFC 3678.  Real implementations exist only for Linux so far.
   Implemented by Ulrich Drepper.
+
+* nscd can now cache entries persistently.  Expiring entries are reloaded.
+  For speedups the cache can be shared in memory with client processes.
+  Implemented by Ulrich Drepper.
+
+* nscd can now perform SELinux checks.
+  Implemented by Matthew Rickard <mjricka@epoch.ncsc.mil>.
+
+* getaddrinfo queries are not cached.  Canonical name lookup is performed
+  efficiently.
+  Implemented by Ulrich Drepper.
+
+* The nothrow function attribute is used when headers are used by gcc when
+  compiling C code.  This can avoid significant amounts of exception
+  handling data.
+
+* The malloc functions perform more error checking and are stricter when
+  it comes to reacting on errors.  The default action is to terminate
+  the process after showing an error message.
+
+* Reverse lookups of IPv6 addresses does not use bit string or .ip6.int
+  lookups anymore unless explicitly requested.
 
 Version 2.3.3
 

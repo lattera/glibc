@@ -205,16 +205,18 @@ __BEGIN_DECLS
 #ifndef __USE_FILE_OFFSET64
 /* Get file attributes for FILE and put them in BUF.  */
 extern int stat (__const char *__restrict __file,
-		 struct stat *__restrict __buf) __THROW;
+		 struct stat *__restrict __buf) __THROW __nonnull ((1, 2));
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
-extern int fstat (int __fd, struct stat *__buf) __THROW;
+extern int fstat (int __fd, struct stat *__buf) __THROW __nonnull ((2));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (stat, (__const char *__restrict __file,
-				  struct stat *__restrict __buf), stat64);
-extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), fstat64);
+				  struct stat *__restrict __buf), stat64)
+     __nonnull ((1, 2));
+extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), fstat64)
+     __nonnull ((2));
 # else
 #  define stat stat64
 #  define fstat fstat64
@@ -222,8 +224,8 @@ extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), fstat64);
 #endif
 #ifdef __USE_LARGEFILE64
 extern int stat64 (__const char *__restrict __file,
-		   struct stat64 *__restrict __buf) __THROW;
-extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
+		   struct stat64 *__restrict __buf) __THROW __nonnull ((1, 2));
+extern int fstat64 (int __fd, struct stat64 *__buf) __THROW __nonnull ((2));
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -231,31 +233,35 @@ extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
 extern int lstat (__const char *__restrict __file,
-		  struct stat *__restrict __buf) __THROW;
+		  struct stat *__restrict __buf) __THROW __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (lstat,
 			   (__const char *__restrict __file,
-			    struct stat *__restrict __buf), lstat64);
+			    struct stat *__restrict __buf), lstat64)
+     __nonnull ((1, 2));
 #  else
 #   define lstat lstat64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lstat64 (__const char *__restrict __file,
-		    struct stat64 *__restrict __buf) __THROW;
+		    struct stat64 *__restrict __buf)
+     __THROW __nonnull ((1, 2));
 # endif
 #endif
 
 /* Set file access permissions for FILE to MODE.
    If FILE is a symbolic link, this affects its target instead.  */
-extern int chmod (__const char *__file, __mode_t __mode) __THROW;
+extern int chmod (__const char *__file, __mode_t __mode)
+     __THROW __nonnull ((1));
 
 #ifdef __USE_BSD
 /* Set file access permissions for FILE to MODE.
    If FILE is a symbolic link, this affects the link itself
    rather than its target.  */
-extern int lchmod (__const char *__file, __mode_t __mode) __THROW;
+extern int lchmod (__const char *__file, __mode_t __mode)
+     __THROW __nonnull ((1));
 #endif
 
 /* Set file access permissions of the file FD is open on to MODE.  */
@@ -275,19 +281,21 @@ extern __mode_t getumask (void) __THROW;
 #endif
 
 /* Create a new directory named PATH, with permission bits MODE.  */
-extern int mkdir (__const char *__path, __mode_t __mode) __THROW;
+extern int mkdir (__const char *__path, __mode_t __mode)
+     __THROW __nonnull ((1));
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 #if defined __USE_MISC || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
-     __THROW;
+     __THROW __nonnull ((1));
 #endif
 
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
-extern int mkfifo (__const char *__path, __mode_t __mode) __THROW;
+extern int mkfifo (__const char *__path, __mode_t __mode)
+     __THROW __nonnull ((1));
 
 /* To allow the `struct stat' structure and the file type `mode_t'
    bits to vary without changing shared library major version number,
@@ -313,19 +321,23 @@ extern int mkfifo (__const char *__path, __mode_t __mode) __THROW;
 
 /* Wrappers for stat and mknod system calls.  */
 #ifndef __USE_FILE_OFFSET64
-extern int __fxstat (int __ver, int __fildes, struct stat *__stat_buf) __THROW;
+extern int __fxstat (int __ver, int __fildes, struct stat *__stat_buf)
+     __THROW __nonnull ((3));
 extern int __xstat (int __ver, __const char *__filename,
-		    struct stat *__stat_buf) __THROW;
+		    struct stat *__stat_buf) __THROW __nonnull ((2, 3));
 extern int __lxstat (int __ver, __const char *__filename,
-		     struct stat *__stat_buf) __THROW;
+		     struct stat *__stat_buf) __THROW __nonnull ((2, 3));
 #else
 # ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (__fxstat, (int __ver, int __fildes,
-				      struct stat *__stat_buf), __fxstat64);
+				      struct stat *__stat_buf), __fxstat64)
+     __nonnull ((3));
 extern int __REDIRECT_NTH (__xstat, (int __ver, __const char *__filename,
-				     struct stat *__stat_buf), __xstat64);
+				     struct stat *__stat_buf), __xstat64)
+     __nonnull ((2, 3));
 extern int __REDIRECT_NTH (__lxstat, (int __ver, __const char *__filename,
-				      struct stat *__stat_buf), __lxstat64);
+				      struct stat *__stat_buf), __lxstat64)
+     __nonnull ((2, 3));
 
 # else
 #  define __fxstat __fxstat64
@@ -336,14 +348,14 @@ extern int __REDIRECT_NTH (__lxstat, (int __ver, __const char *__filename,
 
 #ifdef __USE_LARGEFILE64
 extern int __fxstat64 (int __ver, int __fildes, struct stat64 *__stat_buf)
-     __THROW;
+     __THROW __nonnull ((3));
 extern int __xstat64 (int __ver, __const char *__filename,
-		      struct stat64 *__stat_buf) __THROW;
+		      struct stat64 *__stat_buf) __THROW __nonnull ((2, 3));
 extern int __lxstat64 (int __ver, __const char *__filename,
-		       struct stat64 *__stat_buf) __THROW;
+		       struct stat64 *__stat_buf) __THROW __nonnull ((2, 3));
 #endif
 extern int __xmknod (int __ver, __const char *__path, __mode_t __mode,
-		     __dev_t *__dev) __THROW;
+		     __dev_t *__dev) __THROW __nonnull ((2, 4));
 
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Inlined versions of the real stat and mknod functions.  */

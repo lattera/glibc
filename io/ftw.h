@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1996-1999,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -134,18 +134,19 @@ typedef int (*__nftw64_func_t) (__const char *__filename,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors);
+extern int ftw (__const char *__dir, __ftw_func_t __func, int __descriptors)
+     __nonnull ((1, 2));
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (ftw, (__const char *__dir, __ftw_func_t __func,
-			     int __descriptors), ftw64);
+			     int __descriptors), ftw64) __nonnull ((1, 2));
 # else
 #  define ftw ftw64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
-		  int __descriptors);
+		  int __descriptors) __nonnull ((1, 2));
 #endif
 
 #ifdef __USE_XOPEN_EXTENDED
@@ -156,18 +157,19 @@ extern int ftw64 (__const char *__dir, __ftw64_func_t __func,
    marked with __THROW.  */
 # ifndef __USE_FILE_OFFSET64
 extern int nftw (__const char *__dir, __nftw_func_t __func, int __descriptors,
-		 int __flag);
+		 int __flag) __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
-			      int __descriptors, int __flag), nftw64);
+			      int __descriptors, int __flag), nftw64)
+     __nonnull ((1, 2));
 #  else
 #   define nftw nftw64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int nftw64 (__const char *__dir, __nftw64_func_t __func,
-		   int __descriptors, int __flag);
+		   int __descriptors, int __flag) __nonnull ((1, 2));
 # endif
 #endif
 

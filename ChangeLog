@@ -1,3 +1,17 @@
+2004-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/cdefs.h: Define __nonnull using nonnull function attribute
+	for gcc 3.3 and higher.
+	* io/fcntl.h: Add __nonnull where appropriate.
+	* io/ftw.h: Likewise.
+	* io/utime.h: Likewise.
+	* io/sys/poll.h: Likewise.
+	* io/sys/sendfile.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/sys/statvfs.h: Likewise.
+	* posix/unistd.h: Likewise.
+
 2004-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/glob.h: Remove cruft to make header usable outside glibc.
