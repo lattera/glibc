@@ -1,5 +1,4 @@
 errlist.awk
-eval.c
 utmpx.h
 bits/utmpx.h
 netinet/tcp.h
