@@ -1,3 +1,8 @@
+1999-03-02  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): DT_PLTGOT
+	entry is already relocated.
+
 1999-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/res_hconf.c (parse_line): Skip empty lines.  Bug reported

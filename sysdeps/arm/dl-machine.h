@@ -88,7 +88,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 in.  Their initial contents will arrange when called to push an
 	 index into the .got section, load ip with &_GLOBAL_OFFSET_TABLE_[3],
 	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-      got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
 
       /* The got[2] entry contains the address of a function which gets
