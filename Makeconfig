@@ -927,11 +927,11 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 all-Depend-files = $(wildcard $(..)*/Depend)
 $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 			     $(common-objpfx)sysd-dirs $(..)Makeconfig
-	{ { dirs='$(patsubst $(..)%/Depend,$(..)%,$(filter %/Depend,$^))';\
+	{ { dirs='$(patsubst $(..)%/Depend,%,$(filter %/Depend,$^))';	  \
 	    for d in $$dirs; do						  \
 	      while read on; do						  \
 		echo "depend $$d $$on";					  \
-	      done < $$d/Depend;					  \
+	      done < $(..)$$d/Depend;					  \
 	    done;							  \
 	    for f in $(all-subdirs); do					  \
 	      echo $$f;							  \
