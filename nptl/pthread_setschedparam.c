@@ -25,7 +25,7 @@
 
 
 int
-pthread_setschedparam (thread_id, policy, param)
+__pthread_setschedparam (thread_id, policy, param)
      pthread_t thread_id;
      int policy;
      const struct sched_param *param;
@@ -57,3 +57,4 @@ pthread_setschedparam (thread_id, policy, param)
 
   return result;
 }
+strong_alias (__pthread_setschedparam, pthread_setschedparam)

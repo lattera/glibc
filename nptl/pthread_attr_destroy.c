@@ -25,7 +25,7 @@
 
 
 int
-pthread_attr_destroy (attr)
+__pthread_attr_destroy (attr)
      pthread_attr_t *attr;
 {
   /* Enqueue the attributes to the list of all known variables.  */
@@ -64,3 +64,4 @@ pthread_attr_destroy (attr)
 
   return 0;
 }
+strong_alias (__pthread_attr_destroy, pthread_attr_destroy)

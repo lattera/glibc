@@ -23,7 +23,7 @@
 
 
 int
-pthread_getschedparam (thread_id, policy, param)
+__pthread_getschedparam (thread_id, policy, param)
      pthread_t thread_id;
      int *policy;
      struct sched_param *param;
@@ -49,3 +49,4 @@ pthread_getschedparam (thread_id, policy, param)
 
   return 0;
 }
+strong_alias (__pthread_getschedparam, pthread_getschedparam)

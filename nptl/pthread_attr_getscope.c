@@ -22,7 +22,7 @@
 
 
 int
-pthread_attr_getscope (attr, scope)
+__pthread_attr_getscope (attr, scope)
      const pthread_attr_t *attr;
      int *scope;
 {
@@ -37,3 +37,4 @@ pthread_attr_getscope (attr, scope)
 
   return 0;
 }
+strong_alias (__pthread_attr_getscope, pthread_attr_getscope)

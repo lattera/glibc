@@ -21,7 +21,7 @@
 
 
 int
-pthread_cond_init (cond, cond_attr)
+__pthread_cond_init (cond, cond_attr)
      pthread_cond_t *cond;
      const pthread_condattr_t *cond_attr;
 {
@@ -35,3 +35,4 @@ pthread_cond_init (cond, cond_attr)
 
   return 0;
 }
+strong_alias (__pthread_cond_init, pthread_cond_init)

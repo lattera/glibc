@@ -22,7 +22,8 @@
 
 
 pthread_t
-pthread_self (void)
+__pthread_self (void)
 {
   return (pthread_t) THREAD_SELF;
 }
+strong_alias (__pthread_self, pthread_self)

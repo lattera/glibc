@@ -22,7 +22,7 @@
 
 
 int
-pthread_cond_wait (cond, mutex)
+__pthread_cond_wait (cond, mutex)
      pthread_cond_t *cond;
      pthread_mutex_t *mutex;
 {
@@ -64,3 +64,4 @@ pthread_cond_wait (cond, mutex)
 
   return err;
 }
+strong_alias (__pthread_cond_wait, pthread_cond_wait)

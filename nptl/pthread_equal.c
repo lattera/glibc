@@ -21,9 +21,10 @@
 
 
 int
-pthread_equal (thread1, thread2)
+__pthread_equal (thread1, thread2)
      pthread_t thread1;
      pthread_t thread2;
 {
   return thread1 == thread2;
 }
+strong_alias (__pthread_equal, pthread_equal)

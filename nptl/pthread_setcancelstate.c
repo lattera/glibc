@@ -23,7 +23,7 @@
 
 
 int
-pthread_setcancelstate (state, oldstate)
+__pthread_setcancelstate (state, oldstate)
      int state;
      int *oldstate;
 {
@@ -66,3 +66,4 @@ pthread_setcancelstate (state, oldstate)
 
   return 0;
 }
+strong_alias (__pthread_setcancelstate, pthread_setcancelstate)

@@ -23,7 +23,7 @@
 
 
 int
-pthread_attr_setschedpolicy (attr, policy)
+__pthread_attr_setschedpolicy (attr, policy)
      pthread_attr_t *attr;
      int policy;
 {
@@ -41,3 +41,4 @@ pthread_attr_setschedpolicy (attr, policy)
 
   return 0;
 }
+strong_alias (__pthread_attr_setschedpolicy, pthread_attr_setschedpolicy)

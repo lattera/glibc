@@ -22,10 +22,11 @@
 
 
 void
-pthread_exit (value)
+__pthread_exit (value)
      void *value;
 {
   THREAD_SETMEM (THREAD_SELF, result, value);
 
   __do_cancel ();
 }
+strong_alias (__pthread_exit, pthread_exit)

@@ -23,7 +23,7 @@
 
 
 int
-pthread_attr_setinheritsched (attr, inherit)
+__pthread_attr_setinheritsched (attr, inherit)
      pthread_attr_t *attr;
      int inherit;
 {
@@ -44,3 +44,4 @@ pthread_attr_setinheritsched (attr, inherit)
 
   return 0;
 }
+strong_alias (__pthread_attr_setinheritsched, pthread_attr_setinheritsched)

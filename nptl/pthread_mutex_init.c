@@ -53,3 +53,4 @@ __pthread_mutex_init (mutex, mutexattr)
   return 0;
 }
 strong_alias (__pthread_mutex_init, pthread_mutex_init)
+INTDEF(__pthread_mutex_init)

@@ -27,3 +27,4 @@ __pthread_mutex_destroy (mutex)
   return 0;
 }
 strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
+INTDEF(__pthread_mutex_destroy)

@@ -23,7 +23,7 @@
 
 
 int
-pthread_attr_getschedparam (attr, param)
+__pthread_attr_getschedparam (attr, param)
      const pthread_attr_t *attr;
      struct sched_param *param;
 {
@@ -37,3 +37,4 @@ pthread_attr_getschedparam (attr, param)
 
   return 0;
 }
+strong_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam)

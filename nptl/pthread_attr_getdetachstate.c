@@ -22,7 +22,7 @@
 
 
 int
-pthread_attr_getdetachstate (attr, detachstate)
+__pthread_attr_getdetachstate (attr, detachstate)
      const pthread_attr_t *attr;
      int *detachstate;
 {
@@ -36,3 +36,4 @@ pthread_attr_getdetachstate (attr, detachstate)
 
   return 0;
 }
+strong_alias (__pthread_attr_getdetachstate, pthread_attr_getdetachstate)

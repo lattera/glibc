@@ -23,7 +23,7 @@
 
 
 int
-pthread_attr_setscope (attr, scope)
+__pthread_attr_setscope (attr, scope)
      pthread_attr_t *attr;
      int scope;
 {
@@ -48,3 +48,4 @@ pthread_attr_setscope (attr, scope)
 
   return 0;
 }
+strong_alias (__pthread_attr_setscope, pthread_attr_setscope)
