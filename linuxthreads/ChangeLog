@@ -1,3 +1,14 @@
+2002-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Move declarations/definitions of
+	__pthread_initial_thread_bos, __pthread_initial_thread,
+	__pthread_manager_thread_bos, __pthread_manager_thread_tos,
+	__pthread_manager_thread, __pthread_nonstandard_stacks, STACK_SIZE,
+	CURRENT_STACK_FRAME, __pthread_find_self, and thread_self...
+	* descr.h: ...here.
+	* sysdeps/i386/tls.h: Add TLS definitions also for !FLOATING_STACKS.
+	Define THREAD_GETMEM accordingly.
+
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h: Include <stddef.h> for size_t.

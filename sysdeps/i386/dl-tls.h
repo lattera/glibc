@@ -19,15 +19,15 @@
 
 #ifdef USE_TLS
 /* Type used for the representation of TLS information in the GOT.  */
-struct tls_index
+typedef struct
 {
   unsigned long int ti_module;
   unsigned long int ti_offset;
-};
+} tls_index;
 
 
 /* This is the prototype for the GNU version.  */
-extern void *___tls_get_addr (struct tls_index *ti)
+extern void *___tls_get_addr (tls_index *ti)
      __attribute__ ((__regparm__ (1)));
 
 /* The special thing about the x86 TLS ABI is that we have two
@@ -37,7 +37,7 @@ extern void *___tls_get_addr (struct tls_index *ti)
    an additional underscore at the beginning.  The Sun version uses
    the normal calling convention.  */
 void *
-__tls_get_addr (struct tls_index *ti)
+__tls_get_addr (tls_index *ti)
 {
   return ___tls_get_addr (ti);
 }

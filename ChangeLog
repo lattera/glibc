@@ -1,3 +1,15 @@
+2002-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Account for
+	alignment of the TCB and store total size and alignment of static
+	TLS block in _dl_tls_static_size and _dl_tls_static_align.
+	tls_index is a typedef.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_tls_static_size and
+	_dl_tls_static_align.
+	* sysdeps/i386/dl-tls.h: tls_index is a typedef.
+	* elf/dl-support.c: Define _dl_tls_static_size and
+	_dl_tls_static_align.
+
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* configure.in: Add --without-tls option.

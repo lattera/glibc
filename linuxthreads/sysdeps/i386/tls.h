@@ -42,7 +42,7 @@ typedef struct
 
 
 /* We can support TLS only if the floating-stack support is available.  */
-#if FLOATING_STACKS && defined HAVE_TLS_SUPPORT
+#ifdef HAVE_TLS_SUPPORT
 
 /* Get system call information.  */
 # include <sysdep.h>
@@ -94,11 +94,16 @@ typedef struct
 
 
 /* Return the address of the dtv for the current thread.  */
-# define THREAD_DTV() \
+# if FLOATING_STACKS
+#  define THREAD_DTV() \
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
+# else
+#  define THREAD_DTV() \
+  ({ struct _pthread_descr_struct *__descr = thread_self ();		      \
+     THREAD_GETMEM (__descr, p_header.data.dtvp); })
+# endif
 
-
-#endif
+#endif	/* HAVE_TLS_SUPPORT */
 
 #endif	/* tls.h */

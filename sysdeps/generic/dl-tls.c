@@ -103,7 +103,21 @@ _dl_determine_tlsoffset (struct link_map *firstp)
 
   /* The thread descriptor (pointed to by the thread pointer) has its
      own alignment requirement.  Adjust the static TLS size
-     appropriately.  */
+     and TLS offsets appropriately.  */
+  if (offset % TLS_TCB_ALIGN != 0)
+    {
+      size_t add = TLS_TCB_ALIGN - offset % TLS_TCB_ALIGN;
+
+      /* XXX If the offset stored is negative we must subtract here.  */
+      offset += add;
+
+      runp = firstp;
+      do
+	runp->l_tls_offset += add;
+      while ((runp = runp->l_tls_nextimage) != firstp);
+    }
+
+  GL(dl_tls_static_size) = offset + TLS_TCB_SIZE;
 # elif TLS_DTV_AT_TP
   struct link_map *lastp;
 
@@ -121,10 +135,17 @@ _dl_determine_tlsoffset (struct link_map *firstp)
       offset = roundup (offset + lastp->l_tls_blocksize, runp->l_tls_align);
 
       runp->l_tls_offset = offset;
+
+      lastp = runp;
     }
+
+  GL(dl_tls_static_size) = offset + lastp->l_tls_blocksize;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
+
+  /* The alignment requirement for the static TLS block.  */
+  GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
 }
 
 
@@ -136,7 +157,7 @@ _dl_determine_tlsoffset (struct link_map *firstp)
    it.  Users of the IA-64 form have to provide adequate definitions
    of the following macros.  */
 # ifndef GET_ADDR_ARGS
-#  define GET_ADDR_ARGS struct tls_index *ti
+#  define GET_ADDR_ARGS tls_index *ti
 # endif
 # ifndef GET_ADDR_MODULE
 #  define GET_ADDR_MODULE ti->ti_module

@@ -110,29 +110,9 @@ extern int __pthread_sig_debug;
 
 extern struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX];
 
-/* Descriptor of the initial thread */
-
-extern struct _pthread_descr_struct __pthread_initial_thread;
-
-/* Descriptor of the manager thread */
-
-extern struct _pthread_descr_struct __pthread_manager_thread;
-
 /* Descriptor of the main thread */
 
 extern pthread_descr __pthread_main_thread;
-
-/* Limit between the stack of the initial thread (above) and the
-   stacks of other threads (below). Aligned on a STACK_SIZE boundary.
-   Initially 0, meaning that the current thread is (by definition)
-   the initial thread. */
-
-extern char *__pthread_initial_thread_bos;
-
-/* Indicate whether at least one thread has a user-defined stack (if 1),
-   or all threads have stacks supplied by LinuxThreads (if 0). */
-
-extern int __pthread_nonstandard_stacks;
 
 /* File descriptor for sending requests to the thread manager.
    Initially -1, meaning that __pthread_initialize_manager must be called. */
@@ -142,11 +122,6 @@ extern int __pthread_manager_request;
 /* Other end of the pipe for sending requests to the thread manager. */
 
 extern int __pthread_manager_reader;
-
-/* Limits of the thread manager stack. */
-
-extern char *__pthread_manager_thread_bos;
-extern char *__pthread_manager_thread_tos;
 
 #ifdef FLOATING_STACKS
 /* Maximum stack size.  */
@@ -202,13 +177,6 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 #define PAGE_SIZE  (sysconf (_SC_PAGE_SIZE))
 #endif
 
-/* The max size of the thread stack segments.  If the default
-   THREAD_SELF implementation is used, this must be a power of two and
-   a multiple of PAGE_SIZE.  */
-#ifndef STACK_SIZE
-#define STACK_SIZE  (2 * 1024 * 1024)
-#endif
-
 /* The initial size of the thread stack.  Must be a multiple of PAGE_SIZE.  */
 #ifndef INITIAL_STACK_SIZE
 #define INITIAL_STACK_SIZE  (4 * PAGE_SIZE)
@@ -226,39 +194,6 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 #ifndef THREAD_STACK_START_ADDRESS
 #define THREAD_STACK_START_ADDRESS  __pthread_initial_thread_bos
 #endif
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#ifndef CURRENT_STACK_FRAME
-#define CURRENT_STACK_FRAME  ({ char __csf; &__csf; })
-#endif
-
-/* Recover thread descriptor for the current thread */
-
-extern pthread_descr __pthread_find_self (void) __attribute__ ((const));
-
-static inline pthread_descr thread_self (void) __attribute__ ((const));
-static inline pthread_descr thread_self (void)
-{
-#ifdef THREAD_SELF
-  return THREAD_SELF;
-#else
-  char *sp = CURRENT_STACK_FRAME;
-  if (sp >= __pthread_initial_thread_bos)
-    return &__pthread_initial_thread;
-  else if (sp >= __pthread_manager_thread_bos
-	   && sp < __pthread_manager_thread_tos)
-    return &__pthread_manager_thread;
-  else if (__pthread_nonstandard_stacks)
-    return __pthread_find_self();
-  else
-#ifdef _STACK_GROWS_DOWN
-    return (pthread_descr)(((unsigned long)sp | (STACK_SIZE-1))+1) - 1;
-#else
-    return (pthread_descr)((unsigned long)sp &~ (STACK_SIZE-1));
-#endif
-#endif
-}
 
 /* If MEMORY_BARRIER isn't defined in pt-machine.h, assume the architecture
    doesn't need a memory barrier instruction (e.g. Intel x86).  Some

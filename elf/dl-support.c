@@ -147,6 +147,11 @@ struct link_map *_dl_initimage_list;
 size_t _dl_tls_max_dtv_idx;
 /* Flag signalling whether there are gaps in the module ID allocation.  */
 bool _dl_tls_dtv_gaps;
+
+/* Size of the static TLS block.  */
+size_t _dl_tls_static_size;
+/* Alignment requirement of the static TLS block.  */
+size_t _dl_tls_static_align;
 #endif
 
 

@@ -298,6 +298,11 @@ struct rtld_global
   EXTERN size_t _dl_tls_max_dtv_idx;
   /* Flag signalling whether there are gaps in the module ID allocation.  */
   EXTERN bool _dl_tls_dtv_gaps;
+
+  /* Size of the static TLS block.  */
+  EXTERN size_t _dl_tls_static_size;
+  /* Alignment requirement of the static TLS block.  */
+  EXTERN size_t _dl_tls_static_align;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */

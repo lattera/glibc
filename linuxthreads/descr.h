@@ -165,4 +165,71 @@ struct _pthread_descr_struct {
 				    32 bytes might give better cache
 				    utilization.  */
 
+
+
+/* Limit between the stack of the initial thread (above) and the
+   stacks of other threads (below). Aligned on a STACK_SIZE boundary.
+   Initially 0, meaning that the current thread is (by definition)
+   the initial thread. */
+
+extern char *__pthread_initial_thread_bos;
+
+/* Descriptor of the initial thread */
+
+extern struct _pthread_descr_struct __pthread_initial_thread;
+
+/* Limits of the thread manager stack. */
+
+extern char *__pthread_manager_thread_bos;
+extern char *__pthread_manager_thread_tos;
+
+/* Descriptor of the manager thread */
+
+extern struct _pthread_descr_struct __pthread_manager_thread;
+
+/* Indicate whether at least one thread has a user-defined stack (if 1),
+   or all threads have stacks supplied by LinuxThreads (if 0). */
+
+extern int __pthread_nonstandard_stacks;
+
+/* The max size of the thread stack segments.  If the default
+   THREAD_SELF implementation is used, this must be a power of two and
+   a multiple of PAGE_SIZE.  */
+#ifndef STACK_SIZE
+#define STACK_SIZE  (2 * 1024 * 1024)
+#endif
+
+/* Get some notion of the current stack.  Need not be exactly the top
+   of the stack, just something somewhere in the current frame.  */
+#ifndef CURRENT_STACK_FRAME
+#define CURRENT_STACK_FRAME  ({ char __csf; &__csf; })
+#endif
+
+/* Recover thread descriptor for the current thread */
+
+extern pthread_descr __pthread_find_self (void) __attribute__ ((const));
+
+static inline pthread_descr thread_self (void) __attribute__ ((const));
+static inline pthread_descr thread_self (void)
+{
+#ifdef THREAD_SELF
+  return THREAD_SELF;
+#else
+  char *sp = CURRENT_STACK_FRAME;
+  if (sp >= __pthread_initial_thread_bos)
+    return &__pthread_initial_thread;
+  else if (sp >= __pthread_manager_thread_bos
+	   && sp < __pthread_manager_thread_tos)
+    return &__pthread_manager_thread;
+  else if (__pthread_nonstandard_stacks)
+    return __pthread_find_self();
+  else
+#ifdef _STACK_GROWS_DOWN
+    return (pthread_descr)(((unsigned long)sp | (STACK_SIZE-1))+1) - 1;
+#else
+    return (pthread_descr)((unsigned long)sp &~ (STACK_SIZE-1));
+#endif
+#endif
+}
+
 #endif	/* descr.h */
