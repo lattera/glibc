@@ -537,8 +537,15 @@ __pthread_rwlock_unlock:
 	movl	$1, %ecx
 	leal	WRITERS_WAKEUP(%edi), %eax
 	cmpl	$0, WRITERS_QUEUED(%edi)
-	cmovne	%ecx, %edx
-	cmovne	%eax, %ebx
+#ifdef HAVE_CMOV
+	cmovnel	%ecx, %edx
+	cmovnel	%eax, %ebx
+#else
+	je	0f
+	movl	%ecx, %edx
+	movl	%eax, %ebx
+0:
+#endif
 	movl	$SYS_futex, %eax
 	int	$0x80
 
