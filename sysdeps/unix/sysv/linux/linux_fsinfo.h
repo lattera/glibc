@@ -126,6 +126,9 @@
 /* Constants that identify the `xfs' filesystem.  */
 #define XFS_SUPER_MAGIC		0x58465342
 
+/* Constants that identify the `vxfs' filesystem.  */
+#define VXFS_SUPER_MAGIC	0xa501fcf5
+
 /* Maximum link counts.  */
 #define COH_LINK_MAX		10000
 #define EXT2_LINK_MAX		32000

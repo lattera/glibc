@@ -1,5 +1,9 @@
 2003-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
+	Report correct value for vxfs.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Dfeine VXFS_SUPER_MAGIC.
+
 	* gmon/gmon.c: Use only not-cancelable syscalls to write profiling
 	data.
 

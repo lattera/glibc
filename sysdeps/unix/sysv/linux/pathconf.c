@@ -130,6 +130,7 @@ __statfs_filesize_max (int result, const struct statfs *fsbuf)
     case NTFS_SUPER_MAGIC:
     case UDF_SUPER_MAGIC:
     case JFS_SUPER_MAGIC:
+    case VXFS_SUPER_MAGIC:
       return 64;
 
     case MSDOS_SUPER_MAGIC:
