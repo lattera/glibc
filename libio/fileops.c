@@ -48,6 +48,7 @@ extern int errno;
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
+# define fstat(FD, Buf) __fxstat (_STAT_VER, FD, Buf)
 #endif
 
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
@@ -650,7 +651,7 @@ _IO_file_stat (fp, st)
      _IO_FILE *fp;
      void *st;
 {
-#ifdef _G_STAT64
+#ifdef _G_FSTAT64
   return _G_FSTAT64 (fp->_fileno, (struct _G_stat64 *) st);
 #else
   return fstat (fp->_fileno, (struct _G_stat64 *) st);
@@ -800,9 +801,13 @@ _IO_file_xsgetn (fp, data, n)
 	{
 	  if (have > 0)
 	    {
+#ifdef _LIBC
+	      s = __mempcpy (s, fp->_IO_read_ptr, have);
+#else
 	      memcpy (s, fp->_IO_read_ptr, have);
-	      want -= have;
 	      s += have;
+#endif
+	      want -= have;
 	      fp->_IO_read_ptr += have;
 	    }
 
@@ -829,7 +834,16 @@ _IO_file_xsgetn (fp, data, n)
 	  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
 	  _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
 
-	  count = _IO_SYSREAD (fp, s, want);
+	  /* Try to maintain alignment: read a whole number of blocks.  */
+	  count = want;
+	  if (fp->_IO_buf_base)
+	    {
+	      _IO_size_t block_size = fp->_IO_buf_end - fp->_IO_buf_base;
+	      if (block_size >= 128)
+		count -= want % block_size;
+	    }
+
+	  count = _IO_SYSREAD (fp, s, count);
 	  if (count <= 0)
 	    {
 	      if (count == 0)

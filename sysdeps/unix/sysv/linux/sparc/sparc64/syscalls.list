@@ -1,7 +1,7 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 # Whee! 64-bit systems naturally implement llseek.
-llseek		EXTRA	lseek		3	__llseek	llseek lseek64
+llseek		EXTRA	lseek		3	__llseek	llseek __lseek64 lseek64
 pread		EXTRA	pread		4	__pread		pread __pread64 pread64
 pwrite		EXTRA	pwrite		4	__pwrite	pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs fstatfs64

@@ -1,3 +1,22 @@
+1998-04-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/_G_config.h (_G_stat64): Define to
+	stat64.
+	(_G_OPEN64, _G_LSEEK64, _G_FSTAT64): Use namespace clean
+	functions.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __lseek64 alias
+	for __llseek.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Likewise.
+	* sysdeps/generic/lseek64.c (lseek64): Rename to __lseek64, and
+	make it a weak alias.
+	* posix/unistd.h: Declare __lseek64.
+
+	* libio/fileops.c (fstat) [_LIBC]: Use namespace clean function.
+	(_IO_file_stat): Fix typo.
+	(_IO_file_xsgetn): Update fd->_offset.  Read a multiple of the
+	block size from the file.  Use __mempcpy if _LIBC.
+
 1998-04-07 20:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/btowc.c: Fix dozends of bugs in untested code.

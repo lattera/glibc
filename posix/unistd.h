@@ -270,6 +270,7 @@ extern int euidaccess __P ((__const char *__name, int __type));
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
 extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
+extern __off64_t __lseek64 __P ((int __fd, __off64_t __offset, int __whence));
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
 #else

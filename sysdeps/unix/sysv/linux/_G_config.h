@@ -30,7 +30,7 @@ typedef unsigned int wint_t;
 #define	_G_uid_t	__uid_t
 #define _G_wchar_t	wchar_t
 #define _G_wint_t	wint_t
-#define _G_stat64	stat
+#define _G_stat64	stat64
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));
@@ -55,9 +55,9 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 
 #define _G_IO_IO_FILE_VERSION 0x20001
 
-#define _G_OPEN64	open64
-#define _G_LSEEK64	lseek64
-#define _G_FSTAT64	fstat64
+#define _G_OPEN64	__open64
+#define _G_LSEEK64	__lseek64
+#define _G_FSTAT64(fd,buf) __fxstat64 (_STAT_VER, fd, buf)
 
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
