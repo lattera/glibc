@@ -584,7 +584,7 @@
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
 #   else
-#    define __hidden_def1(original, alias)
+#    define __hidden_dot_def1(original, alias)
 #   endif
 #  endif
 #  define __hidden_def2(...) #__VA_ARGS__
