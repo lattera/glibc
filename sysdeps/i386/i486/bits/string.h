@@ -1013,7 +1013,7 @@ __strcmp_gg (__const char *__s1, __const char *__s2)
 		     : __strncmp_g (s1, s2, n))))
 
 __STRING_INLINE int __strncmp_g (__const char *__s1, __const char *__s2,
-				size_t __n);
+				 size_t __n);
 
 __STRING_INLINE int
 __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
