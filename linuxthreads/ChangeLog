@@ -1,3 +1,12 @@
+1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pthread.c (pthread_handle_sigrestart_rt): New function.  Use
+	this instead of pthread_handle_sigrestart if the signal is an RT
+	signal.
+
+	* signals.c: Handle passing through of sighandler arguments also
+	for real-time signals.
+
 1999-09-03  Andreas Schwab  <schwab@suse.de>
 
 	* ptfork.c (__fork): Renamed from fork and use __libc_fork.  Add

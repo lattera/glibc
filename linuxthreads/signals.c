@@ -19,6 +19,7 @@
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
+#include <ucontext.h>
 #include <sigcontextinfo.h>
 
 int pthread_sigmask(int how, const sigset_t * newmask, sigset_t * oldmask)
@@ -69,7 +70,11 @@ int pthread_kill(pthread_t thread, int signo)
 
 /* User-provided signal handlers */
 typedef void (*arch_sighandler_t) __PMT ((int, SIGCONTEXT));
-static arch_sighandler_t sighandler[NSIG];
+static union
+{
+  arch_sighandler_t old;
+  void (*rt) (int, struct siginfo *, struct ucontext *);
+} sighandler[NSIG];
 
 /* The wrapper around user-provided signal handlers */
 static void pthread_sighandler(int signo, SIGCONTEXT ctx)
@@ -88,7 +93,30 @@ static void pthread_sighandler(int signo, SIGCONTEXT ctx)
   in_sighandler = THREAD_GETMEM(self, p_in_sighandler);
   if (in_sighandler == NULL)
     THREAD_SETMEM(self, p_in_sighandler, CURRENT_STACK_FRAME);
-  sighandler[signo](signo, SIGCONTEXT_EXTRA_ARGS ctx);
+  sighandler[signo].old(signo, SIGCONTEXT_EXTRA_ARGS ctx);
+  if (in_sighandler == NULL)
+    THREAD_SETMEM(self, p_in_sighandler, NULL);
+}
+
+/* The same, this time for real-time signals.  */
+static void pthread_sighandler_rt(int signo, struct siginfo *si,
+				  struct ucontext *uc)
+{
+  pthread_descr self = thread_self();
+  char * in_sighandler;
+  /* If we're in a sigwait operation, just record the signal received
+     and return without calling the user's handler */
+  if (THREAD_GETMEM(self, p_sigwaiting)) {
+    THREAD_SETMEM(self, p_sigwaiting, 0);
+    THREAD_SETMEM(self, p_signal, signo);
+    return;
+  }
+  /* Record that we're in a signal handler and call the user's
+     handler function */
+  in_sighandler = THREAD_GETMEM(self, p_in_sighandler);
+  if (in_sighandler == NULL)
+    THREAD_SETMEM(self, p_in_sighandler, CURRENT_STACK_FRAME);
+  sighandler[signo].rt(signo, si, uc);
   if (in_sighandler == NULL)
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
@@ -110,7 +138,12 @@ int sigaction(int sig, const struct sigaction * act,
       newact = *act;
       if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL
 	  && sig > 0 && sig < NSIG)
-	newact.sa_handler = (__sighandler_t) pthread_sighandler;
+	{
+	  if (sig >= SIGRTMIN)
+	   newact.sa_handler = (__sighandler_t) pthread_sighandler_rt;
+	  else
+	   newact.sa_handler = (__sighandler_t) pthread_sighandler;
+	}
       newactp = &newact;
     }
   else
@@ -120,9 +153,11 @@ int sigaction(int sig, const struct sigaction * act,
   if (sig > 0 && sig < NSIG)
     {
       if (oact != NULL)
-	oact->sa_handler = (__sighandler_t) sighandler[sig];
+	oact->sa_handler = (__sighandler_t) sighandler[sig].old;
       if (act)
-	sighandler[sig] = (arch_sighandler_t) act->sa_handler;
+	/* For the assignment is does not matter whether it's a normal
+	   or real-time signal.  */
+	sighandler[sig].old = (arch_sighandler_t) act->sa_handler;
     }
   return 0;
 }
@@ -153,9 +188,9 @@ int sigwait(const sigset_t * set, int * sig)
         s != __pthread_sig_cancel &&
         s != __pthread_sig_debug) {
       sigdelset(&mask, s);
-      if (sighandler[s] == NULL ||
-          sighandler[s] == (arch_sighandler_t) SIG_DFL ||
-          sighandler[s] == (arch_sighandler_t) SIG_IGN) {
+      if (sighandler[s].old == NULL ||
+          sighandler[s].old == (arch_sighandler_t) SIG_DFL ||
+          sighandler[s].old == (arch_sighandler_t) SIG_IGN) {
         sa.sa_handler = pthread_null_sighandler;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;

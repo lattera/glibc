@@ -21,6 +21,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#ifdef __i386__
+# include <ucontext.h>
+#endif
 #include <sys/wait.h>
 #include <sys/resource.h>
 #include "pthread.h"
@@ -161,6 +164,8 @@ static void pthread_handle_sigrestart(int sig);
 #else
 static void pthread_handle_sigcancel(int sig, struct sigcontext ctx);
 static void pthread_handle_sigrestart(int sig, struct sigcontext ctx);
+static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
+					 struct ucontext *uc);
 #endif
 static void pthread_handle_sigdebug(int sig);
 
@@ -318,7 +323,10 @@ static void pthread_initialize(void)
 #ifndef __i386__
   sa.sa_handler = pthread_handle_sigrestart;
 #else
-  sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart;
+  if (__pthread_sig_restart >= SIGRTMIN)
+    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart_rt;
+  else
+    sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart;
 #endif
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
@@ -567,6 +575,20 @@ static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
   if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
     siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
 }
+
+#ifdef __i386__
+static void pthread_handle_sigrestart_rt(int sig, struct siginfo *si,
+					 struct ucontext *uc)
+{
+  pthread_descr self;
+  asm volatile ("movw %w0,%%gs" : : "r" (uc->uc_mcontext.gregs[GS]));
+  self = thread_self();
+  THREAD_SETMEM(self, p_signal, sig);
+  if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
+    siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
+}
+#endif
+
 
 /* The handler for the CANCEL signal checks for cancellation
    (in asynchronous mode), for process-wide exit and exec requests.
