@@ -1,3 +1,7 @@
+2002-07-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/bits/link.h: Add biarch support.
+
 2002-07-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/register-dump.h (register_dump):
