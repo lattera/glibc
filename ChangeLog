@@ -7,6 +7,20 @@
 	ibm939.h, and ibm1046.h.
 	* iconvdata/gconv-modules: Add entries for IBM856, IBM930, IBM933,
 	IBM935, IBM937, IBM939, and IBM1046.
+	* iconvdata/ibm1046.c: New file.
+	* iconvdata/ibm1046.h: New file.
+	* iconvdata/ibm856.c: New file.
+	* iconvdata/ibm856.h: New file.
+	* iconvdata/ibm930.c: New file.
+	* iconvdata/ibm930.h: New file.
+	* iconvdata/ibm933.c: New file.
+	* iconvdata/ibm933.h: New file.
+	* iconvdata/ibm935.c: New file.
+	* iconvdata/ibm935.h: New file.
+	* iconvdata/ibm937.c: New file.
+	* iconvdata/ibm937.h: New file.
+	* iconvdata/ibm939.c: New file.
+	* iconvdata/ibm939.h: New file.
 	Patches by Masahide Washizawa <washi@yamato.ibm.co.jp>.
 
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
