@@ -1,5 +1,8 @@
 1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define O_DSYNC and
+	O_RSYNC.  Patch by Christian Gafton.
+
 	* stdio-common/vfprintf.c (process_string_arg) [printf]: Handle
 	possibly unterminated strings for %ls when a precision is
 	specified.
