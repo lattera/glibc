@@ -1,3 +1,10 @@
+1999-04-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* charmaps/UTF8: Fix entries for <G'>, <g'>, <1!> and <RY>, and
+	correct some character names.
+
+	* repertoiremaps/mnemonic.ds: Correct name of <P2> entry.
+
 1999-04-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/SAMI-WS2: Add one more alias.

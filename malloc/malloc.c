@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -373,7 +373,7 @@ extern "C" {
 */
 
 
-/*   #define REALLOC_ZERO_BYTES_FREES */
+#define REALLOC_ZERO_BYTES_FREES
 
 
 /*
@@ -2000,9 +2000,9 @@ grow_heap(h, diff) heap_info *h; long diff;
     new_size = (long)h->size + diff;
     if(new_size < (long)sizeof(*h))
       return -1;
-    /* Try to re-map the extra heap space freshly to save memory, and 
-       make it inaccessible. */ 
-    if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE, 
+    /* Try to re-map the extra heap space freshly to save memory, and
+       make it inaccessible. */
+    if((char *)MMAP((char *)h + new_size, -diff, PROT_NONE,
 		    MAP_PRIVATE|MAP_FIXED) == (char *) MAP_FAILED)
       return -2;
   }
@@ -2159,9 +2159,9 @@ static void do_check_chunk(ar_ptr, p) arena *ar_ptr; mchunkptr p;
   if(ar_ptr != &main_arena) {
     heap_info *heap = heap_for_ptr(p);
     assert(heap->ar_ptr == ar_ptr);
-    if(p != top(ar_ptr)) 
-      assert((char *)p + sz <= (char *)heap + heap->size); 
-    else 
+    if(p != top(ar_ptr))
+      assert((char *)p + sz <= (char *)heap + heap->size);
+    else
       assert((char *)p + sz == (char *)heap + heap->size);
     return;
   }
@@ -3111,7 +3111,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
 #endif
 
 #ifdef REALLOC_ZERO_BYTES_FREES
-  if (bytes == 0) { fREe(oldmem); return 0; }
+  if (bytes == 0 && oldmem != NULL) { fREe(oldmem); return 0; }
 #endif
 
   /* realloc of null is supposed to be same as malloc */
