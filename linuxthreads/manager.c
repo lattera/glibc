@@ -635,6 +635,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread_id = sseg + pthread_threads_counter;
   /* Initialize the thread descriptor.  Elements which have to be
      initialized to zero already have this value.  */
+  new_thread->p_header.data.tcb = new_thread;
   new_thread->p_tid = new_thread_id;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
   new_thread->p_cancelstate = PTHREAD_CANCEL_ENABLE;
