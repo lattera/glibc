@@ -1,3 +1,9 @@
+2004-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_routines.c: Include errno.h.
+	(timer_helper_thread): Use inline rt_sigtimedwait syscall instead
+	of calling sigwaitinfo.
+
 2004-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (allocate_stack): Set reported_guardsize

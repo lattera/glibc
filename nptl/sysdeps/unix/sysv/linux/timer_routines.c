@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -61,7 +62,19 @@ timer_helper_thread (void *arg)
     {
       siginfo_t si;
 
-      if (sigwaitinfo (&ss, &si) > 0)
+      /* sigwaitinfo cannot be used here, since it deletes
+	 SIGCANCEL == SIGTIMER from the set.  */
+
+      int oldtype = LIBC_CANCEL_ASYNC ();
+
+      /* XXX The size argument hopefully will have to be changed to the
+	 real size of the user-level sigset_t.  */
+      int result = INLINE_SYSCALL (rt_sigtimedwait, 4, &ss, &si, NULL,
+				   _NSIG / 8);
+
+      LIBC_CANCEL_RESET (oldtype);
+
+      if (result > 0)
 	{
 	  if (si.si_code == SI_TIMER)
 	    {
