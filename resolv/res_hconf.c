@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -411,18 +411,13 @@ parse_line (const char *fname, int line_num, const char *str)
 }
 
 
-/* Initialize hconf datastructure by reading host.conf file and
-   environment variables.  */
-void
-_res_hconf_init (void)
+static void
+do_init (void)
 {
   const char *hconf_name;
   int line_num = 0;
   char buf[256], *envval;
   FILE *fp;
-
-  if (_res_hconf.initialized)
-    return;
 
   memset (&_res_hconf, '\0', sizeof (_res_hconf));
 
@@ -479,6 +474,17 @@ _res_hconf_init (void)
     }
 
   _res_hconf.initialized = 1;
+}
+
+
+/* Initialize hconf datastructure by reading host.conf file and
+   environment variables.  */
+void
+_res_hconf_init (void)
+{
+  __libc_once_define (static, once);
+
+  __libc_once (once, do_init);
 }
 
 

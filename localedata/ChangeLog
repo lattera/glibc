@@ -1,3 +1,7 @@
+2002-07-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/ISO-8859-11: New file.
+
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/lug_UG: New file.

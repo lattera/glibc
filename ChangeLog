@@ -1,5 +1,9 @@
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_hconf.c (_res_hconf_init): Move code into new
+	function do_init.  Use __libc_once.
+	(do_init): New function.
+
 	* iconvdata/iso8859-11.h: Removed.
 	* iconvdata/Makefile (gen-8bit-gap-modules): Add iso8859-11.
 	(distribute): Remove iso8859-11.h.
