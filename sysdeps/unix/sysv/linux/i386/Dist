@@ -6,6 +6,7 @@ setfsuid.c
 setfsgid.c
 sys/debugreg.h
 sys/elf.h
+sys/io.h
 sys/perm.h
 sys/procfs.h
 sys/reg.h

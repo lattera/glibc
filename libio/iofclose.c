@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
+#if _LIBC
+# include "../iconv/gconv_int.h"
+#endif
 
 int
 _IO_new_fclose (fp)
@@ -52,6 +55,25 @@ _IO_new_fclose (fp)
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_FINISH (fp);
   _IO_funlockfile (fp);
+  if (fp->_mode > 0)
+    {
+#if _LIBC
+      /* This stream has a wide orientation.  This means we have to free
+	 the conversion functions.  */
+      struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
+
+      if (cc->__cd_in.__cd.__steps->__shlib_handle != NULL)
+	{
+	  --cc->__cd_in.__cd.__steps->__counter;
+	  __gconv_close_transform (cc->__cd_in.__cd.__steps, 1);
+	}
+      if (cc->__cd_out.__cd.__steps->__shlib_handle != NULL)
+	{
+	  --cc->__cd_out.__cd.__steps->__counter;
+	  __gconv_close_transform (cc->__cd_out.__cd.__steps, 1);
+	}
+#endif
+    }
   _IO_cleanup_region_end (0);
   if (_IO_have_backup (fp))
     _IO_free_backup_area (fp);

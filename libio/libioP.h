@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -390,6 +390,7 @@ extern struct _IO_jump_t _IO_proc_jumps;
 extern struct _IO_jump_t _IO_old_proc_jumps;
 extern struct _IO_jump_t _IO_str_jumps;
 extern struct _IO_jump_t _IO_wstr_jumps;
+extern struct _IO_codecvt __libio_codecvt;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));

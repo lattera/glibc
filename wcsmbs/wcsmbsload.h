@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -43,6 +43,10 @@ extern void __wcsmbs_load_conv (const struct locale_data *new_category)
 
 /* Clone the current `__wcsmbs_load_conv' value.  */
 extern void __wcsmbs_clone_conv (struct gconv_fcts *copy)
+     internal_function;
+
+/* Find the conversion functions for converting to and from NAME.  */
+extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
      internal_function;
 
 

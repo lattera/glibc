@@ -1,5 +1,18 @@
 2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/fileops.c (_IO_new_file_open): Recognize ,ccs= in mode string
+	and load appropriate conversions.
+	* libio/iofwide.c (__libio_codecvt): Renamed from libio_codecvt and
+	made global.
+	* libio/libioP.h: Declare __libio_codecvt.
+	* manual/stdio.texi: Document ,ccs= option for fopen.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_named_conv): New function.
+	* wcsmbs/wcsmbsload.h (__wcsmbs_named_conv): Declare.
+
+	* libio/iofclose.c: Free conversion data if stream was wide-oriented.
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Add sys/io.h.
+
 	* sysdeps/unix/sysv/linux/Dist: Remove sys/io.h.
 
 	* posix/fnmatch_loop.c: Fix problem with FNM_LEADING_DIR.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -36,6 +36,9 @@
 #include <errno.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#endif
+#if _LIBC
+# include "../wcsmbs/wcsmbsload.h"
 #endif
 #ifndef errno
 extern int errno;
@@ -214,6 +217,11 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
   int read_write;
   int oprot = 0666;
   int i;
+  _IO_FILE *result;
+#if _LIBC
+  const char *cs;
+#endif
+
   if (_IO_file_is_open (fp))
     return 0;
   switch (*mode)
@@ -257,8 +265,54 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
       break;
     }
 
-  return _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
-			is32not64);
+  result = _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
+			  is32not64);
+
+
+#if _LIBC
+  /* Test whether the mode string specifies the conversion.  */
+  cs = strstr (mode, ",ccs=");
+  if (cs != NULL)
+    {
+      /* Yep.  Load the appropriate conversions and set the orientation
+	 to wide.  */
+	struct gconv_fcts fcts;
+	struct _IO_codecvt *cc = &fp->_wide_data->_codecvt;
+
+	if (__wcsmbs_named_conv (&fcts, cs + 5) != 0)
+	  {
+	    /* Something went wrong, we cannot load the conversion modules.
+	       This means we cannot proceed since the user explicitly asked
+	       for these.  */
+	    _IO_new_fclose (result);
+	    return NULL;
+	  }
+
+	/* The functions are always the same.  */
+	*cc = __libio_codecvt;
+
+	cc->__cd_in.__cd.__nsteps = 1; /* Only one step allowed.  */
+	cc->__cd_in.__cd.__steps = fcts.towc;
+
+	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
+	cc->__cd_in.__cd.__data[0].__internal_use = 1;
+	cc->__cd_in.__cd.__data[0].__is_last = 1;
+	cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+
+	cc->__cd_out.__cd.__nsteps = 1; /* Only one step allowed.  */
+	cc->__cd_out.__cd.__steps = fcts.tomb;
+
+	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
+	cc->__cd_out.__cd.__data[0].__internal_use = 1;
+	cc->__cd_out.__cd.__data[0].__is_last = 1;
+	cc->__cd_out.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+
+	/* Set the mode now.  */
+	result->_mode = 1;
+    }
+#endif	/* GNU libc */
+
+  return result;
 }
 
 _IO_FILE *

@@ -206,6 +206,21 @@ difference in POSIX systems (including the GNU system).  If both
 @samp{+} and @samp{b} are specified, they can appear in either order.
 @xref{Binary Streams}.
 
+@cindex stream orientation
+@cindex orientation, stream
+If the @var{opentype} string contains the sequence
+@code{,ccs=@var{STRING}} then @var{STRING} is taken as the name of a
+coded character set and @code{fopen} will mark the stream as
+wide-oriented which appropriate conversion functions in place to convert
+from and to the character set @var{STRING} is place.  Any other stream
+is opened initially unoriented and the orientation is decided with the
+first file operation.  If the first operation is a wide character
+operation, the stream is not only marked as wide-oriented, also the
+conversion functions to convert to the coded character set used for the
+current locale are loaded.  This will not change anymore from this point
+on even if the locale selected for the @code{LC_CTYPE} category is
+changed.
+
 Any other characters in @var{opentype} are simply ignored.  They may be
 meaningful in other systems.
 

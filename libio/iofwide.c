@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ static int do_always_noconv (struct _IO_codecvt *codecvt);
 
 
 /* The functions used in `codecvt' for libio are always the same.  */
-static struct _IO_codecvt libio_codecvt =
+struct _IO_codecvt __libio_codecvt =
 {
   .__codecvt_destr = NULL,		/* Destructor, never used.  */
   .__codecvt_do_out = do_out,
@@ -114,7 +114,7 @@ _IO_fwide (fp, mode)
 	__wcsmbs_clone_conv (&fcts);
 
 	/* The functions are always the same.  */
-	*cc = libio_codecvt;
+	*cc = __libio_codecvt;
 
 	cc->__cd_in.__cd.__nsteps = 1; /* Only one step allowed.  */
 	cc->__cd_in.__cd.__steps = fcts.towc;

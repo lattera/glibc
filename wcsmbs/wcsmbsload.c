@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -249,4 +249,30 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
     ++copy->tomb->__counter;
 
   __libc_lock_unlock (lock);
+}
+
+
+/* Clone the current conversion function set.  */
+int
+internal_function
+__wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
+{
+  copy->towc = getfct ("INTERNAL", name);
+  if (copy->towc != NULL)
+    {
+      copy->tomb = getfct (name, "INTERNAL");
+      if (copy->tomb == NULL)
+	__gconv_close_transform (copy->towc, 1);
+    }
+
+  if (copy->towc == NULL || copy->tomb == NULL)
+    return 1;
+
+  /* Now increment the usage counters.  */
+  if (copy->towc->__shlib_handle != NULL)
+    ++copy->towc->__counter;
+  if (copy->tomb->__shlib_handle != NULL)
+    ++copy->tomb->__counter;
+
+  return 0;
 }
