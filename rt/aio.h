@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,7 +93,9 @@ struct aioinit
     int aio_usedba;		/* Not used.  */
     int aio_debug;		/* Not used.  */
     int aio_numusers;		/* Not used.  */
-    int aio_reserved[2];
+    int aio_idle_time;		/* Number of seconds before idle thread
+				   terminates.  */
+    int aio_reserved;
   };
 #endif
 

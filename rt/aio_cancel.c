@@ -1,5 +1,5 @@
 /* Cancel requests associated with given file descriptor.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -60,12 +60,18 @@ aio_cancel (fildes, aiocbp)
 	    {
 	      last = req;
 	      req = req->next_prio;
+	      if (req == NULL)
+		{
+		  pthread_mutex_unlock (&__aio_requests_mutex);
+		  __set_errno (EINVAL);
+		  return -1;
+		}
 	    }
 
 	  /* Don't remove the entry if a thread is already working on it.  */
 	  if (req->running == allocated)
 	    result = AIO_NOTCANCELED;
-	  else
+	  else if (req->running == yes)
 	    {
 	      /* We can remove the entry.  */
 	      if (last != NULL)
