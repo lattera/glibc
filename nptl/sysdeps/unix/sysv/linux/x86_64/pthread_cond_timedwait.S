@@ -370,40 +370,41 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 #ifdef SHARED
 	.uleb128 0				# No augmentation data.
 #endif
-	.byte	0x40+.Lpush_r12-.LSTARTCODE	# DW_CFA_advance_loc4
+	.byte	0x40+.Lpush_r12-.LSTARTCODE	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	0x8c				# DW_CFA_offset %r12
 	.uleb128 2
-	.byte	0x40+.Lpush_r13-.Lpush_r12	# DW_CFA_advance_loc4
+	.byte	0x40+.Lpush_r13-.Lpush_r12	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
 	.byte	0x8d				# DW_CFA_offset %r13
 	.uleb128 3
-	.byte	0x40+.Lpush_r14-.Lpush_r13	# DW_CFA_advance_loc4
+	.byte	0x40+.Lpush_r14-.Lpush_r13	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 32
 	.byte	0x84				# DW_CFA_offset %r14
 	.uleb128 4
-	.byte	0x40+.Lsubq-.Lpush_r14		# DW_CFA_advance_loc4
+	.byte	0x40+.Lsubq-.Lpush_r14		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 112
-	.byte	0x40+.Laddq-.Lsubq		# DW_CFA_advance_loc4
+	.byte	3				# DW_CFA_advance_loc2
+	.2byte	.Laddq-.Lsubq
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 32
-	.byte	0x40+.Lpop_r14-.Laddq		# DW_CFA_advance_loc4
+	.byte	0x40+.Lpop_r14-.Laddq		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
 	.byte	0xce				# DW_CFA_restore %r14
-	.byte	0x40+.Lpop_r13-.Lpop_r14	# DW_CFA_advance_loc4
+	.byte	0x40+.Lpop_r13-.Lpop_r14	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	0xcd				# DW_CFA_restore %r13
-	.byte	0x40+.Lpop_r12-.Lpop_r13	# DW_CFA_advance_loc4
+	.byte	0x40+.Lpop_r12-.Lpop_r13	# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 8
 	.byte	0xcc				# DW_CFA_restore %r12
-	.byte	0x40+.LSbl1-.Lpop_r12		# DW_CFA_advance_loc4
+	.byte	0x40+.LSbl1-.Lpop_r12		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 112
 	.byte	0x8c				# DW_CFA_offset %r12
