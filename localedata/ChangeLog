@@ -3,6 +3,8 @@
 	* sort-test.sh: Call localedef with additional environment variable
 	I18NPATH to point to not-yet-installed locale data files.
 
+	* locales/POSIX: Updated version from maintainer.
+
 1997-02-15 14:32 15:10 Andreas Jaeger  <aj@arthur.pfalz.de>
 
 	* collate-test.c (main): Change prototype definition to prevent
