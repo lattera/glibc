@@ -14,7 +14,8 @@
 	* sysdeps/mips/mips64/rshift.S: Likewise.
 	* sysdeps/mips/mips64/setjmp.S: Likewise.
 	* sysdeps/mips/mips64/sub_n.S: Likewise.
-	* sysdeps/mips/mips64/submul_1.S: Likewise.
+	* sysdeps/mips/mips64/submul_1.S: Likewise
+	* sysdeps/unix/mips/sysdep.S: Likewise.
 
 	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Remove strtab
 	and update comment.  The strtab from _dl_relocate_object can be
