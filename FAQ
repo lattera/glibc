@@ -273,7 +273,7 @@ them.
 1.5.	Which compiler should I use for powerpc?
 
 {GK} You want to use at least gcc 2.95 (together with the right versions
-of all the other tools, of course).  See also question question 2.8.
+of all the other tools, of course).  See also question 2.8.
 
 
 1.6.	Which tools should I use for ARM?
@@ -929,7 +929,7 @@ necessary conversion and calls to create those files.  The file is
 `db-Makefile' in the subdirectory `nss' and you can call it with `make -f
 db-Makefile'.  Please note that not all services are capable of using a
 database.  Currently passwd, group, ethers, protocol, rpc, services shadow
-and netgroup are implemented.  See also question question 2.31.
+and netgroup are implemented.  See also question 2.31.
 
 
 2.17.	I have /usr/include/net and /usr/include/scsi as symlinks

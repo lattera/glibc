@@ -1,3 +1,8 @@
+2001-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile (plural.c): Reorder rules so that they work if
+	BISON doesn't exist.
+
 2001-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/locale.alias: Don't use nb_NO but define aliases for it.

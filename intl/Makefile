@@ -43,9 +43,9 @@ include ../Makeconfig
 ifneq (no,$(BISON))
 plural.c: plural.y
 	$(BISON) $(BISONFLAGS) $@ $^
-endif
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'$(BISON) $(BISONFLAGS) $@ $^' $@
+endif
 endif
 $(objpfx)plural.o: plural.c
 
