@@ -20,9 +20,11 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 	.text
-	.globl __start
+	.globl _start	/* what ELF wants */
+	.globl __start	/* for backwards (ECOFF) comatibility */
 	.align 3
 	.ent __start, 0
+_start:
 __start:
 	.frame fp, 0, zero
 	mov	zero, fp

@@ -59,14 +59,16 @@ I/O address space that's 512MB large!).  */
  * so the following defines apply to LCA as well.
  */
 #define APECS_IO_BASE		(0xfffffc01c0000000UL)
+#define APECS_SPARSE_MEM	(0xfffffc0200000000UL)
 #define APECS_DENSE_MEM		(0xfffffc0300000000UL)
 
-#define ALCOR_IO_BASE		(0xfffffc8580000000UL)
-#define ALCOR_DENSE_MEM		(0xfffffc8600000000UL)
+#define CIA_IO_BASE		(0xfffffc8580000000UL)
+#define CIA_SPARSE_MEM		(0xfffffc8000000000UL)
+#define CIA_DENSE_MEM		(0xfffffc8600000000UL)
 
 
 enum {
-  IOSYS_JENSEN = 0, IOSYS_APECS = 1, IOSYS_ALCOR = 2
+  IOSYS_JENSEN = 0, IOSYS_APECS = 1, IOSYS_CIA = 2
 } iosys_t;
 
 struct ioswtch {
@@ -83,18 +85,19 @@ static struct platform {
   const char	*name;
   int		io_sys;
   unsigned long	bus_memory_base;
+  unsigned long	sparse_bus_memory_base;
 } platform[] = {
-  {"Alcor",	IOSYS_ALCOR,	ALCOR_DENSE_MEM},
-  {"Avanti",	IOSYS_APECS,	APECS_DENSE_MEM},
-  {"Cabriolet",	IOSYS_APECS,	APECS_DENSE_MEM},
-  {"EB164",	IOSYS_ALCOR,	ALCOR_DENSE_MEM},
-  {"EB64+",	IOSYS_APECS,	APECS_DENSE_MEM},
-  {"EB66",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
-  {"EB66P",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
-  {"Jensen",	IOSYS_JENSEN,	JENSEN_MEM},
-  {"Mikasa",	IOSYS_APECS,	APECS_DENSE_MEM},
-  {"Mustang",	IOSYS_APECS,	APECS_DENSE_MEM},
-  {"Noname",	IOSYS_APECS,	APECS_DENSE_MEM},	/* LCA same as APECS */
+  {"Alcor",	IOSYS_CIA,	CIA_DENSE_MEM,		CIA_SPARSE_MEM},
+  {"Avanti",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Cabriolet",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB164",	IOSYS_CIA,	CIA_DENSE_MEM,		CIA_SPARSE_MEM},
+  {"EB64+",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB66",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"EB66P",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Jensen",	IOSYS_JENSEN,	JENSEN_MEM,		JENSEN_MEM},
+  {"Mikasa",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Mustang",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
+  {"Noname",	IOSYS_APECS,	APECS_DENSE_MEM,	APECS_SPARSE_MEM},
 };
 
 
@@ -109,6 +112,7 @@ static struct {
 } io;
 
 static unsigned long bus_memory_base = -1;
+static unsigned long sparse_bus_memory_base = -1;
 
 extern void __sethae (unsigned long);	/* we can't use asm/io.h */
 
@@ -256,7 +260,7 @@ DCL_IN(jensen, inb, JENSEN)
 DCL_IN(jensen, inw, JENSEN)
 DCL_IN(jensen, inl, JENSEN)
 
-/* The APECS functions are also used for ALCOR since they are
+/* The APECS functions are also used for CIA since they are
    identical.  */
 
 DCL_SETHAE(apecs, APECS)
@@ -332,6 +336,7 @@ init_iosys (void)
       if (strcmp (platform[i].name, systype) == 0)
 	{
 	  bus_memory_base = platform[i].bus_memory_base;
+	  sparse_bus_memory_base = platform[i].sparse_bus_memory_base;
 	  io.sys = platform[i].io_sys;
 	  if (io.sys == IOSYS_JENSEN)
 	    io.swp = &ioswtch[0];
@@ -382,7 +387,7 @@ _ioperm (unsigned long from, unsigned long num, int turn_on)
 	    {
 	    case IOSYS_JENSEN:	base = JENSEN_IO_BASE; break;
 	    case IOSYS_APECS:	base = APECS_IO_BASE; break;
-	    case IOSYS_ALCOR:	base = ALCOR_IO_BASE; break;
+	    case IOSYS_CIA:	base = CIA_IO_BASE; break;
 	    default:
 	      errno = ENODEV;
 	      return -1;
@@ -498,6 +503,14 @@ _bus_base(void)
   return bus_memory_base;
 }
 
+unsigned long
+_bus_base_sparse(void)
+{
+  if (!io.swp && init_iosys () < 0)
+    return -1;
+  return sparse_bus_memory_base;
+}
+
 weak_alias (_sethae, sethae);
 weak_alias (_ioperm, ioperm);
 weak_alias (_iopl, iopl);
@@ -508,3 +521,4 @@ weak_alias (_outb, outb);
 weak_alias (_outw, outw);
 weak_alias (_outl, outl);
 weak_alias (_bus_base, bus_base);
+weak_alias (_bus_base_sparse, bus_base_sparse);
