@@ -1,3 +1,9 @@
+2002-08-23  Roland McGrath  <roland@redhat.com>
+
+	* malloc/hooks.c: Move variable definitions ahead of uses.
+	* libio/fileops.c: Move versioned_symbol defns ahead of _IO_jump_t
+	initializers that make reference to variables they define.
+
 2002-08-23  Andreas Jaeger  <aj@suse.de>
 
 	* locale/loadarchive.c: Include <stdlib.h> for prototypes of
@@ -8,6 +14,8 @@
 	* sysdeps/ieee754/flt-32/e_jnf.c: Remove unused variable.
 	* sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
 
+	* misc/sys/xattr.h: New file, contributed by Christoph Hellwig
+	<hch@lst.de>.
 	* sysdeps/generic/fgetxattr.c: New file.
 	* sysdeps/generic/flistxattr.c: New file.
 	* sysdeps/generic/fremovexattr.c: New file.
@@ -20,15 +28,9 @@
 	* sysdeps/generic/lsetxattr.c: New file.
 	* sysdeps/generic/removexattr.c: New file.
 	* sysdeps/generic/setxattr.c: New file.
-
-	* misc/sys/xattr.h: New file, contributed by Christoph Hellwig
-	<hch@lst.de>.
-
 	* misc/Makefile (headers): Add sys/xattr.h.
 	(routines): Add *xattr calls.
-
 	* misc/Versions: Add *xattr calls with version 2.3.
-
 	* sysdeps/unix/sysv/linux/m68k/Versions: Remove *xattr syscalls.
 	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: Likewise.
