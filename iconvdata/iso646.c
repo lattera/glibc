@@ -42,7 +42,7 @@
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		1
 #define MIN_NEEDED_TO		4
-#define FROM_DIRECTION		dir == from_iso646
+#define FROM_DIRECTION		(dir == from_iso646)
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso646_data *) step->data)->dir;	      \
   enum variant var = ((struct iso646_data *) step->data)->var;

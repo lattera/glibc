@@ -100,7 +100,16 @@ struct gconv_step_data
   char *outbuf;		/* Output buffer for this step.  */
   char *outbufend;	/* Address of first byte after the output buffer.  */
 
+  /* Is this the last module in the chain.  */
   int is_last;
+
+  /* Counter for number of invocations of the module function for this
+     desriptor.  */
+  int invocation_counter;
+
+  /* Flag whether this is an internal use of the module (in the mb*towc*
+     and wc*tomb* functions) or regular with iconv(3).  */
+  int internal_use;
 
   mbstate_t *statep;
   mbstate_t __state;	/* This element should not be used directly by

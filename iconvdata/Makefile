@@ -165,8 +165,8 @@ $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
 LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
 			 $(objpfx)libCNS.so $(objpfx)libKSC.so
-LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
-$(objpfx)ISO-2022-JP.so: $(objpfx)libKSC.so
+LDFLAGS-ISO-2022-KR.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)ISO-2022-KR.so: $(objpfx)libKSC.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)

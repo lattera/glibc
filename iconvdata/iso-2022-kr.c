@@ -44,7 +44,18 @@
 #define MAX_NEEDED_TO		4
 #define PREPARE_LOOP \
   int save_set;								      \
-  int set = data->statep->count;
+  int set = data->statep->count;					      \
+  if (!FROM_DIRECTION && !data->internal_use && data->invocation_counter == 0)\
+    {									      \
+      /* Emit the designator sequence.  */				      \
+      if (outptr + 4 > outend)						      \
+	return GCONV_FULL_OUTPUT;					      \
+									      \
+      *outptr++ = '\x1b';						      \
+      *outptr++ = '\x24';						      \
+      *outptr++ = '\x29';						      \
+      *outptr++ = '\x43';						      \
+    }
 #define EXTRA_LOOP_ARGS		, set
 
 

@@ -65,6 +65,12 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 		     buffer.  */
 		  data[cnt].is_last = cnt == nsteps - 1;
 
+		  /* Reset the counter.  */
+		  data[cnt].invocation_counter = 0;
+
+		  /* It's a regular use.  */
+		  data[cnt].internal_use = 0;
+
 		  /* We use the `mbstate_t' member in DATA.  */
 		  data[cnt].statep = &data[cnt].__state;
 

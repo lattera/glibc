@@ -1,3 +1,19 @@
+1998-05-15 21:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.h (gconv_step_data): Add new fields invocation_counter
+	and internal_use.
+	* iconv/gconv_open.c (__gconv_open): Initialize invocation_counter
+	and internal_use.
+	* iconv/skeleton.c: Increment invocation_counter.
+	* iconvdata/iso-2022-kr.c: When used in iconv() emit designator
+	sequence first.
+
+	* iconv/skeleton.c (FROM_DIRECTION): Completely embrace expression.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+
+	* iconvdata/Makefile: Correct rpath definition for ISO-2022-KR.
+
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_db.c (derivation_lookup): Use __tfind correctly.

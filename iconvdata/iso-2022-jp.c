@@ -50,7 +50,7 @@ struct gap
 #define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
 #define MAX_NEEDED_TO		4
-#define FROM_DIRECTION		dir == from_iso2022jp
+#define FROM_DIRECTION		(dir == from_iso2022jp)
 #define PREPARE_LOOP \
   enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
   enum variant var = ((struct iso2022jp_data *) step->data)->var;	      \

@@ -90,7 +90,7 @@ static int from_object;
 static int to_object;
 
 # ifndef FROM_DIRECTION
-#  define FROM_DIRECTION step->data == &from_object
+#  define FROM_DIRECTION (step->data == &from_object)
 # endif
 #else
 # ifndef FROM_DIRECTION
@@ -346,6 +346,9 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 #ifdef END_LOOP
       END_LOOP
 #endif
+
+      /* We finished one use of this step.  */
+      ++data->invocation_counter;
     }
 
   return status;
