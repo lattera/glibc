@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,4 +35,6 @@ fputc (c, stream)
   return __putc (c, stream);
 }
 
+#ifndef fputc
 weak_alias (fputc, fputc_unlocked)
+#endif
