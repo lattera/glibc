@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -829,6 +830,11 @@ yperr_string (const int error)
 static const int8_t yp_2_yperr[] =
   {
 #define YP2YPERR(yp, yperr)  [YP_##yp - YP_VERS] = YPERR_##yperr
+    YP2YPERR (TRUE, SUCCESS),
+    YP2YPERR (NOMORE, NOMORE),
+    YP2YPERR (FALSE, YPERR),
+    YP2YPERR (NOMAP, MAP),
+    YP2YPERR (NODOM, DOMAIN),
     YP2YPERR (NOKEY, KEY),
     YP2YPERR (BADOP, YPERR),
     YP2YPERR (BADDB, BADDB),
@@ -839,7 +845,7 @@ static const int8_t yp_2_yperr[] =
 int
 ypprot_err (const int code)
 {
-  if (code < YP_VERS || code > YP_NOKEY)
+  if (code < YP_VERS || code > YP_NOMORE)
     return YPERR_YPERR;
   return yp_2_yperr[code - YP_VERS];
 }
