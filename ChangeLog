@@ -1,3 +1,13 @@
+1999-10-20  Andreas Schwab  <schwab@suse.de>
+
+	* math/Makefile (libm-tests-generated): Remove libm-test.stmp.
+	(generated): Add it here.
+	(before-compile): Add libm-test.c.
+	($(addprefix $(objpfx), $(libm-tests-generated))): Depend on
+	libm-test.stmp.
+	($(objpfx)libm-test.stmp): Use $(objpfx) instead of
+	$(objdir)/math/.
+
 1999-10-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (pdf): New goal.

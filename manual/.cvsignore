@@ -4,7 +4,7 @@
 TODO COPYING* AUTHORS copyr-* copying.*
 glibc-*
 
-*.dvi* *.info* *.c.texi *.ps
+*.dvi* *.info* *.c.texi *.ps *.pdf
 *.toc *.aux *.log *.tmp
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 

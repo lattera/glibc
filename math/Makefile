@@ -88,14 +88,19 @@ libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
 tests += $(libm-tests)
-libm-tests-generated = libm-test-ulps.h libm-test.c libm-test.stmp
-generated += $(libm-tests-generated)
+libm-tests-generated = libm-test-ulps.h libm-test.c
+generated += $(libm-tests-generated) libm-test.stmp
 
+# This is needed for dependencies
+before-compile += $(objpfx)libm-test.c
 
-ulps-file= $(firstword $(wildcard $(config-sysdirs:%=$(..)%/libm-test-ulps)))
+ulps-file = $(firstword $(wildcard $(config-sysdirs:%=$(..)%/libm-test-ulps)))
+
+$(addprefix $(objpfx), $(libm-tests-generated)): $(objpfx)libm-test.stmp
 
 $(objpfx)libm-test.stmp: $(ulps-file) libm-test.inc gen-libm-test.pl
-	$(PERL) gen-libm-test.pl -u $< -o $(objdir)/math/
+	$(make-target-directory)
+	$(PERL) gen-libm-test.pl -u $< -o "$(objpfx)"
 	@echo > $@
 
 $(objpfx)test-float.o: $(objpfx)libm-test.stmp
