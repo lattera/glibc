@@ -1,4 +1,4 @@
 #include <sysdep.h>
 #include <tls.h>
 
-MULTIPLE_THREADS_OFFSET offsetof (struct pthread, multiple_threads) - sizeof (struct pthread)
+MULTIPLE_THREADS_OFFSET offsetof (struct pthread, header.multiple_threads) - sizeof (struct pthread)

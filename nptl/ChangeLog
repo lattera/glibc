@@ -1,3 +1,13 @@
+2003-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h
+	(SINGLE_THREAD): Use `header' prefix instead of `header.data'.
+	* sysdeps/sh/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Likewise.
+	* sysdeps/sh/tls.h (TLS_MULTIPLE_THREADS_IN_TCB): Define.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (SINGLE_THREAD_P):
+	Use `header.' prefix.
+	* sysdeps/ia64/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Likewise.
+
 2003-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/pthreaddef.h (CURRENT_STACK_FRAME): Don't use
