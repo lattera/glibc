@@ -44,22 +44,29 @@ memchr (const void *s, int c, size_t n)
 
   for (;;)
     {
-      int mask;
-      asm ("cmpbge %1, %2, %0"
-	   : "=r" (mask) : "r" (charmask), "r" (*longword_ptr++));
-      if (mask)
+      const unsigned long int longword = *longword_ptr++;
+      int ge, le;
+
+      /* Set bits in GE if bytes in CHARMASK are >= bytes in LONGWORD.  */
+      asm ("cmpbge %1, %2, %0" : "=r" (ge) : "r" (charmask), "r" (longword));
+
+      /* Set bits in LE if bytes in CHARMASK are <= bytes in LONGWORD.  */
+      asm ("cmpbge %2, %1, %0" : "=r" (le) : "r" (charmask), "r" (longword));
+
+      /* Bytes that are both <= and >= are == to C.  */
+      if (ge & le)
 	{
 	  /* Which of the bytes was the C?  */
 
 	  const char *cp = (const char *) (longword_ptr - 1);
 
 	  if (cp[0] == c)
-	    return cp - str;
+	    return cp;
 	  if (cp[1] == c)
-	    return cp - str + 1;
+	    return &cp[1];
 	  if (cp[2] == c)
-	    return cp - str + 2;
-	  return cp - str + 3;
+	    return &cp[2];
+	  return &cp[3];
 	}
     }
 }
