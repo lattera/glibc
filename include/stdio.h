@@ -50,6 +50,12 @@ extern int __gen_tempname (char *__tmpl, int __kind);
 extern void __libc_fatal (__const char *__message)
      __attribute__ ((__noreturn__));
 
+/* Acquire ownership of STREAM.  */
+extern void __flockfile (FILE *__stream);
+
+/* Relinquish the ownership granted for STREAM.  */
+extern void __funlockfile (FILE *__stream);
+    
 # endif
 
 #endif

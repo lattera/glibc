@@ -43,5 +43,10 @@ extern int __vfwscanf (FILE *__restrict __s,
 		       __const wchar_t *__restrict __format,
 		       __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0)) */;
+extern int __vswprintf (wchar_t *__restrict __s, size_t __n,
+			__const wchar_t *__restrict __format,
+			__gnuc_va_list __arg)
+     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
+
 # endif
 #endif

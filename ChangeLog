@@ -1,3 +1,18 @@
+2000-08-21  Andreas Jaeger  <aj@suse.de>
+
+	* include/poll.h: Include include/sys/poll.h to get __poll
+	declaration.
+
+	* io/sys/poll.h: Move __poll declaration from here...
+	* include/sys/poll.h: ...to here.
+
+	* include/sys/socket.h (__getpeername): Add declaration.
+
+	* include/wchar.h (__vswprintf): Add declaration.
+
+	* include/stdio.h (__flockfile): Add declaration.
+	(__funlockfile): Likewise.
+
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Define __restrict_arr.
