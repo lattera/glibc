@@ -1,3 +1,17 @@
+2004-07-28  GOTO Masanori  <gotom@debian.or.jp>
+
+	* timezone/asia: Update from tzdata2004b.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+	* timezone/private.h: Update from tzcode2004b.
+	* timezone/zic.c: Likewise.
+
 2004-07-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/grpcache.c (cache_addgr): If necessary, add entry also

@@ -1,4 +1,4 @@
-static char	elsieid[] = "@(#)zic.c	7.113";
+static char	elsieid[] = "@(#)zic.c	7.116";
 
 #include "private.h"
 #include "locale.h"
@@ -942,6 +942,8 @@ const int		signable;
 			error(errstring);
 			return 0;
 	}
+	if (noise && hh == HOURSPERDAY)
+		warning(_("24:00 not handled by pre-1998 versions of zic"));
 	return eitol(sign) *
 		(eitol(hh * MINSPERHOUR + mm) *
 		eitol(SECSPERMIN) + eitol(ss));
@@ -2148,8 +2150,8 @@ register const int			wantedy;
 				--i;
 			}
 		if (i < 0 || i >= len_months[isleap(y)][m]) {
-			error(_("no day in month matches rule"));
-			(void) exit(EXIT_FAILURE);
+			if (noise)
+				warning(_("rule goes past start/end of month--will not work with pre-2004 versions of zic"));
 		}
 	}
 	if (dayoff < 0 && !TYPE_SIGNED(time_t))
@@ -2243,5 +2245,5 @@ const int	i;
 }
 
 /*
-** UNIX was a registered trademark of UNIX System Laboratories in 1993.
+** UNIX was a registered trademark of The Open Group in 2003.
 */

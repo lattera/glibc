@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.52";
+static char	privatehid[] = "@(#)private.h	7.53";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -288,7 +288,7 @@ char *ctime_r P((time_t const *, char *));
 #endif /* HAVE_INCOMPATIBLE_CTIME_R */
 
 /*
-** UNIX was a registered trademark of UNIX System Laboratories in 1993.
+** UNIX was a registered trademark of The Open Group in 2003.
 */
 
 #endif /* !defined PRIVATE_H */
