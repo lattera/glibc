@@ -36,6 +36,8 @@ comment_char %
 %       Several changes in LC_TIME
 %       Added tel_dom_fmt to LC_TELEPHONE
 %       Some cosmetic changes
+% 2001-10-08: Won-kyu Park <wkpark@chem.skku.ac.kr>
+%       Fixed a typo in Hangul portion of LC_COLLATE
 
 LC_IDENTIFICATION
 title      "Korean locale for Republic of Korea"
@@ -1179,7 +1181,7 @@ order_start forward
 %%%
 % HANGUL SYLLABLES 
 <UAC00>
-...
+..
 <UD7A3>
 %%%
 % HANJA. For the moment, Hanjas defined in KS X 1001

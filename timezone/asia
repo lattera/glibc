@@ -1,4 +1,4 @@
-# @(#)asia	7.64
+# @(#)asia	7.65
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -10,7 +10,7 @@
 # Thomas G. Shanks, The International Atlas (5th edition),
 # San Diego: ACS Publications, Inc. (1999).
 #
-# Gwillim Law <Gwil_Law@bridge-point.com> writes that a good source
+# Gwillim Law writes that a good source
 # for recent time zone data is the International Air Transport
 # Association's Standard Schedules Information Manual (IATA SSIM),
 # published semiannually.  Law sent in several helpful summaries
@@ -210,7 +210,7 @@ Zone	Asia/Harbin	8:26:44	-	LMT	1928 # or Haerbin
 Zone	Asia/Shanghai	8:05:52	-	LMT	1928
 			8:00	Shang	C%sT	1949
 			8:00	PRC	C%sT
-Zone	Asia/Chungking	7:06:20	-	LMT	1928 # or Chongqing
+Zone	Asia/Chongqing	7:06:20	-	LMT	1928 # or Chungking
 			7:00	-	CHUT	1980 May # Chungking Time
 			8:00	PRC	C%sT
 Zone	Asia/Urumqi	5:50:20	-	LMT	1928 # or Urumchi
@@ -263,7 +263,7 @@ Rule	Taiwan	1974	1975	-	Oct	1	0:00	0	S
 Rule	Taiwan	1980	only	-	Jun	30	0:00	1:00	D
 Rule	Taiwan	1980	only	-	Sep	30	0:00	0	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Taipei	8:06:00 -	LMT	1896
+Zone	Asia/Taipei	8:06:00 -	LMT	1896 # or Taibei or T'ai-pei
 			8:00	Taiwan	C%sT
 
 # Macao (Macau, Aomen)
@@ -932,9 +932,11 @@ Zone	Asia/Beirut	2:22:00 -	LMT	1880
 
 # Malaysia
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	NBorneo	1935	1941	-	Sep	14	0:00	0:20	TS
+Rule	NBorneo	1935	1941	-	Sep	14	0:00	0:20	TS # one-Third Summer
 Rule	NBorneo	1935	1941	-	Dec	14	0:00	0	-
+#
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+# peninsular Malaysia
 Zone Asia/Kuala_Lumpur	6:46:48 -	LMT	1880
 			6:55:24	-	SMT	1905 Jun # Singapore Mean Time
 			7:00	-	MALT	1933	 # Malaya Time
@@ -943,6 +945,7 @@ Zone Asia/Kuala_Lumpur	6:46:48 -	LMT	1880
 			7:20	-	MALT	1950
 			7:30	-	MALT	1982 May
 			8:00	-	MYT	# Malaysia Time
+# Sabah & Sarawak
 Zone Asia/Kuching	7:21:20	-	LMT	1926 Mar
 			7:30	-	BORT	1933	# Borneo Time
 			8:00	NBorneo	BOR%sT	1942
@@ -1022,11 +1025,10 @@ Zone	Asia/Ulaanbaatar 7:07:32 -	LMT	1905 Aug
 			8:00	Mongol	ULA%sT
 # Choibalsan, a.k.a. Bajan Tuemen, Bajan Tumen, Chojbalsan,
 # Choybalsan, Sanbejse, Tchoibalsan
-# We're still not sure about this data, so we'll omit it for now.
-#Zone	Asia/Choibalsan	7:38:00 -	LMT	1905 Aug
-#			7:00	-	ULAT	1978
-#			8:00	Mongol	ULA%sT	1983 Apr
-#			9:00	Mongol	CHO%sT	# Choibalsan Time
+Zone	Asia/Choibalsan	7:38:00 -	LMT	1905 Aug
+			7:00	-	ULAT	1978
+			8:00	-	ULAT	1983 Apr
+			9:00	Mongol	CHO%sT	# Choibalsan Time
 
 # Nepal
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

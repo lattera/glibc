@@ -45,7 +45,7 @@
    -.5 ln 2  <  x  <  .5 ln 2
    Theoretical peak relative error = 8.1e-36  */
 
-static long double
+static const long double
   P0 = 2.943520915569954073888921213330863757240E8L,
   P1 = -5.722847283900608941516165725053359168840E7L,
   P2 = 8.944630806357575461578107295909719817253E6L,
@@ -103,11 +103,11 @@ __expm1l (long double x)
   /* expm1(+- 0) = +- 0.  */
   if ((ix == 0) && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
     return x;
- 
+
   /* Overflow.  */
   if (x > maxlog)
     return (big * big);
- 
+
   /* Minimum value.  */
   if (x < minarg)
     return (4.0/big - 1.0L);

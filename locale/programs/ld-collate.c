@@ -1315,7 +1315,7 @@ order for `%.*s' already defined at %s:%Zu"),
 	      int cnt;
 
 	      /* Generate the the name.  */
-	      sprintf (buf + preflen, base == 10 ? "%ld" : "%lx", from);
+	      sprintf (buf + preflen, base == 10 ? "%ld" : "%lX", from);
 
 	      /* Look whether this name is already defined.  */
 	      if (find_entry (&collate->seq_table, buf, symlen,

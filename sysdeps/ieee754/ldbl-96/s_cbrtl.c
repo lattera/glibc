@@ -37,11 +37,12 @@ static const double factor[5] =
   SQR_CBRT2
 };
 
+static const long double third = 0.3333333333333333333333333L;
 
 long double
 __cbrtl (long double x)
 {
-  long double xm, ym, u, t2;
+  long double xm, u;
   int xe;
 
   /* Reduce X.  XM now is an range 1.0 to 0.5.  */
@@ -54,25 +55,17 @@ __cbrtl (long double x)
   if (xe == 0 && fpclassify (x) <= FP_ZERO)
     return x + x;
 
-  u = (0.338058687610520237
-       + (1.67595307700780102
-	  + (-2.82414939754975962
-	     + (4.09559907378707839 +
-		(-4.11151425200350531
-		 + (2.65298938441952296 +
-		    (-0.988553671195413709
-		     + 0.161617097923756032 * xm)
-		    * xm)
-		 * xm)
-		* xm)
-	     * xm)
-	  * xm)
-       *xm);
+  u = (((-1.34661104733595206551E-1 * xm
+	  + 5.46646013663955245034E-1) * xm
+	 - 9.54382247715094465250E-1) * xm
+	+ 1.13999833547172932737E0) * xm
+       + 4.02389795645447521269E-1;
 
-  t2 = u * u * u;
+  u *= factor[2 + xe % 3];
+  u = __ldexpl (x > 0.0 ? u : -u, xe / 3);
 
-  ym = u * (t2 + 2.0 * xm) / (2.0 * t2 + xm) * factor[2 + xe % 3];
-
-  return __ldexpl (x > 0.0 ? ym : -ym, xe / 3);
+  u -= (u - (x / (u * u))) * third;
+  u -= (u - (x / (u * u))) * third;
+  return u;
 }
 weak_alias (__cbrtl, cbrtl)

@@ -34,7 +34,7 @@ typedef struct
 {
   unsigned long mask;
   unsigned long addr;
-} __psw_t __attribute__ ((aligned(8)));
+} __attribute__ ((aligned(8))) __psw_t;
 
 /* Type for a general-purpose register.  */
 typedef unsigned long greg_t;

@@ -1,3 +1,7 @@
+2001-10-08  Won-kyu Park  <wkpark@chem.skku.ac.kr>
+
+	* locales/ko_KR: Fixed a typo in Hangul portion of LC_COLLATE.
+
 2001-09-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/SAMI-WS2: Add Euro sign.

@@ -46,7 +46,7 @@
  * Theoretical peak relative error = 5.3e-37,
  * relative peak error spread = 2.3e-14
  */
-static long double
+static const long double
   P12 = 1.538612243596254322971797716843006400388E-6L,
   P11 = 4.998469661968096229986658302195402690910E-1L,
   P10 = 2.321125933898420063925789532045674660756E1L,
@@ -80,7 +80,7 @@ static long double
  * Theoretical peak relative error = 1.1e-35,
  * relative peak error spread 1.1e-9
  */
-static long double
+static const long double
   R5 = -8.828896441624934385266096344596648080902E-1L,
   R4 = 8.057002716646055371965756206836056074715E1L,
   R3 = -2.024301798136027039250415126250455056397E3L,
@@ -96,14 +96,14 @@ static long double
   S0 = 1.701761051846631278975701529965589676574E6L;
 
 /* C1 + C2 = ln 2 */
-static long double C1 = 6.93145751953125E-1L;
-static long double C2 = 1.428606820309417232121458176568075500134E-6L;
+static const long double C1 = 6.93145751953125E-1L;
+static const long double C2 = 1.428606820309417232121458176568075500134E-6L;
 
-static long double sqrth = 0.7071067811865475244008443621048490392848L;
+static const long double sqrth = 0.7071067811865475244008443621048490392848L;
 /* ln (2^16384 * (1 - 2^-113)) */
-static long double maxlog = 1.1356523406294143949491931077970764891253E4L;
-static long double big = 2e4932L;
-static long double zero = 0.0L;
+static const long double maxlog = 1.1356523406294143949491931077970764891253E4L;
+static const long double big = 2e4932L;
+static const long double zero = 0.0L;
 
 #if 1
 /* Make sure these are prototyped.  */

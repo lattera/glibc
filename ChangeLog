@@ -1,3 +1,41 @@
+2001-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (handle_ellipsis): Use %lX not %lx
+	to generate hexadecimal identifier.
+	Patch by Jungshik Shin <jungshik.shin@yale.edu>.
+
+2001-10-09  Stephen L Moshier  <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-96/s_cbrtl.c (__cbrtl): Fix algorithm.
+
+2001-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/e_powl.c: New file.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Constify float variables.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise
+
+	* timezone/africa: Update from tzdata2001d.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+2001-10-09  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/sys/ucontext.h: Correct __psw_t typedef.
+	* sysdeps/s390/s390-64/sys/ucontext.h: Likewise.
+
 2001-10-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h (PT_TLS): New definition.

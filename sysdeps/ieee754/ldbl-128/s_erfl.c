@@ -137,7 +137,7 @@ tiny = 1e-4931L,
    0 <= x <= 7/8
    Peak relative error 1.8e-35  */
 #define NTN1 8
-static long double TN1[NTN1 + 1] =
+static const long double TN1[NTN1 + 1] =
 {
  -3.858252324254637124543172907442106422373E10L,
   9.580319248590464682316366876952214879858E10L,
@@ -150,7 +150,7 @@ static long double TN1[NTN1 + 1] =
   3.390868480059991640235675479463287886081E1L
 };
 #define NTD1 8
-static long double TD1[NTD1 + 1] =
+static const long double TD1[NTD1 + 1] =
 {
   -3.005357030696532927149885530689529032152E11L,
   -1.342602283126282827411658673839982164042E11L,
@@ -168,9 +168,9 @@ static long double TD1[NTD1 + 1] =
 /* erf(z+1)  = erf_const + P(z)/Q(z)
    -.125 <= z <= 0
    Peak relative error 7.3e-36  */
-static long double erf_const = 0.845062911510467529296875L;
+static const long double erf_const = 0.845062911510467529296875L;
 #define NTN2 8
-static long double TN2[NTN2 + 1] =
+static const long double TN2[NTN2 + 1] =
 {
  -4.088889697077485301010486931817357000235E1L,
   7.157046430681808553842307502826960051036E3L,
@@ -183,7 +183,7 @@ static long double TN2[NTN2 + 1] =
   5.127662277706787664956025545897050896203E-1L
 };
 #define NTD2 8
-static long double TD2[NTD2 + 1] =
+static const long double TD2[NTD2 + 1] =
 {
   1.731026445926834008273768924015161048885E4L,
   1.209682239007990370796112604286048173750E4L,
@@ -202,7 +202,7 @@ static long double TD2[NTD2 + 1] =
    0 <= x < 0.125
    Peak relative error 1.4e-35  */
 #define NRNr13 8
-static long double RNr13[NRNr13 + 1] =
+static const long double RNr13[NRNr13 + 1] =
 {
  -2.353707097641280550282633036456457014829E3L,
   3.871159656228743599994116143079870279866E2L,
@@ -215,7 +215,7 @@ static long double RNr13[NRNr13 + 1] =
  -8.098602878463854789780108161581050357814E-2L
 };
 #define NRDr13 7
-static long double RDr13[NRDr13 + 1] =
+static const long double RDr13[NRDr13 + 1] =
 {
   2.220448796306693503549505450626652881752E3L,
   1.899133258779578688791041599040951431383E2L,
@@ -228,15 +228,15 @@ static long double RDr13[NRDr13 + 1] =
  /* 1.0E0 */
 };
 /* erfc(0.25) = C13a + C13b to extra precision.  */
-static long double C13a = 0.723663330078125L;
-static long double C13b = 1.0279753638067014931732235184287934646022E-5L;
+static const long double C13a = 0.723663330078125L;
+static const long double C13b = 1.0279753638067014931732235184287934646022E-5L;
 
 
 /* erfc(x + 0.375) = erfc(0.375) + x R(x)
    0 <= x < 0.125
    Peak relative error 1.2e-35  */
 #define NRNr14 8
-static long double RNr14[NRNr14 + 1] =
+static const long double RNr14[NRNr14 + 1] =
 {
  -2.446164016404426277577283038988918202456E3L,
   6.718753324496563913392217011618096698140E2L,
@@ -249,7 +249,7 @@ static long double RNr14[NRNr14 + 1] =
  -2.230395570574153963203348263549700967918E-2L
 };
 #define NRDr14 7
-static long double RDr14[NRDr14 + 1] =
+static const long double RDr14[NRDr14 + 1] =
 {
   2.495187439241869732696223349840963702875E3L,
   2.503549449872925580011284635695738412162E2L,
@@ -262,14 +262,14 @@ static long double RDr14[NRDr14 + 1] =
  /* 1.0E0 */
 };
 /* erfc(0.375) = C14a + C14b to extra precision.  */
-static long double C14a = 0.5958709716796875L;
-static long double C14b = 1.2118885490201676174914080878232469565953E-5L;
+static const long double C14a = 0.5958709716796875L;
+static const long double C14b = 1.2118885490201676174914080878232469565953E-5L;
 
 /* erfc(x + 0.5) = erfc(0.5) + x R(x)
    0 <= x < 0.125
    Peak relative error 4.7e-36  */
 #define NRNr15 8
-static long double RNr15[NRNr15 + 1] =
+static const long double RNr15[NRNr15 + 1] =
 {
  -2.624212418011181487924855581955853461925E3L,
   8.473828904647825181073831556439301342756E2L,
@@ -282,7 +282,7 @@ static long double RNr15[NRNr15 + 1] =
   1.990253655948179713415957791776180406812E-2L
 };
 #define NRDr15 7
-static long double RDr15[NRDr15 + 1] =
+static const long double RDr15[NRDr15 + 1] =
 {
   2.986190760847974943034021764693341524962E3L,
   5.288262758961073066335410218650047725985E2L,
@@ -295,14 +295,14 @@ static long double RDr15[NRDr15 + 1] =
   /* 1.0E0 */
 };
 /* erfc(0.5) = C15a + C15b to extra precision.  */
-static long double C15a = 0.4794921875L;
-static long double C15b = 7.9346869534623172533461080354712635484242E-6L;
+static const long double C15a = 0.4794921875L;
+static const long double C15b = 7.9346869534623172533461080354712635484242E-6L;
 
 /* erfc(x + 0.625) = erfc(0.625) + x R(x)
    0 <= x < 0.125
    Peak relative error 5.1e-36  */
 #define NRNr16 8
-static long double RNr16[NRNr16 + 1] =
+static const long double RNr16[NRNr16 + 1] =
 {
  -2.347887943200680563784690094002722906820E3L,
   8.008590660692105004780722726421020136482E2L,
@@ -315,7 +315,7 @@ static long double RNr16[NRNr16 + 1] =
   2.022958279982138755020825717073966576670E-2L,
 };
 #define NRDr16 7
-static long double RDr16[NRDr16 + 1] =
+static const long double RDr16[NRDr16 + 1] =
 {
   3.075166170024837215399323264868308087281E3L,
   8.730468942160798031608053127270430036627E2L,
@@ -328,14 +328,14 @@ static long double RDr16[NRDr16 + 1] =
   /* 1.0E0 */
 };
 /* erfc(0.625) = C16a + C16b to extra precision.  */
-static long double C16a = 0.3767547607421875L;
-static long double C16b = 4.3570693945275513594941232097252997287766E-6L;
+static const long double C16a = 0.3767547607421875L;
+static const long double C16b = 4.3570693945275513594941232097252997287766E-6L;
 
 /* erfc(x + 0.75) = erfc(0.75) + x R(x)
    0 <= x < 0.125
    Peak relative error 1.7e-35  */
 #define NRNr17 8
-static long double RNr17[NRNr17 + 1] =
+static const long double RNr17[NRNr17 + 1] =
 {
   -1.767068734220277728233364375724380366826E3L,
   6.693746645665242832426891888805363898707E2L,
@@ -348,7 +348,7 @@ static long double RNr17[NRNr17 + 1] =
   -1.488945487149634820537348176770282391202E-2L
 };
 #define NRDr17 7
-static long double RDr17[NRDr17 + 1] =
+static const long double RDr17[NRDr17 + 1] =
 {
   2.748457523498150741964464942246913394647E3L,
   1.020213390713477686776037331757871252652E3L,
@@ -361,15 +361,15 @@ static long double RDr17[NRDr17 + 1] =
   /* 1.0E0 */
 };
 /* erfc(0.75) = C17a + C17b to extra precision.  */
-static long double C17a = 0.2888336181640625L;
-static long double C17b = 1.0748182422368401062165408589222625794046E-5L;
+static const long double C17a = 0.2888336181640625L;
+static const long double C17b = 1.0748182422368401062165408589222625794046E-5L;
 
 
 /* erfc(x + 0.875) = erfc(0.875) + x R(x)
    0 <= x < 0.125
    Peak relative error 2.2e-35  */
 #define NRNr18 8
-static long double RNr18[NRNr18 + 1] =
+static const long double RNr18[NRNr18 + 1] =
 {
  -1.342044899087593397419622771847219619588E3L,
   6.127221294229172997509252330961641850598E2L,
@@ -382,7 +382,7 @@ static long double RNr18[NRNr18 + 1] =
  -5.557645435858916025452563379795159124753E-2L
 };
 #define NRDr18 7
-static long double RDr18[NRDr18 + 1] =
+static const long double RDr18[NRDr18 + 1] =
 {
   2.557518000661700588758505116291983092951E3L,
   1.070171433382888994954602511991940418588E3L,
@@ -395,14 +395,14 @@ static long double RDr18[NRDr18 + 1] =
   /* 1.0E0 */
 };
 /* erfc(0.875) = C18a + C18b to extra precision.  */
-static long double C18a = 0.215911865234375L;
-static long double C18b = 1.3073705765341685464282101150637224028267E-5L;
+static const long double C18a = 0.215911865234375L;
+static const long double C18b = 1.3073705765341685464282101150637224028267E-5L;
 
 /* erfc(x + 1.0) = erfc(1.0) + x R(x)
    0 <= x < 0.125
    Peak relative error 1.6e-35  */
 #define NRNr19 8
-static long double RNr19[NRNr19 + 1] =
+static const long double RNr19[NRNr19 + 1] =
 {
  -1.139180936454157193495882956565663294826E3L,
   6.134903129086899737514712477207945973616E2L,
@@ -415,7 +415,7 @@ static long double RNr19[NRNr19 + 1] =
  -8.629945436917752003058064731308767664446E-2L
 };
 #define NRDr19 7
-static long double RDr19[NRDr19 + 1] =
+static const long double RDr19[NRDr19 + 1] =
 {
   2.744303447981132701432716278363418643778E3L,
   1.266396359526187065222528050591302171471E3L,
@@ -428,14 +428,14 @@ static long double RDr19[NRDr19 + 1] =
   /* 1.0E0 */
 };
 /* erfc(1.0) = C19a + C19b to extra precision.  */
-static long double C19a = 0.15728759765625L;
-static long double C19b = 1.1609394035130658779364917390740703933002E-5L;
+static const long double C19a = 0.15728759765625L;
+static const long double C19b = 1.1609394035130658779364917390740703933002E-5L;
 
 /* erfc(x + 1.125) = erfc(1.125) + x R(x)
    0 <= x < 0.125
    Peak relative error 3.6e-36  */
 #define NRNr20 8
-static long double RNr20[NRNr20 + 1] =
+static const long double RNr20[NRNr20 + 1] =
 {
  -9.652706916457973956366721379612508047640E2L,
   5.577066396050932776683469951773643880634E2L,
@@ -448,7 +448,7 @@ static long double RNr20[NRNr20 + 1] =
  -9.611744011489092894027478899545635991213E-2L
 };
 #define NRDr20 7
-static long double RDr20[NRDr20 + 1] =
+static const long double RDr20[NRDr20 + 1] =
 {
   3.032829629520142564106649167182428189014E3L,
   1.659648470721967719961167083684972196891E3L,
@@ -461,14 +461,14 @@ static long double RDr20[NRDr20 + 1] =
  /* 1.0E0 */
 };
 /* erfc(1.125) = C20a + C20b to extra precision.  */
-static long double C20a = 0.111602783203125L;
-static long double C20b = 8.9850951672359304215530728365232161564636E-6L;
+static const long double C20a = 0.111602783203125L;
+static const long double C20b = 8.9850951672359304215530728365232161564636E-6L;
 
 /* erfc(1/x) = 1/x exp (-1/x^2 - 0.5625 + R(1/x^2))
    7/8 <= 1/x < 1
    Peak relative error 1.4e-35  */
 #define NRNr8 9
-static long double RNr8[NRNr8 + 1] =
+static const long double RNr8[NRNr8 + 1] =
 {
   3.587451489255356250759834295199296936784E1L,
   5.406249749087340431871378009874875889602E2L,
@@ -482,7 +482,7 @@ static long double RNr8[NRNr8 + 1] =
   4.876422978828717219629814794707963640913E-2L
 };
 #define NRDr8 8
-static long double RDr8[NRDr8 + 1] =
+static const long double RDr8[NRDr8 + 1] =
 {
   6.358593134096908350929496535931630140282E1L,
   9.900253816552450073757174323424051765523E2L,
@@ -500,7 +500,7 @@ static long double RDr8[NRDr8 + 1] =
    0.75 <= 1/x <= 0.875
    Peak relative error 2.0e-36  */
 #define NRNr7 9
-static long double RNr7[NRNr7 + 1] =
+static const long double RNr7[NRNr7 + 1] =
 {
  1.686222193385987690785945787708644476545E1L,
  1.178224543567604215602418571310612066594E3L,
@@ -514,7 +514,7 @@ static long double RNr7[NRNr7 + 1] =
  6.700393957480661937695573729183733234400E2L
 };
 #define NRDr7 9
-static long double RDr7[NRDr7 + 1] =
+static const long double RDr7[NRDr7 + 1] =
 {
 -1.709305024718358874701575813642933561169E3L,
 -3.280033887481333199580464617020514788369E4L,
@@ -533,7 +533,7 @@ static long double RDr7[NRDr7 + 1] =
    5/8 <= 1/x < 3/4
    Peak relative error 1.9e-35  */
 #define NRNr6 9
-static long double RNr6[NRNr6 + 1] =
+static const long double RNr6[NRNr6 + 1] =
 {
  1.642076876176834390623842732352935761108E0L,
  1.207150003611117689000664385596211076662E2L,
@@ -547,7 +547,7 @@ static long double RNr6[NRNr6 + 1] =
  4.506934806567986810091824791963991057083E2L
 };
 #define NRDr6 9
-static long double RDr6[NRDr6 + 1] =
+static const long double RDr6[NRDr6 + 1] =
 {
 -1.664557643928263091879301304019826629067E2L,
 -3.800035902507656624590531122291160668452E3L,
@@ -566,7 +566,7 @@ static long double RDr6[NRDr6 + 1] =
    1/2 <= 1/x < 5/8
    Peak relative error 4.6e-36  */
 #define NRNr5 10
-static long double RNr5[NRNr5 + 1] =
+static const long double RNr5[NRNr5 + 1] =
 {
 -3.332258927455285458355550878136506961608E-3L,
 -2.697100758900280402659586595884478660721E-1L,
@@ -581,7 +581,7 @@ static long double RNr5[NRNr5 + 1] =
 -2.077715925587834606379119585995758954399E0L
 };
 #define NRDr5 9
-static long double RDr5[NRDr5 + 1] =
+static const long double RDr5[NRDr5 + 1] =
 {
  3.377879570417399341550710467744693125385E-1L,
  1.021963322742390735430008860602594456187E1L,
@@ -600,7 +600,7 @@ static long double RDr5[NRDr5 + 1] =
    3/8 <= 1/x < 1/2
    Peak relative error 2.0e-36  */
 #define NRNr4 10
-static long double RNr4[NRNr4 + 1] =
+static const long double RNr4[NRNr4 + 1] =
 {
  3.258530712024527835089319075288494524465E-3L,
  2.987056016877277929720231688689431056567E-1L,
@@ -615,7 +615,7 @@ static long double RNr4[NRNr4 + 1] =
  2.127493573166454249221983582495245662319E2L
 };
 #define NRDr4 10
-static long double RDr4[NRDr4 + 1] =
+static const long double RDr4[NRDr4 + 1] =
 {
 -3.303141981514540274165450687270180479586E-1L,
 -1.353768629363605300707949368917687066724E1L,
@@ -635,7 +635,7 @@ static long double RDr4[NRDr4 + 1] =
    1/4 <= 1/x < 3/8
    Peak relative error 8.4e-37  */
 #define NRNr3 11
-static long double RNr3[NRNr3 + 1] =
+static const long double RNr3[NRNr3 + 1] =
 {
 -1.952401126551202208698629992497306292987E-6L,
 -2.130881743066372952515162564941682716125E-4L,
@@ -651,7 +651,7 @@ static long double RNr3[NRNr3 + 1] =
 -1.787995944187565676837847610706317833247E0L
 };
 #define NRDr3 10
-static long double RDr3[NRDr3 + 1] =
+static const long double RDr3[NRDr3 + 1] =
 {
  1.979130686770349481460559711878399476903E-4L,
  1.156941716128488266238105813374635099057E-2L,
@@ -671,7 +671,7 @@ static long double RDr3[NRDr3 + 1] =
    1/8 <= 1/x < 1/4
    Peak relative error 1.5e-36  */
 #define NRNr2 11
-static long double RNr2[NRNr2 + 1] =
+static const long double RNr2[NRNr2 + 1] =
 {
 -2.638914383420287212401687401284326363787E-8L,
 -3.479198370260633977258201271399116766619E-6L,
@@ -687,7 +687,7 @@ static long double RNr2[NRNr2 + 1] =
 -1.572436106228070195510230310658206154374E0L
 };
 #define NRDr2 10
-static long double RDr2[NRDr2 + 1] =
+static const long double RDr2[NRDr2 + 1] =
 {
  2.675042728136731923554119302571867799673E-6L,
  2.170997868451812708585443282998329996268E-4L,
@@ -707,7 +707,7 @@ static long double RDr2[NRDr2 + 1] =
    1/128 <= 1/x < 1/8
    Peak relative error 2.2e-36  */
 #define NRNr1 9
-static long double RNr1[NRNr1 + 1] =
+static const long double RNr1[NRNr1 + 1] =
 {
 -4.250780883202361946697751475473042685782E-8L,
 -5.375777053288612282487696975623206383019E-6L,
@@ -721,7 +721,7 @@ static long double RNr1[NRNr1 + 1] =
 -1.290865243944292370661544030414667556649E0L
 };
 #define NRDr1 8
-static long double RDr1[NRDr1 + 1] =
+static const long double RDr1[NRDr1 + 1] =
 {
  4.308976661749509034845251315983612976224E-6L,
  3.265390126432780184125233455960049294580E-4L,
