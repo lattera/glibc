@@ -1,3 +1,7 @@
+2002-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* argp/Makefile (tests): Add tst-argp1.
+
 2002-12-04  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Move all [USE_TLS]

@@ -134,7 +134,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-stack1 \
 	tst-unload \
 	tst-sysconf \
-	tst-locale1
+	tst-locale1 tst-locale2
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
@@ -156,7 +156,7 @@ CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
 
 ifeq ($(build-static),yes)
-tests-static += tst-locale1
+tests-static += tst-locale1 tst-locale2
 endif
 
 include ../Rules

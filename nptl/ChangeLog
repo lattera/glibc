@@ -1,5 +1,9 @@
 2002-12-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-locale2.
+	(tests-static): Likewise.
+	* tst-locale2.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Mark asms as
 	volatile and add memory clobbers to lock operations.
 
