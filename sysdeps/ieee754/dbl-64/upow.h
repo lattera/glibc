@@ -31,7 +31,9 @@
 
 #ifdef BIG_ENDI
   const static mynumber
+/**/ nZERO	    = {{0x80000000, 0}},	  /* -0.0          */
 /**/ INF            = {{0x7ff00000, 0x00000000}}, /* INF           */
+/**/ nINF           = {{0xfff00000, 0x00000000}}, /* -INF          */
 /**/ NaNQ           = {{0x7ff80000, 0x00000000}}, /* NaNQ          */
 /**/ sqrt_2         = {{0x3ff6a09e, 0x667f3bcc}}, /* sqrt(2)       */
 /**/ ln2a           = {{0x3fe62e42, 0xfefa3800}}, /* ln(2) 43 bits */
@@ -47,7 +49,9 @@
 #else
 #ifdef LITTLE_ENDI
   const static mynumber
+/**/ nZERO	    = {{0, 0x80000000}},	  /* -0.0          */
 /**/ INF            = {{0x00000000, 0x7ff00000}}, /* INF           */
+/**/ nINF           = {{0x00000000, 0xfff00000}}, /* -INF           */
 /**/ NaNQ           = {{0x00000000, 0x7ff80000}}, /* NaNQ          */
 /**/ sqrt_2         = {{0x667f3bcc, 0x3ff6a09e}}, /* sqrt(2)       */
 /**/ ln2a           = {{0xfefa3800, 0x3fe62e42}}, /* ln(2) 43 bits */

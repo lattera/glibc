@@ -1,5 +1,7 @@
 2001-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/upow.h: Define nZERO and nINF.
+
 	* sysdeps/ieee754/dbl-64/e_remainder.c: Fix handling of boundary
 	conditions.
 
