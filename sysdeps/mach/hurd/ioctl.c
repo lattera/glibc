@@ -171,6 +171,13 @@ DEFUN(__ioctl, (fd, request),
       in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
       in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
     }
+  else if (_IOC_INOUT (request) == IOC_VOID)
+    {
+      /* The RPC takes a single integer_t argument.
+	 Rather than pointing to the value, ARG is the value itself.  */
+      *t++ = io2mach_type (_IOTS (integer_t));
+      *((integer_t *) t)++ = (integer_t) arg;
+    }
 
   /* Compute the expected size of the reply.  There is a standard header
      consisting of the message header and the reply code.  Then, for out
