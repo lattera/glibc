@@ -55,7 +55,7 @@ static struct argp argp =
 static void
 print_version (FILE *stream, struct argp_state *state)
 {
-  fprintf (stream, "pt_chmod (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, "pt_chown (GNU %s) %s\n", PACKAGE, VERSION);
   fprintf (stream, gettext ("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
@@ -95,41 +95,17 @@ Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
 }
 
 int
-main (int argc, char *argv[])
+do_pt_chown (void)
 {
   char *pty;
-  int remaining;
   struct stat st;
   struct group *p;
   gid_t gid;
-
-  /* Set locale via LC_ALL.  */
-  setlocale (LC_ALL, "");
-
-  /* Set the text message domain.  */
-  textdomain (PACKAGE);
-
-  /* parse and process arguments.  */
-  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
-
-  if (remaining < argc)
-    {
-      /* We should not be called with any non-option parameters.  */
-      error (0, 0, gettext ("too many arguments"));
-      argp_help (&argp, stdout, ARGP_HELP_SEE | ARGP_HELP_EXIT_ERR,
-		 program_invocation_short_name);
-      exit (EXIT_FAILURE);
-    }
-
-  /* Check if we are properly installed.  */
-  if (geteuid () != 0)
-    error (FAIL_EXEC, 0, gettext ("needs to be installed setuid `root'"));
 
   /* Check that PTY_FILENO is a valid master pseudo terminal.  */
   pty = ptsname (PTY_FILENO);
   if (pty == NULL)
     return errno == EBADF ? FAIL_EBADF : FAIL_EINVAL;
-  close (PTY_FILENO);
 
   /* Check that the returned slave pseudo terminal is a
      character device.  */
@@ -150,5 +126,45 @@ main (int argc, char *argv[])
   if (chmod (pty, S_IRUSR|S_IWUSR|S_IWGRP) < 0)
     return FAIL_EACCES;
 
-  exit (EXIT_SUCCESS);
+  return 0;
+}
+
+
+int
+main (int argc, char *argv[])
+{
+  int remaining;
+
+  /* Normal invocation of this program is with no arguments and
+     with privileges.
+     FIXME: Should use capable (CAP_CHOWN|CAP_FOWNER).  */
+  if (argc == 1 && geteuid () == 0)
+    return do_pt_chown ();
+
+  /* We aren't going to be using privileges, so drop them right now. */
+  setuid (getuid ());
+  
+  /* Set locale via LC_ALL.  */
+  setlocale (LC_ALL, "");
+
+  /* Set the text message domain.  */
+  textdomain (PACKAGE);
+
+  /* parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
+
+  if (remaining < argc)
+    {
+      /* We should not be called with any non-option parameters.  */
+      error (0, 0, gettext ("too many arguments"));
+      argp_help (&argp, stdout, ARGP_HELP_SEE | ARGP_HELP_EXIT_ERR,
+		 program_invocation_short_name);
+      return EXIT_FAILURE;
+    }
+
+  /* Check if we are properly installed.  */
+  if (geteuid () != 0)
+    error (FAIL_EXEC, 0, gettext ("needs to be installed setuid `root'"));
+
+  return EXIT_SUCCESS;
 }

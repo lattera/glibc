@@ -1,3 +1,8 @@
+1999-03-30 20:59 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* login/programs/pt_chown.c: Drop privileges if invoked with
+	arguments.  Don't close the master pty.
+
 1999-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/tzfile.c (__tzfile_read): Process transitions from the rear.
