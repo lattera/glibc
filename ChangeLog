@@ -1,3 +1,22 @@
+2001-04-07  Roland McGrath  <roland@frob.com>
+
+	* mach/msgserver.c (__mach_msg_server_timeout): Add an assert.
+
+2001-03-31  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/fork.c: Skip NEWPROC just like NEWTASK when
+	copying send rights into child.  When we hit our name for our proc
+	port, just copy NEWPROC directly instead of repeating proc_task2proc
+	to install the child's port.
+
+2001-04-08  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig ($(common-objpfx)soversions.i): Grok entries with DEFAULT
+	in second column, to provide default values for third column.
+	* shlib-versions: Add comments about using DEFAULT in second column.
+	(s390x-.*-linux.*): Replace individual entries with a DEFAULT entry.
+	(cris-.*-linux.*): Likewise.
+
 2001-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (distribute): Add scripts/documented.sh.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,95,96,97,99 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -296,8 +296,8 @@ __fork (void)
 	      mach_port_urefs_t refs, *record_refs = NULL;
 	      mach_port_t insert;
 	      mach_msg_type_name_t insert_type = MACH_MSG_TYPE_COPY_SEND;
-	      if (portnames[i] == newtask)
-		/* Skip the name we use for the child's task port.  */
+	      if (portnames[i] == newtask || portnames[i] == newproc)
+		/* Skip the name we use for the child's task or proc ports.  */
 		continue;
 	      if (portnames[i] == __mach_task_self ())
 		/* For the name we use for our own task port,
@@ -305,10 +305,9 @@ __fork (void)
 		insert = newtask;
 	      else if (portnames[i] == _hurd_ports[INIT_PORT_PROC].port)
 		{
-		  /* Get the proc server port for the new task.  */
-		  if (err = __proc_task2proc (portnames[i], newtask, &insert))
-		    LOSE;
-		  insert_type = MACH_MSG_TYPE_MOVE_SEND;
+		  /* Use the proc server port for the new task.  */
+		  insert = newproc;
+		  insert_type = MACH_MSG_TYPE_COPY_SEND;
 		}
 	      else if (portnames[i] == ss->thread)
 		{
