@@ -17,7 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
-#include <sys/socketcall.h>
+#include <socketcall.h>
 
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
