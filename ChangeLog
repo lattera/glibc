@@ -43,7 +43,7 @@
 	* configure.in: Make sure at least gcc 3.4 is used.  Undo last change.
 	* config.make.in: Undo last change.
 
-	* sysdeps/i386/Makefile ((CFLAGS-initfini.s): Unconditionally use
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Unconditionally use
 	-mtune.
 
 2005-03-05  Roland McGrath  <roland@redhat.com>
