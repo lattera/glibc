@@ -144,7 +144,7 @@ typedef unsigned int uint;
 
 #if !__GNUC_PREREQ (2, 7)
 
-/* These types are defined by the ISO C 9x header <inttypes.h>. */
+/* These types are defined by the ISO C99 header <inttypes.h>. */
 # ifndef __int8_t_defined
 #  define __int8_t_defined
 typedef	char int8_t;

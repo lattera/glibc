@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X: 7.5 Format conversion of integer types	<inttypes.h>
+ *	ISO C99: 7.8 Format conversion of integer types	<inttypes.h>
  */
 
 #ifndef _INTTYPES_H
@@ -28,7 +28,7 @@
 #include <stdint.h>
 
 
-/* The ISO C 9X standard specifies that these macros must only be
+/* The ISO C99 standard specifies that these macros must only be
    defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_FORMAT_MACROS
 

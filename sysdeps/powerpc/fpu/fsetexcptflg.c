@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
 
 #include <fenv_libc.h>
 
-void
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int
+__fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
   fenv_union_t u;
   fexcept_t flag;
@@ -45,4 +45,10 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* Deal with FE_INVALID_SOFTWARE not being implemented on some chips.  */
   if (flag & FE_INVALID)
     feraiseexcept(FE_INVALID);
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetexceptflag, __old_fesetexceptflag)
+symbol_version (__old_fesetexceptflag, fesetexceptflag, GLIBC_2.1);
+default_symbol_version (__fesetexceptflag, fesetexceptflag, GLIBC_2.1.3);

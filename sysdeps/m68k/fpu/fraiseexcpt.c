@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -21,8 +21,8 @@
 #include <fenv.h>
 #include <math.h>
 
-void
-feraiseexcept (int excepts)
+int
+__feraiseexcept (int excepts)
 {
   /* Raise exceptions represented by EXCEPTS.  But we must raise only one
      signal at a time.  It is important that if the overflow/underflow
@@ -67,4 +67,10 @@ feraiseexcept (int excepts)
       long double d = 1.0;
       __asm__ __volatile__ ("fdiv%.s %#0r3,%0; fnop" : "=f" (d) : "0" (d));
     }
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);

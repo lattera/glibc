@@ -20,8 +20,8 @@
 
 #include <fenv.h>
 
-void
-feclearexcept (int excepts)
+int
+__feclearexcept (int excepts)
 {
   fenv_t temp;
 
@@ -37,4 +37,10 @@ feclearexcept (int excepts)
 
   /* Put the new data in effect.  */
   __asm__ ("fldenv %0" : : "m" (*&temp));
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feclearexcept, __old_feclearexcept)
+symbol_version (__old_feclearexcept, feclearexcept, GLIBC_2.1);
+default_symbol_version (__feclearexcept, feclearexcept, GLIBC_2.1.3);

@@ -21,8 +21,8 @@
 #include <fenv.h>
 #include <math.h>
 
-void
-feraiseexcept (int excepts)
+int
+__feraiseexcept (int excepts)
 {
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important that if the overflow/underflow
@@ -109,4 +109,10 @@ feraiseexcept (int excepts)
       /* And raise the exception.  */
       __asm__ __volatile__ ("fwait");
     }
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);

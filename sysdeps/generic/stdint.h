@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X: 7.18 Integer types <stdint.h>
+ *	ISO C99: 7.18 Integer types <stdint.h>
  */
 
 #ifndef _STDINT_H
@@ -140,7 +140,7 @@ typedef unsigned long long int	uintmax_t;
 #endif
 
 
-/* The ISO C 9X standard specifies that in C++ implementations these
+/* The ISO C99 standard specifies that in C++ implementations these
    macros should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_LIMIT_MACROS
 
@@ -280,7 +280,7 @@ typedef unsigned long long int	uintmax_t;
 #endif	/* C++ && limit macros */
 
 
-/* The ISO C 9X standard specifies that in C++ implementations these
+/* The ISO C99 standard specifies that in C++ implementations these
    should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_CONSTANT_MACROS
 

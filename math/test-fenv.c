@@ -373,7 +373,7 @@ feenv_tests (void)
 }
 
 
-/* IEC 559 and ISO C 9X define a default startup environment */
+/* IEC 559 and ISO C99 define a default startup environment */
 static void
 initial_tests (void)
 {

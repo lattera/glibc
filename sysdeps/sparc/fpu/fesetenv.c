@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
 
 #include <fenv.h>
 
-void
-fesetenv (const fenv_t *envp)
+int
+__fesetenv (const fenv_t *envp)
 {
   fenv_t dummy;
 
@@ -40,4 +40,10 @@ fesetenv (const fenv_t *envp)
     }
 
   __fenv_ldfsr (*envp);
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetenv, __old_fesetenv)
+symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
+default_symbol_version (__fesetenv, fesetenv, GLIBC_2.1.3);

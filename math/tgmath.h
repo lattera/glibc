@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X Standard: 7.9 Type-generic math	<tgmath.h>
+ *	ISO C99 Standard: 7.22 Type-generic math	<tgmath.h>
  */
 
 #ifndef _TGMATH_H

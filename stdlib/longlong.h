@@ -1179,7 +1179,9 @@ extern USItype __udiv_qrnnd ();
 #define UDIV_TIME (3+7*32)	/* 7 instructions/iteration. 32 iterations. */
 #else
 extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
+#ifndef UDIV_TIME
 #define UDIV_TIME 140
+#endif /* UDIV_TIME */
 #endif /* udiv_qrnnd */
 #endif /* __sparc__ */
 

@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,18 +21,24 @@
 #include <math.h>
 #include <fpu_control.h>
 
-void
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int
+__fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
   fexcept_t temp;
 
   /* Get the current environment.  */
-  _FPU_GETCW(temp);
+  _FPU_GETCW (temp);
 
   /* Set the desired exception mask.  */
   temp &= ~((excepts & FE_ALL_EXCEPT) << FE_EXCEPT_SHIFT);
   temp |= (*flagp & excepts & FE_ALL_EXCEPT) << FE_EXCEPT_SHIFT;
 
   /* Save state back to the FPU.  */
-  _FPU_SETCW(temp);
+  _FPU_SETCW (temp);
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetexceptflag, __old_fesetexceptflag)
+symbol_version (__old_fesetexceptflag, fesetexceptflag, GLIBC_2.1);
+default_symbol_version (__fesetexceptflag, fesetexceptflag, GLIBC_2.1.3);

@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -20,8 +20,8 @@
 
 #include <fenv.h>
 
-void
-feclearexcept (int excepts)
+int
+__feclearexcept (int excepts)
 {
   fexcept_t fpsr;
 
@@ -36,4 +36,10 @@ feclearexcept (int excepts)
 
   /* Put the new data in effect.  */
   __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feclearexcept, __old_feclearexcept)
+symbol_version (__old_feclearexcept, feclearexcept, GLIBC_2.1);
+default_symbol_version (__feclearexcept, feclearexcept, GLIBC_2.1.3);

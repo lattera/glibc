@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #include <fenv.h>
 #include <math.h>
 
-void
-feraiseexcept (int excepts)
+int
+__feraiseexcept (int excepts)
 {
   static volatile double sink;
   static const struct {
@@ -37,32 +37,28 @@ feraiseexcept (int excepts)
 
   /* First: invalid exception.  */
   if ((FE_INVALID & excepts) != 0)
-    {
-      /* One example of a invalid operation is 0/0.  */
-      sink = c.zero / c.zero;
-    }
+    /* One example of a invalid operation is 0/0.  */
+    sink = c.zero / c.zero;
 
   /* Next: division by zero.  */
   if ((FE_DIVBYZERO & excepts) != 0)
-    {
-      sink = c.one / c.zero;
-    }
+    sink = c.one / c.zero;
 
   /* Next: overflow.  */
   if ((FE_OVERFLOW & excepts) != 0)
-    {
-      sink = c.max * c.max;
-    }
+    sink = c.max * c.max;
 
   /* Next: underflow.  */
   if ((FE_UNDERFLOW & excepts) != 0)
-    {
-      sink = c.min / c.sixteen;
-    }
+    sink = c.min / c.sixteen;
 
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
-    {
-      sink = c.one / c.pi;
-    }
+    sink = c.one / c.pi;
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);

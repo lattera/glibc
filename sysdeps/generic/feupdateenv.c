@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,15 @@
 
 #include <fenv.h>
 
-void
-feupdateenv (const fenv_t *envp)
+int
+__feupdateenv (const fenv_t *envp)
 {
+  /* This always fails.  */
+  return 1;
 }
+strong_alias (__feupdateenv, __old_feupdateenv)
+symbol_version (__old_feupdateenv, feupdateenv, GLIBC_2.1);
+default_symbol_version (__feupdateenv, feupdateenv, GLIBC_2.1.3);
+
 stub_warning (feupdateenv)
 #include <stub-tag.h>

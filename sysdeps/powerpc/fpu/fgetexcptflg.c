@@ -1,5 +1,5 @@
-/* Install given floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Store current representation for exceptions.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,20 @@
 
 #include <fenv_libc.h>
 
-void
-fesetenv (const fenv_t *envp)
+int
+__fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-  fesetenv_register (*envp);
+  fenv_union_t u;
+
+  /* Get the current state.  */
+  u.fenv = fegetenv_register ();
+
+  /* Return (all of) it.  */
+  *flagp = u.l[1];
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fegetexceptflag, __old_fegetexceptflag)
+symbol_version (__old_fegetexceptflag, fegetexceptflag, GLIBC_2.1);
+default_symbol_version (__fegetexceptflag, fegetexceptflag, GLIBC_2.1.3);

@@ -56,7 +56,9 @@ elf_machine_matches_host (Elf32_Half e_machine)
       weak_extern (_dl_hwcap_mask);
 
       hwcap = WEAKADDR(_dl_hwcap);
-      return hwcap && (*hwcap & _dl_hwcap_mask & HWCAP_SPARC_V9);
+      /* XXX The following is wrong!  Dave Miller rejected to implement it
+	 correctly.  If this causes problems shoot *him*!  */
+      return hwcap == NULL || (*hwcap & _dl_hwcap_mask & HWCAP_SPARC_V9);
     }
   else
     return 0;

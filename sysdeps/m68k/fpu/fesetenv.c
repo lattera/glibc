@@ -20,8 +20,8 @@
 
 #include <fenv.h>
 
-void
-fesetenv (const fenv_t *envp)
+int
+__fesetenv (const fenv_t *envp)
 {
   fenv_t temp;
 
@@ -45,4 +45,10 @@ fesetenv (const fenv_t *envp)
     }
 
   __asm__ __volatile__ ("fmovem%.l %0,%/fpcr/%/fpsr/%/fpiar" : : "m" (*&temp));
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetenv, __old_fesetenv)
+symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
+default_symbol_version (__fesetenv, fesetenv, GLIBC_2.1.3);

@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
 
 #include <fenv.h>
 
-void
-feclearexcept (int excepts)
+int
+__feclearexcept (int excepts)
 {
   fenv_t tmp;
 
@@ -29,4 +29,10 @@ feclearexcept (int excepts)
   tmp &= ~(excepts & FE_ALL_EXCEPT);
 
   __fenv_ldfsr (tmp);
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feclearexcept, __old_feclearexcept)
+symbol_version (__old_feclearexcept, feclearexcept, GLIBC_2.1);
+default_symbol_version (__feclearexcept, feclearexcept, GLIBC_2.1.3);

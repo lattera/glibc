@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,9 +20,15 @@
 
 #include <fenv.h>
 
-void
-feraiseexcept (int excepts)
+int
+__feraiseexcept (int excepts)
 {
+  /* This always fails.  */
+  return 1;
 }
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);
+
 stub_warning (feraiseexcept)
 #include <stub-tag.h>

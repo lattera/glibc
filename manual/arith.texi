@@ -476,9 +476,27 @@ and save and restore the set of exceptions flagged.
 
 @comment fenv.h
 @comment ISO
-@deftypefun void feclearexcept (int @var{excepts})
+@deftypefun int feclearexcept (int @var{excepts})
 This function clears all of the supported exception flags indicated by
 @var{excepts}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@comment fenv.h
+@comment ISO
+@deftypefun int feraiseexcept (int @var{excepts})
+This function raises the supported exceptions indicated by
+@var{excepts}.  If more than one exception bit in @var{excepts} is set
+the order in which the exceptions are raised is undefined except that
+overflow (@code{FE_OVERFLOW}) or underflow (@code{FE_UNDERFLOW}) are
+raised before inexact (@code{FE_INEXACT}).  Whether for overflow or
+underflow the inexact exception is also raised is also implementation
+dependent.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 @comment fenv.h
@@ -519,19 +537,25 @@ following functions:
 
 @comment fenv.h
 @comment ISO
-@deftypefun void fegetexceptflag (fexcept_t *@var{flagp}, int @var{excepts})
+@deftypefun int fegetexceptflag (fexcept_t *@var{flagp}, int @var{excepts})
 This function stores in the variable pointed to by @var{flagp} an
 implementation-defined value representing the current setting of the
 exception flags indicated by @var{excepts}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 @comment fenv.h
 @comment ISO
-@deftypefun void fesetexceptflag (const fexcept_t *@var{flagp}, int
+@deftypefun int fesetexceptflag (const fexcept_t *@var{flagp}, int
 @var{excepts})
 This function restores the flags for the exceptions indicated by
 @var{excepts} to the values stored in the variable pointed to by
 @var{flagp}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 Note that the value stored in @code{fexcept_t} bears no resemblance to
@@ -736,9 +760,12 @@ To save the state of the FPU, use one of these functions:
 
 @comment fenv.h
 @comment ISO
-@deftypefun void fegetenv (fenv_t *@var{envp})
+@deftypefun int fegetenv (fenv_t *@var{envp})
 Store the floating-point environment in the variable pointed to by
 @var{envp}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 @comment fenv.h
@@ -780,19 +807,25 @@ functions:
 
 @comment fenv.h
 @comment ISO
-@deftypefun void fesetenv (const fenv_t *@var{envp})
+@deftypefun int fesetenv (const fenv_t *@var{envp})
 Set the floating-point environment to that described by @var{envp}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 @comment fenv.h
 @comment ISO
-@deftypefun void feupdateenv (const fenv_t *@var{envp})
+@deftypefun int feupdateenv (const fenv_t *@var{envp})
 Like @code{fesetenv}, this function sets the floating-point environment
 to that described by @var{envp}.  However, if any exceptions were
 flagged in the status word before @code{feupdateenv} was called, they
 remain flagged after the call.  In other words, after @code{feupdateenv}
 is called, the status word is the bitwise OR of the previous status word
 and the one saved in @var{envp}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
 @end deftypefun
 
 @node Arithmetic Functions

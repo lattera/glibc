@@ -85,7 +85,7 @@ typedef struct ucontext {
 	mcontext_t		uc_mcontext;
 } ucontext_t;
 
-#else /* __WORDSIZE == 32 */
+#endif /* __WORDISIZE == 64 */
 
 /*
  * Location of the users' stored registers relative to R0.
@@ -117,11 +117,24 @@ typedef struct ucontext {
  * treats arrays and structures as parameters.
  *
  * Note that NGREG is really (sizeof (struct regs) / sizeof (greg_t)),
- * but that the ABI defines it absolutely to be 19.
+ * but that the ABI defines it absolutely to be 21 (resp. 19).
  */
-#define NGREG   19
 
+#if __WORDSIZE == 64
+
+#define REG_ASI	(19)
+#define REG_FPRS (20)
+
+#define NGREG   21
+typedef long greg_t;
+
+#else /* __WORDSIZE == 32 */
+
+#define NGREG   19
 typedef int greg_t;
+
+#endif /* __WORDSIZE == 32 */
+
 typedef greg_t  gregset_t[NGREG];
 
 /*
@@ -181,6 +194,24 @@ struct fq
 #define V7_FPU_FSR_TYPE         unsigned
 #define V9_FPU_FSR_TYPE         unsigned long long
 #define V9_FPU_FPRS_TYPE        unsigned
+
+#if __WORDSIZE == 64
+
+typedef struct fpu
+  {
+    union {				/* FPU floating point regs */
+      unsigned		fpu_regs[32];	/* 32 singles */
+      double            fpu_dregs[16];	/* 32 doubles */
+      long double	fpu_qregs[16];  /* 16 quads */
+    } fpu_fr;
+    struct fq       *fpu_q;		/* ptr to array of FQ entries */
+    unsigned long   fpu_fsr;		/* FPU status register */
+    unsigned char   fpu_qcnt;		/* # of entries in saved FQ */
+    unsigned char   fpu_q_entrysize;	/* # of bytes per FQ entry */
+    unsigned char   fpu_en;		/* flag signifying fpu in use */
+  } fpregset_t;
+
+#else /* __WORDSIZE == 32 */
 
 typedef struct fpu
   {

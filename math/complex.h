@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X:  7.8 Complex arithmetic	<complex.h>
+ *	ISO C99:  7.8 Complex arithmetic	<complex.h>
  */
 
 #ifndef _COMPLEX_H
@@ -25,13 +25,13 @@
 
 #include <features.h>
 
-/* Get general and ISO C 9X specific information.  */
+/* Get general and ISO C99 specific information.  */
 #include <bits/mathdef.h>
 
 __BEGIN_DECLS
 
-/* We might need to add support for more compilers here.  But once ISO
-   C 9X is out hopefully all maintained compilers will provide the data
+/* We might need to add support for more compilers here.  But since ISO
+   C99 is out hopefully all maintained compilers will soon provide the data
    types `float complex' and `double complex'.  */
 #if __GNUC_PREREQ (2, 7)
 # define _Complex __complex__
@@ -82,7 +82,7 @@ __BEGIN_DECLS
 #undef	__MATH_PRECNAME
 
 /* And the long double versions.  It is non-critical to define them
-   here unconditionally since `long double' is required in ISO C 9X.  */
+   here unconditionally since `long double' is required in ISO C99.  */
 #if __STDC__ - 0 || __GNUC__ - 0 && !defined __NO_LONG_DOUBLE_MATH
 # ifndef _Mlong_double_
 #  define _Mlong_double_	long double
