@@ -21,7 +21,5 @@ gen-as-const-headers += tcb-offsets.sym
 endif
 
 ifeq ($(subdir),nptl)
-CFLAGS-tst-align.c += -malign-double
 CFLAGS-pthread_create.c += -mpreferred-stack-boundary=4
-CFLAGS-tst-align.c += -mpreferred-stack-boundary=4
 endif

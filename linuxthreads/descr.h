@@ -217,7 +217,7 @@ extern char *__pthread_manager_thread_tos;
 /* Descriptor of the manager thread */
 
 extern struct _pthread_descr_struct __pthread_manager_thread;
-extern pthread_descr manager_thread attribute_hidden;
+extern pthread_descr __pthread_manager_threadp attribute_hidden;
 
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or all threads have stacks supplied by LinuxThreads (if 0). */

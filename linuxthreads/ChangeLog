@@ -1,3 +1,12 @@
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h (manager_thread): Rename to...
+	(__pthread_manager_threadp): ... this.
+	* pthread.c (manager_thread): Define to __pthread_manager_threadp.
+	(__pthread_manager_threadp): New variable.
+	* internals.h (__manager_thread): Define to
+	__pthread_manager_threadp if USE_TLS.
+
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/Makefile (CFLAGS-cancel.c, CFLAGS-manager.c,

@@ -35,6 +35,8 @@ else
 sysdep-CFLAGS += -mpreferred-stack-boundary=2
 # Likewise, any function which calls user callbacks
 uses-callbacks += -mpreferred-stack-boundary=4
+# Likewise, any stack alignment tests
+stack-align-test-flags += -malign-double -mpreferred-stack-boundary=4
 endif
 endif
 

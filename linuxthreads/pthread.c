@@ -55,7 +55,8 @@ extern struct __res_state _res;
 #ifdef USE_TLS
 
 /* We need only a few variables.  */
-pthread_descr manager_thread attribute_hidden;
+#define manager_thread __pthread_manager_threadp
+pthread_descr __pthread_manager_threadp attribute_hidden;
 
 #else
 

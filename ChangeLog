@@ -1,3 +1,8 @@
+2003-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/Makefile (stack-align-test-flags): Add
+	-malign-double -mpreferred-stack-boundary=4.
+
 2003-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/utimes.c (__utimes): Truncate instead of round.

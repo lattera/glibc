@@ -1,3 +1,8 @@
+2003-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/lo_LA: Fix duplicated collation entries.
+	Patch by Anousak Souphavanh <anousak@muanglao.com>.
+
 2003-09-01  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/iw_IL: Add comment stating why there are two locales for

@@ -526,7 +526,7 @@ weak_extern (__pthread_thread_self)
 #ifndef USE_TLS
 # define __manager_thread (&__pthread_manager_thread)
 #else
-# define __manager_thread manager_thread
+# define __manager_thread __pthread_manager_threadp
 #endif
 
 extern inline __attribute__((always_inline)) pthread_descr
