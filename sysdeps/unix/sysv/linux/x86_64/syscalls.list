@@ -1,5 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+arch_prctl	EXTRA	arch_prctl	i:ii	__arch_prctl	arch_prctl
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 llseek		EXTRA	lseek		i:iii	__libc_lseek64	__llseek llseek __lseek64 lseek64
 pread		-	pread		i:ibni	__libc_pread	__libc_pread64 __pread pread __pread64 pread64

@@ -1,5 +1,8 @@
 2001-11-29  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add arch_prctl
+	call.
+
 	* sysdeps/generic/abort.c: Include libioP.h for
 	_IO_flush_all_lockp prototype.
 
