@@ -1,3 +1,8 @@
+2000-08-01  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (distribute): Follow name change of tst-ctype-de.in to
+	tst-ctype-de_DE.ISO-8859-1.in.
+
 2000-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/KSX1001: Add width information.

@@ -259,8 +259,8 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		config-name.in Makefile.in sysdep.h set-hooks.h		\
 		libc-symbols.h version.h shlib-versions rpm/Makefile	\
 		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
-		test-skeleton.c include/des.h include/db_185.h		\
-		include/db.h include/shlib-compat.h Versions.def	\
+		test-skeleton.c include/des.h		 		\
+		include/shlib-compat.h Versions.def			\
 		INTERFACE CONFORMANCE NAMESPACE				\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
