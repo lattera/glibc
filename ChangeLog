@@ -1,5 +1,8 @@
 2001-07-30  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: New file, contributed by
+	Stephen L Moshier.
+
 	* posix/regex.c: Declare wcs functions only if compiling with
 	MBS_SUPPORT.
 	Don't use #elif for traditional C.
