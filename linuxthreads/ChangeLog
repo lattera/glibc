@@ -1,3 +1,7 @@
+2004-07-02  Roland McGrath  <roland@redhat.com>
+
+	* configure: Don't exit.
+
 2004-07-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/pt-machine.h: Use standard names for ABI macros,

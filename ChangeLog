@@ -1,3 +1,21 @@
+2004-07-20  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (add_ons): Substitute this.  Move $add_ons handling
+	after AC_CANONICAL_HOST and default setting of $machine et al.
+	Don't set $subdirs from $add_ons.
+	Instead, source add-on/configure fragments early on.
+	(base_machine): If it's already set, don't set it based on $machine.
+	(libc_config_ok): New variable, set to no.  If an add-on fragment sets
+	it to yes, skip the  tuple sanity check as if --enable-hacker-mode.
+	(sysnames): Try appending add-on names after machine as well.
+	* configure: Regenerated.
+	* config.make.in (add-ons): Set from @add_ons@ instead of @subdirs@.
+	* Makeconfig ($(common-objpfx)config.status): Also depend on configure
+	files in $(add_ons) dirs.
+
+	* sysdeps/unix/sysv/linux/bits/in.h (struct ip_mreq): Remove
+	definition, now in netinet/in.h proper.
+
 2004-07-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/Makefile ($(objpfx)syscall-%.h):
@@ -136,7 +154,7 @@
 
 	[BZ #266]
 	* manual/string.texi (l64a): Note that the static buffer is 7 bytes
-	long.  Rewrite example code so that it takes account l64a output
+	long.  Rewrite example code so that it takes into account l64a output
 	shorter than 6 characters.
 	Reported by Julian Graham <julian.graham@aya.yale.edu>.
 

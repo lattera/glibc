@@ -210,38 +210,6 @@ AC_ARG_ENABLE([bind-now],
 	      [bindnow=no])
 AC_SUBST(bindnow)
 
-AC_CONFIG_SUBDIRS([ ])dnl Bonehead new Autoconf whines if we do it cleanly.
-add_ons_pfx=
-if test x"$add_ons" != x; then
-  for f in $add_ons; do
-    # Some sanity checks
-    if test "$f" = "crypt"; then
-      AC_MSG_ERROR([
-*** It seems that you're using an old \`crypt' add-on.  crypt is now
-*** part of glibc and using the old add-on will not work with this
-*** release.  Start again with fresh sources and without the old
-*** \`crypt' add-on.])
-    fi
-    if test "$f" = "localedata"; then
-      AC_MSG_ERROR([
-*** It seems that you're using an old \`localedata' add-on.  localedata
-*** is now part of glibc and using the old add-on will not work with
-*** this release.  Start again with fresh sources and without the old
-*** \`localedata' add-on.])
-    fi
-    # Test whether such a subdir really exists.
-    if test -d $srcdir/$f; then
-      add_ons_pfx="$add_ons_pfx $f/"
-      dnl This variable is what AC_CONFIG_SUBDIRS is supposed to set,
-      dnl but the new Autoconf maintainers don't care about compatibility
-      dnl so we cannot use it normally any more without complaints.
-      subdirs="$subdirs $f"
-    else
-      AC_MSG_ERROR(add-on directory \"$f\" does not exist)
-    fi
-  done
-fi
-
 dnl On some platforms we cannot use dynamic loading.  We must provide
 dnl static NSS modules.
 AC_ARG_ENABLE([static-nss],
@@ -334,6 +302,9 @@ aix*)
   ;;
 esac
 
+# The configure fragment of an add-on port can modify these to supplement
+# or override the table in the case statement below.  No fragment should
+# ever change the config_* variables, however.
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
@@ -351,6 +322,59 @@ case "$machine-$host_os" in
     ;;
 esac
 
+
+# An add-on can set this when it the tuple to disable the sanity check below.
+libc_config_ok=no
+
+dnl Having this here, though empty, makes sure that if add-ons' fragments
+dnl do AC_CONFIG_SUBDIRS([some-dir]), which just sets $subdirs, then
+dnl our AC_OUTPUT will actually use it.
+AC_CONFIG_SUBDIRS()
+
+add_ons_sfx=
+add_ons_pfx=
+if test x"$add_ons" != x; then
+  for f in $add_ons; do
+    # Some sanity checks
+    case "$f" in
+    crypt)
+      AC_MSG_ERROR([
+*** It seems that you're using an old \`crypt' add-on.  crypt is now
+*** part of glibc and using the old add-on will not work with this
+*** release.  Start again with fresh sources and without the old
+*** \`crypt' add-on.])
+    ;;
+    localedata)
+      AC_MSG_ERROR([
+*** It seems that you're using an old \`localedata' add-on.  localedata
+*** is now part of glibc and using the old add-on will not work with
+*** this release.  Start again with fresh sources and without the old
+*** \`localedata' add-on.])
+    ;;
+    esac
+
+    # Test whether such a subdir really exists.
+    if test -d $srcdir/$f; then
+      add_ons_pfx="$add_ons_pfx $f/"
+      add_ons_sfx="$add_ons_sfx /$f"
+    else
+      AC_MSG_ERROR(add-on directory \"$f\" does not exist)
+    fi
+  done
+
+  for f in $add_ons; do
+    frag=$srcdir/$f/configure
+    if test -r $frag; then
+      AC_MSG_RESULT(running configure fragment for add-on $f)
+      . $frag
+    else
+      AC_MSG_WARN(add-on fragment $frag missing)
+    fi
+  done
+fi
+AC_SUBST(add_ons)
+
+
 ###
 ### I put this here to prevent those annoying emails from people who cannot
 ### read and try to compile glibc on unsupported platforms.  --drepper
@@ -359,7 +383,7 @@ esac
 ### one can skip this test to make the configuration not fail for unsupported
 ### platforms.
 ###
-if test -z "$enable_hacker_mode"; then
+if test -z "$enable_hacker_mode" && test x"$libc_config_ok" != xyes; then
   case "$machine-$host_os" in
   *-linux* | *-gnu* | arm*-none* | powerpc-aix4.3.*)
     ;;
@@ -378,8 +402,9 @@ fi
 dnl We need to use [ and ] for other purposes for a while now.
 changequote(,)dnl
 # Expand the configuration machine name into a subdirectory by architecture
-# type and particular chip.
-case "$machine" in
+# type and particular chip.  If an add-on configure fragment already set
+# base_machine, we don't change it.
+test -n "$base_machine" || case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
 arm*)		base_machine=arm machine=arm/arm32/$machine ;;
@@ -535,16 +560,18 @@ for d in $add_ons_pfx ''; do
 	for o in /$ostry ''; do
 	  test "$o" = / && continue
 	  for m in $mach ''; do
-	    if test "$m0$b$v$o$m"; then
-	      try="${d}sysdeps$m0$b$v$o$m"
-	      test -n "$enable_debug_configure" &&
-	      echo "$0 [DEBUG]: try $try" >&2
-	      if test -d $srcdir/$try; then
-		sysnames="$sysnames $try"
-		{ test -n "$o" || test -n "$b"; } && os_used=t
-		{ test -n "$m" || test -n "$m0"; } && machine_used=t
+	    for a in $add_ons_sfx ''; do
+	      if test "$m0$b$v$o$m"; then
+		try="${d}sysdeps$m0$b$v$o$m$a"
+		test -n "$enable_debug_configure" &&
+		echo "$0 [DEBUG]: try $try" >&2
+		if test -d $srcdir/$try; then
+		  sysnames="$sysnames $try"
+		  { test -n "$o" || test -n "$b"; } && os_used=t
+		  { test -n "$m" || test -n "$m0"; } && machine_used=t
+		fi
 	      fi
-	    fi
+	    done
 	  done
 	done
       done

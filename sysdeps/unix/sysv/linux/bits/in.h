@@ -85,14 +85,7 @@ struct ip_opts
     char ip_opts[40];		/* Actually variable in size.  */
   };
 
-/* Structure used for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP. */
-struct ip_mreq
-  {
-    struct in_addr imr_multiaddr;	/* IP multicast address of group */
-    struct in_addr imr_interface;	/* local IP address of interface */
-  };
-
-/* As above but including interface specification by index.  */
+/* Like `struct ip_mreq' but including interface specification by index.  */
 struct ip_mreqn
   {
     struct in_addr imr_multiaddr;	/* IP multicast address of group */

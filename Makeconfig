@@ -110,15 +110,19 @@ $(common-objpfx)config.make: $(common-objpfx)config.status \
 			     $(..)config.make.in $(..)config.h.in
 	cd $(<D); $(SHELL) $(<F)
 
-# Find all the sysdeps configure fragments, to make sure we re-run
-# configure when any of them changes.
+# Find all the add-on and sysdeps configure fragments, to make sure we
+# re-run configure when any of them changes.
 $(common-objpfx)config.status: $(..)version.h $(..)configure \
 			       $(foreach dir,$(full_config_sysdirs),\
 					 $(wildcard \
 					   $(dir)/Implies) \
 					 $(patsubst %.in,%,\
 						    $(firstword $(wildcard \
- $(addprefix $(dir)/,configure configure.in)))))
+ $(addprefix $(dir)/,configure configure.in))))) \
+			       $(patsubst %.in,%,\
+					  $(foreach dir,$(add_ons),\
+						    $(firstword $(wildcard \
+ $(addprefix $(..)$(dir)/,configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \
