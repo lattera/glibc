@@ -1,5 +1,14 @@
 1999-02-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/link.h (link_map): Add l_dev and l_ino.
+	* elf/dl-load.c (_dl_map_object_from_fd): Test dev/ino of newly
+	loaded shared object with all laoded objects.  Initialize l_ino
+	and l_dev in case it's new.
+	* elf/rtld.c (dl_main): Explain situation is l_dev/l_ino with main
+	object.
+	* elf/Makefile: Compile and run new test.
+	* elf/multiload.c: New file.
+
 	* nss/nsswitch.h (service_user): Change name field from const char *
 	to char[0].
 	(name_database_entry): Likewise.

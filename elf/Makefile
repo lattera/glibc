@@ -77,7 +77,7 @@ others		+= ldconfig
 install-rootsbin += ldconfig
 endif
 
-tests = loadtest restest1 preloadtest loadfail
+tests = loadtest restest1 preloadtest loadfail multiload
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj
 extra-objs += $(modules-names:=.os)
@@ -244,7 +244,13 @@ preloadtest-ENV = \
 $(objpfx)loadfail: $(libdl)
 LDFLAGS-loadfail = -rdynamic
 
-$(objpfx)loadfile.out: $(objpfx)failobj.so
+$(objpfx)loadfail.out: $(objpfx)failobj.so
+
+$(objpfx)multiload: $(libdl)
+LDFLAGS-multiload = -rdynamic
+CFLAGS-multiload.c = -DOBJDIR=\"$(objdir)/$(subdir)\"
+
+$(objpfx)multiload.out: $(objpfx)testobj1.so
 
 # muwahaha
 

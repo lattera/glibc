@@ -461,7 +461,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  HP_TIMING_NOW (start);
 	  _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
 	  HP_TIMING_NOW (stop);
-	  
+
 	  HP_TIMING_DIFF (load_time, start, stop);
 	}
 
@@ -485,6 +485,21 @@ of this helper program; chances are you did not intend to run this program.\n\
       _dl_loaded->l_phnum = phent;
       _dl_loaded->l_entry = *user_entry;
       _dl_loaded->l_opencount = 1;
+
+      /* At this point we are in a bit of trouble.  We would have to
+	 fill in the values for l_dev and l_ino.  But in general we
+	 do not know where the file is.  We also do not handle AT_EXECFD
+	 even if it would be passed up.
+
+	 We leave the values here defined to 0.  This is normally no
+	 problem as the program code itself is normally no shared
+	 object and therefore cannot be loaded dynamically.  Nothing
+	 prevent the use of dynamic binaries and in these situations
+	 we might get problems.  We might not be able to find out
+	 whether the object is already loaded.  But since there is no
+	 easy way out and because the dynamic binary must also not
+	 have an SONAME we ignore this program for now.  If it becomes
+	 a problem we can force people using SONAMEs.  */
 
       /* We delay initializing the path structure until we got the dynamic
 	 information for the program.  */

@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <features.h>
 #include <elf.h>
 #include <dlfcn.h>
+#include <sys/types.h>
 
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
@@ -193,6 +194,11 @@ struct link_map
     /* A similar array, this time only with the local scope.  This is
        used occasionally.  */
     struct r_scope_elem *l_local_scope[2];
+
+    /* This information is kept to check for sure whether a shared
+       object is the same as one already loaded.  */
+    dev_t l_dev;
+    ino_t l_ino;
   };
 
 #endif /* link.h */

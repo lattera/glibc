@@ -602,10 +602,15 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   int type;
   char *readbuf;
   ssize_t readlength;
+  struct stat st;
+
+  /* Get file information.  */
+  if (__fstat (fd, &st) < 0)
+    lose (errno, "cannot stat shared object");
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
-    if (! strcmp (realname, l->l_name))
+    if (l->l_ino == st.st_ino && l->l_dev == st.st_dev)
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
@@ -960,6 +965,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       /* Now add the new entry.  */
       l->l_scope[0] = &l->l_symbolic_searchlist;
     }
+
+  /* Finally the file information.  */
+  l->l_dev = st.st_dev;
+  l->l_ino = st.st_ino;
 
   return l;
 }
