@@ -1,3 +1,10 @@
+2000-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/localedef.c (construct_output_path): Correct
+	computation of endp after asprintf.
+	* locale/programs/locfile.c (write_locale_data): Don't add extra
+	slash in filename.
+
 2000-09-05  Andreas Jaeger  <aj@suse.de>
 
 	* scripts/config.guess: New upstream version.

@@ -374,7 +374,7 @@ construct_output_path (char *path)
 		      output_prefix ?: "", LOCALEDIR,
 		      (int) (startp - path), path, normal, endp, '\0');
 
-      endp = result + n;
+      endp = result + n - 1;
     }
   else
     {
