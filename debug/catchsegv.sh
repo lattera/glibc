@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright (C) 1998, 1999, 2001, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2001, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,7 +39,7 @@ if test $# -eq 0; then
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv (GNU libc) @VERSION@'
-      echo 'Copyright (C) 2003 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2004 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'
@@ -50,9 +50,7 @@ Written by Ulrich Drepper.'
   esac
 fi
 
-segv_output=`basename "$prog"`.segv.$$
-# Make sure this output file does not exist.
-rm -f "$segv_output"
+segv_output=`mktemp ${TMPDIR:-/tmp}/segv_output.XXXXXX` || exit
 
 # Redirect stderr to avoid termination message from shell.
 (exec 3>&2 2>/dev/null
@@ -65,7 +63,7 @@ exval=$?
 # Check for output.  Even if the program terminated correctly it might
 # be that a minor process (clone) failed.  Therefore we do not check the
 # exit code.
-if test -f "$segv_output"; then
+if test -s "$segv_output"; then
   # The program caught a signal.  The output is in the file with the
   # name we have in SEGFAULT_OUTPUT_NAME.  In the output the names of
   # functions in shared objects are available, but names in the static
@@ -102,7 +100,7 @@ if test -f "$segv_output"; then
 	    ;;
      esac
    done)
-   rm -f "$segv_output"
 fi
+rm -f "$segv_output"
 
 exit $exval
