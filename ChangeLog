@@ -1,3 +1,7 @@
+2001-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/tr.po: Update from translation team.
+
 2001-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* iconv/Makefile (extra-objs): Add iconvconfig-modules so that
