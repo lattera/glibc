@@ -5,3 +5,8 @@ m68k-syntax-flag = -DMOTOROLA_SYNTAX
 ifeq ($(subdir),misc)
 sysdep_routines += mremap
 endif
+
+ifeq ($(subdir),elf)
+others      += lddlibc4
+install-bin += lddlibc4
+endif
