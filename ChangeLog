@@ -1,3 +1,16 @@
+1998-12-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/posix/tempname.c (__path_search): Add casts for format
+	string.
+
+1998-12-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sunrpc/rpc/xdr.h (XDR_DESTROY, xdr_destroy): Avoid dangling else
+	problem.
+	(IXDR_PUT_INT32): Fully parenthesize parameters.
+	(IXDR_GET_LONG, IXDR_PUT_LONG): Mark GCC extension.  Fully
+	parenthesize parameter.
+
 1998-12-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Add some of the charset name aliases

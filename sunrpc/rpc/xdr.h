@@ -209,12 +209,16 @@ typedef bool_t (*xdrproc_t) __PMT ((XDR *, void *,...));
 #define	xdr_inline(xdrs, len)				\
 	(*(xdrs)->x_ops->x_inline)(xdrs, len)
 
-#define	XDR_DESTROY(xdrs)				\
-	if ((xdrs)->x_ops->x_destroy) 			\
-		(*(xdrs)->x_ops->x_destroy)(xdrs)
-#define	xdr_destroy(xdrs)				\
-	if ((xdrs)->x_ops->x_destroy) 			\
-		(*(xdrs)->x_ops->x_destroy)(xdrs)
+#define	XDR_DESTROY(xdrs)					\
+	do {							\
+		if ((xdrs)->x_ops->x_destroy)			\
+			(*(xdrs)->x_ops->x_destroy)(xdrs)	\
+	} while (0)
+#define	xdr_destroy(xdrs)					\
+	do {							\
+		if ((xdrs)->x_ops->x_destroy)			\
+			(*(xdrs)->x_ops->x_destroy)(xdrs)	\
+	} while (0)
 
 /*
  * Support struct for discriminated unions.
@@ -250,18 +254,20 @@ struct xdr_discrim
  */
 
 #define IXDR_GET_INT32(buf)           ((int32_t)ntohl((uint32_t)*(buf)++))
-#define IXDR_PUT_INT32(buf, v)        (*(buf)++ = (int32_t)htonl((uint32_t)v))
+#define IXDR_PUT_INT32(buf, v)        (*(buf)++ = (int32_t)htonl((uint32_t)(v)))
 #define IXDR_GET_U_INT32(buf)         ((uint32_t)IXDR_GET_INT32(buf))
-#define IXDR_PUT_U_INT32(buf, v)      IXDR_PUT_INT32((buf), ((int32_t)(v)))
+#define IXDR_PUT_U_INT32(buf, v)      IXDR_PUT_INT32(buf, (int32_t)(v))
 
 /* WARNING: The IXDR_*_LONG defines are removed by Sun for new platforms
  * and shouldn't be used any longer. Code which use this defines or longs
  * in the RPC code will not work on 64bit Solaris platforms !
  */
-#define IXDR_GET_LONG(buf)	      ((long)ntohl((u_long)*((u_int32_t*)buf)++))
-#define IXDR_PUT_LONG(buf, v)         (*((u_int32_t*)(buf))++ = (long)htonl((u_long)v))
+#define IXDR_GET_LONG(buf) \
+	((long)ntohl((u_long)*__extension__((u_int32_t*)(buf))++))
+#define IXDR_PUT_LONG(buf, v) \
+	(*__extension__((u_int32_t*)(buf))++ = (long)htonl((u_long)(v)))
 #define IXDR_GET_U_LONG(buf)	      ((u_long)IXDR_GET_LONG(buf))
-#define IXDR_PUT_U_LONG(buf, v)	      IXDR_PUT_LONG((buf), ((long)(v)))
+#define IXDR_PUT_U_LONG(buf, v)	      IXDR_PUT_LONG(buf, (long)(v))
 
 
 #define IXDR_GET_BOOL(buf)            ((bool_t)IXDR_GET_LONG(buf))
@@ -269,10 +275,10 @@ struct xdr_discrim
 #define IXDR_GET_SHORT(buf)           ((short)IXDR_GET_LONG(buf))
 #define IXDR_GET_U_SHORT(buf)         ((u_short)IXDR_GET_LONG(buf))
 
-#define IXDR_PUT_BOOL(buf, v)         IXDR_PUT_LONG((buf), ((long)(v)))
-#define IXDR_PUT_ENUM(buf, v)         IXDR_PUT_LONG((buf), ((long)(v)))
-#define IXDR_PUT_SHORT(buf, v)        IXDR_PUT_LONG((buf), ((long)(v)))
-#define IXDR_PUT_U_SHORT(buf, v)      IXDR_PUT_LONG((buf), ((long)(v)))
+#define IXDR_PUT_BOOL(buf, v)         IXDR_PUT_LONG(buf, (long)(v))
+#define IXDR_PUT_ENUM(buf, v)         IXDR_PUT_LONG(buf, (long)(v))
+#define IXDR_PUT_SHORT(buf, v)        IXDR_PUT_LONG(buf, (long)(v))
+#define IXDR_PUT_U_SHORT(buf, v)      IXDR_PUT_LONG(buf, (long)(v))
 
 /*
  * These are the "generic" xdr routines.
