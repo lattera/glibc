@@ -26,9 +26,10 @@
 
 #define SC_FLGS 0x000
 #define SC_LINK 0x004
-#define SC_MASK 0x008
-#define SC_STCK 0x088
-#define SC_VERS 0x098
-#define SC_GPRS 0x0a0
-#define SC_FPC  0x130
-#define SC_FPRS 0x138
+#define SC_STCK 0x008
+#define SC_PSW  0x018
+#define SC_GPRS 0x020
+#define SC_ACRS 0x060
+#define SC_FPC  0x0A0
+#define SC_FPRS 0x0A8
+#define SC_MASK 0x128

@@ -170,6 +170,7 @@ find_module_idx (const char *str, size_t *idxp)
 }
 
 
+#ifndef STATIC_GCONV
 static int
 internal_function
 find_module (const char *directory, const char *filename,
@@ -199,6 +200,7 @@ find_module (const char *directory, const char *filename,
 
   return status;
 }
+#endif
 
 
 int

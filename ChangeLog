@@ -1,3 +1,34 @@
+2001-08-14  Tom Rix  <trix@redhat.com>
+
+	* iconv/gconv_cache.c (find_module): Add #ifndef STATIC_GCONV.
+	* iconv/Makefile: Fix gconv_cache.c CFLAGS.
+
+2001-08-13  Tom Rix  <trix@redhat.com>
+
+	* sysdeps/unix/sysv/aix/Makefile: Add rule to import kernel symbols.
+	* sysdeps/unix/sysv/aix/bits/types.h: Fix type of __id_t, __useconds_t
+	and __intptr_t.
+
+2001-08-15  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S (__getcontext):
+	Store the access registers to the ucontext structure.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S (__getcontext):
+	Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S (__setcontext):
+	Load the access registers from the ucontext structure.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S (__setcontext):
+	Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h: Adjust the SC_xxx
+	offsets to the new ucontext layout.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ucontext_i.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Fix the layout
+	of the ucontext structure.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Likewise.
+
 2001-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/error.c (error): Handle wide oriented stderr stream correctly.

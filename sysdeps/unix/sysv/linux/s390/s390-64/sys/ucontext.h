@@ -29,18 +29,19 @@ typedef struct ucontext ucontext_t;
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
+/* Type for a program status word.  */
+typedef struct
+{
+  unsigned long mask;
+  unsigned long addr;
+} __psw_t __attribute__ ((aligned(8)));
 
 /* Type for a general-purpose register.  */
 typedef unsigned long greg_t;
 
-/* And the whole bunch of them.  We should have used `struct s390_regs',
-   but to avoid name space pollution and since the tradition says that
-   the register set is an array, we make gregset_t a simple array
-   that has the same size as s390_regs. */
-#define NGREG 27
-#define NUM_FPRS 16
-/* Must match kernels psw_t alignment */
-typedef greg_t gregset_t[NGREG] __attribute__ ((aligned(8)));
+#define NGREG 16
+
+typedef greg_t gregset_t[NGREG];
 
 typedef union
 {
@@ -51,14 +52,15 @@ typedef union
 /* Register set for the floating-point registers.  */
 typedef struct {
   unsigned int fpc;
-  fpreg_t fprs[NUM_FPRS];
+  fpreg_t fprs[16];
 } fpregset_t;
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    int version;
+    __psw_t      psw;
     gregset_t    gregs;
+    unsigned int aregs[16];
     fpregset_t   fpregs;
   } mcontext_t;
 
@@ -67,10 +69,9 @@ struct ucontext
   {
     unsigned long int uc_flags;
     struct ucontext *uc_link;
-    __sigset_t uc_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
-    long int uc_filler[170];
+    __sigset_t uc_sigmask;
   };
 
 

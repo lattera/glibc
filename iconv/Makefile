@@ -57,7 +57,7 @@ others		= iconv_prog iconvconfig
 install-others	= $(inst_bindir)/iconv
 install-sbin	= iconvconfig
 
-CFLAGS-gconv_cache.c = -DGCONV_DIR='"$(gconvdir)"'
+CFLAGS-gconv_cache.c += -DGCONV_DIR='"$(gconvdir)"'
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 CFLAGS-iconvconfig.c = -DGCONV_PATH='"$(gconvdir)"' -DGCONV_DIR='"$(gconvdir)"'
 

@@ -62,6 +62,9 @@ ENTRY(__getcontext)
 	/* Set __getcontext return value to 0.  */
 	slr     %r2,%r2
 
+	/* Store access registers.  */
+	stam    %a0,%a15,SC_ACRS(%r5)
+
 	/* Store general purpose registers.  */
 	stmg    %r0,%r15,SC_GPRS(%r5)
 

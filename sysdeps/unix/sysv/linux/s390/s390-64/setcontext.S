@@ -58,6 +58,9 @@ ENTRY(__setcontext)
 	ld      %f13,SC_FPRS+104(%r5)
 	ld      %f14,SC_FPRS+112(%r5)
 	ld      %f15,SC_FPRS+120(%r5)
+
+	/* Don't touch %a0 and %a1, used for thread purposes.  */
+	lam     %a2,%a15,SC_ACRS+8(%r5)
  
 	/* Load general purpose registers.  */
 	lmg	%r0,%r15,SC_GPRS(%r5)
