@@ -1,3 +1,12 @@
+2001-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* Examples/ex9.c: Add noreturn attribute for thread.
+	* Examples/ex10.c: Likewise.
+	* Examples/ex13.c (thread_start): Likewise.
+	* Examples/ex15.c (worker): Likewise.
+
+	* Examples/ex18.c: Include unistd.h for prototype of sleep.
+
 2001-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* man/pthread_atfork.man: Adjust description of mutex handling

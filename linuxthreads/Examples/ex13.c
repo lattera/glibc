@@ -1,5 +1,5 @@
 /* Test for Pthreads/mutexes.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kurt Garloff <garloff@suse.de>, 2000.
 
@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+static void *thread_start (void *ptr) __attribute__ ((__noreturn__));
+
 
 struct thr_ctrl
 {
@@ -57,7 +60,6 @@ pthr_cond_signal_mutex (pthread_cond_t * cond, pthread_mutex_t * mut)
   if (err)
     printf ("mutex_unlock: %s\n", strerror (err));
 }
-
 
 static void *
 thread_start (void *ptr)

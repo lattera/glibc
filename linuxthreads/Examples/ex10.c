@@ -1,5 +1,5 @@
 /* Tests for pthread_mutex_timedlock function.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 #define NUM_ITERS   50
 #define TIMEOUT_NS  100000000L
 
-static void *thread (void *);
+static void *thread (void *)  __attribute__ ((__noreturn__));
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int

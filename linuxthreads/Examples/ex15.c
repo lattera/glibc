@@ -5,6 +5,8 @@
 #include <pthread.h>
 #include <unistd.h>
 
+static void *worker (void *dummy) __attribute__ ((__noreturn__));
+
 static void *
 worker (void *dummy)
 {
