@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __fesetenv (const fenv_t *envp)
@@ -37,11 +37,11 @@ __fesetenv (const fenv_t *envp)
   /* Reset the rounding mode with the hardware fpcr.  Note that the following
      system call is an implied trap barrier for our modification.  */
   __asm__ __volatile__ ("excb; mf_fpcr %0" : "=f" (fpcr));
-  fpcr = (fpcr & ~(3UL << 58)) | (env & (3UL << 58));
+  fpcr = (fpcr & ~FPCR_ROUND_MASK) | (env & FPCR_ROUND_MASK);
   __asm__ __volatile__ ("mt_fpcr %0" : : "f" (fpcr));
 
   /* Reset the exception status and mask with the kernel's FP code.  */
-  __ieee_set_fp_control (env & (FE_ALL_EXCEPT | 0x3e));
+  __ieee_set_fp_control (env & SWCR_ALL_MASK);
 
   /* Success.  */
   return 0;

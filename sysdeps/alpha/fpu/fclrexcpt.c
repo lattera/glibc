@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __feclearexcept (int excepts)
@@ -29,7 +29,7 @@ __feclearexcept (int excepts)
   swcr = __ieee_get_fp_control ();
 
   /* Clear the relevant bits.  */
-  swcr &= ~((unsigned long int) excepts & FE_ALL_EXCEPT);
+  swcr &= ~((unsigned long int) excepts & SWCR_STATUS_MASK);
 
   /* Put the new state in effect.  */
   __ieee_set_fp_control (swcr);

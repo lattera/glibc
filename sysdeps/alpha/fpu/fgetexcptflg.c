@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
@@ -29,7 +29,7 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   tmp = __ieee_get_fp_control();
 
   /* Return that portion that corresponds to the requested exceptions. */
-  *flagp = tmp & excepts & FE_ALL_EXCEPT;
+  *flagp = tmp & excepts & SWCR_STATUS_MASK;
 
   /* Success.  */
   return 0;

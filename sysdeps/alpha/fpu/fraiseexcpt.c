@@ -18,8 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
-#include <math.h>
+#include <fenv_libc.h>
 
 int
 __feraiseexcept (int excepts)
@@ -30,7 +29,7 @@ __feraiseexcept (int excepts)
   tmp = __ieee_get_fp_control ();
 
   /* Set all the bits that were called for.  */
-  tmp |= (excepts & FE_ALL_EXCEPT);
+  tmp |= (excepts & SWCR_STATUS_MASK);
 
   /* And store it back.  */
   __ieee_set_fp_control (tmp);

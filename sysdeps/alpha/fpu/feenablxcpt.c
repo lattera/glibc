@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 feenableexcept (int excepts)
@@ -27,8 +27,8 @@ feenableexcept (int excepts)
 
   new_exc = __ieee_get_fp_control ();
 
-  old_exc = (new_exc << 16) & FE_ALL_EXCEPT;
-  new_exc |= (excepts & FE_ALL_EXCEPT) >> 16;
+  old_exc = (new_exc & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT;
+  new_exc |= (excepts >> SWCR_ENABLE_SHIFT) & SWCR_ENABLE_MASK;
 
   __ieee_set_fp_control (new_exc);
 

@@ -1,5 +1,5 @@
 /* Return current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 fegetround (void)
@@ -27,5 +27,5 @@ fegetround (void)
 
   __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
 
-  return (fpcr >> 58) & 3;
+  return (fpcr >> FPCR_ROUND_SHIFT) & 3;
 }

@@ -1,5 +1,5 @@
 /* Set current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 
 int
 fesetround (int round)
@@ -32,7 +32,8 @@ fesetround (int round)
   __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
 
   /* Set the relevant bits.  */
-  fpcr = (fpcr & ~(3UL << 58)) | ((unsigned long)round << 58);
+  fpcr = ((fpcr & ~FPCR_ROUND_MASK)
+	  | ((unsigned long)round << FPCR_ROUND_SHIFT));
 
   /* Put the new state in effect.  */
   __asm__ __volatile__("mt_fpcr %0; excb" : : "f"(fpcr));
