@@ -32,12 +32,12 @@ sequence, these expect their arguments in registers t10 and t11, and
 return the result in t12 (aka pv). Registers AT and v0 may be
 clobbered (assembly temporary), anything else must be saved.  */
 
+#include <sysdep.h>
+
 #ifdef __linux__
-# include <alpha/regdef.h>
 # include <asm/gentrap.h>
 # include <asm/pal.h>
 #else
-# include <regdef.h>
 # include <machine/pal.h>
 #endif
 
@@ -185,4 +185,4 @@ divbyzero:
 	ldq	arg1,0x00(sp)
 	br	done
 
-	.end FUNC_NAME
+	END(FUNC_NAME)
