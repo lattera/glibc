@@ -1,5 +1,9 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/itoa-digits.c: Move upper digits to...
+	* stdio-common/itoa-udigits.c: ...here.  New file.
+	* stdio-common/Makefile (routines): Add itoa-udigits.
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): For the version to
 	relocate ld.so don't add supprt for relocations which should not
 	appear in ld.so.

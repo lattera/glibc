@@ -17,6 +17,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Lower-case digits.  */
-const char _itoa_lower_digits[36]
-	= "0123456789abcdefghijklmnopqrstuvwxyz";
+/* Upper-case digits.  */
+const char _itoa_upper_digits[36]
+	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
