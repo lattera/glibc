@@ -53,7 +53,7 @@
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmn r0, $4096;							      \
-    bhs PLTJMP(syscall_error);
+    bhs PLTJMP(C_SYMBOL_NAME(__syscall_error));
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
