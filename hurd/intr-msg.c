@@ -59,6 +59,8 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
   if (ss->cancel)
     {
+      /* We have been cancelled.  Don't do an RPC at all.  */
+      ss->intr_port = MACH_PORT_NULL;
       ss->cancel = 0;
       return EINTR;
     }
