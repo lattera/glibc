@@ -1,3 +1,15 @@
+2002-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_thr_clear_event.c: Yet more changes to help with TLS-enabled
+	libpthread.
+	* td_thr_event_enable.c: Likewise.
+	* td_thr_event_getmsg.c: Likewise.
+	* td_thr_set_event.c: Likewise.
+	* td_thr_setfpregs.c: Likewise.
+	* td_thr_setgregs.c: Likewise.
+	* td_thr_tsd.c: Likewise.
+	* td_thr_validate.c: Likewise.
+
 2002-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_ta_thr_iter.c: Some more changes to enable using TLS-enabled

@@ -1,3 +1,8 @@
+2002-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/th_TH: Change tel_dom_fmt.
+	Patch by Theppitak Karoonboonyanan <thep@links.nectec.or.th>.
+
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/ISO-8859-11: New file.

@@ -31,6 +31,11 @@ td_thr_validate (const td_thrhandle_t *th)
 
   LOG ("td_thr_validate");
 
+  /* A special case: if the program just starts up the handle is
+     NULL.  */
+  if (th->th_unique == NULL)
+    return TD_OK;
+
   /* Now get all descriptors, one after the other.  */
   for (cnt = 0; cnt < pthread_threads_max; ++cnt, ++handles)
     {

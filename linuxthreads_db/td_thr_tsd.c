@@ -36,6 +36,11 @@ td_thr_tsd (const td_thrhandle_t *th, const thread_key_t tk, void **data)
 
   LOG ("td_thr_tsd");
 
+  /* If there is no thread descriptor there cannot be any thread
+     specific data.  */
+  if (th->th_unique == NULL)
+    return TD_BADKEY;
+
   /* Get the thread descriptor.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
 		 sizeof (struct _pthread_descr_struct)) != PS_OK)

@@ -1,5 +1,5 @@
 /* Enable specific event for thread.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -32,6 +32,11 @@ td_thr_set_event (th, event)
   int i;
 
   LOG ("td_thr_set_event");
+
+  /* What shall we do if no thread descriptor exists but the user
+     wants to set an event?  */
+  if (th->th_unique == NULL)
+    return TD_NOTALLOC;
 
   /* Write the new value into the thread data structure.  */
   if (ps_pdread (th->th_ta_p->ph,
