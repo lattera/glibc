@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,10 +40,29 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   vm_address_t mapaddr;
   vm_size_t pageoff;
 
+  mapaddr = (vm_address_t) addr;
+
+  if ((flags & (MAP_TYPE|MAP_INHERIT)) == MAP_ANON
+      && prot == (PROT_READ|PROT_WRITE)) /* cf VM_PROT_DEFAULT */
+    {
+      /* vm_allocate has (a little) less overhead in the kernel too.  */
+      err = __vm_allocate (&mapaddr, len, !(flags & MAP_FIXED));
+
+      if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
+	{
+	  /* XXX this is not atomic as it is in unix! */
+	  /* The region is already allocated; deallocate it first.  */
+	  err = __vm_deallocate (__mach_task_self (), mapaddr, len);
+	  if (!err)
+	    err = __vm_allocate (&mapaddr, len, 0);
+	}
+
+      return err ? (__ptr_t) (long int) __hurd_fail (err) : (__ptr_t) mapaddr;
+    }
+
   pageoff = offset & (vm_page_size - 1);
   offset &= ~(vm_page_size - 1);
 
-  mapaddr = (vm_address_t) addr;
   if (flags & MAP_FIXED)
     {
       /* A specific address is requested.  It need not be page-aligned;
