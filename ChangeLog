@@ -1,5 +1,6 @@
 2003-07-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/sys/time.h: Namespace cleanup.
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_UTIMES for the architectures which always had the syscall.
 	* sysdeps/unix/sysv/linux/futimes.c: New file.
