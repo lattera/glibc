@@ -33,7 +33,7 @@ dlsym (void *handle, const char *name)
   void doit (void)
     {
       const Elf32_Sym *ref = NULL;
-      value = _dl_lookup_symbol (name, &ref, map, map->l_name);
+      value = _dl_lookup_symbol (name, &ref, map, map->l_name, 1);
     }
 
   /* Confine the symbol scope to just this map.  */

@@ -61,14 +61,15 @@ static void fmh() {
     while (!(err=__vm_region(__mach_task_self(),&a,&fmhs,&x,&x,&x,&x,&p,&x))){
       __mach_port_deallocate(__mach_task_self(),p);
       if (a+fmhs>=0x80000000U){
-	max=a;break;}
+	max=a; break;}
       fmha=a+=fmhs;}
     if (err) assert(err==KERN_NO_SPACE);
+    if (!fmha)fmhs=0;else{
     fmhs=max-fmha;
     err = __vm_map (__mach_task_self (),
 		    &fmha, fmhs, 0, 0, MACH_PORT_NULL, 0, 1,
 		    VM_PROT_NONE, VM_PROT_NONE, VM_INHERIT_COPY);
-    assert_perror(err);
+    assert_perror(err);}
   }
 /* XXX loser kludge for vm_map kernel bug */
 

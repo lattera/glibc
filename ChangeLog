@@ -1,3 +1,28 @@
+Mon Jul 10 05:39:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Take just one arg,
+ 	DATA for the entry SP; DATA[-1] is always the return address
+ 	location.  In both cthreads and non-cthreads cases, use asm to
+ 	force parameters into %eax and %ecx before return, and mutate
+ 	DATA[-1] to return to specific asm code to set up the user from
+ 	%eax and %ecx.
+	[PIC] (_init): Caller changed.
+	(__libc_init_first) [! PIC] (doinit): Use asm to effect call to init
+	with SP unwound to argument data ptr.
+
+Thu Jul  6 14:28:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (fmh): Fixed this kludge to work
+ 	when 0x08000000 and up are not mapped.
+
+	* Makerules (stamp$o-$(subdir) rule): Remove the timestamp file
+ 	before touching it.
+	(lib%.so): Use -Wl to get -soname to ld.
+
+	* elf/dlsym.c: Pass final arg to _dl_lookup_symbol.
+
+	* elf/Makefile (libdl.so): Pass $(LDFLAGS.so).
+
 Tue Jun 20 02:18:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (lib%.so: lib%_pic.a): Pass -soname switch giving the

@@ -96,7 +96,7 @@ init1 (int argc, char *arg0, ...)
 }
 
 static void
-init (int *data, void *usercode, void **retaddrloc)
+init (int *data)
 {
   int argc = *data;
   char **argv = (void *) (data + 1);
@@ -144,42 +144,43 @@ init (int *data, void *usercode, void **retaddrloc)
       /* Push the user code address on the top of the new stack.  It will
 	 be the return address for `init1'; we will jump there with NEWSP
 	 as the stack pointer.  */
-      *--(void **) newsp = usercode;
-      /* Mutate our own return address to run the code below.  */
-      *retaddrloc = &&switch_stacks;
+      *--(int *) newsp = data[-1];
+      ((void **) data)[-1] = &&switch_stacks;
       /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
-         by function return.  */
-      asm volatile ("# a %0 c %1" : : "a" (&init1), "c" (newsp));
-      return;
-    switch_stacks:
-      /* Our return address was redirected to here, so at this point our
-	 stack is unwound and callers' registers restored.  Only %ecx and
-	 %eax are call-clobbered and thus still have the values we set just
-	 above.  Fetch from there the new stack pointer we will run on, and
-	 jmp to the run-time address of `init1'; when it returns, it will
-	 run the user code with the argument data at the top of the stack.  */
-      asm volatile ("movl %ecx, %esp; jmp *%eax");
-      /* NOTREACHED */
-    }
+	 by function return.  */
+      asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
+    } 
   else
     {
-      /* We are not switching stacks, but we must play some games with
-	 the one we've got, similar to the stack-switching code above.  */
-      *retaddrloc = &&call_init1;
-      /* Force the user code address into %ecx and the run-time address of
-	 `init1' into %eax, for use below.  */
-      asm volatile ("# a %0 c %1" : : "a" (&init1), "c" (usercode));
-      return;
-    call_init1:
-      /* As in the stack-switching case, at this point our stack is unwound
-	 and callers' registers restored, and only %ecx and %eax
-	 communicate values from the lines above.  In this case we have
-	 stashed in %ecx the user code return address.  Push it on the top
-	 of the stack so it acts as init1's return address, and then jump
-	 there.  */
-      asm volatile ("pushl %ecx; jmp *%eax");
-      /* NOTREACHED */
+      /* The argument data is just above the stack frame we will unwind by
+	 returning.  Mutate our own return address to run the code below.  */
+      int usercode = data[-1];
+      ((void **) data)[-1] = &&call_init1;
+      /* Force USERCODE into %eax and &init1 into %ecx, which are not
+	 restored by function return.  */
+      asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
     }
+
+  return;
+
+ switch_stacks:
+  /* Our return address was redirected to here, so at this point our stack
+     is unwound and callers' registers restored.  Only %ecx and %eax are
+     call-clobbered and thus still have the values we set just above.
+     Fetch from there the new stack pointer we will run on, and jmp to the
+     run-time address of `init1'; when it returns, it will run the user
+     code with the argument data at the top of the stack.  */
+  asm volatile ("movl %eax, %esp; jmp *%ecx");
+  /* NOTREACHED */
+
+ call_init1:
+  /* As in the stack-switching case, at this point our stack is unwound and
+     callers' registers restored, and only %ecx and %eax communicate values
+     from the lines above.  In this case we have stashed in %eax the user
+     code return address.  Push it on the top of the stack so it acts as
+     init1's return address, and then jump there.  */
+  asm volatile ("pushl %eax; jmp *%ecx");
+  /* NOTREACHED */
 }  
 
 
@@ -202,7 +203,7 @@ _init (int argc, ...)
 
   RUN_HOOK (_hurd_preinit_hook, ());
   
-  init (&argc, ((void **) &argc)[-1], &((void **) &argc)[-1]);
+  init (&argc);
 }
 #endif
 
@@ -213,7 +214,21 @@ __libc_init_first (int argc __attribute__ ((unused)), ...)
 #ifndef PIC
   void doinit (int *data)
     {
-      init (data, ((void **) &argc)[-1], &((void **) &data)[-1]);
+      /* This function gets called with the argument data at TOS.  */
+      void doinit1 (int argc, ...)
+	{
+	  init (&argc);
+	}
+
+      /* Push the user return address after the argument data, and then
+	 jump to `doinit1' (above), so it is as if __libc_init_first's
+	 caller had called `doinit1' with the argument data already on the
+	 stack.  */
+      *--data = (&argc)[-1];
+      asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
+		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
+		    "jmp *%1" : : "r" (data), "r" (&doinit1));
+      /* NOTREACHED */
     }
 
   /* Initialize data structures so we can do RPCs.  */

@@ -379,6 +379,8 @@ $(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)): \
 	$(patsubst %,cd %;,$(objdir)) \
 	$(AR) cru$(verbose) ${O%-lib} \
 	      $(patsubst $(objpfx)%,%,$^)
+# `touch' won't let me touch a world-writable file I don't own.  Sigh.
+	rm -f $@
 	touch $@
 ifdef subdir
 O%-lib = $(filter ../,$(firstword $(objdir) ../))$(patsubst %,$(libtype$*),c)
@@ -553,8 +555,8 @@ ifeq (yes,$(build-shared))
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
 lib%.so: lib%_pic.a
-	$(LINK.o) -shared -o $@ \
-		  -soname lib$(libprefix)$*.so$($(@F)-version) \
+	$(LINK.o) -shared -o $@ -Wl,-soname \
+		  -Wl,lib$(libprefix)$(notdir $*).so$($(@F)-version) \
 		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
 		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
 		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \
