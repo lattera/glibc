@@ -9,7 +9,7 @@ libc {
   }
 }
 
-ld.so {
+ld {
   GLIBC_2.0 {
     # variables that must be shared with libc
     __hurd_sigthread_stack_base; __hurd_sigthread_stack_end;

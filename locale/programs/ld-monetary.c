@@ -361,7 +361,7 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
 {
   struct locale_monetary_t *monetary
     = locale->categories[LC_MONETARY].monetary;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
+  struct iovec iov[3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_MONETARY)];
   size_t cnt = 0;
@@ -452,7 +452,7 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) &monetary->crncystr;
+  iov[cnt].iov_base = (void *) monetary->crncystr;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
@@ -486,7 +486,7 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = 1;
   ++cnt;
 
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) monetary->duo_int_curr_symbol;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
@@ -567,44 +567,51 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+
+  /* Align following data */
+  iov[cnt].iov_base = (void *) "\0\0";
+  iov[cnt].iov_len = ((idx[cnt - 2] + 3) & ~3) - idx[cnt - 2];
+  idx[cnt - 2] = (idx[cnt - 2] + 3) & ~3;
+  ++cnt;
+
   iov[cnt].iov_base = (void *) &monetary->uno_valid_from;
-  iov[cnt].iov_len = 4;
+  iov[cnt].iov_len = sizeof(uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->uno_valid_to;
-  iov[cnt].iov_len = 4;
+  iov[cnt].iov_len = sizeof(uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->duo_valid_from;
-  iov[cnt].iov_len = 4;
+  iov[cnt].iov_len = sizeof(uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->duo_valid_to;
-  iov[cnt].iov_len = 4;
+  iov[cnt].iov_len = sizeof(uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) monetary->conversion_rate;
-  iov[cnt].iov_len = 8;
+  iov[cnt].iov_len = 2 * sizeof(uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->mon_decimal_point_wc;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &monetary->mon_thousands_sep_wc;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 
-  assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
+  assert (cnt == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
 
   write_locale_data (output_path, "LC_MONETARY",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY), iov);
+		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY), iov);
 }
 
 

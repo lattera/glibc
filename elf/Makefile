@@ -50,7 +50,7 @@ include ../Makeconfig
 before-compile = $(objpfx)trusted-dirs.h
 
 ifeq ($(versioning),yes)
-ld-map		= $(common-objpfx)ld.so.map
+ld-map		= $(common-objpfx)ld.map
 endif
 
 ifeq (yes,$(build-shared))

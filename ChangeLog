@@ -1,3 +1,41 @@
+2000-04-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-ctype.c (ctype_output): Set size of the idx
+	field to nelems * sizeof (uint32_t).
+	* locale/programs/ld-address.c (address_output): Align word fields
+	properly.
+	* locale/programs/ld-monetary.c (monetary_output): Likewise.
+	Don't restart idx pointers to idx end at the duo_int_curr_symbol
+	field.
+	Avoid giving arbitrary garbage in the crncystr field.
+	Use sizeof(uint32_t) instead of 4 for len in uno_valid_from,
+	uno_valid_to, duo_valid_from, duo_valid_to and conversion_rate
+	fields.
+	* locale/programs/ld-numeric.c (numeric_output): Likewise.
+	Don't restart idx pointers to idx end at the decimal_point_wc field.
+	* locale/programs/ld-time.c (time_output): week_1stday should be
+	word, not byte.  Align it properly.
+
+2000-04-19  H.J. Lu  <hjl@gnu.org>
+
+	* csu/gmon-start.c (_start): Declared as "extern void".
+	(etext): Likewise.
+
+2000-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Running make install): Don't mention utmpd
+	anymore.
+
+2000-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* linuxthreads/Versions: Use ld instead of ld.so.
+
+	* elf/Makefile (ld-map): Use ld.map.
+
+	* Versions.def: Use ld instead of ld.so.
+	* elf/Versions: Likewise.
+	* sysdeps/mach/hurd/Versions: Likewise.
+
 2000-04-20  Andreas Jaeger  <aj@suse.de>
 
 	* elf/rtld.c (print_statistics): Move ifndef further up.

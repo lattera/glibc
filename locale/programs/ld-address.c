@@ -328,7 +328,7 @@ address_output (struct localedef_t *locale, struct charmap_t *charmap,
 		const char *output_path)
 {
   struct locale_address_t *address = locale->categories[LC_ADDRESS].address;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS)];
+  struct iovec iov[3 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS)];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS)];
   size_t cnt = 0;
@@ -374,39 +374,46 @@ address_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+
+  /* Align following data */
+  iov[cnt].iov_base = (void *) "\0\0";
+  iov[cnt].iov_len = ((idx[cnt - 2] + 3) & ~3) - idx[cnt - 2];
+  idx[cnt - 2] = (idx[cnt - 2] + 3) & ~3;
+  ++cnt;
+
   iov[cnt].iov_base = (void *) &address->country_num;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) address->country_isbn;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) address->lang_name;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) address->lang_ab;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) address->lang_term;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) address->lang_lib;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-  assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS));
+  assert (cnt == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS));
 
   write_locale_data (output_path, "LC_ADDRESS",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS), iov);
+		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_ADDRESS), iov);
 }
 
 

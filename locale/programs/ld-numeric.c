@@ -133,7 +133,7 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
 		const char *output_path)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
-  struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
+  struct iovec iov[3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC)];
   size_t cnt = 0;
@@ -163,19 +163,26 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = numeric->grouping_len;
   ++cnt;
 
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+
+  /* Align following data */
+  iov[cnt].iov_base = (void *) "\0\0";
+  iov[cnt].iov_len = ((idx[cnt - 2] + 3) & ~3) - idx[cnt - 2];
+  idx[cnt - 2] = (idx[cnt - 2] + 3) & ~3;
+  ++cnt;
+
   iov[cnt].iov_base = (void *) &numeric->decimal_point_wc;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &numeric->thousands_sep_wc;
   iov[cnt].iov_len = sizeof (uint32_t);
 
-  assert (cnt + 1 == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
+  assert (cnt + 1 == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 
   write_locale_data (output_path, "LC_NUMERIC",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC), iov);
+		     3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC), iov);
 }
 
 

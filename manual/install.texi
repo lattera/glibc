@@ -274,12 +274,10 @@ paths for installation.  This is useful when setting up a chroot
 environment or preparing a binary distribution.  The directory should be
 specified with an absolute file name.
 
-Glibc 2.1 includes two daemons, @code{nscd} and @code{utmpd}, which you
+Glibc 2.2 includes a daemon called @code{nscd}, which you
 may or may not want to run.  @code{nscd} caches name service lookups; it
 can dramatically improve performance with NIS+, and may help with DNS as
-well.  @code{utmpd} allows programs that use the old format for the
-@file{utmp} file to coexist with new programs.  For more information see
-the file @file{login/README.utmpd}.
+well.
 
 One auxiliary program, @file{/usr/libexec/pt_chown}, is installed setuid
 @code{root}.  This program is invoked by the @code{grantpt} function; it

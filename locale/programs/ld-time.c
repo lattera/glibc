@@ -502,7 +502,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
 		  + 2 * 99
-		  + 1 + time->num_era * 10 - 1];
+		  + 2 + time->num_era * 10 - 1];
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;
@@ -811,8 +811,14 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
   ++last_idx;
 
+  /* We must align the following data.  */
+  iov[2 + cnt].iov_base = (void *) "\0\0";
+  iov[2 + cnt].iov_len = ((idx[last_idx] + 3) & ~3) - idx[last_idx];
+  idx[last_idx] = (idx[last_idx] + 3) & ~3;
+  ++cnt;
+
   iov[2 + cnt].iov_base = (void *) &time->week_1stday;
-  iov[2 + cnt].iov_len = 1;
+  iov[2 + cnt].iov_len = sizeof(uint32_t);
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
@@ -849,7 +855,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == (_NL_ITEM_INDEX (_NL_NUM_LC_TIME)
 		  + time->num_era - 1
 		  + 2 * 99
-		  + 1 + time->num_era * 10 - 1));
+		  + 2 + time->num_era * 10 - 1));
   assert (last_idx  == _NL_ITEM_INDEX (_NL_NUM_LC_TIME));
 
   write_locale_data (output_path, "LC_TIME", 2 + cnt, iov);

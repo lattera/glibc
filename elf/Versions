@@ -16,7 +16,7 @@ libc {
   }
 }
 
-ld.so {
+ld {
   GLIBC_2.0 {
     # global variables
     _dl_debug_impcalls; _dl_debug_fd;

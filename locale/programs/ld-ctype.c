@@ -796,7 +796,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[0].iov_len = sizeof (data);
 
   iov[1].iov_base = (void *) idx;
-  iov[1].iov_len = sizeof (idx);
+  iov[1].iov_len = nelems * sizeof (uint32_t);
 
   idx[0] = iov[0].iov_len + iov[1].iov_len;
   offset = 0;

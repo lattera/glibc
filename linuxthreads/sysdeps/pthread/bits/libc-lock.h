@@ -209,6 +209,7 @@ extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *__attr,
 					int __kind);
 
+#ifdef __USE_UNIX98
 extern int __pthread_rwlock_init (pthread_rwlock_t *__rwlock,
 				  __const pthread_rwlockattr_t *__attr);
 
@@ -223,6 +224,7 @@ extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
+#endif
 
 extern int __pthread_key_create (pthread_key_t *__key,
 				 void (*__destr_function) (void *));
