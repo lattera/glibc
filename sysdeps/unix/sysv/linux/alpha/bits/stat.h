@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,9 @@ struct stat64
   };
 #endif
 
-#define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
+/* Tell code we have these members.  */
+#define	_STATBUF_ST_BLKSIZE
+#define _STATBUF_ST_RDEV
 
 /* Encoding of the file mode.  */
 
