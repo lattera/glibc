@@ -1,3 +1,12 @@
+2005-01-17  Roland McGrath  <roland@redhat.com>
+
+	* nscd/Makefile (LDLIBS-nscd): New variable.
+	($(objpfx)nscd): Use that instead of selinux-LIBS.
+
+	* Makeconfig (link-extra-libs): Define just as $(LDLIBS-$(@F)).
+	(link-extra-libs-static): Define to $(link-extra-libs).
+	(link-extra-libs-bounded): Likewise.
+
 2005-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h: Remove stray definition of pltenter.

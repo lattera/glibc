@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -480,32 +480,21 @@ default-rpath = $(libdir)
 endif
 
 ifndef link-extra-libs
-ifeq (yes,$(build-shared))
-ifneq ($(common-objpfx),$(objpfx))
-link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),\
-	$(wildcard $(common-objpfx)$(lib).so$($(notdir $(lib)).so-version) \
-		   $(objpfx)$(lib).so$($(notdir $(lib)).so-version)))
-else
-link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).so$($(notdir $(lib)).so-version))
-endif
-else
-link-extra-libs = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
-endif
+link-extra-libs = $(LDLIBS-$(@F))
+link-extra-libs-static = $(link-extra-libs)
+link-extra-libs-bounded = $(link-extra-libs)
 endif
 
 # The static libraries.
 ifeq (yes,$(build-static))
 link-libc-static = $(common-objpfx)libc.a $(static-gnulib) $(common-objpfx)libc.a
-link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 else
 ifeq (yes,$(build-shared))
 # We can try to link the programs with lib*_pic.a...
 link-libc-static = $(static-gnulib) $(common-objpfx)libc_pic.a
-link-extra-libs-static = $(link-extra-libs)
 endif
 endif
 link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
-link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
 ifneq ($(have-cc-with-libunwind),yes)
