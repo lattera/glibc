@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -253,10 +253,10 @@ __END_NAMESPACE_STD
 # if defined __USE_XOPEN2K && !defined __USE_GNU
 /* Fill BUF with a string describing the meaning of the `errno' code in
    ERRNUM.  */
-#  ifdef __REDIRECT
-extern int __REDIRECT (strerror_r,
-		       (int __errnum, char *__buf, size_t __buflen),
-		       __xpg_strerror_r) __THROW;
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (strerror_r,
+			   (int __errnum, char *__buf, size_t __buflen),
+			   __xpg_strerror_r);
 #  else
 extern int __xpg_strerror_r (int __errnum, char *__buf, size_t __buflen)
      __THROW;

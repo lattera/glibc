@@ -285,11 +285,10 @@ extern int euidaccess (__const char *__name, int __type) __THROW;
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #else
-# ifdef __REDIRECT
-extern __off64_t __REDIRECT (lseek,
-			     (int __fd, __off64_t __offset, int __whence)
-			     __THROW,
-			     lseek64);
+# ifdef __REDIRECT_NTH
+extern __off64_t __REDIRECT_NTH (lseek,
+				 (int __fd, __off64_t __offset, int __whence),
+				 lseek64);
 # else
 #  define lseek lseek64
 # endif
@@ -550,8 +549,8 @@ extern __pid_t getppid (void) __THROW;
 #ifndef __FAVOR_BSD
 extern __pid_t getpgrp (void) __THROW;
 #else
-# ifdef __REDIRECT
-extern __pid_t __REDIRECT (getpgrp, (__pid_t __pid) __THROW, __getpgid);
+# ifdef __REDIRECT_NTH
+extern __pid_t __REDIRECT_NTH (getpgrp, (__pid_t __pid), __getpgid);
 # else
 #  define getpgrp __getpgid
 # endif
@@ -589,9 +588,8 @@ extern int setpgrp (void) __THROW;
 # else
 
 /* Another name for `setpgid' (above).  */
-#  ifdef __REDIRECT
-extern int __REDIRECT (setpgrp, (__pid_t __pid, __pid_t __pgrp) __THROW,
-		       setpgid);
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (setpgrp, (__pid_t __pid, __pid_t __pgrp), setpgid);
 #  else
 #   define setpgrp setpgid
 #  endif
@@ -876,10 +874,10 @@ extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 # ifndef __USE_FILE_OFFSET64
 extern int truncate (__const char *__file, __off_t __length) __THROW;
 # else
-#  ifdef __REDIRECT
-extern int __REDIRECT (truncate,
-		       (__const char *__file, __off64_t __length) __THROW,
-		       truncate64);
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (truncate,
+			   (__const char *__file, __off64_t __length),
+			   truncate64);
 #  else
 #   define truncate truncate64
 #  endif
@@ -892,9 +890,9 @@ extern int truncate64 (__const char *__file, __off64_t __length) __THROW;
 # ifndef __USE_FILE_OFFSET64
 extern int ftruncate (int __fd, __off_t __length) __THROW;
 # else
-#  ifdef __REDIRECT
-extern int __REDIRECT (ftruncate, (int __fd, __off64_t __length) __THROW,
-		       ftruncate64);
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (ftruncate, (int __fd, __off64_t __length),
+			   ftruncate64);
 #  else
 #   define ftruncate ftruncate64
 #  endif

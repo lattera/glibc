@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -172,35 +172,33 @@ extern int aio_suspend (__const struct aiocb *__const __list[], int __nent,
    `aio_fildes' member of AIOCBP.  */
 extern int aio_fsync (int __operation, struct aiocb *__aiocbp) __THROW;
 #else
-# ifdef __REDIRECT
-extern int __REDIRECT (aio_read, (struct aiocb *__aiocbp) __THROW, aio_read64);
-extern int __REDIRECT (aio_write, (struct aiocb *__aiocbp) __THROW,
-		       aio_write64);
+# ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (aio_read, (struct aiocb *__aiocbp), aio_read64);
+extern int __REDIRECT_NTH (aio_write, (struct aiocb *__aiocbp), aio_write64);
 
-extern int __REDIRECT (lio_listio,
-		       (int __mode,
-			struct aiocb *__const __list[__restrict_arr],
-			int __nent, struct sigevent *__restrict __sig) __THROW,
-		       lio_listio64);
+extern int __REDIRECT_NTH (lio_listio,
+			   (int __mode,
+			    struct aiocb *__const __list[__restrict_arr],
+			    int __nent, struct sigevent *__restrict __sig),
+			   lio_listio64);
 
-extern int __REDIRECT (aio_error, (__const struct aiocb *__aiocbp) __THROW,
-		       aio_error64);
-extern __ssize_t __REDIRECT (aio_return, (struct aiocb *__aiocbp) __THROW,
-			     aio_return64);
+extern int __REDIRECT_NTH (aio_error, (__const struct aiocb *__aiocbp),
+			   aio_error64);
+extern __ssize_t __REDIRECT_NTH (aio_return, (struct aiocb *__aiocbp),
+				 aio_return64);
 
-extern int __REDIRECT (aio_cancel,
-		       (int __fildes, struct aiocb *__aiocbp) __THROW,
-		       aio_cancel64);
+extern int __REDIRECT_NTH (aio_cancel,
+			   (int __fildes, struct aiocb *__aiocbp),
+			   aio_cancel64);
 
-extern int __REDIRECT (aio_suspend,
-		       (__const struct aiocb *__const __list[],
-			int __nent,
-			__const struct timespec *__restrict __timeout) __THROW,
-		       aio_suspend64);
+extern int __REDIRECT_NTH (aio_suspend,
+			   (__const struct aiocb *__const __list[], int __nent,
+			    __const struct timespec *__restrict __timeout),
+			   aio_suspend64);
 
-extern int __REDIRECT (aio_fsync,
-		       (int __operation, struct aiocb *__aiocbp) __THROW,
-		       aio_fsync64);
+extern int __REDIRECT_NTH (aio_fsync,
+			   (int __operation, struct aiocb *__aiocbp),
+			   aio_fsync64);
 
 # else
 #  define aio_read aio_read64

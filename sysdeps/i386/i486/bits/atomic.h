@@ -361,3 +361,6 @@ typedef uintmax_t uatomic_max_t;
      else							      	      \
        abort ();							      \
      __result; })
+
+
+#define atomic_delay() asm ("rep; nop")

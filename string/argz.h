@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,8 +161,8 @@ extern char *argz_next (__const char *__restrict __argz, size_t __argz_len,
 
 #ifdef __USE_EXTERN_INLINES
 extern inline char *
-__argz_next (__const char *__argz, size_t __argz_len,
-	     __const char *__entry) __THROW
+__NTH (__argz_next (__const char *__argz, size_t __argz_len,
+		    __const char *__entry))
 {
   if (__entry)
     {
@@ -175,8 +175,8 @@ __argz_next (__const char *__argz, size_t __argz_len,
     return __argz_len > 0 ? (char *) __argz : 0;
 }
 extern inline char *
-argz_next (__const char *__argz, size_t __argz_len,
-	   __const char *__entry) __THROW
+__NTH (argz_next (__const char *__argz, size_t __argz_len,
+		  __const char *__entry))
 {
   return __argz_next (__argz, __argz_len, __entry);
 }

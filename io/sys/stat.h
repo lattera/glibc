@@ -211,12 +211,10 @@ extern int stat (__const char *__restrict __file,
    that file descriptor FD is open on and put them in BUF.  */
 extern int fstat (int __fd, struct stat *__buf) __THROW;
 #else
-# ifdef __REDIRECT
-extern int __REDIRECT (stat,
-		       (__const char *__restrict __file,
-			struct stat *__restrict __buf) __THROW,
-		       stat64);
-extern int __REDIRECT (fstat, (int __fd, struct stat *__buf) __THROW, fstat64);
+# ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (stat, (__const char *__restrict __file,
+				  struct stat *__restrict __buf), stat64);
+extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), fstat64);
 # else
 #  define stat stat64
 #  define fstat fstat64
@@ -235,11 +233,10 @@ extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
 extern int lstat (__const char *__restrict __file,
 		  struct stat *__restrict __buf) __THROW;
 # else
-#  ifdef __REDIRECT
-extern int __REDIRECT (lstat,
-		       (__const char *__restrict __file,
-			struct stat *__restrict __buf) __THROW,
-		       lstat64);
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (lstat,
+			   (__const char *__restrict __file,
+			    struct stat *__restrict __buf), lstat64);
 #  else
 #   define lstat lstat64
 #  endif
@@ -322,15 +319,13 @@ extern int __xstat (int __ver, __const char *__filename,
 extern int __lxstat (int __ver, __const char *__filename,
 		     struct stat *__stat_buf) __THROW;
 #else
-# ifdef __REDIRECT
-extern int __REDIRECT (__fxstat, (int __ver, int __fildes,
-				  struct stat *__stat_buf) __THROW,
-		       __fxstat64);
-extern int __REDIRECT (__xstat, (int __ver, __const char *__filename,
-				 struct stat *__stat_buf) __THROW, __xstat64);
-extern int __REDIRECT (__lxstat, (int __ver, __const char *__filename,
-				  struct stat *__stat_buf) __THROW,
-		       __lxstat64);
+# ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (__fxstat, (int __ver, int __fildes,
+				      struct stat *__stat_buf), __fxstat64);
+extern int __REDIRECT_NTH (__xstat, (int __ver, __const char *__filename,
+				     struct stat *__stat_buf), __xstat64);
+extern int __REDIRECT_NTH (__lxstat, (int __ver, __const char *__filename,
+				      struct stat *__stat_buf), __lxstat64);
 
 # else
 #  define __fxstat __fxstat64
@@ -353,28 +348,29 @@ extern int __xmknod (int __ver, __const char *__path, __mode_t __mode,
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Inlined versions of the real stat and mknod functions.  */
 
-extern __inline__ int stat (__const char *__path,
-			    struct stat *__statbuf) __THROW
+extern __inline__ int
+__NTH (stat (__const char *__path, struct stat *__statbuf))
 {
   return __xstat (_STAT_VER, __path, __statbuf);
 }
 
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern __inline__ int lstat (__const char *__path,
-			     struct stat *__statbuf) __THROW
+extern __inline__ int
+__NTH (lstat (__const char *__path, struct stat *__statbuf))
 {
   return __lxstat (_STAT_VER, __path, __statbuf);
 }
 # endif
 
-extern __inline__ int fstat (int __fd, struct stat *__statbuf) __THROW
+extern __inline__ int
+__NTH (fstat (int __fd, struct stat *__statbuf))
 {
   return __fxstat (_STAT_VER, __fd, __statbuf);
 }
 
 # if defined __USE_MISC || defined __USE_BSD
-extern __inline__ int mknod (__const char *__path, __mode_t __mode,
-			     __dev_t __dev) __THROW
+extern __inline__ int
+__NTH (mknod (__const char *__path, __mode_t __mode, __dev_t __dev))
 {
   return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
 }
@@ -382,22 +378,23 @@ extern __inline__ int mknod (__const char *__path, __mode_t __mode,
 
 # if defined __USE_LARGEFILE64 \
   && (! defined __USE_FILE_OFFSET64 \
-      || (defined __REDIRECT && defined __OPTIMIZE__))
-extern __inline__ int stat64 (__const char *__path,
-			      struct stat64 *__statbuf) __THROW
+      || (defined __REDIRECT_NTH && defined __OPTIMIZE__))
+extern __inline__ int
+__NTH (stat64 (__const char *__path, struct stat64 *__statbuf))
 {
   return __xstat64 (_STAT_VER, __path, __statbuf);
 }
 
 #  if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern __inline__ int lstat64 (__const char *__path,
-			       struct stat64 *__statbuf) __THROW
+extern __inline__ int
+__NTH (lstat64 (__const char *__path, struct stat64 *__statbuf))
 {
   return __lxstat64 (_STAT_VER, __path, __statbuf);
 }
 #  endif
 
-extern __inline__ int fstat64 (int __fd, struct stat64 *__statbuf) __THROW
+extern __inline__ int
+__NTH (fstat64 (int __fd, struct stat64 *__statbuf))
 {
   return __fxstat64 (_STAT_VER, __fd, __statbuf);
 }

@@ -92,11 +92,10 @@ __BEGIN_NAMESPACE_STD
 extern __sighandler_t signal (int __sig, __sighandler_t __handler) __THROW;
 #else
 /* Make sure the used `signal' implementation is the SVID version. */
-# ifdef __REDIRECT
-extern __sighandler_t __REDIRECT (signal,
-				  (int __sig,
-				   __sighandler_t __handler) __THROW,
-				  __sysv_signal);
+# ifdef __REDIRECT_NTH
+extern __sighandler_t __REDIRECT_NTH (signal,
+				      (int __sig, __sighandler_t __handler),
+				      __sysv_signal);
 # else
 #  define signal __sysv_signal
 # endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -319,3 +319,6 @@ typedef uintmax_t uatomic_max_t;
 			 : "=q" (__result), "=m" (*mem)			      \
 			 : "m" (*mem), "ir" (bit));			      \
      __result; })
+
+
+#define atomic_delay() asm ("rep; nop")

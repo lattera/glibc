@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -34,6 +34,9 @@
 
 #ifndef __THROW
 # define __THROW
+#endif
+#ifndef __NTH
+# define __NTH(fct) fct __THROW
 #endif
 
 #ifndef __attribute__
@@ -558,13 +561,13 @@ extern void *__argp_input (__const struct argp *__restrict __argp,
 # endif
 
 ARGP_EI void
-__argp_usage (__const struct argp_state *__state) __THROW
+__NTH (__argp_usage (__const struct argp_state *__state))
 {
   __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
 }
 
 ARGP_EI int
-__option_is_short (__const struct argp_option *__opt) __THROW
+__NTH (__option_is_short (__const struct argp_option *__opt))
 {
   if (__opt->flags & OPTION_DOC)
     return 0;
@@ -576,7 +579,7 @@ __option_is_short (__const struct argp_option *__opt) __THROW
 }
 
 ARGP_EI int
-__option_is_end (__const struct argp_option *__opt) __THROW
+__NTH (__option_is_end (__const struct argp_option *__opt))
 {
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
 }

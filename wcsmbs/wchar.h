@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -320,8 +320,9 @@ __END_NAMESPACE_C99
 
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
-extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
-			       mbstate_t *__restrict __ps) __THROW
+extern __inline size_t
+__NTH (mbrlen (__const char *__restrict __s, size_t __n,
+	       mbstate_t *__restrict __ps))
 { return (__ps != NULL
 	  ? mbrtowc (NULL, __s, __n, __ps) : __mbrlen (__s, __n, NULL)); }
 #endif
@@ -525,38 +526,40 @@ extern unsigned long long int __wcstoull_internal (__const wchar_t *
 /* Define inline functions which call the internal entry points.  */
 __BEGIN_NAMESPACE_C99
 
-extern __inline double wcstod (__const wchar_t *__restrict __nptr,
-			       wchar_t **__restrict __endptr) __THROW
+extern __inline double
+__NTH (wcstod (__const wchar_t *__restrict __nptr,
+	       wchar_t **__restrict __endptr))
 { return __wcstod_internal (__nptr, __endptr, 0); }
-extern __inline long int wcstol (__const wchar_t *__restrict __nptr,
-                                 wchar_t **__restrict __endptr,
-				 int __base) __THROW
+extern __inline long int
+__NTH (wcstol (__const wchar_t *__restrict __nptr,
+	       wchar_t **__restrict __endptr, int __base))
 { return __wcstol_internal (__nptr, __endptr, __base, 0); }
-extern __inline unsigned long int wcstoul (__const wchar_t *__restrict __nptr,
-                                           wchar_t **__restrict __endptr,
-					   int __base) __THROW
+extern __inline unsigned long int
+__NTH (wcstoul (__const wchar_t *__restrict __nptr,
+		wchar_t **__restrict __endptr, int __base))
 { return __wcstoul_internal (__nptr, __endptr, __base, 0); }
 __END_NAMESPACE_C99
 
 # ifdef __USE_GNU
-extern __inline float wcstof (__const wchar_t *__restrict __nptr,
-			      wchar_t **__restrict __endptr) __THROW
+extern __inline float
+__NTH (wcstof (__const wchar_t *__restrict __nptr,
+	       wchar_t **__restrict __endptr))
 { return __wcstof_internal (__nptr, __endptr, 0); }
-extern __inline long double wcstold (__const wchar_t *__restrict __nptr,
-				     wchar_t **__restrict __endptr) __THROW
+extern __inline long double
+__NTH (wcstold (__const wchar_t *__restrict __nptr,
+		wchar_t **__restrict __endptr))
 { return __wcstold_internal (__nptr, __endptr, 0); }
 
 
 __extension__
-extern __inline long long int wcstoq (__const wchar_t *__restrict __nptr,
-				      wchar_t **__restrict __endptr,
-				      int __base) __THROW
+extern __inline long long int
+__NTH (wcstoq (__const wchar_t *__restrict __nptr,
+	       wchar_t **__restrict __endptr, int __base))
 { return __wcstoll_internal (__nptr, __endptr, __base, 0); }
 __extension__
-extern __inline unsigned long long int wcstouq (__const wchar_t *
-						__restrict __nptr,
-						wchar_t **__restrict __endptr,
-						int __base) __THROW
+extern __inline unsigned long long int
+__NTH (wcstouq (__const wchar_t *__restrict __nptr,
+		wchar_t **__restrict __endptr, int __base))
 { return __wcstoull_internal (__nptr, __endptr, __base, 0); }
 # endif /* Use GNU.  */
 #endif /* Optimizing GCC >=2.  */

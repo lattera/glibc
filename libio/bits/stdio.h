@@ -109,14 +109,14 @@ getline (char **__lineptr, size_t *__n, FILE *__stream)
 # ifdef __USE_MISC
 /* Faster versions when locking is not required.  */
 __STDIO_INLINE int
-feof_unlocked (FILE *__stream) __THROW
+__NTH (feof_unlocked (FILE *__stream))
 {
   return _IO_feof_unlocked (__stream);
 }
 
 /* Faster versions when locking is not required.  */
 __STDIO_INLINE int
-ferror_unlocked (FILE *__stream) __THROW
+__NTH (ferror_unlocked (FILE *__stream))
 {
   return _IO_ferror_unlocked (__stream);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -306,19 +306,19 @@ extern unsigned long long int __strtoull_internal (__const char *
 
 __BEGIN_NAMESPACE_STD
 extern __inline double
-strtod (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
+__NTH (strtod (__const char *__restrict __nptr, char **__restrict __endptr))
 {
   return __strtod_internal (__nptr, __endptr, 0);
 }
 extern __inline long int
-strtol (__const char *__restrict __nptr, char **__restrict __endptr,
-	int __base) __THROW
+__NTH (strtol (__const char *__restrict __nptr, char **__restrict __endptr,
+	       int __base))
 {
   return __strtol_internal (__nptr, __endptr, __base, 0);
 }
 extern __inline unsigned long int
-strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
-	 int __base) __THROW
+__NTH (strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
+		int __base))
 {
   return __strtoul_internal (__nptr, __endptr, __base, 0);
 }
@@ -327,12 +327,12 @@ __END_NAMESPACE_STD
 # ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 extern __inline float
-strtof (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
+__NTH (strtof (__const char *__restrict __nptr, char **__restrict __endptr))
 {
   return __strtof_internal (__nptr, __endptr, 0);
 }
 extern __inline long double
-strtold (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
+__NTH (strtold (__const char *__restrict __nptr, char **__restrict __endptr))
 {
   return __strtold_internal (__nptr, __endptr, 0);
 }
@@ -341,14 +341,14 @@ __END_NAMESPACE_C99
 
 # ifdef __USE_BSD
 __extension__ extern __inline long long int
-strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
-	int __base) __THROW
+__NTH (strtoq (__const char *__restrict __nptr, char **__restrict __endptr,
+	       int __base))
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
 __extension__ extern __inline unsigned long long int
-strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
-	 int __base) __THROW
+__NTH (strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
+		int __base))
 {
   return __strtoull_internal (__nptr, __endptr, __base, 0);
 }
@@ -357,14 +357,14 @@ strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
 # if defined __USE_MISC || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 __extension__ extern __inline long long int
-strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
-	 int __base) __THROW
+__NTH (strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
+		int __base))
 {
   return __strtoll_internal (__nptr, __endptr, __base, 0);
 }
 __extension__ extern __inline unsigned long long int
-strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
-	  int __base) __THROW
+__NTH (strtoull (__const char * __restrict __nptr, char **__restrict __endptr,
+		 int __base))
 {
   return __strtoull_internal (__nptr, __endptr, __base, 0);
 }
@@ -373,17 +373,17 @@ __END_NAMESPACE_C99
 
 __BEGIN_NAMESPACE_STD
 extern __inline double
-atof (__const char *__nptr) __THROW
+__NTH (atof (__const char *__nptr))
 {
   return strtod (__nptr, (char **) NULL);
 }
 extern __inline int
-atoi (__const char *__nptr) __THROW
+__NTH (atoi (__const char *__nptr))
 {
   return (int) strtol (__nptr, (char **) NULL, 10);
 }
 extern __inline long int
-atol (__const char *__nptr) __THROW
+__NTH (atol (__const char *__nptr))
 {
   return strtol (__nptr, (char **) NULL, 10);
 }
@@ -392,7 +392,7 @@ __END_NAMESPACE_STD
 # if defined __USE_MISC || defined __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 __extension__ extern __inline long long int
-atoll (__const char *__nptr) __THROW
+__NTH (atoll (__const char *__nptr))
 {
   return strtoll (__nptr, (char **) NULL, 10);
 }

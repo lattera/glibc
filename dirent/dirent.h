@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -268,9 +268,9 @@ extern int alphasort (__const void *__e1, __const void *__e2)
      __THROW __attribute_pure__;
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (alphasort,
-		       (__const void *__e1, __const void *__e2) __THROW,
-		       alphasort64) __attribute_pure__;
+extern int __REDIRECT_NTH (alphasort,
+			   (__const void *__e1, __const void *__e2),
+			   alphasort64) __attribute_pure__;
 #  else
 #   define alphasort alphasort64
 #  endif
@@ -288,9 +288,9 @@ extern int versionsort (__const void *__e1, __const void *__e2)
      __THROW __attribute_pure__;
 #  else
 #   ifdef __REDIRECT
-extern int __REDIRECT (versionsort,
-		       (__const void *__e1, __const void *__e2) __THROW,
-		       versionsort64) __attribute_pure__;
+extern int __REDIRECT_NTH (versionsort,
+			   (__const void *__e1, __const void *__e2),
+			   versionsort64) __attribute_pure__;
 #   else
 #    define versionsort versionsort64
 #   endif
@@ -312,11 +312,11 @@ extern __ssize_t getdirentries (int __fd, char *__restrict __buf,
 				__off_t *__restrict __basep) __THROW;
 # else
 #  ifdef __REDIRECT
-extern __ssize_t __REDIRECT (getdirentries,
-			     (int __fd, char *__restrict __buf,
-			      size_t __nbytes,
-			      __off64_t *__restrict __basep) __THROW,
-			     getdirentries64);
+extern __ssize_t __REDIRECT_NTH (getdirentries,
+				 (int __fd, char *__restrict __buf,
+				  size_t __nbytes,
+				  __off64_t *__restrict __basep),
+				 getdirentries64);
 #  else
 #   define getdirentries getdirentries64
 #  endif

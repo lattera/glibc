@@ -33,13 +33,15 @@
 #ifdef __USE_ISOC99
 
 /* Test for negative number.  Used in the signbit() macro.  */
-__MATH_INLINE int __signbitf (float __x) __THROW
+__MATH_INLINE int
+__NTH (__signbitf (float __x))
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 
-__MATH_INLINE int __signbit (double __x) __THROW
+__MATH_INLINE int
+__NTH (__signbit (double __x))
 {
   __extension__ union { double __d; long __i; } __u = { __d: __x };
   return __u.__i < 0;
@@ -55,19 +57,19 @@ __MATH_INLINE int __signbit (double __x) __THROW
 #include <dl-procinfo.h>
 
 __MATH_INLINE double
-__ieee754_sqrt (double x)
+__NTH (__ieee754_sqrt (double x))
 {
   double res;
-     
+
   asm ( "sqdbr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
 
 __MATH_INLINE float
-__ieee754_sqrtf (float x)
+__NTH (__ieee754_sqrtf (float x))
 {
   float res;
-  
+
   asm ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }

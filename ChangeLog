@@ -1,5 +1,47 @@
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/atomic.h: Define atomic_increment_val, atomic_decrement_val,
+	and atomic_dealy is not already defined.
+	* sysdeps/i386/i486/bits/atomic.h: Define atomic_delay.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
+	* miscd/sys/cdefs.h (__NTH): New macro.
+	(__THROW): Define using nothrow attribute for C code and gcc >= 3.2.
+	(__REDIRECT_NTH): New macro.
+	* argp/argp.h: Use __NTH and __REDIRECT_NTH where necessary.
+	* ctype/ctype.h: Likewise.
+	* dirent/dirent.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/sys/sendfile.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/sys/statvfs.h: Likewise.
+	* libio/bits/stdio.h: Likewise.
+	* misc/sys/mman.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* rt/aio.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/string.h: Likewise.
+	* sysdeps/generic/inttypes.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/s390/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sys/sysmacros.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
+	* sysdeps/generic/glob.c: Use __PMT isntead of __P where appropriate.
+
+	* resolv/gethnamaddr.c (getanswer): Remove __P use in variable
+	definition.
+
+	* io/sys/poll.h: Remove __THROW from poll prototype, it's a
+	cancellation point.
+
 	* io/fts.c (fts_open): Remove uses of __P.
 
 	* include/stdlib.h: No need to use __THROW in this header.

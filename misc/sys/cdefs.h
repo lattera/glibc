@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,11 +39,20 @@
 
 /* GCC can always grok prototypes.  For C++ programs we add throw()
    to help it optimize the function calls.  But this works only with
-   gcc 2.8.x and egcs.  */
-# if defined __cplusplus && __GNUC_PREREQ (2,8)
-#  define __THROW	throw ()
+   gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
+   as non-throwing using a function attribute since programs can use
+   the -fexceptions options for C code as well.  */
+# if !defined __cplusplus && __GNUC_PREREQ (3, 2)
+#  define __THROW	__attribute__ ((__nothrow__))
+#  define __NTH(fct)	__attribute__ ((__nothrow__)) fct
 # else
-#  define __THROW
+#  if defined __cplusplus && __GNUC_PREREQ (2,8)
+#   define __THROW	throw ()
+#   define __NTH(fct)	fct throw ()
+#  else
+#   define __THROW
+#   define __NTH(fct)	fct
+#  endif
 # endif
 # define __P(args)	args __THROW
 /* This macro will be used for functions which might take C++ callback
@@ -55,6 +64,7 @@
 # define __inline		/* No inline functions.  */
 
 # define __THROW
+# define __NTH(fct)	fct
 # define __P(args)	args
 # define __PMT(args)	args
 
@@ -149,6 +159,8 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 
 # define __REDIRECT(name, proto, alias) name proto __asm__ (__ASMNAME (#alias))
+# define __REDIRECT_NTH(name, proto, alias) \
+     name proto __asm__ (__ASMNAME (#alias)) __THROW
 # define __ASMNAME(cname)  __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
 # define __ASMNAME2(prefix, cname) __STRING (prefix) cname
 

@@ -1,5 +1,5 @@
 /* Internal macros for atomic operations for GNU C Library.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -151,6 +151,11 @@
 #endif
 
 
+#ifndef atomic_increment_val
+# define atomic_increment_val(mem) (atomic_exchange_and_add ((mem), 1) + 1)
+#endif
+
+
 /* Add one to *MEM and return true iff it's now zero.  */
 #ifndef atomic_increment_and_test
 # define atomic_increment_and_test(mem) \
@@ -160,6 +165,11 @@
 
 #ifndef atomic_decrement
 # define atomic_decrement(mem) atomic_add ((mem), -1)
+#endif
+
+
+#ifndef atomic_decrement_val
+# define atomic_decrement_val(mem) (atomic_exchange_and_add ((mem), -1) - 1)
 #endif
 
 
@@ -241,6 +251,11 @@
 
 #ifndef atomic_write_barrier
 # define atomic_write_barrier() atomic_full_barrier ()
+#endif
+
+
+#ifndef atomic_delay
+# define atomic_delay() do { /* nothing */ } while (0)
 #endif
 
 #endif	/* atomic.h */

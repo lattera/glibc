@@ -1,5 +1,5 @@
 /* Inline math functions for x86-64.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -33,19 +33,19 @@
 
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
-__signbitf (float __x) __THROW
+__NTH (__signbitf (float __x))
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 __MATH_INLINE int
-__signbit (double __x) __THROW
+__NTH (__signbit (double __x))
 {
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
 }
 __MATH_INLINE int
-__signbitl (long double __x) __THROW
+__NTH (__signbitl (long double __x))
 {
   __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;

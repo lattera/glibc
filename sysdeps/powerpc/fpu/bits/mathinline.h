@@ -61,13 +61,13 @@
 # if __GNUC_PREREQ (2, 8)
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
-__signbitf (float __x) __THROW
+__NTH (__signbitf (float __x))
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 __MATH_INLINE int
-__signbit (double __x) __THROW
+__NTH (__signbit (double __x))
 {
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[0] < 0;
@@ -82,7 +82,7 @@ __signbit (double __x) __THROW
 # ifndef __powerpc64__
 __MATH_INLINE long int lrint (double __x) __THROW;
 __MATH_INLINE long int
-lrint (double __x) __THROW
+__NTH (lrint (double __x))
 {
   union {
     double __d;
@@ -94,7 +94,7 @@ lrint (double __x) __THROW
 
 __MATH_INLINE long int lrintf (float __x) __THROW;
 __MATH_INLINE long int
-lrintf (float __x) __THROW
+__NTH (lrintf (float __x))
 {
   union {
     double __d;
@@ -107,14 +107,14 @@ lrintf (float __x) __THROW
 
 __MATH_INLINE double fdim (double __x, double __y) __THROW;
 __MATH_INLINE double
-fdim (double __x, double __y) __THROW
+__NTH (fdim (double __x, double __y))
 {
   return __x < __y ? 0 : __x - __y;
 }
 
 __MATH_INLINE float fdimf (float __x, float __y) __THROW;
 __MATH_INLINE float
-fdimf (float __x, float __y) __THROW
+__NTH (fdimf (float __x, float __y))
 {
   return __x < __y ? 0 : __x - __y;
 }
@@ -131,14 +131,14 @@ fdimf (float __x, float __y) __THROW
 
 extern double __slow_ieee754_sqrt (double);
 __MATH_INLINE double
-__ieee754_sqrt (double __x)
+__NTH (__ieee754_sqrt (double __x))
 {
   double __z;
-  
+
   /* If the CPU is 64-bit we can use the optional FP instructions we.  */
   if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
   {
-    /* Volatile is required to prevent the compiler from moving the 
+    /* Volatile is required to prevent the compiler from moving the
        fsqrt instruction above the branch.  */
      __asm __volatile (
 	"	fsqrt	%0,%1\n"
@@ -147,20 +147,20 @@ __ieee754_sqrt (double __x)
   }
   else
      __z = __slow_ieee754_sqrt(__x);
-     
+
   return __z;
 }
 
 extern float __slow_ieee754_sqrtf (float);
 __MATH_INLINE float
-__ieee754_sqrtf (float __x)
+__NTH (__ieee754_sqrtf (float __x))
 {
   float __z;
-  
+
   /* If the CPU is 64-bit we can use the optional FP instructions we.  */
   if ((GLRO(dl_hwcap) & PPC_FEATURE_64) != 0)
   {
-    /* Volatile is required to prevent the compiler from moving the 
+    /* Volatile is required to prevent the compiler from moving the
        fsqrts instruction above the branch.  */
      __asm __volatile (
 	"	fsqrts	%0,%1\n"
@@ -169,7 +169,7 @@ __ieee754_sqrtf (float __x)
   }
   else
      __z = __slow_ieee754_sqrtf(__x);
-     
+
   return __z;
 }
 #  endif /* __LIBC_INTERNAL_MATH_INLINES */

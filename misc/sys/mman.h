@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994-1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,11 +58,11 @@ __BEGIN_DECLS
 extern void *mmap (void *__addr, size_t __len, int __prot,
 		   int __flags, int __fd, __off_t __offset) __THROW;
 #else
-# ifdef __REDIRECT
-extern void * __REDIRECT (mmap,
-			  (void *__addr, size_t __len, int __prot,
-			   int __flags, int __fd, __off64_t __offset) __THROW,
-			  mmap64);
+# ifdef __REDIRECT_NTH
+extern void * __REDIRECT_NTH (mmap,
+			      (void *__addr, size_t __len, int __prot,
+			       int __flags, int __fd, __off64_t __offset),
+			      mmap64);
 # else
 #  define mmap mmap64
 # endif
