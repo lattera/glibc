@@ -11,6 +11,9 @@
 	* io/sys/statfs.h: Likewise.
 	* io/sys/statvfs.h: Likewise.
 	* posix/unistd.h: Likewise.
+	* catgets/nl_types.h: Likewise.
+	* crypt/crypt.h: Likewise.
+	* debug/execinfo.h: Likewise.
 
 2004-09-16  Ulrich Drepper  <drepper@redhat.com>
 

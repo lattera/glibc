@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,19 +25,20 @@ __BEGIN_DECLS
 
 /* Store up to SIZE return address of the current program state in
    ARRAY and return the exact number of values stored.  */
-extern int backtrace (void **__array, int __size) __THROW;
+extern int backtrace (void **__array, int __size) __THROW __nonnull ((1));
 
 
 /* Return names of functions from the backtrace list in ARRAY in a newly
    malloc()ed memory block.  */
-extern char **backtrace_symbols (void *__const *__array, int __size) __THROW;
+extern char **backtrace_symbols (void *__const *__array, int __size)
+     __THROW __nonnull ((1));
 
 
 /* This function is similar to backtrace_symbols() but it writes the result
    immediately to a file and can therefore also be used in situations where
    malloc() is not usable anymore.  */
 extern void backtrace_symbols_fd (void *__const *__array, int __size,
-				  int __fd) __THROW;
+				  int __fd) __THROW __nonnull ((1));
 
 __END_DECLS
 
