@@ -58,9 +58,14 @@ elf_dynamic_do_rel (struct link_map *map,
     {
       const ElfW(Sym) *const symtab =
 	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
+#ifndef RTLD_BOOTSTRAP
       ElfW(Word) nrelative = (map->l_info[RELCOUNT_IDX] == NULL
 			      ? 0 : map->l_info[RELCOUNT_IDX]->d_un.d_val);
-      const ElfW(Rel) *endrel = r + nrelative;
+#else
+      ElfW(Word) nrelative = 0;
+#endif
+      const ElfW(Rel) *relative = r;
+      r += nrelative;
 
 #ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a; make
@@ -71,10 +76,17 @@ elf_dynamic_do_rel (struct link_map *map,
 	 file.  */
       weak_extern (_dl_rtld_map);
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+# ifndef DO_RELA
+	/* Rela platforms get the offset from r_addend and this must
+	   be copied in the relocation address.  Therefore we can skip
+	   the relative relocations only if this is for rel
+	   relocations.  */
+	if (l_addr != 0)
+# endif
 #endif
-	for (; r < endrel; ++r)
-	  elf_machine_rel_relative (l_addr, r,
-				    (void *) (l_addr + r->r_offset));
+	  for (; relative < r; ++relative)
+	    elf_machine_rel_relative (l_addr, relative,
+				      (void *) (l_addr + relative->r_offset));
 
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
 	{

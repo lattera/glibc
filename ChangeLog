@@ -1,5 +1,16 @@
 2001-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-rel.h (elf_dynamic_do_rel) [RTLD_BOOTSTRAP]: Disable use of
+	RELCOUNT for now until we know what is wrong with it.
+
+2001-08-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): If l_addr is 0, skip relative
+	records.  Rename endrel to relative, initialize it to r, and use it
+	in elf_machine_rel_relative calls.  Point r after relative relocs.
+
+2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Correct prediction
 	of R_386_NONE.
 
