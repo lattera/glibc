@@ -1,3 +1,7 @@
+2003-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile ($(objpfx)libpthread.so): Depend on ld.so.
+
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthreadP.h (pthread_cond_2_0_t): New type.
