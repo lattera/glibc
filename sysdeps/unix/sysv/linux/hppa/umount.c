@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Huggins-Daines <dhd@debian.org>, 2000.
 
@@ -19,6 +19,8 @@
 
 /* Since we don't have an oldumount system call, do what the kernel
    does down here.  */
+
+extern log int __umount2 (char * name, int flags);
 
 long int
 __umount (const char *name)
