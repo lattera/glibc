@@ -1,6 +1,6 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    S/390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -19,6 +19,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <limits.h>
 #define ffsl __something_else
 #include <string.h>
 
@@ -57,7 +58,7 @@ __ffs (x)
 		"3:  tml  %%r1,0x0001\n"
 		"    jnz  4f\n"
 		"    ahi  %0,1\n"
-		"4:" 
+		"4:"
 		: "=&d" (r) : "d" (x) : "cc", "1" );
 	return r+1;
 }
@@ -67,4 +68,3 @@ weak_alias (__ffs, ffs)
 #undef ffsl
 weak_alias (__ffs, ffsl)
 #endif
-

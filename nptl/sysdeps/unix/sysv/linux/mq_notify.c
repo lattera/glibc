@@ -137,6 +137,7 @@ helper_thread (void *arg)
 	/* The only state we keep is the copy of the thread attributes.  */
 	free (data.attr);
     }
+  return NULL;
 }
 
 
