@@ -1,5 +1,11 @@
 2001-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust for errors in y0l.
+
+	* math/libm-test.inc (j0_test): Make expected results long double
+	constants.
+	(y0_test): Likewise.
+
 	* sysdeps/ieee754/ldbl-96/e_j0l.c: New file.
 	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
 

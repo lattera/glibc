@@ -892,6 +892,8 @@ float: 1
 ifloat: 1
 double: 3
 idouble: 3
+ldouble: 2
+ildouble: 2
 Test "y0 (1.0) == 0.088256964215676957983":
 double: 2
 float: 1
@@ -910,11 +912,15 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 1
+ildouble: 2
 Test "y0 (8.0) == 0.22352148938756622053":
 float: 1
 ifloat: 1
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 # y1
 Test "y1 (0.1) == -6.4589510947020269877":
@@ -1481,6 +1487,8 @@ double: 3
 float: 1
 idouble: 3
 ifloat: 1
+ldouble: 2
+ildouble: 2
 
 Function: "y1":
 double: 3
