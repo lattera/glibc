@@ -1,5 +1,5 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
 
    This definition file is free software; you can redistribute it
    and/or modify it under the terms of the GNU General Public
@@ -1182,8 +1182,8 @@ UDItype __umulsidi3 (USItype, USItype);
 #endif /* __sparc_v8__ */
 #endif /* __sparc__ */
 
-#if (defined (__sparc__) && defined (__arch64__)) \
-    || defined (__sparcv9)) && W_TYPE_SIZE == 64
+#if ((defined (__sparc__) && defined (__arch64__)) \
+     || defined (__sparcv9)) && W_TYPE_SIZE == 64
 #define add_ssaaaa(sh, sl, ah, al, bh, bl)				\
   __asm__ ("addcc %r4,%5,%1
   	    add %r2,%3,%0

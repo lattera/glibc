@@ -1,3 +1,7 @@
+2000-01-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/longlong.h: Fix typo in last patch.
+
 2000-01-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_32BITUIDS):
