@@ -1,5 +1,14 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/testdata/CP1254: Update for charmap changes.
+	* iconvdata/testdata/CP1254..UTF8: Likewise.
+	* iconvdata/testdata/CP1255: Likewise.
+	* iconvdata/testdata/CP1255..UTF8: Likewise.
+	* iconvdata/testdata/CP1256: Likewise.
+	* iconvdata/testdata/CP1256..UTF8: Likewise.
+	* iconvdata/testdata/CP1257: Likewise.
+	* iconvdata/testdata/CP1257..UTF8: Likewise.
+
 	* iconvdata/Makefile (distribute): Remove cp1258.h.
 	(gen-8bit-gap-modules): Add cp1258.
 	* iconvdata/cp1258.h: Removed.

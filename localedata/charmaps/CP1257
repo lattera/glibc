@@ -155,7 +155,7 @@ CHARMAP
 <-M>                   /x97   <U2014> EM DASH
 <TM>                   /x99   <U2122> TRADE MARK SIGN
 </>1>                  /x9B   <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
-<'m>                   /x9D   <U00af> MACRON
+<'m>                   /x9D   <U00AF> MACRON
 <';>                   /x9E   <U02DB> OGONEK
 <NS>                   /xA0   <U00A0> NO-BREAK SPACE
 <Ct>                   /xA2   <U00A2> CENT SIGN

@@ -145,7 +145,7 @@ CHARMAP
 <//=>                  /x87   <U2021> DOUBLE DAGGER
 <1/>>                  /x88   <U02C6> MODIFIER LETTER CIRCUMFLEX ACCENT
 <%0>                   /x89   <U2030> PER MILLE SIGN
-<tt+>                  /x8a   <U0679> ARABIC LETTER TTEH
+<tt+>                  /x8A   <U0679> ARABIC LETTER TTEH
 <<1>                   /x8B   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK
 <OE>                   /x8C   <U0152> LATIN CAPITAL LIGATURE OE
 <tc>                   /x8D   <U0686> ARABIC LETTER TCHEH
