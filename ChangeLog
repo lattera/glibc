@@ -15,6 +15,17 @@
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: New file.
 
+2002-09-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/wordsize-32/Makefile: New file.
+	* sysdeps/arm/Makefile: Removed.
+	* sysdeps/i386/Makefile (sysdep_routines, shared-only-routines):
+	Don't add divdi3 here.
+	* sysdeps/m68k/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc32/Makefile: Likewise.
+	* sysdeps/sh/Makefile: Likewise.
+	* sysdeps/s390/s390-32/Makefile: Likewise.
+
 2002-09-18  Roland McGrath  <roland@redhat.com>
 
 	* locale/lc-ctype.c (_nl_postload_ctype): Add compat_symbol decls for
