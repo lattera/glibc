@@ -177,7 +177,7 @@ const char *const _sys_errlist[] =
   N_("No route to host"),
   N_("Operation already in progress"),
   N_("Operation now in progress"),
-  N_("Stale NFS file handle)"
+  N_("Stale NFS file handle")
 };
 
 weak_alias (_sys_errlist, sys_errlist)
