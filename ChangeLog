@@ -3,6 +3,11 @@
 	* sysdeps/generic/strtol.c: Include <locale.h>
 	* stdlib/strtod.c: Likewise
 	* stdlib/strfmon.c: Likewise.
+	* string/strcoll.c: Likewise.
+	* string/strxfrm.c: Likewise.
+	* wctype/wcfuncs_l.c: Likewise.
+	* wctype/wctype_l.c: Likewise.
+	* wctype/wctrans_l.c: Likewise.
 
 	* include/bits/locale.h: New file.
 

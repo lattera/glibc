@@ -44,6 +44,7 @@ extern int errno;
 # include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
+# include <locale.h>
 #else
 # ifndef NULL
 #  define NULL 0

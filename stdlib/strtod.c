@@ -56,6 +56,7 @@
 #include <float.h>
 #include <ieee754.h>
 #include "../locale/localeinfo.h"
+#include <locale.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>

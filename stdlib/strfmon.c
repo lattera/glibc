@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <langinfo.h>
+#include <locale.h>
 #include <monetary.h>
 #ifdef USE_IN_LIBIO
 # include "../libio/libioP.h"
