@@ -801,7 +801,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     return NULL;
 
   /* Print debugging message.  */
-  if (__builtin_expect (_dl_debug_files, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
     _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
@@ -1059,7 +1059,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   l->l_entry += l->l_addr;
 
-  if (__builtin_expect (_dl_debug_files, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
     {
       const size_t nibbles = sizeof (void *) * 2;
       char buf1[nibbles + 1];
@@ -1351,7 +1351,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
-      if (__builtin_expect (_dl_debug_libs, 0)
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0)
 	  && current_what != this_dir->what)
 	{
 	  current_what = this_dir->what;
@@ -1372,7 +1372,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	     - buf);
 
 	  /* Print name we try if this is wanted.  */
-	  if (__builtin_expect (_dl_debug_libs, 0))
+	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
 
 	  fd = open_verify (buf, fbp);
@@ -1506,7 +1506,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
 
   /* Display information if we are debugging.  */
-  if (__builtin_expect (_dl_debug_files, 0) && loader != NULL)
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0) && loader != NULL)
     _dl_debug_message (1, "\nfile=", name, ";  needed by ",
 		       loader->l_name[0] ? loader->l_name : _dl_argv[0],
 		       "\n", NULL);
@@ -1517,7 +1517,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       size_t namelen = strlen (name) + 1;
 
-      if (__builtin_expect (_dl_debug_libs, 0))
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 	_dl_debug_message (1, "find library=", name, "; searching\n", NULL);
 
       fd = -1;
@@ -1654,7 +1654,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			&realname, &fb);
 
       /* Add another newline when we a tracing the library loading.  */
-      if (__builtin_expect (_dl_debug_libs, 0))
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
         _dl_debug_message (1, "\n", NULL);
     }
   else

@@ -242,7 +242,7 @@ dl_open_worker (void *a)
   if (new->l_searchlist.r_list != NULL)
     {
       /* Let the user know about the opencount.  */
-      if (__builtin_expect (_dl_debug_files, 0))
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
 	{
 	  char buf[20];
 
@@ -342,7 +342,7 @@ dl_open_worker (void *a)
     __libc_multiple_libcs = 1;
 
   /* Let the user know about the opencount.  */
-  if (__builtin_expect (_dl_debug_files, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
     {
       char buf[20];
 

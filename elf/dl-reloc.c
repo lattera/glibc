@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
       && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
     lazy = 0;
 
-  if (__builtin_expect (_dl_debug_reloc, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_RELOC, 0))
     _dl_debug_message (1, "\nrelocation processing: ",
 		       l->l_name[0] ? l->l_name : _dl_argv[0],
 		       lazy ? " (lazy)\n" : "\n", NULL);

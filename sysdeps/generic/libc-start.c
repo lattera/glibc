@@ -115,14 +115,14 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_impcalls, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
   if (init)
     (*init) ();
 
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_impcalls, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
 #endif
 

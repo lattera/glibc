@@ -69,7 +69,8 @@ _dl_close (void *_map)
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
-      if (__builtin_expect (_dl_debug_files, 0))
+      if (//__builtin_expect (_dl_debug_files, 0))
+	  __builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
 	{
 	  char buf[20];
 
@@ -133,7 +134,8 @@ _dl_close (void *_map)
 	  && imap->l_init_called)
 	{
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (_dl_debug_impcalls, 0))
+	  if (//__builtin_expect (_dl_debug_impcalls, 0))
+	      __builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_message (1, "\ncalling fini: ", imap->l_name,
 			       "\n\n", NULL);
 

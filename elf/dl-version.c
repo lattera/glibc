@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -83,7 +83,7 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   ElfW(Verdef) *def;
 
   /* Display information about what we are doing while debugging.  */
-  if (__builtin_expect (_dl_debug_versions, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_VERSIONS, 0))
     _dl_debug_message (1, "checking for version `", string, "' in file ",
 		       map->l_name[0] ? map->l_name : _dl_argv[0],
 		       " required by file ", name, "\n", NULL);

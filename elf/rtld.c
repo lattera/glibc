@@ -74,14 +74,7 @@ int _dl_dynamic_weak;
 #else
 int _dl_dynamic_weak = 1;
 #endif
-int _dl_debug_libs;
-int _dl_debug_impcalls;
-int _dl_debug_bindings;
-int _dl_debug_symbols;
-int _dl_debug_versions;
-int _dl_debug_reloc;
-int _dl_debug_files;
-int _dl_debug_statistics;
+int _dl_debug_mask;
 const char *_dl_inhibit_rpath;		/* RPATH values which should be
 					   ignored.  */
 const char *_dl_origin_path;
@@ -257,7 +250,8 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
     }
 #endif
 
-  if (__builtin_expect (_dl_debug_statistics, 0))
+  if (//__builtin_expect (_dl_debug_statistics, 0))
+      __builtin_expect (_dl_debug_mask & DL_DEBUG_STATISTICS, 0))
     print_statistics ();
 
   return *start_addr;
@@ -1197,13 +1191,10 @@ process_dl_debug (const char *dl_debug)
 		 useful.  */
 	      if (memcmp (dl_debug, "all", 3) == 0)
 		{
-		  _dl_debug_libs = 1;
-		  _dl_debug_impcalls = 1;
-		  _dl_debug_reloc = 1;
-		  _dl_debug_files = 1;
-		  _dl_debug_symbols = 1;
-		  _dl_debug_bindings = 1;
-		  _dl_debug_versions = 1;
+		  _dl_debug_mask = (DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS
+				    | DL_DEBUG_RELOC | DL_DEBUG_FILES
+				    | DL_DEBUG_SYMBOLS | DL_DEBUG_BINDINGS
+				    | DL_DEBUG_VERSIONS);
 		  any_debug = 1;
 		  continue;
 		}
@@ -1232,8 +1223,7 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 
 	      if (memcmp (dl_debug, "libs", 4) == 0)
 		{
-		  _dl_debug_libs = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
@@ -1242,16 +1232,14 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	    case 5:
 	      if (memcmp (dl_debug, "reloc", 5) == 0)
 		{
-		  _dl_debug_reloc = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_RELOC | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
 
 	      if (memcmp (dl_debug, "files", 5) == 0)
 		{
-		  _dl_debug_files = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_FILES | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
@@ -1260,8 +1248,7 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	    case 7:
 	      if (memcmp (dl_debug, "symbols", 7) == 0)
 		{
-		  _dl_debug_symbols = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_SYMBOLS | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
@@ -1270,16 +1257,14 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	    case 8:
 	      if (memcmp (dl_debug, "bindings", 8) == 0)
 		{
-		  _dl_debug_bindings = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_BINDINGS | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
 
 	      if (memcmp (dl_debug, "versions", 8) == 0)
 		{
-		  _dl_debug_versions = 1;
-		  _dl_debug_impcalls = 1;
+		  _dl_debug_mask |= DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS;
 		  any_debug = 1;
 		  continue;
 		}
@@ -1288,7 +1273,7 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	    case 10:
 	      if (memcmp (dl_debug, "statistics", 10) == 0)
 		{
-		  _dl_debug_statistics = 1;
+		  _dl_debug_mask |= DL_DEBUG_STATISTICS;
 		  continue;
 		}
 	      break;

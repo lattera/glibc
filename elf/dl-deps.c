@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,7 +120,7 @@ empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
-		if (__builtin_expect (_dl_debug_libs, 0))		      \
+		if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))     \
 		  _dl_debug_message (1, "cannot load auxiliary `", __str,     \
 				     "' because of empty dynamic string"      \
 				     " token substitution\n", NULL);	      \
@@ -293,7 +293,7 @@ _dl_map_object_deps (struct link_map *map,
 		if (d->d_tag == DT_AUXILIARY)
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (_dl_debug_libs, 0))
+		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 		      _dl_debug_message (1, "load auxiliary object=",
 					 name, " requested by file=",
 					 l->l_name[0]
@@ -316,7 +316,7 @@ _dl_map_object_deps (struct link_map *map,
 		else
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (__builtin_expect (_dl_debug_libs, 0))
+		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 		      _dl_debug_message (1, "load filtered object=", name,
 					 " requested by file=",
 					 l->l_name[0]

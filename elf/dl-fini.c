@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -146,7 +146,7 @@ _dl_fini (void)
 	    continue;
 
 	  /* When debugging print a message first.  */
-	  if (__builtin_expect (_dl_debug_impcalls, 0))
+	  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
 	    _dl_debug_message (1, "\ncalling fini: ",
 			       l->l_name[0] ? l->l_name : _dl_argv[0],
 			       "\n\n", NULL);

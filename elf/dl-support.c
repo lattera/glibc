@@ -37,13 +37,7 @@ char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
 const char *_dl_platform;
 size_t _dl_platformlen;
 
-int _dl_debug_libs;
-int _dl_debug_impcalls;
-int _dl_debug_bindings;
-int _dl_debug_symbols;
-int _dl_debug_versions;
-int _dl_debug_reloc;
-int _dl_debug_files;
+int _dl_debug_mask;
 int _dl_lazy;
 /* XXX I know about at least one case where we depend on the old weak
    behavior (it has to do with librt).  Until we get DSO groups implemented

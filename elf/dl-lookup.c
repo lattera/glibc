@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000  Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -161,7 +161,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	      ++map->l_opencount;
 
 	      /* Display information if we are debugging.  */
-	      if (__builtin_expect (_dl_debug_files, 0))
+	      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
 		_dl_debug_message (1, "\nfile=",
 				   map->l_name[0] ? map->l_name : _dl_argv[0],
 				   ";  needed by ",
@@ -242,7 +242,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
-  if (__builtin_expect (_dl_debug_bindings, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -321,7 +321,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
-  if (__builtin_expect (_dl_debug_bindings, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -449,7 +449,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
-  if (__builtin_expect (_dl_debug_bindings, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -540,7 +540,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
-  if (__builtin_expect (_dl_debug_bindings, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name

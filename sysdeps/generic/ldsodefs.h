@@ -184,6 +184,7 @@ extern struct link_map *_dl_profile_map;
 extern const char *_dl_profile_output;
 
 /* If nonzero the appropriate debug information is printed.  */
+#if 0
 extern int _dl_debug_libs;
 extern int _dl_debug_impcalls;
 extern int _dl_debug_bindings;
@@ -191,6 +192,17 @@ extern int _dl_debug_symbols;
 extern int _dl_debug_versions;
 extern int _dl_debug_reloc;
 extern int _dl_debug_files;
+#else
+extern int _dl_debug_mask;
+#define DL_DEBUG_LIBS	    (1 << 0)
+#define DL_DEBUG_IMPCALLS   (1 << 1)
+#define DL_DEBUG_BINDINGS   (1 << 2)
+#define DL_DEBUG_SYMBOLS    (1 << 3)
+#define DL_DEBUG_VERSIONS   (1 << 4)
+#define DL_DEBUG_RELOC      (1 << 5)
+#define DL_DEBUG_FILES      (1 << 6)
+#define DL_DEBUG_STATISTICS (1 << 7)
+#endif
 
 /* Expect cache ID.  */
 extern int _dl_correct_cache_id;

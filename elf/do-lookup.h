@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	continue;
 
       /* Print some debugging info if wanted.  */
-      if (__builtin_expect (_dl_debug_symbols, 0))
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_SYMBOLS, 0))
 	_dl_debug_message (1, "symbol=", undef_name, ";  lookup in file=",
 			   map->l_name[0] ? map->l_name : _dl_argv[0],
 			   "\n", NULL);
