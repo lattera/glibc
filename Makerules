@@ -65,6 +65,41 @@ endif
 # Add -I switches to get the right sysdep directories.
 # `+includes' in Makeconfig references $(+sysdep-includes).
 +sysdep-includes := $(addprefix -I,$(+sysdep_dirs))
+
+# Enable object files for different versions of the library.
+# Various things use $(object-suffixes) to know what all to make.
+# The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
+# to pass different flags for each flavor.
+libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
+object-suffixes := .o
+libtype.o := lib%.a
+override CFLAGS += $(CFLAGS-$(suffix $@))
+override CPPFLAGS += $(CPPFLAGS-$(suffix $@))
+ifeq (yes,$(build-shared))
+# Under --enable-shared, we will build a shared library of PIC objects.
+# The PIC object files are named foo.so.
+object-suffixes += .so
+CPPFLAGS-.so = -DPIC
+CFLAGS-.so = -fPIC
+libtype.so := lib%_pic.a
+endif
+ifeq (yes,$(build-profile))
+# Under --enable-profile, we will build a static library of profiled objects.
+# The profiled object files are named foo.po.
+object-suffixes += .po
+CFLAGS-.po = -p
+libtype.po = lib%_p.a
+endif
+ifeq (yes,$(build-omitfp))
+# Under --enable-omitfp, we build an the library optimized without
+# debugging information using -fomit-frame-pointer, and build an extra
+# library with debugging information.  The debuggable objects are named foo.go.
+object-suffixes += .go
+CFLAGS-.go = -g
+CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
+CFLAGS-.so += $(CFLAGS.o)
+libtype.go = lib%_g.a
+endif
 
 # Include any system-specific makefiles.
 
@@ -140,10 +175,19 @@ $(objpfx)dummy.d:
 # compiling in the source tree, generated sources go into the current
 # directory, and those should be chosen before any sources in sysdeps.
 $(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.so: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.po: %.S $(before-compile); $(compile-command.S)
+$(objpfx)%.go: %.S $(before-compile); $(compile-command.S)
 $(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.so: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.po: %.s $(before-compile); $(compile-command.s)
+$(objpfx)%.go: %.s $(before-compile); $(compile-command.s)
 $(objpfx)%.d: %.s $(objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.so: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.po: %.c $(before-compile); $(compile-command.c)
+$(objpfx)%.go: %.c $(before-compile); $(compile-command.c)
 $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
 # Omit the objpfx rules when building in the source tree, because
@@ -152,10 +196,19 @@ ifdef objpfx
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
 $(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.so: $(objpfx)%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.po: $(objpfx)%.S $(before-compile); $(compile-command.S)
+$(objpfx)%.go: $(objpfx)%.S $(before-compile); $(compile-command.S)
 $(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.so: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.po: $(objpfx)%.s $(before-compile); $(compile-command.s)
+$(objpfx)%.go: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)%.d: $(objpfx)%.s $(objpfx)dummy.d; $(make-dummy-dep)
 $(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.so: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.po: $(objpfx)%.c $(before-compile); $(compile-command.c)
+$(objpfx)%.go: $(objpfx)%.c $(before-compile); $(compile-command.c)
 $(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
 
@@ -166,7 +219,7 @@ ifdef inhibit-sysdep-asm
 define open-check-inhibit-asm
 case $$sysdir in $(subst $(empty) ,|,$(inhibit-sysdep-asm))) : ;; *)
 endef
-close-check-inhibit-asm = ;; esac
+close-check-inhibit-asm = ;; esac ;
 endif
 
 # Don't include sysd-rules until sysd-Makefile is already there and has been
@@ -181,17 +234,22 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	-@rm -f $@T
 	(for sysdir in $(sysdirs); do		   			      \
 	   dir="\$$(sysdep_dir)/$$sysdir";				      \
+	   for o in $(object-suffixes); do \
+	     $(open-check-inhibit-asm) \
+	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";				      \
+	     $(close-check-inhibit-asm)	\
+	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	   done; \
 	   $(open-check-inhibit-asm) \
-	   echo "\$$(objpfx)%.o: $$dir/%.S \$$(before-compile); \
-		\$$(compile-command.S)";				      \
+	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(objpfx)dummy.d; \
+		\$$(make-dummy-dep)";			       \
 	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
-	   echo "\$$(objpfx)%.o: $$dir/%.s \$$(before-compile); \
-		\$$(compile-command.s)";				      \
-	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(objpfx)dummy.d; \
-		\$$(make-dummy-dep)" $(close-check-inhibit-asm);	\
-	   echo "\$$(objpfx)%.o: $$dir/%.c \$$(before-compile); \
-		\$$(compile-command.c)";				      \
+	   $(close-check-inhibit-asm)	\
 	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	 done) > $@T
@@ -207,29 +265,21 @@ ifndef compile-command.c
 compile-command.c = $(compile.c) $(OUTPUT_OPTION)
 endif
 
-ifneq ($(filter %gcc,$(notdir $(firstword $(CC)))),)
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.S = $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
-else
-compile.S = $(COMPILE.S) -DASSEMBLER $(asm-CPPFLAGS) $<
-compile.c = $(COMPILE.c) $<
-endif
 
-ifndef OUTPUT_OPTION
-ifdef objpfx
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o
 # together.  You can't compile the C library with such a compiler.
 OUTPUT_OPTION = -o $@
-endif
-endif
 
 S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-sed -e 's,$*\.o,$(@:.d=.o) $@,' $(sed-remove-objpfx) > $(@:.d=.T)
+sed -e 's,$*\.o,$(foreach o,$(object-suffixes),$(@:.d=$o)) $@,' \
+$(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@
 endef
 ifneq (,$(objpfx))
@@ -273,7 +323,7 @@ endif
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.
 # Add the suffixes we use.
-.SUFFIXES: .a .o .S .s .c .h .d
+.SUFFIXES: .a $(object-suffixes) .S .s .c .h .d
 
 # Generic rule for making directories.
 %/:
@@ -282,11 +332,10 @@ endif
 
 # Make sure that object files are not removed
 # when they are intermediates between sources and library members.
-# This can go away with make v4.
-.PRECIOUS: %.o
+.PRECIOUS: $(addprefix $(objpfx)%,$(object-suffixes))
 
 # Make sure that the parent library archive is never removed.
-.PRECIOUS: $(libc.a)
+.PRECIOUS: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 
 # Use the verbose option of ar and tar when not running silently.
 ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
@@ -300,43 +349,73 @@ ARFLAGS := r$(verbose)
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib libobjs lib-noranlib
-$(libc.a): $(libc.a)(__.SYMDEF)
-lib: $(libc.a)
+lib: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 
-+libobjs := $(patsubst %,$(libc.a)(%),$(notdir $(objects)))
-libobjs: $(+libobjs)
+# Pattern rule for libraries: depend on the __.SYMDEF member updated by ranlib.
+lib%.a: lib%.a(__.SYMDEF) ;
+
+ifeq (yes,$(build-shared))
+# Pattern rule to build a shared object from an archive of PIC objects.
+# $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
+# on other shared objects.
+lib%.so: lib%_pic.a
+	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< $(LDLIBS-$*.so)
+endif
+
+libobjs: $(foreach o,$(object-suffixes),\
+		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
+		   $(notdir $(objects:.o=$o))))
 lib-noranlib: libobjs
 
-# Define a pattern rule that will match many targets libc.%(foo.o), for
-# each foo in $(objects) (% will just happen always to match `a').  This is
-# the only way to define a rule that updates many targets at once with one
-# sequence of commands.
 ifdef objects
-$(patsubst %,$(libc.a:a=)\%(%),$(notdir $(objects))): $(objpfx)stamp-$(subdir);
-$(objpfx)stamp-$(subdir): $(objects)
-#	$(+libc_lock_open)
-ifdef objdir
-	cd $(objdir); $(AR) cru$(verbose) libc.a $(patsubst $(objpfx)%,%,$^)
-else
-	$(AR) cru$(verbose) $(..)libc.a $^
-endif
-#	$(+libc_lock_close)
+
+# Define a pattern rule that will match many targets libc.a(foo.%), for
+# each foo.o in $(objects) (% will just happen always to match `o').  This is
+# the only way to define a rule that updates many targets at once with one
+# sequence of commands.  We in fact define the pattern rule to match
+# targets libc.a(foo.%), libc_pic.a(foo.%), etc, to avoid repeating the rule.
+# Each match will only ever be called upon to make member objects of
+# the appropriate type in each library (i.e. libc_pic.a(foo.so)).
+$(foreach l,$(libtypes),\
+	  $(common-objpfx)$(patsubst %,$l,c)($(notdir $(objects:.o=.%)))): \
+  $(objpfx)stamp.%-$(subdir) ;
+
+# The pattern rule tells Make to remake $(objpfx)stamp.%-$(subdir) as
+# the way to update all the foo.% object files in $(objects).
+# Now we define a static pattern rule to update each
+# $(objpfx)stamp.SUFFIX-$(subdir) timestamp file;
+# these rules (one explicit rule is generated for each object suffix)
+# will update the parent archive with
+$(foreach o,$(object-suffixes),$(objpfx)stamp$o-$(subdir)): \
+  $(objpfx)stamp%-$(subdir): $(objects:.o=%)
+	$(patsubst %,cd %;,$(objdir)) \
+	$(AR) cru$(verbose) ${O%-lib} \
+	      $(patsubst $(objpfx)%,%,$^)
 	touch $@
+O%-lib = $(filter ../,$(firstword $(objdir) ../))$(patsubst %,$(libtype$*),c)
+
 endif
 
-$(libc.a)(__.SYMDEF): $(+libobjs)
-	$(RANLIB) $@
-
-define +libc_lock_open
-@. $(..)libc-lock-open
-endef
-define +libc_lock_close
-@rm -f $(..)LOCK-libc.a
-endef
+# Rules to update the __.SYMDEF member with ranlib.
+# To consolidate, each flavor library's __.SYMDEF member
+# depends on the imaginary intermediate file `symdef.SUFFIX',
+# where SUFFIX is that flavor's object suffix; then a pattern rule
+# "remakes" symdef.% depending on all the libc.a(foo.%) files in $(objects).
+$(common-objpfx)$(patsubst %,$(libtype.o),c)(__.SYMDEF): symdef.o
+$(common-objpfx)$(patsubst %,$(libtype.so),c)(__.SYMDEF): symdef.so
+$(common-objpfx)$(patsubst %,$(libtype.po),c)(__.SYMDEF): symdef.po
+$(common-objpfx)$(patsubst %,$(libtype.go),c)(__.SYMDEF): symdef.go
+symdef.%: $(foreach o,$(object-suffixes),\
+		    $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
+	  $(patsubst $(objpfx)%.o,%.%,$(objects)))) \
+	  $(filter subdir_lib,$(firstword $(subdir) subdir_lib))
+# The last line above makes it also depend on subdir_lib for the parent.
+	$(RANLIB) $(common-objpfx)$(patsubst %,$(libtype.$*),c)
 
 # This makes all the object files.
 .PHONY: objects objs
-objects objs: $(objects) $(addprefix $(objpfx),$(extra-objs))
+objects objs: $(foreach o,$(object-suffixes),$(objects:.o=$o)) \
+	      $(addprefix $(objpfx),$(extra-objs))
 
 # Installation.
 
@@ -373,17 +452,28 @@ endef
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-install: $(libdir)/lib$(libprefix)$(libc-name).a
+installed-libcs := $(foreach o,$(object-suffixes),\
+			     $(libdir)/$(patsubst %,$(libtype$o),\
+						  $(libprefix)$(libc-name)))
+install: $(installed-libcs)
 # We avoid depending on lib-noranlib because that makes the parent make
 # subdir_lib in all the subdirs, when the make install run they do will
 # update the library anyway.  Running ranlib after installing makes the
 # __.SYMDEF time stamp up to date, which avoids messages from some linkers.
 # Depending on subdir_install gets all the subdirs to update the library,
 # and is optimal for `make install' at top level.
-$(libdir)/lib$(libprefix)$(libc-name).a: libobjs subdir_install
+$(install-libcs): $(libdir)/lib$(libprefix)%: libobjs subdir_install
 	$(make-target-directory)
-	$(INSTALL_DATA) $(libc.a) $@
+	$(INSTALL_DATA) $(common-objpfx)lib$* $@
 	$(RANLIB) $@
+endif
+
+install-lib.so := libc.so $(filter lib%.so,$(install-lib))
+install-lib := $(filter-out lib%.so,$(install-lib))
+ifeq (yes,$(build-shared))
+install: $(foreach so,$(install-lib.so), \
+		   $(libdir)/$(so:lib%=lib$(libprefix)%).$($(so)-version))
+$(libdir)/lib$(libprefix)%.so: $(common-objpfx)lib%.so; $(do-install)
 endif
 
 ifdef install-bin
@@ -481,8 +571,13 @@ common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
 				     $(addsuffix .o,$(tests) $(others)) \
 				     $(addsuffix .out,$(tests)))
-	-rm -f $(objects) $(addprefix $(objpfx),$(extra-objs) stamp-$(subdir))
+	-rm -f $(addprefix $(objpfx),$(extra-objs))
 	-rm -f core TAGS
+	$(rmobjs)
+define rmobjs
+$(foreach o,$(object-suffixes),
+-rm -f $(addprefix $(objpfx),stamp$o-$(subdir)) $(objects:.o=$o))
+endef
 
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean

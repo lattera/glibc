@@ -1,5 +1,37 @@
 Mon Mar 13 01:48:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	Support building several flavors of objects and libraries.
+	* Makerules (libtypes, object-suffixes): New variables.
+	(libtype.*, CFLAGS-*, CPPFLAGS-*): New variables for each object
+	suffix.
+	(CFLAGS, CPPFLAGS): Append $(C{,CPP}FLAGS-$(suffix $@)).
+	(%.so, %.po, %.go): New compilation rules for %.S, %.s, %.c.
+	(close-check-inhibit-asm): Append a semicolon.
+	(sysd-rules): Generate rules for each object suffix.
+	(compile.S, compile.c): Always assume gcc.
+	(OUTPUT_OPTION): Define unconditionally.
+	(+make-deps): In generated rule, produce a dependent for each
+	object suffix.
+	(.SUFFIXES): Add $(object-suffixes) in place of .o.
+	(.PRECIOUS): Make all suffix flavors precious.
+	($(libc.a)): Target removed.
+	(lib): Depend on each enabled libtype.
+	(libobjs, objects, objs): Depend on all the enabled object flavors.
+	(lib%.a): New pattern rule.
+	[$(build-shared)=yes] (lib%.so: lib%_pic.a): New pattern rule.
+	(stamp-$(subdir)): Rewritten to a pattern rule for stamp.%-$(subdir)
+	to make one for each flavor; library dep rule likewise rewritten.
+	($(libc.a)(__.SYMDEF)): Target replaced with one target for each
+	flavor.
+	(symdef.%): New pattern rule; helper for __.SYMDEF targets.
+	(installed-libcs): New variable.
+	(install): Depend on that instead of
+	$(libdir)/lib$(libprefix)$(libc-name).a;
+	that file's rule rewritten to make each enabled libtype.
+	(install-lib.so): New variable, filters lib%.so from $(install-lib).
+	(install-lib): Filter out lib%.so after setting install-lib.so.
+	[$(build-shared)=yes] (install): Install $(install-lib.so).
+	(common-mostlyclean): Remove all flavors of objects.
 	* Makefile ($(libc.a)(__.SYMDEF)): Target removed.
 	[$(build-shared)=yes] (lib): Depend on $(common-objpfx)libc.so.
 
