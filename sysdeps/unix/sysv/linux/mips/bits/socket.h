@@ -28,8 +28,10 @@
 #define __need_NULL
 #include <stddef.h>
 
-
 __BEGIN_DECLS
+
+/* Type for length arguments in socket calls.  */
+typedef unsigned int socklen_t;
 
 /* Supported address families. */
 #define PF_UNSPEC	0
@@ -103,25 +105,22 @@ enum
 struct msghdr
   {
     __ptr_t msg_name;		/* Address to send to/receive from.  */
-    int msg_namelen;		/* Length of address data.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
+    socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     int msg_iovlen;		/* Number of elements in the vector.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    int msg_controllen;		/* Ancillary data buffer length.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
+    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+
     int msg_flags;		/* Flags on received message.  */
   };
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    int cmsg_len;		/* Length of data in cmsg_data plus length
+    socklen_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
