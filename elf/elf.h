@@ -945,7 +945,9 @@ typedef struct
 
 /* A special ignored value for PPC, used by the kernel to control the
    interpretation of the AUXV. Must be > 16.  */
-#define AT_IGNOREPPC	22		/* Entry should be ignored */
+#define AT_IGNOREPPC	22		/* Entry should be ignored.  */
+
+#define	AT_SECURE	23		/* Boolean, was exec setuid-like?  */
 
 /* Pointer to the global system page used for system calls and other
    nice things.  */

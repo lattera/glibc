@@ -79,14 +79,19 @@ _dl_sysdep_start (void **start_argptr,
   ElfW(Word) phnum = 0;
   ElfW(Addr) user_entry;
   ElfW(auxv_t) *av;
+#ifdef HAVE_AUX_SECURE
+# define set_seen_secure() ((void) 0)
+#else
   uid_t uid = 0;
   gid_t gid = 0;
-#ifdef HAVE_AUX_XID
-# define set_seen(tag) (tag) /* Evaluate for the side effects.  */
-#else
   unsigned int seen = 0;
-# define M(type) (1 << (type))
-# define set_seen(tag) seen |= M ((tag)->a_type)
+# define set_seen_secure() (seen = -1)
+# ifdef HAVE_AUX_XID
+#  define set_seen(tag) (tag)	/* Evaluate for the side effects.  */
+# else
+#  define M(type) (1 << (type))
+#  define set_seen(tag) seen |= M ((tag)->a_type)
+# endif
 #endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
@@ -123,6 +128,10 @@ _dl_sysdep_start (void **start_argptr,
       case AT_EGID:
 	gid ^= av->a_un.a_val;
 	break;
+      case AT_SECURE:
+	seen = -1;
+	INTUSE(__libc_enable_secure) = av->a_un.a_val;
+	break;
       case AT_PLATFORM:
 	GL(dl_platform) = av->a_un.a_ptr;
 	break;
@@ -152,20 +161,25 @@ _dl_sysdep_start (void **start_argptr,
   DL_SYSDEP_OSCHECK (dl_fatal);
 #endif
 
-  /* Fill in the values we have not gotten from the kernel through the
-     auxiliary vector.  */
-#ifndef HAVE_AUX_XID
+#ifndef HAVE_AUX_SECURE
+  if (seen != -1)
+    {
+      /* Fill in the values we have not gotten from the kernel through the
+	 auxiliary vector.  */
+# ifndef HAVE_AUX_XID
 # define SEE(UID, var, uid) \
    if ((seen & M (AT_##UID)) == 0) var ^= __get##uid ()
-  SEE (UID, uid, uid);
-  SEE (EUID, uid, euid);
-  SEE (GID, gid, gid);
-  SEE (EGID, gid, egid);
-#endif
+      SEE (UID, uid, uid);
+      SEE (EUID, uid, euid);
+      SEE (GID, gid, gid);
+      SEE (EGID, gid, egid);
+# endif
 
-  /* If one of the two pairs of IDs does not match this is a setuid
-     or setgid run.  */
-  INTUSE(__libc_enable_secure) = uid | gid;
+      /* If one of the two pairs of IDs does not match this is a setuid
+	 or setgid run.  */
+      INTUSE(__libc_enable_secure) = uid | gid;
+    }
+#endif
 
 #ifndef HAVE_AUX_PAGESIZE
   if (GL(dl_pagesize) == 0)
@@ -253,8 +267,9 @@ _dl_show_auxv (void)
 	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:  0x", hex },
 #ifdef NEED_DL_SYSINFO
 	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
-	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex }
+	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex },
 #endif
+	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 

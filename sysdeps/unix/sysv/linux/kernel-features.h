@@ -321,3 +321,9 @@
 #if __LINUX_KERNEL_VERSION >= 132426
 # define __ASSUME_STATFS64	1
 #endif
+
+/* Starting with at least 2.5.74 the kernel passes the setuid-like exec
+   flag unconditionally up to the child.  */
+#if __LINUX_KERNEL_VERSION >= 132426
+# define __ASSUME_AT_SECURE	1
+#endif

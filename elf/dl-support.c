@@ -188,6 +188,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	gid ^= av->a_un.a_val;
 	seen |= 8;
 	break;
+      case AT_SECURE:
+	seen = -1;
+	__libc_enable_secure = av->a_un.a_val;
+	__libc_enable_secure_decided = 1;
+	break;
       }
   if (seen == 0xf)
     {
