@@ -1,3 +1,12 @@
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #789]
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_ACCUM): Fix asm constraints.
+	Remove memory clobber.
+
+	* sysdeps/x86_64/hp-timing.h (HP_TIMING_ACCUM): Make the addition
+	thread-safe.  Subtract GLRO(dl_hp_timing_overhead) from Diff.
+
 2005-03-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Don't include

@@ -41,8 +41,12 @@
 #if HAVE_ICONV
 /* Get iconv etc. */
 # include <iconv.h>
-/* Get MB_LEN_MAX. */
+/* Get MB_LEN_MAX, CHAR_BIT.  */
 # include <limits.h>
+#endif
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
 #endif
 
 /* Convert a zero-terminated string STR from the FROM_CODSET code set
@@ -63,10 +67,18 @@ iconv_string (const char *str, const char *from_codeset,
   char *p = (char *) str;
   size_t inbytes_remaining = strlen (p);
   /* Guess the maximum length the output string can have.  */
-  size_t outbuf_size = (inbytes_remaining + 1) * MB_LEN_MAX;
-  size_t outbytes_remaining = outbuf_size - 1; /* -1 for NUL */
+  size_t outbuf_size = inbytes_remaining + 1;
+  size_t outbytes_remaining;
   size_t err;
   int have_error = 0;
+
+  /* Use a worst-case output size guess, so long as that wouldn't be
+     too large for comfort.  It's OK if the guess is wrong so long as
+     it's nonzero.  */
+  size_t approx_sqrt_SIZE_MAX = SIZE_MAX >> (sizeof (size_t) * CHAR_BIT / 2);
+  if (outbuf_size <= approx_sqrt_SIZE_MAX / MB_LEN_MAX)
+    outbuf_size *= MB_LEN_MAX;
+  outbytes_remaining = outbuf_size - 1;
 #endif
 
   if (strcmp (to_codeset, from_codeset) == 0)

@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  i686 version.
-   Copyright (C) 1998, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -119,26 +119,24 @@ typedef unsigned long long int hp_timing_t;
 /* We have to jump through hoops to get this correctly implemented.  */
 #define HP_TIMING_ACCUM(Sum, Diff) \
   do {									      \
-    char __not_done;							      \
+    int __not_done;							      \
     hp_timing_t __oldval = (Sum);					      \
     hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
     do									      \
       {									      \
 	hp_timing_t __newval = __oldval + __diff;			      \
 	int __temp0, __temp1;						      \
-	__asm__ __volatile__ ("xchgl %4, %%ebx\n\t"			      \
+	__asm__ __volatile__ ("xchgl %0, %%ebx\n\t"			      \
 			      "lock; cmpxchg8b %1\n\t"			      \
-			      "sete %0\n\t"				      \
-			      "movl %4, %%ebx"				      \
-			      : "=q" (__not_done), "=m" (Sum),		      \
-				"=A" (__oldval), "=c" (__temp0),	      \
-				"=SD" (__temp1)				      \
-			      : "1" (Sum), "2" (__oldval),		      \
-				"3" (__newval >> 32),			      \
-				"4" (__newval & 0xffffffff)		      \
-			      : "memory");				      \
+			      "sete %%bl\n\t"				      \
+			      "xchgl %0, %%ebx"				      \
+			      : "=SD" (__not_done), "=m" (Sum),		      \
+				"=A" (__oldval), "=c" (__temp0)		      \
+			      : "m" (Sum), "2" (__oldval),		      \
+				"3" ((unsigned int) (__newval >> 32)),	      \
+				"0" ((unsigned int) __newval));		      \
       }									      \
-    while (__not_done);							      \
+    while ((unsigned char) __not_done);					      \
   } while (0)
 
 /* No threads, no extra work.  */

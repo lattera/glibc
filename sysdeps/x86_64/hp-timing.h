@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  x86-64 version.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,11 @@
 
 /* The funny business for 32-bit mode is not required here.  */
 # undef HP_TIMING_ACCUM
-# define HP_TIMING_ACCUM(Sum, Diff) ((Sum) += (Diff))
-
+# define HP_TIMING_ACCUM(Sum, Diff)					      \
+  do {									      \
+    hp_timing_t __diff = (Diff) - GLRO(dl_hp_timing_overhead);		      \
+    __asm__ __volatile__ ("lock; addq %1, %0"				      \
+			  : "=m" (Sum) : "r" (__diff), "m" (Sum));	      \
+  } while (0)
 
 #endif /* hp-timing.h */
