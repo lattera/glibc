@@ -70,6 +70,9 @@
 #define _POSIX_REENTRANT_FUNCTIONS      1
 #define _POSIX_THREAD_SAFE_FUNCTIONS	200112L
 
+/* We provide priority scheduling for threads.  */
+#define _POSIX_THREAD_PRIORITY_SCHEDULING	200112L
+
 /* We support user-defined stack sizes.  */
 #define _POSIX_THREAD_ATTR_STACKSIZE	200112L
 
