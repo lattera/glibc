@@ -28,34 +28,19 @@
 # define __MATH_INLINE extern __inline
 #endif
 
-#ifdef __USE_ISOC99
-# define isunordered(x, y)				\
+#if defined __USE_ISOC99 && defined __GNUC__ && !__GNUC_PREREQ(3,0)
+# undef isgreater
+# undef isgreaterequal
+# undef isless
+# undef islessequal
+# undef islessgreater
+# undef isunordered
+# define isunordered(u, v)				\
   (__extension__					\
-   ({ double __r;					\
+   ({ double __r, __u = (u), __v = (v);			\
       __asm ("cmptun/su %1,%2,%0\n\ttrapb"		\
-	     : "=&f" (__r) : "f" (x), "f"(y));		\
+	     : "=&f" (__r) : "f" (__u), "f"(__v));	\
       __r != 0; }))
-
-# define isgreater(x, y)				\
-  (__extension__					\
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
-      !isunordered(__x, __y) && __x > __y; }))
-# define isgreaterequal(x, y)				\
-  (__extension__					\
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
-      !isunordered(__x, __y) && __x >= __y; }))
-# define isless(x, y)					\
-  (__extension__					\
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
-      !isunordered(__x, __y) && __x < __y; }))
-# define islessequal(x, y)				\
-  (__extension__					\
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
-      !isunordered(__x, __y) && __x <= __y; }))
-# define islessgreater(x, y)				\
-  (__extension__					\
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
-      !isunordered(__x, __y) && __x != __y; }))
 #endif /* ISO C99 */
 
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
