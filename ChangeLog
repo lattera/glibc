@@ -1,3 +1,14 @@
+2004-03-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (link-libc-static): Use $(static-gnulib) instead
+	of $(gnulib).
+	(libgcc_eh): New variable.
+	(gnulib): Use it variable.
+	(static-gnulib): New variable.
+	* Makerules (LDLIBS-c.so): Use $(static-gnulib) instead of $(gnulib).
+	* config.make.in (have-as-needed): New variable.
+	* configure.in: Check if linker supports --as-needed.
+
 2004-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/internal_statvfs64.c: New file.

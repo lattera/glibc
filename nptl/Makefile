@@ -332,7 +332,8 @@ CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-ftrylockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 
-link-libc-static := $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
+		    $(common-objpfx)libc.a
 
 ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2

@@ -504,12 +504,12 @@ endif
 
 # The static libraries.
 ifeq (yes,$(build-static))
-link-libc-static = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+link-libc-static = $(common-objpfx)libc.a $(static-gnulib) $(common-objpfx)libc.a
 link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 else
 ifeq (yes,$(build-shared))
 # We can try to link the programs with lib*_pic.a...
-link-libc-static = $(gnulib) $(common-objpfx)libc_pic.a
+link-libc-static = $(static-gnulib) $(common-objpfx)libc_pic.a
 link-extra-libs-static = $(link-extra-libs)
 endif
 endif
@@ -517,10 +517,17 @@ link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
 link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
-ifneq ($(have-cc-with-libunwind),yes)
- gnulib := -lgcc -lgcc_eh
+ifneq ($(have-as-needed),yes)
+ libgcc_eh := -lgcc_eh
 else
- gnulib := -lgcc -lgcc_eh -lunwind
+ libgcc_eh := --as-needed -lgcc_s --no-as-needed
+endif
+ifneq ($(have-cc-with-libunwind),yes)
+ gnulib := -lgcc $(libgcc_eh)
+ static-gnulib := -lgcc -lgcc_eh
+else
+ gnulib := -lgcc $(libgcc_eh) -lunwind
+ static-gnulib := -lgcc -lgcc_eh -lunwind
 endif
 endif
 ifeq ($(elf),yes)

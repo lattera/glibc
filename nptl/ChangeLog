@@ -1,3 +1,8 @@
+2004-03-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makefile (link-libc-static): Use $(static-gnulib) instead of
+	$(gnulib).
+
 2004-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread-functions.h: Add ptr__nptl_deallocate_tsd.
