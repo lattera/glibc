@@ -1,3 +1,43 @@
+1998-03-11 15:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c: Update help message.
+	Install link maps for preloaded objects using main_map as loader.
+
+	* elf/dl-misc.c: Use __libc_write instead of __write for debugging.
+	* elf/dl-profile.c: Likewise.
+
+	* elf/dlsym.c: Little optimization.
+	* elf/dlvsym.c: Likewise.
+
+1998-03-11 14:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp-test.c: Move test for parameter list at the very
+	beginning.
+
+1998-03-11 00:16  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (wordexp): Set we_wordc to zero initially unless
+	WRDE_REUSE flag is set.
+	(parse_param): Allow `*', `@', and numbers in parameter names.
+	(parse_dollars): Differentiate between arithmetic expansion and a
+	command substitution that starts immediately with a sub-shell
+	(like ``$((1+3))'' as opposed to ``$((echo);(ls))'').
+	(parse_param): Memory allocated with __alloca in a block was
+	referenced outside that block.  Adjusted to use malloc/free.
+	(parse_param): Adjusted field-splitting algorithm so that there is
+	not necessarily a field split at the end of a parameter expansion.
+
+1998-03-10 19:52  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (wordexp): If about to return WRDE_NOSPACE,
+	don't free words that have already been allocated.
+	(parse_param): A dollar sign on its own will never have a pattern
+	associated with it (like "${HOME%%/}" has), so don't try to free it.
+	(parse_glob): Attempt to glob when an unquoted `[' is found
+	(rather than an unquoted '{' (!)).  Also for unquoted '?'.
+	(parse_glob): Sorted out quoting in a glob-able word.
+	(parse_param): Added $* and $@ handling.
+
 1998-03-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nss_db/db-XXX.c (lookup): Copy data to safe place before

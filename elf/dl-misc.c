@@ -27,6 +27,10 @@
 #include <sys/stat.h>
 #include <stdio-common/_itoa.h>
 
+/* We have prototype anywhere.  */
+extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
+				  size_t __n));
+
 #ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time
    by _dl_map_object.  */
@@ -89,7 +93,7 @@ _dl_sysdep_output (int fd, const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      __write (fd, msg, len);
+      __libc_write (fd, msg, len);
       msg = va_arg (ap, const char *);
     }
   while (msg != NULL);
@@ -124,19 +128,19 @@ _dl_debug_message (int new_line, const char *msg, ...)
 	    char buf[7] = "00000:\t";
 	    assert (pid >= 0 && pid < 100000);
 	    _itoa_word (pid, &buf[5], 10, 0);
-	    __write (_dl_debug_fd, buf, 7);
+	    __libc_write (_dl_debug_fd, buf, 7);
 	    new_line = 0;
 	  }
 
 	endp = strchr (msg, '\n');
 	if (endp == NULL)
 	  {
-	    __write (_dl_debug_fd, msg, strlen (msg));
+	    __libc_write (_dl_debug_fd, msg, strlen (msg));
 	    msg = va_arg (ap, const char *);
 	  }
 	else
 	  {
-	    __write (_dl_debug_fd, msg, endp - msg + 1);
+	    __libc_write (_dl_debug_fd, msg, endp - msg + 1);
 	    msg = endp + 1;
 	    new_line = 1;
 	  }

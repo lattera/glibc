@@ -1,5 +1,5 @@
 /* Profiling of shared libraries.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
@@ -34,6 +34,10 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <atomicity.h>
+
+/* We have prototype anywhere.  */
+extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
+				  size_t __n));
 
 /* The LD_PROFILE feature has to be implemented different to the
    normal profiling using the gmon/ functions.  The problem is that an
@@ -305,8 +309,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	  return;
 	}
 
-      if (TEMP_FAILURE_RETRY (__write (fd, buf, (expected_size
-						 & (_dl_pagesize - 1)))) < 0)
+      if (TEMP_FAILURE_RETRY (__libc_write (fd, buf, (expected_size
+						      & (_dl_pagesize - 1))))
+	  < 0)
 	goto cannot_create;
     }
   else if (st.st_size != expected_size)

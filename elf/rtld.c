@@ -349,7 +349,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	 Grant the user some education.  */
       if (_dl_argc < 2)
 	_dl_sysdep_fatal ("\
-Usage: ld.so [--list|--verify] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
+Usage: ld.so [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
 This program usually lives in the file `/lib/ld.so', and special directives\n\
 in executable files using ELF shared libraries tell the system's program\n\
@@ -360,7 +360,13 @@ command line to load and run an ELF executable file; this is like executing\n\
 that file itself, but always uses this helper program from the file you\n\
 specified, instead of the helper program file specified in the executable\n\
 file you run.  This is mostly of use for maintainers to test new versions\n\
-of this helper program; chances are you did not intend to run this program.\n",
+of this helper program; chances are you did not intend to run this program.\n\
+\n\
+  --list               list all dependencies and how they are resolved\n\
+  --verify             verify that given object really is a dynamically linked\n\
+                       object we get handle\n\
+  --library-path PATH  use given PATH instead of content of the environment\n\
+                       variable LD_LIBRARY_PATH\n",
 			  NULL);
 
       ++_dl_skip_args;
@@ -509,7 +515,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       while ((p = strsep (&list, " :")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
-	    struct link_map *new_map = _dl_map_object (NULL, p, 1,
+	    struct link_map *new_map = _dl_map_object (main_map, p, 1,
 						       lt_library, 0);
 	    if (new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
@@ -570,7 +576,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  runp = file + strspn (file, ": \t\n");
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    {
-	      struct link_map *new_map = _dl_map_object (NULL, p, 1,
+	      struct link_map *new_map = _dl_map_object (main_map, p, 1,
 							 lt_library, 0);
 	      if (new_map->l_opencount == 1)
 		/* It is no duplicate.  */
@@ -584,7 +590,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = _dl_map_object (NULL, p, 1,
+	  struct link_map *new_map = _dl_map_object (main_map, p, 1,
 						     lt_library, 0);
 	  if (new_map->l_opencount == 1)
 	    /* It is no duplicate.  */

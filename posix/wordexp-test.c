@@ -107,16 +107,16 @@ main (int argc, char *argv[])
   int test;
   int fail = 0;
 
-  setenv ("IFS", IFS, 1);
-  for (test = 0; test_case[test].retval != -1; test++)
-    if (testit (&test_case[test]))
-      ++fail;
-
   if (argc > 1)
     {
       command_line_test (argv[1]);
       return 0;
     }
+
+  setenv ("IFS", IFS, 1);
+  for (test = 0; test_case[test].retval != -1; test++)
+    if (testit (&test_case[test]))
+      ++fail;
 
   pw = getpwnam ("root");
   if (pw != NULL)

@@ -66,8 +66,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	l = l->l_loader;
 
       {
-	struct link_map *map = l;
-	struct link_map *mapscope[2] = { map, NULL };
+	struct link_map *mapscope[2] = { l, NULL };
 	args->loadbase = _dl_lookup_symbol_skip (args->name, &args->ref,
 						 mapscope, NULL, match);
       }
