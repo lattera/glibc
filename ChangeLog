@@ -1,3 +1,118 @@
+2000-09-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/bits/endian.h: Remove.
+	* sysdeps/sparc/sparc32/ieee754.h: New.
+	* sysdeps/sparc/sparc64/bits/endian.h: Move...
+	* sysdeps/sparc/bits/endian.h: ...here.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Optimize.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Check
+	%o1, not %o0 to see if we're parent or child.  Optimize.
+
+2000-09-26  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/fork.S: New file (based on code
+	by Hans Boehm).
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: New file (based on
+	code by Hans Boehm).
+	* sysdeps/unix/sysv/linux/ia64/fork.c: Deleted (obsoleted by fork.S).
+
+2000-09-20  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/printf_fphex.c: New file.
+
+	* sysdeps/ia64/fpu/libm-test-ulps: New file.
+
+2000-09-17  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/Makefile (long-double-fcts): New.  Defined as yes.
+
+	* sysdeps/ia64/fpu/s_isinfl.c: New file.  Include
+	sysdeps/i386/fpu/s_isinfl.c.
+
+	* sysdeps/ia64/fpu/s_isnanl.c: New file.  Include
+	sysdeps/i386/fpu/s_isnanl.c.
+
+	* sysdeps/ia64/fpu/s_nextafterl.c: New file.  Include
+	sysdeps/i386/fpu/s_nextafterl.c.
+
+	* sysdeps/ia64/fpu/bits/mathdef.h: New file.  Copied from
+	sysdeps/i386/fpu/bits/mathdef.h.
+
+2000-09-16  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/ldsodefs.h (DL_UNMAP): New.  Defined if
+	DL_UNMAP_IS_SPECIAL is not defined.
+
+	* sysdeps/ia64/dl-lookupcfg.h (DL_UNMAP_IS_SPECIAL): Defined.
+	(_dl_unmap): New prototype.
+	(DL_UNMAP): New.  Defined as _dl_unmap.
+
+	* sysdeps/ia64/Versions [ld] (GLIBC_2.2): Add _dl_unmap.
+
+	* elf/dl-close.c (_dl_close): Replace __munmap with DL_UNMAP.
+
+2000-09-16  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/ldsodefs.h (DL_LOOKUP_ADDRESS): New. Defined
+	if ELF_FUNCTION_PTR_IS_SPECIAL is not defined.
+
+	* sysdeps/ia64/dl-lookupcfg.h (_dl_lookup_address): New
+	prototype.
+	(DL_LOOKUP_ADDRESS): New. Defined as _dl_lookup_address.
+
+	* sysdeps/ia64/dl-fptr.c (_dl_lookup_address): New. Lookup
+	the memory location of a function from a function descriptor.
+
+	* sysdeps/ia64/Versions [ld] (GLIBC_2.2): Add _dl_lookup_address.
+
+	* elf/dl-addr.c (_dl_addr): Use DL_LOOKUP_ADDRESS to get the
+	memory location.
+
+2000-09-14  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/bits/byteswap.h (__bswap_16): Don't mark output
+	variable as input argument.
+	(__bswap_32): Likewise.
+
+	* sysdeps/ia64/dl-machine.h: Add missing stop bit in RTLD_START()
+	- found by Jim Wilson <wilson@cygnus.com>
+
+2000-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strxfrm.c: Only require alignment on __alignof__ (int32_t)
+	instead of 4.
+
+2000-09-26  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/ld-collate.c (collate_output): Only require
+	alignment on __alignof__ (int32_t) instead of 4.
+	* locale/loadlocale.c (_nl_load_locale): Likewise.
+	* string/strcoll.c: Likewise.
+
+2000-09-26  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ieee754/ldbl-96/e_atan2l.c (__ieee754_atan2l): Add
+	parentheses around arithmetic used in | statement to kill compiler
+	warning.
+
+	* math/math_private.h: Add prototype for __finitel.
+	(__ilogbl): Likewise.
+	(__isinfl): Likewise.
+	(__isnanl): Likewise.
+	(__atanl): Likewise.
+	(__copysignl): Likewise.
+	(__expm1l): Likewise.
+	(__floorl): Likewise.
+	(__frexpl): Likewise.
+	(__ldexpl): Likewise.
+	(__log1pl): Likewise.
+	(__nanl): Likewise.
+	(__rintl): Likewise.
+	(__scalbnl): Likewise.
+	(__sqrtl): Likewise.
+	(fabsl): Likewise.
+	(__sincosl): Likewise.
+
 2000-09-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: New file
@@ -4715,15 +4830,15 @@
 	based on sysdeps/unix/sysv/linux/bits/siginfo.h.
 	Change type of si_band from "int" to "long".
 	(si_imm) [USE_GNU]: Define
-	(si_isr) [USE_GNU]: Ditto.
-	(ILL_BREAK) [USE_GNU]: Ditto.
-	(FPE_DECOVF) [USE_GNU]: Ditto.
-	(FPE_DECDIV) [USE_GNU]: Ditto.
-	(FPE_DECERR) [USE_GNU]: Ditto.
-	(FPE_INVASC) [USE_GNU]: Ditto.
-	(FPE_INVDEC) [USE_GNU]: Ditto.
-	(TRAP_BRANCH) [USE_GNU]: Ditto.
-	(TRAP_HWBKPT) [USE_GNU]: Ditto.
+	(si_isr) [USE_GNU]: Likewise.
+	(ILL_BREAK) [USE_GNU]: Likewise.
+	(FPE_DECOVF) [USE_GNU]: Likewise.
+	(FPE_DECDIV) [USE_GNU]: Likewise.
+	(FPE_DECERR) [USE_GNU]: Likewise.
+	(FPE_INVASC) [USE_GNU]: Likewise.
+	(FPE_INVDEC) [USE_GNU]: Likewise.
+	(TRAP_BRANCH) [USE_GNU]: Likewise.
+	(TRAP_HWBKPT) [USE_GNU]: Likewise.
 
 2000-07-06  Jes Sorensen  <jes@linuxcare.com>
 
@@ -5570,7 +5685,7 @@
 
 	* sysdeps/ieee754/dbl-64/s_exp2.c: Add include stdlib.h to get
 	prototype for abs().
-	* sysdeps/ieee754/flt-32/s_exp2f.c: ditto.
+	* sysdeps/ieee754/flt-32/s_exp2f.c: Likewise.
 
 2000-06-23  Andreas Jaeger  <aj@suse.de>
 

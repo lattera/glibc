@@ -351,6 +351,7 @@ _dl_start_user:
 	{ .mmb
 	  st8 [r10] = out1		/* Record the new argc. */
 	  ld8 out0 = [out0]
+	  ;;
 	}
 	{ .mfb
 	  ld8 out0 = [out0]		/* get the linkmap */

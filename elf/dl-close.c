@@ -167,8 +167,7 @@ _dl_close (void *_map)
 	  /* We can unmap all the maps at once.  We determined the
 	     start address and length when we loaded the object and
 	     the `munmap' call does the rest.  */
-	  __munmap ((void *) imap->l_map_start,
-		    imap->l_map_end - imap->l_map_start);
+	  DL_UNMAP (imap);
 
 	  /* Finally, unlink the data structure and free it.  */
 #ifdef SHARED

@@ -26,7 +26,7 @@ int
 internal_function
 _dl_addr (const void *address, Dl_info *info)
 {
-  const ElfW(Addr) addr = (ElfW(Addr)) address;
+  const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
   struct link_map *l, *match;
   const ElfW(Sym) *symtab, *matchsym;
   const char *strtab;

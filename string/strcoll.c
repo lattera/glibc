@@ -127,10 +127,10 @@ STRCOLL (s1, s2, l)
 #endif
   use_malloc = 0;
 
-  assert (((uintptr_t) table) % sizeof (table[0]) == 0);
-  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
-  assert (((uintptr_t) extra) % sizeof (extra[0]) == 0);
-  assert (((uintptr_t) indirect) % sizeof (indirect[0]) == 0);
+  assert (((uintptr_t) table) % __alignof__ (table[0]) == 0);
+  assert (((uintptr_t) weights) % __alignof__ (weights[0]) == 0);
+  assert (((uintptr_t) extra) % __alignof__ (extra[0]) == 0);
+  assert (((uintptr_t) indirect) % __alignof__ (indirect[0]) == 0);
 
   /* We need this a few times.  */
   s1len = STRLEN (s1);

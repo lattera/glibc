@@ -184,3 +184,29 @@ _dl_unmap (struct link_map *map)
   __ia64_fptr_lock = 0;
 #endif
 }
+
+Elf64_Addr
+_dl_lookup_address (const void *address)
+{
+  Elf64_Addr addr = (Elf64_Addr) address;
+  struct ia64_fptr *f;
+
+#ifdef _LIBC_REENTRANT
+  /* Make sure we are alone.  */
+  while (testandset (&__ia64_fptr_lock));
+#endif
+
+  for (f = __fptr_root; f != NULL; f = f->next)
+    if (f == address)
+      {
+	addr = f->func;
+	break;
+      }
+
+#ifdef _LIBC_REENTRANT
+  /* Release the lock.   */
+  __ia64_fptr_lock = 0;
+#endif
+
+  return addr;
+}

@@ -217,7 +217,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	}
       if (__builtin_expect (_nl_value_types[category][cnt] == word, 0))
 	{
-	  assert (idx % 4 == 0);
+	  assert (idx % __alignof__ (u_int32_t) == 0);
 	  newdata->values[cnt].word =
 	    *((u_int32_t *) (newdata->filedata + idx));
 	}

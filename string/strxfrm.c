@@ -151,10 +151,10 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 #endif
   use_malloc = 0;
 
-  assert (((uintptr_t) table) % sizeof (table[0]) == 0);
-  assert (((uintptr_t) weights) % sizeof (weights[0]) == 0);
-  assert (((uintptr_t) extra) % sizeof (extra[0]) == 0);
-  assert (((uintptr_t) indirect) % sizeof (indirect[0]) == 0);
+  assert (((uintptr_t) table) % __alignof__ (table[0]) == 0);
+  assert (((uintptr_t) weights) % __alignof__ (weights[0]) == 0);
+  assert (((uintptr_t) extra) % __alignof__ (extra[0]) == 0);
+  assert (((uintptr_t) indirect) % __alignof__ (indirect[0]) == 0);
 
   /* Handle an empty string as a special case.  */
   if (srclen == 0)

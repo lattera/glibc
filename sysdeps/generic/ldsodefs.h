@@ -67,8 +67,16 @@ typedef ElfW(Addr) lookup_t;
    to the actual code of the function but rather an architecture
    specific descriptor. */
 #ifndef ELF_FUNCTION_PTR_IS_SPECIAL
-#define DL_SYMBOL_ADDRESS(map, ref) \
+# define DL_SYMBOL_ADDRESS(map, ref) \
  (void *) (LOOKUP_VALUE_ADDRESS (map) + ref->st_value)
+# define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
+#endif
+
+/* Unmap a loaded object, called by _dl_close (). */
+#ifndef DL_UNMAP_IS_SPECIAL
+# define DL_UNMAP(map) \
+ __munmap ((void *) (map)->l_map_start,					      \
+	   (map)->l_map_end - (map)->l_map_start)
 #endif
 
 /* For the version handling we need an array with only names and their

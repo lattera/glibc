@@ -33,9 +33,9 @@
 	   __v = __bswap_constant_16 (x);				      \
 	 else								      \
 	   __asm__ __volatile__ ("shl %0 = %1, 48 ;;"			      \
-				 "mux1 %0 = %2, @rev ;;"		      \
+				 "mux1 %0 = %0, @rev ;;"		      \
 				 : "=r" (__v)				      \
-				 : "r" ((unsigned short int) (x)), "0" (__v));\
+				 : "r" ((unsigned short int) (x)));	      \
 	 __v; }))
 #else
 /* This is better than nothing.  */
@@ -56,9 +56,9 @@
 	   __v = __bswap_constant_32 (x);				      \
 	 else								      \
 	   __asm__ __volatile__ ("shl %0 = %1, 32 ;;"			      \
-				 "mux1 %0 = %2, @rev ;;"		      \
+				 "mux1 %0 = %0, @rev ;;"		      \
 				 : "=r" (__v)				      \
-				 : "r" ((unsigned int) (x)), "0" (__v));      \
+				 : "r" ((unsigned int) (x)));		      \
 	 __v; }))
 #else
 # define __bswap_32(x) __bswap_constant_32 (x)

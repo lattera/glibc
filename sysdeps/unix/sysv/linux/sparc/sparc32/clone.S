@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,30 +35,26 @@ __clone:
 	/* sanity check arguments */
 	tst	%i0
 	be	.Lerror
-	 tst	%i1
+	 orcc	%i1,%g0,%o1
 	be	.Lerror
-	 nop
+	 mov	%i2,%o0
 
 	/* Do the system call */
-	mov	%i1,%o1
-	mov	%i2,%o0
 	set	__NR_clone,%g1
 	ta	0x10
 	bcs	.Lerror
 	 tst	%o1
 	bne	__thread_start
 	 nop
-	mov	%o0,%i0
 	ret
-	 restore
+	 restore %o0,%g0,%o0
 
 .Lerror:
 	call	__errno_location
 	 or	%g0,EINVAL,%i0
 	st	%i0,[%o0]
-	mov	-1,%i0
 	ret
-	 restore
+	 restore %g0,-1,%o0
 
 	.size	__clone, .-__clone
 

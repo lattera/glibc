@@ -1,7 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-   Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
-   December 1995.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,17 +15,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
-#include <asm/signal.h>
 
-extern int __clone (int (*fn)(void *), void *ksp, unsigned long int flags,
-		  void *arg);
+#include <sysdep.h>
+#define _SIGNAL_H
+#include <bits/signum.h>
 
-int
-__libc_fork (void)
-{
-  return __clone (NULL, NULL, SIGCHLD, 0);
-}
+/* pid_t fork(void); */
+/* Implemented as a clone system call with parameters SIGCHLD and 0	*/
 
-weak_alias (__libc_fork, fork)
+ENTRY(__libc_fork)
+	alloc r2=ar.pfs,0,0,2,0
+	mov out0=SIGCHLD	/* Return SIGCHLD when child finishes	*/
+				/* no other clone flags; nothing shared	*/
+	mov out1=0		/* Standard sp value.			*/
+	;;
+	DO_CALL (SYS_ify (clone))
+	cmp.eq p6,p0=-1,r10
+	;;
+(p6)	br.cond.spnt.few __syscall_error
+	ret
+PSEUDO_END(__libc_fork)
+
 weak_alias (__libc_fork, __fork)
+weak_alias (__libc_fork, fork)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ __clone:
 	ta	0x6d
 	bcs,pn	%xcc, 99f
 	 nop
-	brnz,pn	%o0, __thread_start
+	brnz,pn	%o1, __thread_start
 	 mov	%o0, %i0
 	ret
 	 restore
@@ -70,9 +70,8 @@ __clone:
 	 nop
 	st	%i0, [%o0]
 #endif
-	mov	-1,%i0
 	ret
-	 restore
+	 restore %g0,-1,%o0
 	.size __clone, .-__clone
 
 	.type __thread_start,@function
