@@ -1,3 +1,7 @@
+2002-02-06  Roland McGrath  <roland@frob.com>
+
+	* scripts/firstversions.awk: Don't mess with GLIBC_PRIVATE.
+
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def [ld]: Add GLIBC_2.3.
