@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -21,6 +21,7 @@
 #include <netdb.h>
 #include <ctype.h>
 #include <errno.h>
+#include <stdint.h>
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -247,7 +248,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
 }
 
 enum nss_status
-_nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
+_nss_nis_getnetbyaddr_r (uint32_t addr, int type, struct netent *net,
 			 char *buffer, size_t buflen, int *errnop,
 			 int *herrnop)
 {

@@ -32,6 +32,13 @@
 #define __need_size_t
 #include <stddef.h>
 
+#ifndef __uint32_t_defined
+typedef unsigned int		uint32_t;
+# define __uint32_t_defined
+#endif
+
+#include <bits/netdb.h>
+
 /* Absolute file name for network data base files.  */
 #define	_PATH_HEQUIV		"/etc/hosts.equiv"
 #define	_PATH_HOSTS		"/etc/hosts"
@@ -184,17 +191,6 @@ extern int gethostbyname2_r (__const char *__restrict __name, int __af,
 #endif	/* misc */
 
 
-/* Description of data base entry for a single network.  NOTE: here a
-   poor assumption is made.  The network number is expected to fit
-   into an unsigned long int variable.  */
-struct netent
-{
-  char *n_name;			/* Official name of network.  */
-  char **n_aliases;		/* Alias list.  */
-  int n_addrtype;		/* Net address type.  */
-  unsigned long	int n_net;	/* Network number.  */
-};
-
 /* Open network data base files and mark them as staying open even
    after a later search if STAY_OPEN is non-zero.  */
 extern void setnetent (int __stay_open) __THROW;
@@ -208,7 +204,7 @@ extern struct netent *getnetent (void) __THROW;
 
 /* Return entry from network data base which address match NET and
    type TYPE.  */
-extern struct netent *getnetbyaddr (unsigned long int __net, int __type)
+extern struct netent *getnetbyaddr (uint32_t __net, int __type)
      __THROW;
 
 /* Return entry from network data base for network with NAME.  */
@@ -225,7 +221,7 @@ extern int getnetent_r (struct netent *__restrict __result_buf,
 			struct netent **__restrict __result,
 			int *__restrict __h_errnop) __THROW;
 
-extern int getnetbyaddr_r (unsigned long int __net, int __type,
+extern int getnetbyaddr_r (uint32_t __net, int __type,
 			   struct netent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,
 			   struct netent **__restrict __result,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,12 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <netdb.h>
+#include <stdint.h>
 
 
 #define LOOKUP_TYPE	struct netent
 #define FUNCTION_NAME	getnetbyaddr
 #define DATABASE_NAME	networks
-#define ADD_PARAMS	unsigned long int net, int type
+#define ADD_PARAMS	uint32_t net, int type
 #define ADD_VARIABLES	net, type
 #define NEED__RES	1
 #define NEED_H_ERRNO	1

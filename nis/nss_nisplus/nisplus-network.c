@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -21,6 +21,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdint.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <bits/libc-lock.h>
@@ -365,7 +366,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 
 /* XXX type is ignored, SUN's NIS+ table doesn't support it */
 enum nss_status
-_nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
+_nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 			     struct netent *network, char *buffer,
 			     size_t buflen, int *errnop, int *herrnop)
 {

@@ -31,7 +31,7 @@ extern int __getnetent_r (struct netent *__restrict __result_buf,
 			  struct netent **__restrict __result,
 			  int *__restrict __h_errnop);
 
-extern int __getnetbyaddr_r (unsigned long int __net, int __type,
+extern int __getnetbyaddr_r (uint32_t __net, int __type,
 			     struct netent *__restrict __result_buf,
 			     char *__restrict __buf, size_t __buflen,
 			     struct netent **__restrict __result,

@@ -1,5 +1,18 @@
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/netdb.h: Change type of first parameter of __getnetbyaddr_r.
+	* inet/getnetbyad.c: Likewise.
+	* inet/getnetbyad_r.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nssplus_nis/nisplus-network.c: Likewise.
+	* nss/nss_files/files-network.c: Likewise.
+	* resolv/netdb.h: Define uint32_t if not already happened.
+	Include bits/netdb.h.  Remove definition of struct netent.
+	Change type of first parameter of getnetbyaddr_r and getnetbyaddr.
+	* sysdeps/generic/stdint.h: Allow definition of uint32_t elsewhere.
+	* sysdeps/generic/bits/netdb.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/netdb.h: New file.
+
 	* dlfcn/Makefile (distribute): Add glreflib1.c and glreflib2.c.
 	(tests): Add glrefmain.
 	Add rules to build modules and run tests.  Ignore result of glrefmain
