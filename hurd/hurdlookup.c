@@ -67,7 +67,7 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   while (file_name[0] == '/')
     file_name++;
 
-  if (flags & O_NOFOLLOW)	/* See comments below about O_NOFOLLOW.  */
+  if (flags & O_NOFOLLOW)	/* See lookup-retry.c about O_NOFOLLOW.  */
     flags |= O_NOTRANS;
 
   if (flags & O_DIRECTORY)
