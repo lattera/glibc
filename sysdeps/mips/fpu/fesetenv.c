@@ -1,7 +1,7 @@
 /* Install given floating-point environment.
    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,6 +20,7 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <shlib-compat.h>
 
 int
 __fesetenv (const fenv_t *envp)
@@ -32,6 +33,8 @@ __fesetenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
+#ifdef SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetenv, __old_fesetenv)
-symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
-default_symbol_version (__fesetenv, fesetenv, GLIBC_2.2);
+compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
+#endif
+versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
