@@ -393,7 +393,7 @@ Instead of the using the using the normal functions for accessing the
 filesystem the @code{glob} implementation uses the user-supplied
 functions specified in the structure pointed to by @var{pglob}
 parameter.  For more information about the functions refer to the
-sections about directory handling @ref{Accessing Directories} and
+sections about directory handling see @ref{Accessing Directories}, and
 @ref{Reading Attributes}.
 
 @comment glob.h

@@ -3749,7 +3749,7 @@ buffer (for this, try @code{open_memstream}, below).  The buffer is
 freed when the stream is open.
 
 The argument @var{opentype} is the same as in @code{fopen}
-(@xref{Opening Streams}).  If the @var{opentype} specifies
+(@pxref{Opening Streams}).  If the @var{opentype} specifies
 append mode, then the initial file position is set to the first null
 character in the buffer.  Otherwise the initial file position is at the
 beginning of the buffer.
@@ -4342,8 +4342,8 @@ We see the different fields of the message and how the extra glue (the
 colons and the @code{TO FIX} string) are printed.  But only one of the
 three calls to @code{fmtmsg} produced output.  The first call does not
 print anything because the @var{label} parameter is not in the correct
-form.  As specified in @ref{Printing Formatted Messages} the string must
-contain two fields, separated by a colon.  The third @code{fmtmsg} call
+form.  The string must contain two fields, separated by a colon
+(@pxref{Printing Formatted Messages}).  The third @code{fmtmsg} call
 produced no output since the class with the numeric value @code{6} is
 not defined.  Although a class with numeric value @code{5} is also not
 defined by default, the call the @code{addseverity} introduces it and

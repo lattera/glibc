@@ -230,6 +230,8 @@ __tzfile_read (const char *file)
 	  || fread_unlocked (&types[i].isdst, 1, 1, f) != 1
 	  || fread_unlocked (&types[i].idx, 1, 1, f) != 1)
 	goto lose;
+      if (types[i].isdst > 1)
+	goto lose;
       if (types[i].idx >= chars) /* Bogus index in data file.  */
 	goto lose;
       types[i].offset = (long int) decode (x);

@@ -127,48 +127,41 @@ ferror_unlocked (FILE *__stream) __THROW
 #if defined __USE_MISC && defined __GNUC__ && defined __OPTIMIZE__
 /* Perform some simple optimizations.  */
 # define fread_unlocked(ptr, size, n, stream) \
-  (__extension__ ((((__builtin_constant_p (size)			      \
-		     && ((size) == 0 || __builtin_constant_p (n)))	      \
-		    || (__builtin_constant_p (n) && (n) == 0))		      \
-		   && (size_t) ((size) * (n)) <= 8)			      \
+  (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \
+		   && (size_t) ((size) * (n)) <= 8 && (size) != 0)	      \
 		  ? ({ char *__ptr = (char *) (ptr);			      \
 		       FILE *__stream = (stream);			      \
-		       size_t __size = (size);				      \
-		       size_t __n = (n);				      \
-		       size_t __readres = __n;				      \
-		       size_t __cnt = __size * __n + 1;			      \
-		       while (--__cnt > 0)				      \
+		       size_t __cnt;					      \
+		       for (__cnt = (size) * (n); __cnt > 0; --__cnt)	      \
 			 {						      \
 			   int __c = _IO_getc_unlocked (__stream);	      \
 			   if (__c == EOF)				      \
-			     {						      \
-			       __readres = (__size * __n - __cnt) / __size;   \
-			       break;					      \
-			     }						      \
+			     break;					      \
 			   *__ptr++ = __c;				      \
 			 }						      \
-		       __readres; })					      \
-		  : fread_unlocked (ptr, size, n, stream)))
+		       ((size_t) ((size) * (n)) - __cnt) / (size); })	      \
+		  : (((__builtin_constant_p (size) && (size) == 0)	      \
+		      || (__builtin_constant_p (n) && (n) == 0))	      \
+			/* Evaluate all parameters once.  */		      \
+		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
+			(void) n, 0)					      \
+		     : fread_unlocked (ptr, size, n, stream))))
 
 # define fwrite_unlocked(ptr, size, n, stream) \
-  (__extension__ ((((__builtin_constant_p (size)			      \
-		     && ((size) == 0 || __builtin_constant_p (n)))	      \
-		    || (__builtin_constant_p (n) && (n) == 0))		      \
-		   && (size_t) ((size) * (n)) <= 8)			      \
+  (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \
+		   && (size_t) ((size) * (n)) <= 8 && (size) != 0)	      \
 		  ? ({ const char *__ptr = (const char *) (ptr);	      \
 		       FILE *__stream = (stream);			      \
-		       size_t __size = (size);				      \
-		       size_t __n = (n);				      \
-		       size_t __writeres = __n;				      \
-		       size_t __cnt = __size * __n + 1;			      \
-		       while (--__cnt > 0)				      \
+		       size_t __cnt;					      \
+		       for (__cnt = (size) * (n); __cnt > 0; --__cnt)	      \
 			 if (_IO_putc_unlocked (*__ptr++, __stream) == EOF)   \
-			   {						      \
-			     __writeres = (__size * __n - __cnt) / __size;    \
-			     break;					      \
-			   }						      \
-		       __writeres; })					      \
-		  : fwrite_unlocked (ptr, size, n, stream)))
+			   break;					      \
+		       ((size_t) ((size) * (n)) - __cnt) / (size); })	      \
+		  : (((__builtin_constant_p (size) && (size) == 0)	      \
+		      || (__builtin_constant_p (n) && (n) == 0))	      \
+			/* Evaluate all parameters once.  */		      \
+		     ? ((void) (ptr), (void) (stream), (void) (size), n)      \
+		     : fwrite_unlocked (ptr, size, n, stream))))
 #endif
 
 /* Define helper macro.  */

@@ -3625,4 +3625,4 @@ unknown device.
 
 Most IOCTLs are OS-specific and/or only used in special system utilities,
 and are thus beyond the scope of this document.  For an example of the use
-of an IOCTL, @xref{Out-of-Band Data}.
+of an IOCTL, see @ref{Out-of-Band Data}.

@@ -239,7 +239,7 @@ exceptions happened.
 Alternatively, you can enable @dfn{traps} for exceptions.  In that case,
 when an exception is raised, your program will receive the @code{SIGFPE}
 signal.  The default action for this signal is to terminate the
-program.  @xref{Signal Handling} for how you can change the effect of
+program.  @xref{Signal Handling}, for how you can change the effect of
 the signal.
 
 @findex matherr
@@ -851,7 +851,7 @@ sqrt (creal (@var{z}) * creal (@var{z}) + cimag (@var{z}) * cimag (@var{z}))
 This function should always be used instead of the direct formula
 because it takes special care to avoid losing precision.  It may also
 take advantage of hardware support for this operation. See @code{hypot}
-in @xref{Exponents and Logarithms}.
+in @ref{Exponents and Logarithms}.
 @end deftypefun
 
 @node Normalization Functions

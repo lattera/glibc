@@ -47,7 +47,7 @@ latter case is equivalent to calling @code{pthread_exit} with the result
 returned by @var{start_routine} as exit code.
 
 The @var{attr} argument specifies thread attributes to be applied to the
-new thread. @xref{Thread Attributes} for details. The @var{attr}
+new thread. @xref{Thread Attributes}, for details. The @var{attr}
 argument can also be @code{NULL}, in which case default attributes are
 used: the created thread is joinable (not detached) and has an ordinary
 (not realtime) scheduling policy.

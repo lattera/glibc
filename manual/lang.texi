@@ -528,7 +528,7 @@ old-fashioned variadic facility is called @file{varargs.h}.
 
 Using @file{varargs.h} is almost the same as using @file{stdarg.h}.
 There is no difference in how you call a variadic function;
-@xref{Calling Variadics}.  The only difference is in how you define
+see @ref{Calling Variadics}.  The only difference is in how you define
 them.  First of all, you must use old-style non-prototype syntax, like
 this:
 
@@ -572,7 +572,7 @@ function.
 @end deftypefn
 
 The other argument macros, @code{va_arg} and @code{va_end}, are the same
-in @file{varargs.h} as in @file{stdarg.h}; see @ref{Argument Macros} for
+in @file{varargs.h} as in @file{stdarg.h}; see @ref{Argument Macros}, for
 details.
 
 It does not work to include both @file{varargs.h} and @file{stdarg.h} in

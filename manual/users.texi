@@ -778,7 +778,7 @@ store a user name.
 
 These functions let your program identify positively the user who is
 running or the user who logged in this session.  (These can differ when
-setuid programs are involved; @xref{Process Persona}.)  The user cannot
+setuid programs are involved; see @ref{Process Persona}.)  The user cannot
 do anything to fool these functions.
 
 For most purposes, it is more useful to use the environment variable
@@ -1843,10 +1843,10 @@ The members of this group are:
 @subsection Netgroup Data
 
 @cindex Netgroup
-Sometimes it is useful group users according to other criteria like the
-ones used in the @xref{Group Database}.  E.g., it is useful to associate
-a certain group of users with a certain machine.  On the other hand
-grouping of host names is not supported so far.
+Sometimes it is useful to group users according to other criteria
+(@pxref{Group Database}).  E.g., it is useful to associate a certain
+group of users with a certain machine.  On the other hand grouping of
+host names is not supported so far.
 
 In Sun Microsystems SunOS appeared a new kind of database, the netgroup
 database.  It allows to group hosts, users, and domain freely, giving

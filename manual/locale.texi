@@ -140,7 +140,7 @@ and @code{strxfrm}); see @ref{Collation Functions}.
 @item LC_CTYPE
 This category applies to classification and conversion of characters,
 and to multibyte and wide characters;
-see @ref{Character Handling} and @ref{Extended Characters}.
+see @ref{Character Handling}, and @ref{Extended Characters}.
 
 @comment locale.h
 @comment ISO
@@ -163,8 +163,8 @@ This category applies to formatting date and time values; see
 @comment XOPEN
 @item LC_MESSAGES
 This category applies to selecting the language used in the user
-interface for message translation (@ref{The Uniforum approach} and
-@ref{Message catalogs a la X/Open}).
+interface for message translation (@pxref{The Uniforum approach};
+@pxref{Message catalogs a la X/Open}).
 
 @comment locale.h
 @comment ISO

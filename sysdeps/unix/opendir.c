@@ -29,37 +29,37 @@
 
 #include <dirstream.h>
 
-/* opendir() must not accidentally open something other than a directory. 
-   Some OS's have kernel support for that, some don't.  In the worst 
-   case we have to stat() before the open() AND fstat() after. 
- 
-   We have to test at runtime for kernel support since libc may have 
-   been compiled with different headers to the kernel it's running on. 
-   This test can't be done reliably in the general case.  We'll use 
-   /dev/null, which if it's not a device lots of stuff will break, as 
-   a guinea pig.  It may be missing in chroot environments, so we 
-   make sure to fail safe. */ 
+/* opendir() must not accidentally open something other than a directory.
+   Some OS's have kernel support for that, some don't.  In the worst
+   case we have to stat() before the open() AND fstat() after.
+
+   We have to test at runtime for kernel support since libc may have
+   been compiled with different headers to the kernel it's running on.
+   This test can't be done reliably in the general case.  We'll use
+   /dev/null, which if it's not a device lots of stuff will break, as
+   a guinea pig.  It may be missing in chroot environments, so we
+   make sure to fail safe. */
 #ifdef O_DIRECTORY
-static int o_directory_works = -1; 
+static int o_directory_works;
 
 static void
-tryopen_o_directory (void) 
-{ 
-  int serrno = errno; 
-  int x = __open ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY); 
- 
-  if (x >= 0) 
-    { 
-      __close (x); 
-      o_directory_works = 0; 
-    } 
-  else if (errno != ENOTDIR) 
-    o_directory_works = 0; 
-  else 
-    o_directory_works = 1; 
- 
-  __set_errno (serrno); 
-} 
+tryopen_o_directory (void)
+{
+  int serrno = errno;
+  int x = __open ("/dev/null", O_RDONLY|O_NDELAY|O_DIRECTORY);
+
+  if (x >= 0)
+    {
+      __close (x);
+      o_directory_works = -1;
+    }
+  else if (errno != ENOTDIR)
+    o_directory_works = -1;
+  else
+    o_directory_works = 1;
+
+  __set_errno (serrno);
+}
 # define EXTRA_FLAGS O_DIRECTORY
 #else
 # define EXTRA_FLAGS 0
@@ -86,11 +86,11 @@ __opendir (const char *name)
 
 #ifdef O_DIRECTORY
   /* Test whether O_DIRECTORY works.  */
-  if (o_directory_works == -1)
+  if (o_directory_works == 0)
     tryopen_o_directory ();
 
   /* We can skip the expensive `stat' call if O_DIRECTORY works.  */
-  if (o_directory_works == 0)
+  if (o_directory_works < 0)
 #endif
     {
       /* We first have to check whether the name is for a directory.  We

@@ -252,10 +252,12 @@ write_sample_server (definition * def)
 	  fprintf (fout, "\n\t/*\n\t * insert server code here\n\t */\n\n");
 
 	  if (!mtflag)
-	    if(!streq(proc->res_type, "void"))
-	      f_print(fout, "\treturn &result;\n}\n");
-	    else /* cast back to void * */
-	      f_print(fout, "\treturn (void *) &result;\n}\n");
+	    {
+	      if (!streq(proc->res_type, "void"))
+		f_print(fout, "\treturn &result;\n}\n");
+	      else /* cast back to void * */
+		f_print(fout, "\treturn (void *) &result;\n}\n");
+	    }
 	  else
 	    f_print(fout, "\treturn retval;\n}\n");
 	}

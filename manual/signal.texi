@@ -978,7 +978,7 @@ the signal @var{signum}.
 The first argument, @var{signum}, identifies the signal whose behavior
 you want to control, and should be a signal number.  The proper way to
 specify a signal number is with one of the symbolic signal names
-described in @ref{Standard Signals}---don't use an explicit number, because
+(@pxref{Standard Signals})---don't use an explicit number, because
 the numerical code for a given kind of signal may vary from operating
 system to operating system.
 

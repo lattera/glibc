@@ -675,7 +675,7 @@ does so.  @xref{Time Zone Functions}.
 @deftypefun {char *} ctime_r (const time_t *@var{time}, char *@var{buffer})
 This function is similar to @code{ctime}, only that it places the result
 in the string pointed to by @var{buffer}.  It is equivalent to (written
-using gcc extensions, @xref{Statement Exprs,,,gcc,Porting and Using gcc}.):
+using gcc extensions, @pxref{Statement Exprs,,,gcc,Porting and Using gcc}):
 
 @smallexample
 (@{ struct tm tm; asctime_r (localtime_r (time, &tm), buf); @})

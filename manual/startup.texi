@@ -103,7 +103,7 @@ the options do not take arguments.  Thus, @samp{-abc} is equivalent to
 
 @item
 Option names are single alphanumeric characters (as for @code{isalnum};
-see @ref{Classification of Characters}).
+@pxref{Classification of Characters}).
 
 @item
 Certain options require an argument.  For example, the @samp{-o} command
@@ -376,8 +376,8 @@ value is nonzero.
 
 You can deal directly with the underlying representation of environment
 objects to add more variables to the environment (for example, to
-communicate with another program you are about to execute; see
-@ref{Executing a File}).
+communicate with another program you are about to execute;
+@pxref{Executing a File}).
 
 @comment unistd.h
 @comment POSIX.1
@@ -784,7 +784,7 @@ following things happen:
 @item
 All open file descriptors in the process are closed.  @xref{Low-Level I/O}.
 Note that streams are not flushed automatically when the process
-terminates; @xref{I/O on Streams}.
+terminates; see @ref{I/O on Streams}.
 
 @item
 The low-order 8 bits of the return status code are saved to be reported

@@ -429,7 +429,7 @@ extended or searched.
 The @code{tsearch} function searches in the tree pointed to by
 @code{*@var{rootp}} for an element matching @var{key}.  The function
 pointed to by @var{compar} is used to determine whether two elements
-match.  @xref{Comparison Functions} for a specification of the functions
+match.  @xref{Comparison Functions}, for a specification of the functions
 which can be used for the @var{compar} parameter.
 
 If the tree does not contain a matching entry the @var{key} value will

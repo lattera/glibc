@@ -1,4 +1,57 @@
-Mon Nov 16 11:17:31 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/opendir.c: Use o_directory_works differently.  Treat
+	zero value as uninitialized so that variable can go into .bss.
+
+	* dirent/opendir-tst1.c: Print error strings to stdout.
+
+	* sysdeps/unix/sysv/linux/mmap64.c: New file.  Empty.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add mmap with mmap64 alias.
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Add mmap64 alias.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+
+1998-11-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* time/tzfile.c (__tzfile_read): Check that types[i].isdst is in
+	range.
+
+1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/bits/stdio.h (fread_unlocked): Do handle zero size and number.
+	(fwrite_unlocked): Likewise.
+
+1998-11-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/bits/stdio.h (fread_unlocked): Don't evaluate non-constant
+	twice.  Don't bother handling zero size.
+	(frwite_unlocked): Likewise.
+
+1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* configure.in: Fix regex for makeinfo version string.
+
+1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sunrpc/rpc_sample.c (write_sample_server): Avoid -Wparentheses
+	warning.
+	* sunrpc/rpc_svcout.c (write_program): Likewise.
+
+1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* time/Makefile (CFLAGS-test_time.c): Add -Wno-format.
+
+1998-11-16  Ulrich Drepper  <drepper@cygnus.com
+
+	* misc/sys/mman.h: Pretty print prototypes.
+
+1998-11-15  Ulrich Drepper  <drepper@cygnus.com
+
+	* misc/error.c (error): Don't use result of strerror_r call directly
+	since at least DEC Unix has a wrong return type.
+	Patch by Johan Danielsson <joda@pdc.kth.se>.
+
+1998-11-16  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Undo
 	last change.

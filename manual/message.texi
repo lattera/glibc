@@ -279,8 +279,8 @@ functions if no supporting functionality is available.  Since each
 set/message number tuple must be unique the programmer must keep lists
 of the messages at the same time the code is written.  And the work
 between several people working on the same project must be coordinated.
-In @ref{Common Usage} we will see some how these problems can be relaxed
-a bit.
+We will see some how these problems can be relaxed a bit (@pxref{Common
+Usage}).
 
 @deftypefun int catclose (nl_catd @var{catalog_desc})
 The @code{catclose} function can be used to free the resources
@@ -817,8 +817,8 @@ be used.
 
 Please note that above we wrote ``message catalogs'' (plural).  This is
 a speciality of the GNU implementation of these functions and we will
-say more about this in section @xref{Locating gettext catalog} when we
-talk about the ways message catalogs are selected.
+say more about this when we talk about the ways message catalogs are
+selected (@pxref{Locating gettext catalog}).
 
 The @code{gettext} function does not modify the value of the global
 @var{errno} variable.  This is necessary to make it possible to write

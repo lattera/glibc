@@ -896,7 +896,7 @@ Allocate a block of @var{size} bytes, starting on an address that is a
 multiple of @var{boundary}.  @xref{Aligned Memory Blocks}.
 
 @item int mallopt (int @var{param}, int @var{value})
-Adjust a tunable parameter.  @xref{Malloc Tunable Parameters}
+Adjust a tunable parameter.  @xref{Malloc Tunable Parameters}.
 
 @item int mcheck (void (*@var{abortfn}) (void))
 Tell @code{malloc} to perform occasional consistency checks on

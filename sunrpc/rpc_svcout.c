@@ -602,12 +602,14 @@ write_program (const definition * def, const char *storage)
       f_print (fout, "\t}\n");
 
       if (!mtflag)
-	if (Cflag)
-	  f_print (fout, "\t%s = (*%s)((char *)&%s, %s);\n",
-		   RESULT, ROUTINE, ARG, RQSTP);
-	else
-	  f_print (fout, "\t%s = (*%s)(&%s, %s);\n",
-		   RESULT, ROUTINE, ARG, RQSTP);
+	{
+	  if (Cflag)
+	    f_print (fout, "\t%s = (*%s)((char *)&%s, %s);\n",
+		     RESULT, ROUTINE, ARG, RQSTP);
+	  else
+	    f_print (fout, "\t%s = (*%s)(&%s, %s);\n",
+		     RESULT, ROUTINE, ARG, RQSTP);
+	}
       else
 	if (Cflag)
 	  f_print(fout, "\t%s = (bool_t) (*%s)((char *)&%s, (void *)&%s, %s);\n",

@@ -42,15 +42,15 @@ __BEGIN_DECLS
 
 #ifndef __USE_FILE_OFFSET64
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, __off_t __offset));
+			  int __flags, int __fd, __off_t __offset));
 #else
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, __off_t __offset))
+			  int __flags, int __fd, __off_t __offset))
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
 extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off64_t __offset));
+			    int __flags, int __fd, __off64_t __offset));
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
@@ -94,7 +94,7 @@ extern int munlockall __P ((void));
    NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
    differ from ADDR.  */
 extern __ptr_t mremap __P ((__ptr_t __addr, size_t __old_len,
-			  size_t __new_len, int __may_move));
+			    size_t __new_len, int __may_move));
 #endif
 
 __END_DECLS

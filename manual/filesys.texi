@@ -3,10 +3,9 @@
 @chapter File System Interface
 
 This chapter describes the GNU C library's functions for manipulating
-files.  Unlike the input and output functions described in
-@ref{I/O on Streams} and @ref{Low-Level I/O}, these
-functions are concerned with operating on the files themselves, rather
-than on their contents.
+files.  Unlike the input and output functions (@pxref{I/O on Streams};
+@pxref{Low-Level I/O}), these functions are concerned with operating
+on the files themselves, rather than on their contents.
 
 Among the facilities described in this chapter are functions for
 examining or modifying directories, functions for renaming and deleting
@@ -396,7 +395,7 @@ the current working directory:
 The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
 alphabetizing them) before printing them; see
-@ref{Scanning Directory Content} and @ref{Array Sort Function}.
+@ref{Scanning Directory Content}, and @ref{Array Sort Function}.
 
 
 @node Random Access Directory

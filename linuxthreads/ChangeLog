@@ -1,3 +1,7 @@
+1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* linuxthreads.texi: Fix punctuation after xref.
+
 1998-11-10  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine NR_OPEN

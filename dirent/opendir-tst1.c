@@ -41,14 +41,14 @@ real_test (void)
   if (dirp != NULL)
     {
       /* Oh, oh, how can this work?  */
-      fputs ("`opendir' succeeded on a FIFO???\n", stderr);
+      fputs ("`opendir' succeeded on a FIFO???\n", stdout);
       closedir (dirp);
       return 1;
     }
 
   if (errno != ENOTDIR)
     {
-      fprintf (stderr, "`opendir' return error `%s' instead of `%s'\n",
+      fprintf (stdout, "`opendir' return error `%s' instead of `%s'\n",
 	       strerror (errno), strerror (ENOTDIR));
       return 1;
     }
