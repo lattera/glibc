@@ -53,8 +53,6 @@
    can be disabled by using the value _POSIX_VDISABLE.  */
 #define _POSIX_VDISABLE			((unsigned char) -1)
 
-#define _XBS5_ILP32_OFF32		1
-
 
 /* Different Hurd filesystems might do these differently.
    You must query the particular file with `pathconf' or `fpathconf'.  */
