@@ -172,7 +172,68 @@ extern int mknod __P ((__const char *__path,
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
 extern int mkfifo __P ((__const char *__path, __mode_t __mode));
+
+/* To allow the `struct stat' structure and the file type `mode_t' bits to
+   vary without changing shared library major version number, the `stat'
+   family of functions and `mknod' are in fact inline wrappers around calls
+   to `xstat', `fxstat', `lxstat', and `xmknod', which all take a leading
+   version-number argument designating the data structure and bits used.
+   <statbuf.h> defines _STAT_VER with the version number corresponding to
+   `struct stat' as defined in that file; and _MKNOD_VER with the version
+   number corresponding to the S_IF* macros defined therein.  It is
+   arranged that when not inlined these function are always statically
+   linked; that way a dynamically-linked executable always encodes the
+   version number corresponding to the data structures it uses, so the `x'
+   functions in the shared library can adapt without needing to recompile
+   all callers.  */
+
+#ifndef _STAT_VER
+#define _STAT_VER	0
+#endif
+#ifndef _MKNOD_VER
+#define _MKNOD_VER	0
+#endif
+
+/* Wrappers for stat and mknod system calls.  */
+extern int __fxstat __P ((int __ver, int __fildes,
+			  struct stat *__stat_buf));
+extern int __xstat __P ((int __ver, __const char *__filename,
+			 struct stat *__stat_buf));
+extern int __lxstat __P ((int __ver, __const char *__filename,
+			  struct stat *__stat_buf));
+extern int __xmknod __P ((int __ver, __const char *__path,
+			  __mode_t __mode, __dev_t *__dev));
+
+#if defined (__GNUC__) && __GNUC__ >= 2
+/* Inlined versions of the real stat and mknod functions.  */
+
+extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
+{ return __xstat (_STAT_VER, __path, __statbuf); }
+extern __inline__ int stat (__const char *__path, struct stat *__statbuf)
+{ return __xstat (_STAT_VER, __path, __statbuf); }
+
+extern __inline__ int __lstat(__const char *__path, struct stat *__statbuf)
+{ return __lxstat (_STAT_VER, __path, __statbuf); }
+extern __inline__ int lstat(__const char *__path, struct stat *__statbuf)
+{ return __lxstat (_STAT_VER, __path, __statbuf); }
+
+extern __inline__ int __fstat (int __fd, struct stat *__statbuf)
+{ return __fxstat (_STAT_VER, __fd, __statbuf); }
+extern __inline__ int fstat (int __fd, struct stat *__statbuf)
+{ return __fxstat (_STAT_VER, __fd, __statbuf); }
+
+extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
+			       __dev_t __dev)
+{ return __xmknod (_MKNOD_VER, __path, __mode, &__dev); }
+#if	defined(__USE_MISC) || defined(__USE_BSD)
+extern __inline__ int mknod (__const char *__path, __mode_t __mode,
+			     __dev_t __dev)
+{ return __xmknod (_MKNOD_VER, __path, __mode, &__dev); }
+#endif
+
+#endif
 
 __END_DECLS
+
 
 #endif /* sys/stat.h  */
