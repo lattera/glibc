@@ -29,20 +29,17 @@ Boston, MA 02111-1307, USA.  */
 
 __BEGIN_DECLS
 
-/* FIXME: should this go into <stddef.h>???  */
-#if 0
+/* We try to get wint_t from <stddef.h>, but not all GCC versions define it
+   there.  So define it ourselves if it remains undefined.  */
 #define __need_wint_t
 #include <stddef.h>
-#else
+#ifndef _WINT_T
 /* Integral type unchanged by default argument promotions that can
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
-#ifndef __have_wint_t_defined
-#define __have_wint_t_defined 1
-/* This is a hack!!! */
+#define _WINT_T
 typedef unsigned int wint_t;
-#endif
 #endif
 
 /* Scalar type that can hold values which represent locale-specific

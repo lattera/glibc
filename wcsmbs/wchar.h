@@ -34,6 +34,19 @@ __BEGIN_DECLS
 #define __need_NULL
 #include <stddef.h>
 
+
+/* We try to get wint_t from <stddef.h>, but not all GCC versions define it
+   there.  So define it ourselves if it remains undefined.  */
+#ifndef _WINT_T
+/* Integral type unchanged by default argument promotions that can
+   hold any value corresponding to members of the extended character
+   set, as well as at least one value that does not correspond to any
+   member of the extended character set.  */
+#define _WINT_T
+typedef unsigned int wint_t;
+#endif
+
+
 /* Conversion state information.  */
 typedef int mbstate_t; /* FIXME */
 
@@ -42,15 +55,6 @@ typedef int mbstate_t; /* FIXME */
 
 #ifndef WEOF
 # define WEOF (0xffffffffu)
-#endif
-
-#ifndef _WINT_T
-/* Integral type unchanged by default argument promotions that can
-   hold any value corresponding to members of the extended character
-   set, as well as at least one value that does not correspond to any
-   member of the extended character set.  */
-#define _WINT_T	1
-typedef unsigned int wint_t;
 #endif
 
 

@@ -1,6 +1,16 @@
 Sun May 26 15:15:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* time/Makefile (tzcompile): Add missing backslash.
+
 	* stdlib/ldiv.c: Deansideclized.
+
+	* wctype/wctype.h (__need_wint_t): Define this and include stddef.h.
+	[! _WINT_T] (wint_t): Conditionalize typedef on this in case pre-2.7.3
+	stddef.h doesn't define it.
+	* wcsmbs/wchar.h: Likewise.
+	* stdlib/strtod.c: Likewise.
+
+	* wcsmbs/wcstok.c: Fix argument name typo.
 
 Sun May 26 19:39:53 1996  Ulrich Drepper  <drepper@cygnus.com>
 

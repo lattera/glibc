@@ -364,6 +364,11 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* Contains the last character read.  */
   CHAR_TYPE c;
 
+/* We should get wint_t from <stddef.h>, but not all GCC versions define it
+   there.  So define it ourselves if it remains undefined.  */
+#ifndef _WINT_T
+  typedef unsigned int wint_t;
+#endif
   /* The radix character of the current locale.  */
   wint_t decimal;
   /* The thousands character of the current locale.  */

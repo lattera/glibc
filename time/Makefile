@@ -105,10 +105,8 @@ echo-zonenames: zonenames
 # specify it with -d on the command line so that it can be overridden on
 # the command line of `make install' (e.g., "make install prefix=/foo").
 zic-cmd = $(built-program-cmd) -d $(zonedir)
-define tzcompile
-$(zic-cmd)$(target-zone-flavor)
- -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
-endef
+tzcompile = $(zic-cmd)$(target-zone-flavor) -L $(word 3,$^) \
+	    -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 
 # The source files specify the zone names relative to the -d directory,
 # so for the posix/ and right/ flavors we need to pass -d $(zonedir)/posix
