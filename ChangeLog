@@ -1,3 +1,7 @@
+2000-10-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: New file.
+
 2000-10-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/nextmod1.c (failing_rtld_next_use): Ensure it is not tail call
