@@ -1554,7 +1554,7 @@ to signal the error but instead the return value now is this error code.
 The same error codes as described in the @code{getdate_err}
 documentation above are used.
 
-@code{getdate_err} also does not store the broken-down time in a static
+@code{getdate_r} also does not store the broken-down time in a static
 variable.  Instead it takes an second argument which must be a pointer
 to a variable of type @code{struct tm} where the broken-down can be
 stored.
@@ -1563,7 +1563,7 @@ This function is not defined in the Unix standard.  Nevertheless it is
 available on some other Unix systems as well.
 
 As for @code{getdate} the warning for using this function in
-SUID-programs applied to @code{getdate_r} as well.
+SUID-programs applies to @code{getdate_r} as well.
 @end deftypefun
 
 @node TZ Variable
