@@ -101,13 +101,13 @@ Foundation.
 @end titlepage
 @page
 
-@ifinfo
+@ifnottex
 @node Top, Introduction, (dir), (dir)
 @top Main Menu
 This is Edition @value{EDITION}, last updated @value{UPDATED}, of
 @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}
 of the GNU C Library.
-@end ifinfo
+@end ifnottex
 
 @include top-menu.texi
 @include chapters.texi

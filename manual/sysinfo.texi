@@ -341,6 +341,7 @@ gets stored.
 @end menu
 
 @node Mount Information, Mount-Unmount-Remount, , Filesystem Handling
+@subsection Mount Information
 
 For some programs it is desirable and necessary to access information
 about whether a certain filesystem is mounted and, if it is, where, or
@@ -384,7 +385,7 @@ names should always be used.
 @end menu
 
 @node fstab
-@subsection The @file{fstab} file
+@subsubsection The @file{fstab} file
 
 The internal representation for entries of the file is @w{@code{struct
 fstab}}, defined in @file{fstab.h}.
@@ -536,7 +537,7 @@ returns a @code{NULL} pointer.
 
 
 @node mtab
-@subsection The @file{mtab} file
+@subsubsection The @file{mtab} file
 The following functions and data structure access the @file{mtab} file.
 
 @comment mntent.h
@@ -746,7 +747,7 @@ when all options have to be processed one is better off with using the
 @end deftypefun
 
 @node Other Mount Information
-@subsection Other (Non-libc) Sources of Mount Information
+@subsubsection Other (Non-libc) Sources of Mount Information
 
 On a system with a Linux kernel and the @code{proc} filesystem, you can
 get information on currently mounted filesystems from the file
@@ -757,6 +758,7 @@ to date.
 
 
 @node Mount-Unmount-Remount, , Mount Information, Filesystem Handling
+@subsection Mount, Unmount, Remount
 
 This section describes the functions for mounting, unmounting, and
 remounting filesystems.

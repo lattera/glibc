@@ -528,7 +528,7 @@ get_ident (struct linereader *lr)
   ADDC (lr->buf[lr->idx - 1]);
 
   while (!isspace ((ch = lr_getc (lr))) && ch != '"' && ch != ';'
-	 && ch != '<' && ch != ',')
+	 && ch != '<' && ch != ',' && ch != EOF)
     {
       if (ch == lr->escape_char)
 	{
@@ -542,7 +542,7 @@ get_ident (struct linereader *lr)
       ADDC (ch);
     }
 
-  lr_ungetn (lr, 1);
+  lr_ungetc (lr, ch);
 
   kw = lr->hash_fct (buf, bufact);
 

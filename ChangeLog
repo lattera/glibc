@@ -1,3 +1,15 @@
+2001-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/linereader.c (get_ident): Stop loop if EOF.  Use
+	lr_ungetc to push back last read character.
+	* locale/programs/linereader.h (lr_ungetc): Don't push back is
+	character is EOF.
+	(lr_ignore_rest): Don't warn about garbage if it is really the end
+	of the file.
+
+	* manual/Makefile: Use ifnottext and not ifinfo to protect Top node
+	definition.
+
 2001-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules (build-shlib): Work around different order of

@@ -123,7 +123,8 @@ lr_ungetc (struct linereader *lr, int ch)
   if (lr->idx == 0)
     return -1;
 
-  lr->buf[--lr->idx] = ch;
+  if (ch != EOF)
+    lr->buf[--lr->idx] = ch;
   return 0;
 }
 
@@ -154,7 +155,8 @@ lr_ignore_rest (struct linereader *lr, int verbose)
 	else
 	  ++lr->idx;
 
-      if (lr->buf[lr->idx] != '\n' &&lr->buf[lr->idx] != lr->comment_char)
+      if (lr->buf[lr->idx] != '\n' && ! feof (lr->fp)
+	  && lr->buf[lr->idx] != lr->comment_char)
 	lr_error (lr, _("trailing garbage at end of line"));
     }
 
