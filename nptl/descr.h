@@ -86,7 +86,11 @@ struct pthread
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;
 
-  /* Two-level array for the thread-specific data.  */
+  /* True if events must be reported.  */
+  bool report_events;
+
+  /* We allocate one block of references here.  This should be enough
+     to avoid allocating any memory dynamically for most applications.  */
   struct pthread_key_data
   {
     /* Sequence number.  We use uintptr_t to not require padding on
@@ -96,20 +100,18 @@ struct pthread
 
     /* Data pointer.  */
     void *data;
-  } *specific[PTHREAD_KEY_1STLEVEL_SIZE];
-  /* We allocate one block of references here.  This should be enough
-     to avoid allocating any memory dynamically for most applications.  */
-  struct pthread_key_data specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
+  } specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
+
   /* Flag which is set when specific data is set.  */
   bool specific_used;
+
+  /* Two-level array for the thread-specific data.  */
+  struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
 
   /* True if the user provided the stack.  */
   bool user_stack;
 
-  /* True if events must be reported.  */
-  bool report_events;
-
-  /* Lock to syncronize access to the descriptor.  */
+  /* Lock to synchronize access to the descriptor.  */
   lll_lock_t lock;
 
 #if HP_TIMING_AVAIL
