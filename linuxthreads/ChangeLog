@@ -1,3 +1,12 @@
+2003-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/pthreadtypes.h (pthread_cond_t): Add padding.
+	* condvar.c: Add symbol versioning.  The compatibility versions
+	are the same as the change in the interface does not effect this
+	implementation.
+	* Versions [libpthread]: Add definitions for new pthread_cond_*
+	interfaces for version GLIBC_2.3.2.
+
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.h: Add libc_hidden_proto for

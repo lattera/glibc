@@ -65,8 +65,9 @@ libpthread-routines = init events \
 		      pthread_rwlockattr_getkind_np \
 		      pthread_rwlockattr_setkind_np \
 		      pthread_cond_init pthread_cond_destroy \
-		      pthread_cond_wait pthread_cond_timedwait \
-		      pthread_cond_signal pthread_cond_broadcast \
+		      old_pthread_cond_init old_pthread_cond_destroy \
+		      old_pthread_cond_wait old_pthread_cond_timedwait \
+		      old_pthread_cond_signal old_pthread_cond_broadcast \
 		      pthread_condattr_init pthread_condattr_destroy \
 		      pthread_condattr_getpshared pthread_condattr_setpshared \
 		      pthread_spin_init pthread_spin_destroy \

@@ -17,13 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdlib.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_destroy (cond)
+__old_pthread_cond_destroy (cond)
      pthread_cond_t *cond;
 {
+  /* Free the memory which was eventually allocated.  */
+  free (*(void **) cond);
+
   return 0;
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+compat_symbol (libpthread, __old_pthread_cond_destroy, pthread_cond_destroy,
+	       GLIBC_2_0);
+#endif

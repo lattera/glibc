@@ -57,6 +57,8 @@ typedef struct
 {
   struct _pthread_fastlock __c_lock; /* Protect against concurrent access */
   _pthread_descr __c_waiting;        /* Threads waiting on this condition */
+  char __padding[48 - sizeof (struct _pthread_fastlock)
+		 - sizeof (_pthread_descr)];
 } pthread_cond_t;
 
 

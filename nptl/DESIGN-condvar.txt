@@ -7,49 +7,78 @@ Conditional Variable pseudocode.
 
 struct pthread_cond_t {
 
-   unsigned int lock:
+   unsigned int cond_lock;
 
          internal mutex
 
-   unsigned int nr_wakers:
+   uint64_t total_seq;
 
-         number of threads signalled to be woken up.
+     Total number of threads using the conditional variable.
 
-   unsigned int nr_sleepers:
+   uint64_t wakeup_seq;
 
-         number of threads waiting for the cv.
+     sequence number for next wakeup.
+
+   uint64_t woken_seq;
+
+     sequence number of last woken thread.
 
 }
 
-#define ALL_THREADS (1 << (BITS_PER_LONG-1))
 
-cond_wait_timeout(cv, mutex, timeout):
+
+cleanup_handler(cv)
+{
+  lll_lock(cv->lock);
+
+  ++cv->wakeup_seq;
+  ++cv->woken_seq;
+
+  lll_unlock(cv->lock);
+}
+
+
+cond_timedwait(cv, mutex, timeout):
 {
    lll_lock(cv->lock);
    mutex_unlock(mutex);
 
-   cv->nr_sleepers++;
-   for (;;) {
+   cleanup_push
 
-       if (cv->nr_wakers) {
-           cv->nr_wakers--;
-           break;
-       }
-       val = cv->nr_wakers;
+   ++cv->total_seq;
+   val = seq =  cv->wakeup_seq;
 
-       lll_unlock(cv->lock);
+   while (1) {
 
-       ret = FUTEX WAIT (cv->nr_wakers, val, timeout)
+     lll_unlock(cv->lock);
 
-       lll_lock(cv->lock);
+     enable_async
 
-       if (ret == TIMEOUT)
-         break;
+     ret = FUTEX_WAIT(cv->wakeup_seq, val, timeout);
+
+     restore_async
+
+     lll_lock(cv->lock);
+
+     val = cv->wakeup_seq;
+
+     if (cv->woken_seq >= seq && cv->woken_seq < val) {
        ret = 0;
+       break;
+     }
+
+     if (ret == TIMEDOUT) {
+       ++cv->wakeup_seq;
+       break;
+     }
    }
-   if (!--cv->nr_sleepers)
-     cv->nr_wakers = 0; /* no memory of wakeups */
+
+   ++cv->woken_seq;
+
    lll_unlock(cv->lock);
+
+   cleanup_pop
+
    mutex_lock(mutex);
 
    return ret;
@@ -57,34 +86,24 @@ cond_wait_timeout(cv, mutex, timeout):
 
 cond_signal(cv)
 {
-   int do_wakeup = 0;
-
    lll_lock(cv->lock);
-   if (cv->nr_sleepers) {
-     if (!++cv->nr_wakers) /* overflow detection for the nutcase */
-       cv->nr_wakers = ALL_THREADS;
-     do_wakeup = 1;
+
+   if (cv->total_seq > cv->wakeup_seq) {
+     ++cv->wakeup_seq;
+     FUTEX_WAKE(cv->wakeup_seq, 1);
    }
+
    lll_unlock(cv->lock);
-   if (do_wakeup)
-     FUTEX WAKE (cv->nr_wakers, 1)
 }
 
 cond_broadcast(cv)
 {
-   int do_wakeup = 0;
-
    lll_lock(cv->lock);
-   if (cv->nr_sleepers) {
-     cv->nr_wakers |= ALL_THREADS;
-     do_wakeup = 1;
+
+   if (cv->total_seq > cv->wakeup_seq) {
+     cv->wakeup_seq = cv->total_seq;
+     FUTEX_WAKE(cv->wakeup_seq, ALL);
    }
+
    lll_unlock(cv->lock);
-   if (do_wakeup)
-     FUTEX WAKE (cv->nr_wakers, ALL_THREADS);
 }
-
-weaknesses of the implementation:
-
- it might generate spurious wakeups in the broadcast case, but those are
- allowed by POSIX.

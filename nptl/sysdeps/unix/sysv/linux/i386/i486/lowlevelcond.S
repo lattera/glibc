@@ -18,8 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-
-	.text
+#include <shlib-compat.h>
 
 #ifdef UP
 # define LOCK
@@ -32,248 +31,622 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 
-#define EWOULDBLOCK		11
-#define EINVAL			22
 #define ETIMEDOUT		110
 
-#define cond_lock	 0
-#define cond_nr_wakers	 4
-#define cond_nr_sleepers 8
+#define cond_lock	0
+#define total_seq	4
+#define wakeup_seq	12
+#define woken_seq	20
 
 
-	.global	__lll_cond_wait
-	.type	__lll_cond_wait,@function
-	.hidden	__lll_cond_wait
+	.text
+
 	.align	16
-__lll_cond_wait:
+	.type	condvar_cleanup, @function
+condvar_cleanup:
+	pushl	%ebx
+	movl	4(%esp), %ebx
+#if cond_lock != 0
+	addl	$cond_lock, %ebx
+#endif
+
+	/* Get internal lock.  */
+	movl	$1, %eax
+	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
+	testl	%eax, %eax
+	je	1f
+
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+
+1:	addl	$1, wakeup_seq(%ebx)
+	adcl	$0, wakeup_seq+4(%ebx)
+
+	addl	$1, woken_seq(%ebx)
+	adcl	$0, woken_seq+4(%ebx)
+
+	LOCK
+	decl	(%ebx)
+	je	2f
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+
+2:	popl	%ebx
+	ret
+	.size	condvar_cleanup, .-condvar_cleanup
+
+
+/* int pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)  */
+	.globl	__pthread_cond_wait
+	.type	__pthread_cond_wait, @function
+	.align	16
+__pthread_cond_wait:
+
+	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 
 	xorl	%esi, %esi
+	movl	16(%esp), %ebx
+#if cond_lock != 0
+	addl	$cond_lock, %ebx
+#endif
 
-	leal	cond_nr_wakers(%eax), %ebx
-
-4:	movl	(%ebx), %edx
-	testl	%edx, %edx
-	jne	1f
-
-	LOCK
-	decl	cond_lock-cond_nr_wakers(%ebx)
-	jne	2f
-
-3:	xorl	%ecx, %ecx
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
-
+	/* Get internal lock.  */
 	movl	$1, %eax
 	LOCK
-	xaddl	%eax, cond_lock-cond_nr_wakers(%ebx)
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
 	testl	%eax, %eax
-	je	4b
+	jne	1f
 
-	leal	cond_lock-cond_nr_wakers(%ebx), %ecx
-	/* Preserves %ebx, %edx, %edi, %esi.  */
-	call	__lll_mutex_lock_wait
-	jmp	4b
+	/* Unlock the mutex.  */
+2:	pushl	20(%esp)
+	call	__pthread_mutex_unlock_internal
 
-1:	decl	(%ebx)
+	addl	$1, total_seq(%ebx)
+	adcl	$0, total_seq+4(%ebx)
+
+	/* Install cancellation handler.  */
+#ifdef PIC
+	call	__i686.get_pc_thunk.cx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
+	leal	condvar_cleanup@GOTOFF(%ecx), %eax
+#else
+	leal	condvar_cleanup, %eax
+#endif
+	subl	$24, %esp
+	leal	12(%esp), %edx
+	movl	%ebx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%edx, (%esp)
+	call	_GI_pthread_cleanup_push
+
+	/* Get and store current wakeup_seq value.  */
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
+	movl	%edi, (%esp)
+	movl	%edx, 4(%esp)
+
+	/* Unlock.  */
+8:	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	3f
+
+4:	call	__pthread_enable_asynccancel
+	movl	%eax, (%esp)
+
+	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
+	movl	%edi, %edx
+	addl	$wakeup_seq-cond_lock, %ebx
+	movl	$SYS_futex, %eax
+	ENTER_KERNEL
+	subl	$wakeup_seq-cond_lock, %ebx
+
+	call	__pthread_disable_asynccancel
+
+	/* Lock.  */
+	movl	$1, %eax
+	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
+	testl	%eax, %eax
+	jne	5f
+
+6:	movl	woken_seq(%ebx), %eax
+	movl	woken_seq+4(%ebx), %ecx
+
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
+
+	cmpl	4(%esp), %ecx
+	ja	7f
+	jb	8b
+	cmpl	(%esp), %eax
+	jb	8b
+
+7:	cmpl	%ecx, %edx
+	ja	9f
+	jb	8b
+	cmp	%eax, %edi
+	jna	8b
+
+9:	addl	$1, woken_seq(%ebx)
+	adcl	$0, woken_seq+4(%ebx)
+
+	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	10f
+
+	/* Remove cancellation handler.  */
+11:	leal	12(%esp), %edx
+	movl	$0, 4(%esp)
+	movl	%edx, (%esp)
+	call	_GI_pthread_cleanup_pop
+
+	movl	48(%esp), %eax
+	movl	%eax, (%esp)
+	call	__pthread_mutex_lock_internal
+	addl	$28, %esp
 
 	popl	%ebx
 	popl	%esi
+	popl	%edi
+
+	/* We return the result of the mutex_lock operation.  */
 	ret
 
-2:	leal	cond_lock-cond_nr_wakers(%ebx), %eax
-	/* Preserves %ebx, %ecx, %edx, %edi, %esi.  */
+	/* Initial locking failed.  */
+1:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+	jmp	2b
+
+	/* Unlock in loop requires waekup.  */
+3:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
 	call	__lll_mutex_unlock_wake
-	jmp	3b
-	.size	__lll_cond_wait,.-__lll_cond_wait
+	jmp	4b
+
+	/* Locking in loop failed.  */
+5:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+	jmp	6b
+
+	/* Unlock after loop requires waekup.  */
+10:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	11b
+	.size	__pthread_cond_wait, .-__pthread_cond_wait
+versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
+		  GLIBC_2_3_2)
 
 
-	.global	__lll_cond_timedwait
-	.type	__lll_cond_timedwait,@function
-	.hidden	__lll_cond_timedwait
+/* int pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			       const struct timespec *abstime)  */
+	.globl	__pthread_cond_timedwait
+	.type	__pthread_cond_timedwait, @function
 	.align	16
-__lll_cond_timedwait:
-	/* Check for a valid timeout value.  */
-	cmpl	$1000000000, 4(%edx)
-	jae	1f
+__pthread_cond_timedwait:
 
 	pushl	%ebp
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 
-	/* Stack frame for the timespec and timeval structs.  */
-	subl	$8, %esp
+	movl	20(%esp), %ebx
+	movl	28(%esp), %ebp
+#if cond_lock != 0
+	addl	$cond_lock, %ebx
+#endif
 
-	leal	cond_nr_wakers(%eax), %ebp	/* cond */
-	movl	%edx, %edi			/* timeout */
-
-9:	movl	(%ebp), %esi
-	testl	%esi, %esi
-	jne	5f
-
+	/* Get internal lock.  */
+	movl	$1, %eax
 	LOCK
-	decl	cond_lock-cond_nr_wakers(%ebp)
-	jne	6f
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
+	testl	%eax, %eax
+	jne	1f
 
-	/* Get current time.  */
-7:	movl	%esp, %ebx
+	/* Unlock the mutex.  */
+2:	pushl	24(%esp)
+	call	__pthread_mutex_unlock_internal
+
+	addl	$1, total_seq(%ebx)
+	adcl	$0, total_seq+4(%ebx)
+
+	/* Install cancellation handler.  */
+#ifdef PIC
+	call	__i686.get_pc_thunk.cx
+	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
+	leal	condvar_cleanup@GOTOFF(%ecx), %eax
+#else
+	leal	condvar_cleanup, %eax
+#endif
+	subl	$32, %esp
+	leal	16(%esp), %edx
+	movl	%ebx, 8(%esp)
+	movl	%eax, 4(%esp)
+	movl	%edx, (%esp)
+	call	_GI_pthread_cleanup_push
+
+	/* Get and store current wakeup_seq value.  */
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
+	movl	%edi, 12(%esp)
+	movl	%edx, 16(%esp)
+
+	/* Unlock.  */
+8:	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	3f
+
+4:	call	__pthread_enable_asynccancel
+	movl	%eax, (%esp)
+
+	/* Get the current time.  */
+	movl	%ebx, %edx
+	leal	4(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
 	ENTER_KERNEL
+	movl	%edx, %ebx
 
 	/* Compute relative timeout.  */
-	movl	4(%esp), %eax
+	movl	8(%esp), %eax
 	movl	$1000, %edx
 	mul	%edx		/* Milli seconds to nano seconds.  */
-	movl	(%edi), %ecx
-	movl	4(%edi), %edx
-	subl	(%esp), %ecx
+	movl	(%ebp), %ecx
+	movl	4(%ebp), %edx
+	subl	4(%esp), %ecx
 	subl	%eax, %edx
-	jns	3f
+	jns	12f
 	addl	$1000000000, %edx
 	decl	%ecx
-3:	testl	%ecx, %ecx
-	js	4f		/* Time is already up.  */
+12:	testl	%ecx, %ecx
+	js	13f
 
-	movl	%ecx, (%esp)	/* Store relative timeout.  */
-	movl	%edx, 4(%esp)
-	movl	%esi, %edx
-	movl	%esp, %esi
+	/* Store relative timeout.  */
+	movl	%ecx, 4(%esp)
+	movl	%edx, 8(%esp)
+	leal	4(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
-	movl	%ebp, %ebx
+	movl	%edi, %edx
+	addl	$wakeup_seq-cond_lock, %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
+	subl	$wakeup_seq-cond_lock, %ebx
+	movl	%eax, %esi
 
-	movl	%eax, %edx
+	call	__pthread_disable_asynccancel
 
+	/* Lock.  */
 	movl	$1, %eax
 	LOCK
-	xaddl	%eax, cond_lock-cond_nr_wakers(%ebp)
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
+	xaddl	%eax, cond_lock(%ebx)
+#endif
 	testl	%eax, %eax
-	jne	8f
+	jne	5f
 
-	cmpl	$-ETIMEDOUT, %edx
-	jne	9b
+6:	movl	woken_seq(%ebx), %eax
+	movl	woken_seq+4(%ebx), %ecx
 
-4:	movl	$ETIMEDOUT, %eax
-	jmp	2f
+	movl	wakeup_seq(%ebx), %edi
+	movl	wakeup_seq+4(%ebx), %edx
 
-5:	decl	(%ebp)
-	xorl	%eax, %eax
+	cmpl	16(%esp), %ecx
+	ja	7f
+	jb	15f
+	cmpl	12(%esp), %eax
+	jb	15f
 
-2:	addl	$8, %esp
+7:	cmpl	%ecx, %edx
+	ja	9f
+	jb	15f
+	cmp	%eax, %edi
+	ja	9f
+
+15:	cmpl	$-ETIMEDOUT, %esi
+	jne	8b
+
+13:	addl	$1, wakeup_seq(%ebx)
+	adcl	$0, wakeup_seq+4(%ebx)
+	movl	$ETIMEDOUT, %esi
+	jmp	14f
+
+9:	xorl	%esi, %esi
+14:	addl	$1, woken_seq(%ebx)
+	adcl	$0, woken_seq+4(%ebx)
+
+	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	10f
+
+	/* Remove cancellation handler.  */
+11:	leal	20(%esp), %edx
+	movl	$0, 4(%esp)
+	movl	%edx, (%esp)
+	call	_GI_pthread_cleanup_pop
+
+	movl	60(%esp), %ecx
+	movl	%ecx, (%esp)
+	call	__pthread_mutex_lock_internal
+	addl	$36, %esp
+
+	movl	%esi, %eax
+
 	popl	%ebx
 	popl	%esi
 	popl	%edi
 	popl	%ebp
+
+	/* We return the result of the mutex_lock operation.  */
 	ret
 
-6:	leal	cond_lock-cond_nr_wakers(%ebp), %eax
-	/* Preserves %ebx, %ecx, %edx, %edi, %esi.  */
-	call	__lll_mutex_unlock_wake
-	jmp	7b
-
-8:	leal	cond_lock-cond_nr_wakers(%ebp), %ecx
-	/* Preserves %ebx, %edx, %edi, %esi.  */
-	call	__lll_mutex_lock_wait
-	jmp	5b
-
-1:	movl	$EINVAL, %eax
-	ret
-	.size	__lll_cond_timedwait,.-__lll_cond_timedwait
-
-
-	.global	__lll_cond_wake
-	.type	__lll_cond_wake,@function
-	.hidden	__lll_cond_wake
-	.align	16
-__lll_cond_wake:
-	pushl	%esi
-	pushl	%ebx
-
-	movl	%eax, %ebx
-
-	movl	$1, %eax
-	LOCK
-	xaddl	%eax, (%ebx)
-	testl	%eax, %eax
-	jne	1f
-
-2:	leal	cond_nr_wakers(%ebx), %ebx
-	cmpl	$0, cond_nr_sleepers-cond_nr_wakers(%ebx)
-	je	3f
-
-	incl	(%ebx)
-	jz	5f
-
-6:	movl	$FUTEX_WAKE, %ecx
-	xorl	%esi, %esi
-	movl	%ecx, %edx	/* movl $1, %edx */
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
-
-3:	LOCK
-	decl	cond_lock-cond_nr_wakers(%ebx)
-	je,pt	4f
-
-	leal	cond_lock-cond_nr_wakers(%ebx), %eax
-	call	__lll_mutex_unlock_wake
-
-4:	popl	%ebx
-	popl	%esi
-	ret
-
-1:	movl	%ebx, %ecx
+	/* Initial locking failed.  */
+1:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-5:	movl	$0x80000000, (%ebx)
+	/* Unlock in loop requires waekup.  */
+3:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	4b
+
+	/* Locking in loop failed.  */
+5:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
 	jmp	6b
-	.size	__lll_cond_wake,.-__lll_cond_wake
+
+	/* Unlock after loop requires waekup.  */
+10:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	11b
+	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
+versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
+		  GLIBC_2_3_2)
 
 
-	.global	__lll_cond_broadcast
-	.type	__lll_cond_broadcast,@function
-	.hidden	__lll_cond_broadcast
+	/* int pthread_cond_signal (pthread_cond_t *cond) */
+	.globl	__pthread_cond_signal
+	.type	__pthread_cond_signal, @function
 	.align	16
-__lll_cond_broadcast:
+__pthread_cond_signal:
+
 	pushl	%esi
 	pushl	%ebx
+#if cond_lock != 0
+	addl	$cond_lock, %ebx
+#endif
 
-	movl	%eax, %ebx
-	movl	$0x8000000, %edx
+	movl	12(%esp), %ebx
 
+	/* Get internal lock.  */
 	movl	$1, %eax
 	LOCK
-	xaddl	%eax, (%ebx)
+	xaddl	%eax, cond_lock(%ebx)
 	testl	%eax, %eax
 	jne	1f
 
-2:	leal	cond_nr_wakers(%ebx), %ebx
-	cmpl	$0, cond_nr_sleepers-cond_nr_wakers(%ebx)
-	je	3f
+2:	movl	total_seq+4(%ebx), %eax
+	movl	total_seq(%ebx), %ecx
+	cmpl	wakeup_seq+4(%ebx), %eax
+	ja	3f
+	jb	4f
+	cmpl	wakeup_seq(%ebx), %ecx
+	jbe	4f
 
-	orl	%edx, (%ebx)
+	/* Bump the wakeup number.  */
+3:	addl	$1, wakeup_seq(%ebx)
+	adcl	$0, wakeup_seq+4(%ebx)
 
-6:	movl	$FUTEX_WAKE, %ecx
+	/* Wake up one thread.  */
+	addl	$wakeup_seq-cond_lock, %ebx
+	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
+	movl	%ecx, %edx	/* movl $1, %edx */
 	ENTER_KERNEL
 
-3:	LOCK
-	decl	cond_lock-cond_nr_wakers(%ebx)
-	je,pt	4f
+	subl	$wakeup_seq-cond_lock, %ebx
 
-	leal	cond_lock-cond_nr_wakers(%ebx), %eax
-	call	__lll_mutex_unlock_wake
+	/* Unlock.  */
+4:	LOCK
+	decl	cond_lock(%ebx)
+	jne	5f
 
-4:	popl	%ebx
+6:	xorl	%eax, %eax
+	popl	%ebx
 	popl	%esi
 	ret
 
-1:	movl	%ebx, %ecx
+	/* Initial locking failed.  */
+1:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
-	.size	__lll_cond_broadcast,.-__lll_cond_broadcast
+
+	/* Unlock in loop requires waekup.  */
+5:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	6b
+	.size	__pthread_cond_signal, .-__pthread_cond_signal
+versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
+		  GLIBC_2_3_2)
+
+
+	/* int pthread_cond_broadcast (pthread_cond_t *cond) */
+	.globl	__pthread_cond_broadcast
+	.type	__pthread_cond_broadcast, @function
+	.align	16
+__pthread_cond_broadcast:
+
+	pushl	%esi
+	pushl	%ebx
+
+	movl	12(%esp), %ebx
+#if cond_lock != 0
+	addl	$cond_lock, %ebx
+#endif
+
+	/* Get internal lock.  */
+	movl	$1, %eax
+	LOCK
+	xaddl	%eax, cond_lock(%ebx)
+	testl	%eax, %eax
+	jne	1f
+
+2:	movl	total_seq+4(%ebx), %eax
+	movl	total_seq(%ebx), %ecx
+	cmpl	wakeup_seq+4(%ebx), %eax
+	ja	3f
+	jb	4f
+	cmpl	wakeup_seq(%ebx), %ecx
+	jna	4f
+
+	/* Case all currently waiting threads to wake up.  */
+3:	movl	%ecx, wakeup_seq(%ebx)
+	movl	%eax, wakeup_seq+4(%ebx)
+
+	/* Wake up all threads.  */
+	addl	$wakeup_seq-cond_lock, %ebx
+	movl	$FUTEX_WAKE, %ecx
+	xorl	%esi, %esi
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %edx
+	ENTER_KERNEL
+
+	subl	$wakeup_seq-cond_lock, %ebx
+
+	/* Unlock.  */
+4:	LOCK
+	decl	cond_lock(%ebx)
+	jne	5f
+
+6:	xorl	%eax, %eax
+	popl	%ebx
+	popl	%esi
+	ret
+
+	/* Initial locking failed.  */
+1:
+#if cond_lock == 0
+	movl	%ebx, %ecx
+#else
+	leal	cond_lock(%ebx), %ecx
+#endif
+	call	__lll_mutex_lock_wait
+	jmp	2b
+
+	/* Unlock in loop requires waekup.  */
+5:
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	6b
+	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
+versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
+		  GLIBC_2_3_2)
+
+
+#ifdef PIC
+	.section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits
+	.globl	__i686.get_pc_thunk.cx
+	.hidden	__i686.get_pc_thunk.cx
+	.type	__i686.get_pc_thunk.cx,@function
+__i686.get_pc_thunk.cx:
+	movl (%esp), %ecx;
+	ret
+	.size	__i686.get_pc_thunk.cx,.-__i686.get_pc_thunk.cx
+#endif

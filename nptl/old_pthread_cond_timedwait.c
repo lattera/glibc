@@ -17,13 +17,32 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <stdlib.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_destroy (cond)
+__old_pthread_cond_timedwait (cond, mutex, abstime)
      pthread_cond_t *cond;
+     pthread_mutex_t *mutex;
+     const struct timespec *abstime;
 {
-  return 0;
+  pthread_cond_t **realp = (pthread_cond_t **) cond;
+
+  if (*realp == NULL)
+    {
+      *realp = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
+      if (*realp == NULL)
+	return ENOMEM;
+
+      **realp = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    }
+
+  return __pthread_cond_timedwait (*realp, mutex, abstime);
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+compat_symbol (libpthread, __old_pthread_cond_timedwait,
+	       pthread_cond_timedwait, GLIBC_2_0);
+#endif

@@ -30,8 +30,9 @@ __pthread_cond_init (cond, cond_attr)
      variables are always usable in multiple processes.  */
 
   cond->__data.__lock = LLL_MUTEX_LOCK_INITIALIZER;
-  cond->__data.__nr_wakers = 0;
-  cond->__data.__nr_sleepers = 0;
+  cond->__data.__total_seq = 0;
+  cond->__data.__wakeup_seq = 0;
+  cond->__data.__woken_seq = 0;
 
   return 0;
 }

@@ -1,3 +1,28 @@
+2003-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
+	New, larger type definition.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S: New condvar
+	implementation.
+	* Versions [libpthread]: Add definitions for new pthread_cond_*
+	interfaces for version GLIBC_2.3.2.
+	* pthread_cond_init.c: Update initialization for new type definition.
+	* Makefile (libpthread-routines): Remove pthread_cond_wait,
+	pthread_cond_timedwait, pthread_cond_signal, and
+	pthread_cond_broadcast.  Add old_pthread_cond_init,
+	old_pthread_cond_destroy, old_pthread_cond_wait,
+	old_pthread_cond_timedwait, old_pthread_cond_signal, and
+	old_pthread_cond_broadcast.
+	* old_pthread_cond_broadcast.c: New file.
+	* old_pthread_cond_destroy.c: New file.
+	* old_pthread_cond_init.c: New file.
+	* old_pthread_cond_signal.c: New file.
+	* old_pthread_cond_timedwait.c: New file.
+	* old_pthread_cond_wait.c: New file.
+	* pthreadP.h: Add prototypes for the compatibility interfaces.
+
+	* pthread_cond_destroy.c: Don't include <errno.h>.
+
 2003-01-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrwlock.S: Avoid

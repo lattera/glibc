@@ -17,13 +17,30 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <stdlib.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_destroy (cond)
+__old_pthread_cond_signal (cond)
      pthread_cond_t *cond;
 {
-  return 0;
+  pthread_cond_t **realp = (pthread_cond_t **) cond;
+
+  if (*realp == NULL)
+    {
+      *realp = (pthread_cond_t *) malloc (sizeof (pthread_cond_t));
+      if (*realp == NULL)
+	return ENOMEM;
+
+      **realp = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+    }
+
+  return __pthread_cond_signal (*realp);
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+compat_symbol (libpthread, __old_pthread_cond_signal, pthread_cond_signal,
+	       GLIBC_2_0);
+#endif

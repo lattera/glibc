@@ -315,6 +315,17 @@ extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 
+extern int __old_pthread_cond_broadcast (pthread_cond_t *cond);
+extern int __old_pthread_cond_destroy (pthread_cond_t *cond);
+extern int __old_pthread_cond_init (pthread_cond_t *cond,
+				    const pthread_condattr_t *cond_attr);
+extern int __old_pthread_cond_signal (pthread_cond_t *cond);
+extern int __old_pthread_cond_timedwait (pthread_cond_t *cond,
+					 pthread_mutex_t *mutex,
+					 const struct timespec *abstime);
+extern int __old_pthread_cond_wait (pthread_cond_t *cond,
+				    pthread_mutex_t *mutex);
+
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)

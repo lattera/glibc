@@ -24,6 +24,7 @@
 #include "spinlock.h"
 #include "queue.h"
 #include "restart.h"
+#include <shlib-compat.h>
 
 int __pthread_cond_init(pthread_cond_t *cond,
                         const pthread_condattr_t *cond_attr)
@@ -32,14 +33,26 @@ int __pthread_cond_init(pthread_cond_t *cond,
   cond->__c_waiting = NULL;
   return 0;
 }
-strong_alias (__pthread_cond_init, pthread_cond_init)
+versioned_symbol (libpthread, __pthread_cond_init, pthread_cond_init,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_init, __old_pthread_cond_init)
+compat_symbol (libpthread, __old_pthread_cond_init, pthread_cond_init,
+	       GLIBC_2_0);
+#endif
 
 int __pthread_cond_destroy(pthread_cond_t *cond)
 {
   if (cond->__c_waiting != NULL) return EBUSY;
   return 0;
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+versioned_symbol (libpthread, __pthread_cond_destroy, pthread_cond_destroy,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_destroy, __old_pthread_cond_destroy)
+compat_symbol (libpthread, __old_pthread_cond_destroy, pthread_cond_destroy,
+	       GLIBC_2_0);
+#endif
 
 /* Function called by pthread_cancel to remove the thread from
    waiting on a condition variable queue. */
@@ -134,7 +147,13 @@ int __pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   pthread_mutex_lock(mutex);
   return 0;
 }
-strong_alias (__pthread_cond_wait, pthread_cond_wait)
+versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_wait, __old_pthread_cond_wait)
+compat_symbol (libpthread, __old_pthread_cond_wait, pthread_cond_wait,
+	       GLIBC_2_0);
+#endif
 
 static int
 pthread_cond_timedwait_relative(pthread_cond_t *cond,
@@ -230,12 +249,19 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   return 0;
 }
 
-int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                           const struct timespec * abstime)
+int __pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+			     const struct timespec * abstime)
 {
   /* Indirect call through pointer! */
   return pthread_cond_timedwait_relative(cond, mutex, abstime);
 }
+versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_timedwait, __old_pthread_cond_timedwait)
+compat_symbol (libpthread, __old_pthread_cond_timedwait,
+	       pthread_cond_timedwait, GLIBC_2_0);
+#endif
 
 int __pthread_cond_signal(pthread_cond_t *cond)
 {
@@ -251,7 +277,13 @@ int __pthread_cond_signal(pthread_cond_t *cond)
   }
   return 0;
 }
-strong_alias (__pthread_cond_signal, pthread_cond_signal)
+versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_signal, __old_pthread_cond_signal)
+compat_symbol (libpthread, __old_pthread_cond_signal, pthread_cond_signal,
+	       GLIBC_2_0);
+#endif
 
 int __pthread_cond_broadcast(pthread_cond_t *cond)
 {
@@ -270,7 +302,13 @@ int __pthread_cond_broadcast(pthread_cond_t *cond)
   }
   return 0;
 }
-strong_alias (__pthread_cond_broadcast, pthread_cond_broadcast)
+versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
+		  GLIBC_2_3_2);
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_broadcast, __old_pthread_cond_broadcast)
+compat_symbol (libpthread, __old_pthread_cond_broadcast,
+	       pthread_cond_broadcast, GLIBC_2_0);
+#endif
 
 int __pthread_condattr_init(pthread_condattr_t *attr)
 {

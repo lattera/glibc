@@ -18,12 +18,26 @@
    02111-1307 USA.  */
 
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
-__pthread_cond_destroy (cond)
+__old_pthread_cond_init (cond, cond_attr)
      pthread_cond_t *cond;
+     const pthread_condattr_t *cond_attr;
 {
+  /* Note that we don't need the COND-ATTR.  It contains only the
+     PSHARED flag which is unimportant here since conditional
+     variables are always usable in multiple processes.  */
+
+  /* The type of the first argument is actually that of the old, too
+     small pthread_cond_t.  We use only the first word of it, as a
+     pointer.  */
+  *((void **) cond) = NULL;
+
   return 0;
 }
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
+compat_symbol (libpthread, __old_pthread_cond_init, pthread_cond_init,
+	       GLIBC_2_0);
+#endif
