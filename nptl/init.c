@@ -255,12 +255,17 @@ __pthread_initialize_minimal_internal (void)
       || limit.rlim_cur == RLIM_INFINITY)
     /* The system limit is not usable.  Use an architecture-specific
        default.  */
-    limit.rlim_cur = ARCH_STACK_DEFAULT_SIZE;
-
-  __default_stacksize = MAX (limit.rlim_cur, PTHREAD_STACK_MIN);
-  /* The maximum page size better should be a multiple of the page
-     size.  */
-  assert (__default_stacksize % __sysconf (_SC_PAGESIZE) == 0);
+    __default_stacksize = ARCH_STACK_DEFAULT_SIZE;
+  else if (limit.rlim_cur < PTHREAD_STACK_MIN)
+    /* The system limit is unusably small.
+       Use the minimal size acceptable.  */
+    __default_stacksize = PTHREAD_STACK_MIN;
+  else
+    {
+      /* Round the resource limit up to page size.  */
+      const uintptr_t pagesz = __sysconf (_SC_PAGESIZE);
+      __default_stacksize = (limit.rlim_cur + pagesz - 1) & -pagesz;
+    }
 
   /* Get the size of the static and alignment requirements for the TLS
      block.  */
