@@ -1,3 +1,10 @@
+2003-05-05  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (common-before-compile): New variable.
+	($(common-objpfx)%.make): Depend on that instead of $(before-compile).
+	($(common-objpfx)%.h $(common-objpfx)%.h.d): Likewise.  Move this rule
+	to after all setting of before-compile.
+
 2003-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/bits/atomic.h (__arch_compare_and_exchange_val_8_acq,
@@ -33,9 +40,8 @@
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (__NR_semtimedop):
 	Define if not defined.
 
-	* sunrpc/Makefile (generated-dirs): New.
-
-	* resolv/Makefile (generate): New.
+	* sunrpc/Makefile (generated-dirs): New variable.
+	* resolv/Makefile (generated): New variable.
 
 2003-05-04  Roland McGrath  <roland@redhat.com>
 
