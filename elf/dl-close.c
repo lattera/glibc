@@ -145,7 +145,7 @@ _dl_close (void *_map)
 		    imap->l_map_end - imap->l_map_start);
 
 	  /* Finally, unlink the data structure and free it.  */
-#ifdef PIC
+#ifdef SHARED
 	  /* We will unlink the first object only if this is a statically
 	     linked program.  */
 	  assert (imap->l_prev != NULL);

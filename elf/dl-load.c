@@ -516,7 +516,7 @@ _dl_init_paths (const char *llp)
   const char *strp;
   struct r_search_path_elem *pelem, **aelem;
   size_t round_size;
-#ifdef PIC
+#ifdef SHARED
   struct link_map *l;
 #endif
 
@@ -579,7 +579,7 @@ _dl_init_paths (const char *llp)
   max_dirnamelen = SYSTEM_DIRS_MAX_LEN;
   *aelem = NULL;
 
-#ifdef PIC
+#ifdef SHARED
   /* This points to the map of the main object.  */
   l = _dl_loaded;
   if (l != NULL)
@@ -613,7 +613,7 @@ _dl_init_paths (const char *llp)
 	    l->l_rpath_dirs = NULL;
 	}
     }
-#endif	/* PIC */
+#endif	/* SHARED */
 
   if (llp != NULL && *llp != '\0')
     {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
+#include <shlib-compat.h>
 #include "kernel-features.h"
 
 extern int __syscall_ugetrlimit (unsigned int resource,
@@ -77,8 +77,4 @@ __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 }
 
 weak_alias (__new_getrlimit, __getrlimit);
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_getrlimit, getrlimit, GLIBC_2.2);
-#else
-weak_alias (__new_getrlimit, getrlimit);
-#endif
+versioned_symbol (libc, __new_getrlimit, getrlimit, GLIBC_2_2);

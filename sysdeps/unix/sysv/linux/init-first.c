@@ -128,7 +128,7 @@ init (int argc, char **argv, char **envp)
       /* Set the FPU control word to the proper default value if the
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */
-#ifdef PIC
+#ifdef SHARED
       if (__fpu_control != _dl_fpu_control)
 #endif
 	__setfpucw (__fpu_control);
@@ -139,7 +139,7 @@ init (int argc, char **argv, char **envp)
   __libc_argv = argv;
   __environ = envp;
 
-#ifndef PIC
+#ifndef SHARED
   __libc_init_secure ();
 #endif
 
@@ -148,12 +148,12 @@ init (int argc, char **argv, char **envp)
   /* This is a hack to make the special getopt in GNU libc working.  */
   __getopt_clean_environment (envp);
 
-#ifdef PIC
+#ifdef SHARED
   __libc_global_ctors ();
 #endif
 }
 
-#ifdef PIC
+#ifdef SHARED
 
 strong_alias (init, _init);
 

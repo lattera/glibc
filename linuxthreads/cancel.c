@@ -162,7 +162,7 @@ void __pthread_perform_cleanup(void)
     c->__routine(c->__arg);
 }
 
-#ifndef PIC
+#ifndef SHARED
 /* We need a hook to force the cancelation wrappers to be linked in when
    static libpthread is used.  */
 extern const int __pthread_provide_wrappers;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,8 +19,9 @@
    became necessary since the glob_t structure changed.  */
 #include <sys/types.h>
 #include <glob.h>
+#include <shlib-compat.h>
 
-#if defined PIC && DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 /* This is the old structure.  The difference is that the gl_pathc and
    gl_offs elements have type `int'.  */
@@ -33,11 +34,11 @@ typedef struct
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
-    void (*gl_closedir) __P ((void *));
-    struct dirent *(*gl_readdir) __P ((void *));
-    __ptr_t (*gl_opendir) __P ((__const char *));
-    int (*gl_lstat) __P ((__const char *, struct stat *));
-    int (*gl_stat) __P ((__const char *, struct stat *));
+    void (*gl_closedir) (void *);
+    struct dirent *(*gl_readdir) (void *);
+    __ptr_t (*gl_opendir) (__const char *);
+    int (*gl_lstat) (__const char *, struct stat *);
+    int (*gl_stat) (__const char *, struct stat *);
   } old_glob_t;
 
 
@@ -75,7 +76,7 @@ __old_glob (const char *pattern, int flags,
 
   return result;
 }
-symbol_version(__old_glob, glob, GLIBC_2.0);
+compat_symbol (libc, __old_glob, glob, GLIBC_2_0);
 
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
@@ -90,6 +91,6 @@ __old_globfree (old_glob_t *pglob)
 
   globfree (&correct);
 }
-symbol_version(__old_globfree, globfree, GLIBC_2.0);
+compat_symbol (libc, __old_globfree, globfree, GLIBC_2_0);
 
 #endif

@@ -27,6 +27,7 @@
 #include <bits/wordsize.h>
 
 #include "kernel-features.h"
+#include <shlib-compat.h>
 
 struct __old_shmid_ds
 {
@@ -61,14 +62,19 @@ extern int __libc_missing_32bit_uids;
 #endif
 
 /* Provide operations to control over shared memory segments.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int __old_shmctl (int, int, struct __old_shmid_ds *);
+#endif
 int __new_shmctl (int, int, struct shmid_ds *);
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, buf);
 }
+compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
+#endif
 
 int
 __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
@@ -163,9 +169,4 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_shmctl, shmctl, GLIBC_2.2);
-symbol_version (__old_shmctl, shmctl, GLIBC_2.0);
-#else
-weak_alias (__new_shmctl, shmctl);
-#endif
+versioned_symbol (libc, __new_shmctl, shmctl, GLIBC_2_2);

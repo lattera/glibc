@@ -1,3 +1,43 @@
+2000-03-29  Jes Sorensen  <jes@pcatls01.cern.ch>
+
+	* malloc/malloc.c: Declare bit flags UL so that they will not
+	default to int size when being inverted.
+
+2000-03-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/arm/errlist.c: Use shlib-compat macros.
+	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
+
+2000-03-29  Andreas Jaeger  <aj@suse.de>,
+            Ralf Baechle <ralf@uni-koblenz.de>
+
+	* Makeconfig: Introduce new variable SHARED to mark code used in
+	the shared library.
+	* elf/dl-close.c: Use it instead of PIC.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* hurd/geteuids.c: Likewise.
+	* include/libc-symbols.h: Likewise.
+	* include/shlib-compat.h: Likewise.
+	* libio/freopen.c: Likewise.
+	* linuxthreads/cancel.c: Likewise.
+	* linuxthreads/pthread.c: Likewise.
+	* linuxthreads/wrapsyscall.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* sysdeps/arm/init-first.c: Likewise.
+	* sysdeps/i386/init-first.c: Likewise
+	* sysdeps/generic/init-first.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* sysdeps/mips/init-first.c: Likewise.
+	* sysdeps/powerpc/elf/libc-start.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/errlist.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+
+	* sysdeps/mips/machine-gmon.h (asm): Use __PIC__ as check.
+
 2000-03-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):

@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <shlib-compat.h>
 
 #include "kernel-features.h"
 
@@ -46,14 +47,19 @@ struct __old_msqid_ds
 
 /* Allows to control internal state and destruction of message queue
    objects.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int __old_msgctl (int, int, struct __old_msqid_ds *);
+#endif
 int __new_msgctl (int, int, struct msqid_ds *);
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 __old_msgctl (int msqid, int cmd, struct __old_msqid_ds *buf)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
 }
+compat_symbol (libc, __old_msgctl, msgctl, GLIBC_2_0);
+#endif
 
 int
 __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
@@ -120,9 +126,4 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_msgctl, msgctl, GLIBC_2.2);
-symbol_version (__old_msgctl, msgctl, GLIBC_2.0);
-#else
-weak_alias (__new_msgctl, msgctl);
-#endif
+versioned_symbol (libc, __new_msgctl, msgctl, GLIBC_2_2);

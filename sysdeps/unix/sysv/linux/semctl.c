@@ -25,9 +25,11 @@
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <shlib-compat.h>
 
 #include "kernel-features.h"
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_semid_ds
 {
   struct __old_ipc_perm sem_perm;	/* operation permission struct */
@@ -39,6 +41,7 @@ struct __old_semid_ds
   struct sem_undo *__undo;		/* ondo requests on this array */
   unsigned short int sem_nsems;		/* number of semaphores in set */
 };
+#endif
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
@@ -52,9 +55,12 @@ union semun
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int __old_semctl (int semid, int semnum, int cmd, ...);
+#endif
 int __new_semctl (int semid, int semnum, int cmd, ...);
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 __old_semctl (int semid, int semnum, int cmd, ...)
 {
@@ -70,6 +76,8 @@ __old_semctl (int semid, int semnum, int cmd, ...)
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
 }
+compat_symbol (libc, __old_semctl, semctl, GLIBC_2_0);
+#endif
 
 int
 __new_semctl (int semid, int semnum, int cmd, ...)
@@ -142,9 +150,4 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_semctl, semctl, GLIBC_2.2);
-symbol_version (__old_semctl, semctl, GLIBC_2.0);
-#else
-weak_alias (__new_semctl, semctl);
-#endif
+versioned_symbol (libc, __new_semctl, semctl, GLIBC_2_2);

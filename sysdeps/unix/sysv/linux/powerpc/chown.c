@@ -1,5 +1,5 @@
 /* chown() compatibility.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,8 +124,5 @@ __chown (const char *file, uid_t owner, gid_t group)
    return -1;
 }
 
-#if defined PIC && defined DO_VERSIONING
-default_symbol_version (__chown, chown, GLIBC_2.1);
-#else
-weak_alias (__chown, chown)
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __chown, chown, GLIBC_2_1);

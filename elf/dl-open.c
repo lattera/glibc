@@ -166,7 +166,7 @@ dl_open_worker (void *a)
     {
       if (! l->l_relocated)
 	{
-#ifdef PIC
+#ifdef SHARED
 	  if (_dl_profile != NULL)
 	    {
 	      /* If this here is the shared object which we want to profile

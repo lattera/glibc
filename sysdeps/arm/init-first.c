@@ -39,7 +39,7 @@ init (int *data)
   __getopt_clean_environment (envp);
 }
 
-#ifdef PIC
+#ifdef SHARED
 /* This function is called to initialize the shared C library.
    It is called just before the user _start code from i386/elf/start.S,
    with the stack set up as that code gets it.  */
@@ -63,7 +63,7 @@ _init (int argc, ...)
 void
 __libc_init_first (int argc __attribute__ ((unused)), ...)
 {
-#ifndef PIC
+#ifndef SHARED
   init (&argc);
 #endif
 }

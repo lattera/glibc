@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+#include <shlib-compat.h>
 
 struct timeval32
 {
@@ -54,7 +56,7 @@ struct timex32 {
 #define TIMEX		timex32
 #define ADJTIME		__adjtime_tv32
 #define ADJTIMEX(x)	__adjtimex_tv32 (x)
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #define LINKAGE
 #else
 #define LINKAGE		static
@@ -65,8 +67,8 @@ extern int ADJTIMEX (struct TIMEX *);
 
 #include <sysdeps/unix/sysv/linux/adjtime.c>
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-symbol_version (__adjtime_tv32, adjtime, GLIBC_2.0);
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2.0);
 #endif
 
 #undef TIMEVAL
@@ -117,11 +119,7 @@ __adjtime (itv, otv)
   return ret;
 }
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-default_symbol_version (__adjtime, adjtime, GLIBC_2.1);
-#else
-weak_alias (__adjtime, adjtime);
-#endif
+versioned_symbol (libc, __adjtime, adjtime, GLIBC_2_1);
 
 extern int __syscall_adjtimex_tv64 (struct timex *tx);
 
@@ -191,11 +189,6 @@ __adjtimex_tv64 (struct timex *tx)
   return ret;
 }
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 strong_alias (__adjtimex_tv64, __adjtimex_tv64p);
-default_symbol_version (__adjtimex_tv64, __adjtimex, GLIBC_2.1);
-default_symbol_version (__adjtimex_tv64p, adjtimex, GLIBC_2.1);
-#else
-weak_alias (__adjtimex_tv64, __adjtimex);
-weak_alias (__adjtimex_tv64, adjtimex);
-#endif
+versioned_symbol (libc, __adjtimex_tv64, __adjtimex, GLIBC_2_1);
+versioned_symbol (libc, __adjtimex_tv64p, adjtimex, GLIBC_2_1);

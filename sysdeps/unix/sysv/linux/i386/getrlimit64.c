@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,5 @@
 #include <sysdeps/generic/getrlimit64.c>
 
 #undef getrlimit64
-#if defined PIC && defined DO_VERSIONING
-default_symbol_version (__new_getrlimit64, getrlimit64, GLIBC_2.2);
-#else
-weak_alias (__new_getrlimit64, getrlimit64);
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __new_getrlimit64, getrlimit64, GLIBC_2_2);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <sys/syscall.h>
 
 #include "kernel-features.h"
+#include <shlib-compat.h>
 
 extern int __syscall_setrlimit (unsigned int resource,
 				const struct rlimit *rlimits);
@@ -75,8 +76,4 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 }
 
 weak_alias (__new_setrlimit, __setrlimit);
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_setrlimit, setrlimit, GLIBC_2.2);
-#else
-weak_alias (__new_setrlimit, setrlimit);
-#endif
+versioned_symbol (libc, __new_setrlimit, setrlimit, GLIBC_2_2);

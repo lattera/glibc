@@ -1317,11 +1317,11 @@ static void      free_atfork();
 
 /* size field is or'ed with PREV_INUSE when previous adjacent chunk in use */
 
-#define PREV_INUSE 0x1
+#define PREV_INUSE 0x1UL
 
 /* size field is or'ed with IS_MMAPPED if the chunk was obtained with mmap() */
 
-#define IS_MMAPPED 0x2
+#define IS_MMAPPED 0x2UL
 
 /* Bits to mask off when extracting size */
 

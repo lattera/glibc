@@ -18,7 +18,8 @@
 
 /* This is a compatibility file.  If we don't build the libc with
    versioning don't compile this file.  */
-#if defined PIC && DO_VERSIONING
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 
 #include <errno.h>
 #include <sys/resource.h>
@@ -48,6 +49,6 @@ __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
   return 0;
 }
 
-symbol_version (__old_getrlimit64, getrlimit64, GLIBC_2.1);
+compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
 
-#endif /* PIC && DO_VERSIONING */
+#endif /* SHLIB_COMPAT */

@@ -41,7 +41,7 @@ __libc_start_main (int argc, char **argv, char **envp,
 		   struct startup_info *stinfo,
 		   char **stack_on_entry)
 {
-#ifndef PIC
+#ifndef SHARED
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
@@ -80,7 +80,7 @@ __libc_start_main (int argc, char **argv, char **envp,
     atexit (rtld_fini);
 
   /* Call the initializer of the libc.  */
-#ifdef PIC
+#ifdef SHARED
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize libc\n\n", NULL);
 #endif
@@ -91,14 +91,14 @@ __libc_start_main (int argc, char **argv, char **envp,
     atexit (stinfo->fini);
 
   /* Call the initializer of the program, if any.  */
-#ifdef PIC
+#ifdef SHARED
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
   if (stinfo->init)
     stinfo->init (argc, argv, __environ, auxvec);
 
-#ifdef PIC
+#ifdef SHARED
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
 #endif

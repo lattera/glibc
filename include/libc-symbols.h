@@ -214,7 +214,7 @@
 
 /* These are all done the same way in ELF.
    There is a new section created for each set.  */
-#  ifdef PIC
+#  ifdef SHARED
 /* When building a shared library, make the set section writable,
    because it will need to be relocated at run time anyway.  */
 #   define _elf_set_element(set, symbol) \

@@ -25,14 +25,14 @@ int __libc_multiple_libcs = 1;
 extern void __libc_init (int, char **, char **);
 extern void __getopt_clean_environment (char **);
 
-#ifdef PIC
+#ifdef SHARED
 void
 __libc_init_first (void)
 {
 }
 #endif
 
-#ifdef PIC
+#ifdef SHARED
 /* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
    pointer in the dynamic section based solely on that.  It is convention
    for this function to be in the `.init' section, but the symbol name is

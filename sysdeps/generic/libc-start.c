@@ -39,7 +39,7 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 		   char **argv, void (*init) (void), void (*fini) (void),
 		   void (*rtld_fini) (void), void *stack_end)
 {
-#ifndef PIC
+#ifndef SHARED
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
@@ -66,7 +66,7 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   /* Call the initializer of the libc.  This is only needed here if we
      are compiling for the static library in which case we haven't
      run the constructors in `_dl_start_user'.  */
-#ifndef PIC
+#ifndef SHARED
   __libc_init_first (argc, argv, __environ);
 #endif
 
@@ -75,14 +75,14 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
     atexit (fini);
 
   /* Call the initializer of the program, if any.  */
-#ifdef PIC
+#ifdef SHARED
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
   if (init)
     (*init) ();
 
-#ifdef PIC
+#ifdef SHARED
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
 #endif

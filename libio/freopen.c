@@ -26,7 +26,7 @@
 #include "libioP.h"
 #include "stdio.h"
 
-#ifdef PIC
+#ifdef SHARED
 extern void *_IO_stdin_used;
 weak_extern (_IO_stdin_used);
 #endif

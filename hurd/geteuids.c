@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 94, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,6 +64,6 @@ geteuids (int n, uid_t *uidset)
 
 /* XXX Remove this alias when we bump the libc soname.  */
 
-#if defined PIC && DO_VERSIONING
+#if defined SHARED && DO_VERSIONING
 weak_alias (geteuids, __getuids)
 #endif

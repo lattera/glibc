@@ -132,7 +132,7 @@ __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {
   return INLINE_SYSCALL (chown, 3, file, owner, group);
 }
-#elif defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#elif defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
 /* Compiling for compatibiity.  */
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)
@@ -141,7 +141,7 @@ __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 }
 #endif
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
 strong_alias (__chown_is_lchown, _chown_is_lchown)
 symbol_version (__chown_is_lchown, __chown, GLIBC_2.0);
 symbol_version (_chown_is_lchown, chown, GLIBC_2.0);

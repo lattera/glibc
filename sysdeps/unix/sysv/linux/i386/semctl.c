@@ -27,6 +27,7 @@
 #include <sys/syscall.h>
 
 #include "kernel-features.h"
+#include <shlib-compat.h>
 
 struct __old_semid_ds
 {
@@ -59,9 +60,12 @@ extern int __libc_missing_32bit_uids;
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int __old_semctl (int semid, int semnum, int cmd, ...);
+#endif
 int __new_semctl (int semid, int semnum, int cmd, ...);
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 __old_semctl (int semid, int semnum, int cmd, ...)
 {
@@ -77,6 +81,8 @@ __old_semctl (int semid, int semnum, int cmd, ...)
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
 }
+compat_symbol (libc, __old_semctl, semctl, GLIBC_2_0);
+#endif
 
 int
 __new_semctl (int semid, int semnum, int cmd, ...)
@@ -165,9 +171,4 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 #endif
 }
 
-#if defined PIC && DO_VERSIONING
-default_symbol_version (__new_semctl, semctl, GLIBC_2.2);
-symbol_version (__old_semctl, semctl, GLIBC_2.0);
-#else
-weak_alias (__new_semctl, semctl);
-#endif
+versioned_symbol (libc, __new_semctl, semctl, GLIBC_2_2);

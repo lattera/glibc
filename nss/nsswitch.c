@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if !defined DO_STATIC_NSS || defined PIC
+#if !defined DO_STATIC_NSS || defined SHARED
 # include <gnu/lib-names.h>
 #endif
 
@@ -65,7 +65,7 @@ static struct
 
 __libc_lock_define_initialized (static, lock)
 
-#if !defined DO_STATIC_NSS || defined PIC
+#if !defined DO_STATIC_NSS || defined SHARED
 /* String with revision number of the shared object files.  */
 static const char *const __nss_shlib_revision = LIBNSS_FILES_SO + 15;
 #endif
@@ -314,7 +314,7 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 		}
 	    }
 
-#if !defined DO_STATIC_NSS || defined PIC
+#if !defined DO_STATIC_NSS || defined SHARED
 	  if (ni->library->lib_handle == NULL)
 	    {
 	      /* Load the shared library.  */

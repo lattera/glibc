@@ -31,7 +31,7 @@
 #include <sys/socket.h>
 
 
-#ifndef PIC
+#ifndef SHARED
 /* We need a hook to force this file to be linked in when static
    libpthread is used.  */
 const int __pthread_provide_wrappers = 0;
