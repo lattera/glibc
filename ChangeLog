@@ -1,3 +1,10 @@
+1998-10-16  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* time/mktime.c: Some systems require <unistd.h> to be
+	included before <time.h> for localtime_r to be declared
+	properly.
+	* time/strftime.c: Likewise.
+
 1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db/Makefile: Add rule to generate shared object with the soname

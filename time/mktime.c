@@ -47,6 +47,12 @@
 # define LEAP_SECONDS_POSSIBLE 1
 #endif
 
+/* Some systems require <unistd.h> to be included before <time.h>
+   for localtime_r to be declared properly.  */
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
@@ -64,7 +70,7 @@
 #endif /* DEBUG */
 
 #ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
 #  define __P(args) args
 # else
 #  define __P(args) ()
