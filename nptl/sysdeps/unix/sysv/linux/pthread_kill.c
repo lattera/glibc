@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,6 +32,11 @@ __pthread_kill (threadid, signo)
   struct pthread *pd = (struct pthread *) threadid;
 
   /* We have a special syscall to do the work.  */
-  return INLINE_SYSCALL (tkill, 2, pd->tid, signo);
+  INTERNAL_SYSCALL_DECL (err);
+
+  int val = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, signo);
+
+  return (INTERNAL_SYSCALL_ERROR_P (val, err)
+	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);
 }
 strong_alias (__pthread_kill, pthread_kill)

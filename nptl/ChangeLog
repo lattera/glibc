@@ -1,5 +1,8 @@
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Don't
+	use INLINE_SYSCALL.  Error number is returned, not -1.
+
 	* pthreadP.h: Mark declarations of __find_in_stack_list, __free_tcb,
 	and __deallocate_stack with internal_function.
 	* pthread_create.c: Adjust definitions appropriately.
