@@ -21,20 +21,18 @@
 #ifdef	__GNUC__
 
 #ifdef __USE_ISOC99
-
-# if __GNUC_PREREQ (3,1)
 /* GCC 3.1 and up have builtins that actually can be used.  */
-#  define isgreater(x, y) __builtin_isgreater (x, y)
-#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
-#  define isless(x, y) __builtin_isless (x, y)
-#  define islessequal(x, y) __builtin_islessequal (x, y)
-#  define islessgreater(x, y) __builtin_islessgreater (x, y)
-#  define isunordered(x, y) __builtin_isunordered (x, y)
-# else
+# if !__GNUC_PREREQ (3,1)
 /* ISO C99 defines some macros to perform unordered comparisons.  The
    m68k FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
+#  undef isgreater
+#  undef isgreaterequal
+#  undef isless
+#  undef islessequal
+#  undef islessgreater
+#  undef isunordered
 #  define isgreater(x, y)					\
    __extension__					\
    ({ char __result;					\
