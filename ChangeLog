@@ -16,9 +16,6 @@
 	latest possible point to allow partly initialized structures
 	(e.g., from strptime).
 
-	* sysdeps/unix/sysv/linux/init-first.c [!PIC]: Define __libc_init_first
-	using init-first.h.
-
 1998-04-30 18:20  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-load.c (_dl_init_paths): Don't check the dynamic

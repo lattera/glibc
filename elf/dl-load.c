@@ -531,80 +531,84 @@ _dl_init_paths (const char *llp)
 #ifdef PIC
   /* This points to the map of the main object.  */
   l = _dl_loaded;
-
-  /* We should never get here when initializing in a static application.
-     If this is a dynamically linked application _dl_loaded always
-     points to the main map which is not dlopen()ed.  */
-  assert (l->l_type != lt_loaded);
-
-  if (l->l_info[DT_RPATH])
+  if (l != NULL)
     {
-      /* Allocate room for the search path and fill in information
-	 from RPATH.  */
-      l->l_rpath_dirs =
-	decompose_rpath ((const char *)
-			 (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
-			  + l->l_info[DT_RPATH]->d_un.d_val),
-			 nllp, l);
-    }
-  else
-    {
-      /* If we have no LD_LIBRARY_PATH and no RPATH we must tell
-	 this somehow to prevent we look this up again and again.  */
-      if (nllp == 0)
-	l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
+      /* We should never get here when initializing in a static application.
+	 If this is a dynamically linked application _dl_loaded always
+	 points to the main map which is not dlopen()ed.  */
+      assert (l->l_type != lt_loaded);
+
+      if (l->l_info[DT_RPATH])
+	{
+	  /* Allocate room for the search path and fill in information
+	     from RPATH.  */
+	  l->l_rpath_dirs =
+	    decompose_rpath ((const char *)
+			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
+			      + l->l_info[DT_RPATH]->d_un.d_val),
+			     nllp, l);
+	}
       else
 	{
-	  l->l_rpath_dirs = (struct r_search_path_elem **)
-	    malloc ((nllp + 1) * sizeof (*l->l_rpath_dirs));
-	  if (l->l_rpath_dirs == NULL)
-	    _dl_signal_error (ENOMEM, NULL,
-			      "cannot create cache for search path");
-	  l->l_rpath_dirs[0] = NULL;
+	  /* If we have no LD_LIBRARY_PATH and no RPATH we must tell
+	     this somehow to prevent we look this up again and again.  */
+	  if (nllp == 0)
+	    l->l_rpath_dirs = (struct r_search_path_elem **) -1l;
+	  else
+	    {
+	      l->l_rpath_dirs = (struct r_search_path_elem **)
+		malloc ((nllp + 1) * sizeof (*l->l_rpath_dirs));
+	      if (l->l_rpath_dirs == NULL)
+		_dl_signal_error (ENOMEM, NULL,
+				  "cannot create cache for search path");
+	      l->l_rpath_dirs[0] = NULL;
+	    }
+	}
+
+      /* We don't need to search the list of fake entries which is searched
+	 when no dynamic objects were loaded at this time.  */
+      fake_path_list = NULL;
+
+      if (nllp > 0)
+	{
+	  char *copy = local_strdup (llp);
+
+	  /* Decompose the LD_LIBRARY_PATH and fill in the result.
+	     First search for the next place to enter elements.  */
+	  struct r_search_path_elem **result = l->l_rpath_dirs;
+	  while (*result != NULL)
+	    ++result;
+
+	  /* We need to take care that the LD_LIBRARY_PATH environment
+	     variable can contain a semicolon.  */
+	  (void) fillin_rpath (copy, result, ":;",
+			       __libc_enable_secure ? system_dirs : NULL,
+			       "LD_LIBRARY_PATH", NULL);
 	}
     }
-
-  /* We don't need to search the list of fake entries which is searched
-     when no dynamic objects were loaded at this time.  */
-  fake_path_list = NULL;
-
-  if (nllp > 0)
-    {
-      char *copy = local_strdup (llp);
-
-      /* Decompose the LD_LIBRARY_PATH and fill in the result.
-	 First search for the next place to enter elements.  */
-      struct r_search_path_elem **result = l->l_rpath_dirs;
-      while (*result != NULL)
-	++result;
-
-      /* We need to take care that the LD_LIBRARY_PATH environment
-	 variable can contain a semicolon.  */
-      (void) fillin_rpath (copy, result, ":;",
-			   __libc_enable_secure ? system_dirs : NULL,
-			   "LD_LIBRARY_PATH", NULL);
-    }
-#else	/* !PIC */
-  /* This is a statically linked program but we still have to take
-     care for the LD_LIBRARY_PATH environment variable.  We use a fake
-     link_map entry.  This will only contain the l_rpath_dirs
-     information.  */
-
-  if (nllp == 0)
-    fake_path_list = NULL;
   else
-    {
-      fake_path_list = (struct r_search_path_elem **)
-	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
-      if (fake_path_list == NULL)
-	_dl_signal_error (ENOMEM, NULL,
-			  "cannot create cache for search path");
-
-      (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
-			   __libc_enable_secure ? system_dirs : NULL,
-			   "LD_LIBRARY_PATH", NULL);
-    }
 #endif	/* PIC */
+    {
+      /* This is a statically linked program but we still have to take
+	 care for the LD_LIBRARY_PATH environment variable.  We use a fake
+	 link_map entry.  This will only contain the l_rpath_dirs
+	 information.  */
+
+      if (nllp == 0)
+	fake_path_list = NULL;
+      else
+	{
+	  fake_path_list = (struct r_search_path_elem **)
+	    malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
+	  if (fake_path_list == NULL)
+	    _dl_signal_error (ENOMEM, NULL,
+			      "cannot create cache for search path");
+
+	  (void) fillin_rpath (local_strdup (llp), fake_path_list, ":;",
+			       __libc_enable_secure ? system_dirs : NULL,
+			       "LD_LIBRARY_PATH", NULL);
+	}
+    }
 }
 
 
