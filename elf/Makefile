@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,10 +79,11 @@ vpath %.c ../locale/programs
 endif
 
 ifeq (yes,$(build-shared))
-tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail
+tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
+	constload1
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1 failobj
+		testobj1_1 failobj constload2 constload3
 extra-objs += $(modules-names:=.os)
 
 include ../Rules
@@ -251,3 +252,6 @@ $(objpfx)resolvfail: $(libdl) $(shared-thread-library)
 else
 $(objpfx)resolvfail: $(libdl)
 endif
+
+$(objpfx)constload1: $(libdl)
+$(objpfx)constload1.out: $(objpfx)constload2.so $(objpfx)constload3.so
