@@ -1,6 +1,6 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -52,7 +52,7 @@ static const struct test_times tests[] =
 /* This string will be used for `putenv' calls.  */
 char envstring[100];
 
-void
+static void
 print_tzvars (void)
 {
   printf ("tzname[0]: %s\n", tzname[0]);
@@ -62,7 +62,7 @@ print_tzvars (void)
 }
 
 
-void
+static void
 check_tzvars (const char *name, int dayl, int timez, const char *const tznam[])
 {
   int i;

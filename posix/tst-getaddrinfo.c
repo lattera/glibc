@@ -23,7 +23,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-int
+static int
 do_test (void)
 {
   const int family[3] = { AF_INET, AF_INET6, AF_UNIX };

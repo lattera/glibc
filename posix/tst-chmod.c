@@ -36,7 +36,7 @@
     goto fail;								      \
   } while (0)
 
-int
+static int
 do_test (int argc, char *argv[])
 {
   const char *builddir;

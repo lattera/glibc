@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *
+static void *
 sub1 (void *arg)
 {
   /* Nothing.  */

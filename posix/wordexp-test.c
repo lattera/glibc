@@ -208,7 +208,7 @@ struct test_case_struct
 static int testit (struct test_case_struct *tc);
 static int tests;
 
-void
+static void
 command_line_test (const char *words)
 {
   wordexp_t we;

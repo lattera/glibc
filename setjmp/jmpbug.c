@@ -4,13 +4,13 @@
 #include <setjmp.h>
 #include <alloca.h>
 
-void
+static void
 sub5 (jmp_buf buf)
 {
   longjmp (buf, 1);
 }
 
-void
+static void
 test (int x)
 {
   jmp_buf buf;

@@ -4023,7 +4023,8 @@ sprint_double_type sprint_doubles[] =
 int required_precision = 13;
 
 #if defined(__STDC__) || defined(__cplusplus)
-int matches(register char *result, register const char *desired)
+static int
+matches (register char *result, register const char *desired)
 #else
 int matches(result, desired)
      register char *result; register const char *desired;

@@ -5,7 +5,7 @@
 
 int win = 0;
 
-void
+static void
 handler (int sig)
 {
   printf ("Received signal %d (%s).\n", sig, strsignal(sig));

@@ -26,14 +26,14 @@
 int flag;
 
 
-void
+static void
 thrfct (sigval_t arg)
 {
   flag = 1;
 }
 
 
-int
+static int
 do_test (int argc, char *argv[])
 {
   char name[] = "/tmp/aio3.XXXXXX";
@@ -74,7 +74,7 @@ do_test (int argc, char *argv[])
       printf ("aio_suspend failed: %m\n");
       return 1;
     }
-    
+
   if (flag != 0)
     {
       puts ("thread created, should not have happened");

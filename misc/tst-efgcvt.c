@@ -86,7 +86,7 @@ static testcase fcvt_tests[] =
   { -1.0, 0, 0, "" }
 };
 
-void
+static void
 output_error (const char *name, double value, int ndigit,
 	      const char *exp_p, int exp_decpt, int exp_sign,
 	      char *res_p, int res_decpt, int res_sign)
@@ -101,7 +101,7 @@ output_error (const char *name, double value, int ndigit,
 }
 
 
-void
+static void
 output_r_error (const char *name, double value, int ndigit,
 		const char *exp_p, int exp_decpt, int exp_sign, int exp_return,
 		char *res_p, int res_decpt, int res_sign, int res_return)
@@ -115,7 +115,7 @@ output_r_error (const char *name, double value, int ndigit,
   ++error_count;
 }
 
-void
+static void
 test (testcase tests[], efcvt_func efcvt, const char *name)
 {
   int no = 0;
@@ -136,7 +136,7 @@ test (testcase tests[], efcvt_func efcvt, const char *name)
     }
 }
 
-void
+static void
 test_r (testcase tests[], efcvt_r_func efcvt_r, const char *name)
 {
   int no = 0;
@@ -160,7 +160,7 @@ test_r (testcase tests[], efcvt_r_func efcvt_r, const char *name)
     }
 }
 
-void
+static void
 special (void)
 {
   int decpt, sign, res;

@@ -27,14 +27,14 @@
 int flag;
 
 
-void
+static void
 thrfct (sigval_t arg)
 {
   flag = 1;
 }
 
 
-int
+static int
 do_test (int argc, char *argv[])
 {
   char name[] = "/tmp/aio2.XXXXXX";

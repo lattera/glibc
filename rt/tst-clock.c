@@ -28,7 +28,7 @@
 /* We expect to run at least 10 seconds.  */
 #define TIMEOUT 15
 
-int
+static int
 clock_test (clockid_t cl)
 {
   struct timespec old_ts;
@@ -101,7 +101,7 @@ clock_test (clockid_t cl)
   return result;
 }
 
-int
+static int
 do_test (void)
 {
   clockid_t cl;

@@ -48,7 +48,7 @@ static const struct a_test the_tests[] =
 
 
 
-int
+static int
 run_a_test (int id, const struct a_test * t)
 {
   static const char * last_pattern = 0;

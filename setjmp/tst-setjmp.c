@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 static jmp_buf env;
 static int last_value = -1, lose = 0;
 
-void
+static void
 jump (int val)
 {
   longjmp (env, val);

@@ -7,7 +7,7 @@
 #define  MAX_STRINGS      256
 #define  MAX_LINE_SIZE    32
 
-int
+static int
 compare (const void *p1, const void *p2)
 {
   return strverscmp (*((char **) p1), *((char **) p2));

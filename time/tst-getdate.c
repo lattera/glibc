@@ -35,7 +35,7 @@ static const struct
   {"16:30:46 2000-2-29", 0, {46, 30,16, 29, 1, 100, 0, 0, 0}}
 };
 
-void
+static void
 report_date_error (int err)
 {
   switch(err)

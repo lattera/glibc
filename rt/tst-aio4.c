@@ -31,13 +31,13 @@
 volatile sig_atomic_t flag;
 
 
-void
+static void
 sighandler (const int signo)
 {
   flag = signo;
 }
 
-int
+static int
 wait_flag (void)
 {
   while (flag == 0)
@@ -56,7 +56,7 @@ wait_flag (void)
 }
 
 
-int
+static int
 do_test (int argc, char *argv[])
 {
   char name[] = "/tmp/aio4.XXXXXX";

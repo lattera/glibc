@@ -122,7 +122,7 @@ worker (int write_now)
 }
 
 
-int
+static int
 do_test (void)
 {
   int fd;
