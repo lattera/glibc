@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,42 +16,79 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/*
+    Floating Point Registers (FPRs) restore routine
+*/
+
 #include <sysdep.h>
 
-		ASM_GLOBAL_DIRECTIVE _restfpr_14
-_restfpr_14:	lfd	fp14,-144(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_15
-_restfpr_15:	lfd	fp15,-136(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_16
-_restfpr_16:	lfd	fp16,-128(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_17
-_restfpr_17:	lfd	fp17,-120(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_18
-_restfpr_18:	lfd	fp18,-112(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_19
-_restfpr_19:	lfd	fp19,-104(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_20
-_restfpr_20:	lfd	fp20,-96(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_21
-_restfpr_21:	lfd	fp21,-88(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_22
-_restfpr_22:	lfd	fp22,-80(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_23
-_restfpr_23:	lfd	fp23,-72(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_24
-_restfpr_24:	lfd	fp24,-64(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_25
-_restfpr_25:	lfd	fp25,-56(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_26
-_restfpr_26:	lfd	fp26,-48(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_27
-_restfpr_27:	lfd	fp27,-40(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_28
-_restfpr_28:	lfd	fp28,-32(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_29
-_restfpr_29:	lfd	fp29,-24(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_30
-_restfpr_30:	lfd	fp30,-16(r11)
-		ASM_GLOBAL_DIRECTIVE _restfpr_31
-_restfpr_31:	lfd	fp31,-8(r11)
-		blr
+ENTRY(_restfpr_all)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf14)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_14)
+C_TEXT(_restf14):
+C_TEXT(_restfpr_14):	lfd	fp14,-144(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf15)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_15)
+C_TEXT(_restf15):
+C_TEXT(_restfpr_15):	lfd	fp15,-136(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf16)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_16)
+C_TEXT(_restf16):
+C_TEXT(_restfpr_16):	lfd	fp16,-128(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf17)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_17)
+C_TEXT(_restf17):
+C_TEXT(_restfpr_17):	lfd	fp17,-120(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf18)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_18)
+C_TEXT(_restf18):
+C_TEXT(_restfpr_18):	lfd	fp18,-112(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf19)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_19)
+C_TEXT(_restf19):
+C_TEXT(_restfpr_19):	lfd	fp19,-104(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf20)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_20)
+C_TEXT(_restf20):
+C_TEXT(_restfpr_20):	lfd	fp20,-96(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf21)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_21)
+C_TEXT(_restf21):
+C_TEXT(_restfpr_21):	lfd	fp21,-88(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf22)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_22)
+C_TEXT(_restf22):
+C_TEXT(_restfpr_22):	lfd	fp22,-80(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf23)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_23)
+C_TEXT(_restf23):
+C_TEXT(_restfpr_23):	lfd	fp23,-72(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf24)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_24)
+C_TEXT(_restf24):
+C_TEXT(_restfpr_24):	lfd	fp24,-64(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf25)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_25)
+C_TEXT(_restf25):
+C_TEXT(_restfpr_25):	lfd	fp25,-56(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf26)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_26)
+C_TEXT(_restf26):
+C_TEXT(_restfpr_26):	lfd	fp26,-48(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf27)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_27)
+C_TEXT(_restf27):
+C_TEXT(_restfpr_27):	lfd	fp27,-40(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf28)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_28)
+C_TEXT(_restf28):
+C_TEXT(_restfpr_28):	lfd	fp28,-32(r1)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restf29)
+		ASM_GLOBAL_DIRECTIVE C_TEXT(_restfpr_29)
+C_TEXT(_restf29):
+C_TEXT(_restfpr_29):	lwz	r0,8(r1)	#get return address from frame
+			lfd	fp29,-24(r1)    #restore f29
+			mtlr	r0		#move return address to LR
+			lfd	fp30,-16(r1)	#restore f30
+			lfd	fp31,-8(r1)	#restore f31
+			blr			#return

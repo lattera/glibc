@@ -1,3 +1,8 @@
+2001-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/strtok.S: Continue to return NULL after the first
+	time this happened.
+
 2001-02-23  Andreas Jaeger  <aj@suse.de>
 
 	* string/tester.c (test_strtok_r): Add testcase.

@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -113,6 +113,8 @@ L(0):	movl SAVE_PTR, %edx
 	   we have to take care for PIC code.  */
 	movl SAVE_PTR, %edx
 #endif
+	testl %edx, %edx
+	jz L(returnNULL)
 
 L(1):
 	/* First we create a table with flags for all possible characters.
