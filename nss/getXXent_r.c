@@ -244,7 +244,6 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   while (! no_more)
     {
       int is_last_nip = nip == last_nip;
-      service_user *current_nip = nip;
 
       status = (*fct) (resbuf, buffer, buflen, __errno_location ()
 		       H_ERRNO_VAR);

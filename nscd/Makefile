@@ -25,13 +25,14 @@ routines := nscd_getpw_r nscd_getgr_r
 
 include ../Makeconfig
 
+nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
+		getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
+
 ifeq ($(have-thread-library),yes)
 
 others := nscd
 install-sbin := nscd
 
-nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
-		getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
 extra-objs := $(nscd-modules:=.o)
 
 endif

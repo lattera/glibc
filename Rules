@@ -188,36 +188,3 @@ $(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
-
-ifndef libc.so-version
-# Undefine this because it can't work when we libc.so is unversioned.
-static-only-routines =
-endif
-
-ifdef static-only-routines
-# These routines are to be omitted from the shared library object,
-# so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
-	rm -f $@
-	ln $< $@
-	touch $@
-
-subdir_lib: $(objpfx)stamp.oS
-$(objpfx)stamp.oS: $(objpfx)stamp%: $(static-only-routines:%=$(objpfx)%.oS)
-	$(do-ar)
-$(common-objpfx)$(patsubst %,$(libtype.oS),c)(\
-$(addsuffix .%,$(static-only-routines))): $(objpfx)stamp.%;
-endif
-
-ifdef shared-only-routines
-# If we have versioned code we don't need the old versions in any of the
-# static libraries.
-define o-iterator-doit
-$(shared-only-routines:%=$(objpfx)%$o): %$o: $(common-objpfx)empty$o;
-	rm -f $$@
-	ln $$< $$@
-	touch $$@
-endef
-object-suffixes-left := $(filter-out .os,$(object-suffixes))
-include $(o-iterator)
-endif

@@ -60,12 +60,16 @@ $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon \
-       $(objpfx)tst-rpmatch
-	$(SHELL) -e sort-test.sh $(common-objpfx) $(test-input)
-	$(SHELL) -e tst-fmon.sh $(common-objpfx) tst-fmon.data
-	$(SHELL) -e tst-locale.sh $(common-objpfx)
-	$(SHELL) -e tst-rpmatch.sh $(common-objpfx)
+.PHONY: do-collate-test do-xfrm-test do-tst-fmon do-tst-rpmatch
+tests: do-collate-test do-xfrm-test do-tst-fmon do-tst-rpmatch
+do-collate-test: sort-test.sh $(objpfx)collate-test $(test-input)
+	$(SHELL) -e $< $(common-objpfx) $(test-input)
+do-xfrm-test: tst-fmon.sh $(objpfx)xfrm-test tst-fmon.data
+	$(SHELL) -e $< $(common-objpfx) tst-fmon.data
+do-tst-fmon: tst-locale.sh $(objpfx)tst-fmon $(ld-test-srcs)
+	$(SHELL) -e $< $(common-objpfx)
+do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch
+	$(SHELL) -e $< $(common-objpfx)
 endif
 
 # Sometimes the whole collection of locale files should be installed.
@@ -75,6 +79,7 @@ else
 LOCALEDEF=$(common-objpfx)locale/localedef
 endif
 install-locales:
-	(while read locale charset; do \
+	while read locale charset; do \
+	   case $$locale in \#*) continue;; esac; \
 	   $(LOCALEDEF) -c -i $$locale -f $$charset $$locale; \
-	 done) < SUPPORTED
+	done < SUPPORTED

@@ -2730,7 +2730,6 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		      /* Two-byte character.  First test whether the next
 			 character is also available.  */
 		      int inchar2;
-		      int idx;
 
 		      if (cnt + 1 >= inchars)
 			{

@@ -172,12 +172,6 @@ endef
 $(common-objpfx)dummy.d:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
-object-suffixes-for-rules := $(object-suffixes)
-
-ifeq (yes,$(build-shared))
-object-suffixes-for-rules += .oS
-endif
-
 # It matters that this set of rules, for compiling from sources in
 # the current directory (the $srcdir/$subdir) come before the
 # generated sysdep rules in included from sysd-rules below.  When
@@ -186,21 +180,21 @@ endif
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
@@ -212,21 +206,21 @@ ifdef objpfx
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes-for-rules)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
@@ -379,6 +373,34 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
+ifndef libc.so-version
+# Undefine this because it can't work when we libc.so is unversioned.
+static-only-routines =
+endif
+
+elide-routines.oS = $(filter-out $(static-only-routines),\
+				 $(routines) $(aux) $(sysdep_routines))
+
+ifdef static-only-routines
+# These routines are to be omitted from the shared library object,
+# so we replace the PIC objects for them with the empty object file.
+$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
+	rm -f $@
+	ln $< $@
+endif
+
+ifdef shared-only-routines
+# If we have versioned code we don't need the old versions in any of the
+# static libraries.
+define o-iterator-doit
+$(shared-only-routines:%=$(objpfx)%$o): %$o: $(common-objpfx)empty$o;
+	rm -f $$@
+	ln $$< $$@
+endef
+object-suffixes-left := $(filter-out .os,$(object-suffixes))
+include $(o-iterator)
+endif
+
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want
 # since we define our own `.init' section specially.
@@ -475,7 +497,7 @@ MAKEFLAGS := $(MAKEFLAGS)r
 
 # Make sure that object files are not removed
 # when they are intermediates between sources and library members.
-.PRECIOUS: $(addprefix $(objpfx)%,$(object-suffixes))
+.PRECIOUS: $(addprefix $(objpfx)%,$(all-object-suffixes))
 
 # Make sure that the parent library archive is never removed.
 .PRECIOUS: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
@@ -508,7 +530,7 @@ o-objects = $(patsubst %.o,%$o,$(filter-out $(patsubst %,$(objpfx)%.o,\
 						       $(elide-routines$o)),\
 					    $(objects)))
 
-libobjs: $(foreach o,$(object-suffixes),\
+libobjs: $(foreach o,$(object-suffixes-for-libc),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 		   $(notdir $(o-objects))))
 lib-noranlib: libobjs
@@ -517,8 +539,8 @@ others: $(addprefix $(objpfx),$(install-lib))
 ifndef objects
 
 # Create the stamp$o files to keep the parent makefile happy.
-subdir_lib: $(foreach o,$(object-suffixes),$(objpfx)stamp$o)
-$(foreach o,$(object-suffixes),$(objpfx)stamp$o):
+subdir_lib: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
+$(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o):
 	$(make-target-directory)
 	rm -f $@; > $@
 else
@@ -532,7 +554,7 @@ $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 $(addsuffix .%,$(filter-out $(elide-routines$o),$(notdir $(objects:.o=))))): \
   $(objpfx)stamp.% ;
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-libc)
 include $(o-iterator)
 
 # The pattern rule tells Make to remake $(objpfx)stamp.% as
@@ -544,7 +566,11 @@ include $(o-iterator)
 define o-iterator-doit
 $(objpfx)stamp$o: $(objpfx)stamp%: $(o-objects); $$(do-ar)
 endef
+ifdef static-only-routines
+object-suffixes-left := $(object-suffixes-for-libc)
+else
 object-suffixes-left := $(object-suffixes)
+endif
 include $(o-iterator)
 define do-ar
 topdir=`cd $(..).; pwd`; \
@@ -556,6 +582,13 @@ touch $@
 endef
 O%-lib = $(..)$(patsubst %,$(libtype$*),c)
 
+endif
+
+ifndef static-only-routines
+subdir_lib: $(objpfx)stamp.oS
+$(objpfx)stamp.oS:
+	$(make-target-directory)
+	rm -f $@; > $@
 endif
 
 # Rules to update the $(ar-symtab-name) member with ranlib,
@@ -573,22 +606,13 @@ subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 $(subdirs-stamps): subdir_lib;
 endif
-object-suffixes-left = $(object-suffixes)
+object-suffixes-left = $(object-suffixes-for-libc)
 include $(o-iterator)
-ifeq (yes,$(build-shared))
-$(common-objpfx)$(patsubst %,$(libtype.oS),c)($(ar-symtab-name)): \
-	$(common-objpfx)$(patsubst %,$(libtype.oS),c)(\
-	  $(patsubst %,%.oS,$(static-only-routines))) \
-	$(wildcard $(foreach d,$(subdirs),$(common-objpfx)$d/stamp.oS))
-	$(SHELL) $(..)./autolock.sh \
-	  $(common-objpfx)$(patsubst %,$(libtype.oS),c).lck \
-	  $(RANLIB) $(common-objpfx)$(patsubst %,$(libtype.oS),c)
-endif
 
 
 # This makes all the object files.
 .PHONY: objects objs
-objects objs: $(foreach o,$(object-suffixes),$(o-objects)) \
+objects objs: $(foreach o,$(object-suffixes-for-libc),$(o-objects)) \
 	      $(addprefix $(objpfx),$(extra-objs))
 
 # Canned sequence for building an extra library archive.
@@ -632,14 +656,9 @@ endef
 # should install libc.a; this way "make install" in a subdir is guaranteed
 # to install everything it changes.
 ifdef objects
-installed-libcs := $(foreach o,$(object-suffixes),\
+installed-libcs := $(foreach o,$(filter-out .so,$(object-suffixes-for-libc)),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
-installed-libcs := $(filter-out %_pic.a,$(installed-libcs))
-ifdef libc.so-version
-installed-libcs += $(inst_libdir)/$(patsubst %,$(libtype.oS),\
-					     $(libprefix)$(libc-name))
-endif
 install: $(installed-libcs)
 $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib
 	$(make-target-directory)
@@ -925,9 +944,8 @@ common-mostlyclean:
 	-rm -f core $(common-objpfx)stub-$(subdir)
 	$(rmobjs)
 define rmobjs
-$(foreach o,$(object-suffixes),
+$(foreach o,$(object-suffixes-for-libc),
 -rm -f $(objpfx)stamp$o $(o-objects))
--rm -f $(objpfx)stamp.oS $(patsubst %,$(objpfx)%.oS,$(static-only-routines))
 endef
 
 # Also remove the dependencies and generated source files.

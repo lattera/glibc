@@ -742,10 +742,11 @@ __strcat_c (char *__dest, __const char __src[], size_t __srclen)
   register unsigned long int __d0;
   register char *__tmp;
   __asm__ __volatile__
-    ("repne; cmpsb"
-     : "=S" (__tmp), "=&c" (__d0)
+    ("repne; scasb"
+     : "=D" (__tmp), "=&c" (__d0)
      : "0" (__dest), "1" (0xffffffff), "a" (0)
      : "cc");
+  --__tmp;
 #else
   register char *__tmp = __dest - 1;
   __asm__ __volatile__
@@ -798,8 +799,27 @@ __strcat_g (char *__dest, __const char *__src)
 __STRING_INLINE char *
 __strncat_g (char *__dest, __const char __src[], size_t __n)
 {
-  register char *__tmp = __dest - 1;
+  register char *__tmp = __dest;
   register char __dummy;
+#ifdef __i686__
+  __asm__ __volatile__
+    ("repne; scasb\n"
+     "decl %1\n\t"
+     "1:\n\t"
+     "decl	%3\n\t"
+     "js	2f\n\t"
+     "movb	(%2),%b0\n\t"
+     "movsb\n\t"
+     "testb	%b0,%b0\n\t"
+     "jne	1b\n\t"
+     "decl	%1\n"
+     "2:\n\t"
+     "movb	$0,(%1)"
+     : "=&a" (__dummy), "=&D" (__tmp), "=&S" (__src), "=&r" (__n)
+     : "0" (0), "1" (__tmp), "2" (__src), "3" (__n)
+     : "memory", "cc");
+#else
+  --__tmp;
   __asm__ __volatile__
     ("1:\n\t"
      "cmpb	$0,1(%1)\n\t"
@@ -816,10 +836,11 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
      "jne	2b\n\t"
      "decl	%1\n"
      "3:\n\t"
-     "movb	$0,(%1)\n\t"
+     "movb	$0,(%1)"
      : "=&q" (__dummy), "=&r" (__tmp), "=&r" (__src), "=&r" (__n)
      : "1" (__tmp), "2" (__src), "3" (__n)
      : "memory", "cc");
+#endif
   return __dest;
 }
 

@@ -23,13 +23,18 @@ install-others += $(inst_includedir)/bits/syscall.h
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)
-	echo > $(@:.d=.h).new \
-	     '/* Generated at libc build time from kernel syscall list.  */'
-	SUNPRO_DEPENDENCIES='$(@:.h=.d) $(patsubst $(objpfx)%,$$(objpfx)%,\
-						   $(@:.d=.h) $(@:.h=.d))' \
-	$(CC) -E -x c $< -D_LIBC -dM | \
-	sed -n >> $(@:.d=.h).new \
-	      's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'
+	{ \
+	 echo '/* Generated at libc build time from kernel syscall list.  */';\
+	 echo ''; \
+	 echo '#ifndef _SYSCALL_H'; \
+	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
+	 echo '#endif'; \
+	 echo ''; \
+	 SUNPRO_DEPENDENCIES='$(@:.h=.d) $(patsubst $(objpfx)%,$$(objpfx)%,\
+						    $(@:.d=.h) $(@:.h=.d))' \
+	 $(CC) -E -x c $< -D_LIBC -dM | \
+	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'; \
+	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h

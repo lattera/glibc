@@ -110,7 +110,8 @@ $(rtld-ldscript): $(rtld-ldscript-in) $(rtld-parms)
 	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
 endif
 
-$(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) $(load-map-file)
+$(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) \
+		$(ld-map)
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
 define rtld-link
@@ -136,18 +137,18 @@ endif
 # libraries when using LD_LIBRARY_PATH in a setuid program.  The user can
 # add directories to the list by defining $(user-defined-trusted-dirs)
 # before starting make.
-$(objpfx)trusted-dirs.h: Makefile
+$(objpfx)trusted-dirs.h: Makefile $(..)Makeconfig
 	$(make-target-directory)
 	(for dir in `echo "$(default-rpath) $(user-defined-trusted-dirs)" |   \
 		     sed 's/:/ /g'`; do					      \
 	   echo "  \"$$dir\",";						      \
 	 done;) > $@T
 	mv -f $@T $@
-$(objpfx)rtldtbl.h: Makefile genrtldtbl.awk
+$(objpfx)rtldtbl.h: Makefile $(..)Makeconfig genrtldtbl.awk
 	$(make-target-directory)
 	echo "$(default-rpath)" | awk -f genrtldtbl.awk > $@T
 	mv -f $@T $@
-CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
+CPPFLAGS-dl-load.c = -I$(objpfx).
 CFLAGS-dl-load.c += -Wno-uninitialized
 
 # Specify the dependencies of libdl.so; its commands come from the generic

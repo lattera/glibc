@@ -1182,6 +1182,12 @@ moving pointer has to be done by the user.  Successive calls to
 @var{delimiter}, returning the address of the next token and updating
 @var{string_ptr} to point to the beginning of the next token.
 
+If the input string contains more than one character from
+@var{delimiter} in a row @code{strsep} returns an empty string for each
+pair of characters from @var{delimiter}.  This means that a program
+normally should test for @code{strsep} returning an empty string before
+processing it.
+
 This function was introduced in 4.3BSD and therefore is widely available.
 @end deftypefun
 
@@ -1206,8 +1212,13 @@ token = strsep (&running, delimiters);    /* token => "words" */
 token = strsep (&running, delimiters);    /* token => "separated" */
 token = strsep (&running, delimiters);    /* token => "by" */
 token = strsep (&running, delimiters);    /* token => "spaces" */
+token = strsep (&running, delimiters);    /* token => "" */
+token = strsep (&running, delimiters);    /* token => "" */
+token = strsep (&running, delimiters);    /* token => "" */
 token = strsep (&running, delimiters);    /* token => "and" */
+token = strsep (&running, delimiters);    /* token => "" */
 token = strsep (&running, delimiters);    /* token => "punctuation" */
+token = strsep (&running, delimiters);    /* token => "" */
 token = strsep (&running, delimiters);    /* token => NULL */
 @end smallexample
 

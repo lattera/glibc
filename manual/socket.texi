@@ -791,8 +791,8 @@ packaged inside a structure of type @code{struct in_addr}.  It would
 be better if the usage were made consistent, but it is not hard to extract
 the integer from the structure or put the integer into a structure.
 
-The following basic definitions for Internet addresses appear in the
-header file@*@file{netinet/in.h}:
+The following basic definitions for Internet addresses are declared in
+the header file @file{netinet/in.h}:
 @pindex netinet/in.h
 
 @comment netinet/in.h
@@ -868,10 +868,10 @@ own variables to this value.
 @pindex arpa/inet.h
 @noindent
 These additional functions for manipulating Internet addresses are
-declared in@*@file{arpa/inet.h}.  They represent Internet addresses in
-network byte order; they represent network numbers and
-local-address-within-network numbers in host byte order.
-@xref{Byte Order}, for an explanation of network and host byte order.
+declared in the header file @file{arpa/inet.h}.  They represent Internet
+addresses in network byte order; they represent network numbers and
+local-address-within-network numbers in host byte order.  @xref{Byte
+Order}, for an explanation of network and host byte order.
 
 @comment arpa/inet.h
 @comment BSD
@@ -2718,7 +2718,7 @@ this section.
 @pindex sys/socket.h
 @noindent
 Here is a table of socket-level option names; all are defined in the
-header file@*@file{sys/socket.h}.
+header file @file{sys/socket.h}.
 
 @table @code
 @comment sys/socket.h

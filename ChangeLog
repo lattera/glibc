@@ -1,3 +1,81 @@
+1998-03-30 12:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strcat_c) [__i686__]: Correct
+	scanning for \0.
+	(__strncat_g): Add i686 specific code.
+
+1998-03-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Reporting Bugs): Ask to include section
+	names in reports.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.h): Emit
+	guard against direct inclusion.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	Rework support for libc_nonshared.a:
+	* Makeconfig (object-suffixes-for-libc): New variable.
+	* Rules: Remove handling of static-only and shared-only routines.
+	* Makerules: Handle them here instead.  Use
+	object-suffixes-for-libc instead of object-suffixes when dealing
+	with libc objects.
+	(object-suffixes-for-rules): Remove variable.
+	(elide-routines.oS): Elide all routines except static-only
+	routines.
+	($(objpfx)stamp.oS): Special rule for when static-only-routines is
+	empty.
+	(installed-libcs): Remove special case for .oS.
+	(rmobjs): Likewise.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (do-collate-test, do-xfrm-test, do-tst-fmon,
+	do-tst-rpmatch): New targets.
+	(test): Use them.
+	(install-locales): Ignore comment lines.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile ($(objpfx)ld.so): Depend on version script.
+	($(objpfx)trusted-dirs.h): Depend also on $(..)Makeconfig.
+	($(objpfx)rtldtbl.h): Likewise.
+	(CPPFLAGS-dl-load.c): Fix reference to object directory.
+
+1998-03-30 09:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/string.texi (Finding Tokens in a String): Extend strsep
+	description and correct example.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/socket.texi: Remove misguided explicit line breaks and
+	fix the formatting problem instead by reformulating the
+	paragraphs.
+	* manual/filesys.texi: Likewise.
+	* manual/conf.texi: Likewise.  Don't typeset table with index
+	fonts, that looks worse than a minimally overfull line.
+
+1998-03-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nscd/Makefile (nscd-modules): Move definition outside of
+	conditional.
+
+	* pwd/Makefile: Use have-thread-library to test for thread
+	library.
+
+1998-03-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/getXXent_r.c (INTERNAL): Remove unused variable current_nip.
+
+	* iconvdata/uhc.c (gconv): Remove unused variable idx.
+
+1998-03-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add lddlibc4.c.
+
 1998-03-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/getXXent_r.c: Correctly handle failing setXXent function.

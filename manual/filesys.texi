@@ -86,9 +86,8 @@ Permission to read or search a component of the file name was denied.
 @end table
 @end deftypefun
 
-Here is an example showing how you could implement the behavior of GNU's@*
-@w{@code{getcwd (NULL, 0)}} using only the standard behavior of
-@code{getcwd}:
+You could implement the behavior of GNU's @w{@code{getcwd (NULL, 0)}}
+using only the standard behavior of @code{getcwd}:
 
 @smallexample
 char *
