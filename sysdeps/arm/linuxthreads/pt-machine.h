@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    ARM version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -29,7 +29,7 @@
    time; let's hope nobody tries to use one.  */
 
 /* Spinlock implementation; required.  */
-PT_EI int
+PT_EI long int
 testandset (int *spinlock)
 {
   register unsigned int ret;
