@@ -59,10 +59,12 @@ __libc_lock_define_initialized (static, lock);
 /* Address to breakpoint on accesses to... */
 __ptr_t mallwatch;
 
+#ifdef USE_MTRACE_FILE
 /* File name and line number information, for callers that had
    the foresight to call through a macro.  */
-char *_mtrace_file attribute_hidden;
-int _mtrace_line attribute_hidden;
+char *_mtrace_file;
+int _mtrace_line;
+#endif
 
 /* Old hook values.  */
 static void (*tr_old_free_hook) __P ((__ptr_t ptr, const __ptr_t));
@@ -89,12 +91,15 @@ internal_function
 tr_where (caller)
      const __ptr_t caller;
 {
+#ifdef USE_MTRACE_FILE
   if (_mtrace_file)
     {
       fprintf (mallstream, "@ %s:%d ", _mtrace_file, _mtrace_line);
       _mtrace_file = NULL;
     }
-  else if (caller != NULL)
+  else
+#endif
+    if (caller != NULL)
     {
 #ifdef HAVE_ELF
       Dl_info info;
