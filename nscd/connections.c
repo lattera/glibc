@@ -83,7 +83,8 @@ const char *serv2str[LASTREQ] =
   [INVALIDATE] = "INVALIDATE",
   [GETFDPW] = "GETFDPW",
   [GETFDGR] = "GETFDGR",
-  [GETFDHST] = "GETFDHST"
+  [GETFDHST] = "GETFDHST",
+  [GETAI] = "GETAI"
 };
 
 /* The control data structures for the services.  */
@@ -151,6 +152,7 @@ static struct database_dyn *const serv2db[LASTREQ] =
   [GETFDPW] = &dbs[pwddb],
   [GETFDGR] = &dbs[grpdb],
   [GETFDHST] = &dbs[hstdb],
+  [GETAI] = &dbs[hstdb],
 };
 
 
@@ -592,8 +594,9 @@ cannot handle old request version %d; current version is %d"),
 
   struct database_dyn *db = serv2db[req->type];
 
-  if (__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
-      && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
+  if ((__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
+       && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
+      || req->type == GETAI)
     {
       if (__builtin_expect (debug_level, 0) > 0)
 	{
@@ -700,6 +703,10 @@ cannot handle old request version %d; current version is %d"),
 
     case GETHOSTBYADDRv6:
       addhstbyaddrv6 (db, fd, req, key, uid);
+      break;
+
+    case GETAI:
+      addhstai (db, fd, req, key, uid);
       break;
 
     case GETSTAT:

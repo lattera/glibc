@@ -54,11 +54,6 @@
 #   define __NTH(fct)	fct
 #  endif
 # endif
-/* These two macros are not usde in glibc anymore.  They are kept here
-   only because some other projects expect the macros to be
-   defined.  */
-# define __P(args)	args
-# define __PMT(args)	args
 
 #else	/* Not GCC.  */
 
@@ -66,14 +61,17 @@
 
 # define __THROW
 # define __NTH(fct)	fct
-# define __P(args)	args
-# define __PMT(args)	args
 
 # define __const	const
 # define __signed	signed
 # define __volatile	volatile
 
 #endif	/* GCC.  */
+
+/* These two macros are not used in glibc anymore.  They are kept here
+   only because some other projects expect the macros to be defined.  */
+#define __P(args)	args
+#define __PMT(args)	args
 
 /* For these things, GCC behaves the ANSI way normally,
    and the non-ANSI way under -traditional.  */

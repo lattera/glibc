@@ -193,6 +193,11 @@ extern void readdhstbynamev6 (struct database_dyn *db, struct hashentry *he,
 extern void readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
 			      struct datahead *dh);
 
+/* aicache.c */
+extern void addhstai (struct database_dyn *db, int fd, request_header *req,
+		      void *key, uid_t uid);
+extern void readdhstai (struct database_dyn *db, struct hashentry *he,
+			struct datahead *dh);
 
 /* mem.c */
 extern void *mempool_alloc (struct database_dyn *db, size_t len);

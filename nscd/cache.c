@@ -313,6 +313,10 @@ prune_cache (struct database_dyn *table, time_t now)
 			  readdhstbyaddrv6 (table, runp, dh);
 			  break;
 
+			case GETAI:
+			  readdhstai (table, runp, dh);
+			  break;
+
 			default:
 			  assert (! "should never happen");
 			}

@@ -1,3 +1,22 @@
+2004-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (rountines): Add nscd_getai.
+	(nscd-modules): Add aicache.
+	* nscd/aicache.c: New file.
+	* nscd/nscd_getai.c: New file.
+	* nscd/cache.c (prune_cache): Handle GETAI request type.
+	* nscd/connections.c: Add GETAI support in request handling.
+	* nscd/nscd-client.h (request_type): Add GETAI.
+	Define ai_response_header and struct nscd_ai_result types.
+	(struct datahead): Add aidata field.
+	Declare __nscd_getai.
+	* nscd/nscd.c: Add getaddrinfo definition to catch problems.
+	* nscd/nscd.h: Declare addhstai and readdhstai.
+
+	* sysdeps/posix/getaddrinfo.c: Add support for using cached results.
+
+	* nscd/nscd-client.h  (struct datahead): Use uint8_t instead of bool.
+
 2004-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Remove debugging text from __P and __PMT.

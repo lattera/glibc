@@ -54,6 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <net/if.h>
 #include <nsswitch.h>
 #include <not-cancel.h>
+#include <nscd/nscd-client.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -586,10 +587,156 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  enum nss_status inet6_status = NSS_STATUS_UNAVAIL;
 	  enum nss_status status = NSS_STATUS_UNAVAIL;
 	  int no_more;
-	  nss_gethostbyname2_r fct;
 	  int old_res_options;
-	  size_t tmpbuflen = 512;
-	  char *tmpbuf = alloca (tmpbuflen);
+
+	  /* If we do not have to look for IPv4 and IPv6 together, use
+	     the simple, old functions.  */
+	  if (req->ai_family == AF_INET || req->ai_family == AF_INET6)
+	    {
+	      int family = req->ai_family;
+	      size_t tmpbuflen = 512;
+	      char *tmpbuf = alloca (tmpbuflen);
+	      int rc;
+	      struct hostent th;
+	      struct hostent *h;
+	      int herrno;
+
+	    simple_again:
+	      while (1)
+		{
+		  rc = __gethostbyname2_r (name, family, &th, tmpbuf,
+					   tmpbuflen, &h, &herrno);
+		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
+		    break;
+		  tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);
+		}
+
+	      if (rc == 0)
+		{
+		  if (h == NULL)
+		    {
+		      if (req->ai_family == AF_INET6
+			  && (req->ai_flags & AI_V4MAPPED)
+			  && family == AF_INET6)
+			{
+			  /* Try again, this time looking for IPv4
+			     addresses.  */
+			  family = AF_INET;
+			  goto simple_again;
+			}
+		    }
+		  else
+		    {
+		      /* We found data, now convert it into the list.  */
+		      for (int i = 0; h->h_addr_list[i]; ++i)
+			{
+			  if (*pat == NULL)
+			    {
+			      *pat = __alloca (sizeof (struct gaih_addrtuple));
+			      (*pat)->scopeid = 0;
+			    }
+			  (*pat)->next = NULL;
+			  (*pat)->family = req->ai_family;
+			  if (family == req->ai_family)
+			    memcpy ((*pat)->addr, h->h_addr_list[i],
+				    h->h_length);
+			  else
+			    {
+			      int32_t *addr = (uint32_t *) (*pat)->addr;
+			      addr[3] = *(uint32_t *) h->h_addr_list[i];
+			      addr[2] = htonl (0xffff);
+			      addr[1] = 0;
+			      addr[0] = 0;
+			    }
+			  pat = &((*pat)->next);
+			}
+		    }
+		}
+	      else
+		{
+		  if (herrno == NETDB_INTERNAL)
+		    {
+		      __set_h_errno (herrno);
+		      return -EAI_SYSTEM;
+		    }
+		  if (herrno == TRY_AGAIN)
+		    {
+		      return -EAI_AGAIN;
+		    }
+		  /* We made requests but they turned out no data.
+		     The name is known, though.  */
+		  return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+		}
+
+	      goto process_list;
+	    }
+
+#ifdef USE_NSCD
+	  /* Try to use nscd.  */
+	  struct nscd_ai_result *air = NULL;
+	  int herrno;
+	  int err = __nscd_getai (name, &air, &herrno);
+	  if (air != NULL)
+	    {
+	      /* Transform into gaih_addrtuple list.  */
+	      bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
+	      char *addrs = air->addrs;
+
+	      for (int i = 0; i < air->naddrs; ++i)
+		{
+		  socklen_t size = (air->family[i] == AF_INET
+				    ? INADDRSZ : IN6ADDRSZ);
+		  if (*pat == NULL)
+		    {
+		      *pat = __alloca (sizeof (struct gaih_addrtuple));
+		      (*pat)->scopeid = 0;
+		    }
+		  uint32_t *pataddr = (*pat)->addr;
+		  (*pat)->next = NULL;
+		  if (added_canon || air->canon == NULL)
+		    (*pat)->name = NULL;
+		  else
+		    canon = (*pat)->name = strdupa (air->canon);
+
+		  if (air->family[i] == AF_INET
+		      && req->ai_family == AF_INET6
+		      && (req->ai_flags & AI_V4MAPPED))
+		    {
+		      (*pat)->family = AF_INET6;
+		      pataddr[3] = *(uint32_t *) addrs;
+		      pataddr[2] = htonl (0xffff);
+		      pataddr[1] = 0;
+		      pataddr[0] = 0;
+		      pat = &((*pat)->next);
+		      added_canon = true;
+		    }
+		  else if (req->ai_family == AF_UNSPEC
+			   || air->family[i] == req->ai_family)
+		    {
+		      (*pat)->family = air->family[i];
+		      memcpy (pataddr, addrs, size);
+		      pat = &((*pat)->next);
+		      added_canon = true;
+		      if (air->family[i] == AF_INET6)
+			got_ipv6 = true;
+		    }
+		  addrs += size;
+		}
+
+	      if (at->family == AF_UNSPEC)
+		return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+
+	      goto process_list;
+	    }
+	  else if (err != 0)
+	    {
+	      if (herrno == NETDB_INTERNAL && errno == ENOMEM)
+		return -EAI_MEMORY;
+	      if (herrno == TRY_AGAIN)
+		return -EAI_AGAIN;
+	      return -EAI_SYSTEM;
+	    }
+#endif
 
 	  if (__nss_hosts_database != NULL)
 	    {
@@ -611,9 +758,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  old_res_options = _res.options;
 	  _res.options &= ~RES_USE_INET6;
 
+	  size_t tmpbuflen = 512;
+	  char *tmpbuf = alloca (tmpbuflen);
+
 	  while (!no_more)
 	    {
-	      fct = __nss_lookup_function (nip, "gethostbyname2_r");
+	      nss_gethostbyname2_r fct
+		= __nss_lookup_function (nip, "gethostbyname2_r");
 
 	      if (fct != NULL)
 		{
@@ -707,6 +858,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    }
 	}
 
+    process_list:
       if (at->family == AF_UNSPEC)
 	return (GAIH_OKIFUNSPEC | -EAI_NONAME);
     }
@@ -917,6 +1069,7 @@ struct sort_result
 {
   struct addrinfo *dest_addr;
   struct sockaddr_storage source_addr;
+  uint8_t source_addr_len;
   bool got_source_addr;
 };
 
@@ -1377,9 +1530,10 @@ getaddrinfo (const char *name, const char *service,
       /* Sort results according to RFC 3484.  */
       struct sort_result results[nresults];
       struct addrinfo *q;
+      struct addrinfo *last = NULL;
       char *canonname = NULL;
 
-      for (i = 0, q = p; q != NULL; ++i, q = q->ai_next)
+      for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
 	  results[i].dest_addr = q;
 	  results[i].got_source_addr = false;
@@ -1387,18 +1541,33 @@ getaddrinfo (const char *name, const char *service,
 	  /* We overwrite the type with SOCK_DGRAM since we do not
 	     want connect() to connect to the other side.  If we
 	     cannot determine the source address remember this
-	     fact.  */
-	  int fd = __socket (q->ai_family, SOCK_DGRAM, IPPROTO_IP);
-	  if (fd != -1)
+	     fact.  If we just looked up the address for a different
+	     protocol, reuse the result.  */
+	  if (last != NULL && last->ai_addrlen == q->ai_addrlen
+	      && memcmp (last->ai_addr, q->ai_addr, q->ai_addrlen) == 0)
 	    {
-	      socklen_t sl = sizeof (results[i].source_addr);
-	      if (__connect (fd, q->ai_addr, q->ai_addrlen) == 0
-		  && __getsockname (fd,
-				    (struct sockaddr *) &results[i].source_addr,
-				    &sl) == 0)
-		results[i].got_source_addr = true;
+	      memcpy (&results[i].source_addr, &results[i - 1].source_addr,
+		      results[i - 1].source_addr_len);
+	      results[i].source_addr_len = results[i - 1].source_addr_len;
+	      results[i].got_source_addr = results[i - 1].got_source_addr;
+	    }
+	  else
+	    {
+	      int fd = __socket (q->ai_family, SOCK_DGRAM, IPPROTO_IP);
+	      if (fd != -1)
+		{
+		  socklen_t sl = sizeof (results[i].source_addr);
+		  if (__connect (fd, q->ai_addr, q->ai_addrlen) == 0
+		      && __getsockname (fd,
+					(struct sockaddr *) &results[i].source_addr,
+					&sl) == 0)
+		    {
+		      results[i].source_addr_len = sl;
+		      results[i].got_source_addr = true;
+		    }
 
-	      close_not_cancel_no_status (fd);
+		  close_not_cancel_no_status (fd);
+		}
 	    }
 
 	  /* Remember the canonical name.  */

@@ -61,6 +61,7 @@ typedef enum
   GETFDPW,
   GETFDGR,
   GETFDHST,
+  GETAI,
   LASTREQ
 } request_type;
 
@@ -118,6 +119,28 @@ typedef struct
 } hst_response_header;
 
 
+/* Structure sent in reply to addrinfo query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  nscd_ssize_t naddrs;
+  nscd_ssize_t addrslen;
+  nscd_ssize_t canonlen;
+  int32_t error;
+} ai_response_header;
+
+/* Structure filled in by __nscd_getai.  */
+struct nscd_ai_result
+{
+  int naddrs;
+  char *canon;
+  uint8_t *family;
+  char *addrs;
+};
+
+
 /* Type for offsets in data part of database.  */
 typedef uint32_t ref_t;
 /* Value for invalid/no reference.  */
@@ -136,9 +159,9 @@ struct datahead
   nscd_ssize_t allocsize;	/* Allocated Bytes.  */
   nscd_ssize_t recsize;		/* Size of the record.  */
   nscd_time_t timeout;		/* Time when this entry becomes invalid.  */
-  bool notfound;		/* Nonzero if data has not been found.  */
+  uint8_t notfound;		/* Nonzero if data has not been found.  */
   uint8_t nreloads;		/* Reloads without use.  */
-  bool usable;			/* False if the entry must be ignored.  */
+  uint8_t usable;		/* False if the entry must be ignored.  */
   uint64_t :40;			/* Alignment.  */
 
   /* We need to have the following element aligned for the response
@@ -149,6 +172,7 @@ struct datahead
     pw_response_header pwdata;
     gr_response_header grdata;
     hst_response_header hstdata;
+    ai_response_header aidata;
     nscd_ssize_t align1;
     nscd_time_t align2;
   } data[0];
@@ -269,5 +293,9 @@ extern const struct datahead *__nscd_cache_search (request_type type,
 						   const char *key,
 						   size_t keylen,
 						   const struct mapped_database *mapped);
+
+/* Look up in addrinfo cache.  */
+extern int __nscd_getai (const char *key, struct nscd_ai_result **result,
+			 int *h_errnop);
 
 #endif /* nscd.h */
