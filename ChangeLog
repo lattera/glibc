@@ -1,3 +1,8 @@
+2005-03-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,
+	it has been incremented before.
+
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-fini.c (_dl_fini): Split sorting of the maps in separate
