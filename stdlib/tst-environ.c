@@ -127,8 +127,9 @@ main (void)
     }
 
   /* More fun ahead: we are now removing the variable.  This should remove
-     both values.  */
-  putenv (VAR);
+     both values.  The cast is ok: this call should never put the string
+     in the environment and it should never modify it.  */
+  putenv ((char *) VAR);
 
   /* Getting the value should now fail.  */
   if (getenv (VAR) != NULL)

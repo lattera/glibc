@@ -7,11 +7,11 @@ struct {
   const char *	env;
   time_t	expected;
 } tests[] = {
-  {"TZ=MST",		832935315},
-  {"TZ=",		832910115},
-  {"TZ=:UTC",		832910115},
-  {"TZ=UTC",		832910115},
-  {"TZ=UTC0",		832910115}
+  {"MST",	832935315},
+  {"",		832910115},
+  {":UTC",	832910115},
+  {"UTC",	832910115},
+  {"UTC0",	832910115}
 };
 
 
@@ -34,7 +34,7 @@ main (int argc, char ** argv)
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
-      putenv (tests[i].env);
+      setenv ("TZ", tests[i].env);
       t = mktime (&tm);
       if (t != tests[i].expected)
 	{

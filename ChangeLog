@@ -1,3 +1,8 @@
+1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/tst-environ.c: Add cast to avoid warning.
+	* timezone/test-tz.c: Use setenv instead of putenv.
+
 1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/libc.texinfo: Update version and date.
