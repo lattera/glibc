@@ -309,6 +309,38 @@ typedef struct
   Elf64_Xword	st_size;		/* Symbol size */
 } Elf64_Sym;
 
+/* The syminfo section if available contains additional information about
+   every dynamic symbol.  */
+
+typedef struct
+{
+  Elf32_Half si_boundto;		/* Direct bindings, symbol bound to */
+  Elf32_Half si_flags;			/* Per symbol flags */
+} Elf32_Syminfo;
+
+typedef struct
+{
+  Elf64_Half si_boundto;		/* Direct bindings, symbol bound to */
+  Elf64_Half si_flags;			/* Per symbol flags */
+} Elf64_Syminfo;
+
+/* Possible values for si_boundto.  */
+#define SYMINFO_BT_SELF		0xffff	/* Symbol bound to self */
+#define SYMINFO_BT_PARENT	0xfffe	/* Symbol bound to parent */
+#define SYMINFO_BT_LOWRESERVE	0xff00	/* Beginning of reserved entries */
+
+/* Possible bitmasks for si_flags.  */
+#define SYMINFO_FLG_DIRECT	0x0001	/* Direct bound symbol */
+#define SYMINFO_FLG_PASSTHRU	0x0002	/* Pass-thru symbol for translator */
+#define SYMINFO_FLG_COPY	0x0004	/* Symbol is a copy-reloc */
+#define SYMINFO_FLG_LAZYLOAD	0x0008	/* Symbol bound to object to be lazy
+					   loaded */
+/* Syminfo version values.  */
+#define SYMINFO_NONE		0
+#define SYMINFO_CURRENT		1
+#define SYMINFO_NUM		2
+
+
 /* Special section index.  */
 
 #define SHN_UNDEF	0		/* No section, undefined symbol.  */
@@ -529,6 +561,25 @@ typedef struct
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
+
+/* DT_* entries which fall between DT_VALRNGHI & DT_VALRNGLO use the
+   Dyn.d_un.d_val field of the Elf*_Dyn structure.  This follows Sun's
+   approach.  */
+#define DT_VALRNGLO	0x6ffffd00
+#define DT_POSFLAG_1	0x6ffffdfd	/* Flags for DT_* entries, effecting
+					   the following DT_* entry.  */
+#define DT_SYMINSZ	0x6ffffdfe	/* Size of syminfo table (in bytes) */
+#define DT_SYMINENT	0x6ffffdff	/* Entry size of syminfo */
+#define DT_VALRNGHI	0x6ffffdff
+
+/* DT_* entries which fall between DT_ADDRRNGHI & DT_ADDRRNGLO use the
+   Dyn.d_un.d_ptr field of the Elf*_Dyn structure.
+
+   If any adjustment is made to the ELF object after it has been
+   built these entries will need to be adjusted.  */
+#define DT_ADDRRNGLO	0x6ffffe00
+#define DT_SYMINFO	0x6ffffeff	/* syminfo table */
+#define DT_ADDRRNGHI	0x6ffffeff
 
 /* The versioning entry types.  The next are defined as part of the
    GNU extension.  */

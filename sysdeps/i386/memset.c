@@ -1,6 +1,6 @@
 /* Set a block of memory to some byte value.
    For Intel 80x86, x>=3.
-   Copyright (C) 1991, 1992, 1993, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1993, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 void *
 memset (void *dstpp, int c, size_t len)
 {
+  int d0;
   unsigned long int dstp = (unsigned long int) dstpp;
 
   /* This explicit register allocation
@@ -55,25 +56,25 @@ memset (void *dstpp, int c, size_t len)
       /* Fill bytes until DSTP is aligned on a longword boundary.  */
       asm volatile("rep\n"
 		   "stosb" /* %0, %2, %3 */ :
-		   "=D" (dstp) :
-		   "0" (dstp), "c" ((-dstp) % OPSIZ), "a" (x) :
-		   "cx");
+		   "=D" (dstp), "=c" (d0) :
+		   "0" (dstp), "1" ((-dstp) % OPSIZ), "a" (x) :
+		   "memory");
 
       /* Fill longwords.  */
       asm volatile("rep\n"
 		   "stosl" /* %0, %2, %3 */ :
-		   "=D" (dstp) :
-		   "0" (dstp), "c" (len / OPSIZ), "a" (x) :
-		   "cx");
+		   "=D" (dstp), "=c" (d0) :
+		   "0" (dstp), "1" (len / OPSIZ), "a" (x) :
+		   "memory");
       len %= OPSIZ;
     }
 
   /* Write the last few bytes.  */
   asm volatile("rep\n"
 	       "stosb" /* %0, %2, %3 */ :
-	       "=D" (dstp) :
-	       "0" (dstp), "c" (len), "a" (x) :
-	       "cx");
+	       "=D" (dstp), "=c" (d0) :
+	       "0" (dstp), "1" (len), "a" (x) :
+	       "memory");
 
   return dstpp;
 }

@@ -1,3 +1,22 @@
+1998-08-25 11:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add syminfo stuff and other DT_* from Solaris' ELF.
+
+1998-08-25  Bernd Schmidt  <crux@Pool.Informatik.RWTH-Aachen.DE>
+
+	* argp/argp.h: Use __inline__ not inline.
+
+	* sysdeps/i386/bits/select.h (FD_ZERO): Rewrite asm not to indicate
+	an input register as being clobbered.
+	* sysdeps/i386/memset.c (memset): Likewise.
+	* sysdeps/i386/bzero.c (__bzero): Likewise.
+	* sysdeps/i386/memcopy.h ({BYTE,WORD}_COPY_[FB]WD): Likewise.
+
+1998-08-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdlib/jrand48_r.c (__jrand48_r): Set also upper half of result.
+	Fixes PR libc/757 (Reported by Michael Creutz <creutz@bnl.gov).
+
 1998-08-24 16:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* debug/catchsegv.sh: Handle text preceding backtrace better.

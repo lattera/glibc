@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,17 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 
 # define __FD_ZERO(fdsetp) \
-  __asm__ __volatile__ ("cld; rep; stosl"				      \
-			: "=m" ((fdsetp)->fds_bits[__FDELT (__FD_SETSIZE)])   \
-			: "a" (0), "c" (sizeof (__fd_set)		      \
-					/ sizeof (__fd_mask)),		      \
-			  "D" (&(fdsetp)->fds_bits[0])			      \
-			:"cx","di","memory")
+  do {									      \
+    int __d0, __d1;							      \
+    __asm__ __volatile__ ("cld; rep; stosl"				      \
+			  : "=m" ((fdsetp)->fds_bits[__FDELT (__FD_SETSIZE)]),\
+			    "=&c" (__d0), "=&D" (__d1)			      \
+			  : "a" (0), "1" (sizeof (__fd_set)		      \
+					  / sizeof (__fd_mask)),	      \
+			    "2" (&(fdsetp)->fds_bits[0])		      \
+			  : "memory");					      \
+  } while (0)
+
 # define __FD_SET(fd, fdsetp) \
   __asm__ __volatile__ ("btsl %1,%0"					      \
 			: "=m" ((fdsetp)->fds_bits[__FDELT (fd)])	      \

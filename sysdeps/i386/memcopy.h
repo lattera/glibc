@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  i386 version.
-   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -25,19 +25,23 @@
 
 #undef	BYTE_COPY_FWD
 #define BYTE_COPY_FWD(dst_bp, src_bp, nbytes)				      \
-  asm volatile(/* Clear the direction flag, so copying goes forward.  */      \
-	       "cld\n"							      \
-	       /* Copy bytes.  */					      \
-	       "rep\n"							      \
-	       "movsb" :						      \
-	       "=D" (dst_bp), "=S" (src_bp) :				      \
-	       "0" (dst_bp), "1" (src_bp), "c" (nbytes) :		      \
-	       "cx")
+  do {									      \
+    int __d0;								      \
+    asm volatile(/* Clear the direction flag, so copying goes forward.  */    \
+		 "cld\n"						      \
+		 /* Copy bytes.  */					      \
+		 "rep\n"						      \
+		 "movsb" :						      \
+		 "=D" (dst_bp), "=S" (src_bp), "=c" (__d0) :		      \
+		 "0" (dst_bp), "1" (src_bp), "2" (nbytes) :		      \
+		 "memory");						      \
+  } while (0)
 
 #undef	BYTE_COPY_BWD
 #define BYTE_COPY_BWD(dst_ep, src_ep, nbytes)				      \
   do									      \
     {									      \
+      int __d0;								      \
       asm volatile(/* Set the direction flag, so copying goes backwards.  */  \
 		   "std\n"						      \
 		   /* Copy bytes.  */					      \
@@ -45,9 +49,9 @@
 		   "movsb\n"						      \
 		   /* Clear the dir flag.  Convention says it should be 0. */ \
 		   "cld" :						      \
-		   "=D" (dst_ep), "=S" (src_ep) :			      \
-		   "0" (dst_ep - 1), "1" (src_ep - 1), "c" (nbytes) :	      \
-		   "cx");						      \
+		   "=D" (dst_ep), "=S" (src_ep), "=c" (__d0) :		      \
+		   "0" (dst_ep - 1), "1" (src_ep - 1), "2" (nbytes) :	      \
+		   "memory");						      \
       dst_ep += 1;							      \
       src_ep += 1;							      \
     } while (0)
@@ -56,14 +60,15 @@
 #define WORD_COPY_FWD(dst_bp, src_bp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
+      int __d0;								      \
       asm volatile(/* Clear the direction flag, so copying goes forward.  */  \
 		   "cld\n"						      \
 		   /* Copy longwords.  */				      \
 		   "rep\n"						      \
 		   "movsl" :						      \
-		   "=D" (dst_bp), "=S" (src_bp) :			      \
-		   "0" (dst_bp), "1" (src_bp), "c" ((nbytes) / 4) :	      \
-		   "cx");						      \
+ 		   "=D" (dst_bp), "=S" (src_bp), "=c" (__d0) :		      \
+		   "0" (dst_bp), "1" (src_bp), "2" ((nbytes) / 4) :	      \
+		   "memory");						      \
       (nbytes_left) = (nbytes) % 4;					      \
     } while (0)
 
@@ -71,6 +76,7 @@
 #define WORD_COPY_BWD(dst_ep, src_ep, nbytes_left, nbytes)		      \
   do									      \
     {									      \
+      int __d0;								      \
       asm volatile(/* Set the direction flag, so copying goes backwards.  */  \
 		   "std\n"						      \
 		   /* Copy longwords.  */				      \
@@ -78,9 +84,9 @@
 		   "movsl\n"						      \
 		   /* Clear the dir flag.  Convention says it should be 0. */ \
 		   "cld" :						      \
-		   "=D" (dst_ep), "=S" (src_ep) :			      \
-		   "0" (dst_ep - 4), "1" (src_ep - 4), "c" ((nbytes) / 4) :   \
-		   "cx");						      \
+		   "=D" (dst_ep), "=S" (src_ep), "=c" (__d0) :		      \
+		   "0" (dst_ep - 4), "1" (src_ep - 4), "2" ((nbytes) / 4) :   \
+		   "memory");						      \
       dst_ep += 4;							      \
       src_ep += 4;							      \
       (nbytes_left) = (nbytes) % 4;					      \
