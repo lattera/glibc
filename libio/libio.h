@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995, 1997-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -495,6 +495,8 @@ weak_extern (_IO_stdin_used);
 	   (__fp)->_mode = -1;						      \
 	 __result = (__fp)->_mode;					      \
        }								      \
+     else if (__builtin_constant_p (__mode) && (__mode) == 0)		      \
+       __result = (__fp)->_mode;					      \
      else								      \
        __result = _IO_fwide (__fp, __result);				      \
      __result; })

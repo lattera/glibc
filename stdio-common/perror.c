@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1997,1998,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ perror (const char *s)
   errstring = __strerror_r (errnum, buf, sizeof buf);
 
 #ifdef USE_IN_LIBIO
-  if (fwide (stderr, 0) > 0)
+  if (_IO_fwide (stderr, 0) > 0)
     (void) fwprintf (stderr, L"%s%s%s\n", s, colon, errstring);
   else
 #endif

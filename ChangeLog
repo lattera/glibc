@@ -1,3 +1,10 @@
+2001-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/perror.c (perror): Use _IO_fwide instead of fwide.
+
+	* libio/libio.h (_IO_fwide): Handle zero as second parameter more
+	efficiently in macro.
+
 2001-08-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (RESOLVSORT): Define.
