@@ -68,7 +68,7 @@ enum mode { normal, list, verify, trace };
 static void process_envvars (enum mode *modep);
 
 int _dl_argc attribute_relro attribute_hidden;
-char **_dl_argv attribute_relro;
+char **_dl_argv attribute_relro = NULL;
 INTDEF(_dl_argv)
 
 /* Nonzero if we were run directly.  */

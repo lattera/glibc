@@ -1,5 +1,7 @@
 2004-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Initialize _dl_argv to allow aliasing.
+
 	* resolv/resolv.h: Add RES_USEBSTRING.
 	* resolv/res_debug.c (p_option): Add handling for RES_USE_INET6,
 	RES_ROTATE, RES_NOCHECKNAME, and RES_USEBSTRING.
