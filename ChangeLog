@@ -1,5 +1,9 @@
 2002-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile: Add rules to build and run tst-tls8.
+	* elf/tst-tls8.c: New file.
+	* elf/tst-tlsmod4.c: New file.
+
 	* stdlib/test-a64l.c (tests): Add more test cases.
 
 	* sunrpc/rtime.c (rtime): Change type of thetime to uint32_t.
