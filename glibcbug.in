@@ -11,6 +11,7 @@ ADDONS="@subdirs@"
 HOST="@host@"
 CC='@CC@'
 CFLAGS="@CFLAGS@"
+SYSINCLUDES="@SYSINCLUDES@"
 VERSIONING="@VERSIONING@"
 BUILD_STATIC="@static@"
 BUILD_SHARED="@shared@"
@@ -20,9 +21,6 @@ BUILD_OMITFP="@omitfp@"
 BUILD_BOUNDED="@bounded@"
 BUILD_STATIC_NSS="@static_nss@"
 STDIO="@stdio@"
-
-PATH=/bin:/usr/bin:/usr/local/bin:$PATH
-export PATH
 
 TEMP=`mktemp -q /tmp/glibcbugXXXXXX 2>/dev/null`
 if test $? -ne 0; then
@@ -108,9 +106,9 @@ MACHINE=`[ -f /bin/machine ] && /bin/machine`
 CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 
 case $HOST in *linux*)
-  KHDRS=`(echo '#include <linux/version.h>
+  KHDRS=`(echo '#include <linux/version.h>'
 	  echo '! UTS_RELEASE' ) |
-	 $CC -E - | sed -n '/!/s/[! "]//gp'`;;
+	 $CC $SYSINCLUDES -E - | sed -n '/!/s/[! "]//gp'`;;
 esac
 
 ORGANIZATION_C='<organization of PR author (multiple lines)>'

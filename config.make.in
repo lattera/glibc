@@ -26,6 +26,7 @@ config-os = @host_os@
 config-sysdirs = @sysnames@
 
 defines = @DEFINES@
+sysincludes = @SYSINCLUDES@
 
 elf = @elf@
 have-initfini = @libc_cv_have_initfini@

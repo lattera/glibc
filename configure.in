@@ -47,6 +47,12 @@ AC_ARG_WITH(cvs, dnl
 	    with_cvs=$withval, with_cvs=yes)
 AC_SUBST(with_cvs)
 
+AC_ARG_WITH(headers, dnl
+[  --with-headers=PATH     location of system headers to use
+                          [e.g. /usr/src/linux/include]
+                          [default=compiler default]],
+	    sysheaders=$withval, sysheaders='')
+
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
  	      [if test $enableval = yes; then
@@ -469,6 +475,15 @@ LIBC_PROG_BINUTILS
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 AC_CHECK_TOOL(MIG, mig)
+
+# if using special system headers, find out the compiler's sekrit
+# header directory and add that to the list.  NOTE: Only does the right
+# thing on a system that doesn't need fixincludes.  (Not presently a problem.)
+if test -n "$sysheaders"; then
+  ccheaders=`$CC -print-file-name=include`
+  SYSINCLUDES="-nostdinc -isystem $ccheaders -isystem $sysheaders"
+fi
+AC_SUBST(SYSINCLUDES)
 
 # check if ar takes S
 AC_CACHE_CHECK(for ar S, libc_cv_ar_S, [dnl

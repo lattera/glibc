@@ -541,7 +541,7 @@ endif	# $(+cflags) == ""
 # `+sysdep-includes' will be defined by Makerules.
 +includes = -I. $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
 	    -I$(..)include $($(stdio)-include) $(includes) \
-	    $(+sysdep-includes) $(last-includes)
+	    $(+sysdep-includes) $(last-includes) $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.
