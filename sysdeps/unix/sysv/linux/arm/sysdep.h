@@ -49,8 +49,8 @@
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  .type syscall_error,%function	;					      \
-  ENTRY (name)								      \
+  .type syscall_error,%function;					      \
+  ENTRY (name);								      \
     DO_CALL (args, syscall_name);					      \
     cmn r0, $4096;							      \
     bhs PLTJMP(C_SYMBOL_NAME(__syscall_error));
