@@ -39,7 +39,7 @@ Cambridge, MA 02139, USA.  */
 #include <libioP.h>
 #define PUT(f, s, n)	_IO_sputn (f, s, n)
 #define PAD(padchar)	\
-  (width > 0 ? (_IO_padn (s, padchar, width), done += width) : 0)
+	(width > 0 ? width += _IO_padn (s, padchar, width) : 0)
 #define PUTC(c, f)	_IO_putc(c, f)
 #define vfprintf	_IO_vfprintf
 #define size_t		_IO_size_t
@@ -862,7 +862,7 @@ DEFUN(buffered_vfprintf, (s, format, args),
   result = vfprintf (s, format, args);
 
   if (fflush (s) == EOF)
-    return -1;
+    result = -1;
   s->__buffer = s->__bufp = s->__get_limit = s->__put_limit = NULL;
   s->__bufsize = 0;
 
