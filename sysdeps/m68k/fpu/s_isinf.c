@@ -34,7 +34,7 @@ __CONCATX(__,FUNC) (x)
   return __m81_u(__CONCATX(__,FUNC))(x);
 }
 
-#define INTDEFX(a) INTDEF(a)
-INTDEFX(__CONCATX(__,FUNC))
+#define hidden_defx(a) hidden_def(a)
+hidden_defx(__CONCATX(__,FUNC))
 #define weak_aliasx(a,b) weak_alias(a,b)
 weak_aliasx (__CONCATX(__,FUNC), FUNC)
