@@ -1,3 +1,8 @@
+1999-06-02  David S. Miller  <davem@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Align the h_addr_list
+	pointers properly.
+
 1999-06-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: Read kernel-features.h

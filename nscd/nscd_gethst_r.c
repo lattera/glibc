@@ -167,7 +167,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       struct iovec vec[4];
       size_t *aliases_len;
       char *cp = buffer;
-      uintptr_t align;
+      uintptr_t align1;
+      uintptr_t align2;
       size_t total_len;
       ssize_t cnt;
       char *ignore;
@@ -175,10 +176,13 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
       /* A first check whether the buffer is sufficently large is possible.  */
       /* Now allocate the buffer the array for the group members.  We must
-	 align the pointer.  */
-      align = ((__alignof__ (char *) - (cp - ((char *) 0)))
-	       & (__alignof__ (char *) - 1));
-      if (buflen < (align + hst_resp.h_name_len
+	 align the pointer and the base of the h_addr_list pointers.  */
+      align1 = ((__alignof__ (char *) - (cp - ((char *) 0)))
+		& (__alignof__ (char *) - 1));
+      align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp.h_name_len)
+					 - ((char *) 0)))
+		& (__alignof__ (char *) - 1));
+      if (buflen < (align1 + hst_resp.h_name_len + align2 +
 		    + ((hst_resp.h_aliases_cnt + hst_resp.h_addr_list_cnt + 2)
 		       * sizeof (char *))
 		    + hst_resp.h_addr_list_cnt * (type == AF_INET
@@ -189,7 +193,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	  __close (sock);
 	  return -1;
 	}
-      cp += align;
+      cp += align1;
 
       /* Prepare the result as far as we can.  */
       resultbuf->h_aliases = (char **) cp;
@@ -198,7 +202,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       cp += (hst_resp.h_addr_list_cnt + 1) * sizeof (char *);
 
       resultbuf->h_name = cp;
-      cp += hst_resp.h_name_len;
+      cp += hst_resp.h_name_len + align2;
       vec[0].iov_base = resultbuf->h_name;
       vec[0].iov_len = hst_resp.h_name_len;
 
