@@ -43,10 +43,12 @@
 
 #include "localeinfo.h"
 #include "charmap-dir.h"
+#include "../locarchive.h"
 
 extern void *xmalloc (size_t __n);
 extern char *xstrdup (const char *__str);
 
+#define ARCHIVE_NAME LOCALEDIR "/locale-archive"
 
 /* If set print the name of the category.  */
 static int show_category_name;
@@ -168,7 +170,11 @@ extern void locale_special (const char *name, int show_category_name,
 			    int show_keyword_name);
 
 /* Prototypes for local functions.  */
+static void print_LC_IDENTIFICATION (void *mapped, size_t size);
+static void print_LC_CTYPE (void *mapped, size_t size);
 static void write_locales (void);
+static int nameentcmp (const void *a, const void *b);
+static int write_archive_locales (void **all_datap, char *linebuf);
 static void write_charmaps (void);
 static void show_locale_vars (void);
 static void show_info (const char *name);
@@ -327,6 +333,74 @@ select_dirs (const struct dirent *dirent)
 }
 
 
+static void
+print_LC_IDENTIFICATION (void *mapped, size_t size)
+{
+  /* Read the information from the file.  */
+  struct
+    {
+      unsigned int magic;
+      unsigned int nstrings;
+      unsigned int strindex[0];
+    } *filedata = mapped;
+
+  if (filedata->magic == LIMAGIC (LC_IDENTIFICATION)
+      && (sizeof *filedata
+	  + (filedata->nstrings
+	     * sizeof (unsigned int))
+	  <= size))
+    {
+      const char *str;
+
+#define HANDLE(idx, name) \
+  str = ((char *) mapped						      \
+	 + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
+  if (*str != '\0')							      \
+    printf ("%9s | %s\n", name, str)
+      HANDLE (TITLE, "title");
+      HANDLE (SOURCE, "source");
+      HANDLE (ADDRESS, "address");
+      HANDLE (CONTACT, "contact");
+      HANDLE (EMAIL, "email");
+      HANDLE (TEL, "telephone");
+      HANDLE (FAX, "fax");
+      HANDLE (LANGUAGE, "language");
+      HANDLE (TERRITORY, "territory");
+      HANDLE (AUDIENCE, "audience");
+      HANDLE (APPLICATION, "application");
+      HANDLE (ABBREVIATION, "abbreviation");
+      HANDLE (REVISION, "revision");
+      HANDLE (DATE, "date");
+    }
+}
+
+
+static void
+print_LC_CTYPE (void *mapped, size_t size)
+{
+  struct
+    {
+      unsigned int magic;
+      unsigned int nstrings;
+      unsigned int strindex[0];
+    } *filedata = mapped;
+
+  if (filedata->magic == LIMAGIC (LC_CTYPE)
+      && (sizeof *filedata
+	  + (filedata->nstrings
+	     * sizeof (unsigned int))
+	  <= size))
+    {
+      const char *str;
+
+      str = ((char *) mapped
+	     + filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)]);
+      if (*str != '\0')
+	printf ("  codeset | %s\n", str);
+    }
+}
+
+
 /* Write the names of all available locales to stdout.  We have some
    sources of the information: the contents of the locale directory
    and the locale.alias file.  To avoid duplicates and print the
@@ -358,6 +432,10 @@ write_locales (void)
   memset (linebuf, '-', sizeof (linebuf) - 1);
   linebuf[sizeof (linebuf) - 1] = '\0';
 
+  /* First scan the locale archive.  */
+  if (write_archive_locales (&all_data, linebuf))
+    first_locale = 0;
+
   /* Now we can look for all files in the directory.  */
   ndirents = scandir (LOCALEDIR, &dirents, select_dirs, alphasort);
   for (cnt = 0; cnt < ndirents; ++cnt)
@@ -375,7 +453,7 @@ write_locales (void)
 
       if (stat64 (buf, &st) == 0 && S_ISREG (st.st_mode))
 	{
-	  if (verbose)
+	  if (verbose && GET (dirents[cnt]->d_name) == NULL)
 	    {
 	      /* Provide some nice output of all kinds of
 		 information.  */
@@ -396,42 +474,7 @@ write_locales (void)
 					 MAP_SHARED, fd, 0);
 		  if (mapped != MAP_FAILED)
 		    {
-		      /* Read the information from the file.  */
-		      struct
-		      {
-			unsigned int magic;
-			unsigned int nstrings;
-			unsigned int strindex[0];
-		      } *filedata = mapped;
-
-		      if (filedata->magic == LIMAGIC (LC_IDENTIFICATION)
-			  && (sizeof *filedata
-			      + (filedata->nstrings
-				 * sizeof (unsigned int))
-			      <= (size_t) st.st_size))
-			{
-			  const char *str;
-
-#define HANDLE(idx, name) \
-  str = ((char *) mapped						      \
-	 + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
-  if (*str != '\0')							      \
-    printf ("%9s | %s\n", name, str)
-			  HANDLE (TITLE, "title");
-			  HANDLE (SOURCE, "source");
-			  HANDLE (ADDRESS, "address");
-			  HANDLE (CONTACT, "contact");
-			  HANDLE (EMAIL, "email");
-			  HANDLE (TEL, "telephone");
-			  HANDLE (FAX, "fax");
-			  HANDLE (LANGUAGE, "language");
-			  HANDLE (TERRITORY, "territory");
-			  HANDLE (AUDIENCE, "audience");
-			  HANDLE (APPLICATION, "application");
-			  HANDLE (ABBREVIATION, "abbreviation");
-			  HANDLE (REVISION, "revision");
-			  HANDLE (DATE, "date");
-			}
+		      print_LC_IDENTIFICATION (mapped, st.st_size);
 
 		      munmap (mapped, st.st_size);
 		    }
@@ -446,26 +489,7 @@ write_locales (void)
 					    MAP_SHARED, fd, 0))
 			  != MAP_FAILED))
 		    {
-		      struct
-		      {
-			unsigned int magic;
-			unsigned int nstrings;
-			unsigned int strindex[0];
-		      } *filedata = mapped;
-
-		      if (filedata->magic == LIMAGIC (LC_CTYPE)
-			  && (sizeof *filedata
-			      + (filedata->nstrings
-				 * sizeof (unsigned int))
-			      <= (size_t) st.st_size))
-			{
-			  const char *str;
-
-			  str = ((char *) mapped
-				 + filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)]);
-			  if (*str != '\0')
-			    printf ("  codeset | %s\n", str);
-			}
+		      print_LC_CTYPE (mapped, st.st_size);
 
 		      munmap (mapped, st.st_size);
 		    }
@@ -474,10 +498,10 @@ write_locales (void)
 		    close (fd);
 		}
 	    }
-	  else
-	    /* If the verbose format is not selected we simply
-	       collect the names.  */
-	    PUT (xstrdup (dirents[cnt]->d_name));
+
+	  /* If the verbose format is not selected we simply
+	     collect the names.  */
+	  PUT (xstrdup (dirents[cnt]->d_name));
 	}
     }
   if (ndirents > 0)
@@ -581,6 +605,113 @@ write_locales (void)
     {
       twalk (all_data, print_names);
     }
+}
+
+
+struct nameent
+{
+  char *name;
+  uint32_t locrec_offset;
+};
+
+
+static int
+nameentcmp (const void *a, const void *b)
+{
+  return strcoll (((const struct nameent *) a)->name,
+		  ((const struct nameent *) b)->name);
+}
+
+
+static int
+write_archive_locales (void **all_datap, char *linebuf)
+{
+  struct stat64 st;
+  void *all_data = *all_datap;
+  size_t len = 0;
+  struct locarhead *head;
+  struct namehashent *namehashtab;
+  char *addr = MAP_FAILED;
+  int fd, ret = 0;
+  uint32_t cnt;
+
+  fd = open64 (ARCHIVE_NAME, O_RDONLY);
+  if (fd < 0)
+    return 0;
+
+  if (fstat64 (fd, &st) < 0 || st.st_size < sizeof (*head))
+    goto error_out;
+
+  len = st.st_size;
+  addr = mmap64 (NULL, len, PROT_READ, MAP_SHARED, fd, 0);
+  if (addr == MAP_FAILED)
+    goto error_out;
+
+  head = (struct locarhead *) addr;
+  if (head->namehash_offset + head->namehash_size > len
+      || head->string_offset + head->string_size > len
+      || head->locrectab_offset + head->locrectab_size > len
+      || head->sumhash_offset + head->sumhash_size > len)
+    goto error_out;
+
+  namehashtab = (struct namehashent *) (addr + head->namehash_offset);
+  if (! verbose)
+    {
+      for (cnt = 0; cnt < head->namehash_size; ++cnt)
+	if (namehashtab[cnt].locrec_offset != 0)
+	  {
+	    PUT (xstrdup (addr + namehashtab[cnt].name_offset));
+	    ++ret;
+	  }
+    }
+  else
+    {
+      struct nameent *names;
+      uint32_t used;
+
+      names = (struct nameent *) xmalloc (head->namehash_used
+					  * sizeof (struct nameent));
+      for (cnt = used = 0; cnt < head->namehash_size; ++cnt)
+	if (namehashtab[cnt].locrec_offset != 0)
+	  {
+	    names[used].name = addr + namehashtab[cnt].name_offset;
+	    names[used++].locrec_offset = namehashtab[cnt].locrec_offset;
+	  }
+
+      /* Sort the names.  */
+      qsort (names, used, sizeof (struct nameent), nameentcmp);
+
+      for (cnt = 0; cnt < used; ++cnt)
+	{
+	  struct locrecent *locrec;
+
+	  PUT (xstrdup (names[cnt].name));
+
+	  if (cnt)
+	    putchar_unlocked ('\n');
+
+	  printf ("locale: %-15.15s archive: " ARCHIVE_NAME "\n%s\n",
+		  names[cnt].name, linebuf);
+
+	  locrec = (struct locrecent *) (addr + names[cnt].locrec_offset);
+
+	  print_LC_IDENTIFICATION (addr
+				   + locrec->record[LC_IDENTIFICATION].offset,
+				   locrec->record[LC_IDENTIFICATION].len);
+
+	  print_LC_CTYPE (addr + locrec->record[LC_CTYPE].offset,
+			  locrec->record[LC_CTYPE].len);
+	}
+
+      ret = used;
+    }
+
+error_out:
+  if (addr != MAP_FAILED)
+    munmap (addr, len);
+  close (fd);
+  *all_datap = all_data;
+  return ret;
 }
 
 
