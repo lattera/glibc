@@ -100,17 +100,6 @@ struct elf_prpsinfo
     char pr_psargs[ELF_PRARGSZ];	/* Initial part of arg list.  */
   };
 
-/* Addresses.  */
-typedef void *psaddr_t;
-
-/* Register sets.  Linux has different names.  */
-typedef gregset_t prgregset_t;
-typedef fpregset_t prfpregset_t;
-
-/* We don't have any differences between processes and threads,
-   therefore habe only ine PID type.  */
-typedef __pid_t lwpid_t;
-
 
 /* Addresses.  */
 typedef void *psaddr_t;
