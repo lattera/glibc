@@ -416,9 +416,8 @@ extern void _dl_relocate_object (struct link_map *map,
    TYPE is the result of ELFW(R_TYPE) (r_info), i.e. an R_<CPU>_* value.
    PLT is nonzero if this was a PLT reloc; it just affects the message.  */
 extern void _dl_reloc_bad_type (struct link_map *map,
-				uint_fast8_t type, int plt)
-     internal_function
-     __attribute__ ((__noreturn__));
+				unsigned int type, int plt)
+     internal_function __attribute__ ((__noreturn__));
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */

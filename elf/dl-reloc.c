@@ -187,28 +187,23 @@ cannot make segment writable for relocation"));
     }
 }
 
-#include "../stdio-common/_itoa.h"
-#define DIGIT(b)	_itoa_lower_digits[(b) & 0xf];
 
 void
 internal_function
-_dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
+_dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 {
   extern const char _itoa_lower_digits[];
-  if (plt)
-    {
-      /* XXX We cannot translate the message.  */
-      static char msg[] = "unexpected PLT reloc type 0x??";
-      msg[sizeof msg - 3] = DIGIT(type >> 4);
-      msg[sizeof msg - 2] = DIGIT(type);
-      _dl_signal_error (0, map->l_name, NULL, msg);
-    }
-  else
-    {
-      /* XXX We cannot translate the message.  */
-      static char msg[] = "unexpected reloc type 0x??";
-      msg[sizeof msg - 3] = DIGIT(type >> 4);
-      msg[sizeof msg - 2] = DIGIT(type);
-      _dl_signal_error (0, map->l_name, NULL, msg);
-    }
+#define DIGIT(b)	_itoa_lower_digits[(b) & 0xf];
+
+  /* XXX We cannot translate these messages.  */
+  static const char msg[2][32] = { "unexpected reloc type 0x",
+				   "unexpected PLT reloc type 0x" };
+  char msgbuf[sizeof (msg[0])];
+  char *cp;
+
+  cp = __stpcpy (msgbuf, msg[plt]);
+  *cp++ = DIGIT (type >> 4);
+  *cp = DIGIT (type);
+
+  _dl_signal_error (0, map->l_name, NULL, msgbuf);
 }
