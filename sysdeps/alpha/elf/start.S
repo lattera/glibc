@@ -30,7 +30,7 @@ _start:
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
 	subq	sp, 16, sp
-	.prologue 1
+	.prologue 0
 
   /* Load address of the user's main function.  */
 	lda	a0, main
