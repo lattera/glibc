@@ -1,3 +1,7 @@
+2004-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/tst-setcontext.c: Enlarge st1 and st2 arrays.
+
 2004-09-02  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #610]
