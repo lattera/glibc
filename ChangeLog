@@ -1,5 +1,8 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-ctype.c (set_class_defaults): Several uses of
+	BIT() must actually be BITw().
+
 	* locale/programs/ld-ctype.c: Handle SP and space consistently.
 
 	* locale/programs/charmap.c: Allow string arguments for

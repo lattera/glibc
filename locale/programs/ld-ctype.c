@@ -533,7 +533,7 @@ character '%s' in class `%s' must not be in class `%s'"),
     ELEM (ctype, class_collection, , space_value) |= BITw (tok_print);
 
   space_seq = charmap_find_value (charmap, "SP", 2);
-  if (space_req == NULL)
+  if (space_seq == NULL)
     space_seq = charmap_find_value (charmap, "space", 5);
   if (space_seq == NULL)
     space_seq = charmap_find_value (charmap, "U00000020", 5);
@@ -2720,7 +2720,7 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L' ') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L' ') |= BITw (tok_space);
 
       seq = charmap_find_value (charmap, "form-feed", 9);
       if (seq == NULL)
@@ -2740,7 +2740,7 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\f') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L'\f') |= BITw (tok_space);
 
 
       seq = charmap_find_value (charmap, "newline", 7);
@@ -2761,7 +2761,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\n') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L'\n') |= BITw (tok_space);
 
 
       seq = charmap_find_value (charmap, "carriage-return", 15);
@@ -2782,7 +2782,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\r') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L'\r') |= BITw (tok_space);
 
 
       seq = charmap_find_value (charmap, "tab", 3);
@@ -2803,7 +2803,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L'\t') |= BITw (tok_space);
 
 
       seq = charmap_find_value (charmap, "vertical-tab", 12);
@@ -2824,7 +2824,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_space);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\v') |= BIT (tok_space);
+      ELEM (ctype, class_collection, , L'\v') |= BITw (tok_space);
     }
 
   if ((ctype->class_done & BITw (tok_xdigit)) == 0)
@@ -2864,7 +2864,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_blank);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L' ') |= BIT (tok_blank);
+      ELEM (ctype, class_collection, , L' ') |= BITw (tok_blank);
 
 
       seq = charmap_find_value (charmap, "tab", 3);
@@ -2885,7 +2885,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_blank);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L'\t') |= BIT (tok_blank);
+      ELEM (ctype, class_collection, , L'\t') |= BITw (tok_blank);
     }
 
   if ((ctype->class_done & BITw (tok_graph)) == 0)
@@ -2895,11 +2895,14 @@ character `%s' not defined while needed as default value"),
     {
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower) |
 	BIT (tok_alpha) | BIT (tok_digit) | BIT (tok_xdigit) | BIT (tok_punct);
+      unsigned long int maskw = BITw (tok_upper) | BITw (tok_lower) |
+	BITw (tok_alpha) | BITw (tok_digit) | BITw (tok_xdigit) |
+	BITw (tok_punct);
       size_t cnt;
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
-	if ((ctype->class_collection[cnt] & mask) != 0)
-	  ctype->class_collection[cnt] |= BIT (tok_graph);
+	if ((ctype->class_collection[cnt] & maskw) != 0)
+	  ctype->class_collection[cnt] |= BITw (tok_graph);
 
       for (cnt = 0; cnt < 256; ++cnt)
 	if ((ctype->class256_collection[cnt] & mask) != 0)
@@ -2914,12 +2917,15 @@ character `%s' not defined while needed as default value"),
     {
       unsigned long int mask = BIT (tok_upper) | BIT (tok_lower) |
 	BIT (tok_alpha) | BIT (tok_digit) | BIT (tok_xdigit) | BIT (tok_punct);
+      unsigned long int maskw = BITw (tok_upper) | BITw (tok_lower) |
+	BITw (tok_alpha) | BITw (tok_digit) | BITw (tok_xdigit) |
+	BITw (tok_punct);
       size_t cnt;
       struct charseq *seq;
 
       for (cnt = 0; cnt < ctype->class_collection_act; ++cnt)
-	if ((ctype->class_collection[cnt] & mask) != 0)
-	  ctype->class_collection[cnt] |= BIT (tok_print);
+	if ((ctype->class_collection[cnt] & maskw) != 0)
+	  ctype->class_collection[cnt] |= BITw (tok_print);
 
       for (cnt = 0; cnt < 256; ++cnt)
 	if ((ctype->class256_collection[cnt] & mask) != 0)
@@ -2946,7 +2952,7 @@ character `%s' not defined while needed as default value"),
 	ctype->class256_collection[seq->bytes[0]] |= BIT (tok_print);
 
       /* No need to search.  */
-      ELEM (ctype, class_collection, , L' ') |= BIT (tok_print);
+      ELEM (ctype, class_collection, , L' ') |= BITw (tok_print);
     }
 
   if (ctype->tomap_done[0] == 0)
