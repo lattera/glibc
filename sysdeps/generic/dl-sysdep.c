@@ -38,7 +38,7 @@
 #include <dl-osinfo.h>
 #include <hp-timing.h>
 
-extern char **_environ;
+extern char **_environ attribute_hidden;
 extern void _end attribute_hidden;
 
 /* Protect SUID program against misuse of file descriptors.  */

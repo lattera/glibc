@@ -1,5 +1,18 @@
 2002-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c: Declare _environ as hidden.
+	* sysdeps/generic/dl-environ.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+
+	* sysdeps/generic/ldsodefs.h: Declare _dl_debug_state_internal and
+	_dl_mcount_internal as hidden.
+
+	* elf/Makefile (rtld-routines): Add dl-sbrk and dl-brk.
+	* sysdeps/generic/dl-brk.c: New file.
+	* sysdeps/generic/dl-sbrk.c: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-brk.c: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-sbrk.c: New file.
+
 	* elf/dl-minimal.c (malloc): Declare _end as hidden.
 	(__errno_location): New function.  Declare errno as hidden.
 	* elf/rtld.c (_dl_argc): Define as hidden.

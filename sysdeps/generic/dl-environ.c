@@ -50,6 +50,10 @@ _dl_next_ld_env_entry (char ***position)
   return result;
 }
 
+
+/* In ld.so __environ is not exported.  */
+extern char **__environ attribute_hidden;
+
 int
 unsetenv (const char *name)
 {

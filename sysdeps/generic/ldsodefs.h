@@ -634,7 +634,7 @@ extern void _dl_fini (void) internal_function;
    says what change is taking place.  This function's address is
    the value of the `r_brk' member.  */
 extern void _dl_debug_state (void);
-extern void _dl_debug_state_internal (void);
+extern void _dl_debug_state_internal (void) attribute_hidden;
 
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put
@@ -655,7 +655,8 @@ extern void _dl_start_profile_internal (struct link_map *map,
 
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
-extern void _dl_mcount_internal (ElfW(Addr) frompc, ElfW(Addr) selfpc);
+extern void _dl_mcount_internal (ElfW(Addr) frompc, ElfW(Addr) selfpc)
+     attribute_hidden;
 
 /* This function is simply a wrapper around the _dl_mcount function
    which does not require a FROMPC parameter since this is the

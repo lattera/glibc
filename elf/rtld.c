@@ -1579,7 +1579,7 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
-extern char **_environ;
+extern char **_environ attribute_hidden;
 
 
 static void
