@@ -1,0 +1,1 @@
+CFLAGS += -mv8

@@ -907,6 +907,8 @@ sparc | sparcv[67])
 		base_machine=sparc machine=sparc/sparc32 ;;
 sparcv8 | supersparc | hypersparc)
 		base_machine=sparc machine=sparc/sparc32/sparcv8 ;;
+sparcv8plus | sparcv8plusa | sparcv9)
+		base_machine=sparc machine=sparc/sparc32/sparcv9 ;;
 sparc64 | ultrasparc)
 		base_machine=sparc machine=sparc/sparc64 ;;
 esac
@@ -972,7 +974,7 @@ while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
   tail="$2"
 done
 
-# For sparc/sparc9, try sparc/sparc9 and then sparc.
+# For sparc/sparc32, try sparc/sparc32 and then sparc.
 mach=
 tail=$machine
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do

@@ -1,3 +1,77 @@
+1999-03-29  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc32/sparcv8/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv8/rem.S: Delay after write %y.
+	* sysdeps/sparc/sparc32/sparcv8/sdiv.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/udiv.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv8/urem.S: Likewise.
+
+	* sysdeps/sparc/sparc32/sparcv9/bcopy.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/bzero.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/memchr.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/memcmp.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/memset.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/stpcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strcat.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strchr.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strcmp.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strcspn.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strlen.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strncpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strpbrk.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strrchr.c: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strspn.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/dotmul.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/rem.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sdiv.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/udiv.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/umul.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/urem.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv9/stpncpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/strncmp.S: New file.
+
+	* sysdeps/sparc/sparc32/bcopy.c: New file.
+	* sysdeps/sparc/sparc32/bzero.c: New file.
+	* sysdeps/sparc/sparc32/memchr.S: New file.
+	* sysdeps/sparc/sparc32/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/memmove.c: New file.
+	* sysdeps/sparc/sparc32/memset.S: New file.
+	* sysdeps/sparc/sparc32/stpcpy.S: New file.
+	* sysdeps/sparc/sparc32/strchr.S: New file.
+	* sysdeps/sparc/sparc32/strrchr.c: New file.
+	* sysdeps/sparc/sparc32/strcpy.S: New file.
+	* sysdeps/sparc/sparc32/strlen.S: New file.
+	* sysdeps/sparc/sparc32/strcat.S: New file.
+	* sysdeps/sparc/sparc32/strcmp.S: New file.
+
+	* sysdeps/sparc/sparc64/bcopy.c: New file.
+	* sysdeps/sparc/sparc64/bzero.c: New file.
+	* sysdeps/sparc/sparc64/memchr.S: New file.
+	* sysdeps/sparc/sparc64/memcmp.S: New file.
+	* sysdeps/sparc/sparc64/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/memset.S: New file.
+	* sysdeps/sparc/sparc64/stpcpy.S: New file.
+	* sysdeps/sparc/sparc64/strcat.S: New file.
+	* sysdeps/sparc/sparc64/strchr.S: New file.
+	* sysdeps/sparc/sparc64/strcmp.S: New file.
+	* sysdeps/sparc/sparc64/strcpy.S: New file.
+	* sysdeps/sparc/sparc64/strcspn.S: New file.
+	* sysdeps/sparc/sparc64/strlen.S: New file.
+	* sysdeps/sparc/sparc64/strncpy.S: New file.
+	* sysdeps/sparc/sparc64/strpbrk.S: New file.
+	* sysdeps/sparc/sparc64/strrchr.c: New file.
+	* sysdeps/sparc/sparc64/strspn.S: New file.
+	* sysdeps/sparc/sparc64/stpncpy.S: New file.
+	* sysdeps/sparc/sparc64/strncmp.S: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile (ASFLAGS-.os):
+	Append -fPIC, don't replace.
+
+	* configure.in: Recognize sparcv8plus / sparcv9.
+
 1999-03-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* malloc/obstack.h (obstack_free): Explicitly convert __obj to

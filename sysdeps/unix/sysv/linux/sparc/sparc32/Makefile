@@ -1,5 +1,5 @@
-asm-CPPFLAGS=-D__ASSEMBLY__
-ASFLAGS-.os=-fPIC
+asm-CPPFLAGS = -D__ASSEMBLY__
+ASFLAGS-.os += -fPIC
 
 ifeq ($(subdir),misc)
 sysdep_routines += setfsgid setfsuid setresgid setresuid
