@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <sgidefs.h>
 #include <sys/types.h>
 #include <sys/ptrace.h>
 #include <sys/user.h>
@@ -28,7 +29,7 @@
 #include <bp-checks.h>
 #include <sgidefs.h>
 
-#if  _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
 __extension__ typedef long long int reg_type;
 #else
 typedef long int reg_type;

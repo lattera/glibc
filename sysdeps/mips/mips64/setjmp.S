@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000, 2002, 2003, 2004
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sgidefs.h>
 #include <sysdep.h>
 #include <sys/asm.h>
 
@@ -33,11 +35,11 @@ ENTRY (__sigsetjmp)
 	move a2, sp
 	move a3, fp
 	PTR_LA t9, __sigsetjmp_aux
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 	nop
 #endif	
 	RESTORE_GP64
-#if _MIPS_SIM != _MIPS_SIM_ABI32
+#if _MIPS_SIM != _ABIO32
 	move a4, gp
 #endif
 	jr t9

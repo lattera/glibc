@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 1999, 2000, 2002, 2003
+/* Copyright (C) 1992, 1995, 1997, 1999, 2000, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sgidefs.h>
 #include <sysdeps/unix/sysdep.h>
 
 #ifdef __ASSEMBLER__
@@ -69,7 +70,7 @@
 /* The mips move insn is d,s.  */
 #define MOVE(x,y)	move y , x
 
-#if _MIPS_SIM == _MIPS_SIM_ABI32 || _MIPS_SIM == _MIPS_SIM_ABIO64
+#if _MIPS_SIM == _ABIO32
 # define L(label) $L ## label
 #else
 # define L(label) .L ## label

@@ -32,6 +32,7 @@
 #error ENTRY_POINT needs to be defined for MIPS.
 #endif
 
+#include <sgidefs.h>
 #include <sys/asm.h>
 
 /* The offset of gp from GOT might be system-dependent.  It's set by
@@ -74,10 +75,9 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
 static inline int __attribute_used__
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
-#if _MIPS_SIM == _MIPS_SIM_ABI32 || _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIO32 || _MIPS_SIM == _ABIN32
   /* Don't link o32 and n32 together.  */
-  if (((ehdr->e_flags & EF_MIPS_ABI2) != 0)
-      != (_MIPS_SIM != _MIPS_SIM_ABI32))
+  if (((ehdr->e_flags & EF_MIPS_ABI2) != 0) != (_MIPS_SIM == _ABIN32))
     return 0;
 #endif
 
@@ -130,7 +130,7 @@ elf_machine_load_address (void)
 }
 
 /* The MSB of got[1] of a gnu object is set to identify gnu objects.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
 # define ELF_MIPS_GNU_GOT1_MASK	0x8000000000000000L
 #else
 # define ELF_MIPS_GNU_GOT1_MASK	0x80000000L
@@ -257,7 +257,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
   return NULL;
 }
 
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 #define ELF_DL_FRAME_SIZE 40
 
 #define ELF_DL_SAVE_ARG_REGS "\
@@ -278,7 +278,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 
 #define IFABIO32(X) X
 
-#else /* _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64 */
+#else /* _MIPS_SIM == _ABIN32 || _MIPS_SIM == _ABI64 */
 
 #define ELF_DL_FRAME_SIZE 80
 
@@ -550,7 +550,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 
   switch (r_type)
     {
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
     case (R_MIPS_64 << 8) | R_MIPS_REL32:
 #else
     case R_MIPS_REL32:
@@ -615,7 +615,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
       break;
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
     case R_MIPS_64:
       /* For full compliance with the ELF64 ABI, one must precede the
 	 _REL32/_64 pair of relocations with a _64 relocation, such

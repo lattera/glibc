@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
 
@@ -20,6 +20,8 @@
 #ifndef _SYS_REGDEF_H
 #define _SYS_REGDEF_H
 
+#include <sgidefs.h>
+
 /*
  * Symbolic register names for 32 bit ABI
  */
@@ -31,7 +33,7 @@
 #define a1      $5
 #define a2      $6
 #define a3      $7
-#if _MIPS_SIM != _MIPS_SIM_ABI32
+#if _MIPS_SIM != _ABIO32
 #define a4      $8
 #define a5      $9
 #define a6      $10
@@ -44,7 +46,7 @@
 #define ta1     a5
 #define ta2     a6
 #define ta3     a7
-#else /* if _MIPS_SIM == _MIPS_SIM_ABI32 */
+#else /* if _MIPS_SIM == _ABIO32 */
 #define t0      $8      /* caller saved */
 #define t1      $9
 #define t2      $10
@@ -57,7 +59,7 @@
 #define ta1     t5
 #define ta2     t6
 #define ta3     t7
-#endif /* _MIPS_SIM == _MIPS_SIM_ABI32 */
+#endif /* _MIPS_SIM == _ABIO32 */
 #define s0      $16     /* callee saved */
 #define s1      $17
 #define s2      $18
