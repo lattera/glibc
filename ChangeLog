@@ -1,3 +1,9 @@
+2004-09-02  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/tls.h (TLS_INIT_TP_EXPENSIVE): New macro.
+	(INSTALL_NEW_DTV, THREAD_DTV): Rewritten to fetch the right word.
+	(THREAD_SELF): New macro.
+
 2004-09-02  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #357]
