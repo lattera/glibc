@@ -64,6 +64,14 @@ extern int pciconfig_write (unsigned long int __bus,
 			    unsigned long int __len,
 			    unsigned char *__buf) __THROW;
 
+/* Userspace declarations.  */
+extern unsigned int inb (unsigned long __port) __THROW;
+extern unsigned int inw (unsigned long __port) __THROW;
+extern unsigned int inl (unsigned long __port) __THROW;
+extern void outb (unsigned char __b, unsigned long __port) __THROW;
+extern void outw (unsigned short __w, unsigned long __port) __THROW;
+extern void outl (unsigned int __l, unsigned long __port) __THROW;
+
 __END_DECLS
 
 #endif /* _SYS_IO_H */
