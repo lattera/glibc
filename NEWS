@@ -17,9 +17,9 @@ Version 2.2.4
 * Speed of regex for single-byte locales is back to previous levels.
   Patch by Isamu Hasegawa.
 
-* Alpha, SPARC, and IA-64 now also using floating stacks
+* Alpha, SPARC, and IA-64 now also using floating stacks.
 
-* Startup time of internatioanlized applications greatly improved through
+* Startup time of internationalized applications greatly improved through
   iconv cache.  Use iconvconfig to generate the cache file.
   Contributed by Ulrich Drepper.
 
