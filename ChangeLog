@@ -1,5 +1,8 @@
 Mon Mar 25 13:10:04 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* malloc/realloc.c (_realloc_internal): In case of growing large
+	block, leave _heaplimit zero across _malloc_internal call.
+
 	* intl/Makefile [gettext-srcdir]: Use gpl2lgpl.sed on copied sources.
 
 Mon Mar 25 03:35:16 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
