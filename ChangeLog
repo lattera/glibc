@@ -1,3 +1,8 @@
+2002-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/tst-calloc.c: Add tests for one or both parameters being
+	zero.
+
 2002-08-07  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Add to, don't clobber,
@@ -6,7 +11,7 @@
 
 2002-08-07  Jakub Jelinek  <jakub@redhat.com>
 
-        * malloc/malloc.c (public_cALLOc): Check ELEM_SIZE != 0 before
+	* malloc/malloc.c (public_cALLOc): Check ELEM_SIZE != 0 before
 	division.
 
 2002-08-06  Roland McGrath  <roland@redhat.com>
