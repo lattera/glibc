@@ -19,21 +19,33 @@
 #define __LIBC_M81_MATH_INLINES
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC ilogb
+#ifndef SUFF
+#define SUFF
 #endif
 #ifndef float_type
 #define float_type double
 #endif
 
-#define __CONCATX(a,b) __CONCAT(a,b)
+#define CONCATX(a,b) __CONCAT(a,b)
+#define s(name) CONCATX(name,SUFF)
+#define m81(func) __m81_u(s(func))
 
 int
-__CONCATX(__,FUNC) (x)
-     float_type x;
+s(__ilogb) (float_type x)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  float_type result;
+  unsigned long x_cond;
+
+  x_cond = __m81_test (x);
+  /* We must return consistent values for zero and NaN.  */
+  if (x_cond & __M81_COND_ZERO)
+    return FP_ILOGB0;
+  if (x_cond & (__M81_COND_NAN | __M81_COND_INF))
+    return FP_ILOGBNAN;
+
+  __asm ("fgetexp%.x %1, %0" : "=f" (result) : "f" (x));
+  return (int) result;
 }
 
 #define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+weak_aliasx (s(__ilogb), s(ilogb))
