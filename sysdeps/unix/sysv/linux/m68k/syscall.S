@@ -18,14 +18,20 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+/* Please consult the file sysdeps/unix/sysv/linux/m68k/sysdep.h for
+   more information about the value -128 used below.*/
+
 	.text
 	SYSCALL_ERROR_HANDLER
 ENTRY (syscall)
-	move.l (%sp)+, %a0	/* Pop return address.  */
-	DO_CALL ((%sp), 5)	/* Frob the args and do the system call.  */
-	tst.l %d0		/* Check %d0 for error.  */
-	jmi error		/* Jump to error handler if negative.  */
-	jmp (%a0)		/* Return to caller.  */
+	CALL_MCOUNT
 
-error:	pea (%a0)
-	jra syscall_error
+	move.l 4(%sp), %d0	/* Load syscall number.  */
+	_DOARGS_5 (24)		/* Frob arguments.  */
+	trap &0			/* Do the system call.  */
+	UNDOARGS_5		/* Unfrob arguments.  */
+	moveq.l &-128, %d1
+	cmp.l %d1, %d0		/* Check %d0 for error.  */
+	jcc syscall_error	/* Jump to error handler if negative.  */
+	rts			/* Return to caller.  */
+PSEUDO_END (syscall)

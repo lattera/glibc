@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 	SYSCALL_ERROR_HANDLER
 
 ENTRY (__mmap)
+	CALL_MCOUNT
 
 	move.l #SYS_ify (mmap), %d0	/* System call number in %d0.  */
 
@@ -40,5 +41,6 @@ ENTRY (__mmap)
 	   mmap is declared to return a pointer.  */
 	move.l %d0, %a0
 	rts
+PSEUDO_END (__mmap)
 
 weak_alias (__mmap, mmap)

@@ -44,3 +44,4 @@ ENTRY (setjmp)
 #else
 	jmp C_SYMBOL_NAME (__sigsetjmp)
 #endif
+PSEUDO_END (setjmp)
