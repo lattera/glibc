@@ -1,3 +1,9 @@
+2004-08-15  Roland McGrath  <roland@frob.com>
+
+	* pthread_atfork.c: Update copyright terms including special exception
+	for these trivial files, which are statically linked into executables
+	that use dynamic linking for the significant library code.
+
 2004-08-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* DESIGN-rwlock.txt: Add decreasing of nr_readers_queued to

@@ -11,10 +11,18 @@
    License, the Free Software Foundation gives you unlimited
    permission to link the compiled version of this file with other
    programs, and to distribute those programs without any restriction
-   coming from the use of this file.  (The GNU Lesser General Public
+   coming from the use of this file. (The GNU Lesser General Public
    License restrictions do apply in other respects; for example, they
    cover modification of the file, and distribution when not linked
    into another program.)
+
+   Note that people who make modified versions of this file are not
+   obligated to grant this special exception for their modified
+   versions; it is their choice whether to do so. The GNU Lesser
+   General Public License gives permission to release a modified
+   version without this exception; this exception also makes it
+   possible to release a modified version which carries forward this
+   exception.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of

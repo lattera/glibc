@@ -1,3 +1,56 @@
+2004-08-15  Roland McGrath  <roland@frob.com>
+
+	* csu/elf-init.c: Update copyright terms including special exception
+	for these trivial files, which are statically linked into executables
+	that use dynamic linking for the significant library code.
+	* io/fstat.c: Likewise.
+	* io/fstat64.c: Likewise.
+	* io/lstat.c: Likewise.
+	* io/lstat64.c: Likewise.
+	* io/stat.c: Likewise.
+	* io/stat64.c: Likewise.
+	* stdlib/atexit.c: Likewise.
+	* sysdeps/alpha/elf/initfini.c: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.
+	* sysdeps/arm/elf/start.S: Likewise.
+	* sysdeps/cris/elf/start.S: Likewise.
+	* sysdeps/generic/initfini.c: Likewise.
+	* sysdeps/generic/mknod.c: Likewise.
+	* sysdeps/hppa/elf/initfini.c: Likewise.
+	* sysdeps/hppa/elf/start.S: Likewise.
+	* sysdeps/i386/elf/start.S: Likewise.
+	* sysdeps/i386/i686/hp-timing.c: Likewise.
+	* sysdeps/ia64/elf/initfini.c: Likewise.
+	* sysdeps/ia64/elf/start.S: Likewise.
+	* sysdeps/ia64/hp-timing.c: Likewise.
+	* sysdeps/m68k/elf/start.S: Likewise.
+	* sysdeps/mach/start.c: Likewise.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc32/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc64/elf/start.S: Likewise.
+	* sysdeps/s390/s390-32/elf/start.S: Likewise.
+	* sysdeps/s390/s390-32/initfini.c: Likewise.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+	* sysdeps/s390/s390-64/initfini.c: Likewise.
+	* sysdeps/sh/elf/initfini.c: Likewise.
+	* sysdeps/sh/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.c: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.c: Likewise.
+	* sysdeps/standalone/i386/start.S: Likewise.
+	* sysdeps/standalone/i960/start.S: Likewise.
+	* sysdeps/standalone/m68k/m68020/start.S: Likewise.
+	* sysdeps/unix/arm/start.c: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/start.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/start.S: Likewise.
+	* sysdeps/unix/sparc/start.c: Likewise.
+	* sysdeps/unix/start.c: Likewise.
+	* sysdeps/unix/sysv/aix/start.s: Likewise.
+	* sysdeps/unix/sysv/irix4/start.c: Likewise.
+	* sysdeps/x86_64/elf/initfini.c: Likewise.
+	* sysdeps/x86_64/elf/start.S: Likewise.
+
 2004-08-15  Roland McGrath  <roland@redhat.com>
 
 	[BZ #227]
