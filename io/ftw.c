@@ -473,9 +473,6 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
       return -1;
     }
 
-  if (__access (dir, R_OK) != 0)
-    return -1;
-
   data.maxdir = descriptors < 1 ? 1 : descriptors;
   data.actdir = 0;
   data.dirstreams = (struct dir_data **) alloca (data.maxdir
@@ -552,12 +549,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	   ? LXSTAT (_STAT_VER, data.dirbuf, &st)
 	   : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
 	{
-	  if (errno == EACCES)
-	    result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
-	  else if (!(flags & FTW_PHYS)
-		   && errno == ENOENT
-		   && LXSTAT (_STAT_VER, dir, &st) == 0
-		   && S_ISLNK (st.st_mode))
+	  if (!(flags & FTW_PHYS)
+	      && errno == ENOENT
+	      && LXSTAT (_STAT_VER, dir, &st) == 0
+	      && S_ISLNK (st.st_mode))
 	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				   &data.ftw);
 	  else
