@@ -1,5 +1,14 @@
 libc {
+  # The comment lines with "#errlist-compat" are magic; see
+  # sysdeps/gnu/errlist-compat.awk.
+  # When you get an error from errlist-compat.awk, you need to add a new
+  # version here.  Don't do this blindly, since this means changing the ABI
+  # for all GNU/Linux configurations.
+
   GLIBC_2.0 {
+    #errlist-compat	131
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
     # Unfortunately in wider use.
     _inb; _inw; _inl; _outb; _outw; _outl; _bus_base; _bus_base_sparse;
     _hae_shift;
@@ -24,6 +33,9 @@ libc {
     pciconfig_read; pciconfig_write; sethae;
   }
   GLIBC_2.1 {
+    #errlist-compat	131
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
     # Linux/Alpha 64-bit timeval functions.
     __select; select;
     adjtime; adjtimex; __adjtimex;
@@ -56,5 +68,15 @@ libc {
   GLIBC_2.2.2 {
     # w*
     wordexp;
+  }
+  GLIBC_2.3 {
+    #errlist-compat	132
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+  }
+}
+librt {
+  GLIBC_2.3 {
+    # AIO functions.
+    aio_cancel; aio_cancel64;
   }
 }
