@@ -239,6 +239,10 @@ ucs4_internal_loop (struct __gconv_step *step,
 	     this is not an error because of the lack of possibilities to
 	     represent the result.  This is a genuine bug in the input since
 	     UCS4 does not allow such values.  */
+	  if (irreversible == NULL)
+	    /* We are transliterating, don't try to correct anything.  */
+	    return __GCONV_ILLEGAL_INPUT;
+
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -292,6 +296,10 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 	     this is not an error because of the lack of possibilities to
 	     represent the result.  This is a genuine bug in the input since
 	     UCS4 does not allow such values.  */
+	  if (irreversible == NULL)
+	    /* We are transliterating, don't try to correct anything.  */
+	    return __GCONV_ILLEGAL_INPUT;
+
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -582,6 +590,10 @@ ucs4le_internal_loop (struct __gconv_step *step,
 	     this is not an error because of the lack of possibilities to
 	     represent the result.  This is a genuine bug in the input since
 	     UCS4 does not allow such values.  */
+	  if (irreversible == NULL)
+	    /* We are transliterating, don't try to correct anything.  */
+	    return __GCONV_ILLEGAL_INPUT;
+
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -633,6 +645,10 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 	     this is not an error because of the lack of possibilities to
 	     represent the result.  This is a genuine bug in the input since
 	     UCS4 does not allow such values.  */
+	  if (irreversible == NULL)
+	    /* We are transliterating, don't try to correct anything.  */
+	    return __GCONV_ILLEGAL_INPUT;
+
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
@@ -958,7 +974,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	     continue;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (inptr + cnt > inend, 0))			    \
+	if (__builtin_expect (inptr + cnt > inend, 0))			      \
 	  {								      \
 	    /* We don't have enough input.  But before we report that check   \
 	       that all the bytes are correct.  */			      \
@@ -972,7 +988,6 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 		break;							      \
 	      }								      \
 									      \
-	    /* This is an illegal character.  */			      \
 	    if (ignore_errors_p ())					      \
 	      {								      \
 		/* Ignore it.  */					      \
