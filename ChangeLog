@@ -1,3 +1,9 @@
+2000-02-09  Andreas Jaeger  <aj@suse.de>
+
+	* time/strptime.c (strptime_internal): Fix pointer dereference.
+	Patch by Juergen Heinzl <juergen@monocerus.demon.co.uk>, closes PR
+	libc/1591.
+
 2000-02-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/msgctl.c: New file.
