@@ -1,3 +1,16 @@
+2002-12-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locale.c: Include locarchive.h.
+	(ARCHIVE_NAME): Define.
+	(write_archive_locales): New function.
+	(write_locales): Use it.  Ensure the same locale is not printed
+	multiple times in verbose mode.
+	Mode LC_IDENTIFICATION and LC_CTYPE printing into...
+	(print_LC_IDENTIFICATION, print_LC_CTYPE): ... these helper
+	functions.
+	(struct nameent): New type.
+	(nameentcmp): New function.
+
 2002-12-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.c (re_string_context_at): Guard wide char
