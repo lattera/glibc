@@ -1,3 +1,4 @@
+bits/utmpx.h
 kernel_termios.h
 sys/trap.h
 ldd-rewrite.sed

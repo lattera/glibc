@@ -10,7 +10,7 @@ configurations:
 		m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
 		alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
-		powerpc64-*-linux-gnu	Linux-2.4+ on 64-bit PowerPC systems
+		powerpc64-*-linux-gnu	Linux-2.4.19+ on 64-bit PowerPC systems
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC 64-bit
 		arm-*-none		ARM standalone systems
@@ -19,9 +19,10 @@ configurations:
 		mips*-*-linux-gnu	Linux-2.x on MIPS
 		ia64-*-linux-gnu	Linux-2.x on ia64
 		s390-*-linux-gnu	Linux-2.x on IBM S/390
-		s390x-*-linux-gnu	Linux-2.x on IBM S/390 64-bit
+		s390x-*-linux-gnu	Linux-2.4+ on IBM S/390 64-bit
 		sh-*-linux-gnu		Linux-2.x on Super Hitachi
 		cris-*-linux-gnu	Linux-2.4+ on CRIS
+		x86-64-*-linux-gnu	Linux-2.4+ on x86-64
 
 Former releases of this library (version 1.09.1 and perhaps earlier
 versions) used to run on the following configurations:

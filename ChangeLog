@@ -1,5 +1,9 @@
 2002-10-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/Dist: Add bits/utmpx.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Likewise.
+
 	* sysdeps/s390/s390-32/initfini.c: Avoid unterminated string literals.
 	* sysdeps/sh/elf/initfini.c: Likewise.
 	* sysdeps/mach/hurd/mips/init-first.c: Likewise.

@@ -1,3 +1,4 @@
+bits/utmpx.h
 clone.S
 ldd-rewrite.sed
 __start_context.S
