@@ -963,8 +963,8 @@ To change the rounding mode, use this function:
 @deftypefun int fesetround (int @var{round})
 Changes the currently selected rounding mode to @var{round}.  If
 @var{round} does not correspond to one of the supported rounding modes
-nothing is changed.  @code{fesetround} returns a nonzero value if it
-changed the rounding mode, zero if the mode is not supported.
+nothing is changed.  @code{fesetround} returns zero if it changed the
+rounding mode, a nonzero value if the mode is not supported.
 @end deftypefun
 
 You should avoid changing the rounding mode if possible.  It can be an
