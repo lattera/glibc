@@ -1,3 +1,7 @@
+2002-07-19  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/errnos.awk: Remove __set_errno defn from output.
+
 2002-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ldsodefs.h (HAVE_AUX_XID): Define if
