@@ -1,5 +1,12 @@
 2003-02-22  Roland McGrath  <roland@redhat.com>
 
+	* resolv/tst-leaks.c: New file by Daniel Jacobowitz <drow@mvista.com>.
+	* resolv/Makefile (tests): Add tst-leaks.
+	($(objpfx)tst-leaks): Depend on $(objpfx)libresolv.so.
+	(tst-leaks-ENV): New variable.
+	($(objpfx)mtrace-tst-leaks): New target.
+	(tests): Depend on it.
+
 	* include/libc-internal.h: Declare __libc_thread_freeres.
 
 	* Makerules: Fix last change to use $($(subdir)-version) when set.
