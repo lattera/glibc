@@ -1,3 +1,8 @@
+2000-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_open.c: Undo last two changes for now.  They break
+	everything.
+
 2000-07-12  Andreas Jaeger  <aj@suse.de>
 
 	* elf/Makefile (SYSCONF-FLAGS): Added to pass sysconfdir to
