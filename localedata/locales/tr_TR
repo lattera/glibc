@@ -37,6 +37,9 @@ language   "Turkish"
 territory  "Turkey"
 revision   "1.0"
 date       "2000-06-29"
+audience   ""
+application ""
+abbreviation ""
 %
 category  "tr_TR:2000";LC_IDENTIFICATION
 category  "tr_TR:2000";LC_CTYPE
@@ -49,6 +52,7 @@ category  "tr_TR:2000";LC_PAPER
 category  "tr_TR:2000";LC_NAME
 category  "tr_TR:2000";LC_ADDRESS
 category  "tr_TR:2000";LC_TELEPHONE
+category  "tr_TR:2000";LC_MEASUREMENT
 
 END LC_IDENTIFICATION
 
@@ -3491,9 +3495,7 @@ date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_PAPER
-% FIXME
 height   297
-% FIXME
 width    210
 END LC_PAPER
 
@@ -3501,16 +3503,24 @@ LC_TELEPHONE
 tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
 <U006C>"
 int_prefix     "<U0039><U0030>"
+int_select     "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
 measurement    1
 END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 <U0025><U006D><U0025><U0074><U0025><U0066>"
+% Say-Mýn-A
+name_gen    "<U0053><U0061><U0079><U0131><U006E>"
+% Bay
+name_mr     "<U0042><U0061><U0079>"
+% Bayan
+name_mrs    "<U0042><U0061><U0079><U0061><U006E>"
+name_miss   "<U0042><U0061><U0079><U0061><U006E>"
+name_ms     "<U0042><U0061><U0079><U0061><U006E>"
 END LC_NAME
 
 LC_ADDRESS
@@ -3519,4 +3529,24 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+% Turkey
+country_name	"<U0054><U0075><U0072><U006B><U0065><U0079>"
+% TR
+country_post	"<U0054><U0052>"
+% TR
+country_car	"<U0054><U0052>"
+country_isbn	975
+country_num	792
+% TR
+country_ab2	"<U0054><U0052>"
+% TUR
+country_ab3	"<U0054><U0055><U0052>"
+% Turkish
+lang_name	"<U0054><U0075><U0072><U006B><U0069><U0073><U0068>"
+% tr
+lang_term	"<U0074><U0075><U0072>"
+% tr
+lang_lib	"<U0074><U0072>"
+%tr
+lang_ab		"<U0074><U0072>"
 END LC_ADDRESS

@@ -1,3 +1,8 @@
+2001-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/tr_TR: Define missing fields and remove FIXME comments.
+	Patch by Nilg~n Belma Bug~ner <nilgun@fide.org>.
+
 2001-07-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/en_CA (LC_PAPER): Change to Letter.
