@@ -1,5 +1,8 @@
 2003-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-signal6.
+	* tst-signal6.c: New file.
+
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
 	(__lll_mutex_unlock_force): New function
 	(lll_mutex_unlock_force): Use __lll_mutex_unlock_force.
