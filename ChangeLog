@@ -1,3 +1,11 @@
+2003-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.c: Include
+	sysdeps/i386/dl-procinfo.c instead of
+	sysdeps/unix/sysv/linux/i386/dl-procinfo.c.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Avoid using
+	#include_next.
+
 2003-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (peek_token): Remove recent changes for anchor
