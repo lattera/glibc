@@ -1,3 +1,9 @@
+2002-11-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/segfault.c (catch_segfault): If HAVE_PROC_SELF
+	is defined write out memory map.
+	* sysdeps/unix/sysv/linux/segfault.c: New file.
+
 2002-11-02  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use union type for
