@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,10 @@ extern int __libc_missing_posix_timers attribute_hidden;
       if (e == EINVAL && clock_id == CLOCK_REALTIME)			      \
 	HANDLE_REALTIME;						      \
       else								      \
-	__set_errno (e);						      \
+	{								      \
+	  __set_errno (e);						      \
+	  retval = -1;							      \
+	}								      \
     }									      \
     break
 #endif
