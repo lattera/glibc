@@ -1,3 +1,8 @@
+2001-01-23  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Change required
+	binutils version.
+
 2001-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* configure.in: Add test for new enough binutils version, move

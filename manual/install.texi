@@ -346,17 +346,16 @@ For PPC you might need some patches even on top of the last GCC version.
 See the FAQ.
 
 @item
-GNU @code{binutils} 2.9.1, 2.9.1.0.16, or later 2.9.1.0.x release
+GNU @code{binutils} 2.10.1 or later
 
 You must use GNU binutils (as and ld) if you want to build a shared
 library.  Even if you don't, we recommend you use them anyway.  No one
 has tested compilation with non-GNU binutils in a long time.
 
 The quality of binutils releases has varied a bit recently.  The bugs
-are in obscure features, but glibc uses quite a few of those.  2.9.1,
-2.9.1.0.16, and later 2.9.1.0.x releases are known to work.  Versions
-after 2.8.1.0.23 may or may not work.  Older versions definitely don't.
-2.9.1.0.16 or higher is required on some platforms, like PPC and Arm.
+are in obscure features, but glibc uses quite a few of those.  2.10.1
+and later releases are known to work.  Versions after 2.8.1.0.23 may or
+may not work.  Older versions definitely don't.
 
 For PPC you might need some patches even on top of the last binutils
 version.  See the FAQ.
