@@ -1,3 +1,8 @@
+1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c: Handle hexadecimal numbers with leading digit
+	!= 1 correctly.
+
 1999-10-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/ifreq.h: New file.

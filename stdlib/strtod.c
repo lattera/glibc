@@ -797,11 +797,15 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
       while (!ISXDIGIT (*startp))
 	++startp;
+      while (*startp == L_('0'))
+	++startp;
       if (ISDIGIT (*startp))
 	val = *startp++ - L_('0');
       else
 	val = 10 + TOLOWER (*startp++) - L_('a');
       bits = nbits[val];
+      /* We cannot have a leading zero.  */
+      assert (bits != 0);
 
       if (pos + 1 >= 4 || pos + 1 >= bits)
 	{
@@ -818,6 +822,9 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	  retval[idx] = val << (BITS_PER_MP_LIMB - (bits - pos - 1));
 	  pos = BITS_PER_MP_LIMB - 1 - (bits - pos - 1);
 	}
+
+      /* Adjust the exponent for the bits we are shifting in.  */
+      exponent += bits - 1;
 
       while (--dig_no > 0 && idx >= 0)
 	{
