@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,61 @@
 # define	__need_NULL
 #endif
 #include <stddef.h>
+
+#ifdef __USE_XOPEN
+/* XPG requires a few symbols from <sys/wait.h> being defined.  */
+# include <bits/waitflags.h>
+# include <bits/waitstatus.h>
+
+# ifndef WEXITSTATUS
+#  ifdef __USE_BSD
+
+/* Lots of hair to allow traditional BSD use of `union wait'
+   as well as POSIX.1 use of `int' for the status word.  */
+
+#   if defined __GNUC__ && !defined __cplusplus
+#    define __WAIT_INT(status)						      \
+  (__extension__ ({ union { __typeof(status) __in; int __i; } __u;	      \
+		    __u.__in = (status); __u.__i; }))
+#   else
+#    define __WAIT_INT(status)	(*(int *) &(status))
+#   endif
+
+/* This is the type of the argument to `wait'.  The funky union
+   causes redeclarations with ether `int *' or `union wait *' to be
+   allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
+   the actual function definitions.  */
+
+#   if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
+#    define __WAIT_STATUS	void *
+#    define __WAIT_STATUS_DEFN	void *
+#   else
+/* This works in GCC 2.6.1 and later.  */
+typedef union
+  {
+    union wait *__uptr;
+    int *__iptr;
+  } __WAIT_STATUS __attribute__ ((__transparent_union__));
+#    define __WAIT_STATUS_DEFN	int *
+#   endif
+
+#  else /* Don't use BSD.  */
+
+#   define __WAIT_INT(status)	(status)
+#   define __WAIT_STATUS	int *
+#   define __WAIT_STATUS_DEFN	int *
+
+#  endif /* Use BSD.  */
+
+/* Define the macros <sys/wait.h> also would define this way.  */
+#  define WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
+#  define WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
+#  define WSTOPSIG(status)	__WSTOPSIG(__WAIT_INT(status))
+#  define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
+#  define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
+#  define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
+# endif
+#endif
 
 __BEGIN_DECLS
 
@@ -350,12 +405,12 @@ extern void srandom (unsigned int __seed) __THROW;
    of length STATELEN, and seed it with SEED.  Optimal lengths are 8, 16,
    32, 64, 128 and 256, the bigger the better; values less than 8 will
    cause an error and values greater than 256 will be rounded down.  */
-extern void *initstate (unsigned int __seed, void *__statebuf,
+extern char *initstate (unsigned int __seed, char *__statebuf,
 			size_t __statelen) __THROW;
 
 /* Switch the random number generator to state buffer STATEBUF,
    which should have been previously initialized by `initstate'.  */
-extern void *setstate (void *__statebuf) __THROW;
+extern char *setstate (__const char *__statebuf) __THROW;
 
 
 # ifdef __USE_MISC
@@ -379,11 +434,11 @@ extern int random_r (struct random_data *__restrict __buf,
 
 extern int srandom_r (unsigned int __seed, struct random_data *__buf) __THROW;
 
-extern int initstate_r (unsigned int __seed, void *__restrict __statebuf,
+extern int initstate_r (unsigned int __seed, char *__restrict __statebuf,
 			size_t __statelen,
 			struct random_data *__restrict __buf) __THROW;
 
-extern int setstate_r (void *__restrict __statebuf,
+extern int setstate_r (char *__restrict __statebuf,
 		       struct random_data *__restrict __buf) __THROW;
 # endif	/* Use misc.  */
 #endif	/* Use SVID || extended X/Open.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,8 +66,8 @@ typedef union
     union wait *__uptr;
     int *__iptr;
   } __WAIT_STATUS __attribute__ ((__transparent_union__));
-# define __WAIT_STATUS_DEFN	int *
-#endif
+#  define __WAIT_STATUS_DEFN	int *
+# endif
 
 #else /* Don't use BSD.  */
 
@@ -80,12 +80,14 @@ typedef union
 /* This will define all the `__W*' macros.  */
 #include <bits/waitstatus.h>
 
-#define	WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
-#define	WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
-#define	WSTOPSIG(status)	__WSTOPSIG(__WAIT_INT(status))
-#define	WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
-#define	WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
-#define	WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
+/* These macros could also be defined int <stdlib.h>.  */
+#ifndef WEXITSTATUS
+# define WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
+# define WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
+# define WSTOPSIG(status)	__WSTOPSIG(__WAIT_INT(status))
+# define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
+# define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
+# define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
 
 #ifdef	__USE_BSD
 # define WCOREFLAG		__WCOREFLAG

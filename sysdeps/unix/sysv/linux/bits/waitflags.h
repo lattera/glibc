@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_WAIT_H
+#if !defined _SYS_WAIT_H && !defined _STDLIB_H
 # error "Never include <bits/waitflags.h> directly; use <sys/wait.h> instead."
 #endif
 
