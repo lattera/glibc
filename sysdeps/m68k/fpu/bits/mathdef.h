@@ -16,11 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _MATH_H
+#if !defined _MATH_H && !defined _COMPLEX_H
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-#ifdef __USE_ISOC9X
+#if defined __USE_ISOC9X && defined _MATH_H
 /* The m68k FPUs evaluate all values in the 96 bit floating-point format
    which is also available for the user as `long double'.  Therefore we
    define: */
