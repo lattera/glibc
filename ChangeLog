@@ -1,3 +1,7 @@
+2000-10-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h: Partly revert patch from 2000-10-18.
+
 2000-10-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h (struct link_map): New bit field l_faked.
