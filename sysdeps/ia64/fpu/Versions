@@ -1,5 +1,5 @@
 libc {
-  GLIBC_2.2.3 {
+  GLIBC_PRIVATE {
     __libm_frexp_4; __libm_frexp_4f; __libm_frexp_4l; __libm_error_support;
   }
 }

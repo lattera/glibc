@@ -13,17 +13,18 @@ libc {
     pthread_mutexattr_getkind_np; pthread_mutexattr_setkind_np;
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     pthread_setschedparam;
-
-    # Internal libc interface to libpthread
-    __libc_internal_tsd_get; __libc_internal_tsd_set;
   }
   GLIBC_2.1 {
     pthread_attr_init;
   }
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __libc_internal_tsd_get; __libc_internal_tsd_set;
+  }
 }
 
 ld {
-  GLIBC_2.0 {
+  GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __libc_internal_tsd_get; __libc_internal_tsd_set;
   }
@@ -34,9 +35,6 @@ libpthread {
     # Hidden entry point (through macros).
     _pthread_cleanup_pop; _pthread_cleanup_pop_restore; _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
-
-    # Internal libc interface to libpthread
-    __libc_internal_tsd_get; __libc_internal_tsd_set;
 
     # Overwritten libc functions.
     accept; close; connect; fcntl; fork; fsync; longjmp; lseek; msync;
@@ -118,7 +116,6 @@ libpthread {
     sem_close; sem_open; sem_unlink;
   }
   GLIBC_2.1.2 {
-    __pthread_kill_other_threads_np;
     __vfork;
   }
   GLIBC_2.2 {
@@ -155,5 +152,10 @@ libpthread {
   GLIBC_2.2.3 {
     # Extensions.
     pthread_getattr_np;
+  }
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __libc_internal_tsd_get; __libc_internal_tsd_set;
+    __pthread_kill_other_threads_np;
   }
 }

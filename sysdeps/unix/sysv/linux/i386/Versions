@@ -9,7 +9,7 @@ libc {
     vm86;
   }
   GLIBC_2.1 {
-    __modify_ldt; modify_ldt;
+    modify_ldt;
   }
   GLIBC_2.2 {
     # functions used in other libraries
@@ -32,5 +32,8 @@ libc {
 
     # v*
     versionsort64;
+  }
+  GLIBC_PRIVATE {
+    __modify_ldt;
   }
 }

@@ -1,8 +1,7 @@
 libc {
   GLIBC_2.0 {
     # global variables
-    _itoa_lower_digits; _itoa_upper_digits; _sys_errlist; _sys_nerr;
-    _sys_siglist;
+    _sys_errlist; _sys_nerr; _sys_siglist;
 
     # functions used in other libraries
     __printf_fp; __vfscanf;
@@ -47,4 +46,7 @@ libc {
     # t*
     tmpfile; tmpfile64;
   }
+  GLIBC_PRIVATE {
+    # global variables
+    _itoa_lower_digits; _itoa_upper_digits;
 }

@@ -20,14 +20,10 @@ libc {
 %ifdef EXPORT_UNWIND_FIND_FDE
   GCC_3.0
 %endif
+  GLIBC_PRIVATE
 }
 libcrypt {
   GLIBC_2.0
-}
-libdb {
-  GLIBC_2.0
-  GLIBC_2.1
-  GLIBC_2.2
 }
 libdl {
   GLIBC_2.0
@@ -45,27 +41,22 @@ libnsl {
   GLIBC_2.2
 }
 libnss_compat {
-  GLIBC_2.0
-}
-libnss_db {
-  GLIBC_2.0
+  GLIBC_PRIVATE
 }
 libnss_dns {
-  GLIBC_2.0
+  GLIBC_PRIVATE
 }
 libnss_files {
-  GLIBC_2.0
-  GLIBC_2.1
+  GLIBC_PRIVATE
 }
 libnss_hesiod {
-  GLIBC_2.1
-  GLIBC_2.2
+  GLIBC_PRIVATE
 }
 libnss_nis {
-  GLIBC_2.0
+  GLIBC_PRIVATE
 }
 libnss_nisplus {
-  GLIBC_2.0
+  GLIBC_PRIVATE
 }
 libpthread {
   GLIBC_2.0
@@ -74,11 +65,12 @@ libpthread {
   GLIBC_2.1.2
   GLIBC_2.2
   GLIBC_2.2.3
+  GLIBC_PRIVATE
 }
 libresolv {
   GLIBC_2.0
-  GLIBC_2.1
   GLIBC_2.2
+  GLIBC_PRIVATE
 }
 librt {
   GLIBC_2.1
@@ -87,17 +79,10 @@ librt {
 libutil {
   GLIBC_2.0
 }
-libdb1 {
-  GLIBC_2.0
-}
 ld {
   GLIBC_2.0
   GLIBC_2.1
-  GLIBC_2.1.1
-  GLIBC_2.2
-  GLIBC_2.2.1
-  GLIBC_2.2.3
-  GLIBC_2.3
+  GLIBC_PRIVATE
 }
 libthread_db {
   GLIBC_2.1.3

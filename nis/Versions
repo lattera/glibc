@@ -60,20 +60,18 @@ libnsl {
 }
 
 libnss_compat {
-  GLIBC_2.0 {
+  GLIBC_PRIVATE {
     _nss_compat_endgrent; _nss_compat_endpwent; _nss_compat_endspent;
     _nss_compat_getgrent_r; _nss_compat_getgrgid_r; _nss_compat_getgrnam_r;
     _nss_compat_getpwent_r; _nss_compat_getpwnam_r; _nss_compat_getpwuid_r;
     _nss_compat_getspent_r; _nss_compat_getspnam_r;
     _nss_compat_setgrent; _nss_compat_setpwent; _nss_compat_setspent;
-  }
-  GLIBC_2.2 {
     _nss_compat_initgroups_dyn;
   }
 }
 
 libnss_nis {
-  GLIBC_2.0 {
+  GLIBC_PRIVATE {
     _nss_nis_endaliasent; _nss_nis_endetherent; _nss_nis_endgrent;
     _nss_nis_endhostent; _nss_nis_endnetent; _nss_nis_endnetgrent;
     _nss_nis_endprotoent; _nss_nis_endpwent; _nss_nis_endrpcent;
@@ -93,14 +91,12 @@ libnss_nis {
     _nss_nis_setgrent; _nss_nis_sethostent; _nss_nis_setnetent;
     _nss_nis_setnetgrent; _nss_nis_setprotoent; _nss_nis_setpwent;
     _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
-  }
-  GLIBC_2.2 {
     _nss_nis_initgroups_dyn;
   }
 }
 
 libnss_nisplus {
-  GLIBC_2.1 {
+  GLIBC_PRIVATE {
     _nss_nisplus_endaliasent; _nss_nisplus_endetherent; _nss_nisplus_endgrent;
     _nss_nisplus_endhostent; _nss_nisplus_endnetent; _nss_nisplus_endnetgrent;
     _nss_nisplus_endprotoent; _nss_nisplus_endpwent; _nss_nisplus_endrpcent;

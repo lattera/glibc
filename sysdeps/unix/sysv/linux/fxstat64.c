@@ -1,5 +1,5 @@
 /* fxstat64 using old-style Unix fstat system call.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,11 +85,16 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 #endif
 }
 
-#include <shlib-compat.h>
+#ifndef RTLD_STAT64
+# include <shlib-compat.h>
 
 versioned_symbol (libc, ___fxstat64, __fxstat64, GLIBC_2_2);
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+# if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 strong_alias (___fxstat64, __old__fxstat64)
 compat_symbol (libc, __old__fxstat64, __fxstat64, GLIBC_2_1);
+# endif
+
+#else
+strong_alias (___fxstat64, __fxstat64);
 #endif

@@ -7,9 +7,7 @@ libBrokenLocale {
 libc {
   GLIBC_2.0 {
     # global variables
-    __collate_element_hash; __collate_element_strings;
-    __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
-    _libc_intl_domainname; _nl_current_LC_COLLATE; _nl_current_LC_CTYPE;
+    _libc_intl_domainname;
 
     # functions used in inline functions or macros
     __ctype_get_mb_cur_max;
@@ -47,5 +45,11 @@ libc {
 
     # missing function from the experimental locale implementation
     __nl_langinfo_l;
+  }
+  GLIBC_PRIVATE {
+    # global variables
+    __collate_element_hash; __collate_element_strings;
+    __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
+    _nl_current_LC_COLLATE; _nl_current_LC_CTYPE;
   }
 }

@@ -22,7 +22,7 @@ libc {
     # r*
     __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
   }
-  GLIBC_2.2.3 {
+  GLIBC_PRIVATE {
     __gai_sigqueue;
   }
 }
@@ -49,21 +49,21 @@ libresolv {
     __res_send;
     __sym_ntop; __sym_ntos; __sym_ston;
   }
-  GLIBC_2.1 {
-    # Needed in libnss_dns.
-    __ns_name_unpack; __ns_name_ntop;
-  }
   GLIBC_2.2 {
     __dn_expand;
-    __ns_get16; __ns_samename;
     __res_hostalias; __res_mkquery; __res_nmkquery; __res_nquery;
     __res_nquerydomain; __res_nsearch; __res_nsend; __res_query;
     __res_querydomain; __res_search;
   }
+  GLIBC_PRIVATE {
+    # Needed in libnss_dns.
+    __ns_name_unpack; __ns_name_ntop;
+    __ns_get16; __ns_samename;
+  }
 }
 
 libnss_dns {
-  GLIBC_2.0 {
+  GLIBC_PRIVATE {
     _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
     _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
     _nss_dns_getnetbyname_r;

@@ -1,3 +1,81 @@
+2002-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* Versions.def (libc): Add GLIBC_PRIVATE.
+	(libdb, libnss_db, libdb1): Remove.
+	(libnss_compat, libnss_dns, libnss_files, libnss_hesiod, libnss_nis,
+	libnss_nisplus): Move all symbols to GLIBC_PRIVATE.
+	(libpthread): Add GLIBC_PRIVATE.
+	(libresolv): Likewise, remove GLIBC_2.1.
+	(ld): Add GLIBC_PRIVATE, remove GLIBC_2.1.1, GLIBC_2.2, GLIBC_2.2.1,
+	GLIBC_2.2.3, GLIBC_2.3.
+	* catgets/Versions (__open_catalog): Move to GLIBC_PRIVATE.
+	* elf/Versions (_dl_open, _dl_close, _dl_addr, _dl_init_first,
+	_dl_sym, _dl_vsym): Likewise.
+	(__libc_enable_secure, __libc_stack_end, _dl_argv, _dl_catch_error,
+	_dl_check_all_versions, _dl_check_map_versions, _dl_debug_initialize,
+	_dl_debug_printf, _dl_debug_state, _dl_dst_count, _dl_dst_substitute,
+	_dl_init, _dl_lookup_symbol, _dl_lookup_symbol_skip,
+	_dl_lookup_versioned_symbol, _dl_lookup_versioned_symbol_skip,
+	_dl_map_object, _dl_map_object_deps, _dl_out_of_memory,
+	_dl_relocate_object, _dl_signal_error, _dl_start_profile,
+	_dl_starting_up, _dl_sysdep_start, _dl_unload_cache, _rtld_global):
+	Likewise.
+	(_dl_object_relocation_scope): Remove.
+	* hesiod/Versions: Move all symbols to GLIBC_PRIVATE.
+	* iconv/Versions (__gconv_alias_db, __gconv_modules_db,
+	__gconv_cache): Move to GLIBC_PRIVATE.
+	* inet/Versions (__internal_endnetgrent, __internal_getnetgrent_r,
+	__internal_setnetgrent): Likewise.
+	* io/Versions (__libc_open, __libc_close, __libc_read, __libc_write,
+	__libc_lseek, __libc_fcntl, __libc_open64, __libc_lseek64): Likewise.
+	* locale/Versions (__collate_element_hash, __collate_element_strings,
+	__collate_symbol_classes, __collate_symbol_hash,
+	__collate_symbol_strings, _nl_current_LC_COLLATE,
+	_nl_current_LC_CTYPE): Likewise.
+	* misc/Versions (__libc_fsync, __libc_msync): Likewise.
+	* nis/Versions (libnss_compat): Move all symbols to GLIBC_PRIVATE.
+	(libnss_nis, libnss_nisplus): Likewise.
+	* nss/Versions (_nss_files_parse_grent, _nss_files_parse_pwent,
+	_nss_files_parse_spent): Move to GLIBC_PRIVATE.
+	(libnss_files): Move all symbols to GLIBC_PRIVATE.
+	* posix/Versions (__libc_wait, __libc_waitpid, __libc_pause,
+	__libc_nanosleep, __libc_fork, __libc_pread, __libc_pread64,
+	__libc_pwrite, __libc_pwrite64): Move to GLIBC_PRIVATE.
+	* resolv/Versions (__gai_sigqueue, __ns_name_unpack, __ns_name_ntop,
+	__ns_get16, __ns_samename): Likewise.
+	(libnss_dns): Move all symbols to GLIBC_PRIVATE.
+	* setjmp/Versions (__libc_longjmp, __libc_siglongjmp): Move to
+	GLIBC_PRIVATE.
+	* socket/Versions (__libc_accept, __libc_send, __libc_recvfrom,
+	__libc_recvmsg, __libc_sendmsg, __libc_recv, __libc_sendto,
+	__libc_connect): Likewise.
+	* stdio-common/Versions (_itoa_lower_digits, _itoa_upper_digits):
+	Likewise.
+	* stdlib/Versions (__libc_system): Likewise.
+	* sunrpc/Versions (__rpc_thread_destroy): Likewise.
+	* sysdeps/hppa/Versions: Move all symbols to GLIBC_PRIVATE.
+	* sysdeps/ia64/fpu/Versions: Likewise.
+	* sysdeps/ia64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions (__modify_ldt): Move
+	to GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/x86_64/Versions (__modify_ldt): Likewise.
+	* sysdeps/unix/sysv/linux/Versions (__syscall_rt_sigqueueinfo,
+	__libc_sigaction): Likewise.
+	* termios/Versions (__libc_tcdrain): Likewise.
+
+	* misc/sys/cdefs (__attribute_noinline__): Define.
+	* elf/dl-lookup.c (_dl_do_lookup, _dl_do_lookup_versioned): Add
+	__attribute_noinline__.
+
+	* elf/Makefile (rtld-routines): Add dl-xstat64, dl-fxstat64.
+	* elf/dl-xstat64.c: New file.
+	* elf/dl-fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/fxstat64.c: If RTLD_STAT64 is defined,
+	don't export __fxstat64 at multiple versions.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Similarly.
+	* sysdeps/unix/sysv/linux/xstat64.c: Similarly.
+
 2002-01-18  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* locale/program/ld-collate.c (collate_finish): Assign a wide

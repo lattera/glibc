@@ -661,7 +661,7 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
 /* These are here so that we only inline do_lookup{,_versioned} in the common
    case, not everywhere.  */
-static int
+static int __attribute_noinline__
 internal_function
 _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       const ElfW(Sym) *ref, struct sym_val *result,
@@ -672,7 +672,7 @@ _dl_do_lookup (const char *undef_name, unsigned long int hash,
 		    type_class);
 }
 
-static int
+static int __attribute_noinline__
 internal_function
 _dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
 			 const ElfW(Sym) *ref, struct sym_val *result,

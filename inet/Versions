@@ -3,10 +3,6 @@ libc {
     # functions with required interface outside normal name space
     __ivaliduser; __check_rhosts_file; __rcmd_errstr;
 
-    # functions used in other libraries
-    __internal_endnetgrent; __internal_getnetgrent_r;
-    __internal_setnetgrent;
-
     # variables in normal name space
     rexecoptions;
 
@@ -67,5 +63,10 @@ libc {
     iruserok_af;
     # r*
     rcmd_af; rexec_af; rresvport_af; ruserok_af;
+  }
+  GLIBC_PRIVATE {
+    # functions used in other libraries
+    __internal_endnetgrent; __internal_getnetgrent_r;
+    __internal_setnetgrent;
   }
 }

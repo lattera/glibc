@@ -1,3 +1,13 @@
+2002-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* Versions (__libc_internal_tsd_get, __libc_internal_tsd_set,
+	__pthread_kill_other_threads_np): Move to GLIBC_PRIVATE.
+	* sysdeps/i386/i586/Versions: Move all symbols to GLIBC_PRIVATE.
+	* sysdeps/i386/i686/Versions: Move all symbols to GLIBC_PRIVATE.
+	* sysdeps/sparc/sparc32/sparcv9/Versions: New file.
+	* sysdeps/sparc/sparc64/Versions: New file.
+	* sysdeps/ia64/Versions: Move all symbols to GLIBC_PRIVATE.
+
 2002-01-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c: _dl_cpuclock_offset is not any longer a global variable

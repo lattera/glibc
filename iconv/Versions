@@ -1,13 +1,10 @@
 libc {
   GLIBC_2.1 {
-    # global variables
-    __gconv_alias_db; __gconv_modules_db;
-
     # i*
     iconv_open; iconv; iconv_close;
   }
-  GLIBC_2.2.5 {
-    # variable shared with iconv program
-    __gconv_cache;
+  GLIBC_PRIVATE {
+    # variables shared with iconv program
+    __gconv_alias_db; __gconv_modules_db; __gconv_cache;
   }
 }

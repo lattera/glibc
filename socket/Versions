@@ -1,10 +1,5 @@
 libc {
   GLIBC_2.0 {
-    # functions which have an additional interface since they are
-    # are cancelable.
-    __libc_accept; __libc_send; __libc_recvfrom;
-    __libc_recvmsg; __libc_sendmsg; __libc_recv; __libc_sendto; __libc_connect;
-
     # functions used in other libraries
     __connect; __send;
 
@@ -35,5 +30,11 @@ libc {
   GLIBC_2.2.4 {
     # Addition from P1003.1-200x
     sockatmark;
+  }
+  GLIBC_PRIVATE {
+    # functions which have an additional interface since they are
+    # cancelable.
+    __libc_accept; __libc_send; __libc_recvfrom;
+    __libc_recvmsg; __libc_sendmsg; __libc_recv; __libc_sendto; __libc_connect;
   }
 }

@@ -165,8 +165,10 @@
    (although this would be possible) since it generates warnings.  */
 #if __GNUC_PREREQ (3,1)
 # define __attribute_used__ __attribute__ ((__used__))
+# define __attribute_noinline__ __attribute__ ((__noinline__))
 #else
 # define __attribute_used__ __attribute__ ((__unused__))
+# define __attribute_noinline__ /* Ignore */
 #endif
 
 /* At some point during the gcc 2.8 development the `format_arg' attribute

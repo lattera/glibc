@@ -1,5 +1,5 @@
 /* xstat64 using old-style Unix stat system call.
-   Copyright (C) 1991,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,11 +91,16 @@ ___xstat64 (int vers, const char *name, struct stat64 *buf)
 #endif
 }
 
-#include <shlib-compat.h>
+#ifndef RTLD_STAT64
+# include <shlib-compat.h>
 
 versioned_symbol (libc, ___xstat64, __xstat64, GLIBC_2_2);
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+# if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 strong_alias (___xstat64, __old__xstat64)
 compat_symbol (libc, __old__xstat64, __xstat64, GLIBC_2_1);
+# endif
+
+#else
+strong_alias (___xstat64, __xstat64);
 #endif

@@ -2,16 +2,18 @@ libc {
   GLIBC_2.0 {
      # functions used in other libraries
     __nss_passwd_lookup; __nss_group_lookup; __nss_hosts_lookup; __nss_next;
-    _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __nss_configure_lookup;
   }
   GLIBC_2.2.2 {
     __nss_hostname_digits_dots;
   }
+  GLIBC_PRIVATE {
+    _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
+  }
 }
 
 libnss_files {
-  GLIBC_2.0 {
+  GLIBC_PRIVATE {
     _nss_files_setaliasent;
     _nss_files_endaliasent;
     _nss_files_getaliasbyname_r;
@@ -81,8 +83,6 @@ libnss_files {
     _nss_files_getspnam_r;
 
     _nss_netgroup_parseline;
-  }
-  GLIBC_2.1 {
     _nss_files_getpublickey;
     _nss_files_getsecretkey;
   }

@@ -4,6 +4,9 @@ libc {
 
     ioperm; iopl;
 
-    __modify_ldt; modify_ldt;
+    modify_ldt;
+  }
+  GLIBC_PRIVATE {
+    __modify_ldt;
   }
 }

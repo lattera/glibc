@@ -1,7 +1,5 @@
 libc {
   GLIBC_2.0 {
-    # functions used in other libraries
-    _dl_open; _dl_close; _dl_addr;
 %ifdef EXPORT_UNWIND_FIND_FDE
     __register_frame_info; __deregister_frame_info;
 %endif
@@ -9,13 +7,6 @@ libc {
   GLIBC_2.1 {
     # functions used in other libraries
     _dl_mcount_wrapper; _dl_mcount_wrapper_check;
-  }
-  GLIBC_2.2 {
-    # this is defined in ld.so and overridden by libc
-    _dl_init_first;
-
-    # functions used in other libraries
-    _dl_sym; _dl_vsym;
   }
   GLIBC_2.2.4 {
     dl_iterate_phdr;
@@ -26,44 +17,34 @@ libc {
     __register_frame_info_table_bases; _Unwind_Find_FDE;
   }
 %endif
+  GLIBC_PRIVATE {
+    # functions used in other libraries
+    _dl_open; _dl_close; _dl_addr;
+    _dl_sym; _dl_vsym; _dl_init_first;
+  }
 }
 
 ld {
   GLIBC_2.0 {
-    # Those are in the dynamic linker, but used by libc.so.
-    __libc_enable_secure; _dl_catch_error; _dl_check_all_versions;
-    _dl_debug_initialize; _dl_debug_state;
-    _dl_lookup_symbol;
-    _dl_map_object; _dl_map_object_deps; _dl_object_relocation_scope;
-    _dl_relocate_object; _dl_signal_error; _dl_starting_up;
-    _dl_sysdep_start; _r_debug;
-    _dl_lookup_symbol_skip;
-    _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
-
     # Function from libc.so which must be shared with libc.
     calloc; free; malloc; realloc;
+
+    _r_debug;
   }
   GLIBC_2.1 {
-    # global variables
-    __libc_stack_end;
-
     # functions used in other libraries
-    _dl_start_profile; _dl_mcount; _dl_unload_cache;
+    _dl_mcount;
   }
-  GLIBC_2.1.1 {
-    # functions used in other libraries
-    _dl_dst_count; _dl_dst_substitute;
-  }
-  GLIBC_2.2 {
-    _dl_init; _dl_argv; _dl_check_map_versions;
-
-    # variables used elsewhere
-    _dl_out_of_memory;
-  }
-  GLIBC_2.2.3 {
-    _dl_debug_printf;
-  }
-  GLIBC_2.3 {
+  GLIBC_PRIVATE {
+    # Those are in the dynamic linker, but used by libc.so.
+    __libc_enable_secure; __libc_stack_end;
+    _dl_argv; _dl_catch_error; _dl_check_all_versions; _dl_check_map_versions;
+    _dl_debug_initialize; _dl_debug_printf; _dl_debug_state; _dl_dst_count;
+    _dl_dst_substitute; _dl_init; _dl_lookup_symbol; _dl_lookup_symbol_skip;
+    _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
+    _dl_map_object; _dl_map_object_deps; _dl_out_of_memory;
+    _dl_relocate_object; _dl_signal_error; _dl_start_profile; _dl_starting_up;
+    _dl_sysdep_start; _dl_unload_cache;
     _rtld_global;
   }
 }
