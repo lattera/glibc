@@ -1,5 +1,16 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/wordexp.h: Correct definition of wordexp_t.
+	* posix/wordexp.c: Moved to ...
+	* sysdeps/generic/wordexp.c: ...here.  New file.
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/wordexp.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/wordexp.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/Versions [libc] (GLIBC_2.2.2): Add
+	wordexp.
+	* sysdeps/unix/sysv/linux/ia64/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: Likewise.
+
 	* math/tgmath.h: Pretty printing.
 
 	* math/Makefile (tests): Add test-tgmath.

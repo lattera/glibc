@@ -5,4 +5,8 @@ libc {
     __register_frame_info; __deregister_frame_info; __frame_state_for;
     __register_frame_info_table;
   }
+  GLIBC_2.2.2 {
+    # w*
+    wordexp;
+  }
 }

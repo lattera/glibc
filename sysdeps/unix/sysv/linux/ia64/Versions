@@ -19,4 +19,8 @@ libc {
     # linuxthreads
     __clone2;
   }
+  GLIBC_2.2.2 {
+    # w*
+    wordexp;
+  }
 }

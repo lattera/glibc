@@ -54,4 +54,8 @@ libc {
   GLIBC_2.1.4 {
     pciconfig_iobase;
   }
+  GLIBC_2.2.2 {
+    # w*
+    wordexp;
+  }
 }

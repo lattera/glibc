@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #define	_WORDEXP_H	1
 
 #include <features.h>
+#define __need_size_t
+#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -39,9 +41,9 @@ enum
 /* Structure describing a word-expansion run.  */
 typedef struct
   {
-    int we_wordc;		/* Count of words matched.  */
+    size_t we_wordc;		/* Count of words matched.  */
     char **we_wordv;		/* List of expanded words.  */
-    int we_offs;		/* Slots to reserve in `we_wordv'.  */
+    size_t we_offs;		/* Slots to reserve in `we_wordv'.  */
   } wordexp_t;
 
 /* Possible nonzero return values from `wordexp'.  */
