@@ -1,3 +1,9 @@
+2000-06-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/fr_FR: Update for new format.
+	* locales/de_AT: Likewise.
+	* locales/en_GB: Likewise.
+
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/th_TH: Update copyright notice.
@@ -43,8 +49,6 @@
 	* tests-mbwc/tst_wcsstr.c (tst_wcsstr): ws2 has size WCSSIZE.
 
 	* tests-mbwc/dat_iswalnum.c (TST_ISW_LOC): Add tests for de_UTF8.
-
-	* tests-mbwc/tgn_locdef.h (TST_LOC_de_UTF8): Added.
 
 	* tests-mbwc/tgn_locdef.h (TST_LOC_de_UTF8): Added.
 
