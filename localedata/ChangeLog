@@ -1,3 +1,8 @@
+2000-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-ctype-de_DE.in: Renamed to...
+	* tst-ctype-de_DE.ISO-8859-1.in: ...this.
+
 2000-07-11  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (locale_test_suite): Always run test suite.

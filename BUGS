@@ -57,6 +57,11 @@ Severity: [  *] to [***]
        This is *extremely* hard to fix since regex has to be rewritten
        completely.
 
+[  *]  The regex implementation has various other problems, like limitations
+       of the expression size etc.
+
+       None of these can be fixed without a rewrite.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
 drepper@cygnus.com

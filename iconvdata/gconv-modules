@@ -1193,3 +1193,7 @@ module	INTERNAL		UTF-16BE//		UTF-16		1
 alias	CSUNICODE//		UNICODE//
 module	UNICODE//		INTERNAL		UNICODE		1
 module	INTERNAL		UNICODE//		UNICODE		1
+
+#	from			to			module		cost
+module	GB18030//		INTERNAL		GB18030		1
+module	INTERNAL		GB18030//		GB18030		1
