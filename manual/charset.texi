@@ -696,7 +696,7 @@ mbstouwcs (const char *s)
       if (nbytes >= (size_t) -2)
         /* Invalid input string.  */
         return NULL;
-      *result++ = towupper (tmp[0]);
+      *wcp++ = towupper (tmp[0]);
       len -= nbytes;
       s += nbytes;
     @}
