@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -283,6 +283,7 @@ extern int euidaccess (__const char *__name, int __type)
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
+// XXX Probably should be __wur but lseek(fd,
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #else
@@ -295,7 +296,8 @@ extern __off64_t __REDIRECT_NTH (lseek,
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence) __THROW;
+extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence)
+     __THROW;
 #endif
 
 /* Close the file descriptor FD.
@@ -309,13 +311,13 @@ extern int close (int __fd);
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t read (int __fd, void *__buf, size_t __nbytes);
+extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur;
 
 /* Write N bytes of BUF to FD.  Return the number written, or -1.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern ssize_t write (int __fd, __const void *__buf, size_t __n);
+extern ssize_t write (int __fd, __const void *__buf, size_t __n) __wur;
 
 #ifdef __USE_UNIX98
 # ifndef __USE_FILE_OFFSET64
@@ -326,7 +328,7 @@ extern ssize_t write (int __fd, __const void *__buf, size_t __n);
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern ssize_t pread (int __fd, void *__buf, size_t __nbytes,
-		      __off_t __offset);
+		      __off_t __offset) __wur;
 
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.
@@ -334,15 +336,15 @@ extern ssize_t pread (int __fd, void *__buf, size_t __nbytes,
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern ssize_t pwrite (int __fd, __const void *__buf, size_t __n,
-		       __off_t __offset);
+		       __off_t __offset) __wur;
 # else
 #  ifdef __REDIRECT
 extern ssize_t __REDIRECT (pread, (int __fd, void *__buf, size_t __nbytes,
 				   __off64_t __offset),
-			   pread64);
+			   pread64) __wur;
 extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
 				    size_t __nbytes, __off64_t __offset),
-			   pwrite64);
+			   pwrite64) __wur;
 #  else
 #   define pread pread64
 #   define pwrite pwrite64
@@ -354,11 +356,11 @@ extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
 extern ssize_t pread64 (int __fd, void *__buf, size_t __nbytes,
-			__off64_t __offset);
+			__off64_t __offset) __wur;
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
 extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
-			 __off64_t __offset);
+			 __off64_t __offset) __wur;
 # endif
 #endif
 
@@ -366,7 +368,7 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
    If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
-extern int pipe (int __pipedes[2]) __THROW;
+extern int pipe (int __pipedes[2]) __THROW __wur;
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
    If SECONDS is zero, any currently scheduled alarm will be cancelled.
@@ -416,26 +418,26 @@ extern int pause (void);
 
 /* Change the owner and group of FILE.  */
 extern int chown (__const char *__file, __uid_t __owner, __gid_t __group)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the owner and group of the file that FD is open on.  */
-extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW;
+extern int fchown (int __fd, __uid_t __owner, __gid_t __group) __THROW __wur;
 
 
 /* Change owner and group of FILE, if it is a symbolic
    link the ownership of the symbolic link is changed.  */
 extern int lchown (__const char *__file, __uid_t __owner, __gid_t __group)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 
 #endif /* Use BSD || X/Open Unix.  */
 
 /* Change the process's working directory to PATH.  */
-extern int chdir (__const char *__path) __THROW __nonnull ((1));
+extern int chdir (__const char *__path) __THROW __nonnull ((1)) __wur;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the process's working directory to the one FD is open on.  */
-extern int fchdir (int __fd) __THROW;
+extern int fchdir (int __fd) __THROW __wur;
 #endif
 
 /* Get the pathname of the current working directory,
@@ -445,7 +447,7 @@ extern int fchdir (int __fd) __THROW;
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
-extern char *getcwd (char *__buf, size_t __size) __THROW;
+extern char *getcwd (char *__buf, size_t __size) __THROW __wur;
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the current directory name.
@@ -458,15 +460,16 @@ extern char *get_current_dir_name (void) __THROW;
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
-extern char *getwd (char *__buf) __THROW __nonnull ((1));
+extern char *getwd (char *__buf)
+     __THROW __nonnull ((1)) __attribute_deprecated__ __wur;
 #endif
 
 
 /* Duplicate FD, returning a new file descriptor on the same file.  */
-extern int dup (int __fd) __THROW;
+extern int dup (int __fd) __THROW __wur;
 
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
-extern int dup2 (int __fd, int __fd2) __THROW;
+extern int dup2 (int __fd, int __fd2) __THROW __wur;
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;
@@ -516,7 +519,7 @@ extern int execlp (__const char *__file, __const char *__arg, ...)
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* Add INC to priority of the current process.  */
-extern int nice (int __inc) __THROW;
+extern int nice (int __inc) __THROW __wur;
 #endif
 
 
@@ -629,7 +632,7 @@ extern __gid_t getegid (void) __THROW;
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
-extern int getgroups (int __size, __gid_t __list[]) __THROW;
+extern int getgroups (int __size, __gid_t __list[]) __THROW __wur;
 
 #ifdef	__USE_GNU
 /* Return nonzero iff the calling process is in group GID.  */
@@ -673,19 +676,23 @@ extern int setegid (__gid_t __gid) __THROW;
 #ifdef __USE_GNU
 /* Fetch the effective user ID, real user ID, and saved-set user ID,
    of the calling process.  */
-extern int getresuid (__uid_t *__euid, __uid_t *__ruid, __uid_t *__suid);
+extern int getresuid (__uid_t *__euid, __uid_t *__ruid, __uid_t *__suid)
+     __THROW;
 
 /* Fetch the effective group ID, real group ID, and saved-set group ID,
    of the calling process.  */
-extern int getresgid (__gid_t *__egid, __gid_t *__rgid, __gid_t *__sgid);
+extern int getresgid (__gid_t *__egid, __gid_t *__rgid, __gid_t *__sgid)
+     __THROW;
 
 /* Set the effective user ID, real user ID, and saved-set user ID,
    of the calling process to EUID, RUID, and SUID, respectively.  */
-extern int setresuid (__uid_t __euid, __uid_t __ruid, __uid_t __suid);
+extern int setresuid (__uid_t __euid, __uid_t __ruid, __uid_t __suid)
+     __THROW;
 
 /* Set the effective group ID, real group ID, and saved-set group ID,
    of the calling process to EGID, RGID, and SGID, respectively.  */
-extern int setresgid (__gid_t __egid, __gid_t __rgid, __gid_t __sgid);
+extern int setresgid (__gid_t __egid, __gid_t __rgid, __gid_t __sgid)
+     __THROW;
 #endif
 
 
@@ -710,7 +717,7 @@ extern char *ttyname (int __fd) __THROW;
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, otherwise an error number.  */
 extern int ttyname_r (int __fd, char *__buf, size_t __buflen)
-     __THROW __nonnull ((2));
+     __THROW __nonnull ((2)) __wur;
 
 /* Return 1 if FD is a valid descriptor associated
    with a terminal, zero if not.  */
@@ -726,18 +733,18 @@ extern int ttyslot (void) __THROW;
 
 /* Make a link to FROM named TO.  */
 extern int link (__const char *__from, __const char *__to)
-     __THROW __nonnull ((1, 2));
+     __THROW __nonnull ((1, 2)) __wur;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Make a symbolic link to FROM named TO.  */
 extern int symlink (__const char *__from, __const char *__to)
-     __THROW __nonnull ((1, 2));
+     __THROW __nonnull ((1, 2)) __wur;
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 extern int readlink (__const char *__restrict __path, char *__restrict __buf,
-		     size_t __len) __THROW __nonnull ((1, 2));
+		     size_t __len) __THROW __nonnull ((1, 2)) __wur;
 #endif /* Use BSD.  */
 
 /* Remove the link NAME.  */
@@ -796,20 +803,20 @@ extern int gethostname (char *__name, size_t __len) __THROW __nonnull ((1));
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 extern int sethostname (__const char *__name, size_t __len)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */
-extern int sethostid (long int __id) __THROW;
+extern int sethostid (long int __id) __THROW __wur;
 
 
 /* Get and set the NIS (aka YP) domain name, if any.
    Called just like `gethostname' and `sethostname'.
    The NIS domain name is usually the empty string when not using NIS.  */
 extern int getdomainname (char *__name, size_t __len)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 extern int setdomainname (__const char *__name, size_t __len)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 
 
 /* Revoke access permissions to all processes currently communicating
@@ -818,7 +825,7 @@ extern int setdomainname (__const char *__name, size_t __len)
 extern int vhangup (void) __THROW;
 
 /* Revoke the access of all descriptors currently open on FILE.  */
-extern int revoke (__const char *__file) __THROW __nonnull ((1));
+extern int revoke (__const char *__file) __THROW __nonnull ((1)) __wur;
 
 
 /* Enable statistical profiling, writing samples of the PC into at most
@@ -846,14 +853,14 @@ extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
 /* Put the program in the background, and dissociate from the controlling
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
-extern int daemon (int __nochdir, int __noclose) __THROW;
+extern int daemon (int __nochdir, int __noclose) __THROW __wur;
 #endif /* Use BSD || X/Open.  */
 
 
 #if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Make PATH be the root directory (the starting point for absolute paths).
    This call is restricted to the super-user.  */
-extern int chroot (__const char *__path) __THROW __nonnull ((1));
+extern int chroot (__const char *__path) __THROW __nonnull ((1)) __wur;
 
 /* Prompt with PROMPT and read a string from the terminal without echoing.
    Uses /dev/tty if possible; otherwise stderr and stdin.  */
@@ -887,34 +894,34 @@ extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 /* Truncate FILE to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
 extern int truncate (__const char *__file, __off_t __length)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 # else
 #  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (truncate,
 			   (__const char *__file, __off64_t __length),
-			   truncate64) __nonnull ((1));
+			   truncate64) __nonnull ((1)) __wur;
 #  else
 #   define truncate truncate64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int truncate64 (__const char *__file, __off64_t __length)
-     __THROW __nonnull ((1));
+     __THROW __nonnull ((1)) __wur;
 # endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
 # ifndef __USE_FILE_OFFSET64
-extern int ftruncate (int __fd, __off_t __length) __THROW;
+extern int ftruncate (int __fd, __off_t __length) __THROW __wur;
 # else
 #  ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (ftruncate, (int __fd, __off64_t __length),
-			   ftruncate64);
+			   ftruncate64) __wur;
 #  else
 #   define ftruncate ftruncate64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int ftruncate64 (int __fd, __off64_t __length) __THROW;
+extern int ftruncate64 (int __fd, __off64_t __length) __THROW __wur;
 # endif
 
 
@@ -929,7 +936,7 @@ extern int getdtablesize (void) __THROW;
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
-extern int brk (void *__addr) __THROW;
+extern int brk (void *__addr) __THROW __wur;
 
 /* Increase or decrease the end of accessible data space by DELTA bytes.
    If successful, returns the address the previous end of data space
@@ -973,17 +980,17 @@ extern long int syscall (long int __sysno, ...) __THROW;
 # define F_TEST  3	/* Test a region for other processes locks.  */
 
 # ifndef __USE_FILE_OFFSET64
-extern int lockf (int __fd, int __cmd, __off_t __len);
+extern int lockf (int __fd, int __cmd, __off_t __len) __wur;
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len),
-		       lockf64);
+		       lockf64) __wur;
 #  else
 #   define lockf lockf64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lockf64 (int __fd, int __cmd, __off64_t __len);
+extern int lockf64 (int __fd, int __cmd, __off64_t __len) __wur;
 # endif
 #endif /* Use misc and F_LOCK not already defined.  */
 

@@ -3,6 +3,7 @@
 	* misc/sys/cdefs.h: Define __wur.
 	* libio/stdio.h: Use __wur for a number of interfaces.
 	* posix/unistd.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
 
 2004-12-29  Jakub Jelinek  <jakub@redhat.com>
 
