@@ -1,3 +1,46 @@
+2002-11-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_pattern): Don't set regs_allocated
+	here.
+	(regcomp): Don't set can_be_null here.
+	(re_comp): Clear whole re_comp_buf with the exception of fastmap.
+	(re_compile_internal): Clear can_be_null, set regs_allocated.
+
+	* posix/regcomp.c (re_set_fastmap): New function.
+	(re_compile_fastmap_iter): Use it.  Remove redundant type ==
+	COMPLEX_BRACKET check.
+	* posix/regexec.c (re_search_internal): Optimize searching with
+	fastmap.  Call re_string_reconstruct even if match_first is
+	smaller than raw_mbs_idx.
+
+2002-11-06  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp (free_dfa_content): Use free_state.
+	* posix/regex_internal.c (re_string_realloc_buffers): Don't edit
+	pointers in case that realloc failed.
+	(re_node_set_merge): Likewise.
+	(register_state): Likewise.
+	(create_newstate_common): Invoke memory release functions in case of
+	error conditions.
+	(create_ci_newstate): Likewise.
+	(create_cd_newstate): Likewise.
+	(free_state): New function.
+	* posix/regexec.c (re_search_internal): Invoke memory release
+	functions in case of error conditions.
+	(sift_states_backward): Likewise.
+	(merge_state_array): Likewise.
+	(add_epsilon_src_nodes): Likewise.
+	(sub_epsilon_src_nodes): Likewise.
+	(search_subexp): Likewise.
+	(sift_states_bkref): Likewise.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(group_nodes_into_DFAstates): Likewise.
+	(push_fail_stack): Don't edit pointers in case that realloc failed.
+	(extend_buffers): Likewise.
+	(match_ctx_add_entry): Likewise.
+
 2002-11-06  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Add checks on as and ld for binutils 2.13 or later.

@@ -267,10 +267,6 @@ re_compile_pattern (pattern, length, bufp)
 {
   reg_errcode_t ret;
 
-  /* GNU code is written to assume at least RE_NREGS registers will be set
-     (and at least one extra will be -1).  */
-  bufp->regs_allocated = REGS_UNALLOCATED;
-
   /* And GNU code determines whether or not to get register information
      by passing null for the REGS argument to re_match, etc., not by
      setting no_sub.  */
@@ -339,6 +335,14 @@ re_compile_fastmap (bufp)
 weak_alias (__re_compile_fastmap, re_compile_fastmap)
 #endif
 
+static inline void
+re_set_fastmap (char *fastmap, int icase, int ch)
+{
+  fastmap[ch] = 1;
+  if (icase)
+    fastmap[tolower (ch)] = 1;
+}
+
 /* Helper function for re_compile_fastmap.
    Compile fastmap for the initial_state INIT_STATE.  */
 
@@ -350,20 +354,21 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 {
   re_dfa_t *dfa = (re_dfa_t *) bufp->buffer;
   int node_cnt;
+  int icase = (MB_CUR_MAX == 1 && (bufp->syntax & RE_ICASE));
   for (node_cnt = 0; node_cnt < init_state->nodes.nelem; ++node_cnt)
     {
       int node = init_state->nodes.elems[node_cnt];
       re_token_type_t type = dfa->nodes[node].type;
 
       if (type == CHARACTER)
-        fastmap[dfa->nodes[node].opr.c] = 1;
+	re_set_fastmap (fastmap, icase, dfa->nodes[node].opr.c);
       else if (type == SIMPLE_BRACKET)
         {
           int i, j, ch;
           for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
             for (j = 0; j < UINT_BITS; ++j, ++ch)
               if (dfa->nodes[node].opr.sbcset[i] & (1 << j))
-                fastmap[ch] = 1;
+                re_set_fastmap (fastmap, icase, ch);
         }
 #ifdef RE_ENABLE_I18N
       else if (type == COMPLEX_BRACKET)
@@ -388,28 +393,24 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
                   for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
                     for (j = 0; j < UINT_BITS; ++j, ++ch)
                       if (table[ch] < 0)
-                        fastmap[ch] = 1;
+                        re_set_fastmap (fastmap, icase, ch);
                 }
 # else
               if (MB_CUR_MAX > 1)
                 for (i = 0; i < SBC_MAX; ++i)
                   if (__btowc (i) == WEOF)
-                    fastmap[i] = 1;
+                    re_set_fastmap (fastmap, icase, i);
 # endif /* not _LIBC */
             }
           for (i = 0; i < cset->nmbchars; ++i)
             {
               char buf[256];
               wctomb (buf, cset->mbchars[i]);
-              fastmap[*(unsigned char *) buf] = 1;
+              re_set_fastmap (fastmap, icase, *(unsigned char *) buf);
             }
         }
 #endif /* RE_ENABLE_I18N */
-      else if (type == END_OF_RE || type == OP_PERIOD
-#ifdef RE_ENABLE_I18N
-               || type == COMPLEX_BRACKET
-#endif /* RE_ENABLE_I18N */
-              )
+      else if (type == END_OF_RE || type == OP_PERIOD)
         {
           memset (fastmap, '\1', sizeof (char) * SBC_MAX);
           if (type == END_OF_RE)
@@ -468,7 +469,6 @@ regcomp (preg, pattern, cflags)
   preg->buffer = NULL;
   preg->allocated = 0;
   preg->used = 0;
-  preg->can_be_null = 0;
 
   /* Try to allocate space for the fastmap.  */
   preg->fastmap = re_malloc (char, SBC_MAX);
@@ -667,8 +667,7 @@ re_comp (s)
       fastmap = re_comp_buf.fastmap;
       re_comp_buf.fastmap = NULL;
       __regfree (&re_comp_buf);
-      re_comp_buf.buffer = NULL;
-      re_comp_buf.allocated = 0;
+      memset (&re_comp_buf, '\0', sizeof (re_comp_buf));
       re_comp_buf.fastmap = fastmap;
     }
 
@@ -725,6 +724,8 @@ re_compile_internal (preg, pattern, length, syntax)
   preg->not_bol = preg->not_eol = 0;
   preg->used = 0;
   preg->re_nsub = 0;
+  preg->can_be_null = 0;
+  preg->regs_allocated = REGS_UNALLOCATED;
 
   /* Initialize the dfa.  */
   dfa = (re_dfa_t *) preg->buffer;
