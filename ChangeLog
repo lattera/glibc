@@ -1,5 +1,8 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/types.h: Fix __SQUAD_TYPE and __UQUAD_TYPE
+	for compilers without __GLIBC_HAVE_LONG_LONG.  [BZ #362]
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Remove incorrect
 	requirement on socktype and protocol.
 	(gaih_inet): If numeric port number is given, return records for all

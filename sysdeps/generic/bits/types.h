@@ -1,5 +1,5 @@
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,8 +106,8 @@ typedef struct
 #define __SLONGWORD_TYPE	long int
 #define __ULONGWORD_TYPE	unsigned long int
 #if __WORDSIZE == 32
-# define __SQUAD_TYPE		long long int
-# define __UQUAD_TYPE		unsigned long long int
+# define __SQUAD_TYPE		__quad_t
+# define __UQUAD_TYPE		__u_quad_t
 # define __SWORD_TYPE		int
 # define __UWORD_TYPE		unsigned int
 # define __SLONG32_TYPE		long int
