@@ -27,6 +27,10 @@
 #if _POSIX_THREADS
 # include <pthread.h>
 
+# ifndef TEST_CLOCK
+#  define TEST_CLOCK		CLOCK_REALTIME
+# endif
+
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
@@ -40,7 +44,7 @@ static void
 thr1 (union sigval sigval)
 {
   pthread_mutex_lock (&lock);
-  thr1_err = clock_gettime (CLOCK_REALTIME, &thr1_ts);
+  thr1_err = clock_gettime (TEST_CLOCK, &thr1_ts);
   if (thr1_cnt >= 5)
     {
       struct itimerspec it = { };
@@ -86,7 +90,7 @@ thr2 (union sigval sigval)
         }
     }
   pthread_mutex_lock (&lock);
-  thr2_err = clock_gettime (CLOCK_REALTIME, &thr2_ts) | err;
+  thr2_err = clock_gettime (TEST_CLOCK, &thr2_ts) | err;
   if (thr2_cnt >= 5)
     {
       struct itimerspec it = { };
@@ -110,7 +114,7 @@ sig1_handler (int sig, siginfo_t *info, void *ctx)
   if (sig != SIGRTMIN) err |= 1 << 0;
   if (info->si_signo != SIGRTMIN) err |= 1 << 1;
   if (info->si_code != SI_TIMER) err |= 1 << 2;
-  if (clock_gettime (CLOCK_REALTIME, &sig1_ts) != 0)
+  if (clock_gettime (TEST_CLOCK, &sig1_ts) != 0)
     err |= 1 << 3;
   if (sig1_cnt >= 5)
     {
@@ -134,7 +138,7 @@ sig2_handler (int sig, siginfo_t *info, void *ctx)
   if (sig != SIGRTMIN + 1) err |= 1 << 0;
   if (info->si_signo != SIGRTMIN + 1) err |= 1 << 1;
   if (info->si_code != SI_TIMER) err |= 1 << 2;
-  if (clock_gettime (CLOCK_REALTIME, &sig2_ts) != 0)
+  if (clock_gettime (TEST_CLOCK, &sig2_ts) != 0)
     err |= 1 << 3;
   if (sig2_cnt >= 5)
     {
@@ -181,8 +185,17 @@ do_test (void)
 {
   int result = 0;
 
+#ifdef TEST_CLOCK_MISSING
+  const char *missing = TEST_CLOCK_MISSING (TEST_CLOCK);
+  if (missing != NULL)
+    {
+      printf ("%s missing, skipping test\n", missing);
+      return 0;
+    }
+#endif
+
   struct timespec ts;
-  if (clock_gettime (CLOCK_REALTIME, &ts) != 0)
+  if (clock_gettime (TEST_CLOCK, &ts) != 0)
     {
       printf ("*** clock_gettime failed: %m\n");
       result = 1;
@@ -191,7 +204,7 @@ do_test (void)
     printf ("clock_gettime returned timespec = { %ld, %ld }\n",
 	    (long) ts.tv_sec, ts.tv_nsec);
 
-  if (clock_getres (CLOCK_REALTIME, &ts) != 0)
+  if (clock_getres (TEST_CLOCK, &ts) != 0)
     {
       printf ("*** clock_getres failed: %m\n");
       result = 1;
@@ -203,7 +216,7 @@ do_test (void)
   struct sigevent ev;
   memset (&ev, 0x11, sizeof (ev));
   ev.sigev_notify = SIGEV_NONE;
-  if (timer_create (CLOCK_REALTIME, &ev, &timer_none) != 0)
+  if (timer_create (TEST_CLOCK, &ev, &timer_none) != 0)
     {
       printf ("*** timer_create for timer_none failed: %m\n");
       return 1;
@@ -220,7 +233,7 @@ do_test (void)
   ev.sigev_notify = SIGEV_SIGNAL;
   ev.sigev_signo = SIGRTMIN;
   ev.sigev_value.sival_ptr = &ev;
-  if (timer_create (CLOCK_REALTIME, &ev, &timer_sig1) != 0)
+  if (timer_create (TEST_CLOCK, &ev, &timer_sig1) != 0)
     {
       printf ("*** timer_create for timer_sig1 failed: %m\n");
       return 1;
@@ -230,7 +243,7 @@ do_test (void)
   ev.sigev_notify = SIGEV_SIGNAL;
   ev.sigev_signo = SIGRTMIN + 1;
   ev.sigev_value.sival_int = 163;
-  if (timer_create (CLOCK_REALTIME, &ev, &timer_sig2) != 0)
+  if (timer_create (TEST_CLOCK, &ev, &timer_sig2) != 0)
     {
       printf ("*** timer_create for timer_sig2 failed: %m\n");
       return 1;
@@ -241,7 +254,7 @@ do_test (void)
   ev.sigev_notify_function = thr1;
   ev.sigev_notify_attributes = NULL;
   ev.sigev_value.sival_ptr = &ev;
-  if (timer_create (CLOCK_REALTIME, &ev, &timer_thr1) != 0)
+  if (timer_create (TEST_CLOCK, &ev, &timer_thr1) != 0)
     {
       printf ("*** timer_create for timer_thr1 failed: %m\n");
       return 1;
@@ -260,7 +273,7 @@ do_test (void)
   ev.sigev_notify_function = thr2;
   ev.sigev_notify_attributes = &nattr;
   ev.sigev_value.sival_int = 111;
-  if (timer_create (CLOCK_REALTIME, &ev, &timer_thr2) != 0)
+  if (timer_create (TEST_CLOCK, &ev, &timer_thr2) != 0)
     {
       printf ("*** timer_create for timer_thr2 failed: %m\n");
       return 1;
@@ -330,7 +343,7 @@ do_test (void)
 #endif
 
   struct timespec startts;
-  if (clock_gettime (CLOCK_REALTIME, &startts) != 0)
+  if (clock_gettime (TEST_CLOCK, &startts) != 0)
     {
       printf ("*** clock_gettime failed: %m\n");
       result = 1;
@@ -482,7 +495,7 @@ do_test (void)
       result = 1;
     }
 
-  if (clock_gettime (CLOCK_REALTIME, &startts) != 0)
+  if (clock_gettime (TEST_CLOCK, &startts) != 0)
     {
       printf ("*** clock_gettime failed: %m\n");
       result = 1;
