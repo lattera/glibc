@@ -43,7 +43,7 @@ static long int nsec;
 #define EXTRA_CLOCK_CASES \
   case __CLOCK_HIGHRES:							      \
     {									      \
-      if (__builtin_expect (nsec != 0, 0))				      \
+      if (__builtin_expect (nsec == 0, 0))				      \
 	{								      \
 	  unsigned long long int freq;					      \
 									      \

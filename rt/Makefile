@@ -38,7 +38,7 @@ include ../Makeconfig
 
 ifeq ($(have-thread-library),yes)
 
-tests := tst-aio tst-aio64
+tests := tst-aio tst-aio64 tst-clock
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
@@ -55,7 +55,9 @@ $(objpfx)librt.so: $(common-objpfx)libc.so $(shared-thread-library)
 ifeq (yes,$(build-shared))
 $(objpfx)tst-aio: $(objpfx)librt.so $(shared-thread-library)
 $(objpfx)tst-aio64: $(objpfx)librt.so $(shared-thread-library)
+$(objpfx)tst-clock: $(objpfx)librt.so $(shared-thread-library)
 else
 $(objpfx)tst-aio: $(objpfx)librt.a $(static-thread-library)
 $(objpfx)tst-aio64: $(objpfx)librt.a $(static-thread-library)
+$(objpfx)tst-clock: $(objpfx)librt.a $(static-thread-library)
 endif

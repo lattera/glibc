@@ -109,8 +109,8 @@ struct in_pktinfo
 #define IPV6_MULTICAST_IF	17
 #define IPV6_MULTICAST_HOPS	18
 #define IPV6_MULTICAST_LOOP	19
-#define IPV6_ADD_MEMBERSHIP	20
-#define IPV6_DROP_MEMBERSHIP	21
+#define IPV6_JOIN_GROUP		20
+#define IPV6_LEAVE_GROUP	21
 #define IPV6_ROUTER_ALERT	22
 #define IPV6_MTU_DISCOVER	23
 #define IPV6_MTU		24
@@ -118,8 +118,12 @@ struct in_pktinfo
 
 #define SCM_SRCRT		IPV6_RXSRCRT
 
-#define IPV6_RXHOPOPTS		IPV6_HOPOPTS	/* obsolete name */
-#define IPV6_RXDSTOPTS		IPV6_DSTOPTS	/* obsolete name */
+/* Obsolete synonyms for the above.  */
+#define IPV6_RXHOPOPTS		IPV6_HOPOPTS
+#define IPV6_RXDSTOPTS		IPV6_DSTOPTS
+#define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
+#define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
+
 
 /* IPV6_MTU_DISCOVER values.  */
 #define IPV6_PMTUDISC_DONT	0	/* Never send DF frames.  */

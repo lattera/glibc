@@ -44,7 +44,7 @@ static unsigned long long int freq;
     {									      \
       unsigned long long int tsc;					      \
 									      \
-      if (__builtin_expect (freq != 0, 0))				      \
+      if (__builtin_expect (freq == 0, 0))				      \
 	{								      \
 	  /* This can only happen if we haven't initialized the `freq'	      \
 	     variable yet.  Do this now. We don't have to protect this	      \
@@ -64,7 +64,9 @@ static unsigned long long int freq;
 									      \
       /* And the nanoseconds.  This computation should be stable until	      \
 	 we get machines with about 16GHz frequency.  */		      \
-      tp->tv_nsec = ((tsc % freq) * 1000000000ULL) / freq;		      \
+      tp->tv_nsec = ((tsc % freq) * 1000000000ull) / freq;		      \
+									      \
+      retval = 0;							      \
     }									      \
     break;
 

@@ -79,8 +79,12 @@ struct ip_mreq
 #define IPV6_MULTICAST_IF	17
 #define IPV6_MULTICAST_HOPS	18
 #define IPV6_MULTICAST_LOOP	19
-#define IPV6_ADD_MEMBERSHIP	20
-#define IPV6_DROP_MEMBERSHIP	21
+#define IPV6_JOIN_GROUP		20
+#define IPV6_LEAVE_GROUP	21
+
+/* Obsolete synonyms for the above.  */
+#define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
+#define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
 
 /* Routing header options for IPv6.  */
 #define IPV6_RTHDR_LOOSE	0	/* Hop doesn't need to be neighbour. */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -92,10 +92,22 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
   if (fstat (fileno (file), &statbuf) < 0)
     {
       error (0, 0, _("Cannot fstat file %s.\n"), file_name);
+      fclose (file);
       return 1;
     }
 
-  file_contents = mmap (0, statbuf.st_size, PROT_READ, MAP_SHARED, fileno (file), 0);
+  /* Check that the file is large enough so that we can access the
+     information.  We're only checking the size of the headers here.  */
+  if (statbuf.st_size < sizeof (struct exec)
+      || statbuf.st_size < sizeof (ElfW(Ehdr)))
+    {
+      error (0, 0, _("File %s is too small, not checked."), file_name);
+      fclose (file);
+      return 1;
+    }
+
+  file_contents = mmap (0, statbuf.st_size, PROT_READ, MAP_SHARED,
+			fileno (file), 0);
   if (file_contents == MAP_FAILED)
     {
       error (0, 0, _("Cannot mmap file %s.\n"), file_name);
@@ -108,7 +120,7 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
   if (N_MAGIC (*aout_header) == ZMAGIC
       || N_MAGIC (*aout_header) == QMAGIC)
     {
-      /* Aout files don't have a soname, just return the the name
+      /* Aout files don't have a soname, just return the name
          including the major number.  */
       char *copy, *major, *dot;
       copy = xstrdup (lib);

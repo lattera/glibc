@@ -319,14 +319,14 @@ if test "$user" != root; then
     cat <<"EOF" | cmp - $testout || result=1
 GLOB_ABORTED
 EOF
-fi # not run as root
 
-${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
-${common_objpfx}posix/globtest -E "$testdir" "noread*/*" |
-sort > $testout
-cat <<"EOF" | cmp - $testout || result=1
+    ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+    ${common_objpfx}posix/globtest -E "$testdir" "noread*/*" |
+    sort > $testout
+    cat <<"EOF" | cmp - $testout || result=1
 GLOB_ABORTED
 EOF
+fi # not run as root
 
 # Try multiple patterns (GLOB_APPEND)
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \

@@ -122,6 +122,10 @@ main (int argc, char *argv[])
   int status;
   int opt;
 
+#ifdef STDOUT_UNBUFFERED
+  setbuf (stdout, NULL);
+#endif
+
   while ((opt = getopt_long (argc, argv, "", options, NULL)) != -1)
     switch (opt)
       {

@@ -29,8 +29,12 @@ __get_clockfreq (void)
      least one line like
 	cpu MHz         : 497.840237
      We search for this line and convert the number in an integer.  */
-  unsigned long long int result = 0ull;
+  static unsigned long long int result;
   int fd;
+
+  /* If this function was called before, we know the result.  */
+  if (result != 0)
+    return result;
 
   fd = open ("/proc/cpuinfo", O_RDONLY);
   if (__builtin_expect (fd != -1, 1))

@@ -1,3 +1,42 @@
+2000-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/globtest.sh: Fix last change.
+
+2000-04-10  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_JOIN_GROUP,
+	IPV6_LEAVE_GROUP): New names for IPV6_ADD_MEMBERSHIP,
+	IPV6_DROP_MEMBERSHIP.
+	* sysdeps/generic/bits/in.h (IPV6_JOIN_GROUP, IPV6_LEAVE_GROUP):
+	Likewise.
+
+2000-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/readlib (process_file): Close streams in case of an error.
+
+2000-04-09  Andreas Jaeger  <aj@suse.de>
+
+	* elf/readlib.c (process_file): Check if file is big enough to
+	contain aout and ELF headers.
+	Reported by Reinhard Moosauer <RMoosauer@steinecker.com>.
+
+2000-04-10  Jes Sorensen  <Jes.Sorensen@cern.ch>
+
+	* elf/dl-fini.c: Include alloca.h to get proper prototype for alloca().
+
+2000-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* test-skeleton.c (main): If STDOUT_UNBUFFERED is defined, make stdout
+	stream unbuffered.
+	* rt/Makefile (tests): Add tst-clock.
+	Add rules to build tst-clock.
+	* rt/tst-clock.c: New file.
+	* sysdeps/unix/i386/i586/clock_getres.c: Correct expression to decide
+	about initialization of nsec.
+	* sysdeps/unix/i386/i586/clock_gettime.c: Correct expression to decide
+	about initialization of freq.  Set retval to zero if successful.
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c: Cache result.
+
 2000-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def (librt): Add GLIBC_2.2.
