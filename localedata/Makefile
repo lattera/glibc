@@ -35,6 +35,19 @@ locales := $(filter-out $(addprefix locales/, CVS RCS SCCS %~), \
 repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 					   $(wildcard repertoiremaps/*))
 
+# Disable the tests for now - first the locales have to be generated
+#tests := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp tst_wctrans \
+#	  tst_iswalpha tst_iswpunct tst_wcschr tst_wcspbrk tst_wctype	 \
+#	  tst_iswcntrl tst_iswspace tst_wcscoll tst_wcsspn tst_iswdigit	 \
+#	  tst_iswupper tst_wcscpy tst_wcsstr tst_iswgraph tst_iswxdigit	 \
+#	  tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf tst_wcslen	 \
+#	  tst_wctob
+
+subdir-dirs = tests-mbwc
+vpath %.c tests-mbwc
+vpath %.h tests-mbwc
+
+
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
 	     tst-ctype
@@ -122,3 +135,20 @@ install-locales:
 			-u repertoiremaps/mnemonic.ds \
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
+
+tst_iswcntrl-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswspace-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcscoll-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcsspn-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswdigit-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswupper-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcscpy-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcsstr-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswgraph-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswxdigit-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcscspn-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcswidth-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswlower-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_swscanf-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wcslen-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_wctob-ENV=LOCPATH=$(common-objpfx)/localedata
