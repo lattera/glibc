@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,96,97,2000-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,2000-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,8 +32,8 @@ confstr (name, buf, len)
      char *buf;
      size_t len;
 {
-  const char *string;
-  size_t string_len;
+  const char *string = "";
+  size_t string_len = 1;
 
   switch (name)
     {
@@ -86,10 +86,12 @@ confstr (name, buf, len)
     case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
     case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
     case _CS_LFS_CFLAGS:
+    case _CS_LFS_LINTFLAGS:
 #if _XBS5_LP64_OFF64 == -1 && _XBS5_LPBIG_OFFBIG == -1 && _XBS5_ILP32_OFFBIG == 1
       /* Signal that we want the new ABI.  */
       {
-	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
+	static const char file_offset[]
+	  = "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64";
 	string = file_offset;
 	string_len = sizeof (file_offset);
       }
@@ -97,13 +99,25 @@ confstr (name, buf, len)
 #endif
       /* FALLTHROUGH */
 
-    case _CS_LFS_LINTFLAGS:
     case _CS_LFS_LDFLAGS:
     case _CS_LFS_LIBS:
+      /* No special libraries or linker flags needed.  */
+      break;
+
     case _CS_LFS64_CFLAGS:
     case _CS_LFS64_LINTFLAGS:
+      if (sizeof (off_t) != sizeof (off64_t))
+	{
+	  static const char lf64_source[] = "-D_LARGEFILE64_SOURCE";
+	  string = lf64_source;
+	  string_len = sizeof (lf64_source);
+	}
+      break;
+
     case _CS_LFS64_LDFLAGS:
     case _CS_LFS64_LIBS:
+      /* No special libraries or linker flags needed.  */
+      break;
 
     case _CS_XBS5_ILP32_OFF32_CFLAGS:
     case _CS_XBS5_ILP32_OFF32_LDFLAGS:
@@ -137,8 +151,6 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_LPBIG_OFFBIG_LIBS:
     case _CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS:
       /* GNU libc does not require special actions to use LFS functions.  */
-      string = "";
-      string_len = 1;
       break;
 
     case _CS_GNU_LIBC_VERSION:
