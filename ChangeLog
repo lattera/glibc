@@ -1,3 +1,10 @@
+Mon Mar  4 17:35:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select):
+	Don't increment GOT only because READ/WRITE/EXCEPTFDS is 0!
+	Don't return without frobbing the bitmasks after a timeout.
+	When clearing the bitmasks, only loop from FIRSTFD to LASTFD.
+	
 Sat Mar  2 16:35:40 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/m68k/profil-counter.h: File removed.
