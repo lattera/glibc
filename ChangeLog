@@ -1,3 +1,8 @@
+2000-06-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* xdr_rec.c (set_input_fragment) Fix PR libc/1549, patch from Jens
+	Moeller <jens.moeller@waii.com>.
+
 2000-06-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-name.c (name_finish): Add missing format
