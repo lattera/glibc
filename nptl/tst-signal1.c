@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -94,13 +94,6 @@ receiver (void)
 static int
 do_test (void)
 {
-#if ! _POSIX_THREAD_PROCESS_SHARED
-
-  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
-  return 0;
-
-#else
-
   char tmp[] = "/tmp/tst-signal1-XXXXXX";
 
   int fd = mkstemp (tmp);
@@ -190,7 +183,6 @@ do_test (void)
     }
 
   return 0;
-#endif
 }
 
 #define TEST_FUNCTION do_test ()

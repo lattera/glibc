@@ -103,10 +103,10 @@
 #define _POSIX_SHARED_MEMORY_OBJECTS	200112L
 
 /* CPU-time clocks supported.  */
-#define _POSIX_CPUTIME 200112L
+#define _POSIX_CPUTIME 0
 
 /* We support the clock also in threads.  */
-#define _POSIX_THREAD_CPUTIME  200112L
+#define _POSIX_THREAD_CPUTIME  0
 
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1

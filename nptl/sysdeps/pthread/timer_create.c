@@ -38,10 +38,10 @@ timer_create (clock_id, evp, timerid)
   struct thread_node *thread = NULL;
 
   if (0
-#ifdef _POSIX_CPUTIME
+#ifdef CLOCK_PROCESS_CPUTIME_ID
       || clock_id == CLOCK_PROCESS_CPUTIME_ID
 #endif
-#ifdef _POSIX_THREAD_CPUTIME
+#ifdef CLOCK_THREAD_CPUTIME_ID
       || clock_id == CLOCK_THREAD_CPUTIME_ID
 #endif
       )
@@ -100,12 +100,12 @@ timer_create (clock_id, evp, timerid)
 	default:
 	  thread = &__timer_signal_thread_rclk;
 	  break;
-#ifdef _POSIX_CPUTIME
+#ifdef CLOCK_PROCESS_CPUTIME_ID
 	case CLOCK_PROCESS_CPUTIME_ID:
 	  thread = &__timer_signal_thread_pclk;
 	  break;
 #endif
-#ifdef _POSIX_THREAD_CPUTIME
+#ifdef CLOCK_THREAD_CPUTIME_ID
 	case CLOCK_THREAD_CPUTIME_ID:
 	  thread = &__timer_signal_thread_tclk;
 	  break;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 
-#if _POSIX_CLOCK_SELECTION
+#ifdef _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
 static int
 run_test (clockid_t cl)
 {
@@ -156,7 +156,7 @@ run_test (clockid_t cl)
 static int
 do_test (void)
 {
-#if ! _POSIX_CLOCK_SELECTION
+#if !defined _POSIX_CLOCK_SELECTION || _POSIX_CLOCK_SELECTION == -1
 
   puts ("_POSIX_CLOCK_SELECTION not supported, test skipped");
   return 0;
@@ -165,7 +165,7 @@ do_test (void)
 
   int res = run_test (CLOCK_REALTIME);
 
-# if defined _POSIX_MONOTONIC_CLOCK
+# if defined _POSIX_MONOTONIC_CLOCK && _POSIX_MONOTONIC_CLOCK >= 0
 #  if _POSIX_MONOTONIC_CLOCK == 0
   int e = sysconf (_SC_MONOTONIC_CLOCK);
   if (e < 0)

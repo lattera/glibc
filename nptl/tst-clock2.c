@@ -25,7 +25,7 @@
 #include <unistd.h>
 
 
-#if _POSIX_THREAD_CPUTIME
+#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
 static pthread_barrier_t b2;
 static pthread_barrier_t bN;
 
@@ -55,7 +55,7 @@ tf (void *arg)
 int
 do_test (void)
 {
-#if _POSIX_THREAD_CPUTIME
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
 # define N 10
 
   if (pthread_barrier_init (&b2, NULL, 2) != 0

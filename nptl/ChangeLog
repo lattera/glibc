@@ -1,3 +1,25 @@
+2004-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Define _POSIX_CPUTIME
+	and _POSIX_THREAD_CPUTIME to zero.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Likewise.
+	* tst-barrier2.c: Fix testing for POSIX feature.
+	* tst-clock1.c: Likewise.
+	* tst-clock2.c: Likewise.
+	* tst-cond11.c: Likewise.
+	* tst-cond4.c: Likewise.
+	* tst-cond6.c: Likewise.
+	* tst-flock2.c: Likewise.
+	* tst-mutex4.c: Likewise.
+	* tst-mutex9.c: Likewise.
+	* tst-rwlock12.c: Likewise.
+	* tst-rwlock4.c: Likewise.
+	* tst-signal1.c: Likewise.
+	* tst-spin2.c: Likewise.
+	* sysdeps/pthread/posix-timer.h: Likewise.
+	* sysdeps/pthread/timer_create.c: Likewise.
+	* sysdeps/pthread/timer_routines.c: Likewise.
+
 2004-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S

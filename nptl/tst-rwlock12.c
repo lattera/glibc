@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,13 +31,6 @@
 static int
 do_test (void)
 {
-#if ! _POSIX_THREAD_PROCESS_SHARED
-
-  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
-  return 0;
-
-#else
-
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-rwlock12.XXXXXX";
   char data[ps];
@@ -209,7 +202,6 @@ do_test (void)
     }
 
   return status;
-#endif
 }
 
 #define TEST_FUNCTION do_test ()

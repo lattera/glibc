@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -27,13 +27,13 @@
 int
 do_test (void)
 {
-#if _POSIX_THREAD_CPUTIME
+#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
   clockid_t cl;
   /* This is really only a linking-test here.  */
   int e = pthread_getcpuclockid (pthread_self (), &cl);
   if (e != 0)
     {
-# if _POSIX_THREAD_CPUTIME < 0
+# if _POSIX_THREAD_CPUTIME == 0
       if (sysconf (_SC_THREAD_CPUTIME) >= 0)
 # endif
 	{

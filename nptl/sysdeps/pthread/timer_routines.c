@@ -53,10 +53,10 @@ int __timer_init_failed;
 
 /* Node for the thread used to deliver signals.  */
 struct thread_node __timer_signal_thread_rclk;
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
 struct thread_node __timer_signal_thread_pclk;
 #endif
-#ifdef _POSIX_THREAD_CPUTIME
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
 struct thread_node __timer_signal_thread_tclk;
 #endif
 
@@ -191,10 +191,10 @@ init_module (void)
     list_append (&thread_free_list, &thread_array[i].links);
 
   thread_init (&__timer_signal_thread_rclk, 0, CLOCK_REALTIME);
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   thread_init (&__timer_signal_thread_pclk, 0, CLOCK_PROCESS_CPUTIME_ID);
 #endif
-#ifdef _POSIX_THREAD_CPUTIME
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
   thread_init (&__timer_signal_thread_tclk, 0, CLOCK_THREAD_CPUTIME_ID);
 #endif
 }
@@ -281,10 +281,10 @@ thread_cleanup (void *val)
 
       /* How did the signal thread get killed?  */
       assert (thread != &__timer_signal_thread_rclk);
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
       assert (thread != &__timer_signal_thread_pclk);
 #endif
-#ifdef _POSIX_THREAD_CPUTIME
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
       assert (thread != &__timer_signal_thread_tclk);
 #endif
 
