@@ -1003,7 +1003,7 @@ Computing table size for collation information might take a while..."),
 #if __BYTE_ORDER == __BIG_ENDIAN
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EB)].iov_base
     = symbols_class;
-  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_CLASS_EB)].iov_len
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EB)].iov_len
     = symbols_class_size;
 
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EL)].iov_base

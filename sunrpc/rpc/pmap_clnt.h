@@ -35,6 +35,10 @@
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
+#ifndef _RPC_PMAP_CLNT_H
+#define _RPC_PMAP_CLNT_H	1
+#include <features.h>
+
 __BEGIN_DECLS
 
 typedef bool_t (*resultproc_t)();
