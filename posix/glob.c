@@ -93,6 +93,9 @@ extern int errno;
 # ifdef HAVE_NDIR_H
 #  include <ndir.h>
 # endif
+# ifdef HAVE_VMSDIR_H
+#  include "vmsdir.h"
+# endif /* HAVE_VMSDIR_H */
 #endif
 
 
@@ -435,6 +438,7 @@ glob (pattern, flags, errfunc, pglob)
 
   oldcount = pglob->gl_pathc;
 
+#ifndef VMS
   if ((flags & GLOB_TILDE) && dirname[0] == '~')
     {
       if (dirname[1] == '\0')
@@ -473,6 +477,7 @@ glob (pattern, flags, errfunc, pglob)
 #endif
 	}
     }
+#endif	/* Not VMS.  */
 
   if (glob_pattern_p (dirname, !(flags & GLOB_NOESCAPE)))
     {
