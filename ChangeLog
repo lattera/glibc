@@ -1,5 +1,7 @@
 Fri Mar 17 12:58:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Put elf last.
+
 	* sunrpc/Makefile (install-lib): Variable removed.
 	(rpcsvc-objs): Variable removed.
 	(extra-objs): Don't include $(rpcsvc-objs).
