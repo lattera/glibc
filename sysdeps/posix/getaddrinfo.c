@@ -738,7 +738,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
     size_t socklen;
-    size_t canonlen;
     sa_family_t family;
 
     /*
@@ -806,19 +805,22 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    return -EAI_IDN_ENCODE;
 		  }
 		/* In case the output string is the same as the input
-		   string no new string has been allocated.  */
-		if (out != canon)
-		  {
-		    canon = strdupa (out);
-		    free (out);
-		  }
+		   string no new string has been allocated.  Otherwise
+		   make a copy.  */
+		if (out == canon)
+		  goto make_copy;
 	      }
+	    else
 #endif
-
-	    canonlen = strlen (canon) + 1;
+	      {
+#ifdef HAVE_LIBIDN
+	      make_copy:
+#endif
+		canon = strdup (canon);
+		if (canon == NULL)
+		  return -EAI_MEMORY;
+	      }
 	  }
-	else
-	  canonlen = 0;
 
 	if (at2->family == AF_INET6)
 	  {
@@ -841,7 +843,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
-	    *pai = malloc (sizeof (struct addrinfo) + socklen + canonlen);
+	    *pai = malloc (sizeof (struct addrinfo) + socklen);
 	    if (*pai == NULL)
 	      return -EAI_MEMORY;
 
@@ -851,6 +853,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    (*pai)->ai_protocol = st2->protocol;
 	    (*pai)->ai_addrlen = socklen;
 	    (*pai)->ai_addr = (void *) (*pai + 1);
+
+	    /* We only add the canonical name once.  */
+	    (*pai)->ai_canonname = canon;
+	    canon = NULL;
+
 #if SALEN
 	    (*pai)->ai_addr->sa_len = socklen;
 #endif /* SALEN */
@@ -876,18 +883,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			at2->addr, sizeof (struct in_addr));
 		memset (sinp->sin_zero, '\0', sizeof (sinp->sin_zero));
 	      }
-
-	    if (canonlen != 0)
-	      {
-		(*pai)->ai_canonname = ((void *) (*pai) +
-					sizeof (struct addrinfo) + socklen);
-		strcpy ((*pai)->ai_canonname, canon);
-
-		/* We do not need to allocate the canonical name anymore.  */
-		canonlen = 0;
-	      }
-	    else
-	      (*pai)->ai_canonname = NULL;
 
 	    (*pai)->ai_next = NULL;
 	    pai = &((*pai)->ai_next);
@@ -1445,6 +1440,7 @@ freeaddrinfo (struct addrinfo *ai)
     {
       p = ai;
       ai = ai->ai_next;
+      free (p->ai_canonname);
       free (p);
     }
 }
