@@ -1,5 +1,8 @@
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* td_ta_thr_iter.c: Fix loop starting point over all but main and
+	manager thread.
+
 	* td_ta_thr_iter.c: Read descriptors for main and manager thread
 	special since after this we can assume that no new threads will be
 	created anymore (at least in the gdb implementation).

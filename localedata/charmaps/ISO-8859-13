@@ -255,26 +255,25 @@ CHARMAP
 <PM>                   /x9E     <U009E> PRIVACY MESSAGE (PM)
 <AC>                   /x9F     <U009F> APPLICATION PROGRAM COMMAND (APC)
 <NS>                   /xA0     <U00A0> NO-BREAK SPACE
+<"9>                   /xA1     <U201D> RIGHT DOUBLE QUOTATION MARK
 <Ct>                   /xA2     <U00A2> CENT SIGN
 <!C>                   /xA2     <U00A2> CENT SIGN
 <L->                   /xA3     <U00A3> POUND SIGN
 <Pd>                   /xA3     <U00A3> POUND SIGN
 <Cu>                   /xA4     <U00A4> CURRENCY SIGN
 <Xo>                   /xA4     <U00A4> CURRENCY SIGN
+<:9>                   /xA5     <U201E> DOUBLE LOW-9 QUOTATION MARK
 <BB>                   /xA6     <U00A6> BROKEN BAR
 <!B>                   /xA6     <U00A6> BROKEN BAR
-<So>                   /xA7     <U00A7> SECTION SIGN
 <SE>                   /xA7     <U00A7> SECTION SIGN
 <O//>                  /xA8     <U00D8> LATIN CAPITAL LETTER O WITH STROKE
 <Co>                   /xA9     <U00A9> COPYRIGHT SIGN
-<OC>                   /xA9     <U00A9> COPYRIGHT SIGN
 <R,>                   /xAA     <U0156> LATIN CAPITAL LETTER R WITH CEDILLA
 <<<>                   /xAB     <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 <NO>                   /xAC     <U00AC> NOT SIGN
 <7!>                   /xAC     <U00AC> NOT SIGN
 <-->                   /xAD     <U00AD> SOFT HYPHEN
 <Rg>                   /xAE     <U00AE> REGISTERED SIGN
-<OR>                   /xAE     <U00AE> REGISTERED SIGN
 <AE>                   /xAF     <U00C6> LATIN CAPITAL LETTER AE
 <DG>                   /xB0     <U00B0> DEGREE SIGN
 <+->                   /xB1     <U00B1> PLUS-MINUS SIGN

@@ -30,11 +30,6 @@ handle_descr (const td_thragent_t *ta, td_thr_iter_f *callback,
   size_t sizeof_descr = ta->sizeof_descr;
   td_thrhandle_t th;
 
-#ifdef ALL_THREADS_STOPPED
-  /* First count this active thread.  */
-  --num;
-#endif
-
   if (ps_pdread (ta->ph, descr, &pds, sizeof_descr) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
@@ -129,9 +124,14 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
 #endif
 
   /* Now get all descriptors, one after the other.  */
-  for (cnt = 0; cnt < pthread_threads_max && num > 0; ++cnt)
+  for (cnt = 2; cnt < pthread_threads_max && num > 0; ++cnt)
     if (phc[cnt].h_descr != NULL)
       {
+#ifdef ALL_THREADS_STOPPED
+	/* First count this active thread.  */
+	--num;
+#endif
+
 	result = handle_descr (ta, callback, cbdata_p, state, ti_pri, cnt,
 			       phc[cnt].h_descr);
 	if (result != TD_OK)
