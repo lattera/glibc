@@ -358,9 +358,9 @@ extern void __pthread_kill_other_threads_np __P ((void));
 extern int __libc_close (int fd);
 extern int __libc_nanosleep (const struct timespec *requested_time,
 			     struct timespec *remaining);
-extern int __libc_read (int fd, void *buf, size_t count);
+extern ssize_t __libc_read (int fd, void *buf, size_t count);
 extern pid_t __libc_waitpid (pid_t pid, int *stat_loc, int options);
-extern int __libc_write (int fd, const void *buf, size_t count);
+extern ssize_t __libc_write (int fd, const void *buf, size_t count);
 
 /* Prototypes for some of the new semaphore functions.  */
 extern int __new_sem_post (sem_t * sem);

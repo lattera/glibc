@@ -1,3 +1,30 @@
+1999-10-12  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/tst-environ.c: Include <string.h> for strcpy declaration.
+
+	* math/basic-test.c: Fix typo.
+
+	* locale/programs/xstrdup.c: Include string.h for glibc
+	compilation to get string prototypes.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h: Add definition of
+	gregset_t and fpregset_t.
+
+	* sysdeps/generic/s_nexttowardf.c: Add parenthesis to shut up gcc
+	warnings.  Correct value for x == 0.
+
+	* argp/argp-help.c: Remove broken definition of flockfile and
+	funlockfile.
+
+1999-10-12  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Update to match
+	generic Linux version.
+
+1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Remove K&R compatibility.
+
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Add gregset_t

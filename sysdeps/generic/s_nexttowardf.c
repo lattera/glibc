@@ -45,21 +45,21 @@
 	if((long double) x==y) return y;	/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float x2;
-	    SET_FLOAT_WORD(x,(u_int32_t)((hy>>32)&0x80000000)|1);/* return +-minsub*/
+	    SET_FLOAT_WORD(x,(u_int32_t)(hy&0x80000000)|1);/* return +-minsub*/
 	    x2 = x*x;
 	    if(x2==x) return x2; else return x; /* raise underflow flag */
 	}
 	if(hx>=0) {				/* x > 0 */
 	    if(hy<0||(ix>>23)>(iy>>20)-0x380
 	       || ((ix>>23)==(iy>>20)-0x380
-		   && (ix&0x7fffff)>((hy<<3)|(ly>>29))&0x7fffff))	/* x > y, x -= ulp */
+		   && (ix&0x7fffff)>(((hy<<3)|(ly>>29))&0x7fffff)))	/* x > y, x -= ulp */
 		hx -= 1;
 	    else				/* x < y, x += ulp */
 		hx += 1;
 	} else {				/* x < 0 */
 	    if(hy>=0||(ix>>23)>(iy>>20)-0x380
 	       || ((ix>>23)==(iy>>20)-0x380
-		   && (ix&0x7fffff)>((hy<<3)|(ly>>29))&0x7fffff))	/* x < y, x -= ulp */
+		   && (ix&0x7fffff)>(((hy<<3)|(ly>>29))&0x7fffff)))	/* x < y, x -= ulp */
 		hx -= 1;
 	    else				/* x > y, x += ulp */
 		hx += 1;

@@ -106,7 +106,7 @@ NAME (void)								      \
 TEST_FUNC (float_test, float, nanf, FLT_EPSILON, HUGE_VALF)
 TEST_FUNC (double_test, double, nan, DBL_EPSILON, HUGE_VAL)
 #ifndef NO_LONG_DOUBLE
-TEST_FUNC (ldouble_test, long double, nan, LDBL_EPSILON, HUGE_VALL)
+TEST_FUNC (ldouble_test, long double, nanl, LDBL_EPSILON, HUGE_VALL)
 #endif
 
 int

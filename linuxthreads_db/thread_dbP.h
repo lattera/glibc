@@ -2,6 +2,7 @@
 #ifndef _THREAD_DBP_H
 #define _THREAD_DBP_H	1
 
+#include <string.h>
 #include "thread_db.h"
 #include "../linuxthreads/internals.h"
 
@@ -10,8 +11,6 @@
 
 /* Comment out the following for less verbose output.  */
 #define LOG(c) __libc_write (2, c "\n", strlen (c "\n"))
-extern ssize_t __libc_write (int, const void *, size_t);
-
 
 
 /* Handle for a process.  This type is opaque.  */
