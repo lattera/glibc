@@ -2788,13 +2788,15 @@ Void_t* mALLOc(bytes) size_t bytes;
   mchunkptr victim;
 
 #if defined _LIBC || defined MALLOC_HOOKS
-  if (__malloc_hook != NULL) {
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
+      __malloc_hook;
+  if (hook != NULL) {
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__malloc_hook)(bytes, RETURN_ADDRESS (0));
+    result = (*hook)(bytes, RETURN_ADDRESS (0));
 #else
-    result = (*__malloc_hook)(bytes, NULL);
+    result = (*hook)(bytes, NULL);
 #endif
     return result;
   }
@@ -3111,11 +3113,14 @@ void fREe(mem) Void_t* mem;
   mchunkptr p;                          /* chunk corresponding to mem */
 
 #if defined _LIBC || defined MALLOC_HOOKS
-  if (__free_hook != NULL) {
+  void (*hook) __MALLOC_PMT ((__malloc_ptr_t, __const __malloc_ptr_t)) =
+    __free_hook;
+
+  if (hook != NULL) {
 #if defined __GNUC__ && __GNUC__ >= 2
-    (*__free_hook)(mem, RETURN_ADDRESS (0));
+    (*hook)(mem, RETURN_ADDRESS (0));
 #else
-    (*__free_hook)(mem, NULL);
+    (*hook)(mem, NULL);
 #endif
     return;
   }
@@ -3314,13 +3319,16 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   mchunkptr newp;             /* chunk to return */
 
 #if defined _LIBC || defined MALLOC_HOOKS
-  if (__realloc_hook != NULL) {
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((__malloc_ptr_t, size_t,
+                                        __const __malloc_ptr_t)) =
+    __realloc_hook;
+  if (hook != NULL) {
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__realloc_hook)(oldmem, bytes, RETURN_ADDRESS (0));
+    result = (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 #else
-    result = (*__realloc_hook)(oldmem, bytes, NULL);
+    result = (*hook)(oldmem, bytes, NULL);
 #endif
     return result;
   }
@@ -3596,13 +3604,16 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
   mchunkptr p;
 
 #if defined _LIBC || defined MALLOC_HOOKS
-  if (__memalign_hook != NULL) {
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
+                                        __const __malloc_ptr_t)) =
+    __memalign_hook;
+  if (hook != NULL) {
     Void_t* result;
 
 #if defined __GNUC__ && __GNUC__ >= 2
-    result = (*__memalign_hook)(alignment, bytes, RETURN_ADDRESS (0));
+    result = (*hook)(alignment, bytes, RETURN_ADDRESS (0));
 #else
-    result = (*__memalign_hook)(alignment, bytes, NULL);
+    result = (*hook)(alignment, bytes, NULL);
 #endif
     return result;
   }
@@ -3788,12 +3799,14 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   Void_t* mem;
 
 #if defined _LIBC || defined MALLOC_HOOKS
-  if (__malloc_hook != NULL) {
+  __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
+    __malloc_hook;
+  if (hook != NULL) {
     sz = n * elem_size;
 #if defined __GNUC__ && __GNUC__ >= 2
-    mem = (*__malloc_hook)(sz, RETURN_ADDRESS (0));
+    mem = (*hook)(sz, RETURN_ADDRESS (0));
 #else
-    mem = (*__malloc_hook)(sz, NULL);
+    mem = (*hook)(sz, NULL);
 #endif
     if(mem == 0)
       return 0;

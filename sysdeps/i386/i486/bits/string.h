@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -538,6 +538,18 @@ __strlen_g (__const char *__str)
      : "memory", "cc" );
   return __tmp - __str - 1;
 }
+
+
+
+#if defined __USE_GNU
+#define _HAVE_STRING_ARCH_strnlen	1
+__STRING_INLINE size_t
+strnlen (__const char *__string, size_t __maxlen)
+{
+  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
+  return __end ? (size_t) (__end - __string) : __maxlen;
+}
+#endif
 
 
 /* Copy SRC to DEST.  */

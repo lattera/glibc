@@ -1021,18 +1021,6 @@ __strpbrk_c3 (__const char *__s, int __accept1, int __accept2,
 #endif
 
 
-#if defined __USE_GNU && !defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strnlen
-__STRING_INLINE size_t
-strnlen (__const char *__string, size_t __maxlen)
-{
-  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
-  return __end ? (size_t) (__end - __string) : __maxlen;
-}
-# endif
-#endif
-
-
 #ifndef _HAVE_STRING_ARCH_strtok_r
 # define __strtok_r(s, sep, nextp) \
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
