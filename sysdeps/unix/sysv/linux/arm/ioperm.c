@@ -27,6 +27,12 @@
    registers tend to be memory mapped these days so this should be no big
    problem.  */
 
+/* Once upon a time this file used mprotect to enable and disable
+   access to particular areas of I/O space.  Unfortunately the
+   mprotect syscall also has the side effect of enabling caching for
+   the area affected (this is a kernel limitation).  So we now just
+   enable all the ports all of the time.  */
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -39,6 +45,7 @@
 #include <sys/mman.h>
 
 #include <asm/page.h>
+#include <sys/sysctl.h>
 
 #define PATH_ARM_SYSTYPE	"/etc/arm_systype"
 #define PATH_CPUINFO		"/proc/cpuinfo"
@@ -69,16 +76,22 @@ static struct platform {
 #define IO_ADDR(port)	(io.base + ((port) << io.shift))
 
 /*
- * Initialize I/O system.  To determine what I/O system we're dealing
- * with, we first try to read the value of symlink PATH_ARM_SYSTYPE,
- * if that fails, we lookup the "system type" field in /proc/cpuinfo.
- * If that fails as well, we give up.  Other possible options might be
- * to look at the ELF auxiliary vector or to add a special system call
- * but there is probably no point.
+ * Initialize I/O system.  There are several ways to get the information
+ * we need.  Each is tried in turn until one succeeds.
  *
- * If the value received from PATH_ARM_SYSTYPE begins with a number,
- * assume this is a previously unsupported system and the values encode,
- * in order, "<io_base>,<port_shift>".
+ * 1. Sysctl (CTL_BUS, BUS_ISA, ISA_*).  This is the preferred method
+ *    but not all kernels support it.
+ *
+ * 2. Read the value (not the contents) of symlink PATH_ARM_SYSTYPE.
+ *    - If it matches one of the entries in the table above, use the
+ *      corresponding values.
+ *    - If it begins with a number, assume this is a previously
+ *      unsupported system and the values encode, in order,
+ *      "<io_base>,<port_shift>".
+ *
+ * 3. Lookup the "system type" field in /proc/cpuinfo.  Again, if it
+ *    matches an entry in the platform[] table, use the corresponding
+ *    values.
  */
 
 static int
@@ -86,6 +99,16 @@ init_iosys (void)
 {
   char systype[256];
   int i, n;
+  static int iobase_name[] = { CTL_BUS, BUS_ISA, BUS_ISA_PORT_BASE };
+  static int ioshift_name[] = { CTL_BUS, BUS_ISA, BUS_ISA_PORT_SHIFT };
+  size_t len = sizeof(io.base);
+
+  if (! sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)
+      && ! sysctl (ioshift_name, 3, &io.shift, &len, NULL, 0))
+    {
+      io.initdone = 1;
+      return 0;
+    }
 
   n = readlink (PATH_ARM_SYSTYPE, systype, sizeof (systype) - 1);
   if (n > 0)
@@ -106,7 +129,7 @@ init_iosys (void)
       FILE * fp;
 
       fp = fopen (PATH_CPUINFO, "r");
-      if (!fp)
+      if (! fp)
 	return -1;
       while ((n = fscanf (fp, "Hardware\t: %256[^\n]\n", systype))
 	     != EOF)
@@ -149,10 +172,7 @@ init_iosys (void)
 int
 _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
-  unsigned long int addr, len;
-  int prot;
-
-  if (!io.initdone && init_iosys () < 0)
+  if (! io.initdone && init_iosys () < 0)
     return -1;
 
   /* this test isn't as silly as it may look like; consider overflows! */
@@ -173,25 +193,16 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	    return -1;
 
 	  io.base =
-	    (unsigned long int) __mmap (0, MAX_PORT << io.shift, PROT_NONE, 
+	    (unsigned long int) __mmap (0, MAX_PORT << io.shift, 
+					PROT_READ | PROT_WRITE, 
 					MAP_SHARED, fd, io.io_base);
 	  close (fd);
 	  if ((long) io.base == -1)
 	    return -1;
 	}
-      prot = PROT_READ | PROT_WRITE;
     }
-  else
-    {
-      if (!io.base)
-	return 0;	/* never was turned on... */
 
-      /* turnoff access to relevant pages: */
-      prot = PROT_NONE;
-    }
-  addr = (io.base + (from << io.shift)) & PAGE_MASK;
-  len = num << io.shift;
-  return mprotect ((void *) addr, len, prot);
+  return 0;
 }
 
 

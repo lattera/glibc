@@ -44,7 +44,11 @@
 #endif
 
 #ifdef __USE_LARGEFILE64
-# define O_LARGEFILE	0x40000
+# if __WORDSIZE == 64
+#  define O_LARGEFILE	0
+# else
+#  define O_LARGEFILE	0x40000
+# endif
 #endif
 
 /* For now Linux has no synchronisity options for data and read
