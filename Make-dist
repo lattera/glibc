@@ -154,8 +154,7 @@ foo:=$(shell echo subdir foo >&2)
 
 +tsrcs := Makefile $(wildcard Versions) $(wildcard Depend) $(+tsrcs) \
 	  $(addsuffix .c,$(others) $(tests) $(test-srcs)) \
-	  $(wildcard $(addsuffix .input,$(tests) $(test-srcs)) \
-	  $(addsuffix .args,$(tests) $(test-srcs)))
+	  $(wildcard $(addsuffix .input,$(tests) $(test-srcs)))
 +tardeps := $(strip $(+tsrcs))
 
 verbose = v

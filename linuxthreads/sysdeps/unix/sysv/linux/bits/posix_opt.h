@@ -128,4 +128,7 @@
 /* The `spawn' function family is supported.  */
 #define _POSIX_SPAWN	200912L
 
+/* We have POSIX timers.  */
+#define _POSIX_TIMERS	1
+
 #endif /* posix_opt.h */

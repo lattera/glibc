@@ -1,5 +1,8 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_TIMERS): Define.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
 	* sysdeps/pthread/Makefile: Remove tests definition.
 
 2000-06-12  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
