@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -704,16 +704,16 @@ yp_all (const char *indomain, const char *inmap,
 	  return YPERR_DOMAIN;
 	}
 
-      /* YPPROC_ALL get its own TCP channel to ypserv.  Therefore we
-	 close the socket opened by the __yp_bind call.  */
-      close (ydb->dom_socket);
       clnt_sock = RPC_ANYSOCK;
       clnt_sin = ydb->dom_server_addr;
       clnt_sin.sin_port = 0;
+
+      /* We don't need the UDP connection anymore.  */
+      __yp_unbind (ydb);
+
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
 	{
-	  __yp_unbind (ydb);
 	  __set_errno (saved_errno);
 	  return YPERR_PMAP;
 	}
@@ -737,7 +737,6 @@ yp_all (const char *indomain, const char *inmap,
       else
 	res = YPERR_SUCCESS;
 
-      __yp_unbind (ydb);
       clnt_destroy (clnt);
 
       if (res == YPERR_SUCCESS && status != YP_NOMORE)
