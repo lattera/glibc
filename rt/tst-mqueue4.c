@@ -93,6 +93,18 @@ do_test (void)
       result = 1;
     }
 
+  if (mq_unlink (name) == 0)
+    {
+      puts ("mq_unlink with too long name component unexpectedly succeeded");
+      result = 1;
+    }
+  else if (errno != ENAMETOOLONG)
+    {
+      printf ("mq_unlink with too long name component did not fail with "
+	      "ENAMETOOLONG: %m\n");
+      result = 1;
+    }
+
   *p = '\0';
   attr.mq_maxmsg = 1;
   attr.mq_msgsize = 3;

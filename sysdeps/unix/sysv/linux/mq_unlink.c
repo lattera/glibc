@@ -31,7 +31,15 @@ mq_unlink (const char *name)
       __set_errno (EINVAL);
       return -1;
     }
-  return INLINE_SYSCALL (mq_unlink, 1, name + 1);
+
+  int ret = INLINE_SYSCALL (mq_unlink, 1, name + 1);
+
+  /* While unlink can return either EPERM or EACCES, mq_unlink should
+     return just EACCES.  */
+  if (ret < 0 && errno == EPERM)
+    __set_errno (EACCES);
+
+  return ret;
 }
 
 #else

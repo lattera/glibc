@@ -1,3 +1,16 @@
+2004-04-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_unlink.c (mq_unlink): Change EPERM into
+	EACCES.
+	* rt/Makefile (tests): Add tst-mqueue9.
+	* rt/tst-mqueue9.c: New test.
+	* rt/tst-mqueue4.c (do_test): Add test for mq_unlink of a too long
+	name component.
+
+2004-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-mqueue7.c (do_test): Make newargv const.
+
 2004-04-18  Randolph Chung  <tausq@debian.org>
 
 	* sysdeps/hppa/elf/entry.h: New file.

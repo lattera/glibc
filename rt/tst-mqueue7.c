@@ -93,7 +93,7 @@ do_test (int argc, char **argv)
   snprintf (after_exec_arg, sizeof (after_exec_arg),
 	    "--after-exec=0x%lx", (long) q);
 
-  char *newargv[argc + 2];
+  const char *newargv[argc + 2];
   for (int i = 1; i < argc; ++i)
     newargv[i - 1] = argv[i];
   newargv[argc - 1] = "--direct";
