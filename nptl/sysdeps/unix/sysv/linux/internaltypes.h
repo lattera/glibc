@@ -37,10 +37,7 @@ struct pthread_attr
   size_t stacksize;
   /* Affinity map.  */
   cpu_set_t *cpuset;
-
-  /* Chain of all initialized attributes.  Keep this last since it is
-     not always used.  */
-  struct pthread_attr *next;
+  size_t cpusetsize;
 };
 
 #define ATTR_FLAG_DETACHSTATE		0x0001
