@@ -1,5 +1,8 @@
 1998-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Define
+	__off64_t.  Reported by Felix von Leitner <leitner@math.fu-berlin.de>.
+
 	* sysdeps/unix/sysv/linux/ldd-rewrite.sed: Do not exit the shell
 	script if lddlibc4 failed.
 	Reported by B. D. Elliott <bde@accessone.com>.
