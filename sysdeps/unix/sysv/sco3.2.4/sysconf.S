@@ -18,7 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 #include <confname.h>
-#include <limits.h>
 
 .globl	__tzname_max
 ENTRY (__sysconf)
