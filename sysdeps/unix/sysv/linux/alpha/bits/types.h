@@ -42,18 +42,26 @@ typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
 typedef __quad_t *__qaddr_t;
 
-typedef __u_long __dev_t;		/* Type of device numbers.  */
-typedef __u_int __uid_t;		/* Type of user identifications.  */
-typedef __u_int __gid_t;		/* Type of group identifications.  */
-typedef __u_int __ino_t;		/* Type of file serial numbers.  */
-typedef __u_int __mode_t;		/* Type of file attribute bitmasks.  */
-typedef __u_int __nlink_t; 		/* Type of file link counts.  */
-typedef long int __off_t;		/* Type of file sizes and offsets.  */
-typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
-typedef int __pid_t;			/* Type of process identifications.  */
-typedef long int __ssize_t;		/* Type of a byte count, or error.  */
-typedef long int __rlim_t;		/* Type of resource counts.  */
-typedef long int __rlim64_t;		/* Type of resource counts (LFS).  */
+typedef __uint64_t __dev_t;		/* Type of device numbers.  */
+typedef __uint32_t __uid_t;		/* Type of user identifications.  */
+typedef __uint32_t __gid_t;		/* Type of group identifications.  */
+typedef __uint32_t __ino_t;		/* Type of file serial numbers.  */
+typedef __uint64_t __ino64_t;		/*  "" (LFS) */
+typedef __uint32_t __mode_t;		/* Type of file attribute bitmasks.  */
+typedef __uint32_t __nlink_t; 		/* Type of file link counts.  */
+typedef __int64_t  __off_t;		/* Type of file sizes and offsets.  */
+typedef __int64_t  __off64_t;		/*  "" (LFS) */
+typedef __int64_t  __loff_t;		/* Type of file sizes and offsets.  */
+typedef __int32_t  __pid_t;		/* Type of process identifications.  */
+typedef __int64_t  __ssize_t;		/* Type of a byte count, or error.  */
+typedef __int64_t  __rlim_t;		/* Type of resource counts.  */
+typedef __int64_t  __rlim64_t;		/*  "" (LFS) */
+typedef __int32_t  __blkcnt_t;		/* Type to count nr disk blocks.  */
+typedef __int64_t  __blkcnt64_t;	/*  "" (LFS) */
+typedef __uint32_t __fsblkcnt_t;	/* Type to count file system blocks.  */
+typedef __uint64_t __fsblkcnt64_t;	/*  "" (LFS) */
+typedef __uint64_t __fsfilcnt_t;	/* Type to count file system inodes.  */
+typedef __uint64_t __fsfilcnt64_t;	/*  "" (LFS) */
 
 typedef struct
   {
@@ -61,12 +69,12 @@ typedef struct
   } __fsid_t;				/* Type of file system IDs.  */
 
 /* Everythin' else.  */
-typedef int __daddr_t;			/* The type of a disk address.  */
-typedef char *__caddr_t;
+typedef int __daddr_t;			/* Type of a disk address.  */
+typedef char *__caddr_t;		/* Type of a core address.  */
 typedef long int __time_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
-
 typedef long int __clock_t;
+typedef int __key_t;			/* Type of a SYSV IPC key. */
 
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;
@@ -90,23 +98,5 @@ typedef struct
     /* XPG4.2 requires this member name.  */
     __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
   } __fd_set;
-
-
-typedef int __key_t;
-
-
-/* Types from the Large File Support interface.  */
-
-/* Type to count number os disk blocks.  */
-typedef int __blkcnt_t;
-typedef __quad_t __blkcnt64_t;
-
-/* Type to count file system blocks.  */
-typedef unsigned int __fsblkcnt_t;
-typedef __u_quad_t __fsblkcnt64_t;
-
-/* Type to count file system inodes.  */
-typedef unsigned long int __fsfilcnt_t;
-typedef __u_quad_t __fsfilcnt64_t;
 
 #endif /* bits/types.h */
