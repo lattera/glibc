@@ -6,6 +6,8 @@ Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	If there is only a single descriptor, just use its reply port for
 	everything and don't bother creating the port set.
 
+	* sysdeps/mach/hurd/uname.c (uname): Deref UNAME to get nodename.
+
 	* sysdeps/mach/libc-lock.h (__libc_lock_define): Backslashify
 	continuation line.
 
