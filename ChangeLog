@@ -1,3 +1,7 @@
+2000-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (print_version): Update copyright year.
+
 2000-07-17  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/make-syscalls.sh: Handle new arg signature
