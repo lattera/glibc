@@ -934,12 +934,17 @@ fts_sort(sp, head, nitems)
 	 * 40 so don't realloc one entry at a time.
 	 */
 	if (nitems > sp->fts_nitems) {
+		struct _ftsent **a;
+
 		sp->fts_nitems = nitems + 40;
-		if ((sp->fts_array = realloc(sp->fts_array,
-		    (size_t)(sp->fts_nitems * sizeof(FTSENT *)))) == NULL) {
+		if ((a = realloc(sp->fts_array,
+ 		    (size_t)(sp->fts_nitems * sizeof(FTSENT *)))) == NULL) {
+			free(sp->fts_array);
+			sp->fts_array = NULL;
 			sp->fts_nitems = 0;
 			return (head);
 		}
+		sp->fts_array = a;
 	}
 	for (ap = sp->fts_array, p = head; p; p = p->fts_link)
 		*ap++ = p;
@@ -1016,6 +1021,8 @@ fts_palloc(sp, more)
 	FTS *sp;
 	size_t more;
 {
+	char *p;
+
 	sp->fts_pathlen += more + 256;
 	/*
 	 * Check for possible wraparound.  In an FTS, fts_pathlen is
@@ -1023,14 +1030,22 @@ fts_palloc(sp, more)
 	 * We limit fts_pathlen to USHRT_MAX to be safe in both cases.
 	 */
 	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= USHRT_MAX) {
-		if (sp->fts_path)
+		if (sp->fts_path) {
 			free(sp->fts_path);
+			sp->fts_path = NULL;
+		}
 		sp->fts_path = NULL;
 		__set_errno (ENAMETOOLONG);
 		return (1);
 	}
-	sp->fts_path = realloc(sp->fts_path, sp->fts_pathlen);
-	return (sp->fts_path == NULL);
+	p = realloc(sp->fts_path, sp->fts_pathlen);
+	if (p == NULL) {
+		free(sp->fts_path);
+		sp->fts_path = NULL;
+		return 1;
+	}
+	sp->fts_path = p;
+	return 0;
 }
 
 /*

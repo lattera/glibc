@@ -1,5 +1,9 @@
 2001-12-25  Dmitry V. Levin  <ldv@alt-linux.org>
 
+	* io/fts.c: Update from BSD to fix memory leaks.
+
+2001-12-25  Dmitry V. Levin  <ldv@alt-linux.org>
+
 	* crypt/md5-crypt.c: Realloc error handling memory leak fix.
 	* elf/chroot_canon.c: Likewise.
 	* elf/dl-object.c: Likewise.
