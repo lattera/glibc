@@ -49,7 +49,7 @@ extern void __default_rt_sa_restorer(void);
   : __default_sa_restorer
 #else
 #define choose_restorer(flags)					\
-  &&__default_sa_restorer
+  __default_sa_restorer
 #endif
 
 /* If ACT is not NULL, change the action for SIG to *ACT.

@@ -1,3 +1,23 @@
+1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/bits/semaphore.h: Removed.
+	* sysdeps/powerpc/bits/semaphore.h: Removed.
+	* sysdeps/pthread/cmpxchg/bits/semaphore.h: Removed.
+	* sysdeps/pthread/no-cmpxchg/bits/semaphore.h: Removed.
+	* Makefile (headers): Remove bits/semaphore.h.
+
+	* semaphore.h: Define _pthread_descr if necessary.
+	Don't include limits.h.  Define SEM_VALUE_MAX directly.
+	Define SEM_FAILED.
+	(sem_t): Protect element names with leading __.
+	Add declarations for sem_close, sem_open, and sem_unlink.
+	* semaphore.c: Adjust all functions for new element names.
+	Define sem_close, sem_open, and sem_unlink.
+	* Versions (libthread): Add sem_close, sem_open, and sem_unlink for
+	GLIBC_2.1.1.
+	* sysdeps/pthread/bits/pthreadtypes.h: Define _pthread_descr only if
+	necessary.
+
 1999-03-16  H.J. Lu  <hjl@gnu.org>
 
 	* specific.c (pthread_key_delete): Check th->p_terminated to see
