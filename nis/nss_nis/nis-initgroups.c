@@ -57,14 +57,14 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
   intern_t *intern = (intern_t *) indata;
 
   if (instatus != YP_TRUE)
-    return instatus;
+    return 1;
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
       struct response_t *newp = malloc (sizeof (struct response_t)
 					+ invallen + 1);
       if (newp == NULL)
-	return YP_FALSE; /* We have no error code for out of memory */
+	return 1; /* We have no error code for out of memory */
 
       if (intern->start == NULL)
 	intern->start = newp;

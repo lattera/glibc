@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996,1997,1998,1999,2000,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,10 @@
 #include <stddef.h>
 #include <sysdep.h>
 
+
+# if __ASSUME_STATFS64 == 0
 int __no_statfs64 attribute_hidden;
+#endif
 
 /* Return information about the filesystem on which FILE resides.  */
 int

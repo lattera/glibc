@@ -1,3 +1,25 @@
+2004-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internal_statvfs64.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add internal_statvfs64.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Allow to be used to
+	compile 64bit version.
+	* sysdeps/unix/sysv/linux/statvfs64.c: Use __fstatfs64 and skip
+	compatibility code if __ASSUME_STATFS64 is defined.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/statfs64.c: Don't add __no_statfs64 if
+	__ASSUME_STATFS64 != 0.
+
+2004-04-02  Thorsten Kukuk  <kukuk@firun.suse.de>
+
+	* nis/nss_nis/nis-ethers.c (saveit): Fix return codes in error case.
+	* nis/nss_nis/nis-initgroups.c (saveit): Likewise.
+	* nis/nss_nis/nis-proto.c (saveit): Likewise.
+	* nis/nss_nis/nis-rpc.c (saveit): Likewise.
+	* nis/nss_nis/nis-service.c (saveit): Likewise.
+
 2004-04-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nss: Add SERVICES_AUTHORITATIVE.

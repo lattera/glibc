@@ -49,13 +49,13 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
 {
   if (instatus != YP_TRUE)
-    return instatus;
+    return 1;
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
       struct response *newp = malloc (sizeof (struct response) + invallen + 1);
       if (newp == NULL)
-	return YP_FALSE; /* We have no error code for out of memory */
+	return 1; /* We have no error code for out of memory */
 
       if (start == NULL)
 	start = newp;

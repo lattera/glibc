@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -31,9 +31,16 @@
 #include "linux_fsinfo.h"
 
 
+#ifndef STATFS
+# define STATFS statfs
+# define STATVFS statvfs
+# define INTERNAL_STATVFS __internal_statvfs
+#endif
+
+
 void
-__internal_statvfs (const char *name, struct statvfs *buf,
-		    struct statfs *fsbuf, struct stat64 *st)
+INTERNAL_STATVFS (const char *name, struct STATVFS *buf,
+		  struct STATFS *fsbuf, struct stat64 *st)
 {
   /* Now fill in the fields we have information for.  */
   buf->f_bsize = fsbuf->f_bsize;

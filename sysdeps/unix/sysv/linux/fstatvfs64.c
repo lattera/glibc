@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FD resides.
-   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2000,2001,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,31 +18,56 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <sys/statvfs.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/statfs.h>
+#include <sys/statvfs.h>
+#include "kernel-features.h"
+
+
+extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,
+				  struct statfs64 *fsbuf, struct stat64 *st);
+
 
 /* Return information about the filesystem on which FD resides.  */
 int
 __fstatvfs64 (int fd, struct statvfs64 *buf)
 {
-  struct statvfs buf32;
+  struct statfs64 fsbuf;
+  int res = __fstatfs64 (fd, &fsbuf);
 
-  if (fstatvfs (fd, &buf32) < 0)
-    return -1;
+#ifndef __ASSUME_STATFS64
+  if (res < 0 && errno == ENOSYS)
+    {
+      struct statvfs buf32;
 
-  buf->f_bsize = buf32.f_bsize;
-  buf->f_frsize = buf32.f_frsize;
-  buf->f_blocks = buf32.f_blocks;
-  buf->f_bfree = buf32.f_bfree;
-  buf->f_bavail = buf32.f_bavail;
-  buf->f_files = buf32.f_files;
-  buf->f_ffree = buf32.f_ffree;
-  buf->f_favail = buf32.f_favail;
-  buf->f_fsid = buf32.f_fsid;
-  buf->f_flag = buf32.f_flag;
-  buf->f_namemax = buf32.f_namemax;
-  memcpy (buf->__f_spare, buf32.__f_spare, sizeof (buf32.__f_spare));
+      res = fstatvfs (fd, &buf32);
+      if (res == 0)
+	{
+	  buf->f_bsize = buf32.f_bsize;
+	  buf->f_frsize = buf32.f_frsize;
+	  buf->f_blocks = buf32.f_blocks;
+	  buf->f_bfree = buf32.f_bfree;
+	  buf->f_bavail = buf32.f_bavail;
+	  buf->f_files = buf32.f_files;
+	  buf->f_ffree = buf32.f_ffree;
+	  buf->f_favail = buf32.f_favail;
+	  buf->f_fsid = buf32.f_fsid;
+	  buf->f_flag = buf32.f_flag;
+	  buf->f_namemax = buf32.f_namemax;
+	  memcpy (buf->__f_spare, buf32.__f_spare, sizeof (buf32.__f_spare));
+	}
+    }
+#endif
 
-  return 0;
+  if (res == 0)
+    {
+      /* Convert the result.  */
+      struct stat64 st;
+      __internal_statvfs64 (NULL, buf, &fsbuf,
+			    fstat64 (fd, &st) == -1 ? NULL : &st);
+    }
+
+  return res;
 }
 weak_alias (__fstatvfs64, fstatvfs64)
