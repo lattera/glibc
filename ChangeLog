@@ -2,8 +2,10 @@
 
 	* iconv/iconvconfig.c (main): Don't write an output file if we
 	have seen an error.
+	(write_output): Don't overwrite old cache file until we know we
+	have a new one.
 
-	* iconv/Makefile (install-bin): Add iconvconfig.
+	* iconv/Makefile (install-sbin): Add iconvconfig.
 
 2001-07-25  Jakub Jelinek  <jakub@redhat.com>
 
@@ -43,7 +45,7 @@
 	__gconv_release_cache after the steps are handled.
 	* iconv/gconv_dl.c (__gconv_find_shlib): Allocate file name in the
 	record as well.
-	* iconv/gconv_int.h: Add prototype fpr __gconv_release_cache.
+	* iconv/gconv_int.h: Add prototype for __gconv_release_cache.
 
 	* iconv/gconv_cache.c (__gconv_lookup_cache): Catch one more
 	boundary case and reject it.

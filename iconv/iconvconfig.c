@@ -305,7 +305,7 @@ main (int argc, char *argv[])
   if (status == 0)
     status = write_output ();
   else
-    fputs ("No output written!\n", stderr);
+    error (1, 0, _("no output file produced because warning were issued"));
 
   return status;
 }
@@ -966,6 +966,7 @@ write_output (void)
   struct iovec iov[6];
   static const gidx_t null_word;
   size_t total;
+  char tmpfname[sizeof (GCONV_MODULES_CACHE) + strlen (".XXXXXX")];
 
   /* Function to insert the names.  */
   static void name_insert (const void *nodep, VISIT value, int level)
@@ -992,7 +993,8 @@ write_output (void)
     }
 
   /* Open the output file.  */
-  fd = open (GCONV_MODULES_CACHE, O_TRUNC | O_CREAT | O_RDWR, 0644);
+  strcpy (stpcpy (tmpfname, GCONV_MODULES_CACHE), ".XXXXXX");
+  fd = mkstemp (tmpfname);
   if (fd == -1)
     return 1;
 
@@ -1144,12 +1146,17 @@ write_output (void)
   total += iov[idx].iov_len;
   ++idx;
 
-  if (TEMP_FAILURE_RETRY (writev (fd, iov, idx)) != total)
+  if (TEMP_FAILURE_RETRY (writev (fd, iov, idx)) != total
+      /* The file was created with mode 0600.  Make it world-readable.  */
+      || fchmod (fd, 0644) != 0
+      /* Rename the file, possibly replacing an old one.  */
+      || rename (tmpfname, GCONV_MODULES_CACHE) != 0)
     {
       int save_errno = errno;
       close (fd);
-      unlink (GCONV_MODULES_CACHE);
-      error (EXIT_FAILURE, save_errno, gettext ("cannot write output file"));
+      unlink (tmpfname);
+      error (EXIT_FAILURE, save_errno,
+	     gettext ("cannot generate output file"));
     }
 
   close (fd);
