@@ -141,6 +141,10 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
        between two locales would slowly eat up all memory.  */
     free ((void *) loc_name);
 
+  /* The space for normalized_codeset is dynamically allocated.  Free it.  */
+  if (mask & XPG_NORM_CODESET)
+    free ((void *) normalized_codeset);
+
   if (locale_file->decided == 0)
     _nl_load_locale (locale_file, category);
 

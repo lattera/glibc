@@ -23,7 +23,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include "../kernel-features.h"
+#include "kernel-features.h"
 
 
 /* Linux 2.3.25 introduced a new system call since the types used for

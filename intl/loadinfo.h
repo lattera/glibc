@@ -54,6 +54,10 @@ struct loaded_l10nfile
 };
 
 
+/* Normalize codeset name.  There is no standard for the codeset
+   names.  Normalization allows the user to use any of the common
+   names.  The return value is dynamically allocated and has to be
+   freed by the caller.  */
 extern const char *_nl_normalize_codeset PARAMS ((const char *codeset,
 						  size_t name_len));
 
@@ -70,6 +74,8 @@ _nl_make_l10nflist PARAMS ((struct loaded_l10nfile **l10nfile_list,
 
 extern const char *_nl_expand_alias PARAMS ((const char *name));
 
+/* normalized_codeset is dynamically allocated and has to be freed by
+   the caller.  */
 extern int _nl_explode_name PARAMS ((char *name, const char **language,
 				     const char **modifier,
 				     const char **territory,

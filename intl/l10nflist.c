@@ -352,7 +352,8 @@ _nl_make_l10nflist (l10nfile_list, dirlist, dirlist_len, mask, language,
 
 /* Normalize codeset name.  There is no standard for the codeset
    names.  Normalization allows the user to use any of the common
-   names.  */
+   names.  The return value is dynamically allocated and has to be
+   freed by the caller.  */
 const char *
 _nl_normalize_codeset (codeset, name_len)
      const char *codeset;

@@ -86,7 +86,7 @@ enum
 # define FE_INVALID_SQRT	FE_INVALID_SQRT
 
     /* Conversion-to-integer of a NaN or a number too large or too small.  */
-    FE_INVALID_INTEGER_CONVERSION = 1 << (31 - 23),
+    FE_INVALID_INTEGER_CONVERSION = 1 << (31 - 23)
 # define FE_INVALID_INTEGER_CONVERSION	FE_INVALID_INTEGER_CONVERSION
 
 # define FE_ALL_INVALID \
@@ -110,7 +110,7 @@ enum
 #define FE_TOWARDZERO	FE_TOWARDZERO
     FE_UPWARD = 2,
 #define FE_UPWARD	FE_UPWARD
-    FE_DOWNWARD = 3,
+    FE_DOWNWARD = 3
 #define FE_DOWNWARD	FE_DOWNWARD
   };
 
@@ -152,27 +152,33 @@ extern const fenv_t *__fe_nomask_env __P ((void));
 			     : "=r"(__fegetround_result) : : "cr7");	      \
 		     __fegetround_result & 3; }))
 
+/* The weird 'i#*X' constraints on the following suppress a gcc
+   warning when __excepts is not a constant.  Otherwise, they mean the
+   same as just plain 'i'.  */
+
 /* Inline definition for feraiseexcept.  */
 # define feraiseexcept(__excepts) \
-  (__extension__ ({ if (__builtin_constant_p (__excepts)		      \
-			&& ((__excepts) & -(__excepts)) == 0		      \
-			&& (__excepts) != FE_INVALID) {			      \
-		      if ((__excepts) != 0)				      \
-			__asm__ __volatile__				      \
-			  ("mtfsb1 %0"					      \
-			   : : "i"(32 - __builtin_ffs (__excepts)));	      \
-		    } else						      \
-		      (feraiseexcept) (__excepts); }))
+  ((__builtin_constant_p (__excepts)					      \
+    && ((__excepts) & ((__excepts)-1)) == 0				      \
+    && (__excepts) != FE_INVALID)					      \
+   ? ((__excepts) != 0							      \
+      ? (__extension__ ({ __asm__ __volatile__				      \
+			  ("mtfsb1 %s0"					      \
+			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
+			  (void)0; }))					      \
+      : (void)0)							      \
+   : (feraiseexcept) (__excepts))
 
 /* Inline definition for feclearexcept.  */
 # define feclearexcept(__excepts) \
-  (__extension__  ({ if (__builtin_constant_p (__excepts)		      \
-			 && ((__excepts) & -(__excepts)) == 0		      \
-			 && (__excepts) != FE_INVALID) {		      \
-		       if ((__excepts) != 0)				      \
-			 __asm__ __volatile__				      \
-			   ("mtfsb0 %0"					      \
-			    : : "i"(32 - __builtin_ffs (__excepts)));	      \
-		     } else						      \
-		       (feclearexcept) (__excepts); }))
+  ((__builtin_constant_p (__excepts)					      \
+    && ((__excepts) & ((__excepts)-1)) == 0				      \
+    && (__excepts) != FE_INVALID)					      \
+   ? ((__excepts) != 0							      \
+      ? (__extension__ ({ __asm__ __volatile__				      \
+			  ("mtfsb0 %s0"					      \
+			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
+			  (void)0; }))					      \
+      : (void)0)							      \
+   : (feclearexcept) (__excepts))
 #endif /* __OPTIMIZE__ && !_SOFT_FLOAT */

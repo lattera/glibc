@@ -1,3 +1,28 @@
+1999-11-08  Andreas Jaeger  <aj@suse.de>
+
+	* locale/findlocale.c (_nl_find_locale): Free normalized_codeset;
+	this fixes a memory leak (closes PR libc/1435).
+
+	* intl/l10nflist.c (_nl_normalize_codeset): Update comment to
+	reflect memory allocation.
+
+	* intl/loadinfo.h: Comment _nl_normalize_codeset, comment memory
+	allocation in _nl_explode_name.
+
+1999-11-06  Andreas Jaeger  <aj@suse.de>
+
+	* time/tzset.c: Use __libc_lock_define_initialized for tzset_lock
+	to initialize it.
+	Reported by wes@surety.com, closes PR libc/1432.
+
+1999-11-05  Geoff Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/fpu/bits/fenv.h: Don't put commas at the end of
+	enumerator lists (-pedantic complains).
+	(feraiseexcept): Use i#*X as the constraint.  Fix a bug in the
+	test for 'one bit set'.
+	(feclearexcept): Likewise.
+
 1999-11-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/setrlimit.c: New file.

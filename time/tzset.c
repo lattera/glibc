@@ -38,7 +38,7 @@ weak_alias (__daylight, daylight)
 weak_alias (__timezone, timezone)
 
 /* This locks all the state variables in tzfile.c and this file.  */
-__libc_lock_define (static, tzset_lock)
+__libc_lock_define_initialized (static, tzset_lock)
 
 
 #define	min(a, b)	((a) < (b) ? (a) : (b))
