@@ -1,5 +1,9 @@
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makeconfig: Ensures the soversions.mk part of Makefile gets
+	included before building gnu/lib-names.h
+	Patch by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
+
 	* elf/dl-close.c (_dl_close): Don't run destructors of objects
 	marked DF_1_NODELETE.
 

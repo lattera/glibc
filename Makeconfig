@@ -725,14 +725,15 @@ $(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
 	  done > $@T; exit 0
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
-	while read lib number setname; do \
-	  case $$number in \
-	    [0-9]*) echo "$$lib.so-version=.$$number"; \
-		    echo "all-sonames+=$$lib=$$lib.so\$$($$lib.so-version)";;\
-	    *)	    echo "$$lib.so-version=$$number"; \
-		    echo "all-sonames+=$$lib=\$$($$lib.so-version)";;\
-	  esac; \
-	done < $< > $@T; exit 0
+	(while read lib number setname; do \
+	   case $$number in \
+	     [0-9]*) echo "$$lib.so-version=.$$number"; \
+		     echo "all-sonames+=$$lib=$$lib.so\$$($$lib.so-version)";;\
+	     *)	     echo "$$lib.so-version=$$number"; \
+		     echo "all-sonames+=$$lib=\$$($$lib.so-version)";;\
+	   esac; \
+	 done; \
+	 echo soversions.mk-done = t;) < $< > $@T; exit 0
 	mv -f $@T $@
 endif
 endif
@@ -742,6 +743,7 @@ postclean-generated += soversions.mk
 # Generate the header containing the names of all shared libraries.
 # We use a stamp file to avoid uncessary recompilations.
 before-compile += $(common-objpfx)gnu/lib-names.h
+ifeq ($(soversions.mk-done),t)
 $(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
 $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	$(make-target-directory)
@@ -770,6 +772,7 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
+endif
 
 common-generated += gnu/lib-names.h gnu/lib-names.stmp
 
