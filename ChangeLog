@@ -1,3 +1,9 @@
+2001-12-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde):
+	Fix conditionals so this is set by default for stdio and not for libio.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
 2001-12-10  Thorsten Kukuk  <kukuk@suse.de>
 
 	* io/ftw.c (ftw_startup): Check, if the path is search and readable.
