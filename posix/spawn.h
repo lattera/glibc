@@ -83,12 +83,13 @@ extern int posix_spawnattr_destroy (posix_spawnattr_t *__attr) __THROW;
 
 /* Store signal mask for signals with default handling from ATTR in
    SIGDEFAULT.  */
-extern int posix_spawnattr_getdefault (__const posix_spawnattr_t *__attr,
-				       sigset_t *__sigdefault) __THROW;
+extern int posix_spawnattr_getsigdefault (__const posix_spawnattr_t *__attr,
+					  sigset_t *__sigdefault) __THROW;
 
 /* Set signal mask for signals with default handling in ATTR to SIGDEFAULT.  */
-extern int posix_spawnattr_setdefault (posix_spawnattr_t *__attr,
-				       __const sigset_t *__sigdefault) __THROW;
+extern int posix_spawnattr_setsigdefault (posix_spawnattr_t *__attr,
+					  __const sigset_t *__sigdefault)
+     __THROW;
 
 /* Store signal mask for the new process from ATTR in SIGMASK.  */
 extern int posix_spawnattr_getsigmask (__const posix_spawnattr_t *__attr,

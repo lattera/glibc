@@ -22,8 +22,8 @@
 /* Store signal mask for signals with default handling from ATTR in
    SIGDEFAULT.  */
 int
-posix_spawnattr_getdefault (const posix_spawnattr_t *attr,
-			    sigset_t *sigdefault)
+posix_spawnattr_getsigdefault (const posix_spawnattr_t *attr,
+			       sigset_t *sigdefault)
 {
   /* Copy the sigset_t data to the user buffer.  */
   memcpy (sigdefault, &attr->__sd, sizeof (sigset_t));
