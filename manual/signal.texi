@@ -3123,10 +3123,10 @@ stack and increase @code{ss_size} accordingly.
 This field contains the bitwise @sc{or} of these flags:
 
 @vtable @code
-@item SA_DISABLE
+@item SS_DISABLE
 This tells the system that it should not use the signal stack.
 
-@item SA_ONSTACK
+@item SS_ONSTACK
 This is set by the system, and indicates that the signal stack is
 currently in use.  If this bit is not set, then signals will be
 delivered on the normal user stack.

@@ -23,7 +23,7 @@ subdir	:= grp
 headers := grp.h
 
 routines := fgetgrent initgroups setgroups \
-	    getgrent getgrgid getgrnam \
+	    getgrent getgrgid getgrnam putgrent \
 	    getgrent_r getgrgid_r getgrnam_r fgetgrent_r
 
 tests := testgrp

@@ -19,16 +19,18 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#ifdef _USE_IN_LIBIO
-# define fdopen _IO_new_fdopen
+#ifdef USE_IN_LIBIO
+# include <iolibio.h>
+# define __fdopen _IO_fdopen
+# define tmpfile __new_tmpfile
 #endif
 
 /* This returns a new stream opened on a temporary file (generated
-   by tmpnam) The file is opened with mode "w+b" (binary read/write).
+   by tmpnam).  The file is opened with mode "w+b" (binary read/write).
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
 FILE *
-tmpfile ()
+tmpfile (void)
 {
   char buf[FILENAME_MAX];
   int fd;
@@ -36,15 +38,27 @@ tmpfile ()
 
   if (__path_search (buf, FILENAME_MAX, NULL, "tmpf"))
     return NULL;
-  if ((fd = __gen_tempname (buf, 1, 0)) < 0)
+  fd = __gen_tempname (buf, 1, 0);
+  if (fd < 0)
     return NULL;
 
   /* Note that this relies on the Unix semantics that
      a file is not really removed until it is closed.  */
   (void) remove (buf);
 
-  if ((f = fdopen (fd, "w+b")) == NULL)
-    close (fd);
+  if ((f = __fdopen (fd, "w+b")) == NULL)
+    __close (fd);
 
   return f;
 }
+
+#ifdef USE_IN_LIBIO
+# undef tmpfile
+# if defined PIC && DO_VERSIONING
+default_symbol_version (__new_tmpfile, tmpfile, GLIBC_2.1);
+# else
+#  ifdef weak_alias
+weak_alias (__new_tmpfile, tmpfile)
+#  endif
+# endif
+#endif

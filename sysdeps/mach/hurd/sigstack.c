@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-/* XXX should be __sigstack ? */
 int
 sigstack (ss, oss)
      const struct sigstack *ss;
@@ -34,13 +33,13 @@ sigstack (ss, oss)
   as.ss_size = 0;
   as.ss_flags = 0;
 
-  if (sigaltstack (&as, &oas) < 0)
+  if (__sigaltstack (&as, &oas) < 0)
     return -1;
 
   if (oss != NULL)
     {
       oss->ss_sp = oas.ss_sp;
-      oss->ss_onstack = oas.ss_flags & SA_ONSTACK;
+      oss->ss_onstack = oas.ss_flags & SS_ONSTACK;
     }
 
   return 0;

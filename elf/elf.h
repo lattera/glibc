@@ -180,7 +180,17 @@ typedef struct
 #define EM_OLD_ALPHA	41		/* Digital Alpha */
 #define EM_SH		42		/* Hitachi SH */
 #define EM_SPARCV9	43		/* SPARC v9 64-bit */
-#define EM_NUM		44
+#define EM_TRICORE	44		/* Siemens Tricore */
+#define EM_ARC		45		/* Argonaut RISC Core */
+#define EM_H8_300	46		/* Hitachi H8/300 */
+#define EM_H8_300H	47		/* Hitachi H8/300H */
+#define EM_H8S		48		/* Hitachi H8S */
+#define EM_H8_500	49		/* Hitachi H8/500 */
+#define EM_IA_64	50		/* Intel Merced */
+#define EM_MIPS_X	51		/* Stanford MIPS-X */
+#define EM_COLDFIRE	52		/* Motorola Coldfire */
+#define EM_68HC12	53		/* Motorola M68HC12 */
+#define EM_NUM		54
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -249,6 +259,7 @@ typedef struct
 #define SHT_SHLIB	 10		/* Reserved */
 #define SHT_DYNSYM	 11		/* Dynamic linker symbol table */
 #define	SHT_NUM		 12		/* Number of defined types.  */
+#define SHT_LOOS	 0x60000000	/* Start OS-specific */
 #define SHT_LOSUNW	 0x6ffffffb	/* Sun-specific low bound.  */
 #define SHT_SUNW_COMDAT  0x6ffffffb
 #define SHT_SUNW_syminfo 0x6ffffffc
@@ -256,6 +267,7 @@ typedef struct
 #define SHT_GNU_verneed	 0x6ffffffe	/* Version needs section.  */
 #define SHT_GNU_versym	 0x6fffffff	/* Version symbol table.  */
 #define SHT_HISUNW	 0x6fffffff	/* Sun-specific high bound.  */
+#define SHT_HIOS	 0x60000000	/* End OS-specific type */
 #define SHT_LOPROC	 0x70000000	/* Start of processor-specific */
 #define SHT_HIPROC	 0x7fffffff	/* End of processor-specific */
 #define SHT_LOUSER	 0x80000000	/* Start of application-specific */
@@ -311,6 +323,8 @@ typedef struct
 #define STB_GLOBAL	1		/* Global symbol */
 #define STB_WEAK	2		/* Weak symbol */
 #define	STB_NUM		3		/* Number of defined types.  */
+#define STB_LOOS	10		/* Start of OS-specific */
+#define STB_HIOS	12		/* End of OS-specific */
 #define STB_LOPROC	13		/* Start of processor-specific */
 #define STB_HIPROC	15		/* End of processor-specific */
 
@@ -322,6 +336,8 @@ typedef struct
 #define STT_SECTION	3		/* Symbol associated with a section */
 #define STT_FILE	4		/* Symbol's name is file name */
 #define	STT_NUM		5		/* Number of defined types.  */
+#define STT_LOOS	11		/* Start of OS-specific */
+#define STT_HIOS	12		/* End of OS-specific */
 #define STT_LOPROC	13		/* Start of processor-specific */
 #define STT_HIPROC	15		/* End of processor-specific */
 
@@ -414,6 +430,8 @@ typedef struct
 #define PT_SHLIB	5		/* Reserved */
 #define PT_PHDR		6		/* Entry for header table itself */
 #define	PT_NUM		7		/* Number of defined types.  */
+#define PT_LOOS		0x60000000	/* Start of OS-specific */
+#define PT_HIOS		0x6fffffff	/* End of OS-specific */
 #define PT_LOPROC	0x70000000	/* Start of processor-specific */
 #define PT_HIPROC	0x7fffffff	/* End of processor-specific */
 
@@ -493,7 +511,14 @@ typedef struct
 #define DT_DEBUG	21		/* For debugging; unspecified */
 #define DT_TEXTREL	22		/* Reloc might modify .text */
 #define DT_JMPREL	23		/* Address of PLT relocs */
-#define	DT_NUM		24		/* Number used */
+#define	DT_BIND_NOW	24		/* Process relocations of object */
+#define	DT_INIT_ARRAY	25		/* Array with addresses of init fct */
+#define	DT_FINI_ARRAY	26		/* Array with addresses of fini fct */
+#define	DT_INIT_ARRAYSZ	27		/* Size in bytes of DT_INIT_ARRAY */
+#define	DT_FINI_ARRAYSZ	28		/* Size in bytes of DT_FINI_ARRAY */
+#define	DT_NUM		29		/* Number used */
+#define DT_LOOS		0x60000000	/* Start of OS-specific */
+#define DT_HIOS		0x6fffffff	/* End of OS-specific */
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
@@ -771,6 +796,8 @@ typedef struct
 #define R_68K_GLOB_DAT	20		/* Create GOT entry */
 #define R_68K_JMP_SLOT	21		/* Create PLT entry */
 #define R_68K_RELATIVE	22		/* Adjust by program base */
+/* Keep this the last entry.  */
+#define R_68K_NUM	23
 
 /* Intel 80386 specific definitions.  */
 
@@ -787,6 +814,8 @@ typedef struct
 #define R_386_RELATIVE	8		/* Adjust by program base */
 #define R_386_GOTOFF	9		/* 32 bit offset to GOT */
 #define R_386_GOTPC	10		/* 32 bit PC relative offset to GOT */
+/* Keep this the last entry.  */
+#define R_386_NUM	11
 
 /* SUN SPARC specific definitions.  */
 
@@ -860,6 +889,8 @@ typedef struct
 #define R_SPARC_REGISTER 53		/* Global register usage */
 #define R_SPARC_UA64	54		/* Direct 64 bit unaligned */
 #define R_SPARC_UA16	55		/* Direct 16 bit unaligned */
+/* Keep this the last entry.  */
+#define R_SPARC_NUM	56
 
 /* For Sparc64, legal values for d_tag of Elf64_Dyn.  */
 
@@ -1103,6 +1134,8 @@ typedef struct
 #define R_MIPS_ADD_IMMEDIATE	34
 #define R_MIPS_PJUMP		35
 #define R_MIPS_RELGOT		36
+/* Keep this the last entry.  */
+#define R_MIPS_NUM		37
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
@@ -1296,6 +1329,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ALPHA_GLOB_DAT	25	/* Create GOT entry */
 #define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
 #define R_ALPHA_RELATIVE	27	/* Adjust by program base */
+/* Keep this the last entry.  */
+#define R_ALPHA_NUM		28
 
 
 /* PowerPC specific declarations */
@@ -1338,6 +1373,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_SECTOFF_LO	34
 #define R_PPC_SECTOFF_HI	35
 #define R_PPC_SECTOFF_HA	36
+/* Keep this the last entry.  */
+#define R_PPC_NUM		37
 
 /* The remaining relocs are from the Embedded ELF ABI, and are not
    in the SVR4 ELF ABI.  */
@@ -1371,6 +1408,15 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_PC24	1		/* PC relative 26 bit branch */
 #define R_ARM_ABS32	2		/* Direct 32 bit  */
 #define R_ARM_REL32	3		/* PC relative 32 bit */
+#define R_ARM_ABS8	4
+#define R_ARM_ABS16	5
+#define R_ARM_ABS12	6
+#define R_ARM_THM_ABS5	7
+#define R_ARM_THM_PC22	8
+#define R_ARM_SBREL32	9
+#define R_ARM_AMP_VCALL9 10
+#define R_ARM_THM_PC11	11
+#define R_ARM_THM_PC9	12
 #define R_ARM_COPY	20		/* Copy symbol at runtime */
 #define R_ARM_GLOB_DAT	21		/* Create GOT entry */
 #define R_ARM_JUMP_SLOT	22		/* Create PLT entry */
@@ -1379,6 +1425,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_GOTPC	25		/* 32 bit PC relative offset to GOT */
 #define R_ARM_GOT32	26		/* 32 bit GOT entry */
 #define R_ARM_PLT32	27		/* 32 bit PLT address */
+/* Keep this the last entry.  */
+#define R_ARM_NUM	28
 
 __END_DECLS
 

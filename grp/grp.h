@@ -54,23 +54,6 @@ struct group
 # include <stdio.h>
 #endif
 
-#ifdef	__USE_GNU
-/* Return a new stream open on the group file.  */
-extern FILE *__grpopen __P ((void));
-
-/* Read a group entry from STREAM, filling in G.
-   Return the `struct group' of G if successful, NULL on failure.  */
-extern struct group *__grpread __P ((FILE *__stream, __ptr_t __g));
-
-/* Return a chunk of memory containing pre-initialized data for __grpread.  */
-extern __ptr_t __grpalloc __P ((void));
-
-/* Scan the group file, filling in G, until SELECTOR returns nonzero for an
-   entry.  Return the `struct group' of G if successful, NULL on failure.  */
-extern struct group *__grpscan __P ((__ptr_t *__p,
-				     int (*__selector) (struct group *)));
-#endif
-
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Rewind the group-file stream.  */
@@ -86,6 +69,11 @@ extern struct group *getgrent __P ((void));
 #ifdef	__USE_SVID
 /* Read a group entry from STREAM.  */
 extern struct group *fgetgrent __P ((FILE *__stream));
+#endif
+
+#ifdef __USE_GNU
+/* Write the given entry onto the given stream.  */
+extern int putgrent __P ((__const struct group *__p, FILE *__f));
 #endif
 
 /* Search for an entry with a matching group ID.  */

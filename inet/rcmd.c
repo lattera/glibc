@@ -413,11 +413,18 @@ __ivaliduser(hostf, raddr, luser, ruser)
 	register char *user, *p;
 	int ch;
 	char *buf = NULL;
+	char *cp;
 	size_t bufsize = 0;
 	ssize_t nread;
 
 	while ((nread = __getline (&buf, &bufsize, hostf)) > 0) {
 		buf[bufsize - 1] = '\0'; /* Make sure it's terminated.  */
+		/* Because the file format does not know any form of quoting we
+		   can search forward for the next '#' character and if found
+		   make it terminating the line.  */
+		cp = strchr (buf, '#');
+		if (cp != NULL)
+		  *cp = '\0';
 		p = buf;
 		while (*p != '\n' && *p != ' ' && *p != '\t' && *p != '\0') {
 			*p = isupper(*p) ? tolower(*p) : *p;

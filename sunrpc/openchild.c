@@ -46,6 +46,7 @@
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
 # define fflush(s) _IO_fflush (s)
+# define __fdopen(fd,m) _IO_fdopen (fd,m)
 #endif
 
 /*
@@ -88,9 +89,9 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
       /*
        * parent: write into pdto[1], read from pdfrom[0]
        */
-      *fto = fdopen (pdto[1], "w");
+      *fto = __fdopen (pdto[1], "w");
       __close (pdto[0]);
-      *ffrom = fdopen (pdfrom[0], "r");
+      *ffrom = __fdopen (pdfrom[0], "r");
       __close (pdfrom[1]);
       break;
     }

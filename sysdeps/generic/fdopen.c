@@ -21,13 +21,14 @@
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *
-fdopen (fd, mode)
+__fdopen (fd, mode)
      int fd;
      const char *mode;
 {
   __set_errno (ENOSYS);
   return NULL;
 }
+weak_alias (__fdopen, fdopen)
 
 stub_warning (fdopen)
 #include <stub-tag.h>

@@ -4035,11 +4035,11 @@ casinh_test (void)
   check_eps ("real(casinh(0.7 + i 1.2)) == 0.97865...", __real__ result,
 	     0.9786545955936738768L, CHOOSE(5e-17L, 2e-16, 0));
   check_eps ("imag(casinh(0.7 + i 1.2)) == 0.91135...", __imag__ result,
-	     0.9113541895315601156L, CHOOSE(7e-19L, 2e-16, 6e-8));
+	     0.9113541895315601156L, CHOOSE(7e-19L, 2e-16, 2e-7));
 
   result = FUNC(casinh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(casinh(-2 - i 3)) == -1.96863...", __real__ result,
-	     -1.9686379257930962917L, CHOOSE(7e-19L, 2e-15, 2e-7));
+	     -1.9686379257930962917L, CHOOSE(7e-19L, 2e-15, 3e-6));
   check_eps ("imag(casinh(-2 - i 3)) == -0.96465...", __imag__ result,
 	     -0.9646585044076027920L, CHOOSE(4e-19L, 2e-15, 4e-7));
 }
@@ -5158,13 +5158,13 @@ csqrt_test (void)
 
   result = FUNC(csqrt) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csqrt(-2 - i 3)) == 0.89597...", __real__ result,
-	     0.8959774761298381247L, CHOOSE(6e-20L, 2e-16, 6e-8));
+	     0.8959774761298381247L, CHOOSE(6e-16L, 4e-16, 6e-8));
   check_eps ("imag(csqrt(-2 - i 3)) == -1.67414...", __imag__ result,
 	     -1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
 
   result = FUNC(csqrt) (BUILD_COMPLEX (-2, 3));
   check_eps ("real(csqrt(-2 + i 3)) == 0.89597...", __real__ result,
-	     0.8959774761298381247L, CHOOSE(6e-20L, 2e-16, 6e-8));
+	     0.8959774761298381247L, CHOOSE(6e-20L, 4e-16, 6e-8));
   check_eps ("imag(csqrt(-2 + i 3)) == 1.67414...", __imag__ result,
 	     1.6741492280355400404L, CHOOSE(0, 5e-16, 0));
 }

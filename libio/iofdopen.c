@@ -130,7 +130,7 @@ _IO_new_fdopen (fd, mode)
     _IO_mask_flags (&new_f->fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return (_IO_FILE *) &new_f->fp;
+  return &new_f->fp.file;
 }
 
 #if defined PIC && DO_VERSIONING

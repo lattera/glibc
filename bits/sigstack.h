@@ -37,3 +37,19 @@ typedef struct sigaltstack
     size_t ss_size;
     int ss_flags;
   } stack_t;
+
+
+/* Possible values for `ss_flags.'.  */
+enum
+{
+  SS_ONSTACK = 0x0001,
+#define SS_ONSTACK	SS_ONSTACK
+  SS_DISABLE = 0x0004,
+#define SS_DISABLE	SS_DISABLE
+};
+    
+/* Minumum stack size for a signal handler.  */
+#define MINSIGSTKSZ	8192
+
+/* System default stack size.  */
+#define SIGSTKSZ	(MINSIGSTKSZ + 32768)

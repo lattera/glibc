@@ -45,6 +45,6 @@ libc {
     printf_size; printf_size_info;
 
     # t*
-    tmpfile64;
+    tmpfile; tmpfile64;
   }
 }

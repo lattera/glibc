@@ -64,24 +64,6 @@ struct passwd
 # include <stdio.h>
 #endif
 
-#ifdef	__USE_GNU
-/* Return a new stream open on the password file.  */
-extern FILE *__pwdopen __P ((void));
-
-/* Read a password entry from STREAM, filling in P.
-   Return the `struct passwd' of P if successful, NULL on failure.  */
-extern struct passwd *__pwdread __P ((FILE *__stream, __ptr_t __p));
-
-/* Return a chunk of memory containing pre-initialized data for __pwdread.  */
-extern __ptr_t __pwdalloc __P ((void));
-
-/* Scan the password file, filling in P, until SELECTOR returns nonzero for
-   an entry.  Return the `struct passwd' of P if successful, NULL on
-   failure.  */
-extern struct passwd *__pwdscan __P ((__ptr_t *__p,
-				      int (*__selector) (struct passwd *)));
-#endif
-
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Rewind the password-file stream.  */

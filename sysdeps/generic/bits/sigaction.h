@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,12 +40,11 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#ifdef	__USE_BSD
-# define SA_ONSTACK	0x1	/* Take signal on signal stack.  */
-# define SA_RESTART	0x2	/* Restart syscall on signal return.  */
-# define SA_DISABLE	0x4	/* Disable alternate signal stack.  */
+#if defined __USE_UNIX98 || defined __USE_MISC
+# define SA_ONSTACK	0x0001	/* Take signal on signal stack.  */
+# define SA_RESTART	0x0002	/* Restart syscall on signal return.  */
 #endif
-#define	SA_NOCLDSTOP	0x8	/* Don't send SIGCHLD when children stop.  */
+#define	SA_NOCLDSTOP	0x0008	/* Don't send SIGCHLD when children stop.  */
 
 
 /* Values for the HOW argument to `sigprocmask'.  */

@@ -364,6 +364,7 @@ extern FILE *__newstream __P ((void));
 
 #ifdef	__USE_POSIX
 /* Create a new stream that refers to an existing system file descriptor.  */
+extern FILE *__fdopen __P ((int __fd, __const char *__modes));
 extern FILE *fdopen __P ((int __fd, __const char *__modes));
 #endif
 

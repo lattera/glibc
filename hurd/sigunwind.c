@@ -1,5 +1,5 @@
 /* longjmp cleanup function for unwinding past signal handlers.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
      which calls us inside a critical section.  */
   assert (__spin_lock_locked (&ss->critical_section_lock));
   /* Are we on the alternate signal stack now?  */
-  onstack = (ss->sigaltstack.ss_flags & SA_ONSTACK);
+  onstack = (ss->sigaltstack.ss_flags & SS_ONSTACK);
   __spin_unlock (&ss->lock);
 
   if (onstack && ! scp->sc_onstack)

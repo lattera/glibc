@@ -1,3 +1,133 @@
+1998-07-31 17:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bits/byteswap.h: Fix problems with side effects.
+
+	* manual/filesys.texi: Document truncate and ftruncate.
+	Patch by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+	* shadow/putspent.c: Lock stream while generating the output.
+
+	* sunrpc/clnt_unix.c: Use ucred instead of cmsgcred again.
+	(__msgwrite): Rewrite accordingly.
+	* sunrpc/svc_unix.c: Likewise.
+	* sysdeps/unix/sysv/linux/Dist: Remove __recvmsg.S and __sendmsg.S.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==socket]
+	(sysdep_routines): Remove __sendmsg and __recvmsg.
+	* sysdeps/unix/sysv/linux/__recvmsg.S: Removed.
+	* sysdeps/unix/sysv/linux/__sendmsg.S: Removed.
+	* sysdeps/unix/sysv/linux/recvmsg.c: Removed.
+	* sysdeps/unix/sysv/linux/sendmsg.c: Removed.
+	* sysdeps/unix/sysv/linux/recvmsg.S: New file.
+	* sysdeps/unix/sysv/linux/sendmsg.S: New file.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define SCM_CREDENTIALS and
+	struct ucred.  Remove struct cmsgcred.
+	Patches by Thorsten Kukuk.
+
+1998-08-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/rcmd.c (__ivaliduser): Allow '#' as comment character.
+
+1998-08-08 14:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp-help.c: Prepare to be used outside glibc without gcc by
+	adding usual alloca cruft.
+	Reported by Eleftherios Gkioulekas <lf@amath.washington.edu>.
+
+1998-04-05  Jim Meyering  <meyering@ascend.com>
+
+	* lib/regex.c (WIDE_CHAR_SUPPORT): Define.
+	This now depends on HAVE_BTOWC so systems that lack btowc (like
+	solaris-2.5.1) don't lose.
+
+1998-08-07  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/bits/sigaction.h: Remove definition of SA_DISABLE.
+	* sysdeps/generic/bits/sigstack.h: Define SS_DISABLE, SS_ONSTACK,
+	MINSIGSTKZ and SIGSTKSZ.  Definitions match BSD.
+	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Use SS_ONSTACK
+	instead of SA_ONSTACK.
+	* sysdeps/mach/hurd/sigaltstack.c (__sigaltstack): Renamed from
+	sigaltstack, and created a weak alias.  Use SS_DISABLE and
+	SS_ONSTACK instead of SA_DISABLE and SA_ONSTACK.
+	* sysdeps/mach/hurd/sigstack.c (sigstack): Use SS_ONSTACK instead
+	of SA_ONSTACK.  Call __sigaltstack instead of sigaltstack.
+	* sysdeps/mach/hurd/i386/sigreturn.c (__sigreturn): Use SS_ONSTACK
+	instead of SA_ONSTACK.
+	* sysdeps/mach/hurd/alpha/sigreturn.c (__sigreturn): Likewise.
+	* sysdeps/mach/hurd/mips/sigreturn.c (__sigreturn): Likewise.
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Use SS_DISABLE instead of SA_DISABLE.  Use SS_ONSTACK instead of
+	SA_ONSTACK where appropriate.
+	* sysdeps/mach/hurd/alpha/trampoline.c (_hurd_setup_sighandler):
+	Likewise.
+	* sysdeps/mach/hurd/hppa/trampoline.c (_hurd_setup_sighandler):
+	Likewise.
+	* sysdeps/mach/hurd/mips/trampoline.c (_hurd_setup_sighandler):
+	Likewise.
+	* manual/signal.texi (Signal Stack): Talk about SS_DISABLE and
+	SS_ONSTACK instead of SA_DISABLE and SA_ONSTACK in discussion of
+	the `ss_flags' member of `struct sigaltstack'.
+
+1998-08-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/Makefile (routines) [$(versioning)=yes]: Add oldtmpfile.
+	(shared-only-routines): Likewise.
+	* libio/oldtmpfile.c: New file
+	* stdio-common/tmpfile.c: Use __fdopen and __close.
+	[USE_IN_LIBIO]: Use _IO_fdopen instead of _IO_new_fdopen.  Put
+	tmpfile on symbol version GLIBC_2.1.
+	* stdio-common/tmpfile64.c: Use __fdopen and __close.
+	[USE_IN_LIBIO]: Use _IO_fdopen instead of _IO_new_fdopen.
+	* stdio-common/Version [GLIBC_2.1]: Add tmpfile.
+	* stdio-common/tempnam.c: Use __strdup instead of strdup.
+	* sysdeps/posix/fdopen.c: Define __fdopen and make fdopen weak
+	alias.
+	* sysdeps/generic/fdopen.c: Likewise.
+	* sysdeps/mach/hurd/fdopen.c: Likewise.
+	* stdio/stdio.h: Declare __fdopen.
+	* sunrpc/openchild.c: Use __fdopen instead of fdopen.
+	[USE_IN_LIBIO]: Map __fdopen to _IO_fdopen.
+	* sysdeps/posix/tempname.c (__gen_tempname): Don't bother checking
+	__stub_open64, it is never defined.
+
+1998-08-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/iofopen64.c: Fix typo.  Avoid unnessary casts.
+	* libio/iopopen.c: Unlink file before freeing it if command
+	creation failed.  Avoid unnessary casts.
+	* libio/iofdopen.c:  Avoid unnecessary cast.
+	* pwd/fgetpwent_r.c [USE_IN_LIBIO]: Map funlockfile to
+	_IO_funlockfile.
+	* pwd/fgetspent_r.c [USE_IN_LIBIO]: Likewise.
+
+1998-08-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* grp/grp.h, pwd/pwd.h: Don't declare __grpopen, __grpread,
+	__grpalloc, __grpscan and the corresponding pwd functions, they
+	were removed long ago.
+
+1998-08-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (csqrt_test): Adjust epsilons.
+	(casinh_test): Likewise.
+
+1998-08-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/globtest.sh: Fix typo.  Remove second test output file.
+
+1998-08-07  Cristian Gafton  <gafton@redhat.com>
+
+	* pwd/putpwent.c (putpwent): Avoid writting (none) in the passwd file.
+	* shadow/putspent.c (putspent): Likewise.
+	* grp/putgrent.c: New file.
+	* grp/Makefile (routines): Add putgrent.
+	* grp/Versions [GLIBC_2.1]: Add putgrent.
+	* grp/grp.h: Add putgrent prototype.
+
+1998-08-04 19:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: More ELF definitions.
+
 1998-08-04 16:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/tmpfile.c: Include unistd.h for close prototype.

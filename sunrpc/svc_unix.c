@@ -281,7 +281,7 @@ svcunix_destroy (SVCXPRT *xprt)
 
 struct cmessage {
   struct cmsghdr cmsg;
-  struct cmsgcred cmcred;
+  struct ucred cmcred;
 };
 
 /* XXX This is not thread safe, but since the main functions in svc.c
@@ -318,7 +318,7 @@ __msgread (int sock, void *buf, size_t cnt)
 static int
 __msgwrite (int sock, void *buf, size_t cnt)
 {
-#ifndef SCM_CREDS
+#ifndef SCM_CREDENTIALS
   /* We cannot implement this reliably.  */
   __set_errno (ENOSYS);
   return -1;
@@ -329,15 +329,15 @@ __msgwrite (int sock, void *buf, size_t cnt)
   iov[0].iov_base = buf;
   iov[0].iov_len = cnt;
 
-  cm.cmsg.cmsg_type = SCM_CREDS;
+  cm.cmsg.cmsg_type = SCM_CREDENTIALS;
   cm.cmsg.cmsg_level = SOL_SOCKET;
   cm.cmsg.cmsg_len = sizeof (struct cmessage);
   /* XXX I'm not sure, if we really should use gete?id(), or get?id().
      It would be much better, if the kernel could pass both to the
      client. */
-  cm.cmcred.cmcred_pid = __getpid ();
-  cm.cmcred.cmcred_uid = __geteuid ();
-  cm.cmcred.cmcred_gid = __getegid ();
+  cm.cmcred.pid = __getpid ();
+  cm.cmcred.uid = __geteuid ();
+  cm.cmcred.gid = __getegid ();
 
   msg.msg_iov = iov;
   msg.msg_iovlen = 1;

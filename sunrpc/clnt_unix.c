@@ -436,7 +436,7 @@ clntunix_destroy (CLIENT *h)
 
 struct cmessage {
   struct cmsghdr cmsg;
-  struct cmsgcred cmcred;
+  struct ucred cmcred;
 };
 
 static int
@@ -469,7 +469,7 @@ __msgread (int sock, void *buf, size_t cnt)
 static int
 __msgwrite (int sock, void *buf, size_t cnt)
 {
-#ifndef SCM_CREDS
+#ifndef SCM_CREDENTIALS
   /* We cannot implement this reliably.  */
   __set_errno (ENOSYS);
   return -1;
@@ -481,15 +481,15 @@ __msgwrite (int sock, void *buf, size_t cnt)
   iov[0].iov_base = buf;
   iov[0].iov_len = cnt;
 
-  cm.cmsg.cmsg_type = SCM_CREDS;
+  cm.cmsg.cmsg_type = SCM_CREDENTIALS;
   cm.cmsg.cmsg_level = SOL_SOCKET;
   cm.cmsg.cmsg_len = sizeof (struct cmessage);
   /* XXX I'm not sure, if gete?id() is always correct, or if we should use
      get?id(). But since keyserv needs geteuid(), we have no other chance.
      It would be much better, if the kernel could pass both to the server. */
-  cm.cmcred.cmcred_pid = __getpid ();
-  cm.cmcred.cmcred_uid = __geteuid ();
-  cm.cmcred.cmcred_gid = __getegid ();
+  cm.cmcred.pid = __getpid ();
+  cm.cmcred.uid = __geteuid ();
+  cm.cmcred.gid = __getegid ();
 
   msg.msg_iov = iov;
   msg.msg_iovlen = 1;

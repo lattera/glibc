@@ -16,4 +16,8 @@ libc {
     # s*
     setgrent; setgroups;
   }
+  GLIBC_2.1 {
+    # p*
+    putgrent;
+  }
 }

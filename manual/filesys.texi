@@ -1308,6 +1308,7 @@ modify these attributes of files.
 * Testing File Access::         How to find out if your process can
                                  access a file.
 * File Times::                  About the time attributes of a file.
+* File Size::			Manually changing the size of a file.
 @end menu
 
 @node Attribute Meanings
@@ -2501,6 +2502,148 @@ named by @var{filename}.  The new file access time is specified by
 The return values and error conditions are the same as for the @code{utime}
 function.
 @end deftypefun
+
+@node File Size
+@subsection File Size
+
+Normally file sizes are maintained automatically.  A file begins with a
+size of @math{0} and is automatically extended when data is written
+past its end.  It is also possible to empty a file completely in an
+@code{open} or @code{fopen} call.
+
+However, sometimes it is neccessary to @emph{reduce} the size of a file.
+This can be done with the @code{truncate} and @code{ftruncate} functions.
+They were introduced in BSD Unix.  @code{ftruncate} was later added to
+POSIX.1.
+
+Some systems allow you to extend a file (creating holes) with these
+functions.  This is useful when using memory-mapped I/O
+(@pxref{Memory-mapped I/O}), where files are not automatically extended.
+However it is not portable but must be implemented if @code{mmap} allows
+mapping of files (i.e., @code{_POSIX_MAPPED_FILES} is defined).
+
+Using these functions on anything other than a regular file gives
+@emph{undefined} results.  On many systems, such a call will appear to
+succeed, without actually accomplishing anything.
+
+@deftypefun int truncate (const char *@var{filename}, off_t @var{length})
+
+The @code{truncate} function changes the size of @var{filename} to
+@var{length}.  If @var{length} is shorter than the previous length, data at
+the end will be lost.
+
+If @var{length} is longer, holes will be added to the end.  However, some
+systems do not support this feature and will leave the file unchanged.
+
+The return value is @math{0} for success, or @math{-1} for an error.  In
+addition to the usual file name errors, the following errors may occur:
+
+@table @code
+
+@item EACCES
+The file is a directory or not writable.
+
+@item EINVAL
+@var{length} is negative.
+
+@item EFBIG
+The operation would extend the file beyond the limits of the operating system.
+
+@item EIO
+A hardware I/O error occured.
+
+@item EPERM
+The file is "append-only" or "immutable".
+
+@item EINTR
+The operation was interrupted by a signal.
+
+@end table
+
+@end deftypefun
+
+@deftypefun int ftruncate (int @var{fd}, off_t @var{length})
+
+This is like @code{truncate}, but it works on a file descriptor @var{fd}.
+
+@code{ftruncate} is especially useful in combination with @code{mmap}.
+Since the mapped region must have a fixed size one cannot enlarge the
+file by writing something beyond the last mapped page.  Instead one has
+to enlarge the file itself and then remap the file with the new size.
+The example below shows how this works.
+
+The return value is @math{0} for success, or @math{-1} for an error.  The
+following errors may occur:
+
+@table @code
+
+@item EBADF
+@var{fd} does not correspond to an open file.
+
+@item EACCES
+@var{fd} is a directory or not open for write.
+
+@item EINVAL
+@var{length} is negative.
+
+@item EFBIG
+The operation would extend the file beyond the limits of the operating system.
+@c or the open() call -- with the not-yet-discussed feature of opening
+@c files with extra-large offsets.
+
+@item EIO
+A hardware I/O error occured.
+
+@item EPERM
+The file is "append-only" or "immutable".
+
+@item EINTR
+The operation was interrupted by a signal.
+
+@c ENOENT is also possible on Linux --- however it only occurs if the file
+@c descriptor has a `file' structure but no `inode' structure.  I'm not
+@c sure how such an fd could be created.  Perhaps it's a bug.
+
+@end table
+
+@end deftypefun
+
+As announced here is a little example how to use @code{ftruncate} in
+combination with @code{mmap}:
+
+@smallexample
+int fd;
+void *start;
+size_t len;
+
+int
+add (off_t at, void *block, size_t size)
+@{
+  if (at + size > len)
+    @{
+      /* Resize the file and remap.  */
+      size_t ps = sysconf (_SC_PAGESIZE);
+      size_t ns = (at + size + ps - 1) & ~(ps - 1);
+      void *np;
+      if (ftruncate (fd, ns) < 0)
+        return -1;
+      np = mmap (NULL, ns, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+      if (np == MAP_FAILED)
+        return -1;
+      start = np;
+      len = ns;
+    @}
+  memcpy ((char *) start + at, block, size);
+  return 0;
+@}
+@end smallexample
+
+The function @code{add} allows to add at arbitrary positions in the file
+given blocks of memory.  If the current size of the file is too small it
+is extended.  Please note the it is extended in multiples of a pagesize.
+This is a requirement of @code{mmap}.  The program has to track the real
+size and once the program finished to work a final @code{ftruncate} call
+should set the real size of the file.
 
 @node Making Special Files
 @section Making Special Files

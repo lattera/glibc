@@ -46,9 +46,12 @@
 # include <sys/types.h>
 #endif
 
+#define WIDE_CHAR_SUPPORT \
+  defined _LIBC || (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
+
 /* For platform which support the ISO C amendement 1 functionality we
    support user defined character classes.  */
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
 /* Solaris 2.5 has a bug: <wchar.h> must be included before <wctype.h>.  */
 # include <wchar.h>
 # include <wctype.h>
@@ -1716,7 +1719,7 @@ typedef struct
        } 								\
     }
 
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
 /* The GNU C library provides support for user-defined character classes
    and the functions from ISO C amendement 1.  */
 # ifdef CHARCLASS_NAME_MAX
@@ -2220,7 +2223,7 @@ regex_compile (pattern, size, syntax, bufp)
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
                       {
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
                         boolean is_lower = STREQ (str, "lower");
                         boolean is_upper = STREQ (str, "upper");
 			wctype_t wt;
@@ -2241,10 +2244,10 @@ regex_compile (pattern, size, syntax, bufp)
 # ifdef _LIBC
 			    if (__iswctype (__btowc (ch), wt))
 			      SET_LIST_BIT (ch);
-#else
+# else
 			    if (iswctype (btowc (ch), wt))
 			      SET_LIST_BIT (ch);
-#endif
+# endif
 
 			    if (translate && (is_upper || is_lower)
 				&& (ISUPPER (ch) || ISLOWER (ch)))

@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  Alpha version.
-   Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,10 +86,10 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     return NULL;
 
   if ((ss->actions[signo].sa_flags & SA_ONSTACK) &&
-      !(ss->sigaltstack.ss_flags & (SA_DISABLE|SA_ONSTACK)))
+      !(ss->sigaltstack.ss_flags & (SS_DISABLE|SS_ONSTACK)))
     {
       sigsp = ss->sigaltstack.ss_sp + ss->sigaltstack.ss_size;
-      ss->sigaltstack.ss_flags |= SA_ONSTACK;
+      ss->sigaltstack.ss_flags |= SS_ONSTACK;
       /* XXX need to set up base of new stack for
 	 per-thread variables, cthreads.  */
     }
@@ -114,7 +114,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     {
       /* Set up the sigcontext from the current state of the thread.  */
 
-      scp->sc_onstack = ss->sigaltstack.ss_flags & SA_ONSTACK ? 1 : 0;
+      scp->sc_onstack = ss->sigaltstack.ss_flags & SS_ONSTACK ? 1 : 0;
 
       /* struct sigcontext is laid out so that starting at sc_regs
 	 mimics a struct alpha_thread_state.  */

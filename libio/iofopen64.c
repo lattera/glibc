@@ -51,10 +51,10 @@ _IO_fopen64 (filename, mode)
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.plus.vtable = NULL;
+  new_f->fp.vtable = NULL;
 #endif
   if (_IO_file_fopen (&new_f->fp.file, filename, mode, 1) != NULL)
-    return (_IO_FILE *) &new_f->fp;
+    return &new_f->fp.file;
   _IO_un_link (&new_f->fp.file);
   free (new_f);
   return NULL;

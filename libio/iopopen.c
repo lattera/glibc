@@ -196,15 +196,16 @@ _IO_popen (command, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fpx.file.file._lock = &new_f->lock;
 #endif
-  fp = (_IO_FILE*)&new_f->fpx;
+  fp = &new_f->fpx.file.file;
   _IO_init (fp, 0);
   _IO_JUMPS (fp) = &_IO_proc_jumps;
   _IO_file_init (fp);
 #if  !_IO_UNIFIED_JUMPTABLES
-  ((struct _IO_FILE_plus *) fp)->vtable = NULL;
+  new_f->fpx.file.vtable = NULL;
 #endif
   if (_IO_proc_open (fp, command, mode) != NULL)
     return fp;
+  _IO_un_link (fp);
   free (new_f);
   return NULL;
 }

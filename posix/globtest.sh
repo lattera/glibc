@@ -7,7 +7,7 @@ rtld_installed_name=$1; shift
 # We have to find the libc and the NSS modules.
 library_path=${common_objpfx}:${common_objpfx}nss:${common_objpfx}nis
 
-# Since we use `osrt' we must make sure to use the same locale everywhere.
+# Since we use `sort' we must make sure to use the same locale everywhere.
 LC_ALL=C
 export LC_ALL
 LANG=C
@@ -17,9 +17,8 @@ export LANG
 : ${TMPDIR=/tmp}
 testdir=$TMPDIR/globtest-dir
 testout=$TMPDIR/globtest-out
-testout2=$TMPDIR/globtest-out2
 
-trap 'rm -fr $testdir $testout $testout2' 1 2 3 15
+trap 'rm -fr $testdir $testout' 1 2 3 15
 
 rm -fr $testdir
 mkdir $testdir
@@ -197,22 +196,19 @@ EOF
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~" |
 sort >$testout
-echo ~ > $testout2
-cmp $testout2 $testout || result=1
+echo ~ | cmp - $testout || result=1
 
 # Test tilde expansion with trailing slash
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~/" |
 sort > $testout
-echo ~/ > $testout2
-cmp $testout2 $testout || result=1
+echo ~/ | cmp - $testout || result=1
 
 # Test tilde expansion with username
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
 ${common_objpfx}posix/globtest -q -t "$testdir" "~"$USER |
 sort > $testout
-eval echo ~$USER > $testout2
-cmp $testout2 $testout || result=1
+eval echo ~$USER | cmp - $testout || result=1
 
 # Tilde expansion shouldn't match a file
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \

@@ -27,7 +27,7 @@ extern int __getmode __P ((const char *mode, __io_mode *mptr));
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *
-fdopen (fd, mode)
+__fdopen (fd, mode)
      int fd;
      const char *mode;
 {
@@ -68,3 +68,5 @@ fdopen (fd, mode)
 
   return stream;
 }
+
+weak_alias (__fdopen, fdopen)

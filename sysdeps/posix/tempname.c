@@ -145,15 +145,9 @@ __gen_tempname (char *tmpl, int openit, int largefile)
 
       if (openit)
 	{
-	  /* XXX Do we want to fail on largefile if 64 bit fileops
-	     are not implemented, or just fall back to the old stuff? */
-#ifndef __stub_open64
 	  fd = (largefile
 		? __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666)
 		: __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666));
-#else
-	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0666);
-#endif
 	  if (fd >= 0)
 	    {
 	      __set_errno (save_errno);

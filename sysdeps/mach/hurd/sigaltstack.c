@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
 int
-sigaltstack (argss, oss)
+__sigaltstack (argss, oss)
      const struct sigaltstack *argss;
      struct sigaltstack *oss;
 {
@@ -40,7 +40,7 @@ sigaltstack (argss, oss)
   __spin_lock (&s->lock);
 
   if (argss != NULL &&
-      (ss.ss_flags & SA_DISABLE) && (s->sigaltstack.ss_flags & SA_ONSTACK))
+      (ss.ss_flags & SS_DISABLE) && (s->sigaltstack.ss_flags & SS_ONSTACK))
     {
       /* Can't disable a stack that is in use.  */
       __spin_unlock (&s->lock);
@@ -60,3 +60,4 @@ sigaltstack (argss, oss)
 
   return 0;
 }
+weak_alias(__sigaltstack, sigaltstack)
