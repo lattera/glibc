@@ -1762,7 +1762,14 @@ A literal @samp{%} character.
 
 All other characters in the format string must have a matching character
 in the input string.  Exceptions are white spaces in the input string
-which can match zero or more white space characters in the format string.
+which can match zero or more whitespace characters in the format string.
+
+@strong{Portability Note:} The XPG standard advises applications to use
+at least one whitespace character (as specified by @code{isspace}) or
+other non-alphanumeric characters between any two conversion
+specifications.  The @w{GNU C Library} does not have this limitation but
+other libraries might have trouble parsing formats like
+@code{"%d%m%Y%H%M%S"}.
 
 The @code{strptime} function processes the input string from right to
 left.  Each of the three possible input elements (white space, literal,
