@@ -24,6 +24,15 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
 
+/* We push lr onto the stack, so we have to use ldmib instead of ldmia
+   to find the saved arguments.  */
+#undef DOARGS_5
+#undef DOARGS_6
+#undef DOARGS_7
+#define DOARGS_5 str r4, [sp, $-4]!; ldr r4, [sp, $8];
+#define DOARGS_6 mov ip, sp; stmfd sp!, {r4, r5}; ldmib ip, {r4, r5};
+#define DOARGS_7 mov ip, sp; stmfd sp!, {r4, r5, r6}; ldmib ip, {r4, r5, r6};
+
 # undef PSEUDO_RET
 # define PSEUDO_RET						        \
     ldrcc pc, [sp], $4;						        \
