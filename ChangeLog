@@ -1,3 +1,12 @@
+2000-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/aio_suspend.c (aio_suspend): Convert timeout value to
+	absolute time for pthread_cond_timedwait call.
+	Reported by Lawrence Chen <lchen@opentext.com> [libc/1930].
+
+	* rt/Makefile (tests): Add tst-aio6.
+	* rt/tst-aio6.c: New file.
+
 2000-11-23  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/s390/bits/string.h (strncat): Fix one more typo.

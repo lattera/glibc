@@ -1,5 +1,5 @@
 /* Suspend until termination of a requests.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,7 +20,7 @@
 
 
 /* We use an UGLY hack to prevent gcc from finding us cheating.  The
-   implementation of aio_suspend and aio_suspend64 are identical and so
+   implementations of aio_suspend and aio_suspend64 are identical and so
    we want to avoid code duplication by using aliases.  But gcc sees
    the different parameter lists and prints a warning.  We define here
    a function so that aio_suspend64 has no prototype.  */
@@ -31,6 +31,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "aio_misc.h"
 
@@ -84,8 +85,24 @@ aio_suspend (list, nent, timeout)
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
       else
-	result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
-					 timeout);
+	{
+	  /* We have to convert the relative timeout value into an
+	     absolute time value with pthread_cond_timedwait expects.  */
+	  struct timeval now;
+	  struct timespec abstime;
+
+	  __gettimeofday (&now, NULL);
+	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
+	  if (abstime.tv_nsec >= 1000000000)
+	    {
+	      abstime.tv_nsec -= 1000000000;
+	      abstime.tv_sec += 1;
+	    }
+
+	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
+					   &abstime);
+	}
 
       /* Now remove the entry in the waiting list for all requests
 	 which didn't terminate.  */

@@ -41,7 +41,7 @@ include ../Makeconfig
 ifeq ($(have-thread-library),yes)
 
 tests := tst-aio tst-aio64 tst-clock tst-shm tst-timer tst-aio2 tst-aio3 \
-	 tst-aio4 tst-aio5
+	 tst-aio4 tst-aio5 tst-aio6
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
