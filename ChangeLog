@@ -1,3 +1,7 @@
+2001-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add dependencies for tst-loading test.
+
 2001-07-24  Andreas Jaeger  <aj@suse.de>
 
 	* iconv/iconvconfig.c (name_insert): Make static to avoid warning.
@@ -37,9 +41,9 @@
 
 2001-07-23  Jakub Jelinek  <jakub@redhat.com>
 
-	* sunrpc/svc_tcp.c (svctcp_rendezvous_abort): New.
+	* sunrpc/svc_tcp.c (svctcp_rendezvous_abort): New function.
 	(svctcp_rendezvous_op): Use it.
-	* sunrpc/svc_unix.c (svcunix_rendezvous_abort): New.
+	* sunrpc/svc_unix.c (svcunix_rendezvous_abort): New function.
 	(svcunix_rendezvous_op): Use it.
 
 2001-07-23  Andreas Schwab  <schwab@suse.de>

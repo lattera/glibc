@@ -271,8 +271,12 @@ tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
 $(objpfx)mtrace-tst-loading: $(objpfx)tst-loading.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@
 
-$(objpfx)bug-iconv1.out: $(objpfx)gconv-modules
-$(objpfx)bug-iconv2.out: $(objpfx)gconv-modules
+$(objpfx)bug-iconv1.out: $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so))
+$(objpfx)bug-iconv2.out: $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so))
+$(objpfx)tst-loading.out: $(objpfx)gconv-modules \
+			  $(addprefix $(objpfx),$(modules.so))
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
