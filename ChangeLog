@@ -1,3 +1,13 @@
+2003-03-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/bits/atomic.h (__arch_atomic_exchange_32): New macro.
+	(__arch_atomic_exchange_64): New macro.
+	(atomic_exchange): Use them.
+	(__arch_atomic_exchange_and_add_32): New macro.
+	(__arch_atomic_exchange_and_add_64): New macro.
+	(atomic_exchange_and_add): Use them.
+	Original patch from Steven Munroe <sjmunroe@us.ibm.com>.
+
 2003-03-25  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/sgidefs.h (_MIPS_ISA_MIPS32, _MIPS_ISA_MIPS64):
