@@ -439,9 +439,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	      lll_unlock (stack_cache_lock);
 
-	      /* Free the memory regardless of whether the size of the
-		 cache is over the limit or not.  If this piece of
-		 memory caused problems we better do not use it
+	      /* Get rid of the TLS block we allocated.  */
+	      _dl_deallocate_tls (pd, false);
+
+	      /* Free the stack memory regardless of whether the size
+		 of the cache is over the limit or not.  If this piece
+		 of memory caused problems we better do not use it
 		 anymore.  Uh, and we ignore possible errors.  There
 		 is nothing we could do.  */
 	      (void) munmap (mem, size);

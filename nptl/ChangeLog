@@ -1,3 +1,8 @@
+2003-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): If mprotect() fails free the
+	TLS memory.
+
 2003-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h: Fix a few unused definitions.
