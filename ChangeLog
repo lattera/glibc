@@ -1,5 +1,8 @@
 1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/rcmd.c (iruserok2): Initialize isbad to -1 [PR libc/1405].
+	Patch by J. Richard Sladkey <jrs@world.std.com>.
+
 	* scripts/config.sub: Update from latest autoconf version.
 	* scripts/config.guess: Likewise.
 

@@ -349,7 +349,7 @@ iruserok2 (raddr, superuser, ruser, luser, rhost)
      const char *ruser, *luser, *rhost;
 {
   FILE *hostf = NULL;
-  int isbad;
+  int isbad = -1;
 
   if (!superuser)
     hostf = iruserfopen (_PATH_HEQUIV, 0);
