@@ -148,7 +148,7 @@ This macro was introduced as part of the Large File Support extension (LFS).
 @comment (NONE)
 @comment X/Open
 @defvr Macro _LARGEFILE64_SOURCE
-If you define this macro an additional set of function is made available
+If you define this macro an additional set of functions is made available
 which enables @w{32 bit} systems to use files of sizes beyond
 the usual limit of 2GB.  This interface is not available if the system
 does not support files that large.  On systems where the natural file

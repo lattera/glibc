@@ -1,3 +1,7 @@
+2000-03-10  Andreas Jaeger  <aj@suse.de>
+
+	* manual/creature.texi (Feature Test Macros): Fix language.
+
 2000-03-10  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* mach/devstream.c (devstream_write, devstream_read): New functions.
