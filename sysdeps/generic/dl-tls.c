@@ -67,7 +67,10 @@ _dl_next_tls_modid (void)
       /* Note that this branch will never be executed during program
 	 start since there are no gaps at that time.  Therefore it
 	 does not matter that the dl_tls_dtv_slotinfo is not allocated
-	 yet when the function is called for the first times.  */
+	 yet when the function is called for the first times.
+
+	 NB: the offset +1 is due to the fact that DTV[0] is used
+	 for something else.  */
       result = GL(dl_tls_static_nelem) + 1;
       /* If the following would not be true we mustn't have assumed
 	 there is a gap.  */
@@ -90,11 +93,11 @@ _dl_next_tls_modid (void)
 	}
       while ((runp = runp->next) != NULL);
 
-      if (result >= GL(dl_tls_max_dtv_idx))
+      if (result > GL(dl_tls_max_dtv_idx))
 	{
 	  /* The new index must indeed be exactly one higher than the
 	     previous high.  */
-	  assert (result == GL(dl_tls_max_dtv_idx));
+	  assert (result == GL(dl_tls_max_dtv_idx) + 1);
 
 	  /* There is no gap anymore.  */
 	  GL(dl_tls_dtv_gaps) = false;

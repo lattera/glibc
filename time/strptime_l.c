@@ -544,8 +544,8 @@ __strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		is_pm = 1;
 	      else
 		return NULL;
-	      break;
 	    }
+	  break;
 	case 'r':
 #ifdef _NL_CURRENT
 	  if (*decided != raw)

@@ -1,3 +1,8 @@
+2005-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Fix assertion and
+	recognition of last entry.
+
 2005-01-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-runtime.c: Inlcude <sys/param.h>.
