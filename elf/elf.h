@@ -227,7 +227,7 @@ typedef struct
 #define EM_68HC08	71		/* Motorola MC68HC08 microcontroller */
 #define EM_68HC05	72		/* Motorola MC68HC05 microcontroller */
 #define EM_SVX		73		/* Silicon Graphics SVx */
-#define EM_AT19		74		/* STMicroelectronics ST19 8 bit mc */
+#define EM_ST19		74		/* STMicroelectronics ST19 8 bit mc */
 #define EM_VAX		75		/* Digital VAX */
 #define EM_CRIS		76		/* Axis Communications 32-bit embedded processor */
 #define EM_JAVELIN	77		/* Infineon Technologies 32-bit embedded processor */
