@@ -164,7 +164,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
       break;
 
     case SEEK_END:
-      np = c->size - *p;
+      np = c->maxpos - *p;
       break;
 
     default:
@@ -201,6 +201,13 @@ fmemopen (void *buf, size_t len, const char *mode)
   cookie_io_functions_t iof;
   fmemopen_cookie_t *c;
 
+  if (len == 0)
+    {
+    einval:
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
   c = (fmemopen_cookie_t *) malloc (sizeof (fmemopen_cookie_t));
   if (c == NULL)
     return NULL;
@@ -218,7 +225,12 @@ fmemopen (void *buf, size_t len, const char *mode)
       c->buffer[0] = '\0';
     }
   else
-    c->buffer = buf;
+    {
+      if ((uintptr_t) len > -(uintptr_t) buf)
+	goto einval;
+
+      c->buffer = buf;
+    }
 
   c->size = len;
 

@@ -1,5 +1,8 @@
 2005-01-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/fmemopen.c (fmemopen_seek): SEEK_END should count from
+	maximum used address, not maximum buffer position.
+
 	* libio/iofopncook.c (_IO_cookie_seekoff): Define.  Mark offset as
 	invalid to disable optimizations in fileops which won't work here.
 	(_IO_cookie_jumps): Use it.
