@@ -74,6 +74,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 							   &args->ref,
 							   mapscope,
 							   NULL,
+							   &args->version,
 							   match);
       }
     }

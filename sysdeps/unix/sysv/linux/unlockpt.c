@@ -35,7 +35,7 @@ unlockpt (fd)
 
   if (ioctl (fd, TIOCSPTLCK, &unlock))
     {
-      if(errno == EINVAL)
+      if (errno == EINVAL)
 	{
 	  __set_errno (serrno);
 	  return 0;
@@ -43,8 +43,7 @@ unlockpt (fd)
       else
 	return -1;
     }
-#else
+#endif
   /* On pre-/dev/ptmx kernels this function should be a no-op.  */
   return 0;
-#endif
 }

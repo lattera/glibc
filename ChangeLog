@@ -1,3 +1,27 @@
+1998-02-20 18:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hesiod/hesiod.c: Pretty print.  Don't use __ protected names.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+
+1998-02-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h: Replace all negative
+	feature tests by positive feature tests.
+
+1998-02-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/unlockpt.c: Always return a value.
+
+1998-02-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlvsym.c (dlvsym_doit): More corrections.
+	Patch by Andreas Jaeger.
+
 1998-02-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sigqueue.c: Fix weak alias definition.

@@ -1,5 +1,5 @@
 /* Mapping tables for SJIS handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -4004,9 +4004,9 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
   enum direction dir;
   int result;
 
-  if (__strcasestr (step->from_name, "SJIS") != NULL)
+  if (strcasestr (step->from_name, "SJIS") != NULL)
     dir = from_sjis;
-  else if (__strcasestr (step->to_name, "SJIS") != NULL)
+  else if (strcasestr (step->to_name, "SJIS") != NULL)
     dir = to_sjis;
   else
     dir = illegal;

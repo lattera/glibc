@@ -58,47 +58,48 @@ static const char rcsid[] = "$Id$";
 
 /* A few operating systems don't define these. */
 #ifndef C_HS
-#define C_HS	4
+# define C_HS	4
 #endif
 #ifndef T_TXT
-#define T_TXT	16
+# define T_TXT	16
 #endif
 
-static int read_config_file(struct hesiod_p *ctx, const char *filename);
-static char **get_txt_records(struct hesiod_p *ctx, int class,
-			      const char *name);
+static int read_config_file (struct hesiod_p *ctx, const char *filename);
+static char **get_txt_records (struct hesiod_p *ctx, int class,
+			       const char *name);
 #ifdef _LIBC
 # define cistrcmp(s1, s2) strcasecmp (s1, s2)
 #else
-static int cistrcmp(const char *s1, const char *s2);
+static int cistrcmp (const char *s1, const char *s2);
 #endif
 
 /* This function is called to initialize a hesiod_p. */
-int hesiod_init(void **context)
+int
+hesiod_init (void **context)
 {
   struct hesiod_p *ctx;
   const char *p, *configname;
 
-  ctx = malloc(sizeof(struct hesiod_p));
+  ctx = malloc (sizeof (struct hesiod_p));
   if (ctx)
     {
       *context = ctx;
-      configname = __secure_getenv("HESIOD_CONFIG");
+      configname = __secure_getenv ("HESIOD_CONFIG");
       if (!configname)
 	configname = SYSCONFDIR "/hesiod.conf";
-      if (read_config_file(ctx, configname) >= 0)
+      if (read_config_file (ctx, configname) >= 0)
 	{
 	  /* The default rhs can be overridden by an environment variable. */
-	  p = __secure_getenv("HES_DOMAIN");
+	  p = __secure_getenv ("HES_DOMAIN");
 	  if (p)
 	    {
 	      if (ctx->rhs)
-		free(ctx->rhs);
-	      ctx->rhs = malloc(strlen(p) + 2);
+		free (ctx->rhs);
+	      ctx->rhs = malloc (strlen (p) + 2);
 	      if (ctx->rhs)
 		{
 		  *ctx->rhs = '.';
-		  strcpy(ctx->rhs + 1, (*p == '.') ? p + 1 : p);
+		  strcpy (ctx->rhs + 1, (*p == '.') ? p + 1 : p);
 		  return 0;
 		}
 	      else
@@ -112,47 +113,49 @@ int hesiod_init(void **context)
     __set_errno (ENOMEM);
 
   if (ctx->lhs)
-    free(ctx->lhs);
+    free (ctx->lhs);
   if (ctx->rhs)
-    free(ctx->rhs);
+    free (ctx->rhs);
   if (ctx)
-    free(ctx);
+    free (ctx);
   return -1;
 }
 
 /* This function deallocates the hesiod_p. */
-void hesiod_end(void *context)
+void
+hesiod_end (void *context)
 {
   struct hesiod_p *ctx = (struct hesiod_p *) context;
 
-  free(ctx->rhs);
+  free (ctx->rhs);
   if (ctx->lhs)
-    free(ctx->lhs);
-  free(ctx);
+    free (ctx->lhs);
+  free (ctx);
 }
 
 /* This function takes a hesiod (name, type) and returns a DNS
  * name which is to be resolved.
  */
-char *hesiod_to_bind(void *context, const char *name, const char *type)
+char *
+hesiod_to_bind (void *context, const char *name, const char *type)
 {
   struct hesiod_p *ctx = (struct hesiod_p *) context;
   char bindname[MAXDNAME], *p, *endp, *ret, **rhs_list = NULL;
   const char *rhs;
   size_t len;
 
-  endp = stpcpy(bindname, name);
+  endp = stpcpy (bindname, name);
 
   /* Find the right right hand side to use, possibly truncating bindname. */
-  p = strchr(bindname, '@');
+  p = strchr (bindname, '@');
   if (p)
     {
       *p++ = 0;
-      if (strchr(p, '.'))
+      if (strchr (p, '.'))
 	rhs = name + (p - bindname);
       else
 	{
-	  rhs_list = hesiod_resolve(context, p, "rhs-extension");
+	  rhs_list = hesiod_resolve (context, p, "rhs-extension");
 	  if (rhs_list)
 	    rhs = *rhs_list;
 	  else
@@ -161,82 +164,85 @@ char *hesiod_to_bind(void *context, const char *name, const char *type)
 	      return NULL;
 	    }
 	}
-    } else
-      rhs = ctx->rhs;
+    }
+  else
+    rhs = ctx->rhs;
 
   /* See if we have enough room. */
-  len = (endp - bindname) + 1 + strlen(type);
+  len = (endp - bindname) + 1 + strlen (type);
   if (ctx->lhs)
-    len += strlen(ctx->lhs) + ((ctx->lhs[0] != '.') ? 1 : 0);
-  len += strlen(rhs) + ((rhs[0] != '.') ? 1 : 0);
-  if (len > sizeof(bindname) - 1)
+    len += strlen (ctx->lhs) + ((ctx->lhs[0] != '.') ? 1 : 0);
+  len += strlen (rhs) + ((rhs[0] != '.') ? 1 : 0);
+  if (len > sizeof (bindname) - 1)
     {
       if (rhs_list)
-	hesiod_free_list(context, rhs_list);
+	hesiod_free_list (context, rhs_list);
       __set_errno (EMSGSIZE);
       return NULL;
     }
 
   /* Put together the rest of the domain. */
-  endp = __stpcpy (__stpcpy (endp, "."), type);
+  endp = stpcpy (stpcpy (endp, "."), type);
   if (ctx->lhs)
     {
       if (ctx->lhs[0] != '.')
-	endp = __stpcpy (endp, ".");
-      endp = __stpcpy (endp, ctx->lhs);
+	endp = stpcpy (endp, ".");
+      endp = stpcpy (endp, ctx->lhs);
     }
   if (rhs[0] != '.')
-    endp = __stpcpy (endp, ".");
-  endp = __stpcpy (endp, rhs);
+    endp = stpcpy (endp, ".");
+  endp = stpcpy (endp, rhs);
 
   /* rhs_list is no longer needed, since we're done with rhs. */
   if (rhs_list)
-    hesiod_free_list(context, rhs_list);
+    hesiod_free_list (context, rhs_list);
 
   /* Make a copy of the result and return it to the caller. */
-  ret = malloc((endp - bindname) + 1);
+  ret = malloc ((endp - bindname) + 1);
   if (!ret)
     {
       __set_errno (ENOMEM);
       return NULL;
     }
-  strcpy(ret, bindname);
-  return ret;
+  return strcpy (ret, bindname);
 }
 
 /* This is the core function.  Given a hesiod name and type, it
  * returns an array of strings returned by the resolver.
  */
-char **hesiod_resolve(void *context, const char *name, const char *type)
+char **
+hesiod_resolve (void *context, const char *name, const char *type)
 {
   struct hesiod_p *ctx = (struct hesiod_p *) context;
   char *bindname, **retvec;
 
-  bindname = hesiod_to_bind(context, name, type);
-  if (!bindname)
+  bindname = hesiod_to_bind (context, name, type);
+  if (bindname == NULL)
     return NULL;
 
   retvec = get_txt_records(ctx, ctx->classes[0], bindname);
   if (retvec == NULL && errno == ENOENT && ctx->classes[1])
-    retvec = get_txt_records(ctx, ctx->classes[1], bindname);
+    retvec = get_txt_records (ctx, ctx->classes[1], bindname);
 
-  free(bindname);
+  free (bindname);
   return retvec;
 }
 
-void hesiod_free_list(void *context, char **list)
+void
+hesiod_free_list (void *context, char **list)
 {
   char **p;
 
   for (p = list; *p; p++)
-    free(*p);
-  free(list);
+    free (*p);
+  free (list);
 }
 
 /* This function parses the /etc/hesiod.conf file.  Returns 0 on success,
  * -1 on failure.  On failure, it might leave values in ctx->lhs or
  * ctx->rhs which need to be freed by the caller. */
-static int read_config_file(struct hesiod_p *ctx, const char *filename)
+static int
+read_config_file (struct hesiod_p *ctx, const char *filename)
 {
   char *key, *data, *p, **which;
   char buf[MAXDNAME + 7];
@@ -248,16 +254,16 @@ static int read_config_file(struct hesiod_p *ctx, const char *filename)
   ctx->classes[1] = C_HS;
 
   /* Try to open the configuration file. */
-  fp = fopen(filename, "r");
-  if (!fp)
+  fp = fopen (filename, "r");
+  if (fp = NULL)
     {
       /* Use compiled in default domain names. */
-      ctx->lhs = malloc(strlen(DEF_LHS) + 1);
-      ctx->rhs = malloc(strlen(DEF_RHS) + 1);
+      ctx->lhs = malloc (strlen (DEF_LHS) + 1);
+      ctx->rhs = malloc (strlen (DEF_RHS) + 1);
       if (ctx->lhs && ctx->rhs)
 	{
-	  strcpy(ctx->lhs, DEF_LHS);
-	  strcpy(ctx->rhs, DEF_RHS);
+	  strcpy (ctx->lhs, DEF_LHS);
+	  strcpy (ctx->rhs, DEF_RHS);
 	  return 0;
 	}
       else
@@ -269,49 +275,48 @@ static int read_config_file(struct hesiod_p *ctx, const char *filename)
 
   ctx->lhs = NULL;
   ctx->rhs = NULL;
-  while (fgets(buf, sizeof(buf), fp) != NULL)
+  while (fgets (buf, sizeof (buf), fp) != NULL)
     {
       p = buf;
       if (*p == '#' || *p == '\n' || *p == '\r')
 	continue;
-      while(*p == ' ' || *p == '\t')
-	p++;
+      while (*p == ' ' || *p == '\t')
+	++p;
       key = p;
       while(*p != ' ' && *p != '\t' && *p != '=')
-	p++;
+	++p;
       *p++ = 0;
 
-      while(isspace(*p) || *p == '=')
-	p++;
+      while (isspace (*p) || *p == '=')
+	++p;
       data = p;
-      while(!isspace(*p))
-	p++;
+      while (!isspace (*p))
+	++p;
       *p = 0;
 
-      if (cistrcmp(key, "lhs") == 0 || cistrcmp(key, "rhs") == 0)
+      if (cistrcmp (key, "lhs") == 0 || cistrcmp (key, "rhs") == 0)
 	{
-	  which = (strcmp(key, "lhs") == 0) ? &ctx->lhs : &ctx->rhs;
-	  *which = malloc(strlen(data) + 1);
+	  which = (strcmp (key, "lhs") == 0) ? &ctx->lhs : &ctx->rhs;
+	  *which = strdup (data);
 	  if (!*which)
 	    {
 	      __set_errno (ENOMEM);
 	      return -1;
 	    }
-	  strcpy(*which, data);
 	}
-      else if (cistrcmp(key, "classes") == 0)
+      else if (cistrcmp (key, "classes") == 0)
 	{
 	  n = 0;
 	  while (*data && n < 2)
 	    {
 	      p = data;
 	      while (*p && *p != ',')
-		p++;
+		++p;
 	      if (*p)
 		*p++ = 0;
-	      if (cistrcmp(data, "IN") == 0)
+	      if (cistrcmp (data, "IN") == 0)
 		ctx->classes[n++] = C_IN;
-	      else if (cistrcmp(data, "HS") == 0)
+	      else if (cistrcmp (data, "HS") == 0)
 		ctx->classes[n++] = C_HS;
 	      data = p;
 	    }
@@ -319,7 +324,7 @@ static int read_config_file(struct hesiod_p *ctx, const char *filename)
 	    ctx->classes[n++] = 0;
 	}
     }
-  fclose(fp);
+  fclose (fp);
 
   if (!ctx->rhs || ctx->classes[0] == 0 || ctx->classes[0] == ctx->classes[1])
     {
@@ -333,8 +338,8 @@ static int read_config_file(struct hesiod_p *ctx, const char *filename)
 /* Given a DNS class and a DNS name, do a lookup for TXT records, and
  * return a list of them.
  */
-static char **get_txt_records(struct hesiod_p *ctx, int qclass,
-			      const char *name)
+static char **
+get_txt_records (struct hesiod_p *ctx, int qclass, const char *name)
 {
   HEADER *hp;
   unsigned char qbuf[PACKETSZ], abuf[MAX_HESRESP], *p, *eom, *eor;
@@ -342,17 +347,17 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
   int ancount, qdcount, i, j, n, skip, type, class, len;
 
   /* Make sure the resolver is initialized. */
-  if ((_res.options & RES_INIT) == 0 && res_init() == -1)
+  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
     return NULL;
 
   /* Construct the query. */
-  n = res_mkquery(QUERY, name, qclass, T_TXT, NULL, 0,
-		  NULL, qbuf, PACKETSZ);
+  n = res_mkquery (QUERY, name, qclass, T_TXT, NULL, 0,
+		   NULL, qbuf, PACKETSZ);
   if (n < 0)
       return NULL;
 
   /* Send the query. */
-  n = res_send(qbuf, n, abuf, MAX_HESRESP);
+  n = res_send (qbuf, n, abuf, MAX_HESRESP);
   if (n < 0)
     {
       __set_errno (ECONNREFUSED);
@@ -361,15 +366,15 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
 
   /* Parse the header of the result. */
   hp = (HEADER *) abuf;
-  ancount = ntohs(hp->ancount);
-  qdcount = ntohs(hp->qdcount);
-  p = abuf + sizeof(HEADER);
+  ancount = ntohs (hp->ancount);
+  qdcount = ntohs (hp->qdcount);
+  p = abuf + sizeof (HEADER);
   eom = abuf + n;
 
   /* Skip questions, trying to get to the answer section which follows. */
-  for (i = 0; i < qdcount; i++)
+  for (i = 0; i < qdcount; ++i)
     {
-      skip = dn_skipname(p, eom);
+      skip = dn_skipname (p, eom);
       if (skip < 0 || p + skip + QFIXEDSZ > eom)
 	{
 	  __set_errno (EMSGSIZE);
@@ -379,8 +384,8 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
     }
 
   /* Allocate space for the text record answers. */
-  list = malloc((ancount + 1) * sizeof(char *));
-  if (!list)
+  list = malloc ((ancount + 1) * sizeof(char *));
+  if (list == NULL)
     {
       __set_errno (ENOMEM);
       return NULL;
@@ -391,7 +396,7 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
   for (i = 0; i < ancount; i++)
     {
       /* Parse the header of this answer. */
-      skip = dn_skipname(p, eom);
+      skip = dn_skipname (p, eom);
       if (skip < 0 || p + skip + 10 > eom)
 	break;
       type = p[skip + 0] << 8 | p[skip + 1];
@@ -412,7 +417,7 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
 	}
 
       /* Allocate space for this answer. */
-      list[j] = malloc(len);
+      list[j] = malloc (len);
       if (!list[j])
 	{
 	  __set_errno (ENOMEM);
@@ -430,9 +435,8 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
 	      __set_errno (EMSGSIZE);
 	      break;
 	    }
-	  memcpy(dst, p, n);
+	  dst = mempcpy (dst, p, n);
 	  p += n;
-	  dst += n;
 	}
       if (p < eor)
 	{
@@ -446,15 +450,15 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
   if (i < ancount)
     {
       for (i = 0; i < j; i++)
-	free(list[i]);
-      free(list);
+	free (list[i]);
+      free (list);
       return NULL;
     }
 
   if (j == 0)
     {
       __set_errno (ENOENT);
-      free(list);
+      free (list);
       return NULL;
     }
 
@@ -463,7 +467,8 @@ static char **get_txt_records(struct hesiod_p *ctx, int qclass,
 }
 
 #ifndef _LIBC
-static int cistrcmp(const char *s1, const char *s2)
+static int
+cistrcmp (const char *s1, const char *s2)
 {
   while (*s1 && tolower(*s1) == tolower(*s2))
     {

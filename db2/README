@@ -1,3 +1,13 @@
+When Berkeley DB is distributed as part of the GNU system, the Berkeley
+DB license requirement that derivative works using Berkeley DB themselves
+be freely redistributable, does not apply to programs loading standard
+UNIX interfaces via the GNU C library and dynamically loading Berkeley DB
+support to obtain the underlying functionality.
+
+Sleepycat Software, Inc.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The LICENSE file, mentioned in the beginning of the source files, can
 be found together with all the other relevant license texts in the
 manual and the INSTALL file in the toplevel directory.

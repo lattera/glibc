@@ -1,6 +1,6 @@
 /* Generic conversion to and from 8bit charsets,
    converting from UCS using gaps.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -57,9 +57,9 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
   enum direction dir;
   int result;
 
-  if (__strcasestr (step->from_name, NAME) != NULL)
+  if (strcasestr (step->from_name, NAME) != NULL)
     dir = from_8bit;
-  else if (__strcasestr (step->to_name, NAME) != NULL)
+  else if (strcasestr (step->to_name, NAME) != NULL)
     dir = to_8bit;
   else
     dir = illegal;

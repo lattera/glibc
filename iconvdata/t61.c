@@ -1,5 +1,5 @@
 /* Generic conversion to and from T.61.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -385,9 +385,9 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
   enum direction dir;
   int result;
 
-  if (__strcasestr (step->from_name, "T.61") != NULL)
+  if (strcasestr (step->from_name, "T.61") != NULL)
     dir = from_t61;
-  else if (__strcasestr (step->to_name, "T.61") != NULL)
+  else if (strcasestr (step->to_name, "T.61") != NULL)
     dir = to_t61;
   else
     dir = illegal;
