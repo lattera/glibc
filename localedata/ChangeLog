@@ -1,5 +1,7 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* charmaps/BIG5HKSCS: Add Big5 codes.
+
 	* Makefile (test-input): Add sv_SE.ISO-8859-1.
 	(LOCALES): Likewise.
 	* sv_SE.ISO-8859-1: New file.

@@ -93,7 +93,7 @@ fmemopen_read (void *cookie, char *b, size_t s)
 
   c = (fmemopen_cookie_t *) cookie;
 
-  if ((c->pos + s) > c->size)
+  if (c->pos + s > c->size)
     {
       if (c->pos == c->size)
 	return -1;
@@ -118,11 +118,11 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
   c = (fmemopen_cookie_t *) cookie;
 
-  addnullc = ((s == 0) || (b[s - 1] != '\0')) ? 1 : 0;
+  addnullc = s == 0 || b[s - 1] != '\0';
 
-  if ((c->pos + s + addnullc) > c->size)
+  if (c->pos + s + addnullc > c->size)
     {
-      if ((c->pos + addnullc) == c->size)
+      if (c->pos + addnullc == c->size)
 	return -1;
       s = c->size - c->pos - addnullc;
     }
@@ -151,7 +151,6 @@ fmemopen_seek (void *cookie, _IO_off64_t * p, int w)
 
   switch (w)
     {
-
     case SEEK_SET:
       np = *p;
       break;
@@ -164,9 +163,11 @@ fmemopen_seek (void *cookie, _IO_off64_t * p, int w)
       np = c->size - *p;
       break;
 
+    default:
+      return -1;
     }
 
-  if ((np < 0) || (np > c->size))
+  if (np < 0 || np > c->size)
     return -1;
 
   c->pos = np;
@@ -182,8 +183,7 @@ fmemopen_close (void *cookie)
 
   c = (fmemopen_cookie_t *) cookie;
 
-  if (c->mybuffer)
-    free (c->buffer);
+  free (c->buffer);
   free (c);
 
   return 0;
@@ -213,9 +213,7 @@ fmemopen (void *buf, size_t len, const char *mode)
       c->buffer[0] = '\0';
     }
   else
-    {
-      c->buffer = buf;
-    }
+    c->buffer = buf;
 
   c->size = len;
 
@@ -225,13 +223,9 @@ fmemopen (void *buf, size_t len, const char *mode)
   c->maxpos = strlen (c->buffer);
 
   if (mode[0] == 'a')
-    {
-      c->pos = c->maxpos;
-    }
+    c->pos = c->maxpos;
   else
-    {
-      c->pos = 0;
-    }
+    c->pos = 0;
 
   iof.read = fmemopen_read;
   iof.write = fmemopen_write;
