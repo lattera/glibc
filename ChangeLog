@@ -1,3 +1,8 @@
+2001-03-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/bits/string.h: Protect __STRING_INLINE against
+	redefinition. 
+
 2001-03-11  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/configure.in: Add a sanity check on $prefix.
