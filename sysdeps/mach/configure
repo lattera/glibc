@@ -1,18 +1,22 @@
  
+if test "x$MIG" = xMISSING; then
+  { echo "configure: error: cannot find required build tool mig" 1>&2; exit 1; }
+fi
+
 ### Sanity checks for Mach header installation
 ac_safe=`echo "mach/mach_types.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/mach_types.h""... $ac_c" 1>&6
-echo "configure:6: checking for mach/mach_types.h" >&5
+echo "configure:10: checking for mach/mach_types.h" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 11 "configure"
+#line 15 "configure"
 #include "confdefs.h"
 #include <mach/mach_types.h>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:16: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:20: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -36,17 +40,17 @@ fi
 
 ac_safe=`echo "mach/mach_types.defs" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/mach_types.defs""... $ac_c" 1>&6
-echo "configure:40: checking for mach/mach_types.defs" >&5
+echo "configure:44: checking for mach/mach_types.defs" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 45 "configure"
+#line 49 "configure"
 #include "confdefs.h"
 #include <mach/mach_types.defs>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:50: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:54: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -72,19 +76,19 @@ fi
 
 
 echo $ac_n "checking for task_t in mach/mach_types.h""... $ac_c" 1>&6
-echo "configure:76: checking for task_t in mach/mach_types.h" >&5
+echo "configure:80: checking for task_t in mach/mach_types.h" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_task_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 81 "configure"
+#line 85 "configure"
 #include "confdefs.h"
 #include <mach/mach_types.h>
 int main() {
 extern task_t foo;
 ; return 0; }
 EOF
-if { (eval echo configure:88: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:92: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_mach_task_t=task_t
 else
@@ -101,19 +105,19 @@ if test $libc_cv_mach_task_t != task_t; then
   DEFINES="$DEFINES -Dtask_t=task_port_t"
 fi
 echo $ac_n "checking for thread_t in mach/mach_types.h""... $ac_c" 1>&6
-echo "configure:105: checking for thread_t in mach/mach_types.h" >&5
+echo "configure:109: checking for thread_t in mach/mach_types.h" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_thread_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 110 "configure"
+#line 114 "configure"
 #include "confdefs.h"
 #include <mach/mach_types.h>
 int main() {
 extern thread_t foo;
 ; return 0; }
 EOF
-if { (eval echo configure:117: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:121: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_mach_thread_t=thread_t
 else
@@ -131,12 +135,12 @@ if test $libc_cv_mach_thread_t != thread_t; then
 fi
 
 echo $ac_n "checking for creation_time in task_basic_info""... $ac_c" 1>&6
-echo "configure:135: checking for creation_time in task_basic_info" >&5
+echo "configure:139: checking for creation_time in task_basic_info" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_task_creation_time'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 140 "configure"
+#line 144 "configure"
 #include "confdefs.h"
 #include <mach/task_info.h>
 int main() {
@@ -146,7 +150,7 @@ long s = i->creation_time.seconds;
 
 ; return 0; }
 EOF
-if { (eval echo configure:150: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:154: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   libc_cv_mach_task_creation_time=yes
 else
@@ -172,17 +176,17 @@ for ifc in mach mach4 \
 	   ; do
   ac_safe=`echo "mach/${ifc}.defs" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/${ifc}.defs""... $ac_c" 1>&6
-echo "configure:176: checking for mach/${ifc}.defs" >&5
+echo "configure:180: checking for mach/${ifc}.defs" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 181 "configure"
+#line 185 "configure"
 #include "confdefs.h"
 #include <mach/${ifc}.defs>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:186: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:190: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -209,12 +213,12 @@ if test "x$mach_interface_list" = x; then
 fi
 
 echo $ac_n "checking for host_page_size in mach_host.defs""... $ac_c" 1>&6
-echo "configure:213: checking for host_page_size in mach_host.defs" >&5
+echo "configure:217: checking for host_page_size in mach_host.defs" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_host_page_size'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 218 "configure"
+#line 222 "configure"
 #include "confdefs.h"
 #include <mach/mach_host.defs>
 EOF
@@ -240,17 +244,17 @@ fi
 
 ac_safe=`echo "mach/machine/ndr_def.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/machine/ndr_def.h""... $ac_c" 1>&6
-echo "configure:244: checking for mach/machine/ndr_def.h" >&5
+echo "configure:248: checking for mach/machine/ndr_def.h" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 249 "configure"
+#line 253 "configure"
 #include "confdefs.h"
 #include <mach/machine/ndr_def.h>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:254: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:258: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -271,17 +275,17 @@ else
   echo "$ac_t""no" 1>&6
 ac_safe=`echo "machine/ndr_def.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for machine/ndr_def.h""... $ac_c" 1>&6
-echo "configure:275: checking for machine/ndr_def.h" >&5
+echo "configure:279: checking for machine/ndr_def.h" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 280 "configure"
+#line 284 "configure"
 #include "confdefs.h"
 #include <machine/ndr_def.h>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:285: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:289: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -306,12 +310,12 @@ fi
 
 
 echo $ac_n "checking for i386_io_perm_modify in mach_i386.defs""... $ac_c" 1>&6
-echo "configure:310: checking for i386_io_perm_modify in mach_i386.defs" >&5
+echo "configure:314: checking for i386_io_perm_modify in mach_i386.defs" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_i386_ioports'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 315 "configure"
+#line 319 "configure"
 #include "confdefs.h"
 #include <mach/i386/mach_i386.defs>
 EOF

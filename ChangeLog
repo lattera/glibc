@@ -1,3 +1,31 @@
+2002-08-14  Roland McGrath  <roland@frob.com>
+
+	* locale/locarchive.h (struct locale_category_data): Give this name to
+	the type of locale_data_t's elements.
+	* locale/programs/locarchive.c (cmpcategorysize): New static function.
+	(add_locale): Use that to sort the categories by size and put all
+	those that fit into two pages into the LC_ALL block, instead of
+	hard-coding it to do everything but LC_CTYPE and LC_COLLATE.
+	(show_archive_content): Detect categories inside LC_ALL block
+	directly, instead of hard-coding.
+
+2002-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (struct oldlocrecent): New.
+	(oldlocrecentcmp): New.
+	(enlarge_archive): Re-add locales in the order they were added
+	to the archive.
+	(add_locale): Put all the small locale files together, if the small
+	locale file block would occupy less pages if page size aligned, align
+	it.
+	(show_archive_content): Adjust for locale archives optimized for speed.
+
+2002-08-14  Roland McGrath  <roland@frob.com>
+
+	* configure.in: Use "MISSING" as not-found value for MIG.
+	* sysdeps/mach/configure.in: Fatal if mig not found.
+	* configure, sysdeps/mach/configure: Regenerated.
+
 2002-08-13  Jakub Jelinek  <jakub@redhat.com>
 
         * locale/loadarchive.c (archfname): Add missing slash.

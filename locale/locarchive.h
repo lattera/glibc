@@ -88,7 +88,7 @@ struct locarhandle
 
 
 /* In memory data for the locales with their checksums.  */
-typedef struct
+typedef struct locale_category_data
 {
   off64_t size;
   void *addr;
