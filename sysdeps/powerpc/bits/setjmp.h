@@ -27,6 +27,8 @@
    assembler easier. Naturally, user code should not depend on
    either representation. */
 
+#include <bits/wordsize.h>
+
 #if defined __USE_MISC || defined _ASM
 # define JB_GPR1   0  /* Also known as the stack pointer */
 # define JB_GPR2   1

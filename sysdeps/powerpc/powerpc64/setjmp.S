@@ -1,6 +1,6 @@
 /* setjmp for PowerPC64.
-   Copyright (C) 1995, 1996, 1997, 1999, 2000, 2001, 2002 
-   Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000, 2001, 2002
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ ___sigsetjmp:
 	std  r0,(JB_CR*8)(3)
 	std  r17,((JB_GPRS+3)*8)(3)
 	stfd fp17,((JB_FPRS+3)*8)(3)
-	std  r18,((JB_GPRS+8)*8)(3)
+	std  r18,((JB_GPRS+4)*8)(3)
 	stfd fp18,((JB_FPRS+4)*8)(3)
 	std  r19,((JB_GPRS+5)*8)(3)
 	stfd fp19,((JB_FPRS+5)*8)(3)
@@ -84,4 +84,3 @@ ENTRY (BP_SYM (__setjmp))
 END (BP_SYM (__setjmp))
 
 strong_alias (__setjmp, setjmp)
-
