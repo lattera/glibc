@@ -1,3 +1,7 @@
+2001-08-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/gethostname.c: New file.
+
 2001-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_findserv.c (__nis_findfastest): Don't fail if reply received
