@@ -50,11 +50,6 @@ routines := htonl htons		\
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-ipnode tst-network
 
-# No warnings about losing BSD code.
-CFLAGS-rcmd.c = -w
-CFLAGS-rexec.c = -w
-CFLAGS-ruserpass.c = -w
-
 include ../Rules
 
 ifeq ($(have-thread-library),yes)
