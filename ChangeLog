@@ -1,3 +1,10 @@
+2001-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h (fgetwc, getwc, getwchar, fputwc, putwc, putwchar,
+	fgetws, fputws, ungetwc, getwc_unlocked, getwchar_unlocked,
+	fgetwc_unlocked, fputwc_unlocked, putwc_unlocked, putwchar_unlocked,
+	fgetws_unlocked, fputws_unlocked, wcsftime): Add __THROW.
+
 2001-04-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/elf/start.S [__ASSEMBLY__]: Define it.
