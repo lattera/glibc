@@ -29,7 +29,7 @@
 /* Table for Big5 to UCS conversion. This is generated from the BIG5
    charmap, using the following command:
 
-	egrep "/x../x.." BIG5 | egrep -v "^%" | segA.pl > segA 
+	egrep "/x../x.." BIG5 | egrep -v "^%" | segA.pl > segA
 
    where segA.pl script is:
 
@@ -3790,7 +3790,7 @@ static const char from_ucs4_tab1[256][2] =
   /* 0xf5 */ "\x00\x00", "\x00\x00", "\xa1\xd2"
 };
 
-/* In the following are generated from the BIG5 charmap, using the 
+/* In the following are generated from the BIG5 charmap, using the
    following commands:
 
 ---------------------------------------------------------------------
@@ -8628,7 +8628,7 @@ static const char from_ucs4_tab15[][2] =
 	ch = big5_to_ucs[idx];						      \
 									      \
 	/* Is this character defined?  */				      \
-	if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \

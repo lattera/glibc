@@ -1,5 +1,7 @@
 2000-08-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ja_JP: Add yesstr and nostr information.
+
 	* charmaps/GB18030: Add entries from GBK not present here.
 
 	* SUPPORTED: Add zh_TW.EUC-JP and zh_CN.GB18030.
