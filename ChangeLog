@@ -1,3 +1,21 @@
+2003-05-21  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locale/programs/locale.c (main): Report an error if setlocale()
+	fails [PR libc/2254].
+
+2003-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/system.c: New file.
+
+2003-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (LOADARGS_0,
+	LOADARGS_1, LOADARGS_2, LOADARGS_3, LOADARGS_4, LOADARGS_5,
+	LOADARGS_6): Don't error if syscall argument is a string literal.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h (LOADARGS_0,
+	LOADARGS_1, LOADARGS_2, LOADARGS_3, LOADARGS_4, LOADARGS_5,
+	LOADARGS_6): Likewise.
+
 2003-05-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/sysdep.h (cfi_offset, cfi_startproc,

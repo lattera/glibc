@@ -191,8 +191,10 @@ main (int argc, char *argv[])
 
   /* Set locale.  Do not set LC_ALL because the other categories must
      not be affected (according to POSIX.2).  */
-  setlocale (LC_CTYPE, "");
-  setlocale (LC_MESSAGES, "");
+  if (setlocale (LC_CTYPE, "") == NULL)
+    error (0, errno, gettext ("Cannot set LC_CTYPE to default locale"));
+  if (setlocale (LC_MESSAGES, "") == NULL)
+    error (0, errno, gettext ("Cannot set LC_MESSAGES to default locale"));
 
   /* Initialize the message catalog.  */
   textdomain (PACKAGE);
@@ -203,7 +205,9 @@ main (int argc, char *argv[])
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
     {
-      setlocale (LC_COLLATE, "");
+      if (setlocale (LC_COLLATE, "") == NULL)
+	error (0, errno,
+	       gettext ("Cannot set LC_COLLATE to default locale"));
       write_locales ();
       exit (EXIT_SUCCESS);
     }
@@ -218,7 +222,8 @@ main (int argc, char *argv[])
 
   /* Specific information about the current locale are requested.
      Change to this locale now.  */
-  setlocale (LC_ALL, "");
+  if (setlocale (LC_ALL, "") = NULL)
+    error (0, errno, gettext ("Cannot set LC_ALL to default locale"));
 
   /* If no real argument is given we have to print the contents of the
      current locale definition variables.  These are LANG and the LC_*.  */
