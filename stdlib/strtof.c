@@ -6,6 +6,5 @@
 #define	STRTOF		strtof
 #define	MPN2FLOAT	__mpn_construct_float
 #define	FLOAT_HUGE_VAL	HUGE_VALf
-#define	IMPLICIT_ONE	1
 
 #include "strtod.c"

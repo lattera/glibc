@@ -27,7 +27,6 @@ Cambridge, MA 02139, USA.  */
 #define	STRTOF		strtod
 #define	MPN2FLOAT	__mpn_construct_double
 #define	FLOAT_HUGE_VAL	HUGE_VAL
-#define	IMPLICIT_ONE	1
 #endif
 /* End of configuration part.  */
 
@@ -54,7 +53,6 @@ Cambridge, MA 02139, USA.  */
 #define	MIN_EXP		PASTE(FLT,_MIN_EXP)
 #define MAX_10_EXP	PASTE(FLT,_MAX_10_EXP)
 #define MIN_10_EXP	PASTE(FLT,_MIN_10_EXP)
-#define	MAX_10_EXP_LOG	PASTE(FLT,_MAX_10_EXP_LOG)
 
 /* Extra macros required to get FLT expanded before the pasting.  */
 #define PASTE(a,b)	PASTE1(a,b)
@@ -102,7 +100,7 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
 #define RETURN(val,end) \
-  do { if (endptr != 0) *endptr = (char *) (end); return (val); } while (0)
+    do { if (endptr != 0) *endptr = (char *) (end); return val; } while (0)
 
 /* Maximum size necessary for mpn integers to hold floating point numbers.  */ 
 #define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
@@ -120,21 +118,38 @@ static inline FLOAT
 round_and_return (mp_limb *retval, int exponent, int negative,
 		  mp_limb round_limb, mp_size_t round_bit, int more_bits)
 {
-  if (exponent < MIN_EXP - 2 + IMPLICIT_ONE)
+  if (exponent < MIN_EXP - 1)
     {
-      mp_size_t shift = MIN_EXP - 2 + IMPLICIT_ONE - exponent;
+      mp_size_t shift = MIN_EXP - 1 - exponent;
 
-      if (shift >= MANT_DIG)
+      if (shift > MANT_DIG)
 	{
 	  errno = EDOM;
 	  return 0.0;
 	}
 
       more_bits |= (round_limb & ((1 << round_bit) - 1)) != 0;
-      if (shift >= BITS_PER_MP_LIMB)
+      if (shift == MANT_DIG)
+	/* This is a special case to handle the very seldom case where
+	   the mantissa will be empty after the shift.  */
 	{
+	  int i;
+
+	  round_limb = retval[RETURN_LIMB_SIZE - 1];
+	  round_bit = BITS_PER_MP_LIMB - 1;
+	  for (i = 0; i < RETURN_LIMB_SIZE; ++i)
+	    more_bits |= retval[i] != 0;
+	  MPN_ZERO (retval, RETURN_LIMB_SIZE);
+	}
+      else if (shift >= BITS_PER_MP_LIMB)
+	{
+	  int i;
+
 	  round_limb = retval[(shift - 1) / BITS_PER_MP_LIMB];
 	  round_bit = (shift - 1) % BITS_PER_MP_LIMB;
+	  for (i = 0; i < (shift - 1) / BITS_PER_MP_LIMB; ++i)
+	    more_bits |= retval[i] != 0;
+	  more_bits |= (round_limb & ((1 << round_bit) - 1)) != 0;
 
 	  (void) __mpn_rshift (retval, &retval[shift / BITS_PER_MP_LIMB],
                                RETURN_LIMB_SIZE - (shift / BITS_PER_MP_LIMB),
@@ -167,7 +182,7 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	  retval[RETURN_LIMB_SIZE - 1] |= 1 << ((MANT_DIG - 1)
 						% BITS_PER_MP_LIMB);
 	}
-      else if (IMPLICIT_ONE && exponent == MIN_EXP - 2
+      else if (exponent == MIN_EXP - 2
 	       && (retval[RETURN_LIMB_SIZE - 1]
 		   & (1 << ((MANT_DIG - 1) % BITS_PER_MP_LIMB))) != 0)
 	  /* The number was denormalized but now normalized.  */
@@ -390,9 +405,13 @@ INTERNAL (STRTOF) (nptr, endptr, group)
      Return current read pointer.  */
   if (!isdigit (c) && c != decimal)
     {
-      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
-      /* If TP is at the start of the digits, there was no correctly
-	 grouped prefix of the string; so no number found.  */
+      if (grouping)
+	/* Check the grouping of the digits.  */
+        tp = correctly_grouped_prefix (start_of_digits, cp, thousands,
+				       grouping);
+      else
+	tp = cp;
+
       RETURN (0.0, tp == start_of_digits ? nptr : tp);
     }
 
@@ -418,7 +437,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       /* Check the grouping of the digits.  */
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       if (cp != tp)
-       {
+        {
 	  /* Less than the entire string was correctly grouped.  */
 
 	  if (tp == start_of_digits)
@@ -539,7 +558,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       assert (dig_no >= int_no);
     }
 
- number_parsed:
+  number_parsed:
 
   /* The whole string is parsed.  Store the address of the next character.  */
   if (endptr)
@@ -584,7 +603,6 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	  int expbit = 1;
 	  const struct mp_power *ttab = &_fpioconst_pow10[0];
 
-	  assert (exponent < (1 << (MAX_10_EXP_LOG + 1)));
 	  do
 	    {
 	      if ((exponent & expbit) != 0)

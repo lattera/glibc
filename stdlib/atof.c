@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdlib.h>
 
 #undef	atof
@@ -24,7 +23,8 @@ Cambridge, MA 02139, USA.  */
 
 /* Convert a string to a double.  */
 double
-DEFUN(atof, (nptr), CONST char *nptr)
+atof (nptr)
+     const char *nptr;
 {
-  return(strtod(nptr, (char **) NULL));
+  return __strtod_internal (nptr, (char **) NULL, 0);
 }

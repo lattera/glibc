@@ -196,7 +196,8 @@ static const mp_limb _ten_p12[] =
     0xae7be4a2, 0x271133ee, 0xbb0fd922, 0x25254932, 0xa60a9fc0, 0x104bcd64,
     0x30290145, 0x00000062 };
 
-#define LAST_POW10	12
+/* This value is the index of the last array element.  */
+#define _LAST_POW10	12
 
 #elif BITS_PER_MP_LIMB == 64
 
@@ -369,7 +370,8 @@ static const mp_limb _ten_p12[] =
     0x271133eeae7be4a2, 0x25254932bb0fd922, 0x104bcd64a60a9fc0,
     0x0000006230290145 };
 
-#define LAST_POW10	12
+/* This value is the index of the last array element.  */
+#define _LAST_POW10	12
 
 #else
 #  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
@@ -379,23 +381,23 @@ static const mp_limb _ten_p12[] =
 /* Each of array variable above defines one mpn integer which is a power of 10.
    This table points to those variables, indexed by the exponent.  */
 
-const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1] =
+const struct mp_power _fpioconst_pow10[_LAST_POW10 + 1] =
   {
     { _ten_p0, sizeof (_ten_p0) / sizeof (_ten_p0[0]),		4,	     },
-    { _ten_p1, sizeof (_ten_p1) / sizeof (_ten_p0[1]),		7,	   4 },
-    { _ten_p2, sizeof (_ten_p2) / sizeof (_ten_p0[2]),		14,	  10 },
-    { _ten_p3, sizeof (_ten_p3) / sizeof (_ten_p0[3]),		27,	  24 },
-    { _ten_p4, sizeof (_ten_p4) / sizeof (_ten_p0[4]),		54,	  50 },
-    { _ten_p5, sizeof (_ten_p5) / sizeof (_ten_p0[5]),		107,	 103 },
-    { _ten_p6, sizeof (_ten_p6) / sizeof (_ten_p0[6]),		213,	 210 },
-    { _ten_p7, sizeof (_ten_p7) / sizeof (_ten_p0[7]),		426,	 422 },
-    { _ten_p8, sizeof (_ten_p8) / sizeof (_ten_p0[8]),	  	851,	 848 },
-    { _ten_p9, sizeof (_ten_p9) / sizeof (_ten_p0[9]),	 	1701,	1698 },
-    { _ten_p10, sizeof (_ten_p10) / sizeof (_ten_p0[10]),	3402,	3399 },
-    { _ten_p11, sizeof (_ten_p11) / sizeof (_ten_p0[11]),	6804,	6800 },
-    { _ten_p12, sizeof (_ten_p12) / sizeof (_ten_p0[12]), 	13607, 13604 }
+    { _ten_p1, sizeof (_ten_p1) / sizeof (_ten_p1[0]),		7,	   4 },
+    { _ten_p2, sizeof (_ten_p2) / sizeof (_ten_p2[0]),		14,	  10 },
+    { _ten_p3, sizeof (_ten_p3) / sizeof (_ten_p3[0]),		27,	  24 },
+    { _ten_p4, sizeof (_ten_p4) / sizeof (_ten_p4[0]),		54,	  50 },
+    { _ten_p5, sizeof (_ten_p5) / sizeof (_ten_p5[0]),		107,	 103 },
+    { _ten_p6, sizeof (_ten_p6) / sizeof (_ten_p6[0]),		213,	 210 },
+    { _ten_p7, sizeof (_ten_p7) / sizeof (_ten_p7[0]),		426,	 422 },
+    { _ten_p8, sizeof (_ten_p8) / sizeof (_ten_p8[0]),	  	851,	 848 },
+    { _ten_p9, sizeof (_ten_p9) / sizeof (_ten_p9[0]),	 	1701,	1698 },
+    { _ten_p10, sizeof (_ten_p10) / sizeof (_ten_p10[0]),	3402,	3399 },
+    { _ten_p11, sizeof (_ten_p11) / sizeof (_ten_p11[0]),	6804,	6800 },
+    { _ten_p12, sizeof (_ten_p12) / sizeof (_ten_p12[0]), 	13607, 13604 }
   };
 
-#if LDBL_MAX_10_EXP_LOG > LAST_POW10
-#error "Need to expand 10^(2^i) table for i up to" LDBL_MAX_10_EXP_LOG
+#if LAST_POW10 > _LAST_POW10
+#error "Need to expand 10^(2^i) table for i up to" LAST_POW10
 #endif
