@@ -154,17 +154,19 @@ they are not exhaustive.  New tests are welcome.
 GETTING HELP, GLIBC DISCUSSIONS, etc
 ------------------------------------
 
-People who want to help with glibc and who test out snapshots regularly should
-get on the libc-alpha@cygnus.com mailing list by sending an email to
-libc-alpha-request@cygnus.com.  This list is meant (as the name suggests)
-for the discussion of test releases and also reports for them.  People who are
-on this list are welcome to post questions of general interest.
+People who want to help with glibc and who test out snapshots
+regularly should get on the libc-alpha@sourceware.cygnus.com mailing
+list by sending an email to libc-alpha-subscribe@sourceware.cygnus.com.
+This list is meant (as the name suggests) for the discussion of test
+releases and also reports for them.  People who are on this list are
+welcome to post questions of general interest.
 
-People who are not only willing to test the snapshots but instead really want
-to help developing glibc should contact libc-hacker-request@cygnus.com.org to
-be put on the developers mailing list.  This list is really only meant for
-developers.  No questions about installation problems or other simple topics
-are wanted nor will they be answered.
+People who are not only willing to test the snapshots but instead
+really want to help developing glibc should contact
+libc-hacker-subscribe@sourceware.cygnus.com.org to be put on the developers
+mailing list.  This list is really only meant for developers.  No
+questions about installation problems or other simple topics are
+wanted nor will they be answered.
 
 Do *not* send any questions about the snapshots or patches specific to the
 snapshots to bug-glibc@gnu.org.  Nobody there will have any idea what

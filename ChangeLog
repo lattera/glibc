@@ -1,3 +1,8 @@
+1999-05-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* glibcbug.in (BUGGLIBC): Change address to
+	libc-alpha@sourceware.cygnus.com.
+
 1999-05-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/arpa/nameser.h: Add C++ protectors.

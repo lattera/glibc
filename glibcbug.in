@@ -38,7 +38,7 @@ fi
 if test "$RELEASE" = "stable"; then
   BUGGLIBC="bugs@gnu.org"
 else
-  BUGGLIBC="libc-alpha@cygnus.com"
+  BUGGLIBC="libc-alpha@sourceware.cygnus.com"
 fi
 
 BUGADDR=${1-$BUGGLIBC}
