@@ -22,9 +22,12 @@ Cambridge, MA 02139, USA.  */
    reliably access the stack or frame pointers, so we pass them in as
    extra arguments.  */
 ENTRY (__sigsetjmp)
-	ldgp $29, 0($27)
-	lda $27, __sigsetjmp_aux/* Load address to jump to.  */
-	bis $30, $30, $18	/* Pass SP as 3rd arg.  */
-	bis $15, $15, $19	/* Pass FP as 4th arg.  */
-	jmp $31, ($27), __sigsetjmp_aux /* Call __sigsetjmp_aux.  */
+	ldgp	$29, 0($27)
+	.prologue 1
+
+	lda	$27, __sigsetjmp_aux	/* Load address to jump to.  */
+	bis	$30, $30, $18		/* Pass SP as 3rd arg.  */
+	bis	$15, $15, $19		/* Pass FP as 4th arg.  */
+	jmp	$31, ($27), __sigsetjmp_aux /* Call __sigsetjmp_aux.  */
+
 	.end __sigsetjmp
