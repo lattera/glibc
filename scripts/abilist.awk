@@ -12,6 +12,8 @@ BEGIN {
 /[^ :]+\.so\.[0-9]+:[ 	]+.file format .*$/ {
   emit(0);
 
+  seen_opd = 0;
+
   sofullname = $1;
   sub(/:$/, "", sofullname);
   soname = sofullname;
@@ -52,8 +54,11 @@ $2 == "g" || $2 == "w" && NF == 7 {
     type = "T";
   }
   else if (type == "D" && $4 == ".opd") {
-    type = "O";
+    type = "F";
     size = "";
+    if (seen_opd < 0)
+      type = "O";
+    seen_opd = 1;
   }
   else if ($4 == "*ABS*") {
     type = "A";
@@ -63,6 +68,9 @@ $2 == "g" || $2 == "w" && NF == 7 {
     type = "D";
   }
   else if (type == "DF") {
+    if (symbol ~ /^\./ && seen_opd >= 0)
+      next;
+    seen_opd = -1;
     type = "F";
     size = "";
   }

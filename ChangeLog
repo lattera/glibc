@@ -1,5 +1,7 @@
 2003-03-30  Roland McGrath  <roland@redhat.com>
 
+	* scripts/abilist.awk: Grok .opd foo plus .text .foo as "foo F" alone.
+
 	* intl/po2test.sed: Anchor substitution regexps to fix last change.
 
 2003-03-29  Paolo Bonzini  <bonzini@gnu.org>
