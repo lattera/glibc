@@ -2,7 +2,9 @@
 
 	* libc.map: Don't export argp's fmtstream handling functions.
 
-	* manual/sysinfo.h: Document fstab and mtab handling functions.
+	* manual/sysinfo.texi: Document fstab and mtab handling functions.
+	* manual/llio.texi: Document more LFS functions and start documenting
+	the AIO functions.
 
 1998-06-03 03:09  Geoff Keating  <geoffk@ozemail.com.au>
 

@@ -481,7 +481,7 @@ This function takes for the @var{stream} parameter a file handle which
 previously was returned from the @code{setmntent} call.
 @code{endmntent} closes the stream and frees all resources.
 
-The return value is @code[1} unless an error occurred in which case it
+The return value is @code{1} unless an error occurred in which case it
 is @code{0}.
 @end deftypefun
 
