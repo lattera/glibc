@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,16 +39,9 @@
 #	define	pNeg	p7	/* is rotate count negative? */
 
 
-	.psr abi64
-	.psr lsb
-	.lsb
-
 	/* __longjmp(__jmp_buf buf, int val) */
-	.text
-	.align 32
-	.global __longjmp
-	.proc __longjmp
-__longjmp:
+
+LEAF(__longjmp)
 	alloc r8=ar.pfs,2,1,0,0
 	mov r27=ar.rsc
 	add r2=0x98,in0		// r2 <- &jmpbuf.orig_jmp_buf_addr
@@ -164,5 +157,4 @@ __longjmp:
 	invala			// virt. -> phys. regnum mapping may change
 	mov pr=r24,-1
 	ret
-	.endp __longjmp
-
+END(__longjmp)

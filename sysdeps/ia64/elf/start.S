@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
 
@@ -31,14 +31,8 @@
  *	out6:	stack_end
  */
 
-	.psr	abi64
-	.psr	lsb
-	.lsb
-
-	.text
-
-	.global	_start#
-	.proc	_start#
+	.global	_start
+	.proc	_start
 
 _start:
 	{ .mlx
@@ -59,11 +53,11 @@ _start:
 	}
 	{ .mfi
 	  mov ar.fpsr = r3
-	  addl out0 = @ltoff(@fptr(main#)), gp
+	  addl out0 = @ltoff(@fptr(main)), gp
 	}
 	{ .mfi
-	  addl out4 = @ltoff(@fptr(_fini#)), gp
-	  addl out3 = @ltoff(@fptr(_init#)), gp
+	  addl out4 = @ltoff(@fptr(_fini)), gp
+	  addl out3 = @ltoff(@fptr(_init)), gp
 	  ;;
 	}
 	{ .mmi
@@ -74,14 +68,14 @@ _start:
 	{ .mib
 	  ld8 out4 = [out4]	/* pointer to `fini' function descriptor */
 	  mov out5 = ret0	/* dynamic linker destructor */
-	  br.call.sptk.few rp = __libc_start_main#
+	  br.call.sptk.few rp = __libc_start_main
 	}
 	{ .mib
 	  mov rp = r0
 	  br.ret.sptk.few rp	/* break miserably if we ever return */
 	  ;;
 	}
-	.endp	_start#
+	.endp	_start
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

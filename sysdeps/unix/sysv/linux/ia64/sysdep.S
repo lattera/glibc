@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,6 @@
 #include <sysdep.h>
 #include <features.h>
 
-	.psr abi64
-	.psr lsb
-	.lsb
-
 	.global errno
 	.common errno,4,4
 	.type errno, @object
@@ -34,16 +30,11 @@ __errno = errno
 	.global _errno
 _errno = errno
 
-	.text
-
-	.align 8
-
-	.global __syscall_error
-	.proc __syscall_error
-__syscall_error:
+ENTRY(__syscall_error)
 #ifdef _LIBC_REENTRANT
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(0)
 	alloc	r35=ar.pfs, 0, 4, 0, 0
-	mov	r32=b0
+	mov	r32=rp
 	mov	r33=r8
 	mov	r34=r1
 	;;
@@ -51,7 +42,7 @@ __syscall_error:
 .Lret0:		/* force new bundle */
 	st4	[r8]=r33
 	mov	r1=r34
-	mov	b0=r32
+	mov	rp=r32
 	mov	r8=-1
 	mov	ar.pfs=r35
 #else /* _LIBC_REENTRANT */
@@ -71,8 +62,7 @@ __syscall_error:
 	st4	[r2]=r3
 #endif /* _LIBC_REENTRANT */
 	ret			// ret is #define'd in syscall.h!
-	.endp __syscall_error
-
+END(__syscall_error)
 
 ENTRY(__ia64_syscall)
 	mov r15=r37		/* syscall number */

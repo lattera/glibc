@@ -36,16 +36,20 @@
 
 #undef CALL_MCOUNT
 #ifdef PROF
-# define CALL_MCOUNT				\
-	.data;					\
-1:	data8 0;				\
-	.previous;				\
-	alloc out0 = ar.pfs, 8, 0, 4, 0;	\
-	mov out1 = gp;				\
-	mov out2 = rp;				\
-	;;					\
-	addl out3 = @ltoff(1b), gp;		\
-	br.call.sptk.many rp = _mcount		\
+# define CALL_MCOUNT							\
+	.data;								\
+1:	data8 0;	/* XXX fixme: use .xdata8 once labels work */	\
+	.previous;							\
+	.prologue;							\
+	.save ar.pfs, r40;						\
+	alloc out0 = ar.pfs, 8, 0, 4, 0;				\
+	mov out1 = gp;							\
+	.save rp, out2;							\
+	mov out2 = rp;							\
+	.body;								\
+	;;								\
+	addl out3 = @ltoff(1b), gp;					\
+	br.call.sptk.many rp = _mcount					\
 	;;
 #else
 # define CALL_MCOUNT	/* Do nothing. */
@@ -71,17 +75,6 @@
     DO_CALL (SYS_ify(syscall_name));		\
 	cmp.eq p6,p0=-1,r10;;			\
 (p6)	br.cond.spnt.few __syscall_error;
-
-#define ENTRY(name)				\
-	.psr abi64;				\
-	.psr lsb;				\
-	.lsb;					\
-	.text;					\
-	.align 32;				\
-	.proc C_SYMBOL_NAME(name);		\
-	.global C_SYMBOL_NAME(name);		\
-	C_LABEL(name)				\
-	CALL_MCOUNT
 
 #define DO_CALL(num)				\
 	mov r15=num;				\

@@ -1,5 +1,5 @@
 /* brk system call for Linux/ia64
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Stephane Eranian <eranian@hpl.hp.com> and
 	      Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
@@ -19,31 +19,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sysdep.h>
+
 #include <asm/unistd.h>
 #include <asm/errno.h>
-	.text
-	.psr	abi64
-	.psr	lsb
-	.lsb
 
 	.global __curbrk
 	.data
 	.align	8
 __curbrk:
 	data8	0
-	.weak	___brk_addr
-___brk_addr = __curbrk
-	.text
-	.align	16
-	.global	__brk
-	.proc	__brk
-__brk:
+
+weak_alias (__curbrk, ___brk_addr)
+
+LEAF(__brk)
 	mov	r15=__NR_brk
 	break.i	__BREAK_SYSCALL
 	;;
 	cmp.ltu	p6,p0=ret0,r32	/* r32 is the input register, even though we
 				   haven't allocated a frame */
-	addl	r9=@ltoff(__curbrk#),gp
+	addl	r9=@ltoff(__curbrk),gp
 	;;
 	ld8	r9=[r9]
 (p6) 	mov	ret0=ENOMEM
@@ -51,8 +46,7 @@ __brk:
 	;;
 	st8	[r9]=ret0
 	mov 	ret0=0
- 	br.ret.sptk.few rp
-	.endp __brk
+	ret
+END(__brk)
 
-	.weak	brk
-brk = __brk
+weak_alias (__brk, brk)

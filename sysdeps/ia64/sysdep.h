@@ -21,11 +21,39 @@
 
 #ifdef __ASSEMBLER__
 
+/* Macros to help writing .prologue directives in assembly code.  */
+#define ASM_UNW_PRLG_RP			0x8
+#define ASM_UNW_PRLG_PFS		0x4
+#define ASM_UNW_PRLG_PSP		0x2
+#define ASM_UNW_PRLG_PR			0x1
+#define ASM_UNW_PRLG_GRSAVE(ninputs)	(32+(ninputs))
+
+#define ENTRY(name)				\
+	.text;					\
+	.align 32;				\
+	.proc C_SYMBOL_NAME(name);		\
+	.global C_SYMBOL_NAME(name);		\
+	C_LABEL(name)				\
+	CALL_MCOUNT
+
+#define LOCAL_ENTRY(name)			\
+	.text;					\
+	.align 32;				\
+	.proc C_SYMBOL_NAME(name);		\
+	C_LABEL(name)				\
+	CALL_MCOUNT
+
 #define LEAF(name)				\
   .text;					\
   .align 32;					\
   .proc C_SYMBOL_NAME(name);			\
   .global name;					\
+  C_LABEL(name)
+
+#define LOCAL_LEAF(name)			\
+  .text;					\
+  .align 32;					\
+  .proc C_SYMBOL_NAME(name);			\
   C_LABEL(name)
 
 /* Mark the end of function SYM.  */

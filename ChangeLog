@@ -1,3 +1,51 @@
+2001-03-23  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ENTRY): Moved to ...
+	* sysdeps/ia64/sysdep.h: ...here.
+
+	* sysdeps/ia64/sysdep.h (LOCAL_ENTRY): Define.
+	* sysdeps/ia64/sysdep.h (LOCAL_LEAF): Define.
+
+	* sysdeps/ia64/_mcount.S (_mcount_ret_helper): Use LOCAL_LEAF() to
+	declare instead of LEAF().  Suggestion from David Mosberger.
+
+2001-03-21  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (CALL_MCOUNT): Add unwind
+	directives.
+	(PSEUDO): Drop .psr and .lsb directives.
+
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Ditto.  Add unwind
+	directives.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S: Ditto.
+
+	* sysdeps/ia64/elf/start.S: Misc cleanup: remove .psr and .lsb
+	directives etc.
+	* sysdeps/unix/sysv/linux/ia64/brk.S: Ditto.
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: Ditto.
+	* sysdeps/ia64/_mcount.S: Remove .psr and .lsb directives (no
+	longer needed).  Add unwind directives.
+
+	* sysdeps/ia64/sysdep.h: Define ASM_UNW_PRLG_RP, ASM_UNW_PRLG_PFS,
+	ASM_UNW_PRLG_PSP, ASM_UNW_PRLG_PR, and ASM_UNW_PRLG_GRSAVE.
+
+2001-03-21  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.h (RE_INVALID_INTERVAL_ORD): New macro.
+	(RE_SYNTAX_POSIX_EGREP): Use it.
+	* posix/regex.c (regex_compile): Implement it.
+
+2001-03-21  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.c (GET_UNSIGNED_NUMBER): Check for overflow.
+	Rewrite to avoid duplicate code.
+
+2001-03-21  H.J. Lu  <hjl@gnu.org>
+
+	* elf/Makefile (tests): Don't depend on $(objpfx)tst-pathopt.out
+	for cross-compiling.
+	($(objpfx)tst-pathopt.out): Undo the last change.
+
 2001-03-24  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/i386/bits/sigcontext.h (sc_sp, sc_fp, sc_pc,

@@ -48,13 +48,11 @@
 
 #undef ret
 
-	.psr	abi64
-	.psr	lsb
-	.lsb
-
 LEAF(_mcount)
-	alloc loc0 = ar.pfs, 4, 4, 3, 0
-	mov loc1 = rp
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(4)
+	alloc loc1 = ar.pfs, 4, 4, 3, 0
+	mov loc0 = rp
+	.body
 	mov loc2 = r8	// gcc uses r8 to pass pointer to return structure
 	;;
 	mov loc3 = r15	// gcc uses r15 to pass the static link to nested functions
@@ -67,21 +65,27 @@ LEAF(_mcount)
 	.mii
 	mov gp = in1
 	mov r2 = ip
-	mov ar.pfs = loc0
+	mov ar.pfs = loc1
 }
 	;;
-	adds r2 = 1f - .here, r2
-	mov b7 = loc1
+	adds r2 = _mcount_ret_helper - .here, r2
+	mov b7 = loc0
 	mov rp = in2
 	;;
 	mov r8 = loc2
 	mov r15 = loc3
 	mov b6 = r2
 	br.ret.sptk.few b6
+END(_mcount)
 
-1:	alloc r2 = ar.pfs, 0, 0, 9, 0
+LOCAL_LEAF(_mcount_ret_helper)
+	.prologue
+	.altrp b7
+	.save ar.pfs, r40
+	.body
+	alloc r2 = ar.pfs, 0, 0, 9, 0
 	mov ar.pfs = r40
 	br b7
-END(_mcount)
+END(_mcount_ret_helper)
 
 weak_alias (_mcount, mcount)

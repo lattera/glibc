@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
    The layout of the jmp_buf is as follows.  This is subject to change
    and user-code should never depend on the particular layout of
    jmp_buf!
-  
+
 
   	offset:	description:
 	-------	------------
@@ -67,34 +67,25 @@
 #include <sysdep.h>
 #include <features.h>
 
-	.text
-	.psr abi64
-	.psr lsb
-	.lsb
-
 	/* The following two entry points are the traditional entry points: */
 
-	.global setjmp
-	.proc setjmp
-setjmp:	alloc r8=ar.pfs,2,0,0,0
+LEAF(setjmp)
+	alloc r8=ar.pfs,2,0,0,0
 	mov in1=1
 	br.cond.sptk.many __sigsetjmp
-	.endp setjmp
+END(setjmp)
 
-	.global _setjmp
-	.proc _setjmp
-_setjmp:
+LEAF(_setjmp)
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=0
 	br.cond.sptk.many __sigsetjmp
-	.endp _setjmp
+END(_setjmp)
 
 	/* __sigsetjmp(__jmp_buf buf, int savemask) */
-	.align 32
-	.global __sigsetjmp
-	.proc __sigsetjmp
-__sigsetjmp:
-	alloc loc0=ar.pfs,2,2,2,0
+
+ENTRY(__sigsetjmp)
+	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(2)
+	alloc loc1=ar.pfs,2,2,2,0
 	mov r16=ar.unat
 	;;
 	mov r17=ar.fpsr
@@ -114,7 +105,8 @@ __sigsetjmp:
 	;;
 	stf.spill.nta [r8]=f2,32
 	stf.spill.nta [r9]=f3,32
-	mov loc1=rp
+	mov loc0=rp
+	.body
 	;;
 	stf.spill.nta [r8]=f4,32
 	stf.spill.nta [r9]=f5,32
@@ -157,7 +149,7 @@ __sigsetjmp:
 	mov r25=ar.unat
 	mov out0=in0
 
-	st8.nta [r2]=loc1,16		// b0
+	st8.nta [r2]=loc0,16		// b0
 	st8.nta [r3]=r17,16		// b1
 	mov out1=in1
 	;;
@@ -167,7 +159,7 @@ __sigsetjmp:
 	st8.nta [r2]=r20,16		// b4
 	st8.nta [r3]=r21,16		// b5
 	;;
-	st8.nta [r2]=loc0,16		// ar.pfs
+	st8.nta [r2]=loc1,16		// ar.pfs
 	st8.nta [r3]=r22,16		// ar.lc
 	;;
 	st8.nta [r2]=r24,16		// pr
@@ -178,10 +170,10 @@ __sigsetjmp:
 	br.call.dpnt.few rp=__sigjmp_save
 .ret0:					// force a new bundle ::q
 	mov r8=0
-	mov rp=loc1
-	mov ar.pfs=loc0
+	mov rp=loc0
+	mov ar.pfs=loc1
 	ret
-	.endp __sigsetjmp
+END(__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)
