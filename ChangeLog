@@ -1,3 +1,7 @@
+2000-02-01  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/elf/start.S: Rewritten for __libc_start_main.
+
 2000-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/fpu/feholdexcpt.c: Correct return value according to
