@@ -1,5 +1,8 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pread64.c: The little/big endian code
+	was switched.
+
 	* posix/Makefile (tests): Add tst-preadwrite64.
 	* posix/tst-preadwrite.c: Alloc file being used also for testing
 	pread64 and pwrite64.
