@@ -214,7 +214,7 @@ double __mpcos(double x, double dx) {
   __add(&a,&b,&c,p);
   if (x>0.8)
   { __sub(&hp,&c,&b,p);
-    __c32(&b,&a,&c,p);
+    __c32(&b,&c,&a,p);
   }
   else __c32(&c,&a,&b,p);     /* a = cos(x+dx)     */
   __mp_dbl(&a,&y,p);
