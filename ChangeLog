@@ -1,3 +1,12 @@
+2001-11-05  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/powerpc/elf/sysdep.h: Remove this file, because it overrides
+	the more-specific unix/sysv/linux/powerpc file and breaks everything.
+	* sysdeps/powerpc/sysdep.h (ALIGNARG, ASM_TYPE_DIRECTIVE,
+	ASM_SIZE_DIRECTIVE, CALL_MCOUNT, ENTRY, EALIGN, DO_CALL, JUMPTARGET,
+	PSEUDO, PSEUDO_RET, PSEUDO_END, L, C_TEXT): These macros moved here
+	here, put under [__ELF__].
+
 2001-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/charset.texi: Extensive editing work.
