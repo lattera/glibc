@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,7 @@
 # define ENOSPC		29
 # define EEXIST		30
 # define EBUSY		31
+# define EOVERFLOW	32
 #endif
 
 #define __set_errno(val) errno = (val)
