@@ -1,5 +1,12 @@
 2001-05-29  Bruno Haible  <haible@clisp.cons.org>
 
+	* charmaps/GB18030: Update for Unicode 3.1: Add <U03F4>..<U03F5>. Use
+	full Hangul syllable names. Add Unicode planes 1 (scripts, symbols),
+	2 (CJK), 14 (tags), 15 and 16 (private use). Update width table.
+	Assign width 1 to <U3008>, <U3009>, <U3014>, <U3015>, <U3018>, <U3019>.
+
+2001-05-29  Bruno Haible  <haible@clisp.cons.org>
+
 	* charmaps/UTF-8: Update for Unicode 3.1: Add <U03F4>..<U03F5>. Use
 	range syntax for <U3400>..<U4DB5>, <U4E00>..<U9FA5>, <UE000>..<UF8FF>.
 	Add Unicode planes 1 (scripts, symbols), 2 (CJK), 14 (tags), 15 and 16
