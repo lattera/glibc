@@ -1,6 +1,6 @@
 /* MIPS3 __mpn_lshift --
  *
- * Copyright (C) 1995 Free Software Foundation, Inc.
+ * Copyright (C) 1995, 2000 Free Software Foundation, Inc.
  *
  * This file is part of the GNU MP Library.
  *
@@ -29,7 +29,7 @@
  * cnt		$7
  */
 
-#ifdef PIC
+#ifdef __PIC__
 	.option pic2
 #endif
 	.text
@@ -38,7 +38,7 @@
 	.ent	__mpn_lshift
 __mpn_lshift:
 	.set	noreorder
-#ifdef PIC
+#ifdef __PIC__
 	.cpload t9
 #endif
 	.set	nomacro

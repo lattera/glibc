@@ -1,7 +1,7 @@
 /* MIPS3 __mpn_mul_1 -- Multiply a limb vector with a single limb and
  * store the product in a second limb vector.
  *
- * Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+ * Copyright (C) 1992, 1994, 1995, 2000 Free Software Foundation, Inc.
  *
  * This file is part of the GNU MP Library.
  *
@@ -30,7 +30,7 @@
  * s2_limb	$7
  */
 
-#ifdef PIC
+#ifdef __PIC__
 	.option pic2
 #endif
 	.text
@@ -39,7 +39,7 @@
 	.ent	__mpn_mul_1
 __mpn_mul_1:
 	.set    noreorder
-#ifdef PIC
+#ifdef __PIC__
 	.cpload t9
 #endif
 	.set    nomacro
