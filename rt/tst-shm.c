@@ -1,5 +1,5 @@
 /* Test program for POSIX shm_* functions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -131,6 +131,7 @@ do_test (void)
   pid_t pid2;
   int status1;
   int status2;
+  struct stat st;
 
   /* Create the shared memory object.  */
   fd = shm_open ("/shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
@@ -152,6 +153,12 @@ do_test (void)
       close (fd);
       shm_unlink ("/shm-test");
       return 0;
+    }
+
+  if (fstat (fd, &st) == -1 || st.st_size != 4000)
+    {
+      shm_unlink ("/shm-test");
+      error (EXIT_FAILURE, 0, "initial stat failed");
     }
 
   /* Spawn to processes which will do the work.  */

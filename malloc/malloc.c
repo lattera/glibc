@@ -1190,6 +1190,39 @@ void     public_mSTATs(void);
 void     public_mSTATs();
 #endif
 
+/*
+  malloc_get_state(void);
+
+  Returns the state of all malloc variables in an opaque data
+  structure.
+*/
+#if __STD_C
+Void_t*  public_gET_STATe(void);
+#else
+Void_t*  public_gET_STATe();
+#endif
+
+/*
+  malloc_set_state(Void_t* state);
+
+  Restore the state of all malloc variables from data obtained with
+  malloc_get_state().
+*/
+#if __STD_C
+int      public_sET_STATe(Void_t*);
+#else
+int      public_sET_STATe();
+#endif
+
+#ifdef _LIBC
+/*
+  posix_memalign(void **memptr, size_t alignment, size_t size);
+
+  POSIX wrapper like memalign(), checking for validity of size.
+*/
+int      __posix_memalign(void **, size_t, size_t);
+#endif
+
 /* mallopt tuning options */
 
 /*

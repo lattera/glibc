@@ -1,5 +1,5 @@
 /* Get public or secret key from key server.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -33,7 +33,7 @@ typedef int (*secret_function) (const char *, char *, const char *, int *);
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_publickey_lookup (service_user **nip, const char *name,
-				   void **fctp);
+				   void **fctp) internal_function;
 
 
 int

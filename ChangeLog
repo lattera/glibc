@@ -1,3 +1,41 @@
+2002-04-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/ether_ntoh.c (__nss_ethers_lookup): Add internal_function.
+	* inet/ether_hton.c (__nss_ethers_lookup): Likewise.
+	* inet/getnetgrent_r.c (__nss_netgroup_lookup): Likewise.
+	* sunrpc/netname.c (__nss_publickey_lookup): Likewise.
+	* sunrpc/publickey.c (__nss_publickey_lookup): Likewise.
+
+2002-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Don't abort on unknown
+	dynamic tags.
+
+2002-03-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/s_fabs.S: New file.
+	* sysdeps/i386/fpu/s_fabsf.S: New file.
+	* sysdeps/i386/fpu/s_fabsl.S: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fabs.c: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fabsf.c: New file.
+	* sysdeps/sparc/sparc64/fpu/s_fabsl.c: New file.
+
+2002-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-shm.c (do_test): Add one more test for size of shared
+	memory object.
+
+2002-03-29  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c: Add short description and prototypes for
+	malloc_get_state, malloc_set_state and posix_memalign, for
+	consistency and to avoid warnings with -Wstrict-prototypes.
+	Reported by Andreas Jaeger <aj@suse.de>.
+
+2002-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/gl.po: Update from translation team.
+
 2002-03-31  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdselect.c (_hurd_select): Fix

@@ -38,7 +38,7 @@ static struct __netgrent dataset;
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_netgroup_lookup (service_user **nip, const char *name,
-				  void **fctp);
+				  void **fctp) internal_function;
 
 
 /* Set up NIP to run through the services.  If ALL is zero, use NIP's

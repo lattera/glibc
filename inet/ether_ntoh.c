@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -31,7 +31,7 @@ typedef int (*lookup_function) (const struct ether_addr *, struct etherent *,
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_ethers_lookup (service_user **nip, const char *name,
-				void **fctp);
+				void **fctp) internal_function;
 
 
 int

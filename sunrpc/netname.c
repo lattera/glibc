@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -135,7 +135,7 @@ typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
 				      uid_t *, gid_t *, int *, gid_t *);
 /* The lookup function for the first entry of this service.  */
 extern int __nss_publickey_lookup (service_user ** nip, const char *name,
-				   void **fctp);
+				   void **fctp) internal_function;
 
 int
 netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
