@@ -51,11 +51,11 @@ struct stat
     long int st_pad2[2];
 #ifndef __USE_FILE_OFFSET64
     __off_t st_size;		/* Size of file, in bytes.  */
+    /* SVR4 added this extra long to allow for expansion of off_t.  */
+    long int st_pad3;
 #else
     __off64_t st_size;		/* Size of file, in bytes.  */
 #endif
-    /* SVR4 added this extra long to allow for expansion of off_t.  */
-    long int st_pad3;
     /*
      * Actually this should be timestruc_t st_atime, st_mtime and
      * st_ctime but we don't have it under Linux.
@@ -70,13 +70,10 @@ struct stat
 #ifndef __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
 #else
+    long int st_pad4;
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
 #endif
-    char st_fstype[16];		/* Filesystem type name */
-    long int st_pad4[8];
-    /* Linux specific fields */
-    unsigned int st_flags;
-    unsigned int st_gen;
+    long int st_pad4[14];
   };
 
 #ifdef __USE_LARGEFILE64
@@ -92,8 +89,6 @@ struct stat64
     unsigned long int st_rdev;	/* Device number, if device.  */
     long int st_pad2[2];
     __off64_t st_size;		/* Size of file, in bytes.  */
-    /* SVR4 added this extra long to allow for expansion of off_t.  */
-    long int st_pad3;
     /*
      * Actually this should be timestruc_t st_atime, st_mtime and
      * st_ctime but we don't have it under Linux.
@@ -105,12 +100,9 @@ struct stat64
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
+    long int st_pad3;
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
-    char st_fstype[16];		/* Filesystem type name */
-    long int st_pad4[8];
-    /* Linux specific fields */
-    unsigned int st_flags;
-    unsigned int st_gen;
+    long int st_pad4[14];
   };
 #endif
 
