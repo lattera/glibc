@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -349,12 +349,13 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
 #else
       if (*str < '0' || *str > '9')
 	{
+	  int inner = 0;
 	  if (thousands != NULL && *str == *thousands
-	      && ({ for (cnt == 1; thousands[cnt] != '\0'; ++cnt)
-		      if (thousands[cnt] != str[cnt])
+	      && ({ for (inner = 1; thousands[inner] != '\0'; ++inner)
+		      if (thousands[inner] != str[inner])
 			break;
-		    thousands[cnt] == '\0'; }))
-	    str += cnt;
+		    thousands[inner] == '\0'; }))
+	    str += inner;
 	  else
 	    str += decimal_len;
 	}
