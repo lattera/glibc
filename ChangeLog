@@ -1,3 +1,12 @@
+2002-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert.c: Use hidden_def not INTDEF.
+
+2002-08-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h: Optimize if HAVE_BROKEN_ALIAS_ATTRIBUTE is
+	not defined.
+
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
 	* include/sys/syslog.h: Use libc_hidden_proto for syslog, vsyslog.
