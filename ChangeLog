@@ -1,3 +1,8 @@
+2005-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Clean file up.  Don't
+	define unnecessary wrappers or aliases of static functions.
+
 2005-01-03  Andreas Jaeger  <aj@suse.de>
 
 	* csu/Makefile (generated): Add start.os and start.ob.
