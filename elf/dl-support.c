@@ -121,9 +121,19 @@ int _dl_debug_fd = STDERR_FILENO;
 
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
-struct ElfW(Phdr) *_dl_phdr;
+ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
-unsigned long int _dl_hwcap;
+unsigned long int _dl_hwcap __attribute__ ((nocommon));
+
+/* Prevailing state of the stack, PF_X indicating it's executable.  */
+ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
+
+/* If loading a shared object requires that we make the stack executable
+   when it was not, we do it by calling this function.
+   It returns an errno code or zero on success.  */
+int (*_dl_make_stack_executable_hook) (void) internal_function
+  = _dl_make_stack_executable;
+
 
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
@@ -260,6 +270,15 @@ _dl_non_dynamic_init (void)
   /* Now determine the length of the platform string.  */
   if (_dl_platform != NULL)
     _dl_platformlen = strlen (_dl_platform);
+
+  /* Scan for a program header telling us the stack is nonexecutable.  */
+  if (_dl_phdr != NULL)
+    for (uint_fast16_t i = 0; i < _dl_phnum; ++i)
+      if (_dl_phdr[i].p_type == PT_GNU_STACK)
+	{
+	  _dl_stack_flags = _dl_phdr[i].p_flags;
+	  break;
+	}
 }
 
 

@@ -1,3 +1,7 @@
+2003-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-support.c (_dl_hwcap): Add nocommon attribute.
+
 2003-07-29  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile (tests) [$(build-shared) = yes]:

@@ -1,3 +1,11 @@
+2003-07-29  Roland McGrath  <roland@redhat.com>
+
+	* Makefile [$(build-shared) = yes] (tests): Depend on $(test-modules).
+
+2003-07-25  Roland McGrath  <roland@redhat.com>
+
+	* manager.c (pthread_start_thread): Fix typo in last change.
+
 2003-07-14  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h: Add IS_IN_librt,

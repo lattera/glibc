@@ -1,3 +1,7 @@
+2003-07-29  Roland McGrath  <roland@redhat.com>
+
+	* Makefile [$(build-shared) = yes] (tests): Depend on $(test-modules).
+
 2003-07-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-cancel17.c (do_test): Check if aio_cancel failed.
