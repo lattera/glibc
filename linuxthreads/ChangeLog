@@ -1,3 +1,9 @@
+2000-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (pthread_initialize): Instead of on_exit use
+	__cxa_atexit if __dso_label is available to allow unloading the
+	libpthread shared library.
+
 2000-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c: Make tests for ownership of mutex less strict.

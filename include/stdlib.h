@@ -53,6 +53,8 @@ extern int __add_to_environ (const char *name, const char *value,
 extern void _quicksort (void *const pbase, size_t total_elems,
 			size_t size, __compar_fn_t cmp);
 
+extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+
 #endif
 #undef __Need_M_And_C
 
