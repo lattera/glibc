@@ -25,6 +25,10 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY(setjmp)
 	ldgp	$29, 0($27)
+#ifdef PROF
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+#endif
 	.prologue 1
 	bis	$31, 1, $17		/* Pass a second argument of one.  */
 	jmp	$31, __sigsetjmp	/* Call __sigsetjmp.  */

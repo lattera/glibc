@@ -85,7 +85,14 @@ $tail:	bne	t4, 1f		# is there a tail to do?
 	.end memset_loop
 
 ENTRY(memset)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
 
 	zapnot	a1, 1, a1	# e0    : zero extend input character
 	mov	a0, v0		# .. e1 : move return value in place

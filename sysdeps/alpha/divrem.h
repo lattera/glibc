@@ -1,25 +1,25 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+   Cambridge, MA 02139, USA.  */
 
 /* The current Alpha chips don't provide hardware for integer
-division.  The C compiler expects the functions
+   division.  The C compiler expects the functions
 
 	__divqu: 64-bit unsigned long divide
 	__remqu: 64-bit unsigned long remainder
@@ -27,10 +27,10 @@ division.  The C compiler expects the functions
 	__divlu/__remlu: unsigned 32-bit
 	__divls/__remls: signed 32-bit
 
-These are not normal C functions: instead of the normal calling
-sequence, these expect their arguments in registers t10 and t11, and
-return the result in t12 (aka pv). Register AT may be clobbered
-(assembly temporary), anything else must be saved.  */
+   These are not normal C functions: instead of the normal calling
+   sequence, these expect their arguments in registers t10 and t11, and
+   return the result in t12 (aka pv).  Register AT may be clobbered
+   (assembly temporary), anything else must be saved.  */
 
 #include <sysdep.h>
 
@@ -41,77 +41,144 @@ return the result in t12 (aka pv). Register AT may be clobbered
 # include <machine/pal.h>
 #endif
 
-#ifdef DEBUG
-# define arg1		a0
-# define arg2		a1
-# define result		v0
-# define mask		t0
-# define tmp0		t1
-# define tmp1		t2
-# define sign		t3
-# define retaddr	ra
-#else
-# define arg1		t10
-# define arg2		t11
-# define result		t12
-# define mask		v0
-# define tmp0		t0
-# define tmp1		t1
-# define sign		t2
-# define retaddr	t9
-#endif
+#define mask			v0
+#define divisor			t0
+#define compare			AT
+#define tmp1			t2
+#define tmp2			t3
+#define retaddr			t9
+#define arg1			t10
+#define arg2			t11
+#define result			t12
 
-# define divisor	arg2
 #if IS_REM
-# define dividend	result
-# define quotient	arg1
-# define GETDIVIDEND	bis arg1,zero,dividend
+# define DIV_ONLY(x,y...)
+# define REM_ONLY(x,y...)	x,##y
+# define modulus		result
+# define quotient		t1
+# define GETSIGN(x)		mov arg1, x
+# define STACK			32
 #else
-# define dividend	arg1
-# define quotient	result
-# define GETDIVIDEND
+# define DIV_ONLY(x,y...)	x,##y
+# define REM_ONLY(x,y...)
+# define modulus		t1
+# define quotient		result
+# define GETSIGN(x)		xor arg1, arg2, x
+# define STACK			48
 #endif
 
 #if SIZE == 8
-# define LONGIFYarg1	GETDIVIDEND
-# define LONGIFYarg2
+# define LONGIFY(x,y)		mov x,y
+# define SLONGIFY(x,y)		mov x,y
+# define _SLONGIFY(x)
+# define NEG(x,y)		negq x,y
 #else
-# if SIGNED
-#  define LONGIFYarg1	addl	arg1,zero,dividend
-#  define LONGIFYarg2	addl	arg2,zero,divisor
-# else
-#  define LONGIFYarg1	zapnot	arg1,0x0f,dividend
-#  define LONGIFYarg2	zapnot	arg2,0x0f,divisor
-# endif
-#endif
-
-#if SIGNED
-# define SETSIGN(sign,reg,tmp)	subq zero,reg,tmp; cmovlt sign,tmp,reg
-# if IS_REM
-#  define GETSIGN(x,y,s)	bis	x,zero,s
-# else
-#  define GETSIGN(x,y,s)	xor	x,y,s
-# endif
-#else
-# define SETSIGN(sign,reg,tmp)
-# define GETSIGN(x,y,s)
+# define LONGIFY(x,y)		zapnot x,15,y
+# define SLONGIFY(x,y)		sextl x,y
+# define _SLONGIFY(x)		sextl x,x
+# define NEG(x,y)		negl x,y
 #endif
 
 	.set noreorder
 	.set noat
 
-	.ent FUNC_NAME
-	.globl FUNC_NAME
+	.ent UFUNC_NAME
+	.globl UFUNC_NAME
 
-#define FRAME_SIZE	0x30
-
-	.align 5
-FUNC_NAME:
+	.align 3
+UFUNC_NAME:
+	lda	sp, -STACK(sp)
+	.frame	sp, STACK, retaddr, 0
 #ifdef PROF
-	lda	sp, -0x18(sp)
-	stq	ra, 0x00(sp)
-	stq	pv, 0x08(sp)
-	stq	gp, 0x10(sp)
+	stq	ra, 0(sp)
+	stq	pv, 8(sp)
+	stq	gp, 16(sp)
+
+	br	AT, 1f
+1:	ldgp	gp, 0(AT)
+
+	mov	retaddr, ra
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+
+	ldq	ra, 0(sp)
+	ldq	pv, 8(sp)
+	ldq	gp, 16(sp)
+#endif
+	.prologue 0
+
+$udiv:
+	stq	t0, 0(sp)
+	LONGIFY	(arg2, divisor)
+	stq	t1, 8(sp)
+	LONGIFY	(arg1, modulus)
+	stq	v0, 16(sp)
+	clr	quotient
+	stq	tmp1, 24(sp)
+	ldiq	mask, 1
+	DIV_ONLY(stq tmp2,32(sp))
+
+	beq	divisor, $divbyzero
+
+	.align 3
+#if SIZE == 8
+	/* Shift divisor left.  */
+1:	cmpult	divisor, modulus, compare
+	blt	divisor, 2f
+	addq	divisor, divisor, divisor
+	addq	mask, mask, mask
+	bne	compare, 1b
+	unop
+2:
+#else
+	/* Shift divisor left using 3-bit shifts as we can't overflow.
+	   This results in looping three times less here, but up to
+	   two more times later.  Thus using a large shift isn't worth it.  */
+1:	cmpult	divisor, modulus, compare
+	s8addq	divisor, zero, divisor
+	s8addq	mask, zero, mask
+	bne	compare, 1b
+#endif
+
+	/* Now go back to the right.  */
+3:	DIV_ONLY(addq quotient, mask, tmp2)
+	srl	mask, 1, mask
+	cmpule	divisor, modulus, compare
+	subq	modulus, divisor, tmp1
+	DIV_ONLY(cmovne compare, tmp2, quotient)
+	srl	divisor, 1, divisor
+	cmovne	compare, tmp1, modulus
+	bne	mask, 3b
+
+$done:	ldq	t0, 0(sp)
+	ldq	t1, 8(sp)
+	ldq	v0, 16(sp)
+	ldq	tmp1, 24(sp)
+	DIV_ONLY(ldq tmp2, 32(sp))
+	lda	sp, STACK(sp)
+	ret	zero, (retaddr), 1
+
+$divbyzero:
+	mov	a0, tmp1
+	ldiq	a0, GEN_INTDIV
+	call_pal PAL_gentrap
+	mov	tmp1, a0
+	clr	result			/* If trap returns, return zero.  */
+	br	$done
+
+	.end UFUNC_NAME
+
+	.ent SFUNC_NAME
+	.globl SFUNC_NAME
+
+	.align 3
+SFUNC_NAME:
+	lda	sp, -STACK(sp)
+	.frame	sp, STACK, retaddr, 0
+#ifdef PROF
+	stq	ra, 0(sp)
+	stq	pv, 8(sp)
+	stq	gp, 16(sp)
 
 	br	AT, 1f
 1:	ldgp	gp, 0(AT)
@@ -119,69 +186,40 @@ FUNC_NAME:
 	mov	retaddr, ra
 	jsr	AT, _mcount
 
-	ldq	ra, 0x00(sp)
-	ldq	pv, 0x08(sp)
-	ldq	gp, 0x10(sp)
-	lda	sp, 0x18(sp)
+	ldq	ra, 0(sp)
+	ldq	pv, 8(sp)
+	ldq	gp, 16(sp)
 #endif
-	.frame	sp, FRAME_SIZE, retaddr, 0
-	lda	sp,-FRAME_SIZE(sp)
-	.prologue 1
-	stq	arg1,0x00(sp)
-	LONGIFYarg1
-	stq	arg2,0x08(sp)
-	LONGIFYarg2
-	stq	mask,0x10(sp)
-	bis	zero,1,mask
-	stq	tmp0,0x18(sp)
-	bis	zero,zero,quotient
-	stq	tmp1,0x20(sp)
-	beq	divisor,$divbyzero
-	stq	sign,0x28(sp)
-	GETSIGN(dividend,divisor,sign)
-#if SIGNED
-	subq	zero,dividend,tmp0
-	subq	zero,divisor,tmp1
-	cmovlt	dividend,tmp0,dividend
-	cmovlt	divisor,tmp1,divisor
-#endif
-	/*
-	 * Shift divisor left until either bit 63 is set or until it
-	 * is at least as big as the dividend:
-	 */
-	.align	3
-1:	cmpule	dividend,divisor,AT
-	blt	divisor,2f
-	blbs	AT,2f
-	addq	mask,mask,mask
-	addq	divisor,divisor,divisor
-	br	1b
+	.prologue 0
 
-	.align	3
-2:	addq	mask,quotient,tmp0
-	cmpule	divisor,dividend,AT
-	subq	dividend,divisor,tmp1
-	srl	divisor,1,divisor
-	srl	mask,1,mask
-	cmovlbs	AT,tmp0,quotient
-	cmovlbs	AT,tmp1,dividend
-	bne	mask,2b
+	or	arg1, arg2, AT
+	_SLONGIFY(AT)
+	bge	AT, $udiv		/* don't need to mess with signs */
 
-	ldq	arg1,0x00(sp)
-	SETSIGN(sign,result,tmp0)
-$done:	ldq	arg2,0x08(sp)
-	ldq	mask,0x10(sp)
-	ldq	tmp0,0x18(sp)
-	ldq	tmp1,0x20(sp)
-	ldq	sign,0x28(sp)
-	lda	sp,FRAME_SIZE(sp)
-	ret	zero,(retaddr),0
+	/* Save originals and find absolute values.  */
+	stq	arg1, 0(sp)
+	NEG	(arg1, AT)
+	stq	arg2, 8(sp)
+	cmovge	AT, AT, arg1
+	stq	retaddr, 16(sp)
+	NEG	(arg2, AT)
+	stq	tmp1, 24(sp)
+	cmovge	AT, AT, arg2
 
-$divbyzero:
-	lda	a0,GEN_INTDIV(zero)
-	call_pal PAL_gentrap
-	bis	zero,zero,result	/* if trap returns, return 0 */
-	ldq	arg1,0x00(sp)
-	br	$done
+	/* Do the unsigned division.  */
+	bsr	retaddr, UFUNC_NAME
 
-	END(FUNC_NAME)
+	/* Restore originals and adjust the sign of the result.  */
+	ldq	arg1, 0(sp)
+	ldq	arg2, 8(sp)
+	GETSIGN	(AT)
+	NEG	(result, tmp1)
+	_SLONGIFY(AT)
+	ldq	retaddr, 16(sp)
+	cmovlt	AT, tmp1, result
+	ldq	tmp1, 24(sp)
+
+	lda	sp, STACK(sp)
+	ret	zero, (retaddr), 1
+
+	.end	SFUNC_NAME

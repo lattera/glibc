@@ -31,7 +31,14 @@ Cambridge, MA 02139, USA.  */
 	.set noat
 
 ENTRY(strrchr)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
 
 	zapnot	a1, 1, a1	# e0    : zero extend our test character
 	mov	zero, t6	# .. e1 : t6 is last match aligned addr

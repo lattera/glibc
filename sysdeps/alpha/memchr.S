@@ -40,7 +40,14 @@ For correctness consider that:
         .set noat
 
 ENTRY(memchr)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
 
 	beq	a2, $not_found
         ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)

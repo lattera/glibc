@@ -27,6 +27,10 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY(strcpy)
 	ldgp	gp, 0(pv)
+#ifdef PROF
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+#endif
 	.prologue 1
 
 	mov	a0, v0		# set up return value

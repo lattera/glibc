@@ -19,7 +19,15 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY(__htonl)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
 	.prologue 0
+#endif
+
 	extlh	a0, 5, t1	# t1 = dd000000
 	zap	a0, 0xfd, t2	# t2 = 0000cc00
 	sll	t2, 5, t2	# t2 = 00198000

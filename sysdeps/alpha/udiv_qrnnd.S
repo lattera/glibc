@@ -27,8 +27,15 @@
 	.text
 
 LEAF(__udiv_qrnnd, 0)
-
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
         .prologue 0
+#endif
+
 #define cnt	$2
 #define tmp	$3
 #define rem_ptr	$16
@@ -38,9 +45,9 @@ LEAF(__udiv_qrnnd, 0)
 #define qb	$20
 
 	ldiq	cnt,16
-	blt	d,.Largedivisor
+	blt	d,$largedivisor
 
-.Loop1:	cmplt	n0,0,tmp
+$loop1:	cmplt	n0,0,tmp
 	addq	n1,n1,n1
 	bis	n1,tmp,n1
 	addq	n0,n0,n0
@@ -73,12 +80,12 @@ LEAF(__udiv_qrnnd, 0)
 	cmovne	qb,tmp,n1
 	bis	n0,qb,n0
 	subq	cnt,1,cnt
-	bgt	cnt,.Loop1
+	bgt	cnt,$loop1
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1
 
-.Largedivisor:
+$largedivisor:
 	and	n0,1,$4
 
 	srl	n0,1,n0
@@ -90,7 +97,7 @@ LEAF(__udiv_qrnnd, 0)
 	srl	d,1,$5
 	addq	$5,$6,$5
 
-.Loop2:	cmplt	n0,0,tmp
+$loop2:	cmplt	n0,0,tmp
 	addq	n1,n1,n1
 	bis	n1,tmp,n1
 	addq	n0,n0,n0
@@ -123,27 +130,30 @@ LEAF(__udiv_qrnnd, 0)
 	cmovne	qb,tmp,n1
 	bis	n0,qb,n0
 	subq	cnt,1,cnt
-	bgt	cnt,.Loop2
+	bgt	cnt,$loop2
 
 	addq	n1,n1,n1
 	addq	$4,n1,n1
-	bne	$6,.LOdd
+	bne	$6,$Odd
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1
 
-.LOdd:
+$Odd:
 	/* q' in n0. r' in n1 */
 	addq	n1,n0,n1
+
 	cmpult	n1,n0,tmp	# tmp := carry from addq
-	beq	tmp,.LLp6
-	addq	n0,1,n0
-	subq	n1,d,n1
-.LLp6:	cmpult	n1,d,tmp
-	bne	tmp,.LLp7
-	addq	n0,1,n0
-	subq	n1,d,n1
-.LLp7:
+	subq	n1,d,AT
+	addq	n0,tmp,n0
+	cmovne	tmp,AT,n1
+
+	cmpult	n1,d,tmp
+	addq	n0,1,AT
+	cmoveq	tmp,AT,n0
+	subq	n1,d,AT
+	cmoveq	tmp,AT,n1
+
 	stq	n1,0(rem_ptr)
 	bis	$31,n0,$0
 	ret	$31,($26),1

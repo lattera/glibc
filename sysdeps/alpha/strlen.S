@@ -34,6 +34,15 @@ Cambridge, MA 02139, USA.  */
 	.set noat
 
 ENTRY(strlen)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+#else
+	.prologue 0
+#endif
+
 	ldq_u   t0, 0(a0)	# load first quadword (a0 may be misaligned)
 	lda     t1, -1(zero)
 	insqh   t1, a0, t1
