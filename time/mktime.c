@@ -528,6 +528,6 @@ main (int argc, char **argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -DHAVE_TIME_R_POSIX -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -Wall -W -O -g mktime.c -o mktime"
 End:
 */
