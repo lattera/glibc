@@ -92,6 +92,7 @@ CFLAGS-nscd_setup_thread.c += -fpie
 CFLAGS-aicache.c += -fpie
 CFLAGS-selinux.c += -fpie
 CFLAGS-initgrcache.c += -fpie
+CFLAGS-gai.c += -fpie
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \

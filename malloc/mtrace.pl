@@ -165,17 +165,18 @@ while (<DATA>) {
 	if ($cols[$n] eq "+") {
 	    if (defined $allocated{$allocaddr}) {
 		printf ("+ %#0@XXX@x Alloc %d duplicate: %s %s\n",
-			hex($allocaddr), $nr, $wherewas{$allocaddr}, $where);
+			hex($allocaddr), $nr, &location($addrwas{$allocaddr}),
+			$where);
 	    } else {
 		$allocated{$allocaddr}=$howmuch;
-		$wherewas{$allocaddr}=&location($where);
+		$addrwas{$allocaddr}=$where;
 	    }
 	    last SWITCH;
 	}
 	if ($cols[$n] eq "-") {
 	    if (defined $allocated{$allocaddr}) {
 		undef $allocated{$allocaddr};
-		undef $wherewas{$allocaddr};
+		undef $addrwas{$allocaddr};
 	    } else {
 		printf ("- %#0@XXX@x Free %d was never alloc'd %s\n",
 			hex($allocaddr), $nr, &location($where));
@@ -185,7 +186,7 @@ while (<DATA>) {
 	if ($cols[$n] eq "<") {
 	    if (defined $allocated{$allocaddr}) {
 		undef $allocated{$allocaddr};
-		undef $wherewas{$allocaddr};
+		undef $addrwas{$allocaddr};
 	    } else {
 		printf ("- %#0@XXX@x Realloc %d was never alloc'd %s\n",
 			hex($allocaddr), $nr, &location($where));
@@ -196,10 +197,10 @@ while (<DATA>) {
 	    if (defined $allocated{$allocaddr}) {
 		printf ("+ %#0@XXX@x Realloc %d duplicate: %#010x %s %s\n",
 			hex($allocaddr), $nr, $allocated{$allocaddr},
-			$wherewas{$allocaddr}, &location($where));
+			&location($addrwas{$allocaddr}), &location($where));
 	    } else {
 		$allocated{$allocaddr}=$howmuch;
-		$wherewas{$allocaddr}=&location($where);
+		$addrwas{$allocaddr}=$where;
 	    }
 	    last SWITCH;
 	}
@@ -227,7 +228,7 @@ if ($#addrs >= 0) {
 		$anything=1;
 	    }
 	    printf ("%#0@XXX@x %#8x  at %s\n", hex($addr), $allocated{$addr},
-		    $wherewas{$addr});
+		    &location($addrwas{$addr}));
 	}
     }
 }
