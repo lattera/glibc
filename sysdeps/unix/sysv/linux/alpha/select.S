@@ -19,7 +19,21 @@
 #include <sysdep-cancel.h>
 #define _ERRNO_H        1
 #include <bits/errno.h>
+#include "kernel-features.h"
 
+.text
+
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define SELECT	__select_tv64
+#else
+#define SELECT	__select
+#endif
+
+#if defined __ASSUME_TIMEVAL64
+PSEUDO(SELECT, select, 5)
+	ret
+PSEUDO_END(SELECT)
+#else
 /* The problem here is that initially we made struct timeval compatible with
    OSF/1, using int32.  But we defined time_t with uint64, and later found
    that POSIX requires tv_sec to be time_t.
@@ -29,14 +43,6 @@
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
 .comm __libc_missing_axp_tv64, 4
-
-.text
-
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-#define SELECT	__select_tv64
-#else
-#define SELECT	__select
-#endif
 
 LEAF(SELECT, 64)
 	ldgp	gp, 0(pv)
@@ -210,6 +216,7 @@ $error:
 	SYSCALL_ERROR_HANDLER
 
 END(SELECT)
+#endif /* __ASSUME_TIMEVAL64 */
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__select_tv64, __select, GLIBC_2.1)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -17,13 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <sysdep.h>
 #include <signal.h>
 
 /* When there is kernel support for more than 64 signals, we'll have to
    switch to a new system call convention here.  */
-
-extern unsigned long __osf_sigprocmask (int how, unsigned long newmask);
 
 int
 __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
@@ -32,15 +31,14 @@ __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
   long result;
 
   if (set)
-    {
-      setval = set->__val[0];
-    }
+    setval = set->__val[0];
   else
     {
       setval = 0;
       how = SIG_BLOCK;	/* ensure blocked mask doesn't get changed */
     }
-  result = __osf_sigprocmask (how, setval);
+
+  result = INLINE_SYSCALL (osf_sigprocmask, 2, how, setval);
   if (result == -1)
     /* If there are ever more than 63 signals, we need to recode this
        in assembler since we wouldn't be able to distinguish a mask of

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,21 @@
 #include <sysdep.h>
 #define _ERRNO_H        1
 #include <bits/errno.h>
+#include "kernel-features.h"
 
+.text
+
+#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
+#define SETTIMEOFDAY	__settimeofday_tv64
+#else
+#define SETTIMEOFDAY	__settimeofday
+#endif
+
+#if defined __ASSUME_TIMEVAL64
+PSEUDO(SETTIMEOFDAY, settimeofday, 2)
+	ret
+PSEUDO_END(SETTIMEOFDAY)
+#else
 /* The problem here is that initially we made struct timeval compatible with
    OSF/1, using int32.  But we defined time_t with uint64, and later found
    that POSIX requires tv_sec to be time_t.
@@ -29,14 +43,6 @@
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
 .comm __libc_missing_axp_tv64, 4
-
-.text
-
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-#define SETTIMEOFDAY	__settimeofday_tv64
-#else
-#define SETTIMEOFDAY	__settimeofday
-#endif
 
 LEAF(SETTIMEOFDAY, 16)
 	ldgp	gp, 0(pv)
@@ -97,6 +103,7 @@ $error:
 	SYSCALL_ERROR_HANDLER
 
 END(SETTIMEOFDAY)
+#endif /* __ASSUME_TIMEVAL64 */
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 default_symbol_version (__settimeofday_tv64, __settimeofday, GLIBC_2.1)

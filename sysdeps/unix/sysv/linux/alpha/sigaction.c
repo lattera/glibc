@@ -1,6 +1,5 @@
-/* Copyright (C) 1997, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,18 +16,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <sys/ustat.h>
-#include <sys/sysmacros.h>
 #include <sysdep.h>
 
-int
-ustat (dev_t dev, struct ustat *ubuf)
-{
-  unsigned int k_dev;
+/*
+ * In order to get the hidden arguments for rt_sigaction set up
+ * properly, we need to call the assembly version.  Detect this in the
+ * INLINE_SYSCALL macro, and fail to expand inline in that case.
+ */
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)       \
+        (__NR_##name == __NR_rt_sigaction       \
+         ? __syscall_rt_sigaction(args)         \
+         : INLINE_SYSCALL1(name, nr, args))
 
-  return INLINE_SYSCALL (ustat, 2, k_dev, ubuf);
-}
+#include <sysdeps/unix/sysv/linux/sigaction.c>

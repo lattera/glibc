@@ -17,7 +17,11 @@
    02111-1307 USA.  */
 
 #include <shlib-compat.h>
+#include <sysdep.h>
+#include <sys/time.h>
+#include "kernel-features.h"
 
+#if !defined __ASSUME_TIMEVAL64 || SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 struct timeval32
 {
     int tv_sec, tv_usec;
@@ -55,7 +59,7 @@ struct timex32 {
 #define TIMEVAL		timeval32
 #define TIMEX		timex32
 #define ADJTIME		__adjtime_tv32
-#define ADJTIMEX(x)	__adjtimex_tv32 (x)
+#define ADJTIMEX(x)	INLINE_SYSCALL (old_adjtimex, 1, x)
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #define LINKAGE
 #else
@@ -63,13 +67,18 @@ struct timex32 {
 #endif
 
 LINKAGE int ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv);
-extern int ADJTIMEX (struct TIMEX *);
 
 #include <sysdeps/unix/sysv/linux/adjtime.c>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+int __adjtimex_tv32 (struct timex32 *tx) { return ADJTIMEX (tx); }
+strong_alias (__adjtimex_tv32, __adjtimex_tv32_1);
+strong_alias (__adjtimex_tv32, __adjtimex_tv32_2);
+compat_symbol (libc, __adjtimex_tv32_1, __adjtimex, GLIBC_2_0);
+compat_symbol (libc, __adjtimex_tv32_2, adjtimex, GLIBC_2_0);
 compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2_0);
 #endif
+#endif /* !__ASSUME_TIMEVAL64 || SHLIB_COMPAT */
 
 #undef TIMEVAL
 #define TIMEVAL		timeval
@@ -78,34 +87,38 @@ compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2_0);
 #undef ADJTIME
 #define ADJTIME		__adjtime_tv64
 #undef ADJTIMEX
-#define ADJTIMEX(x)	__syscall_adjtimex_tv64 (x)
+#define ADJTIMEX(x)	INLINE_SYSCALL (adjtimex, 1, x)
 #undef LINKAGE
 #define LINKAGE		static
 
 LINKAGE int ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv);
-extern int ADJTIMEX (struct TIMEX *);
 
 #include <sysdeps/unix/sysv/linux/adjtime.c>
-static int missing_adjtimex = 0;
+#include <stdbool.h>
+
+#if !defined __ASSUME_TIMEVAL64
+static bool missing_adjtimex;
 
 int
 __adjtime (itv, otv)
      const struct timeval *itv;
      struct timeval *otv;
 {
+  struct timeval32 itv32, otv32;
   int ret;
 
-  if (!missing_adjtimex)
+  switch (missing_adjtimex)
     {
+    case false:
       ret = __adjtime_tv64 (itv, otv);
       if (ret && errno == ENOSYS)
 	missing_adjtimex = 1;
-    }
+      else
+	break;
 
-  if (missing_adjtimex)
-    {
-      struct timeval32 itv32, otv32;
+      /* FALLTHRU */
 
+    default:
       itv32.tv_sec = itv->tv_sec;
       itv32.tv_usec = itv->tv_usec;
       ret = __adjtime_tv32 (&itv32, &otv32);
@@ -114,31 +127,38 @@ __adjtime (itv, otv)
 	  otv->tv_sec = otv32.tv_sec;
 	  otv->tv_usec = otv32.tv_usec;
 	}
+      break;
     }
 
   return ret;
 }
+#else
+strong_alias (__adjtime_tv64, __adjtime);
+#endif
 
 versioned_symbol (libc, __adjtime, adjtime, GLIBC_2_1);
-
-extern int __syscall_adjtimex_tv64 (struct timex *tx);
 
 int
 __adjtimex_tv64 (struct timex *tx)
 {
+#if defined __ASSUME_TIMEVAL64
+  return ADJTIMEX (tx);
+#else
+  struct timex32 tx32;
   int ret;
 
-  if (!missing_adjtimex)
-   {
-     ret = __syscall_adjtimex_tv64 (tx);
-     if (ret && errno == ENOSYS)
-	missing_adjtimex = 1;
-   }
-
-  if (missing_adjtimex)
+  switch (missing_adjtimex)
     {
-      struct timex32 tx32;
+    case false:
+      ret = ADJTIMEX (tx);
+      if (ret && errno == ENOSYS)
+	missing_adjtimex = 1;
+      else
+	break;
 
+      /* FALLTHRU */
+
+    default:
       tx32.modes = tx->modes;
       tx32.offset = tx->offset;
       tx32.freq = tx->freq;
@@ -184,9 +204,11 @@ __adjtimex_tv64 (struct timex *tx)
 	  tx->errcnt = tx32.errcnt;
 	  tx->stbcnt = tx32.stbcnt;
 	}
+      break;
     }
 
   return ret;
+#endif
 }
 
 strong_alias (__adjtimex_tv64, __adjtimex_internal);

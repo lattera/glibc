@@ -152,7 +152,7 @@ __LABEL(name)						\
 ({						\
 	long _sc_ret, _sc_err;			\
 	inline_syscall##nr(name, args);		\
-	if (_sc_err)				\
+	if (__builtin_expect (_sc_err, 0))	\
 	  {					\
 	    __set_errno (_sc_ret);		\
 	    _sc_ret = -1L;			\

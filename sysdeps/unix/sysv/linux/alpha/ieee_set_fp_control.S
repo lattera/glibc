@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>, 1995.
 
@@ -30,9 +30,13 @@ LEAF(__ieee_set_fp_control, 16)
 	jsr	AT, (AT), _mcount
 	.set at
 	.prologue 1
-#else
+#elif defined PIC
 	lda	sp, -16(sp)
 	.prologue 0
+#else
+	ldgp	gp, 0(pv)
+	lda	sp, -16(sp)
+	.prologue 1
 #endif
 
 	stq	a0, 0(sp)
@@ -47,10 +51,6 @@ LEAF(__ieee_set_fp_control, 16)
 	ret
 
 $error:
-#ifndef PROF
-	br	gp, 1f
-1:	ldgp	gp, 0(gp)
-#endif
 	lda	sp, 16(sp)
 	SYSCALL_ERROR_HANDLER
 

@@ -13,7 +13,6 @@ semtimedop	-	semtimedop	i:ipip	semtimedop
 semget		-	semget		i:iii	__semget	semget
 oldsemctl	EXTRA	semctl		i:iiii	__old_semctl	semctl@GLIBC_2.0
 
-osf_sigprocmask	-	osf_sigprocmask	2	__osf_sigprocmask
 sigstack	-	sigstack	2	sigstack
 vfork		-	vfork		0	__vfork		vfork
 
@@ -33,10 +32,6 @@ ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 readahead	-	readahead	3	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
-
-# these are actually common with the x86:
-sys_ustat	ustat	ustat		i:ip	__syscall_ustat
-sys_mknod	xmknod	mknod		i:sii	__syscall_mknod
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
@@ -64,9 +59,6 @@ pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 pciconfig_iobase EXTRA	pciconfig_iobase 3	__pciconfig_iobase pciconfig_iobase
 
-# Wrapper for adjtimex.
-adjtimex       -       syscall_adjtimex 1      __syscall_adjtimex syscall_adjtimex
-
 # support old timeval32 entry points
 osf_select	-	osf_select	C:5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
 osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
@@ -76,7 +68,3 @@ osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
 osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
 osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
 osf_wait4	-	osf_wait4	2	__wait4_tv32  wait4@GLIBC_2.0
-old_adjtimex	-	old_adjtimex	1	__adjtimex_tv32  __adjtimex@GLIBC_2.0 adjtimex@GLIBC_2.0
-
-# and one for timeval64 entry points
-adjtimex	adjtime	adjtimex	1	__syscall_adjtimex_tv64
