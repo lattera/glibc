@@ -1,3 +1,7 @@
+2001-02-13  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add __ftruncate64.
+
 2001-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-paper.c (paper_output): Pretty printing.

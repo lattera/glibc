@@ -11,7 +11,7 @@ statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64
+ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64 __ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
 setrlimit	-	setrlimit	2	__setrlimit	setrlimit setrlimit64
