@@ -1,7 +1,62 @@
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Declare local variable
+	result if necessary.
+
+	* sysdeps/unix/sysv/linux/i386/bits/resource.h: Don't depend on the
+	unreliable kernel headers.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: New file.
+
+1999-12-18  Andreas Jaeger  <aj@suse.de>
+
+	* config.make.in (datadir): Added.
+	Closes PR libc/1491. Patch by dervishd@jazzfree.com.
+
+1999-12-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/ftruncate64.c (ftruncate64): Save and
+	set errno.
+	* sysdeps/unix/sysv/linux/truncate64.c (truncate64): Likewise.
+
+1999-12-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/fxstat64.c: Rewrite to use fstat64
+	syscall if available.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise for lstat64.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise for stat64.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_STAT64_SYSCALL): New.
+
+1999-12-17  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): New macro to force a
+	cache flush.
+	* elf/dl-reloc.c (_dl_relocate_object): Add call to flush cache
+	after .text segment fixups.
+
+1999-12-16  Andreas Jaeger  <aj@suse.de>
+
+	* rt/aio.h: Remove erroneous __restrict declarations.
+
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* scripts/rellns-sh: Find pwd program also in /usr/bin and let shell
+	do the job if it is there neither.
+	Patch by David R. Conrad <drc@adni.net> (PR libc/1485).
+
+1999-12-16  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/bits/nan.h (NAN): Rename union to avoid
+	duplicate definition with function __nan.
+	Closes PR libc/1487 reported by <diana@kai.com>.
+
 1999-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
-	* string/bits/string2.h (__strtok_r_1c): Help gcc optimizing string
-	access.
+	* string/bits/string2.h (__strsep): Help gcc optimizing string access.
 
 	* locale/programs/ld-collate.c: Implement handling of absolute
 	ellipsis.  Parsing of file and constructing the internal data

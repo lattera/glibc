@@ -172,7 +172,7 @@ extern int __REDIRECT (aio_write, (struct aiocb *__aiocbp) __THROW,
 		       aio_write64);
 
 extern int __REDIRECT (lio_listio,
-		       (int __mode, struct aiocb *__const __restrict __list[],
+		       (int __mode, struct aiocb *__const __list[],
 			int __nent, struct sigevent *__restrict __sig) __THROW,
 		       lio_listio64);
 
@@ -186,7 +186,7 @@ extern int __REDIRECT (aio_cancel,
 		       aio_cancel64);
 
 extern int __REDIRECT (aio_suspend,
-		       (__const struct aiocb *__const __restrict __list[],
+		       (__const struct aiocb *__const __list[],
 			int __nent,
 			__const struct timespec *__restrict __timeout) __THROW,
 		       aio_suspend64);

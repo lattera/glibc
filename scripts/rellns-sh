@@ -22,15 +22,23 @@ if test $# -ne 2; then
   exit 1
 fi
 
+if test -x /bin/pwd; then
+  pwd=/bin/pwd
+elif test -x /usr/bin/pwd; then
+  pwd=/usr/bin/pwd
+else
+  pwd='pwd'
+fi
+
 # Make both paths absolute.
 if test -d $1; then
-  to=`cd $1 && /bin/pwd`
+  to=`cd $1 && $pwd`
 else
   temp=`echo $1 | sed 's%/*[^/]*$%%'`
   if test -z "$temp"; then
-    to=`/bin/pwd`
+    to=`$pwd`
   else
-    to=`cd $temp && /bin/pwd`
+    to=`cd $temp && $pwd`
   fi
   to="$to/`echo $1 | sed 's%.*/\([^/][^/]*\)$%\1%'`"
 fi
@@ -43,9 +51,9 @@ else
 fi
 
 if test -z "$from"; then
-  from=`/bin/pwd | sed 's%^/%%'`
+  from=`$pwd | sed 's%^/%%'`
 else
-  from=`cd $from && /bin/pwd | sed 's%^/%%'`
+  from=`cd $from && $pwd | sed 's%^/%%'`
 fi
 
 while test -n "$to" && test -n "$from"; do

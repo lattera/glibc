@@ -32,6 +32,14 @@
   && VALID_ELF_OSABI (hdr[EI_OSABI]) \
   && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
 
+#define CLEAR_CACHE(BEG,END)						\
+{									\
+  register unsigned long _beg __asm ("a1") = (unsigned long)(BEG);	\
+  register unsigned long _end __asm ("a2") = (unsigned long)((END) - (BEG));\
+  register unsigned long _flg __asm ("a3") = 0;				\
+  __asm __volatile ("swi 0x9f0002");					\
+}
+
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int __attribute__ ((unused))
 elf_machine_matches_host (Elf32_Half e_machine)

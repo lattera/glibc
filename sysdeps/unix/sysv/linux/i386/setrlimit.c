@@ -50,7 +50,7 @@ __new_setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
       /* Check if the new ugetrlimit syscall exists.  We must do this
 	 first because older kernels don't reject negative rlimit
 	 values in setrlimit.  */
-      result = INLINE_SYSCALL (ugetrlimit, 2, resource, &rlimits_small);
+      int result = INLINE_SYSCALL (ugetrlimit, 2, resource, &rlimits_small);
       if (result != -1 || errno != ENOSYS)
 	/* The syscall exists.  */
 	__have_no_new_getrlimit = -1;

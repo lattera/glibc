@@ -33,73 +33,51 @@
 enum __rlimit_resource
 {
   /* Per-process CPU limit, in seconds.  */
-  _RLIMIT_CPU = RLIMIT_CPU,
-#undef RLIMIT_CPU
-  RLIMIT_CPU = _RLIMIT_CPU,
+  RLIMIT_CPU = 0,
 #define RLIMIT_CPU RLIMIT_CPU
 
   /* Largest file that can be created, in bytes.  */
-  _RLIMIT_FSIZE = RLIMIT_FSIZE,
-#undef RLIMIT_FSIZE
-  RLIMIT_FSIZE = _RLIMIT_FSIZE,
+  RLIMIT_FSIZE = 1,
 #define	RLIMIT_FSIZE RLIMIT_FSIZE
 
   /* Maximum size of data segment, in bytes.  */
-  _RLIMIT_DATA = RLIMIT_DATA,
-#undef RLIMIT_DATA
-  RLIMIT_DATA = _RLIMIT_DATA,
+  RLIMIT_DATA = 2,
 #define	RLIMIT_DATA RLIMIT_DATA
 
   /* Maximum size of stack segment, in bytes.  */
-  _RLIMIT_STACK = RLIMIT_STACK,
-#undef RLIMIT_STACK
-  RLIMIT_STACK = _RLIMIT_STACK,
+  RLIMIT_STACK = 3,
 #define	RLIMIT_STACK RLIMIT_STACK
 
   /* Largest core file that can be created, in bytes.  */
-  _RLIMIT_CORE = RLIMIT_CORE,
-#undef RLIMIT_CORE
-  RLIMIT_CORE = _RLIMIT_CORE,
+  RLIMIT_CORE = 4,
 #define	RLIMIT_CORE RLIMIT_CORE
 
   /* Largest resident set size, in bytes.
      This affects swapping; processes that are exceeding their
      resident set size will be more likely to have physical memory
      taken from them.  */
-  _RLIMIT_RSS = RLIMIT_RSS,
-#undef RLIMIT_RSS
-  RLIMIT_RSS = _RLIMIT_RSS,
+  RLIMIT_RSS = 5,
 #define	RLIMIT_RSS RLIMIT_RSS
 
   /* Number of open files.  */
-  _RLIMIT_NOFILE = RLIMIT_NOFILE,
-#undef RLIMIT_NOFILE
-  RLIMIT_NOFILE = _RLIMIT_NOFILE,
+  RLIMIT_NOFILE = 7,
   RLIMIT_OFILE = RLIMIT_NOFILE, /* BSD name for same.  */
 #define RLIMIT_NOFILE RLIMIT_NOFILE
 #define RLIMIT_OFILE RLIMIT_OFILE
 
   /* Address space limit (?) */
-  _RLIMIT_AS = RLIMIT_AS,
-#undef RLIMIT_AS
-  RLIMIT_AS = _RLIMIT_AS,
+  RLIMIT_AS = 9,
 #define RLIMIT_AS RLIMIT_AS
 
   /* Number of processes.  */
-  _RLIMIT_NPROC = RLIMIT_NPROC,
-#undef RLIMIT_NPROC
-  RLIMIT_NPROC = _RLIMIT_NPROC,
+  RLIMIT_NPROC = 6,
 #define RLIMIT_NPROC RLIMIT_NPROC
 
   /* Locked-in-memory address space.  */
-  _RLIMIT_MEMLOCK = RLIMIT_MEMLOCK,
-#undef RLIMIT_MEMLOCK
-  RLIMIT_MEMLOCK = _RLIMIT_MEMLOCK,
+  RLIMIT_MEMLOCK = 8,
 #define RLIMIT_MEMLOCK RLIMIT_MEMLOCK
 
-  RLIMIT_NLIMITS = RLIM_NLIMITS,
-#undef RLIM_NLIMITS
-  RLIM_NLIMITS = RLIMIT_NLIMITS
+  RLIM_NLIMITS = 10
 #define RLIMIT_NLIMITS RLIMIT_NLIMITS
 #define RLIM_NLIMITS RLIM_NLIMITS
 };

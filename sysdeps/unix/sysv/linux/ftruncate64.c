@@ -43,6 +43,9 @@ ftruncate64 (fd, length)
     {
       unsigned int low = length & 0xffffffff;
       unsigned int high = length >> 32;
+#ifndef __ASSUME_TRUNCATE64_SYSCALL
+      int saved_errno = errno;
+#endif
       int result = INLINE_SYSCALL (ftruncate64, 3, fd, low, high);
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
@@ -51,6 +54,7 @@ ftruncate64 (fd, length)
 	return result;
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
+      __set_errno (saved_errno);
       have_no_ftruncate64 = 1;
 #endif
     }

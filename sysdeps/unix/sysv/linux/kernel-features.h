@@ -85,7 +85,12 @@
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 #endif
 
-/* On x86 the truncate64/ftruncate64 syscalls were introduced in 2.3.31.  */
+/* On x86 the mmap2 syscall was introduced in 2.3.31.  */
 #if __LINUX_KERNEL_VERSION >= 131871 && defined __i386__
 # define __ASSUME_MMAP2_SYSCALL	1
+#endif
+
+/* On x86 the stat64/lstat64/fstat64 syscalls were introduced in 2.3.34.  */
+#if __LINUX_KERNEL_VERSION >= 131874 && defined __i386__
+# define __ASSUME_STAT64_SYSCALL	1
 #endif

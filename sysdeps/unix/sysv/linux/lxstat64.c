@@ -1,5 +1,5 @@
 /* lxstat64 using old-style Unix lstat system call.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,20 +25,46 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <xstatconv.c>
+#if __ASSUME_STAT64_SYSCALL == 0
+# include <xstatconv.c>
+#endif
 
 extern int __syscall_lstat (const char *, struct kernel_stat *);
+
+#ifdef __NR_lstat64
+extern int __syscall_lstat64 (const char *, struct stat64 *);
+# if  __ASSUME_STAT64_SYSCALL == 0
+/* The variable is shared between all wrappers around *stat64 calls.  */
+extern int have_no_stat64;
+# endif
+#endif
 
 /* Get information about the file NAME in BUF.  */
 int
 __lxstat64 (int vers, const char *name, struct stat64 *buf)
 {
+#ifdef __ASSUME_STAT64_SYSCALL
+  return INLINE_SYSCALL (lstat64, 2, name, &buf);
+#else
   struct kernel_stat kbuf;
   int result;
+# ifdef __NR_lstat64
+  if (! have_no_stat64)
+    {
+      int saved_errno = errno;
+      result = INLINE_SYSCALL (lstat64, 2, name, &kbuf);
 
+      if (result != -1 || errno != ENOSYS)
+	return result;
+
+      __set_errno (saved_errno);
+      have_no_stat64 = 1;
+    }
+# endif
   result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
   if (result == 0)
     result = xstat64_conv (vers, &kbuf, buf);
 
   return result;
+#endif
 }

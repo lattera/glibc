@@ -131,6 +131,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    if (__mprotect (mapstart, mapend - mapstart, prot) < 0)
 	      _dl_signal_error (errno, l->l_name,
 				"can't restore segment prot after reloc");
+
+#ifdef CLEAR_CACHE
+	    CLEAR_CACHE (mapstart, mapend);
+#endif 
 	  }
     }
 }

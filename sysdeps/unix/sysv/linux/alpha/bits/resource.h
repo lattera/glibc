@@ -1,4 +1,4 @@
-/* Bit values & structures for resource limits.  SPARC/Linux version.
+/* Bit values & structures for resource limits.  Alpha/Linux version.
    Copyright (C) 1994, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -65,15 +65,15 @@ enum __rlimit_resource
 #define RLIMIT_OFILE RLIMIT_OFILE
 
   /* Address space limit (?) */
-  RLIMIT_AS = 9,
+  RLIMIT_AS = 7,
 #define RLIMIT_AS RLIMIT_AS
 
   /* Number of processes.  */
-  RLIMIT_NPROC = 7,
+  RLIMIT_NPROC = 8,
 #define RLIMIT_NPROC RLIMIT_NPROC
 
   /* Locked-in-memory address space.  */
-  RLIMIT_MEMLOCK = 8,
+  RLIMIT_MEMLOCK = 9,
 #define RLIMIT_MEMLOCK RLIMIT_MEMLOCK
 
   RLIM_NLIMITS = 10
@@ -82,20 +82,6 @@ enum __rlimit_resource
 };
 
 /* Value to indicate that there is no limit.  */
-#if __WORDSIZE == 64
-
-#ifndef __USE_FILE_OFFSET64
-# define RLIM_INFINITY ((unsigned long int)(~0UL))
-#else
-# define RLIM_INFINITY 0xffffffffffffffffuLL
-#endif
-
-#ifdef __USE_LARGEFILE64
-# define RLIM64_INFINITY 0xffffffffffffffffuLL
-#endif
-
-#else
-
 #ifndef __USE_FILE_OFFSET64
 # define RLIM_INFINITY ((long int)(~0UL >> 1))
 #else
@@ -104,8 +90,6 @@ enum __rlimit_resource
 
 #ifdef __USE_LARGEFILE64
 # define RLIM64_INFINITY 0x7fffffffffffffffLL
-#endif
-
 #endif
 
 /* We can represent all limits.  */

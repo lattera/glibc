@@ -43,6 +43,9 @@ truncate64 (path, length)
     {
       unsigned int low = length & 0xffffffff;
       unsigned int high = length >> 32;
+#ifndef __ASSUME_TRUNCATE64_SYSCALL
+      int saved_errno = errno;
+#endif
       int result = INLINE_SYSCALL (truncate64, 3, path, low, high);
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
@@ -51,6 +54,7 @@ truncate64 (path, length)
 	return result;
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
+      __set_errno (saved_errno);
       have_no_truncate64 = 1;
 #endif
     }
