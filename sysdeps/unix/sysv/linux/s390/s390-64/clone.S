@@ -26,28 +26,31 @@
 #include <bits/errno.h>
 
 /* int __clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
-               void *tls, pid_t *parent_tid, pid_t *child_tid);  */
+               pid_t *parent_tid, void *tls, pid_t *child_tid);  */
 /* sys_clone  (void *child_stack, unsigned long flags,
                pid_t *parent_tid, pid_t *child_tid, void *tls);  */
 
 	.text
 ENTRY(__clone)
-	/* Sanity check arguments & move registers */
+	stg	%r6,48(%r15)		/* store %r6 to save area */
 	lgr	%r0,%r5			/* move *arg out of the way */
-	ltgr	%r1,%r2			/* no NULL function pointers */
-	lghi	%r2,-EINVAL
-	jgz	SYSCALL_ERROR_LABEL
-	ltgr	%r3,%r3			/* no NULL stack pointers */
-	jgz	SYSCALL_ERROR_LABEL
-	/* set up registers, then call SVC */
-	lgr	%r2,%r3
-	lgr	%r3,%r4
-	lmg	%r4,%r5,160(%r15)
+	ltgr    %r1,%r2			/* check fn and move to %r1 */
+	jz      error			/* no NULL function pointers */
+	ltgr    %r2,%r3			/* check child_stack and move to %r2 */
+	jz	error			/* no NULL stack pointers */
+	lgr	%r3,%r4			/* move flags to %r3 */
+	lgr	%r4,%r6			/* move parent_tid to %r4 */
+	lg	%r5,168(%r15)		/* load child_tid from stack */
+	l	%r6,160(%r15)		/* load tls from stack */
 	svc	SYS_ify(clone)
+	lg	%r6,48(%r15)		/* restore %r6 */
 	ltgr	%r2,%r2			/* check return code */
 	jgm	SYSCALL_ERROR_LABEL
 	jz	thread_start
 	br	%r14
+error:
+	lghi	%r2,-EINVAL
+	jg	SYSCALL_ERROR_LABEL
 
 thread_start:
 	/* fn is in gpr 1, arg in gpr 0 */

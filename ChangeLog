@@ -1,3 +1,9 @@
+2003-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Reorder additional
+	clone parameters to match the order used on ia32.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+
 2003-01-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* elf/elf.h: Add new s390 relocs.
