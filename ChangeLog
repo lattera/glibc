@@ -1,5 +1,7 @@
 2001-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/time.c: Include <stddef.h> for NULL.
+
 	* conform/data/time.h-data: CLK_TCK is not in XPG6.  Fix tzname entry.
 	* sysdeps/mach/hurd/bits/time.h: Don't define CLK_TCK for XPG6.
 	* sysdeps/mach/hurd/i386/bits/time.h: Likewise.
