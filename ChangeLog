@@ -1,3 +1,9 @@
+2003-11-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/tst-rxspencer.c (check_match): @ without any following
+	characters must match only end of string.
+	(main): Fix filename in error message.
+
 2003-11-12  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/dl-machine.h: Force inlining of

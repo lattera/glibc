@@ -184,7 +184,7 @@ check_match (regmatch_t *rm, int idx, const char *string,
 	  return 1;
 	}
 
-      if (strncmp (string + rm[idx].rm_so, match + 1, strlen (match + 1)))
+      if (strncmp (string + rm[idx].rm_so, match + 1, strlen (match + 1) ?: 1))
 	{
 	  printf ("%s rm[%d] not matching %s\n", fail, idx, match);
 	  return 1;
@@ -395,7 +395,7 @@ main (int argc, char **argv)
   f = fopen (argv[optind], "r");
   if (f == NULL)
     {
-      fprintf (stderr, "Couldn't open %s\n", argv[1]);
+      fprintf (stderr, "Couldn't open %s\n", argv[optind]);
       return 1;
     }
 
