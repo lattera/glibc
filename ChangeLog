@@ -1,3 +1,40 @@
+2002-09-17  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	Ported to PowerPC64 running Linux.
+	* sysdeps/powerpc/powerpc64/Dist: New file.
+	* sysdeps/powerpc/powerpc64/Implies: New file.
+	* sysdeps/powerpc/powerpc64/Makefile: New file.
+	* sysdeps/powerpc/powerpc64/__longjmp.S: New file.
+	* sysdeps/powerpc/powerpc64/atomicity.h: New file.
+	* sysdeps/powerpc/powerpc64/backtrace.c: New file.
+	* sysdeps/powerpc/powerpc64/bp-asm.h: New file.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: New file.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: New file.
+	* sysdeps/powerpc/powerpc64/dl-dtprocnum.h: New file.
+	* sysdeps/powerpc/powerpc64/dl-lookupcfg.h: New file.
+	* sysdeps/powerpc/powerpc64/dl-machine.c: New file.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: New file.
+	* sysdeps/powerpc/powerpc64/memset.S: New file.
+	* sysdeps/powerpc/powerpc64/ppc-mcount.S: New file.
+	* sysdeps/powerpc/powerpc64/register-dump.h: New file.
+	* sysdeps/powerpc/powerpc64/setjmp.S: New file.
+	* sysdeps/powerpc/powerpc64/stpcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/strcmp.S: New file.
+	* sysdeps/powerpc/powerpc64/strcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/strlen.S: New file.
+	* sysdeps/powerpc/powerpc64/elf/bzero.S: New file.
+	* sysdeps/powerpc/powerpc64/elf/start.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignf.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions: New File.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: New file.
+
 2002-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h: Change *hidden_proto macros to accept
