@@ -32,6 +32,9 @@
 
 2004-10-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c: Remove compatibility code which is unused in
+	glibc and probably bitrotten.
+
 	* debug/execinfo.h: Remove __THROW from backtrace prototype.
 
 2004-10-22  Jakub Jelinek  <jakub@redhat.com>
