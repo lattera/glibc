@@ -385,7 +385,11 @@ _dl_map_object_deps (struct link_map *map,
 
   for (nlist = 0, runp = known; runp; runp = runp->unique)
     {
-      map->l_searchlist.r_list[nlist++] = runp->map;
+      if (trace_mode && runp->map->l_opencount == 0)
+	/* This can happen when we trace the loading.  */
+	--map->l_searchlist.r_nlist;
+      else
+	map->l_searchlist.r_list[nlist++] = runp->map;
 
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
@@ -406,7 +410,11 @@ _dl_map_object_deps (struct link_map *map,
 			  "cannot allocate symbol search list");
 
       for (cnt = 0, runp = known; runp; runp = runp->dup)
-	map->l_searchlist.r_duplist[cnt++] = runp->map;
+	if (trace_mode && runp->map->l_opencount == 0)
+	  /* This can happen when we trace the loading.  */
+	  --map->l_searchlist.r_nduplist;
+	else
+	  map->l_searchlist.r_duplist[cnt++] = runp->map;
     }
 
   /* Now that all this succeeded put the objects in the global scope if

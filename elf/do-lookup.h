@@ -56,18 +56,9 @@ FCT (const char *undef_name, unsigned long int hash,
       if (skip != NULL && map == skip)
 	continue;
 
-      /* Skip objects that could not be opened, which can occur in trace
-	 mode.  */
-      if (map->l_opencount == 0)
-	continue;
-
       /* Don't search the executable when resolving a copy reloc.  */
       if (elf_machine_lookup_noexec_p (reloc_type)
 	  && map->l_type == lt_executable)
-	continue;
-
-      /* Skip objects without symbol tables.  */
-      if (map->l_info[DT_SYMTAB] == NULL)
 	continue;
 
       /* Print some debugging info if wanted.  */

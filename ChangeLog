@@ -1,5 +1,10 @@
 1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-deps.c (_dl_map_object_deps): Don't add dummy objects created
+	for tracing to the scope lists.
+	* elf/do-lookup.h: Remove test for l_opencount == 0 after above change.
+	DT_SYMTAB is always available according to ELF spec.
+
 	* elf/dl-lookup.c (_dl_lookup_symbol_skip): Before first do_lookup
 	call test whether there is any scope left.
 	(_dl_lookup_versioned_symbol_skip): Likewise.
