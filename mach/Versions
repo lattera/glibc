@@ -65,6 +65,9 @@ libc {
   GLIBC_2.2.5 {
     # internal functions used by other libraries (e.g. librt)
     __mach_msg_destroy; __mach_reply_port;
+
+    # This was always there, but not exported as it should have been.
+    mig_strncpy;
   }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
