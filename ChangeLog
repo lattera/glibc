@@ -1,3 +1,12 @@
+2000-01-23  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.c (GET_UNSIGNED_NUMBER): Allow only ASCII digits.
+
+2000-01-23  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.c (compile_range): When matching a character
+	range, use the current collating sequence, as POSIX requires.
+
 2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/argz-stringify.c: Handle case of missing \0 at the end of

@@ -1769,7 +1769,7 @@ typedef struct
   { if (p != pend)							\
      {									\
        PATFETCH (c); 							\
-       while (ISDIGIT (c)) 						\
+       while ('0' <= c && c <= '9')					\
          { 								\
            if (num < 0)							\
               num = 0;							\
@@ -3423,49 +3423,53 @@ group_in_compile_stack (compile_stack, regnum)
    `regex_compile' itself.  */
 
 static reg_errcode_t
-compile_range (range_start, p_ptr, pend, translate, syntax, b)
-     unsigned int range_start;
-    const char **p_ptr, *pend;
-    RE_TRANSLATE_TYPE translate;
-    reg_syntax_t syntax;
-    unsigned char *b;
+compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
+     unsigned int range_start_char;
+     const char **p_ptr, *pend;
+     RE_TRANSLATE_TYPE translate;
+     reg_syntax_t syntax;
+     unsigned char *b;
 {
   unsigned this_char;
 
   const char *p = *p_ptr;
-  unsigned int range_end;
+  reg_errcode_t ret;
+  char range_start[2];
+  char range_end[2];
+  char ch[2];
 
   if (p == pend)
     return REG_ERANGE;
 
-  /* Even though the pattern is a signed `char *', we need to fetch
-     with unsigned char *'s; if the high bit of the pattern character
-     is set, the range endpoints will be negative if we fetch using a
-     signed char *.
-
-     We also want to fetch the endpoints without translating them; the
+  /* Fetch the endpoints without translating them; the
      appropriate translation is done in the bit-setting loop below.  */
-  /* The SVR4 compiler on the 3B2 had trouble with unsigned const char *.  */
-  range_end   = ((const unsigned char *) p)[0];
+  range_start[0] = range_start_char;
+  range_start[1] = '\0';
+  range_end[0] = p[0];
+  range_end[1] = '\0';
 
   /* Have to increment the pointer into the pattern string, so the
      caller isn't still at the ending character.  */
   (*p_ptr)++;
 
-  /* If the start is after the end, the range is empty.  */
-  if (range_start > range_end)
-    return syntax & RE_NO_EMPTY_RANGES ? REG_ERANGE : REG_NOERROR;
+  /* Report an error if the range is empty and the syntax prohibits this.  */
+  ret = syntax & RE_NO_EMPTY_RANGES ? REG_ERANGE : REG_NOERROR;
 
   /* Here we see why `this_char' has to be larger than an `unsigned
-     char' -- the range is inclusive, so if `range_end' == 0xff
-     (assuming 8-bit characters), we would otherwise go into an infinite
-     loop, since all characters <= 0xff.  */
-  for (this_char = range_start; this_char <= range_end; this_char++)
+     char' -- we would otherwise go into an infinite loop, since all
+     characters <= 0xff.  */
+  ch[1] = '\0';
+  for (this_char = 0; this_char <= (unsigned char) -1; ++this_char)
     {
-      SET_LIST_BIT (TRANSLATE (this_char));
+      ch[0] = this_char;
+      if (strcoll (range_start, ch) <= 0 && strcoll (ch, range_end) <= 0)
+	{
+	  SET_LIST_BIT (TRANSLATE (this_char));
+	  ret = REG_NOERROR;
+	}
     }
 
-  return REG_NOERROR;
+  return ret;
 }
 
 /* re_compile_fastmap computes a ``fastmap'' for the compiled pattern in
