@@ -1,3 +1,12 @@
+Tue Apr 30 17:30:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurdsig_abort_rpcs): Add timeout argument to
+	interrupt_operation call.
+	(_hurdsig_interrupt_timeout): New variable.
+
+	* hurd/report-wait.c (describe_number): Correctly allocate space
+	in DESCRIPTION for the digits in I.
+
 Mon Apr 29 00:11:59 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* errno.h [!__error_t_defined] (error_t): New type.
