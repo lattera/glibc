@@ -257,22 +257,22 @@ _dl_non_dynamic_init (void)
 
   if (__libc_enable_secure)
     {
-      static const char *unsecure_envvars[] =
-      {
-	UNSECURE_ENVVARS,
+      static const char unsecure_envvars[] =
+	UNSECURE_ENVVARS
 #ifdef EXTRA_UNSECURE_ENVVARS
 	EXTRA_UNSECURE_ENVVARS
 #endif
-      };
-      size_t cnt;
+	;
+      const char *cp = unsecure_envvars;
 
-      for (cnt = 0;
-	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
-	   ++cnt)
-	unsetenv (unsecure_envvars[cnt]);
+      while (cp < unsecure_envvars + sizeof (unsecure_envvars))
+	{
+	  __unsetenv (cp);
+	  cp = (const char *) __rawmemchr (cp, '\0') + 1;
+	}
 
       if (__access ("/etc/suid-debug", F_OK) != 0)
-	unsetenv ("MALLOC_CHECK_");
+	__unsetenv ("MALLOC_CHECK_");
     }
 
 #ifdef DL_PLATFORM_INIT

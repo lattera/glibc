@@ -1,5 +1,8 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-support.c (_dl_non_dynamic_init): Fix cleaning of
+	environment.  [BZ #384]
+
 	* sunrpc/clnt_udp.c (is_network_up): Use getifaddrs instead of ioctl.
 	* sunrpc/get_myaddr.c (get_myaddress): Likewise.
 	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
