@@ -1,4 +1,6 @@
-1998-10-22 12:49  Ulrich Drepper  <drepper@cygnus.com>
+1998-10-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/rpc/auth.h (AUTH_DH): New macro.  Alias for AUTH_DES.
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Drastically simplify and
 	improve INLINE_SYSCALL using macro assembler magic.

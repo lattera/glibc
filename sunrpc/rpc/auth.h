@@ -176,6 +176,7 @@ extern AUTH *authdes_pk_create __P ((const char *, netobj *, u_int,
 #define	AUTH_UNIX	AUTH_SYS
 #define	AUTH_SHORT	2		/* short hand unix style */
 #define AUTH_DES	3		/* des style (encrypted timestamps) */
+#define AUTH_DH		AUTH_DES	/* Diffie-Hellman (this is DES) */
 #define AUTH_KERB       4               /* kerberos style */
 
 /*
