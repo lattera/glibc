@@ -81,6 +81,7 @@ static const char rcsid[] = "$BINDId: res_init.c,v 8.16 2000/05/09 07:10:12 vixi
 #include <ctype.h>
 #include <resolv.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -226,6 +227,8 @@ __res_vinit(res_state statp, int preinit) {
 	 line[sizeof(name) - 1] == '\t'))
 
 	if ((fp = fopen(_PATH_RESCONF, "r")) != NULL) {
+		/* No threads use this stream.  */
+		__fsetlocking (fp, FSETLOCKING_BYCALLER);
 	    /* read the config file */
 	    while (fgets_unlocked(buf, sizeof(buf), fp) != NULL) {
 		/* skip comments */

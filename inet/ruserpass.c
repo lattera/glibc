@@ -39,6 +39,7 @@ static char sccsid[] = "@(#)ruserpass.c	8.3 (Berkeley) 4/2/94";
 #include <errno.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -119,6 +120,8 @@ ruserpass(host, aname, apass)
 			warn("%s", buf);
 		return (0);
 	}
+	/* No threads use this stream.  */
+	__fsetlocking (cfile, FSETLOCKING_BYCALLER);
 	if (__gethostname(myname, sizeof(myname)) < 0)
 		myname[0] = '\0';
 	mydomain = __strchrnul(myname, '.');

@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <alloca.h>
 #include <mntent.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -33,7 +34,13 @@
 FILE *
 __setmntent (const char *file, const char *mode)
 {
-  return fopen (file, mode);
+  FILE *result = fopen (file, mode);
+
+  if (result != NULL)
+    /* We do the locking ourselves.  */
+    __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+  return result;
 }
 weak_alias (__setmntent, setmntent)
 

@@ -25,6 +25,7 @@
 #include <search.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -357,6 +358,9 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
      ignore it.  */
   if (fp == NULL)
     return;
+
+  /* No threads reading from this stream.  */
+  __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
   /* Process the known entries of the file.  Comments start with `#' and
      end with the end of the line.  Empty lines are ignored.  */

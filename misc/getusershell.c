@@ -35,6 +35,7 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -116,6 +117,8 @@ initshells()
 		strings = NULL;
 		return (char **) okshells;
 	}
+	/* No threads using this stream.  */
+	__fsetlocking (fp, FSETLOCKING_BYCALLER);
 	sp = shells;
 	cp = strings;
 	flen = statb.st_size;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -55,7 +56,12 @@ getpass (prompt)
       out = stderr;
     }
   else
-    out = in;
+    {
+      /* We do the locking ourselves.  */
+      __fsetlocking (tf, FSETLOCKING_BYCALLER);
+
+      out = in;
+    }
 
   flockfile (out);
 

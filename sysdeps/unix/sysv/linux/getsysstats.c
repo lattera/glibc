@@ -24,6 +24,7 @@
 #include <mntent.h>
 #include <paths.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -151,6 +152,8 @@ __get_nprocs ()
       fp = fopen (proc_cpuinfo, "r");
       if (fp != NULL)
 	{
+	  /* No threads use this stream.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
 	  GET_NPROCS_PARSER (fp, buffer, result);
 	  fclose (fp);
 	}
@@ -186,6 +189,8 @@ __get_nprocs_conf ()
       fp = fopen (proc_cpuinfo, "r");
       if (fp != NULL)
 	{
+	  /* No threads use this stream.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
 	  GET_NPROCS_CONF_PARSER (fp, buffer, result);
 	  fclose (fp);
 	}
@@ -224,6 +229,9 @@ phys_pages_info (const char *format)
       fp = fopen (proc_meminfo, "r");
       if (fp != NULL)
 	{
+	  /* No threads use this stream.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
 	  result = 0;
 	  /* Read all lines and count the lines starting with the
 	     string "processor".  We don't have to fear extremely long

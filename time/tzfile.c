@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -149,6 +150,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   f = fopen (file, "r");
   if (f == NULL)
     return;
+
+  /* No threads reading this stream.  */
+  __fsetlocking (f, FSETLOCKING_BYCALLER);
 
   if (fread_unlocked ((void *) &tzhead, sizeof (tzhead), 1, f) != 1)
     goto lose;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <net/if.h>
@@ -338,6 +339,9 @@ _res_hconf_init (void)
     _res_hconf.service[_res_hconf.num_services++] = SERVICE_BIND;
   else
     {
+      /* No threads using this stream.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
       while (fgets_unlocked (buf, sizeof (buf), fp))
 	{
 	  ++line_num;

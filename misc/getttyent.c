@@ -33,6 +33,7 @@ static char sccsid[] = "@(#)getttyent.c	8.1 (Berkeley) 6/4/93";
 
 #include <ttyent.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -190,8 +191,11 @@ setttyent()
 	if (tf) {
 		(void)rewind(tf);
 		return (1);
-	} else if ((tf = fopen(_PATH_TTYS, "r")))
+	} else if ((tf = fopen(_PATH_TTYS, "r"))) {
+		/* We do the locking ourselves.  */
+		__fsetlocking (tf, FSETLOCKING_BYCALLER);
 		return (1);
+	}
 	return (0);
 }
 

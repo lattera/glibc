@@ -1,3 +1,25 @@
+2001-07-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/rcmd.c (iruserfopen): Disable implicit locking for the stream.
+	* inet/ruserpass.c (ruserpass): Likewise.
+	* nss/nsswitch.c (nss_parse_file): Likewise.
+	* resolv/res_hconf.c (_res_hconf_init): Likewise.
+	* resolv/res_init.c (__res_vinit): Likewise.
+	* gmon/bb_exit_func.c (__bb_exit_func): Likewise.
+	* misc/getpass.c (getpass): Likewise.
+	* misc/getusershell.c (initshells): Likewise.
+	* misc/getttyent.c (setttyent): Likewise.
+	* misc/mntent_r.c (__setmntent): Likewise.
+	* time/getdate.c (__getdate_r): Likewise.
+	* time/tzfile.c (__tzfile_read): Likewise.
+	* iconv/gconv_conf.c (read_conf_file): Likewise.
+	* intl/localealias.c (read_alias_file): Disable implicit locking
+	for the stream.  Use _unlocked functions for glibc.
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Disable
+	implicit locking for the stream.
+	(__get_nprocs_conf): Likewise.
+	(phys_pages_info): Likewise.
+
 2001-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c: Print messages caused by user application

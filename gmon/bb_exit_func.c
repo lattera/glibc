@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -25,6 +25,7 @@
 #include <sys/types.h>
 
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <string.h>
 
 #define OUT_NAME	"gmon.out"
@@ -43,6 +44,9 @@ __bb_exit_func (void)
       perror (OUT_NAME);
       return;
     }
+  /* No threads use this stream.  */
+  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
   memcpy (&ghdr.cookie[0], GMON_MAGIC, 4);
   memcpy (&ghdr.version, &version, sizeof (version));
   fwrite_unlocked (&ghdr, sizeof (ghdr), 1, fp);

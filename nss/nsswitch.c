@@ -24,6 +24,7 @@
 #include <bits/libc-lock.h>
 #include <search.h>
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -426,6 +427,9 @@ nss_parse_file (const char *fname)
   fp = fopen (fname, "r");
   if (fp == NULL)
     return NULL;
+
+  /* No threads use this stream.  */
+  __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
   result = (name_database *) malloc (sizeof (name_database));
   if (result == NULL)
