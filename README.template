@@ -10,7 +10,7 @@ configurations:
 		m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
 		alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
-		powerpc64-*-linux-gnu	Linux-2.4+ on 64-bit PowerPC systems
+		powerpc64-*-linux-gnu	Linux-2.4.19+ on 64-bit PowerPC systems
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC 64-bit
 		arm-*-none		ARM standalone systems

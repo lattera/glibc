@@ -1,5 +1,11 @@
 2002-09-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
+	* README.template: Minimum Linux kernel for powerpc64 is 2.4.19.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h (struct ipc_perm):
+	Use __uint32_t and __uint64_t for __seq, __pad1, __unused[12] fields
+	so they are consistent between PPC32 and PPC64.
+
 	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h [__WORDSIZE != 32]:
 	(_STAT_VER): Define to _STAT_VER_KERNEL.
 	(stru stat, struct stat64): Define to match the PPC64 kernel.
