@@ -1,5 +1,5 @@
 /* Test compilation of tgmath macros.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com> and
    Ulrich Drepper <drepper@redhat.com>, 2001.
@@ -162,7 +162,7 @@ main (void)
 static void
 F(compile_test) (void)
 {
-  TYPE a, b, c;
+  TYPE a, b, c = 1.0;
   int i;
   long int j;
   long long int k;

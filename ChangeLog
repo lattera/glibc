@@ -1,10 +1,14 @@
+2003-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/test-tgmath.c (F): Initialize c.
+
 2003-04-05  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/ftruncate64.c: New.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/truncate64.c: New.
 	* sysdeps/unix/sysv/linux/kernel-features.h: fcntl64 is available
 	on mips n32.
-	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Explain why 
+	* sysdeps/unix/sysv/linux/mips/kernel_stat.h: Explain why
 	XSTAT_IS_XSTAT64 must not be used for mips n64.  Use 64-bit data
 	structure on n32 as well.
 	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Use POSIX-compliant
