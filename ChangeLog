@@ -1,3 +1,8 @@
+2005-02-22  Roland McGrath  <roland@redhat.com>
+
+	* include/signal.h: Revert last change.
+	(__sigemptyset): Use __builtin_memset instead of memset.
+
 2005-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_message): Use
