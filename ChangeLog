@@ -1,3 +1,8 @@
+2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Avoid crashing for
+	ridiculously large widths and precisions [PR libc/3026].
+
 2002-03-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed: Fix for bi-arch
