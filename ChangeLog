@@ -3,6 +3,8 @@ Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* configure.in (libc_cv_asm_global_directive): New check to define
  	ASM_GLOBAL_DIRECTIVE.
 	* config.h.in: Add #undef ASM_GLOBAL_DIRECTIVE.
+	* libc-symbols.h (strong_alias_asm, strong_alias): Use
+ 	ASM_GLOBAL_DIRECTIVE on the alias.
 
 	* sysdeps/unix/make_errlist.c (main): Don't generate "#ifdef
  	HAVE_WEAK_SYMBOLS" #defns.

@@ -1134,13 +1134,42 @@ if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
 else
   libc_cv_asm_set_directive=no
 fi
-rm -f contest*
+rm -f conftest*
 fi
 
 echo "$ac_t""$libc_cv_asm_set_directive" 1>&4
 if test $libc_cv_asm_set_directive = yes; then
   cat >> confdefs.h <<\EOF
 #define HAVE_ASM_SET_DIRECTIVE 1
+EOF
+
+fi
+
+echo $ac_n "checking for assembler global-symbol directive""... $ac_c" 1>&4
+if eval "test \"`echo '$''{'libc_cv_asm_global_directive'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&4
+else
+  libc_cv_asm_global_directive=UNKNOWN
+for ac_globl in .globl .global; do
+  cat > conftest.s <<EOF
+.text
+${ac_globl} foo
+foo: .long 0
+EOF
+  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+    libc_cv_asm_global_directive=${ac_globl}
+  fi
+  rm -f conftest*
+  test $libc_cv_asm_global_directive != UNKNOWN && break
+done
+fi
+
+echo "$ac_t""$libc_cv_asm_global_directive" 1>&4
+if test $libc_cv_asm_global_directive = UNKNOWN; then
+  { echo "configure: error: cannot determine asm global directive" 1>&2; exit 1; }
+else
+  cat >> confdefs.h <<EOF
+#define ASM_GLOBAL_DIRECTIVE ${libc_cv_asm_global_directive}
 EOF
 
 fi

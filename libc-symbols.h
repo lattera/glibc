@@ -79,37 +79,49 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
+
 /* Define ALIAS as a strong alias for ORIGINAL.  */
 #ifdef HAVE_ASM_SET_DIRECTIVE
 #define strong_alias_asm(original, alias)	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 #ifdef ASSEMBLER
 #define strong_alias(original, alias)	strong_alias_asm (original, alias)
 #else
 #define strong_alias(original, alias)	\
-  asm (".set " __SYMBOL_PREFIX #alias "," __SYMBOL_PREFIX #original);
+  asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
+       ".set " __SYMBOL_PREFIX #alias "," __SYMBOL_PREFIX #original);
 #endif
 #else
 #define strong_alias_asm(original, alias)	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 #ifdef ASSEMBLER
 #define strong_alias(original, alias)	strong_alias_asm (original, alias)
 #else
 #define strong_alias(original, alias)	\
-  asm (__SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
+  asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
+       __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
 #endif
 #endif
 
-/* Define ALIAS as a weak alias for ORIGINAL.
-   If weak aliases are not available, this defines a strong alias.  */
+/* Helper macros used above.  */
+#define __string_1(x) __string_0(x)
+#define __string_0(x) #x
+
+
 #ifdef HAVE_WEAK_SYMBOLS
 #ifdef ASSEMBLER
+
+/* Define ALIAS as a weak alias for ORIGINAL.
+   If weak aliases are not available, this defines a strong alias.  */
 #define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
 /* Declare SYMBOL to be weak.  */
 #define weak_symbol(symbol)	.weak C_SYMBOL_NAME (symbol)
+
 #else
 #define weak_symbol(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
 #define weak_alias(original, alias) \
