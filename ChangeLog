@@ -1,3 +1,8 @@
+2004-07-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Add nloaded variable, load
+	GL(dl_nloaded) into it while still in critical section.
+
 2004-07-06  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nss/getent.c (print_group, print_passwd): Use %lu format for
