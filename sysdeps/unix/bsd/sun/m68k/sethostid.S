@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ SYSCALL (sethostid)
 
 #else
 
-#include <gnu/errno.h>
+#include <errnos.h>
 
 .globl _sethostid
 .even
@@ -34,11 +34,10 @@ _sethostid:
 	moveq #-1, d0
 	rts
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 
-#include <gnu-stabs.h>
-
-stub_warning(sethostid);
+.stabs "warning: sethostid is not implemented and will always fail",30,0,0,0
+.stabs "_sethostid",1,0,0,0
 
 #endif
 
