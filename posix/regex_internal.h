@@ -23,7 +23,6 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,7 +52,7 @@
 #endif
 
 /* This is for other GNU distributions with internationalized messages.  */
-#if HAVE_LIBINTL_H || defined _LIBC
+#if (HAVE_LIBINTL_H && ENABLE_NLS) || defined _LIBC
 # include <libintl.h>
 # ifdef _LIBC
 #  undef gettext

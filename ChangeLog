@@ -1,3 +1,12 @@
+2004-01-28  Paolo Bonzini  <bonzini@gnu.org>
+
+	Merge regex changes in gawk.
+	* posix/regcomp.c (build_range_exp) [!_LIBC]: Check validity
+	of collation elements.
+	* posix/regex.c: Include limits.h.
+	* posix/regex.h: Document REG_ECOLLATE correctly.
+	* posix/regex_internal.h [!_LIBC && !ENABLE_NLS]: Disable NLS.
+
 2004-01-24  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/obstack.h: Import gnulib version.

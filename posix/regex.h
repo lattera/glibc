@@ -313,7 +313,7 @@ typedef enum
   /* POSIX regcomp return error codes.  (In the order listed in the
      standard.)  */
   REG_BADPAT,		/* Invalid pattern.  */
-  REG_ECOLLATE,		/* Not implemented.  */
+  REG_ECOLLATE,		/* Inalid collating element.  */
   REG_ECTYPE,		/* Invalid character class name.  */
   REG_EESCAPE,		/* Trailing backslash.  */
   REG_ESUBREG,		/* Invalid back reference.  */

@@ -74,6 +74,12 @@
 /* POSIX says that <sys/types.h> must be included (by the caller) before
    <regex.h>.  */
 #include <sys/types.h>
+
+/* On some systems, limits.h sets RE_DUP_MAX to a lower value than
+   GNU regex allows.  Include it before <regex.h>, which correctly
+   #undefs RE_DUP_MAX and sets it to the right value.  */
+#include <limits.h>
+
 #include <regex.h>
 #include "regex_internal.h"
 
