@@ -44,25 +44,6 @@ struct msqid_ds
   unsigned long int __unused2;
 };
 
-#ifdef __LIBC_IPC_INTERNAL
-struct __old_msqid_ds
-{
-  struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
-  struct msg *__msg_first;		/* pointer to first message on queue */
-  struct msg *__msg_last;		/* pointer to last message on queue */
-  __time_t msg_stime;			/* time of last msgsnd command */
-  __time_t msg_rtime;			/* time of last msgrcv command */
-  __time_t msg_ctime;			/* time of last change */
-  struct wait_queue *__wwait;		/* ??? */
-  struct wait_queue *__rwait;		/* ??? */
-  unsigned short int __msg_cbytes;	/* current number of bytes on queue */
-  unsigned short int msg_qnum;		/* number of messages currently on queue */
-  unsigned short int msg_qbytes;	/* max number of bytes allowed on queue */
-  __ipc_pid_t msg_lspid;		/* pid of last msgsnd() */
-  __ipc_pid_t msg_lrpid;		/* pid of last msgrcv() */
-};
-#endif
-
 #ifdef __USE_MISC
 
 # define msg_cbytes	__msg_cbytes
