@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,13 @@
 #include <errno.h>
 #include <stddef.h>
 
-static struct speed_struct
+struct speed_struct
 {
   speed_t value;
   speed_t internal;
-} speeds[] =
+};
+
+static const struct speed_struct speeds[] =
   {
 #ifdef B0
     { 0, B0 },

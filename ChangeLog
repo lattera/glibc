@@ -1,5 +1,8 @@
 1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* termios/cfsetspeed.c: Make code cleaner and add missing const.
+	Patch by Joe Keane <jgk@jgk.org>.
+
 	* inet/rcmd.c (__ivaliduser): Check buf for being NULL before
 	free()ing.
 
