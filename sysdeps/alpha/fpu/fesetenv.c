@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
@@ -20,26 +20,32 @@
 
 #include <fenv.h>
 
-void
-fesetenv (const fenv_t *envp)
+int
+__fesetenv (const fenv_t *envp)
 {
-  unsigned long fpcr;
+  unsigned long int fpcr;
   fenv_t env;
 
   /* Magic encoding of default values: high bit set (never possible for a
      user-space address) is not indirect.  And we don't even have to get
      rid of it since we mask things around just below.  */
-  if ((long)envp >= 0)
+  if ((long int) envp >= 0)
     env = *envp;
   else
-    env = (unsigned long)envp;
+    env = (unsigned long int) envp;
 
   /* Reset the rounding mode with the hardware fpcr.  Note that the following
      system call is an implied trap barrier for our modification.  */
-  __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
+  __asm__ __volatile__ ("excb; mf_fpcr %0" : "=f" (fpcr));
   fpcr = (fpcr & ~(3UL << 58)) | (env & (3UL << 58));
-  __asm__ __volatile__("mt_fpcr %0" : : "f"(fpcr));
+  __asm__ __volatile__ ("mt_fpcr %0" : : "f" (fpcr));
 
   /* Reset the exception status and mask with the kernel's FP code.  */
-  __ieee_set_fp_control(env & (FE_ALL_EXCEPT | 0x3e));
+  __ieee_set_fp_control (env & (FE_ALL_EXCEPT | 0x3e));
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetenv, __old_fesetenv)
+symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
+default_symbol_version (__fesetenv, fesetenv, GLIBC_2.1.3);

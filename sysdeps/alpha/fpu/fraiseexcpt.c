@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997.
 
@@ -22,9 +22,10 @@
 #include <math.h>
 
 void
-feraiseexcept (int excepts)
+__feraiseexcept (int excepts)
 {
-  double tmp, dummy;
+  double tmp;
+  double dummy;
 
   /* Raise exceptions represented by EXPECTS.  But we must raise only
      one signal at a time.  It is important the if the overflow/underflow
@@ -36,38 +37,34 @@ feraiseexcept (int excepts)
 
   /* First: invalid exception.  */
   if (FE_INVALID & excepts)
-    {
-      /* One example of a invalid operation is 0 * Infinity.  */
-      __asm__ __volatile__("mult/sui $f31,%1,%0; trapb"
-			   : "=&f"(tmp) : "f"(HUGE_VAL));
-    }
+    /* One example of a invalid operation is 0 * Infinity.  */
+    __asm__ __volatile__("mult/sui $f31,%1,%0; trapb"
+			 : "=&f" (tmp) : "f" (HUGE_VAL));
 
   /* Next: division by zero.  */
   if (FE_DIVBYZERO & excepts)
-    {
-      __asm__ __volatile__("cmpteq $f31,$f31,%1; divt/sui %1,$f31,%0; trapb"
-			   : "=&f"(tmp), "=f"(dummy));
-    }
+    __asm__ __volatile__("cmpteq $f31,$f31,%1; divt/sui %1,$f31,%0; trapb"
+			 : "=&f" (tmp), "=f" (dummy));
 
   /* Next: overflow.  */
   if (FE_OVERFLOW & excepts)
-    {
-      __asm__ __volatile__("mult/sui %1,%1,%0; trapb"
-			   : "=&f"(tmp) : "f"(DBL_MAX));
-    }
+    __asm__ __volatile__("mult/sui %1,%1,%0; trapb"
+			 : "=&f" (tmp) : "f" (DBL_MAX));
 
   /* Next: underflow.  */
   if (FE_UNDERFLOW & excepts)
-    {
-      __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
-			   : "=&f"(tmp) : "f"(DBL_MIN),
-					 "f"((double) (1UL << 60)));
-    }
+    __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
+			 : "=&f" (tmp) : "f" (DBL_MIN),
+			   "f" ((double) (1UL << 60)));
 
   /* Last: inexact.  */
   if (FE_INEXACT & excepts)
-    {
-      __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
-			   : "=&f"(tmp) : "f"(1.0), "f"(M_PI));
-    }
+    __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
+			 : "=&f" (tmp) : "f" (1.0), "f" (M_PI));
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feraiseexcept, __old_feraiseexcept)
+symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
+default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.1.3);

@@ -20,14 +20,20 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-void
-fesetenv (const fenv_t *envp)
+int
+__fesetenv (const fenv_t *envp)
 {
   if (envp == FE_DFL_ENV)
-      _FPU_SETCW(_FPU_DEFAULT);
+    _FPU_SETCW (_FPU_DEFAULT);
   else
     {
-      unsigned long temp = envp->__cw;
-      _FPU_SETCW(temp);
+      unsigned long int temp = envp->__cw;
+      _FPU_SETCW (temp);
     }
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__fesetenv, __old_fesetenv)
+symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
+default_symbol_version (__fesetenv, fesetenv, GLIBC_2.1.3);

@@ -1,5 +1,5 @@
 /* Clear given exceptions in current floating-point environment.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-void
-feclearexcept (int excepts)
+int
+__feclearexcept (int excepts)
 {
   unsigned long int temp;
 
@@ -29,11 +29,17 @@ feclearexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
 
   /* Get the current floating point status. */
-  _FPU_GETCW(temp);
+  _FPU_GETCW (temp);
 
   /* Clear the relevant bits.  */
   temp &= excepts ^ FE_ALL_EXCEPT;
 
   /* Put the new data in effect.  */
-  _FPU_SETCW(temp);
+  _FPU_SETCW (temp);
+
+  /* Success.  */
+  return 0;
 }
+strong_alias (__feclearexcept, __old_feclearexcept)
+symbol_version (__old_feclearexcept, feclearexcept, GLIBC_2.1);
+default_symbol_version (__feclearexcept, feclearexcept, GLIBC_2.1.3);
