@@ -1,3 +1,8 @@
+2004-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Recognize DF_1_NOW.
+	In ld.so, neither DT_FLAGS nor DT_FLAGS_1 must be used.
+
 2004-02-21  Andreas Jaeger  <aj@suse.de>
 
 	* posix/bug-ga1.c: Include <string.h> for memset prototype.
