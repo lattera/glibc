@@ -23,7 +23,12 @@
 int
 main (void)
 {
-  char *dir = getcwd ((char *) NULL, 0);
+  char *dir;
+
+  /* Let this program be used for debugging.  */
+  mtrace ();
+
+  dir = getcwd ((char *) NULL, 0);
 
   if (dir == NULL)
     perror ("getcwd");

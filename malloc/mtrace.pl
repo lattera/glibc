@@ -1,7 +1,7 @@
 #! @PERL@
 eval "exec @PERL@ -S $0 $*"
     if 0;
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1997.
 # Based on the mtrace.awk script.
@@ -30,7 +30,7 @@ sub usage {
     print "  --help       print this help, then exit\n";
     print "  --version    print version number, then exit\n";
     print "\n";
-    print "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
+    print "Report bugs using the `glibcbug' script to <bugs\@gnu.org>.\n";
     exit 0;
 }
 

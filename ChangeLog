@@ -1,3 +1,9 @@
+1998-09-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/pwd.c (main): Add call to mtrace.
+
+	* malloc/mtrace.pl: Quote @ in string.
+
 1998-09-13 19:25  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp.c (parse_arith): Fix memory leaks.
