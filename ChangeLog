@@ -13,6 +13,32 @@
 
 	* manual/process.texi (Creating a Process): Fix typos.
 
+1999-01-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__getcwd): Fail with ENOSYS, don't
+	call abort.  Suggested by Mark Kettenis <kettenis@phys.uva.nl>.
+
+1999-01-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/sys/mtio.h: Moved to...
+	* sysdeps/gnu/sys/mtio.h: ...here.
+	(_IOT_mtop, _IOT_mtget, _IOT_mtpos, _IOT_mtconfiginfo): New macros.
+	* sysdeps/gnu/Dist: Add sys/mtio.h.
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/mtio.h.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_headers): Don't add sys/mtio.h here.
+	* sysdeps/gnu/Makefile [$(subdir) = misc] (sysdep_headers): Add it
+	here instead.
+
+	Revamp Hurd ioctl typing magic to handle `struct' keyword in the
+	ioctl command macros, so we can use Unix-compatible headers that
+	make use of the _IO* macros.
+	* sysdeps/mach/hurd/bits/ioctls.h (_IOC_ENCODE_TYPE,
+	_IOC_ENCODE_TYPE_1, _IOC_ENCODE_TYPE_2, _IOTBASE_struct): New macros.
+	(_IOR, _IOW, _IOWR): Use them _IOC_ENCODE_TYPE(t) instead of _IOT_##t.
+	(_IOT_int, _IOT_char, _IOT_short): Renamed to _IOT__IOTBASE_*.
+	(numerous ioctl command macros): Restore `struct' keyword.
+
 1999-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* ctype/ctype.c (toupper): Correct variable names from lat change.
