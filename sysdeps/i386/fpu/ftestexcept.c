@@ -33,7 +33,7 @@ fetestexcept (int excepts)
   __asm__ ("fnstsw %0" : "=a" (temp));
 
   /* If the CPU supports SSE we test the MXCSR as well.  */
-  if ((GL(dl_hwcap_mask) & HWCAP_I386_XMM) != 0)
+  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
     __asm__ ("stmxcsr %0" : "=m" (*&xtemp));
 
   return (temp | xtemp) & excepts & FE_ALL_EXCEPT;

@@ -39,7 +39,7 @@ feenableexcept (int excepts)
   __asm__ ("fldcw %0" : : "m" (*&new_exc));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
-  if ((GL(dl_hwcap_mask) & HWCAP_I386_XMM) != 0)
+  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
     {
       unsigned int xnew_exc;
 

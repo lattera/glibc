@@ -6,6 +6,12 @@
 	which has undefined symbols.
 	* elf/Makefile: Likewise.
 
+	* sysdeps/i386/fpu/fedisblxcpt.c: Use dl_hwcap, not dl_hwcap_mask.
+	* sysdeps/i386/fpu/feenablxcpt.c: Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fesetround.c: Likewise.
+	* sysdeps/i386/fpu/ftestexcept.c: Likewise.
+
 2003-07-21  HJ Lu  <hongjiu.lu@intel.com>
 
 	* elf/ldconfig.c (search_dir): Treat symlink as regular file
