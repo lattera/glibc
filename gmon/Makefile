@@ -21,7 +21,7 @@
 #
 subdir	:= gmon
 
-headers	:= sys/gmon.h sys/gmon_out.h
+headers	:= sys/gmon.h sys/gmon_out.h sys/profil.h
 distribute := machine-gmon.h profil-counter.h
 routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
 

@@ -1,2 +1,3 @@
 clone.S
+kernel_stat.h
 sys/procfs.h

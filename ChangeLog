@@ -1,3 +1,11 @@
+2001-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/fpu/Dist: Add new files to distribute.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Likewise.
+
+	* gmon/Makefile (headers): Add sys/profil.h.
+
 2001-03-18  Andreas Jaeger  <aj@suse.de>
 
 	* manual/install.texi (Tools for Compilation): Advise to use GCC
