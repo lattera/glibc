@@ -1,3 +1,8 @@
+1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_free): Unmap guard before the stack.
+	Patch by Matthias Urlichs.
+
 1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_free): Detect already free child.

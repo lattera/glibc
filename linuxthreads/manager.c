@@ -336,9 +336,9 @@ static void pthread_free(pthread_descr th)
   if (!th->p_userstack)
     {
       /* Free the stack and thread descriptor area */
-      munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
       if (th->p_guardsize != 0)
 	munmap(th->p_guardaddr, th->p_guardsize);
+      munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
     }
 }
 
