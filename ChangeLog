@@ -1,5 +1,18 @@
 2001-11-09  Roland McGrath  <roland@frob.com>
 
+	Hurd/PowerPC port contributed by Peter Bruin <pjbruin@dds.nl>.
+	* NEWS: Mention it.
+	* sysdeps/mach/hurd/powerpc/exc2signal.c: New file.
+	* sysdeps/mach/hurd/powerpc/init-first.c: New file.
+	* sysdeps/mach/hurd/powerpc/intr-msg.h: New file.
+	* sysdeps/mach/hurd/powerpc/longjmp-ts.c: New file.
+	* sysdeps/mach/hurd/powerpc/register-dump.h: New file.
+	* sysdeps/mach/hurd/powerpc/sigreturn.c: New file.
+	* sysdeps/mach/hurd/powerpc/static-start.S: New file.
+	* sysdeps/mach/hurd/powerpc/trampoline.c: New file.
+	* sysdeps/mach/hurd/powerpc/bits/sigcontext.h: New file.
+	* sysdeps/mach/hurd/powerpc/Dist: New file.
+
 	* hurd/privports.c (__get_privileged_ports):
 	Only contact the proc server if necessary for this call.
 	Suggested by Neal H Walfield <neal@cs.uml.edu>.

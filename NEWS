@@ -16,12 +16,14 @@ Version 2.2.5
 
 * Andreas Jaeger contributed a port to x86_64/Linux.
 
+* Peter Bruin contributed a port to PowerPC/Hurd.
+
 * libc functions using I/O streams now can handle wide-oriented streams
   as well.
 
 * optimizations in the dynamic linker.  binaries created by recent binutils
   versions start up quicker due to reduced time spend on relocations.
-
+
 Version 2.2.4
 
 * Stephen Moshier implemented cosh, expm1, log1p, acos, sinh, tanh,
