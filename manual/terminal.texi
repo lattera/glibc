@@ -1,4 +1,4 @@
-@node Low-Level Terminal Interface, Mathematics, Sockets, Top
+@node Low-Level Terminal Interface, Syslog, Sockets, Top
 @c %MENU% How to change the characteristics of a terminal device
 @chapter Low-Level Terminal Interface
 

@@ -54,9 +54,9 @@ mkinstalldirs = $(..)scripts/mkinstalldirs
 chapters = $(addsuffix .texi, \
 		       intro errno memory ctype string charset locale	\
 		       message search pattern io stdio llio filesys	\
-		       pipe socket terminal math arith time resource	\
-		       setjmp signal startup process job nss users	\
-		       sysinfo conf crypt)
+		       pipe socket terminal syslog math arith time	\
+		       resource setjmp signal startup process job nss	\
+		       users sysinfo conf crypt)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
 

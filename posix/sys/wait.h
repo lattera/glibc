@@ -35,7 +35,7 @@ typedef __pid_t pid_t;
 #endif
 
 /* These macros could also be defined int <stdlib.h>.  */
-#ifndef _STDLIB_H
+#if !defined _STDLIB_H || !defined __USE_XOPEN
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
 # include <bits/waitflags.h>

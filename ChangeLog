@@ -1,5 +1,18 @@
 2000-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/Makefile (chapters): Add syslog.
+	* manual/syslog.texi: New file.
+	* manual/math.texi: Fix references.
+	* manual/terminal.texi: Likewise.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
+
+2000-04-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/sys/wait.h: Define __WAIT_STATUS and the like either if
+	stdlib.h was not included or __USE_XOPEN not defined.
+
+2000-04-23  Ulrich Drepper  <drepper@redhat.com>
+
 	* nss/Makefile (libnss_db-dbs): Remove stry backslash.
 	Patch by Zack Weinberg <zack@wolery.cumb.org>.
 

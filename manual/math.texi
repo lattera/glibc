@@ -27,7 +27,7 @@
 @end ifnottex
 @end ifclear
 
-@node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
+@node Mathematics, Arithmetic, Syslog, Top
 @c %MENU% Math functions, useful constants, random numbers
 @chapter Mathematics
 
