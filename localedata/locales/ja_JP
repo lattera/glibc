@@ -6,6 +6,33 @@ comment_char  %
 % Date:    1999-12-05
 % Write:   HANATAKA, Shinya <hanataka@abyss.rim.or.jp>
 
+LC_IDENTIFICATION
+title      "Japanese language locale for Japan"
+source     "HANATAKA, Shinya, hanataka@abyss.rim.or.jp"
+address    ""
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "Japanese"
+territory  "Japan"
+revision   "1.0"
+date       "2000-07-20"
+%
+category  "ja_JP:2000";LC_IDENTIFICATION
+category  "ja_JP:2000";LC_CTYPE
+category  "ja_JP:2000";LC_COLLATE
+category  "ja_JP:2000";LC_TIME
+category  "ja_JP:2000";LC_NUMERIC
+category  "ja_JP:2000";LC_MONETARY
+category  "ja_JP:2000";LC_MESSAGES
+category  "ja_JP:2000";LC_PAPER
+category  "ja_JP:2000";LC_NAME
+category  "ja_JP:2000";LC_ADDRESS
+category  "ja_JP:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
 LC_CTYPE
 upper	<U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;/
 	<U0049>;<U004A>;<U004B>;<U004C>;<U004D>;<U004E>;<U004F>;<U0050>;/
@@ -18596,3 +18623,54 @@ alt_digits	"<U3007>";"<U4E00>";"<U4E8C>";"<U4E09>";"<U56DB>";"<U4E94>";/
 		"<U4E5D><U5341><U516D>";"<U4E5D><U5341><U4E03>";/
 		"<U4E5D><U5341><U516B>";"<U4E5D><U5341><U4E5D>"
 END LC_TIME
+
+
+LC_PAPER
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_PAPER category
+height      297
+width       210
+
+END LC_PAPER
+
+
+LC_NAME
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_NAME category.
+%
+name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
+<U0025><U0067>"
+name_gen    ""
+name_mr     "<U004D><U0072><U002E>"
+name_mrs    "<U004D><U0072><U0073><U002E>"
+name_miss   "<U004D><U0069><U0073><U0073><U002E>"
+name_ms     "<U004D><U0073><U002E>"
+
+END LC_NAME
+
+
+LC_ADDRESS
+% This is the ISO_IEC TR14652 Locale definition for the
+% LC_ADDRESS
+postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
+<U0025><U0062><U0025><U0065><U0025><U0072>"
+
+END LC_ADDRESS
+
+
+LC_TELEPHONE
+% This is the ISO_IEC TR14652 Locale definition for the
+%
+tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
+<U003B><U0025><U006C>"
+int_prefix  "<U0038><U0031>"
+
+END LC_TELEPHONE
+
+
+LC_MEASUREMENT
+% This is the ISO_IEC TR14652 Locale definition for the
+%
+measurement 1
+
+END LC_MEASUREMENT

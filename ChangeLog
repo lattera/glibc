@@ -1,3 +1,19 @@
+2000-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_trans.c (__gconv_transliterate): Pass NULL instead of
+	irreversible in recursive call of conversion function to signal that
+	no error handling is wanted.
+	* iconv/loop.c (ignore_errors_p): irreversible must be != NULL, too.
+	(STANDARD_ERR_HANDLER): Don't do anything if irreversible == NULL.
+	* iconv/skeleton.c (lirreversiblep): New variable.  Set to NULL is
+	recursive error handling call, otherwise to &lirreversible.  Use it
+	for calls to conversion functions.
+	* iconv/gconv_simple.c (ucs4_internal_loop): Don't handle errors when
+	transliterating.
+	(ucs4_internal_loop_unaligned): Likewise.
+	(ucs4le_internal_loop): Likewise.
+	(ucs4le_internal_loop_unaligned): Likewise.
+
 2000-08-25  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/memchr.S: Check high bound against chars
