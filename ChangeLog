@@ -1,3 +1,8 @@
+2000-09-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__access): New function.  Dummy
+	implementation for use by the dynamic linker.
+
 2000-09-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Protect DN_* by

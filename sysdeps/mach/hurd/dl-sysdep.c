@@ -654,6 +654,17 @@ __xstat (int vers, const char *file, struct stat *buf)
   return 0;
 }
 
+/* This function is called by the dynamic linker (rtld.c) to check
+   whether debugging malloc is allowed even for SUID binaries.  This
+   stub will always fail, which means that malloc-debugging is always
+   disabled for SUID binaries.  */
+int weak_function
+__access (const char *file, int type)
+{
+  errno = ENOSYS;
+  return -1;
+}
+
 pid_t weak_function
 __getpid ()
 {
