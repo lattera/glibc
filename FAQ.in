@@ -319,6 +319,8 @@ There are some failures which are not directly related to the GNU libc:
   the test cases in the math subdirectory will fail.  Linux 2.2 has
   fixes for the floating point support on Alpha.  The Linux/SPARC kernel has
   also some bugs in the FPU emulation code (as of Linux 2.2.0).
+- Other tools might have problems.  For example bash 2.03 gives a
+  segmentation fault running the tst-rpmatch.sh test script.
 
 ??	What is symbol versioning good for?  Do I need it?
 
