@@ -19,9 +19,8 @@
 subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
-		   eval
-distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo
+distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
 		   modcxaatexit.c modstatic.c \
 		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c
@@ -34,7 +33,6 @@ ifeq ($(versioning),yes)
 libdl-routines	+= dlopenold
 libdl-shared-only-routines := dlopenold
 endif
-libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
@@ -58,7 +56,7 @@ modules-names += modstatic
 tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 endif
 
-extra-objs += $(modules-names:=.os) eval.os
+extra-objs += $(modules-names:=.os)
 generated := $(modules-names:=.so)
 
 include ../Rules
