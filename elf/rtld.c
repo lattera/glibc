@@ -708,6 +708,25 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    GL(dl_loaded)->l_map_end = allocend;
 	}
 	break;
+#ifdef USE_TLS
+      case PT_TLS:
+	/* Note that in the case the dynamic linker we duplicate work
+	   here since we read the PT_TLS entry already in
+	   _dl_start_final.  But the result is repeatable so do not
+	   check for this special but unimportant case.  */
+	GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
+	GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
+	GL(dl_loaded)->l_tls_initimage = (void *) (GL(dl_loaded)->l_addr
+						   + ph->p_offset);
+	/* This is the first element of the initialization image list.
+	   It is created as a circular list so that we can easily
+	   append to it.  */
+	GL(dl_initimage_list) = GL(dl_loaded)->l_tls_nextimage = GL(dl_loaded);
+
+	/* This image get the ID one.  */
+	GL(dl_tls_module_cnt) = GL(dl_loaded)->l_tls_modid = 1;
+	break;
+#endif
       }
   if (! GL(dl_loaded)->l_map_end)
     GL(dl_loaded)->l_map_end = ~0;

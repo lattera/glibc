@@ -292,6 +292,9 @@ struct rtld_global
      thread-local storage sections.  This will be traversed to
      initialize new TLS blocks.  */
   EXTERN struct link_map *_dl_initimage_list;
+
+  /* Count the number of modules which define TLS data.  */
+  EXTERN size_t _dl_tls_module_cnt;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
