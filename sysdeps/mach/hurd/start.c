@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/exec.h>
 #include <sysdep.h>
 #include <hurd/threadvar.h>
+#include <unistd.h>
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
 
