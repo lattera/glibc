@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,14 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   finddomain loadmsgcat localealias textdomain
 aux =	   l10nflist explodename plural plural-exp hash-string
 distribute = gmo.h gettextP.h hash-string.h loadinfo.h locale.alias \
-	     plural.y plural-exp.h po2test.sed tst-gettext.sh tst-translit.sh \
-	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po tstcodeset.po\
-	     tst-codeset.sh plural-eval.c
+	     plural.y plural-exp.h plural-eval.c po2test.sed \
+	     tst-gettext.sh \
+	     tst-translit.sh translit.po \
+	     tst-gettext2.sh tstlang1.po tstlang2.po \
+	     tst-codeset.sh tstcodeset.po \
+	     tst-gettext3.sh
 
-test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset
+test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset tst-gettext3
 tests = tst-ngettext
 
 before-compile = $(objpfx)msgs.h
@@ -56,7 +59,7 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 ifneq ($(strip $(MSGFMT)),:)
 tests: $(objpfx)tst-translit.out $(objpfx)tst-gettext2.out \
-       $(objpfx)tst-codeset.out
+       $(objpfx)tst-codeset.out $(objpfx)tst-gettext3.out
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-gettext
 endif
@@ -72,6 +75,8 @@ $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 $(objpfx)tst-codeset.out: tst-codeset.sh $(objpfx)tst-codeset
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
+$(objpfx)tst-gettext3.out: tst-gettext3.sh $(objpfx)tst-gettext3
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 endif
 endif
 
@@ -80,13 +85,15 @@ $(objpfx)msgs.h: po2test.sed ../po/de.po
 	LC_ALL=C sed -f $^ > $@
 
 CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
-CFLAGS-tst-gettext2.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext2.c = -DOBJPFX=\"$(objpfx)\"
 CFLAGS-tst-codeset.c = -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext3.c = -DOBJPFX=\"$(objpfx)\"
 
 $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-gettext2.out: $(objpfx)tst-gettext.out
 $(objpfx)tst-codeset.out: $(objpfx)tst-gettext.out
+$(objpfx)tst-gettext3.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'LOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
