@@ -26,7 +26,7 @@
 static void *
 tf1 (void *arg)
 {
-  pthread_join (arg, NULL);
+  pthread_join ((pthread_t) arg, NULL);
 
   puts ("1st join returned");
 
@@ -37,7 +37,7 @@ tf1 (void *arg)
 static void *
 tf2 (void *arg)
 {
-  pthread_join (arg, NULL);
+  pthread_join ((pthread_t) arg, NULL);
 
   puts ("2nd join returned");
 

@@ -1,3 +1,30 @@
+2003-03-23  Roland McGrath  <roland@redhat.com>
+
+	* tst-join5.c (tf1, tf2): Add a cast.
+
+	* Makeconfig (includes): Append -I$(..)nptl to this variable.
+
+	* tst-barrier2.c (do_test) [! _POSIX_THREAD_PROCESS_SHARED]:
+	Don't test anything.
+	* tst-cond4.c: Likewise.
+	* tst-cond6.c: Likewise.
+	* tst-flock2.c: Likewise.
+	* tst-mutex4.c: Likewise.
+	* tst-rwlock4.c: Likewise.
+	* tst-signal1.c: Likewise.
+	* tst-spin2.c: Likewise.
+	* tst-cond11.c [! _POSIX_CLOCK_SELECTION]: Likewise.
+
+	* tst-mutex4.c: Use test-skeleton.c.
+	* tst-spin2.c: Likewise.
+	* tst-sysconf.c: Likewise.
+	* tst-barrier2.c: Likewise.
+	* tst-cond4.c: Likewise.
+	* tst-cond6.c: Likewise.
+	* tst-rwlock4.c: Likewise.
+	* tst-unload.c: Likewise.
+	* tst-flock2.c (do_test): Use return instead of exit.
+
 2003-03-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.c (__fork): Add libc_hidden_def.

@@ -24,6 +24,7 @@
 #include <unistd.h>
 
 
+#if _POSIX_CLOCK_SELECTION
 static int
 run_test (clockid_t cl)
 {
@@ -149,15 +150,23 @@ run_test (clockid_t cl)
 
   return 0;
 }
+#endif
 
 
 static int
 do_test (void)
 {
+#if ! _POSIX_CLOCK_SELECTION
+
+  puts ("_POSIX_CLOCK_SELECTION not supported, test skipped");
+  return 0;
+
+#else
+
   int res = run_test (CLOCK_REALTIME);
 
-#if defined _POSIX_MONOTONIC_CLOCK
-# if _POSIX_MONOTONIC_CLOCK == 0
+# if defined _POSIX_MONOTONIC_CLOCK
+#  if _POSIX_MONOTONIC_CLOCK == 0
   int e = sysconf (_SC_MONOTONIC_CLOCK);
   if (e < 0)
     puts ("CLOCK_MONOTONIC not supported");
@@ -167,13 +176,14 @@ do_test (void)
       res = 1;
     }
   else
-# endif
+#  endif
     res |= run_test (CLOCK_MONOTONIC);
-#else
+# else
   puts ("_POSIX_MONOTONIC_CLOCK not defined");
-#endif
+# endif
 
   return res;
+#endif
 }
 
 #define TIMEOUT 3

@@ -29,10 +29,16 @@
 
 int *condition;
 
-
-int
-main (void)
+static int
+do_test (void)
 {
+#if ! _POSIX_THREAD_PROCESS_SHARED
+
+  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
+  return 0;
+
+#else
+
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-cond4.XXXXXX";
   char data[ps];
@@ -51,7 +57,7 @@ main (void)
   if (fd == -1)
     {
       printf ("cannot open temporary file: %m\n");
-      exit (1);
+      return 1;
     }
 
   /* Make sure it is always removed.  */
@@ -64,14 +70,14 @@ main (void)
   if (write (fd, data, ps) != ps)
     {
       puts ("short write");
-      exit (1);
+      return 1;
     }
 
   mem = mmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     {
       printf ("mmap failed: %m\n");
-      exit (1);
+      return 1;
     }
 
   mut1 = (pthread_mutex_t *) (((uintptr_t) mem
@@ -89,97 +95,97 @@ main (void)
   if (pthread_mutexattr_init (&ma) != 0)
     {
       puts ("mutexattr_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_getpshared (&ma, &p) != 0)
     {
       puts ("1st mutexattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_PRIVATE)
     {
       puts ("default pshared value wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_setpshared (&ma, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("mutexattr_setpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_getpshared (&ma, &p) != 0)
     {
       puts ("2nd mutexattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_SHARED)
     {
       puts ("pshared value after setpshared call wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_init (mut1, &ma) != 0)
     {
       puts ("1st mutex_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_init (mut2, &ma) != 0)
     {
       puts ("2nd mutex_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_condattr_init (&ca) != 0)
     {
       puts ("condattr_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_condattr_getpshared (&ca, &p) != 0)
     {
       puts ("1st condattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_PRIVATE)
     {
       puts ("default value for pshared in condattr wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_condattr_setpshared (&ca, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("condattr_setpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_condattr_getpshared (&ca, &p) != 0)
     {
       puts ("2nd condattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_SHARED)
     {
       puts ("pshared condattr still not set");
-      exit (1);
+      return 1;
     }
 
   if (pthread_cond_init (cond, &ca) != 0)
     {
       puts ("cond_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_lock (mut1) != 0)
     {
       puts ("parent: 1st mutex_lock failed");
-      exit (1);
+      return 1;
     }
 
   puts ("going to fork now");
@@ -187,34 +193,34 @@ main (void)
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
   else if (pid == 0)
     {
       if (pthread_mutex_lock (mut2) != 0)
 	{
 	  puts ("child: mutex_lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_mutex_unlock (mut1) != 0)
 	{
 	  puts ("child: 1st mutex_unlock failed");
-	  exit (1);
+	  return 1;
 	}
 
       do
 	if (pthread_cond_wait (cond, mut2) != 0)
 	  {
 	    puts ("child: cond_wait failed");
-	    exit (1);
+	    return 1;
 	  }
       while (*condition == 0);
 
       if (pthread_mutex_unlock (mut2) != 0)
 	{
 	  puts ("child: 2nd mutex_unlock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child done");
@@ -226,19 +232,19 @@ main (void)
       if (pthread_mutex_lock (mut1) != 0)
 	{
 	  puts ("parent: 2nd mutex_lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_mutex_lock (mut2) != 0)
 	{
 	  puts ("parent: 3rd mutex_lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_cond_signal (cond) != 0)
 	{
 	  puts ("parent: cond_signal failed");
-	  exit (1);
+	  return 1;
 	}
 
       *condition = 1;
@@ -246,7 +252,7 @@ main (void)
       if (pthread_mutex_unlock (mut2) != 0)
 	{
 	  puts ("parent: mutex_unlock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("waiting for child");
@@ -258,4 +264,8 @@ main (void)
     }
 
  return result;
+#endif
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

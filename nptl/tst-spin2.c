@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,9 +28,15 @@
 #include <sys/wait.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
+#if ! _POSIX_THREAD_PROCESS_SHARED
+
+  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
+
+#else
+
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-spin2.XXXXXX";
   char data[ps];
@@ -45,7 +51,7 @@ main (void)
   if (fd == -1)
     {
       printf ("cannot open temporary file: %m\n");
-      exit (1);
+      return 1;
     }
 
   /* Make sure it is always removed.  */
@@ -58,14 +64,14 @@ main (void)
   if (write (fd, data, ps) != ps)
     {
       puts ("short write");
-      exit (1);
+      return 1;
     }
 
   mem = mmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     {
       printf ("mmap failed: %m\n");
-      exit (1);
+      return 1;
     }
 
   s = (pthread_spinlock_t *) (((uintptr_t) mem
@@ -76,39 +82,39 @@ main (void)
   if (pthread_spin_init (s, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("spin_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_spin_lock (s) != 0)
     {
       puts ("spin_lock failed");
-      exit (1);
+      return 1;
     }
 
   err = pthread_spin_trylock (s);
   if (err == 0)
     {
       puts ("1st spin_trylock succeeded");
-      exit (1);
+      return 1;
     }
   else if (err != EBUSY)
     {
       puts ("1st spin_trylock didn't return EBUSY");
-      exit (1);
+      return 1;
     }
 
   err = pthread_spin_unlock (s);
   if (err != 0)
     {
       puts ("parent: spin_unlock failed");
-      exit (1);
+      return 1;
     }
 
   err = pthread_spin_trylock (s);
   if (err != 0)
     {
       puts ("2nd spin_trylock failed");
-      exit (1);
+      return 1;
     }
 
   *p = 0;
@@ -118,7 +124,7 @@ main (void)
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
   else if (pid == 0)
     {
@@ -126,13 +132,13 @@ main (void)
       if ((*p)++ != 0)
 	{
 	  puts ("child: *p != 0");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_spin_unlock (s) != 0)
 	{
 	  puts ("child: 1st spin_unlock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child done");
@@ -142,7 +148,7 @@ main (void)
       if (pthread_spin_lock (s) != 0)
 	{
 	  puts ("parent: 2nd spin_lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("waiting for child");
@@ -151,6 +157,10 @@ main (void)
 
       puts ("parent done");
     }
+#endif
 
-  exit (0);
+  return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

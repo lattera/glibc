@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -59,13 +59,20 @@ tf (void *arg)
 static int
 do_test (void)
 {
+#if ! _POSIX_THREAD_PROCESS_SHARED
+
+  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
+  return 0;
+
+#else
+
   char tmp[] = "/tmp/tst-flock2-XXXXXX";
 
   fd = mkstemp (tmp);
   if (fd == -1)
     {
       puts ("mkstemp failed");
-      exit (1);
+      return 1;
     }
 
   unlink (tmp);
@@ -80,32 +87,32 @@ do_test (void)
   if (b == MAP_FAILED)
     {
       puts ("mmap failed");
-      exit (1);
+      return 1;
     }
 
   pthread_barrierattr_t ba;
   if (pthread_barrierattr_init (&ba) != 0)
     {
       puts ("barrierattr_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_setpshared (&ba, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("barrierattr_setpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrier_init (b, &ba, 2) != 0)
     {
       puts ("barrier_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_destroy (&ba) != 0)
     {
       puts ("barrierattr_destroy failed");
-      exit (1);
+      return 1;
     }
 
   struct flock fl =
@@ -118,14 +125,14 @@ do_test (void)
   if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLKW, &fl)) != 0)
     {
       puts ("first fcntl failed");
-      exit (1);
+      return 1;
     }
 
   pid_t pid = fork ();
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
 
   if (pid == 0)
@@ -137,7 +144,7 @@ do_test (void)
       if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLK, &fl)) == 0)
 	{
 	  puts ("child:  second flock succeeded");
-	  exit (1);
+	  return 1;
 	}
     }
 
@@ -149,7 +156,7 @@ do_test (void)
       if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLKW, &fl)) != 0)
 	{
 	  puts ("third fcntl failed");
-	  exit (1);
+	  return 1;
 	}
     }
 
@@ -161,25 +168,25 @@ do_test (void)
       if (pthread_mutex_lock (&lock) != 0)
 	{
 	  puts ("1st locking of lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_mutex_lock (&lock2) != 0)
 	{
 	  puts ("1st locking of lock2 failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_create (&th, NULL, tf, NULL) != 0)
 	{
 	  puts ("pthread_create failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_mutex_lock (&lock) != 0)
 	{
 	  puts ("2nd locking of lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child locked file");
@@ -193,7 +200,7 @@ do_test (void)
       if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLK, &fl)) == 0)
 	{
 	  puts ("fifth fcntl succeeded");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("file locked by child");
@@ -206,13 +213,13 @@ do_test (void)
       if (pthread_mutex_unlock (&lock2) != 0)
 	{
 	  puts ("unlock of lock2 failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_join (th, NULL) != 0)
 	{
 	  puts ("join failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child's thread terminated");
@@ -226,7 +233,7 @@ do_test (void)
       if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLK, &fl)) == 0)
 	{
 	  puts ("fifth fcntl succeeded");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("file still locked");
@@ -243,17 +250,18 @@ do_test (void)
   if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
     {
       puts ("waitpid failed");
-      exit (1);
+      return 1;
     }
   puts ("child terminated");
 
   if (TEMP_FAILURE_RETRY (fcntl (fd, F_SETLKW, &fl)) != 0)
     {
       puts ("sixth fcntl failed");
-      exit (1);
+      return 1;
     }
 
   return status;
+#endif
 }
 
 #define TEST_FUNCTION do_test ()

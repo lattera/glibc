@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,9 +28,16 @@
 #include <sys/wait.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
+#if ! _POSIX_THREAD_PROCESS_SHARED
+
+  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
+  return 0;
+
+#else
+
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-mutex4.XXXXXX";
   char data[ps];
@@ -47,7 +54,7 @@ main (void)
   if (fd == -1)
     {
       printf ("cannot open temporary file: %m\n");
-      exit (1);
+      return 1;
     }
 
   /* Make sure it is always removed.  */
@@ -60,14 +67,14 @@ main (void)
   if (write (fd, data, ps) != ps)
     {
       puts ("short write");
-      exit (1);
+      return 1;
     }
 
   mem = mmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     {
       printf ("mmap failed: %m\n");
-      exit (1);
+      return 1;
     }
 
   m = (pthread_mutex_t *) (((uintptr_t) mem + __alignof (pthread_mutex_t))
@@ -77,67 +84,67 @@ main (void)
   if (pthread_mutexattr_init (&a) != 0)
     {
       puts ("mutexattr_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_getpshared (&a, &s) != 0)
     {
       puts ("1st mutexattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (s != PTHREAD_PROCESS_PRIVATE)
     {
       puts ("default pshared value wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_setpshared (&a, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("mutexattr_setpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_getpshared (&a, &s) != 0)
     {
       puts ("2nd mutexattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (s != PTHREAD_PROCESS_SHARED)
     {
       puts ("pshared value after setpshared call wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_init (m, &a) != 0)
     {
       puts ("mutex_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_lock (m) != 0)
     {
       puts ("mutex_lock failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutexattr_destroy (&a) != 0)
     {
       puts ("mutexattr_destroy failed");
-      exit (1);
+      return 1;
     }
 
   err = pthread_mutex_trylock (m);
   if (err == 0)
     {
       puts ("mutex_trylock succeeded");
-      exit (1);
+      return 1;
     }
   else if (err != EBUSY)
     {
       puts ("mutex_trylock didn't return EBUSY");
-      exit (1);
+      return 1;
     }
 
   *p = 0;
@@ -147,7 +154,7 @@ main (void)
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
   else if (pid == 0)
     {
@@ -155,13 +162,13 @@ main (void)
       if ((*p)++ != 0)
 	{
 	  puts ("child: *p != 0");
-	  exit (1);
+	  return 1;
 	}
 
       if (pthread_mutex_unlock (m) != 0)
 	{
 	  puts ("child: 1st mutex_unlock failed");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("child done");
@@ -171,17 +178,22 @@ main (void)
       if (pthread_mutex_lock (m) != 0)
 	{
 	  puts ("parent: 2nd mutex_lock failed");
-	  exit (1);
+	  return 1;
 	}
 
       if (*p != 1)
 	{
 	  puts ("*p != 1");
-	  exit (1);
+	  return 1;
 	}
 
       puts ("parent done");
     }
 
-  exit (0);
+  return 0;
+#endif
 }
+
+#define TIMEOUT 4
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

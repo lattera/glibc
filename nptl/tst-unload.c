@@ -1,5 +1,5 @@
 /* Tests for non-unloading of libpthread.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,24 +22,27 @@
 #include <stdlib.h>
 #include <gnu/lib-names.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   void *p = dlopen (PREFIX LIBPTHREAD_SO, RTLD_LAZY);
 
   if (p == NULL)
     {
       puts ("failed to load " LIBPTHREAD_SO);
-      exit (1);
+      return 1;
     }
 
   if (dlclose (p) != 0)
     {
       puts ("dlclose (" LIBPTHREAD_SO ") failed");
-      exit (1);
+      return 1;
     }
 
   puts ("seems to work");
 
-  exit (0);
+  return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

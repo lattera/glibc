@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,9 +28,15 @@
 #include <sys/wait.h>
 
 
-int
-main (void)
+static int
+do_test (void)
 {
+#if ! _POSIX_THREAD_PROCESS_SHARED
+
+  puts ("_POSIX_THREAD_PROCESS_SHARED not supported, test skipped");
+
+#else
+
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-barrier2.XXXXXX";
   char data[ps];
@@ -48,7 +54,7 @@ main (void)
   if (fd == -1)
     {
       printf ("cannot open temporary file: %m\n");
-      exit (1);
+      return 1;
     }
 
   /* Make sure it is always removed.  */
@@ -61,14 +67,14 @@ main (void)
   if (write (fd, data, ps) != ps)
     {
       puts ("short write");
-      exit (1);
+      return 1;
     }
 
   mem = mmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     {
       printf ("mmap failed: %m\n");
-      exit (1);
+      return 1;
     }
 
   b = (pthread_barrier_t *) (((uintptr_t) mem + __alignof (pthread_barrier_t))
@@ -77,49 +83,49 @@ main (void)
   if (pthread_barrierattr_init (&a) != 0)
     {
       puts ("barrierattr_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_getpshared (&a, &p) != 0)
     {
       puts ("1st barrierattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_PRIVATE)
     {
       puts ("default pshared value wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_setpshared (&a, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("barrierattr_setpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_getpshared (&a, &p) != 0)
     {
       puts ("2nd barrierattr_getpshared failed");
-      exit (1);
+      return 1;
     }
 
   if (p != PTHREAD_PROCESS_SHARED)
     {
       puts ("pshared value after setpshared call wrong");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrier_init (b, &a, 2) != 0)
     {
       puts ("barrier_init failed");
-      exit (1);
+      return 1;
     }
 
   if (pthread_barrierattr_destroy (&a) != 0)
     {
       puts ("barrierattr_destroy failed");
-      exit (1);
+      return 1;
     }
 
   puts ("going to fork now");
@@ -127,7 +133,7 @@ main (void)
   if (pid == -1)
     {
       puts ("fork failed");
-      exit (1);
+      return 1;
     }
 
   /* Just to be sure we don't hang forever.  */
@@ -145,7 +151,7 @@ main (void)
 	{
 	  printf ("%s: barrier_wait returned value %d != 0 and PTHREAD_BARRIER_SERIAL_THREAD\n",
 		  pid == 0 ? "child" : "parent", e);
-	  exit (1);
+	  return 1;
 	}
     }
 
@@ -177,6 +183,10 @@ main (void)
 	      WEXITSTATUS (status) + serials, N);
       return 1;
     }
+#endif
 
-  exit (0);
+  return 0;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
