@@ -61,6 +61,7 @@ same as @code{double}.
 * Exponents and Logarithms::    Also pow and sqrt.
 * Hyperbolic Functions::        sinh, cosh, tanh, etc.
 * Special Functions::           Bessel, gamma, erf.
+* Errors in Math Functions::    Known Maximum Errors in Math Functions.
 * Pseudo-Random Numbers::       Functions for generating pseudo-random
 				 numbers.
 * FP Function Optimizations::   Fast code or small code.
@@ -1202,6 +1203,47 @@ is negative, @code{y1} signals a domain error; if it is zero,
 is negative, @code{yn} signals a domain error; if it is zero,
 @code{yn} signals overflow and returns @math{-@infinity}.
 @end deftypefun
+
+@node Errors in Math Functions
+@section Known Maximum Errors in Math Functions
+@cindex math errors
+@cindex ulps
+
+This section lists the known errors of the functions in the math
+library.  Errors are measured in ``units of the last place''.  This is a
+measure for the relative error.  For a number @math{z} with the
+representation @math{d.d@dots{}d@mul{}2^e} (we assume IEEE
+floating-point numbers with base 2) the ULP is represented by
+
+@tex
+$$\frac{|{\mathrm d.d\dots d - (z/2^e)|}{2^{p-1}}$$
+@end tex
+@ifnottex
+@smallexample
+|d.d...d - (z / 2^e)| / 2^(p - 1)
+@end smallexample
+@end ifnottex
+
+@noindent
+where @math{p} is the number of bits in the mantissa of the
+floating-point number representation.  Ideally the error for all
+functions is always less than 0.5ulps.  Using rounding bits this is also
+possible and normally implemented for the basic operations.  To achieve
+the same for the complex math functions requires a lot more work and
+this was not spend so far.
+
+Therefore many of the functions in the math library have errors.  The
+table lists the maximum error for each function which is exposed by one
+of the existing tests in the test suite.  It is tried to cover as much
+as possible and really list the maximum error (or at least a ballpark
+figure) but this is often not achieved due to the large search space.
+
+The table lists the ULP values for different architectures.  Different
+architectures have different results since their hardware support for
+floating-point operations varies and also the existing hardware support
+is different.
+
+@include libm-err.texi
 
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers

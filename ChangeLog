@@ -1,5 +1,10 @@
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/math.texi (Errors in Math Functions): New section.
+	* math/libm-err-tab.pl: Moved to...
+	* manual/libm-err-tab.pl: ...here.
+	* manual/Makefile: Add rules for math function error table generation.
+
 	* stdlib/tst-strtod.c: Add more hexadecimal tests.
 
 	* stdlib/strtod.c: Handle hexadecimal numbers with leading digit

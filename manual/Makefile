@@ -69,7 +69,7 @@ examples = $(filter-out $(foreach d, $(add-ons), ../$d/%.c.texi), \
 chapters.% top-menu.%: libc-texinfo.sh $(texis)
 	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
 
-libc.dvi libc.info: chapters.texi top-menu.texi
+libc.dvi libc.info: chapters.texi top-menu.texi libm-err.texi
 libc.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
@@ -89,6 +89,15 @@ dir-add.info: xtract-typefun.awk $(texis)
 	 echo "END-INFO-DIR-ENTRY") > $@.new
 	mv -f $@.new $@
 
+# The table with the math errors is generated.
+libm-err.texi: stamp-libm-err
+stamp-libm-err: libm-err-tab.pl $(wildcard $(foreach dir,$(sysdirs),\
+						     $(dir)/libm-test-ulps))
+	pwd=`pwd`; \
+	$(PERL) $< $$pwd/.. > libm-err-tmp
+	$(move-if-change) libm-err-tmp libm-err.texi
+	touch $@
+
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
@@ -106,13 +115,14 @@ dir-add.info: xtract-typefun.awk $(texis)
 
 # Distribution.
 minimal-dist = summary.awk texis.awk tsort.awk libc-texinfo.sh libc.texinfo \
+	       libm-err.texi stamp-libm-err				    \
 	       $(filter-out summary.texi, $(nonexamples))		    \
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
 doc-only-dist = Makefile COPYING.LIB
 distribute = $(minimal-dist) $(examples) stdio-fp.c	\
 	     libc.info* libc.?? libc.??s texinfo.tex	\
-	     xtract-typefun.awk dir-add.info dir
+	     xtract-typefun.awk dir-add.info dir libm-err-tab.pl
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
