@@ -1,5 +1,5 @@
 /* Exception handling and frame unwind runtime interface routines.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 
    This file is part of GNU CC.
 
@@ -51,6 +51,16 @@
 
 #define DW_EH_PE_indirect	0x80
 
+
+#ifdef _LIBC
+/* Prototypes.  */
+extern unsigned int size_of_encoded_value (unsigned char encoding);
+extern const unsigned char *read_encoded_value_with_base
+  (unsigned char encoding, _Unwind_Ptr base,
+   const unsigned char *p, _Unwind_Ptr *val);
+#endif
+
+
 
 /* Given an encoding, return the number of bytes the format occupies.
    This is only defined for fixed-size encodings, and so does not

@@ -1,3 +1,28 @@
+2002-03-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/fpu/fraiseexcpt.c (__feraiseexcept): Set cause bits.
+
+	* sysdeps/mips/fpu/fgetexcptflg.c (__fegetexceptflag): Add comment.
+
+	* sysdeps/mips/fpu/fclrexcpt.c (__feclearexcept): Clear also cause
+	bits.
+
+	* sysdeps/mips/fpu/fenv_libc.h (CAUSE_MASK): New.
+	(CAUSE_SHIFT): New.
+	Patch by Hartvig Ekner <hartvige@mips.com>.
+
+        * sysdeps/generic/unwind-dw2-fde-glibc.c: Add prototypes.
+        * sysdeps/generic/unwind-pe.h: Likewise.
+
+        * libio/iofdopen.c (_IO_new_fdopen): Pass parameter of correct
+        type to _IO_setb.
+
+	* libio/stdio.c (AL2): Define variant when visibility attribute is
+	not supported.
+
+	* include/libc-symbols.h (_INTVARDEF): Define variant when
+	visibility attribute is not supported.
+
 2002-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fr.po: Update from translation team.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    This file is part of GNU CC.
@@ -44,7 +44,9 @@
 
 #undef _Unwind_Find_FDE
 
-fde * _Unwind_Find_registered_FDE (void *pc, struct dwarf_eh_bases *bases);
+extern fde * _Unwind_Find_registered_FDE (void *pc,
+					  struct dwarf_eh_bases *bases);
+extern fde * _Unwind_Find_FDE (void *, struct dwarf_eh_bases *);
 
 struct unw_eh_callback_data
 {

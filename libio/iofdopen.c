@@ -132,7 +132,7 @@ _IO_new_fdopen (fd, mode)
 #endif
   if (INTUSE(_IO_file_attach) ((_IO_FILE *) &new_f->fp, fd) == NULL)
     {
-      INTUSE(_IO_setb) (&new_f->fp, NULL, NULL, 0);
+      INTUSE(_IO_setb) (&new_f->fp.file, NULL, NULL, 0);
       INTUSE(_IO_un_link) (&new_f->fp);
       free (new_f);
       return NULL;

@@ -362,9 +362,14 @@
 # define INTDEF(name) strong_alias (name, name##_internal)
 # define INTVARDEF(name) \
   _INTVARDEF (name, name##_internal)
-# define _INTVARDEF(name, aliasname) \
+# if defined HAVE_VISIBILITY_ATTRIBUTE
+#  define _INTVARDEF(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((alias (#name), \
 						   visibility ("hidden")));
+# else
+#  define _INTVARDEF(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
+# endif
 # define INTDEF2(name, newname) strong_alias (name, newname##_internal)
 # define INTVARDEF2(name, newname) _INTVARDEF (name, newname##_internal)
 #else

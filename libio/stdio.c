@@ -40,9 +40,14 @@ _IO_FILE *stderr = (FILE *) &_IO_2_1_stderr_;
 #undef _IO_stderr
 #ifdef _LIBC
 # define AL(name) AL2 (name, _IO_##name)
-# define AL2(name, al) \
-  extern __typeof (name) al __attribute__ ((alias (#name),		      \
-					    visibility ("hidden")))
+# if defined HAVE_VISIBILITY_ATTRIBUTE
+#  define AL2(name, al) \
+  extern __typeof (name) al __attribute__ ((alias (#name),                    \
+                                            visibility ("hidden")))
+# else
+#  define AL2(name, al) \
+  extern __typeof (name) al __attribute__ ((alias (#name)))
+# endif
 AL(stdin);
 AL(stdout);
 AL(stderr);
