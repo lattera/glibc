@@ -45,7 +45,7 @@ DEFUN(msort_with_tmp, (b, n, s, cmp, t),
 
   tmp = t;
 
-  if (s == OPSIZ && (b1 - b2) % OPSIZ == 0)
+  if (s == OPSIZ && (b1 - (char *) 0) % OPSIZ == 0)
     /* We are operating on aligned words.  Use direct word stores.  */
     while (n1 > 0 && n2 > 0)
       {
