@@ -91,7 +91,7 @@ default detach state wrong: %d, expected %d (PTHREAD_CREATE_JOINABLE)\n",
       puts ("1st attr_getguardsize failed");
       exit (1);
     }
-  if (g != sysconf (_SC_PAGESIZE))
+  if (g != (size_t) sysconf (_SC_PAGESIZE))
     {
       printf ("default guardsize %zu, expected %ld (PAGESIZE)\n",
 	      g, sysconf (_SC_PAGESIZE));
