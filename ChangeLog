@@ -1,3 +1,20 @@
+2002-06-05  Roland McGrath  <roland@frob.com>
+
+	* io/Makefile (routines): Add sendfile and sendfile64.
+	(headers): Add sys/sendfile.h to the list.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Don't add it here.
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: Moved to ...
+	* io/sys/sendfile.h: ... here.
+	* sysdeps/generic/sendfile.c: New file.
+	* sysdeps/generic/sendfile64.c: New file.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.1, GLIBC_2.3):
+	Move sendfile, sendfile64 to ...
+	* io/Versions (GLIBC_2.1, GLIBC_2.3): ... here.
+	* sysdeps/mach/hurd/sendfile.c: New file.
+	* sysdeps/mach/hurd/sendfile64.c: New file.
+
+	* sysdeps/mach/nanosleep.c: New file.
+
 2002-06-04  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/alpha/elf/configure.in: New file.  Check for TLS support.

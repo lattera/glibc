@@ -20,7 +20,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h sys/fsuid.h \
 		  scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h sys/pci.h \
-		  sys/ultrasound.h sys/sendfile.h sys/raw.h
+		  sys/ultrasound.h sys/raw.h
 
 install-others += $(inst_includedir)/bits/syscall.h
 

@@ -73,9 +73,6 @@ libc {
     # n*
     ntp_adjtime; ntp_gettime;
 
-    # s*
-    sendfile;
-
     # u*
     umount2;
   }
@@ -93,8 +90,6 @@ libc {
   GLIBC_2.3 {
     # r*
     readahead;
-    # s*
-    sendfile64;
   }
   GLIBC_PRIVATE {
     # needed by libpthread.

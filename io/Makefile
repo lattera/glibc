@@ -1,4 +1,4 @@
-# Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999,2000,01,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ subdir	:= io
 headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   sys/statvfs.h bits/statvfs.h fcntl.h sys/fcntl.h bits/fcntl.h \
 	   poll.h sys/poll.h bits/poll.h \
-	   utime.h ftw.h fts.h
+	   utime.h ftw.h fts.h sys/sendfile.h
 
 routines :=							      \
 	utime							      \
@@ -46,7 +46,8 @@ routines :=							      \
 	unlink rmdir						      \
 	ftw ftw64 fts poll					      \
 	posix_fadvise posix_fadvise64				      \
-	posix_fallocate posix_fallocate64
+	posix_fallocate posix_fallocate64			      \
+	sendfile sendfile64
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive

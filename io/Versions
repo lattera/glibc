@@ -76,6 +76,7 @@ libc {
     open64;
 
     # s*
+    sendfile;
     statfs64; statvfs; statvfs64;
   }
   GLIBC_2.2 {
@@ -83,6 +84,10 @@ libc {
     posix_fadvise; posix_fadvise64; posix_fallocate; posix_fallocate64;
 
     __open64;
+  }
+  GLIBC_2.3 {
+    # s*
+    sendfile64;
   }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
