@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,10 @@
 # way to choose a sysdep file based on MIT vs Motorola syntax.
 # No existing m68k ports use Motorola syntax.
 
-crypt := crypt.sun3	# Use crypt/crypt.sun3.S.
+# Don't use crypt/crypt.sun3.S.  It's not pic-clean.
+ifneq (yes,$(build-shared))
+crypt := crypt.sun3
+endif
 
 # The mpn functions need this.  All existing 68k ports use MIT syntax.  If
 # a new port wants to use Motorola or Sony syntax, it can redefine this
@@ -29,4 +32,4 @@ ifndef m68k-syntax-flag
 m68k-syntax-flag = -DMIT_SYNTAX
 endif
 
-asm-CPPFLAGS := $(asm-CPPFLAGS) $(m68k-syntax-flag)
+asm-CPPFLAGS += $(m68k-syntax-flag)

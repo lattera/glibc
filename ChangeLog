@@ -1,5 +1,8 @@
 Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/m68k/Makefile (crypt): Don't define if building a shared
+	library.
+
 	* csu/initfini.c (_init): Call __gmon_start__ if defined (weak ref).
 	* csu/gmon-start.c (__gmon_start__): Renamed from gmon_start, made
 	global.
