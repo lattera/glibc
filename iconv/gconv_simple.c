@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -305,7 +305,7 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 
 	  *inptrp = inptr;
 	  *outptrp = outptr;
- 	  return __GCONV_ILLEGAL_INPUT;
+	  return __GCONV_ILLEGAL_INPUT;
 	}
 
 # if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -654,7 +654,7 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 
 	  *inptrp = inptr;
 	  *outptrp = outptr;
- 	  return __GCONV_ILLEGAL_INPUT;
+	  return __GCONV_ILLEGAL_INPUT;
 	}
 
 # if __BYTE_ORDER == __BIG_ENDIAN
@@ -729,7 +729,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       (*outptrp)[1] = state->__value.__wchb[2];
       (*outptrp)[2] = state->__value.__wchb[1];
       (*outptrp)[3] = state->__value.__wchb[0];
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#else
       (*outptrp)[0] = state->__value.__wchb[0];
       (*outptrp)[1] = state->__value.__wchb[1];
       (*outptrp)[2] = state->__value.__wchb[2];
@@ -915,11 +915,11 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       {									      \
- 	if (ch >= 0xc2 && ch < 0xe0)					      \
+	if (ch >= 0xc2 && ch < 0xe0)					      \
 	  {								      \
- 	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
- 	       otherwise the wide character could have been represented	      \
- 	       using a single byte.  */					      \
+	    /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
+	       otherwise the wide character could have been represented	      \
+	       using a single byte.  */					      \
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
@@ -1222,7 +1222,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	++*irreversible;						      \
 	continue;							      \
       }									      \
-    else 								      \
+    else								      \
       {									      \
 	*((uint16_t *) outptr)++ = val;					      \
 	inptr += 4;							      \
@@ -1312,7 +1312,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	++*irreversible;						      \
 	continue;							      \
       }									      \
-    else 								      \
+    else								      \
       {									      \
 	*((uint16_t *) outptr)++ = bswap_16 (val);			      \
 	inptr += 4;							      \
