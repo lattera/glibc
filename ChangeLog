@@ -1,5 +1,8 @@
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
+	* Rules (subdir_objs, subdir_stubs): New phony targets.
+	* Makefile (+subdir_targets): Add them.
+
 	* Makerules ($(common-objpfx)Versions.all): Grok new leading column in
 	soversions.i.
 

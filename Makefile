@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ endif # $(AUTOCONF) = no
 		   subdir_update-abi subdir_check-abi 			\
 		   subdir_echo-headers 					\
 		   subdir_install					\
-		   subdir_testclean					\
+		   subdir_objs subdir_stubs subdir_testclean		\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := limits.h values.h features.h gnu-versions.h bits/libc-lock.h \

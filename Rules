@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000,2002,2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,2002,2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -165,7 +165,9 @@ distclean: clean
 .PHONY: subdir_install
 subdir_install: install-no-libc.a lib-noranlib stubs
 
-.PHONY: subdir_TAGS
+.PHONY: subdir_objs subdir_stubs subdir_TAGS
+subdir_objs: objs
+subdir_stubs: stubs
 subdir_TAGS: TAGS
 
 # Target required by the Hurd to ensure that all the MiG-generated
