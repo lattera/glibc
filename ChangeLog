@@ -88,6 +88,7 @@
 	* iconvdata/ibm1160.h: New file.
 	* iconvdata/ibm1161.c: New file.
 	* iconvdata/ibm1161.h: New file.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
 
 2001-09-19  Jakub Jelinek  <jakub@redhat.com>
 
