@@ -64,7 +64,7 @@ extern size_t _dl_dst_count_internal (const char *name, int is_path);
 extern const char *_dl_get_origin (void);
 extern const char *_dl_get_origin_internal (void);
 
-#ifdef _RTLD_LOCAL
+#ifdef IS_IN_rtld
 # define _dl_get_origin INTUSE(_dl_get_origin)
 #endif
 

@@ -1,8 +1,31 @@
+2002-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* cppflags-iterator.mk (cpp-srcs-left): Define NOT_IN_libc instead
+	of NOT_IN_LIBC.
+	* include/libintl.h: Test for NOT_IN_libc not NOT_IN_LIBC.
+	* include/stdlib.h: Likewise.
+
+2002-04-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (CFLAGS-.os): Define NOT_IN_libc and IS_IN_rtld
+	instead of _RTLD_LOCAL.
+	* elf/dl-dst.h: Use IS_IN_rtld instead of _RTLD_LOCAL.
+	* include/unistd.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+
+	* stdio-common/_itoa.h (_itoa_word): Only use internal digit arrays
+	if in libc or ld.so.
+
 2002-04-08  Andreas Jaeger  <aj@suse.de>
 
 	* elf/cache.c (print_entry): Support x86-64.
 
 2002-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdlib.h: For libc itself replace MB_CUR_MAX definition
+	with one accessing the locale data structures directly.
+	* stdio-common/printf-prs.c: Include localeinfo.h for new
+	MB_CUR_MAX definition.
 
 	* Makeconfig (CPPFLAGS): Also add CPPFLAGS-<basename> where <basename>
 	is the name of the source file without extension.

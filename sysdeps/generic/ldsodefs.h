@@ -199,7 +199,7 @@ typedef void (*receiver_fct) (int, const char *, const char *);
 # define GL(name) _##name
 #else
 # define EXTERN
-# ifdef _RTLD_LOCAL
+# ifdef IS_IN_rtld
 #  define GL(name) _rtld_local._##name
 # else
 #  define GL(name) _rtld_global._##name
@@ -375,7 +375,7 @@ struct rtld_global
 #ifdef SHARED
 };
 extern struct rtld_global _rtld_global;
-# ifdef _RTLD_LOCAL
+# ifdef IS_IN_rtld
 #  ifdef HAVE_VISIBILITY_ATTRIBUTE
 #   ifdef HAVE_SDATA_SECTION
 #    define __rtld_local_attribute__ \
@@ -394,7 +394,7 @@ extern struct rtld_global _rtld_local __rtld_local_attribute__;
 /* Parameters passed to the dynamic linker.  */
 extern int _dl_argc attribute_hidden;
 extern char **_dl_argv;
-#ifdef _RTLD_LOCAL
+#ifdef IS_IN_rtld
 extern char **_dl_argv_internal attribute_hidden;
 # define rtld_progname (INTUSE(_dl_argv)[0])
 #else
@@ -403,7 +403,7 @@ extern char **_dl_argv_internal attribute_hidden;
 
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
-#ifdef _RTLD_LOCAL
+#ifdef IS_IN_rtld
 /* XXX #ifdef should go away.  */
 extern const char _dl_out_of_memory_internal[] attribute_hidden;
 #endif

@@ -23,6 +23,8 @@
 #include <wchar.h>
 #include <sys/param.h>
 
+#include "../locale/localeinfo.h"
+
 #ifndef COMPILE_WPRINTF
 # define CHAR_T		char
 # define UCHAR_T	unsigned char

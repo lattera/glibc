@@ -39,8 +39,14 @@ _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
   const char *digits = (upper_case
+#if !defined NOT_IN_libc || defined IS_IN_rtld
 			? INTUSE(_itoa_upper_digits)
-			: INTUSE(_itoa_lower_digits));
+			: INTUSE(_itoa_lower_digits)
+#else
+			? _itoa_upper_digits
+			: _itoa_lower_digits
+#endif
+		       );
 
   switch (base)
     {

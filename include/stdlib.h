@@ -147,7 +147,7 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 }
 
 
-# ifndef NOT_IN_LIBC
+# ifndef NOT_IN_libc
 #  undef MB_CUR_MAX
 #  define MB_CUR_MAX (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX))
 # endif
