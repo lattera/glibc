@@ -29,10 +29,15 @@
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
-
-	SINGLE_THREAD_P
+#ifdef SHARED
+	tstl	(__libc_pthread_functions@GOTPC, %pc)
+#else
+	.weak	__pthread_fork
+	movel	#__pthread_fork, %d0
+#endif
 	jbne	HIDDEN_JUMPTARGET (__fork)
+
+#ifdef __NR_vfork
 
 	/* Pop the return PC value into A0.  */
 	movel	%sp@+, %a0
