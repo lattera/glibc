@@ -50,6 +50,11 @@ LEAF(SELECT, 64)
 	.prologue 1
 
 	ldl	t0, __libc_missing_axp_tv64
+
+	/* Save timeout early, since we'll need to recover this after 
+	   the system call.  */
+	stq	a4, 48(sp)
+
 	bne	t0, $do32
 
 	/* Save arguments in case we do need to fall back.  */
@@ -57,7 +62,6 @@ LEAF(SELECT, 64)
 	stq	a1, 16(sp)
 	stq	a2, 24(sp)
 	stq	a3, 32(sp)
-	stq	a4, 48(sp)
 
 	ldi	v0, SYS_ify(select)
 	callsys
