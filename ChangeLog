@@ -1,3 +1,8 @@
+1998-10-28  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Tidy up, correct
+	llseek.
+
 1998-10-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Don't include <time.h> for timespec, add

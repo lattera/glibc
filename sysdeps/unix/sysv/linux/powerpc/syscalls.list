@@ -1,10 +1,9 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-s_ioctl		ioctl	ioctl		3	__syscall_ioctl
-s_llseek	llseek	_llseek		5	__sys_llseek
-s_chown		chown	chown		3	__syscall_chown
-
 # System calls with wrappers.
+s_ioctl		ioctl	ioctl		3	__syscall_ioctl
+s_llseek	llseek	_llseek		5	__syscall_llseek
+s_chown		chown	chown		3	__syscall_chown
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
 rt_sigpending	-	rt_sigpending	2	__syscall_rt_sigpending
 rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
