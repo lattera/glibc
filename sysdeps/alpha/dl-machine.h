@@ -321,7 +321,8 @@ _dl_start_user:							\n\
 	mov	$0, $9						\n\
 	/* See if we were run as a command with the executable	\n\
 	   file name as an extra leading argument.  */		\n\
-	ldl	$1, _dl_skip_args($gp)	!gprel			\n\
+	ldah	$1, _dl_skip_args($gp)	!gprelhigh		\n\
+	ldl	$1, _dl_skip_args($1)	!gprellow		\n\
 	bne	$1, $fixup_stack				\n\
 $fixup_stack_ret:						\n\
 	/* The special initializer gets called with the stack	\n\
