@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 #include <ctype.h>
 #include <string.h>
 #include <wctype.h>
-#include "localeinfo.h"
+#include "../locale/localeinfo.h"
 
 wctrans_t
 wctrans (const char *property)

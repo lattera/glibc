@@ -1,3 +1,9 @@
+Thu Mar 28 11:53:26 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* wctype/cname-lookup.h: Find localeinfo.h in ../locale.
+	* wctype/wctype.c: Likewise.
+	* wctype/wctrans.c: Likewise.
+
 Thu Mar 28 03:00:43 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
 
 	* locale/nl_langinfo.c (nl_langinfo): Use DATA->values instead of

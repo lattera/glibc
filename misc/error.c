@@ -172,8 +172,8 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
       static const char *old_file_name;
       static unsigned int old_line_number;
 
-      if (old_line_number == line_number
-	  && (file_name == old_file_name || !strcmp (old_file_name, file_name))
+      if (old_line_number == line_number &&
+	  (file_name == old_file_name || !strcmp (old_file_name, file_name)))
 	/* Simply return and print nothing.  */
 	return;
 
