@@ -130,7 +130,7 @@ enum
 	  }								      \
 									      \
 	++inptr;							      \
-	++*converted;							      \
+	++*irreversible;						      \
 	continue;							      \
       }									      \
 									      \
@@ -201,7 +201,7 @@ enum
 		break;							      \
 	      }								      \
 									      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    ++inptr;							      \
 	    continue;							      \
 	  }								      \
@@ -261,7 +261,7 @@ enum
 		break;							      \
 	      }								      \
 									      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	  }								      \
 	else								      \
 	  {								      \

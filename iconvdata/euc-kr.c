@@ -91,7 +91,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  }								      \
 									      \
 	++inptr;							      \
-	++*converted;							      \
+	++*irreversible;						      \
 	continue;							      \
       }									      \
     else								      \
@@ -117,7 +117,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -152,7 +152,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  }								      \
 									      \
 	inptr += 4;							      \
-	++*converted;							      \
+	++*irreversible;						      \
 	continue;							      \
       }									      \
 									      \

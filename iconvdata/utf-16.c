@@ -208,7 +208,7 @@ gconv_end (struct __gconv_step *data)
 		    break;						      \
 		  }							      \
 									      \
-		++*converted;						      \
+		++*irreversible;					      \
 		inptr += 4;						      \
 		continue;						      \
 	      }								      \
@@ -241,7 +241,7 @@ gconv_end (struct __gconv_step *data)
 		    break;						      \
 		  }							      \
 									      \
-		++*converted;						      \
+		++*irreversible;					      \
 		inptr += 4;						      \
 		continue;						      \
 	      }								      \
@@ -315,7 +315,7 @@ gconv_end (struct __gconv_step *data)
 		    break;						      \
 		  }							      \
 									      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -358,7 +358,7 @@ gconv_end (struct __gconv_step *data)
 		    break;						      \
 		  }							      \
 									      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \

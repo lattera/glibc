@@ -427,7 +427,7 @@ static const char from_ucs4[][2] =
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -444,7 +444,7 @@ static const char from_ucs4[][2] =
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -465,7 +465,7 @@ static const char from_ucs4[][2] =
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 	++inptr;							      \
@@ -577,7 +577,7 @@ static const char from_ucs4[][2] =
 	      }								      \
 									      \
 	    inptr += 4;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -590,7 +590,7 @@ static const char from_ucs4[][2] =
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
 	inptr += 4;							      \
 	continue;							      \
       }									      \

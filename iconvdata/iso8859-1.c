@@ -54,7 +54,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       *outptr++ = (unsigned char) ch;					      \

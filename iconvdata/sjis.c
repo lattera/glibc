@@ -4367,7 +4367,7 @@ static const char from_ucs4_extra[0x100][2] =
 	  }								      \
 									      \
 	++inptr;							      \
-	++*converted;							      \
+	++*irreversible;						      \
 	continue;							      \
       }									      \
     else								      \
@@ -4402,7 +4402,7 @@ static const char from_ucs4_extra[0x100][2] =
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 	else								      \
@@ -4433,7 +4433,7 @@ static const char from_ucs4_extra[0x100][2] =
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -4474,7 +4474,7 @@ static const char from_ucs4_extra[0x100][2] =
 	      }								      \
 									      \
 	    inptr += 4;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -4491,7 +4491,7 @@ static const char from_ucs4_extra[0x100][2] =
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       {									      \

@@ -3076,7 +3076,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  }								      \
 									      \
 	++inptr;							      \
-	++*converted;							      \
+	++*irreversible;						      \
 	continue;							      \
       }									      \
     else								      \
@@ -3130,7 +3130,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 		  }							      \
 									      \
 		++inptr;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -3151,7 +3151,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 		  }							      \
 									      \
 		inptr += 2;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -3171,7 +3171,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 		  }							      \
 									      \
 		inptr += 2;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 	  }								      \
@@ -3229,7 +3229,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	      }								      \
 									      \
 	    inptr += 4;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -3261,7 +3261,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	      }								      \
 									      \
 	    inptr += 4;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \

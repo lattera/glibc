@@ -1,5 +1,37 @@
 2000-06-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/skeleton.c:  Rename converted written to correcter name
+	irreversible.
+	* iconv/gconv.c: Rename converted variable to correcter name
+	irreversible.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/iconv.c: Likewise.
+	* iconv/loop.c: Likewise.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/big5hkscs.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (struct cmsghdr): Mark
 	__cmsg_data field with __extension__.
 

@@ -367,7 +367,7 @@ gconv_end (struct __gconv_step *data)
 		  }							      \
 									      \
 		++inptr;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 	    ch = iso88597_to_ucs4[inptr[2] - 0x20];			      \
@@ -380,7 +380,7 @@ gconv_end (struct __gconv_step *data)
 		  }							      \
 									      \
 		inptr += 3;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 	    inptr += 3;							      \
@@ -394,7 +394,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -414,7 +414,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 	++inptr;							      \
@@ -432,7 +432,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 	++inptr;							      \
@@ -477,7 +477,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
@@ -722,7 +722,7 @@ gconv_end (struct __gconv_step *data)
 			break;						      \
 		      }							      \
 									      \
-		    ++*converted;					      \
+		    ++*irreversible;					      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -908,7 +908,7 @@ gconv_end (struct __gconv_step *data)
 					     break;			      \
 					  }				      \
 									      \
-					++*converted;			      \
+					++*irreversible;		      \
 				      }					      \
 				  }					      \
 			      }						      \

@@ -158,7 +158,7 @@ gconv_end (struct __gconv_step *data)
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       {									      \

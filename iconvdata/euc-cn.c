@@ -55,7 +55,7 @@
 	    }								      \
 									      \
 	  ++inptr;							      \
-	  ++*converted;							      \
+	  ++*irreversible;						      \
 	  continue;							      \
 	}								      \
       else								      \
@@ -85,7 +85,7 @@
 		}							      \
 									      \
 	      ++inptr;							      \
-	      ++*converted;						      \
+	      ++*irreversible;						      \
 	      continue;							      \
 	    }								      \
 									      \
@@ -104,7 +104,7 @@
 		}							      \
 									      \
 	      inptr += 2;						      \
-	      ++*converted;						      \
+	      ++*irreversible;						      \
 	      continue;							      \
 	    }								      \
 									      \
@@ -148,7 +148,7 @@
 		  }							      \
 									      \
 		inptr += 4;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \

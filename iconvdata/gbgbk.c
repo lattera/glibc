@@ -108,7 +108,7 @@
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	  }								      \
 	else								      \
 	  {								      \

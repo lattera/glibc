@@ -177,8 +177,8 @@
 static inline int
 FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 		   unsigned char **outptrp, unsigned char *outend,
-		   mbstate_t *state, int flags, void *data, size_t *converted
-		   EXTRA_LOOP_DECLS)
+		   mbstate_t *state, int flags, void *data,
+		   size_t *irreversible EXTRA_LOOP_DECLS)
 {
   int result = __GCONV_OK;
   const unsigned char *inptr = *inptrp;
@@ -293,7 +293,7 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 static inline int
 SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 		 unsigned char **outptrp, unsigned char *outend,
-		 mbstate_t *state, int flags, void *data, size_t *converted
+		 mbstate_t *state, int flags, void *data, size_t *irreversible
 		 EXTRA_LOOP_DECLS)
 {
   int result = __GCONV_OK;

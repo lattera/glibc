@@ -13132,7 +13132,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	    }								      \
 									      \
 	  ++inptr;							      \
-	  ++*converted;							      \
+	  ++*irreversible;						      \
 	  continue;							      \
 	}								      \
       else								      \
@@ -13164,7 +13164,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 		}							      \
 									      \
 	      ++inptr;							      \
-	      ++*converted;						      \
+	      ++*irreversible;						      \
 	      continue;							      \
 	    }								      \
 									      \
@@ -13184,7 +13184,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 		}							      \
 									      \
 	      inptr += 2;						      \
-	      ++*converted;						      \
+	      ++*irreversible;						      \
 	      continue;							      \
 	    }								      \
 									      \
@@ -13456,7 +13456,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	      break;							      \
 	    }								      \
 									      \
-	  ++*converted;							      \
+	  ++*irreversible;						      \
 	}								      \
       /* See whether there is enough room for the second byte we write.  */   \
       else if (NEED_LENGTH_TEST && cp[1] != '\0'			      \

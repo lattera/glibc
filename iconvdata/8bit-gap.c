@@ -57,7 +57,7 @@ struct gap
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       {									      \
@@ -89,7 +89,7 @@ struct gap
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
 	inptr += 4;							      \
 	continue;							      \
       }									      \
@@ -104,7 +104,7 @@ struct gap
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
 	inptr += 4;							      \
 	continue;							      \
       }									      \
@@ -119,7 +119,7 @@ struct gap
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
 	inptr += 4;							      \
 	continue;							      \
       }									      \

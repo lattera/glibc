@@ -29,7 +29,7 @@ int
 internal_function
 __gconv (__gconv_t cd, const unsigned char **inbuf,
 	 const unsigned char *inbufend, unsigned char **outbuf,
-	 unsigned char *outbufend, size_t *converted)
+	 unsigned char *outbufend, size_t *irreversible)
 {
   size_t last_step = cd->__nsteps - 1;
   int result;
@@ -37,8 +37,8 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
   if (cd == (__gconv_t) -1L)
     return __GCONV_ILLEGAL_DESCRIPTOR;
 
-  assert (converted != NULL);
-  *converted = 0;
+  assert (irreversible != NULL);
+  *irreversible = 0;
 
   cd->__data[last_step].__outbuf = outbuf != NULL ? *outbuf : NULL;
   cd->__data[last_step].__outbufend = outbufend;
@@ -47,7 +47,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
     /* We just flush.  */
     result = DL_CALL_FCT (cd->__steps->__fct,
 			   (cd->__steps, cd->__data, NULL, NULL,
-			    converted, 1, 0));
+			    irreversible, 1, 0));
   else
     {
       const unsigned char *last_start;
@@ -59,7 +59,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
 	  last_start = *inbuf;
 	  result = DL_CALL_FCT (cd->__steps->__fct,
 				 (cd->__steps, cd->__data, inbuf, inbufend,
-				  converted, 0, 0));
+				  irreversible, 0, 0));
 	}
       while (result == __GCONV_EMPTY_INPUT && last_start != *inbuf
 	     && *inbuf + cd->__steps->__min_needed_from <= inbufend);

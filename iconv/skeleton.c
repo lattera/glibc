@@ -271,7 +271,7 @@ gconv_init (struct __gconv_step *step)
 int
 FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	       const unsigned char **inptrp, const unsigned char *inend,
-	       size_t *written, int do_flush, int consume_incomplete)
+	       size_t *irreversible, int do_flush, int consume_incomplete)
 {
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
@@ -295,7 +295,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
          successfully emitted the escape sequence.  */
       if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-				    written, 1, consume_incomplete));
+				    irreversible, 1, consume_incomplete));
     }
   else
     {
@@ -306,7 +306,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       unsigned char *outstart;
       /* This variable is used to count the number of characters we
 	 actually converted.  */
-      size_t converted = 0;
+      size_t lirreversible = 0;
 #if defined _STRING_ARCH_unaligned \
     || MIN_NEEDED_FROM == 1 || MAX_NEEDED_FROM % MIN_NEEDED_FROM != 0 \
     || MIN_NEEDED_TO == 1 || MAX_NEEDED_TO % MIN_NEEDED_TO != 0
@@ -335,7 +335,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  if (MAX_NEEDED_TO == 1 || FROM_DIRECTION)
 	    status = SINGLE(FROM_LOOP) (inptrp, inend, &outbuf, outend,
 					data->__statep, data->__flags,
-					step->__data, &converted
+					step->__data, &lirreversible
 					EXTRA_LOOP_ARGS);
 # endif
 # if MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1 && !ONE_DIRECTION
@@ -344,7 +344,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 # if MAX_NEEDED_TO > 1 && !ONE_DIRECTION
 	    status = SINGLE(TO_LOOP) (inptrp, inend, &outbuf, outend,
 				      data->__statep, data->__flags,
-				      step->__data, &converted
+				      step->__data, &lirreversible
 				      EXTRA_LOOP_ARGS);
 # endif
 
@@ -388,12 +388,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		/* Run the conversion loop.  */
 		status = FROM_LOOP (inptrp, inend, &outbuf, outend,
 				    data->__statep, data->__flags,
-				    step->__data, &converted EXTRA_LOOP_ARGS);
+				    step->__data, &lirreversible
+				    EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
 		status = TO_LOOP (inptrp, inend, &outbuf, outend,
 				  data->__statep, data->__flags,
-				  step->__data, &converted EXTRA_LOOP_ARGS);
+				  step->__data, &lirreversible
+				  EXTRA_LOOP_ARGS);
 	    }
 #if !defined _STRING_ARCH_unaligned \
     && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
@@ -405,14 +407,16 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		status = GEN_unaligned (FROM_LOOP) (inptrp, inend, &outbuf,
 						    outend, data->__statep,
 						    data->__flags,
-						    step->__data, &converted
+						    step->__data,
+						    &lirreversible
 						    EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
 		status = GEN_unaligned (TO_LOOP) (inptrp, inend, &outbuf,
 						  outend, data->__statep,
 						  data->__flags,
-						  step->__data, &converted
+						  step->__data,
+						  &lirreversible
 						  EXTRA_LOOP_ARGS);
 	    }
 #endif
@@ -427,8 +431,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
 
-	      /* Remember how many non-identical characters we converted.  */
-	      *written += converted;
+	      /* Remember how many non-identical characters we
+                 converted in a irreversible way.  */
+	      *irreversible += lirreversible;
 
 	      break;
 	    }
@@ -440,7 +445,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      int result;
 
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
-					  outbuf, written, 0,
+					  outbuf, irreversible, 0,
 					  consume_incomplete));
 
 	      if (result != __GCONV_EMPTY_INPUT)
@@ -471,7 +476,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 					     (unsigned char **) &outbuf,
 					     (unsigned char *) outerr,
 					     data->__statep, data->__flags,
-					     step->__data, &converted
+					     step->__data, &lirreversible
 					     EXTRA_LOOP_ARGS);
 		      else
 			/* Run the conversion loop.  */
@@ -480,7 +485,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 					   (unsigned char **) &outbuf,
 					   (unsigned char *) outerr,
 					   data->__statep, data->__flags,
-					   step->__data, &converted
+					   step->__data, &lirreversible
 					   EXTRA_LOOP_ARGS);
 
 		      /* We must run out of output buffer space in this

@@ -193,7 +193,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 	else								      \
@@ -235,7 +235,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		      }							      \
 									      \
 		    ++inptr;						      \
-		    ++*converted;					      \
+		    ++*irreversible;					      \
 		    continue;						      \
 		  }							      \
 		else if (i > 0 && m > 0)				      \
@@ -258,7 +258,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		      }							      \
 									      \
 		    ++inptr;						      \
-		    ++*converted;					      \
+		    ++*irreversible;					      \
 		    continue;						      \
 		  }							      \
 	      }								      \
@@ -279,7 +279,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		      }							      \
 									      \
 		    ++inptr;						      \
-		    ++*converted;					      \
+		    ++*irreversible;					      \
 		    continue;						      \
 		  }							      \
 		else							      \
@@ -309,7 +309,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -404,7 +404,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  }							      \
 									      \
 		inptr += 4;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -441,7 +441,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  }							      \
 									      \
 		inptr += 4;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \

@@ -43,7 +43,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -71,7 +71,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	++*converted; 							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       *outptr++ = from_ucs4[ch];					      \

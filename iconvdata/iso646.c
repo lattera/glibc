@@ -413,7 +413,7 @@ gconv_end (struct __gconv_step *data)
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       {									      \
@@ -890,7 +890,7 @@ gconv_end (struct __gconv_step *data)
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       *outptr++ = (unsigned char) ch;					      \

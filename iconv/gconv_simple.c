@@ -64,7 +64,8 @@ static const unsigned char encoding_byte[] =
 static inline int
 internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, int flags, void *data, size_t *converted)
+		    mbstate_t *state, int flags, void *data,
+		    size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -105,7 +106,7 @@ internal_ucs4_loop_unaligned (const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
 			      mbstate_t *state, int flags, void *data,
-			      size_t *converted)
+			      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -152,7 +153,7 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
 			   mbstate_t *state, int flags, void *data,
-			   size_t *converted)
+			   size_t *irreversible)
 {
   size_t cnt = state->__count & 7;
 
@@ -206,7 +207,8 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
 static inline int
 ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 		    unsigned char **outptrp, unsigned char *outend,
-		    mbstate_t *state, int flags, void *data, size_t *converted)
+		    mbstate_t *state, int flags, void *data,
+		    size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -229,7 +231,7 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
-	      ++*converted;
+	      ++*irreversible;
 	      continue;
 	    }
 
@@ -261,7 +263,7 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
 			      const unsigned char *inend,
 			      unsigned char **outptrp, unsigned char *outend,
 			      mbstate_t *state, int flags, void *data,
-			      size_t *converted)
+			      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -277,7 +279,7 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
-	      ++*converted;
+	      ++*irreversible;
 	      continue;
 	    }
 
@@ -320,7 +322,7 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
 			   const unsigned char *inend,
 			   unsigned char **outptrp, unsigned char *outend,
 			   mbstate_t *state, int flags, void *data,
-			   size_t *converted)
+			   size_t *irreversible)
 {
   size_t cnt = state->__count & 7;
 
@@ -387,7 +389,7 @@ static inline int
 internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
 		      mbstate_t *state, int flags, void *data,
-		      size_t *converted)
+		      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -428,7 +430,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
 				mbstate_t *state, int flags, void *data,
-				size_t *converted)
+				size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -475,7 +477,7 @@ internal_ucs4le_loop_single (const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
 			     mbstate_t *state, int flags, void *data,
-			     size_t *converted)
+			     size_t *irreversible)
 {
   size_t cnt = state->__count & 7;
 
@@ -527,7 +529,7 @@ static inline int
 ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 		      unsigned char **outptrp, unsigned char *outend,
 		      mbstate_t *state, int flags, void *data,
-		      size_t *converted)
+		      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -550,7 +552,7 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
-	      ++*converted;
+	      ++*irreversible;
 	      continue;
 	    }
 
@@ -580,7 +582,7 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
 				const unsigned char *inend,
 				unsigned char **outptrp, unsigned char *outend,
 				mbstate_t *state, int flags, void *data,
-				size_t *converted)
+				size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
@@ -596,7 +598,7 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
 	      /* Just ignore this character.  */
-	      ++*converted;
+	      ++*irreversible;
 	      continue;
 	    }
 
@@ -641,7 +643,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 			     const unsigned char *inend,
 			     unsigned char **outptrp, unsigned char *outend,
 			     mbstate_t *state, int flags, void *data,
-			     size_t *converted)
+			     size_t *irreversible)
 {
   size_t cnt = state->__count & 7;
 
@@ -715,7 +717,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
 	++inptr; 							      \
       }									      \
     else								      \
@@ -753,7 +755,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
 	inptr += 4; 							      \
       }									      \
     else								      \
@@ -933,7 +935,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	      {								      \
 		/* Ignore it.  */					      \
 		inptr += i;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -963,7 +965,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    if (ignore_errors_p ())					      \
 	      {								      \
 		inptr += i;						      \
-		++*converted;						      \
+		++*irreversible;					      \
 		continue;						      \
 	      }								      \
 									      \
@@ -1130,7 +1132,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	  }								      \
 									      \
 	inptr += 4;							      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else 								      \
       *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;		      \
@@ -1186,7 +1188,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	  }								      \
 									      \
 	inptr += 4;							      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     *((uint16_t *) outptr)++ = bswap_16 (val);				      \
     inptr += 4;								      \

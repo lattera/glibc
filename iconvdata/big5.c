@@ -8463,7 +8463,7 @@ static const char from_ucs4_tab13[][2] =
 	      }								      \
 									      \
 	    ++inptr;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -8481,7 +8481,7 @@ static const char from_ucs4_tab13[][2] =
 	      }								      \
 									      \
 	    inptr += 2;							      \
-	    ++*converted;						      \
+	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
 									      \
@@ -8589,7 +8589,7 @@ static const char from_ucs4_tab13[][2] =
 	    break;							      \
 	  }								      \
 									      \
-	++*converted;							      \
+	++*irreversible;						      \
       }									      \
     else								      \
       {									      \

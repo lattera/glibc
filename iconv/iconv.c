@@ -34,17 +34,17 @@ iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
 {
   __gconv_t gcd = (__gconv_t) cd;
   char *outstart = outbuf ? *outbuf : NULL;
-  size_t converted;
+  size_t irreversible;
   int result;
 
   if (__builtin_expect (inbuf == NULL || *inbuf == NULL, 0))
     {
       if (outbuf == NULL || *outbuf == NULL)
-	result = __gconv (gcd, NULL, NULL, NULL, NULL, &converted);
+	result = __gconv (gcd, NULL, NULL, NULL, NULL, &irreversible);
       else
 	result = __gconv (gcd, NULL, NULL, (unsigned char **) outbuf,
 			  (unsigned char *) (outstart + *outbytesleft),
-			  &converted);
+			  &irreversible);
     }
   else
     {
@@ -54,7 +54,7 @@ iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
 			(const unsigned char *)  (*inbuf + *inbytesleft),
 			(unsigned char **) outbuf,
 			(unsigned char *) (*outbuf + *outbytesleft),
-			&converted);
+			&irreversible);
 
       *inbytesleft -= *inbuf - instart;
     }
@@ -65,22 +65,22 @@ iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
     {
     case __GCONV_ILLEGAL_DESCRIPTOR:
       __set_errno (EBADF);
-      converted = (size_t) -1L;
+      irreversible = (size_t) -1L;
       break;
 
     case __GCONV_ILLEGAL_INPUT:
       __set_errno (EILSEQ);
-      converted = (size_t) -1L;
+      irreversible = (size_t) -1L;
       break;
 
     case __GCONV_FULL_OUTPUT:
       __set_errno (E2BIG);
-      converted = (size_t) -1L;
+      irreversible = (size_t) -1L;
       break;
 
     case __GCONV_INCOMPLETE_INPUT:
       __set_errno (EINVAL);
-      converted = (size_t) -1L;
+      irreversible = (size_t) -1L;
       break;
 
     case __GCONV_EMPTY_INPUT:
@@ -92,5 +92,5 @@ iconv (iconv_t cd, char **inbuf, size_t *inbytesleft, char **outbuf,
       assert (!"Nothing like this should happen");
     }
 
-  return converted;
+  return irreversible;
 }
