@@ -139,7 +139,7 @@ endif
 tests: $(objpfx)annexc.out
 $(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
-			       '-I../include -I.. $(+sysdep-includes)' > $@
+			       '-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $@
 
 $(objpfx)annexc: annexc.c
 	$(native-compile)
