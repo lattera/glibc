@@ -2,7 +2,7 @@
 
 	* elf/rtld.c (process_dl_debug): Rewritten.  Optimized for size not
 	speed.
-	(process_envvars): More some optimizations.
+	(process_envvars): Some more optimizations.
 
 	* elf/elf.h: Add dynamic tag definitions for prelinking.
 
