@@ -58,7 +58,7 @@ typedef struct
 
    We need USE_TLS to be consistently defined, for ldsodefs.h conditionals.
    But some of the code below can cause problems in building libpthread
-   (e.g. useldt.h will define FLOATING_STACKS when it shouldn't).  */
+   (e.g. useldt.h will defined FLOATING_STACKS when it shouldn't).  */
 
 #if defined HAVE_TLS_SUPPORT \
     && (defined FLOATING_STACKS || !defined IS_IN_libpthread)
