@@ -448,7 +448,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       assert (!(flags & MAP_SHARED));
       err = __io_map ((mach_port_t) fd, &memobj_rd, &memobj_wr);
       if (err)
-	return (__ptr_t) __hurd_fail (err);
+	return __hurd_fail (err), MAP_FAILED;
       __mach_port_deallocate (__mach_task_self (), memobj_wr);
     }
 

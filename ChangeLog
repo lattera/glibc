@@ -1,3 +1,8 @@
+2002-04-08  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Use MAP_FAILED instead of
+	widening __hurd_fail value.
+
 2002-04-07  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/alpha/trampoline.c: Don't include
