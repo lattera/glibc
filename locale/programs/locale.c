@@ -58,22 +58,24 @@ static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
 /* Definitions of arguments for argp functions.  */
-static struct argp_option options[] =
+static const struct argp_option options[] =
 {
-  { NULL, 0, NULL, 0, "System information:" },
-  { "all-locales", 'a', NULL, 0, "Write names of available locales" },
-  { "charmaps", 'm', NULL, 0, "Write names of available charmaps" },
-  { NULL, 0, NULL, 0, "Modify output format:" },
-  { "category-name", 'c', NULL, 0, "Write names of selected categories" },
-  { "keyword-name", 'k', NULL, 0, "Write names of selected keywords" },
+  { NULL, 0, NULL, 0, N_("System information:") },
+  { "all-locales", 'a', NULL, OPTION_NO_USAGE,
+    N_("Write names of available locales") },
+  { "charmaps", 'm', NULL, OPTION_NO_USAGE,
+    N_("Write names of available charmaps") },
+  { NULL, 0, NULL, 0, N_("Modify output format:") },
+  { "category-name", 'c', NULL, 0, N_("Write names of selected categories") },
+  { "keyword-name", 'k', NULL, 0, N_("Write names of selected keywords") },
   { NULL, 0, NULL, 0, NULL }
 };
 
 /* Short description of program.  */
-static const char doc[] = "Get locale-specific information.";
+static const char doc[] = N_("Get locale-specific information.");
 
 /* Strings for arguments in help texts.  */
-static const char args_doc[] = "NAME\n[-a|-m]";
+static const char args_doc[] = N_("NAME\n[-a|-m]");
 
 /* Prototype for option handler.  */
 static error_t parse_opt (int key, char *arg, struct argp_state *state);

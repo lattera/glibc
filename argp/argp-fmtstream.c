@@ -240,7 +240,14 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      nextline = p;
 	    }
 
-	  if (nextline - (nl + 1) < fs->wmargin)
+	  /* Note: There are a bunch of tests below for
+	     NEXTLINE == BUF + LEN + 1; this case is where NL happens to fall
+	     at the end of the buffer, and NEXTLINE is in fact empty (and so
+	     we need not be careful to maintain its contents).  */
+
+	  if (nextline == buf + len + 1
+	      ? fs->end - nl < fs->wmargin + 1
+	      : nextline - (nl + 1) < fs->wmargin)
 	    /* The margin needs more blanks than we removed.  */
 	    if (fs->end - fs->p > fs->wmargin + 1)
 	      /* Make some space for them.  */
@@ -265,7 +272,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	       the next word.  */
 	    *nl++ = '\n';
 
-	  if (nextline - nl >= fs->wmargin)
+	  if (nextline - nl >= fs->wmargin
+	      || (nextline == buf + len + 1 && fs->end - nextline >= fs->wmargin))
 	    /* Add blanks up to the wrap margin column.  */
 	    for (i = 0; i < fs->wmargin; ++i)
 	      *nl++ = ' ';
@@ -275,7 +283,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 
 	  /* Copy the tail of the original buffer into the current buffer
 	     position.  */
-	  if (nl != nextline)
+	  if (nl < nextline)
 	    memmove (nl, nextline, buf + len - nextline);
 	  len -= nextline - buf;
 

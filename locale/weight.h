@@ -55,8 +55,8 @@ typedef struct weight_t
 # define collate_rules \
   ((u_int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
 
-static __inline int get_weight (const STRING_TYPE **str, weight_t *result);
-static __inline int
+static __inline void get_weight (const STRING_TYPE **str, weight_t *result);
+static __inline void
 get_weight (const STRING_TYPE **str, weight_t *result)
 #else
 # define collate_nrules \
@@ -70,11 +70,11 @@ get_weight (const STRING_TYPE **str, weight_t *result)
 # define collate_rules \
   ((u_int32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULES)].string)
 
-static __inline int get_weight (const STRING_TYPE **str, weight_t *result,
-				struct locale_data *current,
-				const u_int32_t *__collate_table,
-				const u_int32_t *__collate_extra);
-static __inline int
+static __inline void get_weight (const STRING_TYPE **str, weight_t *result,
+				 struct locale_data *current,
+				 const u_int32_t *__collate_table,
+				 const u_int32_t *__collate_extra);
+static __inline void
 get_weight (const STRING_TYPE **str, weight_t *result,
 	    struct locale_data *current, const u_int32_t *__collate_table,
 	    const u_int32_t *__collate_extra)
@@ -107,7 +107,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 		  result->data[cnt].value = &__collate_extra[idx];
 		  idx += result->data[cnt].number;
 		}
-	      return 0;
+	      return;
 	    }
 	  slot += level_size;
 	}
@@ -123,7 +123,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 	  result->data[cnt].number = 1;
 	  result->data[cnt].value = &__collate_table[slot + 1 + cnt];
 	}
-      return ch == 0;
+      return;
     }
 
   /* We now look for any collation element which starts with CH.
@@ -156,14 +156,12 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 	      result->data[cnt].value = &__collate_extra[idx];
 	      idx += result->data[cnt].number;
 	    }
-	  return 0;
+	  return;
 	}
 
       /* To next entry in list.  */
       slot += __collate_extra[slot];
     }
-  /* NOTREACHED */
-  return 0;	/* To calm down gcc.  */
 }
 
 
@@ -174,7 +172,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
    order.
 
    We have this strange extra macro since the functions which use the
-   given locale (not the global one) canot use the global tables.  */
+   given locale (not the global one) cannot use the global tables.  */
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
 # define call_get_weight(strp, newp) get_weight ((strp), (newp))
 #else
@@ -182,11 +180,11 @@ get_weight (const STRING_TYPE **str, weight_t *result,
   get_weight ((strp), (newp), current, collate_table, collate_extra)
 #endif
 
-#define get_string(str, forw, backw)					      \
+#define get_string(str, forw, backw) \
   do									      \
     {									      \
       weight_t *newp;							      \
-      do								      \
+      while (*str != '\0')						      \
 	{								      \
 	  newp = (weight_t *) alloca (sizeof (weight_t)			      \
 				      + (collate_nrules			      \
@@ -199,7 +197,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 	    backw->next = newp;						      \
 	  newp->next = NULL;						      \
 	  backw = newp;							      \
+	  call_get_weight (&str, newp);					      \
 	}								      \
-      while (call_get_weight (&str, newp) == 0);			      \
     }									      \
   while (0)

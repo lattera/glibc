@@ -568,12 +568,6 @@ something like this:
 GROUP ( libc.so.6 ld.so.1 libc.a )
 
 
-{UD} The Linux ldconfig file probably generates a link libc.so ->
-libc.so.6 in /lib.  This is not correct.  There must not be such a
-link.  The linker script with the above contents is placed in
-/usr/lib which is enough for the linker.
-
-
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q18]	``The prototypes for `connect', `accept', `getsockopt',
 	  `setsockopt', `getsockname', `getpeername', `send',

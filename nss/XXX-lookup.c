@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -26,6 +26,9 @@
 |*		   (e.g., hosts, services, ...)			   *|
 |* 								   *|
 |* One additional symbol may optionally be defined:		   *|
+|* 								   *|
+|* ALTERNATE_NAME - name of another service which is examined in   *|
+|*                  case DATABASE_NAME is not found                *|
 |* 								   *|
 |* DEFAULT_CONFIG - string for default conf (e.g. "dns files")	   *|
 |* 								   *|

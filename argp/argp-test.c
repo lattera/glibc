@@ -187,7 +187,7 @@ help_filter (int key, const char *text, void *input)
     asprintf (&new_text, "%s (ZOT defaults to %x)",
 	      text, params->foonly_default);
   else
-    new_text = (char *) text;
+    new_text = (char *)text;
 
   return new_text;
 }

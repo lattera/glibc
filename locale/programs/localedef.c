@@ -21,9 +21,9 @@
 # include <config.h>
 #endif
 
+#include <argp.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
@@ -73,20 +73,62 @@ int verbose;
 /* If not zero suppress warnings and information messages.  */
 int be_quiet;
 
+/* If not zero force output even if warning were issued.  */
+static int force_output;
 
-/* Long options.  */
-static const struct option long_options[] =
+/* Name of the character map file.  */
+static const char *charmap_file;
+
+/* Name of the locale definition file.  */
+static const char *input_file;
+
+/* Name of the UCS file.  */
+static const char *ucs_csn;
+
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+
+#define OPT_POSIX 1
+#define OPT_QUIET 2
+
+/* Definitions of arguments for argp functions.  */
+static const struct argp_option options[] =
 {
-  { "charmap", required_argument, NULL, 'f' },
-  { "code-set-name", required_argument, NULL, 'u' },
-  { "help", no_argument, NULL, 'h' },
-  { "force", no_argument, NULL, 'c' },
-  { "inputfile", required_argument, NULL, 'i' },
-  { "posix", no_argument, &posix_conformance, 1 },
-  { "quiet", no_argument, NULL, 'q' },
-  { "verbose", no_argument, &verbose, 1},
-  { "version", no_argument, NULL, 'V' },
-  { NULL, 0, NULL, 0 }
+  { NULL, 0, NULL, 0, N_("Input Files:") },
+  { "charmap", 'f', "FILE", 0,
+    N_("Symbolic character names defined in FILE") },
+  { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
+  { "code-set-name", 'u', "NAME", OPTION_HIDDEN,
+    N_("Specify code set for mapping ISO 10646 elements") },
+
+  { NULL, 0, NULL, 0, N_("Output control:") },
+  { "force", 'c', NULL, 0,
+    N_("Create output even if warning messages were issued") },
+  { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
+  { "quiet", OPT_QUIET, NULL, 0,
+    N_("Suppress warnings and information messages") },
+  { "verbose", 'V', NULL, 0, N_("print more messages") },
+  { NULL, 0, NULL, 0, NULL }
+};
+
+/* Short description of program.  */
+static const char doc[] = N_("Compile locale specification");
+
+/* Strings for arguments in help texts.  */
+static const char args_doc[] = N_("NAME");
+
+/* Prototype for option handler.  */
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
+
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, args_doc, doc, NULL, more_help
 };
 
 
@@ -94,7 +136,6 @@ static const struct option long_options[] =
 void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
-static void usage (int status) __attribute__ ((noreturn));
 static void error_print (void);
 static const char *construct_output_path (char *path);
 
@@ -102,13 +143,6 @@ static const char *construct_output_path (char *path);
 int
 main (int argc, char *argv[])
 {
-  int optchar;
-  int do_help = 0;
-  int do_version = 0;
-  int force_output = 0;
-  const char *charmap_file = NULL;
-  const char *input_file = NULL;
-  const char *ucs_csn = NULL;
   const char *output_path;
   int cannot_write_why;
   struct charset_t *charset;
@@ -119,7 +153,6 @@ main (int argc, char *argv[])
   copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
   error_print_progname = error_print;
-  verbose = 0;
 
   /* Set locale.  Do not set LC_ALL because the other categories must
      not be affected (according to POSIX.2).  */
@@ -129,82 +162,26 @@ main (int argc, char *argv[])
   /* Initialize the message catalog.  */
   textdomain (_libc_intl_domainname);
 
-  while ((optchar = getopt_long (argc, argv, "cf:hi:u:vV", long_options, NULL))
-         != -1)
-    switch (optchar)
-      {
-      case '\0':		/* Long option.  */
-        break;
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, 0, NULL);
 
-      case 'c':
-	force_output = 1;
-	break;
-
-      case 'f':
-        charmap_file = optarg;
-        break;
-
-      case 'h':
-        do_help = 1;
-        break;
-
-      case 'i':
-	input_file = optarg;
-        break;
-
-      case 'q':
-	be_quiet = 1;
-	verbose = 0;
-	break;
-
-      case 'u':
-	ucs_csn = optarg;
-	break;
-
-      case 'v':
-        verbose = 1;
-	be_quiet = 0;
-        break;
-
-      case 'V':
-        do_version = 1;
-        break;
-
-      default:
-        usage (4);	/* A value >3 is forced by POSIX.  */
-        break;
-      }
+  /* XXX POSIX is violated since for unknown option a exit value > 3
+     must be used.  */
 
   /* POSIX.2 requires to be verbose about missing characters in the
      character map.  */
   verbose |= posix_conformance;
 
-  /* Version information is requested.  */
-  if (do_version)
-    {
-      printf ("localedef (GNU %s) %s\n", PACKAGE, VERSION);
-      printf (_("\
-Copyright (C) %s Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1995, 1996, 1997");
-      printf (_("Written by %s.\n"), "Ulrich Drepper");
-
-      exit (0);
-    }
-
-  /* Help is requested.  */
-  if (do_help)
-    /* Possible violation: POSIX.2 4.35.8 defines the return value 0 as
-       "No errors occurred and the locale(s) were successfully created."
-       But giving a other value than 0 does not make sense here.  It
-       is perhaps not that important because POSIX does not specify the
-       -h option for localedef.  */
-    usage (0);
-
   if (argc - optind != 1)
-    /* We need exactly one non-option parameter.  */
-    usage (4);
+    {
+      /* We need exactly one non-option parameter.  */
+      argp_help (&argp, stdout, ARGP_HELP_SEE,
+		 program_invocation_short_name);
+
+      /* XXX Currently POSIX is violated.  We must exit with code 4
+	 but the argp_help function currently does not allow this.  */
+      exit (4);
+    }
 
   /* The parameter describes the output path of the constructed files.
      If the described files cannot be written return a NULL pointer.  */
@@ -353,6 +330,76 @@ cannot `stat' locale file `%s'"),
 }
 
 
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  switch (key)
+    {
+    case OPT_QUIET:
+      be_quiet = 1;
+      break;
+    case OPT_POSIX:
+      posix_conformance = 1;
+      break;
+    case 'c':
+      force_output = 1;
+      break;
+    case 'f':
+      charmap_file = arg;
+      break;
+    case 'i':
+      input_file = arg;
+      break;
+    case 'u':
+      ucs_csn = arg;
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
+}
+
+
+static char *
+more_help (int key, const char *text, void *input)
+{
+  char *cp;
+
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      asprintf (&cp, gettext ("\
+System's directory for character maps: %s\n\
+                       locale files  : %s\n\
+%s"),
+		CHARMAP_PATH, LOCALE_PATH, gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+      return cp;
+    default:
+      break;
+    }
+  return (char *) text;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "localedef (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1995, 1996, 1997");
+  fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
+}
+
+
 void
 def_to_process (const char *name, int category)
 {
@@ -387,40 +434,6 @@ def_to_process (const char *name, int category)
 category data requested more than once: should not happen"));
 
   new->mask |= category;
-}
-
-
-/* Display usage information and exit.  */
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_invocation_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... name\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
-  -c, --force               create output even if warning messages were issued\n\
-  -h, --help                display this help and exit\n\
-  -f, --charmap=FILE        symbolic character names defined in FILE\n\
-  -i, --inputfile=FILE      source definitions are found in FILE\n\
-      --quiet               Suppress warnings and information messages\n\
-  -u, --code-set-name=NAME  specify code set for mapping ISO 10646 elements\n\
-  -v, --verbose             print more messages\n\
-  -V, --version             output version information and exit\n\
-      --posix               be strictly POSIX conform\n\
-\n\
-System's directory for character maps: %s\n\
-                       locale files  : %s\n"),
-	      program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
-      fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
-	     stdout);
-    }
-
-  exit (status);
 }
 
 

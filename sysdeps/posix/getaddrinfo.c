@@ -64,6 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
+#include <arpa/inet.h>
 
 #ifndef AF_LOCAL
 #define AF_LOCAL AF_UNIX
@@ -202,7 +203,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 
   if (req->ai_protocol || req->ai_socktype) {
     for (tp++; tp->name &&
-	  ((req->ai_socktype != tp->socktype) || !req->ai_socktype) && 
+	  ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
 	  ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
     if (!tp->name)
       if (req->ai_socktype)
@@ -414,7 +415,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 
   if (!pai) {
     i = 0;
-    goto ret; 
+    goto ret;
   };
 
   {
@@ -438,9 +439,9 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	char *tmpbuf = __alloca(tmpbuflen);
 	while (__gethostbyaddr_r(at2->addr,
 #if INET6
-	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) : 
+	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) :
 #endif /* INET6 */
-				 sizeof(struct in_addr), at2->family, 
+				 sizeof(struct in_addr), at2->family,
 				 &th, tmpbuf, tmpbuflen, &h, &herrno)) {
 	  if (herrno == NETDB_INTERNAL) {
 	    if (errno == ERANGE) {
@@ -454,7 +455,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	      goto ret;
 	    }
 	  } else {
-	    break; 
+	    break;
 	  }
 	}
 #endif /* RESOLVER */
@@ -462,7 +463,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	if (!h)
 	  h = _addr2hostname_hosts(at2->addr,
 #if INET6
-	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) : 
+	    (at2->family == AF_INET6) ? sizeof(struct in6_addr) :
 #endif /* INET6 */
 	    sizeof(struct in_addr), at2->family);
 #endif /* HOSTTABLE */
@@ -516,7 +517,7 @@ static int gaih_inet(const char *name, const struct gaih_service *service,
 	  memcpy(&((struct sockaddr_in *)(*pai)->ai_addr)->sin_addr, at2->addr, sizeof(struct in_addr));
 	  memset(((struct sockaddr_in *)(*pai)->ai_addr)->sin_zero, 0, sizeof(((struct sockaddr_in *)(*pai)->ai_addr)->sin_zero));
 	}
-	
+
 	if (c) {
 	  (*pai)->ai_canonname = (void *)(*pai) + sizeof(struct addrinfo) + i;
 	  strcpy((*pai)->ai_canonname, c);

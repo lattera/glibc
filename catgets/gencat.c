@@ -21,12 +21,12 @@
 # include <config.h>
 #endif
 
+#include <argp.h>
 #include <ctype.h>
 #include <endian.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <locale.h>
 #include <libintl.h>
 #include <limits.h>
@@ -88,22 +88,55 @@ struct catalog
 /* If non-zero force creation of new file, not using existing one.  */
 static int force_new;
 
-/* Long options.  */
-static const struct option long_options[] =
+/* Name of output file.  */
+static const char *output_name;
+
+/* Name of generated C header file.  */
+static const char *header_name;
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+
+#define OPT_NEW 1
+
+/* Definitions of arguments for argp functions.  */
+static const struct argp_option options[] =
 {
-  { "header", required_argument, NULL, 'H' },
-  { "help", no_argument, NULL, 'h' },
-  { "new", no_argument, &force_new, 1 },
-  { "output", required_argument, NULL, 'o' },
-  { "version", no_argument, NULL, 'V' },
-  { NULL, 0, NULL, 0 }
+  { "header", 'H', N_("NAME"), 0,
+    N_("Create C header file NAME containing symbol definitions") },
+  { "new", OPT_NEW, NULL, 0,
+    N_("Do not use existing catalog, force new output file") },
+  { "output", 'o', N_("NAME"), 0, N_("Write output to file NAME") },
+  { NULL, 0, NULL, 0, NULL }
 };
+
+/* Short description of program.  */
+static const char doc[] = N_("Generate message catalog.\
+\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
+is -, output is written to standard output.\n");
+
+/* Strings for arguments in help texts.  */
+static const char args_doc[] = N_("\
+-o OUTPUT-FILE [INPUT-FILE]...\n[OUTPUT-FILE [INPUT-FILE]...]");
+
+/* Prototype for option handler.  */
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
+
+/* Function to print some extra text in the help message.  */
+static char *more_help (int key, const char *text, void *input);
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, args_doc, doc, NULL, more_help
+};
+
 
 /* Wrapper functions with error checking for standard functions.  */
 extern void *xmalloc (size_t n);
 
 /* Prototypes for local functions.  */
-static void usage (int status) __attribute__ ((noreturn));
 static void error_print (void);
 static struct catalog *read_input_file (struct catalog *current,
 					const char *fname);
@@ -119,11 +152,6 @@ int
 main (int argc, char *argv[])
 {
   struct catalog *result;
-  const char *output_name;
-  const char *header_name;
-  int do_help;
-  int do_version;
-  int opt;
 
   /* Set program name for messages.  */
   error_print_progname = error_print;
@@ -135,50 +163,10 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   /* Initialize local variables.  */
-  do_help = 0;
-  do_version = 0;
-  output_name = NULL;
-  header_name = NULL;
   result = NULL;
 
-  while ((opt = getopt_long (argc, argv, "hH:o:V", long_options, NULL)) != -1)
-    switch (opt)
-      {
-      case '\0':	/* Long option.  */
-	break;
-      case 'h':
-	do_help = 1;
-	break;
-      case 'H':
-	header_name = optarg;
-	break;
-      case 'o':
-	output_name = optarg;
-	break;
-      case 'V':
-	do_version = 1;
-	break;
-      default:
-	usage (EXIT_FAILURE);
-      }
-
-  /* Version information is requested.  */
-  if (do_version)
-    {
-      printf ("gencat (GNU %s) %s\n", PACKAGE, VERSION);
-      printf (_("\
-Copyright (C) %s Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996, 1997");
-      printf (_("Written by %s.\n"), "Ulrich Drepper");
-
-      exit (EXIT_SUCCESS);
-    }
-
-  /* Help is requested.  */
-  if (do_help)
-    usage (EXIT_SUCCESS);
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, 0, NULL);
 
   /* Determine output file.  */
   if (output_name == NULL)
@@ -201,32 +189,54 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 }
 
 
-static void
-usage (int status)
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
 {
-  if (status != EXIT_SUCCESS)
-    fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
-             program_invocation_name);
-  else
+  switch (key)
     {
-      printf (gettext ("\
-Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n\
-       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
-  -H, --header        create C header file containing symbol definitions\n\
-  -h, --help          display this help and exit\n\
-      --new           do not use existing catalog, force new output file\n\
-  -o, --output=NAME   write output to file NAME\n\
-  -V, --version       output version information and exit\n\
-If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
-is -, output is written to standard output.\n"),
-	      program_invocation_name, program_invocation_name);
-      fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
-	     stdout);
+    case 'H':
+      header_name = arg;
+      break;
+    case OPT_NEW:
+      force_new = 1;
+      break;
+    case 'o':
+      output_name = arg;
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
     }
+  return 0;
+}
 
-  exit (status);
+
+static char *
+more_help (int key, const char *text, void *input)
+{
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      return strdup (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+    default:
+      break;
+    }
+  return (char *) text;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "gencat (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1996, 1997");
+  fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
 

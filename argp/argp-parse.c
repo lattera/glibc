@@ -106,7 +106,7 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
       break;
 
     case OPT_PROGNAME:		/* Set the program name.  */
-      program_invocation_short_name = arg;
+      program_invocation_name = arg;
 
       /* [Note that some systems only have PROGRAM_INVOCATION_SHORT_NAME (aka
 	 __PROGNAME), in which case, PROGRAM_INVOCATION_NAME is just defined
@@ -117,10 +117,13 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
       else
 	program_invocation_short_name = program_invocation_name;
 
+      /* Update what we use for messages.  */
+      state->name = program_invocation_short_name;
+
       if ((state->flags & (ARGP_PARSE_ARGV0 | ARGP_NO_ERRS))
 	  == ARGP_PARSE_ARGV0)
 	/* Update what getopt uses too.  */
-	state->argv[0] = program_invocation_short_name;
+	state->argv[0] = program_invocation_name;
 
       break;
 
@@ -522,16 +525,17 @@ parser_init (struct parser *parser, const struct argp *argp,
   memset (parser->child_inputs, 0, szs.num_child_inputs * sizeof (void *));
   parser_convert (parser, argp, flags);
 
-  parser->try_getopt = 1;
-
   memset (&parser->state, 0, sizeof (struct argp_state));
   parser->state.argp = parser->argp;
   parser->state.argc = argc;
   parser->state.argv = argv;
+  parser->state.flags = flags;
   parser->state.err_stream = stderr;
   parser->state.out_stream = stdout;
   parser->state.next = 0;	/* Tell getopt to initialize.  */
   parser->state.pstate = parser;
+
+  parser->try_getopt = 1;
 
   /* Call each parser for the first time, giving it a chance to propagate
      values to child parsers.  */
@@ -552,12 +556,6 @@ parser_init (struct parser *parser, const struct argp *argp,
   if (err)
     return err;
 
-  if (parser->state.argv == argv && argv[0])
-    /* There's an argv[0]; use it for messages.  */
-    parser->state.name = argv[0];
-  else
-    parser->state.name = program_invocation_name;
-
   /* Getopt is (currently) non-reentrant.  */
   LOCK_GETOPT;
 
@@ -571,6 +569,15 @@ parser_init (struct parser *parser, const struct argp *argp,
     }
   else
     opterr = 1;		/* Print error messages.  */
+
+  if (parser->state.argv == argv && argv[0])
+    /* There's an argv[0]; use it for messages.  */
+    {
+      char *short_name = strrchr (argv[0], '/');
+      parser->state.name = short_name ? short_name + 1 : argv[0];
+    }
+  else
+    parser->state.name = program_invocation_short_name;
 
   return 0;
 }

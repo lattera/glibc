@@ -37,6 +37,7 @@ gnu-ld = @gnu_ld@
 build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@
+build-bounded = @bounded@
 stdio = @stdio@
 add-ons = @subdirs@
 

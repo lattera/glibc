@@ -1,3 +1,132 @@
+1997-02-22 00:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c: Change to use argp.
+	* db/makedb: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+	* locale/programs/locale.c: Little adjustment for better usage of
+	argp.
+
+1997-02-20 20:07  Greg McGary  <gkm@eng.ascend.com>
+
+	* Makeconfig: Add rules for libc with bounded pointers.
+	* Makerules: Likewise.
+	* config.make.in: Likewise.
+	* configure.in: Likewise.
+
+1997-02-21 10:41  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp.h (OPTION_NO_USAGE): New macro.
+	* argp-help.c (usage_long_opt, usage_argful_short_opt,
+	add_argless_short_opt): Implement OPTION_NO_USAGE.
+
+1997-02-20 16:41  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/obstack.h: Fix typo.
+
+1997-02-20 15:56  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-fmtstream.c (__argp_fmtstream_update): Account for case
+	where NEXTLINE points one past the end of the active buffer.
+
+	* argp-help.c <stddef.h>: New include.
+	(__argp_failure): Only exit if STATE says it's ok.
+	(print_header, hol_entry_help): Use UPARAMS fields rather than
+	constants.
+	(_help): Call fill_in_uparams if necessary.
+	(struct hol_help_state): New type.
+	(struct pentry_state): Add hhstate field.  Remove prev_entry &
+	sep_groups fields.
+	(hol_entry_help): Add HHSTATE parameter.  Remove prev_entry &
+	sep_groups parameters.
+	Suppress duplicate arguments if requested, and note the fact.
+	(print_header, comma): Use PEST->hhstate fields.
+	(hol_help): Add HHSTATE variable & pass to hol_entry_help.
+	Remove LAST_ENTRY & SEP_GROUPS variables.
+	If any suplicate arguments were suppressed, print explanatory note.
+	(filter_doc): Replace PEST parameter with STATE.
+	(struct uparams): New type.
+	(uparams): New variable.
+	(struct uparam_name): New type.
+	(uparam_names): New variable.
+	(fill_in_uparams): New function.
+	(__argp_failure, __argp_error, __argp_state_help): Make STATE
+	parameter const.
+	* argp.h (argp_state_help, __argp_state_help, argp_usage,
+	__argp_usage, argp_error, __argp_error, argp_failure,
+	__argp_failure): Make STATE parameter const.
+	(ARGP_KEY_HELP_DUP_ARGS_NOTE): New macro.
+
+	* argp.h (argp_program_bug_address): Make const.
+
+1997-02-20 19:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/mman/syscalls.list: Explain msync interface.
+
+1997-02-19 01:37  Erik Troan  <ewt@redhat.com>
+
+	* shadow/sgetspent_r.c: Accept empty third, fourth and fifth fields.
+
+1997-02-20 14:44  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdio-common/test-fseek.c: Remove temporary file, add
+	copyright.
+
+1997-02-20 17:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/netinet/in.h: Protect contents using
+	__BEGIN/END_DECLS.  Reported by a sun <asun@zoology.washington.edu>.
+
+	* inet/net/ethernet.h: Move to sysdeps/unix/sysv/linux/net.
+	* inet/Makefile (headers): Remove net/ethernet.h.
+	* sysdeps/unix/sysv/linux/Makefile: Install net/ethernet.h.
+	* sysdeps/unix/sysv/linux/Dist: Distribute net/ethernet.h.
+
+1997-02-20 15:23  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nss/nsswitch.c (__nss_configure_lookup): Use correct test when
+	searching in sorted array.
+
+1997-02-20 01:24  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* inet/getnameinfo.c: Change to use reentrant getXXbyYY functions
+	and protect modification of global data.
+
+1997-02-19 18:48  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-parse.c (argp_default_parser): Set STATE->name for OPT_PROGNAME.
+	(parser_init): Use the basename for PARSER->state.name.
+	* argp-help.c (__argp_error, __argp_failure, __argp_state_help):
+	Use PROGRAM_INVOCATION_SHORT_NAME instead of PROGRAM_INVOCATION_NAME.
+
+	* argp-parse.c (parser_init): Set PARSER->state.flags.
+	Make check whether PARSER has the prog name in argv[0] at the
+	proper place.
+
+1997-02-19 23:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-time.c (time_finish): t_fmt_ampm is optional.
+	Use default value instead of printing a warning.
+
+	* nss/XXX-lookup.c: Add misssing explanation.
+
+1997-02-19 19:14  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* inet/in6_addr.c: Add missing braces.
+
+	* inet/getnameinfo.c: Include <arpa/inet.h>.
+
+	* sysdeps/posix/getaddrinfo.c: Include <arpa/inet.h>.
+
+1997-02-19 11:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/strxfrm.c (STRCOLL): Correct handling of `position'
+	levels with no non-IGNOREd element and handling of NUL byte.
+	* string/strcoll.c (STRXFRM): Likewise.
+	* locale/weight.h: Likewise.
+
+	* shadow/sgetspent_r.c (LINE_PARSER): Add missing ')'.
+
 1997-02-19 03:28  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* argp/argp-help.c: Add support for user provided filter of help

@@ -45,6 +45,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define INET6 1
 #define LOCAL 1
 #define HOSTTABLE 0
+#define RESOLVER 1
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -59,6 +60,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <alloca.h>
+#include <libc-lock.h>
+#include <arpa/inet.h>
 
 #ifndef AF_LOCAL
 #define AF_LOCAL AF_UNIX
@@ -79,39 +83,91 @@ struct hostent *_addr2hostname_hosts(const char *, int, int);
 static char *domain;
 static char domainbuffer[MAXHOSTNAMELEN];
 
-
-static char *
-nrl_domainname (void)
+static char *nrl_domainname(void)
 {
   static int first = 1;
 
   if (first) {
-    char *c;
-    struct hostent *h;
 
-    first = 0;
+    __libc_lock_define_initialized (static, lock);
+    __libc_lock_lock (lock);
 
-    if ((h = gethostbyname("localhost")) && (c = strchr(h->h_name, '.')))
-      return strcpy(domain = domainbuffer, ++c);
+    if (first) {
+      char *c;
+      struct hostent *h, th;
+      int tmpbuflen = 1024;
+      char *tmpbuf = __alloca(tmpbuflen);
+      int herror;
 
-    if (!gethostname(domainbuffer, sizeof(domainbuffer))) {
-      if (c = strchr(domainbuffer, '.'))
-        return (domain = ++c);
+      first = 0;
 
-      if ((h = gethostbyname(domainbuffer)) && (c = strchr(h->h_name, '.')))
-        return strcpy(domain = domainbuffer, ++c);
+      while (__gethostbyname_r("localhost", &th, tmpbuf, tmpbuflen, &h,
+			       &herror)) {
+	if (herror == NETDB_INTERNAL) {
+	  if (errno == ERANGE) {
+	    tmpbuflen *= 2;
+	    tmpbuf = __alloca(tmpbuflen);
+	  }
+	} else {
+	  break;
+	}
+      }
+
+      if (h && (c = strchr(h->h_name, '.'))) {
+	strcpy(domain = domainbuffer, ++c);
+	goto ret;
+      }
+
+      if (!gethostname(domainbuffer, sizeof(domainbuffer))) {
+	if (c = strchr(domainbuffer, '.')) {
+	  domain = ++c;
+	  goto ret;
+	}
+
+	while (__gethostbyname_r(domainbuffer, &th, tmpbuf, tmpbuflen, &h,
+				 &herror)) {
+	  if (herror == NETDB_INTERNAL) {
+	    if (errno == ERANGE) {
+	      tmpbuflen *= 2;
+	      tmpbuf = __alloca(tmpbuflen);
+	    }
+	  } else {
+	    break;
+	  }
+	}
+
+	if (h && (c = strchr(h->h_name, '.'))) {
+	  strcpy(domain = domainbuffer, ++c);
+	  goto ret;
+	}
+      }
+
+      {
+	struct in_addr in_addr;
+
+	in_addr.s_addr = htonl(0x7f000001);
+
+	while (__gethostbyaddr_r((const char *)&in_addr, sizeof(struct in_addr), AF_INET, &th, tmpbuf, tmpbuflen, &h, &herror)) {
+	  if (herror == NETDB_INTERNAL) {
+	    if (errno == ERANGE) {
+	      tmpbuflen *= 2;
+	      tmpbuf = __alloca(tmpbuflen);
+	    }
+	  } else {
+	    break;
+	  }
+	}
+
+	if (h && (c = strchr(h->h_name, '.'))) {
+	  domain = domainbuffer, ++c;
+	  goto ret;
+	}
+      }
+
     }
 
-    {
-      struct in_addr in_addr;
-
-      in_addr.s_addr = htonl(0x7f000001);
-
-      if ((h = gethostbyaddr((const char *)&in_addr, sizeof(struct in_addr), AF_INET)) && (c = strchr(h->h_name, '.')))
-        return strcpy(domain = domainbuffer, ++c);
-    }
-
-    return NULL;
+  ret:
+    __libc_lock_unlock (lock);
   };
 
   return domain;
@@ -120,6 +176,10 @@ nrl_domainname (void)
 int getnameinfo(const struct sockaddr *sa, size_t addrlen, char *host, size_t hostlen, char *serv, size_t servlen, int flags)
 {
   int serrno = errno;
+  int tmpbuflen = 1024;
+  int herrno;
+  char *tmpbuf = __alloca(tmpbuflen);
+  struct hostent th;
 
   if (!sa)
     return -1;
@@ -144,20 +204,39 @@ int getnameinfo(const struct sockaddr *sa, size_t addrlen, char *host, size_t ho
 #if RESOLVER
 	  if (!h) {
 #if INET6
-	    if (sa->sa_family == AF_INET6)
-	      h = gethostbyaddr((void *)&(((struct sockaddr_in6 *)sa)->sin6_addr), sizeof(struct in6_addr), AF_INET6);
-	    else
+	    if (sa->sa_family == AF_INET6) {
+	      while (__gethostbyaddr_r((void *)&(((struct sockaddr_in6 *)sa)->sin6_addr), sizeof(struct in6_addr), AF_INET6, &th, tmpbuf, tmpbuflen, &h, &herrno)) {
+		if (herrno == NETDB_INTERNAL) {
+		  if (errno == ERANGE) {
+		    tmpbuflen *= 2;
+		    tmpbuf = __alloca(tmpbuflen);
+		  } else {
+		    __set_h_errno(herrno);
+		    goto fail;
+		  }
+		} else {
+		  break;
+		}
+	      }
+	    } else {
 #endif /* INET6 */
-	      h = gethostbyaddr((void *)&(((struct sockaddr_in *)sa)->sin_addr), sizeof(struct in_addr), AF_INET);
-	    endhostent();
-	  };
+	      while (__gethostbyaddr_r((void *)&(((struct sockaddr_in *)sa)->sin_addr), sizeof(struct in_addr), AF_INET, &th, tmpbuf, tmpbuflen, &h, &herrno)) {
+		if (errno == ERANGE) {
+		  tmpbuflen *= 2;
+		  tmpbuf = __alloca(tmpbuflen);
+		} else {
+		  break;
+		}
+	      }
+	    }
+	  }
 #endif /* RESOLVER */
 
 	  if (h) {
 	    if (flags & NI_NOFQDN) {
 	      char *c;
 	      if ((c = nrl_domainname()) && (c = strstr(h->h_name, c)) && (c != h->h_name) && (*(--c) == '.')) {
-		strncpy(host, h->h_name, min(hostlen, (c - h->h_name)));
+		strncpy(host, h->h_name, min(hostlen, (size_t) (c - h->h_name)));
 		break;
 	      };
 	    };
@@ -210,8 +289,20 @@ int getnameinfo(const struct sockaddr *sa, size_t addrlen, char *host, size_t ho
       case AF_INET6:
 #endif /* INET6 */
 	if (!(flags & NI_NUMERICSERV)) {
-	  struct servent *s;
-	  if (s = getservbyport(((struct sockaddr_in *)sa)->sin_port, (flags & NI_DGRAM) ? "udp" : "tcp")) {
+	  struct servent *s, ts;
+	  while (__getservbyport_r(((struct sockaddr_in *)sa)->sin_port, ((flags & NI_DGRAM) ? "udp" : "tcp"), &ts, tmpbuf, tmpbuflen, &s)) {
+	    if (herrno == NETDB_INTERNAL) {
+	      if (errno == ERANGE) {
+		tmpbuflen *= 2;
+		tmpbuf = __alloca(tmpbuflen);
+	      } else {
+		goto fail;
+	      }
+	    } else {
+	      break;
+	    }
+	  }
+	  if (s) {
 	    strncpy(serv, s->s_name, servlen);
 	    break;
 	  };
@@ -224,7 +315,6 @@ int getnameinfo(const struct sockaddr *sa, size_t addrlen, char *host, size_t ho
 	break;
 #endif /* LOCAL */
     };
-
   if (host && (hostlen > 0))
     host[hostlen-1] = 0;
   if (serv && (servlen > 0))

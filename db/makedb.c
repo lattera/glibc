@@ -1,4 +1,4 @@
-/* makedb -- create simple DB database from textual input.
+/* Create simple DB database from textual input.
    Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
@@ -18,12 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <db.h>
+#include <argp.h>
 #include <ctype.h>
+#include <db.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
@@ -35,20 +35,55 @@
 
 #define PACKAGE _libc_intl_domainname
 
-/* Long options.  */
-static const struct option long_options[] =
+/* If non-zero convert key to lower case.  */
+static int to_lowercase;
+
+/* If non-zero print content of input file, one entry per line.  */
+static int do_undo;
+
+/* If non-zero do not print informational messages.  */
+static int be_quiet;
+
+/* Name of output file.  */
+static const char *output_name;
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+
+/* Definitions of arguments for argp functions.  */
+static const struct argp_option options[] =
 {
-  { "help", no_argument, NULL, 'h' },
-  { "fold-case", no_argument, NULL, 'f' },
-  { "output", required_argument, NULL, 'o' },
-  { "quiet", no_argument, NULL, 'q' },
-  { "undo", no_argument, NULL, 'u' },
-  { "version", no_argument, NULL, 'V' },
-  { NULL, 0, NULL, 0}
+  { "fold-case", 'f', NULL, 0, N_("Convert key to lower case") },
+  { "output", 'o', N_("NAME"), 0, N_("Write output to file NAME") },
+  { "quiet", 'q', NULL, 0,
+    N_("Do not print messages while building database") },
+  { "undo", 'u', NULL, 0,
+    N_("Print content of database file, one entry a line") },
+  { NULL, 0, NULL, 0, NULL }
 };
 
+/* Short description of program.  */
+static const char doc[] = N_("Create simple DB database from textual input.");
+
+/* Strings for arguments in help texts.  */
+static const char args_doc[] = N_("\
+INPUT-FILE OUTPUT-FILE\n-o OUTPUT-FILE INPUT-FILE\n-u INPUT-FILE");
+
+/* Prototype for option handler.  */
+static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));
+
+/* Function to print some extra text in the help message.  */
+static char *more_help __P ((int key, const char *text, void *input));
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, args_doc, doc, NULL, more_help
+};
+
+
 /* Prototypes for local functions.  */
-static void usage __P ((int status)) __attribute__ ((noreturn));
 static int process_input __P ((FILE *input, const char *inname, DB *output,
 			       int to_lowercase, int be_quiet));
 static int print_database __P ((DB *db));
@@ -60,17 +95,10 @@ main (argc, argv)
      int argc;
      char *argv[];
 {
-  const char *output_name;
   const char *input_name;
   FILE *input_file;
   DB *db_file;
-  int do_help;
-  int do_version;
-  int to_lowercase;
-  int do_undo;
-  int be_quiet;
   int status;
-  int opt;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -79,59 +107,10 @@ main (argc, argv)
   textdomain (_libc_intl_domainname);
 
   /* Initialize local variables.  */
-  do_help = 0;
-  do_version = 0;
-  to_lowercase = 0;
-  do_undo = 0;
-  be_quiet = 0;
-  output_name = NULL;
+  input_name = NULL;
 
-  while ((opt = getopt_long (argc, argv, "fho:uV", long_options, NULL)) != -1)
-    switch (opt)
-      {
-      case '\0':        /* Long option.  */
-        break;
-      case 'h':
-        do_help = 1;
-        break;
-      case 'f':
-	to_lowercase = 1;
-	break;
-      case 'o':
-        output_name = optarg;
-        break;
-      case 'q':
-	be_quiet = 1;
-	break;
-      case 'u':
-	do_undo = 1;
-	break;
-      case 'V':
-        do_version = 1;
-        break;
-      default:
-        usage (EXIT_FAILURE);
-      }
-
-  /* Version information is requested.  */
-  if (do_version)
-    {
-      printf ("makedb (GNU %s) %s\n", PACKAGE, VERSION);
-      printf (_("\
-Copyright (C) %s Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1996, 1997");
-      printf (_("Written by %s.\n"), "Ulrich Drepper");
-
-      exit (EXIT_SUCCESS);
-    }
-
-  /* Help is requested.  */
-  if (do_help)
-    usage (EXIT_SUCCESS);
-  else if (do_version)
-    exit (EXIT_SUCCESS);
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, 0, NULL);
 
   /* Determine file names.  */
   if (do_undo || output_name != NULL)
@@ -140,7 +119,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	{
 	wrong_arguments:
 	  error (0, 0, gettext ("wrong number of arguments"));
-	  usage (EXIT_FAILURE);
+	  argp_help (&argp, stdout, ARGP_HELP_SEE,
+		     program_invocation_short_name);
 	}
       input_name = argv[optind];
     }
@@ -201,35 +181,57 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 }
 
 
-static void
-usage (status)
-     int status;
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
 {
-  if (status != EXIT_SUCCESS)
-    fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
-             program_invocation_name);
-  else
+  switch (key)
     {
-      printf (gettext ("\
-Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n\
-       %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n\
-       %s [OPTION]... -u INPUT-FILE\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
-  -f, --fold-case     convert key to lower case\n\
-  -h, --help          display this help and exit\n\
-  -o, --output=NAME   write output to file NAME\n\
-      --quiet         don't print messages while building database\n\
-  -u, --undo          print content of database file, one entry a line\n\
-  -V, --version       output version information and exit\n\
-If INPUT-FILE is -, input is read from standard input.\n"),
-	      program_invocation_name, program_invocation_name,
-	      program_invocation_name);
-      fputs (gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
-	     stdout);
+    case 'f':
+      to_lowercase = 1;
+      break;
+    case 'o':
+      output_name = arg;
+      break;
+    case 'q':
+      be_quiet = 1;
+      break;
+    case 'u':
+      do_undo = 1;
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
     }
+  return 0;
+}
 
-  exit (status);
+
+static char *
+more_help (int key, const char *text, void *input)
+{
+  switch (key)
+    {
+    case ARGP_KEY_HELP_EXTRA:
+      /* We print some extra information.  */
+      return strdup (gettext ("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+    default:
+      break;
+    }
+  return (char *) text;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "makedb (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1996, 1997");
+  fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
 

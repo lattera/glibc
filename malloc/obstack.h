@@ -107,7 +107,7 @@ Summary:
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
 
-#ifdef __cpluscplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 

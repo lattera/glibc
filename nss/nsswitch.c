@@ -201,7 +201,7 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
       int cmp = strcmp (dbname, databases[cnt].name);
       if (cmp == 0)
 	break;
-      if (cmp > 0)
+      if (cmp < 0)
 	{
 	  __set_errno (EINVAL);
 	  return -1;

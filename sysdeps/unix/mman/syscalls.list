@@ -1,3 +1,7 @@
+# This interface desciption corresponds to the POSIX.1 description.  The
+# 4.4BSD interface is slightly different since the `msync' function takes
+# only 2 arguments.
+
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 madvise		-	madvise		3	madvise

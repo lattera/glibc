@@ -127,7 +127,12 @@ time_finish (struct localedef_t *locale)
   TEST_ELEM (d_t_fmt);
   TEST_ELEM (d_fmt);
   TEST_ELEM (t_fmt);
-  TEST_ELEM (t_fmt_ampm);
+
+  /* According to C.Y.Alexis Cheng <alexis@vnet.ibm.com> the T_FMT_AMPM
+     field is optional.  */
+  if (time->t_fmt_ampm == NULL)
+    /* Use the 24h format as default.  */
+    time->t_fmt_ampm = time->t_fmt;
 
   /* Now process the era entries.  */
   if (time->cur_num_era != 0)

@@ -96,16 +96,18 @@ STRCOLL (s1, s2, l)
       int s1idx = forward ? 0 : s1run->data[pass].number - 1;
       int s2idx = forward ? 0 : s2run->data[pass].number - 1;
 
-      do
+      while (1)
 	{
 	  int s1ignore = 0;
 	  int s2ignore = 0;
-	  u_int32_t w1, w2;
+	  u_int32_t w1 = 0;
+	  u_int32_t w2 = 0;
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on with the next value.  */
-	  while ((w1 = s1run->data[pass].value[s1idx])
-		 == (u_int32_t) IGNORE_CHAR)
+	  while (s1run != NULL
+		 && ((w1 = s1run->data[pass].value[s1idx])
+		     == (u_int32_t) IGNORE_CHAR))
 	    {
 	      ++s1ignore;
 	      if ((forward && ++s1idx >= s1run->data[pass].number)
@@ -115,15 +117,19 @@ STRCOLL (s1, s2, l)
 		  if (nextp == NULL)
 		    {
 		      w1 = 0;
-		      break;
+		      /* No more non-INGOREd elements means lowest
+			 possible value.  */
+		      s1ignore = -1;
 		    }
+		  else
+		    s1idx = forward ? 0 : nextp->data[pass].number - 1;
 		  s1run = nextp;
-		  s1idx = forward ? 0 : s1run->data[pass].number - 1;
 		}
 	    }
 
-	  while ((w2 = s2run->data[pass].value[s2idx])
-		 == (u_int32_t) IGNORE_CHAR)
+	  while (s2run != NULL
+		 && ((w2 = s2run->data[pass].value[s2idx])
+		     == (u_int32_t) IGNORE_CHAR))
 	    {
 	      ++s2ignore;
 	      if ((forward && ++s2idx >= s2run->data[pass].number)
@@ -133,12 +139,19 @@ STRCOLL (s1, s2, l)
 		  if (nextp == NULL)
 		    {
 		      w2 = 0;
-		      break;
+		      /* No more non-INGOREd elements means lowest
+			 possible value.  */
+		      s2ignore = -1;
 		    }
+		  else
+		    s2idx = forward ? 0 : nextp->data[pass].number - 1;
 		  s2run = nextp;
-		  s2idx = forward ? 0 : s2run->data[pass].number - 1;
 		}
 	    }
+
+	  /* If one string is completely processed stop.  */
+	  if (s1run == NULL || s2run == NULL)
+	    break;
 
 	  /* Now we have information of the number of ignored
 	     weights and the value of the next weight.  */
@@ -179,7 +192,6 @@ STRCOLL (s1, s2, l)
 	      }
 
 	}
-      while (s1run != NULL && s2run != NULL);
 
       if (s1run != s2run)
 	return s1run != NULL ? 1 : -1;

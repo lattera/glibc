@@ -108,6 +108,15 @@ struct argp_option
    is displayed after all options (and OPTION_DOC entries with a leading `-')
    in the same group.  */
 #define OPTION_DOC		0x8
+
+/* This option shouldn't be included in `long' usage messages (but is still
+   included in help messages).  This is mainly intended for options that are
+   completely documented in an argp's ARGS_DOC field, in which case including
+   the option in the generic usage list would be redundant.  For instance,
+   if ARGS_DOC is "FOO BAR\n-x BLAH", and the `-x' option's purpose is to
+   distinguish these two cases, -x should probably be marked
+   OPTION_NO_USAGE.  */
+#define OPTION_NO_USAGE		0x10
 
 struct argp;			/* fwd declare this type */
 struct argp_state;		/* " */
@@ -126,12 +135,21 @@ typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
 /* Special values for the KEY argument to an argument parsing function.
    ARGP_ERR_UNKNOWN should be returned if they aren't understood.
 
-   The sequence of keys to parser calls is either (where opt is a user key):
-       ARGP_KEY_INIT (opt | ARGP_KEY_ARG)... ARGP_KEY_END
-   or  ARGP_KEY_INIT opt... ARGP_KEY_NO_ARGS ARGP_KEY_END
+   The sequence of keys to a parsing function is either (where each
+   uppercased word should be prefixed by `ARGP_KEY_' and opt is a user key):
 
-   If an error occurs, then the parser is called with ARGP_KEY_ERR, and no
-   other calls are made.  */
+       INIT opt... NO_ARGS END SUCCESS  -- No non-option arguments at all
+   or  INIT (opt | ARG)... END SUCCESS  -- All non-option args parsed
+   or  INIT (opt | ARG)... SUCCESS      -- Some non-option arg unrecognized
+
+   The third case is where every parser returned ARGP_KEY_UNKNOWN for an
+   argument, in which case parsing stops at that argument (returning the
+   unparsed arguments to the caller of argp_parse if requested, or stopping
+   with an error message if not).
+
+   If an error occurs (either detected by argp, or because the parsing
+   function returned an error value), then the parser is called with
+   ARGP_KEY_ERROR, and no further calls are made.  */
 
 /* This is not an option at all, but rather a command line argument.  If a
    parser receiving this key returns success, the fact is recorded, and the
@@ -160,12 +178,12 @@ typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
    never made, so any cleanup must be done here).  */
 #define ARGP_KEY_ERROR		0x1000005
 
-/* An argp structure contains a set of getopt options declarations, a
-   function to deal with getting one, and an optional pointer to another
-   argp structure.  When actually parsing options, getopt is called with
-   the union of all the argp structures chained together through their
-   CHILD pointers, with conflicts being resolved in favor of the first
-   occurance in the chain.  */
+/* An argp structure contains a set of options declarations, a function to
+   deal with parsing one, documentation string, a possible vector of child
+   argp's, and perhaps a function to filter help output.  When actually
+   parsing options, getopt is called with the union of all the argp
+   structures chained together through their CHILD pointers, with conflicts
+   being resolved in favor of the first occurance in the chain.  */
 struct argp
 {
   /* An array of argp_option structures, terminated by an entry with both
@@ -220,6 +238,9 @@ struct argp
 #define ARGP_KEY_HELP_HEADER	0x2000003 /* Option header string. */
 #define ARGP_KEY_HELP_EXTRA	0x2000004 /* After all other documentation;
 					     TEXT is NULL for this key.  */
+/* Explanatory note emitted when duplicate option arguments have been
+   suppressed.  */
+#define ARGP_KEY_HELP_DUP_ARGS_NOTE 0x2000005 
 
 /* When an argp has a non-zero CHILDREN field, it should point to a vector of
    argp_child structures, each of which describes a subsidiary argp.  */
@@ -373,7 +394,7 @@ extern void (*argp_program_version_hook) __P ((FILE *__stream,
    argp_help if the ARGP_HELP_BUG_ADDR flag is set (as it is by various
    standard help messages), embedded in a sentence that says something like
    `Report bugs to ADDR.'.  */
-extern char *argp_program_bug_address;
+__const extern char *argp_program_bug_address;
 
 /* Flags for argp_help.  */
 #define ARGP_HELP_USAGE		0x01 /* a Usage: message. */
@@ -421,22 +442,22 @@ extern void __argp_help __P ((__const struct argp *__argp, FILE *__stream,
 
 /* Output, if appropriate, a usage message for STATE to STREAM.  FLAGS are
    from the set ARGP_HELP_*.  */
-extern void argp_state_help __P ((struct argp_state *__state, FILE *__stream,
-				  unsigned __flags));
-extern void __argp_state_help __P ((struct argp_state *__state, FILE *__stream,
-				    unsigned __flags));
+extern void argp_state_help __P ((__const struct argp_state *__state,
+				  FILE *__stream, unsigned __flags));
+extern void __argp_state_help __P ((__const struct argp_state *__state,
+				    FILE *__stream, unsigned __flags));
 
 /* Possibly output the standard usage message for ARGP to stderr and exit.  */
-extern void argp_usage __P ((struct argp_state *__state));
-extern void __argp_usage __P ((struct argp_state *__state));
+extern void argp_usage __P ((__const struct argp_state *__state));
+extern void __argp_usage __P ((__const struct argp_state *__state));
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
    message, then exit (1).  */
-extern void argp_error __P ((struct argp_state *__state, __const char *__fmt,
-			     ...))
+extern void argp_error __P ((__const struct argp_state *__state,
+			     __const char *__fmt, ...))
      __attribute__ ((__format__ (__printf__, 2, 3)));
-extern void __argp_error __P ((struct argp_state *__state,
+extern void __argp_error __P ((__const struct argp_state *__state,
 			       __const char *__fmt, ...))
      __attribute__ ((__format__ (__printf__, 2, 3)));
 
@@ -448,11 +469,13 @@ extern void __argp_error __P ((struct argp_state *__state,
    difference between this function and argp_error is that the latter is for
    *parsing errors*, and the former is for other problems that occur during
    parsing but don't reflect a (syntactic) problem with the input.  */
-extern void argp_failure __P ((struct argp_state *__state, int __status,
-			       int __errnum, __const char *__fmt, ...))
+extern void argp_failure __P ((__const struct argp_state *__state,
+			       int __status, int __errnum,
+			       __const char *__fmt, ...))
      __attribute__ ((__format__ (__printf__, 4, 5)));
-extern void __argp_failure __P ((struct argp_state *__state, int __status,
-				 int __errnum, __const char *__fmt, ...))
+extern void __argp_failure __P ((__const struct argp_state *__state,
+				 int __status, int __errnum,
+				 __const char *__fmt, ...))
      __attribute__ ((__format__ (__printf__, 4, 5)));
 
 /* Returns true if the option OPT is a valid short option.  */
@@ -485,7 +508,7 @@ extern void *__argp_input __P ((__const struct argp *argp,
 #endif
 
 ARGP_EI void
-__argp_usage (struct argp_state *__state)
+__argp_usage (__const struct argp_state *__state)
 {
   __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
 }
