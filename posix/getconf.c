@@ -997,7 +997,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
     {
       char default_name[getconf_dirlen + sizeof "/default"];
       memcpy (mempcpy (default_name, getconf_dir, getconf_dirlen),
-              "/default", sizeof "/default");
+	      "/default", sizeof "/default");
       int len = readlink (default_name, buf, sizeof buf - 1);
       if (len > 0)
 	{
@@ -1034,10 +1034,10 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	    {
 	      const char *args[argc + 3];
 	      size_t spec_len = strlen (spec);
-	      char getconf_name[getconf_dirlen + 2 + spec_len + 1];
+	      char getconf_name[getconf_dirlen + 1 + spec_len + 1];
 	      memcpy (mempcpy (mempcpy (getconf_name, getconf_dir,
-	                                getconf_dirlen),
-                               "/_", 2), spec, spec_len + 1);
+					getconf_dirlen),
+			       "/", 1), spec, spec_len + 1);
 	      args[0] = argv0;
 	      args[1] = "-v";
 	      args[2] = spec;

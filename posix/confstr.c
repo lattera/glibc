@@ -55,7 +55,7 @@ confstr (name, buf, len)
 
 	 Currently this means all environment which the system allows.  */
       {
-	char restenvs[4 * sizeof "_POSIX_V6_LPBIG_OFFBIG"];
+	char restenvs[4 * sizeof "POSIX_V6_LPBIG_OFFBIG"];
 
 	string_len = 0;
 #ifndef _POSIX_V6_ILP32_OFF32
@@ -63,9 +63,9 @@ confstr (name, buf, len)
 #endif
 #if !defined _POSIX_V6_ILP32_OFF32 || _POSIX_V6_ILP32_OFF32 > 0
           {
-            memcpy (restenvs + string_len, "_POSIX_V6_ILP32_OFF32",
-                    sizeof "_POSIX_V6_ILP32_OFF32" - 1);
-            string_len += sizeof "_POSIX_V6_ILP32_OFF32" - 1;
+            memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFF32",
+                    sizeof "POSIX_V6_ILP32_OFF32" - 1);
+            string_len += sizeof "POSIX_V6_ILP32_OFF32" - 1;
           }
 #endif
 #ifndef _POSIX_V6_ILP32_OFFBIG
@@ -75,9 +75,9 @@ confstr (name, buf, len)
           {
             if (string_len)
               restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "_POSIX_V6_ILP32_OFFBIG",
-                    sizeof "_POSIX_V6_ILP32_OFFBIG" - 1);
-            string_len += sizeof "_POSIX_V6_ILP32_OFFBIG" - 1;
+            memcpy (restenvs + string_len, "POSIX_V6_ILP32_OFFBIG",
+                    sizeof "POSIX_V6_ILP32_OFFBIG" - 1);
+            string_len += sizeof "POSIX_V6_ILP32_OFFBIG" - 1;
           }
 #endif
 #ifndef _POSIX_V6_LP64_OFF64
@@ -87,9 +87,9 @@ confstr (name, buf, len)
           {
             if (string_len)
               restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "_POSIX_V6_LP64_OFF64",
-                    sizeof "_POSIX_V6_LP64_OFF64" - 1);
-            string_len += sizeof "_POSIX_V6_LP64_OFF64" - 1;
+            memcpy (restenvs + string_len, "POSIX_V6_LP64_OFF64",
+                    sizeof "POSIX_V6_LP64_OFF64" - 1);
+            string_len += sizeof "POSIX_V6_LP64_OFF64" - 1;
           }
 #endif
 #ifndef _POSIX_V6_LPBIG_OFFBIG
@@ -99,9 +99,9 @@ confstr (name, buf, len)
           {
             if (string_len)
               restenvs[string_len++] = '\n';
-            memcpy (restenvs + string_len, "_POSIX_V6_LPBIG_OFFBIG",
-                    sizeof "_POSIX_V6_LPBIG_OFFBIG" - 1);
-            string_len += sizeof "_POSIX_V6_LPBIG_OFFBIG" - 1;
+            memcpy (restenvs + string_len, "POSIX_V6_LPBIG_OFFBIG",
+                    sizeof "POSIX_V6_LPBIG_OFFBIG" - 1);
+            string_len += sizeof "POSIX_V6_LPBIG_OFFBIG" - 1;
           }
 #endif
         restenvs[string_len++] = '\0';
