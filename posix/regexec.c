@@ -3334,12 +3334,6 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	 match it the context.  */
       if (constraint)
 	{
-	  if (constraint & NEXT_WORD_CONSTRAINT)
-	    for (j = 0; j < BITSET_UINTS; ++j)
-	      accepts[j] &= dfa->word_char[j];
-	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
-	    for (j = 0; j < BITSET_UINTS; ++j)
-	      accepts[j] &= ~dfa->word_char[j];
 	  if (constraint & NEXT_NEWLINE_CONSTRAINT)
 	    {
 	      int accepts_newline = bitset_contain (accepts, NEWLINE_CHAR);
@@ -3349,6 +3343,17 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	      else
 		continue;
 	    }
+	  if (constraint & NEXT_ENDBUF_CONSTRAINT)
+	    {
+	      bitset_empty (accepts);
+	      continue;
+	    }
+	  if (constraint & NEXT_WORD_CONSTRAINT)
+	    for (j = 0; j < BITSET_UINTS; ++j)
+	      accepts[j] &= dfa->word_char[j];
+	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
+	    for (j = 0; j < BITSET_UINTS; ++j)
+	      accepts[j] &= ~dfa->word_char[j];
 	}
 
       /* Then divide `accepts' into DFA states, or create a new

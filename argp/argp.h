@@ -32,6 +32,10 @@
 # define __const const
 #endif
 
+#ifndef __THROW
+# define __THROW
+#endif
+
 #ifndef __error_t_defined
 typedef int error_t;
 # define __error_t_defined

@@ -1,3 +1,12 @@
+2003-06-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* posix/transbug.c (run_test): Return 1 for failure.
+	(do_test): Compare only if run_test is successful.
+
+2003-06-12  Simon Josefsson  <jas@extundo.com>
+
+	* argp/argp.h [!__THROW]: Define if undefined.
+
 2003-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/cris/sysdep.h: Fix handling of syscalls with
@@ -22,7 +31,7 @@
 	build_word_op, and build_charclass.
 	(build_charclass): Apply translation for character classes too.
 	(build_word_op): Deliver translation to build_charclass.
-	* posux/transbug.c: New file.
+	* posix/transbug.c: New file.
 	* posix/Makefile (tests): Add transbug.
 
 2003-06-04  Paolo Bonzini  <bonzini@gnu.org>
@@ -193,10 +202,10 @@
 
 2003-06-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* inet/Makefile (aux): Add check_fd.
-	* include/ifaddrs.h: Add prototype for __check_fd.
-	* sysdeps/generic/check_fd.c: New file.
-	* sysdeps/unix/sysv/linux/check_fd.c: New file.
+	* inet/Makefile (aux): Add check_pf.
+	* include/ifaddrs.h: Add prototype for __check_pf.
+	* sysdeps/generic/check_pf.c: New file.
+	* sysdeps/unix/sysv/linux/check_pf.c: New file.
 	* sysdeps/unix/sysv/linux/ifaddrs.h (__no_netlink_support): Renamed
 	from no_netlink_support.  Export.
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Don't call getifaddrs,

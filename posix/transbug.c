@@ -105,7 +105,7 @@ run_test (const char *pattern, struct re_registers *regs)
     printf ("search 2: res = %d, start = %d, end = %d\n",
 	    res, regs[1].start[0], regs[1].end[0]);
 
-  return 0;
+  return res < 0 ? 1 : 0;
 }
 
 
@@ -120,17 +120,19 @@ do_test (void)
 
   (void) re_set_syntax (RE_SYNTAX_GNU_AWK);
 
-  run_test (lower, regs);
-  run_test (upper, &regs[2]);
-
-  int result = 0;
+  int result;
 #define CHECK(exp) \
   if (exp) { puts (#exp); result = 1; }
 
-  CHECK (regs[0].start[0] != regs[2].start[0]);
-  CHECK (regs[0].end[0] != regs[2].end[0]);
-  CHECK (regs[1].start[0] != regs[3].start[0]);
-  CHECK (regs[1].end[0] != regs[3].end[0]);
+  result = run_test (lower, regs);
+  result |= run_test (upper, &regs[2]);
+  if (! result)
+    {
+      CHECK (regs[0].start[0] != regs[2].start[0]);
+      CHECK (regs[0].end[0] != regs[2].end[0]);
+      CHECK (regs[1].start[0] != regs[3].start[0]);
+      CHECK (regs[1].end[0] != regs[3].end[0]);
+    }
 
   return result;
 }

@@ -104,7 +104,8 @@ static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					re_charset_t *mbcset,
 					int *equiv_class_alloc,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (re_bitset_ptr_t sbcset,
+static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
+				      re_bitset_ptr_t sbcset,
 				      re_charset_t *mbcset,
 				      int *char_class_alloc,
 				      const unsigned char *class_name,
@@ -112,11 +113,13 @@ static reg_errcode_t build_charclass (re_bitset_ptr_t sbcset,
 #else  /* not RE_ENABLE_I18N */
 static reg_errcode_t build_equiv_class (re_bitset_ptr_t sbcset,
 					const unsigned char *name);
-static reg_errcode_t build_charclass (re_bitset_ptr_t sbcset,
+static reg_errcode_t build_charclass (RE_TRANSLATE_TYPE trans,
+				      re_bitset_ptr_t sbcset,
 				      const unsigned char *class_name,
 				      reg_syntax_t syntax);
 #endif /* not RE_ENABLE_I18N */
-static bin_tree_t *build_word_op (re_dfa_t *dfa, int not, reg_errcode_t *err);
+static bin_tree_t *build_word_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
+				  int not, reg_errcode_t *err);
 static void free_bin_tree (bin_tree_t *tree);
 static bin_tree_t *create_tree (bin_tree_t *left, bin_tree_t *right,
 				re_token_type_t type, int index);
@@ -2073,12 +2076,12 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	dfa->has_mb_node = 1;
       break;
     case OP_WORD:
-      tree = build_word_op (dfa, 0, err);
+      tree = build_word_op (dfa, regexp->trans, 0, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;
     case OP_NOTWORD:
-      tree = build_word_op (dfa, 1, err);
+      tree = build_word_op (dfa, regexp->trans, 1, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
 	return NULL;
       break;
@@ -2949,7 +2952,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 		goto parse_bracket_exp_free_return;
 	      break;
 	    case CHAR_CLASS:
-	      *err = build_charclass (sbcset,
+	      *err = build_charclass (regexp->trans, sbcset,
 #ifdef RE_ENABLE_I18N
 				      mbcset, &char_class_alloc,
 #endif /* RE_ENABLE_I18N */
@@ -3200,12 +3203,13 @@ build_equiv_class (sbcset, name)
 
 static reg_errcode_t
 #ifdef RE_ENABLE_I18N
-build_charclass (sbcset, mbcset, char_class_alloc, class_name, syntax)
+build_charclass (trans, sbcset, mbcset, char_class_alloc, class_name, syntax)
      re_charset_t *mbcset;
      int *char_class_alloc;
 #else /* not RE_ENABLE_I18N */
-build_charclass (sbcset, class_name, syntax)
+build_charclass (trans, sbcset, class_name, syntax)
 #endif /* not RE_ENABLE_I18N */
+     RE_TRANSLATE_TYPE trans;
      re_bitset_ptr_t sbcset;
      const unsigned char *class_name;
      reg_syntax_t syntax;
@@ -3235,11 +3239,14 @@ build_charclass (sbcset, class_name, syntax)
   mbcset->char_classes[mbcset->nchar_classes++] = __wctype (name);
 #endif /* RE_ENABLE_I18N */
 
-#define BUILD_CHARCLASS_LOOP(ctype_func)\
-    for (i = 0; i < SBC_MAX; ++i)	\
-      {					\
-	if (ctype_func (i))		\
-	  bitset_set (sbcset, i);	\
+#define BUILD_CHARCLASS_LOOP(ctype_func)	\
+    for (i = 0; i < SBC_MAX; ++i)		\
+      {						\
+	if (ctype_func (i))			\
+	  {					\
+	    int ch = trans ? trans[i] : i;	\
+	    bitset_set (sbcset, ch);		\
+	  }					\
       }
 
   if (strcmp (name, "alnum") == 0)
@@ -3273,8 +3280,9 @@ build_charclass (sbcset, class_name, syntax)
 }
 
 static bin_tree_t *
-build_word_op (dfa, not, err)
+build_word_op (dfa, trans, not, err)
      re_dfa_t *dfa;
+     RE_TRANSLATE_TYPE trans;
      int not;
      reg_errcode_t *err;
 {
@@ -3324,7 +3332,7 @@ build_word_op (dfa, not, err)
     }
 
   /* We don't care the syntax in this case.  */
-  ret = build_charclass (sbcset,
+  ret = build_charclass (trans, sbcset,
 #ifdef RE_ENABLE_I18N
 			 mbcset, &alloc,
 #endif /* RE_ENABLE_I18N */
