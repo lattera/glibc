@@ -1,3 +1,8 @@
+2000-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_conf.c (read_conf_file): Make mod_counter static to
+	preserve value over different gconv-modules files.
+
 2000-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/findlocale.c: Add casts to avoid warnings.

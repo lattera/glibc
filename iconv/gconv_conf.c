@@ -351,7 +351,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
   FILE *fp = fopen (filename, "r");
   char *line = NULL;
   size_t line_len = 0;
-  int modcounter = 0;
+  static int modcounter;
 
   /* Don't complain if a file is not present or readable, simply silently
      ignore it.  */
