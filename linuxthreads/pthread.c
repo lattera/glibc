@@ -30,6 +30,7 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
+#include <stackinfo.h>
 
 /* We need the global/static resolver state here.  */
 #include <resolv.h>
@@ -412,11 +413,17 @@ static void pthread_initialize(void)
   /* Test if compare-and-swap is available */
   __pthread_has_cas = compare_and_swap_is_available();
 #endif
+#ifdef _STACK_GROWS_UP
+  /* The initial thread already has all the stack it needs */
+  __pthread_initial_thread_bos = (char *)
+    ((long)CURRENT_STACK_FRAME &~ (STACK_SIZE - 1));
+#else
   /* For the initial stack, reserve at least STACK_SIZE bytes of stack
      below the current stack address, and align that on a
      STACK_SIZE boundary. */
   __pthread_initial_thread_bos =
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
+#endif
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
   /* Likewise for the resolver state _res.  */
@@ -544,6 +551,11 @@ int __pthread_initialize_manager(void)
 			 THREAD_MANAGER_STACK_SIZE,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
 			 (void *)(long)manager_pipe[0]);
+#elif _STACK_GROWS_UP
+	  pid = __clone(__pthread_manager_event,
+			(void **) __pthread_manager_thread_bos,
+			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+			(void *)(long)manager_pipe[0]);
 #else
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_tos,
@@ -580,6 +592,10 @@ int __pthread_initialize_manager(void)
 		     THREAD_MANAGER_STACK_SIZE,
 		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
 		     (void *)(long)manager_pipe[0]);
+#elif _STACK_GROWS_UP
+      pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_bos,
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+		    (void *)(long)manager_pipe[0]);
 #else
       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
 		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,

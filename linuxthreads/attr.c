@@ -283,8 +283,12 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 
   attr->__inheritsched = descr->p_inheritsched;
   attr->__scope = PTHREAD_SCOPE_SYSTEM;
+#ifdef _STACK_GROWS_DOWN
   attr->__stacksize = (char *)(descr + 1) - (char *)descr->p_guardaddr
 		      - descr->p_guardsize;
+#else
+  attr->__stacksize = (char *)descr->p_guardaddr - (char *)descr;
+#endif
   attr->__guardsize = descr->p_guardsize;
   attr->__stackaddr_set = descr->p_userstack;
 #ifdef NEED_SEPARATE_REGISTER_STACK
@@ -298,7 +302,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 #ifndef _STACK_GROWS_UP
   attr->__stackaddr = (char *)(descr + 1);
 #else
-# error __stackaddr not handled
+  attr->__stackaddr = (char *)descr;
 #endif
 
   return 0;

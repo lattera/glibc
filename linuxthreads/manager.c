@@ -32,6 +32,7 @@
 #include "spinlock.h"
 #include "restart.h"
 #include "semaphore.h"
+#include <stackinfo.h>
 
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
@@ -313,6 +314,13 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
   if (attr != NULL && attr->__stackaddr_set)
     {
+#ifdef _STACK_GROWS_UP
+      /* The user provided a stack. */
+      new_thread = (pthread_descr) attr->__stackaddr;
+      new_thread_bottom = (char *) (new_thread + 1);
+      guardaddr = attr->__stackaddr + attr->__stacksize;
+      guardsize = 0;
+#else
       /* The user provided a stack.  For now we interpret the supplied
 	 address as 1 + the highest addr. in the stack segment.  If a
 	 separate register stack is needed, we place it at the low end
@@ -328,6 +336,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
       guardaddr = new_thread_bottom;
       guardsize = 0;
+#endif
 #ifndef THREAD_SELF
       __pthread_nonstandard_stacks = 1;
 #endif
@@ -423,12 +432,23 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
         /* No more memory available.  */
         return -1;
 
+#  ifdef _STACK_GROWS_DOWN
       guardaddr = map_addr;
       if (guardsize > 0)
 	mprotect (guardaddr, guardsize, PROT_NONE);
 
       new_thread_bottom = (char *) map_addr + guardsize;
       new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
+#  elif _STACK_GROWS_UP
+      guardaddr = map_addr + stacksize;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+
+      new_thread = (pthread_descr) map_addr;
+      new_thread_bottom = (char *) (new_thread + 1);
+#  else
+#    error You must define a stack direction
+#  endif /* Stack direction */
 # else /* !FLOATING_STACKS */
       void *res_addr;
 
@@ -445,6 +465,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	  stacksize = STACK_SIZE - granularity;
 	}
 
+#  ifdef _STACK_GROWS_DOWN
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
       map_addr = new_thread_bottom - guardsize;
@@ -464,6 +485,23 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       guardaddr = map_addr;
       if (guardsize > 0)
 	mprotect (guardaddr, guardsize, PROT_NONE);
+#  else
+      /* The thread description goes at the bottom of this area, and
+       * the stack starts directly above it.
+       */
+      new_thread = (pthread_descr)((unsigned long)default_new_thread &~ (STACK_SIZE - 1));
+      map_addr = mmap(new_thread, stacksize + guardsize,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      if (map_addr == MAP_FAILED)
+	  return -1;
+
+      new_thread_bottom = map_addr + sizeof(*new_thread);
+      guardaddr = map_addr + stacksize;
+      if (guardsize > 0)
+	  mprotect (guardaddr, guardsize, PROT_NONE);
+
+#  endif /* stack direction */
 # endif
 #endif /* !NEED_SEPARATE_REGISTER_STACK */
     }
@@ -591,6 +629,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 			 (char *)new_thread - new_thread_bottom,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			 __pthread_sig_cancel, new_thread);
+#elif _STACK_GROWS_UP
+	  pid = __clone(pthread_start_thread_event, (void **) new_thread_bottom,
+			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+			__pthread_sig_cancel, new_thread);
 #else
 	  pid = __clone(pthread_start_thread_event, (void **) new_thread,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
@@ -627,6 +669,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
                      (char *)new_thread - new_thread_bottom,
 		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 		     __pthread_sig_cancel, new_thread);
+#elif _STACK_GROWS_UP
+      pid = __clone(pthread_start_thread, (void **) new_thread_bottom,
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+		    __pthread_sig_cancel, new_thread);
 #else
       pid = __clone(pthread_start_thread, (void **) new_thread,
 		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
@@ -643,6 +689,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 			    - new_thread_bottom);
 	munmap((caddr_t)new_thread_bottom,
 	       2 * stacksize + new_thread->p_guardsize);
+#elif _STACK_GROWS_UP
+	size_t stacksize = guardaddr - (char *)new_thread;
+	munmap(new_thread, stacksize + guardsize);
 #else
 	size_t stacksize = (char *)(new_thread+1) - new_thread_bottom;
 	munmap(new_thread_bottom - guardsize, guardsize + stacksize);
@@ -708,6 +757,10 @@ static void pthread_free(pthread_descr th)
       size_t guardsize = th->p_guardsize;
       /* Free the stack and thread descriptor area */
       char *guardaddr = th->p_guardaddr;
+#ifdef _STACK_GROWS_UP
+      size_t stacksize = guardaddr - (char *)th;
+      guardaddr = (char *)th;
+#else
       /* Guardaddr is always set, even if guardsize is 0.  This allows
 	 us to compute everything else.  */
       size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
@@ -715,6 +768,7 @@ static void pthread_free(pthread_descr th)
       /* Take account of the register stack, which is below guardaddr.  */
       guardaddr -= stacksize;
       stacksize *= 2;
+#endif
 #endif
       /* Unmap the stack.  */
       munmap(guardaddr, stacksize + guardsize);

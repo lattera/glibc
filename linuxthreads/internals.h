@@ -384,7 +384,11 @@ static inline pthread_descr thread_self (void)
   else if (__pthread_nonstandard_stacks)
     return __pthread_find_self();
   else
+#ifdef _STACK_GROWS_DOWN
     return (pthread_descr)(((unsigned long)sp | (STACK_SIZE-1))+1) - 1;
+#else
+    return (pthread_descr)((unsigned long)sp &~ (STACK_SIZE-1));
+#endif
 #endif
 }
 
