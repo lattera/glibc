@@ -1,3 +1,7 @@
+2000-05-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/i686/pt-machine.h: Only use LDT on newer kernels.
+
 2000-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* manager.c (pthread_handle_create): Initialize p_res._sock to -1.

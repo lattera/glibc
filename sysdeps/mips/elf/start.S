@@ -27,7 +27,7 @@
    segment.  The SVR4/Mips ABI (pages 3-31, 3-32) says that when the entry
    point runs, most registers' values are unspecified, except for:
 
-   v1 ($2)	Contains a function pointer to be registered with `atexit'.
+   v0 ($2)	Contains a function pointer to be registered with `atexit'.
 		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
 		before this code runs.
@@ -76,7 +76,9 @@ ENTRY_POINT:
 	dla $4, main		/* main */
 	lw $5, 0($29)		/* argc */
 	addu $6, $29, 4		/* argv  */
-	/* Allocate space on the stack for seven arguments but align to 32.  */
+	/* Allocate space on the stack for seven arguments and make sure
+	   the stack is aligned to double words (8 bytes).  */
+	and $29, 0xfffffff8
 	subu $29, 32
 	dla $7, _init		/* init */
 	dla $8, _fini
@@ -84,7 +86,9 @@ ENTRY_POINT:
 	la $4, main		/* main */
 	lw $5, 0($29)		/* argc */
 	addu $6, $29, 4		/* argv  */
-	/* Allocate space on the stack for seven arguments but align to 32.  */
+	/* Allocate space on the stack for seven arguments and make sure
+	   the stack is aligned to double words (8 bytes).  */
+	and $29, 0xfffffff8
 	subu $29, 32
 	la $7, _init		/* init */
 	la $8, _fini

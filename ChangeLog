@@ -1,5 +1,8 @@
 2000-05-24  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/elf/start.S (ENTRY_POINT): Align stack for double
+	words.
+
 	* intl/Makefile: Run gettext-test only if msgfmt is available.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_LDT_WORKS):
