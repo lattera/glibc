@@ -5,6 +5,11 @@
 	* locale/nl_langinfo.c: Grok special item value for _NL_LOCALE_NAME,
 	return locale name string for the category.
 
+2005-03-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/wcstoul_l.c: Include "wcstol_l.c" rather than
+	<wcstol_l.c>.
+
 2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/mips/atomicity.h: Remove unused file.
