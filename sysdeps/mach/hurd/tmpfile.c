@@ -1,5 +1,5 @@
 /* Open a stdio stream on an anonymous temporary file.  Hurd version.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,19 +23,14 @@
 #include <hurd/fd.h>
 #include <fcntl.h>
 #include <unistd.h>
-
-#ifdef USE_IN_LIBIO
-# include <iolibio.h>
-# define __fdopen INTUSE(_IO_fdopen)
-# define tmpfile __new_tmpfile
-#endif
+#include <iolibio.h>
 
 /* This returns a new stream opened on a temporary file (generated
    by tmpnam).  The file is opened with mode "w+b" (binary read/write).
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
 FILE *
-tmpfile (void)
+__tmpfile (void)
 {
   error_t err;
   file_t file;
@@ -62,16 +57,13 @@ tmpfile (void)
 
   /* Open a stream on the unnamed file.
      It will cease to exist when this stream is closed.  */
-  if ((f = __fdopen (fd, "w+b")) == NULL)
+  if ((f = INTUSE(_IO_fdopen) (fd, "w+b")) == NULL)
     __close (fd);
 
   return f;
 }
 
-#ifdef USE_IN_LIBIO
-# undef tmpfile
-# include <shlib-compat.h>
-versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);
-#endif
+#include <shlib-compat.h>
+versioned_symbol (libc, __tmpfile, tmpfile, GLIBC_2_1);
 
-weak_alias (tmpfile, tmpfile64)
+weak_alias (__tmpfile, tmpfile64)
