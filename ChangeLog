@@ -1,5 +1,12 @@
 2001-06-28  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/read.c: Include <hurd/fd.h>.
+	(__libc_read): Don't call __pread.  Use _hurd_fd_read directly
+	instead.
+	* sysdeps/mach/hurd/write.c: Include <hurd/fd.h>.
+	(__libc_write): Don't call __pwrite.  Use _hurd_fd_write directly
+	instead.
+
 	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Add back
 	-Wl,-soname option lost in 2001-06-16 change.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,14 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <hurd/fd.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
 ssize_t
 __libc_read (int fd, void *buf, size_t nbytes)
 {
-  return __pread (fd, buf, nbytes, (off_t) -1);
+  error_t err = HURD_FD_USE (fd, _hurd_fd_read (descriptor, buf, &nbytes, -1));
+  return err ? __hurd_dfail (fd, err) : nbytes;
 }
 
 weak_alias (__libc_read, __read)
