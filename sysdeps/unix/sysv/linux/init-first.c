@@ -108,12 +108,16 @@ init (int argc, char **argv, char **envp)
 
 strong_alias (init, _init);
 
+extern void __libc_init_first (void);
+
 void
 __libc_init_first (void)
 {
 }
 
 #else
+extern void __libc_init_first (int argc, char **argv, char **envp);
+
 void
 __libc_init_first (int argc, char **argv, char **envp)
 {
@@ -126,6 +130,8 @@ __libc_init_first (int argc, char **argv, char **envp)
    ld.so we will get a link error.  Having this file silently included
    in ld.so causes disaster, because the _init definition above will
    cause ld.so to gain an init function, which is not a cool thing. */
+
+extern void _dl_start (void) __attribute__ ((noreturn));
 
 void
 _dl_start (void)

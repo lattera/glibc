@@ -62,7 +62,6 @@ enum direction
 enum variant
 {
   illegal_var,
-  US,		/* ANSI_X3.4-1968 */
   GB,		/* BS_4730 */
   CA,		/* CSA_Z243.4-1985-1 */
   CA2,		/* CSA_Z243.4-1985-2 */
@@ -90,7 +89,6 @@ enum variant
 
 static const char *names[] =
 {
-  [US] = "ANSI_X3.4-1968//",
   [GB] = "BS_4730//",
   [CA] = "CSA_Z243.4-1985-1//",
   [CA2] = "CSA_Z243.4-1985-2//",

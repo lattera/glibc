@@ -502,15 +502,13 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			  if (FROM_DIRECTION)
 			    /* Run the conversion loop.  */
 			    nstatus = FROM_LOOP (step, data, inptrp, inend,
-						 &outbuf,
-						 (unsigned char *) outerr,
+						 &outbuf, outerr,
 						 lirreversiblep
 						 EXTRA_LOOP_ARGS);
 			  else
 			    /* Run the conversion loop.  */
 			    nstatus = TO_LOOP (step, data, inptrp, inend,
-					       &outbuf,
-					       (unsigned char *) outerr,
+					       &outbuf, outerr,
 					       lirreversiblep
 					       EXTRA_LOOP_ARGS);
 			}
@@ -524,15 +522,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			    nstatus = GEN_unaligned (FROM_LOOP) (step, data,
 								 inptrp, inend,
 								 &outbuf,
-								 (unsigned char *) outerr,
+								 outerr,
 								 lirreversiblep
 								 EXTRA_LOOP_ARGS);
 			  else
 			    /* Run the conversion loop.  */
 			    nstatus = GEN_unaligned (TO_LOOP) (step, data,
 							       inptrp, inend,
-							       &outbuf,
-							       (unsigned char *) outerr,
+							       &outbuf, outerr,
 							       lirreversiblep
 							       EXTRA_LOOP_ARGS);
 			}

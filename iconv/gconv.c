@@ -20,7 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
-#include <gconv.h>
+#include <gconv_int.h>
 #include <sys/param.h>
 #include <dlfcn.h>
 #include <stddef.h>

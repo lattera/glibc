@@ -52,7 +52,8 @@ do {							\
    which calls each function on the hook in turn, with ARGS.  */
 
 # define DEFINE_HOOK_RUNNER(name, runner, proto, args) \
-DEFINE_HOOK (name, proto); void runner proto { RUN_HOOK (name, args); }
+DEFINE_HOOK (name, proto); \
+extern void runner proto; void runner proto { RUN_HOOK (name, args); }
 
 #else
 

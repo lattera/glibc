@@ -44,8 +44,8 @@ __libc_lock_define_initialized (static, lock)
 int
 __gconv_alias_compare (const void *p1, const void *p2)
 {
-  struct gconv_alias *s1 = (struct gconv_alias *) p1;
-  struct gconv_alias *s2 = (struct gconv_alias *) p2;
+  const struct gconv_alias *s1 = (const struct gconv_alias *) p1;
+  const struct gconv_alias *s2 = (const struct gconv_alias *) p2;
   return strcmp (s1->fromname, s2->fromname);
 }
 
@@ -90,8 +90,8 @@ struct known_derivation
 static int
 derivation_compare (const void *p1, const void *p2)
 {
-  struct known_derivation *s1 = (struct known_derivation *) p1;
-  struct known_derivation *s2 = (struct known_derivation *) p2;
+  const struct known_derivation *s1 = (const struct known_derivation *) p1;
+  const struct known_derivation *s2 = (const struct known_derivation *) p2;
   int result;
 
   result = strcmp (s1->from, s2->from);

@@ -33,8 +33,15 @@ extern void *__libc_stack_end;
 extern void __pthread_initialize_minimal (void) __attribute__ ((weak));
 #endif
 
-/* Prototype for local function.  */
-extern void __libc_check_standard_fds (void);
+
+extern int BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
+				       int argc,
+				       char *__unbounded *__unbounded ubp_av,
+				       void (*init) (void),
+				       void (*fini) (void),
+				       void (*rtld_fini) (void),
+				       void *__unbounded stack_end)
+     __attribute__ ((noreturn));
 
 int
 /* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the

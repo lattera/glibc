@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <search.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,7 +39,7 @@ static const char default_gconv_path[] = GCONV_PATH;
 
 /* The path elements, as determined by the __gconv_get_path function.
    All path elements end in a slash.  */
-const struct path_elem *__gconv_path_elem;
+struct path_elem *__gconv_path_elem;
 /* Maximum length of a single path element in __gconv_path_elem.  */
 size_t __gconv_max_path_elem_len;
 
@@ -283,7 +284,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 
   /* See whether we must add the ending.  */
   need_ext = 0;
-  if (wp - module < sizeof (gconv_module_ext)
+  if (wp - module < (ptrdiff_t) sizeof (gconv_module_ext)
       || memcmp (wp - sizeof (gconv_module_ext), gconv_module_ext,
 		 sizeof (gconv_module_ext)) != 0)
     /* We must add the module extension.  */
@@ -304,23 +305,19 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     {
       char *tmp;
 
-      new_module->from_string = memcpy ((char *) new_module
-					+ sizeof (struct gconv_module),
-					from, to - from);
+      new_module->from_string = tmp = (char *) (new_module + 1);
+      tmp = __mempcpy (tmp, from, to - from);
 
-      new_module->to_string = memcpy ((char *) new_module->from_string
-				      + (to - from), to, module - to);
+      new_module->to_string = tmp;
+      tmp = __mempcpy (tmp, to, module - to);
 
       new_module->cost_hi = cost_hi;
       new_module->cost_lo = modcounter;
 
-      new_module->module_name = (char *) new_module->to_string + (module - to);
+      new_module->module_name = tmp;
 
-      if (dir_len == 0)
-	tmp = (char *) new_module->module_name;
-      else
-	tmp = __mempcpy ((char *) new_module->module_name,
-			 directory, dir_len);
+      if (dir_len != 0)
+	tmp = __mempcpy (tmp, directory, dir_len);
 
       tmp = __mempcpy (tmp, module, wp - module);
 

@@ -115,8 +115,8 @@ struct __gconv_step
 
   int __counter;
 
-  __const char *__from_name;
-  __const char *__to_name;
+  char *__from_name;
+  char *__to_name;
 
   __gconv_fct __fct;
   __gconv_init_fct __init_fct;

@@ -71,7 +71,7 @@ dl_fatal (const char *str)
 		 make sure the library can actually work.  */		      \
 	      FATAL ("FATAL: cannot determine library version\n");	      \
 	    __close (fd);						      \
-	    buf[MIN (reslen, sizeof (bufmem) - 1)] = '\0';		      \
+	    buf[MIN (reslen, (ssize_t) sizeof (bufmem) - 1)] = '\0';	      \
 	  }								      \
 	else								      \
           buf = uts.release;						      \

@@ -29,6 +29,15 @@
 #include <wchar.h>
 #include <sys/param.h>
 
+#define BUILTIN_ALIAS(s1, s2) /* nothing */
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
+			       MaxF, MinT, MaxT) \
+  extern int Fct (struct __gconv_step *, struct __gconv_step_data *,	      \
+		  __const unsigned char **, __const unsigned char *,	      \
+		  unsigned char **, size_t *, int, int);
+#include "gconv_builtin.h"
+
+
 #ifndef EILSEQ
 # define EILSEQ EINVAL
 #endif
@@ -66,7 +75,7 @@ internal_ucs4_loop (struct __gconv_step *step,
   size_t cnt;
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
-    *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
+    *((uint32_t *) outptr)++ = bswap_32 (*(const uint32_t *) inptr);
 
   *inptrp = inptr;
   *outptrp = outptr;
@@ -215,9 +224,9 @@ ucs4_internal_loop (struct __gconv_step *step,
       uint32_t inval;
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-      inval = bswap_32 (*(uint32_t *) inptr);
+      inval = bswap_32 (*(const uint32_t *) inptr);
 #else
-      inval = *(uint32_t *) inptr;
+      inval = *(const uint32_t *) inptr;
 #endif
 
       if (__builtin_expect (inval, 0) > 0x7fffffff)
@@ -420,7 +429,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
   size_t cnt;
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
-    *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
+    *((uint32_t *) outptr)++ = bswap_32 (*(const uint32_t *) inptr);
 
   *inptrp = inptr;
   *outptrp = outptr;
@@ -566,9 +575,9 @@ ucs4le_internal_loop (struct __gconv_step *step,
       uint32_t inval;
 
 #if __BYTE_ORDER == __BIG_ENDIAN
-      inval = bswap_32 (*(uint32_t *) inptr);
+      inval = bswap_32 (*(const uint32_t *) inptr);
 #else
-      inval = *(uint32_t *) inptr;
+      inval = *(const uint32_t *) inptr;
 #endif
 
       if (__builtin_expect (inval, 0) > 0x7fffffff)
@@ -796,13 +805,13 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
+    if (__builtin_expect (*((const uint32_t *) inptr), 0) > 0x7f)	      \
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
-      *outptr++ = *((uint32_t *) inptr)++;				      \
+      *outptr++ = *((const uint32_t *) inptr)++;			      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
@@ -827,7 +836,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t wc = *((uint32_t *) inptr);				      \
+    uint32_t wc = *((const uint32_t *) inptr);				      \
 									      \
     /* Since we control every character we read this cannot happen.  */	      \
     assert (wc <= 0x7fffffff);						      \
@@ -1146,7 +1155,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = *((uint16_t *) inptr);				      \
+    uint16_t u1 = *((const uint16_t *) inptr);				      \
 									      \
     if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
       {									      \
@@ -1186,7 +1195,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t val = *((uint32_t *) inptr);				      \
+    uint32_t val = *((const uint32_t *) inptr);				      \
 									      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
@@ -1236,7 +1245,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = bswap_16 (*((uint16_t *) inptr));			      \
+    uint16_t u1 = bswap_16 (*((const uint16_t *) inptr));		      \
 									      \
     if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
       {									      \
@@ -1276,7 +1285,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t val = *((uint32_t *) inptr);				      \
+    uint32_t val = *((const uint32_t *) inptr);				      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \

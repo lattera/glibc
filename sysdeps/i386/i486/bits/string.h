@@ -1057,18 +1057,20 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
 		  : (__builtin_constant_p (s1) && sizeof ((s1)[0]) == 1	      \
 		     && sizeof ((s2)[0]) == 1 && strlen (s1) < 4	      \
 		     ? (__builtin_constant_p (s2) && sizeof ((s2)[0]) == 1    \
-			? __strcmp_cc ((unsigned char *) (s1),		      \
-				       (unsigned char *) (s2), strlen (s1))   \
-			: __strcmp_cg ((unsigned char *) (s1),		      \
-				       (unsigned char *) (s2), strlen (s1)))  \
+			? __strcmp_cc ((__const unsigned char *) (s1),	      \
+				       (__const unsigned char *) (s2),	      \
+				       strlen (s1))			      \
+			: __strcmp_cg ((__const unsigned char *) (s1),	      \
+				       (__const unsigned char *) (s2),	      \
+				       strlen (s1)))			      \
 		     : (__builtin_constant_p (s2) && sizeof ((s1)[0]) == 1    \
 			&& sizeof ((s2)[0]) == 1 && strlen (s2) < 4	      \
 			? (__builtin_constant_p (s1)			      \
-			   ? __strcmp_cc ((unsigned char *) (s1),	      \
-					  (unsigned char *) (s2),	      \
+			   ? __strcmp_cc ((__const unsigned char *) (s1),     \
+					  (__const unsigned char *) (s2),     \
 					  strlen (s2))			      \
-			   : __strcmp_gc ((unsigned char *) (s1),	      \
-					  (unsigned char *) (s2),	      \
+			   : __strcmp_gc ((__const unsigned char *) (s1),     \
+					  (__const unsigned char *) (s2),     \
 					  strlen (s2)))			      \
 			: __strcmp_gg (s1, s2)))))
 

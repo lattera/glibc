@@ -217,7 +217,7 @@ static inline int
 FCTNAME (LOOPFCT) (struct __gconv_step *step,
 		   struct __gconv_step_data *step_data,
 		   const unsigned char **inptrp, const unsigned char *inend,
-		   unsigned char **outptrp, unsigned char *outend,
+		   unsigned char **outptrp, const unsigned char *outend,
 		   size_t *irreversible EXTRA_LOOP_DECLS)
 {
 #ifdef LOOP_NEED_STATE
@@ -326,7 +326,7 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
   UNPACK_BYTES
 #else
   /* Add the bytes from the state to the input buffer.  */
-  for (inlen = 0; inlen < (state->__count & 7); ++ inlen)
+  for (inlen = 0; inlen < (size_t) (state->__count & 7); ++inlen)
     bytebuf[inlen] = state->__value.__wchb[inlen];
 #endif
 

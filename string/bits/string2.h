@@ -208,8 +208,8 @@ __STRING2_COPY_TYPE (8);
 
 #  if _STRING_ARCH_unaligned
 #   define __mempcpy_args(src) \
-     ((char *) (src))[0], ((char *) (src))[2], ((char *) (src))[4],	      \
-     ((char *) (src))[6],						      \
+     ((__const char *) (src))[0], ((__const char *) (src))[2],		      \
+     ((__const char *) (src))[4], ((__const char *) (src))[6],		      \
      __extension__ __STRING2_SMALL_GET16 (src, 0),			      \
      __extension__ __STRING2_SMALL_GET16 (src, 4),			      \
      __extension__ __STRING2_SMALL_GET32 (src, 0),			      \

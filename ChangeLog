@@ -1,6 +1,52 @@
+2000-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/gmon-start.c: Always have prototype for __gmon_start.
+	* csu/version.c: Add prototypes for __libc_print_version and
+	__libc_main.
+	* iconv/gconv.c: Include gconv_int.h and gconv.h.
+	* iconv/gconv.h (struct __gconv_step): Remove const from __from_name
+	and __to_name.
+	* iconv/gconv_builtin.h: Add ASCII module definitions.
+	* iconv/gconv_conf.c (__gconv_path_elem): Remove const.
+	(add_module): Add cast to avoid warning.  Rework construction of
+	strings for new module.
+	* iconv/gconv_db.c (__gconv_alias_compare): Make s1 and s2 const.
+	(derivation_compare): Likewise.
+	* iconv/gconv_dl.c (do_release_shlib): Remove const from nodep.
+	(__gconv_release_shlib): Cast do_release_shlib as parameter for twalk.
+	* iconv/gconv_int.h (__gconv_path_elem): Remove const.
+	(struct gconv_alias): Remove const from fromname and toname.
+	* iconv/gconv_simple.c: Include gconv_builtin.h to get prototypes
+	for loop functions.
+	(internal_ucs4_loop): Use correct const-ness.
+	(ucs4_internal_loop): Likewise.
+	(internal_ucs4le_loop): Likewise.
+	(ucs4le_internal_loop_single): Likewise.
+	* iconv/gconv_trans.c (__gconv_transliterate): Make from_idx, from_tbl,
+	to_idx, to_tbl, winbuf, winbufend const.  Change casts in
+	assignments appropriately.
+	(struct known_trans): Remove const from fname.
+	(trans_compare): Make s1 and s2 const.
+	* iconv/loop.c (LOOPFC): Make outend parameter const.  Add cast to
+	avoid warning.
+	* iconv/skeleton.c: Remove cast in calls of loop functions.
+	* iconvdata/gconv-modules: Remove US-ASCII definitions.
+	* iconvdata/iso646.c: Remove US_ASCII support.
+	* include/set-hooks.h (DEFINE_HOOK): Also generate prototype.
+	* include/unistd.h: Add __libc_check_standard_fds prototype.
+	* string/bits/string2.h (__mempcpy_args): Add const to casts.
+	* sysdeps/generic/initfini.c: Add prototypes for dummy, _init, and
+	_fini.
+	* sysdeps/generic/libc-start.c: Add prototype for __libc_start_main.
+	* sysdeps/i386/i486/bits/string.h (strcmp): Add const to casts.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (dl_fatal): Add cast to avoid
+	warning.
+	* sysdeps/unix/sysv/linux/init-first.c: Add prototypes for
+	__libc_init_first and _dl_start.
+
 2000-11-20  Hiroyuki Machida  <machida@sm.sony.co.jp>
 
-	* sysdeps/unix/sysv/linux/mips/clone.S:  Fix comments.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Fix comments.
 
 	* sysdeps/unix/sysv/linux/mips/kernel_stat.h (kernel_stat): Expand
 	time_t to 'long int' not, 'unsigned int'.  Use 'long int' for

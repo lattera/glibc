@@ -33,7 +33,7 @@ struct path_elem
 };
 
 /* Variable with search path for `gconv' implementation.  */
-extern const struct path_elem *__gconv_path_elem;
+extern struct path_elem *__gconv_path_elem;
 /* Maximum length of a single path element.  */
 extern size_t __gconv_max_path_elem_len;
 
@@ -41,8 +41,8 @@ extern size_t __gconv_max_path_elem_len;
 /* Structure for alias definition.  Simply to strings.  */
 struct gconv_alias
 {
-  const char *fromname;
-  const char *toname;
+  char *fromname;
+  char *toname;
 };
 
 

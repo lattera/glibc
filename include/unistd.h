@@ -98,4 +98,9 @@ extern void *__sbrk (intptr_t __delta);
    environment variables that normally affect them.  */
 extern int __libc_enable_secure;
 
+
+/* Various internal function.  */
+extern void __libc_check_standard_fds (void);
+
+
 #endif

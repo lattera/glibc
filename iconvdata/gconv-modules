@@ -33,22 +33,6 @@
 #  alias:	alias name which is not really recognized.
 #  name:	the real name of the character set
 
-#	from			to			module		cost
-alias	ANSI_X3.4//		ANSI_X3.4-1968//
-alias	ISO-IR-6//		ANSI_X3.4-1968//
-alias	ANSI_X3.4-1986//	ANSI_X3.4-1968//
-alias	ISO_646.IRV:1991//	ANSI_X3.4-1968//
-alias	ASCII//			ANSI_X3.4-1968//
-alias	ISO646-US//		ANSI_X3.4-1968//
-alias	US-ASCII//		ANSI_X3.4-1968//
-alias	US//			ANSI_X3.4-1968//
-alias	IBM367//		ANSI_X3.4-1968//
-alias	CP367//			ANSI_X3.4-1968//
-alias	CSASCII//		ANSI_X3.4-1968//
-alias	OSF00010020//		ANSI_X3.4-1968//
-module	ANSI_X3.4-1968//	INTERNAL		ISO646		2
-module	INTERNAL		ANSI_X3.4-1968//	ISO646		2
-
 alias	ISO-IR-4//		BS_4730//
 alias	ISO646-GB//		BS_4730//
 alias	GB//			BS_4730//

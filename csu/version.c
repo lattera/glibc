@@ -34,6 +34,7 @@ Compiled by GNU CC version "__VERSION__".\n"
 
 #include <unistd.h>
 
+extern void __libc_print_version (void);
 void
 __libc_print_version (void)
 {
@@ -58,6 +59,7 @@ weak_alias (__gnu_get_libc_version, gnu_get_libc_version)
 /* This function is the entry point for the shared object.
    Running the library as a program will get here.  */
 
+extern void __libc_main (void) __attribute__ ((noreturn));
 void
 __libc_main (void)
 {

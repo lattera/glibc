@@ -41,18 +41,18 @@ __gconv_transliterate (struct __gconv_step *step,
 {
   /* Find out about the locale's transliteration.  */
   uint_fast32_t size;
-  uint32_t *from_idx;
-  uint32_t *from_tbl;
-  uint32_t *to_idx;
-  uint32_t *to_tbl;
-  uint32_t *winbuf;
-  uint32_t *winbufend;
+  const uint32_t *from_idx;
+  const uint32_t *from_tbl;
+  const uint32_t *to_idx;
+  const uint32_t *to_tbl;
+  const uint32_t *winbuf;
+  const uint32_t *winbufend;
   uint_fast32_t low;
   uint_fast32_t high;
 
   /* The input buffer.  There are actually 4-byte values.  */
-  winbuf = (uint32_t *) *inbufp;
-  winbufend = (uint32_t *) inbufend;
+  winbuf = (const uint32_t *) *inbufp;
+  winbufend = (const uint32_t *) inbufend;
 
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */
@@ -61,10 +61,14 @@ __gconv_transliterate (struct __gconv_step *step,
     goto no_rules;
 
   /* Get the rest of the values.  */
-  from_idx = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_IDX);
-  from_tbl = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_TBL);
-  to_idx = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_IDX);
-  to_tbl = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_TBL);
+  from_idx =
+    (const uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_IDX);
+  from_tbl =
+    (const uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_TBL);
+  to_idx =
+    (const uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_IDX);
+  to_tbl =
+    (const uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_TBL);
 
   /* Test whether there is enough input.  */
   if (winbuf + 1 > winbufend)
@@ -156,9 +160,9 @@ __gconv_transliterate (struct __gconv_step *step,
   if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_IGNORE_LEN) != 0)
     {
       int n = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_IGNORE_LEN);
-      uint32_t *ranges = (uint32_t *) _NL_CURRENT (LC_CTYPE,
-						   _NL_CTYPE_TRANSLIT_IGNORE);
-      uint32_t wc = *(uint32_t *) (*inbufp);
+      const uint32_t *ranges =
+	(const uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_IGNORE);
+      const uint32_t wc = *(const uint32_t *) (*inbufp);
       int i;
 
       /* Test whether there is enough input.  */
@@ -184,7 +188,7 @@ __gconv_transliterate (struct __gconv_step *step,
   /* One last chance: use the default replacement.  */
   if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN) != 0)
     {
-      uint32_t *default_missing = (uint32_t *)
+      const uint32_t *default_missing = (const uint32_t *)
 	_NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING);
       const unsigned char *toinptr = (const unsigned char *) default_missing;
       uint32_t len = _NL_CURRENT_WORD (LC_CTYPE,
@@ -230,7 +234,7 @@ struct known_trans
   /* This structure must remain the first member.  */
   struct trans_struct info;
 
-  const char *fname;
+  char *fname;
   void *handle;
   int open_count;
 };
@@ -247,8 +251,8 @@ __libc_lock_define_initialized (static, lock);
 static int
 trans_compare (const void *p1, const void *p2)
 {
-  struct known_trans *s1 = (struct known_trans *) p1;
-  struct known_trans *s2 = (struct known_trans *) p2;
+  const struct known_trans *s1 = (const struct known_trans *) p1;
+  const struct known_trans *s2 = (const struct known_trans *) p2;
 
   return strcmp (s1->info.name, s2->info.name);
 }

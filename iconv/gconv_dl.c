@@ -149,7 +149,7 @@ __gconv_find_shlib (const char *name)
 static struct __gconv_loaded_object *release_handle;
 
 static void
-do_release_shlib (const void *nodep, VISIT value, int level)
+do_release_shlib (void *nodep, VISIT value, int level)
 {
   struct __gconv_loaded_object *obj = *(struct __gconv_loaded_object **) nodep;
 
@@ -184,7 +184,7 @@ __gconv_release_shlib (struct __gconv_loaded_object *handle)
   /* Process all entries.  Please note that we also visit entries
      with release counts <= 0.  This way we can finally unload them
      if necessary.  */
-  __twalk (loaded, do_release_shlib);
+  __twalk (loaded, (__action_fn_t) do_release_shlib);
 }
 
 

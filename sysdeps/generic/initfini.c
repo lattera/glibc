@@ -50,6 +50,7 @@ asm ("\n/*@HEADER_ENDS*/");
 
 /* To determine whether we need .end and .align: */
 asm ("\n/*@TESTS_BEGIN*/");
+extern void dummy (void (*foo) (void));
 void
 dummy (void (*foo) (void))
 {
@@ -68,10 +69,11 @@ call_gmon_start(void)
   void (*gmon_start) (void) = __gmon_start__;
 
   if (gmon_start)
-    gmon_start ();  
+    gmon_start ();
 }
 
 SECTION (".init");
+extern void _init (void);
 void
 _init (void)
 {
@@ -97,6 +99,7 @@ asm ("\n/*@_init_EPILOG_ENDS*/");
 asm ("\n/*@_fini_PROLOG_BEGINS*/");
 
 SECTION (".fini");
+extern void _fini (void);
 void
 _fini (void)
 {
