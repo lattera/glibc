@@ -180,8 +180,12 @@ extern void __funlockfile (FILE *);
     }									      \
   while (0)
 
-/* For handling long_double and longlong we use the same flag.  */
-#ifndef is_longlong
+/* For handling long_double and longlong we use the same flag.  If
+   `long' and `long long' are effectively the same type define it to
+   zero.  */
+#if LONG_MAX == LONG_LONG_MAX
+# define is_longlong 0
+#else
 # define is_longlong is_long_double
 #endif
 
@@ -1228,17 +1232,17 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       JUMP (*++f, step4_jumps);
 
     LABEL (mod_size_t):
-      is_longlong = sizeof (size_t) > sizeof (unsigned long int);
+      is_long_double = sizeof (size_t) > sizeof (unsigned long int);
       is_long = sizeof (size_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 
     LABEL (mod_ptrdiff_t):
-      is_longlong = sizeof (ptrdiff_t) > sizeof (unsigned long int);
+      is_long_double = sizeof (ptrdiff_t) > sizeof (unsigned long int);
       is_long = sizeof (ptrdiff_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 
     LABEL (mod_intmax_t):
-      is_longlong = sizeof (intmax_t) > sizeof (unsigned long int);
+      is_long_double = sizeof (intmax_t) > sizeof (unsigned long int);
       is_long = sizeof (intmax_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 

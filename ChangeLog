@@ -1,5 +1,8 @@
 1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/vfprintf.c (vfprintf): Don't implement special
+	handling for long long if it is the same as long.
+
 	* stdlib/strtol.c: Moved to ...
 	* sysdeps/generic/strtol.c: ...here.
 	* stdlib/strtoul.c: Moved to ...
