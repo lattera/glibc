@@ -19,13 +19,13 @@
 
 #include <assert.h>
 
-#include <tls.h>
-#include <dl-tls.h>
-#include <ldsodefs.h>
-
 
 /* We don't need any of this if TLS is not supported.  */
 #ifdef USE_TLS
+
+#include <tls.h>
+#include <dl-tls.h>
+#include <ldsodefs.h>
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATE	((void *) -1l)
