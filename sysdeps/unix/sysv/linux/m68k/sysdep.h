@@ -171,7 +171,7 @@ SYSCALL_ERROR_LABEL:							      \
        asm volatile ("trap #0"				\
 		     : "=d" (_d0)			\
 		     : "0" (_d0) ASM_ARGS_##nr		\
-		     : "d0", "memory");			\
+		     : "memory");			\
        _sys_result = _d0;				\
      }							\
      if (_sys_result >= (unsigned int) -4095)		\
