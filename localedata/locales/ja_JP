@@ -5,6 +5,7 @@ comment_char  %
 % Version: 0.7
 % Date:    1999-12-05
 % Write:   HANATAKA, Shinya <hanataka@abyss.rim.or.jp>
+% Charset: EUC-JP
 
 LC_IDENTIFICATION
 title      "Japanese language locale for Japan"

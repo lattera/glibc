@@ -18,7 +18,7 @@ comment_char  %
 %
 % Changelog
 % 1.1 (2003-03-14):
-%   - Updated maintainer to Zuza Sofware Foundation
+%   - Updated maintainer to Zuza Software Foundation
 %   - Changed %x for LC_TIME to use dd/mm/ccyy
 %   - Added ^ to LC_MESSAGES regex "^[yY].*"
 %   - Confirmed LC_PAPER and LC_MEASUREMENT settings

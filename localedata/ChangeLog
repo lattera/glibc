@@ -1,3 +1,12 @@
+2003-07-06  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/en_ZA: Correcty typo in changelog (Sofware -> Software).
+	* locales/hr_HR: Correct the email address of Tomislav Vujec.
+	* locales/ja_JP: Document EUC-JP as the recommended charset.
+	* locales/ko_KR: List Won-kyu Park as the author/contact for the
+	locale.
+	* locales/ru_UA: Correct the email address of Denis V. Dmitrienko.
+
 2003-12-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-numeric.data: Remove reliance on nb_NO.ISO-8859-1 locale.
