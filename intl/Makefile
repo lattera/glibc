@@ -34,7 +34,7 @@ before-compile = $(objpfx)msgs.h
 
 install-others = $(inst_msgcatdir)/locale.alias
 
-generated = msgs.h
+generated = msgs.h mtrace-tst-gettext tst-gettext.mtrace
 generated-dirs := domaindir
 
 plural.c: plural.y

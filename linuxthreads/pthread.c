@@ -248,7 +248,9 @@ int __pthread_sig_debug;
 
 static int rtsigs_initialized;
 
-#include "testrtsig.h"
+#if !__ASSUME_REALTIME_SIGNALS
+# include "testrtsig.h"
+#endif
 
 static void
 init_rtsigs (void)

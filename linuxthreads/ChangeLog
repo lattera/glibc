@@ -1,3 +1,8 @@
+2000-09-20  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c [!__ASSUME_REALTIME_SIGNALS]: Make inclusion of
+	"testrtsig.h" conditional.
+
 2000-09-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Declare pthread_attr_getstack and
