@@ -1,3 +1,11 @@
+2004-10-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/memcopy.h (WORD_COPY_BWD): Remove use of cast as
+	lvalue.
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Remove __THROW from inline
+	definitions.
+
 2004-10-07  Andreas Schwab  <schwab@suse.de>
 
 	* misc/sys/uio.h: Change __vector to __iovec to avoid clash with

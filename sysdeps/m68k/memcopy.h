@@ -1,5 +1,5 @@
 /* memcopy.h -- definitions for memory copy functions.  Motorola 68020 version.
-   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -68,29 +68,33 @@
   do									      \
     {									      \
       size_t __nblocks = (nbytes) / 32 + 1;				      \
+      op_t *__dst_ep = (op_t *) (dst_ep);				      \
+      op_t *__src_ep = (op_t *) (src_ep);				      \
       switch ((nbytes) / sizeof (op_t) % 8)				      \
 	do								      \
 	  {								      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 7:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 6:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 5:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 4:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 3:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 2:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 1:							      \
-	    *--((op_t *) dst_ep) = *--((op_t *) src_ep);		      \
+	    *--__dst_ep = *--__src_ep;					      \
 	  case 0:							      \
 	    __nblocks--;						      \
 	  }								      \
       while (__nblocks != 0);						      \
       (nbytes_left) = (nbytes) % sizeof (op_t);				      \
+      (dst_ep) = (unsigned long) __dst_ep;				      \
+      (src_ep) = (unsigned long) __src_ep;				      \
     } while (0)
 
 #endif
