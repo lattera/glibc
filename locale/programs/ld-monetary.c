@@ -708,7 +708,7 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 	      monetary->cat = "";					      \
 	      monetary->cat##_wc = L'\0';				      \
 	    }								      \
-	  else if (now->val.str.startwc != NULL && now->val.str.lenwc > 1)    \
+	  else if (now->val.str.startwc != NULL && now->val.str.lenwc > 2)    \
 	    {								      \
 	      lr_error (ldfile, _("\
 %s: value for field `%s' must be a single character"), "LC_MONETARY", #cat);  \

@@ -1,3 +1,11 @@
+2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-monetary.c (STR_ELEM_WC): Fix test for too
+	long string in definition.
+	* locale/programs/ld-numeric.c (STR_ELEM): Likewise.
+
+	* configure.in: Add check for recent enough sed version.
+
 2000-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c [COMPILE_WPRINT] (_i18n_itoa_word,
