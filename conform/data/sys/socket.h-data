@@ -116,4 +116,5 @@ allow ifra_*
 allow msg_*
 allow cmsg_*
 allow l_*
+allow SO*
 #endif
