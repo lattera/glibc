@@ -1,3 +1,8 @@
+2000-07-27  Andreas Jaeger  <aj@suse.de>
+
+	* libio/Depend: New file, libio needs localedata for tests.
+	* posix/Depend: Likewise.
+
 2000-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/_i18n_itoa.c: Removed.
