@@ -25,19 +25,25 @@ typedef struct
   unsigned long int ti_offset;
 } tls_index;
 
-
-#ifdef SHARED
-
-extern void *__tls_get_addr (tls_index *ti);
-
 /* The thread pointer points 0x7000 past the first static TLS block.  */
-# define TLS_TP_OFFSET		0x7000
+#define TLS_TP_OFFSET		0x7000
 
 /* Dynamic thread vector pointers point 0x8000 past the start of each
    TLS block.  */
-# define TLS_DTV_OFFSET		0x8000
+#define TLS_DTV_OFFSET		0x8000
+
+/* Compute the value for a @tprel reloc.  */
+#define TLS_TPREL_VALUE(sym_map, sym, reloc) \
+  ((sym_map)->l_tls_offset + (sym)->st_value + (reloc)->r_addend \
+   - TLS_TCB_SIZE - TLS_TP_OFFSET)
+
+/* Compute the value for a @dtprel reloc.  */
+#define TLS_DTPREL_VALUE(sym, reloc) \
+  ((sym)->st_value + (reloc)->r_addend - TLS_DTV_OFFSET)
+
+#ifdef SHARED
+extern void *__tls_get_addr (tls_index *ti);
 
 # define GET_ADDR_OFFSET	(ti->ti_offset + TLS_DTV_OFFSET)
 # define __TLS_GET_ADDR(__ti)	(__tls_get_addr (__ti) - TLS_DTV_OFFSET)
-
 #endif
