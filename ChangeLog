@@ -1,3 +1,9 @@
+2005-03-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (read, pread, pread64): Use __bos0 instead
+	of __bos.
+	* socket/bits/socket2.h (recv, recvfrom): Likewise.
+
 2005-03-01  Roland McGrath  <roland@redhat.com>
 
 	[BZ #721]

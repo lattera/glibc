@@ -24,8 +24,8 @@
 extern ssize_t __recv_chk (int __fd, void *__buf, size_t __n, size_t __buflen,
 			   int __flags);
 #define recv(fd, buf, n, flags) \
-  (__bos (buf) != (size_t) -1						      \
-   ? __recv_chk (fd, buf, n, __bos (buf), flags)			      \
+  (__bos0 (buf) != (size_t) -1						      \
+   ? __recv_chk (fd, buf, n, __bos0 (buf), flags)			      \
    : recv (fd, buf, n, flags))
 
 extern ssize_t __recvfrom_chk (int __fd, void *__restrict __buf, size_t __n,
@@ -33,6 +33,6 @@ extern ssize_t __recvfrom_chk (int __fd, void *__restrict __buf, size_t __n,
 			       __SOCKADDR_ARG __addr,
 			       socklen_t *__restrict __addr_len);
 #define recvfrom(fd, buf, n, flags, addr, addr_len) \
-  (__bos (buf) != (size_t) -1						      \
-   ? __recvfrom_chk (fd, buf, n, __bos (buf), flags, addr, addr_len)	      \
+  (__bos0 (buf) != (size_t) -1						      \
+   ? __recvfrom_chk (fd, buf, n, __bos0 (buf), flags, addr, addr_len)	      \
    : recvfrom (fd, buf, n, flags, addr, addr_len))

@@ -24,9 +24,9 @@
 extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
 			   size_t __buflen) __wur;
 #define read(fd, buf, nbytes) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
-   ? __read_chk (fd, buf, nbytes, __bos (buf))				      \
+  (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
+   ? __read_chk (fd, buf, nbytes, __bos0 (buf))				      \
    : read (fd, buf, nbytes))
 
 #ifdef __USE_UNIX98
@@ -36,23 +36,23 @@ extern ssize_t __pread64_chk (int __fd, void *__buf, size_t __nbytes,
 			      __off64_t __offset, size_t __bufsize) __wur;
 # ifndef __USE_FILE_OFFSET64
 #  define pread(fd, buf, nbytes, offset) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
-   ? __pread64_chk (fd, buf, nbytes, offset, __bos (buf))		      \
+  (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
+   ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
    : pread (fd, buf, offset, nbytes))
 # else
 #  define pread(fd, buf, nbytes, offset) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
-   ? __pread_chk (fd, buf, nbytes, offset, __bos (buf))			      \
+  (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
+   ? __pread_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
    : pread (fd, buf, offset, nbytes))
 # endif
 
 # ifdef __USE_LARGEFILE64
 #  define pread64(fd, buf, nbytes, offset) \
-  (__bos (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos (buf))	      \
-   ? __pread64_chk (fd, buf, nbytes, offset, __bos (buf))		      \
+  (__bos0 (buf) != (size_t) -1						      \
+   && (!__builtin_constant_p (nbytes) || (nbytes) > __bos0 (buf))	      \
+   ? __pread64_chk (fd, buf, nbytes, offset, __bos0 (buf))		      \
    : pread64 (fd, buf, offset, nbytes))
 # endif
 #endif
