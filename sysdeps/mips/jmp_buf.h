@@ -1,5 +1,5 @@
-/* Define the machine-dependent type `jmp_buf'.  Mips version.
-   Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Define the machine-dependent type `jmp_buf'.  MIPS version.
+   Copyright (C) 1992, 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,3 +45,9 @@ typedef struct
 /* Offset to the program counter in `jmp_buf'.  */
 #define JB_PC	0
 #endif
+
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((__ptr_t) (address) < (jmpbuf)[0].__sp)
