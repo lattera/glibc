@@ -29,6 +29,7 @@
 #include <bits/libc-lock.h>
 #include <dl-librecon.h>
 #include <unsecvars.h>
+#include <cpuclock-init.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -92,6 +93,11 @@ struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
 
+/* Initial value of the CPU clock.  */
+#ifdef CPUCLOCK_VARDEF
+CPUCLOCK_VARDEF (_dl_cpuclock_offset);
+#endif
+
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
    protect `_dl_open' and `_dl_close' in dl-close.c.
@@ -127,6 +133,10 @@ static void non_dynamic_init (void) __attribute__ ((unused));
 static void
 non_dynamic_init (void)
 {
+#ifdef CPUCLOCK_INIT
+  CPUCLOCK_INIT (_dl_cpuclock_offset);
+#endif
+
   if (!_dl_pagesize)
     _dl_pagesize = __getpagesize ();
 

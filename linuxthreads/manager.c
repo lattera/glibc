@@ -225,9 +225,16 @@ static int pthread_start_thread(void *arg)
   pthread_descr self = (pthread_descr) arg;
   struct pthread_request request;
   void * outcome;
+#ifdef CPUCLOCK_VARDEF
+  CPUCLOCK_VARDEF (tmpclock);
+#endif
   /* Initialize special thread_self processing, if any.  */
 #ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(self, self->p_nr);
+#endif
+#ifdef CPUCLOCK_INIT
+  CPUCLOCK_INIT (tmpclock);
+  THREAD_SETMEM (self, p_cpuclock_offset, tmpclock);
 #endif
   /* Make sure our pid field is initialized, just in case we get there
      before our father has initialized it. */

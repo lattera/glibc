@@ -1,0 +1,5 @@
+ld {
+  GLIBC_2.2.3 {
+    _dl_cpuclock_offset;
+  }
+}

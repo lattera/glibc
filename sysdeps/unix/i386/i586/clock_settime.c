@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <time.h>
-#include <libc-internal.h>
 
 #include "cpuclock-init.h"
 
@@ -41,8 +40,7 @@ CPUCLOCK_VARDECL (_dl_cpuclock_offset);
 
 
 /* This function is defined in the thread library.  */
-extern int __pthread_clock_gettime (unsigned long long int freq,
-				    struct timespec *tp)
+extern void __pthread_clock_settime (unsigned long long int offset)
      __attribute__ ((__weak__));
 
 
@@ -51,29 +49,14 @@ extern int __pthread_clock_gettime (unsigned long long int freq,
    counter.  On a 4GHz machine it would take 136 years of uptime to
    wrap around so this "limitation" is not severe.  */
 #define EXTRA_CLOCK_CASES \
-  case CLOCK_THREAD_CPUTIME_ID:						      \
-    if (__pthread_clock_gettime != NULL)				      \
-      {									      \
-	if (__builtin_expect (freq == 0, 0))				      \
-	  {								      \
-	    /* This can only happen if we haven't initialized the `freq'      \
-	       variable yet.  Do this now. We don't have to protect this      \
-	       code against multiple execution since all of them should	      \
-	       lead to the same result.  */				      \
-	    freq = __get_clockfreq ();					      \
-	    if (__builtin_expect (freq == 0, 0))			      \
-	      /* Something went wrong.  */				      \
-	      break;							      \
-	  }								      \
-									      \
-	retval = __pthread_clock_gettime (freq, tp);			      \
-	break;								      \
-      }									      \
-    /* FALLTHROUGH */							      \
-									      \
   case CLOCK_PROCESS_CPUTIME_ID:					      \
+  case CLOCK_THREAD_CPUTIME_ID:						      \
     {									      \
       unsigned long long int tsc;					      \
+      unsigned long long int usertime;					      \
+									      \
+      /* First thing is to get the current time.  */			      \
+      asm volatile ("rdtsc" : "=A" (tsc));				      \
 									      \
       if (__builtin_expect (freq == 0, 0))				      \
 	{								      \
@@ -87,21 +70,16 @@ extern int __pthread_clock_gettime (unsigned long long int freq,
 	    break;							      \
 	}								      \
 									      \
-      /* Get the current counter.  */					      \
-      asm volatile ("rdtsc" : "=A" (tsc));				      \
+      /* Convert the user-provided time into CPU ticks.  */		      \
+      usertime = tp->tv_sec * freq + (tp->tv_nsec * freq) / 1000000000ull;    \
 									      \
-      /* Compute the offset since the start time of the process.  */	      \
-      tsc -= _dl_cpuclock_offset;					      \
-									      \
-      /* Compute the seconds.  */					      \
-      tp->tv_sec = tsc / freq;						      \
-									      \
-      /* And the nanoseconds.  This computation should be stable until	      \
-	 we get machines with about 16GHz frequency.  */		      \
-      tp->tv_nsec = ((tsc % freq) * 1000000000ull) / freq;		      \
-									      \
-      retval = 0;							      \
+      /* Determine the offset and use it as the new base value.  */	      \
+      if (clock_id != CLOCK_THREAD_CPUTIME_ID				      \
+	  || __pthread_clock_settime == NULL)				      \
+	_dl_cpuclock_offset = tsc - usertime;				      \
+      else								      \
+	__pthread_clock_settime (tsc - usertime);			      \
     }									      \
-    break;
+  break;
 
-#include <sysdeps/unix/clock_gettime.c>
+#include <sysdeps/unix/clock_settime.c>

@@ -35,6 +35,7 @@
 #include <dl-machine.h>
 #include <dl-procinfo.h>
 #include <dl-osinfo.h>
+#include <cpuclock-init.h>
 
 extern int _dl_argc;
 extern char **_dl_argv;
@@ -60,7 +61,9 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 void *__libc_stack_end;
 static ElfW(auxv_t) *_dl_auxv;
 unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
-
+#ifdef CPUCLOCK_VARDEF
+CPUCLOCK_VARDEF (_dl_cpuclock_offset);
+#endif
 
 #ifndef DL_FIND_ARG_COMPONENTS
 # define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
@@ -95,6 +98,10 @@ _dl_sysdep_start (void **start_argptr,
   unsigned int seen = 0;
 # define M(type) (1 << (type))
 # define set_seen(tag) seen |= M ((tag)->a_type)
+#endif
+
+#ifdef CPUCLOCK_INIT
+  CPUCLOCK_INIT (_dl_cpuclock_offset);
 #endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,

@@ -1,3 +1,21 @@
+2001-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Include <cpuclock-init.h>.
+	(struct _pthread_descr_struct): Add p_cpuclock_offset field if
+	CPUCLOCK_VARDEF is defined.
+	* pthread.c (__pthread_initialize_minimal): Initialize
+	p_cpuclock_offset field for main thread if CPUCLOCK_INIT is defined.
+	* manager.c (pthread_start_thread): Set p_cpuclock_offset field
+	for new thread to current CPU clock value.
+
+	* sysdeps/i386/useldt.h: Extend all the macros to handle 8-byte values.
+
+	* sysdeps/i386/i586/Makefile: New file.
+	* sysdeps/i386/i586/Versions: New file.
+	* sysdeps/i386/i586/ptclock_gettime.c: New file.
+	* sysdeps/i386/i586/ptclock_settime.c: New file.
+	* sysdeps/i386/i686/Implies: New file.
+
 2001-04-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: Put specs into

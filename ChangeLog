@@ -1,3 +1,16 @@
+2001-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-support.c: Include cpuclock-init.h.  Use CPUCLOCK_VARDEF and
+	CPUCLOCK_INIT if defined.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/cpuclock-init.h: New file.
+	* sysdeps/unix/i386/i586/cpuclock-init.h: New file.
+	* sysdeps/unix/i386/i586/Versions: New file.
+	* sysdeps/unix/i386/i586/clock_settime.c: New file.
+	* sysdeps/unix/i386/i586/clock_gettime.c: Handle thread CPU clock
+	separately by calling __pthread_clock_gettime if this function is
+	available.  Subtract offset from tsc value before computing time value.
+
 2001-04-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (print_known_names): If printing goes not to

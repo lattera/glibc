@@ -225,6 +225,11 @@ static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
 static void pthread_handle_sigdebug(int sig);
 
+/* CPU clock handling.  */
+#ifdef CPUCLOCK_VARDECL
+CPUCLOCK_VARDECL (_dl_cpuclock_offset);
+#endif
+
 /* Signal numbers used for the communication.
    In these variables we keep track of the used variables.  If the
    platform does not support any real-time signals we will define the
@@ -389,6 +394,9 @@ __pthread_initialize_minimal(void)
      main thread now.  */
 #ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(&__pthread_initial_thread, 0);
+#endif
+#ifdef CPUCLOCK_INIT
+  __pthread_initial_thread.p_cpuclock_offset = _dl_cpuclock_offset;
 #endif
 }
 

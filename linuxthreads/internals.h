@@ -33,6 +33,7 @@ extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 #include "pt-machine.h"
 #include "semaphore.h"
 #include "../linuxthreads_db/thread_dbP.h"
+#include <cpuclock-init.h>
 
 #ifndef THREAD_GETMEM
 # define THREAD_GETMEM(descr, member) descr->member
@@ -179,6 +180,9 @@ struct _pthread_descr_struct {
   struct __res_state *p_resp;	/* Pointer to resolver state */
   struct __res_state p_res;	/* per-thread resolver state */
   int p_inheritsched;           /* copied from the thread attribute */
+#ifdef CPUCLOCK_VARDEF
+  CPUCLOCK_VARDEF (p_cpuclock_offset); /* Initial CPU clock for thread.  */
+#endif
   /* New elements must be added at the end.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8

@@ -1,6 +1,6 @@
 /* Special definitions for ix86 machine using segment register based
    thread descriptor.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
@@ -88,16 +88,24 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 			  : "0" (0),					      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %%gs:%P1,%0"				      \
+			  : "=r" (__value)				      \
+			  : "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
   else									      \
     {									      \
-      if (sizeof (__value) != 4)					      \
-	/* There should not be any value with a size other than 1 or 4.  */   \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %%gs:%P1,%0"				      \
-			    : "=r" (__value)				      \
+      __asm__ __volatile__ ("movl %%gs:%P1,%%eax\n\t"			      \
+			    "movl %%gs:%P2,%%edx"			      \
+			    : "=A" (__value)				      \
 			    : "i" (offsetof (struct _pthread_descr_struct,    \
-					     member)));			      \
+					     member)),			      \
+			      "i" (offsetof (struct _pthread_descr_struct,    \
+					     member) + 4));		      \
     }									      \
   __value;								      \
 })
@@ -112,14 +120,20 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 			  : "0" (0),					      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %%gs:(%1),%0"				      \
+			  : "=r" (__value)				      \
+			  : "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
   else									      \
     {									      \
-      if (sizeof (__value) != 4)					      \
-	/* There should not be any value with a size other than 1 or 4.  */   \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %%gs:(%1),%0"				      \
-			    : "=r" (__value)				      \
+      __asm__ __volatile__ ("movl %%gs:(%1),%%eax\n\t"			      \
+			    "movl %%gs:4(%1),%%edx"			      \
+			    : "=&A" (__value)				      \
 			    : "r" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
     }									      \
@@ -135,16 +149,24 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 			  : "q" (__value),				      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %0,%%gs:%P1" :				      \
+			  : "r" (__value),				      \
+			    "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
   else									      \
     {									      \
-      if (sizeof (__value) != 4)					      \
-	/* There should not be any value with a size other than 1 or 4.  */   \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %0,%%gs:%P1" :			      \
-			    : "r" (__value),				      \
+      __asm__ __volatile__ ("movl %%eax,%%gs:%P1\n\n"			      \
+			    "movl %%edx,%%gs:%P2" :			      \
+			    : "A" (__value),				      \
 			      "i" (offsetof (struct _pthread_descr_struct,    \
-					     member)));			      \
+					     member)),			      \
+			      "i" (offsetof (struct _pthread_descr_struct,    \
+					     member) + 4));		      \
     }									      \
 })
 
@@ -157,14 +179,20 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 			  : "q" (__value),				      \
 			    "r" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %0,%%gs:(%1)" :				      \
+			  : "r" (__value),				      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
   else									      \
     {									      \
-      if (sizeof (__value) != 4)					      \
-	/* There should not be any value with a size other than 1 or 4.  */   \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %0,%%gs:(%1)" :			      \
-			    : "r" (__value),				      \
+      __asm__ __volatile__ ("movl %%eax,%%gs:(%1)\n\t"			      \
+			    "movl %%edx,%%gs:4(%1)" :			      \
+			    : "A" (__value),				      \
 			      "r" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
     }									      \
