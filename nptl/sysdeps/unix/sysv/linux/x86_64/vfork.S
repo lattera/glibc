@@ -20,7 +20,11 @@
 
 #define SAVE_PID \
 	movl	%fs:PID, %esi;						      \
-	movl	$-1, %fs:PID
+	movl	$0x80000000, %ecx;					      \
+	movl	%esi, %edx;						      \
+	negl	%edx;							      \
+	cmove	%ecx, %edx;						      \
+	movl	%edx, %fs:PID
 
 #define RESTORE_PID \
 	testq	%rax, %rax;						      \

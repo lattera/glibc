@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <limits.h>
 #include <signal.h>
 #include <sysdep.h>
 #include <nptl/pthreadP.h>
@@ -53,10 +54,10 @@ raise (sig)
 #if __ASSUME_TGKILL || defined __NR_tgkill
   else
     /* raise is an async-safe function.  It could be called while the
-       fork function temporarily invalidated the PID field.  Adjust for
+       fork/vfork function temporarily invalidated the PID field.  Adjust for
        that.  */
     if (__builtin_expect (pid <= 0, 0))
-      pid = pid == 0 ? selftid : -pid;
+      pid = (pid & INT_MAX) == 0 ? selftid : -pid;
 #endif
 
 #if __ASSUME_TGKILL

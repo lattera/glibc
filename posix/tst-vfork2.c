@@ -19,23 +19,58 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
+int raise_fail;
+
+static void
+alrm (int sig)
+{
+  if (raise (SIGUSR1) < 0)
+    raise_fail = 1;
+}
+
 /* This test relies on non-POSIX functionality since the child
-   processes call write and getpid.  */
+   processes call write, nanosleep and getpid.  */
 static int
 do_test (void)
 {
   int result = 0;
   int fd[2];
 
+  signal (SIGUSR1, SIG_IGN);
+
+  struct sigaction sa;
+  sa.sa_handler = alrm;
+  sigemptyset (&sa.sa_mask);
+  sa.sa_flags = 0;
+  if (sigaction (SIGALRM, &sa, NULL) < 0)
+    {
+      puts ("couldn't set up SIGALRM handler");
+      return 1;
+    }
+
   if (pipe (fd) == -1)
     {
       puts ("pipe failed");
+      return 1;
+    }
+
+  struct itimerval it;
+  it.it_value.tv_sec = 0;
+  it.it_value.tv_usec = 200 * 1000;
+  it.it_interval = it.it_value;
+  if (setitimer (ITIMER_REAL, &it, NULL) < 0)
+    {
+      puts ("couldn't set up timer");
       return 1;
     }
 
@@ -44,6 +79,11 @@ do_test (void)
   if ((p1 = vfork ()) == 0)
     {
       pid_t p = getpid ();
+
+      struct timespec ts;
+      ts.tv_sec = 1;
+      ts.tv_nsec = 0;
+      TEMP_FAILURE_RETRY (nanosleep (&ts, &ts));
       _exit (TEMP_FAILURE_RETRY (write (fd[1], &p, sizeof (p))) != sizeof (p));
     }
   else if (p1 == -1)
@@ -51,6 +91,9 @@ do_test (void)
       puts ("1st vfork failed");
       result = 1;
     }
+
+  memset (&it, 0, sizeof (it));
+  setitimer (ITIMER_REAL, &it, NULL);
 
   pid_t p2 = 0;
   if (TEMP_FAILURE_RETRY (read (fd[0], &p2, sizeof (pid_t))) != sizeof (pid_t))
@@ -139,6 +182,12 @@ do_test (void)
 
   close (fd[0]);
   close (fd[1]);
+
+  if (raise_fail)
+    {
+      puts ("raise failed");
+      result = 1;
+    }
 
   if (result == 0)
     puts ("All OK");

@@ -21,9 +21,13 @@
 /* Save the PID value.  */
 #define SAVE_PID \
 	movl	%gs:PID, %edx; 						      \
-	movl	$-1, %gs:PID
+	movl	%edx, %eax;						      \
+	negl	%eax;							      \
+	jne	1f;							      \
+	movl	$0x80000000, %eax;					      \
+1:	movl	%eax, %gs:PID
 
-/* Restore the old PID value in the parent.  In the child store 0.  */
+/* Restore the old PID value in the parent.  */
 #define RESTORE_PID \
 	testl	%eax, %eax;						      \
 	je	1f;							      \

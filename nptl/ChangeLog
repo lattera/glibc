@@ -1,3 +1,24 @@
+2004-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S (SAVE_PID): Negate PID
+	if non-zero and set to INT_MIN if zero.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S (SAVE_PID): Likewise.
+	* sysdeps/unix/sysv/linux/i386/pt-vfork.S: Include tcb-offsets.h.
+	(SAVE_PID, RESTORE_PID): Define.
+	(__vfork): Use it.
+	* sysdeps/unix/sysv/linux/x86_64/pt-vfork.S: Include tcb-offsets.h.
+	Use relative path to avoid including NPTL i386/vfork.S.
+	(SAVE_PID, RESTORE_PID): Define.
+	* sysdeps/unix/sysv/linux/raise.c: Include limits.h.
+	(raise): Handle THREAD_SELF->pid INT_MIN the same as 0.
+	* Makefile (tests): Add tst-vfork1, tst-vfork2, tst-vfork1x and
+	tst-vfork2x.
+	(tests-reverse): Add tst-vfork1x and tst-vfork2x.
+	* tst-vfork1.c: New test.
+	* tst-vfork2.c: New test.
+	* tst-vfork1x.c: New test.
+	* tst-vfork2x.c: New test.
+
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tcb-offsets.sym: Add PID.

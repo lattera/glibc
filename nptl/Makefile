@@ -237,7 +237,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-context1 \
 	tst-sched1 \
 	tst-backtrace1 \
-	tst-oddstacklimit
+	tst-oddstacklimit \
+	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
@@ -337,7 +338,7 @@ ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2
 endif
 # These tests are linked with libc before libpthread
-tests-reverse += tst-cancel5 tst-cancel23
+tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
 
 include ../Rules
 

@@ -1,3 +1,9 @@
+2004-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Makefile (tests): Add tst-vfork2.
+	* posix/tst-vfork1.c (do_test): Fix comment.
+	* posix/tst-vfork2.c: New test.
+
 2004-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol_x): Fix possible NULL pointer
