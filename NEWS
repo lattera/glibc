@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-6-16
+GNU C Library NEWS -- history of user-visible changes.  2001-6-18
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -13,6 +13,9 @@ Version 2.2.4
 
 * Bruno Haible updated all the code handling Unicode in some form to
   support Unicode 3.1.
+
+* Speed of regex for single-byte locales is back to previous levels.
+  Patch by Isamu Hasegawa.
 
 Version 2.2.3
 
