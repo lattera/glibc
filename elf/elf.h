@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1118,6 +1118,8 @@ typedef struct
 #define EF_MIPS_ARCH_3	    0x20000000	/* -mips3 code.  */
 #define EF_MIPS_ARCH_4	    0x30000000	/* -mips4 code.  */
 #define EF_MIPS_ARCH_5	    0x40000000	/* -mips5 code.  */
+#define EF_MIPS_ARCH_32	    0x60000000	/* MIPS32 code.  */
+#define EF_MIPS_ARCH_64	    0x70000000	/* MIPS64 code.  */
 
 /* The following are non-official names and should not be used.  */
 
@@ -1126,13 +1128,15 @@ typedef struct
 #define E_MIPS_ARCH_3	  0x20000000	/* -mips3 code.  */
 #define E_MIPS_ARCH_4	  0x30000000	/* -mips4 code.  */
 #define E_MIPS_ARCH_5	  0x40000000	/* -mips5 code.  */
+#define E_MIPS_ARCH_32	  0x60000000	/* MIPS32 code.  */
+#define E_MIPS_ARCH_64	  0x70000000	/* MIPS64 code.  */
 
 /* Special section indices.  */
 
-#define SHN_MIPS_ACOMMON 0xff00		/* Allocated common symbols */
-#define SHN_MIPS_TEXT	 0xff01		/* Allocated test symbols.  */
-#define SHN_MIPS_DATA	 0xff02		/* Allocated data symbols.  */
-#define SHN_MIPS_SCOMMON 0xff03		/* Small common symbols */
+#define SHN_MIPS_ACOMMON    0xff00	/* Allocated common symbols */
+#define SHN_MIPS_TEXT	    0xff01	/* Allocated test symbols.  */
+#define SHN_MIPS_DATA	    0xff02	/* Allocated data symbols.  */
+#define SHN_MIPS_SCOMMON    0xff03	/* Small common symbols */
 #define SHN_MIPS_SUNDEFINED 0xff04	/* Small undefined symbols */
 
 /* Legal values for sh_type field of Elf32_Shdr.  */

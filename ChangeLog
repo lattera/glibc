@@ -1,3 +1,7 @@
+2001-01-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Add a few more EF_MIPS_* constants.
+
 2001-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/Makefile (chapters): Add debug.
