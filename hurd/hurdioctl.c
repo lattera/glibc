@@ -1,5 +1,5 @@
 /* ioctl commands which must be done in the C library.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -126,12 +126,13 @@ fioclex (int fd,
 _HURD_HANDLE_IOCTLS (fioclex, FIOCLEX, FIONCLEX);
 
 #include <hurd/term.h>
+#include <hurd/tioctl.h>
 
 static void
 rectty_dtable (mach_port_t cttyid)
 {
   int i;
-  
+
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -222,6 +223,11 @@ tiocsctty (int fd,
   else if (err)
     return __hurd_fail (err);
 
+  /* Change the terminal's pgrp to ours.  */
+  err = HURD_DPORT_USE (fd, __tioctl_tiocspgrp (port, _hurd_pgrp));
+  if (err)
+    return __hurd_fail (err);
+
   /* Make it our own.  */
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
 
@@ -256,7 +262,7 @@ tiocnotty (int fd,
   _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
 
   /* Reset all the ctty ports in all the descriptors.  */
-				
+
   __USEPORT (CTTYID, (rectty_dtable (MACH_PORT_NULL), 0));
 
   return 0;

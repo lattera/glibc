@@ -1,3 +1,7 @@
+Thu Feb  8 18:55:27 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdioctl.c (tiocsctty): Set the terminal's pgrp to our own.
+
 Wed Feb  7 18:48:30 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makefile (subdirs): Added wcsmbs.
