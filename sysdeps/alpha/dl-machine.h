@@ -423,26 +423,16 @@ elf_machine_rela (struct link_map *map,
       return;
   else
     {
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr sym_value;
       Elf64_Addr sym_raw_value;
 
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
-      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       sym_raw_value = sym_value = reloc->r_addend;
-      if (sym)
+      if (sym_map)
 	{
 	  sym_raw_value += sym->st_value;
 	  sym_value = sym_raw_value + sym_map->l_addr;
 	}
-#else
-      Elf64_Addr loadbase = RESOLVE (&sym, version, r_type);
-      sym_raw_value = sym_value = reloc->r_addend;
-      if (sym)
-	{
-	  sym_raw_value += sym->st_value;
-	  sym_value = sym_raw_value + loadbase;
-	}
-#endif
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;

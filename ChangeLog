@@ -1,3 +1,8 @@
+2005-02-06  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Use RESOLVE_MAP
+	all the time.
+
 2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
 
 	* configure.in (sysnames): Append sysdeps/generic for each add-on.
