@@ -224,6 +224,7 @@ __getcwd (buf, size)
   register char *pathp;
   struct stat st;
   int prev_errno = errno;
+  size_t allocated = size;
 
   if (size == 0)
     {
@@ -233,19 +234,19 @@ __getcwd (buf, size)
 	  return NULL;
 	}
 
-      size = PATH_MAX + 1;
+      allocated = PATH_MAX + 1;
     }
 
   if (buf != NULL)
     path = buf;
   else
     {
-      path = malloc (size);
+      path = malloc (allocated);
       if (path == NULL)
 	return NULL;
     }
 
-  pathp = path + size;
+  pathp = path + allocated;
   *--pathp = '\0';
 
   if (__lstat (".", &st) < 0)
@@ -362,7 +363,7 @@ __getcwd (buf, size)
 
 	  if ((size_t) (pathp - path) <= namlen)
 	    {
-	      if (buf != NULL)
+	      if (size != 0)
 		{
 		  (void) __closedir (dirstream);
 		  __set_errno (ERANGE);
@@ -371,20 +372,23 @@ __getcwd (buf, size)
 	      else
 		{
 		  char *tmp;
+		  size_t oldsize = allocated;
 
-		  size = 2 * MAX (size, namlen);
-		  tmp = realloc (path, size);
+		  allocated = 2 * MAX (allocated, namlen);
+		  tmp = realloc (path, allocated);
 		  if (tmp == NULL)
 		    {
 		      (void) __closedir (dirstream);
 		      __set_errno (ENOMEM);/* closedir might have changed it.*/
 		      goto lose;
 		    }
-		  pathp = &tmp[pathp - path + size / 2];
-		  path = tmp;
+
 		  /* Move current contents up to the end of the buffer.
 		     This is guaranteed to be non-overlapping.  */
-		  memcpy (pathp, pathp - size / 2, path + size - pathp);
+		  pathp = memcpy (tmp + allocated - (path + oldsize - pathp),
+				  tmp + (pathp - path),
+				  path + oldsize - pathp);
+		  path = tmp;
 		}
 	    }
 	  pathp -= namlen;
@@ -397,13 +401,13 @@ __getcwd (buf, size)
       thisino = dotino;
     }
 
-  if (pathp == &path[size - 1])
+  if (pathp == &path[allocated - 1])
     *--pathp = '/';
 
   if (dotlist != dots)
     free ((__ptr_t) dotlist);
 
-  memmove (path, pathp, path + size - pathp);
+  memmove (path, pathp, path + allocated - pathp);
 
   /* Restore errno on successful return.  */
   __set_errno (prev_errno);

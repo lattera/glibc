@@ -1,5 +1,8 @@
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getcwd.c: Correct last patch.  Handle getcwd
+	(NULL, != 0) correctly.
+
 	* elf/dl-load.c: Use a few more __builtin_expect.
 
 	* sysdeps/posix/getcwd.c: When resizing buffer make sure new size
