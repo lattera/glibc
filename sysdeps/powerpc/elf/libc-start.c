@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+#include <bp-start.h>
+#include <bp-sym.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 
@@ -29,18 +31,27 @@ extern void *__libc_stack_end;
 
 struct startup_info
 {
-  void *sda_base;
+  void *__unbounded sda_base;
   int (*main) (int, char **, char **, void *);
   int (*init) (int, char **, char **, void *);
   void (*fini) (void);
 };
 
 int
-__libc_start_main (int argc, char **argv, char **envp,
-		   void *auxvec, void (*rtld_fini) (void),
-		   struct startup_info *stinfo,
-		   char **stack_on_entry)
+/* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
+   BPs in the arglist of startup_info.main and startup_info.init. */
+BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
+		   char *__unbounded *__unbounded ubp_ev,
+		   void *__unbounded auxvec, void (*rtld_fini) (void),
+		   struct startup_info *__unbounded stinfo,
+		   char *__unbounded *__unbounded stack_on_entry)
 {
+#if __BOUNDED_POINTERS__
+  char **argv;
+#else
+# define argv ubp_av
+#endif
+
 #ifndef SHARED
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
@@ -58,22 +69,21 @@ __libc_start_main (int argc, char **argv, char **envp,
       /* ...in which case, we have argc as the top thing on the
 	 stack, followed by argv (NULL-terminated), envp (likewise),
 	 and the auxilary vector.  */
-      argc = *(int *) stack_on_entry;
-      argv = stack_on_entry + 1;
-      envp = argv + argc + 1;
-      auxvec = envp;
-      while (*(char **) auxvec != NULL)
+      argc = *(int *__unbounded) stack_on_entry;
+      ubp_av = stack_on_entry + 1;
+      ubp_ev = ubp_av + argc + 1;
+      auxvec = ubp_ev;
+      while (*(char *__unbounded *__unbounded) auxvec != NULL)
 	++auxvec;
       ++auxvec;
       rtld_fini = NULL;
     }
 
+  INIT_ARGV_and_ENVIRON;
+
   /* Store something that has some relationship to the end of the
      stack, for backtraces.  This variable should be thread-specific.  */
   __libc_stack_end = stack_on_entry + 4;
-
-  /* Set the global _environ variable correctly.  */
-  __environ = envp;
 
   /* Register the destructor of the dynamic linker if there is any.  */
   if (rtld_fini != NULL)
@@ -84,7 +94,7 @@ __libc_start_main (int argc, char **argv, char **envp,
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize libc\n\n", NULL);
 #endif
-  __libc_init_first (argc, argv, envp);
+  __libc_init_first (argc, argv, __environ);
 
   /* Register the destructor of the program, if any.  */
   if (stinfo->fini)

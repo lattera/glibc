@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,21 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* This is the only really unusual system call in PPC linux, but not
    because of any weirdness in the system call itself; because of
    all the freaky stuff we have to do to make the call useful.  */
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
+/* int [r3] clone(int (*fn)(void *arg) [r3], void *child_stack [r4],
+   		  int flags [r5], void *arg [r6]); */
 
-ENTRY(__clone)
+ENTRY (BP_SYM (__clone))
+	/* GKM FIXME: add bounds checks, where sensible.  */
+	DISCARD_BOUNDS (r4)
+	DISCARD_BOUNDS (r6)
+
 	/* Check for child_stack == NULL || fn == NULL.  */
 	cmpwi	cr0,r4,0
 	cmpwi	cr1,r3,0
@@ -82,6 +89,6 @@ L(parent):
 L(badargs):
 	li	r3,EINVAL
 	b	JUMPTARGET(__syscall_error)
-END (__clone)
+END (BP_SYM (__clone))
 
-weak_alias (__clone, clone)
+weak_alias (BP_SYM (__clone), BP_SYM (clone))

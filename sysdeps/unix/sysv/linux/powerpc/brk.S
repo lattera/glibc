@@ -20,10 +20,14 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 	.comm	__curbrk,4,4
 	.section ".text"
-ENTRY(__brk)
+ENTRY (BP_SYM (__brk))
+	DISCARD_BOUNDS (r3)	/* the bounds are meaningless, so toss 'em */
+
 	stwu    r1,-16(r1)
 	stw	r3,8(r1)
 	DO_CALL(SYS_ify(brk))
@@ -45,6 +49,6 @@ ENTRY(__brk)
 	blelr+
 	li      r3,ENOMEM
 	b	JUMPTARGET(__syscall_error)
-END (__brk)
+END (BP_SYM (__brk))
 
-weak_alias (__brk, brk)
+weak_alias (BP_SYM (__brk), BP_SYM (brk))

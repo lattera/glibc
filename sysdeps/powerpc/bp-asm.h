@@ -30,7 +30,7 @@
 /* Don't check bounds, just convert the BP register to its simple
    pointer value.  */
 
-# define UNCHECK_BOUNDS(rBP)			\
+# define DISCARD_BOUNDS(rBP)			\
 	lwz	rBP, oVALUE(rBP)
 
 /* Check low bound, with the side effect that the BP register is converted
@@ -99,7 +99,7 @@
 
 #else
 
-# define UNCHECK_BOUNDS(rBP)
+# define DISCARD_BOUNDS(rBP)
 # define CHECK_BOUNDS_LOW(rBP, rLOW, rHIGH)
 # define CHECK_BOUNDS_HIGH(rVALUE, rHIGH, TWLcc)
 # define CHECK_BOUNDS_HIGH_RTN(rVALUE, rHIGH, TWLcc)

@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include "bp-sym.h"
 
  /* These are the various addresses we require.  */
 	.section ".rodata"
@@ -35,7 +36,7 @@
 	weak_extern(_fini)
 L(start_addresses):
 	.long	_SDA_BASE_
-	.long	JUMPTARGET(main)
+	.long	JUMPTARGET(BP_SYM (main))
 	.long 	JUMPTARGET(_init)
 	.long 	JUMPTARGET(_fini)
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
@@ -55,7 +56,7 @@ ENTRY(_start)
 	lis	r8,L(start_addresses)@ha
 	lwzu	r13,L(start_addresses)@l(r8)
  /* and continue in libc-start, in glibc.  */
-	b	JUMPTARGET(__libc_start_main)
+	b	JUMPTARGET(BP_SYM (__libc_start_main))
 END(_start)
 
 /* Define a symbol for the first piece of initialized data.  */

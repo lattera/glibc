@@ -19,18 +19,18 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <sys/mman.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-
-#include <sys/mman.h>
+#include <bp-checks.h>
 
 #include <asm/page.h>
-
 #include "kernel-features.h"
 
 #ifdef __NR_mmap2
-extern __ptr_t __syscall_mmap2(__ptr_t, size_t, int, int, int, off_t);
+extern void *__unbounded __syscall_mmap2(void *__unbounded, size_t,
+					 int, int, int, off_t);
 #ifndef __ASSUME_MMAP2_SYSCALL
 static int have_no_mmap2;
 #endif
@@ -50,9 +50,13 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
       int saved_errno = errno;
 #endif
       /* This will be always 12, no matter what page size is.  */
-      __ptr_t result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
-				       fd, (off_t) (offset >> PAGE_SHIFT));
-
+      __ptr_t result;
+      __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len, prot,
+					    flags, fd, (off_t) (offset >> PAGE_SHIFT));
+#if __BOUNDED_POINTERS__
+      __ptrlow (result) = __ptrvalue (result);
+      __ptrhigh (result) = __ptrvalue (result) + len;
+#endif
 #ifndef __ASSUME_MMAP2_SYSCALL
       if (result != (__ptr_t) -1 || errno != ENOSYS)
 #endif

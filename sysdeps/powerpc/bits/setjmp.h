@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@
 # define JB_GPRS   3  /* GPRs 14 through 31 are saved, 18 in total */
 # define JB_CR     21 /* Condition code registers. */
 # define JB_FPRS   22 /* FPRs 14 through 31 are saved, 18*2 words total */
+# define JB_SIZE   (58*4)
 #endif
 
 #ifndef	_ASM

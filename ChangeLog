@@ -1,3 +1,16 @@
+2000-07-21  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/powerpc/bp-asm.h (DISCARD_BOUNDS): Rename from UNCHECK_BOUNDS.
+	* sysdeps/powerpc/bits/setjmp.h (JB_SIZE): New constant.
+	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main):
+	Wrap bounds around argv & envp and each of their string members.
+	* sysdeps/powerpc/elf/start.S: Designate BP symbols.
+	* sysdeps/unix/sysv/linux/powerpc/brk.S: Wrap entry-point
+	symbol in BP_SYM ().  Discard bounds of address arg.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64):
+	Discard bounds on address arg, add bounds to return value.
+
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile (tests): Add filter.  Add rules to generate filter.
