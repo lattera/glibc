@@ -17,14 +17,14 @@
 
 /* For Linux/Alpha we have to make the glob symbols versioned.  */
 #define glob(pattern, flags, errfunc, pglob) \
-  __new_glob (pattern, flags, errfunc, pglob) \
+  __new_glob (pattern, flags, errfunc, pglob)
 #define globfree(pglob) \
   __new_globfree (pglob)
 
-#include_next <glob.c>
+#include <sysdeps/generic/glob.c>
 
 #undef glob
 #undef globfree
 
-default_symbol_version(__new_glob, glob, GLIBC_2.1)
-default_symbol_version(__new_globfree, globfree, GLIBC_2.1)
+default_symbol_version(__new_glob, glob, GLIBC_2.1);
+default_symbol_version(__new_globfree, globfree, GLIBC_2.1);
