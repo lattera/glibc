@@ -1,3 +1,13 @@
+1999-04-14 Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: Socket calls could not be
+	restarted after being interrupted by a signal.  The parameters on
+	the stack were corrupted by the signal handler.
+
+	* sysdeps/unix/sysv/linux/arm/mmap.S: mmap calls could not be
+	restarted after being interrupted by a signal.  The parameters on
+	the stack were corrupted by the signal handler.
+
 1999-04-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* wctype/wcfuncs.c (towlower): Use __ctype_tolower.

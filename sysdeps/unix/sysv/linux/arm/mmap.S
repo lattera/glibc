@@ -26,10 +26,26 @@ ENTRY (__mmap)
 	   mmap() takes six, we need to build a parameter block and pass its	
 	   address instead.  The 386 port does a similar trick.  */
 
-	mov	ip, sp
-	stmdb	ip!, {a1-a4}
-	mov	a1, ip
+	/* This code previously moved sp into ip and stored the args using
+	   stmdb ip!, {a1-a4}.  It did not modify sp, so the stack never had 
+	   to be restored after the syscall completed.  It saved an 
+	   instruction and meant no stack cleanup work was required.
+
+	   This will not work in the case of a mmap call being interrupted
+	   by a signal.  If the signal handler uses any stack the arguments
+	   to mmap will be trashed.  The results of a restart of mmap are
+	   then unpredictable. */
+
+	/* store args on the stack */
+	stmdb	sp!, {a1-a4}
+
+	/* do the syscall */
+	mov	a1, sp
 	swi	SYS_ify (mmap)
+
+	/* pop args off the stack. */
+	add	sp, sp, #16
+
 	cmn	r0, $4096
 	bhs	PLTJMP(syscall_error);
 	ret
