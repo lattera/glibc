@@ -1,3 +1,32 @@
+2000-07-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/md5-crypt.c (__md5_crypt_r): If buffers for key and salt
+	are not aligned to alignof(md5_uint32) do it before calling
+	__md5_process_bytes.
+	* crypt/md5.c: Make sure buffers are aligned.
+	* crypt/md5.h: Likewise.
+	Reported by Solar Designer <solar@false.com>.
+
+	* crypt/Makefile: Add dependencies for test programs.
+
+	* Rules: Define LC_ALL=C in environments of all programs we run.
+
+	* intl/tst-gettext.sh (LC_ALL): Define to C and export.
+
+2000-07-03  H.J. Lu  <hjl@gnu.org>
+
+	* locale/programs/ld-ctype.c (ctype_output): The size of iov
+	is 2 + elem + offset, not 2 + elem + offset + 2.
+
+2000-07-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/fnmatch_loop.c: Fix two problems uncovered by the new test
+	suite.
+	* posix/Makefile (tests): Add tst-fnmatch.
+	(tst-fnmatch-ENV): Define.
+	* posix/tst-fnmatch.c: New file.
+	* posix/tst-fnmatch.sh: New file.
+
 2000-07-04  NIIBE Yutaka  <gniibe@chroot.org>
 
 	* locale/programs/charmap.c (charmap_read): Prepend
@@ -21,6 +50,7 @@
 	Wrap extern symbols in BP_SYM ().
 
 2000-07-03  Andreas Jaeger  <aj@suse.de>
+
 	* dlfcn/Makefile (generated): New.
 
 2000-07-03  Ulrich Drepper  <drepper@redhat.com>

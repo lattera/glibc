@@ -1,6 +1,6 @@
-/* md5.c - Functions to compute MD5 message digest of files or memory blocks
+/* Functions to compute MD5 message digest of files or memory blocks.
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -217,6 +217,8 @@ md5_process_bytes (buffer, len, ctx)
      size_t len;
      struct md5_ctx *ctx;
 {
+  //const void aligned_buffer = buffer;
+
   /* When we already have some bits in our internal buffer concatenate
      both inputs first.  */
   if (ctx->buflen != 0)
@@ -224,16 +226,20 @@ md5_process_bytes (buffer, len, ctx)
       size_t left_over = ctx->buflen;
       size_t add = 128 - left_over > len ? len : 128 - left_over;
 
+      /* Only put full words in the buffer.  */
+      add -= add % __alignof__ (md5_uint32);
+
       memcpy (&ctx->buffer[left_over], buffer, add);
       ctx->buflen += add;
 
-      if (left_over + add > 64)
+      if (ctx->buflen > 64)
 	{
-	  md5_process_block (ctx->buffer, (left_over + add) & ~63, ctx);
+	  md5_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
+
+	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
 	  memcpy (ctx->buffer, &ctx->buffer[(left_over + add) & ~63],
-		  (left_over + add) & 63);
-	  ctx->buflen = (left_over + add) & 63;
+		  ctx->buflen);
 	}
 
       buffer = (const char *) buffer + add;
@@ -251,8 +257,17 @@ md5_process_bytes (buffer, len, ctx)
   /* Move remaining bytes in internal buffer.  */
   if (len > 0)
     {
-      memcpy (ctx->buffer, buffer, len);
-      ctx->buflen = len;
+      size_t left_over = ctx->buflen;
+
+      memcpy (&ctx->buffer[left_over], buffer, len);
+      left_over += len;
+      if (left_over >= 64)
+	{
+	  md5_process_block (ctx->buffer, 64, ctx);
+	  left_over -= 64;
+	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
+	}
+      ctx->buflen = left_over;
     }
 }
 

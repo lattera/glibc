@@ -1,5 +1,5 @@
 /* One way encryption based on MD5 sum.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,9 +38,9 @@ static const char b64t[64] =
 
 
 /* Prototypes for local functions.  */
-extern char *__md5_crypt_r __P ((const char *key, const char *salt,
-				 char *buffer, int buflen));
-extern char *__md5_crypt __P ((const char *key, const char *salt));
+extern char *__md5_crypt_r (const char *key, const char *salt,
+			    char *buffer, int buflen);
+extern char *__md5_crypt (const char *key, const char *salt);
 
 
 /* This entry point is equivalent to the `crypt' function in Unix
@@ -51,7 +52,8 @@ __md5_crypt_r (key, salt, buffer, buflen)
      char *buffer;
      int buflen;
 {
-  unsigned char alt_result[16];
+  unsigned char alt_result[16]
+    __attribute__ ((__aligned__ (__alignof__ (md5_uint32))));
   struct md5_ctx ctx;
   struct md5_ctx alt_ctx;
   size_t salt_len;
@@ -67,6 +69,24 @@ __md5_crypt_r (key, salt, buffer, buflen)
 
   salt_len = MIN (strcspn (salt, "$"), 8);
   key_len = strlen (key);
+
+  if ((key - (char *) 0) % __alignof__ (md5_uint32) != 0)
+    {
+      char *tmp = (char *) alloca (key_len + __alignof__ (md5_uint32));
+      key = memcpy (tmp + __alignof__ (md5_uint32)
+		    - (tmp - (char *) 0) % __alignof__ (md5_uint32),
+		    key, key_len);
+      assert ((key - (char *) 0) % __alignof__ (md5_uint32) == 0);
+    }
+
+  if ((salt - (char *) 0) % __alignof__ (md5_uint32) != 0)
+    {
+      char *tmp = (char *) alloca (salt_len + __alignof__ (md5_uint32));
+      salt = memcpy (tmp + __alignof__ (md5_uint32)
+		     - (tmp - (char *) 0) % __alignof__ (md5_uint32),
+		     salt, salt_len);
+      assert ((salt - (char *) 0) % __alignof__ (md5_uint32) == 0);
+    }
 
   /* Prepare for the real work.  */
   __md5_init_ctx (&ctx);
