@@ -1,5 +1,7 @@
 Mon May 27 10:10:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makefile ($(includedir)/stubs.h): Add missing backslash.
+
 	* sysdeps/unix/sysv/linux/i386/brk.c (__curbrk): Initialize it so it
 	can be aliased.
 
