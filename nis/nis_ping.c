@@ -23,12 +23,13 @@
 #include "nis_intern.h"
 
 void
-nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
+nis_ping (const_nis_name dirname, unsigned int utime,
+	  const nis_object *dirobj)
 {
   nis_result *res = NULL;
   nis_object *obj;
   ping_args args;
-  u_int i;
+  unsigned int i;
 
   if (dirname == NULL && dirobj == NULL)
     abort ();

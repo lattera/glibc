@@ -45,18 +45,18 @@ struct cback_data {
 };
 typedef struct cback_data cback_data;
 
-#define CB_PROG ((u_long)100302)
-#define CB_VERS ((u_long)1)
+#define CB_PROG 100302
+#define CB_VERS 1
 
-#define CBPROC_RECEIVE ((u_long)1)
+#define CBPROC_RECEIVE 1
 extern  bool_t * cbproc_receive_1 __P ((cback_data *, CLIENT *));
 extern  bool_t * cbproc_receive_1_svc __P ((cback_data *, struct svc_req *));
 
-#define CBPROC_FINISH ((u_long)2)
+#define CBPROC_FINISH 2
 extern  void * cbproc_finish_1 __P ((void *, CLIENT *));
 extern  void * cbproc_finish_1_svc __P ((void *, struct svc_req *));
 
-#define CBPROC_ERROR ((u_long)3)
+#define CBPROC_ERROR 3
 extern  void * cbproc_error_1 __P ((nis_error *, CLIENT *));
 extern  void * cbproc_error_1_svc __P ((nis_error *, struct svc_req *));
 extern int cb_prog_1_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));

@@ -55,7 +55,7 @@ __nis_getpkey(const char *sname)
   char pkey[HEXKEYBYTES + 1];
   char *cp, *domain;
   nis_result *res;
-  u_int len = 0;
+  unsigned int len = 0;
 
   domain = strchr (sname, '.');
   if (domain == NULL)
@@ -115,7 +115,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
 
     case CBPROC_RECEIVE:
       {
-	u_long i;
+	unsigned int i;
 
 	xdr_argument = (xdrproc_t) xdr_cback_data;
 	xdr_result = (xdrproc_t) xdr_bool;
@@ -261,7 +261,7 @@ __nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 struct nis_cb *
 __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
 					const void *),
-		       const void *userdata, u_long flags)
+		       const void *userdata, unsigned int flags)
 {
   struct nis_cb *cb;
   int sock = RPC_ANYSOCK;

@@ -23,7 +23,7 @@
 #include "nis_intern.h"
 
 nis_result *
-nis_lookup (const_nis_name name, const u_long flags)
+nis_lookup (const_nis_name name, const unsigned int flags)
 {
   nis_result *res = calloc (1, sizeof (nis_result));
   struct ns_request req;

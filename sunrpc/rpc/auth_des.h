@@ -37,7 +37,7 @@ struct authdes_fullname
   {
     char *name;		/* network name of client, up to MAXNETNAMELEN */
     des_block key;	/* conversation key */
-    u_long window;	/* associated window */
+    uint32_t window;	/* associated window */
   };
 
 /* A credential */
@@ -45,7 +45,7 @@ struct authdes_cred
   {
     enum authdes_namekind adc_namekind;
     struct authdes_fullname adc_fullname;
-    u_long adc_nickname;
+    uint32_t adc_nickname;
   };
 
 /* A des authentication verifier */
@@ -57,7 +57,7 @@ struct authdes_verf
 	des_block adv_xtime;		/* crypt time */
       }
     adv_time_u;
-    u_long adv_int_u;
+    uint32_t adv_int_u;
   };
 
 /* des authentication verifier: client variety

@@ -55,12 +55,12 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
  *
  * OZ's original sdbm hash
  */
-unsigned long
+uint32_t
 __nis_hash (const void *keyarg, register size_t len)
 {
   register const u_char *key;
   register size_t loop;
-  register u_int32_t h;
+  register uint32_t h;
 
 #define HASHC   h = *key++ + 65599 * h
 

@@ -63,7 +63,7 @@ xdr_nstype (XDR *xdrs, nstype *objp)
 static bool_t
 xdr_oar_mask (XDR *xdrs, oar_mask *objp)
 {
-  if (!xdr_u_long (xdrs, &objp->oa_rights))
+  if (!xdr_u_int (xdrs, &objp->oa_rights))
     return FALSE;
   if (!xdr_zotypes (xdrs, &objp->oa_otype))
     return FALSE;
@@ -90,7 +90,7 @@ _xdr_nis_server (XDR *xdrs, nis_server *objp)
   if (!xdr_array (xdrs, (char **) &objp->ep.ep_val, (u_int *) &objp->ep.ep_len,
 		  ~0, sizeof (endpoint), (xdrproc_t) xdr_endpoint))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->key_type))
+  if (!xdr_u_int (xdrs, &objp->key_type))
     return FALSE;
   if (!xdr_netobj (xdrs, &objp->pkey))
     return FALSE;
@@ -109,7 +109,7 @@ _xdr_directory_obj (XDR *xdrs, directory_obj *objp)
 		  sizeof (nis_server), (xdrproc_t) _xdr_nis_server))
     return FALSE;
 
-  if (!xdr_u_long (xdrs, &objp->do_ttl))
+  if (!xdr_uint32_t (xdrs, &objp->do_ttl))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->do_armask.do_armask_val,
 		  (u_int *) & objp->do_armask.do_armask_len, ~0,
@@ -121,7 +121,7 @@ _xdr_directory_obj (XDR *xdrs, directory_obj *objp)
 static bool_t
 xdr_entry_col (XDR *xdrs, entry_col *objp)
 {
-  if (!xdr_u_long (xdrs, &objp->ec_flags))
+  if (!xdr_u_int (xdrs, &objp->ec_flags))
     return FALSE;
   if (!xdr_bytes (xdrs, (char **) &objp->ec_value.ec_value_val,
 		  (u_int *) &objp->ec_value.ec_value_len, ~0))
@@ -144,7 +144,7 @@ xdr_entry_obj (XDR *xdrs, entry_obj *objp)
 static bool_t
 xdr_group_obj (XDR *xdrs, group_obj *objp)
 {
-  if (!xdr_u_long (xdrs, &objp->gr_flags))
+  if (!xdr_u_int (xdrs, &objp->gr_flags))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->gr_members.gr_members_val,
 		  (u_int *) &objp->gr_members.gr_members_len, ~0,
@@ -172,9 +172,9 @@ xdr_table_col (XDR *xdrs, table_col *objp)
 {
   if (!xdr_string (xdrs, &objp->tc_name, 64))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->tc_flags))
+  if (!xdr_u_int (xdrs, &objp->tc_flags))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->tc_rights))
+  if (!xdr_u_int (xdrs, &objp->tc_rights))
     return FALSE;
   return TRUE;
 }
@@ -242,9 +242,9 @@ xdr_objdata (XDR *xdrs, objdata *objp)
 static bool_t
 xdr_nis_oid (XDR *xdrs, nis_oid *objp)
 {
-  if (!xdr_u_long (xdrs, &objp->ctime))
+  if (!xdr_uint32_t (xdrs, &objp->ctime))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->mtime))
+  if (!xdr_uint32_t (xdrs, &objp->mtime))
     return FALSE;
   return TRUE;
 }
@@ -262,9 +262,9 @@ _xdr_nis_object (XDR *xdrs, nis_object *objp)
     return FALSE;
   if (!_xdr_nis_name (xdrs, &objp->zo_domain))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->zo_access))
+  if (!xdr_u_int (xdrs, &objp->zo_access))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->zo_ttl))
+  if (!xdr_uint32_t (xdrs, &objp->zo_ttl))
     return FALSE;
   if (!xdr_objdata (xdrs, &objp->zo_data))
     return FALSE;
@@ -282,71 +282,6 @@ _xdr_nis_error (XDR *xdrs, nis_error *objp)
 bool_t
 _xdr_nis_result (XDR *xdrs, nis_result *objp)
 {
-  register long *buf;
-
-  if (xdrs->x_op == XDR_ENCODE)
-    {
-      if (!_xdr_nis_error (xdrs, &objp->status))
-	return FALSE;
-      if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
-		      (u_int *) &objp->objects.objects_len, ~0,
-		      sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
-	return FALSE;
-      if (!xdr_netobj (xdrs, &objp->cookie))
-	return FALSE;
-      buf = XDR_INLINE (xdrs, 4 * BYTES_PER_XDR_UNIT);
-      if (buf == NULL)
-	{
-	  if (!xdr_u_long (xdrs, &objp->zticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->dticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->aticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->cticks))
-	    return FALSE;
-	}
-      else
-	{
-	  IXDR_PUT_U_LONG (buf, objp->zticks);
-	  IXDR_PUT_U_LONG (buf, objp->dticks);
-	  IXDR_PUT_U_LONG (buf, objp->aticks);
-	  IXDR_PUT_U_LONG (buf, objp->cticks);
-	}
-      return TRUE;
-    }
-  else if (xdrs->x_op == XDR_DECODE)
-    {
-      if (!_xdr_nis_error (xdrs, &objp->status))
-	return FALSE;
-      if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
-		      (u_int *) &objp->objects.objects_len, ~0,
-		      sizeof (nis_object), (xdrproc_t) _xdr_nis_object))
-	return FALSE;
-      if (!xdr_netobj (xdrs, &objp->cookie))
-	return FALSE;
-      buf = XDR_INLINE (xdrs, 4 * BYTES_PER_XDR_UNIT);
-      if (buf == NULL)
-	{
-	  if (!xdr_u_long (xdrs, &objp->zticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->dticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->aticks))
-	    return FALSE;
-	  if (!xdr_u_long (xdrs, &objp->cticks))
-	    return FALSE;
-	}
-      else
-	{
-	  objp->zticks = IXDR_GET_U_LONG (buf);
-	  objp->dticks = IXDR_GET_U_LONG (buf);
-	  objp->aticks = IXDR_GET_U_LONG (buf);
-	  objp->cticks = IXDR_GET_U_LONG (buf);
-	}
-      return TRUE;
-    }
-
   if (!_xdr_nis_error (xdrs, &objp->status))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->objects.objects_val,
@@ -355,13 +290,13 @@ _xdr_nis_result (XDR *xdrs, nis_result *objp)
     return FALSE;
   if (!xdr_netobj (xdrs, &objp->cookie))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->zticks))
+  if (!xdr_uint32_t (xdrs, &objp->zticks))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->dticks))
+  if (!xdr_uint32_t (xdrs, &objp->dticks))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->aticks))
+  if (!xdr_uint32_t (xdrs, &objp->aticks))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->cticks))
+  if (!xdr_uint32_t (xdrs, &objp->cticks))
     return FALSE;
   return TRUE;
 }
@@ -387,7 +322,7 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
 		  (u_int *) &objp->ibr_srch.ibr_srch_len, ~0,
 		  sizeof (nis_attr), (xdrproc_t) xdr_nis_attr))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->ibr_flags))
+  if (!xdr_u_int (xdrs, &objp->ibr_flags))
     return FALSE;
   if (!xdr_array (xdrs, (char **) &objp->ibr_obj.ibr_obj_val,
 		  (u_int *) &objp->ibr_obj.ibr_obj_len, 1,
@@ -397,7 +332,7 @@ _xdr_ib_request (XDR *xdrs, ib_request *objp)
 		  (u_int *) &objp->ibr_cbhost.ibr_cbhost_len, 1,
 		  sizeof (nis_server), (xdrproc_t) _xdr_nis_server))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->ibr_bufsize))
+  if (!xdr_u_int (xdrs, &objp->ibr_bufsize))
     return FALSE;
   if (!xdr_netobj (xdrs, &objp->ibr_cookie))
     return FALSE;
@@ -409,7 +344,7 @@ _xdr_ping_args (XDR *xdrs, ping_args *objp)
 {
   if (!_xdr_nis_name (xdrs, &objp->dir))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->stamp))
+  if (!xdr_uint32_t (xdrs, &objp->stamp))
     return FALSE;
   return TRUE;
 }
@@ -419,9 +354,9 @@ _xdr_cp_result (XDR *xdrs, cp_result *objp)
 {
   if (!_xdr_nis_error (xdrs, &objp->cp_status))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->cp_zticks))
+  if (!xdr_uint32_t (xdrs, &objp->cp_zticks))
     return FALSE;
-  if (!xdr_u_long (xdrs, &objp->cp_dticks))
+  if (!xdr_uint32_t (xdrs, &objp->cp_dticks))
     return FALSE;
   return TRUE;
 }
@@ -429,14 +364,10 @@ _xdr_cp_result (XDR *xdrs, cp_result *objp)
 bool_t
 _xdr_nis_tag (XDR *xdrs, nis_tag *objp)
 {
-  if (!xdr_u_long (xdrs, &objp->tag_type))
-    {
-      return FALSE;
-    }
-  if (!xdr_string (xdrs, &objp->tag_val, 1024))
-    {
-      return FALSE;
-    }
+  if (!xdr_u_int (xdrs, &objp->tag_type))
+    return FALSE;
+  if (!xdr_string (xdrs, &objp->tag_val, ~0))
+    return FALSE;
   return TRUE;
 }
 

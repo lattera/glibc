@@ -123,10 +123,10 @@ struct nis_result {
 	nis_error	status;		/* Status of the response */
 	nis_object	objects<>;	/* objects found 	  */
 	netobj		cookie;		/* Cookie Data 		  */
-	u_long		zticks;		/* server ticks	 	  */
-	u_long		dticks;		/* DBM ticks.		  */
-	u_long		aticks;		/* Cache (accel) ticks	  */
-	u_long		cticks;		/* Client ticks		  */
+	uint32_t	zticks;		/* server ticks	 	  */
+	uint32_t	dticks;		/* DBM ticks.		  */
+	uint32_t	aticks;		/* Cache (accel) ticks	  */
+	uint32_t	cticks;		/* Client ticks		  */
 };
 
 /* 
@@ -153,10 +153,10 @@ struct ns_request {
 struct ib_request {
 	nis_name  	ibr_name;	/* The name of the Table 	*/
 	nis_attr  	ibr_srch<>; 	/* The search critereia 	*/
-	u_long		ibr_flags;	/* Optional flags 		*/
+	u_int		ibr_flags;	/* Optional flags 		*/
 	nis_object	ibr_obj<1>;	/* optional object (add/modify) */
 	nis_server	ibr_cbhost<1>;	/* Optional callback info	*/
-	u_long		ibr_bufsize;	/* Optional first/next bufsize	*/
+	u_int		ibr_bufsize;	/* Optional first/next bufsize	*/
 	netobj		ibr_cookie;	/* The first/next cookie	*/
 };
 
@@ -167,7 +167,7 @@ struct ib_request {
  */
 struct ping_args {
 	nis_name	dir;	/* Directory that had the change */
-	u_long		stamp;	/* timestamp of the transaction  */
+	uint32_t	stamp;	/* timestamp of the transaction  */
 };
 
 /* 
@@ -198,7 +198,7 @@ enum log_entry_t {
  * 'name'. 
  */
 struct log_entry {
-	u_long		le_time;	/* Time in seconds 		*/
+	uint32_t	le_time;	/* Time in seconds 		*/
 	log_entry_t	le_type;	/* Type of log entry 		*/
 	nis_name	le_princp;	/* Principal making the change	*/
 	nis_name	le_name;	/* Name of table/dir involved 	*/
@@ -214,19 +214,19 @@ struct log_result {
 	
 struct cp_result {
 	nis_error	cp_status;	/* Status of the checkpoint 	*/
-	u_long		cp_zticks;	/* Service 'ticks' 	    	*/
-	u_long		cp_dticks;	/* Database 'ticks'	    	*/
+	uint32_t	cp_zticks;	/* Service 'ticks' 	    	*/
+	uint32_t	cp_dticks;	/* Database 'ticks'	    	*/
 };
 
 /*
  * This structure defines a generic NIS tag list. The taglist contains
- * zero or tags, each of which is a type and a value. (u_long). 
+ * zero or tags, each of which is a type and a value. (u_int). 
  * These are used to report statistics (see tag definitions below)
  * and to set or reset state variables.
  */
 struct nis_tag {
-	u_long	tag_type;	/* Statistic tag (may vary) 	 */
-	string	tag_val<1024>;	/* Statistic value may also vary */
+	u_int	tag_type;	/* Statistic tag (may vary) 	 */
+	string	tag_val<>;	/* Statistic value may also vary */
 };
 
 struct nis_taglist {
@@ -235,7 +235,7 @@ struct nis_taglist {
 
 struct dump_args {
 	nis_name	da_dir;		/* Directory to dump 	*/
-	u_long		da_time;	/* From this timestamp	*/
+	uint32_t	da_time;	/* From this timestamp	*/
 	nis_server	da_cbhost<1>;	/* Callback to use.	*/
 };
 
@@ -258,7 +258,7 @@ struct nis_bound_endpoint {
 	endpoint ep;
 	int generation;
 	int rank;
-	u_long flags;
+	u_int flags;
 	int hostnum;
 	int epnum;
 	nis_name uaddr;
@@ -342,7 +342,7 @@ program  NIS_PROG {
 		bool	    NIS_CALLBACK(netobj) = 17;
 
 		/* Return last update time for named dir */
-		u_long      NIS_CPTIME(nis_name) = 18;
+		uint32_t    NIS_CPTIME(nis_name) = 18;
 
 		/* Checkpoint directory or table named */
 		cp_result   NIS_CHECKPOINT(nis_name) = 19;
@@ -392,7 +392,7 @@ program  NIS_PROG {
 %/* Structure for storing dynamically allocated static data */
 %struct nis_sdata {
 %	void	*buf;	/* Memory allocation pointer 	*/
-%	u_long	size;	/* Buffer size			*/
+%	u_int	size;	/* Buffer size			*/
 %};
 %
 %/* Generic client creating flags */

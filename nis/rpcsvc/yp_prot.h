@@ -60,13 +60,13 @@ __BEGIN_DECLS
 
 /* Program and version symbols, magic numbers */
 
-#define YPPROG		((u_long)100004)
-#define YPVERS		((u_long)2)
-#define YPVERS_ORIG	((u_long)1)
+#define YPPROG		100004
+#define YPVERS		2
+#define YPVERS_ORIG	1
 #define YPMAXRECORD	1024
-#define YPMAXDOMAIN	64 /* XXX orig. yp_prot.h defines ((u_long)256) */
+#define YPMAXDOMAIN	64 /* XXX orig. yp_prot.h defines 256 */
 #define YPMAXMAP	64
-#define YPMAXPEER	64 /* XXX orig. yp_prot.h defines ((u_long)256) */
+#define YPMAXPEER	64 /* XXX orig. yp_prot.h defines 256 */
 
 /* byte size of a large NIS packet */
 #define YPMSGSZ		1600
@@ -198,19 +198,19 @@ struct ypresp_maplist {
  * of the protocol.
  */
 
-#define YPPROC_NULL	((u_long)0)
-#define YPPROC_DOMAIN	((u_long)1)
-#define YPPROC_DOMAIN_NONACK ((u_long)2)
-#define YPPROC_MATCH	((u_long)3)
-#define YPPROC_FIRST	((u_long)4)
-#define YPPROC_NEXT	((u_long)5)
-#define YPPROC_XFR	((u_long)6)
-#define YPPROC_CLEAR	((u_long)7)
-#define YPPROC_ALL	((u_long)8)
-#define YPPROC_MASTER	((u_long)9)
-#define YPPROC_ORDER	((u_long)10)
-#define YPPROC_MAPLIST	((u_long)11)
-#define	YPPROC_NEWXFR	((u_long)12)
+#define YPPROC_NULL	0
+#define YPPROC_DOMAIN	1
+#define YPPROC_DOMAIN_NONACK 2
+#define YPPROC_MATCH	3
+#define YPPROC_FIRST	4
+#define YPPROC_NEXT	5
+#define YPPROC_XFR	6
+#define YPPROC_CLEAR	7
+#define YPPROC_ALL	8
+#define YPPROC_MASTER	9
+#define YPPROC_ORDER	10
+#define YPPROC_MAPLIST	11
+#define	YPPROC_NEWXFR	12
 
 /*
  *		Protocol between clients and NIS binder servers
@@ -229,15 +229,15 @@ struct ypresp_maplist {
 
 /* Program and version symbols, magic numbers */
 
-#define YPBINDPROG		((u_long)100007)
-#define YPBINDVERS		((u_long)2)
-#define YPBINDVERS_ORIG		((u_long)1)
+#define YPBINDPROG		100007
+#define YPBINDVERS		2
+#define YPBINDVERS_ORIG		1
 
 /* Procedure symbols */
 
-#define YPBINDPROC_NULL		((u_long)0)
-#define YPBINDPROC_DOMAIN	((u_long)1)
-#define YPBINDPROC_SETDOM	((u_long)2)
+#define YPBINDPROC_NULL		0
+#define YPBINDPROC_DOMAIN	1
+#define YPBINDPROC_SETDOM	2
 /*
  * Response structure and overall result status codes.  Success and failure
  * represent two separate response message types.
@@ -282,13 +282,13 @@ struct ypbind_setdom {
  *		is supplied to ypxfr as a command-line parameter when it
  *		is activated by ypserv.
  */
-#define YPPUSHVERS		((u_long)1)
-#define YPPUSHVERS_ORIG		((u_long)1)
+#define YPPUSHVERS		1
+#define YPPUSHVERS_ORIG		1
 
 /* Procedure symbols */
 
-#define YPPUSHPROC_NULL		((u_long)0)
-#define YPPUSHPROC_XFRRESP	((u_long)1)
+#define YPPUSHPROC_NULL		0
+#define YPPUSHPROC_XFRRESP	1
 
 /* Status values for yppushresp_xfr.status */
 

@@ -32,8 +32,8 @@ typedef const char *const_nis_name;
  * nis_lookup (name, flags) resolves a NIS+ name and returns a copy of
  *                          that object  from a NIS+ server.
  *    const nis_name name: name of the object to be resolved
- *    u_long flags: logically ORing zero or more flags (FOLLOW_LINKS,
- *                  HARD_LOOKUP, [NO_CACHE], MASTER_ONLY, EXPAND_NAME)
+ *    unsigned int flags: logically ORing zero or more flags (FOLLOW_LINKS,
+ *                          HARD_LOOKUP, [NO_CACHE], MASTER_ONLY, EXPAND_NAME)
  *
  * nis_add (name, obj) adds objects to the NIS+ namespace.
  *    const nis_name name: fully qualified NIS+ name.
@@ -52,7 +52,7 @@ typedef const char *const_nis_name;
  * nis_modify (name, obj) can change specific attributes of an object
  *                        that already exists in the namespace.
  */
-extern nis_result *nis_lookup __P ((const_nis_name name, u_long flags));
+extern nis_result *nis_lookup __P ((const_nis_name name, unsigned int flags));
 extern nis_result *nis_add __P ((const_nis_name name, const nis_object *obj));
 extern nis_result *nis_remove __P ((const_nis_name name,
 				    const nis_object *obj));
@@ -64,9 +64,9 @@ extern nis_result *nis_modify __P ((const_nis_name name,
  * nis_list (table_name, flags, callback(table_name, obj, userdata), userdata)
  *           search a table in the NIS+ namespace.
  *    const nis_name table_name: indexed name ([xx=yy],table.dir)
- *    u_long flags: logically ORing one or more flags (FOLLOW_LINKS,
- *                  [FOLLOW_PATH], HARD_LOOKUP, [ALL_RESULTS], [NO_CACHE],
- *                  MASTER_ONLY, EXPAND_NAME, RETURN_RESULT)
+ *    unsigned int flags: logically ORing one or more flags (FOLLOW_LINKS,
+ *                      [FOLLOW_PATH], HARD_LOOKUP, [ALL_RESULTS], [NO_CACHE],
+ *                      MASTER_ONLY, EXPAND_NAME, RETURN_RESULT)
  *    callback(): callback is an optional pointer to a function that will
  *                process the ENTRY type objects that are returned from the
  *                search. If this pointer is NULL, then all entries that match
@@ -80,14 +80,14 @@ extern nis_result *nis_modify __P ((const_nis_name name,
  *                                        NIS+ table_name.
  *    const nis_name table_name
  *    const nis_object *obj
- *    u_long flags: 0, ADD_OVERWRITE, RETURN_RESULT
+ *    unsigned int flags: 0, ADD_OVERWRITE, RETURN_RESULT
  *
  * nis_modify_entry (name, obj, flags) modifies an object identified by name.
  *    const nis_name name: object identifier
  *    const nis_object *obj: should point to an entry with the EN_MODIFIED
  *                           flag set in each column that contains new
  *                           information.
- *    u_long flags: 0, MOD_SAMEOBJ, RETURN_RESULT
+ *    unsigned int flags: 0, MOD_SAMEOBJ, RETURN_RESULT
  *
  * nis_remove_entry (table_name, obj, flags) removes a set of entries
  *                                 identified by table_name from the table.
@@ -98,7 +98,7 @@ extern nis_result *nis_modify __P ((const_nis_name name,
  *                           is not the same as the cached object pointed to
  *                           by object then the operation will fail with an
  *                           NIS_NOTSAMEOBJ error
- *    u_long flags: 0, REM_MULTIPLE
+ *    unsigned int flags: 0, REM_MULTIPLE
  *
  * nis_first_entry (table_name) fetches entries from a table one at a time.
  *    const nis_name table_name
@@ -109,19 +109,20 @@ extern nis_result *nis_modify __P ((const_nis_name name,
  *    const netobj *cookie: The value of cookie from the nis_result structure
  *                          form the previous call.
  */
-extern nis_result *nis_list __P ((const_nis_name name, u_long flags,
+extern nis_result *nis_list __P ((const_nis_name name, unsigned int flags,
 				  int (*callback)(const_nis_name table_name,
 						  const nis_object *obj,
 						  const void *userdata),
 				  const void *userdata));
 extern nis_result *nis_add_entry __P ((const_nis_name table_name,
-				       const nis_object *obj, u_long flags));
+				       const nis_object *obj,
+				       unsigned int flags));
 extern nis_result *nis_modify_entry __P ((const_nis_name name,
 					  const nis_object *obj,
-					  u_long flags));
+					  unsigned int flags));
 extern nis_result *nis_remove_entry __P ((const_nis_name table_name,
 					  const nis_object *obj,
-					  u_long flags));
+					  unsigned int flags));
 extern nis_result *nis_first_entry __P ((const_nis_name table_name));
 extern nis_result *nis_next_entry __P ((const_nis_name table_name,
 					const netobj *cookie));
@@ -188,7 +189,8 @@ extern nis_error nis_addmember __P ((const_nis_name member,
 				     const_nis_name group));
 extern nis_error nis_removemember __P ((const_nis_name member,
 					const_nis_name group));
-extern nis_error nis_creategroup __P ((const_nis_name group, u_long flags));
+extern nis_error nis_creategroup __P ((const_nis_name group,
+				       unsigned int flags));
 extern nis_error nis_destroygroup __P ((const_nis_name group));
 extern void nis_print_group_entry __P ((const_nis_name group));
 extern nis_error nis_verifygroup __P ((const_nis_name group));
@@ -196,7 +198,7 @@ extern nis_error nis_verifygroup __P ((const_nis_name group));
 /*
 ** nis_ping
 */
-extern void nis_ping __P ((const_nis_name dirname, u_long utime,
+extern void nis_ping __P ((const_nis_name dirname, uint32_t utime,
 			   const nis_object *dirobj));
 extern nis_result *nis_checkpoint __P ((const_nis_name dirname));
 
@@ -204,7 +206,7 @@ extern nis_result *nis_checkpoint __P ((const_nis_name dirname));
 ** nis_print (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!)
 */
 extern void nis_print_result __P ((const nis_result *result));
-extern void nis_print_rights __P ((u_long rights));
+extern void nis_print_rights __P ((unsigned int rights));
 extern void nis_print_directory __P ((const directory_obj *dirobj));
 extern void nis_print_group __P ((const group_obj *grpobj));
 extern void nis_print_table __P ((const table_obj *tblobj));
@@ -237,11 +239,11 @@ extern void nis_free_object __P ((nis_object *obj));
 /* (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
 extern nis_name __nis_default_owner __P ((char *));
 extern nis_name __nis_default_group __P ((char *));
-extern u_long __nis_default_ttl __P ((char *));
-extern u_long __nis_default_access __P ((char *, u_long));
+extern uint32_t __nis_default_ttl __P ((char *));
+extern unsigned int __nis_default_access __P ((char *, unsigned int));
 extern fd_result *__nis_finddirectory __P ((directory_obj *, const_nis_name));
 extern void __free_fdresult __P ((fd_result *));
-extern u_long __nis_hash __P ((const void *keyarg, register size_t len));
+extern uint32_t __nis_hash __P ((const void *keyarg, register size_t len));
 
 /* NIS+ cache locking */
 extern int __nis_lock_cache __P ((void));
@@ -254,11 +256,11 @@ struct dir_binding
 {
   CLIENT *clnt;                  /* RPC CLIENT handle */
   nis_server *server_val;        /* List of servers */
-  u_int server_len;              /* # of servers */
-  u_int server_used;             /* Which server we are bind in the moment ? */
-  u_int current_ep;              /* Which endpoint of the server are in use? */
-  u_int trys;                    /* How many server have we tried ? */
-  u_int class;                   /* From which class is server_val ? */
+  unsigned int server_len;       /* # of servers */
+  unsigned int server_used;      /* Which server we are bind in the moment ? */
+  unsigned int current_ep;       /* Which endpoint of the server are in use? */
+  unsigned int trys;             /* How many server have we tried ? */
+  unsigned int class;            /* From which class is server_val ? */
   bool_t master_only;            /* Is only binded to the master */
   bool_t use_auth;               /* Do we use AUTH ? */
   bool_t use_udp;                /* Do we use UDP ? */
@@ -268,7 +270,7 @@ struct dir_binding
 typedef struct dir_binding dir_binding;
 
 extern nis_error __nisbind_create __P ((dir_binding *, const nis_server *,
-					u_int, u_long));
+					unsigned int, unsigned int));
 extern nis_error __nisbind_connect __P ((dir_binding *));
 extern nis_error __nisbind_next __P ((dir_binding *));
 extern void __nisbind_destroy __P ((dir_binding *));

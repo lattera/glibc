@@ -1,3 +1,33 @@
+1998-10-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+ 
+	* sunrpc/Versions: Add xdr_uint32_t and xdr_int32_t. 
+	* sunrpc/pmap_rmt.c: Initialize clnt_stat variable. 
+	* sunrpc/rpc/auth_des.h: Use uint32_t for time values. 
+	* sunrpc/rpc/xdr.h: Add INT32 support. 
+	* sunrpc/xdr.c: Implement xdr_int32_t and xdr_uint32_t .
+ 
+	* nis/nis_call.c: Changes for new 64bit clean NIS+ interface. 
+	* nis/nis_callback.c: Likewise. 
+	* nis/nis_creategroup.c: Likewise. 
+	* nis/nis_defaults.c: Likewise. 
+	* nis/nis_intern.h: Likewise. 
+	* nis/nis_lookup.c: Likewise. 
+	* nis/nis_ping.c: Likewise. 
+	* nis/nis_print.c: Likewise. 
+	* nis/nis_table.c: Likewise. 
+	* nis/nis_util.c: Likewise. 
+	* nis/nis_xdr.c: Likewise. 
+	* nis/rpcsvc/nis.h: Likewise. 
+	* nis/rpcsvc/nis.x: Likewise. 
+	* nis/rpcsvc/nis_callback.h: Likewise. 
+	* nis/rpcsvc/nis_object.x: Likewise. 
+	* nis/rpcsvc/nislib.h: Likewise. 
+ 
+	* nis/rpcsvc/yp.h: Remove casts to (u_long). 
+	* nis/rpcsvc/yp_prot.h: Likewise. 
+	* nis/rpcsvc/ypupd.h: Likewise. 
+	* nis/ypclnt.c: Change %ld to %d in sprintf. 
+ 
 1998-10-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
  
 	* manual/locale.texi (Formatting Numbers): Fix strfmon examples. 

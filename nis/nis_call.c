@@ -180,8 +180,8 @@ __nisbind_connect (dir_binding *dbp)
 }
 
 nis_error
-__nisbind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
-		  u_long flags)
+__nisbind_create (dir_binding *dbp, const nis_server *serv_val,
+		  unsigned int serv_len, unsigned int flags)
 {
   dbp->clnt = NULL;
 
@@ -220,7 +220,7 @@ __nisbind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
    So we could use the same binding twice */
 nis_error
 __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
-	       xdrproc_t xres, caddr_t resp, u_long flags, nis_cb *cb)
+	       xdrproc_t xres, caddr_t resp, unsigned int flags, nis_cb *cb)
 {
   enum clnt_stat result;
   nis_error retcode;
@@ -325,7 +325,7 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 nis_error
 __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
-	       u_long flags, nis_cb *cb)
+	       unsigned int flags, nis_cb *cb)
 {
   dir_binding dbp;
   nis_error status;
@@ -550,7 +550,7 @@ __nisfind_server (const_nis_name name, directory_obj **dir)
 
 nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
-	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags,
+	      caddr_t req, xdrproc_t xres, caddr_t resp, unsigned int flags,
 	      nis_cb *cb)
 {
   nis_error retcode;

@@ -106,7 +106,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 	  unsigned short port;
 	  int fd;
 
-	  sprintf (path, "%s/%s.%ld", BINDINGDIR, domain, YPBINDVERS);
+	  sprintf (path, "%s/%s.%d", BINDINGDIR, domain, YPBINDVERS);
 	  fd = open (path, O_RDONLY);
 	  if (fd >= 0)
 	    {
@@ -599,7 +599,7 @@ static int (*ypall_foreach) __P ((int status, char *key, int keylen,
 				  char *val, int vallen, char *data));
 
 static bool_t
-__xdr_ypresp_all (XDR * xdrs, u_long * objp)
+__xdr_ypresp_all (XDR *xdrs, u_long *objp)
 {
   while (1)
     {

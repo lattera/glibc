@@ -237,70 +237,70 @@ typedef struct ypbind_setdom ypbind_setdom;
 
 __BEGIN_DECLS
 
-#define YPPROG ((u_long)100004)
-#define YPVERS ((u_long)2)
+#define YPPROG 100004
+#define YPVERS 2
 
-#define YPPROC_NULL ((u_long)0)
+#define YPPROC_NULL 0
 extern  void *ypproc_null_2 __P ((void *, CLIENT *));
 extern  void *ypproc_null_2_svc __P ((void *, struct svc_req *));
-#define YPPROC_DOMAIN ((u_long)1)
+#define YPPROC_DOMAIN 1
 extern  bool_t *ypproc_domain_2 __P ((domainname *, CLIENT *));
 extern  bool_t *ypproc_domain_2_svc __P ((domainname *, struct svc_req *));
-#define YPPROC_DOMAIN_NONACK ((u_long)2)
+#define YPPROC_DOMAIN_NONACK 2
 extern  bool_t *ypproc_domain_nonack_2 __P ((domainname *, CLIENT *));
 extern  bool_t *ypproc_domain_nonack_2_svc __P ((domainname *, struct svc_req *));
-#define YPPROC_MATCH ((u_long)3)
+#define YPPROC_MATCH 3
 extern  ypresp_val *ypproc_match_2 __P ((ypreq_key *, CLIENT *));
 extern  ypresp_val *ypproc_match_2_svc __P ((ypreq_key *, struct svc_req *));
-#define YPPROC_FIRST ((u_long)4)
+#define YPPROC_FIRST 4
 extern  ypresp_key_val *ypproc_first_2 __P ((ypreq_key *, CLIENT *));
 extern  ypresp_key_val *ypproc_first_2_svc __P ((ypreq_key *, struct svc_req *));
-#define YPPROC_NEXT ((u_long)5)
+#define YPPROC_NEXT 5
 extern  ypresp_key_val *ypproc_next_2 __P ((ypreq_key *, CLIENT *));
 extern  ypresp_key_val *ypproc_next_2_svc __P ((ypreq_key *, struct svc_req *));
-#define YPPROC_XFR ((u_long)6)
+#define YPPROC_XFR 6
 extern  ypresp_xfr *ypproc_xfr_2 __P ((ypreq_xfr *, CLIENT *));
 extern  ypresp_xfr *ypproc_xfr_2_svc __P ((ypreq_xfr *, struct svc_req *));
-#define YPPROC_CLEAR ((u_long)7)
+#define YPPROC_CLEAR 7
 extern  void *ypproc_clear_2 __P ((void *, CLIENT *));
 extern  void *ypproc_clear_2_svc __P ((void *, struct svc_req *));
-#define YPPROC_ALL ((u_long)8)
+#define YPPROC_ALL 8
 extern  ypresp_all *ypproc_all_2 __P ((ypreq_nokey *, CLIENT *));
 extern  ypresp_all *ypproc_all_2_svc __P ((ypreq_nokey *, struct svc_req *));
-#define YPPROC_MASTER ((u_long)9)
+#define YPPROC_MASTER 9
 extern  ypresp_master *ypproc_master_2 __P ((ypreq_nokey *, CLIENT *));
 extern  ypresp_master *ypproc_master_2_svc __P ((ypreq_nokey *, struct svc_req *));
-#define YPPROC_ORDER ((u_long)10)
+#define YPPROC_ORDER 10
 extern  ypresp_order *ypproc_order_2 __P ((ypreq_nokey *, CLIENT *));
 extern  ypresp_order *ypproc_order_2_svc __P ((ypreq_nokey *, struct svc_req *));
-#define YPPROC_MAPLIST ((u_long)11)
+#define YPPROC_MAPLIST 11
 extern  ypresp_maplist *ypproc_maplist_2 __P ((domainname *, CLIENT *));
 extern  ypresp_maplist *ypproc_maplist_2_svc __P ((domainname *, struct svc_req *));
 extern int ypprog_2_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));
 
 
-#define YPPUSH_XFRRESPPROG ((u_long)0x40000000)
-#define YPPUSH_XFRRESPVERS ((u_long)1)
+#define YPPUSH_XFRRESPPROG (0x40000000)
+#define YPPUSH_XFRRESPVERS 1
 
-#define YPPUSHPROC_NULL ((u_long)0)
+#define YPPUSHPROC_NULL 0
 extern  void *yppushproc_null_1 __P ((void *, CLIENT *));
 extern  void *yppushproc_null_1_svc __P ((void *, struct svc_req *));
-#define YPPUSHPROC_XFRRESP ((u_long)1)
+#define YPPUSHPROC_XFRRESP 1
 extern  void *yppushproc_xfrresp_1 __P ((yppushresp_xfr *, CLIENT *));
 extern  void *yppushproc_xfrresp_1_svc __P ((yppushresp_xfr *, struct svc_req *));
 extern int yppush_xfrrespprog_1_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));
 
 
-#define YPBINDPROG ((u_long)100007)
-#define YPBINDVERS ((u_long)2)
+#define YPBINDPROG 100007
+#define YPBINDVERS 2
 
-#define YPBINDPROC_NULL ((u_long)0)
+#define YPBINDPROC_NULL 0
 extern  void *ypbindproc_null_2 __P ((void *, CLIENT *));
 extern  void *ypbindproc_null_2_svc __P ((void *, struct svc_req *));
-#define YPBINDPROC_DOMAIN ((u_long)1)
+#define YPBINDPROC_DOMAIN 1
 extern  ypbind_resp *ypbindproc_domain_2 __P ((domainname *, CLIENT *));
 extern  ypbind_resp *ypbindproc_domain_2_svc __P ((domainname *, struct svc_req *));
-#define YPBINDPROC_SETDOM ((u_long)2)
+#define YPBINDPROC_SETDOM 2
 extern  void *ypbindproc_setdom_2 __P ((ypbind_setdom *, CLIENT *));
 extern  void *ypbindproc_setdom_2_svc __P ((ypbind_setdom *, struct svc_req *));
 extern int ypbindprog_2_freeresult __P ((SVCXPRT *, xdrproc_t, caddr_t));

@@ -58,17 +58,14 @@ static char sccsid[] = "@(#)xdr.c 1.35 87/08/12";
 /*
  * for unit alignment
  */
-static const char xdr_zero[BYTES_PER_XDR_UNIT] =
-{0, 0, 0, 0};
+static const char xdr_zero[BYTES_PER_XDR_UNIT] = {0, 0, 0, 0};
 
 /*
  * Free a data structure using XDR
  * Not a filter, but a convenient utility nonetheless
  */
 void
-xdr_free (proc, objp)
-     xdrproc_t proc;
-     char *objp;
+xdr_free (xdrproc_t proc, char *objp)
 {
   XDR x;
 
@@ -89,9 +86,7 @@ xdr_void (void)
  * XDR integers
  */
 bool_t
-xdr_int (xdrs, ip)
-     XDR *xdrs;
-     int *ip;
+xdr_int (XDR *xdrs, int *ip)
 {
 
 #if INT_MAX < LONG_MAX
@@ -126,9 +121,7 @@ xdr_int (xdrs, ip)
  * XDR unsigned integers
  */
 bool_t
-xdr_u_int (xdrs, up)
-     XDR *xdrs;
-     u_int *up;
+xdr_u_int (XDR *xdrs, u_int *up)
 {
 #if UINT_MAX < ULONG_MAX
   u_long l;
@@ -159,13 +152,50 @@ xdr_u_int (xdrs, up)
 }
 
 /*
+ * XDR 32bit integers
+ */
+bool_t
+xdr_int32_t (XDR *xdrs, int32_t *lp)
+{
+
+  if (xdrs->x_op == XDR_ENCODE)
+    return XDR_PUTINT32 (xdrs, lp);
+
+  if (xdrs->x_op == XDR_DECODE)
+    return XDR_GETINT32 (xdrs, lp);
+
+  if (xdrs->x_op == XDR_FREE)
+    return TRUE;
+
+  return FALSE;
+}
+
+/*
+ * XDR 32bit unsigned integers
+ */
+bool_t
+xdr_uint32_t (XDR *xdrs, uint32_t *ulp)
+{
+  switch (xdrs->x_op)
+    {
+    case XDR_DECODE:
+      return XDR_GETINT32 (xdrs, (uint32_t *) ulp);
+
+    case XDR_ENCODE:
+      return XDR_PUTINT32 (xdrs, (uint32_t *) ulp);
+
+    case XDR_FREE:
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/*
  * XDR long integers
  * same as xdr_u_long - open coded to save a proc call!
  */
 bool_t
-xdr_long (xdrs, lp)
-     XDR *xdrs;
-     long *lp;
+xdr_long (XDR *xdrs, long *lp)
 {
 
   if (xdrs->x_op == XDR_ENCODE)
@@ -185,9 +215,7 @@ xdr_long (xdrs, lp)
  * same as xdr_long - open coded to save a proc call!
  */
 bool_t
-xdr_u_long (xdrs, ulp)
-     XDR *xdrs;
-     u_long *ulp;
+xdr_u_long (XDR *xdrs, u_long *ulp)
 {
   switch (xdrs->x_op)
     {

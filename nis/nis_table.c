@@ -25,7 +25,7 @@
 
 
 static struct ib_request *
-__create_ib_request (const_nis_name name, u_long flags)
+__create_ib_request (const_nis_name name, unsigned int flags)
 {
   struct ib_request *ibreq = calloc (1, sizeof (ib_request));
   char buf[strlen (name) + 1];
@@ -145,7 +145,7 @@ __get_tablepath (char *name, dir_binding *bptr)
 }
 
 nis_result *
-nis_list (const_nis_name name, u_long flags,
+nis_list (const_nis_name name, unsigned int flags,
 	  int (*callback) (const_nis_name name,
 			   const nis_object *object,
 			   const void *userdata),
@@ -432,7 +432,7 @@ nis_list (const_nis_name name, u_long flags,
 }
 
 nis_result *
-nis_add_entry (const_nis_name name, const nis_object *obj2, u_long flags)
+nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
 {
   nis_object obj;
   nis_result *res;
@@ -492,7 +492,8 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, u_long flags)
 }
 
 nis_result *
-nis_modify_entry (const_nis_name name, const nis_object *obj2, u_long flags)
+nis_modify_entry (const_nis_name name, const nis_object *obj2,
+		  unsigned int flags)
 {
   nis_object obj;
   nis_result *res;
@@ -546,7 +547,7 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2, u_long flags)
 
 nis_result *
 nis_remove_entry (const_nis_name name, const nis_object *obj,
-		  u_long flags)
+		  unsigned int flags)
 {
   nis_result *res;
   ib_request *ibreq;

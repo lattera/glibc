@@ -69,12 +69,12 @@ searchowner (char *str)
   return strndup (cptr, i);
 }
 
-static u_long
+static uint32_t
 searchttl (char *str)
 {
   char buf[strlen (str) + 1];
   char *cptr, *dptr;
-  u_long time;
+  uint32_t time;
   int i;
 
   dptr = strstr (str, "ttl=");
@@ -129,12 +129,12 @@ searchttl (char *str)
   return time;
 }
 
-static u_long
-searchaccess (char *str, u_long access)
+static unsigned int
+searchaccess (char *str, unsigned int access)
 {
   char buf[strlen (str) + 1];
   char *cptr;
-  u_long result = access;
+  unsigned int result = access;
   int i;
   int n, o, g, w;
 
@@ -222,7 +222,7 @@ searchaccess (char *str, u_long access)
 		    result = result & ~(NIS_DESTROY_ACC);
 		  break;
 		default:
-		  return ULONG_MAX;
+		  return (~0U);
 		}
 	      cptr++;
 	    }
@@ -275,7 +275,7 @@ searchaccess (char *str, u_long access)
 		    result = result | (NIS_DESTROY_ACC);
 		  break;
 		default:
-		  return ULONG_MAX;
+		  return (~0U);
 		}
 	      cptr++;
 	    }
@@ -342,14 +342,14 @@ searchaccess (char *str, u_long access)
 		    result = result | (NIS_DESTROY_ACC);
 		  break;
 		default:
-		  return result = ULONG_MAX;
+		  return result = (~0U);
 		}
 	      cptr++;
 	    }
 	  n = o = g = w = 0;
 	  break;
 	default:
-	  return result = ULONG_MAX;
+	  return result = (~0U);
 	}
       if (*cptr != '\0')
 	cptr++;
@@ -436,7 +436,7 @@ __nis_default_group (char *defaults)
   return strdup (default_group);
 }
 
-u_long
+uint32_t
 __nis_default_ttl (char *defaults)
 {
   char *cptr, *dptr;
@@ -461,10 +461,10 @@ __nis_default_ttl (char *defaults)
 
 /* Default access rights are ----rmcdr---r---, but we could change
    this with the NIS_DEFAULTS variable. */
-u_long
-__nis_default_access (char *param, u_long defaults)
+unsigned int
+__nis_default_access (char *param, unsigned int defaults)
 {
-  u_long result;
+  unsigned int result;
   char *cptr;
 
   if (defaults == 0)

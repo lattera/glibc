@@ -49,9 +49,9 @@ nis_nstype2str (const nstype type)
 }
 
 static void
-print_ttl (const u_long ttl)
+print_ttl (const uint32_t ttl)
 {
-  unsigned long int time, s, m, h;
+  uint32_t time, s, m, h;
 
   time = ttl;
 
@@ -60,11 +60,11 @@ print_ttl (const u_long ttl)
   m = time / 60;
   time %= 60;
   s = time;
-  printf ("%lu:%lu:%lu\n", h, m, s);
+  printf ("%u:%u:%u\n", h, m, s);
 }
 
 static void
-print_flags (const u_long flags)
+print_flags (const unsigned int flags)
 {
   fputs ("(", stdout);
 
@@ -132,10 +132,10 @@ nis_print_objtype (enum zotypes type)
 }
 
 void
-nis_print_rights (const u_long access)
+nis_print_rights (const unsigned int access)
 {
   char result[17];
-  u_long acc;
+  unsigned int acc;
   int i;
 
   acc = access;			/* Parameter is const ! */
@@ -247,7 +247,7 @@ nis_print_group (const group_obj *obj)
 
   fputs (_("Group Flags :"), stdout);
   if (obj->gr_flags)
-    printf ("0x%08lX", obj->gr_flags);
+    printf ("0x%08X", obj->gr_flags);
   fputs (_("\nGroup Members :\n"), stdout);
 
   for (i = 0; i < obj->gr_members.gr_members_len; i++)
@@ -316,8 +316,8 @@ nis_print_object (const nis_object * obj)
   nis_print_rights (obj->zo_access);
   printf (_("\nTime to Live  : "));
   print_ttl (obj->zo_ttl);
-  printf (_("Creation Time : %s"), ctime (&obj->zo_oid.ctime));
-  printf (_("Mod. Time     : %s"), ctime (&obj->zo_oid.mtime));
+  printf (_("Creation Time : %s"), ctime ((time_t *)&obj->zo_oid.ctime));
+  printf (_("Mod. Time     : %s"), ctime ((time_t *)&obj->zo_oid.mtime));
   fputs (_("Object Type   : "), stdout);
   nis_print_objtype (obj->zo_data.zo_type);
   switch (obj->zo_data.zo_type)

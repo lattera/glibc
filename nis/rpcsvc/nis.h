@@ -72,6 +72,7 @@ __BEGIN_DECLS
 #define NIS_PK_DH 1
 #define NIS_PK_RSA 2
 #define NIS_PK_KERB 3
+#define NIS_PK_DHEXT 4
 
 struct nis_attr {
 	char *zattr_ndx;
@@ -118,7 +119,7 @@ enum nstype {
 typedef enum nstype nstype;
 
 struct oar_mask {
-	u_long oa_rights;
+	u_int oa_rights;
 	zotypes oa_otype;
 };
 typedef struct oar_mask oar_mask;
@@ -136,7 +137,7 @@ struct nis_server {
 		u_int ep_len;
 		endpoint *ep_val;
 	} ep;
-	u_long key_type;
+	u_int key_type;
 	netobj pkey;
 };
 typedef struct nis_server nis_server;
@@ -148,7 +149,7 @@ struct directory_obj {
 		u_int do_servers_len;
 		nis_server *do_servers_val;
 	} do_servers;
-	u_long do_ttl;
+	uint32_t do_ttl;
 	struct {
 		u_int do_armask_len;
 		oar_mask *do_armask_val;
@@ -163,7 +164,7 @@ typedef struct directory_obj directory_obj;
 #define EN_ASN1 64
 
 struct entry_col {
-	u_long ec_flags;
+	u_int ec_flags;
 	struct {
 		u_int ec_value_len;
 		char *ec_value_val;
@@ -181,7 +182,7 @@ struct entry_obj {
 typedef struct entry_obj entry_obj;
 
 struct group_obj {
-	u_long gr_flags;
+	u_int gr_flags;
 	struct {
 		u_int gr_members_len;
 		nis_name *gr_members_val;
@@ -209,8 +210,8 @@ typedef struct link_obj link_obj;
 
 struct table_col {
 	char *tc_name;
-	u_long tc_flags;
-	u_long tc_rights;
+	u_int tc_flags;
+	u_int tc_rights;
 };
 typedef struct table_col table_col;
 
@@ -243,8 +244,8 @@ struct objdata {
 typedef struct objdata objdata;
 
 struct nis_oid {
-	u_long ctime;
-	u_long mtime;
+	uint32_t ctime;
+	uint32_t mtime;
 };
 typedef struct nis_oid nis_oid;
 
@@ -254,8 +255,8 @@ struct nis_object {
 	nis_name zo_owner;
 	nis_name zo_group;
 	nis_name zo_domain;
-	u_long zo_access;
-	u_long zo_ttl;
+	u_int zo_access;
+	uint32_t zo_ttl;
 	objdata zo_data;
 };
 typedef struct nis_object nis_object;
@@ -321,10 +322,10 @@ struct nis_result {
 		nis_object *objects_val;
 	} objects;
 	netobj cookie;
-	u_long zticks;
-	u_long dticks;
-	u_long aticks;
-	u_long cticks;
+	uint32_t zticks;
+	uint32_t dticks;
+	uint32_t aticks;
+	uint32_t cticks;
 };
 typedef struct nis_result nis_result;
 
@@ -343,7 +344,7 @@ struct ib_request {
 		u_int ibr_srch_len;
 		nis_attr *ibr_srch_val;
 	} ibr_srch;
-	u_long ibr_flags;
+	u_int ibr_flags;
 	struct {
 		u_int ibr_obj_len;
 		nis_object *ibr_obj_val;
@@ -352,14 +353,14 @@ struct ib_request {
 		u_int ibr_cbhost_len;
 		nis_server *ibr_cbhost_val;
 	} ibr_cbhost;
-	u_long ibr_bufsize;
+	u_int ibr_bufsize;
 	netobj ibr_cookie;
 };
 typedef struct ib_request ib_request;
 
 struct ping_args {
 	nis_name dir;
-	u_long stamp;
+	uint32_t stamp;
 };
 typedef struct ping_args ping_args;
 
@@ -377,7 +378,7 @@ enum log_entry_t {
 typedef enum log_entry_t log_entry_t;
 
 struct log_entry {
-	u_long le_time;
+	uint32_t le_time;
 	log_entry_t le_type;
 	nis_name le_princp;
 	nis_name le_name;
@@ -401,13 +402,13 @@ typedef struct log_result log_result;
 
 struct cp_result {
 	nis_error cp_status;
-	u_long cp_zticks;
-	u_long cp_dticks;
+	uint32_t cp_zticks;
+	uint32_t cp_dticks;
 };
 typedef struct cp_result cp_result;
 
 struct nis_tag {
-	u_long tag_type;
+	u_int tag_type;
 	char *tag_val;
 };
 typedef struct nis_tag nis_tag;
@@ -422,7 +423,7 @@ typedef struct nis_taglist nis_taglist;
 
 struct dump_args {
 	nis_name da_dir;
-	u_long da_time;
+	uint32_t da_time;
 	struct {
 		u_int da_cbhost_len;
 		nis_server *da_cbhost_val;
@@ -532,78 +533,78 @@ typedef enum name_pos name_pos;
 #ifndef __nis_3_h
 #define __nis_3_h
 
-#define NIS_PROG ((u_long)100300)
-#define NIS_VERSION ((u_long)3)
+#define NIS_PROG 100300
+#define NIS_VERSION 3
 
-#define NIS_LOOKUP ((u_long)1)
+#define NIS_LOOKUP 1
 extern  nis_result * nis_lookup_3 __P ((ns_request *, CLIENT *));
 extern  nis_result * nis_lookup_3_svc __P ((ns_request *, struct svc_req *));
-#define NIS_ADD ((u_long)2)
+#define NIS_ADD 2
 extern  nis_result * nis_add_3 __P ((ns_request *, CLIENT *));
 extern  nis_result * nis_add_3_svc __P ((ns_request *, struct svc_req *));
-#define NIS_MODIFY ((u_long)3)
+#define NIS_MODIFY 3
 extern  nis_result * nis_modify_3 __P ((ns_request *, CLIENT *));
 extern  nis_result * nis_modify_3_svc __P ((ns_request *, struct svc_req *));
-#define NIS_REMOVE ((u_long)4)
+#define NIS_REMOVE 4
 extern  nis_result * nis_remove_3 __P ((ns_request *, CLIENT *));
 extern  nis_result * nis_remove_3_svc __P ((ns_request *, struct svc_req *));
-#define NIS_IBLIST ((u_long)5)
+#define NIS_IBLIST 5
 extern  nis_result * nis_iblist_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_iblist_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_IBADD ((u_long)6)
+#define NIS_IBADD 6
 extern  nis_result * nis_ibadd_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_ibadd_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_IBMODIFY ((u_long)7)
+#define NIS_IBMODIFY 7
 extern  nis_result * nis_ibmodify_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_ibmodify_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_IBREMOVE ((u_long)8)
+#define NIS_IBREMOVE 8
 extern  nis_result * nis_ibremove_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_ibremove_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_IBFIRST ((u_long)9)
+#define NIS_IBFIRST 9
 extern  nis_result * nis_ibfirst_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_ibfirst_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_IBNEXT ((u_long)10)
+#define NIS_IBNEXT 10
 extern  nis_result * nis_ibnext_3 __P ((ib_request *, CLIENT *));
 extern  nis_result * nis_ibnext_3_svc __P ((ib_request *, struct svc_req *));
-#define NIS_FINDDIRECTORY ((u_long)12)
+#define NIS_FINDDIRECTORY 12
 extern  fd_result * nis_finddirectory_3 __P ((fd_args *, CLIENT *));
 extern  fd_result * nis_finddirectory_3_svc __P ((fd_args *,
 						  struct svc_req *));
-#define NIS_STATUS ((u_long)14)
+#define NIS_STATUS 14
 extern  nis_taglist * nis_status_3 __P ((nis_taglist *, CLIENT *));
 extern  nis_taglist * nis_status_3_svc __P ((nis_taglist *, struct svc_req *));
-#define NIS_DUMPLOG ((u_long)15)
+#define NIS_DUMPLOG 15
 extern  log_result * nis_dumplog_3 __P ((dump_args *, CLIENT *));
 extern  log_result * nis_dumplog_3_svc __P ((dump_args *, struct svc_req *));
-#define NIS_DUMP ((u_long)16)
+#define NIS_DUMP 16
 extern  log_result * nis_dump_3 __P ((dump_args *, CLIENT *));
 extern  log_result * nis_dump_3_svc __P ((dump_args *, struct svc_req *));
-#define NIS_CALLBACK ((u_long)17)
+#define NIS_CALLBACK 17
 extern  bool_t * nis_callback_3 __P ((netobj *, CLIENT *));
 extern  bool_t * nis_callback_3_svc __P ((netobj *, struct svc_req *));
-#define NIS_CPTIME ((u_long)18)
-extern  u_long * nis_cptime_3 __P ((nis_name *, CLIENT *));
-extern  u_long * nis_cptime_3_svc __P ((nis_name *, struct svc_req *));
-#define NIS_CHECKPOINT ((u_long)19)
+#define NIS_CPTIME 18
+extern  uint32_t * nis_cptime_3 __P ((nis_name *, CLIENT *));
+extern  uint32_t * nis_cptime_3_svc __P ((nis_name *, struct svc_req *));
+#define NIS_CHECKPOINT 19
 extern  cp_result * nis_checkpoint_3 __P ((nis_name *, CLIENT *));
 extern  cp_result * nis_checkpoint_3_svc __P ((nis_name *, struct svc_req *));
-#define NIS_PING ((u_long)20)
+#define NIS_PING 20
 extern  void * nis_ping_3 __P ((ping_args *, CLIENT *));
 extern  void * nis_ping_3_svc __P ((ping_args *, struct svc_req *));
-#define NIS_SERVSTATE ((u_long)21)
+#define NIS_SERVSTATE 21
 extern  nis_taglist * nis_servstate_3 __P ((nis_taglist *, CLIENT *));
 extern  nis_taglist * nis_servstate_3_svc __P ((nis_taglist *,
 						struct svc_req *));
-#define NIS_MKDIR ((u_long)22)
+#define NIS_MKDIR 22
 extern  nis_error * nis_mkdir_3 __P ((nis_name *, CLIENT *));
 extern  nis_error * nis_mkdir_3_svc __P ((nis_name *, struct svc_req *));
-#define NIS_RMDIR ((u_long)23)
+#define NIS_RMDIR 23
 extern  nis_error * nis_rmdir_3 __P ((nis_name *, CLIENT *));
 extern  nis_error * nis_rmdir_3_svc __P ((nis_name *, struct svc_req *));
-#define NIS_UPDKEYS ((u_long)24)
+#define NIS_UPDKEYS 24
 extern  nis_error * nis_updkeys_3 __P ((nis_name *, CLIENT *));
 extern  nis_error * nis_updkeys_3_svc __P ((nis_name *, struct svc_req *));
 
 __END_DECLS
 
-#endif /* !_NIS_H_RPCGEN */
+#endif /* ! _RPCSVC_NIS_H */

@@ -5,7 +5,7 @@
  *	All Rights Reserved.
  */
 
-%#pragma ident	"@(#)nis_object.x	1.9	96/07/09 SMI"
+%#pragma ident	"@(#)nis_object.x	1.12	97/11/19 SMI"
 
 #if RPC_HDR
 %
@@ -46,6 +46,7 @@ const NIS_PK_NONE      = 0;	/* no public key (unix/sys auth) */
 const NIS_PK_DH	       = 1;	/* Public key is Diffie-Hellman type */
 const NIS_PK_RSA       = 2;	/* Public key if RSA type */
 const NIS_PK_KERB      = 3;	/* Use kerberos style authentication */
+const NIS_PK_DHEXT     = 4;	/* Extended Diffie-Hellman for RPC-GSS */
 
 /*
  * The fundamental name type of NIS. The name may consist of two parts,
@@ -123,7 +124,7 @@ enum nstype {
  * administrator's approval.
  */
 struct oar_mask {
-	u_long	oa_rights;	/* Access rights mask 	*/
+	u_int	oa_rights;	/* Access rights mask 	*/
 	zotypes	oa_otype;	/* Object type 		*/
 };
 
@@ -141,7 +142,7 @@ struct endpoint {
 struct nis_server {
 	nis_name	name; 	 	/* Principal name of the server  */
 	endpoint	ep<>;  		/* Universal addr(s) for server  */
-	u_long		key_type;	/* Public key type		 */
+	u_int		key_type;	/* Public key type		 */
 	netobj		pkey;		/* server's public key  	 */
 };
 
@@ -149,7 +150,7 @@ struct directory_obj {
 	nis_name   do_name;	 /* Name of the directory being served   */
 	nstype	   do_type;	 /* one of NIS, DNS, IVY, YP, or X.500 	 */
 	nis_server do_servers<>; /* <0> == Primary name server     	 */
-	u_long	   do_ttl;	 /* Time To Live (for caches) 		 */
+	uint32_t   do_ttl;	 /* Time To Live (for caches) 		 */
 	oar_mask   do_armask<>;  /* Create/Destroy rights by object type */
 };
 
@@ -169,7 +170,7 @@ const EN_MODIFIED = 8;	/* Indicates entry is modified. 	*/
 const EN_ASN1     = 64;	/* Means contents use ASN.1 encoding    */
 
 struct entry_col {
-	u_long	ec_flags;	/* Flags for this value */
+	u_int	ec_flags;	/* Flags for this value */
 	opaque	ec_value<>;	/* It's textual value	*/
 };
 
@@ -185,7 +186,7 @@ struct entry_obj {
  * name.directory and recursive groups are expressed as @groupname.directory
  */
 struct group_obj {
-	u_long		gr_flags;	/* Flags controlling group	*/
+	u_int		gr_flags;	/* Flags controlling group	*/
 	nis_name	gr_members<>;  	/* List of names in group 	*/
 };
 
@@ -228,8 +229,8 @@ const TA_ASN1       = 64;	/* Means contents use ASN.1 encoding     */
 
 struct table_col {
 	string	tc_name<64>;	/* Column Name 	 	   */
-	u_long	tc_flags;	/* control flags	   */
-	u_long	tc_rights;	/* Access rights mask	   */
+	u_int	tc_flags;	/* control flags	   */
+	u_int	tc_rights;	/* Access rights mask	   */
 };
 
 struct table_obj {
@@ -280,8 +281,8 @@ union objdata switch (zotypes zo_type) {
  * new position and calculate the size. 
  */
 struct nis_oid {
-	u_long	ctime;		/* Time of objects creation 	*/
-	u_long	mtime;		/* Time of objects modification */
+	uint32_t ctime;		/* Time of objects creation 	*/
+	uint32_t mtime;		/* Time of objects modification */
 };
 
 struct nis_object {
@@ -290,8 +291,8 @@ struct nis_object {
 	nis_name zo_owner;	/* NIS name of object owner.		*/
 	nis_name zo_group;	/* NIS name of access group.		*/
 	nis_name zo_domain;	/* The administrator for the object	*/
-	u_long	 zo_access;	/* Access rights (owner, group, world)	*/
-	u_long	 zo_ttl;	/* Object's time to live in seconds.	*/
+	u_int	 zo_access;	/* Access rights (owner, group, world)	*/
+	uint32_t zo_ttl;	/* Object's time to live in seconds.	*/
 	objdata	 zo_data;	/* Data structure for this type 	*/
 };
 #if RPC_HDR

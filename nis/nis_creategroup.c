@@ -21,7 +21,7 @@
 #include <rpcsvc/nis.h>
 
 nis_error
-nis_creategroup (const_nis_name group, u_long flags)
+nis_creategroup (const_nis_name group, unsigned int flags)
 {
   if (group != NULL && group[0] != '\0')
     {
