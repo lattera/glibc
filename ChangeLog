@@ -1,5 +1,11 @@
 2000-04-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/sysinfo.texi: Fix typo.
+	* manual/time.texi: Document timelocal, timegm, adjtimex, and stime.
+	Replace "high precision time" with "high accuracy clock".
+	Fix language.
+	Patches by Bryan Henderson <bryanh@giraffe-data.com>.
+
 	* nis/nis_findserv.c (__nis_findfastest): Improve memory handling.
 	* nis/nis_print_group_entry.c (nis_print_group_entry): Use alloca
 	instead of malloc.

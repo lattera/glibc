@@ -25,8 +25,6 @@ an Alarm}.
 @menu
 * Processor Time::              Measures processor time used by a program.
 * Calendar Time::               Manipulation of ``real'' dates and times.
-* Precision Time::              Manipulation and monitoring of high accuracy
-                                  time.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
 @end menu
@@ -195,42 +193,45 @@ the @code{tms_utime} and @code{tms_stime} fields returned by
 @node Calendar Time
 @section Calendar Time
 
-This section describes facilities for keeping track of dates and times
-according to the Gregorian calendar.
-@cindex Gregorian calendar
+This section describes facilities for keeping track of points in time.
+This is called calendar time and sometimes absolute time.
+@cindex time, absolute
 @cindex time, calendar
 @cindex date and time
 
-There are three representations for date and time information:
+The GNU C library represents calendar time three ways:
 
 @itemize @bullet
 @item
-@dfn{Calendar time} (the @code{time_t} data type) is a compact
+@dfn{Simple time} (the @code{time_t} data type) is a compact
 representation, typically giving the number of seconds elapsed since
 some implementation-specific base time.
-@cindex calendar time
+@cindex simple time
 
 @item
 There is also a @dfn{high-resolution time} representation (the @code{struct
 timeval} data type) that includes fractions of a second.  Use this time
-representation instead of ordinary calendar time when you need greater
+representation instead of simple time when you need greater
 precision.
 @cindex high-resolution time
 
 @item
-@dfn{Local time} or @dfn{broken-down time} (the @code{struct
-tm} data type) represents the date and time as a set of components
-specifying the year, month, and so on, for a specific time zone.
-This time representation is usually used in conjunction with formatting
-date and time values.
+@dfn{Local time} or @dfn{broken-down time} (the @code{struct tm} data
+type) represents the date and time as a set of components specifying the
+year, month, and so on in the Gregorian calendar, for a specific time
+zone.  This time representation is usually used only to communicate with
+people.
 @cindex local time
 @cindex broken-down time
+@cindex Gregorian calendar
+@cindex calendar, Gregorian
 @end itemize
 
 @menu
 * Simple Calendar Time::        Facilities for manipulating calendar time.
 * High-Resolution Calendar::    A time representation with greater precision.
 * Broken-down Time::            Facilities for manipulating local time.
+* High Accuracy Clock::         Maintaining a high accuracy system clock.
 * Formatting Date and Time::    Converting times to strings.
 * Parsing Date and Time::       Convert textual time and date information back
                                  into broken-down time values.
@@ -243,8 +244,8 @@ date and time values.
 @node Simple Calendar Time
 @subsection Simple Calendar Time
 
-This section describes the @code{time_t} data type for representing
-calendar time, and the functions which operate on calendar time objects.
+This section describes the @code{time_t} data type for representing calendar
+time as simple time, and the functions which operate on simple time objects.
 These facilities are declared in the header file @file{time.h}.
 @pindex time.h
 
@@ -252,13 +253,18 @@ These facilities are declared in the header file @file{time.h}.
 @comment time.h
 @comment ISO
 @deftp {Data Type} time_t
-This is the data type used to represent calendar time.
+This is the data type used to represent simple time.  Sometimes, it also
+represents an elapsed time.
 When interpreted as an absolute time
 value, it represents the number of seconds elapsed since 00:00:00 on
-January 1, 1970, Coordinated Universal Time.  (This date is sometimes
+January 1, 1970, Coordinated Universal Time.  (This time is sometimes
 referred to as the @dfn{epoch}.)  POSIX requires that this count
-ignore leap seconds, but on some hosts this count includes leap seconds
+not include leap seconds, but on some hosts this count includes leap seconds
 if you set @code{TZ} to certain values (@pxref{TZ Variable}).
+
+Note that a simple time has no concept of local time zone.  Time @var{N}
+is the same instant in time regardless of where on the globe the
+computer is.
 
 In the GNU C library, @code{time_t} is equivalent to @code{long int}.
 In other systems, @code{time_t} might be either an integer or
@@ -287,11 +293,36 @@ time value is also stored in @code{*@var{result}}.  If the calendar
 time is not available, the value @w{@code{(time_t)(-1)}} is returned.
 @end deftypefun
 
+@c The GNU C library implements stime() with a call to settimeofday() on
+@c Linux.
+@comment time.h
+@comment SVID, XPG
+@deftypefun int stime (time_t *@var{newtime})
+@code{stime} sets the system clock, i.e.  it tells the system that the
+present absolute time is @var{newtime}, where @code{newtime} is
+interpreted as described in the above definition of @code{time_t}.
+
+@code{settimeofday} is a newer function which sets the system clock to
+better than one second precision.  @code{settimeofday} is generally a
+better choice than @code{stime}.  @xref{High-Resolution Calendar}.
+
+Only the superuser can set the system clock.
+
+If the function succeeds, the return value is zero.  Otherwise, it is
+@code{-1} and @code{errno} is set accordingly:
+
+@table @code
+@item EPERM
+The process is not superuser.
+@end table
+@end deftypefun
+
+
 
 @node High-Resolution Calendar
 @subsection High-Resolution Calendar
 
-The @code{time_t} data type used to represent calendar times has a
+The @code{time_t} data type used to represent simple times has a
 resolution of only one second.  Some applications need more precision.
 
 So, the GNU C library also contains functions which are capable of
@@ -405,6 +436,22 @@ information is ignored if @var{tzp} is a null pointer.
 
 You must be a privileged user in order to use @code{settimeofday}.
 
+Some kernels automatically set the system clock from some source such as
+a hardware clock when they start up.  Others, including Linux, place the
+system clock in an ``invalid'' state (in which attempts to read the time
+fail).  A call of @code{stime} removes the system clock from an invalid
+state, and system startup scripts typically run a program that calls
+@code{stime}.
+
+@code{settimeofday} causes a sudden jump forwards or backwards, which
+can cause a variety of problems in a system.  Use @code{adjtime} (below)
+to make a smooth transition from one time to another by temporarily
+speeding up or slowing down the clock.
+
+With a Linux kernel, @code{adjtimex} does the same thing and can also
+make permanent changes to the speed of the system clock so it doesn't
+need to be corrected as often.
+
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error conditions are defined for this function:
 
@@ -418,6 +465,7 @@ The operating system does not support setting time zone information, and
 @end table
 @end deftypefun
 
+@c On Linux, GNU libc implements adjtime() as a call to adjtimex().
 @comment sys/time.h
 @comment BSD
 @deftypefun int adjtime (const struct timeval *@var{delta}, struct timeval *@var{olddelta})
@@ -437,6 +485,10 @@ has not yet completed.
 
 This function is typically used to synchronize the clocks of computers
 in a local network.  You must be a privileged user to use it.
+
+With a Linux kernel, you can use the @code{adjtimex} function to
+permanently change the clock speed.
+
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error condition is defined for this function:
 
@@ -450,19 +502,32 @@ You do not have privilege to set the time.
 and @code{adjtime} functions are derived from BSD.
 
 
+Symbols for the following function are declared in @file{sys/timex.h}.
+
+@comment sys/timex.h
+@comment GNU
+@deftypefun int adjtimex (struct timex *@var{timex})
+
+@code{adjtimex} is functionally identical to @code{ntp_adjtime}.
+@xref{High Accuracy Clock}.
+
+This function is present only with a Linux kernel.
+
+@end deftypefun
+
 @node Broken-down Time
 @subsection Broken-down Time
 @cindex broken-down time
 @cindex calendar time and broken-down time
 
-Calendar time is represented as a number of seconds.  This is convenient
-for calculation, but has no relation to the way people normally
-represent dates and times.  By contrast, @dfn{broken-down time} is a binary
-representation separated into year, month, day, and so on.  Broken-down
-time values are not useful for calculations, but they are useful for
-printing human readable time.
+Calendar time is represented as an amount of time since a fixed base
+time.  This is convenient for calculation, but has no relation to the
+way people normally think of dates and times.  By contrast,
+@dfn{broken-down time} is a binary representation separated into year,
+month, day, and so on.  Broken-down time values are not useful for
+calculations, but they are useful for printing human readable time.
 
-A broken-down time value is always relative to a choice of local time
+A broken-down time value is always relative to a choice of time
 zone, and it also indicates which time zone was used.
 
 The symbols in this section are declared in the header file @file{time.h}.
@@ -533,7 +598,7 @@ GNU extension, and is not visible in a strict @w{ISO C} environment.
 @comment time.h
 @comment ISO
 @deftypefun {struct tm *} localtime (const time_t *@var{time})
-The @code{localtime} function converts the calendar time pointed to by
+The @code{localtime} function converts the simple time pointed to by
 @var{time} to broken-down time representation, expressed relative to the
 user's specified time zone.
 
@@ -559,7 +624,7 @@ all threads.  POSIX.1c introduced a variant of this function.
 @comment POSIX.1c
 @deftypefun {struct tm *} localtime_r (const time_t *@var{time}, struct tm *@var{resultp})
 The @code{localtime_r} function works just like the @code{localtime}
-function.  It takes a pointer to a variable containing the calendar time
+function.  It takes a pointer to a variable containing a simple time
 and converts it to the broken-down time format.
 
 But the result is not placed in a static buffer.  Instead it is placed
@@ -575,11 +640,9 @@ object the result was written into, i.e., it returns @var{resultp}.
 @comment ISO
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
 This function is similar to @code{localtime}, except that the broken-down
-time is expressed as Coordinated Universal Time (UTC)---that is, as
-Greenwich Mean Time (GMT)---rather than relative to the local time zone.
+time is expressed as Coordinated Universal Time (UTC) (formerly called
+Greenwich Mean Time (GMT)) rather than relative to a local time zone.
 
-Recall that calendar times are @emph{always} expressed in coordinated
-universal time.
 @end deftypefun
 
 As for the @code{localtime} function we have the problem that the result
@@ -601,25 +664,261 @@ object the result was written into, i.e., it returns @var{resultp}.
 @comment ISO
 @deftypefun time_t mktime (struct tm *@var{brokentime})
 The @code{mktime} function is used to convert a broken-down time structure
-to a calendar time representation.  It also ``normalizes'' the contents of
+to a simple time representation.  It also ``normalizes'' the contents of
 the broken-down time structure, by filling in the day of week and day of
 year based on the other date and time components.
 
 The @code{mktime} function ignores the specified contents of the
 @code{tm_wday} and @code{tm_yday} members of the broken-down time
-structure.  It uses the values of the other components to compute the
+structure.  It uses the values of the other components to determine the
 calendar time; it's permissible for these components to have
 unnormalized values outside their normal ranges.  The last thing that
 @code{mktime} does is adjust the components of the @var{brokentime}
 structure (including the @code{tm_wday} and @code{tm_yday}).
 
-If the specified broken-down time cannot be represented as a calendar time,
+If the specified broken-down time cannot be represented as a simple time,
 @code{mktime} returns a value of @code{(time_t)(-1)} and does not modify
 the contents of @var{brokentime}.
 
 Calling @code{mktime} also sets the variable @code{tzname} with
 information about the current time zone.  @xref{Time Zone Functions}.
 @end deftypefun
+
+@comment time.h
+@comment ???
+@deftypefun time_t timelocal (struct tm *@var{brokentime})
+
+@code{timelocal} is functionally identical to @code{mktime}, but more
+mnemonically named.  Note that it is the inverse of the @code{localtime}
+function.
+
+@strong{Portability note:}  @code{mktime} is essentially universally
+available.  @code{timelocal} is rather rare.
+
+@end deftypefun
+
+@comment time.h
+@comment ???
+@deftypefun time_t timegm (struct tm *@var{brokentime})
+
+@code{timegm} is functionally identical to @code{mktime} except it
+always takes the input values to be Coordinated Universal Time (UTC)
+regardless of any local time zone setting.
+
+Note that @code{timegm} is the inverse of @code{gmtime}.
+
+@strong{Portability note:}  @code{mktime} is essentially universally
+available.  @code{timegm} is rather rare.  For the most portable
+conversion from a UTC broken-down time to a simple time, set
+the @code{TZ} environment variable to UTC, call @code{mktime}, then set
+@code{TZ} back.
+
+@end deftypefun
+
+
+
+@node High Accuracy Clock
+@subsection High Accuracy Clock
+
+@cindex time, high precision
+@cindex clock, high accuracy
+@pindex sys/timex.h
+@c On Linux, GNU libc implements ntp_gettime() and npt_adjtime() as calls
+@c to adjtimex().
+The @code{ntp_gettime} and @code{ntp_adjtime} functions provide an
+interface to monitor and manipulate the system clock to maintain high
+accuracy time.  For example, you can fine tune the speed of the clock
+or synchronize it with another time source.
+
+A typical use of these functions is by a server implementing the Network
+Time Protocol to synchronize the clocks of multiple systems and high
+precision clocks.
+
+These functions are declared in @file{sys/timex.h}.
+
+@tindex struct ntptimeval
+@deftp {Data Type} {struct ntptimeval}
+This structure is used to monitor kernel time.  It contains the
+following members:
+@table @code
+@item struct timeval time
+This is the current time.  The @code{struct timeval} data type is
+described in @ref{High-Resolution Calendar}.
+
+@item long int maxerror
+This is the maximum error, measured in microseconds.  Unless updated
+via @code{ntp_adjtime} periodically, this value will reach some
+platform-specific maximum value.
+
+@item long int esterror
+This is the estimated error, measured in microseconds.  This value can
+be set by @code{ntp_adjtime} to indicate the estimated offset of the
+local clock against the true time.
+@end table
+@end deftp
+
+@comment sys/timex.h
+@comment GNU
+@deftypefun int ntp_gettime (struct ntptimeval *@var{tptr})
+The @code{ntp_gettime} function sets the structure pointed to by
+@var{tptr} to current values.  The elements of the structure afterwards
+contain the values the timer implementation in the kernel assumes.  They
+might or might not be correct.  If they are not a @code{ntp_adjtime}
+call is necessary.
+
+The return value is @code{0} on success and other values on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item TIME_ERROR
+The precision clock model is not properly set up at the moment, thus the
+clock must be considered unsynchronized, and the values should be
+treated with care.
+@end table
+@end deftypefun
+
+@tindex struct timex
+@deftp {Data Type} {struct timex}
+This structure is used to control and monitor the system clock.  It
+contains the following members:
+@table @code
+@item unsigned int modes
+This variable controls whether and which values are set.  Several
+symbolic constants have to be combined with @emph{binary or} to specify
+the effective mode.  These constants start with @code{MOD_}.
+
+@item long int offset
+This value indicates the current offset of the local clock from the true
+time.  The value is given in microseconds.  If bit @code{MOD_OFFSET} is
+set in @code{modes}, the offset (and possibly other dependent values) can
+be set.  The offset's absolute value must not exceed @code{MAXPHASE}.
+
+
+@item long int frequency
+This value indicates the difference in frequency between the true time
+and the local clock.  The value is expressed as scaled PPM (parts per
+million, 0.0001%).  The scaling is @code{1 << SHIFT_USEC}.  The value
+can be set with bit @code{MOD_FREQUENCY}, but the absolute value must
+not exceed @code{MAXFREQ}.
+
+@item long int maxerror
+This is the maximum error, measured in microseconds.  A new value can be
+set using bit @code{MOD_MAXERROR}.  Unless updated via
+@code{ntp_adjtime} periodically, this value will increase steadily
+and reach some platform-specific maximum value.
+
+@item long int esterror
+This is the estimated error, measured in microseconds.  This value can
+be set using bit @code{MOD_ESTERROR}.
+
+@item int status
+This variable reflects the various states of the clock machinery.  There
+are symbolic constants for the significant bits, starting with
+@code{STA_}.  Some of these flags can be updated using the
+@code{MOD_STATUS} bit.
+
+@item long int constant
+This value represents the bandwidth or stiffness of the PLL (phase
+locked loop) implemented in the kernel.  The value can be changed using
+bit @code{MOD_TIMECONST}.
+
+@item long int precision
+This value represents the accuracy or the maximum error when reading the
+system clock.  The value is expressed in microseconds.
+
+@item long int tolerance
+This value represents the maximum frequency error of the system clock in
+scaled PPM.  This value is used to increase the @code{maxerror} every
+second.
+
+@item struct timeval time
+The current time.
+
+@item long int tick
+The time between clock ticks in microseconds.  A clock tick is a
+periodic timer interrupt on which the system clock is based.
+
+@item long int ppsfreq
+This is the first of a few optional variables that are present only if
+the system clock can use a PPS (pulse per second) signal to discipline
+the local clock.  The value is expressed in scaled PPM and it denotes
+the difference in frequency between the local clock and the PPS signal.
+
+@item long int jitter
+This value expresses a median filtered average of the PPS signal's
+dispersion in microseconds.
+
+@item int shift
+This value is a binary exponent for the duration of the PPS calibration
+interval, ranging from @code{PPS_SHIFT} to @code{PPS_SHIFTMAX}.
+
+@item long int stabil
+This value represents the median filtered dispersion of the PPS
+frequency in scaled PPM.
+
+@item long int jitcnt
+This counter represents the number of pulses where the jitter exceeded
+the allowed maximum @code{MAXTIME}.
+
+@item long int calcnt
+This counter reflects the number of successful calibration intervals.
+
+@item long int errcnt
+This counter represents the number of calibration errors (caused by
+large offsets or jitter).
+
+@item long int stbcnt
+This counter denotes the number of of calibrations where the stability
+exceeded the threshold.
+@end table
+@end deftp
+
+@comment sys/timex.h
+@comment GNU
+@deftypefun int ntp_adjtime (struct timex *@var{tptr})
+The @code{ntp_adjtime} function sets the structure specified by
+@var{tptr} to current values.
+
+In addition, @code{ntp_adjtime} updates some settings to match what you
+pass to it in *@var{tptr}.  Use the @code{modes} element of *@var{tptr}
+to select what settings to update.  You can set @code{offset},
+@code{freq}, @code{maxerror}, @code{esterror}, @code{status},
+@code{constant}, and @code{tick}.
+
+@code{modes} = zero means set nothing.
+
+Only the superuser can update settings.
+
+@c On Linux, ntp_adjtime() also does the adjtime() function if you set
+@c modes = ADJ_OFFSET_SINGLESHOT (in fact, that is how GNU libc implements
+@c adjtime()).  But this should be considered an internal function because
+@c it's so inconsistent with the rest of what ntp_adjtime() does and is
+@c forced in an ugly way into the struct timex.  So we don't document it
+@c and instead document adjtime() as the way to achieve the function.
+
+The return value is @code{0} on success and other values on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item TIME_ERROR
+The high accuracy clock model is not properly set up at the moment, thus the
+clock must be considered unsynchronized, and the values should be
+treated with care.  Another reason could be that the specified new values
+are not allowed.
+
+@item EPERM
+The process specified a settings update, but is not superuser.
+
+@end table
+
+For more details see RFC1305 (Network Time Protocol, Version 3) and
+related documents.
+
+@strong{Portability note:} Early versions of the GNU C library did not
+have this function but did have the synonymous @code{adjtimex}.
+
+@end deftypefun
+
 
 @node Formatting Date and Time
 @subsection Formatting Date and Time
@@ -669,7 +968,7 @@ return @code{NULL}.
 @comment ISO
 @deftypefun {char *} ctime (const time_t *@var{time})
 The @code{ctime} function is similar to @code{asctime}, except that the
-time value is specified as a @code{time_t} calendar time value rather
+time value is specified as a @code{time_t} simple time value rather
 than in broken-down local time format.  It is equivalent to
 
 @smallexample
@@ -1816,8 +2115,8 @@ effect.
 @node Time Functions Example
 @subsection Time Functions Example
 
-Here is an example program showing the use of some of the local time and
-calendar time functions.
+Here is an example program showing the use of some of the calendar time
+functions.
 
 @smallexample
 @include strftim.c.texi
@@ -1830,169 +2129,6 @@ Wed Jul 31 13:02:36 1991
 Today is Wednesday, July 31.
 The time is 01:02 PM.
 @end smallexample
-
-
-@node Precision Time
-@section Precision Time
-
-@cindex time, high precision
-@pindex sys/timex.h
-The @code{ntp_gettime} and @code{ntp_adjtime} functions provide an
-interface to monitor and manipulate high precision time.  These
-functions are declared in @file{sys/timex.h}.
-
-@tindex struct ntptimeval
-@deftp {Data Type} {struct ntptimeval}
-This structure is used to monitor kernel time.  It contains the
-following members:
-@table @code
-@item struct timeval time
-This is the current time.  The @code{struct timeval} data type is
-described in @ref{High-Resolution Calendar}.
-
-@item long int maxerror
-This is the maximum error, measured in microseconds.  Unless updated
-via @code{ntp_adjtime} periodically, this value will reach some
-platform-specific maximum value.
-
-@item long int esterror
-This is the estimated error, measured in microseconds.  This value can
-be set by @code{ntp_adjtime} to indicate the estimated offset of the
-local clock against the true time.
-@end table
-@end deftp
-
-@comment sys/timex,h
-@comment GNU
-@deftypefun int ntp_gettime (struct ntptimeval *@var{tptr})
-The @code{ntp_gettime} function sets the structure pointed to by
-@var{tptr} to current values.  The elements of the structure afterwards
-contain the values the timer implementation in the kernel assumes.  They
-might or might not be correct.  If they are not a @code{ntp_adjtime}
-call is necessary.
-
-The return value is @code{0} on success and other values on failure.  The
-following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item TIME_ERROR
-The precision clock model is not properly set up at the moment, thus the
-clock must be considered unsynchronized, and the values should be
-treated with care.
-@end table
-@end deftypefun
-
-@tindex struct timex
-@deftp {Data Type} {struct timex}
-This structure is used to control and monitor kernel time in a greater
-level of detail.  It contains the following members:
-@table @code
-@item unsigned int modes
-This variable controls whether and which values are set.  Several
-symbolic constants have to be combined with @emph{binary or} to specify
-the effective mode.  These constants start with @code{MOD_}.
-
-@item long int offset
-This value indicates the current offset of the local clock from the true
-time.  The value is given in microseconds.  If bit @code{MOD_OFFSET} is
-set in @code{modes}, the offset (and possibly other dependent values) can
-be set.  The offset's absolute value must not exceed @code{MAXPHASE}.
-
-@item long int frequency
-This value indicates the difference in frequency between the true time
-and the local clock.  The value is expressed as scaled PPM (parts per
-million, 0.0001%).  The scaling is @code{1 << SHIFT_USEC}.  The value
-can be set with bit @code{MOD_FREQUENCY}, but the absolute value must
-not exceed @code{MAXFREQ}.
-
-@item long int maxerror
-This is the maximum error, measured in microseconds.  A new value can be
-set using bit @code{MOD_MAXERROR}.  Unless updated via
-@code{ntp_adjtime} periodically, this value will increase steadily
-and reach some platform-specific maximum value.
-
-@item long int esterror
-This is the estimated error, measured in microseconds.  This value can
-be set using bit @code{MOD_ESTERROR}.
-
-@item int status
-This variable reflects the various states of the clock machinery.  There
-are symbolic constants for the significant bits, starting with
-@code{STA_}.  Some of these flags can be updated using the
-@code{MOD_STATUS} bit.
-
-@item long int constant
-This value represents the bandwidth or stiffness of the PLL (phase
-locked loop) implemented in the kernel.  The value can be changed using
-bit @code{MOD_TIMECONST}.
-
-@item long int precision
-This value represents the accuracy or the maximum error when reading the
-system clock.  The value is expressed in microseconds and can't be changed.
-
-@item long int tolerance
-This value represents the maximum frequency error of the system clock in
-scaled PPM.  This value is used to increase the @code{maxerror} every
-second.
-
-@item long int ppsfreq
-This is the first of a few optional variables that are present only if
-the system clock can use a PPS (pulse per second) signal to discipline
-the local clock.  The value is expressed in scaled PPM and it denotes
-the difference in frequency between the local clock and the PPS signal.
-
-@item long int jitter
-This value expresses a median filtered average of the PPS signal's
-dispersion in microseconds.
-
-@item int int shift
-This value is a binary exponent for the duration of the PPS calibration
-interval, ranging from @code{PPS_SHIFT} to @code{PPS_SHIFTMAX}.
-
-@item long int stabil
-This value represents the median filtered dispersion of the PPS
-frequency in scaled PPM.
-
-@item long int jitcnt
-This counter represents the number of pulses where the jitter exceeded
-the allowed maximum @code{MAXTIME}.
-
-@item long int calcnt
-This counter reflects the number of successful calibration intervals.
-
-@item long int errcnt
-This counter represents the number of calibration errors (caused by
-large offsets or jitter).
-
-@item long int stbcnt
-This counter denotes the number of of calibrations where the stability
-exceeded the threshold.
-@end table
-@end deftp
-
-@comment sys/timex.h
-@comment GNU
-@deftypefun int ntp_adjtime (struct timex *@var{tptr})
-The @code{ntp_adjtime} function sets the structure specified by
-@var{tptr} to current values.  In addition, values passed in @var{tptr}
-can be used to replace existing settings.  To do this the @code{modes}
-element of the @code{struct timex} must be set appropriately.  Setting
-it to zero selects reading the current state.
-
-The return value is @code{0} on success and other values on failure.  The
-following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item TIME_ERROR
-The precision clock model is not properly set up at the moment, thus the
-clock must be considered unsynchronized, and the values should be
-treated with care.  Another reason could be that the specified new values
-are not allowed.
-@end table
-
-For more details see RFC1305 (Network Time Protocol, Version 3) and
-related documents.
-@end deftypefun
 
 
 @node Setting an Alarm
@@ -2263,4 +2399,3 @@ be protected using cancellation handlers.
 
 The @code{nanosleep} function is declared in @file{time.h}.
 @end deftypefun
-

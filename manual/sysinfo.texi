@@ -691,7 +691,7 @@ For a remount, @code{mount} ignores @var{fstype}.
 @c This is traditionally called "rwflag" for historical reasons.
 @c No point in confusing people today, though.
 @var{options} specifies a variety of options that apply until the
-filesystem in unmounted or remounted.  The precise meaning of an option
+filesystem is unmounted or remounted.  The precise meaning of an option
 depends on the filesystem and with some filesystems, an option may have
 no effect at all.  Furthermore, for some filesystems, some of these
 options (but never @code{MS_RDONLY}) can be overridden for individual
