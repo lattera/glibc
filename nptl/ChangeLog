@@ -1,3 +1,7 @@
+2003-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread): Move cancelhandling member to the front.
+
 2003-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/register-atfork.c: Define malloc_prepare,

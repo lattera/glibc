@@ -86,49 +86,6 @@ struct pthread
   /* List of cleanup buffers.  */
   struct _pthread_cleanup_buffer *cleanup;
 
-  /* True if events must be reported.  */
-  bool report_events;
-
-  /* We allocate one block of references here.  This should be enough
-     to avoid allocating any memory dynamically for most applications.  */
-  struct pthread_key_data
-  {
-    /* Sequence number.  We use uintptr_t to not require padding on
-       32- and 64-bit machines.  On 64-bit machines it helps to avoid
-       wrapping, too.  */
-    uintptr_t seq;
-
-    /* Data pointer.  */
-    void *data;
-  } specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
-
-  /* Flag which is set when specific data is set.  */
-  bool specific_used;
-
-  /* Two-level array for the thread-specific data.  */
-  struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
-
-  /* True if the user provided the stack.  */
-  bool user_stack;
-
-  /* Lock to synchronize access to the descriptor.  */
-  lll_lock_t lock;
-
-#if HP_TIMING_AVAIL
-  /* Offset of the CPU clock at start thread start time.  */
-  hp_timing_t cpuclock_offset;
-#endif
-
-  /* If the thread waits to join another one the ID of the latter is
-     stored here.
-
-     In case a thread is detached this field contains a pointer of the
-     TCB if the thread itself.  This is something which cannot happen
-     in normal operation.  */
-  struct pthread *joinid;
-  /* Check whether a thread is detached.  */
-#define IS_DETACHED(pd) ((pd)->joinid == (pd))
-
   /* Flags determining processing of cancellation.  */
   int cancelhandling;
   /* Bit set if cancellation is disabled.  */
@@ -159,6 +116,50 @@ struct pthread
   (((value) & (CANCELSTATE_BITMASK | CANCELTYPE_BITMASK | CANCELED_BITMASK    \
 	       | EXITING_BITMASK | CANCEL_RESTMASK | TERMINATED_BITMASK))     \
    == (CANCELTYPE_BITMASK | CANCELED_BITMASK))
+
+  /* We allocate one block of references here.  This should be enough
+     to avoid allocating any memory dynamically for most applications.  */
+  struct pthread_key_data
+  {
+    /* Sequence number.  We use uintptr_t to not require padding on
+       32- and 64-bit machines.  On 64-bit machines it helps to avoid
+       wrapping, too.  */
+    uintptr_t seq;
+
+    /* Data pointer.  */
+    void *data;
+  } specific_1stblock[PTHREAD_KEY_2NDLEVEL_SIZE];
+
+  /* Flag which is set when specific data is set.  */
+  bool specific_used;
+
+  /* Two-level array for the thread-specific data.  */
+  struct pthread_key_data *specific[PTHREAD_KEY_1STLEVEL_SIZE];
+
+  /* True if events must be reported.  */
+  bool report_events;
+
+  /* True if the user provided the stack.  */
+  bool user_stack;
+
+  /* Lock to synchronize access to the descriptor.  */
+  lll_lock_t lock;
+
+#if HP_TIMING_AVAIL
+  /* Offset of the CPU clock at start thread start time.  */
+  hp_timing_t cpuclock_offset;
+#endif
+
+  /* If the thread waits to join another one the ID of the latter is
+     stored here.
+
+     In case a thread is detached this field contains a pointer of the
+     TCB if the thread itself.  This is something which cannot happen
+     in normal operation.  */
+  struct pthread *joinid;
+  /* Check whether a thread is detached.  */
+#define IS_DETACHED(pd) ((pd)->joinid == (pd))
+
   /* Setjmp buffer to be used if try/finally is not available.  */
   sigjmp_buf cancelbuf;
 #define HAVE_CANCELBUF	1

@@ -343,10 +343,10 @@ read_input_file (struct catalog *current, const char *fname)
 		      continued = !continued;
 		    }
 		  while (temp_act_len > 0 && buf[temp_act_len - 1] == '\\');
-		}
 
-	      if (continued)
-		--act_len;
+		  if (continued)
+		    --act_len;
+		}
 	    }
 
 	  /* Append to currently selected line.  */
