@@ -1,3 +1,8 @@
+2000-06-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/timer_routines.c (list_append): Little fix to
+	reall append the entry.
+
 2000-06-10  Andreas Jaeger  <aj@suse.de>
 
 	* lockfile.c (__fresetlockfiles): Remove unused variable fp.
@@ -13,7 +18,7 @@
 
 	* sysdeps/pthread/timer_routines.c: Thread allocation and
 	deallocation function now remembers to put thread on active
-	list and remove from active list. 
+	list and remove from active list.
 	Thus now the feature of binding multiple timers
 	to a single thread actually works.
 

@@ -81,7 +81,7 @@ list_append (struct list_links *list, struct list_links *newp)
   newp->prev = list->prev;
   newp->next = list;
   list->prev->next = newp;
-  list->prev = list;
+  list->prev = newp;
 }
 
 static inline void
@@ -500,7 +500,7 @@ thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
 /* Search the list of active threads and find one which has matching
    attributes.  Global mutex lock must be held by caller.  */
 struct thread_node *
-__timer_thread_find_matching (const pthread_attr_t *desired_attr, 
+__timer_thread_find_matching (const pthread_attr_t *desired_attr,
 			      clockid_t desired_clock_id)
 {
   struct list_links *iter = list_first (&thread_active_list);
