@@ -10,5 +10,5 @@ __ieee754_logl (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_logl)
+stub_warning (logl)
 #include <stub-tag.h>

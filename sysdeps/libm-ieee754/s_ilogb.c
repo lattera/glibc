@@ -37,7 +37,7 @@ static char rcsid[] = "$NetBSD: s_ilogb.c,v 1.9 1995/05/10 20:47:28 jtc Exp $";
 	if(hx<0x00100000) {
 	    GET_LOW_WORD(lx,x);
 	    if((hx|lx)==0)
-		return 0x80000001;	/* ilogb(0) = 0x80000001 */
+		return FP_ILOGB0;	/* ilogb(0) = FP_ILOGB0 */
 	    else			/* subnormal x */
 		if(hx==0) {
 		    for (ix = -1043; lx>0; lx<<=1) ix -=1;
@@ -47,7 +47,7 @@ static char rcsid[] = "$NetBSD: s_ilogb.c,v 1.9 1995/05/10 20:47:28 jtc Exp $";
 	    return ix;
 	}
 	else if (hx<0x7ff00000) return (hx>>20)-1023;
-	else return 0x7fffffff;
+	else return FP_ILOGBNAN;
 }
 weak_alias (__ilogb, ilogb)
 #ifdef NO_LONG_DOUBLE

@@ -42,7 +42,7 @@ main (void)
       fputs (", set", stdout);
       FD_SET (i, &set);
       fputs (", check:", stdout);
-      if (FD_ISSET (i, &set) == 1)
+      if (FD_ISSET (i, &set))
 	fputs ("ok", stdout);
       else
 	{

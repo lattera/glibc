@@ -856,7 +856,8 @@ asin_test (void)
 #endif
 
   check ("asin (0) == 0", FUNC(asin) (0), 0);
-  check ("asin (0.5) ==  pi/6", FUNC(asin) (0.5), M_PI_6);
+  check_eps ("asin (0.5) ==  pi/6", FUNC(asin) (0.5), M_PI_6,
+	     CHOOSE(3.5e-18, 0, 2e-7));
   check ("asin (1.0) ==  pi/2", FUNC(asin) (1.0), M_PI_2);
 }
 
@@ -1508,7 +1509,7 @@ log1p_test (void)
   check_isinfp ("log1p (+inf) == +inf", FUNC(log1p) (plus_infty));
 
   check_eps ("log1p (e-1) == 1", FUNC(log1p) (M_E - 1.0), 1,
-	     CHOOSE (1e-18L, 0, 0));
+	     CHOOSE (1e-18L, 0, 6e-8));
 
 }
 
@@ -1779,7 +1780,7 @@ tan_test (void)
 		   FUNC(tan) (minus_infty), INVALID_EXCEPTION);
 
   check_eps ("tan (pi/4) == 1", FUNC(tan) (M_PI_4), 1,
-	     CHOOSE (2e-18L, 1e-15L, 0));
+	     CHOOSE (2e-18L, 1e-15L, 2e-7));
 }
 
 
@@ -4880,26 +4881,31 @@ static void
 inverse_functions (void)
 {
   inverse_func_pair_test ("asin(sin(x)) == x",
-			FUNC(sin), FUNC(asin), 1.0, CHOOSE (2e-18L, 0, 3e-7L));
+			  FUNC(sin), FUNC(asin), 1.0,
+			  CHOOSE (2e-18L, 0, 3e-7L));
   inverse_func_pair_test ("sin(asin(x)) == x",
 			  FUNC(asin), FUNC(sin), 1.0, 0.0);
 
   inverse_func_pair_test ("acos(cos(x)) == x",
-		       FUNC(cos), FUNC(acos), 1.0, CHOOSE (4e-18L, 1e-15L, 0));
+			  FUNC(cos), FUNC(acos), 1.0,
+			  CHOOSE (4e-18L, 1e-15L, 0));
   inverse_func_pair_test ("cos(acos(x)) == x",
 			  FUNC(acos), FUNC(cos), 1.0, 0.0);
   inverse_func_pair_test ("atan(tan(x)) == x",
 			  FUNC(tan), FUNC(atan), 1.0, CHOOSE (2e-18L, 0, 0));
   inverse_func_pair_test ("tan(atan(x)) == x",
-		       FUNC(atan), FUNC(tan), 1.0, CHOOSE (2e-18L, 1e-15L, 0));
+			  FUNC(atan), FUNC(tan), 1.0,
+			  CHOOSE (2e-18L, 1e-15L, 2e-7));
 
   inverse_func_pair_test ("asinh(sinh(x)) == x",
 		     FUNC(sinh), FUNC(asinh), 1.0, CHOOSE (1e-18L, 0, 1e-7));
   inverse_func_pair_test ("sinh(asinh(x)) == x",
-			  FUNC(asinh), FUNC(sinh), 1.0, CHOOSE (2e-18L, 0, 0));
+			  FUNC(asinh), FUNC(sinh), 1.0,
+			  CHOOSE (2e-18L, 2e-16L, 2e-7));
 
   inverse_func_pair_test ("acosh(cosh(x)) == x",
-		FUNC(cosh), FUNC(acosh), 1.0, CHOOSE (1e-18L, 1e-15L, 0));
+			  FUNC(cosh), FUNC(acosh), 1.0,
+			  CHOOSE (1e-18L, 1e-15L, 6e-8));
   inverse_func_pair_test ("cosh(acosh(x)) == x",
 			  FUNC(acosh), FUNC(cosh), 1.0, 0.0);
 

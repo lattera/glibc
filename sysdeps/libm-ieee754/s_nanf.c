@@ -35,6 +35,6 @@ __nanf (const char *tagp)
       return strtof (buf, NULL);
     }
 
-  return NANF;
+  return NAN;
 }
 weak_alias (__nanf, nanf)

@@ -5,7 +5,8 @@ BEGIN {
 }
 {
   for (i = 1; i <= NF; ++i) {
-    dir[count++] = gensub(/((.*)[^/])?[/]*/, "\\1", "", $i);
+    gsub (/\/*$/, "", $i);
+    dir[count++] = $i;
   }
 }
 END {

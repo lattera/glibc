@@ -346,6 +346,9 @@ extern void _IO_flush_all_linebuffered __P ((void));
 #define _IO_do_flush(_f) \
   _IO_do_write(_f, (_f)->_IO_write_base, \
 	       (_f)->_IO_write_ptr-(_f)->_IO_write_base)
+#define _IO_old_do_flush(_f) \
+  _IO_old_do_write(_f, (_f)->_IO_write_base, \
+		   (_f)->_IO_write_ptr-(_f)->_IO_write_base)
 #define _IO_in_put_mode(_fp) ((_fp)->_flags & _IO_CURRENTLY_PUTTING)
 #define _IO_mask_flags(fp, f, mask) \
        ((fp)->_flags = ((fp)->_flags & ~(mask)) | ((f) & (mask)))

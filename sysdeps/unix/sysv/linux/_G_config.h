@@ -9,6 +9,7 @@
 #include <bits/types.h>
 #define __need_size_t
 #define __need_wint_t
+#define __need_NULL
 #include <stddef.h>
 #ifndef _WINT_T
 /* Integral type unchanged by default argument promotions that can

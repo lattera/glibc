@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,23 +24,35 @@
    General Public License.  */
 
 #include "libioP.h"
-#include "stdio.h"
+#ifdef __STDC__
+#include <stdlib.h>
+#endif
 
-FILE*
-__old_freopen (filename, mode, fp)
-     const char* filename;
-     const char* mode;
-     FILE* fp;
+int
+_IO_old_fclose (fp)
+     _IO_FILE *fp;
 {
-  FILE *result;
-  CHECK_FILE (fp, NULL);
-  if (!(fp->_flags & _IO_IS_FILEBUF))
-    return NULL;
+  int status;
+
+  CHECK_FILE(fp, EOF);
+
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  result = _IO_old_freopen (filename, mode, fp);
+  if (fp->_IO_file_flags & _IO_IS_FILEBUF)
+    status = _IO_old_file_close_it (fp);
+  else
+    status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
+  _IO_FINISH (fp);
   _IO_cleanup_region_end (1);
-  return result;
+  if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
+    {
+      fp->_IO_file_flags = 0;
+      free(fp);
+    }
+
+  return status;
 }
 
-symbol_version (__old_freopen, freopen,);
+strong_alias (_IO_old_fclose, __old_fclose)
+symbol_version (_IO_old_fclose, _IO_fclose, GLIBC_2.0);
+symbol_version (__old_fclose, fclose, GLIBC_2.0);

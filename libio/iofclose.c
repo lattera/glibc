@@ -29,7 +29,7 @@
 #endif
 
 int
-_IO_fclose (fp)
+_IO_new_fclose (fp)
      _IO_FILE *fp;
 {
   int status;
@@ -53,6 +53,13 @@ _IO_fclose (fp)
   return status;
 }
 
-#ifdef weak_alias
-weak_alias (_IO_fclose, fclose)
+#ifdef DO_VERSIONING
+strong_alias (_IO_new_fclose, __new_fclose)
+default_symbol_version (_IO_new_fclose, _IO_fclose, GLIBC_2.1);
+default_symbol_version (__new_fclose, fclose, GLIBC_2.1);
+#else
+# ifdef weak_alias
+weak_alias (_IO_new_fclose, _IO_fclose)
+weak_alias (_IO_new_fclose, fclose)
+# endif
 #endif

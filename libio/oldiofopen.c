@@ -49,7 +49,7 @@ _IO_old_fopen (filename, mode)
 #endif
   _IO_init (&new_f->fp.file, 0);
   _IO_JUMPS (&new_f->fp.file) = &_IO_old_file_jumps;
-  _IO_file_init (&new_f->fp.file);
+  _IO_old_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
@@ -61,5 +61,5 @@ _IO_old_fopen (filename, mode)
 }
 
 strong_alias (_IO_old_fopen, __old_fopen)
-symbol_version (_IO_old_fopen, _IO_fopen,);
-symbol_version (__old_fopen, fopen,);
+symbol_version (_IO_old_fopen, _IO_fopen, GLIBC_2.0);
+symbol_version (__old_fopen, fopen, GLIBC_2.0);

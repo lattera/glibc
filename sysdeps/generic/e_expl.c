@@ -10,5 +10,5 @@ __ieee754_expl (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_expl)
+stub_warning (expl)
 #include <stub-tag.h>

@@ -10,7 +10,7 @@ __ieee754_j1l (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_j1l)
+stub_warning (j1l)
 
 long double
 __ieee754_y1l (long double x)
@@ -20,5 +20,5 @@ __ieee754_y1l (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_y1l)
+stub_warning (y1l)
 #include <stub-tag.h>

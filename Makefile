@@ -53,7 +53,7 @@ endif
 # These are the subdirectories containing the library source.
 subdirs = csu assert ctype db2 locale intl catgets math setjmp signal stdlib \
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
-	  posix io termios resource misc socket sysvipc gmon gnulib \
+	  posix io termios resource misc socket sysvipc gmon gnulib iconv \
 	  wctype manual shadow md5-crypt po argp $(add-ons) nss \
 	  $(sysdep-subdirs) $(binfmt-subdir)
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
@@ -117,7 +117,7 @@ include Makerules
 # Install from subdirectories too.
 install: subdir_install
 
-# Create linkfs for shared libraries using the `ldconfig' program is possible.
+# Create links for shared libraries using the `ldconfig' program is possible.
 # Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
@@ -127,7 +127,7 @@ install:
 ifneq (no,$(PERL))
 ifeq (/usr,$(prefix))
 ifeq (,$(install_root))
-	CC=$(CC) $(PERL) test-installation.pl $(common-objpfx)
+	CC="$(CC)" $(PERL) test-installation.pl $(common-objpfx)
 endif
 endif
 endif
@@ -312,7 +312,8 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
-	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags
+	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags	\
+	       stub-tag.h
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

@@ -53,7 +53,7 @@ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #define _IO_freopen(FILENAME, MODE, FP) \
   (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 0))
 #define _IO_old_freopen(FILENAME, MODE, FP) \
-  (_IO_file_close_it(FP), _IO_old_file_fopen(FP, FILENAME, MODE))
+  (_IO_old_file_close_it (FP), _IO_old_file_fopen(FP, FILENAME, MODE))
 #define _IO_freopen64(FILENAME, MODE, FP) \
   (_IO_file_close_it(FP), _IO_file_fopen(FP, FILENAME, MODE, 1))
 #define _IO_fileno(FP) ((FP)->_fileno)

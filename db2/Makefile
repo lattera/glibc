@@ -33,7 +33,7 @@ subdir-dirs = btree common db db185 dbm hash lock log mp mutex os txn \
 headers = db.h db_185.h
 
 distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
-	     db/db.src db185/db185_int.src hash/hash.src log/log.src \
+	     db/db.src db185/db185_int.h hash/hash.src log/log.src \
 	     txn/txn.src \
 	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
 				  clib_ext.h common_ext.h cxx_int.h \

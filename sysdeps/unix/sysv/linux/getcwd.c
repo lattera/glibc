@@ -23,23 +23,26 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/* #define NDEBUG 1 */
-#include <assert.h>
 
 /* The "proc" filesystem provides an easy method to retrieve the value.
    For each process, the corresponding directory contains a symbolic link
    named `cwd'.  Reading the content of this link immediate gives us the
    information.  But we have to take care for systems which do not have
    the proc filesystem mounted.  Use the POSIX implementation in this case.  */
-static char *generic_getcwd (char *buf, size_t size);
+static char *generic_getcwd (char *buf, size_t size) internal_function;
 
 char *
 __getcwd (char *buf, size_t size)
 {
+  static int no_new_dcache = 0;
   int save_errno;
   char *path;
   int n;
   char *result;
+  size_t alloc_size = size;
+
+  if (no_new_dcache)
+    return generic_getcwd (buf, size);
 
   if (size == 0)
     {
@@ -49,39 +52,56 @@ __getcwd (char *buf, size_t size)
 	  return NULL;
 	}
 
-      size = PATH_MAX + 1;
+      alloc_size = PATH_MAX + 1;
     }
 
   if (buf != NULL)
     path = buf;
   else
     {
-      path = malloc (size);
+      path = malloc (alloc_size);
       if (path == NULL)
 	return NULL;
     }
 
   save_errno = errno;
-  n = __readlink ("/proc/self/cwd", path, size);
+
+  n = __readlink ("/proc/self/cwd", path, alloc_size - 1);
   if (n != -1)
     {
-      if (n >= size)
+      if (n >= alloc_size - 1)
 	{
-	  /* This should never happen when we allocate the buffer here.  */
-	  assert (buf == NULL);
-	  __set_errno (ERANGE);
-	  return NULL;
+	  if (size > 0)
+	    return NULL;
 	}
-      path[n] = '\0';
-      return buf ?: (char *) realloc (path, (size_t) n + 1);
+      else
+	if (path[0] == '/')
+	  {
+	    path[n] = '\0';
+	    return buf ?: (char *) realloc (path, (size_t) n + 1);
+	  }
+	else
+	  no_new_dcache = 1;
     }
+
+  /* Set to no_new_dcache only if error indicates that proc doesn't exist.  */
+  if (errno != EACCES && errno != ENAMETOOLONG)
+    no_new_dcache = 1;
 
   /* Something went wrong.  Restore the error number and use the generic
      version.  */
   __set_errno (save_errno);
+
+  /* Don't put restrictions on the length of the path unless the user does.  */
+  if (size == 0)
+    {
+      free (path);
+      path = NULL;
+    }
+
   result = generic_getcwd (path, size);
 
-  if (result == NULL && buf == NULL)
+  if (result == NULL && buf == NULL && size != 0)
     free (path);
 
   return result;
@@ -89,6 +109,6 @@ __getcwd (char *buf, size_t size)
 weak_alias (__getcwd, getcwd)
 
 /* Get the code for the generic version.  */
-#define GETCWD_STORAGE_CLASS	static
+#define GETCWD_STORAGE_CLASS	static internal_function
 #define __getcwd		generic_getcwd
 #include <sysdeps/posix/getcwd.c>

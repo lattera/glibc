@@ -10,7 +10,7 @@ __ieee754_jnl (int n, long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_jnl)
+stub_warning (jnl)
 
 long double
 __ieee754_ynl (int n, long double x)
@@ -20,5 +20,5 @@ __ieee754_ynl (int n, long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_ynl)
+stub_warning (ynl)
 #include <stub-tag.h>

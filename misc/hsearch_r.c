@@ -187,6 +187,10 @@ hsearch_r (item, action, retval, htab)
 	  else
 	    idx -= hval2;
 
+	  /* If we visited all entries leave the loop unsuccessfully.  */
+	  if (idx == hval)
+	    break;
+
             /* If entry is found use it. */
           if (htab->table[idx].used == hval
 	      && strcmp (item.key, htab->table[idx].entry.key) == 0)

@@ -225,10 +225,18 @@ typedef struct _IO_FILE _IO_FILE;
 #endif
 
 struct _IO_FILE_complete;
-extern struct _IO_FILE_complete _IO_stdin_, _IO_stdout_, _IO_stderr_;
-#define _IO_stdin ((_IO_FILE*)(&_IO_stdin_))
-#define _IO_stdout ((_IO_FILE*)(&_IO_stdout_))
-#define _IO_stderr ((_IO_FILE*)(&_IO_stderr_))
+extern struct _IO_FILE_complete _IO_2_1_stdin_;
+extern struct _IO_FILE_complete _IO_2_1_stdout_;
+extern struct _IO_FILE_complete _IO_2_1_stderr_;
+#ifndef _LIBC
+#define _IO_stdin ((_IO_FILE*)(&_IO_2_1_stdin_))
+#define _IO_stdout ((_IO_FILE*)(&_IO_2_1_stdout_))
+#define _IO_stderr ((_IO_FILE*)(&_IO_2_1_stderr_))
+#else
+extern _IO_FILE *_IO_stdin;
+extern _IO_FILE *_IO_stdout;
+extern _IO_FILE *_IO_stderr;
+#endif
 
 
 /* Define the user-visible type, with user-friendly member names.  */

@@ -29,10 +29,6 @@
 #include <rpcsvc/nis.h>
 #include <nsswitch.h>
 
-/* Comment out the following line for the production version.  */
-/* #define NDEBUG 1 */
-#include <assert.h>
-
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 
@@ -101,10 +97,6 @@ _nss_first_init (void)
 						key, sizeof (key) - 1),
 				       local_dir, len_local_dir + 1)
 		     - grptable) - 1;
-
-      /* *Maybe* (I'm no NIS expert) we have to duplicate the `local_dir'
-	 value since it might change during our work.  So add a test here.  */
-      assert (grptablelen == sizeof (key) + len_local_dir);
     }
 
   return NSS_STATUS_SUCCESS;
@@ -705,7 +697,7 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
   if (use_nisplus) /* Do the NIS+ query here */
     {
       nis_result *res;
-      char buf[1024 + grptablelen];
+      char buf[24 + grptablelen];
 
       sprintf(buf, "[gid=%d],%s", gid, grptable);
       res = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
@@ -727,7 +719,7 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
     }
   else /* Use NIS */
     {
-      char buf[1024];
+      char buf[24];
       char *domain, *outval, *p;
       int outvallen;
 

@@ -41,7 +41,7 @@ static char rcsid[] = "$NetBSD: $";
 	if(es==0) {
 	    GET_LDOUBLE_WORDS(es,hx,lx,x);
 	    if((hx|lx)==0)
-		return 0x80000001;	/* ilogbl(0) = 0x80000001 */
+		return FP_ILOGB0;	/* ilogbl(0) = FP_ILOGB0 */
 	    else			/* subnormal x */
 		if(hx==0) {
 		    for (ix = -16415; lx>0; lx<<=1) ix -=1;
@@ -51,6 +51,6 @@ static char rcsid[] = "$NetBSD: $";
 	    return ix;
 	}
 	else if (es<0x7fff) return es-0x3fff;
-	else return 0x7fffffff;
+	else return FP_ILOGBNAN;
 }
 weak_alias (__ilogbl, ilogbl)

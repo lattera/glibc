@@ -10,5 +10,6 @@ __ieee754_lgammal_r (long double x, int *signgamp)
   return 0.0;
 }
 
-stub_warning (__ieee754_lgammal_r)
+stub_warning (lgammal)
+stub_warning (lgammal_r)
 #include <stub-tag.h>

@@ -5,6 +5,8 @@ kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
 llseek.c
+s_pread64.c
+s_pwrite64.c
 siglist.h
 socketcall.h
 sysctl.c
@@ -12,6 +14,7 @@ termio.h
 net/ethernet.h
 net/if.h
 net/if_arp.h
+net/if_packet.h
 net/if_ppp.h
 net/if_slip.h
 net/ppp-comp.h
@@ -28,6 +31,7 @@ netinet/tcp.h
 netinet/udp.h
 netipx/ipx.h
 nfs/nfs.h
+scsi/sg.h
 sys/acct.h
 sys/debugreg.h
 sys/fsuid.h

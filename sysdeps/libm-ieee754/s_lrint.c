@@ -34,7 +34,7 @@ long int
 __lrint (double x)
 {
   int32_t j0;
-  u_int32_t i0,i1,i;
+  u_int32_t i0,i1;
   volatile double w;
   double t;
   long int result;
@@ -55,9 +55,9 @@ __lrint (double x)
 	  w = two52[sx] + x;
 	  t = w - two52[sx];
 	  EXTRACT_WORDS (i0, i1, t);
-	  i0 = i & 0xfffff;
-	  i0 |= 0x100000;
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+	  i0 &= 0xfffff;
+	  i0 |= 0x100000;
 
 	  result = i0 >> (20 - j0);
 	}
@@ -71,9 +71,9 @@ __lrint (double x)
 	  w = two52[sx] + x;
 	  t = w - two52[sx];
 	  EXTRACT_WORDS (i0, i1, t);
-	  i0 = i & 0xfffff;
-	  i0 |= 0x100000;
 	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+	  i0 &= 0xfffff;
+	  i0 |= 0x100000;
 
 	  result = ((long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
 	}

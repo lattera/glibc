@@ -26,8 +26,13 @@
 #include "libioP.h"
 #include "stdio.h"
 
+#ifdef PIC
+extern void *_IO_stdin_used;
+weak_extern (_IO_stdin_used);
+#endif
+
 FILE*
-__new_freopen (filename, mode, fp)
+freopen (filename, mode, fp)
      const char* filename;
      const char* mode;
      FILE* fp;
@@ -38,9 +43,17 @@ __new_freopen (filename, mode, fp)
     return NULL;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  result = _IO_freopen (filename, mode, fp);
+#ifdef PIC
+  if (&_IO_stdin_used == NULL)
+    /* If the shared C library is used by the application binary which
+       was linked against the older version of libio, we just use the
+       older one even for internal use to avoid trouble since a pointer
+       to the old libio may be passed into shared C library and wind
+       up here. */
+    result = _IO_old_freopen (filename, mode, fp);
+  else
+#endif
+    result = _IO_freopen (filename, mode, fp);
   _IO_cleanup_region_end (1);
   return result;
 }
-
-default_symbol_version (__new_freopen, freopen, GLIBC_2.1);

@@ -30,10 +30,6 @@
 #include <rpcsvc/nis.h>
 #include <nsswitch.h>
 
-/* Comment out the following line for the production version.  */
-/* #define NDEBUG 1 */
-#include <assert.h>
-
 #include "netgroup.h"
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
@@ -179,10 +175,6 @@ internal_setspent (ent_t *ent)
 						key, sizeof (key) - 1),
 				       local_dir, len_local_dir + 1)
 		     - pwdtable) - 1;
-
-      /* *Maybe* (I'm no NIS expert) we have to duplicate the `local_dir'
-	 value since it might change during our work.  So add a test here.  */
-      assert (pwdtablelen == sizeof (key) + len_local_dir);
     }
 
   ent->blacklist.current = 0;

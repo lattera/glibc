@@ -37,7 +37,7 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
-		  genrtldtbl.awk
+		  genrtldtbl.awk atomicity.h
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)

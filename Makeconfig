@@ -217,6 +217,12 @@ i18ndir = $(datadir)/i18n
 endif
 inst_i18ndir = $(install_root)$(i18ndir)
 
+# Where to install the shared object for charset transformation.
+ifndef gconvdir
+gconvdir = $(libdir)/gconv
+endif
+inst_gconvdir = $(install_root)$(gconvdir)
+
 
 # Where to install programs.
 ifndef bindir

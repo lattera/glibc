@@ -583,7 +583,7 @@ __strspn_c1 (__const char *__s, char __accept)
 # define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
 		  ? (((__const unsigned char *) (needle))[0] == '\0'	      \
-		     ? haystack						      \
+		     ? (char *) (haystack)				      \
 		     : (((__const unsigned char *) (needle))[1] == '\0'	      \
 			? strchr (haystack,				      \
 				  ((__const unsigned char *) (needle))[0])    \
@@ -600,6 +600,47 @@ strnlen (__const char *__string, size_t __maxlen)
 {
   __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
   return __end ? __end - __string : __maxlen;
+}
+# endif
+#endif
+
+
+#if defined __USE_POSIX || defined __USE_MISC
+# ifndef _HAVE_STRING_ARCH_strtok_r
+#  define strtok_r(s, sep, nextp) \
+  (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
+		  ? (((__const unsigned char *) (sep))[0] != '\0'	      \
+		     && ((__const unsigned char *) (sep))[1] == '\0'	      \
+		     ? __strtok_r_1c (s, ((__const unsigned char *) (sep))[0],\
+				      nextp)				      \
+		     : strtok_r (s, sep, nextp))			      \
+		  : strtok_r (s, sep, nextp)))
+
+__STRING_INLINE char *__strtok_r_1c (char *__s, char __sep, char **__nextp);
+__STRING_INLINE char *
+__strtok_r_1c (char *__s, char __sep, char **__nextp)
+{
+  char *__result;
+  if (__s == NULL)
+    __s = *__nextp;
+  while (*__s == __sep)
+    ++__s;
+  if (*__s == '\0')
+    __result = NULL;
+  else
+    {
+      __result = __s;
+      while (*__s != '\0' && *__s != __sep)
+	++__s;
+      if (*__s == '\0')
+	*__nextp = __s;
+      else
+	{
+	  *__s = '\0';
+	  *__nextp = __s + 1;
+	}
+    }
+  return __result;
 }
 # endif
 #endif

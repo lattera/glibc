@@ -104,6 +104,11 @@ please let me know.
 [Q29]	``I don't include any kernel header myself but still the
 	  compiler complains about type redeclarations of types in the
 	  kernel headers.''
+
+[Q30]	``When I start the program XXX after upgrading the library
+	  I get
+	    XXX: Symbol `_sys_errlist' has different size in shared object, consider re-linking
+	  Why?  What to do?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -774,6 +779,29 @@ example is `struct fd_set'.
 
 There might be some more problems left but 2.1.61 fixes some of the known
 ones.  See the BUGS file for other known problems.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q30]	``When I start the program XXX after upgrading the library
+	  I get
+	    XXX: Symbol `_sys_errlist' has different size in shared object, consider re-linking
+	  Why?  What to do?''
+
+[A30] {UD} As the message says, relink the binary.  The problem is that
+very few symbols from the library can change in size and there is no way
+to avoid this.  _sys_errlist is a good example.  Occasionally there are
+new error numbers added to the kernel and this must be reflected at user
+level.
+
+But this does not mean all programs are doomed once such a change is
+necessary.  Such symbols should normally not be used at all.  There are
+mechanisms to avoid using them.  In the case of _sys_errlist, there is the
+strerror() function which should _always_ be used instead.  So the correct
+fix is to rewrite that part of the application.
+
+In some situations (especially when testing a new library release) it might
+be possible that such a symbol size change slipped in though it must not
+happen.  So in case of doubt report such a warning message as a problem.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

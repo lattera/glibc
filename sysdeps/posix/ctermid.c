@@ -29,11 +29,8 @@ ctermid (s)
 {
   static char name[L_ctermid];
 
-  if (name[0] == '\0')
-    (void) strcpy(name, "/dev/tty");
-
   if (s == NULL)
-    return(name);
+    s = name;
 
-  return(strcpy(s, name));
+  return strcpy (s, "/dev/tty");
 }

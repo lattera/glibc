@@ -43,7 +43,7 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq ($(versioning),yes)
-routines += oldiofopen oldfreopen
+routines += oldiofopen oldiofclose
 endif
 
 CPPFLAGS-.o += -DIO_DEBUG
@@ -62,7 +62,7 @@ ifeq ($(versioning),yes)
 aux	+= oldfileops oldstdfiles
 endif
 
-shared-only-routines = oldiofopen oldfreopen oldfileops oldstdfiles
+shared-only-routines = oldiofopen oldiofclose oldfileops oldstdfiles
 
 distribute := iolibio.h libioP.h strfile.h Banner
 

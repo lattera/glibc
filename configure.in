@@ -422,7 +422,8 @@ AC_CHECK_TOOL(RANLIB, ranlib, :)
 
 AC_PATH_PROG(BASH, bash, no)
 if test "$BASH" != no &&
-   $BASH -c 'test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
+   $BASH -c 'test "$BASH_VERSINFO"
+	     && test "$BASH_VERSINFO" -ge 2 >&/dev/null'; then
   libc_cv_have_bash2=yes
 else
   libc_cv_have_bash2=no

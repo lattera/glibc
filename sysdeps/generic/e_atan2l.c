@@ -10,5 +10,5 @@ __ieee754_atan2l (long double x, long double y)
   return 0.0;
 }
 
-stub_warning (__ieee754_atan2l)
+stub_warning (atan2l)
 #include <stub-tag.h>

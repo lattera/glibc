@@ -10,5 +10,5 @@ __ieee754_fmodl (long double x, long double y)
   return 0.0;
 }
 
-stub_warning (__ieee754_fmodl)
+stub_warning (fmodl)
 #include <stub-tag.h>

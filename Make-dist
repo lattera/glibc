@@ -96,7 +96,7 @@ foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
 foo:=$(shell echo 'generic +sysdeps=$(+sysdeps)'>&2)
 +sysdep-names := $(sort $(patsubst $(..)sysdeps/generic/%,%,\
 				   $(patsubst $(..)sysdeps/libm-ieee754/%,%,\
-					      $(+sysdeps)))))
+					      $(+sysdeps))))
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 
 ifdef subdir-dirs

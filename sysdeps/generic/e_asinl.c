@@ -10,5 +10,5 @@ __ieee754_asinl (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_asinl)
+stub_warning (asinl)
 #include <stub-tag.h>

@@ -10,5 +10,5 @@ __ieee754_acosl (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_acosl)
+stub_warning (acosl)
 #include <stub-tag.h>

@@ -130,7 +130,7 @@ _IO_old_file_close_it (fp)
   if (!_IO_file_is_open (fp))
     return EOF;
 
-  write_status = _IO_do_flush (fp);
+  write_status = _IO_old_do_flush (fp);
 
   _IO_unsave_markers(fp);
 
@@ -156,7 +156,7 @@ _IO_old_file_finish (fp, dummy)
 {
   if (_IO_file_is_open (fp))
     {
-      _IO_do_flush (fp);
+      _IO_old_do_flush (fp);
       if (!(fp->_flags & _IO_DELETE_DONT_CLOSE))
 	_IO_SYSCLOSE (fp);
     }
@@ -378,14 +378,14 @@ _IO_old_file_overflow (f, ch)
       f->_flags |= _IO_CURRENTLY_PUTTING;
     }
   if (ch == EOF)
-    return _IO_do_flush (f);
+    return _IO_old_do_flush (f);
   if (f->_IO_write_ptr == f->_IO_buf_end ) /* Buffer is really full */
-    if (_IO_do_flush (f) == EOF)
+    if (_IO_old_do_flush (f) == EOF)
       return EOF;
   *f->_IO_write_ptr++ = ch;
   if ((f->_flags & _IO_UNBUFFERED)
       || ((f->_flags & _IO_LINE_BUF) && ch == '\n'))
-    if (_IO_do_flush (f) == EOF)
+    if (_IO_old_do_flush (f) == EOF)
       return EOF;
   return (unsigned char) ch;
 }
@@ -401,7 +401,7 @@ _IO_old_file_sync (fp)
   _IO_flockfile (fp);
   /*    char* ptr = cur_ptr(); */
   if (fp->_IO_write_ptr > fp->_IO_write_base)
-    if (_IO_do_flush(fp)) return EOF;
+    if (_IO_old_do_flush(fp)) return EOF;
   delta = fp->_IO_read_ptr - fp->_IO_read_end;
   if (delta != 0)
     {
@@ -679,7 +679,7 @@ _IO_old_file_xsputn (f, data, n)
       dont_write = block_size >= 128 ? to_do % block_size : 0;
 
       count = to_do - dont_write;
-      if (_IO_do_write (f, s, count) == EOF)
+      if (_IO_old_do_write (f, s, count) == EOF)
 	return n - to_do;
       to_do = dont_write;
 

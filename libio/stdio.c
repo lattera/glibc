@@ -29,6 +29,13 @@
 #undef stdin
 #undef stdout
 #undef stderr
-FILE *stdin = &_IO_stdin_.plus.file;
-FILE *stdout = &_IO_stdout_.plus.file;
-FILE *stderr = &_IO_stderr_.plus.file;
+FILE *stdin = &_IO_2_1_stdin_.plus.file;
+FILE *stdout = &_IO_2_1_stdout_.plus.file;
+FILE *stderr = &_IO_2_1_stderr_.plus.file;
+
+#undef _IO_stdin
+#undef _IO_stdout
+#undef _IO_stderr
+strong_alias (stdin, _IO_stdin);
+strong_alias (stdout, _IO_stdout);
+strong_alias (stderr, _IO_stderr);

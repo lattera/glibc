@@ -150,20 +150,21 @@ struct ifconf
 
 /* Convert an interface name to an index, and vice versa.  */
 
-unsigned int  if_nametoindex(const char *ifname);
-char  *if_indextoname(unsigned int ifindex, char *ifname);
+extern unsigned int if_nametoindex __P ((__const char *__ifname));
+extern char *if_indextoname __P ((unsigned int __ifindex, char *__ifname));
 
 /* Return a list of all interfaces and their indices.  */
 
-struct if_nameindex {
-  unsigned int   if_index;  /* 1, 2, ... */
-  char          *if_name;   /* null terminated name: "eth0", ... */
-};
+struct if_nameindex
+  {
+    unsigned int if_index;	/* 1, 2, ... */
+    char *if_name;		/* null terminated name: "eth0", ... */
+  };
 
-struct if_nameindex  *if_nameindex(void);
+extern struct if_nameindex *if_nameindex __P ((void));
 
 /* Free the data returned from if_nameindex.  */
 
-void  if_freenameindex(struct if_nameindex *ptr);
+extern void if_freenameindex __P ((struct if_nameindex *__ptr));
 
 #endif /* net/if.h */

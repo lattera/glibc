@@ -415,12 +415,15 @@ GLIBC_2.0 {
 
     _IO_list_all;
 
+    _IO_stdin_; _IO_stdout_; _IO_stderr_;
+    _IO_fopen; fopen; freopen; _IO_fclose; fclose;
+
   local:
     *;
 };
 
 GLIBC_2.1 {
   global:
-    _IO_fopen; fopen; _IO_stdin_; _IO_stdout_; _IO_stderr_;
-    freopen;
+    _IO_fopen; fopen; _IO_fclose; fclose;
+    _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
 } GLIBC_2.0;

@@ -1,5 +1,5 @@
 @c We need some definitions here.
-@ifclear cdor
+@ifclear cdot
 @ifhtml
 @set cdot ·
 @end ifhtml
@@ -140,6 +140,7 @@ from real values:
 @smallexample
 3.0 - _Complex_I * 4.0
 @end smallexample
+@end deftypevr
 
 @noindent
 Without an optimizing compiler this is more expensive than the use of
@@ -150,6 +151,7 @@ problem.
 @deftypevr Macro {const float imaginary} _Imaginary_I
 This macro is a representation of the value ``@math{1i}''.  I.e., it is
 the value for which
+@end deftypevr
 
 @smallexample
 _Imaginary_I * _Imaginary_I = -1
@@ -166,7 +168,6 @@ One can use it to easily construct complex number like in
 @noindent
 which results in the complex number with a real part of 3.0 and a
 imaginary part -4.0.
-@end deftypevr
 
 @noindent
 A more intuitive approach is to use the following macro.

@@ -10,5 +10,5 @@ __ieee754_sqrtl (long double x)
   return 0.0;
 }
 
-stub_warning (__ieee754_sqrtl)
+stub_warning (sqrtl)
 #include <stub-tag.h>

@@ -155,11 +155,12 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      else
 		{
 		  /* We can match the version information or use the
-		     default one.  */
+		     default one if it is not hidden.  */
 		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
 		  if ((map->l_versions[ndx].hash != version->hash
 		       || strcmp (map->l_versions[ndx].name, version->name))
-		      && (version->hidden || map->l_versions[ndx].hash))
+		      && (version->hidden || map->l_versions[ndx].hash
+			  || (verstab[symidx] & 0x8000)))
 		    /* It's not the version we want.  */
 		    continue;
 		}

@@ -80,8 +80,8 @@ CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)
 
-CFLAGS-charmap.c = -Wno-write-strings
-CFLAGS-locfile.c = -Wno-write-strings
+CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
+CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

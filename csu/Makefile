@@ -36,7 +36,7 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S
+distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S init.c
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -89,7 +89,7 @@ $(objpfx)defs.h: $(objpfx)initfini.s
 endif
 
 ifeq (yes,$(elf))
-extra-objs += abi-note.o
+extra-objs += abi-note.o init.o
 asm-CPPFLAGS += -I$(objpfx).
 endif
 
@@ -103,7 +103,8 @@ ifndef start-installed-name-rule
 ifeq (yes,$(elf))
 # We link the ELF startfile along with a SHT_NOTE section indicating
 # the the kernel ABI the binaries linked with this library will require.
-$(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o
+$(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
+				  $(objpfx)init.o
 	$(link-relocatable)
 else
 # The startfile is installed under different names, so we just call our

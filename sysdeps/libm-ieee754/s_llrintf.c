@@ -34,17 +34,17 @@ long long int
 __llrintf (float x)
 {
   int32_t j0;
-  u_int32_t i, i0;
+  u_int32_t i0;
   volatile float w;
   float t;
   long long int result;
   int sx;
 
-  GET_FLOAT_WORD (i, x);
+  GET_FLOAT_WORD (i0, x);
 
   sx = i0 >> 31;
   j0 = ((i0 >> 23) & 0xff) - 0x7f;
-  i0 = i & 0x7fffff;
+  i0 &= 0x7fffff;
   i0 |= 0x800000;
 
   if (j0 < (int32_t) (sizeof (long long int) * 8) - 1)
@@ -57,10 +57,10 @@ __llrintf (float x)
 	{
 	  w = two23[sx] + x;
 	  t = w - two23[sx];
-	  GET_FLOAT_WORD (i, t);
-	  i0 = i & 0x7fffff;
-	  i0 |= 0x800000;
+	  GET_FLOAT_WORD (i0, t);
 	  j0 = ((i0 >> 23) & 0xff) - 0x7f;
+	  i0 &= 0x7fffff;
+	  i0 |= 0x800000;
 
 	  result = i0 >> (23 - j0);
 	}

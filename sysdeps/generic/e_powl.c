@@ -10,5 +10,5 @@ __ieee754_powl (long double x, long double y)
   return 0.0;
 }
 
-stub_warning (__ieee754_powl)
+stub_warning (powl)
 #include <stub-tag.h>
