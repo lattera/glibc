@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <pt-machine.h>
-
+#include "internals.h"
 
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)

@@ -34,6 +34,14 @@ typedef struct {
     int sem_spinlock;
 } old_sem_t;
 
+extern int __old_sem_init (old_sem_t *__sem, int __pshared, unsigned int __value);
+extern int __old_sem_wait (old_sem_t *__sem);
+extern int __old_sem_trywait (old_sem_t *__sem);
+extern int __old_sem_post (old_sem_t *__sem);
+extern int __old_sem_getvalue (old_sem_t *__sem, int *__sval);
+extern int __old_sem_destroy (old_sem_t *__sem);
+
+
 /* Maximum value the semaphore can have.  */
 #define SEM_VALUE_MAX   ((int) ((~0u) >> 1))
 

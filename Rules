@@ -74,7 +74,8 @@ endef
 
 $(common-objpfx)dummy.c:
 	rm -f $@
-	echo 'void __dummy__ (void) { }' > $@
+	(echo 'extern void __dummy__ (void);'; \
+	 echo 'void __dummy__ (void) { }') > $@
 common-generated += dummy.o dummy.c
 
 # This makes all the auxiliary and test programs.

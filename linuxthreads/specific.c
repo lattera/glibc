@@ -20,6 +20,8 @@
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
+#include <bits/libc-lock.h>
+
 
 /* Table of keys. */
 

@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include "pthread.h"
 #include "internals.h"
+#include <bits/libc-lock.h>
 
 struct handler_list {
   void (*handler)(void);

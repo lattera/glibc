@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include "internals.h"
 
 
 int

@@ -26,6 +26,7 @@
 extern int __pthread_return_0 (void);
 extern int __pthread_return_1 (void);
 extern void __pthread_return_void (void);
+extern void weak_function pthread_exit (void *__retval);
 
 /* Those are pthread functions which return 0 if successful. */
 weak_alias (__pthread_return_0, BP_SYM (__libc_pthread_attr_init_2_1))

@@ -1,5 +1,10 @@
 2000-12-27  Andreas Jaeger  <aj@suse.de>
 
+	* include/sys/wait.h: Add some prototypes.
+	* Rules (dummy.c): Create also prototype to shut up GCC.
+
+2000-12-27  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/mach/hurd/if_index.c (__protocol_available): Uncomment,
 	it's not needed at the moment.
 	* sysdeps/generic/if_index.c (__protocol_available): Likewise.

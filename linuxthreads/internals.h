@@ -427,21 +427,22 @@ static inline pthread_descr thread_self (void)
 
 /* Internal global functions */
 
-void __pthread_destroy_specifics(void);
-void __pthread_perform_cleanup(void);
-int __pthread_initialize_manager(void);
-void __pthread_message(char * fmt, ...);
-int __pthread_manager(void *reqfd);
-int __pthread_manager_event(void *reqfd);
-void __pthread_manager_sighandler(int sig);
-void __pthread_reset_main_thread(void);
-void __pthread_once_fork_prepare(void);
-void __pthread_once_fork_parent(void);
-void __pthread_once_fork_child(void);
-void __flockfilelist(void);
-void __funlockfilelist(void);
-void __fresetlockfiles(void);
-void __pthread_manager_adjust_prio(int thread_prio);
+extern void __pthread_destroy_specifics (void);
+extern void __pthread_perform_cleanup (void);
+extern int __pthread_initialize_manager (void);
+extern void __pthread_message (char * fmt, ...);
+extern int __pthread_manager (void *reqfd);
+extern int __pthread_manager_event (void *reqfd);
+extern void __pthread_manager_sighandler (int sig);
+extern void __pthread_reset_main_thread (void);
+extern void __pthread_once_fork_prepare (void);
+extern void __pthread_once_fork_parent (void);
+extern void __pthread_once_fork_child (void);
+extern void __flockfilelist (void);
+extern void __funlockfilelist (void);
+extern void __fresetlockfiles (void);
+extern void __pthread_manager_adjust_prio (int thread_prio);
+extern void __pthread_initialize_minimal (void);
 
 extern int __pthread_attr_setguardsize (pthread_attr_t *__attr,
 					size_t __guardsize);
@@ -455,23 +456,52 @@ extern int __pthread_attr_setstacksize (pthread_attr_t *__attr,
 					size_t __stacksize);
 extern int __pthread_attr_getstacksize (const pthread_attr_t *__attr,
 					size_t *__stacksize);
+extern int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
+				    size_t __stacksize);
+extern int __pthread_attr_getstack (const pthread_attr_t *__attr, void **__stackaddr,
+				    size_t *__stacksize);
 extern int __pthread_getconcurrency (void);
 extern int __pthread_setconcurrency (int __level);
+extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
+				      const struct timespec *__abstime);
+extern int __pthread_mutexattr_getpshared (const pthread_mutexattr_t *__attr,
+					   int *__pshared);
+extern int __pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
+					   int __pshared);
 extern int __pthread_mutexattr_gettype (const pthread_mutexattr_t *__attr,
 					int *__kind);
 extern void __pthread_kill_other_threads_np (void);
 
-void __pthread_restart_old(pthread_descr th);
-void __pthread_suspend_old(pthread_descr self);
-int __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abs);
+extern void __pthread_restart_old(pthread_descr th);
+extern void __pthread_suspend_old(pthread_descr self);
+extern int __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abs);
 
-void __pthread_restart_new(pthread_descr th);
-void __pthread_suspend_new(pthread_descr self);
-int __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abs);
+extern void __pthread_restart_new(pthread_descr th);
+extern void __pthread_suspend_new(pthread_descr self);
+extern int __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abs);
 
-void __pthread_wait_for_restart_signal(pthread_descr self);
+extern void __pthread_wait_for_restart_signal(pthread_descr self);
 
-int __pthread_yield (void);
+extern int __pthread_yield (void);
+
+extern int __pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
+					 __const struct timespec *__restrict
+					 __abstime);
+extern int __pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
+					 __const struct timespec *__restrict
+					 __abstime);
+extern int __pthread_rwlockattr_destroy (pthread_rwlockattr_t *__attr);
+
+extern int __pthread_barrierattr_getpshared (__const pthread_barrierattr_t *
+					     __restrict __attr,
+					     int *__restrict __pshared);
+
+extern int __pthread_spin_lock (pthread_spinlock_t *__lock);
+extern int __pthread_spin_trylock (pthread_spinlock_t *__lock);
+extern int __pthread_spin_unlock (pthread_spinlock_t *__lock);
+extern int __pthread_spin_init (pthread_spinlock_t *__lock, int __pshared);
+extern int __pthread_spin_destroy (pthread_spinlock_t *__lock);
+
 
 /* Global pointers to old or new suspend functions */
 
@@ -484,10 +514,25 @@ extern int (*__pthread_timedsuspend)(pthread_descr, const struct timespec *);
 extern int __libc_close (int fd);
 extern int __libc_nanosleep (const struct timespec *requested_time,
 			     struct timespec *remaining);
-extern pid_t __libc_waitpid (pid_t pid, int *stat_loc, int options);
-
 /* Prototypes for some of the new semaphore functions.  */
 extern int __new_sem_post (sem_t * sem);
+extern int __new_sem_init (sem_t *__sem, int __pshared, unsigned int __value);
+extern int __new_sem_wait (sem_t *__sem);
+extern int __new_sem_trywait (sem_t *__sem);
+extern int __new_sem_getvalue (sem_t *__restrict __sem, int *__restrict __sval);
+extern int __new_sem_destroy (sem_t *__sem);
+
+/* Prototypes for compatibility functions.  */
+extern int __pthread_attr_init_2_1 (pthread_attr_t *__attr);
+extern int __pthread_attr_init_2_0 (pthread_attr_t *__attr);
+extern int __pthread_create_2_1 (pthread_t *__restrict __thread,
+				 const pthread_attr_t *__attr,
+				 void *(*__start_routine) (void *),
+				 void *__restrict __arg);
+extern int __pthread_create_2_0 (pthread_t *__restrict thread,
+				 const pthread_attr_t *__attr,
+				 void *(*__start_routine) (void *),
+				 void *__restrict arg);
 
 /* The functions called the signal events.  */
 extern void __linuxthreads_create_event (void);

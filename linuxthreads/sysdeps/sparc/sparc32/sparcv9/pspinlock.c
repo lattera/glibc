@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include "internals.h"
 
 
 /* This implementation is similar to the one used in the Linux kernel.  */

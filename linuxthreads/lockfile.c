@@ -20,6 +20,7 @@
 #include <bits/libc-lock.h>
 #include <stdio.h>
 #include <pthread.h>
+#include "internals.h"
 
 #ifdef USE_IN_LIBIO
 #include "../libio/libioP.h"

@@ -19,7 +19,7 @@
 
 #include <errno.h>
 #include <pthread.h>
-
+#include "internals.h"
 
 /* This implementation is similar to the one used in the Linux kernel.
    But the kernel is byte instructions for the memory access.  This is

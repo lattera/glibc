@@ -21,7 +21,7 @@
 #include <pthread.h>
 #include <sgidefs.h>
 #include <sys/tas.h>
-
+#include "internals.h"
 
 #if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 

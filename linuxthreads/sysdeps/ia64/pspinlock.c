@@ -20,7 +20,7 @@
 
 #include <errno.h>
 #include <pthread.h>
-
+#include "internals.h"
 
 /* This implementation is inspired by the implementation used in the
    Linux kernel. */

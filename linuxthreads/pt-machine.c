@@ -19,4 +19,7 @@
 
 #define PT_EI
 
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+
 #include <pt-machine.h>

@@ -1,3 +1,45 @@
+2000-12-27  Andreas Jaeger  <aj@suse.de>
+
+	* Examples/ex13.c: Make local functions static.
+	* ecmutex.c: Likewise.
+	* Examples/ex14.c: Likewise.
+
+	* Examples/ex2.c: Make local functions static; reformat.
+	* Examples/ex1.c: Likewise.
+	* Examples/ex4.c: Likewise.
+	* Examples/ex5.c: Likewise.
+	* Examples/ex7.c: Likewise.
+
+	* oldsemaphore.c: Add prototypes to shut up GCC.
+	* pt-machine.c: Likewise.
+
+	* weaks.c: Add prototype for pthread_exit.
+
+	* internals.h: Add some prototypes, format prototypes and add
+	missing externs.
+	Move __libc_waitpid prototype to include/sys/wait.h.
+
+	* rwlock.c: Include <bits/libc-lock.h> for prototypes.
+	* mutex.c: Likewise.
+	* specific.c: Likewise.
+	* ptfork.c: Likewise.
+
+	* lockfile.c: Include internals.h to get prototypes.
+	* events.c: Likewise.
+	* sysdeps/alpha/pspinlock.c: Likewise.
+	* sysdeps/arm/pspinlock.c: Likewise.
+	* sysdeps/hppa/pspinlock.c: Likewise.
+	* sysdeps/i386/pspinlock.c: Likewise.
+	* sysdeps/ia64/pspinlock.c: Likewise.
+	* sysdeps/m68k/pspinlock.c: Likewise.
+	* sysdeps/mips/pspinlock.c: Likewise.
+	* sysdeps/powerpc/pspinlock.c: Likewise.
+	* sysdeps/s390/pspinlock.c: Likewise.
+	* sysdeps/sh/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc32/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc64/pspinlock.c: Likewise.
+
 2000-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (__pthread_attr_setstack): Fix setting of __stackaddr element.

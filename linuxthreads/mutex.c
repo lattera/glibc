@@ -14,6 +14,7 @@
 
 /* Mutexes */
 
+#include <bits/libc-lock.h>
 #include <errno.h>
 #include <sched.h>
 #include <stddef.h>
