@@ -1,5 +1,11 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/sjis.c: In conversion from UCS4, correct test for
+	enough room in target buffer.
+	Patch by KUSANO Takayuki <AE5T-KSN@asahi-net.or.jp> [PR libc/1865].
+	* iconvdata/bug-iconv1.c: New file.
+	* iconvdata/Makefile (tests): Add bug-iconv1.
+
 	* locale/iso-4217.def: Update entry for Nicaragua.
 
 2000-08-22  Mark Kettenis  <kettenis@gnu.org>

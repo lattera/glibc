@@ -49,6 +49,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 
 modules.so := $(addsuffix .so, $(modules))
 
+tests = bug-iconv1
+
 include ../Makeconfig
 
 libJIS-routines := jis0201 jis0208 jis0212

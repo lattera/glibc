@@ -4484,18 +4484,19 @@ static const char from_ucs4_extra[0x100][2] =
       }									      \
     else								      \
       {									      \
-	*outptr++ = cp[0];						      \
+	*outptr = cp[0];						      \
 	/* Now test for a possible second byte and write this if possible.  */\
 	if (cp[1] != '\0')						      \
 	  {								      \
-	    if (__builtin_expect (outptr >= outend, 0))			      \
+	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
 	      {								      \
 		/* The result does not fit into the buffer.  */		      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    *outptr++ = cp[1];						      \
+	    *++outptr = cp[1];						      \
 	  }								      \
+	++outptr;							      \
       }									      \
 									      \
     inptr += 4;								      \
