@@ -17,7 +17,9 @@ case $# in
   /*) file="$1" ;;
   *) file="./$1" ;;
   esac
-  if ${RTLD} --verify "$file"; then
+  if test ! -f "$file"; then
+    echo "$file: no such file"
+  elif ${RTLD} --verify "$file"; then
     LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} "$file" && exit 1
   else
     echo '	not a dynamic executable'
@@ -31,7 +33,9 @@ case $# in
     /*) file="$file" ;;
     *) file="./$file" ;;
     esac
-    if ${RTLD} --verify "$file"; then
+    if test ! -f "$file"; then
+      echo "$file: no such file"
+    elif ${RTLD} --verify "$file"; then
       LD_TRACE_LOADED_OBJECTS=1 ${RTLD} "$file"
     else
       echo '	not a dynamic executable'

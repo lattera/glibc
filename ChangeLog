@@ -1,3 +1,42 @@
+Sat Oct 19 17:42:24 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/locale.alias: Language for entry `czech' is `cs'.
+
+Fri Oct 17 13:20:35 1996  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* sunrpc/etc.rpc: Update from ti-rpcsvc 2.3.
+
+Fri Oct 18 22:56:45 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile (install-sbin): Remove portmap.  This version is
+ 	buggy and more competent people work on a usable version which is
+ 	distributed separately.
+	* sunrpc/portmap.c: Removed.
+	Suggested by Thorsten Kukuk.
+
+Fri Oct 18 12:17:09 1996  Enrique Melero  <justine@iprolink.ch>
+
+	* sysdeps/libm-ieee754/s_finitel.c: Change function name to
+ 	`finitel'.
+
+Fri Oct 18 00:01:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Makefile (tests): Add stratcliff.
+	* string/stratcliff.c: New file.  Test for string function at
+	the edge of the usable memory.
+
+Thu Oct 17 22:10:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules ($(libdir)/libc.so): Fix typo.
+
+	* elf/ldd.sh.in: Test whether given file really exist and give
+ 	better message if it is not available.
+
+Thu Oct 17 04:25:38 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/shm_buf.h: Add definition for
+	SHM_R and SHM_W.
+
 Thu Oct 17 01:55:34 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/Makefile ($(objpfx)rpcsvc/%.h, $(objpfx)x%.c): Write
@@ -33,7 +72,7 @@ Thu Oct 17 00:26:20 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
 
 Wed Oct 16 12:26:53 1996  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
 
-	* locale/progams/localedef.c (main): Test with -1 to find out
+	* locale/programs/localedef.c (main): Test with -1 to find out
  	whether read failed.
 
 Wed Oct 16 14:54:59 1996  Ulrich Drepper  <drepper@cygnus.com>

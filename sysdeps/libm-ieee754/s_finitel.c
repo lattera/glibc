@@ -27,9 +27,9 @@ static char rcsid[] = "$NetBSD: $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	int __finite(long double x)
+	int __finitel(long double x)
 #else
-	int __finite(x)
+	int __finitel(x)
 	long double x;
 #endif
 {

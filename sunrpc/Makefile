@@ -68,7 +68,7 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 
 others := portmap rpcinfo
 install-bin := rpcgen
-install-sbin := rpcinfo portmap
+install-sbin := rpcinfo
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o

@@ -38,7 +38,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 			             delete extract insert stringify)	\
 		   envz basename
 
-tests		:= tester testcopy test-ffs tst-strlen
+tests		:= tester testcopy test-ffs tst-strlen stratcliff
 distribute	:= memcopy.h pagecopy.h
 
 
@@ -47,3 +47,4 @@ include ../Rules
 tester-ENV = LANGUAGE=C
 CFLAGS-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
+CFLAGS-stratcliff.c = -fno-builtin

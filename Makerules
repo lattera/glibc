@@ -621,7 +621,7 @@ ifndef subdir
 install: $(libdir)/libc.so
 $(libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 		   $(elfobjdir)/$(rtld-installed-name) \
-		   $(libdir)lib$(libc-name).a
+		   $(libdir)/lib$(libc-name).a
 	(echo '/* Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
 	 echo '   The dynamic linker defines some functions used by $(<F),';\

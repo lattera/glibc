@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -22,6 +22,10 @@ Boston, MA 02111-1307, USA.  */
 
 #include <features.h>
 #include <sys/types.h>
+
+/* Permission flag for shmget.  */
+#define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
+#define SHM_W		0200		/* or S_IWUGO from <linux/stat.h> */
 
 /* Flags for `shmat'.  */
 #define SHM_RDONLY	010000		/* attach read-only else read-write */
@@ -62,11 +66,11 @@ struct shmid_ds
 #define SHM_LOCKED      02000   /* segment will not be swapped */
 
 struct	shminfo {
-    int shmmax;	
-    int shmmin;	
-    int shmmni;	
-    int shmseg;	
-    int shmall;	
+    int shmmax;
+    int shmmin;
+    int shmmni;
+    int shmseg;
+    int shmall;
 };
 
 struct shm_info {
