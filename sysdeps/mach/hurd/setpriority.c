@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ setpriority (enum __priority_which which, int who, int prio)
 
   npids = ntasks = nwin = nperm = nacces = 0;
   pidloser = priloser = 0;
-  err = _hurd_priority_which_map (which, who, setonepriority);
+  err = _hurd_priority_which_map (which, who, setonepriority, 0);
 
   if (!err && npids == 0)
     /* No error, but no pids found.  */

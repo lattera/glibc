@@ -1,5 +1,15 @@
 Tue Oct 31 00:07:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/getpriority.c (getpriority): Pass
+	PI_FETCH_TASKINFO to proc_getprocinfo and through
+	_hurd_priority_which_map.
+
+	* sysdeps/mach/hurd/setpriority.c (setpriority): Pass new arg to
+	_hurd_priority_which_map.
+	* hurd/hurdprio.c (_hurd_priority_which_map): New arg PI_FLAGS,
+	passed through to proc_getprocinfo RPC.
+	* hurd/hurd/resource.h: Add PI_FLAGS arg in decl.
+
 	* sysdeps/mach/hurd/group_member.c: New file.
 	* sysdeps/generic/group_member.c: New file.
 

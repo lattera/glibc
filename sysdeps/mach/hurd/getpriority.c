@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -41,8 +41,8 @@ getpriority (enum __priority_which which, int who)
 	{
 	  int *oldpi = pi;
 	  unsigned int oldpisize = pisize;
-	  onerr = __USEPORT (PROC, __proc_getprocinfo (port,
-						       pid,
+	  onerr = __USEPORT (PROC, __proc_getprocinfo (port, pid,
+						       PI_FETCH_TASKINFO,
 						       &pi, &pisize));
 	  if (pi != oldpi && oldpi != pibuf)
 	    /* Old buffer from last call was not reused; free it.  */
@@ -56,7 +56,8 @@ getpriority (enum __priority_which which, int who)
     }
 
   onerr = 0;
-  err = _hurd_priority_which_map (which, who, getonepriority);
+  err = _hurd_priority_which_map (which, who,
+				  getonepriority, PI_FETCH_TASKINFO);
 
   if (pi != pibuf)
     __vm_deallocate (__mach_task_self (),

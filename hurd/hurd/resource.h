@@ -1,5 +1,5 @@
 /* Resource limits for the Hurd.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,13 @@ extern struct mutex _hurd_rlimit_lock; /* Locks _hurd_rlimits.  */
 /* Helper function for getpriority and setpriority.  Maps FN over all the
    processes specified by WHICH and WHO.  PI is non-null if a
    proc_getprocinfo was already done; FN may use *PI arbitrarily, it is
-   reset on the next call.  Returns FN's result the first time it returns
-   nonzero.  If FN never returns nonzero, this returns zero.  */
+   reset on the next call; PI_FLAGS is passed to proc_getprocinfo.  Returns
+   FN's result the first time it returns nonzero.  If FN never returns
+   nonzero, this returns zero.  */
 extern error_t _hurd_priority_which_map (enum __priority_which which, int who,
 					 error_t (*fn) (pid_t pid,
-							struct procinfo *pi));
+							struct procinfo *pi),
+					 int pi_flags);
 
 /* Convert between Mach priority values and the priority
    values used by getpriority, setpriority, and nice.  */
