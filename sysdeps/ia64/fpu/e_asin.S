@@ -1,10 +1,10 @@
 .file "asin.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003 Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,818 +35,776 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 
 // History
 //==============================================================
-// 2/02/00  Initial version 
-// 8/17/00  New and much faster algorithm.
-// 8/31/00  Avoided bank conflicts on loads, shortened |x|=1 path, 
+// 02/02/00 Initial version
+// 08/17/00 New and much faster algorithm.
+// 08/31/00 Avoided bank conflicts on loads, shortened |x|=1 path,
 //          fixed mfb split issue stalls.
 // 12/19/00 Fixed small arg cases to force inexact, or inexact and underflow.
+// 08/02/02 New and much faster algorithm II
+// 02/06/03 Reordered header: .section, .global, .proc, .align
 
 // Description
 //=========================================
-// The asin function computes the principle value of the arc sine of x.
+// The asin function computes the principal value of the arc sine of x.
 // asin(0) returns 0, asin(1) returns pi/2, asin(-1) returns -pi/2.
 // A doman error occurs for arguments not in the range [-1,+1].
-
+//
 // The asin function returns the arc sine in the range [-pi/2, +pi/2] radians.
+//
+// There are 8 paths:
+// 1. x = +/-0.0
+//    Return asin(x) = +/-0.0
+//
+// 2. 0.0 < |x| < 0.625
+//    Return asin(x) = x + x^3 *PolA(x^2)
+//    where PolA(x^2) = A3 + A5*x^2 + A7*x^4 +...+ A35*x^32
+//
+// 3. 0.625 <=|x| < 1.0
+//    Return asin(x) = sign(x) * ( Pi/2 - sqrt(R) * PolB(R))
+//    Where R = 1 - |x|,
+//          PolB(R) = B0 + B1*R + B2*R^2 +...+B12*R^12
+//
+//    sqrt(R) is approximated using the following sequence:
+//        y0 = (1 + eps)/sqrt(R) - initial approximation by frsqrta,
+//             |eps| < 2^(-8)
+//        Then 3 iterations are used to refine the result:
+//        H0 = 0.5*y0
+//        S0 = R*y0
+//
+//        d0 = 0.5 - H0*S0
+//        H1 = H0 + d0*H0
+//        S1 = S0 + d0*S0
+//
+//        d1 = 0.5 - H1*S1
+//        H2 = H1 + d0*H1
+//        S2 = S1 + d0*S1
+//
+//        d2 = 0.5 - H2*S2
+//        S3 = S3 + d2*S3
+//
+//        S3 approximates sqrt(R) with enough accuracy for this algorithm
+//
+//    So, the result should be reconstracted as follows:
+//    asin(x) = sign(x) * (Pi/2 - S3*PolB(R))
+//
+//    But for optimization perposes the reconstruction step is slightly
+//    changed:
+//    asin(x) = sign(x)*(Pi/2 - PolB(R)*S2) + sign(x)*d2*S2*PolB(R)
+//
+// 4. |x| = 1.0
+//    Return asin(x) = sign(x)*Pi/2
+//
+// 5. 1.0 < |x| <= +INF
+//    A doman error occurs for arguments not in the range [-1,+1]
+//
+// 6. x = [S,Q]NaN
+//    Return asin(x) = QNaN
+//
+// 7. x is denormal
+//    Return asin(x) = x + x^3,
+//
+// 8. x is unnormal
+//    Normalize input in f8 and return to the very beginning of the function
+//
+// Registers used
+//==============================================================
+// Floating Point registers used:
+// f8, input, output
+// f6, f7, f9 -> f15, f32 -> f63
 
-#include "libm_support.h"
+// General registers used:
+// r3, r21 -> r31, r32 -> r38
+
+// Predicate registers used:
+// p0, p6 -> p14
 
 //
 // Assembly macros
 //=========================================
+// integer registers used
+// scratch
+rTblAddr                      = r3
+
+rPiBy2Ptr                     = r21
+rTmpPtr3                      = r22
+rDenoBound                    = r23
+rOne                          = r24
+rAbsXBits                     = r25
+rHalf                         = r26
+r0625                         = r27
+rSign                         = r28
+rXBits                        = r29
+rTmpPtr2                      = r30
+rTmpPtr1                      = r31
+
+// stacked
+GR_SAVE_PFS                   = r32
+GR_SAVE_B0                    = r33
+GR_SAVE_GP                    = r34
+GR_Parameter_X                = r35
+GR_Parameter_Y                = r36
+GR_Parameter_RESULT           = r37
+GR_Parameter_TAG              = r38
+
+// floating point registers used
+FR_X                          = f10
+FR_Y                          = f1
+FR_RESULT                     = f8
 
 
-// predicate registers
-//asin_pred_LEsqrt2by2            = p7
-//asin_pred_GTsqrt2by2            = p8
-
-// integer registers
-ASIN_Addr1                      = r33
-ASIN_Addr2                      = r34
-ASIN_FFFE                       = r35
-ASIN_lnorm_sig                  = r36
-ASIN_snorm_exp                  = r37
-
-GR_SAVE_B0                      = r36
-GR_SAVE_PFS                     = r37
-GR_SAVE_GP                      = r38
-
-GR_Parameter_X                  = r39
-GR_Parameter_Y                  = r40
-GR_Parameter_RESULT             = r41
-GR_Parameter_Tag                = r42
-
-// floating point registers
-asin_coeff_P1                   = f32
-asin_coeff_P2                   = f33
-asin_coeff_P3                   = f34
-asin_coeff_P4                   = f35
-
-asin_coeff_P5                   = f36
-asin_coeff_P6                   = f37
-asin_coeff_P7                   = f38
-asin_coeff_P8                   = f39
-asin_coeff_P9                   = f40
-
-asin_coeff_P10                  = f41
-asin_coeff_P11                  = f42
-asin_coeff_P12                  = f43
-asin_coeff_P13                  = f44
-asin_coeff_P14                  = f45
-
-asin_coeff_P15                  = f46
-asin_coeff_P16                  = f47
-asin_coeff_P17                  = f48
-asin_coeff_P18                  = f49
-asin_coeff_P19                  = f50
-
-asin_coeff_P20                  = f51
-asin_coeff_P21                  = f52
-asin_const_sqrt2by2             = f53
-asin_const_piby2                = f54
-asin_abs_x                      = f55
-
-asin_tx                         = f56
-asin_tx2                        = f57
-asin_tx3                        = f58
-asin_tx4                        = f59
-asin_tx8                        = f60
-
-asin_tx11                       = f61
-asin_1poly_p8                   = f62
-asin_1poly_p19                  = f63
-asin_1poly_p4                   = f64
-asin_1poly_p15                  = f65
-
-asin_1poly_p6                   = f66
-asin_1poly_p17                  = f67
-asin_1poly_p0                   = f68
-asin_1poly_p11                  = f69
-asin_1poly_p2                   = f70
-
-asin_1poly_p13                  = f71
-asin_series_tx                  = f72
-asin_t                          = f73
-asin_t2                         = f74
-asin_t3                         = f75
-
-asin_t4                         = f76
-asin_t8                         = f77
-asin_t11                        = f78
-asin_poly_p8                    = f79
-asin_poly_p19                   = f80
-
-asin_poly_p4                    = f81
-asin_poly_p15                   = f82
-asin_poly_p6                    = f83
-asin_poly_p17                   = f84
-asin_poly_p0                    = f85
-
-asin_poly_p11                   = f86
-asin_poly_p2                    = f87
-asin_poly_p13                   = f88
-asin_series_t                   = f89
-asin_1by2                       = f90
-
-asin_3by2                       = f91
-asin_5by2                       = f92
-asin_11by4                      = f93
-asin_35by8                      = f94
-asin_63by8                      = f95
-
-asin_231by16                    = f96 
-asin_y0                         = f97 
-asin_H0                         = f98 
-asin_S0                         = f99 
-asin_d                          = f100
-
-asin_l1                         = f101
-asin_d2                         = f102
-asin_T0                         = f103
-asin_d1                         = f104
-asin_e0                         = f105
-
-asin_l2                         = f106
-asin_d3                         = f107
-asin_T3                         = f108
-asin_S1                         = f109
-asin_e1                         = f110
-
-asin_z                          = f111
-answer2                         = f112
-asin_sgn_x                      = f113
-asin_429by16                    = f114
-asin_18by4                      = f115
-
-asin_3by4                       = f116
-asin_l3                         = f117
-asin_T6                         = f118
-asin_eps_exp                    = f119
-asin_eps_sig                    = f120
-asin_eps                        = f120
-
+// scratch
+fXSqr                         = f6
+fXCube                        = f7
+fXQuadr                       = f9
+f1pX                          = f10
+f1mX                          = f11
+f1pXRcp                       = f12
+f1mXRcp                       = f13
+fH                            = f14
+fS                            = f15
+// stacked
+fA3                           = f32
+fB1                           = f32
+fA5                           = f33
+fB2                           = f33
+fA7                           = f34
+fPiBy2                        = f34
+fA9                           = f35
+fA11                          = f36
+fB10                          = f35
+fB11                          = f36
+fA13                          = f37
+fA15                          = f38
+fB4                           = f37
+fB5                           = f38
+fA17                          = f39
+fA19                          = f40
+fB6                           = f39
+fB7                           = f40
+fA21                          = f41
+fA23                          = f42
+fB3                           = f41
+fB8                           = f42
+fA25                          = f43
+fA27                          = f44
+fB9                           = f43
+fB12                          = f44
+fA29                          = f45
+fA31                          = f46
+fA33                          = f47
+fA35                          = f48
+fBaseP                        = f49
+fB0                           = f50
+fSignedS                      = f51
+fD                            = f52
+fHalf                         = f53
+fR                            = f54
+fCloseTo1Pol                  = f55
+fSignX                        = f56
+fDenoBound                    = f57
+fNormX                        = f58
+fX8                           = f59
+fRSqr                         = f60
+fRQuadr                       = f61
+fR8                           = f62
+fX16                          = f63
 // Data tables
 //==============================================================
-
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
+LOCAL_OBJECT_START(asin_base_range_table)
+// Ai: Polynomial coefficients for the asin(x), |x| < .625000
+// Bi: Polynomial coefficients for the asin(x), |x| > .625000
+data8 0xBFDAAB56C01AE468 //A29
+data8 0x3FE1C470B76A5B2B //A31
+data8 0xBFDC5FF82A0C4205 //A33
+data8 0x3FC71FD88BFE93F0 //A35
+data8 0xB504F333F9DE6487, 0x00003FFF //B0
+data8 0xAAAAAAAAAAAAFC18, 0x00003FFC //A3
+data8 0x3F9F1C71BC4A7823 //A9
+data8 0x3F96E8BBAAB216B2 //A11
+data8 0x3F91C4CA1F9F8A98 //A13
+data8 0x3F8C9DDCEDEBE7A6 //A15
+data8 0x3F877784442B1516 //A17
+data8 0x3F859C0491802BA2 //A19
+data8 0x9999999998C88B8F, 0x00003FFB //A5
+data8 0x3F6BD7A9A660BF5E //A21
+data8 0x3F9FC1659340419D //A23
+data8 0xB6DB6DB798149BDF, 0x00003FFA //A7
+data8 0xBFB3EF18964D3ED3 //A25
+data8 0x3FCD285315542CF2 //A27
+data8 0xF15BEEEFF7D2966A, 0x00003FFB //B1
+data8 0x3EF0DDA376D10FB3 //B10
+data8 0xBEB83CAFE05EBAC9 //B11
+data8 0x3F65FFB67B513644 //B4
+data8 0x3F5032FBB86A4501 //B5
+data8 0x3F392162276C7CBA //B6
+data8 0x3F2435949FD98BDF //B7
+data8 0xD93923D7FA08341C, 0x00003FF9 //B2
+data8 0x3F802995B6D90BDB //B3
+data8 0x3F10DF86B341A63F //B8
+data8 0xC90FDAA22168C235, 0x00003FFF // Pi/2
+data8 0x3EFA3EBD6B0ECB9D //B9
+data8 0x3EDE18BA080E9098 //B12
+LOCAL_OBJECT_END(asin_base_range_table)
 
-asin_coeff_1_table:
-ASM_TYPE_DIRECTIVE(asin_coeff_1_table,@object)
-data8 0xE4E7E0A423A21249  , 0x00003FF8 //P7
-data8 0xC2F7EE0200FCE2A5  , 0x0000C003 //P18
-data8 0xB745D7F6C65C20E0  , 0x00003FF9 //P5
-data8 0xF75E381A323D4D94  , 0x0000C002 //P16
-data8 0x8959C2629C1024C0  , 0x0000C002 //P20
-data8 0xAFF68E7D241292C5  , 0x00003FF8 //P9
-data8 0xB6DB6DB7260AC30D  , 0x00003FFA //P3
-data8 0xD0417CE2B41CB7BF  , 0x0000C000 //P14
-data8 0x81D570FEA724E3E4  , 0x0000BFFD //P12
-data8 0xAAAAAAAAAAAAC277  , 0x00003FFC //P1
-data8 0xF534912FF3E7B76F  , 0x00003FFF //P21
-data8 0xc90fdaa22168c235  , 0x00003fff // pi/2
-data8 0x0000000000000000  , 0x00000000 // pad to avoid data bank conflict
-ASM_SIZE_DIRECTIVE(asin_coeff_1_table)
-	
-
-asin_coeff_2_table:
-ASM_TYPE_DIRECTIVE(asin_coeff_2_table,@object)
-data8 0x8E26AF5F29B39A2A  , 0x00003FF9 //P6
-data8 0xB4F118A4B1015470  , 0x00004003 //P17
-data8 0xF8E38E10C25990E0  , 0x00003FF9 //P4
-data8 0x80F50489AEF1CAC6  , 0x00004002 //P15
-data8 0x92728015172CFE1C  , 0x00004003 //P19
-data8 0xBBC3D831D4595971  , 0x00003FF8 //P8
-data8 0x999999999952A5C3  , 0x00003FFB //P2
-data8 0x855576BE6F0975EC  , 0x00003FFF //P13
-data8 0xF12420E778077D89  , 0x00003FFA //P11
-data8 0xB6590FF4D23DE003  , 0x00003FF3 //P10
-data8 0xb504f333f9de6484  , 0x00003ffe // sqrt(2)/2
-ASM_SIZE_DIRECTIVE(asin_coeff_2_table)
-
-
-
-.align 32
-.global asin
 
 .section .text
-.proc  asin
+GLOBAL_LIBM_ENTRY(asin)
+asin_unnormal_back:
+{ .mfi
+      getf.d             rXBits = f8 // grab bits of input value
+      // set p12 = 1 if x is a NaN, denormal, or zero
+      fclass.m           p12, p0 = f8, 0xcf
+      adds               rSign = 1, r0
+}
+{ .mfi
+      addl               rTblAddr = @ltoff(asin_base_range_table),gp
+      // 1 - x = 1 - |x| for positive x
+      fms.s1             f1mX = f1, f1, f8
+      addl               rHalf = 0xFFFE, r0 // exponent of 1/2
+}
+;;
+{ .mfi
+      addl               r0625 = 0x3FE4, r0 // high 16 bits of 0.625
+      // set p8 = 1 if x < 0
+      fcmp.lt.s1         p8, p9 = f8, f0
+      shl                rSign = rSign, 63 // sign bit
+}
+{ .mfi
+      // point to the beginning of the table
+      ld8                rTblAddr = [rTblAddr]
+      // 1 + x = 1 - |x| for negative x
+      fma.s1             f1pX = f1, f1, f8
+      adds               rOne = 0x3FF, r0
+}
+;;
+{ .mfi
+      andcm              rAbsXBits = rXBits, rSign // bits of |x|
+      fmerge.s           fSignX = f8, f1 // signum(x)
+      shl                r0625 = r0625, 48 // bits of DP representation of 0.625
+}
+{ .mfb
+      setf.exp           fHalf = rHalf // load A2 to FP reg
+      fma.s1             fXSqr = f8, f8, f0 // x^2
+      // branch on special path if x is a NaN, denormal, or zero
+(p12) br.cond.spnt       asin_special
+}
+;;
+{ .mfi
+      adds               rPiBy2Ptr = 272, rTblAddr
+      nop.f              0
+      shl                rOne = rOne, 52 // bits of 1.0
+}
+{ .mfi
+      adds               rTmpPtr1 = 16, rTblAddr
+      nop.f              0
+      // set p6 = 1 if |x| < 0.625
+      cmp.lt             p6, p7 = rAbsXBits, r0625
+}
+;;
+{ .mfi
+      ldfpd              fA29, fA31 = [rTblAddr] // A29, fA31
+      // 1 - x = 1 - |x| for positive x
+(p9)  fms.s1             fR = f1, f1, f8
+      // point to coefficient of "near 1" polynomial
+(p7)  adds               rTmpPtr2 = 176, rTblAddr
+}
+{ .mfi
+      ldfpd              fA33, fA35 = [rTmpPtr1], 16 // A33, fA35
+      // 1 + x = 1 - |x| for negative x
+(p8)  fma.s1             fR = f1, f1, f8
+(p6)  adds               rTmpPtr2 = 48, rTblAddr
+}
+;;
+{ .mfi
+      ldfe               fB0 = [rTmpPtr1], 16 // B0
+      nop.f              0
+      nop.i              0
+}
+{ .mib
+      adds               rTmpPtr3 = 16, rTmpPtr2
+      // set p10 = 1 if |x| = 1.0
+      cmp.eq             p10, p0 = rAbsXBits, rOne
+      // branch on special path for |x| = 1.0
+(p10) br.cond.spnt       asin_abs_1
+}
+;;
+{ .mfi
+      ldfe               fA3 = [rTmpPtr2], 48 // A3 or B1
+      nop.f              0
+      adds               rTmpPtr1 = 64, rTmpPtr3
+}
+{ .mib
+      ldfpd              fA9, fA11 = [rTmpPtr3], 16 // A9, A11 or B10, B11
+      // set p11 = 1 if |x| > 1.0
+      cmp.gt             p11, p0 = rAbsXBits, rOne
+      // branch on special path for |x| > 1.0
+(p11) br.cond.spnt       asin_abs_gt_1
+}
+;;
+{ .mfi
+      ldfpd              fA17, fA19 = [rTmpPtr2], 16 // A17, A19 or B6, B7
+      // initial approximation of 1 / sqrt(1 - x)
+      frsqrta.s1         f1mXRcp, p0 = f1mX
+      nop.i              0
+}
+{ .mfi
+      ldfpd              fA13, fA15 = [rTmpPtr3] // A13, A15 or B4, B5
+      fma.s1             fXCube = fXSqr, f8, f0 // x^3
+      nop.i              0
+}
+;;
+{ .mfi
+      ldfe               fA5 = [rTmpPtr2], 48 // A5 or B2
+      // initial approximation of 1 / sqrt(1 + x)
+      frsqrta.s1         f1pXRcp, p0 = f1pX
+      nop.i              0
+}
+{ .mfi
+      ldfpd              fA21, fA23 = [rTmpPtr1], 16 // A21, A23 or B3, B8
+      fma.s1             fXQuadr = fXSqr, fXSqr, f0 // x^4
+      nop.i              0
+}
+;;
+{ .mfi
+      ldfe               fA7 = [rTmpPtr1] // A7 or Pi/2
+      fma.s1             fRSqr = fR, fR, f0 // R^2
+      nop.i              0
+}
+{ .mfb
+      ldfpd              fA25, fA27 = [rTmpPtr2] // A25, A27 or B9, B12
+      nop.f              0
+(p6)  br.cond.spnt       asin_base_range;
+}
+;;
+
+{ .mfi
+      nop.m              0
+(p9)  fma.s1             fH = fHalf, f1mXRcp, f0 // H0 for x > 0
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+(p9)  fma.s1             fS = f1mX, f1mXRcp, f0  // S0 for x > 0
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+(p8)  fma.s1             fH = fHalf, f1pXRcp, f0 // H0 for x < 0
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+(p8)  fma.s1             fS = f1pX, f1pXRcp, f0  // S0 for x > 0
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fRQuadr = fRSqr, fRSqr, f0 // R^4
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fB11 = fB11, fR, fB10
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fB1 = fB1, fR, fB0
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fB5 = fB5, fR, fB4
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fB7 = fB7, fR, fB6
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fB3 = fB3, fR, fB2
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fnma.s1            fD = fH, fS, fHalf // d0 = 1/2 - H0*S0
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fR8 = fRQuadr, fRQuadr, f0 // R^4
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fB9 = fB9, fR, fB8
+      nop.i              0
+}
+;;
+{.mfi
+      nop.m              0
+      fma.s1             fB12 = fB12, fRSqr, fB11
+      nop.i              0
+}
+{.mfi
+      nop.m              0
+      fma.s1             fB7 = fB7, fRSqr, fB5
+      nop.i              0
+}
+;;
+{.mfi
+      nop.m              0
+      fma.s1             fB3 = fB3, fRSqr, fB1
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fH = fH, fD, fH // H1 = H0 + H0*d0
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fS = fS, fD, fS // S1 = S0 + S0*d0
+      nop.i              0
+}
+;;
+{.mfi
+      nop.m              0
+      fma.s1             fPiBy2 = fPiBy2, fSignX, f0 // signum(x)*Pi/2
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fB12 = fB12, fRSqr, fB9
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fB7 = fB7, fRQuadr, fB3
+      nop.i              0
+}
+;;
+{.mfi
+      nop.m              0
+      fnma.s1            fD = fH, fS, fHalf // d1 = 1/2 - H1*S1
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fnma.s1            fSignedS = fSignX, fS, f0 // -signum(x)*S1
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fCloseTo1Pol = fB12, fR8, fB7
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fH = fH, fD, fH // H2 = H1 + H1*d1
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fS = fS, fD, fS // S2 = S1 + S1*d1
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      // -signum(x)* S2 = -signum(x)*(S1 + S1*d1)
+      fma.s1             fSignedS = fSignedS, fD, fSignedS
+      nop.i              0
+}
+;;
+{.mfi
+      nop.m              0
+      fnma.s1            fD = fH, fS, fHalf // d2 = 1/2 - H2*S2
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      // signum(x)*(Pi/2 - PolB*S2)
+      fma.s1             fPiBy2 = fSignedS, fCloseTo1Pol, fPiBy2
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      // -signum(x)*PolB * S2
+      fma.s1             fCloseTo1Pol = fSignedS, fCloseTo1Pol, f0
+      nop.i              0
+}
+;;
+{ .mfb
+      nop.m              0
+      // final result for 0.625 <= |x| < 1
+      fma.d.s0           f8 = fCloseTo1Pol, fD, fPiBy2
+      // exit here for  0.625 <= |x| < 1
+      br.ret.sptk        b0
+}
+;;
+
+
+// here if |x| < 0.625
 .align 32
-
-
-asin:
- 
-{     .mfi 
-     alloc      r32               = ar.pfs,1,6,4,0
-     fma.s1    asin_tx        =    f8,f8,f0
-     addl      ASIN_Addr2     =    @ltoff(asin_coeff_2_table),gp
-} 
-{     .mfi 
-     mov       ASIN_FFFE      =    0xFFFE
-     fnma.s1   asin_t         =    f8,f8,f1
-     addl      ASIN_Addr1     =    @ltoff(asin_coeff_1_table),gp
+asin_base_range:
+{ .mfi
+      nop.m              0
+      fma.s1             fA33 = fA33, fXSqr, fA31
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA15 = fA15, fXSqr, fA13
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA29 = fA29, fXSqr, fA27
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA25 = fA25, fXSqr, fA23
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA21 = fA21, fXSqr, fA19
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA9 = fA9, fXSqr, fA7
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA5 = fA5, fXSqr, fA3
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA35 = fA35, fXQuadr, fA33
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA17 = fA17, fXQuadr, fA15
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fX8 = fXQuadr, fXQuadr, f0 // x^8
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA25 = fA25, fXQuadr, fA21
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA9 = fA9, fXQuadr, fA5
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA35 = fA35, fXQuadr, fA29
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA17 = fA17, fXSqr, fA11
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fX16 = fX8, fX8, f0 // x^16
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fA35 = fA35, fX8, fA25
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fma.s1             fA17 = fA17, fX8, fA9
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+      fma.s1             fBaseP = fA35, fX16, fA17
+      nop.i              0
+}
+;;
+{ .mfb
+      nop.m              0
+      // final result for |x| < 0.625
+      fma.d.s0           f8 = fBaseP, fXCube, f8
+      // exit here for |x| < 0.625 path
+      br.ret.sptk        b0
 }
 ;;
 
- 
-{     .mfi 
-     setf.exp       asin_1by2      =    ASIN_FFFE
-     fmerge.s       asin_abs_x     =    f1,f8
-     nop.i          999              ;;
-} 
- 
-{     .mmf 
-     ld8       ASIN_Addr1     =    [ASIN_Addr1]
-     ld8       ASIN_Addr2     =    [ASIN_Addr2]
-     fmerge.s  asin_sgn_x     =    f8,f1 ;;
-} 
-
- 
-{     .mfi 
-     ldfe      asin_coeff_P7  =    [ASIN_Addr1],16
-     fma.s1    asin_tx2       =    asin_tx,asin_tx,f0
-     nop.i                      999
-} 
-{     .mfi 
-     ldfe      asin_coeff_P6  =    [ASIN_Addr2],16
-     fma.s1    asin_t2        =    asin_t,asin_t,f0
-     nop.i                      999;;
+// here if |x| = 1
+// asin(x) = sign(x) * Pi/2
+.align 32
+asin_abs_1:
+{ .mfi
+      ldfe               fPiBy2 = [rPiBy2Ptr] // Pi/2
+      nop.f              0
+      nop.i              0
 }
-
- 
-{     .mmf 
-     ldfe      asin_coeff_P18 =    [ASIN_Addr1],16
-     ldfe      asin_coeff_P17 =    [ASIN_Addr2],16
-     fclass.m.unc p8,p0  = f8, 0xc3	//@qnan |@snan
-} 
 ;;
- 
-{     .mmf 
-     ldfe           asin_coeff_P5  =    [ASIN_Addr1],16
-     ldfe      asin_coeff_P4  =    [ASIN_Addr2],16
-     frsqrta.s1     asin_y0,p0     =    asin_t
-} 
-;;
- 
-{     .mfi 
-     ldfe      asin_coeff_P16 =    [ASIN_Addr1],16
-     fcmp.gt.s1 p9,p0 = asin_abs_x,f1
-     nop.i                      999
-} 
-{     .mfb 
-     ldfe      asin_coeff_P15 =    [ASIN_Addr2],16
-(p8) fma.d     f8 = f8,f1,f0
-(p8) br.ret.spnt b0
+{.mfb
+      nop.m              0
+      // result for |x| = 1.0
+      fma.d.s0           f8 = fPiBy2, fSignX, f0
+      // exit here for |x| = 1.0
+      br.ret.sptk        b0
 }
 ;;
 
- 
-{     .mmf 
-     ldfe      asin_coeff_P20 =    [ASIN_Addr1],16
-     ldfe      asin_coeff_P19 =    [ASIN_Addr2],16
-     fclass.m.unc p8,p0 = f8, 0x07	//@zero
-} 
-;;
- 
-
-{     .mfi 
-     ldfe      asin_coeff_P9  =    [ASIN_Addr1],16
-     fma.s1    asin_t4        =    asin_t2,asin_t2,f0
-(p9) mov GR_Parameter_Tag = 61 
-} 
-{     .mfi 
-     ldfe      asin_coeff_P8  =    [ASIN_Addr2],16
-     fma.s1    asin_3by2      =    asin_1by2,f1,f1
-     nop.i                      999;;
+// here if x is a NaN, denormal, or zero
+.align 32
+asin_special:
+{ .mfi
+      nop.m              0
+      // set p12 = 1 if x is a NaN
+      fclass.m           p12, p0 = f8, 0xc3
+      nop.i              0
 }
-
- 
-{     .mfi 
-     ldfe      asin_coeff_P2  =    [ASIN_Addr2],16
-     fma.s1    asin_tx4       =    asin_tx2,asin_tx2,f0
-     nop.i                      999
-} 
-{     .mfb 
-     ldfe      asin_coeff_P3  =    [ASIN_Addr1],16
-     fma.s1    asin_t3        =    asin_t,asin_t2,f0
-(p8) br.ret.spnt b0
+{ .mlx
+      nop.m              0
+      // smallest positive DP normalized number
+      movl               rDenoBound = 0x0010000000000000
 }
 ;;
-
- 
-{     .mfi 
-     ldfe      asin_coeff_P13 =    [ASIN_Addr2],16
-     fma.s1    asin_H0        =    asin_y0,asin_1by2,f0
-     nop.i                      999
-} 
-{     .mfb 
-     ldfe      asin_coeff_P14 =    [ASIN_Addr1],16
-     fma.s1    asin_S0        =    asin_y0,asin_t,f0
-(p9) br.cond.spnt  __libm_error_region
+{ .mfi
+      nop.m              0
+      // set p13 = 1 if x = 0.0
+      fclass.m           p13, p0 = f8, 0x07
+      nop.i              0
+}
+{ .mfi
+      nop.m              0
+      fnorm.s1           fNormX = f8
+      nop.i              0
 }
 ;;
-
- 
-{     .mfi 
-     ldfe      asin_coeff_P11 =    [ASIN_Addr2],16
-     fcmp.eq.s1 p6,p0 = asin_abs_x,f1
-     nop.i                      999
-} 
-{     .mfi 
-     ldfe      asin_coeff_P12 =    [ASIN_Addr1],16
-     fma.s1    asin_tx3       =    asin_tx,asin_tx2,f0
-     nop.i                      999;;
+{ .mfb
+      // load smallest normal to FP reg
+      setf.d             fDenoBound = rDenoBound
+      // answer if x is a NaN
+(p12) fma.d.s0           f8 = f8,f1,f0
+      // exit here if x is a NaN
+(p12) br.ret.spnt        b0
 }
-
- 
-{     .mfi 
-     ldfe      asin_coeff_P10 =    [ASIN_Addr2],16
-     fma.s1    asin_1poly_p6  =    asin_tx,asin_coeff_P7,asin_coeff_P6
-     nop.i                      999
-} 
-{     .mfi 
-     ldfe      asin_coeff_P1  =    [ASIN_Addr1],16
-     fma.s1    asin_poly_p6   =    asin_t,asin_coeff_P7,asin_coeff_P6
-     nop.i                      999;;
+;;
+{ .mfb
+      nop.m              0
+      nop.f              0
+      // exit here if x = 0.0
+(p13) br.ret.spnt        b0
 }
-
- 
-{     .mfi 
-     ldfe      asin_const_sqrt2by2 =    [ASIN_Addr2],16
-     fma.s1    asin_5by2           =    asin_3by2,f1,f1
-     nop.i                           999
-} 
-{     .mfi 
-     ldfe      asin_coeff_P21 =    [ASIN_Addr1],16
-     fma.s1    asin_11by4     =    asin_3by2,asin_3by2,asin_1by2
-     nop.i                      999;;
+;;
+// if we still here then x is denormal or unnormal
+{ .mfi
+      nop.m              0
+      // absolute value of normalized x
+      fmerge.s           fNormX = f1, fNormX
+      nop.i              0
 }
-
- 
-{     .mfi 
-     ldfe      asin_const_piby2    =    [ASIN_Addr1],16
-     fma.s1    asin_poly_p17       =    asin_t,asin_coeff_P18,asin_coeff_P17
-     nop.i                           999
-} 
-{     .mfb 
-     nop.m                 999
-     fma.s1    asin_3by4 =    asin_3by2,asin_1by2,f0
-(p6) br.cond.spnt  L(ASIN_ABS_1)      // Branch to short exit if |x|=1
+;;
+{ .mfi
+      nop.m              0
+      // set p14 = 1 if normalized x is greater than or
+      // equal to the smallest denormalized value
+      // So, if p14 is set to 1 it means that we deal with
+      // unnormal rather than with "true" denormal
+      fcmp.ge.s1         p14, p0 = fNormX, fDenoBound
+      nop.i              0
+}
+;;
+{ .mfi
+      nop.m              0
+(p14) fcmp.eq.s0         p6, p0 = f8, f0      // Set D flag if x unnormal
+      nop.i              0
+}
+{ .mfb
+      nop.m              0
+      // normalize unnormal input
+(p14) fnorm.s1           f8 = f8
+      // return to the main path
+(p14) br.cond.sptk       asin_unnormal_back
+}
+;;
+// if we still here it means that input is "true" denormal
+{ .mfb
+      nop.m              0
+      // final result if x is denormal
+      fma.d.s0           f8 = f8, fXSqr, f8
+      // exit here if x is denormal
+      br.ret.sptk        b0
 }
 ;;
 
- 
-{     .mfi 
-     addl ASIN_lnorm_sig = -0x1,r0  // Form significand 0xffffffffffffffff
-     fma.s1    asin_poly_p15  =    asin_t,asin_coeff_P16,asin_coeff_P15
-     nop.i                      999
-} 
-{     .mfi 
-     addl ASIN_snorm_exp = 0x0c001,r0  // Form small exponent
-     fnma.s1   asin_d    =    asin_S0,asin_H0,asin_1by2
-     nop.i                 999;;
+// here if |x| > 1.0
+// error handler should be called
+.align 32
+asin_abs_gt_1:
+{ .mfi
+      alloc              r32 = ar.pfs, 0, 3, 4, 0 // get some registers
+      fmerge.s           FR_X = f8,f8
+      nop.i              0
 }
-
- 
-// Form the exponent and significand of a small number
-{     .mfi 
-     setf.sig asin_eps_sig = ASIN_lnorm_sig
-     fma.s1    asin_poly_p19  =    asin_t,asin_coeff_P20,asin_coeff_P19
-     nop.i                      999
-} 
-{     .mfi 
-     setf.exp asin_eps_exp = ASIN_snorm_exp
-     fma.s1    asin_poly_p4   =    asin_t,asin_coeff_P5,asin_coeff_P4
-     nop.i                      999;;
+{ .mfb
+      mov                GR_Parameter_TAG = 61 // error code
+      frcpa.s0           FR_RESULT, p0 = f0,f0
+      // call error handler routine
+      br.cond.sptk       __libm_error_region
 }
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p17 =    asin_tx,asin_coeff_P18,asin_coeff_P17
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p8   =    asin_t,asin_coeff_P9,asin_coeff_P8
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fms.s1    asin_35by8     =    asin_5by2,asin_11by4,asin_5by2
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_63by8     =    asin_5by2,asin_11by4,f1
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p13  =    asin_t,asin_coeff_P14,asin_coeff_P13
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_18by4     =    asin_3by2,asin_5by2,asin_3by4
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_l1   =    asin_5by2,asin_d,asin_3by2
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_d2   =    asin_d,asin_d,f0
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p15  =    asin_t2,asin_poly_p17,asin_poly_p15
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_T0   =    asin_d,asin_S0,f0
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p19  =    asin_t2,asin_coeff_P21,asin_poly_p19
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p4   =    asin_t2,asin_poly_p6,asin_poly_p4
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_d1   =    asin_35by8,asin_d,f0
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_231by16   =    asin_3by2,asin_35by8,asin_63by8
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p2   =    asin_t,asin_coeff_P3,asin_coeff_P2
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p8   =    asin_t2,asin_coeff_P10,asin_poly_p8
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p11  =    asin_t,asin_coeff_P12,asin_coeff_P11
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_e0   =    asin_d2,asin_l1,asin_d
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p15 =    asin_tx,asin_coeff_P16,asin_coeff_P15
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p0   =    asin_t,asin_coeff_P1,f1
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p19 =    asin_tx,asin_coeff_P20,asin_coeff_P19
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p4  =    asin_tx,asin_coeff_P5,asin_coeff_P4
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p8  =    asin_tx,asin_coeff_P9,asin_coeff_P8
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_l2   =    asin_231by16,asin_d,asin_63by8
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_d3   =    asin_d2,asin_d,f0
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_T3   =    asin_d2,asin_T0,f0
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_429by16   =    asin_18by4,asin_11by4,asin_231by16
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_S1   =    asin_e0,asin_S0,asin_S0
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p4   =    asin_t4,asin_poly_p8,asin_poly_p4
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p15  =    asin_t4,asin_poly_p19,asin_poly_p15
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p0   =    asin_t2,asin_poly_p2,asin_poly_p0
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p11  =    asin_t2,asin_poly_p13,asin_poly_p11
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_t8   =    asin_t4,asin_t4,f0
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_e1   =    asin_d2,asin_l2,asin_d1
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p4  =    asin_tx2,asin_1poly_p6,asin_1poly_p4
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p15 =    asin_tx2,asin_1poly_p17,asin_1poly_p15
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p8  =    asin_tx2,asin_coeff_P10,asin_1poly_p8
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p19 =    asin_tx2,asin_coeff_P21,asin_1poly_p19
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p2  =    asin_tx,asin_coeff_P3,asin_coeff_P2
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p13 =    asin_tx,asin_coeff_P14,asin_coeff_P13
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p0  =    asin_tx,asin_coeff_P1,f1
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p11 =    asin_tx,asin_coeff_P12,asin_coeff_P11
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_l3   =    asin_429by16,asin_d,f0
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_z    =    asin_e1,asin_T3,asin_S1
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p11  =    asin_t4,asin_poly_p15,asin_poly_p11
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_T6   =    asin_T3,asin_d3,f0
-     nop.i                 999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_t11  =    asin_t8,asin_t3,f0
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_poly_p0   =    asin_t4,asin_poly_p4,asin_poly_p0
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p4  =    asin_tx4,asin_1poly_p8,asin_1poly_p4
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p15 =    asin_tx4,asin_1poly_p19,asin_1poly_p15
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p0  =    asin_tx2,asin_1poly_p2,asin_1poly_p0
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p11 =    asin_tx2,asin_1poly_p13,asin_1poly_p11
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                                                         999
-//     fcmp.le.s1     asin_pred_LEsqrt2by2,asin_pred_GTsqrt2by2    =    asin_abs_x,asin_const_sqrt2by2
-     fcmp.le.s1     p7,p8    =    asin_abs_x,asin_const_sqrt2by2
-     nop.i                                                         999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_tx8  =    asin_tx4,asin_tx4,f0
-     nop.i                 999;;
-}
-
- 
-// Form a small number to force inexact flag for small args 
-{     .mfi 
-     nop.m                 999
-     fmerge.se asin_eps = asin_eps_exp,asin_eps_sig
-     nop.i                 999
-} 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_z    =    asin_l3,asin_T6,asin_z
-     nop.i                 999;;
-} 
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_series_t  =    asin_t11,asin_poly_p11,asin_poly_p0
-     nop.i                      999;;
-} 
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p0  =    asin_tx4,asin_1poly_p4,asin_1poly_p0
-     nop.i                      999
-} 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_1poly_p11 =    asin_tx4,asin_1poly_p15,asin_1poly_p11
-     nop.i                      999;;
-}
-
- 
-{     .mfi 
-     nop.m                 999
-     fma.s1    asin_tx11 =    asin_tx8,asin_tx3,f0
-     nop.i                 999;;
-} 
- 
-{     .mfi 
-                         nop.m                 999
-//(asin_pred_GTsqrt2by2)   fnma.s1      answer2   =    asin_z,asin_series_t,asin_const_piby2
-(p8)   fnma.s1      answer2   =    asin_z,asin_series_t,asin_const_piby2
-                         nop.i                 999;;
-} 
- 
-{     .mfi 
-     nop.m                      999
-     fma.s1    asin_series_tx =    asin_tx11,asin_1poly_p11,asin_1poly_p0
-     nop.i                      999;;
-} 
- 
-{     .mfi 
-                         nop.m                 999
-//(asin_pred_GTsqrt2by2)   fma.d     f8   =    asin_sgn_x,answer2,f0
-(p8)   fma.d     f8   =    asin_sgn_x,answer2,f0
-                         nop.i                 999;;
-} 
- 
-// asin_eps is added only to force inexact and possibly underflow flag 
-// in case asin_series_tx is zero
-//
-{     .mfi 
-                         nop.m                 999
-(p7)   fma.d     asin_eps   =    f8,asin_series_tx,asin_eps
-                         nop.i                 999
-} 
-{     .mfb 
-                         nop.m                 999
-//(asin_pred_LEsqrt2by2)   fma.d     f8   =    f8,asin_series_tx,f0
-(p7)   fma.d     f8   =    f8,asin_series_tx,f0
-       br.ret.sptk b0
-} 
 ;;
+GLOBAL_LIBM_END(asin)
 
 
-L(ASIN_ABS_1):
-// Here for short exit if |x|=1
-{     .mfb 
-     nop.m                      999
-     fma.d    f8 =    asin_sgn_x,asin_const_piby2,f0
-     br.ret.sptk b0
-} 
-;;
-
-
-.endp asin
-ASM_SIZE_DIRECTIVE(asin)
-
-.proc __libm_error_region
-__libm_error_region:
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-                nop.f 999
+        nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
         mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
@@ -857,28 +815,29 @@ __libm_error_region:
         mov GR_SAVE_GP=gp                       // Save gp
 };;
 { .mmi
-        stfs [GR_Parameter_Y] = f1,16         // Store Parameter 2 on stack
+        stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
 .save   b0, GR_SAVE_B0
         mov GR_SAVE_B0=b0                       // Save b0
 };;
-
 .body
-        frcpa.s0 f9,p0 = f0,f0
-;;
-
 { .mib
-        stfd [GR_Parameter_X] = f8            // Store Parameter 1 on stack
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y
-        nop.b 0                                 // Parameter 3 address
+        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
+        nop.b 0
 }
 { .mib
-        stfd [GR_Parameter_Y] = f9,-16           // Store Parameter 3 on stack
-        adds r32 = 48,sp
-        br.call.sptk b0=__libm_error_support#   // Call error handling function
+        stfd [GR_Parameter_Y] = FR_RESULT             // STORE Parameter 3 on stack
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
+        br.call.sptk b0=__libm_error_support#         // Call error handling function
 };;
 { .mmi
-        ldfd  f8 = [r32]       // Get return result off stack
+        add   GR_Parameter_RESULT = 48,sp
+        nop.m 0
+        nop.i 0
+};;
+{ .mmi
+        ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
         add   sp = 64,sp                       // Restore stack pointer
         mov   b0 = GR_SAVE_B0                  // Restore return address
@@ -887,11 +846,8 @@ __libm_error_region:
         mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
-
-.type   __libm_error_support,@function
-.global __libm_error_support
+LOCAL_LIBM_END(__libm_error_region)
+.type   __libm_error_support#,@function
+.global __libm_error_support#

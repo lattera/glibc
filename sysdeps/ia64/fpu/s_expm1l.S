@@ -1,10 +1,10 @@
-.file "exp_m1l.s"
+.file "expl_m1.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,15 +35,22 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 Initial Version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 07/07/01 Improved speed of all paths
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align;
+//          used data8 for long double table values
+// 03/11/03 Improved accuracy and performance, corrected missing inexact flags
+// 04/17/03 Eliminated misplaced and unused data label
 //
-// ********************************************************************* 
+//********************************************************************* 
 //
 // Function:   Combined expl(x) and expm1l(x), where
 //                        x 
@@ -51,20 +58,20 @@
 //                          x
 //             expm1l(x) = e  - 1  for double-extended precision x values
 //
-// ********************************************************************* 
+//********************************************************************* 
 //
 // Resources Used:
 //
 //    Floating-Point Registers: f8  (Input and Return Value) 
-//                              f9,f32-f61, f99-f102 
+//                              f9-f15,f32-f77 
 //
 //    General Purpose Registers: 
-//      r32-r61
-//      r62-r65 (Used to pass arguments to error handling routine)
+//      r14-r38
+//      r35-r38 (Used to pass arguments to error handling routine)
 //                                     
 //    Predicate Registers:      p6-p15
 //
-// ********************************************************************* 
+//********************************************************************* 
 //
 // IEEE Special Conditions:
 //
@@ -74,39 +81,37 @@
 //    (Error Handling Routine called for overflow and Underflow)
 //    Inexact raised when appropriate by algorithm 
 //
-//    expl(inf) = inf
-//    expl(-inf) = +0
-//    expl(SNaN) = QNaN
-//    expl(QNaN) = QNaN
-//    expl(0) = 1
-//    expl(EM_special Values) = QNaN
-//    expl(inf) = inf
-//    expm1l(-inf) = -1 
-//    expm1l(SNaN) = QNaN
-//    expm1l(QNaN) = QNaN
-//    expm1l(0) = 0
-//    expm1l(EM_special Values) = QNaN
+//    exp(inf) = inf
+//    exp(-inf) = +0
+//    exp(SNaN) = QNaN
+//    exp(QNaN) = QNaN
+//    exp(0) = 1
+//    exp(EM_special Values) = QNaN
+//    exp(inf) = inf
+//    expm1(-inf) = -1 
+//    expm1(SNaN) = QNaN
+//    expm1(QNaN) = QNaN
+//    expm1(0) = 0
+//    expm1(EM_special Values) = QNaN
 //    
-// ********************************************************************* 
+//********************************************************************* 
 //
 // Implementation and Algorithm Notes:
 //
 //  ker_exp_64( in_FR  : X,
-//            in_GR  : Flag,
-//            in_GR  : Expo_Range
 //            out_FR : Y_hi,
 //            out_FR : Y_lo,
 //            out_FR : scale,
 //            out_PR : Safe )
 //
-// On input, X is in register format and 
-// Flag  = 0 for exp,
-// Flag  = 1 for expm1,
+// On input, X is in register format
+// p6 for exp,
+// p7 for expm1,
 //
-// On output, provided X and X_cor are real numbers, then
+// On output, 
 //
-//   scale*(Y_hi + Y_lo)  approximates  expl(X)       if Flag is 0
-//   scale*(Y_hi + Y_lo)  approximates  expl(X)-1     if Flag is 1
+//   scale*(Y_hi + Y_lo)  approximates  exp(X)       if exp
+//   scale*(Y_hi + Y_lo)  approximates  exp(X)-1     if expm1
 //
 // The accuracy is sufficient for a highly accurate 64 sig.
 // bit implementation.  Safe is set if there is no danger of 
@@ -122,36 +127,36 @@
 // The method consists of three cases.
 // 
 // If           |X| < Tiny	use case exp_tiny;
-// else if	|X| < 2^(-6)	use case exp_small;
+// else if	|X| < 2^(-m)	use case exp_small; m=12 for exp, m=7 for expm1
 // else		use case exp_regular;
 //
 // Case exp_tiny:
 //
-//   1 + X     can be used to approximate expl(X) or expl(X+X_cor);
-//   X + X^2/2 can be used to approximate expl(X) - 1
+//   1 + X     can be used to approximate exp(X) 
+//   X + X^2/2 can be used to approximate exp(X) - 1
 //
 // Case exp_small:
 //
-//   Here, expl(X), expl(X+X_cor), and expl(X) - 1 can all be 
+//   Here, exp(X) and exp(X) - 1 can all be 
 //   appproximated by a relatively simple polynomial.
 //
 //   This polynomial resembles the truncated Taylor series
 //
-//	expl(w) = 1 + w + w^2/2! + w^3/3! + ... + w^n/n!
+//	exp(w) = 1 + w + w^2/2! + w^3/3! + ... + w^n/n!
 //
 // Case exp_regular:
 //
 //   Here we use a table lookup method. The basic idea is that in
-//   order to compute expl(X), we accurately decompose X into
+//   order to compute exp(X), we accurately decompose X into
 //
 //   X = N * log(2)/(2^12)  + r,	|r| <= log(2)/2^13.
 //
 //   Hence
 //
-//   expl(X) = 2^( N / 2^12 ) * expl(r).
+//   exp(X) = 2^( N / 2^12 ) * exp(r).
 //
 //   The value 2^( N / 2^12 ) is obtained by simple combinations
-//   of values calculated beforehand and stored in table; expl(r)
+//   of values calculated beforehand and stored in table; exp(r)
 //   is approximated by a short polynomial because |r| is small.
 //
 //   We elaborate this method in 4 steps.
@@ -178,13 +183,9 @@
 //   as a double-precision number; L_lo has 64 significant bits and
 //   stored as a double-extended number.
 //
-//   In the case Flag = 2, we further modify r by
-//
-//   r := r + X_cor.
-//
 //   Step 2: Approximation
 //
-//   expl(r) - 1 is approximated by a short polynomial of the form
+//   exp(r) - 1 is approximated by a short polynomial of the form
 //   
 //   r + A_1 r^2 + A_2 r^3 + A_3 r^4 .
 //
@@ -213,19 +214,19 @@
 //   Define two mathematical values, delta_1 and delta_2, implicitly
 //   such that
 //
-//     T_1 = expl( [M_1 log(2)/2^6]  -  delta_1 ) 
-//     T_2 = expl( [M_2 log(2)/2^12] -  delta_2 )
+//     T_1 = exp( [M_1 log(2)/2^6]  -  delta_1 ) 
+//     T_2 = exp( [M_2 log(2)/2^12] -  delta_2 )
 //
 //   are representable as 24 significant bits. To illustrate the idea,
 //   we show how we define delta_1: 
 //
-//     T_1     := round_to_24_bits( expl( M_1 log(2)/2^6 ) )
+//     T_1     := round_to_24_bits( exp( M_1 log(2)/2^6 ) )
 //     delta_1  = (M_1 log(2)/2^6) - log( T_1 )  
 //
 //   The last equality means mathematical equality. We then tabulate
 //
-//     W_1 := expl(delta_1) - 1
-//     W_2 := expl(delta_2) - 1
+//     W_1 := exp(delta_1) - 1
+//     W_2 := exp(delta_2) - 1
 //
 //   Both in double precision.
 //
@@ -235,13 +236,13 @@
 //     T := T_1 * T_2			...exactly
 //     W := W_1 + (1 + W_1)*W_2	
 //
-//   W approximates expl( delta ) - 1  where delta = delta_1 + delta_2.
+//   W approximates exp( delta ) - 1  where delta = delta_1 + delta_2.
 //   The mathematical product of T and (W+1) is an accurate representation
 //   of 2^(M_1/2^6) * 2^(M_2/2^12).
 //
 //   Step 4. Reconstruction
 //
-//   Finally, we can reconstruct expl(X), expl(X) - 1. 
+//   Finally, we can reconstruct exp(X), exp(X) - 1. 
 //   Because
 //
 //	X = K * log(2) + (M_1*log(2)/2^6  - delta_1) 
@@ -249,18 +250,18 @@
 //		       + delta_1 + delta_2 + r 		...accurately
 //   We have
 //
-//	expl(X) ~=~ 2^K * ( T + T*[expl(delta_1+delta_2+r) - 1] )
-//	       ~=~ 2^K * ( T + T*[expl(delta + r) - 1]         )
-//	       ~=~ 2^K * ( T + T*[(expl(delta)-1)  
-//				 + expl(delta)*(expl(r)-1)]   )
+//	exp(X) ~=~ 2^K * ( T + T*[exp(delta_1+delta_2+r) - 1] )
+//	       ~=~ 2^K * ( T + T*[exp(delta + r) - 1]         )
+//	       ~=~ 2^K * ( T + T*[(exp(delta)-1)  
+//				 + exp(delta)*(exp(r)-1)]   )
 //             ~=~ 2^K * ( T + T*( W + (1+W)*poly(r) ) )
 //             ~=~ 2^K * ( Y_hi  +  Y_lo )
 //
 //   where Y_hi = T  and Y_lo = T*(W + (1+W)*poly(r))
 //
-//   For expl(X)-1, we have
+//   For exp(X)-1, we have
 //
-//	expl(X)-1 ~=~ 2^K * ( Y_hi + Y_lo ) - 1
+//	exp(X)-1 ~=~ 2^K * ( Y_hi + Y_lo ) - 1
 //		 ~=~ 2^K * ( Y_hi + Y_lo - 2^(-K) )
 //
 //   and we combine Y_hi + Y_lo - 2^(-N)  into the form of two 
@@ -278,7 +279,7 @@
 //   different rounding directions and a correct setting of the SAFE 
 //   flag.
 //
-//   If Flag is 1, then
+//   If expm1 is 1, then
 //      SAFE  := False	...possibility of underflow
 //      Scale := 1.0
 //      Y_hi  := X
@@ -296,26 +297,25 @@
 //
 //   Let r = X 
 //
-//   If Flag is not 1	...i.e. expl( argument )
+//   If exp 	...i.e. exp( argument )
 //
 //      rsq := r * r; 
 //      r4  := rsq*rsq
 //      poly_lo := P_3 + r*(P_4 + r*(P_5 + r*P_6))
 //      poly_hi := r + rsq*(P_1 + r*P_2)
 //      Y_lo    := poly_hi + r4 * poly_lo
-//      set lsb(Y_lo) to 1
 //      Y_hi    := 1.0
 //      Scale   := 1.0
 //
-//   Else			...i.e. expl( argument ) - 1
+//   Else			...i.e. exp( argument ) - 1
 //
 //      rsq := r * r
 //      r4  := rsq * rsq
-//      r6  := rsq * r4
-//      poly_lo := r6*(Q_5 + r*(Q_6 + r*Q_7))
-//      poly_hi := Q_1 + r*(Q_2 + r*(Q_3 + r*Q_4))
-//      Y_lo    := rsq*poly_hi +  poly_lo
-//      set lsb(Y_lo) to 1
+//      poly_lo := Q_7 + r*(Q_8 + r*Q_9))
+//      poly_med:= Q_3 + r*Q_4 + rsq*(Q_5 + r*Q_6)
+//      poly_med:= poly_med + r4*poly_lo
+//      poly_hi := Q_1 + r*Q_2
+//      Y_lo    := rsq*(poly_hi +  rsq*poly_lo)
 //      Y_hi    := X
 //      Scale   := 1.0
 //
@@ -325,14 +325,14 @@
 //
 //  The previous description contain enough information except the
 //  computation of poly and the final Y_hi and Y_lo in the case for
-//  expl(X)-1.
+//  exp(X)-1.
 //
 //  The computation of poly for Step 2:
 //
 //   rsq := r*r
 //   poly := r + rsq*(A_1 + r*(A_2 + r*A_3))
 //
-//  For the case expl(X) - 1, we need to incorporate 2^(-K) into
+//  For the case exp(X) - 1, we need to incorporate 2^(-K) into
 //  Y_hi and Y_lo at the end of Step 4.
 //
 //   If K > 10 then
@@ -346,72 +346,197 @@
 //      End If
 //   End If
 //
+//=======================================================
+// General Purpose Registers
+//
+GR_ad_Arg           = r14
+GR_ad_A             = r15
+GR_sig_inv_ln2      = r15
+GR_rshf_2to51       = r16
+GR_ad_PQ            = r16
+GR_ad_Q             = r16
+GR_signexp_x        = r17
+GR_exp_x            = r17
+GR_small_exp        = r18
+GR_rshf             = r18
+GR_exp_mask         = r19
+GR_ad_W1            = r20
+GR_exp_2tom51       = r20
+GR_ad_W2            = r21
+GR_exp_underflow    = r21
+GR_M2               = r22
+GR_huge_exp         = r22
+GR_M1               = r23
+GR_huge_signif      = r23
+GR_K                = r24
+GR_one              = r24
+GR_minus_one        = r24
+GR_exp_bias         = r25
+GR_ad_Limits        = r26
+GR_N_fix            = r26
+GR_exp_2_mk         = r26
+GR_ad_P             = r27
+GR_exp_2_k          = r27
+GR_big_expo_neg     = r28
+GR_very_small_exp   = r29
+GR_exp_half         = r29
+GR_ad_T1            = r30
+GR_ad_T2            = r31
 
-#include "libm_support.h"
+GR_SAVE_PFS         = r32
+GR_SAVE_B0          = r33
+GR_SAVE_GP          = r34
+GR_Parameter_X      = r35
+GR_Parameter_Y      = r36
+GR_Parameter_RESULT = r37
+GR_Parameter_TAG    = r38 
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+// Floating Point Registers
+//
+FR_norm_x           = f9
+FR_RSHF_2TO51       = f10
+FR_INV_LN2_2TO63    = f11
+FR_W_2TO51_RSH      = f12
+FR_2TOM51           = f13
+FR_RSHF             = f14
+FR_Y_hi             = f34
+FR_Y_lo             = f35
+FR_scale            = f36
+FR_tmp              = f37
+FR_float_N          = f38
+FR_N_signif         = f39
+FR_L_hi             = f40
+FR_L_lo             = f41
+FR_r                = f42
+FR_W1               = f43
+FR_T1               = f44
+FR_W2               = f45
+FR_T2               = f46
+FR_W1_p1            = f47
+FR_rsq              = f48
+FR_A2               = f49
+FR_r4               = f50
+FR_A3               = f51
+FR_poly             = f52
+FR_T                = f53
+FR_W                = f54
+FR_Wp1              = f55
+FR_p21              = f59
+FR_p210             = f59
+FR_p65              = f60
+FR_p654             = f60
+FR_p6543            = f60
+FR_2_mk             = f61
+FR_P4Q7             = f61
+FR_P4               = f61
+FR_Q7               = f61
+FR_P3Q6             = f62
+FR_P3               = f62
+FR_Q6               = f62
+FR_q65              = f62
+FR_q6543            = f62
+FR_P2Q5             = f63
+FR_P2               = f63
+FR_Q5               = f63
+FR_P1Q4             = f64
+FR_P1               = f64
+FR_Q4               = f64
+FR_q43              = f64
+FR_Q3               = f65
+FR_Q2               = f66
+FR_q21              = f66
+FR_Q1               = f67
+FR_A1               = f68
+FR_P6Q9             = f68
+FR_P6               = f68
+FR_Q9               = f68
+FR_P5Q8             = f69
+FR_P5               = f69
+FR_Q8               = f69
+FR_q987             = f69
+FR_q98              = f69
+FR_q9876543         = f69
+FR_min_oflow_x      = f70
+FR_huge_exp         = f70
+FR_zero_uflow_x     = f71
+FR_huge_signif      = f71
+FR_huge             = f72
+FR_small            = f72
+FR_half             = f73
+FR_T_scale          = f74
+FR_result_lo        = f75
+FR_W_T_scale        = f76
+FR_Wp1_T_scale      = f77
+FR_ftz              = f77
+FR_half_x           = f77
+//
 
+FR_X                = f9
+FR_Y                = f0
+FR_RESULT           = f15
+
+// ************* DO NOT CHANGE ORDER OF THESE TABLES ********************
+
+// double-extended 1/ln(2)
+// 3fff b8aa 3b29 5c17 f0bb be87fed0691d3e88
+// 3fff b8aa 3b29 5c17 f0bc 
+// For speed the significand will be loaded directly with a movl and setf.sig
+//   and the exponent will be bias+63 instead of bias+0.  Thus subsequent
+//   computations need to scale appropriately.
+// The constant 2^12/ln(2) is needed for the computation of N.  This is also 
+//   obtained by scaling the computations.
+//
+// Two shifting constants are loaded directly with movl and setf.d. 
+//   1. RSHF_2TO51 = 1.1000..00 * 2^(63-12) 
+//        This constant is added to x*1/ln2 to shift the integer part of
+//        x*2^12/ln2 into the rightmost bits of the significand.
+//        The result of this fma is N_signif.
+//   2. RSHF       = 1.1000..00 * 2^(63) 
+//        This constant is subtracted from N_signif * 2^(-51) to give
+//        the integer part of N, N_fix, as a floating-point number.
+//        The result of this fms is float_N.
+
+RODATA
 .align 64 
-Constants_exp_64_Arg:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_Arg,@object)
-data4 0x5C17F0BC,0xB8AA3B29,0x0000400B,0x00000000 
-data4 0x00000000,0xB17217F4,0x00003FF2,0x00000000
-data4 0xF278ECE6,0xF473DE6A,0x00003FD4,0x00000000
-// /* Inv_L, L_hi, L_lo */
-ASM_SIZE_DIRECTIVE(Constants_exp_64_Arg)
+LOCAL_OBJECT_START(Constants_exp_64_Arg)
+//data8 0xB8AA3B295C17F0BC,0x0000400B // Inv_L = 2^12/log(2)
+data8 0xB17217F400000000,0x00003FF2 // L_hi = hi part log(2)/2^12
+data8 0xF473DE6AF278ECE6,0x00003FD4 // L_lo = lo part log(2)/2^12
+LOCAL_OBJECT_END(Constants_exp_64_Arg)
 
-.align 64 
-Constants_exp_64_Exponents:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_Exponents,@object)
-data4 0x0000007E,0x00000000,0xFFFFFF83,0xFFFFFFFF
-data4 0x000003FE,0x00000000,0xFFFFFC03,0xFFFFFFFF
-data4 0x00003FFE,0x00000000,0xFFFFC003,0xFFFFFFFF
-data4 0x00003FFE,0x00000000,0xFFFFC003,0xFFFFFFFF
-data4 0xFFFFFFE2,0xFFFFFFFF,0xFFFFFFC4,0xFFFFFFFF
-data4 0xFFFFFFBA,0xFFFFFFFF,0xFFFFFFBA,0xFFFFFFFF
-ASM_SIZE_DIRECTIVE(Constants_exp_64_Exponents)
+LOCAL_OBJECT_START(Constants_exp_64_Limits)
+data8 0xb17217f7d1cf79ac,0x0000400c // Smallest long dbl oflow x
+data8 0xb220000000000000,0x0000c00c // Small long dbl uflow zero x
+LOCAL_OBJECT_END(Constants_exp_64_Limits)
 
-.align 64 
-Constants_exp_64_A:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_A,@object)
-data4 0xB1B736A0,0xAAAAAAAB,0x00003FFA,0x00000000
-data4 0x90CD6327,0xAAAAAAAB,0x00003FFC,0x00000000
-data4 0xFFFFFFFF,0xFFFFFFFF,0x00003FFD,0x00000000
-// /* Reversed */
-ASM_SIZE_DIRECTIVE(Constants_exp_64_A)
+LOCAL_OBJECT_START(Constants_exp_64_A)
+data8 0xAAAAAAABB1B736A0,0x00003FFA // A3
+data8 0xAAAAAAAB90CD6327,0x00003FFC // A2
+data8 0xFFFFFFFFFFFFFFFF,0x00003FFD // A1
+LOCAL_OBJECT_END(Constants_exp_64_A)
 
-.align 64 
-Constants_exp_64_P:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_P,@object)
-data4 0x43914A8A,0xD00D6C81,0x00003FF2,0x00000000
-data4 0x30304B30,0xB60BC4AC,0x00003FF5,0x00000000
-data4 0x7474C518,0x88888888,0x00003FF8,0x00000000
-data4 0x8DAE729D,0xAAAAAAAA,0x00003FFA,0x00000000
-data4 0xAAAAAF61,0xAAAAAAAA,0x00003FFC,0x00000000
-data4 0x000004C7,0x80000000,0x00003FFE,0x00000000 
-// /* Reversed */
-ASM_SIZE_DIRECTIVE(Constants_exp_64_P)
+LOCAL_OBJECT_START(Constants_exp_64_P)
+data8 0xD00D6C8143914A8A,0x00003FF2 // P6
+data8 0xB60BC4AC30304B30,0x00003FF5 // P5
+data8 0x888888887474C518,0x00003FF8 // P4
+data8 0xAAAAAAAA8DAE729D,0x00003FFA // P3
+data8 0xAAAAAAAAAAAAAF61,0x00003FFC // P2
+data8 0x80000000000004C7,0x00003FFE // P1
+LOCAL_OBJECT_END(Constants_exp_64_P)
 
-.align 64 
-Constants_exp_64_Q:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_Q,@object)
-data4 0xA49EF6CA,0xD00D56F7,0x00003FEF,0x00000000
-data4 0x1C63493D,0xD00D59AB,0x00003FF2,0x00000000
-data4 0xFB50CDD2,0xB60B60B5,0x00003FF5,0x00000000
-data4 0x7BA68DC8,0x88888888,0x00003FF8,0x00000000
-data4 0xAAAAAC8D,0xAAAAAAAA,0x00003FFA,0x00000000
-data4 0xAAAAACCA,0xAAAAAAAA,0x00003FFC,0x00000000
-data4 0x00000000,0x80000000,0x00003FFE,0x00000000 
-// /* Reversed */
-ASM_SIZE_DIRECTIVE(Constants_exp_64_Q)
+LOCAL_OBJECT_START(Constants_exp_64_Q)
+data8 0x93F2AC5F7471F32E, 0x00003FE9 // Q9
+data8 0xB8DA0F3550B3E764, 0x00003FEC // Q8
+data8 0xD00D00D0028E89C4, 0x00003FEF // Q7
+data8 0xD00D00DAEB8C4E91, 0x00003FF2 // Q6
+data8 0xB60B60B60B60B6F5, 0x00003FF5 // Q5
+data8 0x888888888886CC23, 0x00003FF8 // Q4
+data8 0xAAAAAAAAAAAAAAAB, 0x00003FFA // Q3
+data8 0xAAAAAAAAAAAAAAAB, 0x00003FFC // Q2
+data8 0x8000000000000000, 0x00003FFE // Q1
+LOCAL_OBJECT_END(Constants_exp_64_Q)
 
-.align 64 
-Constants_exp_64_T1:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_T1,@object)
+LOCAL_OBJECT_START(Constants_exp_64_T1)
 data4 0x3F800000,0x3F8164D2,0x3F82CD87,0x3F843A29 
 data4 0x3F85AAC3,0x3F871F62,0x3F88980F,0x3F8A14D5 
 data4 0x3F8B95C2,0x3F8D1ADF,0x3F8EA43A,0x3F9031DC
@@ -428,11 +553,9 @@ data4 0x3FD744FD,0x3FD99D16,0x3FDBFBB8,0x3FDE60F5
 data4 0x3FE0CCDF,0x3FE33F89,0x3FE5B907,0x3FE8396A
 data4 0x3FEAC0C7,0x3FED4F30,0x3FEFE4BA,0x3FF28177
 data4 0x3FF5257D,0x3FF7D0DF,0x3FFA83B3,0x3FFD3E0C
-ASM_SIZE_DIRECTIVE(Constants_exp_64_T1)
+LOCAL_OBJECT_END(Constants_exp_64_T1)
 
-.align 64 
-Constants_exp_64_T2:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_T2,@object)
+LOCAL_OBJECT_START(Constants_exp_64_T2)
 data4 0x3F800000,0x3F80058C,0x3F800B18,0x3F8010A4 
 data4 0x3F801630,0x3F801BBD,0x3F80214A,0x3F8026D7 
 data4 0x3F802C64,0x3F8031F2,0x3F803780,0x3F803D0E 
@@ -449,1124 +572,824 @@ data4 0x3F810B41,0x3F8110D8,0x3F81166F,0x3F811C07
 data4 0x3F81219F,0x3F812737,0x3F812CD0,0x3F813269 
 data4 0x3F813802,0x3F813D9B,0x3F814334,0x3F8148CE 
 data4 0x3F814E68,0x3F815402,0x3F81599C,0x3F815F37
-ASM_SIZE_DIRECTIVE(Constants_exp_64_T2)
+LOCAL_OBJECT_END(Constants_exp_64_T2)
 
-.align 64 
-Constants_exp_64_W1:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_W1,@object)
-data4 0x00000000,0x00000000,0x171EC4B4,0xBE384454
-data4 0x4AA72766,0xBE694741,0xD42518F8,0xBE5D32B6
-data4 0x3A319149,0x3E68D96D,0x62415F36,0xBE68F4DA
-data4 0xC9C86A3B,0xBE6DDA2F,0xF49228FE,0x3E6B2E50
-data4 0x1188B886,0xBE49C0C2,0x1A4C2F1F,0x3E64BFC2
-data4 0x2CB98B54,0xBE6A2FBB,0x9A55D329,0x3E5DC5DE
-data4 0x39A7AACE,0x3E696490,0x5C66DBA5,0x3E54728B
-data4 0xBA1C7D7D,0xBE62B0DB,0x09F1AF5F,0x3E576E04
-data4 0x1A0DD6A1,0x3E612500,0x795FBDEF,0xBE66A419
-data4 0xE1BD41FC,0xBE5CDE8C,0xEA54964F,0xBE621376
-data4 0x476E76EE,0x3E6370BE,0x3427EB92,0x3E390D1A 
-data4 0x2BF82BF8,0x3E1336DE,0xD0F7BD9E,0xBE5FF1CB 
-data4 0x0CEB09DD,0xBE60A355,0x0980F30D,0xBE5CA37E 
-data4 0x4C082D25,0xBE5C541B,0x3B467D29,0xBE5BBECA 
-data4 0xB9D946C5,0xBE400D8A,0x07ED374A,0xBE5E2A08 
-data4 0x365C8B0A,0xBE66CB28,0xD3403BCA,0x3E3AAD5B 
-data4 0xC7EA21E0,0x3E526055,0xE72880D6,0xBE442C75 
-data4 0x85222A43,0x3E58B2BB,0x522C42BF,0xBE5AAB79 
-data4 0x469DC2BC,0xBE605CB4,0xA48C40DC,0xBE589FA7 
-data4 0x1AA42614,0xBE51C214,0xC37293F4,0xBE48D087 
-data4 0xA2D673E0,0x3E367A1C,0x114F7A38,0xBE51BEBB 
-data4 0x661A4B48,0xBE6348E5,0x1D3B9962,0xBDF52643  
-data4 0x35A78A53,0x3E3A3B5E,0x1CECD788,0xBE46C46C 
-data4 0x7857D689,0xBE60B7EC,0xD14F1AD7,0xBE594D3D 
-data4 0x4C9A8F60,0xBE4F9C30,0x02DFF9D2,0xBE521873 
-data4 0x55E6D68F,0xBE5E4C88,0x667F3DC4,0xBE62140F 
-data4 0x3BF88747,0xBE36961B,0xC96EC6AA,0x3E602861 
-data4 0xD57FD718,0xBE3B5151,0xFC4A627B,0x3E561CD0 
-data4 0xCA913FEA,0xBE3A5217,0x9A5D193A,0x3E40A3CC 
-data4 0x10A9C312,0xBE5AB713,0xC5F57719,0x3E4FDADB 
-data4 0xDBDF59D5,0x3E361428,0x61B4180D,0x3E5DB5DB 
-data4 0x7408D856,0xBE42AD5F,0x31B2B707,0x3E2A3148 
-ASM_SIZE_DIRECTIVE(Constants_exp_64_W1)
+LOCAL_OBJECT_START(Constants_exp_64_W1)
+data8 0x0000000000000000, 0xBE384454171EC4B4
+data8 0xBE6947414AA72766, 0xBE5D32B6D42518F8
+data8 0x3E68D96D3A319149, 0xBE68F4DA62415F36
+data8 0xBE6DDA2FC9C86A3B, 0x3E6B2E50F49228FE
+data8 0xBE49C0C21188B886, 0x3E64BFC21A4C2F1F
+data8 0xBE6A2FBB2CB98B54, 0x3E5DC5DE9A55D329
+data8 0x3E69649039A7AACE, 0x3E54728B5C66DBA5
+data8 0xBE62B0DBBA1C7D7D, 0x3E576E0409F1AF5F
+data8 0x3E6125001A0DD6A1, 0xBE66A419795FBDEF
+data8 0xBE5CDE8CE1BD41FC, 0xBE621376EA54964F
+data8 0x3E6370BE476E76EE, 0x3E390D1A3427EB92
+data8 0x3E1336DE2BF82BF8, 0xBE5FF1CBD0F7BD9E
+data8 0xBE60A3550CEB09DD, 0xBE5CA37E0980F30D
+data8 0xBE5C541B4C082D25, 0xBE5BBECA3B467D29
+data8 0xBE400D8AB9D946C5, 0xBE5E2A0807ED374A
+data8 0xBE66CB28365C8B0A, 0x3E3AAD5BD3403BCA
+data8 0x3E526055C7EA21E0, 0xBE442C75E72880D6
+data8 0x3E58B2BB85222A43, 0xBE5AAB79522C42BF
+data8 0xBE605CB4469DC2BC, 0xBE589FA7A48C40DC
+data8 0xBE51C2141AA42614, 0xBE48D087C37293F4
+data8 0x3E367A1CA2D673E0, 0xBE51BEBB114F7A38
+data8 0xBE6348E5661A4B48, 0xBDF526431D3B9962
+data8 0x3E3A3B5E35A78A53, 0xBE46C46C1CECD788
+data8 0xBE60B7EC7857D689, 0xBE594D3DD14F1AD7
+data8 0xBE4F9C304C9A8F60, 0xBE52187302DFF9D2
+data8 0xBE5E4C8855E6D68F, 0xBE62140F667F3DC4
+data8 0xBE36961B3BF88747, 0x3E602861C96EC6AA
+data8 0xBE3B5151D57FD718, 0x3E561CD0FC4A627B
+data8 0xBE3A5217CA913FEA, 0x3E40A3CC9A5D193A
+data8 0xBE5AB71310A9C312, 0x3E4FDADBC5F57719
+data8 0x3E361428DBDF59D5, 0x3E5DB5DB61B4180D
+data8 0xBE42AD5F7408D856, 0x3E2A314831B2B707
+LOCAL_OBJECT_END(Constants_exp_64_W1)
 
-.align 64 
-Constants_exp_64_W2:
-ASM_TYPE_DIRECTIVE(Constants_exp_64_W2,@object)
-data4 0x00000000,0x00000000,0x37A3D7A2,0xBE641F25 
-data4 0xAD028C40,0xBE68DD57,0xF212B1B6,0xBE5C77D8 
-data4 0x1BA5B070,0x3E57878F,0x2ECAE6FE,0xBE55A36A 
-data4 0x569DFA3B,0xBE620608,0xA6D300A3,0xBE53B50E 
-data4 0x223F8F2C,0x3E5B5EF2,0xD6DE0DF4,0xBE56A0D9 
-data4 0xEAE28F51,0xBE64EEF3,0x367EA80B,0xBE5E5AE2 
-data4 0x5FCBC02D,0x3E47CB1A,0x9BDAFEB7,0xBE656BA0 
-data4 0x805AFEE7,0x3E6E70C6,0xA3415EBA,0xBE6E0509 
-data4 0x49BFF529,0xBE56856B,0x00508651,0x3E66DD33 
-data4 0xC114BC13,0x3E51165F,0xC453290F,0x3E53333D 
-data4 0x05539FDA,0x3E6A072B,0x7C0A7696,0xBE47CD87 
-data4 0xEB05C6D9,0xBE668BF4,0x6AE86C93,0xBE67C3E3 
-data4 0xD0B3E84B,0xBE533904,0x556B53CE,0x3E63E8D9 
-data4 0x63A98DC8,0x3E212C89,0x032A7A22,0xBE33138F 
-data4 0xBC584008,0x3E530FA9,0xCCB93C97,0xBE6ADF82 
-data4 0x8370EA39,0x3E5F9113,0xFB6A05D8,0x3E5443A4 
-data4 0x181FEE7A,0x3E63DACD,0xF0F67DEC,0xBE62B29D 
-data4 0x3DDE6307,0x3E65C483,0xD40A24C1,0x3E5BF030  
-data4 0x14E437BE,0x3E658B8F,0xED98B6C7,0xBE631C29 
-data4 0x04CF7C71,0x3E6335D2,0xE954A79D,0x3E529EED 
-data4 0xF64A2FB8,0x3E5D9257,0x854ED06C,0xBE6BED1B 
-data4 0xD71405CB,0x3E5096F6,0xACB9FDF5,0xBE3D4893 
-data4 0x01B68349,0xBDFEB158,0xC6A463B9,0x3E628D35 
-data4 0xADE45917,0xBE559725,0x042FC476,0xBE68C29C 
-data4 0x01E511FA,0xBE67593B,0x398801ED,0xBE4A4313 
-data4 0xDA7C3300,0x3E699571,0x08062A9E,0x3E5349BE 
-data4 0x755BB28E,0x3E5229C4,0x77A1F80D,0x3E67E426 
-data4 0x6B69C352,0xBE52B33F,0x084DA57F,0xBE6B3550 
-data4 0xD1D09A20,0xBE6DB03F,0x2161B2C1,0xBE60CBC4 
-data4 0x78A2B771,0x3E56ED9C,0x9D0FA795,0xBE508E31 
-data4 0xFD1A54E9,0xBE59482A,0xB07FD23E,0xBE2A17CE 
-data4 0x17365712,0x3E68BF5C,0xB3785569,0x3E3956F9
-ASM_SIZE_DIRECTIVE(Constants_exp_64_W2)
+LOCAL_OBJECT_START(Constants_exp_64_W2)
+data8 0x0000000000000000, 0xBE641F2537A3D7A2
+data8 0xBE68DD57AD028C40, 0xBE5C77D8F212B1B6
+data8 0x3E57878F1BA5B070, 0xBE55A36A2ECAE6FE
+data8 0xBE620608569DFA3B, 0xBE53B50EA6D300A3
+data8 0x3E5B5EF2223F8F2C, 0xBE56A0D9D6DE0DF4
+data8 0xBE64EEF3EAE28F51, 0xBE5E5AE2367EA80B
+data8 0x3E47CB1A5FCBC02D, 0xBE656BA09BDAFEB7
+data8 0x3E6E70C6805AFEE7, 0xBE6E0509A3415EBA
+data8 0xBE56856B49BFF529, 0x3E66DD3300508651
+data8 0x3E51165FC114BC13, 0x3E53333DC453290F
+data8 0x3E6A072B05539FDA, 0xBE47CD877C0A7696
+data8 0xBE668BF4EB05C6D9, 0xBE67C3E36AE86C93
+data8 0xBE533904D0B3E84B, 0x3E63E8D9556B53CE
+data8 0x3E212C8963A98DC8, 0xBE33138F032A7A22
+data8 0x3E530FA9BC584008, 0xBE6ADF82CCB93C97
+data8 0x3E5F91138370EA39, 0x3E5443A4FB6A05D8
+data8 0x3E63DACD181FEE7A, 0xBE62B29DF0F67DEC
+data8 0x3E65C4833DDE6307, 0x3E5BF030D40A24C1
+data8 0x3E658B8F14E437BE, 0xBE631C29ED98B6C7
+data8 0x3E6335D204CF7C71, 0x3E529EEDE954A79D
+data8 0x3E5D9257F64A2FB8, 0xBE6BED1B854ED06C
+data8 0x3E5096F6D71405CB, 0xBE3D4893ACB9FDF5
+data8 0xBDFEB15801B68349, 0x3E628D35C6A463B9
+data8 0xBE559725ADE45917, 0xBE68C29C042FC476
+data8 0xBE67593B01E511FA, 0xBE4A4313398801ED
+data8 0x3E699571DA7C3300, 0x3E5349BE08062A9E
+data8 0x3E5229C4755BB28E, 0x3E67E42677A1F80D
+data8 0xBE52B33F6B69C352, 0xBE6B3550084DA57F
+data8 0xBE6DB03FD1D09A20, 0xBE60CBC42161B2C1
+data8 0x3E56ED9C78A2B771, 0xBE508E319D0FA795
+data8 0xBE59482AFD1A54E9, 0xBE2A17CEB07FD23E
+data8 0x3E68BF5C17365712, 0x3E3956F9B3785569
+LOCAL_OBJECT_END(Constants_exp_64_W2)
 
-GR_SAVE_PFS         = r59
-GR_SAVE_B0          = r60
-GR_SAVE_GP          = r61
-GR_Parameter_X      = r62
-GR_Parameter_Y      = r63
-GR_Parameter_RESULT = r64
-GR_Parameter_TAG    = r65 
-
-FR_X                = f9
-FR_Y                = f9
-FR_RESULT           = f99
 
 .section .text
-.proc expm1l#
-.global expm1l#
-.align 64 
-expm1l: 
-#ifdef _LIBC
-.global __expm1l#
-__expm1l:
-#endif
-{ .mii
-alloc r32 = ar.pfs,0,30,4,0
-(p0)  add r33 = 1, r0  
-(p0)  cmp.eq.unc  p7, p0 =  r0, r0 
-}
-{ .mbb
-	nop.m 999
-(p0)  br.cond.sptk exp_continue 
-	nop.b 999 ;;
-}
+
+GLOBAL_IEEE754_ENTRY(expm1l)
 
 //
-//    Set p7 true for expm1
-//    Set Flag = r33 = 1 for expm1
+//    Set p7 true for expm1, p6 false
 //    
 
-.endp expm1l
-ASM_SIZE_DIRECTIVE(expm1l)
-
-#ifdef _LIBC
-libm_hidden_def (__expm1l)
-#endif
-
-.section .text
-.proc expl#
-.global expl#
-.align 64 
-expl: 
-#ifdef _LIBC
-.global __ieee754_expl#
-__ieee754_expl:
-#endif
-{ .mii
-alloc r32 = ar.pfs,0,30,4,0
-(p0)  add r33 = r0, r0  
-(p0)  cmp.eq.unc  p0, p7 =  r0, r0 ;; 
+{ .mlx
+      getf.exp GR_signexp_x = f8  // Get sign and exponent of x, redo if unorm
+      movl GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
 }
+{ .mlx
+      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp  
+      movl GR_rshf_2to51 = 0x4718000000000000 // 1.10000 2^(63+51)
+}
+;;
+
+{ .mfi
+      ld8  GR_ad_Arg = [GR_ad_Arg]       // Point to Arg table
+      fclass.m p8, p0 =  f8, 0x1E7       // Test x for natval, nan, inf, zero
+      cmp.eq  p7, p6 =  r0, r0 
+}
+{ .mfb
+      mov GR_exp_half = 0x0FFFE          // Exponent of 0.5, for very small path
+      fnorm.s1 FR_norm_x = f8            // Normalize x
+      br.cond.sptk exp_continue 
+}
+;;
+
+GLOBAL_IEEE754_END(expm1l)
+
+GLOBAL_IEEE754_ENTRY(expl)
+//
+//    Set p7 false for exp, p6 true
+//    
+{ .mlx
+      getf.exp GR_signexp_x = f8  // Get sign and exponent of x, redo if unorm
+      movl GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
+}
+{ .mlx
+      addl GR_ad_Arg = @ltoff(Constants_exp_64_Arg#),gp  
+      movl GR_rshf_2to51 = 0x4718000000000000 // 1.10000 2^(63+51)
+}
+;;
+
+{ .mfi
+      ld8  GR_ad_Arg = [GR_ad_Arg]       // Point to Arg table
+      fclass.m p8, p0 =  f8, 0x1E7       // Test x for natval, nan, inf, zero
+      cmp.eq  p6, p7 =  r0, r0
+}
+{ .mfi
+      mov GR_exp_half = 0x0FFFE          // Exponent of 0.5, for very small path
+      fnorm.s1 FR_norm_x = f8            // Normalize x
+      nop.i 999
+}
+;;
+
 exp_continue: 
+// Form two constants we need
+//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128 
+//  1.1000..000 * 2^(63+63-12) to right shift int(N) into the significand
+
 { .mfi
-(p0)  add r32 = 2,r0  
-(p0)  fnorm.s1 f9 = f8 
-      nop.i 0
-}
-{ .mfi
-(p0)  nop.m 0 
-//
-//    Set p7 false for exp
-//    Set Flag = r33 = 0 for exp
-//    
-(p0)  fclass.m.unc p6, p8 =  f8, 0x1E7 
-      nop.i 0;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.nm.unc p9, p0 =  f8, 0x1FF 
-      nop.i 0
-}
-{ .mfi
-	nop.m 999
-(p0)  mov f36 = f1 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-//     
-//    Identify NatVals, NaNs, Infs, and Zeros. 
-//    Identify EM unsupporteds. 
-//    Save special input registers 
-(p0)  mov f32 = f0 
-//
-//    Create FR_X_cor      = 0.0 
-//           GR_Flag       = 0 
-//           GR_Expo_Range = 2 (r32) for double-extended precision 
-//           FR_Scale      = 1.0
-//
-(p6)  br.cond.spnt EXPL_64_SPECIAL ;; 
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-(p9)  br.cond.spnt EXPL_64_UNSUPPORTED ;; 
-}
-{ .mfi
-(p0)  cmp.ne.unc p12, p13 = 0x01, r33
-//     
-//    Branch out for special input values 
-//     
-(p0)  fcmp.lt.unc.s0 p9,p0 =  f8, f0 
-(p0)  cmp.eq.unc  p15, p0 =  r0, r0 
-}
-{ .mmi
-	nop.m 999
-//     
-//    Raise possible denormal operand exception 
-//    Normalize x 
-//     
-//    This function computes expl( x  + x_cor) 
-//    Input  FR 1: FR_X            
-//    Input  FR 2: FR_X_cor  
-//    Input  GR 1: GR_Flag  
-//    Input  GR 2: GR_Expo_Range  
-//    Output FR 3: FR_Y_hi  
-//    Output FR 4: FR_Y_lo  
-//    Output FR 5: FR_Scale  
-//    Output PR 1: PR_Safe  
-(p0)  addl r34 = @ltoff(Constants_exp_64_Arg#),gp  
-(p0)  addl r40 = @ltoff(Constants_exp_64_W1#),gp 
-};;
-//
-//    Prepare to load constants
-//    Set Safe = True
-//
-
-{ .mmi
-      ld8  r34 = [r34]
-      ld8  r40 = [r40]
-(p0)  addl r41 = @ltoff(Constants_exp_64_W2#),gp  
-};;
-
-{ .mmi
-(p0)  ldfe f37 = [r34],16 
-(p0)  ld8 r41 = [r41] ;; 
-}
-
-//
-//    N = fcvt.fx(float_N)
-//    Set p14 if -6 > expo_X 
-//
-//
-//    Bias = 0x0FFFF
-//    expo_X = expo_X and Mask  
-//
-
-{ .mmi
-(p0)  ldfe f40 = [r34],16 
-      nop.m 999
-//
-//    Load L_lo
-//    Set p10 if 14 < expo_X 
-//
-(p0)  addl r50 = @ltoff(Constants_exp_64_T1#),gp 
-}
-{ .mmi
-	nop.m 999
-	nop.m 999
-(p0)  addl r51 = @ltoff(Constants_exp_64_T2#),gp ;; 
-}
-//
-//    Load W2_ptr
-//    Branch to SMALL is expo_X < -6
-//
-
-{.mmi
-(p0)  ld8 r50 = [r50]  
-(p0)  ld8 r51 = [r51]  
-};;
-
-{ .mlx
-(p0)  ldfe f41 = [r34],16 
-//
-//    float_N = X * L_Inv
-//    expo_X = exponent of X
-//    Mask = 0x1FFFF
-//
-(p0)  movl r58 = 0x0FFFF 
+      setf.sig  FR_INV_LN2_2TO63 = GR_sig_inv_ln2 // form 1/ln2 * 2^63
+      fclass.nm.unc p9, p0 =  f8, 0x1FF  // Test x for unsupported
+      mov GR_exp_2tom51 = 0xffff-51
 }
 { .mlx
-	nop.m 999
-(p0)  movl r39 = 0x1FFFF ;; 
+      setf.d  FR_RSHF_2TO51 = GR_rshf_2to51 // Form const 1.1000 * 2^(63+51)
+      movl GR_rshf = 0x43e8000000000000  // 1.10000 2^63 for right shift
 }
-{ .mmi
-(p0)  getf.exp r37 = f9 
-	nop.m 999
-(p0)  addl r34 = @ltoff(Constants_exp_64_Exponents#),gp ;; 
-}
-{ .mii
-(p0)  ld8 r34 = [r34]  
-      nop.i 999 
-(p0)  and  r37 = r37, r39 ;;  
-}
-{ .mmi
-(p0)  sub r37 = r37, r58 ;;  
-(p0)  cmp.gt.unc  p14, p0 =  -6, r37 
-(p0)  cmp.lt.unc  p10, p0 =  14, r37 ;; 
-}
+;;
+
 { .mfi
-(p0)  nop.m 0  
-//
-//    Load L_inv 
-//    Set p12 true for Flag = 0 (exp)
-//    Set p13 true for Flag = 1 (expm1)
-//
-(p0)  fmpy.s1 f38 = f9, f37 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-//
-//    Load L_hi
-//    expo_X = expo_X - Bias
-//    get W1_ptr      
-//
-(p0)  fcvt.fx.s1 f39 = f38
-(p14) br.cond.spnt EXPL_SMALL ;; 
+      setf.exp FR_half = GR_exp_half     // Form 0.5 for very small path
+      fma.s1 FR_scale = f1,f1,f0         // Scale = 1.0
+      mov GR_exp_bias = 0x0FFFF          // Set exponent bias
 }
 { .mib
-	nop.m 999
-	nop.i 999
-(p10) br.cond.spnt EXPL_HUGE ;; 
+      add GR_ad_Limits = 0x20, GR_ad_Arg // Point to Limits table
+      mov GR_exp_mask = 0x1FFFF          // Form exponent mask
+(p8)  br.cond.spnt EXP_64_SPECIAL        // Branch if natval, nan, inf, zero
 }
-{ .mmi
-(p0)  shladd r34 = r32,4,r34 
-      nop.m 999
-(p0)  addl r35 = @ltoff(Constants_exp_64_A#),gp ;; 
+;;
+
+{ .mfi
+      setf.exp FR_2TOM51 = GR_exp_2tom51 // Form 2^-51 for scaling float_N
+      nop.f 999
+      add GR_ad_A = 0x40, GR_ad_Arg      // Point to A table
 }
-//
-//    Load T_1,T_2
-//
-{ .mmi
-   nop.m 999
-   ld8   r35 =[r35]
-   nop.i 99
+{ .mib
+      setf.d  FR_RSHF = GR_rshf          // Form right shift const 1.1000 * 2^63
+      add GR_ad_T1 = 0x160, GR_ad_Arg    // Point to T1 table
+(p9)  br.cond.spnt EXP_64_UNSUPPORTED    // Branch if unsupported
+}
+;;
+
+.pred.rel "mutex",p6,p7
+{ .mfi
+      ldfe FR_L_hi = [GR_ad_Arg],16      // Get L_hi
+      fcmp.eq.s0 p9,p0 =  f8, f0         // Dummy op to flag denormals
+(p6)  add GR_ad_PQ = 0x30, GR_ad_A       // Point to P table for exp
+}
+{ .mfi
+      ldfe FR_min_oflow_x = [GR_ad_Limits],16 // Get min x to cause overflow
+      fmpy.s1 FR_rsq = f8, f8            // rsq = x * x for small path
+(p7)  add GR_ad_PQ = 0x90, GR_ad_A       // Point to Q table for expm1
 };;
-{ .mmb
-(p0)  ldfe f51 = [r35],16 
-(p0)  ld8 r45 = [r34],8
-	nop.b 999 ;;
+
+{ .mmi
+      ldfe FR_L_lo = [GR_ad_Arg],16      // Get L_lo
+      ldfe FR_zero_uflow_x = [GR_ad_Limits],16 // Get x for zero uflow result
+      add GR_ad_W1 = 0x200, GR_ad_T1     // Point to W1 table
 }
-//    
-//    Set Safe = True  if k >= big_expo_neg  
-//    Set Safe = False if k < big_expo_neg  
-//    
-{ .mmb
-(p0)  ldfe f49 = [r35],16 
-(p0)  ld8 r48 = [r34],0
-	nop.b 999 ;;
+;;
+
+{ .mfi
+      ldfe FR_P6Q9 = [GR_ad_PQ],16       // P6(exp) or Q9(expm1) for small path
+      mov FR_r = FR_norm_x               // r = X for small path
+      mov GR_very_small_exp = -60        // Exponent of x for very small path
 }
 { .mfi
-	nop.m 999
-//
-//    Branch to HUGE is expo_X > 14 
-//
-(p0)  fcvt.xf f38 = f39 
-	nop.i 999 ;;
+      add GR_ad_W2 = 0x400, GR_ad_T1     // Point to W2 table
+      nop.f 999
+(p7)  mov GR_small_exp = -7              // Exponent of x for small path expm1
+}
+;;
+
+{ .mmi
+      ldfe FR_P5Q8 = [GR_ad_PQ],16       // P5(exp) or Q8(expm1) for small path
+      and  GR_exp_x = GR_signexp_x, GR_exp_mask
+(p6)  mov GR_small_exp = -12             // Exponent of x for small path exp
+}
+;;
+
+// N_signif = X * Inv_log2_by_2^12
+// By adding 1.10...0*2^63 we shift and get round_int(N_signif) in significand.
+// We actually add 1.10...0*2^51 to X * Inv_log2 to do the same thing.
+{ .mfi
+      ldfe FR_P4Q7 = [GR_ad_PQ],16       // P4(exp) or Q7(expm1) for small path
+      fma.s1 FR_N_signif = FR_norm_x, FR_INV_LN2_2TO63, FR_RSHF_2TO51
+      nop.i 999
 }
 { .mfi
-(p0)  getf.sig r52 = f39 
-	nop.f 999
-	nop.i 999 ;;
+      sub GR_exp_x = GR_exp_x, GR_exp_bias // Get exponent
+      fmpy.s1 FR_r4 = FR_rsq, FR_rsq     // Form r4 for small path
+      cmp.eq.unc  p15, p0 =  r0, r0      // Set Safe as default
 }
-{ .mii
-	nop.m 999
-(p0)  extr.u r43 = r52, 6, 6 ;;  
+;;
+
+{ .mmi
+      ldfe FR_P3Q6 = [GR_ad_PQ],16       // P3(exp) or Q6(expm1) for small path
+      cmp.lt  p14, p0 =  GR_exp_x, GR_very_small_exp // Is |x| < 2^-60?
+      nop.i 999
+}
+;;
+
+{ .mfi
+      ldfe FR_P2Q5 = [GR_ad_PQ],16       // P2(exp) or Q5(expm1) for small path
+      fmpy.s1 FR_half_x = FR_half, FR_norm_x // 0.5 * x for very small path
+      cmp.lt  p13, p0 =  GR_exp_x, GR_small_exp // Is |x| < 2^-m?
+}
+{ .mib
+      nop.m 999
+      nop.i 999
+(p14) br.cond.spnt EXP_VERY_SMALL        // Branch if |x| < 2^-60
+}
+;;
+
+{ .mfi
+      ldfe FR_A3 = [GR_ad_A],16          // Get A3 for normal path
+      fcmp.ge.s1 p10,p0 = FR_norm_x, FR_min_oflow_x // Will result overflow?
+      mov GR_big_expo_neg = -16381       // -0x3ffd
+}
+{ .mfb
+      ldfe FR_P1Q4 = [GR_ad_PQ],16       // P1(exp) or Q4(expm1) for small path
+      nop.f 999
+(p13) br.cond.spnt EXP_SMALL             // Branch if |x| < 2^-m
+                                         // m=12 for exp, m=7 for expm1
+}
+;;
+
+// Now we are on the main path for |x| >= 2^-m, m=12 for exp, m=7 for expm1
 //
-//    r = r - float_N * L_lo
-//    K = extr(N_fix,12,52)
-//
-(p0)  shladd r40 = r43,3,r40 ;; 
+// float_N = round_int(N_signif) 
+// The signficand of N_signif contains the rounded integer part of X * 2^12/ln2,
+// as a twos complement number in the lower bits (that is, it may be negative).
+// That twos complement number (called N) is put into GR_N.
+
+// Since N_signif is scaled by 2^51, it must be multiplied by 2^-51
+// before the shift constant 1.10000 * 2^63 is subtracted to yield float_N.
+// Thus, float_N contains the floating point version of N
+
+
+{ .mfi
+      ldfe FR_A2 = [GR_ad_A],16          // Get A2 for main path
+      fcmp.lt.s1 p11,p0 = FR_norm_x, FR_zero_uflow_x // Certain zero, uflow?
+      add GR_ad_T2 = 0x100, GR_ad_T1     // Point to T2 table
 }
 { .mfi
-(p0)  shladd r50 = r43,2,r50 
-(p0)  fnma.s1 f42 = f40, f38, f9 
-//
-//    float_N = float(N)
-//    N_fix = signficand N 
-//
-(p0)  extr.u r42 = r52, 0, 6  
+      nop.m 999
+      fms.s1 FR_float_N = FR_N_signif, FR_2TOM51, FR_RSHF // Form float_N
+      nop.i 999
 }
+;;
+
+{ .mbb
+      getf.sig GR_N_fix = FR_N_signif    // Get N from significand
+(p10) br.cond.spnt  EXP_OVERFLOW         // Branch if result will overflow
+(p11) br.cond.spnt  EXP_CERTAIN_UNDERFLOW_ZERO // Branch if certain zero, uflow
+}
+;;
+
+{ .mfi
+      ldfe FR_A1 = [GR_ad_A],16          // Get A1 for main path
+      fnma.s1 FR_r = FR_L_hi, FR_float_N, FR_norm_x  // r = -L_hi * float_N + x
+      extr.u GR_M1 = GR_N_fix, 6, 6      // Extract index M_1
+}
+{ .mfi
+      and GR_M2 = 0x3f, GR_N_fix         // Extract index M_2
+      nop.f 999
+      nop.i 999
+}
+;;
+
+// N_fix is only correct up to 50 bits because of our right shift technique.
+// Actually in the normal path we will have restricted K to about 14 bits.
+// Somewhat arbitrarily we extract 32 bits.
+{ .mfi
+      shladd GR_ad_W1 = GR_M1,3,GR_ad_W1 // Point to W1
+      nop.f 999
+      extr GR_K = GR_N_fix, 12, 32       // Extract limited range K
+}
+{ .mfi
+      shladd GR_ad_T1 = GR_M1,2,GR_ad_T1 // Point to T1
+      nop.f 999
+      shladd GR_ad_T2 = GR_M2,2,GR_ad_T2 // Point to T2
+}
+;;
+
 { .mmi
-(p0)  ldfd  f43 = [r40],0 ;; 
-(p0)  shladd r41 = r42,3,r41 
-(p0)  shladd r51 = r42,2,r51 
+      ldfs  FR_T1 = [GR_ad_T1],0         // Get T1
+      ldfd  FR_W1 = [GR_ad_W1],0         // Get W1
+      add GR_exp_2_k = GR_exp_bias, GR_K // Form exponent of 2^k
 }
-//
-//    W_1_p1 = 1 + W_1
-//
+;;
+
 { .mmi
-(p0)  ldfs  f44 = [r50],0 ;; 
-(p0)  ldfd  f45 = [r41],0 
-//
-//    M_2 = extr(N_fix,0,6)
-//    M_1 = extr(N_fix,6,6)
-//    r = X - float_N * L_hi
-//
-(p0)  extr r44 = r52, 12, 52  
+      ldfs  FR_T2 = [GR_ad_T2],0         // Get T2
+      shladd GR_ad_W2 = GR_M2,3,GR_ad_W2 // Point to W2
+      sub GR_exp_2_mk = GR_exp_bias, GR_K // Form exponent of 2^-k
 }
-{ .mmi
-(p0)  ldfs  f46 = [r51],0 ;; 
-(p0)  sub r46 = r58, r44  
-(p0)  cmp.gt.unc  p8, p15 =  r44, r45 
-}
-//    
-//    W = W_1 + W_1_p1*W_2 
-//    Load  A_2 
-//    Bias_m_K = Bias - K
-//
-{ .mii
-(p0)  ldfe f40 = [r35],16 
-//
-//    load A_1
-//    poly = A_2 + r*A_3 
-//    rsq = r * r  
-//    neg_2_mK = exponent of Bias_m_k
-//
-(p0)  add r47 = r58, r44 ;;  
-//    
-//    Set Safe = True  if k <= big_expo_pos  
-//    Set Safe = False  if k >  big_expo_pos  
-//    Load A_3
-//    
-(p15) cmp.lt p8,p15 = r44,r48 ;;
-}
+;;
+
 { .mmf
-(p0)  setf.exp f61 = r46 
-//    
-//    Bias_p + K = Bias + K
-//    T = T_1 * T_2
-//    
-(p0)  setf.exp f36 = r47 
-(p0)  fnma.s1 f42 = f41, f38, f42 ;; 
-}
-{ .mfi
-	nop.m 999
-//
-//    Load W_1,W_2
-//    Load big_exp_pos, load big_exp_neg
-//
-(p0)  fadd.s1 f47 = f43, f1 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 f52 = f42, f51, f49 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fmpy.s1 f48 = f42, f42 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fmpy.s1 f53 = f44, f46 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 f54 = f45, f47, f43 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fneg f61 =  f61 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 f52 = f42, f52, f40 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fadd.s1 f55 = f54, f1 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-//
-//    W + Wp1 * poly     
-// 
-(p0)  mov f34 = f53 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    A_1 + r * poly 
-//    Scale = setf_expl(Bias_p_k) 
-//
-(p0)  fma.s1 f52 = f48, f52, f42 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    poly = r + rsq(A_1 + r*poly) 
-//    Wp1 = 1 + W
-//    neg_2_mK = -neg_2_mK
-//
-(p0)  fma.s1 f35 = f55, f52, f54
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p0)  fmpy.s1 f35 = f35, f53 
-//   
-//    Y_hi = T
-//    Y_lo = T * (W + Wp1*poly)
-//
-(p12) br.cond.sptk EXPL_MAIN ;; 
-}
-//
-//    Branch if expl(x)  
-//    Continue for expl(x-1)
-//
-{ .mii
-(p0)  cmp.lt.unc  p12, p13 =  10, r44 
-	nop.i 999 ;;
-//
-//    Set p12 if 10 < K, Else p13 
-//
-(p13) cmp.gt.unc  p13, p14 =  -10, r44 ;; 
-}
-//
-//    K > 10:  Y_lo = Y_lo + neg_2_mK
-//    K <=10:  Set p13 if -10 > K, Else set p14 
-//
-{ .mfi
-(p13) cmp.eq  p15, p0 =  r0, r0 
-(p14) fadd.s1 f34 = f61, f34 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) fadd.s1 f35 = f35, f61 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p13) fadd.s1 f35 = f35, f34 
-	nop.i 999
-}
-{ .mfb
-	nop.m 999
-//
-//    K <= 10 and K < -10, Set Safe = True
-//    K <= 10 and K < 10,   Y_lo = Y_hi + Y_lo 
-//    K <= 10 and K > =-10, Y_hi = Y_hi + neg_2_mk 
-// 
-(p13) mov f34 = f61 
-(p0)  br.cond.sptk EXPL_MAIN ;; 
-}
-EXPL_SMALL: 
-{ .mmi
-      nop.m 999
-(p0)  addl r34 = @ltoff(Constants_exp_64_Exponents#),gp  
-(p12) addl r35 = @ltoff(Constants_exp_64_P#),gp ;; 
-}
-.pred.rel "mutex",p12,p13
-{ .mmi
-(p12) ld8  r35=[r35]      
-nop.m 999
-(p13) addl r35 = @ltoff(Constants_exp_64_Q#),gp 
-};;
-{ .mmi
-(p13) ld8  r35=[r35]      
-(p0) ld8  r34=[r34]      
-nop.i 999
-};;
-{ .mfi
-(p0)  add r34 = 0x48,r34  
-// 
-//    Return
-//    K <= 10 and K < 10,   Y_hi = neg_2_mk 
-// 
-//    /*******************************************************/
-//    /*********** Branch EXPL_SMALL  ************************/
-//    /*******************************************************/
-(p0)  mov f42 = f9 
-	nop.i 999 ;;
-}
-//
-//    Flag = 0
-//    r4 = rsq * rsq
-//
-{ .mfi
-(p0)  ld8 r49 =[r34],0
-	nop.f 999
-	nop.i 999 ;;
-}
-{ .mii
-	nop.m 999
-	nop.i 999 ;;
-//
-//    Flag = 1
-//
-(p0)  cmp.lt.unc  p14, p0 =  r37, r49 ;; 
-}
-{ .mfi
-	nop.m 999
-//
-//    r = X
-//
-(p0)  fmpy.s1 f48 = f42, f42 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-//
-//    rsq = r * r
-//
-(p0)  fmpy.s1 f50 = f48, f48 
-//
-//    Is input very small?
-//
-(p14) br.cond.spnt EXPL_VERY_SMALL ;; 
-}
-//
-//    Flag_not1: Y_hi = 1.0
-//    Flag is 1: r6 = rsq * r4
-//
-{ .mfi
-(p12) ldfe f52 = [r35],16 
-(p12) mov f34 = f1 
-(p0)  add r53 = 0x1,r0 ;;  
-}
-{ .mfi
-(p13) ldfe f51 = [r35],16 
-//
-//    Flag_not_1: Y_lo = poly_hi + r4 * poly_lo
-//
-(p13) mov f34 = f9 
-	nop.i 999 ;;
-}
-{ .mmf
-(p12) ldfe f53 = [r35],16 
-//
-//    For Flag_not_1, Y_hi = X
-//    Scale = 1
-//    Create 0x000...01
-//
-(p0)  setf.sig f37 = r53 
-(p0)  mov f36 = f1 ;; 
-}
-{ .mmi
-(p13) ldfe f52 = [r35],16 ;; 
-(p12) ldfe f54 = [r35],16 
-	nop.i 999 ;;
-}
-{ .mfi
-(p13) ldfe f53 = [r35],16 
-(p13) fmpy.s1 f58 = f48, f50 
-	nop.i 999 ;;
-}
-//
-//    Flag_not1: poly_lo = P_5 + r*P_6
-//    Flag_1: poly_lo = Q_6 + r*Q_7
-//
-{ .mmi
-(p13) ldfe f54 = [r35],16 ;; 
-(p12) ldfe f55 = [r35],16 
-	nop.i 999 ;;
-}
-{ .mmi
-(p12) ldfe f56 = [r35],16 ;; 
-(p13) ldfe f55 = [r35],16 
-	nop.i 999 ;;
-}
-{ .mmi
-(p12) ldfe f57 = [r35],0 ;; 
-(p13) ldfe f56 = [r35],16 
-	nop.i 999 ;;
-}
-{ .mfi
-(p13) ldfe f57 = [r35],0 
-	nop.f 999
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    For  Flag_not_1, load p5,p6,p1,p2
-//    Else load p5,p6,p1,p2
-//
-(p12) fma.s1 f60 = f52, f42, f53 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p13) fma.s1 f60 = f51, f42, f52 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) fma.s1 f60 = f60, f42, f54 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) fma.s1 f59 = f56, f42, f57 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p13) fma.s1 f60 = f42, f60, f53 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) fma.s1 f59 = f59, f48, f42 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Flag_1: poly_lo = Q_5 + r*(Q_6 + r*Q_7) 
-//    Flag_not1: poly_lo = P_4 + r*(P_5 + r*P_6)
-//    Flag_not1: poly_hi = (P_1 + r*P_2)
-//
-(p13) fmpy.s1 f60 = f60, f58 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) fma.s1 f60 = f60, f42, f55 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Flag_1: poly_lo = r6 *(Q_5 + ....)
-//    Flag_not1: poly_hi =  r + rsq *(P_1 + r*P_2)
-//
-(p12) fma.s1 f35 = f60, f50, f59 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p13) fma.s1 f59 = f54, f42, f55 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Flag_not1: Y_lo = rsq* poly_hi + poly_lo 
-//    Flag_1: poly_lo = rsq* poly_hi + poly_lo 
-//
-(p13) fma.s1 f59 = f59, f42, f56 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Flag_not_1: (P_1 + r*P_2) 
-//
-(p13) fma.s1 f59 = f59, f42, f57 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Flag_not_1: poly_hi = r + rsq * (P_1 + r*P_2) 
-//
-(p13) fma.s1 f35 = f59, f48, f60 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Create 0.000...01
-//
-(p0)  for f37 = f35, f37 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-//
-//    Set lsb of Y_lo to 1
-//
-(p0)  fmerge.se f35 = f35,f37 
-(p0)  br.cond.sptk EXPL_MAIN ;; 
-}
-EXPL_VERY_SMALL: 
-{ .mmi
-	nop.m 999
-	nop.m 999
-(p13) addl r34 = @ltoff(Constants_exp_64_Exponents#),gp 
-}
-{ .mfi
-	nop.m 999
-(p12) mov f35 = f9 
-	nop.i 999 ;;
-}
-{ .mfb
-(p13) ld8 r34 = [r34] 
-(p12) mov f34 = f1 
-(p12) br.cond.sptk EXPL_MAIN ;; 
-}
-{ .mlx
-(p13) add  r34 = 8,r34 
-(p13) movl r39 = 0x0FFFE ;; 
-}
-//
-//    Load big_exp_neg 
-//    Create 1/2's exponent
-//
-{ .mii
-(p13) setf.exp f56 = r39 
-(p13) shladd r34 = r32,4,r34 ;;  
-	nop.i 999
-}
-//
-//    Negative exponents are stored after positive
-//
-{ .mfi
-(p13) ld8 r45 = [r34],0
-//
-//    Y_hi = x
-//    Scale = 1
-//
-(p13) fmpy.s1 f35 = f9, f9 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Reset Safe if necessary 
-//    Create 1/2
-//
-(p13) mov f34 = f9 
-	nop.i 999 ;;
-}
-{ .mfi
-(p13) cmp.lt.unc  p0, p15 =  r37, r45 
-(p13) mov f36 = f1 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-//
-//    Y_lo = x * x
-//
-(p13) fmpy.s1 f35 = f35, f56 
-//
-//    Y_lo = x*x/2 
-//
-(p13) br.cond.sptk EXPL_MAIN ;; 
-}
-EXPL_HUGE: 
-{ .mfi
-	nop.m 999
-(p0)  fcmp.gt.unc.s1 p14, p0 =  f9, f0 
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p0)  movl r39 = 0x15DC0 ;; 
-}
-{ .mfi
-(p14) setf.exp f34 = r39 
-(p14) mov f35 = f1 
-(p14) cmp.eq  p0, p15 =  r0, r0 ;; 
-}
-{ .mfb
-	nop.m 999
-(p14) mov f36 = f34 
-//
-//    If x > 0, Set Safe = False
-//    If x > 0, Y_hi = 2**(24,000)
-//    If x > 0, Y_lo = 1.0
-//    If x > 0, Scale = 2**(24,000)
-//
-(p14) br.cond.sptk EXPL_MAIN ;; 
-}
-{ .mlx
-	nop.m 999
-(p12) movl r39 = 0xA240 
-}
-{ .mlx
-	nop.m 999
-(p12) movl r38 = 0xA1DC ;; 
-}
-{ .mmb
-(p13) cmp.eq  p15, p14 =  r0, r0 
-(p12) setf.exp f34 = r39 
-	nop.b 999 ;;
-}
-{ .mlx
-(p12) setf.exp f35 = r38 
-(p13) movl r39 = 0xFF9C 
-}
-{ .mfi
-	nop.m 999
-(p13) fsub.s1 f34 = f0, f1
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p12) mov f36 = f34 
-(p12) cmp.eq  p0, p15 =  r0, r0 ;; 
-}
-{ .mfi
-(p13) setf.exp f35 = r39 
-(p13) mov f36 = f1 
-	nop.i 999 ;;
-}
-EXPL_MAIN: 
-{ .mfi
-(p0)  cmp.ne.unc p12, p0 = 0x01, r33
-(p0)  fmpy.s1 f101 = f36, f35 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p0)  fma.s0 f99 = f34, f36, f101 
-(p15) br.cond.sptk EXPL_64_RETURN ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fsetc.s3 0x7F,0x01
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p0)  movl r50 = 0x00000000013FFF ;;
-}
-//    
-//    S0 user supplied status
-//    S2 user supplied status + WRE + TD  (Overflows) 
-//    S3 user supplied status + RZ + TD   (Underflows) 
-//    
-//    
-//    If (Safe) is true, then
-//        Compute result using user supplied status field.
-//        No overflow or underflow here, but perhaps inexact.
-//        Return
-//    Else
-//       Determine if overflow or underflow  was raised.
-//       Fetch +/- overflow threshold for IEEE single, double,
-//       double extended   
-//    
-{ .mfi
-(p0)  setf.exp f60 = r50
-(p0)  fma.s3 f102 = f34, f36, f101 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fsetc.s3 0x7F,0x40 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    For Safe, no need to check for over/under. 
-//    For expm1, handle errors like exp. 
-//
-(p0)  fsetc.s2 0x7F,0x42
-	nop.i 999;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s2 f100 = f34, f36, f101 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fsetc.s2 0x7F,0x40 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p7)  fclass.m.unc   p12, p0 =  f102, 0x00F
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc   p11, p0 =  f102, 0x00F
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p7)  fcmp.ge.unc.s1 p10, p0 =  f100, f60
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-//    
-//    Create largest double exponent + 1.
-//    Create smallest double exponent - 1.
-//    
-(p0)  fcmp.ge.unc.s1 p8, p0 =  f100, f60
-	nop.i 999 ;;
-}
-//    
-//    fcmp:   resultS2 >= + overflow threshold  -> set (a) if true
-//    fcmp:   resultS2 <= - overflow threshold  -> set (b) if true
-//    fclass: resultS3 is denorm/unorm/0        -> set (d) if true
-//    
-{ .mib
-(p10) mov   GR_Parameter_TAG = 39
-	nop.i 999
-(p10) br.cond.sptk __libm_error_region ;;
-}
-{ .mib
-(p8)  mov   GR_Parameter_TAG = 12
-	nop.i 999
-(p8)  br.cond.sptk __libm_error_region ;;
-}
-//    
-//    Report that exp overflowed
-//    
-{ .mib
-(p12) mov   GR_Parameter_TAG = 40
-	nop.i 999
-(p12) br.cond.sptk __libm_error_region ;;
-}
-{ .mib
-(p11) mov   GR_Parameter_TAG = 13
-	nop.i 999
-(p11) br.cond.sptk __libm_error_region ;;
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-//    
-//    Report that exp underflowed
-//    
-(p0)  br.cond.sptk EXPL_64_RETURN ;;
-}
-EXPL_64_SPECIAL: 
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc p6,  p0 =  f8, 0x0c3 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc p13, p8 =  f8, 0x007 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p7)  fclass.m.unc p14, p0 =  f8, 0x007 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc p12, p9 =  f8, 0x021 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc p11, p0 =  f8, 0x022 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p7)  fclass.m.unc p10, p0 =  f8, 0x022 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//    
-//    Identify +/- 0, Inf, or -Inf 
-//    Generate the right kind of NaN.
-//    
-(p13) fadd.s0 f99 = f0, f1 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p14) mov f99 = f8 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p6)  fadd.s0 f99 = f8, f1 
-//    
-//    expl(+/-0) = 1 
-//    expm1l(+/-0) = +/-0 
-//    No exceptions raised
-//    
-(p6)  br.cond.sptk EXPL_64_RETURN ;; 
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-(p14) br.cond.sptk EXPL_64_RETURN ;; 
-}
-{ .mfi
-	nop.m 999
-(p11) mov f99 = f0 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p10) fsub.s1 f99 = f0, f1 
-//    
-//    expl(-Inf) = 0 
-//    expm1l(-Inf) = -1 
-//    No exceptions raised.
-//    
-(p10) br.cond.sptk EXPL_64_RETURN ;; 
-}
-{ .mfb
-	nop.m 999
-(p12) fmpy.s1 f99 = f8, f1 
-//    
-//    expl(+Inf) = Inf 
-//    No exceptions raised.
-//    
-(p0)  br.cond.sptk EXPL_64_RETURN ;; 
-}
-EXPL_64_UNSUPPORTED: 
-{ .mfb
-	nop.m 999
-(p0)  fmpy.s0 f99 = f8, f0 
-(p0)  br.cond.sptk EXPL_64_RETURN ;; 
-}
-EXPL_64_RETURN: 
-{ .mfb
-      nop.m 999
-(p0)  mov   f8     = f99
-(p0)  br.ret.sptk   b0
-}
-.endp
-ASM_SIZE_DIRECTIVE(expl) 
+      ldfd  FR_W2 = [GR_ad_W2],0         // Get W2
+      setf.exp FR_scale = GR_exp_2_k     // Set scale = 2^k
+      fnma.s1 FR_r = FR_L_lo, FR_float_N, FR_r // r = -L_lo * float_N + r
+}
+;;
 
-.proc __libm_error_region
-__libm_error_region:
+{ .mfi
+      setf.exp FR_2_mk = GR_exp_2_mk     // Form 2^-k
+      fma.s1 FR_poly = FR_r, FR_A3, FR_A2 // poly = r * A3 + A2
+      cmp.lt p8,p15 = GR_K,GR_big_expo_neg // Set Safe if K > big_expo_neg
+}
+{ .mfi
+      nop.m 999
+      fmpy.s1 FR_rsq = FR_r, FR_r         // rsq = r * r
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmpy.s1 FR_T = FR_T1, FR_T2         // T = T1 * T2
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+      fadd.s1 FR_W1_p1 = FR_W1, f1        // W1_p1 = W1 + 1.0
+      nop.i 999
+}
+;;
+
+{ .mfi
+(p7)  cmp.lt.unc  p8, p9 =  10, GR_K       // If expm1, set p8 if K > 10 
+      fma.s1 FR_poly = FR_r, FR_poly, FR_A1 // poly = r * poly + A1
+      nop.i 999
+}
+;;
+
+{ .mfi
+(p7)  cmp.eq  p15, p0 =  r0, r0            // If expm1, set Safe flag
+      fma.s1 FR_T_scale = FR_T, FR_scale, f0 // T_scale = T * scale
+(p9)  cmp.gt.unc  p9, p10 =  -10, GR_K     // If expm1, set p9 if K < -10
+                                           // If expm1, set p10 if -10<=K<=10
+}
+{ .mfi
+      nop.m 999
+      fma.s1 FR_W = FR_W2, FR_W1_p1, FR_W1 // W = W2 * (W1+1.0) + W1
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      mov FR_Y_hi = FR_T                   // Assume Y_hi = T
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fma.s1 FR_poly = FR_rsq, FR_poly, FR_r // poly = rsq * poly + r
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fma.s1 FR_Wp1_T_scale = FR_W, FR_T_scale, FR_T_scale // (W+1)*T*scale
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+      fma.s1 FR_W_T_scale = FR_W, FR_T_scale, f0 // W*T*scale
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fsub.s1 FR_Y_hi = f0, FR_2_mk      // If expm1, if K < -10 set Y_hi
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p10) fsub.s1 FR_Y_hi = FR_T, FR_2_mk    // If expm1, if |K|<=10 set Y_hi
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fma.s1 FR_result_lo = FR_Wp1_T_scale, FR_poly, FR_W_T_scale
+      nop.i 999
+}
+;;
+
+.pred.rel "mutex",p8,p9
+// If K > 10 adjust result_lo = result_lo - scale * 2^-k
+// If |K| <= 10 adjust result_lo = result_lo + scale * T
+{ .mfi
+      nop.m 999
+(p8)  fnma.s1 FR_result_lo = FR_scale, FR_2_mk, FR_result_lo // If K > 10
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_result_lo = FR_T_scale, f1, FR_result_lo // If |K| <= 10
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmpy.s0 FR_tmp = FR_A1, FR_A1         // Dummy op to set inexact
+      nop.i 999
+}
+{ .mfb
+      nop.m 999
+(p15) fma.s0 f8 = FR_Y_hi, FR_scale, FR_result_lo  // Safe result
+(p15) br.ret.sptk b0                        // Safe exit for normal path
+}
+;;
+
+// Here if unsafe, will only be here for exp with K < big_expo_neg
+{ .mfb
+      nop.m 999
+      fma.s0 FR_RESULT = FR_Y_hi, FR_scale, FR_result_lo  // Prelim result
+      br.cond.sptk EXP_POSSIBLE_UNDERFLOW  // Branch to unsafe code
+}
+;;
+
+ 
+EXP_SMALL: 
+// Here if 2^-60 < |x| < 2^-m, m=12 for exp, m=7 for expm1
+{ .mfi
+(p7)  ldfe FR_Q3 = [GR_ad_Q],16          // Get Q3 for small path, if expm1
+(p6)  fma.s1 FR_p65 = FR_P6, FR_r, FR_P5  // If exp, p65 = P6 * r + P5
+      nop.i 999
+}
+{ .mfi
+      mov GR_minus_one = -1
+(p7)  fma.s1 FR_q98 = FR_Q9, FR_r, FR_Q8  // If expm1, q98 = Q9 * r + Q8
+      nop.i 999
+}
+;;
+
+{ .mfi
+(p7)  ldfe FR_Q2 = [GR_ad_Q],16           // Get Q2 for small path, if expm1
+(p7)  fma.s1 FR_q65 = FR_Q6, FR_r, FR_Q5  // If expm1, q65 = Q6 * r + Q5
+      nop.i 999
+}
+;;
+
+{ .mfi
+      setf.sig FR_tmp = GR_minus_one      // Create value to force inexact
+(p6)  fma.s1 FR_p21 = FR_P2, FR_r, FR_P1  // If exp, p21 = P2 * r + P1
+      nop.i 999
+}
+{ .mfi
+(p7)  ldfe FR_Q1 = [GR_ad_Q],16           // Get Q1 for small path, if expm1
+(p7)  fma.s1 FR_q43 = FR_Q4, FR_r, FR_Q3  // If expm1, q43 = Q4 * r + Q3
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fma.s1 FR_p654 = FR_p65, FR_r, FR_P4 // If exp, p654 = p65 * r + P4
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p7)  fma.s1 FR_q987 = FR_q98, FR_r, FR_Q7 // If expm1, q987 = q98 * r + Q7
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p7)  fma.s1 FR_q21 = FR_Q2, FR_r, FR_Q1  // If expm1, q21 = Q2 * r + Q1
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fma.s1 FR_p210 = FR_p21, FR_rsq, FR_r // If exp, p210 = p21 * r + P0
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p7)  fma.s1 FR_q6543 = FR_q65, FR_rsq, FR_q43 // If expm1, q6543 = q65*r2+q43
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fma.s1 FR_p6543 = FR_p654, FR_r, FR_P3 // If exp, p6543 = p654 * r + P3
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p7)  fma.s1 FR_q9876543 = FR_q987, FR_r4, FR_q6543 // If expm1, q9876543 = ...
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fma.s1 FR_Y_lo = FR_p6543, FR_r4, FR_p210 // If exp, form Y_lo
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p7)  fma.s1 FR_Y_lo = FR_q9876543, FR_rsq, FR_q21 // If expm1, form Y_lo
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmpy.s0  FR_tmp = FR_tmp, FR_tmp   // Dummy op to set inexact
+      nop.i 999
+}
+;;
+
+.pred.rel "mutex",p6,p7
+{ .mfi
+      nop.m 999
+(p6)  fma.s0 f8 = FR_Y_lo, f1, f1          // If exp, result = 1 + Y_lo
+      nop.i 999
+}
+{ .mfb
+      nop.m 999
+(p7)  fma.s0 f8 = FR_Y_lo, FR_rsq, FR_norm_x // If expm1, result = Y_lo*r2+x
+      br.ret.sptk  b0                      // Exit for 2^-60 <= |x| < 2^-m
+                                           // m=12 for exp, m=7 for expm1
+}
+;;
+
+
+EXP_VERY_SMALL: 
+//
+// Here if 0 < |x| < 2^-60
+// If exp, result = 1.0 + x
+// If expm1, result = x +x*x/2, but have to check for possible underflow
+//
+
+{ .mfi
+(p7)  mov GR_exp_underflow = -16381        // Exponent for possible underflow
+(p6)  fadd.s0 f8 = f1, FR_norm_x           // If exp, result = 1+x
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p7)  fmpy.s1 FR_result_lo = FR_half_x, FR_norm_x  // If expm1 result_lo = x*x/2
+      nop.i 999
+}
+;;
+
+{ .mfi
+(p7)  cmp.lt.unc p0, p8 = GR_exp_x, GR_exp_underflow // Unsafe if expm1 x small
+(p7)  mov FR_Y_hi = FR_norm_x              // If expm1, Y_hi = x
+(p7)  cmp.lt p0, p15 = GR_exp_x, GR_exp_underflow // Unsafe if expm1 x small
+}
+;;
+
+{ .mfb
+      nop.m 999
+(p8)  fma.s0 f8 = FR_norm_x, f1, FR_result_lo // If expm1, result=x+x*x/2
+(p15) br.ret.sptk b0                       // If Safe, exit
+}
+;;
+
+// Here if expm1 and 0 < |x| < 2^-16381;  may be possible underflow
+{ .mfb
+      nop.m 999
+      fma.s0 FR_RESULT = FR_Y_hi, FR_scale, FR_result_lo // Prelim result
+      br.cond.sptk EXP_POSSIBLE_UNDERFLOW  // Branch to unsafe code
+}
+;;
+
+EXP_CERTAIN_UNDERFLOW_ZERO:
+// Here if x < zero_uflow_x
+// For exp, set result to tiny+0.0 and set I, U, and branch to error handling
+// For expm1, set result to tiny-1.0 and set I, and exit
+{ .mmi
+      alloc GR_SAVE_PFS = ar.pfs,0,3,4,0
+      nop.m 999
+      mov GR_one = 1
+}
+;;
+
+{ .mmi
+      setf.exp FR_small = GR_one               // Form small value
+      nop.m 999
+(p6)  mov GR_Parameter_TAG = 13                // Error tag for exp underflow
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmerge.s FR_X = f8,f8                    // Save x for error call
+      nop.i 999
+}
+;;
+
+.pred.rel "mutex",p6,p7
+{ .mfb
+      nop.m 999
+(p6)  fma.s0 FR_RESULT = FR_small, FR_small, f0 // If exp, set I,U, tiny result
+(p6)  br.cond.sptk __libm_error_region          // If exp, go to error handling
+}
+{ .mfb
+      nop.m 999
+(p7)  fms.s0 f8 = FR_small, FR_small, f1        // If expm1, set I, result -1.0
+(p7)  br.ret.sptk  b0                           // If expm1, exit
+}
+;;
+     
+  
+EXP_OVERFLOW:
+// Here if x >= min_oflow_x
+{ .mmi
+      alloc GR_SAVE_PFS = ar.pfs,0,3,4,0
+      mov GR_huge_exp = 0x1fffe
+      nop.i 999
+}
+{ .mfi
+      mov GR_huge_signif = -0x1
+      nop.f 999
+(p6)  mov GR_Parameter_TAG = 12                // Error tag for exp overflow
+}
+;;
+
+{ .mmf
+      setf.exp FR_huge_exp = GR_huge_exp       // Create huge value
+      setf.sig FR_huge_signif = GR_huge_signif // Create huge value
+      fmerge.s FR_X = f8,f8                    // Save x for error call
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmerge.se FR_huge = FR_huge_exp, FR_huge_signif
+(p7)  mov GR_Parameter_TAG = 39                // Error tag for expm1 overflow
+}
+;;
+
+{ .mfb
+      nop.m 999
+      fma.s0 FR_RESULT = FR_huge, FR_huge, FR_huge // Force I, O, and Inf
+      br.cond.sptk __libm_error_region         // Branch to error handling
+}
+;;
+
+
+
+EXP_POSSIBLE_UNDERFLOW:
+// Here if exp and zero_uflow_x < x < about -11356 [where k < -16381]
+// Here if expm1 and |x| < 2^-16381
+{ .mfi
+      alloc GR_SAVE_PFS = ar.pfs,0,3,4,0
+      fsetc.s2 0x7F,0x41                   // Set FTZ and disable traps
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fma.s2 FR_ftz = FR_Y_hi, FR_scale, FR_result_lo   // Result with FTZ
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fsetc.s2 0x7F,0x40                   // Disable traps (set s2 default)
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p7)  fclass.m.unc p12, p0 = FR_ftz, 0x00F // If expm1, FTZ result denorm, zero?
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fclass.m.unc p11, p0 = FR_ftz, 0x00F // If exp, FTZ result denorm or zero?
+      nop.i 999
+}
+;;
+
+{ .mfb
+(p12) mov   GR_Parameter_TAG = 40             // expm1 underflow
+      fmerge.s FR_X = f8,f8                   // Save x for error call
+(p12) br.cond.spnt __libm_error_region        // Branch on expm1 underflow
+}
+;;
+
+{ .mib
+(p11) mov   GR_Parameter_TAG = 13             // exp underflow
+      nop.i 999
+(p11) br.cond.spnt __libm_error_region        // Branch on exp underflow
+}
+;;
+
+{ .mfb
+      nop.m 999
+      mov   f8     = FR_RESULT                // Was safe after all
+      br.ret.sptk   b0
+}
+;;
+
+
+EXP_64_SPECIAL: 
+// Here if x natval, nan, inf, zero
+// If x natval, +inf, or if expm1 and x zero, just return x.
+// The other cases must be tested for, and results set.
+// These cases do not generate exceptions.
+{ .mfi
+      nop.m 999
+      fclass.m p8, p0 =  f8, 0x0c3            // Is x nan?
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fclass.m.unc p13, p0 =  f8, 0x007       // If exp, is x zero?
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p6)  fclass.m.unc p11, p0 =  f8, 0x022       // If exp, is x -inf?
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p8)  fadd.s0 f8 = f8, f1                     // If x nan, result quietized x
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p7)  fclass.m.unc p10, p0 =  f8, 0x022       // If expm1, is x -inf?
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p13) fadd.s0 f8 = f0, f1                     // If exp and x zero, result 1.0
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p11) mov f8 = f0                             // If exp and x -inf, result 0
+      nop.i 999
+}
+;;
+
+{ .mfb
+      nop.m 999
+(p10) fsub.s1 f8 = f0, f1                     // If expm1, x -inf, result -1.0
+      br.ret.sptk b0                          // Exit special cases
+}
+;;
+
+
+EXP_64_UNSUPPORTED: 
+// Here if x unsupported type
+{ .mfb
+      nop.m 999
+      fmpy.s0 f8 = f8, f0                     // Return nan
+      br.ret.sptk   b0
+}
+;;
+
+GLOBAL_IEEE754_END(expl)
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -1598,9 +1421,9 @@ __libm_error_region:
         br.call.sptk b0=__libm_error_support#  // Call error handling function
 };;
 { .mmi
-        nop.m 0
-        nop.m 0
         add   GR_Parameter_RESULT = 48,sp
+        nop.m 0
+        nop.i 0
 };;
 { .mmi
         ldfe  f8 = [GR_Parameter_RESULT]       // Get return result off stack
@@ -1613,8 +1436,7 @@ __libm_error_region:
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
 };;
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region#)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

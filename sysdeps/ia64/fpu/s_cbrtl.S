@@ -1,11 +1,10 @@
-.file "cbrtl.asm"
+.file "cbrtl.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Cristina Iordache, Ted Kubaska, 
-// Bob Norin, Shane Story, and Ping Tak Peter Tang 
-// of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -21,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,11 +35,13 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 4/28/00: Initial version 
+// 04/28/00 Initial version 
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/06/03 Reordered header: .section, .global, .proc, .align
 //
 // API
 //==============================================================
@@ -95,29 +96,26 @@
 //   r2-r3, r23-r30
 //   p6,p7,p12
 
-#include "libm_support.h"
+
 
 // Data tables
 //==============================================================
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+RODATA
 
 .align 16
 
-poly_coeffs:
-ASM_TYPE_DIRECTIVE(poly_coeffs,@object)
+LOCAL_OBJECT_START(poly_coeffs)
+
 data8 0xaaaaaaaaaaaaaab1, 0x00003ffd // C_1
 data8 0xe38e38e38e38e3e0, 0x00003ffb // C_2
 data8 0x3faf9add3c0be9a6, 0x3fa511e8d2b1f749 // C_3, C_4
 data8 0x3f9ee71b2c6ebe99, 0x3f9809180fd0340c // C_5, C_6
-ASM_SIZE_DIRECTIVE(poly_coeffs)
+LOCAL_OBJECT_END(poly_coeffs)
 
-T_table:
-ASM_TYPE_DIRECTIVE(T_table,@object)
+
+LOCAL_OBJECT_START(T_table)
+
 
 data8 0x80155c748c374836, 0x8040404b0879f7f9
 data8 0x806b5dce4b405c10, 0x8096b586974669b1
@@ -503,14 +501,15 @@ data8 0xfec316fecaf3f2ab, 0xfeecfdaf33fadb80
 data8 0xff16fffe2fa8fad6, 0xff411e0ba9db886d
 data8 0xff6b57f7c33e4e9a, 0xff95ade2d1bd7358
 data8 0xffc01fed60f86fb5, 0xffeaae3832b63956
-ASM_SIZE_DIRECTIVE(T_table)
+LOCAL_OBJECT_END(T_table)
 
 
 
 
 
-D_table:
-ASM_TYPE_DIRECTIVE(D_table,@object)
+
+LOCAL_OBJECT_START(D_table)
+
 data4 0x1e50f488, 0x1ebdc559, 0x1e649ec1, 0x9eed9b2c
 data4 0x9e511c44, 0x9ec6d551, 0x9eefe248, 0x9e313854
 data4 0x9f54ff18, 0x9d231411, 0x1ee5d63c, 0x9edf6b95
@@ -703,25 +702,16 @@ data4 0x9eafd508, 0x9ef0e9fc, 0x1d1307ac, 0x1eecee20
 data4 0x1cf60c6f, 0x9d556216, 0x9eaed175, 0x9ec919f4
 data4 0x1ec2c988, 0x1cd82772, 0x9dc99456, 0x1eab0467
 data4 0x1e89b36f, 0x1c757944, 0x1eef9abd, 0x9e98664d
-ASM_SIZE_DIRECTIVE(D_table)
+LOCAL_OBJECT_END(D_table)
 
-
-
-
-
-.align 32
-.global cbrtl#
 
 .section .text
-.proc  cbrtl#
-.align 32
-cbrtl: 
-
+GLOBAL_LIBM_ENTRY(cbrtl)
 
 { .mfi
   getf.sig r3=f8
      // will continue only for normal/denormal numbers          
-(p0)  fclass.nm.unc p12,p7 = f8, 0x1b           
+      fclass.nm.unc p12,p7 = f8, 0x1b           
   // r2 = pointer to C_1...C_6 followed by T_table
   addl r2 = @ltoff(poly_coeffs), gp;;
 }
@@ -898,5 +888,5 @@ cbrtl:
   (p6) fma.s0 f8=f8,f6,f8
   br.ret.sptk b0;;
 }
-.endp cbrtl
-ASM_SIZE_DIRECTIVE(cbrtl)
+GLOBAL_LIBM_END(cbrtl)
+

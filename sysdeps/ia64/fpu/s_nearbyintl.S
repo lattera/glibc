@@ -1,11 +1,10 @@
 .file "nearbyintl.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 10/19/2000 by John Harrison, Cristina Iordache, Ted Kubaska,
-// Bob Norin, Tom Rowan, Shane Story, and Ping Tak Peter Tang of the
-// Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -21,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,20 +35,19 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 10/19/2000: Created
-// 2/08/01  Corrected behavior for all rounding modes.
+// 10/19/00 Created
+// 02/08/01 Corrected behavior for all rounding modes.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //==============================================================
 //
 // API
 //==============================================================
 // long double nearbyintl(long double x)
-
-#include "libm_support.h"
-
 //
 // general registers used:  
 //
@@ -111,15 +109,8 @@ NEARBYINT_SIGNED_FLOAT_INT_f8 = f12
 // 1    1    1   0        0     1 11     0xe7
 
 
-.align 32
-.global nearbyintl#
-
 .section .text
-.proc  nearbyintl#
-.align 32
-
-
-nearbyintl: 
+GLOBAL_LIBM_ENTRY(nearbyintl)
 
 { .mfi
       mov nearbyint_GR_fpsr = ar40           // Read the fpsr--need to check rc.s0
@@ -142,7 +133,7 @@ nearbyintl:
 
 { .mfb
 	nop.m 999
-(p6)  fnorm f8 = f8
+(p6)  fnorm.s0 f8 = f8
 (p6)  br.ret.spnt   b0    // Exit if x nan, inf, zero
 ;;
 }
@@ -180,11 +171,11 @@ nearbyintl:
 // rounding mode to that of s0 and repeat conversions.
 // Must merge the original sign for cases where the result is zero or the input
 // is the largest that still has a fraction (0x1007dfffffffffff)
-L(NEARBYINT_COMMON):
+NEARBYINT_COMMON:
 { .mfb
       cmp.ne   p11,p0 = nearbyint_GR_rcs0, r0
 (p6) fmerge.s  NEARBYINT_SIGNED_FLOAT_INT_f8 = f8, NEARBYINT_FLOAT_INT_f8
-(p11) br.cond.spnt L(NEARBYINT_NOT_ROUND_NEAREST)  // Branch if not round to nearest
+(p11) br.cond.spnt NEARBYINT_NOT_ROUND_NEAREST  // Branch if not round to nearest
 ;;
 }
 
@@ -197,13 +188,13 @@ L(NEARBYINT_COMMON):
 
 { .mfb
       nop.m 999
-(p6) fnorm f8 = NEARBYINT_SIGNED_FLOAT_INT_f8
+(p6) fnorm.s0 f8 = NEARBYINT_SIGNED_FLOAT_INT_f8
      br.ret.sptk    b0
 ;;
 }
 
 
-L(NEARBYINT_NOT_ROUND_NEAREST):
+NEARBYINT_NOT_ROUND_NEAREST:
 // Set rounding mode of s2 to that of s0
 { .mfi
       mov nearbyint_GR_rcs0 = r0       // Clear so we don't come back here
@@ -222,10 +213,9 @@ L(NEARBYINT_NOT_ROUND_NEAREST):
 { .mfb
 	nop.m 999
       fcvt.xf         NEARBYINT_FLOAT_INT_f8   = NEARBYINT_INT_f8
-      br.cond.sptk  L(NEARBYINT_COMMON)
+      br.cond.sptk  NEARBYINT_COMMON
 ;;
 }
 
 
-.endp nearbyintl
-ASM_SIZE_DIRECTIVE(nearbyintl)
+GLOBAL_LIBM_END(nearbyintl)

@@ -1,10 +1,10 @@
 .file "acosf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,19 +35,23 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 
 // History
 //==============================================================
-// 2/02/00  Initial revision
-// 6/28/00  Improved speed
-// 6/31/00  Changed register allocation because of some duplicate macros
+// 02/02/00 Initial version
+// 06/28/00 Improved speed
+// 06/31/00 Changed register allocation because of some duplicate macros
 //          moved nan exit bundle up to gain a cycle.
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 8/17/00  Changed predicate register macro-usage to direct predicate
+// 08/17/00 Changed predicate register macro-usage to direct predicate
 //          names due to an assembler bug.
 // 10/17/00 Improved speed of x=0 and x=1 paths, set D flag if x denormal.
+// 03/13/01 Corrected sign of imm1 value in dep instruction.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/06/03 Reordered header: .section, .global, .proc, .align
+// 04/17/03 Moved mutex after label
 
 
 // Description
@@ -115,7 +119,6 @@
 //  answer2 = sign(x) z P(t)       if x>0
 //          = sign(x) z P(t) + pi  if x<0
 
-#include "libm_support.h"
 
 //
 // Assembly macros
@@ -222,42 +225,30 @@ acosf_poly_p1a                   = f90
 // Data tables
 //==============================================================
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+RODATA
 
 .align 16
 
-acosf_coeff_1_table:
-ASM_TYPE_DIRECTIVE(acosf_coeff_1_table,@object)
+LOCAL_OBJECT_START(acosf_coeff_1_table)
 data8 0x3FC5555607DCF816 // P1
 data8 0x3F9CF81AD9BAB2C6 // P4
 data8 0x3FC59E0975074DF3 // P7
 data8 0xBFA6F4CC2780AA1D // P6
 data8 0x3FC2DD45292E93CB // P9
 data8 0x3fe6a09e667f3bcd // sqrt(2)/2
-ASM_SIZE_DIRECTIVE(acosf_coeff_1_table)
+LOCAL_OBJECT_END(acosf_coeff_1_table)
 
-acosf_coeff_2_table:
-ASM_TYPE_DIRECTIVE(acosf_coeff_2_table,@object)
+LOCAL_OBJECT_START(acosf_coeff_2_table)
 data8 0x3FA6F108E31EFBA6 // P3
 data8 0xBFCA31BF175D82A0 // P8
 data8 0x3FA30C0337F6418B // P5
 data8 0x3FB332C9266CB1F9 // P2
 data8 0x3ff921fb54442d18 // pi_by_2
-ASM_SIZE_DIRECTIVE(acosf_coeff_2_table)
+LOCAL_OBJECT_END(acosf_coeff_2_table)
 
-.align 32
-.global acosf
-ASM_TYPE_DIRECTIVE(acosf,@function)
 
 .section .text
-.proc  acosf
-.align 32
-
-acosf:
+GLOBAL_LIBM_ENTRY(acosf)
  
 // Load the addresses of the two tables.
 // Then, load the coefficients and other constants.
@@ -342,7 +333,7 @@ acosf:
 } 
 {     .mfb 
      nop.m                                               999
-(p8) fma.s f8                = f8,f1,f0
+(p8) fma.s.s0 f8                = f8,f1,f0
 (p8) br.ret.spnt   b0 ;;  // Exit if x=nan
 }
 
@@ -350,7 +341,7 @@ acosf:
 {     .mfb 
      nop.m                 999
      fcmp.eq.s1 p6,p0 = acosf_abs_x,f1
-(p10) br.cond.spnt  L(ACOSF_ZERO) ;;     // Branch if x=0
+(p10) br.cond.spnt  ACOSF_ZERO ;;     // Branch if x=0
 } 
  
 {     .mfi 
@@ -367,7 +358,7 @@ acosf:
 {     .mfb 
      nop.m                      999
      fma.s1    acosf_t4  =    acosf_t2,acosf_t2,f0
-(p6) br.cond.spnt  L(ACOSF_ABS_ONE) ;;     // Branch if |x|=1
+(p6) br.cond.spnt  ACOSF_ABS_ONE ;;     // Branch if |x|=1
 } 
 
 {     .mfi 
@@ -575,42 +566,40 @@ acosf:
 .pred.rel "mutex",p8,p7    //acosf_pred_GTsqrt2by2,acosf_pred_LEsqrt2by2
 {     .mfi 
       nop.m            999
-(p8)  fma.s     f8   =    acosf_z,acosf_Pt,acosf_sgn_x_piby2
+(p8)  fma.s.s0     f8   =    acosf_z,acosf_Pt,acosf_sgn_x_piby2
       nop.i            999
 } 
  
 {     .mfb 
       nop.m            999
-(p7)  fms.s     f8   =    acosf_const_piby2,f1,acosf_sinf1
+(p7)  fms.s.s0     f8   =    acosf_const_piby2,f1,acosf_sinf1
       br.ret.sptk b0 ;;
 } 
 
-L(ACOSF_ZERO):
+ACOSF_ZERO:
 // Here if x=0
 {     .mfb 
       nop.m                 999
-      fma.s    f8 =    acosf_const_piby2,f1,f0  // acosf(0)=pi/2
+      fma.s.s0    f8 =    acosf_const_piby2,f1,f0  // acosf(0)=pi/2
       br.ret.sptk b0 ;;
 } 
 
 
-L(ACOSF_ABS_ONE):
+ACOSF_ABS_ONE:
 .pred.rel "mutex",p11,p12
 // Here if |x|=1
 {     .mfi 
       nop.m                 999
-(p11) fma.s    f8 =    acosf_const_piby2,f1,acosf_const_piby2 // acosf(-1)=pi
+(p11) fma.s.s0    f8 =    acosf_const_piby2,f1,acosf_const_piby2 // acosf(-1)=pi
       nop.i                 999
 } 
 {     .mfb 
       nop.m                 999
-(p12) fma.s    f8 =    f1,f0,f0 // acosf(1)=0
+(p12) fma.s.s0    f8 =    f1,f0,f0 // acosf(1)=0
       br.ret.sptk b0 ;;
 } 
 
-.endp acosf
-ASM_SIZE_DIRECTIVE(acosf)
-
+GLOBAL_LIBM_END(acosf)
 
 // Stack operations when calling error support.
 //       (1)               (2)
@@ -642,8 +631,7 @@ ASM_SIZE_DIRECTIVE(acosf)
 //                              restore ar.pfs
 
 
-.proc __libm_error_region
-__libm_error_region:
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -699,8 +687,7 @@ __libm_error_region:
         br.ret.sptk     b0                     // Return
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

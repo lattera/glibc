@@ -1,12 +1,10 @@
-
 .file "sincosf.s"
 
 
-// Copyright (C) 2000, 2001, Intel Corporation
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -22,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -37,663 +35,680 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
-
-
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
+//
 // History
 //==============================================================
-// 2/02/00  Initial revision 
-// 4/02/00  Unwind support added.
-// 5/10/00  Improved speed with new algorithm.
-// 8/08/00  Improved speed by avoiding SIR flush.
-// 8/17/00  Changed predicate register macro-usage to direct predicate
-//          names due to an assembler bug.
-// 8/30/00  Put sin_of_r before sin_tbl_S_cos_of_r to gain a cycle 
-// 1/02/00  Fixed flag settings, improved speed.
+// 02/02/00 Initial version
+// 04/02/00 Unwind support added.
+// 06/16/00 Updated tables to enforce symmetry
+// 08/31/00 Saved 2 cycles in main path, and 9 in other paths.
+// 09/20/00 The updated tables regressed to an old version, so reinstated them
+// 10/18/00 Changed one table entry to ensure symmetry
+// 01/03/01 Improved speed, fixed flag settings for small arguments.
+// 02/18/02 Large arguments processing routine excluded
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 06/03/02 Insure inexact flag set for large arg result
+// 09/05/02 Single precision version is made using double precision one as base
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
 // API
 //==============================================================
 // float sinf( float x);
 // float cosf( float x);
 //
+// Overview of operation
+//==============================================================
+//
+// Step 1
+// ======
+// Reduce x to region -1/2*pi/2^k ===== 0 ===== +1/2*pi/2^k  where k=4
+//    divide x by pi/2^k.
+//    Multiply by 2^k/pi.
+//    nfloat = Round result to integer (round-to-nearest)
+//
+// r = x -  nfloat * pi/2^k
+//    Do this as (x -  nfloat * HIGH(pi/2^k)) - nfloat * LOW(pi/2^k) 
 
-#include "libm_support.h"	
-	
+//    for increased accuracy.
+//    pi/2^k is stored as two numbers that when added make pi/2^k.
+//       pi/2^k = HIGH(pi/2^k) + LOW(pi/2^k)
+//    HIGH part is rounded to zero, LOW - to nearest
+//
+// x = (nfloat * pi/2^k) + r
+//    r is small enough that we can use a polynomial approximation
+//    and is referred to as the reduced argument.
+//
+// Step 3
+// ======
+// Take the unreduced part and remove the multiples of 2pi.
+// So nfloat = nfloat (with lower k+1 bits cleared) + lower k+1 bits
+//
+//    nfloat (with lower k+1 bits cleared) is a multiple of 2^(k+1)
+//    N * 2^(k+1)
+//    nfloat * pi/2^k = N * 2^(k+1) * pi/2^k + (lower k+1 bits) * pi/2^k
+//    nfloat * pi/2^k = N * 2 * pi + (lower k+1 bits) * pi/2^k
+//    nfloat * pi/2^k = N2pi + M * pi/2^k
+//
+//
+// Sin(x) = Sin((nfloat * pi/2^k) + r)
+//        = Sin(nfloat * pi/2^k) * Cos(r) + Cos(nfloat * pi/2^k) * Sin(r)
+//
+//          Sin(nfloat * pi/2^k) = Sin(N2pi + Mpi/2^k)
+//                               = Sin(N2pi)Cos(Mpi/2^k) + Cos(N2pi)Sin(Mpi/2^k)
+//                               = Sin(Mpi/2^k)
+//
+//          Cos(nfloat * pi/2^k) = Cos(N2pi + Mpi/2^k)
+//                               = Cos(N2pi)Cos(Mpi/2^k) + Sin(N2pi)Sin(Mpi/2^k)
+//                               = Cos(Mpi/2^k)
+//
+// Sin(x) = Sin(Mpi/2^k) Cos(r) + Cos(Mpi/2^k) Sin(r)
+//
+//
+// Step 4
+// ======
+// 0 <= M < 2^(k+1)
+// There are 2^(k+1) Sin entries in a table.
+// There are 2^(k+1) Cos entries in a table.
+//
+// Get Sin(Mpi/2^k) and Cos(Mpi/2^k) by table lookup.
+//
+//
+// Step 5
+// ======
+// Calculate Cos(r) and Sin(r) by polynomial approximation.
+//
+// Cos(r) = 1 + r^2 q1  + r^4 q2  = Series for Cos
+// Sin(r) = r + r^3 p1  + r^5 p2  = Series for Sin
+//
+// and the coefficients q1, q2 and p1, p2 are stored in a table
+//
+//
+// Calculate
+// Sin(x) = Sin(Mpi/2^k) Cos(r) + Cos(Mpi/2^k) Sin(r)
+//
+// as follows
+//
+//    S[m] = Sin(Mpi/2^k) and C[m] = Cos(Mpi/2^k)
+//    rsq = r*r
+//
+//
+//    P = P1 + r^2*P2
+//    Q = Q1 + r^2*Q2
+//
+//       rcub = r * rsq
+//       Sin(r) = r + rcub * P
+//              = r + r^3p1  + r^5p2 = Sin(r)
+//
+//            The coefficients are not exactly these values, but almost.
+//
+//            p1 = -1/6  = -1/3!
+//            p2 = 1/120 =  1/5!
+//            p3 = -1/5040 = -1/7!
+//            p4 = 1/362889 = 1/9!
+//
+//       P =  r + r^3 * P
+//
+//    Answer = S[m] Cos(r) + C[m] P
+//
+//       Cos(r) = 1 + rsq Q
+//       Cos(r) = 1 + r^2 Q
+//       Cos(r) = 1 + r^2 (q1 + r^2q2)
+//       Cos(r) = 1 + r^2q1 + r^4q2
+//
+//       S[m] Cos(r) = S[m](1 + rsq Q)
+//       S[m] Cos(r) = S[m] + S[m] rsq Q
+//       S[m] Cos(r) = S[m] + s_rsq Q
+//       Q         = S[m] + s_rsq Q
+//
+// Then,
+//
+//    Answer = Q + C[m] P
+
+
+// Registers used
+//==============================================================
+// general input registers:
+// r14 -> r19
+// r32 -> r45
+
+// predicate registers used:
+// p6 -> p14
+
+// floating-point registers used
+// f9 -> f15
+// f32 -> f61
+
 // Assembly macros
 //==============================================================
+sincosf_NORM_f8                 = f9
+sincosf_W                       = f10
+sincosf_int_Nfloat              = f11
+sincosf_Nfloat                  = f12
 
-// SIN_Sin_Flag               = p6
-// SIN_Cos_Flag               = p7
+sincosf_r                       = f13
+sincosf_rsq                     = f14
+sincosf_rcub                    = f15
+sincosf_save_tmp                = f15
 
-// integer registers used
+sincosf_Inv_Pi_by_16            = f32
+sincosf_Pi_by_16_1              = f33
+sincosf_Pi_by_16_2              = f34
 
- SIN_AD_PQ_1                = r33
- SIN_AD_PQ_2                = r33
- sin_GR_sincos_flag         = r34
- sin_GR_Mint                = r35
+sincosf_Inv_Pi_by_64            = f35
 
- sin_GR_index               = r36
- gr_tmp                     = r37
+sincosf_Pi_by_16_3              = f36
 
- GR_SAVE_B0                 = r37
- GR_SAVE_GP                 = r38
- GR_SAVE_PFS                = r39
+sincosf_r_exact                 = f37
 
+sincosf_Sm                      = f38
+sincosf_Cm                      = f39
 
-// floating point registers used
+sincosf_P1                      = f40
+sincosf_Q1                      = f41
+sincosf_P2                      = f42
+sincosf_Q2                      = f43
+sincosf_P3                      = f44
+sincosf_Q3                      = f45
+sincosf_P4                      = f46
+sincosf_Q4                      = f47
 
- sin_coeff_P1               = f32
- sin_coeff_P2               = f33
- sin_coeff_Q1               = f34
- sin_coeff_Q2               = f35
- sin_coeff_P4               = f36
- sin_coeff_P5               = f37
- sin_coeff_Q3               = f38
- sin_coeff_Q4               = f39
- sin_Mx                     = f40
- sin_Mfloat                 = f41
- sin_tbl_S                  = f42
- sin_tbl_C                  = f43
- sin_r                      = f44
- sin_rcube                  = f45
- sin_tsq                    = f46
- sin_r7                     = f47
- sin_t                      = f48
- sin_poly_p2                = f49
- sin_poly_p1                = f50
- fp_tmp                     = f51
- sin_poly_p3                = f52
- sin_poly_p4                = f53
- sin_of_r                   = f54
- sin_S_t                    = f55
- sin_poly_q2                = f56
- sin_poly_q1                = f57
- sin_S_tcube                = f58
- sin_poly_q3                = f59
- sin_poly_q4                = f60
- sin_tbl_S_tcube            = f61
- sin_tbl_S_cos_of_r         = f62
+sincosf_P_temp1                 = f48
+sincosf_P_temp2                 = f49
 
- sin_coeff_Q5               = f63
- sin_coeff_Q6               = f64
- sin_coeff_P3               = f65
+sincosf_Q_temp1                 = f50
+sincosf_Q_temp2                 = f51
 
- sin_poly_q5                = f66
- sin_poly_q12               = f67
- sin_poly_q3456             = f68
- fp_tmp2                    = f69
- SIN_NORM_f8                = f70
+sincosf_P                       = f52
+sincosf_Q                       = f53
 
+sincosf_srsq                    = f54
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+sincosf_SIG_INV_PI_BY_16_2TO61  = f55
+sincosf_RSHF_2TO61              = f56
+sincosf_RSHF                    = f57
+sincosf_2TOM61                  = f58
+sincosf_NFLOAT                  = f59
+sincosf_W_2TO61_RSH             = f60
 
+fp_tmp                          = f61
+
+/////////////////////////////////////////////////////////////
+
+sincosf_AD_1                    = r33
+sincosf_AD_2                    = r34
+sincosf_exp_limit               = r35
+sincosf_r_signexp               = r36
+sincosf_AD_beta_table           = r37
+sincosf_r_sincos                = r38
+
+sincosf_r_exp                   = r39
+sincosf_r_17_ones               = r40
+
+sincosf_GR_sig_inv_pi_by_16     = r14
+sincosf_GR_rshf_2to61           = r15
+sincosf_GR_rshf                 = r16
+sincosf_GR_exp_2tom61           = r17
+sincosf_GR_n                    = r18
+sincosf_GR_m                    = r19
+sincosf_GR_32m                  = r19
+sincosf_GR_all_ones             = r19
+
+gr_tmp                          = r41
+GR_SAVE_PFS                     = r41
+GR_SAVE_B0                      = r42
+GR_SAVE_GP                      = r43
+
+RODATA
 .align 16
 
-sin_coeff_1_table:
-ASM_TYPE_DIRECTIVE(sin_coeff_1_table,@object)
-data8 0xBF56C16C16BF6462       // q3
-data8 0x3EFA01A0128B9EBC       // q4
-data8 0xBE927E42FDF33FFE       // q5
-data8 0x3E21DA5C72A446F3       // q6
-data8 0x3EC71DD1D5E421A4       // p4
-data8 0xBE5AC5C9D0ACF95A       // p5
-data8 0xBFC55555555554CA       // p1
-data8 0x3F811111110F2395       // p2
-data8 0xBFE0000000000000       // q1
-data8 0x3FA55555555554EF       // q2
-data8 0xBF2A01A011232913       // p3
-data8 0x0000000000000000       // pad
- 
+// Pi/16 parts
+LOCAL_OBJECT_START(double_sincosf_pi)
+   data8 0xC90FDAA22168C234, 0x00003FFC // pi/16 1st part
+   data8 0xC4C6628B80DC1CD1, 0x00003FBC // pi/16 2nd part
+LOCAL_OBJECT_END(double_sincosf_pi)
 
-/////////////////////////////////////////
+// Coefficients for polynomials
+LOCAL_OBJECT_START(double_sincosf_pq_k4)
+   data8 0x3F810FABB668E9A2 // P2
+   data8 0x3FA552E3D6DE75C9 // Q2
+   data8 0xBFC555554447BC7F // P1
+   data8 0xBFDFFFFFC447610A // Q1
+LOCAL_OBJECT_END(double_sincosf_pq_k4)
 
-data8 0xBFE1A54991426566   //sin(-32)
-data8 0x3FEAB1F5305DE8E5   //cos(-32)
-data8 0x3FD9DBC0B640FC81   //sin(-31)
-data8 0x3FED4591C3E12A20   //cos(-31)
-data8 0x3FEF9DF47F1C903D   //sin(-30)
-data8 0x3FC3BE82F2505A52   //cos(-30)
-data8 0x3FE53C7D20A6C9E7   //sin(-29)
-data8 0xBFE7F01658314E47   //cos(-29)
-data8 0xBFD156853B4514D6   //sin(-28)
-data8 0xBFEECDAAD1582500   //cos(-28)
-data8 0xBFEE9AA1B0E5BA30   //sin(-27)
-data8 0xBFD2B266F959DED5   //cos(-27)
-data8 0xBFE866E0FAC32583   //sin(-26)
-data8 0x3FE4B3902691A9ED   //cos(-26)
-data8 0x3FC0F0E6F31E809D   //sin(-25)
-data8 0x3FEFB7EEF59504FF   //cos(-25)
-data8 0x3FECFA7F7919140F   //sin(-24)
-data8 0x3FDB25BFB50A609A   //cos(-24)
-data8 0x3FEB143CD0247D02   //sin(-23)
-data8 0xBFE10CF7D591F272   //cos(-23)
-data8 0x3F8220A29F6EB9F4   //sin(-22)
-data8 0xBFEFFFADD8D4ACDA   //cos(-22)
-data8 0xBFEAC5E20BB0D7ED   //sin(-21)
-data8 0xBFE186FF83773759   //cos(-21)
-data8 0xBFED36D8F55D3CE0   //sin(-20)
-data8 0x3FDA1E043964A83F   //cos(-20)
-data8 0xBFC32F2D28F584CF   //sin(-19)
-data8 0x3FEFA377DE108258   //cos(-19)
-data8 0x3FE8081668131E26   //sin(-18)
-data8 0x3FE52150815D2470   //cos(-18)
-data8 0x3FEEC3C4AC42882B   //sin(-17)
-data8 0xBFD19C46B07F58E7   //cos(-17)
-data8 0x3FD26D02085F20F8   //sin(-16)
-data8 0xBFEEA5257E962F74   //cos(-16)
-data8 0xBFE4CF2871CEC2E8   //sin(-15)
-data8 0xBFE84F5D069CA4F3   //cos(-15)
-data8 0xBFEFB30E327C5E45   //sin(-14)
-data8 0x3FC1809AEC2CA0ED   //cos(-14)
-data8 0xBFDAE4044881C506   //sin(-13)
-data8 0x3FED09CDD5260CB7   //cos(-13)
-data8 0x3FE12B9AF7D765A5   //sin(-12)
-data8 0x3FEB00DA046B65E3   //cos(-12)
-data8 0x3FEFFFEB762E93EB   //sin(-11)
-data8 0x3F7220AE41EE2FDF   //cos(-11)
-data8 0x3FE1689EF5F34F52   //sin(-10)
-data8 0xBFEAD9AC890C6B1F   //cos(-10)
-data8 0xBFDA6026360C2F91   //sin( -9)
-data8 0xBFED27FAA6A6196B   //cos( -9)
-data8 0xBFEFA8D2A028CF7B   //sin( -8)
-data8 0xBFC29FBEBF632F94   //cos( -8)
-data8 0xBFE50608C26D0A08   //sin( -7)
-data8 0x3FE81FF79ED92017   //cos( -7)
-data8 0x3FD1E1F18AB0A2C0   //sin( -6)
-data8 0x3FEEB9B7097822F5   //cos( -6)
-data8 0x3FEEAF81F5E09933   //sin( -5)
-data8 0x3FD22785706B4AD9   //cos( -5)
-data8 0x3FE837B9DDDC1EAE   //sin( -4)
-data8 0xBFE4EAA606DB24C1   //cos( -4)
-data8 0xBFC210386DB6D55B   //sin( -3)
-data8 0xBFEFAE04BE85E5D2   //cos( -3)
-data8 0xBFED18F6EAD1B446   //sin( -2)
-data8 0xBFDAA22657537205   //cos( -2)
-data8 0xBFEAED548F090CEE   //sin( -1)
-data8 0x3FE14A280FB5068C   //cos( -1)
-data8 0x0000000000000000   //sin(  0)
-data8 0x3FF0000000000000   //cos(  0)
-data8 0x3FEAED548F090CEE   //sin(  1)
-data8 0x3FE14A280FB5068C   //cos(  1)
-data8 0x3FED18F6EAD1B446   //sin(  2)
-data8 0xBFDAA22657537205   //cos(  2)
-data8 0x3FC210386DB6D55B   //sin(  3)
-data8 0xBFEFAE04BE85E5D2   //cos(  3)
-data8 0xBFE837B9DDDC1EAE   //sin(  4)
-data8 0xBFE4EAA606DB24C1   //cos(  4)
-data8 0xBFEEAF81F5E09933   //sin(  5)
-data8 0x3FD22785706B4AD9   //cos(  5)
-data8 0xBFD1E1F18AB0A2C0   //sin(  6)
-data8 0x3FEEB9B7097822F5   //cos(  6)
-data8 0x3FE50608C26D0A08   //sin(  7)
-data8 0x3FE81FF79ED92017   //cos(  7)
-data8 0x3FEFA8D2A028CF7B   //sin(  8)
-data8 0xBFC29FBEBF632F94   //cos(  8)
-data8 0x3FDA6026360C2F91   //sin(  9)
-data8 0xBFED27FAA6A6196B   //cos(  9)
-data8 0xBFE1689EF5F34F52   //sin( 10)
-data8 0xBFEAD9AC890C6B1F   //cos( 10)
-data8 0xBFEFFFEB762E93EB   //sin( 11)
-data8 0x3F7220AE41EE2FDF   //cos( 11)
-data8 0xBFE12B9AF7D765A5   //sin( 12)
-data8 0x3FEB00DA046B65E3   //cos( 12)
-data8 0x3FDAE4044881C506   //sin( 13)
-data8 0x3FED09CDD5260CB7   //cos( 13)
-data8 0x3FEFB30E327C5E45   //sin( 14)
-data8 0x3FC1809AEC2CA0ED   //cos( 14)
-data8 0x3FE4CF2871CEC2E8   //sin( 15)
-data8 0xBFE84F5D069CA4F3   //cos( 15)
-data8 0xBFD26D02085F20F8   //sin( 16)
-data8 0xBFEEA5257E962F74   //cos( 16)
-data8 0xBFEEC3C4AC42882B   //sin( 17)
-data8 0xBFD19C46B07F58E7   //cos( 17)
-data8 0xBFE8081668131E26   //sin( 18)
-data8 0x3FE52150815D2470   //cos( 18)
-data8 0x3FC32F2D28F584CF   //sin( 19)
-data8 0x3FEFA377DE108258   //cos( 19)
-data8 0x3FED36D8F55D3CE0   //sin( 20)
-data8 0x3FDA1E043964A83F   //cos( 20)
-data8 0x3FEAC5E20BB0D7ED   //sin( 21)
-data8 0xBFE186FF83773759   //cos( 21)
-data8 0xBF8220A29F6EB9F4   //sin( 22)
-data8 0xBFEFFFADD8D4ACDA   //cos( 22)
-data8 0xBFEB143CD0247D02   //sin( 23)
-data8 0xBFE10CF7D591F272   //cos( 23)
-data8 0xBFECFA7F7919140F   //sin( 24)
-data8 0x3FDB25BFB50A609A   //cos( 24)
-data8 0xBFC0F0E6F31E809D   //sin( 25)
-data8 0x3FEFB7EEF59504FF   //cos( 25)
-data8 0x3FE866E0FAC32583   //sin( 26)
-data8 0x3FE4B3902691A9ED   //cos( 26)
-data8 0x3FEE9AA1B0E5BA30   //sin( 27)
-data8 0xBFD2B266F959DED5   //cos( 27)
-data8 0x3FD156853B4514D6   //sin( 28)
-data8 0xBFEECDAAD1582500   //cos( 28)
-data8 0xBFE53C7D20A6C9E7   //sin( 29)
-data8 0xBFE7F01658314E47   //cos( 29)
-data8 0xBFEF9DF47F1C903D   //sin( 30)
-data8 0x3FC3BE82F2505A52   //cos( 30)
-data8 0xBFD9DBC0B640FC81   //sin( 31)
-data8 0x3FED4591C3E12A20   //cos( 31)
-data8 0x3FE1A54991426566   //sin( 32)
-data8 0x3FEAB1F5305DE8E5   //cos( 32)
-ASM_SIZE_DIRECTIVE(sin_coeff_1_table)
+// Sincos table (S[m], C[m])
+LOCAL_OBJECT_START(double_sin_cos_beta_k4)
+    data8 0x0000000000000000 // sin ( 0 Pi / 16 )
+    data8 0x3FF0000000000000 // cos ( 0 Pi / 16 )
+//
+    data8 0x3FC8F8B83C69A60B // sin ( 1 Pi / 16 )
+    data8 0x3FEF6297CFF75CB0 // cos ( 1 Pi / 16 )
+//
+    data8 0x3FD87DE2A6AEA963 // sin ( 2 Pi / 16 )
+    data8 0x3FED906BCF328D46 // cos ( 2 Pi / 16 )
+//
+    data8 0x3FE1C73B39AE68C8 // sin ( 3 Pi / 16 )
+    data8 0x3FEA9B66290EA1A3 // cos ( 3 Pi / 16 )
+//
+    data8 0x3FE6A09E667F3BCD // sin ( 4 Pi / 16 )
+    data8 0x3FE6A09E667F3BCD // cos ( 4 Pi / 16 )
+//
+    data8 0x3FEA9B66290EA1A3 // sin ( 5 Pi / 16 )
+    data8 0x3FE1C73B39AE68C8 // cos ( 5 Pi / 16 )
+//
+    data8 0x3FED906BCF328D46 // sin ( 6 Pi / 16 )
+    data8 0x3FD87DE2A6AEA963 // cos ( 6 Pi / 16 )
+//
+    data8 0x3FEF6297CFF75CB0 // sin ( 7 Pi / 16 )
+    data8 0x3FC8F8B83C69A60B // cos ( 7 Pi / 16 )
+//
+    data8 0x3FF0000000000000 // sin ( 8 Pi / 16 )
+    data8 0x0000000000000000 // cos ( 8 Pi / 16 )
+//
+    data8 0x3FEF6297CFF75CB0 // sin ( 9 Pi / 16 )
+    data8 0xBFC8F8B83C69A60B // cos ( 9 Pi / 16 )
+//
+    data8 0x3FED906BCF328D46 // sin ( 10 Pi / 16 )
+    data8 0xBFD87DE2A6AEA963 // cos ( 10 Pi / 16 )
+//
+    data8 0x3FEA9B66290EA1A3 // sin ( 11 Pi / 16 )
+    data8 0xBFE1C73B39AE68C8 // cos ( 11 Pi / 16 )
+//
+    data8 0x3FE6A09E667F3BCD // sin ( 12 Pi / 16 )
+    data8 0xBFE6A09E667F3BCD // cos ( 12 Pi / 16 )
+//
+    data8 0x3FE1C73B39AE68C8 // sin ( 13 Pi / 16 )
+    data8 0xBFEA9B66290EA1A3 // cos ( 13 Pi / 16 )
+//
+    data8 0x3FD87DE2A6AEA963 // sin ( 14 Pi / 16 )
+    data8 0xBFED906BCF328D46 // cos ( 14 Pi / 16 )
+//
+    data8 0x3FC8F8B83C69A60B // sin ( 15 Pi / 16 )
+    data8 0xBFEF6297CFF75CB0 // cos ( 15 Pi / 16 )
+//
+    data8 0x0000000000000000 // sin ( 16 Pi / 16 )
+    data8 0xBFF0000000000000 // cos ( 16 Pi / 16 )
+//
+    data8 0xBFC8F8B83C69A60B // sin ( 17 Pi / 16 )
+    data8 0xBFEF6297CFF75CB0 // cos ( 17 Pi / 16 )
+//
+    data8 0xBFD87DE2A6AEA963 // sin ( 18 Pi / 16 )
+    data8 0xBFED906BCF328D46 // cos ( 18 Pi / 16 )
+//
+    data8 0xBFE1C73B39AE68C8 // sin ( 19 Pi / 16 )
+    data8 0xBFEA9B66290EA1A3 // cos ( 19 Pi / 16 )
+//
+    data8 0xBFE6A09E667F3BCD // sin ( 20 Pi / 16 )
+    data8 0xBFE6A09E667F3BCD // cos ( 20 Pi / 16 )
+//
+    data8 0xBFEA9B66290EA1A3 // sin ( 21 Pi / 16 )
+    data8 0xBFE1C73B39AE68C8 // cos ( 21 Pi / 16 )
+//
+    data8 0xBFED906BCF328D46 // sin ( 22 Pi / 16 )
+    data8 0xBFD87DE2A6AEA963 // cos ( 22 Pi / 16 )
+//
+    data8 0xBFEF6297CFF75CB0 // sin ( 23 Pi / 16 )
+    data8 0xBFC8F8B83C69A60B // cos ( 23 Pi / 16 )
+//
+    data8 0xBFF0000000000000 // sin ( 24 Pi / 16 )
+    data8 0x0000000000000000 // cos ( 24 Pi / 16 )
+//
+    data8 0xBFEF6297CFF75CB0 // sin ( 25 Pi / 16 )
+    data8 0x3FC8F8B83C69A60B // cos ( 25 Pi / 16 )
+//
+    data8 0xBFED906BCF328D46 // sin ( 26 Pi / 16 )
+    data8 0x3FD87DE2A6AEA963 // cos ( 26 Pi / 16 )
+//
+    data8 0xBFEA9B66290EA1A3 // sin ( 27 Pi / 16 )
+    data8 0x3FE1C73B39AE68C8 // cos ( 27 Pi / 16 )
+//
+    data8 0xBFE6A09E667F3BCD // sin ( 28 Pi / 16 )
+    data8 0x3FE6A09E667F3BCD // cos ( 28 Pi / 16 )
+//
+    data8 0xBFE1C73B39AE68C8 // sin ( 29 Pi / 16 )
+    data8 0x3FEA9B66290EA1A3 // cos ( 29 Pi / 16 )
+//
+    data8 0xBFD87DE2A6AEA963 // sin ( 30 Pi / 16 )
+    data8 0x3FED906BCF328D46 // cos ( 30 Pi / 16 )
+//
+    data8 0xBFC8F8B83C69A60B // sin ( 31 Pi / 16 )
+    data8 0x3FEF6297CFF75CB0 // cos ( 31 Pi / 16 )
+//
+    data8 0x0000000000000000 // sin ( 32 Pi / 16 )
+    data8 0x3FF0000000000000 // cos ( 32 Pi / 16 )
+LOCAL_OBJECT_END(double_sin_cos_beta_k4)
 
-//////////////////////////////////////////
+.section .text
 
+////////////////////////////////////////////////////////
+// There are two entry points: sin and cos
+// If from sin, p8 is true
+// If from cos, p9 is true
 
-.global sinf
-.global cosf
-#ifdef _LIBC
-.global __sinf
-.global __cosf
-#endif
+GLOBAL_IEEE754_ENTRY(sinf)
 
-.text
-.proc cosf
-#ifdef _LIBC
-.proc __cosf
-#endif
-.align 32
-
-
-cosf:
-#ifdef _LIBC
-__cosf:
-#endif
-{ .mfi
-     alloc          r32                      = ar.pfs,1,7,0,0
-     fcvt.fx.s1     sin_Mx                   =    f8
-     cmp.ne    p6,p7     =    r0,r0        // p7 set if cos
+{ .mlx
+      alloc         r32                 = ar.pfs,1,13,0,0
+      movl  sincosf_GR_sig_inv_pi_by_16 = 0xA2F9836E4E44152A //signd of 16/pi
 }
-{ .mfi
-     addl           SIN_AD_PQ_1              =    @ltoff(sin_coeff_1_table),gp
-     fnorm.s0 SIN_NORM_f8 = f8        // Sets denormal or invalid
-     mov sin_GR_sincos_flag = 0x0
-}
-;;
+{ .mlx
+      addl         sincosf_AD_1         = @ltoff(double_sincosf_pi), gp
+      movl  sincosf_GR_rshf_2to61       = 0x47b8000000000000 // 1.1 2^(63+63-2)
+};;
 
 { .mfi
-     ld8       SIN_AD_PQ_1    =    [SIN_AD_PQ_1]
-     fclass.m.unc  p9,p0      =    f8, 0x07
-     cmp.ne p8,p0 = r0,r0
+      ld8           sincosf_AD_1        = [sincosf_AD_1]
+      fnorm.s1      sincosf_NORM_f8     = f8     // Normalize argument
+      cmp.eq        p8,p9               = r0, r0 // set p8 (clear p9) for sin
 }
-{ .mfb
-     nop.m 999
-     nop.f 999
-     br.sptk L(SINCOSF_COMMON)
+{ .mib
+      mov           sincosf_GR_exp_2tom61 = 0xffff-61 // exponent of scale 2^-61
+      mov           sincosf_r_sincos      = 0x0       // 0 for sin
+      br.cond.sptk  _SINCOSF_COMMON                 // go to common part
+};;
+
+GLOBAL_IEEE754_END(sinf)
+GLOBAL_IEEE754_ENTRY(cosf)
+
+{ .mlx
+      alloc         r32                 = ar.pfs,1,13,0,0
+      movl  sincosf_GR_sig_inv_pi_by_16 = 0xA2F9836E4E44152A //signd of 16/pi
 }
-;;
-
-.endp cosf
-ASM_SIZE_DIRECTIVE(cosf)
-
-
-.text
-.proc  sinf
-#ifdef _LIBC
-.proc  __sinf
-#endif
-.align 32
-
-sinf:
-#ifdef _LIBC
-__sinf:	
-#endif
-{ .mfi
-     alloc          r32                      = ar.pfs,1,7,0,0
-     fcvt.fx.s1     sin_Mx                   =    f8
-     cmp.eq    p6,p7     =    r0,r0        // p6 set if sin
-}
-{ .mfi
-     addl           SIN_AD_PQ_1              =    @ltoff(sin_coeff_1_table),gp
-     fnorm.s0 SIN_NORM_f8 = f8        // Sets denormal or invalid
-     mov sin_GR_sincos_flag = 0x1
-}
-;;
+{ .mlx
+      addl          sincosf_AD_1        = @ltoff(double_sincosf_pi), gp
+      movl  sincosf_GR_rshf_2to61       = 0x47b8000000000000 // 1.1 2^(63+63-2)
+};;
 
 { .mfi
-     ld8       SIN_AD_PQ_1    =    [SIN_AD_PQ_1]
-     fclass.m.unc  p8,p0      =    f8, 0x07
-     cmp.ne p9,p0 = r0,r0
+      ld8           sincosf_AD_1        = [sincosf_AD_1]
+      fnorm.s1      sincosf_NORM_f8     = f8        // Normalize argument
+      cmp.eq        p9,p8               = r0, r0    // set p9 (clear p8) for cos
 }
-{ .mfb
-     nop.m 999
-     nop.f 999
-     br.sptk L(SINCOSF_COMMON)
+{ .mib
+      mov           sincosf_GR_exp_2tom61 = 0xffff-61 // exponent of scale 2^-61
+      mov           sincosf_r_sincos      = 0x8       // 8 for cos
+      nop.b         999
+};;
+
+////////////////////////////////////////////////////////
+// All entry points end up here.
+// If from sin, sincosf_r_sincos is 0 and p8 is true
+// If from cos, sincosf_r_sincos is 8 = 2^(k-1) and p9 is true
+// We add sincosf_r_sincos to N
+
+///////////// Common sin and cos part //////////////////
+_SINCOSF_COMMON:
+
+//  Form two constants we need
+//  16/pi * 2^-2 * 2^63, scaled by 2^61 since we just loaded the significand
+//  1.1000...000 * 2^(63+63-2) to right shift int(W) into the low significand
+//  fcmp used to set denormal, and invalid on snans
+{ .mfi
+      setf.sig      sincosf_SIG_INV_PI_BY_16_2TO61 = sincosf_GR_sig_inv_pi_by_16
+      fclass.m      p6,p0                          = f8, 0xe7 // if x=0,inf,nan
+      mov           sincosf_exp_limit              = 0x10017
 }
-;;
+{ .mlx
+      setf.d        sincosf_RSHF_2TO61  = sincosf_GR_rshf_2to61
+      movl          sincosf_GR_rshf     = 0x43e8000000000000 // 1.1000 2^63
+};;                                                          // Right shift
 
-
-L(SINCOSF_COMMON):
-
-// Here with p6 if sin, p7 if cos, p8 if sin(0), p9 if cos(0)
-
-
-{ .mmf
-     ldfpd      sin_coeff_Q3, sin_coeff_Q4     = [SIN_AD_PQ_1], 16
-     nop.m 999
-     fclass.m.unc  p11,p0      =    f8, 0x23	// Test for x=inf
-}
-;;
-
-{ .mfb
-     ldfpd      sin_coeff_Q5, sin_coeff_Q6     = [SIN_AD_PQ_1], 16
-     fclass.m.unc  p10,p0      =    f8, 0xc3	// Test for x=nan
-(p8) br.ret.spnt b0                   // Exit for sin(0)
-}
-{ .mfb
-     nop.m 999
-(p9) fma.s      f8 = f1,f1,f0
-(p9) br.ret.spnt b0                   // Exit for cos(0)
-}
-;;
-
-{ .mmf
-     ldfpd      sin_coeff_P4, sin_coeff_P5     = [SIN_AD_PQ_1], 16
-     addl gr_tmp = -1,r0
-     fcvt.xf    sin_Mfloat                     =    sin_Mx
-}
-;;
-
-{     .mfi
-     getf.sig  sin_GR_Mint    =    sin_Mx
-(p11) frcpa.s0      f8,p13      =    f0,f0  // qnan indef if x=inf
-     nop.i 999
-}
-{     .mfb
-     ldfpd      sin_coeff_P1, sin_coeff_P2     = [SIN_AD_PQ_1], 16
-     nop.f 999
-(p11) br.ret.spnt b0                   // Exit for x=inf
-}
-;;
-
-{     .mfi
-     ldfpd      sin_coeff_Q1, sin_coeff_Q2     = [SIN_AD_PQ_1], 16
-     nop.f                      999
-     cmp.ge    p8,p9          = -33,sin_GR_Mint
-}
-{     .mfb
-     add       sin_GR_index   =    32,sin_GR_Mint
-(p10) fma.s      f8 = f8,f1,f0         // Force qnan if x=nan
-(p10) br.ret.spnt b0                   // Exit for x=nan
-}
-;;
-
+//  Form another constant
+//  2^-61 for scaling Nfloat
+//  0x10017 is register_bias + 24.
+//  So if f8 >= 2^24, go to large argument routines
 { .mmi
-     ldfd      sin_coeff_P3   = [SIN_AD_PQ_1], 16
-(p9) cmp.le    p8,p0        = 33, sin_GR_Mint 
-     shl       sin_GR_index   =    sin_GR_index,4
+      getf.exp      sincosf_r_signexp   = f8
+      setf.exp      sincosf_2TOM61      = sincosf_GR_exp_2tom61
+      addl          gr_tmp              = -1,r0 // For "inexect" constant create
+};;
+
+// Load the two pieces of pi/16
+// Form another constant
+//  1.1000...000 * 2^63, the right shift constant
+{ .mmb
+      ldfe          sincosf_Pi_by_16_1  = [sincosf_AD_1],16
+      setf.d        sincosf_RSHF        = sincosf_GR_rshf
+(p6)  br.cond.spnt  _SINCOSF_SPECIAL_ARGS
+};;
+
+// Getting argument's exp for "large arguments" filtering
+{ .mmi
+      ldfe          sincosf_Pi_by_16_2  = [sincosf_AD_1],16
+      setf.sig      fp_tmp              = gr_tmp // constant for inexact set
+      nop.i         999
+};;
+
+// Polynomial coefficients (Q2, Q1, P2, P1) loading
+{ .mmi
+      ldfpd         sincosf_P2,sincosf_Q2 = [sincosf_AD_1],16
+      nop.m         999 
+      nop.i         999 
+};;
+
+// Select exponent (17 lsb)
+{ .mmi
+      ldfpd         sincosf_P1,sincosf_Q1 = [sincosf_AD_1],16
+      nop.m         999 
+      dep.z         sincosf_r_exp         = sincosf_r_signexp, 0, 17
+};;
+
+// p10 is true if we must call routines to handle larger arguments
+// p10 is true if f8 exp is >= 0x10017 (2^24)
+{ .mfb
+      cmp.ge        p10,p0              = sincosf_r_exp,sincosf_exp_limit
+      nop.f         999
+(p10) br.cond.spnt  _SINCOSF_LARGE_ARGS // Go to "large args" routine
+};;
+
+// sincosf_W          = x * sincosf_Inv_Pi_by_16
+// Multiply x by scaled 16/pi and add large const to shift integer part of W to
+//   rightmost bits of significand
+{ .mfi
+      nop.m         999 
+      fma.s1 sincosf_W_2TO61_RSH = sincosf_NORM_f8, sincosf_SIG_INV_PI_BY_16_2TO61, sincosf_RSHF_2TO61
+      nop.i         999 
+};;
+
+// sincosf_NFLOAT = Round_Int_Nearest(sincosf_W)
+// This is done by scaling back by 2^-61 and subtracting the shift constant
+{ .mfi
+      nop.m         999
+      fms.s1 sincosf_NFLOAT = sincosf_W_2TO61_RSH,sincosf_2TOM61,sincosf_RSHF
+      nop.i         999 
+};;
+
+// get N = (int)sincosf_int_Nfloat
+{ .mfi
+      getf.sig      sincosf_GR_n        = sincosf_W_2TO61_RSH // integer N value
+      nop.f         999
+      nop.i         999 
+};;
+
+// Add 2^(k-1) (which is in sincosf_r_sincos=8) to N
+// sincosf_r          = -sincosf_Nfloat * sincosf_Pi_by_16_1 + x
+{ .mfi
+      add           sincosf_GR_n        = sincosf_GR_n, sincosf_r_sincos
+      fnma.s1 sincosf_r = sincosf_NFLOAT, sincosf_Pi_by_16_1, sincosf_NORM_f8
+      nop.i         999 
+};;
+
+// Get M (least k+1 bits of N)
+{ .mmi
+      and           sincosf_GR_m        = 0x1f,sincosf_GR_n // Put mask 0x1F  - 
+      nop.m         999                                     // - select k+1 bits
+      nop.i         999
+};;
+
+// Add 16*M to address of sin_cos_beta table
+{ .mfi
+      shladd        sincosf_AD_2        = sincosf_GR_32m, 4, sincosf_AD_1
+(p8)  fclass.m.unc  p10,p0              = f8,0x0b  // If sin denormal input -
+      nop.i         999 
+};;
+
+// Load Sin and Cos table value using obtained index m  (sincosf_AD_2)
+{ .mfi
+      ldfd          sincosf_Sm          = [sincosf_AD_2],8 // Sin value S[m]
+(p9)  fclass.m.unc  p11,p0              = f8,0x0b  // If cos denormal input -
+      nop.i         999                            // - set denormal
+};;
+
+// sincosf_r          = sincosf_r -sincosf_Nfloat * sincosf_Pi_by_16_2
+{ .mfi
+      ldfd          sincosf_Cm          = [sincosf_AD_2] // Cos table value C[m]
+      fnma.s1  sincosf_r_exact = sincosf_NFLOAT, sincosf_Pi_by_16_2, sincosf_r
+      nop.i         999
 }
-;;
+// get rsq = r*r
+{ .mfi
+      nop.m         999
+      fma.s1        sincosf_rsq         = sincosf_r, sincosf_r,  f0 // r^2 = r*r
+      nop.i         999
+};;
+
+{ .mfi
+      nop.m         999
+      fmpy.s0       fp_tmp              = fp_tmp, fp_tmp // forces inexact flag
+      nop.i         999                                
+};;
+
+// Polynomials calculation 
+// Q = Q2*r^2 + Q1
+// P = P2*r^2 + P1
+{ .mfi
+      nop.m         999
+      fma.s1        sincosf_Q           = sincosf_rsq, sincosf_Q2, sincosf_Q1
+      nop.i         999
+}
+{ .mfi
+      nop.m         999
+      fma.s1        sincosf_P           = sincosf_rsq, sincosf_P2, sincosf_P1
+      nop.i         999 
+};;
+
+// get rcube and S[m]*r^2
+{ .mfi
+      nop.m         999
+      fmpy.s1       sincosf_srsq        = sincosf_Sm,sincosf_rsq // r^2*S[m]
+      nop.i         999
+}
+{ .mfi
+      nop.m         999
+      fmpy.s1       sincosf_rcub        = sincosf_r_exact, sincosf_rsq
+      nop.i         999 
+};;
+
+// Get final P and Q
+// Q = Q*S[m]*r^2 + S[m]
+// P = P*r^3 + r
+{ .mfi
+      nop.m         999
+      fma.s1        sincosf_Q           = sincosf_srsq,sincosf_Q, sincosf_Sm
+      nop.i         999
+}
+{ .mfi
+      nop.m         999
+      fma.s1        sincosf_P           = sincosf_rcub,sincosf_P,sincosf_r_exact
+      nop.i         999 
+};;
+
+// If sinf(denormal) - force underflow to be set
+.pred.rel "mutex",p10,p11
+{ .mfi
+      nop.m         999
+(p10) fmpy.s.s0     fp_tmp              = f8,f8 // forces underflow flag
+      nop.i         999                         // for denormal sine args
+}
+// If cosf(denormal) - force denormal to be set
+{ .mfi
+      nop.m         999
+(p11) fma.s.s0     fp_tmp              = f8, f1, f8 // forces denormal flag
+      nop.i         999                              // for denormal cosine args
+};;
 
 
-{     .mfi
-     setf.sig fp_tmp = gr_tmp  // Create constant such that fmpy sets inexact
-     fnma.s1   sin_r     =    f1,sin_Mfloat,SIN_NORM_f8
-(p8) cmp.eq.unc p11,p12=sin_GR_sincos_flag,r0  // p11 if must call dbl cos
-                                               // p12 if must call dbl sin
-}
-{    .mbb
-     add       SIN_AD_PQ_2    =    sin_GR_index,SIN_AD_PQ_1
-(p11) br.cond.spnt COS_DOUBLE
-(p12) br.cond.spnt SIN_DOUBLE
-}
-;;
+// Final calculation
+// result = C[m]*P + Q
+{ .mfb
+      nop.m         999
+      fma.s.s0      f8                  = sincosf_Cm, sincosf_P, sincosf_Q
+      br.ret.sptk   b0 // Exit for common path
+};;
 
-.pred.rel "mutex",p6,p7    //SIN_Sin_Flag, SIN_Cos_Flag
-{     .mmi
-(p6) ldfpd     sin_tbl_S,sin_tbl_C =    [SIN_AD_PQ_2]
-(p7) ldfpd     sin_tbl_C,sin_tbl_S =    [SIN_AD_PQ_2]
-               nop.i                           999
+////////// x = 0/Inf/NaN path //////////////////
+_SINCOSF_SPECIAL_ARGS:
+.pred.rel "mutex",p8,p9
+// sinf(+/-0) = +/-0
+// sinf(Inf)  = NaN
+// sinf(NaN)  = NaN
+{ .mfi
+      nop.m         999
+(p8)  fma.s.s0      f8                  = f8, f0, f0 // sinf(+/-0,NaN,Inf)
+      nop.i         999
 }
-;;
+// cosf(+/-0) = 1.0
+// cosf(Inf)  = NaN
+// cosf(NaN)  = NaN
+{ .mfb
+      nop.m         999
+(p9)  fma.s.s0      f8                  = f8, f0, f1 // cosf(+/-0,NaN,Inf)
+      br.ret.sptk   b0 // Exit for x = 0/Inf/NaN path
+};;
 
-{     .mfi
-     nop.m                 999
-(p6) fclass.m.unc p8,p0 = f8, 0x0b // If sin, note denormal input to set uflow
-     nop.i                 999
-}
-{     .mfi
-     nop.m                 999
-     fma.s1    sin_t     =    sin_r,sin_r,f0
-     nop.i                 999
-}
-;;
-
-{     .mfi
-     nop.m                 999
-     fma.s1    sin_rcube =    sin_t,sin_r,f0
-     nop.i                 999
-}
-{     .mfi
-     nop.m                 999
-     fma.s1    sin_tsq   =    sin_t,sin_t,f0
-     nop.i                 999
-}
-;;
-
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_q3    =    sin_t,sin_coeff_Q4,sin_coeff_Q3
-     nop.i                      999
-}
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_q5    =    sin_t,sin_coeff_Q6,sin_coeff_Q5
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_p1    =    sin_t,sin_coeff_P5,sin_coeff_P4
-     nop.i                      999
-}
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_p2    =    sin_t,sin_coeff_P2,sin_coeff_P1
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_q1    =    sin_t,sin_coeff_Q2,sin_coeff_Q1
-     nop.i                      999
-}
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_S_t   =    sin_t,sin_tbl_S,f0
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                 999
-(p8) fmpy.s.s0 fp_tmp2 = f8,f8  // Dummy mult to set underflow if sin(denormal)
-     nop.i                 999
-}
-{     .mfi
-     nop.m                 999
-     fma.s1    sin_r7    =    sin_rcube,sin_tsq,f0
-     nop.i                 999
-}
-;;
-
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_q3456 =    sin_tsq,sin_poly_q5,sin_poly_q3
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_p3    =    sin_t,sin_poly_p1,sin_coeff_P3
-     nop.i                      999
-}
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_p4    =    sin_rcube,sin_poly_p2,sin_r
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                           999
-     fma.s1    sin_tbl_S_tcube     =    sin_S_t,sin_tsq,f0
-     nop.i                           999
-}
-{     .mfi
-     nop.m                      999
-     fma.s1    sin_poly_q12   =    sin_S_t,sin_poly_q1,sin_tbl_S
-     nop.i                      999
-}
-;;
-
-{     .mfi
-     nop.m                 999
-     fma.d.s1  sin_of_r  =    sin_r7,sin_poly_p3,sin_poly_p4
-     nop.i                 999
-}
-;;
-
-{     .mfi
-     nop.m                           999
-     fma.d.s1  sin_tbl_S_cos_of_r  =    sin_tbl_S_tcube,sin_poly_q3456,sin_poly_q12
-     nop.i                           999
-}
-{     .mfi
-     nop.m                           999
-     fmpy.s0   fp_tmp = fp_tmp, fp_tmp  // Dummy mult to set inexact
-     nop.i                           999
-}
-;;
-
-
-.pred.rel "mutex",p6,p7    //SIN_Sin_Flag, SIN_Cos_Flag
-{     .mfi
-               nop.m            999
-//(SIN_Sin_Flag) fma.s     f8   =    sin_tbl_C,sin_of_r,sin_tbl_S_cos_of_r
-(p6) fma.s     f8   =    sin_tbl_C,sin_of_r,sin_tbl_S_cos_of_r
-               nop.i            999
-}
-{     .mfb
-               nop.m            999
-//(SIN_Cos_Flag) fnma.s    f8   =    sin_tbl_C,sin_of_r,sin_tbl_S_cos_of_r
-(p7) fnma.s    f8   =    sin_tbl_C,sin_of_r,sin_tbl_S_cos_of_r
-               br.ret.sptk     b0
-}
-
-.endp sinf
-ASM_SIZE_DIRECTIVE(sinf)
-
-
-.proc SIN_DOUBLE 
-SIN_DOUBLE:
+GLOBAL_IEEE754_END(cosf)
+//////////// x >= 2^24 - large arguments routine call ////////////
+LOCAL_LIBM_ENTRY(__libm_callout_sincosf)
+_SINCOSF_LARGE_ARGS:
 .prologue
 { .mfi
-        nop.m 0
-        nop.f 0
-.save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs
+      mov           sincosf_GR_all_ones = -1 // 0xffffffff
+      nop.f         999
+.save ar.pfs,GR_SAVE_PFS
+      mov           GR_SAVE_PFS         = ar.pfs
 }
 ;;
 
 { .mfi
-        mov GR_SAVE_GP=gp
-        nop.f 0
-.save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0
+      mov           GR_SAVE_GP          = gp
+      nop.f         999
+.save b0, GR_SAVE_B0
+      mov           GR_SAVE_B0          = b0
 }
-
 .body
-{ .mmb
-       nop.m 999
-       nop.m 999
-       br.call.sptk.many   b0=sin 
-}
-;;
+
+{ .mbb
+      setf.sig      sincosf_save_tmp    = sincosf_GR_all_ones  // inexact set
+      nop.b         999
+(p8)  br.call.sptk.many b0              = __libm_sin_large# // sinf(large_X)
+};;
+
+{ .mbb
+      cmp.ne        p9,p0               = sincosf_r_sincos, r0 // set p9 if cos
+      nop.b         999
+(p9)  br.call.sptk.many b0              = __libm_cos_large# // cosf(large_X)
+};;
 
 { .mfi
-       mov gp        = GR_SAVE_GP
-       nop.f 999
-       mov b0        = GR_SAVE_B0
+      mov           gp                  = GR_SAVE_GP
+      fma.s.s0      f8                  = f8, f1, f0 // Round result to single
+      mov           b0                  = GR_SAVE_B0
 }
-;;
+{ .mfi // force inexact set
+      nop.m         999
+      fmpy.s0       sincosf_save_tmp    = sincosf_save_tmp, sincosf_save_tmp 
+      nop.i         999                                               
+};;
 
-{ .mfi
-      nop.m 999
-      fma.s f8 = f8,f1,f0
-(p0)  mov ar.pfs    = GR_SAVE_PFS
-}
 { .mib
-      nop.m 999
-      nop.i 999
-(p0)  br.ret.sptk     b0 
-}
-;;
+      nop.m         999
+      mov           ar.pfs              = GR_SAVE_PFS
+      br.ret.sptk   b0 // Exit for large arguments routine call
+};;
+LOCAL_LIBM_END(__libm_callout_sincosf)
 
-.endp  SIN_DOUBLE
-ASM_SIZE_DIRECTIVE(SIN_DOUBLE)
+.type    __libm_sin_large#, @function
+.global  __libm_sin_large#
+.type    __libm_cos_large#, @function
+.global  __libm_cos_large#
 
-
-.proc COS_DOUBLE 
-COS_DOUBLE:
-.prologue
-{ .mfi
-        nop.m 0
-        nop.f 0
-.save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs
-}
-;;
-
-{ .mfi
-        mov GR_SAVE_GP=gp
-        nop.f 0
-.save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0
-}
-
-.body
-{ .mmb
-       nop.m 999
-       nop.m 999
-       br.call.sptk.many   b0=cos 
-}
-;;
-
-{ .mfi
-       mov gp        = GR_SAVE_GP
-       nop.f 999
-       mov b0        = GR_SAVE_B0
-}
-;;
-
-{ .mfi
-      nop.m 999
-      fma.s f8 = f8,f1,f0
-(p0)  mov ar.pfs    = GR_SAVE_PFS
-}
-{ .mib
-      nop.m 999
-      nop.i 999
-(p0)  br.ret.sptk     b0 
-}
-;;
-
-.endp  COS_DOUBLE
-ASM_SIZE_DIRECTIVE(COS_DOUBLE)
-
-
-
-.type sin,@function
-.global sin 
-.type cos,@function
-.global cos 

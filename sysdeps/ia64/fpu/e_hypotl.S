@@ -1,11 +1,10 @@
-.file "hypotl.asm"
+.file "hypotl.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Cristina Iordache, Ted Kubaska, 
-// Bob Norin, Shane Story, and Ping Tak Peter Tang of the 
-// Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -21,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,24 +35,26 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // History: 
-// 2/02/00  hand-optimized
-// 4/04/00  Unwind support added
-// 6/20/00  new version
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 hand-optimized
+// 04/04/00 Unwind support added
+// 06/20/00 new version
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
-// *********************************************************************
+//*********************************************************************
 //                           ___________
 // Function:   hypotl(x,y) = |(x^2 + y^2) = for double extended values
 //             x and y
 //             Also provides cabsl functionality.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Resources Used:
 //
@@ -68,7 +69,7 @@
 //
 //    Predicate Registers:      p6 - p10
 //
-// *********************************************************************
+//*********************************************************************
 //
 // IEEE Special Conditions:
 //
@@ -78,7 +79,7 @@
 //    hypotl(QNaN and anything) = QNaN
 //    hypotl(SNaN and anything ) = QNaN
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Implementation:
 //  x2 = x * x   in double-extended
@@ -86,9 +87,7 @@
 //  temp = x2 + y2   in double-extended
 //  sqrt(temp) rounded to double extended
 //
-// *********************************************************************
-
-#include "libm_support.h"
+//*********************************************************************
 
 GR_SAVE_PFS         = r33
 GR_SAVE_B0          = r34
@@ -103,23 +102,10 @@ FR_Y                = f33
 FR_RESULT           = f8
 
 .section .text
-#ifndef _LIBC
-.proc cabsl#
-.global cabsl#
-cabsl: 
-.endp cabsl
-#endif
-.proc hypotl#
-.global hypotl#
-.align 64 
 
-hypotl: 
-#ifdef _LIBC
-.global __hypotl
-__hypotl:
-.global __ieee754_hypotl
-__ieee754_hypotl:
-#endif 
+LOCAL_LIBM_ENTRY(cabsl)
+LOCAL_LIBM_END(cabsl)
+GLOBAL_IEEE754_ENTRY(hypotl)
 {.mfi
   alloc r32= ar.pfs,0,4,4,0
   // Compute x*x
@@ -434,11 +420,8 @@ __ieee754_hypotl:
 	 // No overflow
 (p9) br.ret.sptk b0;; 
 }
-.endp hypotl
-ASM_SIZE_DIRECTIVE(hypotl)
-
-.proc __libm_error_region
-__libm_error_region:
+GLOBAL_IEEE754_END(hypotl)
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -485,7 +468,9 @@ __libm_error_region:
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
 };;
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region) 
+LOCAL_LIBM_END(__libm_error_region#)
 .type   __libm_error_support#,@function
 .global __libm_error_support#
+
+
+

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Notes:
+
+#  We don't import copysign finite, fpclassify, isinf, isnan, and signbit
+#  since our own versions are nicer and just as correct and fast (except
+#  perhaps that they don't handle non-finite arguments well?).
+#
+#  Also, leave out cabs for now since it doesn't seem overridable in
+#  glibc.
+
+libm_dir=$1
+
+import_s() {
+	# $1 = name
+	# $2 = source file-name
+	# $3 = destination file-name
+	echo "Importing $1 from $2 -> $3"
+	awk -f import_file.awk FUNC=$1 $2 > $3
+}
+
+import_c() {
+	# $1 = name
+	# $2 = source file-name
+	# $3 = destination file-name
+	echo "Importing $1 from $2 -> $3"
+	awk -f import_file.awk LICENSE_ONLY=y $2 > $3
+}
+
+do_imports() {
+    while read func_pattern src_file dst_file; do
+	if [ "$(expr $src_file : '.*\(c\)$')" = "c" ]; then
+	    import_c "$func_pattern" "$src_file" "$dst_file"
+	else
+	    import_s "$func_pattern" "$src_file" "$dst_file"
+	fi
+    done
+}
+
+./gen_import_file_list $libm_dir > import_file_list
+
+do_imports < import_file_list

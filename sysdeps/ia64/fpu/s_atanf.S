@@ -1,12 +1,10 @@
 .file "atanf.s"
 
-// THIS IS NOT OPTIMIZED AND NOT OFFICIAL
 
-// Copyright (C) 2000, 2001, Intel Corporation
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -22,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -37,16 +35,18 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 
 
 // History
 //==============================================================
-// ?/??/00  Initial revision 
-// 8/17/00  Changed predicate register macro-usage to direct predicate
+// 02/20/00 Initial version
+// 08/17/00 Changed predicate register macro-usage to direct predicate
 //          names due to an assembler bug.
-
-#include "libm_support.h"
+// 02/06/02 Corrected .section statement
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/06/03 Reordered header: .section, .global, .proc, .align;
+//          added missing bundling
 
 //
 // Assembly macros
@@ -140,16 +140,11 @@ atanf_answer       = f8
 //atanf_pred_GT1     = p7
 
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+RODATA
 
 .align 16
 
-atanf_coeff_1_table:
-ASM_TYPE_DIRECTIVE(atanf_coeff_1_table,@object)
+LOCAL_OBJECT_START(atanf_coeff_1_table)
 data8 0x40c4c241be751ff2  // r4
 data8 0x40e9f300c2f3070b  // r5
 data8 0x409babffef772075  // r3
@@ -164,12 +159,11 @@ data8 0xbfc2473c5145ee38  // p3
 data8 0x3fbc4f512b1865f5  // p4
 data8 0x3fc9997e7afbff4e  // p2
 data8 0x3ff921fb54442d18  // pi/2
-ASM_SIZE_DIRECTIVE(atanf_coeff_1_table)
+LOCAL_OBJECT_END(atanf_coeff_1_table)
 
 
 
-atanf_coeff_2_table:
-ASM_TYPE_DIRECTIVE(atanf_coeff_2_table,@object)
+LOCAL_OBJECT_START(atanf_coeff_2_table)
 data8 0x4035000000004284  // r1
 data8 0x406cdffff336a59b  // r2
 data8 0x3fbc4f512b1865f5  // p4 = q6
@@ -182,18 +176,12 @@ data8 0xbfa6e10ba401393f  // p7
 data8 0x3f97105b4160f86b  // p8
 data8 0xbf7deaadaa336451  // p9
 data8 0x3f522e5d33bc9baa  // p10
-ASM_SIZE_DIRECTIVE(atanf_coeff_2_table)
+LOCAL_OBJECT_END(atanf_coeff_2_table)
 
 
 
-.global atanf 
-
-.text
-.proc  atanf
-
-.align 32
-atanf:
-
+.section .text
+GLOBAL_LIBM_ENTRY(atanf)
 
 {     .mfi 
      alloc      r32                  = ar.pfs,1,2,0,0
@@ -325,7 +313,7 @@ atanf:
 {     .mfb 
      nop.m                 999
      fma.s1    atanf_x5  =    atanf_t,atanf_xcub,f0
-(p8)  br.cond.spnt   L(ATANF_X_INF_NAN_ZERO)
+(p8)  br.cond.spnt   ATANF_X_INF_NAN_ZERO
 } 
 ;;
  
@@ -487,7 +475,7 @@ atanf:
  
 {     .mfi 
      nop.m                           999
-     fma       atanf_sgnx_piby2    =    atanf_sgn_x,atanf_piby2,f0
+     fma.s0       atanf_sgnx_piby2    =    atanf_sgn_x,atanf_piby2,f0
      nop.i                           999
 } 
 {     .mfi 
@@ -530,27 +518,38 @@ atanf:
 {     .mfi 
                     nop.m                      999
 //(atanf_pred_GT1)    fnma.s    atanf_answer   =    atanf_poly_q,atanf_z21_poly_r,atanf_sgnx_piby2
-(p7)    fnma.s    atanf_answer   =    atanf_poly_q,atanf_z21_poly_r,atanf_sgnx_piby2
+(p7)    fnma.s.s0    atanf_answer   =    atanf_poly_q,atanf_z21_poly_r,atanf_sgnx_piby2
                     nop.i                      999;;
 } 
  
 {     .mfb 
                     nop.m                      999
 //(atanf_pred_LE1)    fma.s     atanf_answer   =    atanf_x11,atanf_poly_p1,atanf_poly_p4
-(p6)    fma.s     atanf_answer   =    atanf_x11,atanf_poly_p1,atanf_poly_p4
+(p6)    fma.s.s0     atanf_answer   =    atanf_x11,atanf_poly_p1,atanf_poly_p4
                     br.ret.sptk b0
 } 
 
 
 
-L(ATANF_X_INF_NAN_ZERO):
+ATANF_X_INF_NAN_ZERO:
 
-      fclass.m p8,p9 = f8,0x23	// @inf
+{ .mfi
+      nop.m 0
+      fclass.m p8,p9 = f8,0x23  // @inf
+      nop.i 0
+}
 ;;
+{ .mfi
+      nop.m 0
 (p8)  fmerge.s f8 = f8, atanf_piby2
+      nop.i 0
+}
 ;;
-      fnorm.s f8 = f8
+{ .mfb
+      nop.m 0
+      fnorm.s.s0 f8 = f8
       br.ret.sptk b0
+}
+;;
 
-.endp atanf
-ASM_SIZE_DIRECTIVE(atanf)
+GLOBAL_LIBM_END(atanf)

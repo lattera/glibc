@@ -1,10 +1,10 @@
 .file "expf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2002, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,589 +35,501 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 
 // History
-//==============================================================
-// 4/04/00  Unwind update
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+//*********************************************************************
+// 02/02/00 Original version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 8/21/00  Improvements to save 2 cycles on main path, and shorten x=0 case
+// 08/21/00 Improvements to save 2 cycles on main path, and shorten x=0 case
 // 12/07/00 Widen main path, shorten x=inf, nan paths
+// 03/15/01 Fix monotonicity problem around x=0 for round to +inf
+// 02/05/02 Corrected uninitialize predicate in POSSIBLE_UNDERFLOW path
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 07/26/02 Algorithm changed, accuracy improved
+// 09/26/02 support of higher precision inputs added, underflow threshold
+//          corrected
+// 11/15/02 Improved performance on Itanium 2, added possible over/under paths
+//
+//
+// API
+//*********************************************************************
+// float expf(float)
+//
+// Overview of operation
+//*********************************************************************
+// Take the input x. w is "how many log2/128 in x?"
+//  w = x * 64/log2
+//  NJ = int(w)
+//  x = NJ*log2/64 + R
+
+//  NJ = 64*n + j
+//  x = n*log2 + (log2/64)*j + R
+//
+//  So, exp(x) = 2^n * 2^(j/64)* exp(R)
+//
+//  T =  2^n * 2^(j/64)
+//       Construct 2^n
+//       Get 2^(j/64) table
+//           actually all the entries of 2^(j/64) table are stored in DP and
+//           with exponent bits set to 0 -> multiplication on 2^n can be
+//           performed by doing logical "or" operation with bits presenting 2^n
+
+//  exp(R) = 1 + (exp(R) - 1)
+//  P = exp(R) - 1 approximated by Taylor series of 3rd degree
+//      P = A3*R^3 + A2*R^2 + R, A3 = 1/6, A2 = 1/2
 //
 
-#include "libm_support.h"
+//  The final result is reconstructed as follows
+//  exp(x) = T + T*P
+
+// Special values
+//*********************************************************************
+// expf(+0)    = 1.0
+// expf(-0)    = 1.0
+
+// expf(+qnan) = +qnan
+// expf(-qnan) = -qnan
+// expf(+snan) = +qnan
+// expf(-snan) = -qnan
+
+// expf(-inf)  = +0
+// expf(+inf)  = +inf
+
+// Overflow and Underflow
+//*********************************************************************
+// expf(x) = largest single normal when
+//     x = 88.72283 = 0x42b17217
+
+// expf(x) = smallest single normal when
+//     x = -87.33654 = 0xc2aeac4f
+
+// expf(x) = largest round-to-nearest single zero when
+//     x = -103.97208 = 0xc2cff1b5
+
+
+// Registers used
+//*********************************************************************
+// Floating Point registers used:
+// f8, input
+// f6,f7, f9 -> f15,  f32 -> f40
+
+// General registers used:
+// r3, r23 -> r38
+
+// Predicate registers used:
+// p10 -> p15
 
 // Assembly macros
-//==============================================================
+//*********************************************************************
 // integer registers used
+// scratch
+rNJ                   = r3
 
- exp_GR_0x0f                = r33
- exp_GR_0xf0                = r34
-
- EXP_AD_P_1                 = r36
- EXP_AD_P_2                 = r37
- EXP_AD_T1                  = r38
- EXP_AD_T2                  = r39
- exp_GR_Mint                = r40
-
- exp_GR_Mint_p_128          = r41
- exp_GR_Ind1                = r42
- EXP_AD_M1                  = r43
- exp_GR_Ind2                = r44
- EXP_AD_M2                  = r45
-
- exp_GR_min_oflow           = r46
- exp_GR_max_zero            = r47
- exp_GR_max_norm            = r48
- exp_GR_max_uflow           = r49
- exp_GR_min_norm            = r50
-
- exp_GR_17ones              = r51
- exp_GR_gt_ln               = r52
- exp_GR_T2_size             = r53
-
- exp_GR_17ones_m1           = r56
- exp_GR_one                 = r57
-
-
-
-GR_SAVE_B0                    = r53
-GR_SAVE_PFS                   = r55
-GR_SAVE_GP                    = r54 
-
-GR_Parameter_X                = r59
-GR_Parameter_Y                = r60
-GR_Parameter_RESULT           = r61
-GR_Parameter_TAG              = r62
-
-FR_X             = f10
-FR_Y             = f1
-FR_RESULT        = f8
-
+rTmp                  = r23
+rJ                    = r23
+rN                    = r24
+rTblAddr              = r25
+rA3                   = r26
+rExpHalf              = r27
+rLn2Div64             = r28
+r17ones_m1            = r29
+rGt_ln                = r29
+rRightShifter         = r30
+r64DivLn2             = r31
+// stacked
+GR_SAVE_PFS           = r32
+GR_SAVE_B0            = r33
+GR_SAVE_GP            = r34
+GR_Parameter_X        = r35
+GR_Parameter_Y        = r36
+GR_Parameter_RESULT   = r37
+GR_Parameter_TAG      = r38
 
 // floating point registers used
-
- EXP_MIN_SGL_OFLOW_ARG      = f11
- EXP_MAX_SGL_ZERO_ARG       = f12
- EXP_MAX_SGL_NORM_ARG       = f13
- EXP_MAX_SGL_UFLOW_ARG      = f14
- EXP_MIN_SGL_NORM_ARG       = f15
-
- exp_coeff_P5               = f32
- exp_coeff_P6               = f33
- exp_coeff_P3               = f34
- exp_coeff_P4               = f35
-
- exp_coeff_P1               = f36
- exp_coeff_P2               = f37
- exp_Mx                     = f38
- exp_Mfloat                 = f39
- exp_R                      = f40
-
- exp_P1                     = f41
- exp_P2                     = f42
- exp_P3                     = f43
- exp_Rsq                    = f44
- exp_R4                     = f45
-
- exp_P4                     = f46
- exp_P5                     = f47
- exp_P6                     = f48
- exp_P7                     = f49
- exp_T1                     = f50
-
- exp_T2                     = f51
- exp_T                      = f52
- exp_A                      = f53
- exp_norm_f8                = f54
- exp_wre_urm_f8             = f55
-
- exp_ftz_urm_f8             = f56
- exp_gt_pln                 = f57
+FR_X                  = f10
+FR_Y                  = f1
+FR_RESULT             = f8
+// scratch
+fRightShifter         = f6
+f64DivLn2             = f7
+fNormX                = f9
+fNint                 = f10
+fN                    = f11
+fR                    = f12
+fLn2Div64             = f13
+fA2                   = f14
+fA3                   = f15
+// stacked
+fP                    = f32
+fT                    = f33
+fMIN_SGL_OFLOW_ARG    = f34
+fMAX_SGL_ZERO_ARG     = f35
+fMAX_SGL_NORM_ARG     = f36
+fMIN_SGL_NORM_ARG     = f37
+fRSqr                 = f38
+fTmp                  = f39
+fGt_pln               = f39
+fWre_urm_f8           = f40
+fFtz_urm_f8           = f40
 
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
 
-exp_coeff_1_table:
-ASM_TYPE_DIRECTIVE(exp_coeff_1_table,@object)
-data8 0x3F56F35FDE4F8563 // p5
-data8 0x3F2A378BEFECCFDD // p6
-data8 0x3FE00000258C581D // p1
-data8 0x3FC555557AE7B3D4 // p2
-ASM_SIZE_DIRECTIVE(exp_coeff_1_table)
-
-
-exp_coeff_2_table:
-ASM_TYPE_DIRECTIVE(exp_coeff_2_table,@object)
-data8 0x3FA5551BB6592FAE // p3
-data8 0x3F8110E8EBFFD485 // p4
-ASM_SIZE_DIRECTIVE(exp_coeff_2_table)
-
-
-exp_T2_table:
-ASM_TYPE_DIRECTIVE(exp_T2_table,@object)
-data8 0xa175cf9cd7d85844 , 0x00003f46 // exp(-128)
-data8 0xdb7279415a1f9eed , 0x00003f47 // exp(-127)
-data8 0x95213b242bd8ca5f , 0x00003f49 // exp(-126)
-data8 0xcab03c968c989f83 , 0x00003f4a // exp(-125)
-data8 0x89bdb674702961ad , 0x00003f4c // exp(-124)
-data8 0xbb35a2eec278be35 , 0x00003f4d // exp(-123)
-data8 0xfe71b17f373e7e7a , 0x00003f4e // exp(-122)
-data8 0xace9a6ec52a39b63 , 0x00003f50 // exp(-121)
-data8 0xeb03423fe393cf1c , 0x00003f51 // exp(-120)
-data8 0x9fb52c5bcaef1693 , 0x00003f53 // exp(-119)
-data8 0xd910b6377ed60bf1 , 0x00003f54 // exp(-118)
-data8 0x9382dad8a9fdbfe4 , 0x00003f56 // exp(-117)
-data8 0xc87d0a84dea869a3 , 0x00003f57 // exp(-116)
-data8 0x883efb4c6d1087b0 , 0x00003f59 // exp(-115)
-data8 0xb92d7373dce9a502 , 0x00003f5a // exp(-114)
-data8 0xfbaeb020577fb0cb , 0x00003f5b // exp(-113)
-ASM_SIZE_DIRECTIVE(exp_T2_table)
-
-
-exp_T1_table:
-ASM_TYPE_DIRECTIVE(exp_T1_table,@object)
-data8 0x8000000000000000 , 0x00003fff // exp(16 * 0)
-data8 0x87975e8540010249 , 0x00004016 // exp(16 * 1) 
-data8 0x8fa1fe625b3163ec , 0x0000402d // exp(16 * 2) 
-data8 0x9826b576512a59d7 , 0x00004044 // exp(16 * 3) 
-data8 0xa12cc167acbe6902 , 0x0000405b // exp(16 * 4) 
-data8 0xaabbcdcc279f59e4 , 0x00004072 // exp(16 * 5) 
-data8 0xb4dbfaadc045d16f , 0x00004089 // exp(16 * 6) 
-data8 0xbf95e372ccdbf146 , 0x000040a0 // exp(16 * 7) 
-data8 0xcaf2a62eea10bbfb , 0x000040b7 // exp(16 * 8) 
-data8 0xd6fbeb62fddbd340 , 0x000040ce // exp(16 * 9) 
-data8 0xe3bbee32e4a440ea , 0x000040e5 // exp(16 * 10)
-data8 0xf13d8517c34199a8 , 0x000040fc // exp(16 * 11)
-data8 0xff8c2b166241eedd , 0x00004113 // exp(16 * 12)
-data8 0x875a04c0b38d6129 , 0x0000412b // exp(16 * 13)
-data8 0x8f610127db6774d7 , 0x00004142 // exp(16 * 14)
-data8 0x97e1dd87e5c20bb6 , 0x00004159 // exp(16 * 15)
-ASM_SIZE_DIRECTIVE(exp_T1_table)
-
-// Argument Reduction
-//  exp_Mx = (int)f8            ==> The value of f8 rounded to int is placed into the
-//                                  significand of exp_Mx as a two's
-//                                  complement number.
-
-// Later we want to have exp_Mx in a general register. Do this with a getf.sig
-// and call the general register exp_GR_Mint
-
-//  exp_Mfloat = (float)(int)f8 ==> the two's complement number in
-//                                  significand of exp_Mx is turned
-//                                  into a floating point number.
-//  R = 1 - exp_Mfloat          ==> reduced argument
-
-// Core Approximation
-// Calculate a series in R
-//  R * p6 + p5
-//  R * p4 + p3
-//  R * p2 + p1
-//  R^2
-//  R^4
-//  R^2(R * p6 + p5) + (R * p4 + p3)
-//  R^2(R * p2 + p1)
-//  R^4(R^2(R * p6 + p5) + (R * p4 + p3)) + (R^2(R * p2 + p1))
-//  R + 1
-//  exp(R) = (1 + R) + R^4(R^2(R * p6 + p5) + (R * p4 + p3)) + (R^2(R * p2 + p1))
-//  exp(R) = 1 + R + R^2 * p1 + R^3 * p2 + R^4 * p3 + R^5 * p4 + R^6 * p5 + R^7 * p6
-
-// Reconstruction
-// signficand of exp_Mx is two's complement,
-// -103 < x < 89
-// The smallest single denormal is 2^-149 = ssdn
-//    For e^x = ssdn
-//        x   = log(ssdn) = -103.279
-//    But with rounding result goes to ssdn until -103.972079
-// The largest single normal is  1.<23 1's> 2^126 ~ 2^127 = lsn
-//    For e^x = lsn
-//        x   = log(lsn) = 88.7228
+LOCAL_OBJECT_START(_expf_table)
+data4 0x42b17218         // Smallest sgl arg to overflow sgl result, +88.7228
+data4 0xc2cff1b5         // Largest sgl for rnd-to-nearest 0 result, -103.9720
+data4 0x42b17217         // Largest sgl arg to give normal sgl result, +88.7228
+data4 0xc2aeac4f         // Smallest sgl arg to give normal sgl result, -87.3365
 //
-// expf overflows                       when x > 42b17218 = 88.7228
-// expf returns largest single denormal when x = c2aeac50
-// expf goes to zero when                    x < c2cff1b5 
+// 2^(j/64) table, j goes from 0 to 63
+data8 0x0000000000000000 // 2^(0/64)
+data8 0x00002C9A3E778061 // 2^(1/64)
+data8 0x000059B0D3158574 // 2^(2/64)
+data8 0x0000874518759BC8 // 2^(3/64)
+data8 0x0000B5586CF9890F // 2^(4/64)
+data8 0x0000E3EC32D3D1A2 // 2^(5/64)
+data8 0x00011301D0125B51 // 2^(6/64)
+data8 0x0001429AAEA92DE0 // 2^(7/64)
+data8 0x000172B83C7D517B // 2^(8/64)
+data8 0x0001A35BEB6FCB75 // 2^(9/64)
+data8 0x0001D4873168B9AA // 2^(10/64)
+data8 0x0002063B88628CD6 // 2^(11/64)
+data8 0x0002387A6E756238 // 2^(12/64)
+data8 0x00026B4565E27CDD // 2^(13/64)
+data8 0x00029E9DF51FDEE1 // 2^(14/64)
+data8 0x0002D285A6E4030B // 2^(15/64)
+data8 0x000306FE0A31B715 // 2^(16/64)
+data8 0x00033C08B26416FF // 2^(17/64)
+data8 0x000371A7373AA9CB // 2^(18/64)
+data8 0x0003A7DB34E59FF7 // 2^(19/64)
+data8 0x0003DEA64C123422 // 2^(20/64)
+data8 0x0004160A21F72E2A // 2^(21/64)
+data8 0x00044E086061892D // 2^(22/64)
+data8 0x000486A2B5C13CD0 // 2^(23/64)
+data8 0x0004BFDAD5362A27 // 2^(24/64)
+data8 0x0004F9B2769D2CA7 // 2^(25/64)
+data8 0x0005342B569D4F82 // 2^(26/64)
+data8 0x00056F4736B527DA // 2^(27/64)
+data8 0x0005AB07DD485429 // 2^(28/64)
+data8 0x0005E76F15AD2148 // 2^(29/64)
+data8 0x0006247EB03A5585 // 2^(30/64)
+data8 0x0006623882552225 // 2^(31/64)
+data8 0x0006A09E667F3BCD // 2^(32/64)
+data8 0x0006DFB23C651A2F // 2^(33/64)
+data8 0x00071F75E8EC5F74 // 2^(34/64)
+data8 0x00075FEB564267C9 // 2^(35/64)
+data8 0x0007A11473EB0187 // 2^(36/64)
+data8 0x0007E2F336CF4E62 // 2^(37/64)
+data8 0x00082589994CCE13 // 2^(38/64)
+data8 0x000868D99B4492ED // 2^(39/64)
+data8 0x0008ACE5422AA0DB // 2^(40/64)
+data8 0x0008F1AE99157736 // 2^(41/64)
+data8 0x00093737B0CDC5E5 // 2^(42/64)
+data8 0x00097D829FDE4E50 // 2^(43/64)
+data8 0x0009C49182A3F090 // 2^(44/64)
+data8 0x000A0C667B5DE565 // 2^(45/64)
+data8 0x000A5503B23E255D // 2^(46/64)
+data8 0x000A9E6B5579FDBF // 2^(47/64)
+data8 0x000AE89F995AD3AD // 2^(48/64)
+data8 0x000B33A2B84F15FB // 2^(49/64)
+data8 0x000B7F76F2FB5E47 // 2^(50/64)
+data8 0x000BCC1E904BC1D2 // 2^(51/64)
+data8 0x000C199BDD85529C // 2^(52/64)
+data8 0x000C67F12E57D14B // 2^(53/64)
+data8 0x000CB720DCEF9069 // 2^(54/64)
+data8 0x000D072D4A07897C // 2^(55/64)
+data8 0x000D5818DCFBA487 // 2^(56/64)
+data8 0x000DA9E603DB3285 // 2^(57/64)
+data8 0x000DFC97337B9B5F // 2^(58/64)
+data8 0x000E502EE78B3FF6 // 2^(59/64)
+data8 0x000EA4AFA2A490DA // 2^(60/64)
+data8 0x000EFA1BEE615A27 // 2^(61/64)
+data8 0x000F50765B6E4540 // 2^(62/64)
+data8 0x000FA7C1819E90D8 // 2^(63/64)
+LOCAL_OBJECT_END(_expf_table)
 
-// Consider range of 8-bit two's complement, -128 ---> 127
-// Add 128; range becomes                       0 ---> 255
-
-// The number (=i) in 0 ---> 255 is used as offset into two tables.
-
-// i = abcd efgh = abcd * 16 + efgh = i1 * 16 + i2
-
-// i1 = (exp_GR_Mint + 128)  & 0xf0 (show 0xf0 as -0x10 to avoid assembler error)
-//                                  (The immediate in the AND is an 8-bit two's complement)
-// i1 = i1 + start of T1 table (EXP_AD_T1)
-//    Note that the entries in T1 are double-extended numbers on 16-byte boundaries
-//    and that i1 is already shifted left by 16 after the AND.
-
-// i2 must be shifted left by 4 before adding to the start of the table.
-// i2 = ((exp_GR_Mint + 128)  & 0x0f) << 4
-// i2 = i2 + start of T2 table (EXP_AD_T2)
-
-// T      = T1 * T2
-// A      = T * (1 + R)
-// answer = T *  (R^2 * p1 + R^3 * p2 + R^4 * p3 + R^5 * p4 + R^6 * p5 + R^7 * p6) +
-//          T *  (1 + R)
-//        = T * exp(R)
-
-
-.global expf#
 
 .section .text
-.proc  expf#
-.align 32
-expf:
-#ifdef _LIBC
-.global __ieee754_expf#
-__ieee754_expf:
-#endif
-
-{ .mfi
-     alloc      r32            = ar.pfs,1,26,4,0
-     fcvt.fx.s1   exp_Mx       =    f8
-     mov       exp_GR_17ones   =    0x1FFFF
+GLOBAL_IEEE754_ENTRY(expf)
+      
+{ .mlx
+      addl            rTblAddr = @ltoff(_expf_table),gp
+      movl            r64DivLn2 = 0x40571547652B82FE // 64/ln(2)
 }
 { .mlx
-     addl      EXP_AD_P_1      =    @ltoff(exp_coeff_1_table),gp
-     movl      exp_GR_min_oflow = 0x42b17218    
-}
-;;
-
-// Fnorm done to take any enabled faults
-{ .mfi
-     ld8       EXP_AD_P_1      =  [EXP_AD_P_1]
-     fclass.m  p6,p0      = f8, 0x07	//@zero
-     nop.i 999
-}
-{ .mfi
-     add       exp_GR_max_norm = -1, exp_GR_min_oflow  // 0x42b17217
-     fnorm     exp_norm_f8     =    f8
-     nop.i 999
+      addl            rA3 = 0x3E2AA, r0 // high bits of 1.0/6.0 rounded to SP
+      movl            rRightShifter = 0x43E8000000000000 // DP Right Shifter
 }
 ;;
 
 { .mfi
-     setf.s    EXP_MIN_SGL_OFLOW_ARG = exp_GR_min_oflow  // 0x42b17218
-     fclass.m  p7,p0      = f8, 0x22	// Test for x=-inf
-     mov       exp_GR_0xf0 = 0x0f0
+      // point to the beginning of the table
+      ld8             rTblAddr = [rTblAddr]
+      fclass.m        p14, p0 = f8, 0x22    // test for -INF
+      shl             rA3 = rA3, 12  // 0x3E2AA000, approx to 1.0/6.0 in SP
 }
-{ .mlx
-     setf.s    EXP_MAX_SGL_NORM_ARG = exp_GR_max_norm
-     movl      exp_GR_max_zero = 0xc2cff1b5    
+{ .mfi
+      nop.m           0
+      fnorm.s1        fNormX = f8           // normalized x
+      addl            rExpHalf = 0xFFFE, r0 // exponent of 1/2
 }
 ;;
 
-
+{ .mfi
+      setf.d          f64DivLn2 = r64DivLn2 // load 64/ln(2) to FP reg
+      fclass.m        p15, p0 = f8, 0x1e1   // test for NaT,NaN,+Inf
+      nop.i           0
+}
 { .mlx
-     mov       exp_GR_0x0f = 0x00f
-     movl      exp_GR_max_uflow = 0xc2aeac50    
+      // load Right Shifter to FP reg
+      setf.d          fRightShifter = rRightShifter
+      movl            rLn2Div64 = 0x3F862E42FEFA39EF // DP ln(2)/64 in GR
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.eq.s1      p13, p0 = f0, f8      // test for x = 0.0
+      nop.i           0
 }
 { .mfb
-     nop.m 999
-(p6) fma.s     f8 = f1,f1,f0
-(p6) br.ret.spnt   b0        // quick exit for x=0
+      setf.s          fA3 = rA3             // load A3 to FP reg
+(p14) fma.s.s0        f8 = f0, f1, f0       // result if x = -inf
+(p14) br.ret.spnt     b0                    // exit here if x = -inf
 }
 ;;
 
 { .mfi
-     setf.s    EXP_MAX_SGL_ZERO_ARG = exp_GR_max_zero
-     fclass.m  p8,p0      = f8, 0x21	// Test for x=+inf
-     adds      exp_GR_min_norm = 1, exp_GR_max_uflow  // 0xc2aeac51
+      setf.exp        fA2 = rExpHalf        // load A2 to FP reg
+      fcmp.eq.s0      p6, p0 = f8, f0       // Dummy to flag denorm
+      nop.i           0
 }
 { .mfb
-     ldfpd     exp_coeff_P5,exp_coeff_P6     =    [EXP_AD_P_1],16
-(p7) fma.s     f8 = f0,f0,f0
-(p7) br.ret.spnt   b0        // quick exit for x=-inf
-}
-;;
-
-{ .mmf
-     ldfpd     exp_coeff_P1,exp_coeff_P2     =    [EXP_AD_P_1],16
-     setf.s    EXP_MAX_SGL_UFLOW_ARG = exp_GR_max_uflow
-     fclass.m  p9,p0      = f8, 0xc3	// Test for x=nan
-}
-;;
-
-{ .mmb
-     ldfpd     exp_coeff_P3,exp_coeff_P4     =    [EXP_AD_P_1],16
-     setf.s    EXP_MIN_SGL_NORM_ARG = exp_GR_min_norm
-(p8) br.ret.spnt   b0        // quick exit for x=+inf
-}
-;;
-
-// EXP_AD_P_1 now points to exp_T2_table
-{ .mfi
-     mov exp_GR_T2_size           = 0x100
-     fcvt.xf   exp_Mfloat     =    exp_Mx
-     nop.i 999
+      setf.d          fLn2Div64 = rLn2Div64 // load ln(2)/64 to FP reg
+(p15) fma.s.s0        f8 = f8, f1, f0       // result if x = NaT,NaN,+Inf
+(p15) br.ret.spnt     b0                    // exit here if x = NaT,NaN,+Inf
 }
 ;;
 
 { .mfb
-     getf.sig  exp_GR_Mint    =    exp_Mx
-(p9) fmerge.s     f8 = exp_norm_f8, exp_norm_f8
-(p9) br.ret.spnt   b0        // quick exit for x=nan
+      // overflow and underflow_zero threshold
+      ldfps           fMIN_SGL_OFLOW_ARG, fMAX_SGL_ZERO_ARG = [rTblAddr], 8
+(p13) fma.s.s0        f8 = f1, f1, f0       // result if x = 0.0
+(p13) br.ret.spnt     b0                    // exit here if x =0.0
 }
 ;;
 
-{ .mmi
-     nop.m 999
-     mov      EXP_AD_T2       =  EXP_AD_P_1
-     add      EXP_AD_T1       =  exp_GR_T2_size,EXP_AD_P_1 ;;
+      // max normal and underflow_denorm threshold
+{ .mfi
+      ldfps           fMAX_SGL_NORM_ARG, fMIN_SGL_NORM_ARG = [rTblAddr], 8
+      nop.f           0
+      nop.i           0
 }
+;;
 
-
-{ .mmi
-     adds      exp_GR_Mint_p_128   =    0x80,exp_GR_Mint ;;
-     and       exp_GR_Ind1      =    exp_GR_Mint_p_128, exp_GR_0xf0
-     and       exp_GR_Ind2      =    exp_GR_Mint_p_128, exp_GR_0x0f ;;
+{ .mfi
+      nop.m           0
+      // x*(64/ln(2)) + Right Shifter
+      fma.s1          fNint = fNormX, f64DivLn2, fRightShifter
+      nop.i           0
 }
+;;
 
 // Divide arguments into the following categories:
-//  Certain Underflow/zero  p11 - -inf < x <= MAX_SGL_ZERO_ARG 
-//  Certain Underflow       p12 - MAX_SGL_ZERO_ARG < x <= MAX_SGL_UFLOW_ARG 
-//  Possible Underflow      p13 - MAX_SGL_UFLOW_ARG < x < MIN_SGL_NORM_ARG
+//  Certain Underflow       p11 - -inf < x <= MAX_SGL_ZERO_ARG
+//  Possible Underflow      p13 - MAX_SGL_ZERO_ARG < x < MIN_SGL_NORM_ARG
 //  Certain Safe                - MIN_SGL_NORM_ARG <= x <= MAX_SGL_NORM_ARG
 //  Possible Overflow       p14 - MAX_SGL_NORM_ARG < x < MIN_SGL_OFLOW_ARG
 //  Certain Overflow        p15 - MIN_SGL_OFLOW_ARG <= x < +inf
 //
-// If the input is really a single arg, then there will never be "Possible
-// Underflow" or "Possible Overflow" arguments.
+// If the input is really a single arg, then there will never be
+// "Possible Overflow" arguments.
 //
 
 { .mfi
-     add       EXP_AD_M1 =    exp_GR_Ind1,EXP_AD_T1
-     fcmp.ge.s1  p15,p14 = exp_norm_f8,EXP_MIN_SGL_OFLOW_ARG
-     nop.i 999
+      nop.m           0
+      // check for overflow
+      fcmp.ge.s1      p15, p0 = fNormX, fMIN_SGL_OFLOW_ARG
+      nop.i           0
 }
-{ .mfi
-     shladd       EXP_AD_M2                =    exp_GR_Ind2,4,EXP_AD_T2
-     fms.s1    exp_R                    =    f1,f8,exp_Mfloat
-     nop.i 999 ;;
-}
+;;
 
 { .mfi
-     ldfe           exp_T1    =    [EXP_AD_M1]
-     fcmp.le.s1  p11,p12 = exp_norm_f8,EXP_MAX_SGL_ZERO_ARG
-     nop.i 999 ;;
+      nop.m           0
+      // check for underflow and tiny (+0) result
+      fcmp.le.s1      p11, p0 = fNormX, fMAX_SGL_ZERO_ARG
+      nop.i           0
 }
-
 { .mfb
-      ldfe           exp_T2   =    [EXP_AD_M2]
-(p14) fcmp.gt.s1  p14,p0 = exp_norm_f8,EXP_MAX_SGL_NORM_ARG
-(p15) br.cond.spnt L(EXP_CERTAIN_OVERFLOW) ;;
-}
-
-{ .mfb
-      nop.m 999
-(p12) fcmp.le.s1  p12,p0 = exp_norm_f8,EXP_MAX_SGL_UFLOW_ARG
-(p11) br.cond.spnt L(EXP_CERTAIN_UNDERFLOW_ZERO)
-}
-;;
-
-{ .mfi
-      nop.m 999
-(p13) fcmp.lt.s1  p13,p0 = exp_norm_f8,EXP_MIN_SGL_NORM_ARG
-      nop.i 999
-}
-;;
-
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_Rsq   =    exp_R,exp_R,f0
-     nop.i                 999
-}
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P3    =    exp_R,exp_coeff_P2,exp_coeff_P1
-     nop.i                 999 
-}
-;;
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P1    =    exp_R,exp_coeff_P6,exp_coeff_P5
-     nop.i                 999 
-}
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P2    =    exp_R,exp_coeff_P4,exp_coeff_P3
-     nop.i                 999
-}
-;;
-
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P7    =    f1,exp_R,f1
-     nop.i                 999
-}
-;;
-
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P5    =    exp_Rsq,exp_P3,f0
-     nop.i                 999
-}
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_R4    =    exp_Rsq,exp_Rsq,f0
-     nop.i                 999 
-}
-;;
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_T     =    exp_T1,exp_T2,f0
-     nop.i                 999 
-}
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P4    =    exp_Rsq,exp_P1,exp_P2
-     nop.i                 999 
-}
-;;
-
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_A     =    exp_T,exp_P7,f0
-     nop.i                 999
-}
-{ .mfi
-     nop.m                 999
-     fma.s1    exp_P6    =    exp_R4,exp_P4,exp_P5
-     nop.i                 999
-}
-;;
-
-{ .bbb
-(p12) br.cond.spnt L(EXP_CERTAIN_UNDERFLOW)
-(p13) br.cond.spnt L(EXP_POSSIBLE_UNDERFLOW)
-(p14) br.cond.spnt L(EXP_POSSIBLE_OVERFLOW)
+      nop.m           0
+      fms.s1          fN = fNint, f1, fRightShifter // n in FP register
+      // branch out if overflow
+(p15) br.cond.spnt    EXP_CERTAIN_OVERFLOW
 }
 ;;
 
 { .mfb
-     nop.m            999
-     fma.s     f8   =    exp_T,exp_P6,exp_A
-     br.ret.sptk     b0
-}
-;;
-
-L(EXP_POSSIBLE_OVERFLOW):
-
-// We got an answer. EXP_MAX_SGL_NORM_ARG < x < EXP_MIN_SGL_OFLOW_ARG
-// overflow is a possibility, not a certainty
-// Set wre in s2 and perform the last operation with s2
-
-// We define an overflow when the answer with
-//    WRE set
-//    user-defined rounding mode
-// is lsn +1
-
-// Is the exponent 1 more than the largest single?
-// If so, go to ERROR RETURN, else (no overflow) get the answer and
-// leave.
-
-// Largest single is FE (biased single)
-//                   FE - 7F + FFFF = 1007E
-
-// Create + largest_single_plus_ulp
-// Create - largest_single_plus_ulp
-
-// Calculate answer with WRE set.
-
-// Cases when answer is lsn+1  are as follows:
-
-//           midpoint
-//              |
-//  lsn         |         lsn+1
-// --+----------|----------+------------
-//              |
-//    +inf          +inf      -inf
-//                  RN         RN
-//                             RZ
-// exp_gt_pln contains the floating point number lsn+1.
-// The setf.exp puts 0x1007f in the exponent and 0x800... in the significand.
-
-// If the answer is >= lsn+1, we have overflowed.
-// Then p6 is TRUE. Set the overflow tag, save input in FR_X,
-// do the final calculation for IEEE result, and branch to error return.
-
-{ .mfi
-       mov         exp_GR_gt_ln    = 0x1007F 
-       fsetc.s2    0x7F,0x42
-       nop.i 999
+      getf.sig        rNJ = fNint           // bits of n, j
+      // check for underflow and deno result
+      fcmp.lt.s1      p13, p0 = fNormX, fMIN_SGL_NORM_ARG
+      // branch out if underflow and tiny (+0) result
+(p11) br.cond.spnt    EXP_CERTAIN_UNDERFLOW
 }
 ;;
 
 { .mfi
-       setf.exp      exp_gt_pln    = exp_GR_gt_ln
-       fma.s.s2    exp_wre_urm_f8  = exp_T,  exp_P6, exp_A
-       nop.i 999
+      nop.m           0
+      // check for possible overflow
+      fcmp.gt.s1      p14, p0 = fNormX, fMAX_SGL_NORM_ARG
+      extr.u          rJ = rNJ, 0, 6        // bits of j
+}
+{ .mfi
+      addl            rN = 0xFFFF - 63, rNJ // biased and shifted n
+      fnma.s1         fR = fLn2Div64, fN, fNormX // R = x - N*ln(2)/64
+      nop.i           0
 }
 ;;
 
 { .mfi
-       nop.m 999
-       fsetc.s2 0x7F,0x40
-       nop.i 999
+      shladd          rJ = rJ, 3, rTblAddr  // address in the 2^(j/64) table
+      nop.f           0
+      shr             rN = rN, 6            // biased n
 }
 ;;
 
 { .mfi
-       nop.m 999
-       fcmp.ge.unc.s1 p6, p0       =  exp_wre_urm_f8, exp_gt_pln
-       nop.i 999
+      ld8             rJ = [rJ]
+      nop.f           0
+      shl             rN = rN, 52           // 2^n bits in DP format
+}
+;;
+
+{ .mfi
+      or              rN = rN, rJ // bits of 2^n * 2^(j/64) in DP format
+      nop.f           0
+      nop.i           0
+}
+;;
+
+{ .mfi
+      setf.d          fT = rN               // 2^n * 2^(j/64)
+      fma.s1          fP = fA3, fR, fA2     // A3*R + A2
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.s1          fRSqr = fR, fR, f0    // R^2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fP = fP, fRSqr, fR    // P = (A3*R + A2)*R^2 + R
+      nop.i           0
+}
+;;
+
+{ .mbb
+      nop.m           0
+      // branch out if possible underflow
+(p13) br.cond.spnt    EXP_POSSIBLE_UNDERFLOW
+      // branch out if possible overflow result
+(p14) br.cond.spnt    EXP_POSSIBLE_OVERFLOW
 }
 ;;
 
 { .mfb
-       nop.m 999
-       nop.f 999
-(p6)   br.cond.spnt L(EXP_CERTAIN_OVERFLOW)  // Branch if really overflow
+      nop.m           0
+      // final result in the absence of over- and underflow
+      fma.s.s0        f8 = fP, fT, fT
+      // exit here in the absence of over- and underflow
+      br.ret.sptk     b0
+}
+;;
+
+EXP_POSSIBLE_OVERFLOW:
+
+// Here if fMAX_SGL_NORM_ARG < x < fMIN_SGL_OFLOW_ARG
+// This cannot happen if input is a single, only if input higher precision.
+// Overflow is a possibility, not a certainty.
+
+// Recompute result using status field 2 with user's rounding mode,
+// and wre set.  If result is larger than largest single, then we have
+// overflow
+
+{ .mfi
+      mov             rGt_ln  = 0x1007f // Exponent for largest single + 1 ulp
+      fsetc.s2        0x7F,0x42         // Get user's round mode, set wre
+      nop.i           0
+}
+;;
+
+{ .mfi
+      setf.exp        fGt_pln = rGt_ln  // Create largest single + 1 ulp
+      fma.s.s2        fWre_urm_f8 = fP, fT, fT    // Result with wre set
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fsetc.s2        0x7F,0x40                   // Turn off wre in sf2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.ge.s1      p6, p0 =  fWre_urm_f8, fGt_pln // Test for overflow
+      nop.i           0
 }
 ;;
 
 { .mfb
-       nop.m 999
-       fma.s        f8             = exp_T,  exp_P6, exp_A
-       br.ret.sptk     b0                 // Exit if really no overflow
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    EXP_CERTAIN_OVERFLOW // Branch if overflow
 }
 ;;
 
-L(EXP_CERTAIN_OVERFLOW):
+{ .mfb
+      nop.m           0
+      fma.s.s0        f8 = fP, fT, fT
+      br.ret.sptk     b0                     // Exit if really no overflow
+}
+;;
+
+// here if overflow
+EXP_CERTAIN_OVERFLOW:
 { .mmi
-      sub   exp_GR_17ones_m1 = exp_GR_17ones, r0, 1 ;;
-      setf.exp     f9 = exp_GR_17ones_m1
-      nop.i 999 ;;
+      addl            r17ones_m1 = 0x1FFFE, r0
+;;
+      setf.exp        fTmp = r17ones_m1
+      nop.i           0
 }
+;;
 
 { .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
+      alloc           r32=ar.pfs,0,3,4,0
+      fmerge.s        FR_X = f8,f8
+      nop.i           0
 }
 { .mfb
-      mov        GR_Parameter_TAG = 16
-      fma.s       FR_RESULT = f9, f9, f0    // Set I,O and +INF result
-      br.cond.sptk  __libm_error_region ;;                             
+      mov             GR_Parameter_TAG = 16
+      fma.s.s0        FR_RESULT = fTmp, fTmp, f0 // Set I,O and +INF result
+      br.cond.sptk    __libm_error_region
 }
+;;
 
-L(EXP_POSSIBLE_UNDERFLOW): 
+EXP_POSSIBLE_UNDERFLOW:
 
-// We got an answer. EXP_MAX_SGL_UFLOW_ARG < x < EXP_MIN_SGL_NORM_ARG
-// underflow is a possibility, not a certainty
+// Here if fMAX_SGL_ZERO_ARG < x < fMIN_SGL_NORM_ARG
+// Underflow is a possibility, not a certainty
 
 // We define an underflow when the answer with
 //    ftz set
@@ -637,144 +549,157 @@ L(EXP_POSSIBLE_UNDERFLOW):
 //                           E
 // -----+--------------------+--------------------+-----
 //      |                    |                    |
-//   1.1...10 2^-7f      1.1...11 2^-7f      1.0...00 2^-7e  
-//   0.1...11 2^-7e                                     (biased, 1)
+//   1.1...10 2^-3fff    1.1...11 2^-3fff    1.0...00 2^-3ffe
+//   0.1...11 2^-3ffe                                   (biased, 1)
 //    largest dn                               smallest normal
 
-// If the answer is = 0, we have underflowed.
-// Then p6 is TRUE. Set the underflow tag, save input in FR_X,
-// do the final calculation for IEEE result, and branch to error return.
-
 { .mfi
-       nop.m 999
-       fsetc.s2 0x7F,0x41
-       nop.i 999
+      nop.m           0
+      fsetc.s2        0x7F,0x41                // Get user's round mode, set ftz
+      nop.i           0
 }
 ;;
 
 { .mfi
-       nop.m 999
-       fma.s.s2     exp_ftz_urm_f8  = exp_T,  exp_P6, exp_A
-       nop.i 999
-}
-;;
-
-
-{ .mfi
-       nop.m 999
-       fsetc.s2 0x7F,0x40
-       nop.i 999
+      nop.m           0
+      fma.s.s2        fFtz_urm_f8 = fP, fT, fT // Result with ftz set
+      nop.i           0
 }
 ;;
 
 { .mfi
-       nop.m 999
-       fcmp.eq.unc.s1 p6, p0     =  exp_ftz_urm_f8, f0
-       nop.i 999
+      nop.m           0
+      fsetc.s2        0x7F,0x40                // Turn off ftz in sf2
+      nop.i           0
 }
 ;;
 
-{ .mfb
-       nop.m 999
-       nop.f 999
-(p6)   br.cond.spnt L(EXP_CERTAIN_UNDERFLOW)  // Branch if really underflow 
-}
-;;
-
-{ .mfb
-       nop.m 999
-       fma.s        f8             = exp_T,  exp_P6, exp_A
-       br.ret.sptk     b0                  // Exit if really no underflow
-}
-;;
-
-L(EXP_CERTAIN_UNDERFLOW):
 { .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
+      nop.m           0
+      fcmp.eq.s1      p6, p7 = fFtz_urm_f8, f0 // Test for underflow
+      nop.i           0
 }
-{ .mfb
-      mov        GR_Parameter_TAG = 17
-      fma.s       FR_RESULT  = exp_T, exp_P6, exp_A // Set I,U and tiny result
-      br.cond.sptk  __libm_error_region ;;                             
+{ .mfi
+      nop.m           0
+      fma.s.s0        f8 = fP, fT, fT          // Compute result, set I, maybe U
+      nop.i           0
 }
+;;
 
-L(EXP_CERTAIN_UNDERFLOW_ZERO):
+{ .mbb
+      nop.m           0
+(p6)  br.cond.spnt    EXP_UNDERFLOW_COMMON     // Branch if really underflow
+(p7)  br.ret.sptk     b0                       // Exit if really no underflow
+}
+;;
+
+EXP_CERTAIN_UNDERFLOW:
+// Here if  x < fMAX_SGL_ZERO_ARG
+// Result will be zero (or smallest denorm if round to +inf) with I, U set
 { .mmi
-      mov   exp_GR_one = 1 ;;
-      setf.exp     f9 = exp_GR_one
-      nop.i 999 ;;
+      mov             rTmp = 1
+;;
+      setf.exp        fTmp = rTmp               // Form small normal
+      nop.i           0
 }
+;;
 
-{ .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
-}
 { .mfb
-      mov        GR_Parameter_TAG = 17
-      fma.s       FR_RESULT = f9, f9, f0    // Set I,U and tiny (+0.0) result
-      br.cond.sptk  __libm_error_region ;;                             
+      nop.m           0
+      fma.s.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result
+      br.cond.sptk    EXP_UNDERFLOW_COMMON
 }
+;;
 
-.endp expf
-ASM_SIZE_DIRECTIVE(expf)
+EXP_UNDERFLOW_COMMON:
+// Determine if underflow result is zero or nonzero
+{ .mfi
+      alloc           r32=ar.pfs,0,3,4,0
+      fcmp.eq.s1      p6, p0 =  f8, f0
+      nop.i           0
+}
+;;
 
+{ .mfb
+      nop.m           0
+      fmerge.s        FR_X = fNormX,fNormX
+(p6)  br.cond.spnt    EXP_UNDERFLOW_ZERO
+}
+;;
 
-.proc __libm_error_region
-__libm_error_region:
+EXP_UNDERFLOW_NONZERO:
+// Here if  x < fMIN_SGL_NORM_ARG and result nonzero;
+// I, U are set
+{ .mfb
+      mov             GR_Parameter_TAG = 17
+      nop.f           0                         // FR_RESULT already set
+      br.cond.sptk    __libm_error_region
+}
+;;
+
+EXP_UNDERFLOW_ZERO:
+// Here if x < fMIN_SGL_NORM_ARG and result zero;
+// I, U are set
+{ .mfb
+      mov             GR_Parameter_TAG = 17
+      nop.f           0                         // FR_RESULT already set
+      br.cond.sptk    __libm_error_region
+}
+;;
+
+GLOBAL_IEEE754_END(expf)
+
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
-        add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-	nop.f 999
+      add   GR_Parameter_Y=-32,sp             // Parameter 2 value
+      nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
+      mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
 .fframe 64
-        add sp=-64,sp                           // Create new stack
-        nop.f 0
-        mov GR_SAVE_GP=gp                       // Save gp
+      add sp=-64,sp                           // Create new stack
+      nop.f 0
+      mov GR_SAVE_GP=gp                       // Save gp
 };;
 { .mmi
-        stfs [GR_Parameter_Y] = FR_Y,16         // Store Parameter 2 on stack
-        add GR_Parameter_X = 16,sp              // Parameter 1 address
+      stfs [GR_Parameter_Y] = FR_Y,16         // Store Parameter 2 on stack
+      add GR_Parameter_X = 16,sp              // Parameter 1 address
 .save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0                       // Save b0
+      mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mfi
-        stfs [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack
-        nop.f 0
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y // Parameter 3 address
+      stfs [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack
+      nop.f 0
+      add   GR_Parameter_RESULT = 0,GR_Parameter_Y // Parameter 3 address
 }
 { .mib
-        stfs [GR_Parameter_Y] = FR_RESULT       // Store Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y
-        br.call.sptk b0=__libm_error_support#   // Call error handling function
+      stfs [GR_Parameter_Y] = FR_RESULT       // Store Parameter 3 on stack
+      add   GR_Parameter_Y = -16,GR_Parameter_Y
+      br.call.sptk b0=__libm_error_support#   // Call error handling function
 };;
 
 { .mmi
-        nop.m 0
-        nop.m 0
-        add   GR_Parameter_RESULT = 48,sp
+      add   GR_Parameter_RESULT = 48,sp
+      nop.m 0
+      nop.i 0
 };;
 
 { .mmi
-        ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
+      ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
-        add   sp = 64,sp                       // Restore stack pointer
-        mov   b0 = GR_SAVE_B0                  // Restore return address
+      add   sp = 64,sp                       // Restore stack pointer
+      mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
-        mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
-        br.ret.sptk     b0                     // Return
-};; 
+      mov   gp = GR_SAVE_GP                  // Restore gp
+      mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
+      br.ret.sptk     b0                     // Return
+};;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
 
 
 .type   __libm_error_support#,@function

@@ -1,10 +1,10 @@
 .file "atan.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,947 +20,734 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 2/02/00: Initial version
-// 4/13/00: Improved speed
-// 4/19/00: Removed the qualifying predicate from the fmerge.s that
-//          takes the absolute value.
-// 6/16/00: Reassigned FP registers to eliminate stalls on loads
-// 8/30/00: Saved 5 cycles in main path by rearranging large argument logic
-//          and delaying use of result of fcmp in load by 1 group
+// 02/02/00  Initial version
+// 04/13/00  Improved speed
+// 04/19/00  Removed the qualifying predicate from the fmerge.s that
+//           takes the absolute value.
+// 06/16/00  Reassigned FP registers to eliminate stalls on loads
+// 08/30/00  Saved 5 cycles in main path by rearranging large argument logic
+//           and delaying use of result of fcmp in load by 1 group
+// 05/20/02  Cleaned up namespace and sf0 syntax
+// 08/20/02  Use atan2 algorithm with x=1 for better accuracy
+// 02/06/03  Reordered header: .section, .global, .proc, .align
 //
 // API
 //==============================================================
-// double atan( double x);
+// double atan(double Y)
 //
 // Overview of operation
 //==============================================================
-// atan(x) = sign(X)pi/2 - atan(1/x)
 //
-// We have two paths: |x| > 1 and |x| <= 1
+// The atan function returns values in the interval [-pi/2,+pi/2].
 //
-// |x| >  1
-// ==========================================
+// The algorithm used is the atan2(Y,X) algorithm where we fix X=1.0.
 //
-// c  = frcpa(x) which is approximately 1/x
+// There are two basic paths: swap true and swap false.
+// atan2(Y,X) ==> atan2(V/U) where U >= V. If Y > X, we must swap.
 //
-// xc = 1- B
-// B  = 1-xc
+// p6  swap True    |Y| > |X|
+// p7  swap False   |Y| <= |X|
 //
-// Approximate 1/(1-B)^k by a polynomial in B, poly(B)
-// k is 45.
 //
-// poly(B)     = 1 + r1 B + r2 B^2 + ...+ r10 B^10
+// Simple trigonometric identities show
+//   Region 1
+//         |Y|<=1.0, V=Y, U=1.0     atan2(Y,X) = sgnY * (0 + atan(V/U))
 //
-// c^k         = (1-B)^k/x^k
-// c^k/(1-B)^k = 1/x^k 
-// c^k poly(B) = 1/x^k
+//   Region 2
+//         |Y|>1.0, V=1.0, U=Y      atan2(Y,X) = sgnY * (pi/2 - atan(V/U))
+//
+//
+// We compute atan(V/U) from the identity
+//      atan(z) + atan([(V/U)-z] / [1+(V/U)z])
+//      where z is a limited precision approximation (16 bits) to V/U
+//
+// z is calculated with the assistance of the frcpa instruction.
+//
+// atan(z) is calculated by a polynomial z + z^3 * p(w),  w=z^2
+// where p(w) = P0+P1*w+...+P22*w^22
+//
+// Let d = [(V/U)-z] / [1+(V/U)z]) = (V-U*z)/(U+V*z)
+//
+// Approximate atan(d) by d + P0*d^3
+// Let F = 1/(U+V*z) * (1-a), where |a|< 2^-8.8.
+// Compute q(a) = 1 + a + ... + a^5.
+// Then F*q(a) approximates the reciprocal to more than 50 bits.
 
-// poly(x)     = series(atan(1/x)) = 1/x - 1/3x^3 + 1/5x^5 - 1/7x^7 .... + 1/45 x^45
-//                                 = 1/x^45 ( x^44 - x^42/3 + x^40/5 - x^38/7 ... +1)
-//                                 = 1/x^45 ( y^22 - y^21/3 + y^20/5 - y^19/7 ... +1)
-//        
-//                                 = c^45 poly(B) poly(x)
-//                                 = c^45 r(B) q(y)
-
-// q(y) = q0 + q1 y + q2 y^2 + ... + q22 y^22
-// where q22 is 1.0
-
-// atan(x) = sign(X)pi/2 -  c^45 r(B) q(y)
-
-// |x| <=  1
-// ==========================================
-// poly(x)    = series(atan(x))   = x - x^3/3 + x^5/5 + .....
-// poly(x)    = series(atan(x))   = x  + x^3(- 1/3 + x^2/5 + ..... +x^47/47)
-// poly(x)    = series(atan(x))   = x  + x^3(p0 + x^2/5 + ..... + x^44/47)
-// poly(x)    = series(atan(x))   = x  + x^3(p0 + y/5 + ..... + y^22/47)
-   
-// where p0 is about -1/3.
-
-// atan(x) = poly(x)
-
-#include "libm_support.h"
-
-// Special Values
+// Special values
 //==============================================================
 // atan(QNAN)  = QNAN
 // atan(SNAN)  = quieted SNAN
-// atan(+-inf) = +- pi/2     
+// atan(+-inf) = +- pi/2
 // atan(+-0)   = +-0
-
-
 
 // Registers used
 //==============================================================
 
-// predicate registers used: 
-// p6 -> p11
+// predicate registers used:
+// p6 -> p15
 
-// floating-point registers used:  
-// f32 -> f127
+// floating-point registers used:
+// f8, input
+// f32 -> f116
 
 // general registers used
-// r32 -> r37
+// r14 -> r16
 
 // Assembly macros
 //==============================================================
-atan_Pi_by_2                  = f32
-atan_S_PI                     = f33
-atan_ABS_f8                   = f34
 
-atan_R0                       = f35
-atan_R1                       = f36
-atan_R2                       = f37
-atan_R3                       = f38 
-atan_R4                       = f39 
-atan_R5                       = f40 
-atan_R6                       = f41
-atan_R7                       = f42
-atan_R8                       = f43 
-atan_R9                       = f44 
-atan_R10                      = f45 
+EXP_AD_P1                    = r14
+EXP_AD_P2                    = r15
+rsig_near_one                = r16
 
-atan_Q0                       = f46
+atan2_Y                      = f8
+atan2_X                      = f1
 
-atan_Q1                       = f47 
-atan_Q2                       = f48
-atan_Q3                       = f49
-atan_Q4                       = f50
-atan_Q5                       = f51 
-atan_Q6                       = f52 
-atan_Q7                       = f53 
-atan_Q8                       = f54 
-atan_Q9                       = f55 
-atan_Q10                      = f56 
+atan2_u1_X                   = f32
+atan2_u1_Y                   = f33
+atan2_z2_X                   = f34
 
-atan_Q11                      = f57 
-atan_Q12                      = f58
-atan_Q13                      = f59
-atan_Q14                      = f60
-atan_Q15                      = f61 
-atan_Q16                      = f62 
-atan_Q17                      = f63 
-atan_Q18                      = f64 
-atan_Q19                      = f65 
-atan_Q20                      = f66 
-atan_Q21                      = f67 
-atan_Q22                      = f68 
+atan2_two                    = f36
+atan2_B1sq_Y                 = f37
+atan2_z1_X                   = f38
+atan2_B1X                    = f40
 
-// P and Q constants are mutually exclusive 
-// so they can share macro definitions
-atan_P0                       = f46
+atan2_B1Y                    = f41
+atan2_wp_X                   = f42
+atan2_B1sq_X                 = f43
+atan2_z                      = f44
+atan2_w                      = f45
 
-atan_P1                       = f47 
-atan_P2                       = f48
-atan_P3                       = f49
-atan_P4                       = f10
-atan_P5                       = f11 
-atan_P6                       = f12 
-atan_P7                       = f13 
-atan_P10                      = f103 
+atan2_P0                     = f46
+atan2_P1                     = f47
+atan2_P2                     = f48
+atan2_P3                     = f49
+atan2_P4                     = f50
 
-atan_P11                      = f114 
-atan_P12                      = f58
-atan_P13                      = f59
-atan_P14                      = f60
-atan_P15                      = f61 
-atan_P16                      = f62 
-atan_P17                      = f63 
-atan_P18                      = f64 
-atan_P19                      = f65 
-atan_P20                      = f14 
-atan_P21                      = f99 
-atan_P22                      = f68 
-// end of P constant macros
+atan2_P5                     = f51
+atan2_P6                     = f52
+atan2_P7                     = f53
+atan2_P8                     = f54
+atan2_P9                     = f55
 
-atan_C                        = f69
-atan_Y                        = f70
-atan_B                        = f71
-atan_Z                        = f72
-atan_V11                      = f73
-atan_V12                      = f74
+atan2_P10                    = f56
+atan2_P11                    = f57
+atan2_P12                    = f58
+atan2_P13                    = f59
+atan2_P14                    = f60
 
-atan_V7                       = f75
-atan_V8                       = f76
+atan2_P15                    = f61
+atan2_P16                    = f62
+atan2_P17                    = f63
+atan2_P18                    = f64
+atan2_P19                    = f65
 
-atan_W13                      = f77
-atan_W11                      = f78
+atan2_P20                    = f66
+atan2_P21                    = f67
+atan2_P22                    = f68
+atan2_pi_by_2                = f69
+atan2_sgn_pi_by_2            = f69
+atan2_V13                    = f70
 
-atan_V3                       = f79
-atan_V4                       = f80
+atan2_W11                    = f71
+atan2_E                      = f72
+atan2_wp_Y                   = f73
+atan2_V11                    = f74
+atan2_V12                    = f75
 
-atan_G11                      = f81
-atan_G12                      = f82
-atan_G7                       = f83
-atan_G8                       = f84
+atan2_V7                     = f76
+atan2_V8                     = f77
+atan2_W7                     = f78
+atan2_W8                     = f79
+atan2_W3                     = f80
 
-atan_Z1                       = f85
-atan_W7                       = f86
+atan2_W4                     = f81
+atan2_V3                     = f82
+atan2_V4                     = f83
+atan2_F                      = f84
+atan2_gV                     = f85
 
-atan_G3                       = f87
-atan_W8                       = f88
-atan_V9                       = f89
-atan_V10                      = f90
+atan2_V10                    = f86
+atan2_zcub                   = f87
+atan2_V6                     = f88
+atan2_V9                     = f89
+atan2_W10                    = f90
 
-atan_G10                      = f91
-atan_W3                       = f92
-atan_G4                       = f93
-atan_G9                       = f94
-                                
-atan_G6                       = f95
-atan_W4                       = f96
-atan_Z2                       = f97
-atan_V6                       = f98
-                              
-atan_V2                       = f99
-atan_W6                       = f100
-atan_W10                      = f101
-atan_Y3                       = f102
-                              
-atan_G2                       = f103
+atan2_W6                     = f91
+atan2_W2                     = f92
+atan2_V2                     = f93
+atan2_alpha                  = f94
+atan2_alpha_1                = f95
 
-atan_Y8                       = f104
-                              
-atan_G5                       = f105
-atan_Z3                       = f106
-atan_Z4                       = f107
-atan_W2                       = f108
-atan_V5                       = f109
-                            
-atan_W5                       = f110
-atan_G1                       = f111
-atan_Y11                      = f112
-                             
-atan_Z5                       = f113
-atan_Z6                       = f114
-atan_V1                       = f115
-atan_W1                       = f116
-                              
-atan_Z7                       = f117
-atan_Q                        = f118
-atan_Z                        = f119
-atan_abs_f8                   = f120                            
+atan2_gVF                    = f96
+atan2_V5                     = f97
+atan2_W12                    = f98
+atan2_W5                     = f99
+atan2_alpha_sq               = f100
 
-atan_V13                      = f121
-atan_Xcub                     = f122
-atan_Y12                      = f123
-atan_P                        = f124
+atan2_Cp                     = f101
+atan2_V1                     = f102
+atan2_ysq                    = f103
+atan2_W1                     = f104
+atan2_alpha_cub              = f105
 
-atan_NORM_f8                  = f125
+atan2_C                      = f106
+atan2_d                      = f108
+atan2_A_hi                   = f109
+atan2_dsq                    = f110
 
-atan_P8                       = f126
-atan_P9                       = f127
+atan2_pd                     = f111
+atan2_A_lo                   = f112
+atan2_A                      = f113
+atan2_Pp                     = f114
+atan2_sgnY                   = f115
 
-
-
-
-atan_GR_AD_R                 = r14
-atan_GR_AD_Q                 = r15
-atan_GR_AD_P                 = r16
-atan_GR_10172                = r17 
-atan_GR_exp_f8               = r18 
-atan_GR_signexp_f8           = r19
-atan_GR_exp_mask             = r20
-
-
-
+atan2_sig_near_one           = f116
+atan2_near_one               = f116
 
 /////////////////////////////////////////////////////////////
 
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+RODATA
 
 .align 16
 
-double_atan_constants_R:
-ASM_TYPE_DIRECTIVE(double_atan_constants_R,@object)
-   data8 0xB36B46B9C5443CED, 0x0000401C  //R8
-   data8 0x842633E0D126261F, 0x0000401F  //R9
-   data8 0xBE04FFFFFFFF46E0, 0x00004010  //R4
-   data8 0xE8C62000244D66E2, 0x00004013  //R5
-   data8 0xF2790C001E3789B3, 0x00004016  //R6
-   data8 0xDCD2CCF97D7C764F, 0x00004019  //R7
-   data8 0xB40000000000000B, 0x00004004  //R1
-   data8 0xB265F3D38F5EE28F, 0x00004021  //R10
-   data8 0x8160000000000001, 0x00004009  //R2
-   data8 0xFD5BFFFFFFFE55CD, 0x0000400C  //R3
-   data8 0xC90FDAA22168C235, 0x00003FFF  // pi/2
-ASM_SIZE_DIRECTIVE(double_atan_constants_R)
+LOCAL_OBJECT_START(atan2_tb1)
+data8 0xA21922DC45605EA1 ,  0x00003FFA // P11
+data8 0xB199DD6D2675C40F ,  0x0000BFFA // P10
+data8 0xC2F01E5DDD100DBE ,  0x00003FFA // P9
+data8 0xD78F28FC2A592781 ,  0x0000BFFA // P8
+data8 0xF0F03ADB3FC930D3 ,  0x00003FFA // P7
+data8 0x88887EBB209E3543 ,  0x0000BFFB // P6
+data8 0x9D89D7D55C3287A5 ,  0x00003FFB // P5
+data8 0xBA2E8B9793955C77 ,  0x0000BFFB // P4
+data8 0xE38E38E320A8A098 ,  0x00003FFB // P3
+data8 0x9249249247E37913 ,  0x0000BFFC // P2
+data8 0xCCCCCCCCCCC906CD ,  0x00003FFC // P1
+data8 0xAAAAAAAAAAAAA8A9 ,  0x0000BFFD // P0
+data8 0x0000000000000000 ,  0x00000000 // pad to avoid bank conflict
+LOCAL_OBJECT_END(atan2_tb1)
 
-double_atan_constants_Q:
-ASM_TYPE_DIRECTIVE(double_atan_constants_Q,@object)
-   data8 0xEBD602FA7761BC33, 0x00003FF9  //Q8
-   data8 0x8CB1CABD6A91913C, 0x0000BFFA  //Q9
-   data8 0x84C665C37D623CD2, 0x00003FF7  //Q4
-   data8 0x8DE0D1673DAEA9BC, 0x0000BFF8  //Q5
-   data8 0xF658ADBE2C6E6FCC, 0x00003FF8  //Q6
+LOCAL_OBJECT_START(atan2_tb2)
+data8 0xCE585A259BD8374C ,  0x00003FF0 // P21
+data8 0x9F90FB984D8E39D0 ,  0x0000BFF3 // P20
+data8 0x9D3436AABE218776 ,  0x00003FF5 // P19
+data8 0xDEC343E068A6D2A8 ,  0x0000BFF6 // P18
+data8 0xF396268151CFB11C ,  0x00003FF7 // P17
+data8 0xD818B4BB43D84BF2 ,  0x0000BFF8 // P16
+data8 0xA2270D30A90AA220 ,  0x00003FF9 // P15
+data8 0xD5F4F2182E7A8725 ,  0x0000BFF9 // P14
+data8 0x80D601879218B53A ,  0x00003FFA // P13
+data8 0x9297B23CCFFB291F ,  0x0000BFFA // P12
+data8 0xFE7E52D2A89995B3 ,  0x0000BFEC // P22
+data8 0xC90FDAA22168C235 ,  0x00003FFF // pi/2
+LOCAL_OBJECT_END(atan2_tb2)
 
-   data8 0xB56307BE1DD3FFB6, 0x0000BFF9  //Q7
-   data8 0xAAAAAAAAAAAA8000, 0x0000BFFD  //Q21
-   data8 0x8000000000000000, 0x00003FFF  //Q22
-   data8 0x924924923A9D710C, 0x0000BFFC  //Q19
-   data8 0xCCCCCCCCCC9380E7, 0x00003FFC  //Q20
- 
-   data8 0xA644DC250EFA2800, 0x00003FED  //Q0
-   data8 0x83DEAE24EEBF5E44, 0x0000BFF1  //Q1
-   data8 0xC758CCC64793D4EC, 0x00003FF3  //Q2
-   data8 0xBFDC0B54E7C89DCE, 0x0000BFF5  //Q3
-   data8 0x888855199D1290AF, 0x0000BFFB  //Q15
-
-   data8 0x9D89D3BE514B0178, 0x00003FFB  //Q16
-   data8 0xBA2E8B4DEC70282A, 0x0000BFFB  //Q17
-   data8 0xE38E38DF9E9FC83B, 0x00003FFB  //Q18
-   data8 0x9F8781CC990029D9, 0x00003FFA  //Q10
-   data8 0xB0B39472DEBA3C79, 0x0000BFFA  //Q11
-
-   data8 0xC2AFAEF8C85B0BC6, 0x00003FFA  //Q12
-   data8 0xD780E539797525DD, 0x0000BFFA  //Q13
-   data8 0xF0EDC449AC786DF9, 0x00003FFA  //Q14
-ASM_SIZE_DIRECTIVE(double_atan_constants_Q)
-
-
-
-double_atan_constants_P:
-ASM_TYPE_DIRECTIVE(double_atan_constants_P,@object)
-   data8 0xB1899EC590CDB8DF, 0x0000BFFA //P10
-   data8 0xA1E79850A67D59B0, 0x00003FFA //P11
-   data8 0x911D8B30C2A96E6D, 0x0000BFF3 //P20
-   data8 0xB87233C68A640706, 0x00003FF0 //P21
-   data8 0xD78E4B82F3C29D7A, 0x0000BFFA //P8
-
-   data8 0xC2EBE37AF932C14F, 0x00003FFA //P9
-   data8 0xBA2E8B94AA104DD6, 0x0000BFFB //P4
-   data8 0x9D89D7A640B71D38, 0x00003FFB //P5
-   data8 0x88887CA2CE9B2A40, 0x0000BFFB //P6
-   data8 0xF0F017D57A919C1E, 0x00003FFA //P7
-
-   data8 0xD0D635F230C80E06, 0x0000BFF8 //P16
-   data8 0xE847BECA7209B479, 0x00003FF7 //P17
-   data8 0xD14C6A2AAE0D5B07, 0x0000BFF6 //P18
-   data8 0x915F612A5C469117, 0x00003FF5 //P19
-   data8 0x921EDE5FD0DBBBE2, 0x0000BFFA //P12
-
-   data8 0xFFD303C2C8535445, 0x00003FF9 //P13
-   data8 0xD30DF50E295386F7, 0x0000BFF9 //P14
-   data8 0x9E81F2B1BBD210A8, 0x00003FF9 //P15
-   data8 0xAAAAAAAAAAAAA800, 0x0000BFFD //P0
-   data8 0xCCCCCCCCCCC7D476, 0x00003FFC //P1
-
-   data8 0x9249249247838066, 0x0000BFFC //P2
-   data8 0xE38E38E302290D68, 0x00003FFB //P3
-   data8 0xDF7F0A816F7E5025, 0x0000BFEC //P22
-ASM_SIZE_DIRECTIVE(double_atan_constants_P)
-
-
-.align 32
-.global atan#
-
-////////////////////////////////////////////////////////
 
 
 
 .section .text
-.proc  atan#
-.align 32
+GLOBAL_LIBM_ENTRY(atan)
 
-atan: 
+{ .mfi
+           nop.m 999
+           frcpa.s1     atan2_u1_Y,p7 = f1,atan2_Y
+           nop.i 999
+}
+{ .mfi
+           addl         EXP_AD_P1   = @ltoff(atan2_tb1), gp
+           fma.s1       atan2_two  = f1,f1,f1
+           nop.i 999
+;;
+}
 
-{ .mmf
-(p0)  addl      atan_GR_AD_P   = @ltoff(double_atan_constants_P), gp
-(p0)  addl      atan_GR_AD_Q   = @ltoff(double_atan_constants_Q), gp
-(p0)  fmerge.s  atan_ABS_f8  = f0,f8                       
+{ .mfi
+           ld8  EXP_AD_P1 = [EXP_AD_P1]
+           frcpa.s1     atan2_u1_X,p6 = f1,atan2_X
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_ysq  = atan2_Y,atan2_Y,f0
+           nop.i 999
 }
 ;;
 
-{ .mmf
-      ld8 atan_GR_AD_P = [atan_GR_AD_P]
-      ld8 atan_GR_AD_Q = [atan_GR_AD_Q]
-(p0)  frcpa.s1     atan_C,p8 = f1,f8                                  
-}
-;;
-
-{ .mmf
-(p0)  addl      atan_GR_AD_R   = @ltoff(double_atan_constants_R), gp
-(p0)  addl      atan_GR_exp_mask = 0x1ffff, r0
-(p0)  fma.s1       atan_Y = f8,f8,f0                                  
-}
-;;
-
-// This fnorm takes faults or sets fault flags
-{ .mmf
-(p0)  mov       atan_GR_10172 = 0x10172
-      ld8 atan_GR_AD_R = [atan_GR_AD_R]
-(p0)  fnorm     atan_NORM_f8  = f8
-}
-;;
-
-
-// qnan snan inf norm     unorm 0 -+
-// 1    1    0   0        0     1 11
-// c                      7
-
-// p9 set if we have a NAN or +-0
-
-{ .mmf
-(p0)  ldfe      atan_Q8  = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_P10    = [atan_GR_AD_P],16                   
-(p0)  fclass.m.unc p9, p0   = f8, 0xc7                         
+{ .mfi
+           add  EXP_AD_P2 = 0xd0,EXP_AD_P1
+           fmerge.s     atan2_sgnY = atan2_Y,f1
+           nop.i 999
 }
 ;;
 
 
-{ .mmi
-(p0)  ldfe      atan_Q9  = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_P11    = [atan_GR_AD_P],16                   
-      nop.i 999   
+{ .mfi
+           ldfe         atan2_P11  = [EXP_AD_P1],16
+           fclass.m p10,p0 = atan2_Y, 0xc3     // Test for y=nan
+           nop.i 999
 }
-;;
-
-        
-{ .mmf
-(p0)  ldfe      atan_Q4      = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_P20     = [atan_GR_AD_P],16                   
-(p9)  fma.d.s0  f8          = f8,f1,f0
-;;
-}
-
-// Exit if we have a NAN or +-0
-{ .mmb
-(p0)  ldfe      atan_Q5     = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_P21    = [atan_GR_AD_P],16                   
-(p9)  br.ret.spnt b0
-;;
-}
-
-
-// p6 is TRUE if |x| <= 1
-// p7 is TRUE if |x| >  1
-{ .mmf
-(p0)  ldfe      atan_Q6  = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_P8  = [atan_GR_AD_P],16                   
-(p0)  fcmp.le.unc  p6,p7 = atan_ABS_f8, f1 
+{ .mfi
+           ldfe         atan2_P21  = [EXP_AD_P2],16
+           nop.f 999
+           nop.i 999
 ;;
 }
 
 
 { .mfi
-(p0)  ldfe         atan_Q7  = [atan_GR_AD_Q],16 
-(p0)  fma.s1       atan_Z   = atan_C, atan_C, f0                        
-      nop.i 999   
+           ldfe         atan2_P10  = [EXP_AD_P1],16
+           fnma.s1      atan2_B1Y  = atan2_u1_Y, atan2_Y, atan2_two
+           nop.i 999
 }
 { .mfi
-(p0)  ldfe         atan_P9  = [atan_GR_AD_P],16                   
-(p0)  fnma.s1      atan_B   = atan_C,f8, f1                             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p0)  ldfe         atan_Q21  = [atan_GR_AD_Q],16 
-(p0)  fma.s1       atan_V12  = atan_Y, atan_Y, f0                      
-      nop.i 999   
-}
-{ .mfi
-(p0)  ldfe         atan_P4    = [atan_GR_AD_P],16                   
-(p0)  fma.s1       atan_Xcub  = f8, atan_Y  , f0                        
-      nop.i 999   
-;;
-}
-
-
-{ .mmi
-(p7)  ldfe      atan_Q22         = [atan_GR_AD_Q],16 
-(p6)  ldfe      atan_P5          = [atan_GR_AD_P],16                   
-(p6)  cmp.eq.unc  p8,p0 = r0,r0
-;;
-}
-
-
-{ .mmi
-(p7)  ldfe      atan_Q19   = [atan_GR_AD_Q],16 
-(p6)  ldfe      atan_P6    = [atan_GR_AD_P],16                   
-(p7)  cmp.eq.unc  p9,p0 = r0,r0
-;;
-}
-
-
-{ .mmi
-(p7)  ldfe      atan_Q20  = [atan_GR_AD_Q],16 
-(p6)  ldfe      atan_P7    = [atan_GR_AD_P],16                   
-      nop.i 999   
+           ldfe         atan2_P20  = [EXP_AD_P2],16
+           fma.s1       atan2_wp_Y   = atan2_u1_Y, atan2_u1_Y, f0
+           nop.i 999
 ;;
 }
 
 { .mfi
-(p7)  ldfe      atan_Q0  = [atan_GR_AD_Q],16 
-(p6)  fma.s1       atan_V13 = atan_Y, atan_P11, atan_P10              
-      nop.i 999   
+           ldfe         atan2_P9   = [EXP_AD_P1],16
+           fma.s1       atan2_z1_X = atan2_u1_X, atan2_Y, f0
+           nop.i 999
 }
 { .mfi
-(p6)  ldfe      atan_P16    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V11 = atan_Y, atan_Q9, atan_Q8                
-      nop.i 999    ;;
+           ldfe         atan2_P19  = [EXP_AD_P2],16
+           fnma.s1      atan2_B1X  = atan2_u1_X, atan2_X, atan2_two
+           nop.i 999
 }
-
-
-{ .mfi
-(p7)  ldfe      atan_Q1  = [atan_GR_AD_Q],16 
-(p7)  fma.s1       atan_G12 = atan_B, atan_B, f0                      
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P17    = [atan_GR_AD_P],16                   
-(p0)  fma.s1       atan_V9  = atan_V12, atan_V12, f0                  
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_Q2  = [atan_GR_AD_Q],16 
-(p6)  fma.s1       atan_W11 = atan_Y, atan_P21, atan_P20              
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P18    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V7  = atan_Y, atan_Q5, atan_Q4                
-      nop.i 999    ;;
-}
-
-{ .mfi
-(p7)  ldfe      atan_Q3  = [atan_GR_AD_Q],16 
-(p7)  fma.s1    atan_Z1  = atan_Z, atan_Z, f0                      
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P19    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_Y3  = atan_Y  , atan_V12, f0                  
-      nop.i 999    ;;
-}
-
-{ .mfi
-(p7)  ldfe      atan_R8  = [atan_GR_AD_R],16 
-(p6)  fma.s1       atan_V11 = atan_Y, atan_P9, atan_P8                
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P12    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V8  = atan_Y, atan_Q7, atan_Q6                
-      nop.i 999    ;;
-}
-
-{ .mmi
-(p7)  ldfe      atan_R9     = [atan_GR_AD_R],16 
-(p6)  ldfe      atan_P13    = [atan_GR_AD_P],16                   
-      nop.i 999   
 ;;
-}
 
 { .mfi
-(p7)  ldfe      atan_R4  = [atan_GR_AD_R],16 
-(p6)  fma.s1    atan_V7  = atan_Y, atan_P5, atan_P4                 
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P14    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_W13 = atan_Y, atan_Q22, atan_Q21              
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_R5  = [atan_GR_AD_R],16 
-(p6)  fma.s1    atan_Y12 = atan_V9 , atan_V9 , f0                   
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P15    = [atan_GR_AD_P],16                   
-(p7)  fma.s1    atan_Y8 = atan_V9 , atan_V9 , f0                   
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_R6  = [atan_GR_AD_R],16 
-(p6)  fma.s1    atan_V8  = atan_Y, atan_P7, atan_P6                 
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P0     = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_W11 = atan_Y, atan_Q20, atan_Q19              
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_R7  = [atan_GR_AD_R],16 
-(p7)  fma.s1    atan_Z2  = atan_Z1 , atan_Z1,  f0                  
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P1     = [atan_GR_AD_P],16                   
-(p6)  fma.s1       atan_V10 = atan_V12, atan_V13, atan_V11             
-      nop.i 999    ;;
-}
-
-{ .mfi
-(p7)  ldfe      atan_Q15 = [atan_GR_AD_Q],16 
-(p6)  fma.s1    atan_W7  = atan_Y, atan_P17, atan_P16               
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P2     = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V3  = atan_Y, atan_Q1 , atan_Q0               
-      nop.i 999    ;;
-}
-
-{ .mfi
-(p7)  ldfe      atan_Q16 = [atan_GR_AD_Q],16 
-(p7)  fma.s1    atan_G9  = atan_G12, atan_G12, f0                  
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P3     = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V6  = atan_V12, atan_V8,  atan_V7             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_R1     = [atan_GR_AD_R],16 
-(p6)  fma.s1       atan_W8  = atan_Y, atan_P19, atan_P18               
-      nop.i 999   
-}
-{ .mfi
-(p6)  ldfe      atan_P22    = [atan_GR_AD_P],16                   
-(p7)  fma.s1       atan_V4  = atan_Y, atan_Q3 , atan_Q2               
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      getf.exp     atan_GR_signexp_f8  = atan_NORM_f8
-(p7)  fma.s1       atan_Y11 = atan_Y3 , atan_Y8 , f0                  
-      nop.i 999   
-}
-{ .mfi
-(p7)  ldfe      atan_Q17    = [atan_GR_AD_Q],16 
-(p6)  fma.s1       atan_V6  = atan_V12, atan_V8,  atan_V7             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_Q18    = [atan_GR_AD_Q],16 
-(p6)  fma.s1       atan_W3  = atan_Y, atan_P13, atan_P12               
-      nop.i 999   
-}
-{ .mfi
-(p7)  ldfe      atan_R10    = [atan_GR_AD_R],16 
-(p7)  fma.s1       atan_G11 = atan_B, atan_R9 , atan_R8               
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_Q10    = [atan_GR_AD_Q],16 
-(p7)  fma.s1    atan_Z3     = atan_Z1 , atan_Z2 , f0                  
-(p0)  and       atan_GR_exp_f8 = atan_GR_signexp_f8,atan_GR_exp_mask
-}
-{ .mfi
-(p7)  ldfe      atan_R2     = [atan_GR_AD_R],16 
-(p7)  fma.s1       atan_Z4  = atan_Z2 , atan_Z2 , f0                  
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-(p7)  ldfe      atan_Q11 = [atan_GR_AD_Q],16 
-(p6)  fma.s1    atan_W4  = atan_Y, atan_P15, atan_P14               
-      nop.i 999
-}
-{ .mfi
-(p7)  ldfe      atan_R3     = [atan_GR_AD_R],16 
-(p7)  fma.s1       atan_G7  = atan_B, atan_R5 , atan_R4               
-(p0)  cmp.le.unc   p11,p0  = atan_GR_10172,atan_GR_exp_f8 
-;;
-}
-
-
-{ .mmf
-(p9)  ldfe      atan_Q12 = [atan_GR_AD_Q],16 
-(p0)  ldfe      atan_S_PI     = [atan_GR_AD_R],16 
-(p8)  fma.s1       atan_W6  = atan_V12, atan_W8,  atan_W7             
-;;
-}
-
-
-
-{ .mfi
-(p9)  ldfe      atan_Q13 = [atan_GR_AD_Q],16 
-(p8)  fma.s1       atan_V3  = atan_Y, atan_P1 , atan_P0                
-(p11) cmp.ne.and p6,p7 = r0,r0
-}
-{ .mfi
-      nop.m 999
-(p8)  fma.s1       atan_V5  = atan_V9 , atan_V10, atan_V6             
-      nop.i 999    ;;
-}
-
-
-.pred.rel "mutex",p6,p7,p11
-{ .mfi
-(p7)  ldfe      atan_Q14 = [atan_GR_AD_Q],16 
-(p6)  fma.s1       atan_Y12 = atan_V9 , atan_Y12, f0                   
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1    atan_G8  = atan_B, atan_R7 , atan_R6               
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_V4  = atan_Y, atan_P3 , atan_P2                
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W7  = atan_Y, atan_Q16, atan_Q15              
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_W10 = atan_V12, atan_P22, atan_W11            
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G3  = atan_B, atan_R1 , f1                    
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1    atan_W2  = atan_V12, atan_W4 , atan_W3             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_V2  = atan_V12, atan_V4 , atan_V3              
-      nop.i 999    ;;
-}
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W8  = atan_Y, atan_Q18, atan_Q17              
-      nop.i 999   
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G10 = atan_G12, atan_R10, atan_G11            
-      nop.i 999    ;;
-}
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_V10 = atan_V12, atan_Q10, atan_V11            
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G6  = atan_G12, atan_G8 , atan_G7             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_V2  = atan_V12, atan_V4,  atan_V3             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G4  = atan_B  , atan_R3 , atan_R2             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_W5  = atan_V9 , atan_W10, atan_W6             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W3  = atan_Y  , atan_Q12, atan_Q11            
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_Z5  = atan_Z3 , atan_Z4 , f0                  
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W10 = atan_V12, atan_W13, atan_W11            
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W4  = atan_Y  , atan_Q14, atan_Q13            
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W6  = atan_V12, atan_W8,  atan_W7             
-      nop.i 999    ;;
-}
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_V5  = atan_V9 , atan_V10, atan_V6             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G5  = atan_G9 , atan_G10, atan_G6             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_V1  = atan_V9 , atan_V5 , atan_V2             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G2  = atan_G12, atan_G4 , atan_G3             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_W1  = atan_V9 , atan_W5 , atan_W2             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_Z6  = atan_Z4 , atan_C  , f0                  
-      nop.i 999    ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fmerge.s    atan_S_PI = f8, atan_S_PI
-      nop.i 999     ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W5  = atan_V9 , atan_W10, atan_W6             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W2  = atan_V12, atan_W4 , atan_W3             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_G1  = atan_G9 , atan_G5 , atan_G2             
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_V1  = atan_V9 , atan_V5 , atan_V2             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.s1       atan_P   = atan_Y12, atan_W1 , atan_V1              
-      nop.i 999    
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_Z7  = atan_Z5 , atan_Z6 , f0                  
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_W1  = atan_V9 , atan_W5 , atan_W2             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p11) fma.d.s0  f8 = atan_S_PI,f1,f0
-      nop.i 999
-}
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_Z   = atan_G1 , atan_Z7 , f0                  
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p7)  fma.s1       atan_Q   = atan_Y11, atan_W1 , atan_V1             
-      nop.i 999    ;;
-}
-
-
-{ .mfi
-      nop.m 999
-(p6)  fma.d.s0    f8       = atan_P  , atan_Xcub  , f8               
-      nop.i 999    
+           ldfe         atan2_P8   = [EXP_AD_P1],16
+           fma.s1       atan2_z2_X = atan2_u1_X, atan2_ysq, f0
+           nop.i 999
 }
 { .mfb
-      nop.m 999
-(p7)  fnma.d.s0    f8       = atan_Z  , atan_Q  , atan_S_PI           
-(p0)  br.ret.sptk    b0    ;;
+           ldfe         atan2_P18  = [EXP_AD_P2],16
+(p10)      fma.d.s0 f8 = atan2_Y,atan2_X,f0   // If y=nan, result quietized y
+(p10)      br.ret.spnt b0        // Exit if y=nan
+}
+;;
+
+// p6 true if swap,    means |y| >  1.0    or ysq > 1.0
+// p7 true if no swap, means 1.0 >= |y|    or 1.0 >= ysq
+{ .mfi
+           ldfe         atan2_P7   = [EXP_AD_P1],16
+           fcmp.ge.s1 p7,p6    = f1, atan2_ysq
+           nop.i 999
+}
+{ .mmf
+           ldfe         atan2_P17  = [EXP_AD_P2],16
+           nop.m 999
+           nop.f 999
+}
+;;
+
+{ .mfi
+           ldfe         atan2_P6   = [EXP_AD_P1],16
+           fma.s1       atan2_E         = atan2_u1_Y, atan2_B1Y, atan2_Y
+           nop.i 999
+}
+{ .mfi
+           ldfe         atan2_P16  = [EXP_AD_P2],16
+           fma.s1       atan2_B1sq_Y = atan2_B1Y, atan2_B1Y, f0
+           nop.i 999
+;;
 }
 
-.endp atan
-ASM_SIZE_DIRECTIVE(atan)
+{ .mfi
+           ldfe         atan2_P5   = [EXP_AD_P1],16
+(p7)       fma.s1       atan2_wp_X   = atan2_z1_X, atan2_z1_X, f0
+           nop.i 999
+}
+{ .mfi
+           ldfe         atan2_P15       = [EXP_AD_P2],16
+(p7)       fma.s1       atan2_B1sq_X = atan2_B1X, atan2_B1X, f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           ldfe         atan2_P4   = [EXP_AD_P1],16
+(p6)       fma.s1       atan2_z         = atan2_u1_Y, atan2_B1Y, f0
+           nop.i 999
+}
+{ .mfi
+           ldfe         atan2_P14  = [EXP_AD_P2],16
+(p7)       fma.s1       atan2_E         = atan2_z2_X, atan2_B1X, atan2_X
+           nop.i 999
+;;
+}
+
+
+{ .mfi
+           ldfe         atan2_P3        = [EXP_AD_P1],16
+           fcmp.eq.s0  p14,p15=atan2_X,atan2_Y  // Dummy for denorm and invalid
+           nop.i 999
+}
+{ .mmf
+           ldfe         atan2_P13  = [EXP_AD_P2],16
+           nop.m 999
+(p7)       fma.s1       atan2_z         = atan2_z1_X, atan2_B1X, f0
+;;
+}
+
+{ .mfi
+           ldfe         atan2_P2        = [EXP_AD_P1],16
+(p6)       fma.s1       atan2_w         = atan2_wp_Y, atan2_B1sq_Y,f0
+           nop.i 999
+}
+{ .mlx
+           ldfe         atan2_P12  = [EXP_AD_P2],16
+           movl         rsig_near_one = 0x8000000000000001 // signif near 1.0
+;;
+}
+
+{ .mfi
+           ldfe         atan2_P1        = [EXP_AD_P1],16
+           fclass.m p9,p0 = atan2_Y, 0x23  // test if y inf
+           nop.i 999
+}
+{ .mfi
+           ldfe         atan2_P22       = [EXP_AD_P2],16
+(p7)       fma.s1       atan2_w         = atan2_wp_X, atan2_B1sq_X,f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           ldfe         atan2_P0        = [EXP_AD_P1],16
+           frcpa.s1     atan2_F,p0     = f1, atan2_E
+           nop.i 999
+}
+{ .mfi
+           ldfe         atan2_pi_by_2   = [EXP_AD_P2],16
+(p6)       fnma.s1       atan2_gV        = atan2_Y, atan2_z, atan2_X
+           nop.i 999
+;;
+}
+
+{ .mfi
+           setf.sig      atan2_sig_near_one = rsig_near_one
+(p7)       fnma.s1       atan2_gV        = atan2_X, atan2_z, atan2_Y
+           nop.i 999
+}
+{ .mfb
+           nop.m 999
+(p9)       fma.d.s0  f8 = atan2_sgnY, atan2_pi_by_2, f0  // +-pi/2 if y inf
+(p9)       br.ret.spnt b0      // exit if y inf, result is +-pi/2
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V13       = atan2_w, atan2_P11, atan2_P10
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W11       = atan2_w, atan2_P21, atan2_P20
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V11       = atan2_w, atan2_P9, atan2_P8
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V12       = atan2_w, atan2_w, f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V8        = atan2_w, atan2_P7 , atan2_P6
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W8        = atan2_w, atan2_P19, atan2_P18
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fnma.s1      atan2_alpha     = atan2_E, atan2_F, f1
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fnma.s1      atan2_alpha_1   = atan2_E, atan2_F, atan2_two
+           nop.i 999
+;;
+}
+
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V7        = atan2_w, atan2_P5 , atan2_P4
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W7        = atan2_w, atan2_P17, atan2_P16
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V4        = atan2_w, atan2_P3 , atan2_P2
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W4        = atan2_w, atan2_P15, atan2_P14
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V3        = atan2_w, atan2_P1 , atan2_P0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W3        = atan2_w, atan2_P13, atan2_P12
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V10       = atan2_V12, atan2_V13, atan2_V11
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_gVF       = atan2_gV, atan2_F, f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_alpha_sq  = atan2_alpha, atan2_alpha, f0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_Cp        = atan2_alpha, atan2_alpha_1, f1
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V9        = atan2_V12, atan2_V12, f0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W10       = atan2_V12, atan2_P22 , atan2_W11
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V6        = atan2_V12, atan2_V8 , atan2_V7
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W6        = atan2_V12, atan2_W8 , atan2_W7
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V2        = atan2_V12, atan2_V4 , atan2_V3
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W2        = atan2_V12, atan2_W4  , atan2_W3
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_alpha_cub = atan2_alpha, atan2_alpha_sq, f0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_C         = atan2_gVF, atan2_Cp, f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W12       = atan2_V9, atan2_V9, f0
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V5        = atan2_V9, atan2_V10, atan2_V6
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W5        = atan2_V9, atan2_W10, atan2_W6
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fclass.m p8,p0 = atan2_Y, 0x07  // Test for y=0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_d         = atan2_alpha_cub, atan2_C, atan2_C
+           nop.i 999
+}
+;;
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W12       = atan2_V9, atan2_W12, f0
+           nop.i 999
+}
+;;
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_V1        = atan2_V9, atan2_V5, atan2_V2
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_W1        = atan2_V9, atan2_W5, atan2_W2
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+(p8)       fmerge.s     f8              = atan2_sgnY, f0  // +-0 if y=0
+           nop.i 999
+}
+{ .mfb
+           nop.m 999
+           fma.s1       atan2_zcub      = atan2_z, atan2_w, f0
+(p8)       br.ret.spnt b0      // Exit if y=0
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_pd        = atan2_P0, atan2_d, f0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_dsq       = atan2_d, atan2_d, f0
+           nop.i 999
+;;
+}
+
+
+{ .mfi
+           nop.m 999
+           fmerge.se    atan2_near_one = f1, atan2_sig_near_one // Const ~1.0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_Pp        = atan2_W12, atan2_W1, atan2_V1
+           nop.i 999
+;;
+}
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_sgn_pi_by_2 = atan2_pi_by_2, atan2_sgnY, f0
+           nop.i 999
+}
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_A_lo      = atan2_pd, atan2_dsq, atan2_d
+           nop.i 999
+;;
+}
+
+
+{ .mfi
+           nop.m 999
+           fma.s1       atan2_A_hi      = atan2_zcub, atan2_Pp, atan2_z
+           nop.i 999
+;;
+}
+
+
+{ .mfi
+           nop.m 999
+(p6)       fma.s1       atan2_A         = atan2_A_hi, f1, atan2_A_lo
+           nop.i 999
+}
+// For |Y| <= |X| and X > 0, result is A_hi + A_lo
+{ .mfi
+           nop.m 999
+(p7)       fma.d.s0       f8         = atan2_A_hi, f1, atan2_A_lo
+           nop.i 999
+;;
+}
+
+// For |Y| > |X|, result is  +- pi/2 - (A_hi + A_lo)
+// We perturb A by multiplying by 1.0+1ulp as we produce the result
+// in order to get symmetrically rounded results in directed rounding modes.
+// If we don't do this, there are a few cases where the trailing 11 bits of
+// the significand of the result, before converting to double, are zero.  These
+// cases do not round symmetrically in round to +infinity or round to -infinity.
+{ .mfb
+           nop.m 999
+(p6)       fnma.d.s0      f8        = atan2_A, atan2_near_one, atan2_sgn_pi_by_2
+           br.ret.sptk  b0
+;;
+}
+
+GLOBAL_LIBM_END(atan)

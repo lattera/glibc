@@ -1,10 +1,10 @@
 .file "exp.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2002, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,26 +20,26 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 2/02/00  Initial version 
+// 2/02/00  Initial version
 // 3/07/00  exp(inf)  = inf but now does NOT call error support
 //          exp(-inf) = 0   but now does NOT call error support
 // 4/04/00  Unwind support added
@@ -48,6 +48,10 @@
 // 11/30/00 Reworked to shorten main path, widen main path to include all
 //          args in normal range, and add quick exit for 0, nan, inf.
 // 12/05/00 Loaded constants earlier with setf to save 2 cycles.
+// 02/05/02 Corrected uninitialize predicate in POSSIBLE_UNDERFLOW path
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 09/07/02 Force inexact flag
+// 11/15/02 Split underflow path into zero/nonzero; eliminated fma in main path
 
 // API
 //==============================================================
@@ -67,187 +71,167 @@
 //       Construct 2^M
 //       Get 2^(index_1/128) from table_1;
 //       Get 2^(index_2/8)   from table_2;
-//       Calculate exp(r) by series
+//       Calculate exp(r) by 5th order polynomial
 //          r = x - n (log2/128)_high
 //          delta = - n (log2/128)_low
 //       Calculate exp(delta) as 1 + delta
 
 
-// Special values 
+// Special values
 //==============================================================
 // exp(+0)    = 1.0
 // exp(-0)    = 1.0
 
-// exp(+qnan) = +qnan 
-// exp(-qnan) = -qnan 
-// exp(+snan) = +qnan 
-// exp(-snan) = -qnan 
+// exp(+qnan) = +qnan
+// exp(-qnan) = -qnan
+// exp(+snan) = +qnan
+// exp(-snan) = -qnan
 
-// exp(-inf)  = +0 
+// exp(-inf)  = +0
 // exp(+inf)  = +inf
 
-// Overfow and Underfow
+// Overflow and Underflow
 //=======================
-// exp(-x) = smallest double normal when
-//     x = -708.396 = c086232bdd7abcd2
-
 // exp(x) = largest double normal when
-//     x = 709.7827 = 40862e42fefa39ef
+//     x = 709.7827 = 0x40862e42fefa39ef
 
+// exp(x) = smallest double normal when
+//     x = -708.396 = 0xc086232bdd7abcd2
+
+// exp(x) = largest round-to-nearest single zero when
+//     x = -745.1332 = 0xc0874910d52d3052
 
 
 // Registers used
 //==============================================================
-// Floating Point registers used: 
-// f8, input
-// f9 -> f15,  f32 -> f60
+// Floating Point registers used:
+// f8, input, output
+// f6 -> f15,  f32 -> f49
 
-// General registers used: 
-// r32 -> r60 
+// General registers used:
+// r14 -> r40
 
 // Predicate registers used:
 // p6 -> p15
 
-#include "libm_support.h"
-
 // Assembly macros
 //==============================================================
 
-exp_GR_rshf                   = r33
-EXP_AD_TB1                    = r34
-EXP_AD_TB2                    = r35
-EXP_AD_P                      = r36
-
-exp_GR_N                      = r37
-exp_GR_index_1                = r38
-exp_GR_index_2_16             = r39
-
-exp_GR_biased_M               = r40
-exp_GR_index_1_16             = r41
-EXP_AD_T1                     = r42
-EXP_AD_T2                     = r43
-exp_GR_sig_inv_ln2            = r44
-
-exp_GR_17ones                 = r45
-exp_GR_one                    = r46
-exp_TB1_size                  = r47
-exp_TB2_size                  = r48
-exp_GR_rshf_2to56             = r49
-
-exp_GR_gt_ln                  = r50
-exp_GR_exp_2tom56             = r51
-
-exp_GR_17ones_m1              = r52
-
-GR_SAVE_B0                    = r53
-GR_SAVE_PFS                   = r54
-GR_SAVE_GP                    = r55
-GR_SAVE_SP                    = r56
-
-GR_Parameter_X                = r57
-GR_Parameter_Y                = r58
-GR_Parameter_RESULT           = r59
-GR_Parameter_TAG              = r60
+rRshf                 = r14
+rAD_TB1               = r15
+rAD_T1                = r15
+rAD_TB2               = r16
+rAD_T2                = r16
+rAD_P                 = r17
+rN                    = r18
+rIndex_1              = r19
+rIndex_2_16           = r20
+rM                    = r21
+rBiased_M             = r21
+rIndex_1_16           = r21
+rSig_inv_ln2          = r22
+rExp_bias             = r23
+rExp_mask             = r24
+rTmp                  = r25
+rRshf_2to56           = r26
+rGt_ln                = r27
+rExp_2tom56           = r28
 
 
-FR_X             = f10
-FR_Y             = f1
-FR_RESULT        = f8
+GR_SAVE_B0            = r33
+GR_SAVE_PFS           = r34
+GR_SAVE_GP            = r35
+GR_SAVE_SP            = r36
 
-EXP_RSHF_2TO56   = f6
-EXP_INV_LN2_2TO63 = f7
-EXP_W_2TO56_RSH  = f9
-EXP_2TOM56       = f11
-exp_P4           = f12 
-exp_P3           = f13 
-exp_P2           = f14 
-exp_P1           = f15 
+GR_Parameter_X        = r37
+GR_Parameter_Y        = r38
+GR_Parameter_RESULT   = r39
+GR_Parameter_TAG      = r40
 
-exp_ln2_by_128_hi  = f33 
-exp_ln2_by_128_lo  = f34 
 
-EXP_RSHF           = f35
-EXP_Nfloat         = f36 
-exp_W              = f37
-exp_r              = f38
-exp_f              = f39
+FR_X                  = f10
+FR_Y                  = f1
+FR_RESULT             = f8
 
-exp_rsq            = f40
-exp_rcube          = f41
+fRSHF_2TO56           = f6
+fINV_LN2_2TO63        = f7
+fW_2TO56_RSH          = f9
+f2TOM56               = f11
+fP5                   = f12
+fP54                  = f12
+fP5432                = f12
+fP4                   = f13
+fP3                   = f14
+fP32                  = f14
+fP2                   = f15
+fP                    = f15
 
-EXP_2M             = f42
-exp_S1             = f43
-exp_T1             = f44
+fLn2_by_128_hi        = f33
+fLn2_by_128_lo        = f34
 
-EXP_MIN_DBL_OFLOW_ARG = f45
-EXP_MAX_DBL_ZERO_ARG  = f46
-EXP_MAX_DBL_NORM_ARG  = f47
-EXP_MAX_DBL_UFLOW_ARG = f48
-EXP_MIN_DBL_NORM_ARG  = f49
-exp_rP4pP3         = f50
-exp_P_lo           = f51
-exp_P_hi           = f52
-exp_P              = f53
-exp_S              = f54
+fRSHF                 = f35
+fNfloat               = f36
+fNormX                = f37
+fR                    = f38
+fF                    = f39
 
-EXP_NORM_f8        = f56   
+fRsq                  = f40
+f2M                   = f41
+fS1                   = f42
+fT1                   = f42
+fS2                   = f43
+fT2                   = f43
+fS                    = f43
+fWre_urm_f8           = f44
+fFtz_urm_f8           = f44
 
-exp_wre_urm_f8     = f57
-exp_ftz_urm_f8     = f57
-
-exp_gt_pln         = f58
-
-exp_S2             = f59
-exp_T2             = f60
+fMIN_DBL_OFLOW_ARG    = f45
+fMAX_DBL_ZERO_ARG     = f46
+fMAX_DBL_NORM_ARG     = f47
+fMIN_DBL_NORM_ARG     = f48
+fGt_pln               = f49
+fTmp                  = f49
 
 
 // Data tables
 //==============================================================
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
 
 // ************* DO NOT CHANGE ORDER OF THESE TABLES ********************
 
 // double-extended 1/ln(2)
 // 3fff b8aa 3b29 5c17 f0bb be87fed0691d3e88
-// 3fff b8aa 3b29 5c17 f0bc 
+// 3fff b8aa 3b29 5c17 f0bc
 // For speed the significand will be loaded directly with a movl and setf.sig
 //   and the exponent will be bias+63 instead of bias+0.  Thus subsequent
 //   computations need to scale appropriately.
-// The constant 128/ln(2) is needed for the computation of w.  This is also 
+// The constant 128/ln(2) is needed for the computation of w.  This is also
 //   obtained by scaling the computations.
 //
-// Two shifting constants are loaded directly with movl and setf.d. 
-//   1. EXP_RSHF_2TO56 = 1.1000..00 * 2^(63-7) 
+// Two shifting constants are loaded directly with movl and setf.d.
+//   1. fRSHF_2TO56 = 1.1000..00 * 2^(63-7)
 //        This constant is added to x*1/ln2 to shift the integer part of
 //        x*128/ln2 into the rightmost bits of the significand.
-//        The result of this fma is EXP_W_2TO56_RSH.
-//   2. EXP_RSHF       = 1.1000..00 * 2^(63) 
-//        This constant is subtracted from EXP_W_2TO56_RSH * 2^(-56) to give
+//        The result of this fma is fW_2TO56_RSH.
+//   2. fRSHF       = 1.1000..00 * 2^(63)
+//        This constant is subtracted from fW_2TO56_RSH * 2^(-56) to give
 //        the integer part of w, n, as a floating-point number.
-//        The result of this fms is EXP_Nfloat.
+//        The result of this fms is fNfloat.
 
 
-exp_table_1:
-ASM_TYPE_DIRECTIVE(exp_table_1,@object)
-data8 0x40862e42fefa39f0 // smallest dbl overflow arg
-data8 0xc0874c0000000000 // approx largest arg for zero result
-data8 0x40862e42fefa39ef // largest dbl arg to give normal dbl result
-data8 0xc086232bdd7abcd3 // largest dbl underflow arg
-data8 0xc086232bdd7abcd2 // smallest dbl arg to give normal dbl result
-data8 0x0                // pad
+LOCAL_OBJECT_START(exp_table_1)
+data8 0x40862e42fefa39f0 // smallest dbl overflow arg, +709.7827
+data8 0xc0874910d52d3052 // largest arg for rnd-to-nearest 0 result, -745.133
+data8 0x40862e42fefa39ef // largest dbl arg to give normal dbl result, +709.7827
+data8 0xc086232bdd7abcd2 // smallest dbl arg to give normal dbl result, -708.396
 data8 0xb17217f7d1cf79ab , 0x00003ff7 // ln2/128 hi
 data8 0xc9e3b39803f2f6af , 0x00003fb7 // ln2/128 lo
-
+//
 // Table 1 is 2^(index_1/128) where
 // index_1 goes from 0 to 15
-
+//
 data8 0x8000000000000000 , 0x00003FFF
 data8 0x80B1ED4FD999AB6C , 0x00003FFF
 data8 0x8164D1F3BC030773 , 0x00003FFF
@@ -264,12 +248,11 @@ data8 0x88980E8092DA8527 , 0x00003FFF
 data8 0x8955EE03618E5FDD , 0x00003FFF
 data8 0x8A14D575496EFD9A , 0x00003FFF
 data8 0x8AD4C6452C728924 , 0x00003FFF
-ASM_SIZE_DIRECTIVE(exp_table_1)
+LOCAL_OBJECT_END(exp_table_1)
 
 // Table 2 is 2^(index_1/8) where
 // index_2 goes from 0 to 7
-exp_table_2:
-ASM_TYPE_DIRECTIVE(exp_table_2,@object)
+LOCAL_OBJECT_START(exp_table_2)
 data8 0x8000000000000000 , 0x00003FFF
 data8 0x8B95C1E3EA8BD6E7 , 0x00003FFF
 data8 0x9837F0518DB8A96F , 0x00003FFF
@@ -278,413 +261,356 @@ data8 0xB504F333F9DE6484 , 0x00003FFF
 data8 0xC5672A115506DADD , 0x00003FFF
 data8 0xD744FCCAD69D6AF4 , 0x00003FFF
 data8 0xEAC0C6E7DD24392F , 0x00003FFF
-ASM_SIZE_DIRECTIVE (exp_table_2)
+LOCAL_OBJECT_END(exp_table_2)
 
 
-exp_p_table:
-ASM_TYPE_DIRECTIVE(exp_p_table,@object)
-data8 0x3f8111116da21757 //P_4
-data8 0x3fa55555d787761c //P_3
-data8 0x3fc5555555555414 //P_2
-data8 0x3fdffffffffffd6a //P_1
-ASM_SIZE_DIRECTIVE(exp_p_table)
+LOCAL_OBJECT_START(exp_p_table)
+data8 0x3f8111116da21757 //P5
+data8 0x3fa55555d787761c //P4
+data8 0x3fc5555555555414 //P3
+data8 0x3fdffffffffffd6a //P2
+LOCAL_OBJECT_END(exp_p_table)
 
-
-.align 32
-.global exp#
 
 .section .text
-.proc  exp#
-.align 32
-exp: 
-#ifdef _LIBC
-.global __ieee754_exp#
-__ieee754_exp:
-#endif
+GLOBAL_IEEE754_ENTRY(exp)
 
 { .mlx
-      alloc      r32=ar.pfs,1,24,4,0                               
-      movl exp_GR_sig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
+      nop.m           0
+      movl            rSig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
 }
 { .mlx
-      addl       EXP_AD_TB1    = @ltoff(exp_table_1), gp
-      movl exp_GR_rshf_2to56 = 0x4768000000000000 ;;  // 1.10000 2^(63+56)
+      addl            rAD_TB1    = @ltoff(exp_table_1), gp
+      movl            rRshf_2to56 = 0x4768000000000000   // 1.10000 2^(63+56)
 }
 ;;
 
-// We do this fnorm right at the beginning to take any enabled
-// faults and to normalize any input unnormals so that SWA is not taken.
 { .mfi
-      ld8        EXP_AD_TB1    = [EXP_AD_TB1]
-      fclass.m   p8,p0 = f8,0x07  // Test for x=0
-      mov        exp_GR_17ones = 0x1FFFF                          
+      ld8             rAD_TB1    = [rAD_TB1]
+      fclass.m        p8,p0 = f8,0x07  // Test for x=0
+      mov             rExp_mask = 0x1ffff
 }
 { .mfi
-      mov        exp_TB1_size  = 0x100
-      fnorm      EXP_NORM_f8   = f8                                          
-      mov exp_GR_exp_2tom56 = 0xffff-56
+      mov             rExp_bias = 0xffff
+      fnorm.s1        fNormX   = f8
+      mov             rExp_2tom56 = 0xffff-56
 }
 ;;
 
 // Form two constants we need
-//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128 
+//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128
 //  1.1000..000 * 2^(63+63-7) to right shift int(w) into the significand
 
-{ .mmf
-      setf.sig  EXP_INV_LN2_2TO63 = exp_GR_sig_inv_ln2 // form 1/ln2 * 2^63
-      setf.d  EXP_RSHF_2TO56 = exp_GR_rshf_2to56 // Form const 1.100 * 2^(63+56)
-      fclass.m   p9,p0 = f8,0x22  // Test for x=-inf
+{ .mfi
+      setf.sig        fINV_LN2_2TO63 = rSig_inv_ln2 // form 1/ln2 * 2^63
+      fclass.m        p9,p0 = f8,0x22  // Test for x=-inf
+      nop.i           0
 }
-;;
-
 { .mlx
-      setf.exp EXP_2TOM56 = exp_GR_exp_2tom56 // form 2^-56 for scaling Nfloat
-      movl exp_GR_rshf = 0x43e8000000000000   // 1.10000 2^63 for right shift
+      setf.d          fRSHF_2TO56 = rRshf_2to56 // Form const 1.100 * 2^(63+56)
+      movl            rRshf = 0x43e8000000000000 // 1.10000 2^63 for right shift
 }
-{ .mfb
-      mov        exp_TB2_size  = 0x80
-(p8)  fma.d      f8 = f1,f1,f0           // quick exit for x=0
-(p8)  br.ret.spnt b0
 ;;
-}
 
 { .mfi
-      ldfpd      EXP_MIN_DBL_OFLOW_ARG, EXP_MAX_DBL_ZERO_ARG = [EXP_AD_TB1],16
-      fclass.m   p10,p0 = f8,0x21  // Test for x=+inf
-      nop.i 999
+      ldfpd           fMIN_DBL_OFLOW_ARG, fMAX_DBL_ZERO_ARG = [rAD_TB1],16
+      fclass.m        p10,p0 = f8,0x1e1  // Test for x=+inf, nan, NaT
+      nop.i           0
 }
 { .mfb
-      nop.m 999
-(p9)  fma.d      f8 = f0,f0,f0           // quick exit for x=-inf
-(p9)  br.ret.spnt b0
-;;                    
+      setf.exp        f2TOM56 = rExp_2tom56 // form 2^-56 for scaling Nfloat
+(p9)  fma.d.s0        f8 = f0,f0,f0           // quick exit for x=-inf
+(p9)  br.ret.spnt     b0
 }
-
-{ .mmf
-      ldfpd      EXP_MAX_DBL_NORM_ARG, EXP_MAX_DBL_UFLOW_ARG = [EXP_AD_TB1],16
-      setf.d  EXP_RSHF = exp_GR_rshf // Form right shift const 1.100 * 2^63
-      fclass.m   p11,p0 = f8,0xc3  // Test for x=nan
 ;;
-}
-
-{ .mfb
-      ldfd      EXP_MIN_DBL_NORM_ARG = [EXP_AD_TB1],16
-      nop.f 999
-(p10) br.ret.spnt b0               // quick exit for x=+inf
-;;
-}
 
 { .mfi
-      ldfe       exp_ln2_by_128_hi  = [EXP_AD_TB1],16
-      nop.f 999
-      nop.i 999
-;;
+      ldfpd           fMAX_DBL_NORM_ARG, fMIN_DBL_NORM_ARG = [rAD_TB1],16
+      nop.f           0
+      nop.i           0
 }
-
+{ .mfb
+      setf.d          fRSHF = rRshf // Form right shift const 1.100 * 2^63
+(p8)  fma.d.s0        f8 = f1,f1,f0           // quick exit for x=0
+(p8)  br.ret.spnt     b0
+}
+;;
 
 { .mfb
-      ldfe       exp_ln2_by_128_lo  = [EXP_AD_TB1],16
-(p11) fmerge.s   f8 = EXP_NORM_f8, EXP_NORM_f8
-(p11) br.ret.spnt b0               // quick exit for x=nan
-;;
+      ldfe            fLn2_by_128_hi  = [rAD_TB1],16
+(p10) fma.d.s0        f8 = f8,f8,f0  // Result if x=+inf, nan, NaT
+(p10) br.ret.spnt     b0               // quick exit for x=+inf, nan, NaT
 }
+;;
 
-// After that last load, EXP_AD_TB1 points to the beginning of table 1
+{ .mfi
+      ldfe            fLn2_by_128_lo  = [rAD_TB1],16
+      fcmp.eq.s0      p6,p0 = f8, f0       // Dummy to set D
+      nop.i           0
+}
+;;
+
+// After that last load, rAD_TB1 points to the beginning of table 1
 
 // W = X * Inv_log2_by_128
 // By adding 1.10...0*2^63 we shift and get round_int(W) in significand.
 // We actually add 1.10...0*2^56 to X * Inv_log2 to do the same thing.
 
 { .mfi
-      nop.m 999
-      fma.s1  EXP_W_2TO56_RSH  = EXP_NORM_f8, EXP_INV_LN2_2TO63, EXP_RSHF_2TO56
-      nop.i 999
-;;
+      nop.m           0
+      fma.s1          fW_2TO56_RSH  = fNormX, fINV_LN2_2TO63, fRSHF_2TO56
+      nop.i           0
 }
-
+;;
 
 // Divide arguments into the following categories:
-//  Certain Underflow/zero  p11 - -inf < x <= MAX_DBL_ZERO_ARG 
-//  Certain Underflow       p12 - MAX_DBL_ZERO_ARG < x <= MAX_DBL_UFLOW_ARG 
-//  Possible Underflow      p13 - MAX_DBL_UFLOW_ARG < x < MIN_DBL_NORM_ARG
+//  Certain Underflow       p11 - -inf < x <= MAX_DBL_ZERO_ARG
+//  Possible Underflow      p13 - MAX_DBL_ZERO_ARG < x < MIN_DBL_NORM_ARG
 //  Certain Safe                - MIN_DBL_NORM_ARG <= x <= MAX_DBL_NORM_ARG
 //  Possible Overflow       p14 - MAX_DBL_NORM_ARG < x < MIN_DBL_OFLOW_ARG
 //  Certain Overflow        p15 - MIN_DBL_OFLOW_ARG <= x < +inf
 //
-// If the input is really a double arg, then there will never be "Possible
-// Underflow" or "Possible Overflow" arguments.
+// If the input is really a double arg, then there will never be
+// "Possible Overflow" arguments.
 //
 
 { .mfi
-      add        EXP_AD_TB2 = exp_TB1_size, EXP_AD_TB1
-      fcmp.ge.s1  p15,p14 = EXP_NORM_f8,EXP_MIN_DBL_OFLOW_ARG
-      nop.i 999
-;;                        
+      add             rAD_TB2 = 0x100, rAD_TB1
+      fcmp.ge.s1      p15,p0 = fNormX,fMIN_DBL_OFLOW_ARG
+      nop.i           0
 }
+;;
 
 { .mfi
-      add        EXP_AD_P = exp_TB2_size, EXP_AD_TB2
-      fcmp.le.s1  p11,p12 = EXP_NORM_f8,EXP_MAX_DBL_ZERO_ARG
-      nop.i 999
-;;
+      add             rAD_P = 0x80, rAD_TB2
+      fcmp.le.s1      p11,p0 = fNormX,fMAX_DBL_ZERO_ARG
+      nop.i           0
 }
+;;
 
 { .mfb
-      ldfpd      exp_P4, exp_P3  = [EXP_AD_P] ,16
-(p14) fcmp.gt.unc.s1  p14,p0 = EXP_NORM_f8,EXP_MAX_DBL_NORM_ARG
-(p15) br.cond.spnt L(EXP_CERTAIN_OVERFLOW)
-;;
+      ldfpd           fP5, fP4  = [rAD_P] ,16
+      fcmp.gt.s1      p14,p0 = fNormX,fMAX_DBL_NORM_ARG
+(p15) br.cond.spnt    EXP_CERTAIN_OVERFLOW
 }
+;;
 
-
-// Nfloat = round_int(W) 
-// The signficand of EXP_W_2TO56_RSH contains the rounded integer part of W,
+// Nfloat = round_int(W)
+// The signficand of fW_2TO56_RSH contains the rounded integer part of W,
 // as a twos complement number in the lower bits (that is, it may be negative).
-// That twos complement number (called N) is put into exp_GR_N.
+// That twos complement number (called N) is put into rN.
 
-// Since EXP_W_2TO56_RSH is scaled by 2^56, it must be multiplied by 2^-56
-// before the shift constant 1.10000 * 2^63 is subtracted to yield EXP_Nfloat.
-// Thus, EXP_Nfloat contains the floating point version of N
+// Since fW_2TO56_RSH is scaled by 2^56, it must be multiplied by 2^-56
+// before the shift constant 1.10000 * 2^63 is subtracted to yield fNfloat.
+// Thus, fNfloat contains the floating point version of N
 
-
-{ .mfi
-      nop.m 999
-(p12) fcmp.le.unc  p12,p0 = EXP_NORM_f8,EXP_MAX_DBL_UFLOW_ARG
-      nop.i 999
-}
 { .mfb
-      ldfpd      exp_P2, exp_P1  = [EXP_AD_P]                                  
-      fms.s1          EXP_Nfloat = EXP_W_2TO56_RSH, EXP_2TOM56, EXP_RSHF 
-(p11) br.cond.spnt L(EXP_CERTAIN_UNDERFLOW_ZERO)
+      ldfpd           fP3, fP2  = [rAD_P]
+      fms.s1          fNfloat = fW_2TO56_RSH, f2TOM56, fRSHF
+(p11) br.cond.spnt    EXP_CERTAIN_UNDERFLOW
+}
 ;;
-}
 
 { .mfi
-      getf.sig        exp_GR_N        = EXP_W_2TO56_RSH
-(p13) fcmp.lt.unc  p13,p0 = EXP_NORM_f8,EXP_MIN_DBL_NORM_ARG
-      nop.i 999
+      getf.sig        rN        = fW_2TO56_RSH
+      nop.f           0
+      nop.i           0
+}
 ;;
-}
 
+// rIndex_1 has index_1
+// rIndex_2_16 has index_2 * 16
+// rBiased_M has M
+// rIndex_1_16 has index_1 * 16
 
-// exp_GR_index_1 has index_1
-// exp_GR_index_2_16 has index_2 * 16
-// exp_GR_biased_M has M
-// exp_GR_index_1_16 has index_1 * 16
-
-// r2 has true M
+// rM has true M
+// r = x - Nfloat * ln2_by_128_hi
+// f = 1 - Nfloat * ln2_by_128_lo
 { .mfi
-      and            exp_GR_index_1 = 0x0f, exp_GR_N
-      fnma.s1    exp_r   = EXP_Nfloat, exp_ln2_by_128_hi, EXP_NORM_f8 
-      shr            r2 = exp_GR_N,  0x7
+      and             rIndex_1 = 0x0f, rN
+      fnma.s1         fR   = fNfloat, fLn2_by_128_hi, fNormX
+      shr             rM = rN,  0x7
 }
 { .mfi
-      and            exp_GR_index_2_16 = 0x70, exp_GR_N
-      fnma.s1    exp_f   = EXP_Nfloat, exp_ln2_by_128_lo, f1 
-      nop.i 999
-;;                            
+      and             rIndex_2_16 = 0x70, rN
+      fnma.s1         fF   = fNfloat, fLn2_by_128_lo, f1
+      nop.i           0
 }
+;;
 
-
-// EXP_AD_T1 has address of T1                           
-// EXP_AD_T2 has address if T2                            
+// rAD_T1 has address of T1
+// rAD_T2 has address if T2
 
 { .mmi
-      addl           exp_GR_biased_M = 0xffff, r2 
-      add            EXP_AD_T2 = EXP_AD_TB2, exp_GR_index_2_16 
-      shladd         EXP_AD_T1 = exp_GR_index_1, 4, EXP_AD_TB1
-;;                            
+      add             rBiased_M = rExp_bias, rM
+      add             rAD_T2 = rAD_TB2, rIndex_2_16
+      shladd          rAD_T1 = rIndex_1, 4, rAD_TB1
 }
-
+;;
 
 // Create Scale = 2^M
-// r = x - Nfloat * ln2_by_128_hi 
-// f = 1 - Nfloat * ln2_by_128_lo 
-
 { .mmi
-      setf.exp        EXP_2M = exp_GR_biased_M                              
-      ldfe       exp_T2  = [EXP_AD_T2]                                
-      nop.i 999
-;;
+      setf.exp        f2M = rBiased_M
+      ldfe            fT2  = [rAD_T2]
+      nop.i           0
 }
+;;
 
 // Load T1 and T2
 { .mfi
-      ldfe       exp_T1  = [EXP_AD_T1]                                
-      nop.f 999
-      nop.i 999
+      ldfe            fT1  = [rAD_T1]
+      fmpy.s0         fTmp = fLn2_by_128_lo, fLn2_by_128_lo // Force inexact
+      nop.i           0
+}
 ;;
-}
-
 
 { .mfi
-        nop.m 999
-        fma.s1           exp_rsq = exp_r, exp_r, f0 
-        nop.i 999
+      nop.m           0
+      fma.s1          fRsq = fR, fR, f0
+      nop.i           0
 }
 { .mfi
-        nop.m 999
-        fma.s1        exp_rP4pP3 = exp_r, exp_P4, exp_P3               
-        nop.i 999
+      nop.m           0
+      fma.s1          fP54 = fR, fP5, fP4
+      nop.i           0
+}
 ;;
-}
-
-
 
 { .mfi
-        nop.m 999
-        fma.s1           exp_rcube = exp_r, exp_rsq, f0 
-        nop.i 999 
+      nop.m           0
+      fcmp.lt.s1      p13,p0 = fNormX,fMIN_DBL_NORM_ARG
+      nop.i           0
 }
 { .mfi
-        nop.m 999
-        fma.s1        exp_P_lo  = exp_r, exp_rP4pP3, exp_P2            
-        nop.i 999
+      nop.m           0
+      fma.s1          fP32 = fR, fP3, fP2
+      nop.i           0
+}
 ;;
-}
-
 
 { .mfi
-        nop.m 999
-        fma.s1        exp_P_hi  = exp_rsq, exp_P1, exp_r              
-        nop.i 999
+      nop.m           0
+      fma.s1          fP5432  = fRsq, fP54, fP32
+      nop.i           0
 }
-{ .mfi
-        nop.m 999
-        fma.s1        exp_S2  = exp_f,exp_T2,f0                       
-        nop.i 999
 ;;
-}
 
 { .mfi
-        nop.m 999
-        fma.s1        exp_S1  = EXP_2M,exp_T1,f0                      
-        nop.i 999
-;;
+      nop.m           0
+      fma.s1          fS1  = f2M,fT1,f0
+      nop.i           0
 }
-
+{ .mfi
+      nop.m           0
+      fma.s1          fS2  = fF,fT2,f0
+      nop.i           0
+}
+;;
 
 { .mfi
-        nop.m 999
-        fma.s1        exp_P     = exp_rcube, exp_P_lo, exp_P_hi       
-        nop.i 999
-;;
+      nop.m           0
+      fma.s1          fP     = fRsq, fP5432, fR
+      nop.i           0
 }
-
 { .mfi
-        nop.m 999
-        fma.s1        exp_S   = exp_S1,exp_S2,f0                      
-        nop.i 999
-;;
+      nop.m           0
+      fma.s1          fS   = fS1,fS2,f0
+      nop.i           0
 }
-
-{ .bbb
-(p12)   br.cond.spnt  L(EXP_CERTAIN_UNDERFLOW)
-(p13)   br.cond.spnt  L(EXP_POSSIBLE_UNDERFLOW)
-(p14)   br.cond.spnt  L(EXP_POSSIBLE_OVERFLOW)
 ;;
-}
 
+{ .mbb
+      nop.m           0
+(p13) br.cond.spnt    EXP_POSSIBLE_UNDERFLOW
+(p14) br.cond.spnt    EXP_POSSIBLE_OVERFLOW
+}
+;;
 
 { .mfb
-        nop.m 999
-        fma.d      f8 = exp_S, exp_P, exp_S 
-        br.ret.sptk     b0 ;;               // Normal path exit 
+      nop.m           0
+      fma.d.s0        f8 = fS, fP, fS
+      br.ret.sptk     b0                  // Normal path exit
 }
+;;
 
 
-L(EXP_POSSIBLE_OVERFLOW): 
+EXP_POSSIBLE_OVERFLOW:
 
-// We got an answer. EXP_MAX_DBL_NORM_ARG < x < EXP_MIN_DBL_OFLOW_ARG
-// overflow is a possibility, not a certainty
+// Here if fMAX_DBL_NORM_ARG < x < fMIN_DBL_OFLOW_ARG
+// This cannot happen if input is a double, only if input higher precision.
+// Overflow is a possibility, not a certainty.
+
+// Recompute result using status field 2 with user's rounding mode,
+// and wre set.  If result is larger than largest double, then we have
+// overflow
 
 { .mfi
-	nop.m 999
-        fsetc.s2 0x7F,0x42                                          
-	nop.i 999 ;;
+      mov             rGt_ln  = 0x103ff // Exponent for largest dbl + 1 ulp
+      fsetc.s2        0x7F,0x42         // Get user's round mode, set wre
+      nop.i           0
 }
+;;
 
 { .mfi
-	nop.m 999
-        fma.d.s2      exp_wre_urm_f8 = exp_S, exp_P, exp_S          
-	nop.i 999 ;;
+      setf.exp        fGt_pln = rGt_ln  // Create largest double + 1 ulp
+      fma.d.s2        fWre_urm_f8 = fS, fP, fS    // Result with wre set
+      nop.i           0
 }
-
-// We define an overflow when the answer with
-//    WRE set
-//    user-defined rounding mode
-// is ldn +1
-
-// Is the exponent 1 more than the largest double?
-// If so, go to ERROR RETURN, else get the answer and 
-// leave.
-
-// Largest double is 7FE (biased double)
-//                   7FE - 3FF + FFFF = 103FE
-// Create + largest_double_plus_ulp
-// Create - largest_double_plus_ulp
-// Calculate answer with WRE set.
-
-// Cases when answer is ldn+1  are as follows:
-//  ldn                   ldn+1
-// --+----------|----------+------------
-//              | 
-//    +inf          +inf      -inf
-//                  RN         RN
-//                             RZ 
+;;
 
 { .mfi
-	nop.m 999
-        fsetc.s2 0x7F,0x40                                          
-        mov           exp_GR_gt_ln  = 0x103ff ;;                      
+      nop.m           0
+      fsetc.s2        0x7F,0x40                   // Turn off wre in sf2
+      nop.i           0
 }
+;;
 
 { .mfi
-        setf.exp      exp_gt_pln    = exp_GR_gt_ln                 
-	nop.f 999
-	nop.i 999 ;;
+      nop.m           0
+      fcmp.ge.s1      p6, p0 =  fWre_urm_f8, fGt_pln // Test for overflow
+      nop.i           0
 }
-
-{ .mfi
-	nop.m 999
-       fcmp.ge.unc.s1 p6, p0 =  exp_wre_urm_f8, exp_gt_pln 	  
-	nop.i 999 ;;
-}
+;;
 
 { .mfb
-	nop.m 999
-	nop.f 999
-(p6)   br.cond.spnt L(EXP_CERTAIN_OVERFLOW) ;; // Branch if really overflow
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    EXP_CERTAIN_OVERFLOW // Branch if overflow
 }
+;;
 
 { .mfb
-	nop.m 999
-       fma.d        f8 = exp_S, exp_P, exp_S                      
-       br.ret.sptk     b0 ;;             // Exit if really no overflow
+      nop.m           0
+      fma.d.s0        f8 = fS, fP, fS
+      br.ret.sptk     b0                     // Exit if really no overflow
 }
+;;
 
-L(EXP_CERTAIN_OVERFLOW):
+EXP_CERTAIN_OVERFLOW:
 { .mmi
-      sub   exp_GR_17ones_m1 = exp_GR_17ones, r0, 1 ;;
-      setf.exp     f9 = exp_GR_17ones_m1
-      nop.i 999 ;;
+      sub             rTmp = rExp_mask, r0, 1
+;;
+      setf.exp        fTmp = rTmp
+      nop.i           0
 }
+;;
 
 { .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
+      alloc           r32=ar.pfs,1,4,4,0
+      fmerge.s        FR_X = f8,f8
+      nop.i           0
 }
 { .mfb
-      mov        GR_Parameter_TAG = 14
-      fma.d       FR_RESULT = f9, f9, f0    // Set I,O and +INF result
-      br.cond.sptk  __libm_error_region ;;                             
+      mov             GR_Parameter_TAG = 14
+      fma.d.s0        FR_RESULT = fTmp, fTmp, f0    // Set I,O and +INF result
+      br.cond.sptk    __libm_error_region
 }
+;;
 
-L(EXP_POSSIBLE_UNDERFLOW): 
+EXP_POSSIBLE_UNDERFLOW:
 
-// We got an answer. EXP_MAX_DBL_UFLOW_ARG < x < EXP_MIN_DBL_NORM_ARG
-// underflow is a possibility, not a certainty
+// Here if fMAX_DBL_ZERO_ARG < x < fMIN_DBL_NORM_ARG
+// Underflow is a possibility, not a certainty
 
 // We define an underflow when the answer with
 //    ftz set
@@ -709,81 +635,111 @@ L(EXP_POSSIBLE_UNDERFLOW):
 //    largest dn                               smallest normal
 
 { .mfi
-	nop.m 999
-       fsetc.s2 0x7F,0x41                                          
-	nop.i 999 ;;
+      nop.m           0
+      fsetc.s2        0x7F,0x41                // Get user's round mode, set ftz
+      nop.i           0
 }
-{ .mfi
-	nop.m 999
-       fma.d.s2      exp_ftz_urm_f8 = exp_S, exp_P, exp_S          
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-       fsetc.s2 0x7F,0x40                                          
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-       fcmp.eq.unc.s1 p6, p0 =  exp_ftz_urm_f8, f0 	          
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-	nop.f 999
-(p6)   br.cond.spnt L(EXP_CERTAIN_UNDERFLOW) ;; // Branch if really underflow
-}
-{ .mfb
-	nop.m 999
-       fma.d        f8 = exp_S, exp_P, exp_S                      
-       br.ret.sptk     b0 ;;                // Exit if really no underflow
-}
+;;
 
-L(EXP_CERTAIN_UNDERFLOW):
 { .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
+      nop.m           0
+      fma.d.s2        fFtz_urm_f8 = fS, fP, fS // Result with ftz set
+      nop.i           0
 }
-{ .mfb
-      mov        GR_Parameter_TAG = 15
-      fma.d       FR_RESULT  = exp_S, exp_P, exp_S // Set I,U and tiny result
-      br.cond.sptk  __libm_error_region ;;                             
-}
+;;
 
-L(EXP_CERTAIN_UNDERFLOW_ZERO):
+{ .mfi
+      nop.m           0
+      fsetc.s2        0x7F,0x40                // Turn off ftz in sf2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.eq.s1      p6, p7 = fFtz_urm_f8, f0 // Test for underflow
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.d.s0        f8 = fS, fP, fS          // Compute result, set I, maybe U
+      nop.i           0
+}
+;;
+
+{ .mbb
+      nop.m           0
+(p6)  br.cond.spnt    EXP_UNDERFLOW_COMMON     // Branch if really underflow
+(p7)  br.ret.sptk     b0                       // Exit if really no underflow
+}
+;;
+
+EXP_CERTAIN_UNDERFLOW:
+// Here if  x < fMAX_DBL_ZERO_ARG
+// Result will be zero (or smallest denorm if round to +inf) with I, U set
 { .mmi
-      mov   exp_GR_one = 1 ;;
-      setf.exp     f9 = exp_GR_one
-      nop.i 999 ;;
+      mov             rTmp = 1
+;;
+      setf.exp        fTmp = rTmp               // Form small normal
+      nop.i           0
 }
+;;
 
-{ .mfi
-      nop.m 999
-      fmerge.s FR_X = f8,f8
-      nop.i 999
-}
 { .mfb
-      mov        GR_Parameter_TAG = 15
-      fma.d       FR_RESULT = f9, f9, f0    // Set I,U and tiny (+0.0) result
-      br.cond.sptk  __libm_error_region ;;                             
+      nop.m           0
+      fma.d.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result
+      br.cond.sptk    EXP_UNDERFLOW_COMMON
 }
+;;
 
-.endp exp
-ASM_SIZE_DIRECTIVE(exp)
+EXP_UNDERFLOW_COMMON:
+// Determine if underflow result is zero or nonzero
+{ .mfi
+      alloc           r32=ar.pfs,1,4,4,0
+      fcmp.eq.s1      p6, p0 =  f8, f0
+      nop.i           0
+}
+;;
 
+{ .mfb
+      nop.m           0
+      fmerge.s        FR_X = fNormX,fNormX
+(p6)  br.cond.spnt    EXP_UNDERFLOW_ZERO
+}
+;;
 
-.proc __libm_error_region
-__libm_error_region:
+EXP_UNDERFLOW_NONZERO:
+// Here if  x < fMIN_DBL_NORM_ARG and result nonzero;
+// I, U are set
+{ .mfb
+      mov             GR_Parameter_TAG = 15
+      nop.f           0                         // FR_RESULT already set
+      br.cond.sptk    __libm_error_region
+}
+;;
+
+EXP_UNDERFLOW_ZERO:
+// Here if x < fMIN_DBL_NORM_ARG and result zero;
+// I, U are set
+{ .mfb
+      mov             GR_Parameter_TAG = 15
+      nop.f           0                         // FR_RESULT already set
+      br.cond.sptk    __libm_error_region
+}
+;;
+
+GLOBAL_IEEE754_END(exp)
+
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
+.fframe 64
         add sp=-64,sp                           // Create new stack
         nop.f 0
         mov GR_SAVE_GP=gp                       // Save gp
@@ -791,24 +747,24 @@ __libm_error_region:
 { .mmi
         stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+.save   b0, GR_SAVE_B0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
 { .mib
-        stfd [GR_Parameter_X] = FR_X                  // STORE Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
-	nop.b 0                                      
+        stfd [GR_Parameter_X] = FR_X            // STORE Parameter 1 on stack
+        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
+	nop.b 0
 }
 { .mib
-        stfd [GR_Parameter_Y] = FR_RESULT             // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
-        br.call.sptk b0=__libm_error_support#         // Call error handling function
+        stfd [GR_Parameter_Y] = FR_RESULT       // STORE Parameter 3 on stack
+        add   GR_Parameter_Y = -16,GR_Parameter_Y
+        br.call.sptk b0=__libm_error_support#   // Call error handling function
 };;
 { .mmi
-        nop.m 0
-        nop.m 0
         add   GR_Parameter_RESULT = 48,sp
+        nop.m 0
+        nop.i 0
 };;
 { .mmi
         ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
@@ -817,12 +773,11 @@ __libm_error_region:
         mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
+        mov   gp = GR_SAVE_GP                  // Restore gp
         mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
         br.ret.sptk     b0                     // Return
-};; 
+};;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function
 .global __libm_error_support#

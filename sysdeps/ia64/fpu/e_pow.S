@@ -1,10 +1,10 @@
 .file "pow.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,30 +35,41 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 2/02/00  Initial version
-// 2/03/00  Added p12 to definite over/under path. With odd power we did not
+// 02/02/00 Initial version
+// 02/03/00 Added p12 to definite over/under path. With odd power we did not
 //          maintain the sign of x in this path.
-// 4/04/00  Unwind support added
-// 4/19/00  pow(+-1,inf) now returns NaN
-//          pow(+-val, +-inf) returns 0 or inf, but now does not call error support
+// 04/04/00 Unwind support added
+// 04/19/00 pow(+-1,inf) now returns NaN
+//          pow(+-val, +-inf) returns 0 or inf, but now does not call error
+//          support
 //          Added s1 to fcvt.fx because invalid flag was incorrectly set.
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-// 9/07/00  Improved performance by eliminating bank conflicts and other stalls,
+// 09/07/00 Improved performance by eliminating bank conflicts and other stalls,
 //          and tweaking the critical path
-// 9/08/00  Per c99, pow(+-1,inf) now returns 1, and pow(+1,nan) returns 1
-// 9/28/00  Updated NaN**0 path 
-// 1/20/01  Fixed denormal flag settings.
-// 2/12/01  Improved speed.
+// 09/08/00 Per c99, pow(+-1,inf) now returns 1, and pow(+1,nan) returns 1
+// 09/28/00 Updated NaN**0 path
+// 01/20/01 Fixed denormal flag settings.
+// 02/13/01 Improved speed.
+// 03/19/01 Reordered exp polynomial to improve speed and eliminate monotonicity
+//          problem in round up, down, and to zero modes.  Also corrected
+//          overflow result when x negative, y odd in round up, down, zero.
+// 06/14/01 Added brace missing from bundle
+// 12/10/01 Corrected case where x negative, 2^52 <= |y| < 2^53, y odd integer.
+// 12/20/01 Fixed monotonity problem in round to nearest.
+// 02/08/02 Fixed overflow/underflow cases that were not calling error support.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 08/29/02 Improved Itanium 2 performance
+// 09/21/02 Added branch for |y*log(x)|<2^-11 to fix monotonicity problems.
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
 // API
 //==============================================================
-// double pow(double)
-// float  powf(float)
+// double pow(double x, double y)
 //
 // Overview of operation
 //==============================================================
@@ -67,51 +78,51 @@
 // 1. Log(x)
 // 2. y Log(x)
 // 3. exp(y log(x))
-// 
+//
 // This means we work with the absolute value of x and merge in the sign later.
 //      Log(x) = G + delta + r -rsq/2 + p
 // G,delta depend on the exponent of x and table entries. The table entries are
 // indexed by the exponent of x, called K.
-// 
+//
 // The G and delta come out of the reduction; r is the reduced x.
-// 
+//
 // B = frcpa(x)
 // xB-1 is small means that B is the approximate inverse of x.
-// 
+//
 //      Log(x) = Log( (1/B)(Bx) )
 //             = Log(1/B) + Log(Bx)
 //             = Log(1/B) + Log( 1 + (Bx-1))
-// 
+//
 //      x  = 2^K 1.x_1x_2.....x_52
-//      B= frcpa(x) = 2^-k Cm 
+//      B= frcpa(x) = 2^-k Cm
 //      Log(1/B) = Log(1/(2^-K Cm))
 //      Log(1/B) = Log((2^K/ Cm))
 //      Log(1/B) = K Log(2) + Log(1/Cm)
-// 
+//
 //      Log(x)   = K Log(2) + Log(1/Cm) + Log( 1 + (Bx-1))
-// 
+//
 // If you take the significand of x, set the exponent to true 0, then Cm is
 // the frcpa. We tabulate the Log(1/Cm) values. There are 256 of them.
 // The frcpa table is indexed by 8 bits, the x_1 thru x_8.
 // m = x_1x_2...x_8 is an 8-bit index.
-// 
+//
 //      Log(1/Cm) = log(1/frcpa(1+m/256)) where m goes from 0 to 255.
-// 
+//
 // We tabluate as two doubles, T and t, where T +t is the value itself.
-// 
+//
 //      Log(x)   = (K Log(2)_hi + T) + (Log(2)_hi + t) + Log( 1 + (Bx-1))
 //      Log(x)   =  G + delta           + Log( 1 + (Bx-1))
-// 
+//
 // The Log( 1 + (Bx-1)) can be calculated as a series in r = Bx-1.
-// 
+//
 //      Log( 1 + (Bx-1)) = r - rsq/2 + p
-// 
+//
 // Then,
-//    
+//
 //      yLog(x) = yG + y delta + y(r-rsq/2) + yp
 //      yLog(x) = Z1 + e3      + Z2         + Z3 + (e2 + e3)
-// 
-// 
+//
+//
 //     exp(yLog(x)) = exp(Z1 + Z2 + Z3) exp(e1 + e2 + e3)
 //
 //
@@ -133,7 +144,7 @@
 //       exp(r)       = exp(Z - N log2/128)
 //
 //      r = s + d = (Z - N (log2/128)_hi) -N (log2/128)_lo
-//                =  Z - N (log2/128) 
+//                =  Z - N (log2/128)
 //
 //      Z         = s+d +N (log2/128)
 //
@@ -149,22 +160,22 @@
 //      n log2/128 = n_7n_6n_5 log2/8 + n_4n_3n_2n_1 log2/128
 //      n log2/128 = I2 log2/8 + I1 log2/128
 //
-//      N log2/128 = M log2 + I2 log2/8 + I1 log2/128 
+//      N log2/128 = M log2 + I2 log2/8 + I1 log2/128
 //
 //      exp(Z)    = exp(s) (1+d) exp(log(2^M) + log(2^I2/8) + log(2^I1/128))
 //      exp(Z)    = exp(s) (1+d1) (1+d2)(2^M) 2^I2/8 2^I1/128
 //      exp(Z)    = exp(s) f1 f2 (2^M) 2^I2/8 2^I1/128
 //
 // I1, I2 are table indices. Use a series for exp(s).
-// Then get exp(Z) 
+// Then get exp(Z)
 //
 //     exp(yLog(x)) = exp(Z1 + Z2 + Z3) exp(e1 + e2 + e3)
-//     exp(yLog(x)) = exp(Z) exp(Z3) f3 
-//     exp(yLog(x)) = exp(Z)f3 exp(Z3)  
-//     exp(yLog(x)) = A exp(Z3)  
+//     exp(yLog(x)) = exp(Z) exp(Z3) f3
+//     exp(yLog(x)) = exp(Z)f3 exp(Z3)
+//     exp(yLog(x)) = A exp(Z3)
 //
 // We actually calculate exp(Z3) -1.
-// Then, 
+// Then,
 //     exp(yLog(x)) = A + A( exp(Z3)   -1)
 //
 
@@ -175,142 +186,146 @@
 // ==============
 // The operation (K*log2_hi) must be exact. K is the true exponent of x.
 // If we allow gradual underflow (denormals), K can be represented in 12 bits
-// (as a two's complement number). We assume 13 bits as an engineering precaution.
-// 
+// (as a two's complement number). We assume 13 bits as an engineering
+// precaution.
+//
 //           +------------+----------------+-+
 //           |  13 bits   | 50 bits        | |
 //           +------------+----------------+-+
 //           0            1                66
 //                        2                34
-// 
+//
 // So we want the lsb(log2_hi) to be 2^-50
 // We get log2 as a quad-extended (15-bit exponent, 128-bit significand)
-// 
+//
 //      0 fffe b17217f7d1cf79ab c9e3b39803f2f6af (4...)
-// 
+//
 // Consider numbering the bits left to right, starting at 0 thru 127.
 // Bit 0 is the 2^-1 bit; bit 49 is the 2^-50 bit.
-// 
+//
 //  ...79ab
 //     0111 1001 1010 1011
 //     44
 //     89
-// 
-// So if we shift off the rightmost 14 bits, then (shift back only 
+//
+// So if we shift off the rightmost 14 bits, then (shift back only
 // the top half) we get
-// 
+//
 //      0 fffe b17217f7d1cf4000 e6af278ece600fcb dabc000000000000
-// 
+//
 // Put the right 64-bit signficand in an FR register, convert to double;
 // it is exact. Put the next 128 bits into a quad register and round to double.
 // The true exponent of the low part is -51.
-// 
+//
 // hi is 0 fffe b17217f7d1cf4000
 // lo is 0 ffcc e6af278ece601000
-// 
+//
 // Convert to double memory format and get
-// 
+//
 // hi is 0x3fe62e42fefa39e8
-// lo is 0x3cccd5e4f1d9cc02 
-// 
+// lo is 0x3cccd5e4f1d9cc02
+//
 // log2_hi + log2_lo is an accurate value for log2.
-// 
-// 
+//
+//
 // The T and t values
 // ==================
 // A similar method is used to generate the T and t values.
-// 
+//
 // K * log2_hi + T  must be exact.
-// 
+//
 // Smallest T,t
 // ----------
-// The smallest T,t is 
+// The smallest T,t is
 //       T                   t
-// data8 0x3f60040155d58800, 0x3c93bce0ce3ddd81  log(1/frcpa(1+0/256))=  +1.95503e-003
-// 
+// 0x3f60040155d58800, 0x3c93bce0ce3ddd81  log(1/frcpa(1+0/256))=  +1.95503e-003
+//
 // The exponent is 0x3f6 (biased)  or -9 (true).
 // For the smallest T value, what we want is to clip the significand such that
-// when it is shifted right by 9, its lsb is in the bit for 2^-51. The 9 is the specific 
-// for the first entry. In general, it is 0xffff - (biased 15-bit exponent).
+// when it is shifted right by 9, its lsb is in the bit for 2^-51. The 9 is the
+// specific for the first entry. In general, it is 0xffff - (biased 15-bit
+// exponent).
 
-// Independently, what we have calculated is the table value as a quad precision number.
+// Independently, what we have calculated is the table value as a quad
+// precision number.
 // Table entry 1 is
 // 0 fff6 80200aaeac44ef38 338f77605fdf8000
-// 
+//
 // We store this quad precision number in a data structure that is
-//    sign:           1 
+//    sign:           1
 //    exponent:      15
 //    signficand_hi: 64 (includes explicit bit)
 //    signficand_lo: 49
 // Because the explicit bit is included, the significand is 113 bits.
-// 
+//
 // Consider significand_hi for table entry 1.
-// 
-// 
+//
+//
 // +-+--- ... -------+--------------------+
 // | |
 // +-+--- ... -------+--------------------+
 // 0 1               4444444455555555556666
 //                   2345678901234567890123
-// 
+//
 // Labeled as above, bit 0 is 2^0, bit 1 is 2^-1, etc.
 // Bit 42 is 2^-42. If we shift to the right by 9, the bit in
 // bit 42 goes in 51.
-// 
+//
 // So what we want to do is shift bits 43 thru 63 into significand_lo.
-// This is shifting bit 42 into bit 63, taking care to retain the shifted-off bits.
-// Then shifting (just with signficaand_hi) back into bit 42. 
-//  
-// The shift_value is 63-42 = 21. In general, this is 
+// This is shifting bit 42 into bit 63, taking care to retain shifted-off bits.
+// Then shifting (just with signficaand_hi) back into bit 42.
+//
+// The shift_value is 63-42 = 21. In general, this is
 //      63 - (51 -(0xffff - 0xfff6))
 // For this example, it is
 //      63 - (51 - 9) = 63 - 42  = 21
-// 
-// This means we are shifting 21 bits into significand_lo.  We must maintain more
-// that a 128-bit signficand not to lose bits. So before the shift we put the 128-bit 
-// significand into a 256-bit signficand and then shift.
+//
+// This means we are shifting 21 bits into significand_lo. We must maintain more
+// that a 128-bit signficand not to lose bits. So before the shift we put the
+// 128-bit significand into a 256-bit signficand and then shift.
 // The 256-bit significand has four parts: hh, hl, lh, and ll.
-// 
+//
 // Start off with
 //      hh         hl         lh         ll
 //      <64>       <49><15_0> <64_0>     <64_0>
-// 
+//
 // After shift by 21 (then return for significand_hi),
 //      <43><21_0> <21><43>   <6><58_0>  <64_0>
-// 
+//
 // Take the hh part and convert to a double. There is no rounding here.
-// The conversion is exact. The true exponent of the high part is the same as the
-// true exponent of the input quad.
-// 
-// We have some 64 plus significand bits for the low part. In this example, we have
-// 70 bits. We want to round this to a double. Put them in a quad and then do a quad fnorm.
-// For this example the true exponent of the low part is 
+// The conversion is exact. The true exponent of the high part is the same as
+// the true exponent of the input quad.
+//
+// We have some 64 plus significand bits for the low part. In this example, we
+// have 70 bits. We want to round this to a double. Put them in a quad and then
+// do a quad fnorm.
+// For this example the true exponent of the low part is
 //      true_exponent_of_high - 43 = true_exponent_of_high - (64-21)
-// In general, this is 
-//      true_exponent_of_high - (64 - shift_value)  
-// 
-// 
+// In general, this is
+//      true_exponent_of_high - (64 - shift_value)
+//
+//
 // Largest T,t
 // ----------
 // The largest T,t is
-// data8 0x3fe62643fecf9742, 0x3c9e3147684bd37d    log(1/frcpa(1+255/256))=  +6.92171e-001
-// 
+// 0x3fe62643fecf9742, 0x3c9e3147684bd37d  log(1/frcpa(1+255/256))=+6.92171e-001
+//
 // Table entry 256 is
 // 0 fffe b1321ff67cba178c 51da12f4df5a0000
-// 
-// The shift value is 
+//
+// The shift value is
 //      63 - (51 -(0xffff - 0xfffe)) = 13
-// 
-// The true exponent of the low part is 
+//
+// The true exponent of the low part is
 //      true_exponent_of_high - (64 - shift_value)
 //      -1 - (64-13) = -52
 // Biased as a double, this is 0x3cb
-// 
-// 
-// 
+//
+//
+//
 // So then lsb(T) must be >= 2^-51
 // msb(Klog2_hi) <= 2^12
-// 
+//
 //              +--------+---------+
 //              |       51 bits    | <== largest T
 //              +--------+---------+
@@ -318,7 +333,6 @@
 // +------------+----------------+-+
 // |  13 bits   | 50 bits        | |
 // +------------+----------------+-+
-
 
 
 // Special Cases
@@ -385,63 +399,67 @@
 
 // X any   Y =0               +1
 
-#include "libm_support.h"
-
 // Assembly macros
 //==============================================================
 
 // integer registers used
 
-pow_AD_Tt                 = r33
-pow_GR_FFF7               = r34
-pow_GR_exp_Y              = r34 // duplicate
-pow_GR_17ones             = r35
+pow_GR_signexp_X          = r14
+pow_GR_17ones             = r15
+pow_AD_P                  = r16
+pow_GR_exp_2tom8          = r17
+pow_GR_sig_X              = r18
+pow_GR_10033              = r19
+pow_GR_16ones             = r20
 
-pow_AD_P                  = r36
-pow_AD_Q                  = r37
-pow_AD_tbl1               = r38
-pow_AD_tbl2               = r39
-pow_GR_exp_X              = r40
-pow_GR_true_exp_X         = r40 // duplicate
+pow_AD_Tt                 = r21
+pow_GR_exp_X              = r22
+pow_AD_Q                  = r23
+pow_GR_true_exp_X         = r24
+pow_GR_y_zero             = r25
 
-pow_GR_offset             = r41
-pow_GR_exp_Xm1            = r42
-pow_GR_sig_X              = r43
-pow_GR_signexp_X          = r44
+pow_GR_exp_Y              = r26
+pow_AD_tbl1               = r27
+pow_AD_tbl2               = r28
+pow_GR_offset             = r29
+pow_GR_exp_Xm1            = r30
+pow_GR_xneg_yodd          = r31
 
-pow_GR_signexp_Xm1        = r46
-pow_GR_int_W1             = r47
-pow_GR_int_W2             = r48
-pow_GR_int_N              = r49
-pow_GR_index1             = r50
+pow_GR_signexp_Xm1        = r35
+pow_GR_int_W1             = r36
+pow_GR_int_W2             = r37
+pow_GR_int_N              = r38
+pow_GR_index1             = r39
+pow_GR_index2             = r40
 
-pow_GR_index2             = r51
-pow_AD_T1                 = r52
-pow_AD_T2                 = r53
-pow_GR_gt_ln              = r53 // duplicate
-pow_int_GR_M              = r54
-pow_GR_10033              = r55
+pow_AD_T1                 = r41
+pow_AD_T2                 = r42
+pow_int_GR_M              = r43
+pow_GR_sig_int_Y          = r44
+pow_GR_sign_Y_Gpr         = r45
 
-pow_GR_16ones             = r56
-pow_GR_sig_int_Y          = r57
-pow_GR_sign_Y_Gpr         = r58
-pow_GR_17ones_m1          = r59
-pow_GR_one                = r60
-pow_GR_sign_Y             = r60 
+pow_GR_17ones_m1          = r46
+pow_GR_one                = r47
+pow_GR_sign_Y             = r48
+pow_GR_signexp_Y_Gpr      = r49
+pow_GR_exp_Y_Gpr          = r50
 
-pow_GR_signexp_Y_Gpr      = r61 
-pow_GR_exp_Y_Gpr          = r62 
-pow_GR_true_exp_Y_Gpr     = r63 
-pow_GR_signexp_Y          = r64 
+pow_GR_true_exp_Y_Gpr     = r51
+pow_GR_signexp_Y          = r52
+pow_GR_x_one              = r53
+pow_GR_exp_2toM63         = r54
+pow_GR_big_pos            = r55
 
-GR_SAVE_B0                = r65
-GR_SAVE_GP                = r66
-GR_SAVE_PFS               = r67
+pow_GR_big_neg            = r56
 
-GR_Parameter_X            = r68
-GR_Parameter_Y            = r69
-GR_Parameter_RESULT       = r70
-pow_GR_tag                = r71
+GR_SAVE_B0                = r50
+GR_SAVE_GP                = r51
+GR_SAVE_PFS               = r52
+
+GR_Parameter_X            = r53
+GR_Parameter_Y            = r54
+GR_Parameter_RESULT       = r55
+pow_GR_tag                = r56
 
 
 // floating point registers used
@@ -464,7 +482,8 @@ POW_log2_lo               = f43
 POW_r                     = f44
 POW_Q0_half               = f45
 
-POW_Q1                    = f46  
+POW_Q1                    = f46
+POW_tmp                   = f47
 POW_log2_hi               = f48
 POW_Q4                    = f49
 POW_P1                    = f50
@@ -476,6 +495,7 @@ POW_Yrcub                 = f54
 POW_log2_by_128_lo        = f55
 
 POW_v6                    = f56
+POW_xsq                   = f57
 POW_v4                    = f58
 POW_v2                    = f59
 POW_T                     = f60
@@ -484,6 +504,7 @@ POW_Tt                    = f61
 POW_RSHF                  = f62
 POW_v21ps                 = f63
 POW_s4                    = f64
+POW_twoV                  = f65
 
 POW_U                     = f66
 POW_G                     = f67
@@ -533,44 +554,45 @@ POW_1ps                   = f103
 POW_A                     = f104
 POW_es                    = f105
 
+POW_Xp1                   = f106
 POW_int_K                 = f107
 POW_K                     = f108
 POW_f123                  = f109
 POW_Gpr                   = f110
 
-POW_Y_Gpr                 = f111 
+POW_Y_Gpr                 = f111
 POW_int_Y                 = f112
+POW_abs_q                 = f114
+POW_2toM63                = f115
 
 POW_float_int_Y           = f116
 POW_ftz_urm_f8            = f117
 POW_wre_urm_f8            = f118
-POW_abs_A                 = f119
-POW_gt_pln                = f120
+POW_big_neg               = f119
+POW_big_pos               = f120
 
-POW_xsq                   = f121
-
-POW_twoV                  = f122
-POW_Xp1                   = f123
+POW_GY_Z2                 = f121
+POW_pYrcub_e3             = f122
+POW_d                     = f123
+POW_d2                    = f124
+POW_poly_d_hi             = f121
+POW_poly_d_lo             = f122
+POW_poly_d                = f121
 
 // Data tables
 //==============================================================
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
+RODATA
 
 .align 16
 
-pow_table_P:
-ASM_TYPE_DIRECTIVE(pow_table_P,@object)
+LOCAL_OBJECT_START(pow_table_P)
 data8 0x8000F7B249FF332D, 0x0000BFFC  // P_5
 data8 0xAAAAAAA9E7902C7F, 0x0000BFFC  // P_3
 data8 0x80000000000018E5, 0x0000BFFD  // P_1
 data8 0xb8aa3b295c17f0bc, 0x00004006  // inv_ln2_by_128
-
-
+//
+//
 data8 0x3FA5555555554A9E // Q_2
 data8 0x3F8111124F4DD9F9 // Q_3
 data8 0x3FE0000000000000 // Q_0
@@ -580,20 +602,18 @@ data8 0x43e8000000000000 // Right shift constant for exp
 data8 0xc9e3b39803f2f6af, 0x00003fb7  // ln2_by_128_lo
 data8 0x0000000000000000 // pad to eliminate bank conflicts with pow_table_Q
 data8 0x0000000000000000 // pad to eliminate bank conflicts with pow_table_Q
-ASM_SIZE_DIRECTIVE(pow_table_P)
+LOCAL_OBJECT_END(pow_table_P)
 
-pow_table_Q:
-ASM_TYPE_DIRECTIVE(pow_table_Q,@object)
+LOCAL_OBJECT_START(pow_table_Q)
 data8 0x9249FE7F0DC423CF, 0x00003FFC  // P_4
 data8 0xCCCCCCCC4ED2BA7F, 0x00003FFC  // P_2
 data8 0xAAAAAAAAAAAAB505, 0x00003FFD  // P_0
 data8 0x3fe62e42fefa39e8, 0x3cccd5e4f1d9cc02 // log2 hi lo =  +6.93147e-001
 data8 0xb17217f7d1cf79ab, 0x00003ff7  // ln2_by_128_hi
-ASM_SIZE_DIRECTIVE(pow_table_Q)
+LOCAL_OBJECT_END(pow_table_Q)
 
 
-pow_Tt:
-ASM_TYPE_DIRECTIVE(pow_Tt,@object)
+LOCAL_OBJECT_START(pow_Tt)
 data8 0x3f60040155d58800, 0x3c93bce0ce3ddd81 // log(1/frcpa(1+0/256))=  +1.95503e-003
 data8 0x3f78121214586a00, 0x3cb540e0a5cfc9bc // log(1/frcpa(1+1/256))=  +5.87661e-003
 data8 0x3f841929f9683200, 0x3cbdf1d57404da1f // log(1/frcpa(1+2/256))=  +9.81362e-003
@@ -850,13 +870,12 @@ data8 0x3fe5f673c61a2ed0, 0x3caa385eef5f2789 // log(1/frcpa(1+252/256))=  +6.863
 data8 0x3fe6065bea385924, 0x3cb11624f165c5b4 // log(1/frcpa(1+253/256))=  +6.88276e-001
 data8 0x3fe6164bfa7cc068, 0x3cbad884f87073fa // log(1/frcpa(1+254/256))=  +6.90222e-001
 data8 0x3fe62643fecf9740, 0x3cb78c51da12f4df // log(1/frcpa(1+255/256))=  +6.92171e-001
-ASM_SIZE_DIRECTIVE(pow_Tt)
+LOCAL_OBJECT_END(pow_Tt)
 
 
 // Table 1 is 2^(index_1/128) where
 // index_1 goes from 0 to 15
-pow_tbl1:
-ASM_TYPE_DIRECTIVE(pow_tbl1,@object)
+LOCAL_OBJECT_START(pow_tbl1)
 data8 0x8000000000000000 , 0x00003FFF
 data8 0x80B1ED4FD999AB6C , 0x00003FFF
 data8 0x8164D1F3BC030773 , 0x00003FFF
@@ -873,13 +892,12 @@ data8 0x88980E8092DA8527 , 0x00003FFF
 data8 0x8955EE03618E5FDD , 0x00003FFF
 data8 0x8A14D575496EFD9A , 0x00003FFF
 data8 0x8AD4C6452C728924 , 0x00003FFF
-ASM_SIZE_DIRECTIVE(pow_tbl1)
+LOCAL_OBJECT_END(pow_tbl1)
 
 
 // Table 2 is 2^(index_1/8) where
 // index_2 goes from 0 to 7
-pow_tbl2:
-ASM_TYPE_DIRECTIVE(pow_tbl2,@object)
+LOCAL_OBJECT_START(pow_tbl2)
 data8 0x8000000000000000 , 0x00003FFF
 data8 0x8B95C1E3EA8BD6E7 , 0x00003FFF
 data8 0x9837F0518DB8A96F , 0x00003FFF
@@ -888,372 +906,287 @@ data8 0xB504F333F9DE6484 , 0x00003FFF
 data8 0xC5672A115506DADD , 0x00003FFF
 data8 0xD744FCCAD69D6AF4 , 0x00003FFF
 data8 0xEAC0C6E7DD24392F , 0x00003FFF
-ASM_SIZE_DIRECTIVE(pow_tbl2)
-
-.global pow
+LOCAL_OBJECT_END(pow_tbl2)
 
 .section .text
-.proc  pow
-.align 32
+GLOBAL_LIBM_ENTRY(pow)
 
-pow:
-
+// Get exponent of x.  Will be used to calculate K.
 { .mfi
-          alloc         r32=ar.pfs,1,35,4,0 
-          fms.s1 POW_Xm1 = f8,f1,f1   // Will be used for r1 if x>0
-          mov           pow_GR_17ones  = 0x1FFFF
+          getf.exp     pow_GR_signexp_X = f8
+          fms.s1 POW_Xm1 = f8,f1,f1     // Will be used for r1 if x>0
+          mov           pow_GR_17ones   = 0x1FFFF
 }
 { .mfi
-(p0)      addl          pow_AD_P   = @ltoff(pow_table_P), gp
-          fma.s1 POW_Xp1 = f8,f1,f1   // Will be used for r1 if x<0
+          addl          pow_AD_P        = @ltoff(pow_table_P), gp
+          fma.s1 POW_Xp1 = f8,f1,f1     // Will be used for r1 if x<0
           nop.i 999
 ;;
 }
 
-
-// Get exponent of x.  Will be used to calculate K.
+// Get significand of x.  Will be used to get index to fetch T, Tt.
 { .mfi
-          getf.exp      pow_GR_signexp_X    = f8
-          frcpa.s1      POW_B, p6   = f1,f8
+          getf.sig      pow_GR_sig_X    = f8
+          frcpa.s1      POW_B, p6       = f1,f8
           nop.i 999
 }
 { .mfi
           ld8 pow_AD_P = [pow_AD_P]
-          fma.s1        POW_NORM_X     = f8,f1,f0
-          mov           pow_GR_FFF7    = 0xFFF7
+          fma.s1        POW_NORM_X      = f8,f1,f0
+          mov          pow_GR_exp_2tom8 = 0xFFF7
 }
 ;;
 
-
-
-// Get significand of x.  Will be used to get index to fetch T, Tt.
 // p13 = TRUE ==> X is unorm
 // DOUBLE 0x10033  exponent limit at which y is an integer
-// SINGLE 0x10016
 { .mfi
-          getf.sig      pow_GR_sig_X        = f8
-          fclass.m  p13,p0          = f8, 0x0b  // Test for x unorm
-          addl pow_GR_10033                 = 0x10033, r0
+          nop.m 999
+          fclass.m  p13,p0              = f8, 0x0b  // Test for x unorm
+          addl pow_GR_10033             = 0x10033, r0
 }
 { .mfi
           mov           pow_GR_16ones   = 0xFFFF
-          fma.s1        POW_NORM_Y     = f9,f1,f0
+          fma.s1        POW_NORM_Y      = f9,f1,f0
           nop.i 999
 }
 ;;
-
 
 // p14 = TRUE ==> X is ZERO
 { .mfi
           adds          pow_AD_Tt       = pow_Tt - pow_table_P,  pow_AD_P
-          fclass.m  p14,p15          = f8, 0x07
-          and           pow_GR_exp_X        = pow_GR_signexp_X, pow_GR_17ones
+          fclass.m  p14,p0              = f8, 0x07
+          and           pow_GR_exp_X    = pow_GR_signexp_X, pow_GR_17ones
 }
 { .mfi
-          adds          pow_AD_Q       = pow_table_Q - pow_table_P,  pow_AD_P
+          adds          pow_AD_Q        = pow_table_Q - pow_table_P,  pow_AD_P
           nop.f 999
           nop.i 999
 }
 ;;
 
 { .mfi
-          ldfe          POW_P5         = [pow_AD_P], 16
-          fcmp.lt.s1 p8,p9 = f8, f0    // Test for x<0
-          shl           pow_GR_offset       = pow_GR_sig_X, 1
+          ldfe          POW_P5          = [pow_AD_P], 16
+          fcmp.lt.s1 p8,p9 = f8, f0     // Test for x<0
+          nop.i 999
 }
 { .mib
-          ldfe          POW_P4         = [pow_AD_Q], 16
-          sub       pow_GR_true_exp_X       = pow_GR_exp_X, pow_GR_16ones
-(p13)     br.cond.spnt L(POW_X_DENORM)
+          ldfe          POW_P4          = [pow_AD_Q], 16
+          sub       pow_GR_true_exp_X   = pow_GR_exp_X, pow_GR_16ones
+(p13)     br.cond.spnt POW_X_DENORM
 }
 ;;
-
 
 // Continue normal and denormal paths here
-L(POW_COMMON):
+POW_COMMON:
 // p11 = TRUE ==> Y is a NAN
 { .mfi
-          ldfe          POW_P3         = [pow_AD_P], 16
-          fclass.m.unc  p11,p0         = f9, 0xc3
-          shr.u     pow_GR_offset           = pow_GR_offset,56
+          ldfe          POW_P3          = [pow_AD_P], 16
+          fclass.m  p11,p0              = f9, 0xc3
+          nop.i 999
 }
 { .mfi
-          ldfe          POW_P2         = [pow_AD_Q], 16
+          ldfe          POW_P2          = [pow_AD_Q], 16
           nop.f 999
+          mov pow_GR_y_zero = 0
+}
+;;
+
+// Note POW_Xm1 and POW_r1 are used interchangably
+{ .mfi
+          alloc         r32=ar.pfs,2,19,4,0
+          fms.s1        POW_r           = POW_B, POW_NORM_X,f1
+          nop.i 999
+}
+{ .mfi
+          setf.sig POW_int_K            = pow_GR_true_exp_X
+(p8)      fnma.s1        POW_Xm1        = POW_Xp1,f1,f0
           nop.i 999
 }
 ;;
 
-
-
+// p12 = TRUE if Y is ZERO
 // Compute xsq to decide later if |x|=1
-// p11 = TRUE ==> Y is a NaN
 { .mfi
-          setf.sig POW_int_K                = pow_GR_true_exp_X
-(p15)     fms.s1        POW_r          = POW_B, POW_NORM_X,f1
-          shladd pow_AD_Tt = pow_GR_offset, 4, pow_AD_Tt
-}
-{ .mfi
-          nop.m 999
-(p8)      fnma.s1        POW_Xm1       = POW_Xp1,f1,f0
-          nop.i 999
-}
-;;
-
-
-
-// p12 = TRUE ==> X is ZERO and Y is ZERO
-{ .mfi
-          ldfe          POW_P1         = [pow_AD_P], 16
-(p14)     fclass.m.unc  p12,p0              = f9, 0x07
-          nop.i 999
+          ldfe          POW_P1          = [pow_AD_P], 16
+          fclass.m      p12,p0          = f9, 0x07
+          shl           pow_GR_offset   = pow_GR_sig_X, 1
 }
 { .mfb
-          ldfe          POW_P0         = [pow_AD_Q], 16
+          ldfe          POW_P0          = [pow_AD_Q], 16
           fma.s1        POW_xsq = POW_NORM_X, POW_NORM_X, f0
-(p11)     br.cond.spnt   L(POW_Y_NAN)
+(p11)     br.cond.spnt  POW_Y_NAN       // Branch if y=nan
 }
 ;;
 
-
-.pred.rel "mutex",p8,p9
 // Get exponent of |x|-1 to use in comparison to 2^-8
-{ .mmf
-(p8)      getf.exp      pow_GR_signexp_Xm1  = POW_Xp1
-(p9)      getf.exp      pow_GR_signexp_Xm1  = POW_Xm1
-          fcvt.fx.s1   POW_int_Y            = POW_NORM_Y
+{ .mfi
+          getf.exp  pow_GR_signexp_Xm1  = POW_Xm1
+          fcvt.fx.s1   POW_int_Y        = POW_NORM_Y
+          shr.u     pow_GR_offset       = pow_GR_offset,56
 }
 ;;
-
 
 // p11 = TRUE ==> X is a NAN
 { .mfi
           ldfpd         POW_log2_hi, POW_log2_lo  = [pow_AD_Q], 16
-          fclass.m.unc  p11,p0              = f8, 0xc3
-          nop.i 999
+          fclass.m      p11,p0          = f8, 0xc3
+          shladd pow_AD_Tt = pow_GR_offset, 4, pow_AD_Tt
 }
-{ .mib
-          ldfpd  POW_T, POW_Tt              = [pow_AD_Tt], 16
-          nop.i 999
-(p12)     br.cond.spnt L(POW_X_0_Y_0)
-}
-;;
-
-
-// p14 = TRUE ==> X is zero
-//    p15 = TRUE ==> X is zero AND Y is negative
-//    p10 = TRUE ==> X is zero AND Y is >= zero 
 { .mfi
           ldfe          POW_inv_log2_by_128 = [pow_AD_P], 16
-(p14)     fcmp.lt.unc.s1 p15, p10           = f9,f0
-          nop.i 999
+          fma.s1 POW_delta              = f0,f0,f0 // delta=0 in case |x| near 1
+(p12)     mov pow_GR_y_zero = 1
 }
-{ .mfi
-          nop.m 999
-          nop.f 999
-          and       pow_GR_exp_Xm1          = pow_GR_signexp_Xm1, pow_GR_17ones
-} 
 ;;
 
+{ .mfi
+          ldfpd  POW_Q2, POW_Q3         = [pow_AD_P], 16
+          fma.s1 POW_G                  = f0,f0,f0  // G=0 in case |x| near 1
+          and       pow_GR_exp_Xm1      = pow_GR_signexp_Xm1, pow_GR_17ones
+}
+;;
 
 // Determine if we will use the |x| near 1 path (p6) or normal path (p7)
-// p12 = TRUE ==> X is a NAN and Y is a zero
-// p13 = TRUE ==> X is a NAN and Y is anything else
 { .mfi
-          getf.exp  pow_GR_signexp_Y        = POW_NORM_Y 
-(p11)     fclass.m.unc  p12,p13             = f9, 0x07
-          cmp.lt.unc p6,p7                  = pow_GR_exp_Xm1, pow_GR_FFF7
+          getf.exp  pow_GR_signexp_Y    = POW_NORM_Y
+          nop.f 999
+          cmp.lt p6,p7                  = pow_GR_exp_Xm1, pow_GR_exp_2tom8
 }
-{ .mfi
-          ldfpd  POW_Q2, POW_Q3             = [pow_AD_P], 16
-          fma.s1        POW_rsq             = POW_r, POW_r,f0
-          nop.i 999
+{ .mfb
+          ldfpd  POW_T, POW_Tt          = [pow_AD_Tt], 16
+          fma.s1        POW_rsq         = POW_r, POW_r,f0
+(p11)     br.cond.spnt  POW_X_NAN       // Branch if x=nan and y not nan
+}
 ;;
-}
 
 // If on the x near 1 path, assign r1 to r and r1*r1 to rsq
 { .mfi
-          ldfpd  POW_Q0_half, POW_Q1             = [pow_AD_P], 16
-(p6)      fma.s1    POW_r                 = POW_r1, f1, f0
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-(p6)      fma.s1    POW_rsq                 = POW_r1, POW_r1, f0
-          nop.i 999
-;;
-}
-
-
-{ .mfi
-          ldfpd   POW_Q4, POW_RSHF          = [pow_AD_P], 16
-(p7)      fma.s1 POW_v6                     = POW_r,  POW_P5, POW_P4
-          and pow_GR_exp_Y                   = pow_GR_signexp_Y, pow_GR_17ones
-}
-{ .mfb
-          nop.m 999
-(p6)      fma.s1 POW_v6                     = POW_r1, POW_P5, POW_P4
-(p12)     br.cond.spnt L(POW_X_NAN_Y_0)
-}
-;;
-
-
-{ .mfi
-          nop.m 999
-(p7)      fma.s1 POW_v4                     = POW_P3, POW_r,  POW_P2 
-          andcm pow_GR_sign_Y               = pow_GR_signexp_Y, pow_GR_17ones
-}
-{ .mfb
-          nop.m 999
-(p6)      fma.s1 POW_v4                     = POW_P3, POW_r1, POW_P2 
-(p12)     br.cond.spnt L(POW_X_NAN_Y_0)
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fcvt.xf POW_K                     = POW_int_K
+          ldfpd  POW_Q0_half, POW_Q1    = [pow_AD_P], 16
+(p6)      fma.s1    POW_r               = POW_r1, f1, f0
           nop.i 999
 }
 { .mfb
           nop.m 999
-(p13)     fma.d f8                           = f8,f1,f0
-(p13)     br.ret.spnt  b0    // Exit if x nan, y anything but zero
+(p6)      fma.s1    POW_rsq             = POW_r1, POW_r1, f0
+(p14)     br.cond.spnt POW_X_0          // Branch if x zero and y not nan
 }
 ;;
-          
-// p10 = TRUE ==> X is zero  AND Y is positive
-//  p8  = TRUE ==> X is zero  AND Y is outside integer range (treat as even int)
-//                   return +0
-//  p9  = TRUE ==> X is zero  AND Y is within integer range (may not be integer) 
+
 { .mfi
-(p10)     cmp.gt.unc p8,p9                  =  pow_GR_exp_Y, pow_GR_10033
-(p6)      fmerge.s POW_delta                 = f0,f0
+          ldfpd   POW_Q4, POW_RSHF      = [pow_AD_P], 16
+(p7)      fma.s1 POW_v6                 = POW_r,  POW_P5, POW_P4
           nop.i 999
 }
 { .mfi
-          nop.m 999
-(p6)      fma.s1 POW_G                       = f0,f0,f0
+          mov pow_GR_exp_2toM63         = 0xffc0  // Exponent of 2^-63
+(p6)      fma.s1 POW_v6                 = POW_r1, POW_P5, POW_P4
           nop.i 999
 }
 ;;
 
 { .mfi
-          getf.sig pow_GR_sig_int_Y         = POW_int_Y
-          fnma.s1 POW_twoV                   = POW_NORM_Y, POW_rsq,f0
+          setf.exp POW_2toM63 = pow_GR_exp_2toM63  // Form 2^-63 for test of q
+(p7)      fma.s1 POW_v4                 = POW_P3, POW_r,  POW_P2
           nop.i 999
 }
 { .mfi
           nop.m 999
-          fma.s1 POW_U                      = POW_NORM_Y,POW_r,f0
+(p6)      fma.s1 POW_v4                 = POW_P3, POW_r1, POW_P2
           nop.i 999
 }
 ;;
 
 { .mfi
-          ldfe      POW_log2_by_128_lo      = [pow_AD_P], 16
-(p6)      fma.s1 POW_v2                     = POW_P1, POW_r1, POW_P0 
-          nop.i 999
-}
-{ .mfi
-          ldfe          POW_log2_by_128_hi  = [pow_AD_Q], 16
-(p7)      fma.s1 POW_v2                     = POW_P1, POW_r,  POW_P0 
+          nop.m 999
+          fcvt.xf POW_K                 = POW_int_K
           nop.i 999
 }
 ;;
 
-
 { .mfi
-          nop.m 999
-          fcvt.xf   POW_float_int_Y               = POW_int_Y
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-          fma.s1 POW_v3                     = POW_v6, POW_rsq,  POW_v4 
-          adds          pow_AD_tbl1       = pow_tbl1 - pow_Tt,  pow_AD_Q
-}
-;;
-
-{ .mfi
-          nop.m 999
-(p7)      fma.s1 POW_delta                  = POW_K, POW_log2_lo, POW_Tt
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-(p7)      fma.s1 POW_G                      = POW_K, POW_log2_hi, POW_T 
-          adds pow_AD_tbl2                  = pow_tbl2 - pow_tbl1,  pow_AD_tbl1
-}
-;;
-
-
-{ .mfi
-          nop.m 999
-          fms.s1 POW_e2                     = POW_NORM_Y, POW_r, POW_U
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-          fma.s1 POW_Z2                     = POW_twoV, POW_Q0_half, POW_U
-          nop.i 999
-}
-;;
-
-// p11 = TRUE ==> X is NEGATIVE 
-// p8  = TRUE ==> X is zero  AND Y is outside intger range (treat as even int)
-//                return +0
-{ .mfi
-          nop.m 999
-          fclass.m.unc  p11,p0              = f8, 0x1a
-          nop.i 999
+          getf.sig pow_GR_sig_int_Y     = POW_int_Y
+          fnma.s1 POW_twoV              = POW_NORM_Y, POW_rsq,f0
+          and pow_GR_exp_Y              = pow_GR_signexp_Y, pow_GR_17ones
 }
 { .mfb
-          nop.m 999
-(p8)      fma.d f8                          = f0,f0,f0
-(p8)      br.ret.spnt b0
+          andcm pow_GR_sign_Y           = pow_GR_signexp_Y, pow_GR_17ones
+          fma.s1 POW_U                  = POW_NORM_Y,POW_r,f0
+(p12)     br.cond.spnt POW_Y_0   // Branch if y=zero, x not zero or nan
 }
 ;;
 
-{ .mfi 
-          nop.m 999
-          fma.s1 POW_Yrcub                 = POW_rsq, POW_U, f0
+// p11 = TRUE ==> X is NEGATIVE but not inf
+{ .mfi
+          ldfe      POW_log2_by_128_lo  = [pow_AD_P], 16
+          fclass.m  p11,p0              = f8, 0x1a
           nop.i 999
 }
-{ .mfi 
-          nop.m 999
-          fma.s1 POW_p                      = POW_rsq, POW_v3, POW_v2
+{ .mfi
+          ldfe      POW_log2_by_128_hi  = [pow_AD_Q], 16
+          fma.s1 POW_v2                 = POW_P1, POW_r,  POW_P0
           nop.i 999
 }
 ;;
 
+{ .mfi
+          nop.m 999
+          fcvt.xf   POW_float_int_Y     = POW_int_Y
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_v3                 = POW_v6, POW_rsq,  POW_v4
+          adds          pow_AD_tbl1     = pow_tbl1 - pow_Tt,  pow_AD_Q
+}
+;;
 
-// p11 = TRUE ==> X is NEGATIVE
-//    p12 = TRUE ==> X is NEGATIVE  AND  Y  already int
+{ .mfi
+          nop.m 999
+(p7)      fma.s1 POW_delta              = POW_K, POW_log2_lo, POW_Tt
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+(p7)      fma.s1 POW_G                  = POW_K, POW_log2_hi, POW_T
+          adds pow_AD_tbl2              = pow_tbl2 - pow_tbl1,  pow_AD_tbl1
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fms.s1 POW_e2                 = POW_NORM_Y, POW_r, POW_U
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_Z2                 = POW_twoV, POW_Q0_half, POW_U
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_Yrcub              = POW_rsq, POW_U, f0
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_p                  = POW_rsq, POW_v3, POW_v2
+          nop.i 999
+}
+;;
+
+// p11 = TRUE ==> X is NEGATIVE but not inf
+//    p12 = TRUE ==> X is NEGATIVE  AND  Y  already even int
 //    p13 = TRUE ==> X is NEGATIVE  AND  Y possible int
 { .mfi
           nop.m 999
-          fma.s1 POW_Z1                     = POW_NORM_Y, POW_G, f0
-(p11)     cmp.ge.unc  p12,p13                = pow_GR_exp_Y, pow_GR_10033
+          fma.s1 POW_Z1                 = POW_NORM_Y, POW_G, f0
+(p11)     cmp.gt.unc  p12,p13           = pow_GR_exp_Y, pow_GR_10033
 }
 { .mfi
           nop.m 999
-          fma.s1 POW_e3                     = POW_NORM_Y, POW_delta, f0
-          nop.i 999
-}
-;;
-
-// p9  = TRUE ==> X is zero  AND Y is within integer range (may not be integer)
-//    p6 = TRUE ==>  X is zero  AND  Y is an integer (may be even or odd)
-//    p7 = TRUE ==>  X is zero  AND  Y is NOT an integer, return +0
-{ .mfi
-          nop.m 999
-(p9)      fcmp.eq.unc.s1 p6,p7             = POW_float_int_Y,  POW_NORM_Y
-          nop.i 999
-}
-{ .mfi 
-          nop.m 999
-          fma.s1 POW_Gpr                    = POW_G, f1, POW_r
+          fma.s1 POW_Gpr                = POW_G, f1, POW_r
           nop.i 999
 }
 ;;
@@ -1266,24 +1199,26 @@ L(POW_COMMON):
 }
 { .mfi
           nop.m 999
-          fms.s1 POW_UmZ2                   = POW_U, f1, POW_Z2
+          fms.s1 POW_UmZ2               = POW_U, f1, POW_Z2
           nop.i 999
 }
 ;;
 
-
-// If x=0 and y>0, test y and flag denormal
-// p6  = TRUE ==>  X is zero  AND  Y is an integer (may be even or odd)
-//    p8 = TRUE ==>  X is zero  AND  Y is an odd  integer
-//    p9 = TRUE ==>  X is zero  AND  Y is an even integer
 { .mfi
           nop.m 999
-(p10)     fcmp.eq.s0 p15,p0 = f9,f0
-(p6)      tbit.nz.unc  p8,p9                = pow_GR_sig_int_Y,0
+          fma.s1 POW_e3                 = POW_NORM_Y, POW_delta, f0
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_Z3                 = POW_p, POW_Yrcub, f0
+          nop.i 999
 }
 { .mfi
           nop.m 999
-          fma.s1 POW_Z3                      = POW_p, POW_Yrcub, f0
+          fma.s1 POW_GY_Z2              = POW_G, POW_NORM_Y, POW_Z2
           nop.i 999
 }
 ;;
@@ -1291,7 +1226,7 @@ L(POW_COMMON):
 // By adding RSHF (1.1000...*2^63) we put integer part in rightmost significand
 { .mfi
           nop.m 999
-          fms.s1 POW_e1                     = POW_NORM_Y, POW_G, POW_Z1
+          fms.s1 POW_e1                 = POW_NORM_Y, POW_G, POW_Z1
           nop.i 999
 }
 { .mfi
@@ -1301,80 +1236,59 @@ L(POW_COMMON):
 }
 ;;
 
-{ .mfi
-          nop.m 999
-(p7)      fma.d f8  = f0,f0,f0  // Result +0 if x zero and y not integer
-          nop.i 999
-}
-{ .mfb
-          nop.m 999
-          fma.s1 POW_Y_Gpr                  = POW_NORM_Y, POW_Gpr, f0
-(p8)      br.ret.spnt b0        // Exit if x zero and y odd integer
-}
-;;
-
-// By subtracting RSHF we get rounded integer POW_N2float
-// p15 = TRUE ==> X_0_Y_NEG
-{ .mfi
-          nop.m 999
-          fms.s1 POW_N2float  = POW_W2, f1, POW_RSHF
-          nop.i 999
-}
-{ .mfb
-          nop.m 999
-          fma.s1 POW_UmZ2pV                 = POW_twoV,POW_Q0_half,POW_UmZ2
-(p15)     br.cond.spnt L(POW_X_0_Y_NEG)
-}
-;;
-
-
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_Z3sq                   = POW_Z3, POW_Z3, f0
-          nop.i 999
-}
-{ .mfb
-          nop.m 999
-          fma.s1 POW_v4                     = POW_Z3, POW_Q3, POW_Q2
-(p7)      br.ret.spnt b0     // Exit if x zero and y not an integer
-}
-;;
-
-
-
-// Extract rounded integer from rightmost significand of POW_W2
-// By subtracting RSHF we get rounded integer POW_N1float
-{ .mfi
-          getf.sig pow_GR_int_W2             = POW_W2
-          fms.s1 POW_N1float  = POW_W1, f1, POW_RSHF
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-          fma.s1 POW_v2                     = POW_Z3, POW_Q1, POW_Q0_half
-          nop.i 999
-}
-;;
-
-
-
-
 // p13 = TRUE ==> X is NEGATIVE  AND  Y possible int
 //     p10 = TRUE ==> X is NEG and Y is an int
 //     p12 = TRUE ==> X is NEG and Y is not an int
 { .mfi
           nop.m 999
-(p13)     fcmp.eq.unc.s1 p10,p12             = POW_float_int_Y,  POW_NORM_Y
-          nop.i 999
+(p13)     fcmp.eq.unc.s1 p10,p12        = POW_float_int_Y,  POW_NORM_Y
+          mov pow_GR_xneg_yodd = 0
 }
-{ .mfb
+{ .mfi
           nop.m 999
-(p9)      fma.d f8  = f0,f0,f0   // Result +0 if x zero and y even integer
-(p9)      br.ret.spnt b0    // Exit if x zero and y even integer
+          fma.s1 POW_Y_Gpr              = POW_NORM_Y, POW_Gpr, f0
+          nop.i 999
 }
 ;;
 
+// By subtracting RSHF we get rounded integer POW_N2float
+{ .mfi
+          nop.m 999
+          fms.s1 POW_N2float  = POW_W2, f1, POW_RSHF
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_UmZ2pV             = POW_twoV,POW_Q0_half,POW_UmZ2
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_Z3sq               = POW_Z3, POW_Z3, f0
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_v4                 = POW_Z3, POW_Q3, POW_Q2
+          nop.i 999
+}
+;;
+
+// Extract rounded integer from rightmost significand of POW_W2
+// By subtracting RSHF we get rounded integer POW_N1float
+{ .mfi
+          getf.sig pow_GR_int_W2        = POW_W2
+          fms.s1 POW_N1float  = POW_W1, f1, POW_RSHF
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_v2                 = POW_Z3, POW_Q1, POW_Q0_half
+          nop.i 999
+}
+;;
 
 { .mfi
           nop.m 999
@@ -1383,7 +1297,7 @@ L(POW_COMMON):
 }
 { .mfi
           nop.m 999
-          fma.s1 POW_e2                     = POW_e2,f1,POW_UmZ2pV
+          fma.s1 POW_e2                 = POW_e2,f1,POW_UmZ2pV
           nop.i 999
 }
 ;;
@@ -1391,278 +1305,283 @@ L(POW_COMMON):
 // Extract rounded integer from rightmost significand of POW_W1
 // Test if x inf
 { .mfi
-          getf.sig pow_GR_int_W1             = POW_W1
-          fclass.m.unc p15,p0 = POW_NORM_X,  0x23
+          getf.sig pow_GR_int_W1        = POW_W1
+          fclass.m p15,p0 = POW_NORM_X,  0x23
           nop.i 999
 }
 { .mfb
           nop.m 999
           fnma.s1 POW_f2  = POW_N2float, POW_log2_by_128_lo, f1
-(p12)     br.cond.spnt L(POW_X_NEG_Y_NONINT)  // Branch if x neg, y not integer
+(p12)     br.cond.spnt POW_X_NEG_Y_NONINT  // Branch if x neg, y not integer
 }
 ;;
 
+// p11 = TRUE ==> X is +1.0
 // p12 = TRUE ==> X is NEGATIVE  AND Y is an odd integer
 { .mfi
-          getf.exp pow_GR_signexp_Y_Gpr       = POW_Y_Gpr
-          fma.s1 POW_v3                     = POW_Z3sq, POW_Q4, POW_v4
-(p10)     tbit.nz.unc  p12,p0                = pow_GR_sig_int_Y,0
+          getf.exp pow_GR_signexp_Y_Gpr = POW_Y_Gpr
+          fcmp.eq.s1 p11,p0 = POW_NORM_X, f1
+(p10)     tbit.nz.unc  p12,p0           = pow_GR_sig_int_Y,0
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_v3                 = POW_Z3sq, POW_Q4, POW_v4
+          nop.i 999
 }
 ;;
 
-
 { .mfi
-          add pow_GR_int_N                   = pow_GR_int_W1, pow_GR_int_W2
+          nop.m 999
           fnma.s1 POW_f1  = POW_N1float, POW_log2_by_128_lo, f1
           nop.i 999
 }
 { .mfb
           nop.m 999
           fnma.s1 POW_s1  = POW_N1float, POW_log2_by_128_hi, POW_Z1
-(p15)     br.cond.spnt L(POW_X_INF)
+(p15)     br.cond.spnt POW_X_INF
 }
 ;;
-
 
 // Test x and y and flag denormal
 { .mfi
-          and pow_GR_index1                  = 0x0f, pow_GR_int_N
+          nop.m 999
           fcmp.eq.s0 p15,p0 = f8,f9
-          shr r2                             = pow_GR_int_N, 7
+          nop.i 999
 }
 { .mfi
-          and pow_GR_exp_Y_Gpr               = pow_GR_signexp_Y_Gpr, pow_GR_17ones
-          nop.f 999
-          and pow_GR_index2                  = 0x70, pow_GR_int_N
+          nop.m 999
+          fma.s1 POW_pYrcub_e3          = POW_p, POW_Yrcub, POW_e3
+          nop.i 999
 }
 ;;
 
-
-
 { .mfi
-          shladd pow_AD_T1                   = pow_GR_index1, 4, pow_AD_tbl1
+          nop.m 999
           fcmp.eq.s1 p7,p0 = POW_NORM_Y, f1  // Test for y=1.0
-          sub pow_GR_true_exp_Y_Gpr          = pow_GR_exp_Y_Gpr, pow_GR_16ones
+          nop.i 999
 }
 { .mfi
-          addl pow_int_GR_M                  = 0xFFFF, r2
-          fma.s1  POW_e12                     = POW_e1,f1,POW_e2
-          add pow_AD_T2                      = pow_AD_tbl2, pow_GR_index2
+          nop.m 999
+          fma.s1  POW_e12               = POW_e1,f1,POW_e2
+          nop.i 999
 }
 ;;
 
-
-{ .mmi
-          ldfe POW_T1                        = [pow_AD_T1],16
-          setf.exp POW_2M                    = pow_int_GR_M
-          andcm pow_GR_sign_Y_Gpr            = pow_GR_signexp_Y_Gpr, pow_GR_17ones
+{ .mfi
+          add pow_GR_int_N              = pow_GR_int_W1, pow_GR_int_W2
+(p11)     fma.d.s0 f8 = f1,f1,f0    // If x=1, result is +1
+          nop.i 999
+}
+{ .mib
+(p12)     mov pow_GR_xneg_yodd = 1
+          nop.i 999
+(p11)     br.ret.spnt b0            // Early exit if x=1.0, result is +1
 }
 ;;
 
-
-{ .mfb
-          ldfe POW_T2                        = [pow_AD_T2],16
-          fma.s1 POW_q                       = POW_Z3sq, POW_v3, POW_v2
+{ .mfi
+          and pow_GR_index1             = 0x0f, pow_GR_int_N
+          fma.s1 POW_q                  = POW_Z3sq, POW_v3, POW_v2
+          shr pow_int_GR_M              = pow_GR_int_N, 7    // M = N/128
+}
+{ .mib
+          and pow_GR_index2             = 0x70, pow_GR_int_N
+          cmp.eq p6, p0                 = pow_GR_xneg_yodd, r0
 (p7)      br.ret.spnt b0        // Early exit if y=1.0, result is x
 }
 ;;
 
+{ .mfi
+          shladd pow_AD_T1              = pow_GR_index1, 4, pow_AD_tbl1
+          fma.s1 POW_s                  = POW_s1, f1, POW_s2
+          add pow_int_GR_M              = pow_GR_16ones, pow_int_GR_M
+}
+{ .mfi
+          add pow_AD_T2                 = pow_AD_tbl2, pow_GR_index2
+          fma.s1 POW_f12                = POW_f1, POW_f2,f0
+          and pow_GR_exp_Y_Gpr          = pow_GR_signexp_Y_Gpr, pow_GR_17ones
+}
+;;
 
-// double: p8 TRUE ==> |Y(G + r)| >= 10
-// single: p8 TRUE ==> |Y(G + r)| >= 7
+{ .mmi
+          ldfe POW_T1                   = [pow_AD_T1]
+          ldfe POW_T2                   = [pow_AD_T2]
+          sub pow_GR_true_exp_Y_Gpr     = pow_GR_exp_Y_Gpr, pow_GR_16ones
+}
+;;
+
+{ .mfi
+          setf.exp POW_2M               = pow_int_GR_M
+          fma.s1 POW_e123               = POW_e12, f1, POW_e3
+          nop.i 999
+}
+{ .mfb
+(p6)      cmp.gt p6, p0                 = -11, pow_GR_true_exp_Y_Gpr
+          fma.s1 POW_d                  = POW_GY_Z2, f1, POW_pYrcub_e3
+(p6)      br.cond.spnt POW_NEAR_ONE // branch if |y*log(x)| < 2^(-11)
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_q                  = POW_Z3sq, POW_q, POW_Z3
+          nop.i 999
+}
+;;
+
+// p8 TRUE ==> |Y(G + r)| >= 10
 
 // double
 //     -2^10  -2^9             2^9   2^10
 // -----+-----+----+ ... +-----+-----+-----
 //  p8  |             p9             |  p8
-//      |     |       p10      |     |  
-// single
-//     -2^7   -2^6             2^6   2^7
-// -----+-----+----+ ... +-----+-----+-----
-//  p8  |             p9             |  p8
 //      |     |       p10      |     |
 
+// Form signexp of constants to indicate overflow
+{ .mfi
+          mov         pow_GR_big_pos    = 0x103ff
+          fma.s1 POW_ssq                = POW_s, POW_s, f0
+          cmp.le p8,p9                  = 10, pow_GR_true_exp_Y_Gpr
+}
+{ .mfi
+          mov         pow_GR_big_neg    = 0x303ff
+          fma.s1 POW_v4                 = POW_s, POW_Q3, POW_Q2
+          andcm pow_GR_sign_Y_Gpr       = pow_GR_signexp_Y_Gpr, pow_GR_17ones
+}
+;;
+
+// Form big positive and negative constants to test for possible overflow
+{ .mfi
+          setf.exp POW_big_pos          = pow_GR_big_pos
+          fma.s1 POW_v2                 = POW_s, POW_Q1, POW_Q0_half
+(p9)      cmp.le.unc p0,p10             = 9, pow_GR_true_exp_Y_Gpr
+}
+{ .mfb
+          setf.exp POW_big_neg          = pow_GR_big_neg
+          fma.s1 POW_1ps                = f1,f1,POW_s
+(p8)      br.cond.spnt POW_OVER_UNDER_X_NOT_INF
+}
+;;
+
+// f123 = f12*(e123+1) = f12*e123+f12
+{ .mfi
+          nop.m 999
+          fma.s1 POW_f123               = POW_e123,POW_f12,POW_f12
+          nop.i 999
+}
+;;
 
 { .mfi
-(p0)      cmp.le.unc p8,p9                   = 10, pow_GR_true_exp_Y_Gpr
-          fma.s1 POW_s                       = POW_s1, f1, POW_s2
+          nop.m 999
+          fma.s1 POW_T1T2               = POW_T1, POW_T2, f0
           nop.i 999
 }
 { .mfi
           nop.m 999
-          fma.s1 POW_f12                     = POW_f1, POW_f2,f0
+          fma.s1 POW_v3                 = POW_ssq, POW_Q4, POW_v4
+          cmp.ne p12,p13 = pow_GR_xneg_yodd, r0
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_v21ps              = POW_ssq, POW_v2, POW_1ps
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_s4                 = POW_ssq, POW_ssq, f0
           nop.i 999
 }
 ;;
 
-
 { .mfi
-          nop.f 999
-(p9)      cmp.le.unc p0,p10                  = 9, pow_GR_true_exp_Y_Gpr
+          nop.m 999
+(p12)     fnma.s1 POW_A                 =  POW_2M, POW_f123, f0
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+(p13)     fma.s1 POW_A                  =  POW_2M, POW_f123, f0
+          cmp.eq p14,p11 = r0,r0   // Initialize p14 on, p11 off
 }
 ;;
 
+{ .mfi
+          nop.m 999
+          fmerge.s POW_abs_q = f0, POW_q // Form |q| so can test its size
+          nop.i 999
+}
+;;
 
+{ .mfi
+(p10)     cmp.eq p0,p14 = r0,r0    // Turn off p14 if no overflow
+          fma.s1 POW_es                 = POW_s4,  POW_v3, POW_v21ps
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_A                  = POW_A, POW_T1T2, f0
+          nop.i 999
+}
+;;
 
+{ .mfi
+// Test for |q| < 2^-63.  If so then reverse last two steps of the result
+// to avoid monotonicity problems for results near 1.0 in round up/down/zero.
+// p11 will be set if need to reverse the order, p14 if not.
+          nop.m 999
+(p10)     fcmp.lt.s0 p11,p14 = POW_abs_q, POW_2toM63 // Test |q| <2^-63
+          nop.i 999
+}
+;;
+
+.pred.rel "mutex",p11,p14
+{ .mfi
+          nop.m 999
+(p14)     fma.s1 POW_A                  = POW_A, POW_es, f0
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+(p11)     fma.s1 POW_A                  = POW_A, POW_q, POW_A
+          nop.i 999
+}
+;;
+
+// Dummy op to set inexact if |q| < 2^-63
+{ .mfi
+          nop.m 999
+(p11)     fma.d.s0 POW_tmp              = POW_A, POW_q, POW_A
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+(p14)     fma.d.s0 f8                   = POW_A, POW_q, POW_A
+          nop.i 999
+}
 { .mfb
           nop.m 999
-          fma.s1 POW_e123                    = POW_e12, f1, POW_e3
-(p8)      br.cond.spnt L(POW_OVER_UNDER_X_NOT_INF)
+(p11)     fma.d.s0 f8                   = POW_A, POW_es, f0
+(p10)     br.ret.sptk     b0            // Exit main branch if no over/underflow
 }
 ;;
-
-
-{ .mmf
-          fma.s1 POW_q                       = POW_Z3sq, POW_q, POW_Z3
-}
-;;
-
-
-{ .mfi
-          nop.m 999 
-          fma.s1 POW_ssq                     = POW_s, POW_s, f0
-          nop.i 999
-}
-{ .mfi
-          nop.m 999 
-          fma.s1 POW_v4                      = POW_s, POW_Q3, POW_Q2
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_v2                      = POW_s, POW_Q1, POW_Q0_half
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-          fma.s1 POW_1ps                     = f1,f1,POW_s
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_f3                      = POW_e123,f1,f1
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_T1T2                    = POW_T1, POW_T2, f0
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_v3                     = POW_ssq, POW_Q4, POW_v4
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_v21ps                  = POW_ssq, POW_v2, POW_1ps
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-          fma.s1 POW_s4                     = POW_ssq, POW_ssq, f0
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_f123                    = POW_f12, POW_f3, f0
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_A                      =  POW_2M, POW_T1T2, f0
-          nop.i 999
-}
-;;
-
-
-
-{ .mfi
-          nop.m 999
-(p12)     fmerge.s POW_f123 = f8,POW_f123  // if x neg, y odd int
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-//          fma.s1 POW_es                     = POW_ssq,  POW_v3, POW_v2
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_es                     = POW_s4,  POW_v3, POW_v21ps
-          nop.i 999
-}
-;;
-
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_A                      = POW_A, POW_f123, f0
-          nop.i 999
-}
-{ .mfi
-          nop.m 999
-//          fma.s1 POW_es                     = POW_es, POW_ssq, POW_1ps
-          nop.i 999
-}
-;;
-
-
-{ .mfi
-          nop.m 999
-          fma.s1 POW_A                      = POW_A, POW_es,f0
-          nop.i 999
-}
-;;
-
-
-
-{ .mfb
-          nop.m 999
-(p10)     fma.d f8                          = POW_A, POW_q, POW_A
-(p10)     br.ret.sptk     b0
-}
-;;
-
-
-
-
 
 // POSSIBLE_OVER_UNDER
-// p6 = TRUE ==> Y negative
+// p6 = TRUE ==> Y_Gpr negative
+// Result is already computed.  We just need to know if over/underflow occurred.
 
-{ .mfi
-        nop.m 999
-        fmerge.s POW_abs_A                = f0, POW_A
-        cmp.eq.unc p0,p6                  = pow_GR_sign_Y, r0
-}
-;;
-
-{ .mib
-        nop.m 999
-        nop.i 999
-(p6)    br.cond.spnt L(POW_POSSIBLE_UNDER) 
+{ .mfb
+        cmp.eq p0,p6                    = pow_GR_sign_Y_Gpr, r0
+        nop.f 999
+(p6)    br.cond.spnt POW_POSSIBLE_UNDER
 }
 ;;
 
 // POSSIBLE_OVER
-// We got an answer. 
+// We got an answer.
 // overflow is a possibility, not a certainty
 
 
@@ -1692,21 +1611,20 @@ L(POW_COMMON):
 //                  RN         RN
 //                             RZ
 
-
 // Put in s2 (td set, wre set)
 { .mfi
-        mov           pow_GR_gt_ln                 = 0x103ff 
+        nop.m 999
         fsetc.s2 0x7F,0x42
-        nop.i 999 
+        nop.i 999
 }
 ;;
 
-
 { .mfi
-        setf.exp POW_gt_pln                        = pow_GR_gt_ln
-        fma.d.s2 POW_wre_urm_f8                    = POW_abs_A, POW_q, POW_abs_A
-        nop.i 999 ;;
+        nop.m 999
+        fma.d.s2 POW_wre_urm_f8         = POW_A, POW_q, POW_A
+        nop.i 999
 }
+;;
 
 // Return s2 to default
 { .mfi
@@ -1716,31 +1634,67 @@ L(POW_COMMON):
 }
 ;;
 
-
 // p7 = TRUE ==> yes, we have an overflow
 { .mfi
         nop.m 999
-        fcmp.ge.unc.s1 p7, p0                    =  POW_wre_urm_f8, POW_gt_pln
+        fcmp.ge.s1 p7, p8               =  POW_wre_urm_f8, POW_big_pos
         nop.i 999
 }
 ;;
 
-
-
-{ .mfb
-(p7)   mov pow_GR_tag                            = 24
-       fma.d f8                                  = POW_A, POW_q, POW_A
-(p7)   br.cond.spnt __libm_error_region 
-}
-{ .mfb
-       nop.m 999
-       nop.f 999
-(p0)   br.ret.sptk     b0 
+{ .mfi
+        nop.m 999
+(p8)    fcmp.le.s1 p7, p0               =  POW_wre_urm_f8, POW_big_neg
+        nop.i 999
 }
 ;;
 
+{ .mbb
+(p7)   mov pow_GR_tag                   = 24
+(p7)   br.cond.spnt __libm_error_region // Branch if overflow
+       br.ret.sptk     b0               // Exit if did not overflow
+}
+;;
 
-L(POW_POSSIBLE_UNDER):
+// Here if |y*log(x)| < 2^(-11)
+// pow(x,y) ~ exp(d) ~ 1 + d + 0.5*d^2 + Q1*d^3 + Q2*d^4, where d = y*log(x)
+.align 32
+POW_NEAR_ONE:
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_d2                 = POW_d, POW_d, f0
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_poly_d_hi          = POW_d, POW_Q0_half, f1
+          nop.i 999
+}
+{ .mfi
+          nop.m 999
+          fma.s1 POW_poly_d_lo          = POW_d, POW_Q2, POW_Q1
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fma.s1 POW_poly_d             = POW_d2, POW_poly_d_lo, POW_poly_d_hi
+          nop.i 999
+}
+;;
+
+{ .mfb
+          nop.m 999
+          fma.d.s0 f8                   = POW_d, POW_poly_d, f1
+          br.ret.sptk b0 // exit function for arguments |y*log(x)| < 2^(-11)
+}
+;;
+
+POW_POSSIBLE_UNDER:
 // We got an answer. input was < -2^9 but > -2^10 (double)
 // We got an answer. input was < -2^6 but > -2^7  (float)
 // underflow is a possibility, not a certainty
@@ -1763,244 +1717,151 @@ L(POW_POSSIBLE_UNDER):
 //   0.1...11 2^-3ffe                                   (biased, 1)
 //    largest dn                               smallest normal
 
-
 // Put in s2 (td set, ftz set)
 { .mfi
         nop.m 999
         fsetc.s2 0x7F,0x41
-        nop.i 999 
-}
-;;
-
-
-
-{ .mfi
-        nop.m 999
-        fma.d.s2 POW_ftz_urm_f8                    = POW_A, POW_q, POW_A
         nop.i 999
 }
 ;;
 
+{ .mfi
+        nop.m 999
+        fma.d.s2 POW_ftz_urm_f8         = POW_A, POW_q, POW_A
+        nop.i 999
+}
+;;
 
 // Return s2 to default
 { .mfi
         nop.m 999
         fsetc.s2 0x7F,0x40
-        nop.i 999 
+        nop.i 999
 }
 ;;
-
 
 // p7 = TRUE ==> yes, we have an underflow
 { .mfi
         nop.m 999
-        fcmp.eq.unc.s1 p7, p0                     =  POW_ftz_urm_f8, f0
-        nop.i 999 
+        fcmp.eq.s1 p7, p0               =  POW_ftz_urm_f8, f0
+        nop.i 999
 }
 ;;
 
-
-
-
-{ .mfb
-(p7)    mov pow_GR_tag                           = 25
-        fma.d f8                                 = POW_A, POW_q, POW_A
-(p7)    br.cond.spnt __libm_error_region 
+{ .mbb
+(p7)    mov pow_GR_tag                  = 25
+(p7)    br.cond.spnt __libm_error_region // Branch if underflow
+        br.ret.sptk     b0               // Exit if did not underflow
 }
 ;;
 
-
-{ .mfb
-        nop.m 999
-        nop.f 999
-        br.ret.sptk     b0 
-}
-;;
-
-
-L(POW_X_DENORM):
-// Here if x unorm. Use the NORM_X for getf instructions, and the back
+POW_X_DENORM:
+// Here if x unorm. Use the NORM_X for getf instructions, and then back
 // to normal path
 { .mfi
-        getf.exp      pow_GR_signexp_X    = POW_NORM_X
+        getf.exp      pow_GR_signexp_X  = POW_NORM_X
         nop.f 999
         nop.i 999
 }
 ;;
 
-{ .mfi
-        getf.sig      pow_GR_sig_X        = POW_NORM_X
-        nop.f 999
-        nop.i 999
-}
+{ .mmi
+        getf.sig      pow_GR_sig_X      = POW_NORM_X
 ;;
-
-{ .mfi
-        and           pow_GR_exp_X        = pow_GR_signexp_X, pow_GR_17ones
-        nop.f 999
+        and           pow_GR_exp_X      = pow_GR_signexp_X, pow_GR_17ones
+        nop.i 999
 }
 ;;
 
 { .mib
-        sub       pow_GR_true_exp_X       = pow_GR_exp_X, pow_GR_16ones
-        shl           pow_GR_offset       = pow_GR_sig_X, 1
-        br.cond.sptk    L(POW_COMMON)
+        sub       pow_GR_true_exp_X     = pow_GR_exp_X, pow_GR_16ones
+        nop.i 999
+        br.cond.sptk    POW_COMMON
 }
 ;;
 
-
-L(POW_X_0_Y_0):
-// When X is +-0 and Y is +-0, IEEE returns 1.0 
-// We call error support with this value 
-
-{ .mfb
-         mov pow_GR_tag                     = 26
-         fma.d f8                           = f1,f1,f0
-         br.cond.sptk __libm_error_region
-}
-;;
-
-
-
-
-L(POW_X_INF):
-// When X is +-inf and Y is +-, IEEE returns 
-
-// overflow                       
-// X +inf  Y +inf             +inf  
-// X -inf  Y +inf             +inf 
-
-// X +inf  Y >0               +inf    
-// X -inf  Y >0, !odd integer +inf     <== (-inf)^0.5 = +inf !!
-// X -inf  Y >0,  odd integer  -inf   
-
-// underflow                     
-// X +inf  Y -inf             +0   
-// X -inf  Y -inf             +0  
-
-// X +inf  Y <0               +0      
-// X -inf  Y <0, !odd integer +0     
-// X -inf  Y <0, odd integer  -0    
-
-// X + inf Y=+0                +1
-// X + inf Y=-0                +1
-// X - inf Y=+0                +1
-// X - inf Y=-0                +1
-
-// p13 == Y negative
-// p14 == Y positive
-
-// p6 == Y is a floating point number outside the integer.
-//       Hence it is an integer and is even.
-//       p13 == (Y negative) 
-//          return +inf
-//       p14 == (Y positive)
-//          return +0
-
-
-
-// p7 == Y is a floating point number within the integer range.
-//      p9  == (int_Y = NORM_Y), Y is an integer, which may be odd or even.
-//           p11 odd
-//              p13 == (Y negative)    
-//                 return (sign_of_x)inf
-//              p14 == (Y positive) 
-//                 return (sign_of_x)0
-//           pxx even                
-//              p13 == (Y negative) 
-//                 return +inf     
-//              p14 == (Y positive)
-//                 return +0     
-
-//      pxx == Y is not an integer
-//           p13 == (Y negative) 
-//                 return +inf
-//           p14 == (Y positive)
-//                 return +0
-// 
-
-// If x=inf, test y and flag denormal
+POW_X_0:
+// Here if x=0 and y not nan
+//
+// We have the following cases:
+//  p6  x=0  and  y>0 and is an integer (may be even or odd)
+//  p7  x=0  and  y>0 and is NOT an integer, return +0
+//  p8  x=0  and  y>0 and so big as to always be an even integer, return +0
+//  p9  x=0  and  y>0 and may not be integer
+//  p10 x=0  and  y>0 and is an odd  integer, return x
+//  p11 x=0  and  y>0 and is an even integer, return +0
+//  p12 used in dummy fcmp to set denormal flag if y=unorm
+//  p13 x=0  and  y>0
+//  p14 x=0  and  y=0, branch to code for calling error handling
+//  p15 x=0  and  y<0, branch to code for calling error handling
+//
 { .mfi
-          nop.m 999
-          fcmp.eq.s0 p10,p11 = f9,f0
-          nop.i 999
-}
-;;
-
-{ .mfi
-          nop.m 999
-          fcmp.lt p13,p14                    = POW_NORM_Y,f0 
-          cmp.gt.unc  p6,p7                  = pow_GR_exp_Y, pow_GR_10033
-}
-{ .mfi
-          nop.m 999
-          fclass.m p12,p0                    = f9, 0x23
-          nop.i 999
-}
-;;
-
-
-{ .mfi
-          nop.m 999
-          fclass.m p15,p0                    = f9, 0x07	//@zero
-          nop.i 999
-}
-;;
-
-{ .mfb
-          nop.m 999
-(p15)     fmerge.s f8 = f1,f1
-(p15)     br.ret.spnt b0
-}
-;;
-
-        
-{ .mfi
-(p13)     mov pow_GR_tag                     = 25
-(p14)     frcpa.s1 f8,p10                       = f1,f0
-          nop.i 999
+        getf.sig pow_GR_sig_int_Y = POW_int_Y // Get signif of int_Y
+        fcmp.lt.s1 p15,p13 = f9, f0           // Test for y<0
+        and pow_GR_exp_Y = pow_GR_signexp_Y, pow_GR_17ones
 }
 { .mfb
-(p14)     mov pow_GR_tag                     = 24
-(p13)     fma.s1 f8                          = f0,f0,f0
-(p12)     br.ret.spnt b0
+        cmp.ne p14,p0 = pow_GR_y_zero,r0      // Test for y=0
+        fcvt.xf   POW_float_int_Y = POW_int_Y
+(p14)   br.cond.spnt POW_X_0_Y_0              // Branch if x=0 and y=0
 }
 ;;
 
-   
-
+// If x=0 and y>0, test y and flag denormal
 { .mfb
-          nop.m 999
-(p7)      fcmp.eq.unc.s1 p9,p0              = POW_float_int_Y,  POW_NORM_Y
-          nop.b 999
+(p13)   cmp.gt.unc p8,p9 = pow_GR_exp_Y, pow_GR_10033 // Test y +big = even int
+(p13)   fcmp.eq.s0 p12,p0 = f9,f0    // If x=0, y>0 dummy op to flag denormal
+(p15)   br.cond.spnt POW_X_0_Y_NEG // Branch if x=0 and y<0
+}
+;;
+
+// Here if x=0 and y>0
+{ .mfi
+        nop.m 999
+(p9)    fcmp.eq.unc.s1 p6,p7 = POW_float_int_Y,  POW_NORM_Y // Test y=int
+        nop.i 999
+}
+{ .mfi
+        nop.m 999
+(p8)    fma.d.s0 f8 = f0,f0,f0 // If x=0, y>0 and large even int, return +0
+        nop.i 999
 }
 ;;
 
 { .mfi
-          nop.m 999
-          nop.f 999
-(p9)      tbit.nz.unc p11,p0                 = pow_GR_sig_int_Y,0
+        nop.m 999
+(p7)    fma.d.s0 f8  = f0,f0,f0   // Result +0 if x=0 and y>0 and not integer
+(p6)    tbit.nz.unc p10,p11 = pow_GR_sig_int_Y,0 // If y>0 int, test y even/odd
 }
 ;;
+
+// Note if x=0, y>0 and odd integer, just return x
+{ .mfb
+        nop.m 999
+(p11)   fma.d.s0 f8  = f0,f0,f0   // Result +0 if x=0 and y even integer
+        br.ret.sptk b0            // Exit if x=0 and y>0
+}
+;;
+
+POW_X_0_Y_0:
+// When X is +-0 and Y is +-0, IEEE returns 1.0
+// We call error support with this value
 
 { .mfb
-          nop.m 999
-(p11)     fmerge.s f8 = POW_NORM_X,f8
-          br.ret.sptk b0 
+        mov pow_GR_tag                  = 26
+        fma.d.s0 f8                     = f1,f1,f0
+        br.cond.sptk __libm_error_region
 }
 ;;
 
-
-
-L(POW_X_0_Y_NEG):
-// When X is +-0 and Y is negative, IEEE returns 
+POW_X_0_Y_NEG:
+// When X is +-0 and Y is negative, IEEE returns
 // X     Y           answer
 // +0    -odd int    +inf
 // -0    -odd int    -inf
 
 // +0    !-odd int   +inf
 // -0    !-odd int   +inf
-
 
 // p6 == Y is a floating point number outside the integer.
 //       Hence it is an integer and is even.
@@ -2014,122 +1875,263 @@ L(POW_X_0_Y_NEG):
 //              return +inf
 //      p10 == Y is not an integer
 //         return +inf
-// 
-// 
+//
 
 { .mfi
           nop.m 999
           nop.f 999
-          cmp.gt.unc  p6,p7                  = pow_GR_exp_Y, pow_GR_10033
+          cmp.gt  p6,p7                 = pow_GR_exp_Y, pow_GR_10033
 }
 ;;
 
-
 { .mfi
-          mov pow_GR_tag                     = 27
-(p7)      fcmp.eq.unc.s1 p9,p10              = POW_float_int_Y,  POW_NORM_Y
+          mov pow_GR_tag                = 27
+(p7)      fcmp.eq.unc.s1 p9,p10         = POW_float_int_Y,  POW_NORM_Y
           nop.i 999
 }
 ;;
 
-
 { .mfb
           nop.m 999
-(p6)      frcpa.s0 f8,p13                       = f1, f0
-(p6)      br.cond.sptk __libm_error_region
+(p6)      frcpa.s0 f8,p13               = f1, f0
+(p6)      br.cond.sptk __libm_error_region   // x=0, y<0, y large neg int
 }
 ;;
 
 { .mfb
           nop.m 999
-(p10)     frcpa.s0 f8,p13                       = f1, f0
-(p10)     br.cond.sptk __libm_error_region
+(p10)     frcpa.s0 f8,p13               = f1, f0
+(p10)     br.cond.sptk __libm_error_region   // x=0, y<0, y not int
 }
 ;;
 
-
-
+// x=0, y<0, y an int
 { .mib
           nop.m 999
-(p9)      tbit.nz.unc p11,p12                = pow_GR_sig_int_Y,0
+(p9)      tbit.nz.unc p11,p12           = pow_GR_sig_int_Y,0
           nop.b 999
 }
 ;;
 
-
-
 { .mfi
           nop.m 999
-(p12)     frcpa.s0 f8,p13                      = f1,f0
+(p12)     frcpa.s0 f8,p13               = f1,f0
           nop.i 999
 }
 ;;
 
 { .mfb
           nop.m 999
-(p11)     frcpa f8,p13                      = f1,f8 
+(p11)     frcpa.s0 f8,p13               = f1,f8
           br.cond.sptk __libm_error_region
 }
 ;;
 
 
-
-
-L(POW_X_NEG_Y_NONINT):
-// When X is negative and Y is a non-integer, IEEE
-// returns a qnan indefinite.
-// We call error support with this value 
-
+POW_Y_0:
+// Here for y zero, x anything but zero and nan
+// Set flag if x denormal
+// Result is +1.0
+{ .mfi
+        nop.m 999
+        fcmp.eq.s0 p6,p0 = f8,f0    // Sets flag if x denormal
+        nop.i 999
+}
 { .mfb
-         mov pow_GR_tag                     = 28
-         frcpa f8,p6                        = f0,f0
-         br.cond.sptk __libm_error_region
+        nop.m 999
+        fma.d.s0 f8 = f1,f1,f0
+        br.ret.sptk b0
 }
 ;;
 
 
+POW_X_INF:
+// Here when X is +-inf
 
+// X +inf  Y +inf             +inf
+// X -inf  Y +inf             +inf
 
-L(POW_X_NAN_Y_0):
-// When X is a NAN and Y is zero, IEEE returns 1.
-// We call error support with this value.
+// X +inf  Y >0               +inf
+// X -inf  Y >0, !odd integer +inf     <== (-inf)^0.5 = +inf !!
+// X -inf  Y >0,  odd integer -inf
+
+// X +inf  Y -inf             +0
+// X -inf  Y -inf             +0
+
+// X +inf  Y <0               +0
+// X -inf  Y <0, !odd integer +0
+// X -inf  Y <0, odd integer  -0
+
+// X + inf Y=+0                +1
+// X + inf Y=-0                +1
+// X - inf Y=+0                +1
+// X - inf Y=-0                +1
+
+// p13 == Y negative
+// p14 == Y positive
+
+// p6 == Y is a floating point number outside the integer.
+//       Hence it is an integer and is even.
+//       p13 == (Y negative)
+//          return +inf
+//       p14 == (Y positive)
+//          return +0
+
+// p7 == Y is a floating point number within the integer range.
+//      p9  == (int_Y = NORM_Y), Y is an integer, which may be odd or even.
+//           p11 odd
+//              p13 == (Y negative)
+//                 return (sign_of_x)inf
+//              p14 == (Y positive)
+//                 return (sign_of_x)0
+//           pxx even
+//              p13 == (Y negative)
+//                 return +inf
+//              p14 == (Y positive)
+//                 return +0
+
+//      pxx == Y is not an integer
+//           p13 == (Y negative)
+//                 return +inf
+//           p14 == (Y positive)
+//                 return +0
+//
+
+// If x=inf, test y and flag denormal
+{ .mfi
+          nop.m 999
+          fcmp.eq.s0 p10,p11 = f9,f0
+          nop.i 999
+}
+;;
 
 { .mfi
-         nop.m 0
-         fma.d.s0 f10 = f8,f1,f0 
-         nop.i 0
+          nop.m 999
+          fcmp.lt.s0 p13,p14            = POW_NORM_Y,f0
+          cmp.gt  p6,p7                 = pow_GR_exp_Y, pow_GR_10033
+}
+{ .mfi
+          nop.m 999
+          fclass.m p12,p0               = f9, 0x23 //@inf
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          fclass.m p15,p0               = f9, 0x07 //@zero
+          nop.i 999
+}
+;;
+
+{ .mfb
+          nop.m 999
+(p15)     fmerge.s f8 = f1,f1      // Return +1.0 if x=inf, y=0
+(p15)     br.ret.spnt b0           // Exit if x=inf, y=0
+}
+;;
+
+{ .mfi
+          nop.m 999
+(p14)     frcpa.s1 f8,p10 = f1,f0  // If x=inf, y>0, assume result +inf
+          nop.i 999
 }
 { .mfb
-         mov pow_GR_tag                     = 29
-         fma.d.s0 f8 = f0,f0,f1 
+          nop.m 999
+(p13)     fma.d.s0 f8 = f0,f0,f0   // If x=inf, y<0, assume result +0.0
+(p12)     br.ret.spnt b0           // Exit if x=inf, y=inf
+}
+;;
+
+// Here if x=inf, and 0 < |y| < inf.  Need to correct results if y odd integer.
+{ .mfi
+          nop.m 999
+(p7)      fcmp.eq.unc.s1 p9,p0 = POW_float_int_Y,  POW_NORM_Y // Is y integer?
+          nop.i 999
+}
+;;
+
+{ .mfi
+          nop.m 999
+          nop.f 999
+(p9)      tbit.nz.unc p11,p0 = pow_GR_sig_int_Y,0  // Test for y odd integer
+}
+;;
+
+{ .mfb
+          nop.m 999
+(p11)     fmerge.s f8 = POW_NORM_X,f8    // If y odd integer use sign of x
+          br.ret.sptk b0                 // Exit for x=inf, 0 < |y| < inf
+}
+;;
+
+
+POW_X_NEG_Y_NONINT:
+// When X is negative and Y is a non-integer, IEEE
+// returns a qnan indefinite.
+// We call error support with this value
+
+{ .mfb
+         mov pow_GR_tag                 = 28
+         frcpa.s0 f8,p6                 = f0,f0
+         br.cond.sptk __libm_error_region
+}
+;;
+
+POW_X_NAN:
+// Here if x=nan, y not nan
+{ .mfi
+         nop.m 999
+         fclass.m  p9,p13 = f9, 0x07 // Test y=zero
+         nop.i 999
+}
+;;
+
+{ .mfb
+         nop.m 999
+(p13)    fma.d.s0 f8 = f8,f1,f0
+(p13)    br.ret.sptk  b0            // Exit if x nan, y anything but zero or nan
+}
+;;
+
+POW_X_NAN_Y_0:
+// When X is a NAN and Y is zero, IEEE returns 1.
+// We call error support with this value.
+{ .mfi
+         nop.m 999
+         fcmp.eq.s0 p6,p0 = f8,f0       // Dummy op to set invalid on snan
+         nop.i 999
+}
+{ .mfb
+         mov pow_GR_tag                 = 29
+         fma.d.s0 f8 = f0,f0,f1
          br.cond.sptk __libm_error_region
 }
 ;;
 
 
-L(POW_OVER_UNDER_X_NOT_INF):
+POW_OVER_UNDER_X_NOT_INF:
 
 // p8 is TRUE for overflow
 // p9 is TRUE for underflow
 
 // if y is infinity, we should not over/underflow
 
-
 { .mfi
           nop.m 999
-          fcmp.eq.unc.s1     p14, p13        = POW_xsq,f1
-          cmp.eq.unc p8,p9                   = pow_GR_sign_Y_Gpr, r0
+          fcmp.eq.s1     p14, p13       = POW_xsq,f1  // Test |x|=1
+          cmp.eq p8,p9                  = pow_GR_sign_Y_Gpr, r0
 }
 ;;
 
 { .mfi
           nop.m 999
-(p14)     fclass.m.unc       p15, p0         = f9, 0x23
+(p14)     fclass.m.unc       p15, p0    = f9, 0x23 // If |x|=1, test y=inf
           nop.i 999
 }
 { .mfi
           nop.m 999
-(p13)     fclass.m.unc       p11,p0         = f9, 0x23
+(p13)     fclass.m.unc       p11,p0     = f9, 0x23 // If |x| not 1, test y=inf
           nop.i 999
 }
 ;;
@@ -2137,31 +2139,33 @@ L(POW_OVER_UNDER_X_NOT_INF):
 // p15 = TRUE if |x|=1, y=inf, return +1
 { .mfb
           nop.m 999
-(p15)     fma.d              f8              = f1,f1,f0
-(p15)     br.ret.spnt b0
+(p15)     fma.d.s0          f8          = f1,f1,f0 // If |x|=1, y=inf, result +1
+(p15)     br.ret.spnt b0                // Exit if |x|=1, y=inf
 }
 ;;
 
 .pred.rel "mutex",p8,p9
 {  .mfb
-(p8)      setf.exp           f8              = pow_GR_17ones
-(p9)      fmerge.s           f8              = f0,f0
-(p11)     br.ret.sptk b0
+(p8)      setf.exp           f8 = pow_GR_17ones // If exp(+big), result inf
+(p9)      fmerge.s           f8 = f0,f0         // If exp(-big), result 0
+(p11)     br.ret.sptk b0                // Exit if |x| not 1, y=inf
 }
+;;
 
 { .mfb
           nop.m 999
           nop.f 999
-          br.cond.sptk L(POW_OVER_UNDER_ERROR)
+          br.cond.sptk POW_OVER_UNDER_ERROR // Branch if y not inf
 }
 ;;
 
-L(POW_Y_NAN):
 
-// Is x = +1 then result is +1, else result is quiet Y
+POW_Y_NAN:
+// Here if y=nan, x anything
+// If x = +1 then result is +1, else result is quiet Y
 { .mfi
        nop.m 999
-       fcmp.eq.s1         p10,p9               = POW_NORM_X, f1 
+       fcmp.eq.s1         p10,p9        = POW_NORM_X, f1
        nop.i 999
 }
 ;;
@@ -2175,148 +2179,117 @@ L(POW_Y_NAN):
 
 { .mfi
        nop.m 999
-(p10)  fma.d f8 = f1,f1,f0 
+(p10)  fma.d.s0 f8 = f1,f1,f0
        nop.i 999
 }
 { .mfb
        nop.m 999
-(p9)   fma.d f8 = f9,f8,f0 
-       br.ret.sptk b0
+(p9)   fma.d.s0 f8 = f9,f8,f0
+       br.ret.sptk b0             // Exit y=nan
 }
 ;;
 
 
-L(POW_OVER_UNDER_ERROR):
+POW_OVER_UNDER_ERROR:
+// Here if we have overflow or underflow.
+// Enter with p12 true if x negative and y odd int to force -0 or -inf
 
 { .mfi
-          nop.m 999
-          fmerge.s f10                      = POW_NORM_X,POW_NORM_X
-          nop.i 999
-}
-{ .mfi
-          sub   pow_GR_17ones_m1            = pow_GR_17ones, r0, 1
-          nop.f 999
-          mov pow_GR_one                    = 0x1
+         sub   pow_GR_17ones_m1         = pow_GR_17ones, r0, 1
+         nop.f 999
+         mov pow_GR_one                 = 0x1
 }
 ;;
 
-// overflow
+// overflow, force inf with O flag
 { .mmb
-(p8)     mov pow_GR_tag                     = 24
-(p8)     setf.exp f11                       = pow_GR_17ones_m1
+(p8)     mov pow_GR_tag                 = 24
+(p8)     setf.exp POW_tmp               = pow_GR_17ones_m1
          nop.b 999
 }
 ;;
 
-        
-// underflow
+// underflow, force zero with I, U flags
 { .mmi
-(p9)    mov pow_GR_tag                     = 25
-(p9)    setf.exp f11                       = pow_GR_one
-        nop.i 999
-}
-;;
-
-
-// p12 x is negative and y is an odd integer 
-
-
-{ .mfi
-        nop.m 999
-        fma.d f8                               = f11, f11, f0
+(p9)    mov pow_GR_tag                  = 25
+(p9)    setf.exp POW_tmp                = pow_GR_one
         nop.i 999
 }
 ;;
 
 { .mfi
         nop.m 999
-(p12)   fmerge.ns f8                           = f8, f8
+        fma.d.s0 f8                     = POW_tmp, POW_tmp, f0
         nop.i 999
 }
 ;;
 
+// p12 x is negative and y is an odd integer, change sign of result
+{ .mfi
+        nop.m 999
+(p12)   fnma.d.s0 f8                    = POW_tmp, POW_tmp, f0
+        nop.i 999
+}
+;;
 
-.endp pow
-ASM_SIZE_DIRECTIVE(pow)
+GLOBAL_LIBM_END(pow)
 
+LOCAL_LIBM_ENTRY(__libm_error_region)
 
-// Stack operations when calling error support.
-//       (1)               (2)                          (3) (call)              (4)
-//   sp   -> +          psp -> +                     psp -> +                   sp -> +
-//           |                 |                            |                         |
-//           |                 | <- GR_Y               R3 ->| <- GR_RESULT            | -> f8
-//           |                 |                            |                         |
-//           | <-GR_Y      Y2->|                       Y2 ->| <- GR_Y                 |
-//           |                 |                            |                         |
-//           |                 | <- GR_X               X1 ->|                         |
-//           |                 |                            |                         |
-//  sp-64 -> +          sp ->  +                     sp ->  +                         +
-//    save ar.pfs          save b0                                               restore gp
-//    save gp                                                                    restore ar.pfs
-
-
-
-.proc __libm_error_region
-__libm_error_region:
-
-// Answer is inf for overflow and 0 for underflow.
 .prologue
-// (1)
 { .mfi
-        add   GR_Parameter_Y=-32,sp             // Parameter 2 value
+        add   GR_Parameter_Y=-32,sp     // Parameter 2 value
         nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
+        mov  GR_SAVE_PFS=ar.pfs         // Save ar.pfs
 }
 { .mfi
 .fframe 64
-        add sp=-64,sp                          // Create new stack
+        add sp=-64,sp                   // Create new stack
         nop.f 0
-        mov GR_SAVE_GP=gp                      // Save gp
+        mov GR_SAVE_GP=gp               // Save gp
 };;
 
-
-// (2)
 { .mmi
         stfd [GR_Parameter_Y] = POW_NORM_Y,16 // STORE Parameter 2 on stack
-        add GR_Parameter_X = 16,sp            // Parameter 1 address
+        add GR_Parameter_X = 16,sp      // Parameter 1 address
 .save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0                     // Save b0
+        mov GR_SAVE_B0=b0               // Save b0
 };;
 
 .body
-// (3)
 { .mib
-        stfd [GR_Parameter_X] = POW_NORM_X              // STORE Parameter 1 on stack
+        stfd [GR_Parameter_X] = POW_NORM_X // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y    // Parameter 3 address
-        nop.b 0                                
+        nop.b 0
 }
 { .mib
-        stfd [GR_Parameter_Y] = f8                      // STORE Parameter 3 on stack
+        stfd [GR_Parameter_Y] = f8      // STORE Parameter 3 on stack
         add   GR_Parameter_Y = -16,GR_Parameter_Y
-        br.call.sptk b0=__libm_error_support#           // Call error handling function
+        br.call.sptk b0=__libm_error_support# // Call error handling function
 };;
+
 { .mmi
-        nop.m 0
-        nop.m 0
         add   GR_Parameter_RESULT = 48,sp
+        nop.m 0
+        nop.i 0
 };;
 
-// (4)
 { .mmi
-        ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
+        ldfd  f8 = [GR_Parameter_RESULT] // Get return result off stack
 .restore sp
-        add   sp = 64,sp                       // Restore stack pointer
-        mov   b0 = GR_SAVE_B0                  // Restore return address
-};;
-{ .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp
-        mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
-        br.ret.sptk     b0                     // Return
+        add   sp = 64,sp                 // Restore stack pointer
+        mov   b0 = GR_SAVE_B0            // Restore return address
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+{ .mib
+        mov   gp = GR_SAVE_GP            // Restore gp
+        mov   ar.pfs = GR_SAVE_PFS       // Restore ar.pfs
+        br.ret.sptk     b0               // Return
+};;
+
+LOCAL_LIBM_END(__libm_error_region)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#
+

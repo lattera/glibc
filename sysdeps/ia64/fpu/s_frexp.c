@@ -1,8 +1,10 @@
-//
-// Copyright (C) 2000, 2001, Intel Corporation
+/* file: frexp.c */
+
+
+// Copyright (c) 2000-2002, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
+// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story, 
 // and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -19,14 +21,15 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
+
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
 // EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
 // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
@@ -34,22 +37,30 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 //
+// History
+//=====================================================================
+//  2/02/00  Initial version
+//  1/23/02  Calls kernel with parameter to specify 32- or 64-bit int
+//
+//=====================================================================
 
 #include "libm_support.h"
+
+double __libm_frexp(double, int*, int);
 
 double frexp(double x, int *y)
 {
 
-#ifdef SIZE_INT_64
-   return( __libm_frexp_8(x, y) );
+#ifdef SIZE_INT_64 
+   return( __libm_frexp(x, y, 1) );
 
 #else
 
-#ifdef SIZE_INT_32
-   return( _GI___libm_frexp_4(x, y) );
+#ifdef SIZE_INT_32 
+   return( __libm_frexp(x, y, 0) );
 #endif
 
 #endif

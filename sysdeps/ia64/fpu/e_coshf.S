@@ -1,10 +1,10 @@
 .file "coshf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2002, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,1127 +20,690 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
-// Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// Intel Corporation is the author of this code, and requests that all
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
+
 // History
-//==============================================================
-// 2/02/00  Initial version
-// 2/16/00  The error tag for coshf overflow changed to 65 (from 64).
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+//*********************************************************************
+// 02/02/00 Initial version
+// 02/16/00 The error tag for coshf overflow changed to 65 (from 64).
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 05/07/01 Reworked to improve speed of all paths
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 11/15/02 Improved algorithm based on expf
 //
 // API
-//==============================================================
-// float = coshf(float)
-// input  floating point f8
-// output floating point f8
-
-
+//*********************************************************************
+// float coshf(float)
+//
 // Overview of operation
-//==============================================================
-// There are four paths
+//*********************************************************************
+// Case 1:  0 < |x| < 0.25
+//  Evaluate cosh(x) by a 8th order polynomial
+//  Care is take for the order of multiplication; and A2 is not exactly 1/4!,
+//  A3 is not exactly 1/6!, etc.
+//  cosh(x) = 1 + (A1*x^2 + A2*x^4 + A3*x^6 + A4*x^8)
+//
+// Case 2:  0.25 < |x| < 89.41598
+//  Algorithm is based on the identity cosh(x) = ( exp(x) + exp(-x) ) / 2.
+//  The algorithm for exp is described as below.  There are a number of
+//  economies from evaluating both exp(x) and exp(-x).  Although we
+//  are evaluating both quantities, only where the quantities diverge do we
+//  duplicate the computations.  The basic algorithm for exp(x) is described
+//  below.
+//
+// Take the input x. w is "how many log2/128 in x?"
+//  w = x * 64/log2
+//  NJ = int(w)
+//  x = NJ*log2/64 + R
 
-// 1. |x| < 0.25        COSH_BY_POLY
-// 2. |x| < 32          COSH_BY_TBL
-// 3. |x| < 2^14        COSH_BY_EXP
-// 4. |x_ >= 2^14       COSH_HUGE
+//  NJ = 64*n + j
+//  x = n*log2 + (log2/64)*j + R
+//
+//  So, exp(x) = 2^n * 2^(j/64)* exp(R)
+//
+//  T =  2^n * 2^(j/64)
+//       Construct 2^n
+//       Get 2^(j/64) table
+//           actually all the entries of 2^(j/64) table are stored in DP and
+//           with exponent bits set to 0 -> multiplication on 2^n can be
+//           performed by doing logical "or" operation with bits presenting 2^n
 
-// For paths 1, and 2 SAFE is always 1.
-// For path  4, Safe is always 0.
-// SAFE = 1 means we cannot overflow.
+//  exp(R) = 1 + (exp(R) - 1)
+//  P = exp(R) - 1 approximated by Taylor series of 3rd degree
+//      P = A3*R^3 + A2*R^2 + R, A3 = 1/6, A2 = 1/2
+//
 
-#include "libm_support.h"
+//  The final result is reconstructed as follows
+//  exp(x) = T + T*P
+
+// Special values
+//*********************************************************************
+// coshf(+0)    = 1.0
+// coshf(-0)    = 1.0
+
+// coshf(+qnan) = +qnan
+// coshf(-qnan) = -qnan
+// coshf(+snan) = +qnan
+// coshf(-snan) = -qnan
+
+// coshf(-inf)  = +inf
+// coshf(+inf)  = +inf
+
+// Overflow and Underflow
+//*********************************************************************
+// coshf(x) = largest single normal when
+//     x = 89.41598 = 0x42b2d4fc
+//
+// There is no underflow.
+
+// Registers used
+//*********************************************************************
+// Floating Point registers used:
+// f8 input, output
+// f6,f7, f9 -> f15,  f32 -> f45
+
+// General registers used:
+// r2, r3, r16 -> r38
+
+// Predicate registers used:
+// p6 -> p15
 
 // Assembly macros
-//==============================================================
-coshf_FR_X            = f44
-coshf_FR_SGNX         = f40
+//*********************************************************************
+// integer registers used
+// scratch
+rNJ                   = r2
+rNJ_neg               = r3
 
-coshf_FR_Inv_log2by64 = f9
-coshf_FR_log2by64_lo  = f11
-coshf_FR_log2by64_hi  = f10
+rJ_neg                = r16
+rN_neg                = r17
+rSignexp_x            = r18
+rExp_x                = r18
+rExp_mask             = r19
+rExp_bias             = r20
+rAd1                  = r21
+rAd2                  = r22
+rJ                    = r23
+rN                    = r24
+rTblAddr              = r25
+rA3                   = r26
+rExpHalf              = r27
+rLn2Div64             = r28
+rGt_ln                = r29
+r17ones_m1            = r29
+rRightShifter         = r30
+rJ_mask               = r30
+r64DivLn2             = r31
+rN_mask               = r31
+// stacked
+GR_SAVE_PFS           = r32
+GR_SAVE_B0            = r33
+GR_SAVE_GP            = r34
+GR_Parameter_X        = r35
+GR_Parameter_Y        = r36
+GR_Parameter_RESULT   = r37
+GR_Parameter_TAG      = r38
 
-coshf_FR_A1           = f9
-coshf_FR_A2           = f10
-coshf_FR_A3           = f11
-
-coshf_FR_Rcub         = f12
-coshf_FR_M_temp       = f13
-coshf_FR_R_temp       = f13
-coshf_FR_Rsq          = f13
-coshf_FR_R            = f14
-
-coshf_FR_M            = f38
-
-coshf_FR_B1           = f15
-coshf_FR_B2           = f32
-coshf_FR_B3           = f33
-
-coshf_FR_peven_temp1  = f34
-coshf_FR_peven_temp2  = f35
-coshf_FR_peven        = f36
-
-coshf_FR_podd_temp1   = f34
-coshf_FR_podd_temp2   = f35
-coshf_FR_podd         = f37
-
-coshf_FR_J_temp       = f9
-coshf_FR_J            = f10
-
-coshf_FR_Mmj          = f39
-
-coshf_FR_N_temp1      = f11
-coshf_FR_N_temp2      = f12
-coshf_FR_N            = f13
-
-coshf_FR_spos         = f14
-coshf_FR_sneg         = f15
-
-coshf_FR_Tjhi         = f32
-coshf_FR_Tjlo         = f33
-coshf_FR_Tmjhi        = f34
-coshf_FR_Tmjlo        = f35
-
-GR_mJ           = r35
-GR_J            = r36
-
-AD_mJ           = r38
-AD_J            = r39
+// floating point registers used
+FR_X                  = f10
+FR_Y                  = f1
+FR_RESULT             = f8
+// scratch
+fRightShifter         = f6
+f64DivLn2             = f7
+fNormX                = f9
+fNint                 = f10
+fN                    = f11
+fR                    = f12
+fLn2Div64             = f13
+fA2                   = f14
+fA3                   = f15
+// stacked
+fP                    = f32
+fT                    = f33
+fMIN_SGL_OFLOW_ARG    = f34
+fMAX_SGL_NORM_ARG     = f35
+fRSqr                 = f36
+fA1                   = f37
+fA21                  = f37
+fA4                   = f38
+fA43                  = f38
+fA4321                = f38
+fX4                   = f39
+fTmp                  = f39
+fGt_pln               = f39
+fWre_urm_f8           = f40
+fXsq                  = f40
+fP_neg                = f41
+fT_neg                = f42
+fExp                  = f43
+fExp_neg              = f44
+fAbsX                 = f45
 
 
-GR_SAVE_B0                    = r42
-GR_SAVE_PFS                   = r41
-GR_SAVE_GP                    = r43 
-
-GR_Parameter_X                = r44
-GR_Parameter_Y                = r45
-GR_Parameter_RESULT           = r46
-GR_Parameter_TAG              = r47
-
-FR_X             = f8
-FR_Y             = f0
-FR_RESULT        = f44
-
-
-coshf_FR_C_hi         = f9
-coshf_FR_C_hi_temp    = f10
-coshf_FR_C_lo_temp1   = f11 
-coshf_FR_C_lo_temp2   = f12 
-coshf_FR_C_lo_temp3   = f13 
-
-coshf_FR_C_lo         = f38
-coshf_FR_S_hi         = f39
-
-coshf_FR_S_hi_temp1   = f10
-coshf_FR_Y_hi         = f11 
-coshf_FR_Y_lo_temp    = f12 
-coshf_FR_Y_lo         = f13 
-coshf_FR_COSH         = f9
-
-coshf_FR_X2           = f9
-coshf_FR_X4           = f10
-
-coshf_FR_P1           = f14
-coshf_FR_P2           = f15
-coshf_FR_P3           = f32
-coshf_FR_P4           = f33
-coshf_FR_P5           = f34
-coshf_FR_P6           = f35
-
-coshf_FR_TINY_THRESH  = f9
-
-coshf_FR_COSH_temp    = f10
-coshf_FR_SCALE        = f11 
-
-coshf_FR_hi_lo = f10
-
-coshf_FR_poly_podd_temp1    =  f11 
-coshf_FR_poly_podd_temp2    =  f13
-coshf_FR_poly_peven_temp1   =  f11
-coshf_FR_poly_peven_temp2   =  f13
-
-// Data tables
-//==============================================================
-
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
-single_coshf_arg_reduction:
-ASM_TYPE_DIRECTIVE(single_coshf_arg_reduction,@object)
-   data8 0xB8AA3B295C17F0BC, 0x00004005
-   data8 0xB17217F7D1000000, 0x00003FF8
-   data8 0xCF79ABC9E3B39804, 0x00003FD0
-ASM_SIZE_DIRECTIVE(single_coshf_arg_reduction)
 
-single_coshf_p_table:
-ASM_TYPE_DIRECTIVE(single_coshf_p_table,@object)
-   data8 0x8000000000000000, 0x00003FFE
-   data8 0xAAAAAAAAAAAAAB80, 0x00003FFA
-   data8 0xB60B60B60B4FE884, 0x00003FF5
-   data8 0xD00D00D1021D7370, 0x00003FEF
-   data8 0x93F27740C0C2F1CC, 0x00003FE9
-   data8 0x8FA02AC65BCBD5BC, 0x00003FE2
-ASM_SIZE_DIRECTIVE(single_coshf_p_table)
+LOCAL_OBJECT_START(_coshf_table)
+data4 0x42b2d4fd         // Smallest single arg to overflow single result
+data4 0x42b2d4fc         // Largest single arg to give normal single result
+data4 0x00000000         // pad
+data4 0x00000000         // pad
+//
+// 2^(j/64) table, j goes from 0 to 63
+data8 0x0000000000000000 // 2^(0/64)
+data8 0x00002C9A3E778061 // 2^(1/64)
+data8 0x000059B0D3158574 // 2^(2/64)
+data8 0x0000874518759BC8 // 2^(3/64)
+data8 0x0000B5586CF9890F // 2^(4/64)
+data8 0x0000E3EC32D3D1A2 // 2^(5/64)
+data8 0x00011301D0125B51 // 2^(6/64)
+data8 0x0001429AAEA92DE0 // 2^(7/64)
+data8 0x000172B83C7D517B // 2^(8/64)
+data8 0x0001A35BEB6FCB75 // 2^(9/64)
+data8 0x0001D4873168B9AA // 2^(10/64)
+data8 0x0002063B88628CD6 // 2^(11/64)
+data8 0x0002387A6E756238 // 2^(12/64)
+data8 0x00026B4565E27CDD // 2^(13/64)
+data8 0x00029E9DF51FDEE1 // 2^(14/64)
+data8 0x0002D285A6E4030B // 2^(15/64)
+data8 0x000306FE0A31B715 // 2^(16/64)
+data8 0x00033C08B26416FF // 2^(17/64)
+data8 0x000371A7373AA9CB // 2^(18/64)
+data8 0x0003A7DB34E59FF7 // 2^(19/64)
+data8 0x0003DEA64C123422 // 2^(20/64)
+data8 0x0004160A21F72E2A // 2^(21/64)
+data8 0x00044E086061892D // 2^(22/64)
+data8 0x000486A2B5C13CD0 // 2^(23/64)
+data8 0x0004BFDAD5362A27 // 2^(24/64)
+data8 0x0004F9B2769D2CA7 // 2^(25/64)
+data8 0x0005342B569D4F82 // 2^(26/64)
+data8 0x00056F4736B527DA // 2^(27/64)
+data8 0x0005AB07DD485429 // 2^(28/64)
+data8 0x0005E76F15AD2148 // 2^(29/64)
+data8 0x0006247EB03A5585 // 2^(30/64)
+data8 0x0006623882552225 // 2^(31/64)
+data8 0x0006A09E667F3BCD // 2^(32/64)
+data8 0x0006DFB23C651A2F // 2^(33/64)
+data8 0x00071F75E8EC5F74 // 2^(34/64)
+data8 0x00075FEB564267C9 // 2^(35/64)
+data8 0x0007A11473EB0187 // 2^(36/64)
+data8 0x0007E2F336CF4E62 // 2^(37/64)
+data8 0x00082589994CCE13 // 2^(38/64)
+data8 0x000868D99B4492ED // 2^(39/64)
+data8 0x0008ACE5422AA0DB // 2^(40/64)
+data8 0x0008F1AE99157736 // 2^(41/64)
+data8 0x00093737B0CDC5E5 // 2^(42/64)
+data8 0x00097D829FDE4E50 // 2^(43/64)
+data8 0x0009C49182A3F090 // 2^(44/64)
+data8 0x000A0C667B5DE565 // 2^(45/64)
+data8 0x000A5503B23E255D // 2^(46/64)
+data8 0x000A9E6B5579FDBF // 2^(47/64)
+data8 0x000AE89F995AD3AD // 2^(48/64)
+data8 0x000B33A2B84F15FB // 2^(49/64)
+data8 0x000B7F76F2FB5E47 // 2^(50/64)
+data8 0x000BCC1E904BC1D2 // 2^(51/64)
+data8 0x000C199BDD85529C // 2^(52/64)
+data8 0x000C67F12E57D14B // 2^(53/64)
+data8 0x000CB720DCEF9069 // 2^(54/64)
+data8 0x000D072D4A07897C // 2^(55/64)
+data8 0x000D5818DCFBA487 // 2^(56/64)
+data8 0x000DA9E603DB3285 // 2^(57/64)
+data8 0x000DFC97337B9B5F // 2^(58/64)
+data8 0x000E502EE78B3FF6 // 2^(59/64)
+data8 0x000EA4AFA2A490DA // 2^(60/64)
+data8 0x000EFA1BEE615A27 // 2^(61/64)
+data8 0x000F50765B6E4540 // 2^(62/64)
+data8 0x000FA7C1819E90D8 // 2^(63/64)
+LOCAL_OBJECT_END(_coshf_table)
 
-single_coshf_ab_table:
-ASM_TYPE_DIRECTIVE(single_coshf_ab_table,@object)
-   data8 0xAAAAAAAAAAAAAAAC, 0x00003FFC
-   data8 0x88888888884ECDD5, 0x00003FF8
-   data8 0xD00D0C6DCC26A86B, 0x00003FF2
-   data8 0x8000000000000002, 0x00003FFE
-   data8 0xAAAAAAAAAA402C77, 0x00003FFA
-   data8 0xB60B6CC96BDB144D, 0x00003FF5
-ASM_SIZE_DIRECTIVE(single_coshf_ab_table)
+LOCAL_OBJECT_START(cosh_p_table)
+data8 0x3efa3001dcf5905b // A4
+data8 0x3f56c1437543543e // A3
+data8 0x3fa5555572601504 // A2
+data8 0x3fdfffffffe2f097 // A1
+LOCAL_OBJECT_END(cosh_p_table)
 
-single_coshf_j_table:
-ASM_TYPE_DIRECTIVE(single_coshf_j_table,@object)
-   data8 0xB504F333F9DE6484, 0x00003FFE, 0x1EB2FB13, 0x00000000
-   data8 0xB6FD91E328D17791, 0x00003FFE, 0x1CE2CBE2, 0x00000000
-   data8 0xB8FBAF4762FB9EE9, 0x00003FFE, 0x1DDC3CBC, 0x00000000
-   data8 0xBAFF5AB2133E45FB, 0x00003FFE, 0x1EE9AA34, 0x00000000
-   data8 0xBD08A39F580C36BF, 0x00003FFE, 0x9EAEFDC1, 0x00000000
-   data8 0xBF1799B67A731083, 0x00003FFE, 0x9DBF517B, 0x00000000
-   data8 0xC12C4CCA66709456, 0x00003FFE, 0x1EF88AFB, 0x00000000
-   data8 0xC346CCDA24976407, 0x00003FFE, 0x1E03B216, 0x00000000
-   data8 0xC5672A115506DADD, 0x00003FFE, 0x1E78AB43, 0x00000000
-   data8 0xC78D74C8ABB9B15D, 0x00003FFE, 0x9E7B1747, 0x00000000
-   data8 0xC9B9BD866E2F27A3, 0x00003FFE, 0x9EFE3C0E, 0x00000000
-   data8 0xCBEC14FEF2727C5D, 0x00003FFE, 0x9D36F837, 0x00000000
-   data8 0xCE248C151F8480E4, 0x00003FFE, 0x9DEE53E4, 0x00000000
-   data8 0xD06333DAEF2B2595, 0x00003FFE, 0x9E24AE8E, 0x00000000
-   data8 0xD2A81D91F12AE45A, 0x00003FFE, 0x1D912473, 0x00000000
-   data8 0xD4F35AABCFEDFA1F, 0x00003FFE, 0x1EB243BE, 0x00000000
-   data8 0xD744FCCAD69D6AF4, 0x00003FFE, 0x1E669A2F, 0x00000000
-   data8 0xD99D15C278AFD7B6, 0x00003FFE, 0x9BBC610A, 0x00000000
-   data8 0xDBFBB797DAF23755, 0x00003FFE, 0x1E761035, 0x00000000
-   data8 0xDE60F4825E0E9124, 0x00003FFE, 0x9E0BE175, 0x00000000
-   data8 0xE0CCDEEC2A94E111, 0x00003FFE, 0x1CCB12A1, 0x00000000
-   data8 0xE33F8972BE8A5A51, 0x00003FFE, 0x1D1BFE90, 0x00000000
-   data8 0xE5B906E77C8348A8, 0x00003FFE, 0x1DF2F47A, 0x00000000
-   data8 0xE8396A503C4BDC68, 0x00003FFE, 0x1EF22F22, 0x00000000
-   data8 0xEAC0C6E7DD24392F, 0x00003FFE, 0x9E3F4A29, 0x00000000
-   data8 0xED4F301ED9942B84, 0x00003FFE, 0x1EC01A5B, 0x00000000
-   data8 0xEFE4B99BDCDAF5CB, 0x00003FFE, 0x1E8CAC3A, 0x00000000
-   data8 0xF281773C59FFB13A, 0x00003FFE, 0x9DBB3FAB, 0x00000000
-   data8 0xF5257D152486CC2C, 0x00003FFE, 0x1EF73A19, 0x00000000
-   data8 0xF7D0DF730AD13BB9, 0x00003FFE, 0x9BB795B5, 0x00000000
-   data8 0xFA83B2DB722A033A, 0x00003FFE, 0x1EF84B76, 0x00000000
-   data8 0xFD3E0C0CF486C175, 0x00003FFE, 0x9EF5818B, 0x00000000
-   data8 0x8000000000000000, 0x00003FFF, 0x00000000, 0x00000000
-   data8 0x8164D1F3BC030773, 0x00003FFF, 0x1F77CACA, 0x00000000
-   data8 0x82CD8698AC2BA1D7, 0x00003FFF, 0x1EF8A91D, 0x00000000
-   data8 0x843A28C3ACDE4046, 0x00003FFF, 0x1E57C976, 0x00000000
-   data8 0x85AAC367CC487B15, 0x00003FFF, 0x9EE8DA92, 0x00000000
-   data8 0x871F61969E8D1010, 0x00003FFF, 0x1EE85C9F, 0x00000000
-   data8 0x88980E8092DA8527, 0x00003FFF, 0x1F3BF1AF, 0x00000000
-   data8 0x8A14D575496EFD9A, 0x00003FFF, 0x1D80CA1E, 0x00000000
-   data8 0x8B95C1E3EA8BD6E7, 0x00003FFF, 0x9D0373AF, 0x00000000
-   data8 0x8D1ADF5B7E5BA9E6, 0x00003FFF, 0x9F167097, 0x00000000
-   data8 0x8EA4398B45CD53C0, 0x00003FFF, 0x1EB70051, 0x00000000
-   data8 0x9031DC431466B1DC, 0x00003FFF, 0x1F6EB029, 0x00000000
-   data8 0x91C3D373AB11C336, 0x00003FFF, 0x1DFD6D8E, 0x00000000
-   data8 0x935A2B2F13E6E92C, 0x00003FFF, 0x9EB319B0, 0x00000000
-   data8 0x94F4EFA8FEF70961, 0x00003FFF, 0x1EBA2BEB, 0x00000000
-   data8 0x96942D3720185A00, 0x00003FFF, 0x1F11D537, 0x00000000
-   data8 0x9837F0518DB8A96F, 0x00003FFF, 0x1F0D5A46, 0x00000000
-   data8 0x99E0459320B7FA65, 0x00003FFF, 0x9E5E7BCA, 0x00000000
-   data8 0x9B8D39B9D54E5539, 0x00003FFF, 0x9F3AAFD1, 0x00000000
-   data8 0x9D3ED9A72CFFB751, 0x00003FFF, 0x9E86DACC, 0x00000000
-   data8 0x9EF5326091A111AE, 0x00003FFF, 0x9F3EDDC2, 0x00000000
-   data8 0xA0B0510FB9714FC2, 0x00003FFF, 0x1E496E3D, 0x00000000
-   data8 0xA27043030C496819, 0x00003FFF, 0x9F490BF6, 0x00000000
-   data8 0xA43515AE09E6809E, 0x00003FFF, 0x1DD1DB48, 0x00000000
-   data8 0xA5FED6A9B15138EA, 0x00003FFF, 0x1E65EBFB, 0x00000000
-   data8 0xA7CD93B4E965356A, 0x00003FFF, 0x9F427496, 0x00000000
-   data8 0xA9A15AB4EA7C0EF8, 0x00003FFF, 0x1F283C4A, 0x00000000
-   data8 0xAB7A39B5A93ED337, 0x00003FFF, 0x1F4B0047, 0x00000000
-   data8 0xAD583EEA42A14AC6, 0x00003FFF, 0x1F130152, 0x00000000
-   data8 0xAF3B78AD690A4375, 0x00003FFF, 0x9E8367C0, 0x00000000
-   data8 0xB123F581D2AC2590, 0x00003FFF, 0x9F705F90, 0x00000000
-   data8 0xB311C412A9112489, 0x00003FFF, 0x1EFB3C53, 0x00000000
-   data8 0xB504F333F9DE6484, 0x00003FFF, 0x1F32FB13, 0x00000000
-ASM_SIZE_DIRECTIVE(single_coshf_j_table)
-
-.align 32
-.global coshf#
 
 .section .text
-.proc  coshf#
-.align 32
-
-coshf: 
-
-#ifdef _LIBC
-.global __ieee754_coshf#
-.proc __ieee754_coshf#
-__ieee754_coshf:
-#endif
-
-// X NAN?
-
-
-{ .mfi
-      alloc r32 = ar.pfs,0,12,4,0                  
-(p0)  fclass.m.unc  p6,p7 = f8, 0xc3               
-	  nop.i 999 ;;                           
-}
-{ .mfb
-      nop.m 999
-(p6)  fma.s.s0   f8 = f8,f1,f8                  
-(p6)  br.ret.spnt b0 ;;                    
-}
-
-{ .mfi
-       nop.m 999
-       nop.f 999
-       nop.i 999 ;;
-}
-
-// X infinity 
-{ .mfi
-       nop.m 999
-(p0)  fclass.m.unc  p6,p0 = f8, 0x23               
-       nop.i 999 ;;
-}
-
-{ .mfb
-       nop.m 999
-(p6)     fmerge.s      f8 = f0,f8                  
-(p6)  br.ret.spnt    b0 ;;                  
-}
-
-// Put 0.25 in f9; p6 true if x < 0.25
-{ .mlx
-       nop.m 999
-(p0)     movl            r32 = 0x000000000000fffd ;;         
-}
-
-{ .mfi
-(p0)     setf.exp        f9 = r32                         
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)  fmerge.s      coshf_FR_X    = f0,f8                
-       nop.i 999
-}
-
-{ .mfi
-       nop.m 999
-(p0)  fmerge.s      coshf_FR_SGNX = f8,f1                
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fcmp.lt.unc     p0,p7 = coshf_FR_X,f9                    
-       nop.i 999 ;;
-}
-
-{ .mib
-       nop.m 999
-       nop.i 999
-(p7)     br.cond.sptk    L(COSH_BY_TBL) ;;                      
-}
-
-
-// COSH_BY_POLY: 
-
-// POLY cannot overflow so there is no need to call __libm_error_support
-// Get the values of P_x from the table
-
-{ .mmi
-      nop.m 999
-(p0)  addl           r34   = @ltoff(single_coshf_p_table), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
-}
-;;
-
-// Calculate coshf_FR_X2 = ax*ax and coshf_FR_X4 = ax*ax*ax*ax
-{ .mmf
-       nop.m 999
-(p0)     ldfe       coshf_FR_P1 = [r34],16                 
-(p0)     fma.s1     coshf_FR_X2 = coshf_FR_X, coshf_FR_X, f0 ;;           
-}
-
-{ .mmi
-(p0)     ldfe       coshf_FR_P2 = [r34],16 ;;                 
-(p0)     ldfe       coshf_FR_P3 = [r34],16                 
-       nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe       coshf_FR_P4 = [r34],16 ;;                 
-(p0)     ldfe       coshf_FR_P5 = [r34],16                 
-       nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     ldfe       coshf_FR_P6 = [r34],16                 
-(p0)     fma.s1     coshf_FR_X4 = coshf_FR_X2, coshf_FR_X2, f0         
-       nop.i 999 ;;
-}
-
-// Calculate coshf_FR_podd = x4 *(x4 * P_5 + P_3) + P_1
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_poly_podd_temp1 = coshf_FR_X4, coshf_FR_P5, coshf_FR_P3                
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_podd            = coshf_FR_X4, coshf_FR_poly_podd_temp1, coshf_FR_P1   
-       nop.i 999
-}
-
-// Calculate coshf_FR_peven =  p_even = x4 *(x4 * (x4 * P_6 + P_4) + P_2)
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_poly_peven_temp1 = coshf_FR_X4, coshf_FR_P6, coshf_FR_P4               
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_poly_peven_temp2 = coshf_FR_X4, coshf_FR_poly_peven_temp1, coshf_FR_P2 
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_peven       = coshf_FR_X4, coshf_FR_poly_peven_temp2, f0         
-       nop.i 999 ;;
-}
-
-// Y_lo = x2*p_odd + p_even
-// Calculate f8 = Y_hi + Y_lo 
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1     coshf_FR_Y_lo         = coshf_FR_X2, coshf_FR_podd,  coshf_FR_peven    
-       nop.i 999 ;;
-}
-
-{ .mfb
-       nop.m 999
-(p0)     fma.s.s0   f8                   = f1, f1, coshf_FR_Y_lo                        
-(p0)     br.ret.sptk    b0 ;;                                                        
-}
-
-
-L(COSH_BY_TBL): 
-
-// Now that we are at TBL; so far all we know is that |x| >= 0.25.
-// The first two steps are the same for TBL and EXP, but if we are HUGE
-// Double
-// Go to HUGE if |x| >= 2^10, 10009 (register-biased) is e = 10 (true)
-// Single
-// Go to HUGE if |x| >= 2^7,  10006 (register-biased) is e =  7 (true)
-// we want to leave now. Go to HUGE if |x| >= 2^14
-// 1000d (register-biased) is e = 14 (true)
+GLOBAL_IEEE754_ENTRY(coshf)
 
 { .mlx
-       nop.m 999
-(p0)     movl            r32 = 0x0000000000010006 ;;              
+      getf.exp        rSignexp_x = f8  // Must recompute if x unorm
+      movl            r64DivLn2 = 0x40571547652B82FE // 64/ln(2)
 }
-
-{ .mfi
-(p0)     setf.exp        f9 = r32                              
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fcmp.ge.unc     p6,p7 = coshf_FR_X,f9                  
-       nop.i 999 ;;
-}
-
-{ .mib
-       nop.m 999
-       nop.i 999
-(p6)     br.cond.spnt    L(COSH_HUGE) ;;                             
-}
-
-// r32 = 1
-// r34 = N-1 
-// r35 = N
-// r36 = j
-// r37 = N+1
-
-// TBL can never overflow
-// coshf(x) = coshf(B+R)
-//         = coshf(B) coshf(R) + sinh(B) sinh(R) 
-// coshf(R) can be approximated by 1 + p_even
-// sinh(R) can be approximated by p_odd
-
-// ******************************************************
-// STEP 1 (TBL and EXP)
-// ******************************************************
-// Get the following constants.
-// f9  = Inv_log2by64
-// f10 = log2by64_hi
-// f11 = log2by64_lo
-
-{ .mmi
-(p0)     adds                 r32 = 0x1,r0      
-(p0)     addl           r34   = @ltoff(single_coshf_arg_reduction), gp
-         nop.i 999
-}
-;;
-
-
-// We want 2^(N-1) and 2^(-N-1). So bias N-1 and -N-1 and
-// put them in an exponent.
-// coshf_FR_spos = 2^(N-1) and coshf_FR_sneg = 2^(-N-1)
-// r39 = 0xffff + (N-1)  = 0xffff +N -1
-// r40 = 0xffff - (N +1) = 0xffff -N -1
-
 { .mlx
-         ld8 r34 = [r34]
-(p0)     movl                r38 = 0x000000000000fffe ;; 
-}
-
-{ .mmi
-(p0)     ldfe            coshf_FR_Inv_log2by64 = [r34],16 ;;            
-(p0)     ldfe            coshf_FR_log2by64_hi  = [r34],16            
-       nop.i 999 ;;
-}
-
-{ .mbb
-(p0)     ldfe            coshf_FR_log2by64_lo  = [r34],16            
-       nop.b 999
-       nop.b 999 ;;
-}
-
-// Get the A coefficients
-// f9  = A_1
-// f10 = A_2
-// f11 = A_3
-
-{ .mmi
-      nop.m 999
-(p0)  addl           r34   = @ltoff(single_coshf_ab_table), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
-}
-;;
-
-
-// Calculate M and keep it as integer and floating point.
-// M = round-to-integer(x*Inv_log2by64)
-// coshf_FR_M = M = truncate(ax/(log2/64))
-// Put the significand of M in r35
-//    and the floating point representation of M in coshf_FR_M
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_M      = coshf_FR_X, coshf_FR_Inv_log2by64, f0 
-       nop.i 999
-}
-
-{ .mfi
-(p0)     ldfe            coshf_FR_A1 = [r34],16            
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fcvt.fx.s1      coshf_FR_M_temp = coshf_FR_M                      
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fnorm.s1        coshf_FR_M      = coshf_FR_M_temp                 
-       nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     getf.sig        r35       = coshf_FR_M_temp                 
-       nop.f 999
-       nop.i 999 ;;
-}
-
-// M is still in r35. Calculate j. j is the signed extension of the six lsb of M. It
-// has a range of -32 thru 31.
-// r35 = M
-// r36 = j 
-
-{ .mii
-       nop.m 999
-       nop.i 999 ;;
-(p0)     and            r36 = 0x3f, r35 ;;   
-}
-
-// Calculate R
-// f13 = f44 - f12*f10 = x - M*log2by64_hi
-// f14 = f13 - f8*f11 = R = (x - M*log2by64_hi) - M*log2by64_lo
-
-{ .mfi
-       nop.m 999
-(p0)     fnma.s1        coshf_FR_R_temp = coshf_FR_M, coshf_FR_log2by64_hi, coshf_FR_X      
-       nop.i 999
-}
-
-{ .mfi
-(p0)     ldfe            coshf_FR_A2 = [r34],16            
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fnma.s1        coshf_FR_R      = coshf_FR_M, coshf_FR_log2by64_lo, coshf_FR_R_temp 
-       nop.i 999
-}
-
-// Get the B coefficients
-// f15 = B_1
-// f32 = B_2
-// f33 = B_3
-
-{ .mmi
-(p0)     ldfe            coshf_FR_A3 = [r34],16 ;;            
-(p0)     ldfe            coshf_FR_B1 = [r34],16            
-       nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe            coshf_FR_B2 = [r34],16 ;;            
-(p0)     ldfe            coshf_FR_B3 = [r34],16            
-       nop.i 999 ;;
-}
-
-{ .mii
-       nop.m 999
-(p0)     shl            r34 = r36,  0x2 ;;   
-(p0)     sxt1           r37 = r34 ;;         
-}
-
-// ******************************************************
-// STEP 2 (TBL and EXP)
-// ******************************************************
-// Calculate Rsquared and Rcubed in preparation for p_even and p_odd
-// f12 = R*R*R
-// f13 = R*R
-// f14 = R <== from above
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_Rsq  = coshf_FR_R,   coshf_FR_R, f0  
-(p0)     shr            r36 = r37,  0x2 ;;   
-}
-
-// r34 = M-j = r35 - r36
-// r35 = N = (M-j)/64
-
-{ .mii
-(p0)     sub                  r34 = r35, r36    
-       nop.i 999 ;;
-(p0)     shr                  r35 = r34, 0x6 ;;    
-}
-
-{ .mii
-(p0)     sub                 r40 = r38, r35           
-(p0)     adds                 r37 = 0x1, r35    
-(p0)     add                 r39 = r38, r35 ;;           
-}
-
-// Get the address of the J table, add the offset,
-// addresses are sinh_AD_mJ and sinh_AD_J, get the T value
-// f32 = T(j)_hi
-// f33 = T(j)_lo
-// f34 = T(-j)_hi
-// f35 = T(-j)_lo
-
-{ .mmi
-(p0)     sub                  r34 = r35, r32    
-(p0)     addl    r37   = @ltoff(single_coshf_j_table), gp
-         nop.i 999
+      addl            rTblAddr = @ltoff(_coshf_table),gp
+      movl            rRightShifter = 0x43E8000000000000 // DP Right Shifter
 }
 ;;
 
 { .mfi
-      ld8 r37 = [r37]
-(p0)     fma.s1          coshf_FR_Rcub = coshf_FR_Rsq, coshf_FR_R, f0  
-       nop.i 999
+      // point to the beginning of the table
+      ld8             rTblAddr = [rTblAddr]
+      fclass.m        p6, p0 = f8, 0x0b   // Test for x=unorm
+      addl            rA3 = 0x3E2AA, r0   // high bits of 1.0/6.0 rounded to SP
 }
+{ .mfi
+      nop.m           0
+      fnorm.s1        fNormX = f8 // normalized x
+      addl            rExpHalf = 0xFFFE, r0 // exponent of 1/2
+}
+;;
 
-// ******************************************************
-// STEP 3 Now decide if we need to branch to EXP
-// ******************************************************
-// Put 32 in f9; p6 true if x < 32
-
+{ .mfi
+      setf.d          f64DivLn2 = r64DivLn2 // load 64/ln(2) to FP reg
+      fclass.m        p15, p0 = f8, 0x1e3   // test for NaT,NaN,Inf
+      nop.i           0
+}
 { .mlx
-       nop.m 999
-(p0)     movl                r32 = 0x0000000000010004 ;;               
+      // load Right Shifter to FP reg
+      setf.d          fRightShifter = rRightShifter
+      movl            rLn2Div64 = 0x3F862E42FEFA39EF // DP ln(2)/64 in GR
 }
-
-// Calculate p_even
-// f34 = B_2 + Rsq *B_3
-// f35 = B_1 + Rsq*f34      = B_1 + Rsq * (B_2 + Rsq *B_3)
-// f36 = peven = Rsq * f35 = Rsq * (B_1 + Rsq * (B_2 + Rsq *B_3))
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_peven_temp1 = coshf_FR_Rsq, coshf_FR_B3,          coshf_FR_B2  
-       nop.i 999 ;;
+      mov             rExp_mask = 0x1ffff
+      fcmp.eq.s1      p13, p0 = f0, f8 // test for x = 0.0
+      shl             rA3 = rA3, 12    // 0x3E2AA000, approx to 1.0/6.0 in SP
 }
+{ .mfb
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    COSH_UNORM            // Branch if x=unorm
+}
+;;
+
+COSH_COMMON:
+{ .mfi
+      setf.exp        fA2 = rExpHalf        // load A2 to FP reg
+      nop.f           0
+      mov             rExp_bias = 0xffff
+}
+{ .mfb
+      setf.d          fLn2Div64 = rLn2Div64 // load ln(2)/64 to FP reg
+(p15) fma.s.s0        f8 = f8, f8, f0       // result if x = NaT,NaN,Inf
+(p15) br.ret.spnt     b0                    // exit here if x = NaT,NaN,Inf
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_peven_temp2 = coshf_FR_Rsq, coshf_FR_peven_temp1, coshf_FR_B1  
-       nop.i 999
+      // min overflow and max normal threshold
+      ldfps           fMIN_SGL_OFLOW_ARG, fMAX_SGL_NORM_ARG = [rTblAddr], 8
+      nop.f           0
+      and             rExp_x = rExp_mask, rSignexp_x // Biased exponent of x
 }
-
-// Calculate p_odd
-// f34 = A_2 + Rsq *A_3
-// f35 = A_1 + Rsq * (A_2 + Rsq *A_3)
-// f37 = podd = R + Rcub * (A_1 + Rsq * (A_2 + Rsq *A_3))
+{ .mfb
+      setf.s          fA3 = rA3                  // load A3 to FP reg
+(p13) fma.s.s0        f8 = f1, f1, f0            // result if x = 0.0
+(p13) br.ret.spnt     b0                         // exit here if x =0.0
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_podd_temp1 = coshf_FR_Rsq,        coshf_FR_A3,         coshf_FR_A2  
-       nop.i 999 ;;
+      sub             rExp_x = rExp_x, rExp_bias // True exponent of x
+      fmerge.s        fAbsX = f0, fNormX         // Form |x|
+      nop.i           0
 }
+;;
 
 { .mfi
-(p0)     setf.exp            coshf_FR_N_temp1 = r39            
-       nop.f 999
-       nop.i 999 ;;
+      nop.m           0
+      // x*(64/ln(2)) + Right Shifter
+      fma.s1          fNint = fNormX, f64DivLn2, fRightShifter
+      add             rTblAddr = 8, rTblAddr
 }
+{ .mfb
+      cmp.gt          p7, p0 = -2, rExp_x        // Test |x| < 2^(-2)
+      fma.s1          fXsq = fNormX, fNormX, f0  // x*x for small path
+(p7)  br.cond.spnt    COSH_SMALL                 // Branch if 0 < |x| < 2^-2
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_peven       = coshf_FR_Rsq, coshf_FR_peven_temp2, f0     
-       nop.i 999
+      nop.m           0
+      // check for overflow
+      fcmp.ge.s1      p12, p13 = fAbsX, fMIN_SGL_OFLOW_ARG
+      mov             rJ_mask = 0x3f             // 6-bit mask for J
 }
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_podd_temp2 = coshf_FR_Rsq,        coshf_FR_podd_temp1, coshf_FR_A1  
-       nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     setf.exp            f9  = r32                              
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1          coshf_FR_podd       = coshf_FR_podd_temp2, coshf_FR_Rcub,       coshf_FR_R   
-       nop.i 999
-}
-
-// sinh_GR_mj contains the table offset for -j
-// sinh_GR_j  contains the table offset for +j
-// p6 is true when j <= 0
-
-{ .mlx
-(p0)     setf.exp            coshf_FR_N_temp2 = r40            
-(p0)     movl                r40 = 0x0000000000000020 ;;    
-}
-
-{ .mfi
-(p0)     sub                 GR_mJ = r40,  r36           
-(p0)     fmerge.se           coshf_FR_spos    = coshf_FR_N_temp1, f1 
-(p0)     adds                GR_J  = 0x20, r36 ;;           
-}
-
-{ .mii
-       nop.m 999
-(p0)     shl                  GR_mJ = GR_mJ, 5 ;;   
-(p0)     add                  AD_mJ = r37, GR_mJ ;; 
-}
-
-{ .mmi
-       nop.m 999
-(p0)     ldfe                 coshf_FR_Tmjhi = [AD_mJ],16                 
-(p0)     shl                  GR_J  = GR_J, 5 ;;    
-}
-
-{ .mfi
-(p0)     ldfs                 coshf_FR_Tmjlo = [AD_mJ],16                 
-(p0)     fcmp.lt.unc.s1      p6,p7 = coshf_FR_X,f9                          
-(p0)     add                  AD_J  = r37, GR_J ;;  
-}
-
-{ .mmi
-(p0)     ldfe                 coshf_FR_Tjhi  = [AD_J],16 ;;                  
-(p0)     ldfs                 coshf_FR_Tjlo  = [AD_J],16                  
-       nop.i 999 ;;
-}
+;;
 
 { .mfb
-       nop.m 999
-(p0)     fmerge.se           coshf_FR_sneg    = coshf_FR_N_temp2, f1 
-(p7)     br.cond.spnt        L(COSH_BY_EXP) ;;                            
+      nop.m           0
+      fms.s1          fN = fNint, f1, fRightShifter // n in FP register
+      // branch out if overflow
+(p12) br.cond.spnt    COSH_CERTAIN_OVERFLOW
 }
-
-// ******************************************************
-// If NOT branch to EXP
-// ******************************************************
-// Calculate C_hi
-// ******************************************************
-// coshf_FR_C_hi_temp = coshf_FR_sneg * coshf_FR_Tmjhi
-// coshf_FR_C_hi = coshf_FR_spos * coshf_FR_Tjhi + (coshf_FR_sneg * coshf_FR_Tmjhi)
+;;
 
 { .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_C_hi_temp = coshf_FR_sneg, coshf_FR_Tmjhi, f0                   
-       nop.i 999 ;;
+      getf.sig        rNJ = fNint                   // bits of n, j
+      // check for possible overflow
+      fcmp.gt.s1      p13, p0 = fAbsX, fMAX_SGL_NORM_ARG
+      nop.i           0
 }
+;;
 
 { .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_C_hi      = coshf_FR_spos, coshf_FR_Tjhi,  coshf_FR_C_hi_temp    
-       nop.i 999
+      addl            rN = 0xFFBF - 63, rNJ      // biased and shifted n-1,j
+      fnma.s1         fR = fLn2Div64, fN, fNormX // R = x - N*ln(2)/64
+      and             rJ = rJ_mask, rNJ          // bits of j
 }
-
-// ******************************************************
-// Calculate S_hi
-// ******************************************************
-// coshf_FR_S_hi_temp1 = coshf_FR_sneg * coshf_FR_Tmjhi
-// coshf_FR_S_hi = coshf_FR_spos * coshf_FR_Tjhi - coshf_FR_C_hi_temp1
+{ .mfi
+      sub             rNJ_neg = r0, rNJ          // bits of n, j for -x
+      nop.f           0
+      andcm           rN_mask = -1, rJ_mask      // 0xff...fc0 to mask N
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1        coshf_FR_S_hi_temp1 =  coshf_FR_sneg, coshf_FR_Tmjhi, f0                
-       nop.i 999 ;;
+      shladd          rJ = rJ, 3, rTblAddr // address in the 2^(j/64) table
+      nop.f           0
+      and             rN = rN_mask, rN     // biased, shifted n-1
 }
-
-// ******************************************************
-// Calculate C_lo
-// ******************************************************
-// coshf_FR_C_lo_temp1 = coshf_FR_spos * coshf_FR_Tjhi - coshf_FR_C_hi
-// coshf_FR_C_lo_temp2 = coshf_FR_sneg * coshf_FR_Tmjlo + (coshf_FR_spos * coshf_FR_Tjhi - coshf_FR_C_hi)
-// coshf_FR_C_lo_temp1 = coshf_FR_sneg * coshf_FR_Tmjlo
-// coshf_FR_C_lo_temp3 = coshf_FR_spos * coshf_FR_Tjlo + (coshf_FR_sneg * coshf_FR_Tmjlo)
-// coshf_FR_C_lo = coshf_FR_C_lo_temp3 + coshf_FR_C_lo_temp2
+{ .mfi
+      addl            rN_neg = 0xFFBF - 63, rNJ_neg // -x biased, shifted n-1,j
+      nop.f           0
+      and             rJ_neg = rJ_mask, rNJ_neg     // bits of j for -x
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fms.s1        coshf_FR_C_lo_temp1 = coshf_FR_spos, coshf_FR_Tjhi,  coshf_FR_C_hi        
-       nop.i 999
+      ld8             rJ = [rJ]                    // Table value
+      nop.f           0
+      shl             rN = rN, 46 // 2^(n-1) bits in DP format
 }
+{ .mfi
+      shladd          rJ_neg = rJ_neg, 3, rTblAddr // addr in 2^(j/64) table -x
+      nop.f           0
+      and             rN_neg = rN_mask, rN_neg     // biased, shifted n-1 for -x
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fms.s1        coshf_FR_S_hi       =  coshf_FR_spos, coshf_FR_Tjhi, coshf_FR_S_hi_temp1 
-       nop.i 999 ;;
+      ld8             rJ_neg = [rJ_neg]            // Table value for -x
+      nop.f           0
+      shl             rN_neg = rN_neg, 46 // 2^(n-1) bits in DP format for -x
 }
+;;
 
 { .mfi
-       nop.m 999
-(p0)     fma.s1        coshf_FR_C_lo_temp2 = coshf_FR_sneg, coshf_FR_Tmjhi, coshf_FR_C_lo_temp1  
-       nop.i 999
+      or              rN = rN, rJ // bits of 2^n * 2^(j/64) in DP format
+      nop.f           0
+      nop.i           0
 }
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1        coshf_FR_C_lo_temp1 = coshf_FR_sneg, coshf_FR_Tmjlo, f0                  
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1        coshf_FR_C_lo_temp3 =  coshf_FR_spos, coshf_FR_Tjlo,  coshf_FR_C_lo_temp1 
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)     fma.s1        coshf_FR_C_lo       =  coshf_FR_C_lo_temp3, f1,   coshf_FR_C_lo_temp2    
-       nop.i 999 ;;
-}
-
-// ******************************************************
-// coshf_FR_Y_lo_temp = coshf_FR_C_hi * coshf_FR_peven + coshf_FR_C_lo
-// coshf_FR_Y_lo = coshf_FR_S_hi * coshf_FR_podd + coshf_FR_Y_lo_temp
-// coshf_FR_COSH = Y_hi + Y_lo
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_Y_lo_temp =  coshf_FR_C_hi, coshf_FR_peven, coshf_FR_C_lo       
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_Y_lo      =  coshf_FR_S_hi, coshf_FR_podd, coshf_FR_Y_lo_temp   
-       nop.i 999 ;;
-}
-
-{ .mfb
-       nop.m 999
-(p0)    fma.s.s0       f8 =  coshf_FR_C_hi, f1, coshf_FR_Y_lo                       
-(p0)    br.ret.sptk        b0 ;;                                           
-}
-
-
-L(COSH_BY_EXP): 
-
-// When p7 is true,  we know that an overflow is not going to happen
-// When p7 is false, we must check for possible overflow
-// p7 is the over_SAFE flag
-// f44 = Scale * (Y_hi + Y_lo)
-//     =  coshf_FR_spos * (coshf_FR_Tjhi + coshf_FR_Y_lo)
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_Y_lo_temp =  coshf_FR_peven, f1,       coshf_FR_podd           
-       nop.i 999
-}
-
-// Now we are in EXP. This is the only path where an overflow is possible
-// but not for certain. So this is the only path where over_SAFE has any use.
-// r34 still has N-1
-// There is a danger of double-extended overflow   if N-1 > 16382 = 0x3ffe
-// There is a danger of double overflow            if N-1 > 0x3fe = 1022
-// There is a danger of single overflow            if N-1 > 0x7e = 126
-
-{ .mlx
-       nop.m 999
-(p0)   movl                r32          = 0x000000000000007e ;;                       
-}
-
-{ .mfi
-(p0)   cmp.gt.unc          p0,p7        = r34, r32                                 
-       nop.f 999
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_Y_lo      =  coshf_FR_Tjhi,  coshf_FR_Y_lo_temp, coshf_FR_Tjlo       
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s1         coshf_FR_COSH_temp =  coshf_FR_Y_lo,  f1, coshf_FR_Tjhi                 
-       nop.i 999 ;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)    fma.s.s0       f44 = coshf_FR_spos,  coshf_FR_COSH_temp, f0                       
-       nop.i 999 ;;
-}
-
-// If over_SAFE is set, return
-{ .mfb
-       nop.m 999
-(p7)   fmerge.s            f8 = f44,f44
-(p7)   br.ret.sptk        b0 ;;
-}
-
-// Else see if we overflowed
-// S0 user supplied status
-// S2 user supplied status + WRE + TD  (Overflows)
-// If WRE is set then an overflow will not occur in EXP.
-// The input value that would cause a register (WRE) value to overflow is about 2^15
-// and this input would go into the HUGE path.
-// Answer with WRE is in f43.
-
-{ .mfi
-       nop.m 999
-(p0)   fsetc.s2            0x7F,0x42                                               
-       nop.i 999;;
-}
-
-{ .mfi
-       nop.m 999
-(p0)   fma.s.s2            f43  = coshf_FR_spos,  coshf_FR_COSH_temp, f0                      
-       nop.i 999 ;;
-}
-
-// 1 more that the exponent of the largest double (7FE)  = 7FF
-// 7FF - 3FF = 400 (true); 400 + FFFF = 103FF (register-biased)
-// So 0 103FF 8000000000000000  is one ulp more than
-// largest double in register bias
-// 1 more that the exponent of the largest single (FE)  = FF
-// FF - 7F = 80 (true); 80 + FFFF = 1007F (register-biased)
-// Now  set p8 if the answer with WRE is greater than or equal this value
-// Also set p9 if the answer with WRE is less than or equal to negative this value
-
-{ .mlx
-       nop.m 999
-(p0)   movl                r32          = 0x000000000001007f ;;                     
-}
+;;
 
 { .mmf
-       nop.m 999
-(p0)   setf.exp            f41          = r32                                    
-(p0)   fsetc.s2            0x7F,0x40 ;;                                               
+      setf.d          fT = rN            // 2^(n-1) * 2^(j/64)
+      or              rN_neg = rN_neg, rJ_neg // -x bits of 2^n * 2^(j/64) in DP
+      fma.s1          fRSqr = fR, fR, f0 // R^2
 }
+;;
 
 { .mfi
-       nop.m 999
-(p0)   fcmp.ge.unc.s1      p8, p0       = f43, f41                               
-       nop.i 999
+      setf.d          fT_neg = rN_neg    // 2^(n-1) * 2^(j/64) for -x
+      fma.s1          fP = fA3, fR, fA2  // A3*R + A2
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fnma.s1         fP_neg = fA3, fR, fA2  // A3*R + A2 for -x
+      nop.i           0
+}
+;;
 
 { .mfi
-       nop.m 999
-(p0)   fmerge.ns           f42 = f41, f41                                        
-       nop.i 999 ;;
+      nop.m           0
+      fma.s1          fP = fP, fRSqr, fR // P = (A3*R + A2)*R^2 + R
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fms.s1          fP_neg = fP_neg, fRSqr, fR // P = (A3*R + A2)*R^2 + R, -x
+      nop.i           0
+}
+;;
 
-// The error tag for overflow is 65
-{ .mii
-       nop.m 999
-       nop.i 999 ;;
-(p8)   mov                 GR_Parameter_TAG = 65 ;;                                              
+{ .mfi
+      nop.m           0
+      fmpy.s0         fTmp = fLn2Div64, fLn2Div64       // Force inexact
+      nop.i           0
 }
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fExp = fP, fT, fT                 // exp(x)/2
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+      fma.s1          fExp_neg = fP_neg, fT_neg, fT_neg // exp(-x)/2
+      // branch out if possible overflow result
+(p13) br.cond.spnt    COSH_POSSIBLE_OVERFLOW
+}
+;;
 
 { .mfb
-       nop.m 999
-(p0)   fcmp.le.unc.s1      p9, p0 =  f43, f42                                    
-(p8)   br.cond.spnt __libm_error_region ;;
+      nop.m           0
+      // final result in the absence of overflow
+      fma.s.s0        f8 = fExp, f1, fExp_neg  // result = (exp(x)+exp(-x))/2
+      // exit here in the absence of overflow
+      br.ret.sptk     b0              // Exit main path, 0.25 <= |x| < 89.41598
 }
+;;
 
-{ .mii
-       nop.m 999
-       nop.i 999 ;;
-(p9)   mov                 GR_Parameter_TAG = 64                                              
+// Here if 0 < |x| < 0.25.  Evaluate 8th order polynomial.
+COSH_SMALL:
+{ .mmi
+      add             rAd1 = 0x200, rTblAddr
+      add             rAd2 = 0x210, rTblAddr
+      nop.i           0
 }
+;;
 
-{ .mib
-       nop.m 999
-       nop.i 999
-(p9)   br.cond.spnt __libm_error_region ;;
+{ .mmi
+      ldfpd           fA4, fA3 = [rAd1]
+      ldfpd           fA2, fA1 = [rAd2]
+      nop.i           0
 }
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fX4 = fXsq, fXsq, f0
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA43 = fXsq, fA4, fA3
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.s1          fA21 = fXsq, fA2, fA1
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA4321 = fX4, fA43, fA21
+      nop.i           0
+}
+;;
+
+// Dummy multiply to generate inexact
+{ .mfi
+      nop.m           0
+      fmpy.s0         fTmp = fA4, fA4
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+      fma.s.s0        f8 = fA4321, fXsq, f1
+      br.ret.sptk     b0                // Exit if 0 < |x| < 0.25
+}
+;;
+
+COSH_POSSIBLE_OVERFLOW:
+
+// Here if fMAX_SGL_NORM_ARG < x < fMIN_SGL_OFLOW_ARG
+// This cannot happen if input is a single, only if input higher precision.
+// Overflow is a possibility, not a certainty.
+
+// Recompute result using status field 2 with user's rounding mode,
+// and wre set.  If result is larger than largest single, then we have
+// overflow
+
+{ .mfi
+      mov             rGt_ln  = 0x1007f // Exponent for largest single + 1 ulp
+      fsetc.s2        0x7F,0x42         // Get user's round mode, set wre
+      nop.i           0
+}
+;;
+
+{ .mfi
+      setf.exp        fGt_pln = rGt_ln  // Create largest single + 1 ulp
+      fma.s.s2        fWre_urm_f8 = fP, fT, fT    // Result with wre set
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fsetc.s2        0x7F,0x40                   // Turn off wre in sf2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.ge.s1      p6, p0 =  fWre_urm_f8, fGt_pln // Test for overflow
+      nop.i           0
+}
+;;
 
 { .mfb
-       nop.m 999
-(p0)   fmerge.s            f8 = f44,f44                                          
-(p0)   br.ret.sptk b0 ;; 
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    COSH_CERTAIN_OVERFLOW // Branch if overflow
 }
+;;
 
-
-L(COSH_HUGE): 
-
-// for COSH_HUGE, put 24000 in exponent; take sign from input; add 1
-// SAFE: SAFE is always 0 for HUGE
-
-{ .mlx
-       nop.m 999
-(p0)   movl                r32 = 0x0000000000015dbf ;;                               
+{ .mfb
+      nop.m           0
+      fma.s.s0        f8 = fP, fT, fT
+      br.ret.sptk     b0                     // Exit if really no overflow
 }
+;;
+
+// here if overflow
+COSH_CERTAIN_OVERFLOW:
+{ .mmi
+      addl            r17ones_m1 = 0x1FFFE, r0
+;;
+      setf.exp        fTmp = r17ones_m1
+      nop.i           0
+}
+;;
 
 { .mfi
-(p0)   setf.exp            f9  = r32                                              
-       nop.f 999
-       nop.i 999 ;;
+      alloc           r32 = ar.pfs, 0, 3, 4, 0 // get some registers
+      fmerge.s        FR_X = f8,f8
+      nop.i           0
 }
-
-{ .mfi
-       nop.m 999
-(p0)   fma.s1              coshf_FR_hi_lo = f1, f9, f1                            
-       nop.i 999 ;;
+{ .mfb
+      mov             GR_Parameter_TAG = 65
+      fma.s.s0        FR_RESULT = fTmp, fTmp, f0 // Set I,O and +INF result
+      br.cond.sptk    __libm_error_region
 }
+;;
 
-{ .mfi
-       nop.m 999
-(p0)   fma.s.s0            f44 = f9, coshf_FR_hi_lo, f0                           
-(p0)   mov                 GR_Parameter_TAG = 65                                               
+// Here if x unorm
+COSH_UNORM:
+{ .mfb
+      getf.exp        rSignexp_x = fNormX    // Must recompute if x unorm
+      fcmp.eq.s0      p6, p0 = f8, f0        // Set D flag
+      br.cond.sptk    COSH_COMMON            // Return to main path
 }
-.endp coshf
-ASM_SIZE_DIRECTIVE(coshf)
+;;
 
+GLOBAL_IEEE754_END(coshf)
 
-.proc __libm_error_region
-__libm_error_region:
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
-        add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-        nop.f 0
+      add   GR_Parameter_Y=-32,sp             // Parameter 2 value
+      nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs 
+      mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
-.fframe 64 
-        add sp=-64,sp                           // Create new stack
-        nop.f 0
-        mov GR_SAVE_GP=gp                       // Save gp
+.fframe 64
+      add sp=-64,sp                           // Create new stack
+      nop.f 0
+      mov GR_SAVE_GP=gp                       // Save gp
 };;
 { .mmi
-        stfs [GR_Parameter_Y] = FR_Y,16         // Save Parameter 2 on stack
-        add GR_Parameter_X = 16,sp              // Parameter 1 address
-.save   b0, GR_SAVE_B0                      
-        mov GR_SAVE_B0=b0                       // Save b0 
+      stfs [GR_Parameter_Y] = FR_Y,16         // Store Parameter 2 on stack
+      add GR_Parameter_X = 16,sp              // Parameter 1 address
+.save   b0, GR_SAVE_B0
+      mov GR_SAVE_B0=b0                       // Save b0
 };;
 .body
-{ .mib
-        stfs [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack 
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y  
-	nop.b 0                                 // Parameter 3 address
+{ .mfi
+      stfs [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack
+      nop.f 0
+      add   GR_Parameter_RESULT = 0,GR_Parameter_Y // Parameter 3 address
 }
 { .mib
-        stfs [GR_Parameter_Y] = FR_RESULT      // Store Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y  
-        br.call.sptk.many b0=__libm_error_support#  // Call error handling function
+      stfs [GR_Parameter_Y] = FR_RESULT       // Store Parameter 3 on stack
+      add   GR_Parameter_Y = -16,GR_Parameter_Y
+      br.call.sptk b0=__libm_error_support#   // Call error handling function
 };;
+
 { .mmi
-        nop.m 0
-        nop.m 0
-        add   GR_Parameter_RESULT = 48,sp
+      add   GR_Parameter_RESULT = 48,sp
+      nop.m 0
+      nop.i 0
 };;
+
 { .mmi
-        ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
+      ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
-        add   sp = 64,sp                       // Restore stack pointer
-        mov   b0 = GR_SAVE_B0                  // Restore return address
+      add   sp = 64,sp                       // Restore stack pointer
+      mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp 
-        mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
-        br.ret.sptk     b0                     // Return
-};; 
+      mov   gp = GR_SAVE_GP                  // Restore gp
+      mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
+      br.ret.sptk     b0                     // Return
+};;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
+
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

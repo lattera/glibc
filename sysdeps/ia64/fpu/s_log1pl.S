@@ -1,10 +1,10 @@
 .file "log1pl.s" 
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,55 +35,49 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // History: 
-// 2/02/00  hand-optimized
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 Initial version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 05/21/01 Removed logl and log10l, putting them in a separate file
+// 06/29/01 Improved speed of all paths
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align;
+//          used data8 for long double table values
 //
-// *********************************************************************
+//*********************************************************************
 //
-// *********************************************************************
+//*********************************************************************
 //
-// Function:   Combined logl(x), log1pl(x), and log10l(x) where
-//             logl(x)   = ln(x), for double-extended precision x values
-//             log1pl(x) = ln(x+1), for double-extended precision x values
-//             log10l(x) = log (x), for double-extended precision x values
-//                           10
+// Function:   log1pl(x) = ln(x+1), for double-extended precision x values
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Resources Used:
 //
 //    Floating-Point Registers: f8 (Input and Return Value)
-//                              f9,f33-f55,f99 
+//                              f34-f82
 //
 //    General Purpose Registers:
-//      r32-r53
-//      r54-r57 (Used to pass arguments to error handling routine)
+//      r32-r56
+//      r53-r56 (Used to pass arguments to error handling routine)
 //
-//    Predicate Registers:      p6-p15
+//    Predicate Registers:      p6-p13
 //
-// *********************************************************************
+//*********************************************************************
 //
 // IEEE Special Conditions:
 //
-//    Denormal  fault raised on denormal inputs
+//    Denormal fault raised on denormal inputs
 //    Overflow exceptions cannot occur  
 //    Underflow exceptions raised when appropriate for log1p 
-//    (Error Handling Routine called for underflow)
 //    Inexact raised when appropriate by algorithm
 //
-//    logl(inf) = inf
-//    logl(-inf) = QNaN 
-//    logl(+/-0) = -inf 
-//    logl(SNaN) = QNaN
-//    logl(QNaN) = QNaN
-//    logl(EM_special Values) = QNaN
 //    log1pl(inf) = inf
 //    log1pl(-inf) = QNaN 
 //    log1pl(+/-0) = +/-0 
@@ -91,54 +85,37 @@
 //    log1pl(SNaN) = QNaN
 //    log1pl(QNaN) = QNaN
 //    log1pl(EM_special Values) = QNaN
-//    log10l(inf) = inf
-//    log10l(-inf) = QNaN 
-//    log10l(+/-0) = -inf 
-//    log10l(SNaN) = QNaN
-//    log10l(QNaN) = QNaN
-//    log10l(EM_special Values) = QNaN
 //
-// *********************************************************************
+//*********************************************************************
 //
-// Computation is based on the following kernel.
-//
-// ker_log_64( in_FR    :  X,
-// 	    in_FR    :  E,
-// 	    in_FR    :  Em1,
-// 	    in_GR    :  Expo_Range,
-// 	    out_FR   :  Y_hi,
-// 	    out_FR   :  Y_lo,
-// 	    out_FR   :  Scale,
-// 	    out_PR   :  Safe  )
-// 
 // Overview
 //
 // The method consists of three cases.
 //
-// If	|X+Em1| < 2^(-80)	use case log1pl_small;
-// elseif	|X+Em1| < 2^(-7)	use case log_near1;
-// else				use case log_regular;
+// If      |X| < 2^(-80)	use case log1p_small;
+// else    |X| < 2^(-7)	        use case log_near1;
+// else      			use case log_regular;
 //
-// Case log1pl_small:
+// Case log1p_small:
 //
-// logl( 1 + (X+Em1) ) can be approximated by (X+Em1).
+//   log1pl( X ) = logl( X+1 ) can be approximated by X
 //
 // Case log_near1:
 //
-//   logl( 1 + (X+Em1) ) can be approximated by a simple polynomial
-//   in W = X+Em1. This polynomial resembles the truncated Taylor
+//   log1pl( X ) = log( X+1 ) can be approximated by a simple polynomial
+//   in W = X. This polynomial resembles the truncated Taylor
 //   series W - W^/2 + W^3/3 - ...
 // 
 // Case log_regular:
 //
 //   Here we use a table lookup method. The basic idea is that in
-//   order to compute logl(Arg) for an argument Arg in [1,2), we 
-//   construct a value G such that G*Arg is close to 1 and that
+//   order to compute logl(Arg) = log1pl (Arg-1) for an argument Arg in [1,2), 
+//   we construct a value G such that G*Arg is close to 1 and that
 //   logl(1/G) is obtainable easily from a table of values calculated
 //   beforehand. Thus
 //
-//	logl(Arg) = logl(1/G) + logl(G*Arg)
-//		 = logl(1/G) + logl(1 + (G*Arg - 1))
+//      logl(Arg) = logl(1/G) + logl(G*Arg)
+//      	 = logl(1/G) + logl(1 + (G*Arg - 1))
 //
 //   Because |G*Arg - 1| is small, the second term on the right hand
 //   side can be approximated by a short polynomial. We elaborate
@@ -146,9 +123,9 @@
 //
 //   Step 0: Initialization
 //
-//   We need to calculate logl( E + X ). Obtain N, S_hi, S_lo such that
+//   We need to calculate logl( X+1 ). Obtain N, S_hi such that
 //
-//	E + X = 2^N * ( S_hi + S_lo )	exactly
+//      X+1 = 2^N * ( S_hi + S_lo )   exactly
 //
 //   where S_hi in [1,2) and S_lo is a correction to S_hi in the sense
 //   that |S_lo| <= ulp(S_hi).
@@ -157,8 +134,8 @@
 //
 //   Based on S_hi, obtain G_1, G_2, G_3 from a table and calculate
 //
-//	G := G_1 * G_2 * G_3
-//	r := (G * S_hi - 1)  + G * S_lo
+//      G := G_1 * G_2 * G_3
+//      r := (G * S_hi - 1) + G * S_lo
 //
 //   These G_j's have the property that the product is exactly 
 //   representable and that |r| < 2^(-12) as a result.
@@ -171,61 +148,34 @@
 //   Step 3: Reconstruction
 //
 //
-//   Finally, logl( E + X ) is given by
+//   Finally, log1pl( X ) = logl( X+1 ) is given by
 //
-//   logl( E + X )   =   logl( 2^N * (S_hi + S_lo) )
+//   logl( X+1 )   =   logl( 2^N * (S_hi + S_lo) )
 //                 ~=~  N*logl(2) + logl(1/G) + logl(1 + r)
 //                 ~=~  N*logl(2) + logl(1/G) + poly(r).
 //
 // **** Algorithm ****
 //
-// Case log1pl_small:
+// Case log1p_small:
 //
-// Although logl(1 + (X+Em1)) is basically X+Em1, we would like to 
-// preserve the inexactness nature as well as consistent behavior
-// under different rounding modes. Note that this case can only be
-// taken if E is set to be 1.0. In this case, Em1 is zero, and that
-// X can be very tiny and thus the final result can possibly underflow.
-// Thus, we compare X against a threshold that is dependent on the
-// input Expo_Range. If |X| is smaller than this threshold, we set
-// SAFE to be FALSE. 
+// Although log1pl(X) is basically X, we would like to preserve the inexactness
+// nature as well as consistent behavior under different rounding modes.
+// We can do this by computing the result as 
+//    
+//     log1pl(X) = X - X*X
 //
-// The result is returned as Y_hi, Y_lo, and in the case of SAFE 
-// is FALSE, an additional value Scale is also returned. 
-//
-//	W    := X + Em1
-//      Threshold := Threshold_Table( Expo_Range )
-//      Tiny      := Tiny_Table( Expo_Range )
-//
-//      If ( |W| > Threshold ) then
-//         Y_hi  := W
-//         Y_lo  := -W*W
-//      Else
-//         Y_hi  := W
-//         Y_lo  := -Tiny
-//         Scale := 2^(-100)
-//         Safe  := FALSE
-//      EndIf
-//
-//
-// One may think that Y_lo should be -W*W/2; however, it does not matter
-// as Y_lo will be rounded off completely except for the correct effect in 
-// directed rounding. Clearly -W*W is simplier to compute. Moreover,
-// because of the difference in exponent value, Y_hi + Y_lo or 
-// Y_hi + Scale*Y_lo is always inexact.
 //
 // Case log_near1:
 //
 // Here we compute a simple polynomial. To exploit parallelism, we split
 // the polynomial into two portions.
 // 
-// 	W := X + Em1
-// 	Wsq := W * W
-// 	W4  := Wsq*Wsq
-// 	W6  := W4*Wsq
-// 	Y_hi := W + Wsq*(P_1 + W*(P_2 + W*(P_3 + W*P_4))
-// 	Y_lo := W6*(P_5 + W*(P_6 + W*(P_7 + W*P_8)))
-//      set lsb(Y_lo) to be 1
+//       W := X
+//       Wsq := W * W
+//       W4  := Wsq*Wsq
+//       W6  := W4*Wsq
+//       Y_hi := W + Wsq*(P_1 + W*(P_2 + W*(P_3 + W*P_4))
+//       Y_lo := W6*(P_5 + W*(P_6 + W*(P_7 + W*P_8)))
 //
 // Case log_regular:
 //
@@ -234,89 +184,87 @@
 //   Step 0. Initialization
 //   ----------------------
 //
-//   Z := X + E
+//   Z := X + 1
 //   N := unbaised exponent of Z
 //   S_hi := 2^(-N) * Z
-//   S_lo := 2^(-N) * { (max(X,E)-Z) + min(X,E) }
-//
-//   Note that S_lo is always 0 for the case E = 0.
+//   S_lo := 2^(-N) * { (max(X,1)-Z) + min(X,1) }
 //
 //   Step 1. Argument Reduction
 //   --------------------------
 //
 //   Let
 //
-//	Z = 2^N * S_hi = 2^N * 1.d_1 d_2 d_3 ... d_63
+//      Z = 2^N * S_hi = 2^N * 1.d_1 d_2 d_3 ... d_63
 //
 //   We obtain G_1, G_2, G_3 by the following steps.
 //
 //
-//	Define		X_0 := 1.d_1 d_2 ... d_14. This is extracted
-//			from S_hi.
+//      Define		X_0 := 1.d_1 d_2 ... d_14. This is extracted
+//      		from S_hi.
 //
-//	Define		A_1 := 1.d_1 d_2 d_3 d_4. This is X_0 truncated
-//			to lsb = 2^(-4).
+//      Define		A_1 := 1.d_1 d_2 d_3 d_4. This is X_0 truncated
+//      		to lsb = 2^(-4).
 //
-//	Define		index_1 := [ d_1 d_2 d_3 d_4 ].
+//      Define		index_1 := [ d_1 d_2 d_3 d_4 ].
 //
-//	Fetch 		Z_1 := (1/A_1) rounded UP in fixed point with
-//	fixed point	lsb = 2^(-15).
-//			Z_1 looks like z_0.z_1 z_2 ... z_15
-//		        Note that the fetching is done using index_1.
-//			A_1 is actually not needed in the implementation
-//			and is used here only to explain how is the value
-//			Z_1 defined.
+//      Fetch 		Z_1 := (1/A_1) rounded UP in fixed point with
+//      fixed point	lsb = 2^(-15).
+//      		Z_1 looks like z_0.z_1 z_2 ... z_15
+//      	        Note that the fetching is done using index_1.
+//      		A_1 is actually not needed in the implementation
+//      		and is used here only to explain how is the value
+//      		Z_1 defined.
 //
-//	Fetch		G_1 := (1/A_1) truncated to 21 sig. bits.
-//	floating pt.	Again, fetching is done using index_1. A_1
-//			explains how G_1 is defined.
+//      Fetch		G_1 := (1/A_1) truncated to 21 sig. bits.
+//      floating pt.	Again, fetching is done using index_1. A_1
+//      		explains how G_1 is defined.
 //
-//	Calculate	X_1 := X_0 * Z_1 truncated to lsb = 2^(-14)
-//			     = 1.0 0 0 0 d_5 ... d_14
-//			This is accomplised by integer multiplication.
-//			It is proved that X_1 indeed always begin
-//			with 1.0000 in fixed point.
-//
-//
-//	Define		A_2 := 1.0 0 0 0 d_5 d_6 d_7 d_8. This is X_1 
-//			truncated to lsb = 2^(-8). Similar to A_1,
-//			A_2 is not needed in actual implementation. It
-//			helps explain how some of the values are defined.
-//
-//	Define		index_2 := [ d_5 d_6 d_7 d_8 ].
-//
-//	Fetch 		Z_2 := (1/A_2) rounded UP in fixed point with
-//	fixed point	lsb = 2^(-15). Fetch done using index_2.
-//			Z_2 looks like z_0.z_1 z_2 ... z_15
-//
-//	Fetch		G_2 := (1/A_2) truncated to 21 sig. bits.
-//	floating pt.
-//
-//	Calculate	X_2 := X_1 * Z_2 truncated to lsb = 2^(-14)
-//			     = 1.0 0 0 0 0 0 0 0 d_9 d_10 ... d_14
-//			This is accomplised by integer multiplication.
-//			It is proved that X_2 indeed always begin
-//			with 1.00000000 in fixed point.
+//      Calculate	X_1 := X_0 * Z_1 truncated to lsb = 2^(-14)
+//      		     = 1.0 0 0 0 d_5 ... d_14
+//      		This is accomplised by integer multiplication.
+//      		It is proved that X_1 indeed always begin
+//      		with 1.0000 in fixed point.
 //
 //
-//	Define		A_3 := 1.0 0 0 0 0 0 0 0 d_9 d_10 d_11 d_12 d_13 1.
-//			This is 2^(-14) + X_2 truncated to lsb = 2^(-13).
+//      Define		A_2 := 1.0 0 0 0 d_5 d_6 d_7 d_8. This is X_1 
+//      		truncated to lsb = 2^(-8). Similar to A_1,
+//      		A_2 is not needed in actual implementation. It
+//      		helps explain how some of the values are defined.
 //
-//	Define		index_3 := [ d_9 d_10 d_11 d_12 d_13 ].
+//      Define		index_2 := [ d_5 d_6 d_7 d_8 ].
 //
-//	Fetch		G_3 := (1/A_3) truncated to 21 sig. bits.
-//	floating pt.	Fetch is done using index_3.
+//      Fetch 		Z_2 := (1/A_2) rounded UP in fixed point with
+//      fixed point	lsb = 2^(-15). Fetch done using index_2.
+//      		Z_2 looks like z_0.z_1 z_2 ... z_15
 //
-//	Compute		G := G_1 * G_2 * G_3. 
+//      Fetch		G_2 := (1/A_2) truncated to 21 sig. bits.
+//      floating pt.
 //
-//	This is done exactly since each of G_j only has 21 sig. bits.
+//      Calculate	X_2 := X_1 * Z_2 truncated to lsb = 2^(-14)
+//      		     = 1.0 0 0 0 0 0 0 0 d_9 d_10 ... d_14
+//      		This is accomplised by integer multiplication.
+//      		It is proved that X_2 indeed always begin
+//      		with 1.00000000 in fixed point.
 //
-//	Compute   
 //
-//		r := (G*S_hi - 1) + G*S_lo   using 2 FMA operations.
+//      Define		A_3 := 1.0 0 0 0 0 0 0 0 d_9 d_10 d_11 d_12 d_13 1.
+//      		This is 2^(-14) + X_2 truncated to lsb = 2^(-13).
 //
-//	thus, r approximates G*(S_hi+S_lo) - 1 to within a couple of 
-//	rounding errors.
+//      Define		index_3 := [ d_9 d_10 d_11 d_12 d_13 ].
+//
+//      Fetch		G_3 := (1/A_3) truncated to 21 sig. bits.
+//      floating pt.	Fetch is done using index_3.
+//
+//      Compute		G := G_1 * G_2 * G_3. 
+//
+//      This is done exactly since each of G_j only has 21 sig. bits.
+//
+//      Compute   
+//
+//      	r := (G*S_hi - 1) + G*S_lo using 2 FMA operations.
+//
+//      Thus r approximates G*(S_hi + S_lo) - 1 to within a couple of
+//      rounding errors.
 //
 //
 //  Step 2. Approximation
@@ -326,1258 +274,878 @@
 //   reduced argument just obtained. It is proved that |r| <= 1.9*2^(-13);
 //   thus logl(1+r) can be approximated by a short polynomial:
 //
-//	logl(1+r) ~=~ poly = r + Q1 r^2 + ... + Q4 r^5
+//      logl(1+r) ~=~ poly = r + Q1 r^2 + ... + Q4 r^5
 //
 //
 //  Step 3. Reconstruction
 //  ----------------------
 //
-//   This step computes the desired result of logl(X+E):
+//   This step computes the desired result of logl(X+1):
 //
-//	logl(X+E)  =   logl( 2^N * (S_hi + S_lo) )
-//		  =   N*logl(2) + logl( S_hi + S_lo )
-//		  =   N*logl(2) + logl(1/G) +
-//		      logl(1 + C*(S_hi+S_lo) - 1 )
+//      logl(X+1) =   logl( 2^N * (S_hi + S_lo) )
+//      	  =   N*logl(2) + logl( S_hi + S_lo) )
+//      	  =   N*logl(2) + logl(1/G) +
+//      	      logl(1 + G * ( S_hi + S_lo ) - 1 )
 //
 //   logl(2), logl(1/G_j) are stored as pairs of (single,double) numbers:
 //   log2_hi, log2_lo, log1byGj_hi, log1byGj_lo. The high parts are
 //   single-precision numbers and the low parts are double precision
 //   numbers. These have the property that
 //
-//	N*log2_hi + SUM ( log1byGj_hi )
+//      N*log2_hi + SUM ( log1byGj_hi )
 //
 //   is computable exactly in double-extended precision (64 sig. bits).
 //   Finally
 //
-//	Y_hi := N*log2_hi + SUM ( log1byGj_hi )
-//	Y_lo := poly_hi + [ poly_lo + 
-//	        ( SUM ( log1byGj_lo ) + N*log2_lo ) ]
-//      set lsb(Y_lo) to be 1
+//      Y_hi := N*log2_hi + SUM ( log1byGj_hi )
+//      Y_lo := poly_hi + [ poly_lo + 
+//              ( SUM ( log1byGj_lo ) + N*log2_lo ) ]
 //
 
-#include "libm_support.h"
-
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
-// P_7, P_6, P_5, P_4, P_3, P_2, and P_1 
-
+RODATA
 .align 64
-Constants_P:
-ASM_TYPE_DIRECTIVE(Constants_P,@object)
-data4  0xEFD62B15,0xE3936754,0x00003FFB,0x00000000
-data4  0xA5E56381,0x8003B271,0x0000BFFC,0x00000000
-data4  0x73282DB0,0x9249248C,0x00003FFC,0x00000000
-data4  0x47305052,0xAAAAAA9F,0x0000BFFC,0x00000000
-data4  0xCCD17FC9,0xCCCCCCCC,0x00003FFC,0x00000000
-data4  0x00067ED5,0x80000000,0x0000BFFD,0x00000000
-data4  0xAAAAAAAA,0xAAAAAAAA,0x00003FFD,0x00000000
-data4  0xFFFFFFFE,0xFFFFFFFF,0x0000BFFD,0x00000000
-ASM_SIZE_DIRECTIVE(Constants_P)
- 
+
+// ************* DO NOT CHANGE THE ORDER OF THESE TABLES *************
+
+// P_8, P_7, P_6, P_5, P_4, P_3, P_2, and P_1 
+
+LOCAL_OBJECT_START(Constants_P)
+//data4  0xEFD62B15,0xE3936754,0x00003FFB,0x00000000
+//data4  0xA5E56381,0x8003B271,0x0000BFFC,0x00000000
+//data4  0x73282DB0,0x9249248C,0x00003FFC,0x00000000
+//data4  0x47305052,0xAAAAAA9F,0x0000BFFC,0x00000000
+//data4  0xCCD17FC9,0xCCCCCCCC,0x00003FFC,0x00000000
+//data4  0x00067ED5,0x80000000,0x0000BFFD,0x00000000
+//data4  0xAAAAAAAA,0xAAAAAAAA,0x00003FFD,0x00000000
+//data4  0xFFFFFFFE,0xFFFFFFFF,0x0000BFFD,0x00000000
+data8  0xE3936754EFD62B15,0x00003FFB
+data8  0x8003B271A5E56381,0x0000BFFC
+data8  0x9249248C73282DB0,0x00003FFC
+data8  0xAAAAAA9F47305052,0x0000BFFC
+data8  0xCCCCCCCCCCD17FC9,0x00003FFC
+data8  0x8000000000067ED5,0x0000BFFD
+data8  0xAAAAAAAAAAAAAAAA,0x00003FFD
+data8  0xFFFFFFFFFFFFFFFE,0x0000BFFD
+LOCAL_OBJECT_END(Constants_P)
+
 // log2_hi, log2_lo, Q_4, Q_3, Q_2, and Q_1 
 
-.align 64
-Constants_Q:
-ASM_TYPE_DIRECTIVE(Constants_Q,@object)
-data4  0x00000000,0xB1721800,0x00003FFE,0x00000000 
-data4  0x4361C4C6,0x82E30865,0x0000BFE2,0x00000000
-data4  0x328833CB,0xCCCCCAF2,0x00003FFC,0x00000000
-data4  0xA9D4BAFB,0x80000077,0x0000BFFD,0x00000000
-data4  0xAAABE3D2,0xAAAAAAAA,0x00003FFD,0x00000000
-data4  0xFFFFDAB7,0xFFFFFFFF,0x0000BFFD,0x00000000
-ASM_SIZE_DIRECTIVE(Constants_Q)
+LOCAL_OBJECT_START(Constants_Q)
+//data4  0x00000000,0xB1721800,0x00003FFE,0x00000000 
+//data4  0x4361C4C6,0x82E30865,0x0000BFE2,0x00000000
+//data4  0x328833CB,0xCCCCCAF2,0x00003FFC,0x00000000
+//data4  0xA9D4BAFB,0x80000077,0x0000BFFD,0x00000000
+//data4  0xAAABE3D2,0xAAAAAAAA,0x00003FFD,0x00000000
+//data4  0xFFFFDAB7,0xFFFFFFFF,0x0000BFFD,0x00000000 
+data8  0xB172180000000000,0x00003FFE
+data8  0x82E308654361C4C6,0x0000BFE2
+data8  0xCCCCCAF2328833CB,0x00003FFC
+data8  0x80000077A9D4BAFB,0x0000BFFD
+data8  0xAAAAAAAAAAABE3D2,0x00003FFD
+data8  0xFFFFFFFFFFFFDAB7,0x0000BFFD
+LOCAL_OBJECT_END(Constants_Q)
+
+// 1/ln10_hi, 1/ln10_lo
+
+LOCAL_OBJECT_START(Constants_1_by_LN10)
+//data4  0x37287195,0xDE5BD8A9,0x00003FFD,0x00000000
+//data4  0xACCF70C8,0xD56EAABE,0x00003FBB,0x00000000
+data8  0xDE5BD8A937287195,0x00003FFD
+data8  0xD56EAABEACCF70C8,0x00003FBB
+LOCAL_OBJECT_END(Constants_1_by_LN10)
+
+
+// Z1 - 16 bit fixed
  
-// Z1 - 16 bit fixed, G1 and H1 - IEEE single 
- 
-.align 64
-Constants_Z_G_H_h1:
-ASM_TYPE_DIRECTIVE(Constants_Z_G_H_h1,@object)
-data4  0x00008000,0x3F800000,0x00000000,0x00000000,0x00000000,0x00000000
-data4  0x00007879,0x3F70F0F0,0x3D785196,0x00000000,0x617D741C,0x3DA163A6
-data4  0x000071C8,0x3F638E38,0x3DF13843,0x00000000,0xCBD3D5BB,0x3E2C55E6
-data4  0x00006BCB,0x3F579430,0x3E2FF9A0,0x00000000,0xD86EA5E7,0xBE3EB0BF
-data4  0x00006667,0x3F4CCCC8,0x3E647FD6,0x00000000,0x86B12760,0x3E2E6A8C
-data4  0x00006187,0x3F430C30,0x3E8B3AE7,0x00000000,0x5C0739BA,0x3E47574C
-data4  0x00005D18,0x3F3A2E88,0x3EA30C68,0x00000000,0x13E8AF2F,0x3E20E30F
-data4  0x0000590C,0x3F321640,0x3EB9CEC8,0x00000000,0xF2C630BD,0xBE42885B
-data4  0x00005556,0x3F2AAAA8,0x3ECF9927,0x00000000,0x97E577C6,0x3E497F34
-data4  0x000051EC,0x3F23D708,0x3EE47FC5,0x00000000,0xA6B0A5AB,0x3E3E6A6E
-data4  0x00004EC5,0x3F1D89D8,0x3EF8947D,0x00000000,0xD328D9BE,0xBDF43E3C
-data4  0x00004BDB,0x3F17B420,0x3F05F3A1,0x00000000,0x0ADB090A,0x3E4094C3
-data4  0x00004925,0x3F124920,0x3F0F4303,0x00000000,0xFC1FE510,0xBE28FBB2
-data4  0x0000469F,0x3F0D3DC8,0x3F183EBF,0x00000000,0x10FDE3FA,0x3E3A7895
-data4  0x00004445,0x3F088888,0x3F20EC80,0x00000000,0x7CC8C98F,0x3E508CE5
-data4  0x00004211,0x3F042108,0x3F29516A,0x00000000,0xA223106C,0xBE534874
-ASM_SIZE_DIRECTIVE(Constants_Z_G_H_h1)
- 
-// Z2 - 16 bit fixed, G2 and H2 - IEEE single 
+LOCAL_OBJECT_START(Constants_Z_1)
+data4  0x00008000
+data4  0x00007879
+data4  0x000071C8
+data4  0x00006BCB
+data4  0x00006667
+data4  0x00006187
+data4  0x00005D18
+data4  0x0000590C
+data4  0x00005556
+data4  0x000051EC
+data4  0x00004EC5
+data4  0x00004BDB
+data4  0x00004925
+data4  0x0000469F
+data4  0x00004445
+data4  0x00004211
+LOCAL_OBJECT_END(Constants_Z_1)
 
-.align 64 
-Constants_Z_G_H_h2:
-ASM_TYPE_DIRECTIVE(Constants_Z_G_H_h2,@object)
-data4  0x00008000,0x3F800000,0x00000000,0x00000000,0x00000000,0x00000000
-data4  0x00007F81,0x3F7F00F8,0x3B7F875D,0x00000000,0x22C42273,0x3DB5A116
-data4  0x00007F02,0x3F7E03F8,0x3BFF015B,0x00000000,0x21F86ED3,0x3DE620CF
-data4  0x00007E85,0x3F7D08E0,0x3C3EE393,0x00000000,0x484F34ED,0xBDAFA07E
-data4  0x00007E08,0x3F7C0FC0,0x3C7E0586,0x00000000,0x3860BCF6,0xBDFE07F0
-data4  0x00007D8D,0x3F7B1880,0x3C9E75D2,0x00000000,0xA78093D6,0x3DEA370F
-data4  0x00007D12,0x3F7A2328,0x3CBDC97A,0x00000000,0x72A753D0,0x3DFF5791
-data4  0x00007C98,0x3F792FB0,0x3CDCFE47,0x00000000,0xA7EF896B,0x3DFEBE6C
-data4  0x00007C20,0x3F783E08,0x3CFC15D0,0x00000000,0x409ECB43,0x3E0CF156
-data4  0x00007BA8,0x3F774E38,0x3D0D874D,0x00000000,0xFFEF71DF,0xBE0B6F97
-data4  0x00007B31,0x3F766038,0x3D1CF49B,0x00000000,0x5D59EEE8,0xBE080483
-data4  0x00007ABB,0x3F757400,0x3D2C531D,0x00000000,0xA9192A74,0x3E1F91E9
-data4  0x00007A45,0x3F748988,0x3D3BA322,0x00000000,0xBF72A8CD,0xBE139A06
-data4  0x000079D1,0x3F73A0D0,0x3D4AE46F,0x00000000,0xF8FBA6CF,0x3E1D9202
-data4  0x0000795D,0x3F72B9D0,0x3D5A1756,0x00000000,0xBA796223,0xBE1DCCC4
-data4  0x000078EB,0x3F71D488,0x3D693B9D,0x00000000,0xB6B7C239,0xBE049391
-ASM_SIZE_DIRECTIVE(Constants_Z_G_H_h2)
- 
-// G3 and H3 - IEEE single and h3 -IEEE double 
+// G1 and H1 - IEEE single and h1 - IEEE double
 
-.align 64 
-Constants_Z_G_H_h3:
-ASM_TYPE_DIRECTIVE(Constants_Z_G_H_h3,@object)
-data4  0x3F7FFC00,0x38800100,0x562224CD,0x3D355595
-data4  0x3F7FF400,0x39400480,0x06136FF6,0x3D8200A2
-data4  0x3F7FEC00,0x39A00640,0xE8DE9AF0,0x3DA4D68D
-data4  0x3F7FE400,0x39E00C41,0xB10238DC,0xBD8B4291
-data4  0x3F7FDC00,0x3A100A21,0x3B1952CA,0xBD89CCB8
-data4  0x3F7FD400,0x3A300F22,0x1DC46826,0xBDB10707
-data4  0x3F7FCC08,0x3A4FF51C,0xF43307DB,0x3DB6FCB9
-data4  0x3F7FC408,0x3A6FFC1D,0x62DC7872,0xBD9B7C47
-data4  0x3F7FBC10,0x3A87F20B,0x3F89154A,0xBDC3725E
-data4  0x3F7FB410,0x3A97F68B,0x62B9D392,0xBD93519D
-data4  0x3F7FAC18,0x3AA7EB86,0x0F21BD9D,0x3DC18441
-data4  0x3F7FA420,0x3AB7E101,0x2245E0A6,0xBDA64B95
-data4  0x3F7F9C20,0x3AC7E701,0xAABB34B8,0x3DB4B0EC
-data4  0x3F7F9428,0x3AD7DD7B,0x6DC40A7E,0x3D992337
-data4  0x3F7F8C30,0x3AE7D474,0x4F2083D3,0x3DC6E17B
-data4  0x3F7F8438,0x3AF7CBED,0x811D4394,0x3DAE314B
-data4  0x3F7F7C40,0x3B03E1F3,0xB08F2DB1,0xBDD46F21
-data4  0x3F7F7448,0x3B0BDE2F,0x6D34522B,0xBDDC30A4
-data4  0x3F7F6C50,0x3B13DAAA,0xB1F473DB,0x3DCB0070
-data4  0x3F7F6458,0x3B1BD766,0x6AD282FD,0xBDD65DDC
-data4  0x3F7F5C68,0x3B23CC5C,0xF153761A,0xBDCDAB83
-data4  0x3F7F5470,0x3B2BC997,0x341D0F8F,0xBDDADA40
-data4  0x3F7F4C78,0x3B33C711,0xEBC394E8,0x3DCD1BD7
-data4  0x3F7F4488,0x3B3BBCC6,0x52E3E695,0xBDC3532B
-data4  0x3F7F3C90,0x3B43BAC0,0xE846B3DE,0xBDA3961E
-data4  0x3F7F34A0,0x3B4BB0F4,0x785778D4,0xBDDADF06
-data4  0x3F7F2CA8,0x3B53AF6D,0xE55CE212,0x3DCC3ED1
-data4  0x3F7F24B8,0x3B5BA620,0x9E382C15,0xBDBA3103
-data4  0x3F7F1CC8,0x3B639D12,0x5C5AF197,0x3D635A0B
-data4  0x3F7F14D8,0x3B6B9444,0x71D34EFC,0xBDDCCB19
-data4  0x3F7F0CE0,0x3B7393BC,0x52CD7ADA,0x3DC74502
-data4  0x3F7F04F0,0x3B7B8B6D,0x7D7F2A42,0xBDB68F17
-ASM_SIZE_DIRECTIVE(Constants_Z_G_H_h3)
- 
-// 
-//  Exponent Thresholds and Tiny Thresholds
-//  for 8, 11, 15, and 17 bit exponents
-// 
-//  Expo_Range             Value
-// 
-//  0 (8  bits)            2^(-126)
-//  1 (11 bits)            2^(-1022)
-//  2 (15 bits)            2^(-16382)
-//  3 (17 bits)            2^(-16382)
-// 
-//  Tiny_Table
-//  ----------
-//  Expo_Range             Value
-// 
-//  0 (8  bits)            2^(-16382)
-//  1 (11 bits)            2^(-16382)
-//  2 (15 bits)            2^(-16382)
-//  3 (17 bits)            2^(-16382)
-// 
+LOCAL_OBJECT_START(Constants_G_H_h1)
+data4  0x3F800000,0x00000000
+data8  0x0000000000000000
+data4  0x3F70F0F0,0x3D785196
+data8  0x3DA163A6617D741C
+data4  0x3F638E38,0x3DF13843
+data8  0x3E2C55E6CBD3D5BB
+data4  0x3F579430,0x3E2FF9A0
+data8  0xBE3EB0BFD86EA5E7
+data4  0x3F4CCCC8,0x3E647FD6
+data8  0x3E2E6A8C86B12760
+data4  0x3F430C30,0x3E8B3AE7
+data8  0x3E47574C5C0739BA
+data4  0x3F3A2E88,0x3EA30C68
+data8  0x3E20E30F13E8AF2F
+data4  0x3F321640,0x3EB9CEC8
+data8  0xBE42885BF2C630BD
+data4  0x3F2AAAA8,0x3ECF9927
+data8  0x3E497F3497E577C6
+data4  0x3F23D708,0x3EE47FC5
+data8  0x3E3E6A6EA6B0A5AB
+data4  0x3F1D89D8,0x3EF8947D
+data8  0xBDF43E3CD328D9BE
+data4  0x3F17B420,0x3F05F3A1
+data8  0x3E4094C30ADB090A
+data4  0x3F124920,0x3F0F4303
+data8  0xBE28FBB2FC1FE510
+data4  0x3F0D3DC8,0x3F183EBF
+data8  0x3E3A789510FDE3FA
+data4  0x3F088888,0x3F20EC80
+data8  0x3E508CE57CC8C98F
+data4  0x3F042108,0x3F29516A
+data8  0xBE534874A223106C
+LOCAL_OBJECT_END(Constants_G_H_h1)
 
-.align 64 
-Constants_Threshold:
-ASM_TYPE_DIRECTIVE(Constants_Threshold,@object)
-data4  0x00000000,0x80000000,0x00003F81,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-data4  0x00000000,0x80000000,0x00003C01,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-data4  0x00000000,0x80000000,0x00000001,0x00000000
-ASM_SIZE_DIRECTIVE(Constants_Threshold)
+// Z2 - 16 bit fixed
 
-.align 64
-Constants_1_by_LN10:
-ASM_TYPE_DIRECTIVE(Constants_1_by_LN10,@object)
-data4  0x37287195,0xDE5BD8A9,0x00003FFD,0x00000000
-data4  0xACCF70C8,0xD56EAABE,0x00003FBB,0x00000000
-ASM_SIZE_DIRECTIVE(Constants_1_by_LN10)
+LOCAL_OBJECT_START(Constants_Z_2)
+data4  0x00008000
+data4  0x00007F81
+data4  0x00007F02
+data4  0x00007E85
+data4  0x00007E08
+data4  0x00007D8D
+data4  0x00007D12
+data4  0x00007C98
+data4  0x00007C20
+data4  0x00007BA8
+data4  0x00007B31
+data4  0x00007ABB
+data4  0x00007A45
+data4  0x000079D1
+data4  0x0000795D
+data4  0x000078EB
+LOCAL_OBJECT_END(Constants_Z_2)
 
-FR_Input_X = f8 
-FR_Neg_One = f9
-FR_E       = f33
-FR_Em1     = f34
-FR_Y_hi    = f34  
-// Shared with Em1
-FR_Y_lo    = f35
-FR_Scale   = f36
-FR_X_Prime = f37 
-FR_Z       = f38 
-FR_S_hi    = f38  
-// Shared with Z  
-FR_W       = f39
-FR_G       = f40
-FR_wsq     = f40 
-// Shared with G 
-FR_H       = f41
-FR_w4      = f41
-// Shared with H  
-FR_h       = f42
-FR_w6      = f42  
-// Shared with h     
-FR_G_tmp   = f43
-FR_poly_lo = f43
-// Shared with G_tmp 
-FR_P8      = f43  
-// Shared with G_tmp 
-FR_H_tmp   = f44
-FR_poly_hi = f44
-  // Shared with H_tmp
-FR_P7      = f44  
-// Shared with H_tmp
-FR_h_tmp   = f45 
-FR_rsq     = f45  
-// Shared with h_tmp
-FR_P6      = f45
-// Shared with h_tmp
-FR_abs_W   = f46
-FR_r       = f46  
-// Shared with abs_W  
-FR_AA      = f47 
-FR_log2_hi = f47  
-// Shared with AA  
-FR_BB          = f48
-FR_log2_lo     = f48  
-// Shared with BB  
-FR_S_lo        = f49 
-FR_two_negN    = f50  
-FR_float_N     = f51 
-FR_Q4          = f52 
-FR_dummy       = f52  
-// Shared with Q4
-FR_P4          = f52  
-// Shared with Q4
-FR_Threshold    = f52
-// Shared with Q4
-FR_Q3          = f53  
-FR_P3          = f53  
-// Shared with Q3
-FR_Tiny        = f53  
-// Shared with Q3
-FR_Q2          = f54 
-FR_P2          = f54  
-// Shared with Q2
-FR_1LN10_hi     = f54 
-// Shared with Q2
-FR_Q1           = f55 
-FR_P1           = f55 
-// Shared with Q1 
-FR_1LN10_lo     = f55 
-// Shared with Q1 
-FR_P5           = f98 
-FR_SCALE        = f98 
-FR_Output_X_tmp = f99 
+// G2 and H2 - IEEE single and h2 - IEEE double
 
-GR_Expo_Range   = r32
-GR_Table_Base   = r34
-GR_Table_Base1  = r35
-GR_Table_ptr    = r36 
-GR_Index2       = r37 
-GR_signif       = r38 
-GR_X_0          = r39 
-GR_X_1          = r40 
-GR_X_2          = r41 
-GR_Z_1          = r42 
-GR_Z_2          = r43 
-GR_N            = r44 
-GR_Bias         = r45 
-GR_M            = r46 
-GR_ScaleN       = r47  
-GR_Index3       = r48 
-GR_Perturb      = r49 
-GR_Table_Scale  = r50 
+LOCAL_OBJECT_START(Constants_G_H_h2)
+data4  0x3F800000,0x00000000
+data8  0x0000000000000000
+data4  0x3F7F00F8,0x3B7F875D
+data8  0x3DB5A11622C42273
+data4  0x3F7E03F8,0x3BFF015B
+data8  0x3DE620CF21F86ED3
+data4  0x3F7D08E0,0x3C3EE393
+data8  0xBDAFA07E484F34ED
+data4  0x3F7C0FC0,0x3C7E0586
+data8  0xBDFE07F03860BCF6
+data4  0x3F7B1880,0x3C9E75D2
+data8  0x3DEA370FA78093D6
+data4  0x3F7A2328,0x3CBDC97A
+data8  0x3DFF579172A753D0
+data4  0x3F792FB0,0x3CDCFE47
+data8  0x3DFEBE6CA7EF896B
+data4  0x3F783E08,0x3CFC15D0
+data8  0x3E0CF156409ECB43
+data4  0x3F774E38,0x3D0D874D
+data8  0xBE0B6F97FFEF71DF
+data4  0x3F766038,0x3D1CF49B
+data8  0xBE0804835D59EEE8
+data4  0x3F757400,0x3D2C531D
+data8  0x3E1F91E9A9192A74
+data4  0x3F748988,0x3D3BA322
+data8  0xBE139A06BF72A8CD
+data4  0x3F73A0D0,0x3D4AE46F
+data8  0x3E1D9202F8FBA6CF
+data4  0x3F72B9D0,0x3D5A1756
+data8  0xBE1DCCC4BA796223
+data4  0x3F71D488,0x3D693B9D
+data8  0xBE049391B6B7C239
+LOCAL_OBJECT_END(Constants_G_H_h2)
+
+// G3 and H3 - IEEE single and h3 - IEEE double 
+
+LOCAL_OBJECT_START(Constants_G_H_h3)
+data4  0x3F7FFC00,0x38800100
+data8  0x3D355595562224CD
+data4  0x3F7FF400,0x39400480
+data8  0x3D8200A206136FF6
+data4  0x3F7FEC00,0x39A00640
+data8  0x3DA4D68DE8DE9AF0
+data4  0x3F7FE400,0x39E00C41
+data8  0xBD8B4291B10238DC
+data4  0x3F7FDC00,0x3A100A21
+data8  0xBD89CCB83B1952CA
+data4  0x3F7FD400,0x3A300F22
+data8  0xBDB107071DC46826
+data4  0x3F7FCC08,0x3A4FF51C
+data8  0x3DB6FCB9F43307DB
+data4  0x3F7FC408,0x3A6FFC1D
+data8  0xBD9B7C4762DC7872
+data4  0x3F7FBC10,0x3A87F20B
+data8  0xBDC3725E3F89154A
+data4  0x3F7FB410,0x3A97F68B
+data8  0xBD93519D62B9D392
+data4  0x3F7FAC18,0x3AA7EB86
+data8  0x3DC184410F21BD9D
+data4  0x3F7FA420,0x3AB7E101
+data8  0xBDA64B952245E0A6
+data4  0x3F7F9C20,0x3AC7E701
+data8  0x3DB4B0ECAABB34B8
+data4  0x3F7F9428,0x3AD7DD7B
+data8  0x3D9923376DC40A7E
+data4  0x3F7F8C30,0x3AE7D474
+data8  0x3DC6E17B4F2083D3
+data4  0x3F7F8438,0x3AF7CBED
+data8  0x3DAE314B811D4394
+data4  0x3F7F7C40,0x3B03E1F3
+data8  0xBDD46F21B08F2DB1
+data4  0x3F7F7448,0x3B0BDE2F
+data8  0xBDDC30A46D34522B
+data4  0x3F7F6C50,0x3B13DAAA
+data8  0x3DCB0070B1F473DB
+data4  0x3F7F6458,0x3B1BD766
+data8  0xBDD65DDC6AD282FD
+data4  0x3F7F5C68,0x3B23CC5C
+data8  0xBDCDAB83F153761A
+data4  0x3F7F5470,0x3B2BC997
+data8  0xBDDADA40341D0F8F
+data4  0x3F7F4C78,0x3B33C711
+data8  0x3DCD1BD7EBC394E8
+data4  0x3F7F4488,0x3B3BBCC6
+data8  0xBDC3532B52E3E695
+data4  0x3F7F3C90,0x3B43BAC0
+data8  0xBDA3961EE846B3DE
+data4  0x3F7F34A0,0x3B4BB0F4
+data8  0xBDDADF06785778D4
+data4  0x3F7F2CA8,0x3B53AF6D
+data8  0x3DCC3ED1E55CE212
+data4  0x3F7F24B8,0x3B5BA620
+data8  0xBDBA31039E382C15
+data4  0x3F7F1CC8,0x3B639D12
+data8  0x3D635A0B5C5AF197
+data4  0x3F7F14D8,0x3B6B9444
+data8  0xBDDCCB1971D34EFC
+data4  0x3F7F0CE0,0x3B7393BC
+data8  0x3DC7450252CD7ADA
+data4  0x3F7F04F0,0x3B7B8B6D
+data8  0xBDB68F177D7F2A42
+LOCAL_OBJECT_END(Constants_G_H_h3)
+
+
+// Floating Point Registers
+
+FR_Input_X      = f8 
+
+FR_Y_hi         = f34  
+FR_Y_lo         = f35
+
+FR_Scale        = f36
+FR_X_Prime      = f37 
+FR_S_hi         = f38  
+FR_W            = f39
+FR_G            = f40
+
+FR_H            = f41
+FR_wsq          = f42 
+FR_w4           = f43
+FR_h            = f44
+FR_w6           = f45  
+
+FR_G2           = f46
+FR_H2           = f47
+FR_poly_lo      = f48
+FR_P8           = f49  
+FR_poly_hi      = f50
+
+FR_P7           = f51  
+FR_h2           = f52 
+FR_rsq          = f53  
+FR_P6           = f54
+FR_r            = f55  
+
+FR_log2_hi      = f56  
+FR_log2_lo      = f57  
+FR_p87          = f58  
+FR_p876         = f58  
+FR_p8765        = f58  
+FR_float_N      = f59 
+FR_Q4           = f60 
+
+FR_p43          = f61  
+FR_p432         = f61  
+FR_p4321        = f61  
+FR_P4           = f62  
+FR_G3           = f63  
+FR_H3           = f64  
+FR_h3           = f65  
+
+FR_Q3           = f66  
+FR_P3           = f67  
+FR_Q2           = f68 
+FR_P2           = f69  
+FR_1LN10_hi     = f70 
+
+FR_Q1           = f71 
+FR_P1           = f72 
+FR_1LN10_lo     = f73 
+FR_P5           = f74 
+FR_rcub         = f75 
+
+FR_Output_X_tmp = f76 
+FR_Neg_One      = f77 
+FR_Z            = f78 
+FR_AA           = f79 
+FR_BB           = f80 
+FR_S_lo         = f81 
+FR_2_to_minus_N = f82 
+
+FR_X                = f8
+FR_Y                = f0
+FR_RESULT           = f76
+
+
+// General Purpose Registers
+
+GR_ad_p         = r33
+GR_Index1       = r34 
+GR_Index2       = r35 
+GR_signif       = r36 
+GR_X_0          = r37 
+GR_X_1          = r38 
+GR_X_2          = r39 
+GR_minus_N      = r39
+GR_Z_1          = r40 
+GR_Z_2          = r41 
+GR_N            = r42 
+GR_Bias         = r43 
+GR_M            = r44 
+GR_Index3       = r45 
+GR_exp_2tom80   = r45 
+GR_ad_p2        = r46
+GR_exp_mask     = r47 
+GR_exp_2tom7    = r48 
+GR_ad_ln10      = r49 
+GR_ad_tbl_1     = r50
+GR_ad_tbl_2     = r51
+GR_ad_tbl_3     = r52
+GR_ad_q         = r53
+GR_ad_z_1       = r54
+GR_ad_z_2       = r55
+GR_ad_z_3       = r56
+GR_minus_N      = r39
 
 //
 // Added for unwind support
 //
 
-GR_SAVE_PFS         = r51
-GR_SAVE_B0          = r52
-GR_SAVE_GP          = r53
-GR_Parameter_X      = r54
-GR_Parameter_Y      = r55
-GR_Parameter_RESULT = r56
-GR_Parameter_TAG    = r57
-
-FR_X                = f8
-FR_Y                = f0
-FR_RESULT           = f99
+GR_SAVE_PFS         = r50
+GR_SAVE_B0          = r51
+GR_SAVE_GP          = r52
+GR_Parameter_X      = r53
+GR_Parameter_Y      = r54
+GR_Parameter_RESULT = r55
+GR_Parameter_TAG    = r56
 
 .section .text
-.proc logl#
-.global logl#
-.align 64 
-logl:
-#ifdef _LIBC
-.global __ieee754_logl
-__ieee754_logl:
-#endif 
+GLOBAL_IEEE754_ENTRY(log1pl)
 { .mfi
-alloc r32 = ar.pfs,0,22,4,0
-(p0)  fnorm.s1 FR_X_Prime = FR_Input_X 
-(p0)  cmp.eq.unc  p7, p0 = r0, r0 
+      alloc r32 = ar.pfs,0,21,4,0
+      fclass.m p6, p0 =  FR_Input_X, 0x1E3  // Test for natval, nan, inf
+      nop.i 999
 }
 { .mfi
-(p0)  cmp.ne.unc  p14, p0 = r0, r0 
-(p0)  fclass.m.unc p6, p0 =  FR_Input_X, 0x1E3 
-(p0)  cmp.ne.unc  p15, p0 = r0, r0 ;; 
+      addl GR_ad_z_1 = @ltoff(Constants_Z_1#),gp
+      fma.s1 FR_Z = FR_Input_X, f1, f1      // x+1
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+      fmerge.ns FR_Neg_One = f1, f1         // Form -1.0
+      nop.i 999
 }
 { .mfi
- nop.m 0
-(p0)  fclass.nm.unc p10, p0 =  FR_Input_X, 0x1FF 
- nop.i 0
+      nop.m 999
+      fnorm.s1 FR_X_Prime = FR_Input_X      // Normalize x
+      nop.i 999
+}
+;;
+
+{ .mfi
+      ld8    GR_ad_z_1 = [GR_ad_z_1]          // Get pointer to Constants_Z_1
+      nop.f 999
+      mov GR_exp_2tom7 = 0x0fff8              // Exponent of 2^-7
+}
+;;
+
+{ .mfb
+      getf.sig GR_signif = FR_Z               // Get significand of x+1
+      fcmp.eq.s1 p9, p0 =  FR_Input_X, f0     // Test for x=0
+(p6)  br.cond.spnt LOG1P_special              // Branch for nan, inf, natval
+}
+;;
+
+{ .mfi
+      add   GR_ad_tbl_1 = 0x040, GR_ad_z_1    // Point to Constants_G_H_h1
+      fcmp.lt.s1 p13, p0 =  FR_X_Prime, FR_Neg_One // Test for x<-1
+      add   GR_ad_p = -0x100, GR_ad_z_1       // Point to Constants_P
 }
 { .mfi
-nop.m 999
-(p0)  fcmp.eq.unc.s1 p8, p0 =  FR_Input_X, f0 
- nop.i 0
+      add   GR_ad_z_2 = 0x140, GR_ad_z_1      // Point to Constants_Z_2
+      nop.f 999
+      add   GR_ad_tbl_2 = 0x180, GR_ad_z_1    // Point to Constants_G_H_h2
 }
+;;
+
 { .mfi
-	nop.m 999
-(p0)  fcmp.lt.unc.s1 p13, p0 =  FR_Input_X, f0 
- nop.i 0
-}
-{ .mfi
-	nop.m 999
-(p0)  fcmp.eq.unc.s1 p9, p0 =  FR_Input_X, f1 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fsub.s1 FR_Em1 = f0,f1 
-	nop.i 999
+      add   GR_ad_q = 0x080, GR_ad_p          // Point to Constants_Q
+      fcmp.eq.s1 p8, p0 =  FR_X_Prime, FR_Neg_One // Test for x=-1
+      extr.u GR_Index1 = GR_signif, 59, 4     // Get high 4 bits of signif
 }
 { .mfb
-	nop.m 999
-(p0)  fadd FR_E = f0,f0 
-//     
-//    Create E = 0 and Em1 = -1 
-//    Check for X == 1, meaning logl(1)
-//    Check for X < 0, meaning logl(negative)
-//    Check for X == 0, meaning logl(0)
-//    Identify NatVals, NaNs, Infs. 
-//    Identify EM unsupporteds. 
-//    Identify Negative values - us S1 so as
-//    not to raise denormal operand exception 
-//    Set p15 to false for log
-//    Set p14 to false for log
-//    Set p7 true for log and log1p
-//    
-(p0)  br.cond.sptk L(LOGL_BEGIN) ;; 
+      add   GR_ad_tbl_3 = 0x280, GR_ad_z_1    // Point to Constants_G_H_h3
+      nop.f 999
+(p9)  br.ret.spnt  b0                         // Exit if x=0, return input
 }
+;;
 
-.endp logl
-ASM_SIZE_DIRECTIVE(logl)
+{ .mfi
+      shladd GR_ad_z_1 = GR_Index1, 2, GR_ad_z_1  // Point to Z_1
+      fclass.nm p10, p0 =  FR_Input_X, 0x1FF  // Test for unsupported
+      extr.u GR_X_0 = GR_signif, 49, 15       // Get high 15 bits of significand
+}
+{ .mfi
+      ldfe FR_P8 = [GR_ad_p],16               // Load P_8 for near1 path
+      fsub.s1 FR_W = FR_X_Prime, f0           // W = x
+      add   GR_ad_ln10 = 0x060, GR_ad_q       // Point to Constants_1_by_LN10
+}
+;;
 
-.section .text
-.proc log10l#
-.global log10l#
-.align 64 
-log10l:
-#ifdef _LIBC
-.global __ieee754_log10l
-__ieee754_log10l:
-#endif
 { .mfi
-alloc r32 = ar.pfs,0,22,4,0
-(p0)  fadd FR_E = f0,f0 
-      nop.i 0
+      ld4 GR_Z_1 = [GR_ad_z_1]                // Load Z_1
+      fmax.s1  FR_AA = FR_X_Prime, f1         // For S_lo, form AA = max(X,1.0)
+      mov GR_exp_mask = 0x1FFFF               // Create exponent mask
 }
-{ .mfi
-      nop.m 0
-(p0)  fsub.s1 FR_Em1 = f0,f1 
-      nop.i 0
+{ .mib
+      shladd GR_ad_tbl_1 = GR_Index1, 4, GR_ad_tbl_1  // Point to G_1
+      mov GR_Bias = 0x0FFFF                   // Create exponent bias
+(p13) br.cond.spnt LOG1P_LT_Minus_1           // Branch if x<-1
 }
-{ .mfi
-(p0)  cmp.ne.unc  p15, p0 = r0, r0 
-(p0)  fcmp.eq.unc.s1 p9, p0 =  FR_Input_X, f1 
-      nop.i 0
-}
-{ .mfi
-(p0)  cmp.eq.unc  p14, p0 = r0, r0 
-(p0)  fcmp.lt.unc.s1 p13, p0 =  FR_Input_X, f0 
-(p0)  cmp.ne.unc  p7, p0 = r0, r0 ;; 
-}
-{ .mfi
-	nop.m 999
-(p0)  fcmp.eq.unc.s1 p8, p0 =  FR_Input_X, f0 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.nm.unc p10, p0 =  FR_Input_X, 0x1FF 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fclass.m.unc p6, p0 =  FR_Input_X, 0x1E3 
-	nop.i 999
-}
+;;
+
 { .mfb
-	nop.m 999
-(p0)  fnorm.s1 FR_X_Prime = FR_Input_X 
-//     
-//    Create E = 0 and Em1 = -1 
-//    Check for X == 1, meaning logl(1)
-//    Check for X < 0, meaning logl(negative)
-//    Check for X == 0, meaning logl(0)
-//    Identify NatVals, NaNs, Infs. 
-//    Identify EM unsupporteds. 
-//    Identify Negative values - us S1 so as
-//    Identify Negative values - us S1 so as
-//    not to raise denormal operand exception 
-//    Set p15 to false for log10
-//    Set p14 to true for log10
-//    Set p7 to false for log10
-//    
-(p0)  br.cond.sptk L(LOGL_BEGIN) ;; 
+      ldfps  FR_G, FR_H = [GR_ad_tbl_1],8     // Load G_1, H_1
+      fmerge.se FR_S_hi =  f1,FR_Z            // Form |x+1|
+(p8)  br.cond.spnt LOG1P_EQ_Minus_1           // Branch if x=-1
 }
+;;
 
-.endp log10l
-ASM_SIZE_DIRECTIVE(log10l)
+{ .mmb
+      getf.exp GR_N =  FR_Z                   // Get N = exponent of x+1
+      ldfd  FR_h = [GR_ad_tbl_1]              // Load h_1
+(p10) br.cond.spnt LOG1P_unsupported          // Branch for unsupported type
+}
+;;
 
-.section .text
-.proc log1pl#
-.global log1pl#
-.align 64 
-log1pl:
-#ifdef _LIBC
-.global __log1pl
-__log1pl:
-#endif
 { .mfi
-alloc r32 = ar.pfs,0,22,4,0
-(p0)  fsub.s1 FR_Neg_One = f0,f1 
-(p0)  cmp.eq.unc  p7, p0 = r0, r0 
+      ldfe FR_log2_hi = [GR_ad_q],16          // Load log2_hi
+      fcmp.eq.s0 p8, p0 =  FR_Input_X, f0     // Dummy op to flag denormals
+      pmpyshr2.u GR_X_1 = GR_X_0,GR_Z_1,15    // Get bits 30-15 of X_0 * Z_1
 }
-{ .mfi
-(p0)  cmp.ne.unc  p14, p0 = r0, r0 
-(p0)  fnorm.s1 FR_X_Prime = FR_Input_X 
-(p0)  cmp.eq.unc  p15, p0 = r0, r0 ;; 
-}
-{ .mfi
-      nop.m 0
-(p0)  fclass.m.unc p6, p0 =  FR_Input_X, 0x1E3 
-      nop.i 0
-}
-{ .mfi
-      nop.m 999
-(p0)  fclass.nm.unc p10, p0 =  FR_Input_X, 0x1FF 
-      nop.i 0
-}
-{ .mfi
-      nop.m 999
-(p0)  fcmp.eq.unc.s1 p9, p0 =  FR_Input_X, f0 
-      nop.i 0 
-}
-{ .mfi
-      nop.m 999
-(p0)  fadd FR_Em1 = f0,f0 
-      nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fadd FR_E = f0,f1 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fcmp.eq.unc.s1 p8, p0 =  FR_Input_X, FR_Neg_One 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fcmp.lt.unc.s1 p13, p0 =  FR_Input_X, FR_Neg_One 
-	nop.i 999
-}
-L(LOGL_BEGIN): 
-{ .mfi
-	nop.m 999
-(p0)  fadd.s1 FR_Z = FR_X_Prime, FR_E 
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p0)  movl GR_Table_Scale = 0x0000000000000018 ;; 
-}
+;;
+
+//
+//    For performance, don't use result of pmpyshr2.u for 4 cycles.
+//
 { .mmi
-	nop.m 999
-	nop.m 999
-//     
-//    Create E = 1 and Em1 = 0 
-//    Check for X == 0, meaning logl(1+0)
-//    Check for X < -1, meaning logl(negative)
-//    Check for X == -1, meaning logl(0)
-//    Normalize x 
-//    Identify NatVals, NaNs, Infs. 
-//    Identify EM unsupporteds. 
-//    Identify Negative values - us S1 so as
-//    not to raise denormal operand exception 
-//    Set p15 to true for log1p
-//    Set p14 to false for log1p
-//    Set p7 true for log and log1p
-//    
-(p0)  addl GR_Table_Base = @ltoff(Constants_Z_G_H_h1#),gp
+      ldfe FR_log2_lo = [GR_ad_q],16          // Load log2_lo
+      sub GR_N = GR_N, GR_Bias 
+      mov GR_exp_2tom80 = 0x0ffaf             // Exponent of 2^-80
 }
+;;
+
 { .mfi
-      nop.m 999
-(p0)  fmax.s1 FR_AA = FR_X_Prime, FR_E 
-      nop.i 999 ;;
+      ldfe FR_Q4 = [GR_ad_q],16               // Load Q4
+      fms.s1  FR_S_lo = FR_AA, f1, FR_Z       // Form S_lo = AA - Z 
+      sub GR_minus_N = GR_Bias, GR_N          // Form exponent of 2^(-N)
 }
+;;
+
+{ .mmf
+      ldfe FR_Q3 = [GR_ad_q],16               // Load Q3
+      setf.sig FR_float_N = GR_N   // Put integer N into rightmost significand
+      fmin.s1  FR_BB = FR_X_Prime, f1         // For S_lo, form BB = min(X,1.0)
+}
+;;
+
+{ .mmi
+      getf.exp GR_M = FR_W                    // Get signexp of w = x
+      ldfe FR_Q2 = [GR_ad_q],16               // Load Q2
+      extr.u GR_Index2 = GR_X_1, 6, 4         // Extract bits 6-9 of X_1 
+}
+;;
+
+{ .mmi
+      ldfe FR_Q1 = [GR_ad_q]                  // Load Q1
+      shladd GR_ad_z_2 = GR_Index2, 2, GR_ad_z_2  // Point to Z_2
+      add GR_ad_p2  = 0x30,GR_ad_p            // Point to P_4
+}
+;;
+
+{ .mmi
+      ld4 GR_Z_2 = [GR_ad_z_2]                // Load Z_2
+      shladd GR_ad_tbl_2 = GR_Index2, 4, GR_ad_tbl_2  // Point to G_2
+      and GR_M = GR_exp_mask, GR_M            // Get exponent of w = x
+}
+;;
+
+{ .mmi
+      ldfps  FR_G2, FR_H2 = [GR_ad_tbl_2],8   // Load G_2, H_2
+      cmp.lt  p8, p9 =  GR_M, GR_exp_2tom7    // Test |x| < 2^-7
+      cmp.lt  p7, p0 =  GR_M, GR_exp_2tom80   // Test |x| < 2^-80
+}
+;;
+
+// Small path is separate code
+//  p7 is for the small path: |x| < 2^-80
+// near1 and regular paths are merged.
+//  p8 is for the near1 path: |x| < 2^-7
+//  p9 is for regular path:   |x| >= 2^-7
+
 { .mfi
-      ld8    GR_Table_Base = [GR_Table_Base]
-(p0)  fmin.s1 FR_BB = FR_X_Prime, FR_E 
+      ldfd  FR_h2 = [GR_ad_tbl_2]             // Load h_2
+      nop.f 999
       nop.i 999
 }
 { .mfb
+(p9)  setf.exp FR_2_to_minus_N = GR_minus_N   // Form 2^(-N)
+(p7)  fnma.s0  f8 = FR_X_Prime, FR_X_Prime, FR_X_Prime // Result x - x*x
+(p7)  br.ret.spnt  b0                         // Branch if |x| < 2^-80
+}
+;;
+
+{ .mmi
+(p8)  ldfe FR_P7 = [GR_ad_p],16               // Load P_7 for near1 path
+(p8)  ldfe FR_P4 = [GR_ad_p2],16              // Load P_4 for near1 path
+(p9)  pmpyshr2.u GR_X_2 = GR_X_1,GR_Z_2,15    // Get bits 30-15 of X_1 * Z_2
+}
+;;
+
+//
+//    For performance, don't use result of pmpyshr2.u for 4 cycles.
+//
+{ .mmf
+(p8)  ldfe FR_P6 = [GR_ad_p],16               // Load P_6 for near1 path
+(p8)  ldfe FR_P3 = [GR_ad_p2],16              // Load P_3 for near1 path
+(p9)  fma.s1  FR_S_lo = FR_S_lo, f1, FR_BB    // S_lo = S_lo + BB
+}
+;;
+
+{ .mmf
+(p8)  ldfe FR_P5 = [GR_ad_p],16               // Load P_5 for near1 path
+(p8)  ldfe FR_P2 = [GR_ad_p2],16              // Load P_2 for near1 path
+(p8)  fmpy.s1 FR_wsq = FR_W, FR_W             // wsq = w * w for near1 path
+}
+;;
+
+{ .mmi
+(p8)  ldfe FR_P1 = [GR_ad_p2],16 ;;           // Load P_1 for near1 path
       nop.m 999
-(p0)  fadd.s1 FR_W = FR_X_Prime, FR_Em1 
-//     
-//    Begin load of constants base
-//    FR_Z = Z = |x| + E 
-//    FR_W = W = |x| + Em1
-//    AA = fmax(|x|,E)
-//    BB = fmin(|x|,E)
-//
-(p6)  br.cond.spnt L(LOGL_64_special) ;; 
+(p9)  extr.u GR_Index3 = GR_X_2, 1, 5         // Extract bits 1-5 of X_2
 }
-{ .mib
-	nop.m 999
-	nop.i 999
-(p10) br.cond.spnt L(LOGL_64_unsupported) ;; 
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-(p13) br.cond.spnt L(LOGL_64_negative) ;; 
-}
-{ .mib
-(p0)  getf.sig GR_signif = FR_Z 
-	nop.i 999
-(p9)  br.cond.spnt L(LOGL_64_one) ;; 
-}
-{ .mib
-	nop.m 999
-	nop.i 999
-(p8)  br.cond.spnt L(LOGL_64_zero) ;; 
-}
-{ .mfi
-(p0)  getf.exp GR_N =  FR_Z 
-//   
-//    Raise possible denormal operand exception 
-//    Create Bias
-// 
-//    This function computes ln( x + e ) 
-//    Input  FR 1: FR_X   = FR_Input_X          
-//    Input  FR 2: FR_E   = FR_E
-//    Input  FR 3: FR_Em1 = FR_Em1 
-//    Input  GR 1: GR_Expo_Range = GR_Expo_Range = 1
-//    Output FR 4: FR_Y_hi  
-//    Output FR 5: FR_Y_lo  
-//    Output FR 6: FR_Scale  
-//    Output PR 7: PR_Safe  
-//
-(p0)  fsub.s1 FR_S_lo = FR_AA, FR_Z 
-//
-//    signif = getf.sig(Z)
-//    abs_W = fabs(w)
-//
-(p0)  extr.u GR_Table_ptr = GR_signif, 59, 4 ;; 
-}
-{ .mfi
-	nop.m 999
-(p0)  fmerge.se FR_S_hi =  f1,FR_Z 
-(p0)  extr.u GR_X_0 = GR_signif, 49, 15  
-}
-{ .mmi
-       nop.m 999
-       nop.m 999
-(p0)  addl GR_Table_Base1 = @ltoff(Constants_Z_G_H_h2#),gp ;; 
-}
-{ .mlx
-      ld8    GR_Table_Base1 = [GR_Table_Base1]
-(p0)  movl GR_Bias = 0x000000000000FFFF ;; 
-}
-{ .mfi
-	nop.m 999
-(p0)  fabs FR_abs_W =  FR_W 
-(p0)  pmpyshr2.u GR_Table_ptr = GR_Table_ptr,GR_Table_Scale,0 
-}
-{ .mfi
-	nop.m 999
-//    
-//    Branch out for special input values 
-//    
-(p0)  fcmp.lt.unc.s0 p8, p0 =  FR_Input_X, f0 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    X_0 = extr.u(signif,49,15)
-//    Index1 = extr.u(signif,59,4)
-//
-(p0)  fadd.s1 FR_S_lo = FR_S_lo, FR_BB 
-	nop.i 999 ;;
-}
-{ .mii
-	nop.m 999
-	nop.i 999 ;;
-//
-//    Offset_to_Z1 = 24 * Index1
-//    For performance, don't use result
-//    for 3 or 4 cycles.
-//
-(p0)  add GR_Table_ptr = GR_Table_ptr, GR_Table_Base ;; 
-}
-//
-//    Add Base to Offset for Z1
-//    Create Bias
-{ .mmi
-(p0)  ld4 GR_Z_1 = [GR_Table_ptr],4 ;; 
-(p0)  ldfs  FR_G = [GR_Table_ptr],4 
-	nop.i 999 ;;
-}
-{ .mmi
-(p0)  ldfs  FR_H = [GR_Table_ptr],8 ;; 
-(p0)  ldfd  FR_h = [GR_Table_ptr],0 
-(p0)  pmpyshr2.u GR_X_1 = GR_X_0,GR_Z_1,15 
-}
-//
-//    Load Z_1 
-//    Get Base of Table2 
-//
-{ .mfi
-(p0)  getf.exp GR_M = FR_abs_W 
-	nop.f 999
-	nop.i 999 ;;
-}
-{ .mii
-	nop.m 999
-	nop.i 999 ;;
-//
-//    M = getf.exp(abs_W)
-//    S_lo = AA - Z
-//    X_1 = pmpyshr2(X_0,Z_1,15)
-//
-(p0)  sub GR_M = GR_M, GR_Bias ;; 
-}
-//     
-//    M = M - Bias
-//    Load G1
-//    N = getf.exp(Z)
-//
-{ .mii
-(p0)  cmp.gt.unc  p11, p0 =  -80, GR_M 
-(p0)  cmp.gt.unc  p12, p0 =  -7, GR_M ;; 
-(p0)  extr.u GR_Index2 = GR_X_1, 6, 4 ;; 
-}
-{ .mib
-	nop.m 999
-//
-//    if -80 > M, set p11
-//    Index2 = extr.u(X_1,6,4)
-//    if -7  > M, set p12
-//    Load H1
-//
-(p0)  pmpyshr2.u GR_Index2 = GR_Index2,GR_Table_Scale,0 
-(p11) br.cond.spnt L(log1pl_small) ;; 
-}
-{ .mib
-      nop.m 999
-	nop.i 999
-(p12) br.cond.spnt L(log1pl_near) ;; 
-}
-{ .mii
-(p0)  sub GR_N = GR_N, GR_Bias 
-//
-//    poly_lo = r * poly_lo 
-//
-(p0)  add GR_Perturb = 0x1, r0 ;; 
-(p0)  sub GR_ScaleN = GR_Bias, GR_N  
-}
-{ .mii
-(p0)  setf.sig FR_float_N = GR_N 
-	nop.i 999 ;;
-//
-//    Prepare Index2 - pmpyshr2.u(X_1,Z_2,15)
-//    Load h1
-//    S_lo = S_lo + BB 
-//    Branch for -80 > M
-//   
-(p0)  add GR_Index2 = GR_Index2, GR_Table_Base1
-}
-{ .mmi
-(p0)  setf.exp FR_two_negN = GR_ScaleN 
-      nop.m 999
-(p0)  addl GR_Table_Base = @ltoff(Constants_Z_G_H_h3#),gp ;; 
-}
-//
-//    Index2 points to Z2
-//    Branch for -7 > M
-//
-{ .mmb
-(p0)  ld4 GR_Z_2 = [GR_Index2],4 
-(p0)  ld8 GR_Table_Base = [GR_Table_Base] 
-	nop.b 999 ;;
-}
-(p0)  nop.i 999
-//
-//    Load Z_2
-//    N = N - Bias
-//    Tablebase points to Table3
-//
-{ .mmi
-(p0)  ldfs  FR_G_tmp = [GR_Index2],4 ;; 
-//
-//    Load G_2
-//    pmpyshr2  X_2= (X_1,Z_2,15)
-//    float_N = setf.sig(N)
-//    ScaleN = Bias - N
-//
-(p0)  ldfs  FR_H_tmp = [GR_Index2],8 
-	nop.i 999 ;;
-}
-//
-//    Load H_2
-//    two_negN = setf.exp(scaleN)
-//    G = G_1 * G_2
-//
-{ .mfi
-(p0)  ldfd  FR_h_tmp = [GR_Index2],0 
-	nop.f 999
-(p0)  pmpyshr2.u GR_X_2 = GR_X_1,GR_Z_2,15 ;; 
-}
-{ .mii
-	nop.m 999
-(p0)  extr.u GR_Index3 = GR_X_2, 1, 5 ;; 
-//
-//    Load h_2
-//    H = H_1 + H_2 
-//    h = h_1 + h_2 
-//    Index3 = extr.u(X_2,1,5)
-//
-(p0)  shladd GR_Index3 = GR_Index3,4,GR_Table_Base 
-}
-{ .mmi
-	nop.m 999
-	nop.m 999
-//
-//    float_N = fcvt.xf(float_N)
-//    load G3
-//
-(p0)  addl GR_Table_Base = @ltoff(Constants_Q#),gp ;; 
-}
-{ .mmi
-      nop.m 999
-      ld8    GR_Table_Base = [GR_Table_Base]
-      nop.i 999
-};;
+;;
 
 { .mfi
-(p0)  ldfe FR_log2_hi = [GR_Table_Base],16 
-(p0)  fmpy.s1 FR_S_lo = FR_S_lo, FR_two_negN 
-	nop.i 999 ;;
-}
-{ .mmf
-	nop.m 999
-//
-//    G = G3 * G
-//    Load h3
-//    Load log2_hi
-//    H = H + H3
-//
-(p0)  ldfe FR_log2_lo = [GR_Table_Base],16 
-(p0)  fmpy.s1 FR_G = FR_G, FR_G_tmp ;; 
-}
-{ .mmf
-(p0)  ldfs  FR_G_tmp = [GR_Index3],4 
-//
-//    h = h + h3
-//    r = G * S_hi + 1 
-//    Load log2_lo
-//
-(p0)  ldfe FR_Q4 = [GR_Table_Base],16 
-(p0)  fadd.s1 FR_h = FR_h, FR_h_tmp ;; 
-}
-{ .mfi
-(p0)  ldfe FR_Q3 = [GR_Table_Base],16 
-(p0)  fadd.s1 FR_H = FR_H, FR_H_tmp 
-	nop.i 999 ;;
-}
-{ .mmf
-(p0)  ldfs  FR_H_tmp = [GR_Index3],4 
-(p0)  ldfe FR_Q2 = [GR_Table_Base],16 
-//
-//    Comput Index for Table3
-//    S_lo = S_lo * two_negN
-//
-(p0)  fcvt.xf FR_float_N = FR_float_N ;; 
-}
-//
-//    If S_lo == 0, set p8 false
-//    Load H3
-//    Load ptr to table of polynomial coeff.
-//
-{ .mmf
-(p0)  ldfd  FR_h_tmp = [GR_Index3],0 
-(p0)  ldfe FR_Q1 = [GR_Table_Base],0 
-(p0)  fcmp.eq.unc.s1 p0, p8 =  FR_S_lo, f0 ;; 
-}
-{ .mfi
-	nop.m 999
-(p0)  fmpy.s1 FR_G = FR_G, FR_G_tmp 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fadd.s1 FR_H = FR_H, FR_H_tmp 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fms.s1 FR_r = FR_G, FR_S_hi, f1 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fadd.s1 FR_h = FR_h, FR_h_tmp 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_hi = FR_float_N, FR_log2_hi, FR_H 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    Load Q4 
-//    Load Q3 
-//    Load Q2 
-//    Load Q1 
-//
-(p8) fma.s1 FR_r = FR_G, FR_S_lo, FR_r 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-//
-//    poly_lo = r * Q4 + Q3
-//    rsq = r* r
-//
-(p0)  fma.s1 FR_h = FR_float_N, FR_log2_lo, FR_h 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    If (S_lo!=0) r = s_lo * G + r
-//
-(p0)  fma.s1 FR_poly_lo = FR_r, FR_Q4, FR_Q3 
-	nop.i 999
-}
-//
-//    Create a 0x00000....01
-//    poly_lo = poly_lo * rsq + h
-//
-{ .mfi
-(p0)  setf.sig FR_dummy = GR_Perturb 
-(p0)  fmpy.s1 FR_rsq = FR_r, FR_r 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    h = N * log2_lo + h 
-//    Y_hi = n * log2_hi + H 
-//
-(p0)  fma.s1 FR_poly_lo = FR_poly_lo, FR_r, FR_Q2 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_poly_hi = FR_Q1, FR_rsq, FR_r 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-//
-//    poly_lo = r * poly_o + Q2 
-//    poly_hi = Q1 * rsq + r 
-//
-(p0)  fmpy.s1 FR_poly_lo = FR_poly_lo, FR_r 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_poly_lo = FR_poly_lo, FR_rsq, FR_h 
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p0)  fadd.s1 FR_Y_lo = FR_poly_hi, FR_poly_lo 
-//
-//    Create the FR for a binary "or"
-//    Y_lo = poly_hi + poly_lo
-//
-// (p0)  for FR_dummy = FR_Y_lo,FR_dummy ;;
-//
-//    Turn the lsb of Y_lo ON
-//
-// (p0)  fmerge.se FR_Y_lo =  FR_Y_lo,FR_dummy ;;
-//
-//    Merge the new lsb into Y_lo, for alone doesn't
-//
-(p0)  br.cond.sptk LOGL_main ;; 
-}
-L(log1pl_near): 
-{ .mmi
-	nop.m 999
-	nop.m 999
-//    /*******************************************************/
-//    /*********** Branch log1pl_near  ************************/
-//    /*******************************************************/
-(p0)  addl GR_Table_Base = @ltoff(Constants_P#),gp ;; 
-}
-{ .mmi
-      nop.m 999
-      ld8    GR_Table_Base = [GR_Table_Base]
+(p9)  shladd GR_ad_tbl_3 = GR_Index3, 4, GR_ad_tbl_3  // Point to G_3
+(p9)  fcvt.xf FR_float_N = FR_float_N
       nop.i 999
-};;
-//
-//    Load base address of poly. coeff.
-//
-{ .mmb
-(p0)  add GR_Table_ptr = 0x40,GR_Table_Base  
-//
-//    Address tables with separate pointers 
-//
-(p0)  ldfe FR_P8 = [GR_Table_Base],16 
-	nop.b 999 ;;
 }
-{ .mmb
-(p0)  ldfe FR_P4 = [GR_Table_ptr],16 
-//
-//    Load P4
-//    Load P8
-//
-(p0)  ldfe FR_P7 = [GR_Table_Base],16 
-	nop.b 999 ;;
-}
-{ .mmf
-(p0)  ldfe FR_P3 = [GR_Table_ptr],16 
-//
-//    Load P3
-//    Load P7
-//
-(p0)  ldfe FR_P6 = [GR_Table_Base],16 
-(p0)  fmpy.s1 FR_wsq = FR_W, FR_W ;; 
-}
+;;
+
 { .mfi
-(p0)  ldfe FR_P2 = [GR_Table_ptr],16 
-	nop.f 999
-	nop.i 999 ;;
+(p9)  ldfps  FR_G3, FR_H3 = [GR_ad_tbl_3],8   // Load G_3, H_3
+      nop.f 999
+      nop.i 999
 }
+;;
+
 { .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_hi = FR_W, FR_P4, FR_P3 
-	nop.i 999
-}
-//
-//    Load P2
-//    Load P6
-//    Wsq = w * w
-//    Y_hi = p4 * w + p3
-//
-{ .mfi
-(p0)  ldfe FR_P5 = [GR_Table_Base],16 
-(p0)  fma.s1 FR_Y_lo = FR_W, FR_P8, FR_P7 
-	nop.i 999 ;;
-}
-{ .mfi
-(p0)  ldfe FR_P1 = [GR_Table_ptr],16 
-//
-//    Load P1
-//    Load P5
-//    Y_lo = p8 * w + P7
-//
-(p0)  fmpy.s1 FR_w4 = FR_wsq, FR_wsq 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_hi = FR_W, FR_Y_hi, FR_P2 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_lo = FR_W, FR_Y_lo, FR_P6 
-(p0)  add GR_Perturb = 0x1, r0 ;; 
-}
-{ .mfi
-	nop.m 999
-//
-//    w4 = w2 * w2 
-//    Y_hi = y_hi * w + p2 
-//    Y_lo = y_lo * w + p6 
-//    Create perturbation bit
-//
-(p0)  fmpy.s1 FR_w6 = FR_w4, FR_wsq 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_hi = FR_W, FR_Y_hi, FR_P1 
-	nop.i 999
-}
-//
-//    Y_hi = y_hi * w + p1 
-//    w6 = w4 * w2 
-//
-{ .mfi
-(p0)  setf.sig FR_Q4 = GR_Perturb 
-(p0)  fma.s1 FR_Y_lo = FR_W, FR_Y_lo, FR_P5 
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_dummy = FR_wsq,FR_Y_hi, f0 
-	nop.i 999
-}
-{ .mfi
-	nop.m 999
-(p0)  fma.s1 FR_Y_hi = FR_W,f1,f0 
-	nop.i 999
-};;
-{ .mfb
-	nop.m 999
-//
-//    Y_hi = w 
-//    Y_lo = y_lo * w + p5 
-//
-(p0)  fma.s1 FR_Y_lo = FR_w6, FR_Y_lo,FR_dummy 
-//
-//    Y_lo = y_lo * w6   + y_high order part. 
-//
-//    performance
-//
-(p0)  br.cond.sptk LOGL_main ;; 
-}
-L(log1pl_small): 
-{ .mmi
-	nop.m 999
-//  /*******************************************************/
-//  /*********** Branch log1pl_small  ***********************/
-//  /*******************************************************/
-(p0)  addl GR_Table_Base = @ltoff(Constants_Threshold#),gp
+(p9)  ldfd  FR_h3 = [GR_ad_tbl_3]             // Load h_3
+(p9)  fmpy.s1 FR_G = FR_G, FR_G2              // G = G_1 * G_2
+      nop.i 999
 }
 { .mfi
       nop.m 999
-(p0)  mov FR_Em1 = FR_W 
-(p0)  cmp.eq.unc  p7, p0 = r0, r0 ;; 
+(p9)  fadd.s1 FR_H = FR_H, FR_H2              // H = H_1 + H_2
+      nop.i 999
 }
-{ .mlx
-      ld8    GR_Table_Base = [GR_Table_Base]
-(p0)  movl GR_Expo_Range = 0x0000000000000004 ;; 
+;;
+
+{ .mmf
+      nop.m 999
+      nop.m 999
+(p9)  fadd.s1 FR_h = FR_h, FR_h2              // h = h_1 + h_2
 }
-//
-//    Set Safe to true
-//    Set Expo_Range = 0 for single
-//    Set Expo_Range = 2 for double 
-//    Set Expo_Range = 4 for double-extended 
-//
-{ .mmi
-(p0)  shladd GR_Table_Base = GR_Expo_Range,4,GR_Table_Base ;; 
-(p0)  ldfe FR_Threshold = [GR_Table_Base],16 
-	nop.i 999
-}
-{ .mlx
-	nop.m 999
-(p0)  movl GR_Bias = 0x000000000000FF9B ;; 
+;;
+
+{ .mfi
+      nop.m 999
+(p8)  fmpy.s1 FR_w4 = FR_wsq, FR_wsq          // w4 = w^4 for near1 path
+      nop.i 999
 }
 { .mfi
-(p0)  ldfe FR_Tiny = [GR_Table_Base],0 
-	nop.f 999
-	nop.i 999 ;;
+      nop.m 999
+(p8)  fma.s1 FR_p87 = FR_W, FR_P8, FR_P7      // p87 = w * P8 + P7
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1  FR_S_lo = FR_S_lo, FR_2_to_minus_N, f0 // S_lo = S_lo * 2^(-N)
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p0)  fcmp.gt.unc.s1 p13, p12 =  FR_abs_W, FR_Threshold 
-	nop.i 999 ;;
+      nop.m 999
+(p8)  fma.s1 FR_p43 = FR_W, FR_P4, FR_P3      // p43 = w * P4 + P3
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fmpy.s1 FR_G = FR_G, FR_G3              // G = (G_1 * G_2) * G_3
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p13) fnmpy.s1 FR_Y_lo = FR_W, FR_W 
-	nop.i 999
+      nop.m 999
+(p9)  fadd.s1 FR_H = FR_H, FR_H3              // H = (H_1 + H_2) + H_3
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fadd.s1 FR_h = FR_h, FR_h3              // h = (h_1 + h_2) + h_3
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p13) fadd FR_SCALE = f0, f1 
-	nop.i 999 ;;
+      nop.m 999
+(p8)  fmpy.s1 FR_w6 = FR_w4, FR_wsq           // w6 = w^6 for near1 path
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_p432 = FR_W, FR_p43, FR_P2    // p432 = w * p43 + P2
+      nop.i 999
 }
 { .mfi
-	nop.m 999
-(p12) fsub.s1 FR_Y_lo = f0, FR_Tiny 
-(p12) cmp.ne.unc  p7, p0 = r0, r0 
+      nop.m 999
+(p8)  fma.s1 FR_p876 = FR_W, FR_p87, FR_P6    // p876 = w * p87 + P6
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fms.s1 FR_r = FR_G, FR_S_hi, f1         // r = G * S_hi - 1
+      nop.i 999
 }
 { .mfi
-(p12) setf.exp FR_SCALE = GR_Bias 
-	nop.f 999
-	nop.i 999 ;;
+      nop.m 999
+(p9)  fma.s1 FR_Y_hi = FR_float_N, FR_log2_hi, FR_H // Y_hi = N * log2_hi + H
+      nop.i 999
 }
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_h = FR_float_N, FR_log2_lo, FR_h  // h = N * log2_lo + h
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_r = FR_G, FR_S_lo, FR_r        // r = G * S_lo + (G * S_hi - 1)
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_p4321 = FR_W, FR_p432, FR_P1      // p4321 = w * p432 + P1
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_p8765 = FR_W, FR_p876, FR_P5      // p8765 = w * p876 + P5
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_poly_lo = FR_r, FR_Q4, FR_Q3      // poly_lo = r * Q4 + Q3
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p9)  fmpy.s1 FR_rsq = FR_r, FR_r                 // rsq = r * r
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_Y_lo = FR_wsq, FR_p4321, f0       // Y_lo = wsq * p4321
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_Y_hi = FR_W, f1, f0               // Y_hi = w for near1 path
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_poly_lo = FR_poly_lo, FR_r, FR_Q2 // poly_lo = poly_lo * r + Q2
+      nop.i 999
+}
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_rcub = FR_rsq, FR_r, f0           // rcub = r^3
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p8)  fma.s1 FR_Y_lo = FR_w6, FR_p8765,FR_Y_lo // Y_lo = w6 * p8765 + w2 * p4321
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_poly_hi = FR_Q1, FR_rsq, FR_r     // poly_hi = Q1 * rsq + r
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fma.s1 FR_poly_lo = FR_poly_lo, FR_rcub, FR_h // poly_lo = poly_lo*r^3 + h
+      nop.i 999
+}
+;;
+
+{ .mfi
+      nop.m 999
+(p9)  fadd.s1 FR_Y_lo = FR_poly_hi, FR_poly_lo    // Y_lo = poly_hi + poly_lo 
+      nop.i 999
+}
+;;
+
+// Remainder of code is common for near1 and regular paths
 { .mfb
-	nop.m 999
-//
-//    Set p7 to SAFE = FALSE
-//    Set Scale = 2^-100 
-//
-(p0)  fma.s0 f8 = FR_Y_lo,FR_SCALE,FR_Y_hi
-(p0)  br.ret.sptk   b0 ;; 
+      nop.m 999
+      fadd.s0  f8 = FR_Y_lo,FR_Y_hi               // Result=Y_lo+Y_hi
+      br.ret.sptk   b0                       // Common exit for 2^-80 < x < inf
 }
-L(LOGL_64_one): 
-{ .mfb
-	nop.m 999
-(p0)  fmpy.s0 f8 = FR_Input_X, f0 
-(p0)  br.ret.sptk   b0 ;; 
-}
-//    
-//    Raise divide by zero for +/-0 input.
-//    
-L(LOGL_64_zero): 
-{ .mfi
-(p0)  mov   GR_Parameter_TAG = 0
+;;
+
+
+// Here if x=-1
+LOG1P_EQ_Minus_1: 
 //
-//    If we have logl(1), log10l(1) or log1pl(0), return 0.
+//    If x=-1 raise divide by zero and return -inf
 //  
-(p0)  fsub.s0 FR_Output_X_tmp = f0, f1 
-	nop.i 999 ;;
-}
-{ .mii
-(p14) mov   GR_Parameter_TAG = 6 
-	nop.i 999 ;;
-(p15) mov   GR_Parameter_TAG = 138 ;; 
-}
-{ .mfb
-	nop.m 999
-(p0)  frcpa.s0 FR_Output_X_tmp, p8 =  FR_Output_X_tmp, f0 
-(p0)  br.cond.sptk __libm_error_region ;; 
-}
-{ .mfb
-	nop.m 999
-//     
-//    Report that logl(0) computed
-//     { .mfb
-(p0)  mov   FR_Input_X     = FR_Output_X_tmp
-(p0)  br.ret.sptk   b0 ;;
-}
-
-L(LOGL_64_special): 
 { .mfi
-	nop.m 999
-//    
-//    Return -Inf or value from handler.
-//    
-(p0)  fclass.m.unc p7, p0 =  FR_Input_X, 0x1E1 
-	nop.i 999 ;;
+      mov   GR_Parameter_TAG = 138
+      fsub.s1 FR_Output_X_tmp = f0, f1 
+      nop.i 999
 }
+;;
+
 { .mfb
-	nop.m 999
-//     
-//    Check for Natval, QNan, SNaN, +Inf   
-//    
-(p7)  fmpy.s0 f8 =  FR_Input_X, f1 
+      nop.m 999
+      frcpa.s0 FR_Output_X_tmp, p8 =  FR_Output_X_tmp, f0 
+      br.cond.sptk __libm_error_region
+}
+;;
+
+LOG1P_special: 
+{ .mfi
+      nop.m 999
+      fclass.m.unc p8, p0 =  FR_Input_X, 0x1E1  // Test for natval, nan, +inf
+      nop.i 999
+}
+;;
+
 //     
 //    For SNaN raise invalid and return QNaN.
 //    For QNaN raise invalid and return QNaN.
 //    For +Inf return +Inf.
 //    
-(p7)  br.ret.sptk   b0 ;;
+{ .mfb
+      nop.m 999
+(p8)  fmpy.s0 f8 =  FR_Input_X, f1 
+(p8)  br.ret.sptk   b0                          // Return for natval, nan, +inf
 }
+;;
+
 //    
 //    For -Inf raise invalid and return QNaN.
 //    
-{ .mii
-(p0)  mov   GR_Parameter_TAG = 1
-	nop.i 999 ;;
-(p14) mov   GR_Parameter_TAG = 7 ;;
-}
-{ .mfi
-(p15) mov   GR_Parameter_TAG = 139 
-	nop.f 999
-	nop.i 999 ;;
-}
 { .mfb
-	nop.m 999
-(p0)  fmpy.s0 FR_Output_X_tmp =  FR_Input_X, f0 
-(p0)  br.cond.sptk __libm_error_region ;; 
+      mov   GR_Parameter_TAG = 139
+      fmpy.s0 FR_Output_X_tmp =  FR_Input_X, f0 
+      br.cond.sptk __libm_error_region
 }
-//     
-//    Report that logl(-Inf) computed
-//    Report that log10l(-Inf) computed
-//    Report that log1p(-Inf) computed
-//     
+;;
+
+
+LOG1P_unsupported: 
+//    
+//    Return generated NaN or other value.
+//    
 { .mfb
-      nop.m 0
-(p0)  mov   FR_Input_X     = FR_Output_X_tmp
-(p0)  br.ret.sptk   b0 ;;
+      nop.m 999
+      fmpy.s0 f8 = FR_Input_X, f0 
+      br.ret.sptk   b0
 }
-L(LOGL_64_unsupported): 
-{ .mfb
-	nop.m 999
-//    
-//    Return generated NaN or other value .
-//    
-(p0)  fmpy.s0 f8 = FR_Input_X, f0 
-(p0)  br.ret.sptk   b0 ;;
-}
-L(LOGL_64_negative): 
-{ .mfi
-	nop.m 999
+;;
+
+// Here if -inf < x < -1
+LOG1P_LT_Minus_1: 
 //     
-//    Deal with x < 0 in a special way 
-//    
-(p0)  frcpa.s0 FR_Output_X_tmp, p8 =  f0, f0 
-//     
-//    Deal with x < 0 in a special way - raise
+//    Deal with x < -1 in a special way - raise
 //    invalid and produce QNaN indefinite.
 //    
-(p0)  mov   GR_Parameter_TAG = 1 ;; 
+{ .mfb
+      mov   GR_Parameter_TAG = 139
+      frcpa.s0 FR_Output_X_tmp, p8 =  f0, f0
+      br.cond.sptk __libm_error_region
 }
-{ .mii
-(p14) mov   GR_Parameter_TAG = 7
-	nop.i 999 ;;
-(p15) mov   GR_Parameter_TAG = 139
-}
-.endp log1pl
-ASM_SIZE_DIRECTIVE(log1pl) 
+;;
 
-.proc __libm_error_region
-__libm_error_region:
+
+GLOBAL_IEEE754_END(log1pl)
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
@@ -1609,8 +1177,8 @@ __libm_error_region:
         br.call.sptk b0=__libm_error_support#  // Call error handling function
 };;
 { .mmi
-        nop.m 0
-        nop.m 0
+        nop.m 999
+        nop.m 999
         add   GR_Parameter_RESULT = 48,sp
 };;
 { .mmi
@@ -1625,52 +1193,7 @@ __libm_error_region:
         br.ret.sptk     b0                     // Return
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
-
-.proc LOGL_main 
-LOGL_main: 
-{ .mfi
-	nop.m 999
-//
-//    kernel_log_64 computes ln(X + E)
-//
-(p7)  fadd.s0 FR_Input_X = FR_Y_lo,FR_Y_hi
-      nop.i 0
-}
-{ .mmi
-      nop.m 999
-      nop.m 999
-(p14) addl GR_Table_Base = @ltoff(Constants_1_by_LN10#),gp ;; 
-}
-{ .mmi
-      nop.m 999
-(p14) ld8    GR_Table_Base = [GR_Table_Base]
-      nop.i 999
-};;
-
-{ .mmi
-(p14) ldfe FR_1LN10_hi = [GR_Table_Base],16 ;; 
-(p14) ldfe FR_1LN10_lo = [GR_Table_Base]
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p14) fmpy.s1 FR_Output_X_tmp = FR_Y_lo,FR_1LN10_hi
-	nop.i 999 ;;
-}
-{ .mfi
-	nop.m 999
-(p14) fma.s1  FR_Output_X_tmp = FR_Y_hi,FR_1LN10_lo,FR_Output_X_tmp
-	nop.i 999 ;;
-}
-{ .mfb
-	nop.m 999
-(p14) fma.s0 FR_Input_X = FR_Y_hi,FR_1LN10_hi,FR_Output_X_tmp
-(p0)  br.ret.sptk   b0 ;; 
-}
-.endp LOGL_main
-ASM_SIZE_DIRECTIVE(LOGL_main) 
+LOCAL_LIBM_END(__libm_error_region#)
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

@@ -1,10 +1,10 @@
 .file "sinhf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2002, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,1305 +20,727 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
-// Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// Intel Corporation is the author of this code, and requests that all
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
+
 // History
-//==============================================================
-// 2/02/00  Initial version
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+//*********************************************************************
+// 02/02/00 Initial version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
 // 10/12/00 Update to set denormal operand and underflow flags
-// 1/22/01  Fixed to set inexact flag for small args.
+// 01/22/01 Fixed to set inexact flag for small args.
+// 05/02/01 Reworked to improve speed of all paths
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 11/20/02 Improved algorithm based on expf
 //
 // API
-//==============================================================
-// float = sinhf(float)
-// input  floating point f8
-// output floating point f8
-//
-// Registers used
-//==============================================================
-// general registers: 
-// r32 -> r47
-// predicate registers used:
-// p6 p7 p8 p9
-// floating-point registers used:
-// f9 -> f15; f32 -> f45; 
-// f8 has input, then output
+//*********************************************************************
+// float sinhf(float)
 //
 // Overview of operation
-//==============================================================
-// There are four paths
-// 1. |x| < 0.25        SINH_BY_POLY
-// 2. |x| < 32          SINH_BY_TBL
-// 3. |x| < 2^14        SINH_BY_EXP
-// 4. |x_ >= 2^14       SINH_HUGE
+//*********************************************************************
+// Case 1:  0 < |x| < 2^-60
+//  Result = x, computed by x+sgn(x)*x^2) to handle flags and rounding
 //
-// For double extended we get infinity for x >= 400c b174 ddc0 31ae c0ea
-//                                           >= 1.0110001.... x 2^13
-//                                           >= 11357.2166
+// Case 2:  2^-60 < |x| < 0.25
+//  Evaluate sinh(x) by a 9th order polynomial
+//  Care is take for the order of multiplication; and A2 is not exactly 1/5!,
+//  A3 is not exactly 1/7!, etc.
+//  sinh(x) = x + (A1*x^3 + A2*x^5 + A3*x^7 + A4*x^9)
 //
-// But for double we get infinity for x >= 408633ce8fb9f87e
-//                                      >= 1.0110...x 2^9
-//                                      >= +7.10476e+002
+// Case 3:  0.25 < |x| < 89.41598
+//  Algorithm is based on the identity sinh(x) = ( exp(x) - exp(-x) ) / 2.
+//  The algorithm for exp is described as below.  There are a number of
+//  economies from evaluating both exp(x) and exp(-x).  Although we
+//  are evaluating both quantities, only where the quantities diverge do we
+//  duplicate the computations.  The basic algorithm for exp(x) is described
+//  below.
 //
-// And for single we get infinity for x >= 42b3a496
-//                                      >= 1.0110... 2^6
-//                                      >= 89.8215
+// Take the input x. w is "how many log2/128 in x?"
+//  w = x * 64/log2
+//  NJ = int(w)
+//  x = NJ*log2/64 + R
+
+//  NJ = 64*n + j
+//  x = n*log2 + (log2/64)*j + R
 //
-// SAFE: If there is danger of overflow set SAFE to 0
-//       NOT implemented: if there is danger of underflow, set SAFE to 0
-// SAFE for all paths listed below
+//  So, exp(x) = 2^n * 2^(j/64)* exp(R)
 //
-// 1. SINH_BY_POLY
-// ===============
-// If |x| is less than the tiny threshold, then clear SAFE 
-// For double, the tiny threshold is -1022 = -0x3fe => -3fe + ffff = fc01
-//             register-biased, this is fc01
-// For single, the tiny threshold is -126  = -7e    => -7e  + ffff = ff81
-// If |x| < tiny threshold, set SAFE = 0
-//
-// 2. SINH_BY_TBL
-// =============
-// SAFE: SAFE is always 1 for TBL; 
-//
-// 3. SINH_BY_EXP
-// ==============
-// There is a danger of double-extended overflow   if N-1 > 16382 = 0x3ffe
-// r34 has N-1; 16382 is in register biased form, 0x13ffd
-// There is danger of double overflow if N-1 > 0x3fe
-//                       in register biased form, 0x103fd
-// Analagously, there is danger of single overflow if N-1 > 0x7e
-//                       in register biased form, 0x1007d
-// SAFE: If there is danger of overflow set SAFE to 0
-//
-// 4. SINH_HUGE
-// ============
-// SAFE: SAFE is always 0 for HUGE
+//  T =  2^n * 2^(j/64)
+//       Construct 2^n
+//       Get 2^(j/64) table
+//           actually all the entries of 2^(j/64) table are stored in DP and
+//           with exponent bits set to 0 -> multiplication on 2^n can be
+//           performed by doing logical "or" operation with bits presenting 2^n
+
+//  exp(R) = 1 + (exp(R) - 1)
+//  P = exp(R) - 1 approximated by Taylor series of 3rd degree
+//      P = A3*R^3 + A2*R^2 + R, A3 = 1/6, A2 = 1/2
 //
 
-#include "libm_support.h"
+//  The final result is reconstructed as follows
+//  exp(x) = T + T*P
+
+// Special values
+//*********************************************************************
+// sinhf(+0)    = +0
+// sinhf(-0)    = -0
+
+// sinhf(+qnan) = +qnan
+// sinhf(-qnan) = -qnan
+// sinhf(+snan) = +qnan
+// sinhf(-snan) = -qnan
+
+// sinhf(-inf)  = -inf
+// sinhf(+inf)  = +inf
+
+// Overflow and Underflow
+//*********************************************************************
+// sinhf(x) = largest single normal when
+//     x = 89.41598 = 0x42b2d4fc
+//
+// Underflow is handled as described in case 1 above
+
+// Registers used
+//*********************************************************************
+// Floating Point registers used:
+// f8 input, output
+// f6,f7, f9 -> f15,  f32 -> f45
+
+// General registers used:
+// r2, r3, r16 -> r38
+
+// Predicate registers used:
+// p6 -> p15
 
 // Assembly macros
-//==============================================================
-sinh_FR_X            = f44
-sinh_FR_X2           = f9
-sinh_FR_X4           = f10
-sinh_FR_SGNX         = f40
-sinh_FR_all_ones     = f45
-sinh_FR_tmp          = f42
+//*********************************************************************
+// integer registers used
+// scratch
+rNJ                   = r2
+rNJ_neg               = r3
 
-sinh_FR_Inv_log2by64 = f9
-sinh_FR_log2by64_lo  = f11
-sinh_FR_log2by64_hi  = f10
+rJ_neg                = r16
+rN_neg                = r17
+rSignexp_x            = r18
+rExp_x                = r18
+rExp_mask             = r19
+rExp_bias             = r20
+rAd1                  = r21
+rAd2                  = r22
+rJ                    = r23
+rN                    = r24
+rTblAddr              = r25
+rA3                   = r26
+rExpHalf              = r27
+rLn2Div64             = r28
+rGt_ln                = r29
+r17ones_m1            = r29
+rRightShifter         = r30
+rJ_mask               = r30
+r64DivLn2             = r31
+rN_mask               = r31
+// stacked
+GR_SAVE_PFS           = r32
+GR_SAVE_B0            = r33
+GR_SAVE_GP            = r34
+GR_Parameter_X        = r35
+GR_Parameter_Y        = r36
+GR_Parameter_RESULT   = r37
+GR_Parameter_TAG      = r38
 
-sinh_FR_A1           = f9
-sinh_FR_A2           = f10
-sinh_FR_A3           = f11
-
-sinh_FR_Rcub         = f12
-sinh_FR_M_temp       = f13
-sinh_FR_R_temp       = f13
-sinh_FR_Rsq          = f13
-sinh_FR_R            = f14
-
-sinh_FR_M            = f38
-
-sinh_FR_B1           = f15
-sinh_FR_B2           = f32
-sinh_FR_B3           = f33
-
-sinh_FR_peven_temp1  = f34
-sinh_FR_peven_temp2  = f35
-sinh_FR_peven        = f36
-
-sinh_FR_podd_temp1   = f34
-sinh_FR_podd_temp2   = f35
-sinh_FR_podd         = f37
-
-sinh_FR_poly_podd_temp1    =  f11 
-sinh_FR_poly_podd_temp2    =  f13
-sinh_FR_poly_peven_temp1   =  f11
-sinh_FR_poly_peven_temp2   =  f13
-
-sinh_FR_J_temp       = f9
-sinh_FR_J            = f10
-
-sinh_FR_Mmj          = f39
-
-sinh_FR_N_temp1      = f11
-sinh_FR_N_temp2      = f12
-sinh_FR_N            = f13
-
-sinh_FR_spos         = f14
-sinh_FR_sneg         = f15
-
-sinh_FR_Tjhi         = f32
-sinh_FR_Tjlo         = f33
-sinh_FR_Tmjhi        = f34
-sinh_FR_Tmjlo        = f35
-
-sinh_GR_mJ           = r35
-sinh_GR_J            = r36
-
-sinh_AD_mJ           = r38
-sinh_AD_J            = r39
-sinh_GR_all_ones     = r40
-
-sinh_FR_S_hi         = f9
-sinh_FR_S_hi_temp    = f10
-sinh_FR_S_lo_temp1   = f11 
-sinh_FR_S_lo_temp2   = f12 
-sinh_FR_S_lo_temp3   = f13 
-
-sinh_FR_S_lo         = f38
-sinh_FR_C_hi         = f39
-
-sinh_FR_C_hi_temp1   = f10
-sinh_FR_Y_hi         = f11 
-sinh_FR_Y_lo_temp    = f12 
-sinh_FR_Y_lo         = f13 
-sinh_FR_SINH         = f9
-
-sinh_FR_P1           = f14
-sinh_FR_P2           = f15
-sinh_FR_P3           = f32
-sinh_FR_P4           = f33
-sinh_FR_P5           = f34
-sinh_FR_P6           = f35
-
-sinh_FR_TINY_THRESH  = f9
-
-sinh_FR_SINH_temp    = f10
-sinh_FR_SCALE        = f11 
-
-sinh_FR_signed_hi_lo = f10
+// floating point registers used
+FR_X                  = f10
+FR_Y                  = f1
+FR_RESULT             = f8
+// scratch
+fRightShifter         = f6
+f64DivLn2             = f7
+fNormX                = f9
+fNint                 = f10
+fN                    = f11
+fR                    = f12
+fLn2Div64             = f13
+fA2                   = f14
+fA3                   = f15
+// stacked
+fP                    = f32
+fT                    = f33
+fMIN_SGL_OFLOW_ARG    = f34
+fMAX_SGL_NORM_ARG     = f35
+fRSqr                 = f36
+fA1                   = f37
+fA21                  = f37
+fA4                   = f38
+fA43                  = f38
+fA4321                = f38
+fX4                   = f39
+fTmp                  = f39
+fGt_pln               = f39
+fWre_urm_f8           = f40
+fXsq                  = f40
+fP_neg                = f41
+fX3                   = f41
+fT_neg                = f42
+fExp                  = f43
+fExp_neg              = f44
+fAbsX                 = f45
 
 
-GR_SAVE_PFS          = r41
-GR_SAVE_B0           = r42
-GR_SAVE_GP           = r43
-
-GR_Parameter_X       = r44
-GR_Parameter_Y       = r45
-GR_Parameter_RESULT  = r46
-
-// Data tables
-//==============================================================
-
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
-double_sinh_arg_reduction:
-ASM_TYPE_DIRECTIVE(double_sinh_arg_reduction,@object)
-   data8 0xB8AA3B295C17F0BC, 0x00004005
-   data8 0xB17217F7D1000000, 0x00003FF8
-   data8 0xCF79ABC9E3B39804, 0x00003FD0
-ASM_SIZE_DIRECTIVE(double_sinh_arg_reduction)
 
-double_sinh_p_table:
-ASM_TYPE_DIRECTIVE(double_sinh_p_table,@object)
-   data8 0xAAAAAAAAAAAAAAAB, 0x00003FFC
-   data8 0x8888888888888412, 0x00003FF8
-   data8 0xD00D00D00D4D39F2, 0x00003FF2
-   data8 0xB8EF1D28926D8891, 0x00003FEC
-   data8 0xD732377688025BE9, 0x00003FE5
-   data8 0xB08AF9AE78C1239F, 0x00003FDE
-ASM_SIZE_DIRECTIVE(double_sinh_p_table)
+LOCAL_OBJECT_START(_sinhf_table)
+data4 0x42b2d4fd         // Smallest single arg to overflow single result
+data4 0x42b2d4fc         // Largest single arg to give normal single result
+data4 0x00000000         // pad
+data4 0x00000000         // pad
+//
+// 2^(j/64) table, j goes from 0 to 63
+data8 0x0000000000000000 // 2^(0/64)
+data8 0x00002C9A3E778061 // 2^(1/64)
+data8 0x000059B0D3158574 // 2^(2/64)
+data8 0x0000874518759BC8 // 2^(3/64)
+data8 0x0000B5586CF9890F // 2^(4/64)
+data8 0x0000E3EC32D3D1A2 // 2^(5/64)
+data8 0x00011301D0125B51 // 2^(6/64)
+data8 0x0001429AAEA92DE0 // 2^(7/64)
+data8 0x000172B83C7D517B // 2^(8/64)
+data8 0x0001A35BEB6FCB75 // 2^(9/64)
+data8 0x0001D4873168B9AA // 2^(10/64)
+data8 0x0002063B88628CD6 // 2^(11/64)
+data8 0x0002387A6E756238 // 2^(12/64)
+data8 0x00026B4565E27CDD // 2^(13/64)
+data8 0x00029E9DF51FDEE1 // 2^(14/64)
+data8 0x0002D285A6E4030B // 2^(15/64)
+data8 0x000306FE0A31B715 // 2^(16/64)
+data8 0x00033C08B26416FF // 2^(17/64)
+data8 0x000371A7373AA9CB // 2^(18/64)
+data8 0x0003A7DB34E59FF7 // 2^(19/64)
+data8 0x0003DEA64C123422 // 2^(20/64)
+data8 0x0004160A21F72E2A // 2^(21/64)
+data8 0x00044E086061892D // 2^(22/64)
+data8 0x000486A2B5C13CD0 // 2^(23/64)
+data8 0x0004BFDAD5362A27 // 2^(24/64)
+data8 0x0004F9B2769D2CA7 // 2^(25/64)
+data8 0x0005342B569D4F82 // 2^(26/64)
+data8 0x00056F4736B527DA // 2^(27/64)
+data8 0x0005AB07DD485429 // 2^(28/64)
+data8 0x0005E76F15AD2148 // 2^(29/64)
+data8 0x0006247EB03A5585 // 2^(30/64)
+data8 0x0006623882552225 // 2^(31/64)
+data8 0x0006A09E667F3BCD // 2^(32/64)
+data8 0x0006DFB23C651A2F // 2^(33/64)
+data8 0x00071F75E8EC5F74 // 2^(34/64)
+data8 0x00075FEB564267C9 // 2^(35/64)
+data8 0x0007A11473EB0187 // 2^(36/64)
+data8 0x0007E2F336CF4E62 // 2^(37/64)
+data8 0x00082589994CCE13 // 2^(38/64)
+data8 0x000868D99B4492ED // 2^(39/64)
+data8 0x0008ACE5422AA0DB // 2^(40/64)
+data8 0x0008F1AE99157736 // 2^(41/64)
+data8 0x00093737B0CDC5E5 // 2^(42/64)
+data8 0x00097D829FDE4E50 // 2^(43/64)
+data8 0x0009C49182A3F090 // 2^(44/64)
+data8 0x000A0C667B5DE565 // 2^(45/64)
+data8 0x000A5503B23E255D // 2^(46/64)
+data8 0x000A9E6B5579FDBF // 2^(47/64)
+data8 0x000AE89F995AD3AD // 2^(48/64)
+data8 0x000B33A2B84F15FB // 2^(49/64)
+data8 0x000B7F76F2FB5E47 // 2^(50/64)
+data8 0x000BCC1E904BC1D2 // 2^(51/64)
+data8 0x000C199BDD85529C // 2^(52/64)
+data8 0x000C67F12E57D14B // 2^(53/64)
+data8 0x000CB720DCEF9069 // 2^(54/64)
+data8 0x000D072D4A07897C // 2^(55/64)
+data8 0x000D5818DCFBA487 // 2^(56/64)
+data8 0x000DA9E603DB3285 // 2^(57/64)
+data8 0x000DFC97337B9B5F // 2^(58/64)
+data8 0x000E502EE78B3FF6 // 2^(59/64)
+data8 0x000EA4AFA2A490DA // 2^(60/64)
+data8 0x000EFA1BEE615A27 // 2^(61/64)
+data8 0x000F50765B6E4540 // 2^(62/64)
+data8 0x000FA7C1819E90D8 // 2^(63/64)
+LOCAL_OBJECT_END(_sinhf_table)
 
-double_sinh_ab_table:
-ASM_TYPE_DIRECTIVE(double_sinh_ab_table,@object)
-   data8 0xAAAAAAAAAAAAAAAC, 0x00003FFC
-   data8 0x88888888884ECDD5, 0x00003FF8
-   data8 0xD00D0C6DCC26A86B, 0x00003FF2
-   data8 0x8000000000000002, 0x00003FFE
-   data8 0xAAAAAAAAAA402C77, 0x00003FFA
-   data8 0xB60B6CC96BDB144D, 0x00003FF5
-ASM_SIZE_DIRECTIVE(double_sinh_ab_table)
+LOCAL_OBJECT_START(sinh_p_table)
+data8 0x3ec749d84bc96d7d // A4
+data8 0x3f2a0168d09557cf // A3
+data8 0x3f811111326ed15a // A2
+data8 0x3fc55555552ed1e2 // A1
+LOCAL_OBJECT_END(sinh_p_table)
 
-double_sinh_j_table:
-ASM_TYPE_DIRECTIVE(double_sinh_j_table,@object)
-   data8 0xB504F333F9DE6484, 0x00003FFE, 0x1EB2FB13, 0x00000000
-   data8 0xB6FD91E328D17791, 0x00003FFE, 0x1CE2CBE2, 0x00000000
-   data8 0xB8FBAF4762FB9EE9, 0x00003FFE, 0x1DDC3CBC, 0x00000000
-   data8 0xBAFF5AB2133E45FB, 0x00003FFE, 0x1EE9AA34, 0x00000000
-   data8 0xBD08A39F580C36BF, 0x00003FFE, 0x9EAEFDC1, 0x00000000
-   data8 0xBF1799B67A731083, 0x00003FFE, 0x9DBF517B, 0x00000000
-   data8 0xC12C4CCA66709456, 0x00003FFE, 0x1EF88AFB, 0x00000000
-   data8 0xC346CCDA24976407, 0x00003FFE, 0x1E03B216, 0x00000000
-   data8 0xC5672A115506DADD, 0x00003FFE, 0x1E78AB43, 0x00000000
-   data8 0xC78D74C8ABB9B15D, 0x00003FFE, 0x9E7B1747, 0x00000000
-   data8 0xC9B9BD866E2F27A3, 0x00003FFE, 0x9EFE3C0E, 0x00000000
-   data8 0xCBEC14FEF2727C5D, 0x00003FFE, 0x9D36F837, 0x00000000
-   data8 0xCE248C151F8480E4, 0x00003FFE, 0x9DEE53E4, 0x00000000
-   data8 0xD06333DAEF2B2595, 0x00003FFE, 0x9E24AE8E, 0x00000000
-   data8 0xD2A81D91F12AE45A, 0x00003FFE, 0x1D912473, 0x00000000
-   data8 0xD4F35AABCFEDFA1F, 0x00003FFE, 0x1EB243BE, 0x00000000
-   data8 0xD744FCCAD69D6AF4, 0x00003FFE, 0x1E669A2F, 0x00000000
-   data8 0xD99D15C278AFD7B6, 0x00003FFE, 0x9BBC610A, 0x00000000
-   data8 0xDBFBB797DAF23755, 0x00003FFE, 0x1E761035, 0x00000000
-   data8 0xDE60F4825E0E9124, 0x00003FFE, 0x9E0BE175, 0x00000000
-   data8 0xE0CCDEEC2A94E111, 0x00003FFE, 0x1CCB12A1, 0x00000000
-   data8 0xE33F8972BE8A5A51, 0x00003FFE, 0x1D1BFE90, 0x00000000
-   data8 0xE5B906E77C8348A8, 0x00003FFE, 0x1DF2F47A, 0x00000000
-   data8 0xE8396A503C4BDC68, 0x00003FFE, 0x1EF22F22, 0x00000000
-   data8 0xEAC0C6E7DD24392F, 0x00003FFE, 0x9E3F4A29, 0x00000000
-   data8 0xED4F301ED9942B84, 0x00003FFE, 0x1EC01A5B, 0x00000000
-   data8 0xEFE4B99BDCDAF5CB, 0x00003FFE, 0x1E8CAC3A, 0x00000000
-   data8 0xF281773C59FFB13A, 0x00003FFE, 0x9DBB3FAB, 0x00000000
-   data8 0xF5257D152486CC2C, 0x00003FFE, 0x1EF73A19, 0x00000000
-   data8 0xF7D0DF730AD13BB9, 0x00003FFE, 0x9BB795B5, 0x00000000
-   data8 0xFA83B2DB722A033A, 0x00003FFE, 0x1EF84B76, 0x00000000
-   data8 0xFD3E0C0CF486C175, 0x00003FFE, 0x9EF5818B, 0x00000000
-   data8 0x8000000000000000, 0x00003FFF, 0x00000000, 0x00000000
-   data8 0x8164D1F3BC030773, 0x00003FFF, 0x1F77CACA, 0x00000000
-   data8 0x82CD8698AC2BA1D7, 0x00003FFF, 0x1EF8A91D, 0x00000000
-   data8 0x843A28C3ACDE4046, 0x00003FFF, 0x1E57C976, 0x00000000
-   data8 0x85AAC367CC487B15, 0x00003FFF, 0x9EE8DA92, 0x00000000
-   data8 0x871F61969E8D1010, 0x00003FFF, 0x1EE85C9F, 0x00000000
-   data8 0x88980E8092DA8527, 0x00003FFF, 0x1F3BF1AF, 0x00000000
-   data8 0x8A14D575496EFD9A, 0x00003FFF, 0x1D80CA1E, 0x00000000
-   data8 0x8B95C1E3EA8BD6E7, 0x00003FFF, 0x9D0373AF, 0x00000000
-   data8 0x8D1ADF5B7E5BA9E6, 0x00003FFF, 0x9F167097, 0x00000000
-   data8 0x8EA4398B45CD53C0, 0x00003FFF, 0x1EB70051, 0x00000000
-   data8 0x9031DC431466B1DC, 0x00003FFF, 0x1F6EB029, 0x00000000
-   data8 0x91C3D373AB11C336, 0x00003FFF, 0x1DFD6D8E, 0x00000000
-   data8 0x935A2B2F13E6E92C, 0x00003FFF, 0x9EB319B0, 0x00000000
-   data8 0x94F4EFA8FEF70961, 0x00003FFF, 0x1EBA2BEB, 0x00000000
-   data8 0x96942D3720185A00, 0x00003FFF, 0x1F11D537, 0x00000000
-   data8 0x9837F0518DB8A96F, 0x00003FFF, 0x1F0D5A46, 0x00000000
-   data8 0x99E0459320B7FA65, 0x00003FFF, 0x9E5E7BCA, 0x00000000
-   data8 0x9B8D39B9D54E5539, 0x00003FFF, 0x9F3AAFD1, 0x00000000
-   data8 0x9D3ED9A72CFFB751, 0x00003FFF, 0x9E86DACC, 0x00000000
-   data8 0x9EF5326091A111AE, 0x00003FFF, 0x9F3EDDC2, 0x00000000
-   data8 0xA0B0510FB9714FC2, 0x00003FFF, 0x1E496E3D, 0x00000000
-   data8 0xA27043030C496819, 0x00003FFF, 0x9F490BF6, 0x00000000
-   data8 0xA43515AE09E6809E, 0x00003FFF, 0x1DD1DB48, 0x00000000
-   data8 0xA5FED6A9B15138EA, 0x00003FFF, 0x1E65EBFB, 0x00000000
-   data8 0xA7CD93B4E965356A, 0x00003FFF, 0x9F427496, 0x00000000
-   data8 0xA9A15AB4EA7C0EF8, 0x00003FFF, 0x1F283C4A, 0x00000000
-   data8 0xAB7A39B5A93ED337, 0x00003FFF, 0x1F4B0047, 0x00000000
-   data8 0xAD583EEA42A14AC6, 0x00003FFF, 0x1F130152, 0x00000000
-   data8 0xAF3B78AD690A4375, 0x00003FFF, 0x9E8367C0, 0x00000000
-   data8 0xB123F581D2AC2590, 0x00003FFF, 0x9F705F90, 0x00000000
-   data8 0xB311C412A9112489, 0x00003FFF, 0x1EFB3C53, 0x00000000
-   data8 0xB504F333F9DE6484, 0x00003FFF, 0x1F32FB13, 0x00000000
-ASM_SIZE_DIRECTIVE(double_sinh_j_table)
-
-.align 32
-.global sinhf#
 
 .section .text
-.proc  sinhf#
-.align 32
-
-sinhf: 
-#ifdef _LIBC
-.global __ieee754_sinhf
-.type __ieee754_sinhf,@function
-__ieee754_sinhf:
-#endif
-
-// X infinity or NAN?
-// Take invalid fault if enabled
-
-
-{ .mfi
-      alloc r32 = ar.pfs,0,12,4,0                  
-(p0)     fclass.m.unc  p6,p0 = f8, 0xe3	//@qnan | @snan | @inf 
-         mov sinh_GR_all_ones = -1
-}
-;;
-
-
-{ .mfb
-         nop.m 999
-(p6)     fma.s.s0   f8 = f8,f1,f8               
-(p6)     br.ret.spnt     b0 ;;                          
-}
-
-// Put 0.25 in f9; p6 true if x < 0.25
-// Make constant that will generate inexact when squared
-{ .mlx
-         setf.sig sinh_FR_all_ones = sinh_GR_all_ones 
-(p0)     movl            r32 = 0x000000000000fffd ;;         
-}
-
-{ .mfi
-(p0)     setf.exp        f9 = r32                         
-(p0)     fclass.m.unc  p7,p0 = f8, 0x07	//@zero
-         nop.i 999 ;;
-}
-
-{ .mfb
-         nop.m 999
-(p0)     fmerge.s      sinh_FR_X    = f0,f8             
-(p7)     br.ret.spnt     b0 ;;                          
-}
-
-// Identify denormal operands.
-{ .mfi
-         nop.m 999
-         fclass.m.unc  p10,p0 = f8, 0x09        //  + denorm
-         nop.i 999
-};;
-{ .mfi
-         nop.m 999
-         fclass.m.unc  p11,p0 = f8, 0x0a        //  - denorm
-         nop.i 999 
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fmerge.s      sinh_FR_SGNX = f8,f1             
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fcmp.lt.unc.s1  p0,p7 = sinh_FR_X,f9             
-         nop.i 999 ;;
-}
-
-{ .mib
-         nop.m 999
-         nop.i 999
-(p7)     br.cond.sptk    L(SINH_BY_TBL) ;;                      
-}
-
-
-L(SINH_BY_POLY): 
-
-// POLY cannot overflow so there is no need to call __libm_error_support
-// Set tiny_SAFE (p7) to 1(0) if answer is not tiny 
-// Currently we do not use tiny_SAFE. So the setting of tiny_SAFE is
-// commented out.
-//(p0)     movl            r32            = 0x000000000000fc01           
-//(p0)     setf.exp        f10            = r32                         
-//(p0)     fcmp.lt.unc.s1  p6,p7          = f8,f10                     
-// Here is essentially the algorithm for SINH_BY_POLY. Care is take for the order 
-// of multiplication; and P_1 is not exactly 1/3!, P_2 is not exactly 1/5!, etc.
-// Note that ax = |x|
-// sinh(x) = sign * (series(e^x) - series(e^-x))/2
-//         = sign * (ax + ax^3/3! + ax^5/5! + ax^7/7! + ax^9/9! + ax^11/11! + ax^13/13!)
-//         = sign * (ax   + ax * ( ax^2 * (1/3! + ax^4 * (1/7! + ax^4*1/11!)) )
-//                        + ax * ( ax^4 * (1/5! + ax^4 * (1/9! + ax^4*1/13!)) ) )
-//         = sign * (ax   + ax*p_odd + (ax*p_even))
-//         = sign * (ax   + Y_lo)
-// sinh(x) = sign * (Y_hi + Y_lo)
-// Get the values of P_x from the table
-{ .mfb
-(p0)  addl           r34   = @ltoff(double_sinh_p_table), gp
-(p10) fma.s.s0       f8 =  f8,f8,f8
-(p10) br.ret.spnt    b0
-}
-;;
-
-{ .mfb
-      ld8 r34 = [r34]
-(p11) fnma.s.s0      f8 =  f8,f8,f8
-(p11) br.ret.spnt    b0
-}
-;;
-
-// Calculate sinh_FR_X2 = ax*ax and sinh_FR_X4 = ax*ax*ax*ax
-{ .mmf
-         nop.m 999
-(p0)     ldfe            sinh_FR_P1 = [r34],16                 
-(p0)     fma.s1        sinh_FR_X2 = sinh_FR_X, sinh_FR_X, f0 ;;           
-}
-
-{ .mmi
-(p0)     ldfe            sinh_FR_P2 = [r34],16 ;;                 
-(p0)     ldfe            sinh_FR_P3 = [r34],16                 
-         nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe            sinh_FR_P4 = [r34],16 ;;                 
-(p0)     ldfe            sinh_FR_P5 = [r34],16                 
-         nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     ldfe            sinh_FR_P6 = [r34],16                 
-(p0)     fma.s1        sinh_FR_X4 = sinh_FR_X2, sinh_FR_X2, f0         
-         nop.i 999 ;;
-}
-
-// Calculate sinh_FR_podd = p_odd and sinh_FR_peven = p_even 
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_poly_podd_temp1 = sinh_FR_X4, sinh_FR_P5, sinh_FR_P3                
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_poly_podd_temp2 = sinh_FR_X4, sinh_FR_poly_podd_temp1, sinh_FR_P1   
-         nop.i 999
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_poly_peven_temp1 = sinh_FR_X4, sinh_FR_P6, sinh_FR_P4               
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_podd       = sinh_FR_X2, sinh_FR_poly_podd_temp2, f0           
-         nop.i 999
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_poly_peven_temp2 = sinh_FR_X4, sinh_FR_poly_peven_temp1, sinh_FR_P2 
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_peven       = sinh_FR_X4, sinh_FR_poly_peven_temp2, f0         
-         nop.i 999 ;;
-}
-
-// Calculate sinh_FR_Y_lo = ax*p_odd + (ax*p_even)
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_Y_lo_temp    = sinh_FR_X, sinh_FR_peven, f0                    
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_Y_lo         = sinh_FR_X, sinh_FR_podd,  sinh_FR_Y_lo_temp          
-         nop.i 999 ;;
-}
-
-// Calculate sinh_FR_SINH = Y_hi + Y_lo. Note that ax = Y_hi
-{ .mfi
-         nop.m 999
-(p0)     fma.s1      sinh_FR_SINH        = sinh_FR_X, f1, sinh_FR_Y_lo                      
-         nop.i 999 ;;
-}
-// Dummy multiply to generate inexact
-{ .mfi
-         nop.m 999
-(p0)     fmpy.s0      sinh_FR_tmp = sinh_FR_all_ones, sinh_FR_all_ones
-         nop.i 999
-}
-
-// Calculate f8 = sign * (Y_hi + Y_lo)
-// Go to return
-{ .mfb
-         nop.m 999
-(p0)     fma.s.s0        f8 = sinh_FR_SGNX,sinh_FR_SINH,f0                       
-(p0)     br.ret.sptk     b0 ;;                          
-}
-
-
-L(SINH_BY_TBL): 
-
-// Now that we are at TBL; so far all we know is that |x| >= 0.25.
-// The first two steps are the same for TBL and EXP, but if we are HUGE
-// we want to leave now. 
-// Double-extended:
-// Go to HUGE if |x| >= 2^14, 1000d (register-biased) is e = 14 (true)
-// Double
-// Go to HUGE if |x| >= 2^10, 10009 (register-biased) is e = 10 (true)
-// Single
-// Go to HUGE if |x| >= 2^7,  10006 (register-biased) is e =  7 (true)
+GLOBAL_IEEE754_ENTRY(sinhf)
 
 { .mlx
-         nop.m 999
-(p0)     movl            r32 = 0x0000000000010006 ;;         
+      getf.exp        rSignexp_x = f8  // Must recompute if x unorm
+      movl            r64DivLn2 = 0x40571547652B82FE // 64/ln(2)
 }
-
-{ .mfi
-(p0)     setf.exp        f9 = r32                         
-         nop.f 999
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fcmp.ge.unc.s1  p6,p7 = sinh_FR_X,f9             
-         nop.i 999 ;;
-}
-
-{ .mib
-         nop.m 999
-         nop.i 999
-(p6)     br.cond.spnt    L(SINH_HUGE) ;;                        
-}
-
-// r32 = 1
-// r34 = N-1 
-// r35 = N
-// r36 = j
-// r37 = N+1
-
-// TBL can never overflow
-// sinh(x) = sinh(B+R)
-//         = sinh(B)cosh(R) + cosh(B)sinh(R)
-// 
-// ax = |x| = M*log2/64 + R
-// B = M*log2/64
-// M = 64*N + j 
-//   We will calcualte M and get N as (M-j)/64
-//   The division is a shift.
-// exp(B)  = exp(N*log2 + j*log2/64)
-//         = 2^N * 2^(j*log2/64)
-// sinh(B) = 1/2(e^B -e^-B)
-//         = 1/2(2^N * 2^(j*log2/64) - 2^-N * 2^(-j*log2/64)) 
-// sinh(B) = (2^(N-1) * 2^(j*log2/64) - 2^(-N-1) * 2^(-j*log2/64)) 
-// cosh(B) = (2^(N-1) * 2^(j*log2/64) + 2^(-N-1) * 2^(-j*log2/64)) 
-// 2^(j*log2/64) is stored as Tjhi + Tjlo , j= -32,....,32
-// Tjhi is double-extended (80-bit) and Tjlo is single(32-bit)
-// R = ax - M*log2/64
-// R = ax - M*log2_by_64_hi - M*log2_by_64_lo
-// exp(R) = 1 + R +R^2(1/2! + R(1/3! + R(1/4! + ... + R(1/n!)...)
-//        = 1 + p_odd + p_even
-//        where the p_even uses the A coefficients and the p_even uses the B coefficients
-// So sinh(R) = 1 + p_odd + p_even -(1 -p_odd -p_even)/2 = p_odd
-//    cosh(R) = 1 + p_even
-//    sinh(B) = S_hi + S_lo
-//    cosh(B) = C_hi
-// sinh(x) = sinh(B)cosh(R) + cosh(B)sinh(R)
-// ******************************************************
-// STEP 1 (TBL and EXP)
-// ******************************************************
-// Get the following constants. 
-// f9  = Inv_log2by64
-// f10 = log2by64_hi
-// f11 = log2by64_lo
-
-{ .mmi
-(p0)  adds                 r32 = 0x1,r0      
-(p0)  addl           r34   = @ltoff(double_sinh_arg_reduction), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
-}
-;;
-
-
-// We want 2^(N-1) and 2^(-N-1). So bias N-1 and -N-1 and
-// put them in an exponent.
-// sinh_FR_spos = 2^(N-1) and sinh_FR_sneg = 2^(-N-1)
-// r39 = 0xffff + (N-1)  = 0xffff +N -1
-// r40 = 0xffff - (N +1) = 0xffff -N -1
-
 { .mlx
-         nop.m 999
-(p0)     movl                r38 = 0x000000000000fffe ;; 
-}
-
-{ .mmi
-(p0)     ldfe            sinh_FR_Inv_log2by64 = [r34],16 ;;       
-(p0)     ldfe            sinh_FR_log2by64_hi  = [r34],16       
-         nop.i 999 ;;
-}
-
-{ .mbb
-(p0)     ldfe            sinh_FR_log2by64_lo  = [r34],16       
-         nop.b 999
-         nop.b 999 ;;
-}
-
-// Get the A coefficients
-// f9  = A_1
-// f10 = A_2
-// f11 = A_3
-
-{ .mmi
-      nop.m 999
-(p0)  addl           r34   = @ltoff(double_sinh_ab_table), gp
-      nop.i 999
+      addl            rTblAddr = @ltoff(_sinhf_table),gp
+      movl            rRightShifter = 0x43E8000000000000 // DP Right Shifter
 }
 ;;
 
-{ .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
+{ .mfi
+      // point to the beginning of the table
+      ld8             rTblAddr = [rTblAddr]
+      fclass.m        p6, p0 = f8, 0x0b   // Test for x=unorm
+      addl            rA3 = 0x3E2AA, r0   // high bits of 1.0/6.0 rounded to SP
+}
+{ .mfi
+      nop.m           0
+      fnorm.s1        fNormX = f8 // normalized x
+      addl            rExpHalf = 0xFFFE, r0 // exponent of 1/2
 }
 ;;
 
-
-// Calculate M and keep it as integer and floating point.
-// f38 = M = round-to-integer(x*Inv_log2by64)
-// sinh_FR_M = M = truncate(ax/(log2/64))
-// Put the significand of M in r35
-//    and the floating point representation of M in sinh_FR_M
-
 { .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_M      = sinh_FR_X, sinh_FR_Inv_log2by64, f0 
-         nop.i 999
+      setf.d          f64DivLn2 = r64DivLn2 // load 64/ln(2) to FP reg
+      fclass.m        p15, p0 = f8, 0x1e3   // test for NaT,NaN,Inf
+      nop.i           0
 }
-
-{ .mfi
-(p0)     ldfe            sinh_FR_A1 = [r34],16            
-         nop.f 999
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fcvt.fx.s1      sinh_FR_M_temp = sinh_FR_M                      
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fnorm.s1        sinh_FR_M      = sinh_FR_M_temp                 
-         nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     getf.sig        r35       = sinh_FR_M_temp                 
-         nop.f 999
-         nop.i 999 ;;
-}
-
-// M is still in r35. Calculate j. j is the signed extension of the six lsb of M. It 
-// has a range of -32 thru 31.
-// r35 = M
-// r36 = j 
-
-{ .mii
-         nop.m 999
-         nop.i 999 ;;
-(p0)     and            r36 = 0x3f, r35 ;;   
-}
-
-// Calculate R
-// f13 = f44 - f12*f10 = ax - M*log2by64_hi
-// f14 = f13 - f8*f11  = R = (ax - M*log2by64_hi) - M*log2by64_lo
-
-{ .mfi
-         nop.m 999
-(p0)     fnma.s1           sinh_FR_R_temp = sinh_FR_M, sinh_FR_log2by64_hi, sinh_FR_X      
-         nop.i 999
-}
-
-{ .mfi
-(p0)     ldfe            sinh_FR_A2 = [r34],16            
-         nop.f 999
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fnma.s1           sinh_FR_R      = sinh_FR_M, sinh_FR_log2by64_lo, sinh_FR_R_temp 
-         nop.i 999
-}
-
-// Get the B coefficients
-// f15 = B_1
-// f32 = B_2
-// f33 = B_3
-
-{ .mmi
-(p0)     ldfe            sinh_FR_A3 = [r34],16 ;;            
-(p0)     ldfe            sinh_FR_B1 = [r34],16            
-         nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe            sinh_FR_B2 = [r34],16 ;;            
-(p0)     ldfe            sinh_FR_B3 = [r34],16            
-         nop.i 999 ;;
-}
-
-{ .mii
-         nop.m 999
-(p0)     shl            r34 = r36,  0x2 ;;   
-(p0)     sxt1           r37 = r34 ;;         
-}
-
-// ******************************************************
-// STEP 2 (TBL and EXP)
-// ******************************************************
-// Calculate Rsquared and Rcubed in preparation for p_even and p_odd
-// f12 = R*R*R
-// f13 = R*R
-// f14 = R <== from above
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1             sinh_FR_Rsq  = sinh_FR_R,   sinh_FR_R, f0  
-(p0)     shr            r36 = r37,  0x2 ;;   
-}
-
-// r34 = M-j = r35 - r36
-// r35 = N = (M-j)/64
-
-{ .mii
-(p0)     sub                  r34 = r35, r36    
-         nop.i 999 ;;
-(p0)     shr                  r35 = r34, 0x6 ;;    
-}
-
-{ .mii
-(p0)     sub                 r40 = r38, r35           
-(p0)     adds                 r37 = 0x1, r35    
-(p0)     add                 r39 = r38, r35 ;;           
-}
-
-// Get the address of the J table, add the offset, 
-// addresses are sinh_AD_mJ and sinh_AD_J, get the T value
-// f32 = T(j)_hi
-// f33 = T(j)_lo
-// f34 = T(-j)_hi
-// f35 = T(-j)_lo
-
-{ .mmi
-(p0)  sub                  r34 = r35, r32    
-(p0)  addl           r37   = @ltoff(double_sinh_j_table), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
-      ld8 r37 = [r37]
-      nop.m 999
-      nop.i 999
-}
-;;
-
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1             sinh_FR_Rcub = sinh_FR_Rsq, sinh_FR_R, f0  
-         nop.i 999
-}
-
-// ******************************************************
-// STEP 3 Now decide if we need to branch to EXP
-// ******************************************************
-// Put 32 in f9; p6 true if x < 32
-// Go to EXP if |x| >= 32 
-
 { .mlx
-         nop.m 999
-(p0)     movl                r32 = 0x0000000000010004 ;;               
+      // load Right Shifter to FP reg
+      setf.d          fRightShifter = rRightShifter
+      movl            rLn2Div64 = 0x3F862E42FEFA39EF // DP ln(2)/64 in GR
 }
-
-// Calculate p_even
-// f34 = B_2 + Rsq *B_3
-// f35 = B_1 + Rsq*f34      = B_1 + Rsq * (B_2 + Rsq *B_3)
-// f36 = p_even = Rsq * f35 = Rsq * (B_1 + Rsq * (B_2 + Rsq *B_3))
+;;
 
 { .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_peven_temp1 = sinh_FR_Rsq, sinh_FR_B3,          sinh_FR_B2  
-         nop.i 999 ;;
+      mov             rExp_mask = 0x1ffff
+      fcmp.eq.s1      p13, p0 = f0, f8 // test for x = 0.0
+      shl             rA3 = rA3, 12    // 0x3E2AA000, approx to 1.0/6.0 in SP
 }
+{ .mfb
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    SINH_UNORM            // Branch if x=unorm
+}
+;;
+
+SINH_COMMON:
+{ .mfi
+      setf.exp        fA2 = rExpHalf        // load A2 to FP reg
+      nop.f           0
+      mov             rExp_bias = 0xffff
+}
+{ .mfb
+      setf.d          fLn2Div64 = rLn2Div64 // load ln(2)/64 to FP reg
+(p15) fma.s.s0        f8 = f8, f1, f0       // result if x = NaT,NaN,Inf
+(p15) br.ret.spnt     b0                    // exit here if x = NaT,NaN,Inf
+}
+;;
 
 { .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_peven_temp2 = sinh_FR_Rsq, sinh_FR_peven_temp1, sinh_FR_B1  
-         nop.i 999
+      // min overflow and max normal threshold
+      ldfps           fMIN_SGL_OFLOW_ARG, fMAX_SGL_NORM_ARG = [rTblAddr], 8
+      nop.f           0
+      and             rExp_x = rExp_mask, rSignexp_x // Biased exponent of x
 }
-
-// Calculate p_odd
-// f34 = A_2 + Rsq *A_3
-// f35 = A_1 + Rsq * (A_2 + Rsq *A_3)
-// f37 = podd = R + Rcub * (A_1 + Rsq * (A_2 + Rsq *A_3))
+{ .mfb
+      setf.s          fA3 = rA3                  // load A3 to FP reg
+      nop.f           0
+(p13) br.ret.spnt     b0                         // exit here if x=0.0, return x
+}
+;;
 
 { .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_podd_temp1 = sinh_FR_Rsq,        sinh_FR_A3,         sinh_FR_A2  
-         nop.i 999 ;;
+      sub             rExp_x = rExp_x, rExp_bias // True exponent of x
+      fmerge.s        fAbsX = f0, fNormX         // Form |x|
+      nop.i           0
 }
+;;
 
 { .mfi
-(p0)     setf.exp            sinh_FR_N_temp1 = r39            
-         nop.f 999
-         nop.i 999 ;;
+      nop.m           0
+      // x*(64/ln(2)) + Right Shifter
+      fma.s1          fNint = fNormX, f64DivLn2, fRightShifter
+      add             rTblAddr = 8, rTblAddr
 }
+{ .mfb
+      cmp.gt          p7, p0 = -2, rExp_x        // Test |x| < 2^(-2)
+      fma.s1          fXsq = fNormX, fNormX, f0  // x*x for small path
+(p7)  br.cond.spnt    SINH_SMALL                 // Branch if 0 < |x| < 2^-2
+}
+;;
 
 { .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_peven       = sinh_FR_Rsq, sinh_FR_peven_temp2, f0     
-         nop.i 999
+      nop.m           0
+      // check for overflow
+      fcmp.ge.s1      p12, p13 = fAbsX, fMIN_SGL_OFLOW_ARG
+      mov             rJ_mask = 0x3f             // 6-bit mask for J
 }
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_podd_temp2 = sinh_FR_Rsq,        sinh_FR_podd_temp1, sinh_FR_A1  
-         nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     setf.exp            f9  = r32                              
-         nop.f 999
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1          sinh_FR_podd       = sinh_FR_podd_temp2, sinh_FR_Rcub,       sinh_FR_R   
-         nop.i 999
-}
-
-// sinh_GR_mj contains the table offset for -j
-// sinh_GR_j  contains the table offset for +j
-// p6 is true when j <= 0
-
-{ .mlx
-(p0)     setf.exp            sinh_FR_N_temp2 = r40            
-(p0)     movl                r40 = 0x0000000000000020 ;;    
-}
-
-{ .mfi
-(p0)     sub                 sinh_GR_mJ = r40,  r36           
-(p0)     fmerge.se           sinh_FR_spos    = sinh_FR_N_temp1, f1 
-(p0)     adds                sinh_GR_J  = 0x20, r36 ;;           
-}
-
-{ .mii
-         nop.m 999
-(p0)     shl                  sinh_GR_mJ = sinh_GR_mJ, 5 ;;   
-(p0)     add                  sinh_AD_mJ = r37, sinh_GR_mJ ;; 
-}
-
-{ .mmi
-         nop.m 999
-(p0)     ldfe                 sinh_FR_Tmjhi = [sinh_AD_mJ],16                 
-(p0)     shl                  sinh_GR_J  = sinh_GR_J, 5 ;;    
-}
-
-{ .mfi
-(p0)     ldfs                 sinh_FR_Tmjlo = [sinh_AD_mJ],16                 
-(p0)     fcmp.lt.unc.s1      p0,p7 = sinh_FR_X,f9                          
-(p0)     add                  sinh_AD_J  = r37, sinh_GR_J ;;  
-}
-
-{ .mmi
-(p0)     ldfe                 sinh_FR_Tjhi  = [sinh_AD_J],16 ;;                  
-(p0)     ldfs                 sinh_FR_Tjlo  = [sinh_AD_J],16                  
-         nop.i 999 ;;
-}
+;;
 
 { .mfb
-         nop.m 999
-(p0)     fmerge.se           sinh_FR_sneg    = sinh_FR_N_temp2, f1 
-(p7)     br.cond.spnt        L(SINH_BY_EXP) ;;                            
+      nop.m           0
+      fms.s1          fN = fNint, f1, fRightShifter // n in FP register
+      // branch out if overflow
+(p12) br.cond.spnt    SINH_CERTAIN_OVERFLOW
 }
+;;
 
 { .mfi
-         nop.m 999
-         nop.f 999
-         nop.i 999 ;;
+      getf.sig        rNJ = fNint                   // bits of n, j
+      // check for possible overflow
+      fcmp.gt.s1      p13, p0 = fAbsX, fMAX_SGL_NORM_ARG
+      nop.i           0
 }
-
-// ******************************************************
-// If NOT branch to EXP
-// ******************************************************
-// Calculate S_hi and S_lo
-// sinh_FR_S_hi_temp = sinh_FR_sneg * sinh_FR_Tmjhi
-// sinh_FR_S_hi = sinh_FR_spos * sinh_FR_Tjhi - sinh_FR_S_hi_temp
-// sinh_FR_S_hi = sinh_FR_spos * sinh_FR_Tjhi - (sinh_FR_sneg * sinh_FR_Tmjlo)
+;;
 
 { .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_S_hi_temp = sinh_FR_sneg, sinh_FR_Tmjhi, f0   
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)    fms.s1         sinh_FR_S_hi = sinh_FR_spos, sinh_FR_Tjhi,  sinh_FR_S_hi_temp              
-         nop.i 999
-}
-
-// Calculate C_hi
-// sinh_FR_C_hi_temp1 = sinh_FR_sneg * sinh_FR_Tmjhi
-// sinh_FR_C_hi = sinh_FR_spos * sinh_FR_Tjhi + sinh_FR_C_hi_temp1
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_C_hi_temp1 = sinh_FR_sneg, sinh_FR_Tmjhi, f0                   
-         nop.i 999 ;;
-}
-
-// sinh_FR_S_lo_temp1 =  sinh_FR_spos * sinh_FR_Tjhi - sinh_FR_S_hi
-// sinh_FR_S_lo_temp2 = -sinh_FR_sneg * sinh_FR_Tmjlo + (sinh_FR_spos * sinh_FR_Tjhi - sinh_FR_S_hi)
-// sinh_FR_S_lo_temp2 = -sinh_FR_sneg * sinh_FR_Tmjlo + (sinh_FR_S_lo_temp1              )
-
-{ .mfi
-         nop.m 999
-(p0)    fms.s1         sinh_FR_S_lo_temp1 =  sinh_FR_spos, sinh_FR_Tjhi,  sinh_FR_S_hi            
-         nop.i 999
-}
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_C_hi       = sinh_FR_spos, sinh_FR_Tjhi, sinh_FR_C_hi_temp1    
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)    fnma.s1        sinh_FR_S_lo_temp2 = sinh_FR_sneg, sinh_FR_Tmjhi, sinh_FR_S_lo_temp1       
-         nop.i 999
-}
-
-// sinh_FR_S_lo_temp1 = sinh_FR_sneg * sinh_FR_Tmjlo
-// sinh_FR_S_lo_temp3 = sinh_FR_spos * sinh_FR_Tjlo - sinh_FR_S_lo_temp1
-// sinh_FR_S_lo_temp3 = sinh_FR_spos * sinh_FR_Tjlo -(sinh_FR_sneg * sinh_FR_Tmjlo)
-// sinh_FR_S_lo = sinh_FR_S_lo_temp3 + sinh_FR_S_lo_temp2
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_S_lo_temp1 =  sinh_FR_sneg, sinh_FR_Tmjlo, f0                  
-         nop.i 999 ;;
-}
-
-/////////// BUG FIX fma to fms -TK
-{ .mfi
-         nop.m 999
-(p0)    fms.s1         sinh_FR_S_lo_temp3 =  sinh_FR_spos, sinh_FR_Tjlo,  sinh_FR_S_lo_temp1  
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_S_lo       =  sinh_FR_S_lo_temp3, f1,   sinh_FR_S_lo_temp2     
-         nop.i 999 ;;
-}
-
-// Y_hi = S_hi 
-// Y_lo = C_hi*p_odd + (S_hi*p_even + S_lo)
-// sinh_FR_Y_lo_temp = sinh_FR_S_hi * sinh_FR_peven + sinh_FR_S_lo
-// sinh_FR_Y_lo      = sinh_FR_C_hi * sinh_FR_podd + sinh_FR_Y_lo_temp
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_Y_lo_temp  = sinh_FR_S_hi, sinh_FR_peven, sinh_FR_S_lo           
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_Y_lo       =  sinh_FR_C_hi, sinh_FR_podd, sinh_FR_Y_lo_temp      
-         nop.i 999 ;;
-}
-
-// sinh_FR_SINH = Y_hi + Y_lo
-// f8 = answer = sinh_FR_SGNX * sinh_FR_SINH
-
-// Dummy multiply to generate inexact
-{ .mfi
-         nop.m 999
-(p0)     fmpy.s0      sinh_FR_tmp = sinh_FR_all_ones, sinh_FR_all_ones
-         nop.i 999
+      addl            rN = 0xFFBF - 63, rNJ      // biased and shifted n-1,j
+      fnma.s1         fR = fLn2Div64, fN, fNormX // R = x - N*ln(2)/64
+      and             rJ = rJ_mask, rNJ          // bits of j
 }
 { .mfi
-         nop.m 999
-(p0)    fma.s1         sinh_FR_SINH       =  sinh_FR_S_hi, f1, sinh_FR_Y_lo    
-         nop.i 999 ;;
+      sub             rNJ_neg = r0, rNJ          // bits of n, j for -x
+      nop.f           0
+      andcm           rN_mask = -1, rJ_mask      // 0xff...fc0 to mask N
 }
-
-{ .mfb
-         nop.m 999
-(p0)    fma.s.s0       f8 = sinh_FR_SGNX, sinh_FR_SINH,f0                      
-(p0)    br.ret.sptk     b0 ;;                          
-}
-
-
-L(SINH_BY_EXP): 
-
-// When p7 is true,  we know that an overflow is not going to happen
-// When p7 is false, we must check for possible overflow
-// p7 is the over_SAFE flag
-// Y_hi = Tjhi
-// Y_lo = Tjhi * (p_odd + p_even) +Tjlo
-// Scale = sign * 2^(N-1)
-// sinh_FR_Y_lo =  sinh_FR_Tjhi * (sinh_FR_peven + sinh_FR_podd)
-// sinh_FR_Y_lo =  sinh_FR_Tjhi * (sinh_FR_Y_lo_temp      )
+;;
 
 { .mfi
-         nop.m 999
-(p0)   fma.s1            sinh_FR_Y_lo_temp =  sinh_FR_peven, f1, sinh_FR_podd                   
-         nop.i 999
+      shladd          rJ = rJ, 3, rTblAddr // address in the 2^(j/64) table
+      nop.f           0
+      and             rN = rN_mask, rN     // biased, shifted n-1
 }
-
-// Now we are in EXP. This is the only path where an overflow is possible
-// but not for certain. So this is the only path where over_SAFE has any use.
-// r34 still has N-1
-// There is a danger of double-extended overflow   if N-1 > 16382 = 0x3ffe
-// There is a danger of double overflow            if N-1 > 0x3fe = 1022
-// There is a danger of single overflow            if N-1 > 0x7e = 126
-{ .mlx
-         nop.m 999
-(p0)   movl                r32          = 0x000000000000007e ;;                       
+{ .mfi
+      addl            rN_neg = 0xFFBF - 63, rNJ_neg // -x biased, shifted n-1,j
+      nop.f           0
+      and             rJ_neg = rJ_mask, rNJ_neg     // bits of j for -x
 }
+;;
 
 { .mfi
-(p0)   cmp.gt.unc          p0,p7        = r34, r32                                 
-(p0)   fmerge.s          sinh_FR_SCALE     = sinh_FR_SGNX, sinh_FR_spos                         
-         nop.i 999 ;;
+      ld8             rJ = [rJ]                    // Table value
+      nop.f           0
+      shl             rN = rN, 46 // 2^(n-1) bits in DP format
 }
+{ .mfi
+      shladd          rJ_neg = rJ_neg, 3, rTblAddr // addr in 2^(j/64) table -x
+      nop.f           0
+      and             rN_neg = rN_mask, rN_neg     // biased, shifted n-1 for -x
+}
+;;
 
 { .mfi
-         nop.m 999
-(p0)   fma.s1            sinh_FR_Y_lo      =  sinh_FR_Tjhi,  sinh_FR_Y_lo_temp, sinh_FR_Tjlo    
-         nop.i 999 ;;
+      ld8             rJ_neg = [rJ_neg]            // Table value for -x
+      nop.f           0
+      shl             rN_neg = rN_neg, 46 // 2^(n-1) bits in DP format for -x
 }
-
-// f8 = answer = scale * (Y_hi + Y_lo)
-{ .mfi
-         nop.m 999
-(p0)   fma.s1            sinh_FR_SINH_temp = sinh_FR_Y_lo,  f1, sinh_FR_Tjhi       
-         nop.i 999 ;;
-}
+;;
 
 { .mfi
-         nop.m 999
-(p0)   fma.s.s0          f44          = sinh_FR_SCALE,  sinh_FR_SINH_temp, f0      
-         nop.i 999 ;;
+      or              rN = rN, rJ // bits of 2^n * 2^(j/64) in DP format
+      nop.f           0
+      nop.i           0
 }
-
-// Dummy multiply to generate inexact
-{ .mfi
-         nop.m 999
-(p7)     fmpy.s0      sinh_FR_tmp = sinh_FR_all_ones, sinh_FR_all_ones
-         nop.i 999 ;;
-}
-
-// If over_SAFE is set, return
-{ .mfb
-       nop.m 999
-(p7)   fmerge.s            f8 = f44,f44                                            
-(p7)   br.ret.sptk     b0 ;;                          
-}
-
-// Else see if we overflowed
-// S0 user supplied status
-// S2 user supplied status + WRE + TD  (Overflows)
-// If WRE is set then an overflow will not occur in EXP.
-// The input value that would cause a register (WRE) value to overflow is about 2^15
-// and this input would go into the HUGE path.
-// Answer with WRE is in f43.
-
-{ .mfi
-         nop.m 999
-(p0)   fsetc.s2            0x7F,0x42                                               
-         nop.i 999;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)   fma.s.s2            f43  = sinh_FR_SCALE,  sinh_FR_SINH_temp, f0                      
-         nop.i 999 ;;
-}
-
-// 1007F => 1007F -FFFF = 80(true)
-// 80 + 7F = FF, which is 1 more that the exponent of the largest
-// double (FE). So 0 1007F 8000000000000000  is one ulp more than
-// largest single in register bias
-// Now  set p8 if the answer with WRE is greater than or equal this value
-// Also set p9 if the answer with WRE is less than or equal to negative this value
-
-{ .mlx
-         nop.m 999
-(p0)   movl                r32     = 0x0000000001007F ;;                              
-}
+;;
 
 { .mmf
-         nop.m 999
-(p0)   setf.exp            f41 = r32                                               
-(p0)   fsetc.s2            0x7F,0x40 ;;                                               
+      setf.d          fT = rN            // 2^(n-1) * 2^(j/64)
+      or              rN_neg = rN_neg, rJ_neg // -x bits of 2^n * 2^(j/64) in DP
+      fma.s1          fRSqr = fR, fR, f0 // R^2
 }
+;;
 
 { .mfi
-         nop.m 999
-(p0)   fcmp.ge.unc.s1 p8, p0 =  f43, f41                                           
-         nop.i 999
+      setf.d          fT_neg = rN_neg    // 2^(n-1) * 2^(j/64) for -x
+      fma.s1          fP = fA3, fR, fA2  // A3*R + A2
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fnma.s1         fP_neg = fA3, fR, fA2  // A3*R + A2 for -x
+      nop.i           0
+}
+;;
 
 { .mfi
-         nop.m 999
-(p0)   fmerge.ns           f42 = f41, f41                                          
-         nop.i 999 ;;
+      nop.m           0
+      fma.s1          fP = fP, fRSqr, fR // P = (A3*R + A2)*R^2 + R
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fms.s1          fP_neg = fP_neg, fRSqr, fR // P = (A3*R + A2)*R^2 + R, -x
+      nop.i           0
+}
+;;
 
-// The error tag for overflow is 128
-{ .mii
-         nop.m 999
-         nop.i 999 ;;
-(p8)   mov                 r47 = 128 ;;                                               
+{ .mfi
+      nop.m           0
+      fmpy.s0         fTmp = fLn2Div64, fLn2Div64       // Force inexact
+      nop.i           0
 }
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fExp = fP, fT, fT                 // exp(x)/2
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+      fma.s1          fExp_neg = fP_neg, fT_neg, fT_neg // exp(-x)/2
+      // branch out if possible overflow result
+(p13) br.cond.spnt    SINH_POSSIBLE_OVERFLOW
+}
+;;
 
 { .mfb
-         nop.m 999
-(p0)   fcmp.le.unc.s1      p9, p0 =  f43, f42                                      
-(p8)   br.cond.spnt L(SINH_ERROR_SUPPORT) ;;
+      nop.m           0
+      // final result in the absence of overflow
+      fms.s.s0        f8 = fExp, f1, fExp_neg  // result = (exp(x)-exp(-x))/2
+      // exit here in the absence of overflow
+      br.ret.sptk     b0              // Exit main path, 0.25 <= |x| < 89.41598
 }
+;;
 
-{ .mii
-         nop.m 999
-         nop.i 999 ;;
-(p9)   mov                 r47 = 128                                               
+// Here if 0 < |x| < 0.25.  Evaluate 9th order polynomial.
+SINH_SMALL:
+{ .mfi
+      add             rAd1 = 0x200, rTblAddr
+      fcmp.lt.s1      p7, p8 = fNormX, f0       // Test sign of x
+      cmp.gt          p6, p0 = -60, rExp_x      // Test |x| < 2^(-60)
 }
+{ .mfi
+      add             rAd2 = 0x210, rTblAddr
+      nop.f           0
+      nop.i           0
+}
+;;
 
-{ .mib
-         nop.m 999
-         nop.i 999
-(p9)   br.cond.spnt L(SINH_ERROR_SUPPORT) ;;
+{ .mmb
+      ldfpd           fA4, fA3 = [rAd1]
+      ldfpd           fA2, fA1 = [rAd2]
+(p6)  br.cond.spnt    SINH_VERY_SMALL           // Branch if |x| < 2^(-60)
 }
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fX3 = fXsq, fNormX, f0
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.s1          fX4 = fXsq, fXsq, f0
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA43 = fXsq, fA4, fA3
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.s1          fA21 = fXsq, fA2, fA1
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA4321 = fX4, fA43, fA21
+      nop.i           0
+}
+;;
 
 // Dummy multiply to generate inexact
 { .mfi
-         nop.m 999
-(p0)     fmpy.s0      sinh_FR_tmp = sinh_FR_all_ones, sinh_FR_all_ones
-         nop.i 999 ;;
+      nop.m           0
+      fmpy.s0         fTmp = fA4, fA4
+      nop.i           0
 }
+{ .mfb
+      nop.m           0
+      fma.s.s0        f8 = fA4321, fX3, fNormX
+      br.ret.sptk     b0                // Exit if 2^-60 < |x| < 0.25
+}
+;;
+
+SINH_VERY_SMALL:
+// Here if 0 < |x| < 2^-60
+// Compute result by x + sgn(x)*x^2 to get properly rounded result
+.pred.rel "mutex",p7,p8
+{ .mfi
+      nop.m           0
+(p7)  fnma.s.s0       f8 = fNormX, fNormX, fNormX // If x<0 result ~ x-x^2
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+(p8)  fma.s.s0        f8 = fNormX, fNormX, fNormX // If x>0 result ~ x+x^2
+      br.ret.sptk     b0                          // Exit if |x| < 2^-60
+}
+;;
+
+SINH_POSSIBLE_OVERFLOW:
+
+// Here if fMAX_SGL_NORM_ARG < x < fMIN_SGL_OFLOW_ARG
+// This cannot happen if input is a single, only if input higher precision.
+// Overflow is a possibility, not a certainty.
+
+// Recompute result using status field 2 with user's rounding mode,
+// and wre set.  If result is larger than largest single, then we have
+// overflow
+
+{ .mfi
+      mov             rGt_ln  = 0x1007f // Exponent for largest single + 1 ulp
+      fsetc.s2        0x7F,0x42         // Get user's round mode, set wre
+      nop.i           0
+}
+;;
+
+{ .mfi
+      setf.exp        fGt_pln = rGt_ln  // Create largest single + 1 ulp
+      fma.s.s2        fWre_urm_f8 = fP, fT, fT    // Result with wre set
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fsetc.s2        0x7F,0x40                   // Turn off wre in sf2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.ge.s1      p6, p0 =  fWre_urm_f8, fGt_pln // Test for overflow
+      nop.i           0
+}
+;;
 
 { .mfb
-         nop.m 999
-(p0)   fmerge.s            f8 = f44,f44                                            
-(p0)   br.ret.sptk     b0 ;;                          
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    SINH_CERTAIN_OVERFLOW // Branch if overflow
 }
+;;
 
-L(SINH_HUGE): 
-
-// for SINH_HUGE, put 24000 in exponent; take sign from input; add 1
-// SAFE: SAFE is always 0 for HUGE
-
-{ .mlx
-         nop.m 999
-(p0)   movl                r32 = 0x0000000000015dbf ;;                                
+{ .mfb
+      nop.m           0
+      fma.s.s0        f8 = fP, fT, fT
+      br.ret.sptk     b0                     // Exit if really no overflow
 }
+;;
+
+// here if overflow
+SINH_CERTAIN_OVERFLOW:
+{ .mfi
+      addl            r17ones_m1 = 0x1FFFE, r0
+      fcmp.lt.s1      p6, p7 = fNormX, f0     // Test for x < 0
+      nop.i           0
+}
+;;
+
+{ .mmf
+      alloc           r32 = ar.pfs, 0, 3, 4, 0 // get some registers
+      setf.exp        fTmp = r17ones_m1
+      fmerge.s        FR_X = f8,f8
+}
+;;
 
 { .mfi
-(p0)   setf.exp            f9  = r32                                               
-         nop.f 999
-         nop.i 999 ;;
+      mov             GR_Parameter_TAG = 128
+(p6)  fnma.s.s0       FR_RESULT = fTmp, fTmp, f0 // Set I,O and -INF result
+      nop.i           0
 }
-
-{ .mfi
-         nop.m 999
-(p0)   fma.s1              sinh_FR_signed_hi_lo = sinh_FR_SGNX, f9, f1                       
-         nop.i 999 ;;
+{ .mfb
+      nop.m           0
+(p7)  fma.s.s0        FR_RESULT = fTmp, fTmp, f0 // Set I,O and +INF result
+      br.cond.sptk    __libm_error_region
 }
+;;
 
-{ .mfi
-         nop.m 999
-(p0)   fma.s.s0            f44 = sinh_FR_signed_hi_lo,  f9, f0                          
-(p0)   mov                 r47 = 128                                               
+// Here if x unorm
+SINH_UNORM:
+{ .mfb
+      getf.exp        rSignexp_x = fNormX    // Must recompute if x unorm
+      fcmp.eq.s0      p6, p0 = f8, f0        // Set D flag
+      br.cond.sptk    SINH_COMMON            // Return to main path
 }
-.endp sinhf
-ASM_SIZE_DIRECTIVE(sinhf)
-#ifdef _LIBC
-ASM_SIZE_DIRECTIVE(__ieee754_sinhf)
-#endif
+;;
 
-// Stack operations when calling error support.
-//       (1)               (2)                          (3) (call)              (4)
-//   sp   -> +          psp -> +                     psp -> +                   sp -> +
-//           |                 |                            |                         |
-//           |                 | <- GR_Y               R3 ->| <- GR_RESULT            | -> f8
-//           |                 |                            |                         |
-//           | <-GR_Y      Y2->|                       Y2 ->| <- GR_Y                 |
-//           |                 |                            |                         |
-//           |                 | <- GR_X               X1 ->|                         |
-//           |                 |                            |                         |
-//  sp-64 -> +          sp ->  +                     sp ->  +                         +
-//    save ar.pfs          save b0                                               restore gp
-//    save gp                                                                    restore ar.pfs
+GLOBAL_IEEE754_END(sinhf)
 
-.proc __libm_error_region
-__libm_error_region:
-L(SINH_ERROR_SUPPORT):
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
-
-// (1)
 { .mfi
-        add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-        nop.f 0
+      add   GR_Parameter_Y=-32,sp             // Parameter 2 value
+      nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-        mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
+      mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
 { .mfi
 .fframe 64
-        add sp=-64,sp                          // Create new stack
-        nop.f 0
-        mov GR_SAVE_GP=gp                      // Save gp
+      add sp=-64,sp                           // Create new stack
+      nop.f 0
+      mov GR_SAVE_GP=gp                       // Save gp
 };;
-
-
-// (2)
 { .mmi
-        stfs [GR_Parameter_Y] = f0,16         // STORE Parameter 2 on stack
-        add GR_Parameter_X = 16,sp            // Parameter 1 address
+      stfs [GR_Parameter_Y] = FR_Y,16         // Store Parameter 2 on stack
+      add GR_Parameter_X = 16,sp              // Parameter 1 address
 .save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0                     // Save b0
+      mov GR_SAVE_B0=b0                       // Save b0
 };;
-
 .body
-// (3)
-{ .mib
-        stfs [GR_Parameter_X] = f8                     // STORE Parameter 1 on stack
-        add   GR_Parameter_RESULT = 0,GR_Parameter_Y   // Parameter 3 address
-        nop.b 0                            
+{ .mfi
+      stfs [GR_Parameter_X] = FR_X            // Store Parameter 1 on stack
+      nop.f 0
+      add   GR_Parameter_RESULT = 0,GR_Parameter_Y // Parameter 3 address
 }
 { .mib
-        stfs [GR_Parameter_Y] = f44                    // STORE Parameter 3 on stack
-        add   GR_Parameter_Y = -16,GR_Parameter_Y
-        br.call.sptk b0=__libm_error_support#          // Call error handling function
-};;
-{ .mmi
-        nop.m 0
-        nop.m 0
-        add   GR_Parameter_RESULT = 48,sp
+      stfs [GR_Parameter_Y] = FR_RESULT       // Store Parameter 3 on stack
+      add   GR_Parameter_Y = -16,GR_Parameter_Y
+      br.call.sptk b0=__libm_error_support#   // Call error handling function
 };;
 
-// (4)
 { .mmi
-        ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
+      add   GR_Parameter_RESULT = 48,sp
+      nop.m 0
+      nop.i 0
+};;
+
+{ .mmi
+      ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
-        add   sp = 64,sp                       // Restore stack pointer
-        mov   b0 = GR_SAVE_B0                  // Restore return address
+      add   sp = 64,sp                       // Restore stack pointer
+      mov   b0 = GR_SAVE_B0                  // Restore return address
 };;
 { .mib
-        mov   gp = GR_SAVE_GP                  // Restore gp
-        mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
-        br.ret.sptk     b0                     // Return
+      mov   gp = GR_SAVE_GP                  // Restore gp
+      mov   ar.pfs = GR_SAVE_PFS             // Restore ar.pfs
+      br.ret.sptk     b0                     // Return
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
+
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#

@@ -1,11 +1,10 @@
-.file "hypotf.asm"
+.file "hypotf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Cristina Iordache, Ted Kubaska, 
-// Bob Norin, Shane Story, and Ping Tak Peter Tang of the 
-// Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -21,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,24 +35,27 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // History: 
-// 2/02/00  hand-optimized
-// 4/04/00  Unwind support added
-// 6/26/00  new version
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 hand-optimized
+// 04/04/00 Unwind support added
+// 06/26/00 new version
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align
+// 04/17/03 Added missing mutex directive
 //
-// *********************************************************************
+//*********************************************************************
 //                           ___________
 // Function:   hypotf(x,y) = |(x^2 + y^2) = for single precision values
 //             x and y
 //             Also provides cabsf functionality.
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Resources Used:
 //
@@ -68,7 +70,7 @@
 //
 //    Predicate Registers:      p6 - p10
 //
-// *********************************************************************
+//*********************************************************************
 //
 // IEEE Special Conditions:
 //
@@ -78,7 +80,7 @@
 //    hypotf(QNaN and anything) = QNaN
 //    hypotf(SNaN and anything ) = QNaN
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Implementation:
 //  x2 = x * x   in double-extended
@@ -86,9 +88,7 @@
 //  temp = x2 + y2   in double-extended
 //  sqrt(temp) rounded to single precision 
 //
-// *********************************************************************
-
-#include "libm_support.h"
+//*********************************************************************
 
 GR_SAVE_PFS         = r33
 GR_SAVE_B0          = r34
@@ -103,23 +103,10 @@ FR_Y                = f15
 FR_RESULT           = f8
 
 .section .text
-#ifndef _LIBC
-.proc cabsf#
-.global cabsf#
-cabsf: 
-.endp cabsf
-#endif
-.proc hypotf#
-.global hypotf#
-.align 64 
 
-hypotf: 
-#ifdef _LIBC
-.global __hypotf
-__hypotf:
-.global __ieee754_hypotf
-__ieee754_hypotf:
-#endif 
+LOCAL_LIBM_ENTRY(cabsf)
+LOCAL_LIBM_END(cabsf)
+GLOBAL_IEEE754_ENTRY(hypotf)
 {.mfi
   alloc r32= ar.pfs,0,4,4,0
   // Compute x*x
@@ -207,6 +194,7 @@ __ieee754_hypotf:
   nop.i 0;;
 }
 
+.pred.rel "mutex",p7,p8
 {.mfb
   nop.m 0
   // if f8=Infinity or f9=Zero, return |f8|
@@ -348,15 +336,12 @@ __ieee754_hypotf:
 	 // No overflow
 (p9) br.ret.sptk b0;; 
 }
-.endp hypotf
-ASM_SIZE_DIRECTIVE(hypotf)
-
-.proc __libm_error_region
-__libm_error_region:
+GLOBAL_IEEE754_END(hypotf)
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-(p0)    mov   GR_Parameter_TAG = 47                   
+        mov   GR_Parameter_TAG = 47                   
 .save   ar.pfs,GR_SAVE_PFS
         mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
@@ -400,8 +385,9 @@ __libm_error_region:
         br.ret.sptk     b0                     // Return
 };; 
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
+
 
 .type   __libm_error_support#,@function
 .global __libm_error_support#
+

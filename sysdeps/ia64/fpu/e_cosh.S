@@ -1,10 +1,10 @@
 .file "cosh.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2002, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,1081 +20,799 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// problem reports or change requests be submitted to it directly at
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
-// 2/02/00  Initial version 
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 Initial version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
-//
+// 05/07/01 Reworked to improve speed of all paths
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 11/15/02 Improved speed with new algorithm
+
 // API
 //==============================================================
-// double = cosh(double)
-// input  floating point f8
-// output floating point f8
-
+// double cosh(double)
 
 // Overview of operation
 //==============================================================
-// There are four paths
+// Case 1:  0 < |x| < 0.25
+//  Evaluate cosh(x) by a 12th order polynomial
+//  Care is take for the order of multiplication; and A2 is not exactly 1/4!,
+//  A3 is not exactly 1/6!, etc.
+//  cosh(x) = 1 + (A1*x^2 + A2*x^4 + A3*x^6 + A4*x^8 + A5*x^10 + A6*x^12)
+//
+// Case 2:  0.25 < |x| < 710.47586
+//  Algorithm is based on the identity cosh(x) = ( exp(x) + exp(-x) ) / 2.
+//  The algorithm for exp is described as below.  There are a number of
+//  economies from evaluating both exp(x) and exp(-x).  Although we
+//  are evaluating both quantities, only where the quantities diverge do we
+//  duplicate the computations.  The basic algorithm for exp(x) is described
+//  below.
+//
+// Take the input x. w is "how many log2/128 in x?"
+//  w = x * 128/log2
+//  n = int(w)
+//  x = n log2/128 + r + delta
 
-// 1. |x| < 0.25        COSH_BY_POLY
-// 2. |x| < 32          COSH_BY_TBL
-// 3. |x| < 2^14        COSH_BY_EXP
-// 4. |x_ >= 2^14       COSH_HUGE
+//  n = 128M + index_1 + 2^4 index_2
+//  x = M log2 + (log2/128) index_1 + (log2/8) index_2 + r + delta
 
-// For paths 1, and 2 SAFE is always 1.
-// For path  4, Safe is always 0.
-// SAFE = 1 means we cannot overflow.
+//  exp(x) = 2^M  2^(index_1/128)  2^(index_2/8) exp(r) exp(delta)
+//       Construct 2^M
+//       Get 2^(index_1/128) from table_1;
+//       Get 2^(index_2/8)   from table_2;
+//       Calculate exp(r) by 5th order polynomial
+//          r = x - n (log2/128)_high
+//          delta = - n (log2/128)_low
+//       Calculate exp(delta) as 1 + delta
 
-#include "libm_support.h"
+
+// Special values
+//==============================================================
+// cosh(+0)    = 1.0
+// cosh(-0)    = 1.0
+
+// cosh(+qnan) = +qnan
+// cosh(-qnan) = -qnan
+// cosh(+snan) = +qnan
+// cosh(-snan) = -qnan
+
+// cosh(-inf)  = +inf
+// cosh(+inf)  = +inf
+
+// Overflow and Underflow
+//=======================
+// cosh(x) = largest double normal when
+//     x = 710.47586 = 0x408633ce8fb9f87d
+//
+// There is no underflow.
+
+// Registers used
+//==============================================================
+// Floating Point registers used:
+// f8, input, output
+// f6 -> f15,  f32 -> f61
+
+// General registers used:
+// r14 -> r40
+
+// Predicate registers used:
+// p6 -> p15
 
 // Assembly macros
 //==============================================================
-cosh_FR_X            = f44
-cosh_FR_SGNX         = f40
 
-cosh_FR_Inv_log2by64 = f9
-cosh_FR_log2by64_lo  = f11
-cosh_FR_log2by64_hi  = f10
+rRshf                 = r14
+rN_neg                = r14
+rAD_TB1               = r15
+rAD_TB2               = r16
+rAD_P                 = r17
+rN                    = r18
+rIndex_1              = r19
+rIndex_2_16           = r20
+rM                    = r21
+rBiased_M             = r21
+rSig_inv_ln2          = r22
+rIndex_1_neg          = r22
+rExp_bias             = r23
+rExp_bias_minus_1     = r23
+rExp_mask             = r24
+rTmp                  = r24
+rGt_ln                = r24
+rIndex_2_16_neg       = r24
+rM_neg                = r25
+rBiased_M_neg         = r25
+rRshf_2to56           = r26
+rAD_T1_neg            = r26
+rExp_2tom56           = r28
+rAD_T2_neg            = r28
+rAD_T1                = r29
+rAD_T2                = r30
+rSignexp_x            = r31
+rExp_x                = r31
 
-cosh_FR_A1           = f9
-cosh_FR_A2           = f10
-cosh_FR_A3           = f11
+GR_SAVE_B0            = r33
+GR_SAVE_PFS           = r34
+GR_SAVE_GP            = r35
+GR_SAVE_SP            = r36
 
-cosh_FR_Rcub         = f12
-cosh_FR_M_temp       = f13
-cosh_FR_R_temp       = f13
-cosh_FR_Rsq          = f13
-cosh_FR_R            = f14
+GR_Parameter_X        = r37
+GR_Parameter_Y        = r38
+GR_Parameter_RESULT   = r39
+GR_Parameter_TAG      = r40
 
-cosh_FR_M            = f38
 
-cosh_FR_B1           = f15
-cosh_FR_B2           = f32
-cosh_FR_B3           = f33
+FR_X                  = f10
+FR_Y                  = f1
+FR_RESULT             = f8
 
-cosh_FR_peven_temp1  = f34
-cosh_FR_peven_temp2  = f35
-cosh_FR_peven        = f36
+fRSHF_2TO56           = f6
+fINV_LN2_2TO63        = f7
+fW_2TO56_RSH          = f9
+f2TOM56               = f11
+fP5                   = f12
+fP4                   = f13
+fP3                   = f14
+fP2                   = f15
 
-cosh_FR_podd_temp1   = f34
-cosh_FR_podd_temp2   = f35
-cosh_FR_podd         = f37
+fLn2_by_128_hi        = f33
+fLn2_by_128_lo        = f34
 
-cosh_FR_J_temp       = f9
-cosh_FR_J            = f10
+fRSHF                 = f35
+fNfloat               = f36
+fNormX                = f37
+fR                    = f38
+fF                    = f39
 
-cosh_FR_Mmj          = f39
+fRsq                  = f40
+f2M                   = f41
+fS1                   = f42
+fT1                   = f42
+fS2                   = f43
+fT2                   = f43
+fS                    = f43
+fWre_urm_f8           = f44
+fAbsX                 = f44
 
-cosh_FR_N_temp1      = f11
-cosh_FR_N_temp2      = f12
-cosh_FR_N            = f13
+fMIN_DBL_OFLOW_ARG    = f45
+fMAX_DBL_NORM_ARG     = f46
+fXsq                  = f47
+fX4                   = f48
+fGt_pln               = f49
+fTmp                  = f49
 
-cosh_FR_spos         = f14
-cosh_FR_sneg         = f15
+fP54                  = f50
+fP5432                = f50
+fP32                  = f51
+fP                    = f52
+fP54_neg              = f53
+fP5432_neg            = f53
+fP32_neg              = f54
+fP_neg                = f55
+fF_neg                = f56
 
-cosh_FR_Tjhi         = f32
-cosh_FR_Tjlo         = f33
-cosh_FR_Tmjhi        = f34
-cosh_FR_Tmjlo        = f35
+f2M_neg               = f57
+fS1_neg               = f58
+fT1_neg               = f58
+fS2_neg               = f59
+fT2_neg               = f59
+fS_neg                = f59
+fExp                  = f60
+fExp_neg              = f61
 
-GR_mJ           = r35
-GR_J            = r36
-
-AD_mJ           = r38
-AD_J            = r39
-
-cosh_FR_C_hi         = f9
-cosh_FR_C_hi_temp    = f10
-cosh_FR_C_lo_temp1   = f11 
-cosh_FR_C_lo_temp2   = f12 
-cosh_FR_C_lo_temp3   = f13 
-
-cosh_FR_C_lo         = f38
-cosh_FR_S_hi         = f39
-
-cosh_FR_S_hi_temp1   = f10
-cosh_FR_Y_hi         = f11 
-cosh_FR_Y_lo_temp    = f12 
-cosh_FR_Y_lo         = f13 
-cosh_FR_COSH         = f9
-
-cosh_FR_X2           = f9
-cosh_FR_X4           = f10
-
-cosh_FR_P1           = f14
-cosh_FR_P2           = f15
-cosh_FR_P3           = f32
-cosh_FR_P4           = f33
-cosh_FR_P5           = f34
-cosh_FR_P6           = f35
-
-cosh_FR_TINY_THRESH  = f9
-
-cosh_FR_COSH_temp    = f10
-cosh_FR_SCALE        = f11 
-
-cosh_FR_hi_lo = f10
-
-cosh_FR_poly_podd_temp1    =  f11 
-cosh_FR_poly_podd_temp2    =  f13
-cosh_FR_poly_peven_temp1   =  f11
-cosh_FR_poly_peven_temp2   =  f13
-
-GR_SAVE_PFS                    = r41
-GR_SAVE_B0                     = r42
-GR_SAVE_GP                     = r43
-
-GR_Parameter_X                 = r44
-GR_Parameter_Y                 = r45
-GR_Parameter_RESULT            = r46
-
+fA6                   = f50
+fA65                  = f50
+fA6543                = f50
+fA654321              = f50
+fA5                   = f51
+fA4                   = f52
+fA43                  = f52
+fA3                   = f53
+fA2                   = f54
+fA21                  = f54
+fA1                   = f55
 
 // Data tables
 //==============================================================
 
-#ifdef _LIBC
-.rodata
-#else
-.data
-#endif
-
+RODATA
 .align 16
-double_cosh_arg_reduction:
-ASM_TYPE_DIRECTIVE(double_cosh_arg_reduction,@object)
-   data8 0xB8AA3B295C17F0BC, 0x00004005
-   data8 0xB17217F7D1000000, 0x00003FF8
-   data8 0xCF79ABC9E3B39804, 0x00003FD0
-ASM_SIZE_DIRECTIVE(double_cosh_arg_reduction)
 
-double_cosh_p_table:
-ASM_TYPE_DIRECTIVE(double_cosh_p_table,@object)
-   data8 0x8000000000000000, 0x00003FFE
-   data8 0xAAAAAAAAAAAAAB80, 0x00003FFA
-   data8 0xB60B60B60B4FE884, 0x00003FF5
-   data8 0xD00D00D1021D7370, 0x00003FEF
-   data8 0x93F27740C0C2F1CC, 0x00003FE9
-   data8 0x8FA02AC65BCBD5BC, 0x00003FE2
-ASM_SIZE_DIRECTIVE(double_cosh_p_table)
+// ************* DO NOT CHANGE ORDER OF THESE TABLES ********************
 
-double_cosh_ab_table:
-ASM_TYPE_DIRECTIVE(double_cosh_ab_table,@object)
-   data8 0xAAAAAAAAAAAAAAAC, 0x00003FFC
-   data8 0x88888888884ECDD5, 0x00003FF8
-   data8 0xD00D0C6DCC26A86B, 0x00003FF2
-   data8 0x8000000000000002, 0x00003FFE
-   data8 0xAAAAAAAAAA402C77, 0x00003FFA
-   data8 0xB60B6CC96BDB144D, 0x00003FF5
-ASM_SIZE_DIRECTIVE(double_cosh_ab_table)
+// double-extended 1/ln(2)
+// 3fff b8aa 3b29 5c17 f0bb be87fed0691d3e88
+// 3fff b8aa 3b29 5c17 f0bc
+// For speed the significand will be loaded directly with a movl and setf.sig
+//   and the exponent will be bias+63 instead of bias+0.  Thus subsequent
+//   computations need to scale appropriately.
+// The constant 128/ln(2) is needed for the computation of w.  This is also
+//   obtained by scaling the computations.
+//
+// Two shifting constants are loaded directly with movl and setf.d.
+//   1. fRSHF_2TO56 = 1.1000..00 * 2^(63-7)
+//        This constant is added to x*1/ln2 to shift the integer part of
+//        x*128/ln2 into the rightmost bits of the significand.
+//        The result of this fma is fW_2TO56_RSH.
+//   2. fRSHF       = 1.1000..00 * 2^(63)
+//        This constant is subtracted from fW_2TO56_RSH * 2^(-56) to give
+//        the integer part of w, n, as a floating-point number.
+//        The result of this fms is fNfloat.
 
-double_cosh_j_table:
-ASM_TYPE_DIRECTIVE(double_cosh_j_table,@object)
-   data8 0xB504F333F9DE6484, 0x00003FFE, 0x1EB2FB13, 0x00000000
-   data8 0xB6FD91E328D17791, 0x00003FFE, 0x1CE2CBE2, 0x00000000
-   data8 0xB8FBAF4762FB9EE9, 0x00003FFE, 0x1DDC3CBC, 0x00000000
-   data8 0xBAFF5AB2133E45FB, 0x00003FFE, 0x1EE9AA34, 0x00000000
-   data8 0xBD08A39F580C36BF, 0x00003FFE, 0x9EAEFDC1, 0x00000000
-   data8 0xBF1799B67A731083, 0x00003FFE, 0x9DBF517B, 0x00000000
-   data8 0xC12C4CCA66709456, 0x00003FFE, 0x1EF88AFB, 0x00000000
-   data8 0xC346CCDA24976407, 0x00003FFE, 0x1E03B216, 0x00000000
-   data8 0xC5672A115506DADD, 0x00003FFE, 0x1E78AB43, 0x00000000
-   data8 0xC78D74C8ABB9B15D, 0x00003FFE, 0x9E7B1747, 0x00000000
-   data8 0xC9B9BD866E2F27A3, 0x00003FFE, 0x9EFE3C0E, 0x00000000
-   data8 0xCBEC14FEF2727C5D, 0x00003FFE, 0x9D36F837, 0x00000000
-   data8 0xCE248C151F8480E4, 0x00003FFE, 0x9DEE53E4, 0x00000000
-   data8 0xD06333DAEF2B2595, 0x00003FFE, 0x9E24AE8E, 0x00000000
-   data8 0xD2A81D91F12AE45A, 0x00003FFE, 0x1D912473, 0x00000000
-   data8 0xD4F35AABCFEDFA1F, 0x00003FFE, 0x1EB243BE, 0x00000000
-   data8 0xD744FCCAD69D6AF4, 0x00003FFE, 0x1E669A2F, 0x00000000
-   data8 0xD99D15C278AFD7B6, 0x00003FFE, 0x9BBC610A, 0x00000000
-   data8 0xDBFBB797DAF23755, 0x00003FFE, 0x1E761035, 0x00000000
-   data8 0xDE60F4825E0E9124, 0x00003FFE, 0x9E0BE175, 0x00000000
-   data8 0xE0CCDEEC2A94E111, 0x00003FFE, 0x1CCB12A1, 0x00000000
-   data8 0xE33F8972BE8A5A51, 0x00003FFE, 0x1D1BFE90, 0x00000000
-   data8 0xE5B906E77C8348A8, 0x00003FFE, 0x1DF2F47A, 0x00000000
-   data8 0xE8396A503C4BDC68, 0x00003FFE, 0x1EF22F22, 0x00000000
-   data8 0xEAC0C6E7DD24392F, 0x00003FFE, 0x9E3F4A29, 0x00000000
-   data8 0xED4F301ED9942B84, 0x00003FFE, 0x1EC01A5B, 0x00000000
-   data8 0xEFE4B99BDCDAF5CB, 0x00003FFE, 0x1E8CAC3A, 0x00000000
-   data8 0xF281773C59FFB13A, 0x00003FFE, 0x9DBB3FAB, 0x00000000
-   data8 0xF5257D152486CC2C, 0x00003FFE, 0x1EF73A19, 0x00000000
-   data8 0xF7D0DF730AD13BB9, 0x00003FFE, 0x9BB795B5, 0x00000000
-   data8 0xFA83B2DB722A033A, 0x00003FFE, 0x1EF84B76, 0x00000000
-   data8 0xFD3E0C0CF486C175, 0x00003FFE, 0x9EF5818B, 0x00000000
-   data8 0x8000000000000000, 0x00003FFF, 0x00000000, 0x00000000
-   data8 0x8164D1F3BC030773, 0x00003FFF, 0x1F77CACA, 0x00000000
-   data8 0x82CD8698AC2BA1D7, 0x00003FFF, 0x1EF8A91D, 0x00000000
-   data8 0x843A28C3ACDE4046, 0x00003FFF, 0x1E57C976, 0x00000000
-   data8 0x85AAC367CC487B15, 0x00003FFF, 0x9EE8DA92, 0x00000000
-   data8 0x871F61969E8D1010, 0x00003FFF, 0x1EE85C9F, 0x00000000
-   data8 0x88980E8092DA8527, 0x00003FFF, 0x1F3BF1AF, 0x00000000
-   data8 0x8A14D575496EFD9A, 0x00003FFF, 0x1D80CA1E, 0x00000000
-   data8 0x8B95C1E3EA8BD6E7, 0x00003FFF, 0x9D0373AF, 0x00000000
-   data8 0x8D1ADF5B7E5BA9E6, 0x00003FFF, 0x9F167097, 0x00000000
-   data8 0x8EA4398B45CD53C0, 0x00003FFF, 0x1EB70051, 0x00000000
-   data8 0x9031DC431466B1DC, 0x00003FFF, 0x1F6EB029, 0x00000000
-   data8 0x91C3D373AB11C336, 0x00003FFF, 0x1DFD6D8E, 0x00000000
-   data8 0x935A2B2F13E6E92C, 0x00003FFF, 0x9EB319B0, 0x00000000
-   data8 0x94F4EFA8FEF70961, 0x00003FFF, 0x1EBA2BEB, 0x00000000
-   data8 0x96942D3720185A00, 0x00003FFF, 0x1F11D537, 0x00000000
-   data8 0x9837F0518DB8A96F, 0x00003FFF, 0x1F0D5A46, 0x00000000
-   data8 0x99E0459320B7FA65, 0x00003FFF, 0x9E5E7BCA, 0x00000000
-   data8 0x9B8D39B9D54E5539, 0x00003FFF, 0x9F3AAFD1, 0x00000000
-   data8 0x9D3ED9A72CFFB751, 0x00003FFF, 0x9E86DACC, 0x00000000
-   data8 0x9EF5326091A111AE, 0x00003FFF, 0x9F3EDDC2, 0x00000000
-   data8 0xA0B0510FB9714FC2, 0x00003FFF, 0x1E496E3D, 0x00000000
-   data8 0xA27043030C496819, 0x00003FFF, 0x9F490BF6, 0x00000000
-   data8 0xA43515AE09E6809E, 0x00003FFF, 0x1DD1DB48, 0x00000000
-   data8 0xA5FED6A9B15138EA, 0x00003FFF, 0x1E65EBFB, 0x00000000
-   data8 0xA7CD93B4E965356A, 0x00003FFF, 0x9F427496, 0x00000000
-   data8 0xA9A15AB4EA7C0EF8, 0x00003FFF, 0x1F283C4A, 0x00000000
-   data8 0xAB7A39B5A93ED337, 0x00003FFF, 0x1F4B0047, 0x00000000
-   data8 0xAD583EEA42A14AC6, 0x00003FFF, 0x1F130152, 0x00000000
-   data8 0xAF3B78AD690A4375, 0x00003FFF, 0x9E8367C0, 0x00000000
-   data8 0xB123F581D2AC2590, 0x00003FFF, 0x9F705F90, 0x00000000
-   data8 0xB311C412A9112489, 0x00003FFF, 0x1EFB3C53, 0x00000000
-   data8 0xB504F333F9DE6484, 0x00003FFF, 0x1F32FB13, 0x00000000
-ASM_SIZE_DIRECTIVE(double_cosh_j_table)
 
-.align 32
-.global cosh#
+LOCAL_OBJECT_START(exp_table_1)
+data8 0x408633ce8fb9f87e // smallest dbl overflow arg
+data8 0x408633ce8fb9f87d // largest dbl arg to give normal dbl result
+data8 0xb17217f7d1cf79ab , 0x00003ff7 // ln2/128 hi
+data8 0xc9e3b39803f2f6af , 0x00003fb7 // ln2/128 lo
+//
+// Table 1 is 2^(index_1/128) where
+// index_1 goes from 0 to 15
+//
+data8 0x8000000000000000 , 0x00003FFF
+data8 0x80B1ED4FD999AB6C , 0x00003FFF
+data8 0x8164D1F3BC030773 , 0x00003FFF
+data8 0x8218AF4373FC25EC , 0x00003FFF
+data8 0x82CD8698AC2BA1D7 , 0x00003FFF
+data8 0x8383594EEFB6EE37 , 0x00003FFF
+data8 0x843A28C3ACDE4046 , 0x00003FFF
+data8 0x84F1F656379C1A29 , 0x00003FFF
+data8 0x85AAC367CC487B15 , 0x00003FFF
+data8 0x8664915B923FBA04 , 0x00003FFF
+data8 0x871F61969E8D1010 , 0x00003FFF
+data8 0x87DB357FF698D792 , 0x00003FFF
+data8 0x88980E8092DA8527 , 0x00003FFF
+data8 0x8955EE03618E5FDD , 0x00003FFF
+data8 0x8A14D575496EFD9A , 0x00003FFF
+data8 0x8AD4C6452C728924 , 0x00003FFF
+LOCAL_OBJECT_END(exp_table_1)
+
+// Table 2 is 2^(index_1/8) where
+// index_2 goes from 0 to 7
+LOCAL_OBJECT_START(exp_table_2)
+data8 0x8000000000000000 , 0x00003FFF
+data8 0x8B95C1E3EA8BD6E7 , 0x00003FFF
+data8 0x9837F0518DB8A96F , 0x00003FFF
+data8 0xA5FED6A9B15138EA , 0x00003FFF
+data8 0xB504F333F9DE6484 , 0x00003FFF
+data8 0xC5672A115506DADD , 0x00003FFF
+data8 0xD744FCCAD69D6AF4 , 0x00003FFF
+data8 0xEAC0C6E7DD24392F , 0x00003FFF
+LOCAL_OBJECT_END(exp_table_2)
+
+LOCAL_OBJECT_START(exp_p_table)
+data8 0x3f8111116da21757 //P5
+data8 0x3fa55555d787761c //P4
+data8 0x3fc5555555555414 //P3
+data8 0x3fdffffffffffd6a //P2
+LOCAL_OBJECT_END(exp_p_table)
+
+LOCAL_OBJECT_START(cosh_p_table)
+data8 0x8FA02AC65BCBD5BC, 0x00003FE2  // A6
+data8 0xD00D00D1021D7370, 0x00003FEF  // A4
+data8 0xAAAAAAAAAAAAAB80, 0x00003FFA  // A2
+data8 0x93F27740C0C2F1CC, 0x00003FE9  // A5
+data8 0xB60B60B60B4FE884, 0x00003FF5  // A3
+data8 0x8000000000000000, 0x00003FFE  // A1
+LOCAL_OBJECT_END(cosh_p_table)
+
 
 .section .text
-.proc  cosh#
-.align 32
+GLOBAL_IEEE754_ENTRY(cosh)
 
-cosh: 
-
-#ifdef _LIBC
-.global __ieee754_cosh#
-.proc __ieee754_cosh#
-__ieee754_cosh:
-#endif
-
-// X NAN?
-
-{ .mfi
-      alloc r32 = ar.pfs,0,12,4,0                  
-(p0)  fclass.m.unc  p6,p7 = f8, 0xc3	//@snan | @qnan 
-      nop.i 999
-}
-;;
-
-
-{ .mfb
-      nop.m 999
-(p6)  fma.d.s0   f8 = f8,f1,f8                  
-(p6)  br.ret.spnt     b0 ;;                          
-}
-
-
-// X infinity 
-{ .mfi
-      nop.m 999
-(p0)  fclass.m.unc  p6,p0 = f8, 0x23	//@inf 
-      nop.i 999 ;;
-}
-
-{ .mfb
-      nop.m 999
-(p6)     fmerge.s      f8 = f0,f8                  
-(p6)  br.ret.spnt     b0 ;;                          
-}
-
-
-
-// Put 0.25 in f9; p6 true if x < 0.25
 { .mlx
-         nop.m 999
-(p0)     movl            r32 = 0x000000000000fffd ;;         
+      getf.exp        rSignexp_x = f8  // Must recompute if x unorm
+      movl            rSig_inv_ln2 = 0xb8aa3b295c17f0bc  // significand of 1/ln2
 }
-
-{ .mfi
-(p0)  setf.exp        f9 = r32                         
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fmerge.s      cosh_FR_X    = f0,f8                
-      nop.i 999
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fmerge.s      cosh_FR_SGNX = f8,f1                
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fcmp.lt.unc     p0,p7 = cosh_FR_X,f9                    
-      nop.i 999 ;;
-}
-
-{ .mib
-      nop.m 999
-      nop.i 999
-(p7)  br.cond.sptk    L(COSH_BY_TBL) 
+{ .mlx
+      addl            rAD_TB1    = @ltoff(exp_table_1), gp
+      movl            rRshf_2to56 = 0x4768000000000000   // 1.10000 2^(63+56)
 }
 ;;
 
+{ .mfi
+      ld8             rAD_TB1    = [rAD_TB1]
+      fclass.m        p6,p0 = f8,0x0b  // Test for x=unorm
+      mov             rExp_mask = 0x1ffff
+}
+{ .mfi
+      mov             rExp_bias = 0xffff
+      fnorm.s1        fNormX   = f8
+      mov             rExp_2tom56 = 0xffff-56
+}
+;;
 
-// COSH_BY_POLY: 
-// POLY cannot overflow so there is no need to call __libm_error_support
-// Get the values of P_x from the table
+// Form two constants we need
+//  1/ln2 * 2^63  to compute  w = x * 1/ln2 * 128
+//  1.1000..000 * 2^(63+63-7) to right shift int(w) into the significand
+
+{ .mfi
+      setf.sig        fINV_LN2_2TO63 = rSig_inv_ln2 // form 1/ln2 * 2^63
+      fclass.m        p8,p0 = f8,0x07  // Test for x=0
+      nop.i 999
+}
+{ .mlx
+      setf.d          fRSHF_2TO56 = rRshf_2to56 // Form const 1.100 * 2^(63+56)
+      movl            rRshf = 0x43e8000000000000 // 1.10000 2^63 for right shift
+}
+;;
+
+{ .mfi
+      ldfpd           fMIN_DBL_OFLOW_ARG, fMAX_DBL_NORM_ARG = [rAD_TB1],16
+      fclass.m        p10,p0 = f8,0x1e3  // Test for x=inf, nan, NaT
+      nop.i           0
+}
+{ .mfb
+      setf.exp        f2TOM56 = rExp_2tom56 // form 2^-56 for scaling Nfloat
+      nop.f           0
+(p6)  br.cond.spnt    COSH_UNORM            // Branch if x=unorm
+}
+;;
+
+COSH_COMMON:
+{ .mfi
+      ldfe            fLn2_by_128_hi  = [rAD_TB1],16
+      nop.f           0
+      nop.i           0
+}
+{ .mfb
+      setf.d          fRSHF = rRshf // Form right shift const 1.100 * 2^63
+(p8)  fma.d.s0        f8 = f1,f1,f0           // quick exit for x=0
+(p8)  br.ret.spnt     b0
+}
+;;
+
+{ .mfi
+      ldfe            fLn2_by_128_lo  = [rAD_TB1],16
+      nop.f           0
+      nop.i           0
+}
+{ .mfb
+      and             rExp_x = rExp_mask, rSignexp_x // Biased exponent of x
+(p10) fma.d.s0        f8 = f8,f8,f0  // Result if x=inf, nan, NaT
+(p10) br.ret.spnt     b0               // quick exit for x=inf, nan, NaT
+}
+;;
+
+// After that last load rAD_TB1 points to the beginning of table 1
+{ .mfi
+      nop.m           0
+      fcmp.eq.s0      p6,p0 = f8, f0       // Dummy to set D
+      sub             rExp_x = rExp_x, rExp_bias // True exponent of x
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fmerge.s        fAbsX = f0, fNormX   // Form |x|
+      nop.i           0
+}
+{ .mfb
+      cmp.gt          p7, p0 = -2, rExp_x      // Test |x| < 2^(-2)
+      fma.s1          fXsq = fNormX, fNormX, f0  // x*x for small path
+(p7)  br.cond.spnt    COSH_SMALL               // Branch if 0 < |x| < 2^-2
+}
+;;
+
+// W = X * Inv_log2_by_128
+// By adding 1.10...0*2^63 we shift and get round_int(W) in significand.
+// We actually add 1.10...0*2^56 to X * Inv_log2 to do the same thing.
+
+{ .mfi
+      add             rAD_P = 0x180, rAD_TB1
+      fma.s1          fW_2TO56_RSH  = fNormX, fINV_LN2_2TO63, fRSHF_2TO56
+      add             rAD_TB2 = 0x100, rAD_TB1
+}
+;;
+
+// Divide arguments into the following categories:
+//  Certain Safe                - 0.25 <= |x| <= MAX_DBL_NORM_ARG
+//  Possible Overflow       p14 - MAX_DBL_NORM_ARG < |x| < MIN_DBL_OFLOW_ARG
+//  Certain Overflow        p15 - MIN_DBL_OFLOW_ARG <= |x| < +inf
+//
+// If the input is really a double arg, then there will never be
+// "Possible Overflow" arguments.
+//
+
+{ .mfi
+      ldfpd           fP5, fP4  = [rAD_P] ,16
+      fcmp.ge.s1      p15,p14 = fAbsX,fMIN_DBL_OFLOW_ARG
+      nop.i           0
+}
+;;
+
+// Nfloat = round_int(W)
+// The signficand of fW_2TO56_RSH contains the rounded integer part of W,
+// as a twos complement number in the lower bits (that is, it may be negative).
+// That twos complement number (called N) is put into rN.
+
+// Since fW_2TO56_RSH is scaled by 2^56, it must be multiplied by 2^-56
+// before the shift constant 1.10000 * 2^63 is subtracted to yield fNfloat.
+// Thus, fNfloat contains the floating point version of N
+
+{ .mfi
+      ldfpd           fP3, fP2  = [rAD_P]
+(p14) fcmp.gt.unc.s1  p14,p0 = fAbsX,fMAX_DBL_NORM_ARG
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+      fms.s1          fNfloat = fW_2TO56_RSH, f2TOM56, fRSHF
+(p15) br.cond.spnt    COSH_CERTAIN_OVERFLOW
+}
+;;
+
+{ .mfi
+      getf.sig        rN        = fW_2TO56_RSH
+      nop.f           0
+      mov             rExp_bias_minus_1 = 0xfffe
+}
+;;
+
+// rIndex_1 has index_1
+// rIndex_2_16 has index_2 * 16
+// rBiased_M has M
+
+// rM has true M
+// r = x - Nfloat * ln2_by_128_hi
+// f = 1 - Nfloat * ln2_by_128_lo
+{ .mfi
+      and             rIndex_1 = 0x0f, rN
+      fnma.s1         fR   = fNfloat, fLn2_by_128_hi, fNormX
+      shr             rM = rN,  0x7
+}
+{ .mfi
+      and             rIndex_2_16 = 0x70, rN
+      fnma.s1         fF   = fNfloat, fLn2_by_128_lo, f1
+      sub             rN_neg = r0, rN
+}
+;;
 
 { .mmi
-      nop.m 999
-(p0)  addl           r34   = @ltoff(double_cosh_p_table), gp
-      nop.i 999
+      and             rIndex_1_neg = 0x0f, rN_neg
+      add             rBiased_M = rExp_bias_minus_1, rM
+      shr             rM_neg = rN_neg,  0x7
+}
+{ .mmi
+      and             rIndex_2_16_neg = 0x70, rN_neg
+      add             rAD_T2 = rAD_TB2, rIndex_2_16
+      shladd          rAD_T1 = rIndex_1, 4, rAD_TB1
 }
 ;;
+
+// rAD_T1 has address of T1
+// rAD_T2 has address if T2
 
 { .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
+      setf.exp        f2M = rBiased_M
+      ldfe            fT2  = [rAD_T2]
+      nop.i           0
+}
+{ .mmi
+      add             rBiased_M_neg = rExp_bias_minus_1, rM_neg
+      add             rAD_T2_neg = rAD_TB2, rIndex_2_16_neg
+      shladd          rAD_T1_neg = rIndex_1_neg, 4, rAD_TB1
 }
 ;;
 
-
-// Calculate cosh_FR_X2 = ax*ax and cosh_FR_X4 = ax*ax*ax*ax
+// Create Scale = 2^M
+// Load T1 and T2
+{ .mmi
+      ldfe            fT1  = [rAD_T1]
+      nop.m           0
+      nop.i           0
+}
 { .mmf
-         nop.m 999
-(p0)     ldfe       cosh_FR_P1 = [r34],16                 
-(p0)     fma.s1     cosh_FR_X2 = cosh_FR_X, cosh_FR_X, f0 ;;           
-}
-
-{ .mmi
-(p0)     ldfe       cosh_FR_P2 = [r34],16 ;;                 
-(p0)     ldfe       cosh_FR_P3 = [r34],16                 
-         nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe       cosh_FR_P4 = [r34],16 ;;                 
-(p0)     ldfe       cosh_FR_P5 = [r34],16                 
-         nop.i 999 ;;
-}
-
-{ .mfi
-(p0)     ldfe       cosh_FR_P6 = [r34],16                 
-(p0)     fma.s1     cosh_FR_X4 = cosh_FR_X2, cosh_FR_X2, f0         
-         nop.i 999 ;;
-}
-
-// Calculate cosh_FR_podd = x4 *(x4 * P_5 + P_3) + P_1
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_poly_podd_temp1 = cosh_FR_X4, cosh_FR_P5, cosh_FR_P3                
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_podd            = cosh_FR_X4, cosh_FR_poly_podd_temp1, cosh_FR_P1   
-         nop.i 999
-}
-
-// Calculate cosh_FR_peven =  p_even = x4 *(x4 * (x4 * P_6 + P_4) + P_2)
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_poly_peven_temp1 = cosh_FR_X4, cosh_FR_P6, cosh_FR_P4               
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_poly_peven_temp2 = cosh_FR_X4, cosh_FR_poly_peven_temp1, cosh_FR_P2 
-         nop.i 999 ;;
-}
-
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_peven       = cosh_FR_X4, cosh_FR_poly_peven_temp2, f0         
-         nop.i 999 ;;
-}
-
-// Y_lo = x2*p_odd + p_even
-// Calculate f8 = Y_hi + Y_lo 
-{ .mfi
-         nop.m 999
-(p0)     fma.s1     cosh_FR_Y_lo         = cosh_FR_X2, cosh_FR_podd,  cosh_FR_peven    
-         nop.i 999 ;;
-}
-
-{ .mfb
-         nop.m 999
-(p0)     fma.d.s0   f8                   = f1, f1, cosh_FR_Y_lo                        
-(p0)  br.ret.sptk     b0 ;;                          
-}
-
-
-L(COSH_BY_TBL): 
-
-// Now that we are at TBL; so far all we know is that |x| >= 0.25.
-// The first two steps are the same for TBL and EXP, but if we are HUGE
-// Double
-// Go to HUGE if |x| >= 2^10, 10009 (register-biased) is e = 10 (true)
-// Single
-// Go to HUGE if |x| >= 2^7,  10006 (register-biased) is e =  7 (true)
-// we want to leave now. Go to HUGE if |x| >= 2^14
-// 1000d (register-biased) is e = 14 (true)
-
-{ .mlx
-      nop.m 999
-(p0)     movl            r32 = 0x0000000000010009 ;;              
-}
-
-{ .mfi
-(p0)     setf.exp        f9 = r32                              
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)     fcmp.ge.unc     p6,p7 = cosh_FR_X,f9                  
-      nop.i 999 ;;
-}
-
-{ .mib
-      nop.m 999
-      nop.i 999
-(p6)     br.cond.spnt    L(COSH_HUGE) ;;                             
-}
-
-// r32 = 1
-// r34 = N-1 
-// r35 = N
-// r36 = j
-// r37 = N+1
-
-// TBL can never overflow
-// cosh(x) = cosh(B+R)
-//         = cosh(B) cosh(R) + sinh(B) sinh(R) 
-// cosh(R) can be approximated by 1 + p_even
-// sinh(R) can be approximated by p_odd
-
-// ******************************************************
-// STEP 1 (TBL and EXP)
-// ******************************************************
-// Get the following constants.
-// f9  = Inv_log2by64
-// f10 = log2by64_hi
-// f11 = log2by64_lo
-
-{ .mmi
-(p0)     adds                 r32 = 0x1,r0      
-(p0)     addl           r34   = @ltoff(double_cosh_arg_reduction), gp
-         nop.i 999
-}
-;;
-
-// We want 2^(N-1) and 2^(-N-1). So bias N-1 and -N-1 and
-// put them in an exponent.
-// cosh_FR_spos = 2^(N-1) and cosh_FR_sneg = 2^(-N-1)
-// r39 = 0xffff + (N-1)  = 0xffff +N -1
-// r40 = 0xffff - (N +1) = 0xffff -N -1
-
-{ .mlx
-         ld8 r34 = [r34]
-(p0)     movl                r38 = 0x000000000000fffe ;; 
-}
-
-{ .mmi
-(p0)     ldfe            cosh_FR_Inv_log2by64 = [r34],16 ;;            
-(p0)     ldfe            cosh_FR_log2by64_hi  = [r34],16            
-         nop.i 999 ;;
-}
-
-{ .mbb
-(p0)     ldfe            cosh_FR_log2by64_lo  = [r34],16            
-         nop.b 999
-         nop.b 999 ;;
-}
-
-// Get the A coefficients
-// f9  = A_1
-// f10 = A_2
-// f11 = A_3
-
-{ .mmi
-      nop.m 999
-(p0)  addl           r34   = @ltoff(double_cosh_ab_table), gp
-      nop.i 999
-}
-;;
-
-{ .mmi
-      ld8 r34 = [r34]
-      nop.m 999
-      nop.i 999
-}
-;;
-
-
-// Calculate M and keep it as integer and floating point.
-// M = round-to-integer(x*Inv_log2by64)
-// cosh_FR_M = M = truncate(ax/(log2/64))
-// Put the significand of M in r35
-//    and the floating point representation of M in cosh_FR_M
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_M      = cosh_FR_X, cosh_FR_Inv_log2by64, f0 
-      nop.i 999
-}
-
-{ .mfi
-(p0)  ldfe            cosh_FR_A1 = [r34],16            
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fcvt.fx.s1      cosh_FR_M_temp = cosh_FR_M                      
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fnorm.s1        cosh_FR_M      = cosh_FR_M_temp                 
-      nop.i 999 ;;
-}
-
-{ .mfi
-(p0)  getf.sig        r35       = cosh_FR_M_temp                 
-      nop.f 999
-      nop.i 999 ;;
-}
-
-// M is still in r35. Calculate j. j is the signed extension of the six lsb of M. It
-// has a range of -32 thru 31.
-// r35 = M
-// r36 = j 
-{ .mii
-      nop.m 999
-      nop.i 999 ;;
-(p0)  and            r36 = 0x3f, r35 ;;   
-}
-
-// Calculate R
-// f13 = f44 - f12*f10 = x - M*log2by64_hi
-// f14 = f13 - f8*f11 = R = (x - M*log2by64_hi) - M*log2by64_lo
-
-{ .mfi
-      nop.m 999
-(p0)  fnma.s1        cosh_FR_R_temp = cosh_FR_M, cosh_FR_log2by64_hi, cosh_FR_X      
-      nop.i 999
-}
-
-{ .mfi
-(p0)  ldfe            cosh_FR_A2 = [r34],16            
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fnma.s1        cosh_FR_R      = cosh_FR_M, cosh_FR_log2by64_lo, cosh_FR_R_temp 
-      nop.i 999
-}
-
-// Get the B coefficients
-// f15 = B_1
-// f32 = B_2
-// f33 = B_3
-
-{ .mmi
-(p0)     ldfe            cosh_FR_A3 = [r34],16 ;;            
-(p0)     ldfe            cosh_FR_B1 = [r34],16            
-         nop.i 999 ;;
-}
-
-{ .mmi
-(p0)     ldfe            cosh_FR_B2 = [r34],16 ;;            
-(p0)     ldfe            cosh_FR_B3 = [r34],16            
-         nop.i 999 ;;
-}
-
-{ .mii
-         nop.m 999
-(p0)     shl            r34 = r36,  0x2 ;;   
-(p0)     sxt1           r37 = r34 ;;         
-}
-
-// ******************************************************
-// STEP 2 (TBL and EXP)
-// ******************************************************
-// Calculate Rsquared and Rcubed in preparation for p_even and p_odd
-// f12 = R*R*R
-// f13 = R*R
-// f14 = R <== from above
-
-{ .mfi
-      nop.m 999
-(p0)     fma.s1          cosh_FR_Rsq  = cosh_FR_R,   cosh_FR_R, f0  
-(p0)     shr            r36 = r37,  0x2 ;;   
-}
-
-// r34 = M-j = r35 - r36
-// r35 = N = (M-j)/64
-
-{ .mii
-(p0)     sub                  r34 = r35, r36    
-         nop.i 999 ;;
-(p0)     shr                  r35 = r34, 0x6 ;;    
-}
-
-{ .mii
-(p0)     sub                 r40 = r38, r35           
-(p0)     adds                 r37 = 0x1, r35    
-(p0)     add                 r39 = r38, r35 ;;           
-}
-
-// Get the address of the J table, add the offset,
-// addresses are sinh_AD_mJ and sinh_AD_J, get the T value
-// f32 = T(j)_hi
-// f33 = T(j)_lo
-// f34 = T(-j)_hi
-// f35 = T(-j)_lo
-
-{ .mmi
-(p0)     sub                  r34 = r35, r32    
-(p0)     addl    r37   = @ltoff(double_cosh_j_table), gp
-         nop.i 999
+      setf.exp        f2M_neg = rBiased_M_neg
+      ldfe            fT2_neg  = [rAD_T2_neg]
+      fma.s1          fF_neg   = fNfloat, fLn2_by_128_lo, f1
 }
 ;;
 
 { .mfi
-      ld8 r37 = [r37]
-(p0)  fma.s1          cosh_FR_Rcub = cosh_FR_Rsq, cosh_FR_R, f0  
-      nop.i 999
+      nop.m           0
+      fma.s1          fRsq = fR, fR, f0
+      nop.i           0
 }
-
-// ******************************************************
-// STEP 3 Now decide if we need to branch to EXP
-// ******************************************************
-// Put 32 in f9; p6 true if x < 32
-
-{ .mlx
-         nop.m 999
-(p0)     movl                r32 = 0x0000000000010004 ;;               
+{ .mfi
+      ldfe            fT1_neg  = [rAD_T1_neg]
+      fma.s1          fP54 = fR, fP5, fP4
+      nop.i           0
 }
-
-// Calculate p_even
-// f34 = B_2 + Rsq *B_3
-// f35 = B_1 + Rsq*f34      = B_1 + Rsq * (B_2 + Rsq *B_3)
-// f36 = peven = Rsq * f35 = Rsq * (B_1 + Rsq * (B_2 + Rsq *B_3))
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_peven_temp1 = cosh_FR_Rsq, cosh_FR_B3,          cosh_FR_B2  
-      nop.i 999 ;;
+      nop.m           0
+      fma.s1          fP32 = fR, fP3, fP2
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fnma.s1         fP54_neg = fR, fP5, fP4
+      nop.i           0
+}
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_peven_temp2 = cosh_FR_Rsq, cosh_FR_peven_temp1, cosh_FR_B1  
-      nop.i 999
+      nop.m           0
+      fnma.s1         fP32_neg = fR, fP3, fP2
+      nop.i           0
 }
-
-// Calculate p_odd
-// f34 = A_2 + Rsq *A_3
-// f35 = A_1 + Rsq * (A_2 + Rsq *A_3)
-// f37 = podd = R + Rcub * (A_1 + Rsq * (A_2 + Rsq *A_3))
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_podd_temp1 = cosh_FR_Rsq,        cosh_FR_A3,         cosh_FR_A2  
-      nop.i 999 ;;
+      nop.m           0
+      fma.s1          fP5432  = fRsq, fP54, fP32
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fma.s1          fS2  = fF,fT2,f0
+      nop.i           0
+}
+;;
 
 { .mfi
-(p0)  setf.exp            cosh_FR_N_temp1 = r39            
-      nop.f 999
-      nop.i 999 ;;
+      nop.m           0
+      fma.s1          fS1  = f2M,fT1,f0
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fma.s1          fP5432_neg  = fRsq, fP54_neg, fP32_neg
+      nop.i           0
+}
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_peven       = cosh_FR_Rsq, cosh_FR_peven_temp2, f0     
-      nop.i 999
+      nop.m           0
+      fma.s1          fS1_neg  = f2M_neg,fT1_neg,f0
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fma.s1          fS2_neg  = fF_neg,fT2_neg,f0
+      nop.i           0
+}
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_podd_temp2 = cosh_FR_Rsq,        cosh_FR_podd_temp1, cosh_FR_A1  
-      nop.i 999 ;;
+      nop.m           0
+      fma.s1          fP     = fRsq, fP5432, fR
+      nop.i           0
 }
+{ .mfi
+      nop.m           0
+      fma.s1          fS   = fS1,fS2,f0
+      nop.i           0
+}
+;;
 
 { .mfi
-(p0)  setf.exp            f9  = r32                              
-      nop.f 999
-      nop.i 999 ;;
+      nop.m           0
+      fms.s1          fP_neg     = fRsq, fP5432_neg, fR
+      nop.i           0
 }
-
 { .mfi
-      nop.m 999
-(p0)  fma.s1          cosh_FR_podd       = cosh_FR_podd_temp2, cosh_FR_Rcub,       cosh_FR_R   
-      nop.i 999
+      nop.m           0
+      fma.s1          fS_neg   = fS1_neg,fS2_neg,f0
+      nop.i           0
 }
-
-// sinh_GR_mj contains the table offset for -j
-// sinh_GR_j  contains the table offset for +j
-// p6 is true when j <= 0
-
-{ .mlx
-(p0)     setf.exp            cosh_FR_N_temp2 = r40            
-(p0)     movl                r40 = 0x0000000000000020 ;;    
-}
-
-{ .mfi
-(p0)     sub                 GR_mJ = r40,  r36           
-(p0)     fmerge.se           cosh_FR_spos    = cosh_FR_N_temp1, f1 
-(p0)     adds                GR_J  = 0x20, r36 ;;           
-}
-
-{ .mii
-         nop.m 999
-(p0)     shl                  GR_mJ = GR_mJ, 5 ;;   
-(p0)     add                  AD_mJ = r37, GR_mJ ;; 
-}
-
-{ .mmi
-         nop.m 999
-(p0)     ldfe                 cosh_FR_Tmjhi = [AD_mJ],16                 
-(p0)     shl                  GR_J  = GR_J, 5 ;;    
-}
-
-{ .mfi
-(p0)     ldfs                 cosh_FR_Tmjlo = [AD_mJ],16                 
-(p0)     fcmp.lt.unc.s1      p6,p7 = cosh_FR_X,f9                          
-(p0)     add                  AD_J  = r37, GR_J ;;  
-}
-
-{ .mmi
-(p0)     ldfe                 cosh_FR_Tjhi  = [AD_J],16 ;;                  
-(p0)     ldfs                 cosh_FR_Tjlo  = [AD_J],16                  
-         nop.i 999 ;;
-}
+;;
 
 { .mfb
-         nop.m 999
-(p0)     fmerge.se           cosh_FR_sneg    = cosh_FR_N_temp2, f1 
-(p7)     br.cond.spnt        L(COSH_BY_EXP) ;;                            
+      nop.m           0
+      fmpy.s0         fTmp = fLn2_by_128_lo, fLn2_by_128_lo // Force inexact
+(p14) br.cond.spnt    COSH_POSSIBLE_OVERFLOW
 }
-
-// ******************************************************
-// If NOT branch to EXP
-// ******************************************************
-// Calculate C_hi
-// ******************************************************
-// cosh_FR_C_hi_temp = cosh_FR_sneg * cosh_FR_Tmjhi
-// cosh_FR_C_hi = cosh_FR_spos * cosh_FR_Tjhi + (cosh_FR_sneg * cosh_FR_Tmjhi)
+;;
 
 { .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_C_hi_temp = cosh_FR_sneg, cosh_FR_Tmjhi, f0                   
-      nop.i 999 ;;
+      nop.m           0
+      fma.s1          fExp = fS, fP, fS
+      nop.i           0
 }
-
 { .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_C_hi      = cosh_FR_spos, cosh_FR_Tjhi,  cosh_FR_C_hi_temp    
-      nop.i 999
+      nop.m           0
+      fma.s1          fExp_neg = fS_neg, fP_neg, fS_neg
+      nop.i           0
 }
-
-// ******************************************************
-// Calculate S_hi
-// ******************************************************
-// cosh_FR_S_hi_temp1 = cosh_FR_sneg * cosh_FR_Tmjhi
-// cosh_FR_S_hi = cosh_FR_spos * cosh_FR_Tjhi - cosh_FR_C_hi_temp1
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1        cosh_FR_S_hi_temp1 =  cosh_FR_sneg, cosh_FR_Tmjhi, f0                
-      nop.i 999 ;;
-}
-
-// ******************************************************
-// Calculate C_lo
-// ******************************************************
-// cosh_FR_C_lo_temp1 = cosh_FR_spos * cosh_FR_Tjhi - cosh_FR_C_hi
-// cosh_FR_C_lo_temp2 = cosh_FR_sneg * cosh_FR_Tmjlo + (cosh_FR_spos * cosh_FR_Tjhi - cosh_FR_C_hi)
-// cosh_FR_C_lo_temp1 = cosh_FR_sneg * cosh_FR_Tmjlo
-// cosh_FR_C_lo_temp3 = cosh_FR_spos * cosh_FR_Tjlo + (cosh_FR_sneg * cosh_FR_Tmjlo)
-// cosh_FR_C_lo = cosh_FR_C_lo_temp3 + cosh_FR_C_lo_temp2
-
-{ .mfi
-      nop.m 999
-(p0)  fms.s1        cosh_FR_C_lo_temp1 = cosh_FR_spos, cosh_FR_Tjhi,  cosh_FR_C_hi        
-      nop.i 999
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fms.s1        cosh_FR_S_hi       =  cosh_FR_spos, cosh_FR_Tjhi, cosh_FR_S_hi_temp1 
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1        cosh_FR_C_lo_temp2 = cosh_FR_sneg, cosh_FR_Tmjhi, cosh_FR_C_lo_temp1  
-      nop.i 999
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1        cosh_FR_C_lo_temp1 = cosh_FR_sneg, cosh_FR_Tmjlo, f0                  
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1        cosh_FR_C_lo_temp3 =  cosh_FR_spos, cosh_FR_Tjlo,  cosh_FR_C_lo_temp1 
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1        cosh_FR_C_lo       =  cosh_FR_C_lo_temp3, f1,   cosh_FR_C_lo_temp2    
-      nop.i 999 ;;
-}
-
-// ******************************************************
-// cosh_FR_Y_lo_temp = cosh_FR_C_hi * cosh_FR_peven + cosh_FR_C_lo
-// cosh_FR_Y_lo = cosh_FR_S_hi * cosh_FR_podd + cosh_FR_Y_lo_temp
-// cosh_FR_COSH = Y_hi + Y_lo
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_Y_lo_temp =  cosh_FR_C_hi, cosh_FR_peven, cosh_FR_C_lo       
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_Y_lo      =  cosh_FR_S_hi, cosh_FR_podd, cosh_FR_Y_lo_temp   
-      nop.i 999 ;;
-}
+;;
 
 { .mfb
-      nop.m 999
-(p0)  fma.d.s0       f8 =  cosh_FR_C_hi, f1, cosh_FR_Y_lo                       
-(p0)  br.ret.sptk     b0 ;;                          
+      nop.m           0
+      fma.d.s0        f8 = fExp, f1, fExp_neg
+      br.ret.sptk     b0                  // Normal path exit
 }
+;;
 
-L(COSH_BY_EXP): 
-
-// When p7 is true,  we know that an overflow is not going to happen
-// When p7 is false, we must check for possible overflow
-// p7 is the over_SAFE flag
-// f44 = Scale * (Y_hi + Y_lo)
-//     =  cosh_FR_spos * (cosh_FR_Tjhi + cosh_FR_Y_lo)
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_Y_lo_temp =  cosh_FR_peven, f1,       cosh_FR_podd           
-      nop.i 999
+// Here if 0 < |x| < 0.25
+COSH_SMALL:
+{ .mmf
+      add             rAD_T1 = 0x1a0, rAD_TB1
+      add             rAD_T2 = 0x1d0, rAD_TB1
 }
-
-// Now we are in EXP. This is the only path where an overflow is possible
-// but not for certain. So this is the only path where over_SAFE has any use.
-// r34 still has N-1
-// There is a danger of double-extended overflow   if N-1 > 16382 = 0x3ffe
-// There is a danger of double overflow            if N-1 > 0x3fe = 1022
-
-{ .mlx
-       nop.m 999
-(p0)   movl                r32          = 0x00000000000003fe ;;                       
-}
-
-{ .mfi
-(p0)  cmp.gt.unc          p0,p7        = r34, r32                                 
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_Y_lo      =  cosh_FR_Tjhi,  cosh_FR_Y_lo_temp, cosh_FR_Tjlo       
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1         cosh_FR_COSH_temp =  cosh_FR_Y_lo,  f1, cosh_FR_Tjhi                 
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.d.s0       f44 = cosh_FR_spos,  cosh_FR_COSH_temp, f0                       
-      nop.i 999 ;;
-}
-
-// If over_SAFE is set, return
-{ .mfb
-       nop.m 999
-(p7)   fmerge.s            f8 = f44,f44
-(p7)  br.ret.sptk     b0 ;;                          
-}
-
-// Else see if we overflowed
-// S0 user supplied status
-// S2 user supplied status + WRE + TD  (Overflows)
-// If WRE is set then an overflow will not occur in EXP.
-// The input value that would cause a register (WRE) value to overflow is about 2^15
-// and this input would go into the HUGE path.
-// Answer with WRE is in f43.
-
-{ .mfi
-      nop.m 999
-(p0)  fsetc.s2            0x7F,0x42                                               
-      nop.i 999;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.d.s2            f43  = cosh_FR_spos,  cosh_FR_COSH_temp, f0                      
-      nop.i 999 ;;
-}
-
-// 103FF => 103FF -FFFF = 400(true)
-// 400 + 3FF = 7FF, which is 1 more that the exponent of the largest
-// double (7FE). So 0 103FF 8000000000000000  is one ulp more than
-// largest double in register bias
-// Now  set p8 if the answer with WRE is greater than or equal this value
-// Also set p9 if the answer with WRE is less than or equal to negative this value
-
-{ .mlx
-       nop.m 999
-(p0)   movl                r32          = 0x00000000000103ff ;;                     
-}
+;;
 
 { .mmf
-       nop.m 999
-(p0)   setf.exp            f41          = r32                                    
-(p0)   fsetc.s2            0x7F,0x40 ;;                                               
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fcmp.ge.unc.s1      p8, p0       = f43, f41                               
-      nop.i 999
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fmerge.ns           f42 = f41, f41                                          
-      nop.i 999 ;;
-}
-
-// The error tag for overflow is 64
-{ .mii
-      nop.m 999
-      nop.i 999 ;;
-(p8)  mov                 r47 = 64 ;;                                               
-}
-
-{ .mfb
-      nop.m 999
-(p0)  fcmp.le.unc.s1      p9, p0 =  f43, f42                                      
-(p8)  br.cond.spnt __libm_error_region ;;
-}
-
-{ .mii
-      nop.m 999
-      nop.i 999 ;;
-(p9)  mov                 r47 = 64                                               
-}
-
-{ .mib
-      nop.m 999
-      nop.i 999
-(p9)  br.cond.spnt __libm_error_region ;;
-}
-
-{ .mfb
-      nop.m 999
-(p0)  fmerge.s            f8 = f44,f44                                            
-(p0)  br.ret.sptk     b0 ;;                          
-}
-
-
-// for COSH_HUGE, put 24000 in exponent; take sign from input; add 1
-// SAFE: SAFE is always 0 for HUGE
-
-L(COSH_HUGE): 
-
-{ .mlx
-      nop.m 999
-(p0)  movl                r32 = 0x0000000000015dbf ;;                                
-}
-
-{ .mfi
-(p0)  setf.exp            f9  = r32                                               
-      nop.f 999
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.s1              cosh_FR_hi_lo = f1, f9, f1                              
-      nop.i 999 ;;
-}
-
-{ .mfi
-      nop.m 999
-(p0)  fma.d.s0            f44 = f9, cosh_FR_hi_lo, f0                             
-(p0)  mov                 r47 = 64                                               
+      ldfe            fA6 = [rAD_T1],16
+      ldfe            fA5 = [rAD_T2],16
+      nop.f           0
 }
 ;;
 
-.endp cosh#
-ASM_SIZE_DIRECTIVE(cosh#)
+{ .mmi
+      ldfe            fA4 = [rAD_T1],16
+      ldfe            fA3 = [rAD_T2],16
+      nop.i           0
+}
+;;
 
-// Stack operations when calling error support.
-//       (1)               (2)                          (3) (call)              (4)
-//   sp   -> +          psp -> +                     psp -> +                   sp -> +
-//           |                 |                            |                         |
-//           |                 | <- GR_Y               R3 ->| <- GR_RESULT            | -> f8
-//           |                 |                            |                         |
-//           | <-GR_Y      Y2->|                       Y2 ->| <- GR_Y                 |
-//           |                 |                            |                         |
-//           |                 | <- GR_X               X1 ->|                         |
-//           |                 |                            |                         |
-//  sp-64 -> +          sp ->  +                     sp ->  +                         +
-//    save ar.pfs          save b0                                               restore gp
-//    save gp                                                                    restore ar.pfs
+{ .mmi
+      ldfe            fA2 = [rAD_T1],16
+      ldfe            fA1 = [rAD_T2],16
+      nop.i           0
+}
+;;
 
-.proc __libm_error_region
-__libm_error_region:
+{ .mfi
+      nop.m           0
+      fma.s1          fX4 = fXsq, fXsq, f0
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA65 = fXsq, fA6, fA5
+      nop.i           0
+}
+{ .mfi
+      nop.m           0
+      fma.s1          fA43 = fXsq, fA4, fA3
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA21 = fXsq, fA2, fA1
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA6543 = fX4, fA65, fA43
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fma.s1          fA654321 = fX4, fA6543, fA21
+      nop.i           0
+}
+;;
+
+// Dummy multiply to generate inexact
+{ .mfi
+      nop.m           0
+      fmpy.s0         fTmp = fA6, fA6
+      nop.i           0
+}
+{ .mfb
+      nop.m           0
+      fma.d.s0        f8 = fA654321, fXsq, f1
+      br.ret.sptk     b0                // Exit if 0 < |x| < 0.25
+}
+;;
+
+
+COSH_POSSIBLE_OVERFLOW:
+
+// Here if fMAX_DBL_NORM_ARG < |x| < fMIN_DBL_OFLOW_ARG
+// This cannot happen if input is a double, only if input higher precision.
+// Overflow is a possibility, not a certainty.
+
+// Recompute result using status field 2 with user's rounding mode,
+// and wre set.  If result is larger than largest double, then we have
+// overflow
+
+{ .mfi
+      mov             rGt_ln  = 0x103ff // Exponent for largest dbl + 1 ulp
+      fsetc.s2        0x7F,0x42         // Get user's round mode, set wre
+      nop.i           0
+}
+;;
+
+{ .mfi
+      setf.exp        fGt_pln = rGt_ln  // Create largest double + 1 ulp
+      fma.d.s2        fWre_urm_f8 = fS, fP, fS    // Result with wre set
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fsetc.s2        0x7F,0x40                   // Turn off wre in sf2
+      nop.i           0
+}
+;;
+
+{ .mfi
+      nop.m           0
+      fcmp.ge.s1      p6, p0 =  fWre_urm_f8, fGt_pln // Test for overflow
+      nop.i           0
+}
+;;
+
+{ .mfb
+      nop.m           0
+      nop.f           0
+(p6)  br.cond.spnt    COSH_CERTAIN_OVERFLOW // Branch if overflow
+}
+;;
+
+{ .mfb
+      nop.m           0
+      fma.d.s0        f8 = fS, fP, fS
+      br.ret.sptk     b0                     // Exit if really no overflow
+}
+;;
+
+COSH_CERTAIN_OVERFLOW:
+{ .mmi
+      sub             rTmp = rExp_mask, r0, 1
+;;
+      setf.exp        fTmp = rTmp
+      nop.i           0
+}
+;;
+
+{ .mfi
+      alloc           r32=ar.pfs,1,4,4,0
+      fmerge.s        FR_X = f8,f8
+      nop.i           0
+}
+{ .mfb
+      mov             GR_Parameter_TAG = 64
+      fma.d.s0        FR_RESULT = fTmp, fTmp, f0    // Set I,O and +INF result
+      br.cond.sptk    __libm_error_region
+}
+;;
+
+// Here if x unorm
+COSH_UNORM:
+{ .mfb
+      getf.exp        rSignexp_x = fNormX    // Must recompute if x unorm
+      fcmp.eq.s0      p6, p0 = f8, f0        // Set D flag
+      br.cond.sptk    COSH_COMMON
+}
+;;
+
+GLOBAL_IEEE754_END(cosh)
+
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
-// (1)
 { .mfi
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
         nop.f 0
@@ -1103,39 +821,32 @@ __libm_error_region:
 }
 { .mfi
 .fframe 64
-        add sp=-64,sp                          // Create new stack
+        add sp=-64,sp                           // Create new stack
         nop.f 0
-        mov GR_SAVE_GP=gp                      // Save gp
+        mov GR_SAVE_GP=gp                       // Save gp
 };;
-
-
-// (2)
 { .mmi
-        stfd [GR_Parameter_Y] = f0,16         // STORE Parameter 2 on stack
-        add GR_Parameter_X = 16,sp            // Parameter 1 address
+        stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
+        add GR_Parameter_X = 16,sp              // Parameter 1 address
 .save   b0, GR_SAVE_B0
-        mov GR_SAVE_B0=b0                     // Save b0
+        mov GR_SAVE_B0=b0                       // Save b0
 };;
-
 .body
-// (3)
 { .mib
-        stfd [GR_Parameter_X] = f8                    // STORE Parameter 1 on stack
+        stfd [GR_Parameter_X] = FR_X            // STORE Parameter 1 on stack
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address
-        nop.b 0                                 
+        nop.b 0
 }
 { .mib
-        stfd [GR_Parameter_Y] = f44                   // STORE Parameter 3 on stack
+        stfd [GR_Parameter_Y] = FR_RESULT       // STORE Parameter 3 on stack
         add   GR_Parameter_Y = -16,GR_Parameter_Y
-        br.call.sptk b0=__libm_error_support#         // Call error handling function
+        br.call.sptk b0=__libm_error_support#   // Call error handling function
 };;
 { .mmi
-        nop.m 0
-        nop.m 0
         add   GR_Parameter_RESULT = 48,sp
+        nop.m 0
+        nop.i 0
 };;
-
-// (4)
 { .mmi
         ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
@@ -1148,8 +859,6 @@ __libm_error_region:
         br.ret.sptk     b0                     // Return
 };;
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
-
+LOCAL_LIBM_END(__libm_error_region)
 .type   __libm_error_support#,@function
 .global __libm_error_support#

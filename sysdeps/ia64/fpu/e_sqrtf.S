@@ -1,10 +1,10 @@
 .file "sqrtf.s"
 
-// Copyright (C) 2000, 2001, Intel Corporation
+
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
-// 
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
+//
+// Contributed 2000 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -20,7 +20,7 @@
 // * The name of Intel Corporation may not be used to endorse or promote
 // products derived from this software without specific prior written
 // permission.
-//
+
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,27 +35,29 @@
 // 
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at 
-// http://developer.intel.com/opensource.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
-// *********************************************************************
+//*********************************************************************
 // History:
 //
-// 2/02/00  Initial version
-// 4/04/00  Unwind support added
-// 8/15/00  Bundle added after call to __libm_error_support to properly
+// 02/02/00 Initial version
+// 04/04/00 Unwind support added
+// 08/15/00 Bundle added after call to __libm_error_support to properly
 //          set [the previously overwritten] GR_Parameter_RESULT.
+// 05/20/02 Cleaned up namespace and sf0 syntax
+// 02/10/03 Reordered header: .section, .global, .proc, .align
 //
-// *********************************************************************
+//*********************************************************************
 //
 // Function:   Combined sqrtf(x), where
 //                         _
 //             sqrtf(x) = |x, for single precision x values
 //
-// ********************************************************************
+//********************************************************************
 //
 // Accuracy:       Correctly Rounded 
 //
-// ********************************************************************
+//********************************************************************
 //
 // Resources Used:
 //
@@ -68,7 +70,7 @@
 //
 //    Predicate Registers:      p6, p7, p8
 //
-// ********************************************************************
+//********************************************************************
 //
 // IEEE Special Conditions:
 //
@@ -78,15 +80,14 @@
 //    sqrtf(+/-0) = +/-0 
 //    sqrtf(negative) = QNaN and error handling is called
 //
-// ********************************************************************
+//********************************************************************
 //
 // Implementation:
 //
 //  Modified Newton-Raphson Algorithm
 //
-// ********************************************************************
+//********************************************************************
 
-#include "libm_support.h"
 
 GR_SAVE_B0                    = r34
 GR_SAVE_PFS                   = r33
@@ -102,21 +103,8 @@ FR_Y             = f0
 FR_RESULT        = f8
 
 
-
 .section .text
-.proc sqrtf#
-.global sqrtf#
-.align 64 
-
-sqrtf: 
-#ifdef _LIBC
-.global __sqrtf
-.type __sqrtf,@function
-__sqrtf:
-.global __ieee754_sqrtf
-.type __ieee754_sqrtf,@function
-__ieee754_sqrtf:
-#endif
+GLOBAL_IEEE754_ENTRY(sqrtf)
 { .mlx
   // BEGIN SINGLE PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
   alloc r32= ar.pfs,0,5,4,0
@@ -197,7 +185,7 @@ __ieee754_sqrtf:
   // Step (10)
   // d1 = a - S1 * S1 in f9
   (p6) fnma.s1 f9=f7,f7,f8
-  nop.i 0;;;
+  nop.i 0;;
 } { .mfb
   nop.m 0
   // Step (11)
@@ -207,27 +195,20 @@ __ieee754_sqrtf:
 // END SINGLE PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
 } { .mfb
   nop.m 0
-  (p0) mov   f8 = f7
+       mov   f8 = f7
   (p8) br.ret.sptk b0 ;;
 }
 //
 // This branch includes all those special values that are not negative,
 // with the result equal to frcpa(x)
 //
-.endp sqrtf
-ASM_SIZE_DIRECTIVE(sqrtf)
-#ifdef _LIBC
-ASM_SIZE_DIRECTIVE(__sqrtf)
-ASM_SIZE_DIRECTIVE(__ieee754_sqrtf)
-#endif
+GLOBAL_IEEE754_END(sqrtf)
 
-
-.proc __libm_error_region
-__libm_error_region:
+LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii
         add   GR_Parameter_Y=-32,sp             // Parameter 2 value
-(p0)    mov   GR_Parameter_TAG = 50                   
+        mov   GR_Parameter_TAG = 50                   
 .save   ar.pfs,GR_SAVE_PFS
         mov  GR_SAVE_PFS=ar.pfs                 // Save ar.pfs
 }
@@ -271,8 +252,7 @@ __libm_error_region:
         br.ret.sptk     b0                     // Return
 };; 
 
-.endp __libm_error_region
-ASM_SIZE_DIRECTIVE(__libm_error_region)
+LOCAL_LIBM_END(__libm_error_region)
 
 
 .type   __libm_error_support#,@function
