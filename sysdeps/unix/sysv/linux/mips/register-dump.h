@@ -44,8 +44,7 @@ static void
 register_dump (int fd, struct sigcontext *ctx)
 {
   char regs[32][8];
-  char fpregs[32][8];
-  struct iovec iov[97]; XXX
+  struct iovec iov[38];
   size_t nr = 0;
   int i;
 
@@ -60,11 +59,11 @@ register_dump (int fd, struct sigcontext *ctx)
 
   /* Generate strings of register contents.  */
   for (i = 0; i < 31; i++)
-    hexvalue (ctx->sc_regs, regs[i], 8);
+    hexvalue (ctx->sc_regs[i], regs[i], 8);
   hexvalue (ctx->sc_pc, regs[32], 8);
   hexvalue (ctx->sc_cause, regs[33], 8);
   hexvalue (ctx->sc_status, regs[34], 8);
-  hexvalue (ctx->badvaddr, regs[35], 8);
+  hexvalue (ctx->sc_badvaddr, regs[35], 8);
   hexvalue (ctx->sc_mdhi, regs[36], 8);
   hexvalue (ctx->sc_mdlo, regs[37], 8);
 
@@ -94,7 +93,6 @@ register_dump (int fd, struct sigcontext *ctx)
       ADD_STRING (" ");
     }
   ADD_STRING ("\n           pc    cause  status   badvaddr       lo       hi\n      ");
-  ADD_MEM (regs[], 8);
   for (i = 32; i < 38; i++)
     {
       ADD_MEM (regs[i], 8);
