@@ -1,3 +1,11 @@
+2001-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancel.c (_pthread_cleanup_push): Catch invalid __prev buffer
+	and remove it.
+	(_pthread_cleanup_push_defer): Likewise.
+
+	* tst-cancel.c (main): Fix loop printing cleanup output.
+
 2001-04-10  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/pspinlock.c (__pthread_spin_lock): Fix a reverse

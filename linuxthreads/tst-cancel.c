@@ -142,7 +142,7 @@ main (void)
       while (1)
 	{
 	  ssize_t n = read (fd, buf, sizeof buf);
-	  if (n < 0)
+	  if (n <= 0)
 	    break;
 	  write (STDOUT_FILENO, buf, n);
 	}

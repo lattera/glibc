@@ -125,6 +125,18 @@ void _pthread_cleanup_push(struct _pthread_cleanup_buffer * buffer,
   buffer->__routine = routine;
   buffer->__arg = arg;
   buffer->__prev = THREAD_GETMEM(self, p_cleanup);
+  if (buffer->__prev != NULL)
+    {
+#if _STACK_GROWS_DOWN
+      if ((char *) buffer >= (char *) buffer->__prev)
+	buffer->__prev = NULL;
+#elif _STACK_GROWS_UP
+      if ((char *) buffer <= (char *) buffer->__prev)
+	buffer->__prev = NULL;
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+    }
   THREAD_SETMEM(self, p_cleanup, buffer);
 }
 
@@ -144,6 +156,16 @@ void _pthread_cleanup_push_defer(struct _pthread_cleanup_buffer * buffer,
   buffer->__arg = arg;
   buffer->__canceltype = THREAD_GETMEM(self, p_canceltype);
   buffer->__prev = THREAD_GETMEM(self, p_cleanup);
+  if (buffer->__prev != NULL)
+    {
+#if _STACK_GROWS_DOWN
+      if ((char *) buffer >= (char *) buffer->__prev)
+	buffer->__prev = NULL;
+#elif _STACK_GROWS_UP
+      if ((char *) buffer <= (char *) buffer->__prev)
+	buffer->__prev = NULL;
+#endif
+    }
   THREAD_SETMEM(self, p_canceltype, PTHREAD_CANCEL_DEFERRED);
   THREAD_SETMEM(self, p_cleanup, buffer);
 }
@@ -174,8 +196,6 @@ void __pthread_perform_cleanup(char *currentframe)
 #elif _STACK_GROWS_UP
       if ((char *) c >= currentframe)
 	break;
-#else
-# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
       c->__routine(c->__arg);
     }
