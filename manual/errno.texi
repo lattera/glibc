@@ -869,6 +869,8 @@ up, before it has connected to the file.
 @deftypevr Macro int ED
 @comment errno 102 @c DO NOT REMOVE
 The experienced user will know what is wrong.
+@c This error code is a joke.  Its perror text is part of the joke.
+@c Don't change it.
 @end deftypevr
 
 @comment errno.h

@@ -21,6 +21,8 @@
 # @comment POSIX.1: Function not implemented
 # @deftypevr Macro int ENOSYS
 # @comment errno 78
+# Descriptive paragraph...
+# @end deftypevr
 
 BEGIN {
     alias["EWOULDBLOCK"] = "EAGAIN";
@@ -54,9 +56,22 @@ errnoh == 3 && $1 == "@comment" && $2 == "errno" \
       printf "#if defined (%s) && %s != %s\n", e, e, alias[e];
     else
       printf "#ifdef %s\n", e;
+    errnoh = 4;
+    desc="";
+    next;
+  }
+errnoh == 4 && $1 == "@end" && $2 == "deftypevr" \
+  {
+    printf "/*%s */\n", desc;
     printf "    [%s] = N_(\"%s\"),\n", e, etext;
     print "#endif";
+    errnoh = 0;
     next;
+  }
+errnoh == 4 \
+  {
+    # This magic tag in C comments gets them copied into libc.pot.
+    desc = desc "\nTRANS " $0; next
   }
 { errnoh=0 }
 END {

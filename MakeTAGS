@@ -132,7 +132,7 @@ endif
 
 define extract
 @rm -f $@.new
-$(XGETTEXT) --keyword=_ --keyword=N_ --sort-output -d - \
+$(XGETTEXT) --keyword=_ --keyword=N_ --add-comments=TRANS --sort-output -d - \
 	    $(XGETTEXTFLAGS-$(@F)) > $@.new $^
 mv -f $@.new $@
 endef
