@@ -72,7 +72,8 @@ distribute	:= rtld-Rules \
 		   tst-tlsmod5.c tst-tlsmod6.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
-		   tls-macros.h
+		   tls-macros.h \
+		   reldep8mod1.c reldep8mod2.c reldep8mod3.c
 
 include ../Makeconfig
 
@@ -135,8 +136,8 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
 	 $(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	 restest2 next dblload dblunload reldep5 reldep6 reldep7 circleload1 \
-	 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
+	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
+	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -158,7 +159,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
 		tst-tlsmod5 tst-tlsmod6 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
-		circlemod3 circlemod3a
+		circlemod3 circlemod3a \
+		reldep8mod1 reldep8mod2 reldep8mod3
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -361,6 +363,7 @@ $(objpfx)reldep6mod2.so: $(objpfx)reldep6mod1.so
 $(objpfx)reldep6mod3.so: $(objpfx)reldep6mod2.so
 $(objpfx)reldep6mod4.so: $(objpfx)reldep6mod1.so
 $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
+$(objpfx)reldepmod3.so: $(objpfx)reldepmod1.so $(objpfx)reldepmod2.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
@@ -524,6 +527,9 @@ $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
 
 $(objpfx)reldep7: $(libdl)
 $(objpfx)reldep7.out: $(objpfx)reldep7mod1.so $(objpfx)reldep7mod2.so
+
+$(objpfx)reldep8: $(libdl)
+$(objpfx)reldep8.out: $(objpfx)reldep8mod3.so
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 
