@@ -38,9 +38,7 @@ typedef __volatile long int __spin_lock_t;
 _EXTERN_INLINE void
 __spin_unlock (__spin_lock_t *__lock)
 {
-  __asm__ __volatile__ (".set noreorder\n"
-			"mb; stq $31, %0; mb\n"
-			".set reorder"
+  __asm__ __volatile__ ("mb; stq $31, %0; mb"
 			: "=m" (__lock));
 }
 
@@ -53,18 +51,17 @@ __spin_try_lock (register __spin_lock_t *__lock)
 
   do
     {
-      __asm__ __volatile__ (".set noreorder\n"
-			    /* %0 is TMP, %1 is RTN, %2 is LOCK.  */
-			    "mb; ldq_l %0,%2\n" /* Load lock into TMP.  */
-			    "or $31,2,%1\n" /* Locked value in RTN.  */
-			    ".set reorder"
-			    : "=r" (__tmp), "=r" (__rtn) : "m" (__lock));
+      __asm__ __volatile__ ("mb; ldq_l %0,%1" /* Load lock value into TMP.  */
+			    : "=r" (__tmp) : "m" (*__lock));
+      __rtn = 2;		/* Load locked value into RTN.  */
       if (__tmp)
 	/* The lock is already taken.  */
 	return 0;
 
       /* The lock is not taken; try to get it now.  */
-      __asm__ __volatile__ ("stq_c %0,%1" : "+r" (__rtn), "+m" (__lock));
+      __asm__ __volatile__ ("stq_c %0,%1"
+			    : "=r" (__rtn), "=m" (*__lock)
+			    : "0" (__rtn), "1" (*__lock));
       /* RTN is clear if stq_c was interrupted; loop to try the lock again.  */
    } while (! __rtn);
   /* RTN is now nonzero; we have the lock.  */
