@@ -1,3 +1,24 @@
+Fri Mar 10 13:31:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/printf.h: Doc fixes.  Don't #include <stddef.h>.
+	(printf_function): Make last arg ARGS a vector of pointers instead of a
+	pointer to va_list.
+
+Fri Mar 10 13:46:25 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* stdio/vfprintf.c (PAD): use return value of _IO_padn.
+	(buffered_vfprintf): remove line buffer when flush failed.
+
+Fri Mar 10 00:04:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* time/tzfile.c (struct ttinfo): New member `isgmt'.
+  	(__tzfile_read): Read isgmt flags for each type.
+  	(__tzfile_default): When using TZDEFRULES DST rules, adjust
+ 	transition times according to the isstd and isgmt flags for the
+ 	types of each transition, and adjust each transition to point to
+ 	type index either 0 or 1.  Reset type indices 0 and 1 to describe
+ 	the user's settings.
+
 Thu Mar  9 22:29:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/categories.def (LC_CTYPE): Merge CLASS_EB and CLASS_EL
