@@ -1,3 +1,11 @@
+2002-12-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (readahead): Change
+	caller from EXTRA to -.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+
 2002-12-02  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/fpu/fesetround.c (fesetround): Use ~FE_DOWNWARD so both
