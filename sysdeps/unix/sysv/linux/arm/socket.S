@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,9 +41,9 @@ ENTRY (__socket)
         /* Do the system call trap.  */
 	swi SYS_ify(socketcall)
 
-	/* %eax is < 0 if there was an error.  */
+	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
-	bge syscall_error
+	bge syscall_error(PLT)
 
 	/* Successful; return the syscall's value.  */
 	RETINSTR(mov,pc,r14)

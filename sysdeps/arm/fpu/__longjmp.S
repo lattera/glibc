@@ -1,4 +1,4 @@
-/* setjmp for ARM.
+/* longjmp for ARM.
    Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,13 +22,15 @@
 #define _ASM
 #include <bits/setjmp.h>
 
-	/* Binary compatibility entry point.  */
-ENTRY (__setjmp)
-	mov	r1, #0
-ENTRY (__sigsetjmp)
-	/* Save registers */
-	stmia	r0, {v1-v6, sl, fp, sp, lr}
+/* __longjmp(jmpbuf, val) */
 
-	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
-END (__setjmp)
+ENTRY (__longjmp)
+	movs	r2, r0
+	movs	r0, r1		/* get the return value in place */
+	moveq	r1, #1		/* can't let setjmp() return zero! */
+
+	add	r2, r2, #48
+	lfmfd	f4, 4, [r2]
+
+	LOADREGS(ia, r2, {v1-v6, sl, fp, sp, pc})
+END (__longjmp)

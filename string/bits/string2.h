@@ -704,9 +704,8 @@ strnlen (__const char *__string, size_t __maxlen)
 #endif
 
 
-#if defined __USE_POSIX || defined __USE_MISC
-# ifndef _HAVE_STRING_ARCH_strtok_r
-#  define strtok_r(s, sep, nextp) \
+#ifndef _HAVE_STRING_ARCH_strtok_r
+# define __strtok_r(s, sep, nextp) \
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
 		  ? (((__const unsigned char *) (sep))[0] != '\0'	      \
 		     && ((__const unsigned char *) (sep))[1] == '\0'	      \
@@ -740,14 +739,15 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
     }
   return __result;
 }
+# if defined __USE_POSIX || defined __USE_MISC
+#  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
 # endif
 #endif
 
 
-#ifdef __USE_BSD
-# ifndef _HAVE_STRING_ARCH_strsep
+#ifndef _HAVE_STRING_ARCH_strsep
 
-#  define strsep(s, reject) \
+# define __strsep(s, reject) \
   (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
 		  && ((__const unsigned char *) (reject))[0] != '\0'	      \
 		  ? (((__const unsigned char *) (reject))[1] == '\0'	      \
@@ -844,6 +844,31 @@ __strsep_g (char **__s, __const char *__reject)
     *(*__s)++ = '\0';
   return __retval;
 }
+# ifdef __USE_BSD
+#  define strsep(s, reject) __strsep (s, reject)
+# endif
+#endif
+
+
+#if !defined _HAVE_STRING_ARCH_strdup && !defined __STRICT_ANSI__
+
+/* We need the memory allocation functions.  Including this header is
+   not allowed. */
+# include <stdlib.h>
+
+# define __strdup(s) \
+  (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)
+		  ? (((__const unsigned char *) (s))[0] == '\0'
+		     ? return (char *) calloc (1, 1);
+		     : ({ size_t len = strlen (s) + 1;
+			  char *retval = (char *) malloc (len);
+			  if (retval != NULL)
+			    retval = (char *) memcpy (retval, s, len);
+			  retval; }))
+		  : strdup (s)))
+
+# if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#  define strdup(s) __strdup (s)
 # endif
 #endif
 

@@ -64,9 +64,14 @@ before-compile	:= testcases.h
 include ../Rules
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)globtest $(objpfx)wordexp-test
-	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
-	$(SHELL) -e wordexp-tst.sh $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
+.PHONY: do-globtest do-wordexp-tst
+tests: do-globtest do-wordexp-test
+do-globtest: $(objpfx)globtest
+	$(SHELL) -e globtest.sh $(common-objpfx) $(elf-objpfx) \
+		 $(rtld-installed-name)
+do-wordexp-test: $(objpfx)wordexp-test
+	$(SHELL) -e wordexp-tst.sh $(common-objpfx) $(elf-objpfx) \
+		 $(rtld-installed-name)
 endif
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes

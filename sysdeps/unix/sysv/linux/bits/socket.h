@@ -66,16 +66,16 @@ enum __socket_type
 #define	PF_AAL5		8	/* Reserved for Werner's ATM.  */
 #define	PF_X25		9	/* Reserved for X.25 project.  */
 #define	PF_INET6	10	/* IP version 6.  */
-#define	PF_ROSE		11	/* Amateur Radio X.25 PLP       */
-#define	PF_DECnet	12	/* Reserved for DECnet project  */
-#define	PF_NETBEUI	13	/* Reserved for 802.2LLC project*/
-#define	PF_SECURITY	14	/* Security callback pseudo AF */
-#define	PF_KEY		15	/* PF_KEY key management API */
+#define	PF_ROSE		11	/* Amateur Radio X.25 PLP.  */
+#define	PF_DECnet	12	/* Reserved for DECnet project.  */
+#define	PF_NETBEUI	13	/* Reserved for 802.2LLC project.  */
+#define	PF_SECURITY	14	/* Security callback pseudo AF.  */
+#define	PF_KEY		15	/* PF_KEY key management API.  */
 #define	PF_NETLINK	16
-#define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD */
-#define	PF_PACKET	17	/* Packet family                */
-#define	PF_ASH		18	/* Ash */
-#define	PF_MAX		32	/* For now.. */
+#define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD.  */
+#define	PF_PACKET	17	/* Packet family.  */
+#define	PF_ASH		18	/* Ash.  */
+#define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
 #define	AF_UNSPEC	PF_UNSPEC

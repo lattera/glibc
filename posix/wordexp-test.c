@@ -164,7 +164,7 @@ main (int argc, char *argv[])
   const char *globfile[] = { "one", "two", "three", NULL };
   char tmpdir[32];
   struct passwd *pw;
-  char *cwd;
+  const char *cwd;
   int test;
   int fail = 0;
   int i;

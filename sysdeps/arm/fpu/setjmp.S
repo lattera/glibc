@@ -27,6 +27,7 @@ ENTRY (__setjmp)
 	mov	r1, #0
 ENTRY (__sigsetjmp)
 	/* Save registers */
+	sfmea	f4, 4, [r0]!
 	stmia	r0, {v1-v6, sl, fp, sp, lr}
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */

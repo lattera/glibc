@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  4.4 BSD/generic GNU version.
-   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ enum __rlimit_resource
 #define	RLIMIT_NOFILE	RLIMIT_NOFILE
 
     RLIMIT_NLIMITS,		/* Number of limit flavors.  */
-    RLIM_NLIMITS = RLIMIT_NLIMITS, /* Traditional name for same.  */
+    RLIM_NLIMITS = RLIMIT_NLIMITS /* Traditional name for same.  */
   };
 
 /* Value to indicate that there is no limit.  */

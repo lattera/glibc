@@ -25,14 +25,14 @@ and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
 To configure the GNU C library for your system, run the shell script
-@file{configure} with @code{sh}.  Use an argument which is the
+@file{configure} with @code{sh}.  You might use an argument which is the
 conventional GNU name for your system configuration---for example,
-@samp{sparc-sun-sunos4.1}, for a Sun 4 running SunOS 4.1.
+@samp{i486-pc-linux-gnu}, for Linux running on i486.
 @xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
 Porting GNU CC}, for a full description of standard GNU configuration
 names.  If you omit the configuration name, @file{configure} will try to
 guess one for you by inspecting the system it is running on.  It may or
-may not be able to come up with a guess, and the its guess might be
+may not be able to come up with a guess, and the guess might be
 wrong.  @file{configure} will tell you the canonical name of the chosen
 configuration before proceeding.
 
@@ -109,9 +109,9 @@ because there are bugs in @code{make clean}.  Make a directory for the
 build, and run @code{configure} from that directory, like this:
 
 @smallexample
-mkdir sun4
-cd sun4
-../configure sparc-sun-sunos4.1
+mkdir linux
+cd linux
+../configure
 @end smallexample
 
 @noindent
@@ -190,14 +190,11 @@ recommend version GNU @code{make} version 3.75.  Versions 3.76 and
 GNU @code{libc}.
 
 @item
-GCC 2.7.2.3
+GCC 2.8.1/EGCS 1.0.2
 
 On most platforms, the GNU C library can only be compiled with the GNU C
-compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
-have problems.
-
-On PowerPC, GCC versions dated earlier than 970904 are known not to work
-(they crash), including 2.7.2.
+compiler family.  We recommend GCC version 2.8.1 and EGCS version 1.0.2
+or later versions of these two; earlier versions may have problems.
 
 @item
 GNU @code{binutils} 2.8.1.0.23
@@ -363,9 +360,10 @@ If you think you have found some way in which the GNU C library does not
 conform to the ISO and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
-Send bug reports to the Internet address
-@email{bug-glibc@@gnu.org}.  If you have other problems
-with installation or use, please report those as well.@refill
+Send bug reports to the Internet address @email{bug-glibc@@gnu.org}
+using the @code{glibcbug} script which is installed by the GNU C
+library.  If you have other problems with installation or use, please
+report those as well.@refill
 
 If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the

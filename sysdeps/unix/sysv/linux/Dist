@@ -22,6 +22,7 @@ net/if_slip.h
 net/ppp-comp.h
 net/ppp_defs.h
 net/route.h
+netash/ash.h
 netatalk/at.h
 netax25/ax25.h
 netinet/if_fddi.h
@@ -30,6 +31,7 @@ netinet/igmp.h
 netinet/in_systm.h
 netinet/ip_fw.h
 netinet/ip_icmp.h
+netpacket/packet.h
 netinet/tcp.h
 netinet/udp.h
 netipx/ipx.h

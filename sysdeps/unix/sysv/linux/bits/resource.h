@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux version.
-   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ enum __rlimit_resource
 
   RLIMIT_NLIMITS = RLIM_NLIMITS,
 #undef RLIM_NLIMITS
-  RLIM_NLIMITS = RLIMIT_NLIMITS,
+  RLIM_NLIMITS = RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS RLIMIT_NLIMITS
 #define RLIM_NLIMITS RLIM_NLIMITS
 };

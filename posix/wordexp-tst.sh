@@ -12,7 +12,13 @@ rtld_installed_name=$1; shift
 testout=$TMPDIR/wordexp-test-result
 
 failed=0
-export IFS=$(echo -e " \t\n")
+# This is written in this funny way so that there is no trailing whitespace.
+# The first line contains a space followed by a tab.
+IFS=" 	\
+
+"
+export IFS
+
 
 ${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
 ${common_objpfx}posix/wordexp-test '$*' > ${testout}1
@@ -68,6 +74,22 @@ we_wordv[0] = "2nd"
 we_wordv[1] = "3rd"
 we_wordv[2] = "4"
 we_wordv[3] = "th"
+EOF
+
+${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${common_objpfx}posix/wordexp-test '${11}' 2 3 4 5 6 7 8 9 10 11 > ${testout}8
+cat <<"EOF" | cmp - ${testout}8 || failed=1
+wordexp returned 0
+we_wordv[0] = "11"
+EOF
+
+${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${common_objpfx}posix/wordexp-test '"a $@ b"' c d > ${testout}9
+cat <<"EOF" | cmp - ${testout}9 || failed=1
+wordexp returned 0
+we_wordv[0] = "a "a $@ b""
+we_wordv[1] = "c"
+we_wordv[2] = "d b"
 EOF
 
 exit $failed

@@ -1,3 +1,87 @@
+1998-03-18 14:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Add optimization for strdup.
+	Always define __strsep and __strtok_r and make real names available
+	when feature select macros are defined.
+
+1998-03-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Installation): Use i486-linux as example
+	instead of the unsupported sunos4.
+	(Reporting Bugs): Mention glibcbug script.
+	(Tools for Installation): gcc 2.8.1/egcs 1.0.2 is required.
+
+1998-03-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/wordexp-tst.sh: Make portable.  Add more tests.
+
+	* posix/Makefile (do-globtest do-wordexp-test): New targets.
+
+1998-03-18 13:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/libc-start.c: Moved to ...
+	* sysdeps/generic/libc-start.c: ...here, replacing former content.
+
+	* sysdeps/unix/sysv/linux/Dist: Add netash/ash.h and
+	netpacket/packet.h.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Pretty print.
+
+1998-03-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Remove trailing comma
+	in enumerator for strict standard compliance.
+	* sysdeps/generic/bits/resource.h: Likewise.
+
+1998-03-18 10:04  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/sysdep.h (__ARM_USES_FP): Deleted.
+	(PLTJMP): New macro.
+
+	* sysdeps/arm/fpu/__longjmp.S: New file, implementation of
+	longjmp() when floating point enabled.
+	* sysdeps/arm/fpu/setjmp.S: Likewise for setjmp().
+	* sysdeps/arm/__longjmp.S: Remove floating point code.
+	* sysdeps/arm/setjmp.S: Likewise.
+
+	* sysdeps/arm/bsd-setjmp.S: Call __sigsetjmp by correct name.
+	* sysdeps/arm/bsd-_setjmp.S: Likewise.
+
+	* sysdeps/arm/memset.S: New file; optimised ARM implementation of
+	memset().
+
+	* sysdeps/generic/setsockopt.c (setsockopt): Keep in step with
+	prototype.
+
+1998-03-17 16:16  Philip Blundell  <pb@nexus.co.uk>
+
+	Based on patches from Pat Beirne and Scott Bambrough:
+
+	* sysdeps/arm/__longjmp.S: Use ip, not r2, as temporary.
+
+	* sysdeps/arm/bits/fenv.h: New file.
+
+	* sysdeps/arm/dl-machine.h: New file.  Add ELF support.
+	* sysdeps/arm/elf/setjmp.S: Likewise.
+	* sysdeps/arm/elf/start.S: Likewise.
+	* sysdeps/arm/init-first.c: Likewise.
+	* sysdeps/arm/setjmp.S: Call __sigjmp_save through PLT
+	* sysdeps/arm/sysdep.h: Change format of .type directive.  Correct
+	comment about floating point to reflect current reality.
+
+	* sysdeps/unix/arm/brk.S: Support PIC.
+	* sysdeps/unix/arm/sysdep.S (syscall_error): Support PIC and
+	re-entrant code.
+	* sysdeps/unix/sysv/linux/arm/socket.S: Check correctly for error
+	return; call syscall_error through PLT.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (ENTRY): Correct error jump.
+
+1998-03-04 12:01  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/netpacket/packet.h: New file.
+	* sysdeps/unix/sysv/linux/netash/ash.h: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Install them.
+
 1998-03-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* dirent/list.c (test): Return error value.

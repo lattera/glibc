@@ -1548,7 +1548,7 @@ envsubst:
 		pattern = qtd_pattern;
 	      }
 
-	    if (pattern == NULL && (pattern = __strdup("")) == NULL)
+	    if (pattern == NULL && (pattern = __strdup ("")) == NULL)
 	      goto no_space;
 
 	    error = wordexp (pattern, &we, flags);
@@ -1563,8 +1563,8 @@ envsubst:
 	    assert (!quoted || we.we_wordc == 1);
 
 	    /* Substitute */
-	    for (i = 0; i < we.we_wordc; i++)
-	      if (w_addword (pwordexp, __strdup(we.we_wordv[i]))
+	    for (i = 0; i < we.we_wordc; ++i)
+	      if (w_addword (pwordexp, __strdup (we.we_wordv[i]))
 		  == WRDE_NOSPACE)
 		break;
 

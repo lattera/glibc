@@ -1,5 +1,5 @@
 /* Assembler macros for ARM.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,18 +28,22 @@
 /* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
-#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
+#define ASM_TYPE_DIRECTIVE(name,typearg) .type name,%##typearg;
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
 #define NO_UNDERSCORES
 
+#define PLTJMP(_x)	_x##(PLT)
+
 #else
 
 #define ALIGNARG(log2) log2
 #define ASM_TYPE_DIRECTIVE(name,type)	/* Nothing is specified.  */
 #define ASM_SIZE_DIRECTIVE(name)	/* Nothing is specified.  */
+
+#define PLTJMP(_x)	_x
 
 #endif
 
@@ -56,13 +60,10 @@
 	instr##s	regs
 #endif
 
-/* Don't do floating point */
-#define __ARM_USES_FP   1
-
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
-  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
+  ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),function)			      \
   .align ALIGNARG(4);							      \
   C_LABEL(name)								      \
   CALL_MCOUNT

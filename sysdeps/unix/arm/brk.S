@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,24 @@ C_LABEL(__curbrk)
 
 .text
 SYSCALL__ (brk, 1)
+#ifdef PIC
+	ldr r1, 1f
+	add r1, r1, pc
+2:	ldr r2, _cb_addr
+	add r1, r1, r2
+#else
 	ldr r1, _cb_addr
+#endif
 	str r0, [r1]
 	mov r0, $0
 	RETINSTR(mov, pc, r14)
-_cb_addr:	.long C_SYMBOL_NAME(__curbrk)
-
+#ifdef PIC
+1:	.long _GLOBAL_OFFSET_TABLE_ - 2b - 4
+_cb_addr:
+	.long C_SYMBOL_NAME(__curbrk)(GOTOFF)
+#else
+_cb_addr:
+	.long C_SYMBOL_NAME(__curbrk)
+#endif
 
 weak_alias (__brk, brk)

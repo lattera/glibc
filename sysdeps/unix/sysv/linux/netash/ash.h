@@ -1,5 +1,5 @@
-/* setjmp for ARM.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Definitions for use with Linux AF_ASH sockets.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,18 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#define _SETJMP_H
-#define _ASM
-#include <bits/setjmp.h>
+#ifndef __NETASH_ASH_H
+#define __NETASH_ASH_H	1
 
-	/* Binary compatibility entry point.  */
-ENTRY (__setjmp)
-	mov	r1, #0
-ENTRY (__sigsetjmp)
-	/* Save registers */
-	stmia	r0, {v1-v6, sl, fp, sp, lr}
+#include <features.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
-	/* Make a tail call to __sigjmp_save; it takes the same args.  */
-	B	PLTJMP(C_SYMBOL_NAME(__sigjmp_save))
-END (__setjmp)
+struct sockaddr_ash
+  {
+    _SOCKADDR_COMMON (sash_);		/* Common data: address family etc.  */
+    int if_index;			/* Interface to use.  */
+    int channel;			/* Realtime or control.  */
+  };
+
+#endif	/* netash/ash.h */
