@@ -1,3 +1,7 @@
+2003-04-24  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-reloc.c (_dl_allocate_static_tls): Add internal_function.
+
 2003-04-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-reloc.c (allocate_static_tls): Rename to...
@@ -23,7 +27,7 @@
 
 2003-04-23  Ulrich Drepper  <drepper@redhat.com>
 
-	* nis/ypclnt.c (__yp_bind): Expect ypdb parameter to always we !=
+	* nis/ypclnt.c (__yp_bind): Expect YPDB parameter to always be !=
 	NULL.  Remove code made redundant by this assumption.
 	(__yp_unbind): Add call to free.  Adjust all callers.
 

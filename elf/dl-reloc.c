@@ -41,7 +41,8 @@
    the static TLS area already allocated for each running thread.  If this
    object's TLS segment is too big to fit, we fail.  If it fits,
    we set MAP->l_tls_offset and return.  */
-void __attribute_noinline__
+void
+internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
   size_t offset, used, check;
