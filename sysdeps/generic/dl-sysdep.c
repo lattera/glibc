@@ -54,7 +54,7 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end __attribute__ ((section (".data.rel.ro")));
-rtld_hidden_def(__libc_stack_end)
+rtld_hidden_data_def(__libc_stack_end)
 static ElfW(auxv_t) *_dl_auxv;
 
 #ifndef DL_FIND_ARG_COMPONENTS
