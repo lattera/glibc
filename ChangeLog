@@ -1,3 +1,8 @@
+1999-06-10  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/libm-ieee754/s_truncl.c: Subtract exponent
+	bias from the raw exponent.
+
 1999-06-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/arpa/tftp.h: Move attribute declaration in right position.

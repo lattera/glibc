@@ -1,5 +1,5 @@
 /* Truncate argument to nearest integral value not larger than the argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -32,7 +32,7 @@ __truncl (long double x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   sx = se & 0x8000;
-  j0 = se & 0x7fff;
+  j0 = (se & 0x7fff) - 0x3fff;
   if (j0 < 31)
     {
       if (j0 < 0)
