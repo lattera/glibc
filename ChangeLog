@@ -1,3 +1,20 @@
+2004-08-23  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #341]
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_NOATIME): Define.
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/cris/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_NOATIME): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (O_NOATIME): Likewise.
+
 2004-08-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/hooks.c (DEFAULT_CHECK_ACTION): Moved to malloc.c.
