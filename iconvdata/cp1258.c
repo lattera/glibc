@@ -22,6 +22,7 @@
 #include <dlfcn.h>
 #include <stdint.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #define NELEMS(arr) (sizeof (arr) / sizeof (arr[0]))
 
