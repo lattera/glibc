@@ -82,20 +82,20 @@
        | ((__const unsigned char *) (addr))[1]) << 8			      \
       | ((__const unsigned char *) (addr))[0])
 
-# define put16(addr, val) \
+#  define put16(addr, val) \
      ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
-	((__const unsigned char *) (addr))[1] = __val >> 8;		      \
+	((unsigned char *) (addr))[0] = __val;				      \
+	((unsigned char *) (addr))[1] = __val >> 8;			      \
 	(void) 0; })
-# define put32(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
+#  define put32(addr, val) \
+     ({ uint32_t __val = (val);						      \
+	((unsigned char *) (addr))[0] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
+	((unsigned char *) (addr))[1] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[2] = __val;			      \
+	((unsigned char *) (addr))[2] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[3] = __val;			      \
+	((unsigned char *) (addr))[3] = __val;				      \
 	(void) 0; })
 # else
 #  define get16(addr) \
@@ -107,20 +107,20 @@
        | ((__const unsigned char *) (addr))[2]) << 8			      \
       | ((__const unsigned char *) (addr))[3])
 
-# define put16(addr, val) \
+#  define put16(addr, val) \
      ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
-	((__const unsigned char *) (addr))[2] = __val >> 8;		      \
+	((unsigned char *) (addr))[1] = __val;				      \
+	((unsigned char *) (addr))[2] = __val >> 8;			      \
 	(void) 0; })
-# define put32(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[3] = __val;			      \
+#  define put32(addr, val) \
+     ({ uint32_t __val = (val);						      \
+	((unsigned char *) (addr))[3] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[2] = __val;			      \
+	((unsigned char *) (addr))[2] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
+	((unsigned char *) (addr))[1] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
+	((unsigned char *) (addr))[0] = __val;				      \
 	(void) 0; })
 # endif
 
@@ -261,6 +261,11 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 }
 
 
+#undef get16
+#undef get32
+#undef put16
+#undef put32
+
 /* Include the file a second time to define the function to define the
    function to handle unaligned access.  */
 #if !defined _STRING_ARCH_unaligned && !defined DEFINE_UNALIGNED
@@ -282,8 +287,3 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
-
-#undef get16
-#undef get32
-#undef put16
-#undef put32

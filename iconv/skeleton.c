@@ -140,20 +140,20 @@ static int to_object;
        | ((__const unsigned char *) (addr))[1]) << 8			      \
       | ((__const unsigned char *) (addr))[0])
 
-# define put16(addr, val) \
+#  define put16(addr, val) \
      ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
-	((__const unsigned char *) (addr))[1] = __val >> 8;		      \
+	((unsigned char *) (addr))[0] = __val;				      \
+	((unsigned char *) (addr))[1] = __val >> 8;			      \
 	(void) 0; })
-# define put32(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
+#  define put32(addr, val) \
+     ({ uint32_t __val = (val);						      \
+	((unsigned char *) (addr))[0] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
+	((unsigned char *) (addr))[1] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[2] = __val;			      \
+	((unsigned char *) (addr))[2] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[3] = __val;			      \
+	((unsigned char *) (addr))[3] = __val;				      \
 	(void) 0; })
 # else
 #  define get16(addr) \
@@ -165,20 +165,20 @@ static int to_object;
        | ((__const unsigned char *) (addr))[2]) << 8			      \
       | ((__const unsigned char *) (addr))[3])
 
-# define put16(addr, val) \
+#  define put16(addr, val) \
      ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
-	((__const unsigned char *) (addr))[2] = __val >> 8;		      \
+	((unsigned char *) (addr))[1] = __val;				      \
+	((unsigned char *) (addr))[2] = __val >> 8;			      \
 	(void) 0; })
-# define put32(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((__const unsigned char *) (addr))[3] = __val;			      \
+#  define put32(addr, val) \
+     ({ uint32_t __val = (val);						      \
+	((unsigned char *) (addr))[3] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[2] = __val;			      \
+	((unsigned char *) (addr))[2] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[1] = __val;			      \
+	((unsigned char *) (addr))[1] = __val;				      \
 	__val >>= 8;							      \
-	((__const unsigned char *) (addr))[0] = __val;			      \
+	((unsigned char *) (addr))[0] = __val;				      \
 	(void) 0; })
 # endif
 #endif
