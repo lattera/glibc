@@ -23,3 +23,4 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL (vhangup, 1)
 	ret
+	.end vhangup

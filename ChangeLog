@@ -1,6 +1,18 @@
 Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
 
-	* sysdeps/unix/mips/brk.S (__brk, __curbrk): Add .end.
+	* sysdeps/unix/bsd/osf/alpha/killpg.S (killpg): Add .end directive.
+	* sysdeps/unix/bsd/osf/alpha/sigblock.S (__sigblock): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigsetmask.S (__sigsetmask): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigpause.S (__sigpause): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigvec.S (__sigvec): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/getdents.S (__getdirentries): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/fork.S (__fork): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/recv.S (recv): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/send.S (send): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/vhangup.S (vhangup): Likewise.
+
+	* sysdeps/unix/mips/brk.S (__brk, __curbrk): Add .end directive.
 	* sysdeps/unix/mips/fork.S (fork): Likewise.
 	* sysdeps/unix/mips/pipe.S (fork): Likewise.
 	* sysdeps/unix/mips/sigreturn.S (__sigreturn): Likewise.

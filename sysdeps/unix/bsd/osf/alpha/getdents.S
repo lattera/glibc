@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (getdirentries, 4)
 	ret
+	.end __getdirentries
 
 weak_alias (__getdirentries, getdirentries)
 

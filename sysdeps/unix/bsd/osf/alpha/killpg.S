@@ -23,3 +23,4 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL (killpg, 2)
 	ret
+	.end killpg
