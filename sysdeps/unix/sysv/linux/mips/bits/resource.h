@@ -21,7 +21,6 @@
 # error "Never use <bits/resource.h> directly; include <sys/resource.h> instead."
 #endif
 
-#include <asm/resource.h>
 #include <bits/types.h>
 
 /* Transmute defines to enumerations.  The macro re-definitions are
