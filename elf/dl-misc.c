@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <ldsodefs.h>
 #include <link.h>
 #include <stdarg.h>
 #include <string.h>
@@ -42,6 +43,7 @@ _dl_sysdep_open_zero_fill (void)
    protections.  *SIZEP gets the size of the file.  */
 
 void *
+internal_function
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result;

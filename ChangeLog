@@ -1,3 +1,46 @@
+2000-12-05  Andreas Jaeger  <aj@suse.de>
+
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Mark as
+	internal_function.
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Likewise.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start_cleanup): Likewise.
+
+	* sysdeps/generic/dl-cache.c: Remove declaration of
+	_dl_sysdep_read_whole_file.
+
+	* elf/dl-load.c (_dl_map_object): Remove declaration of
+	_dl_load_cache_lookup.
+
+	* sysdeps/generic/ldsodefs.h: Add declarations of
+	_dl_load_cache_lookup, _dl_unload_cache,
+	_dl_sysdep_read_whole_file, _dl_sysdep_start and
+	_dl_sysdep_start_cleanup.
+
+	* elf/rtld.c: Remove prototypes that are defined in ldsodefs.h
+	now.
+
+	* elf/dl-misc.c: Include <ldsodefs.h> to get prototypes.
+	* sysdeps/generic/dl-environ.c: Likewise.
+
+	* stdio-common/printf_fp.c: Include <gmp.h> instead of
+	<stdlib/gmp.h>.
+	* math/atest-exp.c: Likewise.
+	* math/atest-exp2.c: Likewise.
+	* math/atest-sincos.c: Likewise.
+	* stdio-common/_itoa.c: Likewise.
+	* stdio-common/_itowa.c: Likewise.
+
+	* include/gmp.h: New file with internal prototypes.
+
+	* sysdeps/generic/longjmp.c: Move _longjmp_unwind declaration from
+	here to...
+	* include/setjmp.h: ...here.
+
+	* locale/Makefile (routines): Remove codeset_name since it's not
+	needed anywhere.
+
+	* locale/codeset_name.c: Removed.
+
 2000-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/aix/sys/param.h: Define MAXHOSTNAMELEN here.

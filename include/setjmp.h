@@ -12,4 +12,7 @@ extern void __longjmp (__jmp_buf __env, int __val)
    This is used by the machine-dependent definition of `__sigsetjmp'.
    Always returns zero, for convenience.  */
 extern int __sigjmp_save (jmp_buf __env, int __savemask);
+
+extern void _longjmp_unwind (jmp_buf env, int val);
+
 #endif

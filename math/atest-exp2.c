@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <stdlib/gmp.h>
+#include <gmp.h>
 #include <string.h>
 #include <limits.h>
 #include <assert.h>

@@ -26,12 +26,6 @@
 
 #include <stdio-common/_itoa.h>
 
-/* System-dependent function to read a file's whole contents
-   in the most convenient manner available.  */
-extern void *_dl_sysdep_read_whole_file (const char *filename,
-					 size_t *filesize_ptr,
-					 int mmap_prot);
-
 extern const char *_dl_platform;
 
 #ifndef _DL_PLATFORMS_COUNT
@@ -150,6 +144,7 @@ while (0)
    or null if none is found.  */
 
 const char *
+internal_function
 _dl_load_cache_lookup (const char *name)
 {
   int left, right, middle;

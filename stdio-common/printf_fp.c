@@ -30,7 +30,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <gmp-mparam.h>
-#include <stdlib/gmp.h>
+#include <gmp.h>
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
 #include <stdlib/fpioconst.h>

@@ -35,7 +35,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      locfile.h charmap.h repertoire.h localedef.h \
 			      3level.h charmap-dir.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
-		  nl_langinfo_l mb_cur_max codeset_name \
+		  nl_langinfo_l mb_cur_max \
 		  newlocale duplocale freelocale
 tests		= tst-C-locale
 categories	= ctype messages monetary numeric time paper name \

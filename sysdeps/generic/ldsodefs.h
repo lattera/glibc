@@ -456,6 +456,36 @@ extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
 							size_t *max_capstrlen)
      internal_function;
 
+/* Look up NAME in ld.so.cache and return the file name stored there,
+   or null if none is found.  */
+extern const char *_dl_load_cache_lookup (const char *name)
+     internal_function;
+
+/* If the system does not support MAP_COPY we cannot leave the file open
+   all the time since this would create problems when the file is replaced.
+   Therefore we provide this function to close the file and open it again
+   once needed.  */
+extern void _dl_unload_cache (void);
+
+/* System-dependent function to read a file's whole contents
+   in the most convenient manner available.  */
+extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
+					 int prot)
+     internal_function;
+
+/* System-specific function to do initial startup for the dynamic linker.
+   After this, file access calls and getenv must work.  This is responsible
+   for setting __libc_enable_secure if we need to be secure (e.g. setuid),
+   and for setting _dl_argc and _dl_argv, and then calling _dl_main.  */
+extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
+				    void (*dl_main) (const ElfW(Phdr) *phdr,
+						     ElfW(Word) phnum,
+						     ElfW(Addr) *user_entry));
+
+extern void _dl_sysdep_start_cleanup (void)
+     internal_function;
+
+
 __END_DECLS
 
 #endif /* ldsodefs.h */

@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
-
+#include <ldsodefs.h>
 
 extern char **_environ;
 

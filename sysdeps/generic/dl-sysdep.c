@@ -191,6 +191,7 @@ _dl_sysdep_start (void **start_argptr,
 }
 
 void
+internal_function
 _dl_sysdep_start_cleanup (void)
 {
 }

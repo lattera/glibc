@@ -1586,7 +1586,6 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */
-	  extern const char *_dl_load_cache_lookup (const char *name);
 	  const char *cached = _dl_load_cache_lookup (name);
 
 #ifdef SHARED

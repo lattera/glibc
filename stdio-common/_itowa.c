@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
    and Ulrich Drepper <drepper@gnu.org>.
@@ -20,7 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gmp-mparam.h>
-#include <stdlib/gmp.h>
+#include <gmp.h>
 #include <stdlib/gmp-impl.h>
 #include <stdlib/longlong.h>
 
