@@ -12,7 +12,7 @@ endif
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 
-# XXX Don"t know yet why this is needed in the moment.
+# XXX Don't know yet why this is needed in the moment.
 ifeq ($(subdir),timezone)
 CPPFLAGS-zic.c = -Dunix
 endif
