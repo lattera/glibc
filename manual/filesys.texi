@@ -447,7 +447,9 @@ A higher-level interface to the directory handling functions is the
 entries in a directory, possibly sort them and get as the result a list
 of names.
 
-@deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (struct dirent *), int (*@var{cmp}) (const void *, const void *))
+@comment dirent.h
+@comment BSD/SVID
+@deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (const struct dirent *), int (*@var{cmp}) (const void *, const void *))
 
 The @code{scandir} function scans the contents of the directory selected
 by @var{dir}.  The result in @var{namelist} is an array of pointers to
@@ -475,8 +477,10 @@ a pointer to a sorting function.  For the convenience of the programmer
 the GNU C library contains implementations of functions which are very
 helpful for this purpose.
 
+@comment dirent.h
+@comment BSD/SVID
 @deftypefun int alphasort (const void *@var{a}, const void *@var{b})
-The @code{alphasort} function behaves like the @code{strcmp} function
+The @code{alphasort} function behaves like the @code{strcoll} function
 (@pxref{String/Array Comparison}).  The difference is that the arguments
 are not string pointers but instead they are of type
 @code{struct dirent **}.
@@ -485,10 +489,59 @@ Return value of is less than, equal to, or greater than zero depending
 on the order of the two entries @var{a} and @var{b}.
 @end deftypefun
 
+@comment dirent.h
+@comment GNU
 @deftypefun int versionsort (const void *@var{a}, const void *@var{b})
 The @code{versionsort} function is like @code{alphasort}, excepted that it
 uses the @code{strverscmp} function internally.
 @end deftypefun
+
+If the filesystem supports large files we cannot use the @code{scandir}
+anymore since the @code{dirent} structure might not able to contain all
+the information.  The LFS provides the new type @w{@code{struct
+dirent64}}.  To use this we need a new function.
+
+@comment dirent.h
+@comment GNU
+@deftypefun int scandir64 (const char *@var{dir}, struct dirent64 ***@var{namelist}, int (*@var{selector}) (const struct dirent64 *), int (*@var{cmp}) (const void *, const void *))
+The @code{scandir64} function works like the @code{scandir} function
+only that the directory entries it returns are described by elements of
+type @w{@code{struct dirent64}}.  The function pointed to by
+@var{selector} is again used to select the wanted entries only that
+@var{selector} now must point to a function which takes a
+@w{@code{struct dirent64 *} parameter.
+
+The @var{cmp} now must be a function which expects its two arguments to
+be of type @code{struct dirent64 **}.
+@end deftypefun
+
+As just said the function expected as the fourth is different from the
+function expected in @code{scandir}.  Therefore we cannot use the
+@code{alphasort} and @code{versionsort} functions anymore.  Instead we
+have two similar functions available.
+
+@comment dirent.h
+@comment GNU
+@deftypefun int alphasort64 (const void *@var{a}, const void *@var{b})
+The @code{alphasort64} function behaves like the @code{strcoll} function
+(@pxref{String/Array Comparison}).  The difference is that the arguments
+are not string pointers but instead they are of type
+@code{struct dirent64 **}.
+
+Return value of is less than, equal to, or greater than zero depending
+on the order of the two entries @var{a} and @var{b}.
+@end deftypefun
+
+@comment dirent.h
+@comment GNU
+@deftypefun int versionsort64 (const void *@var{a}, const void *@var{b})
+The @code{versionsort64} function is like @code{alphasort64}, excepted that it
+uses the @code{strverscmp} function internally.
+@end deftypefun
+
+It is important not to mix the use of @code{scandir} and the 64 bits
+comparison functions or vice versa.  There are systems on which this
+work but on others it will fail miserably.
 
 @node Simple Directory Lister Mark II
 @subsection Simple Program to List a Directory, Mark II
