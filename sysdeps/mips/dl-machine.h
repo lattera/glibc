@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -34,6 +35,7 @@
 
 #include <sgidefs.h>
 #include <sys/asm.h>
+#include <dl-tls.h>
 
 /* The offset of gp from GOT might be system-dependent.  It's set by
    ld.  The same value is also */
@@ -322,6 +324,47 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 
   switch (r_type)
     {
+#if defined (USE_TLS) && !defined (RTLD_BOOTSTRAP)
+# if _MIPS_SIM == _ABI64
+    case R_MIPS_TLS_DTPMOD64:
+    case R_MIPS_TLS_DTPREL64:
+    case R_MIPS_TLS_TPREL64:
+# else
+    case R_MIPS_TLS_DTPMOD32:
+    case R_MIPS_TLS_DTPREL32:
+    case R_MIPS_TLS_TPREL32:
+# endif
+      {
+	struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+	Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+
+	if (sym)
+	  value += sym->st_value;
+
+	switch (r_type)
+	  {
+	  case R_MIPS_TLS_DTPMOD64:
+	  case R_MIPS_TLS_DTPMOD32:
+	    if (sym_map)
+	      *(ElfW(Word) *)reloc_addr = sym_map->l_tls_modid;
+	    break;
+
+	  case R_MIPS_TLS_DTPREL64:
+	  case R_MIPS_TLS_DTPREL32:
+	    *(ElfW(Word) *)reloc_addr += TLS_DTPREL_VALUE (sym);
+	    break;
+
+	  case R_MIPS_TLS_TPREL32:
+	  case R_MIPS_TLS_TPREL64:
+	    CHECK_STATIC_TLS (map, sym_map);
+	    *(ElfW(Word) *)reloc_addr += TLS_TPREL_VALUE (sym_map, sym);
+	    break;
+	  }
+
+	break;
+      }
+#endif
+
 #if _MIPS_SIM == _ABI64
     case (R_MIPS_64 << 8) | R_MIPS_REL32:
 #else
