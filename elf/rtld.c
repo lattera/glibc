@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1041,7 +1041,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* We must prepare the profiling.  */
       _dl_start_profile (_dl_profile_map, _dl_profile_output);
 
-    if (_dl_rtld_map.l_opencount > 0)
+    if (_dl_rtld_map.l_opencount > 1)
       {
 	/* There was an explicit ref to the dynamic linker as a shared lib.
 	   Re-relocate ourselves with user-controlled symbol definitions.  */
