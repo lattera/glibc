@@ -1587,6 +1587,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
   if (info->spec != '\0')
     outchar (info->spec);
 
+ all_done:
   return done;
 }
 
