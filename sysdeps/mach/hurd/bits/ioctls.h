@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,14 +100,6 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	_IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)		      \
   _IOC ((inout), (group), (num), _IOT ((t0), (c0), (t1), (c1), (t2), (c2)))
 
-/* Standard flavors of ioctls.
-   _IOT_foobar is defined either in this file,
-   or where struct foobar is defined.  */
-#define	_IO(g, n)	_IOC (IOC_VOID, (g), (n), 0)
-#define	_IOR(g, n, t)	_IOC (IOC_OUT, (g), (n), _IOT_##t)
-#define	_IOW(g, n, t)	_IOC (IOC_IN, (g), (n), _IOT_##t)
-#define	_IOWR(g, n, t)	_IOC (IOC_INOUT, (g), (n), _IOT_##t)
-
 /* Construct an individual type field for TYPE.  */
 #define _IOTS(type)	\
   (sizeof (type) == 8 ? IOC_64 : (sizeof (type) >> 1))
@@ -117,12 +109,32 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	_IOT_SIMPLE(type)	_IOT (_IOTS (type), 1, 0, 0, 0, 0)
 
 /* Basic C types.  */
-#define	_IOT_int		_IOT_SIMPLE (int)
-#define	_IOT_char		_IOT_SIMPLE (char)
-#define	_IOT_short		_IOT_SIMPLE (short)
+#define	_IOT__IOTBASE_int	_IOT_SIMPLE (int)
+#define	_IOT__IOTBASE_char	_IOT_SIMPLE (char)
+#define	_IOT__IOTBASE_short	_IOT_SIMPLE (short)
 
 
-/* ioctls verbatim from 4.4 <sys/ioctl.h>, with `struct' keywords removed.  */
+/* Standard flavors of ioctls.
+   _IOT_foobar is defined either in this file,
+   or where struct foobar is defined.  */
+#define	_IO(g, n)	_IOC (IOC_VOID, (g), (n), 0)
+#define	_IOR(g, n, t)	_IOC (IOC_OUT, (g), (n), _IOC_ENCODE_TYPE (t))
+#define	_IOW(g, n, t)	_IOC (IOC_IN, (g), (n), _IOC_ENCODE_TYPE (t))
+#define	_IOWR(g, n, t)	_IOC (IOC_INOUT, (g), (n), _IOC_ENCODE_TYPE (t))
+
+/* These macros do some preprocessor gymnastics to turn a TYPESPEC of
+   `struct foobar' into the identifier `_IOT_foobar', which is generally
+   defined using `_IOT' (above) in whatever file defines `struct foobar'.
+   For a TYPESPEC that does not begin with `struct' produces a different
+   identifier: `int' produces `_IOT__IOTBASE_int'.  These identifiers
+   are defined for the basic C types above.  */
+#define _IOC_ENCODE_TYPE(typespec)	_IOC_ENCODE_TYPE_1(_IOTBASE_##typespec)
+#define _IOTBASE_struct
+#define _IOC_ENCODE_TYPE_1(typespec)	_IOC_ENCODE_TYPE_2(typespec)
+#define _IOC_ENCODE_TYPE_2(typespec)	_IOT_##typespec
+
+
+/* ioctls verbatim from 4.4 <sys/ioctl.h>.  */
 
 #define	TIOCMODG	_IOR('t', 3, int)	/* get modem control state */
 #define	TIOCMODS	_IOW('t', 4, int)	/* set modem control state */
@@ -143,10 +155,10 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 						/* 15 unused */
 #define	TIOCFLUSH	_IOW('t', 16, int)	/* flush buffers */
 						/* 17-18 compat */
-#define	TIOCGETA	_IOR('t', 19, termios) /* get termios struct */
-#define	TIOCSETA	_IOW('t', 20, termios) /* set termios struct */
-#define	TIOCSETAW	_IOW('t', 21, termios) /* drain output, set */
-#define	TIOCSETAF	_IOW('t', 22, termios) /* drn out, fls in, set */
+#define	TIOCGETA	_IOR('t', 19, struct termios) /* get termios struct */
+#define	TIOCSETA	_IOW('t', 20, struct termios) /* set termios struct */
+#define	TIOCSETAW	_IOW('t', 21, struct termios) /* drain output, set */
+#define	TIOCSETAF	_IOW('t', 22, struct termios) /* drn out, fls in, set */
 #define	TIOCGETD	_IOR('t', 26, int)	/* get line discipline */
 #define	TIOCSETD	_IOW('t', 27, int)	/* set line discipline */
 						/* 127-124 compat */
@@ -176,8 +188,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	TIOCMBIC	_IOW('t', 107, int)	/* bic modem bits */
 #define	TIOCMGET	_IOR('t', 106, int)	/* get all modem bits */
 #define	TIOCREMOTE	_IOW('t', 105, int)	/* remote input editing */
-#define	TIOCGWINSZ	_IOR('t', 104, winsize)	/* get window size */
-#define	TIOCSWINSZ	_IOW('t', 103, winsize)	/* set window size */
+#define	TIOCGWINSZ	_IOR('t', 104, struct winsize)	/* get window size */
+#define	TIOCSWINSZ	_IOW('t', 103, struct winsize)	/* set window size */
 #define	TIOCUCNTL	_IOW('t', 102, int)	/* pty: set/clr usr cntl mode */
 #define		UIOCCMD(n)	_IO('u', n)		/* usr cntl op "n" */
 #define	TIOCCONS	_IOW('t', 98, int)		/* become virtual console */
@@ -208,34 +220,34 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	SIOCSPGRP	_IOW('s',  8, int)		/* set process group */
 #define	SIOCGPGRP	_IOR('s',  9, int)		/* get process group */
 
-#define	SIOCADDRT	_IOW('r', 10, ortentry)	/* add route */
-#define	SIOCDELRT	_IOW('r', 11, ortentry)	/* delete route */
+#define	SIOCADDRT	_IOW('r', 10, struct ortentry)	/* add route */
+#define	SIOCDELRT	_IOW('r', 11, struct ortentry)	/* delete route */
 
-#define	SIOCSIFADDR	_IOW('i', 12, ifreq)	/* set ifnet address */
-#define	OSIOCGIFADDR	_IOWR('i',13, ifreq)	/* get ifnet address */
-#define	SIOCGIFADDR	_IOWR('i',33, ifreq)	/* get ifnet address */
-#define	SIOCSIFDSTADDR	_IOW('i', 14, ifreq)	/* set p-p address */
-#define	OSIOCGIFDSTADDR	_IOWR('i',15, ifreq)	/* get p-p address */
-#define	SIOCGIFDSTADDR	_IOWR('i',34, ifreq)	/* get p-p address */
-#define	SIOCSIFFLAGS	_IOW('i', 16, ifreq)	/* set ifnet flags */
-#define	SIOCGIFFLAGS	_IOWR('i',17, ifreq)	/* get ifnet flags */
-#define	OSIOCGIFBRDADDR	_IOWR('i',18, ifreq)	/* get broadcast addr */
-#define	SIOCGIFBRDADDR	_IOWR('i',35, ifreq)	/* get broadcast addr */
-#define	SIOCSIFBRDADDR	_IOW('i',19, ifreq)	/* set broadcast addr */
-#define	OSIOCGIFCONF	_IOWR('i',20, ifconf)	/* get ifnet list */
-#define	SIOCGIFCONF	_IOWR('i',36, ifconf)	/* get ifnet list */
-#define	OSIOCGIFNETMASK	_IOWR('i',21, ifreq)	/* get net addr mask */
-#define	SIOCGIFNETMASK	_IOWR('i',37, ifreq)	/* get net addr mask */
-#define	SIOCSIFNETMASK	_IOW('i',22, ifreq)	/* set net addr mask */
-#define	SIOCGIFMETRIC	_IOWR('i',23, ifreq)	/* get IF metric */
-#define	SIOCSIFMETRIC	_IOW('i',24, ifreq)	/* set IF metric */
-#define	SIOCDIFADDR	_IOW('i',25, ifreq)	/* delete IF addr */
-#define	SIOCAIFADDR	_IOW('i',26, ifaliasreq)	/* add/chg IF alias */
+#define	SIOCSIFADDR	_IOW('i', 12, struct ifreq)	/* set ifnet address */
+#define	OSIOCGIFADDR	_IOWR('i',13, struct ifreq)	/* get ifnet address */
+#define	SIOCGIFADDR	_IOWR('i',33, struct ifreq)	/* get ifnet address */
+#define	SIOCSIFDSTADDR	_IOW('i', 14, struct ifreq)	/* set p-p address */
+#define	OSIOCGIFDSTADDR	_IOWR('i',15, struct ifreq)	/* get p-p address */
+#define	SIOCGIFDSTADDR	_IOWR('i',34, struct ifreq)	/* get p-p address */
+#define	SIOCSIFFLAGS	_IOW('i', 16, struct ifreq)	/* set ifnet flags */
+#define	SIOCGIFFLAGS	_IOWR('i',17, struct ifreq)	/* get ifnet flags */
+#define	OSIOCGIFBRDADDR	_IOWR('i',18, struct ifreq)	/* get broadcast addr */
+#define	SIOCGIFBRDADDR	_IOWR('i',35, struct ifreq)	/* get broadcast addr */
+#define	SIOCSIFBRDADDR	_IOW('i',19, struct ifreq)	/* set broadcast addr */
+#define	OSIOCGIFCONF	_IOWR('i',20, struct ifconf)	/* get ifnet list */
+#define	SIOCGIFCONF	_IOWR('i',36, struct ifconf)	/* get ifnet list */
+#define	OSIOCGIFNETMASK	_IOWR('i',21, struct ifreq)	/* get net addr mask */
+#define	SIOCGIFNETMASK	_IOWR('i',37, struct ifreq)	/* get net addr mask */
+#define	SIOCSIFNETMASK	_IOW('i',22, struct ifreq)	/* set net addr mask */
+#define	SIOCGIFMETRIC	_IOWR('i',23, struct ifreq)	/* get IF metric */
+#define	SIOCSIFMETRIC	_IOW('i',24, struct ifreq)	/* set IF metric */
+#define	SIOCDIFADDR	_IOW('i',25, struct ifreq)	/* delete IF addr */
+#define	SIOCAIFADDR	_IOW('i',26, struct ifaliasreq)	/* add/chg IF alias */
 
-#define	SIOCSARP	_IOW('i', 30, arpreq)	/* set arp entry */
-#define	OSIOCGARP	_IOWR('i',31, arpreq)	/* get arp entry */
-#define	SIOCGARP	_IOWR('i',38, arpreq)	/* get arp entry */
-#define	SIOCDARP	_IOW('i', 32, arpreq)	/* delete arp entry */
+#define	SIOCSARP	_IOW('i', 30, struct arpreq)	/* set arp entry */
+#define	OSIOCGARP	_IOWR('i',31, struct arpreq)	/* get arp entry */
+#define	SIOCGARP	_IOWR('i',38, struct arpreq)	/* get arp entry */
+#define	SIOCDARP	_IOW('i', 32, struct arpreq)	/* delete arp entry */
 
 
 /* Compatibility with 4.3 BSD terminal driver.
@@ -251,11 +263,11 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 # define OTIOCSETD	_IOW('t', 1, int)	/* set line discipline */
 #endif
 #define	TIOCHPCL	_IO('t', 2)		/* hang up on last close */
-#define	TIOCGETP	_IOR('t', 8,sgttyb)/* get parameters -- gtty */
-#define	TIOCSETP	_IOW('t', 9,sgttyb)/* set parameters -- stty */
-#define	TIOCSETN	_IOW('t',10,sgttyb)/* as above, but no flushtty*/
-#define	TIOCSETC	_IOW('t',17,tchars)/* set special characters */
-#define	TIOCGETC	_IOR('t',18,tchars)/* get special characters */
+#define	TIOCGETP	_IOR('t', 8,struct sgttyb)/* get parameters -- gtty */
+#define	TIOCSETP	_IOW('t', 9,struct sgttyb)/* set parameters -- stty */
+#define	TIOCSETN	_IOW('t',10,struct sgttyb)/* as above, but no flushtty*/
+#define	TIOCSETC	_IOW('t',17,struct tchars)/* set special characters */
+#define	TIOCGETC	_IOR('t',18,struct tchars)/* get special characters */
 #define		TANDEM		0x00000001	/* send stopc on out q full */
 #define		CBREAK		0x00000002	/* half-cooked mode */
 #define		LCASE		0x00000004	/* simulate lower case */
@@ -322,8 +334,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define		LPENDIN		(PENDIN>>16)
 #define		LDECCTQ		(DECCTQ>>16)
 #define		LNOFLSH		(NOFLSH>>16)
-#define	TIOCSLTC	_IOW('t',117,ltchars)/* set local special chars*/
-#define	TIOCGLTC	_IOR('t',116,ltchars)/* get local special chars*/
+#define	TIOCSLTC	_IOW('t',117,struct ltchars)/* set local special chars*/
+#define	TIOCGLTC	_IOR('t',116,struct ltchars)/* get local special chars*/
 #define OTIOCCONS	_IO('t', 98)	/* for hp300 -- sans int arg */
 #define	OTTYDISC	0
 #define	NETLDISC	1
