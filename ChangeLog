@@ -1,5 +1,7 @@
 2004-04-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/tst-mqueue3.c (do_test): Cope with kernel without mq support.
+
 	* sysdeps/ieee754/bits/nan.h (__nan_union): Add __attribute_used__
 	attribute to keep gcc quiet.
 

@@ -165,6 +165,12 @@ do_test (void)
   m = mq_open (mqname, O_CREAT | O_EXCL | O_RDWR, 0600, &attr);
   if (m == -1)
     {
+      if (errno == ENOSYS)
+	{
+	  puts ("not implemented");
+	  return 0;
+	}
+
       puts ("mq_open failed");
       return 1;
     }
