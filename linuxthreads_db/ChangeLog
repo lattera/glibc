@@ -1,3 +1,8 @@
+2004-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* td_thr_tlsbase.c: Remove dl-tls.h include.  Don't use
+	TLS_TP_OFFSET in the #if, but TLS_TCB_SIZE == 0 ?:.
+
 2004-03-12  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_tlsbase.c [TLS_DTV_AT_TP && TLS_TP_OFFSET > 0]: Handle this

@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #include "thread_dbP.h"
-#include <dl-tls.h>
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATED	((void *) -1l)
@@ -39,15 +38,12 @@ td_thr_tlsbase (const td_thrhandle_t *th,
   psaddr_t dtvpp = th->th_unique;
 #if TLS_TCB_AT_TP
   dtvpp += offsetof (struct _pthread_descr_struct, p_header.data.dtvp);
-#elif TLS_DTV_AT_TP && TLS_TP_OFFSET > 0
-/* Special case hack.  Really this #if should be TLS_TCB_SIZE == 0, but
-   when untrue it's a sizeof expression, and that wouldn't fly.  In this
-   flavor (PowerPC), there is no TCB containing the DTV at the TP, but
-   actually the TCB lies behind the TP, i.e. at the very end of the area
-   covered by TLS_PRE_TCB_SIZE.  */
-  dtvpp += TLS_PRE_TCB_SIZE - sizeof (tcbhead_t) + offsetof (tcbhead_t, dtv);
 #elif TLS_DTV_AT_TP
-  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
+/* Special case hack.  If TLS_TCB_SIZE == 0 (on PowerPC), there is no TCB
+   containing the DTV at the TP, but actually the TCB lies behind the TP,
+   i.e. at the very end of the area covered by TLS_PRE_TCB_SIZE.  */
+  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv)
+	   - (TLS_TCB_SIZE == 0 ? sizeof (tcbhead_t) : 0);
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined."
 #endif
