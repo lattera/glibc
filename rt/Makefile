@@ -43,7 +43,8 @@ librt-routines = $(aio-routines) \
 
 tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
-	 tst-aio7 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4
+	 tst-aio7 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
+	 tst-timer3
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)

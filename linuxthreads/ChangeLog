@@ -1,3 +1,11 @@
+2004-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mq_notify.c: New file.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (CENABLE): Define
+	for librt.
+	(CDISABLE): Likewise.
+
 2004-04-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h (MQ_PRIO_MAX): Define.

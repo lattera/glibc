@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -95,6 +95,20 @@
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel;
 #  define CDISABLE	call __pthread_disable_asynccancel
+# elif defined IS_IN_librt
+#  ifdef __PIC__
+#   define CENABLE	pushl %ebx; \
+			SETUP_PIC_REG(bx); \
+			call __librt_enable_asynccancel@PLT; \
+			popl %ebx;
+#   define CDISABLE	pushl %ebx; \
+			SETUP_PIC_REG(bx); \
+			call __librt_disable_asynccancel@PLT; \
+			popl %ebx;
+#  else
+#   define CENABLE	call __librt_enable_asynccancel;
+#   define CDISABLE	call __librt_disable_asynccancel
+   #endif
 # else
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel

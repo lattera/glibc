@@ -1,3 +1,8 @@
+2004-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/Makefile (tests): Add tst-timer3.
+	* rt/tst-timer3.c: New file.  By Roland McGrath.
+
 2004-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/tst-mqueue3.c: New file.
