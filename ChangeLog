@@ -1,7 +1,7 @@
 2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-	* sysdeps/s390/__longjmp.c: Removed unused variable result.
-	* sysdeps/s390/fpu/bits/fenv.h: Moved FPC_* definitions to fenv_libc.h.
+	* sysdeps/s390/__longjmp.c: Remove unused variable result.
+	* sysdeps/s390/fpu/bits/fenv.h: Move FPC_* definitions to fenv_libc.h.
 	* sysdeps/s390/fpu/fclrexcpt.c: Include fenv_libc.h instead of fenv.h.
 	* sysdeps/s390/fpu/fegetenv.c: New file.
 	* sysdeps/s390/fpu/fegetround.c: Include fenv_libc.h instead of fenv.h.
@@ -22,7 +22,7 @@
 	* sysdeps/unix/sysv/linux/s390/Makefile: Remove sys/reg.h.
 	* sysdeps/unix/sysv/linux/s390/bits/stat.h: New file.
 	* sysdeps/unix/sysv/linux/s390/lchown.c: New file.
-	* sysdeps/unix/sysv/linux/s390/sys/elf.h: Moved elf definitions to
+	* sysdeps/unix/sysv/linux/s390/sys/elf.h: Move elf definitions to
 	sys/procfs.h as proposed by Mark Kettenis.
 	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: New file.
 
