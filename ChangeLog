@@ -1,5 +1,7 @@
 2000-04-13  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/pipe.S: New file.
+
 	* sysdeps/unix/mips/pipe.S: Reorder instructions since .reorder is
 	default.
 
