@@ -1,3 +1,7 @@
+2001-02-10  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/Makefile (extra-objs): New.
+
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/stime.c: Include <time.h>.
