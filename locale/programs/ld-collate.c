@@ -641,6 +641,8 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
   elem->line = ldfile->lineno;
   elem->last = collate->cursor;
   elem->next = collate->cursor ? collate->cursor->next : NULL;
+  if (collate->cursor != NULL && collate->cursor->next != NULL)
+    collate->cursor->next->last = elem;
   elem->section = collate->current_section;
   if (collate->cursor != NULL)
     collate->cursor->next = elem;
@@ -914,8 +916,7 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 
 	  if (elem == NULL)
 	    elem = sym->order = new_element (collate, NULL, 0, NULL,
-					     sym->name, strlen (sym->name),
-					     0);
+					     sym->name, strlen (sym->name), 0);
 	}
       else if (find_entry (&collate->elem_table, symstr, symlen,
 			   (void **) &elem) != 0)
@@ -2946,7 +2947,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  if (state != 0)
+	  if (state != 0 && state != 2)
 	    goto err_label;
 
 	  arg = lr_token (ldfile, charmap, repertoire);
@@ -3373,14 +3374,29 @@ error while adding equivalent collating symbol"));
 	  state = 3;
 
 	  arg = lr_token (ldfile, charmap, repertoire);
-	  if (arg->tok == tok_bsymbol)
+	  if (arg->tok == tok_bsymbol || arg->tok == tok_ucs4)
 	    {
 	      /* Find this symbol in the sequence table.  */
+	      char ucsbuf[10];
+	      char *startmb;
+	      size_t lenmb;
 	      struct element_t *insp;
 	      int no_error = 1;
 
-	      if (find_entry (&collate->seq_table, arg->val.str.startmb,
-			      arg->val.str.lenmb, (void **) &insp) == 0)
+	      if (arg->tok == tok_bsymbol)
+		{
+		  startmb = arg->val.str.startmb;
+		  lenmb = arg->val.str.lenmb;
+		}
+	      else
+		{
+		  sprintf (ucsbuf, "U%08X", arg->val.ucs4);
+		  startmb = ucsbuf;
+		  lenmb = 9;
+		}
+
+	      if (find_entry (&collate->seq_table, startmb, lenmb,
+			      (void **) &insp) == 0)
 		/* Yes, the symbol exists.  Simply point the cursor
 		   to it.  */
 		  collate->cursor = insp;
@@ -3388,8 +3404,8 @@ error while adding equivalent collating symbol"));
 		{
 		  struct symbol_t *symbp;
 
-		  if (find_entry (&collate->sym_table, arg->val.str.startmb,
-				  arg->val.str.lenmb, (void **) &symbp) == 0)
+		  if (find_entry (&collate->sym_table, startmb, lenmb,
+				  (void **) &symbp) == 0)
 		    {
 		      if (symbp->order->last != NULL
 			  || symbp->order->next != NULL)
@@ -3400,15 +3416,12 @@ error while adding equivalent collating symbol"));
 			     is not yet defined.  */
 			  lr_error (ldfile, _("\
 %s: order for collating symbol %.*s not yet defined"),
-				    "LC_COLLATE", (int) arg->val.str.lenmb,
-				    arg->val.str.startmb);
+				    "LC_COLLATE", (int) lenmb, startmb);
 			  collate->cursor = NULL;
 			  no_error = 0;
 			}
 		    }
-		  else if (find_entry (&collate->elem_table,
-				       arg->val.str.startmb,
-				       arg->val.str.lenmb,
+		  else if (find_entry (&collate->elem_table, startmb, lenmb,
 				       (void **) &insp) == 0)
 		    {
 		      if (insp->last != NULL || insp->next != NULL)
@@ -3419,8 +3432,7 @@ error while adding equivalent collating symbol"));
 			     is not yet defined.  */
 			  lr_error (ldfile, _("\
 %s: order for collating element %.*s not yet defined"),
-				    "LC_COLLATE", (int) arg->val.str.lenmb,
-				    arg->val.str.startmb);
+				    "LC_COLLATE", (int) lenmb, startmb);
 			  collate->cursor = NULL;
 			  no_error = 0;
 			}
@@ -3431,8 +3443,7 @@ error while adding equivalent collating symbol"));
 			 insert does not exist.  */
 		      lr_error (ldfile, _("\
 %s: cannot reorder after %.*s: symbol not known"),
-				"LC_COLLATE", (int) arg->val.str.lenmb,
-				arg->val.str.startmb);
+				"LC_COLLATE", (int) lenmb, startmb);
 		      collate->cursor = NULL;
 		      no_error = 0;
 		    }
@@ -3632,6 +3643,7 @@ error while adding equivalent collating symbol"));
 	      /* It is possible that we already have this collation sequence.
 		 In this case we move the entry.  */
 	      struct element_t *seqp;
+	      void *sym;
 
 	      /* If the symbol after which we have to insert was not found
 		 ignore all entries.  */
@@ -3642,6 +3654,14 @@ error while adding equivalent collating symbol"));
 		}
 
 	      if (find_entry (&collate->seq_table, symstr, symlen,
+			      (void **) &seqp) == 0)
+		goto move_entry;
+
+	      if (find_entry (&collate->sym_table, symstr, symlen, &sym) == 0
+		  && (seqp = ((struct symbol_t *) sym)->order) != NULL)
+		goto move_entry;
+
+	      if (find_entry (&collate->elem_table, symstr, symlen,
 			      (void **) &seqp) == 0)
 		{
 		move_entry:
@@ -3667,16 +3687,8 @@ error while adding equivalent collating symbol"));
 		    seqp->section->last = seqp->last;
 
 		  /* Now insert it in the new place.  */
-		  seqp->next = collate->cursor->next;
-		  seqp->last = collate->cursor;
-		  collate->cursor->next = seqp;
-		  if (seqp->next != NULL)
-		    seqp->next->last = seqp;
-
-		  seqp->section = collate->cursor->section;
-		  if (seqp->section->last == collate->cursor)
-		    seqp->section->last = seqp;
-
+		  insert_weights (ldfile, seqp, charmap, repertoire, collate,
+				  tok_none);
 		  break;
 		}
 
