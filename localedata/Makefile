@@ -92,7 +92,7 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
-	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2
+	tst-leaks tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale
 ifeq (yes,$(build-shared))
 ifneq (no,$(PERL))
 tests: $(objpfx)mtrace-tst-leaks

@@ -1,3 +1,8 @@
+2003-10-31  Roland McGrath  <roland@redhat.com>
+
+	* locale/lc-ctype.c (_nl_postload_ctype): Update _nl_global_locale's
+	special members.
+
 2003-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/be.po: Update from translation team.

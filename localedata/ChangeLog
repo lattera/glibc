@@ -1,3 +1,8 @@
+2003-10-31  Roland McGrath  <roland@redhat.com>
+
+	* bug-usesetlocale.c: New file.
+	* Makefile (tests): Add it.
+
 2003-10-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add uz_UZ@cyrillic.UTF-8.
