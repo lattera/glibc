@@ -62,5 +62,7 @@ include ../Rules
 CFLAGS-fts.c = -Wno-uninitialized
 CFLAGS-ftw.c = -Wno-uninitialized
 
+ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest
 	$(SHELL) -e ftwtest-sh $(common-objpfx) $<
+endif

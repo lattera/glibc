@@ -55,5 +55,7 @@ CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 
+ifeq ($(cross-compiling),no)
 tests: $(objpfx)tst-svc.out
 	cmp tst-svc.expect $(objpfx)tst-svc.out
+endif
