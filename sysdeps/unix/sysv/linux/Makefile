@@ -108,7 +108,7 @@ inhibit-siglist := yes
 endif
 
 ifeq ($(subdir),posix)
-sysdep_headers += bits/pthreadtypes.h bits/initspin.h
+sysdep_headers += bits/initspin.h
 
 sysdep_routines += exit-thread
 endif

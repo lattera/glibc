@@ -1,5 +1,4 @@
 bits/initspin.h
-bits/pthreadtypes.h
 cmsg_nxthdr.c
 dl-brk.c
 dl-sbrk.c

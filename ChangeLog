@@ -1,3 +1,12 @@
+2002-11-24  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Skip AUTOCONF check under --without-cvs.
+	* configure: Regenerated.
+
+	* posix/Makefile (headers): Add bits/pthreadtypes.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_heaers): Don't add it here.
+	* sysdeps/unix/sysv/linux/Dist: Remove it from the list.
+
 2002-11-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Support inline syscall
