@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 extern int dep3 (void);
+extern int dep4 (void);
 
 static void
 __attribute__ ((constructor))

@@ -1,7 +1,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
-extern int obj1func1 (int);
+#include "testobj.h"
 
 int
 obj2func1 (int a __attribute__ ((unused)))

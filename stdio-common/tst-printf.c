@@ -28,11 +28,11 @@
 
 #include <float.h>
 
-void rfg1 (void);
-void rfg2 (void);
+static void rfg1 (void);
+static void rfg2 (void);
 
 
-void
+static void
 fmtchk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
@@ -41,7 +41,7 @@ fmtchk (const char *fmt)
   (void) printf("'\n");
 }
 
-void
+static void
 fmtst1chk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
@@ -50,7 +50,7 @@ fmtst1chk (const char *fmt)
   (void) printf("'\n");
 }
 
-void
+static void
 fmtst2chk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
@@ -82,7 +82,7 @@ fmtst2chk (const char *fmt)
  * This exercises the output formatting code.
  */
 
-void
+static void
 fp_test (void)
 {
   int i, j, k, l;
@@ -292,7 +292,7 @@ I am ready for my first lesson today.";
   return result != 0;
 }
 
-void
+static void
 rfg1 (void)
 {
   char buf[100];
@@ -317,7 +317,7 @@ rfg1 (void)
     printf ("got: '%s', expected: '%s'\n", buf, "3E+01");
 }
 
-void
+static void
 rfg2 (void)
 {
   int prec;

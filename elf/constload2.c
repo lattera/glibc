@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 extern int bar (void);
+extern int baz (void);
+extern int foo (void);
 
 void *h;
 

@@ -1,5 +1,6 @@
 #include <unistd.h>
 
+extern int dep1 (void);
 extern int dep2 (void);
 extern int dep4 (void);
 

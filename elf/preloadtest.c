@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-extern int preload (int);
+#include "testobj.h"
 
 int
 main (void)
@@ -12,7 +12,6 @@ main (void)
   return res != 92;
 }
 
-extern int foo (int a);
 int
 foo (int a)
 {

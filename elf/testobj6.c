@@ -1,4 +1,4 @@
-extern int foo (int);
+#include "testobj.h"
 
 int
 obj6func1 (int a __attribute__ ((unused)))

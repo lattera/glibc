@@ -4,7 +4,7 @@
 #include <string.h>
 #include <wchar.h>
 
-int
+static int
 t1 (void)
 {
   int n = -1;
@@ -14,7 +14,7 @@ t1 (void)
   return n != 5;
 }
 
-int
+static int
 t2 (void)
 {
   int result = 0;
@@ -46,7 +46,7 @@ t2 (void)
   return result;
 }
 
-int
+static int
 F (void)
 {
   char buf[20];

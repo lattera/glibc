@@ -87,7 +87,7 @@ struct fmemopen_cookie_struct
 };
 
 
-ssize_t
+static ssize_t
 fmemopen_read (void *cookie, char *b, size_t s)
 {
   fmemopen_cookie_t *c;
@@ -111,7 +111,7 @@ fmemopen_read (void *cookie, char *b, size_t s)
 }
 
 
-ssize_t
+static ssize_t
 fmemopen_write (void *cookie, const char *b, size_t s)
 {
   fmemopen_cookie_t *c;
@@ -145,7 +145,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 }
 
 
-int
+static int
 fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
 {
   _IO_off64_t np;
@@ -180,7 +180,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
 }
 
 
-int
+static int
 fmemopen_close (void *cookie)
 {
   fmemopen_cookie_t *c;

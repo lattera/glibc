@@ -1,4 +1,4 @@
-extern int obj1func2 (int);
+#include "testobj.h"
 
 int
 obj1func1 (int a)

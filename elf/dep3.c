@@ -1,5 +1,7 @@
 #include <unistd.h>
 
+extern int dep3 (void);
+
 static void
 __attribute__ ((constructor))
 init (void)

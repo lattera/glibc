@@ -1,3 +1,34 @@
+2000-12-15  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/scanf9.c (main): Reformat and change to avoid
+	warnings.
+
+	* stdio-common/tstdiomisc.c: Make local functions static.
+	* stdio-common/tst-printf.c: Likewise.
+
+	* elf/constload2.c: Add prototype declarations to shut up gcc.
+	* elf/dep1.c: Likewise.
+	* elf/dep2.c: Likewise.
+	* elf/dep3.c: Likewise.
+	* elf/dep4.c: Likewise.
+	* elf/ltglobmod2.c: Likewise.
+
+	* libio/fmemopen.c: Make local functions static.
+
+	* elf/Makefile (distribute): Added testobj.h.
+
+	* elf/testobj.h: New file.
+
+	* elf/testobj1.c: Include testobj.h and move prototype
+	declarations to testobj.h.
+	* elf/testobj2.c: Likewise.
+	* elf/testobj3.c: Likewise.
+	* elf/testobj4.c: Likewise.
+	* elf/testobj5.c: Likewise.
+	* elf/testobj6.c: Likewise.
+	* elf/testobj1_1.c: Likewise.
+	* elf/preloadtest.c: Likewise.
+
 2000-12-15  Ben Collins  <bcollins@debian.org>
 
 	* misc/sys/cdefs.h: Fix thinko in checks for flexarr macros.

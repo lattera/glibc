@@ -1,7 +1,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
-extern int foo (int);
+#include "testobj.h"
 
 int
 obj4func1 (int a __attribute__ ((unused)))
