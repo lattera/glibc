@@ -63,6 +63,11 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	ex17 ex18 tst-cancel tst-context bug-sleep
 test-srcs = tst-signal
 
+ifeq ($(build-static),yes)
+tests += tststatic
+tests-static += tststatic
+endif
+
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
 endif
@@ -90,7 +95,9 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
-$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.so
+$(addprefix $(objpfx), \
+  $(filter-out $(tests-static), \
+    $(tests) $(test-srcs))): $(objpfx)libpthread.so
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 else
@@ -100,6 +107,10 @@ endif
 ifeq ($(build-bounded),yes)
 $(tests:%=$(objpfx)%-bp): $(objpfx)libpthread_b.a
 $(librt-tests:%=$(objpfx)%-bp): $(common-objpfx)rt/librt_b.a
+endif
+
+ifeq ($(build-static),yes)
+$(addprefix $(objpfx), $(tests-static)): $(objpfx)libpthread.a
 endif
 
 ifeq ($(build-shared),yes)
@@ -135,6 +146,6 @@ ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 tests: $(objpfx)tst-signal.out
 $(objpfx)tst-signal.out: tst-signal.sh $(objpfx)tst-signal
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) -e $< $(common-objpfx) > $@
 endif
 endif

@@ -1,3 +1,7 @@
+2002-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Actually creat tst-signal.out file when running the test.
+
 2002-07-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* errno.c (__errno_location): Don't define unless !USE_TLS
