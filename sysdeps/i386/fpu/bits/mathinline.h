@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -455,7 +455,7 @@ __inline_mathcode (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
 __inline_mathcode (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
-  union { long double __xld; unsigned int __xi[3]; } __n = { .__xld = __x };  \
+  union { long double __xld; unsigned int __xi[3]; } __n = { __xld: = __x };  \
   __n.__xi[2] = (__n.__xi[2] & 0x8000) | 0x3fff;			      \
   __n.__xi[1] = 0x80000000;						      \
   __n.__xi[0] = 0;							      \
