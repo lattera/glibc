@@ -1,4 +1,13 @@
+2003-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_once): In case no
+	thread library is available, use correct value to mark initialized
+	once variable.
+
 2003-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): Use __getpagesize instead of
+	__sysconf to determine pagesize.
 
 	* pthread_create.c: Include <atomic.h>.
 	* allocatestack.c (allocate_stack): Implement coloring of the

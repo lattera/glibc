@@ -98,11 +98,11 @@ typedef struct
 
 #else
 
-#define NONTLS_INIT_TP \
-  do { 								\
-    static const tcbhead_t nontls_init_tp			\
-      = { .multiple_threads = 0 };				\
-    __thread_self = (__typeof (__thread_self)) &nontls_init_tp;	\
+# define NONTLS_INIT_TP \
+  do {									      \
+    static const tcbhead_t nontls_init_tp				      \
+      = { .multiple_threads = 0 };					      \
+    __thread_self = (__typeof (__thread_self)) &nontls_init_tp;		      \
   } while (0)
 
 #endif /* USE_TLS */
