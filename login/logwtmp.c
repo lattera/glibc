@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -46,7 +46,7 @@ logwtmp (const char *line, const char *name, const char *host)
 #if _HAVE_UT_TV - 0
   __gettimeofday (&ut.ut_tv, NULL);
 #else
-  time (&ut.ut_time);
+  ut.ut_time = time (NULL);
 #endif
 
   updwtmp (_PATH_WTMP, &ut);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -53,7 +53,7 @@ logout (const char *line)
 #if _HAVE_UT_TV - 0
       gettimeofday (&ut->ut_tv, NULL);
 #else
-      time (&ut->ut_time);
+      ut->ut_time = time (NULL);
 #endif
 #if _HAVE_UT_TYPE - 0
       ut->ut_type = DEAD_PROCESS;
