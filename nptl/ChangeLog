@@ -2,8 +2,9 @@
 
 	* sysdeps/pthread/malloc-machine.h: Remove misleading comment.
 
-2003-09-27  Wolfram Gloger  <wg@malloc.de> 
-	* sysdeps/pthread/malloc-machine.h: New file
+2003-09-27  Wolfram Gloger  <wg@malloc.de>
+
+	* sysdeps/pthread/malloc-machine.h: New file.
 
 2003-09-24  Roland McGrath  <roland@redhat.com>
 
