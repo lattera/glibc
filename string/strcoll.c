@@ -59,7 +59,7 @@ STRCOLL (s1, s2, l)
 {
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = l->__locales[LC_COLLATE];
-  uint_fast32_t nrules = *((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
+  uint_fast32_t nrules = *((const uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
 #else
   uint_fast32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 #endif

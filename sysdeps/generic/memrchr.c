@@ -86,7 +86,7 @@ __memrchr (s, c_in, n)
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
 
-  longword_ptr = (unsigned long int *) char_ptr;
+  longword_ptr = (const unsigned long int *) char_ptr;
 
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of

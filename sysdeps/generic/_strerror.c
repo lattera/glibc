@@ -56,7 +56,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 	 buffer size.  */
       q = __mempcpy (buf, unk, MIN (unklen, buflen));
       if (unklen < buflen)
-	memcpy (q, p, MIN (&numbuf[21] - p, buflen - unklen));
+	memcpy (q, p, MIN ((size_t) (&numbuf[21] - p), buflen - unklen));
 
       /* Terminate the string in any case.  */
       if (buflen > 0)

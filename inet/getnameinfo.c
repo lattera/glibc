@@ -211,7 +211,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	      {
 		if (sa->sa_family == AF_INET6)
 		  {
-		    while (__gethostbyaddr_r ((void *) &(((struct sockaddr_in6 *) sa)->sin6_addr),
+		    while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in6 *) sa)->sin6_addr),
 					      sizeof(struct in6_addr),
 					      AF_INET6, &th, tmpbuf, tmpbuflen,
 					      &h, &herrno))
@@ -238,7 +238,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		  }
 		else
 		  {
-		    while (__gethostbyaddr_r ((void *) &(((struct sockaddr_in *)sa)->sin_addr),
+		    while (__gethostbyaddr_r ((const void *) &(((const struct sockaddr_in *)sa)->sin_addr),
 					      sizeof(struct in_addr), AF_INET,
 					      &th, tmpbuf, tmpbuflen,
 					      &h, &herrno))
@@ -290,11 +290,13 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		const char *c;
 		if (sa->sa_family == AF_INET6)
 		  {
-		    struct sockaddr_in6 *sin6p = (struct sockaddr_in6 *) sa;
+		    const struct sockaddr_in6 *sin6p;
 		    uint32_t scopeid;
 
+		    sin6p = (const struct sockaddr_in6 *) sa;
+
 		    c = inet_ntop (AF_INET6,
-				   (void *) &sin6p->sin6_addr, host, hostlen);
+				   (const void *) &sin6p->sin6_addr, host, hostlen);
 		    scopeid = sin6p->sin6_scope_id;
 		    if (scopeid != 0)
 		      {
@@ -336,7 +338,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		  }
 		else
 		  c = inet_ntop (AF_INET,
-				 (void *) &(((struct sockaddr_in *) sa)->sin_addr),
+				 (const void *) &(((const struct sockaddr_in *) sa)->sin_addr),
 				 host, hostlen);
 		if (c == NULL)
 		  {
@@ -381,7 +383,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (!(flags & NI_NUMERICSERV))
 	  {
 	    struct servent *s, ts;
-	    while (__getservbyport_r (((struct sockaddr_in *) sa)->sin_port,
+	    while (__getservbyport_r (((const struct sockaddr_in *) sa)->sin_port,
 				      ((flags & NI_DGRAM) ? "udp" : "tcp"),
 				      &ts, tmpbuf, tmpbuflen, &s))
 	      {
@@ -410,11 +412,11 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	      }
 	  }
 	__snprintf (serv, servlen, "%d",
-		    ntohs (((struct sockaddr_in *) sa)->sin_port));
+		    ntohs (((const struct sockaddr_in *) sa)->sin_port));
 	break;
 
       case AF_LOCAL:
-	strncpy (serv, ((struct sockaddr_un *) sa)->sun_path, servlen);
+	strncpy (serv, ((const struct sockaddr_un *) sa)->sun_path, servlen);
 	break;
     }
 

@@ -1,3 +1,26 @@
+2000-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c: Adjust casts to avoid warnings.
+	* inet/rcmd.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* inet/netinet/in.h (IN6_IS_ADDR_UNSPECIFIED, IN6_IS_ADDR_LOOPBACK,
+	IN6_IS_ADDR_MULTICAST, IN6_IS_ADDR_LINKLOCAL, IN6_IS_ADDR_SITELOCAL,
+	IN6_IS_ADDR_V4MAPPED, IN6_IS_ADDR_V4COMPAT, IN6_ARE_ADDR_EQUAL,
+	IN6_IS_ADDR_MC_NODELOCAL, IN6_IS_ADDR_MC_LINKLOCAL,
+	IN6_IS_ADDR_MC_SITELOCAL, IN6_IS_ADDR_MC_ORGLOCAL,
+	IN6_IS_ADDR_MC_GLOBAL): Preserve const in cast.
+	* include/aliases.h: Add prototypes for internal __getalias* functions.
+	* include/netdb.h: Add prototypes for __old_gethostent_r,
+	__old_gethostbyaddr_r, __old_gethostbyname_r, __old_gethostbyname2_r,
+	__old_getnetent_r, __old_getnetbyaddr_r, __old_getnetbyname_r,
+	__old_getservent_r, __old_getservbyname_r, __old_getservbyport_r,
+	__old_getprotoent_r, __old_getprotobyname_r, __old_getprotobynumber_r.
+	* include/rpc/netdb.h: Add prototypes for __old_getrpcbyname_r,
+	__old_getrpcbynumber_r, __old_getrpcent_r.
+
+	* include/rpc/netdb.h: Add __getrpcbyname_r, __getrpcbynumber_r,
+	__getrpcent_r prototypes.
+
 2000-11-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strcoll.c: Add casts to avoid warnings.

@@ -215,7 +215,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			goto bad;
 		listen(s2, 1);
 		(void)__snprintf(num, sizeof(num), "%d", lport);
-		if (__write(s, num, strlen(num)+1) != strlen(num)+1) {
+		if (__write(s, num, strlen(num)+1) != (ssize_t)strlen(num)+1) {
 			(void)fprintf(stderr,
 			    _("rcmd: write (setting up stderr): %m\n"));
 			(void)__close(s2);

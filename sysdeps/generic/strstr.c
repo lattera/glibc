@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,9 @@ strstr (phaystack, pneedle)
 	      a = *++haystack;
 	      if (a == '\0')
 		goto ret0;
-shloop:	    }
+shloop:
+	      ;
+	    }
           while (a != b);
 
 jin:	  a = *++haystack;

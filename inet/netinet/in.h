@@ -268,34 +268,43 @@ extern uint16_t htons (uint16_t __hostshort)
 #endif
 
 #define IN6_IS_ADDR_UNSPECIFIED(a) \
-	(((uint32_t *) (a))[0] == 0 && ((uint32_t *) (a))[1] == 0 && \
-	 ((uint32_t *) (a))[2] == 0 && ((uint32_t *) (a))[3] == 0)
+	(((__const uint32_t *) (a))[0] == 0				      \
+	 && ((__const uint32_t *) (a))[1] == 0				      \
+	 && ((__const uint32_t *) (a))[2] == 0				      \
+	 && ((__const uint32_t *) (a))[3] == 0)
 
 #define IN6_IS_ADDR_LOOPBACK(a) \
-	(((uint32_t *) (a))[0] == 0 && ((uint32_t *) (a))[1] == 0 && \
-	 ((uint32_t *) (a))[2] == 0 && ((uint32_t *) (a))[3] == htonl (1))
+	(((__const uint32_t *) (a))[0] == 0				      \
+	 && ((__const uint32_t *) (a))[1] == 0				      \
+	 && ((__const uint32_t *) (a))[2] == 0				      \
+	 && ((__const uint32_t *) (a))[3] == htonl (1))
 
-#define IN6_IS_ADDR_MULTICAST(a) (((uint8_t *) (a))[0] == 0xff)
+#define IN6_IS_ADDR_MULTICAST(a) (((__const uint8_t *) (a))[0] == 0xff)
 
 #define IN6_IS_ADDR_LINKLOCAL(a) \
-	((((uint32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
+	((((__const uint32_t *) (a))[0] & htonl (0xffc00000))		      \
+	 == htonl (0xfe800000))
 
 #define IN6_IS_ADDR_SITELOCAL(a) \
-	((((uint32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
+	((((__const uint32_t *) (a))[0] & htonl (0xffc00000))		      \
+	 == htonl (0xfec00000))
 
 #define IN6_IS_ADDR_V4MAPPED(a) \
-	((((uint32_t *) (a))[0] == 0) && (((uint32_t *) (a))[1] == 0) && \
-	 (((uint32_t *) (a))[2] == htonl (0xffff)))
+	((((__const uint32_t *) (a))[0] == 0)				      \
+	 && (((__const uint32_t *) (a))[1] == 0)			      \
+	 && (((__const uint32_t *) (a))[2] == htonl (0xffff)))
 
 #define IN6_IS_ADDR_V4COMPAT(a) \
-	((((uint32_t *) (a))[0] == 0) && (((uint32_t *) (a))[1] == 0) && \
-	 (((uint32_t *) (a))[2] == 0) && (ntohl (((uint32_t *) (a))[3]) > 1))
+	((((__const uint32_t *) (a))[0] == 0)				      \
+	 && (((__const uint32_t *) (a))[1] == 0)			      \
+	 && (((__const uint32_t *) (a))[2] == 0)			      \
+	 && (ntohl (((__const uint32_t *) (a))[3]) > 1))
 
 #define IN6_ARE_ADDR_EQUAL(a,b) \
-	((((uint32_t *) (a))[0] == ((uint32_t *) (b))[0]) && \
-	 (((uint32_t *) (a))[1] == ((uint32_t *) (b))[1]) && \
-	 (((uint32_t *) (a))[2] == ((uint32_t *) (b))[2]) && \
-	 (((uint32_t *) (a))[3] == ((uint32_t *) (b))[3]))
+	((((__const uint32_t *) (a))[0] == ((__const uint32_t *) (b))[0])     \
+	 && (((__const uint32_t *) (a))[1] == ((__const uint32_t *) (b))[1])  \
+	 && (((__const uint32_t *) (a))[2] == ((__const uint32_t *) (b))[2])  \
+	 && (((__const uint32_t *) (a))[3] == ((__const uint32_t *) (b))[3]))
 
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport (int __sockfd, struct sockaddr_in *__sock_in) __THROW;
@@ -306,19 +315,24 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 
 
 #define IN6_IS_ADDR_MC_NODELOCAL(a) \
-	(IN6_IS_ADDR_MULTICAST(a) && ((((uint8_t *) (a))[1] & 0xf) == 0x1))
+	(IN6_IS_ADDR_MULTICAST(a)					      \
+	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0x1))
 
 #define IN6_IS_ADDR_MC_LINKLOCAL(a) \
-	(IN6_IS_ADDR_MULTICAST(a) && ((((uint8_t *) (a))[1] & 0xf) == 0x2))
+	(IN6_IS_ADDR_MULTICAST(a)					      \
+	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0x2))
 
 #define IN6_IS_ADDR_MC_SITELOCAL(a) \
-	(IN6_IS_ADDR_MULTICAST(a) && ((((uint8_t *) (a))[1] & 0xf) == 0x5))
+	(IN6_IS_ADDR_MULTICAST(a)					      \
+	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0x5))
 
 #define IN6_IS_ADDR_MC_ORGLOCAL(a) \
-	(IN6_IS_ADDR_MULTICAST(a) && ((((uint8_t *) (a))[1] & 0xf) == 0x8))
+	(IN6_IS_ADDR_MULTICAST(a)					      \
+	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0x8))
 
 #define IN6_IS_ADDR_MC_GLOBAL(a) \
-	(IN6_IS_ADDR_MULTICAST(a) && ((((uint8_t *) (a))[1] & 0xf) == 0xe))
+	(IN6_IS_ADDR_MULTICAST(a)					      \
+	 && ((((__const uint8_t *) (a))[1] & 0xf) == 0xe))
 
 /* IPv6 packet information.  */
 struct in6_pktinfo

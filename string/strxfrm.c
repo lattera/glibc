@@ -95,7 +95,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 {
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = l->__locales[LC_COLLATE];
-  uint_fast32_t nrules = *((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
+  uint_fast32_t nrules = *((const uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
 #else
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 #endif
@@ -393,7 +393,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 	      rule = rulesets[rulearr[idxcnt + 1] * nrules + pass];
 	    }
 
-	  if (backw_stop != ~0)
+	  if (backw_stop != ~0ul)
 	    {
 	      /* Handle the pushed elements now.  */
 	      size_t backw;

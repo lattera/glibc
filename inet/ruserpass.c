@@ -317,7 +317,7 @@ token()
 	*cp = 0;
 	if (tokval[0] == 0)
 		return (0);
-	for (i = 0; i < sizeof (toktab) / sizeof (toktab[0]); ++i)
+	for (i = 0; i < (int) (sizeof (toktab) / sizeof (toktab[0])); ++i)
 		if (!strcmp(&tokstr[toktab[i].tokstr_off], tokval))
 			return toktab[i].tval;
 	return (ID);
