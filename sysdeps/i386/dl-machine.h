@@ -334,13 +334,16 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
       if (sym)
 	value += sym->st_value;
 
+#ifdef RTLD_BOOTSTRAP
+      assert (r_type == R_386_GLOB_DAT || r_type == R_386_JMP_SLOT);
+      *reloc_addr = value;
+#else
       switch (r_type)
 	{
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:
 	  *reloc_addr = value;
 	  break;
-#ifndef RTLD_BOOTSTRAP
 	case R_386_32:
 	  *reloc_addr += value;
 	  break;
@@ -372,8 +375,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	     if we are still debugging.  */
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
-#endif
 	}
+#endif
     }
 }
 

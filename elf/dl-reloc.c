@@ -27,6 +27,9 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 
+/* Statistics function.  */
+unsigned long int _dl_num_cache_relocations;
+
 
 void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
@@ -74,30 +77,50 @@ cannot make segment writable for relocation"));
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE_MAP(ref, version, flags) \
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
-     ? ((version) != NULL && (version)->hash != 0			      \
-	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
-				       scope, (version), (flags), 0)	      \
-	: _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref), scope,	      \
-			     (flags), 0))				      \
+     ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
+	 && elf_machine_lookup_noexec_p (flags) == l->l_lookup_cache.noexec   \
+	 && elf_machine_lookup_noplt_p (flags) == l->l_lookup_cache.noplt)    \
+	? (++_dl_num_cache_relocations,					      \
+	   (*ref) = l->l_lookup_cache.ret,				      \
+	   l->l_lookup_cache.value)					      \
+	: ({ lookup_t _lr;						      \
+	     l->l_lookup_cache.sym = (*ref);				      \
+	     l->l_lookup_cache.noexec = elf_machine_lookup_noexec_p (flags);  \
+	     l->l_lookup_cache.noplt = elf_machine_lookup_noplt_p (flags);    \
+	     _lr = ((version) != NULL && (version)->hash != 0		      \
+		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
+						   l, (ref), scope,	      \
+						   (version), (flags), 0)     \
+		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
+					 scope, (flags), 0));		      \
+	     l->l_lookup_cache.ret = (*ref);				      \
+	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
 #define RESOLVE(ref, version, flags) \
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
-     ? ((version) != NULL && (version)->hash != 0			      \
-	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
-				       scope, (version), (flags), 0)	      \
-	: _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref), scope,	      \
-			     (flags), 0))				      \
+     ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
+	 && elf_machine_lookup_noexec_p (flags) == l->l_lookup_cache.noexec   \
+	 && elf_machine_lookup_noplt_p (flags) == l->l_lookup_cache.noplt)    \
+	? (++_dl_num_cache_relocations,					      \
+	   (*ref) = l->l_lookup_cache.ret,				      \
+	   l->l_lookup_cache.value)					      \
+	: ({ lookup_t _lr;						      \
+	     l->l_lookup_cache.sym = (*ref);				      \
+	     l->l_lookup_cache.noexec = elf_machine_lookup_noexec_p (flags);  \
+	     l->l_lookup_cache.noplt = elf_machine_lookup_noplt_p (flags);    \
+	     _lr = ((version) != NULL && (version)->hash != 0		      \
+		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
+						   l, (ref), scope,	      \
+						   (version), (flags), 0)     \
+		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
+					 scope, (flags), 0));		      \
+	     l->l_lookup_cache.ret = (*ref);				      \
+	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)
 
 #include "dynamic-link.h"
-    /* Start symbol lookup caching for this object.  */
-    _dl_lookup_cache.map = l;
-    _dl_lookup_cache_versioned.map = l;
 
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
-
-    _dl_lookup_cache.map = NULL;
-    _dl_lookup_cache_versioned.map = NULL;
 
     if (__builtin_expect (consider_profiling, 0))
       {

@@ -1,11 +1,24 @@
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/link.h (struct link_map): Add l_lookup_cache element.
+	* elf/dl-reloc.c (RESOLVE): Add symbol caching here.
+	(RESOLVE_MAP): Likewise.
+	(_dl_relocate_object): Remove cache initialization.
+	* elf/dl-lookup.c: Rip out cache handling code.
+	* sysdeps/generic/ldsodefs.h: Remove lookup_cache struct and variable
+	declarations.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Reorder some conditions and
+	remove some __builtin_expect.
+	(_dl_lookup_versioned_symbol): Likewise.
+
 	* config.h.in: Add HAVE_Z_COMBRELOC.
 	* configure.in: Add test for -z combreloc.
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Minor cleanups and
 	optimizations.  Use HAVE_Z_COMBRELOC to avoid generaton of
-	R_386_RELATIVE handling for ld.so startup.
+	R_386_RELATIVE handling for ld.so startup.  Reduce RTLD_BOOTSTRAP
+	case to almost no code.
 
 2001-08-25  Ulrich Drepper  <drepper@redhat.com>
 

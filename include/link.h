@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@
 
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
+#include <dl-lookupcfg.h>
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
@@ -231,6 +232,19 @@ struct link_map
     unsigned int l_idx;
 
     struct link_map_machine l_mach;
+
+    struct
+    {
+      const ElfW(Sym) *sym;
+      int noexec;
+      int noplt;
+#ifdef DL_LOOKUP_RETURNS_MAP
+      struct link_map *value;
+#else
+      ElfW(Addr) value;
+#endif
+      const ElfW(Sym) *ret;
+    } l_lookup_cache;
   };
 
 struct dl_phdr_info
