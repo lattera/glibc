@@ -184,6 +184,16 @@ link-libc-static := $(link-libc) -Wl,-\( \
 endif
 endif
 
+ifeq ($(subdir),csu)
+
+extra-objs += static-start.o
+
+# We need special startup code for statically linked binaries.
+$(objpfx)crt0.o: $(objpfx)static-start.o $(objpfx)abi-note.o $(objpfx)init.o
+	$(link-relocatable)
+
+endif
+
 ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif

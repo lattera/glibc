@@ -1,5 +1,17 @@
 2001-10-28  Roland McGrath  <roland@frob.com>
 
+	Support for Mach/PowerPC contributed by Peter Bruin <pjbruin@dds.nl>.
+	* sysdeps/mach/powerpc/machine-sp.h: New file.
+	* sysdeps/mach/powerpc/sysdep.h: New file.
+	* sysdeps/mach/powerpc/thread_state.h: New file.
+
+	* sysdeps/mach/hurd/i386/Makefile: File removed; crt0.o rules moved ...
+	* sysdeps/mach/hurd/Makefile: ... to here.  For the time being, we can
+	expect to need the same thing on every platform.
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: File moved ...
+	* sysdeps/generic/sys/ucontext.h: ... to replace this one.
+
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h (ALIGNARG,
 	ASM_TYPE_DIRECTIVE, ASM_SIZE_DIRECTIVE, CALL_MCOUNT, ENTRY, EALIGN,
 	DO_CALL, JUMPTARGET, PSEUDO, PSEUDO_RET, PSEUDO_END, L, C_TEXT):

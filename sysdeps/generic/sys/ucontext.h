@@ -1,4 +1,5 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Data structures for user-level context switching.  Generic version.
+   Copyright (C) 1997,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +17,29 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/* This file's definitions suffice for any platform where all
+   the machine-specific state is described in `struct sigcontext'.  */
+
 #ifndef _SYS_UCONTEXT_H
 #define _SYS_UCONTEXT_H	1
 
-#error "No system dependent context structure definitions"
+#include <features.h>
+#include <signal.h>
+
+/* We need the signal context definitions even if they are not used
+   included in <signal.h>.  */
+#include <bits/sigcontext.h>
+
+typedef struct sigcontext mcontext_t;
+
+/* Userlevel context.  */
+typedef struct ucontext
+  {
+    unsigned long int uc_flags;
+    struct ucontext *uc_link;
+    stack_t uc_stack;
+    mcontext_t uc_mcontext;
+    __sigset_t uc_sigmask;
+  } ucontext_t;
 
 #endif /* sys/ucontext.h */
