@@ -31,7 +31,7 @@
 2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_simple.c: Fix two problems in UTF-8 decoder.
-	Patch by Bruno Haibe <haible@ilog.fr>.
+	Patch by Bruno Haible <haible@ilog.fr>.
 
 2000-01-05  Roland McGrath  <roland@baalperazim.frob.com>
 

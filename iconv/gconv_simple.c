@@ -320,7 +320,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))	      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
