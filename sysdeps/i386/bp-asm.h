@@ -43,6 +43,8 @@
 /* Stack space overhead of procedure-call linkage: return address and
    frame pointer.  */
 #   define LINKAGE 8
+/* Stack offset of return address after calling ENTER.  */
+#   define PCOFF 4
 
 /* Int 5 is the "bound range" exception also raised by the "bound"
    instruction.  */
@@ -106,8 +108,7 @@
    argument, but we must pop the space for the BP itself.  We also
    dereference the return value in order to dig out the pointer value.  */
 #   define POP_ERRNO_LOCATION_RETURN		\
-	movl (%esp), %eax;			\
-	addl $4, %esp;				\
+	popl %eax;				\
 	addl $8, %esp
 
 #  else /* !__BOUNDED_POINTERS__ */
@@ -123,6 +124,8 @@
 #   define LEAVE
 /* Stack space overhead of procedure-call linkage: return address only.  */
 #   define LINKAGE 4
+/* Stack offset of return address after calling ENTER.  */
+#   define PCOFF 0
 
 #   define CHECK_BOUNDS_LOW(VAL_REG, BP_MEM)
 #   define CHECK_BOUNDS_HIGH(VAL_REG, BP_MEM, Jcc)

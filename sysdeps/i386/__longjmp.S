@@ -21,17 +21,19 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include <asm-syntax.h>
+#include <bp-sym.h>
 #include <bp-asm.h>
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define JBUF	PARMS
 #define VAL	JBUF+PTR_SIZE
 
-ENTRY (__longjmp)
+ENTRY (BP_SYM (__longjmp))
 	ENTER
 
 	movl JBUF(%esp), %ecx	/* User's jmp_buf in %ecx.  */
-	LEAVE
+	CHECK_BOUNDS_BOTH_WIDE (%ecx, JBUF(%esp), $JB_SIZE)
 
 	movl VAL(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */
@@ -44,4 +46,4 @@ ENTRY (__longjmp)
 	movl (JB_SP*4)(%ecx), %esp
 	/* Jump to saved PC.  */
      	jmp *%edx
-END (__longjmp)
+END (BP_SYM (__longjmp))

@@ -1,5 +1,5 @@
 /* setjmp for i386.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,29 +19,38 @@
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #include <bits/setjmp.h>
 #include <asm-syntax.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
 	/* Binary compatibility entry point.  */
-ENTRY (__setjmp)
-	popl %eax		/* Pop return address.  */
-	popl %ecx		/* Pop jmp_buf.  */
-	pushl $0		/* Push zero argument.  */
-	pushl %ecx		/* Push jmp_buf.  */
-	pushl %eax		/* Push back return address.  */
+ENTRY (BP_SYM (__setjmp))
+	PUSH_SIGNAL_MASK (0)
+	/* FALL THROUGH */
 
-ENTRY (__sigsetjmp)
-	movl 4(%esp), %eax	/* User's jmp_buf in %eax.  */
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define JMPBUF	PARMS
+#define SIGMSK	JMPBUF+PTR_SIZE
+
+ENTRY (BP_SYM (__sigsetjmp))
+	ENTER
+
+	movl JMPBUF(%esp), %eax
+	CHECK_BOUNDS_BOTH_WIDE (%eax, JMPBUF(%esp), $JB_SIZE)
+
      	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%eax)
 	movl %esi, (JB_SI*4)(%eax)
 	movl %edi, (JB_DI*4)(%eax)
 	movl %ebp, (JB_BP*4)(%eax)
-	leal 4(%esp), %ecx	/* Save SP as it will be after we return.  */
+	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
      	movl %ecx, (JB_SP*4)(%eax)
-	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
+	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
      	movl %ecx, (JB_PC*4)(%eax)
 
+	LEAVE /* pop frame pointer to prepare for tail-call.  */
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 #ifdef	PIC
 	/* We cannot use the PLT, because it requires that %ebx be set, but
@@ -52,9 +61,9 @@ ENTRY (__sigsetjmp)
 L(here):
 	popl %ecx
 	addl $_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ecx
-	movl C_SYMBOL_NAME(__sigjmp_save@GOT)(%ecx), %ecx
+	movl C_SYMBOL_NAME (BP_SYM (__sigjmp_save)@GOT)(%ecx), %ecx
 	jmp *%ecx
 #else
-	jmp __sigjmp_save
+	jmp BP_SYM (__sigjmp_save)
 #endif
-END (__sigsetjmp)
+END (BP_SYM (__sigsetjmp))

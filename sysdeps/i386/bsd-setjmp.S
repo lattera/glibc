@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  i386 version.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +22,14 @@
    in setjmp doesn't clobber the state restored by longjmp.  */
 
 #include <sysdep.h>
+#define _ASM
+#define _SETJMP_H
+#include <bits/setjmp.h>
+#include "bp-sym.h"
+#include "bp-asm.h"
 
-ENTRY (setjmp)
-	popl %eax		/* Pop return PC.  */
-	popl %ecx		/* Pop jmp_buf argument.  */
-	pushl $1		/* Push second argument of one.  */
-	pushl %ecx		/* Push back first argument.  */
-	pushl %eax		/* Push back return PC.  */
+ENTRY (BP_SYM (setjmp))
+	PUSH_SIGNAL_MASK (1)
 #ifdef	PIC
 	/* We cannot use the PLT, because it requires that %ebx be set, but
            we can't save and restore our caller's value.  Instead, we do an
@@ -37,9 +38,9 @@ ENTRY (setjmp)
 	call here
 here:	popl %ecx
 	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
-	movl C_SYMBOL_NAME(__sigsetjmp@GOT)(%ecx), %ecx
+	movl C_SYMBOL_NAME (BP_SYM (__sigsetjmp)@GOT)(%ecx), %ecx
 	jmp *%ecx
 #else
-	jmp __sigsetjmp
+	jmp BP_SYM (__sigsetjmp)
 #endif
-END (setjmp)
+END (BP_SYM (setjmp))

@@ -1,3 +1,18 @@
+2000-06-29  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/bp-asm.h (PCOFF): New constant.
+	(POP_ERRNO_LOCATION_RETURN): Fold insns.
+	* sysdeps/i386/bits/setjmp.h (JB_SIZE): New constant.
+	(PUSH_SIGNAL_MASK): New macro.
+	* sysdeps/i386/__longjmp.S (__longjmp): Wrap symbol in BP_SYM ().
+	LEAVE is unnecessary.  Check bounds of jmp_buf.
+	* sysdeps/i386/elf/setjmp.S: Call PUSH_SIGNAL_MASK.  Wrap symbols
+	in BP_SYM ().  Check bounds of jmp_buf.  Don't call LEAVE until
+	immediately before tail-call.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+
 2000-06-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/fpu/fclrexcpt.c: Use SHLIB_COMPAT, compat_symbol and
@@ -209,7 +224,6 @@
 
 2000-06-26  Greg McGary  <greg@mcgary.org>
 
-	* sysdeps/i386/bp-asm.h (POP_ERRNO_LOCATION_RETURN): Fold insns.
 	* sysdeps/unix/i386/sysdep.S (syscall_error): Push & pop space
 	for BP return value & push implicit struct-return pointer to
 	__errno_location.
