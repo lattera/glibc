@@ -1,3 +1,7 @@
+2001-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/memusage.sh: Make -n option actually do something.
+
 2001-09-20  Andreas Jaeger  <aj@suse.de>
 
 	* elf/elf.h (R_390_NUM): Correct value.
