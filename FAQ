@@ -100,6 +100,10 @@ please let me know.
 
 [Q28]	``After upgrading to a glibc 2.1 with symbol versioning I get
 	  errors about undefined symbols.  What went wrong?''
+
+[Q29]	``I don't include any kernel header myself but still the
+	  compiler complains about type redeclarations of types in the
+	  kernel headers.''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -116,6 +120,8 @@ in the future are:
 	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
 	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
+	sparc-*-linux-gnu	Linux-2.0 on SPARC
+	sparc64-*-linux-gnu	Linux-2.0 on UltraSPARC
 
 Other Linux platforms are also on the way to be supported but I need
 some success reports first.
@@ -753,6 +759,21 @@ these reference are now local, you might see a message like:
 The only way to fix this is to recompile your program. Sorry, that's
 the price you might have to pay once for quite a number of advantages
 with symbol versioning.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q29]	``I don't include any kernel header myself but still the
+	  compiler complains about type redeclarations of types in the
+	  kernel headers.''
+
+[A29] {UD} The kernel headers before Linux 2.1.61 don't work correctly with
+glibc since they pollute the name space in a not acceptable way.  Compiling
+C programs is possible in most cases but especially C++ programs have (due
+to the change of the name lookups for `struct's) problem.  One prominent
+example is `struct fd_set'.
+
+There might be some more problems left but 2.1.61 fixes some of the known
+ones.  See the BUGS file for other known problems.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

@@ -18,12 +18,50 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <mntent.h>
+#include <stdlib.h>
+#include <bits/libc-lock.h>
+
+/* We don't want to allocate the static buffer all the time since it
+   is not always used (in fact, rather infrequently).  Accept the
+   extra cost of a `malloc'.  */
+static char *getmntent_buffer;
+
+/* This is the size of the buffer.  This is really big.  */
+#define BUFFER_SIZE	4096
+
+
+static void
+allocate (void)
+{
+  getmntent_buffer = (char *) malloc (BUFFER_SIZE);
+}
+
 
 struct mntent *
 getmntent (FILE *stream)
 {
-  static char buf[8192];
   static struct mntent m;
+  __libc_once_define (static, once);
+  __libc_once (once, allocate);
 
-  return __getmntent_r (stream, &m, buf, sizeof buf);
+  if (getmntent_buffer == NULL)
+    /* If no core is available we don't have a chance to run the
+       program successfully and so returning NULL is an acceptable
+       result.  */
+    return NULL;
+
+  return __getmntent_r (stream, &m, getmntent_buffer, BUFFER_SIZE);
 }
+
+
+/* Make sure the memory is freed if the programs ends while in
+   memory-debugging mode and something actually was allocated.  */
+static void
+__attribute__ ((unused))
+free_mem (void)
+{
+  if (getmntent_buffer != NULL)
+    free (getmntent_buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

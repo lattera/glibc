@@ -12,3 +12,4 @@ kernel_termios.h
 sys/acct.h
 sys/io.h
 sys/procfs.h
+xstatconv.c

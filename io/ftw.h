@@ -88,16 +88,20 @@ struct FTW
 /* Convenient types for callback functions.  */
 typedef int (*__ftw_func_t) __P ((__const char *__filename,
 				  __const struct stat *__status, int __flag));
+#if defined __USE_LARGEFILE64 || defined __USE_FILE_OFFSET64
 typedef int (*__ftw64_func_t) __P ((__const char *__filename,
 				    __const struct stat64 *__status,
 				    int __flag));
+#endif
 #ifdef __USE_XOPEN_EXTENDED
 typedef int (*__nftw_func_t) __P ((__const char *__filename,
 				   __const struct stat *__status, int __flag,
 				   struct FTW *__info));
+# if defined __USE_LARGEFILE64 || defined __USE_FILE_OFFSET64
 typedef int (*__nftw64_func_t) __P ((__const char *__filename,
 				     __const struct stat64 *__status,
 				     int __flag, struct FTW *__info));
+# endif
 #endif
 
 /* Call a function on every element in a directory tree.  */

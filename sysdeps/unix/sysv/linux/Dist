@@ -48,3 +48,4 @@ sys/sysmacros.h
 sys/timex.h
 sys/user.h
 sys/vt.h
+xstatconv.c

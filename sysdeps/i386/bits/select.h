@@ -25,29 +25,28 @@
 
 # define __FD_ZERO(fdsetp) \
   __asm__ __volatile__ ("cld; rep; stosl"				      \
-			: "=m" (((__fd_mask *)				      \
-				 (fdsetp))[__FDELT (__FD_SETSIZE)])	      \
+			: "=m" ((fdsetp)->fds_bits[__FDELT (__FD_SETSIZE)])   \
 			: "a" (0), "c" (sizeof (__fd_set)		      \
 					/ sizeof (__fd_mask)),		      \
-			  "D" ((__fd_set *) (fdsetp))			      \
-			:"cx","di")
+			  "D" (&(fdsetp)->fds_bits[0])			      \
+			:"cx","di","memory")
 # define __FD_SET(fd, fdsetp) \
   __asm__ __volatile__ ("btsl %1,%0"					      \
-			: "=m" (((__fd_mask *) (fdsetp))[__FDELT (fd)])	      \
+			: "=m" ((fdsetp)->fds_bits[__FDELT (fd)])	      \
 			: "r" (((int) (fd)) % __NFDBITS)		      \
-			: "cc")
+			: "cc","memory")
 # define __FD_CLR(fd, fdsetp) \
   __asm__ __volatile__ ("btrl %1,%0"					      \
-			: "=m" (((__fd_mask *) (fdsetp))[__FDELT (fd)])	      \
+			: "=m" ((fdsetp)->fds_bits[__FDELT (fd)])	      \
 			: "r" (((int) (fd)) % __NFDBITS)		      \
-			: "cc")
+			: "cc","memory")
 # define __FD_ISSET(fd, fdsetp) \
   (__extension__							      \
    ({register char __result;						      \
      __asm__ __volatile__ ("btl %1,%2 ; setcb %b0"			      \
 			   : "=q" (__result)				      \
 			   : "r" (((int) (fd)) % __NFDBITS),		      \
-			     "m" (((__fd_mask *) (fdsetp))[__FDELT (fd)])     \
+			     "m" ((fdsetp)->fds_bits[__FDELT (fd)])	      \
 			   : "cc");					      \
      __result; }))
 

@@ -20,6 +20,9 @@
 #define FLOAT_TYPE long double
 #define FUNC_PREFIX q
 #define FLOAT_FMT_FLAG "L"
-#define MAXDIG (LDBL_DIG + LDBL_MAX_10_EXP)
+/* Actually we have to write (LDBL_DIG + log10 (LDBL_MAX_10_EXP)) but
+   we don't have log10 available in the preprocessor.  Since we cannot
+   assume anything on the used `long double' format be generous.  */
+#define MAXDIG (LDBL_DIG + 12)
 
 #include "efgcvt.c"

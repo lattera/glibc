@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-10-25T06:32:15+0200 drepper>
+Time-stamp: <1997-10-31T16:49:39+0100 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -36,12 +36,6 @@ Severity: [  *] to [***]
        flag was given.
        [PR libc/72]
 
-[  *]  On Linux, the <linux/posix_types.h> is not clean enough to satisfy
-       the C++ namespace rules.  Declaring `struct fd_set' also makes
-       `fd_set' available in the global namespace which conflicts with
-       the definition of `fd_set' in glibc.
-       [PR libc/79]
-
 [  *]  On Linux, there should be a way to prevent defining the symbol
        NGROUPS_MAX in the <linux/limits.h> header file.  In glibc it
        is defined in <posix1_lim.h> which must not make the other
@@ -69,13 +63,6 @@ Severity: [  *] to [***]
        with gcc. This seems to be a bug in gcc 2.7.2.x (egcs doesn't
        have this bug).
        [PR libc/245]
-
-[  *]  gethostbyname returns HOST_NOT_FOUND if the nameserver is
-       unreachable and nsswitch.conf contains a line with:
-       hosts: files dns
-       If the only method is dns gethostbyname return
-       TRY_AGAIN.  gethostbyname should return in both cases TRY_AGAIN.
-       [PR libc/244]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
 drepper@cygnus.com

@@ -114,6 +114,12 @@ extern int errno;
 # define NAMLEN(d) _D_NAMLEN(d)
 #endif
 
+/* When used in the GNU libc the symbol _DIRENT_HAVE_D_TYPE is available
+   if the `d_type' member for `struct dirent' is available.  */
+#ifdef _DIRENT_HAVE_D_TYPE
+# define HAVE_D_TYPE	1
+#endif
+
 
 #if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
 /* Posix does not require that the d_ino field be present, and some
@@ -661,8 +667,8 @@ glob (pattern, flags, errfunc, pglob)
       register int i;
 
       status = glob (dirname,
-		     ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE)) |
-		      GLOB_NOSORT),
+		     ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE))
+		      | GLOB_NOSORT | GLOB_ONLYDIR),
 		     errfunc, &dirs);
       if (status != 0)
 	return status;
@@ -690,7 +696,8 @@ glob (pattern, flags, errfunc, pglob)
 
 	  oldcount = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
-				(flags | GLOB_APPEND) & ~GLOB_NOCHECK,
+				((flags | GLOB_APPEND)
+				 & ~(GLOB_NOCHECK | GLOB_ERR)),
 				errfunc, pglob);
 	  if (status == GLOB_NOMATCH)
 	    /* No matches in this directory.  Try the next.  */
@@ -981,6 +988,14 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	    if (! REAL_DIR_ENTRY (d))
 	      continue;
 
+#ifdef HAVE_D_TYPE
+	      /* If we shall match only directories use the information
+		 provided by the dirent if possible.  */
+	    if ((flags & GLOB_ONLYDIR)
+		&& d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
+	      continue;
+#endif
+
 	    if (strcmp (pattern, d->d_name) == 0)
 	      {
 		size_t len = NAMLEN (d);
@@ -1029,6 +1044,14 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      continue;
 
 	    name = d->d_name;
+
+#ifdef HAVE_D_TYPE
+	      /* If we shall match only directories use the information
+		 provided by the dirent if possible.  */
+	    if ((flags & GLOB_ONLYDIR)
+		&& d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
+	      continue;
+#endif
 
 	    if (fnmatch (pattern, name,
 			 (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |

@@ -64,7 +64,7 @@ install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch
+tests := tst-dirname tst-tsearch tst-fdset
 
 include ../Rules
 

@@ -1,4 +1,4 @@
-/* Definition of `struct stat' used in the kernel..  */
+/* Definition of `struct stat' used in the kernel.  */
 struct kernel_stat
   {
     unsigned int st_dev;
@@ -17,3 +17,27 @@ struct kernel_stat
     unsigned int st_flags;
     unsigned int st_gen;
   };
+
+/* Definition of `struct stat' used by glibc 2.0.  */
+struct glibc2_stat
+  {
+    __dev_t st_dev;
+    __ino_t st_ino;
+    __mode_t st_mode;
+    __nlink_t st_nlink;
+    __uid_t st_uid;
+    __gid_t st_gid;
+    __dev_t st_rdev;
+    __off_t st_size;
+    __time_t st_atime;
+    __time_t st_mtime;
+    __time_t st_ctime;
+    unsigned int st_blksize;
+    int st_blocks;
+    unsigned int st_flags;
+    unsigned int st_gen;
+  };
+
+extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
+
+#define XSTAT_IS_XSTAT64 1

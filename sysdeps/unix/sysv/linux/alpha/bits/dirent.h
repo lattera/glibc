@@ -19,10 +19,14 @@
 #ifndef _BITS_DIRENT_H
 #define _BITS_DIRENT_H	1
 
-/* We don't have to make a difference for __USE_FILE_OFFSET64.  */
 struct dirent
   {
-    long int d_ino;
+#ifdef __USE_FILE_OFFSET64
+    __ino64_t d_ino;
+#else
+    __ino_t d_ino;
+    int __pad;
+#endif
     __off_t d_off;
     unsigned short int d_reclen;
     unsigned char d_type;
@@ -30,6 +34,7 @@ struct dirent
   };
 
 #ifdef __USE_LARGEFILE64
+/* Note dirent64 is the same as dirent.  */
 struct dirent64
   {
     __ino64_t d_ino;

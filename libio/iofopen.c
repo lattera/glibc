@@ -65,7 +65,7 @@ default_symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
 default_symbol_version (__new_fopen, fopen, GLIBC_2.1);
 #else
 # ifdef weak_alias
-weak_symbol (_IO_new_fopen, _IO_fopen)
-weak_symbol (_IO_new_fopen, fopen)
+weak_alias (_IO_new_fopen, _IO_fopen)
+weak_alias (_IO_new_fopen, fopen)
 # endif
 #endif

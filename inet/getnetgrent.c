@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,48 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <netdb.h>
+#include <stdlib.h>
+#include <bits/libc-lock.h>
 
+/* Statis buffer for return value.  We allocate it when needed.  */
+static char *buffer;
+/* All three strings should fit in a block of 1kB size.  */
+#define BUFSIZE 1024
+
+
+
+static void
+allocate (void)
+{
+  buffer = (char *) malloc (BUFSIZE);
+}
 
 int
 getnetgrent (char **hostp, char **userp, char **domainp)
 {
-  static char buffer[1024];	/* All three strings shouldn't use 1kB.  */
+  __libc_once_define (static, once);
+  __libc_once (once, allocate);
 
-  return __getnetgrent_r (hostp, userp, domainp, buffer, sizeof (buffer));
+  if (buffer == NULL)
+    {
+      __set_errno (ENOMEM);
+      return -1;
+    }
+
+  return __getnetgrent_r (hostp, userp, domainp, buffer, BUFSIZE);
 }
+
+
+/* Make sure the memory is freed if the programs ends while in
+   memory-debugging mode and something actually was allocated.  */
+static void
+__attribute__ ((unused))
+free_mem (void)
+{
+  if (buffer != NULL)
+    free (buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);
