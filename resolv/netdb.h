@@ -410,11 +410,11 @@ extern int ruserok_af (__const char *__rhost, int __suser,
 /* Try to allocate reserved port, returning a descriptor for a socket opened
    at this port or -1 if unsuccessful.  The search for an available port
    will start at ALPORT and continues with lower numbers.  */
-extern int rresvport_af (int *__alport, sa_family_t __af) __THROW;
+extern int rresvport (int *__alport) __THROW;
 
 /* This is the equivalent function where the protocol can be selected
    and which therefore can be used for IPv6.  */
-extern int rresvport (int *__alport) __THROW;
+extern int rresvport_af (int *__alport, sa_family_t __af) __THROW;
 #endif
 
 

@@ -1,3 +1,10 @@
+2000-03-07  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/netdb.h: The descriptions of rresvport and rresvport_af
+	were swapped.
+	Patch by YOSHIFUJI Hideaki <yoshfuji@ecei.tohoku.ac.jp>, closes PR
+	libc/1636.
+
 2000-03-06  Andreas Jaeger  <aj@suse.de>
 
  	* sysdeps/i386/fpu/bits/mathinline.h: Fix union definition error
