@@ -69,6 +69,8 @@ ENTRY (BP_SYM (__clone))
 	   It will be popped off in the child in the ebx frobbing below.  */
 	movl	FUNC(%esp),%eax
 	movl	%eax,4(%ecx)
+	/* Don't leak any information.  */
+	movl	$0,(%ecx)
 
 	/* Do the system call */
 	pushl	%ebx
