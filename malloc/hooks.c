@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -322,7 +322,7 @@ realloc_check(oldmem, bytes, caller)
      Void_t* oldmem; size_t bytes; const Void_t *caller;
 #endif
 {
-  mchunkptr oldp, newp = 0;
+  mchunkptr oldp;
   INTERNAL_SIZE_T nb, oldsize;
   Void_t* newmem = 0;
 
@@ -345,7 +345,7 @@ realloc_check(oldmem, bytes, caller)
 #if HAVE_MMAP
   if (chunk_is_mmapped(oldp)) {
 #if HAVE_MREMAP
-    newp = mremap_chunk(oldp, nb);
+    mchunkptr newp = mremap_chunk(oldp, nb);
     if(!newp) {
 #endif
       /* Note the extra SIZE_SZ overhead. */
