@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
+
+#ifdef ASSEMBLER
+
 #include <regdef.h>
 
 #ifdef __STDC__
@@ -65,3 +68,5 @@ syse1:
 #define r1	v1
 /* The mips move insn is d,s.  */
 #define MOVE(x,y)	move y , x
+
+#endif

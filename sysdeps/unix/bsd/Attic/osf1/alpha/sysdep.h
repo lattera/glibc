@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
+
+#ifdef	ASSEMBLER
+
 #include <machine/pal.h>		/* get PAL_callsys */
 #include <regdef.h>
 
@@ -66,3 +69,5 @@ Cambridge, MA 02139, USA.  */
 #define r0		v0
 #define r1		a4
 #define MOVE(x,y)	mov x, y
+
+#endif	/* ASSEMBLER */

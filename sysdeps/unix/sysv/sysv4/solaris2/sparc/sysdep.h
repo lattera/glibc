@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #define	NO_UNDERSCORES
 
 #include <sysdeps/unix/sysdep.h>
+
+#ifdef	ASSEMBLER
 
 /* As of gcc-2.6.0, it complains about pound signs in front of things
    that aren't arguments to the macro.  So we use this to pull it off
@@ -46,3 +48,4 @@ Cambridge, MA 02139, USA.  */
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y
 
+#endif	/* ASSEMBLER */
