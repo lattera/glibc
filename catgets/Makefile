@@ -53,10 +53,13 @@ tests: $(objpfx)de/libc.cat $(objpfx)test1.cat
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
+	LC_ALL=hr_HR.ISO-8859-2 LOCPATH=$(common-objpfx)localedata \
+	GCONV_PATH=$(common-objpfx)iconvdata \
 	$(built-program-cmd) -H $(objpfx)test1.h $@ $<
 $(objpfx)de/libc.cat: $(objpfx)de.msg $(objpfx)gencat
 	$(make-target-directory)
-	$(built-program-cmd) $@ $<
+	LC_ALL=de_DE.ISO-8859-1 LOCPATH=$(common-objpfx)localedata \
+	GCONV_PATH=$(common-objpfx)iconvdata $(built-program-cmd) $@ $<
 $(objpfx)tst-catgets.out: $(objpfx)de/libc.cat
 
 # Generate a non-simple input file.

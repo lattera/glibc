@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-08-13
+GNU C Library NEWS -- history of user-visible changes.  2000-11-27
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -6,6 +6,20 @@ See the end for copying conditions.
 Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.org>.  Questions and suggestions should be send to
 <bug-glibc@gnu.org>.
+
+Version 2.2.1
+
+* The gencat program now parses the input file according to the charset
+  selected by the LC_CTYPE category.  This is important for stateful
+  character sets.  To make generating catalogs easier there is a way
+  to overwrite the charset selected by the locale: before the first
+  message or $ quote line the catalog can contain a line like
+
+    $ codeset=ISO-8859-2
+
+  to select the charset (ISO-8859-2 in this case).
+
+  Implemented by Shinya Hanataka and Ulrich Drepper.
 
 Version 2.2
 

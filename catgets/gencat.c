@@ -22,11 +22,14 @@
 #endif
 
 #include <argp.h>
+#include <assert.h>
 #include <ctype.h>
 #include <endian.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
+#include <iconv.h>
+#include <langinfo.h>
 #include <locale.h>
 #include <libintl.h>
 #include <limits.h>
@@ -37,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <wchar.h>
 
 #include "version.h"
 
@@ -79,7 +83,7 @@ struct catalog
   struct set_list *all_sets;
   struct set_list *current_set;
   size_t total_messages;
-  char quote_char;
+  wint_t quote_char;
   int last_set;
 
   struct obstack mem_pool;
@@ -137,6 +141,8 @@ static struct argp argp =
 /* Wrapper functions with error checking for standard functions.  */
 extern void *xmalloc (size_t n);
 extern void *xcalloc (size_t n, size_t s);
+extern void *xrealloc (void *o, size_t n);
+extern char *xstrdup (const char *);
 
 /* Prototypes for local functions.  */
 static void error_print (void);
@@ -145,9 +151,11 @@ static struct catalog *read_input_file (struct catalog *current,
 static void write_out (struct catalog *result, const char *output_name,
 		       const char *header_name);
 static struct set_list *find_set (struct catalog *current, int number);
-static void normalize_line (const char *fname, size_t line, char *string,
-			    char quote_char);
+static void normalize_line (const char *fname, size_t line, iconv_t cd,
+			    wchar_t *string, wchar_t quote_char);
 static void read_old (struct catalog *catalog, const char *file_name);
+static int open_conversion (const char *codesetp, iconv_t *cd_towcp,
+			    iconv_t *cd_tombp);
 
 
 int
@@ -260,6 +268,11 @@ read_input_file (struct catalog *current, const char *fname)
   char *buf;
   size_t len;
   size_t line_number;
+  wchar_t *wbuf;
+  size_t wbufsize;
+  iconv_t cd_towc = (iconv_t) -1;
+  iconv_t cd_tomb = (iconv_t) -1;
+  char *codeset = NULL;
 
   if (strcmp (fname, "-") == 0 || strcmp (fname, "/dev/stdin") == 0)
     {
@@ -289,6 +302,10 @@ read_input_file (struct catalog *current, const char *fname)
   buf = NULL;
   len = 0;
   line_number = 0;
+
+  wbufsize = 1024;
+  wbuf = (wchar_t *) xmalloc (wbufsize);
+
   while (!feof (fp))
     {
       int continued;
@@ -328,7 +345,29 @@ read_input_file (struct catalog *current, const char *fname)
       if (this_line[0] == '$')
 	{
 	  if (isblank (this_line[1]))
-	    /* This is a comment line.  Do nothing.  */;
+	    {
+	      int cnt = 1;
+	      while (isblank (this_line[cnt]))
+		++cnt;
+	      if (strncmp (&this_line[cnt], "codeset=", 8) != 0)
+		/* This is a comment line. Do nothing.  */;
+	      else if (codeset != NULL)
+		/* Ignore multiple codeset. */;
+	      else
+		{
+		  int start = cnt + 8;
+		  cnt = start;
+		  while (this_line[cnt] != '\0' && !isspace (this_line[cnt]))
+		    ++cnt;
+		  if (cnt != start)
+		    {
+		      int len = cnt - start;
+		      codeset = xmalloc (len + 1);
+		      *((char *) mempcpy (codeset, &this_line[start], len))
+			= '\0';
+		    }
+		}
+	    }
 	  else if (strncmp (&this_line[1], "set", 3) == 0)
 	    {
 	      int cnt = sizeof ("set");
@@ -470,12 +509,44 @@ this is the first definition"));
 	    }
 	  else if (strncmp (&this_line[1], "quote", 5) == 0)
 	    {
-	      int cnt = sizeof ("quote");
+	      char buf[2];
+	      char *bufptr;
+	      size_t buflen;
+	      char *wbufptr;
+	      size_t wbuflen;
+	      int cnt;
+
+	      cnt = sizeof ("quote");
 	      while (isspace (this_line[cnt]))
 		++cnt;
+
+	      /* We need the conversion.  */
+	      if (cd_towc == (iconv_t) -1
+		  && open_conversion (codeset, &cd_towc, &cd_tomb) != 0)
+		/* Something is wrong.  */
+		goto out;
+
 	      /* Yes, the quote char can be '\0'; this means no quote
-		 char.  */
-	      current->quote_char = this_line[cnt];
+		 char.  The function using the information works on
+		 wide characters so we have to convert it here.  */
+	      buf[0] = this_line[cnt];
+	      buf[1] = '\0';
+	      bufptr = buf;
+	      buflen = 2;
+
+	      wbufptr = (char *) wbuf;
+	      wbuflen = wbufsize;
+
+	      /* Flush the state.  */
+	      iconv (cd_towc, NULL, NULL, NULL, NULL);
+
+	      iconv (cd_towc, &bufptr, &buflen, &wbufptr, &wbuflen);
+	      if (buflen != 0 || (wchar_t *) wbufptr != &wbuf[2])
+		error_at_line (0, 0, fname, start_line,
+			       gettext ("invalid quote character"));
+	      else
+		/* Use the converted wide character.  */
+		current->quote_char = wbuf[0];
 	    }
 	  else
 	    {
@@ -568,14 +639,91 @@ duplicated message identifier"));
 
 	  if (message_number != 0)
 	    {
+	      char *inbuf;
+	      size_t inlen;
+	      char *outbuf;
+	      size_t outlen;
 	      struct message_list *newp;
+	      size_t this_line_len = strlen (this_line) + 1;
+
+	      /* We need the conversion.  */
+	      if (cd_towc == (iconv_t) -1
+		  && open_conversion (codeset, &cd_towc, &cd_tomb) != 0)
+		/* Something is wrong.  */
+		goto out;
+
+	      /* Convert to a wide character string.  We have to
+		 interpret escape sequences which will be impossible
+		 without doing the conversion if the codeset of the
+		 message is stateful.  */
+	      while (1)
+		{
+		  inbuf = this_line;
+		  inlen = this_line_len;
+		  outbuf = (char *) wbuf;
+		  outlen = wbufsize;
+
+		  /* Flush the state.  */
+		  iconv (cd_towc, NULL, NULL, NULL, NULL);
+
+		  iconv (cd_towc, &inbuf, &inlen, &outbuf, &outlen);
+		  if (inlen == 0)
+		    {
+		      /* The string is converted.  */
+		      assert (outlen < wbufsize);
+		      assert (wbuf[(wbufsize - outlen) / sizeof (wchar_t) - 1]
+			      == L'\0');
+		      break;
+		    }
+
+		  if (outlen != 0)
+		    {
+		      /* Something is wrong with this string, we ignore it.  */
+		      error_at_line (0, 0, fname, start_line, gettext ("\
+invalid character: message ignored"));
+		      goto ignore;
+		    }
+
+		  /* The output buffer is too small.  */
+		  wbufsize *= 2;
+		  wbuf = (wchar_t *) xrealloc (wbuf, wbufsize);
+		}
 
 	      used = 1;	/* Yes, we use the line.  */
 
 	      /* Strip quote characters, change escape sequences into
 		 correct characters etc.  */
-	      normalize_line (fname, start_line, this_line,
+	      normalize_line (fname, start_line, cd_towc, wbuf,
 			      current->quote_char);
+
+	      /* Now the string is free of escape sequences.  Convert it
+		 back into a multibyte character string.  First free the
+		 memory allocated for the original string.  */
+	      obstack_free (&current->mem_pool, this_line);
+
+	      /* Now fill in the new string.  It should never happen that
+		 the replaced string is longer than the original.  */
+	      inbuf = (char *) wbuf;
+	      inlen = (wcslen (wbuf) + 1) * sizeof (wchar_t);
+
+	      outlen = obstack_room (&current->mem_pool);
+	      start_line = (char *) obstack_alloc (&current->mem_pool, outlen);
+	      outbuf = start_line;
+
+	      /* Flush the state.  */
+	      iconv (cd_tomb, NULL, NULL, NULL, NULL);
+
+	      iconv (cd_tomb, &inbuf, &inlen, &outbuf, &outlen);
+	      if (inlen != 0)
+		{
+		  error_at_line (0, 0, fname, start_line,
+				 gettext ("invalid line"));
+		  goto ignore;
+		}
+	      assert (outbuf[-1] == '\0');
+
+	      /* Free the memory in the obstack we don't use.  */
+	      obstack_free (&current->mem_pool, outbuf);
 
 	      newp = (struct message_list *) xmalloc (sizeof (*newp));
 	      newp->number = message_number;
@@ -625,10 +773,19 @@ duplicated message identifier"));
 			   gettext ("malformed line ignored"));
 	}
 
+    ignore:
       /* We can save the memory for the line if it was not used.  */
       if (!used)
 	obstack_free (&current->mem_pool, this_line);
     }
+
+  /* Close the conversion modules.  */
+  iconv_close (cd_towc);
+  iconv_close (cd_tomb);
+  free (codeset);
+
+ out:
+  free (wbuf);
 
   if (fp != stdin)
     fclose (fp);
@@ -895,13 +1052,14 @@ find_set (struct catalog *current, int number)
 /* Normalize given string *in*place* by processing escape sequences
    and quote characters.  */
 static void
-normalize_line (const char *fname, size_t line, char *string, char quote_char)
+normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
+		wchar_t quote_char)
 {
   int is_quoted;
-  char *rp = string;
-  char *wp = string;
+  wchar_t *rp = string;
+  wchar_t *wp = string;
 
-  if (quote_char != '\0' && *rp == quote_char)
+  if (quote_char != L'\0' && *rp == quote_char)
     {
       is_quoted = 1;
       ++rp;
@@ -909,58 +1067,83 @@ normalize_line (const char *fname, size_t line, char *string, char quote_char)
   else
     is_quoted = 0;
 
-  while (*rp != '\0')
+  while (*rp != L'\0')
     if (*rp == quote_char)
       /* We simply end the string when we find the first time an
 	 not-escaped quote character.  */
 	break;
-    else if (*rp == '\\')
+    else if (*rp == L'\\')
       {
 	++rp;
-	if (quote_char != '\0' && *rp == quote_char)
+	if (quote_char != L'\0' && *rp == quote_char)
 	  /* This is an extension to XPG.  */
 	  *wp++ = *rp++;
 	else
 	  /* Recognize escape sequences.  */
 	  switch (*rp)
 	    {
-	    case 'n':
-	      *wp++ = '\n';
+	    case L'n':
+	      *wp++ = L'\n';
 	      ++rp;
 	      break;
-	    case 't':
-	      *wp++ = '\t';
+	    case L't':
+	      *wp++ = L'\t';
 	      ++rp;
 	      break;
-	    case 'v':
-	      *wp++ = '\v';
+	    case L'v':
+	      *wp++ = L'\v';
 	      ++rp;
 	      break;
-	    case 'b':
-	      *wp++ = '\b';
+	    case L'b':
+	      *wp++ = L'\b';
 	      ++rp;
 	      break;
-	    case 'r':
-	      *wp++ = '\r';
+	    case L'r':
+	      *wp++ = L'\r';
 	      ++rp;
 	      break;
-	    case 'f':
-	      *wp++ = '\f';
+	    case L'f':
+	      *wp++ = L'\f';
 	      ++rp;
 	      break;
-	    case '\\':
-	      *wp++ = '\\';
+	    case L'\\':
+	      *wp++ = L'\\';
 	      ++rp;
 	      break;
-	    case '0' ... '7':
+	    case L'0' ... L'7':
 	      {
-		int number = *rp++ - '0';
-		while (number <= (255 / 8) && *rp >= '0' && *rp <= '7')
+		int number;
+		char cbuf[2];
+		char *cbufptr;
+		size_t cbufin;
+		wchar_t wcbuf[2];
+		char *wcbufptr;
+		size_t wcbufin;
+
+		number = *rp++ - L'0';
+		while (number <= (255 / 8) && *rp >= L'0' && *rp <= L'7')
 		  {
 		    number *= 8;
-		    number += *rp++ - '0';
+		    number += *rp++ - L'0';
 		  }
-		*wp++ = (char) number;
+
+		cbuf[0] = (char) number;
+		cbuf[1] = '\0';
+		cbufptr = cbuf;
+		cbufin = 2;
+
+		wcbufptr = (char *) wcbuf;
+		wcbufin = sizeof (wcbuf);
+
+		/* Flush the state.  */
+		iconv (cd, NULL, NULL, NULL, NULL);
+
+		iconv (cd, &cbufptr, &cbufin, &wcbufptr, &wcbufin);
+		if (cbufptr != &cbuf[2] || (wchar_t *) wcbufptr != &wcbuf[2])
+		  error_at_line (0, 0, fname, line,
+				 gettext ("invalid escape sequence"));
+		else
+		  *wp++ = wcbuf[0];
 	      }
 	      break;
 	    default:
@@ -974,10 +1157,10 @@ normalize_line (const char *fname, size_t line, char *string, char quote_char)
   /* If we saw a quote character at the beginning we expect another
      one at the end.  */
   if (is_quoted && *rp != quote_char)
-    error (0, 0, fname, line, gettext ("unterminated message"));
+    error_at_line (0, 0, fname, line, gettext ("unterminated message"));
 
   /* Terminate string.  */
-  *wp = '\0';
+  *wp = L'\0';
   return;
 }
 
@@ -1068,4 +1251,31 @@ read_old (struct catalog *catalog, const char *file_name)
 	    last->next = message->next;
 	}
     }
+}
+
+
+static int
+open_conversion (const char *codeset, iconv_t *cd_towcp, iconv_t *cd_tombp)
+{
+  /* If the input file does not specify the codeset use the locale's.  */
+  if (codeset == NULL)
+    {
+      setlocale (LC_ALL, "");
+      codeset = nl_langinfo (CODESET);
+      setlocale (LC_ALL, "C");
+    }
+
+  /* Get the conversion modules.  */
+  *cd_towcp = iconv_open ("WCHAR_T", codeset);
+  *cd_tombp = iconv_open (codeset, "WCHAR_T");
+  if (*cd_towcp == (iconv_t) -1 || *cd_tombp == (iconv_t) -1)
+    {
+      error (0, 0, gettext ("conversion modules not available"));
+      if (*cd_towcp != (iconv_t) -1)
+	iconv_close (*cd_towcp);
+
+      return 1;
+    }
+
+  return 0;
 }

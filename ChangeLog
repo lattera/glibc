@@ -1,3 +1,12 @@
+2000-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/Makefile (test1.cat): Set LC_ALL, LOCPATH, and GCONV_PATH
+	for gencat run.
+	(libc.cat): Likewise.
+	* catgets/gencat.c: Implement handling of message catalogs encoded
+	with stateful character sets.
+	Based on a patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 2000-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/opendir.c (__opendir): Add cast to avoid warning.
