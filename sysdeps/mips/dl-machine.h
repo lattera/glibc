@@ -468,7 +468,9 @@ _dl_start_user:\n\
 	lw $4, _dl_loaded\n\
 	lw $5, 0($29)\n\
 	la $6, 4($29)\n\
-	la $7, 8($29)\n\
+	sll $7, $5, 2\n\
+	addu $7, $7, $6\n\
+	addu $7, $7, 4\n\
 	subu $29, 16\n\
 	# Call the function to run the initializers.\n\
 	jal _dl_init

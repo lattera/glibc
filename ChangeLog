@@ -1,3 +1,8 @@
+2000-10-01  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/mips/dl-machine.h (RTLD_START): Fix computation of envp
+	argument passed to _dl_init.
+
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/programs/charmap-dir.h: New file.
