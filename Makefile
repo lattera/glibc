@@ -282,7 +282,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		rpm/template rpm/rpmrc abi-tags stub-tag.h		\
 		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
-		cppflags-iterator.mk tls.make.c				\
+		cppflags-iterator.mk tls.make.c include/caller.h	\
 		include/stubs-prologue.h include/gnu/stubs.h		\
 		include/atomic.h bits/atomic.h symbol-hacks.h		\
 		INTERFACE CONFORMANCE NAMESPACE LICENSES	        \

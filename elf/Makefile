@@ -30,7 +30,7 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
 				  version profile conflict tls origin \
-				  execstack)
+				  execstack caller)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin

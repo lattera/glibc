@@ -20,8 +20,10 @@
 #include <ldsodefs.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include <libintl.h>
 #include <stdbool.h>
 #include <stackinfo.h>
+#include <caller.h>
 
 #include "kernel-features.h"
 
@@ -31,13 +33,14 @@ internal_function
 _dl_make_stack_executable (void **stack_endp)
 {
   /* This gives us the highest/lowest page that needs to be changed.  */
-  uintptr_t page = ((uintptr_t) __libc_stack_end
+  uintptr_t page = ((uintptr_t) *stack_endp
 		    & -(intptr_t) GLRO(dl_pagesize));
 
   /* Challenge the caller.  */
-  if (__builtin_expect (*stack_endp != __libc_stack_end, 0))
+  if (__builtin_expect (__check_caller (__builtin_return_address (0),
+					allow_ldso|allow_libpthread) != 0, 0)
+      || __builtin_expect (*stack_endp != __libc_stack_end, 0))
     return EPERM;
-  *stack_endp = NULL;
 
 #if _STACK_GROWS_DOWN
   /* Newer Linux kernels support a flag to make our job easy.  */
@@ -151,6 +154,9 @@ _dl_make_stack_executable (void **stack_endp)
 #endif
 
  return_success:
+  /* Clear the address.  */
+  *stack_endp = NULL;
+
   /* Remember that we changed the permission.  */
   GL(dl_stack_flags) |= PF_X;
 

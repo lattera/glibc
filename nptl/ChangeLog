@@ -1,3 +1,8 @@
+2004-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (_make_stacks_executable): Call
+	_dl_make_stack_executable first.
+
 2004-03-24  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/pthread_spin_lock.c (pthread_spin_lock): Use "m"

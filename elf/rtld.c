@@ -142,6 +142,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_start_profile = _dl_start_profile,
     ._dl_mcount = _dl_mcount_internal,
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
+    ._dl_check_caller = _dl_check_caller
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -208,6 +209,7 @@ static ElfW(Addr) _dl_start_final (void *arg,
 
 /* These defined magically in the linker script.  */
 extern char _begin[] attribute_hidden;
+extern char _etext[] attribute_hidden;
 extern char _end[] attribute_hidden;
 
 
@@ -268,6 +270,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_opencount = 1;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
+  GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
 #if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
 # if USE___THREAD
@@ -899,6 +902,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     }
 
   GL(dl_loaded)->l_map_end = 0;
+  GL(dl_loaded)->l_text_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   GL(dl_loaded)->l_map_start = ~0;
   /* We opened the file, account for it.  */
@@ -969,6 +973,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  allocend = GL(dl_loaded)->l_addr + ph->p_vaddr + ph->p_memsz;
 	  if (GL(dl_loaded)->l_map_end < allocend)
 	    GL(dl_loaded)->l_map_end = allocend;
+	  if ((ph->p_flags & PF_X) && allocend > GL(dl_loaded)->l_text_end)
+	    GL(dl_loaded)->l_text_end = allocend;
 	}
 	break;
 #ifdef USE_TLS
@@ -1012,6 +1018,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 #endif
   if (! GL(dl_loaded)->l_map_end)
     GL(dl_loaded)->l_map_end = ~0;
+  if (! GL(dl_loaded)->l_text_end)
+    GL(dl_loaded)->l_text_end = ~0;
   if (! GL(dl_rtld_map).l_libname && GL(dl_rtld_map).l_name)
     {
       /* We were invoked directly, so the program might not have a
@@ -1271,11 +1279,15 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 		    l->l_addr = ph->p_vaddr;
 		  else if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
 		    l->l_map_end = ph->p_vaddr + ph->p_memsz;
+		  else if ((ph->p_flags & PF_X)
+			   && ph->p_vaddr + ph->p_memsz >= l->l_text_end)
+		    l->l_text_end = ph->p_vaddr + ph->p_memsz;
 		}
 	    }
 	  l->l_map_start = (ElfW(Addr)) GLRO(dl_sysinfo_dso);
 	  l->l_addr = l->l_map_start - l->l_addr;
 	  l->l_map_end += l->l_addr;
+	  l->l_text_end += l->l_addr;
 	  l->l_ld = (void *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);

@@ -208,6 +208,8 @@ struct link_map
     /* Start and finish of memory map for this object.  l_map_start
        need not be the same as l_addr.  */
     ElfW(Addr) l_map_start, l_map_end;
+    /* End of the executable part of the mapping.  */
+    ElfW(Addr) l_text_end;
 
     /* Default array for 'l_scope'.  */
     struct r_scope_elem *l_scope_mem[4];

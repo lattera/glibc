@@ -171,6 +171,17 @@ struct libname_list
   };
 
 
+/* Bit masks for the objects which valid callers can come from to
+   functions with restricted interface.  */
+enum allowmask
+  {
+    allow_libc = 1,
+    allow_libdl = 2,
+    allow_libpthread = 4,
+    allow_ldso = 8
+  };
+
+
 /* Test whether given NAME matches any of the names of the given object.  */
 extern int _dl_name_match_p (const char *__name, struct link_map *__map)
      internal_function;
@@ -492,6 +503,7 @@ struct rtld_global_ro
 						     const struct r_found_version *,
 						     int, int,
 						     struct link_map *);
+  int (*_dl_check_caller) (const void *, enum allowmask);
 
 };
 # define __rtld_global_attribute__
@@ -877,6 +889,10 @@ extern size_t _dl_dst_count (const char *name, int is_path) attribute_hidden;
 /* Substitute DST values.  */
 extern char *_dl_dst_substitute (struct link_map *l, const char *name,
 				 char *result, int is_path) attribute_hidden;
+
+/* Check validity of the caller.  */
+extern int _dl_check_caller (const void *caller, enum allowmask mask)
+     attribute_hidden;
 
 __END_DECLS
 

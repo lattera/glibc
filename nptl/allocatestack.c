@@ -676,9 +676,10 @@ int
 internal_function
 __make_stacks_executable (void **stack_endp)
 {
-  /* Challenge the caller.  */
-  if (*stack_endp != __libc_stack_end)
-    return EPERM;
+  /* First the main thread's stack.  */
+  int err = _dl_make_stack_executable (stack_endp);
+  if (err != 0)
+    return err;
 
 #ifdef NEED_SEPARATE_REGISTER_STACK
   const size_t pagemask = ~(__getpagesize () - 1);
@@ -686,7 +687,6 @@ __make_stacks_executable (void **stack_endp)
 
   lll_lock (stack_cache_lock);
 
-  int err = 0;
   list_t *runp;
   list_for_each (runp, &stack_used)
     {
@@ -715,9 +715,6 @@ __make_stacks_executable (void **stack_endp)
       }
 
   lll_unlock (stack_cache_lock);
-
-  if (err == 0)
-    err = _dl_make_stack_executable (stack_endp);
 
   return err;
 }

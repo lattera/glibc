@@ -30,7 +30,7 @@
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
 #include <bp-sym.h>
-#include <gnu/lib-names.h>
+#include <caller.h>
 
 #include <dl-dst.h>
 
@@ -156,68 +156,6 @@ add_to_global (struct link_map *new)
 }
 
 
-#ifdef SHARED
-static int
-internal_function
-check_libc_caller (const void *caller)
-{
-  static const char expected1[] = LIBC_SO;
-  static const char expected2[] = LIBDL_SO;
-
-  /* If we already know the address ranges, just test.  */
-  static const void *expected1_from;
-  static const void *expected1_to;
-  static const void *expected2_from;
-  static const void *expected2_to;
-
-  if (expected1_from == NULL)
-    {
-      /* The only other DSO which is allowed to call these functions is
-	 libdl.  Find the address range containing the caller.  */
-      struct link_map *l;
-
-      for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-	if (strcmp (expected1, l->l_name) == 0)
-	  {
-	  is_1:
-	    expected1_from = (const void *) l->l_map_start;
-	    expected1_to = (const void *) l->l_map_end;
-	  }
-	else if (strcmp (expected2, l->l_name) == 0)
-	  {
-	  is_2:
-	    expected2_from = (const void *) l->l_map_start;
-	    expected2_to = (const void *) l->l_map_end;
-	  }
-	else
-	  {
-	    struct libname_list *runp = l->l_libname;
-
-	    while (runp != NULL)
-	      {
-		if (strcmp (expected1, runp->name) == 0)
-		  goto is_1;
-		else if (strcmp (expected2, runp->name) == 0)
-		  goto is_2;
-
-		runp = runp->next;
-	      }
-	  }
-
-      assert (expected1_from != NULL);
-    }
-
-  /* When there would be more than two expected caller we could use an
-     array for the values but for now this is cheaper.  */
-  if ((caller >= expected1_from && caller < expected1_to)
-      || (caller >= expected2_from && caller < expected2_to))
-    return 0;
-
-  return 1;
-}
-#endif
-
-
 static void
 dl_open_worker (void *a)
 {
@@ -232,11 +170,9 @@ dl_open_worker (void *a)
   bool any_tls;
 #endif
 
-#ifdef SHARED
   /* Check whether _dl_open() has been called from a valid DSO.  */
-  if (check_libc_caller (args->caller_dl_open) != 0)
+  if (__check_caller (args->caller_dl_open, allow_libc|allow_libdl) != 0)
     GLRO(dl_signal_error) (0, "dlopen", NULL, N_("invalid caller"));
-#endif
 
   /* Maybe we have to expand a DST.  */
   dst = strchr (file, '$');

@@ -1110,7 +1110,7 @@ cannot allocate TLS data structures for initial thread");
 	     unallocated.  Then jump into the normal segment-mapping loop to
 	     handle the portion of the segment past the end of the file
 	     mapping.  */
-	  __mprotect ((caddr_t) (l->l_addr + c->mapend),
+	  __mprotect ((caddr_t) l->l_text_end,
 		      loadcmds[nloadcmds - 1].allocend - c->mapend,
 		      PROT_NONE);
 
@@ -1146,6 +1146,9 @@ cannot allocate TLS data structures for initial thread");
 	  goto map_error;
 
       postmap:
+	if (c->prot & PROT_EXEC)
+	  l->l_text_end = l->l_addr + c->mapend;
+
 	if (l->l_phdr == 0
 	    && (ElfW(Off)) c->mapoff <= header->e_phoff
 	    && ((size_t) (c->mapend - c->mapstart + c->mapoff)

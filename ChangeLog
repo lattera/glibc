@@ -1,3 +1,21 @@
+2004-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-caller.c: New file.
+	* include/caller.h: New file.
+	* Makefile (distribute): Add include/caller.h.
+	* elf/Makefile (dl-routines): Add dl-caller.
+	* elf/dl-load.c (_dl_map_object_from_fd): Record l_text_end.
+	* elf/dl-open.c (check_libc_caller): Removed.
+	(dl_open_worker): Use __check_caller instead.
+	* elf/rtld.c (_rtld_global_ro): Initialize _dl_check_caller.
+	(_dl_start_final): Record l_text_end for ld.so map.
+	(dl_main): Record l_text_end for main object and vdso.
+	* include/link.h (struct link_map): Add l_text_end field.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Add
+	_dl_check_caller field.
+	Define enum allowmask.  Add declaration of _dl_check_caller.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Also use __check_caller test.
+
 2004-03-26  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/Makefile <gnulib> (sysdep_routines): Merge divrem
