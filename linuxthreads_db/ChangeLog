@@ -1,3 +1,8 @@
+1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* proc_service.h: Add ps_pstop, ps_pcontinue, ps_lstop, and
+	ps_lcontinue prototypes.
+
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Correct dependency for shared object.

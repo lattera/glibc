@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <atomicity.h>
 #include <stdlib.h>
 #include <set-hooks.h>
 
@@ -26,8 +27,8 @@ __libc_freeres (void)
 {
   /* This function might be called from different places.  So better
      protect for multiple executions since these are fatal.  */
-  static int already_called;
+  static long int already_called;
 
-  if (!already_called)
+  if (compare_and_swap (&already_called, 0, 1))
     RUN_HOOK (__libc_subfreeres, ());
 }
