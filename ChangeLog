@@ -1,3 +1,10 @@
+2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+        * sysdeps/unix/sysv/linux/s390/getmsg.c: Remove.
+        * sysdeps/unix/sysv/linux/s390/getpmsg.c: Remove.
+        * sysdeps/unix/sysv/linux/s390/putmsg.c: Remove.
+        * sysdeps/unix/sysv/linux/s390/putpmsg.c: Remove.
+
 2000-08-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (sysctl): Remove.
