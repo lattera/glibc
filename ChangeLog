@@ -1,3 +1,10 @@
+1999-06-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-deps.c (_dl_map_object_deps): When looking for the next
+	occurence of the aux object start with the current list entry, not
+	the new one.  Adjust tail pointer in the unique list.  Explain how
+	the meaning of the variables changes [PR libc/1168].
+
 1999-06-27  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/Dist: New file.
