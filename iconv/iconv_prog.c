@@ -162,7 +162,10 @@ main (int argc, char *argv[])
      specified with the `-o' parameter.  If we have no file given as
      the parameter process all from stdin.  */
   if (remaining == argc)
-    process_file (cd, stdin, output);
+    {
+      if (process_file (cd, stdin, output) != 0)
+	status = 1;
+    }
   else
     do
       {

@@ -3,8 +3,8 @@
 __BEGIN_DECLS
 
 /* The actual system call: all functions are multiplexed by this.  */
-extern int __syscall_ipc __P ((int __call, int __first, int __second,
-			       int __third, void *__ptr));
+extern int __syscall_ipc (int __call, int __first, int __second,
+			  int __third, void *__ptr) __THROW;
 
 __END_DECLS
 

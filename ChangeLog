@@ -1,3 +1,46 @@
+1999-10-19  Andreas Jaeger  <aj@suse.de>
+
+	* include/bits/ipc.h: Remove K&R compatibility.
+	* include/libintl.h: Likewise.
+	* include/math.h: Likewise.
+	* include/mntent.h: Likewise
+	* include/netdb.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/sched.h: Likewise.
+	* include/shadow.h: Likewise
+	* include/stdlib.h: Likewise.
+	* include/sys/file.h: Likewise.
+	* include/sys/gmon.h: Likewise.
+	* include/sys/ioctl.h: Likewise.
+	* include/sys/mman.h: Likewise.
+	* include/sys/resource.h: Likewise.
+	* include/sys/socket.h: Likewise.
+	* include/sys/stat.h: Likewise.
+	* include/sys/sysinfo.h: Likewise.
+	* include/sys/time.h: Likewise.
+	* include/sys/times.h: Likewise.
+	* include/sys/uio.h: Likewise.
+	* include/sys/wait.h: Likewise.
+	* include/termios.h: Likewise.
+	* include/time.h: Likewise.
+	* include/ulimit.h: Likewise.
+	* include/utmp.h: Likewise.
+	* include/wchar.h: Likewise.
+	* include/wctype.h: Likewise.
+
+1999-10-19  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc: Remove one K&R compatibility.
+	(main): Enable nexttoward_test.
+
+	* math/gen-libm-test.pl (output_ulps): Output name of Ulps file to
+	libm-test-ulps.h; pretty print output a bit.
+
+1999-10-19  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/iconv_prog.c (main): Set exit value in case that reading
+	from stdin failed [PR libc/1404].
+
 1999-10-18  Andreas Jaeger  <aj@suse.de>
 
 	Added improved math testsuite:

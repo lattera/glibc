@@ -3,6 +3,6 @@
 #include <math/math.h>
 
 /* Now define the internal interfaces.  */
-extern int __matherr __P ((struct exception *__exc));
+extern int __matherr (struct exception *__exc) __THROW;
 
 #endif

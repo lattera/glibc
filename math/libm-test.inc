@@ -2969,7 +2969,7 @@ nextafter_test (void)
   END (nextafter);
 }
 
-#if 0
+
 static void
 nexttoward_test (void)
 {
@@ -2993,7 +2993,6 @@ nexttoward_test (void)
 
   END (nexttoward);
 }
-#endif
 
 
 static void
@@ -3706,7 +3705,7 @@ static const struct argp_option options[] =
 static const char doc[] = "Math test suite: " TEST_MSG ;
 
 /* Prototype for option handler.  */
-static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
@@ -3884,7 +3883,7 @@ main (int argc, char **argv)
   /* Manipulation functions:  */
   copysign_test ();
   nextafter_test ();
-  //  nexttoward_test ();
+  nexttoward_test ();
 
   /* maximum, minimum and positive difference functions */
   fdim_test ();

@@ -2,15 +2,15 @@
 #include <io/sys/stat.h>
 
 /* Now define the internal interfaces. */
-extern int __stat __P ((__const char *__file, struct stat *__buf));
-extern int __fstat __P ((int __fd, struct stat *__buf));
-extern int __lstat __P ((__const char *__file, struct stat *__buf));
-extern int __chmod __P ((__const char *__file, __mode_t __mode));
-extern int __fchmod __P ((int __fd, __mode_t __mode));
-extern __mode_t __umask __P ((__mode_t __mask));
-extern int __mkdir __P ((__const char *__path, __mode_t __mode));
-extern int __mknod __P ((__const char *__path,
-			 __mode_t __mode, __dev_t __dev));
+extern int __stat (__const char *__file, struct stat *__buf) __THROW;
+extern int __fstat (int __fd, struct stat *__buf) __THROW;
+extern int __lstat (__const char *__file, struct stat *__buf) __THROW;
+extern int __chmod (__const char *__file, __mode_t __mode) __THROW;
+extern int __fchmod (int __fd, __mode_t __mode) __THROW;
+extern __mode_t __umask (__mode_t __mask) __THROW;
+extern int __mkdir (__const char *__path, __mode_t __mode) __THROW;
+extern int __mknod (__const char *__path,
+		    __mode_t __mode, __dev_t __dev) __THROW;
 extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
 {
   return __xstat (_STAT_VER, __path, __statbuf);

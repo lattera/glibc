@@ -2,5 +2,5 @@
 #include <socket/sys/socket.h>
 
 /* Now define the internal interfaces.  */
-extern int __socket __P ((int __domain, int __type, int __protocol));
+extern int __socket (int __domain, int __type, int __protocol) __THROW;
 #endif

@@ -2,5 +2,5 @@
 #include <misc/sys/file.h>
 
 /* Now define the internal interfaces.  */
-extern int __flock __P ((int __fd, int __operation));
+extern int __flock (int __fd, int __operation) __THROW;
 #endif
