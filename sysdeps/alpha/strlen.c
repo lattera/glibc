@@ -25,7 +25,6 @@ strlen (const char *str)
 {
   const char *char_ptr;
   const unsigned long int *longword_ptr;
-  unsigned long int longword;
 
   /* Handle the first few characters by reading one character at a time.
      Do this until STR is aligned on a 8-byte border.  */
