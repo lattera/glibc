@@ -51,13 +51,13 @@ C_LABEL(_mcount)
 #endif
 	/* Pop the saved registers.  Please note that `mcount' has no
 	   return value.  */
-	movq	(%rsp),%r9
-	movq	8(%rsp),%r8
-	movq	16(%rsp),%rdi
+	movq	48(%rsp),%r9
+	movq	40(%rsp),%r8
+	movq	32(%rsp),%rdi
 	movq	24(%rsp),%rsi
-	movq	32(%rsp),%rdx
-	movq	40(%rsp),%rcx
-	movq	48(%rsp),%rax
+	movq	16(%rsp),%rdx
+	movq	8(%rsp),%rcx
+	movq	(%rsp),%rax
 	addq	$56,%rsp
 	ret
 
