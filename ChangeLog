@@ -1,3 +1,17 @@
+1998-10-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (CFLAGS-ioperm.c): New
+	variable to prevent warnings from use of modern CPU instructions.
+	Patch by Richard Henderson <rth@cygnus.com>.
+
+	* sysdeps/unix/opendir.c: Test whether NAME is directory before
+	opening it.
+
+1998-10-12  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): Add missing
+	semicolon so that profiling works.
+
 1998-10-12  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/generic/glob.c: #undef mempcpy before #define.
