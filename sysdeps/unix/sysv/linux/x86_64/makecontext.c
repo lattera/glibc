@@ -58,11 +58,11 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 
   /* Generate room on stack for parameter if needed and uc_link.  */
   sp = (long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
-  sp -= (argc > 6 ? argc : 0) + 1;
+  sp -= (argc > 6 ? argc - 6 : 0) + 1;
   /* Align stack and make space for trampoline address.  */
   sp = (long *) ((((long) sp) & -16L) - 8);
 
-  idx_uc_link = (argc > 6 ? argc : 0) + 1;
+  idx_uc_link = (argc > 6 ? argc - 6 : 0) + 1;
 
   /* Setup context ucp.  */
   /* Address to jump to.  */
@@ -100,7 +100,7 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 	break;
       default:
 	/* Put value on stack.  */
-	sp[8 + (i - 5)] = va_arg (ap, int);
+	sp[(i - 5)] = va_arg (ap, int);
 	break;
       }
   va_end (ap);
