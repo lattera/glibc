@@ -1,5 +1,8 @@
 1998-10-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/pt-machine.h (get_eflags, set_eflags): Mark these
+	also with PT_EI.
+
 	* sysdeps/i386/i686/pt-machine.h: Remove unused inline
 	definitions.
 

@@ -65,7 +65,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 
-extern inline int
+PT_EI int
 get_eflags (void)
 {
   int res;
@@ -74,7 +74,7 @@ get_eflags (void)
 }
 
 
-extern inline void
+PT_EI void
 set_eflags (int newflags)
 {
   __asm__ __volatile__ ("pushl %0; popfl" : : "r" (newflags) : "cc");
