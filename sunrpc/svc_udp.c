@@ -277,7 +277,7 @@ again:
 	    {
 	      /* It was a simple IP_PKTIFO as we expected, discard the
 		 interface field.  */
-	      struct in_pktinfo *pkti = CMSG_DATA (cmsg);
+	      struct in_pktinfo *pkti = (struct in_pktinfo *) CMSG_DATA (cmsg);
 	      pkti->ipi_ifindex = 0;
 	    }
 	}
