@@ -1,3 +1,7 @@
+2003-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (SA_NOCLDWAIT): Define.
+
 2003-05-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_plt_conflict):

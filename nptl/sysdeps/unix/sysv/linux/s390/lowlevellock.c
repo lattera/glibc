@@ -64,7 +64,7 @@ ___lll_timedwait_tid (ptid, abstime)
 {
   int tid;
 
-  if (abstime == NULL || abstime->tv_nsec >= 1000000000)
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
   /* Repeat until thread terminated.  */

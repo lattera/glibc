@@ -1,5 +1,18 @@
 2003-05-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_timedlock_wait):
+	Also fail if tv_nsec < 0.
+	(__lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c (sem_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_timedwait_tid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.c (___lll_timedwait_tid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevelmutex.c (__lll_mutex_timedlock):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c (sem_timedwait):
+	Likewise.
+
 	* Makefile (tests): Add tst-sem8 and tst-sem9.
 	* tst-sem8.c: New file.
 	* tst-sem9.c: New file.

@@ -42,7 +42,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
     }
 
   err = -EINVAL;
-  if (abstime->tv_nsec >= 1000000000)
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     goto error_return;
 
   do

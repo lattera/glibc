@@ -43,7 +43,7 @@ sem_timedwait (sem, abstime)
 	return 0;
 
       /* Check for invalid timeout values.  */
-      if (abstime->tv_nsec >= 1000000000)
+      if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
 	{
 	  __set_errno (EINVAL);
 	  return -1;

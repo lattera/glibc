@@ -48,7 +48,7 @@ ___lll_mutex_timedlock (futex, abstime, newval)
      int newval;
 {
   /* Reject invalid timeouts.  */
-  if (abstime->tv_nsec >= 1000000000)
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
   int oldval;
