@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,9 +51,14 @@ elf_machine_load_address (void)
 #error "Where am I?"
 }
 
-/* This can modify DYNAMIC_INFO to avoid relocating code in
-   the functions above if they are doing bizarre magic.  */
-#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
+/* Fixup a PLT entry to bounce directly to the function at VALUE.  */
+
+static inline void
+elf_machine_fixup_plt (struct link_map *map, const Elf32_Rel *reloc,
+		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+{
+  *reloc_addr = value;
+}
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    LOADADDR is the load address of the object; INFO is an array indexed
@@ -82,7 +87,7 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 }
 
 
-static inline void
+static inline Elf32_Addr
 elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 		  const Elf32_Rel *reloc, const Elf32_Sym *sym,
 		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
@@ -107,7 +112,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   extern void _dl_runtime_resolve (Elf32_Word);
 
-  if (lazy) 
+  if (lazy)
     {
       /* The GOT entries for functions in the PLT have not yet been filled
          in.  Their initial contents will arrange when called to push an

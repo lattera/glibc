@@ -27,7 +27,7 @@ dist-headers := malloc.h
 headers := $(dist-headers) obstack.h
 tests := mallocbug
 
-distribute = thread-m.h mtrace.awk mcheck-init.c mcheck.h
+distribute = thread-m.h mtrace.pl mcheck-init.c mcheck.h
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore
@@ -41,6 +41,19 @@ non-lib.a := libmcheck.a
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
 
+# The AWK script to analyze the output of the mtrace functions.
+ifneq ($(PERL),no)
+install-bin = mtrace
+
+# The Perl script will print addresses and to do this nicely we must know
+# whether we are on a 32 or 64 bit machine.
+ifneq ($strip($(findstring wordsize-32,$(config-sysdirs))),)
+address-width=10
+else
+address-width=18
+endif
+endif
+
 include ../Rules
 
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
@@ -52,3 +65,9 @@ lib: $(objpfx)libmcheck.a
 
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG
+
+$(objpfx)mtrace: mtrace.pl
+	rm -fr %@.new
+	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
+	    -e 's|@VERSION@|$(version)|' $^ > $@.new \
+	&& rm -fr $@ && mv $@.new $@ && chmod +x $@

@@ -435,6 +435,9 @@ else
 fi
 AC_SUBST(libc_cv_have_ksh)
 
+AC_PATH_PROGS(PERL, perl, no)
+AC_SUBST(PERL)
+
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c

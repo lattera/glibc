@@ -64,7 +64,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	*name = (char *) _nl_C_name;
     }
 
-  if (strcmp (*name, _nl_C_name) == 0 || strcmp (*name, "POSIX") == 0)
+  if (strcmp (*name, _nl_C_name) == 0 || strcmp (*name, _nl_POSIX_name) == 0)
     {
       /* We need not load anything.  The needed data is contained in
 	 the library itself.  */
@@ -202,6 +202,9 @@ _nl_remove_locale (int locale, struct locale_data *data)
 	 to be used again it is reloaded.  */
       ptr->decided = 0;
       ptr->data = NULL;
+
+      /* Free the name.  */
+      free ((char *) data->name);
 
       /* Really delete the data.  First delete the real data.  */
       if (data->mmaped)

@@ -26,7 +26,6 @@
 
 #ifndef _IO_STDIO_H
 #define _IO_STDIO_H
-#include <features.h>
 
 #include <_G_config.h>
 #define _IO_pos_t _G_fpos_t /* obsolete */
@@ -74,12 +73,6 @@
 #define _IO_UNIFIED_JUMPTABLES 1
 #ifndef _G_HAVE_PRINTF_FP
 # define _IO_USE_DTOA 1
-#endif
-
-#if 0
-# ifdef _IO_NEED_STDARG_H
-#  include <stdarg.h>
-# endif
 #endif
 
 #ifndef EOF
@@ -156,7 +149,11 @@ struct _IO_jump_t;  struct _IO_FILE;
 
 /* Handle lock.  */
 #ifdef _IO_MTSAFE_IO
-# include <bits/stdio-lock.h>
+# if defined __GLIBC__ && __GLIBC__ >= 2
+#  include <bits/stdio-lock.h>
+# else
+/*# include <comthread.h>*/
+# endif
 #else
 typedef void _IO_lock_t;
 #endif
@@ -290,15 +287,16 @@ extern void _IO_flockfile __P ((_IO_FILE *));
 extern void _IO_funlockfile __P ((_IO_FILE *));
 extern int _IO_ftrylockfile __P ((_IO_FILE *));
 
-#ifndef _IO_MTSAFE_IO
+#ifdef _IO_MTSAFE_IO
+# define _IO_peekc(_fp) _IO_peekc_locked (_fp)
+#else
+# define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
 # define _IO_flockfile(_fp) /**/
 # define _IO_funlockfile(_fp) /**/
 # define _IO_ftrylockfile(_fp) /**/
 # define _IO_cleanup_region_start(_fct, _fp) /**/
 # define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
-
-#define _IO_peekc(_fp) _IO_peekc_locked (_fp)
 
 extern int _IO_vfscanf __P ((_IO_FILE *, const char *, _IO_va_list, int *));
 extern int _IO_vfprintf __P ((_IO_FILE *, const char *, _IO_va_list));

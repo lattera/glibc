@@ -185,14 +185,10 @@ _dl_runtime_profile:
 	.previous
 ");
 #endif
-/* The PLT uses Elf32_Rel relocs.  */
-#define elf_machine_relplt elf_machine_rel
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK	0xf8000000UL
-
-
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -265,7 +261,7 @@ _dl_start_user:\n\
 #define elf_machine_lookup_noplt_p(type) ((type) == R_386_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_RELOC_NOPLT	R_386_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_386_JMP_SLOT
 
 /* The i386 never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
@@ -285,6 +281,13 @@ dl_platform_init (void)
     _dl_platform = "i386";
   else if (*_dl_platform == '\0')
     _dl_platform = NULL;
+}
+
+static inline void
+elf_machine_fixup_plt (struct link_map *map, const Elf32_Rel *reloc,
+		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+{
+  *reloc_addr = value;
 }
 
 #endif /* !dl_machine_h */

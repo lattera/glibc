@@ -126,13 +126,6 @@ _dl_runtime_resolve:
 	 restore
 	.size _dl_runtime_resolve, . - _dl_runtime_resolve");
 
-/* The address of the JMP_SLOT reloc is the .plt entry, thus we don't
-   dereference the reloc's addr to get the final destination.  Ideally
-   there would be a generic way to return the value of the symbol from
-   elf_machine_relplt, but as it is, the address of the .plt entry is
-   good enough.  */
-#define ELF_FIXUP_RETURN_VALUE(map, result)  ((Elf32_Addr) &(result))
-
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_lookup_noexec_p(type) ((type) == R_SPARC_COPY)
@@ -142,16 +135,13 @@ _dl_runtime_resolve:
 #define elf_machine_lookup_noplt_p(type) ((type) == R_SPARC_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_RELOC_NOPLT	R_SPARC_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT
 
 /* The SPARC never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
 /* The SPARC overlaps DT_RELA and DT_PLTREL.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
-
-/* The PLT uses Elf32_Rela relocs.  */
-#define elf_machine_relplt elf_machine_rela
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -246,7 +236,30 @@ _dl_start_user:
 	.size   _dl_start_user,.-_dl_start_user
 .previous");
 
+static inline void
+elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+{
+  /* For thread safety, write the instructions from the bottom and
+     flush before we overwrite the critical "b,a".  This of course
+     need not be done during bootstrapping, since there are no threads.
+     But we also can't tell if we _can_ use flush, so don't. */
+
+  reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
+#ifndef RTLD_BOOTSTRAP
+  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
+    __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
+#endif
+
+  reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
+#ifndef RTLD_BOOTSTRAP
+  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
+    __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
+#endif
+}
+
 #ifdef RESOLVE
+
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
@@ -305,14 +318,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = value;
 	  break;
 	case R_SPARC_JMP_SLOT:
-	  /* For thread safety, write the instructions from the bottom and
-	     flush before we overwrite the critical "b,a".  */
-	  reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-	  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
-	    __asm __volatile ("flush %0+8" : : "r"(reloc_addr));
-	  reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-	  if (_dl_hwcap & HWCAP_SPARC_FLUSH)
-	    __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
+	  elf_machine_fixup_plt(map, reloc, reloc_addr, value);
 	  break;
 	case R_SPARC_8:
 	  *(char *) reloc_addr = value;

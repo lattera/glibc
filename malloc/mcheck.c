@@ -28,9 +28,10 @@
 #endif
 
 /* Old hook values.  */
-static void (*old_free_hook) __P ((__ptr_t ptr));
-static __ptr_t (*old_malloc_hook) __P ((__malloc_size_t size));
-static __ptr_t (*old_realloc_hook) __P ((__ptr_t ptr, __malloc_size_t size));
+static void (*old_free_hook) __P ((__ptr_t ptr, __const __ptr_t));
+static __ptr_t (*old_malloc_hook) __P ((__malloc_size_t size, const __ptr_t));
+static __ptr_t (*old_realloc_hook) __P ((__ptr_t ptr, __malloc_size_t size,
+					 __const __ptr_t));
 
 /* Function to call when something awful happens.  */
 static void (*abortfunc) __P ((enum mcheck_status));
@@ -91,10 +92,11 @@ checkhdr (hdr)
   return status;
 }
 
-static void freehook __P ((__ptr_t));
+static void freehook __P ((__ptr_t, const __ptr_t));
 static void
-freehook (ptr)
+freehook (ptr, caller)
      __ptr_t ptr;
+     const __ptr_t caller;
 {
   if (ptr)
     {
@@ -105,19 +107,27 @@ freehook (ptr)
       ptr = (__ptr_t) hdr;
     }
   __free_hook = old_free_hook;
-  free (ptr);
+  if (old_free_hook != NULL)
+    (*old_free_hook) (ptr, caller);
+  else
+    free (ptr);
   __free_hook = freehook;
 }
 
-static __ptr_t mallochook __P ((__malloc_size_t));
+static __ptr_t mallochook __P ((__malloc_size_t, const __ptr_t));
 static __ptr_t
-mallochook (size)
+mallochook (size, caller)
      __malloc_size_t size;
+     const __ptr_t caller;
 {
   struct hdr *hdr;
 
   __malloc_hook = old_malloc_hook;
-  hdr = (struct hdr *) malloc (sizeof (struct hdr) + size + 1);
+  if (old_malloc_hook != NULL)
+    hdr = (struct hdr *) (*old_malloc_hook) (sizeof (struct hdr) + size + 1,
+					     caller);
+  else
+    hdr = (struct hdr *) malloc (sizeof (struct hdr) + size + 1);
   __malloc_hook = mallochook;
   if (hdr == NULL)
     return NULL;
@@ -129,11 +139,12 @@ mallochook (size)
   return (__ptr_t) (hdr + 1);
 }
 
-static __ptr_t reallochook __P ((__ptr_t, __malloc_size_t));
+static __ptr_t reallochook __P ((__ptr_t, __malloc_size_t, const __ptr_t));
 static __ptr_t
-reallochook (ptr, size)
+reallochook (ptr, size, caller)
      __ptr_t ptr;
      __malloc_size_t size;
+     const __ptr_t caller;
 {
   struct hdr *hdr;
   __malloc_size_t osize;
@@ -155,7 +166,13 @@ reallochook (ptr, size)
   __free_hook = old_free_hook;
   __malloc_hook = old_malloc_hook;
   __realloc_hook = old_realloc_hook;
-  hdr = (struct hdr *) realloc ((__ptr_t) hdr, sizeof (struct hdr) + size + 1);
+  if (old_realloc_hook != NULL)
+    hdr = (struct hdr *) (*old_realloc_hook) ((__ptr_t) hdr,
+					      sizeof (struct hdr) + size + 1,
+					      caller);
+  else
+    hdr = (struct hdr *) realloc ((__ptr_t) hdr,
+				  sizeof (struct hdr) + size + 1);
   __free_hook = freehook;
   __malloc_hook = mallochook;
   __realloc_hook = reallochook;

@@ -226,8 +226,9 @@ __STRING2_COPY_TYPE (8);
 			++__dest;					      \
 			break;						      \
 		      case 3:						      \
-			*((__uint16_t *) __dest)++ =			      \
+			*((__uint16_t *) __dest) =			      \
 			  __STRING2_SMALL_GET16 (src, 0);		      \
+			__dest += sizeof (__uint16_t);			      \
 			*__dest = '\0';					      \
 			break;						      \
 		      case 4:						      \
@@ -236,8 +237,9 @@ __STRING2_COPY_TYPE (8);
 			__dest += 3;					      \
 			break;						      \
 		      case 5:						      \
-			*((__uint32_t *) __dest)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING2_SMALL_GET32 (src, 0);		      \
+			__dest += sizeof (__uint32_t);			      \
 			*__dest = '\0';					      \
 			break;						      \
 		      case 6:						      \

@@ -56,20 +56,19 @@ check (int thing, int number)
 }
 
 /* Complain if first two args don't strcmp as equal.  */
-void equal (const char *a, const char *b, int number)
+void
+equal (const char *a, const char *b, int number)
 {
   check(a != NULL && b != NULL && STREQ (a, b), number);
 }
 
 char one[50];
 char two[50];
+char *cp;
 
-int
-main (void)
+void
+test_strcmp (void)
 {
-  char *cp;
-
-  /* Test strcmp first because we use it to test other things.  */
   it = "strcmp";
   check (strcmp ("", "") == 0, 1);		/* Trivial case. */
   check (strcmp ("a", "a") == 0, 2);		/* Identity. */
@@ -115,8 +114,11 @@ main (void)
 	    }
 	}
   }
+}
 
-  /* Test strcpy next because we need it to set up other tests.  */
+void
+test_strcpy (void)
+{
   it = "strcpy";
   check (strcpy (one, "abcd") == one, 1); /* Returned value. */
   equal (one, "abcd", 2);		/* Basic test. */
@@ -132,8 +134,11 @@ main (void)
 
   (void) strcpy (one, "");
   equal (one, "", 7);			/* Boundary condition. */
+}
 
-  /* A closely related function is stpcpy.  */
+void
+test_stpcpy (void)
+{
   it = "stpcpy";
   check ((stpcpy (one, "a") - one) == 1, 1);
   equal (one, "a", 2);
@@ -193,10 +198,12 @@ main (void)
   check ((stpcpy (stpcpy (stpcpy (one, "a"), "b"), "c") - one) == 3, 40);
   equal (one, "abc", 41);
   equal (one + 4, "xxx", 42);
+}
 
-  /* stpncpy.  */
+void
+test_stpncpy (void)
+{
   it = "stpncpy";
-
   memset (one, 'x', sizeof (one));
   check (stpncpy (one, "abc", 2) == one + 2, 1);
   check (stpncpy (one, "abc", 3) == one + 3, 2);
@@ -206,8 +213,11 @@ main (void)
   check (one[4] == '\0' && one[5] == 'x', 6);
   check (stpncpy (one, "abcd", 6) == one + 4, 7);
   check (one[4] == '\0' && one[5] == '\0' && one[6] == 'x', 8);
+}
 
-  /* strcat.  */
+void
+test_strcat (void)
+{
   it = "strcat";
   (void) strcpy (one, "ijk");
   check (strcat (one, "lmn") == one, 1); /* Returned value. */
@@ -233,9 +243,13 @@ main (void)
   (void) strcpy (one, "");
   (void) strcat (one, "cd");
   equal (one, "cd", 9);
+}
 
-  /* strncat - first test it as strcat, with big counts,
-     then test the count mechanism.  */
+void
+test_strncat (void)
+{
+  /* First test it as strcat, with big counts, then test the count
+     mechanism.  */
   it = "strncat";
   (void) strcpy (one, "ijk");
   check (strncat (one, "lmn", 99) == one, 1);	/* Returned value. */
@@ -271,9 +285,12 @@ main (void)
 
   (void) strncat (one, "gh", 2);
   equal (one, "abcdgh", 12);		/* Count and length equal. */
+}
 
-  /* strncmp - first test as strcmp with big counts,
-     then test count code.  */
+void
+test_strncmp (void)
+{
+  /* First test as strcmp with big counts, then test count code.  */
   it = "strncmp";
   check (strncmp ("", "", 99) == 0, 1);	/* Trivial case. */
   check (strncmp ("a", "a", 99) == 0, 2);	/* Identity. */
@@ -288,8 +305,12 @@ main (void)
   check (strncmp ("abce", "abc", 3) == 0, 11);	/* Count == length. */
   check (strncmp ("abcd", "abce", 4) < 0, 12);	/* Nudging limit. */
   check (strncmp ("abc", "def", 0) == 0, 13);	/* Zero count. */
+}
 
-  /* strncpy - testing is a bit different because of odd semantics.  */
+void
+test_strncpy (void)
+{
+  /* Testing is a bit different because of odd semantics.  */
   it = "strncpy";
   check (strncpy (one, "abc", 4) == one, 1);	/* Returned value. */
   equal (one, "abc", 2);			/* Did the copy go right? */
@@ -326,8 +347,11 @@ main (void)
   (void) strncpy (two, one, 9);
   equal (two, "hi there", 14);		/* Just paranoia. */
   equal (one, "hi there", 15);		/* Stomped on source? */
+}
 
-  /* strlen.  */
+void
+test_strlen (void)
+{
   it = "strlen";
   check (strlen ("") == 0, 1);		/* Empty. */
   check (strlen ("a") == 1, 2);		/* Single char. */
@@ -344,8 +368,11 @@ main (void)
 	check (strlen (p) == 2, 4+i);
       }
    }
+}
 
-  /* strchr.  */
+void
+test_strchr (void)
+{
   it = "strchr";
   check (strchr ("abcd", 'z') == NULL, 1);	/* Not found. */
   (void) strcpy (one, "abcd");
@@ -370,9 +397,11 @@ main (void)
 	check (strchr (p, '/') == NULL, 9+i);
       }
    }
+}
 
-#if 0
-  /* index - just like strchr.  */
+void
+test_index (void)
+{
   it = "index";
   check (index ("abcd", 'z') == NULL, 1);	/* Not found. */
   (void) strcpy (one, "abcd");
@@ -385,9 +414,11 @@ main (void)
   (void) strcpy (one, "");
   check (index (one, 'b') == NULL, 7);	/* Empty string. */
   check (index (one, '\0') == one, 8);	/* NUL in empty string. */
-#endif
+}
 
-  /* strrchr.  */
+void
+test_strrchr (void)
+{
   it = "strrchr";
   check (strrchr ("abcd", 'z') == NULL, 1);	/* Not found. */
   (void) strcpy (one, "abcd");
@@ -412,9 +443,11 @@ main (void)
 	check (strrchr (p, '/') == NULL, 9+i);
       }
    }
+}
 
-#if 0
-  /* rindex - just like strrchr.  */
+void
+test_rindex (void)
+{
   it = "rindex";
   check (rindex ("abcd", 'z') == NULL, 1);	/* Not found. */
   (void) strcpy (one, "abcd");
@@ -427,9 +460,11 @@ main (void)
   (void) strcpy (one, "");
   check (rindex (one, 'b') == NULL, 7);	/* Empty string. */
   check (rindex (one, '\0') == one, 8);	/* NUL in empty string. */
-#endif
+}
 
-  /* strpbrk - somewhat like strchr.  */
+void
+test_strpbrk (void)
+{
   it = "strpbrk";
   check(strpbrk("abcd", "z") == NULL, 1);	/* Not found. */
   (void) strcpy(one, "abcd");
@@ -445,8 +480,11 @@ main (void)
   (void) strcpy(one, "");
   check(strpbrk(one, "bc") == NULL, 10);	/* Empty string. */
   check(strpbrk(one, "") == NULL, 11);	/* Both strings empty. */
+}
 
-  /* strstr - somewhat like strchr.  */
+void
+test_strstr (void)
+{
   it = "strstr";
   check(strstr("abcd", "z") == NULL, 1);	/* Not found. */
   check(strstr("abcd", "abx") == NULL, 2);	/* Dead end. */
@@ -469,24 +507,33 @@ main (void)
   check(strstr(one, "bca") == one+2, 15);	/* False start. */
   (void) strcpy(one, "bbbcabbca");
   check(strstr(one, "bbca") == one+1, 16);	/* With overlap. */
+}
 
-  /* strspn.  */
+void
+test_strspn (void)
+{
   it = "strspn";
   check(strspn("abcba", "abc") == 5, 1);	/* Whole string. */
   check(strspn("abcba", "ab") == 2, 2);	/* Partial. */
   check(strspn("abc", "qx") == 0, 3);	/* None. */
   check(strspn("", "ab") == 0, 4);	/* Null string. */
   check(strspn("abc", "") == 0, 5);	/* Null search list. */
+}
 
-  /* strcspn.  */
+void
+test_strcspn (void)
+{
   it = "strcspn";
   check(strcspn("abcba", "qx") == 5, 1);	/* Whole string. */
   check(strcspn("abcba", "cx") == 2, 2);	/* Partial. */
   check(strcspn("abc", "abc") == 0, 3);	/* None. */
   check(strcspn("", "ab") == 0, 4);	/* Null string. */
   check(strcspn("abc", "") == 3, 5);	/* Null search list. */
+}
 
-  /* strtok - the hard one.  */
+void
+test_strtok (void)
+{
   it = "strtok";
   (void) strcpy(one, "first, second, third");
   equal(strtok(one, ", "), "first", 1);	/* Basic test. */
@@ -532,8 +579,11 @@ main (void)
   equal(one, "a", 31);			/* Stomped old tokens? */
   equal(one+2, "b", 32);
   equal(one+4, "c", 33);
+}
 
-  /* strtok_r.  */
+void
+test_strtok_r (void)
+{
   it = "strtok_r";
   (void) strcpy(one, "first, second, third");
   equal(strtok_r(one, ", ", &cp), "first", 1);	/* Basic test. */
@@ -579,8 +629,11 @@ main (void)
   equal(one, "a", 31);			/* Stomped old tokens? */
   equal(one+2, "b", 32);
   equal(one+4, "c", 33);
+}
 
-  /* strsep.  */
+void
+test_strsep (void)
+{
   it = "strsep";
   cp = strcpy(one, "first, second, third");
   equal(strsep(&cp, ", "), "first", 1);	/* Basic test. */
@@ -640,7 +693,21 @@ main (void)
   equal(one+2, "b", 45);
   equal(one+4, "c", 46);
 
-  /* memcmp.  */
+  {
+    char text[] = "This,is,a,test";
+    char *list = text;
+    it = "strsep";
+    check (!strcmp ("This", strsep (&list, ",")), 1);
+    check (!strcmp ("is", strsep (&list, ",")), 2);
+    check (!strcmp ("a", strsep (&list, ",")), 3);
+    check (!strcmp ("test", strsep (&list, ",")), 4);
+    check (strsep (&list, ",") == NULL, 5);
+  }
+}
+
+void
+test_memcmp (void)
+{
   it = "memcmp";
   check(memcmp("a", "a", 1) == 0, 1);		/* Identity. */
   check(memcmp("abc", "abc", 3) == 0, 2);	/* Multicharacter. */
@@ -650,8 +717,11 @@ main (void)
   check(memcmp("a\203", "a\003", 2) > 0, 6);
   check(memcmp("abce", "abcd", 3) == 0, 7);	/* Count limited. */
   check(memcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
+}
 
-  /* memchr.  */
+void
+test_memchr (void)
+{
   it = "memchr";
   check(memchr("abcd", 'z', 4) == NULL, 1);	/* Not found. */
   (void) strcpy(one, "abcd");
@@ -690,8 +760,11 @@ main (void)
       }
     }
   }
+}
 
-  /* memcpy - need not work for overlap.  */
+void
+test_memcpy (void)
+{
   it = "memcpy";
   check(memcpy(one, "abc", 4) == one, 1);	/* Returned value. */
   equal(one, "abc", 2);			/* Did the copy go right? */
@@ -709,8 +782,11 @@ main (void)
   (void) memcpy(two, one, 9);
   equal(two, "hi there", 5);		/* Just paranoia. */
   equal(one, "hi there", 6);		/* Stomped on source? */
+}
 
-  /* memmove - must work on overlap.  */
+void
+test_memmove (void)
+{
   it = "memmove";
   check(memmove(one, "abc", 4) == one, 1);	/* Returned value. */
   equal(one, "abc", 2);			/* Did the copy go right? */
@@ -740,11 +816,15 @@ main (void)
   (void) strcpy(one, "abcdefgh");
   (void) memmove(one, one, 9);
   equal(one, "abcdefgh", 9);		/* 100% overlap. */
+}
 
-  /* memccpy - first test like memcpy, then the search part
-     The SVID, the only place where memccpy is mentioned, says
-     overlap might fail, so we don't try it.  Besides, it's hard
-     to see the rationale for a non-left-to-right memccpy.  */
+void
+test_memccpy (void)
+{
+  /* First test like memcpy, then the search part The SVID, the only
+     place where memccpy is mentioned, says overlap might fail, so we
+     don't try it.  Besides, it's hard to see the rationale for a
+     non-left-to-right memccpy.  */
   it = "memccpy";
   check(memccpy(one, "abc", 'q', 4) == NULL, 1);	/* Returned value. */
   equal(one, "abc", 2);			/* Did the copy go right? */
@@ -778,8 +858,11 @@ main (void)
   (void) strcpy(one, "xyz");
   check(memccpy(two, one, 'x', 1) == two+1, 14);	/* Singleton. */
   equal(two, "xbcdlebee", 15);
+}
 
-  /* memset.  */
+void
+test_memset (void)
+{
   it = "memset";
   (void) strcpy(one, "abcdefgh");
   check(memset(one+1, 'x', 3) == one+1, 1);	/* Return value. */
@@ -831,9 +914,13 @@ main (void)
 	    check(0,7+i+j*256+(c != 0)*256*256);
 	  }
   }
+}
 
-  /* bcopy - much like memcpy.
-     Berklix manual is silent about overlap, so don't test it.  */
+void
+test_bcopy (void)
+{
+  /* Much like memcpy.  Berklix manual is silent about overlap, so
+     don't test it.  */
   it = "bcopy";
   (void) bcopy("abc", one, 4);
   equal(one, "abc", 1);			/* Simple copy. */
@@ -851,8 +938,11 @@ main (void)
   (void) bcopy(one, two, 9);
   equal(two, "hi there", 4);		/* Just paranoia. */
   equal(one, "hi there", 5);		/* Stomped on source? */
+}
 
-  /* bzero.  */
+void
+test_bzero (void)
+{
   it = "bzero";
   (void) strcpy(one, "abcdef");
   bzero(one+2, 2);
@@ -863,9 +953,11 @@ main (void)
   (void) strcpy(one, "abcdef");
   bzero(one+2, 0);
   equal(one, "abcdef", 4);		/* Zero-length copy. */
+}
 
-#if 0
-  /* bcmp - somewhat like memcmp.  */
+void
+test_bcmp (void)
+{
   it = "bcmp";
   check(bcmp("a", "a", 1) == 0, 1);	/* Identity. */
   check(bcmp("abc", "abc", 3) == 0, 2);	/* Multicharacter. */
@@ -874,40 +966,123 @@ main (void)
   check(bcmp("alph", "beta", 4) != 0, 5);
   check(bcmp("abce", "abcd", 3) == 0, 6);	/* Count limited. */
   check(bcmp("abc", "def", 0) == 0, 8);	/* Zero count. */
-#endif
+}
 
-  {
-    char text[] = "This,is,a,test";
-    char *list = text;
-    it = "strsep";
-    check (!strcmp ("This", strsep (&list, ",")), 1);
-    check (!strcmp ("is", strsep (&list, ",")), 2);
-    check (!strcmp ("a", strsep (&list, ",")), 3);
-    check (!strcmp ("test", strsep (&list, ",")), 4);
-    check (strsep (&list, ",") == NULL, 5);
-  }
+void
+test_strerror (void)
+{
+  int f;
+  it = "strerror";
+  f = __open("/", O_WRONLY);	/* Should always fail. */
+  check(f < 0 && errno > 0 && errno < _sys_nerr, 1);
+  equal(strerror(errno), _sys_errlist[errno], 2);
+}
+
+int
+main (void)
+{
+  int status;
+
+  /* Test strcmp first because we use it to test other things.  */
+  test_strcmp ();
+
+  /* Test strcpy next because we need it to set up other tests.  */
+  test_strcpy ();
+
+  /* A closely related function is stpcpy.  */
+  test_stpcpy ();
+
+  /* stpncpy.  */
+  test_stpncpy ();
+
+  /* strcat.  */
+  test_strcat ();
+
+  /* strncat.  */
+  test_strncat ();
+
+  /* strncmp.  */
+  test_strncmp ();
+
+  /* strncpy.  */
+  test_strncpy ();
+
+  /* strlen.  */
+  test_strlen ();
+
+  /* strchr.  */
+  test_strchr ();
+
+  /* index - just like strchr.  */
+  test_index ();
+
+  /* strrchr.  */
+  test_strrchr ();
+
+  /* rindex - just like strrchr.  */
+  test_rindex ();
+
+  /* strpbrk - somewhat like strchr.  */
+  test_strpbrk ();
+
+  /* strstr - somewhat like strchr.  */
+  test_strstr ();
+
+  /* strspn.  */
+  test_strspn ();
+
+  /* strcspn.  */
+  test_strcspn ();
+
+  /* strtok - the hard one.  */
+  test_strtok ();
+
+  /* strtok_r.  */
+  test_strtok_r ();
+
+  /* strsep.  */
+  test_strsep ();
+
+  /* memcmp.  */
+  test_memcmp ();
+
+  /* memchr.  */
+  test_memchr ();
+
+  /* memcpy - need not work for overlap.  */
+  test_memcpy ();
+
+  /* memmove - must work on overlap.  */
+  test_memmove ();
+
+  /* memccpy.  */
+  test_memccpy ();
+
+  /* memset.  */
+  test_memset ();
+
+  /* bcopy.  */
+  test_bcopy ();
+
+  /* bzero.  */
+  test_bzero ();
+
+  /* bcmp - somewhat like memcmp.  */
+  test_bcmp ();
 
   /* strerror - VERY system-dependent.  */
-  {
-    int f;
-    it = "strerror";
-    f = __open("/", O_WRONLY);	/* Should always fail. */
-    check(f < 0 && errno > 0 && errno < _sys_nerr, 1);
-    equal(strerror(errno), _sys_errlist[errno], 2);
-  }
+  test_strerror ();
 
-  {
-    int status;
-    if (errors == 0)
-      {
-	status = EXIT_SUCCESS;
-	puts("No errors.");
-      }
-    else
-      {
-	status = EXIT_FAILURE;
-	printf("%Zd errors.\n", errors);
-      }
-    exit(status);
-  }
+
+  if (errors == 0)
+    {
+      status = EXIT_SUCCESS;
+      puts("No errors.");
+    }
+  else
+    {
+      status = EXIT_FAILURE;
+      printf("%Zd errors.\n", errors);
+    }
+  exit(status);
 }

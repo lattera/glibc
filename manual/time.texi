@@ -695,8 +695,9 @@ time conversion (@pxref{Locales}).
 Ordinary characters appearing in the @var{template} are copied to the
 output string @var{s}; this can include multibyte character sequences.
 Conversion specifiers are introduced by a @samp{%} character, followed
-by an optional flag which can be one of the following.  These flags,
-which are GNU extensions, affect only the output of numbers:
+by an optional flag which can be one of the following.  These flags
+are all GNU extensions. The first three affect only the output of
+numbers:
 
 @table @code
 @item _

@@ -27,6 +27,7 @@
 #include <stddef.h>
 
 #include <elf.h>
+#include <dlfcn.h>
 
 __BEGIN_DECLS
 
@@ -357,6 +358,9 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    const char *reference_name,
 						    const struct r_found_version *version,
 						    struct link_map *skip_this);
+
+/* Locate shared object containing the given address.  */
+extern int _dl_addr (const void *address, Dl_info *info);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);

@@ -178,8 +178,25 @@ extern __malloc_ptr_t malloc_get_state __MALLOC_P ((void));
    malloc_get_state(). */
 extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
 
-#if defined(__GLIBC__) || defined(MALLOC_HOOKS)
+#ifdef __GLIBC__
+/* Hooks for debugging versions. */
+extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
+extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
+					__const __malloc_ptr_t));
+extern __malloc_ptr_t (*__malloc_hook) __MALLOC_P ((size_t __size,
+						    __const __malloc_ptr_t));
+extern __malloc_ptr_t (*__realloc_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
+						     size_t __size,
+						     __const __malloc_ptr_t));
+extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
+						      size_t __alignment,
+						      __const __malloc_ptr_t));
+extern void (*__after_morecore_hook) __MALLOC_P ((void));
 
+/* Activate a standard set of debugging hooks. */
+extern void __malloc_check_init __MALLOC_P ((void));
+#else
+#ifdef MALLOC_HOOKS
 /* Hooks for debugging versions. */
 extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
 extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
@@ -192,7 +209,7 @@ extern void (*__after_morecore_hook) __MALLOC_P ((void));
 
 /* Activate a standard set of debugging hooks. */
 extern void __malloc_check_init __MALLOC_P ((void));
-
+#endif
 #endif
 
 #ifdef __cplusplus

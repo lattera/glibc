@@ -63,7 +63,10 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 LN_S = @LN_S@
 MSGFMT = @MSGFMT@
+
+# Script execution tools.
 BASH = @BASH@
 KSH = @KSH@
+PERL = @PERL@
 
 # More variables may be inserted below by configure.

@@ -1,3 +1,99 @@
+1997-09-27 01:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (extra-objs): Depend in before-compile.
+
+	* configure.in: Locate Perl and substitute with complete path.
+	* config.make.in: Add PERL for substitution.
+	* elf/Makefile (routines): Add dl-addr.
+	* elf/dladdr.c: Move the real code into ...
+	* elf/dl-addr.c: New file.
+	* elf/link.h: Add prototype for _dl_addr.
+
+	* elf/dladdr.c (dladdr): Change address argument to be const.
+	* elf/dlfcn.h: Likewise.
+
+	* locale/C_name.c: Add _nl_POSIX_name.
+	* locale/localeinfo.h: Add declaration of _nl_POSIX_name.
+	* locale/findlocale.c (_nl_find_locale): Use _nl_POSIX_name.
+	(_nl_remove_locale): Free name of data set.
+	* locale/setlocale.c (clever_copy): Remove.
+	(new_composite_name): Use _nl_C_name and _nl_POSIX_name in compare.
+	(setname): Only remove old name when it is for category LC_ALL.
+
+	Change malloc, free, realloc, and memalign hooks for glibc to take
+	another parameter indicating the location of the caller.
+	* malloc/malloc.c: Change hook functions and variables.
+	* malloc/malloc.h: Likewise.
+	* malloc/mcheck.c: Likewise.  Make sure later hooked function also
+	get the original caller address.
+	* malloc/mtrace.c: Likewise.
+	(tr_where): If no information in _mtrace_file is given use the
+	information about the caller.
+	* malloc/Makefile (distribute): Replace mtrace.awk by mtrace.pl.
+	Add rules to install mtrace.pl after rewriting.
+	* malloc/mtrace.pl: New file.  Based on the old AWK script but
+	with extended functionality.
+	* malloc/mtrace.awk: Removed.
+
+	* po/fr.po: New version.
+
+	* string/Makefile: Do use builtins for tester.c and inl-tester.c.
+	* string/tester.c: Rewrite.  Split in many small functions to not
+	exceed gcc's limits.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add prctl.
+
+1997-09-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h (__stpcpy_small): Don't use casts as
+	lvalues.
+
+1997-09-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/time.texi (Formatting Date and Time): Clarify
+	explanation of strftime flags a bit.
+	Suggested by Robert Bihlmeyer <robbe@orcus.priv.at>.
+
+1997-09-25 00:13  David S. Miller  <davem@tanya.rutgers.edu>
+
+	* sysdeps/libm-ieee754/s_exp2f.c: Protect _GNU_SOURCE definition.
+	Fix typo, it is FLT_MANT_DIG.
+
+1997-09-24 18:52  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* math/atest-exp2.c: Include <stdlib/gmp.h> instead of <gmp.h>.
+
+1997-08-27 08:10  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/libio.h, libio/libioP.h: Support libio in libstdc++.
+
+	* libio/libio.h (_IO_peekc): Defined as _IO_peekc_unlocked if
+	_IO_MTSAFE_IO is undefined.
+
+1997-09-24 23:27  Richard Henderson  <rth@cygnus.com>
+
+	* elf/dl-runtime.c (fixup): Don't go through elf_machine_relplt, but
+	lookup the value of the target symbol ourselves and call the new
+	elf_machine_fixup_plt.  This kills the ELF_FIXUP_RETURN_VALUE hack.
+	(profile_fixup): Likewise, but don't fix up the plt.
+	* elf/rtld.c (_dl_main): ELF_MACHINE_RELOC_NOPLT renamed _JMP_SLOT.
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_RELOC_NOPLT): Renamed.
+	(elf_alpha_fix_plt): Renamed elf_machine_fixup_plt.
+	* sysdeps/i386/dl-machine.h (elf_machine_relplt): Killed.
+	(ELF_MACHINE_JMP_SLOT): Renamed.
+	(elf_machine_fixup_plt): New function.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	(elf_machine_rela): Moved JMP_SLOT fixup out to elf_machine_fixup_plt.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/stub/dl-machine.h: Update, sorta.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Do profiling.
+	(TRAMPOLINE_TEMPLATE): From the carcas of _RUNTIME_TRAMPOLINE, do
+	both normal and profile code.
+	(elf_machine_rela): Handle r_addend for .got and .plt too.
+
 1997-09-25 00:23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-profile.c: Correct implementation.

@@ -130,24 +130,6 @@ __libc_lock_define_initialized (, __libc_setlocale_lock)
   } while (0)
 
 
-static inline char *
-clever_copy (const char *string)
-{
-  size_t len;
-  char *new;
-
-  if (strcmp (string, "C") == 0 || strcmp (string, "POSIX") == 0)
-    /* This return is dangerous because the returned string might be
-       placed in read-only memory.  But everything should be set up to
-       handle this case.  */
-    return (char *) _nl_C_name;
-
-  len = strlen (string) + 1;
-  new = (char *) malloc (len);
-  return new != NULL ? memcpy (new, string, len) : NULL;
-}
-
-
 /* Construct a new composite name.  */
 static inline char *
 new_composite_name (int category, const char *newnames[LC_ALL])
@@ -172,7 +154,8 @@ new_composite_name (int category, const char *newnames[LC_ALL])
   if (same)
     {
       /* All the categories use the same name.  */
-      if (strcmp (newnames[0], "C") == 0 || strcmp (newnames[0], "POSIX") == 0)
+      if (strcmp (newnames[0], _nl_C_name) == 0
+	  || strcmp (newnames[0], _nl_POSIX_name) == 0)
 	return (char *) _nl_C_name;
 
       new = malloc (last_len + 1);
@@ -207,8 +190,8 @@ setname (int category, const char *name)
   if (_nl_current_names[category] == name)
     return;
 
-  if (_nl_current_names[category] != _nl_C_name)
-    free ((void *) _nl_current_names[category]);
+  if (category == LC_ALL && _nl_current_names[category] != _nl_C_name)
+    free ((char *) _nl_current_names[category]);
 
   _nl_current_names[category] = name;
 }
@@ -375,7 +358,10 @@ setlocale (int category, const char *locale)
 	    goto abort_single;
 
 	  /* We must not simply free a global locale since we have no
-	     control over the usage.  So we mark it as un-deletable.  */
+	     control over the usage.  So we mark it as un-deletable.
+
+	     Note: do ont remove the `if', it's necessary to copy with
+	     the builtin locale data.  */
 	  if (newdata->usage_count != MAX_USAGE_COUNT)
 	    newdata->usage_count = MAX_USAGE_COUNT;
 	}

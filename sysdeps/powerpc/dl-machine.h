@@ -197,8 +197,7 @@ _dl_runtime_resolve:
  # ...unwind the stack frame, and jump to the PLT entry we updated.
 	addi 1,1,48
 	bctr
-0:
-	.size	 _dl_runtime_resolve,0b-_dl_runtime_resolve
+	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve
 
 	.align 2
 	.globl _dl_prof_resolve
@@ -395,10 +394,6 @@ static ElfW(Addr) _dl_preferred_address = 1
      _dl_preferred_address = mapstart;					      \
 } )
 
-/* We require the address of the PLT entry returned from fixup, not
-   the first word of the PLT entry. */
-#define ELF_FIXUP_RETURN_VALUE(map, result)  ((Elf32_Addr) &(result))
-
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_lookup_noexec_p(type) ((type) == R_PPC_COPY)
@@ -413,7 +408,7 @@ static ElfW(Addr) _dl_preferred_address = 1
 					  (type) == R_PPC_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_RELOC_NOPLT	R_PPC_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_PPC_JMP_SLOT
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
@@ -554,6 +549,70 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
   /* elf_machine_runtime_setup handles this. */
 }
 
+static inline void
+elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
+                      Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
+{
+  Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
+  if (delta << 6 >> 6 == delta)
+    *reloc_addr = OPCODE_B (delta);
+  else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
+    *reloc_addr = OPCODE_BA (finaladdr);
+  else
+    {
+      Elf32_Word *plt;
+      Elf32_Word index;
+
+      plt = (Elf32_Word *)((char *)map->l_addr
+			   + map->l_info[DT_PLTGOT]->d_un.d_val);
+      index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
+      if (index >= PLT_DOUBLE_SIZE)
+	{
+	  /* Slots greater than or equal to 2^13 have 4 words available
+	     instead of two.  */
+	  /* FIXME: There are some possible race conditions in this code,
+	     when called from 'fixup'.
+
+	     1) Suppose that a lazy PLT entry is executing, a context switch
+	     between threads (or a signal) occurs, and the new thread or
+	     signal handler calls the same lazy PLT entry.  Then the PLT entry
+	     would be changed while it's being run, which will cause a segfault
+	     (almost always).
+
+	     2) Suppose the reverse: that a lazy PLT entry is being updated,
+	     a context switch occurs, and the new code calls the lazy PLT
+	     entry that is being updated.  Then the half-fixed PLT entry will
+	     be executed, which will also almost always cause a segfault.
+
+	     These problems don't happen with the 2-word entries, because
+	     only one of the two instructions are changed when a lazy entry
+	     is retargeted at the actual PLT entry; the li instruction stays
+	     the same (we have to update it anyway, because we might not be
+	     updating a lazy PLT entry).  */
+
+	  reloc_addr[0] = OPCODE_LI (11, finaladdr);
+	  reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
+	  reloc_addr[2] = OPCODE_MTCTR (11);
+	  reloc_addr[3] = OPCODE_BCTR ();
+	}
+      else
+	{
+	  Elf32_Word num_plt_entries;
+
+	  num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
+			     / sizeof(Elf32_Rela));
+
+	  plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
+	  reloc_addr[0] = OPCODE_LI (11, index*4);
+	  reloc_addr[1] = OPCODE_B (-(4*(index*2
+					 + 1
+					 - PLT_LONGBRANCH_ENTRY_WORDS
+					 + PLT_INITIAL_ENTRY_WORDS)));
+	}
+    }
+  MODIFIED_CODE (reloc_addr);
+}
+
 #endif /* dl_machine_h */
 
 #ifdef RESOLVE
@@ -674,66 +733,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     }
   else if (rinfo == R_PPC_JMP_SLOT)
     {
-      Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
-      if (delta << 6 >> 6 == delta)
-	*reloc_addr = OPCODE_B (delta);
-      else if (finaladdr <= 0x01fffffc || finaladdr >= 0xfe000000)
-	*reloc_addr = OPCODE_BA (finaladdr);
-      else
-	{
-	  Elf32_Word *plt;
-	  Elf32_Word index;
-
-	  plt = (Elf32_Word *)((char *)map->l_addr
-			       + map->l_info[DT_PLTGOT]->d_un.d_val);
-	  index = (reloc_addr - plt - PLT_INITIAL_ENTRY_WORDS)/2;
-	  if (index >= PLT_DOUBLE_SIZE)
-	    {
-	      /* Slots greater than or equal to 2^13 have 4 words available
-		 instead of two.  */
-	      /* FIXME: There are some possible race conditions in this code,
-		 when called from 'fixup'.
-
-		 1) Suppose that a lazy PLT entry is executing, a
-		 context switch between threads (or a signal) occurs,
-		 and the new thread or signal handler calls the same
-		 lazy PLT entry.  Then the PLT entry would be changed
-		 while it's being run, which will cause a segfault
-		 (almost always).
-
-		 2) Suppose the reverse: that a lazy PLT entry is
-		 being updated, a context switch occurs, and the new
-		 code calls the lazy PLT entry that is being updated.
-		 Then the half-fixed PLT entry will be executed, which
-		 will also almost always cause a segfault.
-
-		 These problems don't happen with the 2-word entries, because
-		 only one of the two instructions are changed when a lazy
-		 entry is retargeted at the actual PLT entry; the li
-		 instruction stays the same (we have to update it anyway,
-		 because we might not be updating a lazy PLT entry).  */
-	      reloc_addr[0] = OPCODE_LI (11, finaladdr);
-	      reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
-	      reloc_addr[2] = OPCODE_MTCTR (11);
-	      reloc_addr[3] = OPCODE_BCTR ();
-	    }
-	  else
-	    {
-	      Elf32_Word num_plt_entries;
-
-	      num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-				 / sizeof(Elf32_Rela));
-
-	      plt[index+PLT_DATA_START_WORDS (num_plt_entries)] = finaladdr;
-	      reloc_addr[0] = OPCODE_LI (11, index*4);
-	      reloc_addr[1] =
-		OPCODE_B (-(4*(index*2
-			       + 1
-			       - PLT_LONGBRANCH_ENTRY_WORDS
-			       + PLT_INITIAL_ENTRY_WORDS)));
-	    }
-	}
-      MODIFIED_CODE (reloc_addr);
+      elf_machine_fixup_plt (map, reloc, reloc_addr, finalvalue);
     }
   else
     {

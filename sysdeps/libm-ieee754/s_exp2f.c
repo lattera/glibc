@@ -25,7 +25,9 @@
    It has been slightly modified to compute 2^x instead of e^x, and for
    single-precision.
    */
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
 #include <float.h>
 #include <ieee754.h>
 #include <math.h>
@@ -116,7 +118,7 @@ __ieee754_exp2f (float x)
   else if (isgreaterequal (x, (float) FLT_MAX_EXP))
     return huge * huge;
   /* And underflow (including -inf).  */
-  else if (isless (x, (float) (FLT_MIN_EXP - FLT_MANT_DIF)))
+  else if (isless (x, (float) (FLT_MIN_EXP - FLT_MANT_DIG)))
     return TWOM100 * TWOM100;
   /* Maybe the result needs to be a denormalised number...  */
   else if (!isnan (x))

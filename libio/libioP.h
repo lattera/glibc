@@ -24,7 +24,14 @@
    General Public License.  */
 
 #include <errno.h>
-#include <bits/libc-lock.h>
+#ifndef __set_errno
+# define __set_errno(Val) errno = (Val)
+#endif
+#if defined __GLIBC__ && __GLIBC__ >= 2
+# include <bits/libc-lock.h>
+#else
+/*# include <comthread.h>*/
+#endif
 
 #include "iolibio.h"
 

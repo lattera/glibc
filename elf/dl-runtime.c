@@ -70,37 +70,16 @@ _dl_object_relocation_scope (struct link_map *l)
 
 #include "dynamic-link.h"
 
-/* Figure out the right type, Rel or Rela.  */
-#define elf_machine_rel 1
-#define elf_machine_rela 2
-#if elf_machine_relplt == elf_machine_rel
-# define PLTREL ElfW(Rel)
-#elif elf_machine_relplt == elf_machine_rela
-# define PLTREL ElfW(Rela)
+#if !defined ELF_MACHINE_NO_RELA || ELF_MACHINE_NO_REL
+# define PLTREL  ElfW(Rela)
 #else
-# error "dl-machine.h bug: elf_machine_relplt not rel or rela"
+# define PLTREL  ElfW(Rel)
 #endif
-#undef elf_machine_rel
-#undef elf_machine_rela
 
 #ifndef VERSYMIDX
 # define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
 
-#ifndef ELF_FIXUP_RETURN_VALUE
-#define ELF_FIXUP_RETURN_VALUE(map, result)  (result)
-#endif
-
-/* We need to define the function as a local symbol so that the reference
-   in the trampoline code will be a local PC-relative call.  Tell the
-   compiler not to worry that the function appears not to be called.  */
-
-static ElfW(Addr) fixup (
-#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
-			 ELF_MACHINE_RUNTIME_FIXUP_ARGS,
-#endif
-			 struct link_map *l, ElfW(Word) reloc_offset)
-     __attribute__ ((unused));
 
 /* This function is called through a special trampoline from the PLT the
    first time each PLT entry is called.  We must perform the relocation
@@ -109,7 +88,7 @@ static ElfW(Addr) fixup (
    to that address.  Future calls will bounce directly from the PLT to the
    function.  */
 
-static ElfW(Addr)
+static ElfW(Addr) __attribute__ ((unused))
 fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -124,57 +103,63 @@ fixup (
   const PLTREL *const reloc
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
-  ElfW(Addr) *const rel_addr = (ElfW(Addr) *)(l->l_addr + reloc->r_offset);
+  const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+  void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
+  ElfW(Addr) value;
 
   /* Set up the scope to find symbols referenced by this object.  */
   struct link_map **scope = _dl_object_relocation_scope (l);
 
-  {
-    const struct r_found_version *here_version;
+  /* Sanity check that we're really looking at a PLT relocation.  */
+  assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-    /* This macro is used as a callback from the elf_machine_relplt code.  */
-#define RESOLVE(ref, version, flags) \
-  ((version) != NULL && (version)->hash != 0				      \
-   ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, (ref), scope,     \
-				  l->l_name, (version), (flags))	      \
-   : _dl_lookup_symbol (strtab + (*ref)->st_name, (ref), scope,		      \
-			l->l_name, (flags)))
-#include "dynamic-link.h"
-
-    /* Perform the specified relocation.  */
-    if (l->l_info[VERSYMIDX (DT_VERSYM)])
+   /* Look up the target symbol.  */
+  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+    {
+    default:
       {
-	const ElfW(Half) *version =
-	  (const ElfW(Half) *) (l->l_addr +
-				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
-	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
+	const ElfW(Half) *vernum = (const ElfW(Half) *)
+	  (l->l_addr + l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
+	const struct r_found_version *version = &l->l_versions[ndx];
 
-	here_version = &l->l_versions[ndx];
+	if (version->hash != 0)
+	  {
+	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
+						&sym, scope, l->l_name,
+						version, ELF_MACHINE_JMP_SLOT);
+	    break;
+	  }
       }
-    else
-      here_version = NULL;
+    case 0:
+      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+				 l->l_name, ELF_MACHINE_JMP_SLOT);
+    }
 
-    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			here_version, (void *) rel_addr);
-  }
+  /* Currently value contains the base load address of the object
+     that defines sym.  Now add in the symbol offset.  */
+  value = (sym ? value + sym->st_value : 0);
+
+  /* And now the relocation addend.  */
+#ifndef ELF_MACHINE_NO_RELA
+  if (l->l_info[DT_PLTRELSZ]->d_un.d_val == sizeof (ElfW(Rela)))
+    value += reloc->r_addend;
+#elif ELF_MACHINE_NO_REL
+  value += reloc->r_addend;
+#endif
+
+  /* Finally, fix up the plt itself.  */
+  elf_machine_fixup_plt (l, reloc, rel_addr, value);
 
   *_dl_global_scope_end = NULL;
 
-  /* Return the address that was written by the relocation.  */
-  return ELF_FIXUP_RETURN_VALUE(l, *rel_addr);
+  return value;
 }
 
 
 #ifndef PROF
-static ElfW(Addr)
-profile_fixup (
-#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
-	       ELF_MACHINE_RUNTIME_FIXUP_ARGS,
-#endif
-	       struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
-     __attribute__ ((unused));
 
-static ElfW(Addr)
+static ElfW(Addr) __attribute__ ((unused))
 profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -182,6 +167,7 @@ profile_fixup (
        struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
+
   const ElfW(Sym) *const symtab
     = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
   const char *strtab =
@@ -190,47 +176,57 @@ profile_fixup (
   const PLTREL *const reloc
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
-  ElfW(Addr) result;
+  const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+  ElfW(Addr) value;
 
   /* Set up the scope to find symbols referenced by this object.  */
   struct link_map **scope = _dl_object_relocation_scope (l);
 
-  {
-    const struct r_found_version *here_version;
+  /* Sanity check that we're really looking at a PLT relocation.  */
+  assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-    /* This macro is used as a callback from the elf_machine_relplt code.  */
-#define RESOLVE(ref, version, flags) \
-  ((version) != NULL && (version)->hash != 0				      \
-   ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, (ref), scope,     \
-				  l->l_name, (version), (flags))	      \
-   : _dl_lookup_symbol (strtab + (*ref)->st_name, (ref), scope,		      \
-			l->l_name, (flags)))
-#include "dynamic-link.h"
-
-    /* Perform the specified relocation.  */
-    if (l->l_info[VERSYMIDX (DT_VERSYM)])
+  /* Look up the target symbol.  */
+  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+    {
+    default:
       {
-	const ElfW(Half) *version =
-	  (const ElfW(Half) *) (l->l_addr +
-				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
-	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
+	const ElfW(Half) *vernum = (const ElfW(Half) *)
+	  (l->l_addr + l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
+	const struct r_found_version *version = &l->l_versions[ndx];
 
-	here_version = &l->l_versions[ndx];
+	if (version->hash != 0)
+	  {
+	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
+						&sym, scope, l->l_name,
+						version, ELF_MACHINE_JMP_SLOT);
+	    break;
+	  }
       }
-    else
-      here_version = NULL;
+    case 0:
+      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+				 l->l_name, ELF_MACHINE_JMP_SLOT);
+    }
 
-    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			here_version, (void *) &result);
-  }
+  /* Currently value contains the base load address of the object
+     that defines sym.  Now add in the symbol offset.  */
+  value = (sym ? value + sym->st_value : 0);
+
+  /* And now the relocation addend.  */
+#ifndef ELF_MACHINE_NO_RELA
+  if (l->l_info[DT_PLTRELSZ]->d_un.d_val == sizeof (ElfW(Rela)))
+    value += reloc->r_addend;
+#elif ELF_MACHINE_NO_REL
+  value += reloc->r_addend;
+#endif
 
   *_dl_global_scope_end = NULL;
-  (*mcount_fct) (retaddr, ELF_FIXUP_RETURN_VALUE (l, result));
+  (*mcount_fct) (retaddr, value);
 
-  /* Return the address that was written by the relocation.  */
-  return ELF_FIXUP_RETURN_VALUE (l, result);
+  return value;
 }
-#endif
+
+#endif /* PROF */
 
 
 /* This macro is defined in dl-machine.h to define the entry point called

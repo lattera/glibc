@@ -107,8 +107,9 @@ extern const char *const _nl_category_names[LC_ALL + 1];
 extern const size_t _nl_category_name_sizes[LC_ALL + 1];
 extern struct locale_data * *const _nl_current[LC_ALL + 1];
 
-/* Name of the standard locale.  */
+/* Name of the standard locales.  */
 extern const char _nl_C_name[];
+extern const char _nl_POSIX_name[];
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \

@@ -67,7 +67,26 @@ elf_machine_load_address (void)
   return pc - *(Elf64_Addr *)(elf_pic_register + la);
 }
 
+static inline void
+elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
+                      Elf64_Addr *reloc_addr, Elf64_Addr value)
+{
+  Elf64_Dyn *pltfmt = map->l_info[DT_SPARC(PLTFMT)];
+  switch (pltfmt ? pltfmt->d_un.d_val : 0)
+    {
+    case 1: /* .got.plt with absolute addresses */
+      *reloc_addr = value;
+      break;
+    case 2: /* .got.plt with got-relative addresses */
+      *reloc_addr = value - (map->l_info[DT_PLTGOT]->d_un.d_ptr + map->l_addr);
+      break;
+    default:
+      assert (! "unexpected .plt format type");
+    }
+}
+
 #ifdef RESOLVE
+
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
@@ -160,21 +179,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 
 	case R_SPARC_JMP_SLOT:
-	  {
-	    Elf64_Dyn *pltfmt = map->l_info[DT_SPARC(PLTFMT)];
-	    switch (pltfmt ? pltfmt->d_un.d_val : 0)
-	      {
-	      case 1: /* .got.plt with absolute addresses */
-		*reloc_addr = value;
-	        break;
-	      case 2: /* .got.plt with got-relative addresses */
-		*reloc_addr = value - (map->l_info[DT_PLTGOT]->d_un.d_ptr
-				       + map->l_addr);
-		break;
-	      default:
-		assert (! "unexpected .plt format type");
-	      }
-	  }
+	  elf_machine_fixup_plt(map, reloc, reloc_addr, value);
 	  break;
 
 	case R_SPARC_NONE:		/* Alright, Wilbur.  */
@@ -212,20 +217,13 @@ elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
 #define elf_machine_lookup_noplt_p(type) ((type) == R_SPARC_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_RELOC_NOPLT	R_SPARC_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT
 
 /* The SPARC never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
 /* The SPARC overlaps DT_RELA and DT_PLTREL.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
-
-/* The return value from dl-runtime's fixup, if it should be special.  */
-#define ELF_FIXUP_RETURN_VALUE(map, result)				\
-  ((map)->l_info[DT_SPARC(PLTFMT)]					\
-   && (map)->l_info[DT_SPARC(PLTFMT)]->d_un.d_val == 2			\
-   ? (result) + (map)->l_info[DT_PLTGOT]->d_un.d_ptr + (map)->l_addr	\
-   : (result))
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */

@@ -87,6 +87,9 @@ please let me know.
 
 [Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	  works great.  But the glibc NIS+ doesn't seem to work.''
+
+[Q25]	``After installing glibc name resolving doesn't work properly.''
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -684,6 +687,14 @@ information.  You have to copy a NIS_COLD_START file from a Solaris
 client (the NIS_COLD_START file is byte order independend) or generate
 it new with nisinit from the nis-tools (look at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q25]	``After installing glibc name resolving doesn't work properly.''
+
+[A25] {AJ} You  probable should read the manual section describing
+``nsswitch.conf'' (just type `info libc "NSS Configuration File"').
+The NSS configuration file is usually the culprit.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

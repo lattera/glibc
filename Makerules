@@ -701,6 +701,9 @@ $(inst_slibdir)/libc.so: $(common-objpfx)libc.so
 	$(do-install-program)
 endif
 
+ifdef extra-objs
+$(addprefix $(objpfx),$(extra-objs)): $(before-compile)
+endif
 
 ifneq (,$(versioned))
 # Produce three sets of rules as above for all the smaller versioned libraries.

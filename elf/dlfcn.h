@@ -68,7 +68,7 @@ typedef struct
     __const char *dli_sname;	/* Name of nearest symbol.  */
     void *dli_saddr;		/* Exact value of nearest symbol.  */
   } Dl_info;
-extern int dladdr __P ((void *__address, Dl_info *__info));
+extern int dladdr __P ((const void *__address, Dl_info *__info));
 
 __END_DECLS
 

@@ -5,3 +5,4 @@
 
 /* Name of our standard locale.  */
 const char _nl_C_name[] = "C";
+const char _nl_POSIX_name[] = "POSIX";
