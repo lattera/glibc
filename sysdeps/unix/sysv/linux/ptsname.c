@@ -123,7 +123,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       p[2] = '\0';
     }
 
-  if (__stat (buf, &st) < 0)
+  if (__xstat (_STAT_VER, buf, &st) < 0)
     return errno;
 
   __set_errno (save_errno);

@@ -109,7 +109,7 @@ grantpt (int fd)
   if (pts_name (fd, &buf, sizeof (_buf)))
     return -1;
 
-  if (__stat (buf, &st) < 0)
+  if (__xstat (_STAT_VER, buf, &st) < 0)
     goto cleanup;
 
   /* Make sure that we own the device.  */

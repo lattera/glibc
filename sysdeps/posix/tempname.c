@@ -33,7 +33,7 @@ static int
 direxists (const char *dir)
 {
   struct stat buf;
-  return __stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
+  return __xstat (_STAT_VER, dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
 /* Path search algorithm, for tmpnam, tmpfile, etc.  If DIR is
@@ -161,7 +161,7 @@ __gen_tempname (char *tmpl, int openit, int largefile)
       else
 	{
 	  struct stat st;
-	  if (__stat (tmpl, &st) < 0)
+	  if (__xstat (_STAT_VER, tmpl, &st) < 0)
 	    {
 	      if (errno == ENOENT)
 		{
