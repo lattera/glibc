@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ ENTRY (P(__,socket))
 
 	/* Use ## so `socket' is a separate token that might be #define'd.  */
 	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
-	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
+	lea 4(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
 	int $0x80

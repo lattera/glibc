@@ -1,3 +1,12 @@
+Tue May 28 13:11:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (sed-remove-objpfx): Avoid extra space in regexp due to
+	continuation line.
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Fix off-by-one error in
+	setting %ecx to 2nd syscall arg: we have pushed nothing, so function
+	args are found at 4(%esp), not 8(%esp).
+
 Mon May 27 10:10:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makefile ($(includedir)/stubs.h): Add missing backslash.
