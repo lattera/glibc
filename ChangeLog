@@ -1,5 +1,8 @@
 2001-02-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/elf/libc-start.c: Use new output functions and
+	_dl_debug_mask.
+
 	* elf/Versions [ld]: Don't export _dl_debug_message anymore.  Export
 	_dl_debug_printf.
 	* elf/dl-misc.c: Remove definition of _dl_sysdep_output and

@@ -94,8 +94,8 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Call the initializer of the libc.  */
 #ifdef SHARED
-  if (_dl_debug_impcalls)
-    _dl_debug_message (1, "\ninitialize libc\n\n", NULL);
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+    _dl_debug_printf ("\ninitialize libc\n\n");
 #endif
   __libc_init_first (argc, argv, __environ);
 
@@ -105,15 +105,15 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (_dl_debug_impcalls)
-    _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+    _dl_debug_printf ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (stinfo->init)
     stinfo->init (argc, argv, __environ, auxvec);
 
 #ifdef SHARED
-  if (_dl_debug_impcalls)
-    _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+    _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
   exit (stinfo->main (argc, argv, __environ, auxvec));
