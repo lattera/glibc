@@ -1,3 +1,22 @@
+1998-06-18 16:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add _dl_profile_map, _dl_profile_output, _dl_start_profile,
+	_dl_mcount, _dl_mcount_wrapper.
+	* elf/Makefile (routines): Add dl-profstub.
+	* elf/dl-profstub.c: New file.
+	* elf/dl-support.c: Don't define _dl_profile_map.
+	* elf/rtld.c: Likewise.
+	* elf/dlfcn.h: Define DL_CALL_FCT macro.
+	* elf/ldsodefs.h: Declare _dl_profile_output, _dl_mcount_wrapper.
+	Define _CALL_DL_FCT.
+	* iconv/gconv.c: Use _CALL_DL_FCT to call function from dynamically
+	loaded object.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/skeleton.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+
 1998-06-18 12:29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/libm-i387/e_scalb.S: Fix bug in FPU stack handling.

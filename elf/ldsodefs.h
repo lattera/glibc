@@ -127,6 +127,8 @@ extern int _dl_zerofd;
 extern const char *_dl_profile;
 /* Map of shared object to be profiled.  */
 extern struct link_map *_dl_profile_map;
+/* Filename of the output file.  */
+extern const char *_dl_profile_output;
 
 /* If nonzero the appropriate debug information is printed.  */
 extern int _dl_debug_libs;
@@ -409,6 +411,11 @@ extern void _dl_start_profile (struct link_map *map, const char *output_dir)
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 
+/* This function is simply a wrapper around the _dl_mcount function
+   which does not require a FROMPC parameter since this is the
+   calling function.  */
+extern void _dl_mcount_wrapper (ElfW(Addr) selfpc);
+
 
 /* Show the members of the auxiliary array passed up from the kernel.  */
 extern void _dl_show_auxv (void) internal_function;
@@ -423,6 +430,18 @@ extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
 							size_t *sz,
 							size_t *max_capstrlen)
      internal_function;
+
+
+/* When we do profiling we have the problem that uses of `dlopen'ed
+   objects don't use the PLT but instead use a pointer to the function.
+   We still want to have profiling data and in these cases we must do
+   the work of calling `_dl_mcount' ourself.  The following macros
+   helps do it.  */
+#define _CALL_DL_FCT(fctp, args) \
+  ({ if (_dl_profile_map != NULL)					      \
+       _dl_mcount_wrapper ((ElfW(Addr)) fctp);				      \
+     (*fctp) args;							      \
+  })
 
 __END_DECLS
 

@@ -53,7 +53,6 @@ struct r_search_path *_dl_search_paths;
 
 /* We never do profiling.  */
 const char *_dl_profile;
-struct link_map *_dl_profile_map;
 
 /* Names of shared object for which the RPATHs should be ignored.  */
 const char *_dl_inhibit_rpath;

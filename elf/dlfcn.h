@@ -1,5 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,6 +69,34 @@ typedef struct
     void *dli_saddr;		/* Exact value of nearest symbol.  */
   } Dl_info;
 extern int dladdr __P ((const void *__address, Dl_info *__info));
+
+#ifdef __USE_GNU
+/* To support profiling of shared objects it is a good idea to call
+   the function found using `dlsym' using the following macro since
+   these calls do not use the PLT.  But this would mean the dynamic
+   loader has no chance to find out when the function is called.  The
+   macro applies the necessary magic so that profiling is possible.
+   Rewrite
+	foo = (*fctp) (arg1, arg2);
+   into
+        foo = DL_CALL_FCT (fctp, (arg1, arg2));
+*/
+# if __GNUC__ >= 2
+/* Do not ever use this variable directly, it is internal!  */
+extern struct link_map *_dl_profile_map;
+
+#  define DL_CALL_FCT(fctp, args) \
+  (__extension__ ({ if (_dl_profile_map != NULL)			      \
+		      _dl_mcount_wrapper_check (fctp);			      \
+		    (*fctp) args; })
+# else
+/* This feature is not available without GCC.  */
+#  define DL_CALL_FCT(fctp, args) (*fctp) args
+# endif
+
+/* This function calls the profiling functions.  */
+extern void _dl_mcount_wrapper_check __P ((void *__selfpc));
+#endif
 
 __END_DECLS
 

@@ -73,7 +73,6 @@ unsigned long _dl_hwcap;
 struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;
-struct link_map *_dl_profile_map;
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;

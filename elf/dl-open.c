@@ -101,9 +101,27 @@ _dl_open (const char *file, int mode)
 	     magic ward.  */
 	  asm ("" : "=r" (reloc) : "0" (reloc));
 
-	  (*reloc) (l, _dl_object_relocation_scope (l),
-		    ((mode & RTLD_BINDING_MASK) == RTLD_LAZY
-		     || _dl_profile != NULL), _dl_profile != NULL);
+#ifdef PIC
+	  if (_dl_profile != NULL)
+	    {
+	      /* If this here is the shared object which we want to profile
+		 make sure the profile is started.  We can find out whether
+	         this is necessary or not by observing the `_dl_profile_map'
+	         variable.  If was NULL but is not NULL afterwars we must
+		 start the profiling.  */
+	      struct link_map *old_profile_map = _dl_profile_map;
+
+	      (*reloc) (l, _dl_object_relocation_scope (l), 1, 1);
+
+	      if (old_profile_map == NULL && _dl_profile_map != NULL)
+		/* We must prepare the profiling.  */
+		_dl_start_profile (_dl_profile_map, _dl_profile_output);
+	    }
+	  else
+#endif
+	    (*reloc) (l, _dl_object_relocation_scope (l),
+		      (mode & RTLD_BINDING_MASK) == RTLD_LAZY, 0);
+
 	  *_dl_global_scope_end = NULL;
 	}
 

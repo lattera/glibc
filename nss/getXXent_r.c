@@ -164,7 +164,7 @@ SETFUNC_NAME (STAYOPEN)
   while (! no_more)
     {
       int is_last_nip = nip == last_nip;
-      enum nss_status status = (*fct) (STAYOPEN_VAR);
+      enum nss_status status = _CALL_DL_FCT (fct, (STAYOPEN_VAR));
 
       no_more = __nss_next (&nip, SETFUNC_NAME_STRING, (void **) &fct,
 			    status, 0);
@@ -201,7 +201,7 @@ ENDFUNC_NAME (void)
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
-      (void) (*fct) ();
+      _CALL_DL_FCT (fct, ());
 
       if (nip == last_nip)
 	/* We have processed all services which were used.  */
@@ -245,7 +245,8 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
     {
       int is_last_nip = nip == last_nip;
 
-      status = (*fct) (resbuf, buffer, buflen, &errno H_ERRNO_VAR);
+      status = _CALL_DL_FCT (fct,
+			     (resbuf, buffer, buflen, &errno H_ERRNO_VAR));
 
       /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give
@@ -276,7 +277,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 				      (void **) &sfct);
 
 	      if (! no_more)
-		status = (*sfct) (STAYOPEN_TMPVAR);
+		status = _CALL_DL_FCT (sfct, (STAYOPEN_TMPVAR));
 	      else
 		status = NSS_STATUS_NOTFOUND;
 	    }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #include <nss.h>
 #include <resolv.h>
 #include <search.h>
+#include <elf/ldsodefs.h>
 
 
 /* Actions performed after lookup finished.  */

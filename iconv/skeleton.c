@@ -82,6 +82,7 @@
 #define __need_size_t
 #define __need_NULL
 #include <stddef.h>
+#include <elf/ldsodefs.h>
 
 
 /* The direction objects.  */
@@ -218,7 +219,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  if (status == GCONV_OK)
 #endif
 	    /* Give the modules below the same chance.  */
-	    status = (*fct) (next_step, next_data, NULL, NULL, written, 1);
+	    status = _CALL_DL_FCT (fct, (next_step, next_data, NULL, NULL,
+					 written, 1));
 	}
     }
   else
@@ -284,8 +286,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	      const char *outerr = data->outbuf;
 	      int result;
 
-	      result = (*fct) (next_step, next_data, &outerr, outbuf,
-			       written, 0);
+	      result = _CALL_DL_FCT (fct, (next_step, next_data, &outerr,
+					   outbuf, written, 0));
 
 	      if (result != GCONV_EMPTY_INPUT)
 		{
