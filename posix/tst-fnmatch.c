@@ -118,7 +118,8 @@ main (void)
       /* Now run the actual test.  */
       ++ntests;
 
-      if (setlocale (LC_COLLATE, locale) == NULL)
+      if (setlocale (LC_COLLATE, locale) == NULL
+	  || setlocale (LC_CTYPE, locale) == NULL)
 	{
 	  puts ("*** Cannot set locale");
 	  ++nfailed;
