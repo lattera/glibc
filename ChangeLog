@@ -1,8 +1,24 @@
+2001-01-29  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/sparc/fpu/fraiseexcpt.c: Include <float.h>.
+	* sysdeps/hppa/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/s390/fpu/fraiseexcpt.c: Likewise.
+
 2001-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-measurement.c (measurement_finish): Fix a typo.
+	Patch by Marko Myllynen <myllynen@lut.fi>.
+
+	* string/bits/string2.h (__strpbrk_c2): Correct parameter types
+	(int instead of char).
+	(__strpbrk_c3): Likewise.
+	Reported by GOTO Masanori <gotom@debian.or.jp>.
 
 	* sysdeps/generic/bits/sockaddr.h: Remove SA_LEN macro.
 	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h: Likewise.
 	* include/sys/socket.h: Add SA_LEN here for internal use.
+	Reported by Arkadiusz Miskiewicz <misiek@pld.ORG.PL>.
 
 2001-01-29  Ulrich Drepper  <drepper@redhat.com>
 

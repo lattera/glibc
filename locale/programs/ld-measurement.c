@@ -110,7 +110,7 @@ measurement_finish (struct localedef_t *locale, struct charmap_t *charmap)
     {
       if (measurement->measurement > 3)
 	error (0, 0, _("%s: invalid value for field `%s'"),
-	       "LC_MEASUREMENT", "meassurement");
+	       "LC_MEASUREMENT", "measurement");
     }
 }
 

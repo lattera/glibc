@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -980,10 +980,10 @@ __strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
 		  : strpbrk (s, accept)))))				      \
       : strpbrk (s, accept)); })
 
-__STRING_INLINE char *__strpbrk_c2 (__const char *__s, char __accept1,
-				     char __accept2);
+__STRING_INLINE char *__strpbrk_c2 (__const char *__s, int __accept1,
+				     int __accept2);
 __STRING_INLINE char *
-__strpbrk_c2 (__const char *__s, char __accept1, char __accept2)
+__strpbrk_c2 (__const char *__s, int __accept1, int __accept2)
 {
   /* Please note that __accept1 and __accept2 never can be '\0'.  */
   while (*__s != '\0' && *__s != __accept1 && *__s != __accept2)
@@ -991,11 +991,11 @@ __strpbrk_c2 (__const char *__s, char __accept1, char __accept2)
   return *__s == '\0' ? NULL : (char *) (size_t) __s;
 }
 
-__STRING_INLINE char *__strpbrk_c3 (__const char *__s, char __accept1,
-				     char __accept2, char __accept3);
+__STRING_INLINE char *__strpbrk_c3 (__const char *__s, int __accept1,
+				     int __accept2, int __accept3);
 __STRING_INLINE char *
-__strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
-	      char __accept3)
+__strpbrk_c3 (__const char *__s, int __accept1, int __accept2,
+	      int __accept3)
 {
   /* Please note that __accept1 to __accept3 never can be '\0'.  */
   while (*__s != '\0' && *__s != __accept1 && *__s != __accept2

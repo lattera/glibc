@@ -108,9 +108,7 @@ date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_PAPER
-% FIXME
 height   297
-% FIXME
 width    210
 END LC_PAPER
 
@@ -121,7 +119,6 @@ int_prefix     "<U0033><U0035><U0038>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
 measurement    1
 END LC_MEASUREMENT
 
