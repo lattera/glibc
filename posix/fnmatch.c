@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #include <fnmatch.h>
 #include <ctype.h>
 
-#if HAVE_STRING_H
+#if HAVE_STRING_H || defined _LIBC
 # include <string.h>
 #else
 # include <strings.h>
@@ -154,9 +154,9 @@ fnmatch (pattern, string, flags)
 	case '?':
 	  if (*n == '\0')
 	    return FNM_NOMATCH;
-	  else if ((flags & FNM_FILE_NAME) && *n == '/')
+	  else if (*n == '/' && (flags & FNM_FILE_NAME))
 	    return FNM_NOMATCH;
-	  else if ((flags & FNM_PERIOD) && *n == '.' &&
+	  else if (*n == '.' && (flags & FNM_PERIOD) &&
 		   (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	    return FNM_NOMATCH;
 	  break;
@@ -175,13 +175,13 @@ fnmatch (pattern, string, flags)
 	  break;
 
 	case '*':
-	  if ((flags & FNM_PERIOD) && *n == '.' &&
+	  if (*n == '.' && (flags & FNM_PERIOD) &&
 	      (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	    return FNM_NOMATCH;
 
 	  for (c = *p++; c == '?' || c == '*'; c = *p++)
 	    {
-	      if ((flags & FNM_FILE_NAME) && *n == '/')
+	      if (*n == '/' && (flags & FNM_FILE_NAME))
 		/* A slash does not match a wildcard under FNM_FILE_NAME.  */
 		return FNM_NOMATCH;
 	      else if (c == '?')
@@ -199,17 +199,38 @@ fnmatch (pattern, string, flags)
 	    }
 
 	  if (c == '\0')
-	    return 0;
+	    /* The wildcard(s) is/are the last element of the pattern.
+	       If the name is a file name and contains another slash
+	       this does mean it cannot match.  */
+	    return ((flags & FNM_FILE_NAME) && strchr (n, '/') != NULL
+		    ? FNM_NOMATCH : 0);
+	  else
+	    {
+	      const char *endp;
 
-	  {
-	    unsigned char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
-	    c1 = FOLD (c1);
-	    for (--p; *n != '\0'; ++n)
-	      if ((c == '[' || FOLD ((unsigned char) *n) == c1) &&
-		  fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
-		return 0;
-	    return FNM_NOMATCH;
-	  }
+	      if (!(flags & FNM_FILE_NAME) || (endp = strchr (n, '/')) == NULL)
+		endp = strchr (n, '\0');
+
+	      if (c == '[')
+		{
+		  for (--p; n < endp; ++n)
+		    if (fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
+		      return 0;
+		}
+	      else
+		{
+		  if (c == '\\' && !(flags & FNM_NOESCAPE))
+		    c = *p;
+		  c = FOLD (c);
+		  for (--p; n < endp; ++n)
+		    if (FOLD ((unsigned char) *n) == c
+			&& fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
+		      return 0;
+		}
+	    }
+
+	  /* If we come here no match is possible with the wildcard.  */
+	  return FNM_NOMATCH;
 
 	case '[':
 	  {

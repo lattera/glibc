@@ -13,6 +13,9 @@ struct {
   { "a/b", "a[/]b", 0, 0 },
   { "a/b", "a[/]b", FNM_PATHNAME, FNM_NOMATCH },
   { "a/b", "[a-z]/[a-z]", 0, 0 },
+  { "a/b", "*", FNM_FILE_NAME, FNM_NOMATCH },
+  { "a/b", "*[/]b", FNM_FILE_NAME, FNM_NOMATCH },
+  { "a/b", "*[b]", FNM_FILE_NAME, FNM_NOMATCH }
 };
 
 int

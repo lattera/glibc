@@ -1,3 +1,11 @@
+1999-04-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/fnmatch.c: Include string.h also for glibc.
+	(fnmatch, case '?'): Optimize if cascades a bit.
+	(fnmatch, case '*'): Correct handling if FNM_PATHNAME is set.
+
+	* posix/testfnm.c: Add test cases for * with FNM_PATHNAME errors.
+
 1999-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_builtin.h: Add definitions for UTF16 builtins.
