@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -199,8 +199,8 @@ _dl_start_user:
    MAP is the object containing the reloc.  */
 
 static inline void
-elf_machine_rela (struct link_map *map,
-		  const Elf32_Rela *reloc, const Elf32_Sym *sym)
+elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, const hash_name_pair *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
@@ -208,29 +208,29 @@ elf_machine_rela (struct link_map *map,
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_68K_COPY:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOEXEC);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_68K_GLOB_DAT:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_68K_JMP_SLOT:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOPLT);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_68K_8:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend);
       break;
     case R_68K_16:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend);
       break;
     case R_68K_32:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend);
       break;
@@ -238,17 +238,17 @@ elf_machine_rela (struct link_map *map,
       *reloc_addr = map->l_addr + reloc->r_addend;
       break;
     case R_68K_PC8:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC16:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend - (Elf32_Addr) reloc_addr);
       break;
     case R_68K_PC32:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend - (Elf32_Addr) reloc_addr);
       break;
