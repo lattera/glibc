@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995,96,97,98,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,11 +36,6 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 /* Declarations of global functions.  */
 extern void weak_function free (void *ptr);
 extern void * weak_function realloc (void *ptr, size_t n);
-extern long int weak_function __strtol_internal (const char *nptr,
-						 char **endptr,
-						 int base, int group);
-extern long int weak_function strtol (const char *nptr, char **endptr,
-				      int base);
 extern unsigned long int weak_function __strtoul_internal
 (const char *nptr, char **endptr, int base, int group);
 extern unsigned long int weak_function strtoul (const char *nptr,
@@ -128,9 +123,9 @@ realloc (void *ptr, size_t n)
 #include <setjmp.h>
 
 int weak_function
-__sigjmp_save (sigjmp_buf env, int savemask)
+__sigjmp_save (sigjmp_buf env, int savemask __attribute__ ((unused)))
 {
-  env[0].__mask_was_saved = savemask;
+  env[0].__mask_was_saved = 0;
   return 0;
 }
 
@@ -221,69 +216,6 @@ __assert_perror_fail (int errnum,
 
 #endif
 
-/* This function is only used in eval.c.  */
-long int weak_function
-__strtol_internal (const char *nptr, char **endptr, int base, int group)
-{
-  unsigned long int result = 0;
-  long int sign = 1;
-
-  while (*nptr == ' ' || *nptr == '\t')
-    ++nptr;
-
-  if (*nptr == '-')
-    {
-      sign = -1;
-      ++nptr;
-    }
-  else if (*nptr == '+')
-    ++nptr;
-
-  if (*nptr < '0' || *nptr > '9')
-    {
-      if (endptr != NULL)
-	*endptr = (char *) nptr;
-      return 0L;
-    }
-
-  assert (base == 0);
-  base = 10;
-  if (*nptr == '0')
-    {
-      if (nptr[1] == 'x' || nptr[1] == 'X')
-	{
-	  base = 16;
-	  nptr += 2;
-	}
-      else
-	base = 8;
-    }
-
-  while (*nptr >= '0' && *nptr <= '9')
-    {
-      unsigned long int digval = *nptr - '0';
-      if (result > LONG_MAX / 10
-	  || (sign > 0 ? result == LONG_MAX / 10 && digval > LONG_MAX % 10
-	      : (result == ((unsigned long int) LONG_MAX + 1) / 10
-		 && digval > ((unsigned long int) LONG_MAX + 1) % 10)))
-	{
-	  errno = ERANGE;
-	  return sign > 0 ? LONG_MAX : LONG_MIN;
-	}
-      result *= base;
-      result += digval;
-      ++nptr;
-    }
-
-  return (long int) result * sign;
-}
-
-long int weak_function
-strtol (const char *nptr, char **endptr, int base)
-{
-  return __strtol_internal (nptr, endptr, base, 0);
-}
-
 unsigned long int weak_function
 __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 {
@@ -336,10 +268,4 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
     }
 
   return result * sign;
-}
-
-unsigned long int weak_function
-strtoul (const char *nptr, char **endptr, int base)
-{
-  return (unsigned long int) __strtoul_internal (nptr, endptr, base, 0);
 }

@@ -1,5 +1,13 @@
 2001-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (process_envvars): Call __strtoul_internal instead of
+	strtoul.
+	* elf/dl-minimal.c (strtol, __strtol_internal, strtoul): Removed.
+	(__sigjmp_save): Set __mask_was_saved to zero since we don't save
+	anything.
+	* dlfcn/eval.c (__strtol_internal): Define here.
+	(eval): Use __strtol_internal instead of strtol.
+
 	* elf/elf.h: Add a few more EF_MIPS_* constants.
 
 2001-01-17  Ulrich Drepper  <drepper@redhat.com>

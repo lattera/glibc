@@ -1,5 +1,5 @@
 /* You don't really want to know what this hack is for.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,76 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdio.h>
+#include <assert.h>
 #include <ctype.h>
+#include <dlfcn.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <dlfcn.h>
 
 static void *funcall (char **stringp);
 static void *eval (char **stringp);
+
+
+long int weak_function
+__strtol_internal (const char *nptr, char **endptr, int base, int group)
+{
+  unsigned long int result = 0;
+  long int sign = 1;
+
+  while (*nptr == ' ' || *nptr == '\t')
+    ++nptr;
+
+  if (*nptr == '-')
+    {
+      sign = -1;
+      ++nptr;
+    }
+  else if (*nptr == '+')
+    ++nptr;
+
+  if (*nptr < '0' || *nptr > '9')
+    {
+      if (endptr != NULL)
+	*endptr = (char *) nptr;
+      return 0L;
+    }
+
+  assert (base == 0);
+  base = 10;
+  if (*nptr == '0')
+    {
+      if (nptr[1] == 'x' || nptr[1] == 'X')
+	{
+	  base = 16;
+	  nptr += 2;
+	}
+      else
+	base = 8;
+    }
+
+  while (*nptr >= '0' && *nptr <= '9')
+    {
+      unsigned long int digval = *nptr - '0';
+      if (result > LONG_MAX / 10
+	  || (sign > 0 ? result == LONG_MAX / 10 && digval > LONG_MAX % 10
+	      : (result == ((unsigned long int) LONG_MAX + 1) / 10
+		 && digval > ((unsigned long int) LONG_MAX + 1) % 10)))
+	{
+	  errno = ERANGE;
+	  return sign > 0 ? LONG_MAX : LONG_MIN;
+	}
+      result *= base;
+      result += digval;
+      ++nptr;
+    }
+
+  return (long int) result * sign;
+}
+
 
 static void *
 funcall (char **stringp)
@@ -101,7 +162,7 @@ eval (char **stringp)
 
     default:
       /* Try to parse it as a number.  */
-      value = (void *) strtol (p, stringp, 0);
+      value = (void *) __strtol_internal (p, stringp, 0, 0);
       if (*stringp != p)
 	return value;
 

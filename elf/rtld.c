@@ -1389,7 +1389,7 @@ process_envvars (enum mode *modep, int *lazyp)
 	case 10:
 	  /* Mask for the important hardware capabilities.  */
 	  if (memcmp (&envline[3], "HWCAP_MASK", 10) == 0)
-	    _dl_hwcap_mask = strtoul (&envline[14], NULL, 0);
+	    _dl_hwcap_mask = __strtoul_internal (&envline[14], NULL, 0, 0);
 	  break;
 
 	case 11:
