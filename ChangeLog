@@ -1,3 +1,7 @@
+2002-04-10  Andreas Jaeger  <aj@suse.de>
+
+	* include/argz.h: Remove extra char from last patch.
+
 2002-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/mach/hurd/chown.c: Use INTDEF for __chown.
