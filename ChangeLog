@@ -1,5 +1,7 @@
 2001-04-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/abort-instr.h: New file.  Code by David Mosberger.
+
 	* sysdeps/ia64/atomicity.h: New file.  Copied from libstdc++.
 
 	* sysdeps/i386/i486/atomicity.h: Clean up the asms.
