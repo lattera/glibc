@@ -21,7 +21,7 @@
 #
 subdir	:= locale
 
-headers		= locale.h
+headers		= locale.h langinfo.h
 distribute	= localeinfo.h categories.def \
 		  $(localedef-modules:=.c) $(locale-modules:=.c) \
 		  $(lib-modules:=.c) config.h simple-hash.h iso-4217.def \
@@ -60,7 +60,7 @@ $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 CPPFLAGS := -DLOCALE_PATH='"$(localedir)"' \
 	    -DCHARMAP_PATH='"$(i18ndir)/charmap"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
-	    -Iliblib -Iprograms $(CPPFLAGS)
+	    -Iprograms $(CPPFLAGS)
 
 CFLAGS-charmap.c = -Wno-write-strings
 CFLAGS-locfile.c = -Wno-write-strings

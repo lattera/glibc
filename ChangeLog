@@ -1,3 +1,55 @@
+Fri Apr 19 00:49:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdlib/rpmatch.c (rpmatch: try): Take new arg NOMATCH, return value
+ 	for nonmatching nonerror (instead of !MATCH).
+	(rpmatch): Use it, so we return -1 when NOEXPR doesn't match either.
+
+	* resolv/getnetnamadr.c (getnetbyaddr): Use u_int32_t instead of
+	unsigned long for variable NET2.
+
+	* time/etcetera, time/europe, time/solar89: Updated from ADO's 96e.
+
+Tue Apr  9 14:37:31 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/Makefile, catgets/catgets.c, catgets/catgetsinfo.h,
+	catgets/config.h, catgets/gencat.c, catgets/nl_types.h,
+	catgets/open_catalog.c: New files.  Implementation of XPG4
+	compliant catgets() function and needed tools.
+	* Makefile (subdirs): Add catgets.
+
+Thu Apr 18 23:36:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* math/Makefile (CPPFLAGS): Append -D__NO_MATH_INLINES.
+
+Wed Apr 10 20:48:43 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c: Correct some typos.
+
+	* sysdeps/libm-ieee754/w_gammaf.c, sysdeps/libm-ieee754/w_lgamma.c,
+	sysdeps/libm-ieee754/w_lgammaf.c: Reference signgam instead of
+	__signgam.
+
+Thu Apr 18 21:07:27 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (no-whole-archive): New variable.
+	(build-shlib): Use it.
+	* elf/Makefile (libdl.so): Use it.
+	* configure.in (libc_cv_ld_no_whole_archive): New check for
+	--no-whole-archive.
+	* config.make.in (have-no-whole-archive): New variable.
+
+	* stdio-common/printf_fp.c: Increase fudge factor for BIGNUM_SIZE calc
+	from 3 to 4.
+
+	* Make-dist: Include version.mk.
+	(version, release): Variables removed.
+	* Makeconfig (version.mk): New target.
+
+Fri Apr 19 01:42:18 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/Makefile (headers): Add langinfo.h.
+	(CPPFLAGS): Remove -Iliblib.
+
 Mon Apr 15 16:49:04 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
 
 	* malloc/memalign.c, malloc/malloc.h [__DJGPP__ == 1]: Elide memalign

@@ -71,5 +71,9 @@ include ../Rules
 # the error return conventions for the math functions.
 CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
 
+# We don't want the fdlibm code to use the inline math functions,
+# only the fdlibm code.
+CPPFLAGS += -D__NO_MATH_INLINES
+
 # The fdlibm code generates a lot of these warnings but is otherwise clean.
 override CFLAGS += -Wno-uninitialized -Wno-write-strings

@@ -154,7 +154,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 				cp += n;
 				return (NULL);
 			}
-			cp += n; 
+			cp += n;
 			*ap++ = bp;
 			bp += strlen(bp) + 1;
 			net_entry.n_addrtype =
@@ -189,7 +189,7 @@ static	char *net_aliases[MAXALIASES], netbuf[BUFSIZ+1];
 					paux1 = pauxt;
 				}
 				in = ++st;
-			}		  
+			}
 			net_entry.n_net = inet_network(paux2);
 			break;
 		}
@@ -209,7 +209,7 @@ getnetbyaddr(net, net_type)
 	int nn, anslen;
 	querybuf buf;
 	char qbuf[MAXDNAME];
-	unsigned long net2;
+	u_int32_t net2;
 	struct netent *net_entry;
 
 	if (net_type != AF_INET)

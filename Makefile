@@ -51,7 +51,7 @@ sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
-subdirs = csu assert ctype db locale intl math setjmp signal stdlib	\
+subdirs = csu assert ctype db locale intl catgets math setjmp signal stdlib \
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd\
 	  posix io termios resource misc socket sysvipc gmon gnulib	\
 	  wctype $(wildcard crypt) manual $(sysdep-subdirs) elf

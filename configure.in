@@ -469,6 +469,19 @@ elif test $libc_cv_asm_weakext_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
 fi
 
+AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
+cat > conftest.c <<\EOF
+main () { exit (0); }
+EOF
+if ${CC-cc} $CFLAGS -Wl,--no-whole-archive \
+	    -o conftest conftest.c 2>/dev/null; then
+  libc_cv_ld_no_whole_archive=yes
+else
+  libc_cv_ld_no_whole_archive=no
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_ld_no_whole_archive)dnl
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

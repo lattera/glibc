@@ -105,11 +105,7 @@ foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
 
 ifndef tardir
-rel+vers := $(shell sed -n -e 's/^.*RELEASE.*\"\([^"]*\)";$$/\1/p' \
-			   -e 's/^.*VERSION.*\"\([^"]*\)";$$/\1/p' \
-		    < $(..)version.h)
-release := $(word 1,$(rel+vers))
-version := $(word 2,$(rel+vers))
+-include $(common-objpfx)version.mk
 export tardir := glibc-$(version)
 endif
 

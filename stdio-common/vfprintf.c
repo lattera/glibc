@@ -895,7 +895,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 	tmp = ++f;
 	if (ISDIGIT (*tmp) && read_int (&tmp) && *tmp == L_('$'))
-	  /* The width comes from an positional parameter.  */
+	  /* The width comes from a positional parameter.  */
 	  goto do_positional;
 
 	width = va_arg (ap, int);
@@ -914,7 +914,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
       if (*f == L_('$'))
-	/* Oh, oh.  The argument comes from an positional parameter.  */
+	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
       JUMP (*f, step1_jumps);
 
@@ -926,7 +926,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 	  tmp = ++f;
 	  if (ISDIGIT (*tmp) && read_int (&tmp) > 0 && *tmp == L_('$'))
-	    /* The precision comes from an positional parameter.  */
+	    /* The precision comes from a positional parameter.  */
 	    goto do_positional;
 
 	  prec = va_arg (ap, int);

@@ -1,6 +1,6 @@
 # Makefile for elf subdirectory of GNU C Library.
 
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -80,7 +80,7 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 	$(patsubst %/,cd %;,$(objpfx)) \
 	$(LINK.o) -shared -o $(@:$(objpfx)%=%) \
 		  $(LDFLAGS.so) $(LDFLAGS-dl.so) \
-		  -Wl,--whole-archive $(^:$(objpfx)%=%)
+		  -Wl,--whole-archive $(^:$(objpfx)%=%) $(no-whole-archive)
 
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 $(slibdir)/ld-linux.so.1: $(objpfx)ld-linux.so.1; $(do-install-program)

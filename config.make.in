@@ -17,6 +17,8 @@ config-defines = @DEFS@
 elf = @elf@
 have-initfini = @libc_cv_have_initfini@
 
+have-no-whole-archive = @libc_cv_ld_no_whole_archive@
+
 # Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@

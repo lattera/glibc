@@ -30,7 +30,7 @@ rpmatch (response)
 {
   /* Match against one of the response patterns, compiling the pattern
      first if necessary.  */
-  inline int try (const int tag, const int match,
+  inline int try (const int tag, const int match, const int nomatch,
 		  const char **lastp, regex_t *re)
     {
       const char *pattern = nl_langinfo (tag);
@@ -50,13 +50,13 @@ rpmatch (response)
 	}
 
       /* Try the pattern.  */
-      return regexec (re, response, 0, NULL, 0) == 0 ? match : !match;
+      return regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
     }
 
   /* We cache the response patterns and compiled regexps here.  */
   static const char *yesexpr, *noexpr;
   static regex_t yesre, nore;
 
-  return (try (YESEXPR, 1, &yesexpr, &yesre) ?:
-	  try (NOEXPR, 0, &noexpr, &nore));
+  return (try (YESEXPR, 1, 0, &yesexpr, &yesre) ?:
+	  try (NOEXPR, 0, -1, &noexpr, &nore));
 }
