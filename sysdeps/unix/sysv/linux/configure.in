@@ -38,29 +38,30 @@ fi
 # If the user gave a minimal version number test whether the available
 # kernel headers are young enough.  Additionally we have minimal
 # kernel versions for some architectures.
+case "$machine" in
+  sh*)
+    arch_minimum_kernel=2.3.99
+    ;;
+  ia64*)
+    arch_minimum_kernel=2.4.0
+    ;;
+  *)
+    arch_minimum_kernel=2.0.10
+    ;;
+esac
 if test -n "$minimum_kernel"; then
-  case "$machine" in
-    sh*)
-      arch_minimum_kernel=2.3.99
-      ;;
-    *)
-      ;;
-  esac
-
-  user_version=$((`echo $minimum_kernel.0.0.0 | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
-  arch_version=$((`echo $arch_minimum_kernel.0.0.0 | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
-  if test $user_version -lt $arch_minimum_kernel; then
+  changequote(,)
+  user_version=$((`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
+  arch_version=$((`echo "$arch_minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
+  changequote([,])
+  if test $user_version -lt $arch_version; then
     AC_MSG_WARN([minimum kernel version reset to $arch_minimum_kernel])
     minimum_kernel=$arch_minimum_kernel
   fi
 else
-  case "$machine" in
-    sh*)
-      minimum_kernel = 2.3.99
-      ;;
-    *)
-      ;;
-  esac
+  if test $arch_minimum_kernel != '2.0.10'; then
+    minimum_kernel=$arch_minimum_kernel
+  fi
 fi
 
 if test -n "$minimum_kernel"; then

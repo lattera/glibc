@@ -1,5 +1,8 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/configure.in: Improve handling of
+	minimal kernel versions.  Add information about IA-64 kernel.
+
 	* sysdeps/unix/sysv/linux/configure.in: Allow architecture
 	specific minimal supported kernel versions to be specified.
 
