@@ -1,5 +1,8 @@
 1999-08-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/ieee754/ieee754.h: Handle platforms with special
+	__FLOAT_WORD_ORDER.  Patch by Joel Klecker <jk@espy.org>.
+
 	* string/bits/string2.h: Mark void* operations as extensions.
 	* sysdeps/i386/i486/bits/string.h: Likewise.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,11 +80,18 @@ union ieee754_double
 	unsigned int mantissa1:32;
 #endif				/* Big endian.  */
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
+# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+	unsigned int mantissa0:20;
+	unsigned int exponent:11;
+	unsigned int negative:1;
+	unsigned int mantissa1:32;
+# else
 	/* Together these comprise the mantissa.  */
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:20;
 	unsigned int exponent:11;
 	unsigned int negative:1;
+# endif
 #endif				/* Little endian.  */
       } ieee;
 
@@ -99,12 +106,20 @@ union ieee754_double
 	unsigned int mantissa0:19;
 	unsigned int mantissa1:32;
 #else
+# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+	unsigned int mantissa0:19;
+	unsigned int quiet_nan:1;
+	unsigned int exponent:11;
+	unsigned int negative:1;
+	unsigned int mantissa1:32;
+# else
 	/* Together these comprise the mantissa.  */
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:19;
 	unsigned int quiet_nan:1;
 	unsigned int exponent:11;
 	unsigned int negative:1;
+# endif
 #endif
       } ieee_nan;
   };
@@ -127,11 +142,19 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 #endif
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
+# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+	unsigned int exponent:15;
+	unsigned int negative:1;
+	unsigned int empty:16;
+	unsigned int mantissa0:32;
+	unsigned int mantissa1:32;
+# else
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:32;
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;
+# endif
 #endif
       } ieee;
 
@@ -148,6 +171,15 @@ union ieee854_long_double
 	unsigned int mantissa1:32;
 #endif
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
+# if	__FLOAT_WORD_ORDER == BIG_ENDIAN
+	unsigned int exponent:15;
+	unsigned int negative:1;
+	unsigned int empty:16;
+	unsigned int mantissa0:30;
+	unsigned int quiet_nan:1;
+	unsigned int one:1;
+	unsigned int mantissa1:32;
+# else
 	unsigned int mantissa1:32;
 	unsigned int mantissa0:30;
 	unsigned int quiet_nan:1;
@@ -155,6 +187,7 @@ union ieee854_long_double
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;
+# endif
 #endif
       } ieee_nan;
   };
