@@ -225,6 +225,8 @@ generated-dirs := $(firstword $(subst /, , $(multidir)))
 crti-objs += $(multidir)/crti.o
 crtn-objs += $(multidir)/crtn.o
 omit-deps += $(multidir)/crti $(multidir)/crtn
+$(objpfx)$(multidir):
+	mkdir $@
 endif
 extra-objs += $(crti-objs) $(crtn-objs)
 omit-deps += crti crtn

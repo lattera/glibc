@@ -1,3 +1,7 @@
+2003-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile ($(objpfx)$(multidir)): Add rule to create the directory.
+
 2003-05-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (crti-objs, crtn-objs): New variables.
