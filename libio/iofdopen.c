@@ -124,13 +124,13 @@ _IO_new_fdopen (fd, mode)
 #endif
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp.file);
+  _IO_file_init (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
   if (_IO_file_attach (&new_f->fp.file, fd) == NULL)
     {
-      _IO_un_link (&new_f->fp.file);
+      _IO_un_link (&new_f->fp);
       free (new_f);
       return NULL;
     }
@@ -140,7 +140,7 @@ _IO_new_fdopen (fd, mode)
     _IO_mask_flags (&new_f->fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return &new_f->fp.file;
+  return (_IO_FILE *) &new_f->fp;
 }
 
 strong_alias (_IO_new_fdopen, __new_fdopen)

@@ -52,9 +52,9 @@ _IO_vasprintf (result_ptr, format, args)
 #ifdef _IO_MTSAFE_IO
   sf._sbf._f._lock = &lock;
 #endif
-  _IO_no_init ((_IO_FILE *) &sf, 0, -1, NULL, NULL);
-  _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;
-  _IO_str_init_static ((_IO_FILE *) &sf, string, init_string_size, string);
+  _IO_no_init ((_IO_FILE *) &sf._sbf, 0, -1, NULL, NULL);
+  _IO_JUMPS ((struct _IO_FILE_plus *) &sf._sbf) = &_IO_str_jumps;
+  _IO_str_init_static (&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   sf._s._free_buffer = (_IO_free_type) free;

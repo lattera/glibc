@@ -155,7 +155,7 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
       assert (size != 0);
     }
 
-  _IO_str_init_static (&new_f.ofile.file.file, obstack_base (obstack),
+  _IO_str_init_static ((struct _IO_strfile_ *) &new_f.ofile, obstack_base (obstack),
 		       size, obstack_next_free (obstack));
   /* Now allocate the rest of the current chunk.  */
   assert (size == (new_f.ofile.file.file._IO_write_end
@@ -167,7 +167,7 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   new_f.ofile.obstack = obstack;
 
-  result = _IO_vfprintf (&new_f.ofile.file.file, format, args);
+  result = _IO_vfprintf ((_IO_FILE *) &new_f.ofile.file, format, args);
 
   /* Shrink the buffer to the space we really currently need.  */
   obstack_blank_fast (obstack, (new_f.ofile.file.file._IO_write_ptr

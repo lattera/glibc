@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -43,14 +43,14 @@ _IO_vdprintf (d, format, arg)
   tmpfil.file._lock = &lock;
 #endif
   _IO_no_init (&tmpfil.file, 0, 0, &wd, &_IO_wfile_jumps);
-  _IO_JUMPS (&tmpfil.file) = &_IO_file_jumps;
-  _IO_file_init (&tmpfil.file);
+  _IO_JUMPS (&tmpfil) = &_IO_file_jumps;
+  _IO_file_init (&tmpfil);
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;
 #endif
   if (_IO_file_attach (&tmpfil.file, d) == NULL)
     {
-      _IO_un_link (&tmpfil.file);
+      _IO_un_link (&tmpfil);
       return EOF;
     }
   tmpfil.file._IO_file_flags =
@@ -58,9 +58,9 @@ _IO_vdprintf (d, format, arg)
 		     _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING)
      | _IO_DELETE_DONT_CLOSE);
 
-  done = _IO_vfprintf (&tmpfil.file, format, arg);
+  done = _IO_vfprintf ((_IO_FILE *) &tmpfil, format, arg);
 
-  _IO_FINISH (&tmpfil.file);
+  _IO_FINISH ((_IO_FILE *) &tmpfil);
 
   return done;
 }

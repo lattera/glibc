@@ -52,14 +52,14 @@ _IO_old_fopen (filename, mode)
   new_f->fp.file._lock = &new_f->lock;
 #endif
   _IO_init (&new_f->fp.file, 0);
-  _IO_JUMPS (&new_f->fp.file) = &_IO_old_file_jumps;
-  _IO_old_file_init (&new_f->fp.file);
+  _IO_JUMPS (&new_f->fp) = &_IO_old_file_jumps;
+  _IO_old_file_init (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_old_file_fopen (&new_f->fp.file, filename, mode) != NULL)
-        return &new_f->fp.file;
-  _IO_un_link (&new_f->fp.file);
+  if (_IO_old_file_fopen ((_IO_FILE *) &new_f->fp, filename, mode) != NULL)
+    return (_IO_FILE *) &new_f->fp;
+  _IO_un_link (&new_f->fp);
   free (new_f);
   return NULL;
 }

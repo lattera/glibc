@@ -69,16 +69,16 @@ extern "C" {
 # define _IO_JUMPS_OFFSET 1
 #endif
 
-#define _IO_JUMPS(THIS) ((struct _IO_FILE_plus *) (THIS))->vtable
+#define _IO_JUMPS(THIS) (THIS)->vtable
 #define _IO_WIDE_JUMPS(THIS) ((struct _IO_FILE *) (THIS))->_wide_data->_wide_vtable
 #define _IO_CHECK_WIDE(THIS) (((struct _IO_FILE *) (THIS))->_wide_data != NULL)
 
 #if _IO_JUMPS_OFFSET
 # define _IO_JUMPS_FUNC(THIS) \
- (*(struct _IO_jump_t **) ((void *) &((struct _IO_FILE_plus *) (THIS))->vtable\
+ (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS ((struct _IO_FILE_plus *) (THIS)) \
 			   + (THIS)->_vtable_offset))
 #else
-# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS(THIS)
+# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS ((struct _IO_FILE_plus *) (THIS))
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)
 #ifdef _G_USING_THUNKS
@@ -313,9 +313,17 @@ struct _IO_FILE_plus
   const struct _IO_jump_t *vtable;
 };
 
+/* Special file type for fopencookie function.  */
+struct _IO_cookie_file
+{
+  struct _IO_FILE_plus __fp;
+  void *__cookie;
+  _IO_cookie_io_functions_t __io_functions;
+};
+
 /* Iterator type for walking global linked list of _IO_FILE objects. */
 
-typedef _IO_FILE *_IO_ITER;
+typedef struct _IO_FILE_plus *_IO_ITER;
 
 /* Generic functions */
 
@@ -325,8 +333,8 @@ extern int _IO_switch_to_get_mode __P ((_IO_FILE *));
 extern void _IO_init __P ((_IO_FILE *, int));
 extern int _IO_sputbackc __P ((_IO_FILE *, int));
 extern int _IO_sungetc __P ((_IO_FILE *));
-extern void _IO_un_link __P ((_IO_FILE *));
-extern void _IO_link_in __P ((_IO_FILE *));
+extern void _IO_un_link __P ((struct _IO_FILE_plus *));
+extern void _IO_link_in __P ((struct _IO_FILE_plus *));
 extern void _IO_doallocbuf __P ((_IO_FILE *));
 extern void _IO_unsave_markers __P ((_IO_FILE *));
 extern void _IO_setb __P ((_IO_FILE *, char *, char *, int));
@@ -470,7 +478,7 @@ extern int _IO_file_close __P ((_IO_FILE *));
 extern int _IO_file_underflow __P ((_IO_FILE *));
 extern int _IO_file_overflow __P ((_IO_FILE *, int));
 #define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
-extern void _IO_file_init __P ((_IO_FILE *));
+extern void _IO_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_file_attach __P ((_IO_FILE *, int));
 extern _IO_FILE* _IO_file_open __P ((_IO_FILE *, const char *, int, int,
 				     int, int));
@@ -491,7 +499,7 @@ extern _IO_FILE* _IO_new_file_fopen __P ((_IO_FILE *, const char *, const char *
 					  int));
 extern void _IO_no_init __P ((_IO_FILE *, int, int, struct _IO_wide_data *,
 			      struct _IO_jump_t *));
-extern void _IO_new_file_init __P ((_IO_FILE *));
+extern void _IO_new_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_new_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
 extern int _IO_new_file_sync __P ((_IO_FILE *));
 extern int _IO_new_file_underflow __P ((_IO_FILE *));
@@ -508,7 +516,7 @@ extern _IO_size_t _IO_old_file_xsputn __P ((_IO_FILE *, const void *,
 					    _IO_size_t));
 extern int _IO_old_file_underflow __P ((_IO_FILE *));
 extern int _IO_old_file_overflow __P ((_IO_FILE *, int));
-extern void _IO_old_file_init __P ((_IO_FILE *));
+extern void _IO_old_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_old_file_attach __P ((_IO_FILE *, int));
 extern _IO_FILE* _IO_old_file_fopen __P ((_IO_FILE *, const char *,
 					  const char *));
@@ -543,8 +551,9 @@ extern _IO_off64_t _IO_str_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
 extern void _IO_str_finish __P ((_IO_FILE *, int));
 
 /* Other strfile functions */
-extern void _IO_str_init_static __P ((_IO_FILE *, char *, int, char *));
-extern void _IO_str_init_readonly __P ((_IO_FILE *, const char *, int));
+struct _IO_strfile_;
+extern void _IO_str_init_static __P ((struct _IO_strfile_ *, char *, int, char *));
+extern void _IO_str_init_readonly __P ((struct _IO_strfile_ *, const char *, int));
 extern _IO_ssize_t _IO_str_count __P ((_IO_FILE *));
 
 /* And the wide character versions.  */
@@ -579,7 +588,7 @@ extern int _IO_outfloat __P ((double __value, _IO_FILE *__sb, int __type,
 			      int __width, int __precision, int __flags,
 			      int __sign_mode, int __fill));
 
-extern _IO_FILE *_IO_list_all;
+extern struct _IO_FILE_plus *_IO_list_all;
 extern void (*_IO_cleanup_registration_needed) __PMT ((void));
 
 #ifndef EOF

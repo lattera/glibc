@@ -310,7 +310,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       do								      \
 	{								      \
 	  int offset;							      \
-	  void *ptr;							      \
+	  void *__unbounded ptr;					      \
 	  spec = (ChExpr);						      \
 	  offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)	      \
 	    : table[CHAR_CLASS (spec)];					      \
@@ -323,7 +323,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 # define JUMP(ChExpr, table)						      \
       do								      \
 	{								      \
-	  const void *ptr;						      \
+	  const void *__unbounded ptr;					      \
 	  spec = (ChExpr);						      \
 	  ptr = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)		      \
 	    : table[CHAR_CLASS (spec)];					      \
@@ -1971,7 +1971,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 {
   CHAR_T buf[_IO_BUFSIZ];
   struct helper_file helper;
-  register _IO_FILE *hp = &helper._f.file;
+  register _IO_FILE *hp = (_IO_FILE *) &helper._f;
   int result, to_flush;
 
   /* Initialize helper.  */
@@ -1991,7 +1991,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   hp->_lock = &helper.lock;
   __libc_lock_init (*hp->_lock);
 #endif
-  _IO_JUMPS (hp) = (struct _IO_jump_t *) &_IO_helper_jumps;
+  _IO_JUMPS (&helper._f) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */
   result = vfprintf (hp, format, args);

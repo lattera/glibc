@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -39,9 +39,9 @@ _IO_vsscanf (string, format, args)
   sf._sbf._f._lock = &lock;
 #endif
   _IO_no_init (&sf._sbf._f, 0, -1, NULL, NULL);
-  _IO_JUMPS (&sf._sbf._f) = &_IO_str_jumps;
-  _IO_str_init_static (&sf._sbf._f, (char*)string, 0, NULL);
-  ret = _IO_vfscanf (&sf._sbf._f, format, args, NULL);
+  _IO_JUMPS ((struct _IO_FILE_plus *) &sf._sbf) = &_IO_str_jumps;
+  _IO_str_init_static (&sf, (char*)string, 0, NULL);
+  ret = _IO_vfscanf ((_IO_FILE *) &sf._sbf, format, args, NULL);
   return ret;
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -60,12 +60,14 @@
 #endif
 
 void
-_IO_str_init_static (fp, ptr, size, pstart)
-     _IO_FILE *fp;
+_IO_str_init_static (sf, ptr, size, pstart)
+     _IO_strfile *sf;
      char *ptr;
      int size;
      char *pstart;
 {
+  _IO_FILE *fp = &sf->_sbf._f;
+
   if (size == 0)
     size = strlen (ptr);
   else if (size < 0)
@@ -102,17 +104,17 @@ _IO_str_init_static (fp, ptr, size, pstart)
       fp->_IO_read_end = ptr+size;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
-  (((_IO_strfile *) fp)->_s._allocate_buffer) =  (_IO_alloc_type)0;
+  sf->_s._allocate_buffer = (_IO_alloc_type) 0;
 }
 
 void
-_IO_str_init_readonly (fp, ptr, size)
-     _IO_FILE *fp;
+_IO_str_init_readonly (sf, ptr, size)
+     _IO_strfile *sf;
      const char *ptr;
      int size;
 {
-  _IO_str_init_static (fp, (char *) ptr, size, NULL);
-  fp->_IO_file_flags |= _IO_NO_WRITES;
+  _IO_str_init_static (sf, (char *) ptr, size, NULL);
+  sf->_sbf._f._IO_file_flags |= _IO_NO_WRITES;
 }
 
 int

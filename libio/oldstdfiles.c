@@ -48,9 +48,8 @@
 #endif
 
 DEF_STDFILE(_IO_stdin_, 0, 0, _IO_NO_WRITES);
-DEF_STDFILE(_IO_stdout_, 1, &_IO_stdin_.file, _IO_NO_READS);
-DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_.file,
-	    _IO_NO_READS+_IO_UNBUFFERED);
+DEF_STDFILE(_IO_stdout_, 1, &_IO_stdin_, _IO_NO_READS);
+DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
@@ -67,7 +66,7 @@ extern FILE *stdin;
 extern FILE *stdout;
 extern FILE *stderr;
 
-extern FILE *_IO_list_all;
+extern struct _IO_FILE_plus *_IO_list_all;
 
 static void _IO_check_libio __P ((void)) __attribute__ ((constructor));
 
@@ -81,9 +80,10 @@ _IO_check_libio ()
   if (&_IO_stdin_used == NULL)
     {
       /* We are using the old one. */
-      _IO_stdin = stdin = &_IO_stdin_.file;
-      _IO_stdout = stdout = &_IO_stdout_.file;
-      _IO_stderr = stderr = _IO_list_all = &_IO_stderr_.file;
+      _IO_stdin = stdin = (_IO_FILE *) &_IO_stdin_;
+      _IO_stdout = stdout = (_IO_FILE *) &_IO_stdout_;
+      _IO_stderr = stderr = (_IO_FILE *) &_IO_stderr_;
+      _IO_list_all = &_IO_stderr_;
       _IO_stdin->_vtable_offset = _IO_stdout->_vtable_offset =
 	_IO_stderr->_vtable_offset = stdin->_vtable_offset =
 	stdout->_vtable_offset = stderr->_vtable_offset =

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -50,8 +50,7 @@
 #endif
 
 DEF_STDFILE(_IO_2_1_stdin_, 0, 0, _IO_NO_WRITES);
-DEF_STDFILE(_IO_2_1_stdout_, 1, &_IO_2_1_stdin_.file, _IO_NO_READS);
-DEF_STDFILE(_IO_2_1_stderr_, 2, &_IO_2_1_stdout_.file,
-            _IO_NO_READS+_IO_UNBUFFERED);
+DEF_STDFILE(_IO_2_1_stdout_, 1, &_IO_2_1_stdin_, _IO_NO_READS);
+DEF_STDFILE(_IO_2_1_stderr_, 2, &_IO_2_1_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
 
-_IO_FILE *_IO_list_all = &_IO_2_1_stderr_.file;
+struct _IO_FILE_plus *_IO_list_all = &_IO_2_1_stderr_;

@@ -114,18 +114,18 @@ extern int errno;
 
 void
 _IO_old_file_init (fp)
-     _IO_FILE *fp;
+     struct _IO_FILE_plus *fp;
 {
   /* POSIX.1 allows another file handle to be used to change the position
      of our file descriptor.  Hence we actually don't know the actual
      position before we do the first fseek (and until a following fflush). */
-  fp->_old_offset = _IO_pos_BAD;
-  fp->_IO_file_flags |= CLOSED_FILEBUF_FLAGS;
+  fp->file._old_offset = _IO_pos_BAD;
+  fp->file._IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
-  _IO_link_in(fp);
-  fp->_vtable_offset = ((int) sizeof (struct _IO_FILE)
-			- (int) sizeof (struct _IO_FILE_complete));
-  fp->_fileno = -1;
+  _IO_link_in (fp);
+  fp->file._vtable_offset = ((int) sizeof (struct _IO_FILE)
+			     - (int) sizeof (struct _IO_FILE_complete));
+  fp->file._fileno = -1;
 }
 
 int
@@ -147,7 +147,7 @@ _IO_old_file_close_it (fp)
   _IO_setg (fp, NULL, NULL, NULL);
   _IO_setp (fp, NULL, NULL);
 
-  _IO_un_link (fp);
+  _IO_un_link ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
   fp->_fileno = -1;
   fp->_old_offset = _IO_pos_BAD;
@@ -214,7 +214,7 @@ _IO_old_file_fopen (fp, filename, mode)
     if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
-  _IO_link_in (fp);
+  _IO_link_in ((struct _IO_FILE_plus *) fp);
   return fp;
 }
 

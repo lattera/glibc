@@ -1,3 +1,55 @@
+2000-06-28  Greg McGary  <greg@mcgary.org>
+
+	* libio/libio.h (struct _IO_cookie_file): Move struct type defintion out.
+	(_IO_FILE): Declare chain as (struct _IO_FILE_plus *).
+	* libio/libioP.h (struct _IO_cookie_file): Move struct type defintion in.
+	(_IO_JUMPS): Don't cast THIS--expect arg to be a (struct _IO_FILE_plus *).
+	(_IO_JUMPS_FUNC): Express in terms of _IO_JUMPS, and add cast to
+	THIS, since _IO_JUMPS no longer does it implicitly.
+	(_IO_file_init, _IO_old_file_init, _IO_new_file_init): Declare
+	arg type as (struct _IO_FILE_plus *).
+	(_IO_str_init_static, _IO_str_init_readonly): Declare 1st
+	arg as (_IO_strfile *).
+	* libio/strops.c (_IO_str_init_static, _IO_str_init_readonly):
+	Declare 1st arg as (_IO_strfile *).
+	* libio/fileops.c (_IO_new_file_init): Declare
+	arg type as (struct _IO_FILE_plus *).
+	* libio/oldfileops.c (_IO_old_file_init): Likewise.
+	* libio/genops.c (_IO_link_in, _IO_un_link): Likewise.
+	(_IO_flush_all, _IO_flush_all_linebuffered, _IO_unbuffer_write):
+	Declare iteration pointer as (struct _IO_FILE_plus *).
+	(_IO_iter_next, _IO_iter_file): _IO_ITER is now (struct _IO_FILE_plus *).
+	* libio/stdfiles.c (_IO_list_all): Declare as (struct _IO_FILE_plus *).
+	* libio/oldstdfiles.c (_IO_list_all): Likewise.
+	(_IO_check_libio): Set user-visible handles to (struct _IO_FILE_plus *).
+	* libio/stdio.c (stdin, stdout, stderr): Set user-visible handles
+	to (struct _IO_FILE_plus *).
+
+	* libio/iofdopen.c (_IO_new_fdopen): Pass FILE handle pointer
+	whose high bound includes vtable to all functions that will use
+	vtable.  For streambufs, pass pointer whose bounds include struct
+	_IO_strfile.
+	* libio/wgenops.c (_IO_wdefault_finish): Likewise.
+	* libio/oldiofdopen.c (_IO_old_fdopen): Likewise.
+	* libio/iofopen.c (_IO_new_fopen): Likewise.
+	* libio/oldiofopen.c (_IO_old_fopen): Likewise.
+	* libio/iofopen64.c (_IO_fopen64): Likewise.
+	* libio/iopopen.c (_IO_new_popen): Likewise.
+	* libio/oldiopopen.c (_IO_old_popen): Likewise.
+	* libio/memstream.c (open_memstream): Likewise.
+	* libio/iovsscanf.c (_IO_vsscanf): Likewise.
+	* libio/iovsprintf.c (_IO_vsprintf): Likewise.
+	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
+	* libio/iofopncook.c (_IO_cookie_init): Likewise.
+	* libio/obprintf.c (_IO_obstack_vprintf): Likewise.
+	* libio/vasprintf.c (_IO_vasprintf): Likewise.
+	* libio/vsnprintf.c (_IO_vsnprintf): Likewise.
+	* libio/stdfiles.c (_IO_stdout_, _IO_stderr_): Likewise.
+	* libio/oldstdfiles.c (_IO_stdout_, _IO_stderr_): Likewise.
+	* stdlib/strfmon.c (__strfmon_l): Likewise.
+	* stdio-common/vfprintf.c (buffered_vfprintf): Likewise.
+	(vfprintf): Qualify computed-goto targets as unbounded.
+
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c: Finally handle multibyte decimal point and

@@ -252,6 +252,8 @@ struct _IO_wide_data
   struct _IO_jump_t *_wide_vtable;
 };
 
+struct _IO_FILE_plus;
+
 struct _IO_FILE {
   int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
 #define _IO_file_flags _flags
@@ -273,7 +275,7 @@ struct _IO_FILE {
 
   struct _IO_marker *_markers;
 
-  struct _IO_FILE *_chain;
+  struct _IO_FILE_plus *_chain;
 
   int _fileno;
   int _blksize;
@@ -310,7 +312,6 @@ struct _IO_FILE_complete
 typedef struct _IO_FILE _IO_FILE;
 #endif
 
-struct _IO_FILE_plus;
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 extern struct _IO_FILE_plus _IO_2_1_stdout_;
 extern struct _IO_FILE_plus _IO_2_1_stderr_;
@@ -369,14 +370,7 @@ typedef struct
 } _IO_cookie_io_functions_t;
 typedef _IO_cookie_io_functions_t cookie_io_functions_t;
 
-/* Special file type for fopencookie function.  */
-struct _IO_cookie_file
-{
-  struct _IO_FILE __file;
-  const void *__vtable;
-  void *__cookie;
-  _IO_cookie_io_functions_t __io_functions;
-};
+struct _IO_cookie_file;
 
 /* Initialize one of those.  */
 extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,

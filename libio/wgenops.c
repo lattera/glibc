@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -207,7 +207,7 @@ _IO_wdefault_finish (fp, dummy)
   _IO_lock_fini (*fp->_lock);
 #endif
 
-  _IO_un_link (fp);
+  _IO_un_link ((struct _IO_FILE_plus *) fp);
 }
 
 

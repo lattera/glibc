@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -29,9 +29,9 @@
 #undef stdin
 #undef stdout
 #undef stderr
-FILE *stdin = &_IO_2_1_stdin_.file;
-FILE *stdout = &_IO_2_1_stdout_.file;
-FILE *stderr = &_IO_2_1_stderr_.file;
+FILE *stdin = (FILE *) &_IO_2_1_stdin_;
+FILE *stdout = (FILE *) &_IO_2_1_stdout_;
+FILE *stderr = (FILE *) &_IO_2_1_stderr_;
 
 #undef _IO_stdin
 #undef _IO_stdout

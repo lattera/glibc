@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -113,8 +113,8 @@ open_memstream (bufloc, sizeloc)
   if (buf == NULL)
     return NULL;
   _IO_no_init (&new_f->fp._sf._sbf._f, 0, 0, &new_f->wd, &_IO_wmem_jumps);
-  _IO_JUMPS (&new_f->fp._sf._sbf._f) = &_IO_mem_jumps;
-  _IO_str_init_static (&new_f->fp._sf._sbf._f, buf, _IO_BUFSIZ, buf);
+  _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp._sf._sbf) = &_IO_mem_jumps;
+  _IO_str_init_static (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
   new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
@@ -122,7 +122,7 @@ open_memstream (bufloc, sizeloc)
   new_f->fp.bufloc = bufloc;
   new_f->fp.sizeloc = sizeloc;
 
-  return &new_f->fp._sf._sbf._f;
+  return (_IO_FILE *) &new_f->fp._sf._sbf;
 }
 
 

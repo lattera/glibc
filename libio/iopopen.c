@@ -203,14 +203,14 @@ _IO_new_popen (command, mode)
 #endif
   fp = &new_f->fpx.file.file;
   _IO_no_init (fp, 0, 0, &new_f->wd, &_IO_wproc_jumps);
-  _IO_JUMPS (fp) = &_IO_proc_jumps;
-  _IO_new_file_init (fp);
+  _IO_JUMPS (&new_f->fpx.file) = &_IO_proc_jumps;
+  _IO_new_file_init (&new_f->fpx.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fpx.file.vtable = NULL;
 #endif
   if (_IO_new_proc_open (fp, command, mode) != NULL)
-    return fp;
-  _IO_un_link (fp);
+    return (_IO_FILE *) &new_f->fpx.file;
+  _IO_un_link (&new_f->fpx.file);
   free (new_f);
   return NULL;
 }

@@ -121,22 +121,22 @@ void
 _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 		 void *cookie, _IO_cookie_io_functions_t io_functions)
 {
-  _IO_init (&cfile->__file, 0);
-  _IO_JUMPS (&cfile->__file) = &_IO_cookie_jumps;
+  _IO_init (&cfile->__fp.file, 0);
+  _IO_JUMPS (&cfile->__fp) = &_IO_cookie_jumps;
 
   cfile->__cookie = cookie;
   cfile->__io_functions = io_functions;
 
-  _IO_file_init(&cfile->__file);
+  _IO_file_init(&cfile->__fp);
 
-  cfile->__file._IO_file_flags =
-    _IO_mask_flags (&cfile->__file, read_write,
+  cfile->__fp.file._IO_file_flags =
+    _IO_mask_flags (&cfile->__fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
   /* We use a negative number different from -1 for _fileno to mark that
      this special stream is not associated with a real file, but still has
      to be treated as such.  */
-  cfile->__file._fileno = -2;
+  cfile->__fp.file._fileno = -2;
 }
 
 
@@ -176,12 +176,12 @@ _IO_fopencookie (cookie, mode, io_functions)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->cfile.__file._lock = &new_f->lock;
+  new_f->cfile.__fp.file._lock = &new_f->lock;
 #endif
 
   _IO_cookie_init (&new_f->cfile, read_write, cookie, io_functions);
 
-  return &new_f->cfile.__file;
+  return (_IO_FILE *) &new_f->cfile.__fp;
 }
 
 versioned_symbol (libc, _IO_fopencookie, fopencookie, GLIBC_2_2);
@@ -245,7 +245,7 @@ _IO_old_fopencookie (cookie, mode, io_functions)
 
   ret = _IO_fopencookie (cookie, mode, io_functions);
   if (ret != NULL)
-    _IO_JUMPS (ret) = &_IO_old_cookie_jumps;
+    _IO_JUMPS ((struct _IO_FILE_plus *) ret) = &_IO_old_cookie_jumps;
 
   return ret;
 }

@@ -511,8 +511,8 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       /* Print the number.  */
 #ifdef USE_IN_LIBIO
       _IO_init ((_IO_FILE *) &f, 0);
-      _IO_JUMPS ((_IO_FILE *) &f) = &_IO_str_jumps;
-      _IO_str_init_static ((_IO_FILE *) &f, dest, (s + maxsize) - dest, dest);
+      _IO_JUMPS ((struct _IO_FILE_plus *) &f) = &_IO_str_jumps;
+      _IO_str_init_static ((_IO_strfile *) &f, dest, (s + maxsize) - dest, dest);
 #else
       memset ((void *) &f, 0, sizeof (f));
       f.__magic = _IOMAGIC;

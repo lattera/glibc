@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -123,9 +123,9 @@ _IO_vsnprintf (string, maxlen, format, args)
     }
 
   _IO_no_init (&sf.f._sbf._f, 0, -1, NULL, NULL);
-  _IO_JUMPS (&sf.f._sbf._f) = &_IO_strn_jumps;
+  _IO_JUMPS ((struct _IO_FILE_plus *) &sf.f._sbf) = &_IO_strn_jumps;
   string[0] = '\0';
-  _IO_str_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
+  _IO_str_init_static (&sf.f, string, maxlen - 1, string);
   ret = _IO_vfprintf (&sf.f._sbf._f, format, args);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
