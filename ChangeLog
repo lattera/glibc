@@ -1,5 +1,8 @@
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c (_dl_x86_cap_flags):
+	Fix entry for bit 31.
+
 	* iconvdata/Makefile: Add rules to build IBM866NAV.
 	* iconvdata/ibm866nav.c: New file.
 	* iconvdata/tst-tables.sh: Add IBM866NAV.

@@ -1,5 +1,5 @@
 /* Data for Linux/i386 version of processor capability information.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -53,7 +53,7 @@ const char _dl_x86_cap_flags[32][8]
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
     "pat", "pse36", "pn", "clflush", "20", "dts", "acpi", "mmx",
-    "fxsr", "sse", "sse2", "ss", "ht", "tm", "ia64", "amd3d"
+    "fxsr", "sse", "sse2", "ss", "ht", "tm", "ia64", "pbe"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL

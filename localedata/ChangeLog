@@ -1,5 +1,8 @@
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/sv_SE [LC_TIME]: Define first_weekday and first_workday
+	as 2.  Reported by Christian Rose <menthos@gnu.org>.
+
 	* charmaps/IBM866NAV: New file.  Contributed by vidybida@bitp.kiev.ua.
 
 2002-12-03  Roland McGrath  <roland@redhat.com>
