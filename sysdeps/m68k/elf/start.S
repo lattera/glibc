@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF m68k ABI.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,43 +43,31 @@ _start:
 	   the outermost frame obviously.  */
 	sub.l %fp, %fp
 
-	/* %a1 contains the address of the shared library termination
-	   function, which we will register with `atexit' to be called by
-	   `exit'.  */
-	tstl %a1
-	jbeq 1f
-	move.l %a1, -(%sp)
-	jbsr atexit
-	addql #4, %sp
-1:
-
-	/* Do essential libc initialization.  In statically linked
-	   programs under the GNU Hurd, this is what sets up the
-	   arguments on the stack for the code below.  */
-	jbsr __libc_init_first
-
-	/* Extract the arguments and environment as encoded on the stack
-	   and set up the arguments for `main': argc, argv, envp.  */
+	/* Extract the arguments as encoded on the stack and set up the
+	   arguments for `main': argc, argv.  envp will be determined
+	   later in __libc_start_main.  */
 	move.l (%sp)+, %d0	/* Pop the argument count.  */
-	lea (4,%sp,%d0*4), %a0	/* envp = &argv[argc + 1] */
-	move.l %a0, _environ	/* Store it in the global variable.  */
-	pea (%a0)		/* Push third argument: envp.  */
-	pea 4(%sp)		/* Push second argument: argv.  */
+	move.l %sp, %a0		/* The argument vector starts just at the
+				   current stack top.  */
+
+	pea (%a1)		/* Push address of the shared library
+				   termination function.  */
+
+	/* Push the address of our own entry points to `.fini' and
+	   `.init'.  */
+	pea _fini
+	pea _init
+
+	pea (%a0)		/* Push second argument: argv.  */
 	move.l %d0, -(%sp)	/* Push first argument: argc.  */
 
-	/* Call `_init', which is the entry point to our own `.init'
-	   section; and register with `atexit' to have `exit' call
-	   `_fini', which is the entry point to our own `.fini' section.  */
-	jbsr _init
-	move.l #_fini, -(%sp)
-	jbsr atexit
-	addq.l #4, %sp
+	pea main
 
-	/* Call the user's main function, and exit with its value.  */
-	jbsr main
-	move.l %d0, (%sp)
-1:	jbsr exit		/* This should never return.  */
-	jbra 1b			/* Try again if somehow it does return.  */
+	/* Call the user's main function, and exit with its value.  But
+	   let the libc call main.  */
+	jbsr __libc_start_main
+
+	illegal			/* Crash if somehow `exit' does return.  */
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
