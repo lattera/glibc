@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <stddef.h>
 #include <utime.h>
 
 
