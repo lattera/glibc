@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
 
 #define CALL_WITH_SP(fn, sp) \
   ({ register long int __fn = (long int) fn, __sp = (long int) sp; \
-     asm volatile ("mov %0,$30; jmp $31, %1; ldgp $29, 0(%1)" \
+     asm volatile ("mov %0,$30; jmp $31, (%1); ldgp $29, 0(%1)" \
 		   : : "r" (__sp), "r" (__fn)); })
 
 #define ENTRY(name) LEAF(name, ***loser no arg count***)
