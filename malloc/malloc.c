@@ -283,6 +283,9 @@ extern "C" {
 /* For va_arg, va_start, va_end.  */
 #include <stdarg.h>
 
+/* For writev and struct iovec.  */
+#include <sys/uio.h>
+
 /*
   Debugging:
 
@@ -1501,7 +1504,7 @@ static size_t   mUSABLe(Void_t*);
 static void     mSTATs(void);
 static int      mALLOPt(int, int);
 static struct mallinfo mALLINFo(mstate);
-static void malloc_printf_nc(int action, const char *template, ...);
+static void malloc_printerr(int action, const char *str, void *ptr);
 
 static Void_t* internal_function mem2mem_check(Void_t *p, size_t sz);
 static int internal_function top_check(void);
@@ -1971,10 +1974,11 @@ typedef struct malloc_chunk* mbinptr;
   FD = P->fd;                                                          \
   BK = P->bk;                                                          \
   if (__builtin_expect (FD->bk != P || BK->fd != P, 0))                \
-    malloc_printf_nc (check_action,                                    \
-		      "corrupted double-linked list at %p!\n", P);     \
-  FD->bk = BK;                                                         \
-  BK->fd = FD;                                                         \
+    malloc_printerr (check_action, "corrupted double-linked list", P); \
+  else {                                                               \
+    FD->bk = BK;                                                       \
+    BK->fd = FD;                                                       \
+  }                                                                    \
 }
 
 /*
@@ -4177,7 +4181,7 @@ _int_free(mstate av, Void_t* mem)
        here by accident or by "design" from some intruder.  */
     if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
       {
-	malloc_printf_nc (check_action, "free(): invalid pointer %p!\n", mem);
+	malloc_printerr (check_action, "free(): invalid pointer", mem);
 	return;
       }
 
@@ -4205,7 +4209,8 @@ _int_free(mstate av, Void_t* mem)
 	 record we are going to add (i.e., double free).  */
       if (__builtin_expect (*fb == p, 0))
 	{
-	  malloc_printf_nc (check_action, "double free(%p)!\n", mem);
+	double_free:
+	  malloc_printerr (check_action, "double free or corruption", mem);
 	  return;
 	}
       p->fd = *fb;
@@ -4218,6 +4223,19 @@ _int_free(mstate av, Void_t* mem)
 
     else if (!chunk_is_mmapped(p)) {
       nextchunk = chunk_at_offset(p, size);
+
+      /* Lightweight tests: check whether the block is already the
+	 top block.  */
+      if (__builtin_expect (p == av->top, 0))
+	goto double_free;
+      /* Or whether the next chunk is beyond the boundaries of the arena.  */
+      if (__builtin_expect ((char *) nextchunk >= ((char *) av->top
+						   + chunksize(av->top)), 0))
+	goto double_free;
+      /* Or whether the block is actually not marked used.  */
+      if (__builtin_expect (!prev_inuse(nextchunk), 0))
+	goto double_free;
+
       nextsize = chunksize(nextchunk);
       assert(nextsize > 0);
 
@@ -5413,27 +5431,35 @@ int mALLOPt(param_number, value) int param_number; int value;
 /* Helper code.  */
 
 static void
-malloc_printf_nc(int action, const char *template, ...)
+malloc_printerr(int action, const char *str, void *ptr)
 {
   if (action & 1)
     {
-#ifdef _LIBC
-      _IO_flockfile (stderr);
-      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
+      /* output string will be ": ADDR ***\n"  */
+      static const char suffix[] = " ***\n";
+      static const char prefix[] = ": 0x";
+      char buf[sizeof (prefix) - 1 + sizeof (void *) * 2 + sizeof (suffix)];
+      char *cp;
+      if (action & 4)
+	cp = memcpy (&buf[sizeof (buf) - 2], "\n", 2);
+      else
+	{
+	  cp = memcpy (&buf[sizeof (buf) - sizeof (suffix)], suffix,
+		       sizeof (suffix));
+	  cp = _itoa_word ((unsigned long int) ptr, cp, 16, 0);
+	  while (cp > &buf[sizeof (prefix) - 1])
+	    *--cp = '0';
+	  cp = memcpy (buf, prefix, sizeof (prefix) - 1);
+	}
 
-      va_list ap;
-      va_start (ap, template);
-
-      vfprintf (stderr, template, ap);
-
-      va_end (ap);
-
-#ifdef _LIBC
-      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-      _IO_funlockfile (stderr);
-#endif
+      struct iovec iov[3];
+      iov[0].iov_base = (char *) "*** glibc detected *** ";
+      iov[0].iov_len = strlen (iov[0].iov_base);
+      iov[1].iov_base = (char *) str;
+      iov[1].iov_len = strlen (str);
+      iov[2].iov_base = cp;
+      iov[2].iov_len = &buf[sizeof (buf) - 1] - cp;
+      TEMP_FAILURE_RETRY (__writev (STDERR_FILENO, iov, 3));
     }
   if (action & 2)
     abort ();
