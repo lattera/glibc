@@ -1,3 +1,7 @@
+2002-02-19  Ulrich Drepper  <drepper@redhat.com.>
+
+	* stdlib/Versions: Move __on_exit to GLIBC_PRIVATE.
+
 2002-02-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/fileops.c (_IO_file_underflow_mmap): Cast to unsigned char

@@ -7,7 +7,7 @@ libc {
     __strto*_internal;
 
     # functions used in other libraries
-    __secure_getenv; __on_exit;
+    __secure_getenv;
 
     # a*
     a64l; abort; abs; atexit; atof; atoi; atol; atoll;
@@ -93,6 +93,6 @@ libc {
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.
-    __libc_system;
+    __libc_system; __on_exit;
   }
 }
