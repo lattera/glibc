@@ -1,5 +1,9 @@
 2001-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/alpha/alphaev67/strncat.S: Align last write address.
+	Patch by Richard Henderson <rth@redhat.com>.
+	Reported by Claus-Justus Heine <heine@instmath.rwth-aachen.de>.
+
 	* stdlib/strfmon.c [USE_IN_LIBIO]: Define lock variable and store
 	point in FILE structure before calling _IO_init.
 	* stdlib/Makefile: Add -D_IO_MTSAFE_IO to CFLAGS for strfmon and

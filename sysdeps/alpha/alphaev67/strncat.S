@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Richard Henderson <rth@tamu.edu>, 1996.
    EV67 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
 
@@ -66,7 +66,7 @@ $found:	cttz	t1, t2		# U0 :
 	/* Worry about the null termination.  */
 
 	cttz	t10, t2		# U0: byte offset of end-of-count.
-	nop			# E :
+	bic	a0, 7, a0	# E : word align the last write address.
 	zapnot	t0, t8, t1	# U : was last byte a null?
 	nop			# E :
 
