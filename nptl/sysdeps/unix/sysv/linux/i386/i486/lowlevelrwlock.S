@@ -61,7 +61,11 @@ __pthread_rwlock_rdlock:
 	/* Get the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, MUTEX(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -77,7 +81,11 @@ __pthread_rwlock_rdlock:
 	je	4f
 
 	LOCK
+#if MUTEX == 0
+	decl	(%ebx)
+#else
 	decl	MUTEX(%ebx)
+#endif
 	jne	10f
 
 11:	addl	$READERS_WAKEUP-MUTEX, %ebx
@@ -90,7 +98,11 @@ __pthread_rwlock_rdlock:
 	/* Reget the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, MUTEX(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	12f
 
@@ -103,7 +115,11 @@ __pthread_rwlock_rdlock:
 	incl	NR_READERS(%ebx)
 	je	8f
 9:	LOCK
+#if MUTEX == 0
+	decl	(%ebx)
+#else
 	decl	MUTEX(%ebx)
+#endif
 	jne	6f
 7:
 
@@ -165,7 +181,11 @@ pthread_rwlock_timedrdlock:
 	/* Get the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
 	xaddl	%eax, MUTEX(%ebp)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -181,7 +201,11 @@ pthread_rwlock_timedrdlock:
 	je	4f
 
 	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
 	decl	MUTEX(%ebp)
+#endif
 	jne	10f
 
 	/* Get current time.  */
@@ -219,7 +243,11 @@ pthread_rwlock_timedrdlock:
 	/* Reget the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
 	xaddl	%eax, MUTEX(%ebp)
+#endif
 	testl	%eax, %eax
 	jne	12f
 
@@ -235,7 +263,11 @@ pthread_rwlock_timedrdlock:
 	incl	NR_READERS(%ebp)
 	je	8f
 9:	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
 	decl	MUTEX(%ebp)
+#endif
 	jne	6f
 
 7:	movl	%ecx, %eax
@@ -300,7 +332,11 @@ __pthread_rwlock_wrlock:
 	/* Get the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, MUTEX(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -314,7 +350,11 @@ __pthread_rwlock_wrlock:
 	je	4f
 
 	LOCK
+#if MUTEX == 0
+	decl	(%ebx)
+#else
 	decl	MUTEX(%ebx)
+#endif
 	jne	10f
 
 11:	addl	$WRITERS_WAKEUP-MUTEX, %ebx
@@ -327,7 +367,11 @@ __pthread_rwlock_wrlock:
 	/* Reget the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, MUTEX(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	12f
 
@@ -339,7 +383,11 @@ __pthread_rwlock_wrlock:
 	movl	%gs:8, %eax
 	movl	%eax, WRITER(%ebx)
 9:	LOCK
+#if MUTEX == 0
+	decl	(%ebx)
+#else
 	decl	MUTEX(%ebx)
+#endif
 	jne	6f
 7:
 
@@ -394,7 +442,11 @@ pthread_rwlock_timedwrlock:
 	/* Get the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
 	xaddl	%eax, MUTEX(%ebp)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -408,7 +460,11 @@ pthread_rwlock_timedwrlock:
 	je	4f
 
 	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
 	decl	MUTEX(%ebp)
+#endif
 	jne	10f
 
 	/* Get current time.  */
@@ -446,7 +502,11 @@ pthread_rwlock_timedwrlock:
 	/* Reget the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%ebp)
+#else
 	xaddl	%eax, MUTEX(%ebp)
+#endif
 	testl	%eax, %eax
 	jne	12f
 
@@ -461,7 +521,11 @@ pthread_rwlock_timedwrlock:
 	movl	%gs:8, %eax
 	movl	%eax, WRITER(%ebp)
 9:	LOCK
+#if MUTEX == 0
+	decl	(%ebp)
+#else
 	decl	MUTEX(%ebp)
+#endif
 	jne	6f
 
 7:	movl	%ecx, %eax
@@ -521,7 +585,11 @@ __pthread_rwlock_unlock:
 	/* Get the lock.  */
 	movl	$1, %eax
 	LOCK
+#if MUTEX == 0
+	xaddl	%eax, (%edi)
+#else
 	xaddl	%eax, MUTEX(%edi)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -550,7 +618,11 @@ __pthread_rwlock_unlock:
 	ENTER_KERNEL
 
 6:	LOCK
+#if MUTEX == 0
+	decl	(%edi)
+#else
 	decl	MUTEX(%edi)
+#endif
 	jne	3f
 
 4:	xorl	%eax, %eax
