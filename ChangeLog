@@ -1,3 +1,8 @@
+1999-03-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* db/Makefile: Don't try to install shared library link if not
+	building with shared libs.
+
 1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* rt/Makefile: Link against static library if no shared lib is

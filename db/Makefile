@@ -29,8 +29,11 @@ distribute	:= compat.h					\
 
 include ../Makeconfig
 
-install-others	:= $(inst_slibdir)/libdb.so$(libdb1.so-version) \
-		   $(db1-headers:%=$(inst_includedir)/db1/%)
+install-others	:= $(db1-headers:%=$(inst_includedir)/db1/%)
+
+ifeq (yes,$(build-shared))
+install-others	+= $(inst_slibdir)/libdb.so$(libdb1.so-version)
+endif
 
 $(inst_slibdir)/libdb.so$(libdb1.so-version): $(inst_slibdir)/libdb1-$(version).so $(+force)
 	rm -f $@
