@@ -1,3 +1,25 @@
+2001-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getent.c (print_aliases, aliases_keys, ethers_keys,
+	netgroup_keys, print_rpc, rpc_keys, print_shadow, shadow_keys):
+	New functions.
+	(group_keys, hosts_keys, network_keys, passwd_keys, protocols_keys):
+	If number is 0, list all.
+	(services_keys): Likewise.  Lookup aliases as well.
+	(databases): New table.
+	(build_doc): Prepare argp doc text with list of supported databases.
+	(main): Change to table driven processing.
+
+2001-01-14  Thorsten Kukuk <kukuk@suse.de>
+
+	* sunrpc/xdr.c (xdr_long, xdr_u_long): Fix comments about this
+	functions.
+
+2001-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/xdr.c (xdr_long, xdr_u_long): Return FALSE if trying to
+	encode value which does not fit in the 32bit type.
+
 2001-01-15  Hiroyuki Machida <machida@sm.sony.co.jp>
 
 	* sysdeps/unix/sysv/linux/mips/register-dump.h (REGISTER_DUMP):
