@@ -1,3 +1,12 @@
+1999-08-25  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ptsname.c: Add checks to make sure we're
+	really dealing with a master pseudo terminal, and really returning
+	the name of the associated slave pseudo terminal by checking the
+	device number.
+	* sysdeps/unix/sysv/linux/pty-private.h: Removed.
+	* login/programs/pt_chown.c (do_pt_chown): Don't use unix98_pseudo_p.
+
 1999-08-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add missing

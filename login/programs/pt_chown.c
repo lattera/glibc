@@ -109,13 +109,7 @@ do_pt_chown (void)
 
   /* Check that the returned slave pseudo terminal is a
      character device.  */
-  if (stat (pty, &st) < 0
-#ifdef unix98_pseudo_p
-      || ! unix98_pseudo_p (major (st.st_rdev))
-#else
-      || !S_ISCHR(st.st_mode)
-#endif
-      )
+  if (stat (pty, &st) < 0 || !S_ISCHR(st.st_mode))
     return FAIL_EINVAL;
 
   /* Get the group ID of the special `tty' group.  */

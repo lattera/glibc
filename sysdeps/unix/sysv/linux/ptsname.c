@@ -29,6 +29,23 @@
 
 #include <stdio-common/_itoa.h>
 
+/* Check if DEV corresponds to a master pseudo terminal device.  */
+#define MASTER_P(Dev)                                                         \
+  (major ((Dev)) == 2                                                         \
+   || (major ((Dev)) == 4 && minor ((Dev)) >= 128 && minor ((Dev)) < 192)     \
+   || (major ((Dev)) >= 128 && major ((Dev)) < 136))
+
+/* Check if DEV corresponds to a master pseudo terminal device.  */
+#define SLAVE_P(Dev)                                                          \
+  (major ((Dev)) == 3                                                         \
+   || (major ((Dev)) == 4 && minor ((Dev)) >= 192 && minor ((Dev)) < 256)     \
+   || (major ((Dev)) >= 136 && major ((Dev)) < 144))
+
+/* Note that major number 4 corresponds to the old BSD style pseudo
+   terminal devices.  As of Linux 2.1.115 these are no longer
+   supported.  They have been replaced by major numbers 2 (masters)
+   and 3 (slaves).  */
+     
 /* Directory where we can find the slave pty nodes.  */
 #define _PATH_DEVPTS "/dev/pts/"
 
@@ -107,7 +124,16 @@ __ptsname_r (int fd, char *buf, size_t buflen)
       if (__fstat (fd, &st) < 0)
 	return errno;
 
+      /* Check if FD really is a master pseudo terminal.  */
+      if (! MASTER_P (st.st_rdev))
+	{
+	  __set_errno (ENOTTY);
+	  return ENOTTY;
+	}
+
       ptyno = minor (st.st_rdev);
+      /* This is for the old BSD pseudo terminals.  As of Linux
+         2.1.115 these are no longer supported.  */
       if (major (st.st_rdev) == 4)
 	ptyno -= 128;
 
@@ -125,6 +151,15 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 
   if (__xstat (_STAT_VER, buf, &st) < 0)
     return errno;
+
+  /* Check if the name we're about to return really corresponds to a
+     slave pseudo terminal.  */
+  if (! S_ISCHR (st.st_mode) || ! SLAVE_P (st.st_rdev))
+    {
+      /* This really is a configuration problem.  */
+      __set_errno (ENOTTY);
+      return ENOTTY;
+    }
 
   __set_errno (save_errno);
   return 0;
