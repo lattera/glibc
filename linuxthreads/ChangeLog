@@ -1,7 +1,6 @@
 1999-07-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* linuxthreads/internals.h: Align _pthread_descr_struct to 32
-	bytes.
+	* internals.h: Align _pthread_descr_struct to 32 bytes.
 	Reported by Tim Hockin <thockin@cobaltnet.com>, close PR
 	libc/1206.
 
