@@ -35,7 +35,7 @@
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
 #define lll_futex_clobbers \
-  "out4", "out5", "out6", "out7",					      \
+  "out5", "out6", "out7",						      \
   /* Non-stacked integer registers, minus r8, r10, r15.  */		      \
   "r2", "r3", "r9", "r11", "r12", "r13", "r14", "r16", "r17", "r18",	      \
   "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27",	      \
@@ -100,14 +100,14 @@
      register long int __r10 asm ("r10");				      \
      register long int __r15 asm ("r15") = SYS_futex;			      \
 									      \
-     __asm __volatile ("break %7;;"					      \
+     __asm __volatile ("break %8;;"					      \
 		       : "=r" (__r8), "=r" (__r10), "=r" (__r15),	      \
-			 "=r" (__o0), "=r" (__o1), "=r" (__o2), "r" (__o3),   \
+			 "=r" (__o0), "=r" (__o1), "=r" (__o2), "=r" (__o3),  \
 			 "=r" (__o4)					      \
 		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
 			 "5" (__o2), "6" (__o3), "7" (__o4)		      \
 		       : lll_futex_clobbers);				      \
-     __r8;								      \
+     __r10 == -1 ? -__r8 : __r8;					      \
   })
 
 

@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,29 +21,50 @@
 #include "bp-sym.h"
 
  /* These are the various addresses we require.  */
+#ifdef PIC
+	.section ".data"
+#else
 	.section ".rodata"
+#endif
 	.align	2
 L(start_addresses):
 	.long	_SDA_BASE_
-	.long	JUMPTARGET(BP_SYM (main))
-	.long 	JUMPTARGET(__libc_csu_init)
-	.long 	JUMPTARGET(__libc_csu_fini)
+	.long	BP_SYM (main)
+	.long 	__libc_csu_init
+	.long 	__libc_csu_fini
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 
 	.section ".text"
+#ifdef PIC
+L(start_addressesp):
+	.long	L(start_addresses)-L(branch)
+#endif
 ENTRY(_start)
  /* Save the stack pointer, in case we're statically linked under Linux.  */
 	mr	r9,r1
  /* Set up an initial stack frame, and clear the LR.  */
 	clrrwi	r1,r1,4
+#ifdef PIC
+	bcl	20,31,L(branch)
+L(branch):
 	li	r0,0
+	mflr	r13
+#else
+	li	r0,0
+#endif
 	stwu	r1,-16(r1)
 	mtlr	r0
 	stw	r0,0(r1)
  /* Set r13 to point at the 'small data area', and put the address of
     start_addresses in r8...  */
+#ifdef PIC
+	lwz	r8,L(start_addressesp)-L(branch)(r13)
+	add	r8,r13,r8
+	lwz	r13,0(r8)
+#else
 	lis	r8,L(start_addresses)@ha
 	lwzu	r13,L(start_addresses)@l(r8)
+#endif
  /* and continue in libc-start, in glibc.  */
 	b	JUMPTARGET(BP_SYM (__libc_start_main))
 END(_start)

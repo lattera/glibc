@@ -1,3 +1,15 @@
+2003-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_requeue):
+	Find break parameter in correct asm argument.
+
+2003-05-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(pthread_cond_t): Add __mutex.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (FUTEX_REQUEUE,
+	lll_futex_requeue, lll_mutex_unlock_force): Define.
+
 2003-05-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/tcb-offsets.sym: Define MUTEX_FUTEX.
