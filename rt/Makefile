@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1997,98,99,2000,01 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,30 +23,28 @@ subdir	:= rt
 
 headers	:= aio.h
 
-librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
+aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
-		  aio_notify get_clockfreq clock_getcpuclockid		\
+		  aio_notify
+clock-routines := get_clockfreq clock_getcpuclockid			\
 		  clock_getres clock_gettime clock_settime		\
-		  clock_nanosleep					\
-		  timer_create timer_delete timer_getoverr		\
-		  timer_gettime timer_settime				\
-		  shm_open shm_unlink
+		  clock_nanosleep
+timer-routines := timer_create timer_delete timer_getoverr		\
+		  timer_gettime timer_settime
+shm-routines   := shm_open shm_unlink
 
-# Make sure that everything is distributed independent of configuration.
-distribute := aio_misc.h $(librt-routines:=.c) $(librt-map)
+librt-routines = $(aio-routines) \
+		 $(clock-routines) $(timer-routines) \
+		 $(shm-routines)
 
-include ../Makeconfig
-
-ifeq ($(have-thread-library),yes)
-
-tests := tst-aio tst-aio64 tst-clock tst-shm tst-timer tst-aio2 tst-aio3 \
-	 tst-aio4 tst-aio5 tst-aio6
+tests := tst-shm tst-clock tst-timer \
+	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)
 
-endif
+distribute := aio_misc.h
 
 include ../Rules
 
