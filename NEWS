@@ -1,5 +1,5 @@
 GNU C Library NEWS -- history of user-visible changes.  2002-7-24
-Copyright (C) 1992-2000, 2001, 2002 Free Software Foundation, Inc.
+Copyright (C) 1992-2000,01,02 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -14,30 +14,30 @@ Version 2.3
 * iconv (the program and the interface) now accepts empty names (excluding
   options like //TRANSLIT) to mean "use charset of current locale".
 
-* localedef now can transliterate characters in strings which are not in
+* localedef can now transliterate characters in strings which are not in
   the provided charmap.  The information from the input locale is used.
 
 * Prelinking support was added for ELF targets.  This requires additional
   tools and recent versions of the GNU binutils.  Contributed by Jakub Jelinek.
 
-* Read-only stdio streams now use mmap to speed up operation but eliminating
+* Read-only stdio streams now use mmap to speed up operation by eliminating
   copying and buffer underflows.  Implemented by Ulrich Drepper.
 
 * The malloc functions were completely rewritten by Wolfram Gloger based
   on Doug Lea's malloc-2.7.0.c.
 
-* Isamu Hasegawa contributed a completely new and POSIX conforming
+* Isamu Hasegawa contributed a completely new and POSIX-conformant
   implementation of regex.
 
 * Bruno Haible upgraded the iconv and locale implementation to support
   Unicode 3.2.
 
-* Content of The LC_* and LANG environments in the CEN style is not recognized
-  anymore.   It never was used.  Change by Ulrich Drepper.
+* Contents of the LC_* and LANG environment variables in the CEN style are
+  not recognized anymore.   It never was used.  Change by Ulrich Drepper.
 
-* The runtime (ld.so, libc, libpthread for Linux) now can handle the TLS
-  ABI on some platforms.  Changes by Ulrich Drepper.
-  SH support by Kaz Kojima.
+* The runtime (ld.so, libc, libpthread for Linux) now can handle the ELF
+  thread-local storage (TLS) ABI on some platforms.
+  Changes by Ulrich Drepper.  SH support by Kaz Kojima.
 
 * Bruno Haible contributed iconv converters for ISO-2022-JP-3, SHIFT JIS-X0213,
   and EUC-JISX0213.
