@@ -159,7 +159,7 @@ The specifics of this function are analogous to @code{gethostname}, above.
 
 @comment unistd.h
 @comment ???
-@deftypefun int setdomainnname (const char *@var{name}, size_t @var{length})
+@deftypefun int setdomainname (const char *@var{name}, size_t @var{length})
 @cindex NIS domain name
 @cindex YP domain name
 

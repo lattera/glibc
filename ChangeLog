@@ -1,5 +1,13 @@
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/unix/bsd/times.c: Reorder includes and add <time.h>.
+	(timeval_to_clock_t): Add clk_tck argument and use that instead of
+	CLK_TCK.
+	(__times): Use __getclktck to get the number of clock ticks per
+	second and use its return value instead	of CLK_TCK.
+
+2001-02-10  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h (_HAVE_SA_LEN): Define.
 
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,1998,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,22 +18,23 @@
 
 #include <errno.h>
 #include <stddef.h>
+#include <sys/resource.h>
 #include <sys/times.h>
 #include <sys/time.h>
-#include <sys/resource.h>
+#include <time.h>
 
 
 /* Time the program started.  */
 extern time_t _posix_start_time;
 
-#ifdef	__GNUC__
+#ifdef __GNUC__
 __inline
 #endif
 static clock_t
-timeval_to_clock_t (const struct timeval *tv)
+timeval_to_clock_t (const struct timeval *tv, clock_t clk_tck)
 {
-  return (clock_t) ((tv->tv_sec * CLK_TCK) +
-		    (tv->tv_usec * CLK_TCK / 1000000L));
+  return (clock_t) ((tv->tv_sec * clk_tck) +
+		    (tv->tv_usec * clk_tck / 1000000L));
 }
 
 /* Store the CPU time used by this process and all its
@@ -45,6 +46,7 @@ __times (buffer)
      struct tms *buffer;
 {
   struct rusage usage;
+  clock_t clk_tck;
 
   if (buffer == NULL)
     {
@@ -52,17 +54,19 @@ __times (buffer)
       return (clock_t) -1;
     }
 
+  clk_tck = __getclktck ();
+  
   if (__getrusage (RUSAGE_SELF, &usage) < 0)
     return (clock_t) -1;
-  buffer->tms_utime = (clock_t) timeval_to_clock_t (&usage.ru_utime);
-  buffer->tms_stime = (clock_t) timeval_to_clock_t (&usage.ru_stime);
+  buffer->tms_utime = (clock_t) timeval_to_clock_t (&usage.ru_utime, clk_tck);
+  buffer->tms_stime = (clock_t) timeval_to_clock_t (&usage.ru_stime, clk_tck);
 
   if (__getrusage (RUSAGE_CHILDREN, &usage) < 0)
     return (clock_t) -1;
-  buffer->tms_cutime = (clock_t) timeval_to_clock_t (&usage.ru_utime);
-  buffer->tms_cstime = (clock_t) timeval_to_clock_t (&usage.ru_stime);
+  buffer->tms_cutime = (clock_t) timeval_to_clock_t (&usage.ru_utime, clk_tck);
+  buffer->tms_cstime = (clock_t) timeval_to_clock_t (&usage.ru_stime, clk_tck);
 
-  return (time ((time_t *) NULL) - _posix_start_time) * CLK_TCK;
+  return (time ((time_t *) NULL) - _posix_start_time) * clk_tck;
 }
 
 weak_alias (__times, times)

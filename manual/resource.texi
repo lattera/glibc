@@ -533,7 +533,7 @@ apply only to CPU time.
 CPU scheduling is a complex issue and different systems do it in wildly
 different ways.  New ideas continually develop and find their way into
 the intricacies of the various systems' scheduling algorithms.  This
-section discusses the general concepts, some specifics of systems 
+section discusses the general concepts, some specifics of systems
 that commonly use the GNU C library, and some standards.
 
 For simplicity, we talk about CPU contention as if there is only one CPU
@@ -620,7 +620,7 @@ tell you what the range is on a particular system.
 One thing you must keep in mind when designing real time applications is
 that having higher absolute priority than any other process doesn't
 guarantee the process can run continuously.  Two things that can wreck a
-good CPU run are interrupts and page faults.  
+good CPU run are interrupts and page faults.
 
 Interrupt handlers live in that limbo between processes.  The CPU is
 executing instructions, but they aren't part of any process.  An
@@ -678,7 +678,7 @@ If two processes are ready to run but have different absolute priorities,
 the decision is much simpler, and is described in @ref{Absolute
 Priority}.
 
-Each process has a scheduling policy.  For processes with absolute 
+Each process has a scheduling policy.  For processes with absolute
 priority other than zero, there are two available:
 
 @enumerate
@@ -792,7 +792,7 @@ The following macros represent the valid values for @var{policy}:
 @item SCHED_OTHER
 Traditional Scheduling
 @item SCHED_FIFO
-First In First Out 
+First In First Out
 @item SCHED_RR
 Round Robin
 @end table
@@ -941,7 +941,7 @@ to this function are:
 
 @comment sched.h
 @comment POSIX
-@deftypefun int sched_set_priority_max (int *@var{policy});
+@deftypefun int sched_get_priority_max (int *@var{policy});
 
 This function returns the highest absolute priority value that is
 allowable for a process that with scheduling policy @var{policy}.
@@ -963,11 +963,11 @@ to this function are:
 @comment POSIX
 @deftypefun int sched_rr_get_interval (pid_t @var{pid}, struct timespec *@var{interval})
 
-This function returns the length of the quantum (time slice) used with 
+This function returns the length of the quantum (time slice) used with
 the Round Robin scheduling policy, if it is used, for the process with
 Process ID @var{pid}.
 
-It returns the length of time as @var{interval}.  
+It returns the length of time as @var{interval}.
 @c We need a cross-reference to where timespec is explained.  But that
 @c section doesn't exist yet, and the time chapter needs to be slightly
 @c reorganized so there is a place to put it (which will be right next
@@ -1052,7 +1052,7 @@ immediately.
 
 In addition to its absolute priority of zero, every process has another
 priority, which we will refer to as "dynamic priority" because it changes
-over time.  The dynamic priority is meaningless for processes with 
+over time.  The dynamic priority is meaningless for processes with
 an absolute priority higher than zero.
 
 The dynamic priority sometimes determines who gets the next turn on the
@@ -1103,7 +1103,7 @@ other process owned by the same user (or effective user).  But only a
 privileged process can lower its nice value.  A privileged process can
 also raise or lower another process' nice value.
 
-GNU C Library functions for getting and setting nice values are described in 
+GNU C Library functions for getting and setting nice values are described in
 @xref{Traditional Scheduling Functions}.
 
 @node Traditional Scheduling Functions
@@ -1241,4 +1241,3 @@ nice (int increment)
 @}
 @end smallexample
 @end deftypefun
-

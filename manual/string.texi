@@ -1066,6 +1066,35 @@ located byte, or a null pointer if no match was found.
 
 @comment string.h
 @comment GNU
+@deftypefun {void *} rawmemchr (const void *@var{block}, int @var{c})
+Often the @code{memchr} function is used with the knowledge that the
+byte @var{c} is available in the memory block specified by the
+parameters.  But this means that the @var{size} parameter is not really
+needed and that the tests performed with it at runtime (to check whether
+the end of the block is reached) are not needed.
+
+The @code{rawmemchr} function exists for just this situation which is
+surprisingly frequent.  The interface is similar to @code{memchr} except
+that the @var{size} parameter is missing.  The function will look beyond
+the end of the block pointed to by @var{block} in case the programmer
+made in error in assuming that the byte @var{c} is present in the block.
+In this case the result is unspecified.  Otherwise the return value is a
+pointer to the located byte.
+
+This function is of special interest when looking for the end of a
+string.  Since all strings are terminated by a null byte a call like
+
+@smallexample
+   rawmemchr (str, '\0')
+@end smallexample
+
+will never go beyond the end of the string.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment string.h
+@comment GNU
 @deftypefun {void *} memrchr (const void *@var{block}, int @var{c}, size_t @var{size})
 The function @code{memrchr} is like @code{memchr}, except that it searches
 backwards from the end of the block defined by @var{block} and @var{size}
@@ -1094,7 +1123,7 @@ specifying a null character as the value of the @var{c} argument.
 @end deftypefun
 
 @comment string.h
-@comment ???
+@comment GNU
 @deftypefun {char *} strchrnul (const char *@var{string}, int @var{c})
 @code{strchrnul} is the same as @code{strchr} except that if it does
 not find the character, it returns a pointer to string's terminating
