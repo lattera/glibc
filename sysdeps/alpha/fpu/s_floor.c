@@ -17,18 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __USE_EXTERN_INLINES
-#define __USE_EXTERN_INLINES
-#endif
-#define __floor __i_floor
-
 #include <math.h>
 
-#undef __floor
+
+/* Use the -inf rounding mode conversion instructions to implement
+   floor.  We note when the exponent is large enough that the value
+   must be integral, as this avoids unpleasant integer overflows.  */
 
 double
 __floor (double x)
 {
+  /* Check not zero since floor(-0) == -0.  */
   if (x != 0 && fabs (x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
     {
       double __tmp1;

@@ -1,3 +1,15 @@
+1999-01-29  Richard Henderson  <rth@twiddle.net>
+
+	* scripts/config.sub: Recognize alpha{pca5[67],ev[67]}.
+
+	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
+	Format pointer differences as longs.
+
+	* sysdeps/alpha/fpu/s_floor.c, sysdeps/alpha/fpu/s_floorf.c:
+	Copy commentary from bits/mathinclude.h.  Kill unused defines.
+
+	* sysdeps/alpha/atomicity.h: New file.
+
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.112.

@@ -17,14 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __USE_EXTERN_INLINES
-#define __USE_EXTERN_INLINES
-#endif
-#define __floorf __i_floorf
-
 #include <math.h>
 
-#undef __floorf
+
+/* Use the -inf rounding mode conversion instructions to implement
+   floor.  We note when the exponent is large enough that the value
+   must be integral, as this avoids unpleasant integer overflows.  */
 
 float
 __floorf (float x)
@@ -37,7 +35,7 @@ __floorf (float x)
 	 convert back to S_Floating in the end.  The initial
 	 conversion to T_Floating is needed to handle denormals.  */
 
-      float __tmp1, __tmp2;
+      float tmp1, tmp2;
 
       __asm ("cvtst/s %3,%2\n\t"
 #ifdef _IEEE_FP_INEXACT
@@ -46,7 +44,7 @@ __floorf (float x)
 	     "cvttq/svm %2,%1\n\t"
 #endif
 	     "cvtqt/m %1,%0\n\t"
-	     : "=f"(x), "=&f"(__tmp1), "=&f"(__tmp2)
+	     : "=f"(x), "=&f"(tmp1), "=&f"(tmp2)
 	     : "f"(x));
     }
   return x;

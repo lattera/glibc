@@ -1,5 +1,5 @@
 /* Return list with names for address in backtrace.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -76,9 +76,11 @@ __backtrace_symbols (array, size)
 	      char buf[20];
 
 	      if (array[cnt] >= (void *) info[cnt].dli_saddr)
-		sprintf (buf, "+0x%x", array[cnt] - info[cnt].dli_saddr);
+		sprintf (buf, "+%#lx",
+			 (unsigned long)(array[cnt] - info[cnt].dli_saddr));
 	      else
-		sprintf (buf, "-0x%x", info[cnt].dli_saddr - array[cnt]);
+		sprintf (buf, "-%#lx",
+			 (unsigned long)(info[cnt].dli_saddr - array[cnt]));
 
 	      last += 1 + sprintf (last, "%s%s%s%s%s[%p]",
 				   info[cnt].dli_fname ?: "",

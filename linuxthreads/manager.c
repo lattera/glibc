@@ -314,6 +314,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
                                  &guardaddr, &guardsize) == 0)
         break;
     }
+  __pthread_handles_num++;
   /* Allocate new thread identifier */
   pthread_threads_counter += PTHREAD_THREADS_MAX;
   new_thread_id = sseg + pthread_threads_counter;
