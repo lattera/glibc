@@ -1,0 +1,51 @@
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <errno.h>
+#include <spawn.h>
+#include <unistd.h>
+
+#include "spawn_int.h"
+
+/* Add an action to FILE-ACTIONS which tells the implementation to call
+   `dup2' for the given file descriptors during the `spawn' call.  */
+int
+posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
+				  int fd, int newfd)
+{
+  int maxfd = sysconf (_SC_OPEN_MAX);
+  struct __spawn_action *rec;
+
+  /* Test for the validity of the file descriptor.  */
+  if (fd < 0 || newfd < 0 || fd >= maxfd || newfd >= maxfd)
+    return EBADF;
+
+  /* Allocate more memory of needed.  */
+  if (file_actions->__used == file_actions->__allocated
+      && __posix_spawn_file_actions_realloc (file_actions) != 0)
+    /* THis can only mean we ran out of memory.  */
+    return ENOMEM;
+
+  /* Add the new value.  */
+  rec = &file_actions->__actions[file_actions->__allocated];
+  rec->tag = spawn_do_dup2;
+  rec->action.dup2_action.fd = fd;
+  rec->action.dup2_action.newfd = newfd;
+
+  return 0;
+}

@@ -1,3 +1,48 @@
+2000-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (headers): Add spawn.h.
+	(distribute): Add spawn_int.h.
+	(routines): Add spawn_faction_init, spawn_faction_destroy,
+	spawn_faction_addclose, spawn_faction_addopen, spawn_faction_adddup2,
+	spawnattr_init, spawnattr_destroy, spawnattr_getdefault,
+	spawnattr_setdefault, spawnattr_getflags, spawnattr_setflags,
+	spawnattr_getpgroup, spawnattr_setpgroup, spawn, spawnp, and spawni.
+	* posix/Versions [libc] (GLIBC_2.2): Add posix_spawn_file_actions_init,
+	posix_spawn_file_actions_destroy, posix_spawn_file_actions_addclose,
+	posix_spawn_file_actions_addopen, posix_spawn_file_actions_adddup2,
+	posix_spawnattr_init, posix_spawnattr_destroy,
+	posix_spawnattr_getdefault, posix_spawnattr_setdefault,
+	posix_spawnattr_getflags, posix_spawnattr_setflags,
+	posix_spawnattr_getpgroup, posix_spawnattr_setpgroup, posix_spawn,
+	and posix_spawnp.
+	* posix/spawn.c: New file.
+	* posix/spawn.h: New file.
+	* posix/spawn_faction_addclose.c: New file.
+	* posix/spawn_faction_adddup2.c: New file.
+	* posix/spawn_faction_addopen.c: New file.
+	* posix/spawn_faction_destroy.c: New file.
+	* posix/spawn_faction_init.c: New file.
+	* posix/spawn_int.h: New file.
+	* posix/spawnattr_destroy.c: New file.
+	* posix/spawnattr_getdefault.c: New file.
+	* posix/spawnattr_getflags.c: New file.
+	* posix/spawnattr_getpgroup.c: New file.
+	* posix/spawnattr_getschedparam.c: New file.
+	* posix/spawnattr_getschedpolicy.c: New file.
+	* posix/spawnattr_getsigmask.c: New file.
+	* posix/spawnattr_init.c: New file.
+	* posix/spawnattr_setdefault.c: New file.
+	* posix/spawnattr_setflags.c: New file.
+	* posix/spawnattr_setpgroup.c: New file.
+	* posix/spawnattr_setschedparam.c: New file.
+	* posix/spawnattr_setschedpolicy.c: New file.
+	* posix/spawnattr_setsigmask.c: New file.
+	* posix/spawni.c: New file.
+	* posix/spawnp.c: New file.
+
+	* sysdeps/mach/hurd/bits/posix_opt.h: Add _POSIX_SPAWN.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+
 2000-04-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/Versions [libc] (GLIBC_2.2): Add posix_memalign.

@@ -1,5 +1,12 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* internals.h (WRITE_MEMORY_BARRIER): Define as MEMORY_BARRIER if
+	undefined.
+	* spinlock.c: Use WRITE_MEMORY_BARRIER instead of MEMORY_BARRIER
+	where possible.
+	* sysdeps/alpha/pt-machine.h: Define WRITE_MEMORY_BARRIER.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add _POSIX_SPAWN.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
 

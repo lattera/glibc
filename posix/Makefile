@@ -27,11 +27,12 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h	      \
-	   sys/sysmacros.h
+	   sys/sysmacros.h spawn.h
 
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
-	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c
+	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
+	      spawn_int.h
 
 routines :=								      \
 	uname								      \
@@ -51,7 +52,13 @@ routines :=								      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
 	sched_primin sched_rr_gi					      \
 	getaddrinfo gai_strerror wordexp				      \
-	pread pwrite pread64 pwrite64
+	pread pwrite pread64 pwrite64					      \
+	spawn_faction_init spawn_faction_destroy spawn_faction_addclose	      \
+	spawn_faction_addopen spawn_faction_adddup2			      \
+	spawnattr_init spawnattr_destroy				      \
+	spawnattr_getdefault spawnattr_setdefault			      \
+	spawnattr_getflags spawnattr_setflags				      \
+	spawnattr_getpgroup spawnattr_setpgroup spawn spawnp spawni
 
 include ../Makeconfig
 

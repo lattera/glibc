@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Sparc v9 version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -41,6 +41,9 @@ testandset (int *spinlock)
 /* FIXME: is stbar OK, or should we use the more general membar instruction?
    If so, which mode to pass to membar? */
 #define MEMORY_BARRIER() __asm__ __volatile__("stbar" : : : "memory")
+/* Write barrier.  */
+#define WRITE_MEMORY_BARRIER() \
+     __asm__ __volatile__("membar #StoreLoad | #StoreStore" : : : "memory")
 
 
 /* Get some notion of the current stack.  Need not be exactly the top
