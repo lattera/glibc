@@ -1,3 +1,7 @@
+1999-11-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/string.h: Remove K&R compatibility.
+
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/signum.h (SIGSYS): New definition.
