@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
@@ -19,6 +19,7 @@
 
 #include <wchar.h>
 
+#undef __mbrlen
 
 /* The mbrlen function has an internal shift state which gets used if
    the PS parameter is NULL.  */
@@ -33,4 +34,5 @@ __mbrlen (s, n, ps)
 {
   return __mbrtowc (NULL, s, n, ps ?: &internal);
 }
+INTDEF(__mbrlen)
 weak_alias (__mbrlen, mbrlen)

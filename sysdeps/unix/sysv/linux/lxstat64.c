@@ -32,6 +32,8 @@
 # include <xstatconv.c>
 #endif
 
+#undef __lxstat64
+
 extern int __syscall_lstat (const char *__unbounded,
 			    struct kernel_stat *__unbounded);
 
@@ -100,3 +102,4 @@ compat_symbol (libc, __old__lxstat64, __lxstat64, GLIBC_2_1);
 #else
 strong_alias (___lxstat64, __lxstat64);
 #endif
+INTDEF2(___lxstat64, __lxstat64)

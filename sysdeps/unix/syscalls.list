@@ -61,5 +61,5 @@ umask		-	umask		i:i	__umask		umask
 uname		-	uname		i:p	__uname		uname
 unlink		-	unlink		i:s	__unlink	unlink
 utimes		-	utimes		i:sp	__utimes	utimes
-write		-	write		i:ibn	__libc_write	__write write
+write		-	write		i:ibn	__libc_write	__write write __write_internal
 writev		-	writev		i:ipi	__writev	writev

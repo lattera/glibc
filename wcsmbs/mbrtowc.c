@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -28,6 +28,8 @@
 #ifndef EILSEQ
 # define EILSEQ EINVAL
 #endif
+
+#undef __mbrtowc
 
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
@@ -104,4 +106,5 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   return result;
 }
+INTDEF(__mbrtowc)
 weak_alias (__mbrtowc, mbrtowc)

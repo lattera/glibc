@@ -1,5 +1,37 @@
 2002-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/sys/stat.h: Add prototypes for __lxstat_internal and
+	__lxstat64_internal.  Add macros __lxstat and __lxstat64 if not
+	NOT_IN_libc.
+	* sysdeps/generic/lxstat.c: Use INTDEF for __lxstat.
+	* sysdeps/mach/hurd/lxstat.c: Likewise.
+	* sysdeps/unix/common/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/aix/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/lxstat.c: Likewise.
+	* sysdeps/generic/lxstat64.c: Use INTDEF for __lxstat64.
+	* sysdeps/mach/hurd/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/aix/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linuxx/lxstat64.c: Likewise.
+
+	* include/wchar.h: Declare __mbrtowc_internal and __mbrlen_internal
+	prototypes.  Add __mbrlen and __mbrtowc macros.
+	* wcsmbs/mbrlen.c: Use INTDEF for __mbrlen.
+	* wcsmbs/mbrtowc.c: Use INTDEF for __mbrtowc.
+
+	* include/unistd.h: Add prototype for __write_internal and add
+	__libc_write macro is SHARED.
+	* sysdeps/generic/write.c: Use INTDEF for __write.
+	* sysdeps/mach/hurd/write.c: Likewise.
+	* sysdeps/unix/sysv/aix/write.c: Likewise.
+	* sysdeps/unix/syscalls.list: Add __libc_write alias.
+
+	* assert/assert.c: Replace STR_N_SIZE with something usable in
+	macro arguments.
+	* assert/assert-perr.c: Likewise.
+
 	* include/sys/socket.h: Declare __libc_sa_len_internal and define
 	SA_LEN macro to use it if not NOT_IN_libc.
 	* sysdeps/unix/sysv/linux/sa_len.c: Use INTDEF for __libc_sa_len.

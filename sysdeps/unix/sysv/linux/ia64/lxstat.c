@@ -1,5 +1,5 @@
 /* lxstat using old-style Unix fstat system call.
-   Copyright (C) 1991, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
+#undef __lxstat
+
 extern int __syscall_lstat (const char *__unbounded, struct stat *__unbounded);
 
 /* Get information about the file FD in BUF.  */
@@ -38,6 +40,8 @@ __lxstat (int vers, const char *name, struct stat *buf)
   return INLINE_SYSCALL (lstat, 2, CHECK_STRING (name), CHECK_1 (buf));
 }
 
+INTDEF(__lxstat)
 weak_alias (__lxstat, _lxstat);
 #undef __lxstat64
+INTDEF(__lxstat64)
 strong_alias (__lxstat, __lxstat64);

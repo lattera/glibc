@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 #include <fcntl.h>
 #include <hurd.h>
 
+#undef __lxstat
+
 int
 __lxstat (int vers, const char *file, struct stat *buf)
 {
@@ -41,4 +43,5 @@ __lxstat (int vers, const char *file, struct stat *buf)
   return 0;
 }
 
+INTDEF(__lxstat)
 weak_alias (__lxstat, _lxstat)

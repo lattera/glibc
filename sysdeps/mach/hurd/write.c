@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include <unistd.h>
 #include <hurd/fd.h>
 
+#undef __libc_write
+#undef __write
+
 ssize_t
 __libc_write (int fd, const void *buf, size_t nbytes)
 {
@@ -29,4 +32,5 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 }
 
 weak_alias (__libc_write, __write)
+INTDEF(__write)
 weak_alias (__libc_write, write)

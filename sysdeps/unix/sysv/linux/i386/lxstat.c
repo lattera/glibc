@@ -1,5 +1,5 @@
 /* lxstat using old-style Unix lstat system call.
-   Copyright (C) 1991,95,96,97,98,2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,8 @@
 #include "kernel-features.h"
 
 #include <xstatconv.c>
+
+#undef __lxstat
 
 extern int __syscall_lstat (const char *__unbounded,
 			    struct kernel_stat *__unbounded);
@@ -96,8 +98,10 @@ __lxstat (int vers, const char *name, struct stat *buf)
 #endif
 }
 
+INTDEF(__lxstat)
 weak_alias (__lxstat, _lxstat);
 #ifdef XSTAT_IS_XSTAT64
 #undef __lxstat64
+INTDEF(__lxstat64)
 strong_alias (__lxstat, __lxstat64);
 #endif

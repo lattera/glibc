@@ -15,6 +15,10 @@ extern int __fxstat_internal (int __ver, int __fildes,
 			      struct stat *__stat_buf) attribute_hidden;
 extern int __fxstat64_internal (int __ver, int __fildes,
 				struct stat64 *__stat_buf) attribute_hidden;
+extern int __lxstat_internal (int __ver, __const char __file,
+			      struct stat *__stat_buf) attribute_hidden;
+extern int __lxstat64_internal (int __ver, __const char *__file,
+				struct stat64 *__stat_buf) attribute_hidden;
 extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
 {
   return __xstat (_STAT_VER, __path, __statbuf);
@@ -43,6 +47,8 @@ extern __inline__ int __mknod (__const char *__path, __mode_t __mode,
 
 # define __fxstat(ver, fd, buf) INTUSE(__fxstat) (ver, fd, buf)
 # define __fxstat64(ver, fd, buf) INTUSE(__fxstat64) (ver, fd, buf)
+# define __lxstat(ver, name, buf) INTUSE(__lxstat) (ver, name, buf)
+# define __lxstat64(ver, name, buf) INTUSE(__lxstat64) (ver, name, buf)
 #else
 # define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 # define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)

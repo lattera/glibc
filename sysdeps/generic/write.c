@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
+
+#undef __libc_write
+#undef __write
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
 ssize_t
@@ -44,5 +47,6 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 stub_warning (write)
 
 weak_alias (__libc_write, __write)
+INTDEF(__write)
 weak_alias (__libc_write, write)
 #include <stub-tag.h>

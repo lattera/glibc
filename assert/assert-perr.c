@@ -75,9 +75,11 @@ __assert_perror_fail (int errnum,
       free (buf);
     }
   else
-    /* At least print a minimal message.  */
-#define STR_N_LEN(str) str, sizeof (str) - 1
-    __libc_write (STDERR_FILENO, STR_N_LEN ("Unexpected error.\n"));
+    {
+      /* At least print a minimal message.  */
+      static const char errstr[] = "Unexpected error.\n";
+      __libc_write (STDERR_FILENO, errstr, sizeof (errstr) - 1);
+    }
 
   abort ();
 }
