@@ -1,14 +1,17 @@
 2003-12-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regexec.c (re_copy_regs): Allocate start and end array in
+	one block.
+	(push_fail_stack): Add missing check for failed memory allocation.
+
 	* libio/libio.h: Use __builtin_expect in _IO_getc_unlocked,
-	_IO_peekc_unlocked, _IO_ptc_unlcoked, _IO_getwc_unlocked, and
+	_IO_peekc_unlocked, _IO_ptc_unlocked, _IO_getwc_unlocked, and
 	_IO_putwc_unlocked.
 
 2003-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/dbl-64/e_j0.c (__ieee754_y0): Raise only
-	overflow for 0 as argument. Raise Invalid exception for negative
-	args.
+	overflow for 0 as argument. Raise Invalid exception for negative args.
 	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_yn): Likewise.
 	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_y0): Likewise.
 	* sysdeps/ieee754/ldb-128/e_jnl.c (__ieee754_ynl): Likewise.

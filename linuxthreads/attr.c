@@ -455,12 +455,17 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 		{
 		  /* Found the entry.  Now we have the info we need.  */
 		  attr->__stacksize = rl.rlim_cur;
+#ifdef _STACK_GROWS_UP
+		  /* Don't check to enforce a limit on the __stacksize */
+		  attr->__stackaddr = (void *) from;
+#else
 		  attr->__stackaddr = (void *) to;
 
 		  /* The limit might be too high.  This is a bogus
 		     situation but try to avoid making it worse.  */
 		  if ((size_t) attr->__stacksize > (size_t) attr->__stackaddr)
 		    attr->__stacksize = (size_t) attr->__stackaddr;
+#endif
 
 		  /* We succeed and no need to look further.  */
 		  ret = 0;

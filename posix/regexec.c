@@ -453,16 +453,12 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
 
   /* Have the register data arrays been allocated?  */
   if (regs_allocated == REGS_UNALLOCATED)
-    { /* No.  So allocate them with malloc.  */
-      regs->start = re_malloc (regoff_t, need_regs);
+    { /* No.  So allocate them with malloc.  We allocate the arrays
+	 for the start and end in one block.  */
+      regs->start = re_malloc (regoff_t, 2 * need_regs);
       if (BE (regs->start == NULL, 0))
 	return REGS_UNALLOCATED;
-      regs->end = re_malloc (regoff_t, need_regs);
-      if (BE (regs->end == NULL, 0))
-	{
-	  re_free (regs->start);
-	  return REGS_UNALLOCATED;
-	}
+      regs->end = regs->start + need_regs;
       regs->num_regs = need_regs;
     }
   else if (regs_allocated == REGS_REALLOCATE)
@@ -471,19 +467,13 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
 	 leave it alone.  */
       if (BE (need_regs > regs->num_regs, 0))
 	{
-	  regs->start = re_realloc (regs->start, regoff_t, need_regs);
+	  regs->start = re_realloc (regs->start, regoff_t, 2 * need_regs);
 	  if (BE (regs->start == NULL, 0))
 	    {
-	      if (regs->end != NULL)
-		re_free (regs->end);
+	      regs->end = NULL;
 	      return REGS_UNALLOCATED;
 	    }
-	  regs->end = re_realloc (regs->end, regoff_t, need_regs);
-	  if (BE (regs->end == NULL, 0))
-	    {
-	      re_free (regs->start);
-	      return REGS_UNALLOCATED;
-	    }
+	  regs->end = regs->start + need_regs;
 	  regs->num_regs = need_regs;
 	}
     }
@@ -1243,6 +1233,8 @@ push_fail_stack (fs, str_idx, dests, nregs, regs, eps_via_nodes)
   fs->stack[num].idx = str_idx;
   fs->stack[num].node = dests[1];
   fs->stack[num].regs = re_malloc (regmatch_t, nregs);
+  if (fs->stack[num].regs == NULL)
+    return REG_ESPACE;
   memcpy (fs->stack[num].regs, regs, sizeof (regmatch_t) * nregs);
   err = re_node_set_init_copy (&fs->stack[num].eps_via_nodes, eps_via_nodes);
   return err;
