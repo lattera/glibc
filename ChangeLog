@@ -1,3 +1,17 @@
+2004-09-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/configure.in: New file.
+	* config.h.in (USE_PPC64_OVERLAPPING_OPD): Add.
+	* configure.in (HAVE_ASM_GLOBAL_DOT_NAME): Remove.
+	* sysdeps/powerpc/powerpc64/sysdep.h: Formatting.
+	(OPD_ENT, BODY_LABEL, ENTRY_1, ENTRY_2, END_2, DOT_PREFIX,
+	BODY_PREFIX): Define.
+	(ENTRY, DOT_LABEL, END, TRACEBACK, END_GEN_TB, EALIGN): Support
+	HAVE_ASM_GLOBAL_DOT_NAME or no dot symbols,
+	USE_PPC64_OVERLAPPING_OPD or never overlapping .opd entries.
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Include sysdep.h.
+	(TRAMPOLINE_TEMPLATE, RTLD_START): Use the new sysdep.h macros.
+
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.h: Don't define __THROW if it is already defined.

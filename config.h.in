@@ -61,6 +61,9 @@
 /* Define a symbol_name as a global .symbol_name for ld.  */
 #undef	HAVE_ASM_GLOBAL_DOT_NAME
 
+/* On powerpc64, use overlapping .opd entries.  */
+#undef  USE_PPC64_OVERLAPPING_OPD
+
 /* Define if the assembler generates debugging information directly.  */
 #undef	HAVE_CPP_ASM_DEBUGINFO
 

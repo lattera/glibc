@@ -1030,13 +1030,6 @@ if test "x$libc_cv_asm_type_prefix" != xno; then
   AC_DEFINE_UNQUOTED(ASM_TYPE_DIRECTIVE_PREFIX, ${libc_cv_asm_type_prefix})
 fi
 
-# The Aix ld uses global .symbol_names instead of symbol_names.
-# Unfortunately also used in the PPC64 ELF ABI.
-case "${os}${machine}" in
-aix4.3* | linux*powerpc/powerpc64*)
-  AC_DEFINE(HAVE_ASM_GLOBAL_DOT_NAME)
-esac
-
 AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
 [cat > conftest.s <<EOF
 ${libc_cv_dot_text}

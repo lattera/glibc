@@ -5031,16 +5031,6 @@ _ACEOF
 
 fi
 
-# The Aix ld uses global .symbol_names instead of symbol_names.
-# Unfortunately also used in the PPC64 ELF ABI.
-case "${os}${machine}" in
-aix4.3* | linux*powerpc/powerpc64*)
-  cat >>confdefs.h <<\_ACEOF
-#define HAVE_ASM_GLOBAL_DOT_NAME 1
-_ACEOF
-
-esac
-
 echo "$as_me:$LINENO: checking for .symver assembler directive" >&5
 echo $ECHO_N "checking for .symver assembler directive... $ECHO_C" >&6
 if test "${libc_cv_asm_symver_directive+set}" = set; then

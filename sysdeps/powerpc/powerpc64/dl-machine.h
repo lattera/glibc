@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <sys/param.h>
 #include <dl-tls.h>
+#include <sysdep.h>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -117,16 +118,15 @@ elf_machine_dynamic (void)
 #define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
   asm (".section \".text\"\n"						\
 "	.align	2\n"							\
-"	.globl	." #tramp_name "\n"					\
-"	.type	." #tramp_name ",@function\n"				\
+"	.type	" BODY_PREFIX #tramp_name ",@function\n"		\
 "	.section \".opd\",\"aw\"\n"					\
 "	.align	3\n"							\
 "	.globl	" #tramp_name "\n"					\
-"	.size	" #tramp_name ",24\n"					\
+"	" ENTRY_2(tramp_name) "\n"					\
 #tramp_name ":\n"							\
-"	.quad	." #tramp_name ",.TOC.@tocbase,0\n"			\
+"	" OPD_ENT(tramp_name) "\n"					\
 "	.previous\n"							\
-"." #tramp_name ":\n"							\
+BODY_PREFIX #tramp_name ":\n"						\
 /* We need to save the registers used to pass parameters, ie. r3 thru	\
    r10; the registers are saved in a stack frame.  */			\
 "	stdu	1,-128(1)\n"						\
@@ -141,14 +141,14 @@ elf_machine_dynamic (void)
 "	std	7,80(1)\n"						\
 "	mflr	0\n"							\
 "	std	8,88(1)\n"						\
-/* Store the LR in the LR Save area of the previous frame.  */    \
+/* Store the LR in the LR Save area of the previous frame.  */    	\
 "	std	0,128+16(1)\n"						\
 "	mfcr	0\n"							\
 "	std	9,96(1)\n"						\
 "	std	10,104(1)\n"						\
-/* I'm almost certain we don't have to save cr...  be safe.  */    \
+/* I'm almost certain we don't have to save cr...  be safe.  */    	\
 "	std	0,8(1)\n"						\
-"	bl	." #fixup_name "\n"					\
+"	bl	" DOT_PREFIX #fixup_name "\n"				\
 /* Put the registers back.  */						\
 "	ld	0,128+16(1)\n"						\
 "	ld	10,104(1)\n"						\
@@ -174,13 +174,13 @@ elf_machine_dynamic (void)
 ".LT_" #tramp_name ":\n"						\
 "	.long 0\n"							\
 "	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"		\
-"	.long .LT_" #tramp_name "-."#tramp_name "\n"			\
+"	.long .LT_" #tramp_name "-" BODY_PREFIX #tramp_name "\n"	\
 "	.short .LT_" #tramp_name "_name_end-.LT_" #tramp_name "_name_start\n" \
 ".LT_" #tramp_name "_name_start:\n"					\
 "	.ascii \"" #tramp_name "\"\n"					\
 ".LT_" #tramp_name "_name_end:\n"					\
 "	.align 2\n"							\
-"	.size	." #tramp_name ",. - ." #tramp_name "\n"		\
+"	" END_2(tramp_name) "\n"					\
 "	.previous");
 
 #ifndef PROF
@@ -210,16 +210,15 @@ elf_machine_dynamic (void)
 #define RTLD_START \
   asm (".section \".text\"\n"						\
 "	.align	2\n"							\
-"	.globl	._start\n"						\
-"	.type	._start,@function\n"					\
+"	.type	" BODY_PREFIX "_start,@function\n"			\
 "	.section \".opd\",\"aw\"\n"					\
 "	.align	3\n"							\
 "	.globl	_start\n"						\
-"	.size	_start,24\n"						\
+"	" ENTRY_2(_start) "\n"						\
 "_start:\n"								\
-"	.quad	._start,.TOC.@tocbase,0\n"				\
+"	" OPD_ENT(_start) "\n"						\
 "	.previous\n"							\
-"._start:\n"								\
+BODY_PREFIX "_start:\n"							\
 /* We start with the following on the stack, from top:			\
    argc (4 bytes);							\
    arguments for program (terminated by NULL);				\
@@ -229,24 +228,24 @@ elf_machine_dynamic (void)
 "	li	4,0\n"							\
 "	stdu	4,-128(1)\n"						\
 /* Call _dl_start with one parameter pointing at argc.  */		\
-"	bl	._dl_start\n"						\
+"	bl	" DOT_PREFIX "_dl_start\n"				\
 "	nop\n"								\
 /* Transfer control to _dl_start_user!  */				\
-"	b	._dl_start_user\n"					\
-".LT__start:\n"  \
-"	.long 0\n"      \
+"	b	" DOT_PREFIX "_dl_start_user\n"				\
+".LT__start:\n"								\
+"	.long 0\n"							\
 "	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"		\
-"	.long .LT__start-._start\n"					\
+"	.long .LT__start-" BODY_PREFIX "_start\n"			\
 "	.short .LT__start_name_end-.LT__start_name_start\n"		\
 ".LT__start_name_start:\n"						\
 "	.ascii \"_start\"\n"						\
 ".LT__start_name_end:\n"						\
 "	.align 2\n"							\
-"	.size	._start,.-._start\n"					\
+"	" END_2(_start) "\n"						\
 "	.globl	_dl_start_user\n"					\
 "	.section \".opd\",\"aw\"\n"					\
 "_dl_start_user:\n"							\
-"	.quad	._dl_start_user, .TOC.@tocbase, 0\n"			\
+"	" OPD_ENT(_dl_start_user) "\n"					\
 "	.previous\n"							\
 "	.section	\".toc\",\"aw\"\n"				\
 DL_STARTING_UP_DEF							\
@@ -259,20 +258,20 @@ DL_STARTING_UP_DEF							\
 ".LC__dl_fini:\n"							\
 "	.tc _dl_fini[TC],_dl_fini\n"					\
 "	.previous\n"							\
-"	.globl	._dl_start_user\n"					\
-"	.type	._dl_start_user,@function\n"				\
-/* Now, we do our main work of calling initialisation procedures.  \
-   The ELF ABI doesn't say anything about parameters for these,  \
-   so we just pass argc, argv, and the environment.  \
-   Changing these is strongly discouraged (not least because argc is  \
-   passed by value!).  */  \
-"._dl_start_user:\n"  \
+"	.type	" BODY_PREFIX "_dl_start_user,@function\n"		\
+"	" ENTRY_2(_dl_start_user) "\n"					\
+/* Now, we do our main work of calling initialisation procedures.	\
+   The ELF ABI doesn't say anything about parameters for these,		\
+   so we just pass argc, argv, and the environment.			\
+   Changing these is strongly discouraged (not least because argc is	\
+   passed by value!).  */						\
+BODY_PREFIX "_dl_start_user:\n"						\
 /* the address of _start in r30.  */					\
 "	mr	30,3\n"							\
 /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */		\
-"	ld	28,.LC__rtld_global@toc(2)\n"    \
-"	ld	29,.LC__dl_argc@toc(2)\n"					\
-"	ld	27,.LC__dl_argv@toc(2)\n"					\
+"	ld	28,.LC__rtld_global@toc(2)\n"				\
+"	ld	29,.LC__dl_argc@toc(2)\n"				\
+"	ld	27,.LC__dl_argv@toc(2)\n"				\
 /* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */	\
 "	ld	3,0(28)\n"						\
 "	lwa	4,0(29)\n"						\
@@ -280,7 +279,7 @@ DL_STARTING_UP_DEF							\
 "	sldi	6,4,3\n"						\
 "	add	6,5,6\n"						\
 "	addi	6,6,8\n"						\
-"	bl	._dl_init\n"						\
+"	bl	" DOT_PREFIX "_dl_init\n"				\
 "	nop\n"								\
 /* Now, to conform to the ELF ABI, we have to:				\
    Pass argc (actually _dl_argc) in r3;  */				\
@@ -305,7 +304,7 @@ DL_STARTING_UP_DEF							\
    linked statically, which linux will call with argc on top of the	\
    stack which will hopefully never be zero, and a dynamically linked	\
    program which will always have a NULL on the top of the stack.	\
-   Take the opportunity to clear LR, so anyone who accidentally  \
+   Take the opportunity to clear LR, so anyone who accidentally		\
    returns from _start gets SEGV.  Also clear the next few words of	\
    the stack.  */							\
 "	li	31,0\n"							\
@@ -315,23 +314,23 @@ DL_STARTING_UP_DEF							\
 "	std	31,16(1)\n"						\
 "	std	31,24(1)\n"						\
 /* Now, call the start function descriptor at r30...  */		\
-"	.globl	._dl_main_dispatch\n"  \
-"._dl_main_dispatch:\n"  \
+"	.globl	._dl_main_dispatch\n"					\
+"._dl_main_dispatch:\n"							\
 "	ld	0,0(30)\n"						\
 "	ld	2,8(30)\n"						\
 "	mtctr	0\n"							\
 "	ld	11,16(30)\n"						\
 "	bctr\n"								\
-".LT__dl_start_user:\n"	\
+".LT__dl_start_user:\n"							\
 "	.long 0\n"							\
 "	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"		\
-"	.long .LT__dl_start_user-._dl_start_user\n"			\
+"	.long .LT__dl_start_user-" BODY_PREFIX "_dl_start_user\n"	\
 "	.short .LT__dl_start_user_name_end-.LT__dl_start_user_name_start\n" \
 ".LT__dl_start_user_name_start:\n"					\
 "	.ascii \"_dl_start_user\"\n"					\
 ".LT__dl_start_user_name_end:\n"					\
 "	.align 2\n"							\
-"	.size	._dl_start_user,.-._dl_start_user\n"			\
+"	" END_2(_dl_start_user) "\n"					\
 "	.previous");
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of

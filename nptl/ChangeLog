@@ -1,5 +1,8 @@
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Allow
+	PSEUDO to be used with . prefix.
+
 	* sysdeps/unix/sysv/linux/alpha/pthread_once.c (__pthread_once):
 	Use atomic_increment instead of atomic_exchange_and_add.
 	* sysdeps/unix/sysv/linux/sparc/pthread_once.c (__pthread_once):

@@ -26,6 +26,12 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
+# ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#  define DASHDASHPFX(str) .__##str
+# else
+#  define DASHDASHPFX(str) __##str
+# endif
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
   .section ".text";							\
@@ -33,12 +39,12 @@
     cfi_startproc;							\
     SINGLE_THREAD_P;							\
     bne- .Lpseudo_cancel;						\
-  .type .__##syscall_name##_nocancel,@function;				\
-  .globl .__##syscall_name##_nocancel;					\
-  .__##syscall_name##_nocancel:						\
+  .type DASHDASHPFX(syscall_name##_nocancel),@function;			\
+  .globl DASHDASHPFX(syscall_name##_nocancel);				\
+  DASHDASHPFX(syscall_name##_nocancel):					\
     DO_CALL (SYS_ify (syscall_name));					\
     PSEUDO_RET;								\
-  .size .__##syscall_name##_nocancel,.-.__##syscall_name##_nocancel;	\
+  .size DASHDASHPFX(syscall_name##_nocancel),.-DASHDASHPFX(syscall_name##_nocancel);	\
   .Lpseudo_cancel:							\
     stdu 1,-128(1);							\
     cfi_adjust_cfa_offset (128);					\

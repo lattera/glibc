@@ -37,7 +37,7 @@ pthread_barrier_wait(barrier_t *barrier)
     } while (event == barrier->curr_event);
   }
 
-  if (atomic_exchange_and_add (barrier->left, 1) == barrier->init_count - 1)
+  if (atomic_increment_val (barrier->left) == barrier->init_count)
     lll_unlock(barrier->lock);
 
   return result;
