@@ -1491,3 +1491,15 @@ ildouble: 7
 ldouble: 7
 
 # end of automatic generation
+
+Test "j0 (4.0) == -3.9714980986384737228659076845169804197562E-1":
+idouble: 1
+double: 1
+ifloat: 1
+float: 1
+Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
+idouble: 1
+double: 1
+ifloat: 1
+float: 1
+

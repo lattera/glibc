@@ -1,3 +1,10 @@
+2002-06-20  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc: Use exact values as input parameters,
+	compute output parameters with 36 digits for 128-bit long doubles.
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerated.
+	* sysdeps/x86-64/fpu/libm-test-ulps: Regenerated.
+
 2002-06-13  Stephen L Moshier  <steve@moshier.net>
 
 	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Fix cases in which
