@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -48,7 +48,7 @@ pts_name (int fd, char **pts, size_t buf_len)
 
       if (buf_len)
 	{
-	  rv = ptsname_r (fd, buf, buf_len);
+	  rv = __ptsname_r (fd, buf, buf_len);
 
 	  if (rv != 0 || memchr (buf, '\0', buf_len))
 	    /* We either got an error, or we succeeded and the
@@ -126,7 +126,7 @@ grantpt (int fd)
        Try a moderate value.  */
     grbuflen = 1024;
   grtmpbuf = (char *) __alloca (grbuflen);
-  getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
+  __getgrnam_r (TTY_GROUP, &grbuf, grtmpbuf, grbuflen, &p);
   gid = p ? p->gr_gid : __getgid ();
 
   /* Make sure the group of the device is that special group.  */
@@ -157,7 +157,7 @@ grantpt (int fd)
     {
       /* Disable core dumps.  */
       struct rlimit rl = { 0, 0 };
-      setrlimit (RLIMIT_CORE, &rl);
+      __setrlimit (RLIMIT_CORE, &rl);
 
       /* We pase the master pseudo terminal as file descriptor PTY_FILENO.  */
       if (fd != PTY_FILENO)

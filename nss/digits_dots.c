@@ -17,6 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifdef USE_NSCD
+# define inet_aton __inet_aton
+#endif
+
   /*
    * disallow names consisting only of digits/dots, unless
    * they end in a dot.

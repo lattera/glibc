@@ -129,6 +129,7 @@ void free ();
 # ifndef stpcpy
 #  define stpcpy __stpcpy
 # endif
+# define tfind __tfind
 #else
 # if !defined HAVE_GETCWD
 char *getwd ();

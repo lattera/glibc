@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -278,7 +278,7 @@ parse_line (const char *fname, int line_num, const char *str)
 
   for (i = 0; i < sizeof (cmd) / sizeof (cmd[0]); ++i)
     {
-      if (strncasecmp (start, cmd[i].name, len) == 0
+      if (__strncasecmp (start, cmd[i].name, len) == 0
 	  && strlen (cmd[i].name) == len)
 	{
 	  c = &cmd[i];
@@ -414,7 +414,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
   /* Only reorder if we're supposed to.  */
   if ((_res_hconf.flags & HCONF_FLAG_REORDER) == 0)
     return;
-  
+
   /* Can't deal with anything but IPv4 for now...  */
   if (hp->h_addrtype != AF_INET)
     return;
@@ -425,7 +425,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       int sd, num, i;
       /* Save errno.  */
       int save = errno;
-      
+
       /* Initialize interface table.  */
 
       num_ifs = 0;
@@ -445,13 +445,13 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       ifaddrs = malloc (num * sizeof (ifaddrs[0]));
       if (!ifaddrs)
 	goto cleanup1;
-      
+
       /* Copy usable interfaces in ifaddrs structure.  */
       for (cur_ifr = ifr, i = 0;  i < num; ++cur_ifr, ++i)
 	{
 	  if (cur_ifr->ifr_addr.sa_family != AF_INET)
 	    continue;
-	  
+
 	  ifaddrs[num_ifs].addrtype = AF_INET;
 	  ifaddrs[num_ifs].u.ipv4.addr =
 	    ((struct sockaddr_in *) &cur_ifr->ifr_addr)->sin_addr.s_addr;
@@ -475,7 +475,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Release lock, preserve error value, and close socket.  */
       save = errno;
       __libc_lock_unlock (lock);
-      close (sd);
+      __close (sd);
     }
 
   if (num_ifs == 0)

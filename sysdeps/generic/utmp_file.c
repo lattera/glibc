@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -133,7 +133,7 @@ setutent_file (void)
 	result = __fcntl (file_fd, F_SETFD, result | FD_CLOEXEC);
       if (result == -1)
 	{
-	  close (file_fd);
+	  __close (file_fd);
 	  return 0;
 	}
     }

@@ -1186,8 +1186,8 @@ group_number (wchar_t *buf, wchar_t *bufend, unsigned int intdig_no,
     return bufend;
 
   /* Move the fractional part down.  */
-  wmemmove (buf + intdig_no + ngroups, buf + intdig_no,
-	    bufend - (buf + intdig_no));
+  __wmemmove (buf + intdig_no + ngroups, buf + intdig_no,
+	      bufend - (buf + intdig_no));
 
   p = buf + intdig_no + ngroups - 1;
   do

@@ -129,7 +129,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	hints.ai_flags = AI_CANONNAME;
 	hints.ai_family = af;
 	hints.ai_socktype = SOCK_STREAM;
-	(void)snprintf(num, sizeof(num), "%d", ntohs(rport));
+	(void)__snprintf(num, sizeof(num), "%d", ntohs(rport));
 	error = getaddrinfo(*ahost, num, &hints, &res);
 	if (error) {
 	    fprintf(stderr, "rcmd: getaddrinfo: %s\n",
@@ -191,7 +191,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			continue;
 		}
 		if (refused && timo <= 16) {
-			(void)sleep(timo);
+			(void)__sleep(timo);
 			timo *= 2;
 			ai = res;
 			refused = 0;
@@ -327,7 +327,7 @@ rresvport_af(alport, family)
 		__set_errno (EAFNOSUPPORT);
 		return -1;
 	}
-	s = socket(family, SOCK_STREAM, 0);
+	s = __socket(family, SOCK_STREAM, 0);
 	if (s < 0)
 		return -1;
 

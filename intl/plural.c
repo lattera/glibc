@@ -39,16 +39,15 @@
 #include "gettext.h"
 #include "gettextP.h"
 
-#define YYDEBUG 1
 #define YYLEX_PARAM	&((struct parse_args *) arg)->cp
 #define YYPARSE_PARAM	arg
 
-#line 33 "plural.y"
+#line 32 "plural.y"
 typedef union {
   unsigned long int num;
   struct expression *exp;
 } YYSTYPE;
-#line 38 "plural.y"
+#line 37 "plural.y"
 
 /* Prototypes for local functions.  */
 static struct expression *new_exp (enum operator op, int n, ...);
@@ -118,8 +117,8 @@ static const short yyrhs[] = {    19,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    56,    62,    67,    72,    77,    82,    87,    92,    97,   102,
-   107,   112,   117,   123
+    55,    61,    66,    71,    76,    81,    86,    91,    96,   101,
+   106,   111,   116,   122
 };
 #endif
 
@@ -735,90 +734,90 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 57 "plural.y"
+#line 56 "plural.y"
 {
 	    ((struct parse_args *) arg)->res = yyvsp[0].exp;
 	  ;
     break;}
 case 2:
-#line 63 "plural.y"
+#line 62 "plural.y"
 {
 	    if ((yyval.exp = new_exp (qmop, 3, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 3:
-#line 68 "plural.y"
+#line 67 "plural.y"
 {
 	    if ((yyval.exp = new_exp (lor, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 4:
-#line 73 "plural.y"
+#line 72 "plural.y"
 {
 	    if ((yyval.exp = new_exp (land, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 5:
-#line 78 "plural.y"
+#line 77 "plural.y"
 {
 	    if ((yyval.exp = new_exp (equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 6:
-#line 83 "plural.y"
+#line 82 "plural.y"
 {
 	    if ((yyval.exp = new_exp (not_equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 7:
-#line 88 "plural.y"
+#line 87 "plural.y"
 {
 	    if ((yyval.exp = new_exp (plus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 8:
-#line 93 "plural.y"
+#line 92 "plural.y"
 {
 	    if ((yyval.exp = new_exp (minus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 9:
-#line 98 "plural.y"
+#line 97 "plural.y"
 {
 	    if ((yyval.exp = new_exp (mult, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 10:
-#line 103 "plural.y"
+#line 102 "plural.y"
 {
 	    if ((yyval.exp = new_exp (divide, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 11:
-#line 108 "plural.y"
+#line 107 "plural.y"
 {
 	    if ((yyval.exp = new_exp (module, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 12:
-#line 113 "plural.y"
+#line 112 "plural.y"
 {
 	    if ((yyval.exp = new_exp (var, 0)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 13:
-#line 118 "plural.y"
+#line 117 "plural.y"
 {
 	    if ((yyval.exp = new_exp (num, 0)) == NULL)
 	      YYABORT;
@@ -826,7 +825,7 @@ case 13:
 	  ;
     break;}
 case 14:
-#line 124 "plural.y"
+#line 123 "plural.y"
 {
 	    yyval.exp = yyvsp[-1].exp
 	  ;
@@ -1053,7 +1052,7 @@ yyerrhandle:
     }
   return 1;
 }
-#line 129 "plural.y"
+#line 128 "plural.y"
 
 
 static struct expression *
@@ -1133,8 +1132,6 @@ yylex (YYSTYPE *lval, const char **pexp)
 {
   const char *exp = *pexp;
   int result;
-
-  yydebug = 1;
 
   while (1)
     {

@@ -61,7 +61,7 @@ posix_fallocate64 (int fd, __off64_t offset, size_t len)
     {
       len -= step;
 
-      if (pwrite64 (fd, "", 1, offset) != 1)
+      if (__pwrite64 (fd, "", 1, offset) != 1)
 	return errno;
 
       offset += step;

@@ -80,7 +80,7 @@
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF && ++read_in), c))
 
-#  define MEMCPY(d, s, n) wmemcpy (d, s, n)
+#  define MEMCPY(d, s, n) __wmemcpy (d, s, n)
 #  define ISSPACE(Ch)	  iswspace (Ch)
 #  define ISDIGIT(Ch)	  iswdigit (Ch)
 #  define ISXDIGIT(Ch)	  iswxdigit (Ch)
@@ -696,7 +696,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  size_t n;
 
-		  n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		  n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
 		  if (n == (size_t) -1)
 		    /* No valid wide character.  */
 		    input_error ();
@@ -883,7 +883,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  }
 		      }
 
-		    n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		    n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c,
+				   &state);
 		    if (n == (size_t) -1)
 		      encode_error ();
 
@@ -939,7 +940,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  /* We have to emit the code to get into the intial
 		     state.  */
 		  char buf[MB_LEN_MAX];
-		  size_t n = wcrtomb (buf, L'\0', &state);
+		  size_t n = __wcrtomb (buf, L'\0', &state);
 		  if (n > 0 && (flags & MALLOC)
 		      && str + n >= *strptr + strsize)
 		    {
@@ -2251,7 +2252,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			}
 		    }
 
-		  n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		  n = __wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
 		  if (n == (size_t) -1)
 		    encode_error ();
 
@@ -2324,7 +2325,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  /* We have to emit the code to get into the intial
 		     state.  */
 		  char buf[MB_LEN_MAX];
-		  size_t n = wcrtomb (buf, L'\0', &state);
+		  size_t n = __wcrtomb (buf, L'\0', &state);
 		  if (n > 0 && (flags & MALLOC)
 		      && str + n >= *strptr + strsize)
 		    {

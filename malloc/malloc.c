@@ -889,6 +889,7 @@ Void_t *(*__morecore)() = __default_morecore;
 
 static size_t __libc_pagesize;
 
+#define access	__access
 #define mmap    __mmap
 #define munmap  __munmap
 #define mremap  __mremap

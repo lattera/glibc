@@ -28,7 +28,7 @@ int
 posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
 				  int fd, int newfd)
 {
-  int maxfd = sysconf (_SC_OPEN_MAX);
+  int maxfd = __sysconf (_SC_OPEN_MAX);
   struct __spawn_action *rec;
 
   /* Test for the validity of the file descriptor.  */

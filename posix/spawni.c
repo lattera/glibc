@@ -77,7 +77,7 @@ __spawni (pid_t *pid, const char *file,
   short int flags;
 
   /* Generate the new process.  */
-  new_pid = fork ();
+  new_pid = __fork ();
   if (new_pid != 0)
     {
       if (new_pid < 0)
@@ -157,16 +157,16 @@ __spawni (pid_t *pid, const char *file,
 	  switch (action->tag)
 	    {
 	    case spawn_do_close:
-	      if (close (action->action.close_action.fd) != 0)
+	      if (__close (action->action.close_action.fd) != 0)
 		/* Signal the error.  */
 		_exit (SPAWN_ERROR);
 	      break;
 
 	    case spawn_do_open:
 	      {
-		int new_fd = open (action->action.open_action.path,
-				   action->action.open_action.oflag,
-				   action->action.open_action.mode);
+		int new_fd = __open (action->action.open_action.path,
+				     action->action.open_action.oflag,
+				     action->action.open_action.mode);
 
 		if (new_fd == -1)
 		  /* The `open' call failed.  */
@@ -180,7 +180,7 @@ __spawni (pid_t *pid, const char *file,
 		      /* The `dup2' call failed.  */
 		      _exit (SPAWN_ERROR);
 
-		    if (close (new_fd) != 0)
+		    if (__close (new_fd) != 0)
 		      /* The `close' call failed.  */
 		      _exit (SPAWN_ERROR);
 		  }

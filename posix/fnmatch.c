@@ -56,6 +56,8 @@
 # include "../locale/elem-hash.h"
 
 # define CONCAT(a,b) __CONCAT(a,b)
+# define mbsinit __mbsinit
+# define mbsrtowcs __mbsrtowcs
 #endif
 
 /* Comment out all this code if we are using the GNU C Library, and are not

@@ -47,14 +47,14 @@ getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
   struct dirent *d;
   size_t devlen = strlen (dev) + 1;
 
-  dirstream = opendir (dev);
+  dirstream = __opendir (dev);
   if (dirstream == NULL)
     {
       *dostat = -1;
       return NULL;
     }
 
-  while ((d = readdir (dirstream)) != NULL)
+  while ((d = __readdir (dirstream)) != NULL)
     if (((ino_t) d->d_fileno == myino || *dostat)
 	&& strcmp (d->d_name, "stdin")
 	&& strcmp (d->d_name, "stdout")

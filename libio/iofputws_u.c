@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ fputws_unlocked (str, fp)
       const wchar_t *str;
       _IO_FILE *fp;
 {
-  _IO_size_t len = wcslen (str);
+  _IO_size_t len = __wcslen (str);
   int result = EOF;
   CHECK_FILE (fp, EOF);
   if (_IO_fwide (fp, 1) == 1

@@ -106,7 +106,7 @@ find_spec (const UCHAR_T *format, mbstate_t *ps)
 
       /* Remove any hints of a wrong encoding.  */
       ps->__count = 0;
-      if (! isascii (*format) && (len = mbrlen (format, MB_CUR_MAX, ps)) > 0)
+      if (! isascii (*format) && (len = __mbrlen (format, MB_CUR_MAX, ps)) > 0)
 	format += len;
       else
 	++format;

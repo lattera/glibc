@@ -35,7 +35,7 @@ __sigpause (sig_or_mask, is_sig)
       /* The modern X/Open implementation is requested.  */
       if (__sigprocmask (0, NULL, &set) < 0
 	  /* Yes, we call `sigdelset' and not `__sigdelset'.  */
-	  || sigdelset (&set, sig_or_mask) < 0)
+	  || __sigdelset (&set, sig_or_mask) < 0)
 	return -1;
     }
   else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ ualarm (value, interval)
   timer.it_interval.tv_sec = 0;
   timer.it_interval.tv_usec = interval;
 
-  if (setitimer (ITIMER_REAL, &timer, &otimer) < 0)
+  if (__setitimer (ITIMER_REAL, &timer, &otimer) < 0)
     return -1;
 
   return (otimer.it_value.tv_sec * 1000000) + otimer.it_value.tv_usec;

@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -41,7 +41,7 @@ _create_xid (void)
       struct timeval now;
 
       __gettimeofday (&now, (struct timezone *) 0);
-      srand48_r (now.tv_sec ^ now.tv_usec, &__rpc_lrand48_data);
+      __srand48_r (now.tv_sec ^ now.tv_usec, &__rpc_lrand48_data);
       is_initialized = 1;
     }
 

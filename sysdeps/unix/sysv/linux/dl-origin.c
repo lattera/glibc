@@ -37,7 +37,7 @@ _dl_get_origin (void)
   char linkval[PATH_MAX];
   char *result;
 
-  if (readlink ("/proc/self/exe", linkval, PATH_MAX) != -1
+  if (__readlink ("/proc/self/exe", linkval, PATH_MAX) != -1
       && linkval[0] != '[')
     {
       /* We can use this value.  */

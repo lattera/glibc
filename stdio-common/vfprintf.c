@@ -969,9 +969,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (!left)							      \
 	PAD (L' ');							      \
       if (fspec == NULL)						      \
-	outchar (btowc ((unsigned char) va_arg (ap, int))); /* Promoted.  */  \
+	outchar (__btowc ((unsigned char) va_arg (ap, int))); /* Promoted. */ \
       else								      \
-	outchar (btowc ((unsigned char) args_value[fspec->data_arg].pa_char));\
+	outchar (__btowc ((unsigned char)				      \
+			  args_value[fspec->data_arg].pa_char));	      \
       if (left)								      \
 	PAD (L' ');							      \
       break;								      \

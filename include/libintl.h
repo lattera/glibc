@@ -22,13 +22,7 @@ extern const char _libc_intl_domainname[];
 # define N_(msgid)	msgid
 
 # undef _
-# ifdef dgettext
 /* This is defined as an optimizing macro, so use it.  */
-#  define _(msgid)	dgettext (_libc_intl_domainname, (msgid))
-# else
-/* Be sure to use only the __ name when `dgettext' is a plain function
-   instead of an optimizing macro.  */
-#  define _(msgid)	__dgettext (_libc_intl_domainname, (msgid))
-# endif
+# define _(msgid) __dcgettext (_libc_intl_domainname, (msgid), LC_MESSAGES)
 
 #endif

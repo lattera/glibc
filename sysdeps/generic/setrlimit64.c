@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1997,1998,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,5 +39,5 @@ setrlimit64 (resource, rlimits)
   else
     rlimits32.rlim_max = rlimits->rlim_max;
 
-  return setrlimit (resource, &rlimits32);
+  return __setrlimit (resource, &rlimits32);
 }

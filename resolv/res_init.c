@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -117,7 +117,7 @@ static u_int32_t net_mask __P((struct in_addr));
  * since it was noted that INADDR_ANY actually meant ``the first interface
  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,
  * it had to be "up" in order for you to reach your own name server.  It
- * was later decided that since the recommended practice is to always 
+ * was later decided that since the recommended practice is to always
  * install local static routes through 127.0.0.1 for all your network
  * interfaces, that we could solve this problem without a code change.
  *
@@ -294,7 +294,8 @@ __res_vinit(res_state statp, int preinit) {
 		    cp = buf + sizeof("nameserver") - 1;
 		    while (*cp == ' ' || *cp == '\t')
 			cp++;
-		    if ((*cp != '\0') && (*cp != '\n') && inet_aton(cp, &a)) {
+		    if ((*cp != '\0') && (*cp != '\n')
+			&& __inet_aton(cp, &a)) {
 			statp->nsaddr_list[nserv].sin_addr = a;
 			statp->nsaddr_list[nserv].sin_family = AF_INET;
 			statp->nsaddr_list[nserv].sin_port =
@@ -343,7 +344,7 @@ __res_vinit(res_state statp, int preinit) {
 				cp++;
 			n = *cp;
 			*cp = 0;
-			if (inet_aton(net, &a)) {
+			if (__inet_aton(net, &a)) {
 			    statp->sort_list[nsort].addr = a;
 			    if (ISSORTMASK(n)) {
 				*cp++ = n;
@@ -353,14 +354,14 @@ __res_vinit(res_state statp, int preinit) {
 				    cp++;
 				n = *cp;
 				*cp = 0;
-				if (inet_aton(net, &a)) {
+				if (__inet_aton(net, &a)) {
 				    statp->sort_list[nsort].mask = a.s_addr;
 				} else {
-				    statp->sort_list[nsort].mask = 
+				    statp->sort_list[nsort].mask =
 					net_mask(statp->sort_list[nsort].addr);
 				}
 			    } else {
-				statp->sort_list[nsort].mask = 
+				statp->sort_list[nsort].mask =
 				    net_mask(statp->sort_list[nsort].addr);
 			    }
 			    nsort++;
@@ -375,7 +376,7 @@ __res_vinit(res_state statp, int preinit) {
 		    continue;
 		}
 	    }
-	    if (nserv > 1) 
+	    if (nserv > 1)
 		statp->nscount = nserv;
 #ifdef _LIBC
 	    if (nservall - nserv > 0)
@@ -526,8 +527,8 @@ void
 res_nclose(res_state statp) {
 	int ns;
 
-	if (statp->_vcsock >= 0) { 
-		(void) close(statp->_vcsock);
+	if (statp->_vcsock >= 0) {
+		(void) __close(statp->_vcsock);
 		statp->_vcsock = -1;
 		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
@@ -539,7 +540,7 @@ res_nclose(res_state statp) {
 #endif
 	{
 		if (statp->_u._ext.nssocks[ns] != -1) {
-			(void) close(statp->_u._ext.nssocks[ns]);
+			(void) __close(statp->_u._ext.nssocks[ns]);
 			statp->_u._ext.nssocks[ns] = -1;
 		}
 	}

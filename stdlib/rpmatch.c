@@ -1,7 +1,7 @@
 /* Determine whether string value is affirmation or negative response
    according to current locale's data.
    This file is part of the GNU C Library.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -39,17 +39,17 @@ rpmatch (response)
 	  if (*lastp)
 	    {
 	      /* Free the old compiled pattern.  */
-	      regfree (re);
+	      __regfree (re);
 	      *lastp = NULL;
 	    }
 	  /* Compile the pattern and cache it for future runs.  */
-	  if (regcomp (re, pattern, REG_EXTENDED) != 0)
+	  if (__regcomp (re, pattern, REG_EXTENDED) != 0)
 	    return -1;
 	  *lastp = pattern;
 	}
 
       /* Try the pattern.  */
-      return regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
+      return __regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
     }
 
   /* We cache the response patterns and compiled regexps here.  */

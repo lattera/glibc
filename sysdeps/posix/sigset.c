@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ sigset (sig, disp)
 	return SIG_ERR;
 
       /* Add the specified signal.  */
-      if (sigaddset (&set, sig) < 0)
+      if (__sigaddset (&set, sig) < 0)
 	return SIG_ERR;
 
       /* Add the signal set to the current signal mask.  */
@@ -70,7 +70,7 @@ sigset (sig, disp)
     return SIG_ERR;
 
   /* Add the specified signal.  */
-  if (sigaddset (&set, sig) < 0)
+  if (__sigaddset (&set, sig) < 0)
     return SIG_ERR;
 
   /* Remove the signal set from the current signal mask.  */

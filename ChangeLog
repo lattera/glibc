@@ -1,9 +1,57 @@
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* argp/argp-help.c: Unify use of function aliases to make more compact
+	PLT.
+	* include/libintl.h: Likewise.
+	* inet/rcmd.c: Likewise.
+	* intl/dcigettext.c: Likewise.
+	* libio/iofputws.c: Likewise.
+	* libio/iofputws_u.c: Likewise.
+	* libio/iogetwline.c: Likewise.
+	* libio/swprintf.c: Likewise.
+	* malloc/malloc.c: Likewise.
+	* nss/digits_dots.c: Likewise.
+	* posix/fnmatch.c: Likewise.
+	* posix/spawn_faction_addclose.c: Likewise.
+	* posix/spawn_faction_adddup2.c: Likewise.
+	* posix/spawn_faction_addopen.c: Likewise.
+	* posix/spawni.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* posix/spawni.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* shadow/lckpwdf.c: Likewise.
+	* signal/sighold.c: Likewise.
+	* signal/sigrelse.c: Likewise.
+	* stdio-common/printf-parse.h: Likewise.
+	* stdio-common/printf-prs.c: Likewise.
+	* stdio-common/printf_fp.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* stdlib/rpmatch.c: Likewise.
+	* sunrpc/create_xid.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sysdeps/generic/setrlimit64.c: Likewise.
+	* sysdeps/generic/utmp_file.c: Likewise.
+	* sysdeps/generic/vlimit.c: Likewise.
+	* sysdeps/posix/posix_fallocate.c: Likewise.
+	* sysdeps/posix/posix_fallocate64.c: Likewise.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* sysdeps/posix/sigset.c: Likewise.
+	* sysdeps/unix/grantpt.c: Likewise.
+	* sysdeps/unix/bsd/ualarm.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+	* sysdeps/unix/sysv/linux/getloadavg.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ulimit.c: Likewise.
+	* time/strftime.c: Likewise.
+	* wcsmbs/wcscoll.c: Likewise.
+	* wcsmbs/wcsxfrm.c: Likewise.
+
 	* time/tst-getdate.c (main): Make error messages more human readable.
 
-	* sysdeps/powerpc/fpu_control.h (_FPU_GETCW): Allow gcc to generic
-	postinc/postdec instruction.
+	* sysdeps/powerpc/fpu_control.h (_FPU_GETCW): Allow gcc to generate
+	postinc/predec instruction.
 	(_FPU_SETCW): Likewise.
 	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
 

@@ -92,8 +92,8 @@ extern char *tzname[];
 # define L_(Str) L##Str
 # define NLW(Sym) _NL_W##Sym
 
-# define MEMCPY(d, s, n) wmemcpy (d, s, n)
-# define STRLEN(s) wcslen (s)
+# define MEMCPY(d, s, n) __wmemcpy (d, s, n)
+# define STRLEN(s) __wcslen (s)
 
 #else
 # define CHAR_T char
@@ -834,7 +834,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  size_t len = wcslen (era->era_wname);
+		  size_t len = __wcslen (era->era_wname);
 		  cpy (len, era->era_wname);
 # else
 		  size_t len = strlen (era->era_name);

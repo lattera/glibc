@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -851,7 +851,7 @@ exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
     }
 
   /* Make sure the subshell doesn't field-split on our behalf. */
-  unsetenv ("IFS");
+  __unsetenv ("IFS");
 
   __close (fildes[0]);
   __execve (_PATH_BSHELL, (char *const *) args, __environ);
@@ -1069,7 +1069,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
           fildes[0] = fildes[1] = -1;
 	  exec_comm_child(comm, fildes, 0, 1);
 	}
-      
+
       if (__waitpid (pid, &status, 0) == pid && status != 0)
 	return WRDE_SYNTAX;
     }
@@ -1847,7 +1847,7 @@ envsubst:
 	  if (pattern && !value)
 	    goto no_space;
 
-	  setenv (env, value, 1);
+	  __setenv (env, value, 1);
 	  break;
 
 	default:

@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -1521,7 +1521,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
   if (! stream)
     return;
 
-  flockfile (stream);
+  __flockfile (stream);
 
   if (! uparams.valid)
     fill_in_uparams (state);
@@ -1529,7 +1529,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
   fs = __argp_make_fmtstream (stream, 0, uparams.rmargin, 0);
   if (! fs)
     {
-      funlockfile (stream);
+      __funlockfile (stream);
       return;
     }
 
@@ -1637,7 +1637,7 @@ Try `%s --help' or `%s --usage' for more information.\n"),
       anything = 1;
     }
 
-  funlockfile (stream);
+  __funlockfile (stream);
 
   if (hol)
     hol_free (hol);
@@ -1696,7 +1696,7 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 	{
 	  va_list ap;
 
-	  flockfile (stream);
+	  __flockfile (stream);
 
 	  fputs_unlocked (state ? state->name : program_invocation_short_name,
 			  stream);
@@ -1711,7 +1711,7 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 
 	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
 
-	  funlockfile (stream);
+	  __funlockfile (stream);
 	}
     }
 }
@@ -1737,7 +1737,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
       if (stream)
 	{
-	  flockfile (stream);
+	  __flockfile (stream);
 
 	  fputs_unlocked (state ? state->name : program_invocation_short_name,
 			  stream);
@@ -1763,7 +1763,7 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
 	  putc_unlocked ('\n', stream);
 
-	  funlockfile (stream);
+	  __funlockfile (stream);
 
 	  if (status && (!state || !(state->flags & ARGP_NO_EXIT)))
 	    exit (status);

@@ -27,6 +27,10 @@
 #include <string.h>
 #include <wchar.h>
 
+#ifdef _LIBC
+# define wmemcpy __wmemcpy
+#endif
+
 #if defined _LIBC || !_G_HAVE_IO_GETLINE_INFO
 
 _IO_size_t

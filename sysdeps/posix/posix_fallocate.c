@@ -61,7 +61,7 @@ posix_fallocate (int fd, __off_t offset, size_t len)
     {
       len -= step;
 
-      if (pwrite (fd, "", 1, offset) != 1)
+      if (__pwrite (fd, "", 1, offset) != 1)
 	return errno;
 
       offset += step;

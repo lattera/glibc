@@ -398,7 +398,7 @@ getkeyserv_handle (int vers)
     {
       /* if other side closed socket, build handle again */
       clnt_control (kcp->client, CLGET_FD, (char *)&fd);
-      if (getpeername (fd,(struct sockaddr *)&name,&namelen) == -1)
+      if (__getpeername (fd,(struct sockaddr *)&name,&namelen) == -1)
 	{
 	  auth_destroy (kcp->client->cl_auth);
 	  clnt_destroy (kcp->client);

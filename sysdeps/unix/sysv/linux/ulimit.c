@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ __ulimit (int cmd, ...)
 	limit.rlim_cur = newlimit * 512;
 	limit.rlim_max = newlimit * 512;
 
-	result = setrlimit (RLIMIT_FSIZE, &limit);
+	result = __setrlimit (RLIMIT_FSIZE, &limit);
       }
       break;
 
