@@ -1,3 +1,8 @@
+2003-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (print_statistics): Print also number of relative
+	relocations.
+
 2003-10-12  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/sysdep.h: Undef JUMPTARGET before use.

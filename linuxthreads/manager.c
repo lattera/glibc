@@ -70,8 +70,13 @@ static pthread_descr manager_thread;
 #else
 static inline pthread_descr thread_segment(int seg)
 {
+# ifdef _STACK_GROWS_UP
+  return (pthread_descr)(THREAD_STACK_START_ADDRESS + (seg - 1) * STACK_SIZE)
+         + 1;
+# else
   return (pthread_descr)(THREAD_STACK_START_ADDRESS - (seg - 1) * STACK_SIZE)
          - 1;
+# endif
 }
 #endif
 

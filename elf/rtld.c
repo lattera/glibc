@@ -2120,10 +2120,30 @@ print_statistics (void)
 				buf, pbuf);
     }
 #endif
+
+  unsigned long int num_relative_relocations = 0;
+  struct r_scope_elem *scope = &GL(dl_loaded)->l_searchlist;
+  unsigned int i;
+
+  for (i = 0; i < scope->r_nlist; i++)
+    {
+      struct link_map *l = scope->r_list [i];
+
+      if (!l->l_addr)
+	continue;
+
+      if (l->l_info[VERSYMIDX (DT_RELCOUNT)])
+	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELCOUNT)]->d_un.d_val;
+      if (l->l_info[VERSYMIDX (DT_RELACOUNT)])
+	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
+    }
+
   INTUSE(_dl_debug_printf) ("                 number of relocations: %lu\n",
 			    GL(dl_num_relocations));
   INTUSE(_dl_debug_printf) ("      number of relocations from cache: %lu\n",
 			    GL(dl_num_cache_relocations));
+  INTUSE(_dl_debug_printf) ("        number of relative relocations: %lu\n",
+			    num_relative_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */

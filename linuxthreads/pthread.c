@@ -893,7 +893,11 @@ pthread_descr __pthread_find_self(void)
   /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is
      the manager threads handled specially in thread_self(), so start at 2 */
   h = __pthread_handles + 2;
+# ifdef _STACK_GROWS_UP
+  while (! (sp >= (char *) h->h_descr && sp < h->h_descr->p_guardaddr)) h++;
+# else
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom)) h++;
+# endif
   return h->h_descr;
 }
 
@@ -908,12 +912,23 @@ pthread_descr __pthread_self_stack(void)
     return manager_thread;
   h = __pthread_handles + 2;
 # ifdef USE_TLS
+#  ifdef _STACK_GROWS_UP
+  while (h->h_descr == NULL
+	 || ! (sp >= h->h_descr->p_stackaddr && sp < h->h_descr->p_guardaddr))
+    h++;
+#  else
   while (h->h_descr == NULL
 	 || ! (sp <= (char *) h->h_descr->p_stackaddr && sp >= h->h_bottom))
     h++;
+#  endif
 # else
+#  ifdef _STACK_GROWS_UP
+  while (! (sp >= (char *) h->h_descr && sp < h->h_descr->p_guardaddr))
+    h++;
+#  else
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom))
     h++;
+#  endif
 # endif
   return h->h_descr;
 }

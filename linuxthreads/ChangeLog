@@ -1,3 +1,9 @@
+2003-10-06  Carlos O'Donell <carlos@baldric.uwo.ca>
+
+	* pthread.c (__pthread_self_stack): _STACK_GROWS_UP case added.
+	(__pthread_find_self): Likewise.
+	* manager.c (thread_segment): _STACK_GROWS_UP case added.
+
 2003-10-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* linuxthreads/sysdeps/unix/sysv/linux/hppa/malloc-machine.h: New file.
