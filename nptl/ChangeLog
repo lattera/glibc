@@ -1,3 +1,8 @@
+2003-09-24  Roland McGrath  <roland@redhat.com>
+
+	* allocatestack.c (__make_stacks_executable): Don't ignore return
+	value from _dl_make_stack_executable.
+
 2003-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (__make_stacks_executable): Also change

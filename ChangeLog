@@ -1,3 +1,30 @@
+2003-08-07  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h
+	(__libc_cleanup_push, __libc_cleanup_pop): New macros.
+
+2003-08-01  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/i386/dl-procinfo.h: New file, contents taken from ...
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: ... here.
+	#include_next dl-procinfo.h to get them.
+	(_DL_HWCAP_COUNT): Moved to sysdeps/i386/dl-procinfo.h.
+	(_DL_PLATFORMS_COUNT): Likewise.
+	(_DL_FIRST_PLATFORM): Likewise.
+	(_DL_HWCAP_PLATFORM): Likewise.
+	(HWCAP_I386_FPU, HWCAP_I386_VME, HWCAP_I386_DE, HWCAP_I386_PSE,
+	HWCAP_I386_TSC, HWCAP_I386_MSR, HWCAP_I386_PAE, HWCAP_I386_MCE,
+	HWCAP_I386_CX8, HWCAP_I386_APIC, HWCAP_I386_SEP, HWCAP_I386_MTRR,
+	HWCAP_I386_PGE, HWCAP_I386_MCA, HWCAP_I386_CMOV,
+	HWCAP_I386_FCMOV, HWCAP_I386_MMX, HWCAP_I386_OSFXSR,
+	HWCAP_I386_XMM, HWCAP_I386_XMM2, HWCAP_I386_AMD3D,
+	HWCAP_IMPORTANT): Likewise.
+	(_DL_PROCINFO_H_): Likewise.
+	(_dl_hwcap_string, _dl_platform_string, _dl_string_hwcap): Likewise.
+	(_dl_string_platform): Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c: Moved to ...
+	* sysdeps/i386/dl-procinfo.c: ... here, new file.
+
 2003-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-execstack.c

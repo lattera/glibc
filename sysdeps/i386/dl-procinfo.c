@@ -1,5 +1,5 @@
-/* Data for Linux/i386 version of processor capability information.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Data for i386 version of processor capability information.
+   Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 

@@ -159,6 +159,8 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
   if ((DOIT) && __save_FCT != 0)					    \
     (*__save_FCT)(__save_ARG);						    \
 
+#define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
+#define __libc_cleanup_pop(execute) __libc_cleanup_end (execute)
 
 #if (_CTHREADS_ - 0)
 
