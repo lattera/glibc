@@ -1,3 +1,15 @@
+2001-10-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/setjmp.c: Also define setjmp and _setjmp if
+	BSD_SETJMP or BSD__SETJMP is defined, resp.
+	* sysdeps/m68k/bsd-setjmp.c: Inline setjmp code instead of making
+	a tail call to __sigsetjmp that would require extending the
+	caller's frame.
+	* sysdeps/m68k/bsd-_setjmp.c: Likewise.
+	* sysdeps/m68k/bsd-setjmp.S: Deleted.
+	* sysdeps/m68k/bsd-_setjmp.S: Deleted.
+	Reported by Jes Sorensen <jes@trained-monkey.org>.
+
 2001-10-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Fix
