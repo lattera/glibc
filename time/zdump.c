@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.23";
+static char	elsieid[] = "@(#)zdump.c	7.24";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -208,9 +208,10 @@ _("%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"),
 		static char	buf[MAX_STRING_LENGTH];
 
 		(void) strcpy(&fakeenv[0][3], argv[i]);
-		show(argv[i], now, FALSE);
-		if (!vflag)
+		if (!vflag) {
+			show(argv[i], now, FALSE);
 			continue;
+		}
 		/*
 		** Get lowest value of t.
 		*/

@@ -1,5 +1,22 @@
 Wed Jun  5 15:57:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* time/tzfile.h, time/private.h, time/zdump.c, time/zic.c,
+ 	time/africa, time/asia, time/australasia, time/europe,
+ 	time/northamerica, time/southamerica: Updated from ADO 96h.
+
+	* Make-dist (all-headers): Filter $(sysdep_headers) out of $(headers).
+	(try-sysdeps, +sysdep-names): Check sysdeps/libm-ieee754 too.
+
+	* Makerules (distinfo-vars): Add sysdep_headers.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Append to
+	this instead of $(headers).
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Likewise.
+
+	* Make-dist [subdirs-dirs]: Don't prefix $(subdir-dirs) with
+	$(subdir); we are already there.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/Dist: Removed.
+
 	* mach/Machrules: Undo last change.
 	(mach-generated): List .uh and .__h files only for $(user-interfaces),
 	not for each .h in $(interface-headers); server-interfaces have no .uh

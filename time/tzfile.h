@@ -3,6 +3,11 @@
 #define TZFILE_H
 
 /*
+** This file is in the public domain, so clarified as of
+** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov).
+*/
+
+/*
 ** This header is for use ONLY with the time conversion code.
 ** There is no guarantee that it will remain unchanged,
 ** or that it will remain at all.
@@ -16,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	tzfilehid[] = "@(#)tzfile.h	7.7";
+static char	tzfilehid[] = "@(#)tzfile.h	7.8";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 

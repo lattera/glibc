@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.62";
+static char	elsieid[] = "@(#)zic.c	7.77";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -335,8 +335,10 @@ static const int	len_years[2] = {
 	DAYSPERNYEAR, DAYSPERLYEAR
 };
 
-static time_t		ats[TZ_MAX_TIMES];
-static unsigned char	types[TZ_MAX_TIMES];
+static struct attype {
+	time_t		at;
+	unsigned char	type;
+}			attypes[TZ_MAX_TIMES];
 static long		gmtoffs[TZ_MAX_TYPES];
 static char		isdsts[TZ_MAX_TYPES];
 static unsigned char	abbrinds[TZ_MAX_TYPES];
@@ -427,11 +429,22 @@ const char * const	string;
 }
 
 static void
+warning(string)
+const char * const	string;
+{
+	char *	cp;
+
+	cp = ecpyalloc("warning: ");
+	cp = ecatalloc(cp, string);
+	error(string);
+	ifree(cp);
+	--errors;
+}
+
+static void
 usage P((void))
 {
-	(void) fprintf(stderr, _("%s: usage is %s \
-[ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n\
-\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
+	(void) fprintf(stderr, _("%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"),
 		progname, progname);
 	(void) exit(EXIT_FAILURE);
 }
@@ -622,8 +635,7 @@ const char * const	tofile;
 */
 
 #define MAX_BITS_IN_FILE	32
-#define TIME_T_BITS_IN_FILE	((TYPE_BIT(time_t) < MAX_BITS_IN_FILE) ? \
-					TYPE_BIT(time_t) : MAX_BITS_IN_FILE)
+#define TIME_T_BITS_IN_FILE	((TYPE_BIT(time_t) < MAX_BITS_IN_FILE) ? TYPE_BIT(time_t) : MAX_BITS_IN_FILE)
 
 static void
 setboundaries P((void))
@@ -681,11 +693,37 @@ associate P((void))
 	register struct zone *	zp;
 	register struct rule *	rp;
 	register int		base, out;
-	register int		i;
+	register int		i, j;
 
-	if (nrules != 0)
+	if (nrules != 0) {
 		(void) qsort((void *) rules, (size_t) nrules,
 			(size_t) sizeof *rules, rcomp);
+		for (i = 0; i < nrules - 1; ++i) {
+			if (strcmp(rules[i].r_name,
+				rules[i + 1].r_name) != 0)
+					continue;
+			if (strcmp(rules[i].r_filename,
+				rules[i + 1].r_filename) == 0)
+					continue;
+			eat(rules[i].r_filename, rules[i].r_linenum);
+			warning(_("same rule name in multiple files"));
+			eat(rules[i + 1].r_filename, rules[i + 1].r_linenum);
+			warning(_("same rule name in multiple files"));
+			for (j = i + 2; j < nrules; ++j) {
+				if (strcmp(rules[i].r_name,
+					rules[j].r_name) != 0)
+						break;
+				if (strcmp(rules[i].r_filename,
+					rules[j].r_filename) == 0)
+						continue;
+				if (strcmp(rules[i + 1].r_filename,
+					rules[j].r_filename) == 0)
+						continue;
+				break;
+			}
+			i = j - 1;
+		}
+	}
 	for (i = 0; i < nzones; ++i) {
 		zp = &zones[i];
 		zp->z_rules = NULL;
@@ -1010,8 +1048,7 @@ const int		iscont;
 			zones[nzones - 1].z_untiltime > min_time &&
 			zones[nzones - 1].z_untiltime < max_time &&
 			zones[nzones - 1].z_untiltime >= z.z_untiltime) {
-				error(_("Zone continuation line end time is \
-not after end time of previous line"));
+				error(_("Zone continuation line end time is not after end time of previous line"));
 				return FALSE;
 		}
 	}
@@ -1319,6 +1356,18 @@ FILE * const	fp;
 	(void) fwrite((void *) buf, (size_t) sizeof buf, (size_t) 1, fp);
 }
 
+static int
+atcomp(avp, bvp)
+void *	avp;
+void *	bvp;
+{
+	if (((struct attype *) avp)->at < ((struct attype *) bvp)->at)
+		return -1;
+	else if (((struct attype *) avp)->at > ((struct attype *) bvp)->at)
+		return 1;
+	else	return 0;
+}
+
 static void
 writezone(name)
 const char * const	name;
@@ -1327,7 +1376,50 @@ const char * const	name;
 	register int		i, j;
 	static char *		fullname;
 	static struct tzhead	tzh;
+	time_t			ats[TZ_MAX_TIMES];
+	unsigned char		types[TZ_MAX_TIMES];
 
+	/*
+	** Sort.
+	*/
+	if (timecnt > 1)
+		(void) qsort((void *) attypes, (size_t) timecnt,
+			(size_t) sizeof *attypes, atcomp);
+	/*
+	** Optimize.
+	*/
+	{
+		int	fromi;
+		int	toi;
+
+		toi = 0;
+		fromi = 0;
+		if (isdsts[0] == 0)
+			while (attypes[fromi].type == 0)
+				++fromi;	/* handled by default rule */
+		for ( ; fromi < timecnt; ++fromi) {
+			if (toi != 0
+			    && ((attypes[fromi].at
+				 + gmtoffs[attypes[toi - 1].type])
+				<= (attypes[toi - 1].at
+				    + gmtoffs[toi == 1 ? 0
+					      : attypes[toi - 2].type]))) {
+				attypes[toi - 1].type = attypes[fromi].type;
+				continue;
+			}
+			if (toi == 0 ||
+				attypes[toi - 1].type != attypes[fromi].type)
+					attypes[toi++] = attypes[fromi];
+		}
+		timecnt = toi;
+	}
+	/*
+	** Transfer.
+	*/
+	for (i = 0; i < timecnt; ++i) {
+		ats[i] = attypes[i].at;
+		types[i] = attypes[i].type;
+	}
 	fullname = erealloc(fullname,
 		(int) (strlen(directory) + 1 + strlen(name) + 1));
 	(void) sprintf(fullname, "%s/%s", directory, name);
@@ -1347,8 +1439,7 @@ const char * const	name;
 	convert(eitol(timecnt), tzh.tzh_timecnt);
 	convert(eitol(typecnt), tzh.tzh_typecnt);
 	convert(eitol(charcnt), tzh.tzh_charcnt);
-#define DO(field)	(void) fwrite((void *) tzh.field, \
-		(size_t) sizeof tzh.field, (size_t) 1, fp)
+#define DO(field)	(void) fwrite((void *) tzh.field, (size_t) sizeof tzh.field, (size_t) 1, fp)
 	DO(tzh_reserved);
 	DO(tzh_ttisgmtcnt);
 	DO(tzh_ttisstdcnt);
@@ -1440,7 +1531,6 @@ const int			zonecount;
 	register long			stdoff;
 	register int			year;
 	register long			startoff;
-	register int			startisdst;
 	register int			startttisstd;
 	register int			startttisgmt;
 	register int			type;
@@ -1448,7 +1538,6 @@ const int			zonecount;
 
 	INITIALIZE(untiltime);
 	INITIALIZE(starttime);
-	INITIALIZE(startoff);
 	/*
 	** Now. . .finally. . .generate some useful data!
 	*/
@@ -1473,7 +1562,8 @@ const int			zonecount;
 			continue;
 		gmtoff = zp->z_gmtoff;
 		eat(zp->z_filename, zp->z_linenum);
-		startisdst = -1;
+		*startbuf = '\0';
+		startoff = zp->z_gmtoff;
 		if (zp->z_nrules == 0) {
 			stdoff = zp->z_stdoff;
 			doabbr(startbuf, zp->z_format,
@@ -1481,8 +1571,10 @@ const int			zonecount;
 			type = addtype(oadd(zp->z_gmtoff, stdoff),
 				startbuf, stdoff != 0, startttisstd,
 				startttisgmt);
-			if (usestart)
+			if (usestart) {
 				addtt(starttime, type);
+				usestart = FALSE;
+			}
 			else if (stdoff != 0)
 				addtt(min_time, type);
 		} else for (year = min_year; year <= max_year; ++year) {
@@ -1553,36 +1645,25 @@ const int			zonecount;
 				rp->r_todo = FALSE;
 				if (useuntil && ktime >= untiltime)
 					break;
+				stdoff = rp->r_stdoff;
+				if (usestart && ktime == starttime)
+					usestart = FALSE;
 				if (usestart) {
-				    if (ktime < starttime) {
-					stdoff = rp->r_stdoff;
-					startoff = oadd(zp->z_gmtoff,
-						rp->r_stdoff);
-					doabbr(startbuf, zp->z_format,
-						rp->r_abbrvar,
-						rp->r_stdoff != 0);
-					startisdst = rp->r_stdoff != 0;
-					continue;
-				    }
-				    usestart = FALSE;
-				    if (ktime != starttime) {
-					if (startisdst < 0 &&
-					    zp->z_gmtoff !=
-					    (zp - 1)->z_gmtoff) {
-						type = (timecnt == 0) ? 0 :
-							types[timecnt - 1];
-						startoff = oadd(gmtoffs[type],
-							-(zp - 1)->z_gmtoff);
-						startisdst = startoff != 0;
-						startoff = oadd(startoff,
-							zp->z_gmtoff);
-						(void) strcpy(startbuf,
-						    &chars[abbrinds[type]]);
+					if (ktime < starttime) {
+						startoff = oadd(zp->z_gmtoff,
+							stdoff);
+						doabbr(startbuf, zp->z_format,
+							rp->r_abbrvar,
+							rp->r_stdoff != 0);
+						continue;
 					}
-					if (startisdst >= 0)
-addtt(starttime, addtype(startoff, startbuf, startisdst, startttisstd,
-	startttisgmt));
-				    }
+					if (*startbuf == '\0' &&
+					    startoff == oadd(zp->z_gmtoff,
+					    stdoff)) {
+						doabbr(startbuf, zp->z_format,
+							rp->r_abbrvar,
+							rp->r_stdoff != 0);
+					}
 				}
 				eats(zp->z_filename, zp->z_linenum,
 					rp->r_filename, rp->r_linenum);
@@ -1592,18 +1673,34 @@ addtt(starttime, addtype(startoff, startbuf, startisdst, startttisstd,
 				type = addtype(offset, buf, rp->r_stdoff != 0,
 					rp->r_todisstd, rp->r_todisgmt);
 				addtt(ktime, type);
-				stdoff = rp->r_stdoff;
 			}
+		}
+		if (usestart) {
+			if (*startbuf == '\0' &&
+				zp->z_format != NULL &&
+				strchr(zp->z_format, '%') == NULL &&
+				strchr(zp->z_format, '/') == NULL)
+					(void) strcpy(startbuf, zp->z_format);
+			eat(zp->z_filename, zp->z_linenum);
+			if (*startbuf == '\0')
+error(_("can't determine time zone abbrevation to use just after until time"));
+			else	addtt(starttime,
+					addtype(startoff, startbuf,
+						startoff != zp->z_gmtoff,
+						startttisstd,
+						startttisgmt));
 		}
 		/*
 		** Now we may get to set starttime for the next zone line.
 		*/
 		if (useuntil) {
-			starttime = tadd(zp->z_untiltime, -gmtoff);
 			startttisstd = zp->z_untilrule.r_todisstd;
 			startttisgmt = zp->z_untilrule.r_todisgmt;
+			starttime = zp->z_untiltime;
 			if (!startttisstd)
 				starttime = tadd(starttime, -stdoff);
+			if (!startttisgmt)
+				starttime = tadd(starttime, -gmtoff);
 		}
 	}
 	writezone(zpfirst->z_name);
@@ -1614,16 +1711,12 @@ addtt(starttime, type)
 const time_t	starttime;
 const int	type;
 {
-	if (timecnt != 0 && type == types[timecnt - 1])
-		return;	/* easy enough! */
-	if (timecnt == 0 && type == 0 && isdsts[0] == 0)
-		return; /* handled by default rule */
 	if (timecnt >= TZ_MAX_TIMES) {
 		error(_("too many transitions?!"));
 		(void) exit(EXIT_FAILURE);
 	}
-	ats[timecnt] = starttime;
-	types[timecnt] = type;
+	attypes[timecnt].at = starttime;
+	attypes[timecnt].type = type;
 	++timecnt;
 }
 
@@ -1637,6 +1730,18 @@ const int		ttisgmt;
 {
 	register int	i, j;
 
+	if (isdst != TRUE && isdst != FALSE) {
+		error(_("internal error - addtype called with bad isdst"));
+		(void) exit(EXIT_FAILURE);
+	}
+	if (ttisstd != TRUE && ttisstd != FALSE) {
+		error(_("internal error - addtype called with bad ttisstd"));
+		(void) exit(EXIT_FAILURE);
+	}
+	if (ttisgmt != TRUE && ttisgmt != FALSE) {
+		error(_("internal error - addtype called with bad ttisgmt"));
+		(void) exit(EXIT_FAILURE);
+	}
 	/*
 	** See if there's already an entry for this zone type.
 	** If so, just return its index.

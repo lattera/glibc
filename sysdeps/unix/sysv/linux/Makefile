@@ -1,7 +1,7 @@
 ifeq ($(subdir), math)
 sysdep_routines += setfpucw
 extra-objs += ieee-fpucw.o
-headers += fpu_control.h
+sysdep_headers += fpu_control.h
 install-lib += libieee.a
 non-lib.a += libieee.a
 
@@ -18,7 +18,7 @@ ifeq ($(subdir), misc)
 sysdep_routines += mount umount xmknod s_ptrace s_sysctl sysctl llseek \
 setfsgid setfsuid sysinfo uselib s_reboot
 
-headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h sys/module.h \
+sysdep_headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h sys/module.h \
 	sys/io.h sys/klog.h sys/kdaemon.h
 
 install-others += $(includedir)/sys/syscall.h
@@ -45,19 +45,19 @@ endif
 
 ifeq ($(subdir), time)
 sysdep_routines += adjtimex
-headers += sys/timex.h
+sysdep_headers += sys/timex.h
 endif
 
 ifeq ($(subdir), socket)
-headers += sys/socketcall.h net/if.h
+sysdep_headers += sys/socketcall.h net/if.h
 endif
 
 ifeq ($(subdir), sunrpc)
-headers += nfs/nfs.h
+sysdep_headers += nfs/nfs.h
 endif
 
 ifeq ($(subdir), termios)
-headers += termio.h
+sysdep_headers += termio.h
 endif
 
 rtld-installed-name = ld-gnu.so.1

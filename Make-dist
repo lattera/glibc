@@ -48,7 +48,7 @@ endif
 # where source files might be found.
 
 ifdef	subdir
-all-headers = $(headers)
+all-headers = $(filter-out $(sysdep_headers),$(headers))
 else
 +distinfo := $(shell MAKEFLAGS= MFLAGS= $(MAKE) -s no_deps=t \
 		     inhibit_interface_rules=t inhibit_mach_syscalls=t \
@@ -67,16 +67,20 @@ foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 		  $(filter %.c %.S %.s %.h %.sub,$(distribute))
 foo:=$(shell echo '+maybe-sysdeps=$(+maybe-sysdeps)'>&2)
 # Find all the files that have a stub or generic version.
-try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic,\
+try-sysdeps := $(foreach dir,$(..)sysdeps/stub $(..)sysdeps/generic \
+			     $(..)sysdeps/libm-ieee754,\
 			     $(addprefix $(dir)/,$(+maybe-sysdeps)))
 foo:=$(shell echo 'try-sysdeps=$(try-sysdeps)'>&2)
 +sysdeps := $(wildcard $(try-sysdeps))
 foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
-+sysdep-names := $(sort $(notdir $(+sysdeps)))
++sysdep-names := $(sort $(patsubst $(..)sysdeps/generic/%,%,\
+				   $(patsubst $(..)sysdeps/stub/%,%,\
+				   $(patsubst $(..)sysdeps/libm-ieee754/%,%,\
+					      $(+sysdeps)))))
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 
 ifdef subdir-dirs
-vpath % $(addprefix $(subdir)/,$(subdir-dirs))
+vpath % $(subdir-dirs)
 endif
 
 # Now find all the sysdep versions of those files.
