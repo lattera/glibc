@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -204,7 +204,7 @@ addpwbyname (struct database *db, int fd, request_header *req,
   char *buffer = alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
-  uid_t oldeuid;
+  uid_t oldeuid = 0;
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%s\" in password cache!"), key);
