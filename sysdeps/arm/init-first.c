@@ -25,8 +25,6 @@ extern void __libc_global_ctors (void);
 
 int __libc_multiple_libcs = 1;
 
-pid_t __libc_pid;
-
 static void
 init (int *data)
 {
