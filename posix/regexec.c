@@ -123,7 +123,7 @@ static re_dfastate_t **build_trtable (const regex_t *dfa,
 static int check_node_accept_bytes (const regex_t *preg, int node_idx,
                                     const re_string_t *input, int idx);
 # ifdef _LIBC
-static unsigned int find_collation_sequence_value (const unsigned char *mbs,
+static unsigned int find_collation_sequence_value (const char *mbs,
                                                    size_t name_len);
 # endif /* _LIBC */
 #endif /* RE_ENABLE_I18N */
@@ -153,8 +153,8 @@ static reg_errcode_t extend_buffers (re_match_context_t *mctx);
 
 int
 regexec (preg, string, nmatch, pmatch, eflags)
-    const regex_t *preg;
-    const char *string;
+    const regex_t *__restrict preg;
+    const char *__restrict string;
     size_t nmatch;
     regmatch_t pmatch[];
     int eflags;
@@ -1621,7 +1621,7 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
 
   for (i = 0; i < nodes->nelem; ++i)
     {
-      unsigned char *buf;
+      char *buf;
       int dest_str_idx, subexp_idx, prev_nelem, subexp_len;
       int node_idx = nodes->elems[i];
       unsigned int context;
@@ -2069,7 +2069,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
     {
       const re_charset_t *cset = node->opr.mbcset;
 # ifdef _LIBC
-      const unsigned char *pin = re_string_get_buffer (input) + str_idx;
+      const char *pin = re_string_get_buffer (input) + str_idx;
 # endif /* _LIBC */
       int match_len = 0;
       wchar_t wc = ((cset->nranges || cset->nchar_classes || cset->nmbchars)
@@ -2098,18 +2098,17 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
         {
           unsigned int in_collseq = 0;
           const int32_t *table, *indirect;
-          const unsigned char *weights, *extra, *collseqwc;
+          const char *weights, *extra, *collseqwc;
           int32_t idx;
           /* This #include defines a local function!  */
 #  include <locale/weight.h>
 
           /* match with collating_symbol?  */
           if (cset->ncoll_syms)
-            extra = (const unsigned char *)
-              _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
+            extra = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
           for (i = 0; i < cset->ncoll_syms; ++i)
             {
-              const unsigned char *coll_sym = extra + cset->coll_syms[i];
+              const char *coll_sym = extra + cset->coll_syms[i];
               /* Compare the length of input collating element and
                  the length of current collating element.  */
               if (*coll_sym != elem_len)
@@ -2148,13 +2147,11 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
           /* match with equivalence_class?  */
           if (cset->nequiv_classes)
             {
-              const unsigned char *cp = pin;
+              const unsigned char *cp = (const unsigned char *) pin;
               table = (const int32_t *)
                 _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-              weights = (const unsigned char *)
-                _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
-              extra = (const unsigned char *)
-                _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+              weights = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+              extra = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
               indirect = (const int32_t *)
                 _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
               idx = findidx (&cp);
@@ -2183,7 +2180,12 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 # endif /* _LIBC */
         {
           /* match with range expression?  */
-          wchar_t cmp_buf[6] = {L'\0', L'\0', wc, L'\0', L'\0', L'\0'};
+#if __GNUC__ >= 2
+          wchar_t cmp_buf[] = {L'\0', L'\0', wc, L'\0', L'\0', L'\0'};
+#else
+          wchar_t cmp_buf[] = {L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'};
+          cmp_buf[2] = wc;
+#endif
           for (i = 0; i < cset->nranges; ++i)
             {
               cmp_buf[0] = cset->range_starts[i];
@@ -2213,7 +2215,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 # ifdef _LIBC
 static unsigned int
 find_collation_sequence_value (mbs, mbs_len)
-    const unsigned char *mbs;
+    const char *mbs;
     size_t mbs_len;
 {
   uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
@@ -2224,7 +2226,7 @@ find_collation_sequence_value (mbs, mbs_len)
           /* No valid character.  Match it as a single byte character.  */
           const unsigned char *collseq = (const unsigned char *)
             _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
-          return collseq[mbs[0]];
+          return collseq[*(unsigned char *) mbs];
         }
       return UINT_MAX;
     }

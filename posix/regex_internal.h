@@ -228,15 +228,15 @@ struct re_string_t
 {
   /* Indicate the raw buffer which is the original string passed as an
      argument of regexec(), re_search(), etc..  */
-  const unsigned char *raw_mbs;
+  const char *raw_mbs;
   /* Store the multibyte string.  In case of "case insensitive mode" like
      REG_ICASE, upper cases of the string are stored, otherwise MBS points
      the same address that RAW_MBS points.  */
-  unsigned char *mbs;
+  char *mbs;
   /* Store the case sensitive multibyte string.  In case of
      "case insensitive mode", the original string are stored,
      otherwise MBS_CASE points the same address that MBS points.  */
-  unsigned char *mbs_case;
+  char *mbs_case;
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
   wint_t *wcs;
@@ -275,13 +275,12 @@ typedef struct re_string_t re_string_t;
 #define MBS_CASE_ALLOCATED(pstr) (pstr->trans != NULL)
 
 
-static reg_errcode_t re_string_allocate (re_string_t *pstr,
-                                         const unsigned char *str, int len,
-                                         int init_len,
+static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
+                                         int len, int init_len,
                                          RE_TRANSLATE_TYPE trans, int icase);
-static reg_errcode_t re_string_construct (re_string_t *pstr,
-					  const unsigned char *str, int len,
-                                          RE_TRANSLATE_TYPE trans, int icase);
+static reg_errcode_t re_string_construct (re_string_t *pstr, const char *str,
+                                          int len, RE_TRANSLATE_TYPE trans,
+                                          int icase);
 static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
                                             int eflags, int newline);
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
@@ -513,7 +512,7 @@ typedef struct
   union
   {
     unsigned char ch;
-    unsigned char *name;
+    char *name;
     wchar_t wch;
   } opr;
 } bracket_elem_t;
@@ -581,8 +580,7 @@ re_string_elem_size_at (pstr, idx)
      int idx;
 {
 #ifdef _LIBC
-  const unsigned char *p;
-  const char *extra;
+  const char *extra, *p;
   const int32_t *table, *indirect;
   int32_t tmp;
 # include <locale/weight.h>
@@ -595,8 +593,8 @@ re_string_elem_size_at (pstr, idx)
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
       p = pstr->mbs + idx;
-      tmp = findidx (&p);
-      return p - (const unsigned char *) pstr->mbs - idx;
+      tmp = findidx ((const unsigned char **) &p);
+      return p - pstr->mbs - idx;
     }
   else
 #endif /* _LIBC */

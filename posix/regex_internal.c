@@ -57,8 +57,8 @@
 #include "regex.h"
 #include "regex_internal.h"
 
-static void re_string_construct_common (const unsigned char *str,
-                                        int len, re_string_t *pstr,
+static void re_string_construct_common (const char *str, int len,
+                                        re_string_t *pstr,
                                         RE_TRANSLATE_TYPE trans, int icase);
 #ifdef RE_ENABLE_I18N
 static int re_string_skip_chars (re_string_t *pstr, int new_raw_idx);
@@ -86,7 +86,7 @@ static unsigned int inline calc_state_hash (const re_node_set *nodes,
 static reg_errcode_t
 re_string_allocate (pstr, str, len, init_len, trans, icase)
      re_string_t *pstr;
-     const unsigned char *str;
+     const char *str;
      int len, init_len, icase;
      RE_TRANSLATE_TYPE trans;
 {
@@ -99,8 +99,7 @@ re_string_allocate (pstr, str, len, init_len, trans, icase)
   if (BE (ret != REG_NOERROR, 0))
     return ret;
 
-  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case
-                    : (unsigned char *)str);
+  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case : (char *) str);
   pstr->mbs = MBS_ALLOCATED (pstr) ? pstr->mbs : pstr->mbs_case;
   pstr->valid_len = (MBS_CASE_ALLOCATED (pstr) || MBS_ALLOCATED (pstr)
                      || MB_CUR_MAX > 1) ? pstr->valid_len : len;
@@ -112,7 +111,7 @@ re_string_allocate (pstr, str, len, init_len, trans, icase)
 static reg_errcode_t
 re_string_construct (pstr, str, len, trans, icase)
      re_string_t *pstr;
-     const unsigned char *str;
+     const char *str;
      int len, icase;
      RE_TRANSLATE_TYPE trans;
 {
@@ -128,8 +127,7 @@ re_string_construct (pstr, str, len, trans, icase)
       if (BE (ret != REG_NOERROR, 0))
         return ret;
     }
-  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case
-                    : (unsigned char *)str);
+  pstr->mbs_case = (MBS_CASE_ALLOCATED (pstr) ? pstr->mbs_case : (char *) str);
   pstr->mbs = MBS_ALLOCATED (pstr) ? pstr->mbs : pstr->mbs_case;
 
   if (icase)
@@ -178,13 +176,13 @@ re_string_realloc_buffers (pstr, new_buf_len)
 #endif /* RE_ENABLE_I18N  */
   if (MBS_ALLOCATED (pstr))
     {
-      pstr->mbs = re_realloc (pstr->mbs, unsigned char, new_buf_len);
+      pstr->mbs = re_realloc (pstr->mbs, char, new_buf_len);
       if (BE (pstr->mbs == NULL, 0))
         return REG_ESPACE;
     }
   if (MBS_CASE_ALLOCATED (pstr))
     {
-      pstr->mbs_case = re_realloc (pstr->mbs_case, unsigned char, new_buf_len);
+      pstr->mbs_case = re_realloc (pstr->mbs_case, char, new_buf_len);
       if (BE (pstr->mbs_case == NULL, 0))
         return REG_ESPACE;
       if (!MBS_ALLOCATED (pstr))
@@ -197,7 +195,7 @@ re_string_realloc_buffers (pstr, new_buf_len)
 
 static void
 re_string_construct_common (str, len, pstr, trans, icase)
-     const unsigned char *str;
+     const char *str;
      int len;
      re_string_t *pstr;
      RE_TRANSLATE_TYPE trans;
@@ -256,8 +254,9 @@ build_wcs_buffer (pstr)
       /* Apply the translateion if we need.  */
       if (pstr->trans != NULL && mbclen == 1)
         {
-          int ch =  pstr->trans[pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx]];
-          pstr->mbs_case[byte_idx] = ch;
+          int ch = *((unsigned char *) pstr->raw_mbs + pstr->raw_mbs_idx
+                     + byte_idx);
+          pstr->mbs_case[byte_idx] = pstr->trans[ch];
         }
       /* Write wide character and padding.  */
       pstr->wcs[byte_idx++] = wc;
@@ -421,9 +420,9 @@ re_string_reconstruct (pstr, idx, eflags, newline)
       pstr->tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
                            : CONTEXT_NEWLINE | CONTEXT_BEGBUF);
       if (!MBS_CASE_ALLOCATED (pstr))
-        pstr->mbs_case = (unsigned char *)pstr->raw_mbs;
+        pstr->mbs_case = (char *) pstr->raw_mbs;
       if (!MBS_ALLOCATED (pstr) && !MBS_CASE_ALLOCATED (pstr))
-        pstr->mbs = (unsigned char *)pstr->raw_mbs;
+        pstr->mbs = (char *) pstr->raw_mbs;
       offset = idx;
     }
 

@@ -1,4 +1,2 @@
-wordsize-32
 ieee754/flt-32
 ieee754/dbl-64
-powerpc/soft-fp

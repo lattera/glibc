@@ -30,6 +30,7 @@ in the future, are:
 	m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
 	alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
+	powerpc64-*-linux-gnu	Linux-2.4+ on 64-bit PowerPC systems
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 	arm-*-none		ARM standalone systems
@@ -378,6 +379,11 @@ because of problems of the FPU emulation in the Linux kernel (the MIPS FPU
 doesn't handle all cases and needs help from the kernel).
 
 For details check also my page <http://www.suse.de/~aj/glibc-mips.html>.
+
+??powerpc64	Which compiler should I use for powerpc64?
+
+{SM} You want to use at least gcc 3.2 (together with the right versions
+of all the other tools, of course).
 
 ? Installation and configuration issues
 
@@ -1668,6 +1674,7 @@ Answers were given by:
 {CG} Cristian Gafton, <gafton@redhat.com>
 {AO} Alexandre Oliva, <aoliva@redhat.com>
 {BH} Bruno Haible, <haible@clisp.cons.org>
+{SM} Steven Munroe, <sjmunroe@us.ibm.com>
 
 Local Variables:
  mode:outline

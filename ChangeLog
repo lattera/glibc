@@ -1,3 +1,173 @@
+2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/__longjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/__longjmp.S: ...here.
+	* sysdeps/powerpc/add_n.S: Moved to...
+	* sysdeps/powerpc/powerpc32/add_n.S: ...here.
+	* sysdeps/powerpc/addmul_1.S: Moved to...
+	* sysdeps/powerpc/powerpc32/addmul_1.S: ...here.
+	* sysdeps/powerpc/atomicity.h: Moved to...
+	* sysdeps/powerpc/powerpc32/atomicity.h: ...here.
+	* sysdeps/powerpc/backtrace.c: Moved to...
+	* sysdeps/powerpc/powerpc32/backtrace.c: ...here.
+	* sysdeps/powerpc/bp-asm.h: Moved to...
+	* sysdeps/powerpc/powerpc32/bp-asm.h: ...here.
+	* sysdeps/powerpc/bsd-_setjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/bsd-_setjmp.S: ...here.
+	* sysdeps/powerpc/bsd-setjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/bsd-setjmp.S: ...here.
+	* sysdeps/powerpc/dl-machine.c: Moved to...
+	* sysdeps/powerpc/powerpc32/dl-machine.c: ...here.
+	* sysdeps/powerpc/dl-machine.h: Moved to...
+	* sysdeps/powerpc/powerpc32/dl-machine.h: ...here.
+	* sysdeps/powerpc/dl-start.S: Moved to...
+	* sysdeps/powerpc/powerpc32/dl-start.S: ...here.
+	* sysdeps/powerpc/gprrest0.S: Moved to...
+	* sysdeps/powerpc/powerpc32/gprrest0.S: ...here.
+	* sysdeps/powerpc/gprrest1.S: Moved to...
+	* sysdeps/powerpc/powerpc32/gprrest1.S: ...here.
+	* sysdeps/powerpc/gprsave0.S: Moved to...
+	* sysdeps/powerpc/powerpc32/gprsave0.S: ...here.
+	* sysdeps/powerpc/gprsave1.S: Moved to...
+	* sysdeps/powerpc/powerpc32/gprsave1.S: ...here.
+	* sysdeps/powerpc/lshift.S: Moved to...
+	* sysdeps/powerpc/powerpc32/lshift.S: ...here.
+	* sysdeps/powerpc/memset.S: Moved to...
+	* sysdeps/powerpc/powerpc32/memset.S: ...here.
+	* sysdeps/powerpc/mul_1.S: Moved to...
+	* sysdeps/powerpc/powerpc32/mul_1.S: ...here.
+	* sysdeps/powerpc/ppc-mcount.S: Moved to...
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S: ...here.
+	* sysdeps/powerpc/register-dump.h: Moved to...
+	* sysdeps/powerpc/powerpc32/register-dump.h: ...here.
+	* sysdeps/powerpc/rshift.S: Moved to...
+	* sysdeps/powerpc/powerpc32/rshift.S: ...here.
+	* sysdeps/powerpc/setjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/setjmp.S: ...here.
+	* sysdeps/powerpc/stpcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/stpcpy.S: ...here.
+	* sysdeps/powerpc/strchr.S: Moved to...
+	* sysdeps/powerpc/powerpc32/strchr.S: ...here.
+	* sysdeps/powerpc/strcmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/strcmp.S: ...here.
+	* sysdeps/powerpc/strcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/strcpy.S: ...here.
+	* sysdeps/powerpc/strlen.S: Moved to...
+	* sysdeps/powerpc/powerpc32/strlen.S: ...here.
+	* sysdeps/powerpc/sub_n.S: Moved to...
+	* sysdeps/powerpc/powerpc32/sub_n.S: ...here.
+	* sysdeps/powerpc/submul_1.S: Moved to...
+	* sysdeps/powerpc/powerpc32/submul_1.S: ...here.
+	* sysdeps/powerpc/elf/bzero.S: Moved to...
+	* sysdeps/powerpc/powerpc32/elf/bzero.S: ...here.
+	* sysdeps/powerpc/elf/start.S: Moved to...
+	* sysdeps/powerpc/powerpc32/elf/start.S: ...here.
+	* sysdeps/powerpc/fpu/__longjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S: ...here.
+	* sysdeps/powerpc/fpu/fprrest.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/fprrest.S: ...here.
+	* sysdeps/powerpc/fpu/fprsave.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/fprsave.S: ...here.
+	* sysdeps/powerpc/fpu/setjmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: ...here.
+	* sysdeps/powerpc/fpu/s_copysign.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: ...here.
+	* sysdeps/powerpc/fpu/s_copysignf.S: Moved to...
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignf.S: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/brk.S: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/glob64.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/glob64.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_stat.h: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/kernel_stat.h: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: ...here.
+	Support PowerPC64.  Separate powerpc into powerpc/powerpc32 and
+	powerpc/powerpc64.
+
+2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* FAQ.in: Add powerpc64 to supported targets list. Also state the
+	minimum gcc version is 3.2
+	* README: Add powerpc64 to supported targets list.
+	* configure.in: Change machine=powerpc to machine=powerpc/powerpc32.
+	Add powerpc64 and machine=powerpc/powerpc64.
+	(HAVE_ASM_GLOBAL_DOT_NAME): Define if linux*powerpc/powerpc64*.
+	* shlib-versions: Set DEFAULT version to 2.2.5 for powerpc64.
+	* sysdeps/powerpc/Dist: Remove dl-machine.c, dl-start.S, ppc-mcount.S,
+	gprsave1.S, gprsave0.S, gprrest1.S, and gprrest0.S.
+	* sysdeps/powerpc/powerpc32/Dist: New file.
+	* sysdeps/powerpc/Implies: Remove wordsize-32 and powerpc/soft-fp.
+	* sysdeps/powerpc/powerpc32/Implies: New file.
+	* sysdeps/powerpc/Makefile(cflags): Remove powerpc32 specific cflags.
+	($(with-fp) = no): Move test to powerpc32/Makefile.
+	($(subdir) = misc): Move to powerpc32/Makefile.
+	($(build-shared) = yes): Move to powerpc32/Makefile.
+	($(subdir) = csu): Move to powerpc32/Makefile.
+	(sysdep-rtld-routines): Remove dl-start.  Moved these bits to ...
+	* sysdeps/powerpc/powerpc32/Makefile: New file.
+	* sysdeps/powerpc/Versions: Remove libgcc functions.
+	* sysdeps/powerpc/powerpc32/Versions: New file.
+	* sysdeps/powerpc/fpu/Makefile: Remove fprsave and fprrest.
+	* sysdeps/powerpc/powerpc32/fpu/Makefile: New file.
+	* sysdeps/unix/sysv/linux/configure.in (powerpc*):
+	Set arch_minimum_kernel=2.4.19 for powerpc/powerpc64. Also set
+	libc_cv_gcc_unwind_find_fde=yes only if !powerpc/powerpc64.
+	($machine): Add powerpc/powerpc64 to if ... | for
+	libc_cv_slibdir=/libc64.
+	(powerpc*): Set ldd_rewrite_script.
+	* sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Remove clone.S.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Dist: New file.
+	Add clone.S.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Remove oldgetrlimit64.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Remove GLIBC_2.0
+	functions.  Remove GLIBC_2.2 functions except getrlimit and
+	setrlimit.  Moved them to ...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions: New file.
+
+2002-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/tst-atime.c: Include <errno.h>.
+	(do_test): Only perform fstatvfs check if ST_NOATIME is defined.
+
+2002-09-03  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (regcomp): Append "__restrict" modifier to avoid
+	warnings of some compilers.
+	(build_collating_symbol): Change the type of characters from
+	"unsigned char"	to "char", and append a cast to "char*" pointer in
+	array subscript.
+	(build_collating_symbol): Likewise.
+	(build_equiv_class): Likewise.
+	(build_charclass): Likewise.
+	(re_compile_pattern): Remove incorrect cast.
+	(re_compile_fastmap_iter): Change the type of characters from
+	"unsigned char"	to "char", and append a cast to "char*" pointer
+	in array subscript.
+	(parse_bracket_exp): Likewise.
+	* posix/regex_internal.c (re_string_construct_common): Likewise.
+	(re_string_allocate): Likewise.
+	(re_string_construct): Likewise.
+	(re_string_realloc_buffers): Likewise.
+	(build_wcs_buffer): Likewise.
+	(re_string_reconstruct): Likewise.
+	* posix/regex_internal.h: Change the type of characters in
+	re_string_t and bracket_elem_t from "unsigned char" to "char".
+	* posix/regexec.c (regexec): Append "__restrict" modifier to avoid
+	warnings of some compilers.
+	(transit_state_bkref_loop): Change the type of characters from
+	"unsigned char"	to "char", and append a cast to "char*" pointer in
+	array subscript.
+	(check_node_accept_bytes): Likewise.
+	(find_collation_sequence_value): Likewise.
+
 2002-09-04  Roland McGrath  <roland@redhat.com>
 
 	* resolv/nss_dns/dns-network.c (MAXPACKET): Increase minimum value

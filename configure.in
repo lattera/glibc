@@ -313,6 +313,8 @@ m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
 mips*)		base_machine=mips machine=mips/$machine ;;
+powerpc)	base_machine=powerpc machine=powerpc/powerpc32 ;;
+powerpc64)	base_machine=powerpc machine=powerpc/powerpc64 ;;
 s390)           base_machine=s390 machine=s390/s390-32 ;;
 s390x)          base_machine=s390 machine=s390/s390-64 ;;
 sh3*)		base_machine=sh machine=sh/sh3 ;;
@@ -895,8 +897,9 @@ if test "x$libc_cv_asm_type_prefix" != xno; then
 fi
 
 # The Aix ld uses global .symbol_names instead of symbol_names.
-case "$os" in
-aix4.3*)
+# Unfortunately also used in the PPC64 ELF ABI.
+case "${os}${machine}" in
+aix4.3* | linux*powerpc/powerpc64*)
   AC_DEFINE(HAVE_ASM_GLOBAL_DOT_NAME)
 esac
 

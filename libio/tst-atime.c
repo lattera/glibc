@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +41,7 @@ do_test (void)
       return 1;
     }
 
+#ifdef ST_NOATIME
   /* Make sure the filesystem doesn't have the noatime option set.  If
      statvfs is not available just continue.  */
   e = fstatvfs (fd, &sv);
@@ -57,6 +59,7 @@ do_test (void)
 	  return 0;
 	}
     }
+#endif
 
   /* Make sure it gets removed.  */
   add_temp_file (buf);
