@@ -30,85 +30,95 @@
 
 
 #if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
+# if __GNUC_PREREQ (2,97)
+/* GCC 2.97 and up have builtins that actually can be used.  */
+#  define isgreater(x, y) __builtin_isgreater (x, y)
+#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
+#  define isless(x, y) __builtin_isless (x, y)
+#  define islessequal(x, y) __builtin_islessequal (x, y)
+#  define islessgreater(x, y) __builtin_islessgreater (x, y)
+#  define isunordered(x, y) __builtin_isunordered (x, y)
+# else
 /* ISO C99 defines some macros to perform unordered comparisons.  The
    ix87 FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
-# ifdef __i686__
+#  ifdef __i686__
 /* For the PentiumPro and more recent processors we can provide
    better code.  */
-#  define isgreater(x, y) \
+#   define isgreater(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; seta %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
 	__result; })
-#  define isgreaterequal(x, y) \
+#   define isgreaterequal(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; setae %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
 	__result; })
 
-#  define isless(x, y) \
+#   define isless(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; seta %%al"			      \
 		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st");	      \
 	__result; })
 
-#  define islessequal(x, y) \
+#   define islessequal(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; setae %%al"			      \
 		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st");	      \
 	__result; })
 
-#  define islessgreater(x, y) \
+#   define islessgreater(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; setne %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
 	__result; })
 
-#  define isunordered(x, y) \
+#   define isunordered(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucomip %%st(1), %%st; setp %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st");	      \
 	__result; })
-# else
+#  else
 /* This is the dumb, portable code for i386 and above.  */
-#  define isgreater(x, y) \
+#   define isgreater(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-#  define isgreaterequal(x, y) \
+#   define isgreaterequal(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-#  define isless(x, y) \
+#   define isless(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st", "st(1)"); \
 	__result; })
 
-#  define islessequal(x, y) \
+#   define islessequal(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (x), "t" (y) : "cc", "st", "st(1)"); \
 	__result; })
 
-#  define islessgreater(x, y) \
+#   define islessgreater(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al"	      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
-#  define isunordered(x, y) \
+#   define isunordered(x, y) \
      ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; sahf; setp %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
-# endif	/* __i686__ */
+#  endif /* __i686__ */
+# endif	/* GCC 2.97 */
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */

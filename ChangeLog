@@ -1,5 +1,8 @@
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/bits/mathinline.h: Add support for builtin
+	unordered compare functions to gcc 2.97 and up.
+
 	* string/bits/string2.h: Disable strstr optimizations for newer
 	gcc versions.  Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
 
