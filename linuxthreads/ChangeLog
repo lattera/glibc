@@ -1,5 +1,12 @@
 2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/bits/typesizes.h (__SSIZE_T_TYPE): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__SSIZE_T_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h (__SSIZE_T_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: New file.
+
 	* sysdeps/pthread/pthread.h (pthread_attr_setstackaddr,
 	pthread_attr_setstacksize): Change PTHREAD_STACK_SIZE to
 	PTHREAD_STACK_MIN in comments.
