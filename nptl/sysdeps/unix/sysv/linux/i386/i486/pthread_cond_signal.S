@@ -92,7 +92,11 @@ __pthread_cond_signal:
 
 	/* Unlock.  */
 4:	LOCK
+#if cond_lock == 0
 	subl	$1, (%edi)
+#else
+	subl	$1, cond_lock(%edi)
+#endif
 	jne	5f
 
 6:	xorl	%eax, %eax
