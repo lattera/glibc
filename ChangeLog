@@ -1,5 +1,16 @@
 Tue Jun 11 15:09:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules (elfobjdir): Use $(objdir) if set, even in elf subdir.
+
+	* elf/Makefile (routines): Remove init-first.
+	* csu/Makefile (routines): New variable; put it here instead.
+
+	* config.make.in (CFLAGS): New variable.
+
+	* io/sys/stat.h (S_ISLNK, S_ISSOCK): Make conditional on __USE_BSD,
+	not __USE_GNU.
+	* string/string.h (strncasecmp): Likewise.
+
 	* elf/Makefile (lib-noranlib): Move rule adding deps for ld.so et al
 	to after `include ../Rules', so $(rtld-installed-name) is defined.
 

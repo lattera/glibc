@@ -493,11 +493,7 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_print_version
 # Use our own special initializer and finalizer files for libc.so.
-ifeq (elf, $(subdir))
-elfobjdir := .
-else
-elfobjdir := $(firstword $(objdir) $(..)elf)
-endif
+elfobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)elf))
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so

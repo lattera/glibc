@@ -60,7 +60,7 @@ __BEGIN_DECLS
 #define	S_ISFIFO(mode)	__S_ISTYPE((mode), __S_IFIFO)
 #endif
 
-#ifdef	__USE_GNU
+#ifdef	__USE_BSD
 #ifdef __S_IFLNK
 #define	S_ISLNK(mode)	__S_ISTYPE((mode), __S_IFLNK)
 #endif

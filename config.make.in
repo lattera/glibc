@@ -30,6 +30,7 @@ stdio = @stdio@
 
 # Build tools.
 CC = @CC@
+CFLAGS = @CFLAGS@
 AR = @AR@
 RANLIB = @RANLIB@
 AS = $(CC) -c

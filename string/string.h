@@ -184,16 +184,16 @@ extern int ffs __P ((int __i));
 extern int __strcasecmp __P ((__const char *__s1, __const char *__s2));
 extern int strcasecmp __P ((__const char *__s1, __const char *__s2));
 
+/* Compare no more than N chars of S1 and S2, ignoring case.  */
+extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
+			     size_t __n));
+
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
 extern char *strsep __P ((char **__stringp, __const char *__delim));
 #endif
 
 #ifdef	__USE_GNU
-/* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
-			     size_t __n));
-
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *strsignal __P ((int __sig));
 
