@@ -1,3 +1,9 @@
+2003-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/reg-printf.c (__register_printf_function): Calloc
+	instead of malloc __printf_arginfo_table and __printf_function_table.
+	Reported by John Reiser <jreiser@BitWagon.com>.
+
 2003-04-04  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/strchr.S: 64-bit optimizations.

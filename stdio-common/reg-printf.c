@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ __register_printf_function (spec, converter, arginfo)
   if (__printf_function_table == NULL)
     {
       __printf_arginfo_table = (printf_arginfo_function **)
-	malloc ((UCHAR_MAX + 1) * sizeof (void *) * 2);
+	calloc (UCHAR_MAX + 1, sizeof (void *) * 2);
       if (__printf_arginfo_table == NULL)
 	return -1;
       __printf_function_table = (printf_function **)
