@@ -22,6 +22,7 @@
 subdir	:= debug
 
 headers	:= execinfo.h
+distribute = sigcontextinfo.h
 
 routines := backtrace backtracesyms backtracesymsfd
 
@@ -29,13 +30,23 @@ CFLAGS-backtrace.c = -fno-omit-frame-pointer
 
 tests = backtrace-tst
 
-extra-libs	= libSegFault
+extra-libs = libSegFault
 extra-libs-others = $(extra-libs)
 
 libSegFault-routines = segfault
 libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+distribute += catchsegv.sh
+install-bin = catchsegv
+generated = catchsegv
+
 include ../Rules
+
+$(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
+		    $(common-objpfx)config.make
+	sed 's/@VERSION@/$(version)/;s/@SLIB@/$(slibdir)/' $< > $@.new
+	chmod 555 $@.new
+	mv -f $@.new $@
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

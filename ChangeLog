@@ -1,3 +1,9 @@
+1998-07-16 23:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/Makefile (distribute): Add sigcontextinfo.h.
+	Add rules to generate and install catchsegv.
+	* debug/catchsegv.sh: New file.
+
 1998-07-16  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (open_file): Return a Hurd I/O
