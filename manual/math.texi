@@ -870,9 +870,9 @@ singularity.
 
 @comment math.h
 @comment XPG
-@deftypefun double lgamma_r (double @var{x})
-@deftypefunx float lgammaf_r (float @var{x})
-@deftypefunx {long double} lgammal_r (long double @var{x})
+@deftypefun double lgamma_r (double @var{x}, int *@var{signp})
+@deftypefunx float lgammaf_r (float @var{x}, int *@var{signp})
+@deftypefunx {long double} lgammal_r (long double @var{x}, int *@var{signp})
 @code{lgamma_r} is just like @code{lgamma}, but it stores the sign of
 the intermediate result in the variable pointed to by @var{signp}
 instead of in the @var{signgam} global.

@@ -24,7 +24,7 @@ shift
 args="$*"
 
 if test $# -eq 0; then
-  case "$args" in
+  case "$prog" in
     --h | --he | --hel | --help)
       echo 'Usage: catchsegv PROGRAM ARGS...'
       echo '  --help      print this help, then exit'
@@ -45,18 +45,18 @@ Written by Ulrich Drepper.'
   esac
 fi
 
-LD_PRELOAD="${LD_PRELOAD:+${LD_PRELOAD}:}@SLIB@/libSegFault.so"
+LD_PRELOAD="${LD_PRELOAD:+${LD_PRELOAD}:}@SLIB@/libSegFault.so@SOVER@"
 export LD_PRELOAD
 SEGFAULT_USE_ALTSTACK=1
 export SEGFAULT_USE_ALTSTACK
-SEGFAULT_OUTPUT_NAME="$prog.segv.$$"
+SEGFAULT_OUTPUT_NAME="${TMPDIR:-/tmp}/`basename $prog`.segv.$$"
 export SEGFAULT_OUTPUT_NAME
 
 $prog $args
 exval=$?
 
 unset LD_PRELOAD
-# Check for an segmentation fault.
+# Check for an segmentation error.
 if test $exval -eq 139; then
   # We caught a segmentation error.  The output is in the file with the
   # name we have in SEGFAULT_OUTPUT_NAME.  In the output the names of
@@ -66,10 +66,10 @@ if test $exval -eq 139; then
    read line; echo "$line"
    while read line; do
      case "$line" in
-       [*) addr="`echo $line | sed 's/^[\(.*\)]$/\1/'`"
-           complete="`addr2line -f -e $prog $addr 2>/dev/null|`"
-           if $? -eq 0; then
-             echo "`echo $complete|sed 'N;s/\(.*\)\n\(.*\)/\2(\1)/;'`$line"
+       [*) addr="`echo $line | sed 's/^\[\(.*\)\]$/\1/'`"
+           complete="`addr2line -f -e $prog $addr 2>/dev/null`"
+           if test $? -eq 0; then
+             echo "`echo $complete|sed 's/\(.*\) \(.*\)/\2(\1)/;'`$line"
            else
              echo "$line"
            fi

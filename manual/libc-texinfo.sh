@@ -2,98 +2,71 @@
 
 # Create libc.texinfo from the chapter files.
 
-grep '^@node.*Top' $1 | cut -d, -f-2 |
-    sed 's/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' >cnodes.$$
+trap "rm -f *.$$; exit 1" 1 2 15
 
-$AWK '{ file[$2] = $1; nnode[$2] = $3 }
-END  { for(x in file)
-	if(file[x] != "")
-	    print file[x] ":" x, file[nnode[x]] ":" nnode[x] }' \
-    cnodes.$$ | tsort | sed 's/_/ /g; $d' >corder.$$
+exec 3>incl.$$ 4>smenu.$$ 5>lmenu.$$
 
-[ -z "$2" ] || grep '^@node.*Top' `echo $2 /dev/null | tr ' ' '\n' | sort` |
-    cut -d, -f1 | sed 's/@node //' >xorder.$$
-
-grep '^@node.*Top' $3 | cut -d, -f-2 |
-    sed 's/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' >anodes.$$
-
-$AWK '{ file[$2] = $1; nnode[$2] = $3 }
-END  { for(x in file)
-	if(file[x] != "")
-	    print file[x] ":" x, file[nnode[x]] ":" nnode[x] }' \
-    anodes.$$ | tsort | sed 's/_/ /g; $d' >aorder.$$
-
-IFS=:
-
->incl.$$
->smenu.$$
->lmenu.$$
-
-while read file node; do
-    echo "@include $file" >>incl.$$
-    echo "* $node:: `sed -n 's/^@c %MENU% //p' $file`" >>smenu.$$
-    lmenu=`sed -n '/^@menu/,/^@end menu/p; /^@end menu/q' $file |
-	sed '/^@menu/d; /^@end menu/d'`
-    [ -z "$lmenu" ] || (
-	echo; echo "$node"; echo
-	echo "$lmenu"
-    ) >>lmenu.$$
-done <corder.$$
-
-if [ -f xorder.$$ ]; then
-
-    (echo; echo 'Add-ons'; echo) >>smenu.$$
-
-    while read file node; do
-	echo "@include $file" >>incl.$$
-	echo "* $node:: `sed -n 's/^@c %MENU% //p' $file`" >>smenu.$$
-	lmenu=`sed -n '/^@menu/,/^@end menu/p; /^@end menu/q' $file |
-	    sed '/^@menu/d; /^@end menu/d'`
-	[ -z "$lmenu" ] || (
-	    echo; echo "$node"; echo
-	    echo "$lmenu"
-	) >>lmenu.$$
-    done <xorder.$$
-fi
-
-(echo; echo 'Appendices'; echo) >>smenu.$$
-
-while read file node; do
-    echo "@include $file" >>incl.$$
-    echo "* $node:: `sed -n 's/^@c %MENU% //p' $file`" >>smenu.$$
-    lmenu=`sed -n '/^@menu/,/^@end menu/p; /^@end menu/q' $file |
-	sed '/^@menu/d; /^@end menu/d'`
-    [ -z "$lmenu" ] || (
-	echo; echo "$node"; echo
-	echo "$lmenu"
-    ) >>lmenu.$$
-done <aorder.$$
-
-$AWK '
-BEGIN { FS=":" }
-
-/^\*/ {
-  printf("%-32s", $1 "::");
-  x = split($3, word, " ");
-  hpos = 34;
-  for(i = 1; i <= x; i++) {
-    hpos += length(word[i]) + 1;
-    if(hpos > 78) {
-      printf("\n%34s", "");
-      hpos = 35 + length(word[i]);
-    }
-    printf(" %s", word[i]);
-  }
-  print ".";
+build_menu () {
+  while IFS=: read file node; do
+    echo "@include $file" >&3
+    echo "* $node:: `sed -n 's/^@c %MENU% //p' $file`" >&4
+    $AWK 'BEGIN { do_menu = 0 }
+	  /^@node / { sub(/^@node /, ""); sub(/,.*$/, ""); node = $0 }
+	  /^@menu/ { printf "\n%s\n\n", node; do_menu = 1; next }
+	  /^@end menu/ { do_menu = 0 }
+	  do_menu { print }' $file >&5
+  done
 }
 
-!/^\*/ { print; }
-' smenu.$$ >smenux.$$
+collect_nodes () {
+  grep '^@node.*Top' "$@" /dev/null | cut -d, -f-2 |
+  sed 's/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' |
+  $AWK '{ file[$2] = $1; nnode[$2] = $3 }
+	END  { for (x in file)
+		 if (file[x] != "")
+		   print file[x] ":" x, file[nnode[x]] ":" nnode[x] }' |
+  tsort | sed 's/_/ /g; $d'
+}
+
+collect_nodes $1 | build_menu
+
+if [ -n "$2" ]; then
+
+  { echo; echo 'Add-ons'; echo; } >&4
+
+  grep '^@node.*Top' `echo $2 /dev/null | tr ' ' '\n' | sort` |
+  cut -d, -f1 | sed 's/@node //' | build_menu
+
+fi
+
+{ echo; echo 'Appendices'; echo; } >&4
+
+collect_nodes $3 | build_menu
+
+exec 3>&- 4>&- 5>&-
 
 mv -f incl.$$ chapters.texi
 
-(echo '@menu'
- cat smenux.$$
+{
+ echo '@menu'
+ $AWK -F: '
+  /^\*/ {
+    printf("%-32s", $1 "::");
+    x = split($3, word, " ");
+    hpos = 34;
+    for (i = 1; i <= x; i++) {
+      hpos += length(word[i]) + 1;
+      if (hpos > 78) {
+	printf("\n%34s", "");
+	hpos = 35 + length(word[i]);
+      }
+      printf(" %s", word[i]);
+    }
+    print ".";
+  }
+
+  !/^\*/ { print; }
+ ' smenu.$$
  cat <<EOF
 * Copying::                      The GNU Library General Public License says
                                   how you can copy and share the GNU C Library.
@@ -109,7 +82,7 @@ Indices
  --- The Detailed Node Listing ---
 EOF
  cat lmenu.$$
- echo '@end menu' ) >top-menu.texi.$$
+ echo '@end menu'; } >top-menu.texi.$$
 mv -f top-menu.texi.$$ top-menu.texi
 
 rm -f *.$$

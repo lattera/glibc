@@ -1,3 +1,40 @@
+1998-07-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/catchsegv.sh: Fix several stupid bugs.
+
+	* shlib-versions: Define version for libSegFault.
+	* debug/Makefile: Replace shared lib version number while rewriting.
+
+1998-07-17  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Add sanity check.
+	Suggested by Roland McGrath.
+
+1998-07-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/Makefile: Remove '-L (leapseconds)' for testdata
+	generation to control environment.
+
+1998-07-17 09:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/signum.h: Define SIG_HOLD.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
+	* manual/llio.texi: Document readv/writev and mmap functions.
+	Patch by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1998-07-16  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (texis): Depend on texis.awk.
+	(nonexamples): Filter out add-on chapters.
+	(chapters.% top-menu.%): Depend on libc-texinfo.sh.
+	(stamp-summary): Depend on $(texis) except summary.texi.
+	($(inst_infodir)/libc.info): Simplify command.
+	* manual/libc-texinfo.sh: Cleaned up to use less temporary files.
+	Fix the generation of the detailed node listing to make it
+	complete again.
+	* manual/math.texi: Fix signature of lgamma_r.
+
 1998-07-16 23:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* debug/Makefile (distribute): Add sigcontextinfo.h.

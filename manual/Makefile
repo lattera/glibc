@@ -48,35 +48,32 @@ endif
 mkinstalldirs = $(..)scripts/mkinstalldirs
 
 chapters = $(addsuffix .texi, \
-	   intro errno memory ctype string mbyte locale message search	\
-	   pattern io stdio llio filesys pipe socket terminal math	\
-	   arith time setjmp signal startup process job nss users	\
-	   sysinfo conf)
-add-chapters = $(wildcard $(patsubst %, ../%.texi, \
-		 $(join $(add-ons:=/),$(add-ons))))
+		       intro errno memory ctype string mbyte locale	\
+		       message search pattern io stdio llio filesys	\
+		       pipe socket terminal math arith time setjmp	\
+		       signal startup process job nss users sysinfo conf)
+add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi contrib.texi
 
 -include texis
-texis: $(chapters) $(add-chapters) $(appendices) lgpl.texinfo
-	$(AWK) -f texis.awk $^ > $@.T
+texis: texis.awk $(chapters) $(add-chapters) $(appendices) lgpl.texinfo
+	$(AWK) -f $^ > $@.T
 	mv -f $@.T $@
 
-nonexamples = $(filter-out %.c.texi, $(texis))
+nonexamples = $(filter-out $(add-chapters) %.c.texi, $(texis))
 examples = $(filter %.c.texi, $(texis))
 
 # Kludge: implicit rule so Make knows the one command does it all.
-chapters.% top-menu.%: $(texis)
-	AWK=$(AWK) $(SHELL) libc-texinfo.sh \
-	'$(chapters)' '$(add-chapters)' '$(appendices)'
+chapters.% top-menu.%: libc-texinfo.sh $(texis)
+	AWK=$(AWK) $(SHELL) $< '$(chapters)' '$(add-chapters)' '$(appendices)'
 
 libc.dvi libc.info: chapters.texi top-menu.texi
 libc.dvi: texinfo.tex
 
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
-stamp-summary: summary.awk $(chapters) $(chapters-incl)
-	$(AWK) -f $^ \
-	| sort -df +1 -2 | tr '\014' '\012' > summary-tmp
+stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
+	$(AWK) -f $^ | sort -df +1 -2 | tr '\014' '\012' > summary-tmp
 	$(move-if-change) summary-tmp summary.texi
 	touch $@
 
@@ -106,8 +103,8 @@ dir-add.texinfo: xtract-typefun.awk $(texis)
 	$(TEXI2DVI) $<
 
 # Distribution.
-minimal-dist =  summary.awk texis.awk libc-texinfo.sh libc.texinfo	\
-		$(filter-out summary.texi, $(nonexamples))		\
+minimal-dist = summary.awk texis.awk libc-texinfo.sh libc.texinfo	\
+	       $(filter-out summary.texi, $(nonexamples))		\
 	       $(patsubst %.c.texi,examples/%.c, $(examples))
 
 doc-only-dist = Makefile COPYING.LIB
@@ -170,9 +167,7 @@ install-%: ;
 
 $(inst_infodir)/libc.info: libc.info installdirs
 	for file in $<*; do \
-	  name=`basename $$file`; \
-	  $(INSTALL_DATA) $$file \
-	    `echo $@ | sed "s,$<\$$,$$name,"`; \
+	  $(INSTALL_DATA) $$file $(@D)/$$file; \
 	done
 
 installdirs:

@@ -8,5 +8,5 @@ glibc-*
 *.toc *.aux *.log *.tmp
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
-chapters chapters-incl1 chapters-incl2 summary.texi stamp-*
+texis top-menu.texi chapters.texi summary.texi stamp-*
 distinfo dir-add.texinfo

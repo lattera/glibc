@@ -41,6 +41,8 @@ directly.)
                                          or vice-versa.
 * Stream/Descriptor Precautions::       Precautions needed if you use both
                                          descriptors and streams.
+* Scatter-Gather::                      Fast I/O to discontinous buffers.
+* Memory-mapped I/O::                   Using files like memory.
 * Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
 * Synchronizing I/O::                   Making sure all I/O actions completed.
@@ -58,6 +60,7 @@ directly.)
                                          file locking.
 * Interrupt Input::                     Getting an asynchronous signal when
                                          input arrives.
+* IOCTLs::                              Generic I/O Control operations.
 @end menu
 
 
@@ -88,7 +91,7 @@ parameters (using the @samp{|} operator in C).
 @xref{File Status Flags}, for the parameters available.
 
 The normal return value from @code{open} is a non-negative integer file
-descriptor.  In the case of an error, a value of @code{-1} is returned
+descriptor.  In the case of an error, a value of @math{-1} is returned
 instead.  In addition to the usual file name errors (@pxref{File
 Name Errors}), the following @code{errno} error conditions are defined
 for this function:
@@ -240,7 +243,7 @@ until the program ends.  To avoid this calls to @code{close} should be
 protected using cancelation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
-The normal return value from @code{close} is @code{0}; a value of @code{-1}
+The normal return value from @code{close} is @math{0}; a value of @math{-1}
 is returned in case of failure.  The following @code{errno} error
 conditions are defined for this function:
 
@@ -422,7 +425,7 @@ If @code{read} returns at least one character, there is no way you can
 tell whether end-of-file was reached.  But if you did reach the end, the
 next read will return zero.
 
-In case of an error, @code{read} returns @code{-1}.  The following
+In case of an error, @code{read} returns @math{-1}.  The following
 @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -564,7 +567,7 @@ is therefore faster.
 You can use the @code{O_FSYNC} open mode to make @code{write} always
 store the data to disk before returning; @pxref{Operating Modes}.
 
-In the case of an error, @code{write} returns @code{-1}.  The following
+In the case of an error, @code{write} returns @math{-1}.  The following
 @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -761,7 +764,7 @@ file takes up less space than it appears so; it is then called a
 @cindex holes in files
 
 If the file position cannot be changed, or the operation is in some way
-invalid, @code{lseek} returns a value of @code{-1}.  The following
+invalid, @code{lseek} returns a value of @math{-1}.  The following
 @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -944,7 +947,7 @@ see @ref{Creating a Pipe}.
 This function returns the file descriptor associated with the stream
 @var{stream}.  If an error is detected (for example, if the @var{stream}
 is not valid) or if @var{stream} does not do I/O to a file,
-@code{fileno} returns @code{-1}.
+@code{fileno} returns @math{-1}.
 @end deftypefun
 
 @cindex standard file descriptors
@@ -1121,6 +1124,341 @@ subsequently flushed.  To make sure ``past'' output is covered by the
 terminal settings that were in effect at the time, flush the output
 streams for that terminal before setting the modes.  @xref{Terminal
 Modes}.
+
+@node Scatter-Gather
+@section Fast Scatter-Gather I/O
+@cindex scatter-gather
+
+Some applications may need to read or write data to multiple buffers,
+which are seperated in memory.  Although this can be done easily enough
+with multiple calls to @code{read} and @code{write}, it is inefficent
+because there is overhead associated with each kernel call.
+
+Instead, many platforms provide special high-speed primitives to perform
+these @dfn{scatter-gather} operations in a single kernel call.  The GNU C
+library will provide an emulation on any system that lacks these
+primitives, so they are not a portability threat.  They are defined in
+@code{sys/uio.h}.
+
+These functions are controlled with arrays of @code{iovec} structures,
+which describe the location and size of each buffer.
+
+@deftp {Data Type} {struct iovec}
+
+The @code{iovec} structure describes a buffer. It contains two fields:
+
+@table @code
+
+@item void *iov_base
+Contains the address of a buffer.
+
+@item size_t iov_len
+Contains the length of the buffer.
+
+@end table
+@end deftp
+
+@deftypefun ssize_t readv (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
+
+The @code{readv} function reads data from @var{filedes} and scatters it
+into the buffers described in @var{vector}, which is taken to be
+@var{count} structures long.  As each buffer is filled, data is sent to the
+next.
+
+Note that @code{readv} is not guaranteed to fill all the buffers.
+It may stop at any point, for the same reasons @code{read} would.
+
+The return value is a count of bytes (@emph{not} buffers) read, @math{0}
+indicating end-of-file, or @math{-1} indicating an error.  The possible
+errors are the same as in @code{read}.
+
+@end deftypefun
+
+@deftypefun ssize_t writev (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
+
+The @code{writev} function gathers data from the buffers described in
+@var{vector}, which is taken to be @var{count} structures long, and writes
+them to @code{filedes}.  As each buffer is written, it moves on to the
+next.
+
+Like @code{readv}, @code{writev} may stop midstream under the same
+conditions @code{write} would.
+
+The return value is a count of bytes written, or @math{-1} indicating an
+error.  The possible errors are the same as in @code{write}.
+
+@end deftypefun
+
+@c Note - I haven't read this anywhere. I surmised it from my knowledge
+@c of computer science. Thus, there could be subtleties I'm missing.
+
+Note that if the buffers are small (under about 1kB), high-level streams
+may be easier to use than these functions.  However, @code{readv} and
+@code{writev} are more efficient when the individual buffers themselves
+(as opposed to the total output), are large.  In that case, a high-level
+stream would not be able to cache the data effectively.
+
+@node Memory-mapped I/O
+@section Memory-mapped I/O
+
+On modern operating systems, it is possible to @dfn{mmap} (pronounced
+``em-map'') a file to a region of memory.  When this is done, the file can
+be accessed just like an array in the program.
+
+This is more efficent than @code{read} or @code{write}, as only regions
+of the file a program actually accesses are loaded.  Accesses to
+not-yet-loaded parts of the mmapped region are handled in the same way as
+swapped out pages.
+
+Since mmapped pages can be stored back to their file when physical memory
+is low, it is possible to mmap files orders of magnitude larger than both
+the physical memory @emph{and} swap space.  The only limit is address
+space.  The theoretical limit is 4GB on a 32-bit machine - however, the
+actual limit will be smaller since some areas will be reserved for other
+purposes.
+
+Memory mapping only works on entire pages of memory.  Thus, addresses
+for mapping must be page-aligned, and length values will be rounded up.
+To determine the size of a page the machine uses one should use
+
+@smallexample
+size_t page_size = (size_t) sysconf (_SC_PAGESIZE);
+@end smallexample
+
+These functions are declared in @file{sys/mman.h}.
+
+@deftypefun {void *} mmap (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
+
+The @code{mmap} function creates a new mapping, connected to bytes
+(@var{offset}) to (@var{offset} + @var{length}) in the file open on
+@var{filedes}.
+
+@var{address} gives a preferred starting address for the mapping.
+@code{NULL} expresses no preference. Any previous mapping at that
+address is automatically removed. The address you give may still be
+changed, unless you use the @code{MAP_FIXED} flag.
+
+@vindex PROT_READ
+@vindex PROT_WRITE
+@vindex PROT_EXEC
+@var{protect} contains flags that control what kind of access is
+permitted.  They include @code{PROT_READ}, @code{PROT_WRITE}, and
+@code{PROT_EXEC}, which permit reading, writing, and execution,
+respectively.  Inappropriate access will cause a segfault (@pxref{Program
+Error Signals}).
+
+Note that most hardware designs cannot support write permission without
+read permission, and many do not distinguish read and execute permission.
+Thus, you may recieve wider permissions than you ask for, and mappings of
+write-only files may be denied even if you do not use @code{PROT_READ}.
+
+@var{flags} contains flags that control the nature of the map.
+One of @code{MAP_SHARED} or @code{MAP_PRIVATE} must be specified.
+
+They include:
+
+@vtable @code
+@item MAP_PRIVATE
+This specifies that writes to the region should never be written back
+to the attached file.  Instead, a copy is made for the process, and the
+region will be swapped normally if memory runs low.  No other process will
+see the changes.
+
+Since private mappings effectively revert to ordinary memory
+when written to, you must have enough virtual memory for a copy of
+the entire mmapped region if you use this mode with @code{PROT_WRITE}.
+
+@item MAP_SHARED
+This specifies that writes to the region will be written back to the
+file.  Changes made will be shared immediately with other processes
+mmaping the same file.
+
+Note that actual writing may take place at any time.  You need to use
+@code{msync}, described below, if it is important that other processes
+using conventional I/O get a consistent view of the file.
+
+@item MAP_FIXED
+This forces the system to use the exact mapping address specified in
+@var{address} and fail if it can't.
+
+@c One of these is official - the other is obviously an obsolete synonym
+@c Which is which?
+@item MAP_ANONYMOUS
+@itemx MAP_ANON
+This flag tells the system to create an anonymous mapping, not connected
+to a file.  @var{filedes} and @var{off} are ignored, and the region is
+initialized with zeros.
+
+Anonymous maps are used as the basic primitive to extend the heap on some
+systems.  They are also useful to share data between multiple tasks
+without creating a file.
+
+On some systems using private anonymous mmaps is more efficent than using
+@code{malloc} for large blocks.  This is not an issue with the GNU C library,
+as the included @code{malloc} automatically uses @code{mmap} where appropriate.
+
+@c Linux has some other MAP_ options, which I have not discussed here.
+@c MAP_DENYWRITE, MAP_EXECUTABLE and MAP_GROWSDOWN don't seem applicable to
+@c user programs (and I don't understand the last two). MAP_LOCKED does
+@c not appear to be implemented.
+
+@end vtable
+
+@code{mmap} returns the address of the new mapping, or @math{-1} for an
+error.
+
+Possible errors include:
+
+@table @code
+
+@item EINVAL
+
+Either @var{address} was unusable, or inconsistent @var{flags} were
+given.
+
+@item EACCES
+
+@var{filedes} was not open for the type of access specified in @var{protect}.
+
+@item ENOMEM
+
+Either there is not enough memory for the operation, or the process is
+out of address space.
+
+@item ENODEV
+
+This file is of a type that doesn't support mapping.
+
+@item ENOEXEC
+
+The file is on a filesystem that doesn't support mapping.
+
+@c On Linux, EAGAIN will appear if the file has a conflicting mandatory lock.
+@c However mandatory locks are not discussed in this manual.
+@c
+@c Similarly, ETXTBSY will occur if the MAP_DENYWRITE flag (not documented
+@c here) is used and the file is already open for writing.
+
+@end table
+
+@end deftypefun
+
+@deftypefun int munmap (void *@var{addr}, size_t @var{length})
+
+@code{munmap} removes any memory maps from (@var{addr}) to (@var{addr} +
+@var{length}).  @var{length} should be the length of the mapping.
+
+It is safe to un-map multiple mappings in one command, or include unmapped
+space in the range.  It is also possible to unmap only part of an existing
+mapping, however only entire pages can be removed.  If @var{length} is not
+an even number of pages, it will be rounded up.
+
+It returns @math{0} for success and @math{-1} for an error.
+
+One error is possible:
+
+@table @code
+
+@item EINVAL
+The memory range given was outside the user mmap range, or wasn't page
+aligned.
+
+@end table
+
+@end deftypefun
+
+@deftypefun int msync (void *@var{address}, size_t @var{length}, int @var{flags})
+
+When using shared mappings, the kernel can write the file at any time
+before the mapping is removed.  To be certain data has actually been
+written to the file and will be accessable to non-memory-mapped I/O, it
+is neccessary to use this function.
+
+It operates on the region @var{address} to (@var{address} + @var{length}).
+It may be used on part of a mapping or multiple mappings, however the
+region given should not contain any unmapped space.
+
+@var{flags} can contain some options:
+
+@vtable @code
+
+@item MS_SYNC
+
+This flag makes sure the data is actually written @emph{to disk}.
+Normally @code{msync} only makes sure that accesses to a file with
+conventional I/O reflect the recent changes.
+
+@item MS_ASYNC
+
+This tells @code{msync} to begin the synchronization, but not to wait for
+it to complete.
+
+@c Linux also has MS_INVALIDATE, which I don't understand.
+
+@end vtable
+
+@code{msync} returns @math{0} for success and @math{-1} for
+error.  Errors include:
+
+@table @code
+
+@item EINVAL
+An invalid region was given, or the @var{flags} were invalid.
+
+@item EFAULT
+There is no existing mapping in at least part of the given region.
+
+@end table
+
+@end deftypefun
+
+@deftypefun {void *} mremap (void *@var{address}, size_t @var{length}, size_t @var{new_length}, int @var{flag})
+
+This function can be used to change the size of an existing memory
+area. @var{address} and @var{length} must cover a region entirely mapped
+in the same @code{mmap} statement. A new mapping with the same
+characteristics will be returned, but a with the length @var{new_length}
+instead.
+
+One option is possible, @code{MREMAP_MAYMOVE}. If it is given in
+@var{flags}, the system may remove the existing mapping and create a new
+one of the desired length in another location.
+
+The address of the resulting mapping is returned, or @math{-1}. Possible
+error codes include:
+
+This function is only available on a few systems.  Except for performing
+optional optimizations one should not rely on this function.
+@table @code
+
+@item EFAULT
+There is no existing mapping in at least part of the original region, or
+the region covers two or more distinct mappings.
+
+@item EINVAL
+The address given is misaligned or inappropriate.
+
+@item EAGAIN
+The region has pages locked, and if extended it would exceed the
+process's resource limit for locked pages.  @xref{Limits on Resources}.
+
+@item ENOMEM
+The region is private writable, and insufficent virtual memory is
+available to extend it.  Also, this error will occur if
+@code{MREMAP_MAYMOVE} is not given and the extension would collide with
+another mapped region.
+
+@end table
+@end deftypefun
+
+Not all file descriptors may be mapped.  Sockets, pipes, and most devices
+only allow sequential access and do not fit into the mapping abstraction.
+In addition, some regular files may not be mmapable, and older kernels may
+not support mapping at all.  Thus, programs using @code{mmap} should
+have a fallback method to use should it fail. @xref{Mmap,,,standards,GNU
+Coding Standards}.
+
+@c XXX madvice documentation missing
 
 @node Waiting for I/O
 @section Waiting for Input or Output
@@ -2336,7 +2674,7 @@ the file descriptor returned should be the next available one greater
 than or equal to this value.
 
 The return value from @code{fcntl} with this command is normally the value
-of the new file descriptor.  A return value of @code{-1} indicates an
+of the new file descriptor.  A return value of @math{-1} indicates an
 error.  The following @code{errno} error conditions are defined for
 this command:
 
@@ -2420,7 +2758,7 @@ The normal return value from @code{fcntl} with this command is a
 nonnegative number which can be interpreted as the bitwise OR of the
 individual flags (except that currently there is only one flag to use).
 
-In case of an error, @code{fcntl} returns @code{-1}.  The following
+In case of an error, @code{fcntl} returns @math{-1}.  The following
 @code{errno} error conditions are defined for this command:
 
 @table @code
@@ -2443,7 +2781,7 @@ fcntl (@var{filedes}, F_SETFD, @var{new-flags})
 @end smallexample
 
 The normal return value from @code{fcntl} with this command is an
-unspecified value other than @code{-1}, which indicates an error.
+unspecified value other than @math{-1}, which indicates an error.
 The flags and error conditions are the same as for the @code{F_GETFD}
 command.
 @end deftypevr
@@ -2848,7 +3186,7 @@ individual flags.  Since the file access modes are not single-bit values,
 you can mask off other bits in the returned flags with @code{O_ACCMODE}
 to compare them.
 
-In case of an error, @code{fcntl} returns @code{-1}.  The following
+In case of an error, @code{fcntl} returns @math{-1}.  The following
 @code{errno} error conditions are defined for this command:
 
 @table @code
@@ -2873,7 +3211,7 @@ You can't change the access mode for the file in this way; that is,
 whether the file descriptor was opened for reading or writing.
 
 The normal return value from @code{fcntl} with this command is an
-unspecified value other than @code{-1}, which indicates an error.  The
+unspecified value other than @math{-1}, which indicates an error.  The
 error conditions are the same as for the @code{F_GETFL} command.
 @end deftypevr
 
@@ -3012,7 +3350,7 @@ If no lock applies, the only change to the @var{lockp} structure is to
 update the @code{l_type} to a value of @code{F_UNLCK}.
 
 The normal return value from @code{fcntl} with this command is an
-unspecified value other than @code{-1}, which is reserved to indicate an
+unspecified value other than @math{-1}, which is reserved to indicate an
 error.  The following @code{errno} error conditions are defined for
 this command:
 
@@ -3043,9 +3381,9 @@ on that part is replaced with the new lock.  You can remove a lock
 by specifying a lock type of @code{F_UNLCK}.
 
 If the lock cannot be set, @code{fcntl} returns immediately with a value
-of @code{-1}.  This function does not block waiting for other processes
+of @math{-1}.  This function does not block waiting for other processes
 to release locks.  If @code{fcntl} succeeds, it return a value other
-than @code{-1}.
+than @math{-1}.
 
 The following @code{errno} error conditions are defined for this
 function:
@@ -3213,7 +3551,7 @@ fcntl (@var{filedes}, F_SETOWN, @var{pid})
 The @var{pid} argument should be a process ID.  You can also pass a
 negative number whose absolute value is a process group ID.
 
-The return value from @code{fcntl} with this command is @code{-1}
+The return value from @code{fcntl} with this command is @math{-1}
 in case of error and some other value if successful.  The following
 @code{errno} error conditions are defined for this command:
 
@@ -3227,3 +3565,64 @@ There is no process or process group corresponding to @var{pid}.
 @end deftypevr
 
 @c ??? This section could use an example program.
+
+@node IOCTLs
+@section Generic I/O Control operations
+@cindex generic i/o control operations
+@cindex IOCTLs
+
+The GNU system can handle most input/output operations on many different
+devices and objects in terms of a few file primitives - @code{read},
+@code{write} and @code{lseek}.  However, most devices also have a few
+peculiar operations which do not fit into this model. Such as:
+
+@itemize @bullet
+
+@item
+Changing the character font used on a terminal.
+
+@item
+Telling a magnetic tape system to rewind or fast forward.  (Since they
+cannot move in byte increments, @code{lseek} is inapplicable).
+
+@item
+Ejecting a disk from a drive.
+
+@item
+Playing an audio track from a CD-ROM drive.
+
+@item
+Maintaining routing tables for a network.
+
+@end itemize
+
+Although some such objects such as sockets and terminals
+@footnote{Actually, the terminal-specific functions are implemented with
+IOCTLs on many platforms.} have special functions of their own, it would
+not be practical to create functions for all these cases.
+
+Instead these minor operations, known as @dfn{IOCTL}s, are assigned code
+numbers and multiplexed through the @code{ioctl} function, defined in
+@code{sys/ioctl.h}.  The code numbers themselves are defined in many
+different headers.
+
+@deftypefun int ioctl (int @var{filedes}, int @var{command}, @dots{})
+
+The @code{ioctl} function performs the generic I/O operation
+@var{command} on @var{filedes}.
+
+A third argument is usually present, either a single number or a pointer
+to a structure.  The meaning of this argument, the returned value, and
+any error codes depends upon the command used.  Often @math{-1} is
+returned for a failure.
+
+@end deftypefun
+
+On some systems, IOCTLs used by different devices share the same numbers.
+Thus, although use of an inappropriate IOCTL @emph{usually} only produces
+an error, you should not attempt to use device-specific IOCTLs on an
+unknown device.
+
+Most IOCTLs are OS-specific and/or only used in special system utilities,
+and are thus beyond the scope of this document.  For an example of the use
+of an IOCTL, @xref{Out-of-Band Data}.

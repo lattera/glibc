@@ -54,7 +54,7 @@ int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 /* This variable containts the lowest stack address ever used.  */
 void *__libc_stack_end;
 unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
- 
+
 
 struct hurd_startup_data *_dl_hurd_data;
 
@@ -518,6 +518,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
     memobj_rd = MACH_PORT_NULL;
   else
     {
+      assert (!(flags & MAP_SHARED));
       err = __io_map ((mach_port_t) fd, &memobj_rd, &memobj_wr);
       if (err)
 	return (__ptr_t) __hurd_fail (err);
