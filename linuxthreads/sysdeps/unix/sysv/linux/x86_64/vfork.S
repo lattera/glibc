@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,7 @@ ENTRY (__vfork)
 	/* Pop the return PC value into RDI.  We need a register that
 	   is preserved by the syscall and that we're allowed to destroy. */
 	popq	%rdi
+	cfi_adjust_cfa_offset(-8)
 
 	/* Stuff the syscall number in RAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
@@ -46,6 +47,7 @@ ENTRY (__vfork)
 
 	/* Push back the return PC.  */
 	pushq	%rdi
+	cfi_adjust_cfa_offset(-7)
 
 	cmpl	$-4095, %eax
 	jae SYSCALL_ERROR_LABEL		/* Branch forward if it failed.  */
