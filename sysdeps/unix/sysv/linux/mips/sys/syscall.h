@@ -19,6 +19,18 @@
 #ifndef	_SYSCALL_H
 #define	_SYSCALL_H	1
 
+/* This file should list the numbers of the system the system knows.
+   But instead of duplicating this we use the information available
+   from the kernel sources.  */
+#include <asm/unistd.h>
+
+/* The Linux kernel header file defines macros `__NR_<name>', but some
+   programs expect the traditional form `SYS_<name>'.  So in building libc
+   we scan the kernel's list and produce <bits/syscall.h> with macros for
+   all the `SYS_' names.  On MIPS the program which generates <bits/syscalls.h>
+   on the other ports fails, so do this manually.  */
+
+
 /*
  * SVR4 syscalls are in the range from 1 to 999
  */
