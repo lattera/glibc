@@ -1,3 +1,17 @@
+1998-08-28 13:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h: Also define THREAD_GETMEM_NC and THREAD_SETMEM_NC to
+	access thread data with non-constant offsets.
+	* specific.c: Use THREAD_GETMEM_NC and THREAD_SETMEM_NC where
+	necessary.
+
+	* sysdeps/i386/useldt.h: Fix typo.  Add THREAD_GETMEM_NC and
+	THREAD_SETMEM_NC definitions.
+
+	* sysdeps/sparc/sparc32/pt-machine.h: Define THREAD_GETMEM_NC and
+	THREAD_SETMEM_NC.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+
 1998-08-26 15:46  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h: Define THREAD_GETMEM and THREAD_SETMEM to default if

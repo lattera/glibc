@@ -82,7 +82,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %%gs:%P1,%b0"				      \
+    __asm__ __volatile__ ("movb %%gs:%P2,%b0"				      \
 			  : "=r" (__value)				      \
 			  : "0" (0),					      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
@@ -101,7 +101,31 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __value;								      \
 })
 
-/* Set member of the thread descriptor directly.  */
+/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
+#define THREAD_GETMEM_NC(descr, member) \
+({									      \
+  __typeof__ (descr->member) __value;					      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %%gs:(%2),%b0"				      \
+			  : "=r" (__value)				      \
+			  : "0" (0),					      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 4)					      \
+	/* There should not be any value with a size other than 1 or 4.  */   \
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movl %%gs:(%1),%0"				      \
+			    : "=r" (__value)				      \
+			    : "r" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+  __value;								      \
+})
+
+/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 #define THREAD_SETMEM(descr, member, value) \
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
@@ -119,6 +143,28 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
       __asm__ __volatile__ ("movl %0,%%gs:%P1" :			      \
 			    : "r" (__value),				      \
 			      "i" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+})
+
+/* Set member of the thread descriptor directly.  */
+#define THREAD_SETMEM_NC(descr, member, value) \
+({									      \
+  __typeof__ (descr->member) __value = (value);				      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %0,%%gs:(%1)" :				      \
+			  : "r" (__value),				      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 4)					      \
+	/* There should not be any value with a size other than 1 or 4.  */   \
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movl %0,%%gs:(%1)" :			      \
+			    : "r" (__value),				      \
+			      "r" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
     }									      \
 })

@@ -28,8 +28,14 @@
 #ifndef THREAD_GETMEM
 # define THREAD_GETMEM(descr, member) descr->member
 #endif
+#ifndef THREAD_GETMEM_NC
+# define THREAD_GETMEM_NC(descr, member) descr->member
+#endif
 #ifndef THREAD_SETMEM
 # define THREAD_SETMEM(descr, member, value) descr->member = (value)
+#endif
+#ifndef THREAD_SETMEM_NC
+# define THREAD_SETMEM_NC(descr, member, value) descr->member = (value)
 #endif
 
 /* Arguments passed to thread creation routine */
