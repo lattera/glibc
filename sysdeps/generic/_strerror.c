@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <stdio.h>
 #include <string.h>
+#include "../stdio-common/_itoa.h"
 
 #ifndef HAVE_GNU_LD
 #define _sys_errlist sys_errlist
@@ -31,13 +32,14 @@ _strerror_internal (errnum, buf, buflen)
      char *buf;
      size_t buflen;
 {
-  if (errnum < 0 || errnum > _sys_nerr)
+  if (errnum < 0 || errnum >= _sys_nerr)
     {
-      int len = __snprintf (buf, buflen, _("Unknown error %d"), errnum);
-      if (len < 0)
-	return NULL;
-      buf[len - 1] = '\0';
-      return buf;
+      const char *unk = _("Unknown error ");
+      const size_t unklen = strlen (unk);
+      char *p = buf + buflen;
+      *--p = '\0';
+      p = _itoa (errnum, p, 10, 0);
+      return memcpy (p - unklen, unk, unklen);
     }
 
   return (char *) _(_sys_errlist[errnum]);

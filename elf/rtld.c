@@ -50,22 +50,24 @@ static void dl_main (const Elf32_Phdr *phdr,
 		     Elf32_Word phent,
 		     Elf32_Addr *user_entry);
 
+static struct link_map rtld_map;
+
 Elf32_Addr
 _dl_start (void *arg)
 {
-  struct link_map rtld_map;
+  struct link_map bootstrap_map;
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
-  rtld_map.l_addr = elf_machine_load_address ();
+  bootstrap_map.l_addr = elf_machine_load_address ();
 
   /* Read our own dynamic section and fill in the info array.
      Conveniently, the first element of the GOT contains the
      offset of _DYNAMIC relative to the run-time load address.  */
-  rtld_map.l_ld = (void *) rtld_map.l_addr + *elf_machine_got ();
-  elf_get_dynamic_info (rtld_map.l_ld, rtld_map.l_info);
+  bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + *elf_machine_got ();
+  elf_get_dynamic_info (bootstrap_map.l_ld, bootstrap_map.l_info);
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
-  ELF_MACHINE_BEFORE_RTLD_RELOC (rtld_map.l_info);
+  ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
 #endif
 
   /* Relocate ourselves so we can do normal function calls and
@@ -77,8 +79,8 @@ _dl_start (void *arg)
      bootstrapping, so it must anti-perform each bootstrapping relocation
      before applying the final relocation when ld.so is linked in as
      normal a shared library.  */
-  rtld_map.l_type = lt_library;
-  ELF_DYNAMIC_RELOCATE (&rtld_map, 0, NULL);
+  bootstrap_map.l_type = lt_library;
+  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, NULL);
 
 
   /* Now life is sane; we can call functions and access global data.
@@ -86,7 +88,12 @@ _dl_start (void *arg)
      the operating system's program loader where to find the program
      header table in core.  */
 
-  dl_r_debug.r_ldbase = rtld_map.l_addr; /* Record our load address.  */
+
+  /* Transfer data about ourselves to the permanent link_map structure.  */
+  rtld_map.l_addr = bootstrap_map.l_addr;
+  rtld_map.l_ld = bootstrap_map.l_ld;
+  memcpy (rtld_map.l_info, bootstrap_map.l_info, sizeof rtld_map.l_info);
+
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
@@ -122,9 +129,9 @@ dl_main (const Elf32_Phdr *phdr,
 	     itself!  This means someone ran ld.so as a command.  Well, that
 	     might be convenient to do sometimes.  We support it by
 	     interpreting the args like this:
-	     
+
 	     ld.so PROGRAM ARGS...
-	     
+
 	     The first argument is the name of a file containing an ELF
 	     executable we will load and run with the following arguments.
 	     To simplify life here, PROGRAM is searched for using the
@@ -228,8 +235,14 @@ of this helper program; chances are you did not intend to run this program.\n",
 	   will set up later to communicate with the debugger.  */
 	l->l_info[DT_DEBUG]->d_un.d_ptr = (Elf32_Addr) &dl_r_debug;
 
-      l = _dl_new_object ((char *) interpreter_name, interpreter_name,
-			  lt_interpreter);
+      /* Put the link_map for ourselves on the chain so it can be found by
+	 name.  */
+      rtld_map.l_name = (char *) rtld_map.l_libname = interpreter_name;
+      rtld_map.l_type = lt_interpreter;
+      while (l->l_next)
+	l = l->l_next;
+      l->l_next = &rtld_map;
+      rtld_map.l_prev = l;
 
       /* Now process all the DT_NEEDED entries and map in the objects.
 	 Each new link_map will go on the end of the chain, so we will
@@ -248,16 +261,13 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  l->l_deps_loaded = 1;
 	}
 
-      l = _dl_loaded->l_next;
-      while (l->l_type != lt_interpreter)
-	l = l->l_next;
-      if (l->l_opencount == 0)
+      if (rtld_map.l_opencount == 0)
 	{
 	  /* No DT_NEEDED entry referred to the interpreter object itself.
 	     Remove it from the maps we will use for symbol resolution.  */
-	  l->l_prev->l_next = l->l_next;
-	  if (l->l_next)
-	    l->l_next->l_prev = l->l_prev;
+	  rtld_map.l_prev->l_next = rtld_map.l_next;
+	  if (rtld_map.l_next)
+	    rtld_map.l_next->l_prev = rtld_map.l_prev;
 	}
 
       lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
@@ -276,6 +286,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       /* Tell the debugger where to find the map of loaded objects.  */
       dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
+      dl_r_debug.r_ldbase = rtld_map.l_addr; /* Record our load address.  */
       dl_r_debug.r_map = _dl_loaded;
       dl_r_debug.r_brk = (Elf32_Addr) &_dl_r_debug_state;
 
@@ -301,6 +312,19 @@ of this helper program; chances are you did not intend to run this program.\n",
 
 	  _exit (0);
 	}
+
+      if (rtld_map.l_info[DT_INIT])
+	{
+	  /* Call the initializer for the compatibility version of the
+	     dynamic linker.  There is no additional initialization
+	     required for the ABI-compliant dynamic linker.  */
+
+	  (*(void (*) (void)) (rtld_map.l_addr +
+			       rtld_map.l_info[DT_INIT]->d_un.d_ptr)) ();
+
+	  /* Clear the field so a future dlopen won't run it again.  */
+	  rtld_map.l_info[DT_INIT] = NULL;
+	}
     }
   const char *errstring;
   const char *errobj;
@@ -318,13 +342,25 @@ of this helper program; chances are you did not intend to run this program.\n",
      the DT_INIT functions and then *USER_ENTRY.  */
 }
 
-/* This function exists solely to have a breakpoint set on it by the 
+/* This function exists solely to have a breakpoint set on it by the
    debugger.  */
 void
 _dl_r_debug_state (void)
 {
 }
 
+/* Define our own stub for the localization function used by strerror.
+   English-only in the dynamic linker keeps it smaller.  */
+
+char *
+__dgettext (const char *domainname, const char *msgid)
+{
+  assert (domainname == _libc_intl_domainname);
+  return (char *) msgid;
+}
+weak_symbol (__dgettext)
+weak_alias (__dgettext, dgettext)
+
 #ifndef NDEBUG
 
 /* Define (weakly) our own assert failure function which doesn't use stdio.

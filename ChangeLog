@@ -1,3 +1,35 @@
+Tue Nov  7 12:29:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/linux-compat.c: New file.
+	* elf/Makefile (distribute): Add linux-compat.c.
+	(generated): Add librtld.so.
+	[$(config-os)=linux*] (extra-objs): Add linux-compat.so.
+	[$(config-os)=linux*] (extra-objs): Add ld-linux.so.1.
+	(librtld.so): New target.
+	(ld.so, ld-linux.so.1): Make from librtld.so.
+
+	* elf/rtld.c (dl_main): Instead of weak call to _dl_compat_init,
+	call our own DT_INIT if we have one (and then clear it).
+	(__dgettext): New weak function.
+
+	* intl/localealias.c (read_alias_file): Avoid sprintf; use memcpy
+	by hand instead.
+
+	* sysdeps/generic/_strerror.c (_strerror_internal): Use _itoa
+	instead of snprintf.
+
+	* sysdeps/mach/_strerror.c (_strerror_internal): Don't write
+	BUF[BUFLEN].
+
+	* elf/rtld.c (rtld_map): New static variable.
+	(_dl_start): Use a differently named local BOOTSTRAP_MAP for the
+	bootstrapping.  Then copy data into `rtld_map'.
+	(dl_main): Finish filling in rtld_map and link it into the chain,
+	instead of allocating a new structure.
+	(dl_main): Call _dl_compat_init if it is defined (use weak ref).
+
+	* elf/dlsym.c: Fix last change: move REF out of `doit'.
+
 Mon Nov  6 16:20:14 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/dlsym.c: Return the proper value, not just the defining
@@ -75,7 +107,7 @@ Thu Oct 26 23:11:11 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 	* sysdeps/unix/sysv/linux/i386/sigaction.c: Correct parameter
 	name usage (new->act, old->oact).
 	Correct asm statement because of gcc strangeness.
-	
+
 	* sysdeps/i386/i586/strchr.S: Correct typos: cmp -> cmpb.
 
 	* sunrpc/clnt_perr.c: Remove declaration of sys_errlist.  They
@@ -128,7 +160,7 @@ Thu Oct 26 03:01:22 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 	* sysdeps/unix/sysv/linux/i386/xstat.S: Likewise.
 	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
 	Don't use DO_CALL macro; instead use lower level macros for better
-	control. 
+	control.
 
 	* sysdeps/unix/sysv/linux/sigaction.h: New file.
 	* sysdeps/unix/sysv/linux/sigaction.S: File removed.
@@ -190,7 +222,7 @@ Wed Oct 18 03:33:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	(PSEUDO): Use it before jumping to syscall_error.
 	* sysdeps/unix/i386/sysdep.S [! PIC]: Don't find GOT address;
 	expect it in %ebx on entry.  Pop old %ebx value off stack after
-	using it. 
+	using it.
 
 	* signal/signal.h [__USE_BSD] (_sys_siglist, sys_siglist): Declare
 	them.
@@ -219,7 +251,7 @@ Tue Oct 17 01:21:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* hurd/hurdsock.c: Include stdio-common/_itoa.h instead of
 	stdio/_itoa.h.
 	* hurd/hurdlookup.c: Likewise.
-	
+
 	* hurd/hurd/signal.h: Declare hurd_preempt_signals and
 	hurd_unpreempt_signals.
 
@@ -346,10 +378,10 @@ Sun Oct 15 21:04:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	(__hurd_file_name_lookup, __hurd_file_name_lookup_retry,
 	__hurd_file_name_split): Rewritten to take callback functions for
 	using any needed init or dtable port, instead of passing in crdir
-	and cwdir ports.  
+	and cwdir ports.
 	(__file_name_lookup, __file_name_split): Use new calling
 	convention; pass _hurd_ports_use and __getdport as the callback
-	functions. 
+	functions.
 
 	* sysdeps/mach/hurd/chroot.c: Use __file_name_lookup_under instead
 	of __hurd_file_name_lookup.
@@ -438,7 +470,7 @@ Tue Oct 10 23:08:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* MakeTAGS (all-dirs): Omit CVS directories.
 	Specify vpath directives to find source files in $(all-dirs).
 	(sources, headers): Append sources and headers from $(all-dist) to
-	these. 
+	these.
 	(all-dist): Filter them out of this.
 	(all-headers, all-sources): Use $(shell find ...) instead of
 	$(wildcard ...).
@@ -459,7 +491,7 @@ Mon Oct  9 02:54:14 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	(rtld-installed-name): New variable.
 	* elf/Makefile (install-lib): Variable removed.
 	(install-others): Define this instead, to
-	$(libdir)(rtld-installed-name). 
+	$(libdir)(rtld-installed-name).
 	($(libdir)(rtld-installed-name)): New target; install from ld.so.
 
 	* elf/ldd.sh.in: New file.
@@ -506,7 +538,7 @@ Fri Sep 29 03:43:51 1995  Paul Eggert  <eggert@twinsun.com>
 
 	* time/mktime.c (__mon_yday): New variable; replaces `__mon_lengths'.
 	time/offtime.c (__offtime), time/tzset.c (compute_change): Use it.
-	
+
 	* time/offtime.c (__offtime): Remove useless assignment
 	`tp->tm_isdst = -1'.
 
@@ -602,8 +634,8 @@ Thu Sep 28 13:05:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 Thu Sep 28 09:20:04 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
 	* stdlib/strtod.c (STRTOF): Fix handling of numbers with lots of
-	leading zeroes. 
-	
+	leading zeroes.
+
 Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/getcwd.c (__getcwd): Renamed from getcwd.
@@ -625,7 +657,7 @@ Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/i386/sysdep.h [HAVE_ELF] (ASM_TYPE_DIRECTIVE):
 	Don't use `type' for arg name, since we are using it as a keyword
-	in the rhs. 
+	in the rhs.
 
 	* sysdeps/unix/configure.in: Check for syscalls getpriority,
 	setpriority, getrlimit, setrlimit.
@@ -773,7 +805,7 @@ Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (build-shlib): Use $(@F:lib%.so=%) in place of
 	$(notdir $*), so it wins for the explicit libc.so rule as well as the
-	pattern rule. 
+	pattern rule.
 
 	* sysdeps/stub/sys/sem_buf.h (union semun): New type.
 
@@ -967,7 +999,7 @@ Sat Sep 16 17:47:19 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 	* sysdeps/mach/_strerror.c: Change for new interface with three
 	arguments.
 	* stdio/perror.c, stdio/vfprintf.c: Callers changed.
-	
+
 	* sysdeps/mach/hurd/ttyname_r.c: New file.  Reentrant version.
 	* sysdeps/posix/ttyname_r.c: New file.  Reentrant version.
 	* sysdeps/stub/ttyname_r: New file.  Define as dummy function.
@@ -1100,7 +1132,7 @@ Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	sysdeps/unix/sysv/linux/sys/timex.h:
 	New Linux/ELF specific, architecture independent header files.
 	* sysdeps/unix/sysv/sysv4/linux: Tree removed.
-	
+
 Thu Sep  7 17:05:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/msort.c (msort_with_tmp): Fixed alignment test.  B1 and
@@ -1237,7 +1269,7 @@ Mon Aug 21 16:37:09 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Grok R_386_NONE
 	relocs, and do nothing.  Why the linker generates them we may
-	never know. 
+	never know.
 
 Thu Aug 17 16:18:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
@@ -1261,7 +1293,7 @@ Thu Aug 17 16:18:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/fork.c (_hurd_fork_locks): Variable removed.
   	Instead, declare with `symbol_set_declare'.
-	(fork): Use symbol_set_* macros for _hurd_fork_locks.  
+	(fork): Use symbol_set_* macros for _hurd_fork_locks.
 	Use SS->thread instead of __mach_thread_self ().  Suspend all
  	other threads during task_create and port copying.
 
@@ -1520,12 +1552,12 @@ Sat Jul 22 01:56:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
  	ASM_TYPE_DIRECTIVE.
 	(ASM_TYPE_DIRECTIVE): New macro; defined using `.type' #ifdef ELF.
 
-	* sysdeps/unix/sysv/sysv4/linux/i386/sysdep.S (__syscall_error): 
+	* sysdeps/unix/sysv/sysv4/linux/i386/sysdep.S (__syscall_error):
 	Rewritten, #include'ing unix/i386/sysdep.S for most of the code.
 	* sysdeps/unix/i386/sysdep.S [PIC]: Store into `errno' through the GOT.
 
 	* configure.in (os=linux*): Use unix/sysv/sysv4 for $base_os,
- 	instead of unix/sysv.	
+ 	instead of unix/sysv.
 	* sysdeps/unix/sysv/linux/{accept,connect,getsockname,rename,
 	socketpair,waitpid,bind,getpeername,listen,setsid,wait4}.S: Moved
 	to new directory sysdeps/unix/sysv/sysv4/linux.
@@ -1863,9 +1895,9 @@ Tue May  9 01:26:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	variable to FORCE in this case, to force a rebuild of sysd-rules.
 	(sysd-rules): Depend on $(sysd-rules-force).
 	Write into the file sysd-rules-sysdirs:=$(sysdirs).
-	
+
 	* Makerules (LDFLAGS-c.so): Change ld option -interp to
-	-dynamic-linker.	
+	-dynamic-linker.
 
 	* Makerules (do-install-program): New canned sequence.
 	(install-bin, install-sbin): Use it.
@@ -1950,7 +1982,7 @@ Tue May  2 01:52:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/mach/hurd/i386/init-first.c: New file.
 	* sysdeps/i386/init-first.c: New file.
 	* sysdeps/stub/init-first.c: New file.
-	
+
 Mon May  1 18:48:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (LDFLAGS-c.so): Add -interp and -e switches to make
@@ -2550,7 +2582,7 @@ Mon Mar 13 01:48:16 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdio/printf_fp.c (NDEBUG): Define this to disable assert.
   	Don't include <stdarg.h>.
-	(__printf_fp): Last arg ARGS is now `const void **const'; 
+	(__printf_fp): Last arg ARGS is now `const void **const';
 	dereference ARGS[0] instead of using va_arg.
 
 	* locale/setlocale.c: In LC_ALL case, initialize CATEGORY before
@@ -2729,7 +2761,7 @@ Wed Mar  8 13:38:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	time/ialloc.c: Code and data updated from ADO's 95b.
 	* time/emkdir.c: File removed.
 	* time/Makefile (distribute, extra-objs, zic): Omit it.
-	
+
 	* time/localtime.c: Deansideclized.  Never #define __tzname et al
  	to non-__ names.
 
@@ -2769,7 +2801,7 @@ Sun Mar  5 19:40:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* ctype/ctype.h (_IS*): Use independent bits for all but _ISalnum.
 	* ctype/ctype-info.c: For initial tables, use
 	_nl_C_LC_CTYPE_{class,toupper,tolower} constant tables defined in
-	locale/C-ctype.c. 
+	locale/C-ctype.c.
 	* locale/C-ctype.c, locale/C-messages.c: New files.
  	* locale/C-monetary.c, locale/C-numeric.c, locale/C-time.c:
 	Default "C" locale data updated for new locale system.
@@ -3280,7 +3312,7 @@ Mon Feb  6 18:34:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
   	Don't expect _hurd_self_sigstate to lock it.  Fix critical section
  	locking.
 	* hurd/hurd-raise.c: Likewise.
-	* sysdeps/mach/hurd/sigsuspend.c: Likewise. 
+	* sysdeps/mach/hurd/sigsuspend.c: Likewise.
 	* sysdeps/mach/hurd/sigpending.c: Likewise.
 	* sysdeps/mach/hurd/sigaltstack.c: Likewise.
 	* sysdeps/mach/hurd/sigaction.c: Likewise.
@@ -3290,7 +3322,7 @@ Mon Feb  6 18:34:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/mach/hurd/ioctl.c: Likewise.
 	* sysdeps/mach/hurd/fork.c: Likewise.
 	* sysdeps/mach/hurd/i386/sigreturn.c: Likewise.
-	* sysdeps/mach/hurd/mips/sigreturn.c: Likewise.  
+	* sysdeps/mach/hurd/mips/sigreturn.c: Likewise.
 	* sysdeps/mach/hurd/alpha/sigreturn.c: Likewise.
 	* hurd/hurdmsg.c (get_int): Likewise.
 
@@ -3874,7 +3906,7 @@ Sat Jan 21 08:08:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/unix/common/__getgrps.S: Likewise.
 	* sysdeps/mach/hurd/__getgrps.c: Likewise.
 	* sysdeps/stub/__gethstnm.c: Renamed to gethostname.c; added weak
-	alias gethostname. 
+	alias gethostname.
 	* sysdeps/unix/inet/__gethstnm.S: Likewise.
 	* sysdeps/unix/sysv/__gethstnm.c: Likewise.
 	* sysdeps/unix/sysv/sysv4/__gethstnm.c: Likewise.
@@ -4008,11 +4040,11 @@ Sat Jan 21 08:08:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/unix/bsd/__setgid.c: Likewise.
 	* sysdeps/mach/hurd/__setgid.c: Likewise.
 	* sysdeps/stub/__setitmr.c: Renamed to setitmr.c; added weak alias
-	setitmr 
+	setitmr
 	* sysdeps/unix/common/__setitmr.S: Likewise.
 	* sysdeps/mach/hurd/__setitmr.c: Likewise.
 	* sysdeps/stub/__setpgrp.c: Renamed to setpgrp.c; added weak alias
-	setpgrp 
+	setpgrp
 	* sysdeps/unix/sysv/sysv4/__setpgrp.c: Likewise.
 	* sysdeps/unix/sysv/sco3.2.4/__setpgrp.c: Likewise.
 	* sysdeps/unix/sysv/irix4/__setpgrp.S: Likewise.
@@ -4352,7 +4384,7 @@ Tue Jan 17 03:16:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
         if any are successful.
 
 	* hurd/hurdmsg.c: Prepend `msg_' to all RPC names.
-	(_S_msg_get_exec_flags, _S_msg_set_exec_flags, 
+	(_S_msg_get_exec_flags, _S_msg_set_exec_flags,
 	_S_msg_set_some_exec_flags, _S_msg_clear_some_exec_flags): New
         functions.
 	(_S_io_select_done, _S_dir_changed, _S_file_changed): Stubs removed.
@@ -4374,7 +4406,7 @@ Tue Jan 17 03:16:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (post_reply): Take new arg UNTRACED; if nonzero,
 	use sig_post_untraced_reply.  All callers changed.
-	(abort_thread, abort_rpcs): Take same new arg and pass it through.  
+	(abort_thread, abort_rpcs): Take same new arg and pass it through.
 	All callers changed.
 	(_hurd_internal_post_signal): Take new arg UNTRACED.
 	If zero and process is traced, stop with SIGNO as stop signal.  If

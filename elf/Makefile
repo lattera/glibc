@@ -31,23 +31,41 @@ libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
 rtld-routines	:= rtld $(addprefix dl-,load lookup object reloc	\
 				        runtime sysdep error init fini)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
-		  soinit.c sofini.c ldd.sh.in
+		  soinit.c sofini.c ldd.sh.in linux-compat.c
 
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
+generated	= librtld.so
 install-others	= $(libdir)/$(rtld-installed-name)
 install-bin	= ldd
+
+ifneq (,$(filter linux%,$(config-os)))
+extra-objs	+= linux-compat.so
+install-lib	+= ld-linux.so.1
+endif
 endif
 
 include ../Rules
 
-$(objpfx)ld.so: $(rtld-routines:%=$(objpfx)%.so) \
-		$(patsubst %,$(common-objpfx)lib%_pic.a,\
-			   elf c $(LDLIBS-c.so:-l%=%))
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+
+# Link together the dynamic linker into a single relocatable object.
+# We use this to produce both the ABI-compliant and Linux-compatible
+# dynamic linker shared objects below.
+$(objpfx)librtld.so: $(rtld-routines:%=$(objpfx)%.so) \
+		     $(patsubst %,$(common-objpfx)lib%_pic.a,\
+				elf c $(LDLIBS-c.so:-l%=%))
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 		  '-Wl,-(' $^ -lgcc '-Wl,-)'
+
+$(objpfx)ld.so $(objpfx)ld-linux.so.1: $(objpfx)librtld.so
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $^
+
+# The Linux-compatible dynamic linker shared object is just the same
+# with one object file of compatibility initialization code added.
+$(objpfx)ld-linux.so.1: $(objpfx)linux-compat.so
+
 
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 	$(patsubst %/,cd %;,$(objpfx)) \

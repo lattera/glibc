@@ -1,4 +1,4 @@
-/* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
+/* Initializer for Linux-compatible dynamic linker `/lib/ld-linux.so.1'.
 Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -17,30 +17,24 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <stddef.h>
 #include <link.h>
-#include <dlfcn.h>
-#include <setjmp.h>
+#include <stdlib.h>
 
+/* This function will be the DT_INIT initializer for the ld-linux.so.1
+   shared object.  This is called from rtld.c before shlib initializers.
 
-void *
-dlsym (void *handle, const char *name)
+   The old Linux ELF startup code expects the dynamic linker to magically
+   call atexit to arrange for shared object finalizers to run.  (The
+   ABI-compliant startup code does this itself.)  We build a compatible
+   version of the dynamic linker to install as /lib/ld-linux.so.1, the
+   name old Linux ELF binaries use.  */
+
+void
+_init (void)
 {
-  struct link_map *map = handle;
-  struct link_map *real_next;
-  Elf32_Addr loadbase;
   const Elf32_Sym *ref = NULL;
-  int lose;
-  void doit (void)
-    {
-      loadbase = _dl_lookup_symbol (name, &ref, map, map->l_name, 1);
-    }
-
-  /* Confine the symbol scope to just this map.  */
-  real_next = map->l_next;
-  map->l_next = NULL;
-  lose = _dlerror_run (doit);
-  map->l_next = real_next;
-
-  return lose ? NULL : (void *) (loadbase + ref->st_value);
+  Elf32_Addr loadbase = _dl_lookup_symbol ("atexit", &ref, _dl_loaded,
+					   "<ld-linux.so.1 initialization>",
+					   1);
+  (*(__typeof (atexit) *) (loadbase + ref->st_value)) (&_dl_fini);
 }

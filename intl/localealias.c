@@ -150,9 +150,11 @@ read_alias_file (fname, fname_len)
   FILE *fp;
   char *full_fname;
   size_t added;
+  static const char aliasfile[] = "/locale.alias";
 
-  full_fname = (char *) alloca (fname_len + sizeof ("/locale.alias"));
-  sprintf (full_fname, "%.*s/locale.alias", fname_len, fname);
+  full_fname = (char *) alloca (fname_len + sizeof aliasfile);
+  memcpy (full_fname, fname, fname_len);
+  memcpy (&full_fname[fname_len], aliasfile, sizeof aliasfile);
 
   fp = fopen (full_fname, "r");
   if (fp == NULL)

@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 char *
 _strerror_internal (int errnum, char *buf, size_t buflen)
 {
-  int system; 
+  int system;
   int sub;
   int code;
   const struct error_system *es;
@@ -43,7 +43,7 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
       const char *unk = _("Error in unknown error system: ");
       const size_t unklen = strlen (unk);
       char *p = buf + buflen;
-      *p-- = '\0';
+      *--p = '\0';
       p = _itoa (errnum, p, 16, 1);
       return memcpy (p - unklen, unk, unklen);
     }
@@ -59,7 +59,7 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
       const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       size_t len = strlen (es->subsystem[sub].subsys_name);
-      *p-- = '\0';
+      *--p = '\0';
       p = _itoa (errnum, p, 16, 1);
       *p-- = ' ';
       p = memcpy (p - len, es->subsystem[sub].subsys_name, len);
