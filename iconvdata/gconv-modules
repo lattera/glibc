@@ -934,3 +934,22 @@ alias	ISO-IR-55//		ISO_5428//
 alias	ISO_5428:1980//		ISO_5428//
 module	ISO_5428//		INTERNAL		ISO_5428	1
 module	INTERNAL		ISO_5428//		ISO_5428	1
+
+#	from			to			module		cost
+alias	ISO-IR-155//		ISO_10367-BOX//
+module	ISO_10367-BOX//		INTERNAL		ISO_10367-BOX	1
+module	INTERNAL		ISO_10367-BOX//		ISO_10367-BOX	1
+
+#	from			to			module		cost
+module	MAC-IS//		INTERNAL		MAC-IS		1
+module	INTERNAL		MAC-IS//		MAC-IS		1
+
+#	from			to			module		cost
+alias	ISO-IR-9-1//		NATS-DANO//
+module	NATS-DANO//		INTERNAL		NATS-DANO	1
+module	INTERNAL		NATS-DANO//		NATS-DANO	1
+
+#	from			to			module		cost
+alias	ISO-IR-8-1//		NATS-SEFI//
+module	NATS-SEFI//		INTERNAL		NATS-SEFI	1
+module	INTERNAL		NATS-SEFI//		NATS-SEFI	1

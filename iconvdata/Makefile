@@ -41,7 +41,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
-	   ISO_5428
+	   ISO_5428 ISO_10367-BOX MAC-IS NATS-DANO NATS-SEFI
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -167,6 +167,10 @@ ISO_2033-routines := iso_2033
 ISO_5427-routines := iso_5427
 ISO_5427-EXT-routines := iso_5427-ext
 ISO_5428-routines := iso_5428
+ISO_10367-BOX-routines := iso_10367-box
+MAC-IS-routines := mac-is
+NATS-DANO-routines := nats-dano
+NATS-SEFI-routines := nats-dano
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
@@ -224,7 +228,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      cwi.c dec-mcs.c ecma-cyrillic.c gost_19768-74.c greek-ccitt.c \
 	      greek7.c greek7-old.c inis.c inis-8.c inis-cyrillic.c	    \
 	      iso6937-2.c iso_2033.c iso_5427.c iso_5427-ext.c		    \
-	      iso_5428.c
+	      iso_5428.c iso_10367-box.c mac-is.c nats-dano.c nats-sefi.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -295,7 +299,8 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  cwi.h dec-mcs.h ecma-cyrillic.h gost_19768-74.h\
 			  greek-ccitt.h greek7.h greek7-old.h inis.h	 \
 			  inis-8.h inis-cyrillic.h iso_2033.h iso_5427.h \
-			  iso_5427-ext.h iso_5428.h
+			  iso_5427-ext.h iso_5428.h iso_10367-box.h	 \
+			  mac-is.h nats-dano.h nats-sefi.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
@@ -533,6 +538,15 @@ $(objpfx)iso_5427.stmp: ../localedata/charmaps/ISO_5427 gen-8bit-gap.sh
 $(objpfx)iso_5427-ext.stmp: ../localedata/charmaps/ISO_5427-EXT gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)iso_5428.stmp: ../localedata/charmaps/ISO_5428 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso_10367-box.stmp: ../localedata/charmaps/ISO_10367-BOX \
+			     gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)mac-is.stmp: ../localedata/charmaps/MAC-IS gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)nats-dano.stmp: ../localedata/charmaps/NATS-DANO gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)nats-sefi.stmp: ../localedata/charmaps/NATS-SEFI gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 
 headers: $(addprefix $(objpfx),\

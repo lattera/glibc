@@ -16,6 +16,19 @@
 	latest possible point to allow partly initialized structures
 	(e.g., from strptime).
 
+	* iconvdata/Makefile (modules): Add ISO_10367-BOX, MAC-IS, NATS-DANO,
+	and NATS-SEFI.
+	Define *-routines variables for new modules.
+	(distribute): Add .c files for new modules.
+	(awk-generated-headers): Add iso_10367-box.h, mac-is.h, nats-dano.h,
+	and nats-sefi.h.
+	Add rules for header generation.
+	* iconvdata/gconv-modules: Add entries for new modules.
+	* iconvdata/iso_10367-box.c: New file.
+	* iconvdata/mac-is.c: New file.
+	* iconvdata/nats-dano.c: New file.
+	* iconvdata/nats-sefi.c: New file.
+
 1998-04-30 18:20  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-load.c (_dl_init_paths): Don't check the dynamic
@@ -33,7 +46,7 @@
 	ecma-cyrillic.h, gost_19768-74.h, greek-ccitt.h, greek7.h,
 	greek7-old.h, inis.h, inis-8.h, inis-cyrillic.h, iso_2033.h,
 	iso_5427.h, iso_5427-ext.h, and iso_5428.h.
-	Add rules for hedaer generation.
+	Add rules for header generation.
 	* iconvdata/gconv-modules: Add entries for new modules.
 	* iconvdata/csn_369103.c: New file.
 	* iconvdata/cwi.c: New file.
