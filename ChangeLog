@@ -1,6 +1,11 @@
+2004-12-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (tzset_internal): If + or - is seen,
+	but no offset after it, reset offset to 0.  [BZ #601]
+
 2004-12-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* libio/ioseekpos.c (_IO_seekpos_unlocked): Call _IO_SEEKOF not
+	* libio/ioseekpos.c (_IO_seekpos_unlocked): Call _IO_SEEKOFF not
 	_IO_SEEKPOS, saving one indirect jump.
 
 	* libio/fileops.c (_IO_new_file_seekoff): Fix optimization of in-buffer

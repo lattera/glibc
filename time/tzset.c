@@ -240,6 +240,7 @@ tzset_internal (always, explicit)
   switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
     default:
+      tz_rules[0].offset = 0;
       goto out;
     case 1:
       mm = 0;
