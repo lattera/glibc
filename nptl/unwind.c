@@ -27,6 +27,14 @@
 
 #ifdef HAVE_FORCED_UNWIND
 
+#ifdef _STACK_GROWS_DOWN
+# define FRAME_LEFT(frame, other) ((char *) frame >= (char *) other)
+#elif _STACK_GROWS_UP
+# define FRAME_LEFT(frame, other) ((char *) frame <= (char *) other)
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+
 static _Unwind_Reason_Code
 unwind_stop (int version, _Unwind_Action actions,
 	     _Unwind_Exception_Class exc_class,
@@ -34,6 +42,9 @@ unwind_stop (int version, _Unwind_Action actions,
 	     struct _Unwind_Context *context, void *stop_parameter)
 {
   struct pthread_unwind_buf *buf = stop_parameter;
+  struct pthread *self = THREAD_SELF;
+  struct _pthread_cleanup_buffer *curp = THREAD_GETMEM (self, cleanup);
+  int do_longjump = 0;
 
   /* Do longjmp if we're at "end of stack", aka "end of unwind data".
      We assume there are only C frame without unwind data in between
@@ -42,6 +53,37 @@ unwind_stop (int version, _Unwind_Action actions,
      previous frame.  */
   if ((actions & _UA_END_OF_STACK)
       || ! _JMPBUF_CFA_UNWINDS  (buf->cancel_jmp_buf[0].jmp_buf, context))
+    do_longjump = 1;
+
+  if (__builtin_expect (curp != NULL, 0))
+    {
+      /* Handle the compatibility stuff.  Execute all handlers
+	 registered with the old method which would be unwound by this
+	 step.  */
+      struct _pthread_cleanup_buffer *oldp = buf->priv.data.cleanup;
+      void *cfa = (void *) _Unwind_GetCFA (context);
+
+      if (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp)))
+	{
+	  do
+	    {
+	      /* Pointer to the next element.  */
+	      struct _pthread_cleanup_buffer *nextp = curp->__prev;
+
+	      /* Call the handler.  */
+	      curp->__routine (curp->__arg);
+
+	      /* To the next.  */
+	      curp = nextp;
+	    }
+	  while (curp != oldp && (do_longjump || FRAME_LEFT (cfa, curp)));
+
+	  /* Mark the current element as handled.  */
+	  THREAD_SETMEM (self, cleanup, curp);
+	}
+    }
+
+  if (do_longjump)
     __libc_longjmp ((struct __jmp_buf_tag *) buf->cancel_jmp_buf, 1);
 
   return _URC_NO_REASON;
@@ -70,6 +112,14 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
   struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
   struct pthread *self = THREAD_SELF;
 
+#ifdef HAVE_FORCED_UNWIND
+  /* This is not a catchable exception, so don't provide any details about
+     the exception type.  We do need to initialize the field though.  */
+  THREAD_SETMEM (self, exc.exception_class, 0);
+  THREAD_SETMEM (self, exc.exception_cleanup, unwind_cleanup);
+
+  _Unwind_ForcedUnwind (&self->exc, unwind_stop, ibuf);
+#else
   /* Handle the compatibility stuff first.  Execute all handlers
      registered with the old method.  We don't execute them in order,
      instead, they will run first.  */
@@ -95,14 +145,6 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
       THREAD_SETMEM (self, cleanup, curp);
     }
 
-#ifdef HAVE_FORCED_UNWIND
-  /* This is not a catchable exception, so don't provide any details about
-     the exception type.  We do need to initialize the field though.  */
-  THREAD_SETMEM (self, exc.exception_class, 0);
-  THREAD_SETMEM (self, exc.exception_cleanup, unwind_cleanup);
-
-  _Unwind_ForcedUnwind (&self->exc, unwind_stop, ibuf);
-#else
   /* We simply jump to the registered setjmp buffer.  */
   __libc_longjmp ((struct __jmp_buf_tag *) ibuf->cancel_jmp_buf, 1);
 #endif

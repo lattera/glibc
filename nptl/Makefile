@@ -216,7 +216,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 \
-	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
+	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
 	tst-signal6 \
@@ -248,7 +248,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
 	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15\
 	 tst-cancelx16 tst-cancelx17 tst-cancelx18 \
-	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 \
+	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
 	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
@@ -393,6 +393,7 @@ CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
+CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
@@ -404,6 +405,9 @@ $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
+
+$(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
+$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
 
 $(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3 = -rdynamic
