@@ -1,5 +1,5 @@
 /* Code to enable profiling at program startup.
-   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,12 @@
    as the external functions since we want the addresses of those
    labels. Taking the address of a function may have different
    meanings on different platforms. */
-extern void ENTRY_POINT, etext;
+#ifdef ENTRY_POINT_DECL
+ENTRY_POINT_DECL(extern)
+#else
+extern void ENTRY_POINT;
+#endif
+extern void etext;
 
 #ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor
