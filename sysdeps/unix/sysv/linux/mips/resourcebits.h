@@ -1,5 +1,5 @@
-/* Bit values for resource limits.  SunOS 4 version.
-Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Bit values for resource limits.  Linux/MIPS version.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* These are the values for 4.4 BSD and GNU.  Earlier BSD systems have a
-   subset of these kinds of resource limit.  In systems where `getrlimit'
-   and `setrlimit' are not system calls, these are the values used by the C
-   library to emulate them.  */
+/* These are the values for Linux/MIPS.  */
 
 /* Kinds of resource limit.  */
 enum __rlimit_resource
@@ -40,17 +37,29 @@ enum __rlimit_resource
     /* Largest core file that can be created, in bytes.  */
     RLIMIT_CORE,
 #define	RLIMIT_CORE	RLIMIT_CORE
+    /* Number of open files.  */
+    RLIMIT_OFILE,
+#define	RLIMIT_OFILE	RLIMIT_OFILE
+    RLIMIT_NOFILE = RLIMIT_OFILE, /* Another name for the same thing.  */
+#define	RLIMIT_NOFILE	RLIMIT_NOFILE
+    /* Address space limit.  */
+    RLIMIT_AS,
+#define	RLIMIT_AS	RLIMIT_AS
+    RLIMIT_VMEM = RLIMIT_AS,
+#define	RLIMIT_VMEM	RLIMIT_VMEM
     /* Largest resident set size, in bytes.
        This affects swapping; processes that are exceeding their
        resident set size will be more likely to have physical memory
        taken from them.  */
     RLIMIT_RSS,
 #define	RLIMIT_RSS	RLIMIT_RSS
-    /* Number of open files.  */
-    RLIMIT_NOFILE,
-    RLIMIT_OFILE = RLIMIT_NOFILE, /* BSD name for same.  */
-#defin	RLIMIT_NOFILE	RLIMIT_NOFILE
-#defin	RLIMIT_OFILE	RLIMIT_OFILE
+    /* Number of processes.  */
+    RLIMIT_NPROC,
+#define	RLIMIT_NPROC	RLIMIT_NPROC
+    /* Locked-in-memory address space.  */
+    RLIMIT_MEMLOCK,
+#define	RLIMIT_MEMLOCK	RLIMIT_MEMLOCK
 
-    RLIM_NLIMITS
+    RLIMIT_NLIMITS,		/* Number of limit flavors.  */
+    RLIM_NLIMITS = RLIMIT_NLIMITS /* Traditional name for same.  */
   };
