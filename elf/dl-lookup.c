@@ -279,7 +279,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  && skip_map == NULL)
 	{
 	  /* We could find no value for a strong reference.  */
-	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+	  const char *reference_name = undef_map ? undef_map->l_name : "";
 	  const char *versionstr = version ? ", version " : "";
 	  const char *versionname = (version && version->name
 				     ? version->name : "");
@@ -313,14 +313,13 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	{
 	  struct sym_val protected_value = { NULL, NULL };
 
-	  for (scope = symbol_scope; *scope; i = 0, ++scope)
+	  for (scope = symbol_scope; *scope != NULL; i = 0, ++scope)
 	    if (do_lookup_x (undef_name, hash, *ref, &protected_value,
 			     *scope, i, version, flags, skip_map,
 			     ELF_RTYPE_CLASS_PLT) != 0)
 	      break;
 
-	  if (protected_value.s != NULL
-	      && protected_value.m != undef_map)
+	  if (protected_value.s != NULL && protected_value.m != undef_map)
 	    {
 	      current_value.s = *ref;
 	      current_value.m = undef_map;
