@@ -74,10 +74,10 @@ distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 extra-objs = $(rpcgen-objs)
 
 extra-libs := librpcsvc
+extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
 librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
-librpcsvc-no-lib-dep = t # Don't depend on this in `make lib' pass.
 
 # Sun's code is not too clean.
 override +gccwarn := -w

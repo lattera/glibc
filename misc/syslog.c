@@ -163,7 +163,7 @@ vsyslog(pri, fmt, ap)
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
 		openlog(LogTag, LogStat | LOG_NDELAY, 0);
-	if (send(LogFile, buf, bufsize, 0) < 0)
+	if (__send(LogFile, buf, bufsize, 0) < 0)
 	  {
 	    /*
 	     * Output the message to the console; don't worry about blocking,
@@ -205,11 +205,12 @@ openlog(ident, logstat, logfac)
 		}
 	}
 	if (LogFile != -1 && !connected)
-		if (connect(LogFile, &SyslogAddr, sizeof(SyslogAddr)) == -1) {
+		if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr)) == -1)
+		{
 			(void)close(LogFile);
 			LogFile = -1;
 		} else
-			connected = 1;
+		  connected = 1;
 }
 
 void

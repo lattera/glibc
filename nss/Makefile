@@ -34,6 +34,9 @@ databases		= proto service hosts network grp pwd rpc ethers
 services		:= files dns db
 
 extra-libs		= $(services:%=libnss_%)
+# These libraries will be built in the `others' pass rather than
+# the `lib' pass, because they depend on libc.so being built already.
+extra-libs-others	= $(extra-libs)
 
 # The sources are found in the appropriate subdir.
 subdir-dirs = $(services:%=nss_%)

@@ -76,7 +76,7 @@ extern struct utmp *pututline __P ((__const struct utmp *__utmp_ptr));
 
 
 #ifdef	__USE_REENTRANT
-/* Define the data structure needed for the reentrent version.  */
+/* Define the data structure needed for the reentrant version.  */
 struct utmp_data
 {
   int ut_fd;
@@ -85,7 +85,7 @@ struct utmp_data
 };
 
 
-/* Reentrent versions of the file for handling utmp files.  */
+/* Reentrant versions of the file for handling utmp files.  */
 extern int getutent_r __P ((struct utmp **__utmp,
 			    struct utmp_data *__utmp_data));
 

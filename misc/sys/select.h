@@ -28,13 +28,16 @@ Boston, MA 02111-1307, USA.  */
 #include <gnu/types.h>
 
 /* Get definition of timer specification structures.  */
-/* XXX this is wrong.  1003.1gD6.1 says `struct timespec'
-   is defined by <sys/select.h>, and that is all.
-   However, since a program is required to include <sys/time.h>
-   before using select/pselect anyway, perhaps it doesn't matter.  */
+#define __need_timespec
 #include <sys/time.h>
 
 __BEGIN_DECLS
+
+/* This declaration puts `struct timeval' in global scope even if
+   <sys/time.h> has not been included to define it.  That way the
+   `select' prototype below will not conflict with a later definition
+   of `struct timeval'.  */
+struct timeval;
 
 /* Representation of a set of file descriptors.  */
 #define	fd_set			__fd_set

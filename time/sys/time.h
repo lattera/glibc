@@ -35,12 +35,12 @@ struct timeval
 
 /* Macros for converting between `struct timeval' and `struct timespec'.  */
 #define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \
-        (ts)->ts_sec = (tv)->tv_sec;                                    \
-        (ts)->ts_nsec = (tv)->tv_usec * 1000;                           \
+        (ts)->tv_sec = (tv)->tv_sec;                                    \
+        (ts)->tv_nsec = (tv)->tv_usec * 1000;                           \
 }
 #define TIMESPEC_TO_TIMEVAL(tv, ts) {                                   \
-        (tv)->tv_sec = (ts)->ts_sec;                                    \
-        (tv)->tv_usec = (ts)->ts_nsec / 1000;                           \
+        (tv)->tv_sec = (ts)->tv_sec;                                    \
+        (tv)->tv_usec = (ts)->tv_nsec / 1000;                           \
 }
 
 

@@ -60,7 +60,9 @@ typedef struct service_library
 } service_library;
 
 
-/* For mappng a function name to a function pointer.  */
+/* For mapping a function name to a function pointer.  It is known in
+   nsswitch.c:nss_lookup_function that a string pointer for the lookup key
+   is the first member.  */
 typedef struct
 {
   const char *fct_name;

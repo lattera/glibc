@@ -32,10 +32,6 @@ Boston, MA 02111-1307, USA.  */
 /* Prototypes for the local functions.  */
 static void nss_init (void);
 static void *nss_lookup_function (service_user *ni, const char *fct_name);
-static int nss_find_entry (struct entry **knownp, const char *key,
-			   void **valp);
-static void nss_insert_entry (struct entry **knownp, const char *key,
-			      void *val);
 static name_database *nss_parse_file (const char *fname);
 static name_database_entry *nss_getline (char *line);
 static service_user *nss_parse_service_list (const char *line);
@@ -191,131 +187,133 @@ nss_dlerror_run (void (*operate) (void))
 static void *
 nss_lookup_function (service_user *ni, const char *fct_name)
 {
-  void *result;
-
-  /* Determine whether current function is loaded.  */
-  if (nss_find_entry (&ni->known, fct_name, &result) >= 0)
-    return result;
+  /* Comparison function for searching NI->known tree.  */
+  int known_compare (const void *p1, const void *p2)
+    {
+      return p1 == p2 ? 0 : strcmp (*(const char *const *) p1,
+				    *(const char *const *) p2);
+    }
+  void **found, *result;
 
   /* We now modify global data.  Protect it.  */
   __libc_lock_lock (lock);
 
-  if (ni->library == NULL)
-    {
-      /* This service has not yet been used.  Fetch the service library
-	 for it, creating a new one if need be.  If there is no service
-	 table from the file, this static variable holds the head of the
-	 service_library list made from the default configuration.  */
-      static name_database default_table;
-      ni->library = nss_new_service (service_table ?: &default_table,
-				     ni->name);
-      if (ni->library == NULL)
-	{
-	  /* This only happens when out of memory.  */
-	  __libc_lock_unlock (lock);
-	  return NULL;
-	}
-    }
+  /* Search the tree of functions previously requested.  Data in the
+     tree are `known_function' structures, whose first member is a
+     `const char *', the lookup key.  The search returns a pointer to
+     the tree node structure; the first member of the is a pointer to
+     our structure (i.e. what will be a `known_function'); since the
+     first member of that is the lookup key string, &FCT_NAME is close
+     enough to a pointer to our structure to use as a lookup key that
+     will be passed to `known_compare' (above).  */
 
-  if (ni->library->lib_handle == NULL)
-    {
-      /* Load the shared library.  */
-      size_t shlen = (7 + strlen (ni->library->name) + 3
-		      + sizeof (NSS_SHLIB_REVISION));
-      char shlib_name[shlen];
-
-      void do_open (void)
-	{
-	  /* Open and relocate the shared object.  */
-	  ni->library->lib_handle = _dl_open (shlib_name, RTLD_LAZY);
-	}
-
-      /* Construct name.  */
-      __stpcpy (__stpcpy (__stpcpy (shlib_name, "libnss_"), ni->library->name),
-		".so" NSS_SHLIB_REVISION);
-
-      if (nss_dlerror_run (do_open) != 0)
-	/* Failed to load the library.  */
-	ni->library->lib_handle = (void *) -1;
-    }
-
-  if (ni->library->lib_handle == (void *) -1)
-    /* Library not found => function not found.  */
-    result = NULL;
+  found = __tsearch (&fct_name, (void **) &ni->known, &known_compare);
+  if (*found != &fct_name)
+    /* The search found an existing structure in the tree.  */
+    result = ((known_function *) *found)->fct_ptr;
   else
     {
-      /* Get the desired function.  Again,  GNU ld.so magic ahead.  */
-      size_t namlen = (5 + strlen (ni->library->name) + 1
-		       + strlen (fct_name) + 1);
-      char name[namlen];
-      struct link_map *map = ni->library->lib_handle;
-      ElfW(Addr) loadbase;
-      const ElfW(Sym) *ref = NULL;
-      void get_sym (void)
+      /* This name was not known before.  Now we have a node in the tree
+	 (in the proper sorted position for FCT_NAME) that points to
+	 &FCT_NAME instead of any real `known_function' structure.
+	 Allocate a new structure and fill it in.  */
+
+      known_function *known = malloc (sizeof *known);
+      if (! known)
 	{
-	  struct link_map *scope[2] = { map, NULL };
-	  loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
+	remove_from_tree:
+	  /* Oops.  We can't instantiate this node properly.
+	     Remove it from the tree.  */
+	  __tdelete (&fct_name, (void **) &ni->known, &known_compare);
+	  result = NULL;
 	}
+      else
+	{
+	  /* Point the tree node at this new structure.  */
+	  *found = known;
+	  known->fct_name = fct_name;
 
-      __stpcpy (__stpcpy (__stpcpy (__stpcpy (name, "_nss_"),
-				    ni->library->name),
-			  "_"),
-		fct_name);
+	  if (ni->library == NULL)
+	    {
+	      /* This service has not yet been used.  Fetch the service
+		 library for it, creating a new one if need be.  If there
+		 is no service table from the file, this static variable
+		 holds the head of the service_library list made from the
+		 default configuration.  */
+	      static name_database default_table;
+	      ni->library = nss_new_service (service_table ?: &default_table,
+					     ni->name);
+	      if (ni->library == NULL)
+		{
+		  /* This only happens when out of memory.  */
+		  free (known);
+		  goto remove_from_tree;
+		}
+	    }
 
-      result = (nss_dlerror_run (get_sym)
-		? NULL : (void *) (loadbase + ref->st_value));
+	  if (ni->library->lib_handle == NULL)
+	    {
+	      /* Load the shared library.  */
+	      size_t shlen = (7 + strlen (ni->library->name) + 3
+			      + sizeof (NSS_SHLIB_REVISION));
+	      char shlib_name[shlen];
+
+	      void do_open (void)
+		{
+		  /* Open and relocate the shared object.  */
+		  ni->library->lib_handle = _dl_open (shlib_name, RTLD_LAZY);
+		}
+
+	      /* Construct shared object name.  */
+	      __stpcpy (__stpcpy (__stpcpy (shlib_name, "libnss_"),
+				  ni->library->name),
+			".so" NSS_SHLIB_REVISION);
+
+	      if (nss_dlerror_run (do_open) != 0)
+		/* Failed to load the library.  */
+		ni->library->lib_handle = (void *) -1;
+	    }
+
+	  if (ni->library->lib_handle == (void *) -1)
+	    /* Library not found => function not found.  */
+	    result = NULL;
+	  else
+	    {
+	      /* Get the desired function.  Again,  GNU ld.so magic ahead.  */
+	      size_t namlen = (5 + strlen (ni->library->name) + 1
+			       + strlen (fct_name) + 1);
+	      char name[namlen];
+	      struct link_map *map = ni->library->lib_handle;
+	      ElfW(Addr) loadbase;
+	      const ElfW(Sym) *ref = NULL;
+	      void get_sym (void)
+		{
+		  struct link_map *scope[2] = { map, NULL };
+		  loadbase = _dl_lookup_symbol (name, &ref,
+						scope, map->l_name, 0, 0);
+		}
+
+	      /* Construct the function name.  */
+	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (name, "_nss_"),
+					    ni->library->name),
+				  "_"),
+			fct_name);
+
+	      /* Look up the symbol.  */
+	      result = (nss_dlerror_run (get_sym)
+			? NULL : (void *) (loadbase + ref->st_value));
+	    }
+
+	  /* Remember function pointer for later calls.  Even if null, we
+	     record it so a second try needn't search the library again.  */
+	  known->fct_ptr = result;
+	}
     }
-
-  /* Remember function pointer for the usage.  */
-  nss_insert_entry (&ni->known, fct_name, result);
 
   /* Remove the lock.  */
   __libc_lock_unlock (lock);
 
   return result;
-}
-
-
-static int
-known_compare (const void *p1, const void *p2)
-{
-  known_function *v1 = (known_function *) p1;
-  known_function *v2 = (known_function *) p2;
-
-  return strcmp (v1->fct_name, v2->fct_name);
-}
-
-
-static int
-nss_find_entry (struct entry **knownp, const char *key, void **valp)
-{
-  known_function looking_for = { fct_name: key };
-  struct entry **found;
-
-  found = __tfind (&looking_for, (const void **) knownp, known_compare);
-
-  if (found == NULL)
-    return -1;
-
-  *valp = ((known_function *) (*found)->key)->fct_ptr;
-
-  return 0;
-}
-
-
-static void
-nss_insert_entry (struct entry **knownp, const char *key, void *val)
-{
-  known_function *to_insert;
-
-  to_insert = (known_function *) malloc (sizeof (known_function));
-  if (to_insert == NULL)
-    return;
-
-  to_insert->fct_name = key;
-  to_insert->fct_ptr = val;
-
-  __tsearch (to_insert, (void **) knownp, known_compare);
 }
 
 

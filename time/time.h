@@ -22,7 +22,8 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_TIME_H
 
-#if	!defined(__need_time_t) && !defined(__need_clock_t)
+#if	(! defined (__need_time_t) && !defined(__need_clock_t) && \
+	 ! defined (__need_timespec))
 #define	_TIME_H		1
 #include <features.h>
 
@@ -76,6 +77,24 @@ typedef __time_t time_t;
 
 #endif /* time_t not defined and <time.h> or need time_t.  */
 #undef	__need_time_t
+
+
+#if	! defined(__timespec_defined) &&			\
+	((defined (_TIME_H) && defined (__USE_POSIX)) ||	\
+	 defined (__need_timespec))
+#define	__timespec_defined	1
+
+/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
+   has nanoseconds instead of microseconds.  */
+struct timespec
+  {
+    long int tv_sec;		/* Seconds.  */
+    long int tv_nsec;		/* Nanoseconds.  */
+  };
+
+#endif /* timespec not defined and <time.h> or need timespec.  */
+#undef	__need_timespec
+
 
 
 #ifdef	_TIME_H
@@ -228,14 +247,6 @@ extern time_t timelocal __P ((struct tm *__tp));
 extern int dysize __P ((int __year));
 #endif
 
-
-/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
-   has nanoseconds instead of microseconds.  */
-struct timespec
-  {
-    long int ts_sec;		/* Seconds.  */
-    long int ts_nsec;		/* Nanoseconds.  */
-  };
 
 #ifdef __USE_POSIX
 /* Pause execution for a number of nanoseconds.  */

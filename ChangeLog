@@ -1,5 +1,33 @@
 Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* nss/nss_files/files-parse.c (parse_list): Set EOL from LINE if it
+	points within DATA->linebuffer; otherwise use all of DATA->linebuffer
+	itself, no need to skip past a NUL.
+
+	* nss/nsswitch.h (known_function): Comment fix.
+	* nss/nsswitch.c (nss_lookup_function): Rewritten using __tsearch
+	directly.  Do the lookup and insertion with a single call, and fill in
+	the tree node afterwards if new.
+	(known_compare, nss_find_entry, nss_insert_entry): Functions removed.
+
+	* misc/sys/select.h: #define __need_timespec before <sys/time.h> incl.
+	(struct timeval): Add bodiless decl for scope.
+
+	* time/time.h (struct timespec): Rename members from `ts_*' to `tv_*'.
+  	Move struct timespec defn outside [_TIME_H] so it can be got with
+ 	#define __need_timespec.
+
+	* time/sys/time.h (TIMEVAL_TO_TIMESPEC): Use `tv_*' instead of `ts_*'
+	for `struct timespec' member names.
+	(TIMESPEC_TO_TIMEVAL): Likewise.
+
+	* nss/Makefile (extra-libs-others): New variable.
+
+	* extra-lib.mk: Don't test for $($(lib)-no-lib-dep).  Instead match
+	$(lib) in $(extra-libs-others).
+	* sunrpc/Makefile (extra-libs-others): New variable.
+	(librpcsvc-no-lib-dep): Variable removed.
+
 	* elf/rtld.c: Define RTLD_BOOTSTRAP before #include "dynamic-link.h".
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove weak decl for
 	_dl_rtld_map.
@@ -9,6 +37,14 @@ Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	_dl_rtld_map weak only here.
 
 	* posix/unistd.h [__USE_BSD]: Declare getdomainname, setdomainname.
+
+Thu Jul  4 05:21:59 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* login/utmp.h: Fix typos.
+
+	* misc/syslog.c (vsyslog): Use __send instead of send and
+ 	__connect instead of connect to avoid name-space collisions (e.g.,
+ 	with psgetty).
 
 Wed Jul  3 16:29:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 

@@ -128,8 +128,15 @@ parse_list (char *line, struct parser_data *data, int datalen)
 {
   char *eol, **list, **p;
 
-  /* Find the end of the line buffer.  */
-  eol = strchr (data->linebuffer, '\0') + 1;
+  if (line >= data->linebuffer && line < (char *) data + datalen)
+    /* Find the end of the line buffer, we will use the space in DATA after
+       it for storing the vector of pointers.  */
+    eol = strchr (line, '\0') + 1;
+  else
+    /* LINE does not point within DATA->linebuffer, so that space is
+       not being used for scratch space right now.  We can use all of
+       it for the pointer vector storage.  */
+    eol = data->linebuffer;
   /* Adjust the pointer so it is aligned for storing pointers.  */
   eol += __alignof__ (char *) - 1;
   eol -= (eol - (char *) 0) % __alignof__ (char *);
