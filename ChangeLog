@@ -28,6 +28,7 @@
 	* intl/po2test.sed: New file.
 	* intl/tst-gettext.c: New file.
 	* intl/tst-gettext.sh: New file.
+	* manual/message.texi: Document new interfaces.
 
 	* intl/gettext.c: Call __dcgettext directly.
 
