@@ -1,6 +1,13 @@
+2001-11-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string2.h (__strndup): If n is smaller than len, set
+	len to n + 1.
+	* string/tester.c (test_strndup): New function.
+	(main): Call it.
+
 2001-11-01  Ulrich Drepper  <drepper@redhat.com>
 
-	* sunrpc/rpc_main.c: Optomize variable definitions a bit.
+	* sunrpc/rpc_main.c: Optimize variable definitions a bit.
 
 	* sunrpc/Makefile (rpcgen-cmd): Use ../scripts/cpp in rpcgen calls.
 	* scripts/cpp: New file.

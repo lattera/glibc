@@ -1257,6 +1257,30 @@ test_bzero (void)
 }
 
 static void
+test_strndup (void)
+{
+  char *p, *q;
+  it = "strndup";
+  p = strndup("abcdef", 12);
+  check(p != NULL, 1);
+  if (p != NULL)
+    {
+      equal(p, "abcdef", 2);
+      q = strndup(p + 1, 2);
+      check(q != NULL, 3);
+      if (q != NULL)
+	equal(q, "bc", 4);
+      free (q);
+    }
+  free (p);
+  p = strndup("abc def", 3);
+  check(p != NULL, 5);
+  if (p != NULL)
+    equal(p, "abc", 6);
+  free (p);
+}
+
+static void
 test_bcmp (void)
 {
   it = "bcmp";
@@ -1381,6 +1405,9 @@ main (void)
 
   /* bcmp - somewhat like memcmp.  */
   test_bcmp ();
+
+  /* strndup.  */
+  test_strndup ();
 
   /* strerror - VERY system-dependent.  */
   test_strerror ();

@@ -1216,7 +1216,7 @@ extern char *__strndup (__const char *__string, size_t __n)
 			  size_t __n = (n);				      \
 			  char *__retval;				      \
 			  if (__n < __len)				      \
-			    __len = __n;				      \
+			    __len = __n + 1;				      \
 			  __retval = (char *) malloc (__len);		      \
 			  if (__retval != NULL)				      \
 			    {						      \
