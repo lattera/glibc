@@ -296,7 +296,7 @@ addhstbyname (struct database *db, int fd, request_header *req,
   uid_t oldeuid = 0;
 
   if (debug_level > 0)
-    dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
+    dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *)key);
 
   if (secure[hstdb])
     {

@@ -107,7 +107,7 @@ struct translit_ignore_t
 
 
 /* Type to describe a transliteration include statement.  */
-struct translit_include_t 
+struct translit_include_t
 {
   const char *copy_locale;
   const char *copy_repertoire;
@@ -1482,8 +1482,8 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
 	  struct charseq *seq;
 	  uint32_t wch;
 
-	  sprintf (tmp, (base == 10 ? "%.*s%0*d" : "%.*s%0*X"), cp - last_str,
-		   last_str, now->val.str.lenmb - (cp - last_str), from);
+	  sprintf (tmp, (base == 10 ? "%.*s%0*ld" : "%.*s%0*lX"), cp - last_str,
+		   last_str, (int) (now->val.str.lenmb - (cp - last_str)), from);
 
 	  get_character (now, charmap, repertoire, &seq, &wch);
 

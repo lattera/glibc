@@ -245,7 +245,7 @@ cannot handle old request version %d; current version is %d"),
 				  key, buf, sizeof (buf)));
 	    }
 	  else
-	    dbg_log ("\t%s (%s)", serv2str[req->type], key);
+	    dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
 	}
 
       /* Is this service enabled?  */
@@ -293,7 +293,7 @@ cannot handle old request version %d; current version is %d"),
   else if (debug_level > 0)
     {
       if (req->type == INVALIDATE)
-	dbg_log ("\t%s (%s)", serv2str[req->type], key);
+	dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
       else
 	dbg_log ("\t%s", serv2str[req->type]);
     }

@@ -1,3 +1,24 @@
+2000-12-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: New file.
+
+	* sysdeps/unix/sysv/linux/mips/sys/acct.h: Removed, we can use the
+	generic version.
+	Patches by Hiroyuki Machida <machida@sm.sony.co.jp>.
+
+	* locale/programs/ld-collate.c (handle_ellipsis): Fix format
+	string.
+
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Fix
+	format string.
+
+	* nscd/hstcache.c (addhstbyname): Add cast to avoid warning.
+	* nscd/connections.c (handle_request): Likewise.
+	* nscd/pwdcache.c (addpwbyname): Likewise.
+	* nscd/grpcache.c (addgrbyname): Likewise.
+
+	* nscd/nscd_conf.c (nscd_parse_file): Remove extra argument.
+
 2000-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/stratcliff.c: Add tests for stpncpy, memcpy, and mempcpy.

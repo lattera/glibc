@@ -179,7 +179,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
       else if (strcmp (entry, "server-user") == 0)
         {
           if (!arg1)
-            dbg_log (_("Must specify user name for server-user option"), arg1);
+            dbg_log (_("Must specify user name for server-user option"));
           else
             server_user = strdup (arg1);
         }
