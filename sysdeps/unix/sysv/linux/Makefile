@@ -15,6 +15,8 @@ ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek umount umount2 readahead \
 		   setfsuid setfsgid
 
+CFLAGS-gethostid.c = -fexceptions
+
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/klog.h sys/kdaemon.h \
 		  sys/user.h sys/procfs.h sys/prctl.h \

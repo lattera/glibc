@@ -1,5 +1,28 @@
 2003-09-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/utmp_file.c: Use not-cancelable syscalls all
+	over the place.  It would be allowed to have these fucntions as
+	cancellation points but the cleanup would be ugly and a lot of
+	work.
+
+	* sysdeps/generic/not-cancel.h (fcntl_not_cancel): Define.
+	* sysdeps/unix/sysv/linux/not-cancel.h (fcntl_not_cancel): Define.
+
+	* include/fcntl.h (__fcntl_nocancel): Declare.
+	* sysdeps/unix/sysv/linux/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): Only enable
+	cancellation if absolutely needed.
+	(__fcntl_nocancel): Define.
+
+	* posix/unistd.h (gethostid): Remove __THROW.  Clarify comment.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-gethostid.c): Add
+	-fexceptions.
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Use
+	extend_alloca.
+
+	* resolv/res_init.c (__res_nclose): Use close_not_cancel_no_status
+	instead of __close.
+
 	* nss/getXXbyYY.c (FUNCTION_NAME): Add a few casts.  Remove
 	unnecessary errno handling.
 

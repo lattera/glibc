@@ -101,11 +101,8 @@ gethostid ()
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       return 0;
     else
-      {
-	/* Enlarge buffer.  */
-	buflen *= 2;
-	buffer = __alloca (buflen);
-      }
+      /* Enlarge buffer.  */
+      buffer = extend_alloca (buffer, buflen, 2 * buflen);
 
   in.s_addr = 0;
   memcpy (&in, hp->h_addr,

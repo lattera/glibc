@@ -860,8 +860,8 @@ extern int fsync (int __fd);
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
-/* Return the current machine's Internet number.  */
-extern long int gethostid (void) __THROW;
+/* Return identifier for the current host.  */
+extern long int gethostid (void);
 
 /* Make all changes done to all files actually appear on disk.  */
 extern void sync (void) __THROW;

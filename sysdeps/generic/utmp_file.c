@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -26,6 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <utmp.h>
+#include <not-cancel.h>
 
 #include "utmp-private.h"
 #include "utmp-equal.h"
@@ -57,47 +58,47 @@ static void timeout_handler (int signum) {};
      LOCK_FILE.
  */
 #define LOCK_FILE(fd, type) \
-{                                                                       \
-  struct flock fl;                                                      \
-  struct sigaction action, old_action;                                  \
-  unsigned int old_timeout;                                             \
-                                                                        \
-  /* Cancel any existing alarm.  */                                     \
-  old_timeout = alarm (0);                                              \
-                                                                        \
-  /* Establish signal handler.  */                                      \
-  action.sa_handler = timeout_handler;                                  \
-  __sigemptyset (&action.sa_mask);                                      \
-  action.sa_flags = 0;                                                  \
-  __sigaction (SIGALRM, &action, &old_action);                          \
-                                                                        \
-  alarm (TIMEOUT);                                                      \
-                                                                        \
-  /* Try to get the lock.  */                                           \
-  memset (&fl, '\0', sizeof (struct flock));                            \
-  fl.l_type = (type);                                                   \
-  fl.l_whence = SEEK_SET;                                               \
-  if (__fcntl ((fd), F_SETLKW, &fl) < 0)
+{									      \
+  struct flock fl;							      \
+  struct sigaction action, old_action;					      \
+  unsigned int old_timeout;						      \
+									      \
+  /* Cancel any existing alarm.  */					      \
+  old_timeout = alarm (0);						      \
+									      \
+  /* Establish signal handler.  */					      \
+  action.sa_handler = timeout_handler;					      \
+  __sigemptyset (&action.sa_mask);					      \
+  action.sa_flags = 0;							      \
+  __sigaction (SIGALRM, &action, &old_action);				      \
+									      \
+  alarm (TIMEOUT);							      \
+									      \
+  /* Try to get the lock.  */						      \
+  memset (&fl, '\0', sizeof (struct flock));				      \
+  fl.l_type = (type);							      \
+  fl.l_whence = SEEK_SET;						      \
+  if (__fcntl_nocancel ((fd), F_SETLKW, &fl) < 0)
 
 #define LOCKING_FAILED() \
   goto unalarm_return
 
 #define UNLOCK_FILE(fd) \
-  /* Unlock the file.  */                                               \
-  fl.l_type = F_UNLCK;                                                  \
-  __fcntl ((fd), F_SETLKW, &fl);                                        \
-                                                                        \
- unalarm_return:							\
-  /* Reset the signal handler and alarm.  We must reset the alarm	\
-     before resetting the handler so our alarm does not generate a	\
-     spurious SIGALRM seen by the user.  However, we cannot just set	\
-     the user's old alarm before restoring the handler, because then	\
-     it's possible our handler could catch the user alarm's SIGARLM	\
-     and then the user would never see the signal he expected.  */	\
-  alarm (0);								\
-  __sigaction (SIGALRM, &old_action, NULL);                             \
-  if (old_timeout != 0)							\
-    alarm (old_timeout);                                                \
+  /* Unlock the file.  */						      \
+  fl.l_type = F_UNLCK;							      \
+  __fcntl_nocancel ((fd), F_SETLKW, &fl);				      \
+									      \
+ unalarm_return:							      \
+  /* Reset the signal handler and alarm.  We must reset the alarm	      \
+     before resetting the handler so our alarm does not generate a	      \
+     spurious SIGALRM seen by the user.  However, we cannot just set	      \
+     the user's old alarm before restoring the handler, because then	      \
+     it's possible our handler could catch the user alarm's SIGARLM	      \
+     and then the user would never see the signal he expected.  */	      \
+  alarm (0);								      \
+  __sigaction (SIGALRM, &old_action, NULL);				      \
+  if (old_timeout != 0)							      \
+    alarm (old_timeout);						      \
 } while (0)
 
 
@@ -139,22 +140,22 @@ setutent_file (void)
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-      file_fd = __open (file_name, O_RDWR);
+      file_fd = open_not_cancel_2 (file_name, O_RDWR);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = __open (file_name, O_RDONLY);
+	  file_fd = open_not_cancel_2 (file_name, O_RDONLY);
 	  if (file_fd == -1)
 	    return 0;
 	}
 
       /* We have to make sure the file is `closed on exec'.  */
-      result = __fcntl (file_fd, F_GETFD, 0);
+      result = __fcntl_nocancel (file_fd, F_GETFD, 0);
       if (result >= 0)
-	result = __fcntl (file_fd, F_SETFD, result | FD_CLOEXEC);
+	result = __fcntl_nocancel (file_fd, F_SETFD, result | FD_CLOEXEC);
       if (result == -1)
 	{
-	  __close (file_fd);
+	  close_not_cancel_no_status (file_fd);
 	  return 0;
 	}
     }
@@ -197,7 +198,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
     }
 
   /* Read the next entry.  */
-  nbytes = __read (file_fd, &last_entry, sizeof (struct utmp));
+  nbytes = read_not_cancel (file_fd, &last_entry, sizeof (struct utmp));
 
   UNLOCK_FILE (file_fd);
 
@@ -237,7 +238,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (__read (file_fd, buffer, sizeof (struct utmp))
+	  if (read_not_cancel (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -259,7 +260,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (__read (file_fd, buffer, sizeof (struct utmp))
+	  if (read_not_cancel (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -332,7 +333,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   while (1)
     {
       /* Read the next entry.  */
-      if (__read (file_fd, &last_entry, sizeof (struct utmp))
+      if (read_not_cancel (file_fd, &last_entry, sizeof (struct utmp))
 	  != sizeof (struct utmp))
 	{
 	  __set_errno (ESRCH);
@@ -418,7 +419,8 @@ pututline_file (const struct utmp *data)
     }
 
   /* Write the new data.  */
-  if (__write (file_fd, data, sizeof (struct utmp)) != sizeof (struct utmp))
+  if (write_not_cancel (file_fd, data, sizeof (struct utmp))
+      != sizeof (struct utmp))
     {
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
@@ -444,7 +446,7 @@ endutent_file (void)
 {
   assert (file_fd >= 0);
 
-  __close (file_fd);
+  close_not_cancel_no_status (file_fd);
   file_fd = -1;
 }
 
@@ -457,7 +459,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   int fd;
 
   /* Open WTMP file.  */
-  fd = __open (file, O_WRONLY);
+  fd = open_not_cancel_2 (file, O_WRONLY);
   if (fd < 0)
     return -1;
 
@@ -478,7 +480,8 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   /* Write the entry.  If we can't write all the bytes, reset the file
      size back to the original size.  That way, no partial entries
      will remain.  */
-  if (__write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
+  if (write_not_cancel (fd, utmp, sizeof (struct utmp))
+      != sizeof (struct utmp))
     {
       __ftruncate64 (fd, offset);
       goto unlock_return;
@@ -490,7 +493,7 @@ unlock_return:
   UNLOCK_FILE (fd);
 
   /* Close WTMP file.  */
-  __close (fd);
+  close_not_cancel_no_status (fd);
 
   return result;
 }

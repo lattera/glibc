@@ -46,6 +46,10 @@
   (void) ({ INTERNAL_SYSCALL_DECL (err);				      \
 	    INTERNAL_SYSCALL (writev, err, 3, (fd), (iov), (n)); })
 
+/* Uncancelable fcntl.  */
+#define fcntl_not_cancel(fd, cmd, val) \
+  __fcntl_nocancel (fd, cmd, val)
+
 /* Uncancelable waitpid.  */
 #ifdef __NR_waitpid
 # define waitpid_not_cancel(pid, stat_loc, options) \

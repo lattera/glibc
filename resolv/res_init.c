@@ -86,6 +86,8 @@ static const char rcsid[] = "$BINDId: res_init.c,v 8.16 2000/05/09 07:10:12 vixi
 #include <string.h>
 #include <unistd.h>
 
+#include <not-cancel.h>
+
 /* Options.  Should all be left alone. */
 #define RESOLVSORT
 #define RFC1535
@@ -541,7 +543,7 @@ res_nclose(res_state statp) {
 	int ns;
 
 	if (statp->_vcsock >= 0) {
-		(void) __close(statp->_vcsock);
+		close_not_cancel_no_status(statp->_vcsock);
 		statp->_vcsock = -1;
 		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
@@ -552,7 +554,7 @@ res_nclose(res_state statp) {
 #endif
 		if (statp->_u._ext.nsaddrs[ns]
 		    && statp->_u._ext.nssocks[ns] != -1) {
-			(void) __close(statp->_u._ext.nssocks[ns]);
+			close_not_cancel_no_status(statp->_u._ext.nssocks[ns]);
 			statp->_u._ext.nssocks[ns] = -1;
 		}
 	statp->_u._ext.nsinit = 0;
