@@ -133,7 +133,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 	 the response header and the dataset itself.  */
       total = (sizeof (struct passwddata) + pw_name_len + pw_passwd_len
 	       + pw_gecos_len + pw_dir_len + pw_shell_len);
-      data = (struct passwddata *) malloc (total + n);
+      data = (struct passwddata *) malloc (total + n + req->key_len);
       if (data == NULL)
 	/* There is no reason to go on.  */
 	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
@@ -157,8 +157,11 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       cp = mempcpy (cp, pwd->pw_dir, pw_dir_len);
       cp = mempcpy (cp, pwd->pw_shell, pw_shell_len);
 
-      /* Finally the stringified UID value.  */
+      /* Next the stringified UID value.  */
       memcpy (cp, buf, n);
+
+      /* Copy of the key in case it differs.  */
+      char *key_copy = memcpy (cp + n, key, req->key_len);
 
       /* We write the dataset before inserting it to the database
 	 since while inserting this thread might block and so would
@@ -176,8 +179,8 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 		 total, data, 0, t, db, owner);
 
       /* If the key is different from the name add a separate entry.  */
-      if (type == GETPWBYNAME && strcmp (key, data->strdata) != 0)
-	cache_add (GETPWBYNAME, key, strlen (key) + 1, data,
+      if (type == GETPWBYNAME && strcmp (key_copy, data->strdata) != 0)
+	cache_add (GETPWBYNAME, key_copy, req->key_len, data,
 		   total, data, 0, t, db, owner);
 
       cache_add (GETPWBYUID, cp, n, data, total, data, 1, t, db, owner);
