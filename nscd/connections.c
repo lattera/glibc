@@ -327,9 +327,10 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 
 		/* We do not need the file name anymore after we
 		   opened another file descriptor in read-only mode.  */
-		if (fd != -1 && dbs[cnt].shared)
+		if (fd != -1)
 		  {
-		    ro_fd = open (fname, O_RDONLY);
+		    if (dbs[cnt].shared)
+		      ro_fd = open (fname, O_RDONLY);
 
 		    unlink (fname);
 		  }

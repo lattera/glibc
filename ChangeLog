@@ -1,4 +1,28 @@
+2004-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (nscd_init): Remove file if not persistent
+	and not shared.  Patch by Jerome Borsboom <j.borsboom@erasmusmc.nl>.
+
 2004-10-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Handle
+	defined __NR_setresuid32 && !defined __NR_setresuid.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Handle
+	defined __NR_setresgid32 && !defined __NR_setresgid.
+
+	* sysdeps/sparc/fpu/bits/mathinline.h (__signbitf, __signbit,
+	__signbitl, sqrtf, sqrt, sqrtl, fdim, fdimf): Use __NTH macro.
+
+	* sysdeps/generic/errno-loc.c: Don't undef #errno
+	if RTLD_PRIVATE_ERRNO.
+	* include/errno.h (__errno_location): If RTLD_PRIVATE_ERRNO,
+	add attribute_hidden.
+
+	* dlfcn/dlinfo.c (dlinfo_doit): Replace iteration over GL(dl_loaded)
+	chain with iteration over all namespaces' _ns_loaded chains.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_preferred_address):
+	Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_link_map): Likewise.
 
 	* elf/rtld.c (_dl_start): Fix one last dl_loaded.
 	* elf/dl-load.c (_dl_map_object_from_fd): Avoid definition of

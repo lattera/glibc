@@ -28,7 +28,7 @@
 #include <pthread-functions.h>
 
 
-#ifdef __NR_setresuid
+#if defined __NR_setresuid || defined __NR_setresuid32
 
 # ifdef __NR_setresuid32
 #  if __ASSUME_32BITUIDS == 0
@@ -43,7 +43,7 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
   int result;
 
-# if __ASSUME_32BITUIDS > 0
+# if __ASSUME_32BITUIDS > 0 || !defined __NR_setresuid
   result = INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
 # else
 #  ifdef __NR_setresuid32

@@ -101,11 +101,12 @@ weak_extern (__cache_line_size)
    mapped somewhere else.  */
 
 ElfW(Addr)
-__elf_preferred_address(struct link_map *loader, size_t maplength,
-			ElfW(Addr) mapstartpref)
+__elf_preferred_address (struct link_map *loader, size_t maplength,
+			 ElfW(Addr) mapstartpref)
 {
   ElfW(Addr) low, high;
   struct link_map *l;
+  Lmid_t nsid;
 
   /* If the object has a preference, load it there!  */
   if (mapstartpref != 0)
@@ -117,29 +118,30 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
      be superceded by the program's load address).  */
   low =  0x0003FFFF;
   high = 0x70000000;
-  for (l = GL(dl_loaded); l; l = l->l_next)
-    {
-      ElfW(Addr) mapstart, mapend;
-      mapstart = l->l_map_start & ~(GLRO(dl_pagesize) - 1);
-      mapend = l->l_map_end | (GLRO(dl_pagesize) - 1);
-      assert (mapend > mapstart);
+  for (nsid = 0; nsid < DL_NNS; ++nsid)
+    for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
+      {
+	ElfW(Addr) mapstart, mapend;
+	mapstart = l->l_map_start & ~(GLRO(dl_pagesize) - 1);
+	mapend = l->l_map_end | (GLRO(dl_pagesize) - 1);
+	assert (mapend > mapstart);
 
-      /* Prefer gaps below the main executable, note that l ==
-	 _dl_loaded does not work for static binaries loading
-	 e.g. libnss_*.so.  */
-      if ((mapend >= high || l->l_type == lt_executable)
-	  && high >= mapstart)
-	high = mapstart;
-      else if (mapend >= low && low >= mapstart)
-	low = mapend;
-      else if (high >= mapend && mapstart >= low)
-	{
-	  if (high - mapend >= mapstart - low)
-	    low = mapend;
-	  else
-	    high = mapstart;
-	}
-    }
+	/* Prefer gaps below the main executable, note that l ==
+	   _dl_loaded does not work for static binaries loading
+	   e.g. libnss_*.so.  */
+	if ((mapend >= high || l->l_type == lt_executable)
+  	    && high >= mapstart)
+	  high = mapstart;
+	else if (mapend >= low && low >= mapstart)
+	  low = mapend;
+	else if (high >= mapend && mapstart >= low)
+	  {
+	    if (high - mapend >= mapstart - low)
+	      low = mapend;
+	    else
+	      high = mapstart;
+	  }
+      }
 
   high -= 0x10000; /* Allow some room between objects.  */
   maplength = (maplength | (GLRO(dl_pagesize) - 1)) + 1;
@@ -341,8 +343,8 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 }
 
 Elf32_Addr
-__elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
-			Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
+__elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+			 Elf32_Addr *reloc_addr, Elf32_Addr finaladdr)
 {
   Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
   if (delta << 6 >> 6 == delta)

@@ -1,3 +1,8 @@
+2004-10-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/errno-loc.c: Don't undef #errno
+	if RTLD_PRIVATE_ERRNO.
+
 2004-10-05  Dwayne Grant McConnell  <dgm69@us.ibm.com>
 
 	* pthread.c: Mask restart signal during cancel signal handler.

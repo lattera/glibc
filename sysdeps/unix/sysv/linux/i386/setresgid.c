@@ -28,7 +28,7 @@
 #include <pthread-functions.h>
 
 
-#ifdef __NR_setresgid
+#if defined __NR_setresgid || defined __NR_setresgid32
 
 # ifdef __NR_setresgid32
 #  if __ASSUME_32BITUIDS == 0
@@ -43,7 +43,7 @@ __setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
   int result;
 
-# if __ASSUME_32BITUIDS > 0
+# if __ASSUME_32BITUIDS > 0 || !defined __NR_setresgid
   result = INLINE_SYSCALL (setresgid32, 3, rgid, egid, sgid);
 # else
 #  ifdef __NR_setresgid32

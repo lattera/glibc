@@ -39,13 +39,15 @@ dlinfo_doit (void *argsblock)
 #if 0
   if (args->handle == RTLD_SELF)
     {
+      Lmid_t nsid;
 
       /* Find the highest-addressed object that CALLER is not below.  */
-      for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-	if (caller >= l->l_map_start && caller < l->l_map_end)
-	  /* There must be exactly one DSO for the range of the virtual
-	     memory.  Otherwise something is really broken.  */
-	  break;
+      for (nsid = 0; nsid < DL_NNS; ++nsid)
+	for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
+	  if (caller >= l->l_map_start && caller < l->l_map_end)
+	    /* There must be exactly one DSO for the range of the virtual
+	       memory.  Otherwise something is really broken.  */
+	    break;
 
       if (l == NULL)
 	GLRO(dl_signal_error) (0, NULL, NULL, N_("\
