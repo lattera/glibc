@@ -320,18 +320,22 @@ write_gmon (void)
     int fd = -1;
     char *env;
 
+#ifndef O_NOFOLLOW
+# define O_NOFOLLOW	0
+#endif
+
     env = getenv ("GMON_OUT_PREFIX");
     if (env != NULL && !__libc_enable_secure)
       {
 	size_t len = strlen (env);
 	char buf[len + 20];
 	sprintf (buf, "%s.%u", env, __getpid ());
-	fd = __open (buf, O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	fd = __open (buf, O_CREAT|O_TRUNC|O_WRONLY|O_NOFOLLOW, 0666);
       }
 
     if (fd == -1)
       {
-	fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+	fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY|O_NOFOLLOW, 0666);
 	if (fd < 0)
 	  {
 	    char buf[300];
