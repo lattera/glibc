@@ -137,15 +137,17 @@ __opendir (const char *name)
     goto lose;
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (__builtin_expect ((size_t) statbuf.st_blksize >= sizeof (struct dirent),
+  if (__builtin_expect ((size_t) statbuf.st_blksize >= sizeof (struct dirent64),
 			1))
     allocation = statbuf.st_blksize;
   else
 #endif
-    allocation = (BUFSIZ < sizeof (struct dirent)
-		  ? sizeof (struct dirent) : BUFSIZ);
+    allocation = (BUFSIZ < sizeof (struct dirent64)
+		  ? sizeof (struct dirent64) : BUFSIZ);
 
-  dirp = (DIR *) calloc (1, sizeof (DIR) + allocation); /* Zero-fill.  */
+  const int pad = -sizeof (DIR) % __alignof__ (struct dirent64);
+
+  dirp = (DIR *) malloc (sizeof (DIR) + allocation + pad);
   if (dirp == NULL)
   lose:
     {
@@ -154,7 +156,8 @@ __opendir (const char *name)
       __set_errno (save_errno);
       return NULL;
     }
-  dirp->data = (char *) (dirp + 1);
+  memset (dirp, '\0', sizeof (DIR));
+  dirp->data = (char *) (dirp + 1) + pad;
   dirp->allocation = allocation;
   dirp->fd = fd;
 

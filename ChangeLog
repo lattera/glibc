@@ -1,3 +1,10 @@
+2003-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/opendir.c (__opendir): Make sure even struct dirent64
+	fits into allocation.  Add padding on 32-bit arches so that
+	dirp->data is enough aligned for struct dirent64.
+	Avoid clearing of the buffer, just clear DIR structure.
+
 2003-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/nsswitch.c: Add libc_hidden_def for __nss_lookup_function.
