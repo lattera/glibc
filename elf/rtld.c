@@ -648,6 +648,10 @@ dl_main (const ElfW(Phdr) *phdr,
   GL(dl_rtld_unlock_recursive) = rtld_lock_default_unlock_recursive;
 #endif
 
+  /* The explicit initialization here is cheaper than processing the reloc
+     in the _rtld_local definition's initializer.  */
+  GL(dl_make_stack_executable_hook) = &_dl_make_stack_executable;
+
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);
 
@@ -747,6 +751,25 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Initialize the data structures for the search paths for shared
 	 objects.  */
       _dl_init_paths (library_path);
+
+      /* The initialization of _dl_stack_flags done below assumes the
+	 executable's PT_GNU_STACK may have been honored by the kernel, and
+	 so a PT_GNU_STACK with PF_X set means the stack started out with
+	 execute permission.  However, this is not really true if the
+	 dynamic linker is the executable the kernel loaded.  For this
+	 case, we must reinitialize _dl_stack_flags to match the dynamic
+	 linker itself.  If the dynamic linker was built with a
+	 PT_GNU_STACK, then the kernel may have loaded us with a
+	 nonexecutable stack that we will have to make executable when we
+	 load the program below unless it has a PT_GNU_STACK indicating
+	 nonexecutable stack is ok.  */
+
+      for (ph = phdr; ph < &phdr[phnum]; ++ph)
+	if (ph->p_type == PT_GNU_STACK)
+	  {
+	    GL(dl_stack_flags) = ph->p_flags;
+	    break;
+	  }
 
       if (__builtin_expect (mode, normal) == verify)
 	{
@@ -953,10 +976,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 #endif
       _exit (has_interp ? 0 : 2);
     }
-
-  /* The explicit initialization here is cheaper than processing the reloc
-     in the _rtld_local definition's initializer.  */
-  GL(dl_make_stack_executable_hook) = &_dl_make_stack_executable;
 
   if (! rtld_is_main)
     /* Initialize the data structures for the search paths for shared

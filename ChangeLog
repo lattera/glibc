@@ -1,3 +1,12 @@
+2003-09-23  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main): In rtld_is_main case, reinitialize
+	GL(dl_stack_flags) according to rtld's own PT_GNU_STACK.
+	Move GL(dl_make_stack_executable_hook) initialization up.
+	* elf/tst-execstack-prog.c: New file.
+	* elf/Makefile (tests-execstack-yes): Add it.
+	(LDFLAGS-tst-execstack-prog): New variable.
+
 2003-09-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (RTLD_START): Set __libc_stack_end

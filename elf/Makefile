@@ -159,7 +159,7 @@ test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete nodelete2
 tests-nodlopen-yes = nodlopen nodlopen2
-tests-execstack-yes = tst-execstack tst-execstack-needed
+tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
@@ -673,6 +673,8 @@ LDFLAGS-tst-execstack-mod = -Wl,-z,execstack
 
 $(objpfx)tst-execstack-needed: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
+
+LDFLAGS-tst-execstack-prog = -Wl,-z,execstack
 endif
 
 $(objpfx)tst-array1.out: $(objpfx)tst-array1
