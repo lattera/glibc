@@ -215,31 +215,12 @@ extern void _dl_signal_cerror (int errcode,
 			       const char *errstring)
      internal_function;
 
-/* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
-   error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING is
-   set to a string constructed from the strings passed to _dl_signal_error,
-   and the error code passed is the return value.  ERRSTRING if nonzero
-   points to a malloc'ed string which the caller has to free after use.
-   ARGS is passed as argument to OPERATE.  */
-extern int _dl_catch_error (char **errstring,
-			    void (*operate) (void *),
-			    void *args)
-     internal_function;
-
 /* Call OPERATE, receiving errors from `dl_signal_cerror'.  Unlike
    `_dl_catch_error' the operation is resumed after the OPERATE
    function returns.
    ARGS is passed as argument to OPERATE.  */
 extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 			       void *args)
-     internal_function;
-
-
-/* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
-   _dl_catch_error.  Returns zero for success, nonzero for failure; and
-   arranges for `dlerror' to return the error details.
-   ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args)
      internal_function;
 
 
@@ -265,18 +246,6 @@ extern unsigned int _dl_map_object_deps (struct link_map *map,
 
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map) internal_function;
-
-
-/* Open the shared object NAME, relocate it, and run its initializer if it
-   hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
-   the object is already opened, returns its existing map.  */
-extern struct link_map *_dl_open (const char *name, int mode,
-				  const void *caller)
-     internal_function;
-
-/* Close an object previously opened by _dl_open.  */
-extern void _dl_close (struct link_map *map)
-     internal_function;
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
@@ -322,10 +291,6 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    const char *reference_name,
 						    const struct r_found_version *version,
 						    struct link_map *skip_this)
-     internal_function;
-
-/* Locate shared object containing the given address.  */
-extern int _dl_addr (const void *address, Dl_info *info)
      internal_function;
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
@@ -409,7 +374,6 @@ extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
    calling function.  */
 extern void _dl_mcount_wrapper (void *selfpc);
 
-
 /* Show the members of the auxiliary array passed up from the kernel.  */
 extern void _dl_show_auxv (void) internal_function;
 
@@ -423,18 +387,6 @@ extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
 							size_t *sz,
 							size_t *max_capstrlen)
      internal_function;
-
-
-/* When we do profiling we have the problem that uses of `dlopen'ed
-   objects don't use the PLT but instead use a pointer to the function.
-   We still want to have profiling data and in these cases we must do
-   the work of calling `_dl_mcount' ourself.  The following macros
-   helps do it.  */
-#define _CALL_DL_FCT(fctp, args) \
-  ({ if (_dl_profile_map != NULL)					      \
-       _dl_mcount_wrapper (fctp);					      \
-     (*fctp) args;							      \
-  })
 
 __END_DECLS
 

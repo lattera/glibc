@@ -18,8 +18,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
-#include <stddef.h>
-#include <elf/ldsodefs.h>
 
 struct dlopen_args
 {
@@ -27,11 +25,10 @@ struct dlopen_args
   const char *file;
   int mode;
   /* The return value of dlopen_doit.  */
-  struct link_map *new;
+  void *new;
   /* Address of the caller.  */
   const void *caller;
 };
-
 
 static void
 dlopen_doit (void *a)

@@ -1,4 +1,4 @@
-/* Load a shared object at run time.
+/* Look up a symbol in a shared object loaded by `dlopen'.
    Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,47 +18,34 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
-#include <stddef.h>
-#include <elf/ldsodefs.h>
 
-/* This file is for compatibility with glibc 2.0.  Compile it only if
-   versioning is used.  */
-#if defined PIC && DO_VERSIONING
-
-struct dlopen_args
+struct dlsym_args
 {
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  struct link_map *new;
-  /* Address of the caller.  */
-  const void *caller;
+  /* The arguments to dlsym_doit.  */
+  void *handle;
+  const char *name;
+  void *who;
+
+  /* The return value of dlsym_doit.  */
+  void *sym;
 };
 
-
 static void
-dlopen_doit (void *a)
+dlsym_doit (void *a)
 {
-  struct dlopen_args *args = (struct dlopen_args *) a;
+  struct dlsym_args *args = (struct dlsym_args *) a;
 
-  args->new = _dl_open (args->file ?: "", args->mode, args->caller);
+  args->sym = _dl_sym (args->handle, args->name, args->who);
 }
 
 
 void *
-__dlopen_nocheck (const char *file, int mode)
+dlsym (void *handle, const char *name)
 {
-  struct dlopen_args args;
-  args.file = file;
-  args.caller = __builtin_return_address (0);
+  struct dlsym_args args;
+  args.who = __builtin_return_address (0);
+  args.handle = handle;
+  args.name = name;
 
-  if ((mode & RTLD_BINDING_MASK) == 0)
-    /* By default assume RTLD_LAZY.  */
-    mode |= RTLD_LAZY;
-  args.mode = mode;
-
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+  return (_dlerror_run (dlsym_doit, &args) ? NULL : args.sym);
 }
-symbol_version (__dlopen_nocheck, dlopen, GLIBC_2.0);
-#endif

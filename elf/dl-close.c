@@ -36,9 +36,10 @@ __libc_lock_define (extern, _dl_load_lock)
 
 void
 internal_function
-_dl_close (struct link_map *map)
+_dl_close (void *_map)
 {
   struct link_map **list;
+  struct link_map *map = _map;
   unsigned nsearchlist;
   unsigned int i;
 

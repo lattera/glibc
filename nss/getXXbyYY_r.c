@@ -179,7 +179,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   while (no_more == 0)
     {
-      status = _CALL_DL_FCT (fct, (ADD_VARIABLES, resbuf, buffer, buflen,
+      status = DL_CALL_FCT (fct, (ADD_VARIABLES, resbuf, buffer, buflen,
 				   &errno H_ERRNO_VAR));
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the

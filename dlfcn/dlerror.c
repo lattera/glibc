@@ -22,8 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
-#include <elf/ldsodefs.h>
-
 
 /* Type for storing results of dynamic loading actions.  */
 struct dl_action_result

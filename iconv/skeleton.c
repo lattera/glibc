@@ -86,8 +86,6 @@
 #ifndef STATIC_GCONV
 # include <dlfcn.h>
 #endif
-#include <ldsodefs.h>
-
 
 /* The direction objects.  */
 #if DEFINE_DIRECTION_OBJECTS || DEFINE_INIT

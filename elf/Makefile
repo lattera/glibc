@@ -22,7 +22,7 @@ subdir		:= elf
 
 headers		= elf.h bits/elfclass.h bits/dlfcn.h link.h dlfcn.h
 routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
-		  dl-addr enbl-secure dl-profstub dl-origin dl-libc
+		  dl-addr enbl-secure dl-profstub dl-origin dl-libc dl-sym
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -35,23 +35,15 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
-distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
-		  dl-hash.h soinit.c sofini.c ldd.bash.in eval.c \
-		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
-		  dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
-		  testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
-		  testobj6.c testobj1_1.c failobj.c do-lookup.h \
-		  gen-trusted-dirs.awk
+distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
+		   dl-hash.h soinit.c sofini.c ldd.bash.in \
+		   genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
+		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
+		   do-lookup.h sprof.c gen-trusted-dirs.awk \
+		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
+		   testobj6.c testobj1_1.c failobj.c
 
 include ../Makeconfig
-
-extra-libs	 = libdl
-extra-libs-others = $(extra-libs)
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
-ifeq ($(versioning),yes)
-libdl-routines	+= dlopenold
-libdl-shared-only-routines := dlopenold
-endif
 
 before-compile = $(objpfx)trusted-dirs.h
 
@@ -60,7 +52,7 @@ ld-map		= $(common-objpfx)ld.so.map
 endif
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os interp.os
+extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os interp.os
 generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h trusted-dirs.st
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
@@ -85,14 +77,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj
 extra-objs += $(modules-names:=.os)
 
-ifeq ($(build-shared),yes)
-libdl = $(objpfx)libdl.so$(libdl.so-version)
-else
-libdl = $(objpfx)libdl.a
-endif
-
 include ../Rules
-
 
 ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
@@ -163,10 +148,6 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 CPPFLAGS-dl-load.c = -I$(objpfx).
 CFLAGS-dl-load.c += -Wno-uninitialized
 
-# Specify the dependencies of libdl.so; its commands come from the generic
-# rule to build a shared library.
-$(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
-
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 	$(do-install-program)
@@ -209,9 +190,8 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 	chmod 555 $@.new
 	mv -f $@.new $@
 
-
 $(objpfx)sprof: $(libdl)
-
+
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(addsuffix .so,$(modules-names))
 
@@ -251,14 +231,9 @@ $(objpfx)loadfail.out: $(objpfx)failobj.so
 
 $(objpfx)multiload: $(libdl)
 LDFLAGS-multiload = -rdynamic
-CFLAGS-multiload.c = -DOBJDIR=\"$(elf-objpfx)\"
+CFLAGS-multiload.c = -DOBJDIR=\"$(objpfx)\"
 
 $(objpfx)multiload.out: $(objpfx)testobj1.so
 
 $(objpfx)origtest: $(libdl)
 $(objpfx)origtest.out: $(objpfx)testobj1.so
-
-# muwahaha
-
-LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
-$(objpfx)libdl.so: $(objpfx)eval.os

@@ -1,5 +1,61 @@
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/gnu/Makefile (libdl-routines): Add eval.
+
+1999-07-06  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* dlfcn: New directory.  Move the following files from elf:
+	dladdr.c, dlclose.c, dlerror.c, dlfcn.h, dlopen.c,
+	dlopenold.c, dlsym.c, dlvsym.c.
+	* dlfcn/Makefile: New file.
+	* dlfcn/Versions: New file.
+	* dlfcn/dlsym.c: All ELF-specific code split out to new
+	function _dl_sym.
+	* dlfcn/dlvsym.c: All ELF-specific code split out to new
+	function _dl_vsym.
+	* elf/dl-sym.c: New file.  _dl_sym and _dl_vsym are
+	implemented here.
+
+	* dlfcn/dladdr.c: Remove all references to ELF data structures
+	or headers.
+	* dlfcn/dlclose.c: Likewise.
+	* dlfcn/dlerror.c: Likewise.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlopenold.c: Likewise.
+
+	* Makeconfig (dlfcn): New variable - set to `dlfcn' if elf is
+	yes, empty otherwise.
+	(libdl): Set to dlfcn/libdl.so or libdl.a if elf is yes,
+	depending on build-shared.
+	(subdirs): Add $(dlfcn).
+	(rpath-dirs): Add dlfcn.
+	* elf/Makefile: Remove all references to libdl or its
+	components, except the ones relating to the test cases.
+	(routines): Add dl-sym.
+	* elf/Versions (libc): Add _dl_sym and _dl_vsym for GLIBC_2.2.
+	(libdl): Delete.
+
+	* elf/dl-close.c (_dl_close): Change argument to void *.
+	* elf/dl-open.c (_dl_open): Change return type to void *.
+	* elf/eval.c: Removed.
+	* elf/ldsodefs.h: Move prototypes of _dl_catch_error,
+	_dlerror_run, _dl_open, _dl_close, _dl_addr, and
+	_dl_mcount_wrapper_check to include/dlfcn.h.  Delete
+	_CALL_DL_FCT macro.
+	* include/dlfcn.h: Also prototype _dl_sym and _dl_vsym here.
+	Include real header from dlfcn directory.
+	* include/ldsodefs.h: Removed.
+
+	* grp/initgroups.c: Use DL_CALL_FCT not _CALL_DL_FCT.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* iconv/gconv.c: Likewise.  Don't include ldsodefs.h.
+	* iconv/gconv_db.c: Likewise.  Don't include ldsodefs.h.
+	* iconv/skeleton.c: Don't include ldsodefs.h.
+	* nss/nsswitch.h: Don't include ldsodefs.h.  Include dlfcn.h.
+
+1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/generic/setenv.c: Describe problem.
 
 	* malloc/malloc.c (request2size): Also set errno if failing.

@@ -45,3 +45,8 @@ endif
 ifeq ($(subdir),misc)
 sysdep_headers += sys/mtio.h
 endif
+
+
+ifeq ($(subdir),dlfcn)
+libdl-routines	+= eval
+endif

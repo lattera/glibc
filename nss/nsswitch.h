@@ -26,8 +26,7 @@
 #include <nss.h>
 #include <resolv.h>
 #include <search.h>
-#include <ldsodefs.h>
-
+#include <dlfcn.h>
 
 /* Actions performed after lookup finished.  */
 typedef enum

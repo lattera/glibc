@@ -23,7 +23,6 @@
 #include <gconv.h>
 #include <sys/param.h>
 #include <dlfcn.h>
-#include <ldsodefs.h>
 
 int
 internal_function
@@ -42,7 +41,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
 
   if (inbuf == NULL || *inbuf == NULL)
     /* We just flush.  */
-    result = _CALL_DL_FCT (cd->__steps->__fct,
+    result = DL_CALL_FCT (cd->__steps->__fct,
 			   (cd->__steps, cd->__data, NULL, NULL,
 			    converted, 1));
   else
@@ -56,7 +55,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
       do
 	{
 	  last_start = *inbuf;
-	  result = _CALL_DL_FCT (cd->__steps->__fct,
+	  result = DL_CALL_FCT (cd->__steps->__fct,
 				 (cd->__steps, cd->__data, inbuf, inbufend,
 				  converted, 0));
 	}

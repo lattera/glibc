@@ -26,7 +26,6 @@
 #include <bits/libc-lock.h>
 
 #include <dlfcn.h>
-#include <ldsodefs.h>
 #include <gconv_int.h>
 
 
@@ -165,7 +164,7 @@ free_derivation (void *p)
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
     if (deriv->steps[cnt].__end_fct)
-      _CALL_DL_FCT (deriv->steps[cnt].__end_fct, (&deriv->steps[cnt]));
+      DL_CALL_FCT (deriv->steps[cnt].__end_fct, (&deriv->steps[cnt]));
 
   /* Free the name strings.  */
   free ((char *) deriv->steps[0].__from_name);
@@ -237,7 +236,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  /* Call the init function.  */
 	  if (result[step_cnt].__init_fct != NULL)
 	     {
-	       status = _CALL_DL_FCT (result[step_cnt].__init_fct,
+	       status = DL_CALL_FCT (result[step_cnt].__init_fct,
 				      (&result[step_cnt]));
 
 	       if (status != __GCONV_OK)
@@ -258,7 +257,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  while (++step_cnt < *nsteps)
 	    {
 	      if (result[step_cnt].__end_fct != NULL)
-		_CALL_DL_FCT (result[step_cnt].__end_fct, (&result[step_cnt]));
+		DL_CALL_FCT (result[step_cnt].__end_fct, (&result[step_cnt]));
 #ifndef STATIC_GCONV
 	      __gconv_release_shlib (result[step_cnt].__shlib_handle);
 #endif

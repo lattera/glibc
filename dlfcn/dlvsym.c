@@ -1,5 +1,5 @@
-/* Close a handle opened by `dlopen'.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Look up a versioned symbol in a shared object loaded by `dlopen'.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,16 +18,38 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
-#include <elf/ldsodefs.h>
+
+struct dlvsym_args
+{
+  /* The arguments to dlvsym_doit.  */
+  void *handle;
+  const char *name;
+  const char *version;
+  void *who;
+
+  /* The return values of dlvsym_doit.  */
+  void *sym;
+};
+
 
 static void
-dlclose_doit (void *handle)
+dlvsym_doit (void *a)
 {
-  _dl_close (handle);
+  struct dlvsym_args *args = (struct dlvsym_args *)a;
+
+  args->sym = _dl_vsym (args->handle, args->name, args->version, args->who);
 }
 
-int
-dlclose (void *handle)
+void *
+__dlvsym (void *handle, const char *name, const char *version_str)
 {
-  return _dlerror_run (dlclose_doit, handle) ? -1 : 0;
+  struct dlvsym_args args;
+
+  args.handle = handle;
+  args.name = name;
+  args.who = __builtin_return_address (0);
+  args.version = version_str;
+
+  return (_dlerror_run (dlvsym_doit, &args) ? NULL : args.sym);
 }
+weak_alias (__dlvsym, dlvsym)

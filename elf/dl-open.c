@@ -211,7 +211,7 @@ dl_open_worker (void *a)
 }
 
 
-struct link_map *
+void *
 internal_function
 _dl_open (const char *file, int mode, const void *caller)
 {

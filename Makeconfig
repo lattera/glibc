@@ -415,7 +415,7 @@ else
 default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
-rpath-dirs = math elf nss nis db2 rt resolv
+rpath-dirs = math elf dlfcn nss nis db2 rt resolv
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
@@ -746,6 +746,19 @@ endif
 
 -include $(common-objpfx)sysd-dirs
 
+ifeq ($(elf),yes)
+dlfcn = dlfcn
+ifeq ($(build-shared),yes)
+libdl = $(common-objpfx)dlfcn/libdl.so$(libdl.so-version)
+else
+libdl = $(common-objpfx)dlfcn/libdl.a
+endif
+else
+# No ELF - no libdl, at least for now.
+dlfcn =
+libdl =
+endif
+
 # These are the subdirectories containing the library source.  The order
 # is more or less arbitrary.  The sorting step will take care of the
 # dependencies.  Only the $(binfmt-subdir) should always be kept at the
@@ -755,7 +768,7 @@ all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow md5-crypt po argp \
 	      $(add-ons) nss localedata timezone rt debug $(sysdep-subdirs) \
-	      $(binfmt-subdir)
+	      $(dlfcn) $(binfmt-subdir)
 all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
 
 ifeq ($(sysd-dirs-done),t)

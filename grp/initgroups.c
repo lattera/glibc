@@ -26,7 +26,6 @@
 #include <sys/types.h>
 #include <nsswitch.h>
 
-
 /* Type of the lookup function.  */
 typedef enum nss_status (*initgroups_function) (const char *, gid_t,
 						long int *, long int *,
@@ -67,7 +66,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   setgrent_fct = __nss_lookup_function (nip, "setgrent");
   if (setgrent_fct)
     {
-      status = _CALL_DL_FCT (setgrent_fct, ());
+      status = DL_CALL_FCT (setgrent_fct, ());
       if (status != NSS_STATUS_SUCCESS)
 	return status;
     }
@@ -78,7 +77,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 
   do
     {
-      while ((status = _CALL_DL_FCT (getgrent_fct,
+      while ((status = DL_CALL_FCT (getgrent_fct,
 				     (&grpbuf, tmpbuf, buflen, errnop)),
 	      status == NSS_STATUS_TRYAGAIN)
 	     && *errnop == ERANGE)
@@ -122,7 +121,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 
  done:
   if (endgrent_fct)
-    _CALL_DL_FCT (endgrent_fct, ());
+    DL_CALL_FCT (endgrent_fct, ());
 
   return NSS_STATUS_SUCCESS;
 }
@@ -190,7 +189,7 @@ initgroups (user, group)
 	    break;
 	}
       else
-	status = _CALL_DL_FCT (fct, (user, group, &start, &size, groups, limit,
+	status = DL_CALL_FCT (fct, (user, group, &start, &size, groups, limit,
 				     &errno));
 
       /* This is really only for debugging.  */
