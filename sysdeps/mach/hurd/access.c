@@ -98,9 +98,9 @@ DEFUN(__access, (file, type), CONST char *file AND int type)
 			   __auth_makeauth (port,
 					    NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					    _hurd_id.aux.uids, 1,
-					    _hurd_id.aux.gids, 1,
 					    _hurd_id.aux.uids,
 					    _hurd_id.aux.nuids,
+					    _hurd_id.aux.gids, 1,
 					    _hurd_id.aux.gids,
 					    _hurd_id.aux.ngids,
 					    &_hurd_id.rid_auth)))
