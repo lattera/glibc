@@ -48,7 +48,7 @@ elf_dynamic_do_rel (struct link_map *map,
       /* Doing lazy PLT relocations; they need very little info.  */
       ElfW(Addr) l_addr = map->l_addr;
       for (; r < end; ++r)
-	elf_machine_lazy_rel (l_addr, r);
+	elf_machine_lazy_rel (map, l_addr, r);
     }
   else
     {

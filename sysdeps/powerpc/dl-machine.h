@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -239,7 +239,8 @@ extern int __elf_machine_runtime_setup (struct link_map *map,
 #define elf_machine_runtime_setup __elf_machine_runtime_setup
 
 static inline void
-elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   /* elf_machine_runtime_setup handles this. */
 }

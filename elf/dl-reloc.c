@@ -129,3 +129,27 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	  }
     }
 }
+
+#include "../stdio-common/_itoa.h"
+#define DIGIT(b)	_itoa_lower_digits[(b) & 0xf];
+
+void
+internal_function
+_dl_reloc_bad_type (struct link_map *map, uint_fast8_t type, int plt)
+{
+  extern const char _itoa_lower_digits[];
+  if (plt)
+    {
+      char msg[] = "unexpected reloc type 0x??";
+      msg[sizeof msg - 2] = DIGIT(type >> 8);
+      msg[sizeof msg - 1] = DIGIT(type);
+      _dl_signal_error (0, map->l_name, msg);
+    }
+  else
+    {
+      char msg[] = "unexpected PLT reloc type 0x??";
+      msg[sizeof msg - 2] = DIGIT(type >> 8);
+      msg[sizeof msg - 1] = DIGIT(type);
+      _dl_signal_error (0, map->l_name, msg);
+    }
+}

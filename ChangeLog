@@ -1,3 +1,30 @@
+1999-07-21  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* elf/dl-reloc.c (_dl_reloc_bad_type): New function.
+	* elf/ldsodefs.h: Declare it.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Use it
+	instead of assert.
+	(elf_machine_lazy_rel): Likewise.  Take new arg MAP.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/mips/mips64/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_lazy_rel): Likewise.
+	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Use
+	_dl_reloc_bad_type instead of _dl_signal_error.
+	* elf/do-rel.h (elf_dynamic_do_rel): Pass MAP to elf_machine_lazy_rel.
+
 1999-07-20  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/_strerror.c: Include <libintl.h>.

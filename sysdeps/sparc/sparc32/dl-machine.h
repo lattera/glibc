@@ -19,7 +19,6 @@
 
 #define ELF_MACHINE_NAME "sparc"
 
-#include <assert.h>
 #include <string.h>
 #include <sys/param.h>
 #include <elf/ldsodefs.h>
@@ -430,14 +429,15 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_SPARC_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
-	  assert (! "unexpected dynamic reloc type");
+	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
 	  break;
 	}
     }
 }
 
 static inline void
-elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   switch (ELF32_R_TYPE (reloc->r_info))
     {
@@ -446,7 +446,7 @@ elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
     case R_SPARC_JMP_SLOT:
       break;
     default:
-      assert (! "unexpected PLT reloc type");
+      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
       break;
     }
 }

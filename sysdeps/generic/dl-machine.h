@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@
 
 #define ELF_MACHINE_NAME "stub"
 
-#include <assert.h>
 #include <string.h>
 #include <link.h>
 
@@ -81,7 +80,7 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     default:
-      assert (! "unexpected dynamic reloc type");
+      _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
       break;
     }
 }

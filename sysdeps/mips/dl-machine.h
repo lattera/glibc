@@ -25,7 +25,6 @@
 
 #define ELF_MACHINE_NO_PLT
 
-#include <assert.h>
 #include <entry.h>
 
 #ifndef ENTRY_POINT
@@ -567,13 +566,14 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
     case R_MIPS_NONE:		/* Alright, Wilbur.  */
       break;
     default:
-      assert (! "unexpected dynamic reloc type");
+      _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
       break;
     }
 }
 
 static inline void
-elf_machine_lazy_rel (ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
+elf_machine_lazy_rel (struct link_map *map,
+		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc)
 {
   /* Do nothing.  */
 }

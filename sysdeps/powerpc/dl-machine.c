@@ -426,8 +426,7 @@ __process_machine_rela (struct link_map *map,
       return;
 
     default:
-      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
-			": Unknown relocation type\n", NULL);
+      _dl_reloc_bad_type (map, rinfo, 0);
       return;
     }
 
