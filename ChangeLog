@@ -1,3 +1,13 @@
+2001-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Use
+	_dl_error_printf instead of _dl_sysdep_error.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h (_dl_procinfo):
+	Use _dl_printf instead of _dl_sysdep_message.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h (_dl_procinfo):
+	Likewise.
+
 2001-03-06  Ben Collins  <bcollins@debian.org>
 
 	* manual/arith.texi (Integers): Fix documentation of fast and

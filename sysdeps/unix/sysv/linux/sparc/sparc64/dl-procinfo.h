@@ -1,5 +1,5 @@
 /* Linux/sparc64 version of processor capability information handling macros.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -35,13 +35,13 @@ _dl_procinfo (int word)
 {
   int i;
 
-  _dl_sysdep_message ("AT_HWCAP:   ", NULL);
+  _dl_printf ("AT_HWCAP:   ");
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_sysdep_message (" ", sparc64_cap_flags[i], NULL);
+      _dl_printf (" %s", sparc64_cap_flags[i]);
 
-  _dl_sysdep_message ("\n", NULL);
+  _dl_printf ("\n");
 
   return 0;
 }
