@@ -1,5 +1,5 @@
 /* Skeleton for test programs.
-   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -88,6 +88,38 @@ delete_temp_files (void)
       remove (temp_name_list->name);
       temp_name_list = (struct temp_name_list *) temp_name_list->q.q_forw;
     }
+}
+
+/* Create a temporary file.  */
+static int
+__attribute__ ((unused))
+create_temp_file (const char *base, char **filename)
+{
+  char *fname;
+  int fd;
+
+  fname = (char *) malloc (strlen (test_dir) + 1 + strlen (base)
+			   + sizeof ("XXXXXX"));
+  if (fname == NULL)
+    {
+      puts ("out of memory");
+      return -1;
+    }
+  strcpy (stpcpy (stpcpy (stpcpy (fname, test_dir), "/"), base), "XXXXXX");
+
+  fd = mkstemp (fname);
+  if (fd == -1)
+    {
+      printf ("cannot open temporary file '%s': %m\n", fname);
+      free (fname);
+      return -1;
+    }
+
+  add_temp_file (fname);
+  if (filename != NULL)
+    *filename = fname;
+
+  return fd;
 }
 
 /* Timeout handler.  We kill the child and exit with an error.  */
