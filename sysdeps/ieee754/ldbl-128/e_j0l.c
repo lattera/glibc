@@ -803,18 +803,18 @@ long double
 {
   long double xx, xinv, z, p, q, c, s, cc, ss;
 
-  if (x <= 0.0L)
-    {
-      if (x < 0.0L)
-	return (zero / zero);
-      return 1.0L / zero;
-    }
   if (! finitel (x))
     {
       if (x != x)
 	return x;
       else
 	return 0.0L;
+    }
+  if (x <= 0.0L)
+    {
+      if (x < 0.0L)
+	return (zero / zero);
+      return 1.0L / zero;
     }
   xx = fabsl (x);
   if (xx <= 2.0L)

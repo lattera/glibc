@@ -102,7 +102,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 #else
 	  int j, k, l;
 
-	  for (j = N - 1; j > 0; j++)
+	  for (j = N - 1; j > 0; j--)
 	    if (res_ptr[j] != 0)
 	      break;
 
@@ -112,20 +112,22 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	  if (cnt < 0)
 	    {
 	      cnt += BITS_PER_MP_LIMB;
-	      l++;
+	      l--;
 	    }
 	  if (!cnt)
 	    for (k = N - 1; k >= l; k--)
 	      res_ptr[k] = res_ptr[k-l];
 	  else
-	    for (k = N - 1; k >= l; k--)
-	      res_ptr[k] = res_ptr[k-l] << cnt
-			   | res_ptr[k-l-1] >> (BITS_PER_MP_LIMB - cnt);
-	    res_ptr[k--] = res_ptr[0] << cnt;
+	    {
+	      for (k = N - 1; k > l; k--)
+		res_ptr[k] = res_ptr[k-l] << cnt
+			     | res_ptr[k-l-1] >> (BITS_PER_MP_LIMB - cnt);
+	      res_ptr[k--] = res_ptr[0] << cnt;
+	    }
 
 	  for (; k >= 0; k--)
 	    res_ptr[k] = 0;
-	  *expt = LDBL_MIN_EXP - 1 - 3 * BITS_PER_MP_LIMB - cnt;
+	  *expt = LDBL_MIN_EXP - 1 - l * BITS_PER_MP_LIMB - cnt;
 #endif
 	}
     }

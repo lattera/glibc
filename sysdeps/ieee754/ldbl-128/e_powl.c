@@ -156,6 +156,13 @@ __ieee754_powl (x, y)
   if ((iy | q.parts32.w1 | q.parts32.w2 | q.parts32.w3) == 0)
     return one;
 
+  /* 1.0**y = 1; -1.0**+-Inf = 1 */
+  if (x == one)
+    return one;
+  if (x == -1.0L && iy == 0x7fff0000
+      && (q.parts32.w1 | q.parts32.w2 | q.parts32.w3) == 0)
+    return one;
+
   /* +-NaN return x+y */
   if ((ix > 0x7fff0000)
       || ((ix == 0x7fff0000)

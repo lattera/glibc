@@ -1,3 +1,36 @@
+2002-07-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf_fp.c (__printf_fp.c): If _FPIO_CONST_SHIFT is
+	non-zero, adjust exponent.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfl, erfl, __erfcl, erfcl):
+	Remove NO_LONG_DOUBLE aliases.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l, expm1l): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (__log1pl, log1pl): Likewise.
+	(__log1pl): Raise divide by zero and invalid exceptions when needed.
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Special case
+	1**y and -1**+-Inf.
+	* sysdeps/ieee754/ldbl-128/ldbl2mpn.c (__mpn_extract_long_double):
+	Fix BITS_PER_MP_LIMB 32 extraction.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c (__ieee754_log2l): Don't raise
+	exceptions for qNaNs.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c (__ieee754_log10l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgamma_r):
+	Raise exceptions when needed.  Don't recurse unnecessarily.
+	Special case 1.0L and 2.0L arguments to avoid -0.0L as result.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_y0l): Don't raise
+	exceptions for qNaNs.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c (__remquol): Make qs 64-bit
+	to fix *quo return value sign.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (__ieee754_gamma_r): Special
+	case -Inf argument.
+	* soft-fp/op-4.h (_FP_FRAC_CLZ_4): Fix a pasto.
+
+2002-07-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/tst-eof.c (do_test): Remove unused ch and tm variables.
+	* iconvdata/iso-2022-jp-3.c (EMIT_SHIFT_TO_INIT): Kill warnings if
+	-DNDEBUG.
+
 2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/hooks.c (realloc_check): If mremap succeeds actually use

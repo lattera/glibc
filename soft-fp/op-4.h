@@ -167,7 +167,7 @@
     }					\
     else if (X##_f[1])			\
     {					\
-	__FP_CLZ(R,X##_f[2]);		\
+	__FP_CLZ(R,X##_f[1]);		\
 	R += _FP_W_TYPE_SIZE*2;		\
     }					\
     else				\

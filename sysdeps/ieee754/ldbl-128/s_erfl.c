@@ -790,10 +790,6 @@ __erfl (x)
 }
 
 weak_alias (__erfl, erfl)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__erf, __erfl)
-weak_alias (__erf, erfl)
-#endif
 #ifdef __STDC__
      long double
      __erfcl (long double x)
@@ -935,7 +931,3 @@ weak_alias (__erf, erfl)
 }
 
 weak_alias (__erfcl, erfcl)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__erfc, __erfcl)
-weak_alias (__erfc, erfcl)
-#endif

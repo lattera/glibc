@@ -164,16 +164,15 @@ __ieee754_log2l (x)
   long double z;
   long double y;
   int e;
+  int64_t hx, lx;
 
 /* Test for domain */
-  if (x <= 0.0L)
-    {
-      if (x == 0.0L)
-	return (-1.0L / (x - x));
-      else
-	return (x - x) / (x - x);
-    }
-  if (!__finitel (x))
+  GET_LDOUBLE_WORDS64 (hx, lx, x);
+  if (((hx & 0x7fffffffffffffffLL) | lx) == 0)
+    return (-1.0L / (x - x));
+  if (hx < 0)
+    return (x - x) / (x - x);
+  if (hx >= 0x7fff000000000000LL)
     return (x + x);
 
 /* separate mantissa from exponent */

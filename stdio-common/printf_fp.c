@@ -494,6 +494,9 @@ __printf_fp (FILE *fp,
 			      &__tens[powers->arrayoff],
 			      tmpsize * sizeof (mp_limb_t));
 		      MPN_ZERO (tmp, _FPIO_CONST_SHIFT);
+		      /* Adjust exponent, as scaleexpo will be this much
+			 bigger too.  */
+		      exponent += _FPIO_CONST_SHIFT * BITS_PER_MP_LIMB;
 		    }
 		  else
 #endif

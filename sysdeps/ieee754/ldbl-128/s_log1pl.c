@@ -117,17 +117,18 @@ __log1pl (long double xm1)
 {
   long double x, y, z, r, s;
   ieee854_long_double_shape_type u;
-  int32_t ix;
+  int32_t hx;
   int e;
 
   /* Test for NaN or infinity input. */
   u.value = xm1;
-  ix = u.parts32.w0 & 0x7fffffff;
-  if (ix >= 0x7fff0000)
+  hx = u.parts32.w0;
+  if (hx >= 0x7fff0000)
     return xm1;
 
   /* log1p(+- 0) = +- 0.  */
-  if ((ix == 0) && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
+  if (((hx & 0x7fffffff) == 0)
+      && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
     return xm1;
 
   x = xm1 + 1.0L;
@@ -136,9 +137,9 @@ __log1pl (long double xm1)
   if (x <= 0.0L)
     {
       if (x == 0.0L)
-	return (-1.0L / zero);
+	return (-1.0L / (x - x));
       else
-	return (zero / zero);
+	return (zero / (x - x));
     }
 
   /* Separate mantissa from exponent.  */
@@ -238,7 +239,3 @@ __log1pl (long double xm1)
 }
 
 weak_alias (__log1pl, log1pl)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__log1p, __log1pl)
-weak_alias (__log1p, log1pl)
-#endif

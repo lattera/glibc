@@ -761,10 +761,9 @@ __ieee754_lgammal_r (x, signgamp)
   if (x < 0.0L)
     {
       q = -x;
-      w = __ieee754_lgammal_r (q, &i);
       p = __floorl (q);
       if (p == q)
-	return (one / zero);
+	return (one / (p - p));
       i = p;
       if ((i & 1) == 0)
 	*signgamp = -1;
@@ -779,6 +778,7 @@ __ieee754_lgammal_r (x, signgamp)
       z = q * __sinl (PIL * z);
       if (z == 0.0L)
 	return (*signgamp * huge * huge);
+      w = __ieee754_lgammal_r (q, &i);
       z = __logl (PIL / z) - w;
       return (z);
     }
@@ -859,6 +859,8 @@ __ieee754_lgammal_r (x, signgamp)
 	      z = x - 1.0L;
 	      p = z * neval (z, RNr9, NRNr9) / deval (z, RDr9, NRDr9);
 	    }
+	  else if (x == 1.0L)
+	    p = 0.0L;
 	  else if (x <= 1.125L)
 	    {
 	      z = x - 1.0L;
@@ -900,6 +902,8 @@ __ieee754_lgammal_r (x, signgamp)
 	      p += lgam1r75b;
 	      p += lgam1r75a;
 	    }
+	  else if (x == 2.0L)
+	    p = 0.0L;
 	  else if (x < 2.375L)
 	    {
 	      z = x - 2.0L;

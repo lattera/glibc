@@ -144,6 +144,3 @@ __expm1l (long double x)
 }
 
 weak_alias (__expm1l, expm1l)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__expm1, __expm1l) weak_alias (__expm1, expm1l)
-#endif
