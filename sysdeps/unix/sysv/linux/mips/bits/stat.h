@@ -48,12 +48,13 @@ struct stat
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
     unsigned long int st_rdev;	/* Device number, if device.  */
-    long int st_pad2[2];
 #ifndef __USE_FILE_OFFSET64
+    long int st_pad2[2];
     __off_t st_size;		/* Size of file, in bytes.  */
     /* SVR4 added this extra long to allow for expansion of off_t.  */
     long int st_pad3;
 #else
+    long int st_pad2[3];
     __off64_t st_size;		/* Size of file, in bytes.  */
 #endif
     /*
@@ -87,7 +88,7 @@ struct stat64
     __uid_t st_uid;		/* User ID of the file's owner.	*/
     __gid_t st_gid;		/* Group ID of the file's group.*/
     unsigned long int st_rdev;	/* Device number, if device.  */
-    long int st_pad2[2];
+    long int st_pad2[3];
     __off64_t st_size;		/* Size of file, in bytes.  */
     /*
      * Actually this should be timestruc_t st_atime, st_mtime and
