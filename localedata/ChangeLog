@@ -1,6 +1,6 @@
 2000-03-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* SUPPORTED: Add gv_GB and kw_GB.
+	* SUPPORTED: Add gv_GB.ISO-8859-1 and kw_GB.ISO-8859-1.
 
 2000-03-01  Andreas Jaeger  <aj@suse.de>
 

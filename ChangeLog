@@ -1,3 +1,8 @@
+2000-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.c (MB_LEN_MAX): Include <limits.h> to define;
+	define to 1 if not defined.
+
 2000-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/xdr.c (xdr_hyper): Correctly handle lower half of llp.
