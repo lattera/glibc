@@ -100,7 +100,7 @@ __exctype (isspace);
 __exctype (isupper);
 __exctype (isxdigit);
 
-#ifdef	__USE_GNU
+#ifdef	__USE_ISOC99
 __exctype (isblank);
 #endif
 
@@ -159,7 +159,7 @@ __exctype (_tolower);
 # define isupper(c)	__isctype((c), _ISupper)
 # define isxdigit(c)	__isctype((c), _ISxdigit)
 
-# ifdef	__USE_GNU
+# ifdef	__USE_ISOC99
 #  define isblank(c)	__isctype((c), _ISblank)
 # endif
 

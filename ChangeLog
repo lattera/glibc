@@ -1,5 +1,11 @@
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* ctype/ctype.h (isblank): Make available if ISO C99.
+	* wctype/wctype.h (iswblank): Make available if ISO C99.
+	* math/math.h (signgam): Don't make available if ISO C99.
+	* math/tgmath.h (tgamma): Renamed from gamma.
+	Patches by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 	* intl/loadmsgcat.c (_nl_unload_domain): Also free conv_tab element.
 	Pretty printing.
 	* intl/plural.y (new_exp): Take number of optional parameters in

@@ -108,7 +108,7 @@ __BEGIN_DECLS
 #undef	__MATHCALL
 
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
+#if defined __USE_MISC || defined __USE_XOPEN
 /* This variable is used by `gamma' and `lgamma'.  */
 extern int signgam;
 #endif

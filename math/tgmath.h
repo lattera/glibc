@@ -345,7 +345,7 @@
 /* Error and gamma functions.  */
 #define erf(Val) __TGMATH_UNARY_REAL_ONLY (Val, erf)
 #define erfc(Val) __TGMATH_UNARY_REAL_ONLY (Val, erfc)
-#define gamma(Val) __TGMATH_UNARY_REAL_ONLY (Val, gamma)
+#define tgamma(Val) __TGMATH_UNARY_REAL_ONLY (Val, tgamma)
 #define lgamma(Val) __TGMATH_UNARY_REAL_ONLY (Val, lgamma)
 
 

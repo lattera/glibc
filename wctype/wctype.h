@@ -165,7 +165,7 @@ extern int iswxdigit (wint_t __wc) __THROW;
 /* Test for any wide character that corresponds to a standard blank
    wide character or a locale-specific set of wide characters for
    which `iswalnum' is false.  */
-# ifdef __USE_GNU
+# ifdef __USE_ISOC99
 extern int iswblank (wint_t __wc) __THROW;
 # endif
 
@@ -233,7 +233,7 @@ extern unsigned int *__ctype32_b;
     (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
      ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwxdigit) : iswxdigit (wc)))
 
-# ifdef __USE_GNU
+# ifdef __USE_ISOC99
 #  define iswblank(wc) \
   (__extension__							      \
     (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
