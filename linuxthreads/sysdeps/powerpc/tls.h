@@ -32,6 +32,8 @@ typedef union dtv
   void *pointer;
 } dtv_t;
 
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 #ifdef HAVE_TLS_SUPPORT

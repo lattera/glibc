@@ -571,7 +571,7 @@ int __pthread_initialize_manager(void)
 
   __pthread_multiple_threads = 1;
 #if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
-  p_multiple_threads (__pthread_main_thread) = 1;
+  __pthread_main_thread->p_multiple_threads = 1;
 #endif
   *__libc_multiple_threads_ptr = 1;
 
@@ -620,7 +620,7 @@ int __pthread_initialize_manager(void)
 #if !defined USE_TLS || !TLS_DTV_AT_TP
   mgr->p_header.data.tcb = tcbp;
   mgr->p_header.data.self = mgr;
-  p_multiple_threads (mgr) = 1;
+  mgr->p_header.data.multiple_threads = 1;
 #elif TLS_MULTIPLE_THREADS_IN_TCB
   p_multiple_threads (mgr) = 1;
 #endif

@@ -1,5 +1,20 @@
 2003-04-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/cache.c (cache_search): Keep track of how many chain links
+	we searched and update table statistics.
+	(cache_add): Keep track of how many values are in the table.
+	(prune_cache): Likewise.  Keep track of locking success.
+	Print messages about removed entries in separate pass.
+	* nscd/connections.c (handle_request): Don't print debug message here.
+	The caller will do it.  Keep track of locking success.
+	(nscd_run): Print debug message.  Also print PID of the client process.
+	* nscd/nscd.c (start_time): New variable.
+	(main): Remember start time.
+	* nscd/nscd.h: Declare start_time.
+	(struct database): Add more members for new statistics.
+	* nscd/nscd_stat.c: Add support for sending, receiving, and printing
+	of new statistics.
+
 	* sysdeps/posix/getaddrinfo.c: Include <stdbool.h>.
 
 2003-04-22  Jakub Jelinek  <jakub@redhat.com>

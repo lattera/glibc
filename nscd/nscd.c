@@ -72,6 +72,8 @@ int secure[lastdb];
 int secure_in_use;
 static const char *conffile = _PATH_NSCDCONF;
 
+time_t start_time;
+
 static int check_pid (const char *file);
 static int write_pid (const char *file);
 
@@ -130,6 +132,9 @@ main (int argc, char **argv)
   /* Check if we are already running. */
   if (check_pid (_PATH_NSCDPID))
     error (EXIT_FAILURE, 0, _("already running"));
+
+  /* Remember when we started.  */
+  start_time = time (NULL);
 
   /* Behave like a daemon.  */
   if (go_background)

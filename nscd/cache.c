@@ -44,11 +44,14 @@ cache_search (request_type type, void *key, size_t len, struct database *table,
 {
   unsigned long int hash = __nis_hash (key, len) % table->module;
   struct hashentry *work;
+  unsigned long int nsearched = 0;
 
   work = table->array[hash];
 
   while (work != NULL)
     {
+      ++nsearched;
+
       if (type == work->type && len == work->len
 	  && memcmp (key, work->key, len) == 0 && work->owner == owner)
 	{
@@ -58,13 +61,16 @@ cache_search (request_type type, void *key, size_t len, struct database *table,
 	  else
 	    ++table->poshit;
 
-	  return work;
+	  break;
 	}
 
       work = work->next;
     }
 
-  return NULL;
+  if (nsearched > table->maxnsearched)
+    table->maxnsearched = nsearched;
+
+  return work;
 }
 
 /* Add a new entry to the cache.  The return value is zero if the function
@@ -109,6 +115,12 @@ cache_add (int type, void *key, size_t len, const void *packet, size_t total,
     ++table->negmiss;
   else if (last)
     ++table->posmiss;
+
+  /* Instead of slowing down the normal process for statistics
+     collection we accept living with some incorrect data.  */
+  unsigned long int nentries = ++table->nentries;
+  if (nentries > table->maxnentries)
+    table->maxnentries = nentries;
 }
 
 /* Walk through the table and remove all entries which lifetime ended.
@@ -165,10 +177,10 @@ prune_cache (struct database *table, time_t now)
 
   /* We run through the table and find values which are not valid anymore.
 
-   Note that for the initial step, finding the entries to be removed,
-   we don't need to get any lock.  It is at all timed assured that the
-   linked lists are set up correctly and that no second thread prunes
-   the cache.  */
+     Note that for the initial step, finding the entries to be removed,
+     we don't need to get any lock.  It is at all timed assured that the
+     linked lists are set up correctly and that no second thread prunes
+     the cache.  */
   do
     {
       struct hashentry *runp = table->array[--cnt];
@@ -195,7 +207,11 @@ prune_cache (struct database *table, time_t now)
 
       /* Now we have to get the write lock since we are about to modify
 	 the table.  */
-      pthread_rwlock_wrlock (&table->lock);
+      if (__builtin_expect (pthread_rwlock_trywrlock (&table->lock) != 0, 0))
+	{
+	  ++table->wrlockdelayed;
+	  pthread_rwlock_wrlock (&table->lock);
+	}
 
       while (first <= last)
 	{
@@ -208,6 +224,7 @@ prune_cache (struct database *table, time_t now)
 		  table->array[first]->dellist = head;
 		  head = table->array[first];
 		  table->array[first] = head->next;
+		  --table->nentries;
 		  if (--mark[first] == 0)
 		    break;
 		}
@@ -221,6 +238,7 @@ prune_cache (struct database *table, time_t now)
 		      head = runp->next;
 		      runp->next = head->next;
 		      --mark[first];
+		      --table->nentries;
 		    }
 		  else
 		    runp = runp->next;
@@ -232,29 +250,35 @@ prune_cache (struct database *table, time_t now)
       /* It's all done.  */
       pthread_rwlock_unlock (&table->lock);
 
-      /* And another run to free the data.  */
-      do
+      /* One extra pass if we do debugging.  */
+      if (__builtin_expect (debug_level > 0, 0))
 	{
-	  struct hashentry *old = head;
+	  struct hashentry *runp = head;
 
-	  if (debug_level > 0)
+	  while (runp != NULL)
 	    {
 	      char buf[INET6_ADDRSTRLEN];
 	      const char *str;
 
-	      if ((old->type == GETHOSTBYADDR || old->type == GETHOSTBYADDRv6)
-		  && (old->last || old->data == (void *) -1))
+	      if (runp->type == GETHOSTBYADDR || runp->type == GETHOSTBYADDRv6)
 		{
-		  inet_ntop (old->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
-			     old->key, buf, sizeof (buf));
+		  inet_ntop (runp->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
+			     runp->key, buf, sizeof (buf));
 		  str = buf;
 		}
 	      else
-		str = old->last ? old->key : (old->data == (void *) -1
-					      ? old->key : "???");
+		str = runp->key;
 
-	      dbg_log ("remove %s entry \"%s\"", serv2str[old->type], str);
+	      dbg_log ("remove %s entry \"%s\"", serv2str[runp->type], str);
+
+	      runp = runp->next;
 	    }
+	}
+
+      /* And another run to free the data.  */
+      do
+	{
+	  struct hashentry *old = head;
 
 	  /* Free the data structures.  */
 	  if (old->data == (void *) -1)

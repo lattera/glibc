@@ -77,6 +77,13 @@ struct database
   unsigned long int posmiss;
   unsigned long int negmiss;
 
+  unsigned long int nentries;
+  unsigned long int maxnentries;
+  unsigned long int maxnsearched;
+
+  unsigned long int rdlockdelayed;
+  unsigned long int wrlockdelayed;
+
   struct hashentry **array;
 };
 
@@ -98,6 +105,9 @@ extern int secure_in_use; /* Is one of the above 1 ? */
 
 /* User name to run server processes as */
 extern const char *server_user;
+
+/* Time the server was started.  */
+extern time_t start_time;
 
 /* Prototypes for global functions.  */
 

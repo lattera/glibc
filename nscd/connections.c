@@ -256,10 +256,6 @@ invalidate_cache (char *key)
 static void
 handle_request (int fd, request_header *req, void *key, uid_t uid)
 {
-  if (__builtin_expect (debug_level, 0) > 0)
-    dbg_log (_("handle_request: request received (Version = %d)"),
-	     req->version);
-
   if (__builtin_expect (req->version, NSCD_VERSION) != NSCD_VERSION)
     {
       if (debug_level > 0)
@@ -309,7 +305,11 @@ cannot handle old request version %d; current version is %d"),
 	}
 
       /* Be sure we can read the data.  */
-      pthread_rwlock_rdlock (&db->lock);
+      if (__builtin_expect (pthread_rwlock_tryrdlock (&db->lock) != 0, 0))
+	{
+	  ++db->rdlockdelayed;
+	  pthread_rwlock_rdlock (&db->lock);
+	}
 
       /* See whether we can handle it from the cache.  */
       cached = (struct hashentry *) cache_search (req->type, key, req->key_len,
@@ -465,6 +465,9 @@ nscd_run (void *p)
 	  request_header req;
 	  char buf[256];
 	  uid_t uid = 0;
+#ifdef SO_PEERCRED
+	  pid_t pid = 0;
+#endif
 
 	  if (__builtin_expect (fd, 0) < 0)
 	    {
@@ -505,6 +508,17 @@ nscd_run (void *p)
 	      if (req.type < GETPWBYNAME || req.type > LASTDBREQ
 		  || secure[serv2db[req.type]])
 		uid = caller.uid;
+
+	      pid = caller.pid;
+	    }
+	  else if (__builtin_expect (debug_level > 0, 0))
+	    {
+	      struct ucred caller;
+	      socklen_t optlen = sizeof (caller);
+
+	      if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED,
+			      &caller, &optlen) == 0)
+		pid = caller.pid;
 	    }
 #endif
 
@@ -533,6 +547,19 @@ nscd_run (void *p)
 			     strerror_r (errno, buf, sizeof (buf)));
 		  close (fd);
 		  continue;
+		}
+
+	      if (__builtin_expect (debug_level, 0) > 0)
+		{
+#ifdef SO_PEERCRED
+		  if (pid != 0)
+		    dbg_log (_("\
+handle_request: request received (Version = %d) from PID %ld"),
+			     req.version, (long int) pid);
+		  else
+#endif
+		    dbg_log (_("\
+handle_request: request received (Version = %d)"), req.version);
 		}
 
 	      /* Phew, we got all the data, now process it.  */

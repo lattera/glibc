@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -46,6 +46,13 @@ struct dbstat
   unsigned long int neghit;
   unsigned long int posmiss;
   unsigned long int negmiss;
+
+  unsigned long int nentries;
+  unsigned long int maxnentries;
+  unsigned long int maxnsearched;
+
+  unsigned long int rdlockdelayed;
+  unsigned long int wrlockdelayed;
 };
 
 /* Record for transmitting statistics.  */
@@ -53,6 +60,7 @@ struct statdata
 {
   char version[sizeof (compilation)];
   int debug_level;
+  time_t runtime;
   int ndbs;
   struct dbstat dbs[lastdb];
 };
@@ -66,6 +74,7 @@ send_stats (int fd, struct database dbs[lastdb])
 
   memcpy (data.version, compilation, sizeof (compilation));
   data.debug_level = debug_level;
+  data.runtime = time (NULL) - start_time;
   data.ndbs = lastdb;
 
   for (cnt = 0; cnt < lastdb; ++cnt)
@@ -79,6 +88,11 @@ send_stats (int fd, struct database dbs[lastdb])
       data.dbs[cnt].neghit = dbs[cnt].neghit;
       data.dbs[cnt].posmiss = dbs[cnt].posmiss;
       data.dbs[cnt].negmiss = dbs[cnt].negmiss;
+      data.dbs[cnt].nentries = dbs[cnt].nentries;
+      data.dbs[cnt].maxnentries = dbs[cnt].maxnentries;
+      data.dbs[cnt].maxnsearched = dbs[cnt].maxnsearched;
+      data.dbs[cnt].rdlockdelayed = dbs[cnt].rdlockdelayed;
+      data.dbs[cnt].wrlockdelayed = dbs[cnt].wrlockdelayed;
     }
 
   if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
@@ -120,7 +134,7 @@ receive_print_stats (void)
   if (TEMP_FAILURE_RETRY (read (fd, &data, sizeof (data))) != sizeof (data)
       || (memcmp (data.version, compilation, sizeof (compilation)) != 0
 	  /* Yes, this is an assignment!  */
-	  && errno == EINVAL))
+	  && (errno = EINVAL)))
     {
       /* Not the right version.  */
       int err = errno;
@@ -130,6 +144,36 @@ receive_print_stats (void)
 
   printf (_("nscd configuration:\n\n%15d  server debug level\n"),
 	  data.debug_level);
+
+  /* We know that we can simply subtract time_t values.  */
+  unsigned long int diff = data.runtime;
+  unsigned int ndays = 0;
+  unsigned int nhours = 0;
+  unsigned int nmins = 0;
+  if (diff > 24 * 60 * 60)
+    {
+      ndays = diff / (24 * 60 * 60);
+      diff %= 24 * 60 * 60;
+    }
+  if (diff > 60 * 60)
+    {
+      nhours = diff / (60 * 60);
+      diff %= 60 * 60;
+    }
+  if (diff > 60)
+    {
+      nmins = diff / 60;
+      diff %= 60;
+    }
+  if (ndays != 0)
+    printf (_("%3ud %2uh %2um %2lus  server runtime\n"),
+	    ndays, nhours, nmins, diff);
+  else if (nhours != 0)
+    printf (_("    %2uh %2um %2lus  server runtime\n"), nhours, nmins, diff);
+  else if (nmins != 0)
+    printf (_("        %2um %2lus  server runtime\n"), nmins, diff);
+  else
+    printf (_("            %2lus  server runtime\n"), diff);
 
   for (i = 0; i < lastdb; ++i)
     {
@@ -153,14 +197,19 @@ receive_print_stats (void)
 
       printf (_("\n%s cache:\n\n"
 		"%15s  cache is enabled\n"
-		"%15Zd  suggested size\n"
-		"%15ld  seconds time to live for positive entries\n"
-		"%15ld  seconds time to live for negative entries\n"
-		"%15ld  cache hits on positive entries\n"
-		"%15ld  cache hits on negative entries\n"
-		"%15ld  cache misses on positive entries\n"
-		"%15ld  cache misses on negative entries\n"
-		"%15ld%% cache hit rate\n"
+		"%15Zu  suggested size\n"
+		"%15lu  seconds time to live for positive entries\n"
+		"%15lu  seconds time to live for negative entries\n"
+		"%15lu  cache hits on positive entries\n"
+		"%15lu  cache hits on negative entries\n"
+		"%15lu  cache misses on positive entries\n"
+		"%15lu  cache misses on negative entries\n"
+		"%15lu%% cache hit rate\n"
+		"%15lu  current number of cached values\n"
+		"%15lu  maximum number of cached values\n"
+		"%15lu  maximum chain length searched\n"
+		"%15lu  number of delays on rdlock\n"
+		"%15lu  number of delays on wrlock\n"
 		"%15s  check /etc/%s for changes\n"),
 	      dbnames[i], enabled,
 	      data.dbs[i].module,
@@ -168,7 +217,10 @@ receive_print_stats (void)
 	      data.dbs[i].poshit, data.dbs[i].neghit,
 	      data.dbs[i].posmiss, data.dbs[i].negmiss,
 	      (100 * hit) / all,
-	      check_file, dbnames[i]);
+	      data.dbs[i].nentries, data.dbs[i].maxnentries,
+	      data.dbs[i].maxnsearched,
+	      data.dbs[i].rdlockdelayed,
+	      data.dbs[i].wrlockdelayed, check_file, dbnames[i]);
     }
 
   close (fd);
