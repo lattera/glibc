@@ -1,3 +1,21 @@
+2001-02-08  Andreas Jaeger  <aj@suse.de>
+
+	* localedata/SUPPORTED: Add some entries for new locales.
+
+2001-02-07  Andreas Jaeger  <aj@suse.de>
+
+	* locales/ar_IN: New.
+	* locales/bn_IN: New.
+	* locales/el_GR@euro: New.
+	* locales/en_HK: New.
+	* locales/en_IN: New.
+	* locales/en_PH: New.
+	* locales/en_SG: New.
+	* locales/ms_MY: New.
+	* locales/ta_IN: New.
+	* locales/te_IN: New.
+	* locales/zh_SG: New.
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_TW: Extend LC_IDENTIFICATION entries a bit.
