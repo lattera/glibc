@@ -39,6 +39,7 @@ DIRENT_TYPE *
 __READDIR (DIR *dirp)
 {
   DIRENT_TYPE *dp;
+  int saved_errno = errno;
 
   __libc_lock_lock (dirp->lock);
 
@@ -63,6 +64,9 @@ __READDIR (DIR *dirp)
 	  bytes = __GETDENTS (dirp->fd, dirp->data, maxread);
 	  if (bytes <= 0)
 	    {
+	      /* Don't modifiy errno when reaching EOF.  */
+	      if (bytes == 0)
+		__set_errno (saved_errno);
 	      dp = NULL;
 	      break;
 	    }
