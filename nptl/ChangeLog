@@ -4,6 +4,9 @@
 
 2003-06-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: New file.
+
 	* pthreadP.h: Declare __find_thread_by_id.
 	* allocatestack.c [HP_TIMING_AVAIL]: Define __find_thread_by_id.
 	* pthread_clock_gettime.c: Allow using other thread's clock.
