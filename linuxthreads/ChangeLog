@@ -1,3 +1,9 @@
+2004-05-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile (CFLAGS-pt-initfini.s):
+	Set to -fno-unit-at-a-time.
+	Patch by Dan Kegel <dank@kegel.com>.
+
 2004-05-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-stack1.c: Don't include mcheck.h.
