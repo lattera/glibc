@@ -1,3 +1,15 @@
+Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio-common/vfprintf.c: Include <libc-lock.h>.
+	* stdio-common/vfscanf.c: Likewise.
+
+	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): New
+	macro.
+	(__libc_cleanup_region_end): New macro.
+
+	* stdio-common/vfscanf.c (UNLOCK_STREAM) [! USE_IN_LIBIO]: Call
+	__libc_cleanup_region_end, not __libc_cleanup_region_start.
+
 Thu Sep 12 03:35:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Remove init-first.h.
