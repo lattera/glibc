@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 #define	__inline_mathop2(func, op)					      \
-  extern __inline __const double					      \
+  extern __inline __CONSTVALUE double					      \
   __m81_u(func)(double __mathop_x)					      \
   {									      \
     double __result;							      \
@@ -63,7 +63,7 @@ __inline_mathop2(log1p, lognp1)
 __inline_mathop(atanh)
 #endif
 
-extern __inline __const double
+extern __inline __CONSTVALUE double
 __m81_u(__drem)(double __x, double __y)
 {
   double __result;
@@ -71,7 +71,7 @@ __m81_u(__drem)(double __x, double __y)
   return __result;
 }
 
-extern __inline __const double
+extern __inline __CONSTVALUE double
 __m81_u(ldexp)(double __x, int __e)
 {
   double __result;
@@ -80,7 +80,7 @@ __m81_u(ldexp)(double __x, int __e)
   return __result;
 }
 
-extern __inline __const double
+extern __inline __CONSTVALUE double
 __m81_u(fmod)(double __x, double __y)
 {
   double __result;
@@ -98,7 +98,7 @@ __m81_u(frexp)(double __value, int *__expptr)
   return __mantissa;
 }
 
-extern __inline __const double
+extern __inline __CONSTVALUE double
 __m81_u(pow)(double __x, double __y)
 {
   double __result;
@@ -117,7 +117,7 @@ __m81_u(pow)(double __x, double __y)
   return __result;
 }
 
-extern __inline __const double
+extern __inline __CONSTVALUE double
 __m81_u(ceil)(double __x)
 {
   double __result;
