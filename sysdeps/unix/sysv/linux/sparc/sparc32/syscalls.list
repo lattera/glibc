@@ -9,7 +9,8 @@ s_setgid	setgid	setgid		1	__syscall_setgid
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
 s_setregid	setregid setregid	2	__syscall_setregid
 s_setreuid	setreuid setreuid	2	__syscall_setreuid
-s_setrlimit	setrlimit setrlimit	3	__syscall_setrlimit
+setrlimit	-	setrlimit	3	setrlimit
+getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_setuid	setuid	setuid		1	__syscall_setuid
 setresuid	EXTRA	setresuid32	3	__setresuid	setresuid
@@ -32,7 +33,6 @@ s_getdents	getdents getdents	3	__syscall_getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
-s_getrlimit	getrlimit getrlimit	2	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	2	__syscall_lstat64
 s_mmap2		mmap64	mmap2		6	__syscall_mmap2
 s_poll		poll	poll		3	__syscall_poll

@@ -1,3 +1,9 @@
+2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/POSIX: Remove trailing semicolon.
+	* locales/th_TH: Likewise.
+	PR libc/1545.
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ja_JP: Add double-width digits to digit class.

@@ -1,3 +1,23 @@
+2000-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Remove oldsetrlimit64.c.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/Versions: Remove
+	setrlimit64@GLIBC_2.1.3.
+	* sysdeps/unix/sysv/linux/i386/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/arm/oldsetrlimit64.c: Remove.
+	* sysdeps/unix/sysv/linux/i386/oldsetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: Call __new_getrlimit,
+	so that setrlimit64@GLIBC_2.1 can report limits above 2G.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list (getrlimit,
+	setrlimit): Remove syscall stubs, add normal syscalls.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (setrlimit):
+	Remove syscall stub.
+
 2000-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* localedata/tst-locale.sh: Enable test for de_DE.437.

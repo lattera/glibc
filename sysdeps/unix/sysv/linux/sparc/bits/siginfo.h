@@ -88,6 +88,7 @@ typedef struct siginfo
 	struct
 	  {
 	    void *si_addr;	/* Faulting insn/memory ref.  */
+	    int si_trapno;
 	  } _sigfault;
 
 	/* SIGPOLL.  */
@@ -112,6 +113,7 @@ typedef struct siginfo
 # define si_int		_sifields._rt.si_sigval.sival_int
 # define si_ptr		_sifields._rt.si_sigval.sival_ptr
 # define si_addr	_sifields._sigfault.si_addr
+# define si_trapno	_sifields._sigfault.si_trapno
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
 
@@ -240,6 +242,13 @@ enum
 # define POLL_PRI	POLL_PRI
   POLL_HUP			/* Device disconnected.  */
 # define POLL_HUP	POLL_HUP
+};
+
+/* `si_code' values for SIGEMT signal.  */
+enum
+{
+  EMT_TAGOVF = 1		/* Tag overflow.  */
+# define EMT_TAGOVF	EMT_TAGOVF
 };
 
 # undef __need_siginfo_t

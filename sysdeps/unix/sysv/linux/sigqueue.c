@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -35,9 +36,11 @@ __sigqueue (pid, sig, val)
 {
   siginfo_t info;
 
+  /* First, clear the siginfo_t structure, so that we don't pass our
+     stack content to other tasks.  */
+  memset (&info, 0, sizeof (siginfo_t));
   /* We must pass the information about the data in a siginfo_t value.  */
   info.si_signo = sig;
-  info.si_errno = 0;
   info.si_code = SI_QUEUE;
   info.si_pid = __getpid ();
   info.si_uid = __getuid ();

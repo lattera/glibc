@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <sys/resource.h>
 #include <sys/types.h>
 
-extern int __old_getrlimit (enum __rlimit_resource, struct rlimit *);
+extern int __new_getrlimit (enum __rlimit_resource, struct rlimit *);
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
@@ -33,14 +33,14 @@ __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
   struct rlimit rlimits32;
 
-  if (__old_getrlimit (resource, &rlimits32) < 0)
+  if (__new_getrlimit (resource, &rlimits32) < 0)
     return -1;
 
-  if (rlimits32.rlim_cur == RLIM_INFINITY >> 1)
+  if (rlimits32.rlim_cur == RLIM_INFINITY)
     rlimits->rlim_cur = RLIM64_INFINITY >> 1;
   else
     rlimits->rlim_cur = rlimits32.rlim_cur;
-  if (rlimits32.rlim_max == RLIM_INFINITY >> 1)
+  if (rlimits32.rlim_max == RLIM_INFINITY)
     rlimits->rlim_max = RLIM64_INFINITY >> 1;
   else
     rlimits->rlim_max = rlimits32.rlim_max;

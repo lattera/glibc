@@ -10,5 +10,5 @@ sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
 endif
 
 ifeq ($(subdir),resource)
-sysdep_routines += oldgetrlimit64 oldsetrlimit64
+sysdep_routines += oldgetrlimit64
 endif

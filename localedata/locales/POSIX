@@ -56,7 +56,7 @@ punct   <exclamation-mark>;<quotation-mark>;<number-sign>;\
         <greater-than-sign>;<question-mark>;<commercial-at>;\
         <left-square-bracket>;<backslash>;<right-square-bracket>;\
         <circumflex>;<underscore>;<grave-accent>;\
-        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>
 #
 xdigit  <zero>;<one>;<two>;<three>;<four>;<five>;<six>;<seven>;<eight>;\
         <nine>;<A>;<B>;<C>;<D>;<E>;<F>;<a>;<b>;<c>;<d>;<e>;<f>
