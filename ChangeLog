@@ -1,3 +1,14 @@
+2002-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/stat.h (struct stat): Add
+	attribute((packed)) to counter stupid people misuing gcc options.
+	(struct stat64): Likewise.
+
+2002-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Correct indentation.  Use bool as type for
+	the variables which are used as booleans.
+
 2002-02-06  Andreas Jaeger  <aj@suse.de>
 
 	* include/libc-symbols.h (INTUSE): Renamed from INT.
