@@ -45,21 +45,23 @@ __lll_mutex_lock_wait:
 	pushl	%ebx
 	pushl	%edx
 
+	/* In the loop we are going to add 2 instead of 1 which is what
+	   the caller did.  Account for that.  */
+	subl	$1, %eax
+
 	movl	%ecx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 1:
-	leal	1(%eax), %edx	/* account for the preceeded xadd.  */
+	leal	2(%eax), %edx	/* account for the preceeded xadd.  */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	movl	$1, %eax
+	movl	$2, %eax
 	LOCK
 	xaddl	%eax, (%ebx)
 	testl	%eax, %eax
-	jne	1b
-
-	movl	$2, (%ebx)
+	jne,pn	1b
 
 	popl	%edx
 	popl	%ebx
@@ -83,13 +85,17 @@ __lll_mutex_timedlock_wait:
 	pushl	%ebx
 	pushl	%ebp
 
+	/* In the loop we are going to add 2 instead of 1 which is what
+	   the caller did.  Account for that.  */
+	subl	$1, %eax
+
 	/* Stack frame for the timespec and timeval structs.  */
 	subl	$8, %esp
 
 	movl	%ecx, %ebp
 	movl	%edx, %edi
 
-1:	leal	1(%eax), %esi
+1:	leal	2(%eax), %esi
 
 	/* Get current time.  */
 	movl	%esp, %ebx
@@ -122,13 +128,12 @@ __lll_mutex_timedlock_wait:
 	ENTER_KERNEL
 	movl	%eax, %ecx
 
-	movl	$1, %eax
+	movl	$2, %eax
 	LOCK
 	xaddl	%eax, (%ebx)
 	testl	%eax, %eax
 	jne	7f
 
-	movl	$2, (%ebx)
 	xorl	%eax, %eax
 
 6:	addl	$8, %esp

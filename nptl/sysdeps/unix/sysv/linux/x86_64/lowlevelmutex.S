@@ -46,21 +46,23 @@ __lll_mutex_lock_wait:
 	pushq	%r10
 	pushq	%rdx
 
+	/* In the loop we are going to add 2 instead of 1 which is what
+	   the caller did.  Account for that.  */
+	decq	%rsi
+
 	xorq	%r10, %r10	/* No timeout.  */
 
 1:
-	leaq	1(%rsi), %rdx	/* account for the preceeded xadd.  */
+	leaq	2(%rsi), %rdx	/* account for the preceeded xadd.  */
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
-	movl	$1, %esi
+	movl	$2, %esi
 	LOCK
 	xaddl	%esi, (%rdi)
 	testl	%esi, %esi
 	jne	1b
-
-	movl	$2, (%rdi)
 
 	popq	%rdx
 	popq	%r10
