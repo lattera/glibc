@@ -23,11 +23,12 @@ main (void)
       exit (1);
     }
 
-  /* close the dir stream, making it invalid */
-  if (closedir (dirp))
+  /* close the directory file descriptor, making it invalid */
+  if (close (dirfd (dirp)) != 0)
     {
-      perror ("closedir");
-      exit (1);
+      puts ("could not close directory file descriptor");
+      /* This is not an error.  It is not guaranteed this is possible.  */
+      return 0;
     }
 
   ent = readdir (dirp);
