@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -752,6 +752,7 @@ re_compile_internal (preg, pattern, length, syntax)
     {
       re_free (dfa);
       preg->buffer = NULL;
+      preg->allocated = 0;
       return err;
     }
 #ifdef DEBUG
@@ -765,6 +766,7 @@ re_compile_internal (preg, pattern, length, syntax)
     {
       re_free (dfa);
       preg->buffer = NULL;
+      preg->allocated = 0;
       return err;
     }
 
@@ -792,6 +794,7 @@ re_compile_internal (preg, pattern, length, syntax)
     re_compile_internal_free_return:
       free_dfa_content (dfa);
       preg->buffer = NULL;
+      preg->allocated = 0;
     }
 
   return err;
