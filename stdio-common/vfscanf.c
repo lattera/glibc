@@ -290,13 +290,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 #define is_hexa number_signed
   /* Decimal point character.  */
 #ifdef COMPILE_WSCANF
-  wchar_t decimal;
+  wint_t decimal;
 #else
   const char *decimal;
 #endif
   /* The thousands character of the current locale.  */
 #ifdef COMPILE_WSCANF
-  wchar_t thousands;
+  wint_t thousands;
 #else
   const char *thousands;
 #endif
@@ -1254,7 +1254,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			_NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
 		      wcdigits[n] += from_level;
 
-		      if (c == *wcdigits[n])
+		      if (c == (wint_t) *wcdigits[n])
 			{
 			  to_level = from_level;
 			  break;
@@ -1316,7 +1316,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  for (n = 0; n < 10; ++n)
 			    {
 #ifdef COMPILE_WSCANF
-			      if (c == *wcdigits[n])
+			      if (c == (wint_t) *wcdigits[n])
 				break;
 
 			      /* Advance the pointer to the next string.  */
@@ -1441,7 +1441,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    if (!ISXDIGIT (c))
 		      break;
 		  }
-		else if (!ISDIGIT (c) || c - L_('0') >= base)
+		else if (!ISDIGIT (c) || (int) (c - L_('0')) >= base)
 		  {
 		    if (base == 10 && (flags & GROUP)
 #ifdef COMPILE_WSCANF
@@ -1762,7 +1762,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      else if (got_e && wp[wpsize - 1] == exp_char
 		       && (c == L_('-') || c == L_('+')))
 		ADDW (c);
-	      else if (wpsize > 0 && !got_e && TOLOWER (c) == exp_char)
+	      else if (wpsize > 0 && !got_e
+		       && (CHAR_T) TOLOWER (c) == exp_char)
 		{
 		  ADDW (exp_char);
 		  got_e = got_dot = 1;
@@ -1993,7 +1994,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  wchar_t wc;
 
 			  for (wc = runp[-1] + 1; wc <= runp[1]; ++wc)
-			    if (wc == c)
+			    if ((wint_t) wc == c)
 			      break;
 
 			  if (wc <= runp[1] && !not_in)
@@ -2010,9 +2011,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			}
 		      else
 			{
-			  if (*runp == c && !not_in)
+			  if ((wint_t) *runp == c && !not_in)
 			    break;
-			  if (*runp == c && not_in)
+			  if ((wint_t) *runp == c && not_in)
 			    {
 			      ungetc (c, s);
 			      goto out;
@@ -2211,7 +2212,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  wchar_t wc;
 
 			  for (wc = runp[-1] + 1; wc <= runp[1]; ++wc)
-			    if (wc == c)
+			    if ((wint_t) wc == c)
 			      break;
 
 			  if (wc <= runp[1] && !not_in)
@@ -2228,9 +2229,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			}
 		      else
 			{
-			  if (*runp == c && !not_in)
+			  if ((wint_t) *runp == c && !not_in)
 			    break;
-			  if (*runp == c && not_in)
+			  if ((wint_t) *runp == c && not_in)
 			    {
 			      ungetc (c, s);
 			      goto out2;

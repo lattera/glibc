@@ -1,3 +1,7 @@
+2003-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Add casts to avoid warnings.
+
 2003-04-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h: Rename LOCK to LOCK_PREFIX.
