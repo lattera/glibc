@@ -1,5 +1,7 @@
 2001-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Handle ranges outside glibc correctly.
+
 	* sysdeps/generic/ftime.c: Include <time.h>.
 
 	* configure.in: Don't check for libgd if user set --without-gd.

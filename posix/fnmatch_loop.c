@@ -788,7 +788,7 @@ FCT (pattern, string, no_leading_period, flags)
 			  return FNM_NOMATCH;
 
 			/* It is a range.  */
-			if (cold <= fn && fn <= c)
+			if (cold <= fn && fn <= cend)
 			  goto matched;
 #endif
 
