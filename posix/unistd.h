@@ -235,12 +235,12 @@ typedef __pid_t pid_t;
 # endif
 #endif	/* X/Open */
 
-#ifdef __USE_UNIX98
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 # ifndef __intptr_t_defined
 typedef __intptr_t intptr_t;
 #  define __intptr_t_defined
 # endif
-#endif	/* Unix98 */
+#endif
 
 /* Values for the second argument to access.
    These may be OR'd together.  */

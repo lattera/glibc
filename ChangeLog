@@ -1,3 +1,9 @@
+2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* posix/unistd.h (intptr_t): Conditionalize on [__USE_MISC ||
+	__USE_XOPEN_EXTENDED] rather than on [__USE_UNIX98].
+	We need this for the sbrk decl, which can be included without Unix98.
+
 2000-03-20  Richard Henderson  <rth@cygnus.com>
 
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyport_r): Last
