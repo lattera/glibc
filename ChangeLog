@@ -1,3 +1,8 @@
+2004-06-14  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/psignal.c (psignal): Don't use BUF when asprintf
+	failed.
+
 2004-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Fix pasto

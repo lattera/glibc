@@ -64,12 +64,14 @@ psignal (int sig, const char *s)
 	  else
 	    (void) fprintf (stderr, "%s%s%s\n", s, colon, _("Unknown signal"));
 	}
-
-      if (_IO_fwide (stderr, 0) > 0)
-	(void) __fwprintf (stderr, L"%s",  buf);
       else
-	(void) fputs (buf, stderr);
+	{
+	  if (_IO_fwide (stderr, 0) > 0)
+	    (void) __fwprintf (stderr, L"%s",  buf);
+	  else
+	    (void) fputs (buf, stderr);
 
-      free (buf);
+	  free (buf);
+	}
     }
 }
