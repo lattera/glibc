@@ -147,8 +147,6 @@ static uint32_t narcs;
    lists.  */
 static volatile uint32_t *narcsp;
 
-static volatile uint16_t *kcount;
-static size_t kcountsize;
 
 struct here_fromstruct
   {
@@ -164,7 +162,6 @@ static volatile uint32_t fromidx;
 
 static uintptr_t lowpc;
 static size_t textsize;
-static unsigned int hashfraction;
 static unsigned int log_hashfraction;
 
 
@@ -188,11 +185,14 @@ _dl_start_profile (void)
   size_t tossize;
   size_t fromssize;
   uintptr_t highpc;
+  uint16_t *kcount;
+  size_t kcountsize;
   struct gmon_hdr *addr = NULL;
   off_t expected_size;
   /* See profil(2) where this is described.  */
   int s_scale;
 #define SCALE_1_TO_1	0x10000L
+  const char *errstr = NULL;
 
   /* Compute the size of the sections which contain program code.  */
   for (ph = GL(dl_profile_map)->l_phdr;
@@ -218,7 +218,6 @@ _dl_start_profile (void)
 		    HISTFRACTION * sizeof (HISTCOUNTER));
   textsize = highpc - lowpc;
   kcountsize = textsize / HISTFRACTION;
-  hashfraction = HASHFRACTION;
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
     {
       /* If HASHFRACTION is a power of two, mcount can use shifting
@@ -228,14 +227,14 @@ _dl_start_profile (void)
 	 expression away since the __ffs implementation is not known
 	 to the compiler.  Help the compiler by precomputing the
 	 usual cases.  */
-      assert (hashfraction == 2);
+      assert (HASHFRACTION == 2);
 
       if (sizeof (*froms) == 8)
 	log_hashfraction = 4;
       else if (sizeof (*froms) == 16)
 	log_hashfraction = 5;
       else
-	log_hashfraction = __ffs (hashfraction * sizeof (*froms)) - 1;
+	log_hashfraction = __ffs (HASHFRACTION * sizeof (*froms)) - 1;
     }
   else
     log_hashfraction = -1;
@@ -288,22 +287,25 @@ _dl_start_profile (void)
   fd = __open (filename, O_RDWR | O_CREAT EXTRA_FLAGS, DEFFILEMODE);
   if (fd == -1)
     {
-      /* We cannot write the profiling data so don't do anything.  */
       char buf[400];
-      _dl_error_printf ("%s: cannot open file: %s\n", filename,
-			__strerror_r (errno, buf, sizeof buf));
+      int errnum;
+
+      /* We cannot write the profiling data so don't do anything.  */
+      errstr = "%s: cannot open file: %s\n";
+    print_error:
+      errnum = errno;
+      if (fd != -1)
+	__close (fd);
+      _dl_error_printf (errstr, filename,
+			__strerror_r (errnum, buf, sizeof buf));
       return;
     }
 
   if (__fxstat64 (_STAT_VER, fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       /* Not stat'able or not a regular file => don't use it.  */
-      char buf[400];
-      int errnum = errno;
-      __close (fd);
-      _dl_error_printf ("%s: cannot stat file: %s\n", filename,
-			__strerror_r (errnum, buf, sizeof buf));
-      return;
+      errstr = "%s: cannot stat file: %s\n";
+      goto print_error;
     }
 
   /* Test the size.  If it does not match what we expect from the size
@@ -317,14 +319,9 @@ _dl_start_profile (void)
 
       if (__lseek (fd, expected_size & ~(GLRO(dl_pagesize) - 1), SEEK_SET) == -1)
 	{
-	  char buf[400];
-	  int errnum;
 	cannot_create:
-	  errnum = errno;
-	  __close (fd);
-	  _dl_error_printf ("%s: cannot create file: %s\n", filename,
-			    __strerror_r (errnum, buf, sizeof buf));
-	  return;
+	  errstr = "%s: cannot create file: %s\n";
+	  goto print_error;
 	}
 
       if (TEMP_FAILURE_RETRY (__libc_write (fd, buf, (expected_size
@@ -350,12 +347,8 @@ _dl_start_profile (void)
 				     MAP_SHARED|MAP_FILE, fd, 0);
   if (addr == (struct gmon_hdr *) MAP_FAILED)
     {
-      char buf[400];
-      int errnum = errno;
-      __close (fd);
-      _dl_error_printf ("%s: cannot map file: %s\n", filename,
-			__strerror_r (errnum, buf, sizeof buf));
-      return;
+      errstr = "%s: cannot map file: %s\n";
+      goto print_error;
     }
 
   /* We don't need the file descriptor anymore.  */
@@ -416,7 +409,7 @@ _dl_start_profile (void)
       size_t to_index;
       size_t newfromidx;
       --idx;
-      to_index = (data[idx].self_pc / (hashfraction * sizeof (*tos)));
+      to_index = (data[idx].self_pc / (HASHFRACTION * sizeof (*tos)));
       newfromidx = fromidx++;
       froms[newfromidx].here = &data[idx];
       froms[newfromidx].link = tos[to_index];
@@ -484,7 +477,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
     i = selfpc >> log_hashfraction;
   else
-    i = selfpc / (hashfraction * sizeof (*tos));
+    i = selfpc / (HASHFRACTION * sizeof (*tos));
 
   topcindex = &tos[i];
   fromindex = *topcindex;
@@ -515,7 +508,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	      size_t to_index;
 	      size_t newfromidx;
 	      to_index = (data[narcs].self_pc
-			  / (hashfraction * sizeof (*tos)));
+			  / (HASHFRACTION * sizeof (*tos)));
 	      newfromidx = atomic_exchange_and_add (&fromidx, 1) + 1;
 	      froms[newfromidx].here = &data[narcs];
 	      froms[newfromidx].link = tos[to_index];

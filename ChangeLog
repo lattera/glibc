@@ -1,5 +1,9 @@
 2004-07-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-profile.c (_dl_start_profile): Compact error handling.
+	Remove hashfraction variable.  Make kcount and kcountsize local
+	variables.
+
 	* elf/dl-init.c: Don't define and use _dl_starting_up if
 	HAVE_INLINED_SYSCALLS is defined and the variable is not used.
 	* elf/dl-support.c: Likewise.
