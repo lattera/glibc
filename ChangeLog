@@ -1,5 +1,16 @@
 2000-09-29  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Protect DN_* by
+	__USE_GNU.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+
+2000-09-29  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: Synch with Linux
 	2.4.0-test9-pre7.
 	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.

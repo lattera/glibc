@@ -133,19 +133,21 @@
 
 #ifdef __USE_GNU
 # define LOCK_MAND	32	/* This is a mandatory flock:	*/
-# define LOCK_READ	64	/* ... which allows concurrent read operations.  */
+# define LOCK_READ	64	/* ... which allows concurrent read operations.	 */
 # define LOCK_WRITE	128	/* ... which allows concurrent write operations.  */
-# define LOCK_RW	192	/* ... Which allows concurrent read & write operations.  */
+# define LOCK_RW	192	/* ... Which allows concurrent read & write operations.	 */
 #endif
 
+#ifdef __USE_GNU
 /* Types of directory notifications that may be requested with F_NOTIFY.  */
-#define DN_ACCESS      0x00000001      /* File accessed.  */
-#define DN_MODIFY      0x00000002      /* File modified.  */
-#define DN_CREATE      0x00000004      /* File created.  */
-#define DN_DELETE      0x00000008      /* File removed.  */
-#define DN_RENAME      0x00000010      /* File renamed.  */
-#define DN_ATTRIB      0x00000020      /* File changed attibutes.  */
-#define DN_MULTISHOT   0x80000000      /* Don't remove notifier.  */
+# define DN_ACCESS	0x00000001	/* File accessed.  */
+# define DN_MODIFY	0x00000002	/* File modified.  */
+# define DN_CREATE	0x00000004	/* File created.  */
+# define DN_DELETE	0x00000008	/* File removed.  */
+# define DN_RENAME	0x00000010	/* File renamed.  */
+# define DN_ATTRIB	0x00000020	/* File changed attibutes.  */
+# define DN_MULTISHOT	0x80000000	/* Don't remove notifier.  */
+#endif
 
 struct flock
   {
