@@ -22,6 +22,7 @@
 #ifndef __ASSEMBLER__
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().  */
+#include <sysdep.h>	/* For INLINE_SYSCALL.  */
 
 
 /* We don't want to include the kernel header.  So duplicate the
@@ -61,24 +62,74 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
   __self;								      \
 })
 
-/* Initialize the thread-unique value.  */
-#define INIT_THREAD_SELF(descr, nr) \
-{									      \
+#define DO_MODIFY_LDT(descr, nr) \
+({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
       1, 0, 0, 0, 0, 1, 0 };						      \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
-  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (nr * 8 + 7));		      \
+  nr * 8 + 7;								      \
+})
+
+/* Initialize the thread-unique value.  */
+#ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
+#define INIT_THREAD_SELF(descr, nr) \
+{									      \
+  int __gs = INLINE_SYSCALL (set_thread_area, 2, descr, 1);		      \
+  if (__gs == -1)							      \
+    abort ();								      \
+  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
 }
+#elif defined __NR_set_thread_area
+
+/* Defined in pspinlock.c.  */
+extern int __have_no_set_thread_area;
+
+#define INIT_THREAD_SELF(descr, nr) \
+{									      \
+  int __gs = -1;							      \
+  if (! __builtin_expect (__have_no_set_thread_area, 0))		      \
+    {									      \
+      if ((__gs = INLINE_SYSCALL (set_thread_area, 2, descr, 1)) == -1	      \
+	  && errno == ENOSYS)						      \
+	__have_no_set_thread_area = 1;					      \
+    }									      \
+  if (__builtin_expect (__gs == -1, 0))					      \
+    __gs = DO_MODIFY_LDT (descr, nr);					      \
+  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
+}
+#else
+#define INIT_THREAD_SELF(descr, nr) \
+{									      \
+  int __gs = DO_MODIFY_LDT (descr, nr);					      \
+  __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (__gs));		      \
+}
+#endif
 
 /* Free resources associated with thread descriptor.  */
+#ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
+#define FREE_THREAD(descr, nr) do { } while (0)
+#elif defined __NR_set_thread_area
+#define FREE_THREAD(descr, nr) \
+{									      \
+  int __gs;								      \
+  __asm__ __volatile__ ("movw %%gs, %w0" : "=q" (__gs));		      \
+  if (__builtin_expect (__gs & 4, 0))					      \
+    {									      \
+      struct modify_ldt_ldt_s ldt_entry =				      \
+	{ nr, 0, 0, 0, 0, 1, 0, 1, 0, 0 };				      \
+      __modify_ldt (1, &ldt_entry, sizeof (ldt_entry));			      \
+    }									      \
+}
+#else
 #define FREE_THREAD(descr, nr) \
 {									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, 0, 0, 0, 0, 1, 0, 1, 0, 0 };					      \
   __modify_ldt (1, &ldt_entry, sizeof (ldt_entry));			      \
 }
+#endif
 
 /* Read member of the thread descriptor directly.  */
 #define THREAD_GETMEM(descr, member) \
