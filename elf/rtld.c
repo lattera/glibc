@@ -26,6 +26,7 @@
 #include <stdio-common/_itoa.h>
 #include <entry.h>
 #include <fpu_control.h>
+#include <hp-timing.h>
 #include "dynamic-link.h"
 #include "dl-librecon.h"
 
@@ -58,6 +59,8 @@ static void print_unresolved (int errcode, const char *objname,
 static void print_missing_version (int errcode, const char *objname,
 				   const char *errsting);
 
+/* Print the various times we collected.  */
+static void print_statistics (void);
 
 /* This is a list of all the modes the dynamic loader can be in.  */
 enum mode { normal, list, verify, trace };
@@ -86,6 +89,7 @@ int _dl_debug_symbols;
 int _dl_debug_versions;
 int _dl_debug_reloc;
 int _dl_debug_files;
+int _dl_debug_statistics;
 const char *_dl_inhibit_rpath;		/* RPATH values which should be
 					   ignored.  */
 const char *_dl_origin_path;
@@ -118,6 +122,12 @@ struct link_map _dl_rtld_map;
 struct libname_list _dl_rtld_libname;
 struct libname_list _dl_rtld_libname2;
 
+/* Variable for statistics.  */
+static hp_timing_t rtld_total_time;
+static hp_timing_t relocate_time;
+static hp_timing_t load_time;
+extern unsigned long int _dl_num_relocations;	/* in dl-lookup.c */
+
 #ifdef RTLD_START
 RTLD_START
 #else
@@ -128,6 +138,8 @@ static ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
+  hp_timing_t start_time;
+  ElfW(Addr) start_addr;
 
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
@@ -135,6 +147,9 @@ _dl_start (void *arg)
 #define RESOLVE(sym, version, flags) \
   ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
 #include "dynamic-link.h"
+
+  if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
+    HP_TIMING_NOW (start_time);
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();
@@ -160,6 +175,16 @@ _dl_start (void *arg)
      the operating system's program loader where to find the program
      header table in core.  */
 
+  if (HP_TIMING_AVAIL)
+    {
+      /* If it hasn't happen yet record the startup time.  */
+      if (! HP_TIMING_INLINE)
+	HP_TIMING_NOW (start_time);
+
+      /* Initialize the timing functions.  */
+      HP_TIMING_DIFF_INIT ();
+    }
+
   /* Transfer data about ourselves to the permanent link_map structure.  */
   _dl_rtld_map.l_addr = bootstrap_map.l_addr;
   _dl_rtld_map.l_ld = bootstrap_map.l_ld;
@@ -176,7 +201,23 @@ _dl_start (void *arg)
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
-  return _dl_sysdep_start (arg, &dl_main);
+  start_addr =  _dl_sysdep_start (arg, &dl_main);
+
+  if (HP_TIMING_AVAIL)
+    {
+      hp_timing_t end_time;
+
+      /* Get the current time.  */
+      HP_TIMING_NOW (end_time);
+
+      /* Compute the difference.  */
+      HP_TIMING_DIFF (rtld_total_time, start_time, end_time);
+    }
+
+  if (_dl_debug_statistics)
+    print_statistics ();
+
+  return start_addr;
 }
 
 /* Now life is peachy; we can do all normal operations.
@@ -300,6 +341,9 @@ dl_main (const ElfW(Phdr) *phdr,
   int has_interp = 0;
   unsigned int i;
   int paths_initialized = 0;
+  hp_timing_t start;
+  hp_timing_t stop;
+  hp_timing_t diff;
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &lazy);
@@ -413,7 +457,13 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    }
 	}
       else
-	_dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
+	{
+	  HP_TIMING_NOW (start);
+	  _dl_map_object (NULL, _dl_argv[0], 0, lt_library, 0);
+	  HP_TIMING_NOW (stop);
+	  
+	  HP_TIMING_DIFF (load_time, start, stop);
+	}
 
       phdr = _dl_loaded->l_phdr;
       phent = _dl_loaded->l_phnum;
@@ -562,6 +612,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 containing a '/' are ignored since it is insecure.  */
       char *list = strdupa (preloadlist);
       char *p;
+
+      HP_TIMING_NOW (start);
+
       while ((p = strsep (&list, " :")) != NULL)
 	if (p[0] != '\0'
 	    && (! __libc_enable_secure || strchr (p, '/') == NULL))
@@ -572,6 +625,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      /* It is no duplicate.  */
 	      ++npreloads;
 	  }
+
+      HP_TIMING_NOW (stop);
+      HP_TIMING_DIFF (diff, start, stop);
+      HP_TIMING_ACCUM_NT (load_time, diff);
     }
 
   /* Read the contents of the file.  */
@@ -621,6 +678,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  file[file_size - 1] = '\0';
 	}
 
+      HP_TIMING_NOW (start);
+
       if (file != problem)
 	{
 	  char *p;
@@ -646,6 +705,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    ++npreloads;
 	}
 
+      HP_TIMING_NOW (stop);
+      HP_TIMING_DIFF (diff, start, stop);
+      HP_TIMING_ACCUM_NT (load_time, diff);
+
       /* We don't need the file anymore.  */
       __munmap (file, file_size);
     }
@@ -668,7 +731,11 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
+  HP_TIMING_NOW (start);
   _dl_map_object_deps (_dl_loaded, preloads, npreloads, mode == trace, 0);
+  HP_TIMING_NOW (stop);
+  HP_TIMING_DIFF (diff, start, stop);
+  HP_TIMING_ACCUM_NT (load_time, diff);
 
   /* Mark all objects as being in the global scope.  */
   for (i = _dl_loaded->l_searchlist.r_nlist; i > 0; )
@@ -884,6 +951,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 
     struct link_map *l;
     int consider_profiling = _dl_profile != NULL;
+    hp_timing_t start;
+    hp_timing_t stop;
+    hp_timing_t add;
 
     /* If we are profiling we also must do lazy reloaction.  */
     lazy |= consider_profiling;
@@ -891,13 +961,19 @@ of this helper program; chances are you did not intend to run this program.\n\
     l = _dl_loaded;
     while (l->l_next)
       l = l->l_next;
+
+    HP_TIMING_NOW (start);
     do
       {
 	if (l != &_dl_rtld_map)
 	  _dl_relocate_object (l, l->l_scope, lazy, consider_profiling);
 
 	l = l->l_prev;
-      } while (l);
+      }
+    while (l);
+    HP_TIMING_NOW (stop);
+
+    HP_TIMING_DIFF (relocate_time, start, stop);
 
     /* Do any necessary cleanups for the startup OS interface code.
        We do these now so that no calls are made after rtld re-relocation
@@ -907,9 +983,15 @@ of this helper program; chances are you did not intend to run this program.\n\
     _dl_sysdep_start_cleanup ();
 
     if (_dl_rtld_map.l_opencount > 0)
-      /* There was an explicit ref to the dynamic linker as a shared lib.
-	 Re-relocate ourselves with user-controlled symbol definitions.  */
-      _dl_relocate_object (&_dl_rtld_map, _dl_loaded->l_scope, 0, 0);
+      {
+	/* There was an explicit ref to the dynamic linker as a shared lib.
+	   Re-relocate ourselves with user-controlled symbol definitions.  */
+	HP_TIMING_NOW (start);
+	_dl_relocate_object (&_dl_rtld_map, _dl_loaded->l_scope, 0, 0);
+	HP_TIMING_NOW (stop);
+	HP_TIMING_DIFF (add, start, stop);
+	HP_TIMING_ACCUM_NT (relocate_time, add);
+      }
   }
 
   /* Now set up the variable which helps the assembler startup code.  */
@@ -1101,6 +1183,14 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 		}
 	      break;
 
+	    case 10:
+	      if (memcmp (dl_debug, "statistics", 10) == 0)
+		{
+		  _dl_debug_statistics = 1;
+		  continue;
+		}
+	      break;
+
 	    default:
 	      break;
 	    }
@@ -1110,6 +1200,7 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",
 	    char *startp = strndupa (dl_debug, len);
 	    _dl_sysdep_error ("warning: debug option `", startp,
 			      "' unknown; try LD_DEBUG=help\n", NULL);
+	    break;
 	  }
 	}
     }
@@ -1290,4 +1381,75 @@ process_envvars (enum mode *modep, int *lazyp)
     *lazyp = !__libc_enable_secure && !bind_now;
 
   *modep = mode;
+}
+
+
+/* Print the various times we collected.  */
+static void
+print_statistics (void)
+{
+  char buf[200];
+  char *cp;
+  char *wp;
+
+  /* Total time rtld used.  */
+  if (HP_TIMING_AVAIL)
+    {
+      HP_TIMING_PRINT (buf, sizeof (buf), rtld_total_time);
+      _dl_debug_message (1, "\nruntime linker statistics:\n"
+			 "  total startup time in dynamic loader: ",
+			 buf, "\n", NULL);
+    }
+
+  /* Print relocation statistics.  */
+  if (HP_TIMING_AVAIL)
+    {
+      HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
+      _dl_debug_message (1, "            time needed for relocation: ", buf,
+			 NULL);
+      cp = _itoa_word ((1000 * relocate_time) / rtld_total_time,
+		       buf + sizeof (buf), 10, 0);
+      wp = buf;
+      switch (buf + sizeof (buf) - cp)
+	{
+	case 3:
+	  *wp++ = *cp++;
+	case 2:
+	  *wp++ = *cp++;
+	case 1:
+	  *wp++ = '.';
+	  *wp++ = *cp++;
+	}
+      *wp = '\0';
+      _dl_debug_message (0, " (", buf, "%)\n", NULL);
+    }
+
+  buf[sizeof (buf) - 1] = '\0';
+  _dl_debug_message (1, "                 number of relocations: ",
+		     _itoa_word (_dl_num_relocations,
+				 buf + sizeof (buf) - 1, 10, 0),
+		     "\n", NULL);
+
+  /* Time spend while loading the object and the dependencies.  */
+  if (HP_TIMING_AVAIL)
+    {
+      HP_TIMING_PRINT (buf, sizeof (buf), load_time);
+      _dl_debug_message (1, "           time needed to load objects: ", buf,
+			 NULL);
+      cp = _itoa_word ((1000 * load_time) / rtld_total_time,
+		       buf + sizeof (buf), 10, 0);
+      wp = buf;
+      switch (buf + sizeof (buf) - cp)
+	{
+	case 3:
+	  *wp++ = *cp++;
+	case 2:
+	  *wp++ = *cp++;
+	case 1:
+	  *wp++ = '.';
+	  *wp++ = *cp++;
+	}
+      *wp = '\0';
+      _dl_debug_message (0, " (", buf, "%)\n", NULL);
+    }
 }

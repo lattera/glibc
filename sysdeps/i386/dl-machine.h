@@ -335,7 +335,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (sym->st_size < refsym->st_size && _dl_verbose))
 	    {
 	      const char *strtab;
 

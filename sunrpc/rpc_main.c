@@ -459,7 +459,7 @@ check_nettype (const char *name, const char *list_to_check[])
 	  return 1;
 	}
     }
-  fprintf (stderr, _ ("illegal nettype :\'%s\'\n"), name);
+  fprintf (stderr, _ ("illegal nettype :`%s'\n"), name);
   return 0;
 }
 
@@ -1144,7 +1144,7 @@ checkfiles (const char *infile, const char *outfile)
       else
 	{
 	  fprintf (stderr,
-		   _("file '%s' already exists and may be overwritten\n"),
+		   _("file `%s' already exists and may be overwritten\n"),
 		   outfile);
 	  crash ();
 	}
@@ -1411,7 +1411,7 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 static void
 usage (void)
 {
-  fprintf (stderr, _("usage:  %s infile\n"), cmdname);
+  fprintf (stderr, _("usage: %s infile\n"), cmdname);
   fprintf (stderr, _("\t%s [-abkCLNTM][-Dname[=value]] [-i size] \
 [-I [-K seconds]] [-Y path] infile\n"), cmdname);
   fprintf (stderr, _("\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] \

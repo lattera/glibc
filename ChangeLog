@@ -1,3 +1,30 @@
+1998-12-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c (_dl_num_relocations): New variable.
+	(do_lookup): Increment _dl_num_relocations for every call.
+	* elf/rtld.c (print_statistics): New function.
+	(_dl_debug_statistics): New variable.  Set when statistics are asked
+	for.
+	(rtld_total_time, relocate_time, load_time): New variables.  Used
+	in print_statistics.
+	(_dl_start): Record start and end time of startup.  Call
+	print_statistics if needed.
+	(dk_main): Record times for relocations and loading.
+	(process_dl_debug): Recognize statistics.
+
+	Low-level, low-overhead, high-precision timing funcationality.
+	* sysdeps/generic/hp-timing.h: New file.
+	* sysdeps/i386/i686/Makefile: New file.
+	* sysdeps/i386/i686/hp-timing.h: New file.
+	* sysdeps/i386/i686/hp-timing.c: New file.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Reverse order of OR
+	clauses to avoid accessing global variables during rtld relocation.
+
+	* sunrpc/rpc_main.c: Unify messages.
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Add ioperm.c and sys/io.h.
+
 1998-12-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/bits/statfs.h (struct statfs, struct statfs64):
