@@ -112,7 +112,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
   if (thread == _hurd_msgport_thread)
     /* Cute.  */
     strcpy (description, "msgport");
-  else if (&_hurd_msgport_thread && thread == _hurd_itimer_thread)
+  else if (&_hurd_itimer_thread && thread == _hurd_itimer_thread)
     strcpy (description, "itimer");
   else
     {

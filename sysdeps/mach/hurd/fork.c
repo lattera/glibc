@@ -480,9 +480,27 @@ __fork (void)
 				    (natural_t *) &state, &statecount))
 	LOSE;
 #if STACK_GROWTH_UP
-      state.SP = __hurd_sigthread_stack_base;
+#define THREADVAR_SPACE (__hurd_threadvar_max \
+			 * sizeof *__hurd_sightread_variables)
+      if (__hurd_sigthread_stack_base == 0)
+	{
+	  state.SP &= __hurd_threadvar_stack_mask;
+	  state.SP += __hurd_threadvar_stack_offset + THREADVAR_SPACE;
+	}
+      else
+	state.SP = __hurd_sigthread_stack_base;
 #else
-      state.SP = __hurd_sigthread_stack_end;
+      if (__hurd_sigthread_stack_end == 0)
+	{
+	  /* The signal thread has a normal stack assigned by cthreads.
+	     The threadvar_stack variables conveniently tell us how
+	     to get to the highest address in the stack, just below
+	     the per-thread variables.  */
+	  state.SP &= __hurd_threadvar_stack_mask;
+	  state.SP += __hurd_threadvar_stack_offset;
+	}
+      else
+	state.SP = __hurd_sigthread_stack_end;
 #endif
       MACHINE_THREAD_STATE_SET_PC (&state,
 				   (unsigned long int) _hurd_msgport_receive);

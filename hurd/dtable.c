@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,18 +107,35 @@ text_set_element (_hurd_subinit, init_dtable);
 static file_t
 get_dtable_port (int fd)
 {
+  struct hurd_fd *d = _hurd_fd_get (fd);
   file_t dport;
-  int err = HURD_DPORT_USE (fd, __mach_port_mod_refs (__mach_task_self (),
-						      (dport = port),
-						      MACH_PORT_RIGHT_SEND,
-						      1));
-  if (err)
-    {
-      errno = err;
-      return MACH_PORT_NULL;
-    }
-  else
-    return dport;
+
+  if (!d)
+    return __hurd_fail (EBADF), MACH_PORT_NULL;
+
+  HURD_CRITICAL_BEGIN;
+
+  dport = HURD_PORT_USE (&d->port,
+			 ({
+			   error_t err;
+			   mach_port_t outport;
+			   err = __mach_port_mod_refs (__mach_task_self (),
+						       port,
+						       MACH_PORT_RIGHT_SEND,
+						       1);
+			   if (err)
+			     {
+			       errno = err;
+			       outport = MACH_PORT_NULL;
+			     }
+			   else
+			     outport = port;
+			   outport;
+			 }));
+
+  HURD_CRITICAL_END;
+
+  return dport;
 }
 
 file_t (*_hurd_getdport_fn) (int fd) = get_dtable_port;
@@ -176,32 +193,46 @@ ctty_new_pgrp (void)
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
-  for (i = 0; i < _hurd_dtablesize; ++i)
+  if (__USEPORT (CTTYID, port == MACH_PORT_NULL))
     {
-      struct hurd_fd *const d = _hurd_dtable[i];
-      struct hurd_userlink ulink, ctty_ulink;
-      io_t port, ctty;
+      /* We have no controlling terminal.  If we haven't had one recently,
+	 but our pgrp is being pointlessly diddled anyway, then we will
+	 have nothing to do in the loop below because no fd will have a
+	 ctty port at all.
 
-      if (d == NULL)
-	/* Nothing to do for an unused descriptor cell.  */
-	continue;
-
-      port = _hurd_port_get (&d->port, &ulink);
-      ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
-
-      if (ctty != MACH_PORT_NULL)
-	{
-	  /* This fd has a ctty-special port.  We need a new one, to tell
-             the io server of our different process group.  */
-	  io_t new;
-	  if (__term_open_ctty (port, _hurd_pid, _hurd_pgrp, &new))
-	    new = MACH_PORT_NULL;
-	  _hurd_port_set (&d->ctty, new);
-	}
-
-      _hurd_port_free (&d->port, &ulink, port);
-      _hurd_port_free (&d->ctty, &ctty_ulink, ctty);
+	 More likely, a setsid call is responsible both for the change
+	 in pgrp and for clearing the cttyid port.  In that case, setsid
+	 held the dtable lock while updating the dtable to clear all the
+	 ctty ports, and ergo must have finished doing so before we run here.
+	 So we can be sure, again, that the loop below has no work to do.  */
     }
+  else
+    for (i = 0; i < _hurd_dtablesize; ++i)
+      {
+	struct hurd_fd *const d = _hurd_dtable[i];
+	struct hurd_userlink ulink, ctty_ulink;
+	io_t port, ctty;
+
+	if (d == NULL)
+	  /* Nothing to do for an unused descriptor cell.  */
+	  continue;
+
+	port = _hurd_port_get (&d->port, &ulink);
+	ctty = _hurd_port_get (&d->ctty, &ctty_ulink);
+
+	if (ctty != MACH_PORT_NULL)
+	  {
+	    /* This fd has a ctty-special port.  We need a new one, to tell
+	       the io server of our different process group.  */
+	    io_t new;
+	    if (__term_open_ctty (port, _hurd_pid, _hurd_pgrp, &new))
+	      new = MACH_PORT_NULL;
+	    _hurd_port_set (&d->ctty, new);
+	  }
+
+	_hurd_port_free (&d->port, &ulink, port);
+	_hurd_port_free (&d->ctty, &ctty_ulink, ctty);
+      }
 
   __mutex_unlock (&_hurd_dtable_lock);
   HURD_CRITICAL_END;

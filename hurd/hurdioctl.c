@@ -1,5 +1,5 @@
 /* ioctl commands which must be done in the C library.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -132,13 +132,39 @@ _HURD_HANDLE_IOCTLS (fioclex, FIOCLEX, FIONCLEX);
 #include <hurd/term.h>
 #include <hurd/tioctl.h>
 
-static void
-rectty_dtable (mach_port_t cttyid)
+/* Install a new CTTYID port, atomically updating the dtable appropriately.
+   This consumes the send right passed in.  */
+
+void
+_hurd_locked_install_cttyid (mach_port_t cttyid)
 {
+  mach_port_t old;
+  struct hurd_port *const port = &_hurd_ports[INIT_PORT_CTTYID];
+  struct hurd_userlink ulink;
   int i;
 
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_dtable_lock);
+  /* Install the new cttyid port, and preserve it with a ulink.
+     We unroll the _hurd_port_set + _hurd_port_get here so that
+     there is no window where the cell is unlocked and CTTYID could
+     be changed by another thread.  (We also delay the deallocation
+     of the old port until the end, to minimize the duration of the
+     critical section.)
+
+     It is important that changing the cttyid port is only ever done by
+     holding the dtable lock continuously while updating the port cell and
+     re-ctty'ing the dtable; dtable.c assumes we do this.  Otherwise, the
+     pgrp-change notification code in dtable.c has to worry about racing
+     against us here in odd situations.  The one exception to this is
+     setsid, which holds the dtable lock while changing the pgrp and
+     clearing the cttyid port, and then unlocks the dtable lock to allow
+
+
+  */
+
+  __spin_lock (&port->lock);
+  old = _hurd_userlink_clear (&port->users) ? port->port : MACH_PORT_NULL;
+  port->port = cttyid;
+  cttyid = _hurd_port_locked_get (port, &ulink);
 
   for (i = 0; i < _hurd_dtablesize; ++i)
     {
@@ -178,6 +204,18 @@ rectty_dtable (mach_port_t cttyid)
     }
 
   __mutex_unlock (&_hurd_dtable_lock);
+
+  if (old != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), old);
+  _hurd_port_free (port, &ulink, cttyid);
+}
+
+static void
+install_ctty (mach_port_t cttyid)
+{
+  HURD_CRITICAL_BEGIN;
+  __mutex_lock (&_hurd_dtable_lock);
+  _hurd_locked_install_cttyid (cttyid);
   HURD_CRITICAL_END;
 }
 
@@ -199,10 +237,7 @@ _hurd_setcttyid (mach_port_t cttyid)
     }
 
   /* Install the port, consuming the reference we just created.  */
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
-
-  /* Reset all the ctty ports in all the descriptors.  */
-  __USEPORT (CTTYID, (rectty_dtable (cttyid), 0));
+  install_ctty (cttyid);
 
   return 0;
 }
@@ -233,10 +268,7 @@ tiocsctty (int fd,
     return __hurd_fail (err);
 
   /* Make it our own.  */
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], cttyid);
-
-  /* Reset all the ctty ports in all the descriptors.  */
-  __USEPORT (CTTYID, (rectty_dtable (cttyid), 0));
+  install_ctty (cttyid);
 
   return 0;
 }
@@ -262,12 +294,8 @@ tiocnotty (int fd,
   if (err)
     return __hurd_fail (err);
 
-  /* Clear our cttyid port cell.  */
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
-
-  /* Reset all the ctty ports in all the descriptors.  */
-
-  __USEPORT (CTTYID, (rectty_dtable (MACH_PORT_NULL), 0));
+  /* Clear our cttyid port.  */
+  install_ctty (MACH_PORT_NULL);
 
   return 0;
 }

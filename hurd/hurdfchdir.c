@@ -27,17 +27,30 @@
 int
 _hurd_change_directory_port_from_fd (struct hurd_port *portcell, int fd)
 {
-  error_t err;
-  file_t dir;
+  int ret;
+  struct hurd_fd *d = _hurd_fd_get (fd);
 
-  err = HURD_DPORT_USE (fd,
-			({
-			  dir = __file_name_lookup_under (port, ".", 0, 0);
-			  dir == MACH_PORT_NULL ? errno : 0;
-			}));
+  if (!d)
+    return __hurd_fail (EBADF);
 
-  if (! err)
-    _hurd_port_set (portcell, dir);
+  HURD_CRITICAL_BEGIN;
 
-  return err ? __hurd_fail (err) : 0;
+  ret = HURD_PORT_USE (&d->port,
+		       ({
+			 int ret;
+			 file_t dir = __file_name_lookup_under (port, ".",
+								0, 0);
+			 if (dir == MACH_PORT_NULL)
+			   ret = -1;
+			 else
+			   {
+			     _hurd_port_set (portcell, dir);
+			     ret = 0;
+			   }
+			 ret;
+		       }));
+
+  HURD_CRITICAL_END;
+
+  return ret;
 }

@@ -108,6 +108,9 @@ libc {
     seteuids;
   }
   GLIBC_2.1.3 {
+    # c*
+    cthread_fork; cthread_detach;
+
     # d*
     directory_name_split;
 

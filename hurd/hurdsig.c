@@ -1227,28 +1227,47 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 
   /* Start the signal thread listening on the message port.  */
 
-  err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
-  assert_perror (err);
+  if (__hurd_threadvar_stack_mask == 0)
+    {
+      err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
+      assert_perror (err);
 
-  stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
-  err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
-			     _hurd_msgport_receive,
-			     (vm_address_t *) &__hurd_sigthread_stack_base,
-			     &stacksize);
-  assert_perror (err);
+      stacksize = ~__hurd_threadvar_stack_mask + 1;
+      stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
+      err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
+				 _hurd_msgport_receive,
+				 (vm_address_t *) &__hurd_sigthread_stack_base,
+				 &stacksize);
+      assert_perror (err);
 
-  __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
-  __hurd_sigthread_variables =
-    malloc (__hurd_threadvar_max * sizeof (unsigned long int));
-  if (__hurd_sigthread_variables == NULL)
-    __libc_fatal ("hurd: Can't allocate thread variables for signal thread\n");
+      __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
+      __hurd_sigthread_variables =
+	malloc (__hurd_threadvar_max * sizeof (unsigned long int));
+      if (__hurd_sigthread_variables == NULL)
+	__libc_fatal ("hurd: Can't allocate threadvars for signal thread\n");
 
-  /* Reinitialize the MiG support routines so they will use a per-thread
-     variable for the cached reply port.  */
-  __mig_init ((void *) __hurd_sigthread_stack_base);
+      /* Reinitialize the MiG support routines so they will use a per-thread
+	 variable for the cached reply port.  */
+      __mig_init ((void *) __hurd_sigthread_stack_base);
 
-  err = __thread_resume (_hurd_msgport_thread);
-  assert_perror (err);
+      err = __thread_resume (_hurd_msgport_thread);
+      assert_perror (err);
+    }
+  else
+    {
+      /* When cthreads is being used, we need to make the signal thread a
+         proper cthread.  Otherwise it cannot use mutex_lock et al, which
+         will be the cthreads versions.  Various of the message port RPC
+         handlers need to take locks, so we need to be able to call into
+         cthreads code and meet its assumptions about how our thread and
+         its stack are arranged.  Since cthreads puts it there anyway,
+         we'll let the signal thread's per-thread variables be found as for
+         any normal cthread, and just leave the magic __hurd_sigthread_*
+         values all zero so they'll be ignored.  */
+#pragma weak cthread_fork
+#pragma weak cthread_detach
+      cthread_detach (cthread_fork ((cthread_fn_t) &_hurd_msgport_receive, 0));
+    }
 
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),

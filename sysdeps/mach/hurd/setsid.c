@@ -38,29 +38,32 @@ __setsid (void)
 
   /* Tell the proc server we want to start a new session.  */
   err = __USEPORT (PROC, __proc_setsid (port));
-  if (!err)
-    /* Punt our current ctty.  We hold the dtable lock from before the
-       proc_setsid call through clearing the cttyid port so that we can be
-       sure that it's been cleared by the time the signal thread attempts
-       to re-ctty the dtable in response to the pgrp change notification.  */
-    _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
+  if (err)
+    __mutex_unlock (&_hurd_dtable_lock);
+  else
+    {
+      /* Punt our current ctty, and update the dtable accordingly.  We hold
+	 the dtable lock from before the proc_setsid call through clearing
+	 the cttyid port and processing the dtable, so that we can be sure
+	 that it's all done by the time the signal thread processes the
+	 pgrp change notification.  */
+      _hurd_locked_install_cttyid (MACH_PORT_NULL);
 
-  __mutex_unlock (&_hurd_dtable_lock);
-
-  if (!err)
-    /* Synchronize with the signal thread to make sure we have
-       received and processed proc_newids before returning to the user.
-       This both updates _hurd_pgrp, and
-    */
-    while (_hurd_pids_changed_stamp == stamp)
-      {
+      /* Synchronize with the signal thread to make sure we have received
+	 and processed proc_newids before returning to the user.
+	 This is necessary to ensure that _hurd_pgrp (and thus the value
+	 returned by `getpgrp ()' in other threads) has been updated before
+	 we return.  */
+      while (_hurd_pids_changed_stamp == stamp)
+	{
 #ifdef noteven
-	/* XXX we have no need for a mutex, but cthreads demands one.  */
-	__condition_wait (&_hurd_pids_changed_sync, NULL);
+	  /* XXX we have no need for a mutex, but cthreads demands one.  */
+	  __condition_wait (&_hurd_pids_changed_sync, NULL);
 #else
-	__swtch_pri (0);
+	  __swtch_pri (0);
 #endif
-      }
+	}
+    }
 
   HURD_CRITICAL_END;
 
