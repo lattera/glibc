@@ -1,4 +1,8 @@
-1998-11-05 1998  H.J. Lu  <hjl@gnu.org> 
+1998-10-28  H.J. Lu  <hjl@gnu.org> 
+ 
+	* posix/getopt.h: Add "__" to arguments in prototypes. 
+ 
+1998-11-05  H.J. Lu  <hjl@gnu.org> 
  
 	* libio/iofgets.c (_IO_fgets): Don't report error 
 	if something was read in and errno is set to 
@@ -11,7 +15,7 @@
 	header; it defines too much.  Provide a local definition of struct 
 	sockaddr_pkt and a comment advising against its use. 
  
-1998-11-06 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+1998-11-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
  
 	* extra-lib.mk: Avoid empty include list. 
  
