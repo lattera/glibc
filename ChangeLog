@@ -1,3 +1,12 @@
+2002-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Correct DT_LOOS and DT_HIOS values.
+
+2002-09-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/fpu/s_isnan.c: #undef __isnanf and isnanf after
+	reading the headers.
+
 2002-09-12  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (_dl_start_final): Move _begin, _end decls outside the fn.
