@@ -1,3 +1,8 @@
+2003-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* manual/memory.texi (Malloc Tunable Parameters): Clarify
+	behaviour of M_MMAP_THRESHOLD.
+
 2003-02-25  Roland McGrath  <roland@redhat.com>
 
 	* resolv/res_init.c (res_thread_freeres): Bail out if _res.nscount is
