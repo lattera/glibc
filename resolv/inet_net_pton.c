@@ -102,35 +102,41 @@ inet_net_pton_ipv4(src, dst, size)
 		if (size <= 0)
 			goto emsgsize;
 		*dst = 0, dirty = 0;
+		tmp = 0;	/* To calm down gcc.  */
 		src++;	/* skip x or X. */
-		while ((ch = *src++) != '\0' &&
-		       isascii(ch) && isxdigit(ch)) {
+		while (isxdigit((ch = *src++))) {
 			ch = _tolower(ch);
-			n = strchr(xdigits, ch) - xdigits;
+			n = (const char *) __rawmemchr(xdigits, ch) - xdigits;
 			assert(n >= 0 && n <= 15);
-			*dst |= n;
-			if (!dirty++)
-				*dst <<= 4;
-			else if (size-- > 0)
-				*++dst = 0, dirty = 0;
+			if (dirty == 0)
+				tmp = n << 4;
 			else
-				goto emsgsize;
+				tmp |= n;
+			if (++dirty == 2) {
+				if (size-- <= 0)
+					goto emsgsize;
+				*dst++ = (u_char) tmp;
+				dirty = 0;
+			}
 		}
-		if (dirty)
-			size--;
+		if (dirty) {
+			if (size-- <= 0)
+				goto emsgsize;
+			*dst = (u_char) tmp;
+		}
 	} else if (isascii(ch) && isdigit(ch)) {
 		/* Decimal: eat dotted digit string. */
 		for (;;) {
 			tmp = 0;
 			do {
-				n = strchr(xdigits, ch) - xdigits;
+				n = ((const char *) __rawmemchr(xdigits, ch)
+				     - xdigits);
 				assert(n >= 0 && n <= 9);
 				tmp *= 10;
 				tmp += n;
 				if (tmp > 255)
 					goto enoent;
-			} while ((ch = *src++) != '\0' &&
-				 isascii(ch) && isdigit(ch));
+			} while (isascii((ch = *src++)) && isdigit(ch));
 			if (size-- <= 0)
 				goto emsgsize;
 			*dst++ = (u_char) tmp;
@@ -151,12 +157,11 @@ inet_net_pton_ipv4(src, dst, size)
 		ch = *src++;	/* Skip over the /. */
 		bits = 0;
 		do {
-			n = strchr(xdigits, ch) - xdigits;
+			n = (const char *) __rawmemchr(xdigits, ch) - xdigits;
 			assert(n >= 0 && n <= 9);
 			bits *= 10;
 			bits += n;
-		} while ((ch = *src++) != '\0' &&
-			 isascii(ch) && isdigit(ch));
+		} while (isascii((ch = *src++)) && isdigit(ch));
 		if (ch != '\0')
 			goto enoent;
 		if (bits > 32)

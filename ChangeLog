@@ -1,5 +1,8 @@
 1999-10-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/inet_net_pton.c (inet_net_pton_ipv4): Prevent buffer
+	overruns.
+
 	* resolv/tst-aton.c (main): Add more tests.
 
 	* resolv/inet_addr.c (inet_aton): Correct some problems with to
