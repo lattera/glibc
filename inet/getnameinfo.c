@@ -15,14 +15,7 @@ provided that the following conditions are met:
 3. Redistributions in binary form must reproduce the authors' copyright
    notice(s), this list of conditions, and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
-4. All advertising materials mentioning features or use of this software
-   must display the following acknowledgement with the name(s) of the
-   authors as specified in the copyright notice(s) substituted where
-   indicated:
-
-	This product includes software developed by <name(s)>, The Inner
-	Net, and other contributors.
-
+4. [The copyright holder has authorized the removal of this clause.]
 5. Neither the name(s) of the author(s) nor the names of its contributors
    may be used to endorse or promote products derived from this software
    without specific prior written permission.

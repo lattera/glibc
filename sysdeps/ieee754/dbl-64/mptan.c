@@ -1,7 +1,8 @@
 
 /*
  * IBM Accurate Mathematical Library
- * Copyright (c) International Business Machines Corp., 2001
+ * written by International Business Machines Corp.
+ * Copyright (C) 2001 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

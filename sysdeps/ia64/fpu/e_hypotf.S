@@ -1,14 +1,27 @@
 .file "hypotf.asm"
 
-// Copyright (c) 2000, 2001, Intel Corporation
+// Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 // 
 // Contributed 2/2/2000 by John Harrison, Cristina Iordache, Ted Kubaska, 
 // Bob Norin, Shane Story, and Ping Tak Peter Tang of the 
 // Computational Software Lab, Intel Corporation.
-// 
-// WARRANTY DISCLAIMER
-// 
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+// * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// * The name of Intel Corporation may not be used to endorse or promote
+// products derived from this software without specific prior written
+// permission.
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR

@@ -1,5 +1,10 @@
-/* Copyright (C) 1992 Eric Young - see COPYING for more details */
+/* Copyright (C) 1992 Eric Young */
 /* Collected from libdes and modified for SECURE RPC by Martin Kuck 1994 */
+/* This file is distributed under the terms of the GNU Lesser General */
+/* Public License, version 2.1 or later - see the file COPYING.LIB for details.*/
+/* If you did not receive a copy of the license with this program, please*/
+/* write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,*/
+/* Boston, MA 02111, USA to obtain a copy. */
 #include <string.h>
 #include "des.h"
 

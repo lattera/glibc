@@ -1,6 +1,6 @@
 /*
  * Mach Operating System
- * Copyright (c) 1993,1991,1990 Carnegie Mellon University
+ * Copyright (C) 1993,1991,1990 Carnegie Mellon University
  * All Rights Reserved.
  *
  * Permission to use, copy, modify and distribute this software and its
@@ -26,6 +26,124 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.4  2002/07/06 06:36:00  aj
+ * 	* sysdeps/ia64/fpu/e_acos.S: Added text of Intel license.
+ * 	* sysdeps/ia64/fpu/e_acosf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_acosl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_asin.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_asinf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_asinl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_atan2.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_atan2f.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_cosh.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_coshf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_coshl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_exp.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_expf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_fmod.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_fmodf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_fmodl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_hypot.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_hypotf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_hypotl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_log.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_logf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_pow.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_powf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_powl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_remainder.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_remainderf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_remainderl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_scalb.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_scalbf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_scalbl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sinh.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sinhf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sinhl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sqrt.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sqrtf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/e_sqrtl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/libm_atan2_req.S: Likewise.
+ * 	* sysdeps/ia64/fpu/libm_error.c: Likewise.
+ * 	* sysdeps/ia64/fpu/libm_frexp4.S: Likewise.
+ * 	* sysdeps/ia64/fpu/libm_frexp4f.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_frexpl.c: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ilogb.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ilogbf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ilogbl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ldexp.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ldexpf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_ldexpl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_log1p.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_log1pf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_log1pl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_logb.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_logbf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_logbl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_modf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_modff.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_modfl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_nearbyint.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_nearbyintf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_nearbyintl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_rint.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_rintf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_rintl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_round.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_roundf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_roundl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_scalbn.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_scalbnf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_scalbnl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_significand.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_significandf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_significandl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_tan.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_tanf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_tanl.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_trunc.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_truncf.S: Likewise.
+ * 	* sysdeps/ia64/fpu/s_truncl.S: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/doasin.c: changed copyright notice to
+ * 	reflect IBM donation of math library to FSF
+ * 	* sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_asin.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_remainder.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/e_sqrt.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mpa.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mpatan.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mpatan2.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mpexp.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mplog.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mpsqrt.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/mptan.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/sincos32.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/slowexp.c: Likewise.
+ * 	* sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+ * 	* sysdeps/gnu/netinet/udp.h: Added BSD copying permission notice
+ * 	* sysdeps/vax/__longjmp.c: Likewise.
+ * 	* sysdeps/vax/setjmp.c: Likewise.
+ * 	* libio/filedoalloc.c: Fixed BSD copying permission notice to remove
+ * 	advertising clause
+ * 	* sysdeps/vax/htonl.s: Likewise.
+ * 	* sysdeps/vax/htons.s: Likewise.
+ * 	* libio/wfiledoalloc.c: Likewise.
+ * 	* stdlib/random.c: Likewise.
+ * 	* stdlib/random_r.c: Likewise.
+ * 	* sysdeps/mach/sys/reboot.h: Likewise.
+ *         * inet/getnameinfo.c: Deleted advertising clause from Inner Net License
+ *         * sysdeps/posix/getaddrinfo.c: Likewise.
+ *         * sunrpc/des_impl.c: Updated license permission notice to Lesser GPL
+ *           and corrected pointer to point to the correct license.
+ *
  * Revision 1.3  2000/03/27 04:09:08  roland
  * 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
  *
@@ -68,21 +186,35 @@
  */
 
 /*
- * Copyright (c) 1982, 1986, 1988 Regents of the University of California.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms are permitted
- * provided that the above copyright notice and this paragraph are
- * duplicated in all such forms and that any documentation,
- * advertising materials, and other materials related to such
- * distribution and use acknowledge that the software was developed
- * by the University of California, Berkeley.  The name of the
- * University may not be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
- * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- *
+   Copyright (C) 1982, 1986, 1988 Regents of the University of California.
+   All rights reserved.
+ 
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.*/
+
+/*
  *	@(#)reboot.h	7.5 (Berkeley) 6/27/88
  */
 
