@@ -1,5 +1,8 @@
 2002-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: It is now possible to
+	use this header with LFS.
+
 	* po/sk.po: Update from translation team.
 
 2002-05-28  Andreas Schwab  <schwab@suse.de>

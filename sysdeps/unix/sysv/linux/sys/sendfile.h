@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,16 +22,27 @@
 #include <features.h>
 #include <sys/types.h>
 
-#ifdef __USE_FILE_OFFSET64
-# error "<sys/sendfile.h> cannot be used with _FILE_OFFSET_BITS=64"
-#endif
-
 __BEGIN_DECLS
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-extern ssize_t sendfile (int __out_fd, int __in_fd, off_t *offset,
+#ifndef __USE_FILE_OFFSET64
+extern ssize_t sendfile (int __out_fd, int __in_fd, off_t *__offset,
 			 size_t __count) __THROW;
+#else
+# ifdef __REDIRECT
+extern ssize_t __REDIRECT (sendfile,
+			   (int __out_fd, int __in_fd, __off64_t *__offset,
+			    size_t __count) __THROW,
+			   sendfile64);
+# else
+#  define sendfile sendfile64
+# endif
+#endif
+#ifdef __USE_LARGEFILE64
+extern ssize_t sendfile64 (int __out_fd, int __in_fd, __off64_t *__offset,
+			   size_t __count) __THROW;
+#endif
 
 __END_DECLS
 
