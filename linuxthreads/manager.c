@@ -115,6 +115,8 @@ int __pthread_manager(void *arg)
   sigfillset(&mask);
   sigdelset(&mask, __pthread_sig_cancel); /* for thread termination */
   sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
+  if (__pthread_threads_debug && __pthread_sig_debug > 0)
+    sigdelset(&mask, __pthread_sig_debug);
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);

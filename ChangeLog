@@ -1,5 +1,8 @@
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (nscd_run): Pretty print.
+	* elf/dl-runtime.c: Include stdlib.h for alloca prototype.
+
 	* manual/charset.texi: Fix typos.  Rephrase.
 	* manual/process.texi: Likewise.
 	* manual/signal.texi: Likewise.

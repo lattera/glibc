@@ -387,7 +387,7 @@ static void *
 __attribute__ ((__noreturn__))
 nscd_run (void *p)
 {
-  long my_number = (long) p;
+  long int my_number = (long int) p;
   struct pollfd conn;
   int run_prune = my_number < lastdb && dbs[my_number].enabled;
   time_t now = time (NULL);
