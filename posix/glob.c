@@ -65,7 +65,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
-#if !defined (_AMIGA) && !defined (VMS)
+#if !defined (_AMIGA) && !defined (VMS) && !defined(WIN32)
 #include <pwd.h>
 #endif
 
@@ -106,7 +106,7 @@ extern int errno;
 #endif
 
 
-#if defined (POSIX) && !defined (__GNU_LIBRARY__)
+#if (defined (POSIX) || defined (WIN32)) && !defined (__GNU_LIBRARY__)
 /* Posix does not require that the d_ino field be present, and some
    systems do not provide it. */
 #define REAL_DIR_ENTRY(dp) 1
@@ -166,7 +166,11 @@ extern void bcopy ();
 __inline
 #endif
 #ifndef __SASC
+#ifdef WIN32
+static void *
+#else
 static char *
+#endif
 my_realloc (p, n)
      char *p;
      unsigned int n;
@@ -192,7 +196,11 @@ my_realloc (p, n)
 #include <alloca.h>
 #else	/* Not HAVE_ALLOCA_H.  */
 #ifndef	_AIX
+#ifdef WIN32
+#include <malloc.h>
+#else
 extern char *alloca ();
+#endif /* WIN32 */
 #endif	/* Not _AIX.  */
 #endif	/* sparc or HAVE_ALLOCA_H.  */
 #endif	/* GCC.  */
@@ -449,6 +457,10 @@ glob (pattern, flags, errfunc, pglob)
 	  if (dirname == NULL || dirname[0] == '\0')
 	    dirname = "SYS:";
 #else
+#ifdef WIN32
+	  if (dirname == NULL || dirname[0] == '\0')
+            dirname = "c:/users/default"; /* poor default */
+#else
 	  if (dirname == NULL || dirname[0] == '\0')
 	    {
 	      extern char *getlogin __P ((void));
@@ -462,6 +474,7 @@ glob (pattern, flags, errfunc, pglob)
 	    }
 	  if (dirname == NULL || dirname[0] == '\0')
 	    dirname = (char *) "~"; /* No luck.  */
+#endif /* WIN32 */
 #endif
 	}
       else
@@ -470,10 +483,15 @@ glob (pattern, flags, errfunc, pglob)
 	  if (dirname == NULL || dirname[0] == '\0')
 	    dirname = "SYS:";
 #else
+#ifdef WIN32
+	  if (dirname == NULL || dirname[0] == '\0')
+            dirname = "c:/users/default"; /* poor default */
+#else
 	  /* Look up specific user's home directory.  */
 	  struct passwd *p = getpwnam (dirname + 1);
 	  if (p != NULL)
 	    dirname = p->pw_dir;
+#endif /* WIN32 */
 #endif
 	}
     }
