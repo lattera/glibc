@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -41,8 +41,8 @@ struct response
   struct response *next;
 };
 
-static struct response *start = NULL;
-static struct response *next = NULL;
+static struct response *start;
+static struct response *next;
 
 static int
 saveit (int instatus, char *inkey, int inkeylen, char *inval,

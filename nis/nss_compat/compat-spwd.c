@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -34,10 +34,10 @@
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 
-static service_user *ni = NULL;
-static bool_t use_nisplus = FALSE; /* default: passwd_compat: nis */
-static nis_name pwdtable = NULL; /* Name of the password table */
-static size_t pwdtablelen = 0;
+static service_user *ni;
+static bool_t use_nisplus; /* default: passwd_compat: nis */
+static nis_name pwdtable; /* Name of the password table */
+static size_t pwdtablelen;
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME spent

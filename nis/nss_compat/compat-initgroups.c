@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -34,10 +34,10 @@
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
 
-static service_user *ni = NULL;
-static bool_t use_nisplus = FALSE; /* default: group_compat: nis */
-static nis_name grptable = NULL; /* Name of the group table */
-static size_t grptablelen = 0;
+static service_user *ni;
+static bool_t use_nisplus; /* default: group_compat: nis */
+static nis_name grptable; /* Name of the group table */
+static size_t grptablelen;
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent

@@ -25,6 +25,17 @@
 	* nss_nisplus/nisplus-rpc.c: Likewise.
 	* nss_nisplus/nisplus-service.c: Likewise.
 	* nss_nisplus/nisplus-spwd.c: Likewise.
+	* nss_nis/nis-alias.c: Likewise.
+	* nss_nis/nis-ethers.c: Likewise.
+	* nss_nis/nis-grp.c: Likewise.
+	* nss_nis/nis-network.c: Likewise.
+	* nss_nis/nis-proto.c: Likewise.
+	* nss_nis/nis-pwd.c: Likewise.
+	* nss_nis/nis-spwd.c: Likewise.
+	* nss_compat/compat-grp.c: Likewise.
+	* nss_compat/compat-initgroups.c: Likewise.
+	* nss_compat/compat-pwd.c: Likewise.
+	* nss_compat/compat-spwd.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Some more
 	optimizations.  Patch by Jakub Jelinek <jakub@redhat.com>.

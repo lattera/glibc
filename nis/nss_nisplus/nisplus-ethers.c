@@ -31,9 +31,9 @@
 
 __libc_lock_define_initialized (static, lock)
 
-static nis_result *result = NULL;
-static nis_name tablename_val = NULL;
-static u_long tablename_len = 0;
+static nis_result *result;
+static nis_name tablename_val;
+static u_long tablename_len;
 
 
 #define NISENTRYVAL(idx,col,res) \

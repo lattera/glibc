@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -30,10 +30,10 @@
 
 __libc_lock_define_initialized (static, lock);
 
-static nis_result *result = NULL;
-static unsigned long next_entry = 0;
-static nis_name tablename_val = NULL;
-static u_long tablename_len = 0;
+static nis_result *result;
+static unsigned long next_entry;
+static nis_name tablename_val;
+static u_long tablename_len;
 
 static enum nss_status
 _nss_create_tablename (int *errnop)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,9 +29,9 @@
 
 __libc_lock_define_initialized (static, lock)
 
-static nis_result *result = NULL;
-static nis_name tablename_val = NULL;
-static u_long tablename_len = 0;
+static nis_result *result;
+static nis_name tablename_val;
+static u_long tablename_len;
 
 #define NISENTRYVAL(idx,col,res) \
         ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999i, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -31,8 +31,8 @@
 __libc_lock_define_initialized (static, lock)
 
 static bool_t new_start = 1;
-static char *oldkey = NULL;
-static int oldkeylen = 0;
+static char *oldkey;
+static int oldkeylen;
 
 static int
 _nss_nis_parse_aliasent (const char *key, char *alias, struct aliasent *result,
