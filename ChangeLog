@@ -1,7 +1,3 @@
-1998-03-10 07:54  H.J. Lu  <hjl@gnu.org>
-
-	* elf/rtld.c (dl_main): Load the preloaded objects dependencies.
-
 1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (_dl_lookup_versioned_symbol): Print version

@@ -612,11 +612,6 @@ of this helper program; chances are you did not intend to run this program.\n",
      dependencies in the executable's searchlist for symbol resolution.  */
   _dl_map_object_deps (main_map, preloads, npreloads, mode == trace);
 
-  /* We should also load the preloaded objects dependencies. They
-     may call dlsym (RTLD_NEXT, ...).  */
-  for (i = 0; i < npreloads; i++)
-    _dl_map_object_deps (preloads[i], NULL, 0, 0);
-
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
   __close (_dl_zerofd);
