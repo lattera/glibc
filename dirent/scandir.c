@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #define DIRENT_TYPE struct dirent
 #endif
 
+
 int
 SCANDIR (dir, namelist, select, cmp)
      const char *dir;
@@ -48,34 +49,47 @@ SCANDIR (dir, namelist, select, cmp)
 
   i = 0;
   while ((d = READDIR (dp)) != NULL)
-    if (select == NULL || (*select) (d))
-      {
-	DIRENT_TYPE *vnew;
-	size_t dsize;
+    {
+      int use_it = select == NULL;
 
-	/* Ignore errors from select or readdir */
-	__set_errno (0);
+      if (! use_it)
+	{
+	  use_it = select (d);
+	  /* The select function might have changed errno.  It was
+	     zero before and it need to be again to make the latter
+	     tests work.  */
+	  __set_errno (0);
+	}
 
-	if (__builtin_expect (i == vsize, 0))
-	  {
-	    DIRENT_TYPE **new;
-	    if (vsize == 0)
-	      vsize = 10;
-	    else
-	      vsize *= 2;
-	    new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
-	    if (new == NULL)
-	      break;
-	    v = new;
-	  }
+      if (use_it)
+	{
+	  DIRENT_TYPE *vnew;
+	  size_t dsize;
 
-	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	vnew = (DIRENT_TYPE *) malloc (dsize);
-	if (vnew == NULL)
-	  break;
+	  /* Ignore errors from select or readdir */
+	  __set_errno (0);
 
-	v[i++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
-      }
+	  if (__builtin_expect (i == vsize, 0))
+	    {
+	      DIRENT_TYPE **new;
+	      if (vsize == 0)
+		vsize = 10;
+	      else
+		vsize *= 2;
+	      new = (DIRENT_TYPE **) realloc (v, vsize * sizeof (*v));
+	      if (new == NULL)
+		break;
+	      v = new;
+	    }
+
+	  dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
+	  vnew = (DIRENT_TYPE *) malloc (dsize);
+	  if (vnew == NULL)
+	    break;
+
+	  v[i++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
+	}
+    }
 
   if (__builtin_expect (errno, 0) != 0)
     {

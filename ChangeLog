@@ -1,5 +1,8 @@
 2003-06-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* dirent/scandir.c (SCANDIR): Reset errno after calling selector
+	function [PR libc/5045].
+
 	* sysdeps/i386/bits/byteswap.h (__bswap_32): Use bswap instruction
 	also for P4.
 
