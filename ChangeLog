@@ -1,5 +1,8 @@
 1999-06-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/printf-parse.h (parse_one_spec): Add support for a
+	and A format.
+
 	* shadow/fgetspent_r.c (__fgetspent_r): Set errno to ENOENT for
 	returning after last entry.
 	* pwd/fgetpwent_r.c (__fgetpwent_r): Likewise.
