@@ -1,3 +1,7 @@
+1999-01-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/programs/pt_chown.c (main): Update copyright year.
+
 1999-01-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/tempname.c: Open files with mode 0600.
