@@ -1,3 +1,7 @@
+2004-03-10  Chris Heath  <chris@heathens.co.nz>
+
+	* iconvdata/gconv.map: Add gconv_end (fixes memory leak).
+
 2004-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/__longjmp.S (JB_SIZE): Undefine before

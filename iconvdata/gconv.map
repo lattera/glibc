@@ -1,6 +1,7 @@
 {
 global:
   gconv;
+  gconv_end;
   gconv_init;
 local:
   *;
