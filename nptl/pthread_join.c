@@ -66,8 +66,9 @@ pthread_join (threadid, thread_return)
 
   /* Wait for the thread to finish.  If it is already locked something
      is wrong.  There can only be one waiter.  */
-  if (__builtin_expect (atomic_compare_and_exchange_acq (&pd->joinid, self,
-							 NULL) != 0, 0))
+  if (__builtin_expect (atomic_compare_and_exchange_bool_acq (&pd->joinid,
+							      self,
+							      NULL), 0))
     /* There is already somebody waiting for the thread.  */
     return EINVAL;
 

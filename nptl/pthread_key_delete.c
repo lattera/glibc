@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,8 +33,8 @@ pthread_key_delete (key)
       unsigned int seq = __pthread_keys[key].seq;
 
       if (__builtin_expect (! KEY_UNUSED (seq), 1)
-	  && atomic_compare_and_exchange_acq (&__pthread_keys[key].seq,
-					      seq + 1, seq) == 0)
+	  && ! atomic_compare_and_exchange_bool_acq (&__pthread_keys[key].seq,
+						     seq + 1, seq))
 	/* We deleted a valid key.  */
 	result = 0;
     }

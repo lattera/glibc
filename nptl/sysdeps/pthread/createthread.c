@@ -100,8 +100,8 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	  /* Enqueue the descriptor.  */
 	  do
 	    pd->nextevent = __nptl_last_event;
-	  while (atomic_compare_and_exchange_acq (&__nptl_last_event, pd,
-						  pd->nextevent) != 0);
+	  while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event, pd,
+						       pd->nextevent) != 0);
 
 	  /* Now call the function which signals the event.  */
 	  __nptl_create_event ();

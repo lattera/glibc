@@ -36,8 +36,8 @@ __cxa_finalize (void *d)
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
 	if ((d == NULL || d == f->func.cxa.dso_handle)
 	    /* We don't want to run this cleanup more than once.  */
-	    && (atomic_compare_and_exchange_acq (&f->flavor, ef_free, ef_cxa)
-		== 0))
+	    && ! atomic_compare_and_exchange_bool_acq (&f->flavor, ef_free,
+						       ef_cxa))
 	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
     }
 

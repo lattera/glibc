@@ -45,25 +45,31 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
   (!__sync_bool_compare_and_swap_si ((int *) (mem), (int) (long) (oldval), \
 				     (int) (long) (newval)))
 
-#define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (!__sync_bool_compare_and_swap_di ((long *) (mem), (long) (oldval), \
 				     (long) (newval)))
 
-#define __arch_compare_and_exchange_32_val_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
+  (abort (), 0)
+
+#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
+  (abort (), 0)
+
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap_si ((int *) (mem), (int) (long) (oldval), \
 				  (int) (long) (newval))
 
-#define __arch_compare_and_exchange_64_val_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap_di ((long *) (mem), (long) (oldval), \
 				  (long) (newval))
 

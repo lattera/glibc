@@ -55,29 +55,29 @@ typedef uintmax_t uatomic_max_t;
 #endif
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
+#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
      __asm __volatile (LOCK "cmpxchgb %b2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "q" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
+#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
      __asm __volatile (LOCK "cmpxchgw %w2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
      __asm __volatile (LOCK "cmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-#define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
+#define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
      __asm __volatile (LOCK "cmpxchgq %q2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \

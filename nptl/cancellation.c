@@ -41,8 +41,8 @@ __pthread_enable_asynccancel (void)
       if (newval == oldval)
 	break;
 
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
+      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						  newval, oldval))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
@@ -72,8 +72,8 @@ __pthread_enable_asynccancel_2 (int *oldvalp)
       if (newval == oldval)
 	break;
 
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
+      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						  newval, oldval))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
@@ -106,8 +106,8 @@ __pthread_disable_asynccancel (int oldtype)
       if (newval == oldval)
 	break;
 
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
+      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						  newval, oldval))
 	break;
     }
 }

@@ -1,3 +1,24 @@
+2003-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancellation.c: Adjust for new form of compare&exchange macros.
+	* cleanup_defer.c: Likewise.
+	* init.c: Likewise.
+	* libc-cancellation.c: Likewise.
+	* old_pthread_cond_broadcast.c: Likewise.
+	* old_pthread_cond_signal.c: Likewise.
+	* old_pthread_cond_timedwait.c: Likewise.
+	* old_pthread_cond_wait.c: Likewise.
+	* pthread_cancel.c: Likewise.
+	* pthread_create.c: Likewise.
+	* pthread_detach.c: Likewise.
+	* pthread_join.c: Likewise.
+	* pthread_key_delete.c: Likewise.
+	* pthread_setcancelstate.c: Likewise.
+	* pthread_setcanceltype.c: Likewise.
+	* pthread_timedjoin.c: Likewise.
+	* pthread_tryjoin.c: Likewise.
+	* sysdeps/pthread/createthread.c: Likewise.
+
 2003-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Include <atomic.h>.

@@ -34,11 +34,12 @@ __libc_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
   int oldval;
+  int newval;
 
-  while (1)
+  do
     {
       oldval = THREAD_GETMEM (self, cancelhandling);
-      int newval = oldval | CANCELTYPE_BITMASK;
+      newval = oldval | CANCELTYPE_BITMASK;
 
       if (__builtin_expect ((oldval & CANCELED_BITMASK) != 0, 0))
 	{
@@ -46,8 +47,8 @@ __libc_enable_asynccancel (void)
 	  if ((oldval & EXITING_BITMASK) != 0)
 	    break;
 
-	  if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					       oldval) != 0)
+	  if (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						    newval, oldval))
 	    /* Somebody else modified the word, try again.  */
 	    continue;
 
@@ -60,11 +61,9 @@ __libc_enable_asynccancel (void)
 
 	  /* NOTREACHED */
 	}
-
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
-	break;
     }
+  while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+					       newval, oldval));
 
   return oldval;
 }
@@ -80,19 +79,19 @@ __libc_disable_asynccancel (int oldtype)
     return;
 
   struct pthread *self = THREAD_SELF;
+  int oldval;
+  int newval;
 
-  while (1)
+  do
     {
-      int oldval = THREAD_GETMEM (self, cancelhandling);
-      int newval = oldval & ~CANCELTYPE_BITMASK;
+      oldval = THREAD_GETMEM (self, cancelhandling);
+      newval = oldval & ~CANCELTYPE_BITMASK;
 
       if (newval == oldval)
 	break;
-
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
-	break;
     }
+  while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling, newval,
+					       oldval));
 }
 
 #endif

@@ -41,10 +41,10 @@ _pthread_cleanup_push_defer (buffer, routine, arg)
   /* Disable asynchronous cancellation for now.  */
   if (__builtin_expect (cancelhandling & CANCELTYPE_BITMASK, 0))
     {
-      while (atomic_compare_and_exchange_acq (&self->cancelhandling,
-					      cancelhandling
-					      & ~CANCELTYPE_BITMASK,
-					      cancelhandling) != 0)
+      while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						   cancelhandling
+						   & ~CANCELTYPE_BITMASK,
+						   cancelhandling))
 	cancelhandling = self->cancelhandling;
     }
 
@@ -70,10 +70,10 @@ _pthread_cleanup_pop_restore (buffer, execute)
       && ((cancelhandling = THREAD_GETMEM (self, cancelhandling))
 	  & CANCELTYPE_BITMASK) == 0)
     {
-      while (atomic_compare_and_exchange_acq (&self->cancelhandling,
-					      cancelhandling
-					      | CANCELTYPE_BITMASK,
-					      cancelhandling) != 0)
+      while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						   cancelhandling
+						   | CANCELTYPE_BITMASK,
+						   cancelhandling))
 	cancelhandling = self->cancelhandling;
 
       CANCELLATION_P (self);

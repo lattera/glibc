@@ -46,10 +46,10 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
   (abort (), 0)
 
 #ifdef UP
@@ -69,41 +69,41 @@ typedef uintmax_t uatomic_max_t;
  * XXX this may not work properly on 64-bit if the register
  * containing oldval has the high half non-zero for some reason.
  */
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval)	\
-({								\
-  unsigned int __tmp;						\
-  __asm __volatile (__ARCH_REL_INSTR "\n"			\
-		    "1:	lwarx	%0,0,%1\n"			\
-		    "	subf.	%0,%2,%0\n"			\
-		    "	bne	2f\n"				\
-		    "	stwcx.	%3,0,%1\n"			\
-		    "	bne-	1b\n"				\
-		    "2:	" __ARCH_ACQ_INSTR			\
-		    : "=&r" (__tmp)				\
-		    : "r" (mem), "r" (oldval), "r" (newval)	\
-		    : "cr0", "memory");				\
-  __tmp != 0;							\
+#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
+({									      \
+  unsigned int __tmp;							      \
+  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		    "1:	lwarx	%0,0,%1\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stwcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	" __ARCH_ACQ_INSTR				      \
+		    : "=&r" (__tmp)					      \
+		    : "r" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
 })
 
 #ifdef __powerpc64__
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval)\
-({								\
-  unsigned long	__tmp;						\
-  __asm __volatile (__ARCH_REL_INSTR "\n"			\
-		    "1:	ldarx	%0,0,%1\n"			\
-		    "	subf.	%0,%2,%0\n"			\
-		    "	bne	2f\n"				\
-		    "	stdcx.	%3,0,%1\n"			\
-		    "	bne-	1b\n"				\
-		    "2:	" __ARCH_ACQ_INSTR			\
-		    : "=&r" (__tmp)				\
-		    : "r" (mem), "r" (oldval), "r" (newval)	\
-		    : "cr0", "memory");				\
-  __tmp != 0;							\
+# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
+({									      \
+  unsigned long	__tmp;							      \
+  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		    "1:	ldarx	%0,0,%1\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stdcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	" __ARCH_ACQ_INSTR				      \
+		    : "=&r" (__tmp)					      \
+		    : "r" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
 })
 
 #else /* powerpc32 */
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 #endif
 

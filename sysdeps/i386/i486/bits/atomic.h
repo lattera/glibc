@@ -55,23 +55,23 @@ typedef uintmax_t uatomic_max_t;
 #endif
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     __asm __volatile (LOCK "cmpxchgb %b2, %1; setne %0"		      \
+#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+     __asm __volatile (LOCK "cmpxchgb %b2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "q" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     __asm __volatile (LOCK "cmpxchgw %w2, %1; setne %0"		      \
+#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+     __asm __volatile (LOCK "cmpxchgw %w2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     __asm __volatile (LOCK "cmpxchgl %2, %1; setne %0"			      \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+     __asm __volatile (LOCK "cmpxchgl %2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
@@ -83,37 +83,34 @@ typedef uintmax_t uatomic_max_t;
    really going to be used the code below can be used on Intel Pentium
    and later, but NOT on i486.  */
 #if 1
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), 0)
 #else
 # ifdef __PIC__
-#  define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     int ignore;							      \
-     __asm __volatile ("xchgl %3, %%ebx\n\t"				      \
-		       LOCK "cmpxchg8b %2, %1\n\t"			      \
-		       "setne %0\n\t"					      \
-		       "xchgl %3, %%ebx"				      \
-		       : "=a" (ret), "=m" (*mem), "=d" (ignore)		      \
+#  define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) ret;						      \
+     __asm __volatile ("xchgl %2, %%ebx\n\t"				      \
+		       LOCK "cmpxchg8b %1\n\t"			      \
+		       "xchgl %2, %%ebx"				      \
+		       : "=A" (ret), "=m" (*mem)			      \
 		       : "DS" (((unsigned long long int) (newval))	      \
 			       & 0xffffffff),				      \
 			 "c" (((unsigned long long int) (newval)) >> 32),     \
-			 "1" (*mem), "0" (((unsigned long long int) (oldval)) \
+			 "1" (*mem), "a" (((unsigned long long int) (oldval)) \
 					  & 0xffffffff),		      \
-			 "2" (((unsigned long long int) (oldval)) >> 32));    \
+			 "d" (((unsigned long long int) (oldval)) >> 32));    \
      ret; })
 # else
 #  define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     int ignore;							      \
-     __asm __volatile (LOCK "cmpxchg8b %2, %1; setne %0"		      \
-		       : "=a" (ret), "=m" (*mem), "=d" (ignore)		      \
+  ({ __typeof (*mem) ret;						      \
+     __asm __volatile (LOCK "cmpxchg8b %1"				      \
+		       : "=A" (ret), "=m" (*mem)			      \
 		       : "b" (((unsigned long long int) (newval))	      \
 			      & 0xffffffff),				      \
 			  "c" (((unsigned long long int) (newval)) >> 32),    \
-			 "1" (*mem), "0" (((unsigned long long int) (oldval)) \
+			 "1" (*mem), "a" (((unsigned long long int) (oldval)) \
 					  & 0xffffffff),		      \
-			 "2" (((unsigned long long int) (oldval)) >> 32));    \
+			 "d" (((unsigned long long int) (oldval)) >> 32));    \
      ret; })
 # endif
 #endif

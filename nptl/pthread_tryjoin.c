@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -59,7 +59,7 @@ pthread_tryjoin_np (threadid, thread_return)
 
   /* Wait for the thread to finish.  If it is already locked something
      is wrong.  There can only be one waiter.  */
-  if (atomic_compare_and_exchange_acq (&pd->joinid, self, NULL) != 0)
+  if (atomic_compare_and_exchange_bool_acq (&pd->joinid, self, NULL))
     /* There is already somebody waiting for the thread.  */
     return EINVAL;
 

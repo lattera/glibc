@@ -147,8 +147,8 @@ sigcancel_handler (int sig __attribute ((unused)))
 	/* Already canceled or exiting.  */
 	break;
 
-      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					   oldval) == 0)
+      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
+						  newval, oldval))
 	{
 	  /* Set the return value.  */
 	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);

@@ -36,10 +36,12 @@ pthread_cancel (th)
     return ESRCH;
 
   int result = 0;
-  while (1)
+  int oldval;
+  int newval;
+  do
     {
-      int oldval = pd->cancelhandling;
-      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
+      oldval = pd->cancelhandling;
+      newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
       /* Avoid doing unnecessary work.  The atomic operation can
 	 potentially be expensive if the bug has to be locked and
@@ -66,13 +68,11 @@ pthread_cancel (th)
 
 	  break;
 	}
-
-      /* Mark the thread as canceled.  This has to be done
-	 atomically since other bits could be modified as well.  */
-      if (atomic_compare_and_exchange_acq (&pd->cancelhandling, newval,
-					   oldval) == 0)
-	break;
     }
+  /* Mark the thread as canceled.  This has to be done
+     atomically since other bits could be modified as well.  */
+  while (atomic_compare_and_exchange_bool_acq (&pd->cancelhandling, newval,
+					       oldval));
 
   return result;
 }

@@ -45,13 +45,13 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
   ({ unsigned int *__mem = (unsigned int *) (mem);			      \
      unsigned int __old = (unsigned int) (oldval);			      \
      unsigned int __cmp = __old;					      \
@@ -61,7 +61,7 @@ typedef uintmax_t uatomic_max_t;
      __cmp != __old; })
 
 #ifdef __s390x__
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   ({ unsigned long int *__mem = (unsigned long int *) (mem);		      \
      unsigned long int __old = (unsigned long int) (oldval);		      \
      unsigned long int __cmp = __old;					      \
@@ -73,6 +73,6 @@ typedef uintmax_t uatomic_max_t;
 /* For 31 bit we do not really need 64-bit compare-and-exchange. We can
    implement them by use of the csd instruction. The straightforward
    implementation causes warnings so we skip the definition for now.  */
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 #endif

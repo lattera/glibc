@@ -36,7 +36,7 @@ __libc_freeres (void)
      protect for multiple executions since these are fatal.  */
   static long int already_called;
 
-  if (! atomic_compare_and_exchange_acq (&already_called, 1, 0))
+  if (! atomic_compare_and_exchange_bool_acq (&already_called, 1, 0))
     {
       void * const *p;
 

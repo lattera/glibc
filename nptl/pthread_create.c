@@ -260,8 +260,8 @@ start_thread (void *arg)
 
 	      do
 		pd->nextevent = __nptl_last_event;
-	      while (atomic_compare_and_exchange_acq (&__nptl_last_event, pd,
-						      pd->nextevent) != 0);
+	      while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event,
+							   pd, pd->nextevent));
 	    }
 
 	  /* Now call the function to signal the event.  */
