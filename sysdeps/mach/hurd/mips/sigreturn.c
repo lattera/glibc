@@ -77,8 +77,30 @@ __sigreturn (struct sigcontext *scp)
 
   if (scp->sc_coproc_used & SC_COPROC_USE_FPU)
     {
-      /* XXX should restore FPU state here */
-      abort ();
+      /* Restore FPU state.  */
+#define restore_fpr(n) \
+  asm volatile ("l.d $f" #n ",%0" : : "m" (scp->sc_fpr[n]))
+
+      /* Restore floating-point registers. */
+      restore_fpr (0);
+      restore_fpr (2);
+      restore_fpr (4);
+      restore_fpr (6);
+      restore_fpr (8);
+      restore_fpr (10);
+      restore_fpr (12);
+      restore_fpr (14);
+      restore_fpr (16);
+      restore_fpr (18);
+      restore_fpr (20);
+      restore_fpr (22);
+      restore_fpr (24);
+      restore_fpr (26);
+      restore_fpr (28);
+      restore_fpr (30);
+
+      /* Restore the floating-point control/status register ($f31).  */
+      asm volatile ("ctc1 %0,$f31" : : "r" (scp->sc_fpcsr));
     }
 
   /* Load all the registers from the sigcontext.  */
