@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -25,5 +25,6 @@
 SYSCALL__ (sigpause, 1)
 	ret
 	.end __sigpause
+libc_hidden_def (__sigpause)
 
 weak_alias (__sigpause, sigpause)
