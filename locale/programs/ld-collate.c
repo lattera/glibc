@@ -1073,7 +1073,7 @@ collate_element_to (struct linereader *lr, struct localedef_t *locale,
 		  &not_used) >= 0)
     {
       lr_error (lr, _("symbol for multicharacter collating element "
-		      "`%.*s' duplicates other element definition"),
+		      "`%.*s' duplicates element definition"),
 		(int) code->val.str.len, code->val.str.start);
       return;
     }

@@ -1,10 +1,22 @@
+1998-12-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c: Unify messages and correct typos.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* manual/errno.texi: Likewise.
+	* nis/nis_error.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+
 1998-12-20  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Add
 	implementation.
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove wrappers for
 	now-inlined calls.
-        
+
 1998-12-22  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c: New file.

@@ -731,7 +731,7 @@ The file quota system is confused because there are too many users.
 @end deftypevr
 
 @comment errno.h
-@comment BSD: Disc quota exceeded
+@comment BSD: Disk quota exceeded
 @deftypevr Macro int EDQUOT
 @comment errno 69 @c DO NOT REMOVE
 The user's disk quota was exceeded.

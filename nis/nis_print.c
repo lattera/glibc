@@ -159,7 +159,7 @@ nis_print_directory (const directory_obj *dir)
   nis_server *sptr;
   unsigned int i;
 
-  printf (_("Name : '%s'\n"), dir->do_name);
+  printf (_("Name : `%s'\n"), dir->do_name);
   printf (_("Type : %s\n"), nis_nstype2str (dir->do_type));
   sptr = dir->do_servers.do_servers_val;
   for (i = 0; i < dir->do_servers.do_servers_len; i++)

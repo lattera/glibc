@@ -191,7 +191,7 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
 
   if (!s || (!isdigit (*s)))
     {
-      syslog (LOG_ERR, _("netname2user: missing group id list in '%s'."), s);
+      syslog (LOG_ERR, _("netname2user: missing group id list in `%s'."), s);
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -296,7 +296,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   domain = nis_local_directory ();
   if ((strlen (principal) + strlen (domain) + 45) > (size_t) NIS_MAXNAMELEN)
     {
-      syslog (LOG_ERR, _("netname2user: principal name '%s' too long"),
+      syslog (LOG_ERR, _("netname2user: principal name `%s' too long"),
 	      principal);
       return NSS_STATUS_UNAVAIL;
     }

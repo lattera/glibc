@@ -110,7 +110,7 @@ time_finish (struct localedef_t *locale)
 
 #define TESTARR_ELEM(cat, max)						      \
   if (time->cur_num_##cat == 0 && !be_quiet)				      \
-    error (0, 0, _("field `%s' in category `%s' not defined"),		      \
+    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
 	   #cat, "LC_TIME");						      \
   else if (time->cur_num_##cat != max && !be_quiet)			      \
     error (0, 0, _("field `%s' in category `%s' has not enough values"),      \
@@ -124,7 +124,7 @@ time_finish (struct localedef_t *locale)
 
 #define TEST_ELEM(cat)							      \
   if (time->cat == NULL && !be_quiet)					      \
-    error (0, 0, _("field `%s' in category `%s' not defined"),		      \
+    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
 	   #cat, "LC_TIME")
 
   TEST_ELEM (d_t_fmt);

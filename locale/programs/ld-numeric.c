@@ -78,7 +78,7 @@ numeric_finish (struct localedef_t *locale)
 
 #define TEST_ELEM(cat)							      \
   if (numeric->cat == NULL && !be_quiet)				      \
-    error (0, 0, _("field `%s' in category `%s' not defined"),		      \
+    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
 	   #cat, "LC_NUMERIC")
 
   TEST_ELEM (decimal_point);
@@ -95,7 +95,7 @@ value for field `%s' in category `%s' must not be the empty string"),
     }
 
   if (numeric->grouping_act == 0 && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' not defined"),
+    error (0, 0, _("field `%s' in category `%s' undefined"),
 	   "grouping", "LC_NUMERIC");
 }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -52,7 +52,7 @@ static const char *nis_errlist[] =
   N_("Entry/Table type mismatch"),
   N_("Link Points to illegal name"),
   N_("Partial Success"),
-  N_("Too Many Attributes"),
+  N_("Too many Attributes"),
   N_("Error in RPC subsystem"),
   N_("Missing or malformed attribute"),
   N_("Named object is not searchable"),

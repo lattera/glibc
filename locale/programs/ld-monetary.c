@@ -119,7 +119,7 @@ monetary_finish (struct localedef_t *locale)
 
 #define TEST_ELEM(cat)							      \
   if (monetary->cat == NULL && !be_quiet)				      \
-    error (0, 0, _("field `%s' in category `%s' not defined"),		      \
+    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
 	   #cat, "LC_MONETARY")
 
   TEST_ELEM (int_curr_symbol);
@@ -160,13 +160,13 @@ value for field `%s' in category `%s' must not be the empty string"),
     }
 
   if (monetary->mon_grouping_act == 0 && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' not defined"),
+    error (0, 0, _("field `%s' in category `%s' undefined"),
 	   "mon_grouping", "LC_MONETARY");
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max)					      \
   if (monetary->cat == -2 && !be_quiet)					      \
-    error (0, 0, _("field `%s' in category `%s' not defined"),		      \
+    error (0, 0, _("field `%s' in category `%s' undefined"),		      \
 	   #cat, "LC_MONETARY");					      \
   else if ((monetary->cat < min || monetary->cat > max) && !be_quiet)	      \
     error (0, 0, _("\
