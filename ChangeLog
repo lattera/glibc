@@ -1,3 +1,9 @@
+2001-03-18  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Advise to use GCC
+	2.95.3.
+	(Supported Configurations): Mention s390x.
+
 2001-03-26  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Add MAP_* and MADV_*
