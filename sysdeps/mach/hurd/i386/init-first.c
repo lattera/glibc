@@ -123,7 +123,7 @@ init1 (int argc, char *arg0, ...)
 	 the exec server.  */
       extern const void _start;
       const ElfW(Ehdr) *const ehdr = &_start;
-      _dl_phdr = (const ElfW(Phdr) *) ((const void *) ehdr + ehdr->e_phoff);
+      _dl_phdr = (ElfW(Phdr) *) ((const void *) ehdr + ehdr->e_phoff);
       _dl_phnum = ehdr->e_phnum;
       assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
 #endif
@@ -133,9 +133,9 @@ init1 (int argc, char *arg0, ...)
 #ifndef SHARED
   __libc_enable_secure = d->flags & EXEC_SECURE;
 
-  _dl_phdr = (const ElfW(Phdr) *) d->phdr;
-  _dl_phnum = d->phdr_size / sizeof (ElfW(Phdr));
-  assert (d->phdr_size % sizeof (ElfW(Phdr)) == 0);
+  _dl_phdr = (ElfW(Phdr) *) d->phdr;
+  _dl_phnum = d->phdrsz / sizeof (ElfW(Phdr));
+  assert (d->phdrsz % sizeof (ElfW(Phdr)) == 0);
 #endif
 
   _hurd_init_dtable = d->dtable;
