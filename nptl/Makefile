@@ -398,6 +398,7 @@ CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
+tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
 $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
