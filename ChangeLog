@@ -10,6 +10,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/Versions: ...to here...
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions: ...and here.
 	New file.
+	* sysdeps/mach/hurd/i386/Versions: ...and here.  New file.
 
 	* locale/programs/ld-ctype.c (allocate_arrays): Correct a comment.
 
