@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,01,02, 03 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -553,10 +553,11 @@ else
 +gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes
 endif
 
-# This is the program that generates makefile
-# dependencies from C source files.
+# This is the program that generates makefile dependencies from C source files.
+# The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
+# targets for headers so that removed headers don't break the build.
 ifndef +mkdep
-+mkdep = $(CC) -M
++mkdep = $(CC) -M -MP
 endif
 
 # The program that makes Emacs-style TAGS files.
