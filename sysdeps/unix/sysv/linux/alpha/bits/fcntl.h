@@ -46,6 +46,7 @@
 #ifdef __USE_GNU
 # define O_DIRECT	040000	/* Direct disk access.  */
 # define O_DIRECTORY	0100000	/* Must be a directory.  */
+# define O_NOFOLLOW	0200000	/* Do not follow links.  */
 #endif
 
 /* Not necessary, files are always with 64bit off_t.  */
