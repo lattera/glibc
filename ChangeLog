@@ -1,3 +1,8 @@
+2004-09-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (_int_free): Only do arena boundary check for
+	contiguous arenas.
+
 2004-09-10  Kazuhiro Inaoka <inaoka.kazuhiro@renesas.com>
 
 	* stdlib/longlong.h [__M32R__] (add_ssaaaa, sub_ddmmss): Fix broken
