@@ -51,6 +51,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/utsname.h>
 #include <bits/libc-lock.h>
 
+#ifdef HAVE_LIBIDN
+# include <libidn/idna.h>
+extern int __idna_to_unicode_lzlz (const char *input, char **output,
+				   int flags);
+#endif
+
 #ifndef min
 # define min(x,y) (((x) > (y)) ? (y) : (x))
 #endif /* min */
@@ -160,7 +166,11 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   struct hostent th;
   int ok = 0;
 
-  if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM))
+  if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM
+#ifdef HAVE_LIBIDN
+		|NI_IDN
+#endif
+		))
     return EAI_BADFLAGS;
 
   if (sa == NULL || addrlen < sizeof (sa_family_t))
@@ -244,18 +254,39 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		    && (c = nrl_domainname ())
 		    && (c = strstr (h->h_name, c))
 		    && (c != h->h_name) && (*(--c) == '.'))
+		  /* Terminate the string after the prefix.  */
+		  *c = '\0';
+
+#ifdef HAVE_LIBIDN
+		/* If requested, convert from the IDN format.  */
+		if (flags & NI_IDN)
 		  {
-		    strncpy (host, h->h_name,
-			     min(hostlen, (size_t) (c - h->h_name)));
-		    host[min(hostlen - 1, (size_t) (c - h->h_name))]
-		      = '\0';
-		    ok = 1;
+		    char *out;
+		    int rc = __idna_to_unicode_lzlz (h->h_name, &out, 0);
+		    if (rc != IDNA_SUCCESS)
+		      {
+			if (rc == IDNA_MALLOC_ERROR)
+			  return EAI_MEMORY;
+			if (rc == IDNA_DLOPEN_ERROR)
+			  return EAI_SYSTEM;
+			return EAI_IDN_ENCODE;
+		      }
+
+		    if (out != h->h_name)
+		      {
+			h->h_name = strdupa (out);
+			free (out);
+		      }
 		  }
-		else
-		  {
-		    strncpy (host, h->h_name, hostlen);
-		    ok = 1;
-		  }
+#endif
+
+		size_t len = strlen (h->h_name) + 1;
+		if (len > hostlen)
+		  return EAI_OVERFLOW;
+
+		memcpy (host, h->h_name, len);
+
+		ok = 1;
 	      }
 	  }
 
@@ -390,8 +421,12 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		break;
 	      }
 	  }
-	__snprintf (serv, servlen, "%d",
-		    ntohs (((const struct sockaddr_in *) sa)->sin_port));
+
+	if (__snprintf (serv, servlen, "%d",
+			ntohs (((const struct sockaddr_in *) sa)->sin_port))
+	    + 1 > servlen)
+	  return EAI_OVERFLOW;
+
 	break;
 
       case AF_LOCAL:

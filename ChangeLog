@@ -1,3 +1,15 @@
+2004-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h (EAI_OVERFLOW): Define.
+	(NI_IDN): Define.
+	* inet/getnameinfo.c (getnameinfo): Return error in case argument
+	buffers overflow.  Implement NI_IDN.
+
+2004-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h: Define AI_CANONIDN.
+	* sysdeps/posix/getaddrinfo.c: Implement AI_CANONIDN.
+
 2004-03-12  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/select.S: Fix unwind.  Propagate
