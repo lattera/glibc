@@ -22,6 +22,8 @@
  * -- moshier@na-net.ornl.gov
  */
 
+#include <math_private.h>
+
 static long double c0 = 1.44268798828125L;
 static long double c1 = 7.05260771340735992468e-6L;
 
