@@ -1,5 +1,5 @@
 /* Startup code for elf32-sparc
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -39,11 +39,11 @@ _start:
 
   /* Load the addresses of the user entry points.  */
 	sethi	%hi(main), %o0
-	sethi	%hi(_init), %o3
-	sethi	%hi(_fini), %o4
+	sethi	%hi(__libc_csu_init), %o3
+	sethi	%hi(__libc_csu_fini), %o4
 	or	%o0, %lo(main), %o0
-	or	%o3, %lo(_init), %o3
-	or	%o4, %lo(_fini), %o4
+	or	%o3, %lo(__libc_csu_init), %o3
+	or	%o4, %lo(__libc_csu_fini), %o4
 
   /* When starting a binary via the dynamic linker, %g1 contains the
      address of the shared library termination function, which will be

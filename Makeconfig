@@ -711,7 +711,7 @@ object-suffixes-for-libc += .oS
 # shared objects.  We don't want to use CFLAGS-os because users may, for
 # example, make that processor-specific.
 CFLAGS-.oS = $(CFLAGS-.o) $(pic-ccflag)
-CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC
+CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC -DLIBC_NONSHARED=1
 libtype.oS = lib%_nonshared.a
 endif
 

@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF x86-64 ABI.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2001.
 
@@ -75,8 +75,8 @@ _start:
 	pushq %rsp
 
 	/* Pass address of our own entry points to .fini and .init.  */
-	movq $_fini, %r8
-	movq $_init, %rcx
+	movq $__libc_csu_fini, %r8
+	movq $__libc_csu_init, %rcx
 
 	movq $BP_SYM (main), %rdi
 

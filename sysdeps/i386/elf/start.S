@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF i386 ABI.
-   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2000,2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,8 +68,8 @@ _start:
 				   termination function.  */
 
 	/* Push address of our own entry points to .fini and .init.  */
-	pushl $_fini
-	pushl $_init
+	pushl $__libc_csu_fini
+	pushl $__libc_csu_init
 
 	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */

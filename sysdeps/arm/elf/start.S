@@ -1,5 +1,5 @@
 /* Startup code for ARM & ELF
-   Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,12 +54,12 @@ _start:
 
 	/* Push the last arguments to main() onto the stack */
 	stmfd sp!, {a1}
-	ldr a1, =_fini
+	ldr a1, =__libc_csu_fini
 	stmfd sp!, {a1}
 
 	/* Set up the other arguments for main() that go in registers */
 	ldr a1, =main
-	ldr a4, =_init
+	ldr a4, =__libc_csu_init
 
 	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini) */
 

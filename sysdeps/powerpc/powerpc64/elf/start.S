@@ -23,16 +23,12 @@
  /* These are the various addresses we require.  */
 	.section ".rodata"
 	.align	3
-	weak_extern(_init)
-	weak_extern(_fini) 
-	weak_extern(._init)
-	weak_extern(._fini) 
 L(start_addresses):
 	.quad	0 /* was _SDA_BASE_  but not in 64-bit ABI*/
 /*     function descriptors so don't need JUMPTARGET */
-	.quad	BP_SYM(main) 
-	.quad 	_init
-	.quad 	_fini 
+	.quad	BP_SYM(main)
+	.quad 	__libc_csu_init
+	.quad 	__libc_csu_fini
 
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 
@@ -55,7 +51,7 @@ ENTRY(_start)
 	ld	r8,.L01(r2)
 
  /* and continue in libc-start, in glibc.  */
-	b	JUMPTARGET(BP_SYM(__libc_start_main)) 
+	b	JUMPTARGET(BP_SYM(__libc_start_main))
 
 END(_start)
 

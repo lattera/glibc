@@ -1,5 +1,5 @@
 /* Startup code for statically linked Hurd/PowerPC binaries.
-   Copyright (C) 1998,2001 Free Software Foundation, Inc.
+   Copyright (C) 1998,2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +22,13 @@
  /* These are the various addresses we require.  */
 	.section ".rodata"
 	.align	2
-	weak_extern(_init)
-	weak_extern(_fini)
+	weak_extern(__libc_csu_init)
+	weak_extern(__libc_csu_fini)
 L(start_addresses):
 	.long	_SDA_BASE_
 	.long	JUMPTARGET(main)
-	.long	JUMPTARGET(_init)
-	.long	JUMPTARGET(_fini)
+	.long	JUMPTARGET(__libc_csu_init)
+	.long	JUMPTARGET(__libc_csu_fini)
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 
 	.section ".text"

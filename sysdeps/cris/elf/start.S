@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF CRIS ABI (to-be-written).
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,15 +89,15 @@ _start:
 	move.d	pc,r0
 	sub.d	.:GOTOFF,r0
 
-	move.d	_init:PLTG,r13
+	move.d	__libc_csu_init:PLTG,r13
 	add.d	r0,r13
-	move.d	_fini:PLTG,r9
+	move.d	__libc_csu_fini:PLTG,r9
 	add.d	r0,r9
 	move.d	main:PLTG,r10
 	add.d	r0,r10
 #else
-	move.d	_init,r13
-	move.d	_fini,r9
+	move.d	__libc_csu_init,r13
+	move.d	__libc_csu_fini,r9
 	move.d	main,r10
 #endif
 	push	r9

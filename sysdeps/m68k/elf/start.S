@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF m68k ABI.
-   Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,8 +60,8 @@ _start:
 
 	/* Push the address of our own entry points to `.fini' and
 	   `.init'.  */
-	pea _fini
-	pea _init
+	pea __libc_csu_fini
+	pea __libc_csu_init
 
 	pea (%a0)		/* Push second argument: argv.  */
 	move.l %d0, -(%sp)	/* Push first argument: argc.  */

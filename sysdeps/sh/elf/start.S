@@ -1,5 +1,5 @@
 /* Startup code for SH & ELF.
-   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,9 +75,9 @@ _start:
 L_main:
 	.long	main
 L_init:
-	.long	_init
+	.long	__libc_csu_init
 L_fini:
-	.long	_fini
+	.long	__libc_csu_fini
 L_libc_start_main:
 	.long	__libc_start_main
 L_abort:

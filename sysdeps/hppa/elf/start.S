@@ -1,3 +1,21 @@
+/* ELF startup code for HPPA.
+   Copyright (C) 2002 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 	.text
 
@@ -6,12 +24,9 @@
 	.import main, code
 	.import $global$, data
 	.import __libc_start_main, code
-	.import _fini, code
-	.import _init, code
+	.import __libc_csu_fini, code
+	.import __libc_csu_init, code
 
-	
-	
-	
 	.globl _start
 	.export _start, ENTRY
 	.type _start,@function
@@ -28,17 +43,17 @@ _start:
 
 	/* Expand the stack to store the 5th through 7th args */
 	ldo	64(%sp), %sp
-	
+
 	/* void (*rtld_fini) (void) (actually the 6th arg) */
 	stw	%r23, -56(%sp)
-	
+
 	/* void (*init) (void) */
-	ldil	LP%_init, %r23
-	ldo	RP%_init(%r23), %r23
+	ldil	LP%__libc_csu_init, %r23
+	ldo	RP%__libc_csu_init(%r23), %r23
 
 	/* void (*fini) (void) */
-	ldil	LP%_fini, %r22
-	ldo	RP%_fini(%r22), %r22
+	ldil	LP%__libc_csu_fini, %r22
+	ldo	RP%__libc_csu_fini(%r22), %r22
 	stw	%r22, -52(%sp)
 
 	/* void *stack_end */

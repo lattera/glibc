@@ -1,5 +1,28 @@
 2002-12-08  Roland McGrath  <roland@redhat.com>
 
+	* elf/Makefile (tests): Uncomment tst-array[123].
+	* Makeconfig (CPPFLAGS-.oS): Add -DLIBC_NONSHARED=1.
+	* csu/elf-init.c: New file.
+	* csu/Makefile (routines, static-only-routines): Add elf-init.
+	* sysdeps/alpha/elf/start.S: Use __libc_csu_init in place of _init
+	and __libc_csu_fini in place of _fini.
+	* sysdeps/arm/elf/start.S: Likewise.
+	* sysdeps/cris/elf/start.S: Likewise.
+	* sysdeps/hppa/elf/start.S: Likewise.
+	* sysdeps/i386/elf/start.S: Likewise.
+	* sysdeps/ia64/elf/start.S: Likewise.
+	* sysdeps/m68k/elf/start.S: Likewise.
+	* sysdeps/mach/hurd/powerpc/static-start.S: Likewise.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc32/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc64/elf/start.S: Likewise.
+	* sysdeps/s390/s390-32/elf/start.S: Likewise.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+	* sysdeps/sh/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+	* sysdeps/x86_64/elf/start.S: Likewise.
+
 	* sysdeps/pthread/aio_notify.c (notify_func_wrapper): Take a malloc'd
 	struct containing function ptr and value, free it.
 	(__aio_notify_only): Allocate that and copy values from SIGEV into it.

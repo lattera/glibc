@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF s390 ABI.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -63,8 +63,8 @@ _start:
 	 */
 	stm     %r14,%r15,96(%r15)      # store rtld_fini/stack_end to parameter area
 	la      %r7,96(%r15)
-	l       %r6,.L2-.Llit(%r13)     # load pointer to _fini
-	l       %r5,.L1-.Llit(%r13)     # load pointer to _init
+	l       %r6,.L2-.Llit(%r13)     # load pointer to __libc_csu_fini
+	l       %r5,.L1-.Llit(%r13)     # load pointer to __libc_csu_init
 	l       %r2,.L3-.Llit(%r13)     # load pointer to main
 
 	/* ok, now branch to the libc main routine */
@@ -75,8 +75,8 @@ _start:
 	.word   0
 
 .Llit:
-.L1:    .long  _init
-.L2:    .long  _fini
+.L1:    .long  __libc_csu_init
+.L2:    .long  __libc_csu_fini
 .L3:    .long  main
 .L4:    .long  __libc_start_main
 

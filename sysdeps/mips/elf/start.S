@@ -83,8 +83,8 @@ ENTRY_POINT:
 	   the stack is aligned to double words (8 bytes).  */
 	and $29, 0xfffffff8
 	subu $29, 32
-	la $7, _init		/* init */
-	la $8, _fini
+	la $7, __libc_csu_init		/* init */
+	la $8, __libc_csu_fini
 	sw $8, 16($29)		/* fini */
 	sw $2, 20($29)		/* rtld_fini */
 	sw $29, 24($29)		/* stack_end */
