@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,8 +59,14 @@ struct sym_val
     result;								      \
   })
 
+#ifdef SHARED
 /* Statistics function.  */
 unsigned long int _dl_num_relocations;
+# define bump_num_relocation() ++_dl_num_relocations
+#else
+# define bump_num_relocation() 0
+#endif
+
 
 
 /* We have two different situations when looking up a simple: with or
@@ -215,7 +221,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   struct r_scope_elem **scope;
   int protected;
 
-  ++_dl_num_relocations;
+  bump_num_relocations ();
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -303,7 +309,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
   size_t i;
   int protected;
 
-  ++_dl_num_relocations;
+  bump_num_relocations ();
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
@@ -374,7 +380,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   struct r_scope_elem **scope;
   int protected;
 
-  ++_dl_num_relocations;
+  bump_num_relocations ();
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -493,7 +499,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   size_t i;
   int protected;
 
-  ++_dl_num_relocations;
+  bump_num_relocations ();
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;

@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,13 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 
+#ifdef SHARED
 /* Statistics function.  */
 unsigned long int _dl_num_cache_relocations;
+# define bump_num_cache_relocations() ++_dl_num_cache_relocations
+#else
+# define bump_num_cache_relocations() 0
+#endif
 
 
 void
@@ -113,7 +118,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
 	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
-	? (++_dl_num_cache_relocations,					      \
+	? (bump_num_cache_relocations,					      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
 	   l->l_lookup_cache.value)					      \
 	: ({ lookup_t _lr;						      \
@@ -133,7 +138,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
 	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
-	? (++_dl_num_cache_relocations,					      \
+	? (bump_num_cache_relocations,					      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
 	   l->l_lookup_cache.value)					      \
 	: ({ lookup_t _lr;						      \
