@@ -30,6 +30,7 @@ __BEGIN_DECLS
 #include <bits/types.h>
 
 #ifdef	__USE_BSD
+# ifndef __u_char_defined
 typedef __u_char u_char;
 typedef __u_short u_short;
 typedef __u_int u_int;
@@ -37,6 +38,8 @@ typedef __u_long u_long;
 typedef __quad_t quad_t;
 typedef __u_quad_t u_quad_t;
 typedef __fsid_t fsid_t;
+#  define __u_char_defined
+# endif
 #endif
 
 typedef __loff_t loff_t;
@@ -108,8 +111,11 @@ typedef __ssize_t ssize_t;
 #endif
 
 #ifdef	__USE_BSD
+# ifndef __daddr_t_defined
 typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
+#  define __daddr_t_defined
+# endif
 #endif
 
 #if (defined __USE_SVID || defined __USE_XOPEN) && !defined __key_t_defined

@@ -63,6 +63,23 @@ typedef unsigned long rpcport_t;
 #ifndef makedev /* ie, we haven't already included it */
 #include <sys/types.h>
 #endif
+
+#ifndef __u_char_defined
+typedef __u_char u_char;
+typedef __u_short u_short;
+typedef __u_int u_int;
+typedef __u_long u_long;
+typedef __quad_t quad_t;
+typedef __u_quad_t u_quad_t;
+typedef __fsid_t fsid_t;
+# define __u_char_defined
+#endif
+#ifndef __daddr_t_defined
+typedef __daddr_t daddr_t;
+typedef __caddr_t caddr_t;
+# define __daddr_t_defined
+#endif
+
 #include <sys/time.h>
 #include <sys/param.h>
 

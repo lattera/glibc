@@ -1,3 +1,11 @@
+2001-05-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/rpc/types.h (u_char, u_short, u_int, u_long, quad_t,
+	u_quad_t, fsid_t, daddr_t, caddr_t): Make sure the types are defined.
+	* posix/sys/types.h (u_char, u_short, u_int, u_long, quad_t,
+	u_quad_t, fsid_t, daddr_t, caddr_t): Protect the __USE_BSD typedefs
+	against multiple definition.
+
 2001-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/da.po: Update from translation team.
