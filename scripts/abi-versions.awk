@@ -11,6 +11,7 @@ NF == 2 && $2 == "{" {
   thislib = $1;
   gsub(/[^A-Za-z0-9_ 	]/, "_"); libid = $1;
   printf "\n/* start %s */\n", thislib;
+  n = 0;
   next;
 }
 $1 == "}" {
@@ -19,18 +20,22 @@ $1 == "}" {
 }
 
 $2 == "=" {
-  new = $3;
-  gsub(/[^A-Za-z0-9_ 	]/, "_"); id = $1;
-  printf "#define ABI_%s_%s\t0\t/* earliest supported %s */\n", libid, id, new;
-  printf "#define VERSION_%s_%s\t%s\n", libid, id, new;
+  old = $1; new = $3;
+  gsub(/[^A-Za-z0-9_ 	]/, "_");
+  oldid = $1; newid = $3;
+
+  printf "#define ABI_%s_%s\tABI_%s_%s\n", libid, oldid, libid, newid;
+  printf "#define VERSION_%s_%s\t%s\n", libid, oldid, new;
   next;
 }
 
 {
   vers = $1;
-  gsub(/[^A-Za-z0-9_ 	]/, "_"); id = $1;
-  printf "#define ABI_%s_%s\t1\t/* support %s */\n", libid, id, vers;
-  printf "#define VERSION_%s_%s\t%s\n", libid, id, vers;
+  gsub(/[^A-Za-z0-9_ 	]/, "_");
+  versid = $1;
+
+  printf "#define ABI_%s_%s\t%d\t/* support %s */\n", libid, versid, ++n, vers;
+  printf "#define VERSION_%s_%s\t%s\n", libid, versid, vers;
   next;
 }
 
