@@ -187,6 +187,7 @@ ifdef static-only-routines
 $(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 	rm -f $@
 	ln $< $@
+	touch $@
 
 # Must build the routines as PIC, though, because they can end up in (users')
 # shared objects.  We don't want to use CFLAGS-os because users may, for
@@ -202,6 +203,7 @@ define o-iterator-doit
 $(shared-only-routines:%=$(objpfx)%$o): %$o: $(common-objpfx)empty$o;
 	rm -f $$@
 	ln $$< $$@
+	touch $$@
 endef
 object-suffixes-left := $(filter-out .os,$(object-suffixes))
 include $(o-iterator)

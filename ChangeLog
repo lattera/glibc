@@ -1,3 +1,7 @@
+1998-03-21 23:46  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Rules: Update timestamps on empty object files.
+
 1998-03-21 09:15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/filesys.texi (Scanning Directory Content): Add description
