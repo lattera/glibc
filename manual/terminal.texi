@@ -423,8 +423,8 @@ set_istrip (int desc, int value)
   result = tcsetattr (desc, TCSANOW, &settings);
   if (result < 0)
     @{
-      perror ("error in tcgetattr");
-      return;
+      perror ("error in tcsetattr");
+      return 0;
    @}
   return 1;
 @}
@@ -1640,7 +1640,7 @@ It does exactly this:
 @cindex terminal modes, BSD
 
 The usual way to get and set terminal modes is with the functions described
-in @ref{Terminal Modes}.  However, on some systems you can use the 
+in @ref{Terminal Modes}.  However, on some systems you can use the
 BSD-derived functions in this section to do some of the same thing.  On
 many systems, these functions do not exist.  Even with the GNU C library,
 the functions simply fail with @code{errno} = @code{ENOSYS} with many
