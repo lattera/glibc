@@ -1,3 +1,7 @@
+2005-03-22  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* elf/elf.h (PT_ARM_EXIDX): New macro.
+
 2005-03-21  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sunrpc/xdr_stdio.c (xdrstdio_getlong, xdrstdio_putlong):
