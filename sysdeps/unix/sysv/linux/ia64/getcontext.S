@@ -35,7 +35,7 @@
 
 ENTRY(__getcontext)
 	.prologue
-	alloc r16 = ar.pfs, 1, 0, 3, 0
+	alloc r16 = ar.pfs, 1, 0, 4, 0
 
 	// sigprocmask (SIG_BLOCK, NULL, &sc->sc_mask):
 
@@ -45,6 +45,7 @@ ENTRY(__getcontext)
 	mov out0 = SIG_BLOCK
 	mov out1 = 0
 	add out2 = r2, in0
+	mov out3 = 8	// sizeof kernel sigset_t
 
 	break __BREAK_SYSCALL
 	flushrs					// save dirty partition on rbs
