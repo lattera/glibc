@@ -108,7 +108,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
       || (undef_map->l_flags_1 & DF_1_NODELETE) != 0)
     {
       ++map->l_opencount;
-      map->l_flags |= DF_1_NODELETE;
+      map->l_flags_1 |= DF_1_NODELETE;
       goto out;
     }
 
