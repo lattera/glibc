@@ -1,3 +1,8 @@
+1999-07-15  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/Versions (_inb, _inw, _inl, _outb,
+	_outw, _outl): Added to GLIBC_2.1.2.
+
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/fnmatch.h: Use __name instead of __string in prototype to
