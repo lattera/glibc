@@ -13,21 +13,37 @@
 /* GNU Library General Public License for more details.                 */
 
 #include <signal.h>
+#include <kernel-features.h>
 
 /* Primitives for controlling thread execution */
 
 static inline void restart(pthread_descr th)
 {
-  __pthread_restart(th); /* see pthread.c */ 
+  /* See pthread.c */
+#if __ASSUME_REALTIME_SIGNALS
+  __pthread_restart_new(th);
+#else
+  __pthread_restart(th);
+#endif
 }
 
 static inline void suspend(pthread_descr self)
 {
-  __pthread_suspend(self); /* see pthread.c */
+  /* See pthread.c */
+#if __ASSUME_REALTIME_SIGNALS
+  __pthread_wait_for_restart_signal(self);
+#else
+  __pthread_suspend(self);
+#endif
 }
 
-static inline int timedsuspend(pthread_descr self, 
+static inline int timedsuspend(pthread_descr self,
 		const struct timespec *abstime)
 {
-   return __pthread_timedsuspend(self, abstime); /* see pthread.c */
+  /* See pthread.c */
+#if __ASSUME_REALTIME_SIGNALS
+  return __pthread_timedsuspend_new(self, abstime);
+#else
+  return __pthread_timedsuspend(self, abstime);
+#endif
 }

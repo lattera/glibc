@@ -32,6 +32,11 @@
 #include "spinlock.h"
 #include "restart.h"
 
+/* Sanity check.  */
+#if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
+# error "This must not happen; new kernel assumed but old headers"
+#endif
+
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
@@ -161,12 +166,14 @@ char *__pthread_manager_thread_tos = NULL;
 int __pthread_exit_requested = 0;
 int __pthread_exit_code = 0;
 
+#if !__ASSUME_REALTIME_SIGNALS
 /* Pointers that select new or old suspend/resume functions
    based on availability of rt signals. */
 
 void (*__pthread_restart)(pthread_descr) = __pthread_restart_old;
 void (*__pthread_suspend)(pthread_descr) = __pthread_suspend_old;
 int (*__pthread_timedsuspend)(pthread_descr, const struct timespec *) = __pthread_timedsuspend_old;
+#endif	/* __ASSUME_REALTIME_SIGNALS */
 
 /* Communicate relevant LinuxThreads constants to gdb */
 
@@ -230,23 +237,27 @@ static int rtsigs_initialized;
 static void
 init_rtsigs (void)
 {
+#if !__ASSUME_REALTIME_SIGNALS
   if (!kernel_has_rtsig ())
     {
       current_rtmin = -1;
       current_rtmax = -1;
-#if __SIGRTMAX - __SIGRTMIN >= 3
+# if __SIGRTMAX - __SIGRTMIN >= 3
       __pthread_sig_restart = SIGUSR1;
       __pthread_sig_cancel = SIGUSR2;
       __pthread_sig_debug = 0;
-#endif
+# endif
     }
   else
+#endif	/* __ASSUME_REALTIME_SIGNALS */
     {
 #if __SIGRTMAX - __SIGRTMIN >= 3
       current_rtmin = __SIGRTMIN + 3;
+# if !__ASSUME_REALTIME_SIGNALS
       __pthread_restart = __pthread_restart_new;
       __pthread_suspend = __pthread_wait_for_restart_signal;
       __pthread_timedsuspend = __pthread_timedsuspend_new;
+# endif /* __ASSUME_REALTIME_SIGNALS */
 #else
       current_rtmin = __SIGRTMIN;
 #endif
@@ -825,6 +836,7 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
   } while (self->p_signal !=__pthread_sig_restart );
 }
 
+#if !__ASSUME_REALTIME_SIGNALS
 /* The _old variants are for 2.0 and early 2.1 kernels which don't have RT
    signals.
    On these kernels, we use SIGUSR1 and SIGUSR2 for restart and cancellation.
@@ -844,7 +856,7 @@ void __pthread_suspend_old(pthread_descr self)
     __pthread_wait_for_restart_signal(self);
 }
 
-int 
+int
 __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abstime)
 {
   sigset_t unblock, initial_mask;
@@ -903,7 +915,7 @@ __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abstime)
      Otherwise, no restart was delivered yet, so a potential
      race exists; we return a 0 to the caller which must deal
      with this race in an appropriate way; for example by
-     atomically removing the thread from consideration for a 
+     atomically removing the thread from consideration for a
      wakeup---if such a thing fails, it means a restart is
      being delivered. */
 
@@ -920,6 +932,7 @@ __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abstime)
   /* woken due to restart signal */
   return 1;
 }
+#endif /* __ASSUME_REALTIME_SIGNALS */
 
 void __pthread_restart_new(pthread_descr th)
 {
@@ -929,7 +942,7 @@ void __pthread_restart_new(pthread_descr th)
 /* There is no __pthread_suspend_new because it would just
    be a wasteful wrapper for __pthread_wait_for_restart_signal */
 
-int 
+int
 __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abstime)
 {
   sigset_t unblock, initial_mask;

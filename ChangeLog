@@ -1,6 +1,9 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/alpha/dl-machine.h (RTLD_START):Rewrite for new init
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Fix typo in
+	compat_symbol call for old adjtime.
+
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Rewrite for new init
 	function interface.  Patch by Richard Henderson <rth@cygnus.com>.
 
 	* posix/Makefile (headers): Add spawn.h.

@@ -1,5 +1,17 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread.c: Is __ASSUME_REALTIME_SIGNALS then avoid generating code
+	to dynamically detect RT signals and avoid generating compatibility
+	functions with old kernel.
+	* restart.h (restart) [__ASSUME_REALTIME_SIGNALS]: Use
+	__pthread_restart_new directly.
+	(suspend) [__ASSUME_REALTIME_SIGNALS]: Use
+	__pthread_wait_for_restart_signal directly.
+	(timedsuspend) [__ASSUME_REALTIME_SIGNALS]: Use
+	__pthread_timedsuspend_new directly.
+
+2000-04-15  Ulrich Drepper  <drepper@redhat.com>
+
 	* condvar.c: Remove all the special code to handle cond_timedwait.
 	Use timedsuspend instead.
 	* internals.h: Declare __pthread_timedsuspend_old,
