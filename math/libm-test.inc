@@ -4395,12 +4395,12 @@ main (int argc, char **argv)
   printf ("  %d test cases plus %d tests for exception flags executed.\n",
 	  noTests, noExcTests);
   if (noXFails)
-    printf ("  %d expected failures occured.\n", noXFails);
+    printf ("  %d expected failures occurred.\n", noXFails);
   if (noXPasses)
-    printf ("  %d unexpected passes occured.\n", noXPasses);
+    printf ("  %d unexpected passes occurred.\n", noXPasses);
   if (noErrors)
     {
-      printf ("  %d errors occured.\n", noErrors);
+      printf ("  %d errors occurred.\n", noErrors);
       return 1;
     }
   printf ("  All tests passed successfully.\n");

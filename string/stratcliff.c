@@ -165,7 +165,7 @@ main (int argc, char *argv[])
 	      if (cp - &adr[outer] != middle - outer)
 		{
 		  printf ("rawmemchr flunked for outer = %d, middle = %d\n",
-			  outer, middle, inner);
+			  outer, middle);
 		  result = 1;
 		}
 

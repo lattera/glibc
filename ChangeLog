@@ -1,5 +1,7 @@
 2000-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/libm-test.inc (main): Fix typos in messages.
+
 	* string/stratcliff.c: Add test for rawmemchr.
 
 2000-12-08  Jakub Jelinek  <jakub@redhat.com>
