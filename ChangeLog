@@ -4,6 +4,7 @@
 	block.
 	* malloc/tst-obstack.c: New file.
 	Patch and test case by Alexandre Duret-Lutz <duret_g@epita.fr>.
+	* malloc/Makefile (tests): Add tst-obstack.
 
 	Complete revamp of the reference counter handling.
 	* include/link.h (struct link_map): Add l_idx field.
