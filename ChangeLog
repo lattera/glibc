@@ -1,5 +1,8 @@
 2005-01-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/dl-machine.h: Remove PLT trampolines here.
+	* sysdeps/ia64/dl-trampoline.S: New file.
+
 	* sysdeps/x86_64/bits/link.h: Use namespace-safe identifiers in
 	La_x86_64_xmm definition.
 
