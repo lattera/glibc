@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <bits/libc-lock.h>
 #include <shadow.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -28,15 +29,20 @@
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
+static char *buffer;
+
 /* Read one shadow entry from the given stream.  */
 struct spwd *
 fgetspent (FILE *stream)
 {
-  static char *buffer;
   static size_t buffer_size;
   static struct spwd resbuf;
+  fpos_t pos;
   struct spwd *result;
   int save;
+
+  if (fgetpos (stream, &pos) != 0)
+    return NULL;
 
   /* Get lock.  */
   __libc_lock_lock (lock);
@@ -49,8 +55,8 @@ fgetspent (FILE *stream)
     }
 
   while (buffer != NULL
-	 && __fgetspent_r (stream, &resbuf, buffer, buffer_size, &result) != 0
-	 && errno == ERANGE)
+	 && (__fgetspent_r (stream, &resbuf, buffer, buffer_size, &result)
+	     == ERANGE))
     {
       char *new_buf;
       buffer_size += BUFLEN_SPWD;
@@ -64,6 +70,10 @@ fgetspent (FILE *stream)
 	  __set_errno (save);
 	}
       buffer = new_buf;
+
+      /* Reset the stream.  */
+      if (fsetpos (stream, &pos) != 0)
+	buffer = NULL;
     }
 
   if (buffer == NULL)
@@ -76,3 +86,14 @@ fgetspent (FILE *stream)
 
   return result;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (buffer != NULL)
+    free (buffer);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

@@ -52,8 +52,8 @@ fgetgrent (FILE *stream)
     }
 
   while (buffer != NULL
-	 && __fgetgrent_r (stream, &resbuf, buffer, buffer_size, &result) != 0
-	 && errno == ERANGE)
+	 && (__fgetgrent_r (stream, &resbuf, buffer, buffer_size, &result)
+	     == ERANGE))
     {
       char *new_buf;
       buffer_size += NSS_BUFLEN_GROUP;
@@ -70,10 +70,7 @@ fgetgrent (FILE *stream)
 
       /* Reset the stream.  */
       if (fsetpos (stream, &pos) != 0)
-	{
-	  buffer = NULL;
-	  break;
-	}
+	buffer = NULL;
     }
 
   if (buffer == NULL)

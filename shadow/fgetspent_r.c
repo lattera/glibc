@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,8 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 	{
 	  funlockfile (stream);
 	  *result = NULL;
-	  return errno = ERANGE;
+	  __set_errno (ERANGE);
+	  return errno;
 	}
 
       /* Skip leading blanks.  */

@@ -32,9 +32,12 @@ write_users (FILE *f, int large_pos, int pos)
 
   if (pos == large_pos)
     {
+      if (large_pos == 3)
+	fprintf (f, ":three");
+
       /* we need more than 2048 bytes for proper testing.  */
       for (i = 0; i < 500; i++)
-	fprintf (f, "%suser%03d", i == 0 ? ":" : ",", i);
+	fprintf (f, ",user%03d", i);
     }
   fprintf (f, "\n");
 

@@ -1,3 +1,18 @@
+1999-06-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pwd/fgetpwent_r.c: Set errno in the correct way.
+	* shadow/fgetspent_r.c: Likewise.
+	* pwd/fgetpwent.c: Handle long lines correctly.  Little
+	optimizations.  Free static buffer when debugging memory handling.
+	* shadow/fgetspent.c: Likewise.
+
+	* grp/fgetgrent.c: Little optimization in loop.
+
+1999-06-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* grp/tst_fgetgrent.c (write_group): Fix generation of long line
+	in a different way.
+
 1999-06-09  Jakub Jelinek   <jj@ultra.linux.cz>
 
 	* stdlib/longlong.h: gas changed sethi handling when without
