@@ -51,6 +51,9 @@ freopen (filename, mode, fp)
   else
 #endif
     result = _IO_freopen (filename, mode, fp);
+  if (result != NULL)
+    /* unbound stream orientation */
+    result->_mode = 0;
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return result;

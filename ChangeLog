@@ -1,3 +1,10 @@
+2000-11-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/freopen.c (freopen): Reset _mode after succesful
+	reopening.
+	* libio/freopen64.c (freopen64): Likewise.
+	Patch by Yoshito Kawada <KAWADA@jp.ibm.com>.
+
 2000-11-15  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/generic/ldsodefs.h (DL_DT_INIT_ADDRESS): Defined if
