@@ -1,3 +1,8 @@
+Thu Jan 11 13:09:20 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Use referring symbol as
+	referent for STB_LOCAL.
+
 Wed Jan 10 10:11:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* time/africa, time/antarctica, time/asia, time/australasia,

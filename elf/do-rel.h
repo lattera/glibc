@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ Cambridge, MA 02139, USA.  */
 
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
-		    int reltag, int sztag, 
+		    int reltag, int sztag,
 		    Elf32_Addr (*resolve) (const Elf32_Sym **symbol,
 					   Elf32_Addr r_offset),
 		    int lazy)
@@ -59,6 +59,9 @@ elf_dynamic_do_rel (struct link_map *map,
 
 	if (ELF32_R_SYM (r->r_info) == STN_UNDEF)
 	  loadbase = 0;		/* This value will not be consulted.  */
+	else if (ELF32_ST_BIND (definer->st_info) == STB_LOCAL)
+	  /* Local symbols always refer to the containing object.  */
+	  loadbase = map->l_addr;
 	else
 	  {
 	    if (resolve)
