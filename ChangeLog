@@ -1,3 +1,10 @@
+2002-10-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (syscall-%.h): Add -D for each
+	32bit-predefine when creating .new32 list and -U for each
+	32bit-predefine when creating .new64 list.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (32bit-predefine): New.
+
 2002-10-29  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/generic/allocrtsig.c: Include <testrtsig.h>, not
