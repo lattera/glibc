@@ -1,3 +1,7 @@
+2000-11-28  H.J. Lu  <hjl@gnu.org>
+
+	* libio/libio.h: Remove extra "#if ... #endif".
+
 2000-11-29  H.J. Lu  <hjl@gnu.org>
 
 	* stdio-common/vfscanf.c (ORIENT): Swap the COMPILE_WSCANF case.

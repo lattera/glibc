@@ -246,17 +246,13 @@ struct _IO_wide_data
 				   backup area */
   wchar_t *_IO_save_end;	/* Pointer to end of non-current get area. */
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   __mbstate_t _IO_state;
   __mbstate_t _IO_last_state;
-#endif
   struct _IO_codecvt _codecvt;
 
   wchar_t _shortbuf[1];
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
   struct _IO_jump_t *_wide_vtable;
-#endif
 };
 #endif
 
