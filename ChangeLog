@@ -1,5 +1,7 @@
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/wcswidth.c (wcswidth): Don't forget to decrement counter n.
+
 	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Remove greg_t,
 	gregset_t, fpregset_t, and NGREG definitions.
 

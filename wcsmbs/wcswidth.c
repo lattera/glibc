@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -26,7 +26,7 @@ wcswidth (const wchar_t *s, size_t n)
 {
   int result = 0;
 
-  while (n > 0 && *s != L'\0')
+  while (n-- > 0 && *s != L'\0')
     {
       int now = internal_wcwidth (*s);
       if (now == -1)

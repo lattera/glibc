@@ -1,5 +1,8 @@
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/ISO-8859-1: Don't define values for non-printable
+	characters.
+
 	* charmaps/ISO-8859-1: Add width information.
 
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
