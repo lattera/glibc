@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 
 char *
-strndup (const char *s, size_t n)
+__strndup (const char *s, size_t n)
 {
   size_t len = strnlen (s, n);
   char *new = malloc (len + 1);
@@ -30,9 +30,7 @@ strndup (const char *s, size_t n)
   if (new == NULL)
     return NULL;
 
-  memcpy (new, s, len);
   new[len] = '\0';
-
-  return new;
+  return memcpy (new, s, len);
 }
-
+weak_alias (__strndup, strndup)
