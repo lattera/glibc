@@ -185,6 +185,8 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_MONETARY_DUO_VALID_FROM,         "duo_valid_from",         std, word)
   DEFINE_ELEMENT (_NL_MONETARY_DUO_VALID_TO,           "duo_valid_to",           std, word)
   DEFINE_ELEMENT (_NL_MONETARY_CONVERSION_RATE,        "conversion_rate",         std, wordarray, 2, 2)
+  DEFINE_ELEMENT (_NL_MONETARY_DECIMAL_POINT_WC,       "monetary-decimal-point-wc", std, word)
+  DEFINE_ELEMENT (_NL_MONETARY_THOUSANDS_SEP_WC,       "monetary-thousands-sep-wc", std, word)
   ), NO_POSTLOAD)
 
 
@@ -195,6 +197,9 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (DECIMAL_POINT, "decimal_point", std, string)
   DEFINE_ELEMENT (THOUSANDS_SEP, "thousands_sep", std, string)
   DEFINE_ELEMENT (GROUPING,      "grouping",      std, bytearray)
+  DEFINE_ELEMENT (_NL_NUMERIC_DECIMAL_POINT_WC, "numeric-decimal-point-wc", std, word)
+  DEFINE_ELEMENT (_NL_NUMERIC_THOUSANDS_SEP_WC, "numeric-thousands-sep-wc", std, word)
+
   ), NO_POSTLOAD)
 
 
