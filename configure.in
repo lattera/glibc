@@ -749,10 +749,6 @@ test -n "$aux_missing" && AC_MSG_WARN([
 *** some features will be disabled.
 *** Check the INSTALL file for required versions.])
 
-# glibcbug.in wants to know the compiler version.
-CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
-AC_SUBST(CCVERSION)
-
 # if using special system headers, find out the compiler's sekrit
 # header directory and add that to the list.  NOTE: Only does the right
 # thing on a system that doesn't need fixincludes.  (Not presently a problem.)

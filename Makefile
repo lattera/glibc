@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ vpath %.h $(subdir-dirs)
 
 # What to install.
 install-others = $(inst_includedir)/gnu/stubs.h
-install-bin-script = glibcbug
+install-bin-script =
 
 ifeq (yes,$(build-shared))
 headers += gnu/lib-names.h
@@ -172,11 +172,6 @@ $(inst_includedir)/gnu/stubs.h: include/stubs-prologue.h subdir_install
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
 	rm -f $(objpfx)stubs.h
 
-# The `glibcbug' script contains the version number and it shall be rebuild
-# whenever this changes or the `glibcbug.in' file.
-$(objpfx)glibcbug: $(common-objpfx)config.status glibcbug.in
-	cd $(<D) && CONFIG_FILES=$(@F) CONFIG_HEADERS= $(SHELL) $(<F)
-
 # This makes the Info or DVI file of the documentation from the Texinfo source.
 .PHONY: info dvi pdf html
 info dvi pdf html:
@@ -261,7 +256,6 @@ distclean-1: subdir_$(distclean-1)
 	-rm -f $(config-generated)
 	-rm -f $(addprefix $(objpfx),config.status config.cache config.log)
 	-rm -f $(addprefix $(objpfx),config.make config-name.h config.h)
-	-rm -f $(addprefix $(objpfx),glibcbug)
 ifdef objdir
 	-rm -f $(objpfx)Makefile
 endif
@@ -286,7 +280,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		configure.in aclocal.m4 config.h.in config.make.in	\
 		config-name.in Makefile.in sysdep.h set-hooks.h		\
 		libc-symbols.h version.h shlib-versions rpm/Makefile	\
-		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
+		rpm/template rpm/rpmrc abi-tags stub-tag.h		\
 		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
 		cppflags-iterator.mk tls.make.c				\

@@ -1,3 +1,13 @@
+2004-01-19  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Don't set CCVERSION.
+	* configure: Regenerated.
+	* glibcbug.in: File removed.
+	* Makefile (install-bin-script): Remove glibcbug.
+	(glibcbug): Target removed.
+	(distclean-1): Don't rm glibcbug.
+	(distribute): Remove glibcbug.in.
+
 2004-02-09  Roland McGrath  <roland@redhat.com>
 
 	* time/tzset.c (tzset_internal): Cap hour in POSIX $TZ rule format to
