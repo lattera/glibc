@@ -60,7 +60,7 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 
 #if _HAVE_UT_TYPE - 0
   /* Seek position to write.  */
-  if (utmp_data->loc_utmp >= sizeof (utmp)
+  if (utmp_data->loc_utmp >= sizeof (struct utmp)
       && utmp_data->ubuf.ut_type != id->ut_type)
     {
       /* We must not overwrite the data in UTMP_DATA.  */

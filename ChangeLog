@@ -1,3 +1,12 @@
+Mon Jul  1 13:32:42 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/login.c (login): Only Frob OLD->ut_type if getutline_r
+	actually found any entry.
+
+	* login/pututline_r.c (pututline_r): If not located after any
+	entry don't use UTMP_DATA->ubuf, and seek to the end before adding.
+	Lock the file before stating.
+
 Fri Jun 28 23:25:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/login.c (login): Initialize DATA so that setutent_r will
