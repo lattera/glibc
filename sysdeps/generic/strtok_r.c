@@ -1,5 +1,5 @@
 /* Reentrant string tokenizer.  Generic version.
-   Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,10 @@ __strtok_r (s, delim, save_ptr)
   /* Scan leading delimiters.  */
   s += strspn (s, delim);
   if (*s == '\0')
-    return NULL;
+    {
+      *save_ptr = s;
+      return NULL;
+    }
 
   /* Find the end of the token.  */
   token = s;

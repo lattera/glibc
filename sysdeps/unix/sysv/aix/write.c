@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -32,3 +32,4 @@ __write (fd, ptr, n)
 }
 /* AIX has no weak aliases (yet) but let's hope for better times.  */
 weak_alias (__write, write)
+strong_alias (__write, __libc_write)

@@ -16,10 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <time.h>
 #include <sys/timeb.h>
-#include <sys/time.h>
-#include <errno.h>
 
 int
 ftime (timebuf)

@@ -1,3 +1,39 @@
+2001-02-23  Andreas Jaeger  <aj@suse.de>
+
+	* string/tester.c (test_strtok_r): Add testcase.
+	(test_strtok_r): Always initialize cp for proper checking.
+
+	* sysdeps/generic/strtok.c (strtok): Handle case of first strtok
+	returning NULL correctly.
+	Patch by Fumitoshi UKAI <ukai@debian.or.jp>.
+	* sysdeps/generic/strtok_r.c (__strtok_r): Likewise.
+
+2001-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/bits/types.h: Define __need_NULL before
+	including <stddef.h>.
+	* sysdeps/unix/sysv/aix/write.c: Define alias __libc_write.
+	* include/libc-symbols.h (weak_alias): Don't use .weak if
+	HAVE_ASM_GLOBAL_DOT_NAME is defined.
+	Patches by Michael Keezer <mkeezer@redhat.com>.
+
+	* sysdeps/generic/ftime.c: Don't include <sys/time.h> at all.
+	Patch by Michael Keezer <mkeezer@redhat.com>.
+
+	* sysdeps/unix/sysv/aix/Dist: Remove restf.S and savef.S.
+	* sysdeps/unix/sysv/aix/Makefile [$(subdir) == misc]
+	(sysdep_routines): Remove restf.S and savef.S.
+	* sysdeps/unix/sysv/aix/restf.S. Removed.
+	* sysdeps/unix/sysv/aix/savef.S. Removed.
+	* sysdeps/powerpc/fprrest.S: Use C_TEXT to define label.  Also define
+	alternative names used on some platforms.
+	* sysdeps/powerpc/fprsave.S: Likewise.
+	* sysdeps/powerpc/gprrest0.S: Likewise.
+	* sysdeps/powerpc/gprrest1.S: Likewise.
+	* sysdeps/powerpc/gprsave0.S: Likewise.
+	* sysdeps/powerpc/gprsave1.S: Likewise.
+	Patch by Michael Keezer <mkeezer@redhat.com>.
+
 2001-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/elf/start.S (_fp_hw): Actually define label.

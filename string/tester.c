@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -759,23 +759,28 @@ test_strtok_r (void)
 {
   it = "strtok_r";
   (void) strcpy(one, "first, second, third");
+  cp = NULL;	/* Always initialize cp to make sure it doesn't point to some old data.  */
   equal(strtok_r(one, ", ", &cp), "first", 1);	/* Basic test. */
   equal(one, "first", 2);
   equal(strtok_r((char *)NULL, ", ", &cp), "second", 3);
   equal(strtok_r((char *)NULL, ", ", &cp), "third", 4);
   check(strtok_r((char *)NULL, ", ", &cp) == NULL, 5);
   (void) strcpy(one, ", first, ");
+  cp = NULL;
   equal(strtok_r(one, ", ", &cp), "first", 6);	/* Extra delims, 1 tok. */
   check(strtok_r((char *)NULL, ", ", &cp) == NULL, 7);
   (void) strcpy(one, "1a, 1b; 2a, 2b");
+  cp = NULL;
   equal(strtok_r(one, ", ", &cp), "1a", 8);	/* Changing delim lists. */
   equal(strtok_r((char *)NULL, "; ", &cp), "1b", 9);
   equal(strtok_r((char *)NULL, ", ", &cp), "2a", 10);
   (void) strcpy(two, "x-y");
+  cp = NULL;
   equal(strtok_r(two, "-", &cp), "x", 11);	/* New string before done. */
   equal(strtok_r((char *)NULL, "-", &cp), "y", 12);
   check(strtok_r((char *)NULL, "-", &cp) == NULL, 13);
   (void) strcpy(one, "a,b, c,, ,d");
+  cp = NULL;
   equal(strtok_r(one, ", ", &cp), "a", 14);	/* Different separators. */
   equal(strtok_r((char *)NULL, ", ", &cp), "b", 15);
   equal(strtok_r((char *)NULL, " ,", &cp), "c", 16);	/* Permute list too. */
@@ -783,25 +788,31 @@ test_strtok_r (void)
   check(strtok_r((char *)NULL, ", ", &cp) == NULL, 18);
   check(strtok_r((char *)NULL, ", ", &cp) == NULL, 19);	/* Persistence. */
   (void) strcpy(one, ", ");
+  cp = NULL;
   check(strtok_r(one, ", ", &cp) == NULL, 20);	/* No tokens. */
   (void) strcpy(one, "");
+  cp = NULL;
   check(strtok_r(one, ", ", &cp) == NULL, 21);	/* Empty string. */
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 22);	/* Persistence. */
   (void) strcpy(one, "abc");
-  equal(strtok_r(one, ", ", &cp), "abc", 22);	/* No delimiters. */
-  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 23);
+  cp = NULL;
+  equal(strtok_r(one, ", ", &cp), "abc", 23);	/* No delimiters. */
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 24);
   (void) strcpy(one, "abc");
-  equal(strtok_r(one, "", &cp), "abc", 24);	/* Empty delimiter list. */
-  check(strtok_r((char *)NULL, "", &cp) == NULL, 25);
+  cp = NULL;
+  equal(strtok_r(one, "", &cp), "abc", 25);	/* Empty delimiter list. */
+  check(strtok_r((char *)NULL, "", &cp) == NULL, 26);
   (void) strcpy(one, "abcdefgh");
   (void) strcpy(one, "a,b,c");
-  equal(strtok_r(one, ",", &cp), "a", 26);	/* Basics again... */
-  equal(strtok_r((char *)NULL, ",", &cp), "b", 27);
-  equal(strtok_r((char *)NULL, ",", &cp), "c", 28);
-  check(strtok_r((char *)NULL, ",", &cp) == NULL, 29);
-  equal(one+6, "gh", 30);			/* Stomped past end? */
-  equal(one, "a", 31);			/* Stomped old tokens? */
-  equal(one+2, "b", 32);
-  equal(one+4, "c", 33);
+  cp = NULL;
+  equal(strtok_r(one, ",", &cp), "a", 27);	/* Basics again... */
+  equal(strtok_r((char *)NULL, ",", &cp), "b", 28);
+  equal(strtok_r((char *)NULL, ",", &cp), "c", 29);
+  check(strtok_r((char *)NULL, ",", &cp) == NULL, 30);
+  equal(one+6, "gh", 31);			/* Stomped past end? */
+  equal(one, "a", 32);			/* Stomped old tokens? */
+  equal(one+2, "b", 33);
+  equal(one+4, "c", 34);
 }
 
 static void

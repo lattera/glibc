@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,7 +154,7 @@
 #    define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP	\
-  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP			\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
 #   else
 #    define weak_alias(original, alias)	\

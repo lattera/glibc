@@ -25,6 +25,7 @@
 
 #include <features.h>
 
+#define __need_NULL
 #define __need_size_t
 #include <stddef.h>
 
