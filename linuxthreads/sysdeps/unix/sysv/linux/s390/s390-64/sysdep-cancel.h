@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -63,8 +63,8 @@ L(pseudo_end):
 #  define CDISABLE	__libc_disable_asynccancel
 #  define __local_multiple_threads	__libc_multiple_threads
 # else
-#  define CENABLE	__librt_enable_asynccancel
-#  define CDISABLE	__librt_disable_asynccancel
+#  define CENABLE	__librt_enable_asynccancel@PLT
+#  define CDISABLE	__librt_disable_asynccancel@PLT
 # endif
 
 #define STM_0		/* Nothing */

@@ -1,5 +1,5 @@
-/* Machine-dependent SIGPROF signal handler.  PA-RISC version
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Machine-specific calling sequence for `mcount' profiling function.  PA-RISC
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-static void
-profil_counter (int signr, siginfo_t *si, struct ucontext *uctx)
-{
-  unsigned long ip = uctx->uc_mcontext.sc_iaoq[0] & ~0x3;
-  profil_count ((void *) ip);
-}
+/* We can call _mcount directly since gcc supplies the correct
+ * arguments */
+#define _MCOUNT_DECL(from, self) \
+ void _mcount (u_long from, u_long self)
+
+#define MCOUNT

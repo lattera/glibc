@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -25,9 +25,9 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
-# undef PSEUDO
-# define PSEUDO(name, syscall_name, args)				      \
-	.text;								      \
+# if !defined NOT_IN_libc || defined IS_IN_libpthread
+
+#  define PSEUDO_CANCEL(name, syscall_name, args)			      \
 L(pseudo_cancel):							      \
 	STM_##args							      \
 	stm	%r12,%r15,48(%r15);					      \
@@ -48,7 +48,42 @@ L(pseudo_cancel):							      \
 	lm	%r12,%r15,48+96(%r15);					      \
 	j	L(pseudo_check);					      \
 1:	.long	CENABLE-0b;						      \
-2:	.long	CDISABLE-0b;						      \
+2:	.long	CDISABLE-0b;
+
+# else /* !libc.so && !libpthread.so */
+
+#  define PSEUDO_CANCEL(name, syscall_name, args)			      \
+L(pseudo_cancel):							      \
+	STM_##args							      \
+	stm	%r11,%r15,44(%r15);					      \
+	lr	%r14,%r15;						      \
+	ahi	%r15,-96;						      \
+	st	%r14,0(%r15);						      \
+	basr    %r13,0;							      \
+0:	l	%r12,3f-0b(%r13);					      \
+	l	%r1,1f-0b(%r13);					      \
+	la	%r12,0(%r12,%r13);					      \
+	bas	%r14,0(%r1,%r13);					      \
+	lr	%r0,%r2;						      \
+	LM_##args							      \
+	DO_CALL(syscall_name, args);					      \
+	l	%r1,2f-0b(%r13);					      \
+	lr	%r11,%r2;						      \
+	lr	%r2,%r0;						      \
+	bas	%r14,0(%r1,%r13);					      \
+	lr	%r2,%r11;						      \
+	lm	%r11,%r15,44+96(%r15);					      \
+	j	L(pseudo_check);					      \
+1:	.long	CENABLE@PLT-0b;						      \
+2:	.long	CDISABLE@PLT-0b;					      \
+3:	.long	_GLOBAL_OFFSET_TABLE_-0b;
+
+# endif
+
+# undef PSEUDO
+# define PSEUDO(name, syscall_name, args)				      \
+	.text;								      \
+PSEUDO_CANCEL(name, syscall_name, args)					      \
 ENTRY(name)								      \
 	SINGLE_THREAD_P(%r1)						      \
 	jne	L(pseudo_cancel);					      \
