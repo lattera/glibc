@@ -42,15 +42,12 @@ int
 main (int argc, char *argv[])
 {
   char *s = malloc (201);
-  double monval;
 
   if (setlocale (LC_MONETARY, argv[1]) == NULL)
     {
       fprintf (stderr, "setlocale(LC_MONETARY, \"%s\"): %m\n", argv[1]);
       exit (EXIT_SETLOCALE);
     }
-  /* This is locale-dependent! see setlocale(3) for details */
-  monval = strtod (argv[3], NULL);
 
   if (strfmon (s, 200, argv[2], (double) atof (argv[3])) == -1)
     {

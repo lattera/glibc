@@ -1,3 +1,8 @@
+2003-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Use l_map_start not l_addr in Phdr
+	computation so that prelinking wroks.
+
 2003-06-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Don't skip dynamic
@@ -51,7 +56,7 @@
 	* include/netinet/in.h (inet6_option_alloc): Add libc_hidden_proto
 	definition.
 
-	* inet/netinet/ip6.h (IP6OPT_PAD1, IP6OPT_PADn): Define.
+	* inet/netinet/ip6.h (IP6OPT_PAD1, IP6OPT_PADN): Define.
 	* inet/netinet/in.h: Add prototypes for inet6_option_* functions.
 	* inet/Makefile (routines): Add inet6_option.
 	* inet/inet6_option.c: New file.

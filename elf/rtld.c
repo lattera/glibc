@@ -933,8 +933,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr() callbacks.  */
-  ElfW(Ehdr) *rtld_ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map.l_addr);
-  GL(dl_rtld_map).l_phdr = (ElfW(Phdr) *) (GL(dl_rtld_map.l_addr)
+  ElfW(Ehdr) *rtld_ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map).l_map_start;
+  GL(dl_rtld_map).l_phdr = (ElfW(Phdr) *) (GL(dl_rtld_map).l_map_start
 					   + rtld_ehdr->e_phoff);
   GL(dl_rtld_map).l_phnum = rtld_ehdr->e_phnum;
 

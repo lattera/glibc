@@ -25,25 +25,27 @@ run_program_prefix=$2
 datafile=$3
 
 # Run the tests.
+errcode=0
 # There's a TAB for IFS
 while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
-	LOCPATH=${common_objpfx}localedata \
-	GCONV_PATH=${common_objpfx}/iconvdata \
-	${run_program_prefix} ${common_objpfx}localedata/tst-numeric \
+	if LOCPATH=${common_objpfx}localedata \
+	    GCONV_PATH=${common_objpfx}/iconvdata \
+	    ${run_program_prefix} ${common_objpfx}localedata/tst-numeric \
 	    "$locale" "$format" "$value" "$expect"
-	if [ $? -eq 0 ]; then
+	then
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
 		 "Value: \"${value}\" Expect: \"${expect}\"  passed"
 	else
+	    errcode=$?
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
 		 "Value: \"${value}\" Expect: \"${expect}\"    failed"
 	fi
     fi
 done < $datafile
 
-exit $?
+exit $errcode
 # Local Variables:
 #  mode:shell-script
 # End:
