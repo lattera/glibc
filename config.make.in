@@ -90,6 +90,7 @@ AS = $(CC) -c
 MIG = @MIG@
 PWD_P = @PWD_P@
 BISON = @BISON@
+AUTOCONF = @AUTOCONF@
 
 # Installation tools.
 INSTALL = @INSTALL@

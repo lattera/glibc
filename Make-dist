@@ -190,21 +190,29 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
 +tsrcs := $(+tsrcs) $(+sysdep-tsrcs) $(wildcard $(+sysdep-names:%=include/%))
 
+ifneq ($(AUTOCONF),no)
+
 ifeq ($(with-cvs),yes)
-define autoconf-it
-autoconf $(ACFLAGS) $< > $@.new
-mv -f $@.new $@
+define autoconf-it-cvs
 test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 else
-define autoconf-it
-autoconf $(ACFLAGS) $< > $@.new
-mv -f $@.new $@
-endef
+autoconf-it-cvs =
 endif
+
+define autoconf-it
+@-rm -f $@.new
+$(AUTOCONF) $(ACFLAGS) $< > $@.new
+chmod a-w,a+x $@.new
+mv -f $@.new $@
+$(autoconf-it-cvs)
+endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
+
+endif # $(AUTOCONF) = no
+
 
 dist: $(tardir).tar.bz2
 	rm $(tardir).tar

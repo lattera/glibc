@@ -30,28 +30,32 @@ include Makeconfig
 .PHONY: all
 all: lib others
 
+ifneq ($(AUTOCONF),no)
+
 ifeq ($(with-cvs),yes)
-define autoconf-it
-@-rm -f $@.new
-autoconf $(ACFLAGS) $< > $@.new
-chmod a-w,a+x $@.new
-mv -f $@.new $@
+define autoconf-it-cvs
 test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 else
-define autoconf-it
-@-rm -f $@.new
-autoconf $(ACFLAGS) $< > $@.new
-chmod a-w,a+x $@.new
-mv -f $@.new $@
-endef
+autoconf-it-cvs =
 endif
 
-# We don't want to run anything here in parallel.
-.NOTPARALLEL:
+define autoconf-it
+@-rm -f $@.new
+$(AUTOCONF) $(ACFLAGS) $< > $@.new
+chmod a-w,a+x $@.new
+mv -f $@.new $@
+$(autoconf-it-cvs)
+endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
+
+endif # $(AUTOCONF) = no
+
+
+# We don't want to run anything here in parallel.
+.NOTPARALLEL:
 
 # These are the targets that are made by making them in each subdirectory.
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
