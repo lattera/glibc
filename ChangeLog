@@ -1,3 +1,12 @@
+2003-06-18  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Catch uninitialized
+	elements in the table instead of printing an empty name string.
+
+2003-06-05  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (PT_GNU_STACK): New macro.
+
 2003-06-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/time.h: Define CLOCK_IDFIELD_SIZE.

@@ -228,7 +228,7 @@ _dl_show_auxv (void)
       static const struct
       {
 	const char label[20];
-	enum { dec, hex, str } form;
+	enum { unused, dec, hex, str } form;
       } auxvars[] =
 	{
 	  [AT_EXECFD - 2] =		{ "AT_EXECFD:       ", dec },
@@ -268,7 +268,8 @@ _dl_show_auxv (void)
 	    continue;
 	}
 
-      if (idx < sizeof (auxvars) / sizeof (auxvars[0]))
+      if (idx < sizeof (auxvars) / sizeof (auxvars[0])
+	  && auxvars[idx].form != unused)
 	{
 	  const char *val = av->a_un.a_ptr;
 
