@@ -1,5 +1,5 @@
 /* lxstat64 using old-style Unix lstat system call.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 #ifdef __ASSUME_STAT64_SYSCALL
   result = INLINE_SYSCALL (lstat64, 2, CHECK_STRING (name), CHECK_1 (buf));
 # if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
-  if (!result && buf->__st_ino != (__ino_t)buf->st_ino)
+  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
     buf->st_ino = buf->__st_ino;
 # endif
   return result;
@@ -69,7 +69,7 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
       if (result != -1 || errno != ENOSYS)
 	{
 #  if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
-	  if (!result && buf->__st_ino != (__ino_t)buf->st_ino)
+	  if (!result && buf->__st_ino != (__ino_t) buf->st_ino)
 	    buf->st_ino = buf->__st_ino;
 #  endif
 	  return result;

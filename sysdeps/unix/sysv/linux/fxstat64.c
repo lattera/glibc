@@ -1,5 +1,5 @@
 /* fxstat64 using old-style Unix fstat system call.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 #if __ASSUME_STAT64_SYSCALL > 0
   result = INLINE_SYSCALL (fstat64, 2, fd, CHECK_1 (buf));
 # if defined _HAVE_STAT64___ST_INO && __ASSUME_ST_INO_64_BIT == 0
-  if (!result && buf->__st_ino != (__ino_t) buf->st_ino)
+  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
     buf->st_ino = buf->__st_ino;
 # endif
   return result;
