@@ -20,26 +20,20 @@
 
 
 
-FUNC__(remqu)
+FUNC__(remq)
 	/* First set up the dividend.  */
 	
 	stq t10,0(sp)
 	ldt $f10,0(sp)
 	cvtqt $f10,$f10
-		ldit	$f26, 18446744073709551616.0
-	addt	$f26, $f10, $f26
-	fcmovlt	$f10, $f26, $f10
-
+	
 
 	/* Then set up the divisor.  */
 	
 	stq t11,0(sp)
 	ldt $f1,0(sp)
 	cvtqt $f1,$f1
-		ldit	$f26, 18446744073709551616.0
-	addt	$f26, $f1, $f26
-	fcmovlt	$f1, $f26, $f1
-
+	
 
 	/* Do the division.  */
 	divt $f10,$f1,$f10
@@ -57,4 +51,4 @@ FUNC__(remqu)
 
 	lda sp,16(sp)
 	ret zero,(t9),1
-	.end NAME__(remqu)
+	.end NAME__(remq)

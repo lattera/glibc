@@ -20,7 +20,7 @@
 
 
 
-FUNC__(remqu)
+FUNC__(divqu)
 	/* First set up the dividend.  */
 	
 	stq t10,0(sp)
@@ -50,11 +50,8 @@ FUNC__(remqu)
 	ldq t12,0(sp)
 	
 
-		/* Compute the remainder.  */
-	mulq t11, t12, t11
-	subq t10, t11, t12
-
+	
 
 	lda sp,16(sp)
 	ret zero,(t9),1
-	.end NAME__(remqu)
+	.end NAME__(divqu)
