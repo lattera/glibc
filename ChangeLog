@@ -1,5 +1,9 @@
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Don't use the charset
+	name from the locale name.  Only use the value in the LC_CTYPE
+	locale data file.
+
 	* locale/loadlocale.c (_nl_load_locale): Allow index of entry in
 	file be equal to file size.
 

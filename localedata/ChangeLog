@@ -1,3 +1,9 @@
+1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/ja_JP [LC_CTYPE] (cntrl): Add PAD.
+
+	* repertoiremaps/mnemonic.ja: Add DCS and APC definitions.
+
 1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* tst-trans.c: New file.

@@ -194,14 +194,8 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  __gconv_close_transform (__wcsmbs_gconv_fcts.tomb, 1);
 	  __gconv_close_transform (__wcsmbs_gconv_fcts.towc, 1);
 
-	  /* Get name of charset of the locale.  We first examine
-	     whether we have a character set mentioned in the locale
-	     name.  If this isn't the case we use the information from
-	     the locale files.  */
-	  charset_name = extract_charset_name (setlocale (LC_CTYPE, NULL));
-	  if (charset_name == NULL)
-	    charset_name =
-	      new_category->values[_NL_ITEM_INDEX(CODESET)].string;
+	  /* Get name of charset of the locale.  */
+	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
 
 	  /* Normalize the name and add the slashes necessary for a
              complete lookup.  */
