@@ -356,7 +356,7 @@ extern int sigaltstack (__const struct sigaltstack *__restrict __ss,
 
 #endif /* use BSD or X/Open Unix.  */
 
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN_EXTENDED
 /* Simplified interface for signal management.  */
 
 /* Add SIG to the calling process' signal mask.  */
