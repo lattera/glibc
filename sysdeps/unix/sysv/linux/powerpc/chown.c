@@ -1,5 +1,5 @@
 /* chown() compatibility.
-   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ __chown (const char *file, uid_t owner, gid_t group)
    char link[PATH_MAX+2];
    char path[2*PATH_MAX+4];
    int loopct;
-   int filelen;
+   size_t filelen;
    static int libc_old_chown = 0 /* -1=old linux, 1=new linux, 0=unknown */;
 
    if (libc_old_chown == 1)
@@ -82,7 +82,7 @@ __chown (const char *file, uid_t owner, gid_t group)
       ENAMETOOLONG before this, usually.  */
    for (loopct = 0; loopct < 128; loopct++)
    {
-     int linklen;
+     size_t linklen;
 
      if (err >= PATH_MAX+1)
        {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -1402,8 +1402,7 @@ show_archive_content (int verbose)
   struct locarhead *head;
   struct namehashent *namehashtab;
   struct nameent *names;
-  int cnt;
-  int used;
+  size_t cnt, used;
 
   /* Open the archive.  This call never returns if we cannot
      successfully open the archive.  */

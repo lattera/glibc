@@ -69,4 +69,4 @@ weak_extern (__cache_line_size)
   } while (0)
 #endif
 
-#include_next <sysdeps/unix/sysv/linux/dl-sysdep.c>
+#include <sysdeps/unix/sysv/linux/dl-sysdep.c>

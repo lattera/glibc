@@ -581,8 +581,9 @@ fts_build(sp, type)
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *oldaddr;
-	int cderrno, descend, len, level, maxlen, nlinks, saved_errno,
+	int cderrno, descend, len, level, nlinks, saved_errno,
 	    nostat, doadjust;
+	size_t maxlen;
 	char *cp;
 
 	/* Set current node pointer. */

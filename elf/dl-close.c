@@ -371,7 +371,7 @@ _dl_close (void *_map)
 		     this search list, going in either direction.  When the
 		     whole chunk is at the end of the used area then we can
 		     reclaim it.  */
-		  if (imap->l_tls_offset == tls_free_end)
+		  if ((size_t) imap->l_tls_offset == tls_free_end)
 		    /* Extend the contiguous chunk being reclaimed.  */
 		    tls_free_end += imap->l_tls_blocksize;
 		  else if (imap->l_tls_offset + imap->l_tls_blocksize

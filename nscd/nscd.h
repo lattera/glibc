@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -118,7 +118,7 @@ extern void send_stats (int fd, struct database dbs[lastdb]);
 extern int receive_print_stats (void) __attribute__ ((__noreturn__));
 
 /* cache.c */
-extern struct hashentry *cache_search (int type, void *key, size_t len,
+extern struct hashentry *cache_search (request_type, void *key, size_t len,
 				       struct database *table, uid_t owner);
 extern void cache_add (int type, void *key, size_t len,
 		       const void *packet, size_t iovtotal, void *data,

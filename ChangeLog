@@ -1,3 +1,22 @@
+2003-03-15  Roland McGrath  <roland@redhat.com>
+
+	* nscd/cache.c (cache_search): Give first arg type `request_type'.
+	* nscd/nscd.h: Update decl.
+
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Add casts for signedness.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* elf/dl-close.c (_dl_close): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c (__chown): int -> size_t
+	* io/fts.c (fts_build): Likewise.
+	* elf/cache.c (add_to_cache): Likewise.
+	* locale/programs/locarchive.c (show_archive_content): Likewise.
+
+	* posix/fnmatch.c (fnmatch): Tweak __builtin_expect use.
+
+	* include/ctype.h (__ctype_b_loc): Tweak type punning to make gcc 3.3
+	happy.
+	(__ctype_toupper_loc, __ctype_tolower_loc): Likewise.
+
 2003-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/system.c: Use the generic Linux

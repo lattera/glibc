@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,7 +39,7 @@
 
    This function must be called with the read-lock held.  */
 struct hashentry *
-cache_search (int type, void *key, size_t len, struct database *table,
+cache_search (request_type type, void *key, size_t len, struct database *table,
 	      uid_t owner)
 {
   unsigned long int hash = __nis_hash (key, len) % table->module;

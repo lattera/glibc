@@ -464,7 +464,7 @@ add_to_cache (const char *path, const char *lib, int flags,
 {
   struct cache_entry *new_entry, *ptr, *prev;
   char *full_path;
-  int len, i;
+  size_t len, i;
 
   new_entry = (struct cache_entry *) xmalloc (sizeof (struct cache_entry));
 

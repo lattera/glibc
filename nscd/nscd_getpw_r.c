@@ -113,8 +113,8 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
   vec[1].iov_base = (void *) key;
   vec[1].iov_len = keylen;
 
-  nbytes = (size_t) TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-  if (nbytes != sizeof (request_header) + keylen)
+  nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
+  if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
     {
       __close (sock);
       return -1;
@@ -122,7 +122,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 
   nbytes = TEMP_FAILURE_RETRY (__read (sock, &pw_resp,
 				       sizeof (pw_response_header)));
-  if (nbytes != sizeof (pw_response_header))
+  if (nbytes != (ssize_t) sizeof (pw_response_header))
     {
       __close (sock);
       return -1;
