@@ -1,4 +1,3 @@
-<<<<<<< ChangeLog
 1998-04-23 22:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (fillin_rpath): Handle empty element returned by
