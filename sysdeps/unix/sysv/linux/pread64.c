@@ -47,15 +47,9 @@ __libc_pread64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-# if __BYTE_ORDER == __LITTLE_ENDIAN
   result = INLINE_SYSCALL (pread, 5, fd, buf, count,
-			   (off_t) (offset & 0xffffffff),
-			   (off_t) (offset >> 32));
-# elif __BYTE_ORDER == __BIG_ENDIAN
-  result = INLINE_SYSCALL (pread, 5, fd, buf, count,
-			   (off_t) (offset >> 32),
-			   (off_t) (offset & 0xffffffff));
-# endif
+			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
+					     (off_t) (offset & 0xffffffff)));
 
 # if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)

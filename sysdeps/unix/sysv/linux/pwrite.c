@@ -48,11 +48,8 @@ __libc_pwrite (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, offset, 0);
-# elif __BYTE_ORDER == __BIG_ENDIAN
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, 0, offset);
-# endif
+  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count,
+			   __LONG_LONG_PAIR (0, offset));
 # if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */

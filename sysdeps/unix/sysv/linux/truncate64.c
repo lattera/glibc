@@ -49,11 +49,8 @@ truncate64 (const char *path, off64_t length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-      int result = INLINE_SYSCALL (truncate64, 3, path, low, high);
-#elif __BYTE_ORDER == __BIG_ENDIAN
-      int result = INLINE_SYSCALL (truncate64, 3, path, high, low);
-#endif
+      int result = INLINE_SYSCALL (truncate64, 3, path,
+				   __LONG_LONG_PAIR (high, low));
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)

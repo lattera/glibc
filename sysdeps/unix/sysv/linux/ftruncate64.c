@@ -49,11 +49,8 @@ ftruncate64 (int fd, off64_t length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-      int result = INLINE_SYSCALL (ftruncate64, 3, fd, low, high);
-#elif __BYTE_ORDER == __BIG_ENDIAN
-      int result = INLINE_SYSCALL (ftruncate64, 3, fd, high, low);
-#endif
+      int result = INLINE_SYSCALL (ftruncate64, 3, fd,
+				   __LONG_LONG_PAIR (high, low));
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)
 #endif

@@ -8,6 +8,20 @@
 
 2000-07-06  Greg McGary  <greg@mcgary.org>
 
+	* string/endian.h (__LONG_LONG_PAIR): New macro.
+	* sysdeps/unix/sysv/linux/ftruncate64.c: Use it.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/truncate64.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_SYSCALL): Fix LHS.
 
 2000-07-06  Andreas Jaeger  <aj@suse.de>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,12 @@
 # define BIG_ENDIAN	__BIG_ENDIAN
 # define PDP_ENDIAN	__PDP_ENDIAN
 # define BYTE_ORDER	__BYTE_ORDER
+#endif
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+# define __LONG_LONG_PAIR(HI, LO) LO, HI
+#elif __BYTE_ORDER == __BIG_ENDIAN
+# define __LONG_LONG_PAIR(HI, LO) HI, LO
 #endif
 
 #endif	/* endian.h */
