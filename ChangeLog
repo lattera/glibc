@@ -1,3 +1,8 @@
+2003-10-01  Thorsten Kukuk  <kukuk@suse.de>
+
+	* elf/dl-reloc.c (_dl_allocate_static_tls): Move definition of
+	variables only used if TLS_DTV_AT_TP is defined into the #if branch.
+
 2003-10-02  Jeroen Dekkers  <jeroen@dekkers.cx>
 
 	* sysdeps/mach/hurd/malloc-machine.h: Copy the tsd code from

@@ -49,8 +49,6 @@ internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
   size_t offset;
-  size_t used;
-  size_t check;
 
   /* If the alignment requirements are too high fail.  */
   if (map->l_tls_align > GL(dl_tls_static_align))
@@ -78,6 +76,9 @@ cannot allocate memory in static TLS block"));
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 # elif TLS_DTV_AT_TP
+  size_t used;
+  size_t check;
+
   offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
   used = offset + map->l_tls_blocksize;
   check = used;
