@@ -1,3 +1,8 @@
+2001-04-02  Andreas Schwab  <schwab@suse.de>
+
+	* Makerules (build-module): Make sure exit codes get checked
+	properly and remove unnecessary slashes.
+
 2001-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
