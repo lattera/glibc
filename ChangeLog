@@ -1,3 +1,9 @@
+2003-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Define tv here,
+	not at function level.
+	* sysdeps/unix/clock_gettime.c (HANDLE_REALTIME): Likewise.
+
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* nis/nss_nis/nis-hosts.c (internal_gethostbyname2_r): int -> size_t

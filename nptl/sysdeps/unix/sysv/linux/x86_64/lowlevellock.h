@@ -67,7 +67,9 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %2, %%rsi\n\t"			      \
-			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_mutex_lock_wait\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
@@ -84,7 +86,9 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       ".subsection 1\n"				      \
 		       "1:\tleaq %4, %%rdi\n\t"				      \
 		       "movq %7, %%rdx\n\t"				      \
-		       "call __lll_mutex_timedlock_wait\n\t"		      \
+		       "subq $128, %%rsp\n\t"				      \
+		       "callq __lll_mutex_timedlock_wait\n\t"		      \
+		       "addq $128, %%rsp\n\t"				      \
 		       "jmp 2f\n\t"					      \
 		       ".previous\n"					      \
 		       "2:"						      \
@@ -101,7 +105,9 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
-			      "call __lll_mutex_unlock_wake\n\t"	      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_mutex_unlock_wake\n\t"	      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
@@ -152,7 +158,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %2, %%rsi\n\t"			      \
-			      "call __lll_lock_wait\n\t"		      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_lock_wait\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
@@ -167,7 +175,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
-			      "call __lll_unlock_wake\n\t"		      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_unlock_wake\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
@@ -201,7 +211,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %2, %%rsi\n\t"			      \
-			      "call __lll_lock_wait\n\t"		      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_lock_wait\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \
@@ -219,7 +231,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
-			      "call __lll_unlock_wake\n\t"		      \
+			      "subq $128, %%rsp\n\t"			      \
+			      "callq __lll_unlock_wake\n\t"		      \
+			      "addq $128, %%rsp\n\t"			      \
 			      "jmp 2f\n\t"				      \
 			      ".previous\n"				      \
 			      "2:"					      \

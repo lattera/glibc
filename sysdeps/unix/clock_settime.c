@@ -40,7 +40,6 @@ extern void __pthread_clock_settime (hp_timing_t offset)
 int
 clock_settime (clockid_t clock_id, const struct timespec *tp)
 {
-  struct timeval tv;
   int retval;
 
   /* Make sure the time cvalue is OK.  */
@@ -54,6 +53,7 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
     {
 #define HANDLE_REALTIME \
       do {								      \
+	struct timeval tv;						      \
 	TIMESPEC_TO_TIMEVAL (&tv, tp);					      \
 									      \
 	retval = settimeofday (&tv, NULL);				      \

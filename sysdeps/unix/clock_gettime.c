@@ -41,13 +41,13 @@ extern int __pthread_clock_gettime (hp_timing_t freq, struct timespec *tp)
 int
 clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
-  struct timeval tv;
   int retval = -1;
 
   switch (clock_id)
     {
 #define HANDLE_REALTIME \
       do {								      \
+        struct timeval tv;						      \
 	retval = gettimeofday (&tv, NULL);				      \
 	if (retval == 0)						      \
 	  /* Convert into `timespec'.  */				      \

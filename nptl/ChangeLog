@@ -1,5 +1,8 @@
 2003-03-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Work around red
+	zone versus inline asm stupidity.  Use correct instructions.
+
 	* tst-rwlock6.c: Add some more status output.
 
 2003-03-15  Roland McGrath  <roland@redhat.com>
