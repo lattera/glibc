@@ -153,17 +153,16 @@ write_corefile (int signo, const struct hurd_signal_detail *detail)
     return 0;
 
   /* Get a port to the directory where the new core file will reside.  */
+  file = MACH_PORT_NULL;
   name = _hurdsig_getenv ("COREFILE");
   if (name == NULL)
     name = "core";
   coredir = __file_name_split (name, (char **) &name);
-  if (coredir == MACH_PORT_NULL)
-    return 0;
-  /* Create the new file, but don't link it into the directory yet.  */
-  if (err = __dir_mkfile (coredir, O_WRONLY|O_CREAT,
-			  0600 & ~_hurd_umask, /* XXX ? */
-			  &file))
-    return 0;
+  if (coredir != MACH_PORT_NULL)
+    /* Create the new file, but don't link it into the directory yet.  */
+    __dir_mkfile (coredir, O_WRONLY|O_CREAT,
+		  0600 & ~_hurd_umask, /* XXX ? */
+		  &file))
 
   /* Call the core dumping server to write the core file.  */
   err = __crash_dump_task (coreserver,
@@ -174,13 +173,14 @@ write_corefile (int signo, const struct hurd_signal_detail *detail)
 			   _hurd_ports[INIT_PORT_CTTYID].port,
 			   MACH_MSG_TYPE_COPY_SEND);
   __mach_port_deallocate (__mach_task_self (), coreserver);
-  if (! err)
+
+  if (! err && file != MACH_PORT_NULL)
     /* The core dump into FILE succeeded, so now link it into the
        directory.  */
     err = __dir_link (file, coredir, name, 1);
   __mach_port_deallocate (__mach_task_self (), file);
   __mach_port_deallocate (__mach_task_self (), coredir);
-  return !err;
+  return !err && file != MACH_PORT_NULL;
 }
 
 
