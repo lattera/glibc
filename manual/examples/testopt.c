@@ -1,8 +1,10 @@
 /*@group*/
-#include <unistd.h>
+#include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-int 
+int
 main (int argc, char **argv)
 {
   int aflag = 0;
@@ -28,7 +30,9 @@ main (int argc, char **argv)
         cvalue = optarg;
         break;
       case '?':
-        if (isprint (optopt))
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
         else
           fprintf (stderr,
