@@ -193,7 +193,7 @@ getanswer(answer, anslen, qname, qtype)
 	int toobig = 0;
 	char tbuf[MAXDNAME];
 	const char *tname;
-	int (*name_ok) __P((const char *));
+	int (*name_ok) (const char *);
 
 	tname = qname;
 	host.h_name = NULL;
