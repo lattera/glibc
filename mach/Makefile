@@ -56,7 +56,7 @@ tests := hello
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
 # files in all sysdep directories.
 distribute += Machrules syscalls.awk shortcut.awk \
-	      errorlib.h err_*.sub
+	      errorlib.h err_*.sub errsystems.awk
 
 
 # Clear any environment	value.

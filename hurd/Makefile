@@ -59,7 +59,7 @@ dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
 distribute = hurdstartup.h hurdfault.h hurdhost.h \
-	     faultexc.defs intr-rpc.defs intr-rpc.h
+	     faultexc.defs intr-rpc.defs intr-rpc.h intr-msg.h Notes
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc

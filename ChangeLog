@@ -7,6 +7,25 @@ Tue Sep 10 20:43:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db/makedb.c: Include <locale.h>.  Reported by Fila Kolodny.
 
+Tue Sep 10 14:42:39 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* elf/dl-cache.c: Rename to ...
+	* sysdeps/generic/dl-cache.c:  ... here.
+	* sysdeps/mach/hurd/dl-cache.c: New file.
+	
+	* mach/Makefile (distribute): Add `errsystems.awk'.
+	* hurd/Makefile (distribute): Add `Notes' and `intr-msg.h'.
+	* hurd/hurdintr.awk: Delete file.  (Not used in ages.)
+	* hurd/intr-rpc.awk: Likewise.
+	* hurd/invoke-trans.c: Likewise.
+	* sysdeps/mach/hurd/i386/longjmp-ctx.c: Likewise.
+	* sysdeps/mach/hurd/alpha/longjmp-ctx.c: Likewise.
+	* sysdeps/mach/hurd/mips/longjmp-ctx.c: Likewise.
+	* sysdeps/mach/hurd/i386/init-fault.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-fault.c: Likewise.
+	* sysdeps/stub/init-fault.c: Likewise.
+	* sysdeps/stub/longjmp-ctx.c: Likewise.
+	
 Tue Sep 10 13:49:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/herrno.c: Initialize `h_errno' so that we can provide
@@ -428,10 +447,6 @@ Thu Sep  5 21:08:44 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/unix/sysv/linux/schedbits.h: New file.  Include
 	clone prototypes and associated flags.
 
-Thu Sep  5 08:58:47 1996  Richard Henderson  <rth@tamu.edu>
-
-	* sysdeps/alpha/elf/start.S: Make _start global again.
-
 Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/init-first.c (__libc_argc, __libc_argv):
@@ -466,6 +481,10 @@ Thu Sep  5 13:18:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	* malloc/malloc-size.c: Likewise.
 	* malloc/malloc-walk.c: Likewise.
 	* malloc/memalign.c: Likewise.
+
+Thu Sep  5 08:58:47 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/elf/start.S: Make _start global again.
 
 Thu Sep  5 03:20:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 
