@@ -18,10 +18,10 @@ main (void)
   long int pos;
   int result = 0;
 
-  puts ("This program runs on en_US.UTF-8 locale.");
-  if (setlocale (LC_ALL, "en_US.UTF-8") == NULL)
+  puts ("This program runs on de_DE.UTF-8 locale.");
+  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
     {
-      fprintf (stderr, "Err: Cannot run on the en_US.UTF-8 locale\n");
+      fprintf (stderr, "Err: Cannot run on the de_DE.UTF-8 locale\n");
       exit (EXIT_FAILURE);
     }
 
