@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <unistd.h>
 
+#define _STDIO_H
 #include <bits/stdio_lim.h>
 #include "filedesc.h"
 
