@@ -287,7 +287,8 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name[0]
 				 ? reference_name
-				 : (rtld_progname ?: "<main program>")), NULL,
+				 : (rtld_progname ?: "<main program>")),
+			     N_("symbol lookup error"),
 			     make_string (undefined_msg, undef_name,
 					  versionstr, versionname));
 	}
