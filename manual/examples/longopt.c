@@ -17,21 +17,21 @@ main (argc, argv)
       static struct option long_options[] =
 	{
 	  /* These options set a flag.  */
-	  {"verbose", 0, &verbose_flag, 1},
-	  {"brief", 0, &verbose_flag, 0},
+	  {"verbose", no_argument,       &verbose_flag, 1},
+	  {"brief",   no_argument,       &verbose_flag, 0},
 	  /* These options don't set a flag.
 	     We distinguish them by their indices.  */
-	  {"add", 1, 0, 0},
-	  {"append", 0, 0, 0},
-	  {"delete", 1, 0, 0},
-	  {"create", 0, 0, 0},
-	  {"file", 1, 0, 0},
+	  {"add",     required_argument, 0, 'a'},
+	  {"append",  no_argument,       0, 'b'},
+	  {"delete",  required_argument, 0, 'd'},
+	  {"create",  no_argument,       0, 'c'},
+	  {"file",    required_argument, 0, 'f'},
 	  {0, 0, 0, 0}
 	};
       /* @code{getopt_long} stores the option index here.  */
       int option_index = 0;
 
-      c = getopt_long (argc, argv, "abc:d:",
+      c = getopt_long (argc, argv, "abc:d:f:",
 		       long_options, &option_index);
 
       /* Detect the end of the options.  */
@@ -64,6 +64,10 @@ main (argc, argv)
 
 	case 'd':
 	  printf ("option -d with value `%s'\n", optarg);
+	  break;
+
+	case 'f':
+	  printf ("option -f with value `%s'\n", optarg);
 	  break;
 
 	case '?':

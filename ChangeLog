@@ -1,3 +1,12 @@
+2001-01-07  Ben Collins  <bcollins@debian.org>
+
+	* manual/examples/longopt.c: Make the "struct option" a little
+	more like it should be, adding usage of required_argument,
+	noargument and such, and also setting the options string right.
+
+	* manual/sysinfo.texi (Load Average): New section, documents
+	getloadavg().
+
 2001-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.2.1.
