@@ -1,3 +1,7 @@
+2005-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* charmaps/WINDOWS-31J: Add % before alias keyword.
+
 2005-02-27  Denis Barbier  <barbier@debian.org>
 
 	[BZ #38]

@@ -1,3 +1,8 @@
+2005-03-21  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/xdr_stdio.c (xdrstdio_getlong, xdrstdio_putlong):
+	Convert correctly between long/int on 64bit big-endian.
+
 2005-03-21  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/_mcount.S: Newer kernels don't like register-frames
