@@ -1,7 +1,7 @@
 /* hp300 4.3 BSD starts at 4, rather than 0, when the start address is 0.
    Go figure.  */
 asm(".globl __start\n"
-    "__start:	.ascii \"scum\""); /* He he.  */
+    "__start:	.long 0");
 
 #define	_start	__start0
 
