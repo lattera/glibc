@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2003-4-24
+GNU C Library NEWS -- history of user-visible changes.  2003-11-17
 Copyright (C) 1992-2002,2003 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -18,6 +18,15 @@ Version 2.3.3
 
 * getaddrinfo now implements AI_V4MAPPED, AI_ALL, and AI_ADDRCONF.
   Implemented by Ulrich Drepper.
+
+* support for non-executable stacks on x86 has been added.  Changes mostly
+  by Roland McGrath.
+
+* regex is now much faster for multibyte locaes.  Changes by Jakub Jelinek
+  and Ulrich Drepper.
+
+* getaddrinfo now performs destination address selection according to
+  RFC 3484.
 
 Version 2.3.2
 

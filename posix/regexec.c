@@ -620,7 +620,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
      multi character collating element.  */
   if (nmatch > 1 || dfa->has_mb_node)
     {
-      mctx.state_log = re_malloc (re_dfastate_t *, dfa->nodes_len + 1);
+      mctx.state_log = re_malloc (re_dfastate_t *, input.bufs_len + 1);
       if (BE (mctx.state_log == NULL, 0))
 	{
 	  err = REG_ESPACE;
@@ -766,6 +766,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 			break;
 		      if (BE (err != REG_NOMATCH, 0))
 			goto free_return;
+		      match_last = -1;
 		    }
 		  else
 		    break; /* We found a match.  */
@@ -785,7 +786,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
       int reg_idx;
 
       /* Initialize registers.  */
-      for (reg_idx = 0; reg_idx < nmatch; ++reg_idx)
+      for (reg_idx = 1; reg_idx < nmatch; ++reg_idx)
 	pmatch[reg_idx].rm_so = pmatch[reg_idx].rm_eo = -1;
 
       /* Set the points where matching start/end.  */
@@ -801,7 +802,8 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	}
 
       /* At last, add the offset to the each registers, since we slided
-	 the buffers so that We can assume that the matching starts from 0.  */
+	 the buffers so that we could assume that the matching starts
+	 from 0.  */
       for (reg_idx = 0; reg_idx < nmatch; ++reg_idx)
 	if (pmatch[reg_idx].rm_so != -1)
 	  {
@@ -869,7 +871,8 @@ prune_impossible_nodes (preg, mctx)
 		  ret = REG_NOMATCH;
 		  goto free_return;
 		}
-	    } while (!mctx->state_log[match_last]->halt);
+	    } while (mctx->state_log[match_last] == NULL
+		     || !mctx->state_log[match_last]->halt);
 	  halt_node = check_halt_state_context (preg,
 						mctx->state_log[match_last],
 						mctx, match_last);
@@ -1236,7 +1239,7 @@ pop_fail_stack (fs, pidx, nregs, regs, eps_via_nodes)
 /* Set the positions where the subexpressions are starts/ends to registers
    PMATCH.
    Note: We assume that pmatch[0] is already set, and
-   pmatch[i].rm_so == pmatch[i].rm_eo == -1 (i > 1).  */
+   pmatch[i].rm_so == pmatch[i].rm_eo == -1 for 0 < i < nmatch.  */
 
 static reg_errcode_t
 set_regs (preg, mctx, nmatch, pmatch, fl_backtrack)

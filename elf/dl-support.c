@@ -41,6 +41,7 @@ size_t _dl_platformlen;
 
 int _dl_debug_mask;
 int _dl_lazy;
+ElfW(Addr) _dl_use_load_bias = -2;
 int _dl_dynamic_weak;
 
 /* If nonzero print warnings about problematic situations.  */

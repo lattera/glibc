@@ -226,11 +226,18 @@
 1¦20¦a\(.*b\)c¦axcaxbbbcsxbbbbbbbbc¦
 # GA135
 1¦7¦\(a\(b\(c\(d\(e\)\)\)\)\)\4¦abcdededede¦
-1¦2¦a\(b\)*c\1¦acb¦
+#W POSIX does not really specify whether a\(b\)*c\1 matches acb.
+#W back references are supposed to expand to the last match, but what
+#W if there never was a match as in this case?
+-1¦-1¦a\(b\)*c\1¦acb¦
 1¦11¦\(a\(b\(c\(d\(e\(f\(g\)h\(i\(j\)\)\)\)\)\)\)\)\9¦abcdefghijjk¦
 # GA136
-1¦2¦a\(b\)*c\1¦acb¦
-4¦7¦a\(b\(c\(d\(f\)*\)\)\)\4¦xYzabcdePQRST¦
+#W These two tests have the same problem as the test in GA135.  No match
+#W of a subexpression, why should the back reference be usable?
+#W 1 2 a\(b\)*c\1 acb
+#W 4 7 a\(b\(c\(d\(f\)*\)\)\)\4¦xYzabcdePQRST
+-1¦-1¦a\(b\)*c\1¦acb¦
+-1¦-1¦a\(b\(c\(d\(f\)*\)\)\)\4¦xYzabcdePQRST¦
 # GA137
 -2¦-2¦\(a\(b\)\)\3¦foo¦
 -2¦-2¦\(a\(b\)\)\(a\(b\)\)\5¦foo¦

@@ -271,7 +271,6 @@ main (void)
 	  continue;
 	}
 
-      /* XXX: This causes regex segfault.  Disable for now.
       res = re_search (&regbuf, tests[i].string, str_len, str_len, -str_len,
 		       NULL);
       if (res != tests[i].res)
@@ -280,7 +279,7 @@ main (void)
 	  ret = 1;
 	  regfree (&regbuf);
 	  continue;
-	}  */
+	}
       regfree (&regbuf);
     }
 

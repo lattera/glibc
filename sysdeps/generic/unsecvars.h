@@ -7,6 +7,7 @@
   "LD_ORIGIN_PATH\0"							      \
   "LD_DEBUG_OUTPUT\0"							      \
   "LD_PROFILE\0"							      \
+  "LD_USE_LOAD_BIAS\0"							      \
   "GCONV_PATH\0"							      \
   "HOSTALIASES\0"							      \
   "LOCALDOMAIN\0"							      \

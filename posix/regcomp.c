@@ -3213,7 +3213,6 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       int sbc_idx;
       /* Build a tree for complex bracket.  */
       dfa->has_mb_node = 1;
-      dfa->has_plural_match = 1;
       for (sbc_idx = 0; sbc_idx < BITSET_UINTS; ++sbc_idx)
 	if (sbcset[sbc_idx])
 	  break;
@@ -3233,6 +3232,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	goto parse_bracket_exp_espace;
       /* Then join them by ALT node.  */
       alt_token.type = OP_ALT;
+      dfa->has_plural_match = 1;
       work_tree = re_dfa_add_tree_node (dfa, work_tree, mbc_tree, &alt_token);
       if (BE (mbc_tree != NULL, 1))
 	return work_tree;
@@ -3627,6 +3627,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
 	goto build_word_op_espace;
       /* Then join them by ALT node.  */
       alt_token.type = OP_ALT;
+      dfa->has_plural_match = 1;
       tree = re_dfa_add_tree_node (dfa, tree, mbc_tree, &alt_token);
       if (BE (mbc_tree != NULL, 1))
 	return tree;

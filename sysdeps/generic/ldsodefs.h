@@ -337,6 +337,11 @@ struct rtld_global
   /* File descriptor to write debug messages to.  */
   EXTERN int _dl_debug_fd;
 
+  /* -1 if the dynamic linker should honor library load bias,
+     0 if not, -2 use the default (honor biases for normal
+     binaries, don't honor for PIEs).  */
+  EXTERN ElfW(Addr) _dl_use_load_bias;
+
 #ifdef _LIBC_REENTRANT
   EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
 #endif

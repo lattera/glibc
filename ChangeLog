@@ -1,3 +1,34 @@
+2003-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/runptests.c (main): Make errors fatal.
+	* posix/PTESTS: One test in GA135 and GA136 check functionality
+	which seems not guaranteed.
+
+2003-11-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (re_search_internal): If prune_impossible_nodes
+	returned REG_NOMATCH, set match_last to -1.  Don't initialize
+	pmatch[0] needlessly.  Fix comment.
+	(prune_impossible_nodes): Don't segfault on NULL state_log entry.
+	(set_regs): Fix comment.
+	* posix/regcomp.c (parse_bracket_exp): Only set has_plural_match
+	if adding both SIMPLE_BRACKET and COMPLEX_BRACKET.
+	(build_charclass_op): Set has_plural_match if adding both
+	SIMPLE_BRACKET and COMPLEX_BRACKET.
+	* posix/bug-regex11.c (tests): Fix register values for one commented
+	out test.  Add new tests.
+
+	* posix/regex_internal.c (re_string_allocate): Make sure init_len
+	is at least dfa->mb_cur_max.
+	(re_string_reconstruct): If is_utf8, don't fall back into
+	re_string_skip_chars just because idx points into a middle of
+	valid UTF-8 character.  Instead, set the wcs bytes which correspond
+	to the partial character bytes to WEOF.
+	* posix/regexec.c (re_search_internal): Allocate input.bufs_len + 1
+	instead of dfa->nodes_len + 1 state_log entries initially.
+	* posix/bug-regex20.c (main): Uncomment backwards case insensitive
+	tests.
+
 2003-11-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.h (re_token_t): Add word_char bit.  Add

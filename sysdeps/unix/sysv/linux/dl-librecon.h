@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -44,12 +44,12 @@ _dl_osversion_init (char *assume_kernel)
 }
 
 /* Recognizing extra environment variables.  */
-#define EXTRA_LD_ENVVARS EXTRA_LD_ENVVARS_LINUX
-#define EXTRA_LD_ENVVARS_LINUX \
-  case 13:								      \
+#define EXTRA_LD_ENVVARS_13 \
     if (memcmp (envline, "ASSUME_KERNEL", 13) == 0)			      \
-      _dl_osversion_init (&envline[14]);				      \
-    break;								      \
+      {									      \
+	_dl_osversion_init (&envline[14]);				      \
+	break;								      \
+      }
 
 #define DL_OSVERSION_INIT \
   do {									      \

@@ -55,7 +55,12 @@ re_string_allocate (pstr, str, len, init_len, trans, icase, dfa)
      const re_dfa_t *dfa;
 {
   reg_errcode_t ret;
-  int init_buf_len = (len + 1 < init_len) ? len + 1: init_len;
+  int init_buf_len;
+
+  /* Ensure at least one character fits into the buffers.  */
+  if (init_len < dfa->mb_cur_max)
+    init_len = dfa->mb_cur_max;
+  init_buf_len = (len + 1 < init_len) ? len + 1: init_len;
   re_string_construct_common (str, len, pstr, trans, icase, dfa);
   pstr->stop = pstr->len;
 
@@ -516,33 +521,33 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 		  /* Special case UTF-8.  Multi-byte chars start with any
 		     byte other than 0x80 - 0xbf.  */
 		  raw = pstr->raw_mbs + pstr->raw_mbs_idx;
-		  end = raw + (pstr->valid_len > offset - pstr->mb_cur_max
-			       ? pstr->valid_len : offset - pstr->mb_cur_max);
+		  end = raw + (offset - pstr->mb_cur_max);
 		  for (p = raw + offset - 1; p >= end; --p)
 		    if ((*p & 0xc0) != 0x80)
 		      {
 			mbstate_t cur_state;
 			wchar_t wc2;
+			int mlen;
 
 			/* XXX Don't use mbrtowc, we know which conversion
 			   to use (UTF-8 -> UCS4).  */
 			memset (&cur_state, 0, sizeof (cur_state));
-			if (mbrtowc (&wc2, p, raw + offset - p, &cur_state)
-			    == raw + offset - p)
+			mlen = mbrtowc (&wc2, p, raw + pstr->len - p,
+					&cur_state) - (raw + offset - p);
+			if (mlen >= 0)
 			  {
 			    memset (&pstr->cur_state, '\0',
 				    sizeof (mbstate_t));
+			    pstr->valid_len = mlen;
 			    wc = wc2;
 			  }
 			break;
 		      }
 		}
 	      if (wc == WEOF)
-		{
-		  pstr->valid_len = re_string_skip_chars (pstr, idx, &wc) - idx;
-		  for (wcs_idx = 0; wcs_idx < pstr->valid_len; ++wcs_idx)
-		    pstr->wcs[wcs_idx] = WEOF;
-		}
+		pstr->valid_len = re_string_skip_chars (pstr, idx, &wc) - idx;
+	      for (wcs_idx = 0; wcs_idx < pstr->valid_len; ++wcs_idx)
+		pstr->wcs[wcs_idx] = WEOF;
 	      if (pstr->trans && wc <= 0xff)
 		wc = pstr->trans[wc];
 	      pstr->tip_context = (IS_WIDE_WORD_CHAR (wc) ? CONTEXT_WORD

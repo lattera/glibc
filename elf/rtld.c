@@ -95,6 +95,7 @@ struct rtld_global _rtld_global =
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
     ._dl_lazy = 1,
+    ._dl_use_load_bias = -2,
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
@@ -995,6 +996,12 @@ of this helper program; chances are you did not intend to run this program.\n\
   GL(dl_loaded)->l_next = &GL(dl_rtld_map);
   GL(dl_rtld_map).l_prev = GL(dl_loaded);
   ++GL(dl_nloaded);
+
+  /* If LD_USE_LOAD_BIAS env variable has not been seen, default
+     to not using bias for non-prelinked PIEs and libraries
+     and using it for executables or prelinked PIEs or libraries.  */
+  if (GL(dl_use_load_bias) == (ElfW(Addr)) -2)
+    GL(dl_use_load_bias) = (GL(dl_loaded)->l_addr == 0) ? -1 : 0;
 
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr() callbacks.  */
@@ -1990,6 +1997,17 @@ process_envvars (enum mode *modep)
 
 	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    GL(dl_dynamic_weak) = 1;
+	  break;
+
+	case 13:
+	  /* We might have some extra environment variable with length 13
+	     to handle.  */
+#ifdef EXTRA_LD_ENVVARS_13
+	  EXTRA_LD_ENVVARS_13
+#endif
+	  if (!INTUSE(__libc_enable_secure)
+	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
+	    GL(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
 	  break;
 
 	case 14:

@@ -1096,7 +1096,8 @@ cannot allocate TLS data structures for initial thread");
 	   prefer to map such objects at; but this is only a preference,
 	   the OS can do whatever it likes. */
 	ElfW(Addr) mappref;
-	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart)
+	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength,
+					  c->mapstart & GL(dl_use_load_bias))
 		   - MAP_BASE_ADDR (l));
 
 	/* Remember which part of the address space this object uses.  */

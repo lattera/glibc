@@ -1626,6 +1626,7 @@ ceil_test (void)
   TEST_f_f (ceil, M_PIl, 4.0);
   TEST_f_f (ceil, -M_PIl, -3.0);
   TEST_f_f (ceil, 0.25, 1.0);
+  TEST_f_f (ceil, -0.25, minus_zero);
 
   END (ceil);
 }
@@ -2571,6 +2572,9 @@ floor_test (void)
 
   TEST_f_f (floor, M_PIl, 3.0);
   TEST_f_f (floor, -M_PIl, -4.0);
+
+  TEST_f_f (floor, 0.25, 0.0);
+  TEST_f_f (floor, -0.25, -1.0);
 
   END (floor);
 }

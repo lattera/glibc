@@ -119,8 +119,5 @@ main (int argc, char *argv[])
 
   printf ("\n%Zu tests, %d errors\n", cnt, errors);
 
-  /* We should return here the error status but since some tests are known
-     to fail this would only cause the libc testsuite to fail.  */
-  //return errors != 0;
-  return 0;
+  return errors != 0;
 }
