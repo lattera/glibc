@@ -40,18 +40,21 @@ ENTRY(__syscall_rt_sigaction)
 	.prologue 1
 	
 	beq	a1, 0f
-	ldl	t0, 8(a1)
+	ldl	t0, 8(a1)				# sa_flags
 	lda	a4, sigreturn-__syscall_rt_sigaction(pv)
 	lda	t1, rt_sigreturn-__syscall_rt_sigaction(pv)
 	and	t0, 0x00000040, t0			# SA_SIGINFO
 	cmovne	t0, t1, a4
-0:	ldi	v0,__NR_sigaction
+0:	ldi	v0,__NR_rt_sigaction
 	callsys    
 	bne	a3,1f
 	ret
 	
-1:	br	gp,2f
+1:
+#ifndef PROF
+	br	gp,2f
 2:	ldgp	gp,0(gp)
+#endif
 	jmp	__syscall_error
 
 END(__syscall_rt_sigaction)

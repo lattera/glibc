@@ -43,11 +43,13 @@
 
 #ifndef _STRUCT_TIMEVAL
 # define _STRUCT_TIMEVAL	1
+# include <bits/types.h>
+
 /* A time value that is accurate to the nearest
    microsecond but also has a range of years.  */
 struct timeval
   {
-    int tv_sec;			/* Seconds.  */
-    int tv_usec;		/* Microseconds.  */
+    __time_t tv_sec;		/* Seconds.  */
+    __time_t tv_usec;		/* Microseconds.  */
   };
 #endif	/* struct timeval */

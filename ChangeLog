@@ -1,3 +1,21 @@
+1998-02-04 18:04  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Elide terminal ldgp for PROF.
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Fix typos.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h (struct timeval): 
+	Follow POSIX and make tv_sec a time_t.
+	* sysdeps/unix/sysv/linux/alpha/getitimer.S: New file to handle
+	new tv64 syscall as well as fall back to tv32.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/select.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setitimer.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/settimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/utimes.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/wait4.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add tv32 entries.
+
 1998-02-02 01:12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add _h_errno.

@@ -62,8 +62,10 @@ ENTRY(__clone)
 
 	/* Something bad happened -- no child created */
 $error:
+#ifndef PROF
 	br	gp,1f
 1:	ldgp	gp,0(gp)
+#endif
 	jmp	zero,__syscall_error
 
 	END(__clone)

@@ -34,8 +34,7 @@ truncate	-	truncate	2	truncate	truncate64
 sys_ustat	ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 
-# override select.S in parent directory:
-select		-	select		5	__select	select
+# proper socket implementations:
 accept		-	accept		3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
 connect		-	connect		3	__libc_connect	__connect connect
@@ -58,3 +57,13 @@ sysctl		-	_sysctl		6	sysctl
 # access pci space protected from machine checks:
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
+
+# support old timeval32 entry points
+osf_select	-	osf_select	5	__select_tv32  __select@GLIBC_2.0 select@GLIBC_2.0
+osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
+osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  settimeofday@GLIBC_2.0
+osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  getitimer@GLIBC_2.0
+osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
+osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
+osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
+osf_wait4	-	osf_wait4	2	__wait4_tv32  wait4@GLIBC_2.0
