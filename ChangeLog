@@ -1,3 +1,7 @@
+2001-02-26  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/make-syscalls.sh (ptr): Handle `V' keyletter.
+
 2001-02-26  Paul Eggert  <eggert@twinsun.com>
 
 	Modify mkstemp.c and tempname.c so that they can be used by
