@@ -1,3 +1,14 @@
+2004-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Use extend_alloca.
+
+2004-06-28  GOTO Masanori  <gotom@debian.or.jp>
+
+	* iconv/gconv_simple.c: Use get16/put16 for user given buffer
+	in ucs2/ucs2reverse when unaligned memory access is attempted.
+	* iconv/tst-iconv5.c: New file.
+	* iconv/Makefile (tests): Add tst-iconv5.
+
 2004-06-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/bug-if1.c: Include <string.h>.
