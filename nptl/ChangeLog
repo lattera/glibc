@@ -1,3 +1,9 @@
+2002-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pt-initfini.c (call_initialize_minimal): Use
+	__pthread_initialize_minimal_internal not
+	__pthread_initialize_minimal.
+
 2002-12-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pt-initfini.c (call_initialize_minimal): Mark

@@ -1,5 +1,10 @@
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/setjmp.h: Add libc_hidden_proto for __libc_longjmp.
+	* sysdeps/generic/longjmp.c: Add libc_hidden_def for __longjmp.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Add
+	__GI___longjmp alias.
+
 	* include/setjmp.h: Add libc_hidden_proto for _setjmp.
 	* sysdeps/alpha/setjmp.S: Add __GI__setjmp alias.
 	* sysdeps/arm/bsd-_setjmp.S: Likewise.
