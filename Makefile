@@ -258,6 +258,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
 		cppflags-iterator.mk INTERFACE CONFORMANCE NAMESPACE	\
+		LICENSES						\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\

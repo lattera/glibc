@@ -58,7 +58,7 @@ test-srcs = tst-unbputc tst-printf
 
 include ../Rules
 
-$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.f $(+force)
+$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h $(+force)
 	$(do-install)
 
 ifeq ($(cross-compiling),no)
