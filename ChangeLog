@@ -1,3 +1,10 @@
+1999-12-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/system.c (__libc_system): Check whether command
+	processor is available if LINE is NULL.  Don't return immediately
+	if wait call returned with EINTR.
+	Patches by Geoff Clare <gwc@unisoft.com> (PR libc/1497 and libc/1498).
+
 1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-monetary.c (monetary_finish): Add cast to

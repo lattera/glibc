@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,8 +44,9 @@ __libc_system (const char *line)
 #endif
 
   if (line == NULL)
-    /* This signals that we have a command processor available.  */
-    return 1;
+    /* Check that we have a command processor available.  It might
+       not be available after a chroot(), for example.  */
+    return __libc_system ("exit 0");
 
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;
@@ -113,23 +114,32 @@ __libc_system (const char *line)
     status = -1;
   else
     /* Parent side.  */
-#ifdef	NO_WAITPID
     {
+#ifdef	NO_WAITPID
       pid_t child;
       do
 	{
 	  child = __wait (&status);
-	  if (child <= -1)
+	  if (child <= -1 && errno != EINTR)
 	    {
 	      status = -1;
 	      break;
 	    }
-	} while (child != pid);
-    }
+	  /* Note that pid cannot be <= -1 and therefore the loop continues
+	     when __wait returned with EINTR.  */
+	}
+      while (child != pid);
 #else
-    if (__waitpid (pid, &status, 0) != pid)
-      status = -1;
+      int n;
+
+      do
+	n = __waitpid (pid, &status, 0);
+      while (n == -1 && errno == EINTR);
+
+      if (n != pid)
+	status = -1;
 #endif
+    }
 
   save = errno;
   if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL) |

@@ -1583,7 +1583,7 @@ output_weight (struct obstack *pool, struct locale_collate_t *collate,
 	if (elem->weights[cnt].w[i] == NULL)
 	  {
 	    /* This entry was IGNORE.  */
-	    buf[len++] = '\3';
+	    buf[len++] = IGNORE_CHAR;
 	  }
 	else
 	  len += utf8_encode (&buf[len],
@@ -1839,6 +1839,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
 
   write_locale_data (output_path, "LC_COLLATE", 2 + cnt, iov);
+
+  obstack_free (&weightpool, NULL);
+  obstack_free (&extrapool, NULL);
 }
 
 
