@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/sysctl.h>
+#include <sys/utsname.h>
 #include "kernel-features.h"
 
 #ifndef MIN
@@ -61,16 +62,25 @@ dl_fatal (const char *str)
 		      sizeof (sysctl_args) / sizeof (sysctl_args[0]),	      \
 		      buf, &reslen, NULL, 0) < 0)			      \
 	  {								      \
-	    /* This was not successful.  Now try reading the /proc	      \
-	       filesystem.  */						      \
-	    int fd = __open ("/proc/sys/kernel/osrelease", O_RDONLY);	      \
-	    if (fd == -1						      \
-		|| (reslen = __read (fd, buf, sizeof (buf))) <= 0)	      \
-	      /* This also didn't work.  We give up since we cannot	      \
-		 make sure the library can actually work.  */		      \
-	      FATAL ("FATAL: cannot determine library version\n");	      \
-									      \
-	    __close (fd);						      \
+	    /* This didn't work.  Next try the uname syscall */		      \
+	    struct utsname uts;						      \
+	    if (__uname (&uts))					      	      \
+	      {							      	      \
+	        /* This was not successful.  Now try reading the /proc	      \
+	           filesystem.  */					      \
+	        int fd = __open ("/proc/sys/kernel/osrelease", O_RDONLY);     \
+	        if (fd == -1						      \
+		    || (reslen = __read (fd, buf, sizeof (buf))) <= 0)	      \
+  	      	  /* This also didn't work.  We give up since we cannot       \
+		     make sure the library can actually work.  */	      \
+	          FATAL ("FATAL: cannot determine library version\n");        \
+	        __close (fd);						      \
+	      }								      \
+	    else							      \
+	      {							      	      \
+                strncpy (buf, uts.release, sizeof (buf));		      \
+                reslen = strlen (uts.release);				      \
+	      }								      \
 	  }								      \
 	buf[MIN (reslen, sizeof (buf) - 1)] = '\0';			      \
 									      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1994,1996,1997,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <hurd/startup.h>
 
 int
-uname (struct utsname *uname)
+__uname (struct utsname *uname)
 {
   error_t err;
 
@@ -43,3 +43,4 @@ uname (struct utsname *uname)
 
   return 0;
 }
+weak_alias (__uname, uname)

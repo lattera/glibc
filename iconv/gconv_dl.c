@@ -110,6 +110,7 @@ __gconv_find_shlib (const char *name)
     {
       if (found->counter < -TRIES_BEFORE_UNLOAD)
 	{
+	  assert (found->handle == NULL);
 	  found->handle = __libc_dlopen (found->name);
 	  if (found->handle != NULL)
 	    {
@@ -162,16 +163,12 @@ do_release_shlib (const void *nodep, VISIT value, int level)
       assert (obj->counter > 0);
       --obj->counter;
     }
-  else if (obj->counter <= 0)
+  else if (obj->counter <= 0 && obj->counter >= -TRIES_BEFORE_UNLOAD
+	   && --obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
     {
-      if (obj->counter >= -TRIES_BEFORE_UNLOAD)
-	--obj->counter;
-      if (obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
-	{
-	  /* Unload the shared object.  */
-	  __libc_dlclose (obj->handle);
-	  obj->handle = NULL;
-	}
+      /* Unload the shared object.  */
+      __libc_dlclose (obj->handle);
+      obj->handle = NULL;
     }
 }
 

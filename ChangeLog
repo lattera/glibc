@@ -1,3 +1,25 @@
+2000-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Use uname
+	before trying to read /proc.
+	Patch by Matt Wilson <msw@redhat.com>.
+	* include/sys/utsname.h: Declare __uname.
+	* sysdeps/generic/uname.c: Make uname a weak alias of __uname.
+	* sysdeps/mach/hurd/uname.c: Likewise.
+	* sysdeps/unix/syscalls.list: Likewise.
+
+	* iconv/gconv_dl.c (do_release_shlib): Rewrite condition for
+	unloading a bit.
+
+2000-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getopt.c (_getopt_internal): When long_only is set always
+	recognize conflicts just like before.
+
+2000-09-08  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/ia64/Makefile (sysdep-rtld-routines): New variable.
+
 2000-09-08  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/sysv/linux/syscalls.list (mincore): Fix arg signature.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 /* Put information about the system in NAME.  */
 int
-uname (name)
+__uname (name)
      struct utsname *name;
 {
   int save;
@@ -61,3 +61,4 @@ uname (name)
 
   return 0;
 }
+weak_alias (__uname, uname)
