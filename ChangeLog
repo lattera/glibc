@@ -1,3 +1,11 @@
+2002-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Relocate DT_HASH entry
+	if necessary.
+	* elf/dl-lookup.c (_dl_setup_hash): DT_HASH entry is already relocated.
+	* elf/dl-addr.c (_dl_addr): Use .hash[1] entry to determine end of the
+	symbol table if necessary.
+
 2002-09-26  Roland McGrath  <roland@redhat.com>
 
 	* stdlib/longlong.h: Replaced with current version from GCC mainline,

@@ -587,7 +587,7 @@ _dl_setup_hash (struct link_map *map)
 
   if (!map->l_info[DT_HASH])
     return;
-  hash = (void *)(map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr);
+  hash = (void *) D_PTR (map, l_info[DT_HASH]);
 
   map->l_nbuckets = *hash++;
   nchain = *hash++;

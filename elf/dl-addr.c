@@ -28,7 +28,7 @@ _dl_addr (const void *address, Dl_info *info)
 {
   const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
   struct link_map *l, *match;
-  const ElfW(Sym) *symtab, *matchsym;
+  const ElfW(Sym) *symtab, *matchsym, *symtabend;
   const char *strtab;
   ElfW(Word) strtabsize;
 
@@ -71,11 +71,21 @@ _dl_addr (const void *address, Dl_info *info)
 
   symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
   strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
+
   strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
+
+  if (match->l_info[DT_HASH] != NULL)
+    symtabend = symtab + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1];
+  else
+    /* There is no direct way to determine the number of symbols in the
+       dynamic symbol table and no hash table is present.  The ELF
+       binary is ill-formed but what shall we do?  Use the beginning of
+       the string table which generally follows the symbol table.  */
+    symtabend = strtab;
 
   /* We assume that the string table follows the symbol table, because
      there is no way in ELF to know the size of the dynamic symbol table!!  */
-  for (matchsym = NULL; (void *) symtab < (void *) strtab; ++symtab)
+  for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
     if (addr >= match->l_addr + symtab->st_value
 	&& ((symtab->st_size == 0 && addr == match->l_addr + symtab->st_value)
 	    || addr < match->l_addr + symtab->st_value + symtab->st_size)
@@ -83,7 +93,7 @@ _dl_addr (const void *address, Dl_info *info)
 	&& (matchsym == NULL || matchsym->st_value < symtab->st_value)
 	&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
 	    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
-      matchsym = symtab;
+      matchsym = (ElfW(Sym) *) symtab;
 
   if (matchsym)
     {
