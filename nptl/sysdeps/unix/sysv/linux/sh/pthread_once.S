@@ -122,7 +122,7 @@ __pthread_once:
 #endif
 	mov.l	.Lcpush, r1
 	bsrf	r1
-	 mov	r3, r6
+	 mov	r9, r6
 .Lcpush0:
 	jsr	@r8
 	 nop

@@ -177,8 +177,6 @@ __lll_timedwait_tid:
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
-	mov	r0, r1
-
 	mov.l	@r8, r0
 	tst	r0, r0
 	bf	1f

@@ -51,7 +51,7 @@ __new_sem_post:
 	 mov	#0, r0
 
 1:
-	mov	#EAGAIN, r2
+	mov	#EINVAL, r2
 	mova	.Lgot3, r0
 	mov.l	.Lgot3, r12
 	add	r0, r12
@@ -84,4 +84,4 @@ __new_sem_post:
 	.long	__errno_location@PLT-(.Lerrloc3b+2-.)
 #endif
 	.size	__new_sem_post,.-__new_sem_post
-	.symver	__new_sem_post, sem_post@@GLIBC_2.2
+	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)

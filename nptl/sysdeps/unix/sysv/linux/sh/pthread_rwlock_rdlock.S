@@ -75,7 +75,8 @@ __pthread_rwlock_rdlock:
 	mov	r8, r4
 	add	#READERS_WAKEUP, r4
 	mov	#FUTEX_WAIT, r5
-	mov	#0, r6
+	mov.l	@(READERS_WAKEUP,r8), r6
+	mov	#0, r7
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
@@ -93,11 +94,8 @@ __pthread_rwlock_rdlock:
 13:
 	mov.l	@(READERS_QUEUED,r8), r0
 	add	#-1, r0
-	mov.l	r0, @(READERS_QUEUED,r8)
-	tst	r0, r0
-	bf	2b
 	bra	2b
-	 mov.l	r0, @(READERS_WAKEUP,r8)
+	 mov.l	r0, @(READERS_QUEUED,r8)
 
 5:
 	mov	#0, r3
@@ -138,7 +136,6 @@ __pthread_rwlock_rdlock:
 	stc	gbr, r1
 	mov.w	.Ltcboff,r2
 	sub	r2,r1
-	mov.l	@(8,r1),r1
 	cmp/eq	r1, r0
 	bf	3b
 	/* Deadlock detected.  */

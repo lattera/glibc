@@ -62,6 +62,12 @@ pthread_rwlock_timedrdlock:
 	tst	r0, r0
 	bt	5f
 3:
+	/* Check the value of the timeout parameter.  */
+	mov.l	.L1g0, r1
+	mov.l	@(4,r9), r0
+	cmp/hs	r1, r0
+	bt	19f
+
 	mov.l	@(READERS_QUEUED,r8), r0
 	add	#1, r0
 	mov.l	r0, @(READERS_QUEUED,r8)
@@ -109,7 +115,7 @@ pthread_rwlock_timedrdlock:
 	/* Futex call.  */
 	mov	r15, r7
 	mov	#FUTEX_WAIT, r5
-	mov	#0, r6
+	mov.l	@(READERS_WAKEUP,r8), r6
 	mov	r8, r4
 	add	#READERS_WAKEUP, r4
 	mov	#SYS_futex, r3
@@ -131,16 +137,16 @@ pthread_rwlock_timedrdlock:
 	bf	12f
 
 13:
-	mov	#-ETIMEDOUT, r0
-	cmp/eq	r0, r3
-	bt	18f
 	mov.l	@(READERS_QUEUED,r8), r0
 	add	#-1, r0
 	mov.l	r0, @(READERS_QUEUED,r8)
-	tst	r0, r0
+	mov	#-ETIMEDOUT, r0
+	cmp/eq	r0, r3
 	bf	2b
-	bra	2b
-	 mov.l	r0, @(READERS_WAKEUP,r8)
+
+18:
+	bra	9f
+	 mov	#ETIMEDOUT, r3
 
 5:
 	mov	#0, r3
@@ -189,7 +195,6 @@ pthread_rwlock_timedrdlock:
 	stc	gbr, r1
 	mov.w	.Ltcboff,r2
 	sub	r2,r1
-	mov.l	@(8,r1),r1
 	cmp/eq	r1, r0
 	bf	3b
 	/* Deadlock detected.  */
@@ -253,9 +258,9 @@ pthread_rwlock_timedrdlock:
 	bra	17b
 	 mov	#-ETIMEDOUT, r3
 
-18:
+19:
 	bra	9b
-	 mov	#ETIMEDOUT, r3
+	 mov	#EINVAL, r3
 
 .Ltcboff:
 	.word	TLS_PRE_TCB_SIZE

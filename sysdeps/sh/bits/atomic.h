@@ -45,61 +45,55 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#define __arch_compare_and_exchange_8_acq(mem, newval, oldval) \
-  ({ unsigned char __result; \
+#define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) __result; \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
 	nop\n\
 	mov r15,r1\n\
 	mov #-8,r15\n\
-     0: mov.b @%1,r2\n\
-	cmp/eq r2,%3\n\
+     0: mov.b @%1,%0\n\
+	cmp/eq %0,%3\n\
 	bf 1f\n\
 	mov.b %2,@%1\n\
-     1: mov r1,r15\n\
-	mov #-1,%0\n\
-	negc %0,%0"\
-	: "=r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
-	: "r0", "r1", "r2", "t", "memory"); \
+     1: mov r1,r15"\
+	: "=&r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
+	: "r0", "r1", "t", "memory"); \
      __result; })
 
-#define __arch_compare_and_exchange_16_acq(mem, newval, oldval) \
-  ({ unsigned char __result; \
+#define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) __result; \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
 	nop\n\
 	mov r15,r1\n\
 	mov #-8,r15\n\
-     0: mov.w @%1,r2\n\
-	cmp/eq r2,%3\n\
+     0: mov.w @%1,%0\n\
+	cmp/eq %0,%3\n\
 	bf 1f\n\
 	mov.w %2,@%1\n\
-     1: mov r1,r15\n\
-	mov #-1,%0\n\
-	negc %0,%0"\
-	: "=r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
-	: "r0", "r1", "r2", "t", "memory"); \
+     1: mov r1,r15"\
+	: "=&r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
+	: "r0", "r1", "t", "memory"); \
      __result; })
 
-#define __arch_compare_and_exchange_32_acq(mem, newval, oldval) \
-  ({ unsigned char __result; \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) __result; \
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
 	nop\n\
 	mov r15,r1\n\
 	mov #-8,r15\n\
-     0: mov.l @%1,r2\n\
-	cmp/eq r2,%3\n\
+     0: mov.l @%1,%0\n\
+	cmp/eq %0,%3\n\
 	bf 1f\n\
 	mov.l %2,@%1\n\
-     1: mov r1,r15\n\
-	mov #-1,%0\n\
-	negc %0,%0"\
-	: "=r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
-	: "r0", "r1", "r2", "t", "memory"); \
+     1: mov r1,r15"\
+	: "=&r" (__result) : "r" (mem), "r" (newval), "r" (oldval) \
+	: "r0", "r1", "t", "memory"); \
      __result; })
 
 /* XXX We do not really need 64-bit compare-and-exchange.  At least
@@ -107,11 +101,12 @@ typedef uintmax_t uatomic_max_t;
    problems since not many other 32-bit architectures have support for
    such an operation.  So don't define any code for now.  */
 
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), 0)
 
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*mem) __result; \
+     __typeof (value) __value; \
      if (sizeof (*mem) == 1) \
        __asm __volatile ("\
 	  .align 2\n\
@@ -122,7 +117,7 @@ typedef uintmax_t uatomic_max_t;
 	  add %0,%1\n\
 	  mov.b %1,@%2\n\
        1: mov r1,r15"\
-	: "=&r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=&r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "memory"); \
      else if (sizeof (*mem) == 2) \
        __asm __volatile ("\
@@ -134,7 +129,7 @@ typedef uintmax_t uatomic_max_t;
 	  add %0,%1\n\
 	  mov.w %1,@%2\n\
        1: mov r1,r15"\
-	: "=&r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=&r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "memory"); \
      else if (sizeof (*mem) == 4) \
        __asm __volatile ("\
@@ -146,22 +141,23 @@ typedef uintmax_t uatomic_max_t;
 	  add %0,%1\n\
 	  mov.l %1,@%2\n\
        1: mov r1,r15"\
-	: "=&r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=&r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "memory"); \
      else \
        { \
 	 __typeof (value) addval = (value); \
-	 __typeof (*mem) oldval; \
 	 __typeof (mem) memp = (mem); \
 	 do \
-	   __result = (oldval = *memp) + addval; \
-	 while (!__arch_compare_and_exchange_64_acq (memp, __result, oldval));\
+	   __result = *memp; \
+	 while (__arch_compare_and_exchange_val_64_acq \
+		 (memp,	__result + addval, __result) == __result); \
 	 (void) addval; \
        } \
      __result; })
 
 #define atomic_add(mem, value) \
-  (void) ({ if (sizeof (*mem) == 1) \
+  (void) ({ __typeof (value) __value; \
+	    if (sizeof (*mem) == 1) \
 	      __asm __volatile ("\
 		.align 2\n\
 		mova 1f,r0\n\
@@ -171,7 +167,7 @@ typedef uintmax_t uatomic_max_t;
 		add r2,%0\n\
 		mov.b %0,@%1\n\
 	     1: mov r1,r15"\
-		: "=&r" (value) : "r" (mem), "0" (value) \
+		: "=&r" (__value) : "r" (mem), "0" (value) \
 		: "r0", "r1", "r2", "memory"); \
 	    else if (sizeof (*mem) == 2) \
 	      __asm __volatile ("\
@@ -183,7 +179,7 @@ typedef uintmax_t uatomic_max_t;
 		add r2,%0\n\
 		mov.w %0,@%1\n\
 	     1: mov r1,r15"\
-		: "=&r" (value) : "r" (mem), "0" (value) \
+		: "=&r" (__value) : "r" (mem), "0" (value) \
 		: "r0", "r1", "r2", "memory"); \
 	    else if (sizeof (*mem) == 4) \
 	      __asm __volatile ("\
@@ -195,7 +191,7 @@ typedef uintmax_t uatomic_max_t;
 		add r2,%0\n\
 		mov.l %0,@%1\n\
 	     1: mov r1,r15"\
-		: "=&r" (value) : "r" (mem), "0" (value) \
+		: "=&r" (__value) : "r" (mem), "0" (value) \
 		: "r0", "r1", "r2", "memory"); \
 	    else \
 	      { \
@@ -204,15 +200,15 @@ typedef uintmax_t uatomic_max_t;
 		__typeof (mem) memp = (mem); \
 		do \
 		  oldval = *memp; \
-		while (! __arch_compare_and_exchange_64_acq (memp, \
-							     oldval + addval, \
-							     oldval)); \
+		while (__arch_compare_and_exchange_val_64_acq \
+			(memp, oldval + addval, oldval) == oldval); \
 		(void) addval; \
 	      } \
 	    })
 
 #define atomic_add_negative(mem, value) \
   ({ unsigned char __result; \
+     __typeof (value) __value; \
      if (sizeof (*mem) == 1) \
        __asm __volatile ("\
 	  .align 2\n\
@@ -225,7 +221,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  shal %1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else if (sizeof (*mem) == 2) \
        __asm __volatile ("\
@@ -239,7 +235,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  shal %1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else if (sizeof (*mem) == 4) \
        __asm __volatile ("\
@@ -253,7 +249,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  shal %1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else \
        abort (); \
@@ -261,6 +257,7 @@ typedef uintmax_t uatomic_max_t;
 
 #define atomic_add_zero(mem, value) \
   ({ unsigned char __result; \
+     __typeof (value) __value; \
      if (sizeof (*mem) == 1) \
        __asm __volatile ("\
 	  .align 2\n\
@@ -273,7 +270,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  tst %1,%1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else if (sizeof (*mem) == 2) \
        __asm __volatile ("\
@@ -287,7 +284,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  tst %1,%1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else if (sizeof (*mem) == 4) \
        __asm __volatile ("\
@@ -301,7 +298,7 @@ typedef uintmax_t uatomic_max_t;
        1: mov r1,r15\n\
 	  tst %1,%1\n\
 	  movt %0"\
-	: "=r" (__result), "=&r" (value) : "r" (mem), "1" (value) \
+	: "=r" (__result), "=&r" (__value) : "r" (mem), "1" (value) \
 	: "r0", "r1", "r2", "t", "memory"); \
      else \
        abort (); \

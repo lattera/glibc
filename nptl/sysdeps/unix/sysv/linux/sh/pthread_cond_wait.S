@@ -34,8 +34,10 @@
 	.hidden	__condvar_cleanup
 __condvar_cleanup:
 	mov.l	r8, @-r15
+	mov.l	r9, @-r15
 	sts.l	pr, @-r15
-	mov	r4, r8
+	mov	r4, r9
+	mov.l	@(4,r9), r8
 
 	/* Get internal lock.  */
 	mov	#1, r3
@@ -93,7 +95,33 @@ __condvar_cleanup:
 	 nop
 .Lwake0b:
 2:
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+	mov	r8, r4
+	add	#wakeup_seq, r4
+	mov	#FUTEX_WAKE, r5
+	mov	#-1, r6
+	shlr	r6		/* r6 = 0x7fffffff */
+	mov	#0, r7
+	mov	#SYS_futex, r3
+	extu.b	r3, r3
+	trapa	#0x14
+	SYSCALL_INST_PAD
+
+	/* Lock the mutex unless asynchronous cancellation is in effect.  */
+	mov.l	@(8,r9), r0
+	and	#2, r0
+	tst	r0, r0
+	bf	3f
+
+	mov.l	.Lmlocki1, r1
+	bsrf	r1
+	 mov.l	@r9, r4
+.Lmlocki1b:
+
+3:
 	lds.l	@r15+, pr
+	mov.l	@r15+, r9
 	rts
 	 mov.l	@r15+, r8
 
@@ -102,6 +130,8 @@ __condvar_cleanup:
 	.long	__lll_mutex_lock_wait-.Lwait0b
 .Lwake0:
 	.long	__lll_mutex_unlock_wake-.Lwake0b
+.Lmlocki1:
+	.long	__pthread_mutex_lock_internal-.Lmlocki1b
 	.size	__condvar_cleanup, .-__condvar_cleanup
 
 
@@ -114,7 +144,7 @@ __pthread_cond_wait:
 	mov.l	r9, @-r15
 	mov.l	r8, @-r15
 	sts.l	pr, @-r15
-	add	#-32, r15
+	add	#-48, r15
 	mov	r4, r8
 	mov	r5, r9
 
@@ -133,6 +163,9 @@ __pthread_cond_wait:
 	bsrf	r1
 	 mov	r9, r4
 .Lmunlock0b:
+
+	tst	r0, r0
+	bf	12f
 
 	mov	#1, r2
 	mov	#0, r3
@@ -156,18 +189,21 @@ __pthread_cond_wait:
 	mov.l	.Lccleanup0, r5
 #endif
 	mov	r15, r4
-	add	#12, r4
+	add	#20, r4
 
 	mov.l	.Lccpush0, r1
 	bsrf	r1
-	 mov	r8, r6
+	 mov	r15, r6
 .Lccpush0b:
 
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r0
 	mov.l	@(wakeup_seq+4,r8), r1
-	mov.l	r0, @(4,r15)
-	mov.l	r1, @(8,r15)
+	mov.l	r0, @(12,r15)
+	mov.l	r1, @(16,r15)
+	/* Prepare structure passed to cancellation handler.  */
+	mov.l	r9, @r15
+	mov.l	r8, @(4,r15)
 
 8:
 	/* Unlock.  */
@@ -179,15 +215,15 @@ __pthread_cond_wait:
 	tst	r2, r2
 	bf	3f
 4:
+	mov	r15, r4
 	mov.l	.Lenable0, r1
 	bsrf	r1
-	 nop
+	 add	#8, r4
 .Lenable0b:
-	mov.l	r0, @r15
 
 	mov	#0, r7
 	mov	#FUTEX_WAIT, r5
-	mov.l	@(4,r15), r6
+	mov.l	@(12,r15), r6
 	mov	r8, r4
 	add	#wakeup_seq, r4
 	mov	#SYS_futex, r3
@@ -197,7 +233,7 @@ __pthread_cond_wait:
 
 	mov.l	.Ldisable0, r1
 	bsrf	r1
-	 mov.l	@r15, r4
+	 mov.l	@(8,r15), r4
 .Ldisable0b:	
 
 	/* Lock.  */
@@ -216,14 +252,14 @@ __pthread_cond_wait:
 	mov.l	@(wakeup_seq,r8), r2
 	mov.l	@(wakeup_seq+4,r8), r3
 
-	mov.l	@(8,r15), r5
-	cmp/hi	r5, r1
+	mov.l	@(16,r15), r5
+	cmp/hi	r5, r3
 	bt	7f
-	cmp/hi	r1, r5
+	cmp/hi	r3, r5
 	bt	8b
 
-	mov.l	@(4,r15), r5
-	cmp/hi	r0, r5
+	mov.l	@(12,r15), r5
+	cmp/hs	r2, r5
 	bt	8b
 7:
 	cmp/hi	r1, r3
@@ -255,7 +291,7 @@ __pthread_cond_wait:
 11:
 	/* Remove cancellation handler.  */
 	mov	r15, r4
-	add	#12, r4
+	add	#20, r4
 	mov.l	.Lcpop0, r1
 	bsrf	r1
 	 mov	#0, r5
@@ -266,10 +302,10 @@ __pthread_cond_wait:
 	bsrf	r1
 	 mov	#0, r5
 .Lmlocki0b:
-
-	add	#32, r15
-
 	/* We return the result of the mutex_lock operation.  */
+
+14:
+	add	#48, r15
 	lds.l	@r15+, pr
 	mov.l	@r15+, r8
 	mov.l	@r15+, r9
@@ -291,7 +327,7 @@ __pthread_cond_wait:
 .Lccpush0:
 	.long	__pthread_cleanup_push-.Lccpush0b
 .Lenable0:
-	.long	__pthread_enable_asynccancel-.Lenable0b
+	.long	__pthread_enable_asynccancel_2-.Lenable0b
 .Ldisable0:
 	.long	__pthread_disable_asynccancel-.Ldisable0b
 .Lcpop0:
@@ -350,6 +386,30 @@ __pthread_cond_wait:
 	bra	11b
 	 nop
 
+12:
+	/* The initial unlocking of the mutex failed.  */
+	mov.l	r0, @-r15
+#if cond_lock != 0
+	DEC (@(cond_lock,r8), r2)
+#else
+	DEC (@r8, r2)
+#endif
+	tst	r2, r2
+	bf	13f
+
+	mov	r8, r4
+#if cond_lock != 0
+	add	#cond_lock, r4
+#endif
+	mov.l	.Lmwake2, r1
+	bsrf	r1
+	 nop
+.Lmwake2b:
+
+13:
+	bra	14b
+	 mov.l	@r15+, r0
+
 	.align	2
 .Lmwait0:
 	.long	__lll_mutex_lock_wait-.Lmwait0b
@@ -359,6 +419,8 @@ __pthread_cond_wait:
 	.long	__lll_mutex_lock_wait-.Lmwait1b
 .Lmwake1:
 	.long	__lll_mutex_unlock_wake-.Lmwake1b
+.Lmwake2:
+	.long	__lll_mutex_unlock_wake-.Lmwake2b
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)

@@ -57,24 +57,48 @@ __pthread_rwlock_unlock:
 5:
 	mov	#0, r0
 	mov.l	r0, @(WRITER,r8)
+	mov	#1, r6
 	mov	r8, r4
+	add	#WRITERS_WAKEUP, r4
 	mov.l	@(WRITERS_QUEUED,r8), r0
 	tst	r0, r0
-	bf	9f
+	bf	0f
+
+	/* If also no readers waiting nothing to do.  */
+	mov.l	@(READERS_QUEUED,r8), r0
+	tst	r0, r0
+	bt	6f
+
 	mov	#-1, r6
 	shlr	r6		/* r6 = 0x7fffffff */
-	bra	0f
-	 add	#READERS_WAKEUP, r4
-9:
-	mov	#1, r6
-	add	#WRITERS_WAKEUP, r4
+	mov	r8, r4
+	add	#READERS_WAKEUP, r4
+
 0:
+	mov.l	@r4, r0
+	add	#1, r0
+	mov.l	r0, @r4
+#if MUTEX == 0
+	DEC (@r8, r2)
+#else
+	DEC (@(MUTEX,r8), r2)
+#endif
+	tst	r2, r2
+	bf	7f
+
+8:
 	mov	#FUTEX_WAKE, r5
 	mov	#SYS_futex, r3
+	mov	#0, r7
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
 
+	lds.l	@r15+, pr
+	mov.l	@r15+, r8
+	mov.l	@r15+, r12
+	rts
+	 mov	#0, r0
 6:
 #if MUTEX == 0
 	DEC (@r8, r2)
@@ -114,11 +138,29 @@ __pthread_rwlock_unlock:
 	bra	4b
 	 nop
 
+7:
+	mov.l	r4, @-r15
+	mov.l	r6, @-r15
+	mov	r8, r4
+#if MUTEX != 0
+	add	#MUTEX, r4
+#endif
+	mov.l	.Lwake9, r1
+	bsrf	r1
+	 nop
+.Lwake9b:
+
+	mov.l	@r15+, r6
+	bra	8b
+	 mov.l	@r15+, r4
+
 	.align	2
 .Lwait8:	
 	.long	__lll_mutex_lock_wait-.Lwait8b
 .Lwake8:
 	.long	__lll_mutex_unlock_wake-.Lwake8b
+.Lwake9:
+	.long	__lll_mutex_unlock_wake-.Lwake9b
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 
 	.globl	pthread_rwlock_unlock

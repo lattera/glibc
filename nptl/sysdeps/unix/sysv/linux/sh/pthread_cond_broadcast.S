@@ -59,10 +59,20 @@ __pthread_cond_broadcast:
 	bf	4f
 
 3:
-	/* Case all currently waiting threads to wake up.  */
+	/* Cause all currently waiting threads to recognize they are
+	   woken up.  */
 	mov.l	r1, @(wakeup_seq,r8)
 	mov.l	r0, @(wakeup_seq+4,r8)
 
+	/* Unlock.  */
+#if cond_lock != 0
+	DEC (@(cond_lock,r8), r2)
+#else
+	DEC (@r8, r2)
+#endif
+	tst	r2, r2
+	bf	7f
+8:
 	/* Wake up all threads.  */
 	mov	r8, r4
 	add	#wakeup_seq, r4
@@ -74,6 +84,11 @@ __pthread_cond_broadcast:
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
+
+	mov	#0, r0
+	lds.l	@r15+, pr
+	rts
+	 mov.l	@r15+, r8
 
 4:
 	/* Unlock.  */
@@ -104,7 +119,7 @@ __pthread_cond_broadcast:
 	 nop
 
 5:
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 	mov	r8, r4
 #if cond_lock != 0
 	add	#cond_lock, r4
@@ -116,11 +131,26 @@ __pthread_cond_broadcast:
 	bra	6b
 	 nop
 
+7:
+	/* Unlock in loop requires wakeup.  */
+	mov	r8, r4
+#if cond_lock != 0
+	add	#cond_lock, r4
+#endif
+	mov.l	.Lmwake6, r1
+	bsrf	r1
+	 nop
+.Lmwake6b:
+	bra	8b
+	 nop
+
 	.align	2
 .Lmwait5:
 	.long	__lll_mutex_lock_wait-.Lmwait5b
 .Lmwake5:
 	.long	__lll_mutex_unlock_wake-.Lmwake5b
+.Lmwake6:
+	.long	__lll_mutex_unlock_wake-.Lmwake6b
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

@@ -72,7 +72,8 @@ __pthread_rwlock_wrlock:
 	mov	r8, r4
 	add	#WRITERS_WAKEUP, r4
 	mov	#FUTEX_WAIT, r5
-	mov	#0, r6
+	mov.l	@(WRITERS_WAKEUP,r8), r6
+	mov	#0, r7
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
 	trapa	#0x14
@@ -88,19 +89,16 @@ __pthread_rwlock_wrlock:
 	tst	r2, r2
 	bf	12f
 13:
-	mov.l	@(READERS_QUEUED,r8), r0
+	mov.l	@(WRITERS_QUEUED,r8), r0
 	add	#-1, r0
-	mov.l	r0, @(READERS_QUEUED,r8)
-	mov	#0, r0
 	bra	2b
-	 mov.l	r0, @(WRITERS_WAKEUP,r8)
+	 mov.l	r0, @(WRITERS_QUEUED,r8)
 
 5:
 	mov	#0, r3
-	stc	gbr, r1
+	stc	gbr, r0
 	mov.w	.Ltcboff,r2
-	sub	r2,r1
-	mov.l	@(8,r1),r0
+	sub	r2,r0
 	mov.l	r0, @(WRITER,r8)
 9:
 #if MUTEX == 0
@@ -133,7 +131,6 @@ __pthread_rwlock_wrlock:
 	stc	gbr, r1
 	mov.w	.Ltcboff,r2
 	sub	r2,r1
-	mov.l	@(8,r1),r1
 	cmp/eq	r1, r0
 	bf	3b
 	bra	9b

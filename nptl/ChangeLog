@@ -1,3 +1,36 @@
+2003-03-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tls.h: Include nptl/descr.h after the definition
+	of TLS_DTV_AT_TP.
+	(INSTALL_DTV): Add parens.
+	(THREAD_GETMEM, THREAD_GETMEM_NC, THREAD_SETMEM, THREAD_SETMEM_NC):
+	Use passed descr instead of THREAD_SELF.
+	* sysdeps/unix/sysv/linux/sh/lowlevelmutex.S
+	(__lll_mutex_timedlock_wait): Correct expected value after
+	spurious wakeup.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S:
+	Release lock before waking up the waiters.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Correct exit
+	criteria.  Reorderstruct passed to cleanup handler.  Fix
+	handling of cancellation and failung pthread_mutex_unlock call.
+	Use __pthread_enable_asynccancel_2 instead of
+	__pthread_enable_asynccancel.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	Return result of lock re-get if it fails.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: Fix wrong argument
+	for __pthread_cleanup_push.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: Fix
+	completely broken rwlock implementation.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: Fix error value.  Use
+	versioned_symbol macro.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: Use	versioned_symbol macro.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Likewise.
+
 2003-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-posix-timers.h: Don't declare

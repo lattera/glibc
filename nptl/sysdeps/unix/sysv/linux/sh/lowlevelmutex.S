@@ -73,12 +73,13 @@ __lll_mutex_timedlock_wait:
 	mov	r5, r8
 	mov	r6, r9
 	mov	r4, r10
-	add	#1, r10
 
 	/* Stack frame for the timespec and timeval structs.  */
 	add	#-8, r15
 
 1:
+	add	#1, r10
+
 	/* Get current time.  */
 	mov	r15, r4
 	mov	#0, r5
@@ -116,10 +117,11 @@ __lll_mutex_timedlock_wait:
 	extu.b	r3, r3
 	trapa	#0x14
 	SYSCALL_INST_PAD
+	mov	r0, r4
 
-	mov	#1, r3
-	XADD (r3, @r8, r10)
-	tst	r10, r10
+	mov	#1, r10
+	XADD (r10, @r8, r3)
+	tst	r3, r3
 	bf	7f
 
 	mov	#2, r1
@@ -134,7 +136,7 @@ __lll_mutex_timedlock_wait:
 7:
 	/* Check whether the time expired.  */
 	mov	#-ETIMEDOUT, r1
-	cmp/eq	r0, r1
+	cmp/eq	r4, r1
 	bt	5f
 	bra	1b
 	 nop

@@ -59,6 +59,12 @@ pthread_rwlock_timedwrlock:
 	tst	r0, r0
 	bt	5f
 3:
+	/* Check the value of the timeout parameter.  */
+	mov.l	.L1g1, r1
+	mov.l	@(4,r9), r0
+	cmp/hs	r1, r0
+	bt	19f
+
 	mov.l	@(WRITERS_QUEUED,r8), r0
 	add	#1, r0
 	mov.l	r0, @(WRITERS_QUEUED,r8)
@@ -106,7 +112,7 @@ pthread_rwlock_timedwrlock:
 	/* Futex call.  */
 	mov	r15, r7
 	mov	#FUTEX_WAIT, r5
-	mov	#0, r6
+	mov.l	@(WRITERS_WAKEUP,r8), r6
 	mov	r8, r4
 	add	#WRITERS_WAKEUP, r4
 	mov	#SYS_futex, r3
@@ -128,22 +134,26 @@ pthread_rwlock_timedwrlock:
 	bf	12f
 
 13:
-	mov	#-ETIMEDOUT, r0
-	cmp/eq	r0, r3
-	bt	18f
 	mov.l	@(WRITERS_QUEUED,r8), r0
 	add	#-1, r0
 	mov.l	r0, @(WRITERS_QUEUED,r8)
-	mov	#0, r0
-	bra	2b
-	 mov.l	r0, @(WRITERS_WAKEUP,r8)
+	mov	#-ETIMEDOUT, r0
+	cmp/eq	r0, r3
+	bf	2b
+
+18:
+	bra	9f
+	 mov	#ETIMEDOUT, r3
+
+19:
+	bra	9f
+	 mov	#EINVAL, r3
 
 5:
 	mov	#0, r3
-	stc	gbr, r1
+	stc	gbr, r0
 	mov.w	.Ltcboff,r2
-	sub	r2,r1
-	mov.l	@(8,r1),r0
+	sub	r2,r0
 	mov.l	r0, @(WRITER,r8)
 9:
 #if MUTEX == 0
@@ -184,7 +194,6 @@ pthread_rwlock_timedwrlock:
 	stc	gbr, r1
 	mov.w	.Ltcboff,r2
 	sub	r2,r1
-	mov.l	@(8,r1),r1
 	cmp/eq	r1, r0
 	bf	3b
 	bra	9b
@@ -237,10 +246,6 @@ pthread_rwlock_timedwrlock:
 16:
 	bra	17b
 	 mov	#-ETIMEDOUT, r3
-
-18:
-	bra	9b
-	 mov	#ETIMEDOUT, r3
 
 .Ltcboff:
 	.word	TLS_PRE_TCB_SIZE

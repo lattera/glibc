@@ -104,4 +104,4 @@ __new_sem_wait:
 	.long	__errno_location@PLT-(.Lerrloc0b+2-.)
 #endif
 	.size	__new_sem_wait,.-__new_sem_wait
-	.symver	__new_sem_wait, sem_wait@@GLIBC_2.2
+	versioned_symbol(libpthread, __new_sem_wait, sem_wait, GLIBC_2_1)
