@@ -43,7 +43,7 @@
 	of the proc system is "proc".
 
 	* sysdeps/generic/libc-start.c (__libc_start_main): Initialize
-	thread library for static program.s
+	thread library for static programs.
 
 2000-07-06  Greg McGary  <greg@mcgary.org>
 
