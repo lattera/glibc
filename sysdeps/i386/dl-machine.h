@@ -301,9 +301,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 /* The i386 never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
-#ifdef RTLD_BOOTSTRAP
-# define ELF_MACHINE_NO_RELA 1
-#endif
+#define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
 
 #ifdef RESOLVE_MAP
 
