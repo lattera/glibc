@@ -50,11 +50,11 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
       int saved_errno = errno;
 #endif
       /* This will be always 12, no matter what page size is.  */
-      int result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
+      __ptr_t result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
 				   fd, (off_t) (offset >> PAGE_SHIFT));
 
 #ifndef __ASSUME_MMAP2_SYSCALL
-      if (result != -1 || errno != ENOSYS)
+      if (result != (__ptr_t) -1 || errno != ENOSYS)
 #endif
 	return result;
 

@@ -47,7 +47,7 @@ ftruncate64 (fd, length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-      int result = __syscall_ftruncate64 (fd, off64_length);
+      int result = __syscall_ftruncate64 (fd, length);
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)
