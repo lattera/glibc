@@ -1,5 +1,8 @@
 1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* grp/putgrent.c (putgrent): Don't insert extra colon.
+	Patch by Michael Schaefer <michael.schaefer@dlr.de>.
+
 	* nss/nss_files/files-XXX.c (internal_getent): Make sure the buffer has
 	at least two bytes (not one).  Correct buflen parameter type.
 	* nss/nss_files/files-alias.c (get_next_alias): Make sure buffer
