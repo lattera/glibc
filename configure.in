@@ -6,6 +6,10 @@ AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
+if test "`cd $srcdir; /bin/pwd`" = "`/bin/pwd`"; then
+  AC_MSG_ERROR([you must configure in a separate build directory])
+fi
+
 # This will get text that should go into config.make.
 config_vars=
 
