@@ -266,10 +266,18 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
     rc = __gethostbyname2_r (name, _family, &th, tmpbuf,	\
          tmpbuflen, &h, &herrno);				\
   } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
-  if (rc != 0 && herrno == NETDB_INTERNAL)			\
+  if (rc != 0)							\
     {								\
-      __set_h_errno (herrno);					\
-      return -EAI_SYSTEM;					\
+      if (herrno == NETDB_INTERNAL)				\
+	{							\
+	  __set_h_errno (herrno);				\
+	  return -EAI_SYSTEM;					\
+	}							\
+      if (herrno == TRY_AGAIN)					\
+	{							\
+	  __set_h_errno (herrno);				\
+	  return -EAI_AGAIN;					\
+	}							\
     }								\
   if (h != NULL)						\
     {								\
