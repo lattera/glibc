@@ -1,3 +1,9 @@
+2002-01-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+     * sysdeps/s390/s390-32/pt-machine.h (MEMORY_BARRIER): Define.
+     (CURRENT_STACK_FRAME): Remove duplicate definition.
+     * sysdeps/s390/s390-64/pt-machine.h: Likewise.
+
 2002-01-14  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* Makefile (CFLAGS-tst-cancel.c): Add -fno-inline-functions to prevent

@@ -1,28 +1,15 @@
 # Begin of automatic generation
 
 # asin
-Test "asin (-0.5) == -pi/6":
-float: 2
-ifloat: 2
-Test "asin (0.5) == pi/6":
-float: 2
-ifloat: 2
-Test "asin (0.7) == 0.7753974966107530637":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 Test "asin (0.7) == 0.77539749661075306374035335271498708":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 
 # atan2
-Test "atan2 (0.7, -1.0) == 2.530866689200584621918884506789267":
+Test "atan2 (-0.7, -1.0) == -2.530866689200584621918884506789267":
 float: 3
 ifloat: 3
-Test "atan2 (-0.7, -1.0) == -2.530866689200584621918884506789267":
+Test "atan2 (0.7, -1.0) == 2.530866689200584621918884506789267":
 float: 3
 ifloat: 3
 Test "atan2 (1.4, -0.93) == 2.1571487668237843754887415992772736":
@@ -136,9 +123,7 @@ Test "Real part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959200648705635915
 float: 1
 ifloat: 1
 Test "Imaginary part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959200648705635915 + 0.97024030779509898497385130162655963 i":
-double: 1
 float: 6
-idouble: 1
 ifloat: 6
 
 # cbrt
@@ -180,14 +165,6 @@ idouble: 1
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.13398091492954261346140525546115575 - 0.019098516261135196432576240858800925 i":
 float: 1
 ifloat: 1
-Test "Real part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
-Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
-float: 1
-ifloat: 1
 Test "Real part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 double: 1
 float: 1
@@ -199,9 +176,7 @@ ifloat: 1
 
 # clog
 Test "Imaginary part of: clog (-2 - 3 i) == 1.2824746787307683680267437207826593 - 2.1587989303424641704769327722648368 i":
-double: 1
 float: 3
-idouble: 1
 ifloat: 3
 
 # clog10
@@ -262,11 +237,6 @@ float: 1
 ifloat: 1
 
 # cos
-Test "cos (0.7) == 0.7648421872844884262":
-double: 1
-float: 1
-idouble: 1
-ifloat: 1
 Test "cos (0.7) == 0.76484218728448842625585999019186495":
 double: 1
 float: 1
@@ -274,19 +244,19 @@ idouble: 1
 ifloat: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
-float: 0.5
+float: 1
 idouble: 1
-ifloat: 0.5
+ifloat: 1
 Test "cos (M_PI_6l * 4.0) == -0.5":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
 Test "cos (pi/2) == 0":
-double: 0.2758
-float: 0.3667
-idouble: 0.2758
-ifloat: 0.3667
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 
 # cpow
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
@@ -298,9 +268,9 @@ Test "Imaginary part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 float: 2
 ifloat: 2
 Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
-double: 1.1031
+double: 2
 float: 2
-idouble: 1.1031
+idouble: 2
 ifloat: 2
 
 # csin
@@ -392,9 +362,6 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-Test "exp10 (0.7) == 5.0118723362727228500":
-float: 1
-ifloat: 1
 Test "exp10 (0.7) == 5.0118723362727228500155418688494574":
 float: 1
 ifloat: 1
@@ -461,6 +428,11 @@ float: 1
 ifloat: 1
 
 # j0
+Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "j0 (10.0) == -0.24593576445134833520":
 double: 2
 float: 1
@@ -469,6 +441,11 @@ ifloat: 1
 Test "j0 (2.0) == 0.22389077914123566805":
 float: 2
 ifloat: 2
+Test "j0 (4.0) == -3.9714980986384737228659076845169804197562E-1":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 Test "j0 (8.0) == 0.17165080713755390609":
 float: 1
 ifloat: 1
@@ -589,35 +566,22 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842626 in cos_res":
+Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
-double: 1
-float: 0.5
-idouble: 1
-ifloat: 0.5
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
+Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-Test "sincos (pi/2, &sin_res, &cos_res) puts 0 in cos_res":
-double: 0.2758
-float: 0.3667
-idouble: 0.2758
-ifloat: 0.3667
 Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
-float: 1
-ifloat: 1
-Test "sincos (pi/6, &sin_res, &cos_res) puts 0.866025403784438646764 in cos_res":
 float: 1
 ifloat: 1
 
@@ -630,17 +594,16 @@ ifloat: 1
 
 # tan
 Test "tan (pi/4) == 1":
-double: 0.5
-idouble: 0.5
+double: 1
+idouble: 1
 
 # tanh
-Test "tanh (0.7) == 0.60436777711716349631":
+Test "tanh (-0.7) == -0.60436777711716349631":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
-
-Test "tanh (-0.7) == -0.60436777711716349631":
+Test "tanh (0.7) == 0.60436777711716349631":
 double: 1
 float: 1
 idouble: 1
@@ -805,9 +768,7 @@ idouble: 1
 # Maximal error of functions:
 Function: "asin":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 
 Function: "atan2":
 float: 4
@@ -884,9 +845,7 @@ idouble: 4
 ifloat: 1
 
 Function: Imaginary part of "catanh":
-double: 1
 float: 6
-idouble: 1
 ifloat: 6
 
 Function: "cbrt":
@@ -926,9 +885,7 @@ float: 1
 ifloat: 1
 
 Function: Imaginary part of "clog":
-double: 1
 float: 3
-idouble: 1
 ifloat: 3
 
 Function: Real part of "clog10":
@@ -956,9 +913,9 @@ idouble: 1
 ifloat: 4
 
 Function: Imaginary part of "cpow":
-double: 1.1031
+double: 2
 float: 2
-idouble: 1.1031
+idouble: 2
 ifloat: 2
 
 Function: Imaginary part of "csin":
@@ -1098,8 +1055,8 @@ idouble: 1
 ifloat: 1
 
 Function: "tan":
-double: 0.5
-idouble: 0.5
+double: 1
+idouble: 1
 
 Function: "tanh":
 double: 1

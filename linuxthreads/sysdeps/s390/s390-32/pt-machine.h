@@ -23,6 +23,11 @@
 # define PT_EI extern inline
 #endif
 
+/* For multiprocessor systems, we want to ensure all memory accesses
+   are completed before we reset a lock.  On other systems, we still
+   need to make sure that the compiler has flushed everything to memory.  */
+#define MEMORY_BARRIER() __asm__ __volatile__ ("bcr 15,0" : : : "memory")
+
 /* Spinlock implementation; required.  */
 PT_EI long int
 testandset (int *spinlock)
@@ -94,9 +99,3 @@ __compare_and_swap(long int *p, long int oldval, long int newval)
         return retval == 0;
 }
 
-
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("%r15");
