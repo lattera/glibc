@@ -1,5 +1,8 @@
 2001-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconvconfig.c (write_output): Update comment explaining
+	output format.
+
 	* elf/dl-load.c (_dl_dst_count): In SUID binaries expand $ORIGIN
 	if it is alone.
 	(_dl_dst_substitute): Likewise.

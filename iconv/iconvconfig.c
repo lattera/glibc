@@ -923,13 +923,13 @@ next_prime (uint32_t seed)
                             to-internal module name offset
                             offset into other conversion table
 
-   ooff     ???          Sequence of words
-                            name offset
+   ooff     ???          One or more of
+                            number of steps/modules
                             one or more of tuple
-                              canonical name offset
+                              canonical name offset for output
                               module dir name offset
                               module name offset
-                            (following last entry canocical name offset is 0)
+                         (following last entry with step count 0)
 */
 static int
 write_output (void)
