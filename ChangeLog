@@ -1,3 +1,13 @@
+2002-10-01  Roland McGrath  <roland@frob.com>
+
+	* config.h.in (NO_HIDDEN): New #undef.
+	* include/libc-symbols.h [! NO_HIDDEN]: Add this condition to
+	nonempty definitions of hidden_proto et al.
+	* configure.in: Grok --disable-hidden-plt to define NO_HIDDEN.
+	* configure: Regenerated.
+	* sysdeps/mach/hurd/configure.in: Always define NO_HIDDEN.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
 2002-09-19  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/dl-fptr.c (make_fdesc): Load address of "local" via
