@@ -943,6 +943,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (4) == 6":
+ldouble: 2
+ildouble: 2
 
 # y0
 Test "y0 (0.1) == -1.5342386513503668441":

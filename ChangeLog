@@ -1,3 +1,20 @@
+2001-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Add deltas for tgamma to help
+	the lousy AMD FPU.
+
+2001-04-10  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add sys/ptrace.h.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Delete wrong stuff.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Correct typedefs.
+
+2001-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Provide complete error
+	message.  Based on a patch by HJ Lu.
+
 2001-04-10  Andreas Schwab  <schwab@suse.de>
 
 	* math/libm-test.inc (csinh_test): Don't require the invalid

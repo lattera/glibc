@@ -28,29 +28,6 @@
 
 typedef struct sigcontext mcontext_t;
 
-/* We need explicit types for the general and floating-point register
-   sets.  */
-
-/* Type for general register.  */
-typedef int greg_t;
-
-/* Number of general registers.  */
-#define NGREG	32
-
-/* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
-
-
-/* Type for general register.  */
-typedef int fpreg_t;
-
-/* Number of general registers.  */
-#define NFPREG	32
-
-/* Container for all general registers.  */
-typedef fpreg_t fpregset_t[NFPREG];
-
-
 /* Userlevel context.  */
 typedef struct ucontext
   {

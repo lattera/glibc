@@ -145,6 +145,7 @@ _dl_map_object_deps (struct link_map *map,
   const char *name;
   int errno_saved;
   int errno_reason;
+  const char *errstring;
 
   auto inline void preload (struct link_map *map);
 
@@ -198,6 +199,7 @@ _dl_map_object_deps (struct link_map *map,
      alloca means we cannot use recursive function calls.  */
   errno_saved = errno;
   errno_reason = 0;
+  errstring = NULL;
   errno = 0;
   name = NULL;
   for (runp = known; runp; )
@@ -236,7 +238,6 @@ _dl_map_object_deps (struct link_map *map,
 		/* Allocate new entry.  */
 		struct list *newp;
 		const char *objname;
-		const char *errstring;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
@@ -281,7 +282,6 @@ _dl_map_object_deps (struct link_map *map,
 	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
 		const char *objname;
-		const char *errstring;
 		struct list *newp;
 
 		/* Recognize DSTs.  */
@@ -307,6 +307,7 @@ _dl_map_object_deps (struct link_map *map,
 			assert (errstring != NULL);
 			if (errstring != _dl_out_of_memory)
 			  free ((char *) errstring);
+			errstring = NULL;
 
 			/* Simply ignore this error and continue the work.  */
 			continue;
@@ -581,5 +582,5 @@ out:
 
   if (errno_reason)
     _dl_signal_error (errno_reason == -1 ? 0 : errno_reason,
-		      name ?: "", N_("cannot load shared object file"));
+		      errstring ?: "", N_("cannot load shared object file"));
 }
