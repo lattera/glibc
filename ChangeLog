@@ -1,11 +1,16 @@
 1999-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/ansi_x3.110.c (from_ansi_x3_110): Don't increment
+	pointers if character is illegal.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 	* iconv/gconv_db.c (gen_steps): Set __counter initialy to 1.
 	(increment_counter): New function.  Broken out of find_derivation.
 	(find_derivation): No need for a lock.  Increment counter only when
 	the derivation was already available.
 	* iconv/gconv_dl.c: Add debugging functions.
 	(known_compare): We have to use strcmp.
+	Reported by Bruno Haible <haible@ilog.fr>.
 
 1999-12-06  Ulrich Drepper  <drepper@cygnus.com>
 
