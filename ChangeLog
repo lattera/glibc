@@ -384,10 +384,6 @@
 	* libio/libioP.h (_IO_cleanup_registration_needed): Use __PMT.
 	Reported by Felix von Leitner <leitner@amdiv.de>.
 
-1998-07-13 10:28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* sysdeps/unix/sysv/linux/m68k/dl-envvars.h: New file.
-
 1998-07-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Make-dist (+sysdep-tsrcs): Add Versions.
