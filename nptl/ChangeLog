@@ -1,3 +1,7 @@
+2003-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__fork): Add libc_hidden_def.
+
 2003-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
@@ -29,7 +33,7 @@
 2003-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Include <atomic.h>.
-	Remove __lll_add, __lll_dev_if_positive, and __lll_test_and_set
+	Remove __lll_add, __lll_dec_if_positive, and __lll_test_and_set
 	definitions.  Replace uses with calls to atomic_* functions.
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/lowlevellock.c: Replace __lll_add and

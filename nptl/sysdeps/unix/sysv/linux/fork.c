@@ -131,4 +131,5 @@ __libc_fork (void)
   return pid;
 }
 weak_alias (__libc_fork, __fork)
+libc_hidden_def (__fork)
 weak_alias (__libc_fork, fork)

@@ -1,3 +1,7 @@
+2003-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__fork): Add libc_hidden_def.
+
 2003-03-21  Daniel Jacobowitz  <drow@mvista.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h

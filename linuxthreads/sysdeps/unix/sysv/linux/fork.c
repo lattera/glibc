@@ -39,4 +39,5 @@ __libc_fork (void)
   return __libc_maybe_call2 (pthread_fork, (&__fork_block), ARCH_FORK ());
 }
 weak_alias (__libc_fork, __fork)
+libc_hidden_def (__fork)
 weak_alias (__libc_fork, fork)
