@@ -71,7 +71,6 @@ extern int __pthread_debug attribute_hidden;
 typedef struct
 {
   pthread_cond_t *cond;
-  lll_lock_t lock;
 } pthread_cond_2_0_t;
 
 

@@ -10,13 +10,3 @@ sys_futex
 
 - test with threaded process terminating and semadj (?) being applied
   only after all threads are gone
-
-
-- system() is cancelable.  What happens to the child process?  It probably
-  should be killed.
-
-  The signal handler setting is a process resource.  Setting and resetting
-  it from multiple thread must be possible.
-
-
-- the syscall wrapping code should really be in libc
