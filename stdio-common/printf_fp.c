@@ -204,7 +204,7 @@ __printf_fp (FILE *fp,
 	    hi = 0;
 	  else
 	    {
-	      hi = __mpn_divmod (tmp, frac, fracsize, scale, scalesize);
+	      hi = mpn_divmod (tmp, frac, fracsize, scale, scalesize);
 	      tmp[fracsize - scalesize] = hi;
 	      hi = tmp[0];
 

@@ -49,7 +49,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv
 
 
 # Several mpn functions from GNU MP are used by the strtod function.
-mpn-routines := add_1 add_n addmul_1 cmp divmod divmod_1 udiv_qrnnd \
+mpn-routines := add_1 add_n addmul_1 cmp divrem divmod_1 udiv_qrnnd \
 		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1
 mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
 

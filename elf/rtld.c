@@ -339,22 +339,35 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
-      /* Do any necessary cleanups for the startup OS interface code.
-	 We do these now so that no calls are made after real relocation
-	 which might be resolved to different functions than we expect.  */
-      _dl_sysdep_start_cleanup ();
-
-      /* Now we have all the objects loaded.  Relocate them all.
-	 We do this in reverse order so that copy relocs of earlier
-	 objects overwrite the data written by later objects.  */
+      /* Now we have all the objects loaded.  Relocate them all except for
+	 the dynamic linker itself.  We do this in reverse order so that
+	 copy relocs of earlier objects overwrite the data written by later
+	 objects.  We do not re-relocate the dynamic linker itself in this
+	 loop because that could result in the GOT entries for functions we
+	 call being changed, and that would break us.  It is safe to
+	 relocate the dynamic linker out of order because it has no copy
+	 relocs (we know that because it is self-contained).  */
       l = _dl_loaded;
       while (l->l_next)
 	l = l->l_next;
       do
 	{
-	  _dl_relocate_object (l, lazy);
+	  if (l != &rtld_map)
+	    _dl_relocate_object (l, lazy);
 	  l = l->l_prev;
 	} while (l);
+
+      /* Do any necessary cleanups for the startup OS interface code.
+	 We do these now so that no calls are made after rtld re-relocation
+	 which might be resolved to different functions than we expect.
+	 We cannot do this before relocating the other objects because
+	 _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
+      _dl_sysdep_start_cleanup ();
+
+      if (rtld_map.l_opencount > 0)
+	/* There was an explicit ref to the dynamic linker as a shared lib.
+	   Re-relocate ourselves with user-controlled symbol definitions.  */
+	_dl_relocate_object (&rtld_map, lazy);
 
       /* Tell the debugger where to find the map of loaded objects.  */
       dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
