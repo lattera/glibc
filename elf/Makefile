@@ -335,7 +335,8 @@ $(objpfx)sprof: $(libdl)
 
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
-CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' -D'SLIBDIR="$(slibdir)"'
+CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
+		    -D'SLIBDIR="$(slibdir)"'
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
 
@@ -398,6 +399,40 @@ $(objpfx)reldep9mod3.so: $(objpfx)reldep9mod1.so $(objpfx)reldep9mod2.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
+
+testobj1.so-no-z-defs = yes
+testobj3.so-no-z-defs = yes
+testobj4.so-no-z-defs = yes
+testobj5.so-no-z-defs = yes
+testobj6.so-no-z-defs = yes
+failobj.so-no-z-defs = yes
+constload2.so-no-z-defs = yes
+constload3.so-no-z-defs = yes
+nodelmod1.so-no-z-defs = yes
+nodelmod2.so-no-z-defs = yes
+nodelmod4.so-no-z-defs = yes
+nodel2mod2.so-no-z-defs = yes
+reldepmod2.so-no-z-defs = yes
+reldepmod3.so-no-z-defs = yes
+reldepmod4.so-no-z-defs = yes
+reldep4mod4.so-no-z-defs = yes
+reldep4mod2.so-no-z-defs = yes
+ltglobmod2.so-no-z-defs = yes
+dblloadmod3.so-no-z-defs = yes
+tst-tlsmod1.so-no-z-defs = yes
+tst-tlsmod2.so-no-z-defs = yes
+tst-tlsmod3.so-no-z-defs = yes
+tst-tlsmod4.so-no-z-defs = yes
+tst-tlsmod7.so-no-z-defs = yes
+tst-tlsmod8.so-no-z-defs = yes
+tst-tlsmod9.so-no-z-defs = yes
+tst-tlsmod10.so-no-z-defs = yes
+tst-tlsmod12.so-no-z-defs = yes
+circlemod2.so-no-z-defs = yes
+circlemod3.so-no-z-defs = yes
+circlemod3a.so-no-z-defs = yes
+reldep8mod2.so-no-z-defs = yes
+reldep9mod1.so-no-z-defs = yes
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os

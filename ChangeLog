@@ -1,3 +1,11 @@
+2003-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules (build-module-helper): Add -z defs unless explicitly said
+	not to do it.
+	* dlfcn/Makefile: Define various *-no-z-defs variables for test DSOs
+	which has undefined symbols.
+	* elf/Makefile: Likewise.
+
 2003-07-21  HJ Lu  <hongjiu.lu@intel.com>
 
 	* elf/ldconfig.c (search_dir): Treat symlink as regular file

@@ -521,6 +521,7 @@ endef
 else
 define build-module-helper
 $(LINK.o) -shared $(static-libgcc) $(sysdep-LDFLAGS) $(config-LDFLAGS) \
+	  $(if $($(@F)-no-z-defs)$(no-z-defs),,-Wl,-z,defs) \
 	  -B$(csu-objpfx) $(load-map-file) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)

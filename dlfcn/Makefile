@@ -47,6 +47,10 @@ modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit \
 		bug-dlsym1-lib1 bug-dlsym1-lib2
 
+failtestmod.so-no-z-defs = yes
+glreflib2.so-no-z-defs = yes
+errmsg1mod.so-no-z-defs = yes
+
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests += tststatic
 tests-static += tststatic

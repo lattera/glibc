@@ -1,3 +1,8 @@
+2003-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Define various *-no-z-defs variables for test DSOs
+	which has undefined symbols.
+
 2003-07-21  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (__pthread_once):
