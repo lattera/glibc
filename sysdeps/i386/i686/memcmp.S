@@ -32,13 +32,13 @@
 /* Load an entry in a jump table into EBX.  TABLE is a jump table
    with relative offsets.  INDEX is a register contains the index
    into the jump table.  */
-#define LOAD_JUMP_TABLE_ENTRY(TABLE, INDEX)			\
-  /* We first load PC into EBX.  */				\
-  call	__i686.get_pc_thunk.bx;					\
-  /* Get the address of the jump table.  */			\
-  addl	$(TABLE - .), %ebx;					\
-  /* Get the entry and convert the relative offset to the	\
-     absolute address.  */					\
+#define LOAD_JUMP_TABLE_ENTRY(TABLE, INDEX) \
+  /* We first load PC into EBX.  */					      \
+  call	__i686.get_pc_thunk.bx;						      \
+  /* Get the address of the jump table.  */				      \
+  addl	$(TABLE - .), %ebx;						      \
+  /* Get the entry and convert the relative offset to the		      \
+     absolute address.  */						      \
   addl	(%ebx,INDEX,4), %ebx
 
 #ifdef HAVE_HIDDEN
@@ -351,6 +351,7 @@ L(set):
 	popl	%esi
 	RETURN
 
+	.section	.rodata
 	ALIGN (2)
 L(table_32bytes) :
 	.long	L(0bytes) - . + 0x0

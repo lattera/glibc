@@ -1,3 +1,7 @@
+2004-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/memcmp.S: Move table to .rodata.  Patch by HJ Lu.
+
 2004-02-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): Adjust l->l_ld of the vDSO by l->l_addr.
