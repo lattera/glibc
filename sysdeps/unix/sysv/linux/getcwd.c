@@ -103,7 +103,7 @@ __getcwd (char *buf, size_t size)
       retval = INLINE_SYSCALL (getcwd, 2, CHECK_STRING (path), alloc_size);
       if (retval >= 0)
 	{
-	  if (buf == NULL)
+	  if (buf == NULL && size == 0)
 	    {
 	      buf = realloc (path, (size_t) retval);
 	      if (buf == NULL)
@@ -115,8 +115,9 @@ __getcwd (char *buf, size_t size)
 
 # if __ASSUME_GETCWD_SYSCALL
       /* It should never happen that the `getcwd' syscall failed because
-	 the buffer is too small if we allocated the buffer outself.  */
-      assert (errno != ERANGE || buf != NULL);
+	 the buffer is too small if we allocated the buffer outselves
+	 large enough.  */
+      assert (errno != ERANGE || buf != NULL || size != 0);
 
       if (buf == NULL)
 	free (path);
@@ -153,8 +154,9 @@ __getcwd (char *buf, size_t size)
 	    }
 
 	  path[n] = '\0';
-	  if (buf == NULL)
+	  if (buf == NULL && size == 0)
 	    {
+	      /* Ensure that the buffer is only as large as necessary.  */
 	      buf = realloc (path, (size_t) n + 1);
 	      if (buf == NULL)
 		/* `relloc' failed but we still have the original string.  */
