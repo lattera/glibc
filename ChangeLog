@@ -1,3 +1,8 @@
+2000-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/atomicity.h: Remove white space to avoid
+	compiler warning.
+
 2000-02-14  Scott Bambrough <scottb@netwinder.org>
 
 	* sysdeps/unix/sysv/linux/arm/ioperm.c (_iopl, _ioperm):  Add

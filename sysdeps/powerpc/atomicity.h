@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations.  PowerPC version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
 	bne-	1f
 	stwcx.	%3,0,%1
 	bne-	0b
-1:	
+1:
 " : "=&b"(result) : "r"(p), "Ir"(oldval), "r"(newval) : "cr0", "memory");
   return result >> 5;
 }
