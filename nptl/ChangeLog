@@ -1,3 +1,12 @@
+2004-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h
+	(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP): Make safe for C++.
+	(PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP): Likewise.
+	[BZ #375]
+
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Allow

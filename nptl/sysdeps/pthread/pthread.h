@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <bits/pthreadtypes.h>
 #include <bits/setjmp.h>
+#include <bits/wordsize.h>
 
 
 /* Detach state.  */
@@ -63,12 +64,21 @@ enum
 #define PTHREAD_MUTEX_INITIALIZER \
   { }
 #ifdef __USE_GNU
-# define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { .__data = { .__kind = PTHREAD_MUTEX_RECURSIVE_NP } }
-# define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  { .__data = { .__kind = PTHREAD_MUTEX_ERRORCHECK_NP } }
-# define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
-  { .__data = { .__kind = PTHREAD_MUTEX_ADAPTIVE_NP } }
+# if __WORDSIZE == 64
+#  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP } }
+#  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP } }
+#  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP } }
+# else
+#  define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP } }
+#  define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_ERRORCHECK_NP } }
+#  define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
+  { { 0, 0, 0, PTHREAD_MUTEX_ADAPTIVE_NP } }
+# endif
 #endif
 
 
@@ -87,8 +97,14 @@ enum
 #define PTHREAD_RWLOCK_INITIALIZER \
   { }
 #ifdef __USE_GNU
-# define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { .__data = { .__flags = PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+# if __WORDSIZE == 64
+#  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+  { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,					      \
+      PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+# else
+#  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+  { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+# endif
 #endif
 
 
