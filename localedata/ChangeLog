@@ -1,3 +1,8 @@
+2002-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/hu_HU: New version with corrected collation.
+	Patch by Nagy Péter <chichken@interbase.hu>.
+
 2001-12-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/bn_BD: New file.
