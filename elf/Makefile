@@ -38,7 +38,7 @@ elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal \
-		   dl-xstat64 dl-fxstat64 dl-sbrk dl-brk
+		   dl-xstat64 dl-fxstat64
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
