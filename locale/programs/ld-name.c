@@ -200,6 +200,11 @@ name_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) charmap->code_set_name;
+  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
+  ++cnt;
+
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NAME));
 
   write_locale_data (output_path, "LC_NAME",

@@ -2522,7 +2522,13 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQWC));
   iov[2 + cnt].iov_base = collate->wcseqorder.result;
   iov[2 + cnt].iov_len = collate->wcseqorder.result_size;
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   assert (idx[cnt] % __alignof__ (int32_t) == 0);
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_CODESET));
+  iov[2 + cnt].iov_base = (void *) charmap->code_set_name;
+  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
   ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));

@@ -185,6 +185,7 @@ identification_output (struct localedef_t *locale, struct charmap_t *charmap,
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)];
   size_t cnt = 0;
   size_t num;
+  size_t last_idx;
 
   data.magic = LIMAGIC (LC_IDENTIFICATION);
   data.n = _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION);
@@ -267,19 +268,26 @@ identification_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  last_idx = cnt - 1;
+  idx[last_idx] = idx[cnt - 2];
   for (num = 0; num < __LC_LAST; ++num)
     if (num != LC_ALL)
       {
 	iov[cnt].iov_base = (void *) identification->category[num];
 	iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
+	idx[last_idx] += iov[cnt].iov_len;
 	++cnt;
       }
+
+  assert (last_idx == _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION) - 1);
+  iov[cnt].iov_base = (void *) charmap->code_set_name;
+  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
+  ++cnt;
 
   assert (cnt == (2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION)
 		  + (__LC_LAST - 2)));
 
-  write_locale_data (output_path, "LC_IDENTIFICATION",
-		     2 + _NL_ITEM_INDEX (_NL_NUM_LC_IDENTIFICATION), iov);
+  write_locale_data (output_path, "LC_IDENTIFICATION", cnt, iov);
 }
 
 

@@ -1,6 +1,7 @@
-/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Charset name normalization.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,34 +18,43 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <endian.h>
+#include <ctype.h>
 
-#include "localeinfo.h"
 
-/* This table's entries are taken from ISO 14652, the table in section
-   4.10 "LC_ADDRESS".  */
-
-const struct locale_data _nl_C_LC_ADDRESS =
+static inline void
+strip (char *wp, const char *s)
 {
-  _nl_C_name,
-  NULL, 0, 0, /* no file mapped */
-  UNDELETABLE,
-  0,
-  NULL,
-  13,
-  {
-    { string: "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: _nl_C_codeset }
-  }
-};
+  int slash_count = 0;
+
+  while (*s != '\0')
+    {
+      if (isalnum (*s) || *s == '_' || *s == '-' || *s == '.')
+	*wp++ = toupper (*s);
+      else if (*s == '/')
+	{
+	  if (++slash_count == 3)
+	    break;
+	  *wp++ = '/';
+	}
+      ++s;
+    }
+
+  while (slash_count++ < 2)
+    *wp++ = '/';
+
+  *wp = '\0';
+}
+
+
+static char *
+upstr (char *dst, const char *str)
+{
+  char *cp = dst;
+  while ((*cp++ = toupper (*str++)) != '\0')
+    /* nothing */;
+  return dst;
+}
+
+
+/* If NAME is an codeset alias expand it.  */
+extern const char *__gconv_lookup_alias (const char *name);

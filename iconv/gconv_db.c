@@ -614,13 +614,38 @@ find_derivation (const char *toset, const char *toset_expand,
 }
 
 
+/* Control of initialization.  */
+__libc_once_define (static, once);
+
+
+static const char *
+do_lookup_alias (const char *name)
+{
+  struct gconv_alias key;
+  struct gconv_alias **found;
+
+  key.fromname = (char *) name;
+  found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
+  return found != NULL ? (*found)->toname : NULL;
+}
+
+
+const char *
+__gconv_lookup_alias (const char *name)
+{
+  /* Ensure that the configuration data is read.  */
+  __libc_once (once, __gconv_read_conf);
+
+  return do_lookup_alias (name) ?: name;
+}
+
+
 int
 internal_function
 __gconv_find_transform (const char *toset, const char *fromset,
 			struct __gconv_step **handle, size_t *nsteps,
 			int flags)
 {
-  __libc_once_define (static, once);
   const char *fromset_expand = NULL;
   const char *toset_expand = NULL;
   int result;
@@ -641,16 +666,8 @@ __gconv_find_transform (const char *toset, const char *fromset,
   /* See whether the names are aliases.  */
   if (__gconv_alias_db != NULL)
     {
-      struct gconv_alias key;
-      struct gconv_alias **found;
-
-      key.fromname = (char *) fromset;
-      found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
-      fromset_expand = found != NULL ? (*found)->toname : NULL;
-
-      key.fromname = (char *) toset;
-      found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
-      toset_expand = found != NULL ? (*found)->toname : NULL;
+      fromset_expand = do_lookup_alias (fromset);
+      toset_expand = do_lookup_alias (toset);
     }
 
   if (__builtin_expect (flags & GCONV_AVOID_NOCONV, 0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -105,7 +105,7 @@ const struct locale_data _nl_C_LC_COLLATE =
   UNDELETABLE,
   0,
   NULL,
-  18,
+  19,
   {
     /* _NL_COLLATE_NRULES */
     { word: 0 },
@@ -142,6 +142,8 @@ const struct locale_data _nl_C_LC_COLLATE =
     /* _NL_COLLATE_COLLSEQMB */
     { string: collseqmb },
     /* _NL_COLLATE_COLLSEQWC */
-    { string: (const char *) collseqwc }
+    { string: (const char *) collseqwc },
+    /* _NL_COLLATE_CODESET */
+    { string: _nl_C_codeset }
   }
 };

@@ -869,6 +869,12 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_base = (void *) time->wdate_fmt;
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
                           * sizeof (uint32_t));
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
+
+  iov[2 + cnt].iov_base = (void *) charmap->code_set_name;
+  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
   ++cnt;
   ++last_idx;
 

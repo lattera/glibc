@@ -1,3 +1,49 @@
+2001-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv_open.c: Move strip and upstr definitions...
+	* iconv/gconv_charset.h: ...here.  New file.
+	* iconv/gconv_db.c (once): Move to file level.
+	(do_lookup_alias): Split out from __gconv_find_transform.
+	(__gconv_find_transform): Call do_lookup_alias.
+	(__gconv_loopup_alias): New function.
+	* locale/langinfo.h: Define _NL_*_CODESET values for all categories
+	but LC_CTYPE.
+	* locale/categories.def: Add entries for new _NL_*_CODESET values.
+	* locale/C-ctype.c: Use _nl_C_codeset to initialize CODESET entry.
+	* locale/C-address.c: Initialize _NL_*_CODESET element.
+	* locale/C-collate.c: Likewise.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-messages.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/localeinfo.h: Declare _nl_C_codeset.
+	* locale/C_name.c: Define _nl_C_codeset.
+	* locale/findlocale.c: Before accepting locale check that the used
+	charset does not conflict with what the locale name said.
+	* locale/programs/ld-address.c: Emit codeset information.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+
+	* localedata/tests-mbwc/tst_funcs.h (TST_HEAD_LOCALE): It is an error
+	if the locale data couldn't be found.
+
+	* string/Makefile: Define tst-strxfrm-ENV.
+
+	* ysdeps/unix/sysv/linux/ia64/getcontext.S: Fix comment.
+
 2001-04-06  Andreas Jaeger  <aj@suse.de>
 
 	* include/sys/profil.h: New file.

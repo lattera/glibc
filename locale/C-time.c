@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -30,7 +30,7 @@ const struct locale_data _nl_C_LC_TIME =
   UNDELETABLE,
   0,
   NULL,
-  110,
+  111,
   {
     { string: "Sun" },
     { string: "Mon" },
@@ -141,6 +141,7 @@ const struct locale_data _nl_C_LC_TIME =
     { string: "\1" },
     { string: "" },
     { string: "%a %b %e %H:%M:%S %Z %Y" },
-    { wstr: (const uint32_t *) L"%a %b %e %H:%M:%S %Z %Y" }
+    { wstr: (const uint32_t *) L"%a %b %e %H:%M:%S %Z %Y" },
+    { string: _nl_C_codeset }
   }
 };

@@ -155,6 +155,9 @@ extern struct locale_data * *const _nl_current[__LC_LAST];
 extern const char _nl_C_name[];
 extern const char _nl_POSIX_name[];
 
+/* The standard codeset.  */
+extern const char _nl_C_codeset[];
+
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
   (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)

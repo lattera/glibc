@@ -103,6 +103,7 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
       fprintf (stderr, "Warning : can't set locale: %s\nskipping ...\n",      \
 	       locale);							      \
       result (fp, C_LOCALES, s_func, locale, 0, 0, 0, "can't set locale");    \
+      ++err_count;							      \
       continue;								      \
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -28,12 +28,13 @@ const struct locale_data _nl_C_LC_NUMERIC =
   UNDELETABLE,
   0,
   NULL,
-  5,
+  6,
   {
     { string: "." },
     { string: "" },
     { string: "" },
     { word: (unsigned int) L'.' },
-    { word: (unsigned int) L'\0' }
+    { word: (unsigned int) L'\0' },
+    { string: _nl_C_codeset }
   }
 };

@@ -178,6 +178,11 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &numeric->thousands_sep_wc;
   iov[cnt].iov_len = sizeof (uint32_t);
+  ++cnt;
+
+  idx[cnt - 3] = idx[cnt - 4] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) charmap->code_set_name;
+  iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
 
   assert (cnt + 1 == 3 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 

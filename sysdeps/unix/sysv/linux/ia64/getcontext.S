@@ -1,5 +1,5 @@
 /* Copyright (C) 2001 Free Software Foundation, Inc.
-     Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
+   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,7 +21,7 @@
 
 #include "ucontext_i.h"
 
-/*  __getcontext (const ucontext_t *ucp)
+/*  __getcontext (ucontext_t *ucp)
 
   Saves the machine context in UCP such that when it is activated,
   it appears as if __getcontext() returned again.  The only difference

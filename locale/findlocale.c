@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +27,7 @@
 #endif
 
 #include "localeinfo.h"
+#include "../iconv/gconv_charset.h"
 
 
 /* Constant data defined in setlocale.c.  */
@@ -161,6 +163,54 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       locale_file = locale_file->successor[cnt];
 
       if (locale_file == NULL)
+	return NULL;
+    }
+
+  /* The LC_CTYPE category allows to check whether a locale is really
+     usable.  If the locale name contains a charset name and the
+     charset name used in the locale (present in the LC_CTYPE data) is
+     not the same (after resolving aliases etc) we reject the locale
+     since using it would irritate users expecting the charset named
+     in the locale name.  */
+  if (codeset != NULL)
+    {
+      /* Get the codeset information from the locale file.  */
+      static const int codeset_idx[] =
+	{
+	  [__LC_CTYPE] = _NL_ITEM_INDEX (CODESET),
+	  [__LC_NUMERIC] = _NL_ITEM_INDEX (_NL_NUMERIC_CODESET),
+	  [__LC_TIME] = _NL_ITEM_INDEX (_NL_TIME_CODESET),
+	  [__LC_COLLATE] = _NL_ITEM_INDEX (_NL_COLLATE_CODESET),
+	  [__LC_MONETARY] = _NL_ITEM_INDEX (_NL_MONETARY_CODESET),
+	  [__LC_MESSAGES] = _NL_ITEM_INDEX (_NL_MESSAGES_CODESET),
+	  [__LC_PAPER] = _NL_ITEM_INDEX (_NL_PAPER_CODESET),
+	  [__LC_NAME] = _NL_ITEM_INDEX (_NL_NAME_CODESET),
+	  [__LC_ADDRESS] = _NL_ITEM_INDEX (_NL_ADDRESS_CODESET),
+	  [__LC_TELEPHONE] = _NL_ITEM_INDEX (_NL_TELEPHONE_CODESET),
+	  [__LC_MEASUREMENT] = _NL_ITEM_INDEX (_NL_MEASUREMENT_CODESET),
+	  [__LC_IDENTIFICATION] = _NL_ITEM_INDEX (_NL_IDENTIFICATION_CODESET)
+	};
+      const struct locale_data *data;
+      const char *locale_codeset;
+      char *clocale_codeset;
+      char *ccodeset;
+
+      data = (const struct locale_data *) locale_file->data;
+      locale_codeset =
+	(const char *) data->values[codeset_idx[category]].string;
+      assert (locale_codeset != NULL);
+      /* Note the length of the allocated memory: +3 for up to two slashes
+	 and the NUL byte.  */
+      clocale_codeset = (char *) alloca (strlen (locale_codeset) + 3);
+      strip (clocale_codeset, locale_codeset);
+
+      ccodeset = (char *) alloca (strlen (codeset) + 3);
+      strip (ccodeset, codeset);
+
+      if (strcmp (__gconv_lookup_alias (upstr (ccodeset, ccodeset)),
+		  __gconv_lookup_alias (upstr (clocale_codeset,
+					       clocale_codeset))) != 0)
+	/* The codesets are not identical, don't use the locale.  */
 	return NULL;
     }
 

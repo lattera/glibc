@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -31,8 +31,9 @@ const struct locale_data _nl_C_LC_MEASUREMENT =
   UNDELETABLE,
   0,
   NULL,
-  1,
+  2,
   {
-    { string: "\1" }
+    { string: "\1" },
+    { string: _nl_C_codeset }
   }
 };

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -590,7 +590,7 @@ const struct locale_data _nl_C_LC_CTYPE =
     /* _NL_CTYPE_MB_CUR_MAX */
     { word: 1 },
     /* _NL_CTYPE_CODESET_NAME */
-    { string: "ANSI_X3.4-1968" },
+    { string: _nl_C_codeset },
     /* _NL_CTYPE_TOUPPER32 */
     { string: (const char *) &_nl_C_LC_CTYPE_toupper[128] },
     /* _NL_CTYPE_TOLOWER32 */

@@ -57,6 +57,7 @@ include ../Rules
 tester-ENV = LANGUAGE=C
 inl-tester-ENV = LANGUAGE=C
 noinl-tester-ENV = LANGUAGE=C
+tst-strxfrm-ENV = LOCPATH=$(common-objpfx)localedata
 CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
