@@ -41,6 +41,7 @@
 #include <sys/types.h>
 #include <rpc/types.h>
 #include <rpc/auth.h>
+#include <sys/un.h>
 
 __BEGIN_DECLS
 
@@ -282,7 +283,8 @@ extern CLIENT *clntraw_create __P ((__const u_long __prog,
 
 
 /*
- * Generic client creation routine. Supported protocols are "udp" and "tcp"
+ * Generic client creation routine. Supported protocols are "udp", "tcp" and
+ * "unix"
  * CLIENT *
  * clnt_create(host, prog, vers, prot)
  *	char *host; 	-- hostname
@@ -340,6 +342,24 @@ extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
 				       struct timeval __wait_resend,
 				       int *__sockp, u_int __sendsz,
 				       u_int __recvsz));
+
+
+/*
+ * AF_UNIX based rpc
+ * CLIENT *
+ * clntunix_create(raddr, prog, vers, sockp, sendsz, recvsz)
+ *      struct sockaddr_un *raddr;
+ *      u_long prog;
+ *      u_long version;
+ *      register int *sockp;
+ *      u_int sendsz;
+ *      u_int recvsz;
+ */
+extern CLIENT *clntunix_create  __P ((struct sockaddr_un *__raddr,
+				      u_long __program, u_long __version,
+				      int *__sockp, u_int __sendsz,
+				      u_int __recvsz));
+
 
 extern int callrpc __P ((__const char *__host, __const u_long __prognum,
 			 __const u_long __versnum, __const u_long __procnum,

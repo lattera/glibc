@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -246,6 +246,35 @@ extern u_long __nis_hash __P ((const void *keyarg, register size_t len));
 /* NIS+ cache locking */
 extern int __nis_lock_cache __P ((void));
 extern int __nis_unlock_cache __P ((void));
+
+/* (XXX INTERNAL FUNCTIONS, ONLY FOR rpc.nisd AND glibc !!) */
+#if defined (NIS_INTERNAL) || defined (_LIBC)
+
+struct dir_binding
+{
+  CLIENT *clnt;                  /* RPC CLIENT handle */
+  nis_server *server_val;        /* List of servers */
+  u_int server_len;              /* # of servers */
+  u_int server_used;             /* Which server we are bind in the moment ? */
+  u_int current_ep;              /* Which endpoint of the server are in use? */
+  u_int trys;                    /* How many server have we tried ? */
+  u_int class;                   /* From which class is server_val ? */
+  bool_t master_only;            /* Is only binded to the master */
+  bool_t use_auth;               /* Do we use AUTH ? */
+  bool_t use_udp;                /* Do we use UDP ? */
+  struct sockaddr_in addr;       /* Server's IP address */
+  int socket;                    /* Server's local socket */
+};
+typedef struct dir_binding dir_binding;
+
+extern nis_error __nisbind_create __P ((dir_binding *, const nis_server *,
+					u_int, u_long));
+extern nis_error __nisbind_connect __P ((dir_binding *));
+extern nis_error __nisbind_next __P ((dir_binding *));
+extern void __nisbind_destroy __P ((dir_binding *));
+extern nis_error __nisfind_server __P ((const_nis_name, directory_obj **));
+
+#endif
 
 __END_DECLS
 

@@ -267,6 +267,15 @@ cat <<"EOF" | cmp - $testout || result=1
 `file1'
 EOF
 
+# Test NOCHECK with non-existing file in subdir.
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -c "$testdir" "*/blahblah" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+`dir1/blahblah'
+`dir2/blahblah'
+EOF
+
 if test $result -eq 0; then
     rm -fr $testdir $testout
 fi

@@ -62,7 +62,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
     __do_niscall2 (&obj->DI_data.do_servers.do_servers_val[i], 1,
 		   NIS_PING, (xdrproc_t) _xdr_ping_args,
 		   (caddr_t) &args, (xdrproc_t) xdr_void,
-		   (caddr_t) NULL, 0, NULL, NULL);
+		   (caddr_t) NULL, 0, NULL);
   if (res)
     nis_freeresult (res);
 }

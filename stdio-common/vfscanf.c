@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wctype.h>
@@ -407,7 +408,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	width = -1;
 
       /* Check for type modifiers.  */
-      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a' || *f == 'q')
+      while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a' || *f == 'q'
+	     || *f == 'z' || *f == 't' || *f == 'j')
 	switch (*f++)
 	  {
 	  case 'h':
@@ -458,6 +460,30 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    /* String conversions (%s, %[) take a `char **'
 	       arg and fill it in with a malloc'd pointer.  */
 	    flags |= MALLOC;
+	    break;
+	  case 'z':
+	    if (flags & (SHORT|LONGDBL|CHAR))
+	      conv_error ();
+	    if (sizeof (size_t) > sizeof (unsigned long int))
+	      flags |= LONGDBL;
+	    else if (sizeof (size_t) > sizeof (unsigned int))
+	      flags |= LONG;
+	    break;
+	  case 'j':
+	    if (flags & (SHORT|LONGDBL|CHAR))
+	      conv_error ();
+	    if (sizeof (intmax_t) > sizeof (unsigned long int))
+	      flags |= LONGDBL;
+	    else if (sizeof (intmax_t) > sizeof (unsigned int))
+	      flags |= LONG;
+	    break;
+	  case 't':
+	    if (flags & (SHORT|LONGDBL|CHAR))
+	      conv_error ();
+	    if (sizeof (ptrdiff_t) > sizeof (unsigned long int))
+	      flags |= LONGDBL;
+	    else if (sizeof (ptrdiff_t) > sizeof (unsigned int))
+	      flags |= LONG;
 	    break;
 	  }
 

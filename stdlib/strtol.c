@@ -147,7 +147,7 @@ extern int errno;
 #  define LONG_MAX ((long int) (ULONG_MAX >> 1))
 # endif
 # define STRTOL_LONG_MIN LONG_MIN
-# define STRTOL_LONG_MAX ULONG_MAX
+# define STRTOL_LONG_MAX LONG_MAX
 # define STRTOL_ULONG_MAX ULONG_MAX
 #endif
 

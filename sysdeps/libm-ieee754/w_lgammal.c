@@ -54,3 +54,5 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 }
 weak_alias (__lgammal, lgammal)
+strong_alias (__lgammal, __gammal)
+weak_alias (__gammal, gammal)

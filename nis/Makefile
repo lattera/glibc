@@ -23,7 +23,7 @@ subdir	:= nis
 
 headers			:= $(wildcard rpcsvc/*.[hx])
 distribute		:= nss-nis.h nss-nisplus.h nis_intern.h Banner \
-			nisplus-parser.h nis_cache2.h nis_xdr.h
+			nisplus-parser.h nis_xdr.h
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
@@ -44,8 +44,8 @@ vpath %.c $(subdir-dirs)
 
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
                   nis_subr nis_local_names nis_free nis_file \
-                  nis_print nis_error nis_call nis_lookup nis_cache\
-                  nis_table nis_xdr nis_server nis_ping nis_cache2_xdr\
+                  nis_print nis_error nis_call nis_lookup\
+                  nis_table nis_xdr nis_server nis_ping \
 		  nis_checkpoint nis_mkdir nis_rmdir nis_getservlist\
 		  nis_verifygroup nis_ismember nis_addmember nis_util\
 		  nis_removemember nis_creategroup nis_destroygroup\

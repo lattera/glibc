@@ -240,7 +240,7 @@ open_file (const char *file_name, int mode,
   int nloops;
   error_t err;
 
-  assert (mode == O_RDONLY);
+  assert (!(mode & ~O_READ));
 
   startdir = _dl_hurd_data->portarray[file_name[0] == '/' ?
 				      INIT_PORT_CRDIR : INIT_PORT_CWDIR];
@@ -558,6 +558,38 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   return err ? (__ptr_t) __hurd_fail (err) : (__ptr_t) mapaddr;
 }
 
+int weak_function
+__fxstat (int vers, int fd, struct stat *buf)
+{
+  error_t err;
+  
+  assert (vers == _STAT_VER);
+  
+  err = __io_stat ((mach_port_t) fd, buf);
+  if (err)
+    return __hurd_fail (err);
+
+  return 0;
+  
+}
+
+int weak_function
+__xstat (int vers, const char *file, struct stat *buf)
+{
+  error_t err;
+  mach_port_t port;
+  
+  assert (vers == _STAT_VER);
+
+  err = open_file (file, 0, &port, buf);
+  if (err)
+    return __hurd_fail (err);
+
+  __mach_port_deallocate (__mach_task_self (), port);
+
+  return 0;
+}
+
 void weak_function
 _exit (int status)
 {
@@ -565,37 +597,6 @@ _exit (int status)
 		    W_EXITCODE (status, 0), 0);
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
-}
-
-/* Read the whole contents of FILE into new mmap'd space with given
-   protections.  The size of the file is returned in SIZE.  */
-void *
-weak_function
-_dl_sysdep_read_whole_file (const char *file, size_t *size, int prot)
-{
-  struct stat stat;
-  mach_port_t memobj_rd;
-  void *contents;
-  error_t err = open_file (file, O_RDONLY, &memobj_rd, &stat);
-
-  if (! err)
-    {
-      /* Map a copy of the file contents.  */
-      contents = __mmap (0, stat.st_size, prot, MAP_COPY, memobj_rd, 0);
-      if (contents == (void *)-1)
-	contents = 0;
-      else
-	*size = stat.st_size;
-
-      __mach_port_deallocate (__mach_task_self (), memobj_rd);
-    }
-  else
-    {
-      __hurd_fail (err);
-      contents = 0;
-    }
-
-  return contents;
 }
 
 /* This function is called by interruptible RPC stubs.  For initial

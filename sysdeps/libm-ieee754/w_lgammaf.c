@@ -49,3 +49,5 @@ static char rcsid[] = "$NetBSD: w_lgammaf.c,v 1.3 1995/05/10 20:49:30 jtc Exp $"
 #endif
 }
 weak_alias (__lgammaf, lgammaf)
+strong_alias (__lgammaf, __gammaf)
+weak_alias (__gammaf, gammaf)

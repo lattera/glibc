@@ -20,6 +20,7 @@
 #include <limits.h>
 #include <printf.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <wchar.h>
@@ -250,14 +251,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	       0,            0,            0,            0,
 	       0, /* 'a' */ 26,            0, /* 'c' */ 20,
     /* 'd' */ 15, /* 'e' */ 19, /* 'f' */ 19, /* 'g' */ 19,
-    /* 'h' */ 10, /* 'i' */ 15,            0,            0,
+    /* 'h' */ 10, /* 'i' */ 15, /* 'j' */ 28,            0,
     /* 'l' */ 11, /* 'm' */ 24, /* 'n' */ 23, /* 'o' */ 17,
     /* 'p' */ 22, /* 'q' */ 12,            0, /* 's' */ 21,
-	       0, /* 'u' */ 16,            0,            0,
-    /* 'x' */ 18
+    /* 't' */ 27, /* 'u' */ 16,            0,            0,
+    /* 'x' */ 18,            0, /* 'z' */ 13
   };
 
-#define NOT_IN_JUMP_RANGE(Ch) ((Ch) < ' ' || (Ch) > 'x')
+#define NOT_IN_JUMP_RANGE(Ch) ((Ch) < ' ' || (Ch) > 'z')
 #define CHAR_CLASS(Ch) (jump_table[(int) (Ch) - ' '])
 #define JUMP(ChExpr, table)						      \
       do								      \
@@ -272,7 +273,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static const void *step0_jumps[27] =				      \
+    static const void *step0_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -287,7 +288,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_half),		/* for 'h' */				      \
       REF (mod_long),		/* for 'l' */				      \
       REF (mod_longlong),	/* for 'L', 'q' */			      \
-      REF (mod_size_t),		/* for 'Z' */				      \
+      REF (mod_size_t),		/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -300,10 +301,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
       REF (form_wcharacter),	/* for 'C' */				      \
-      REF (form_floathex)	/* for 'A', 'a' */			      \
+      REF (form_floathex),	/* for 'A', 'a' */			      \
+      REF (mod_ptrdiff_t),      /* for 't' */				      \
+      REF (mod_intmax_t),       /* for 'j' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static const void *step1_jumps[27] =				      \
+    static const void *step1_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -318,7 +321,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_half),		/* for 'h' */				      \
       REF (mod_long),		/* for 'l' */				      \
       REF (mod_longlong),	/* for 'L', 'q' */			      \
-      REF (mod_size_t),		/* for 'Z' */				      \
+      REF (mod_size_t),		/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -331,10 +334,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
       REF (form_wcharacter),	/* for 'C' */				      \
-      REF (form_floathex)	/* for 'A', 'a' */			      \
+      REF (form_floathex),	/* for 'A', 'a' */			      \
+      REF (mod_ptrdiff_t),      /* for 't' */				      \
+      REF (mod_intmax_t)        /* for 'j' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static const void *step2_jumps[27] =				      \
+    static const void *step2_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -349,7 +354,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_half),		/* for 'h' */				      \
       REF (mod_long),		/* for 'l' */				      \
       REF (mod_longlong),	/* for 'L', 'q' */			      \
-      REF (mod_size_t),		/* for 'Z' */				      \
+      REF (mod_size_t),		/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -362,10 +367,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
       REF (form_wcharacter),	/* for 'C' */				      \
-      REF (form_floathex)	/* for 'A', 'a' */			      \
+      REF (form_floathex),	/* for 'A', 'a' */			      \
+      REF (mod_ptrdiff_t),      /* for 't' */				      \
+      REF (mod_intmax_t)        /* for 'j' */				      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
-    static const void *step3a_jumps[27] =				      \
+    static const void *step3a_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -380,7 +387,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (mod_halfhalf),	/* for 'h' */				      \
       REF (form_unknown),	/* for 'l' */				      \
       REF (form_unknown),	/* for 'L', 'q' */			      \
-      REF (form_unknown),	/* for 'Z' */				      \
+      REF (form_unknown),	/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -393,10 +400,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_unknown),	/* for 'm' */				      \
       REF (form_unknown),	/* for 'C' */				      \
-      REF (form_unknown)	/* for 'A', 'a' */			      \
+      REF (form_unknown),	/* for 'A', 'a' */			      \
+      REF (form_unknown),       /* for 't' */				      \
+      REF (form_unknown)        /* for 'j' */				      \
     };									      \
     /* Step 3b: after processing first 'l' modifier.  */		      \
-    static const void *step3b_jumps[27] =				      \
+    static const void *step3b_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -411,7 +420,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unknown),	/* for 'h' */				      \
       REF (mod_longlong),	/* for 'l' */				      \
       REF (form_unknown),	/* for 'L', 'q' */			      \
-      REF (form_unknown),	/* for 'Z' */				      \
+      REF (form_unknown),	/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -424,12 +433,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
       REF (form_wcharacter),	/* for 'C' */				      \
-      REF (form_floathex)	/* for 'A', 'a' */			      \
+      REF (form_floathex),	/* for 'A', 'a' */			      \
+      REF (form_unknown),       /* for 't' */				      \
+      REF (form_unknown)        /* for 'j' */				      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static const void *step4_jumps[27] =				      \
+    static const void *step4_jumps[29] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -444,7 +455,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unknown),	/* for 'h' */				      \
       REF (form_unknown),	/* for 'l' */				      \
       REF (form_unknown),	/* for 'L', 'q' */			      \
-      REF (form_unknown),	/* for 'Z' */				      \
+      REF (form_unknown),	/* for 'z', 'Z' */			      \
       REF (form_percent),	/* for '%' */				      \
       REF (form_integer),	/* for 'd', 'i' */			      \
       REF (form_unsigned),	/* for 'u' */				      \
@@ -457,7 +468,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_number),	/* for 'n' */				      \
       REF (form_strerror),	/* for 'm' */				      \
       REF (form_wcharacter),	/* for 'C' */				      \
-      REF (form_floathex)	/* for 'A', 'a' */			      \
+      REF (form_floathex),	/* for 'A', 'a' */			      \
+      REF (form_unknown),       /* for 't' */				      \
+      REF (form_unknown)        /* for 'j' */				      \
     }
 
 
@@ -1176,6 +1189,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (mod_size_t):
       is_longlong = sizeof (size_t) > sizeof (unsigned long int);
       is_long = sizeof (size_t) > sizeof (unsigned int);
+      JUMP (*++f, step4_jumps);
+
+    LABEL (mod_ptrdiff_t):
+      is_longlong = sizeof (ptrdiff_t) > sizeof (unsigned long int);
+      is_long = sizeof (ptrdiff_t) > sizeof (unsigned int);
+      JUMP (*++f, step4_jumps);
+
+    LABEL (mod_intmax_t):
+      is_longlong = sizeof (intmax_t) > sizeof (unsigned long int);
+      is_long = sizeof (intmax_t) > sizeof (unsigned int);
       JUMP (*++f, step4_jumps);
 
       /* Process current format.  */

@@ -48,9 +48,10 @@ libnsl {
 
     # This functions are needed by the NIS+ tools and rpc.nisd,
     # they should never be used in a normal user program !
-    __do_niscall2;        __free_fdresult;     __nis_default_access;
-    __nis_default_group;  __nis_default_owner; __nis_default_ttl;
-    __nis_finddirectory;  __nis_hash;
+    __free_fdresult;      __nis_default_access; __nis_default_group;  
+    __nis_default_owner;  __nis_default_ttl;   __nis_finddirectory;  
+    __nis_hash;           __nisbind_connect;   __nisbind_create;
+    __nisbind_destroy;    __nisbind_next;
     readColdStartFile;    writeColdStartFile;
   }
 }

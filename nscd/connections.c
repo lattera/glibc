@@ -427,8 +427,9 @@ gr_send_answer (int conn, struct group *grp)
   struct iovec *vec;
   size_t *len;
   gr_response_header resp;
-  size_t total_len;
+  size_t total_len, sum;
   int nblocks;
+  size_t maxiov;
 
   resp.version = NSCD_VERSION;
   if (grp != NULL)
@@ -501,16 +502,21 @@ gr_send_answer (int conn, struct group *grp)
 	}
     }
 
+#ifdef UIO_MAXIOV
+  maxiov = UIO_MAXIOV;
+#else
+  maxiov = sysconf (_SC_UIO_MAXIOV);
+#endif
+
   /* Send all the data.  */
-  while (nblocks > UIO_MAXIOV)
+  sum = 0;
+  while (nblocks > maxiov)
     {
-      if (writev (sock[conn], vec, UIO_MAXIOV) != total_len)
-	dbg_log (_("write incomplete on send group answer: %s"),
-		 strerror (errno));
-      vec += UIO_MAXIOV;
-      nblocks -= UIO_MAXIOV;
+      sum += writev (sock[conn], vec, maxiov);
+      vec += maxiov;
+      nblocks -= maxiov;
     }
-  if (writev (sock[conn], vec, nblocks) != total_len)
+  if (sum + writev (sock[conn], vec, nblocks) != total_len)
     dbg_log (_("write incomplete on send group answer: %s"),
 	     strerror (errno));
 }

@@ -38,6 +38,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
@@ -47,6 +48,7 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <rpc/key_prot.h>
+#include <bits/libc-lock.h>
 
 #define KEY_TIMEOUT	5	/* per-try timeout in seconds */
 #define KEY_NRETRY	12	/* number of retries */
@@ -268,8 +270,8 @@ des_block *(*__key_gendes_LOCAL) (uid_t, char *) = 0;
 
 static int
 internal_function
-key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
-	  xdrproc_t xdr_rslt, char *rslt)
+key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
+		   xdrproc_t xdr_rslt, char *rslt)
 {
   XDR xdrargs;
   XDR xdrrslt;
@@ -282,28 +284,6 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   uid_t ruid;
   uid_t euid;
   static char MESSENGER[] = "/usr/etc/keyenvoy";
-
-  if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
-    {
-      cryptkeyres *res;
-      res = (*__key_encryptsession_pk_LOCAL) (__geteuid (), arg);
-      *(cryptkeyres *) rslt = *res;
-      return 1;
-    }
-  else if (proc == KEY_DECRYPT_PK && __key_decryptsession_pk_LOCAL)
-    {
-      cryptkeyres *res;
-      res = (*__key_decryptsession_pk_LOCAL) (__geteuid (), arg);
-      *(cryptkeyres *) rslt = *res;
-      return 1;
-    }
-  else if (proc == KEY_GEN && __key_gendes_LOCAL)
-    {
-      des_block *res;
-      res = (*__key_gendes_LOCAL) (__geteuid (), 0);
-      *(des_block *) rslt = *res;
-      return 1;
-    }
 
   success = 1;
   sigemptyset (&mask);
@@ -364,4 +344,176 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   __sigprocmask (SIG_SETMASK, &oldmask, NULL);
 
   return success;
+}
+
+struct  key_call_private {
+  CLIENT  *client;        /* Client handle */
+  pid_t   pid;            /* process-id at moment of creation */
+  uid_t   uid;            /* user-id at last authorization */
+};
+static struct key_call_private *key_call_private_main = NULL;
+__libc_lock_define_initialized (static, keycall_lock)
+
+/*
+ * Keep the handle cached.  This call may be made quite often.
+ */
+static CLIENT *
+getkeyserv_handle (int vers)
+{
+  struct key_call_private *kcp = key_call_private_main;
+  struct timeval wait_time;
+  int fd;
+  struct sockaddr_un name;
+  int namelen = sizeof(struct sockaddr_un);
+
+#define TOTAL_TIMEOUT   30      /* total timeout talking to keyserver */
+#define TOTAL_TRIES     5       /* Number of tries */
+
+  if (kcp == (struct key_call_private *)NULL)
+    {
+      kcp = (struct key_call_private *)malloc (sizeof (*kcp));
+      if (kcp == (struct key_call_private *)NULL)
+	return (CLIENT *) NULL;
+
+      key_call_private_main = kcp;
+      kcp->client = NULL;
+    }
+
+  /* if pid has changed, destroy client and rebuild */
+  if (kcp->client != NULL && kcp->pid != __getpid ())
+    {
+      clnt_destroy (kcp->client);
+      kcp->client = NULL;
+    }
+
+  if (kcp->client != NULL)
+    {
+      /* if other side closed socket, build handle again */
+      clnt_control (kcp->client, CLGET_FD, (char *)&fd);
+      if (getpeername (fd,(struct sockaddr *)&name,&namelen) == -1)
+	{
+	  auth_destroy (kcp->client->cl_auth);
+	  clnt_destroy (kcp->client);
+	  kcp->client = NULL;
+	}
+    }
+
+  if (kcp->client != NULL)
+    {
+      /* if uid has changed, build client handle again */
+      if (kcp->uid != __geteuid ())
+	{
+        kcp->uid = __geteuid ();
+        auth_destroy (kcp->client->cl_auth);
+        kcp->client->cl_auth =
+          authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
+        if (kcp->client->cl_auth == NULL)
+          {
+            clnt_destroy (kcp->client);
+            kcp->client = NULL;
+            return ((CLIENT *) NULL);
+          }
+	}
+      /* Change the version number to the new one */
+      clnt_control (kcp->client, CLSET_VERS, (void *)&vers);
+      return kcp->client;
+    }
+
+  if ((kcp->client == (CLIENT *) NULL))
+    /* Use the AF_UNIX transport */
+    kcp->client = clnt_create ("/var/run/keyservsock", KEY_PROG, vers, "unix");
+
+  if (kcp->client == (CLIENT *) NULL)
+    return (CLIENT *) NULL;
+
+  kcp->uid = __geteuid ();
+  kcp->pid = __getpid ();
+  kcp->client->cl_auth = authunix_create ((char *)"", kcp->uid, 0, 0, NULL);
+  if (kcp->client->cl_auth == NULL)
+    {
+      clnt_destroy (kcp->client);
+      kcp->client = NULL;
+      return (CLIENT *) NULL;
+    }
+
+  wait_time.tv_sec = TOTAL_TIMEOUT/TOTAL_TRIES;
+  wait_time.tv_usec = 0;
+  clnt_control (kcp->client, CLSET_RETRY_TIMEOUT,
+		(char *)&wait_time);
+  if (clnt_control (kcp->client, CLGET_FD, (char *)&fd))
+    fcntl (fd, F_SETFD, 1);  /* make it "close on exec" */
+
+  return kcp->client;
+}
+
+/* returns  0 on failure, 1 on success */
+static int
+internal_function
+key_call_socket (u_long proc, xdrproc_t xdr_arg, char *arg,
+               xdrproc_t xdr_rslt, char *rslt)
+{
+  CLIENT *clnt;
+  struct timeval wait_time;
+  int result = 0;
+
+  __libc_lock_lock (keycall_lock);
+  if ((proc == KEY_ENCRYPT_PK) || (proc == KEY_DECRYPT_PK) ||
+      (proc == KEY_NET_GET) || (proc == KEY_NET_PUT) ||
+      (proc == KEY_GET_CONV))
+    clnt = getkeyserv_handle(2); /* talk to version 2 */
+  else
+    clnt = getkeyserv_handle(1); /* talk to version 1 */
+
+  if (clnt != NULL)
+    {
+      wait_time.tv_sec = TOTAL_TIMEOUT;
+      wait_time.tv_usec = 0;
+
+      if (clnt_call (clnt, proc, xdr_arg, arg, xdr_rslt, rslt,
+		     wait_time) == RPC_SUCCESS)
+	result = 1;
+    }
+
+  __libc_lock_unlock (keycall_lock);
+
+  return result;
+}
+
+/* returns  0 on failure, 1 on success */
+static int
+internal_function
+key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
+	  xdrproc_t xdr_rslt, char *rslt)
+{
+  static int use_keyenvoy = 0;
+
+  if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
+    {
+      cryptkeyres *res;
+      res = (*__key_encryptsession_pk_LOCAL) (__geteuid (), arg);
+      *(cryptkeyres *) rslt = *res;
+      return 1;
+    }
+  else if (proc == KEY_DECRYPT_PK && __key_decryptsession_pk_LOCAL)
+    {
+      cryptkeyres *res;
+      res = (*__key_decryptsession_pk_LOCAL) (__geteuid (), arg);
+      *(cryptkeyres *) rslt = *res;
+      return 1;
+    }
+  else if (proc == KEY_GEN && __key_gendes_LOCAL)
+    {
+      des_block *res;
+      res = (*__key_gendes_LOCAL) (__geteuid (), 0);
+      *(des_block *) rslt = *res;
+      return 1;
+    }
+
+  if (!use_keyenvoy)
+    {
+      if (key_call_socket (proc, xdr_arg, arg, xdr_rslt, rslt))
+	return 1;
+      use_keyenvoy = 1;
+    }
+  return key_call_keyenvoy (proc, xdr_arg, arg, xdr_rslt, rslt);
 }

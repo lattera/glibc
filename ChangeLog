@@ -1,3 +1,109 @@
+1998-07-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c (tgamma_test): Remove redundant tests.
+
+1998-07-28 16:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c: Correct problems with */foo and GLOB_NOCHECK
+	where foo does not exist in any of the subdirectories.
+	Reported by Paul D. Smith <psmith@BayNetworks.COM>.
+
+	* posix/globtest.sh: Add test for this bug.
+
+1998-07-28  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* io/sys/statfs.h: Fix typos.
+	* io/sys/statvfs.h: Fix typos.
+
+1998-07-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.95.
+
+	* math/Makefile (libm-calls): Remove w_gamma, add w_tgamma.
+	* math/Versions [GLIBC_2.1]: Add tgamma, tgammaf, and tgammal.
+	* math/libm-test.c: Split old gamma_test and move half of it in new
+	function tgamma_test.
+	* math/bits/mathcalls.h: Add declaration of tgamma.
+	* sysdeps/libm-ieee754/k_standard.c: Change gamma errors into
+	tgamma errors.
+	* sysdeps/libm-ieee754/w_gamma.c: Remove lgamma compatibility code
+	and rename to ...
+	* sysdeps/libm-ieee754/w_tgamma.c: ... this.  New file.
+	* sysdeps/libm-ieee754/w_gammaf.c: Remove lgammaf compatibility code
+	and rename to ...
+	* sysdeps/libm-ieee754/w_tgammaf.c: ... this.  New file.
+	* sysdeps/libm-ieee754/w_gammal.c: Remove lgammal compatibility code
+	and rename to ...
+	* sysdeps/libm-ieee754/w_tgammal.c: ... this.  New file.
+	* sysdeps/libm-ieee754/w_lgamma.c: Add gamma as weak alias.
+	* sysdeps/libm-ieee754/w_lgammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgammal.c: Likewise.
+
+	* stgdio-common/printf-parse.h: Implement handling of j, t, and z
+	modifiers.
+	* stdio-common/vfprintf.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* manual/stdio.texi: Document new printf/scanf modifiers.
+
+	* sysdeps/unix/sysv/linux/recvmsg.c: Remove alias __recvmsg.
+	* sysdeps/unix/sysv/linux/sendmsg.c: Remove alias __sendmsg.
+
+1998-07-28  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/Makefile (routines): Add clnt_unix and svc_unix.
+	* sunrpc/Versions: Add new *unix_create functions.
+	* sunrpc/clnt_gen.c: Add support for RPC over AF_UNIX.
+	* sunrpc/clnt_unix.c: New, client side of RPC over AF_UNIX.
+	* sunrpc/key_call.c: Use RPC over AF_UNIX for communication
+	with keyserv daemon.
+	* sunrpc/rpc/clnt.h: Add AF_UNIX based RPC function prototypes.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/svc_authux.c: Copy internal auth flavor if none is given.
+	* sunrpc/svc_tcp.c: Fix typos.
+	* sunrpc/svc_unix.c: New, server side of AF_UNIX based RPC.
+
+	* nis/Makefile: Remove currently not working cache functions.
+	* nis/Versions: Add __nisbind_* functions for rpc.nisd.
+	* nis/nis_call.c: Rewrite binding to a NIS+ server to reuse
+	CLIENT handles.
+	* nis/nis_file.c: Fix memory leaks.
+	* nis/nis_intern.h: Move internal structs from here ...
+	* nis/rpcsvc/nislib.h: ... to here for NIS+ server and tools.
+	* nis/nis_lookup.c: Try at first if last client handle works.
+	* nis/nis_table.c: Likewise.
+	* nis/nis_checkpoint.c: Adjust __do_niscall2 parameters.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_util.c: Likewise.
+	* nis/nis_findserv.c (__nis_findfastest): Little optimization.
+
+1998-07-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdlib/strtol.c (STRTOL_LONG_MAX): Correct typo in last patch -
+	define as LONG_MAX.
+
+1998-07-28 09:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/connections.c (gr_send_answer): Deal with missing UIO_MAXIOV.
+	Correct test whether writev send all data.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Correct test whether readv
+	received all data.
+
+1998-07-28  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Deal with missing UIO_MAXIOV.
+
+1998-07-28  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (open_file): Change assert call to
+	allow mode to be 0.
+	(__xstat): New function.
+	(__fxstat): New function.
+	(_dl_sysdep_read_whole_file): Removed.  The implementation in
+	`elf/dl-misc.c' now also works for the Hurd.
+
 1998-07-27 22:25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/glob.c: Handle ~ and ~NAME case correctly.

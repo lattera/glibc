@@ -57,10 +57,26 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   size_t prtbuflen;
   char *prttmpbuf;
   struct sockaddr_in sin;
+  struct sockaddr_un sun;
   int sock;
   struct timeval tv;
   CLIENT *client;
   int herr;
+
+  if (strcmp (proto, "unix") == 0)
+    {
+      __bzero ((char *)&sun, sizeof (sun));
+      sun.sun_family = AF_UNIX;
+      strcpy (sun.sun_path, hostname);
+      sock = RPC_ANYSOCK;
+      client = clntunix_create (&sun, prog, vers, &sock, 0, 0);
+      if (client == NULL)
+	return NULL;
+      tv.tv_sec = 25;
+      tv.tv_usec = 0;
+      clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
+      return client;
+    }
 
   hstbuflen = 1024;
   hsttmpbuf = __alloca (hstbuflen);

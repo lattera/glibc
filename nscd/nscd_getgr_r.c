@@ -99,6 +99,8 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
   request_header req;
   gr_response_header gr_resp;
   ssize_t nbytes;
+  size_t maxiov;
+  size_t sum;
 
   if (sock == -1)
     {
@@ -232,18 +234,21 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 	      *p++ = '\0';
 	    }
 
-	  while (i > UIO_MAXIOV)
+#ifdef UIO_MAXIOV
+	  maxiov = UIO_MAXIOV;
+#else
+	  maxiov = sysconf (_SC_UIO_MAXIOV);
+#endif
+
+	  sum = 0;
+	  while (i > maxiov)
 	    {
-	      if (__readv (sock, vec, UIO_MAXIOV) != total_len)
-		{
-		  __close (sock);
-		  return -1;
-		}
-	      vec += UIO_MAXIOV;
-	      i -= UIO_MAXIOV;
+	      sum += __readv (sock, vec, maxiov);
+	      vec += maxiov;
+	      i -= maxiov;
 	    }
 
-	  if (__readv (sock, vec, i) != total_len)
+	  if (sum + __readv (sock, vec, i) != total_len)
 	    {
 	      __close (sock);
 	      return -1;

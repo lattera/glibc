@@ -24,31 +24,6 @@
 
 __BEGIN_DECLS
 
-struct dir_binding
-{
-  CLIENT *clnt;                  /* RPC CLIENT handle */
-  nis_server *server_val;        /* List of servers */
-  u_int server_len;              /* # of servers */
-  u_int server_used;             /* Which server we are bind in the moment ? */
-  u_int current_ep;              /* Which endpoint of the server are in use? */
-  u_int trys;                    /* How many server have we tried ? */
-  u_int class;                   /* From which class is server_val ? */
-  bool_t master_only;            /* Is only binded to the master */
-  bool_t use_auth;               /* Do we use AUTH ? */
-  bool_t use_udp;                /* Do we use UDP ? */
-  struct sockaddr_in addr;       /* Server's IP address */
-  int socket;                    /* Server's local socket */
-};
-typedef struct dir_binding dir_binding;
-
-struct cache2_info
-{
-  long server_used;
-  long current_ep;
-  long class;
-};
-typedef struct cache2_info cache2_info;
-
 struct nis_cb
   {
     nis_server *serv;
@@ -66,8 +41,7 @@ extern long __nis_findfastest __P ((dir_binding *bind));
 extern nis_error __do_niscall2 __P ((const nis_server *serv, u_int serv_len,
 				     u_long prog, xdrproc_t xargs, caddr_t req,
 				     xdrproc_t xres, caddr_t resp,
-				     u_long flags, nis_cb *cb,
-				     cache2_info *cinfo));
+				     u_long flags, nis_cb *cb));
 extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
 				    xdrproc_t xargs, caddr_t req,
 				    xdrproc_t xres, caddr_t resp,
@@ -80,13 +54,6 @@ extern struct nis_cb *__nis_create_callback
       __P ((int (*callback)(const_nis_name, const nis_object *, const void *),
 	    const void *userdata, u_long flags));
 extern nis_error __nis_destroy_callback __P ((struct nis_cb *cb));
-
-#ifdef _LIBC
-/* NIS+ Cache functions */
-extern directory_obj *__nis_cache_search __P ((const_nis_name name,
-					       u_long flags,
-					       cache2_info *cinfo));
-#endif
 
 __END_DECLS
 

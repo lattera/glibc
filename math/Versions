@@ -111,6 +111,7 @@ libm {
     scalbln; scalblnf; scalblnl;
     sincos; sincosf; sincosl;
     trunc; truncf; truncl;
+    tgamma; tgammaf; tgammal;
 
     # complex functions
     cabs; cabsf; cabsl;

@@ -31,18 +31,26 @@ readColdStartFile (void)
   XDR xdrs;
   FILE *in;
   bool_t status;
-  directory_obj obj;
+  directory_obj *obj = calloc (1, sizeof (directory_obj));
+
+  if (obj == NULL)
+    return NULL;
 
   in = fopen (cold_start_file, "rb");
   if (in == NULL)
     return NULL;
-  memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  status = _xdr_directory_obj (&xdrs, &obj);
+  status = _xdr_directory_obj (&xdrs, obj);
   xdr_destroy (&xdrs);
   fclose (in);
 
-  return status ? nis_clone_directory (&obj, NULL) : NULL;
+  if (status)
+    return obj;
+  else
+    {
+      nis_free_directory (obj);
+      return NULL;
+    }
 }
 
 bool_t
@@ -70,19 +78,27 @@ nis_read_obj (const char *name)
   XDR xdrs;
   FILE *in;
   bool_t status;
-  nis_object obj;
+  nis_object *obj = calloc (1, sizeof (nis_object));
+
+  if (obj == NULL)
+    return NULL;
 
   in = fopen (name, "rb");
   if (in == NULL)
     return NULL;
 
-  memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  status =_xdr_nis_object (&xdrs, &obj);
+  status =_xdr_nis_object (&xdrs, obj);
   xdr_destroy (&xdrs);
   fclose (in);
 
-  return status ? nis_clone_object (&obj, NULL) : NULL;
+  if (status)
+    return obj;
+  else
+    {
+      nis_free_object (obj);
+      return NULL;
+    }
 }
 
 bool_t

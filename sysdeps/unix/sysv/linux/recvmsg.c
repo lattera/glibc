@@ -89,5 +89,4 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   return ret;
 }
 
-weak_alias (__libc_recvmsg, __recvmsg)
 weak_alias (__libc_recvmsg, recvmsg)

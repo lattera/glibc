@@ -25,20 +25,20 @@
 nis_result *
 nis_lookup (const_nis_name name, const u_long flags)
 {
-  nis_result *res;
+  nis_result *res = calloc (1, sizeof (nis_result));
   struct ns_request req;
   nis_name *names;
   nis_error status;
+  int link_first_try = 0;
   int count_links = 0;	 /* We will follow only 16 links in the deep */
   int done = 0;
   int name_nr = 0;
   nis_name namebuf[2] = {NULL, NULL};
 
-  res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
-  if (flags & EXPAND_NAME)
+  if ((flags & EXPAND_NAME) && (name[strlen (name) - 1] != '.'))
     {
       names = nis_getnames (name);
       if (names == NULL)
@@ -56,51 +56,141 @@ nis_lookup (const_nis_name name, const u_long flags)
   req.ns_name = names[0];
   while (!done)
     {
+      dir_binding bptr;
+      directory_obj *dir = NULL;
       req.ns_object.ns_object_len = 0;
       req.ns_object.ns_object_val = NULL;
-      memset (res, '\0', sizeof (nis_result));
 
-      status = __do_niscall (req.ns_name, NIS_LOOKUP,
-			     (xdrproc_t) _xdr_ns_request,
-			     (caddr_t) & req,
-			     (xdrproc_t) _xdr_nis_result,
-			     (caddr_t) res, flags, NULL);
+      status = __nisfind_server (req.ns_name, &dir);
       if (status != NIS_SUCCESS)
-	NIS_RES_STATUS (res) = status;
+	{
+	  NIS_RES_STATUS (res) = status;
+	  return res;
+	}
+
+      status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
+				 dir->do_servers.do_servers_len, flags);
+      if (status != NIS_SUCCESS)
+	{
+	  NIS_RES_STATUS (res) = status;
+	  nis_free_directory (dir);
+	  return res;
+	}
+
+      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
+	{
+	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
+	    {
+	      __nisbind_destroy (&bptr);
+	      nis_free_directory (dir);
+	      NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
+	      return res;
+	    }
+	}
+
+      do
+	{
+	  static struct timeval RPCTIMEOUT = {10, 0};
+	  enum clnt_stat result;
+
+	again:
+	  result = clnt_call (bptr.clnt, NIS_LOOKUP,
+			      (xdrproc_t) _xdr_ns_request,
+			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
+			      (caddr_t) res, RPCTIMEOUT);
+
+	  if (result != RPC_SUCCESS)
+	    status = NIS_RPCERROR;
+	  else
+	    {
+	      if (NIS_RES_STATUS (res) == NIS_SUCCESS)
+		{
+		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
+			flags & FOLLOW_LINKS) /* We are following links */
+		      {
+			if (count_links)
+			  free (req.ns_name);
+			/* if we hit the link limit, bail */
+			if (count_links > NIS_MAXLINKS)
+			  {
+			    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
+			    break;
+			  }
+			++count_links;
+			req.ns_name =
+			  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
+			nis_freeresult (res);
+			res = calloc (1, sizeof (nis_result));
+			if (res == NULL)
+			  {
+			    __nisbind_destroy (&bptr);
+			    nis_free_directory (dir);
+			    return NULL;
+			  }
+			link_first_try = 1; /* Try at first the old binding */
+			goto again;
+		      }
+		}
+	      else
+		if ((NIS_RES_STATUS (res) == NIS_SYSTEMERROR) ||
+		    (NIS_RES_STATUS (res) == NIS_NOSUCHNAME) ||
+		    (NIS_RES_STATUS (res) == NIS_NOT_ME))
+		  {
+		    if (link_first_try)
+		      {
+			__nisbind_destroy (&bptr);
+			nis_free_directory (dir);
+
+			if (__nisfind_server (req.ns_name, &dir) != NIS_SUCCESS)
+			  return res;
+
+			if (__nisbind_create (&bptr,
+					      dir->do_servers.do_servers_val,
+					      dir->do_servers.do_servers_len,
+					      flags) != NIS_SUCCESS)
+			  {
+			    nis_free_directory (dir);
+			    return res;
+			  }
+		      }
+		    else
+		      if (__nisbind_next (&bptr) != NIS_SUCCESS)
+			break; /* No more servers to search */
+
+		    while (__nisbind_connect (&bptr) != NIS_SUCCESS)
+		      {
+			if (__nisbind_next (&bptr) != NIS_SUCCESS)
+			  {
+			    __nisbind_destroy (&bptr);
+			    nis_free_directory (dir);
+			    return res;
+			  }
+		      }
+		    goto again;
+		  }
+	      break;
+	    }
+	  link_first_try = 0; /* Set it back */
+	  status= NIS_SUCCESS;
+	}
+      while ((flags & HARD_LOOKUP) && status == NIS_RPCERROR);
+
+      __nisbind_destroy (&bptr);
+      nis_free_directory (dir);
+
+      if (status != NIS_SUCCESS)
+	{
+	  NIS_RES_STATUS (res) = status;
+	  return res;
+	}
 
       switch (NIS_RES_STATUS (res))
 	{
 	case NIS_PARTIAL:
 	case NIS_SUCCESS:
 	case NIS_S_SUCCESS:
-	  if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
-	      flags & FOLLOW_LINKS) /* We are following links */
-	    {
-	      /* if we hit the link limit, bail */
-	      if (count_links > NIS_MAXLINKS)
-		{
-		  NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
-		  ++done;
-		  break;
-		}
-	      if (count_links)
-		free (req.ns_name);
-	      ++count_links;
-	      req.ns_name = strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
-	      nis_freeresult (res);
-	      res = calloc (1, sizeof (nis_result));
-	      if (res == NULL)
-		return NULL;
-	    }
-	  else
-	    ++done;
-	  break;
-	case NIS_CBRESULTS:
-	  /* The callback is handled in __do_niscall2 */
-	  ++done;
-	  break;
-	case NIS_UNAVAIL:
-	  /* NIS+ is not installed, or all servers are down */
+	case NIS_LINKNAMEERROR: /* We follow to max links */
+	case NIS_UNAVAIL: /* NIS+ is not installed, or all servers are down */
 	  ++done;
 	  break;
 	default:

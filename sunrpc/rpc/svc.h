@@ -305,6 +305,13 @@ extern SVCXPRT *svctcp_create __P ((int __sock, u_int __sendsize,
 				    u_int __recvsize));
 
 
+/*
+ * Unix based rpc.
+ */
+extern SVCXPRT *svcunix_create __P ((int __sock, u_int __sendsize,
+				     u_int __recvsize, char *__path));
+
+
 __END_DECLS
 
 #endif /* rpc/svc.h */

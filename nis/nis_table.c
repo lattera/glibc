@@ -110,6 +110,40 @@ __create_ib_request (const_nis_name name, u_long flags)
   return ibreq;
 }
 
+static struct timeval RPCTIMEOUT = {10, 0};
+
+static char *
+__get_tablepath (char *name, dir_binding *bptr)
+{
+  enum clnt_stat result;
+  nis_result *res = calloc (1, sizeof (nis_result));
+  struct ns_request req;
+
+  if (res == NULL)
+    return NULL;
+
+  req.ns_name = name;
+  req.ns_object.ns_object_len = 0;
+  req.ns_object.ns_object_val = NULL;
+
+  result = clnt_call (bptr->clnt, NIS_LOOKUP, (xdrproc_t) _xdr_ns_request,
+		      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
+		      (caddr_t) res, RPCTIMEOUT);
+
+  if (result == RPC_SUCCESS && NIS_RES_STATUS (res) == NIS_SUCCESS &&
+      __type_of (NIS_RES_OBJECT (res)) == NIS_TABLE_OBJ)
+    {
+      char *cptr = strdup (NIS_RES_OBJECT (res)->TA_data.ta_path);
+      nis_freeresult (res);
+      return cptr;
+    }
+  else
+    {
+      nis_freeresult (res);
+      return strdup ("");
+    }
+}
+
 nis_result *
 nis_list (const_nis_name name, u_long flags,
 	  int (*callback) (const_nis_name name,
@@ -120,12 +154,16 @@ nis_list (const_nis_name name, u_long flags,
   nis_result *res = NULL;
   ib_request *ibreq;
   int status;
+  enum clnt_stat clnt_status;
   int count_links = 0;		/* We will only follow NIS_MAXLINKS links! */
   int done = 0;
   nis_name *names;
   nis_name namebuf[2] = {NULL, NULL};
   int name_nr = 0;
   nis_cb *cb = NULL;
+  char *tableptr, *tablepath = NULL;
+  int have_tablepath = 0;
+  int first_try = 0; /* Do we try the old binding at first ? */
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
@@ -164,188 +202,229 @@ nis_list (const_nis_name name, u_long flags,
 
   cb = NULL;
 
-  if (flags & FOLLOW_PATH || flags & ALL_RESULTS)
+  while (!done)
     {
-      nis_result *lres;
-      u_long newflags = flags & ~FOLLOW_PATH & ~ALL_RESULTS;
-      char table_path[NIS_MAXPATH + 3];
-      char *ntable, *p;
-      u_long done = 0, failures = 0;
+      dir_binding bptr;
+      directory_obj *dir = NULL;
 
-      while (names[name_nr] != NULL && !done)
-	{
-	  lres = nis_lookup (names[name_nr], newflags | NO_AUTHINFO);
-	  if (lres == NULL || NIS_RES_STATUS (lres) != NIS_SUCCESS)
-	    {
-	      NIS_RES_STATUS (res) = NIS_RES_STATUS (lres);
-	      nis_freeresult (lres);
-	      ++name_nr;
-	      continue;
-	    }
+      memset (res, '\0', sizeof (nis_result));
 
-	  /* nis_lookup handles FOLLOW_LINKS,
-	     so we must have a table object.*/
-	  if (__type_of (NIS_RES_OBJECT (lres)) != NIS_TABLE_OBJ)
-	    {
-	      nis_freeresult (lres);
-	      NIS_RES_STATUS (res) = NIS_INVALIDOBJ;
-	      break;
-	    }
+      status = __nisfind_server (ibreq->ibr_name, &dir);
+      if (status != NIS_SUCCESS)
+        {
+          NIS_RES_STATUS (res) = status;
+          return res;
+        }
 
-	  /* Save the path, discard everything else.  */
-	  p = __stpncpy (table_path, names[name_nr], NIS_MAXPATH);
-	  *p++ = ':';
-	  p = __stpncpy (p, NIS_RES_OBJECT (lres)->TA_data.ta_path,
-			 NIS_MAXPATH - (p - table_path));
-	  *p = '\0';
-	  nis_freeresult (lres);
-	  free (res);
-	  res = NULL;
+      status = __nisbind_create (&bptr, dir->do_servers.do_servers_val,
+                                 dir->do_servers.do_servers_len, flags);
+      if (status != NIS_SUCCESS)
+        {
+          NIS_RES_STATUS (res) = status;
+          nis_free_directory (dir);
+          return res;
+        }
 
-	  p = table_path;
+      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
+	if (__nisbind_next (&bptr) != NIS_SUCCESS)
+	  {
+	    __nisbind_destroy (&bptr);
+	    nis_free_directory (dir);
+	    NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
+	    return res;
+	  }
 
-	  while (((ntable = strsep (&p, ":")) != NULL) && !done)
-	    {
-	      char *c;
-
-	      if (res != NULL)
-		nis_freeresult (res);
-
-	      /* Do the job recursive here!  */
-	      if ((c = strchr(name, ']')) != NULL)
-		{
-		  /* Have indexed name ! */
-		  int index_len = c - name + 2;
-		  char buf[index_len + strlen (ntable) + 1];
-
-		  c = __stpncpy (buf, name, index_len);
-		  strcpy (c, ntable);
-		  res = nis_list (buf, newflags, callback,userdata);
-		}
-	      else
-		res = nis_list (ntable, newflags, callback, userdata);
-	      if (res == NULL)
-		return NULL;
-	      switch (NIS_RES_STATUS (res))
-		{
-		case NIS_SUCCESS:
-		case NIS_CBRESULTS:
-		  if (!(flags & ALL_RESULTS))
-		    done = 1;
-		  break;
-		case NIS_PARTIAL: /* The table is correct, we doesn't found
-				     the entry */
-		  break;
-		default:
-		  if (flags & ALL_RESULTS)
-		    ++failures;
-		  else
-		    done = 1;
-		  break;
-		}
-	    }
-	  if (NIS_RES_STATUS (res) == NIS_SUCCESS && failures)
-	    NIS_RES_STATUS (res) = NIS_S_SUCCESS;
-	  if (NIS_RES_STATUS (res) == NIS_NOTFOUND && failures)
-	    NIS_RES_STATUS (res) = NIS_S_NOTFOUND;
-	  break;
-	}
-    }
-  else
-    {
       if (callback != NULL)
 	{
 	  cb = __nis_create_callback (callback, userdata, flags);
 	  ibreq->ibr_cbhost.ibr_cbhost_len = 1;
 	  ibreq->ibr_cbhost.ibr_cbhost_val = cb->serv;
-	  }
-
-      while (!done)
-	{
-	  memset (res, '\0', sizeof (nis_result));
-
-	  status = __do_niscall (ibreq->ibr_name, NIS_IBLIST,
-				 (xdrproc_t) _xdr_ib_request,
-				 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-				 (caddr_t) res, flags, cb);
-	  if (status != NIS_SUCCESS)
-	    NIS_RES_STATUS (res) = status;
-
-	  switch (NIS_RES_STATUS (res))
-	    {
-	    case NIS_PARTIAL:
-	    case NIS_SUCCESS:
-	    case NIS_S_SUCCESS:
-	      if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
-		  flags & FOLLOW_LINKS)		/* We are following links.  */
-		{
-		  /* If we hit the link limit, bail.  */
-		  if (count_links > NIS_MAXLINKS)
-		    {
-		      NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
-		      ++done;
-		      break;
-		    }
-		  if (count_links)
-		    free (ibreq->ibr_name);
-		  ++count_links;
-		  free (ibreq->ibr_name);
-		  ibreq->ibr_name =
-		    strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
-		  if (NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_len)
-		    if (ibreq->ibr_srch.ibr_srch_len == 0)
-		      {
-			ibreq->ibr_srch.ibr_srch_len =
-			  NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_len;
-			ibreq->ibr_srch.ibr_srch_val =
-			  NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_val;
-		      }
-		  nis_freeresult (res);
-		  res = calloc (1, sizeof (nis_result));
-		}
-	      else
-		++done;
-	      break;
-	    case NIS_CBRESULTS:
-	      /* Calback is handled in nis_call.c (__do_niscall2),
-		 but we have to change the error code */
-	      NIS_RES_STATUS (res) = cb->result;
-	      ++done;
-	      break;
-	    case NIS_UNAVAIL:
-	      /* NIS+ is not installed, or all servers are down.  */
-	      ++done;
-	      break;
-	    default:
-	      /* Try the next domainname if we don't follow a link.  */
-	      if (count_links)
-		{
-		  free (ibreq->ibr_name);
-		  NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
-		  ++done;
-		  break;
-		}
-	      ++name_nr;
-	      if (names[name_nr] == NULL)
-		{
-		  ++done;
-		  break;
-		}
-	      ibreq->ibr_name = names[name_nr];
-	      break;
-	    }
 	}
-    }				/* End of not FOLLOW_PATH.  */
+
+    again:
+      clnt_status = clnt_call (bptr.clnt, NIS_IBLIST,
+			       (xdrproc_t) _xdr_ib_request, (caddr_t) ibreq,
+			       (xdrproc_t) _xdr_nis_result,
+			       (caddr_t) res, RPCTIMEOUT);
+
+      if (clnt_status != RPC_SUCCESS)
+	NIS_RES_STATUS (res) = NIS_RPCERROR;
+      else
+	switch (NIS_RES_STATUS (res))
+	  { /* start switch */
+	  case NIS_PARTIAL:
+	  case NIS_SUCCESS:
+	  case NIS_S_SUCCESS:
+	    if (__type_of (NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
+		flags & FOLLOW_LINKS)		/* We are following links.  */
+	      {
+		free (ibreq->ibr_name);
+		/* If we hit the link limit, bail.  */
+		if (count_links > NIS_MAXLINKS)
+		  {
+		    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
+		    ++done;
+		    break;
+		  }
+		++count_links;
+		ibreq->ibr_name =
+		  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
+		if (NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_len)
+		  if (ibreq->ibr_srch.ibr_srch_len == 0)
+		    {
+		      ibreq->ibr_srch.ibr_srch_len =
+			NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_len;
+		      ibreq->ibr_srch.ibr_srch_val =
+			NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_val;
+		    }
+		nis_freeresult (res);
+		res = calloc (1, sizeof (nis_result));
+		if (res == NULL)
+		  {
+		    if (have_tablepath)
+		      free (tablepath);
+		    __nisbind_destroy (&bptr);
+		    nis_free_directory (dir);
+		    return NULL;
+		  }
+		first_try = 1; /* Try at first the old binding */
+		goto again;
+	      }
+	    else if ((flags & FOLLOW_PATH) &&
+		     NIS_RES_STATUS (res) == NIS_PARTIAL)
+	      {
+		if (!have_tablepath)
+		  {
+		    tablepath = __get_tablepath (ibreq->ibr_name, &bptr);
+		    tableptr = tablepath;
+		    have_tablepath = 1;
+		  }
+		if (tableptr == NULL)
+		  {
+		    ++done;
+		    break;
+		  }
+		free (ibreq->ibr_name);
+		ibreq->ibr_name = strsep (&tableptr, ":");
+		if (ibreq->ibr_name == NULL || ibreq->ibr_name[0] == '\0')
+		  {
+		    ibreq->ibr_name = strdup ("");
+		    ++done;
+		  }
+		else
+		  {
+		    ibreq->ibr_name = strdup (ibreq->ibr_name);
+		    nis_freeresult (res);
+		    res = calloc (1, sizeof (nis_result));
+		    if (res == NULL)
+		      {
+			if (have_tablepath)
+			  free (tablepath);
+			__nisbind_destroy (&bptr);
+			nis_free_directory (dir);
+			return NULL;
+		      }
+		    first_try = 1;
+		    goto again;
+		  }
+	      }
+	    else
+	      ++done;
+	    break;
+	  case NIS_CBRESULTS:
+	    if (cb != NULL)
+	      {
+		__nis_do_callback (&bptr, &res->cookie, cb);
+		NIS_RES_STATUS (res) = cb->result;
+
+		if (!(flags & ALL_RESULTS))
+		  ++done;
+		else
+		  {
+		    if (!have_tablepath)
+		      {
+			tablepath = __get_tablepath (ibreq->ibr_name, &bptr);
+			tableptr = tablepath;
+			have_tablepath = 1;
+		      }
+		    if (tableptr == NULL)
+		      {
+			++done;
+			break;
+		      }
+		    free (ibreq->ibr_name);
+		    ibreq->ibr_name = strsep (&tableptr, ":");
+		    if (ibreq->ibr_name == NULL || ibreq->ibr_name[0] == '\0')
+		      {
+			ibreq->ibr_name = strdup ("");
+			++done;
+		      }
+		    else
+		      ibreq->ibr_name = strdup (ibreq->ibr_name);
+		  }
+	      }
+	    break;
+	  case NIS_SYSTEMERROR:
+	  case NIS_NOSUCHNAME:
+	  case NIS_NOT_ME:
+	    /* If we had first tried the old binding, do nothing, but
+	       get a new binding */
+	    if (!first_try)
+	      {
+		if (__nisbind_next (&bptr) != NIS_SUCCESS)
+		  {
+		    ++done;
+		    break; /* No more servers to search */
+		  }
+		while (__nisbind_connect (&bptr) != NIS_SUCCESS)
+		  {
+		    if (__nisbind_next (&bptr) != NIS_SUCCESS)
+		      {
+			++done;
+			break; /* No more servers to search */
+		      }
+		  }
+		goto again;
+	      }
+	    break;
+	  default:
+	    if (!first_try)
+	      {
+		/* Try the next domainname if we don't follow a link.  */
+		if (count_links)
+		  {
+		    free (ibreq->ibr_name);
+		    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
+		    ++done;
+		    break;
+		  }
+		++name_nr;
+		if (names[name_nr] == NULL)
+		  {
+		    ++done;
+		    break;
+		  }
+		ibreq->ibr_name = names[name_nr];
+		first_try = 1; /* Try old binding at first */
+		goto again;
+	      }
+	    break;
+	  }
+      first_try = 0;
+
+      if (cb)
+	{
+	  __nis_destroy_callback (cb);
+	  ibreq->ibr_cbhost.ibr_cbhost_len = 0;
+	  ibreq->ibr_cbhost.ibr_cbhost_val = NULL;
+	}
+
+      __nisbind_destroy (&bptr);
+      nis_free_directory (dir);
+    }
 
   if (names != namebuf)
     nis_freenames (names);
-
-  if (cb)
-    {
-      __nis_destroy_callback (cb);
-      ibreq->ibr_cbhost.ibr_cbhost_len = 0;
-      ibreq->ibr_cbhost.ibr_cbhost_val = NULL;
-    }
 
   nis_free_request (ibreq);
 

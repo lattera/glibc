@@ -60,8 +60,8 @@ inetstr2int (const char *str)
   return inet_addr (buffer);
 }
 
-static void
-__bind_destroy (dir_binding *bind)
+void
+__nisbind_destroy (dir_binding *bind)
 {
   if (bind->clnt != NULL)
     {
@@ -71,8 +71,8 @@ __bind_destroy (dir_binding *bind)
     }
 }
 
-static nis_error
-__bind_next (dir_binding *bind)
+nis_error
+__nisbind_next (dir_binding *bind)
 {
   u_int j;
 
@@ -91,8 +91,7 @@ __bind_next (dir_binding *bind)
        j < bind->server_val[bind->server_used].ep.ep_len; ++j)
     if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
 		"inet") == 0)
-      if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].proto,
-		  "-") == 0)
+      if (bind->server_val[bind->server_used].ep.ep_val[j].proto[0] == '-')
 	{
 	  bind->current_ep = j;
 	  return NIS_SUCCESS;
@@ -115,8 +114,8 @@ __bind_next (dir_binding *bind)
   return NIS_FAIL;
 }
 
-static nis_error
-__bind_connect (dir_binding *dbp)
+nis_error
+__nisbind_connect (dir_binding *dbp)
 {
   nis_server *serv;
 
@@ -157,7 +156,7 @@ __bind_connect (dir_binding *dbp)
 
   if (dbp->use_auth)
     {
-      if (serv->key_type == NIS_PK_DH && key_secretkey_is_set ())
+      if (serv->key_type == NIS_PK_DH)
 	{
 	  char netname[MAXNETNAMELEN+1];
 	  char *p;
@@ -180,9 +179,9 @@ __bind_connect (dir_binding *dbp)
   return NIS_SUCCESS;
 }
 
-static nis_error
-__bind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
-	       u_long flags, cache2_info *cinfo)
+nis_error
+__nisbind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
+		  u_long flags)
 {
   dbp->clnt = NULL;
 
@@ -208,54 +207,34 @@ __bind_create (dir_binding *dbp, const nis_server *serv_val, u_int serv_len,
   dbp->trys = 1;
 
   dbp->class = -1;
-  if (cinfo != NULL && cinfo->server_used >= 0)
+  if (__nis_findfastest (dbp) < 1)
     {
-      dbp->server_used = cinfo->server_used;
-      dbp->current_ep = cinfo->current_ep;
-      dbp->class = cinfo->class;
-    }
-  else if (__nis_findfastest (dbp) < 1)
-    {
-      __bind_destroy (dbp);
+      __nisbind_destroy (dbp);
       return NIS_NAMEUNREACHABLE;
     }
 
   return NIS_SUCCESS;
 }
 
+/* __nisbind_connect (dbp) must be run before calling this function !
+   So we could use the same binding twice */
 nis_error
-__do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
-	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
-	       u_long flags, nis_cb *cb, cache2_info *cinfo)
+__do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
+	       xdrproc_t xres, caddr_t resp, u_long flags, nis_cb *cb)
 {
   enum clnt_stat result;
   nis_error retcode;
-  dir_binding dbp;
 
-  if (flags & MASTER_ONLY)
-    server_len = 1;
-
-  if (__bind_create (&dbp, server, server_len, flags, cinfo) != NIS_SUCCESS)
+  if (dbp == NULL)
     return NIS_NAMEUNREACHABLE;
-  while (__bind_connect (&dbp) != NIS_SUCCESS)
-    {
-      if (__bind_next (&dbp) != NIS_SUCCESS)
-	{
-	  __bind_destroy (&dbp);
-	  return NIS_NAMEUNREACHABLE;
-	}
-    }
 
   do
     {
     again:
-      result = clnt_call (dbp.clnt, prog, xargs, req, xres, resp, RPCTIMEOUT);
+      result = clnt_call (dbp->clnt, prog, xargs, req, xres, resp, RPCTIMEOUT);
 
       if (result != RPC_SUCCESS)
-	{
-	  __bind_destroy (&dbp);
-	  retcode = NIS_RPCERROR;
-	}
+	retcode = NIS_RPCERROR;
       else
 	{
 	  switch (prog)
@@ -264,11 +243,11 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	      if ((((nis_result *)resp)->status == NIS_CBRESULTS) &&
 		  (cb != NULL))
 		{
-		  __nis_do_callback(&dbp, &((nis_result *)resp)->cookie, cb);
+		  __nis_do_callback(dbp, &((nis_result *)resp)->cookie, cb);
 		  break;
 		}
-	      /* Yes, this is correct. If we doesn't have to start
-		 a callback, look if we have to search another server */
+	      /* Yes, the missing break is correct. If we doesn't have to
+		 start a callback, look if we have to search another server */
 	    case NIS_LOOKUP:
 	    case NIS_ADD:
 	    case NIS_MODIFY:
@@ -278,19 +257,16 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	    case NIS_IBREMOVE:
 	    case NIS_IBFIRST:
 	    case NIS_IBNEXT:
-	      if ((((nis_result *)resp)->status == NIS_NOTFOUND) ||
+	      if ((((nis_result *)resp)->status == NIS_SYSTEMERROR) ||
 		  (((nis_result *)resp)->status == NIS_NOSUCHNAME) ||
 		  (((nis_result *)resp)->status == NIS_NOT_ME))
 		{
-		  if (__bind_next (&dbp) == NIS_SUCCESS)
+		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (&dbp) != NIS_SUCCESS)
+		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (&dbp) != NIS_SUCCESS)
-			    {
-			      __bind_destroy (&dbp);
+			  if (__nisbind_next (dbp) != NIS_SUCCESS)
 			      return NIS_SUCCESS;
-			    }
 			}
 		    }
 		  else
@@ -299,19 +275,16 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 		}
 	      break;
 	    case NIS_FINDDIRECTORY:
-	      if ((((fd_result *)resp)->status == NIS_NOTFOUND) ||
+	      if ((((fd_result *)resp)->status == NIS_SYSTEMERROR) ||
 		  (((fd_result *)resp)->status == NIS_NOSUCHNAME) ||
 		  (((fd_result *)resp)->status == NIS_NOT_ME))
 		{
-		  if (__bind_next (&dbp) == NIS_SUCCESS)
+		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (&dbp) != NIS_SUCCESS)
+		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (&dbp) != NIS_SUCCESS)
-			    {
-			      __bind_destroy (&dbp);
-			      return NIS_SUCCESS;
-			    }
+			  if (__nisbind_next (dbp) != NIS_SUCCESS)
+			    return NIS_SUCCESS;
 			}
 		    }
 		  else
@@ -321,19 +294,16 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	      break;
 	    case NIS_DUMPLOG: /* log_result */
 	    case NIS_DUMP:
-	      if ((((log_result *)resp)->lr_status == NIS_NOTFOUND) ||
+	      if ((((log_result *)resp)->lr_status == NIS_SYSTEMERROR) ||
 		  (((log_result *)resp)->lr_status == NIS_NOSUCHNAME) ||
 		  (((log_result *)resp)->lr_status == NIS_NOT_ME))
 		{
-		  if (__bind_next (&dbp) == NIS_SUCCESS)
+		  if (__nisbind_next (dbp) == NIS_SUCCESS)
 		    {
-		      while (__bind_connect (&dbp) != NIS_SUCCESS)
+		      while (__nisbind_connect (dbp) != NIS_SUCCESS)
 			{
-			  if (__bind_next (&dbp) != NIS_SUCCESS)
-			    {
-			      __bind_destroy (&dbp);
-			      return NIS_SUCCESS;
-			    }
+			  if (__nisbind_next (dbp) != NIS_SUCCESS)
+			    return NIS_SUCCESS;
 			}
 		    }
 		  else
@@ -344,7 +314,6 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	    default:
 	      break;
 	    }
-	  __bind_destroy (&dbp);
 	  retcode = NIS_SUCCESS;
 	}
     }
@@ -353,9 +322,37 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
   return retcode;
 }
 
+nis_error
+__do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
+	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
+	       u_long flags, nis_cb *cb)
+{
+  dir_binding dbp;
+  nis_error status;
+
+  if (flags & MASTER_ONLY)
+    server_len = 1;
+
+  status = __nisbind_create (&dbp, server, server_len, flags);
+  if (status != NIS_SUCCESS)
+    return status;
+
+  while (__nisbind_connect (&dbp) != NIS_SUCCESS)
+    {
+      if (__nisbind_next (&dbp) != NIS_SUCCESS)
+	return NIS_NAMEUNREACHABLE;
+    }
+
+  status = __do_niscall3 (&dbp, prog, xargs, req, xres, resp, flags, cb);
+
+  __nisbind_destroy (&dbp);
+
+  return status;
+
+}
+
 static directory_obj *
-rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
-	       nis_error *status)
+rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 {
   fd_result *fd_res;
   XDR xdrs;
@@ -396,7 +393,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	    /* We have found a NIS+ server serving ndomain, now
 	       let us search for "name" */
 	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, flags, status);
+	    return rec_dirsearch (name, obj, status);
 	  }
 	else
 	  {
@@ -461,7 +458,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	    /* We have found a NIS+ server serving ndomain, now
 	       let us search for "name" */
 	    nis_free_directory (dir);
-	    return rec_dirsearch (name, obj, flags, status);
+	    return rec_dirsearch (name, obj, status);
 	  }
       }
     break;
@@ -478,7 +475,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 /* We try to query the current server for the searched object,
    maybe he know about it ? */
 static directory_obj *
-first_shoot (const_nis_name name, directory_obj *dir, u_long flags)
+first_shoot (const_nis_name name, directory_obj *dir)
 {
   directory_obj *obj;
   fd_result *fd_res;
@@ -516,50 +513,56 @@ first_shoot (const_nis_name name, directory_obj *dir, u_long flags)
 }
 
 nis_error
+__nisfind_server (const_nis_name name, directory_obj **dir)
+{
+  if (name == NULL)
+    return NIS_BADNAME;
+
+#if 0
+  /* Search in local cache. In the moment, we ignore the fastest server */
+  if (!(flags & NO_CACHE))
+    dir = __nis_cache_search (name, flags, &cinfo);
+#endif
+
+  if (*dir == NULL)
+    {
+      nis_error status;
+      directory_obj *obj;
+
+      *dir = readColdStartFile ();
+      if (*dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
+	return NIS_UNAVAIL;
+
+      /* Try at first, if servers in "dir" know our object */
+      obj = first_shoot (name, *dir);
+      if (obj == NULL)
+	{
+	  *dir = rec_dirsearch (name, *dir, &status);
+	  if (*dir == NULL)
+	    return status;
+	}
+      else
+	*dir = obj;
+    }
+
+  return NIS_SUCCESS;
+}
+
+nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags,
 	      nis_cb *cb)
 {
   nis_error retcode;
+  dir_binding bptr;
   directory_obj *dir = NULL;
   nis_server *server;
   u_int server_len;
-  cache2_info cinfo = {-1, -1, -1};
   int saved_errno = errno;
 
-  if (name == NULL)
-    return NIS_BADNAME;
-
-  /* Search in local cache. In the moment, we ignore the fastest server */
-  if (!(flags & NO_CACHE))
-    dir = __nis_cache_search (name, flags, &cinfo);
-
-  if (dir == NULL)
-    {
-      nis_error status;
-      directory_obj *obj;
-
-      dir = readColdStartFile ();
-      if (dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
-	{
-	  __set_errno (saved_errno);
-	  return NIS_UNAVAIL;
-	}
-
-      /* Try at first, if servers in "dir" know our object */
-      obj = first_shoot (name, dir, flags);
-      if (obj == NULL)
-	{
-	  dir = rec_dirsearch (name, dir, flags, &status);
-	  if (dir == NULL)
-	    {
-	      __set_errno (saved_errno);
-	      return status;
-	    }
-	}
-      else
-	dir = obj;
-    }
+  retcode = __nisfind_server (name, &dir);
+  if (retcode != NIS_SUCCESS)
+    return retcode;
 
   if (flags & MASTER_ONLY)
     {
@@ -572,9 +575,22 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
       server_len = dir->do_servers.do_servers_len;
     }
 
+  retcode = __nisbind_create (&bptr, server, server_len, flags);
+  if (retcode == NIS_SUCCESS)
+    {
+      while (__nisbind_connect (&bptr) != NIS_SUCCESS)
+	{
+	  if (__nisbind_next (&bptr) != NIS_SUCCESS)
+	    {
+	      nis_free_directory (dir);
+	      __nisbind_destroy (&bptr);
+	      return NIS_NAMEUNREACHABLE;
+	    }
+	}
+      retcode = __do_niscall3 (&bptr, prog, xargs, req, xres, resp, flags, cb);
 
-  retcode = __do_niscall2 (server, server_len, prog, xargs, req, xres, resp,
-			   flags, cb, &cinfo);
+      __nisbind_destroy (&bptr);
+    }
 
   nis_free_directory (dir);
 

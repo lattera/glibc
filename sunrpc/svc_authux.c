@@ -120,8 +120,22 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
       stat = AUTH_BADCRED;
       goto done;
     }
-  rqst->rq_xprt->xp_verf.oa_flavor = AUTH_NULL;
-  rqst->rq_xprt->xp_verf.oa_length = 0;
+
+  /* get the verifier */
+  if ((u_int)msg->rm_call.cb_verf.oa_length)
+    {
+      rqst->rq_xprt->xp_verf.oa_flavor =
+	msg->rm_call.cb_verf.oa_flavor;
+      rqst->rq_xprt->xp_verf.oa_base =
+	msg->rm_call.cb_verf.oa_base;
+      rqst->rq_xprt->xp_verf.oa_length =
+	msg->rm_call.cb_verf.oa_length;
+    }
+  else
+    {
+      rqst->rq_xprt->xp_verf.oa_flavor = AUTH_NULL;
+      rqst->rq_xprt->xp_verf.oa_length = 0;
+    }
   stat = AUTH_OK;
 done:
   XDR_DESTROY (&xdrs);

@@ -35,7 +35,7 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
     res2 = __do_niscall2 (server, 1, NIS_MKDIR,
 			  (xdrproc_t) _xdr_nis_name,
 			  (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
-			  (caddr_t) &res, 0, NULL, NULL);
+			  (caddr_t) &res, 0, NULL);
   if (res2 != NIS_SUCCESS)
     return res2;
 

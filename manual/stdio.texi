@@ -1190,12 +1190,20 @@ char}, as appropriate.  A @code{char} argument is converted to an
 anyway, but the @samp{h} modifier says to convert it back to a
 @code{char} again.
 
+This modifier was introduced in @w{ISO C 9x}.
+
 @item h
 Specifies that the argument is a @code{short int} or @code{unsigned
 short int}, as appropriate.  A @code{short} argument is converted to an
 @code{int} or @code{unsigned int} by the default argument promotions
 anyway, but the @samp{h} modifier says to convert it back to a
 @code{short} again.
+
+@item j
+Specifies that the argument is a @code{intmax_t} or @code{uintmax_t}, as
+appropriate.
+
+This modifier was introduced in @w{ISO C 9x}.
 
 @item l
 Specifies that the argument is a @code{long int} or @code{unsigned long
@@ -1213,8 +1221,17 @@ The @samp{q} modifier is another name for the same thing, which comes
 from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
 @code{int}.
 
-@item Z
-Specifies that the argument is a @code{size_t}.  This is a GNU extension.
+@item t
+Specifies that the argument is a @code{ptrdiff_t}.
+
+This modifier was introduced in @w{ISO C 9x}.
+
+@item z
+@itemx Z
+Specifies that the argument is a @code{size_t}.
+
+@samp{z} was introduced in @w{ISO C 9x}.  @samp{Z} is a GNU extension
+predating this addition and should not be used anymore in new code.
 @end table
 
 Here is an example.  Using the template string:
@@ -2653,9 +2670,16 @@ specify other sizes of integer:
 Specifies that the argument is a @code{signed char *} or @code{unsigned
 char *}.
 
+This modifier was introduced in @w{ISO C 9x}.
+
 @item h
 Specifies that the argument is a @code{short int *} or @code{unsigned
 short int *}.
+
+@item j
+Specifies that the argument is a @code{intmax_t *} or @code{uintmax_t *}.
+
+This modifier was introduced in @w{ISO C 9x}.
 
 @item l
 Specifies that the argument is a @code{long int *} or @code{unsigned
@@ -2672,6 +2696,16 @@ is the same as @code{long int}.)
 The @samp{q} modifier is another name for the same thing, which comes
 from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
 @code{int}.
+
+@item t
+Specifies that the argument is a @code{ptrdiff_t *}.
+
+This modifier was introduced in @w{ISO C 9x}.
+
+@item z
+Specifies that the argument is a @code{size_t *}.
+
+This modifier was introduced in @w{ISO C 9x}.
 @end table
 
 All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}

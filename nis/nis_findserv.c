@@ -110,8 +110,25 @@ struct findserv_req
 };
 
 long
-__nis_findfastest (dir_binding * bind)
+__nis_findfastest (dir_binding *bind)
 {
+#if 0
+  unsigned long i, j;
+
+  for (i = 0; i < bind->server_len; i++)
+    for (j = 0; j < bind->server_val[i].ep.ep_len; ++j)
+      if (strcmp (bind->server_val[i].ep.ep_val[j].family, "inet") == 0)
+	if ((bind->server_val[i].ep.ep_val[j].proto == NULL) ||
+	    (bind->server_val[i].ep.ep_val[j].proto[0] ==  '-') ||
+	    (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
+	  {
+	    bind->server_used = i;
+	    bind->current_ep = j;
+	    return 1;
+	  }
+
+  return 0;
+#else
   const struct timeval TIMEOUT50 = {5, 0};
   const struct timeval TIMEOUT00 = {0, 0};
   struct findserv_req **pings;
@@ -137,7 +154,7 @@ __nis_findfastest (dir_binding * bind)
     for (j = 0; j < bind->server_val[i].ep.ep_len; ++j)
       if (strcmp (bind->server_val[i].ep.ep_val[j].family, "inet") == 0)
 	if ((bind->server_val[i].ep.ep_val[j].proto == NULL) ||
-	    (strcmp (bind->server_val[i].ep.ep_val[j].proto, "-") == 0) ||
+	    (bind->server_val[i].ep.ep_val[j].proto[0] == '-') ||
 	    (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
 	  {
 	    sin.sin_addr.s_addr =
@@ -228,4 +245,5 @@ __nis_findfastest (dir_binding * bind)
   free (pings);
 
   return found;
+#endif
 }

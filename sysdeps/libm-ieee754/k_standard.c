@@ -77,8 +77,8 @@ static double zero = 0.0;	/* used as const */
  *	37-- y1(x>X_TLOSS)
  *	38-- jn(|x|>X_TLOSS, n)
  *	39-- yn(x>X_TLOSS, n)
- *	40-- gamma(finite) overflow
- *	41-- gamma(-integer)
+ *	40-- tgamma(finite) overflow
+ *	41-- tgamma(-integer)
  *	42-- pow(NaN,0.0)
  *	43-- +0**neg
  *	44-- exp2 overflow
@@ -829,8 +829,8 @@ static double zero = 0.0;	/* used as const */
 	    case 240:
 		/* gamma(finite) overflow */
 		exc.type = OVERFLOW;
-		exc.name = type < 100 ? "gamma" : (type < 200
-						   ? "gammaf" : "gammal");
+		exc.name = type < 100 ? "tgamma" : (type < 200
+						   ? "tgammaf" : "tgammal");
 		exc.retval = HUGE_VAL;
                 if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
@@ -843,14 +843,14 @@ static double zero = 0.0;	/* used as const */
 	    case 241:
 		/* gamma(-integer) or gamma(0) */
 		exc.type = SING;
-		exc.name = type < 100 ? "gamma" : (type < 200
-						   ? "gammaf" : "gammal");
+		exc.name = type < 100 ? "tgamma" : (type < 200
+						   ? "tgammaf" : "tgammal");
 		exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
-			(void) WRITE2("gamma: SING error\n", 18);
+			(void) WRITE2("tgamma: SING error\n", 18);
 			exc.retval = HUGE_VAL;
 		      }
 		  __set_errno (EDOM);

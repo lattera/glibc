@@ -121,5 +121,4 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   return __syscall_sendmsg (fd, message, flags);
 }
 
-weak_alias (__libc_sendmsg, __sendmsg)
 weak_alias (__libc_sendmsg, sendmsg)

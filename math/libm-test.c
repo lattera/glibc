@@ -51,7 +51,7 @@
    modf, nearbyint, nextafter,
    pow, remainder, remquo, rint, lrint, llrint,
    round, lround, llround,
-   scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, trunc
+   scalb, scalbn, signbit, sin, sincos, sinh, sqrt, tan, tanh, tgamma, trunc
 
    and for the following complex math functions:
    cabs, cacos, cacosh, carg, casin, casinh, catan, catanh,
@@ -1413,15 +1413,9 @@ signbit_test (void)
 }
 
 
-/*
-   gamma has different semantics depending on _LIB_VERSION:
-   if _LIB_VERSION is _SVID, gamma is just an alias for lgamma,
-   otherwise gamma is the real gamma function as definied in ISO C 9X.
-*/
 static void
 gamma_test (void)
 {
-  int save_lib_version = _LIB_VERSION;
   errno = 0;
   FUNC(gamma) (1);
   if (errno == ENOSYS)
@@ -1430,14 +1424,12 @@ gamma_test (void)
   feclearexcept (FE_ALL_EXCEPT);
 
 
-  _LIB_VERSION = _SVID_;
-
   check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
-  check_exc ("gamma (0) == HUGE plus divide by zero exception",
-	     FUNC(gamma) (0), HUGE, DIVIDE_BY_ZERO_EXCEPTION);
+  check_isinfp_exc ("gamma (0) == +inf plus divide by zero exception",
+		    FUNC(gamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
 
-  check_exc ("gamma (x) == HUGE plus divide by zero exception for integer x <= 0",
-	     FUNC(gamma) (-3), HUGE, DIVIDE_BY_ZERO_EXCEPTION);
+  check_isinfp_exc ("gamma (x) == +inf plus divide by zero exception for integer x <= 0",
+		    FUNC(gamma) (-3), DIVIDE_BY_ZERO_EXCEPTION);
   check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
                    FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
 
@@ -1459,39 +1451,43 @@ gamma_test (void)
              FUNC(log) (2*FUNC(sqrt) (M_PIl)), CHOOSE (0, 1e-15, 0));
 
   check_int ("gamma (-0.5) sets signgam to -1", signgam, -1);
+}
 
 
-  _LIB_VERSION = _IEEE_;
+static void
+tgamma_test (void)
+{
+  errno = 0;
+  FUNC(tgamma) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+  feclearexcept (FE_ALL_EXCEPT);
 
-  check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
-  check_isnan_exc ("gamma (0) == NaN plus invalid exception",
-                    FUNC(gamma) (0), INVALID_EXCEPTION);
 
-  check_isnan_exc_ext ("gamma (x) == NaN plus invalid exception for integer x <= 0",
-                        FUNC(gamma) (-2), INVALID_EXCEPTION, -2);
-  check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
-                   FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
+  check_isinfp ("tgamma (+inf) == +inf", FUNC(tgamma) (plus_infty));
+  check_isnan_exc ("tgamma (0) == NaN plus invalid exception",
+                    FUNC(tgamma) (0), INVALID_EXCEPTION);
+
+  check_isnan_exc_ext ("tgamma (x) == NaN plus invalid exception for integer x <= 0",
+                        FUNC(tgamma) (-2), INVALID_EXCEPTION, -2);
+  check_isnan_exc ("tgamma (-inf) == NaN plus invalid exception",
+                   FUNC(tgamma) (minus_infty), INVALID_EXCEPTION);
 
 #ifdef TODO
-  check_eps ("gamma (0.5) == sqrt(pi)", FUNC(gamma) (0.5), FUNC(sqrt) (M_PIl),
-	     CHOOSE (0, 5e-16, 2e-7));
+  check_eps ("tgamma (0.5) == sqrt(pi)", FUNC(tgamma) (0.5),
+	     FUNC(sqrt) (M_PIl), CHOOSE (0, 5e-16, 2e-7));
 #endif
-  check_eps ("gamma (-0.5) == -2*sqrt(pi)", FUNC(gamma) (-0.5),
+  check_eps ("tgamma (-0.5) == -2*sqrt(pi)", FUNC(tgamma) (-0.5),
 	     -2*FUNC(sqrt) (M_PIl), CHOOSE (0, 5e-16, 3e-7));
 
-  check ("gamma (1) == 1", FUNC(gamma) (1), 1);
-  check ("gamma (4) == 6", FUNC(gamma) (4), 6);
+  check ("tgamma (1) == 1", FUNC(tgamma) (1), 1);
+  check ("tgamma (4) == 6", FUNC(tgamma) (4), 6);
 
-  check_eps ("gamma (0.7) == 1.29805...", FUNC(gamma) (0.7),
+  check_eps ("tgamma (0.7) == 1.29805...", FUNC(tgamma) (0.7),
 	     1.29805533264755778568L, CHOOSE(0, 3e-16, 2e-7));
-  check ("gamma (1.2) == 0.91816...", FUNC(gamma) (1.2), 0.91816874239976061064L);
-
-  check_isnan_exc ("gamma (0.0) == NaN plus invalid exception",
-		   FUNC(gamma) (0.0), INVALID_EXCEPTION);
-  check_isnan_exc ("gamma (-1.0) == NaN plus invalid exception",
-		   FUNC(gamma) (-1.0), INVALID_EXCEPTION);
-
-  _LIB_VERSION = save_lib_version;
+  check ("tgamma (1.2) == 0.91816...", FUNC(tgamma) (1.2),
+	 0.91816874239976061064L);
 }
 
 
@@ -6012,6 +6008,7 @@ main (int argc, char *argv[])
   erf_test ();
   erfc_test ();
   gamma_test ();
+  tgamma_test ();
   lgamma_test ();
 
   /* nearest integer functions */

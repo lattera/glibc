@@ -19,8 +19,9 @@
 
 #include <ctype.h>
 #include <printf.h>
-#include <string.h>
+#include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 
 #define NDEBUG 1
 #include <assert.h>
@@ -271,7 +272,8 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   spec->info.is_char = 0;
 
   if (*format == L_('h') || *format == L_('l') || *format == L_('L') ||
-      *format == L_('Z') || *format == L_('q'))
+      *format == L_('Z') || *format == L_('q') || *format == L_('z') ||
+      *format == L_('t') || *format == L_('j'))
     switch (*format++)
       {
       case L_('h'):
@@ -297,11 +299,24 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	/* 4.4 uses this for long long.  */
 	spec->info.is_long_double = 1;
 	break;
+      case L_('z'):
       case L_('Z'):
 	/* int's are size_t's.  */
-	assert (sizeof(size_t) <= sizeof(unsigned long long int));
-	spec->info.is_longlong = sizeof(size_t) > sizeof(unsigned long int);
-	spec->info.is_long = sizeof(size_t) > sizeof(unsigned int);
+	assert (sizeof (size_t) <= sizeof (unsigned long long int));
+	spec->info.is_longlong = sizeof (size_t) > sizeof (unsigned long int);
+	spec->info.is_long = sizeof (size_t) > sizeof (unsigned int);
+	break;
+      case L_('t'):
+	assert (sizeof (ptrdiff_t) <= sizeof (unsigned long long int));
+	spec->info.is_longlong = (sizeof (ptrdiff_t)
+				  > sizeof (unsigned long int));
+	spec->info.is_long = sizeof (ptrdiff_t) > sizeof (unsigned int);
+	break;
+      case L_('j'):
+	assert (sizeof (intmax_t) <= sizeof (unsigned long long int));
+	spec->info.is_longlong = (sizeof (intmax_t)
+				  > sizeof (unsigned long int));
+	spec->info.is_long = sizeof (intmax_t) > sizeof (unsigned int);
 	break;
       }
 

@@ -224,8 +224,12 @@ __MATHCALL (yn,, (int, _Mdouble_));
 /* Error, gamma, and Bessel functions.  */
 __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
-__MATHCALL (gamma,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
+__MATHCALL (tgamma,, (_Mdouble_));
+#endif
+
+#if defined __USE_MISC || defined __USE_XOPEN
+__MATHCALL (gamma,, (_Mdouble_));
 #endif
 
 #ifdef __USE_MISC

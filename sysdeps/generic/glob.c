@@ -808,26 +808,29 @@ glob (pattern, flags, errfunc, pglob)
 
       flags |= GLOB_MAGCHAR;
 
+      /* We have ignored the GLOB_NOCHECK flag in the `glob_in_dir' calls.
+	 But if we have not found any matching entry and thie GLOB_NOCHECK
+	 flag was set we must return the list consisting of the disrectory
+	 names followed by the filename.  */
       if (pglob->gl_pathc == oldcount)
 	/* No matches.  */
 	if (flags & GLOB_NOCHECK)
 	  {
-	    size_t len = strlen (pattern) + 1;
-	    char *patcopy = (char *) malloc (len);
-	    if (patcopy == NULL)
-	      return GLOB_NOSPACE;
-	    memcpy (patcopy, pattern, len);
+	    size_t filename_len = strlen (filename) + 1;
+	    char **new_pathv;
+	    struct stat st;
 
+	    /* This is an pessimistic guess about the size.  */
 	    pglob->gl_pathv
 	      = (char **) realloc (pglob->gl_pathv,
 				   (pglob->gl_pathc +
 				    ((flags & GLOB_DOOFFS) ?
 				     pglob->gl_offs : 0) +
-				    1 + 1) *
+				    dirs.gl_pathc + 1) *
 				   sizeof (char *));
 	    if (pglob->gl_pathv == NULL)
 	      {
-		free (patcopy);
+		globfree (&dirs);
 		return GLOB_NOSPACE;
 	      }
 
@@ -835,12 +838,54 @@ glob (pattern, flags, errfunc, pglob)
 	      while (pglob->gl_pathc < pglob->gl_offs)
 		pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
-	    pglob->gl_pathv[pglob->gl_pathc++] = patcopy;
+	    for (i = 0; i < dirs.gl_pathc; ++i)
+	      {
+		const char *dir = dirs.gl_pathv[i];
+		size_t dir_len = strlen (dir);
+
+		/* First check whether this really is a directory.  */
+		if (((flags & GLOB_ALTDIRFUNC)
+		     ? (*pglob->gl_stat) (dir, &st) : __stat (dir, &st)) != 0
+		    || !S_ISDIR (st.st_mode))
+		  /* No directory, ignore this entry.  */
+		  continue;
+
+		pglob->gl_pathv[pglob->gl_pathc] = malloc (dir_len + 1
+							   + filename_len);
+		if (pglob->gl_pathv[pglob->gl_pathc] == NULL)
+		  {
+		    globfree (&dirs);
+		    globfree (pglob);
+		    return GLOB_NOSPACE;
+		  }
+
+#ifdef HAVE_MEMPCPY
+		mempcpy (mempcpy (mempcpy (pglob->gl_pathv[pglob->gl_pathc],
+					   dir, dir_len),
+				  "/", 1),
+			 filename, filename_len);
+#else
+		memcpy (pglob->gl_pathv[pglob->gl_pathc], dir, dir_len);
+		pglob->gl_pathv[pglob->gl_pathc][dir_len] = '/';
+		memcpy (&pglob->gl_pathv[pglob->gl_pathc][dir_len + 1],
+			filename, filename_len);
+#endif
+		++pglob->gl_pathc;
+	      }
+
 	    pglob->gl_pathv[pglob->gl_pathc] = NULL;
 	    pglob->gl_flags = flags;
+
+	    /* Now we know how large the gl_pathv vector must be.  */
+	    new_pathv = realloc (pglob->gl_pathv,
+				 (pglob->gl_pathc + 1) * sizeof (char *));
+	    if (new_pathv != NULL)
+	      pglob->gl_pathv = new_pathv;
 	  }
 	else
 	  return GLOB_NOMATCH;
+
+      globfree (&dirs);
     }
   else
     {

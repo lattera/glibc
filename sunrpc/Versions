@@ -59,7 +59,7 @@ libc {
     authdes_create; authdes_getucred; authdes_pk_create;
 
     # c*
-    cbc_crypt;
+    cbc_crypt; clntunix_create;
 
     # d*
     des_setparity;
@@ -86,6 +86,9 @@ libc {
 
     # r*
     rtime;
+
+    # s*
+    svcunix_create; svcunixfd_create;
 
     # u*
     user2netname;
