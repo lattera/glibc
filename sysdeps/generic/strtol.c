@@ -348,6 +348,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   if (sizeof (long int) != sizeof (LONG int))
     {
       unsigned long int j = 0;
+      unsigned long int jmax = ULONG_MAX / base;
 
       for (;c != L_('\0'); c = *++s)
 	{
@@ -362,18 +363,14 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	  if ((int) c >= base)
 	    break;
 	  /* Note that we never can have an overflow.  */
-	  else
+	  else if (j >= jmax)
 	    {
-	      unsigned long int jj = j * (unsigned long int) base;
-	      if (jj < j)
-		{
-		  /* We have an overflow.  Now use the long representation.  */
-		  i = (unsigned LONG int) j;
-		  goto use_long;
-		}
-	      j = jj;
-	      j += c;
+	      /* We have an overflow.  Now use the long representation.  */
+	      i = (unsigned LONG int) j;
+	      goto use_long;
 	    }
+	  else
+	    j = j * (unsigned long int) base + c;
 	}
 
       i = (unsigned LONG int) j;
