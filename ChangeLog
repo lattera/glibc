@@ -1,3 +1,9 @@
+2001-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_STD_AUXV):
+	Define for linux >= 2.4.5 on powerpc.
+	(__ASSUME_MMAP2_SYSCALL): Likewise.
+
 2001-05-19  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Don't leak the
