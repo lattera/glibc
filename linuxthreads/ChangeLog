@@ -4,6 +4,8 @@
 	being NULL, not value.  Use __on_exit, not on_exit.
 	Patch by Andreas Jaeger <aj@suse.de>.
 
+	* pthread.c: Use new macros from shlib-compat.h to define versions.
+
 2000-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (pthread_initialize): Instead of on_exit use
