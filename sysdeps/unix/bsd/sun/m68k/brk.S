@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ ENTRY (__brk)
 	ble 0f
 	movel d0, sp@(4)
 0:	pea SYS_brk
-	trap POUND(0)
+	trap #0
 	bcs 1f
 	movel sp@(4), ___curbrk
 	clrl d0

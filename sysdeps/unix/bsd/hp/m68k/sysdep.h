@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
 
-#define	POUND(foo)	(@@@Hash-Here@@@)foo
+#define	POUND	#
 
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
@@ -39,11 +39,11 @@ Cambridge, MA 02139, USA.  */
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
-  DO_CALL (POUND (SYS_ify (syscall_name), args)
+  DO_CALL (POUND SYS_ify (syscall_name), args)
 
 #define DO_CALL(syscall, args)						      \
   movel syscall, d0;							      \
-  trap POUND(0);							      \
+  trap POUND 0;								      \
   bcs error
 
 #define	ret	rts
