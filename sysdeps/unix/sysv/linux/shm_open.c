@@ -27,13 +27,8 @@
 #include <sys/mman.h>
 #include <sys/statfs.h>
 #include <bits/libc-lock.h>
+#include "linux_fsinfo.h"
 
-
-/* XXX Currently the Linux kernel sources do not define a super magic number
-   for the shmfs and the kernel assigns the value 0 to f_type.  */
-#ifndef SHMFS_SUPER_MAGIC
-# define SHMFS_SUPER_MAGIC	0
-#endif
 
 /* Mount point of the shared memory filesystem.  */
 static struct

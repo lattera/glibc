@@ -1,3 +1,10 @@
+2000-04-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/shm_open.c: Include linux_fsinfo for
+	SHMFS_SUPER_MAGIC.  Remove definition of SHMFS_SUPER_MAGIC.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (SHMFS_SUPER_MAGIC): Added.
+
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Fix typo in

@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,6 +97,9 @@
 
 /* Constants that identify the `xenix' filesystem.  */
 #define XENIX_SUPER_MAGIC	0x012ff7b4
+
+/* Constant that identifies the `shm' filesystem.  */
+#define SHMFS_SUPER_MAGIC	0x02011994
 
 /* Maximum link counts.  */
 #define COH_LINK_MAX		10000
