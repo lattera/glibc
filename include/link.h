@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,7 @@
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
 #include <dl-lookupcfg.h>
+#include <tls.h>		/* Defines USE_TLS.  */
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
