@@ -313,7 +313,7 @@ _res_hconf_init (void)
 {
   const char *hconf_name;
   int line_num = 0;
-  char buf[256], *end, *envval;
+  char buf[256], *envval;
   FILE *fp;
 
   if (_res_hconf.initialized)

@@ -1,3 +1,7 @@
+1999-04-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/res_hconf.c (_res_hconf_init): Remove unused variable end.
+
 1999-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp-ba.c (argp_program_bug_address): Don't initialize with 0.

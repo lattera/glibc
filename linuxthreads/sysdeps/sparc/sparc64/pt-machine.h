@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Sparc v9 version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -63,9 +63,9 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   long int readval;
 
-  __asm__ __volatile__ ("cas %1, %2, %0"
+  __asm__ __volatile__ ("cas	[%4], %2, %0"
 			: "=r"(readval), "=m"(*p)
-			: "r"(oldval), "m"(*p), "0"(newval));
+			: "r"(oldval), "m"(*p), "r"(p), "0"(newval));
 
   return readval == newval;
 }

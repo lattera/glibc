@@ -1,3 +1,8 @@
+1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/sparc/sparc64/pt-machine.h (__compare_and_swap): cas
+	instruction does not allow memory element to use offset.
+
 1999-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_allocate_stack): Optimize initialization of new
