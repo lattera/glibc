@@ -72,7 +72,7 @@ case "$machine" in
     libc_cv_gcc_unwind_find_fde=yes
     ;;
   mips*)
-    arch_minimum_kernel=2.2.15
+    arch_minimum_kernel=2.4.0
     libc_cv_gcc_unwind_find_fde=yes
     ;;
   powerpc*)

@@ -20,10 +20,7 @@
 #ifndef _MIPS_ATOMICITY_H
 #define _MIPS_ATOMICITY_H    1
 
-#include <sgidefs.h>
 #include <inttypes.h>
-
-#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
 static inline int
 __attribute__ ((unused))
@@ -34,9 +31,12 @@ exchange_and_add (volatile uint32_t *mem, int val)
   __asm__ __volatile__
     ("/* Inline exchange & add */\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%0,%3\n\t"
      "addu	%1,%4,%0\n\t"
      "sc	%1,%2\n\t"
+     ".set	pop\n\t"
      "beqz	%1,1b\n\t"
      "/* End exchange & add */"
      : "=&r"(result), "=&r"(tmp), "=m"(*mem)
@@ -55,9 +55,12 @@ atomic_add (volatile uint32_t *mem, int val)
   __asm__ __volatile__
     ("/* Inline atomic add */\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%0,%2\n\t"
      "addu	%0,%3,%0\n\t"
      "sc	%0,%1\n\t"
+     ".set	pop\n\t"
      "beqz	%0,1b\n\t"
      "/* End atomic add */"
      : "=&r"(result), "=m"(*mem)
@@ -74,11 +77,14 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   __asm__ __volatile__
     ("/* Inline compare & swap */\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%1,%5\n\t"
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
      "sc	%0,%2\n\t"
+     ".set	pop\n\t"
      "beqz	%0,1b\n"
      "2:\n\t"
      "/* End compare & swap */"
@@ -88,38 +94,5 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
 
   return ret;
 }
-
-#else /* (_MIPS_ISA >= _MIPS_ISA_MIPS2) */
-
-#warning MIPS I atomicity functions are not atomic
-
-static inline int
-__attribute__ ((unused))
-exchange_and_add (volatile uint32_t *mem, int val)
-{
-  int result = *mem;
-  *mem += val;
-  return result;
-}
-
-static inline void
-__attribute__ ((unused))
-atomic_add (volatile uint32_t *mem, int val)
-{
-  *mem += val;
-}
-
-static inline int
-__attribute__ ((unused))
-compare_and_swap (volatile long int *p, long int oldval, long int newval)
-{
-  if (*p != oldval)
-    return 0;
-
-  *p = newval;
-  return 1;
-}
-
-#endif /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
 
 #endif /* atomicity.h */

@@ -1,7 +1,16 @@
+2002-07-02  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/atomicity.h: Don't include <sgidefs.h>.  Always
+	use ll/sc.
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/configure.in: Set arch_minimum_kernel
+	to 2.4.0 for mips.
+
 2002-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): If loaded object uses
-	TLS fail is USE_TLS is not defined.
+	TLS fail if USE_TLS is not defined.
 
 	* libio/wfileops.c (_IO_wfile_seekoff): Reposition wide pointers
 	and adjust state for seek position.  [PR libc/4070]

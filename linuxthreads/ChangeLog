@@ -1,3 +1,9 @@
+2002-07-02  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/pspinlock.c: Don't include <sgidefs.h>.  Always
+	use ll/sc.
+	* sysdeps/mips/pt-machine.h: Likewise.
+
 2002-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* manager.c (pthread_handle_create): Initialize self-reference in

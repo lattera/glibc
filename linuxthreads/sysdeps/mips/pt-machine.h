@@ -23,7 +23,6 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H   1
 
-#include <sgidefs.h>
 #include <sys/tas.h>
 
 #ifndef PT_EI
@@ -51,8 +50,6 @@ register char * stack_pointer __asm__ ("$29");
 
 /* Compare-and-swap for semaphores. */
 
-#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
-
 #define HAS_COMPARE_AND_SWAP
 PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
@@ -62,11 +59,14 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   __asm__ __volatile__
     ("/* Inline compare & swap */\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%1,%5\n\t"
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
      "sc	%0,%2\n\t"
+     ".set	pop\n\t"
      "beqz	%0,1b\n"
      "2:\n\t"
      "/* End compare & swap */"
@@ -76,7 +76,5 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 
   return ret;
 }
-
-#endif /* (_MIPS_ISA >= _MIPS_ISA_MIPS2) */
 
 #endif /* pt-machine.h */

@@ -21,8 +21,6 @@
 #define _SYS_TAS_H 1
 
 #include <features.h>
-#include <sgidefs.h>
-#include <sys/sysmips.h>
 
 __BEGIN_DECLS
 
@@ -34,8 +32,6 @@ extern int _test_and_set (int *p, int v) __THROW;
 #  define _EXTERN_INLINE extern __inline
 # endif
 
-# if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
-
 _EXTERN_INLINE int
 _test_and_set (int *p, int v) __THROW
 {
@@ -44,10 +40,13 @@ _test_and_set (int *p, int v) __THROW
   __asm__ __volatile__
     ("/* Inline test and set */\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%0,%3\n\t"
      "move	%1,%4\n\t"
      "beq	%0,%4,2f\n\t"
      "sc	%1,%2\n\t"
+     ".set	pop\n\t"
      "beqz	%1,1b\n"
      "2:\n\t"
      "/* End test and set */"
@@ -57,16 +56,6 @@ _test_and_set (int *p, int v) __THROW
 
   return r;
 }
-
-# else /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
-
-_EXTERN_INLINE int
-_test_and_set (int *p, int v) __THROW
-{
-  return sysmips (MIPS_ATOMIC_SET, (int) p, v, 0);
-}
-
-# endif /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
 
 #endif /* __USE_EXTERN_INLINES */
 

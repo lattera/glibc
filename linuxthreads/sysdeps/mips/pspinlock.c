@@ -19,11 +19,8 @@
 
 #include <errno.h>
 #include <pthread.h>
-#include <sgidefs.h>
 #include <sys/tas.h>
 #include "internals.h"
-
-#if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
 /* This implementation is similar to the one used in the Linux kernel.  */
 int
@@ -34,10 +31,13 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
   asm volatile
     ("\t\t\t# spin_lock\n"
      "1:\n\t"
+     ".set	push\n\t"
+     ".set	mips2\n\t"
      "ll	%1,%3\n\t"
      "li	%2,1\n\t"
      "bnez	%1,1b\n\t"
      "sc	%2,%0\n\t"
+     ".set	pop\n\t"
      "beqz	%2,1b"
      : "=m" (*lock), "=&r" (tmp1), "=&r" (tmp2)
      : "m" (*lock)
@@ -45,17 +45,6 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
 
   return 0;
 }
-
-#else /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
-
-int
-__pthread_spin_lock (pthread_spinlock_t *lock)
-{
-  while (_test_and_set ((int *) lock, 1));
-  return 0;
-}
-
-#endif /* !(_MIPS_ISA >= _MIPS_ISA_MIPS2) */
 
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
 
