@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,13 @@ extern const char *__ctype32_wctrans[2];
 
 /* Provide real-function versions of all the wctype macros.  */
 
-#define	func(name, type) \
-  int									      \
-  __##name (wint_t wc)							      \
-  {									      \
-    return wctype_table_lookup (__ctype32_wctype[type], wc);		      \
-  }									      \
+#define	func(name, type)					\
+  extern int __##name (wint_t __wc);				\
+  int								\
+  __##name (wint_t wc)						\
+  {								\
+    return wctype_table_lookup (__ctype32_wctype[type], wc);	\
+  }								\
   weak_alias (__##name, name)
 
 #undef iswalnum
