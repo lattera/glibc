@@ -28,18 +28,18 @@ trampoline:
 	call %eax		/* Call the handler, address in %eax.  */
 	addl $8, %esp		/* Pop signum & code off the stack.  */
 	/* __sigreturn will restore the context, and never return here.  */
-	jsr C_SYMBOL_NAME (__sigreturn)
+	call C_SYMBOL_NAME (__sigreturn)
 
 .globl syscall_error
 ENTRY (__sigvec)
 	/* Put the address of the trampoline in a scratch register.  */
-	mov $trampoline, %edx
-	/* Now exchange this register with the top of the stack,
-	   wherein now lies the return PC.  */
-	xchg 0(%esp), %edx
-	mov %esp, %ecx 		/* Point the syscall at the arguments.  */
+	mov $trampoline, scratch
+	/* Now exchange this register with the fourth word on the stack,
+	   where the fourth argument to the system call would go.  */
+	xchg 16(%esp), scratch
+	ARGS_4	 		/* Point the syscall at the arguments.  */
 	DO_CALL (sigvec, 4)	/* Do the system call.  */
-	/* Exchange again, restoring the return PC.  */
-	xchg 0(%esp), %edx
+	/* Exchange again, restoring the stack word.  */
+	xchg 16(%esp), scratch
 	jb syscall_error	/* Check for error.  */
 	ret
