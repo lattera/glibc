@@ -1,3 +1,7 @@
+2002-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/execve.c: New file.
+
 2002-10-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* no-tsd.c: Include stdlib.h.
