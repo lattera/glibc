@@ -73,34 +73,34 @@ register_dump (int fd, struct sigcontext *ctx)
   for (i = 0; i < 8; i++)
     {
       ADD_MEM (regs[i], 8);
-      ADD_STRING (" ", 1);
+      ADD_STRING (" ");
     }
   ADD_STRING ("\n R8   ");
   for (i = 8; i < 16; i++)
     {
       ADD_MEM (regs[i], 8);
-      ADD_STRING (" ", 1);
+      ADD_STRING (" ");
     }
   ADD_STRING ("\n R16  ");
   for (i = 16; i < 24; i++)
     {
       ADD_MEM (regs[i], 8);
-      ADD_STRING (" ", 1);
+      ADD_STRING (" ");
     }
   ADD_STRING ("\n R24  ");
   for (i = 24; i < 32; i++)
     {
       ADD_MEM (regs[i], 8);
-      ADD_STRING (" ", 1);
+      ADD_STRING (" ");
     }
   ADD_STRING ("\n           pc    cause  status   badvaddr       lo       hi\n      ");
   ADD_MEM (regs[], 8);
   for (i = 32; i < 38; i++)
     {
       ADD_MEM (regs[i], 8);
-      ADD_STRING (" ", 1);
+      ADD_STRING (" ");
     }
-  ADD_STRING ("\n", 1);
+  ADD_STRING ("\n");
 
   /* Write the stuff out.  */
   writev (fd, iov, nr);
