@@ -52,8 +52,7 @@ __pthread_rwlock_unlock:
 #else
 	cmpxchgl %edx, MUTEX(%edi)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 2:	cmpl	$0, WRITER(%edi)
 	jne	5f

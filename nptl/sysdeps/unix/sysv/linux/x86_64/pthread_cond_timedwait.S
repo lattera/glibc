@@ -80,14 +80,14 @@ __pthread_cond_timedwait:
 
 	/* Get internal lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	1f
+	jnz	1f
 
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
@@ -188,13 +188,13 @@ __pthread_cond_timedwait:
 	/* Lock.  */
 	movq	8(%rsp), %rdi
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
 	jne	5f
 
 6:	movq	woken_seq(%rdi), %rax

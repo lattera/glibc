@@ -44,14 +44,14 @@ __condvar_cleanup:
 	movq	%rdi, %r8
 	movq	8(%rdi), %rdi
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
-	je	1f
+	jz	1f
 
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
@@ -125,13 +125,13 @@ __pthread_cond_wait:
 
 	/* Get internal lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
 	jne	1f
 
 	/* Unlock the mutex.  */
@@ -186,14 +186,14 @@ __pthread_cond_wait:
 	/* Lock.  */
 	movq	8(%rsp), %rdi
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	5f
+	jnz	5f
 
 6:	movq	woken_seq(%rdi), %rax
 

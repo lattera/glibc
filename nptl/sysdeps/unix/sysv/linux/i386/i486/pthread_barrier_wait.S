@@ -46,8 +46,7 @@ pthread_barrier_wait:
 	xorl	%eax, %eax
 	LOCK
 	cmpxchgl %edx, MUTEX(%ebx)
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 	/* One less waiter.  If this was the last one needed wake
 	   everybody.  */

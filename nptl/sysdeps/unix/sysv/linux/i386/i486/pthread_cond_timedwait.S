@@ -64,8 +64,7 @@ __pthread_cond_timedwait:
 #else
 	cmpxchgl %edx, cond_lock(%ebx)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
@@ -179,8 +178,7 @@ __pthread_cond_timedwait:
 #else
 	cmpxchgl %edx, cond_lock(%ebx)
 #endif
-	testl	%eax, %eax
-	jne	5f
+	jnz	5f
 
 6:	movl	woken_seq(%ebx), %eax
 	movl	woken_seq+4(%ebx), %ecx
@@ -363,8 +361,7 @@ __condvar_tw_cleanup:
 #else
 	cmpxchgl %edx, cond_lock(%ebx)
 #endif
-	testl	%eax, %eax
-	je	1f
+	jz	1f
 
 #if cond_lock == 0
 	movl	%ebx, %ecx

@@ -54,8 +54,7 @@ __pthread_rwlock_rdlock:
 #else
 	cmpxchgl %edx, MUTEX(%ebx)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 2:	movl	WRITER(%ebx), %eax
 	testl	%eax, %eax
@@ -94,8 +93,7 @@ __pthread_rwlock_rdlock:
 #else
 	cmpxchgl %edx, MUTEX(%ebx)
 #endif
-	testl	%eax, %eax
-	jne	12f
+	jnz	12f
 
 13:	subl	$1, READERS_QUEUED(%ebx)
 	jmp	2b

@@ -59,8 +59,7 @@ __pthread_cond_broadcast:
 #else
 	cmpxchgl %edx, cond_lock(%ebx)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 2:	addl	$wakeup_seq, %ebx
 	movl	total_seq+4-wakeup_seq(%ebx), %eax

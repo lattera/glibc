@@ -47,14 +47,14 @@ __pthread_cond_signal:
 	/* Get internal lock.  */
 	movq	%rdi, %r8
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	1f
+	jnz	1f
 
 2:	addq	$wakeup_seq, %rdi
 	movq	total_seq(%r8), %rcx
@@ -65,20 +65,10 @@ __pthread_cond_signal:
 	addq	$1, (%rdi)
 
 	/* Wake up one thread.  */
-	movq	$FUTEX_REQUEUE, %rsi
+	movq	$FUTEX_WAKE, %rsi
 	movq	$SYS_futex, %rax
-	xorq	%rdx, %rdx
-	movq	$1, %r10
+	movq	$1, %rdx
 	syscall
-
-#ifndef __ASSUME_FUTEX_REQUEUE
-	cmpq	$-EINVAL, %rax
-	je	7f
-#endif
-
-	/* If we moved a thread we in any case have to make the syscall.  */
-	testq	%rax, %rax
-	jne	5f
 
 	/* Unlock.  */
 4:	LOCK
@@ -112,15 +102,6 @@ __pthread_cond_signal:
 #endif
 	callq	__lll_mutex_unlock_wake
 	jmp	6b
-
-#ifndef __ASSUME_FUTEX_REQUEUE
-7:	/* The futex requeue functionality is not available.  */
-	movq	$1, %rdx
-	movq	$FUTEX_WAKE, %rsi
-	movq	$SYS_futex, %rax
-	syscall
-	jmp	4b
-#endif
 	.size	__pthread_cond_signal, .-__pthread_cond_signal
 versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2)

@@ -65,8 +65,7 @@ __lll_mutex_lock_wait:
 2:	LOCK
 	cmpxchgl %edx, (%ebx)
 
-	testl	%eax, %eax
-	jne,pn	1b
+	jnz,pn	1b
 
 	popl	%edx
 	popl	%ebx
@@ -144,8 +143,7 @@ __lll_mutex_timedlock_wait:
 	LOCK
 	cmpxchgl %edx, (%ebx)
 
-	testl	%eax, %eax
-	jne	7f
+	jnz	7f
 
 6:	addl	$8, %esp
 	popl	%ebp

@@ -38,10 +38,11 @@
 	.align	16
 pthread_barrier_wait:
 	/* Get the mutex.  */
-	orl	$-1, %esi
+	xorl	%eax, %eax
+	movl	$1, %esi
 	LOCK
-	xaddl	%esi, MUTEX(%rdi)
-	jne	1f
+	cmpxchgl %esi, MUTEX(%rdi)
+	jnz	1f
 
 	/* One less waiter.  If this was the last one needed wake
 	   everybody.  */
@@ -57,8 +58,8 @@ pthread_barrier_wait:
 
 	/* Release the mutex.  */
 	LOCK
-	addl	$1, MUTEX(%rdi)
-	jng	6f
+	decl	MUTEX(%rdi)
+	jne	6f
 
 	/* Wait for the remaining threads.  The call will return immediately
 	   if the CURR_EVENT memory has meanwhile been changed.  */
@@ -102,25 +103,25 @@ pthread_barrier_wait:
 	   waking the waiting threads since otherwise a new thread might
 	   arrive and gets waken up, too.  */
 	LOCK
-	addl	$1, MUTEX(%rdi)
-	jng	4f
+	decl	MUTEX(%rdi)
+	jne	4f
 
 5:	orl	$-1, %eax		/* == PTHREAD_BARRIER_SERIAL_THREAD */
 
 	retq
 
 1:	addq	$MUTEX, %rdi
-	callq	__lll_lock_wait
+	callq	__lll_mutex_lock_wait
 	subq	$MUTEX, %rdi
 	jmp	2b
 
 4:	addq	$MUTEX, %rdi
-	callq	__lll_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	subq	$MUTEX, %rdi
 	jmp	5b
 
 6:	addq	$MUTEX, %rdi
-	callq	__lll_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	subq	$MUTEX, %rdi
 	jmp	7b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

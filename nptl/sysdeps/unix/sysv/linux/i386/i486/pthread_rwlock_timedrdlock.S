@@ -58,8 +58,7 @@ pthread_rwlock_timedrdlock:
 #else
 	cmpxchgl %edx, MUTEX(%ebp)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 2:	movl	WRITER(%ebp), %eax
 	testl	%eax, %eax
@@ -127,8 +126,7 @@ pthread_rwlock_timedrdlock:
 #else
 	cmpxchgl %edx, MUTEX(%ebp)
 #endif
-	testl	%eax, %eax
-	jne	12f
+	jnz	12f
 
 13:	subl	$1, READERS_QUEUED(%ebp)
 	cmpl	$-ETIMEDOUT, %ecx

@@ -43,14 +43,14 @@ __pthread_rwlock_rdlock:
 
 	/* Get the lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, MUTEX(%rdi)
+	cmpxchgl %esi, MUTEX(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	1f
+	jnz	1f
 
 2:	movl	WRITER(%rdi), %eax
 	testl	%eax, %eax
@@ -82,14 +82,14 @@ __pthread_rwlock_rdlock:
 
 	/* Reget the lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, MUTEX(%rdi)
+	cmpxchgl %esi, MUTEX(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	12f
+	jnz	12f
 
 13:	decl	READERS_QUEUED(%rdi)
 	jmp	2b

@@ -58,8 +58,7 @@ __pthread_cond_signal:
 #else
 	cmpxchgl %edx, cond_lock(%edi)
 #endif
-	testl	%eax, %eax
-	jne	1f
+	jnz	1f
 
 2:	leal	wakeup_seq(%edi), %ebx
 	movl	total_seq+4(%edi), %eax

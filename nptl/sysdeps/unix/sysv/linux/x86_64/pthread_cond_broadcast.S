@@ -46,14 +46,14 @@ __pthread_cond_broadcast:
 
 	/* Get internal lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, cond_lock(%rdi)
+	cmpxchgl %esi, cond_lock(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	1f
+	jnz	1f
 
 2:	addq	$wakeup_seq, %rdi
 	movq	total_seq-wakeup_seq(%rdi), %rcx

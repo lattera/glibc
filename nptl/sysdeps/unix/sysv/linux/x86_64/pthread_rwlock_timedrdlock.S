@@ -53,14 +53,14 @@ pthread_rwlock_timedrdlock:
 
 	/* Get the lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%rdi)
+	cmpxchgl %esi, (%rdi)
 #else
-	xaddl	%esi, MUTEX(%rdi)
+	cmpxchgl %esi, MUTEX(%rdi)
 #endif
-	testl	%esi, %esi
-	jne	1f
+	jnz	1f
 
 2:	movl	WRITER(%r12), %eax
 	testl	%eax, %eax
@@ -123,14 +123,14 @@ pthread_rwlock_timedrdlock:
 
 	/* Reget the lock.  */
 	movl	$1, %esi
+	xorl	%eax, %eax
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%r12)
+	cmpxchgl %esi, (%r12)
 #else
-	xaddl	%esi, MUTEX(%r12)
+	cmpxchgl %esi, MUTEX(%r12)
 #endif
-	testl	%esi, %esi
-	jne	12f
+	jnz	12f
 
 13:	decl	READERS_QUEUED(%r12)
 	cmpq	$-ETIMEDOUT, %rdx

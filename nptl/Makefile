@@ -29,8 +29,7 @@ extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 install-lib-ldscripts := libpthread.so
 
-routines = alloca_cutoff forward libc-lowlevellock libc-lowlevelmutex \
-	   libc-cancellation
+routines = alloca_cutoff forward libc-lowlevellock libc-cancellation
 shared-only-routines = forward
 
 libpthread-routines = init events version \
@@ -102,7 +101,7 @@ libpthread-routines = init events version \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp \
 		      cancellation \
-		      lowlevellock lowlevelmutex \
+		      lowlevellock \
 		      pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
 		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \

@@ -115,8 +115,7 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 #define lll_mutex_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"		      \
-			      "testl %0, %0\n\t"			      \
-			      "jne _L_mutex_lock_%=\n\t"		      \
+			      "jnz _L_mutex_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_lock_%=,@function\n"	      \
 			      "_L_mutex_lock_%=:\n\t"			      \
@@ -136,8 +135,7 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 #define lll_mutex_cond_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "cmpxchgl %1, %2\n\t"		      \
-			      "testl %0, %0\n\t"			      \
-			      "jne _L_mutex_cond_lock_%=\n\t"		      \
+			      "jnz _L_mutex_cond_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_cond_lock_%=,@function\n"	      \
 			      "_L_mutex_cond_lock_%=:\n\t"		      \
@@ -155,8 +153,7 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int result, ignore1, ignore2;					      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %3\n\t"			      \
-		       "testl %0, %0\n\t"				      \
-		       "jne _L_mutex_timedlock_%=\n\t"			      \
+		       "jnz _L_mutex_timedlock_%=\n\t"			      \
 		       ".subsection 1\n\t"				      \
 		       ".type _L_mutex_timedlock_%=,@function\n"	      \
 		       "_L_mutex_timedlock_%=:\n\t"			      \
@@ -251,8 +248,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\tcmpxchgl %1, %2\n\t"			      \
-			      "testl %0, %0\n\t"			      \
-			      "jne _L_mutex_lock_%=\n\t"		      \
+			      "jnz _L_mutex_lock_%=\n\t"		      \
 			      ".subsection 1\n\t"			      \
 			      ".type _L_mutex_lock_%=,@function\n"	      \
 			      "_L_mutex_lock_%=:\n\t"			      \
