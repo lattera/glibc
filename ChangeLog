@@ -1,3 +1,8 @@
+2000-05-04  Andreas Jaeger  <aj@suse.de>
+
+	* string/string.h: Remove __strdup prototype, it's not needed in
+	this file anymore.
+
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-fork.

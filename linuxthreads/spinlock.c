@@ -52,7 +52,6 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
       newstatus = (long) self;
     }
     if (self != NULL) {
-      ASSERT(self->p_nextlock == NULL);
       THREAD_SETMEM(self, p_nextlock, (pthread_descr) oldstatus);
       /* Make sure the store in p_nextlock completes before performing
          the compare-and-swap */
