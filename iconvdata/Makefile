@@ -118,9 +118,7 @@ ifeq (yes,$(build-shared))
 
 # Rule to generate the shared objects.
 charmaps = ../localedata/charmaps
-ifndef no_deps
 -include $(objpfx)iconv-rules
-endif
 extra-modules-left := $(modules)
 include extra-module.mk
 
@@ -186,6 +184,7 @@ endef
 # The headers must be generated before the compilation.
 before-compile = $(addprefix $(objpfx),$(generated-modules:=.h))
 
+ifndef avoid-generated
 $(objpfx)iconv-rules: Makefile
 	$(make-target-directory)
 	{ echo $(filter-out lib%, $(modules)); \
@@ -207,6 +206,7 @@ $(objpfx)iconv-rules: Makefile
 		  } \
 		}' > $@.new
 	mv -f $@.new $@
+endif
 
 $(generated-modules:%=$(objpfx)%.h): $(objpfx)%.h: $(objpfx)%.stmp
 	@:

@@ -270,7 +270,6 @@ endif
 
 endif
 
-ifndef avoid-generated
 ifndef inhibit-unix-syscalls
 
 # Sysdep dirs unix/... can contain a file syscalls.list,
@@ -286,6 +285,7 @@ endif
 export sysdirs
 export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
 
+ifndef avoid-generated
 $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $(+sysdep_dirs); do \
@@ -294,6 +294,7 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@
+endif
 
 # This syscall objects depend on s-proto.d, which is generated to
 # specify dependencies generated syscalls with have on headers.
@@ -313,5 +314,4 @@ $(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
 common-generated += s-proto.d
 postclean-generated += sysd-syscalls
 
-endif
 endif

@@ -210,7 +210,7 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 $(objpfx)sprof: $(libdl)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
-generated += $(test-modules)
+generated += $(addsuffix .so,$(modules-names))
 
 $(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)

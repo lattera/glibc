@@ -1,3 +1,21 @@
+1999-02-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/libc.texinfo: Wrap @top node inside @ifnottex instead of
+	@ifinfo.
+
+1999-02-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* iconvdata/Makefile: Always include iconv-rules, but disable rule
+	to regenerate it if avoid-generated.
+
+	* Makeconfig: Always include sys-dirs, but disable rule to
+	regenerate it when avoid-generated.
+
+	* sysdeps/unix/Makefile: Put `ifndef avoid-generated' only around
+	rule to generate sysd-syscalls.
+
+	* elf/Makefile (generated): Remove $(objpfx) from names.
+
 1999-02-28  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/getsockname.c (getsockname): Set *LEN to the
