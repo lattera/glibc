@@ -465,7 +465,7 @@ _dl_map_object_deps (struct link_map *map,
 
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
-  map->l_searchlist.r_list = malloc ((2 * nlist
+  map->l_searchlist.r_list = malloc ((2 * nlist + 1
 				      + (nlist == nduplist ? 0 : nduplist))
 				     * sizeof (struct link_map *));
   if (map->l_searchlist.r_list == NULL)
@@ -549,4 +549,6 @@ _dl_map_object_deps (struct link_map *map,
 	    }
 	}
     }
+  /* Terminate the list of dependencies.  */
+  map->l_initfini[nlist] = NULL;
 }

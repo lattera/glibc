@@ -1,3 +1,12 @@
+2000-05-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-sym.c (_dl_sym): Test ref not result for non-zero.
+	(_dl_vsym): Likewise.
+	Reported by Owen Taylor <otaylor@redhat.com>.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Zero terminate L->l_initfini
+	always.
+
 2000-05-08  Andreas Jaeger  <aj@suse.de>
 
 	* include/libintl.h: Add prototype for __bind_textdomain_codeset.

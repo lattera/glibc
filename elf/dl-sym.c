@@ -74,7 +74,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	}
     }
 
-  if (result)
+  if (ref)
     return DL_SYMBOL_ADDRESS (result, ref);
 
   return NULL;
@@ -130,7 +130,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 					    map->l_local_scope, &vers, 0);
     }
 
-  if (result)
+  if (ref)
     return DL_SYMBOL_ADDRESS (result, ref);
   return NULL;
 }
