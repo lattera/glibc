@@ -1,5 +1,8 @@
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* libc-cancellation.c (__libc_enable_asynccancel): Correct test
+	for failed cmpxchg.
+
 	* pthread_create.c (start_thread): Set EXITING_BIT early.
 
 	* sysdeps/i386/tls.h (THREAD_GETMEM): Mark asm as volatile.

@@ -1,5 +1,8 @@
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (CFLAGS-regex.c): Remove RE_ENABLE_I18N definition.
+	* posix/regex_internal.h (RE_ENABLE_I18N): Pretty printing.
+
 	* resolv/res_libc.c [USE___THREAD] (_res): Initialize _vcsock
 	element to -1.
 

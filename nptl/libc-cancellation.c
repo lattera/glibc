@@ -47,7 +47,7 @@ __libc_enable_asynccancel (void)
 	    break;
 
 	  if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
-					       oldval) == 0)
+					       oldval) != 0)
 	    /* Somebody else modified the word, try again.  */
 	    continue;
 

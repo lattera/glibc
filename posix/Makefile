@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -115,7 +115,7 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 endif
 endif
 
-CFLAGS-regex.c = -Wno-strict-prototypes -DRE_ENABLE_I18N
+CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

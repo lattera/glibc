@@ -74,8 +74,8 @@
 # define gettext_noop(String) String
 #endif
 
-#if (defined (MB_CUR_MAX) && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_WCRTOMB && HAVE_MBRTOWC && HAVE_WCSCOLL) || _LIBC
-#define RE_ENABLE_I18N
+#if (defined MB_CUR_MAX && HAVE_LOCALE_H && HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_WCRTOMB && HAVE_MBRTOWC && HAVE_WCSCOLL) || _LIBC
+# define RE_ENABLE_I18N
 #endif
 
 #if __GNUC__ >= 3
