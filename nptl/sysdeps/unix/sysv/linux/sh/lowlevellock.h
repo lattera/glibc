@@ -89,6 +89,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	    __asm __volatile ("\
 		.align 2\n\
 		mova 1f,r0\n\
+		nop\n\
 		mov r15,r1\n\
 		mov #-8,r15\n\
 	     0: mov.l @%2,%0\n\
@@ -108,6 +109,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	    __asm __volatile ("\
 		.align 2\n\
 		mova 1f,r0\n\
+		nop\n\
 		mov r15,r1\n\
 		mov #-8,r15\n\
 	     0: mov.l @%2,%0\n\
@@ -125,6 +127,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
      __asm __volatile ("\
 	.align 2\n\
 	mova 1f,r0\n\
+	nop\n\
 	mov r15,r1\n\
 	mov #-8,r15\n\
      0: mov.l @%2,%0\n\

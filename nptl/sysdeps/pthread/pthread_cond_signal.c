@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -40,19 +40,10 @@ __pthread_cond_signal (cond)
     {
       /* Yes.  Mark one of them as woken.  */
       ++cond->__data.__wakeup_seq;
-
-      /* The futex syscall operates on a 32-bit word.  That is fine,
-	 we just use the low 32 bits of the sequence counter.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-      int *futex = ((int *) (&cond->__data.__wakeup_seq));
-#elif BYTE_ORDER == BIG_ENDIAN
-      int *futex = ((int *) (&cond->__data.__wakeup_seq)) + 1;
-#else
-# error "No valid byte order"
-#endif
+      ++cond->__data.__futex;
 
       /* Wake one.  */
-      lll_futex_wake (futex, 1);
+      lll_futex_wake (&cond->__data.__futex, 1);
     }
 
   /* We are done.  */

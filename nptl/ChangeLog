@@ -1,3 +1,95 @@
+2004-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-cond16.
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym (cond_futex): Add.
+	* pthread_cond_init.c (__pthread_cond_init): Clear __data.__futex.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_signal.S
+	(__pthread_cond_signal): Increment __futex at the same time as
+	__wakeup_seq or __total_seq.  Pass address of __futex instead of
+	address of low 32-bits of __wakeup_seq to futex syscall.
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.  Pass __futex value from before
+	releasing internal lock to FUTEX_WAIT.
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_broadcast.S
+	(FUTEX_CMP_REQUEUE): Define.
+	(__pthread_cond_broadcast): Set __futex to 2 * __total_seq.
+	Use FUTEX_CMP_REQUEUE operation instead of FUTEX_REQUEUE.
+	Pass __futex value from before the unlock and __futex address instead
+	of address of low 32-bits of __wakeup_seq to futex syscall.
+	Fallback to FUTEX_WAKE all on any errors.
+	* sysdeps/unix/sysv/linux/alpha/lowlevellock.h (FUTEX_CMP_REQUEUE):
+	Define.
+	(lll_futex_requeue): Add val argument, use FUTEX_CMP_REQUEUE
+	internally.  Return non-zero if error, zero if success.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (FUTEX_CMP_REQUEUE):
+	Define.
+	(lll_futex_requeue): Add val argument, return 1 unconditionally
+	for the time being.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (FUTEX_CMP_REQUEUE):
+	Define.
+	(lll_futex_requeue): Add val argument, use FUTEX_CMP_REQUEUE
+	internally.  Return non-zero if error, zero if success.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(pthread_cond_t): Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (FUTEX_CMP_REQUEUE):
+	Define.
+	(lll_futex_requeue): Add val argument, use FUTEX_CMP_REQUEUE
+	internally.  Return non-zero if error, zero if success.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (FUTEX_CMP_REQUEUE):
+	Define.
+	(lll_futex_requeue): Add val argument, use FUTEX_CMP_REQUEUE
+	internally.  Return non-zero if error, zero if success.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h (pthread_cond_t):
+	Add __data.__futex field, reshuffle __data.__clock.
+	* sysdeps/pthread/pthread_cond_signal.c (__pthread_cond_signal):
+	Increment __futex at the same time as __wakeup_seq or __total_seq.
+	Pass address of __futex instead of address of low 32-bits of
+	__wakeup_seq to futex syscall.
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Likewise.
+	Pass __futex value from before releasing internal lock
+	to FUTEX_WAIT.
+	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Likewise.  Avoid unnecessary shadowing of variables.
+	* sysdeps/pthread/pthread_cond_broadcast.c (__pthread_cond_broadcast):
+	Set __futex to 2 * __total_seq.  Pass __futex value from before the
+	unlock and __futex address instead of address of low 32-bits of
+	__wakeup_seq to futex_requeue macro, adjust for new return value
+	meaning.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S
+	(__pthread_cond_signal): Increment __futex at the same time as
+	__wakeup_seq or __total_seq.  Pass address of __futex instead of
+	address of low 32-bits of __wakeup_seq to futex syscall.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.  Pass __futex value from before
+	releasing internal lock to FUTEX_WAIT.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
+	(FUTEX_CMP_REQUEUE): Define.
+	(__pthread_cond_broadcast): Set __futex to 2 * __total_seq.
+	Use FUTEX_CMP_REQUEUE operation instead of FUTEX_REQUEUE.
+	Pass __futex value from before the unlock and __futex address instead
+	of address of low 32-bits of __wakeup_seq to futex syscall.
+	Fallback to FUTEX_WAKE all on any errors.
+
+2004-06-03  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (lll_mutex_lock):
+	Add nop to align the end of critical section.
+	(lll_mutex_cond_lock, lll_mutex_timedlock): Likewise.
+
 2004-06-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):

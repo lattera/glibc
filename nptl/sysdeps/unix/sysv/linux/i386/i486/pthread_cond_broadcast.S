@@ -32,6 +32,7 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
+#define FUTEX_CMP_REQUEUE	4
 
 #define EINVAL			22
 
@@ -47,8 +48,9 @@ __pthread_cond_broadcast:
 	pushl	%ebx
 	pushl	%esi
 	pushl	%edi
+	pushl	%ebp
 
-	movl	16(%esp), %ebx
+	movl	20(%esp), %ebx
 
 	/* Get internal lock.  */
 	movl	$1, %edx
@@ -61,29 +63,31 @@ __pthread_cond_broadcast:
 #endif
 	jnz	1f
 
-2:	addl	$wakeup_seq, %ebx
-	movl	total_seq+4-wakeup_seq(%ebx), %eax
-	movl	total_seq-wakeup_seq(%ebx), %ecx
-	cmpl	4(%ebx), %eax
+2:	addl	$cond_futex, %ebx
+	movl	total_seq+4-cond_futex(%ebx), %eax
+	movl	total_seq-cond_futex(%ebx), %ebp
+	cmpl	wakeup_seq+4-cond_futex(%ebx), %eax
 	ja	3f
 	jb	4f
-	cmpl	(%ebx), %ecx
+	cmpl	wakeup_seq-cond_futex(%ebx), %ebp
 	jna	4f
 
 	/* Cause all currently waiting threads to recognize they are
 	   woken up.  */
-3:	movl	%ecx, (%ebx)
-	movl	%eax, 4(%ebx)
-	movl	%ecx, woken_seq-wakeup_seq(%ebx)
-	movl	%eax, woken_seq-wakeup_seq+4(%ebx)
-	addl	$1, broadcast_seq-wakeup_seq(%ebx)
+3:	movl	%ebp, wakeup_seq-cond_futex(%ebx)
+	movl	%eax, wakeup_seq-cond_futex+4(%ebx)
+	movl	%ebp, woken_seq-cond_futex(%ebx)
+	movl	%eax, woken_seq-cond_futex+4(%ebx)
+	addl	%ebp, %ebp
+	addl	$1, broadcast_seq-cond_futex(%ebx)
+	movl	%ebp, (%ebx)
 
 	/* Get the address of the mutex used.  */
-	movl	dep_mutex-wakeup_seq(%ebx), %edi
+	movl	dep_mutex-cond_futex(%ebx), %edi
 
 	/* Unlock.  */
 	LOCK
-	subl	$1, cond_lock-wakeup_seq(%ebx)
+	subl	$1, cond_lock-cond_futex(%ebx)
 	jne	7f
 
 	/* Don't use requeue for pshared condvars.  */
@@ -91,7 +95,7 @@ __pthread_cond_broadcast:
 	je	9f
 
 	/* Wake up all threads.  */
-	movl	$FUTEX_REQUEUE, %ecx
+	movl	$FUTEX_CMP_REQUEUE, %ecx
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %esi
 	movl	$1, %edx
@@ -99,14 +103,18 @@ __pthread_cond_broadcast:
 # if MUTEX_FUTEX != 0
 	addl	$MUTEX_FUTEX, %edi
 # endif
-	ENTER_KERNEL
+/* FIXME: Until Ingo fixes 4G/4G vDSO, 6 arg syscalls are broken for sysenter.
+	ENTER_KERNEL  */
+	int	$0x80
 
-#ifndef __ASSUME_FUTEX_REQUEUE
-	cmpl	$-EINVAL, %eax
-	je	9f
-#endif
+	/* For any kind of error, which mainly is EAGAIN, we try again
+	   with WAKE.  The general test also covers running on old
+	   kernels.  */
+	cmpl	$0xfffff001, %eax
+	jae	9f
 
 10:	xorl	%eax, %eax
+	popl	%ebp
 	popl	%edi
 	popl	%esi
 	popl	%ebx
@@ -115,10 +123,11 @@ __pthread_cond_broadcast:
 	.align	16
 	/* Unlock.  */
 4:	LOCK
-	subl	$1, cond_lock-wakeup_seq(%ebx)
+	subl	$1, cond_lock-cond_futex(%ebx)
 	jne	5f
 
 6:	xorl	%eax, %eax
+	popl	%ebp
 	popl	%edi
 	popl	%esi
 	popl	%ebx
@@ -135,12 +144,12 @@ __pthread_cond_broadcast:
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
-5:	leal	cond_lock-wakeup_seq(%ebx), %eax
+5:	leal	cond_lock-cond_futex(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	6b
 
 	/* Unlock in loop requires waekup.  */
-7:	leal	cond_lock-wakeup_seq(%ebx), %eax
+7:	leal	cond_lock-cond_futex(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	8b
 

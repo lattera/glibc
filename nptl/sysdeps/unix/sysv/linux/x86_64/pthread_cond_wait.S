@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -69,6 +69,8 @@ __condvar_cleanup:
 
 	incq	woken_seq(%rdi)
 
+	incl	cond_futex(%rdi)
+
 3:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
@@ -82,7 +84,7 @@ __condvar_cleanup:
 	callq	__lll_mutex_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	addq	$wakeup_seq, %rdi
+2:	addq	$cond_futex, %rdi
 	movq	$FUTEX_WAKE, %rsi
 	movl	$0x7fffffff, %edx
 	movq	$SYS_futex, %rax
@@ -154,6 +156,7 @@ __pthread_cond_wait:
 
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
+	incl	cond_futex(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -167,13 +170,14 @@ __pthread_cond_wait:
 
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
-	movq	wakeup_seq(%rdi), %r12
+	movq	wakeup_seq(%rdi), %r9
 	movl	broadcast_seq(%rdi), %edx
-	movq	%r12, 24(%rsp)
+	movq	%r9, 24(%rsp)
 	movl	%edx, 4(%rsp)
 
 	/* Unlock.  */
-8:	LOCK
+8:	movl	cond_futex(%rdi), %r12d
+	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
@@ -187,7 +191,7 @@ __pthread_cond_wait:
 	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
 	movq	%r12, %rdx
-	addq	$wakeup_seq-cond_lock, %rdi
+	addq	$cond_futex-cond_lock, %rdi
 	movq	$SYS_futex, %rax
 	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	syscall
@@ -211,15 +215,15 @@ __pthread_cond_wait:
 
 	movq	woken_seq(%rdi), %rax
 
-	movq	wakeup_seq(%rdi), %r12
+	movq	wakeup_seq(%rdi), %r9
 
 	cmpl	4(%rsp), %edx
 	jne	16f
 
-	cmpq	24(%rsp), %r12
+	cmpq	24(%rsp), %r9
 	jbe	8b
 
-	cmpq	%rax, %r12
+	cmpq	%rax, %r9
 	jna	8b
 
 	incq	woken_seq(%rdi)
@@ -359,8 +363,8 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.byte	0x40+.Lsubq-.Lpush_r12		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16+FRAME_SIZE
-	.byte	2				# DW_CFA_advance_loc1
-	.byte	.Laddq-.Lsubq
+	.byte	3				# DW_CFA_advance_loc2
+	.2byte	.Laddq-.Lsubq
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	0x40+.Lpop_r12-.Laddq		# DW_CFA_advance_loc+N

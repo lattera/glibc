@@ -30,6 +30,7 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
+#define FUTEX_CMP_REQUEUE	4
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -64,15 +65,16 @@
     INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
   })
 
-#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex) \
+/* Returns non-zero if error happened, zero if success.  */
+#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
 									      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 5,				      \
-			      (futexp), FUTEX_REQUEUE, (nr_wake), (nr_move),  \
-			      (mutex));					      \
-    INTERNAL_SYSCALL_ERROR_P (__ret, __err) ? -__ret : __ret;		      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
+			      (futexp), FUTEX_CMP_REQUEUE, (nr_wake),	      \
+			      (nr_move), (mutex), (val));		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
 #ifdef UP

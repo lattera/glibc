@@ -41,21 +41,13 @@ __pthread_cond_broadcast (cond)
       /* Yes.  Mark them all as woken.  */
       cond->__data.__wakeup_seq = cond->__data.__total_seq;
       cond->__data.__woken_seq = cond->__data.__total_seq;
+      cond->__data.__futex = (unsigned int) cond->__data.__total_seq * 2;
+      int futex_val = cond->__data.__futex;
       /* Signal that a broadcast happened.  */
       ++cond->__data.__broadcast_seq;
 
       /* We are done.  */
       lll_mutex_unlock (cond->__data.__lock);
-
-      /* The futex syscall operates on a 32-bit word.  That is fine,
-	 we just use the low 32 bits of the sequence counter.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-      int *futex = ((int *) (&cond->__data.__wakeup_seq));
-#elif BYTE_ORDER == BIG_ENDIAN
-      int *futex = ((int *) (&cond->__data.__wakeup_seq)) + 1;
-#else
-# error "No valid byte order"
-#endif
 
       /* Do not use requeue for pshared condvars.  */
       if (cond->__data.__mutex == (void *) ~0l)
@@ -63,13 +55,15 @@ __pthread_cond_broadcast (cond)
 
       /* Wake everybody.  */
       pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
-      if (__builtin_expect (lll_futex_requeue (futex, 1, INT_MAX,
-					       &mut->__data.__lock) == -EINVAL,
-			    0))
+      /* lll_futex_requeue returns 0 for success and non-zero
+	 for errors.  */
+      if (__builtin_expect (lll_futex_requeue (&cond->__data.__futex, 1,
+					       INT_MAX, &mut->__data.__lock,
+					       futex_val), 0))
 	{
 	  /* The requeue functionality is not available.  */
 	wake_all:
-	  lll_futex_wake (futex, INT_MAX);
+	  lll_futex_wake (&cond->__data.__futex, INT_MAX);
 	}
 
       /* That's all.  */

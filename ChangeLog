@@ -1,3 +1,7 @@
+2004-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/atomic.h: Optimize a bit.
+
 2004-05-07  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* argp/argp-help.c (__argp_error, __argp_failure): Check result

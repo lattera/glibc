@@ -79,6 +79,7 @@ __pthread_cond_wait:
 
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
+	addl	$1, cond_futex(%ebx)
 
 #define FRAME_SIZE 16
 	subl	$FRAME_SIZE, %esp
@@ -92,8 +93,10 @@ __pthread_cond_wait:
 	movl	%edx, 8(%esp)
 	movl	%eax, 12(%esp)
 
+8:	movl	cond_futex(%ebx), %edi
+
 	/* Unlock.  */
-8:	LOCK
+	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
@@ -107,12 +110,12 @@ __pthread_cond_wait:
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
-	addl	$wakeup_seq, %ebx
-.Ladd_wakeup:
+	addl	$cond_futex, %ebx
+.Ladd_cond_futex:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	subl	$wakeup_seq, %ebx
-.Lsub_wakeup:
+	subl	$cond_futex, %ebx
+.Lsub_cond_futex:
 
 	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
@@ -246,7 +249,7 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 
 	.type	__condvar_w_cleanup2, @function
 __condvar_w_cleanup2:
-	subl	$wakeup_seq, %ebx
+	subl	$cond_futex, %ebx
 	.size	__condvar_w_cleanup2, .-__condvar_w_cleanup2
 .LSbl4:
 	.type	__condvar_w_cleanup, @function
@@ -278,6 +281,8 @@ __condvar_w_cleanup:
 	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 
+	addl	$1, cond_futex(%ebx)
+
 	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
@@ -297,7 +302,7 @@ __condvar_w_cleanup:
 	call	__lll_mutex_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	addl	$wakeup_seq, %ebx
+2:	addl	$cond_futex, %ebx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %edx
@@ -323,15 +328,15 @@ __condvar_w_cleanup:
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.long	.LcleanupSTART-.LSTARTCODE
-	.long	.Ladd_wakeup-.LcleanupSTART
+	.long	.Ladd_cond_futex-.LcleanupSTART
 	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
-	.long	.Ladd_wakeup-.LSTARTCODE
-	.long	.Lsub_wakeup-.Ladd_wakeup
+	.long	.Ladd_cond_futex-.LSTARTCODE
+	.long	.Lsub_cond_futex-.Ladd_cond_futex
 	.long	__condvar_w_cleanup2-.LSTARTCODE
 	.uleb128  0
-	.long	.Lsub_wakeup-.LSTARTCODE
-	.long	.LcleanupEND-.Lsub_wakeup
+	.long	.Lsub_cond_futex-.LSTARTCODE
+	.long	.LcleanupEND-.Lsub_cond_futex
 	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LcallUR-.LSTARTCODE

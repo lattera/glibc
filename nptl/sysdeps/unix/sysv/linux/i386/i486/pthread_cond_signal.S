@@ -60,22 +60,23 @@ __pthread_cond_signal:
 #endif
 	jnz	1f
 
-2:	leal	wakeup_seq(%edi), %ebx
+2:	leal	cond_futex(%edi), %ebx
 	movl	total_seq+4(%edi), %eax
 	movl	total_seq(%edi), %ecx
-	cmpl	4(%ebx), %eax
+	cmpl	wakeup_seq+4(%edi), %eax
 #if cond_lock != 0
 	/* Must use leal to preserve the flags.  */
 	leal	cond_lock(%edi), %edi
 #endif
 	ja	3f
 	jb	4f
-	cmpl	(%ebx), %ecx
+	cmpl	wakeup_seq-cond_futex(%ebx), %ecx
 	jbe	4f
 
 	/* Bump the wakeup number.  */
-3:	addl	$1, (%ebx)
-	adcl	$0, 4(%ebx)
+3:	addl	$1, wakeup_seq-cond_futex(%ebx)
+	adcl	$0, wakeup_seq-cond_futex+4(%ebx)
+	addl	$1, (%ebx)
 
 	/* Wake up one thread.  */
 	movl	$FUTEX_WAKE, %ecx

@@ -4,6 +4,7 @@
 --
 
 cond_lock	offsetof (pthread_cond_t, __data.__lock)
+cond_futex	offsetof (pthread_cond_t, __data.__futex)
 cond_clock	offsetof (pthread_cond_t, __data.__clock)
 total_seq	offsetof (pthread_cond_t, __data.__total_seq)
 wakeup_seq	offsetof (pthread_cond_t, __data.__wakeup_seq)

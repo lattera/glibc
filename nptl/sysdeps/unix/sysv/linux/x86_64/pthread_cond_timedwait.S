@@ -105,6 +105,7 @@ __pthread_cond_timedwait:
 
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
+	incl	cond_futex(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -118,9 +119,9 @@ __pthread_cond_timedwait:
 
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
-	movq	wakeup_seq(%rdi), %r12
+	movq	wakeup_seq(%rdi), %r9
 	movl	broadcast_seq(%rdi), %edx
-	movq	%r12, 40(%rsp)
+	movq	%r9, 40(%rsp)
 	movl	%edx, 4(%rsp)
 
 	/* Get the current time.  */
@@ -172,6 +173,8 @@ __pthread_cond_timedwait:
 21:	movq	%rcx, 24(%rsp)
 	movq	%rdx, 32(%rsp)
 
+	movl	cond_futex(%rdi), %r12d
+
 	/* Unlock.  */
 	LOCK
 #if cond_lock == 0
@@ -187,7 +190,7 @@ __pthread_cond_timedwait:
 	leaq	24(%rsp), %r10
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	%r12, %rdx
-	addq	$wakeup_seq-cond_lock, %rdi
+	addq	$cond_futex, %rdi
 	movq	$SYS_futex, %rax
 	syscall
 	movq	%rax, %r14
@@ -211,21 +214,22 @@ __pthread_cond_timedwait:
 
 	movq	woken_seq(%rdi), %rax
 
-	movq	wakeup_seq(%rdi), %r12
+	movq	wakeup_seq(%rdi), %r9
 
 	cmpl	4(%rsp), %edx
 	jne	23f
 
-	cmpq	40(%rsp), %r12
+	cmpq	40(%rsp), %r9
 	jbe	15f
 
-	cmpq	%rax, %r12
+	cmpq	%rax, %r9
 	ja	9f
 
 15:	cmpq	$-ETIMEDOUT, %r14
 	jne	8b
 
 13:	incq	wakeup_seq(%rdi)
+	incl	cond_futex(%rdi)
 	movq	$ETIMEDOUT, %r14
 	jmp	14f
 

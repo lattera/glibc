@@ -32,6 +32,7 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
+#define FUTEX_CMP_REQUEUE	4
 
 #define EINVAL			22
 
@@ -55,39 +56,42 @@ __pthread_cond_broadcast:
 #endif
 	jnz	1f
 
-2:	addq	$wakeup_seq, %rdi
-	movq	total_seq-wakeup_seq(%rdi), %rcx
-	cmpq	(%rdi), %rcx
+2:	addq	$cond_futex, %rdi
+	movq	total_seq-cond_futex(%rdi), %r9
+	cmpq	wakeup_seq-cond_futex(%rdi), %r9
 	jna	4f
 
 	/* Cause all currently waiting threads to recognize they are
 	   woken up.  */
-	movq	%rcx, (%rdi)
-	movq	%rcx, woken_seq-wakeup_seq(%rdi)
-	incl	broadcast_seq-wakeup_seq(%rdi)
+	movq	%r9, wakeup_seq-cond_futex(%rdi)
+	movq	%r9, woken_seq-cond_futex(%rdi)
+	addq	%r9, %r9
+	movl	%r9d, (%rdi)
+	incl	broadcast_seq-cond_futex(%rdi)
 
 	/* Get the address of the mutex used.  */
-	movq	dep_mutex-wakeup_seq(%rdi), %r8
+	movq	dep_mutex-cond_futex(%rdi), %r8
 
 	/* Unlock.  */
 	LOCK
-	decl	cond_lock-wakeup_seq(%rdi)
+	decl	cond_lock-cond_futex(%rdi)
 	jne	7f
 
 8:	cmpq	$-1, %r8
 	je	9f
 
 	/* Wake up all threads.  */
-	movq	$FUTEX_REQUEUE, %rsi
+	movq	$FUTEX_CMP_REQUEUE, %rsi
 	movq	$SYS_futex, %rax
 	movl	$1, %edx
 	movq	$0x7fffffff, %r10
 	syscall
 
-#ifndef __ASSUME_FUTEX_REQUEUE
-	cmpq	$-EINVAL, %rax
-	je	9f
-#endif
+	/* For any kind of error, which mainly is EAGAIN, we try again
+	   with WAKE.  The general test also covers running on old
+	   kernels.  */
+	cmpq	$-4095, %rax
+	jae	9f
 
 10:	xorl	%eax, %eax
 	retq
@@ -95,7 +99,7 @@ __pthread_cond_broadcast:
 	.align	16
 	/* Unlock.  */
 4:	LOCK
-	decl	cond_lock-wakeup_seq(%rdi)
+	decl	cond_lock-cond_futex(%rdi)
 	jne	5f
 
 6:	xorl	%eax, %eax
@@ -113,14 +117,14 @@ __pthread_cond_broadcast:
 	jmp	2b
 
 	/* Unlock in loop requires wakeup.  */
-5:	addq	$cond_lock-wakeup_seq, %rdi
+5:	addq	$cond_lock-cond_futex, %rdi
 	callq	__lll_mutex_unlock_wake
 	jmp	6b
 
 	/* Unlock in loop requires wakeup.  */
-7:	addq	$cond_lock-wakeup_seq, %rdi
+7:	addq	$cond_lock-cond_futex, %rdi
 	callq	__lll_mutex_unlock_wake
-	subq	$cond_lock-wakeup_seq, %rdi
+	subq	$cond_lock-cond_futex, %rdi
 	jmp	8b
 
 9:	/* The futex requeue functionality is not available.  */

@@ -31,6 +31,7 @@ __pthread_cond_init (cond, cond_attr)
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
   cond->__data.__lock = LLL_MUTEX_LOCK_INITIALIZER;
+  cond->__data.__futex = 0;
   cond->__data.__clock = (icond_attr == NULL
 			  ? CLOCK_REALTIME : (icond_attr->value & 0xfe) >> 1);
   cond->__data.__total_seq = 0;

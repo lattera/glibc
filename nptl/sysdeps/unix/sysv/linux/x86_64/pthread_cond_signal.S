@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -56,13 +56,14 @@ __pthread_cond_signal:
 #endif
 	jnz	1f
 
-2:	addq	$wakeup_seq, %rdi
+2:	addq	$cond_futex, %rdi
 	movq	total_seq(%r8), %rcx
-	cmpq	(%rdi), %rcx
+	cmpq	wakeup_seq(%r8), %rcx
 	jbe	4f
 
 	/* Bump the wakeup number.  */
-	addq	$1, (%rdi)
+	addq	$1, wakeup_seq(%r8)
+	addl	$1, (%rdi)
 
 	/* Wake up one thread.  */
 	movq	$FUTEX_WAKE, %rsi
@@ -95,11 +96,7 @@ __pthread_cond_signal:
 
 	/* Unlock in loop requires wakeup.  */
 5:
-#if cond_lock != 0
-	addq	$cond_lock-wakeup_seq, %rdi
-#else
 	movq	%r8, %rdi
-#endif
 	callq	__lll_mutex_unlock_wake
 	jmp	6b
 	.size	__pthread_cond_signal, .-__pthread_cond_signal

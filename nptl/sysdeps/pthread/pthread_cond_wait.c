@@ -52,20 +52,14 @@ __condvar_cleanup (void *arg)
 	 appropriately.  */
       ++cbuffer->cond->__data.__wakeup_seq;
       ++cbuffer->cond->__data.__woken_seq;
+      ++cbuffer->cond->__data.__futex;
     }
 
   /* We are done.  */
   lll_mutex_unlock (cbuffer->cond->__data.__lock);
 
   /* Wake everybody to make sure no condvar signal gets lost.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-  int *futex = ((int *) (&cbuffer->cond->__data.__wakeup_seq));
-#elif BYTE_ORDER == BIG_ENDIAN
-  int *futex = ((int *) (&cbuffer->cond->__data.__wakeup_seq)) + 1;
-#else
-# error "No valid byte order"
-#endif
-  lll_futex_wake (futex, INT_MAX);
+  lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX);
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
@@ -95,6 +89,7 @@ __pthread_cond_wait (cond, mutex)
 
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
+  ++cond->__data.__futex;
 
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
@@ -118,27 +113,18 @@ __pthread_cond_wait (cond, mutex)
   /* Remember the broadcast counter.  */
   cbuffer.bc_seq = cond->__data.__broadcast_seq;
 
-  /* The futex syscall operates on a 32-bit word.  That is fine, we
-     just use the low 32 bits of the sequence counter.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-  int *futex = ((int *) (&cond->__data.__wakeup_seq));
-#elif BYTE_ORDER == BIG_ENDIAN
-  int *futex = ((int *) (&cond->__data.__wakeup_seq)) + 1;
-#else
-# error "No valid byte order"
-#endif
-
   do
     {
+      unsigned int futex_val = cond->__data.__futex;
+
       /* Prepare to wait.  Release the condvar futex.  */
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
-      /* Wait until woken by signal or broadcast.  Note that we
-	 truncate the 'val' value to 32 bits.  */
-      lll_futex_wait (futex, (unsigned int) val);
+      /* Wait until woken by signal or broadcast.  */
+      lll_futex_wait (&cond->__data.__futex, futex_val);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);

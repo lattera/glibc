@@ -140,30 +140,31 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define atomic_exchange_and_add(mem, value) \
-  ({ __typeof (*mem) result;						      \
-     __typeof (value) addval = (value);					      \
+  ({ __typeof (*mem) __result;						      \
+     __typeof (value) __addval = (value);				      \
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK_PREFIX "xaddb %b0, %1"			      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (addval), "m" (*mem));			      \
+			 : "=r" (__result), "=m" (*mem)			      \
+			 : "0" (__addval), "m" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK_PREFIX "xaddw %w0, %1"			      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (addval), "m" (*mem));			      \
+			 : "=r" (__result), "=m" (*mem)			      \
+			 : "0" (__addval), "m" (*mem));			      \
      else if (sizeof (*mem) == 4)					      \
        __asm __volatile (LOCK_PREFIX "xaddl %0, %1"			      \
-			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" (addval), "m" (*mem));			      \
+			 : "=r" (__result), "=m" (*mem)			      \
+			 : "0" (__addval), "m" (*mem));			      \
      else								      \
        {								      \
-	 __typeof (mem) memp = (mem);					      \
+	 __typeof (mem) __memp = (mem);					      \
+	 __typeof (*mem) __tmpval;					      \
+	 __result = *__memp;						      \
 	 do								      \
-	   result = *memp;						      \
-	 while (__arch_compare_and_exchange_val_64_acq (memp,		      \
-							result + addval,      \
-							result) == result);   \
+	   __tmpval = __result;						      \
+	 while ((__result = __arch_compare_and_exchange_val_64_acq	      \
+		 (__memp, __result + __addval, __result)) == __tmpval);	      \
        }								      \
-     result; })
+     __result; })
 
 
 #define atomic_add(mem, value) \
@@ -185,13 +186,14 @@ typedef uintmax_t uatomic_max_t;
 				: "ir" (value), "m" (*mem));		      \
 	    else							      \
 	      {								      \
-		__typeof (value) addval = (value);			      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
+		__typeof (value) __addval = (value);			      \
+		__typeof (mem) __memp = (mem);				      \
+		__typeof (*mem) __oldval = *__memp;			      \
+		__typeof (*mem) __tmpval;				      \
 		do							      \
-		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_val_64_acq		      \
-		       (memp, oldval + addval, oldval) == oldval);	      \
+		  __tmpval = __oldval;					      \
+		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
+		       (__memp, __oldval + __addval, __oldval)) == __tmpval); \
 	      }								      \
 	    })
 
@@ -249,12 +251,13 @@ typedef uintmax_t uatomic_max_t;
 				: "m" (*mem));				      \
 	    else							      \
 	      {								      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
+		__typeof (mem) __memp = (mem);				      \
+		__typeof (*mem) __oldval = *__memp;			      \
+		__typeof (*mem) __tmpval;				      \
 		do							      \
-		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_val_64_acq		      \
-		       (memp, oldval + 1, oldval) == oldval);		      \
+		  __tmpval = __oldval;					      \
+		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
+		       (__memp, __oldval + 1, __oldval)) == __tmpval);	      \
 	      }								      \
 	    })
 
@@ -293,12 +296,13 @@ typedef uintmax_t uatomic_max_t;
 				: "m" (*mem));				      \
 	    else							      \
 	      {								      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
+		__typeof (mem) __memp = (mem);				      \
+		__typeof (*mem) __oldval = *__memp;			      \
+		__typeof (*mem) __tmpval;				      \
 		do							      \
-		  oldval = *memp;					      \
-		while (__arch_compare_and_exchange_val_64_acq		      \
-		       (memp, oldval - 1, oldval) == oldval); 		      \
+		  __tmpval = __oldval;					      \
+		while ((__oldval = __arch_compare_and_exchange_val_64_acq     \
+		       (__memp, __oldval - 1, __oldval)) == __tmpval); 	      \
 	      }								      \
 	    })
 

@@ -30,6 +30,7 @@
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
+#define FUTEX_CMP_REQUEUE	4
 
 /* Delay in spinlock loop.  */
 #define BUSY_WAIT_NOP          asm ("hint @pause")
@@ -52,11 +53,13 @@
    _r10 == -1 ? -_retval : _retval;					\
 })
 
-#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex)			     \
+/* Returns non-zero if error happened, zero if success.  */
+#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val)		     \
 ({									     \
-   DO_INLINE_SYSCALL(futex, 5, (long) (ftx), FUTEX_REQUEUE, (int) (nr_wake), \
-		     (int) (nr_move), (long) (mutex));			     \
-   _r10 == -1 ? -_retval : _retval;					     \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx), FUTEX_CMP_REQUEUE,		     \
+		     (int) (nr_wake), (int) (nr_move), (long) (mutex),	     \
+		     (int) val);					     \
+   _r10 == -1;								     \
 })
 
 

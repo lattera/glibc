@@ -66,6 +66,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
+  ++cond->__data.__futex;
 
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
@@ -89,27 +90,17 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   /* Remember the broadcast counter.  */
   cbuffer.bc_seq = cond->__data.__broadcast_seq;
 
-  /* The futex syscall operates on a 32-bit word.  That is fine, we
-     just use the low 32 bits of the sequence counter.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-  int *futex = ((int *) (&cond->__data.__wakeup_seq));
-#elif BYTE_ORDER == BIG_ENDIAN
-  int *futex = ((int *) (&cond->__data.__wakeup_seq)) + 1;
-#else
-# error "No valid byte order"
-#endif
-
   while (1)
     {
       struct timespec rt;
       {
 #ifdef __NR_clock_gettime
 	INTERNAL_SYSCALL_DECL (err);
-	int val;
-	val = INTERNAL_SYSCALL (clock_gettime, err, 2,
+	int ret;
+	ret = INTERNAL_SYSCALL (clock_gettime, err, 2,
 				cond->__data.__clock, &rt);
 # ifndef __ASSUME_POSIX_TIMERS
-	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (val, err), 0))
+	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (ret, err), 0))
 	  {
 	    struct timeval tv;
 	    (void) gettimeofday (&tv, NULL);
@@ -149,15 +140,17 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	  goto timeout;
 	}
 
+      unsigned int futex_val = cond->__data.__futex;
+
       /* Prepare to wait.  Release the condvar futex.  */
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
-      /* Wait until woken by signal or broadcast.  Note that we
-	 truncate the 'val' value to 32 bits.  */
-      err = lll_futex_timed_wait (futex, (unsigned int) val, &rt);
+      /* Wait until woken by signal or broadcast.  */
+      err = lll_futex_timed_wait (&cond->__data.__futex,
+				  futex_val, &rt);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
@@ -180,6 +173,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	timeout:
 	  /* Yep.  Adjust the counters.  */
 	  ++cond->__data.__wakeup_seq;
+	  ++cond->__data.__futex;
 
 	  /* The error value.  */
 	  result = ETIMEDOUT;
