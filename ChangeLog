@@ -1,3 +1,15 @@
+1999-01-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __syscall_fork alias.
+	* sysdeps/unix/sysv/linux/vfork.c: Use vfork syscall if available,
+	otherwise use fork.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add vfork.
+	* sysdeps/unix/sysv/linux/sparc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc64/syscalls.list: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Correct handling of
+	INLINE_SYSCALL for syscall without parameters.
+
 1999-01-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/make-syscalls.sh: Set shared-only-routines for

@@ -1,6 +1,6 @@
-/* Copyright (C) 1992, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
+   Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -243,11 +243,10 @@ asm (".L__X'%ebx = 1\n\t"
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
-    "bpushl .L__X'%k2, %k2\n\t"						      \
-    "bmovl .L__X'%k2, %k2\n\t"						      \
+    LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
     "int $0x80\n\t"							      \
-    "bpopl .L__X'%k2, %k2\n\t"						      \
+    RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
     if (resultvar >= 0xfffff001)					      \
@@ -256,6 +255,23 @@ asm (".L__X'%ebx = 1\n\t"
 	resultvar = 0xffffffff;						      \
       }									      \
     (int) resultvar; })
+
+#define LOADARGS_0
+#define LOADARGS_1 \
+    "bpushl .L__X'%k2, %k2\n\t"						      \
+    "bmovl .L__X'%k2, %k2\n\t"
+#define LOADARGS_2	LOADARGS_1
+#define LOADARGS_3	LOADARGS_1
+#define LOADARGS_4	LOADARGS_1
+#define LOADARGS_5	LOADARGS_1
+
+#define RESTOREARGS_0
+#define RESTOREARGS_1 \
+    "bpopl .L__X'%k2, %k2\n\t"
+#define RESTOREARGS_2	RESTOREARGS_1
+#define RESTOREARGS_3	RESTOREARGS_1
+#define RESTOREARGS_4	RESTOREARGS_1
+#define RESTOREARGS_5	RESTOREARGS_1
 
 #define ASMFMT_0()
 #define ASMFMT_1(arg1) \

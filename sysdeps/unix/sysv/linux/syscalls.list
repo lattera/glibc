@@ -8,7 +8,7 @@ create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	1	fdatasync
 flock		-	flock		2	__flock		flock
-fork		-	fork		0	__fork		fork
+fork		-	fork		0	__syscall_fork	__fork fork
 get_kernel_syms	EXTRA	get_kernel_syms	1	get_kernel_syms
 getegid		-	getegid		0	__getegid	getegid
 geteuid		-	geteuid		0	__geteuid	geteuid

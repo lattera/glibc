@@ -67,6 +67,8 @@ db.c.texi \
 sysinfo.texi \
 conf.texi \
 ../crypt/crypt.texi \
+../crypt/genpass.c.texi \
+../crypt/testpass.c.texi \
 ../linuxthreads/linuxthreads.texi \
 lang.texi \
 add.c.texi \
