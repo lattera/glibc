@@ -61,8 +61,22 @@ main (void)
   struct timespec ts;
   timer_t timer_sig, timer_thr1, timer_thr2;
   int retval;
-  struct sigevent sigev1 = { SIGEV_SIGNAL, ZSIGALRM, { 0 }, notify_func, 0 };
-  struct sigevent sigev2 = { SIGEV_THREAD, 0, { 0 }, notify_func, 0 };
+  struct sigevent sigev1 =
+  {
+    .sigev_notify = SIGEV_SIGNAL,
+    .sigev_signo = ZSIGALRM
+  };
+  struct sigevent sigev2 =
+  {
+    .sigev_notify = SIGEV_THREAD,
+    ._sigev_un =
+    {
+      ._sigev_thread =
+      {
+	._function = notify_func
+      }
+    }
+  };
   struct itimerspec itimer1 = { { 0, 200000000 }, { 0, 200000000 } };
   struct itimerspec itimer2 = { { 0, 100000000 }, { 0, 500000000 } };
   struct itimerspec itimer3 = { { 0, 150000000 }, { 0, 300000000 } };
@@ -80,19 +94,9 @@ main (void)
   printf ("clock_getres returned %d, timespec = { %ld, %ld }\n",
 	  retval, ts.tv_sec, ts.tv_nsec);
 
-#if 1
   timer_create (CLOCK_REALTIME, &sigev1, &timer_sig);
-#else
-  timer_create (CLOCK_REALTIME, 0, &timer_sig);
-#endif
-
   timer_create (CLOCK_REALTIME, &sigev2, &timer_thr1);
   timer_create (CLOCK_REALTIME, &sigev2, &timer_thr2);
-
-#if 0
-  if (fork ())
-    exit (1);
-#endif
 
   timer_settime (timer_thr1, 0, &itimer2, &old);
   timer_settime (timer_thr2, 0, &itimer3, &old);
