@@ -1,3 +1,12 @@
+2002-04-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/pt-machine.h: Define _PT_MACHINE_H
+	if it isn't defined yet.
+	(FLOATING_STACKS, EARCH_STACK_MAX_SIZE): Defined.
+	(THREAD_GETMEM, THREAD_GETMEM_NC, THREAD_SETMEM, THREAD_SETMEM_NC):
+	Likewise.
+	* sysdeps/sh/tls.h: New file.
+
 2002-04-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* manager.c (__pthread_manager_event): Use self instead of arg

@@ -1035,6 +1035,12 @@ ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h
 # Support the GNU standard name for this target.
 .PHONY: check
 check: tests
+
+ifneq (,$(tests))
+cpp-srcs-left = $(tests)
+lib = tests
+include $(patsubst %,$(..)cppflags-iterator.mk,$(tests))
+endif
 
 .PHONY: TAGS
 TAGS: $(objpfx)distinfo $(..)MakeTAGS
