@@ -573,7 +573,7 @@ feature with a preprocessor conditional, like this:
 
 @smallexample
 #ifdef _POSIX_SAVED_IDS
-  setuid (user_user_id);
+  seteuid (user_user_id);
 #else
   setreuid (geteuid (), getuid ());
 #endif

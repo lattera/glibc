@@ -1,3 +1,54 @@
+2002-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/brk.c (__curbrk): Declare.
+	* sysdeps/generic/dl-brk.c: Add attribute_hidden to __curbrk.
+	* sysdeps/generic/dl-sbrk.c: Likewise.
+	* sysdeps/unix/arm/dl-brk.S: New file.
+	* sysdeps/unix/bsd/hp/m68k/dl-brk.S: New file.
+	* sysdeps/unix/bsd/osf/alpha/dl-brk.S: New file.
+	* sysdeps/unix/bsd/sun/m68k/dl-brk.S: New file.
+	* sysdeps/unix/bsd/vax/dl-brk.S: New file.
+	* sysdeps/unix/i386/dl-brk.S: New file.
+	* sysdeps/unix/mips/dl-brk.S: New file.
+	* sysdeps/unix/sparc/dl-brk.S: New file.
+	* sysdeps/unix/sysv/linux/alpha/dl-brk.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-brk.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/dl-brk.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-brk.S: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-brk.c: Remove.
+	* sysdeps/unix/sysv/linux/i386/dl-sbrk.c: Remove.
+
+2002-04-03  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile (headers): Add gnu/lib-names.h here instead of
+	install-others.
+	($(inst_includedir)/gnu/lib-names.h): Remove explicit
+	installation rule.
+	(install-headers): Add dependency on install-headers-nosubdir.
+	* stdio-common/Makefile (headers): Add bits/stdio_lim.h here
+	instead of install-others.
+	($(inst_includedir)/bits/stdio_lim.h): Remove explicit
+	installation rule.
+
+2002-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/users.tex (Enable/Disable Setuid): Fix typo in example.
+	Reported by Sam Roberts <sroberts@uniserve.com>.
+
+2002-04-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Skip relative relocs if
+	l_addr == 0 and ELF_MACHINE_REL_RELATIVE.
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_REL_RELATIVE): Define.
+	* sysdeps/ia64/dl-machine.h (ELF_MACHINE_REL_RELATIVE): Define.
+
+2002-04-03  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-machine.h (TRAMPOLINE_TEMPLATE): Add unwind info.
+	(RTLD_START): Ditto.
+	(__ia64_init_bootstrap_fdesc_table): Insert stop bit to avoid RAW
+	dependency violation.
+
 2002-04-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/mktime.c (__mktime_internal): Move check for year < 70 below

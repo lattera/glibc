@@ -83,11 +83,12 @@ elf_dynamic_do_rel (struct link_map *map,
       weak_extern (GL(dl_rtld_map));
 # endif
       if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
-# ifndef DO_RELA
+# if !defined DO_RELA || defined ELF_MACHINE_REL_RELATIVE
 	/* Rela platforms get the offset from r_addend and this must
 	   be copied in the relocation address.  Therefore we can skip
 	   the relative relocations only if this is for rel
-	   relocations...  */
+	   relocations or rela relocations if they are computed as
+	   memory_loc += l_addr...  */
 	if (l_addr != 0)
 # else
 	/* ...or we know the object has been prelinked.  */

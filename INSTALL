@@ -1,13 +1,13 @@
 Installing the GNU C Library
 ****************************
 
-   Before you do anything else, you should read the file `FAQ' found at
-the top level of the source tree.  This file answers common questions
+   Before you do anything else, you should read the file `FAQ' located
+at the top level of the source tree.  This file answers common questions
 and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
    Features can be added to GNU Libc via "add-on" bundles.  These are
-separate tarfiles which you unpack into the top level of the source
+separate tar files, which you unpack into the top level of the source
 tree.  Then you give `configure' the `--enable-add-ons' option to
 activate them, and they will be compiled into the library.  As of the
 2.2 release, one important component of glibc is distributed as
@@ -27,13 +27,13 @@ Configuring and compiling GNU Libc
 ==================================
 
    GNU libc can be compiled in the source directory, but we strongly
-advise to build it in a separate build directory.  For example, if you
-have unpacked the glibc sources in `/src/gnu/glibc-2.2.0', create a
+advise building it in a separate build directory.  For example, if you
+have  unpacked the glibc sources in `/src/gnu/glibc-2.2.0', create a
 directory `/src/gnu/glibc-build' to put the object files in.  This
 allows removing the whole build directory in case an error occurs,
 which is the safest way to get a fresh start and should always be done.
 
-   From your object directory, run the shell script `configure' found
+   From your object directory, run the shell script `configure' located
 at the top level of the source tree.  In the scenario above, you'd type
 
      $ ../glibc-2.2.0/configure ARGS...
@@ -44,11 +44,11 @@ directory, especially some files in the manual subdirectory.
 
 `configure' takes many options, but you can get away with knowing only
 two: `--prefix' and `--enable-add-ons'.  The `--prefix' option tells
-configure where you want glibc installed.  This defaults to
-`/usr/local'.  The `--enable-add-ons' option tells configure to use all
-the add-on bundles it finds in the source directory.  Since important
-functionality is provided in add-ons, you should always specify this
-option.
+`configure' where you want glibc installed. This defaults to
+`/usr/local'.  The `--enable-add-ons' option tells `configure' to use
+all the add-on bundles it finds in the source directory.  Since
+important functionality is provided in add-ons, you should always
+specify this option.
 
    It may also be useful to set the CC and CFLAGS variables in the
 environment when running `configure'.  CC selects the C compiler that
@@ -69,7 +69,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--with-headers=DIRECTORY'
      Look for kernel header files in DIRECTORY, not `/usr/include'.
      Glibc needs information from the kernel's private header files.
-     It will normally look in `/usr/include' for them, but if you
+     Glibc will normally look in `/usr/include' for them, but if you
      specify this option, it will look in DIRECTORY instead.
 
      This option is primarily of use on a system where the headers in
@@ -82,7 +82,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--enable-add-ons[=LIST]'
      Enable add-on packages in your source tree.  If this option is
      specified with no list, it enables all the add-on packages it
-     finds.  If you do not wish to use some add-on package that you
+     finds.  If you do not wish to use some add-on packages that you
      have present in your source tree, give this option a list of the
      add-ons that you _do_ want used, like this:
      `--enable-add-ons=linuxthreads'
@@ -96,7 +96,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
 
 `--with-binutils=DIRECTORY'
      Use the binutils (assembler and linker) in `DIRECTORY', not the
-     ones the C compiler would default to.  You could use this option if
+     ones the C compiler would default to.  You can use this option if
      the default binutils on your system cannot deal with all the
      constructs in the GNU C library.  In that case, `configure' will
      detect the problem and suppress these constructs, so that the
@@ -106,6 +106,8 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--without-fp'
      Use this option if your computer lacks hardware floating-point
      support and your operating system does not emulate an FPU.
+
+     these
 
 `--disable-shared'
      Don't build shared libraries even if it is possible.  Not all
@@ -119,9 +121,10 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--enable-omitfp'
      Use maximum optimization for the normal (static and shared)
      libraries, and compile separate static libraries with debugging
-     information and no optimization.  We recommend against this.  The
-     extra optimization doesn't gain you much, it may provoke compiler
-     bugs, and you won't be able to trace bugs through the C library.
+     information and no optimization.  We recommend not doing this.
+     The extra optimization doesn't gain you much, it may provoke
+     compiler bugs, and you won't be able to trace bugs through the C
+     library.
 
 `--disable-versioning'
      Don't compile the shared libraries with symbol version information.
@@ -135,7 +138,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      dynamically reconfigured to use a different name database.
 
 `--without-tls'
-     By default the C library is build with support for thread-local
+     By default the C library is built with support for thread-local
      storage if the used tools support it.  By using `--without-tls'
      this can be prevented though there generally is no reason since it
      creates compatibility problems.
@@ -149,24 +152,24 @@ will be used, and CFLAGS sets optimization options for the compiler.
      too, and you may have to override CONFIGURE's selection of the
      compiler and/or binutils.
 
-     If you only specify `--host', configure will prepare for a native
-     compile but use what you specify instead of guessing what your
-     system is.  This is most useful to change the CPU submodel.  For
-     example, if configure guesses your machine as `i586-pc-linux-gnu'
-     but you want to compile a library for 386es, give
-     `--host=i386-pc-linux-gnu' or just `--host=i386-linux' and add the
-     appropriate compiler flags (`-mcpu=i386' will do the trick) to
+     If you only specify `--host', `configure' will prepare for a
+     native compile but use what you specify instead of guessing what
+     your system is. This is most useful to change the CPU submodel.
+     For example, if `configure' guesses your machine as
+     `i586-pc-linux-gnu' but you want to compile a library for 386es,
+     give `--host=i386-pc-linux-gnu' or just `--host=i386-linux' and add
+     the appropriate compiler flags (`-mcpu=i386' will do the trick) to
      CFLAGS.
 
-     If you specify just `--build', configure will get confused.
+     If you specify just `--build', `configure' will get confused.
 
    To build the library and related programs, type `make'.  This will
 produce a lot of output, some of which may look like errors from `make'
 but isn't.  Look for error messages from `make' containing `***'.
-Those indicate that something is really wrong.
+Those indicate that something is seriously wrong.
 
    The compilation process can take several hours.  Expect at least two
-hours for the default configuration on i586 for Linux.  For Hurd times
+hours for the default configuration on i586 for Linux.  For Hurd, times
 are much longer.  Except for EGCS 1.1 and GCC 2.95 (and later versions
 of GCC), all supported versions of GCC have a problem which causes them
 to take several minutes to compile certain files in the iconvdata
@@ -185,7 +188,7 @@ being run by `root'.  We recommend you compile and test glibc as an
 unprivileged user.
 
    Before reporting bugs make sure there is no problem with your system.
-The tests (and later installation) uses some pre-existing files of the
+The tests (and later installation) use some pre-existing files of the
 system such as `/etc/passwd', `/etc/nsswitch.conf' and others.  These
 files must all contain correct and sensible content.
 
@@ -207,8 +210,8 @@ setting a few variables in `configparms'.  Set `CC' to the
 cross-compiler for the target you configured the library for; it is
 important to use this same `CC' value when running `configure', like
 this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
-to use for for programs run on the build system as part of compiling
-the library.  You may need to set `AR' and `RANLIB' to cross-compiling
+to use for programs run on the build system as part of compiling the
+library.  You may need to set `AR' and `RANLIB' to cross-compiling
 versions of `ar' and `ranlib' if the native tools are not configured to
 work with object files for the target you configured for.
 
@@ -217,7 +220,7 @@ Installing the C Library
 
    To install the library and its header files, and the Info files of
 the manual, type `env LANGUAGE=C LC_ALL=C make install'.  This will
-build things if necessary, before installing them.  However, you should
+build things, if necessary, before installing them; however, you should
 still compile everything first.  If you are installing glibc as your
 primary C library, we recommend that you shut the system down to
 single-user mode first, and reboot afterward.  This minimizes the risk
@@ -277,9 +280,9 @@ set up a German locale with name `de_DE', simply issue the command
 that are supported by glibc, you can issue from your build directory the
 command `make localedata/install-locales'.
 
-   To configure the locally used timezone, you can either set the `TZ'
-environment variable.  The script `tzselect' helps you to select the
-right value.  As an example for Germany, tzselect would tell you to use
+   To configure the locally used timezone, set the `TZ' environment
+variable.  The script `tzselect' helps you to select the right value.
+As an example, for Germany, `tzselect' would tell you to use
 `TZ='Europe/Berlin''.  For a system wide installation (the given paths
 are for an installation with `--prefix=/usr'), link the timezone file
 which is in `/usr/share/zoneinfo' to the file `/etc/localtime'.  For
@@ -297,8 +300,8 @@ build the GNU C library:
      You need the latest version of GNU `make'.  Modifying the GNU C
      Library to work with other `make' programs would be so difficult
      that we recommend you port GNU `make' instead.  *Really.*  We
-     recommend version GNU `make' version 3.79.  All earlier versions
-     have severe bugs or lack features.
+     recommend GNU `make' version 3.79.  All earlier versions have
+     severe bugs or lack features.
 
    * GCC 2.95 or newer
 
@@ -316,17 +319,18 @@ build the GNU C library:
 
    * GNU `binutils' 2.10.1 or later
 
-     You must use GNU binutils (as and ld) if you want to build a shared
-     library.  Even if you don't, we recommend you use them anyway.  No
-     one has tested compilation with non-GNU binutils in a long time.
+     You must use GNU `binutils' (as and ld) if you want to build a
+     shared library.  Even if you don't want to build a shared library,
+     we recommend you use them anyway.  No one has tested compilation
+     with non-GNU `binutils' in a long time.
 
-     The quality of binutils releases has varied a bit recently.  The
+     The quality of `binutils' releases has varied a bit recently.  The
      bugs are in obscure features, but glibc uses quite a few of those.
      2.10.1 and later releases are known to work.  Versions after
      2.8.1.0.23 may or may not work.  Older versions definitely don't.
 
      For PPC you might need some patches even on top of the last
-     binutils version.  See the FAQ.
+     `binutils' version.  See the FAQ.
 
    * GNU `texinfo' 3.12f
 
@@ -338,8 +342,8 @@ build the GNU C library:
 
    * GNU `awk' 3.0, or some other POSIX awk
 
-     Awk is used in several places to generate files.  The scripts
-     should work with any POSIX-compliant awk implementation; `gawk'
+     `Awk' is used in several places to generate files.  The scripts
+     should work with any POSIX-compliant `awk' implementation; `gawk'
      3.0 and `mawk' 1.3 are known to work.
 
    * Perl 5
@@ -349,12 +353,12 @@ build the GNU C library:
 
    * GNU `sed' 3.02 or newer
 
-     Sed is used in several places to generate files.  Most scripts
+     `Sed' is used in several places to generate files.  Most scripts
      work with any version of `sed'.  The known exception is the script
      `po2test.sed' in the `intl' subdirectory which is used to generate
-     `msgs.h' for the testsuite.  This script works correctly only with
-     GNU `sed' 3.02.  If you like to run the testsuite, you should
-     definitely upgrade `sed'.
+     `msgs.h' for the test suite.  This script works correctly only
+     with GNU `sed' 3.02.  If you like to run the test suite, you
+     should definitely upgrade `sed'.
 
 
 If you change any of the `configure.in' files you will also need
@@ -453,7 +457,7 @@ Finally, configure glibc with the option
 kernel you can get your hands on.
 
    An alternate tactic is to unpack the 2.2 kernel and run `make
-config' as above.  Then rename or delete `/usr/include', create a new
+config' as above; then, rename or delete `/usr/include', create a new
 `/usr/include', and make the usual symbolic links of
 `/usr/include/linux' and `/usr/include/asm' into the 2.2 kernel
 sources.  You can then configure glibc with no special options.  This
@@ -493,17 +497,17 @@ remain unfixed for all eternity, if not longer.
 reported.  Bugs are documented in two places: The file `BUGS' describes
 a number of well known bugs and the bug tracking system has a WWW
 interface at <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  The
-WWW interface gives you access to open and closed reports.  The closed
-reports normally include a patch or a hint on solving the problem.
+WWW interface gives you access to open and closed reports.  A closed
+report normally includes a patch or a hint on solving the problem.
 
-   To report a bug, first you must find it.  Hopefully, this will be the
-hard part.  Once you've found a bug, make sure it's really a bug.  A
-good way to do this is to see if the GNU C library behaves the same way
-some other C library does.  If so, probably you are wrong and the
-libraries are right (but not necessarily).  If not, one of the libraries
-is probably wrong.  It might not be the GNU library.  Many historical
-Unix C libraries permit things that we don't, such as closing a file
-twice.
+   To report a bug, first you must find it.  With any luck, this will
+be the hard part.  Once you've found a bug, make sure it's really a
+bug.  A good way to do this is to see if the GNU C library behaves the
+same way some other C library does.  If so, probably you are wrong and
+the libraries are right (but not necessarily).  If not, one of the
+libraries is probably wrong.  It might not be the GNU library.  Many
+historical Unix C libraries permit things that we don't, such as
+closing a file twice.
 
    If you think you have found some way in which the GNU C library does
 not conform to the ISO and POSIX standards (*note Standards and

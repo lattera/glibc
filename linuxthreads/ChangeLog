@@ -1,3 +1,11 @@
+2002-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* man/pthread_mutexattr_init.man (pthread_mutexattr_settype): Document
+	instead of pthread_mutexattr_setkind_np.
+	(pthread_mutexattr_gettype): Similarly.
+	* man/pthread_mutexattr_setkind_np.man: New.
+	* man/Makefile (SOURCES): Add pthread_mutexattr_setkind_np.man.
+
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/pt-machine.h (MEMORY_BARRIER): Define.

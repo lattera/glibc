@@ -1,11 +1,11 @@
 .TH PTHREAD_MUTEXATTR 3 LinuxThreads
 
 .XREF pthread_mutexattr_destroy
-.XREF pthread_mutexattr_setkind_np
-.XREF pthread_mutexattr_getkind_np
+.XREF pthread_mutexattr_settype
+.XREF pthread_mutexattr_gettype
 
 .SH NAME
-pthread_mutexattr_init, pthread_mutexattr_destroy, pthread_mutexattr_setkind_np, pthread_mutexattr_getkind_np \- mutex creation attributes
+pthread_mutexattr_init, pthread_mutexattr_destroy, pthread_mutexattr_settype, pthread_mutexattr_gettype \- mutex creation attributes
 
 .SH SYNOPSIS
 #include <pthread.h>
@@ -14,9 +14,9 @@ int pthread_mutexattr_init(pthread_mutexattr_t *attr);
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t *attr);
 
-int pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind);
+int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind);
 
-int pthread_mutexattr_getkind_np(const pthread_mutexattr_t *attr, int *kind);
+int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *kind);
 
 .SH DESCRIPTION
 
@@ -53,23 +53,23 @@ returns to the unlocked state.
 
 The default mutex kind is ``fast'', that is, !PTHREAD_MUTEX_FAST_NP!.
 
-!pthread_mutexattr_setkind_np! sets the mutex kind attribute in |attr|
+!pthread_mutexattr_settype! sets the mutex kind attribute in |attr|
 to the value specified by |kind|.
 
-!pthread_mutexattr_getkind_np! retrieves the current value of the
+!pthread_mutexattr_gettype! retrieves the current value of the
 mutex kind attribute in |attr| and stores it in the location pointed
 to by |kind|.
 
 .SH "RETURN VALUE"
 !pthread_mutexattr_init!, !pthread_mutexattr_destroy! and
-!pthread_mutexattr_getkind_np! always return 0.
+!pthread_mutexattr_gettype! always return 0.
 
-!pthread_mutexattr_setkind_np! returns 0 on success and a non-zero
+!pthread_mutexattr_settype! returns 0 on success and a non-zero
 error code on error.
 
 .SH ERRORS
 
-On error, !pthread_mutexattr_setkind_np! returns the following error code:
+On error, !pthread_mutexattr_settype! returns the following error code:
 .TP
 !EINVAL!
 |kind| is neither !PTHREAD_MUTEX_FAST_NP! nor !PTHREAD_MUTEX_RECURSIVE_NP!

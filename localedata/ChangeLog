@@ -1,3 +1,7 @@
+2002-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/ms_MY (day): Fix a typo.
+
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/es_ES: Define int_frac_digits and frac_digits as 2.

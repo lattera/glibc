@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+/* sbrk.c expects this.  */
+void *__curbrk;
 
 /* Set the end of the process's data space to ADDR.
    Return 0 if successful, -1 if not.  */

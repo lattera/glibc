@@ -21,7 +21,7 @@
 #
 subdir	:= stdio-common
 
-headers	:= printf.h stdio_ext.h
+headers	:= printf.h stdio_ext.h bits/stdio_lim.h
 
 routines	:=							      \
 	ctermid cuserid							      \
@@ -41,8 +41,6 @@ include ../Makeconfig
 ifeq ($(stdio),libio)
 routines += vfwprintf vfwscanf
 endif
-
-install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
 distribute := _itoa.h _itowa.h _i18n_number.h \
@@ -85,9 +83,6 @@ CFLAGS-tst-printfsz.c = -Wno-format
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 test-vfprintf-ENV = LOCPATH=$(common-objpfx)localedata
-
-$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
-	$(do-install)
 
 ifeq ($(stdio),libio)
 ifneq (,$(filter %REENTRANT, $(defines)))

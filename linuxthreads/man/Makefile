@@ -5,7 +5,7 @@ SOURCES=pthread_atfork.man pthread_attr_init.man pthread_cancel.man \
   pthread_key_create.man pthread_mutex_init.man \
   pthread_mutexattr_init.man pthread_once.man pthread_self.man \
   pthread_setschedparam.man pthread_sigmask.man sem_init.man \
-  pthread_kill_other_threads_np.man
+  pthread_kill_other_threads_np.man pthread_mutexattr_setkind_np.man
 
 MANPAGES=$(SOURCES:.man=.3thr)
 

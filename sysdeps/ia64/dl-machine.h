@@ -61,7 +61,7 @@ __ia64_init_bootstrap_fdesc_table (struct link_map *map)
   Elf64_Addr *boot_table;
 
   /* careful: this will be called before got has been relocated... */
-  asm ("addl %0 = @gprel (__ia64_boot_fptr_table), gp" : "=r"(boot_table));
+  asm (";; addl %0 = @gprel (__ia64_boot_fptr_table), gp" : "=r"(boot_table));
 
   map->l_mach.fptr_table_len = IA64_BOOT_FPTR_TABLE_LEN;
   map->l_mach.fptr_table = boot_table;
@@ -179,13 +179,18 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	.proc " #tramp_name "#\n"					     \
 #tramp_name ":\n"							     \
 "	{ .mmi\n"							     \
+"	  .prologue\n"							     \
+"	  .save ar.pfs, r40\n"						     \
 "	  alloc loc0 = ar.pfs, 8, 6, 3, 0\n"				     \
 "	  adds r2 = -144, r12\n"					     \
 "	  adds r3 = -128, r12\n"					     \
 "	}\n"								     \
 "	{ .mii\n"							     \
+"	  .fframe 160\n"						     \
 "	  adds r12 = -160, r12\n"					     \
+"	  .save rp, r41\n"						     \
 "	  mov loc1 = b0\n"						     \
+"	  .body\n"							     \
 "	  mov out2 = b0		/* needed by fixup_profile */\n"	     \
 "	  ;;\n"								     \
 "	}\n"								     \
@@ -249,6 +254,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	{ .mmi\n"							     \
 "	  ldf.fill f14 = [r2], 32\n"					     \
 "	  ldf.fill f15 = [r3], 32\n"					     \
+"	  .restore sp		/* pop the unwind frame state */\n"	     \
 "	  adds r12 = 160, r12\n"					     \
 "	  ;;\n"								     \
 "	}\n"								     \
@@ -265,6 +271,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	/* An alloc is needed for the break system call to work.\n"	     \
 "	   We don't care about the old value of the pfs register.  */\n"     \
 "	{ .mmb\n"							     \
+"	  .prologue\n"							     \
+"	  .body\n"							     \
 "	  alloc r2 = ar.pfs, 0, 0, 8, 0\n"				     \
 "	  br.sptk.many b6\n"						     \
 "	  ;;\n"								     \
@@ -292,7 +300,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	.proc _start#\n"						      \
 "_start:\n"								      \
 "0:	{ .mii\n"							      \
+"	  .prologue\n"							      \
+"	  .save ar.pfs, r32\n"						      \
+"	  .save rp, r0\n"						      \
 "	  alloc loc0 = ar.pfs, 0, 3, 4, 0\n"				      \
+"	  .body\n"							      \
 "	  mov r2 = ip\n"						      \
 "	  addl r3 = @gprel(0b), r0\n"					      \
 "	  ;;\n"								      \
@@ -319,6 +331,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	.global _dl_start_user#\n"					      \
 "	.proc _dl_start_user#\n"					      \
 "_dl_start_user:\n"							      \
+"	 .prologue\n"							      \
+"	 .save ar.pfs, r32\n"						      \
+"	 .save rp, r0\n"						      \
+"	 .body\n"							      \
 "	{ .mii\n"							      \
 "	  /* Save the pointer to the user entry point fptr in loc2.  */\n"    \
 "	  mov loc2 = ret0\n"						      \
@@ -576,6 +592,10 @@ elf_machine_rela (struct link_map *map,
   else
     assert (! "unexpected dynamic reloc format");
 }
+
+/* Let do-rel.h know that on IA-64 if l_addr is 0, all RELATIVE relocs
+   can be skipped.  */
+#define ELF_MACHINE_REL_RELATIVE 1
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,

@@ -78,7 +78,7 @@ install-others = $(inst_includedir)/gnu/stubs.h
 install-bin-script = glibcbug
 
 ifeq (yes,$(build-shared))
-install-others += $(inst_includedir)/gnu/lib-names.h
+headers += gnu/lib-names.h
 endif
 
 include Makerules
@@ -89,6 +89,9 @@ endif
 
 # Install from subdirectories too.
 install: subdir_install
+
+# Explicit dependency so that `make install-headers' works
+install-headers: install-headers-nosubdir
 
 # Make sure that the dynamic linker is installed before libc.
 $(inst_slibdir)/libc-$(version).so: elf/ldso_install
@@ -154,12 +157,6 @@ $(inst_includedir)/gnu/stubs.h: subdir_install
 	then echo 'stubs.h unchanged'; \
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
 	rm -f $(objpfx)stubs.h
-
-ifeq (yes,$(build-shared))
-
-$(inst_includedir)/gnu/lib-names.h: $(common-objpfx)gnu/lib-names.h $(+force)
-	$(do-install)
-endif
 
 # The `glibcbug' script contains the version number and it shall be rebuild
 # whenever this changes or the `glibcbug.in' file.
