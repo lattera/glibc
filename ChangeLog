@@ -1,3 +1,11 @@
+1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/execve.c: Add __syscall_execve prototype.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Add __syscall_setrlimit
+	prototype.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add setrlimit.
+	* sysdeps/powerpc/stackinfo.h: New file.
+
 1999-11-13  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Versions.def (libc): Move GLIBC_2.2 dependency from GLIBC_2.1.1 to
