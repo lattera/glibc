@@ -1,3 +1,8 @@
+2003-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/libc-symbols.h [HAVE_WEAK_SYMBOLS] (_weak_extern):
+	Define using _Pragma(weak ...).
+
 2003-01-03  Andreas Jaeger  <aj@suse.de>, Jakub Jelinek <jakub@redhat.com>
 
 	* resolv/res_libc.c: Provide declaration for __res_init_weak and
