@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <inttypes.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -72,7 +73,7 @@ strtabinit (void)
 {
   if (ps == 0)
     {
-      ps = sysconf (_SC_PAGESIZE) - 2 * sizeof (void);
+      ps = sysconf (_SC_PAGESIZE) - 2 * sizeof (void *);
       assert (sizeof (struct memoryblock) < ps);
     }
 
@@ -94,7 +95,7 @@ morememory (struct Strtab *st, size_t len)
   newmem->next = st->memory;
   st->memory = newmem;
   st->backp = newmem->memory;
-  st->left = len;
+  st->left = len - offsetof (struct memoryblock, memory);
 }
 
 

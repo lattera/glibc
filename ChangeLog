@@ -1,3 +1,7 @@
+2001-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/strtab.c (morememory): Fix little memory handling problem.
+
 2001-07-22  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Don't
