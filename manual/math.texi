@@ -236,7 +236,7 @@ If the exception does not cause a trap handler to be called the result
 of the operation is taken as a quiet NaN.
 
 @item Division by Zero
-This exception is raised if the devisor is zero and the dividend is a
+This exception is raised if the divisor is zero and the dividend is a
 finite nonzero number.  If no trap occurs the result is either
 @math{+@infinity{}} or @math{-@infinity{}}, depending on the
 signs of the operands.
@@ -413,7 +413,7 @@ representable as an integer.  These are completely independent types.
 It is sometimes necessary so save the complete status of the
 floating-point unit for a certain time to perform some completely
 different actions.  Beside the status of the exception flags, the
-control word for the exceptions and the rounding mode can be safed.
+control word for the exceptions and the rounding mode can be saved.
 
 The file @file{fenv.h} defines the type @code{fenv_t}.  The layout of a
 variable of this type is implementation defined but the variable is able
@@ -710,7 +710,7 @@ exception if one of the arguments is an unordered value.
 @cindex Optimization
 
 If an application uses many floating point function it is often the case
-that the costs for the function calls itseld are not neglectable.
+that the costs for the function calls itselfs are not neglectable.
 Modern processor implementation often can execute the operation itself
 very fast but the call means a disturbance of the control flow.
 
@@ -811,7 +811,7 @@ radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
 the range of @code{-1} to @code{1}.
 
 This function is a GNU extension.  It should be used whenever both sine
-and cosine are needed but in protable applications there should be a
+and cosine are needed but in portable applications there should be a
 fallback method for systems without this function.
 @end deftypefun
 
@@ -1036,7 +1036,7 @@ magnitude of the result is too large to be representable.
 @comment math.h
 @comment ISO
 @deftypefun double log (double @var{x})
-@deftypefunx float logf (floatdouble @var{x})
+@deftypefunx float logf (float @var{x})
 @deftypefunx {long double} logl (long double @var{x})
 These functions return the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
@@ -1211,7 +1211,7 @@ near zero.
 @cindex complex logarithm functions
 
 @w{ISO C 9X} defines variants of some of the exponentiation and
-logarithm functions.  As for the other functions handlung complex
+logarithm functions.  As for the other functions handling complex
 numbers these functions are perhaps better optimized and provide better
 error checking than a direct use of the formulas of the mathematical
 definition.
@@ -1488,7 +1488,7 @@ The GNU library supports the standard @w{ISO C} random number functions
 plus two other sets derived from BSD and SVID.  We recommend you use the
 standard ones, @code{rand} and @code{srand} if only a small number of
 random bits are required.  The SVID functions provide an interface which
-allows better randon number generator algorithms and they return up to
+allows better random number generator algorithms and they return up to
 48 random bits in one calls and they also return random floating-point
 numbers if wanted.  The SVID function might not be available on some BSD
 derived systems but since they are required in the XPG they are
@@ -1580,7 +1580,7 @@ This function returns the next pseudo-random number in the sequence.
 The range of values returned is from @code{0} to @code{RAND_MAX}.
 
 @strong{Please note:} Historically this function returned a @code{long
-int} value.  But with the appearence of 64bit machines this could lead
+int} value.  But with the appearance of 64bit machines this could lead
 to severe compatibility problems and therefore the type now explicitly
 limits the return value to 32bit.
 @end deftypefun
@@ -1619,7 +1619,7 @@ information @var{state}.  The argument must have been the result of
 a previous call to @var{initstate} or @var{setstate}.
 
 The return value is the previous value of the state information array.
-You can use thise value later as an argument to @code{setstate} to
+You can use this value later as an argument to @code{setstate} to
 restore that state.
 @end deftypefun
 
@@ -1734,12 +1734,12 @@ information provided.
 @deftypefun void srand48 (long int @var{seedval}))
 The @code{srand48} function sets the most significant 32 bits of the
 state internal state of the random number generator to the least
-significant 32 bits of the @var{seedval} parameter.  The lower 16 bts
-are initilialized to the value @code{0x330E}.  Even if the @code{long
+significant 32 bits of the @var{seedval} parameter.  The lower 16 bits
+are initialized to the value @code{0x330E}.  Even if the @code{long
 int} type contains more the 32 bits only the lower 32 bits are used.
 
 Due to this limitation the initialization of the state using this
-function of not very useful.  But it makes it easy to use a constrcut
+function of not very useful.  But it makes it easy to use a construct
 like @code{srand48 (time (0))}.
 
 A side-effect of this function is that the values @code{a} and @code{c}
@@ -1802,7 +1802,7 @@ Please note that it is no problem if several threads use the global
 state if all threads use the functions which take a pointer to an array
 containing the state.  The random numbers are computed following the
 same loop but if the state in the array is different all threads will
-get an individuual random number generator.
+get an individual random number generator.
 
 The user supplied buffer must be of type @code{struct drand48_data}.
 This type should be regarded as opaque and no member should be used
@@ -1830,7 +1830,7 @@ programs.
 @deftypefun int erand48_r (unsigned short int @var{xsubi}[3], struct drand48_data *@var{buffer}, double *@var{result})
 The @code{erand48_r} function works like the @code{erand48} and it takes
 an argument @var{buffer} which describes the random number generator.
-The state of the random number genertor is taken from the @code{xsubi}
+The state of the random number generator is taken from the @code{xsubi}
 array, the parameters for the congruential formula from the global
 random number generator data.  The random number is return in the
 variable pointed to by @var{result}.
@@ -1909,7 +1909,7 @@ memset (buffer, '\0', sizeof (struct drand48_data));
 @end smallexample
 
 @noindent
-Using any of the reetrant functions of this family now will
+Using any of the reentrant functions of this family now will
 automatically initialize the random number generator to the default
 values for the state and the parameters of the congruential formula.
 
@@ -1924,8 +1924,8 @@ what you expect.
 @deftypefun int srand48_r (long int @var{seedval}, struct drand48_data *@var{buffer})
 The description of the random number generator represented by the
 information in @var{buffer} is initialized similar to what the function
-@code{srand48} does.  The state is initialized from the paramter
-@var{seedval} and the paameters for the congruential formula are
+@code{srand48} does.  The state is initialized from the parameter
+@var{seedval} and the parameters for the congruential formula are
 initialized to the default values.
 
 If the return value is non-negative the function call succeeded.

@@ -27,12 +27,12 @@
    is nonzero, it is the desired mapping address.  If the MAP_FIXED bit is
    set in FLAGS, the mapping will be at ADDR exactly (which must be
    page-aligned); otherwise the system chooses a convenient nearby address.
-   The return value is the actual mapping address chosen or (caddr_t) -1
+   The return value is the actual mapping address chosen or (__ptr_t) -1
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-caddr_t
-__mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+__ptr_t
+__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
@@ -49,7 +49,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       /* A specific address is requested.  It need not be page-aligned;
 	 it just needs to be congruent with the object offset.  */
       if ((mapaddr & (vm_page_size - 1)) != pageoff)
-	return (caddr_t) (long int) __hurd_fail (EINVAL);
+	return (__ptr_t) (long int) __hurd_fail (EINVAL);
       else
 	/* We will add back PAGEOFF after mapping.  */
 	mapaddr -= pageoff;
@@ -66,7 +66,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   switch (flags & MAP_TYPE)
     {
     default:
-      return (caddr_t) (long int) __hurd_fail (EINVAL);
+      return (__ptr_t) (long int) __hurd_fail (EINVAL);
 
     case MAP_ANON:
       memobj = MACH_PORT_NULL;
@@ -77,7 +77,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       {
 	mach_port_t robj, wobj;
 	if (err = HURD_DPORT_USE (fd, __io_map (port, &robj, &wobj)))
-	  return (caddr_t) (long int) __hurd_dfail (fd, err);
+	  return (__ptr_t) (long int) __hurd_dfail (fd, err);
 	switch (prot & (PROT_READ|PROT_WRITE))
 	  {
 	  case PROT_READ:
@@ -106,7 +106,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return (caddr_t) (long int) __hurd_fail (EACCES);
+		return (__ptr_t) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
 	  }
@@ -144,12 +144,12 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
     __mach_port_deallocate (__mach_task_self (), memobj);
 
   if (err)
-    return (caddr_t) (long int) __hurd_fail (err);
+    return (__ptr_t) (long int) __hurd_fail (err);
 
   /* Adjust the mapping address for the offset-within-page.  */
   mapaddr += pageoff;
 
-  return (caddr_t) mapaddr;
+  return (__ptr_t) mapaddr;
 }
 
 weak_alias (__mmap, mmap)

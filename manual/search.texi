@@ -259,7 +259,7 @@ Computer Programming, Part 3: Searching and Sorting'' for more
 information.
 
 The weakest aspect of this function is that there can be at most one
-hashing table used throught the whole program.  The table is allocated
+hashing table used through the whole program.  The table is allocated
 in local memory out of control of the programmer.  As an extension the
 GNU C library provides an additional set of functions with an reentrant
 interface which provide a similar interface but which allow to keep
@@ -284,13 +284,13 @@ table with possibly different size.
 It is important to remember that the elements contained in the hashing
 table at the time @code{hdestroy} is called are @emph{not} freed by this
 function.  It is the responsibility of the program code to free those
-strings (if necessary at all).  Freeing all the element memory iss not
+strings (if necessary at all).  Freeing all the element memory is not
 possible without extra, separately kept information since there is no
 function to iterate through all available elements in the hashing table.
 If it is really necessary to free a table and all elements the
 programmer has to keep a list of all table elements and before calling
 @code{hdestroy} s/he has to free all element's data using this list.
-This is a very unpleasent mechanism and it also shows that this kind of
+This is a very unpleasant mechanism and it also shows that this kind of
 hashing tables is mainly meant for tables which are created once and
 used until the end of the program run.
 @end deftypefun
@@ -349,7 +349,7 @@ members should be changed directly.
 @comment search.h
 @comment GNU
 @deftypefun int hcreate_r (size_t @var{nel}, struct hsearch_data *@var{htab})
-The @code{hcreate_r} function intializes the object pointed to by
+The @code{hcreate_r} function initializes the object pointed to by
 @var{htab} to contain a hashing table with at least @var{nel} elements.
 So this function is equivalent to the @code{hcreate} function except
 that the initialized data structure is controlled by the user.
@@ -377,7 +377,7 @@ for the elements of the table.
 @deftypefun int hsearch_r (ENTRY @var{item}, ACTION @var{action}, ENTRY **@var{retval}, struct hsearch_data *@var{htab})
 The @code{hsearch_r} function is equivalent to @code{hsearch}.  The
 meaning of the first two arguments is identical.  But instead of
-operating on a single global hashing table the functio works on the
+operating on a single global hashing table the function works on the
 table described by the object pointed to by @var{htab} (which is
 initialized by a call to @code{hcreate_r}).
 
@@ -411,7 +411,7 @@ The GNU C library implementation even guarantees that this bound is
 never exceeded even for input data which cause problems for simple
 binary tree implementations.
 
-The functions desribed in the chapter are all described in the @w{System
+The functions described in the chapter are all described in the @w{System
 V} and X/Open specifications and are therefore quite portable.
 
 In contrast to the @code{hsearch} functions the @code{tsearch} functions
@@ -427,7 +427,7 @@ extended or searched.
 @deftypefun {void *} tsearch (const void *@var{key}, void **@var{rootp}, comparison_fn_t @var{compar})
 The @code{tsearch} function searches in the tree pointed to by
 @code{*@var{rootp}} for an element matching @var{key}.  The function
-pointed to by @var{compar} is used to determine wether two elements
+pointed to by @var{compar} is used to determine whether two elements
 match.  @xref{Comparison Functions} for a specification of the functions
 which can be used for the @var{compar} parameter.
 
@@ -512,7 +512,7 @@ tree and how the function is called.  The status of a node is either
 `leaf' or `internal node'.  For each leaf node the function is called
 exactly once, for each internal node it is called three times: before
 the first child is processed, after the first child is processed and
-after both childs are processed.  This makes it possible to handle all
+after both children are processed.  This makes it possible to handle all
 three methods of tree traversal (or even a combination of them).
 
 @table @code
@@ -540,7 +540,7 @@ For each node in the tree with a node pointed to by @var{root} the
 called three times, setting the @var{value} parameter or @var{action} to
 the appropriate value.  The @var{level} argument for the @var{action}
 function is computed while descending the tree with increasing the value
-by one for the escend to a child, starting with the value @math{0} for
+by one for the descend to a child, starting with the value @math{0} for
 the root node.
 
 Since the functions used for the @var{action} parameter to @code{twalk}

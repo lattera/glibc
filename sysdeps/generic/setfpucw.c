@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "fpu_control.h"
+#include <fpu_control.h>
 
 void
 __setfpucw (fpu_control_t set)

@@ -379,7 +379,7 @@ System's directory for character maps: %s\n\
                        locale files  : %s\n\
 %s"),
 		CHARMAP_PATH, LOCALE_PATH, gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"));
+Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
       return cp;
     default:
       break;

@@ -175,7 +175,7 @@ The @code{strnlen} function returns the length of the null-terminated
 string @var{s} is this length is smaller than @var{maxlen}.  Otherwise
 it returns @var{maxlen}.  Therefore this function is equivalent to
 @code{(strlen (@var{s}) < n ? strlen (@var{s}) : @var{maxlen})} but it
-is more efficent.
+is more efficient.
 
 @smallexample
 char string[32] = "hello, world";
@@ -247,7 +247,7 @@ memcpy (new, old, arraysize * sizeof (struct foo));
 @comment GNU
 @deftypefun {void *} mempcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
 The @code{mempcpy} function is nearly identical to the @code{memcpy}
-function.  It copies @var{size} byts from the object beginning at
+function.  It copies @var{size} bytes from the object beginning at
 @code{from} into the object pointed to by @var{to}.  But instead of
 returning the value of @code{to} it returns a pointer to the byte
 following the last written byte in the object beginning at @var{to}.
@@ -616,7 +616,7 @@ This function is like @code{strcmp}, except that differences in case are
 ignored.  How uppercase and lowercase character are related is
 determined by the currently selected locale.  In the standard @code{"C"}
 locale the characters @"A and @"a do not match but in a locale which
-regards this characters as parts of the alphabeth they do match.
+regards this characters as parts of the alphabet they do match.
 
 @code{strcasecmp} is derived from BSD.
 @end deftypefun
@@ -669,12 +669,12 @@ value follows the same conventions as found in the @code{strverscmp}
 function.  In fact, if @var{s1} and @var{s2} contain no digits,
 @code{strverscmp} behaves like @code{strcmp}.
 
-Basically, we compare strings normaly (character by character), until
+Basically, we compare strings normally (character by character), until
 we find a digit in each string - then we enter a special comparison
 mode, where each sequence of digit is taken as a whole.  If we reach the
 end of these two parts without noticing a difference, we return to the
 standard comparison mode.  There are two types of numeric parts:
-"integral" and "fractionnal" (these laters begins with a '0'). The types
+"integral" and "fractional" (those  begin with a '0'). The types
 of the numeric parts affect the way we sort them:
 
 @itemize @bullet
@@ -682,13 +682,13 @@ of the numeric parts affect the way we sort them:
 integral/integral: we compare values as you would expect.
 
 @item
-fractionnal/integral: the fractionnal part is less than the integral one.
+fractional/integral: the fractional part is less than the integral one.
 Again, no surprise.
 
 @item
-fractionnal/fractionnal: the things become a bit more complex.
-if the common prefix contains only leading zeroes, the longest part is less
-than the other one; else the comparison behaves normaly.
+fractional/fractional: the things become a bit more complex.
+If the common prefix contains only leading zeroes, the longest part is less
+than the other one; else the comparison behaves normally.
 @end itemize
 
 @smallexample
@@ -697,14 +697,14 @@ strverscmp ("no digit", "no digit")
 strverscmp ("item#99", "item#100")
     @result{} <0   /* @r{same prefix, but 99 < 100.} */
 strverscmp ("alpha1", "alpha001")
-    @result{} >0   /* @r{fractionnal part inferior to integral one.} */
+    @result{} >0   /* @r{fractional part inferior to integral one.} */
 strverscmp ("part1_f012", "part1_f01")
-    @result{} >0   /* @r{two fractionnal parts.} */
+    @result{} >0   /* @r{two fractional parts.} */
 strverscmp ("foo.009", "foo.0")
     @result{} <0   /* @r{idem, but with leading zeroes only.} */
 @end smallexample
 
-This function is especially usefull when dealing with filename sorting,
+This function is especially useful when dealing with filename sorting,
 because filenames frequently hold indices/version numbers.
 
 @code{strverscmp} is a GNU extension.
@@ -852,7 +852,7 @@ sort_strings_fast (char **array, int nstrings)
     @{
       size_t length = strlen (array[i]) * 2;
       char *transformed;
-      size_t transformed_lenght;
+      size_t transformed_length;
 
       temp_array[i].input = array[i];
 

@@ -710,6 +710,8 @@ _IO_cleanup ()
   _IO_unbuffer_all ();
 }
 
+_IO_FILE *_IO_list_all = &_IO_stderr_.plus.file;
+
 void
 _IO_init_marker (marker, fp)
      struct _IO_marker *marker;

@@ -76,7 +76,7 @@
 #endif
 
 /* Return value of `mmap' in case of an error.  */
-#define MAP_FAILED	((__caddr_t) -1)
+#define MAP_FAILED	((__ptr_t) -1)
 
 
 __BEGIN_DECLS
@@ -89,41 +89,41 @@ __BEGIN_DECLS
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-extern __caddr_t __mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			      int __flags, int __fd, __off_t __offset));
+extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			  int __flags, int __fd, __off_t __offset));
 #ifndef __USE_FILE_OFFSET64
-extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off_t __offset));
+extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			int __flags, int __fd, __off_t __offset));
 #else
-extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off_t __offset))
+extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			int __flags, int __fd, __off_t __offset))
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
-extern __caddr_t mmap64 __P ((__caddr_t __addr, size_t __len, int __prot,
-			      int __flags, int __fd, __off64_t __offset));
+extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
+			  int __flags, int __fd, __off64_t __offset));
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int __munmap __P ((__caddr_t __addr, size_t __len));
-extern int munmap __P ((__caddr_t __addr, size_t __len));
+extern int __munmap __P ((__ptr_t __addr, size_t __len));
+extern int munmap __P ((__ptr_t __addr, size_t __len));
 
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
-extern int __mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
-extern int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
+extern int __mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
+extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  Flags are from the MS_* set.  */
-extern int msync __P ((__caddr_t __addr, size_t __len, int __flags));
+extern int msync __P ((__ptr_t __addr, size_t __len, int __flags));
 
 #ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
-extern int madvise __P ((__caddr_t __addr, size_t __len, int __advice));
+extern int madvise __P ((__ptr_t __addr, size_t __len, int __advice));
 #endif
 
 __END_DECLS

@@ -12,7 +12,7 @@ These functions are declared in the header files @file{math.h} and
 * Not a Number::                Making NaNs and testing for NaNs.
 * Imaginary Unit::              Constructing complex Numbers.
 * Predicates on Floats::        Testing for infinity and for NaNs.
-* Floating-Point Classes::      Classifiy floating-point numbers.
+* Floating-Point Classes::      Classify floating-point numbers.
 * Operations on Complex::       Projections, Conjugates, and Decomposing.
 * Absolute Value::              Absolute value functions.
 * Normalization Functions::     Hacks for radix-2 representations.
@@ -41,13 +41,13 @@ these situations.  There is a special value for infinity.
 @comment math.h
 @comment ISO
 @deftypevr Macro float_t INFINITY
-A expression representing the inifite value.  @code{INFINITY} values are
+A expression representing the infinite value.  @code{INFINITY} values are
 produce by mathematical operations like @code{1.0 / 0.0}.  It is
 possible to continue the computations with this value since the basic
 operations as well as the mathematical library functions are prepared to
 handle values like this.
 
-Beside @code{INFINITY} also the value @code{-INIFITY} is representable
+Beside @code{INFINITY} also the value @code{-INFINITY} is representable
 and it is handled differently if needed.  It is possible to test a
 variables for infinite value using a simple comparison but the
 recommended way is to use the the @code{isinf} function.
@@ -103,7 +103,7 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @pindex complex.h
 To construct complex numbers it is necessary have a way to express the
 imaginary part of the numbers.  In mathematics one uses the symbol ``i''
-to mark a number as imaginary.  For convenienve the @file{complex.h}
+to mark a number as imaginary.  For convenience the @file{complex.h}
 header defines two macros which allow to use a similar easy notation.
 
 @deftypevr Macro float_t _Imaginary_I
@@ -284,7 +284,7 @@ situation the function be absolutely necessary one can use
 @end smallexample
 
 @noindent
-to avoid the macro expansion.  Using the macro has two big adavantages:
+to avoid the macro expansion.  Using the macro has two big advantages:
 it is more portable and one does not have to choose the right function
 among @code{isnan}, @code{isnanf}, and @code{isnanl}.
 @end deftypefn
@@ -297,7 +297,7 @@ among @code{isnan}, @code{isnanf}, and @code{isnanl}.
 @cindex decompose complex numbers
 
 This section lists functions performing some of the simple mathematical
-operations on complex numbers.  Using any of the function requries that
+operations on complex numbers.  Using any of the function requires that
 the C compiler understands the @code{complex} keyword, introduced to the
 C language in the @w{ISO C 9X} standard.
 
@@ -357,7 +357,7 @@ cut along the negative real axis.
 @deftypefunx {complex long double} cprojl (complex long double @var{z})
 Return the projection of the complex value @var{z} on the Riemann
 sphere.  Values with a infinite complex part (even if the real part
-is NaN) are projected to positive infinte on the real axis.  If the real part is infinite, the result is equivalent to
+is NaN) are projected to positive infinite on the real axis.  If the real part is infinite, the result is equivalent to
 
 @smallexample
 INFINITY + I * copysign (0.0, cimag (z))
@@ -531,7 +531,7 @@ bit set.
 This is not the same as @code{x < 0.0} since in some floating-point
 formats (e.g., @w{IEEE 754}) the zero value is optionally signed.  The
 comparison @code{-0.0 < 0.0} will not be true while @code{signbit
-(-0.0)} will return a nonzeri value.
+(-0.0)} will return a nonzero value.
 @end deftypefun
 
 @node Rounding and Remainders
@@ -599,7 +599,7 @@ raise the inexact exception.
 @comment math.h
 @comment ISO
 @deftypefun double modf (double @var{value}, double *@var{integer-part})
-@deftypefunx float modff (flaot @var{value}, float *@var{integer-part})
+@deftypefunx float modff (float @var{value}, float *@var{integer-part})
 @deftypefunx {long double} modfl (long double @var{value}, long double *@var{integer-part})
 These functions break the argument @var{value} into an integer part and a
 fractional part (between @code{-1} and @code{1}, exclusive).  Their sum
@@ -1060,7 +1060,7 @@ format supports this; and to the largest representable value otherwise.
 If the input string is @code{"nan"} or
 @code{"nan(@var{n-char-sequence})"} the return value of @code{strtod} is
 the representation of the NaN (not a number) value (if the
-flaoting-point formats supports this.  The form with the
+floating-point formats supports this.  The form with the
 @var{n-char-sequence} enables in an implementation specific way to
 specify the form of the NaN value.  When using the @w{IEEE 754}
 floating-point format, the NaN value can have a lot of forms since only

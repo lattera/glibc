@@ -1601,56 +1601,56 @@ after logging in.
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS_CFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the C compiler if a source is compiled using the
 @code{_LARGEFILE_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS_LDFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the linker if a source is compiled using the
 @code{_LARGEFILE_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS_LIBS
-The returned string specifies which additionals libraries must be linked
+The returned string specifies which additional libraries must be linked
 to the application if a source is compiled using the
 @code{_LARGEFILE_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS_LINTFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the the lint tool if a source is compiled using the
 @code{_LARGEFILE_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS64_CFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the C compiler if a source is compiled using the
 @code{_LARGEFILE64_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS64_LDFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the linker if a source is compiled using the
 @code{_LARGEFILE64_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS64_LIBS
-The returned string specifies which additionals libraries must be linked
+The returned string specifies which additional libraries must be linked
 to the application if a source is compiled using the
 @code{_LARGEFILE64_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 
 @comment unistd.h
 @comment Unix98
 @item _CS_LFS64_LINTFLAGS
-The returned string specifies which additionals flags must be given to
+The returned string specifies which additional flags must be given to
 the the lint tool if a source is compiled using the
 @code{_LARGEFILE64_SOURCE} feature select macro; @pxref{Feature Test Macros}.
 @end table

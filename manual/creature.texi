@@ -95,7 +95,7 @@ Single Unix specification, @w{version 2}.
 @comment X/Open
 @defvr Macro _LARGEFILE_SOURCE
 If this macro is defined some extra functions are available which
-rectify a few shortcomings in all previous standards.  More concreten
+rectify a few shortcomings in all previous standards.  More concrete
 the functions @code{fseeko} and @code{ftello} are available.  Without
 these functions the difference between the @w{ISO C} interface
 (@code{fseek}, @code{ftell}) and the low-level POSIX interface

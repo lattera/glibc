@@ -61,8 +61,8 @@ _IO_new_fopen (filename, mode)
 
 #ifdef DO_VERSIONING
 strong_alias (_IO_new_fopen, __new_fopen)
-symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
-symbol_version (__new_fopen, fopen, GLIBC_2.1);
+default_symbol_version (_IO_new_fopen, _IO_fopen, GLIBC_2.1);
+default_symbol_version (__new_fopen, fopen, GLIBC_2.1);
 #else
 # ifdef weak_alias
 weak_symbol (_IO_new_fopen, _IO_fopen)

@@ -1656,7 +1656,7 @@ make is whether at least one signal has arrived since a given time in
 the past.
 
 Here is an example of a handler for @code{SIGCHLD} that compensates for
-the fact that the number of signals recieved may not equal the number of
+the fact that the number of signals received may not equal the number of
 child processes generate them.  It assumes that the program keeps track
 of all the child processes with a chain of structures as follows:
 

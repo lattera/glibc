@@ -16,7 +16,7 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/bits $(common-objpfx)/bits,\
+ifeq (,$(filter-out $(sysdep_dir)/generic/bits $(common-objpfx)/bits,\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/endian.h))))))
 
 $(common-objpfx)bytesex.h: $(common-objpfx)det_endian

@@ -18,7 +18,7 @@ access permissions and modification times.
 * Accessing Directories::       Finding out what files a directory
 				 contains.
 * Working on Directory Trees::  Apply actions to all files or a selectable
-                                 subset of a directory hierachy.
+                                 subset of a directory hierarchy.
 * Hard Links::                  Adding alternate names to a file.
 * Symbolic Links::              A file that ``points to'' a file name.
 * Deleting Files::              How to delete a file, and what that means.
@@ -504,14 +504,14 @@ we want to see all directory entries we always return @code{1}.
 
 @node Working on Directory Trees
 @section Working on Directory Trees
-@cindex directory hierachy
-@cindex hierachy, directory
+@cindex directory hierarchy
+@cindex hierarchy, directory
 @cindex tree, directory
 
 The functions to handle files in directories described so far allowed to
 retrieve all the information in small pieces or process all files in a
 directory (see @code{scandir}).  Sometimes it is useful to process whole
-hierachies of directories and the contained files.  The X/Open
+hierarchies of directories and the contained files.  The X/Open
 specification define two functions to do this.  The simpler form is
 derived from an early definition in @w{System V} systems and therefore
 this function is available on SVID derived systems.  The prototypes and
@@ -591,7 +591,7 @@ with some extra information as described below.
 @deftp {Data Type} {struct FTW}
 The contained information helps to interpret the name parameter and
 gives some information about current state of the traversal of the
-directory hierachy.
+directory hierarchy.
 
 @table @code
 @item int base
@@ -644,7 +644,7 @@ The @var{descriptors} parameter to the @code{ftw} function specifies how
 many file descriptors the @code{ftw} function is allowed to consume.
 The more descriptors can be used the faster the function can run.  For
 each level of directories at most one descriptor is used so that for
-very deep directory hierachies the limit on open file descriptors for
+very deep directory hierarchies the limit on open file descriptors for
 the process or the system can be exceeded.  Beside this the limit on
 file descriptors is counted together for all threads in a multi-threaded
 program and therefore it is always good too limit the maximal number of
@@ -679,7 +679,7 @@ values, combined using bitwise OR.
 While traversing the directory symbolic links are not followed.  I.e.,
 if this flag is given symbolic links are reported using the
 @code{FTW_SL} value for the type parameter to the callback function.
-Please note that if this flag is used the appearence of @code{FTW_SL} in
+Please note that if this flag is used the appearance of @code{FTW_SL} in
 a callback function does not mean the referenced file does not exist.
 To indicate this the extra value @code{FTW_SLN} exists.
 @item FTW_MOUNT
@@ -1447,7 +1447,7 @@ This macro returns nonzero if the file is a symbolic link.
 This macro returns nonzero if the file is a socket.  @xref{Sockets}.
 @end deftypefn
 
-An alterate non-POSIX method of testing the file type is supported for
+An alternate non-POSIX method of testing the file type is supported for
 compatibility with BSD.  The mode can be bitwise ANDed with
 @code{S_IFMT} to extract the file type code, and compared to the
 appropriate type code constant.  For example,
@@ -1780,7 +1780,7 @@ used as the swap area of diskless client machines.  The idea is that the
 pages of the file will be cached in the client's memory, so it is a
 waste of the server's memory to cache them a second time.  In this use
 the sticky bit also says that the filesystem may fail to record the
-file's modification time onto disk reliably (the idea being that noone
+file's modification time onto disk reliably (the idea being that no-one
 cares for a swap file).
 @end table
 
@@ -1790,7 +1790,7 @@ These bit values are correct for most systems, but they are not
 guaranteed.
 
 @strong{Warning:} Writing explicit numbers for file permissions is bad
-practice.  It is not only nonportable, it also requires everyone who
+practice.  It is not only non-portable, it also requires everyone who
 reads your program to remember what the bits mean.  To make your
 program clean, use the symbolic names.
 
@@ -2080,7 +2080,7 @@ Argument that means, test for existence of the file.
 @cindex file access time
 @cindex file modification time
 @cindex file attribute modification time
-Each file has three timestamps associated with it:  its access time,
+Each file has three time stamps associated with it:  its access time,
 its modification time, and its attribute modification time.  These
 correspond to the @code{st_atime}, @code{st_mtime}, and @code{st_ctime}
 members of the @code{stat} structure; see @ref{File Attributes}.
@@ -2093,7 +2093,7 @@ values, see @ref{Calendar Time}.
 
 Reading from a file updates its access time attribute, and writing
 updates its modification time.  When a file is created, all three
-timestamps for that file are set to the current time.  In addition, the
+time stamps for that file are set to the current time.  In addition, the
 attribute change time and modification time fields of the directory that
 contains the new entry are updated.
 
@@ -2109,7 +2109,7 @@ the times for the file being renamed.
 Changing attributes of a file (for example, with @code{chmod}) updates
 its attribute change time field.
 
-You can also change some of the timestamps of a file explicitly using
+You can also change some of the time stamps of a file explicitly using
 the @code{utime} function---all except the attribute change time.  You
 need to include the header file @file{utime.h} to use this facility.
 @pindex utime.h
@@ -2142,7 +2142,7 @@ values from the @code{actime} and @code{modtime} members (respectively)
 of the @code{utimbuf} structure pointed at by @var{times}.
 
 The attribute modification time for the file is set to the current time
-in either case (since changing the timestamps is itself a modification
+in either case (since changing the time stamps is itself a modification
 of the file attributes).
 
 The @code{utime} function returns @code{0} if successful and @code{-1}
@@ -2153,7 +2153,7 @@ are defined for this function:
 @table @code
 @item EACCES
 There is a permission problem in the case where a null pointer was
-passed as the @var{times} argument.  In order to update the timestamp on
+passed as the @var{times} argument.  In order to update the time stamp on
 the file, you must either be the owner of the file, have write
 permission on the file, or be a privileged user.
 

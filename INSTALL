@@ -21,28 +21,19 @@ the chosen configuration before proceeding.
    Here are some options that you should specify (if appropriate) when
 you run `configure':
 
-`--with-gnu-ld'
-     Use this option if you plan to use GNU `ld' to link programs with
-     the GNU C Library.  (We strongly recommend that you do.)  This
-     option enables use of features that exist only in GNU `ld'; so if
-     you configure for GNU `ld' you must use GNU `ld' *every time* you
-     link with the GNU C Library, and when building it.
-
-`--with-gnu-as'
-     Use this option if you plan to use the GNU assembler, `gas', when
-     building the GNU C Library.  On some systems, the library may not
-     build properly if you do *not* use `gas'.
-
-`--with-gnu-binutils'
-     This option implies both `--with-gnu-ld' and `--with-gnu-as'.  On
-     systems where GNU tools are the system tools, there is no need to
-     specify this option.  These include GNU, GNU/Linux, and free BSD
-     systems.
+`--with-binutils=DIRECTORY'
+     Use the binutils (assembler and linker) in `DIRECTORY', not the
+     ones the C compiler would default to.  You could use this option if
+     the default binutils on your system cannot deal with all the
+     constructs in the GNU C library.  (`configure' will detect the
+     problem and suppress these constructs, so the library will still
+     be usable, but functionality may be lost--for example, you can not
+     build a shared libc with old binutils.)
 
 `--without-fp'
 `--nfp'
      Use this option if your computer lacks hardware floating-point
-     support.
+     support and your operating system does not emulate an FPU.
 
 `--prefix=DIRECTORY'
      Install machine-independent data files in subdirectories of
@@ -112,7 +103,7 @@ and define in that file the parameters you want to specify.
 `configparms' should *not* be an edited copy of `Makeconfig'; specify
 only the parameters that you want to override.  To see how to set these
 parameters, find the section of `Makeconfig' that says "These are the
-configuration variables."  Then for each parameter that you want to
+configuration variables." Then for each parameter that you want to
 change, copy the definition from `Makeconfig' to your new `configparms'
 file, and change the value as appropriate for your system.
 
@@ -218,6 +209,7 @@ following patterns:
      iX86-ANYTHING-linux
      m68k-ANYTHING-linux
      powerpc-ANYTHING-linux
+     sparc64-ANYTHING-linux
 
    Former releases of this library (version 1.09.1 and perhaps earlier
 versions) used to run on the following configurations:
@@ -443,27 +435,36 @@ and `unix/Implies' contains:
 
 So the final list is `unix/bsd/vax unix/bsd unix/inet unix posix'.
 
-   `sysdeps' has two "special" subdirectories, called `generic' and
-`stub'.  These two are always implicitly appended to the list of
-subdirectories (in that order), so you needn't put them in an `Implies'
-file, and you should not create any subdirectories under them intended
-to be new specific categories.  `generic' is for things that can be
-implemented in machine-independent C, using only other
-machine-independent functions in the C library.  `stub' is for "stub"
-versions of functions which cannot be implemented on a particular
-machine or operating system.  The stub functions always return an
-error, and set `errno' to `ENOSYS' (Function not implemented).  *Note
-Error Reporting::.
+   `sysdeps' has a "special" subdirectory called `generic'.  It is
+always implicitly appended to the list of subdirectories, so you
+needn't put it in an `Implies' file, and you should not create any
+subdirectories under it intended to be new specific categories.
+`generic' serves two purposes.  First, the makefiles do not bother to
+look for a system-dependent version of a file that's not in `generic'.
+This means that any system-dependent source file must have an analogue
+in `generic', even if the routines defined by that file are not
+implemented on other platforms.  Second. the `generic' version of a
+system-dependent file is used if the makefiles do not find a version
+specific to the system you're compiling for.
 
-   A source file is known to be system-dependent by its having a
-version in `generic' or `stub'; every generally-available function whose
-implementation is system-dependent in should have either a generic or
-stub implementation (there is no point in having both).  Some rare
-functions are only useful on specific systems and aren't defined at all
-on others; these do not appear anywhere in the system-independent
-source code or makefiles (including the `generic' and `stub'
-directories), only in the system-dependent `Makefile' in the specific
-system's subdirectory.
+   If it is possible to implement the routines in a `generic' file in
+machine-independent C, using only other machine-independent functions in
+the C library, then you should do so.  Otherwise, make them stubs.  A
+"stub" function is a function which cannot be implemented on a
+particular machine or operating system.  Stub functions always return an
+error, and set `errno' to `ENOSYS' (Function not implemented).  *Note
+Error Reporting::.  If you define a stub function, you must place the
+statement `stub_warning(FUNCTION)', where FUNCTION is the name of your
+function, after its definition; also, you must include the file
+`<stub-tag.h>' into your file.  This causes the function to be listed
+in the installed `<gnu/stubs.h>', and makes GNU ld warn when the
+function is used.
+
+   Some rare functions are only useful on specific systems and aren't
+defined at all on others; these do not appear anywhere in the
+system-independent source code or makefiles (including the `generic'
+and `stub' directories), only in the system-dependent `Makefile' in the
+specific system's subdirectory.
 
    If you come across a file that is in one of the main source
 directories (`string', `stdio', etc.), and you want to write a machine-
@@ -640,10 +641,8 @@ machine should go in `sysdeps/MACHINE/fpu'.
 hierarchy that are not for particular machine architectures.
 
 `generic'
-`stub'
-     As described above (*note Porting::.), these are the two
-     subdirectories that every configuration implicitly uses after all
-     others.
+     As described above (*note Porting::.), this is the subdirectory
+     that every configuration implicitly uses after all others.
 
 `ieee754'
      This directory is for code using the IEEE 754 floating-point
@@ -970,4 +969,106 @@ parts of the library were contributed or worked on by other people.
           or <Software.Distribution@CS.CMU.EDU> any improvements or
           extensions that they make and grant Carnegie Mellon the
           rights to redistribute these changes.
+
+   * The code for the database library `libdb' comes from the 2.3
+     release of Berkeley DB. That code is under the same copyright as
+     4.4 BSD and also:
+
+               Copyright (C) 1990, 1993, 1994, 1995, 1996, 1997
+               Sleepycat Software.  All rights reserved.
+
+          Redistribution and use in source and binary forms, with or
+          without modification, are permitted provided that the
+          following conditions are met:
+
+            1. Redistributions of source code must retain the above
+               copyright notice, this list of conditions and the
+               following disclaimer.
+
+            2. Redistributions in binary form must reproduce the above
+               copyright notice, this list of conditions and the
+               following disclaimer in the documentation and/or other
+               materials provided with the distribution.
+
+            3. Redistributions in any form must be accompanied by
+               information on how to obtain complete source code for
+               the DB software and any accompanying software that uses
+               the DB software.  The source code must either be
+               included in the distribution or be available for no more
+               than the cost of distribution plus a nominal fee, and
+               must be freely redistributable under reasonable
+               conditions.  For an executable file, complete source
+               code means the source code for all modules it contains.
+               It does not mean source code for modules or files that
+               typically accompany the operating system on which the
+               executable file runs, e.g., standard library modules or
+               system header files.
+
+          THIS SOFTWARE IS PROVIDED BY SLEEPYCAT SOFTWARE "AS IS" AND
+          ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+          TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+          A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
+          SLEEPYCAT SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT,
+          INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+          (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+          GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+          INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+          WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+          NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+          THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+          DAMAGE.
+
+               Portions copyright (C) 1995, 1996
+               The President and Fellows of Harvard University.
+               All rights reserved.
+
+          Redistribution and use in source and binary forms, with or
+          without modification, are permitted provided that the
+          following conditions are met:
+            1. Redistributions of source code must retain the above
+               copyright notice, this list of conditions and the
+               following disclaimer.
+
+            2. Redistributions in binary form must reproduce the above
+               copyright notice, this list of conditions and the
+               following disclaimer in the documentation and/or other
+               materials provided with the distribution.
+
+            3. All advertising materials mentioning features or use of
+               this software must display the following acknowledgement:
+                     This product includes software developed by
+                    Harvard University  and its contributors.
+
+            4. Neither the name of the University nor the names of its
+               contributors may be used to endorse or promote products
+               derived from this software without specific prior
+               written permission.
+
+          THIS SOFTWARE IS PROVIDED BY HARVARD AND ITS CONTRIBUTORS "AS
+          IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+          LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+          FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT
+          SHALL HARVARD OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+          INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+          DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+          SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+          OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+          LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+          THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+          OF SUCH DAMAGE.
+
+          For a license to use, redistribute or sell DB software under
+          conditions other than those described above, or to purchase
+          support for this software, please contact Sleepycat Software
+          at
+
+                Sleepycat Software
+                394 E. Riding Dr.
+                Carlisle, MA 01741
+                USA
+                +1-508-287-4781
+
+          or <db@sleepycat.com>.
+
 

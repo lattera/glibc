@@ -59,12 +59,6 @@ ifneq	"$(findstring env,$(origin common-generated))" ""
 common-generated :=
 endif
 
-ifeq "$(strip $(headers))" ""
-ifneq "$(wildcard $(subdir).h)" ""
-override headers := $(subdir).h
-endif
-endif
-
 include ../Makerules
 
 .PHONY: subdir_lib
@@ -172,4 +166,19 @@ $(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 
 $(common-objpfx)empty.os: $(common-objpfx)empty.c $(before-compile)
 	$(compile-command.c)
+endif
+
+ifdef shared-only-routines
+# If we have versioned code we don't need the old versions in any of the
+# static libraries.
+define o-iterator-doit
+$(shared-only-routines:%=$(objpfx)%.$o): %.$o: $(common-objpfx)empty.$o
+	rm -f $$@
+	ln $$< $$@
+
+$(common-objpfx)empty.$o: $(common-objpfx)empty.c $(before-compile)
+	$$(compile-command.c)
+endef
+object-suffixes-left := $(filter-out .os,$(object-suffixes))
+include $(o-iterator)
 endif

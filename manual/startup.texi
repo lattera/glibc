@@ -520,7 +520,7 @@ classification.
 @cindex LC_MESSAGES environment variable
 
 This specifies what locale to use for printing messages and to parse
-reponses.
+responses.
 
 @item LC_MONETARY
 @cindex LC_MONETARY environment variable

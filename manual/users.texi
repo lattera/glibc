@@ -1770,7 +1770,7 @@ This function closes the internal stream used by @code{getgrent} or
 @subsection Netgroup Data
 
 @cindex Netgroup
-Sometimes it is useful group users according to other criterias like the
+Sometimes it is useful group users according to other criteria like the
 ones used in the @xref{Group Database}.  E.g., it is useful to associate
 a certain group of users with a certain machine.  On the other hand
 grouping of host names is not supported so far.

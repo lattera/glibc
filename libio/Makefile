@@ -62,6 +62,8 @@ ifeq ($(versioning),yes)
 aux	+= oldfileops oldstdfiles
 endif
 
+shared-only-routines = oldiofopen oldfreopen oldfileops oldstdfiles
+
 distribute := iolibio.h libioP.h strfile.h Banner
 
 include ../Rules

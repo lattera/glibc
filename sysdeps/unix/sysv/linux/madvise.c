@@ -1,1 +1,1 @@
-#include <sysdeps/stub/madvise.c>
+#include <sysdeps/generic/madvise.c>

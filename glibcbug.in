@@ -6,7 +6,7 @@
 #       these variables are filled in by configure
 #
 VERSION="@VERSION@"
-BUGGLIBC="bugs@gnu.ai.mit.edu"
+BUGGLIBC="bugs@gnu.org"
 ADDONS="@subdirs@"
 
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH

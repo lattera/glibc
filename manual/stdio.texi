@@ -288,7 +288,7 @@ another function.
 @deftypefun int fcloseall (void)
 This function causes all open streams of the process to be closed and
 the connection to corresponding files to be broken.  All buffered data
-is written and any buffered inputis discarded.  The @code{fcloseall}
+is written and any buffered input is discarded.  The @code{fcloseall}
 function returns a value of @code{0} if all the files were closed
 successfully, and @code{EOF} if an error was detected.
 
@@ -912,7 +912,7 @@ initial @samp{%} character followed in sequence by:
 @item
 An optional specification of the parameter used for this format.
 Normally the parameters to the @code{printf} function a assigned to the
-formats in the order of appearence in the format string.  But in some
+formats in the order of appearance in the format string.  But in some
 situations (such as message translation) this is not desirable and this
 extension allows to specify and explicit parameter to be used.
 
@@ -1236,7 +1236,7 @@ numbers are represented is the form
 @w{[@code{-}]@code{0x}@var{h}@code{.}@var{hhh}@code{p}[@code{+}|@code{-}]@var{dd}}.
 At the left of the decimal-point character exactly one digit is print.
 This character is only @code{0} is the number is denormalized.
-Otherwise the value is unspecifed; it is implemention dependent how many
+Otherwise the value is unspecified; it is implemention dependent how many
 bits are used.  The number of hexadecimal digits on the right side of
 the decimal-point character is equal to the precision.  If the precision
 is zero it is determined to be large enough to provide an exact
@@ -2310,7 +2310,7 @@ register_printf_function ('B', printf_size, printf_size_info);
 @end smallexample
 
 Here we register the functions to print numbers as powers of 1000 since
-the format character @code{'B'} is an upper-case characeter.  If we
+the format character @code{'B'} is an upper-case character.  If we
 would additionally use @code{'b'} in a line like
 
 @smallexample
@@ -3110,7 +3110,7 @@ This function is similar to @code{fseek} but it corrects a problem with
 @code{fseeko} uses the correct type @code{off_t} for the @var{offset}
 parameter.
 
-For this reasonit is a good idea to prefer @code{ftello} whenever it is
+For this reason it is a good idea to prefer @code{ftello} whenever it is
 available since its functionality is (if different at all) closer the
 underlying definition.
 
@@ -3157,7 +3157,7 @@ the offset provided is relative to the end of the file.
 @comment ISO
 @deftypefun void rewind (FILE *@var{stream})
 The @code{rewind} function positions the stream @var{stream} at the
-begining of the file.  It is equivalent to calling @code{fseek} or
+beginning of the file.  It is equivalent to calling @code{fseek} or
 @code{fseeko} on the @var{stream} with an @var{offset} argument of
 @code{0L} and a @var{whence} argument of @code{SEEK_SET}, except that
 the return value is discarded and the error indicator for the stream is
@@ -3756,7 +3756,7 @@ the following members:
 @table @code
 @item cookie_read_function_t *read
 This is the function that reads data from the cookie.  If the value is a
-null pointer instead of a function, then read operations on ths stream
+null pointer instead of a function, then read operations on this stream
 always return @code{EOF}.
 
 @item cookie_write_function_t *write
@@ -3926,7 +3926,7 @@ Display the message in standard error.
 Display the message on the system console.
 @end vtable
 
-The errorneous piece of the system can be signalled by exactly one of the
+The erroneous piece of the system can be signalled by exactly one of the
 following values which also is bitwise ORed with the
 @var{classification} parameter to @code{fmtmsg}:
 
@@ -3945,11 +3945,11 @@ done by using exactly one of the following values:
 
 @vtable @code
 @item MM_APPL
-The errorneous condition is detected by the application.
+The erroneous condition is detected by the application.
 @item MM_UTIL
-The errorneous condition is detected by a utility.
+The erroneous condition is detected by a utility.
 @item MM_OPSYS
-The errorneous condition is detected by the operating system.
+The erroneous condition is detected by the operating system.
 @end vtable
 
 A last component of @var{classification} can signal the results of this
@@ -3970,7 +3970,7 @@ in the @var{classification} parameter.  The @var{label} parameter
 identifies the source of the message.  The string should consist of two
 colon separated parts where the first part has not more than 10 and the
 second part not more the 14 characters.  The @var{text} parameter
-descries the condition of the error, the @var{action} parameter possible
+describes the condition of the error, the @var{action} parameter possible
 steps to recover from the error and the @var{tag} parameter is a
 reference to the online documentation where more information can be
 found.  It should contain the @var{label} value and a unique

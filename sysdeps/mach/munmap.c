@@ -25,7 +25,7 @@
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
 int
-__munmap (caddr_t addr, size_t len)
+__munmap (__ptr_t addr, size_t len)
 {
   kern_return_t err;
   if (err = __vm_deallocate (__mach_task_self (),

@@ -43,4 +43,4 @@ __new_freopen (filename, mode, fp)
   return result;
 }
 
-symbol_version (__new_freopen, freopen, GLIBC_2.1);
+default_symbol_version (__new_freopen, freopen, GLIBC_2.1);

@@ -28,7 +28,7 @@ This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"
 #include "version-info.h"
-"Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n";
+"Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
 
 #include <unistd.h>
 

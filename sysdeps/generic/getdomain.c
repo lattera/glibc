@@ -54,5 +54,6 @@ getdomainname (name, len)
 }
 
 stub_warning (getdomainname)
+#include <stub-tag.h>
 
 #endif

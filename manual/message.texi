@@ -19,8 +19,8 @@ selection of the user.
 The GNU C Library provides two different sets of functions to support
 message translation.  The problem is that neither of the interfaces is
 officially defined by the POSIX standard.  The @code{catgets} family of
-functions is defined in the X/Open standard but this is drived from
-industry decisions and therefore not necessarily is based on reasinable
+functions is defined in the X/Open standard but this is derived from
+industry decisions and therefore not necessarily based on reasonable
 decisions.
 
 As mentioned above the message catalog handling provides easy
@@ -67,7 +67,7 @@ The user of the program must be able to guide the responsible function
 to find whatever catalog the user wants.  This is separated from what
 the programmer had in mind.
 
-All the types, constants and funtions for the @code{catgets} functions
+All the types, constants and functions for the @code{catgets} functions
 are defined/declared in the @file{nl_types.h} header file.
 
 @menu
@@ -99,7 +99,7 @@ Locating the catalog file must happen in a way which lets the user of
 the program influence the decision.  It is up to the user to decide
 about the language to use and sometimes it is useful to use alternate
 catalog files.  All this can be specified by the user by setting some
-enviroment variables.
+environment variables.
 
 The first problem is to find out where all the message catalogs are
 stored.  Every program could have its own place to keep all the
@@ -137,7 +137,7 @@ explained below.
 
 @item %l
 (This is the lowercase ell.) This format element is substituted with the
-language element of the locale name.  The string decsribing the selected
+language element of the locale name.  The string describing the selected
 locale is expected to have the form
 @code{@var{lang}[_@var{terr}[.@var{codeset}]]} and this format uses the
 first part @var{lang}.
@@ -186,7 +186,7 @@ to all other platforms providing the @code{catgets} interface.
 @cindex LC_MESSAGES environment variable
 @cindex LANG environment variable
 Otherwise the values of environment variables from the standard
-environemtn are examined (@pxref{Standard Environment}).  Which
+environment are examined (@pxref{Standard Environment}).  Which
 variables are examined is decided by the @var{flag} parameter of
 @code{catopen}.  If the value is @code{NL_CAT_LOCALE} (which is defined
 in @file{nl_types.h}) then the @code{catopen} function examines the
@@ -225,7 +225,7 @@ When an error occured the global variable @var{errno} is set to
 @item EBADF
 The catalog does not exist.
 @item ENOMSG
-The set/message touple does not name an existing element in the
+The set/message ttuple does not name an existing element in the
 message catalog.
 @end table
 
@@ -275,7 +275,7 @@ all @var{string} arguments should be written in the same language.
 
 It is somewhat uncomfortable to write a program using the @code{catgets}
 functions if no supporting functionality is available.  Since each
-set/message number touple must be unique the programmer must keep lists
+set/message number tuple must be unique the programmer must keep lists
 of the messages at the same time the code is written.  And the work
 between several people working on the same project must be coordinated.
 In @ref{Common Usage} we will see some how these problems can be relaxed
@@ -299,7 +299,7 @@ The only reasonable way the translate all the messages of a function and
 store the result in a message catalog file which can be read by the
 @code{catopen} function is to write all the message text to the
 translator and let her/him translate them all.  I.e., we must have a
-file with entries which associate the set/message touple with a specific
+file with entries which associate the set/message tuple with a specific
 translation.  This file format is specified in the X/Open standard and
 is as follows:
 
@@ -363,11 +363,11 @@ line ends quoting is disable.
 By default no quoting character is used.  In this mode strings are
 terminated with the first unescaped line break.  If there is a
 @code{$quote} sequence present newline need not be escaped.  Instead a
-string is terminated with the first unescaped appearence of the quote
+string is terminated with the first unescaped appearance of the quote
 character.
 
 A common usage of this feature would be to set the quote character to
-@code{"}.  Then any appearence of the @code{"} in the strings must
+@code{"}.  Then any appearance of the @code{"} in the strings must
 be escaped using the backslash (i.e., @code{\"} must be written).
 
 @item
@@ -414,7 +414,7 @@ $set SetOne
 two "   Message with ID \"two\", which gets the value 2 assigned"
 
 $set SetTwo
-$ Since the last set got the nubmer 1 assigned this set has number 2.
+$ Since the last set got the number 1 assigned this set has number 2.
 4000 "The numbers can be arbitrary, they need not start at one."
 @end smallexample
 
@@ -429,7 +429,7 @@ message definition would have to be left away and in this case the
 message with the identifier @code{two} would loose its leading whitespace.
 @item
 Mixing numbered messages with message having symbolic names is no
-problem and the numering happens automatically.
+problem and the numbering happens automatically.
 @end itemize
 
 
@@ -438,7 +438,7 @@ use in a running program.  The @code{catopen} function would have to
 parser the file and handle syntactic errors gracefully.  This is not so
 easy and the whole process is pretty slow.  Therefore the @code{catgets}
 functions expect the data in another more compact and ready-to-use file
-format.  There is a special programm @code{gencat} which is explained in
+format.  There is a special program @code{gencat} which is explained in
 detail in the next section.
 
 Files in this other format are not human readable.  To be easy to use by
@@ -449,7 +449,7 @@ so translation files can be shared by systems of arbitrary architecture
 Details about the binary file format are not important to know since
 these files are always created by the @code{gencat} program.  The
 sources of the GNU C Library also provide the sources for the
-@code{gencat} program and so the interested reader can look throught
+@code{gencat} program and so the interested reader can look through
 these source files to learn about the file format.
 
 
@@ -491,8 +491,8 @@ while using the device names is a GNU extension.
 
 The @code{gencat} program works by concatenating all input files and
 then @strong{merge} the resulting collection of message sets with a
-possiblity existing output file.  This is done by removing all messages
-with set/message number touples matching any of the generated messages
+possibly existing output file.  This is done by removing all messages
+with set/message number tuples matching any of the generated messages
 from the output file and then adding all the new messages.  To
 regenerate a catalog file while ignoring the old contents therefore
 requires to remove the output file if it exists.  If the output is
@@ -541,8 +541,8 @@ method first to understand the benefits of extensions.
 
 Since the X/Open format of the message catalog files does not allow
 symbol names we have to work with numbers all the time.  When we start
-writing a program we have to replace all appearences of translatable
-strings with someting like
+writing a program we have to replace all appearances of translatable
+strings with something like
 
 @smallexample
 catgets (catdesc, set, msg, "string")
@@ -556,8 +556,8 @@ message numbers.
 
 In a bigger program several programmers usually work at the same time on
 the program and so coordinating the number allocation is crucial.
-Though no two different strings must be indexed by the same touple of
-numbers it is highly desireable to reuse the numbers for equal strings
+Though no two different strings must be indexed by the same tuple of
+numbers it is highly desirable to reuse the numbers for equal strings
 with equal translations (please note that there might be strings which
 are equal in one language but have different translations due to
 difference contexts).
@@ -570,7 +570,7 @@ cannot be discovered by the compiler or the @code{catgets} functions.
 Only the user of the program might see wrong messages printed.  In the
 worst cases the messages are so irritating that they cannot be
 recognized as wrong.  Think about the translations for @code{"true"} and
-@code{"false"} being exchanged.  This could result in a desaster.
+@code{"false"} being exchanged.  This could result in a disaster.
 
 
 @subsubsection Using symbolic names
@@ -829,7 +829,7 @@ something like
 Here the @var{errno} value is used in the @code{printf} function while
 processing the @code{%m} format element and if the @code{gettext}
 function would change this value (it is called before @code{printf} is
-called) we wouls get a wrong message.
+called) we would get a wrong message.
 
 So there is no easy way to detect a missing message catalog beside
 comparing the argument string with the result.  But it is normally the
@@ -856,7 +856,7 @@ pointer the @code{dgettext} function is exactly equivalent to
 @code{gettext} since the default value for the domain name is used.
 
 As for @code{gettext} the return value type is @code{char *} which is an
-anachronism.  The returned string must never be modfied.
+anachronism.  The returned string must never be modified.
 @end deftypefun
 
 @deftypefun {char *} dcgettext (const char *@var{domainname}, const char *@var{msgid}, int @var{category})
@@ -895,7 +895,7 @@ but @code{LC_MESSAGES} in for the @var{category} parameter.  We are
 dealing with messages here and any other choice can only be irritating.
 
 As for @code{gettext} the return value type is @code{char *} which is an
-anachronism.  The returned string must never be modfied.
+anachronism.  The returned string must never be modified.
 @end deftypefun
 
 When using the three functions above in a program it is a frequent case
@@ -906,7 +906,7 @@ will not change.  I.e., the algorithm to determine the translation is
 deterministic.
 
 Exactly this is what the optimizations implemented in the
-@file{libintl.h} header will use.  Whenver a program is compiler with
+@file{libintl.h} header will use.  Whenever a program is compiler with
 the GNU C compiler, optimization is selected and the @var{msgid}
 argument to @code{gettext}, @code{dgettext} or @code{dcgettext} is a
 constant string the actual function call will only be done the first
@@ -920,7 +920,7 @@ independent of the compiler or compiler options in use.
 @node Locating gettext catalog
 @subsubsection How to determine which catalog to be used
 
-The functions to retrieve the translations for a given mesage have a
+The functions to retrieve the translations for a given message have a
 remarkable simple interface.  But to provide the user of the program
 still the opportunity to select exactly the translation s/he wants and
 also to provide the programmer the possibility to influence the way to
@@ -977,7 +977,7 @@ to read the messages in another language and so the user of the program
 should be able to define an precedence order of languages.
 @end itemize
 
-We can devide the configuration actions in two parts: the one is
+We can divide the configuration actions in two parts: the one is
 performed by the programmer, the other by the user.  We will start with
 the functions the programmer can use since the user configuration will
 be based on this.
@@ -999,7 +999,7 @@ all future @code{gettext} calls, to @var{domainname}.  Please note that
 @var{domainname} parameter of these functions is not the null pointer.
 
 Before the first call to @code{textdomain} the default domain is
-@code{messages}.  This is the name specified in the fpsecification of
+@code{messages}.  This is the name specified in the specification of
 the @code{gettext} API.  This name is as good as any other name.  No
 program should ever really use a domain with this name since this can
 only lead to problems.
@@ -1025,10 +1025,10 @@ really never should be used.
 The @code{bindtextdomain} function can be used to specify the directly
 which contains the message catalogs for domain @var{domainname} for the
 different languages.  To be correct, this is the directory where the
-hierachy of directories is expected.  Details are explained below.
+hierarchy of directories is expected.  Details are explained below.
 
 For the programmer it is important to note that the translations which
-come with the program have be placed in a directory hierachy starting
+come with the program have be placed in a directory hierarchy starting
 at, say, @file{/foo/bar}.  Then the program should make a
 @code{bindtextdomain} call to bind the domain for the current program to
 this directory.  So it is made sure the catalogs are found.  A correctly
@@ -1036,7 +1036,7 @@ running program does not depend on the user setting an environment
 variable.
 
 The @code{bindtextdomain} function can be used several times and if the
-@var{domainname} argument is different the previously boundd domains
+@var{domainname} argument is different the previously bounded domains
 will not be overwritten.
 
 If the program which wish to use @code{bindtextdomain} at some point of
@@ -1095,7 +1095,7 @@ files.  If the program executed the @code{bindtextdomain} function for
 the message domain that is currently handled the @code{dir_name}
 component is the exactly the value which was given to the function as
 the second parameter.  I.e., @code{bindtextdomain} allows to overwrite
-the only system depdendent and fixed value to make it possible to
+the only system dependent and fixed value to make it possible to
 address file everywhere in the filesystem.
 
 The @var{category} is the name of the locale category which was selected
@@ -1220,7 +1220,7 @@ list:
 @code{audience}/@code{modifier}
 @end enumerate
 
-From the last entry one can see that the meaning of the @code{modifer}
+From the last entry one can see that the meaning of the @code{modifier}
 field in the X/Open format and the @code{audience} format have the same
 meaning.  Beside one can see that the @code{language} field for obvious
 reasons never will be dropped.
@@ -1296,7 +1296,7 @@ help to understand the input better.
 
 Other programs help to manage development cycle when new messages appear
 in the source files or when a new translation of the messages appear.
-here it should only be noted that using all the tools in GNu gettext it
+here it should only be noted that using all the tools in GNU gettext it
 is possible to @emph{completely} automize the handling of message
 catalog.  Beside marking the translatable string in the source code and
 generating the translations the developers do not have anything to do

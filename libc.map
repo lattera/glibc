@@ -413,12 +413,14 @@ GLIBC_2.0 {
     xdrrec_endofrecord; xdrrec_eof; xdrrec_skiprecord; xdrstdio_create;
     xencrypt; xprt_register; xprt_unregister;
 
+    _IO_list_all;
+
   local:
     *;
 };
 
 GLIBC_2.1 {
   global:
-    _IO_fopen; fopen; _IO_stdin_; _IO_stdout_; _IO_stderr_; _IO_list_all;
+    _IO_fopen; fopen; _IO_stdin_; _IO_stdout_; _IO_stderr_;
     freopen;
 } GLIBC_2.0;

@@ -328,8 +328,11 @@ extern const char _libc_intl_domainname[];
 #if DO_VERSIONING
 # define symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@" #version)
+# define default_symbol_version(real, name, version) \
+     __asm__ (".symver " #real "," #name "@@" #version)
 #else
 # define symbol_version(real, name, version)
+# define default_symbol_version(real, name, version)
 #endif
 
 #endif /* libc-symbols.h */

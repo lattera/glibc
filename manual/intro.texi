@@ -15,7 +15,7 @@ operating system, and extensions specific to the GNU system.
 
 The purpose of this manual is to tell you how to use the facilities
 of the GNU library.  We have mentioned which features belong to which
-standards to help you identify things that are potentially nonportable
+standards to help you identify things that are potentially non-portable
 to other systems.  But the emphasis in this manual is not on strict
 portability.
 

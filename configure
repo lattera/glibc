@@ -1056,10 +1056,10 @@ while test $# -gt 0; do
 done
 
 # Add the default directories.
-sysnames="$names sysdeps/generic sysdeps/stub"
+sysnames="$names sysdeps/generic"
 
 # The other names were emitted during the scan.
-echo "$ac_t""sysdeps/generic sysdeps/stub" 1>&6
+echo "$ac_t""sysdeps/generic" 1>&6
 
 
 ### Locate tools.

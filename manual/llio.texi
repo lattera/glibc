@@ -242,7 +242,7 @@ extra bytes are stripped of.  If the file was small or equal to
 @var{length} in size before nothing is done.  The file must be writable
 by the user to perform this operation.
 
-The return value is zero is everything wnet ok.  Otherwise the return
+The return value is zero is everything went ok.  Otherwise the return
 value is @math{-1} and the global variable @var{errno} is set to:
 @table @code
 @item EACCES
@@ -1180,16 +1180,16 @@ No synchronization is possible since the system does not implement this.
 Sometimes it is not even necessary to write all data associated with a
 file descriptor.  E.g., in database files which do not change in size it
 is enough to write all the file content data to the device.
-Metainformation like the modification time etc. are not that important
+Meta-information like the modification time etc. are not that important
 and leaving such information uncommitted does not prevent a successful
 recovering of the file in case of a problem.
 
 @comment unistd.h
 @comment POSIX
 @deftypefun int fdatasync (int @var{fildes})
-When a call to the @code{fdatasync} function returns it is maed sure
+When a call to the @code{fdatasync} function returns it is made sure
 that all of the file data is written to the device.  For all pending I/O
-operations the parts guaranteeing data integrety finished.
+operations the parts guaranteeing data integrity finished.
 
 Not all systems implement the @code{fdatasync} operation.  On systems
 missing this functionality @code{fdatasync} is emulated by a call to

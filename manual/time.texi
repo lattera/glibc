@@ -568,7 +568,7 @@ universal time.
 @end deftypefun
 
 As for the @code{localtime} function we have the problem that the result
-is placed ina static variable.  POSIX.1c also provides a replacement for
+is placed in a static variable.  POSIX.1c also provides a replacement for
 @code{gmtime}.
 
 @comment time.h
@@ -1163,7 +1163,7 @@ broken-down time structure, since @code{tm_zone} reports the correct
 abbreviation even when it is not the latest one.
 
 Though the strings are declared as @code{char *} the user must stay away
-from modifying these strings.  Modying the strings will almost certainly
+from modifying these strings.  Modifying the strings will almost certainly
 lead to trouble.
 
 @end deftypevar

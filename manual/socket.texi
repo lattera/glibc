@@ -687,7 +687,7 @@ Each computer on the Internet has one or more @dfn{Internet addresses},
 numbers which identify that computer among all those on the Internet.
 Users typically write IPv4 numeric host addresses as sequences of four
 numbers, separated by periods, as in @samp{128.52.46.32}, and IPv6
-numeric host addresses as sequences of up to eight numbers seperated by
+numeric host addresses as sequences of up to eight numbers separated by
 colons, as in @samp{5f03:1200:836f:c100::1}.
 
 Each computer also has one or more @dfn{host names}, which are strings

@@ -30,7 +30,7 @@
 #include <bits/mman.h>
 
 /* Return value of `mmap' in case of an error.  */
-#define MAP_FAILED	((__caddr_t) -1)
+#define MAP_FAILED	((__ptr_t) -1)
 
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
@@ -42,41 +42,41 @@ __BEGIN_DECLS
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-extern __caddr_t __mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			      int __flags, int __fd, __off_t __offset));
+extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			  int __flags, int __fd, __off_t __offset));
 #ifndef __USE_FILE_OFFSET64
-extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off_t __offset));
+extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			int __flags, int __fd, __off_t __offset));
 #else
-extern __caddr_t mmap __P ((__caddr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off_t __offset))
+extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
+			int __flags, int __fd, __off_t __offset))
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
-extern __caddr_t mmap64 __P ((__caddr_t __addr, size_t __len, int __prot,
-			      int __flags, int __fd, __off64_t __offset));
+extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
+			  int __flags, int __fd, __off64_t __offset));
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int __munmap __P ((__caddr_t __addr, size_t __len));
-extern int munmap __P ((__caddr_t __addr, size_t __len));
+extern int __munmap __P ((__ptr_t __addr, size_t __len));
+extern int munmap __P ((__ptr_t __addr, size_t __len));
 
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
-extern int __mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
-extern int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
+extern int __mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
+extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  Flags are from the MS_* set.  */
-extern int msync __P ((__caddr_t __addr, size_t __len, int __flags));
+extern int msync __P ((__ptr_t __addr, size_t __len, int __flags));
 
 #ifdef __USE_BSD
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
-extern int madvise __P ((__caddr_t __addr, size_t __len, int __advice));
+extern int madvise __P ((__ptr_t __addr, size_t __len, int __advice));
 #endif
 
 /* Cause all currently mapped pages of the process to be memory resident
@@ -90,22 +90,21 @@ extern int munlockall __P ((void));
 
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
-extern int mlock __P ((__caddr_t __addr, size_t __len));
+extern int mlock __P ((__ptr_t __addr, size_t __len));
 
 /* Unlock whole pages previously mapped by the range [ADDR,ADDR+LEN).  */
-extern int munlock __P ((__caddr_t __addr, size_t __len));
+extern int munlock __P ((__ptr_t __addr, size_t __len));
 
 #ifdef __USE_MISC
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
    NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
    differ from ADDR.  */
-extern __caddr_t __mremap __P ((__caddr_t __addr, size_t __old_len,
-				size_t __new_len, int __may_move));
-extern __caddr_t mremap __P ((__caddr_t __addr, size_t __old_len,
-			      size_t __new_len, int __may_move));
+extern __ptr_t __mremap __P ((__ptr_t __addr, size_t __old_len,
+			    size_t __new_len, int __may_move));
+extern __ptr_t mremap __P ((__ptr_t __addr, size_t __old_len,
+			  size_t __new_len, int __may_move));
 #endif
 
 __END_DECLS
-
 
 #endif	/* _SYS_MMAN_H */

@@ -513,25 +513,35 @@ posix
 @noindent
 So the final list is @file{unix/bsd/vax unix/bsd unix/inet unix posix}.
 
-@file{sysdeps} has two ``special'' subdirectories, called @file{generic}
-and @file{stub}.  These two are always implicitly appended to the list
-of subdirectories (in that order), so you needn't put them in an
-@file{Implies} file, and you should not create any subdirectories under
-them intended to be new specific categories.  @file{generic} is for
-things that can be implemented in machine-independent C, using only
-other machine-independent functions in the C library.  @file{stub} is
-for @dfn{stub} versions of functions which cannot be implemented on a
-particular machine or operating system.  The stub functions always
-return an error, and set @code{errno} to @code{ENOSYS} (Function not
-implemented).  @xref{Error Reporting}.
+@file{sysdeps} has a ``special'' subdirectory called @file{generic}.  It
+is always implicitly appended to the list of subdirectories, so you
+needn't put it in an @file{Implies} file, and you should not create any
+subdirectories under it intended to be new specific categories.
+@file{generic} serves two purposes.  First, the makefiles do not bother
+to look for a system-dependent version of a file that's not in
+@file{generic}.  This means that any system-dependent source file must
+have an analogue in @file{generic}, even if the routines defined by that
+file are not implemented on other platforms.  Second. the @file{generic}
+version of a system-dependent file is used if the makefiles do not find
+a version specific to the system you're compiling for.
 
-A source file is known to be system-dependent by its having a version in
-@file{generic} or @file{stub}; every generally-available function whose
-implementation is system-dependent in should have either a generic or
-stub implementation (there is no point in having both).  Some rare functions
-are only useful on specific systems and aren't defined at all on others;
-these do not appear anywhere in the system-independent source code or makefiles
-(including the @file{generic} and @file{stub} directories), only in the
+If it is possible to implement the routines in a @file{generic} file in
+machine-independent C, using only other machine-independent functions in
+the C library, then you should do so.  Otherwise, make them stubs.  A
+@dfn{stub} function is a function which cannot be implemented on a
+particular machine or operating system.  Stub functions always return an
+error, and set @code{errno} to @code{ENOSYS} (Function not implemented).
+@xref{Error Reporting}.  If you define a stub function, you must place
+the statement @code{stub_warning(@var{function})}, where @var{function}
+is the name of your function, after its definition; also, you must
+include the file @code{<stub-tag.h>} into your file.  This causes the
+function to be listed in the installed @code{<gnu/stubs.h>}, and
+makes GNU ld warn when the function is used.
+
+Some rare functions are only useful on specific systems and aren't
+defined at all on others; these do not appear anywhere in the
+system-independent source code or makefiles (including the
+@file{generic} and @file{stub} directories), only in the
 system-dependent @file{Makefile} in the specific system's subdirectory.
 
 If you come across a file that is in one of the main source directories
@@ -737,8 +747,7 @@ hierarchy that are not for particular machine architectures.
 
 @table @file
 @item generic
-@itemx stub
-As described above (@pxref{Porting}), these are the two subdirectories
+As described above (@pxref{Porting}), this is the subdirectory
 that every configuration implicitly uses after all others.
 
 @item ieee754

@@ -365,7 +365,7 @@ repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @node More Flags for Globbing
 @subsection More Flags for Globbing
 
-Beside the flags descibed in the last section, the GNU implementation of
+Beside the flags described in the last section, the GNU implementation of
 @code{glob} allows a few more flags which are also defined in the
 @file{glob.h} file.  Some of the extensions implement functionality
 which is available in modern shell implementations.
@@ -406,7 +406,7 @@ another one.  It is important to note that the range of each brace
 expression is completely contained in the outer brace expression (if
 there is one).
 
-The string between the mathing braces is separated into single
+The string between the matching braces is separated into single
 expressions by splitting at @code{,} (comma) characters.  The commas
 themself are discarded.  Please note what we said above about recursive
 brace expressions.  The commas used to separate the subexpressions must

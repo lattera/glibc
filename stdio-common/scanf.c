@@ -19,15 +19,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-/* The function `vscanf' is not defined in ISO C.  Therefore we must
-   use the protected form here.  In stdio it is called `__vscanf' and
-   in libio `_IO_vscanf'.  */
-#ifdef USE_IN_LIBIO
-# include <libioP.h>
-# define VSCANF _IO_vscanf
-#else
-# define VSCANF __vscanf
-#endif
 
 /* Read formatted input from stdin according to the format string FORMAT.  */
 /* VARARGS1 */
@@ -38,7 +29,11 @@ scanf (const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = VSCANF (format, arg);
+#ifdef USE_IN_LIBIO
+  done = _IO_vfscanf (stdin, format, arg, NULL);
+#else
+  done = vfscanf (stdin, format, arg);
+#endif
   va_end (arg);
 
   return done;

@@ -46,10 +46,12 @@
 #endif
 
 DEF_STDFILE(_IO_old_stdin_, _IO_stdin_, 0, 0, _IO_NO_WRITES);
-DEF_STDFILE(_IO_old_stdout_, _IO_stdout_, 1, &_IO_old_stdin_.file,
+DEF_STDFILE(_IO_old_stdout_, _IO_stdout_, 1, &_IO_stdin_.plus.file,
 	    _IO_NO_READS);
-DEF_STDFILE(_IO_old_stderr_, _IO_stderr_, 2, &_IO_old_stdout_.file,
+DEF_STDFILE(_IO_old_stderr_, _IO_stderr_, 2, &_IO_stdout_.plus.file,
             _IO_NO_READS+_IO_UNBUFFERED);
 
-_IO_FILE *_IO_old_list_all = &_IO_old_stderr_.file;
+#if 0
+_IO_FILE *_IO_old_list_all = &_IO_stderr_.plus.file;
 symbol_version (_IO_old_list_all, _IO_list_all,);
+#endif

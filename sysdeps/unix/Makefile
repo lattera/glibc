@@ -19,7 +19,7 @@
 # The unix-specific configure fragment writes `unix-generated' in config.make.
 config-generated := $(config-generated) $(unix-generated)
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/local_lim.h))))))
 
 ifneq (,$(wildcard $(sysincludedir)/sys/param.h))
@@ -43,7 +43,7 @@ common-generated := $(common-generated) local_lim.h mk-local_lim
 
 endif
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(patsubst %/sys/param.h,%/,\
 		   $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/param.h))))))
 
@@ -126,11 +126,11 @@ endif # misc
 
 endif # No sysdep sys/param.h.
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/errno.h))))))
 
 # These need to exist before any compiling is done,
-# so cpp doesn't instead find the stub versions.
+# so cpp doesn't instead find the generic versions.
 before-compile := $(before-compile) $(common-objpfx)bits/errno.h
 
 $(common-objpfx)bits/errno.h: $(common-objpfx)make-errnos
@@ -155,7 +155,7 @@ common-generated := $(common-generated) \
 		    errnos.h errnos make-errnos make-errnos.c
 endif
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/ioctls.h))))))
 
 before-compile := $(before-compile) $(common-objpfx)bits/ioctls.h
@@ -211,7 +211,7 @@ common-generated := $(common-generated) \
 endif
 
 ifeq ($(subdir),stdio-common)
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/errlist.c))))))
 
 before-compile: $(objpfx)errlist.c
@@ -228,7 +228,7 @@ generated := $(generated) make_errlist errlist.c
 endif
 endif # stdio-common
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
+ifeq (,$(filter-out $(sysdep_dir)/generic/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/sys/syscall.h))))))
 
 # The syscall code assumes a file <sys/syscall.h> that defines macros

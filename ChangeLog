@@ -1,3 +1,92 @@
+1997-10-15 06:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Rules: Remove ruls to magically install <subdir>.h headers.
+	Reported by Mark Kettenis <kettenis@phys.uva.nl>.
+
+	* glibcbug.in: Fix @gnu.ai.mit.edu -> @gnu.org.
+	* version.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* db2/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
+	* libc.map: Move _IO_list_all back to GLIBC_2.0.
+
+	* elf/rtld.c: Provide name of running program to _dl_new_object.
+
+	* Rules: Implement shared-only-sources.
+	* include/libc-symbols.h: Define default_symbol_version.
+	* libio/Makefile (shared-only-sources): Define.
+	* libio/freopen.c: Define as default version.
+	* libio/iofopen.c: Likewise.
+	* libio/genops.c: Define _IO_list_all here.
+	* libio/stdfiles.c: Create linked list with public names.
+	* libio/oldstdfiles.c: Likewise.
+
+	* stdio-common/printf.c: Optimize.
+	* stdio-common/scanf.c: Optimize.
+
+	* sysdeps/generic/setfpucw.c: Include #include <...> not "...".
+
+	* sysdeps/i386/i486/bits/string.h: Add optimized versions of index and
+	rindex.
+
+1997-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi: Spelling fixes.
+	* manual/conf.texi: Likewise.
+	* manual/creature.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/intro.texi: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/message.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/time.texi: Likewise.
+	* manual/users.texi: Likewise.
+
+1997-10-13 05:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/sys/mman.h: Use __ptr_t instead of __caddr_t.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/mach/hurd/mmap.c: Likewise.
+	* sysdeps/generic/mmap.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/mmap.c: Likewise.
+	* sysdeps/mach/munmap.c: Likewise.
+	* sysdeps/generic/munmap.c: Likewise.
+	* sysdeps/mach/mprotect.c: Likewise.
+	* sysdeps/generic/mprotect.c: Likewise.
+	* sysdeps/generic/msync.c: Likewise.
+	* sysdeps/generic/madvise.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/madvise.c: Include stub version from generic
+	subdir.
+
+1997-10-12 20:27  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/stub (all files):  Moved to sysdeps/generic.
+	* all files using stub_warning: Include <stub-tag.h>.
+	* include/stub-tag.h: New file, marks stubs in .d files.
+	* Makerules: Look for stub-tag.h, not sysdeps/stub, when building
+	<gnu/stubs.h>.
+	* configure.in: Don't add sysdeps/stub to $sysnames.
+	* sysdeps/unix/Makefile: Look for generic headers, not stub
+	headers.
+	* sysdeps/generic/Makefile: Likewise.
+	* manual/maint.texi: Delete references to sysdeps/stub.
+	* INSTALL: Rebuilt.
+	* configure: Rebuilt.
+
 1997-10-13 03:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Move _IO_fopen, fopen, _IO_stdin_, _IO_stdout_,

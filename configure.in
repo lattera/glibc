@@ -388,10 +388,10 @@ changequote([,])dnl
 done
 
 # Add the default directories.
-sysnames="$names sysdeps/generic sysdeps/stub"
+sysnames="$names sysdeps/generic"
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
-AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
+AC_MSG_RESULT(sysdeps/generic)
 
 
 ### Locate tools.
