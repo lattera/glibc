@@ -1,5 +1,12 @@
 1999-02-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Mark as internal and take
+	extra argument with length of key string.
+	(__nscd_getpwnam_r): Call nscd_getpw_r with extra argument.
+	(__nscd_getpwuid_r): Create key string on stack.
+	* nscd/nscd_getgr_r.c: Mark local functions as internal.
+	* nscd/nscd_gethst_r.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/reboot.c: Make sure first parameter is
 	correctly passed to the kernel even on 64bit platforms.
 	Patch by Bruce Elliott <bde@nwlink.com>.

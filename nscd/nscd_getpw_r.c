@@ -33,9 +33,9 @@
 
 int __nss_not_use_nscd_passwd;
 
-static int nscd_getpw_r (const char *key, request_type type,
+static int nscd_getpw_r (const char *key, size_t keylen, request_type type,
 			 struct passwd *resultbuf, char *buffer,
-			 size_t buflen);
+			 size_t buflen) internal_function;
 
 int
 __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
@@ -44,25 +44,20 @@ __nscd_getpwnam_r (const char *name, struct passwd *resultbuf, char *buffer,
   if (name == NULL)
     return 1;
 
-  return nscd_getpw_r (name, GETPWBYNAME, resultbuf, buffer, buflen);
+  return nscd_getpw_r (name, strlen (name) + 1, GETPWBYNAME, resultbuf,
+		       buffer, buflen);
 }
 
 int
 __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
 		   size_t buflen)
 {
-  char *p = buffer;
-  int plen;
+  char buf[12];
+  size_t n;
 
-  plen = __snprintf (buffer, buflen, "%d", uid);
-  if (plen == -1)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  p = buffer + plen + 1;
+  n = __snprintf (buf, sizeof (buf), "%d", uid) + 1;
 
-  return nscd_getpw_r (buffer, GETPWBYUID, resultbuf, p, buflen - plen - 1);
+  return nscd_getpw_r (buf, n, GETPWBYUID, resultbuf, buffer, buflen);
 }
 
 /* Create a socket connected to a name. */
@@ -93,8 +88,9 @@ open_socket (void)
 }
 
 static int
-nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
-	      char *buffer, size_t buflen)
+internal_function
+nscd_getpw_r (const char *key, size_t keylen, request_type type,
+	      struct passwd *resultbuf, char *buffer, size_t buflen)
 {
   int sock = open_socket ();
   request_header req;
@@ -109,7 +105,7 @@ nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 
   req.version = NSCD_VERSION;
   req.type = type;
-  req.key_len = strlen (key) + 1;
+  req.key_len = keylen;
   nbytes = __write (sock, &req, sizeof (request_header));
   if (nbytes != sizeof (request_header))
     {
@@ -117,8 +113,8 @@ nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
       return 1;
     }
 
-  nbytes = __write (sock, key, req.key_len);
-  if (nbytes != req.key_len)
+  nbytes = __write (sock, key, keylen);
+  if (nbytes != keylen)
     {
       __close (sock);
       return 1;

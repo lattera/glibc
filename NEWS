@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1999-01-24
+GNU C Library NEWS -- history of user-visible changes.  1999-02-02
 
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -34,6 +34,9 @@ Version 2.1
 
 * the new headers <stdint.h> and <inttypes.h> from ISO C 9X provides
   information and interfaces for the available integer types.
+
+* about 130 new math functions were added to implement the ISO C9x math
+  library.
 
 * the new header <complex.h> contains definitions of the complex math
   functions from ISO C 9X.

@@ -35,7 +35,7 @@ int __nss_not_use_nscd_group;
 
 static int nscd_getgr_r (const char *key, size_t keylen, request_type type,
 			 struct group *resultbuf, char *buffer,
-			 size_t buflen);
+			 size_t buflen) internal_function;
 
 
 int
@@ -89,6 +89,7 @@ open_socket (void)
 
 
 static int
+internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen)
 {

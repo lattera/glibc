@@ -37,7 +37,7 @@ int __nss_not_use_nscd_hosts;
 
 static int nscd_gethst_r (const char *key, size_t keylen, request_type type,
 			  struct hostent *resultbuf, char *buffer,
-			  size_t buflen, int *h_errnop);
+			  size_t buflen, int *h_errnop) internal_function;
 
 
 int
@@ -114,6 +114,7 @@ open_socket (void)
 
 
 static int
+internal_function
 nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
 	       int *h_errnop)
