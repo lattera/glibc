@@ -9,6 +9,10 @@
 	only if USE_NONOPTION_FLAGS is defined.
 	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
 	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* sysdeps/arm/init-first.c: Likewise.
+	* sysdeps/generic/init-first.c: Likewise.
+	* sysdeps/i386/init-first.c: Likewise.
+	* sysdeps/sh/init-first.c: Likewise.
 
 2001-08-11  Andreas Jaeger  <aj@suse.de>
 

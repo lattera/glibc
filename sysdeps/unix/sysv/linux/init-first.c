@@ -57,7 +57,9 @@ char **__libc_argv;
 static void
 init (int argc, char **argv, char **envp)
 {
+#ifdef USE_NONOPTION_FLAGS
   extern void __getopt_clean_environment (char **);
+#endif
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
@@ -92,8 +94,10 @@ init (int argc, char **argv, char **envp)
 
   __libc_init (argc, argv, envp);
 
+#ifdef USE_NONOPTION_FLAGS
   /* This is a hack to make the special getopt in GNU libc working.  */
   __getopt_clean_environment (envp);
+#endif
 
 #ifdef SHARED
   __libc_global_ctors ();
