@@ -112,7 +112,7 @@
 		      "	  jl  0b\n"					      \
 		      "1:"						      \
 		      : "=Q" (*__futex), "=&d" (oldval), "=&d" (newval)	      \
-		      : "m" (*__futex) : "cc" );			      \
+		      : "m" (*__futex) : "cc", "memory" );		      \
   } while (0)
 
 
@@ -124,7 +124,7 @@ __lll_mutex_trylock (int *futex)
 
     __asm __volatile ("cs %0,%3,%1"
 		       : "=d" (old), "=Q" (*futex)
-		       : "0" (0), "d" (1), "m" (*futex) : "cc" );
+		       : "0" (0), "d" (1), "m" (*futex) : "cc", "memory" );
     return old != 0;
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
@@ -138,7 +138,7 @@ __lll_mutex_cond_trylock (int *futex)
 
     __asm __volatile ("cs %0,%3,%1"
 		       : "=d" (old), "=Q" (*futex)
-		       : "0" (0), "d" (2), "m" (*futex) : "cc" );
+		       : "0" (0), "d" (2), "m" (*futex) : "cc", "memory" );
     return old != 0;
 }
 #define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))

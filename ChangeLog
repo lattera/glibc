@@ -1,3 +1,8 @@
+2004-06-11  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/arm/strlen.S [__ARMEB__]: Compute correctly for big-endian.
+	From Krzysztof Halasa <khc@pm.waw.pl>.
+
 2004-06-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/tls-macros.h [__s390x__] (TLS_LD, TLS_GD): Clobber also r14.

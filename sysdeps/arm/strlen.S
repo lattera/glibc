@@ -53,12 +53,21 @@ Laligned:				@ here, we have a word in r2.  Does it
 	ldrne   r2, [r1], $4            @ and we continue to the next word
 	bne     Laligned                @
 Llastword:				@ drop through to here once we find a
+#ifdef __ARMEB__
+	tst     r2, $0xff000000         @ word that has a zero byte in it
+	addne   r0, r0, $1              @
+	tstne   r2, $0x00ff0000         @ and add up to 3 bytes on to it
+	addne   r0, r0, $1              @
+	tstne   r2, $0x0000ff00         @ (if first three all non-zero, 4th
+	addne   r0, r0, $1              @  must be zero)
+#else
 	tst     r2, $0x000000ff         @ word that has a zero byte in it
 	addne   r0, r0, $1              @
 	tstne   r2, $0x0000ff00         @ and add up to 3 bytes on to it
 	addne   r0, r0, $1              @
 	tstne   r2, $0x00ff0000         @ (if first three all non-zero, 4th
 	addne   r0, r0, $1              @  must be zero)
+#endif
 	RETINSTR(mov,pc,lr)
 END(strlen)
 libc_hidden_builtin_def (strlen)

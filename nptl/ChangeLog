@@ -1,3 +1,10 @@
+2004-06-11  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_compare_and_swap):
+	Add memory clobber to inline assembly.
+	(__lll_mutex_trylock): Likewise.
+	(__lll_mutex_cond_trylock): Likewise.
+
 2004-06-07  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_futex_requeue):
