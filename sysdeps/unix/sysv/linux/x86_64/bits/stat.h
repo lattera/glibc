@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,6 @@
 
 /* Versions of the `struct stat' data structure.  */
 #define _STAT_VER_KERNEL	0
-#define _STAT_VER_LINUX		1
-#define _STAT_VER		_STAT_VER_LINUX
 
 #if __WORDSIZE == 32
 # define _STAT_VER_SVR4		2
@@ -34,9 +32,13 @@
 # define _MKNOD_VER_SVR4	2
 # define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
 #else
+# define _STAT_VER_LINUX	1
+
 /* x86-64 versions of the `xmknod' interface.  */
 # define _MKNOD_VER_LINUX	0
 #endif
+
+#define _STAT_VER		_STAT_VER_LINUX
 
 struct stat
   {
