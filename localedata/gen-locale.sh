@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generate test locale files
+# Generate test locale files.
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
@@ -18,7 +18,8 @@
 # not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-common_objpfx=$1; shift
+common_objpfx="$1"; shift
+locfile="$1"; shift
 
 generate_locale ()
 {
@@ -37,9 +38,8 @@ generate_locale ()
     fi
 }
 
-echo "Generating locale data: this might take a while..."
-generate_locale UTF8 de_DE de_DE.UTF-8
-generate_locale ISO-8859-1 de_DE de_DE.ISO-8859-1
-generate_locale ISO-8859-1 en_US en_US.ISO-8859-1
-generate_locale EUC-JP ja_JP ja_JP.EUC-JP
-generate_locale ANSI_X3.4-1968 en_US en_US.ANSI_X3.4-1968
+locale=`echo $locfile|sed 's|.*/\([^/.]*\)[.].*/LC_CTYPE|\1|'`
+charmap=`echo $locfile|sed 's|.*/[^/.]*[.]\(.*\)/LC_CTYPE|\1|'`
+
+echo "Generating locale $locale.$charmap: this might take a while..."
+generate_locale $charmap $locale $locale.$charmap

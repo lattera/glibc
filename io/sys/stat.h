@@ -360,7 +360,9 @@ extern __inline__ int mknod (__const char *__path, __mode_t __mode,
 }
 # endif
 
-# ifdef __USE_LARGEFILE64
+# if defined __USE_LARGEFILE64 \
+  && (! defined __USE_FILE_OFFSET64 \
+      || (defined __REDIRECT && defined __OPTIMIZE__))
 extern __inline__ int stat64 (__const char *__path,
 			      struct stat64 *__statbuf) __THROW
 {

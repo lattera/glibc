@@ -1,5 +1,11 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* Depend: New file.
+
+	* Makefile: Rewrite rules to generate locale data.
+	* gen-locale.sh: Generate only one locale which is described in a
+	command line parameter.
+
 	* gen-locale.sh: Print that it might take a while to finish.
 
 2000-06-30  Jakub Jelinek  <jakub@redhat.com>

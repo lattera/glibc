@@ -1,5 +1,22 @@
 2000-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* assert/Depend: Add localedata.
+	* assert/Makefile (test-assert-ENV): New.  Define LANGUAGE=C.
+	(test-assert-perr-ENV): New.  Define LANGUAGE=C.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela) [r_type ==
+	R_ALPHA_REFQUAD]: Use memcpy to load and store value from
+	relocation address to prevent unaligned trap.
+	Suggested by Richard Henderson <rth@cygnus.com>.
+
+2000-06-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h (stat64, lstat64, fstat64): Don't define inlines
+	if redirecting and either redirection is done using defines or
+	not optimizing.
+
+2000-06-30  Ulrich Drepper  <drepper@redhat.com>
+
 	* sunrpc/rpc_cout.c (inline_struct): Add missing braces in
 	generated expressions.
 	Patch by Darren McClelland <dmcclell@zetec.com>.
