@@ -1,3 +1,9 @@
+1998-08-15 14:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add PPC Diab relocations.
+
+	* malloc/Makefile (libmcheck.a): Use $(LN_S) not ln.
+
 1998-08-14 10:08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/texinfo.tex: Update.

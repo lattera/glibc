@@ -62,7 +62,7 @@ include ../Rules
 
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 	-rm -f $@
-	ln $< $@
+	$(LN_S) $< $@
 
 lib: $(objpfx)libmcheck.a
 

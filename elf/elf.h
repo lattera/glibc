@@ -1337,17 +1337,17 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* PowerPC relocations defined by the ABIs */
 #define R_PPC_NONE		0
-#define R_PPC_ADDR32		1
-#define R_PPC_ADDR24		2
-#define R_PPC_ADDR16		3
-#define R_PPC_ADDR16_LO		4
-#define R_PPC_ADDR16_HI		5
-#define R_PPC_ADDR16_HA		6
-#define R_PPC_ADDR14		7
+#define R_PPC_ADDR32		1	/* 32bit absolute address */
+#define R_PPC_ADDR24		2	/* 26bit address, 2 bits ignored.  */
+#define R_PPC_ADDR16		3	/* 16bit absolute address */
+#define R_PPC_ADDR16_LO		4	/* lower 16bit of absolute address */
+#define R_PPC_ADDR16_HI		5	/* high 16bit of absolute address */
+#define R_PPC_ADDR16_HA		6	/* adjusted high 16bit */
+#define R_PPC_ADDR14		7	/* 16bit address, 2 bits ignored */
 #define R_PPC_ADDR14_BRTAKEN	8
 #define R_PPC_ADDR14_BRNTAKEN	9
-#define R_PPC_REL24		10
-#define R_PPC_REL14		11
+#define R_PPC_REL24		10	/* PC relative 26 bit */
+#define R_PPC_REL14		11	/* PC relative 16 bit */
 #define R_PPC_REL14_BRTAKEN	12
 #define R_PPC_REL14_BRNTAKEN	13
 #define R_PPC_GOT16		14
@@ -1386,14 +1386,22 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC_EMB_SDAI16	106
 #define R_PPC_EMB_SDA2I16	107
 #define R_PPC_EMB_SDA2REL	108
-#define R_PPC_EMB_SDA21		109
+#define R_PPC_EMB_SDA21		109	/* 16 bit offset in SDA */
 #define R_PPC_EMB_MRKREF	110
 #define R_PPC_EMB_RELSEC16	111
 #define R_PPC_EMB_RELST_LO	112
 #define R_PPC_EMB_RELST_HI	113
 #define R_PPC_EMB_RELST_HA	114
 #define R_PPC_EMB_BIT_FLD	115
-#define R_PPC_EMB_RELSDA	116
+#define R_PPC_EMB_RELSDA	116	/* 16 bit relative offset in SDA */
+
+/* Diab tool relocations.  */
+#define R_PPC_DIAB_SDA21_LO	180	/* like EMB_SDA21, but lower 16 bit */
+#define R_PPC_DIAB_SDA21_HI	181	/* like EMB_SDA21, but high 16 bit */
+#define R_PPC_DIAB_SDA21_HA	182	/* like EMB_SDA21, adjusted high 16 */
+#define R_PPC_DIAB_RELSDA_LO	183	/* like EMB_RELSDA, but lower 16 bit */
+#define R_PPC_DIAB_RELSDA_HI	184	/* like EMB_RELSDA, but high 16 bit */
+#define R_PPC_DIAB_RELSDA_HA	185	/* like EMB_RELSDA, adjusted high 16 */
 
 /* This is a phony reloc to handle any old fashioned TOC16 references
    that may still be in object files.  */
