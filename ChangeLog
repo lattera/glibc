@@ -1,3 +1,98 @@
+Mon Apr  1 13:34:55 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* stdio-common/tst-printf.c (main): Add new test case.
+
+	* sysdeps/generic/setenv.c (unsetenv): Use old-style definition.
+
+Mon Apr  1 11:39:10  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdlib/strtod.c (STRTOD): Fix handling of American style FP
+	numbers.
+
+	* stdio-common/vfprintf.c (vfprintf): Don't increment format
+	string pointer twice after seeing `*'.
+
+Sun Mar 31 17:31:54 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* MakeTAGS (po/SYS_libc.pot): Prepend header processed from
+ 	po/header.pot.
+
+Sun Mar 31 18:07:32 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* locale/Makefile (others, install-bin): Compiling locale works
+        again.
+	(locale-modules): locale has no --dump option anymore.  Remove
+	ctypedump.
+
+	* locale/programs/config.h: Don't declare euidaccess.
+	Use #include_next to get libc's config.h.
+
+	* locale/programs/ctypedump.c: Not needed anymore.  Dump option
+	of locale is removed.
+
+	* locale/programs/locale.c: Adapt for new locale implementation.
+
+	* stdio-common/_itoa.h (_itoa_word): Define as inline function.
+	* stdio-common/_itoa.c (_itoa_lower_digits, _itoa_upper_digits):
+	Don't declare static because used in _itoa_word inline function.
+
+	* stdio-common/printf-parse.h: Prepare for use in wide-char
+	stdio implementation.
+	(find_spec): Take additional argument to work with mbrlen instead
+	of mblen.
+	(parse_one_spec): Ditto.
+
+	* stdio-common/printf-prs.c: Prepare for use in wide-char
+	stdio implementation.
+
+	* stdio-common/printf.h: Mark change for wide-char handling.
+	Changing it now would result in incompatibilities.
+
+	* stdio-common/vfprintf.c: New and fast implementation.
+
+	* wcsmbs/Makefile (routines): Remove pre-ISO C multibyte functions
+	mbsadvance, mbscat, mbschr, mbscmp, mbscpy, mbsdup, mbslen,
+	mbsncat, mbsncmp, mbsncpy, mbsrchr, mbstomb.
+	Change wcswcs to wcsstr.
+	Add wmemchr, wmemcmp, wmemcpy, wmemmove, wmemset, btowc, wctob,
+	mbsinit, mbrlen, mbrtowc, wcrtomb, mbsrtowcs, wcsrtombs.
+
+	* wcsmbs/btowc.c, wcsmbs/mbrlen.c, wcsmbs/mbrtowc.c,
+        wcsmbs/mbsinit.c, wcsmbs/mbsrtowcs.c, wcsmbs/wchar.h,
+        wcsmbs/wcrtomb.c, wcsmbs/wcsrtombs.c, wcsmbs/wcsstr.c,
+        wcsmbs/wctob.c, wcsmbs/wmemchr.c, wcsmbs/wmemcmp.c,
+        wcsmbs/wmemcpy.c, wcsmbs/wmemmove.c, wcsmbs/wmemset.c: New
+        function according to ISO C amendment 1.
+	* wchar.h: Wrapper around "wcsmbs/wchar.h".
+
+	* wcsmbs/wcscat.c, wcsmbs/wcschr.c, wcsmbs/wcscmp.c,
+        wcsmbs/wcscpy.c, wcsmbs/wcscspn.c, wcsmbs/wcsdup.c,
+        wcsmbs/wcslen.c, wcsmbs/wcsncat.c, wcsmbs/wcsncmp.c,
+        wcsmbs/wcsncpy.c, wcsmbs/wcspbrk.c, wcsmbs/wcsrchr.c,
+        wcsmbs/wcsspn.c, wcsmbs/wcstok.c: Changed to conform with ISO C
+        amendment 1.
+
+	* wcsmbs/mbsadvance.c, wcsmbs/mbscat.c, wcsmbs/mbschr.c,
+        wcsmbs/mbscmp.c, wcsmbs/mbscpy.c, wcsmbs/mbsdup.c,
+        wcsmbs/mbslen.c, wcsmbs/mbsncat.c, wcsmbs/mbsncmp.c,
+        wcsmbs/mbsncpy.c, wcsmbs/mbsrchr.c, wcsmbs/mbstomb.c,
+        wcsmbs/mbstr.h, wcsmbs/wcstr.h, wcsmbs/wcswcs.c: Removed.
+        Implement functions from early drafts, not part of final standard.
+
+Sun Mar 31 16:50:41 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* setjmp/setjmp.h (jmp_buf): Change gratuitous struct tag name to
+	__jmp_bug_tag so its C++ implicit typedef does not conflict with the
+	__jmp_buf typedef.
+
+	* Makerules (BUILD_CFLAGS) [! objdir]: Use $(..)config.h when
+	compiling in the source directories.
+
+Fri Mar 29 16:26:35 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* sysdeps/libm-ieee754/w_gamma.c: Use signgam instead of __signgam.
+	* sysdeps/libm-ieee754/s_signgam.c: Undo last change.
+
 Fri Mar 29 11:29:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/libm-ieee754/s_signgam.c (signgam): Renamed to __signgam,
