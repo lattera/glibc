@@ -52,22 +52,7 @@ __pthread_cond_signal (cond)
 #endif
 
       /* Wake one.  */
-      int r = lll_futex_requeue (futex, 0, 1, &cond->__data.__lock);
-      if (__builtin_expect (r == -EINVAL, 0))
-	{
-	  /* The requeue functionality is not available.  */
-#ifndef __ASSUME_FUTEX_REQUEUE
-	  lll_futex_wake (futex, 1);
-#endif
-	}
-      else if (r != 0)
-	{
-	  /* We always have to make the syscall if requeue actually
-	     moved a thread.  */
-	  lll_mutex_unlock_force (cond->__data.__lock);
-
-	  return 0;
-	}
+      lll_futex_wake (futex, 1);
     }
 
   /* We are done.  */

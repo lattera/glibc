@@ -4,9 +4,12 @@
 	locking macros.  No distinction between normal and mutex locking
 	anymore.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Rewrite mutex
 	locking.  Merge bits from lowlevelmutex.S we still need.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevelmutex.S: Removed.
 	* Makefile (routines): Remove libc-lowlevelmutex.
@@ -37,6 +40,7 @@
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
 	Don't use requeue.
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/pthread/pthread_cond_signal.c: Don't use requeue.
 
 2003-09-20  Ulrich Drepper  <drepper@redhat.com>
 

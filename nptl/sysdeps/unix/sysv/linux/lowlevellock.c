@@ -25,22 +25,20 @@
 
 
 void
-__lll_lock_wait (int *futex, int val)
+__lll_lock_wait (int *futex)
 {
-  /* In the loop we are going to add 2 instead of 1 which is what
-     the caller did.  Account for that.  */
-  --val;
   do
     {
-      lll_futex_wait (futex, val + 2);
-      val = atomic_exchange_and_add (futex, 2);
+      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+      if (oldval != 0)
+	lll_futex_wait (futex, 2);
     }
-  while (val != 0);
+  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 }
 
 
 int
-__lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
+__lll_timedlock_wait (int *futex, const struct timespec *abstime)
 {
   /* Reject invalid timeouts.  */
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
@@ -68,12 +66,12 @@ __lll_timedlock_wait (int *futex, int val, const struct timespec *abstime)
 	return ETIMEDOUT;
 
       /* Wait.  */
-      if (lll_futex_timed_wait (futex, val + 1, &rt) == -ETIMEDOUT)
-	return ETIMEDOUT;
+      int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
+      if (oldval != 0)
+	lll_futex_wait (futex, 2);
     }
-  while ((val = atomic_exchange_and_add (futex, 1)) != 0);
+  while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 
-  *futex = 2;
   return 0;
 }
 

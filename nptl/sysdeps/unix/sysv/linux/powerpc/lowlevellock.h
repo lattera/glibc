@@ -106,34 +106,25 @@ extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
 #define lll_mutex_lock(lock) \
   (void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = atomic_exchange_and_add (__futex, 1);			      \
-    __asm __volatile (__lll_acq_instr ::: "memory");			      \
-    if (__builtin_expect (__val != 0, 0))				      \
-      __lll_lock_wait (__futex, __val);					      \
+    if (atomic_compare_and_exchange_bool_acq (__futex, 1, 0) != 0)	      \
+      __lll_lock_wait (__futex);					      \
   })
 
 #define lll_mutex_cond_lock(lock) \
   (void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = atomic_exchange_and_add (__futex, 2);			      \
-    __asm __volatile (__lll_acq_instr ::: "memory");			      \
-    if (__builtin_expect (__val != 0, 0))				      \
-      /* Note, the val + 1 is kind of ugly here.  __lll_lock_wait will add    \
-	 1 again.  But we added 2 to the futex value so this is the right     \
-	 value which will be passed to the kernel.  */			      \
-      __lll_lock_wait (__futex, __val + 1);				      \
+    if (atomic_compare_and_exchange_bool_acq (__futex, 2, 0) != 0)	      \
+      __lll_lock_wait (__futex);					      \
   })
 
 extern int __lll_timedlock_wait
 	(int *futex, int val, const struct timespec *) attribute_hidden;
 
 #define lll_mutex_timedlock(lock, abstime) \
-  ({ int *__futex = &(lock);						      \
-     int __val = atomic_exchange_and_add (__futex, 1);			      \
-     __asm __volatile (__lll_acq_instr ::: "memory");			      \
-     if (__builtin_expect (__val != 0, 0))				      \
-       __val = __lll_timedlock_wait (__futex, __val, (abstime));	      \
-     __val;								      \
+  (void) ({								      \
+    int *__futex = &(lock);						      \
+    if (atomic_compare_and_exchange_bool_acq (__futex, 1, 0) != 0)	      \
+      __lll_timedlock_wait (__futex, abstime);				      \
   })
 
 #define lll_mutex_unlock(lock) \
