@@ -115,10 +115,9 @@ FUNC_NAME:
 
 	br	AT, 1f
 1:	ldgp	gp, 0(AT)
-	lda	AT, _mcount
 
 	mov	retaddr, ra
-	jsr	AT, (AT), _mcount
+	jsr	AT, _mcount
 
 	ldq	ra, 0x00(sp)
 	ldq	pv, 0x08(sp)
@@ -137,7 +136,7 @@ FUNC_NAME:
 	stq	tmp0,0x18(sp)
 	bis	zero,zero,quotient
 	stq	tmp1,0x20(sp)
-	beq	divisor,divbyzero
+	beq	divisor,$divbyzero
 	stq	sign,0x28(sp)
 	GETSIGN(dividend,divisor,sign)
 #if SIGNED
@@ -170,7 +169,7 @@ FUNC_NAME:
 
 	ldq	arg1,0x00(sp)
 	SETSIGN(sign,result,tmp0)
-done:	ldq	arg2,0x08(sp)
+$done:	ldq	arg2,0x08(sp)
 	ldq	mask,0x10(sp)
 	ldq	tmp0,0x18(sp)
 	ldq	tmp1,0x20(sp)
@@ -178,11 +177,11 @@ done:	ldq	arg2,0x08(sp)
 	lda	sp,FRAME_SIZE(sp)
 	ret	zero,(retaddr),0
 
-divbyzero:
+$divbyzero:
 	lda	a0,GEN_INTDIV(zero)
 	call_pal PAL_gentrap
 	bis	zero,zero,result	/* if trap returns, return 0 */
 	ldq	arg1,0x00(sp)
-	br	done
+	br	$done
 
 	END(FUNC_NAME)

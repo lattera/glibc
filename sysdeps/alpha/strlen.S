@@ -19,52 +19,50 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* Finds length of a 0-terminated string.  Optimized for the Alpha
-architecture:
+   architecture:
 
       - memory accessed as aligned quadwords only
-      - uses bcmpge to compare 8 bytes in parallel
-      - does binary search to find 0 byte in last
-        quadword (HAKMEM needed 12 instructions to
-        do this instead of the 9 instructions that
-        binary search needs).  */
+      - uses cmpbge to compare 8 bytes in parallel
+      - does binary search to find 0 byte in last quadword (HAKMEM
+	needed 12 instructions to do this instead of the 8 instructions
+	that the binary search needs).
+*/
 
 #include <sysdep.h>
 
-        .set noreorder
-        .set noat
+	.set noreorder
+	.set noat
 
 ENTRY(strlen)
-        ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)
-        lda     t1, -1(zero)
-        insqh   t1, a0, t1
-        andnot  a0, 7, v0
-        or      t1, t0, t0
-        cmpbge  zero, t0, t1    # t1 <- bitmask: bit i == 1 <==> i-th byte == 0
-        bne     t1, found
+	ldq_u   t0, 0(a0)	# load first quadword (a0 may be misaligned)
+	lda     t1, -1(zero)
+	insqh   t1, a0, t1
+	andnot  a0, 7, v0
+	or      t1, t0, t0
+	nop			# dual issue the next two on ev5
+	cmpbge  zero, t0, t1	# t1 <- bitmask: bit i == 1 <==> i-th byte == 0
+	bne     t1, $found
 
-loop:   ldq     t0, 8(v0)
-        addq    v0, 8, v0       # addr += 8
-        nop                     # helps dual issue last two insns
-        cmpbge  zero, t0, t1
-        beq     t1, loop
+$loop:	ldq     t0, 8(v0)
+	addq    v0, 8, v0	# addr += 8
+	cmpbge  zero, t0, t1
+	beq     t1, $loop
 
-found:  blbs    t1, done        # make aligned case fast
-        negq    t1, t2
-        and     t1, t2, t1
+$found:	negq    t1, t2		# clear all but least set bit
+	and     t1, t2, t1
 
-        and     t1, 0x0f, t0
-        addq    v0, 4, t2
-        cmoveq  t0, t2, v0
+	and     t1, 0xf0, t2	# binary search for that set bit
+	and	t1, 0xcc, t3
+	and	t1, 0xaa, t4
+	cmovne	t2, 4, t2
+	cmovne	t3, 2, t3
+	cmovne	t4, 1, t4
+	addq	t2, t3, t2
+	addq	v0, t4, v0
+	addq	v0, t2, v0
+	nop			# dual issue next two on ev4 and ev5
 
-        and     t1, 0x33, t0
-        addq    v0, 2, t2
-        cmoveq  t0, t2, v0
+	subq    v0, a0, v0
+	ret
 
-        and     t1, 0x55, t0
-        addq    v0, 1, t2
-        cmoveq  t0, t2, v0
-
-done:   subq    v0, a0, v0
-        ret
-
-        END(strlen)
+	END(strlen)

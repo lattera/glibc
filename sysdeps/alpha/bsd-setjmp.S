@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  Alpha version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY(setjmp)
-	lda	$27, __sigsetjmp	/* Load address to jump to.  */
+	ldgp	$29, 0($27)
+	.prologue 1
 	bis	$31, 1, $17		/* Pass a second argument of one.  */
-	jmp	$31, ($27), __sigsetjmp /* Call __sigsetjmp.  */
+	jmp	$31, __sigsetjmp	/* Call __sigsetjmp.  */
 	END(setjmp)

@@ -28,20 +28,17 @@ compiler treats those calls as if they were instructions.  In
 particular, it doesn't save any of the temporary registers (caller
 saved registers).  It is therefore necessary to preserve all
 caller-saved registers as well
- 
+
 Upon entering _mcount, register $at holds the return address and ra
 holds the return address of the function's caller (selfpc and frompc,
 respectively in gmon.c language...). */
 
 #include <sysdep.h>
 
-#undef ret	/* discard `ret' as defined in sysdep.h */
-
 	.set	noat
 	.set	noreorder
 
 LEAF(_mcount, 0xb0)
-weak_alias (_mcount, mcount)
 	.prologue 0
 
 	subq	 sp, 0xb0, sp
@@ -69,8 +66,6 @@ weak_alias (_mcount, mcount)
 	stq	 t5, 0x70(sp)
 	stq	 t6, 0x78(sp)
 
-	lda	 pv, __mcount
-
 	stq	 t7, 0x80(sp)
 	stq	 t8, 0x88(sp)
 	stq	 t9, 0x90(sp)
@@ -78,7 +73,7 @@ weak_alias (_mcount, mcount)
 	stq	t11, 0xa0(sp)
 	stq	 v0, 0xa8(sp)
 
-	jsr	ra, (pv), __mcount
+	jsr	ra, __mcount
 
 	ldq	 a0, 0x00(sp)
 	ldq	 a1, 0x08(sp)
@@ -108,3 +103,5 @@ weak_alias (_mcount, mcount)
 	ret	zero,($at),1
 
 	END(_mcount)
+
+weak_alias (_mcount, mcount)
