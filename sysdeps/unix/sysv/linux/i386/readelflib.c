@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 2000.
@@ -42,7 +42,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
       switch (elf_header->e_machine)
 	{
 	case EM_IA_64:
-	case EM_X8664:
+	case EM_X86_64:
 	  break;
 	default:
 	  error (0, 0, _("%s is for unknown machine %d.\n"),
@@ -59,7 +59,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	  case EM_IA_64:
 	    *flag = FLAG_IA64_LIB64|FLAG_ELF_LIBC6;
 	    break;
-	  case EM_X8664:
+	  case EM_X86_64:
 	    *flag = FLAG_X8664_LIB64|FLAG_ELF_LIBC6;
 	    break;
 	  }

@@ -1,5 +1,8 @@
 2001-03-12  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/s390/sysdep.h (_LINUX_S390_SYSDEP_H):
+	Fix typo.  Patch by Martin Schwidefsky	<schwidefsky@de.ibm.com>.
+
 	* sysdeps/s390/bits/string.h: Protect __STRING_INLINE against
 	redefinition. 
 

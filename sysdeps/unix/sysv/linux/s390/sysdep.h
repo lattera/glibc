@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _LINUX_S390_SYSDEP_H
-#define _LINUX_S390_SYSEDP_H
+#define _LINUX_S390_SYSDEP_H
 
 #include <sysdeps/s390/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
