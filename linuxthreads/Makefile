@@ -46,7 +46,7 @@ LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete)) \
 vpath %.c Examples
 
 tst-cancel-ARGS = "$(objpfx)"
-CFLAGS-tst-cancel.c = -fno-inline
+CFLAGS-tst-cancel.c = -fno-inline -fno-inline-functions
 
 include ../Makeconfig
 
