@@ -1,0 +1,179 @@
+/* Copyright (C) 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <dlfcn.h>
+#include <pthread.h>
+#include <signal.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+
+#define THE_SIG SIGUSR1
+
+
+#define N 10
+static pthread_t th[N];
+
+
+#define CB(n) \
+static void								      \
+cb##n (void)								      \
+{									      \
+  if (th[n] != pthread_self ())						      \
+    {									      \
+      write (STDOUT_FILENO, "wrong callback\n", 15);			      \
+      _exit (1);							      \
+    }									      \
+}
+CB (0)
+CB (1)
+CB (2)
+CB (3)
+CB (4)
+CB (5)
+CB (6)
+CB (7)
+CB (8)
+CB (9)
+static void (*cbs[]) (void) =
+{
+  cb0, cb1, cb2, cb3, cb4, cb5, cb6, cb7, cb8, cb9
+};
+
+
+sem_t s;
+
+
+pthread_barrier_t b;
+
+#define TOTAL_SIGS 1000
+int nsigs;
+
+
+int
+do_test (void)
+{
+  if (pthread_barrier_init (&b, NULL, N + 1) != 0)
+    {
+      puts ("barrier_init failed");
+      exit (1);
+    }
+
+  if (sem_init (&s, 0, 0) != 0)
+    {
+      puts ("sem_init failed");
+      exit (1);
+    }
+
+  void *h = dlopen ("tst-tls3mod.so", RTLD_LAZY);
+  if (h == NULL)
+    {
+      puts ("dlopen failed");
+      exit (1);
+    }
+
+  void *(*tf) (void *) = dlsym (h, "tf");
+  if (tf == NULL)
+    {
+      puts ("dlsym for tf failed");
+      exit (1);
+    }
+
+  struct sigaction sa;
+  sa.sa_handler = dlsym (h, "handler");
+  if (sa.sa_handler == NULL)
+    {
+      puts ("dlsym for handler failed");
+      exit (1);
+    }
+  sigemptyset (&sa.sa_mask);
+  sa.sa_flags = 0;
+  if (sigaction (THE_SIG, &sa, NULL) != 0)
+    {
+      puts ("sigaction failed");
+      exit (1);
+    }
+
+  int r;
+  for (r = 0; r < 10; ++r)
+    {
+      int i;
+      for (i = 0; i < N; ++i)
+	if (pthread_create (&th[i], NULL, tf, cbs[i]) != 0)
+	  {
+	    puts ("pthread_create failed");
+	    exit (1);
+	  }
+
+      nsigs = 0;
+
+      pthread_barrier_wait (&b);
+
+      sigset_t ss;
+      sigemptyset (&ss);
+      sigaddset (&ss, THE_SIG);
+      if (pthread_sigmask (SIG_BLOCK, &ss, NULL) != 0)
+	{
+	  puts ("pthread_sigmask failed");
+	  exit (1);
+	}
+
+      /* Start sending signals.  */
+      for (i = 0; i < TOTAL_SIGS; ++i)
+	{
+	  if (kill (getpid (), THE_SIG) != 0)
+	    {
+	      puts ("kill failed");
+	      exit (1);
+	    }
+
+	  if (sem_wait (&s) != 0)
+	    {
+	      puts ("sem_wait failed");
+	      exit (1);
+	    }
+
+	  ++nsigs;
+	}
+
+      pthread_barrier_wait (&b);
+
+      if (pthread_sigmask (SIG_UNBLOCK, &ss, NULL) != 0)
+	{
+	  puts ("pthread_sigmask failed");
+	  exit (1);
+	}
+
+      for (i = 0; i < N; ++i)
+	if (pthread_join (th[i], NULL) != 0)
+	  {
+	    puts ("join failed");
+	    exit (1);
+	  }
+    }
+
+  return 0;
+}
+
+
+#define TIMEOUT 5
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

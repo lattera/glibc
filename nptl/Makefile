@@ -170,10 +170,10 @@ LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 include ../Makeconfig
 
 ifeq ($(build-shared),yes)
-tests += tst-atfork2
+tests += tst-atfork2 tst-tls3
 endif
 
-modules-names = tst-atfork2mod
+modules-names = tst-atfork2mod tst-tls3mod
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
@@ -252,6 +252,11 @@ $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
+
+$(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-tls3 = -rdynamic
+$(objpfx)tst-tls3.out: $(objpfx)tst-tls3mod.so
+$(objpfx)tst-tls3mod.so: $(shared-thread-library)
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(objpfx)crti.o
