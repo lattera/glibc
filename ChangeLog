@@ -1,3 +1,8 @@
+1998-07-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/auth_unix.c (authunix_create_default): Use __sysconf
+	instead of sysconf.
+
 1998-07-14 19:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c (ungetc): Use _IO_sputbackc, not _IO_ungetc.

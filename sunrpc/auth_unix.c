@@ -172,7 +172,7 @@ authunix_create_default (void)
   char machname[MAX_MACHINE_NAME + 1];
   uid_t uid;
   gid_t gid;
-  int max_nr_groups = sysconf (_SC_NGROUPS_MAX);
+  int max_nr_groups = __sysconf (_SC_NGROUPS_MAX);
   gid_t gids[max_nr_groups];
 
   if (gethostname (machname, MAX_MACHINE_NAME) == -1)
