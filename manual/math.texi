@@ -1011,18 +1011,6 @@ magnitude of the result is too large to be representable.
 
 @comment math.h
 @comment ISO
-@deftypefun double exp10 (double @var{x})
-@deftypefunx float exp10f (float @var{x})
-@deftypefunx {long double} exp10l (long double @var{x})
-These functions return the value of @code{10} raised to the power @var{x}.
-Mathematically, @code{exp10 (x)} is the same as @code{exp (x * log (10))}.
-
-The function fails, and sets @code{errno} to @code{ERANGE}, if the
-magnitude of the result is too large to be representable.
-@end deftypefun
-
-@comment math.h
-@comment ISO
 @deftypefun double exp2 (double @var{x})
 @deftypefunx float exp2f (float @var{x})
 @deftypefunx {long double} exp2l (long double @var{x})
@@ -1031,6 +1019,25 @@ Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 
 The function fails, and sets @code{errno} to @code{ERANGE}, if the
 magnitude of the result is too large to be representable.
+@end deftypefun
+
+@comment math.h
+@comment GNU
+@deftypefun double exp10 (double @var{x})
+@deftypefunx float exp10f (float @var{x})
+@deftypefunx {long double} exp10l (long double @var{x})
+@deftypefunx double pow10 (double @var{x})
+@deftypefunx float pow10f (float @var{x})
+@deftypefunx {long double} pow10l (long double @var{x})
+These functions return the value of @code{10} raised to the power @var{x}.
+Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
+
+The function fails, and sets @code{errno} to @code{ERANGE}, if the
+magnitude of the result is too large to be representable.
+
+All these functions are GNU extensions.  The name @code{pow10} is used
+in some old code but the name @code{exp10} clearly is more in the sense
+of the ISO library designers and therefore should probably be preferred.
 @end deftypefun
 
 
