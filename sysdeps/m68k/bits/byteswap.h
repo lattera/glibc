@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  m68k version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #if !defined _BYTESWAP_H && !defined _NETINET_IN_H
 # error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
 #endif
+
+#ifndef _BITS_BYTESWAP_H
+#define _BITS_BYTESWAP_H 1
 
 /* Swap bytes in 16 bit value.  We don't provide an assembler version
    because GCC is smart enough to generate optimal assembler output, and
@@ -60,3 +63,5 @@
      __bswap_64_r.__l[1] = __bswap_32 (__bswap_64_v.__l[0]);		\
      __bswap_64_r.__ll; })
 #endif
+
+#endif /* _BITS_BYTESWAP_H */
