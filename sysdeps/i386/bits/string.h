@@ -207,7 +207,7 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
       return __s;
     case 3:
       __u->__usi = __pattern;
-      __u = __extension__ ((void *) __u + 1);
+      __u = __extension__ ((void *) __u + 2);
       __u->__uc = __pattern;
       return __s;
     case 4:
