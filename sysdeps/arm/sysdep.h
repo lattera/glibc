@@ -1,5 +1,5 @@
 /* Assembler macros for ARM.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,7 @@
 #define CALL_MCOUNT			\
 	str	lr,[sp, #-4]!	;	\
 	bl	PLTJMP(mcount)	;	\
-	ldr	lr, [sp], #4
+	ldr	lr, [sp], #4	;
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
