@@ -122,7 +122,7 @@ union user_desc_init
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtvp) \
   ({ struct pthread *__pd;						      \
-     THREAD_SETMEM (__pd, dtv, (dtvp)); })
+     THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
@@ -228,7 +228,7 @@ union user_desc_init
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ struct pthread *__pd;						      \
-     THREAD_GETMEM (__pd, dtv); })
+     THREAD_GETMEM (__pd, header.dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -240,7 +240,7 @@ union user_desc_init
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
-	  : "i" (offsetof (struct pthread, self))); 			      \
+	  : "i" (offsetof (struct pthread, header.self)));			      \
      __self;})
 
 

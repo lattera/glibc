@@ -347,10 +347,10 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 
 #ifdef TLS_TCB_AT_TP
   /* Reference to the TCB itself.  */
-  pd->self = pd;
+  pd->header.self = pd;
 
   /* Self-reference for TLS.  */
-  pd->tcb = pd;
+  pd->header.tcb = pd;
 #endif
 
   /* Store the address of the start routine and the parameter.  Since

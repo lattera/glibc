@@ -57,16 +57,24 @@
 /* Thread descriptor data structure.  */
 struct pthread
 {
-#if !TLS_DTV_AT_TP
-  /* This overlaps tcbhead_t (see tls.h), as used for TLS without threads.  */
   union
   {
-    tcbhead_t;
+#if !TLS_DTV_AT_TP
+    /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
+    tcbhead_t header;
+#elif TLS_MULTIPLE_THREADS_IN_TCB
+    struct
+    {
+      int multiple_threads;
+    } header;
+#endif
+
+    /* This extra padding has no special purpose, and this structure layout
+       is private and subject to change without affecting the official ABI.
+       We just have it here in case it might be convenient for some
+       implementation-specific instrumentation hack or suchlike.  */
     void *__padding[16];
   };
-#elif TLS_MULTIPLE_THREADS_IN_TCB
-  int multiple_threads;
-#endif
 
   /* This descriptor's link on the `stack_used' or `__stack_user' list.  */
   list_t list;

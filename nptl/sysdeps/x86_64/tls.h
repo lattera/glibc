@@ -92,7 +92,7 @@ typedef struct
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtvp) \
   ({ struct pthread *__pd;						      \
-     THREAD_SETMEM (__pd, dtv, (dtvp)); })
+     THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
@@ -136,7 +136,7 @@ typedef struct
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ struct pthread *__pd;						      \
-     THREAD_GETMEM (__pd, dtv); })
+     THREAD_GETMEM (__pd, header.dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -148,7 +148,7 @@ typedef struct
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movq %%fs:%c1,%q0" : "=r" (__self)				      \
-	  : "i" (offsetof (struct pthread, self)));		 	      \
+	  : "i" (offsetof (struct pthread, header.self)));	 	      \
      __self;})
 
 

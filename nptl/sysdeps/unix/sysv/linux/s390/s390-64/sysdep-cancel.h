@@ -81,7 +81,7 @@ L(pseudo_end):
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
-				   header.data.multiple_threads) == 0, 1)
+				   header.multiple_threads) == 0, 1)
 # else
 #  define SINGLE_THREAD_P \
 	ear	%r1,%a0;						      \

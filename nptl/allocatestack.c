@@ -321,14 +321,14 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
       /* This is at least the second thread.  */
-      pd->multiple_threads = 1;
+      pd->header.multiple_threads = 1;
 #else
       __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
 #ifdef NEED_DL_SYSINFO
       /* Copy the sysinfo value from the parent.  */
-      pd->sysinfo = THREAD_GETMEM (THREAD_SELF, sysinfo);
+      pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
 #endif
 
       /* Allocate the DTV for this thread.  */
@@ -446,14 +446,14 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 	  /* This is at least the second thread.  */
-	  pd->multiple_threads = 1;
+	  pd->header.multiple_threads = 1;
 #else
 	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
 #ifdef NEED_DL_SYSINFO
 	  /* Copy the sysinfo value from the parent.  */
-	  pd->sysinfo = THREAD_GETMEM (THREAD_SELF, sysinfo);
+	  pd->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo);
 #endif
 
 	  /* Allocate the DTV for this thread.  */
