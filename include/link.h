@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -357,7 +357,6 @@ enum
 
 #if __ELF_NATIVE_CLASS == 32
 # define symbind symbind32
-# define pltenter plt
 #elif __ELF_NATIVE_CLASS == 64
 # define symbind symbind64
 #else
