@@ -16,8 +16,6 @@ struct rpc_thread_variables {
 	struct pollfd	*svc_pollfd_s;		/* Global, rpc_common.c */
 	int		svc_max_pollfd_s;	/* Global, rpc_common.c */
 
-	void		*authnone_private_s;	/* auth_none.c */
-
 	void		*clnt_perr_buf_s;	/* clnt_perr.c */
 
 	void		*clntraw_private_s;	/* clnt_raw.c */

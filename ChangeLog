@@ -1,3 +1,21 @@
+2002-04-11  Zack Weinberg  <zack@codesourcery.com>
+
+	* include/rpc/rpc.h (struct rpc_thread_variables): Remove
+	authnone_private_s.
+	* sunrpc/auth_none.c: Include bits/libc-lock.h.
+	Delete #ifdef _RPC_THREAD_SAFE_ block.
+	(authnone_private): Make a struct, not a pointer to struct.
+	(authnone_private_guard): New once-control variable.
+	(authnone_create_once): New function, split out of
+	authnone_create.  No need to allocate memory.
+	(authnone_create): Just call authnone_create_once via
+	__libc_once, then return &authnone_private->no_client.
+	(authnone_marshal): Access private data via CLIENT argument,
+	not authnone_private pointer.
+	Fix typo (MAX_MARSHEL_SIZE -> MAX_MARSHAL_SIZE).
+	* sunrpc/rpc_thread.c (__rpc_thread_destroy): No need to free
+	authnone_private_s.
+
 2002-04-12  H.J. Lu  <hjl@gnu.org>
 
 	* sunrpc/clnt_raw.c (clntraw_create): Properly set xdrs and client.
