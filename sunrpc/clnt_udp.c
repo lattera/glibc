@@ -50,6 +50,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <rpc/pmap_clnt.h>
 #include <net/if.h>
+#include <ifaddrs.h>
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 #endif
@@ -234,28 +235,24 @@ INTDEF (clntudp_create)
 static int
 is_network_up (int sock)
 {
-  struct ifconf ifc;
-  char buf[UDPMSGSIZE];
-  struct ifreq ifreq, *ifr;
-  int n;
+  struct ifaddrs *ifa;
 
-  ifc.ifc_len = sizeof (buf);
-  ifc.ifc_buf = buf;
-  if (__ioctl(sock, SIOCGIFCONF, (char *) &ifc) == 0)
+  if (getifaddrs (&ifa) != 0)
+    return 0;
+
+  struct ifaddrs *run = ifa;
+  while (run != NULL)
     {
-      ifr = ifc.ifc_req;
-      for (n = ifc.ifc_len / sizeof (struct ifreq); n > 0; n--, ifr++)
-	{
-	  ifreq = *ifr;
-	  if (__ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
-	    break;
+      if ((run->ifa_flags & IFF_UP) != 0
+	  && run->ifa_addr->sa_family == AF_INET)
+	break;
 
-	  if ((ifreq.ifr_flags & IFF_UP)
-	      && ifr->ifr_addr.sa_family == AF_INET)
-	    return 1;
-	}
+      run = run->ifa_next;
     }
-  return 0;
+
+  freeifaddrs (ifa);
+
+  return run != NULL;
 }
 
 static enum clnt_stat

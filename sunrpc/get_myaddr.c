@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 #include <unistd.h>
 #include <libintl.h>
 #include <net/if.h>
+#include <ifaddrs.h>
 #include <sys/ioctl.h>
 /* Order of following two #includes reversed by roland@gnu */
 #include <netinet/in.h>
@@ -60,50 +61,42 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 void
 get_myaddress (struct sockaddr_in *addr)
 {
-  int s;
-  char buf[BUFSIZ];
-  struct ifconf ifc;
-  struct ifreq ifreq, *ifr;
-  int len, loopback = 0;
+  struct ifaddrs *ifa;
 
-  if ((s = __socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if (getifaddrs (&ifa) == 0)
     {
-      perror ("get_myaddress: socket");
+      perror ("get_myaddress: getifaddrs");
       exit (1);
     }
-  ifc.ifc_len = sizeof (buf);
-  ifc.ifc_buf = buf;
-  if (__ioctl (s, SIOCGIFCONF, (char *) &ifc) < 0)
-    {
-      perror (_("get_myaddress: ioctl (get interface configuration)"));
-      exit (1);
-    }
+
+  int loopback = 0;
+  struct ifaddrs *run;
 
  again:
-  ifr = ifc.ifc_req;
-  for (len = ifc.ifc_len; len; len -= sizeof ifreq)
+  run = ifa;
+  while (run != NULL)
     {
-      ifreq = *ifr;
-      if (__ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+      if ((run->ifa_flags & IFF_UP) && run->ifa_addr->sa_family == AF_INET
+	  && (!(run->ifa_flags & IFF_LOOPBACK)
+	      || (loopback == 1 && (run->ifa_flags & IFF_LOOPBACK))))
 	{
-          perror ("get_myaddress: ioctl");
-          exit (1);
-	}
-      if ((ifreq.ifr_flags & IFF_UP) && (ifr->ifr_addr.sa_family == AF_INET)
-	  && (!(ifreq.ifr_flags & IFF_LOOPBACK) ||
-	      (loopback == 1 && (ifreq.ifr_flags & IFF_LOOPBACK))))
-	{
-	  *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
+	  *addr = *((struct sockaddr_in *) run->ifa_addr);
 	  addr->sin_port = htons (PMAPPORT);
-	  __close (s);
-	  return;
+	  goto out;
 	}
-      ifr++;
+
+      run = run->ifa_next;
     }
+
   if (loopback == 0)
     {
       loopback = 1;
       goto again;
     }
-  __close (s);
+ out:
+  freeifaddrs (ifa);
+
+  /* The function is horribly specified.  It does not return any error
+     if no interface is up.  Probably this won't happen (at least
+     loopback is there) but still...  */
 }

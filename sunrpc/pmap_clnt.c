@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <libintl.h>
 #include <net/if.h>
+#include <ifaddrs.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -54,52 +55,41 @@
 static bool_t
 __get_myaddress (struct sockaddr_in *addr)
 {
-  int s;
-  char buf[BUFSIZ];
-  struct ifconf ifc;
-  struct ifreq ifreq, *ifr;
-  int len, loopback = 1;
+  struct ifaddrs *ifa;
 
-  if ((s = __socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if (getifaddrs (&ifa) == 0)
     {
-      perror ("__get_myaddress: socket");
+      perror ("get_myaddress: getifaddrs");
       exit (1);
     }
-  ifc.ifc_len = sizeof (buf);
-  ifc.ifc_buf = buf;
-  if (__ioctl (s, SIOCGIFCONF, (char *) &ifc) < 0)
-    {
-      perror (_("__get_myaddress: ioctl (get interface configuration)"));
-      exit (1);
-    }
+
+  int loopback = 1;
+  struct ifaddrs *run;
 
  again:
-  ifr = ifc.ifc_req;
-  for (len = ifc.ifc_len; len; len -= sizeof ifreq)
+  run = ifa;
+  while (run != NULL)
     {
-      ifreq = *ifr;
-      if (__ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
-        {
-          perror ("__get_myaddress: ioctl");
-          exit (1);
-        }
-      if ((ifreq.ifr_flags & IFF_UP) && (ifr->ifr_addr.sa_family == AF_INET)
-          && ((ifreq.ifr_flags & IFF_LOOPBACK) || (loopback == 0)))
-        {
-          *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
-          addr->sin_port = htons (PMAPPORT);
-          __close (s);
-          return TRUE;
-        }
-      ifr++;
+      if ((run->ifa_flags & IFF_UP) && run->ifa_addr->sa_family == AF_INET
+	  && ((run->ifa_flags & IFF_LOOPBACK) || loopback == 0))
+	{
+	  *addr = *((struct sockaddr_in *) run->ifa_addr);
+	  addr->sin_port = htons (PMAPPORT);
+	  goto out;
+	}
+
+      run = run->ifa_next;
     }
+
   if (loopback == 1)
     {
       loopback = 0;
       goto again;
     }
-  __close (s);
-  return FALSE;
+ out:
+  freeifaddrs (ifa);
+
+  return run == NULL ? FALSE : TRUE;
 }
 
 

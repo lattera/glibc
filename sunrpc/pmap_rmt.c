@@ -53,6 +53,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
 #include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
 #include <net/if.h>
+#include <ifaddrs.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #define MAX_BROADCAST_SIZE 1400
@@ -174,55 +175,31 @@ INTDEF(xdr_rmtcallres)
 
 static int
 internal_function
-getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
-  /* int sock:  any valid socket will do */
-  /* char *buf:	why allocate more when we can use existing... */
+getbroadcastnets (struct in_addr *addrs, int naddrs)
 {
-  struct ifconf ifc;
-  struct ifreq ifreq, *ifr;
-  struct sockaddr_in *sin;
-  int n, i;
+  struct ifaddrs *ifa;
 
-  ifc.ifc_len = UDPMSGSIZE;
-  ifc.ifc_buf = buf;
-  if (__ioctl (sock, SIOCGIFCONF, (char *) &ifc) < 0)
+  if (getifaddrs (&ifa) == 0)
     {
-      perror (_("broadcast: ioctl (get interface configuration)"));
-      return (0);
+      perror ("broadcast: getifaddrs");
+      return 0;
     }
-  ifr = ifc.ifc_req;
-  for (i = 0, n = ifc.ifc_len / sizeof (struct ifreq); n > 0; n--, ifr++)
+
+  int i = 0;
+  struct ifaddrs *run = ifa;
+  while (run != NULL && i < naddrs)
     {
-      ifreq = *ifr;
-      if (__ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
-	{
-	  perror (_("broadcast: ioctl (get interface flags)"));
-	  continue;
-	}
-      if ((ifreq.ifr_flags & IFF_BROADCAST) &&
-	  (ifreq.ifr_flags & IFF_UP) &&
-	  ifr->ifr_addr.sa_family == AF_INET)
-	{
-	  sin = (struct sockaddr_in *) &ifr->ifr_addr;
-#ifdef SIOCGIFBRDADDR		/* 4.3BSD */
-	  if (__ioctl (sock, SIOCGIFBRDADDR, (char *) &ifreq) < 0)
-	    {
-	      addrs[i++] = inet_makeaddr (inet_netof
-	      /* Changed to pass struct instead of s_addr member
-	         by roland@gnu.  */
-					  (sin->sin_addr), INADDR_ANY);
-	    }
-	  else
-	    {
-	      addrs[i++] = ((struct sockaddr_in *)
-			    &ifreq.ifr_addr)->sin_addr;
-	    }
-#else /* 4.2 BSD */
-	  addrs[i++] = inet_makeaddr (inet_netof
-				      (sin->sin_addr.s_addr), INADDR_ANY);
-#endif
-	}
+      if ((run->ifa_flags & IFF_BROADCAST) != 0
+	  && (run->ifa_flags & IFF_UP) != 0
+	  && run->ifa_addr->sa_family == AF_INET)
+	/* Copy the broadcast address.  */
+	addrs[i++] = ((struct sockaddr_in *) run->ifa_broadaddr)->sin_addr;
+
+      run = run->ifa_next;
     }
+
+  freeifaddrs (ifa);
+
   return i;
 }
 
@@ -280,7 +257,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 #endif /* def SO_BROADCAST */
   fd.fd = sock;
   fd.events = POLLIN;
-  nets = getbroadcastnets (addrs, sock, inbuf);
+  nets = getbroadcastnets (addrs, sizeof (addrs) / sizeof (addrs[0]));
   __bzero ((char *) &baddr, sizeof (baddr));
   baddr.sin_family = AF_INET;
   baddr.sin_port = htons (PMAPPORT);

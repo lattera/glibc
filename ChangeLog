@@ -1,5 +1,12 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/clnt_udp.c (is_network_up): Use getifaddrs instead of ioctl.
+	* sunrpc/get_myaddr.c (get_myaddress): Likewise.
+	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.  Change interface
+	to avoid buffer overrun and remove now useless parameters.
+	(clnt_broadcast): Adjust caller.  [BZ #381].
+
 	* sysdeps/generic/s_fdim.c: Handle +inf/+inf
 	* sysdeps/generic/s_fdimf.c: Likewise.
 	* sysdeps/generic/s_fdiml.c: Likewise.
