@@ -84,17 +84,8 @@ fixed, or to compiler limitations.
 Defects in the C99 standard
 ===========================
 
-The definition of macros such as INT8_C in <stdint.h> and <inttypes.h>
-is not implementable (Defect Report #209); this is expected to be
-fixed in a Technical Corrigendum to make the macros yield a constant
-expression of the promoted type (for example, int rather than char)
-rather than needing to be able to represent constants of type char.
-glibc follows this corrected version.
-
-Several of the <fenv.h> functions are specified to return void, but
-Defect Report #202 points out that under some circumstances they may
-need to return an error status.  They are expected to be corrected to
-return int; glibc follows this corrected specification.
+Some defects in C99 were corrected in Technical Corrigendum 1 to that
+standard.  glibc follows the corrected specification.
 
 
 Implementation of library functions
@@ -147,8 +138,7 @@ builtins.
 
 For most of the headers required of freestanding implementations,
 glibc relies on GCC to provide correct versions.  (At present, glibc
-provides <stdint.h>, and GCC doesn't.)  GCC's <float.h> is missing
-FLT_EVAL_METHOD and DECIMAL_DIG.
+provides <stdint.h>, and GCC doesn't.)
 
 Implementing MATH_ERRNO, MATH_ERREXCEPT and math_errhandling in
 <math.h> needs compiler support: see
@@ -162,9 +152,9 @@ Issues with headers
 ===================
 
 There are various technical issues with the definitions contained in
-glibc's headers, listed below.  The list below assumes current CVS GCC
-as of 2001-01-10, and relates to i686-linux; older GCC may lead to
-more problems in the headers.
+glibc's headers, listed below.  The list below assumes GCC 3.3.2, and
+relates to i686-linux; older GCC may lead to more problems in the
+headers.
 
 Note that the _t suffix is reserved by POSIX, but not by pure ISO C.
 Also, the Single Unix Specification generally requires more types to
@@ -173,11 +163,7 @@ than ISO C permits.
 
 <ctype.h> should not declare size_t.
 
-<inttypes.h> should not declare wchar_t.
-
 <signal.h> should not declare size_t.
-
-<stdint.h> should not declare wchar_t.
 
 <stdio.h> should not declare or use wchar_t or wint_t.
 
