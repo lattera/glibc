@@ -63,6 +63,10 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 
   if (!secondcall)
     {
+      /* This field is used by TLS accesses to get our "thread pointer"
+	 from the TLS point of view.  */
+      tcb->tcb = tcb;
+
       /* Cache our thread port.  */
       tcb->self = __mach_thread_self ();
 
