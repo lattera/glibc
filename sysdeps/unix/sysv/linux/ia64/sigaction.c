@@ -50,5 +50,5 @@ __libc_sigaction (sig, act, oact)
 			 CHECK_1opt (act), CHECK_1opt (oact), _NSIG / 8);
 }
 
-strong_alias (__libc_sigaction, __sigaction)
+weak_alias (__libc_sigaction, __sigaction)
 weak_alias (__libc_sigaction, sigaction)

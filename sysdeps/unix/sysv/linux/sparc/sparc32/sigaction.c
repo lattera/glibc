@@ -135,7 +135,7 @@ __libc_sigaction (int sig, __const struct sigaction *act,
   return -1;
 }
 
-strong_alias (__libc_sigaction, __sigaction);
+weak_alias (__libc_sigaction, __sigaction);
 weak_alias (__libc_sigaction, sigaction);
 
 static void

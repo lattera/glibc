@@ -133,5 +133,5 @@ __libc_sigaction (sig, act, oact)
 #endif
 }
 
-strong_alias (__libc_sigaction, __sigaction)
+weak_alias (__libc_sigaction, __sigaction)
 weak_alias (__libc_sigaction, sigaction)

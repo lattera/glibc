@@ -1,5 +1,13 @@
 2000-07-10  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Make alias weak since
+	it's overridden by libpthreads.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+
 	* malloc/Makefile: Run tst-mtrace only with shared libs.
 
 	* stdio-common/Makefile: Run unbputc and tst-printf tests only
