@@ -1,0 +1,412 @@
+@node Cryptographic Functions
+@c @node Cryptographic Functions, , Top, Top
+@chapter DES Encryption and Password Handling
+@c %MENU% DES encryption and password handling
+
+On many systems, it is unnecessary to have any kind of user
+authentication; for instance, a workstation which is not connected to a
+network probably does not need any user authentication, because to use
+the machine an intruder must have physical access.
+
+Sometimes, however, it is necessary to be sure that a user is authorised
+to use some service a machine provides---for instance, to log in as a
+particular user id (@pxref{Users and Groups}).  One traditional way of
+doing this is for each user to choose a secret @dfn{password}; then, the
+system can ask someone claiming to be a user what the user's password
+is, and if the person gives the correct password then the system can
+grant the appropriate privileges.
+
+If all the passwords are just stored in a file somewhere, then this file
+has to be very carefully protected.  To avoid this, passwords are run
+through a @dfn{one-way function}, a function which makes it difficult to
+work out what its input was by looking at its output, before storing in
+the file.
+
+The GNU C library already provides a one-way function based on MD5.  The
+@code{crypt} add-on provides additional compatibility with the standard
+UNIX one-way function based on the Data Encryption Standard.
+
+It also provides support for Secure RPC, and some library functions that
+can be used to perform normal DES encryption.
+
+The add-on is not included in the main distribution of the GNU C library
+because some governments, most notably those of France, Russia, 
+and the US, have very restrictive rules governing the distribution and
+use of encryption software.  The first section below tries to describe some
+of those rules.
+
+@menu
+* Legal Problems::              This software can get you locked up, or worse.
+* getpass::                     Prompting the user for a password.
+* crypt::                       A one-way function for UNIX passwords.
+* DES Encryption::              Routines for DES encryption.
+@end menu
+
+@node Legal Problems
+@section Legal Problems
+
+Because of the continuously changing state of the law, it's not possible
+to provide a definitive survey of the laws affecting cryptography.
+Instead, this section warns you of some of the known trouble spots; this
+may help you when you try to find out what the laws of your country are.
+
+Some countries require that you have a licence to use, posess, or import
+cryptography.  These countries are believed to include Byelorussia,
+Burma, France, India, Indonesia, Israel, Kazakhstan, Pakistan, Russia,
+and Saudi Arabia.
+
+Some countries restrict the transmission of encrypted messages by radio;
+some telecommunications carriers restrict the transmission of encrypted
+messages over their network.
+
+Many countries have some form of export control for encryption software.
+The Wassenaar Arrangement is a multilateral agreement between 33
+countries (Argentina, Australia, Austria, Belgium, Bulgaria, Canada, the
+Czech Republic, Denmark, Finland, France, Germany, Greece, Hungary,
+Ireland, Italy, Japan, Luxembourg, the Netherlands, New Zealand, Norway,
+Poland, Portugal, the Republic of Korea, Romania, the Russian
+Federation, the Slovak Republic, Spain, Sweden, Switzerland, Turkey,
+Ukraine, the United Kingdom and the United States) which restricts some
+kinds of encryption exports.  Different countries apply the arrangement
+in different ways; some do not allow the exception for certain kinds of
+``public domain'' software (which would include this library), some
+only restrict the export of software in tangible form, and others impose
+significant additional restrictions.
+
+The United States has additional rules.  This software would generally
+be exportable under 15 CFR 740.13(e), which permits exports of
+``encryption source code'' which is ``publicly available'' and which is
+``not subject to an express agreement for the payment of a licensing fee or
+royalty for commercial production or sale of any product developed with
+the source code'' to most countries.
+
+The rules in this area are continuously changing.  If you know of any
+information in this manual that is out-of-date, please report it using
+the @code{glibcbug} script. @xref{Reporting Bugs}.
+
+@node getpass
+@section Reading Passwords
+
+When reading in a password, it is desirable to avoid displaying it on
+the screen, to help keep it secret.  The following function handles this
+in a convenient way.
+
+@comment unistd.h
+@comment BSD
+@deftypefun {char *} getpass (const char * @var{prompt})
+
+@code{getpass} outputs @var{prompt}, then reads a string in from the
+terminal without echoing it.  It tries to connect to the real terminal,
+@file{/dev/tty}, if possible, to encourage users not to put plaintext
+passwords in files; otherwise, it uses @code{stdin} and @code{stderr}.
+@code{getpass} also disables the INTR, QUIT, and SUSP characters on the
+terminal using the @code{ISIG} terminal attribute (@pxref{Local Modes}).
+The terminal is flushed before and after @code{getpass}, so that
+characters of a mistyped password are not accidentally visible.
+
+In other C libraries, @code{getpass} may only return the first
+@code{PASS_MAX} bytes of a password.  The GNU C library has no limit, so
+@code{PASS_MAX} is undefined.
+
+The prototype for this function is in @file{unistd.h}.  @code{PASS_MAX}
+would be defined in @file{limits.h}.
+@end deftypefun
+
+This precise set of operations may not suit all possible situations.  In
+this case, it is recommended that users write their own @code{getpass}
+substitute.  For instance, a very simple substitute is as follows:
+
+@smallexample
+@include ../crypt/mygetpass.c.texi
+@end smallexample
+
+The substitute takes the same parameters as @code{getline}
+(@pxref{Line Input}); the user must print any prompt desired.
+
+@node crypt
+@section Encrypting Passwords
+
+@comment crypt.h
+@comment BSD, SVID
+@deftypefun {char *} crypt (const char * @var{key}, const char * @var{salt})
+
+The @code{crypt} function takes a password, @var{key}, as a string, and
+a @var{salt} character array which is described below, and returns a
+printable ASCII string which starts with another salt.  It is believed
+that, given the output of the function, the best way to find a @var{key}
+that will produce that output is to guess values of @var{key} until the
+original value of @var{key} is found.
+
+The @var{salt} parameter does two things.  Firstly, it selects which
+algorithm is used, the MD5-based one or the DES-based one.  Secondly, it
+makes life harder for someone trying to guess passwords against a file
+containing many passwords; without a @var{salt}, an intruder can make a
+guess, run @code{crypt} on it once, and compare the result with all the
+passwords.  With a @var{salt}, the intruder must run @code{crypt} once
+for each different salt.
+
+For the MD5-based algorithm, the @var{salt} should consist of the string
+@code{$1$}, followed by up to 8 characters, terminated by either
+another @code{$} or the end of the string.  The result of @code{crypt}
+will be the @var{salt}, followed by a @code{$} if the salt didn't end
+with one, followed by 22 characters from the alphabet
+@code{./0-9A-Za-z}, up to 34 characters total.  Every character in the
+@var{key} is significant.
+
+For the DES-based algorithm, the @var{salt} should consist of two
+characters from the alphabet @code{./0-9A-Za-z}, and the result of
+@code{crypt} will be those two characters followed by 11 more from the
+same alphabet, 13 in total.  Only the first 8 characters in the
+@var{key} are significant.  If the @code{crypt} add-on is not installed,
+trying to use the DES-based algorithm will return an empty string and
+set @code{errno} to @code{EOPNOTSUPP}.
+
+The MD5-based algorithm is available in the GNU C library even if the
+@code{crypt} add-on is not installed.  It also has no limit on the
+useful length of the password used, and is slightly more secure.  It is
+therefore preferred over the DES-based algorithm.
+
+When the user enters their password for the first time, the @var{salt}
+should be set to a new string which is reasonably random.  To verify a
+password against the result of a previous call to @code{crypt}, pass
+the result of the previous call as the @var{salt}.
+@end deftypefun
+
+The following short program is an example of how to use @code{crypt} the
+first time a password is entered.  Note that the @var{salt} generation
+is just barely acceptable; in particular, it is not unique between
+machines, and in many applications it would not be acceptable to let an
+attacker know what time the user's password was last set.
+
+@smallexample
+@include ../crypt/genpass.c.texi
+@end smallexample
+
+The next program shows how to verify a password.  It prompts the user
+for a password and prints ``Access granted.'' if the user types
+@code{GNU libc manual}.
+
+@smallexample
+@include ../crypt/testpass.c.texi
+@end smallexample
+
+@comment crypt.h
+@comment GNU
+@deftypefun {char *} crypt_r (const char * @var{key}, const char * @var{salt}, {struct crypt_data *} @var{data})
+
+The @code{crypt_r} function does the same thing as @code{crypt}, but
+takes an extra parameter which includes space for its result (among
+other things), so it can be reentrant.  @code{data@w{->}initialized} must be
+cleared to zero before the first time @code{crypt_r} is called.
+
+The @code{crypt_r} function is a GNU extension.
+@end deftypefun
+
+The @code{crypt} and @code{crypt_r} functions are prototyped in the
+header @file{crypt.h}.
+
+@node DES Encryption
+@section DES Encryption
+
+The Data Encryption Standard is described in the US Government Federal
+Information Processing Standards (FIPS) 46-3 published by the National
+Institute of Standards and Technology.  The DES has been very thoroughly
+analysed since it was developed in the late 1970s, and no new
+significant flaws have been found.  
+
+However, the DES uses only a 56-bit key (plus 8 parity bits), and a
+machine has been built in 1998 which can search through all possible
+keys in about 6 days, which cost about US$200000; faster searches would
+be possible with more money.  This makes simple DES unsecure for most
+purposes, and NIST no longer permits new US government systems
+to use simple DES.
+
+For serious encryption functionality, it is recommended that one of the
+many free encryption libraries be used instead of these routines.
+
+The DES is a reversible operation which takes a 64-bit block and a
+64-bit key, and produces another 64-bit block.  Usually the bits are
+numbered so that the most-significant bit, the first bit, of each block
+is numbered 1.
+
+Under that numbering, every 8th bit of the key (the 8th, 16th, and so
+on) is not used by the encryption algorithm itself.  But the key must
+have odd parity; that is, out of bits 1 through 8, and 9 through 16, and
+so on, there must be an odd number of `1' bits, and this completely
+specifies the unused bits.
+
+@comment crypt.h
+@comment BSD, SVID
+@deftypefun void setkey (const char * @var{key})
+
+The @code{setkey} function sets an internal data structure to be an
+expanded form of @var{key}.  @var{key} is specified as an array of 64
+bits each stored in a @code{char}, the first bit is @code{key[0]} and
+the 64th bit is @code{key[63]}.  The @var{key} should have the correct
+parity.
+@end deftypefun
+
+@comment crypt.h
+@comment BSD, SVID
+@deftypefun void encrypt (char * @var{block}, int @var{edflag})
+
+The @code{encrypt} function encrypts @var{block} if
+@var{edflag} is 0, otherwise it decrypts @var{block}, using a key
+previously set by @code{setkey}.  The result is
+placed in @var{block}.
+
+Like @code{setkey}, @var{block} is specified as an array of 64 bits each
+stored in a @code{char}, but there are no parity bits in @var{block}.
+@end deftypefun
+
+@comment crypt.h
+@comment GNU
+@deftypefun void setkey_r (const char * @var{key}, {struct crypt_data *} @var{data})
+@comment crypt.h
+@comment GNU
+@deftypefunx void encrypt_r (char * @var{block}, int @var{edflag}, {struct crypt_data *} @var{data})
+
+These are reentrant versions of @code{setkey} and @code{encrypt}.  The
+only difference is the extra parameter, which stores the expanded
+version of @var{key}.  Before calling @code{setkey_r} the first time, 
+@code{data->initialised} must be cleared to zero.
+@end deftypefun
+
+The @code{setkey_r} and @code{encrypt_r} functions are GNU extensions.
+@code{setkey}, @code{encrypt}, @code{setkey_r}, and @code{encrypt_r} are
+defined in @file{crypt.h}.  
+
+If the @code{crypt} add-on is not used to build the library, programs
+that use these four functions will crash when the functions are called.
+If this is a problem, the @code{ecb_crypt} function described below is
+recommended instead.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@deftypefun int ecb_crypt (char * @var{key}, char * @var{blocks}, unsigned @var{len}, unsigned @var{mode})
+
+The function @code{ecb_crypt} encrypts or decrypts one or more blocks
+using DES.  Each block is encrypted independently.
+
+The @var{blocks} and the @var{key} are stored packed in 8-bit bytes, so
+that the first bit of the key is the most-significant bit of
+@code{key[0]} and the 63rd bit of the key is stored as the
+least-significant bit of @code{key[7]}.  The @var{key} should have the
+correct parity.
+
+@var{len} is the number of bytes in @var{blocks}.  It should be a
+multiple of 8 (so that there is a whole number of blocks to encrypt).
+@var{len} is limited to a maximum of @code{DES_MAXDATA} bytes.
+
+The result of the encryption replaces the input in @var{blocks}.
+
+The @var{mode} parameter is the bitwise OR of two of the following:
+
+@table @code
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DES_ENCRYPT
+@findex DES_ENCRYPT
+This constant, used in the @var{mode} parameter, specifies that
+@var{blocks} is to be encrypted.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DES_DECRYPT
+@findex DES_DECRYPT
+This constant, used in the @var{mode} parameter, specifies that
+@var{blocks} is to be decrypted.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DES_HW
+@findex DES_HW
+This constant, used in the @var{mode} parameter, asks to use a hardware
+device.  If no hardware device is available, encryption happens anyway,
+but in software.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DES_SW
+@findex DES_SW
+This constant, used in the @var{mode} parameter, specifies that no
+hardware device is to be used.
+@end table
+
+The result of the function will be one of these values:
+
+@table @code
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DESERR_NONE
+@findex DESERR_NONE
+The encryption succeeded.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DESERR_NOHWDEVICE
+@findex DESERR_NOHWDEVICE
+The encryption succeeded, but there was no hardware device available.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DESERR_HWERROR
+@findex DESERR_HWERROR
+The encryption failed because of a hardware problem.  In the GNU
+library, this error code is also returned if the @code{crypt} add-on was
+not used to build the library.
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@item DESERR_BADPARAM
+@findex DESERR_BADPARAM
+The encryption failed because of a bad parameter, for instance @var{len}
+is not a multiple of 8 or @var{len} is larger than @code{DES_MAXDATA}.
+@end table
+@end deftypefun
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@deftypefun int DES_FAILED (int @var{err})
+This macro returns 1 if @var{err} is a `success' result code from
+@code{ecb_crypt} or @code{cbc_crypt}, and 0 otherwise.
+@end deftypefun
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@deftypefun int cbc_crypt (char * @var{key}, char * @var{blocks}, unsigned @var{len}, unsigned @var{mode}, char * @var{ivec})
+
+The function @code{cbc_crypt} encrypts or decrypts one or more blocks
+using DES in Cipher Block Chaining mode.
+
+For encryption in CBC mode, each block is exclusive-ored with @var{ivec}
+before being encrypted, then @var{ivec} is replaced with the result of
+the encryption, then the next block is processed.  Decryption is the
+reverse of this process.
+
+This has the advantage that blocks which are the same before being
+encrypted are very unlikely to be the same after being encrypted, making
+it much harder to detect patterns in the data.
+
+Usually, @var{ivec} is set to 8 random bytes before encryption starts.
+Then the 8 random bytes are transmitted along with the encrypted data
+(without themselves being encrypted), and passed back in as @var{ivec}
+for decryption.  Another possibility is to set @var{ivec} to 8 zeroes
+initially, and have the first the block encrypted consist of 8 random
+bytes.
+
+Otherwise, all the parameters are similar to those for @code{ecb_crypt}.
+@end deftypefun
+
+@comment rpc/des_crypt.h
+@comment SUNRPC
+@deftypefun void des_setparity (char * @var{key})
+
+The function @code{des_setparity} changes the 64-bit @var{key}, stored
+packed in 8-bit bytes, to have odd parity by altering the low bits of
+each byte.
+@end deftypefun
+
+The @code{ecb_crypt}, @code{cbc_crypt}, and @code{des_setparity}
+functions and their accompanying macros are all defined in the header
+@file{rpc/des_crypt.h}.

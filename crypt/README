@@ -1,0 +1,49 @@
+This is the distribution tar file for the cryptography add-on to the
+GNU C library.  For the version number, see the file "Banner".
+
+The add-on is not included in the main distribution of the GNU C
+library because some governments, most notably those of France,
+Russia, and the US, have very restrictive rules governing the
+distribution and use of encryption software.  Please read the node
+"Legal Problems" in the manual for more details.  
+
+In particular, the US does not allow export of this software without a
+licence, including via the Internet.  So please do not download it
+from the main FSF FTP site at ftp.gnu.org if you are outside
+the US.  This software was completely developed outside the US.
+
+To install the add-on, unpack the tar file in the top level of the GNU
+C library distribution.  Then build GNU C library like this:
+
+configure --enable-add-ons
+make
+make install
+
+It is not presently possible to add the add-on to the GNU C library
+without recompiling the GNU C library.
+
+The additional functionality provided by the add-on consists of:
+
+* DES-based crypt().  This is only for backwards compatibility;
+  for new installations the MD5-based crypt(), provided with the main
+  GNU C library distribution, should be used instead.
+
+* The AUTH_DES RPC authentication method.  In a given situation, this
+  may be more or less secure than the AUTH_UNIX authentication method
+  which is provided with the main GNU C library distribution.
+
+* User-visible DES encryption routines.  Note that DES by itself is
+  not now considered a very secure encryption method.
+
+The add-on also includes a manual, the file "crypt.texi".  The manual
+will be integrated with the GNU C library manual when the GNU C
+library is installed.
+
+Report bugs in this library (or its manual) in the same way as for the
+GNU C library; that is, using the `glibcbug' shell script to send
+e-mail to <bugs@gnu.org>.  Simply run this shell script and fill in
+the information.  Nevertheless you can still send bug reports to
+<bug-glibc@gnu.org> as normal electronic mails.
+
+The add-on is free software.  See the file COPYING.LIB for copying
+conditions.

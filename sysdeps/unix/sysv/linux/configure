@@ -13,7 +13,7 @@ if test -n "$sysheaders"; then
 fi
 echo $ac_n "checking installed Linux kernel header files""... $ac_c" 1>&6
 echo "configure:16: checking installed Linux kernel header files" >&5
-if eval "test \"\${libc_cv_linux2010+set}\" = set"; then
+if eval "test \"`echo '$''{'libc_cv_linux2010'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -107,21 +107,11 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   libc_cv_rootsbindir="/sbin"
 fi
 
-# Under Linux the LinuxThreads and crypt add-on should be available.
+# Under Linux the LinuxThreads add-on should be available.
 case $add_ons in
   # Both are available.  Good.
-  *linuxthreads*crypt* | *crypt*linuxthreads*)
-    message=
-    ;;
   *linuxthreads*)
-    message="\
-*** WARNING:
-*** Are you sure you do not want to use the \`crypt' add-on?"
-    ;;
-  *crypt*)
-    message="\
-*** WARNING:
-*** Are you sure you do not want to use the \`linuxthread' add-on?"
+    message=
     ;;
   *)
     message="\
@@ -133,11 +123,11 @@ esac
 if test "$message"; then
   if test $enable_sanity = yes; then
     echo "\
-*** You should not compile the GNU libc without the \`linuxthreads' and
-*** \`crypt' add-on.  Not using them risks to be incompatible with the
-*** libraries of other systems.  Consider getting the add-ons and restart
+*** You should not compile the GNU libc without the \`linuxthreads' 
+*** add-on.  Not using them risks being incompatible with the
+*** libraries of other systems.  Consider getting the add-on and restarting
 *** the configuration.
-*** If you really mean to avoid those add-ons run configure again, now
+*** If you really mean to not use this add-on, run configure again
 *** using the extra parameter \`--disable-sanity-checks'."
     exit 1
   else
@@ -172,7 +162,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:176: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:166: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

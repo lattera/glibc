@@ -78,21 +78,11 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   libc_cv_rootsbindir="/sbin"
 fi
 
-# Under Linux the LinuxThreads and crypt add-on should be available.
+# Under Linux the LinuxThreads add-on should be available.
 case $add_ons in
   # Both are available.  Good.
-  *linuxthreads*crypt* | *crypt*linuxthreads*)
-    message=
-    ;;
   *linuxthreads*)
-    message="\
-*** WARNING:
-*** Are you sure you do not want to use the \`crypt' add-on?"
-    ;;
-  *crypt*)
-    message="\
-*** WARNING:
-*** Are you sure you do not want to use the \`linuxthread' add-on?"
+    message=
     ;;
   *)
     message="\
@@ -104,11 +94,11 @@ esac
 if test "$message"; then
   if test $enable_sanity = yes; then
     echo "\
-*** You should not compile the GNU libc without the \`linuxthreads' and
-*** \`crypt' add-on.  Not using them risks to be incompatible with the
-*** libraries of other systems.  Consider getting the add-ons and restart
+*** You should not compile the GNU libc without the \`linuxthreads' 
+*** add-on.  Not using them risks being incompatible with the
+*** libraries of other systems.  Consider getting the add-on and restarting
 *** the configuration.
-*** If you really mean to avoid those add-ons run configure again, now
+*** If you really mean to not use this add-on, run configure again
 *** using the extra parameter \`--disable-sanity-checks'."
     exit 1
   else

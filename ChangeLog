@@ -1,3 +1,17 @@
+2000-02-28  Geoff Keating  <geoffk@cygnus.com>
+
+	* Makeconfig (all-subdirs): Add 'crypt' subdirectory.
+	* sysdeps/unix/sysv/linux/configure.in (inhibit_glue): Don't
+	complain if there is no crypt add-on.
+	* crypt/configure: Removed.
+	
+	* crypt/crypt.texi: Update documentation of US export restrictions
+	to match the 14 Jan 2000 regulations.
+
+2000-02-28  Geoff Keating  <geoffk@cygnus.com>
+
+	* crypt: New subdirectory, merged in from the crypt add-on.
+
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/unistd.h: Add __rmdir and __mkdir prototypes.
