@@ -1,5 +1,5 @@
 /* Assembler macros for PA-RISC.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
    Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
@@ -206,7 +206,7 @@
 	}							\
 	if (__sys_res >= (unsigned long)-4095) {		\
 		__set_errno(-__sys_res);			\
-		__sys_res == (unsigned long)-1;			\
+		__sys_res = (unsigned long)-1;			\
 	}							\
 	__sys_res;						\
 })
