@@ -38,22 +38,24 @@
 # error "This must not happen; new kernel assumed but old headers"
 #endif
 
+#if !(USE_TLS && HAVE___THREAD)
+/* These variables are used by the setup code.  */
+extern int _errno;
+extern int _h_errno;
+
+/* We need the global/static resolver state here.  */
+# include <resolv.h>
+# undef _res
+#endif
+
+extern struct __res_state _res;
+
 #ifdef USE_TLS
 
 /* We need only a few variables.  */
 static pthread_descr manager_thread;
 
 #else
-
-/* These variables are used by the setup code.  */
-extern int _errno;
-extern int _h_errno;
-
-/* We need the global/static resolver state here.  */
-#include <resolv.h>
-#undef _res
-
-extern struct __res_state _res;
 
 /* Descriptor of the initial thread */
 
