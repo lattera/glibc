@@ -1,1 +1,1 @@
-tramp_sigvec.c
+sigtramp.c
