@@ -1,5 +1,11 @@
 1998-10-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/Dist: Add setresuid.c, setresgid.c,
+	setfsuid.c, and setfsgid.c.
+	* sysdeps/unix/sysv/linux/arm/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Likewise.
+
 	* version.h (VERSION): Bump to 2.0.99.
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove duplicate

@@ -1,3 +1,7 @@
 clone.S
 mremap.S
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
 sys/reg.h

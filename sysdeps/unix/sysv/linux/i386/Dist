@@ -1,4 +1,8 @@
 clone.S
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
 sys/debugreg.h
 sys/elf.h
 sys/perm.h

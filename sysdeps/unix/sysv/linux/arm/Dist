@@ -1,3 +1,7 @@
 clone.S
 init-first.h
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
 bits/armsigctx.h

@@ -3,3 +3,7 @@ pipe.S
 fork.S
 kernel_stat.h
 init-first.h
+setresuid.c
+setresgid.c
+setfsuid.c
+setfsgid.c
