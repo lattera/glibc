@@ -35,7 +35,7 @@ mkstemp (template)
 {
   static const char letters[]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  static uint32_t value;
+  static uint64_t value;
   struct timeval tv;
   char *XXXXXX;
   size_t len;
@@ -57,7 +57,7 @@ mkstemp (template)
 
   for (count = 0; count < TMP_MAX; ++count)
     {
-      uint32_t v = value;
+      uint64_t v = value;
       int fd;
 
       /* Fill in the random bits.  */

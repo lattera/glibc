@@ -244,7 +244,7 @@ mtrace ()
       if (mallstream != NULL)
 	{
 	  /* Be sure it doesn't malloc its buffer!  */
-	  setbuffer (mallstream, malloc_trace_buffer, TRACE_BUFFER_SIZE);
+	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
 	  fprintf (mallstream, "= Start\n");
 	  tr_old_free_hook = __free_hook;
 	  __free_hook = tr_freehook;

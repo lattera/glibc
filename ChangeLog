@@ -1,3 +1,27 @@
+1998-04-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_simple.c (__gconv_transform_ucs4_ascii): Fix typo in
+	last change.
+
+1998-04-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-minimal.c (__strtol_internal): Correct range check.  Fix
+	return value on overflow.
+
+1998-04-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/mkstemp.c (mkstemp): Change value and v to 64
+	bits.
+
+1998-04-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/mtrace.c (mtrace): Use standard function setvbuf instead
+	of non-standard function setbuffer.
+
+1998-04-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/perror.c: Include <string.h> for __strerror_r.
+
 1998-04-14 23:54  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Add rules to run tests.

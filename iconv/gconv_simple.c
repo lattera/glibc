@@ -239,7 +239,7 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
 	  size_t cnt = 0;
 
 	  while (data->outbufavail < data->outbufsize
-		 && cnt + sizeof (wchar_t) + 3 < *inlen)
+		 && cnt + 3 < *inlen)
 	    {
 	      if (*newinbuf < L'\0' || *newinbuf > L'\x7f')
 		{

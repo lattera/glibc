@@ -247,15 +247,12 @@ __strtol_internal (const char *nptr, char **endptr, int base, int group)
     {
       unsigned long int digval = *nptr - '0';
       if (result > LONG_MAX / 10
-	  || (result == (sign
-			 ? (unsigned long int) LONG_MAX
-			 : (unsigned long int) LONG_MAX + 1) / 10
-	      && digval > (sign
-			   ? (unsigned long int) LONG_MAX
-			   : (unsigned long int) LONG_MAX + 1) % 10))
+	  || (sign > 0 ? result == LONG_MAX / 10 && digval > LONG_MAX % 10
+	      : (result == ((unsigned long int) LONG_MAX + 1) / 10
+		 && digval > ((unsigned long int) LONG_MAX + 1) % 10)))
 	{
 	  errno = ERANGE;
-	  return LONG_MAX * sign;
+	  return sign > 0 ? LONG_MAX : LONG_MIN;
 	}
       result *= 10;
       result += digval;

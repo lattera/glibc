@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
