@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,8 +69,8 @@ typedef struct
 static tz_rule tz_rules[2];
 
 
-static int compute_change __P ((tz_rule *rule, int year)) internal_function;
-static int tz_compute __P ((const struct tm *tm))
+static void compute_change __P ((tz_rule *rule, int year)) internal_function;
+static void tz_compute __P ((const struct tm *tm))
      internal_function;
 static void tzset_internal __P ((int always)) internal_function;
 
@@ -119,6 +119,23 @@ __tzstring (const char *s)
     tzstring_list = new;
 
   return new->data;
+}
+
+/* Maximum length of a timezone name.  tzset_internal keeps this up to date
+   (never decreasing it) when ! __use_tzfile.
+   tzfile.c keeps it up to date when __use_tzfile.  */
+size_t __tzname_cur_max;
+
+long int
+__tzname_max ()
+{
+  __libc_lock_lock (tzset_lock);
+
+  tzset_internal (0);
+
+  __libc_lock_unlock (tzset_lock);
+
+  return __tzname_cur_max;
 }
 
 static char *old_tz;
@@ -186,7 +203,7 @@ tzset_internal (always)
       tz_rules[0].offset = tz_rules[1].offset = 0L;
       tz_rules[0].change = tz_rules[1].change = (time_t) -1;
       tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
-      return;
+      goto out;
     }
 
   /* Clear out old state and reset to unnamed UTC.  */
@@ -198,7 +215,7 @@ tzset_internal (always)
 
   if (sscanf (tz, "%[^0-9,+-]", tzbuf) != 1 ||
       (l = strlen (tzbuf)) < 3)
-    return;
+    goto out;
 
   tz_rules[0].name = __tzstring (tzbuf);
 
@@ -206,7 +223,7 @@ tzset_internal (always)
 
   /* Figure out the standard offset from UTC.  */
   if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
-    return;
+    goto out;
 
   if (*tz == '-' || *tz == '+')
     tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
@@ -215,7 +232,7 @@ tzset_internal (always)
   switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
     default:
-      return;
+      goto out;
     case 1:
       mm = 0;
     case 2:
@@ -387,32 +404,26 @@ tzset_internal (always)
     }
 
  out:
-  /* We know the offset now, set `__timezone'.  */
+  __daylight = tz_rules[0].offset != tz_rules[1].offset;
   __timezone = -tz_rules[0].offset;
-}
-
-/* Maximum length of a timezone name.  __tz_compute keeps this up to date
-   (never decreasing it) when ! __use_tzfile.
-   tzfile.c keeps it up to date when __use_tzfile.  */
-size_t __tzname_cur_max;
+  __tzname[0] = (char *) tz_rules[0].name;
+  __tzname[1] = (char *) tz_rules[1].name;
 
-long int
-__tzname_max ()
-{
-  __libc_lock_lock (tzset_lock);
-
-  tzset_internal (0);
-
-  __libc_lock_unlock (tzset_lock);
-
-  return __tzname_cur_max;
+  {
+    /* Keep __tzname_cur_max up to date.  */
+    size_t len0 = strlen (__tzname[0]);
+    size_t len1 = strlen (__tzname[1]);
+    if (len0 > __tzname_cur_max)
+      __tzname_cur_max = len0;
+    if (len1 > __tzname_cur_max)
+      __tzname_cur_max = len1;
+  }
 }
 
 /* Figure out the exact time (as a time_t) in YEAR
    when the change described by RULE will occur and
-   put it in RULE->change, saving YEAR in RULE->computed_for.
-   Return nonzero if successful, zero on failure.  */
-static int
+   put it in RULE->change, saving YEAR in RULE->computed_for.  */
+static void
 internal_function
 compute_change (rule, year)
      tz_rule *rule;
@@ -422,7 +433,7 @@ compute_change (rule, year)
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 2 BC will be slower.  Oh well.  */
-    return 1;
+    return;
 
   /* First set T to January 1st, 0:00:00 GMT in YEAR.  */
   if (year > 1970)
@@ -498,45 +509,18 @@ compute_change (rule, year)
 
   rule->change = t - rule->offset + rule->secs;
   rule->computed_for = year;
-  return 1;
 }
 
 
 /* Figure out the correct timezone for TM and set `__tzname',
-   `__timezone', and `__daylight' accordingly.  Return nonzero on
-   success, zero on failure.  */
-static int
+   `__timezone', and `__daylight' accordingly.  */
+static void
 internal_function
 tz_compute (tm)
      const struct tm *tm;
 {
-  if (! compute_change (&tz_rules[0], 1900 + tm->tm_year)
-      || ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
-    return 0;
-  /* We have to distinguish between northern and southern hemisphere.
-     For the latter the daylight saving time ends in the next year.
-     It is easier to detect this after first computing the time for the
-     wrong year since now we simply can compare the times to switch.  */
-  if (tz_rules[0].change > tz_rules[1].change
-      && ! compute_change (&tz_rules[1], 1900 + tm->tm_year + 1))
-    return 0;
-
-  __daylight = tz_rules[0].offset != tz_rules[1].offset;
-  __timezone = -tz_rules[0].offset;
-  __tzname[0] = (char *) tz_rules[0].name;
-  __tzname[1] = (char *) tz_rules[1].name;
-
-  {
-    /* Keep __tzname_cur_max up to date.  */
-    size_t len0 = strlen (__tzname[0]);
-    size_t len1 = strlen (__tzname[1]);
-    if (len0 > __tzname_cur_max)
-      __tzname_cur_max = len0;
-    if (len1 > __tzname_cur_max)
-      __tzname_cur_max = len1;
-  }
-
-  return 1;
+  compute_change (&tz_rules[0], 1900 + tm->tm_year);
+  compute_change (&tz_rules[1], 1900 + tm->tm_year);
 }
 
 /* Reinterpret the TZ environment variable and set `tzname'.  */
@@ -590,8 +574,10 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
     }
   else
     {
-      if (! (__offtime (timer, 0, tp) && tz_compute (tp)))
+      if (! __offtime (timer, 0, tp))
 	tp = NULL;
+      else
+	tz_compute (tp);
       leap_correction = 0L;
       leap_extra_secs = 0;
     }
@@ -602,8 +588,18 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 	{
 	  if (!__use_tzfile)
 	    {
-	      int isdst = (*timer >= tz_rules[0].change
-			   && *timer < tz_rules[1].change);
+	      int isdst;
+
+	      /* We have to distinguish between northern and southern
+		 hemisphere.  For the latter the daylight saving time
+		 ends in the next year.  */
+	      if (__builtin_expect (tz_rules[0].change
+				    > tz_rules[1].change, 0))
+		isdst = (*timer < tz_rules[1].change
+			 || *timer >= tz_rules[0].change);
+	      else
+		isdst = (*timer >= tz_rules[0].change
+			 && *timer < tz_rules[1].change);
 	      tp->tm_isdst = isdst;
 	      tp->tm_zone = __tzname[isdst];
 	      tp->tm_gmtoff = tz_rules[isdst].offset;

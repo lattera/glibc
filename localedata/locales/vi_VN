@@ -4,6 +4,8 @@ escape_char     /
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.
 
+% Revised by Le Hong Boi
+
 LC_IDENTIFICATION
 title      "Vietnamese language locale for Vietnam"
 source     "IBM Globalization Center of Competency, Yamato Software Laboratory"
@@ -54,8 +56,8 @@ mon_thousands_sep     "<U002E>"
 mon_grouping          3
 positive_sign         ""
 negative_sign         "<U002D>"
-int_frac_digits       4
-frac_digits           4
+int_frac_digits       2
+frac_digits           2
 p_cs_precedes         0
 p_sep_by_space        0
 n_cs_precedes         1
@@ -82,24 +84,24 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0054><U0068><U0020><U0032><U0020>";/
+abday       "<U0043><U004E><U0020>";/
+            "<U0054><U0068><U0020><U0032><U0020>";/
             "<U0054><U0068><U0020><U0033><U0020>";/
             "<U0054><U0068><U0020><U0034><U0020>";/
             "<U0054><U0068><U0020><U0035><U0020>";/
             "<U0054><U0068><U0020><U0036><U0020>";/
-            "<U0054><U0068><U0020><U0037><U0020>";/
-            "<U0043><U004E><U0020>"
+            "<U0054><U0068><U0020><U0037><U0020>"
 %
 % Full weekday names (%A)
-day         "<U0054><U0068><U01B0><U0301><U0020><U0068><U0061><U0069><U0020>";/
+day         "<U0043><U0068><U0075><U0309><U0020><U006E><U0068><U00E2><U0323>/
+<U0074><U0020>";/
+            "<U0054><U0068><U01B0><U0301><U0020><U0068><U0061><U0069><U0020>";/
             "<U0054><U0068><U01B0><U0301><U0020><U0062><U0061><U0020>";/
             "<U0054><U0068><U01B0><U0301><U0020><U0074><U01B0><U0020>";/
             "<U0054><U0068><U01B0><U0301><U0020><U006E><U0103><U006D><U0020>";/
             "<U0054><U0068><U01B0><U0301><U0020><U0073><U00E1><U0075><U0020>";/
             "<U0054><U0068><U01B0><U0301><U0020><U0062><U0061><U0309><U0079>/
-<U0020>";/
-            "<U0043><U0068><U0075><U0309><U0020><U006E><U0068><U00E2><U0323>/
-<U0074><U0020>"
+<U0020>"
 %
 % Abbreviated month names (%b)
 abmon       "<U0054><U0068><U0067><U0020><U0031>";/
@@ -155,12 +157,12 @@ t_fmt       "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U005A>"
 %
 % Appropriate 12 h time representation (%r)
-t_fmt_ampm  ""
+t_fmt_ampm ""
 %
-% Appropriate date representation (date(1))   "%a %b %e %H:%M:%S %Z %Y"
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+% Appropriate date representation (date(1))   "%H:%M:%S %a %e %b %Y %Z"
+date_fmt       "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
+<U0020><U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
+<U0020><U0025><U0059><U0020><U0025><U005A>"
 END LC_TIME
 
 
@@ -186,10 +188,10 @@ LC_NAME
 name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
 <U0025><U0067>"
 name_gen    ""
-name_mr     "<U004D><U0072><U002E>"
-name_mrs    "<U004D><U0072><U0073><U002E>"
-name_miss   "<U004D><U0069><U0073><U0073><U002E>"
-name_ms     "<U004D><U0073><U002E>"
+name_mr     "<U00D4><U002E>"
+name_mrs    "<U0042><U002E>"
+name_miss   "<U0043><U002E>"
+name_ms     ""
 
 END LC_NAME
 
@@ -199,6 +201,8 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
+country_name "<U0056><U0069><U1EC7><U0074><U0020><U006E><U0061><U006D>"
+lang_name "<U0056><U0069><U1EC7><U0074><U0020><U006E><U0067><U1EEF>"
 
 END LC_ADDRESS
 
@@ -209,6 +213,7 @@ LC_TELEPHONE
 tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
 <U003B><U0025><U006C>"
 int_prefix  "<U0038><U0034>"
+int_select  "<U0030><U0030>"
 
 END LC_TELEPHONE
 

@@ -1,3 +1,8 @@
+2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/vi_VN: Fix various mistakes and add some more information.
+	Patch by Le Hong Boi <le.hong.boi@quantic.com.vn>.
+
 2002-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/dat_strfmon.c (tst_strfmon_loc): Adjust test data for

@@ -1,3 +1,20 @@
+2002-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tst-posixtz.c (tests): Add new tests.
+	(main): Test whether tzset() sets daylight properly.
+
+2002-03-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (tz_compute): Move __daylight, __tzname and
+	__tzname_cur_max setting...
+	(tzset_internal): ...here.
+
+2002-03-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzset.c (compute_change): Don't return any value.
+	(tz_compute): Likewise.  Don't handle southern hemisphere here.
+	(__tz_convert): But here.
+
 2002-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/examples/mkfsock.c: Include <string.h> as well.

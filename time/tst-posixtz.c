@@ -14,6 +14,14 @@ struct
     "1998/10/25 21:54:09 dst=1 zone=AEDST" },
   { 924864849L, "AEST-10AEDST-11,M10.5.0,M3.5.0",
     "1999/04/23 20:54:09 dst=0 zone=AEST" },
+  { 919973892L, "AEST-10AEDST-11,M10.5.0,M3.5.0",
+    "1999/02/26 07:18:12 dst=1 zone=AEDST" },
+  { 909312849L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
+    "1998/10/25 05:54:09 dst=0 zone=EST" },
+  { 924864849L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
+    "1999/04/23 06:54:09 dst=1 zone=EDT" },
+  { 919973892L, "EST+5EDT,M4.1.0/2,M10.5.0/2",
+    "1999/02/25 15:18:12 dst=0 zone=EST" },
 };
 
 int
@@ -49,6 +57,31 @@ main (void)
 	  result = 1;
 	  puts (", FAIL");
 	}
+    }
+
+  setenv ("TZ", "Universal", 1);
+  localtime (&tests[0].when);
+  printf ("TZ = \"Universal\" daylight %d tzname = { \"%s\", \"%s\" }",
+	  daylight, tzname[0], tzname[1]);
+  if (! daylight)
+    puts (", OK");
+  else
+    {
+      result = 1;
+      puts (", FAIL");
+    }
+
+  setenv ("TZ", "AEST-10AEDST-11,M10.5.0,M3.5.0", 1);
+  tzset ();
+  printf ("TZ = \"AEST-10AEDST-11,M10.5.0,M3.5.0\" daylight %d"
+	  " tzname = { \"%s\", \"%s\" }", daylight, tzname[0], tzname[1]);
+  if (daylight
+      && strcmp (tzname[0], "AEST") == 0 && strcmp (tzname[1], "AEDST") == 0)
+    puts (", OK");
+  else
+    {
+      result = 1;
+      puts (", FAIL");
     }
 
   return result;
