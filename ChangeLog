@@ -1,6 +1,11 @@
+2003-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m68020/bits/atomic.h: Avoid matching memory
+	constraints.
+
 2003-12-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/rtld.c (dl_main): Optimize order or subexpressions in if().
+	* elf/rtld.c (dl_main): Optimize order of subexpressions in if().
 
 2003-12-18  Ulrich Drepper  <drepper@redhat.com>
 
