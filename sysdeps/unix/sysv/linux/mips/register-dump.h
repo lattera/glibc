@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -105,4 +105,4 @@ register_dump (int fd, struct sigcontext *ctx)
 }
 
 
-#define REGISTER_DUMP register_dump (fd, &ctx)
+#define REGISTER_DUMP register_dump (fd, ctx)
