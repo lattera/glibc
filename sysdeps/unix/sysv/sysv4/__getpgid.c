@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+#undef __getpgid
+
 extern int __pgrpsys __P ((int type, ...));
 
 /* Get the process group ID of process PID.  */
@@ -30,3 +32,4 @@ __getpgid (pid)
 {
   return __pgrpsys (4, pid);
 }
+INTDEF(__getpgid)
