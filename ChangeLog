@@ -1,3 +1,9 @@
+1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c (day_of_the_week): Make sure result is never
+	negative.
+	(strptime_internal): Allow %C without %y.
+
 1999-11-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Sorted entries and added
@@ -27,7 +33,7 @@
 	and format for wide characters.
 	* time/strftime.c: Correctly determine era information for wide
 	wcsftime.
-	* wctrans.c: Fix after removal of second endianess table.
+	* wctype/wctrans.c: Fix after removal of second endianess table.
 	* wctype/wctype.h (_ISwbit): Correctly handle bits > 16.
 	Patches by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
@@ -5284,9 +5290,9 @@
 
 	* time/strptime.c (strptime): Initialize the tm struct first to avoid
 	returning bogus results on incomplete data.
-	(strptime_internal): day_of_the_week() requres bith tm_mon and
-	tm_mday to be initializaed.
-	Computer them first if they are not given.
+	(strptime_internal): day_of_the_week() requres both tm_mon and
+	tm_mday to be initialized.
+	Compute them first if they are not given.
 	(strptime_internal): (have_mon, have_mday): New variables.
 
 1999-07-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
