@@ -1,5 +1,10 @@
 2000-07-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (handle_ellipsis): Test for
+	duplication with generated name, not the name of the first
+	character.
+	Patch by Yong Li <yong.li@asu.edu>.
+
 	* sysdeps/powerpc/strchr.S: Correct bugs introduced in BP-ification.
 	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
 

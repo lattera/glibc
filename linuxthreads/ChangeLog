@@ -1,3 +1,10 @@
+2000-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* linuxthreads/spinlock.h: If IMPLEMENT_TAS_WITH_CAS is defined use
+	__compare_and_swap to define testandset.
+	* linuxthreads/sysdeps/powerpc/pt-machine.h: Add volatile to asms.
+	Define IMPLEMENT_TAS_WITH_CAS.
+
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Pass -z nodelete to linker for libpthread.so

@@ -1264,7 +1264,7 @@ order for `%.*s' already defined at %s:%Zu"),
 	      sprintf (buf + preflen, base == 10 ? "%d" : "%x", from);
 
 	      /* Look whether this name is already defined.  */
-	      if (find_entry (&collate->seq_table, symstr, symlen,
+	      if (find_entry (&collate->seq_table, buf, symlen,
 			      (void **) &elem) == 0)
 		{
 		  if (elem->next != NULL || (collate->cursor != NULL
