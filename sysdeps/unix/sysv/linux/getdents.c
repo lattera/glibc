@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,22 +51,23 @@ struct kernel_dirent
   };
 
 #ifdef GETDENTS64
-#define __getdirentries __getdirentries64
-#define dirent dirent64
+# define __getdents __getdents64
+# define dirent dirent64
 #endif
 
 /* The problem here is that we cannot simply read the next NBYTES
    bytes.  We need to take the additional field into account.  We use
    some heuristic.  Assuming the directory contains names with 14
-   characters on average we can compute an estimate number of entries
+   characters on average we can compute an estimated number of entries
    which fit in the buffer.  Taking this number allows us to specify a
-   correct number of bytes to read.  If we should be wrong, we can reset
-   the file descriptor.  */
+   reasonable number of bytes to read.  If we should be wrong, we can
+   reset the file descriptor.  In practice the kernel is limiting the
+   amount of data returned much more then the reduced buffer size.  */
 ssize_t
-__getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
+internal_function
+__getdents (int fd, char *buf, size_t nbytes)
 {
-  off_t base = __lseek (fd, (off_t) 0, SEEK_CUR);
-  off_t last_offset = base;
+  off_t last_offset = 0;
   size_t red_nbytes;
   struct kernel_dirent *skdp, *kdp;
   struct dirent *dp;
@@ -84,7 +85,7 @@ __getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
 
   if (retval == -1)
     return -1;
-  
+
   while ((char *) kdp < (char *) skdp + retval)
     {
       const size_t alignment = __alignof__ (struct dirent);
@@ -95,8 +96,13 @@ __getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
       if ((char *) dp + new_reclen > buf + nbytes)
 	{
 	  /* Our heuristic failed.  We read too many entries.  Reset
-	     the stream.  */
-	  __lseek (fd, last_offset, SEEK_SET);
+	     the stream.  `last_offset' contains the last known
+	     position.  If it is zero this is the first record we are
+	     reading.  In this case do a relative search.  */
+	  if (last_offset == 0)
+	    __lseek (fd, -retval, SEEK_CUR);
+	  else
+	    __lseek (fd, last_offset, SEEK_SET);
 	  break;
 	}
 
@@ -112,12 +118,5 @@ __getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
       kdp = (struct kernel_dirent *) (((char *) kdp) + kdp->d_reclen);
     }
 
-  if (basep)
-    *basep = base;
-
   return (char *) dp - buf;
 }
-
-#ifndef GETDENTS64
-weak_alias (__getdirentries, getdirentries)
-#endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,6 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  /* We've emptied out our buffer.  Refill it.  */
 
 	  size_t maxread;
-	  off_t base;
 	  ssize_t bytes;
 
 #ifndef _DIRENT_HAVE_D_RECLEN
@@ -54,8 +53,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  maxread = dirp->allocation;
 #endif
 
-	  base = dirp->filepos;
-	  bytes = __getdirentries (dirp->fd, dirp->data, maxread, &base);
+	  bytes = __getdents (dirp->fd, dirp->data, maxread);
 	  if (bytes <= 0)
 	    {
 	      dp = NULL;

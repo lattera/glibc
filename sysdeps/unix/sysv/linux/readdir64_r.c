@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,6 @@
 
 #include <dirstream.h>
 
-extern ssize_t __getdirentries64 (int, char *, size_t, off_t *);
-
-
 /* Read a directory entry from DIRP, store result in ENTRY and return
    pointer to result in *RESULT.  */
 int
@@ -47,7 +44,6 @@ readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 	  /* We've emptied out our buffer.  Refill it.  */
 
 	  size_t maxread;
-	  off_t base;
 	  ssize_t bytes;
 
 #ifndef _DIRENT_HAVE_D_RECLEN
@@ -57,8 +53,7 @@ readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 	  maxread = dirp->allocation;
 #endif
 
-	  base = dirp->filepos;
-	  bytes = __getdirentries64 (dirp->fd, dirp->data, maxread, &base);
+	  bytes = __getdents64 (dirp->fd, dirp->data, maxread);
 	  if (bytes <= 0)
 	    {
 	      dp = NULL;
