@@ -1,3 +1,10 @@
+1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/ISO-8859-13: Correct alias name (LATIN8 -> LATIN7).
+	* charmaps/ISO-8859-14: Add alias names.
+
+	* repertoiremaps/mnemonics.ds: Remove duplicates.
+
 1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/ISO-8859-13: New file.

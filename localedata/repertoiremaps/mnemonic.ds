@@ -260,17 +260,14 @@ escape_char /
 <BB>                   <U00A6> BROKEN BAR
 <!B>                   <U00A6> BROKEN BAR
 <SE>                   <U00A7> SECTION SIGN
-<So>                   <U00A7> SECTION SIGN
 <':>                   <U00A8> DIAERESIS
 <Co>                   <U00A9> COPYRIGHT SIGN
-<OC>                   <U00A9> COPYRIGHT SIGN
 <-a>                   <U00AA> FEMININE ORDINAL INDICATOR
 <<<>                   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 <NO>                   <U00AC> NOT SIGN
 <7!>                   <U00AC> NOT SIGN
 <-->                   <U00AD> SOFT HYPHEN
 <Rg>                   <U00AE> REGISTERED SIGN
-<OR>                   <U00AE> REGISTERED SIGN
 <'m>                   <U00AF> MACRON
 <DG>                   <U00B0> DEGREE SIGN
 <+->                   <U00B1> PLUS-MINUS SIGN
@@ -2256,7 +2253,6 @@ escape_char /
 <q+,>                  <UFED7> ARABIC LETTER QAF INITIAL FORM
 <q+;>                  <UFED8> ARABIC LETTER QAF MEDIAL FORM
 <k+->                  <UFED9> ARABIC LETTER KAF ISOLATED FORM
-<k+.>                  <UFEDA> ARABIC LETTER KAF FINAL FORM
 <k+.>                  <UFEDA> ARABIC LETTER KAF FINAL FORM
 <k+,>                  <UFEDB> ARABIC LETTER KAF INITIAL FORM
 <k+;>                  <UFEDC> ARABIC LETTER KAF MEDIAL FORM

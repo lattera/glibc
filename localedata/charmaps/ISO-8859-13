@@ -4,8 +4,8 @@
 % automatically generated from the charDB
 
 % alias ISO-IR-179
-% alias LATIN8    
-% alias L8        
+% alias LATIN7
+% alias L7
 CHARMAP
 <NU>                   /x00     <U0000> NULL
 <NUL>                  /x00     <U0000> NULL

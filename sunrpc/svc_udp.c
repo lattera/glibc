@@ -112,7 +112,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   SVCXPRT *xprt;
   struct svcudp_data *su;
   struct sockaddr_in addr;
-  size_t len = sizeof (struct sockaddr_in);
+  socklen_t len = sizeof (struct sockaddr_in);
 
   if (sock == RPC_ANYSOCK)
     {
@@ -192,11 +192,11 @@ svcudp_recv (xprt, msg)
   int rlen;
   char *reply;
   u_long replylen;
-  size_t len;
+  socklen_t len;
 
 again:
   /* FIXME -- should xp_addrlen be a size_t?  */
-  len = sizeof(struct sockaddr_in);
+  len = (socklen_t) sizeof(struct sockaddr_in);
   rlen = recvfrom (xprt->xp_sock, rpc_buffer (xprt), (int) su->su_iosz, 0,
 		   (struct sockaddr *) &(xprt->xp_raddr), &len);
   xprt->xp_addrlen = len;

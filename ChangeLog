@@ -1,3 +1,18 @@
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Declare len as socklen_t. 
+	(svcudp_recv): Likewise. 
+ 
+1998-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+ 
+	* nis/nss-nisplus.h: Change some mappings of NIS+ errors to 
+	NSS error codes to avoid endless loops. 
+ 
+1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gconv-modules: Correct aliases for ISO-8859-13 and add
+	aliases for ISO-8859-14.
+
 1998-12-12  Geoff Keating  <geoffk@ozemail.com.au> 
  
 	* posix/fnmatch.c (fnmatch): Arguments to FOLD must not have 
