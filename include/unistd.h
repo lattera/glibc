@@ -32,6 +32,8 @@ extern int __lchown (__const char *__file, __uid_t __owner,
 extern int __chdir (__const char *__path);
 extern int __fchdir (int __fd);
 extern char *__getcwd (char *__buf, size_t __size);
+extern int __mkdir (const char *__path, mode_t __mode);
+extern int __rmdir (const char *__path);
 
 /* Get the canonical absolute name of the named directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
