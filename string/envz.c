@@ -1,7 +1,7 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Miles Bader <miles@gnu.ai.mit.edu>
+   Written by Miles Bader <miles@gnu.org>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "envz.h"
+#include <envz.h>
 
 /* The character separating names from values in an envz.  */
 #define SEP '='
@@ -54,6 +54,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 
   return 0;
 }
+libc_hidden_def (envz_entry)
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
@@ -81,6 +82,7 @@ envz_remove (char **envz, size_t *envz_len, const char *name)
   if (entry)
     argz_delete (envz, envz_len, entry);
 }
+libc_hidden_def (envz_remove)
 
 /* Adds an entry for NAME with value VALUE to ENVZ & ENVZ_LEN.  If an entry
    with the same name already exists in ENVZ, it is removed.  If VALUE is
