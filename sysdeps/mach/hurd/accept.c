@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <hurd.h>
-#include <hurd/fd.h>
-#include <sys/socket.h>
-#include <hurd/socket.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/socket.h>
 
 /* Await a connection on socket FD.
    When a connection arrives, open a new socket to communicate with it,
@@ -33,7 +33,7 @@ int
 accept (fd, addrarg, addr_len)
       int fd;
       __SOCKADDR_ARG addrarg;
-      size_t *addr_len;
+      socklen_t *addr_len;
 {
   error_t err;
   socket_t new;
@@ -69,10 +69,11 @@ accept (fd, addrarg, addr_len)
 
   if (addr != NULL)
     {
+      if (*addr_len > buflen)
+	*addr_len = buflen;
+      
       if (buf != (char *) addr)
 	{
-	  if (*addr_len < buflen)
-	    *addr_len = buflen;
 	  memcpy (addr, buf, *addr_len);
 	  __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@
 
 #include <errno.h>
 #include <sys/socket.h>
-#include <hurd.h>
-#include <hurd/socket.h>
-#include <hurd/fd.h>
 #include <sys/un.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 #include <hurd/ifsock.h>
+#include <hurd/socket.h>
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
@@ -32,7 +32,7 @@ sendto (int fd,
 	size_t n,
 	int flags,
 	const struct sockaddr_un *addr,
-	size_t addr_len)
+	socklen_t addr_len)
 {
   addr_port_t aport;
   error_t err;
