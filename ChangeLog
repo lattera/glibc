@@ -1,3 +1,32 @@
+2004-07-01  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/fpu/bits/mathinline.h [__LIBC_INTERNAL_MATH_INLINES]
+	(__ieee754_sqrt): Define as __MATH_INLINE using sqdbr instruction.
+	(__ieee754_sqrtf): Define as __MATH_INLINE using sqebr instruction.
+	* sysdeps/s390/fpu/e_sqrt.c: New file.
+	* sysdeps/s390/fpu/e_sqrtf.c: New file.
+	* sysdeps/s390/Implies: New file.
+	* sysdeps/s390/s390-32/Implies: Remove ieee754, move
+	ieee754/dbl-64 and ieee754/flt-32 to s390/Implies.
+	* sysdeps/s390/s390-64/Implies: Likewise.
+
+2004-06-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S: Include tls.h.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (thread_start):
+	DO_CALL (exit, 1) instead of branching to _exit.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (thread_start):
+	Likewise.
+
+	* sysdeps/s390/fpu/bits/mathinline.h: New file.
+
+	* include/glob.h (glob64): Add libc_hidden_proto.
+	* sysdeps/generic/glob64.c (glob64): Add libc_hidden_def.
+	* sysdeps/gnu/glob64.c (glob64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/glob64.c (glob64): Likewise.
+
 2004-06-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update for GCC 3.4.

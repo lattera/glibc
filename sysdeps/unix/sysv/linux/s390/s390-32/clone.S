@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -59,18 +59,5 @@ thread_start:
 	ahi     %r15,-96        /* make room on the stack for the save area */
 	xc	0(4,%r15),0(%r15)
 	basr    %r14,%r1        /* jump to fn */
-#ifdef PIC
-	basr    %r12,0
-.L0:    lr      %r1,%r12
-	al      %r12,.L1-.L0(%r12)
-	al      %r1,.L2-.L0(%r1)
-	br      %r1             /* branch to _exit -> thread termination */
-.L1:	.long   _GLOBAL_OFFSET_TABLE_ - .L0
-.L2:	.long   _exit@PLT - .L0
-#else
-	basr    %r1,0
-.L0:	al      %r1,.L1-.L0(0,%r1)
-	br      %r1             /* branch to _exit -> thread termination */
-.L1:	.long   _exit - .L0
-#endif
+	DO_CALL (exit, 1)
 weak_alias (__clone, clone)

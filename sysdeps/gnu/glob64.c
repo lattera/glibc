@@ -21,4 +21,5 @@
 
 #include <sysdeps/generic/glob.c>
 
+libc_hidden_def (glob64)
 libc_hidden_def (globfree64)

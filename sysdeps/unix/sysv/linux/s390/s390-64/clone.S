@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.  64 bit S/390 version.
-   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -60,9 +60,5 @@ thread_start:
 	aghi	%r15,-160	/* make room on the stack for the save area */
 	xc	0(8,%r15),0(%r15)
 	basr	%r14,%r1	/* jump to fn */
-#ifdef PIC
-	jg	_exit@PLT	/* branch to _exit -> thread termination */
-#else
-	jg	_exit		/* branch to _exit -> thread termination */
-#endif
+	DO_CALL	(exit, 1)
 weak_alias (__clone, clone)

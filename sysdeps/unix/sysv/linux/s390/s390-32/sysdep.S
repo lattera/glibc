@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tls.h>
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines

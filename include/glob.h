@@ -2,6 +2,7 @@
 #include <posix/glob.h>
 
 libc_hidden_proto (glob)
+libc_hidden_proto (glob64)
 libc_hidden_proto (globfree)
 libc_hidden_proto (globfree64)
 
