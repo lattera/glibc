@@ -1,3 +1,8 @@
+2002-03-23  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/posix/shm_open.c (SHMDIR): /var/run/shm -> /dev/shm
+	* sysdeps/posix/shm_unlink.c: Likewise.
+
 2002-03-22  Roland McGrath  <roland@frob.com>
 
 	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu.*): Make 2.2.6 default.
