@@ -648,7 +648,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buff
 #ifdef __USE_XOPEN2K
 /* Get ID of CPU-time clock for thread THREAD_ID.  */
 extern int pthread_getcpuclockid (pthread_t __thread_id,
-				  clockid_t *__clock_id) __THROW;
+				  __clockid_t *__clock_id) __THROW;
 #endif
 
 

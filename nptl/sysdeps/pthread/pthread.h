@@ -915,7 +915,7 @@ extern int pthread_setspecific (pthread_key_t __key,
 #ifdef __USE_XOPEN2K
 /* Get ID of CPU-time clock for thread THREAD_ID.  */
 extern int pthread_getcpuclockid (pthread_t __thread_id,
-				  clockid_t *__clock_id) __THROW;
+				  __clockid_t *__clock_id) __THROW;
 #endif
 
 

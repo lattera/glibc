@@ -1,3 +1,9 @@
+2004-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #284]
+	* sysdeps/pthread/pthread.h (pthread_getcpuclockid): Use __clockid_t
+	instead of clockid_t.
+
 2004-07-21  Roland McGrath  <roland@redhat.com>
 
 	* Makefile ($(objpfx)multidir.mk): Use $(make-target-directory).
