@@ -1,3 +1,7 @@
+2000-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Correct problems found by test suite.
+
 2000-06-28  Andreas Jaeger  <aj@suse.de>
 
 	* tests-mbwc/tst_wcscat.c (tst_wcscat): Correct format to avoid

@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -49,7 +49,7 @@ jisx0208_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   unsigned char ch2;
   int idx;
 
-  if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0xea)
+  if (ch < offset || (ch - offset) <= 0x20)
     return __UNKNOWN_10646_CHAR;
 
   if (avail < 2)

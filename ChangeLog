@@ -1,3 +1,7 @@
+2000-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/jis0208.h: Remove redundant test.
+
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/initfini.c (SECTION): Remove trailing semicolon.

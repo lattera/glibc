@@ -132,7 +132,8 @@ do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test
 	$(SHELL) -e $< $(common-objpfx)
-$(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: do-tst-ctype
+$(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: do-tst-ctype\
+	do-tst-mbswcs
 endif
 endif
 
