@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    greater than zero if S1 is lexicographically less
    than, equal to or greater than S2.  */
 int
-DEFUN(strncasecmp, (s1, s2, n),
+DEFUN(__strncasecmp, (s1, s2, n),
       CONST char *s1 AND CONST char *s2 AND size_t n)
 {
   register CONST unsigned char *p1 = (CONST unsigned char *) s1;
@@ -45,3 +45,4 @@ DEFUN(strncasecmp, (s1, s2, n),
 
   return c1 - c2;
 }
+weak_alias (__strncasecmp, strncasecmp)

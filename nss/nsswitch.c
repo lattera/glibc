@@ -38,6 +38,7 @@ static void nss_insert_entry (struct entry **knownp, const char *key,
 			      void *val);
 static name_database *nss_parse_file (const char *fname);
 static name_database_entry *nss_getline (char *line);
+static service_user *nss_parse_service_list (const char *line);
 static service_library *nss_new_service (name_database *database,
 					 const char *name);
 
@@ -47,17 +48,6 @@ __libc_lock_define_initialized (static, lock);
 
 /* Global variable.  */
 struct __res_state _res;
-
-
-/* Known aliases for service names.  */
-static struct {
-  const char *alias;
-  const char *value;
-} service_alias[] =
-{
-  { "nis+", "nisplus" },
-  { "yp", "nis" }
-};
 
 
 /* Nonzero if the sevices are already initialized.  */
@@ -84,8 +74,11 @@ nss_init (void)
 /* -1 == database not found
     0 == database entry pointer stored */
 int
-__nss_database_lookup (const char *database, service_user **ni)
+__nss_database_lookup (const char *database, const char *defconfig,
+		       service_user **ni)
 {
+  name_database_entry *entry;
+
   if (nss_initialized == 0)
     nss_init ();
 
@@ -94,7 +87,6 @@ __nss_database_lookup (const char *database, service_user **ni)
     {
       /* Return first `service_user' entry for DATABASE.
 	 XXX Will use perfect hashing function for known databases.  */
-      name_database_entry *entry;
 
       /* XXX Could use some faster mechanism here.  But each database is
 	 only requested once and so this might not be critical.  */
@@ -107,29 +99,17 @@ __nss_database_lookup (const char *database, service_user **ni)
     }
 
   /* No configuration data is available, either because nsswitch.conf
-     doesn't exist or because it doesn't have a line for this database.
-     Use a default equivalent to:
-     	database: compat [NOTFOUND=return] dns [NOTFOUND=return] files
-     */
-  {
-#define DEFAULT_SERVICE(name, next)					      \
-    static service_user default_##name =				      \
-      {									      \
-	#name,								      \
-	{								      \
-	  NSS_ACTION_CONTINUE,						      \
-	  NSS_ACTION_CONTINUE,						      \
-	  NSS_ACTION_RETURN,						      \
-	  NSS_ACTION_RETURN,						      \
-	},								      \
-	NULL, NULL,							      \
-	next								      \
-      }
-    DEFAULT_SERVICE (files, NULL);
-    DEFAULT_SERVICE (dns, &default_files);
-    DEFAULT_SERVICE (compat, &default_dns);
-    *ni = &default_compat;
-  }
+     doesn't exist or because it doesn't have a line for this database.  */
+  entry = malloc (sizeof *entry);
+  if (entry == NULL)
+    return -1;
+  entry->name = database;
+  /* DEFCONFIG specifies the default service list for this database,
+     or null to use the most common default.  */
+  entry->service = nss_parse_service_list (defconfig ?:
+					   "compat [NOTFOUND=return] files");
+
+  *ni = entry->service;
   return 0;
 }
 
@@ -246,9 +226,7 @@ nss_lookup_function (service_user *ni, const char *fct_name)
 
       void do_open (void)
 	{
-	  /* The used function is found in GNU ld.so.  XXX The first
-	     argument to _dl_open used to be `_dl_loaded'.  But this
-	     does (currently) not work.  */
+	  /* Open and relocate the shared object.  */
 	  ni->library->lib_handle = _dl_open (shlib_name, RTLD_LAZY);
 	}
 
@@ -370,7 +348,7 @@ nss_parse_file (const char *fname)
       ssize_t n;
       char *cp;
 
-      n = getline (&line, &len, fp);
+      n = __getline (&line, &len, fp);
       if (n < 0)
 	break;
       if (line[n - 1] == '\n')
@@ -410,48 +388,16 @@ nss_parse_file (const char *fname)
 }
 
 
-static name_database_entry *
-nss_getline (char *line)
+/* Read the source names: `<source> ( "[" <status> "=" <action> "]" )*'.  */
+static service_user *
+nss_parse_service_list (const char *line)
 {
-  const char *name;
-  name_database_entry *result;
-  service_user *last;
+  service_user *result = NULL, **nextp = &result;
 
-  /* Ignore leading white spaces.  ATTENTION: this is different from
-     what is implemented in Solaris.  The Solaris man page says a line
-     beginning with a white space character is ignored.  We regard
-     this as just another misfeature in Solaris.  */
-  while (isspace (line[0]))
-    ++line;
-
-  /* Recognize `<database> ":"'.  */
-  name = line;
-  while (line[0] != '\0' && !isspace (line[0]) && line[0] != ':')
-    ++line;
-  if (line[0] == '\0' || name == line)
-    /* Syntax error.  */
-    return NULL;
-  *line++ = '\0';
-
-  result = (name_database_entry *) malloc (sizeof (name_database_entry));
-  if (result == NULL)
-    return NULL;
-
-  result->name = strdup (name);
-  if (result->name == NULL)
-    {
-      free (result);
-      return NULL;
-    }
-  result->service = NULL;
-  result->next = NULL;
-  last = NULL;
-
-  /* Read the source names: `<source> ( "[" <status> "=" <action> "]" )*'.  */
   while (1)
     {
       service_user *new_service;
-      size_t n;
+      char *name;
 
       while (isspace (line[0]))
 	++line;
@@ -470,15 +416,6 @@ nss_getline (char *line)
       new_service = (service_user *) malloc (sizeof (service_user));
       if (new_service == NULL)
 	return result;
-
-      /* Test whether the source name is one of the aliases.  */
-      for (n = 0; n < sizeof (service_alias) / sizeof (service_alias[0]); ++n)
-	if (strncmp (service_alias[n].alias, name, line - name) == 0
-	    && service_alias[n].alias[line - name] == '\0')
-	  break;
-
-      if (n < sizeof (service_alias) / sizeof (service_alias[0]))
-	new_service->name = service_alias[n].value;
       else
 	{
 	  char *source = (char *) malloc (line - name + 1);
@@ -507,8 +444,6 @@ nss_getline (char *line)
 
       if (line[0] == '[')
 	{
-	  int status;
-
 	  /* Read criterions.  */
 	  do
 	    ++line;
@@ -516,6 +451,14 @@ nss_getline (char *line)
 
 	  do
 	    {
+	      int not;
+	      enum nss_status status;
+	      lookup_actions action;
+
+	      /* Grok ! before name to mean all statii but that one.  */
+	      if (not = line[0] == '!')
+		++line;
+
 	      /* Read status name.  */
 	      name = line;
 	      while (line[0] != '\0' && !isspace (line[0]) && line[0] != '='
@@ -525,18 +468,18 @@ nss_getline (char *line)
 	      /* Compare with known statii.  */
 	      if (line - name == 7)
 		{
-		  if (strncasecmp (name, "SUCCESS", 7) == 0)
+		  if (__strncasecmp (name, "SUCCESS", 7) == 0)
 		    status = NSS_STATUS_SUCCESS;
-		  else if (strncasecmp (name, "UNAVAIL", 7) == 0)
+		  else if (__strncasecmp (name, "UNAVAIL", 7) == 0)
 		    status = NSS_STATUS_UNAVAIL;
 		  else
 		    return result;
 		}
 	      else if (line - name == 8)
 		{
-		  if (strncasecmp (name, "NOTFOUND", 8) == 0)
+		  if (__strncasecmp (name, "NOTFOUND", 8) == 0)
 		    status = NSS_STATUS_NOTFOUND;
-		  else if (strncasecmp (name, "TRYAGAIN", 8) == 0)
+		  else if (__strncasecmp (name, "TRYAGAIN", 8) == 0)
 		    status = NSS_STATUS_TRYAGAIN;
 		  else
 		    return result;
@@ -557,15 +500,29 @@ nss_getline (char *line)
 		     && line[0] != ']')
 		++line;
 
-	      if (line - name == 6 && strncasecmp (name, "RETURN", 6) == 0)
-		new_service->actions[2 + status] = NSS_ACTION_RETURN;
+	      if (line - name == 6 && __strncasecmp (name, "RETURN", 6) == 0)
+		action = NSS_ACTION_RETURN;
 	      else if (line - name == 8
-		       && strncasecmp (name, "CONTINUE", 8) == 0)
-		new_service->actions[2 + status] = NSS_ACTION_CONTINUE;
+		       && __strncasecmp (name, "CONTINUE", 8) == 0)
+		action = NSS_ACTION_CONTINUE;
 	      else
 		return result;
 
-	      /* Match white spaces.  */
+	      if (not)
+		{
+		  /* Save the current action setting for this status,
+		     set them all to the given action, and reset this one.  */
+		  const lookup_actions save = new_service->actions[2 + status];
+		  new_service->actions[2 + NSS_STATUS_TRYAGAIN] = action;
+		  new_service->actions[2 + NSS_STATUS_UNAVAIL] = action;
+		  new_service->actions[2 + NSS_STATUS_NOTFOUND] = action;
+		  new_service->actions[2 + NSS_STATUS_SUCCESS] = action;
+		  new_service->actions[2 + status] = save;
+		}
+	      else
+		new_service->actions[2 + status] = action;
+
+	      /* Skip white spaces.  */
 	      while (isspace (line[0]))
 		++line;
 	    }
@@ -575,14 +532,54 @@ nss_getline (char *line)
 	  ++line;
 	}
 
-      if (last == NULL)
-	result->service = new_service;
-      else
-	last->next = new_service;
-      last = new_service;
+      *nextp = new_service;
+      nextp = &new_service->next;
     }
-  /* NOTREACHED */
-  return NULL;
+}
+
+static name_database_entry *
+nss_getline (char *line)
+{
+  const char *name;
+  name_database_entry *result;
+
+  /* Ignore leading white spaces.  ATTENTION: this is different from
+     what is implemented in Solaris.  The Solaris man page says a line
+     beginning with a white space character is ignored.  We regard
+     this as just another misfeature in Solaris.  */
+  while (isspace (line[0]))
+    ++line;
+
+  /* Recognize `<database> ":"'.  */
+  name = line;
+  while (line[0] != '\0' && !isspace (line[0]) && line[0] != ':')
+    ++line;
+  if (line[0] == '\0' || name == line)
+    /* Syntax error.  */
+    return NULL;
+  *line++ = '\0';
+
+  result = (name_database_entry *) malloc (sizeof (name_database_entry));
+  if (result == NULL)
+    return NULL;
+
+  /* Save the database name.  */
+  {
+    const size_t len = strlen (name) + 1;
+    char *new = malloc (len);
+    if (new == NULL)
+      {
+	free (result);
+	return NULL;
+      }
+    result->name = memcpy (new, name, len);
+  }
+
+  /* Parse the list of services.  */
+  result->service = nss_parse_service_list (line);
+
+  result->next = NULL;
+  return result;
 }
 
 

@@ -107,7 +107,7 @@ parse_list (char *line, struct parser_data *data, int datalen)
   char *eol, **list, **p;
 
   /* Find the end of the line buffer.  */
-  eol = strchr (line, '\0');
+  eol = strchr (line, '\0') + 1;
   /* Adjust the pointer so it is aligned for storing pointers.  */
   eol += (eol - (char *) 0) % __alignof__ (char *);
   /* We will start the storage here for the vector of pointers.  */

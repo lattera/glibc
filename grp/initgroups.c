@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,43 +31,66 @@ int
 DEFUN(initgroups, (user, group),
       CONST char *user AND gid_t group)
 {
-#ifdef NGROUPS_MAX
-#if NGROUPS_MAX == 0
+#if defined (NGROUPS_MAX) && NGROUPS_MAX == 0
+
+  /* No extra groups allowed.  */
   return 0;
+
 #else
-  static PTR info = NULL;
-  register FILE *stream;
-  register struct group *g;
-  gid_t groups[NGROUPS_MAX];
+
+  struct group *g;
   register size_t n;
+#ifdef NGROUPS_MAX
+  gid_t groups[NGROUPS_MAX];
+#else
+  long int limit = sysconf (_SC_NGROUPS_MAX);
+  gid_t *groups;
+  size_t ngroups;
 
-  if (info == NULL)
-    {
-      info = __grpalloc();
-      if (info == NULL)
-	return -1;
-    }
+  if (limit > 0)
+    ngroups = limit;
+  else
+    /* No fixed limit on groups.  Pick a starting buffer size.  */
+    ngroups = 16;
 
-  stream = __grpopen();
-  if (stream == NULL)
-    return -1;
+  groups = __alloca (ngroups * sizeof *groups);
+#endif
+
+  setgrent ();
 
   n = 0;
   groups[n++] = group;
 
-  while (n < NGROUPS_MAX && (g = __grpread(stream, info)) != NULL)
+  while ((g = getgrent ()) != NULL)
     if (g->gr_gid != group)
       {
 	register char **m;
 
 	for (m = g->gr_mem; *m != NULL; ++m)
-	  if (!strcmp(*m, user))
+	  if (!strcmp (*m, user))
+	    break;
+
+	if (*m == NULL)
+	  {
+	    /* Matched the user.  Insert this group.  */
+	    if (n == ngroups && limit <= 0)
+	      {
+		/* Need a bigger buffer.  */
+		groups = memcpy (__alloca (ngroups * 2 * sizeof *groups),
+				 groups, ngroups * sizeof *groups);
+		ngroups *= 2;
+	      }
+
 	    groups[n++] = g->gr_gid;
+
+	    if (n == limit)
+	      /* Can't take any more groups; stop searching.  */
+	      break;
+	  }
       }
 
-  return setgroups(n, groups);
-#endif
-#else
-  return 0;
+  endgrent ();
+
+  return setgroups (n, groups);
 #endif
 }

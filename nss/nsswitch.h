@@ -108,9 +108,12 @@ typedef struct name_database
 
 /* Interface functions for NSS.  */
 
-/* Get the data structure representing the specified database.  More
+/* Get the data structure representing the specified database.
+   If there is no configuration for this database in the file,
+   parse a service list from DEFCONFIG and use that.  More
    than one function can use the database.  */
-int __nss_database_lookup (const char *database, service_user **ni);
+int __nss_database_lookup (const char *database, const char *defconfig,
+			   service_user **ni);
 
 
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The

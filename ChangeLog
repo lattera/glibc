@@ -1,3 +1,46 @@
+Wed Jun 26 01:58:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* nss/nss_files/files-parse.c (parse_list): Count null in EOL calc.
+
+	Move DB code into separate -ldb library.
+	* db/Makefile (extra-libs): New variable, list libdb.
+	(routines): Renamed to libdb-routines.
+	* shlib-versions: Add libdb=2.
+
+	* nss/network-lookup.c (DEFAULT_CONFIG): New macro.
+	* nss/host-lookup.c (DEFAULT_CONFIG): New macro.
+
+	* nss/nsswitch.c (nss_parse_service_list): Use __strncasecmp instead
+	of strncasecmp.  Extend syntax to grok [!foo=bar].
+
+	* sysdeps/generic/strncase.c: Define __strncasecmp with strncasecmp as
+	weak alias.
+	* string/string.h: Declare __strncasecmp.
+
+	* nss/nsswitch.c (nss_parse_file): Call __getline, not getline.
+	(service_alias): Variable removed.
+	(nss_parse_service_list): New function, broken out of nss_getline.
+	Remove alias conversion; we will just use symlinks.
+	(__nss_database_lookup): Take new string arg DEFCONFIG.
+	If no entry exists, make one with service list parsed from that.
+	* nss/nsswitch.h: Update protocol for __nss_database_lookup.
+	* nss/XXX-lookup.c (DEFAULT_CONFIG): New macro, set to 0 if undefined.
+	(DB_LOOKUP_FCT): Pass it to _nss_database_lookup.
+
+	* grp/initgroups.c: Rewritten using getgrent.  Handle unlimited group
+	list size.
+
+	* sunrpc/xdr.c (xdr_int): #if 0 out unresolved references in dead code.
+
+Wed Jun 26 01:56:50 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locale.c (long_options): Short form of
+	--version option is `-V'.
+	(main): Recognize `-V' as option, not `-v'.
+	Call `usage' instead of printing error message for illegal
+	option.
+	(usage): Document `-V'.
+
 Tue Jun 25 17:22:55 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/getcwd.c

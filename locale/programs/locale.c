@@ -49,7 +49,7 @@ static const struct option long_options[] =
   { "charmaps", no_argument, NULL, 'm' },
   { "help", no_argument, NULL, 'h' },
   { "keyword-name", no_argument, &show_keyword_name, 1 },
-  { "version", no_argument, NULL, 'v' },
+  { "version", no_argument, NULL, 'V' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -130,7 +130,7 @@ main (int argc, char *argv[])
   int do_version = 0;
   int do_charmaps = 0;
 
-  /* Set initial values for global varaibles.  */
+  /* Set initial values for global variables.  */
   show_category_name = 0;
   show_keyword_name = 0;
 
@@ -142,7 +142,7 @@ main (int argc, char *argv[])
   /* Initialize the message catalog.  */
   textdomain (PACKAGE);
 
-  while ((optchar = getopt_long (argc, argv, "achkmv", long_options, NULL))
+  while ((optchar = getopt_long (argc, argv, "achkmV", long_options, NULL))
          != EOF)
     switch (optchar)
       {
@@ -163,12 +163,11 @@ main (int argc, char *argv[])
       case 'm':
 	do_charmaps = 1;
 	break;
-      case 'v':
+      case 'V':
 	do_version = 1;
 	break;
       default:
-	error (1, 0, gettext ("illegal option \"%s\""), optarg);
-	break;
+	usage (EXIT_FAILURE);
       }
 
   /* Version information is requested.  */
@@ -219,25 +218,24 @@ main (int argc, char *argv[])
 
 /* Display usage information and exit.  */
 static void
-usage(int status)
+usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
              program_invocation_name);
   else
-    printf(gettext ("\
+    printf (gettext ("\
 Usage: %s [OPTION]... name\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -h, --help            display this help and exit\n\
-  -v, --version         output version information and exit\n\
+  -V, --version         output version information and exit\n\
 \n\
   -a, --all-locales     write names of available locales\n\
   -m, --charmaps        write names of available charmaps\n\
 \n\
   -c, --category-name   write names of selected categories\n\
-  -k, --keyword-name    write names of selected keywords\n\
-\n\
-"), program_invocation_name);
+  -k, --keyword-name    write names of selected keywords\n"),
+	    program_invocation_name);
 
   exit (status);
 }

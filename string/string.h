@@ -185,6 +185,8 @@ extern int __strcasecmp __P ((__const char *__s1, __const char *__s2));
 extern int strcasecmp __P ((__const char *__s1, __const char *__s2));
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
+extern int __strncasecmp __P ((__const char *__s1, __const char *__s2,
+			       size_t __n));
 extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
 			     size_t __n));
 

@@ -25,6 +25,10 @@ Boston, MA 02111-1307, USA.  */
 |* DATABASE_NAME - name of the database the function accesses	   *|
 |*		   (e.g., hosts, servicess, ...)		   *|
 |* 								   *|
+|* One additional symbol may optionally be defined:		   *|
+|* 								   *|
+|* DEFAULT_CONFIG - string for default conf (e.g. "dns files")	   *|
+|* 								   *|
 \*******************************************************************/
 
 #define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
@@ -35,6 +39,9 @@ Boston, MA 02111-1307, USA.  */
 #define STRINGIFY1(Name) STRINGIFY2 (Name)
 #define STRINGIFY2(Name) #Name
 
+#ifndef DEFAULT_CONFIG
+#define DEFAULT_CONFIG 0
+#endif
 
 static service_user *database = NULL;
 
@@ -42,7 +49,8 @@ int
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp)
 {
   if (database == NULL
-      && __nss_database_lookup (DATABASE_NAME_STRING, &database) < 0)
+      && __nss_database_lookup (DATABASE_NAME_STRING, DEFAULT_CONFIG,
+				&database) < 0)
     return -1;
 
   *ni = database;
