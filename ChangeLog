@@ -1,3 +1,12 @@
+2001-01-06  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/fstatfs64.c: New file.
+	* sysdeps/mach/hurd/fstatvfs64.c: New file.
+	* sysdeps/mach/hurd/statfs64.c: New file.
+	* sysdeps/mach/hurd/statvfs64.c: New file.
+	* sysdeps/mach/hurd/statfsconv.c: New file.
+	* sysdeps/mach/hurd/Dist: Add statfsconv.c.
+
 2001-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c: Reset outbuf for next round of the loop.
