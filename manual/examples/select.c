@@ -1,4 +1,5 @@
 /*@group*/
+#include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -6,7 +7,7 @@
 /*@end group*/
 
 /*@group*/
-int 
+int
 input_timeout (int filedes, unsigned int seconds)
 {
   fd_set set;

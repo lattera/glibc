@@ -2829,7 +2829,7 @@ int
 set_cloexec_flag (int desc, int value)
 @{
   int oldflags = fcntl (desc, F_GETFD, 0);
-  /* @r{If reading the flags failed, return error indication now.}
+  /* @r{If reading the flags failed, return error indication now.} */
   if (oldflags < 0)
     return oldflags;
   /* @r{Set just the flag we want to set.} */

@@ -1,3 +1,9 @@
+2002-11-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/useldt.h [PIC] (USETLS_LOAD_EBX): Use correct input
+	register number.
+	(DO_SET_THREAD_AREA): Mark asm output specifiers correctly.
+
 2002-10-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* manager.c (pthread_start_thread): Call __uselocale even

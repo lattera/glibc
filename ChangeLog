@@ -1,3 +1,13 @@
+2002-11-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/examples/dir.c: Don't include <stddef.h>.
+	* manual/examples/select.c: Include <errno.h> for TEMP_FAILURE_RETRY.
+	Reported by Frédéric Delanoy <delanoy_f@yahoo.com>.
+
+2002-11-02  H.J. Lu  <hjl@gnu.org>
+
+	* stdio-common/reg-printf.c: Include <stddef.h>.
+
 2002-11-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-tls.c: Define _dl_tls_static_used.

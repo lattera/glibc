@@ -76,7 +76,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 
 #ifdef __PIC__
 # define USETLS_EBX_ARG "r"
-# define USETLS_LOAD_EBX "xchgl %3, %%ebx\n\t"
+# define USETLS_LOAD_EBX "xchgl %1, %%ebx\n\t"
 #else
 # define USETLS_EBX_ARG "b"
 # define USETLS_LOAD_EBX
@@ -108,7 +108,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	     "movl %2, %%eax\n\t"					      \
 	     "int $0x80\n\t"						      \
 	     USETLS_LOAD_EBX						      \
-	     : "&a" (__result)						      \
+	     : "=&a" (__result)						      \
 	     : USETLS_EBX_ARG (&ldt_entry), "i" (__NR_set_thread_area));      \
       if (__result == 0)						      \
 	asm ("movw %w0, %%gs" :: "q" (__gs));				      \
@@ -126,7 +126,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	     "movl %2, %%eax\n\t"					      \
 	     "int $0x80\n\t"						      \
 	     USETLS_LOAD_EBX						      \
-	     : "&a" (__result)						      \
+	     : "=&a" (__result)						      \
 	     : USETLS_EBX_ARG (&ldt_entry), "i" (__NR_set_thread_area));      \
       if (__result == 0)						      \
 	{								      \
