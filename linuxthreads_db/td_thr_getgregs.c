@@ -1,5 +1,5 @@
 /* Get a thread's general register set.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -30,8 +30,10 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   if (th->th_unique == NULL)
     {
-      /* No data yet.  */
-      memset (gregs, '\0', sizeof (prgregset_t));
+      /* No data yet.  Use the main thread.  */
+      pid_t pid = ps_getpid (th->th_ta_p->ph);
+      if (ps_lgetregs (th->th_ta_p->ph, pid, gregs) != PS_OK)
+	return TD_ERR;
       return TD_OK;
     }
 

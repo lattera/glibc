@@ -787,22 +787,15 @@ search_dir (const struct dir_entry *entry)
 	  continue;
 	}
 
-      if (real_name != real_file_name)
-	free (real_name);
-
-      /* A link may just point to itself.  */
+      /* Links will just point to itself.  */
       if (is_link)
 	{
-	  /* If the path the link points to isn't its soname, we treat
-	     it as a normal file.  */
-	  if (strcmp (basename (real_name), soname) != 0)
-	    is_link = 0;
-	  else
-	    {
-	      free (soname);
-	      soname = xstrdup (direntry->d_name);
-	    }
+	  free (soname);
+	  soname = xstrdup (direntry->d_name);
 	}
+
+      if (real_name != real_file_name)
+	free (real_name);
 
       if (flag == FLAG_ELF
 	  && (entry->flag == FLAG_ELF_LIBC5

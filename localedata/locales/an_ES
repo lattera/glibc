@@ -26,10 +26,10 @@ contact    "Jordi Mallach Pérez"
 email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
-language   "an"
-territory  "ES"
-revision   "1.0"
-date       "2003-06-15"
+language   "Aragonese"
+territory  "Spain"
+revision   "1.1"
+date       "2003-08-25"
 %
 category  "i18n:1999";LC_IDENTIFICATION
 category  "i18n:1999";LC_CTYPE
