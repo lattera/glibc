@@ -1,3 +1,9 @@
+2000-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust some values for the
+	crappy i486 FPU.
+	Reported by Michael Deutschmann <michael@talamasca.ocis.net>.
+
 2000-11-14  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/ia64/_mcount.S: Call __mcount instead of __mcount_internal.

@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-11-27
+GNU C Library NEWS -- history of user-visible changes.  2000-11-28
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -20,6 +20,10 @@ Version 2.2.1
   to select the charset (ISO-8859-2 in this case).
 
   Implemented by Shinya Hanataka and Ulrich Drepper.
+
+* New codeset conversion modules: IBM-922  (Estonia PC codeset),
+  IBM-1124 (Ukraine PC codeset), IBM-1129 (Vietnamese PC codeset).
+  Contributed by Masahide Washizawa <washi@jp.ibm.com>.
 
 Version 2.2
 
@@ -118,24 +122,25 @@ Recommended Tools for Compilation
 least the following versions of the GNU tools (the :
 
    * The Cygnus toolchain snapshot for the ia64 as of August 4
-     including the provided set of patches.
+     including the provided set of patches.  It is however recommend
+     you use the October 24 toolchain snapshot or a more recent version.
 
    OR alternatively you can try the following (the Cygnus toolchain is
    the recommended solution):
 
    * GCC and binutils, GAS and GNU LD out of CVS from
-     sources.redhat.com as of August 28, 2000 or later. The CVS tree
+     sources.redhat.com as of August 28, 2000 or later.  The CVS tree
      may require special patches to work properly on the ia64.
 
 Configuring and compiling GNU Libc for Linux/ia64
 =================================================
 
    The library requires Linux kernel version 2.4.0-test4-000728 or
-later to funtion properly. Besides that it currently does not have
-support for debug and profiling libraries. Hence the following options
+later to funtion properly. Besides that it support for debug libraries
+is currently untested. Hence the following options
 are required for configuring the library:
 
-   --disable-debug --disable-profile --enable-kernel=2.4.0
+   --disable-debug --enable-kernel=2.4.0
 
    It is also important that you make sure the library picks up the
 appropriate kernel header files, if you do not have recent enough
@@ -146,7 +151,6 @@ kernel headers in /usr/src/linux/include, you should use the
 the library:
 
    --disable-debug
-   --disable-profile
    --disable-cvs
    --enable-kernel=2.4.0
    --host=ia64-linux
@@ -158,7 +162,7 @@ the library:
 Good luck
 
 Jes Sorensen <jes@linuxcare.com>,
-August 28th, 2000
+November 14th, 2000
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 2.1.3
