@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,93,1995-1997,1999-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995-1997,1999-2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +38,8 @@ __sysconf (name)
 {
   switch (name)
     {
+      /* Also add obsolete or unnecessarily added constants here.  */
+    case _SC_EQUIV_CLASS_MAX:
     default:
       __set_errno (EINVAL);
       return -1;
@@ -385,6 +388,7 @@ __sysconf (name)
       return -1;
 #endif
 
+      /* The same as _SC_IOV_MAX.  */
     case _SC_UIO_MAXIOV:
 #ifdef	UIO_MAXIOV
       return UIO_MAXIOV;
@@ -461,6 +465,13 @@ __sysconf (name)
     case _SC_2_FORT_DEV:
 #ifdef	_POSIX2_FORT_DEV
       return _POSIX2_FORT_DEV;
+#else
+      return -1;
+#endif
+
+    case _SC_2_FORT_RUN:
+#ifdef	_POSIX2_FORT_RUN
+      return _POSIX2_FORT_RUN;
 #else
       return -1;
 #endif
@@ -1095,6 +1106,12 @@ __sysconf (name)
 #else
       return -1;
 #endif
+    case _SC_2_PBS_MESSAGE:
+#ifdef _POSIX2_PBS_MESSAGE
+      return _POSIX2_PBS_MESSAGE;
+#else
+      return -1;
+#endif
     case _SC_2_PBS_TRACK:
 #ifdef _POSIX2_PBS_TRACK
       return _POSIX2_PBS_TRACK;
@@ -1112,6 +1129,38 @@ __sysconf (name)
     case _SC_STREAMS:
 #ifdef _XOPEN_STREAMS
       return _XOPEN_STREAMS;
+#else
+      return -1;
+#endif
+
+    case _SC_HOST_NAME_MAX:
+#ifdef HOST_NAME_MAX
+      return HOST_NAME_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_TRACE:
+#ifdef _POSIX_TRACE
+      return _POSIX_TRACE;
+#else
+      return -1;
+#endif
+    case _SC_TRACE_EVENT_FILTER:
+#ifdef _POSIX_TRACE_EVENT_FILTER
+      return _POSIX_TRACE_EVENT_FILTER;
+#else
+      return -1;
+#endif
+    case _SC_TRACE_INHERIT:
+#ifdef _POSIX_TRACE_INHERIT
+      return _POSIX_TRACE_INHERIT;
+#else
+      return -1;
+#endif
+    case _SC_TRACE_LOG:
+#ifdef _POSIX_TRACE_LOG
+      return _POSIX_TRACE_LOG;
 #else
       return -1;
 #endif

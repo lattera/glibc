@@ -1,3 +1,8 @@
+2004-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Add missing support for
+	some _SC_* values.
+
 2004-03-10  Chris Heath  <chris@heathens.co.nz>
 
 	* iconvdata/gconv.map: Add gconv_end (fixes memory leak).
