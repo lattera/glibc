@@ -23,6 +23,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
+#include <grp.h>
 #include <libintl.h>
 #include <locale.h>
 #include <pthread.h>
