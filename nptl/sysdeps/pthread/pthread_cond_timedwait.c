@@ -98,9 +98,6 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   while (1)
     {
-      /* Prepare to wait.  Release the condvar futex.  */
-      lll_mutex_unlock (cond->__data.__lock);
-
       struct timespec rt;
       {
 #ifdef __NR_clock_gettime
@@ -142,12 +139,10 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	}
       /* Did we already time out?  */
       if (__builtin_expect (rt.tv_sec < 0, 0))
-	{
-	  /* We are going to look at shared data again, so get the lock.  */
-	  lll_mutex_lock(cond->__data.__lock);
+	goto timeout;
 
-	  goto timeout;
-	}
+      /* Prepare to wait.  Release the condvar futex.  */
+      lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       cbuffer.oldtype = __pthread_enable_asynccancel ();

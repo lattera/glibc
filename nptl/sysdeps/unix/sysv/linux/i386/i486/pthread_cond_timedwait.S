@@ -92,21 +92,8 @@ __pthread_cond_timedwait:
 	movl	%edi, 12(%esp)
 	movl	%edx, 16(%esp)
 
-	/* Unlock.  */
-8:	LOCK
-#if cond_lock == 0
-	subl	$1, (%ebx)
-#else
-	subl	$1, cond_lock(%ebx)
-#endif
-	jne	3f
-
-.LcleanupSTART:
-4:	call	__pthread_enable_asynccancel
-	movl	%eax, (%esp)
-
 	/* Get the current time.  */
-	movl	%ebx, %edx
+8:	movl	%ebx, %edx
 .LebxmovedUR:
 #ifdef __NR_clock_gettime
 	/* Get the clock number.  Note that the field in the condvar
@@ -156,6 +143,20 @@ __pthread_cond_timedwait:
 	/* Store relative timeout.  */
 21:	movl	%ecx, 4(%esp)
 	movl	%edx, 8(%esp)
+
+	/* Unlock.  */
+	LOCK
+#if cond_lock == 0
+	subl	$1, (%ebx)
+#else
+	subl	$1, cond_lock(%ebx)
+#endif
+	jne	3f
+
+.LcleanupSTART:
+4:	call	__pthread_enable_asynccancel
+	movl	%eax, (%esp)
+
 	leal	4(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
@@ -202,20 +203,8 @@ __pthread_cond_timedwait:
 
 15:	cmpl	$-ETIMEDOUT, %esi
 	jne	8b
-	jmp	24f
 
-	/* Lock.  */
-13:	movl	$1, %edx
-	xorl	%eax, %eax
-	LOCK
-#if cond_lock == 0
-	cmpxchgl %edx, (%ebx)
-#else
-	cmpxchgl %edx, cond_lock(%ebx)
-#endif
-	jnz	23f
-
-24:	addl	$1, wakeup_seq(%ebx)
+13:	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 	movl	$ETIMEDOUT, %esi
 	jmp	14f
@@ -347,16 +336,6 @@ __pthread_cond_timedwait:
 	js	13b
 	jmp	21b
 #endif
-
-	/* Locking after time elapsed failed.  */
-23:
-#if cond_lock == 0
-	movl	%ebx, %ecx
-#else
-	leal	cond_lock(%ebx), %ecx
-#endif
-	call	__lll_mutex_lock_wait
-	jmp	24b
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

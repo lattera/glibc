@@ -1,5 +1,5 @@
 /* Skeleton for test programs.
-   Copyright (C) 1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -193,6 +193,7 @@ main (int argc, char *argv[])
   int direct = 0;	/* Directly call the test function?  */
   int status;
   int opt;
+  unsigned int timeoutfactor = 1;
   pid_t termpid;
 
 #ifdef STDOUT_UNBUFFERED
@@ -214,6 +215,19 @@ main (int argc, char *argv[])
 	CMDLINE_PROCESS
 #endif
       }
+
+  /* If set, read the test TIMEOUTFACTOR value from the environment.
+     This value is used to scale the default test timeout values. */
+  char *envstr_timeoutfactor = getenv ("TIMEOUTFACTOR");
+  if (envstr_timeoutfactor != NULL)
+    {
+      char *envstr_conv = envstr_timeoutfactor;
+      unsigned long int env_fact;
+
+      env_fact = strtoul (envstr_timeoutfactor, &envstr_conv, 0);
+      if (*envstr_conv == '\0' && envstr_conv != envstr_timeoutfactor)
+	timeoutfactor = MAX (env_fact, 1);
+    }
 
   /* Set TMPDIR to specified test directory.  */
   if (test_dir != NULL)
@@ -306,7 +320,7 @@ main (int argc, char *argv[])
 # define TIMEOUT 2
 #endif
   signal (SIGALRM, timeout_handler);
-  alarm (TIMEOUT);
+  alarm (TIMEOUT * timeoutfactor);
 
   /* Wait for the regular termination.  */
   termpid = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));

@@ -1,3 +1,15 @@
+2004-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Perform timeout test while holding
+	internal lock to prevent wakeup race.
+	Patch by Dinakar Guniguntala <dgunigun@in.ibm.com>.
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+
 2004-02-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S

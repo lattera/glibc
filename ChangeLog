@@ -1,3 +1,8 @@
+2004-02-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* test-skeleton.c (main): If set, use environment variable
+	TIMEOUTFACTOR to scale test TIMEOUT.
+
 2004-02-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_conf.c: Include <stdio_ext.h>.
