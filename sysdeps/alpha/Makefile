@@ -43,3 +43,7 @@ divrem := divl divq reml remq
 # For now, build everything with full IEEE math support.
 # TODO: build separate libm and libm-ieee.
 sysdep-CFLAGS += -mieee
+
+# libc.so requires about 16k for the small data area, which is well
+# below the 64k maximum.
+pic-ccflag = -fpic
