@@ -145,7 +145,7 @@ else
 endif
 
 $P/siglist.pot: $(common-objpfx)siglist.c; $(extract)
-$P/errlist.pot: $(..)sysdeps/mach/hurd/errlist.c; $(extract)
+$P/errlist.pot: $(..)sysdeps/gnu/errlist.c; $(extract)
 
 # Extract all strings from these files; their strings are not marked.
 # Their surroundings are also not interesting.

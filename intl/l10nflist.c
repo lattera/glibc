@@ -19,7 +19,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#if defined _LIBC && (defined __ARGZ_COUNT || defined __ARGZ_STRINGIFY)
+#if defined _LIBC || (defined __ARGZ_COUNT && defined __ARGZ_STRINGIFY)
 # include <argz.h>
 #endif
 #include <ctype.h>

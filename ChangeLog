@@ -1,5 +1,17 @@
 Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/libm-i387/s_finite.S: Use %eax instead of %al in setnel insn.
+
+	* intl/l10nflist.c: Fix conditional on #include <argz.h>.
+
+	* libio/stdio.h (FOPEN_MAX, FILENAME_MAX, TMP_MAX, L_tmpnam): Macros
+	removed.  Instead, include <stdio_lim.h>.
+
+	* libio/_G_config.h: New file.
+	* libio/Makefile (headers): Add _G_config.h.
+
+	* MakeTAGS (po/errlist.pot): Extract from sysdeps/gnu/errlist.c.
+
 	* sysdeps/unix/sysv/linux/gnu/types.h (__KERNEL_STRICT_NAMES): Define
 	this macro too; current Linux kernels test that instead of
 	_LINUX_TYPES_DONT_EXPORT.

@@ -1,4 +1,4 @@
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #
 subdir	:= libio
 
-headers	:= stdio.h libio.h
+headers	:= stdio.h libio.h _G_config.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \

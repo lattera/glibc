@@ -71,12 +71,9 @@ typedef _IO_size_t size_t;
 typedef struct _IO_FILE FILE;
 typedef _IO_fpos_t fpos_t;
 
-#define FOPEN_MAX     _G_FOPEN_MAX
-#define FILENAME_MAX _G_FILENAME_MAX
-#define TMP_MAX 999 /* Only limited by filename length */
+#include <stdio_lim.h>
 
 #define P_tmpdir      "/tmp"
-#define L_tmpnam      20
 
 /* For use by debuggers. These are linked in if printf or fprintf are used. */
 extern FILE *stdin, *stdout, *stderr; /* TODO */

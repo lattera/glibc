@@ -29,6 +29,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef __GNUC__
 # define alloca __builtin_alloca
+# define HAVE_ALLOCA 1
 #else
 # if defined HAVE_ALLOCA_H || defined _LIBC
 #  include <alloca.h>
@@ -77,10 +78,6 @@ void free ();
 # define strcasecmp __strcasecmp
 #endif
 
-
-#ifdef _LIBC
-#define HAVE_ALLOCA 1
-#endif
 
 /* For those loosing systems which don't have `alloca' we have to add
    some additional code emulating it.  */
