@@ -621,7 +621,7 @@ endif	# $(+cflags) == ""
 +includes = -I$(..)include -I. \
 	    $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
 	    $(libio-include) $(includes) \
-	    $(+sysdep-includes) $(last-includes) $(sysincludes)
+	    $(+sysdep-includes) $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
 # of many little headers in the include directory.

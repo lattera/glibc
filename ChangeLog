@@ -1,3 +1,7 @@
+2003-03-23  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (+includes): Don't use $(last-includes).
+
 2003-03-22  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/configure.in: Update mips64 patterns.

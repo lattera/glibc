@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 
+#if HAVE___THREAD
 struct test_s
 {
   int a;
@@ -51,11 +52,19 @@ tf (void *arg)
 
   return NULL;
 }
+#endif
 
 
 int
 do_test (void)
 {
+#if !HAVE___THREAD
+
+  puts ("No __thread support in compiler, test skipped.");
+
+  return 0;
+#else
+
   if (s.a != INIT_A || s.b != INIT_B)
     {
       puts ("initial value of s in main thread wrong");
@@ -85,6 +94,7 @@ do_test (void)
     }
 
   return 0;
+#endif
 }
 
 

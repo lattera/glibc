@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#if HAVE___THREAD
 
 #define N 10
 static pthread_t th[N];
@@ -105,11 +106,18 @@ tf (void *arg)
 
   return NULL;
 }
-
+#endif
 
 int
 do_test (void)
 {
+#if !HAVE___THREAD
+
+  puts ("No __thread support in compiler, test skipped.");
+
+  return 0;
+#else
+
   if (pthread_barrier_init (&b, NULL, N + 1) != 0)
     {
       puts ("barrier_init failed");
@@ -179,6 +187,7 @@ do_test (void)
       }
 
   return 0;
+#endif
 }
 
 

@@ -1,5 +1,10 @@
 2003-03-23  Roland McGrath  <roland@redhat.com>
 
+	* tst-tls3.c (do_test) [! HAVE___THREAD]: Don't test anything.
+	* tst-tls3mod.c: Likewise.
+	* tst-tls1.c: Likewise.
+	* tst-tls2.c: Likewise.
+
 	* tst-mutex5.c (do_test): Unlock before destroy, otherwise we invoke
 	undefined behavior.
 

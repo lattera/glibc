@@ -25,6 +25,8 @@
 #include <unistd.h>
 
 
+#if HAVE___THREAD
+
 extern pthread_barrier_t b;
 
 #define TOTAL_SIGS 1000
@@ -79,3 +81,5 @@ tf (void *arg)
 
   return NULL;
 }
+
+#endif
