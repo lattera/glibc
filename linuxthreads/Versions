@@ -13,6 +13,9 @@ libc {
     pthread_mutexattr_getkind_np; pthread_mutexattr_setkind_np;
     pthread_self; pthread_setcancelstate; pthread_setcanceltype;
     pthread_setschedparam;
+
+    # Internal libc interface to libpthread
+    __libc_internal_tsd_get; __libc_internal_tsd_set;
   }
   GLIBC_2.1 {
     pthread_attr_init;

@@ -3,6 +3,9 @@
 	* specific.c (pthread_key_delete): Check th->p_terminated to see
 	if the thread is running.
 
+	* Versions (__libc_internal_tsd_get, __libc_internal_tsd_set):
+	Added to GLIBC_2.0 for libc.so.
+
 1999-02-12  H.J. Lu  <hjl@gnu.org>
 
 	* Versions (__libc_current_sigrtmin, __libc_current_sigrtmax,
