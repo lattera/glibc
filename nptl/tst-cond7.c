@@ -43,6 +43,13 @@ tf (void *arg)
 {
   puts ("child created");
 
+  if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL) != 0
+      || pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, NULL) != 0)
+    {
+      puts ("cannot set cancellation options");
+      exit (1);
+    }
+
   T *t = (T *) arg;
 
   if (pthread_mutex_lock (&t->lock) != 0)
@@ -120,6 +127,13 @@ do_test (void)
 	    exit (1);
 	  }
       while (! done);
+
+      /* Release the lock since the cancel handler will get it.  */
+      if (pthread_mutex_unlock (&t[i]->lock) != 0)
+	{
+	  puts ("mutex_unlock failed");
+	  exit (1);
+	}
 
       if (pthread_cancel (t[i]->h) != 0)
 	{

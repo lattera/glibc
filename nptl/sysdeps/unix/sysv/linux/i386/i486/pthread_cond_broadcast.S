@@ -65,7 +65,8 @@ __pthread_cond_broadcast:
 	cmpl	(%ebx), %ecx
 	jna	4f
 
-	/* Case all currently waiting threads to wake up.  */
+	/* Cause all currently waiting threads to recognize they are
+	   woken up.  */
 3:	movl	%ecx, (%ebx)
 	movl	%eax, 4(%ebx)
 

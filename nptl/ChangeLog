@@ -1,5 +1,10 @@
 2003-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cond7.c (do_test): Unlock the mutex before canceling the thread.
+
+	* sysdeps/pthread/pthread.h: Add missing initializers.  Protect
+	non-standard initializers with __USE_GNU.
+
 	* Makefile (tests): Add tst-cleanup3.
 	* tst-cleanup3.c: New file.
 

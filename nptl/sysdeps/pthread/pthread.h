@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,20 +38,7 @@ enum
 };
 
 
-/* Mutex handling.  */
-
-#define PTHREAD_MUTEX_INITIALIZER \
-  { }
-
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  { .__data = { .__kind = PTHREAD_MUTEX_RECURSIVE_NP } }
-
-#define PTHREAD_RWLOCK_INITIALIZER \
-  { }
-
-#define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { .__data = { .__flags = PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
-
+/* Mutex types.  */
 enum
 {
   PTHREAD_MUTEX_TIMED_NP,
@@ -71,6 +58,18 @@ enum
 #endif
 };
 
+/* Mutex initializers.  */
+#define PTHREAD_MUTEX_INITIALIZER \
+  { }
+#ifdef __USE_GNU
+# define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
+  { .__data = { .__kind = PTHREAD_MUTEX_RECURSIVE_NP } }
+# define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
+  { .__data = { .__kind = PTHREAD_MUTEX_ERRORCHECK_NP } }
+# define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
+  { .__data = { .__kind = PTHREAD_MUTEX_ADAPTIVE_NP } }
+#endif
+
 
 /* Read-write lock types.  */
 #ifdef __USE_UNIX98
@@ -82,6 +81,14 @@ enum
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
 };
 #endif  /* Unix98 */
+
+/* Read-write lock initializers.  */
+#define PTHREAD_RWLOCK_INITIALIZER \
+  { }
+#ifdef __USE_GNU
+# define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+  { .__data = { .__flags = PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+#endif
 
 
 /* Scheduler inheritance.  */
