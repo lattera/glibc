@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998, 1999, 2000, 2001, 2002
+/* Copyright (C) 1992, 1997, 1998, 1999, 2000, 2001, 2002, 2003
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
-		
+
 /* Alan Modra <amodra@bigpond.net.au> rewrote the INLINE_SYSCALL macro */
 
 #ifndef _LINUX_POWERPC_SYSDEP_H
@@ -72,8 +72,8 @@
 
 /* This version is for kernels that implement system calls that
    behave like function calls as far as register saving.  */
-#define INLINE_SYSCALL(name, nr, args...)			\
-  ({								\
+#define INLINE_SYSCALL(name, nr, args...)				\
+  ({									\
     INTERNAL_SYSCALL_DECL (sc_err);					\
     long sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);		\
     if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			\
@@ -90,8 +90,8 @@
    gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
    the negation of the return value in the kernel gets reverted.  */
 
-# undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, err, nr, args...)				\
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...)			\
   ({									\
     register long r0  __asm__ ("r0");					\
     register long r3  __asm__ ("r3");					\
@@ -106,24 +106,24 @@
        "mfcr  %0\n\t"							\
        "0:"								\
        : "=&r" (r0),							\
-         "=&r" (r3), "=&r" (r4), "=&r" (r5),  \
-         "=&r" (r6), "=&r" (r7), "=&r" (r8)	\
+         "=&r" (r3), "=&r" (r4), "=&r" (r5),				\
+         "=&r" (r6), "=&r" (r7), "=&r" (r8)				\
        : ASM_INPUT_##nr							\
-       : "r9", "r10", "r11", "r12",		\
+       : "r9", "r10", "r11", "r12",					\
          "cr0", "ctr", "memory");					\
 	  err = r0;  \
     (int) r3;  \
   })
 
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) long err
-  
-# undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val, err) \
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) long err
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
   (__builtin_expect (err & (1 << 28), 0))
 
-# undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
 
 #define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
