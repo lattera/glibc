@@ -1,5 +1,8 @@
 2000-03-17  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/i386/sys/ucontext.h: Prepend REG_ to enum values and
+	macros for register names, in line with 2000-03-14 linux change.
+
 	* sysdeps/mach/sched_yield.c: New file.
 
 2000-03-13  Roland McGrath  <roland@baalperazim.frob.com>
