@@ -1,3 +1,8 @@
+2001-02-13  Andreas Jaeger  <aj@suse.de>
+
+	* login/getutent_r.c: Include <stdlib.h> for NULL.
+	* login/getutid_r.c: Likewise.
+
 2001-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/dbl-64/e_j0.c: Little optimization, use sincos.
