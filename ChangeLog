@@ -1,5 +1,8 @@
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/tst-tables.sh: Add warning that GB18030 test might
+	take longer.
+
 	* math/complex.h: Don't define _Complex macro for gcc 3.  Add
 	__extension__ to _Complex_I definition since gcc warns if -pedantic.
 	* math/bits/cmathcalls.h (conj): Add __extension__ since we use ~.

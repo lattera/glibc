@@ -201,9 +201,11 @@ cat <<EOF |
   #ISO-2022-JP-2
   #ISO-2022-KR
   #ISO-2022-CN
+  #ISO-2022-CN-EXT
   #
 EOF
 while read charset charmap; do
+  if test "$charset" = GB18030; then echo "This might take a while" 1>&2; fi
   case ${charset} in \#*) continue;; esac
   echo -n "Testing ${charset}" 1>&2
   if ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}; then
