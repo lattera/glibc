@@ -1,13 +1,14 @@
+2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): Fix problem with ld.so
+	startup.  Explicitly remove lazy part for RTLD_BOOTSTRAP since gcc
+	doesn't do it.
+
 2001-08-24  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* sysdeps/unix/sysv/linux/mips/configure.in: Define AC_SUBST to
 	empty to prevent junk from being generated.
 	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
-
-2001-08-24  Ulrich Drepper  <drepper@redhat.com>
-
-	* elf/do-rel.h (elf_dynamic_do_rel) [RTLD_BOOTSTRAP]: Disable use of
-	RELCOUNT for now until we know what is wrong with it.
 
 2001-08-24  Jakub Jelinek  <jakub@redhat.com>
 
