@@ -34,8 +34,8 @@ static char rcsid[] = "$Id$";
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
  */
 
-static int inet_pton4 __P((const char *src, u_char *dst)) internal_function;
-static int inet_pton6 __P((const char *src, u_char *dst)) internal_function;
+static int inet_pton4 (const char *src, u_char *dst) internal_function;
+static int inet_pton6 (const char *src, u_char *dst) internal_function;
 
 /* int
  * inet_pton(af, src, dst)

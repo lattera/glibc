@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-01-02
+GNU C Library NEWS -- history of user-visible changes.  2000-05-28
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -23,8 +23,11 @@ Version 2.2
 * ldconfig program added by Andreas Jaeger and Jakub Jelinek.
 
 * The resolver code has been updated from bind 8.2.2-5 which supports
-  threads.  No changes should be necessary for user programs.  The
-  integration was done by Andreas Jaeger and Adam D. Bradley.
+  threads.  The integration was done by Andreas Jaeger and Adam D. Bradley.
+
+  This change could in some situations effect backward compatibility.  Since
+  now `_res' is a thread-local instead of a global variable, modifying it
+  in one thread does not have any effect in other threads.
 
 * Compatibility code for K&R C compilers has been removed from the
   header files.  A ISO C compiler is needed to use the library
