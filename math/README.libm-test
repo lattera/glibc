@@ -1,0 +1,107 @@
+README for libm-test math test suite
+====================================
+
+The libm-test math test suite tests a number of function points of
+math functions in the GNU C library.  The following sections contain a
+brief overview.  Please note that the test drivers and the Perl script
+"gen-libm-test.pl" have some options.  A full list of options is
+available with --help (for the test drivers) and -h for
+"gen-libm-test.pl".
+
+
+What is tested?
+===============
+The tests just evaluate the functions at specified points and compare
+the results with precomputed values and the requirements of the ISO
+C99 standard.
+
+Besides testing the special values mandated by IEEE 754 (infinities,
+NaNs and minus zero), some more or less random values are tested.
+
+Files that are part of libm-test
+================================
+
+The main file is "libm-test.inc".  It is platform and floating point
+format independent.  The file must be preprocessed by the Perl script
+"gen-libm-test.pl".  The results are "libm-test.c" and a file
+"libm-test-ulps.h" with platform specific deltas.
+
+The test drivers test-double.c, test-float.c, test-ldouble.c test the
+normal double, float and long double implementation of libm.  The test
+drivers with an i in it (test-idouble.c, test-ifloat.c,
+test-ildoubl.c) test the corresponding inline functions (where
+available - otherwise they also test the real functions in libm).
+
+"gen-libm-test.pl" needs a platform specific files with ULPs (Units of
+Last Precision).  The file is called "libm-test-ulps" and lives in
+platform specific sysdep directory.
+
+How can I generate "libm-test-ulps"?
+====================================
+
+The test drivers have an option "-u" to output an unsorted list of all
+epsilons that the functions have.  The output can be read in directly
+but it's better to pretty print it first.  "gen-libm-test.pl"  has an option
+to generate a pretty-printed and sorted new ULPs file from the output
+of the test drivers.
+
+To generate a new "libm-test-ulps" file, you can execute for example:
+test-double -u --ignore-max-ulp=yes
+This generates a file "ULPs" with all double ULPs in it, ignoring any
+previous calculated ULPs.
+Now move this away, e.g. "mv ULPs allULPs" and generate the ULPs
+for all other formats and concat all ULP files together (e.g. "cat
+ULPs >> allULPs").  As final step run "gen-libm-test.pl" with the file
+as input and ask to generate a pretty printed output in the file "NewUlps":
+  gen-libm-test.pl -u allULPs -n
+
+Now you can rename "NewUlps" to "libm-test-ulps" and move it into
+sysdeps.
+
+Contents of libm-test-ulps
+==========================
+Since libm-test-ulps can be generated automatically, just a few
+notes.  The file contains lines for single tests, like:
+Test "cos (pi/2) == 0":
+float:  1
+
+and lines for maximal errors of single functions, like:
+Function "yn":
+idouble:  6.0000
+
+The keywords are float, ifloat, double, idouble, ldouble and ildouble
+(the prefix i stands for inline).  You can also specify known
+failures, e.g.:
+
+Test "cos (pi/2) == 0":
+float:  1
+float: fail
+
+Adding tests to libm-test.inc
+=============================
+
+The tests are evaluated by a set of special test macros.  The macros
+start with "TEST_" followed by a specification the input values, an
+underscore and a specification of the output values.  As an example,
+the test macro for a function with input of type FLOAT (FLOAT is
+either float, double, long double) and output of type FLOAT is
+"TEST_f_f".  The macro's parameter are the name of the function, the
+input parameter, output parameter and optionally one exception
+parameter.
+
+The accepted parameter types are:
+- "f" for FLOAT
+- "b" for boolean - just tests if the output parameter evaluates to 0
+  or 1 (only for output).
+- "c" for complex.  This parameter needs two values, first the real,
+  then the imaginary part.
+- "i" for int.
+- "l" for long int.
+- "L" for long long int.
+- "F" for the address of a FLOAT (only as input parameter)
+- "I" for the address of an int (only as input parameter)
+
+Some functions need special handling.  For example gamma sets the
+global variable signgam and frexp takes an argument to &int.  This
+special treatment is coded in "gen-libm-test.pl" and used while
+parsing "libm-test.inc".

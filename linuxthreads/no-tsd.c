@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/cdefs.h>  /* for __P */
+#include <sys/cdefs.h>  /* for __const */
 #include <bits/libc-tsd.h>
 
 /* This file provides uinitialized (common) definitions for the
@@ -29,6 +29,6 @@
    If -lpthread is not used, these uninitialized variables default to zero,
    which the __libc_tsd_* macros check for.   */
 
-void *(*__libc_internal_tsd_get) __P ((enum __libc_tsd_key_t));
-int (*__libc_internal_tsd_set) __P ((enum __libc_tsd_key_t,
-				     __const void *));
+void *(*__libc_internal_tsd_get) (enum __libc_tsd_key_t);
+int (*__libc_internal_tsd_set) (enum __libc_tsd_key_t,
+				__const void *);

@@ -23,6 +23,8 @@
 # Note that functions and tests share the same namespace.
 
 # Information about tests are stored in: %results
+# $results{$test}{"kind"} is either "fct" or "test" and flags whether this
+# is a maximal error of a function or a single test.
 # $results{$test}{"type"} is the result type, e.g. normal or complex.
 # $results{$test}{"has_ulps"} is set if deltas exist.
 # $results{$test}{"has_fails"} is set if exptected failures exist.
@@ -102,7 +104,7 @@ if ($opt_h) {
   print "Usage: gen-libm-test.pl [OPTIONS]\n";
   print " -h         print this help, then exit\n";
   print " -o DIR     directory where generated files will be placed\n";
-  print " -n         generate sorted file NewUlps from libm-test-ulps\n";
+  print " -n         only generate sorted file NewUlps from libm-test-ulps\n";
   print " -u FILE    input file with ulps\n";
   exit 0;
 }
@@ -116,8 +118,8 @@ $output = "${output_dir}libm-test.c";
 $count = 0;
 
 &parse_ulps ($ulps_file);
-&generate_testfile ($input, $output);
-&output_ulps ("${output_dir}libm-test-ulps.h", $ulps_file);
+&generate_testfile ($input, $output) unless ($opt_n);
+&output_ulps ("${output_dir}libm-test-ulps.h", $ulps_file) unless ($opt_n);
 &print_ulps_file ("${output_dir}NewUlps") if ($opt_n);
 
 # Return a nicer representation
@@ -484,7 +486,7 @@ sub generate_testfile {
 # Parse ulps file
 sub parse_ulps {
   my ($file) = @_;
-  my ($test, $type, $float, $eps);
+  my ($test, $type, $float, $eps, $kind);
 
   # $type has the following values:
   # "normal": No complex variable
@@ -508,6 +510,7 @@ sub parse_ulps {
       }
       s/^.+\"(.*)\".*$/$1/;
       $test = $_;
+      $kind = 'test';
       next;
     }
     if (/^Function: /) {
@@ -521,6 +524,7 @@ sub parse_ulps {
 	$type = 'normal';
       }
       ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
+      $kind = 'fct';
       next;
     }
     if (/^i?(float|double|ldouble):/) {
@@ -541,6 +545,7 @@ sub parse_ulps {
       } elsif ($type eq 'normal') {
 	$results{$test}{'type'} = 'normal';
       }
+      $results{$test}{'kind'} = $kind;
       next;
     }
     print "Skipping unknown entry: `$_'\n";
@@ -567,7 +572,9 @@ sub print_ulps_file {
   $last_fct = '';
   open NEWULP, ">$file" or die ("Can't open $file: $!");
   print NEWULP "# Begin of automatic generation\n";
-  foreach $test (sort @tests) {
+  # first the function calls
+  foreach $test (sort keys %results) {
+    next if ($results{$test}{'kind'} ne 'test');
     foreach $type ('real', 'imag', 'normal') {
       if (exists $results{$test}{$type}) {
 	if (defined $results{$test}) {
@@ -599,7 +606,8 @@ sub print_ulps_file {
   }
   print NEWULP "\n# Maximal error of functions:\n";
 
-  foreach $fct (sort @functions) {
+  foreach $fct (sort keys %results) {
+    next if ($results{$fct}{'kind'} ne 'fct');
     foreach $type ('real', 'imag', 'normal') {
       if (exists $results{$fct}{$type}) {
 	if ($type eq 'normal') {

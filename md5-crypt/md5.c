@@ -1,6 +1,6 @@
 /* md5.c - Functions to compute MD5 message digest of files or memory blocks
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@
 #  define WORDS_BIGENDIAN 1
 # endif
 /* We need to keep the namespace clean so define the MD5 function
-   protected using leading __ and use weak aliases.  */
+   protected using leading __ .  */
 # define md5_init_ctx __md5_init_ctx
 # define md5_process_block __md5_process_block
 # define md5_process_bytes __md5_process_bytes
@@ -426,22 +426,3 @@ md5_process_block (buffer, len, ctx)
   ctx->C = C;
   ctx->D = D;
 }
-
-
-#ifdef _LIBC
-/* Define weak aliases.  */
-# undef md5_init_ctx
-weak_alias (__md5_init_ctx, md5_init_ctx)
-# undef md5_process_block
-weak_alias (__md5_process_block, md5_process_block)
-# undef md5_process_bytes
-weak_alias (__md5_process_bytes, md5_process_bytes)
-# undef md5_finish_ctx
-weak_alias (__md5_finish_ctx, md5_finish_ctx)
-# undef md5_read_ctx
-weak_alias (__md5_read_ctx, md5_read_ctx)
-# undef md5_stream
-weak_alias (__md5_stream, md5_stream)
-# undef md5_buffer
-weak_alias (__md5_buffer, md5_buffer)
-#endif

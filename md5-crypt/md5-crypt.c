@@ -1,5 +1,5 @@
 /* One way encryption based on MD5 sum.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -39,11 +39,7 @@ static const char b64t[64] =
 /* Prototypes for local functions.  */
 extern char *__md5_crypt_r __P ((const char *key, const char *salt,
 				 char *buffer, int buflen));
-extern char *md5_crypt_r __P ((const char *key, const char *salt,
-			       char *buffer, int buflen));
 extern char *__md5_crypt __P ((const char *key, const char *salt));
-extern char *md5_crypt __P ((const char *key, const char *salt));
-
 
 
 /* This entry point is equivalent to the `crypt' function in Unix
@@ -73,42 +69,42 @@ __md5_crypt_r (key, salt, buffer, buflen)
   key_len = strlen (key);
 
   /* Prepare for the real work.  */
-  md5_init_ctx (&ctx);
+  __md5_init_ctx (&ctx);
 
   /* Add the key string.  */
-  md5_process_bytes (key, key_len, &ctx);
+  __md5_process_bytes (key, key_len, &ctx);
 
   /* Because the SALT argument need not always have the salt prefix we
      add it separately.  */
-  md5_process_bytes (md5_salt_prefix, sizeof (md5_salt_prefix) - 1, &ctx);
+  __md5_process_bytes (md5_salt_prefix, sizeof (md5_salt_prefix) - 1, &ctx);
 
   /* The last part is the salt string.  This must be at most 8
      characters and it ends at the first `$' character (for
      compatibility which existing solutions).  */
-  md5_process_bytes (salt, salt_len, &ctx);
+  __md5_process_bytes (salt, salt_len, &ctx);
 
 
   /* Compute alternate MD5 sum with input KEY, SALT, and KEY.  The
      final result will be added to the first context.  */
-  md5_init_ctx (&alt_ctx);
+  __md5_init_ctx (&alt_ctx);
 
   /* Add key.  */
-  md5_process_bytes (key, key_len, &alt_ctx);
+  __md5_process_bytes (key, key_len, &alt_ctx);
 
   /* Add salt.  */
-  md5_process_bytes (salt, salt_len, &alt_ctx);
+  __md5_process_bytes (salt, salt_len, &alt_ctx);
 
   /* Add key again.  */
-  md5_process_bytes (key, key_len, &alt_ctx);
+  __md5_process_bytes (key, key_len, &alt_ctx);
 
   /* Now get result of this (16 bytes) and add it to the other
      context.  */
-  md5_finish_ctx (&alt_ctx, alt_result);
+  __md5_finish_ctx (&alt_ctx, alt_result);
 
   /* Add for any character in the key one byte of the alternate sum.  */
   for (cnt = key_len; cnt > 16; cnt -= 16)
-    md5_process_bytes (alt_result, 16, &ctx);
-  md5_process_bytes (alt_result, cnt, &ctx);
+    __md5_process_bytes (alt_result, 16, &ctx);
+  __md5_process_bytes (alt_result, cnt, &ctx);
 
   /* For the following code we need a NUL byte.  */
   *alt_result = '\0';
@@ -118,11 +114,11 @@ __md5_crypt_r (key, salt, buffer, buflen)
      bit the first character of the key.  This does not seem to be
      what was intended but we have to follow this to be compatible.  */
   for (cnt = key_len; cnt > 0; cnt >>= 1)
-    md5_process_bytes ((cnt & 1) != 0 ? (const char *) alt_result : key, 1,
-		       &ctx);
+    __md5_process_bytes ((cnt & 1) != 0 ? (const char *) alt_result : key, 1,
+			 &ctx);
 
   /* Create intermediate result.  */
-  md5_finish_ctx (&ctx, alt_result);
+  __md5_finish_ctx (&ctx, alt_result);
 
   /* Now comes another weirdness.  In fear of password crackers here
      comes a quite long loop which just processes the output of the
@@ -130,30 +126,30 @@ __md5_crypt_r (key, salt, buffer, buflen)
   for (cnt = 0; cnt < 1000; ++cnt)
     {
       /* New context.  */
-      md5_init_ctx (&ctx);
+      __md5_init_ctx (&ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	md5_process_bytes (key, key_len, &ctx);
+	__md5_process_bytes (key, key_len, &ctx);
       else
-	md5_process_bytes (alt_result, 16, &ctx);
+	__md5_process_bytes (alt_result, 16, &ctx);
 
       /* Add salt for numbers not divisible by 3.  */
       if (cnt % 3 != 0)
-	md5_process_bytes (salt, salt_len, &ctx);
+	__md5_process_bytes (salt, salt_len, &ctx);
 
       /* Add key for numbers not divisible by 7.  */
       if (cnt % 7 != 0)
-	md5_process_bytes (key, key_len, &ctx);
+	__md5_process_bytes (key, key_len, &ctx);
 
       /* Add key or last result.  */
       if ((cnt & 1) != 0)
-	md5_process_bytes (alt_result, 16, &ctx);
+	__md5_process_bytes (alt_result, 16, &ctx);
       else
-	md5_process_bytes (key, key_len, &ctx);
+	__md5_process_bytes (key, key_len, &ctx);
 
       /* Create intermediate result.  */
-      md5_finish_ctx (&ctx, alt_result);
+      __md5_finish_ctx (&ctx, alt_result);
     }
 
   /* Now we can construct the result string.  It consists of three
@@ -204,13 +200,10 @@ __md5_crypt_r (key, salt, buffer, buflen)
 
   return buffer;
 }
-weak_alias (__md5_crypt_r, md5_crypt_r)
 
 
 char *
-__md5_crypt (key, salt)
-     const char *key;
-     const char *salt;
+__md5_crypt (const char *key, const char *salt)
 {
   /* We don't want to have an arbitrary limit in the size of the
      password.  We can compute the size of the result in advance and
@@ -228,4 +221,3 @@ __md5_crypt (key, salt)
 
   return __md5_crypt_r (key, salt, buffer, buflen);
 }
-weak_alias (__md5_crypt, md5_crypt)

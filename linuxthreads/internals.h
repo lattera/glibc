@@ -335,23 +335,23 @@ void __pthread_reset_main_thread(void);
 void __fresetlockfiles(void);
 void __pthread_manager_adjust_prio(int thread_prio);
 
-extern int __pthread_attr_setguardsize __P ((pthread_attr_t *__attr,
-					     size_t __guardsize));
-extern int __pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
-					     size_t *__guardsize));
-extern int __pthread_attr_setstackaddr __P ((pthread_attr_t *__attr,
-					     void *__stackaddr));
-extern int __pthread_attr_getstackaddr __P ((__const pthread_attr_t *__attr,
-					     void **__stackaddr));
-extern int __pthread_attr_setstacksize __P ((pthread_attr_t *__attr,
-					     size_t __stacksize));
-extern int __pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
-					     size_t *__stacksize));
-extern int __pthread_getconcurrency __P ((void));
-extern int __pthread_setconcurrency __P ((int __level));
-extern int __pthread_mutexattr_gettype __P ((__const pthread_mutexattr_t *__attr,
-					     int *__kind));
-extern void __pthread_kill_other_threads_np __P ((void));
+extern int __pthread_attr_setguardsize (pthread_attr_t *__attr,
+					size_t __guardsize) __THROW;
+extern int __pthread_attr_getguardsize (__const pthread_attr_t *__attr,
+					size_t *__guardsize) __THROW;
+extern int __pthread_attr_setstackaddr (pthread_attr_t *__attr,
+					void *__stackaddr) __THROW;
+extern int __pthread_attr_getstackaddr (__const pthread_attr_t *__attr,
+					void **__stackaddr) __THROW;
+extern int __pthread_attr_setstacksize (pthread_attr_t *__attr,
+					size_t __stacksize) __THROW;
+extern int __pthread_attr_getstacksize (__const pthread_attr_t *__attr,
+					size_t *__stacksize) __THROW;
+extern int __pthread_getconcurrency (void) __THROW;
+extern int __pthread_setconcurrency (int __level) __THROW;
+extern int __pthread_mutexattr_gettype (__const pthread_mutexattr_t *__attr,
+					int *__kind) __THROW;
+extern void __pthread_kill_other_threads_np (void) __THROW;
 
 /* Prototypes for the function without cancelation support when the
    normal version has it.  */

@@ -49,31 +49,31 @@ __BEGIN_DECLS
 
 /* Initialize semaphore object SEM to VALUE.  If PSHARED then share it
    with other processes.  */
-extern int sem_init __P ((sem_t *__sem, int __pshared, unsigned int __value));
+extern int sem_init (sem_t *__sem, int __pshared, unsigned int __value) __THROW;
 
 /* Free resources associated with semaphore object SEM.  */
-extern int sem_destroy __P ((sem_t *__sem));
+extern int sem_destroy (sem_t *__sem) __THROW;
 
 /* Open a named semaphore NAME with open flaot OFLAG.  */
-extern sem_t *sem_open __P ((__const char *__name, int __oflag, ...));
+extern sem_t *sem_open (__const char *__name, int __oflag, ...) __THROW;
 
 /* Close descriptor for named semaphore SEM.  */
-extern int sem_close __P ((sem_t *__sem));
+extern int sem_close (sem_t *__sem) __THROW;
 
 /* Remove named semaphore NAME.  */
-extern int sem_unlink __P ((__const char *__name));
+extern int sem_unlink (__const char *__name) __THROW;
 
 /* Wait for SEM being posted.  */
-extern int sem_wait __P ((sem_t *__sem));
+extern int sem_wait (sem_t *__sem) __THROW;
 
 /* Test whether SEM is posted.  */
-extern int sem_trywait __P ((sem_t *__sem));
+extern int sem_trywait (sem_t *__sem) __THROW;
 
 /* Post SEM.  */
-extern int sem_post __P ((sem_t *__sem));
+extern int sem_post (sem_t *__sem) __THROW;
 
 /* Get current value of SEM and store it in *SVAL.  */
-extern int sem_getvalue __P ((sem_t *__sem, int *__sval));
+extern int sem_getvalue (sem_t *__sem, int *__sval) __THROW;
 
 __END_DECLS
 

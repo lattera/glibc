@@ -1,3 +1,23 @@
+1999-10-25  Thorsten Kukuk  <kukuk@suse.de>
+
+	* md5-crypt/md5.h: Remove prototypes for public interface. md5 is
+	used only internal.
+	* md5-crypt/md5-crypt.c: Use internal names for md5 functions,
+	remove weak alias for public names.
+	* md5-crypt/md5.c: Remove weak aliase.
+
+1999-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* math/README.libm-test: New file, documents libm-test.inc.
+
+1999-10-25  Andreas Jaeger  <aj@suse.de>
+
+	* math/gen-libm-test.pl: Only generate a new ulps file when -n is
+	given.
+	(print_ulps_file): Fix loops to not read @tests and @functions
+	since those are not initialized with -n now.
+	(parse_ulps): Set $results{..}{"kind"}.
+
 1999-10-25  Andreas Jaeger  <aj@suse.de>
 
 	* math/gen-libm-test.pl (parse_ulps): Ignore 0 has ulp.

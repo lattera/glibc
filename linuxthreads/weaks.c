@@ -21,9 +21,9 @@
 #include <limits.h>
 #include <stdlib.h>
 
-extern int __pthread_return_0 __P ((void));
-extern int __pthread_return_1 __P ((void));
-extern void __pthread_return_void __P ((void));
+extern int __pthread_return_0 (void) __THROW;
+extern int __pthread_return_1 (void) __THROW;
+extern void __pthread_return_void (void) __THROW;
 
 /* Those are pthread functions which return 0 if successful. */
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
