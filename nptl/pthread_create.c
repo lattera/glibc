@@ -225,7 +225,7 @@ start_thread (void *arg)
   if (setjmp (pd->cancelbuf) == 0)
     {
       /* Run the code the user provided.  */
-      pd->result = pd->start_routine (pd->arg);
+      THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
     }
 
   /* The thread is exiting now.  */

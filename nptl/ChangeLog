@@ -1,3 +1,8 @@
+2003-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (start_thread): Use THREAD_SETMEM to store
+	result of the thread function.
+
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/dl-sysdep.h: Removed.  The generic

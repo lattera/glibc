@@ -1,5 +1,7 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.h: Add double include protection.
+
 	* po/tr.po: Update from translation team.
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Determine whether there
