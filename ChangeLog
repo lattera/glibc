@@ -40,6 +40,9 @@
 
 2004-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_simple.c (__gconv_transform_utf8_internal): Use only
+	one copy of error handling code.
+
 	* stdio-common/vfscanf.c: Simplify error handling macros.  Use
 	direct locale access functions.
 
