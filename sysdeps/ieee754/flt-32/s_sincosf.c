@@ -1,5 +1,5 @@
 /* Compute sine and cosine of argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -38,7 +38,7 @@ __sincosf (float x, float *sinx, float *cosx)
       *sinx = __kernel_sinf (x, 0.0, 0);
       *cosx = __kernel_cosf (x, 0.0);
     }
-  else if (ix>=0x7ff00000)
+  else if (ix>=0x7f800000)
     {
       /* sin(Inf or NaN) is NaN */
       *sinx = *cosx = x - x;

@@ -1,3 +1,8 @@
+2000-12-14  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ieee754/flt-32/s_sincosf.c (__sincosf): The exponent
+	field in a float is 8 bits, not 11 bits.
+
 2000-12-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* math/test-misc.c (main): Adjust m for IEEE quad long double.
