@@ -26,8 +26,6 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 
-#include "linux_fsinfo.h"
-
 
 int
 fstatvfs (int fd, struct statvfs *buf)
@@ -52,38 +50,9 @@ fstatvfs (int fd, struct statvfs *buf)
 
   /* What remains to do is to fill the fields f_frsize, f_favail,
      and f_flag.  */
-  switch (fsbuf.f_type)
-    {
-    case EXT2_SUPER_MAGIC:
-      /* This is not really correct since the fragment size can vary.  */
-      buf->f_frsize = 1024;
-      break;
 
-    case ADFS_SUPER_MAGIC:
-    case AFFS_SUPER_MAGIC:
-    case CODA_SUPER_MAGIC:
-    case HPFS_SUPER_MAGIC:
-    case ISOFS_SUPER_MAGIC:
-    case MINIX_SUPER_MAGIC:
-    case MINIX_SUPER_MAGIC2:
-    case MINIX2_SUPER_MAGIC:
-    case MINIX2_SUPER_MAGIC2:
-    case MSDOS_SUPER_MAGIC:
-    case NCP_SUPER_MAGIC:
-    case NFS_SUPER_MAGIC:
-    case PROC_SUPER_MAGIC:
-    case SMB_SUPER_MAGIC:
-    case XENIX_SUPER_MAGIC:
-    case SYSV4_SUPER_MAGIC:
-    case SYSV2_SUPER_MAGIC:
-    case COH_SUPER_MAGIC:
-    case UFS_MAGIC:
-    case UFS_CIGAM:
-    default:
-      /* I hope it's safe to assume no fragmentation.  */
-      buf->f_frsize = buf->f_bsize;
-      break;
-    }
+  /* Linux does not support f_frsize, so set it to zero.  */
+  buf->f_frsize = 0;
 
   /* XXX I have no idea how to compute f_favail.  Any idea???  */
   buf->f_favail = buf->f_ffree;
