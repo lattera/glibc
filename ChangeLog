@@ -1,3 +1,10 @@
+Fri Jul 26 16:10:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/pututline_r.c (pututline_r): Only call getutid_r if ID has a
+	valid ut_id field.
+	* login/getutid_r.c (getutid_r): Mark UTMP_DATA->loc_utmp invalid
+	if a search fails.
+
 Fri Jul 26 00:36:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/mips/dl-machine.h: New file, contributed by Kazumoto Kojima

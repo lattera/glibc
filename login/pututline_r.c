@@ -62,8 +62,9 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
   /* Check whether we need to reposition.  Repositioning is necessary
      either if the data in UTMP_DATA is not valid or if the ids don't
      match: */
-  if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
-      || strncmp(utmp_data->ubuf.ut_id, id->ut_id, sizeof (id->ut_id)) != 0)
+  if (id->ut_id[0]
+      && (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
+	  || strncmp(utmp_data->ubuf.ut_id, id->ut_id, sizeof (id->ut_id)) != 0))
     {
       /* We must not overwrite the data in UTMP_DATA since ID may be
 	 aliasing it.  */
