@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -29,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
 int
-DEFUN(closedir, (dirp), DIR *dirp)
+__closedir (DIR *dirp)
 {
   error_t err;
 
@@ -59,4 +58,4 @@ DEFUN(closedir, (dirp), DIR *dirp)
 
   return 0;
 }
-
+weak_alias (__closedir, closedir)

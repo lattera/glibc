@@ -45,7 +45,7 @@ mbtowc (wchar_t *pwc, const char *s, size_t n)
   if (s == NULL)
     return 1;
 
-  result = mbrtowc (pwc, s, n, &__no_r_state);
+  result = __mbrtowc (pwc, s, n, &__no_r_state);
 
   /* The `mbrtowc' functions tell us more than we need.  Fold the -1
      and -2 result into -1.  */

@@ -34,7 +34,9 @@
  */
 
 #ifndef _FSTAB_H_
-#define _FSTAB_H_
+
+#define _FSTAB_H_	1
+#include <features.h>
 
 /*
  * File system table, see fstab(5).
@@ -66,14 +68,15 @@ struct fstab {
 	int	fs_passno;		/* pass number on parallel dump */
 };
 
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
-struct fstab *getfsent __P((void));
-struct fstab *getfsspec __P((const char *));
-struct fstab *getfsfile __P((const char *));
-int setfsent __P((void));
-void endfsent __P((void));
+
+extern struct fstab *getfsent __P ((void));
+extern struct fstab *getfsspec __P ((__const char *__name));
+extern struct fstab *getfsfile __P ((__const char *__name));
+extern int setfsent __P ((void));
+extern void endfsent __P ((void));
+
 __END_DECLS
 
 #endif /* !_FSTAB_H_ */

@@ -737,15 +737,15 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const wchar_t *s2 = (const wchar_t *) string;		      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = wcsrtombs (NULL, &s2, 0, &mbstate);			      \
+	    len = __wcsrtombs (NULL, &s2, 0, &mbstate);			      \
 	    if (len == (size_t) -1)					      \
 	      /* Illegal wide-character string.  */			      \
 	      return -1;						      \
 									      \
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
-	    (void) wcsrtombs (string, &s2, prec != -1 ? prec : UINT_MAX,      \
-			      &mbstate);				      \
+	    (void) __wcsrtombs (string, &s2, prec != -1 ? prec : UINT_MAX,    \
+				&mbstate);				      \
 	  }								      \
 									      \
 	if ((width -= len) < 0)						      \

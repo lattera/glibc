@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,17 +19,25 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <stdio.h>
 
+/* The function `vscanf' is not defined in ISO C.  Therefore we must
+   use the protected form here.  In stdio it is called `__vscanf' and
+   in libio `_IO_vscanf'.  */
+#ifdef USE_IN_LIBIO
+# define VSCANF _IO_vscanf
+#else
+# define VSCANF __vscanf
+#endif
+
 /* Read formatted input from stdin according to the format string FORMAT.  */
 /* VARARGS1 */
 int
-scanf (format)
-     const char *format;
+scanf (const char *format, ...)
 {
   va_list arg;
   int done;
 
   va_start (arg, format);
-  done = vscanf (format, arg);
+  done = VSCANF (format, arg);
   va_end (arg);
 
   return done;

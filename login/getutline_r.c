@@ -26,13 +26,13 @@ Boston, MA 02111-1307, USA.  */
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
 int
-getutline_r (const struct utmp *line, struct utmp **utmp,
-	     struct utmp_data *utmp_data)
+__getutline_r (const struct utmp *line, struct utmp **utmp,
+	       struct utmp_data *utmp_data)
 {
   /* Open utmp file if not already done.  */
   if (utmp_data->ut_fd == -1)
     {
-      setutent_r (utmp_data);
+      __setutent_r (utmp_data);
       if (utmp_data->ut_fd == -1)
 	return -1;
     }
@@ -71,3 +71,4 @@ getutline_r (const struct utmp *line, struct utmp **utmp,
 
   return 0;
 }
+weak_alias (__getutline_r, getutline_r)

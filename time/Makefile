@@ -25,9 +25,9 @@ headers	:= time.h sys/time.h sys/timeb.h timebits.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype
 extra-objs = scheck.o ialloc.o $(tzfiles:%=z.%)
 
-routines	:= offtime asctime clock ctime difftime gmtime	\
-		   localtime mktime strftime time tzset tzfile	\
-		   gettimeofday settimeofday adjtime		\
+routines	:= offtime asctime clock ctime ctime_r difftime	\
+		   gmtime localtime mktime strftime time tzset	\
+		   tzfile gettimeofday settimeofday adjtime	\
 		   getitimer setitimer				\
 		   stime dysize timegm ftime			\
 		   strptime

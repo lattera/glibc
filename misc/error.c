@@ -88,7 +88,7 @@ private_strerror (errnum)
   extern int sys_nerr;
 
   if (errnum > 0 && errnum <= sys_nerr)
-    return sys_errlist[errnum];
+    return _(sys_errlist[errnum]);
   return _("Unknown system error");
 }
 #define strerror private_strerror

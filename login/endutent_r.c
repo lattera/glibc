@@ -22,7 +22,7 @@ Boston, MA 02111-1307, USA.  */
 
 
 void
-endutent_r (struct utmp_data *utmp_data)
+__endutent_r (struct utmp_data *utmp_data)
 {
   if (utmp_data->ut_fd != -1)
     {
@@ -30,3 +30,4 @@ endutent_r (struct utmp_data *utmp_data)
       utmp_data->ut_fd = -1;
     }
 }
+weak_alias (__endutent_r, endutent_r)

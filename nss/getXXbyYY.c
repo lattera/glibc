@@ -46,6 +46,8 @@ Boston, MA 02111-1307, USA.  */
 #define REENTRANT_NAME APPEND_R (FUNCTION_NAME)
 #define APPEND_R(name) APPEND_R1 (name)
 #define APPEND_R1(name) name##_r
+#define INTERNAL(name) INTERNAL1 (name)
+#define INTERNAL1(name) __##name
 
 /* Sometimes we need to store error codes in the `h_errno' variable.  */
 #ifdef NEED_H_ERRNO
@@ -58,8 +60,9 @@ Boston, MA 02111-1307, USA.  */
 
 
 /* Prototype for reentrant version we use here.  */
-extern LOOKUP_TYPE *REENTRANT_NAME (ADD_PARAMS, LOOKUP_TYPE *result,
-				    char *buffer, int buflen H_ERRNO_PARM);
+extern LOOKUP_TYPE *INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *result,
+					       char *buffer, int buflen
+					       H_ERRNO_PARM);
 
 LOOKUP_TYPE *
 FUNCTION_NAME (ADD_PARAMS)
@@ -67,5 +70,6 @@ FUNCTION_NAME (ADD_PARAMS)
   static LOOKUP_TYPE result;
   static char buffer[BUFLEN];
 
-  return REENTRANT_NAME (ADD_VARIABLES, &result, buffer, BUFLEN H_ERRNO_VAR);
+  return INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &result, buffer,
+				    BUFLEN H_ERRNO_VAR);
 }

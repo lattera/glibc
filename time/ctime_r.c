@@ -1,4 +1,7 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* ctime_r - return in BUF representation of time T in form of asctime
+Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -15,23 +18,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-/* On Linux we must not ask __getdtablesize for te value for _SC_OPEN_MAX
-   because this would mean an endless loop.  */
+#include <time.h>
 
-#include <limits.h>
-#include <unistd.h>
-
-extern long int __default_sysconf (int name);
-
-long int
-__sysconf (int name)
+/* Return a string as returned by asctime which is the representation
+   of *T in that form.  Reentrant version.  */
+char *
+ctime_r (const time_t *t, char *buf)
 {
-  if (name == _SC_OPEN_MAX)
-    return OPEN_MAX;
-
-  return __default_sysconf (name);
+  struct tm tm;
+  return asctime_r (localtime_r (t, &tm), buf);
 }
-
-#define __sysconf __default_sysconf
-
-#include <sysdeps/posix/sysconf.c>

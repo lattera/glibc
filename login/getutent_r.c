@@ -22,7 +22,7 @@ Boston, MA 02111-1307, USA.  */
 
 
 int
-getutent_r (struct utmp **utmp, struct utmp_data *utmp_data)
+__getutent_r (struct utmp **utmp, struct utmp_data *utmp_data)
 {
   /* Open utmp file if not already done.  */
   if (utmp_data->ut_fd == -1)
@@ -48,3 +48,4 @@ getutent_r (struct utmp **utmp, struct utmp_data *utmp_data)
 
   return 0;
 }
+weak_alias (__getutent_r, getutent_r)

@@ -1,4 +1,4 @@
-/* 
+/*
 Copyright (C) 1993 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free
@@ -77,7 +77,7 @@ DEFUN(_IO_file_doallocate, (fp),
      to get called by any program that does buffered I/O. */
   if (_IO_cleanup_registration_needed)
     (*_IO_cleanup_registration_needed)();
-  
+
   if (fp->_fileno < 0 || _IO_SYSSTAT (fp, &st) < 0)
     {
       couldbetty = 0;
@@ -100,7 +100,7 @@ DEFUN(_IO_file_doallocate, (fp),
   if (p == NULL)
     return EOF;
   _IO_setb(fp, p, p+size, 1);
-  if (couldbetty && isatty(fp->_fileno))
+  if (couldbetty && __isatty (fp->_fileno))
     fp->_flags |= _IO_LINE_BUF;
   return 1;
 }

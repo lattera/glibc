@@ -18,10 +18,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <limits.h>
-#include <unistd.h>
+#include <grp.h>
+#include <pwd.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
 extern int __getdtablesize __P ((void));
 extern size_t __getpagesize __P ((void));
@@ -477,6 +479,119 @@ __sysconf (name)
     case _SC_2_SW_DEV:
 #ifdef	_POSIX2_SW_DEV
       return _POSIX2_SW_DEV;
+#else
+      return -1;
+#endif
+
+      /* POSIX 1003.1c (POSIX Threads).  */
+    case _SC_THREADS:
+#ifdef	_POSIX_THREADS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_SAFE_FUNCTIONS:
+#ifdef	_POSIX_THREAD_SAFE_FUNCTIONS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_GETGR_R_SIZE_MAX:
+#ifdef	NSS_BUFLEN_GROUP
+      return NSS_BUFLEN_GROUP;
+#else
+      return -1;
+#endif
+
+    case _SC_GETPW_R_SIZE_MAX:
+#ifdef	NSS_BUFLEN_PASSWD
+      return NSS_BUFLEN_PASSWD;
+#else
+      return -1;
+#endif
+
+    case _SC_LOGIN_NAME_MAX:
+#ifdef	_POSIX_LOGIN_NAME_MAX
+      return _POSIX_LOGIN_NAME_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_TTY_NAME_MAX:
+#ifdef	_POSIX_TTY_NAME_MAX
+      return _POSIX_TTY_NAME_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_DESTRUCTOR_ITERATIONS:
+#ifdef	PTHREAD_DESTRUCTOR_ITERATIONS
+      return PTHREAD_DESTRUCTOR_ITERATIONS;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_KEYS_MAX:
+#ifdef	PTHREAD_KEYS_MAX
+      return PTHREAD_KEYS_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_STACK_MIN:
+#ifdef	PTHREAD_STACK_MIN
+      return PTHREAD_STACK_MIN;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_THREADS_MAX:
+#ifdef	PTHREAD_THREADS_MAX
+      return PTHREAD_THREADS_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_ATTR_STACKADDR:
+#ifdef	_POSIX_THREAD_ATTR_STACKADDR
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_ATTR_STACKSIZE:
+#ifdef	_POSIX_THREAD_ATTR_STACKSIZE
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_PRIORITY_SCHEDULING:
+#ifdef	_POSIX_THREAD_PRIORITY_SCHEDULING
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_PRIO_INHERIT:
+#ifdef	_POSIX_THREAD_PRIO_INHERIT
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_PRIO_PROTECT:
+#ifdef	_POSIX_THREAD_PRIO_PROTECT
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_PROCESS_SHARED:
+#ifdef	_POSIX_THREAD_PROCESS_SHARED
+      return 1;
 #else
       return -1;
 #endif

@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -31,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
-DEFUN(readdir, (dirp), DIR *dirp)
+__readdir (DIR *dirp)
 {
   struct dirent *dp;
 
@@ -104,3 +103,4 @@ DEFUN(readdir, (dirp), DIR *dirp)
 
   return dp;
 }
+weak_alias (__readdir, readdir)

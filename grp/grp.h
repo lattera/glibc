@@ -85,6 +85,33 @@ extern struct group *getgrgid __P ((__gid_t __gid));
 /* Search for an entry with a matching group name.  */
 extern struct group *getgrnam __P ((__const char *__name));
 
+#ifdef	__USE_REENTRANT
+/* Reasonable value for the buffer sized used in the reentrant
+   functions below.  But better use `sysconf'.  */
+#define	NSS_BUFLEN_GROUP	1024
+
+/* Reentrant versions of some of the functions above.
+
+   PLEASE NOTE: these functions are not yet standardized.  The interface
+   may change in later versions of this library.  */
+
+#if defined(__USE_SVID) || defined(__USE_MISC) || defined (__USE_BSD)
+extern struct group *getgrent_r __P ((struct group *__resultbuf,
+				      char *buffer, int __buflen));
+#endif
+
+/* Search for an entry with a matching group ID.  */
+extern struct group *getgrgid_r __P ((__gid_t __gid,
+				      struct group *__resultbuf,
+				      char *buffer, int __buflen));
+
+/* Search for an entry with a matching group name.  */
+extern struct group *getgrnam_r __P ((__const char *__name,
+				      struct group *__resultbuf,
+				      char *buffer, int __buflen));
+
+#endif	/* reentrant */
+
 
 #ifdef	__USE_BSD
 

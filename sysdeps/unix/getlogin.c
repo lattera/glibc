@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
@@ -30,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    The returned pointer, if not NULL, is good only until the next call.  */
 
 char *
-DEFUN_VOID(getlogin)
+getlogin (void)
 {
   char tty_pathname[2 + 2 * NAME_MAX];
   char *real_tty_path = tty_pathname;
@@ -44,7 +43,7 @@ DEFUN_VOID(getlogin)
     if (d < 0)
       return NULL;
 
-    if (ttyname_r (d, real_tty_path, sizeof (tty_pathname)) < 0)
+    if (__ttyname_r (d, real_tty_path, sizeof (tty_pathname)) < 0)
       err = errno;
     (void) close (d);
 
@@ -57,9 +56,9 @@ DEFUN_VOID(getlogin)
 
   real_tty_path += 5;		/* Remove "/dev/".  */
 
-  setutent_r (&utmp_data);
+  __setutent_r (&utmp_data);
   strncpy (line.ut_line, real_tty_path, sizeof line.ut_line);
-  if (getutline_r (&line, &ut, &utmp_data) < 0)
+  if (__getutline_r (&line, &ut, &utmp_data) < 0)
     {
       if (errno == ESRCH)
 	/* The caller expects ENOENT if nothing is found.  */
@@ -69,7 +68,7 @@ DEFUN_VOID(getlogin)
   else
     result = ut->ut_line;
 
-  endutent_r (&utmp_data);
+  __endutent_r (&utmp_data);
 
   return result;
 }

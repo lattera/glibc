@@ -128,6 +128,23 @@ __sysconf (name)
     case _SC_2_FORT_DEV:
     case _SC_2_SW_DEV:
 
+    case _SC_THREADS:
+    case _SC_THREAD_SAFE_FUNCTIONS:
+    case _SC_GETGR_R_SIZE_MAX:
+    case _SC_GETPW_R_SIZE_MAX:
+    case _SC_LOGIN_NAME_MAX:
+    case _SC_TTY_NAME_MAX:
+    case _SC_THREAD_DESTRUCTOR_ITERATIONS:
+    case _SC_THREAD_KEYS_MAX:
+    case _SC_THREAD_STACK_MIN:
+    case _SC_THREAD_THREADS_MAX:
+    case _SC_THREAD_ATTR_STACKADDR:
+    case _SC_THREAD_ATTR_STACKSIZE:
+    case _SC_THREAD_PRIORITY_SCHEDULING:
+    case _SC_THREAD_PRIO_INHERIT:
+    case _SC_THREAD_PRIO_PROTECT:
+    case _SC_THREAD_PROCESS_SHARED:
+
       break;
     }
 

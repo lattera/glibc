@@ -30,7 +30,7 @@ Boston, MA 02111-1307, USA.  */
 static mbstate_t internal;
 
 size_t
-mbsrtowcs (dst, src, len, ps)
+__mbsrtowcs (dst, src, len, ps)
      wchar_t *dst;
      const char **src;
      size_t len;
@@ -135,3 +135,4 @@ mbsrtowcs (dst, src, len, ps)
 
   return written;
 }
+weak_alias (__mbsrtowcs, mbsrtowcs)

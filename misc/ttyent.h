@@ -34,7 +34,9 @@
  */
 
 #ifndef	_TTYENT_H_
-#define	_TTYENT_H_
+
+#define	_TTYENT_H_	1
+#include <features.h>
 
 #define	_PATH_TTYS	"/etc/ttys"
 
@@ -54,14 +56,13 @@ struct ttyent {
 	char	*ty_comment;	/* comment field */
 };
 
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-struct ttyent *getttyent __P ((void));
-struct ttyent *getttynam __P ((__const char *));
-int setttyent __P ((void));
-int endttyent __P ((void));
+extern struct ttyent *getttyent __P ((void));
+extern struct ttyent *getttynam __P ((__const char *__tty));
+extern int setttyent __P ((void));
+extern int endttyent __P ((void));
 
 __END_DECLS
 

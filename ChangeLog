@@ -1,3 +1,114 @@
+Thu Aug  8 01:41:43 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Undo change of Tue Aug  6 14:27:11 1996.
+	* elf/dl-support: Add definition of `_dl_sysdep_read_whole_file'.
+
+Thu Aug  8 01:15:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu_control.h (_FPU_DEFAULT, _FPU_IEEE): Set
+	to 0x137f to allow long double operations.
+
+Sun Aug  4 13:12:05 1996  Richard Henderson  <rth@tamu.edu>
+
+	Bug Fixes:
+
+	* nss/nsswitch.c (_res): Remove redundant variable definition.
+	The real one is in resolve/res_init.c, and having both prevents
+	using -fno-common when building the shared library.
+	* sunrpc/rpc_prot.c (_null_auth): Same.  Original is in rpc_common.c.
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: When PIC, define __curbrk as
+	a .bss object not a COMMON symbol.
+
+	* sysdeps/alpha/bsd-_setjmp.S, sysdeps/alpha/bsd-setjmp.S: Must load
+	$gp before referencing __sigsetjmp symbol.  Retain LITUSE for same.
+
+	Optimizations:
+
+	* sysdeps/alpha/strlen.S: Rearrange first-word setup and thense the
+	main loop for better dual-issue on EV5.  Rearrange binary search to
+	pipeline better and trim one instruction.
+
+	Cosmetic Changes:
+
+	* time/localtime.c (localtime_r): Move lock declaration back next to
+	the comment where it was before the 960724 change.
+
+	* INSTALL, manual/maint.texi: alpha-gnu-linux -> alpha-ANYTHING-linux.
+	The second word is supposed to be the hardware manufacturer.
+
+	* sysdeps/alpha/_mcount.S: Retain LITUSE for __mcount.
+	* sysdeps/alpha/setjmp.S: Retain LITUSE for __sigsetjmp_aux.
+
+	* sysdeps/alpha/divrem.h: More local labels, retain LITUSE for _mcount.
+
+	* sysdeps/alpha/alphaev5/add_n.S, sysdeps/alpha/alphaev5/lshift.S,
+	sysdeps/alpha/alphaev5/rshift.S, sysdeps/alpha/alphaev5/sub_n.S:
+	Same cleanups as with EV4 GMP stuff.
+
+Tue Jul 25 03:30:56 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/Makefile [misc] (sysdep_routines): Add clone.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: New file.
+	* sysdeps/unix/sysv/linux/i386/clone.S: New file.
+
+Sun Aug  4 00:12:41 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/gnu/types.h: Declare __fd_mask as
+	`unsigned long'.
+
+	* misc/sys/select.h: Declare fd_mask as alias of __fd_mask.
+
+Sat Aug  3 16:20:02 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add entry for
+ 	Mikasa.
+
+	* socket/sys/socket.h (send, __send, sendto): Declare buffer
+ 	pointer as __const.
+
+	* string/tester.c (main): Test stpncpy.
+
+	* sysdeps/generic/stpncpy.c (__stpncpy): Fix so it works without
+ 	segfault when called with an N that is not a multiple of four and
+ 	src[N-1]=='\0'.
+
+	* misc/syslog.c (LogType): New variable.
+	(openlog): If connect() with SOCK_DGRAM fails with EPROTOTYPE,
+ 	try again with SOCK_STREAM (the Linux syslogd uses a socket of the
+ 	latter type).
+	(vsyslog): When LogType==SOCK_STREAM, also send ASCII NUL
+ 	terminator as a record-delimiter.  If __send(LogFile) fails,
+	call closelog() so logfile gets re-opened next time.
+
+Wed Aug  7 15:15:14 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open (_dl_open): Add cast to avoid warning.
+
+	* manual/memory.texi: Improve some examples to give readers better
+	advice: Use `stpcpy' instead of `strcat' if possible.
+	* manual/string.texi: Document `strtok_r' and `strtok'.
+
+	* sunrpc/Makefile: Move `+gccwarn' definition before inclusion
+	of Makeconfig.
+	[$(cross-compiling)=no]: Change test before making librpcsvc
+	to this from $(cross-compile).
+	Reported by Andreas Schwab.
+
+Tue Aug  6 14:27:11 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (routines): Move dl-sysdep to here...
+	(rtld-routines): ...from here.  This should make static linking
+	work again.
+
+	* locale/setlocale.c: Add local variable `lock' and add code to
+	`setlocale' to avoid simultaneous changing of global data.
+
+	* catgets/catgets.c (catopen): Use `__strdup' instead of `strdup'.
+	* catgets/open_catalog (__open_catalog): Use `__stpcpy', `__open',
+	`__fstat', `__read', `__mmap', `__munmap' and `__close' instead
+	of unprotected names.
+
 Tue Aug  6 01:13:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	Clean name space according to ISO C, ISO C/Amd 1, and POSIX.1.

@@ -38,7 +38,7 @@ static const unsigned char encoding_byte[] =
 static mbstate_t internal;
 
 size_t
-wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
+__wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
   char fake[1];
   size_t written = 0;
@@ -89,3 +89,4 @@ wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   return written;
 }
+weak_alias (__wcrtomb, wcrtomb)

@@ -221,7 +221,6 @@ setdata (int category, const struct locale_data *data)
 char *
 setlocale (int category, const char *locale)
 {
-  char *locpath_var;
   char *locale_path;
   size_t locale_path_len;
   char *composite;
@@ -245,12 +244,15 @@ setlocale (int category, const char *locale)
   locale_path = NULL;
   locale_path_len = 0;
 
-  locpath_var = getenv ("LOCPATH");
-  if (locpath_var != NULL && locpath_var[0] != '\0'
-      && __getuid () == __geteuid () && __getgid () == __getegid ())
-    if (__argz_create_sep (locpath_var, ':',
-			   &locale_path, &locale_path_len) != 0)
-      return NULL;
+  if (!__libc_enable_secure)
+    {
+      char *locpath_var = getenv ("LOCPATH");
+
+      if (locpath_var != NULL && locpath_var[0] != '\0')
+	if (__argz_create_sep (locpath_var, ':',
+			       &locale_path, &locale_path_len) != 0)
+	  return NULL;
+    }
 
   if (__argz_append (&locale_path, &locale_path_len,
 		     LOCALE_PATH, sizeof (LOCALE_PATH)) != 0)

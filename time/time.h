@@ -177,7 +177,7 @@ extern struct tm *__localtime_r __P ((__const time_t *__timer,
 				      struct tm *__tp));
 extern struct tm *localtime_r __P ((__const time_t *__timer,
 				    struct tm *__tp));
-#endif
+#endif	/* reentrant */
 
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
@@ -192,6 +192,18 @@ extern char *asctime __P ((__const struct tm *__tp));
 
 /* Equivalent to `asctime(localtime(timer))'.  */
 extern char *ctime __P ((__const time_t *__timer));
+
+#ifdef	__USE_REENTRANT
+/* Reentrant versions of the above functions.  */
+
+/* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
+   that is the representation of TP in this format.  */
+extern char *__asctime_r __P ((__const struct tm *__tp, char *__buf));
+extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
+
+/* Equivalent to `asctime_r(localtime_r(timer, *TMP*), buf)'.  */
+extern char *ctime_r __P ((__const time_t *__timer, char *__buf));
+#endif	/* reentrant */
 
 
 /* Defined in localtime.c.  */

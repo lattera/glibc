@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -26,7 +25,8 @@ Cambridge, MA 02139, USA.  */
 /* Read formatted input from stdin according to the format
    string in FORMAT, using the argument list in ARG.  */
 int
-DEFUN(vscanf, (format, arg), CONST char *format AND va_list arg)
+__vscanf (const char *format, va_list arg)
 {
   return vfscanf (stdin, format, arg);
 }
+weak_alias (__vscanf, vscanf)

@@ -92,6 +92,39 @@ extern struct passwd *getpwuid __P ((__uid_t __uid));
 /* Search for an entry with a matching username.  */
 extern struct passwd *getpwnam __P ((__const char *__name));
 
+#ifdef	__USE_REENTRANT
+/* Reasonable value for the buffer sized used in the reentrant
+   functions below.  But better use `sysconf'.  */
+#define	NSS_BUFLEN_PASSWD	1024
+
+/* Reentrant versions of some of the functions above.
+
+   PLEASE NOTE: these functions are not yet standardized.  The interface
+   may change in later versions of this library.  */
+
+#if defined(__USE_SVID) || defined(__USE_MISC)
+extern struct passwd *__getpwent_r __P ((struct passwd *__resultbuf,
+					 char *__buffer, int __buflen));
+extern struct passwd *getpwent_r __P ((struct passwd *__resultbuf,
+				       char *__buffer, int __buflen));
+#endif
+
+extern struct passwd *__getpwuid_r __P ((__uid_t __uid,
+					 struct passwd *__resultbuf,
+					 char *__buffer, int __buflen));
+extern struct passwd *getpwuid_r __P ((__uid_t __uid,
+				       struct passwd *__resultbuf,
+				       char *__buffer, int __buflen));
+
+extern struct passwd *__getpwnam_r __P ((__const char *__name,
+					 struct passwd *__resultbuf,
+					 char *__buffer, int __buflen));
+extern struct passwd *getpwnam_r __P ((__const char *__name,
+				       struct passwd *__resultbuf,
+				       char *__buffer, int __buflen));
+
+#endif	/* reentrant */
+
 
 __END_DECLS
 

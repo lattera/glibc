@@ -151,10 +151,13 @@ extern int mbsinit __P ((__const mbstate_t *__ps));
 
 /* Write wide character representation of multibyte character pointed
    to by S to PWC.  */
+extern size_t __mbrtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n,
+			      mbstate_t *__p));
 extern size_t mbrtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n,
 			    mbstate_t *__p));
 
 /* Write multibyte representation of wide character WC to S.  */
+extern size_t __wcrtomb __P ((char *__s, wchar_t __wc, mbstate_t *__ps));
 extern size_t wcrtomb __P ((char *__s, wchar_t __wc, mbstate_t *__ps));
 
 /* Return number of bytes in multibyte character pointed to by S.  */
@@ -165,16 +168,20 @@ extern size_t mbrlen __P ((__const char *__s, size_t __n, mbstate_t *__ps));
     && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
 /* Define inline function as optimization.  */
 extern __inline size_t mbrlen (__const char *s, size_t n, mbstate_t *ps)
-{ return ps != NULL ? mbrtowc (NULL, s, n, ps) : __mbrlen (s, n, NULL); }
+{ return ps != NULL ? __mbrtowc (NULL, s, n, ps) : __mbrlen (s, n, NULL); }
 #endif
 
 /* Write wide character representation of multibyte character string
    SRC to DST.  */
+extern size_t __mbsrtowcs __P ((wchar_t *__dst, __const char **__src,
+				size_t __len, mbstate_t *__ps));
 extern size_t mbsrtowcs __P ((wchar_t *__dst, __const char **__src,
 			      size_t __len, mbstate_t *__ps));
 
 /* Write multibyte character representation of wide character string
    SRC to DST.  */
+extern size_t __wcsrtombs __P ((char *__dst, __const wchar_t **__src,
+				size_t __len, mbstate_t *__ps));
 extern size_t wcsrtombs __P ((char *__dst, __const wchar_t **__src,
 			      size_t __len, mbstate_t *__ps));
 

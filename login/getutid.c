@@ -29,7 +29,7 @@ getutid (const struct utmp *id)
 {
   struct utmp *result;
 
-  if (getutid_r (id, &result, &__utmp_data) < 0)
+  if (__getutid_r (id, &result, &__utmp_data) < 0)
     return NULL;
 
   return (struct utmp *) result;

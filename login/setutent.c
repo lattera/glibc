@@ -27,5 +27,5 @@ struct utmp_data __utmp_data = { ut_fd: -1 };
 void
 setutent (void)
 {
-  setutent_r (&__utmp_data);
+  __setutent_r (&__utmp_data);
 }

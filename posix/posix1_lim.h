@@ -81,6 +81,12 @@ Cambridge, MA 02139, USA.  */
 /* Maximum number of elements in an `iovec' array.  */
 #define	_POSIX_UIO_MAXIOV	16
 
+/* Maximum number of characters in a tty name.  */
+#define	_POSIX_TTY_NAME_MAX	9
+
+/* Maximum length of login name.  */
+#define	_POSIX_LOGIN_NAME_MAX	9
+
 
 /* Get the implementation-specific values for the above.  */
 #include <local_lim.h>

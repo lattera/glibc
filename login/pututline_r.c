@@ -31,7 +31,7 @@ Boston, MA 02111-1307, USA.  */
    which write the new value.  */
 
 int
-pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
+__pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 {
   struct stat st;
   int result = 0;
@@ -136,3 +136,4 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 
   return result;
 }
+weak_alias (__pututline_r, pututline_r)

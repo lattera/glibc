@@ -286,10 +286,10 @@ __getcwd (buf, size)
       mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      dirstream = opendir (dotp);
+      dirstream = __opendir (dotp);
       if (dirstream == NULL)
 	goto lose;
-      while ((d = readdir (dirstream)) != NULL)
+      while ((d = __readdir (dirstream)) != NULL)
 	{
 	  if (d->d_name[0] == '.' &&
 	      (d->d_name[1] == '\0' ||
@@ -304,7 +304,7 @@ __getcwd (buf, size)
 	      if (__lstat (name, &st) < 0)
 		{
 		  int save = errno;
-		  (void) closedir (dirstream);
+		  (void) __closedir (dirstream);
 		  errno = save;
 		  goto lose;
 		}
@@ -315,7 +315,7 @@ __getcwd (buf, size)
       if (d == NULL)
 	{
 	  int save = errno;
-	  (void) closedir (dirstream);
+	  (void) __closedir (dirstream);
 	  errno = save;
 	  goto lose;
 	}
@@ -336,7 +336,7 @@ __getcwd (buf, size)
 		  buf = realloc (path, size);
 		  if (buf == NULL)
 		    {
-		      (void) closedir (dirstream);
+		      (void) __closedir (dirstream);
 		      free (path);
 		      errno = ENOMEM; /* closedir might have changed it.  */
 		      return NULL;
@@ -348,7 +348,7 @@ __getcwd (buf, size)
 	  pathp -= namlen;
 	  (void) memcpy (pathp, d->d_name, namlen);
 	  *--pathp = '/';
-	  (void) closedir (dirstream);
+	  (void) __closedir (dirstream);
 	}
 
       thisdev = dotdev;

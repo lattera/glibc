@@ -31,7 +31,7 @@ static const char *utmp_file_name = (const char *) default_utmp_name;
 
 
 void
-setutent_r (struct utmp_data *utmp_data)
+__setutent_r (struct utmp_data *utmp_data)
 {
   /* Before the UTMP_DATA is used before the first time the UT_FD
      field must be set to -1.  */
@@ -56,12 +56,13 @@ setutent_r (struct utmp_data *utmp_data)
   utmp_data->ubuf.ut_type = UT_UNKNOWN;
 #endif
 }
+weak_alias (__setutent_r, setutent_r)
 
 
 int
-utmpname (const char *file)
+__utmpname (const char *file)
 {
-  char *fname = strdup (file);
+  char *fname = __strdup (file);
   if (fname == NULL)
     return 0;
 
@@ -72,3 +73,4 @@ utmpname (const char *file)
 
   return 1;
 }
+weak_alias (__utmpname, utmpname)

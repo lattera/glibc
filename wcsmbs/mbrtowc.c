@@ -28,7 +28,7 @@ Boston, MA 02111-1307, USA.  */
 static mbstate_t internal;
 
 size_t
-mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
+__mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
   size_t used = 0;
 
@@ -128,3 +128,4 @@ mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   return (size_t) -2;
 }
+weak_alias (__mbrtowc, mbrtowc)

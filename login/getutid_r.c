@@ -26,8 +26,8 @@ Boston, MA 02111-1307, USA.  */
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
 int
-getutid_r (const struct utmp *id, struct utmp **utmp,
-	   struct utmp_data *utmp_data)
+__getutid_r (const struct utmp *id, struct utmp **utmp,
+	     struct utmp_data *utmp_data)
 {
 #if (_HAVE_UT_ID - 0) && (_HAVE_UT_TYPE - 0)
   /* Test whether ID has any of the legal types.  */
@@ -114,3 +114,4 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
   return -1;
 #endif
 }
+weak_alias (__getutid_r, getutid_r)

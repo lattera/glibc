@@ -101,16 +101,19 @@ typedef struct __dirstream DIR;
 
 /* Open a directory stream on NAME.
    Return a DIR stream on the directory, or NULL if it could not be opened.  */
+extern DIR *__opendir __P ((__const char *__name));
 extern DIR *opendir __P ((__const char *__name));
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
+extern int __closedir __P ((DIR * __dirp));
 extern int closedir __P ((DIR * __dirp));
 
 /* Read a directory entry from DIRP.
    Return a pointer to a `struct dirent' describing the entry,
    or NULL for EOF or error.  The storage returned may be overwritten
    by a later readdir call on the same DIR stream.  */
+extern struct dirent *__readdir __P ((DIR * __dirp));
 extern struct dirent *readdir __P ((DIR * __dirp));
 
 /* Rewind DIRP to the beginning of the directory.  */

@@ -29,7 +29,7 @@ getutent (void)
 {
   struct utmp *result;
 
-  if (getutent_r (&result, &__utmp_data) < 0)
+  if (__getutent_r (&result, &__utmp_data) < 0)
     return NULL;
 
   return result;

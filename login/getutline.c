@@ -29,7 +29,7 @@ getutline (const struct utmp *line)
 {
   struct utmp *result;
 
-  if (getutline_r (line, &result, &__utmp_data) < 0)
+  if (__getutline_r (line, &result, &__utmp_data) < 0)
     return NULL;
 
   return (struct utmp *) result;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#include <limits.h>
 #include <unistd.h>
-
-extern long int EXFUN(__sysconf, (int));
+#include <sys/resource.h>
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
 int
-DEFUN_VOID(__getdtablesize)
+__getdtablesize (void)
 {
-  return __sysconf (_SC_OPEN_MAX);
+  struct rlimit ru;
+
+  /* This should even work if `getrlimit' is not implemented.  POSIX.1
+     does not define this function but we will generate a stub which
+     returns -1.  */
+  return __getrlimit (RLIMIT_NOFILE, &ru) < 0 ? OPEN_MAX : ru.rlim_cur;
 }
 
 weak_alias (__getdtablesize, getdtablesize)

@@ -50,6 +50,8 @@ Boston, MA 02111-1307, USA.  */
 #define REENTRANT_GETNAME APPEND_R (GETFUNC_NAME)
 #define APPEND_R(name) APPEND_R1 (name)
 #define APPEND_R1(name) name##_r
+#define INTERNAL(name) INTERNAL1 (name)
+#define INTERNAL1(name) __##name
 
 #define SETFUNC_NAME_STRING STRINGIZE (SETFUNC_NAME)
 #define GETFUNC_NAME_STRING STRINGIZE (REENTRANT_GETNAME)
@@ -186,7 +188,8 @@ ENDFUNC_NAME (void)
 
 
 LOOKUP_TYPE *
-REENTRANT_GETNAME (LOOKUP_TYPE *result, char *buffer, int buflen H_ERRNO_PARM)
+INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *result, char *buffer, int buflen
+			      H_ERRNO_PARM)
 {
   get_function fct;
   int no_more;
@@ -221,3 +224,5 @@ REENTRANT_GETNAME (LOOKUP_TYPE *result, char *buffer, int buflen H_ERRNO_PARM)
 
   return status == NSS_STATUS_SUCCESS ? result : NULL;
 }
+#define do_weak_alias(n1, n2) weak_alias (n1, n2)
+do_weak_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME)

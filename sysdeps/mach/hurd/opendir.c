@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
@@ -34,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Open a directory stream on NAME.  */
 DIR *
-DEFUN(opendir, (name), CONST char *name)
+__opendir (const char *name)
 {
   DIR *dirp;
   int fd;
@@ -70,3 +69,4 @@ DEFUN(opendir, (name), CONST char *name)
 
   return dirp;
 }
+weak_alias (__opendir, opendir)

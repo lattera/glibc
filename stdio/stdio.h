@@ -439,6 +439,7 @@ extern int vfscanf __P ((FILE *__s, __const char *__format,
 			 __gnuc_va_list __arg));
 
 /* Read formatted input from stdin into argument list ARG.  */
+extern int __vscanf __P ((__const char *__format, __gnuc_va_list __arg));
 extern int vscanf __P ((__const char *__format, __gnuc_va_list __arg));
 
 /* Read formatted input from S into argument list ARG.  */

@@ -33,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 /* Store at most BUFLEN character of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, -1 otherwise.  */
 int
-ttyname_r (fd, buf, buflen)
+__ttyname_r (fd, buf, buflen)
      int fd;
      char *buf;
      int buflen;
@@ -89,3 +89,4 @@ ttyname_r (fd, buf, buflen)
   errno = save;
   return -1;
 }
+weak_alias (__ttyname_r, ttyname_r)

@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sysdep.h>
 #include <fpu_control.h>
+#include <linux/personality.h>
 #include "init-first.h"
 
 extern void __libc_init (int, char **, char **);
@@ -27,6 +28,11 @@ extern void __libc_global_ctors (void);
 
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (void *) __attribute__ ((unused));
+
+extern int __libc_is_static;
+#ifdef PIC
+weak_extern (__libc_is_static)
+#endif
 
 static void
 init (void *data)
@@ -37,15 +43,36 @@ init (void *data)
   char **argv = (char **)data + 1;
   char **envp = &argv[argc + 1];
 
-  /* The `personality' system call takes one argument that chooses the
-     "personality", i.e. the set of system calls and such.  Zero is the
-     native Linux value; we must make this call first thing to disable
-     emulation of some other system that might have been enabled by default
-     based on the executable format.  */
-  __personality (0);
+#ifdef PIC
+  if (&__libc_is_static != NULL)
+#endif
+    {
+#ifdef PIC
+      /* We must not call `personality' twice.  */
+      if (__libc_is_static == 0)
+#endif
+	{
+	  /* The `personality' system call takes one argument that
+	     chooses the "personality", i.e. the set of system calls
+	     and such.  We must make this call first thing to disable
+	     emulation of some other system that might have been
+	     enabled by default based on the executable format.  */
+	  __personality (PER_LINUX);
 
-  /* Set the FPU control word to the proper default value.  */
-  __setfpucw (__fpu_control);
+	  /* Set the FPU control word to the proper default value.  */
+	  __setfpucw (__fpu_control);
+	}
+
+      /* We set LIBC_IS_STATIC to a value > 0 for the static library
+	 and < 0 for the shared library.  This information might be
+	 useful for the running program but it is mainly necessary for
+	 the above `if' statement.  */
+#ifdef PIC
+      __libc_is_static = -1;
+#else
+      __libc_is_static = 1;
+#endif
+    }
 
   __environ = envp;
   __libc_init (argc, argv, envp);

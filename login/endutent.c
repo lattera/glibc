@@ -27,5 +27,5 @@ extern struct utmp_data __utmp_data;
 void
 endutent (void)
 {
-  endutent_r (&__utmp_data);
+  __endutent_r (&__utmp_data);
 }

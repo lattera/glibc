@@ -86,19 +86,30 @@ struct utmp_data
 
 
 /* Reentrant versions of the file for handling utmp files.  */
+extern int __getutent_r __P ((struct utmp **__utmp,
+			      struct utmp_data *__utmp_data));
 extern int getutent_r __P ((struct utmp **__utmp,
 			    struct utmp_data *__utmp_data));
 
+extern void __setutent_r __P ((struct utmp_data *__utmp_data));
 extern void setutent_r __P ((struct utmp_data *__utmp_data));
 
+extern void __endutent_r __P ((struct utmp_data *__utmp_data));
 extern void endutent_r __P ((struct utmp_data *__utmp_data));
 
+extern int __getutid_r __P ((__const struct utmp *__id, struct utmp **__utmp,
+			     struct utmp_data *__utmp_data));
 extern int getutid_r __P ((__const struct utmp *__id, struct utmp **__utmp,
 			   struct utmp_data *__utmp_data));
 
+extern int __getutline_r __P ((__const struct utmp *__line,
+			       struct utmp **__utmp,
+			       struct utmp_data *__utmp_data));
 extern int getutline_r __P ((__const struct utmp *__line, struct utmp **__utmp,
 			     struct utmp_data *__utmp_data));
 
+extern int __pututline_r __P ((__const struct utmp *__utmp_ptr,
+			       struct utmp_data *__utmp_data));
 extern int pututline_r __P ((__const struct utmp *__utmp_ptr,
 			     struct utmp_data *__utmp_data));
 

@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Open a directory stream on NAME.  */
 DIR *
-opendir (const char *name)
+__opendir (const char *name)
 {
   DIR *dirp;
   struct stat statbuf;
@@ -49,7 +49,7 @@ opendir (const char *name)
   if (fd < 0)
     return NULL;
 
-  if (fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
+  if (__fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
     goto lose;
 
   if (fstat (fd, &statbuf) < 0)
@@ -95,3 +95,4 @@ opendir (const char *name)
 
   return dirp;
 }
+weak_alias (__opendir, opendir)

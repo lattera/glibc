@@ -41,5 +41,5 @@ wctomb (char *s, wchar_t wchar)
   if (s == NULL)
     return 1;
 
-  return wcrtomb (s, wchar, &__no_r_state);
+  return __wcrtomb (s, wchar, &__no_r_state);
 }

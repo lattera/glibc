@@ -66,6 +66,17 @@ useless_function (void)
 }
 asm ("\nEOF.end\n");
 
+/* Find out how much alignment is produced by the compiler.  */
+asm ("align=`awk '$1==\".align\" { if ($2>max) max=$2; } END { print max; }' \
+<<\\EOF.align");
+void
+useless_function2 (void (*foo) (void))
+{
+  if (foo)
+    (*foo) ();
+}
+asm ("\nEOF.align\n`\n");
+
 /* Append the .init prologue to crti.s-new.  */
 asm ("cat >> crti.s-new <<\\EOF.crti.init");
 
@@ -88,6 +99,7 @@ _init (void)
      to crtn.s-new, followed by the function epilogue.  */
   asm ("\n\
 EOF.crti.init\n\
+	test -n \"$align\" && echo .align $align >> crti.s-new\n\
 	test -n \"$need_end\" && echo .end _init >> crti.s-new\n\
 	fgrep .init crti.s-new >>crtn.s-new\n\
 	fgrep -v .end >> crtn.s-new <<\\EOF.crtn.init");
@@ -99,6 +111,11 @@ asm ("\nEOF.crtn.init\
 \n\
 cat >> crti.s-new <<\\EOF.crti.fini");
 
+/* Global variable which says whether we have a statically or dynamically
+   linked program.  If > 0, static, for < 0 dynamic, == 0 means yet to
+   be determined (see init-first.c).  */
+int __libc_is_static = 0;
+
 SECTION (".fini")
 void
 _fini (void)
@@ -107,6 +124,7 @@ _fini (void)
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */
   asm ("\nEOF.crti.fini\n\
+test -n \"$align\" && echo .align $align >> crti.s-new\n\
 test -n \"$need_end\" && echo .end _fini >> crti.s-new\n\
 cat > /dev/null <<\\EOF.fini.skip");
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <sys/resource.h>
 #include <errno.h>
 #include <hurd.h>
@@ -25,8 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 int
-DEFUN(getrlimit, (resource, rlimits),
-      enum __rlimit_resource resource AND struct rlimit *rlimits)
+__getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 {
   struct rlimit lim;
 
@@ -44,3 +42,4 @@ DEFUN(getrlimit, (resource, rlimits),
 
   return 0;
 }
+weak_alias (__getrlimit, getrlimit)

@@ -27,7 +27,7 @@ extern struct utmp_data __utmp_data;
 struct utmp *
 pututline (const struct utmp *utmp)
 {
-  if (pututline_r (utmp, &__utmp_data) < 0)
+  if (__pututline_r (utmp, &__utmp_data) < 0)
     return NULL;
 
   return (struct utmp *) utmp;

@@ -40,7 +40,7 @@ static const unsigned char encoding_byte[] =
 static mbstate_t internal;
 
 size_t
-wcsrtombs (dst, src, len, ps)
+__wcsrtombs (dst, src, len, ps)
      char *dst;
      const wchar_t **src;
      size_t len;
@@ -122,3 +122,4 @@ wcsrtombs (dst, src, len, ps)
 
   return written;
 }
+weak_alias (__wcsrtombs, wcsrtombs)

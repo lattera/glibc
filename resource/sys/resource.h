@@ -39,14 +39,16 @@ struct rlimit
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-int getrlimit __P ((enum __rlimit_resource __resource,
-		    struct rlimit * __rlimits));
+extern int __getrlimit __P ((enum __rlimit_resource __resource,
+			     struct rlimit *__rlimits));
+extern int getrlimit __P ((enum __rlimit_resource __resource,
+			   struct rlimit *__rlimits));
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-int setrlimit __P ((enum __rlimit_resource __resource,
-		    struct rlimit * __rlimits));
+extern int setrlimit __P ((enum __rlimit_resource __resource,
+			   struct rlimit *__rlimits));
 
 
 /* Whose usage statistics do you want?  */
@@ -110,8 +112,8 @@ struct rusage
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-int __getrusage __P ((enum __rusage_who __who, struct rusage * __usage));
-int getrusage __P ((enum __rusage_who __who, struct rusage * __usage));
+extern int __getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
+extern int getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
 
 /* Function depends on CMD:
    1 = Return the limit on the size of a file, in units of 512 bytes.
@@ -120,8 +122,8 @@ int getrusage __P ((enum __rusage_who __who, struct rusage * __usage));
    3 = Return the maximum possible address of the data segment.
    4 = Return the maximum number of files that the calling process can open.
    Returns -1 on errors.  */
-long int __ulimit __P ((int __cmd, long int __newlimit));
-long int ulimit __P ((int __cmd, long int __newlimit));
+extern long int __ulimit __P ((int __cmd, long int __newlimit));
+extern long int ulimit __P ((int __cmd, long int __newlimit));
 
 
 /* Priority limits.  */
@@ -151,4 +153,4 @@ extern int setpriority __P ((enum __priority_which __which, int __who,
 
 __END_DECLS
 
-#endif /* resource.h  */
+#endif	/* resource.h  */

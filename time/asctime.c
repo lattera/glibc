@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,34 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include "../locale/localeinfo.h"
 #include <errno.h>
 #include <stdio.h>
 #include <time.h>
 
 
+static const char format[] = "%.3s %.3s%3d %.2d:%.2d:%.2d %d\n";
+static char result[	         3+1+ 3+1+20+1+20+1+20+1+20+1+20+1 + 1];
+
 /* Returns a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    which is the representation of TP in that form.  */
 char *
-DEFUN(asctime, (tp), CONST struct tm *tp)
+asctime (const struct tm *tp)
 {
-  static const char format[] = "%.3s %.3s%3d %.2d:%.2d:%.2d %d\n";
-  static char result[	         3+1+ 3+1+20+1+20+1+20+1+20+1+20+1 + 1];
+  return __asctime_r (tp, result);
+}
 
+
+char *
+__asctime_r (const struct tm *tp, char *buf)
+{
   if (tp == NULL)
     {
       errno = EINVAL;
       return NULL;
     }
-  
-  if (sprintf (result, format,
+
+  if (sprintf (buf, format,
 	       (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
 		"???" : _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday)),
 	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
@@ -46,5 +52,6 @@ DEFUN(asctime, (tp), CONST struct tm *tp)
 	       tp->tm_sec, 1900 + tp->tm_year) < 0)
     return NULL;
 
-  return result;
+  return buf;
 }
+weak_alias (__asctime_r, asctime_r)

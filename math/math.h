@@ -114,6 +114,7 @@ struct exception
     double retval;
   };
 
+extern int __matherr __P ((struct exception *));
 extern int matherr __P ((struct exception *));
 
 #define X_TLOSS		1.41484755040568800000e+16

@@ -18,7 +18,7 @@ getgroups	-	getgroups	2	__getgroups	getgroups
 getitimer	-	getitimer	2	__getitimer	getitimer
 getpid		-	getpid		0	__getpid	getpid
 getpriority	-	getpriority	2	getpriority
-getrlimit	-	getrlimit	2	getrlimit
+getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 getuid		-	getuid		0	__getuid	getuid
 ioctl		-	ioctl		3	__ioctl		ioctl
 kill		-	kill		2	__kill		kill
@@ -33,7 +33,7 @@ readlink	-	readlink	3	__readlink	readlink
 readv		-	readv		3	readv
 reboot		-	reboot		1	reboot
 rename		-	rename		2	rename
-rmdir		-	rmdir		1	__rmdir	rmdir
+rmdir		-	rmdir		1	__rmdir		rmdir
 select		-	select		5	__select	select
 setdomain	-	setdomainname	2	setdomainname
 setegid		-	setegid		1	__setegid	setegid

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU C Library 1.10.1\n"
-"PO-Revision-Date: 1996-05-26 22:59 KST\n"
+"PO-Revision-Date: 1996-08-02 18:58 MET DST\n"
 "Last-Translator: Bang Jun Young <bangjy@nownuri.nowcom.co.kr>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1049,11 +1049,11 @@ msgstr "rcmd: 쓰기 (표준오류 설정): %s\n"
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
-msgstr "registerrpc: 메모리 부족"
+msgstr "registerrpc: 메모리 부족\n"
 
 #: inet/rcmd.c:158
 msgid "select: protocol failure in circuit setup\n"
-msgstr "select: 회로 설정중 규약이 불이행됨"
+msgstr "select: 회로 설정중 규약이 불이행됨\n"
 
 #: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
@@ -1061,7 +1061,7 @@ msgstr "socket: 회로 설정중 규약이 불이행됨.\n"
 
 #: sunrpc/svc_tcp.c:199 svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr "svc_tcp: makefc_xprt: 메모리 부족"
+msgstr "svc_tcp: makefc_xprt: 메모리 부족\n"
 
 #: sunrpc/svc_tcp.c:147
 msgid "svctcp_.c - cannot getsockname or listen"
@@ -1110,4 +1110,3 @@ msgstr "가변 길이 배열 선언이 있어야 함"
 #: sunrpc/rpc_parse.c:370
 msgid "voids allowed only inside union and program definitions"
 msgstr "void는 오직 공용체와 프로그램 정의 내에서만 허용됩니다"
-

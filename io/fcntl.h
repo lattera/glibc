@@ -52,8 +52,8 @@ extern int fcntl __P ((int __fd, int __cmd, ...));
 /* Open FILE and return a new file descriptor for it, or -1 on error.
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
    the third argument is taken as a `mode_t', the mode of the created file.  */
-extern int __open __P ((__const char *__file, int __oflag,...));
-extern int open __P ((__const char *__file, int __oflag,...));
+extern int __open __P ((__const char *__file, int __oflag, ...));
+extern int open __P ((__const char *__file, int __oflag, ...));
 
 /* Create and open FILE, with mode MODE.
    This takes an `int' MODE argument because that is

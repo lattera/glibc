@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
-readdir (DIR *dirp)
+__readdir (DIR *dirp)
 {
   struct dirent *dp;
 
@@ -105,3 +105,4 @@ readdir (DIR *dirp)
 
   return dp;
 }
+weak_alias (__readdir, readdir)
