@@ -1,5 +1,9 @@
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ar_SA: New file.
+
+	* locales/th_TH: Remove Thai digits from `digits'.
+
 	* SUPPORTED: Add th_TH.TIS-620.
 
 	* locales/el_GR (toupper): Don't map *s to S*.

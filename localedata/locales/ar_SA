@@ -1,0 +1,524 @@
+comment_char %
+escape_char  /
+repertoiremap mnemonic.ds
+
+% Arabic Locale
+% Charset: ISO-8859-6
+% repertoiremap mnemonic.ds
+% By: Salvador Sabanal, LinuxLab, SAP AG <salvador.sabanal@sap.com>
+% Date: Oct. 18, 1999
+% Adjusted to glibc mnemonics --drepper 2000-02-12
+
+LC_CTYPE
+
+upper	<A>;  <B>;  <C>;  <D>; /
+	<E>;  <F>;  <G>;  <H>; /
+	<I>;  <J>;  <K>;  <L>; /
+	<M>;  <N>;  <O>;  <P>; /
+	<Q>;  <R>;  <S>;  <T>; /
+	<U>;  <V>;  <W>;  <X>; /
+	<Y>;  <Z>
+
+lower	<a>;  <b>;  <c>;  <d>; /
+	<e>;  <f>;  <g>;  <h>; /
+	<i>;  <j>;  <k>;  <l>; /
+	<m>;  <n>;  <o>;  <p>; /
+	<q>;  <r>;  <s>;  <t>; /
+	<u>;  <v>;  <w>;  <x>; /
+	<y>;  <z>
+
+alpha	<A>;  <B>;  <C>;  <D>; /
+	<E>;  <F>;  <G>;  <H>; /
+	<I>;  <J>;  <K>;  <L>; /
+	<M>;  <N>;  <O>;  <P>; /
+	<Q>;  <R>;  <S>;  <T>; /
+	<U>;  <V>;  <W>;  <X>; /
+	<Y>;  <Z>;  <a>;  <b>; /
+	<c>;  <d>;  <e>;  <f>; /
+	<g>;  <h>;  <i>;  <j>; /
+	<k>;  <l>;  <m>;  <n>; /
+	<o>;  <p>;  <q>;  <r>; /
+	<s>;  <t>;  <u>;  <v>; /
+	<w>;  <x>;  <y>;  <z>; /
+	<H'>;  <aM>;  <aH>;  <wH>; /
+	<ah>;  <yH>;  <a+>;  <b+>; /
+	<tm>;  <t+>;  <tk>;  <g+>; /
+	<hk>;  <x+>;  <d+>;  <dk>; /
+	<r+>;  <z+>;  <s+>;  <sn>; /
+	<c+>;  <dd>;  <tj>;  <zH>; /
+	<e+>;  <i+>;  <++>;  <f+>; /
+	<q+>;  <k+>;  <l+>;  <m+>; /
+	<n+>;  <h+>;  <w+>;  <j+>; /
+	<y+>;  <:+>;  <"+>;  <=+>; /
+	<//+>;  <'+>;  <1+>;  <3+>; /
+	<0+>
+
+graph	<exclamation-mark>;  <quotation-mark>;  <number-sign>;  <dollar-sign>; /
+	<percent-sign>;  <ampersand>;  <apostrophe>;  <left-parenthesis>; /
+	<right-parenthesis>;  <asterisk>;  <plus-sign>;  <comma>; /
+	<hyphen>;  <period>;  <slash>;  <zero>; /
+	<one>;  <two>;  <three>;  <four>; /
+	<five>;  <six>;  <seven>;  <eight>; /
+	<nine>;  <colon>;  <semicolon>;  <less-than-sign>; /
+	<equals-sign>;  <greater-than-sign>;  <question-mark>;  <commercial-at>; /
+	<A>;  <B>;  <C>;  <D>; /
+	<E>;  <F>;  <G>;  <H>; /
+	<I>;  <J>;  <K>;  <L>; /
+	<M>;  <N>;  <O>;  <P>; /
+	<Q>;  <R>;  <S>;  <T>; /
+	<U>;  <V>;  <W>;  <X>; /
+	<Y>;  <Z>;  <left-square-bracket>;  <backslash>; /
+	<right-square-bracket>;  <circumflex-accent>;  <underscore>;  <grave-accent>; /
+	<a>;  <b>;  <c>;  <d>; /
+	<e>;  <f>;  <g>;  <h>; /
+	<i>;  <j>;  <k>;  <l>; /
+	<m>;  <n>;  <o>;  <p>; /
+	<q>;  <r>;  <s>;  <t>; /
+	<u>;  <v>;  <w>;  <x>; /
+	<y>;  <z>;  <left-brace>;  <vertical-line>; /
+	<right-brace>;  <tilde>;  <currency-symbol>; /
+	<,+>;  <soft-hyphen>;  <;+>;  <?+>; /
+	<H'>;  <aM>;  <aH>;  <wH>; /
+	<ah>;  <yH>;  <a+>;  <b+>; /
+	<tm>;  <t+>;  <tk>;  <g+>; /
+	<hk>;  <x+>;  <d+>;  <dk>; /
+	<r+>;  <z+>;  <s+>;  <sn>; /
+	<c+>;  <dd>;  <tj>;  <zH>; /
+	<e+>;  <i+>;  <++>;  <f+>; /
+	<q+>;  <k+>;  <l+>;  <m+>; /
+	<n+>;  <h+>;  <w+>;  <j+>; /
+	<y+>;  <:+>;  <"+>;  <=+>; /
+	<//+>;  <'+>;  <1+>;  <3+>; /
+	<0+>
+
+print	<space>;  <exclamation-mark>;  <quotation-mark>;  <number-sign>; /
+	<dollar-sign>;  <percent-sign>;  <ampersand>;  <apostrophe>; /
+	<left-parenthesis>;  <right-parenthesis>;  <asterisk>;  <plus-sign>; /
+	<comma>;  <hyphen>;  <period>;  <slash>; /
+	<zero>;  <one>;  <two>;  <three>; /
+	<four>;  <five>;  <six>;  <seven>; /
+	<eight>;  <nine>;  <colon>;  <semicolon>; /
+	<less-than-sign>;  <equals-sign>;  <greater-than-sign>;  <question-mark>; /
+	<commercial-at>;  <A>;  <B>;  <C>; /
+	<D>;  <E>;  <F>;  <G>; /
+	<H>;  <I>;  <J>;  <K>; /
+	<L>;  <M>;  <N>;  <O>; /
+	<P>;  <Q>;  <R>;  <S>; /
+	<T>;  <U>;  <V>;  <W>; /
+	<X>;  <Y>;  <Z>;  <left-square-bracket>; /
+	<backslash>;  <right-square-bracket>;  <circumflex-accent>;  <underscore>; /
+	<grave-accent>;  <a>;  <b>;  <c>; /
+	<d>;  <e>;  <f>;  <g>; /
+	<h>;  <i>;  <j>;  <k>; /
+	<l>;  <m>;  <n>;  <o>; /
+	<p>;  <q>;  <r>;  <s>; /
+	<t>;  <u>;  <v>;  <w>; /
+	<x>;  <y>;  <z>;  <left-brace>; /
+	<vertical-line>;  <right-brace>;  <tilde>;  <non-break-space>; /
+	<currency-symbol>;  <,+>;  <soft-hyphen>;  <;+>; /
+	<?+>;  <H'>;  <aM>;  <aH>; /
+	<wH>;  <ah>;  <yH>;  <a+>; /
+	<b+>;  <tm>;  <t+>;  <tk>; /
+	<g+>;  <hk>;  <x+>;  <d+>; /
+	<dk>;  <r+>;  <z+>;  <s+>; /
+	<sn>;  <c+>;  <dd>;  <tj>; /
+	<zH>;  <e+>;  <i+>;  <++>; /
+	<f+>;  <q+>;  <k+>;  <l+>; /
+	<m+>;  <n+>;  <h+>;  <w+>; /
+	<j+>;  <y+>;  <:+>;  <"+>; /
+	<=+>;  <//+>;  <'+>;  <1+>; /
+	<3+>;  <0+>
+
+digit	<zero>;  <one>;  <two>;  <three>; /
+	<four>;  <five>;  <six>;  <seven>; /
+	<eight>;  <nine>
+
+space	<tab>;  <newline>;  <vertical-tab>;  <form-feed>; /
+	<carriage-return>;  <space>; <NS>
+
+punct	<exclamation-mark>;  <quotation-mark>;  <number-sign>;  <dollar-sign>; /
+	<percent-sign>;  <ampersand>;  <apostrophe>;  <left-parenthesis>; /
+	<right-parenthesis>;  <asterisk>;  <plus-sign>;  <comma>; /
+	<hyphen>;  <period>;  <slash>;  <colon>; /
+	<semicolon>;  <less-than-sign>;  <equals-sign>;  <greater-than-sign>; /
+	<question-mark>;  <commercial-at>;  <left-square-bracket>;  <backslash>; /
+	<right-square-bracket>;  <circumflex-accent>;  <underscore>;  <grave-accent>; /
+	<left-brace>;  <vertical-line>;  <right-brace>;  <tilde>; /
+	<currency-symbol>;  <,+>;  <soft-hyphen>;  <;+>; /
+	<?+>
+
+cntrl	<NUL>;  <SOH>;  <STX>;  <ETX>; /
+	<EOT>;  <ENQ>;  <ACK>;  <BEL>; /
+	<backspace>;  <tab>;  <newline>;  <vertical-tab>; /
+	<form-feed>;  <carriage-return>;  <SO>;  <SI>; /
+	<DLE>;  <DC1>;  <DC2>;  <DC3>; /
+	<DC4>;  <NAK>;  <SYN>;  <ETB>; /
+	<CAN>;  <EM>;  <SUB>;  <ESC>; /
+	<IS4>;  <IS3>;  <IS2>;  <IS1>; /
+	<DEL>;  <PAD>;  <HOP>;  <BPH>; /
+	<NBH>;  <IND>;  <NEL>;  <SSA>; /
+	<ESA>;  <HTS>;  <HTJ>;  <VTS>; /
+	<PLD>;  <PLU>;  <RI>;  <SS2>; /
+	<SS3>;  <DCS>;  <PU1>;  <PU2>; /
+	<STS>;  <CCH>;  <MW>;  <SPS>; /
+	<EPA>;  <SOS>;  <SGCI>;  <SCI>; /
+	<CSI>;  <ST>;  <OSC>;  <PM>; /
+	<APC>
+
+blank	<tab>;  <space>
+
+xdigit	<zero>;  <one>;  <two>;  <three>; /
+	<four>;  <five>;  <six>;  <seven>; /
+	<eight>;  <nine>;  <A>;  <B>; /
+	<C>;  <D>;  <E>;  <F>; /
+	<a>;  <b>;  <c>;  <d>; /
+	<e>;  <f>
+
+toupper	(<a>,<A>);	(<b>,<B>); /
+	(<c>,<C>);	(<d>,<D>); /
+	(<e>,<E>);	(<f>,<F>); /
+	(<g>,<G>);	(<h>,<H>); /
+	(<i>,<I>);	(<j>,<J>); /
+	(<k>,<K>);	(<l>,<L>); /
+	(<m>,<M>);	(<n>,<N>); /
+	(<o>,<O>);	(<p>,<P>); /
+	(<q>,<Q>);	(<r>,<R>); /
+	(<s>,<S>);	(<t>,<T>); /
+	(<u>,<U>);	(<v>,<V>); /
+	(<w>,<W>);	(<x>,<X>); /
+	(<y>,<Y>);	(<z>,<Z>)
+
+tolower	(<A>,<a>);	(<B>,<b>); /
+	(<C>,<c>);	(<D>,<d>); /
+	(<E>,<e>);	(<F>,<f>); /
+	(<G>,<g>);	(<H>,<h>); /
+	(<I>,<i>);	(<J>,<j>); /
+	(<K>,<k>);	(<L>,<l>); /
+	(<M>,<m>);	(<N>,<n>); /
+	(<O>,<o>);	(<P>,<p>); /
+	(<Q>,<q>);	(<R>,<r>); /
+	(<S>,<s>);	(<T>,<t>); /
+	(<U>,<u>);	(<V>,<v>); /
+	(<W>,<w>);	(<X>,<x>); /
+	(<Y>,<y>);	(<Z>,<z>)
+
+END LC_CTYPE
+
+
+% Set up the LC_COLLATE category
+
+LC_COLLATE
+
+
+order_start		forward; forward
+<space>	<space>
+<zero>	<zero>
+<one>	<one>
+<two>	<two>
+<three>	<three>
+<four>	<four>
+<five>	<five>
+<six>	<six>
+<seven>	<seven>
+<eight>	<eight>
+<nine>	<nine>
+<A>	<A>;<A>
+<a>	<A>;<a>
+<B>	<B>;<B>
+<b>	<B>;<b>
+<C>	<C>;<C>
+<c>	<C>;<c>
+<D>	<D>;<D>
+<d>	<D>;<d>
+<E>	<E>;<E>
+<e>	<E>;<e>
+<F>	<F>;<F>
+<f>	<F>;<f>
+<G>	<G>;<G>
+<g>	<G>;<g>
+<H>	<H>;<H>
+<h>	<H>;<h>
+<I>	<I>;<I>
+<i>	<I>;<i>
+<J>	<J>;<J>
+<j>	<J>;<j>
+<K>	<K>;<K>
+<k>	<K>;<k>
+<L>	<L>;<L>
+<l>	<L>;<l>
+<M>	<M>;<M>
+<m>	<M>;<m>
+<N>	<N>;<N>
+<n>	<N>;<n>
+<O>	<O>;<O>
+<o>	<O>;<o>
+<P>	<P>;<P>
+<p>	<P>;<p>
+<Q>	<Q>;<Q>
+<q>	<Q>;<q>
+<R>	<R>;<R>
+<r>	<R>;<r>
+<S>	<S>;<S>
+<s>	<S>;<s>
+<T>	<T>;<T>
+<t>	<T>;<t>
+<U>	<U>;<U>
+<u>	<U>;<u>
+<V>	<V>;<V>
+<v>	<V>;<v>
+<W>	<W>;<W>
+<w>	<W>;<w>
+<X>	<X>;<X>
+<x>	<X>;<x>
+<Y>	<Y>;<Y>
+<y>	<Y>;<y>
+<Z>	<Z>;<Z>
+<z>	<Z>;<z>
+<exclamation-mark>	<exclamation-mark>
+<quotation-mark>	<quotation-mark>
+<number-sign>	<number-sign>
+<dollar-sign>	<dollar-sign>
+<percent-sign>	<percent-sign>
+<ampersand>	<ampersand>
+<apostrophe>	<apostrophe>
+<left-parenthesis>	<left-parenthesis>
+<right-parenthesis>	<right-parenthesis>
+<asterisk>	<asterisk>
+<plus-sign>	<plus-sign>
+<comma>	<comma>
+<hyphen>	<hyphen>
+<period>	<period>
+<slash>	<slash>
+<colon>	<colon>
+<semicolon>	<semicolon>
+<less-than-sign>	<less-than-sign>
+<equals-sign>	<equals-sign>
+<greater-than-sign>	<greater-than-sign>
+<question-mark>	<question-mark>
+<commercial-at>	<commercial-at>
+<left-square-bracket>	<left-square-bracket>
+<backslash>	<backslash>
+<right-square-bracket>	<right-square-bracket>
+<circumflex-accent>	<circumflex-accent>
+<underscore>	<underscore>
+<grave-accent>	<grave-accent>
+<left-brace>	<left-brace>
+<vertical-line>	<vertical-line>
+<right-brace>	<right-brace>
+<tilde>	<tilde>
+<non-break-space>	<non-break-space>
+<H'>	<H'>
+<aM>	<aM>
+<aH>	<aH>
+<wH>	<wH>
+<ah>	<ah>
+<yH>	<yH>
+<a+>	<a+>
+<b+>	<b+>
+<tm>	<tm>
+<t+>	<t+>
+<tk>	<tk>
+<g+>	<g+>
+<hk>	<hk>
+<x+>	<x+>
+<d+>	<d+>
+<dk>	<dk>
+<r+>	<r+>
+<z+>	<z+>
+<s+>	<s+>
+<sn>	<sn>
+<c+>	<c+>
+<dd>	<dd>
+<tj>	<tj>
+<zH>	<zH>
+<e+>	<e+>
+<i+>	<i+>
+<f+>	<f+>
+<q+>	<q+>
+<k+>	<k+>
+<l+>	<l+>
+<m+>	<m+>
+<n+>	<n+>
+<h+>	<h+>
+<w+>	<w+>
+<j+>	<j+>
+<y+>	<y+>
+<currency-symbol>	<currency-symbol>
+<arabic-comma>	<arabic-comma>
+<soft-hyphen>	<soft-hyphen>
+<;+>	<;+>
+<?+>	<?+>
+<NUL>	<NUL>
+<SOH>	<SOH>
+<STX>	<STX>
+<ETX>	<ETX>
+<EOT>	<EOT>
+<ENQ>	<ENQ>
+<ACK>	<ACK>
+<BEL>	<BEL>
+<backspace>	<backspace>
+<tab>	<tab>
+<newline>	<newline>
+<vertical-tab>	<vertical-tab>
+<form-feed>	<form-feed>
+<carriage-return>	<carriage-return>
+<SO>	<SO>
+<SI>	<SI>
+<DLE>	<DLE>
+<DC1>	<DC1>
+<DC2>	<DC2>
+<DC3>	<DC3>
+<DC4>	<DC4>
+<NAK>	<NAK>
+<SYN>	<SYN>
+<ETB>	<ETB>
+<CAN>	<CAN>
+<EM>	<EM>
+<SUB>	<SUB>
+<ESC>	<ESC>
+<IS4>	<IS4>
+<IS3>	<IS3>
+<IS2>	<IS2>
+<IS1>	<IS1>
+<PAD>	<PAD>
+<HOP>	<HOP>
+<BPH>	<BPH>
+<NBH>	<NBH>
+<IND>	<IND>
+<NEL>	<NEL>
+<SSA>	<SSA>
+<ESA>	<ESA>
+<HTS>	<HTS>
+<HTJ>	<HTJ>
+<VTS>	<VTS>
+<PLD>	<PLD>
+<PLU>	<PLU>
+<RI>	<RI>
+<SS2>	<SS2>
+<SS3>	<SS3>
+<DCS>	<DCS>
+<PU1>	<PU1>
+<PU2>	<PU2>
+<STS>	<STS>
+<CCH>	<CCH>
+<MW>	<MW>
+<SPS>	<SPS>
+<EPA>	<EPA>
+<SOS>	<SOS>
+<SGCI>	<SGCI>
+<SCI>	<SCI>
+<CSI>	<CSI>
+<ST>	<ST>
+<OSC>	<OSC>
+<PM>	<PM>
+<APC>	<APC>
+<DEL>	<DEL>
+<++>	IGNORE
+<:+>	IGNORE
+<"+>	IGNORE
+<=+>	IGNORE
+<//+>	IGNORE
+<'+>	IGNORE
+<1+>	IGNORE
+<3+>	IGNORE
+<0+>	IGNORE
+order_end
+
+
+END LC_COLLATE
+
+
+% Set up the LC_MONETARY category
+
+LC_MONETARY
+int_curr_symbol	"<S><A><R><space>"
+currency_symbol	"<r+><y+><a+><l+>"
+mon_decimal_point	"<period>"
+mon_thousands_sep	""
+mon_grouping	-1
+positive_sign	""
+negative_sign	"<hyphen>"
+int_frac_digits	2
+frac_digits	2
+p_cs_precedes	0
+p_sep_by_space	1
+n_cs_precedes	0
+n_sep_by_space	1
+p_sign_posn	1
+n_sign_posn	1
+END LC_MONETARY
+
+
+% Set up the LC_NUMERIC category
+
+LC_NUMERIC
+decimal_point	"<period>"
+thousands_sep	""
+grouping	-1
+END LC_NUMERIC
+
+
+% Set up the LC_TIME category
+% d_t_fmt	"%A %.1d %B %Y  %.1H:%M:%S"
+% d_fmt	"%A %.1d %B %Y"
+% t_fmt	"%.1H:%M:%S"
+% t_fmt_ampm	"%.1H:%M:%S"
+
+LC_TIME
+d_t_fmt	"<percent-sign><A><space><percent-sign><period><one><d><space><percent-sign><B><space><percent-sign><Y><space><space><percent-sign><period><one><H><colon><percent-sign><M><colon><percent-sign><S>"
+d_fmt	"<percent-sign><A><space><percent-sign><period><one><d><space><percent-sign><B><space><percent-sign><Y>"
+t_fmt	"<percent-sign><period><one><H><colon><percent-sign><M><colon><percent-sign><S>"
+t_fmt_ampm	"<percent-sign><period><one><H><colon><percent-sign><M><colon><percent-sign><S>"
+day	"<a+><l+><aH><hk><d+>"; /
+	"<a+><l+><ah><tk><n+><y+><n+>"; /
+	"<a+><l+><tk><l+><a+><tk><a+><H'>"; /
+	"<a+><l+><aH><r+><b+><e+><a+><H'>"; /
+	"<a+><l+><x+><m+><y+><s+>"; /
+	"<a+><l+><g+><m+><e+><++><tm>"; /
+	"<a+><l+><s+><b+><t+>"
+abday	"<S><u><n>"; /
+	"<M><o><n>"; /
+	"<T><u><e>"; /
+	"<W><e><d>"; /
+	"<T><h><u>"; /
+	"<F><r><i>"; /
+	"<S><a><t>"
+mon	"<k+><a+><n+><w+><n+><space><a+><l+><tk><a+><n+><y+>"; /
+	"<sn><b+><a+><tj>"; /
+	"<aM><dk><a+><r+>"; /
+	"<n+><y+><s+><++><a+><n+>"; /
+	"<aH><y+><a+><r+>"; /
+	"<hk><z+><y+><r+><a+><n+>"; /
+	"<t+><++><m+><++><w+><z+>"; /
+	"<aM><b+>"; /
+	"<aH><y+><l+><w+><l+>"; /
+	"<t+><sn><r+><y+><n+><space><a+><l+><aH><w+><l+>"; /
+	"<t+><sn><r+><y+><n+><space><a+><l+><tk><a+><n+><y+>"; /
+	"<k+><a+><n+><w+><n+><space><a+><l+><aH><w+><l+>"
+abmon	"<J><a><n>"; /
+	"<F><e><b>"; /
+	"<M><a><r>"; /
+	"<A><p><r>"; /
+	"<M><a><y>"; /
+	"<J><u><n>"; /
+	"<J><u><l>"; /
+	"<A><u><g>"; /
+	"<S><e><p>"; /
+	"<O><c><t>"; /
+	"<N><o><v>"; /
+	"<D><e><c>"
+am_pm	"";""
+era_d_fmt	""
+END LC_TIME
+
+
+% Set up the LC_MESSAGES category
+% yesexpr = "^(\346|\346\331\345)"
+% noexpr  = "^(\344|\344\307)"
+
+LC_MESSAGES
+yesstr	"<n+><e+><m+>"
+nostr	"<l+><a+>"
+yesexpr	"<circumflex-accent><left-parenthesis><n+><vertical-line><n+><e+><m+><right-parenthesis>"
+noexpr	"<circumflex-accent><left-parenthesis><l+><vertical-line><l+><a+><right-parenthesis>"
+END LC_MESSAGES

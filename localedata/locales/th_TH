@@ -54,8 +54,11 @@ alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
 % digit = Arabic digits  + Thai digits
 %
 digit   <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>;/
-        <th240>;...;<th249>
+        <five>;<six>;<seven>;<eight>;<nine>
+% The Thai digits
+%       <th240>;...;<th249>
+% cannot be listed here.  In glibc 2.2 they'll be in indigits and
+% possibly outdigits.
 
 xdigit  <zero>;<one>;<two>;<three>;<four>;/
         <five>;<six>;<seven>;<eight>;<nine>;/
@@ -562,316 +565,316 @@ UNDEFINED      IGNORE;IGNORE;IGNORE;IGNORE
 % Thai consonants, with leading vowels rearrangement
 %
 <th161>        <th161>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KO KAI
-<ko-kai-e>           "<th161><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ko-kai-ae>          "<th161><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ko-kai-o>           "<th161><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ko-kai-ai-maimuan>  "<th161><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ko-kai-ai-maimalai> "<th161><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<ko-kai-e>           <th161><th224>;<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ae>          <th161><th225>;<BLANK>;<BLANK>;<BLANK>
+<ko-kai-o>           <th161><th226>;<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ai-maimuan>  <th161><th227>;<BLANK>;<BLANK>;<BLANK>
+<ko-kai-ai-maimalai> <th161><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th162>        <th162>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHAI
-<kho-khai-e>           "<th162><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khai-ae>          "<th162><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khai-o>           "<th162><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khai-ai-maimuan>  "<th162><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khai-ai-maimalai> "<th162><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<kho-khai-e>           <th162><th224>;<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ae>          <th162><th225>;<BLANK>;<BLANK>;<BLANK>
+<kho-khai-o>           <th162><th226>;<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ai-maimuan>  <th162><th227>;<BLANK>;<BLANK>;<BLANK>
+<kho-khai-ai-maimalai> <th162><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th163>        <th163>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHUAT
-<kho-khuat-e>           "<th163><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khuat-ae>          "<th163><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khuat-o>           "<th163><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khuat-ai-maimuan>  "<th163><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khuat-ai-maimalai> "<th163><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<kho-khuat-e>           <th163><th224>;<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ae>          <th163><th225>;<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-o>           <th163><th226>;<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ai-maimuan>  <th163><th227>;<BLANK>;<BLANK>;<BLANK>
+<kho-khuat-ai-maimalai> <th163><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th164>        <th164>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHWAI
-<kho-khwai-e>           "<th164><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khwai-ae>          "<th164><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khwai-o>           "<th164><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khwai-ai-maimuan>  "<th164><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khwai-ai-maimalai> "<th164><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<kho-khwai-e>           <th164><th224>;<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ae>          <th164><th225>;<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-o>           <th164><th226>;<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ai-maimuan>  <th164><th227>;<BLANK>;<BLANK>;<BLANK>
+<kho-khwai-ai-maimalai> <th164><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th165>        <th165>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO KHON
-<kho-khon-e>           "<th165><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khon-ae>          "<th165><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khon-o>           "<th165><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khon-ai-maimuan>  "<th165><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-khon-ai-maimalai> "<th165><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<kho-khon-e>           <th165><th224>;<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ae>          <th165><th225>;<BLANK>;<BLANK>;<BLANK>
+<kho-khon-o>           <th165><th226>;<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ai-maimuan>  <th165><th227>;<BLANK>;<BLANK>;<BLANK>
+<kho-khon-ai-maimalai> <th165><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th166>        <th166>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER KHO RAKHANG
-<kho-rakhang-e>           "<th166><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-rakhang-ae>          "<th166><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-rakhang-o>           "<th166><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-rakhang-ai-maimuan>  "<th166><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<kho-rakhang-ai-maimalai> "<th166><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<kho-rakhang-e>           <th166><th224>;<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ae>          <th166><th225>;<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-o>           <th166><th226>;<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ai-maimuan>  <th166><th227>;<BLANK>;<BLANK>;<BLANK>
+<kho-rakhang-ai-maimalai> <th166><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th167>        <th167>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NGO NGU
-<ngo-ngu-e>           "<th167><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ngo-ngu-ae>          "<th167><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ngo-ngu-o>           "<th167><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ngo-ngu-ai-maimuan>  "<th167><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ngo-ngu-ai-maimalai> "<th167><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<ngo-ngu-e>           <th167><th224>;<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ae>          <th167><th225>;<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-o>           <th167><th226>;<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ai-maimuan>  <th167><th227>;<BLANK>;<BLANK>;<BLANK>
+<ngo-ngu-ai-maimalai> <th167><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th168>        <th168>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHAN
-<cho-chan-e>           "<th168><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chan-ae>          "<th168><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chan-o>           "<th168><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chan-ai-maimuan>  "<th168><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chan-ai-maimalai> "<th168><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<cho-chan-e>           <th168><th224>;<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ae>          <th168><th225>;<BLANK>;<BLANK>;<BLANK>
+<cho-chan-o>           <th168><th226>;<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ai-maimuan>  <th168><th227>;<BLANK>;<BLANK>;<BLANK>
+<cho-chan-ai-maimalai> <th168><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th169>        <th169>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHING
-<cho-ching-e>           "<th169><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-ching-ae>          "<th169><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-ching-o>           "<th169><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-ching-ai-maimuan>  "<th169><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-ching-ai-maimalai> "<th169><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<cho-ching-e>           <th169><th224>;<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ae>          <th169><th225>;<BLANK>;<BLANK>;<BLANK>
+<cho-ching-o>           <th169><th226>;<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ai-maimuan>  <th169><th227>;<BLANK>;<BLANK>;<BLANK>
+<cho-ching-ai-maimalai> <th169><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th170>        <th170>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHANG
-<cho-chang-e>           "<th170><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chang-ae>          "<th170><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chang-o>           "<th170><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chang-ai-maimuan>  "<th170><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-chang-ai-maimalai> "<th170><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<cho-chang-e>           <th170><th224>;<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ae>          <th170><th225>;<BLANK>;<BLANK>;<BLANK>
+<cho-chang-o>           <th170><th226>;<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ai-maimuan>  <th170><th227>;<BLANK>;<BLANK>;<BLANK>
+<cho-chang-ai-maimalai> <th170><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th171>        <th171>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SO
-<so-so-e>           "<th171><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-so-ae>          "<th171><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-so-o>           "<th171><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-so-ai-maimuan>  "<th171><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-so-ai-maimalai> "<th171><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<so-so-e>           <th171><th224>;<BLANK>;<BLANK>;<BLANK>
+<so-so-ae>          <th171><th225>;<BLANK>;<BLANK>;<BLANK>
+<so-so-o>           <th171><th226>;<BLANK>;<BLANK>;<BLANK>
+<so-so-ai-maimuan>  <th171><th227>;<BLANK>;<BLANK>;<BLANK>
+<so-so-ai-maimalai> <th171><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th172>        <th172>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER CHO CHOE
-<cho-choe-e>           "<th172><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-choe-ae>          "<th172><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-choe-o>           "<th172><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-choe-ai-maimuan>  "<th172><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<cho-choe-ai-maimalai> "<th172><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<cho-choe-e>           <th172><th224>;<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ae>          <th172><th225>;<BLANK>;<BLANK>;<BLANK>
+<cho-choe-o>           <th172><th226>;<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ai-maimuan>  <th172><th227>;<BLANK>;<BLANK>;<BLANK>
+<cho-choe-ai-maimalai> <th172><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th173>        <th173>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER YO YING
-<yo-ying-e>           "<th173><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-ying-ae>          "<th173><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-ying-o>           "<th173><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-ying-ai-maimuan>  "<th173><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-ying-ai-maimalai> "<th173><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<yo-ying-e>           <th173><th224>;<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ae>          <th173><th225>;<BLANK>;<BLANK>;<BLANK>
+<yo-ying-o>           <th173><th226>;<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ai-maimuan>  <th173><th227>;<BLANK>;<BLANK>;<BLANK>
+<yo-ying-ai-maimalai> <th173><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th174>        <th174>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER DO CHADA
-<do-chada-e>           "<th174><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-chada-ae>          "<th174><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-chada-o>           "<th174><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-chada-ai-maimuan>  "<th174><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-chada-ai-maimalai> "<th174><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<do-chada-e>           <th174><th224>;<BLANK>;<BLANK>;<BLANK>
+<do-chada-ae>          <th174><th225>;<BLANK>;<BLANK>;<BLANK>
+<do-chada-o>           <th174><th226>;<BLANK>;<BLANK>;<BLANK>
+<do-chada-ai-maimuan>  <th174><th227>;<BLANK>;<BLANK>;<BLANK>
+<do-chada-ai-maimalai> <th174><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th175>        <th175>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER TO PATAK
-<to-patak-e>           "<th175><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-patak-ae>          "<th175><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-patak-o>           "<th175><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-patak-ai-maimuan>  "<th175><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-patak-ai-maimalai> "<th175><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<to-patak-e>           <th175><th224>;<BLANK>;<BLANK>;<BLANK>
+<to-patak-ae>          <th175><th225>;<BLANK>;<BLANK>;<BLANK>
+<to-patak-o>           <th175><th226>;<BLANK>;<BLANK>;<BLANK>
+<to-patak-ai-maimuan>  <th175><th227>;<BLANK>;<BLANK>;<BLANK>
+<to-patak-ai-maimalai> <th175><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th176>        <th176>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THAN
-<tho-than-e>           "<th176><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-than-ae>          "<th176><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-than-o>           "<th176><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-than-ai-maimuan>  "<th176><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-than-ai-maimalai> "<th176><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-than-e>           <th176><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-than-ae>          <th176><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-than-o>           <th176><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-than-ai-maimuan>  <th176><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-than-ai-maimalai> <th176><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th177>        <th177>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO NANGMONTHO
-<tho-nangmontho-e>           "<th177><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-nangmontho-ae>          "<th177><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-nangmontho-o>           "<th177><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-nangmontho-ai-maimuan>  "<th177><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-nangmontho-ai-maimalai> "<th177><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-nangmontho-e>           <th177><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ae>          <th177><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-o>           <th177><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ai-maimuan>  <th177><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-nangmontho-ai-maimalai> <th177><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th178>        <th178>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO PHUTHAO
-<tho-phuthao-e>           "<th178><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-phuthao-ae>          "<th178><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-phuthao-o>           "<th178><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-phuthao-ai-maimuan>  "<th178><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-phuthao-ai-maimalai> "<th178><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-phuthao-e>           <th178><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ae>          <th178><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-o>           <th178><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ai-maimuan>  <th178><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-phuthao-ai-maimalai> <th178><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th179>        <th179>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NO NEN
-<no-nen-e>           "<th179><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nen-ae>          "<th179><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nen-o>           "<th179><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nen-ai-maimuan>  "<th179><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nen-ai-maimalai> "<th179><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<no-nen-e>           <th179><th224>;<BLANK>;<BLANK>;<BLANK>
+<no-nen-ae>          <th179><th225>;<BLANK>;<BLANK>;<BLANK>
+<no-nen-o>           <th179><th226>;<BLANK>;<BLANK>;<BLANK>
+<no-nen-ai-maimuan>  <th179><th227>;<BLANK>;<BLANK>;<BLANK>
+<no-nen-ai-maimalai> <th179><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th180>        <th180>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER DO DEK
-<do-dek-e>           "<th180><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-dek-ae>          "<th180><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-dek-o>           "<th180><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-dek-ai-maimuan>  "<th180><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<do-dek-ai-maimalai> "<th180><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<do-dek-e>           <th180><th224>;<BLANK>;<BLANK>;<BLANK>
+<do-dek-ae>          <th180><th225>;<BLANK>;<BLANK>;<BLANK>
+<do-dek-o>           <th180><th226>;<BLANK>;<BLANK>;<BLANK>
+<do-dek-ai-maimuan>  <th180><th227>;<BLANK>;<BLANK>;<BLANK>
+<do-dek-ai-maimalai> <th180><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th181>        <th181>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER TO TAO
-<to-tao-e>           "<th181><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-tao-ae>          "<th181><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-tao-o>           "<th181><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-tao-ai-maimuan>  "<th181><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<to-tao-ai-maimalai> "<th181><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<to-tao-e>           <th181><th224>;<BLANK>;<BLANK>;<BLANK>
+<to-tao-ae>          <th181><th225>;<BLANK>;<BLANK>;<BLANK>
+<to-tao-o>           <th181><th226>;<BLANK>;<BLANK>;<BLANK>
+<to-tao-ai-maimuan>  <th181><th227>;<BLANK>;<BLANK>;<BLANK>
+<to-tao-ai-maimalai> <th181><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th182>        <th182>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THUNG
-<tho-thung-e>           "<th182><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thung-ae>          "<th182><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thung-o>           "<th182><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thung-ai-maimuan>  "<th182><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thung-ai-maimalai> "<th182><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-thung-e>           <th182><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ae>          <th182><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-thung-o>           <th182><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ai-maimuan>  <th182><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-thung-ai-maimalai> <th182><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th183>        <th183>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THAHAN
-<tho-thahan-e>           "<th183><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thahan-ae>          "<th183><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thahan-o>           "<th183><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thahan-ai-maimuan>  "<th183><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thahan-ai-maimalai> "<th183><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-thahan-e>           <th183><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ae>          <th183><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-o>           <th183><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ai-maimuan>  <th183><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-thahan-ai-maimalai> <th183><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th184>        <th184>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER THO THONG
-<tho-thong-e>           "<th184><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thong-ae>          "<th184><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thong-o>           "<th184><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thong-ai-maimuan>  "<th184><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<tho-thong-ai-maimalai> "<th184><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<tho-thong-e>           <th184><th224>;<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ae>          <th184><th225>;<BLANK>;<BLANK>;<BLANK>
+<tho-thong-o>           <th184><th226>;<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ai-maimuan>  <th184><th227>;<BLANK>;<BLANK>;<BLANK>
+<tho-thong-ai-maimalai> <th184><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th185>        <th185>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER NO NU
-<no-nu-e>           "<th185><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nu-ae>          "<th185><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nu-o>           "<th185><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nu-ai-maimuan>  "<th185><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<no-nu-ai-maimalai> "<th185><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<no-nu-e>           <th185><th224>;<BLANK>;<BLANK>;<BLANK>
+<no-nu-ae>          <th185><th225>;<BLANK>;<BLANK>;<BLANK>
+<no-nu-o>           <th185><th226>;<BLANK>;<BLANK>;<BLANK>
+<no-nu-ai-maimuan>  <th185><th227>;<BLANK>;<BLANK>;<BLANK>
+<no-nu-ai-maimalai> <th185><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th186>        <th186>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER BO BAIMAI
-<bo-baimai-e>           "<th186><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<bo-baimai-ae>          "<th186><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<bo-baimai-o>           "<th186><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<bo-baimai-ai-maimuan>  "<th186><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<bo-baimai-ai-maimalai> "<th186><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<bo-baimai-e>           <th186><th224>;<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ae>          <th186><th225>;<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-o>           <th186><th226>;<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ai-maimuan>  <th186><th227>;<BLANK>;<BLANK>;<BLANK>
+<bo-baimai-ai-maimalai> <th186><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th187>        <th187>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PO PLA
-<po-pla-e>           "<th187><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<po-pla-ae>          "<th187><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<po-pla-o>           "<th187><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<po-pla-ai-maimuan>  "<th187><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<po-pla-ai-maimalai> "<th187><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<po-pla-e>           <th187><th224>;<BLANK>;<BLANK>;<BLANK>
+<po-pla-ae>          <th187><th225>;<BLANK>;<BLANK>;<BLANK>
+<po-pla-o>           <th187><th226>;<BLANK>;<BLANK>;<BLANK>
+<po-pla-ai-maimuan>  <th187><th227>;<BLANK>;<BLANK>;<BLANK>
+<po-pla-ai-maimalai> <th187><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th188>        <th188>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO PHUNG
-<pho-phung-e>           "<th188><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phung-ae>          "<th188><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phung-o>           "<th188><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phung-ai-maimuan>  "<th188><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phung-ai-maimalai> "<th188><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<pho-phung-e>           <th188><th224>;<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ae>          <th188><th225>;<BLANK>;<BLANK>;<BLANK>
+<pho-phung-o>           <th188><th226>;<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ai-maimuan>  <th188><th227>;<BLANK>;<BLANK>;<BLANK>
+<pho-phung-ai-maimalai> <th188><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th189>        <th189>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER FO FA
-<fo-fa-e>           "<th189><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fa-ae>          "<th189><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fa-o>           "<th189><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fa-ai-maimuan>  "<th189><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fa-ai-maimalai> "<th189><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<fo-fa-e>           <th189><th224>;<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ae>          <th189><th225>;<BLANK>;<BLANK>;<BLANK>
+<fo-fa-o>           <th189><th226>;<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ai-maimuan>  <th189><th227>;<BLANK>;<BLANK>;<BLANK>
+<fo-fa-ai-maimalai> <th189><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th190>        <th190>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO PHAN
-<pho-phan-e>           "<th190><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phan-ae>          "<th190><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phan-o>           "<th190><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phan-ai-maimuan>  "<th190><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-phan-ai-maimalai> "<th190><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<pho-phan-e>           <th190><th224>;<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ae>          <th190><th225>;<BLANK>;<BLANK>;<BLANK>
+<pho-phan-o>           <th190><th226>;<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ai-maimuan>  <th190><th227>;<BLANK>;<BLANK>;<BLANK>
+<pho-phan-ai-maimalai> <th190><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th191>        <th191>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER FO FAN
-<fo-fan-e>           "<th191><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fan-ae>          "<th191><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fan-o>           "<th191><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fan-ai-maimuan>  "<th191><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<fo-fan-ai-maimalai> "<th191><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<fo-fan-e>           <th191><th224>;<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ae>          <th191><th225>;<BLANK>;<BLANK>;<BLANK>
+<fo-fan-o>           <th191><th226>;<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ai-maimuan>  <th191><th227>;<BLANK>;<BLANK>;<BLANK>
+<fo-fan-ai-maimalai> <th191><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th192>        <th192>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER PHO SAMPHAO
-<pho-samphao-e>           "<th192><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-samphao-ae>          "<th192><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-samphao-o>           "<th192><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-samphao-ai-maimuan>  "<th192><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<pho-samphao-ai-maimalai> "<th192><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<pho-samphao-e>           <th192><th224>;<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ae>          <th192><th225>;<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-o>           <th192><th226>;<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ai-maimuan>  <th192><th227>;<BLANK>;<BLANK>;<BLANK>
+<pho-samphao-ai-maimalai> <th192><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th193>        <th193>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER MO MA
-<mo-ma-e>           "<th193><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<mo-ma-ae>          "<th193><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<mo-ma-o>           "<th193><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<mo-ma-ai-maimuan>  "<th193><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<mo-ma-ai-maimalai> "<th193><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<mo-ma-e>           <th193><th224>;<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ae>          <th193><th225>;<BLANK>;<BLANK>;<BLANK>
+<mo-ma-o>           <th193><th226>;<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ai-maimuan>  <th193><th227>;<BLANK>;<BLANK>;<BLANK>
+<mo-ma-ai-maimalai> <th193><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th194>        <th194>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER YO YAK
-<yo-yak-e>           "<th194><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-yak-ae>          "<th194><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-yak-o>           "<th194><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-yak-ai-maimuan>  "<th194><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<yo-yak-ai-maimalai> "<th194><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<yo-yak-e>           <th194><th224>;<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ae>          <th194><th225>;<BLANK>;<BLANK>;<BLANK>
+<yo-yak-o>           <th194><th226>;<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ai-maimuan>  <th194><th227>;<BLANK>;<BLANK>;<BLANK>
+<yo-yak-ai-maimalai> <th194><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th195>        <th195>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER RO RUA
-<ro-rua-e>           "<th195><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ro-rua-ae>          "<th195><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ro-rua-o>           "<th195><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ro-rua-ai-maimuan>  "<th195><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ro-rua-ai-maimalai> "<th195><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<ro-rua-e>           <th195><th224>;<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ae>          <th195><th225>;<BLANK>;<BLANK>;<BLANK>
+<ro-rua-o>           <th195><th226>;<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ai-maimuan>  <th195><th227>;<BLANK>;<BLANK>;<BLANK>
+<ro-rua-ai-maimalai> <th195><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th196>        <th196>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER RU
 
 <th197>        <th197>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LO LING
-<lo-ling-e>           "<th197><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-ling-ae>          "<th197><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-ling-o>           "<th197><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-ling-ai-maimuan>  "<th197><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-ling-ai-maimalai> "<th197><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<lo-ling-e>           <th197><th224>;<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ae>          <th197><th225>;<BLANK>;<BLANK>;<BLANK>
+<lo-ling-o>           <th197><th226>;<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ai-maimuan>  <th197><th227>;<BLANK>;<BLANK>;<BLANK>
+<lo-ling-ai-maimalai> <th197><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th198>        <th198>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LU
 
 <th199>        <th199>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER WO WAEN
-<wo-waen-e>           "<th199><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<wo-waen-ae>          "<th199><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<wo-waen-o>           "<th199><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<wo-waen-ai-maimuan>  "<th199><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<wo-waen-ai-maimalai> "<th199><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<wo-waen-e>           <th199><th224>;<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ae>          <th199><th225>;<BLANK>;<BLANK>;<BLANK>
+<wo-waen-o>           <th199><th226>;<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ai-maimuan>  <th199><th227>;<BLANK>;<BLANK>;<BLANK>
+<wo-waen-ai-maimalai> <th199><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th200>        <th200>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SALA
-<so-sala-e>           "<th200><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sala-ae>          "<th200><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sala-o>           "<th200><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sala-ai-maimuan>  "<th200><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sala-ai-maimalai> "<th200><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<so-sala-e>           <th200><th224>;<BLANK>;<BLANK>;<BLANK>
+<so-sala-ae>          <th200><th225>;<BLANK>;<BLANK>;<BLANK>
+<so-sala-o>           <th200><th226>;<BLANK>;<BLANK>;<BLANK>
+<so-sala-ai-maimuan>  <th200><th227>;<BLANK>;<BLANK>;<BLANK>
+<so-sala-ai-maimalai> <th200><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th201>        <th201>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO RUSI
-<so-rusi-e>           "<th201><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-rusi-ae>          "<th201><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-rusi-o>           "<th201><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-rusi-ai-maimuan>  "<th201><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-rusi-ai-maimalai> "<th201><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<so-rusi-e>           <th201><th224>;<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ae>          <th201><th225>;<BLANK>;<BLANK>;<BLANK>
+<so-rusi-o>           <th201><th226>;<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ai-maimuan>  <th201><th227>;<BLANK>;<BLANK>;<BLANK>
+<so-rusi-ai-maimalai> <th201><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th202>        <th202>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER SO SUA
-<so-sua-e>           "<th202><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sua-ae>          "<th202><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sua-o>           "<th202><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sua-ai-maimuan>  "<th202><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<so-sua-ai-maimalai> "<th202><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<so-sua-e>           <th202><th224>;<BLANK>;<BLANK>;<BLANK>
+<so-sua-ae>          <th202><th225>;<BLANK>;<BLANK>;<BLANK>
+<so-sua-o>           <th202><th226>;<BLANK>;<BLANK>;<BLANK>
+<so-sua-ai-maimuan>  <th202><th227>;<BLANK>;<BLANK>;<BLANK>
+<so-sua-ai-maimalai> <th202><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th203>        <th203>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER HO HIP
-<ho-hip-e>           "<th203><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-hip-ae>          "<th203><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-hip-o>           "<th203><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-hip-ai-maimuan>  "<th203><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-hip-ai-maimalai> "<th203><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<ho-hip-e>           <th203><th224>;<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ae>          <th203><th225>;<BLANK>;<BLANK>;<BLANK>
+<ho-hip-o>           <th203><th226>;<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ai-maimuan>  <th203><th227>;<BLANK>;<BLANK>;<BLANK>
+<ho-hip-ai-maimalai> <th203><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th204>        <th204>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER LO CHULA
-<lo-chula-e>           "<th204><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-chula-ae>          "<th204><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-chula-o>           "<th204><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-chula-ai-maimuan>  "<th204><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<lo-chula-ai-maimalai> "<th204><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<lo-chula-e>           <th204><th224>;<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ae>          <th204><th225>;<BLANK>;<BLANK>;<BLANK>
+<lo-chula-o>           <th204><th226>;<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ai-maimuan>  <th204><th227>;<BLANK>;<BLANK>;<BLANK>
+<lo-chula-ai-maimalai> <th204><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th205>        <th205>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER O ANG
-<o-ang-e>           "<th205><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<o-ang-ae>          "<th205><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<o-ang-o>           "<th205><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<o-ang-ai-maimuan>  "<th205><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<o-ang-ai-maimalai> "<th205><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<o-ang-e>           <th205><th224>;<BLANK>;<BLANK>;<BLANK>
+<o-ang-ae>          <th205><th225>;<BLANK>;<BLANK>;<BLANK>
+<o-ang-o>           <th205><th226>;<BLANK>;<BLANK>;<BLANK>
+<o-ang-ai-maimuan>  <th205><th227>;<BLANK>;<BLANK>;<BLANK>
+<o-ang-ai-maimalai> <th205><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th206>        <th206>;<BLANK>;<BLANK>;<BLANK> % THAI CHARACTER HO NOKHUK
-<ho-nokhuk-e>           "<th206><th224>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-nokhuk-ae>          "<th206><th225>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-nokhuk-o>           "<th206><th226>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-nokhuk-ai-maimuan>  "<th206><th227>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
-<ho-nokhuk-ai-maimalai> "<th206><th228>";"<BLANK><BLANK>";"<BLANK><BLANK>";"<BLANK><BLANK>"
+<ho-nokhuk-e>           <th206><th224>;<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ae>          <th206><th225>;<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-o>           <th206><th226>;<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ai-maimuan>  <th206><th227>;<BLANK>;<BLANK>;<BLANK>
+<ho-nokhuk-ai-maimalai> <th206><th228>;<BLANK>;<BLANK>;<BLANK>
 
 <th237> <th237>;<BLANK>;<BLANK>;<BLANK>  % THAI CHARACTER NIKHAHIT
 
