@@ -1616,6 +1616,12 @@ make_message (char *name, char *value)
 @end smallexample
 
 In practice, it is often easier just to use @code{asprintf}, below.
+
+@strong{Attention:} In the GNU C library version 2.0 the return value
+is the number of characters stored, not including the terminating null.
+If this value equals @code{@var{size} - 1}, then there was not enough
+space in @var{s} for all the output.  This change was neccessary with
+the adoption of snprintf by ISO C9x.
 @end deftypefun
 
 @node Dynamic Output

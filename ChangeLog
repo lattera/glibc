@@ -1,3 +1,18 @@
+1999-05-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Extend (f)truncate documentation.
+	* manual/llio.texi: Remove duplicate (f)truncate definition.
+
+1999-05-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/stdio.texi (Formatted Output Functions): Mention
+	semantics of snprintf in glibc 2.0.
+	Reported by Ben Pfaff <pfaffben@msu.edu>.
+
+1999-05-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/features.h (__GLIBC_MINOR__): Bump to 2.
+
 1999-05-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c: Adjust a few more deltas for the poor ARM

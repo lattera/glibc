@@ -2526,14 +2526,22 @@ Using these functions on anything other than a regular file gives
 @emph{undefined} results.  On many systems, such a call will appear to
 succeed, without actually accomplishing anything.
 
+@comment unistd.h
+@comment X/Open
 @deftypefun int truncate (const char *@var{filename}, off_t @var{length})
 
 The @code{truncate} function changes the size of @var{filename} to
-@var{length}.  If @var{length} is shorter than the previous length, data at
-the end will be lost.
+@var{length}.  If @var{length} is shorter than the previous length, data
+at the end will be lost.  The file must be writable by the user to
+perform this operation.
 
 If @var{length} is longer, holes will be added to the end.  However, some
 systems do not support this feature and will leave the file unchanged.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{truncate} function is in fact @code{truncate64} and the type
+@code{off_t} has 64 bits which makes it possible to handle files up to
+@math{2^63} bytes in length.
 
 The return value is @math{0} for success, or @math{-1} for an error.  In
 addition to the usual file name errors, the following errors may occur:
@@ -2562,15 +2570,46 @@ The operation was interrupted by a signal.
 
 @end deftypefun
 
+@comment unistd.h
+@comment Unix98
+@deftypefun int truncate64 (const char *@var{name}, off64_t @var{length})
+This function is similar to the @code{truncate} function.  The
+difference is that the @var{length} argument is 64 bits wide even on 32
+bits machines which allows to handle file with a size up to @math{2^63}
+bytes.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits machine this function is actually available under the name
+@code{truncate} and so transparently replaces the 32 bits interface.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX
 @deftypefun int ftruncate (int @var{fd}, off_t @var{length})
 
-This is like @code{truncate}, but it works on a file descriptor @var{fd}.
+This is like @code{truncate}, but it works on a file descriptor @var{fd}
+for an opened file instead of a file name to identify the object.  The
+file must be opened for writing to successfully carry out the operation.
+
+The POSIX standard leaves it implementation defined what happens if the
+specified new @var{length} of the file is bigger than the original size.
+The @code{ftruncate} function might simply leave the file alone and do
+nothing or it can increase the size to the desired size.  In this later
+case the extended area should be zero-filled.  So using @code{ftruncate}
+is no reliable way to increase the file size but if it is possible it is
+probably the fastest way.  The function also operates on POSIX shared
+memory segments if these are implemented by the system.
 
 @code{ftruncate} is especially useful in combination with @code{mmap}.
 Since the mapped region must have a fixed size one cannot enlarge the
 file by writing something beyond the last mapped page.  Instead one has
 to enlarge the file itself and then remap the file with the new size.
 The example below shows how this works.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
+@code{ftruncate} function is in fact @code{ftruncate64} and the type
+@code{off_t} has 64 bits which makes it possible to handle files up to
+@math{2^63} bytes in length.
 
 The return value is @math{0} for success, or @math{-1} for an error.  The
 following errors may occur:
@@ -2606,6 +2645,19 @@ The operation was interrupted by a signal.
 
 @end table
 
+@end deftypefun
+
+@comment unistd.h
+@comment Unix98
+@deftypefun int ftruncate64 (int @var{id}, off64_t @var{length})
+This function is similar to the @code{ftruncate} function.  The
+difference is that the @var{length} argument is 64 bits wide even on 32
+bits machines which allows to handle file with a size up to @math{2^63}
+bytes.
+
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32 bits machine this function is actually available under the name
+@code{ftruncate} and so transparently replaces the 32 bits interface.
 @end deftypefun
 
 As announced here is a little example how to use @code{ftruncate} in
