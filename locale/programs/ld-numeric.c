@@ -116,8 +116,9 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
      != "".  */
   if (numeric->decimal_point == NULL)
     {
-      error (0, 0, _("%s: field `%s' not defined"),
-	     "LC_NUMERIC", "decimal_point");
+      if (! be_quiet && ! nothing)
+	error (0, 0, _("%s: field `%s' not defined"),
+	       "LC_NUMERIC", "decimal_point");
       numeric->decimal_point = ".";
     }
   else if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)

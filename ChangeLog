@@ -1,5 +1,8 @@
 1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-monetary.c (monetary_finish): Don't print
+	individual error message if nothing is defined.
+
 	* locale/programs/ld-time.c (time_startup): Test for lr being
 	nonzero, not time.
 

@@ -1,0 +1,159 @@
+escape_char /
+comment_char %
+repertoiremap mnemonic.ds
+
+LC_CTYPE
+
+digit   <0>;<1>;<2>;<3>;<4>;/
+        <5>;<6>;<7>;<8>;<9>
+
+xdigit  <0>;<1>;<2>;<3>;<4>;/
+        <5>;<6>;<7>;<8>;<9>;/
+        <A>;<B>;<C>;<D>;<E>;<F>;/
+        <a>;<b>;<c>;<d>;<e>;<f>
+
+blank   <SP>;<HT>;<NS>
+
+space   <SP>;<LF>;<VT>;<FF>;/
+        <CR>;<HT>;<NS>
+
+upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;/
+        <H>;<I>;<J>;<K>;<L>;<M>;<N>;/
+        <O>;<P>;<Q>;<R>;<S>;<T>;<U>;/
+        <V>;<W>;<X>;<Y>;<Z>
+
+lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;/
+        <h>;<i>;<j>;<k>;<l>;<m>;<n>;/
+        <o>;<p>;<q>;<r>;<s>;<t>;<u>;/
+        <v>;<w>;<x>;<y>;<z>
+
+alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;/
+        <H>;<I>;<J>;<K>;<L>;<M>;<N>;/
+        <O>;<P>;<Q>;<R>;<S>;<T>;<U>;/
+        <V>;<W>;<X>;<Y>;<Z>;<a>;<b>;/
+        <c>;<d>;<e>;<f>;<g>;<h>;<i>;/
+        <j>;<k>;<l>;<m>;<n>;<o>;<p>;/
+        <q>;<r>;<s>;<t>;<u>;<v>;<w>;/
+        <x>;<y>;<z>
+
+cntrl   <NU>;<SH>;<SX>;<EX>;<ET>;<EQ>;/
+        <AK>;<BL>;<BS>;<HT>;<LF>;<VT>;/
+        <FF>;<CR>;<SO>;<SI>;<DL>;<D1>;/
+        <D2>;<D3>;<D4>;<NK>;<SY>;<EB>;/
+        <CN>;<EM>;<SB>;<EC>;<FS>;<GS>;/
+        <RS>;<US>;<DT>;<PA>;<HO>;<BH>;/
+        <NH>;<IN>;<NL>;<SA>;<ES>;<HS>;/
+        <HJ>;<VS>;<PD>;<PU>;<RI>;<S2>;/
+        <S3>;<DC>;<P1>;<P2>;<TS>;<CC>;/
+        <MW>;<SG>;<EG>;<SS>;<GC>;<SC>;/
+        <CI>;<ST>;<OC>;<PM>;<AC>
+
+punct   <!>;<">;<Nb>;<DO>;<%>;<&>;<'>;/
+        <(>;<)>;<*>;<+>;<,>;<->;<.>;/
+        <//>;<:>;<;>;<<>;<=>;</>>;<?>;/
+        <At>;<<(>;<////>;<)/>>;<'/>>
+
+tolower (<A>,<a>);/
+        (<B>,<b>);/
+        (<C>,<c>);/
+        (<D>,<d>);/
+        (<E>,<e>);/
+        (<F>,<f>);/
+        (<G>,<g>);/
+        (<H>,<h>);/
+        (<I>,<i>);/
+        (<J>,<j>);/
+        (<K>,<k>);/
+        (<L>,<l>);/
+        (<M>,<m>);/
+        (<N>,<n>);/
+        (<O>,<o>);/
+        (<P>,<p>);/
+        (<Q>,<q>);/
+        (<R>,<r>);/
+        (<S>,<s>);/
+        (<T>,<t>);/
+        (<U>,<u>);/
+        (<V>,<v>);/
+        (<W>,<w>);/
+        (<X>,<x>);/
+        (<Y>,<y>);/
+        (<Z>,<z>)
+
+toupper (<a>,<A>);/
+        (<b>,<B>);/
+        (<c>,<C>);/
+        (<d>,<D>);/
+        (<e>,<E>);/
+        (<f>,<F>);/
+        (<g>,<G>);/
+        (<h>,<H>);/
+        (<i>,<I>);/
+        (<j>,<J>);/
+        (<k>,<K>);/
+        (<l>,<L>);/
+        (<m>,<M>);/
+        (<n>,<N>);/
+        (<o>,<O>);/
+        (<p>,<P>);/
+        (<q>,<Q>);/
+        (<r>,<R>);/
+        (<s>,<S>);/
+        (<t>,<T>);/
+        (<u>,<U>);/
+        (<v>,<V>);/
+        (<w>,<W>);/
+        (<x>,<X>);/
+        (<y>,<Y>);/
+        (<z>,<Z>)
+
+charconv test
+
+test (<A>,<B>);(<B>,<C>)
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_TIME
+copy "en_DK"
+END LC_TIME
+
+LC_NUMERIC
+copy "en_DK"
+END LC_NUMERIC
+
+LC_MONETARY
+copy "en_DK"
+END LC_MONETARY
+
+LC_MESSAGES
+copy "en_DK"
+END LC_MESSAGES
+
+LC_PAPER
+height 297
+width 210
+END LC_PAPER
+
+LC_NAME
+name_fmt    "<%><p><%><t><%><g><%><t><%><m><%><t><%><f>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt    "<%><a><%><N><%><f><%><N><%><d><%><N><%><b><%><N><%>/
+<%><s><SP><%><h><SP><%><e><SP><%><r><%><N>/
+<%><C><-><%><z><SP><%><T><%><N><%><c><%><N>"
+END LC_ADDRESS
+
+LC_TELEPHONE
+tel_int_fmt    "<+><%><c><SP><%><a><SP><%><l>"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+measurement    1
+END LC_MEASUREMENT
+
+LC_IDENTIFICATION
+END LC_IDENTIFICATION
