@@ -1,3 +1,7 @@
+2003-05-14  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/umount.c: New file.
+
 2003-05-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): For LD_TRACE_PRELINKING print search scope
