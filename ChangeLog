@@ -1,5 +1,8 @@
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/Makefile (tests): Add tst-preadwrite.
+	* posix/tst-preadwrite.c: New file.
+
 	* sysdeps/unix/opendir.c (__opendir): Add back fstat call to make
 	sure that descriptor is in any case for a directory.
 

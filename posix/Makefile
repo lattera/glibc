@@ -55,7 +55,8 @@ routines :=								      \
 include ../Makeconfig
 
 aux		:= init-posix environ
-tests		:= tstgetopt testfnm runtests wordexp-test runptests
+tests		:= tstgetopt testfnm runtests wordexp-test runptests	     \
+		   tst-preadwrite
 test-srcs	:= globtest
 others		:= getconf
 install-bin	:= getconf
