@@ -33,16 +33,21 @@ __db_oflags(oflags)
 	u_int32_t dbflags;
 
 	/*
-	 * XXX
-	 * Convert POSIX 1003.1 open(2) flags to DB flags.  Not an exact
-	 * science as most POSIX implementations don't have a flag value
-	 * for O_RDONLY, it's simply the lack of a write flag.
+	 * Convert POSIX 1003.1 open(2) flags to DB flags.
 	 */
 	dbflags = 0;
+	switch (oflags & O_ACCMODE) {
+	case O_RDONLY:
+		dbflags |= DB_RDONLY;
+		break;
+	case O_WRONLY:
+	case O_RDWR:
+		break;
+	default:		/* Bogus flags value from user.  */
+	  /* XXX no way to return error from here */
+	}
 	if (oflags & O_CREAT)
 		dbflags |= DB_CREATE;
-	if (!(oflags & (O_RDWR | O_WRONLY)) || oflags & O_RDONLY)
-		dbflags |= DB_RDONLY;
 	if (oflags & O_TRUNC)
 		dbflags |= DB_TRUNCATE;
 	return (dbflags);
