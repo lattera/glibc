@@ -1,3 +1,7 @@
+2001-03-30  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex.c: Avoid an access violation if malloc failes.
+
 2001-03-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/alpha/ldiv.S (ldiv): Add alias for imaxdiv.
