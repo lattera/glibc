@@ -1,3 +1,8 @@
+2002-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-4217.def: Remove obsolete currencies for countries
+	with Euro.
+
 2002-02-28  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (regcomp): Remove a redundant condition.

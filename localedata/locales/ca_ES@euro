@@ -53,21 +53,7 @@ copy "ca_ES"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol      "<U0045><U0055><U0052><U0020>"
-currency_symbol      "<U20AC>"
-mon_decimal_point    "<U002C>"
-mon_thousands_sep    "<U002E>"
-mon_grouping         2;3
-positive_sign        ""
-negative_sign        "<U002D>"
-int_frac_digits      0
-frac_digits          0
-p_cs_precedes        1
-p_sep_by_space       1
-n_cs_precedes        1
-n_sep_by_space       1
-p_sign_posn          1
-n_sign_posn          1
+copy "ca_ES"
 END LC_MONETARY
 
 LC_NUMERIC

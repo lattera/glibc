@@ -69,8 +69,8 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol     "<U0044><U0045><U004D><U0020>"
-currency_symbol     "<U0044><U004D>"
+int_curr_symbol     "<U0045><U0055><U0052><U0020>"
+currency_symbol     "<U20AC>"
 mon_decimal_point   "<U002C>"
 mon_thousands_sep   "<U002E>"
 mon_grouping        3;3

@@ -14,7 +14,6 @@ escape_char  /
 % Date: 1999-07-07
 % Application: general
 % Users: general
-% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
@@ -61,8 +60,8 @@ noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol      "<U0045><U0053><U0050><U0020>"
-currency_symbol      "<U0050><U0074><U0061>"
+int_curr_symbol      "<U0045><U0055><U0052><U0020>"
+currency_symbol      "<U20AC>"
 mon_decimal_point    "<U002C>"
 mon_thousands_sep    "<U002E>"
 mon_grouping         3;3

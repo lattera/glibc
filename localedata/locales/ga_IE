@@ -12,7 +12,6 @@ comment_char  %
 % Revision: 4.3
 % Date: 1996-10-15
 % Users: general
-% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
@@ -53,8 +52,8 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<U0049><U0045><U0050><U0020>"
-currency_symbol         "<U00A3>"
+int_curr_symbol         "<U0045><U0055><U0052><U0020>"
+currency_symbol         "<U20AC>"
 mon_decimal_point       "<U002E>"
 mon_thousands_sep       "<U002C>"
 mon_grouping            3;3

@@ -16,7 +16,6 @@ comment_char    %
 % Date: 1996-10-15
 % Application: general
 % Users: general
-% Repertoiremap: mnemonic.ds
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
@@ -2119,8 +2118,8 @@ copy "i18n"
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol      "<U0046><U0049><U004D><U0020>"
-currency_symbol      "<U006D><U006B>"
+int_curr_symbol      "<U0045><U0055><U0052><U0020>"
+currency_symbol      "<U20AC>"
 mon_decimal_point    "<U002C>"
 mon_thousands_sep    "<U002E>"
 mon_grouping         3;3

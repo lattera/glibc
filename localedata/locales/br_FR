@@ -13,7 +13,6 @@ escape_char  /
 % Revision: 0.5
 % Date: 2001-01-28
 % Users: general
-% Repertoiremap:
 % Charset: ISO-8859-1
 % Distribution and use is free, also
 % for commercial purposes.
@@ -99,8 +98,8 @@ noexpr  "<U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0046><U0052><U0046><U0020>"
-currency_symbol           "<U0046>"
+int_curr_symbol           "<U0045><U0055><U0052><U0020>"
+currency_symbol           "<U20AC>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U0020>"
 mon_grouping              3;3
