@@ -1,5 +1,5 @@
 /* Which thread is running on an LWP?
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,7 +122,6 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
       return TD_DBERR;
 
     default:
-      abort ();
       return TD_DBERR;
 
     case ta_howto_reg:
