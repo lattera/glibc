@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -292,6 +292,8 @@ extern error_t hurd_sig_post (pid_t pid, int sig, mach_port_t refport);
    other than the proc server (such as a bootstrap filesystem) can set
    these variables to install the ports.  */
 
+extern kern_return_t __get_privileged_ports (host_priv_t *host_priv_ptr,
+					     device_t *device_master_ptr);
 extern kern_return_t get_privileged_ports (host_priv_t *host_priv_ptr,
 					   device_t *device_master_ptr);
 extern mach_port_t _hurd_host_priv, _hurd_device_master;

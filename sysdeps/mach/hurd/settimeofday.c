@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ __settimeofday (tv, tz)
      const struct timezone *tz;
 {
   error_t err;
-  mach_port_t hostpriv, devmaster;
+  mach_port_t hostpriv;
 
   if (tz != NULL)
     {
@@ -37,10 +37,9 @@ __settimeofday (tv, tz)
       return -1;
     }
 
-  if (err = __USEPORT (PROC, __proc_getprivports (port,
-						  &hostpriv, &devmaster)))
-    return __hurd_fail (err);
-  __mach_port_deallocate (__mach_task_self (), devmaster);
+  err = __get_privileged_ports (&hostpriv, NULL);
+  if (err)
+    return __hurd_fail (EPERM);
 
   /* `time_value_t' and `struct timeval' are in fact identical with the
      names changed.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,97,98,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +28,11 @@ reboot (int howto)
 {
   error_t err;
   startup_t init;
-  mach_port_t hostpriv, devmaster;
+  mach_port_t hostpriv;
 
-  if (err = __USEPORT (PROC, __proc_getprivports (port,
-						  &hostpriv, &devmaster)))
-    return __hurd_fail (err);
-  __mach_port_deallocate (__mach_task_self (), devmaster);
+  err = __get_privileged_ports (&hostpriv, NULL);
+  if (err)
+    return __hurd_fail (EPERM);
 
   err = __USEPORT (PROC, __proc_getmsgport (port, 1, &init));
   if (!err)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,8 @@ mach_port_t _hurd_host_priv, _hurd_device_master;
 
 
 kern_return_t
-get_privileged_ports (host_priv_t *host_priv_ptr, device_t *device_master_ptr)
+__get_privileged_ports (host_priv_t *host_priv_ptr,
+			device_t *device_master_ptr)
 {
   if (! _hurd_host_priv)
     {
@@ -46,15 +47,16 @@ get_privileged_ports (host_priv_t *host_priv_ptr, device_t *device_master_ptr)
 
   if (host_priv_ptr)
     {
-      mach_port_mod_refs (mach_task_self (),
-			  _hurd_host_priv, MACH_PORT_RIGHT_SEND, 1);
+      __mach_port_mod_refs (mach_task_self (),
+			    _hurd_host_priv, MACH_PORT_RIGHT_SEND, 1);
       *host_priv_ptr = _hurd_host_priv;
     }
   if (device_master_ptr)
     {
-      mach_port_mod_refs (mach_task_self (),
-			  _hurd_device_master, MACH_PORT_RIGHT_SEND, 1);
+      __mach_port_mod_refs (mach_task_self (),
+			    _hurd_device_master, MACH_PORT_RIGHT_SEND, 1);
       *device_master_ptr = _hurd_device_master;
     }
   return KERN_SUCCESS;
 }
+weak_alias (__get_privileged_ports, get_privileged_ports)

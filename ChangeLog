@@ -1,5 +1,13 @@
 2001-04-19  Roland McGrath  <roland@frob.com>
 
+	* hurd/privports.c (__get_privileged_ports): Renamed with __.
+	Use __ names for calls we make.
+	(get_privileged_ports): Add alias.
+	* hurd/hurd.h: Declare it with the __ name.
+	* sysdeps/mach/hurd/reboot.c (reboot): Use __get_privileged_ports.
+	* sysdeps/mach/hurd/adjtime.c (__adjtime): Likewise.
+	* sysdeps/mach/hurd/settimeofday.c (__settimeofday): Likewise.
+
 	* hurd/hurdsig.c (write_corefile): Check RLIMIT_CORE limit and do
 	nothing if it's zero.
 

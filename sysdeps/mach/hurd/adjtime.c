@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,95,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,12 +30,11 @@ __adjtime (delta, olddelta)
      struct timeval *olddelta;
 {
   error_t err;
-  mach_port_t hostpriv, devmaster;
+  mach_port_t hostpriv;
 
-  if (err = __USEPORT (PROC, __proc_getprivports (port,
-						  &hostpriv, &devmaster)))
-    return __hurd_fail (err);
-  __mach_port_deallocate (__mach_task_self (), devmaster);
+  err = __get_privileged_ports (&hostpriv, NULL);
+  if (err)
+    return __hurd_fail (EPERM);
 
   err = __host_adjust_time (hostpriv,
 			    /* `time_value_t' and `struct timeval' are in
