@@ -1,3 +1,8 @@
+2005-03-21  GOTO Masanori  <gotom@debian.or.jp>
+
+	* linuxthreads/sysdeps/m68k/Makefile: Remove to delete
+	unneeded o-iterator thing.
+
 2005-02-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Add local _init
