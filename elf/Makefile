@@ -69,6 +69,7 @@ distribute	:= rtld-Rules \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
 		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h \
 		   tst-tlsmod1.c tst-tlsmod2.c tst-tlsmod3.c tst-tlsmod4.c \
+		   tst-tlsmod5.c tst-tlsmod6.c \
 		   circlemod1.c circlemod1a.c circlemod2.c circlemod2a.c \
 		   circlemod3.c circlemod3a.c nodlopenmod2.c \
 		   tls-macros.h
@@ -115,9 +116,14 @@ vpath %.c ../locale/programs
 endif
 endif
 
-tests = tst-tls1 tst-tls2
+tests = tst-tls1 tst-tls2 tst-tls9
 ifeq (yes,$(build-static))
 tests-static = tst-tls1-static tst-tls2-static
+ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
+tests-static += tst-tls9-static
+tst-tls9-static-ENV = \
+	LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+endif
 tests += $(tests-static)
 endif
 ifeq (yes,$(build-shared))
@@ -147,6 +153,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
 		reldep7mod1 reldep7mod2 \
 		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
+		tst-tlsmod5 tst-tlsmod6 \
 		circlemod1 circlemod1a circlemod2 circlemod2a \
 		circlemod3 circlemod3a
 modules-vis-yes = vismod1 vismod2 vismod3
@@ -347,6 +354,9 @@ $(objpfx)reldep6mod3.so: $(objpfx)reldep6mod2.so
 $(objpfx)reldep6mod4.so: $(objpfx)reldep6mod1.so
 $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
 
+LDFLAGS-tst-tlsmod5.so = -nostdlib
+LDFLAGS-tst-tlsmod6.so = -nostdlib
+
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -523,3 +533,11 @@ $(objpfx)tst-tls7.out: $(objpfx)tst-tlsmod3.so
 
 $(objpfx)tst-tls8: $(libdl)
 $(objpfx)tst-tls8.out: $(objpfx)tst-tlsmod3.so $(objpfx)tst-tlsmod4.so
+
+$(objpfx)tst-tls9: $(libdl)
+$(objpfx)tst-tls9.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
+
+ifdef libdl
+$(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
+$(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
+endif
