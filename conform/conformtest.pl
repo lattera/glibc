@@ -278,7 +278,8 @@ sub checknamespace {
   unlink "$fnamebase.c";
   $realerror = 0;
   if ($#errors != 0) {
-    foreach $f (%errors) {
+    # Sort the output list so it's easier to compare results with diff.
+    foreach $f (sort keys(%errors)) {
       if ($errors{$f} == 1) {
 	if ($realerror == 0) {
 	  printf ("FAIL\n    " . "-" x 72 . "\n");
