@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    unpredictable before this is done.  */
 
 int
-msync (caddr_t addr, size_t len)
+msync (caddr_t addr, size_t len, int flags)
 {
   errno = ENOSYS;
   return -1;

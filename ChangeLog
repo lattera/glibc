@@ -1,3 +1,39 @@
+Mon Jan 29 21:53:40 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/stub/msync.c (msync): Declare third arg FLAGS.
+
+	* resolv/Makefile (+cflags): Append to this instead of CFLAGS.
+
+Mon Jan 29 16:29:16 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Recalculate GOT to
+ 	include an increment for each operation allowed on each fd.
+
+Mon Jan 29 11:44:38 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/configure: Set $inhibit_glue.
+
+	* Makefile: Use -include for sysd-dirs.
+
+	* configure.in (uname): Check for uname in syscalls.list files.
+	* sysdeps/unix/sysv/syscalls.list: Remove uname.
+	* sysdeps/unix/syscalls.list: Add uname.
+
+	* stdlib/strtol.c (weak1): New macro, to get the right name declared
+	weak.
+
+	* sysdeps/posix/getcwd.c (size_t): Don't define #ifdef __GNU_LIBRARY__.
+
+	* db/hash/ndbm.c: Change all uses of `errno' struct member to `errnum'.
+	(dbm_open): Use dynamic allocation for file name buffer, instead of
+	limitting its size to MAXPATHLEN.
+
+	* db/btree/bt_open.c (tmp): Use dynamic allocation for file name
+	buffer, instead of limitting its size to MAXPATHLEN.
+
+	* db/hash/hash.h (HTAB): Rename member `errno' to `errnum'.
+	* db/hash/hash.c: Change all uses of `errno' struct member to `errnum'.
+
 Sun Jan 28 19:42:04 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* time/Makefile: Fix check for cross compiling.
