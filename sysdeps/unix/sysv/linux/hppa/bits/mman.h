@@ -27,6 +27,10 @@
 #define PROT_WRITE	0x2		/* page can be written */
 #define PROT_EXEC	0x4		/* page can be executed */
 #define PROT_NONE	0x0		/* page can not be accessed */
+#define PROT_GROWSDOWN	0x01000000	/* Extend change to start of
+					   growsdown vma (mprotect only).  */
+#define PROT_GROWSUP	0x02000000	/* Extend change to start of
+					   growsup vma (mprotect only).  */
 
 #define MAP_SHARED	0x01		/* Share changes */
 #define MAP_PRIVATE	0x02		/* Changes are private */
