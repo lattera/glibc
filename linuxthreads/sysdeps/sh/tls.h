@@ -88,7 +88,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(descr) \
-  do {									      \
+  ({									      \
     void *_descr = (descr);						      \
     int result;								      \
     tcbhead_t *head = _descr;						      \
@@ -98,7 +98,9 @@ typedef struct
     head->self = _descr;						      \
 									      \
     asm ("ldc %0,gbr" : : "r" (_descr));				      \
-  } while (0)
+									      \
+    0;									      \
+  })
 
 
 /* Return the address of the dtv for the current thread.  */
