@@ -224,7 +224,7 @@ was seen.
 
 @comment getopt.h
 @comment GNU
-@deftypefun int getopt_long (int @var{argc}, char **@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
+@deftypefun int getopt_long (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
 Decode options from the vector @var{argv} (whose length is @var{argc}).
 The argument @var{shortopts} describes the short options to accept, just as
 it does in @code{getopt}.  The argument @var{longopts} describes the long
@@ -267,6 +267,36 @@ how you can tell whether an optional argument was supplied.
 When @code{getopt_long} has no more options to handle, it returns
 @code{-1}, and leaves in the variable @code{optind} the index in
 @var{argv} of the next remaining argument.
+@end deftypefun
+
+Since long option names were used before before the @code{getopt_long}
+options was invented there are program interfaces which require programs
+to recognize options like @w{@samp{-option value}} instead of
+@w{@samp{--option value}}.  To enable these programs to use the GNU
+getopt functionality there is one more function available.
+
+@comment getopt.h
+@comment GNU
+@deftypefun int getopt_long_only (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
+
+The @code{getopt_long_only} function is equivalent to the
+@code{getopt_long} function but it allows to specify the user of the
+application to pass long options with only @samp{-} instead of
+@samp{--}.  The @samp{--} prefix is still recognized but instead of
+looking through the short options if a @samp{-} is seen it is first
+tried whether this parameter names a long option.  If not, it is parsed
+as a short option.
+
+Assuming @code{getopt_long_only} is used starting an application with
+
+@smallexample
+  app -foo
+@end smallexample
+
+@noindent
+the @code{getopt_long_only} will first look for a long option named
+@samp{foo}.  If this is not found, the short options @samp{f}, @samp{o},
+and again @samp{o} are recognized.
 @end deftypefun
 
 @node Getopt Long Option Example
