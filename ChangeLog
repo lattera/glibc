@@ -1,3 +1,8 @@
+Tue Mar  5 18:45:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Include LASTFD in the
+	final loop.
+
 Mon Mar  4 20:54:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Makeconfig ($(common-objpfx)config.make): Depend on config.h.in.
