@@ -1,5 +1,13 @@
 2002-09-11  Roland McGrath  <roland@redhat.com>
 
+	* nss/getnssent_r.c (__nss_getent_r): Use EAGAIN instead of errno
+	when using h_errno and it's not set to NETDB_INTERNAL.
+	* nss/getXXbyYY_r.c [NEED_H_ERRNO]: Likewise.
+
+	* Makefile ($(common-objpfx)testrun.sh): New target.
+	(others): Depend on it.
+	(postclean-generated): Append it.
+
 	* nss/bug-erange.c: New file.
 	* nss/Makefile (tests): Add it.
 

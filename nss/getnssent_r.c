@@ -197,6 +197,9 @@ __nss_getent_r (const char *getent_func_name,
     }
 
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
-  return (status == NSS_STATUS_SUCCESS
-	  ? 0 : status == NSS_STATUS_TRYAGAIN ? errno : ENOENT);
+  return (status == NSS_STATUS_SUCCESS ? 0
+	  : status != NSS_STATUS_TRYAGAIN ? ENOENT
+	  /* h_errno functions only set errno if h_errno is NETDB_INTERNAL.  */
+	  : (h_errnop == NULL || *h_errnop == NETDB_INTERNAL) ? errno
+	  : EAGAIN);
 }

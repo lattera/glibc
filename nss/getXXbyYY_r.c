@@ -244,6 +244,13 @@ done:
 #endif
   return (status == NSS_STATUS_SUCCESS
 	  ? 0 : (status == NSS_STATUS_TRYAGAIN ? errno : ENOENT));
+  return (status == NSS_STATUS_SUCCESS ? 0
+	  : status != NSS_STATUS_TRYAGAIN ? ENOENT
+#ifdef NEED_H_ERRNO
+	  /* These functions only set errno if h_errno is NETDB_INTERNAL.  */
+	  : *h_errnop != NETDB_INTERNAL ? EAGAIN
+#endif
+	  : errno);
 }
 
 

@@ -130,6 +130,21 @@ ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
 lib: $(common-objpfx)libc.so
 endif
+
+
+# This is a handy script for running any dynamically linked program against
+# the current libc build for testing.
+$(common-objpfx)testrun.sh: $(common-objpfx)config.make \
+			    $(..)Makeconfig $(..)Makefile
+	(echo '#!/bin/sh'; \
+	 echo "GCONV_PATH='$(common-objpfx)iconvdata' \\"; \
+	 echo 'exec $(run-program-prefix) $${1+"$$@"}'; \
+	) > $@T
+	chmod a+x $@T
+	mv -f $@T $@
+postclean-generated += testrun.sh
+
+others: $(common-objpfx)testrun.sh
 
 # Makerules creates a file `stubs' in each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function defined in that
