@@ -127,19 +127,19 @@
 __MATH_INLINE int
 __signbitf (float __x) __THROW
 {
-  __extension__ union { float __f; int __i; } __u = { .__f = __x };
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 __MATH_INLINE int
 __signbit (double __x) __THROW
 {
-  __extension__ union { double __d; int __i[2]; } __u = { .__d = __x };
+  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[1] < 0;
 }
 __MATH_INLINE int
 __signbitl (long double __x) __THROW
 {
-  __extension__ union { long double __l; int __i[3]; } __u = { .__l = __x };
+  __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
 # endif
@@ -467,7 +467,7 @@ __inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
   __extension__ union { long double __xld; unsigned int __xi[3]; } __n =      \
-    { .__xld = __x };							      \
+    { __xld: __x };							      \
   __n.__xi[2] = (__n.__xi[2] & 0x8000) | 0x3fff;			      \
   __n.__xi[1] = 0x80000000;						      \
   __n.__xi[0] = 0;							      \
@@ -666,7 +666,7 @@ __MATH_INLINE int
 __finite (double __x) __THROW
 {
   return (__extension__
-	  (((((union { double __d; int __i[2]; }) {.__d = __x}).__i[1]
+	  (((((union { double __d; int __i[2]; }) {__d: __x}).__i[1]
 	     | 0x800fffffu) + 1) >> 31));
 }
 

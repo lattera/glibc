@@ -29,7 +29,7 @@
 # define NAN \
   (__extension__                                                            \
    ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; })  \
-    { .__l = 0x7fc00000UL }).__d)
+    { __l: 0x7fc00000UL }).__d)
 
 #else
 
