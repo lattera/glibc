@@ -1,5 +1,5 @@
 /* Bit values & structures for resource limits.  Linux version.
-   Copyright (C) 1994, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,11 @@ enum __rlimit_resource
   RLIMIT_MEMLOCK = 8,
 #define RLIMIT_MEMLOCK RLIMIT_MEMLOCK
 
-  RLIM_NLIMITS = 10
+  /* Maximum number of file locks.  */
+  RLIMIT_LOCKS = 10,
+#define RLIMIT_LOCKS RLIMIT_LOCKS
+
+  RLIM_NLIMITS = 11
 #define RLIMIT_NLIMITS RLIMIT_NLIMITS
 #define RLIM_NLIMITS RLIM_NLIMITS
 };

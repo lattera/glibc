@@ -1,3 +1,13 @@
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Add RLIMIT_LOCKS.
+	* sysdeps/unix/sysv/linux/arm/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
 2000-09-28  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Add __ASSUME_IPC64, only
@@ -11,13 +21,14 @@
 	* sysdeps/unix/sysv/linux/powerpc/bits/sem.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: New file.
 
-2000-09-28  Martin Schwidefsksy    <schwidefsky@de.ibm.com>
+2000-09-28  Martin Schwidefsksy  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/atomicity.h: Fix compare_and_swap.
+
 	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h
 	(F_GETLK64,F_SETLK64,F_SETLKW64): Use values from 2.4.0-test8.
 
-2000-09-28  Denis Joseph Barrow     <djbarrow@de.ibm.com>
+2000-09-28  Denis Joseph Barrow  <djbarrow@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: Use definitions from
 	ucontext.h.
