@@ -1,5 +1,10 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/arpa/inet.h: Don't include <sys/types.h>.  Define socklen_t
+	if not already happened.
+	* inet/netinet/in.h: Don't include <sys/types.h>, use <bits/types.h>.
+	Don't include <limits.h> and <bits/sockaddr.h>.
+
 	* conform/data/netinet/in.h-data: Allow all of <inttypes.h>.
 
 	* conform/data/spawn.h-data: Allow all of <sched.h>.

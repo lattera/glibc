@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,13 @@
 #define	_ARPA_INET_H	1
 
 #include <features.h>
-#include <sys/types.h>
 #include <netinet/in.h>		/* To define `struct in_addr'.  */
+
+/* Type for length arguments in socket calls.  */
+#ifndef __socklen_t_defined
+typedef __socklen_t socklen_t;
+# define __socklen_t_defined
+#endif
 
 __BEGIN_DECLS
 

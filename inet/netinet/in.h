@@ -20,11 +20,8 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
-#include <limits.h>
 #include <stdint.h>
-
-#include <sys/types.h>
-#include <bits/socket.h>
+#include <bits/types.h>
 
 
 __BEGIN_DECLS
@@ -212,7 +209,7 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 #define INET6_ADDRSTRLEN 46
 
 /* Get the definition of the macro to define the common sockaddr members.  */
-#include <bits/sockaddr.h>
+#include <bits/socket.h>
 
 
 /* Structure describing an Internet socket address.  */
