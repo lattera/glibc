@@ -19,42 +19,42 @@ Cambridge, MA 02139, USA.  */
 /* Note that ANY change to this instantly implies a change to __handler.S.  */
 
 struct sigcontext
-{
-  /* onsigstack flag, for the sigstack state we should restore */
-  int sc_onstack;
-
-  /* signal mask to restore */
-  sigset_t sc_mask;
-
-  /* Program counter when the signal hit.  */
-  int sc_pc;
-
-  /* registers 0 through 31 */
-  int sc_regs[32];
-
-  /* mul/div low and hi; these aren't part of a jmpbuf, but are part of the
-     sigcontext and are referenced from the signal trampoline code.  */
-  int sc_mdlo;
-  int sc_mdhi;
-
-  /* Flag to see if the fp's been used.  */
-  int sc_ownedfp;
-
-  /* floating point registers 0 to 31 */
-  int sc_fpregs[32];
-  /* control & status register for fp */
-  int sc_fpc_csr;
-
-  /* exception instruction register for fp */
-  int sc_fpc_eir;
-
-  /* The coprocessor's cause register.  */
-  int sc_cause;
-
-  /* CPU bad virtual address.  */
-  int sc_badvaddr;
-
-  /* CPU board bad physical address.  */
-  int sc_badpaddr;
-};
+  {
+    /* Nonzero if running on signal stack.  */
+    int sc_onstack;
+    
+    /* Signal mask to restore.  */
+    sigset_t sc_mask;
+    
+    /* Program counter when the signal hit.  */
+    PTR sc_pc;
+    
+    /* Registers 0 through 31.  */
+    int sc_regs[32];
+    
+    /* mul/div low and hi; these aren't part of a jmp_buf, but are part of the
+       sigcontext and are referenced from the signal trampoline code.  */
+    int sc_mdlo;
+    int sc_mdhi;
+    
+    /* Flag to see if the FP's been used.  */
+    int sc_ownedfp;
+    
+    /* Floating point registers 0 to 31.  */
+    int sc_fpregs[32];
+    /* Control & status register for FP.  */
+    int sc_fpc_csr;
+    
+    /* Exception instruction register for FP. */
+    int sc_fpc_eir;
+    
+    /* The coprocessor's cause register.  */
+    int sc_cause;
+    
+    /* CPU bad virtual address.  */
+    PTR sc_badvaddr;
+    
+    /* CPU board bad physical address.  */
+    PTR sc_badpaddr;
+  };
 
