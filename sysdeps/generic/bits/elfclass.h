@@ -2,7 +2,10 @@
    the ELF file class used for executables and shared objects on this
    machine.  */
 
-#define __ELF_NATIVE_CLASS ??
+#ifndef _LINK_H
+# error "Never use <bits/elfclass.h> directly; include <link.h> instead."
+#endif
 
-/* This file goes in sysdeps/wordsize-?? and sysdeps/MACHINE/Implies lists
-   wordsize-?? for MACHINE's wordsize.  */
+#include <bits/wordsize.h>
+
+#define __ELF_NATIVE_CLASS __WORDSIZE

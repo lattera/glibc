@@ -1,3 +1,57 @@
+1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/generic/bits/elfclass.h: Version common to
+	wordsize-32 and wordsize-64.
+	* sysdeps/generic/bits/environments.h: Ditto.
+	* sysdeps/generic/stdint.h: Ditto.
+	* sysdeps/generic/inttypes.h: Ditto.
+
+	* sysdeps/generic/bits/wordsize.h: New file.
+	* stdlib/Makefile: Add bits/wordsize.h to headers.
+
+	* sysdeps/sparc/sparc64/bits/wordsize.h: New file.
+
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: Allow the same exported
+	headers to be used for 32bit and 64bit ABI compilations.
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/setjmp.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statfs.h: Ditto.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sys/ucontext.h: Ditto.
+
+	* sysdeps/wordsize-64/bits/elfclass.h: Remove.
+	* sysdeps/wordsize-64/bits/environments.h: Remove.
+	* sysdeps/wordsize-64/stdint.h: Remove.
+	* sysdeps/wordsize-64/inttypes.h: Remove.
+	* sysdeps/wordsize-64/bits/wordsize.h: New file.
+
+	* sysdeps/wordsize-32/bits/elfclass.h: Remove.
+	* sysdeps/wordsize-32/bits/environments.h: Remove.
+	* sysdeps/wordsize-32/stdint.h: Remove.
+	* sysdeps/wordsize-32/inttypes.h: Remove.
+	* sysdeps/wordsize-32/bits/wordsize.h: New file.
+
+1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc64/memcpy.S (__align_cpy_4, __align_cpy_8,
+	__align_cpy_16): New functions.
+	(__align_cpy_2, __align_cpy_1): New aliases to memcpy.
+
+	* sysdeps/sparc/sparc32/Versions: New file.
+	* sysdeps/sparc/sparc64/Versions: New file.
+	* sysdeps/sparc/Versions: Remove.
+
+1999-05-19  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/configure.in:
+	On sparc64-*-linux*, set slibdir to /lib64 if prefix
+	is /usr, plus set libdir to ${exec_prefix}/lib64.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* config.make.in: Propagate libdir settings from configure
+	to the Makefiles.
+	* shlib-versions: sparc64-*-linux* dynamic linker is
+	/lib64/ld-linux.so.2.
+
 1999-05-18  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nis_lookup.c (nis_lookup): If we run out of memory, close

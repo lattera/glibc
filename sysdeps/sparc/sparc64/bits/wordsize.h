@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,39 +16,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-
-#ifndef _SETJMP_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 64
-
-#include <sys/ucontext.h>
-
-typedef ucontext_t __jmp_buf[1];
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_fp)
-
+#if defined __sparc_v9__ || defined __arch64__ || defined __sparcv9
+# define __WORDSIZE	64
 #else
-
-#if defined __USE_MISC || defined _ASM
-# define JB_SP  0
-# define JB_FP  1
-# define JB_PC  2
-#endif
-
-#ifndef _ASM
-typedef int __jmp_buf[3];
-#endif
-
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((int) (address) < (jmpbuf)[JB_SP])
-
+# define __WORDSIZE	32
 #endif

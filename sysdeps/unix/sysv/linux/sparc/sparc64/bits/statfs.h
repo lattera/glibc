@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,43 +16,66 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/statfs.h> instead.
- */
+#ifndef _SYS_STATFS_H
+# error "Never include <bits/statfs.h> directly; use <sys/statfs.h> instead."
+#endif
 
-#ifndef _BITS_STATFS_H
-#define _BITS_STATFS_H
-
-#include <bits/types.h>  /* for __fsid_t */
+#include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
 
 struct statfs
   {
+#if __WORDSIZE == 64
     long int f_type;
     long int f_bsize;
-    long int f_blocks;
-    long int f_bfree;
-    long int f_bavail;
-    long int f_files;
-    long int f_ffree;
+#else
+    int f_type;
+    int f_bsize;
+#endif
+#ifndef __USE_FILE_OFFSET64
+    __fsblkcnt_t f_blocks;
+    __fsblkcnt_t f_bfree;
+    __fsblkcnt_t f_bavail;
+    __fsfilcnt_t f_files;
+    __fsfilcnt_t f_ffree;
+#else
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_bavail;
+    __fsfilcnt64_t f_files;
+    __fsfilcnt64_t f_ffree;
+#endif
     __fsid_t f_fsid;
+#if __WORDSIZE == 64
     long int f_namelen;
     long int f_spare[6];
+#else    
+    int f_namelen;
+    int f_spare[6];
+#endif
   };
 
-/* We already use 64-bit types in the normal structure,
-   so this is the same as the above.  */
+#ifdef __USE_LARGEFILE64
 struct statfs64
   {
+#if __WORDSIZE == 64
     long int f_type;
     long int f_bsize;
-    long int f_blocks;
-    long int f_bfree;
-    long int f_bavail;
-    long int f_files;
-    long int f_ffree;
+#else
+    int f_type;
+    int f_bsize;
+#endif
+    __fsblkcnt64_t f_blocks;
+    __fsblkcnt64_t f_bfree;
+    __fsblkcnt64_t f_bavail;
+    __fsfilcnt64_t f_files;
+    __fsfilcnt64_t f_ffree;
     __fsid_t f_fsid;
+#if __WORDSIZE == 64
     long int f_namelen;
     long int f_spare[6];
+#else    
+    int f_namelen;
+    int f_spare[6];
+#endif
   };
-
-#endif	/* bits/statfs.h */
+#endif

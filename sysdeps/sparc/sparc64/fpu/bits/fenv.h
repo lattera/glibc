@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #ifndef _FENV_H
 # error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
+
+#include <bits/wordsize.h>
 
 
 /* Define bits representing the exception.  We use the bit positions
@@ -57,11 +59,19 @@ enum
 
 #define __FE_ROUND_MASK	(3U << 30)
 
+#if __WORDSIZE == 64
 /* Type representing exception flags.  */
 typedef unsigned long fexcept_t;
 
 /* Type representing floating-point environment.  */
 typedef unsigned long fenv_t;
+#else
+/* Type representing exception flags.  */
+typedef unsigned int fexcept_t;
+
+/* Type representing floating-point environment.  */
+typedef unsigned int fenv_t;
+#endif
 
 /* If the default argument is used we use this value.  */
 #define FE_DFL_ENV	((fenv_t *) -1)
@@ -72,5 +82,10 @@ typedef unsigned long fenv_t;
 #endif
 
 /* For internal use only: access the fp state register.  */
+#if __WORDSIZE == 64
 #define __fenv_stfsr(X)   __asm__ ("stx %%fsr,%0" : "=m" (X))
 #define __fenv_ldfsr(X)   __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (X))
+#else
+#define __fenv_stfsr(X)   __asm__ ("st %%fsr,%0" : "=m" (X))
+#define __fenv_ldfsr(X)   __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (X))
+#endif

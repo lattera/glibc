@@ -57,7 +57,15 @@ fi
 # shared library objects and the configuration files on the root partition
 # in /lib and /etc.
 if test "$prefix" = "/usr"; then
-  libc_cv_slibdir="/lib"
+  # 64bit libraries on sparc go to /lib64 and not /lib
+  if test "$machine" = "sparc/sparc64"; then
+    libc_cv_slibdir="/lib64"
+    if test "$libdir" = '${exec_prefix}/lib'; then
+      libdir='${exec_prefix}/lib64';
+    fi
+  else
+    libc_cv_slibdir="/lib"
+  fi
   libc_cv_sysconfdir="/etc"
   libc_cv_rootsbindir="/sbin"
 fi

@@ -380,6 +380,66 @@ END(bcopy)
 209:	retl
 	 mov		%g4, %o0
 
+#ifdef USE_BPR
+
+	/* void *__align_cpy_4(void *dest, void *src, size_t n)
+	 * SPARC v9 SYSV ABI
+	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 3))
+	 */
+
+	.align		32
+ENTRY(__align_cpy_4)
+	mov		%o0, %g4			/* IEU0		Group		*/
+	cmp		%o2, 15				/* IEU1				*/
+	bleu,pn		%xcc, 208b			/* CTI				*/
+	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
+	bgeu,pn		%xcc, 200b			/* CTI				*/
+	 andcc		%o0, 7, %g2			/* IEU1		Group		*/
+	ba,pt		%xcc, 216f			/* CTI				*/
+	 andcc		%o1, 4, %g0			/* IEU1		Group		*/
+END(__align_cpy_4)
+
+	/* void *__align_cpy_8(void *dest, void *src, size_t n)
+	 * SPARC v9 SYSV ABI
+	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 7))
+	 */
+
+	.align		32
+ENTRY(__align_cpy_8)
+	mov		%o0, %g4			/* IEU0		Group		*/
+	cmp		%o2, 15				/* IEU1				*/
+	bleu,pn		%xcc, 208b			/* CTI				*/
+	 cmp		%o2, (64 * 6)			/* IEU1		Group		*/
+	bgeu,pn		%xcc, 201b			/* CTI				*/
+	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
+	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
+	 ldx		[%o1], %g1			/* Load				*/
+	ba,pt		%xcc, 41f			/* CTI		Group		*/
+	 andcc		%o2, 0x70, %g7			/* IEU1				*/
+END(__align_cpy_8)
+
+	/* void *__align_cpy_16(void *dest, void *src, size_t n)
+	 * SPARC v9 SYSV ABI
+	 * Like memcpy, but results are undefined if (!n || ((dest | src | n) & 15))
+	 */
+
+	.align		32
+ENTRY(__align_cpy_16)
+	mov		%o0, %g4			/* IEU0		Group		*/
+	cmp		%o2, (64 * 6)			/* IEU1				*/
+	bgeu,pn		%xcc, 201b			/* CTI				*/
+	 andcc		%o0, 0x38, %g5			/* IEU1		Group		*/
+	andcc		%o2, -128, %g7			/* IEU1		Group		*/
+	bne,a,pt	%xcc, 82f + 4			/* CTI				*/
+	 ldx		[%o1], %g1			/* Load				*/
+	ba,pt		%xcc, 41f			/* CTI		Group		*/
+	 andcc		%o2, 0x70, %g7			/* IEU1				*/
+END(__align_cpy_16)
+
+#endif
+
+	.align		32
 ENTRY(memcpy)
 210:
 #ifndef USE_BPR
@@ -396,7 +456,7 @@ ENTRY(memcpy)
 	andcc		%g5, 3, %o5			/* IEU1		Group		*/
 	bne,pn		%xcc, 212f			/* CTI				*/
 	 andcc		%o1, 3, %g0			/* IEU1		Group		*/
-	be,a,pt		%xcc, 3f			/* CTI				*/
+	be,a,pt		%xcc, 216f			/* CTI				*/
 	 andcc		%o1, 4, %g0			/* IEU1		Group		*/
 	andcc		%o1, 1, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 4f			/* CTI				*/
@@ -413,7 +473,7 @@ ENTRY(memcpy)
 	sub		%o2, 2, %o2			/* IEU0				*/
 	sth		%g2, [%o0 - 2]			/* Store	Group + bubble	*/
 5:	andcc		%o1, 4, %g0			/* IEU1				*/
-3:	be,a,pn		%xcc, 2f			/* CTI				*/
+216:	be,a,pn		%xcc, 2f			/* CTI				*/
 	 andcc		%o2, -128, %g7			/* IEU1		Group		*/
 	lduw		[%o1], %g5			/* Load		Group		*/
 	add		%o1, 4, %o1			/* IEU0				*/
@@ -421,7 +481,7 @@ ENTRY(memcpy)
 	sub		%o2, 4, %o2			/* IEU0		Group		*/
 	stw		%g5, [%o0 - 4]			/* Store			*/
 	andcc		%o2, -128, %g7			/* IEU1		Group		*/
-2:	be,pn		%xcc, 3f			/* CTI				*/
+2:	be,pn		%xcc, 215f			/* CTI				*/
 	 andcc		%o0, 4, %g0			/* IEU1		Group		*/
 	be,pn		%xcc, 82f + 4			/* CTI		Group		*/
 5:	MOVE_BIGCHUNK(o1, o0, 0x00, g1, g3, g5, o5)
@@ -432,7 +492,7 @@ ENTRY(memcpy)
 	add		%o1, 128, %o1			/* IEU0				*/
 	bne,pt		%xcc, 5b			/* CTI				*/
 	 add		%o0, 128, %o0			/* IEU0		Group		*/
-3:	andcc		%o2, 0x70, %g7			/* IEU1		Group		*/
+215:	andcc		%o2, 0x70, %g7			/* IEU1		Group		*/
 41:	be,pn		%xcc, 80f			/* CTI				*/
 	 andcc		%o2, 8, %g0			/* IEU1		Group		*/
 							/* Clk1 8-(			*/
@@ -572,3 +632,8 @@ ENTRY(memcpy)
 	retl
 	 mov		%g4, %o0
 END(memcpy)
+
+#ifdef USE_BPR
+weak_alias(memcpy, __align_cpy_1)
+weak_alias(memcpy, __align_cpy_2)
+#endif

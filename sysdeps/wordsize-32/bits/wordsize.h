@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,4 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _UNISTD_H
-# error "Never include this file directly.  Use <unistd.h> instead"
-#endif
-
-/* By default we have 32-bit wide `int', `long int', pointers and `off_t'.  */
-#define _XBS5_ILP32_OFF32	1
-
-/* We optionally provide an environment with the above size but an 64-bit
-   side `off_t'.  Therefore we don't define _XBS5_ILP32_OFFBIG.  */
-
-/* We can never provide environments with 64-bit wide pointers.  */
-#define _XBS5_LP64_OFF64	-1
-#define _XBS5_LPBIG_OFFBIG	-1
+#define __WORDSIZE	32

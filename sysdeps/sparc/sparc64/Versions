@@ -1,0 +1,7 @@
+libc {
+  GLIBC_2.1.1 {
+    # SPARC v9 SYSV ABI helper functions
+    __align_cpy_1; __align_cpy_2; __align_cpy_4;
+    __align_cpy_8; __align_cpy_16;
+  }
+}

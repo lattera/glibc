@@ -23,6 +23,7 @@
 
 
 #include <features.h>
+#include <bits/wordsize.h>
 
 /* masking of interrupts */
 #define _FPU_MASK_IM  0x08000000
@@ -55,11 +56,19 @@
 #define _FPU_DEFAULT  0x0
 #define _FPU_IEEE     0x0
 
+#if __WORDSIZE == 64
 /* Type of the control word.  */
 typedef unsigned long fpu_control_t;
 
 #define _FPU_GETCW(cw) __asm__ ("stx %%fsr,%0" : "=m" (*&cw))
 #define _FPU_SETCW(cw) __asm__ ("ldx %0,%%fsr" : : "m" (*&cw))
+#else
+/* Type of the control word.  */
+typedef unsigned int fpu_control_t;
+
+#define _FPU_GETCW(cw) __asm__ ("st %%fsr,%0" : "=m" (*&cw))
+#define _FPU_SETCW(cw) __asm__ ("ld %0,%%fsr" : : "m" (*&cw))
+#endif
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
