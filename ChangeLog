@@ -1,5 +1,18 @@
 2003-03-01  GOTO Masanori  <gotom@debian.or.jp>
 
+	* argp/argp.h: Fix a typo.
+	Reported by H.S.Teoh <hsteoh@quickfur.ath.cx>.
+
+	* manual/terminal.texi: Fix cfmakeraw() definition from int to void.
+
+2003-02-27  Pat Rankin  <rankin@pactechdata.com>
+
+	* posix/regexec.c (proceed_next_node): Cast re_string_get_buffer to
+	char *.
+	(get_subexp): Likewise.
+
+2003-03-01  GOTO Masanori  <gotom@debian.or.jp>
+
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_DIRECT): Define.
 
 2003-02-26  Steven Munroe  <sjmunroe@us.ibm.com>

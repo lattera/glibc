@@ -1171,7 +1171,7 @@ proceed_next_node (preg, nregs, regs, mctx, pidx, node, eps_via_nodes, fs)
 		return -1;
 	      else if (naccepted)
 		{
-		  char *buf = re_string_get_buffer (mctx->input);
+		  char *buf = (char *) re_string_get_buffer (mctx->input);
 		  if (memcmp (buf + regs[subexp_idx].rm_so, buf + *pidx,
 			      naccepted) != 0)
 		    return -1;
@@ -2468,7 +2468,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 {
   int subexp_num, sub_top_idx;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  char *buf = re_string_get_buffer (mctx->input);
+  char *buf = (char *) re_string_get_buffer (mctx->input);
   /* Return if we have already checked BKREF_NODE at BKREF_STR_IDX.  */
   int cache_idx = search_cur_bkref_entry (mctx, bkref_str_idx);
   for (; cache_idx < mctx->nbkref_ents; ++cache_idx)
@@ -3459,7 +3459,8 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
     {
       const re_charset_t *cset = node->opr.mbcset;
 # ifdef _LIBC
-      const unsigned char *pin = re_string_get_buffer (input) + str_idx;
+      const unsigned char *pin = ((char *) re_string_get_buffer (input)
+				  + str_idx);
 # endif /* _LIBC */
       int match_len = 0;
       wchar_t wc = ((cset->nranges || cset->nchar_classes || cset->nmbchars)

@@ -1617,7 +1617,7 @@ uses.
 
 @comment termios.h
 @comment BSD
-@deftypefun int cfmakeraw (struct termios *@var{termios-p})
+@deftypefun void cfmakeraw (struct termios *@var{termios-p})
 This function provides an easy way to set up @code{*@var{termios-p}} for
 what has traditionally been called ``raw mode'' in BSD.  This uses
 noncanonical input, and turns off most processing to give an unmodified

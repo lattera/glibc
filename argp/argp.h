@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -96,7 +96,7 @@ struct argp_option
    is set, then the option NAME field is displayed unmodified (e.g., no `--'
    prefix is added) at the left-margin (where a *short* option would normally
    be displayed), and the documentation string in the normal place.  For
-   purposes of sorting, any leading whitespace and puncuation is ignored,
+   purposes of sorting, any leading whitespace and punctuation is ignored,
    except that if the first non-whitespace character is not `-', this entry
    is displayed after all options (and OPTION_DOC entries with a leading `-')
    in the same group.  */
