@@ -34,7 +34,7 @@
 #define MAX_NEEDED_TO		2
 
 
-/* First define the conversion function from ISO 8859-1 to UCS4.  */
+/* First define the conversion function from GBK to GB2312.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -67,7 +67,7 @@
 	   is not available we will not flag this as an error but instead     \
 	   map the two positions.  But this means that the mapping	      \
 									      \
-		UCS4 -> GB2312 -> GBK ->UCS4				      \
+		UCS4 -> GB2312 -> GBK -> UCS4				      \
 									      \
 	   might not produce identical text.  */			      \
 	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
@@ -78,11 +78,17 @@
 	    break;							      \
 	  }								      \
 									      \
+	if (NEED_LENGTH_TEST && outend - outptr < 2)			      \
+	  {								      \
+	    /* We ran out of space.  */					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
 	ch = (ch << 8) | inptr[1];					      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
-	if (ch >= 0xa1a1 && ch <= 0x777e				      \
-	    && inptr[1] >= 0xa1 && inptr[1] != 0xff)			      \
+	if (ch >= 0xa1a1 && ch <= 0xf7fe && inptr[1] >= 0xa1)		      \
 	  {								      \
 	    /* So far so good.  Now test the exceptions.  */		      \
 	    if ((ch >= 0xa2a1 && ch <= 0xa2aa)				      \
@@ -123,6 +129,21 @@
 									      \
     if (ch > 0x7f)							      \
       {									      \
+	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	  {								      \
+	    /* The second character is not available.  Store		      \
+		 the intermediate result.  */				      \
+	      result = __GCONV_INCOMPLETE_INPUT;			      \
+	      break;							      \
+	  }								      \
+									      \
+	if (NEED_LENGTH_TEST && outend - outptr < 2)			      \
+	  {								      \
+	    /* We ran out of space.  */					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
 	*outptr++ = ch;							      \
 	ch = *inptr++;							      \
       }									      \

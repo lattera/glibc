@@ -75,7 +75,7 @@ ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
 
   switch (ch)
     {
-    case 0xa4 ... 0x100:
+    case 0xa4 ... 0x101:
       cp = __gb2312_from_ucs4_tab1[ch - 0xa4];
       break;
     case 0x113:
@@ -135,7 +135,7 @@ ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
     case 0x2103 ... 0x22a5:
       cp = __gb2312_from_ucs4_tab5[ch - 0x2103];
       break;
-    case 0x2313:
+    case 0x2312:
       cp = "\x21\x50";
       break;
     case 0x2460 ... 0x249b:
@@ -143,7 +143,7 @@ ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
       break;
     case 0x2500 ... 0x254b:
       buf[0] = '\x29';
-      buf[1] = '\x24' + (ch & 256);
+      buf[1] = '\x24' + (ch % 256);
       break;
     case 0x25a0:
       cp = "\x21\x76";

@@ -1,5 +1,10 @@
 1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/gb2312.h (ucs4_to_gb2312): Fix mapping of 0x0101,
+	0x2312, and 0x2500..0x254b.
+	* iconvdata/TESTS: Add EUC-CN.
+	* iconvdata/testdata/EUC-CN: New file.
+
 	* iconvdata/gbgbk.c: New file.
 	* iconvdata/Makefile (modules): Add GBGBK.
 	(distribute): Add gbgbk.c.

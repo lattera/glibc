@@ -1742,6 +1742,12 @@ Before doing this look through the list of known problem first:
   In addition the Unicode tables contain mappings for the GBK characters
   0xA8BC, 0xA8BF, 0xA989 to 0xA995, and 0xFE50 to 0xFEA0.
 
+- when mapping from EUC-CN to GBK and vice versa we ignore the fact that
+  the coded character at position 0xA1A4 maps to different Unicode
+  characters.  Since the iconv() implementation can do whatever it wants
+  if it cannot directly map a character this is a perfectly good solution
+  since the semantics and appearance of the character does not change.
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 

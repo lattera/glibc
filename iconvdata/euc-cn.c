@@ -32,7 +32,7 @@
 #define MIN_NEEDED_TO		4
 
 
-/* First define the conversion function from ISO 8859-1 to UCS4.  */
+/* First define the conversion function from EUC-CN to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
