@@ -1,3 +1,8 @@
+2003-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h [__ASSUME_SET_THREAD_AREA_SYSCALL]
+	(TLS_SETUP_GS_SEGMENT): Fix a typo.
+
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/Makefile: Fix cut&paste error.
