@@ -1,3 +1,11 @@
+2000-03-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/fpu/fclrexcpt.c: Use shlib-compat macros.
+	* sysdeps/mips/fpu/fegetenv.c: Likewise.
+	* sysdeps/mips/fpu/fesetenv.c: Likewise.
+	* sysdeps/mips/fpu/feupdateenv.c: Likewise.
+	* sysdeps/mips/fpu/fgetexcptflg.c: Likewise.
+
 2000-03-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__sincos): Remove redundant
