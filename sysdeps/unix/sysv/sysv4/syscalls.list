@@ -2,6 +2,6 @@
 
 pgrpsys		-	pgrpsys		3	__pgrpsys
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sigsuspend	-	sigsuspend	1	sigsuspend
 sysconfig	-	sysconfig	1	__sysconfig
 sysinfo		-	systeminfo	3	__sysinfo
+__waitid	waitpid	waitsys		3	__waitid

@@ -36,12 +36,18 @@ rename		-	rename		2	rename
 rmdir		-	rmdir		1	__rmdir	rmdir
 select		-	select		5	__select	select
 setdomain	-	setdomainname	2	setdomainname
+setegid		-	setegid		1	__setegid	setegid
+seteuid		-	seteuid		1	__seteuid	seteuid
 setgid		-	setgid		1	__setgid	setgid
 setgroups	-	setgroups	2	setgroups
 setitimer	-	setitimer	3	__setitimer	setitimer
 setpriority	-	setpriority	3	setpriority
 setrlimit	-	setrlimit	2	setrlimit
+setsid		-	setsid		0	__setsid	setsid
+settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 setuid		-	setuid		1	__setuid	setuid
+sigsuspend	-	sigsuspend	1	sigsuspend
+sstk		-	sstk		1	sstk
 swapon		-	swapon		1	swapon
 symlink		-	symlink		2	__symlink	symlink
 sync		-	sync		0	sync
@@ -51,5 +57,6 @@ sys_stat	xstat	stat		2	__syscall_stat
 umask		-	umask		1	__umask		umask
 uname		-	uname		1	uname
 unlink		-	unlink		1	__unlink	unlink
+utimes		-	utimes		2	__utimes	utimes
 write		-	write		3	__write		write
 writev		-	writev		3	writev

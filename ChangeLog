@@ -1,3 +1,40 @@
+Mon Feb 12 03:10:41 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/sysv4/syscalls.list: Remove redundancies.
+	Add __waitid.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove redundancies.
+	Define __ name for sigprocmask.
+	* sysdeps/unix/bsd/ultrix4/syscalls.list: Remove redundancies.
+	Add getsysinfo.
+	* sysdeps/unix/bsd/sun/sunos4/syscalls.list: Remove redundancies.
+	* sysdeps/unix/bsd/sun/syscalls.list: Remove redundancies.
+	* sysdeps/unix/bsd/bsd4.4/syscalls.list: Remove redundancies.
+	* sysdeps/unix/bsd/syscalls.list: Remove settimeofday, utimes.
+	Add getdents, wait3, waitpid.
+	* sysdeps/unix/syscalls.list: Add seteuid, setegid, setsid,
+	settimeofday, sigsuspend, sstk, utimes.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.S: File removed.
+	* sysdeps/unix/bsd/ultrix4/mips/syscalls.list: New file.
+	* sysdeps/unix/bsd/ultrix4/mips/Makefile (sysdep_routines):
+	Removed sigtramp.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.c: Renamed from sigtramp.c.
+	* sysdeps/unix/bsd/bsd4.4/sstk.S: File removed.
+	* sysdeps/unix/bsd/hp/m68k/syscalls.list: File removed.
+	* sysdeps/unix/bsd/osf/alpha/getdents.S: File removed.
+	* sysdeps/unix/bsd/ultrix4/getsysinfo.S: File removed.
+	* sysdeps/unix/bsd/ultrix4/waitpid.S: File removed.
+	* sysdeps/unix/bsd/ultrix4/mips/sigtramp.c: File removed.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.S: File removed.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.c: New file.
+	* sysdeps/unix/bsd/ultrix4/mips/syscalls.list: New file.
+	* sysdeps/unix/sysv/irix4/wait3.S: File removed.
+	* sysdeps/unix/sysv/sysv4/__waitid.S: File removed.
+	* sysdeps/unix/sysv/sysv4/fchdir.S: File removed.
+	* sysdeps/unix/sysv/sysv4/setegid.S: File removed.
+	* sysdeps/unix/sysv/sysv4/seteuid.S: File removed.
+	* sysdeps/unix/sysv/sysv4/sigaltstack.S: File removed.
+	* sysdeps/unix/sysv/sysv4/solaris2/utimes.S: File removed.
+
 Sat Feb 10 05:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/generic/make_siglist.c: #undef _SIGNAL_H before defining it.

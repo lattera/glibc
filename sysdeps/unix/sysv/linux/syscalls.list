@@ -14,10 +14,8 @@ munlockall	-	munlockall	0	__munlockall	munlockall
 pipe		-	pipe		1	__pipe	pipe
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 setpgid		-	setpgid		2	setpgid
-setsid		-	setsid		0	__setsid	setsid
-settimeofday	-	settimeofday	2	__settimeofday	settimeofday
 sigpending	-	sigpending	1	sigpending
-sigprocmask	-	sigprocmask	3	sigprocmask
+sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
 sigsuspend	-	sigsuspend	1	sigsuspend
 stty		-	stty		2	stty
 umount		-	umount		1	__umount	umount
