@@ -1,0 +1,41 @@
+/* Set current rounding direction.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@tamu.edu>, 1997
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <fenv.h>
+
+int
+fesetround (int round)
+{
+  unsigned long fpcr;
+
+  if (round & ~3)
+    return 0;
+
+  /* Get the current state.  */
+  __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
+
+  /* Set the relevant bits.  */
+  fpcr = (fpcr & ~(3UL << 58)) | ((unsigned long)round << 58);
+
+  /* Put the new state in effect.  */
+  __asm__ __volatile__("mt_fpcr %0; excb" : : "f"(fpcr));
+
+  return 1;
+}
