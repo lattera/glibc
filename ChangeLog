@@ -1,3 +1,12 @@
+2000-05-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Readded file.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Readded file.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Readded file.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Readded file.
+
 2000-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add GNU make magic.
