@@ -1,3 +1,8 @@
+2004-01-15  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Prefix stubs with
+	__syscall_, move nop inside, adjust users by +4.
+
 2004-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* include/libc-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME]
