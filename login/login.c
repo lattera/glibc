@@ -21,27 +21,79 @@ Boston, MA 02111-1307, USA.  */
 #include <limits.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <utmp.h>
+
+/* Return the result of ttyname in the buffer pointed to by TTY, which should
+   be of length BUF_LEN.  If it is too long to fit in this buffer, a
+   sufficiently long buffer is allocated using malloc, and returned in TTY.
+   0 is returned upon success, -1 otherwise.  */
+static int
+tty_name (int fd, char **tty, size_t buf_len)
+{
+  int rv;			/* Return value.  0 = success.  */
+  char *buf = *tty;		/* Buffer for ttyname, initially the user's. */
 
-/* XXX used for tty name array in login.  */
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
+  for (;;)
+    {
+      char *new_buf;
 
+      if (buf_len)
+	{
+	  rv = ttyname_r (fd, buf, buf_len);
+
+	  if (rv < 0 || memchr (buf, '\0', buf_len))
+	    /* We either got an error, or we succeeded and the returned name fit
+	       in the buffer.  */
+	    break;
+
+	  /* Try again with a longer buffer.  */
+	  buf_len += buf_len;	/* Double it */
+	}
+      else
+	/* No initial buffer; start out by mallocing one.  */
+	buf_len = 128;		/* First time guess.  */
+
+      if (buf != *tty)
+	/* We've already malloced another buffer at least once.  */
+	new_buf = realloc (buf, buf_len);
+      else
+	new_buf = malloc (buf_len);
+      if (! new_buf)
+	{
+	  rv = -1;
+	  errno = ENOMEM;
+	  break;
+	}
+    }
+
+  if (rv == 0)
+    *tty = buf;			/* Return buffer to the user.  */
+  else if (buf != *tty)
+    free (buf);			/* Free what we malloced when returning an error.  */
+
+  return rv;
+}
+
 void
 login (const struct utmp *ut)
 {
-  char tty[PATH_MAX + UT_LINESIZE];
+#ifdef PATH_MAX
+  char _tty[PATH_MAX + UT_LINESIZE];
+#else
+  char _tty[512 + UT_LINESIZE];
+#endif
+  char *tty = _tty;
   int found_tty;
   const char *ttyp;
   struct utmp_data data;
 
   /* Seek tty.  */
-  found_tty = ttyname_r (STDIN_FILENO, tty, sizeof tty);
+  found_tty = tty_name (STDIN_FILENO, &tty, sizeof (_tty));
   if (found_tty < 0)
-    found_tty = ttyname_r (STDOUT_FILENO, tty, sizeof tty);
+    found_tty = tty_name (STDOUT_FILENO, &tty, sizeof (_tty));
   if (found_tty < 0)
-    found_tty = ttyname_r (STDERR_FILENO, tty, sizeof tty);
+    found_tty = tty_name (STDERR_FILENO, &tty, sizeof (_tty));
 
   if (found_tty >= 0)
     {
@@ -78,6 +130,9 @@ login (const struct utmp *ut)
 	  /* Close UTMP file.  */
 	  endutent_r (&data);
 	}
+
+      if (tty != _tty)
+	free (tty);		/* Free buffer malloced by tty_name.  */
     }
 
   /* Update the WTMP file.  Here we have to add a new entry.  */
