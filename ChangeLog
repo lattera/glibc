@@ -2,6 +2,9 @@
 
 	* sysdeps/generic/libc-start.c [SHARED] (__libc_start_main): Don't
 	initialize __environ again.
+	* stdlib/Makefile: Add rules to build and run tst-putenv.
+	* stdlib/tst-putenv.c: New file.
+	* stdlib/tst-putenvmod.c: New file.
 
 	* sysdeps/unix/sysv/linux/init-first.c: Clean file up.  Don't
 	define unnecessary wrappers or aliases of static functions.
