@@ -438,7 +438,8 @@ __ivaliduser(hostf, raddr, luser, ruser)
 			return 0;
 		}
 	}
-	free (buf);
+	if (buf != NULL)
+		free (buf);
 	return -1;
 }
 
