@@ -2796,6 +2796,9 @@ with character code range values one must use the absolute ellipsis `...'"));
 		      || now->val.str.startmb == NULL)
 		    goto translit_syntax;
 		  repertoire_name = now->val.str.startmb;
+		  if (repertoire_name[0] == '\0')
+		    /* Ignore the empty string.  */
+		    repertoire_name = NULL;
 
 		  /* Save the include statement for later processing.  */
 		  include_stmt = (struct translit_include_t *)
