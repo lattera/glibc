@@ -29,7 +29,7 @@ __profile_frequency (void)
 #ifdef __ASSUME_AT_CLKTCK
   return GL(dl_clktck);
 #else
-  if (GL(dl_clktck) != )
+  if (GL(dl_clktck) != 0)
     return GL(dl_clktck);
 
   struct itimerval tim;
