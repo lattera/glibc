@@ -1,3 +1,9 @@
+2001-06-06  Andreas Jaeger  <aj@suse.de>
+
+	* manual/llio.texi (Memory-mapped I/O): Clarify that mapping is to
+	offset+length-1.
+	Reported by Robert Bernecky <bernecky@acm.org>.
+
 2001-06-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/cris/elf/start.S: Fix a typo introduced by last patch.

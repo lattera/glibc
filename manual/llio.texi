@@ -1152,7 +1152,7 @@ These functions are declared in @file{sys/mman.h}.
 @deftypefun {void *} mmap (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
 
 The @code{mmap} function creates a new mapping, connected to bytes
-(@var{offset}) to (@var{offset} + @var{length}) in the file open on
+(@var{offset}) to (@var{offset} + @var{length} - 1) in the file open on
 @var{filedes}.
 
 @var{address} gives a preferred starting address for the mapping.
