@@ -1,3 +1,19 @@
+Wed May 22 14:46:53 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdstartup.c (_hurd_startup): Pass the correct counts to
+	argz_extract, and terminate the resulting vectors.
+
+Wed May 22 13:56:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* configure.in: Remove checks for objdump, objcopy, and awk.
+	* config.make.in (OBJDUMP, OBJCOPY, AWK): Variables removed.
+	* Makefile (distribute): Remove extract-dynsym.
+	* extract-dynsym: File removed.
+
+Tue May 21 22:17:45 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* termios/cfmakeraw.c: Set MIN to 1 and TIME to 0.
+
 Wed May 22 01:48:54 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/strtol.c [!QUAD] (ULONG_MAX, LONG_MAX): Define these
