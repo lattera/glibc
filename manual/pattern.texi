@@ -1353,7 +1353,7 @@ to free the space allocated by @code{wordexp}.
 
 @smallexample
 int
-expand_and_execute (const char *program, const char *options)
+expand_and_execute (const char *program, const char **options)
 @{
   wordexp_t result;
   pid_t pid
@@ -1373,9 +1373,9 @@ expand_and_execute (const char *program, const char *options)
     @}
 
   /* @r{Expand the strings specified for the arguments.}  */
-  for (i = 0; args[i]; i++)
+  for (i = 0; options[i] != NULL; i++)
     @{
-      if (wordexp (options, &result, WRDE_APPEND))
+      if (wordexp (options[i], &result, WRDE_APPEND))
         @{
           wordfree (&result);
           return -1;
