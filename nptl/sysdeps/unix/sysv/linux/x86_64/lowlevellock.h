@@ -184,7 +184,10 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
     2  -  taken by more users */
 
 
-#if defined NOT_IN_libc || defined UP
+//#if defined NOT_IN_libc || defined UP
+/* According to AMD it is not necessary to play tricks with avoiding the
+   lock instruction.  */
+#if 1
 # define lll_trylock(futex) lll_mutex_trylock (futex)
 # define lll_lock(futex) lll_mutex_lock (futex)
 # define lll_unlock(futex) lll_mutex_unlock (futex)
