@@ -24,12 +24,16 @@
 #include <internaltypes.h>
 #include <semaphore.h>
 
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
 
 int
 __new_sem_wait (sem_t *sem)
 {
+  /* First check for cancellation.  */
+  CANCELLATION_P (THREAD_SELF);
+
   int *futex = (int *) sem;
   int val;
   int err;
@@ -43,7 +47,13 @@ __new_sem_wait (sem_t *sem)
 	    return 0;
 	}
 
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
+
       err = lll_futex_wait (futex, 0);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
     }
   while (err == 0 || err == -EWOULDBLOCK);
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -41,7 +41,7 @@ ch (void *arg)
 static void *
 tf (void *a)
 {
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  pthread_cancel (pthread_self ());
 
   pthread_cleanup_push (ch, (void *) 1l);
 
@@ -49,7 +49,7 @@ tf (void *a)
 
   pthread_cleanup_push (ch, (void *) 3l);
 
-  pthread_cancel (pthread_self ());
+  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
   pthread_cleanup_pop (1);
 

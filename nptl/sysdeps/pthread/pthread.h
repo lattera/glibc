@@ -419,14 +419,132 @@ typedef struct
 #endif
 
 
+/* Structure to hold the cleanup handler information.  */
+struct __pthread_cleanup_frame
+{
+  void (*__cancel_routine) (void *);
+  void *__cancel_arg;
+  int __do_it;
+  int __cancel_type;
+};
+
+#if defined __GNUC__ && defined __EXCEPTIONS
+# ifdef __cplusplus
+/* Class to handle cancellation handler invocation.  */
+class __pthread_cleanup_class
+{
+  void (*__cancel_routine) (void *);
+  void *__cancel_arg;
+  int __do_it;
+  int __cancel_type;
+
+ public:
+  __pthread_cleanup_class (void (*__fct) (void *), void *__arg)
+    : __cancel_routine (__fct), __cancel_arg (__arg), __do_it (1) { }
+  ~__pthread_cleanup_class () { if (__do_it) __cancel_routine (__cancel_arg); }
+  __setdoit (int __newval) { __do_it = __newval; }
+  __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
+				      &__cancel_type);
+  __restore () const { pthread_setcanceltype (__cancel_type, 0);
+};
+
 /* Install a cleanup handler: ROUTINE will be called with arguments ARG
-   when the thread is cancelled or calls pthread_exit.  ROUTINE will also
+   when the thread is canceled or calls pthread_exit.  ROUTINE will also
    be called with arguments ARG when the matching pthread_cleanup_pop
    is executed with non-zero EXECUTE argument.
 
    pthread_cleanup_push and pthread_cleanup_pop are macros and must always
    be used in matching pairs at the same nesting level of braces.  */
-#define pthread_cleanup_push(routine, arg) \
+#  define pthread_cleanup_push(routine, arg) \
+  do {									      \
+    __pthread_cleanup_class __clframe (routine, arg)
+
+/* Remove a cleanup handler installed by the matching pthread_cleanup_push.
+   If EXECUTE is non-zero, the handler function is called. */
+#  define pthread_cleanup_pop(execute) \
+    __clframe.__setdoit (execute);					      \
+  } while (0)
+
+#  ifdef __USE_GNU
+/* Install a cleanup handler as pthread_cleanup_push does, but also
+   saves the current cancellation type and sets it to deferred
+   cancellation.  */
+#   define pthread_cleanup_push_defer_np(routine, arg) \
+  do {									      \
+    __pthread_cleanup_class __clframe (routine, arg);			      \
+    __clframe.__defer ()
+
+/* Remove a cleanup handler as pthread_cleanup_pop does, but also
+   restores the cancellation type that was in effect when the matching
+   pthread_cleanup_push_defer was called.  */
+#   define pthread_cleanup_pop_restore_np(execute) \
+    __clframe.__restore ();						      \
+    __clframe.__setdoit (execute);					      \
+  } while (0)
+#  endif
+# else
+/* Function called to call the cleanup handler.  As an extern inline
+   function the compiler is free to decide inlining the change when
+   needed or fall back on the copy which must exist somewhere
+   else.  */
+extern inline void
+__pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
+{
+  if (__frame->__do_it)
+    __frame->__cancel_routine (__frame->__cancel_arg);
+}
+
+/* Install a cleanup handler: ROUTINE will be called with arguments ARG
+   when the thread is canceled or calls pthread_exit.  ROUTINE will also
+   be called with arguments ARG when the matching pthread_cleanup_pop
+   is executed with non-zero EXECUTE argument.
+
+   pthread_cleanup_push and pthread_cleanup_pop are macros and must always
+   be used in matching pairs at the same nesting level of braces.  */
+#  define pthread_cleanup_push(routine, arg) \
+  do {									      \
+    struct __pthread_cleanup_frame __clframe				      \
+      __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))		      \
+      = { .__cancel_routine = (routine), .__cancel_arg = (arg),	 	      \
+	  .__do_it = 1 };
+
+/* Remove a cleanup handler installed by the matching pthread_cleanup_push.
+   If EXECUTE is non-zero, the handler function is called. */
+#  define pthread_cleanup_pop(execute) \
+    __clframe.__do_it = (execute);					      \
+  } while (0)
+
+#  ifdef __USE_GNU
+/* Install a cleanup handler as pthread_cleanup_push does, but also
+   saves the current cancellation type and sets it to deferred
+   cancellation.  */
+#   define pthread_cleanup_push_defer_np(routine, arg) \
+  do {									      \
+    struct __pthread_cleanup_frame __clframe				      \
+      __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))		      \
+      = { .__cancel_routine = (routine), .__cancel_arg = (arg),		      \
+	  .__do_it = 1 };						      \
+    (void) pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,		      \
+				  &__clframe.__cancel_type)
+
+/* Remove a cleanup handler as pthread_cleanup_pop does, but also
+   restores the cancellation type that was in effect when the matching
+   pthread_cleanup_push_defer was called.  */
+#   define pthread_cleanup_pop_restore_np(execute) \
+    (void) pthread_setcanceltype (__clframe.__cancel_type, NULL);	      \
+    __clframe.__do_it = (execute);					      \
+  } while (0)
+#  endif
+# endif
+#else
+/* Install a cleanup handler: ROUTINE will be called with arguments ARG
+   when the thread is canceled or calls pthread_exit.  ROUTINE will also
+   be called with arguments ARG when the matching pthread_cleanup_pop
+   is executed with non-zero EXECUTE argument.
+
+   pthread_cleanup_push and pthread_cleanup_pop are macros and must always
+   be used in matching pairs at the same nesting level of braces.  */
+# define pthread_cleanup_push(routine, arg) \
   do {									      \
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
@@ -447,7 +565,7 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
 
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
-#define pthread_cleanup_pop(execute) \
+# define pthread_cleanup_pop(execute) \
     } while (0);							      \
     __pthread_unregister_cancel (&__cancel_buf);			      \
     if (execute)							      \
@@ -456,11 +574,11 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
   __cleanup_fct_attribute;
 
-#ifdef __USE_GNU
+# ifdef __USE_GNU
 /* Install a cleanup handler as pthread_cleanup_push does, but also
    saves the current cancellation type and sets it to deferred
    cancellation.  */
-# define pthread_cleanup_push_defer(routine, arg) \
+#  define pthread_cleanup_push_defer_np(routine, arg) \
   do {									      \
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
@@ -482,7 +600,7 @@ extern void __pthread_register_cancel_defer (__pthread_unwind_buf_t *__buf)
 /* Remove a cleanup handler as pthread_cleanup_pop does, but also
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called.  */
-# define pthread_cleanup_pop_cleanup(execute) \
+#  define pthread_cleanup_pop_restore_np(execute) \
     } while (0);							      \
     __pthread_unregister_cancel_restore (&__cancel_buf);		      \
     if (execute)							      \
@@ -490,15 +608,16 @@ extern void __pthread_register_cancel_defer (__pthread_unwind_buf_t *__buf)
   } while (0)
 extern void __pthread_unregister_cancel_restore (__pthread_unwind_buf_t *__buf)
   __cleanup_fct_attribute;
-#endif
+# endif
 
 /* Internal interface to initiate cleanup.  */
 extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
-#ifndef SHARED
+# ifndef SHARED
      __attribute ((__weak__))
-#endif
+# endif
      ;
+#endif
 
 /* Function used in the macros.  */
 struct __jmp_buf_tag;

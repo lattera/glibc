@@ -35,38 +35,86 @@
 	.globl	sem_wait
 	.type	sem_wait,@function
 	.align	16
+	cfi_startproc
 sem_wait:
-3:	movl	(%rdi), %eax
+	/* First check for cancellation.  */
+	movl	%fs:CANCELHANDLING, %eax
+	andl	$0xfffffff9, %eax
+	cmpl	$8, %eax
+	je	4f
+
+	pushq	%r12
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(12, -16)
+	pushq	%r13
+	cfi_adjust_cfa_offset(8)
+	movq	%rdi, %r13
+	cfi_offset(13, -24)
+
+3:	movl	(%r13), %eax
 2:	testl	%eax, %eax
 	je	1f
 
 	leaq	-1(%rax), %rdx
 	LOCK
-	cmpxchgl %edx, (%rdi)
+	cmpxchgl %edx, (%r13)
 	jne	2b
 	xorl	%eax, %eax
 
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(13)
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(12)
+
 	retq
 
-1:	xorq	%r10, %r10
+	cfi_adjust_cfa_offset(16)
+	cfi_offset(12, -16)
+	cfi_offset(13, -24)
+1:	call	__pthread_enable_asynccancel
+	movl	%eax, %r8d
+
+	xorq	%r10, %r10
 	movq	$SYS_futex, %rax
+	movq	%r13, %rdi
 	movq	%r10, %rsi
 	movq	%r10, %rdx
 	syscall
+	movq	%rax, %r12
 
-	testq	%rax, %rax
+	movl	%r8d, %edi
+	call	__pthread_disable_asynccancel
+
+	testq	%r12, %r12
 	je	3b
-	cmpq	$-EWOULDBLOCK, %rax
+	cmpq	$-EWOULDBLOCK, %r12
 	je	3b
-	negq	%rax
+	negq	%r12
 #if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx
-	movl	%eax, %fs:(%rdx)
+	movl	%r12d, %fs:(%rdx)
 #else
-	movl	%eax, %edx
 	callq	__errno_location@plt
-	movl	%edx, (%rax)
+	movl	%r12d, (%rax)
 #endif
 	orl	$-1, %eax
+
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(13)
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(12)
+
 	retq
+
+4:	/* Canceled.  */
+	movq	$0xffffffffffffffff, %fs:RESULT
+	LOCK
+	orl	$0x10, %fs:CANCELHANDLING
+	movq	%fs:CLEANUP_JMP_BUF, %rdi
+	jmp	__pthread_unwind
+	cfi_endproc
 	.size	sem_wait,.-sem_wait

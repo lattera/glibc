@@ -63,6 +63,8 @@ tf (void *arg)
       printf ("setcanceltype failed: %s\n", strerror (err));
       exit (1);
     }
+  /* The following code is not standard compliant: the mutex functions
+     must not be called with asynchronous cancellation enabled.  */
 
   err = pthread_mutex_unlock (&m2);
   if (err != 0)

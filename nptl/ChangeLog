@@ -1,3 +1,59 @@
+2003-06-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* cleanup_routine.c: New file.
+	* Versions (libpthread) [GLIBC_2.3.3]: Add __pthread_cleanup_routine.
+	* sysdeps/pthread/pthread.h: Add support for fully exception-based
+	cleanup handling.
+	* Makefile (libpthread-routines): Add cleanup_routine.
+	Add more CFLAGS variables to compile with exceptions.  Add comments
+	why which file needs unwind tables.
+	(tests) [have-forced-unwind==yes]: Add tst-cancelx* and tst-cleanupx*
+	tests.
+	* tst-cancelx1.c: New file.
+	* tst-cancelx2.c: New file.
+	* tst-cancelx3.c: New file.
+	* tst-cancelx4.c: New file.
+	* tst-cancelx5.c: New file.
+	* tst-cancelx6.c: New file.
+	* tst-cancelx7.c: New file.
+	* tst-cancelx8.c: New file.
+	* tst-cancelx9.c: New file.
+	* tst-cancelx10.c: New file.
+	* tst-cancelx11.c: New file.
+	* tst-cancelx12.c: New file.
+	* tst-cancelx13.c: New file.
+	* tst-cancelx14.c: New file.
+	* tst-cancelx15.c: New file.
+	* tst-cleanupx0.c: New file.
+	* tst-cleanupx0.expect: New file.
+	* tst-cleanupx1.c: New file.
+	* tst-cleanupx2.c: New file.
+	* tst-cleanupx3.c: New file.
+
+	* tst-cleanup0.c: Make standard compliant.
+	* tst-cleanup1.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: Add cancellation support.
+	* sysdeps/unix/sysv/linux/sem_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+	* sysdeps/i386/tcb-offsets.sym: Add RESULT, CANCELHANDLING, and
+	CLEANUP_JMP_BUF.
+	* sysdeps/x86_64/tcb-offsets.sym: Likewise.
+	* tst-cancel12.c: New file.
+	* tst-cancel13.c: New file.
+	* tst-cancel14.c: New file.
+	* tst-cancel15.c: New file.
+	* Makefile (tests): Add tst-cancel12, tst-cancel13, tst-cancel14,
+	and tst-cancel15.
+
+	* tst-cancel1.c: Add some comments.
+
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Compute relative
+	timeout correctly.
+
 2003-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (CFLAGS-pthread_cancel.c): Define.

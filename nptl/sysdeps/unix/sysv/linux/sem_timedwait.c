@@ -24,12 +24,16 @@
 #include <internaltypes.h>
 #include <semaphore.h>
 
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
 
 int
 sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
+  /* First check for cancellation.  */
+  CANCELLATION_P (THREAD_SELF);
+
   int *futex = (int *) sem;
   int val;
   int err;
@@ -71,7 +75,15 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       /* Do wait.  */
       rt.tv_sec = sec;
       rt.tv_nsec = nsec;
+
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
+
       err = lll_futex_timed_wait (futex, 0, &rt);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
+
       if (err != 0 && err != -EWOULDBLOCK)
 	goto error_return;
 

@@ -1,7 +1,10 @@
 #include <sysdep.h>
 #include <tls.h>
 
+RESULT			offsetof (struct pthread, result)
 TID			offsetof (struct pthread, tid)
+CANCELHANDLING		offsetof (struct pthread, cancelhandling)
+CLEANUP_JMP_BUF		offsetof (struct pthread, cleanup_jmp_buf)
 MULTIPLE_THREADS_OFFSET	offsetof (tcbhead_t, multiple_threads)
 SYSINFO_OFFSET		offsetof (tcbhead_t, sysinfo)
 CLEANUP			offsetof (struct pthread, cleanup)

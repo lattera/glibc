@@ -38,10 +38,20 @@ ch (void *arg)
 }
 
 
+static void
+endfct (void)
+{
+  /* We force exit right here.  */
+  _exit (global);
+}
+
+
 static int
 do_test (void)
 {
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  atexit (endfct);
+
+  pthread_cancel (pthread_self ());
 
   pthread_cleanup_push (ch, (void *) 1l);
 
@@ -49,7 +59,7 @@ do_test (void)
 
   pthread_cleanup_push (ch, (void *) 3l);
 
-  pthread_cancel (pthread_self ());
+  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
   pthread_cleanup_pop (1);
 
@@ -57,9 +67,10 @@ do_test (void)
 
   pthread_cleanup_pop (1);
 
-  return 0;
+  return 100;
 }
 
 
+#define EXPECTED_STATUS 9
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

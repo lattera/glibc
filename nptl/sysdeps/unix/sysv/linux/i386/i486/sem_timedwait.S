@@ -37,7 +37,14 @@
 	.globl	sem_timedwait
 	.type	sem_timedwait,@function
 	.align	16
+	cfi_startproc
 sem_timedwait:
+	/* First check for cancellation.  */
+	movl	%gs:CANCELHANDLING, %eax
+	andl	$0xfffffff9, %eax
+	cmpl	$8, %eax
+	je	10f
+
 	movl	4(%esp), %ecx
 
 	movl	(%ecx), %eax
@@ -54,19 +61,28 @@ sem_timedwait:
 
 	/* Check whether the timeout value is valid.  */
 1:	pushl	%esi
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
-	subl	$8, %esp
+	cfi_adjust_cfa_offset(4)
+	subl	$12, %esp
+	cfi_adjust_cfa_offset(12)
 
-	movl	%esp, %esi
-	movl	28(%esp), %edi
+	movl	32(%esp), %edi
+	cfi_offset(7, -12)		/* %edi */
 
 	/* Check for invalid nanosecond field.  */
 	cmpl	$1000000000, 4(%edi)
-	movl	$EINVAL, %eax
+	movl	$EINVAL, %esi
+	cfi_offset(6, -8)		/* %esi */
 	jae	6f
 
-7:	xorl	%ecx, %ecx
+	cfi_offset(3, -16)		/* %ebx */
+7:	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
+
+	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
 	movl	$SYS_gettimeofday, %eax
@@ -84,20 +100,25 @@ sem_timedwait:
 	addl	$1000000000, %edx
 	subl	$1, %ecx
 5:	testl	%ecx, %ecx
-	movl	$ETIMEDOUT, %eax
+	movl	$ETIMEDOUT, %esi
 	js	6f		/* Time is already up.  */
 
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
-	movl	24(%esp), %ebx
+	movl	28(%esp), %ebx
 	xorl	%ecx, %ecx
+	movl	%esp, %esi
 	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
 	ENTER_KERNEL
+	movl	%eax, %esi
 
-	testl	%eax, %eax
+	movl	8(%esp), %eax
+	call	__pthread_disable_asynccancel
+
+	testl	%esi, %esi
 	je,pt	9f
-	cmpl	$-EWOULDBLOCK, %eax
+	cmpl	$-EWOULDBLOCK, %esi
 	jne	3f
 
 9:	movl	(%ebx), %eax
@@ -109,14 +130,27 @@ sem_timedwait:
 	cmpxchgl %ecx, (%ebx)
 	jne,pn	8b
 
-	addl	$8, %esp
+	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	xorl	%eax, %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(3)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(7)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(6)
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(6)
 	ret
 
-3:	negl	%eax
+	cfi_adjust_cfa_offset(24)
+	cfi_offset(6, -8)		/* %esi */
+	cfi_offset(7, -12)		/* %edi */
+	cfi_offset(3, -16)		/* %ebx */
+3:	negl	%esi
 6:
 #ifdef PIC
 	call	__i686.get_pc_thunk.bx
@@ -128,17 +162,31 @@ sem_timedwait:
 #if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ebx), %edx
-	movl	%eax, (%edx)
+	movl	%esi, (%edx)
 #else
-	movl	%eax, %edx
 	call	__errno_location@plt
-	movl	%edx, (%eax)
+	movl	%esi, (%eax)
 #endif
 
-	addl	$8, %esp
+	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	orl	$-1, %eax
 	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(3)
 	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(7)
 	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(6)
 	ret
+
+10:	/* Canceled.  */
+	movl	$0xffffffff, %gs:RESULT
+	LOCK
+	orl	$0x10, %gs:CANCELHANDLING
+	movl	%gs:CLEANUP_JMP_BUF, %eax
+	jmp	__pthread_unwind
+	cfi_endproc
 	.size	sem_timedwait,.-sem_timedwait

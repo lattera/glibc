@@ -116,7 +116,8 @@ libpthread-routines = init events version \
 		      sigaction \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads \
-		      pthread_getaffinity pthread_setaffinity
+		      pthread_getaffinity pthread_setaffinity \
+		      cleanup_routine
 
 libpthread-shared-only-routines = version pt-allocrtsig
 libpthread-static-only-routines = pthread_atfork
@@ -124,16 +125,41 @@ libpthread-static-only-routines = pthread_atfork
 libpthread-nonshared = pthread_atfork
 
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
+
+# Since cancellation handling is in large parts handled using exceptions
+# we have to compile some files with exception handling enabled, some
+# even with asynchronous unwind tables.
+
+# init.c contains sigcancel_handler().
 CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
+# The unwind code itself,
 CFLAGS-unwind.c = -fexceptions
+
+# The following three functions must be async-cancel safe.
+CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_setcancelstate.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_setcanceltype.c = -fexceptions -fasynchronous-unwind-tables
+
+# These are internal functions which similar functionality as setcancelstate
+# and setcanceltype.
+CFLAGS-cancellation.c = -fasynchronous-unwind-tables
+CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
+
+# Calling pthread_exit() must cause the registered cancel handlers to
+# be executed.  Therefore exceptions have to be thrown through this
+# function.
+CFLAGS-pthread_exit.c = -fexceptions
+
+# The following are cancellation points.  Some of the functions can
+# block and therefore temporarily enable asynchronous cancellation.
+# Those must be compiled asynchronous unwind tables.
 CFLAGS-pthread_testcancel.c = -fexceptions
 CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-cancellation.c = -fasynchronous-unwind-tables
-CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
+CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sem_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 
 # Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
 omit-deps = $(unix-syscalls:%=ptw-%)
@@ -165,7 +191,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
-	tst-cancel11 \
+	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
@@ -192,6 +218,12 @@ LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
 include ../Makeconfig
 
+ifeq ($(have-forced-unwind),yes)
+tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
+	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
+	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15\
+	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
+endif
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls3
 endif
@@ -291,6 +323,23 @@ endif
 CFLAGS-pthread_self.os += -fomit-frame-pointer
 
 CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
+
+# Run the cancellation and cleanup tests also for the modern, exception-based
+# implementation.  For this we have to pass the -fexceptions parameter.
+CFLAGS-tst-cancelx2.c += -fexceptions
+CFLAGS-tst-cancelx3.c += -fexceptions
+CFLAGS-tst-cancelx4.c += -fexceptions
+CFLAGS-tst-cancelx5.c += -fexceptions
+CFLAGS-tst-cancelx6.c += -fexceptions
+CFLAGS-tst-cancelx7.c += -fexceptions
+CFLAGS-tst-cancelx8.c += -fexceptions
+CFLAGS-tst-cancelx9.c += -fexceptions
+CFLAGS-tst-cancelx10.c += -fexceptions
+CFLAGS-tst-cancelx11.c += -fexceptions
+CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tst-cleanupx2.c += -fexceptions
+CFLAGS-tst-cleanupx3.c += -fexceptions
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp

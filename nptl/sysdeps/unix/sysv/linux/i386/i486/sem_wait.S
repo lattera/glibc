@@ -36,12 +36,25 @@
 	.globl	__new_sem_wait
 	.type	__new_sem_wait,@function
 	.align	16
+	cfi_startproc
 __new_sem_wait:
+	/* First check for cancellation.  */
+	movl	%gs:CANCELHANDLING, %eax
+	andl	$0xfffffff9, %eax
+	cmpl	$8, %eax
+	je	5f
+
 	pushl	%ebx
+	cfi_adjust_cfa_offset(4)
 	pushl	%esi
+	cfi_adjust_cfa_offset(4)
+	subl	$4, %esp
+	cfi_adjust_cfa_offset(4)
 
-	movl	12(%esp), %ebx
+	movl	16(%esp), %ebx
+	cfi_offset(3, -8)		/* %ebx */
 
+	cfi_offset(6, -12)		/* %esi */
 3:	movl	(%ebx), %eax
 2:	testl	%eax, %eax
 	je,pn	1f
@@ -52,21 +65,35 @@ __new_sem_wait:
 	jne,pn	2b
 	xorl	%eax, %eax
 
-	popl	%esi
-	popl	%ebx
+	movl	4(%esp), %esi
+	cfi_restore(6)
+	movl	8(%esp), %ebx
+	cfi_restore(3)
+	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	ret
 
-1:	xorl	%esi, %esi
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(3, -8)		/* %ebx */
+	cfi_offset(6, -12)		/* %esi */
+1:	call	__pthread_enable_asynccancel
+	movl	%eax, (%esp)
+
+	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	%esi, %ecx
 	movl	%esi, %edx
 	ENTER_KERNEL
+	movl	%eax, %esi
 
-	testl	%eax, %eax
+	movl	(%esp), %eax
+	call	__pthread_disable_asynccancel
+
+	testl	%esi, %esi
 	je	3b
-	cmpl	$-EWOULDBLOCK, %eax
+	cmpl	$-EWOULDBLOCK, %esi
 	je	3b
-	negl	%eax
+	negl	%esi
 #ifdef PIC
 	call	__i686.get_pc_thunk.bx
 #else
@@ -77,16 +104,27 @@ __new_sem_wait:
 #if USE___THREAD
 	movl	%gs:0, %edx
 	subl	errno@gottpoff(%ebx), %edx
-	movl	%eax, (%edx)
+	movl	%esi, (%edx)
 #else
-	movl	%eax, %edx
 	call	__errno_location@plt
-	movl	%edx, (%eax)
+	movl	%esi, (%eax)
 #endif
 	orl	$-1, %eax
-	popl	%esi
-	popl	%ebx
+	movl	4(%esp), %esi
+	cfi_restore(6)
+	movl	8(%esp), %ebx
+	cfi_restore(3)
+	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	ret
+
+5:	/* Canceled.  */
+	movl	$0xffffffff, %gs:RESULT
+	LOCK
+	orl	$0x10, %gs:CANCELHANDLING
+	movl	%gs:CLEANUP_JMP_BUF, %eax
+	jmp	__pthread_unwind
+	cfi_endproc
 	.size	__new_sem_wait,.-__new_sem_wait
 	versioned_symbol(libpthread, __new_sem_wait, sem_wait, GLIBC_2_1)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
