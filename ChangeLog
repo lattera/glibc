@@ -1,3 +1,8 @@
+1998-10-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzset.c (tz_compute): If time to switch to DST is later in
+	the year switch back in the next year.
+	Reported by jwitford@hutch.com.au.
 1998-10-24  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* mach/Versions: Add evc_wait, mach_error, mach_error_string,
