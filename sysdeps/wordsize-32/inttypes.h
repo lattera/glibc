@@ -21,7 +21,9 @@
  */
 
 #ifndef _INTTYPES_H
+
 #define _INTTYPES_H	1
+#include <features.h>
 
 /* Exact integral types.  */
 
@@ -162,24 +164,21 @@ typedef unsigned long long int uint_fast64_t;
 #define UINTPTR_MAX		(4294967295U)
 
 
-/* Macros for creating constants.  */
-#define __CONCAT__(A, B) A ## B
-
 /* Signed.  */
 #define INT8_C(c)	((int8_t) c)
 #define INT16_C(c)	((int16_t) c)
 #define INT32_C(c)	((int32_t) c)
-#define INT64_C(c)	((int64_t) __CONCAT__ (c,ll))
+#define INT64_C(c)	((int64_t) __CONCAT (c,ll))
 
 /* Unsigned.  */
-#define UINT8_C(c)	((uint8_t) __CONCAT__ (c,u))
-#define UINT16_C(c)	((uint16_t) __CONCAT__ (c,u))
-#define UINT32_C(c)	((uint32_t) __CONCAT__ (c,u))
-#define UINT64_C(c)	((uint64_t) __CONCAT__ (c,ull))
+#define UINT8_C(c)	((uint8_t) __CONCAT (c,u))
+#define UINT16_C(c)	((uint16_t) __CONCAT (c,u))
+#define UINT32_C(c)	((uint32_t) __CONCAT (c,u))
+#define UINT64_C(c)	((uint64_t) __CONCAT (c,ull))
 
 /* Maximal type.  */
-#define INTMAX_C(c)	((intmax_t) __CONCAT__ (c,ll))
-#define UINTMAX_C(c)	((uintmax_t) __CONCAT__ (c,ull))
+#define INTMAX_C(c)	((intmax_t) __CONCAT (c,ll))
+#define UINTMAX_C(c)	((uintmax_t) __CONCAT (c,ull))
 
 
 /* Macros for printing format specifiers.  */

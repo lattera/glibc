@@ -21,7 +21,9 @@
  */
 
 #ifndef _INTTYPES_H
+
 #define _INTTYPES_H	1
+#include <features.h>
 
 /* Exact integral types.  */
 
@@ -162,24 +164,21 @@ typedef unsigned long int uint_fast64_t;
 #define UINTPTR_MAX		(18446744073709551615uL)
 
 
-/* Macros for creating constants.  */
-#define __CONCAT__(A, B) A ## B
-
 /* Signed.  */
 #define INT8_C(c)	((int8_t) c)
 #define INT16_C(c)	((int16_t) c)
 #define INT32_C(c)	((int32_t) c)
-#define INT64_C(c)	((int64_t) __CONCAT__ (c,l))
+#define INT64_C(c)	((int64_t) __CONCAT (c,l))
 
 /* Unsigned.  */
-#define UINT8_C(c)	((uint8_t) __CONCAT__ (c,u))
-#define UINT16_C(c)	((uint16_t) __CONCAT__ (c,u))
-#define UINT32_C(c)	((uint32_t) __CONCAT__ (c,u))
-#define UINT64_C(c)	((uint64_t) __CONCAT__ (c,ul))
+#define UINT8_C(c)	((uint8_t) __CONCAT (c,u))
+#define UINT16_C(c)	((uint16_t) __CONCAT (c,u))
+#define UINT32_C(c)	((uint32_t) __CONCAT (c,u))
+#define UINT64_C(c)	((uint64_t) __CONCAT (c,ul))
 
 /* Maximal type.  */
-#define INTMAX_C(c)	((intmax_t) __CONCAT__ (c,ll))
-#define UINTMAX_C(c)	((uintmax_t) __CONCAT__ (c,ul))
+#define INTMAX_C(c)	((intmax_t) __CONCAT (c,l))
+#define UINTMAX_C(c)	((uintmax_t) __CONCAT (c,ul))
 
 
 /* Macros for printing format specifiers.  */
@@ -290,10 +289,10 @@ typedef unsigned long int uint_fast64_t;
 
 
 /* Macros for printing `intfast_t' and `uintfast_t'.  */
-#define PRIdFAST	"d"
-#define PRIoFAST	"o"
-#define PRIxFAST	"x"
-#define PRIuFAST	"u"
+#define PRIdFAST	"ld"
+#define PRIoFAST	"lo"
+#define PRIxFAST	"lx"
+#define PRIuFAST	"lu"
 
 
 /* Macros for printing `intptr_t' and `uintptr_t'.  */
@@ -326,10 +325,10 @@ typedef unsigned long int uint_fast64_t;
 
 
 /* Macros for scaning `intfast_t' and `uintfast_t'.  */
-#define SCNdFAST	"d"
-#define SCNiFAST	"i"
-#define SCNoFAST	"o"
-#define SCNxFAST	"x"
+#define SCNdFAST	"ld"
+#define SCNiFAST	"li"
+#define SCNoFAST	"lo"
+#define SCNxFAST	"lx"
 
 /* Macros for scaning `intptr_t' and `uintptr_t'.  */
 #define SCNdPTR		"ld"

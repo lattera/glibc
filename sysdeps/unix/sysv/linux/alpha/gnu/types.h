@@ -66,7 +66,7 @@ typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 typedef long int __clock_t;
 
 /* One element in the file descriptor mask array.  */
-typedef unsigned int __fd_mask;
+typedef unsigned long int __fd_mask;
 
 /* Due to incaution, we may have gotten these from a kernel header file.  */
 #undef __FD_SETSIZE

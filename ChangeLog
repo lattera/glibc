@@ -1,3 +1,80 @@
+1997-06-03 23:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-support.c: Define and initialize _dl_verbose used in
+	dl-machine.h.
+
+	* io/ftw.c: Expand stat/lstat calls.
+
+	* manual/intro.texi: Also refer to ISO 9945.
+	Update info about SVID.
+	Add description for XPG.
+
+	* md5-crypt/md5-crypt.c: Namespace cleanups.
+	* md5-crypt/md5.c: Likewise.
+	* md5-crypt/md5.h: Likewise.
+	* sysdeps/generic/crypt-entry.c: Likewise.
+
+	* posix/unistd.h (_POSIX2_C_VERSION): Set to 199209L.
+
+	* stdlib/fmtmsg.h: Declare addseverity only if __USE_SVID is
+	defined.
+
+	* sunrpc/rpc_scan.c (findkind): Declare `token' as const.
+	* sunrpc/rpc_util.c (toktostr): Declare `token' as const.
+
+	* time/Makefile: Make tzselect dependen of config.make.
+
+1997-06-01 15:01  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* manual/string.texi (String and Array Utilities): Add `Argz and
+	Envz Vectors' to the menu.
+	(Argz and Envz Vectors, Argz Functions, Envz Functions): New nodes.
+
+1997-05-31 20:59  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/Makefile (utmpd-routines): Add utmpd.
+	(extra-objs): Add utmpd objects to get dependencies.
+	(distribute): Add sources for utmpd.
+	(subdir-dirs): Define.
+
+1997-06-02 16:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/wordsize-32/inttypes.h: Include features.h and use
+	__CONCAT instead of defined __CONCAT__ ourself.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+
+1997-06-01 19:11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/wordsize-64/inttypes.h (INTMAX_C): Use `l' suffix, not
+	`ll'.
+	(PRIdFAST, PRIoFAST, PRIxFAST, PRIuFAST, SCNdFAST, SCNiFAST,
+	SCNoFAST, SCNxFAST): Correct format specifiers.
+
+1997-06-02 04:23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/syscalls.list: Make fchdir weak alias for __fchdir.
+
+1997-06-01 19:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* md5-crypt/Makefile: Correct libmd5crypt file to really generate
+	DES free libcrypt.
+	* md5-crypt/onlymd5-entry.c: New file.  Wrapper around
+	sysdeps/generic/crypt-entry.c.
+
+1997-06-01 12:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/gnu/types.h (__fd_mask): Change
+	type to `unsigned long int'.
+	Patch by Richard Henderson <richard@twiddle.rth.home>.
+
+1997-05-30 17:34  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/bb_init_func.c (__bb_init_func): Use ISO C
+	declaration style.
+
+	* nss/nss_files/files-hosts.c: Delete inclusion of
+	"../resolv/mapv4v6hostent.h".
+
 1997-05-31 02:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/ftwtest-sh: More tests.

@@ -187,7 +187,7 @@ $(objpfx)testdata/UTC: simplebackw $(objpfx)zic $(objpfx)testdata/Etc/UTC \
 test-tz-ENV = TZDIR=$(objpfx)testdata
 
 
-$(objpfx)tzselect: tzselect.ksh
+$(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	sed -e 's%@KSH@%$(KSH)%g' \
 	    -e 's%@TZDIR@%$(zonedir)%g' < $< > $@.new
 	chmod 555 $@.new

@@ -29,8 +29,7 @@
 #include <stdlib.h>
 
 void
-__bb_init_func (bb)
-     struct __bb *bb;
+__bb_init_func (struct __bb *bb)
 {
   struct gmonparam *p = &_gmonparam;
 

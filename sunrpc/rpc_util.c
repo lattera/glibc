@@ -398,10 +398,10 @@ static const token tokstrings[] =
 static const char *
 toktostr (tok_kind kind)
 {
-  token *sp;
+  const token *sp;
 
   for (sp = tokstrings; sp->kind != TOK_EOF && sp->kind != kind; sp++);
-  return (sp->str);
+  return sp->str;
 }
 
 static void

@@ -243,12 +243,14 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
   memcpy (data->dirbuf + data->ftw.base, name, namlen);
   data->dirbuf[data->ftw.base + namlen] = '\0';
 
-  if (((data->flags & FTW_PHYS) ? lstat : stat) (data->dirbuf, &st) < 0)
+  if (((data->flags & FTW_PHYS)
+       ? __lxstat (_STAT_VER, data->dirbuf, &st)
+       : __xstat (_STAT_VER, data->dirbuf, &st)) < 0)
     {
       if (errno != EACCES && errno != ENOENT)
 	result = -1;
       else if (!(data->flags & FTW_PHYS)
-	       && lstat (data->dirbuf, &st) == 0
+	       && __lxstat (_STAT_VER, data->dirbuf, &st) == 0
 	       && S_ISLNK (st.st_mode))
 	flag = FTW_SLN;
       else
@@ -265,8 +267,8 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
     }
 
   if (result == 0
-      && (!(data->flags & FTW_MOUNT) || flag == FTW_NS
-	  || st.st_dev == data->dev))
+      && (flag == FTW_NS
+	  || !(data->flags & FTW_MOUNT) || st.st_dev == data->dev))
     {
       if ((data->flags & FTW_PHYS) || flag == FTW_NS
 	  || (!find_object (data, &st)
@@ -282,7 +284,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 		  /* Change back to current directory.  */
 		  int done = 0;
 		  if (dir->stream != NULL)
-		    if (fchdir (dirfd (dir->stream)) == 0)
+		    if (__fchdir (dirfd (dir->stream)) == 0)
 		      done = 1;
 
 		  if (!done)
@@ -347,7 +349,7 @@ ftw_dir (struct ftw_data *data, struct stat *st)
   /* If necessary, change to this directory.  */
   if (data->flags & FTW_CHDIR)
     {
-      if (fchdir (dirfd (dir.stream)) < 0)
+      if (__fchdir (dirfd (dir.stream)) < 0)
 	{
 	  if (errno == ENOSYS)
 	    {
@@ -521,13 +523,16 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 
   /* Get stat info for start directory.  */
   if (result == 0)
-    if (((flags & FTW_PHYS) ? lstat : stat) (data.dirbuf, &st) < 0)
+    if (((flags & FTW_PHYS)
+	 ? __lxstat (_STAT_VER, data.dirbuf, &st)
+	 : __xstat (_STAT_VER, data.dirbuf, &st)) < 0)
       {
 	if (errno == EACCES)
 	  result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
 	else if (!(flags & FTW_PHYS)
 		 && errno == ENOENT
-		 && lstat (dir, &st) == 0 && S_ISLNK (st.st_mode))
+		 && __lxstat (_STAT_VER, dir, &st) == 0
+		 && S_ISLNK (st.st_mode))
 	  result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				 &data.ftw);
 	else

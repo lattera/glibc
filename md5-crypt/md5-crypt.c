@@ -37,8 +37,10 @@ static const char b64t[64] =
 
 
 /* Prototypes for local functions.  */
-extern char *md5_crypt_r __P ((const char *key, const char *salt, char *buffer,
-			       int buflen));
+extern char *__md5_crypt_r __P ((const char *key, const char *salt,
+				 char *buffer, int buflen));
+extern char *md5_crypt_r __P ((const char *key, const char *salt,
+			       char *buffer, int buflen));
 extern char *md5_crypt __P ((const char *key, const char *salt));
 
 
@@ -46,7 +48,7 @@ extern char *md5_crypt __P ((const char *key, const char *salt));
 /* This entry point is equivalent to the `crypt' function in Unix
    libcs.  */
 char *
-md5_crypt_r (key, salt, buffer, buflen)
+__md5_crypt_r (key, salt, buffer, buflen)
      const char *key;
      const char *salt;
      char *buffer;
@@ -155,10 +157,10 @@ md5_crypt_r (key, salt, buffer, buflen)
 
   /* Now we can construct the result string.  It consists of three
      parts.  */
-  cp = stpncpy (buffer, md5_salt_prefix, MAX (0, buflen));
+  cp = __stpncpy (buffer, md5_salt_prefix, MAX (0, buflen));
   buflen -= sizeof (md5_salt_prefix);
 
-  cp = stpncpy (cp, salt, MIN ((size_t) buflen, salt_len));
+  cp = __stpncpy (cp, salt, MIN ((size_t) buflen, salt_len));
   buflen -= MIN ((size_t) buflen, salt_len);
 
   if (buflen > 0)
@@ -201,10 +203,11 @@ md5_crypt_r (key, salt, buffer, buflen)
 
   return buffer;
 }
+weak_alias (__md5_crypt_r, md5_crypt_r)
 
 
 char *
-md5_crypt (key, salt)
+__md5_crypt (key, salt)
      const char *key;
      const char *salt;
 {
@@ -222,5 +225,6 @@ md5_crypt (key, salt)
 	return NULL;
     }
 
-  return md5_crypt_r (key, salt, buffer, buflen);
+  return __md5_crypt_r (key, salt, buffer, buflen);
 }
+weak_alias (__md5_crypt, md5_crypt)

@@ -33,6 +33,7 @@ too.
 * Finding Tokens in a String::  Splitting a string into tokens by looking
 				 for delimiters.
 * Encode Binary Data::          Encoding and Decoding of Binary Data.
+* Argz and Envz Vectors::       Null-separated string vectors.
 @end menu
 
 @node Representation of Strings
@@ -1199,4 +1200,228 @@ Consecutive calls to this function are possible but the caller must make
 sure the buffer pointer is update after each call to @code{a64l} since
 this function does not modify the buffer pointer.  Every call consumes 6
 characters.
+@end deftypefun
+
+@node Argz and Envz Vectors
+@section Argz and Envz Vectors
+
+@cindex argz vectors
+@cindex string vectors, null-character separated
+@cindex argument vectors, null-character separated
+@dfn{argz vectors} are vectors of strings in a contiguous block of
+memory, each element separated from its neighbors by null-characters
+(@code{'\0'}).
+
+@cindex envz vectors
+@cindex environment vectors, null-character separated
+@dfn{Envz vectors} are an extension of argz vectors where each element is a
+name-value pair, separated by a @code{'='} character (as in a unix
+environment).
+
+@menu
+* Argz Functions::              Operations on argz vectors.
+* Envz Functions::              Additional operations on environment vectors.
+@end menu
+
+@node Argz Functions, Envz Functions, , Argz and Envz Vectors
+@subsection Argz Functions
+
+Each argz vector is represented by a pointer to the first element, of
+type @code{char *}, and a size, of type @code{size_t}, both of which can
+be initialized to @code{0} to represent an empty argz vector.  All argz
+functions accept either a pointer and a size argument, or pointers to
+them, if they will be modified.
+
+The argz functions use @code{malloc}/@code{realloc} to allocate/grow
+argz vectors, and so any argz vector creating using these functions may
+be freed by using @code{free}; conversely, any argz function that may
+grow a string expects that string to have been allocated using
+@code{malloc} (those argz functions that only examine their arguments or
+modify them in place will work on any sort of memory).
+@xref{Unconstrained Allocation}.
+
+All argz functions that do memory allocation have a return type of
+@code{error_t}, and return @code{0} for success, and @code{ENOMEM} if an
+allocation error occurs.
+
+@pindex argz.h
+These functions are declared in the standard include file @file{argz.h}.
+
+@deftypefun {error_t} argz_create (char *const @var{argv}[], char **@var{argz}, size_t *@var{argz_len})
+The @code{argz_create} function converts the unix-style argument vector
+@var{argv} (a vector of pointers to normal C strings, terminated by
+@code{(char *)0}; @pxref{Program Arguments}) into an argz vector with
+the same elements, which is returned in @var{argz} and @var{argz_len}.
+@end deftypefun
+
+@deftypefun {error_t} argz_create_sep (const char *@var{string}, int @var{sep}, char **@var{argz}, size_t *@var{argz_len})
+The @code{argz_create_sep} function converts the null-terminated string
+@var{string} into an argz vector (returned in @var{argz} and
+@var{argz_len}) by splitting it into elements at every occurance of the
+character @var{sep}.
+@end deftypefun
+
+@deftypefun {size_t} argz_count (const char *@var{argz}, size_t @var{arg_len})
+Returns the number of elements in the argz vector @var{argz} and
+@var{argz_len}.
+@end deftypefun
+
+@deftypefun {void} argz_extract (char *@var{argz}, size_t @var{argz_len}, char **@var{argv})
+The @code{argz_extract} function converts the argz vector @var{argz} and
+@var{argz_len} into a unix-style argument vector stored in @var{argv},
+by putting pointers to every element in @var{argz} into successive
+positions in @var{argv}, followed by a terminator of @code{0}.
+@var{Argv} must be pre-allocated with enough space to hold all the
+elements in @var{argz} plus the terminating @code{(char *)0}
+(@code{(argz_count (@var{argz}, @var{argz_len}) + 1) * sizeof (char *)}
+bytes should be enough).  Note that the string pointers stored into
+@var{argv} point into @var{argz}---they are not copies---and so
+@var{argz} must be copied if it will be changed while @var{argv} is
+still active.  This function is useful for passing the elements in
+@var{argz} to an exec function (@pxref{Executing a File}).
+@end deftypefun
+
+@deftypefun {void} argz_stringify (char *@var{argz}, size_t @var{len}, int @var{sep})
+The @code{argz_stringify} converts @var{argz} into a normal string with
+the elements separated by the character @var{sep}, by replacing each
+@code{'\0'} inside @var{argz} (except the last one, which terminates the
+string) with @var{sep}.  This is handy for printing @var{argz} in a
+readable manner.
+@end deftypefun
+
+@deftypefun {error_t} argz_add (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str})
+The @code{argz_add} function adds the string @var{str} to the end of the
+argz vector @code{*@var{argz}}, and updates @code{*@var{argz}} and
+@code{*@var{argz_len}} accordingly.
+@end deftypefun
+
+@deftypefun {error_t} argz_add_sep (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str}, int @var{delim})
+The @code{argz_add_sep} function is similar to @code{argz_add}, but
+@var{str} is split into separate elements in the result at occurances of
+the character @var{delim}.  This is useful, for instance, for
+adding the components of a unix search path to an argz vector, by using
+a value of @code{':'} for @var{delim}.
+@end deftypefun
+
+@deftypefun {error_t} argz_append (char **@var{argz}, size_t *@var{argz_len}, const char *@var{buf}, size_t @var{buf_len})
+The @code{argz_append} function appends @var{buf_len} bytes starting at
+@var{buf} to the argz vector @code{*@var{argz}}, reallocating
+@code{*@var{argz}} to accommodate it, and adding @var{buf_len} to
+@code{*@var{argz_len}}.
+@end deftypefun
+
+@deftypefun {error_t} argz_delete (char **@var{argz}, size_t *@var{argz_len}, char *@var{entry})
+If @var{entry} points to the beginning of one of the elements in the
+argz vector @code{*@var{argz}}, the @code{argz_delete} function will
+remove this entry and reallocate @code{*@var{argz}}, modifying
+@code{*@var{argz}} and @code{*@var{argz_len}} accordingly.  Note that as
+destructive argz functions usually reallocate their argz argument,
+pointers into argz vectors such as @var{entry} will then become invalid.
+@end deftypefun
+
+@deftypefun {error_t} argz_insert (char **@var{argz}, size_t *@var{argz_len}, char *@var{before}, const char *@var{entry})
+The @code{argz_insert} function inserts the string @var{entry} into the
+argz vector @code{*@var{argz}} at a point just before the existing
+element pointed to by @var{before}, reallocating @code{*@var{argz}} and
+updating @code{*@var{argz}} and @code{*@var{argz_len}}.  If @var{before}
+is @code{0}, @var{entry} is added to the end instead (as if by
+@code{argz_add}).  Since the first element is in fact the same as
+@code{*@var{argz}}, passing in @code{*@var{argz}} as the value of
+@var{before} will result in @var{entry} being inserted at the beginning.
+@end deftypefun
+
+@deftypefun {char *} argz_next (char *@var{argz}, size_t @var{argz_len}, const char *@var{entry})
+The @code{argz_next} function provides a convenient way of iterating
+over the elements in the argz vector @var{argz}.  It returns a pointer
+to the next element in @var{argz} after the element @var{entry}, or
+@code{0} if there are no elements following @var{entry}.  If @var{entry}
+is @code{0}, the first element of @var{argz} is returned.
+
+This behavior suggests two styles of iteration:
+
+@smallexample
+    char *entry = 0;
+    while ((entry = argz_next (@var{argz}, @var{argz_len}, entry)))
+      @var{action};
+@end smallexample
+
+(the double parentheses are necessary to make some C compilers shut up
+about what they consider a questionable @code{while}-test) and:
+
+@smallexample
+    char *entry;
+    for (entry = @var{argz};
+         entry;
+         entry = argz_next (@var{argz}, @var{argz_len}, entry))
+      @var{action};
+@end smallexample
+
+Note that the latter depends on @var{argz} having a value of @code{0} if
+it is empty (rather than a pointer to an empty block of memory); this
+invariant is maintained for argz vectors created by the functions here.
+@end deftypefun
+
+@node Envz Functions, , Argz Functions, Argz and Envz Vectors
+@subsection Envz Functions
+
+Envz vectors are just argz vectors with additional constraints on the form
+of each element; as such, argz functions can also be used on them, where it
+makes sense.
+
+Each element in an envz vector is a name-value pair, separated by a @code{'='}
+character; if multiple @code{'='} characters are present in an element, those
+after the first are considered part of the value, and treated like all other
+non-@code{'\0'} characters.
+
+If @emph{no} @code{'='} characters are present in an element, that element is
+considered the name of a ``null'' entry, as distinct from an entry with an
+empty value: @code{envz_get} will return @code{0} if given the name of null
+entry, whereas an entry with an empty value would result in a value of
+@code{""}; @code{envz_entry} will still find such entries, however.  Null
+entries can be removed with @code{envz_strip} function.
+
+As with argz functions, envz functions that may allocate memory (and thus
+fail) have a return type of @code{error_t}, and return either @code{0} or
+@code{ENOMEM}.
+
+@pindex envz.h
+These functions are declared in the standard include file @file{envz.h}.
+
+@deftypefun {char *} envz_entry (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
+The @code{envz_entry} function finds the entry in @var{envz} with the name
+@var{name}, and returns a pointer to the whole entry---that is, the argz
+element which begins with @var{name} followed by a @code{'='} character.  If
+there is no entry with that name, @code{0} is returned.
+@end deftypefun
+
+@deftypefun {char *} envz_get (const char *@var{envz}, size_t @var{envz_len}, const char *@var{name})
+The @code{envz_get} function finds the entry in @var{envz} with the name
+@var{name} (like @code{envz_entry}), and returns a pointer to the value
+portion of that entry (following the @code{'='}).  If there is no entry with
+that name (or only a null entry), @code{0} is returned.
+@end deftypefun
+
+@deftypefun {error_t} envz_add (char **@var{envz}, size_t *@var{envz_len}, const char *@var{name}, const char *@var{value})
+The @code{envz_add} function adds an entry to @code{*@var{envz}}
+(updating @code{*@var{envz}} and @code{*@var{envz_len}}) with the name
+@var{name}, and value @var{value}.  If an entry with the same name
+already exists in @var{envz}, it is removed first.  If @var{value} is
+@code{0}, then the new entry will the special null type of entry
+(mentioned above).
+@end deftypefun
+
+@deftypefun {error_t} envz_merge (char **@var{envz}, size_t *@var{envz_len}, const char *@var{envz2}, size_t @var{envz2_len}, int @var{override})
+The @code{envz_merge} function adds each entry in @var{envz2} to @var{envz},
+as if with @code{envz_add}, updating @code{*@var{envz}} and
+@code{*@var{envz_len}}.  If @var{override} is true, then values in @var{envz2}
+will supersede those with the same name in @var{envz}, otherwise not.
+
+Null entries are treated just like other entries in this respect, so a null
+entry in @var{envz} can prevent an entry of the same name in @var{envz2} from
+being added to @var{envz}, if @var{override} is false.
+@end deftypefun
+
+@deftypefun {void} envz_strip (char **@var{envz}, size_t *@var{envz_len})
+The @code{envz_strip} function removes any null entries from @var{envz},
+updating @code{*@var{envz}} and @code{*@var{envz_len}}.
 @end deftypefun

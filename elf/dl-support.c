@@ -20,9 +20,25 @@
 /* This file defines some things that for the dynamic linker are defined in
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
+#include <stdlib.h>
+
+
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
 
 /* This defines the default search path for libraries.
    For the dynamic linker it is set by -rpath when linking.  */
 const char *_dl_rpath = DEFAULT_RPATH;
+
+/* If nonzero print warnings about problematic situations.  */
+int _dl_verbose;
+
+
+static void init_verbose (void) __attribute__ ((unused));
+
+static void
+init_verbose (void)
+{
+  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
+}
+text_set_element (__libc_subinit, init_verbose);

@@ -2,17 +2,18 @@ comment_char %
 escape_char  /
 %
 % Croatian Language Locale for Croatia
-% Source: USM/MZT
-% Address: Kotnikova 6,
-%    Ljubljana, Slovenia
-% Contact: Borka Jerman-Blaz<ic<
-% Email: jerman-blazic@ijs.si
-% Tel: +38 - 61 - 653225
-% Fax: none
+% Source: CARNet/SRCE
+% Address: Josipa Marohnica bb
+%    Zagreb, Croatia
+% Contact: Tomislav Vujec
+% Email: Tomislav.Vujec@CARNet.hr
+% Tel: +385-1-616-41-94
+% Fax: +385-1-616-41-94
+% Based on original serbo-croate locale by Borka Jerman Blaz<ic<
 % Language: hr
 % Territory: HR
-% Revision: 4.3
-% Date: 1996-10-15
+% Revision: 1.0
+% Date: 1997-04-22
 % Application: general
 % Users: general
 % Repertoiremap: mnemonic,ds
@@ -2163,15 +2164,15 @@ noexpr  "<<(><n><N><)/>><*><.>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<H><R><D><SP>"
-currency_symbol           "<H><R><D>"
-mon_decimal_point         "<,>"
+int_curr_symbol           "<H><R><K><SP>"
+currency_symbol           "<k><n>"
+mon_decimal_point         "<.>"
 mon_thousands_sep         "<SP>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<->"
-int_frac_digits           0
-frac_digits               0
+int_frac_digits           2
+frac_digits               2
 p_cs_precedes             1
 p_sep_by_space            1
 n_cs_precedes             1
@@ -2181,44 +2182,44 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<,>"
+decimal_point             "<.>"
 thousands_sep             ""
 grouping                  0;0
 END LC_NUMERIC
 
 LC_TIME
 
-abday   "<n><e><d>";"<p><o><n>";/
-        "<t><o><r>";"<s><r><e>";/
-        "<c<><e><t>";"<p><e><t>";/
-        "<s><u><b>"
-day     "<n><e><d><e><l><j><a>";/
-        "<p><o><n><e><d><e><l><j><a><k>";/
-        "<u><t><o><r><a><k>";/
-        "<s><r><e><d><a>";/
-        "<c<><e><t><v><r><t><a><k>";/
-        "<p><e><t><a><k>";/
-        "<s><u><b><o><t><a>"
-abmon   "<j><a><n>";"<f><e><b>";/
-        "<m><a><r>";"<a><p><r>";/
-        "<m><a><j>";"<j><u><n>";/
-        "<j><u><l>";"<a><u><g>";/
-        "<s><e><p>";"<o><k><t>";/
-        "<n><o><v>";"<d><e><c>"
-mon     "<j><a><n><u><a><r>";/
-        "<f><e><b><r><u><a><r>";/
-        "<m><a><r><t>";/
-        "<a><p><r><i><l>";/
-        "<m><a><j>";/
-        "<j><u><n>";/
-        "<j><u><l>";/
-        "<a><u><g><u><s><t>";/
-        "<s><e><p><t><e><m><b><a><r>";/
-        "<o><k><t><o><b><a><r>";/
-        "<n><o><v><e><m><b><a><r>";/
-        "<d><e><c><e><m><b><a><r>"
+abday   "<N><e><d>";"<P><o><n>";/
+        "<U><t><o>";"<S><r><i>";/
+        "<C<><e><t>";"<P><e><t>";/
+        "<S><u><b>"
+day     "<N><e><d><j><e><l><j><a>";/
+        "<P><o><n><e><d><j><e><l><j><a><k>";/
+        "<U><t><o><r><a><k>";/
+        "<S><r><i><j><e><d><a>";/
+        "<C<><e><t><v><r><t><a><k>";/
+        "<P><e><t><a><k>";/
+        "<S><u><b><o><t><a>"
+abmon   "<S><i><j>";"<V><e><l>";/
+        "<O><z><u>";"<T><r><a>";/
+        "<S><v><i>";"<L><i><p>";/
+        "<S><r><p>";"<K><o><l>";/
+        "<R><u><j>";"<L><i><s>";/
+        "<S><t><u>";"<P><r><o>"
+mon     "<S><i><j><e><c'><a><n><j>";/
+        "<V><e><l><j><a><c<><a>";/
+        "<O><z<><u><j><a><k>";/
+        "<T><r><a><v><a><n><j>";/
+        "<S><v><i><b><a><n><j>";/
+        "<L><i><p><a><n><j>";/
+        "<S><r><p><a><n><j>";/
+        "<K><o><l><o><v><o><z>";/
+        "<R><u><j><a><n>";/
+        "<L><i><s><t><o><p><a><d>";/
+        "<S><t><u><d><e><n><i>";/
+        "<P><r><o><s><i><n><a><c>"
 d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T>"
-d_fmt   "<%><Y><-><%><m><-><%><d>"
+d_fmt   "<%><d><.><%><m><.><%><y>"
 t_fmt   "<%><T>"
 am_pm   "";""
 t_fmt_ampm ""

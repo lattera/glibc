@@ -77,12 +77,13 @@ other symbols provided by the library.  This list also states which
 standards each function or symbol comes from.
 
 @menu
-* ISO C::                      The international standard for the C
+* ISO C::                       The international standard for the C
                                  programming language.
 * POSIX::                       The ISO/IEC 9945 (aka IEEE 1003) standards
                                  for operating systems.
 * Berkeley Unix::               BSD and SunOS.
 * SVID::                        The System V Interface Description.
+* XPG::                         The X/Open Portability Guide.
 @end menu
 
 @node ISO C, POSIX,  , Standards and Portability
@@ -118,18 +119,22 @@ differences between @w{ISO C} and older dialects.  It gives advice on how
 to write programs to work portably under multiple C dialects, but does
 not aim for completeness.
 
+
 @node POSIX, Berkeley Unix, ISO C, Standards and Portability
 @subsection POSIX (The Portable Operating System Interface)
 @cindex POSIX
 @cindex POSIX.1
 @cindex IEEE Std 1003.1
+@cindex ISO/IEC 9945-1
 @cindex POSIX.2
 @cindex IEEE Std 1003.2
+@cindex ISO/IEC 9945-2
 
-The GNU library is also compatible with the IEEE @dfn{POSIX} family of
+The GNU library is also compatible with the ISO @dfn{POSIX} family of
 standards, known more formally as the @dfn{Portable Operating System
-Interface for Computer Environments}.  POSIX is derived mostly from
-various versions of the Unix operating system.
+Interface for Computer Environments} (ISO/IEC 9945).  They were also
+published as ANSI/IEEE Std 1003.  POSIX is derived mostly from various
+versions of the Unix operating system.
 
 The library facilities specified by the POSIX standards are a superset
 of those required by @w{ISO C}; POSIX specifies additional features for
@@ -141,14 +146,14 @@ programming language support which can run in many diverse operating
 system environments.@refill
 
 The GNU C library implements all of the functions specified in
-@cite{IEEE Std 1003.1-1990, the POSIX System Application Program
+@cite{ISO/IEC 9945-1:1996, the POSIX System Application Program
 Interface}, commonly referred to as POSIX.1.  The primary extensions to
 the @w{ISO C} facilities specified by this standard include file system
 interface primitives (@pxref{File System Interface}), device-specific
 terminal control functions (@pxref{Low-Level Terminal Interface}), and
 process control functions (@pxref{Processes}).
 
-Some facilities from @cite{IEEE Std 1003.2-1992, the POSIX Shell and
+Some facilities from @cite{ISO/IEC 9945-2:1993, the POSIX Shell and
 Utilities standard} (POSIX.2) are also implemented in the GNU library.
 These include utilities for dealing with regular expressions and other
 pattern matching facilities (@pxref{Pattern Matching}).
@@ -186,7 +191,7 @@ The BSD facilities include symbolic links (@pxref{Symbolic Links}), the
 @code{select} function (@pxref{Waiting for I/O}), the BSD signal
 functions (@pxref{BSD Signal Handling}), and sockets (@pxref{Sockets}).
 
-@node SVID,  , Berkeley Unix, Standards and Portability
+@node SVID, XPG, Berkeley Unix, Standards and Portability
 @subsection SVID (The System V Interface Description)
 @cindex SVID
 @cindex System V Unix
@@ -196,14 +201,36 @@ The @dfn{System V Interface Description} (SVID) is a document describing
 the AT&T Unix System V operating system.  It is to some extent a
 superset of the POSIX standard (@pxref{POSIX}).
 
-The GNU C library defines some of the facilities required by the SVID
+The GNU C library defines most of the facilities required by the SVID
 that are not also required by the @w{ISO C} or POSIX standards, for
 compatibility with  System V Unix and other Unix systems (such as
 SunOS) which include these facilities.  However, many of the more
 obscure and less generally useful facilities required by the SVID are
 not included.  (In fact, Unix System V itself does not provide them all.)
 
-@c !!! mention sysv ipc/shmem when it is there.
+The supported facilities from System V include the methods for
+inter-process communication and shared memory, the @code{hsearch} and
+@code{drand48} families of functions, @code{fmtmsg} and several of the
+mathematical functions.
+
+@node XPG, , SVID, Standards and Portability
+@subsection XPG (The X/Open Portability Guide)
+
+The X/Open Portability Guide, published by the X/Open Company, Ltd., is
+a more general standard than POSIX.  X/Open owns the Unix copyright and
+the XPG specifies the requirements for systems which are intended to be
+a Unix system.
+
+The GNU C library complies to the X/Open Portability Guide, Issue 4.2,
+with the with all extensions common to XSI (X/Open System Interface)
+compliant systems and also all X/Open UNIX extensions.
+
+The additions on top of POSIX are mainly derived from functionality
+available in @w{System V} and BSD systems.  Some of the really bad
+mistakes in @w{System V} systems were corrected, though.  Since
+fulfilling the XPG standard with the Unix extensions is a
+precondition for getting the Unix brand chances are good that the
+functionality is available on commercial systems.
 
 
 @node Using the Library, Roadmap to the Manual, Standards and Portability, Introduction
@@ -360,7 +387,7 @@ and also provides a macro definition for @code{abs}.  Then, in:
 
 @smallexample
 #include <stdlib.h>
-int f (int *i) @{ return (abs (++*i)); @}
+int f (int *i) @{ return abs (++*i); @}
 @end smallexample
 
 @noindent
@@ -370,10 +397,10 @@ to a function and not a macro.
 
 @smallexample
 #include <stdlib.h>
-int g (int *i) @{ return ((abs)(++*i)); @}
+int g (int *i) @{ return (abs) (++*i); @}
 
 #undef abs
-int h (int *i) @{ return (abs (++*i)); @}
+int h (int *i) @{ return abs (++*i); @}
 @end smallexample
 
 Since macro definitions that double for a function behave in

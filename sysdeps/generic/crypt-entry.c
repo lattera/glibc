@@ -30,27 +30,29 @@ static const char md5_salt_prefix[] = "$1$";
 
 
 /* Prototypes for the MD5 encryption replacement functions.  */
-extern char *md5_crypt_r (const char *key, const char *salt, char *buffer,
-			  int buflen);
-extern char *md5_crypt (const char *key, const char *salt);
+extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
+			    int buflen);
+extern char *__md5_crypt (const char *key, const char *salt);
 
 
 /* We recognize an intended call of the MD5 crypt replacement function
    by the first 3 characters of the salt string.  If they match the
    MD5 magic string we want MD5 encryption replacement.  */
 char *
-crypt_r (key, salt, data)
+__crypt_r (key, salt, data)
      const char *key;
      const char *salt;
      struct crypt_data *data;
 {
   if (strncmp (md5_salt_prefix, salt, sizeof (md5_salt_prefix) - 1) == 0)
-    return md5_crypt_r (key, salt, (char *) data, sizeof (struct crypt_data));
+    return __md5_crypt_r (key, salt, (char *) data,
+			  sizeof (struct crypt_data));
 
   /* We don't have DES encryption.  */
   __set_errno (EOPNOTSUPP);
   return NULL;
 }
+weak_alias (__crypt_r, crypt_r)
 
 
 /* The same here, only we call the non-reentrant version.  */
@@ -60,7 +62,7 @@ crypt (key, salt)
      const char *salt;
 {
   if (strncmp (md5_salt_prefix, salt, sizeof (md5_salt_prefix) - 1) == 0)
-    return md5_crypt (key, salt);
+    return __md5_crypt (key, salt);
 
   /* We don't have DES encryption.  */
   __set_errno (EOPNOTSUPP);

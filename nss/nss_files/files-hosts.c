@@ -26,7 +26,6 @@
 
 /* Get implementation for some internal functions.  */
 #include "../resolv/mapv4v6addr.h"
-#include "../resolv/mapv4v6hostent.h"
 
 
 #define ENTNAME		hostent

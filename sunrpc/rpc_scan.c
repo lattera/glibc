@@ -450,10 +450,10 @@ static const token symbols[] =
 };
 
 static void
-findkind (const char **mark, token * tokp)
+findkind (const char **mark, token *tokp)
 {
   int len;
-  token *s;
+  const token *s;
   const char *str;
   char *tmp;
 

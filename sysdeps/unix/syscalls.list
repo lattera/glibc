@@ -9,7 +9,7 @@ chroot		-	chroot		1	chroot
 close		-	close		1	__libc_close	__close close
 dup		-	dup		1	__dup		dup
 dup2		-	dup2		2	__dup2		dup2
-fchdir		-	fchdir		1	fchdir
+fchdir		-	fchdir		1	__fchdir	fchdir
 fcntl		-	fcntl		3	__libc_fcntl	__fcntl fcntl
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs
 fsync		-	fsync		1	__libc_fsync	fsync

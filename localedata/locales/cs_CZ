@@ -1,0 +1,810 @@
+escape_char /
+comment_char %
+%
+% Czech Language Locale for Czech
+% Source:
+% Address: U ¹koly 292		Without diactitical chars: U skoly 292
+%	   783 72 Velký Týnec				   782 72 Velky Tynec
+% Contact: Vladimir Michl
+% Email: Vladimir.Michl@upol.cz
+% Tel:
+% Fax:
+% Language: cs
+% Territory: CZ
+% Revision: 1.01
+% Date: 1997-01-17
+% Application: general
+% Users: general
+% Repertoiremap: mnemonic.ds
+% Charset: ISO_8859-2:1987
+% Distribution and use is free, also
+% for commercial purposes.
+
+% zpracování:
+%%    localedef -c -i <tento-soubor> -f "ISO_8859-2:1987" 'cs_CZ.ISO-8859-2'
+%% pokud se podaøí odstranit chyby, lze -c vynechat.
+
+%% pro úspì¹né pøelo¾ení je tøeba mít kolekci lokalizací WG15collection.
+%% Tuto rozbalit do adresáøe
+%% /usr/share/i18n
+%% Lokalizace se pak budou tvoøit v adresáøi /usr/share/locale
+
+%% Také je dobré do souboru /usr/share/locale/locale.alias napsat tyto øádky
+%% cz	cs_CZ.ISO88592
+%% cs	cs_CZ.ISO88592
+%% czech cs_CZ.ISO88592
+
+
+%% Poøadí znakù
+%% Mo¾ná jsou nìkteré akcentované znaky jinak ne¾ by mìly být,
+%% zkuste zkontrolovat a pøípadné vylep¹ení mi poslat.
+%% ----------------------------------------------------------
+
+LC_COLLATE
+% Definice písmene ch
+collating-element <c-h> from "<c><h>"
+collating-element <C-h> from "<C><h>"
+collating-element <C-H> from "<C><H>"
+
+collating-symbol <CAPITAL>
+collating-symbol <SMALL>
+
+collating-symbol <NONE>
+collating-symbol <ACUTE>
+%collating-symbol <GRAVE>
+%collating-symbol <DOUBLE-GRAVE>
+collating-symbol <BREVE>
+collating-symbol <CIRCUMFLEX>
+collating-symbol <CARON>
+collating-symbol <RING>
+collating-symbol <DIAERESIS>
+collating-symbol <DOUBLE-ACUTE>
+%collating-symbol <TILDE>
+collating-symbol <DOT>
+collating-symbol <STROKE>
+collating-symbol <CEDILLA>
+collating-symbol <OGONEK>
+
+order_start forward;backward/
+            ;forward;position
+
+<CAPITAL>
+<SMALL>
+
+<NONE>
+<ACUTE>
+<CARON>
+<RING>
+%<GRAVE>
+%<DOUBLE-GRAVE>
+<BREVE>
+<CIRCUMFLEX>
+<DIAERESIS>
+<DOUBLE-ACUTE>
+%<TILDE>
+<DOT>
+<STROKE>
+<CEDILLA>
+<OGONEK>
+
+%
+<NS>    <NS>;<NS>;<NS>;IGNORE
+<SP>    IGNORE;IGNORE;IGNORE;<SP>
+<HT>    IGNORE;IGNORE;IGNORE;<HT>
+<VT>    IGNORE;IGNORE;IGNORE;<VT>
+<CR>    IGNORE;IGNORE;IGNORE;<CR>
+<LF>    IGNORE;IGNORE;IGNORE;<LF>
+<FF>    IGNORE;IGNORE;IGNORE;<FF>
+<_>     IGNORE;IGNORE;IGNORE;<_>
+<-->    IGNORE;IGNORE;IGNORE;<-->
+<->     IGNORE;IGNORE;IGNORE;<->
+<,>     IGNORE;IGNORE;IGNORE;<,>
+<;>     IGNORE;IGNORE;IGNORE;<;>
+<:>     IGNORE;IGNORE;IGNORE;<:>
+<!>     IGNORE;IGNORE;IGNORE;<!>
+<?>     IGNORE;IGNORE;IGNORE;<?>
+<//>    IGNORE;IGNORE;IGNORE;<//>
+<.>     IGNORE;IGNORE;IGNORE;<.>
+<''>    IGNORE;IGNORE;IGNORE;<''>
+<'!>    IGNORE;IGNORE;IGNORE;<'!>
+<'/>>   IGNORE;IGNORE;IGNORE;<'/>>
+<':>    IGNORE;IGNORE;IGNORE;<':>
+<'?>    IGNORE;IGNORE;IGNORE;<'?>
+<',>    IGNORE;IGNORE;IGNORE;<',>
+<'>     IGNORE;IGNORE;IGNORE;<'>
+<">     IGNORE;IGNORE;IGNORE;<">
+<(>     IGNORE;IGNORE;IGNORE;<(>
+<)>     IGNORE;IGNORE;IGNORE;<)>
+<<(>    IGNORE;IGNORE;IGNORE;<<(>
+<)/>>   IGNORE;IGNORE;IGNORE;<)/>>
+<(!>    IGNORE;IGNORE;IGNORE;<(!>
+<!)>    IGNORE;IGNORE;IGNORE;<!)>
+<SE>    IGNORE;IGNORE;IGNORE;<SE>
+<At>    IGNORE;IGNORE;IGNORE;<At>
+<Cu>    IGNORE;IGNORE;IGNORE;<Cu>
+<DO>    IGNORE;IGNORE;IGNORE;<DO>
+<*>     IGNORE;IGNORE;IGNORE;<*>
+<////>  IGNORE;IGNORE;IGNORE;<////>
+<&>     IGNORE;IGNORE;IGNORE;<&>
+<Nb>    IGNORE;IGNORE;IGNORE;<Nb>
+<%>     IGNORE;IGNORE;IGNORE;<%>
+<+>     IGNORE;IGNORE;IGNORE;<+>
+<-:>    IGNORE;IGNORE;IGNORE;<-:>
+<*X>    IGNORE;IGNORE;IGNORE;<*X>
+<<>     IGNORE;IGNORE;IGNORE;<<>
+<=>     IGNORE;IGNORE;IGNORE;<=>
+</>>    IGNORE;IGNORE;IGNORE;</>>
+<!!>    IGNORE;IGNORE;IGNORE;<!!>
+<DG>    IGNORE;IGNORE;IGNORE;<DG>
+<'<>    IGNORE;IGNORE;IGNORE;<'<>
+<'(>    IGNORE;IGNORE;IGNORE;<'(>
+<'.>    IGNORE;IGNORE;IGNORE;<'.>
+<'0>    IGNORE;IGNORE;IGNORE;<'0>
+<';>    IGNORE;IGNORE;IGNORE;<';>
+<'">    IGNORE;IGNORE;IGNORE;<'">
+<NU>    IGNORE;IGNORE;IGNORE;<NU>
+<SH>    IGNORE;IGNORE;IGNORE;<SH>
+<SX>    IGNORE;IGNORE;IGNORE;<SX>
+<EX>    IGNORE;IGNORE;IGNORE;<EX>
+<ET>    IGNORE;IGNORE;IGNORE;<ET>
+<EQ>    IGNORE;IGNORE;IGNORE;<EQ>
+<AK>    IGNORE;IGNORE;IGNORE;<AK>
+<BL>    IGNORE;IGNORE;IGNORE;<BL>
+<BS>    IGNORE;IGNORE;IGNORE;<BS>
+<SO>    IGNORE;IGNORE;IGNORE;<SO>
+<SI>    IGNORE;IGNORE;IGNORE;<SI>
+<DL>    IGNORE;IGNORE;IGNORE;<DL>
+<D1>    IGNORE;IGNORE;IGNORE;<D1>
+<D2>    IGNORE;IGNORE;IGNORE;<D2>
+<D3>    IGNORE;IGNORE;IGNORE;<D3>
+<D4>    IGNORE;IGNORE;IGNORE;<D4>
+<NK>    IGNORE;IGNORE;IGNORE;<NK>
+<SY>    IGNORE;IGNORE;IGNORE;<SY>
+<EB>    IGNORE;IGNORE;IGNORE;<EB>
+<CN>    IGNORE;IGNORE;IGNORE;<CN>
+<EM>    IGNORE;IGNORE;IGNORE;<EM>
+<SB>    IGNORE;IGNORE;IGNORE;<SB>
+<EC>    IGNORE;IGNORE;IGNORE;<EC>
+<FS>    IGNORE;IGNORE;IGNORE;<FS>
+<GS>    IGNORE;IGNORE;IGNORE;<GS>
+<RS>    IGNORE;IGNORE;IGNORE;<RS>
+<US>    IGNORE;IGNORE;IGNORE;<US>
+<DT>    IGNORE;IGNORE;IGNORE;<DT>
+<PA>    IGNORE;IGNORE;IGNORE;<PA>
+<HO>    IGNORE;IGNORE;IGNORE;<HO>
+<BH>    IGNORE;IGNORE;IGNORE;<BH>
+<NH>    IGNORE;IGNORE;IGNORE;<NH>
+<IN>    IGNORE;IGNORE;IGNORE;<IN>
+<NL>    IGNORE;IGNORE;IGNORE;<NL>
+<SA>    IGNORE;IGNORE;IGNORE;<SA>
+<ES>    IGNORE;IGNORE;IGNORE;<ES>
+<HS>    IGNORE;IGNORE;IGNORE;<HS>
+<HJ>    IGNORE;IGNORE;IGNORE;<HJ>
+<VS>    IGNORE;IGNORE;IGNORE;<VS>
+<PD>    IGNORE;IGNORE;IGNORE;<PD>
+<PU>    IGNORE;IGNORE;IGNORE;<PU>
+<RI>    IGNORE;IGNORE;IGNORE;<RI>
+<S2>    IGNORE;IGNORE;IGNORE;<S2>
+<S3>    IGNORE;IGNORE;IGNORE;<S3>
+<DC>    IGNORE;IGNORE;IGNORE;<DC>
+<P1>    IGNORE;IGNORE;IGNORE;<P1>
+<P2>    IGNORE;IGNORE;IGNORE;<P2>
+<TS>    IGNORE;IGNORE;IGNORE;<TS>
+<CC>    IGNORE;IGNORE;IGNORE;<CC>
+<MW>    IGNORE;IGNORE;IGNORE;<MW>
+<SG>    IGNORE;IGNORE;IGNORE;<SG>
+<EG>    IGNORE;IGNORE;IGNORE;<EG>
+<SS>    IGNORE;IGNORE;IGNORE;<SS>
+<GC>    IGNORE;IGNORE;IGNORE;<GC>
+<SC>    IGNORE;IGNORE;IGNORE;<SC>
+<CI>    IGNORE;IGNORE;IGNORE;<CI>
+<ST>    IGNORE;IGNORE;IGNORE;<ST>
+<OC>    IGNORE;IGNORE;IGNORE;<OC>
+<PM>    IGNORE;IGNORE;IGNORE;<PM>
+<AC>    IGNORE;IGNORE;IGNORE;<AC>
+UNDEFINED       IGNORE;IGNORE;IGNORE
+
+<0>     <0>;<0>;IGNORE;IGNORE
+<1>     <1>;<1>;IGNORE;IGNORE
+<2>     <2>;<2>;IGNORE;IGNORE
+<3>     <3>;<3>;IGNORE;IGNORE
+<4>     <4>;<4>;IGNORE;IGNORE
+<5>     <5>;<5>;IGNORE;IGNORE
+<6>     <6>;<6>;IGNORE;IGNORE
+<7>     <7>;<7>;IGNORE;IGNORE
+<8>     <8>;<8>;IGNORE;IGNORE
+<9>     <9>;<9>;IGNORE;IGNORE
+
+<A>     <A>;<NONE>;<CAPITAL>;IGNORE
+<a>     <A>;<NONE>;<SMALL>;IGNORE
+<A'>    <A>;<ACUTE>;<CAPITAL>;IGNORE
+<a'>    <A>;<ACUTE>;<SMALL>;IGNORE
+<A(>    <A>;<BREVE>;<CAPITAL>;IGNORE
+<a(>    <A>;<BREVE>;<SMALL>;IGNORE
+<A/>>   <A>;<CIRCUMFLEX>;<CAPITAL>;IGNORE
+<a/>>   <A>;<CIRCUMFLEX>;<SMALL>;IGNORE
+<A:>    <A>;<DIAERESIS>;<CAPITAL>;IGNORE
+<a:>    <A>;<DIAERESIS>;<SMALL>;IGNORE
+<A;>    <A>;<OGONEK>;<CAPITAL>;IGNORE
+<a;>    <A>;<OGONEK>;<SMALL>;IGNORE
+
+<B>     <B>;<NONE>;<CAPITAL>;IGNORE
+<b>     <B>;<NONE>;<SMALL>;IGNORE
+
+<C>     <C>;<NONE>;<CAPITAL>;IGNORE
+<c>     <C>;<NONE>;<SMALL>;IGNORE
+<C<>    <C>;<CARON>;<CAPITAL>;IGNORE
+<c<>    <C>;<CARON>;<SMALL>;IGNORE
+<C'>    <C>;<ACUTE>;<CAPITAL>;IGNORE
+<c'>    <C>;<ACUTE>;<SMALL>;IGNORE
+<C,>    <C>;<CEDILLA>;<CAPITAL>;IGNORE
+<c,>    <C>;<CEDILLA>;<SMALL>;IGNORE
+
+<D>     <D>;<NONE>;<CAPITAL>;IGNORE
+<d>     <D>;<NONE>;<SMALL>;IGNORE
+<D<>    <D>;<CARON>;<CAPITAL>;IGNORE
+<d<>    <D>;<CARON>;<SMALL>;IGNORE
+<D//>   <D>;<STROKE>;<CAPITAL>;IGNORE
+<d//>   <D>;<STROKE>;<SMALL>;IGNORE
+
+<E>     <E>;<NONE>;<CAPITAL>;IGNORE
+<e>     <E>;<NONE>;<SMALL>;IGNORE
+<E'>    <E>;<ACUTE>;<CAPITAL>;IGNORE
+<e'>    <E>;<ACUTE>;<SMALL>;IGNORE
+<E<>    <E>;<CARON>;<CAPITAL>;IGNORE
+<e<>    <E>;<CARON>;<SMALL>;IGNORE
+<E:>    <E>;<DIAERESIS>;<CAPITAL>;IGNORE
+<e:>    <E>;<DIAERESIS>;<SMALL>;IGNORE
+<E;>    <E>;<OGONEK>;<CAPITAL>;IGNORE
+<e;>    <E>;<OGONEK>;<SMALL>;IGNORE
+
+<F>     <F>;<NONE>;<CAPITAL>;IGNORE
+<f>     <F>;<NONE>;<SMALL>;IGNORE
+
+<G>     <G>;<NONE>;<CAPITAL>;IGNORE
+<g>     <G>;<NONE>;<SMALL>;IGNORE
+
+<H>     <H>;<NONE>;<CAPITAL>;IGNORE
+<h>     <H>;<NONE>;<SMALL>;IGNORE
+
+<C-H>	<C-H>;<NONE>;<CAPITAL>;IGNORE
+<C-h>	<C-h>;<NONE>;<CAPITAL>;IGNORE
+<c-h>   <c-h>;<NONE>;<SMALL>;IGNORE
+
+<I>     <I>;<NONE>;<CAPITAL>;IGNORE
+<i>     <I>;<NONE>;<SMALL>;IGNORE
+<I'>    <I>;<ACUTE>;<CAPITAL>;IGNORE
+<i'>    <I>;<ACUTE>;<SMALL>;IGNORE
+<I/>>   <I>;<CIRCUMFLEX>;<CAPITAL>;IGNORE
+<i/>>   <I>;<CIRCUMFLEX>;<SMALL>;IGNORE
+
+<J>     <J>;<NONE>;<CAPITAL>;IGNORE
+<j>     <J>;<NONE>;<SMALL>;IGNORE
+
+<K>     <K>;<NONE>;<CAPITAL>;IGNORE
+<k>     <K>;<NONE>;<SMALL>;IGNORE
+
+<L>     <L>;<NONE>;<CAPITAL>;IGNORE
+<l>     <L>;<NONE>;<SMALL>;IGNORE
+<L'>    <L>;<ACUTE>;<CAPITAL>;IGNORE
+<l'>    <L>;<ACUTE>;<SMALL>;IGNORE
+<L<>    <L>;<CARON>;<CAPITAL>;IGNORE
+<l<>    <L>;<CARON>;<SMALL>;IGNORE
+<L//>   <L>;<STROKE>;<CAPITAL>;IGNORE
+<l//>   <L>;<STROKE>;<SMALL>;IGNORE
+
+<M>     <M>;<NONE>;<CAPITAL>;IGNORE
+<m>     <M>;<NONE>;<SMALL>;IGNORE
+
+<N>     <N>;<NONE>;<CAPITAL>;IGNORE
+<n>     <N>;<NONE>;<SMALL>;IGNORE
+<N<>    <N>;<CARON>;<CAPITAL>;IGNORE
+<n<>    <N>;<CARON>;<SMALL>;IGNORE
+<N'>    <N>;<ACUTE>;<CAPITAL>;IGNORE
+<n'>    <N>;<ACUTE>;<SMALL>;IGNORE
+
+<O>     <O>;<NONE>;<CAPITAL>;IGNORE
+<o>     <O>;<NONE>;<SMALL>;IGNORE
+<O'>    <O>;<ACUTE>;<CAPITAL>;IGNORE
+<o'>    <O>;<ACUTE>;<SMALL>;IGNORE
+<O/>>   <O>;<CIRCUMFLEX>;<CAPITAL>;IGNORE
+<o/>>   <O>;<CIRCUMFLEX>;<SMALL>;IGNORE
+<O:>    <O>;<DIAERESIS>;<CAPITAL>;IGNORE
+<o:>    <O>;<DIAERESIS>;<SMALL>;IGNORE
+<O">    <O>;<DOUBLE-ACUTE>;<CAPITAL>;IGNORE
+<o">    <O>;<DOUBLE-ACUTE>;<SMALL>;IGNORE
+
+<P>     <P>;<NONE>;<CAPITAL>;IGNORE
+<p>     <P>;<NONE>;<SMALL>;IGNORE
+
+<Q>     <Q>;<NONE>;<CAPITAL>;IGNORE
+<q>     <Q>;<NONE>;<SMALL>;IGNORE
+
+<R>     <R>;<NONE>;<CAPITAL>;IGNORE
+<r>     <R>;<NONE>;<SMALL>;IGNORE
+<R<>    <R>;<CARON>;<CAPITAL>;IGNORE
+<r<>    <R>;<CARON>;<SMALL>;IGNORE
+<R'>    <R>;<ACUTE>;<CAPITAL>;IGNORE
+<r'>    <R>;<ACUTE>;<SMALL>;IGNORE
+
+<S>     <S>;<NONE>;<CAPITAL>;IGNORE
+<s>     <S>;<NONE>;<SMALL>;IGNORE
+<S<>    <S>;<CARON>;<CAPITAL>;IGNORE
+<s<>    <S>;<CARON>;<SMALL>;IGNORE
+<S'>    <S>;<ACUTE>;<CAPITAL>;IGNORE
+<s'>    <S>;<ACUTE>;<SMALL>;IGNORE
+<S,>    <S>;<CEDILLA>;<CAPITAL>;IGNORE
+<s,>    <S>;<CEDILLA>;<SMALL>;IGNORE
+
+<T>     <T>;<NONE>;<CAPITAL>;IGNORE
+<t>     <T>;<NONE>;<SMALL>;IGNORE
+<T<>    <T>;<CARON>;<CAPITAL>;IGNORE
+<t<>    <T>;<CARON>;<SMALL>;IGNORE
+<T,>    <T>;<CEDILLA>;<CAPITAL>;IGNORE
+<t,>    <T>;<CEDILLA>;<SMALL>;IGNORE
+
+<U>     <U>;<NONE>;<CAPITAL>;IGNORE
+<u>     <U>;<NONE>;<SMALL>;IGNORE
+<U'>    <U>;<ACUTE>;<CAPITAL>;IGNORE
+<u'>    <U>;<ACUTE>;<SMALL>;IGNORE
+<U0>    <U>;<RING>;<CAPITAL>;IGNORE
+<u0>    <U>;<RING>;<SMALL>;IGNORE
+<U:>    <U>;<DIAERESIS>;<CAPITAL>;IGNORE
+<u:>    <U>;<DIAERESIS>;<SMALL>;IGNORE
+<U">    <U>;<DOUBLE-ACUTE>;<CAPITAL>;IGNORE
+<u">    <U>;<DOUBLE-ACUTE>;<SMALL>;IGNORE
+
+<V>     <V>;<NONE>;<CAPITAL>;IGNORE
+<v>     <V>;<NONE>;<SMALL>;IGNORE
+
+<W>     <W>;<NONE>;<CAPITAL>;IGNORE
+<w>     <W>;<NONE>;<SMALL>;IGNORE
+
+<X>     <X>;<NONE>;<CAPITAL>;IGNORE
+<x>     <X>;<NONE>;<SMALL>;IGNORE
+
+<Y>     <Y>;<NONE>;<CAPITAL>;IGNORE
+<y>     <Y>;<NONE>;<SMALL>;IGNORE
+<Y'>    <Y>;<ACUTE>;<CAPITAL>;IGNORE
+<y'>    <Y>;<ACUTE>;<SMALL>;IGNORE
+
+<Z>     <Z>;<NONE>;<CAPITAL>;IGNORE
+<z>     <Z>;<NONE>;<SMALL>;IGNORE
+<Z<>    <Z>;<CARON>;<CAPITAL>;IGNORE
+<z<>    <Z>;<CARON>;<SMALL>;IGNORE
+<Z'>    <Z>;<ACUTE>;<CAPITAL>;IGNORE
+<z'>    <Z>;<ACUTE>;<SMALL>;IGNORE
+<Z.>    <Z>;<DOT>;<CAPITAL>;IGNORE
+<z.>    <Z>;<DOT>;<SMALL>;IGNORE
+
+order_end
+
+END LC_COLLATE
+
+% Definice typù znakù
+
+LC_CTYPE
+
+digit	<0>;<1>;<2>;<3>;<4>;/
+	<5>;<6>;<7>;<8>;<9>
+
+xdigit	<0>;<1>;<2>;<3>;<4>;/
+	<5>;<6>;<7>;<8>;<9>;/
+	<a>;...;<f>;/
+	<A>;...;<F>
+
+punct	<!>;...;<//>;/
+	<:>;...;<At>;/
+	<<(>;...;<'!>;/
+	<(!>;...;<'?>;/
+	<'(>;<Cu>;<SE>;<':>;/
+	<-->;<DG>;<';>;<''>;/
+	<'<>;<',>;<'">;<*X>;/
+	<-:>;<'.>
+
+blank	<SP>;<HT>;<NS>
+
+space   <SP>;<LF>;<VT>;<FF>;/
+        <CR>;<HT>;<NS>
+
+cntrl   <NU>;<SH>;<SX>;<EX>;<ET>;<EQ>;/
+        <AK>;<BL>;<BS>;<HT>;<LF>;<VT>;/
+        <FF>;<CR>;<SO>;<SI>;<DL>;<D1>;/
+        <D2>;<D3>;<D4>;<NK>;<SY>;<EB>;/
+        <CN>;<EM>;<SB>;<EC>;<FS>;<GS>;/
+        <RS>;<US>;<DT>;<PA>;<HO>;<BH>;/
+        <NH>;<IN>;<NL>;<SA>;<ES>;<HS>;/
+        <HJ>;<VS>;<PD>;<PU>;<RI>;<S2>;/
+        <S3>;<DC>;<P1>;<P2>;<TS>;<CC>;/
+        <MW>;<SG>;<EG>;<SS>;<GC>;<SC>;/
+        <CI>;<ST>;<OC>;<PM>;<AC>
+
+alpha	<A>;...;<Z>;/
+	<A;>;/
+	<L//>;/
+	<L<>;/
+	<S'>;/
+	<S<>;/
+	<S,>;/
+	<T<>;/
+	<Z'>;/
+	<Z<>;/
+	<Z.>;/
+	<R'>;/
+	<A'>;/
+	<A/>>;/
+	<A(>;/
+	<A:>;/
+	<L'>;/
+	<C'>;/
+	<C,>;/
+	<C<>;/
+	<E'>;/
+	<E;>;/
+	<E:>;/
+	<E<>;/
+	<I'>;/
+	<I/>>;/
+	<D<>;/
+	<D//>;/
+	<N'>;/
+	<N<>;/
+	<O'>;/
+	<O/>>;/
+	<O">;/
+	<O:>;/
+	<R<>;/
+	<U0>;/
+	<U'>;/
+	<U">;/
+	<U:>;/
+	<Y'>;/
+	<T,>;/
+	<a>;...;<z>;/
+	<a;>;/
+	<l//>;/
+	<l<>;/
+	<s'>;/
+	<s<>;/
+	<s,>;/
+	<t<>;/
+	<z'>;/
+	<z<>;/
+	<z.>;/
+	<ss>;/
+	<r'>;/
+	<a'>;/
+	<a/>>;/
+	<a(>;/
+	<a:>;/
+	<l'>;/
+	<c'>;/
+	<c,>;/
+	<c<>;/
+	<e'>;/
+	<e;>;/
+	<e:>;/
+	<e<>;/
+	<i'>;/
+	<i/>>;/
+	<d<>;/
+	<d//>;/
+	<n'>;/
+	<n<>;/
+	<o'>;/
+	<o/>>;/
+	<o">;/
+	<o:>;/
+	<r<>;/
+	<u0>;/
+	<u'>;/
+	<u">;/
+	<u:>;/
+	<y'>;/
+	<t,>
+
+upper	<A>;...;<Z>;/
+	<A;>;/
+	<L//>;/
+	<L<>;/
+	<S'>;/
+	<S<>;/
+	<S,>;/
+	<T<>;/
+	<Z'>;/
+	<Z<>;/
+	<Z.>;/
+	<R'>;/
+	<A'>;/
+	<A/>>;/
+	<A(>;/
+	<A:>;/
+	<L'>;/
+	<C'>;/
+	<C,>;/
+	<C<>;/
+	<E'>;/
+	<E;>;/
+	<E:>;/
+	<E<>;/
+	<I'>;/
+	<I/>>;/
+	<D<>;/
+	<D//>;/
+	<N'>;/
+	<N<>;/
+	<O'>;/
+	<O/>>;/
+	<O">;/
+	<O:>;/
+	<R<>;/
+	<U0>;/
+	<U'>;/
+	<U">;/
+	<U:>;/
+	<Y'>;/
+	<T,>
+
+lower	<a>;...;<z>;/
+	<a;>;/
+	<l//>;/
+	<l<>;/
+	<s'>;/
+	<s<>;/
+	<s,>;/
+	<t<>;/
+	<z'>;/
+	<z<>;/
+	<z.>;/
+	<ss>;/
+	<r'>;/
+	<a'>;/
+	<a/>>;/
+	<a(>;/
+	<a:>;/
+	<l'>;/
+	<c'>;/
+	<c,>;/
+	<c<>;/
+	<e'>;/
+	<e;>;/
+	<e:>;/
+	<e<>;/
+	<i'>;/
+	<i/>>;/
+	<d<>;/
+	<d//>;/
+	<n'>;/
+	<n<>;/
+	<o'>;/
+	<o/>>;/
+	<o">;/
+	<o:>;/
+	<r<>;/
+	<u0>;/
+	<u'>;/
+	<u">;/
+	<u:>;/
+	<y'>;/
+	<t,>
+
+
+toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);(<f>,<F>);/
+	(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);(<k>,<K>);(<l>,<L>);/
+	(<m>,<M>);(<n>,<N>);(<o>,<O>);(<p>,<P>);(<q>,<Q>);(<r>,<R>);/
+	(<s>,<S>);(<t>,<T>);(<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);/
+	(<y>,<Y>);(<z>,<Z>);/
+	(<a;>,<A;>);/
+	(<l//>,<L//>);/
+	(<l<>,<L<>);/
+	(<s'>,<S'>);/
+	(<s<>,<S<>);/
+	(<s,>,<S,>);/
+	(<t<>,<T<>);/
+	(<z'>,<Z'>);/
+	(<z<>,<Z<>);/
+	(<z.>,<Z.>);/
+	(<r'>,<R'>);/
+	(<a'>,<A'>);/
+	(<a/>>,<A/>>);/
+	(<a(>,<A(>);/
+	(<a:>,<A:>);/
+	(<l'>,<L'>);/
+	(<c'>,<C'>);/
+	(<c,>,<C,>);/
+	(<c<>,<C<>);/
+	(<e'>,<E'>);/
+	(<e;>,<E;>);/
+	(<e:>,<E:>);/
+	(<e<>,<E<>);/
+	(<i'>,<I'>);/
+	(<i/>>,<I/>>);/
+	(<d<>,<D<>);/
+	(<d//>,<D//>);/
+	(<n'>,<N'>);/
+	(<n<>,<N<>);/
+	(<o'>,<O'>);/
+	(<o/>>,<O/>>);/
+	(<o">,<O">);/
+	(<o:>,<O:>);/
+	(<r<>,<R<>);/
+	(<u0>,<U0>);/
+	(<u'>,<U'>);/
+	(<u">,<U">);/
+	(<u:>,<U:>);/
+	(<y'>,<Y'>);/
+	(<t,>,<T,>)
+
+tolower	(<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);(<F>,<f>);/
+	(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);(<K>,<k>);(<L>,<l>);/
+	(<M>,<m>);(<N>,<n>);(<O>,<o>);(<P>,<p>);(<Q>,<q>);(<R>,<r>);/
+	(<S>,<s>);(<T>,<t>);(<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);/
+	(<Y>,<y>);(<Z>,<z>);/
+	(<A;>,<a;>);/
+	(<L//>,<l//>);/
+	(<L<>,<l<>);/
+	(<S'>,<s'>);/
+	(<S<>,<s<>);/
+	(<S,>,<s,>);/
+	(<T<>,<t<>);/
+	(<Z'>,<z'>);/
+	(<Z<>,<z<>);/
+	(<Z.>,<z.>);/
+	(<R'>,<r'>);/
+	(<A'>,<a'>);/
+	(<A/>>,<a/>>);/
+	(<A(>,<a(>);/
+	(<A:>,<a:>);/
+	(<L'>,<l'>);/
+	(<C'>,<c'>);/
+	(<C,>,<c,>);/
+	(<C<>,<c<>);/
+	(<E'>,<e'>);/
+	(<E;>,<e;>);/
+	(<E:>,<e:>);/
+	(<E<>,<e<>);/
+	(<I'>,<i'>);/
+	(<I/>>,<i/>>);/
+	(<D<>,<d<>);/
+	(<D//>,<d//>);/
+	(<N'>,<n'>);/
+	(<N<>,<n<>);/
+	(<O'>,<o'>);/
+	(<O/>>,<o/>>);/
+	(<O">,<o">);/
+	(<O:>,<o:>);/
+	(<R<>,<r<>);/
+	(<u0>,<U0>);/
+	(<U'>,<u'>);/
+	(<U">,<u">);/
+	(<U:>,<u:>);/
+	(<Y'>,<y'>);/
+	(<T,>,<t,>)
+
+END LC_CTYPE
+
+%% LC_MESSAGES
+%% ekvivalenty yes/no
+%% -------------------------
+
+LC_MESSAGES
+
+yesexpr		"<<(><a><A><y><Y><)/>><.><*>"
+noexpr  	"<<(><n><N><)/>><.><*>"
+yesstr		"<a><n><o>"
+nostr		"<n><e>"
+
+END LC_MESSAGES
+
+%% LC_MONETARY -- jde jen o peníze
+%% -------------------------------------------------
+
+LC_MONETARY
+
+int_curr_symbol		"<C><Z><K><SP>"
+currency_symbol		"<K><c<>"
+mon_decimal_point	"<,>"
+mon_thousands_sep	"<SP>"
+mon_grouping      	3;3
+positive_sign		""
+negative_sign		"<->"
+int_frac_digits		2
+frac_digits		2
+p_cs_precedes		0
+p_sep_by_space		1
+n_cs_precedes		0
+n_sep_by_space		1
+p_sign_posn		1
+n_sign_posn		1
+
+END LC_MONETARY
+
+%% O èíslech
+%% --------------
+
+LC_NUMERIC
+
+decimal_point		"<,>"
+thousands_sep		"<SP>"
+grouping		3;3
+
+END LC_NUMERIC
+
+%% Èas
+
+LC_TIME
+
+abday		"<N><e>";/
+		"<P><o>";/
+		"<U'><t>";/
+		"<S><t>";/
+		"<C<><t>";/
+		"<P><a'>";/
+		"<S><o>"
+
+day		"<N><e><d><e<><l><e>";/
+		"<P><o><n><d<><e><l><i'>";/
+		"<U'><t><e><r><y'>";/
+		"<S><t><r<><e><d><a>";/
+		"<C<><t><v><r><t><e><k>";/
+		"<P><a'><t><e><k>";/
+		"<S><o><b><o><t><a>"
+
+abmon		"<L><e><d>";/
+		"<U'><n><o>";/
+		"<B><r<><e>";/
+		"<D><u><b>";/
+		"<K><v><e<>";/
+		"<C<><e><r>";/
+		"<C<><n><c>";/
+		"<S><r><p>";/
+		"<Z><a'><r<>";/
+		"<R<><i'><j>";/
+		"<L><i><s>";/
+		"<P><r><o>"
+
+mon		"<L><e><d><e><n>";/
+		"<U'><n><o><r>";/
+		"<B><r<><e><z><e><n>";/
+		"<D><u><b><e><n>";/
+		"<K><v><e<><t><e><n>";/
+		"<C<><e><r><v><e><n>";/
+		"<C<><e><r><v><e><n><e><c>";/
+		"<S><r><p><e><n>";/
+		"<Z><a'><r<><i'>";/
+		"<R<><i'><j><e><n>";/
+		"<L><i><s><t><o><p><a><d>";/
+		"<P><r><o><s><i><n><e><c>"
+
+
+d_t_fmt		"<%><a><SP><%><d><.><SP><%><B><SP><%><Y><SP><%><H><:><%><M><:><%><S><SP><%><Z>"
+%d_t_fmt		"<%><d><.><%><m><.><%><Y><SP><%><T><SP><%><Z>"
+
+d_fmt 		"<%><d><.><%><m><.><%><Y>"
+%d_fmt 		"<%><d><.><%><m><.><%><Y>"
+
+t_fmt		"<%><H><:><%><M><:><%><S>"
+%t_fmt		"<%><T>"
+
+t_fmt_ampm	"<%><I><:><%><M><:><%><S>"
+%t_fmt_ampm	""
+
+%am_pm   	"am";"pm"
+am_pm   	"";""
+
+% Zde nevím, co následující polo¾ky znamenají
+% V pøípadì potøeby prosím opravte
+
+%era 		"<%><Y>"
+
+%era_year	"<%><y>"
+
+%alt_digits	"<0>";"<1>";"<2>";"<3>";"<4>";/
+%		"<5>";"<6>";"<7>";"<8>"
+
+%era_d_fmt	"<%><e><SP><%><B><SP><%><Y>"
+
+END LC_TIME
+
+%% END OF LOCALIZATION FILE for cs_CZ.ISO-8859-2
+%% Konec lokalizaèního souboru pro èeské prostøedí

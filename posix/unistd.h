@@ -37,7 +37,7 @@ __BEGIN_DECLS
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
-#define	_POSIX2_C_VERSION	199912L	/* Invalid until 1003.2 is done.  */
+#define	_POSIX2_C_VERSION	199209L	/* Invalid until 1003.2 is done.  */
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
