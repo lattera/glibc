@@ -1,5 +1,5 @@
-/* FPU control word bits.  Alpha-maped-to-Intel version.
-   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
+/* FPU control word bits.  Alpha-mapped-to-Intel version.
+   Copyright (C) 1996, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -65,7 +65,7 @@
 #define _FPU_MASK_UM  0x10
 #define _FPU_MASK_PM  0x20
 
-/* precision control */
+/* precision control -- without effect on Alpha */
 #define _FPU_EXTENDED 0x300   /* RECOMMENDED */
 #define _FPU_DOUBLE   0x200
 #define _FPU_SINGLE   0x0     /* DO NOT USE */
