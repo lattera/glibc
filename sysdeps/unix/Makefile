@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ ifndef no_deps
 include $(common-objpfx)param.h.dep
 endif
 
-# Don't preempt our own headers. 
+# Don't preempt our own headers.
 sys/param.h-includes := \
   $(filter-out $(patsubst $(..)%,%,\
 			  $(wildcard $(addprefix $(..),\
@@ -130,7 +130,7 @@ ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 
 # These need to exist before any compiling is done,
 # so cpp doesn't instead find the stub versions.
-before-compile := $(before-compile) $(common-objpfx)errnos.h 
+before-compile := $(before-compile) $(common-objpfx)errnos.h
 
 $(common-objpfx)errnos.h: $(common-objpfx)make-errnos
 	$(dir $<)$(notdir $<) > $@-tmp
@@ -264,5 +264,32 @@ before-compile := $(before-compile) $(common-objpfx)syscall.h
 common-generated := $(common-generated) syscall.h
 
 endif
+
+endif
+
+ifndef inhibit-unix-syscalls
+
+# Sysdep dirs unix/... can contain a file syscalls.list,
+# which specifies objects to be compiled as simple Unix system calls.
+
+-include $(objpfx)sysd-syscalls
+omit-deps += $(unix-syscalls)
+
+ifeq (misc,$(subdir))
+sysdep_routines += $(unix-extra-syscalls)
+endif
+
+export sysdirs
+export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
+
+$(objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
+			$(wildcard $(+sysdep_dirs:%=%/syscalls.list))
+	for dir in $$sysdirs; do \
+	  test -f $(..)sysdeps/$$dir/syscalls.list && \
+	  { $(SHELL) $(dir $<)$(notdir $<) \
+		     $(..)sysdeps $$dir $(object-suffixes) || exit 1; }; \
+	  test $$dir = unix && break; \
+	done > $@T
+	mv -f $@T $@
 
 endif

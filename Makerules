@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -253,8 +253,10 @@ compile-command.c = $(compile.c) $(OUTPUT_OPTION)
 endif
 
 # GCC can grok options after the file name, and it looks nicer that way.
-compile.S = $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
+compile.S = $(CC) $< -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
+COMPILE.S = $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS)
+COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o

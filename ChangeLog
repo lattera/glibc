@@ -1,3 +1,15 @@
+Thu Jan 18 00:32:43 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (COMPILE.s): New variable.
+
+	* sysdeps/unix/Makefile (sysd-syscalls): New target; generate with
+	make-syscalls.sh and include it.
+	[$(subdir)=misc] (sysdep_routines): Append extra syscalls from
+	sysd-syscalls.
+	* sysdeps/unix/make-syscalls.sh: New file.
+
+	* Makerules (COMPILE.S): New variable.
+
 Wed Jan 17 11:04:58 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/statbuf.h (_STAT_VER_LINUX,
