@@ -38,7 +38,9 @@ static char rcsid[] = "$NetBSD: $";
 #else
 	long double z;
 	z = __ieee754_atan2l(y,x);
-	if(_LIB_VERSION == _IEEE_||__isnanl(x)||__isnanl(y)) return z;
+	if(_LIB_VERSION != _SVID_||__isnanl(x)||__isnanl(y)) return z;
+	if(x==0.0&&y==0.0)
+	  return __kernel_standard(y,x,203); /* atan2(+-0,+-0) */
 	return z;
 #endif
 }

@@ -11,9 +11,9 @@ for l in $lang; do
   cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
   cn=locales/$cns
   fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-  LD_LIBRARY_PATH=$common_objpfx $common_objpfx/elf/ld.so \
-   $common_objpfx/locale/localedef --quiet -i $cn -f $fn \
-   $common_objpfx/localedata/$cns
+  LD_LIBRARY_PATH=$common_objpfx I18NPATH=./locales ${common_objpfx}elf/ld.so \
+   ${common_objpfx}locale/localedef --quiet -i $cn -f $fn \
+   ${common_objpfx}localedata/$cns
 done
 
 # Run collation tests.

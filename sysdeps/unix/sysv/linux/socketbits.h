@@ -83,8 +83,20 @@ enum __socket_type
 #define	AF_INET6	PF_INET6
 #define	AF_MAX		PF_MAX
 
-/* Raw IP packet level.  */
+/* Socket level values.  */
+#define SOL_IP          0
+#define SOL_TCP         6
+#define SOL_UDP         17
+#define SOL_IPV6        41
+#define SOL_ICMPV6      58
 #define SOL_RAW		255
+#define SOL_IPX         256
+#define SOL_AX25        257
+#define SOL_ATALK       258
+#define SOL_NETROM      259
+#define SOL_ROSE        260
+#define SOL_DECNET      261
+#define SOL_X25         262
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
@@ -120,21 +132,18 @@ struct msghdr
     /* XXX Should be type `size_t' according to POSIX.1g.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
-    int msg_iovlen;		/* Number of elements in the vector.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
+    size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
-    int msg_controllen;		/* Ancillary data buffer length.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
+    size_t msg_controllen;	/* Ancillary data buffer length.  */
     int msg_flags;		/* Flags on received message.  */
   };
 
 /* Structure used for storage of ancillary data object information.  */
 struct cmsghdr
   {
-    int cmsg_len;		/* Length of data in cmsg_data plus length
+    size_t cmsg_len;		/* Length of data in cmsg_data plus length
 				   of cmsghdr structure.  */
-    /* XXX Should be type `size_t' according to POSIX.1g.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
 #if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2

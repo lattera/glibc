@@ -1,5 +1,5 @@
-/* Definitions for BSD-style memory management.  Linux version.
-   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Definitions for POSIX-style memory management.  Linux version.
+   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ extern int mprotect __P ((__caddr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
    file it maps.  Filesystem operations on a file being mapped are
-   unpredictable before this is done.  */
+   unpredictable before this is done.  Flags are from the MS_* set.  */
 extern int msync __P ((__caddr_t __addr, size_t __len, int __flags));
 
 /* Advise the system about particular usage patterns the program follows

@@ -37,7 +37,9 @@ static char rcsid[] = "$NetBSD: w_atan2f.c,v 1.3 1995/05/10 20:48:42 jtc Exp $";
 #else
 	float z;
 	z = __ieee754_atan2f(y,x);
-	if(_LIB_VERSION == _IEEE_||__isnanf(x)||__isnanf(y)) return z;
+	if(_LIB_VERSION != _SVID_||__isnanf(x)||__isnanf(y)) return z;
+	if(x==0.0&&y==0.0)
+	  return __kernel_standard(y,x,103); /* atan2(+-0,+-0) */
 	return z;
 #endif
 }

@@ -1,6 +1,11 @@
+1997-03-17 03:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sort-test.sh: Call localedef with additional environment variable
+	I18NPATH to point to not-yet-installed locale data files.
+
 1997-02-15 14:32 15:10 Andreas Jaeger  <aj@arthur.pfalz.de>
 
-	* collate-test.c (main): change prototype definition to prevent
+	* collate-test.c (main): Change prototype definition to prevent
 	warning.
 
 1997-02-15 17:46  Ulrich Drepper  <drepper@cygnus.com>

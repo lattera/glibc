@@ -1,7 +1,6 @@
-/* Return classification value corresponding to argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Andreas Jaeger <aj@arthur.pfalz.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,25 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <math.h>
+#define FUNC(function) function
+#define MATHTYPE double
+#define TEST_MSG "testing double (without inline functions)\n"
+#define MATHCONST(x) x
+#define CHOOSE(Clongdouble,Cdouble,Cfloat) Cdouble
+#define PRINTF_EXPR "e"
 
-#include "math_private.h"
+#define __NO_MATH_INLINES
 
-
-int
-__fpclassifyf (float x)
-{
-  u_int32_t wx;
-  int retval = FP_NORMAL;
-
-  GET_FLOAT_WORD (wx, x);
-  wx &= 0x7fffffff;
-  if (wx == 0)
-    retval = FP_ZERO;
-  else if (wx < 0x1000000)
-    retval = FP_SUBNORMAL;
-  else if (wx >= 0x7f800000)
-    retval = wx > 0x7f800000 ? FP_NAN : FP_INFINITE;
-
-  return retval;
-}
+#include "libm-test.c"

@@ -18,6 +18,8 @@ static char rcsid[] = "$NetBSD: k_standard.c,v 1.6 1995/05/10 20:46:35 jtc Exp $
 #include "math_private.h"
 #include <errno.h>
 
+#include <assert.h>
+
 #ifndef _USE_WRITE
 #include <stdio.h>			/* fputs(), stderr */
 #define	WRITE2(u,v)	fputs(u, stderr)
@@ -109,7 +111,10 @@ static double zero = 0.0;	/* used as const */
 		exc.type = DOMAIN;
 		exc.name = type < 100 ? "acos" : (type < 200
 						  ? "acosf" : "acosl");;
-		exc.retval = zero;
+		if (_LIB_VERSION == _SVID_)
+		  exc.retval = HUGE;
+		else
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -126,7 +131,10 @@ static double zero = 0.0;	/* used as const */
 		exc.type = DOMAIN;
 		exc.name = type < 100 ? "asin" : (type < 200
 						  ? "asinf" : "asinl");
-		exc.retval = zero;
+		if (_LIB_VERSION == _SVID_)
+		  exc.retval = HUGE;
+		else
+		  exc.retval = NAN;
 		if(_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -145,7 +153,8 @@ static double zero = 0.0;	/* used as const */
 		exc.type = DOMAIN;
 		exc.name = type < 100 ? "atan2" : (type < 200
 						   ? "atan2f" : "atan2l");
-		exc.retval = zero;
+		assert (_LIB_VERSION == _SVID_);
+		exc.retval = HUGE;
 		if(_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -399,7 +408,7 @@ static double zero = 0.0;	/* used as const */
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -439,7 +448,7 @@ static double zero = 0.0;	/* used as const */
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = -HUGE;
 		else
-		  exc.retval = -HUGE_VAL;
+		  exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -500,13 +509,32 @@ static double zero = 0.0;	/* used as const */
 	    case 23:
 	    case 123:
 	    case 223:
-		/* 0**neg */
+		/* -0**neg */
 		exc.type = DOMAIN;
 		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
 		if (_LIB_VERSION == _SVID_)
 		  exc.retval = zero;
 		else
 		  exc.retval = -HUGE_VAL;
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (EDOM);
+		else if (!__matherr(&exc)) {
+		  if (_LIB_VERSION == _SVID_) {
+			(void) WRITE2("pow(0,neg): DOMAIN error\n", 25);
+		      }
+		  __set_errno (EDOM);
+		}
+		break;
+	    case 43:
+	    case 143:
+	    case 243:
+		/* +0**neg */
+		exc.type = DOMAIN;
+		exc.name = type < 100 ? "pow" : (type < 200 ? "powf" : "powl");
+		if (_LIB_VERSION == _SVID_)
+		  exc.retval = zero;
+		else
+		  exc.retval = HUGE_VAL;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!__matherr(&exc)) {
@@ -842,6 +870,8 @@ static double zero = 0.0;	/* used as const */
 			__set_errno (EDOM);
 		}
 		break;
+
+		/* #### Last used is 43/143/243 ### */
 	}
 	return exc.retval;
 }

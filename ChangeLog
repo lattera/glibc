@@ -1,12 +1,30 @@
+1997-03-17 04:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libmieee754/w_atan2.c: Don't ignore exception if library
+	type is SVID.
+	* sysdeps/libmieee754/w_atan2f.c: Likewise.
+	* sysdeps/libmieee754/w_atan2l.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h (msync): Add descrption for
+	FLAGS parameter.
+
+1997-03-16 20:28  Philip Blundell  <phil@london.uk.eu.org>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add more SOL_ values.
+	Change msg_iovlen and msg_controllen (in struct msghdr) to
+	`size_t' to keep in step with kernel.
+
 1997-03-16 18:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/filesys.texi: Add documentation for scandir and alphasort.
+	* manual/examples/dir2.c: New example for scandir.
 
 	* math/math.c (fpclassify): Correct stupid typos.
 
 	* math/libm-test.c: New file.  libm test suite by Andreas Jaeger.
-
-	* nss/nss_files/files-hosts.c: Add gethostbyname2 imlementation.
+	* math/test/float.c: New file.  Frontend for float tests.
+	* math/test/double.c: New file.  Frontend for double tests.
+	* math/test/longdouble.c: New file.  Frontend for long double  tests.
 
 	* posix/Makefile (routines): Add bsd-getpgrp.
 	* posix/bsd-getpgrp.c: New file.
@@ -17,7 +35,7 @@
 
 	* sysdeps/i386/huge_val.h: New file.  ix87 specific infinity values.
 	* sysdeps/m68k/huge_val.h: New file.  m68k specific infinity values.
-	* sysdeps/generic/huge_val.h: Remove definition of long double
+	* sysdeps/ieee754/huge_val.h: Remove definition of long double
 	definition.  Make it the same as the double definition.
 
 	* sysdeps/libm-i387/e_acos.S: Fix bug in FPU stack handling.
@@ -29,9 +47,9 @@
 	* sysdeps/libm-i387/e_exp.S: Likewise.
 	* sysdeps/libm-i387/e_expf.S: Likewise.
 	* sysdeps/libm-i387/e_expl.S: Likewise.
-	* sysdeps/libm-i387/e_scalbn.S: Likewise.
-	* sysdeps/libm-i387/e_scalbnf.S: Likewise.
-	* sysdeps/libm-i387/e_scalbnl.S: Likewise.
+	* sysdeps/libm-i387/s_scalbn.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnf.S: Likewise.
+	* sysdeps/libm-i387/s_scalbnl.S: Likewise.
 
 	* sysdeps/libm-i387/e_log.S: Optimize branch code.
 	* sysdeps/libm-i387/e_logf.S: Likewise.
@@ -44,14 +62,14 @@
 	* sysdeps/libm-i387/e_powf.S: Likewise.
 	* sysdeps/libm-i387/e_powl.S: Likewise.
 
-	* sysdeps/libm-i387/e_expm1.S: Change return value for -inf
+	* sysdeps/libm-i387/s_expm1.S: Change return value for -inf
 	argument to -1.0.
-	* sysdeps/libm-i387/e_expm1f.S: Likewise.
-	* sysdeps/libm-i387/e_expm1l.S: Likewise.
+	* sysdeps/libm-i387/s_expm1f.S: Likewise.
+	* sysdeps/libm-i387/s_expm1l.S: Likewise.
 
-	* sysdeps/libm-i387/e_isinfl.c: Return -1 for -inf.
+	* sysdeps/libm-i387/s_isinfl.c: Return -1 for -inf.
 
-	* sysdeps/libm-i387/e_logbl.S: Correct return value.  Discard first
+	* sysdeps/libm-i387/s_logbl.S: Correct return value.  Discard first
 	stack element after fxtract.
 
 	* sysdeps/libm-ieee754/e_atan2l.c: New file.  `long double'
@@ -81,6 +99,8 @@
 
 	* sysdeps/libm-ieee754/w_pow.c: Distinguish error cases for x is +0
 	or -0.
+	* sysdeps/libm-ieee754/w_powf.c: Likewise.
+	* sysdeps/libm-ieee754/w_powl.c: Likewise.
 
 	* sysdeps/posix/isfdtype.c: Add cast to prevent warning.
 
@@ -113,7 +133,7 @@
 	* sysdeps/unix/sysv/linux/statbuf.h (struct stat): Change definition
 	to use prescribed types for elements.
 	(_STAT_VER): Change to value 3.
-	* sysdeps/unix/sysv/linux/alph/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/statbuf.h: Likewise.
 	* sysdeps/unix/sysv/linux/Dist: Add kernel_stat.h.
 	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
 
@@ -150,6 +170,7 @@
 	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname2_r): New
 	functions.  Compare result for correct address type.
 	(_nss_nis_gethostbyname_r): Use _nss_nis_gethostbyname2_r.
+	* nss/nss_files/files-hosts.c: Likewise.
 	Reported by Mirko Streckenbach <mirko@marian.hil.de>.
 
 1997-02-17 01:40  Zlatko Calusic  <zcalusic@srce.hr>
@@ -182,7 +203,7 @@
 	Pretty print header.
 
 	* Makerules (build-shlib): Also create symlink if library is versioned.
-	based on a patch by H.J. Lu <hjl@gnu.ai.mit.edu>.
+	Based on a patch by H.J. Lu <hjl@gnu.ai.mit.edu>.
 	Remove special rule to libc.so symlink.
 
 1997-03-11 20:16  Andreas Jaeger  <aj@arthur.pfalz.de>
@@ -198,7 +219,7 @@
 
 1997-03-10 18:16 Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
-	* ypclnt.c (__yp_bind): Fix possible buffer overflow.
+	* nis/ypclnt.c (__yp_bind): Fix possible buffer overflow.
 
 1997-03-10 18:06  Bernd Schmidt  <crux@Pool.Informatik.RWTH-Aachen.DE>
 
@@ -297,8 +318,6 @@
 	* mach/mach/error.h (mach_error_fn_t): Comment out declaration; it
 	appears to be entirely unused dead code.
 
-	* stdio/stdio.h (freopen): Fix spelling error.
-
 1997-03-02 13:38  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* string/argz.h (__need_error_t): New macro, before including <errno.h>
@@ -315,10 +334,10 @@
 	* configure.in: Substitute ASFLAGS_SO.
 	* sysdeps/sparc/configure.in: New file.
 
-	* posix/unitstd.h: Add prototype for __euidaccess.
+	* posix/unistd.h: Add prototype for __euidaccess.
 	* sysdeps/posix/euidaccess.c: Define as __euidaccess and make
 	euidaccess weak alias.
-	* sysdeps/stubs/euidaccess.c: Likewise.
+	* sysdeps/stub/euidaccess.c: Likewise.
 	* inet/rcmd.c: Use __ protected versions of non-standard functions.
 
 	* locale/setlocale.c (setlocale): Don't set usage_count to
