@@ -431,6 +431,7 @@ ia64-@var{*}-linux
 m68k-@var{*}-linux
 mips@var{*}-@var{*}-linux
 powerpc-@var{*}-linux
+s390-@var{*}-linux
 sparc-@var{*}-linux
 sparc64-@var{*}-linux
 @end smallexample
