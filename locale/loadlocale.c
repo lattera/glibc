@@ -240,5 +240,6 @@ _nl_unload_locale (struct locale_data *locale)
     free ((void *) locale->filedata);
 
   free ((char *) locale->options);
+  free ((char *) locale->name);
   free (locale);
 }

@@ -1,5 +1,9 @@
 2000-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/findlocale.c (free_mem): Also free here->filename.
+
+	* locale/loadlocale.c (_nl_unload_locale): Also free locale->name.
+
 	* math/test-fenv.c (feenv_tests): Clear all exceptions before
 	first test.
 	(feexcp_nomask_test): Correct printf args.
@@ -14,7 +18,7 @@
 
 2000-08-19  Wolfram Gloger  <wg@malloc.de>
 
-	* malloc/malloc.c (new_heap): try harder to get an aligned chunk of
+	* malloc/malloc.c (new_heap): Try harder to get an aligned chunk of
 	size HEAP_MAX_SIZE.
 
 2000-08-19  Andreas Jaeger  <aj@suse.de>
