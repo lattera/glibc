@@ -103,6 +103,20 @@ sources.  To use them, unpack them into your source tree, and give
 If you do not wish to use some add-on package that you have present in
 your source tree, give this option a list of the add-ons that you
 @emph{do} want used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
+
+@item --with-headers=DIRECTORY
+Search only DIRECTORY and the C compiler's private directory for header
+files not found in the libc sources.  @file{/usr/include} will not be
+searched if this option is given.  On Linux, DIRECTORY should be the
+kernel's private include directory (usually
+@file{/usr/src/linux/include}).
+
+This option is primarily of use on a system where the headers in
+@file{/usr/include} come from an older version of glibc.  Conflicts can
+occasionally happen in this case.  Note that Linux libc5 qualifies as an
+older version of glibc.  You can also use this option if you want to
+compile glibc with a newer set of kernel headers than the ones found in
+@file{/usr/include}.
 @end table
 
 You should not build the library in the same directory as the sources,
@@ -150,11 +164,17 @@ Some of the machine-dependent code for some machines uses extensions in
 the GNU C compiler, so you may need to compile the library with GCC.
 (In fact, all of the existing complete ports require GCC.)
 
-
 To build the library and related programs, type @code{make}.  This will
 produce a lot of output, some of which may look like errors from
 @code{make} (but isn't).  Look for error messages from @code{make}
 containing @samp{***}.  Those indicate that something is really wrong.
+
+The compilation process takes several hours even on fast hardware;
+expect at least two hours for the default configuration on i586 for
+Linux.  For Hurd times are much longer.  All current releases of GCC
+have a problem which causes them to take several minutes to compile
+certain files in the iconvdata directory.  Do not panic if the compiler
+appears to hang.
 
 To build and run some test programs which exercise some of the library
 facilities, type @code{make check}.  This will produce several files

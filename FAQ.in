@@ -1,14 +1,13 @@
 	    Frequently Asked Questions about the GNU C Library
 
-This document tries to answer questions a user might have when
-installing and using glibc.  Please make sure you read this before
-sending questions or bug reports to the maintainers.
+This document tries to answer questions a user might have when installing
+and using glibc.  Please make sure you read this before sending questions or
+bug reports to the maintainers.
 
-The GNU C library is very complex.  The installation process has not
-been completely automated; there are too many variables. You can do
-substantial damage to your system by installing the library
-incorrectly.  Make sure you understand what you are undertaking before
-you begin.
+The GNU C library is very complex.  The installation process has not been
+completely automated; there are too many variables. You can do substantial
+damage to your system by installing the library incorrectly.  Make sure you
+understand what you are undertaking before you begin.
 
 If you have any questions you think should be answered in this document,
 please let me know.
@@ -19,12 +18,12 @@ please let me know.
 
 ??	What systems does the GNU C Library run on?
 
-{UD} This is difficult to answer.  The file `README' lists the
-architectures GNU libc was known to run on *at some time*.  This does
-not mean that it still can be compiled and run on them now.
+{UD} This is difficult to answer.  The file `README' lists the architectures
+GNU libc was known to run on *at some time*.  This does not mean that it
+still can be compiled and run on them now.
 
-The systems glibc is known to work on as of this release, and most
-probably in the future, are:
+The systems glibc is known to work on as of this release, and most probably
+in the future, are:
 
 	*-*-gnu			GNU Hurd
 	i[3456]86-*-linux-gnu	Linux-2.x on Intel
@@ -36,68 +35,69 @@ probably in the future, are:
 	arm-*-none		ARM standalone systems
 	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
-Ports to other Linux platforms are in development, and may in fact
-work already, but no one has sent us success reports for them.
-Currently no ports to other operating systems are underway, although a
-few people have expressed interest.
+Ports to other Linux platforms are in development, and may in fact work
+already, but no one has sent us success reports for them.  Currently no
+ports to other operating systems are underway, although a few people have
+expressed interest.
 
-If you have a system not listed above (or in the `README' file) and
-you are really interested in porting it, contact
+If you have a system not listed above (or in the `README' file) and you are
+really interested in porting it, contact
 
 	<bug-glibc@gnu.org>
 
 ??	What compiler do I need to build GNU libc?
 
-{UD} You must use GNU CC to compile GNU libc.  A lot of extensions of
-GNU CC are used to increase portability and speed.
+{UD} You must use GNU CC to compile GNU libc.  A lot of extensions of GNU CC
+are used to increase portability and speed.
 
 GNU CC is found, like all other GNU packages, on
+
 	ftp://ftp.gnu.org/pub/gnu
+
 and the many mirror sites.  ftp.gnu.org is always overloaded, so try to find
 a local mirror first.
 
-You always should try to use the latest official release.  Older
-versions may not have all the features GNU libc requires.  The current
-releases of egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C
-library (for powerpc see question ?powerpc).
+You always should try to use the latest official release.  Older versions
+may not have all the features GNU libc requires.  The current releases of
+egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C library (for
+powerpc see question ?powerpc).
 
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
 
-{UD} You definitely need GNU make to translate GNU libc.  No
-other make program has the needed functionality.
+{UD} You definitely need GNU make to translate GNU libc.  No other make
+program has the needed functionality.
 
-We recommend version GNU make version 3.75.  Versions 3.76 and 3.76.1
-have bugs which appear when building big projects like GNU libc.
-Versions before 3.74 have bugs and/or are missing features.
+We recommend version GNU make version 3.75.  Versions 3.76 and 3.76.1 have
+bugs which appear when building big projects like GNU libc.  Versions before
+3.74 have bugs and/or are missing features.
 
 ??	Do I need a special linker or archiver?
 
-{UD} You may be able to use your system linker, but GNU libc works
-best with GNU binutils.
+{UD} You may be able to use your system linker, but GNU libc works best with
+GNU binutils.
 
-On systems where the native linker does not support weak symbols you
-will not get a fully ISO C compliant C library.  Generally speaking
-you should use the GNU binutils if they provide at least the same
-functionality as your system's tools.
+On systems where the native linker does not support weak symbols you will
+not get a fully ISO C compliant C library.  Generally speaking you should
+use the GNU binutils if they provide at least the same functionality as your
+system's tools.
 
-Always get the newest release of GNU binutils available.  Older
-releases are known to have bugs that prevent a successful compilation.
+Always get the newest release of GNU binutils available.  Older releases are
+known to have bugs that prevent a successful compilation.
 
-{ZW} As of release 2.1 a linker supporting symbol versions is
-required.  For Linux, get binutils-2.8.1.0.23 or later.  Other systems
-may have native linker support, but it's moot right now, because glibc
-has not been ported to them.
+{ZW} As of release 2.1 a linker supporting symbol versions is required.  For
+Linux, get binutils-2.8.1.0.23 or later.  Other systems may have native
+linker support, but it's moot right now, because glibc has not been ported
+to them.
 
 ??powerpc	Which compiler should I use for powerpc?
 
-{GK} You want to use egcs 1.0.1 or later (together with the right
-versions of all the other tools, of course).
+{GK} You want to use egcs 1.0.1 or later (together with the right versions
+of all the other tools, of course).
 
-In fact, egcs 1.0.1 has a serious bug that prevents a clean make,
-relating to switch statement folding.  It also causes the resulting
-shared libraries to use more memory than they should.  There is a
-patch at:
+In fact, egcs 1.0.1 has a serious bug that prevents a clean make, relating
+to switch statement folding.  It also causes the resulting shared libraries
+to use more memory than they should.  There is a patch at:
 
 <http://discus.anu.edu.au/~geoffk/egcs-1.0.1-geoffk.diff>
 
@@ -149,20 +149,28 @@ Later versions of egcs may fix these problems.
 
 ??	What version of the Linux kernel headers should be used?
 
-{AJ,UD} The headers from the most recent Linux kernel should be used.
-The headers used while compiling the GNU C library and the kernel
-binary used when using the library do not need to match.  The GNU C
-library runs without problems on kernels that are older than the
-kernel headers used.  The other way round (compiling the GNU C library
-with old kernel headers and running on a recent kernel) does not
-necessarily work.  For example you can't use new kernel features when
-using old kernel headers for compiling the GNU C library.
+{AJ,UD} The headers from the most recent Linux kernel should be used.  The
+headers used while compiling the GNU C library and the kernel binary used
+when using the library do not need to match.  The GNU C library runs without
+problems on kernels that are older than the kernel headers used.  The other
+way round (compiling the GNU C library with old kernel headers and running
+on a recent kernel) does not necessarily work.  For example you can't use
+new kernel features when using old kernel headers for compiling the GNU C
+library.
+
+??	The compiler hangs while building iconvdata modules.  What's
+	wrong?
+
+{ZW} This is a problem with all current releases of GCC.  Initialization of
+large static arrays is very slow.  The compiler will eventually finish; give
+it time.
+
+The problem will be fixed in egcs 1.1 but probably not before then.
 
 ??	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
 
-{UD} Yes, this is ok.  There can be several kinds of unresolved
-symbols:
+{UD} Yes, this is ok.  There can be several kinds of unresolved symbols:
 
 * magic symbols automatically generated by the linker.  These have names
   like __start_* and __stop_*
@@ -176,33 +184,32 @@ errors while linking before deciding there is a problem.
 
 ??addon	What are these `add-ons'?
 
-{UD} To avoid complications with export rules or external source
-code some optional parts of the libc are distributed as separate
-packages (e.g., the crypt package, see ?crypt).
+{UD} To avoid complications with export rules or external source code some
+optional parts of the libc are distributed as separate packages (e.g., the
+crypt package, see ?crypt).
 
-To use these packages as part of GNU libc, just unpack the tarfiles in
-the libc source directory and tell the configuration script about them
-using the --enable-add-ons option.  If you give just --enable-add-ons
-configure tries to find all the add-on packages in your source tree.
-This may not work.  If it doesn't, or if you want to select only a
-subset of the add-ons, give a comma-separated list of the add-ons to
-enable:
+To use these packages as part of GNU libc, just unpack the tarfiles in the
+libc source directory and tell the configuration script about them using the
+--enable-add-ons option.  If you give just --enable-add-ons configure tries
+to find all the add-on packages in your source tree.  This may not work.  If
+it doesn't, or if you want to select only a subset of the add-ons, give a
+comma-separated list of the add-ons to enable:
 
 	configure --enable-add-ons=crypt,linuxthreads
 
 for example.
 
-Add-ons can add features (including entirely new shared libraries),
-override files, provide support for additional architectures, and
-just about anything else.  The existing makefiles do most of the work;
-only some few stub rules must be written to get everything running.
+Add-ons can add features (including entirely new shared libraries), override
+files, provide support for additional architectures, and just about anything
+else.  The existing makefiles do most of the work; only some few stub rules
+must be written to get everything running.
 
 ??	My XXX kernel emulates a floating-point coprocessor for me.
 	Should I enable --with-fp?
 
-{ZW} An emulated FPU is just as good as a real one, as far as the C
-library is concerned.  You only need to say --without-fp if your
-machine has no way to execute floating-point instructions.
+{ZW} An emulated FPU is just as good as a real one, as far as the C library
+is concerned.  You only need to say --without-fp if your machine has no way
+to execute floating-point instructions.
 
 People who are interested in squeezing the last drop of performance
 out of their machine may wish to avoid the trap overhead, but this is
@@ -213,107 +220,105 @@ far more trouble than it's worth: you then have to compile
 ??	When compiling GNU libc I get lots of errors saying functions
 	in glibc are duplicated in libgcc.
 
-{EY} This is *exactly* the same problem that I was having.  The
-problem was due to the fact that configure didn't correctly detect
-that the linker flag --no-whole-archive was supported in my linker.
-In my case it was because I had run ./configure with bogus CFLAGS, and
-the test failed.
+{EY} This is *exactly* the same problem that I was having.  The problem was
+due to the fact that configure didn't correctly detect that the linker flag
+--no-whole-archive was supported in my linker.  In my case it was because I
+had run ./configure with bogus CFLAGS, and the test failed.
 
-One thing that is particularly annoying about this problem is that
-once this is misdetected, running configure again won't fix it unless
-you first delete config.cache.
+One thing that is particularly annoying about this problem is that once this
+is misdetected, running configure again won't fix it unless you first delete
+config.cache.
 
-{UD} Starting with glibc-2.0.3 there should be a better test to avoid
-some problems of this kind.  The setting of CFLAGS is checked at the
-very beginning and if it is not usable `configure' will bark.
+{UD} Starting with glibc-2.0.3 there should be a better test to avoid some
+problems of this kind.  The setting of CFLAGS is checked at the very
+beginning and if it is not usable `configure' will bark.
 
 ??	Why do I get messages about missing thread functions when I use
 	librt?  I don't even use threads.
 
 {UD} In this case you probably mixed up your installation.  librt uses
 threads internally and has implicit references to the thread library.
-Normally these references are satisfied automatically but if the
-thread library is not in the expected place you must tell the linker
-where it is.  When using GNU ld it works like this:
+Normally these references are satisfied automatically but if the thread
+library is not in the expected place you must tell the linker where it is.
+When using GNU ld it works like this:
 
 	gcc -o foo foo.c -Wl,-rpath-link=/some/other/dir -lrt
 
-The `/some/other/dir' should contain the thread library.  `ld' will
-use the given path to find the implicitly referenced library while not
-disturbing any other link path.
+The `/some/other/dir' should contain the thread library.  `ld' will use the
+given path to find the implicitly referenced library while not disturbing
+any other link path.
 
 ??	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame
-pointers. Some compilers produce buggy code for this model and
-therefore we don't advise using it at the moment.
+pointers. Some compilers produce buggy code for this model and therefore we
+don't advise using it at the moment.
 
-If you use --enable-omitfp, you're on your own. If you encounter
-problems with a library that was build this way, we advise you to
-rebuild the library without --enable-omitfp.  If the problem vanishes
-consider tracking the problem down and report it as compiler failure.
+If you use --enable-omitfp, you're on your own. If you encounter problems
+with a library that was build this way, we advise you to rebuild the library
+without --enable-omitfp.  If the problem vanishes consider tracking the
+problem down and report it as compiler failure.
 
-Since a library build with --enable-omitfp is undebuggable on most
-systems, debuggable libraries are also built - you can use it by
-appending "_g" to the library names.
+Since a library build with --enable-omitfp is undebuggable on most systems,
+debuggable libraries are also built - you can use it by appending "_g" to
+the library names.
 
-The compilation of these extra libraries and the compiler optimizations
-slow down the build process and need more disk space.
+The compilation of these extra libraries and the compiler optimizations slow
+down the build process and need more disk space.
 
 ? Installation and configuration issues
 
 ??	Can I replace the libc on my Linux system with GNU libc?
 
-{UD} You cannot replace any existing libc for Linux with GNU
-libc.  It is binary incompatible and therefore has a different major
-version.  You can, however, install it alongside your existing libc.
+{UD} You cannot replace any existing libc for Linux with GNU libc.  It is
+binary incompatible and therefore has a different major version.  You can,
+however, install it alongside your existing libc.
 
 For Linux there are three major libc versions:
 	libc-4		a.out libc
 	libc-5		original ELF libc
 	libc-6		GNU libc
 
-You can have any combination of these three installed.  For more
-information consult documentation for shared library handling.  The
-Makefiles of GNU libc will automatically generate the needed symbolic
-links which the linker will use.
+You can have any combination of these three installed.  For more information
+consult documentation for shared library handling.  The Makefiles of GNU
+libc will automatically generate the needed symbolic links which the linker
+will use.
 
 ??	How do I configure GNU libc so that the essential libraries
 	like libc.so go into /lib and the other into /usr/lib?
 
 {UD,AJ} Like all other GNU packages GNU libc is designed to use a base
 directory and install all files relative to this.  The default is
-/usr/local, because this is safe (it will not damage the system if
-installed there).  If you wish to install GNU libc as the primary C
-library on your system, set the base directory to /usr (i.e. run
-configure --prefix=/usr <other_options>).  Note that this can damage
-your system; see ?safety for details.
+/usr/local, because this is safe (it will not damage the system if installed
+there).  If you wish to install GNU libc as the primary C library on your
+system, set the base directory to /usr (i.e. run configure --prefix=/usr
+<other_options>).  Note that this can damage your system; see ?safety for
+details.
 
-Some systems like Linux have a filesystem standard which makes a
-difference between essential libraries and others.  Essential
-libraries are placed in /lib because this directory is required to be
-located on the same disk partition as /.  The /usr subtree might be
-found on another partition/disk. If you configure for Linux with
---prefix=/usr, then this will be done automatically.
+Some systems like Linux have a filesystem standard which makes a difference
+between essential libraries and others.  Essential libraries are placed in
+/lib because this directory is required to be located on the same disk
+partition as /.  The /usr subtree might be found on another
+partition/disk. If you configure for Linux with --prefix=/usr, then this
+will be done automatically.
 
 To install the essential libraries which come with GNU libc in /lib on
-systems other than Linux one must explicitly request it.  Autoconf has
-no option for this so you have to use a `configparms' file (see the
-`INSTALL' file for details).  It should contain:
+systems other than Linux one must explicitly request it.  Autoconf has no
+option for this so you have to use a `configparms' file (see the `INSTALL'
+file for details).  It should contain:
 
 slibdir=/lib
 sysconfdir=/etc
 
-The first line specifies the directory for the essential libraries,
-the second line the directory for system configuration files.
+The first line specifies the directory for the essential libraries, the
+second line the directory for system configuration files.
 
 ??safety	How should I avoid damaging my system when I install GNU libc?
 
-{ZW} If you wish to be cautious, do not configure with --prefix=/usr.
-If you don't specify a prefix, glibc will be installed in /usr/local,
-where it will probably not break anything.  (If you wish to be
-certain, set the prefix to something like /usr/local/glibc2 which is
-not used for anything.)
+{ZW} If you wish to be cautious, do not configure with --prefix=/usr.  If
+you don't specify a prefix, glibc will be installed in /usr/local, where it
+will probably not break anything.  (If you wish to be certain, set the
+prefix to something like /usr/local/glibc2 which is not used for anything.)
 
 The dangers when installing glibc in /usr are twofold:
 
@@ -336,54 +341,52 @@ long-time Linux users will remember.
 ??	Do I need to use GNU CC to compile programs that will use the
 	GNU C Library?
 
-{ZW} In theory, no; the linker does not care, and the headers are
-supposed to check for GNU CC before using its extensions to the C
-language.
+{ZW} In theory, no; the linker does not care, and the headers are supposed
+to check for GNU CC before using its extensions to the C language.
 
-However, there are currently no ports of glibc to systems where
-another compiler is the default, so no one has tested the headers
-extensively against another compiler.  You may therefore encounter
-difficulties.  If you do, please report them as bugs.
+However, there are currently no ports of glibc to systems where another
+compiler is the default, so no one has tested the headers extensively
+against another compiler.  You may therefore encounter difficulties.  If you
+do, please report them as bugs.
 
 Also, in several places GNU extensions provide large benefits in code
 quality.  For example, the library has hand-optimized, inline assembly
-versions of some string functions.  These can only be used with GCC.
-See ?string for details.
+versions of some string functions.  These can only be used with GCC.  See
+?string for details.
 
 ??crypt	When linking with the new libc I get unresolved symbols
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
 
-{UD} The US places restrictions on exporting cryptographic programs
-and source code.  Until this law gets abolished we cannot ship the
-cryptographic functions together with glibc.
+{UD} The US places restrictions on exporting cryptographic programs and
+source code.  Until this law gets abolished we cannot ship the cryptographic
+functions together with glibc.
 
-The functions are available, as an add-on (see ?addon).  People in the
-US may get it from the same place they got GNU libc from.  People
-outside the US should get the code from ftp://ftp.ifi.uio.no/pub/gnu,
-or another archive site outside the USA.  The README explains how to
-install the sources.
+The functions are available, as an add-on (see ?addon).  People in the US
+may get it from the same place they got GNU libc from.  People outside the
+US should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another archive
+site outside the USA.  The README explains how to install the sources.
 
-If you already have the crypt code on your system the reason for the
-failure is probably that you did not link with -lcrypt.  The crypto
-functions are in a separate library to make it possible to export GNU
-libc binaries from the US.
+If you already have the crypt code on your system the reason for the failure
+is probably that you did not link with -lcrypt.  The crypto functions are in
+a separate library to make it possible to export GNU libc binaries from the
+US.
 
 ??	When I use GNU libc on my Linux system by linking against
 	the libc.so which comes with glibc all I get is a core dump.
 
-{UD} On Linux, gcc sets the dynamic linker to /lib/ld-linux.so.1
-unless the user specifies a -dynamic-linker argument.  This is the
-name of the libc5 dynamic linker, which does not work with glibc.
+{UD} On Linux, gcc sets the dynamic linker to /lib/ld-linux.so.1 unless the
+user specifies a -dynamic-linker argument.  This is the name of the libc5
+dynamic linker, which does not work with glibc.
 
 For casual use of GNU libc you can just specify
     -dynamic-linker=/lib/ld-linux.so.2
 
-which is the glibc dynamic linker, on Linux systems.  On other systems
-the name is /lib/ld.so.1.
+which is the glibc dynamic linker, on Linux systems.  On other systems the
+name is /lib/ld.so.1.
 
-To change your environment to use GNU libc for compiling you need to
-change the `specs' file of your gcc.  This file is normally found at
+To change your environment to use GNU libc for compiling you need to change
+the `specs' file of your gcc.  This file is normally found at
 
 	/usr/lib/gcc-lib/<arch>/<version>/specs
 
@@ -395,8 +398,8 @@ In this file you have to change a few things:
 
 - fix a minor bug by changing %{pipe:-} to %|
 
-Here is what the gcc-2.7.2 specs file should look like when GNU libc
-is installed at /usr:
+Here is what the gcc-2.7.2 specs file should look like when GNU libc is
+installed at /usr:
 
 -----------------------------------------------------------------------
 *asm:
@@ -446,11 +449,11 @@ is installed at /usr:
 
 -----------------------------------------------------------------------
 
-Things get a bit more complicated if you have GNU libc installed in
-some other place than /usr, i.e., if you do not want to use it instead
-of the old libc.  In this case the needed startup files and libraries
-are not found in the regular places.  So the specs file must tell the
-compiler and linker exactly what to use.
+Things get a bit more complicated if you have GNU libc installed in some
+other place than /usr, i.e., if you do not want to use it instead of the old
+libc.  In this case the needed startup files and libraries are not found in
+the regular places.  So the specs file must tell the compiler and linker
+exactly what to use.
 
 Version 2.7.2.3 does and future versions of GCC will automatically
 provide the correct specs.
@@ -460,36 +463,35 @@ provide the correct specs.
 	linking on my Linux system I get error messages.  How is
 	this supposed to work?
 
-{RM} Believe it or not, stat and lstat (and fstat, and mknod)
-are supposed to be undefined references in libc.so.6!  Your problem is
-probably a missing or incorrect /usr/lib/libc.so file; note that this
-is a small text file now, not a symlink to libc.so.6.  It should look
-something like this:
+{RM} Believe it or not, stat and lstat (and fstat, and mknod) are supposed
+to be undefined references in libc.so.6!  Your problem is probably a missing
+or incorrect /usr/lib/libc.so file; note that this is a small text file now,
+not a symlink to libc.so.6.  It should look something like this:
 
 GROUP ( libc.so.6 libc_nonshared.a )
 
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
 
-{AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or
-later.  But you should get at least gcc 2.8.1 or egcs 1.0.2 (or later
-versions) instead.
+{AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
+But you should get at least gcc 2.8.1 or egcs 1.0.2 (or later versions)
+instead.
 
 ??	The `gencat' utility cannot process the catalog sources which
 	were used on my Linux libc5 based system.  Why?
 
-{UD} The `gencat' utility provided with glibc complies to the XPG
-standard.  The older Linux version did not obey the standard, so they
-are not compatible.
+{UD} The `gencat' utility provided with glibc complies to the XPG standard.
+The older Linux version did not obey the standard, so they are not
+compatible.
 
 To ease the transition from the Linux version some of the non-standard
-features are also present in the `gencat' program of GNU libc.  This
-mainly includes the use of symbols for the message number and the automatic
+features are also present in the `gencat' program of GNU libc.  This mainly
+includes the use of symbols for the message number and the automatic
 generation of header files which contain the needed #defines to map the
 symbols to integers.
 
-Here is a simple SED script to convert at least some Linux specific
-catalog files to the XPG4 form:
+Here is a simple SED script to convert at least some Linux specific catalog
+files to the XPG4 form:
 
 -----------------------------------------------------------------------
 # Change catalog source in Linux specific format to standard XPG format.
@@ -513,10 +515,9 @@ catalog files to the XPG4 form:
 	behavior is not localized (e.g. collating order); why?
 
 {ZW} Translated messages are automatically installed, but the locale
-database that controls other behaviors is not.  You need to run
-localedef to install this database, after you have run `make
-install'.  For example, to set up the French Canadian locale, simply
-issue the command
+database that controls other behaviors is not.  You need to run localedef to
+install this database, after you have run `make install'.  For example, to
+set up the French Canadian locale, simply issue the command
 
     localedef -i fr_CA -f ISO-8859-1 fr_CA
 
@@ -525,47 +526,49 @@ Please see localedata/README in the source tree for further details.
 ??	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
-{TK} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
-file for storing information about the NIS+ server and their public
-keys, because the nis.conf file does not contain all the necessary
-information.  You have to copy a NIS_COLD_START file from a Solaris
-client (the NIS_COLD_START file is byte order independent) or generate
-it with nisinit from the nis-tools package (available at
-http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
+{TK} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START file for
+storing information about the NIS+ server and their public keys, because the
+nis.conf file does not contain all the necessary information.  You have to
+copy a NIS_COLD_START file from a Solaris client (the NIS_COLD_START file is
+byte order independent) or generate it with nisinit from the nis-tools
+package; available at
+
+    http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html
 
 ??	I have killed ypbind to stop using NIS, but glibc
         continues using NIS.
 
-{TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
-from ypbind.  ypbind 3.3 and older versions don't always remove these
-files, so glibc will continue to use them.  Other BSD versions seem to
-work correctly.  Until ypbind 3.4 is released, you can find a patch at
-ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
+{TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files from
+ypbind.  ypbind 3.3 and older versions don't always remove these files, so
+glibc will continue to use them.  Other BSD versions seem to work correctly.
+Until ypbind 3.4 is released, you can find a patch at
+
+    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
 
 ??     Under Linux/Alpha, I always get "do_ypcall: clnt_call:
        RPC: Unable to receive; errno = Connection refused" when using NIS.
 
-{TK} You need a ypbind version which is 64bit clean.  Some versions
-are not 64bit clean.  A 64bit clean implementation is ypbind-mt.  For
-ypbind 3.3, you need the patch from ftp.kernel.org (See the previous
-question).  I don't know about other versions.
+{TK} You need a ypbind version which is 64bit clean.  Some versions are not
+64bit clean.  A 64bit clean implementation is ypbind-mt.  For ypbind 3.3,
+you need the patch from ftp.kernel.org (See the previous question).  I don't
+know about other versions.
 
 
 ??	After installing glibc name resolving doesn't work properly.
 
-{AJ} You probably should read the manual section describing
-nsswitch.conf (just type `info libc "NSS Configuration File"').
-The NSS configuration file is usually the culprit.
+{AJ} You probably should read the manual section describing nsswitch.conf
+(just type `info libc "NSS Configuration File"').  The NSS configuration
+file is usually the culprit.
 
 ??	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
-{PB} This was necessary for libc5, but is not correct when using
-glibc.  Including the kernel header files directly in user programs
-usually does not work (see ?kerhdr).  glibc provides its own <net/*>
-and <scsi/*> header files to replace them, and you may have to remove
-any symlink that you have in place before you install glibc.  However,
-/usr/include/asm and /usr/include/linux should remain as they were.
+{PB} This was necessary for libc5, but is not correct when using glibc.
+Including the kernel header files directly in user programs usually does not
+work (see ?kerhdr).  glibc provides its own <net/*> and <scsi/*> header
+files to replace them, and you may have to remove any symlink that you have
+in place before you install glibc.  However, /usr/include/asm and
+/usr/include/linux should remain as they were.
 
 ??	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
@@ -576,15 +579,15 @@ any symlink that you have in place before you install glibc.  However,
 ??	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
 
-{AJ} The problem is caused either by wrong program code or tools.  In
-the versioned libc a lot of symbols are now local that were global
-symbols in previous versions.  It seems that programs linked against
-older versions often accidentally used libc global variables --
-something that should not happen.
+{AJ} The problem is caused either by wrong program code or tools.  In the
+versioned libc a lot of symbols are now local that were global symbols in
+previous versions.  It seems that programs linked against older versions
+often accidentally used libc global variables -- something that should not
+happen.
 
-The only way to fix this is to recompile your program. Sorry, that's
-the price you might have to pay once for quite a number of advantages
-with symbol versioning.
+The only way to fix this is to recompile your program. Sorry, that's the
+price you might have to pay once for quite a number of advantages with
+symbol versioning.
 
 ??	When I start the program XXX after upgrading the library
 	I get
@@ -592,46 +595,44 @@ with symbol versioning.
 	  object, consider re-linking
 	Why?  What should I do?
 
-{UD} As the message says, relink the binary.  The problem is that
-a few symbols from the library can change in size and there is no way
-to avoid this.  _sys_errlist is a good example.  Occasionally there are
-new error numbers added to the kernel and this must be reflected at user
-level, breaking programs that refer to them directly.
+{UD} As the message says, relink the binary.  The problem is that a few
+symbols from the library can change in size and there is no way to avoid
+this.  _sys_errlist is a good example.  Occasionally there are new error
+numbers added to the kernel and this must be reflected at user level,
+breaking programs that refer to them directly.
 
-Such symbols should normally not be used at all.  There are mechanisms
-to avoid using them.  In the case of _sys_errlist, there is the
-strerror() function which should _always_ be used instead.  So the
-correct fix is to rewrite that part of the application.
+Such symbols should normally not be used at all.  There are mechanisms to
+avoid using them.  In the case of _sys_errlist, there is the strerror()
+function which should _always_ be used instead.  So the correct fix is to
+rewrite that part of the application.
 
-In some situations (especially when testing a new library release) it
-might be possible that a symbol changed size when that should not have
-happened.  So in case of doubt report such a warning message as a
-problem.
+In some situations (especially when testing a new library release) it might
+be possible that a symbol changed size when that should not have happened.
+So in case of doubt report such a warning message as a problem.
 
 ??	What do I need for C++ development?
 
-{HJ,AJ} You need either egcs 1.0.2 or gcc-2.8.1 with libstdc++
-2.8.1 (or more recent versions). libg++ 2.7.2 (and the Linux Versions
-2.7.2.x) doesn't work very well with the GNU C library due to vtable thunks.
-If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
-libstdc++ since the library compiled for 2.0 is not compatible due to the new
-Large File Support (LFS) in version 2.1.
+{HJ,AJ} You need either egcs 1.0.2 or gcc-2.8.1 with libstdc++ 2.8.1 (or
+more recent versions). libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't
+work very well with the GNU C library due to vtable thunks.  If you're
+upgrading from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the
+library compiled for 2.0 is not compatible due to the new Large File Support
+(LFS) in version 2.1.
 
 ??	Even statically linked programs need some shared libraries
 	which is not acceptable for me.  What can I do?
 
-{AJ} NSS (for details just type `info libc "Name Service Switch"')
-won't work properly without shared libraries.  NSS allows using
-different services (e.g. NIS, files, db, hesiod) by just changing one
-configuration file (/etc/nsswitch.conf) without relinking any
-programs.  The only disadvantage is that now static libraries need to
-access shared libraries.  This is handled transparently by the GNU C
-library.
+{AJ} NSS (for details just type `info libc "Name Service Switch"') won't
+work properly without shared libraries.  NSS allows using different services
+(e.g. NIS, files, db, hesiod) by just changing one configuration file
+(/etc/nsswitch.conf) without relinking any programs.  The only disadvantage
+is that now static libraries need to access shared libraries.  This is
+handled transparently by the GNU C library.
 
-A solution is to configure glibc with --enable-static-nss.  In this
-case you can create a static binary that will use only the services
-dns and files (change /etc/nsswitch.conf for this).  You need
-to link explicitly against all these services. For example:
+A solution is to configure glibc with --enable-static-nss.  In this case you
+can create a static binary that will use only the services dns and files
+(change /etc/nsswitch.conf for this).  You need to link explicitly against
+all these services. For example:
 
   gcc -static test-netdb.c -o test-netdb.c \
     -lc -lnss_files -lnss_dns -lresolv
@@ -649,10 +650,10 @@ the behaviour of the programs on the system inconsistent.
 ??	I expect GNU libc to be 100% source code compatible with
 	the old Linux based GNU libc.  Why isn't it like this?
 
-{DMT,UD} Not every extension in Linux libc's history was well
-thought-out.  In fact it had a lot of problems with standards compliance
-and with cleanliness.  With the introduction of a new version number these
-errors can now be corrected.  Here is a list of the known source code
+{DMT,UD} Not every extension in Linux libc's history was well thought-out.
+In fact it had a lot of problems with standards compliance and with
+cleanliness.  With the introduction of a new version number these errors can
+now be corrected.  Here is a list of the known source code
 incompatibilities:
 
 * _GNU_SOURCE: glibc does not make the GNU extensions available
@@ -724,74 +725,73 @@ incompatibilities:
 
 ??getlog	Why does getlogin() always return NULL on my Linux box?
 
-{UD} The GNU C library has a format for the UTMP and WTMP file which
-differs from what your system currently has.  It was extended to
-fulfill the needs of the next years when IPv6 is introduced.  The
-record size is different and some fields have different positions.
-The files written by functions from the one library cannot be read by
-functions from the other library.  Sorry, but this is what a major
-release is for.  It's better to have a cut now than having no means to
-support the new techniques later.
+{UD} The GNU C library has a format for the UTMP and WTMP file which differs
+from what your system currently has.  It was extended to fulfill the needs
+of the next years when IPv6 is introduced.  The record size is different and
+some fields have different positions.  The files written by functions from
+the one library cannot be read by functions from the other library.  Sorry,
+but this is what a major release is for.  It's better to have a cut now than
+having no means to support the new techniques later.
 
-{MK} There is however a (partial) solution for this problem.  Please
-take a look at the file `login/README.utmpd'.
+{MK} There is however a (partial) solution for this problem.  Please take a
+look at the file `login/README.utmpd'.
 
 ??	Where are the DST_* constants found in <sys/time.h> on many
 	systems?
 
-{UD} These constants come from the old BSD days and are not used
-anymore (libc5 does not actually implement the handling although the
-constants are defined).
+{UD} These constants come from the old BSD days and are not used anymore
+(libc5 does not actually implement the handling although the constants are
+defined).
 
-Instead GNU libc contains zone database support and compatibility code
-for POSIX TZ environment variable handling.
+Instead GNU libc contains zone database support and compatibility code for
+POSIX TZ environment variable handling.
 
 ??	The prototypes for `connect', `accept', `getsockopt',
 	`setsockopt', `getsockname', `getpeername', `send',
 	`sendto', and `recvfrom' are different in GNU libc from
 	any other system I saw.  This is a bug, isn't it?
 
-{UD} No, this is no bug.  This version of GNU libc already follows the
-new Single Unix specifications (and I think the POSIX.1g draft which
-adopted the solution).  The type for a parameter describing a size is
-now `socklen_t', a new type.
+{UD} No, this is no bug.  This version of GNU libc already follows the new
+Single Unix specifications (and I think the POSIX.1g draft which adopted the
+solution).  The type for a parameter describing a size is now `socklen_t', a
+new type.
 
 ??kerhdr	On Linux I've got problems with the declarations in Linux
 	kernel headers.
 
-{UD,AJ} On Linux, the use of kernel headers is reduced to the minimum.
-This gives Linus the ability to change the headers more freely.  Also,
-user programs are now insulated from changes in the size of kernel
-data structures.
+{UD,AJ} On Linux, the use of kernel headers is reduced to the minimum.  This
+gives Linus the ability to change the headers more freely.  Also, user
+programs are now insulated from changes in the size of kernel data
+structures.
 
-For example, the sigset_t type is 32 or 64 bits wide in the kernel.
-In glibc it is 1024 bits wide.  This guarantees that when the kernel
-gets a bigger sigset_t (for POSIX.1e realtime support, say) user
-programs will not have to be recompiled.  Consult the header files for
-more information about the changes.
+For example, the sigset_t type is 32 or 64 bits wide in the kernel.  In
+glibc it is 1024 bits wide.  This guarantees that when the kernel gets a
+bigger sigset_t (for POSIX.1e realtime support, say) user programs will not
+have to be recompiled.  Consult the header files for more information about
+the changes.
 
-Therefore you shouldn't include Linux kernel header files directly if
-glibc has defined a replacement. Otherwise you might get undefined
-results because of type conflicts.
+Therefore you shouldn't include Linux kernel header files directly if glibc
+has defined a replacement. Otherwise you might get undefined results because
+of type conflicts.
 
 ??	I don't include any kernel headers myself but the compiler
 	still complains about redeclarations of types in the kernel
 	headers.
 
-{UD} The kernel headers before Linux 2.1.61 and 2.0.32 don't work
-correctly with glibc.  Compiling C programs is possible in most cases
-but C++ programs have (due to the change of the name lookups for
-`struct's) problems.  One prominent example is `struct fd_set'.
+{UD} The kernel headers before Linux 2.1.61 and 2.0.32 don't work correctly
+with glibc.  Compiling C programs is possible in most cases but C++ programs
+have (due to the change of the name lookups for `struct's) problems.  One
+prominent example is `struct fd_set'.
 
-There might be some problems left but 2.1.61/2.0.32 fix most of the
-known ones.  See the BUGS file for other known problems.
+There might be some problems left but 2.1.61/2.0.32 fix most of the known
+ones.  See the BUGS file for other known problems.
 
 ??signal	Why don't signals interrupt system calls anymore?
 
-{ZW} By default GNU libc uses the BSD semantics for signal(),
-unlike Linux libc 5 which used System V semantics.  This is partially
-for compatibility with other systems and partially because the BSD
-semantics tend to make programming with signals easier.
+{ZW} By default GNU libc uses the BSD semantics for signal(), unlike Linux
+libc 5 which used System V semantics.  This is partially for compatibility
+with other systems and partially because the BSD semantics tend to make
+programming with signals easier.
 
 There are three differences:
 
@@ -820,35 +820,35 @@ For new programs, the sigaction() function allows you to specify precisely
 how you want your signals to behave.  All three differences listed above are
 individually switchable on a per-signal basis with this function.
 
-If all you want is for one specific signal to cause system calls to fail
-and return EINTR (for example, to implement a timeout) you can do this with
+If all you want is for one specific signal to cause system calls to fail and
+return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
 
 
 ??string	I've got errors compiling code that uses certain string
 	functions.  Why?
 
-{AJ} glibc 2.1 has special string functions that are faster
-than the normal library functions. Some of the functions are
-implemented as inline functions and others as macros.
+{AJ} glibc 2.1 has special string functions that are faster than the normal
+library functions. Some of the functions are implemented as inline functions
+and others as macros.
 
 The optimized string functions are only used when compiling with
-optimizations (-O1 or higher). The behavior can be changed with two
-feature macros:
+optimizations (-O1 or higher). The behavior can be changed with two feature
+macros:
 
 * __NO_STRING_INLINES: Don't do any string optimizations.
 * __USE_STRING_INLINES: Use assembly language inline functions (might
   increase code size dramatically).
 
-Since some of these string functions are now additionally defined as
-macros, code like "char *strncpy();" doesn't work anymore (and is
-unnecessary, since <string.h> has the necessary declarations). Either
-change your code or define __NO_STRING_INLINES.
+Since some of these string functions are now additionally defined as macros,
+code like "char *strncpy();" doesn't work anymore (and is unnecessary, since
+<string.h> has the necessary declarations). Either change your code or
+define __NO_STRING_INLINES.
 
-{UD} Another problem in this area is that gcc still has problems on
-machines with very few registers (e.g., ix86).  The inline assembler
-code can require almost all the registers and the register allocator
-cannot always handle this situation.
+{UD} Another problem in this area is that gcc still has problems on machines
+with very few registers (e.g., ix86).  The inline assembler code can require
+almost all the registers and the register allocator cannot always handle
+this situation.
 
 One can disable the string optimizations selectively.  Instead of writing
 
@@ -866,16 +866,15 @@ This disables the optimization for that specific call.
 {RM,AJ} Constructs like:
 static FILE *InPtr = stdin;
 
-lead to this message. This is correct behaviour with glibc since stdin
-is not a constant expression. Please note that a strict reading of ISO
-C does not allow above constructs.
+lead to this message. This is correct behaviour with glibc since stdin is
+not a constant expression. Please note that a strict reading of ISO C does
+not allow above constructs.
 
-One of the advantages of this is that you can assign to stdin, stdout,
-and stderr just like any other global variable (e.g. `stdout =
-my_stream;'), which can be very useful with custom streams that you
-can write with libio (but beware this is not necessarily
-portable). The reason to implement it this way were versioning
-problems with the size of the FILE structure.
+One of the advantages of this is that you can assign to stdin, stdout, and
+stderr just like any other global variable (e.g. `stdout = my_stream;'),
+which can be very useful with custom streams that you can write with libio
+(but beware this is not necessarily portable). The reason to implement it
+this way were versioning problems with the size of the FILE structure.
 
 
 ??	I can't compile with gcc -traditional (or
@@ -883,38 +882,40 @@ problems with the size of the FILE structure.
 
 {AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
 to do so. For example constructs of the form:
+
 enum {foo
 #define foo foo
 }
-are  useful for debugging purposes (you can use foo with your debugger
-that's why we need the enum) and for compatibility (other systems use
-defines and check with #ifdef).
+
+are useful for debugging purposes (you can use foo with your debugger that's
+why we need the enum) and for compatibility (other systems use defines and
+check with #ifdef).
 
 ??	I get some errors with `gcc -ansi'. Isn't glibc ANSI compatible?
 
 {AJ} The GNU C library is compatible with the ANSI/ISO C standard.  If
-you're using `gcc -ansi', the glibc includes which are specified in
-the standard follow the standard. The ANSI/ISO C standard defines what
-has to be in the include files - and also states that nothing else
-should be in the include files (btw. you can still enable additional
-standards with feature flags).
+you're using `gcc -ansi', the glibc includes which are specified in the
+standard follow the standard. The ANSI/ISO C standard defines what has to be
+in the include files - and also states that nothing else should be in the
+include files (btw. you can still enable additional standards with feature
+flags).
 
-The GNU C library is conforming to ANSI/ISO C - if and only if you're
-only using the headers and library functions defined in the standard.
+The GNU C library is conforming to ANSI/ISO C - if and only if you're only
+using the headers and library functions defined in the standard.
 
 ??	I can't access some functions anymore.  nm shows that they do
 	exist but linking fails nevertheless.
 
-{AJ} With the introduction of versioning in glibc 2.1 it is possible
-to export only those identifiers (functions, variables) that are
-really needed by application programs and by other parts of glibc.
-This way a lot of internal interfaces are now hidden.  nm will still
-show those identifiers but marking them as internal.  ISO C states
-that identifiers beginning with an underscore are internal to the
-libc.  An application program normally shouldn't use those internal
-interfaces (there are exceptions, e.g. __ivaliduser).  If a program
-uses these interfaces, it's broken.  These internal interfaces might
-change between glibc releases or dropped completely.
+{AJ} With the introduction of versioning in glibc 2.1 it is possible to
+export only those identifiers (functions, variables) that are really needed
+by application programs and by other parts of glibc.  This way a lot of
+internal interfaces are now hidden.  nm will still show those identifiers
+but marking them as internal.  ISO C states that identifiers beginning with
+an underscore are internal to the libc.  An application program normally
+shouldn't use those internal interfaces (there are exceptions,
+e.g. __ivaliduser).  If a program uses these interfaces, it's broken.  These
+internal interfaces might change between glibc releases or dropped
+completely.
 
 
 ? Miscellaneous
@@ -929,9 +930,9 @@ from your favorite mirror of ftp.gnu.org.
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
 
-{UD} The problem is that IPv6 development still has not reached a
-point where the headers are stable.  There are still lots of
-incompatible changes made and the libc headers have to follow.
+{UD} The problem is that IPv6 development still has not reached a point
+where the headers are stable.  There are still lots of incompatible changes
+made and the libc headers have to follow.
 
 Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
@@ -941,26 +942,24 @@ required kernel version is at least 2.1.30.
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 
-{UD} The problem is that people still use the braindamaged POSIX
-method to select the timezone using the TZ environment variable with a
-format EST5EDT or whatever.  People, read the POSIX standard, the
-implemented behaviour is correct!  What you see is in fact the result
-of the decisions made while POSIX.1 was created.  We've only
-implemented the handling of TZ this way to be POSIX compliant.  It is
-not really meant to be used.
+{UD} The problem is that people still use the braindamaged POSIX method to
+select the timezone using the TZ environment variable with a format EST5EDT
+or whatever.  People, read the POSIX standard, the implemented behaviour is
+correct!  What you see is in fact the result of the decisions made while
+POSIX.1 was created.  We've only implemented the handling of TZ this way to
+be POSIX compliant.  It is not really meant to be used.
 
-The alternative approach to handle timezones which is implemented is
-the correct one to use: use the timezone database.  This avoids all
-the problems the POSIX method has plus it is much easier to use.
-Simply run the tzselect shell script, answer the question and use the
-name printed in the end by making a symlink to
-/usr/share/zoneinfo/NAME (NAME is the returned value from tzselect)
-from the file /etc/localtime.  That's all.  You never again have to
-worry.
+The alternative approach to handle timezones which is implemented is the
+correct one to use: use the timezone database.  This avoids all the problems
+the POSIX method has plus it is much easier to use.  Simply run the tzselect
+shell script, answer the question and use the name printed in the end by
+making a symlink to /usr/share/zoneinfo/NAME (NAME is the returned value
+from tzselect) from the file /etc/localtime.  That's all.  You never again
+have to worry.
 
-So, please avoid sending bug reports about time related problems if
-you use the POSIX method and you have not verified something is really
-broken by reading the POSIX standards.
+So, please avoid sending bug reports about time related problems if you use
+the POSIX method and you have not verified something is really broken by
+reading the POSIX standards.
 
 
 Answers were given by:
@@ -979,4 +978,5 @@ Answers were given by:
 Local Variables:
  mode:outline
  outline-regexp:"\\?"
+  fill-column:76
 End:

@@ -19,6 +19,14 @@
 #include "pthread.h"
 #include "internals.h"
 
+/* These functions are not declared anywhere since they shouldn't be
+   used at another place but here.  */
+extern void __libc_siglongjmp (sigjmp_buf env, int val)
+     __attribute__ ((noreturn));
+extern void __libc_longjmp (sigjmp_buf env, int val)
+     __attribute__ ((noreturn));
+
+
 static void pthread_cleanup_upto(__jmp_buf target)
 {
   pthread_descr self = thread_self();
