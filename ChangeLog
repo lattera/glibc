@@ -1,5 +1,10 @@
 2003-06-25  Andreas Jaeger  <aj@suse.de>
 
+	* posix/tst-nanosleep.c: Include <time.h> for nanosleep
+	declaration.
+	
+	* stdio-common/tst-fphex.c: Fix format string.
+
 	* posix/transbug.c: Include <string.h> for memset and strlen
 	declarations.
 
