@@ -1,3 +1,15 @@
+2004-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
+	Add __extension__ to long long types.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread): Add stopped_start field.
