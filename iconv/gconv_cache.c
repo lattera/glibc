@@ -178,7 +178,7 @@ find_module (const char *directory, const char *filename,
   size_t dirlen = strlen (directory);
   size_t fnamelen = strlen (filename) + 1;
   char *fullname;
-  int status = __GCONV_OK;
+  int status = __GCONV_NOCONV;
 
   fullname = (char *) malloc (dirlen + fnamelen);
   if (fullname == NULL)
@@ -187,17 +187,22 @@ find_module (const char *directory, const char *filename,
   memcpy (__mempcpy (fullname, directory, dirlen), filename, fnamelen);
 
   result->__shlib_handle = __gconv_find_shlib (fullname);
-  if (result->__shlib_handle == NULL)
-    return __GCONV_NOCONV;
+  if (result->__shlib_handle != NULL)
+    {
+      status = __GCONV_OK;
 
-  result->__modname = fullname;
-  result->__fct = result->__shlib_handle->fct;
-  result->__init_fct = result->__shlib_handle->init_fct;
-  result->__end_fct = result->__shlib_handle->end_fct;
+      result->__modname = fullname;
+      result->__fct = result->__shlib_handle->fct;
+      result->__init_fct = result->__shlib_handle->init_fct;
+      result->__end_fct = result->__shlib_handle->end_fct;
 
-  result->__data = NULL;
-  if (result->__init_fct != NULL)
-    status = DL_CALL_FCT (result->__init_fct, (result));
+      result->__data = NULL;
+      if (result->__init_fct != NULL)
+	status = DL_CALL_FCT (result->__init_fct, (result));
+    }
+
+  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
+    free (fullname);
 
   return status;
 }
@@ -235,7 +240,8 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
   if (find_module_idx (toset, &toidx) != 0
       || (header->module_offset + (toidx + 1) * sizeof (struct module_entry)
 	  > cache_size))
-    return __GCONV_NOCONV;
+    {puts("toset not found");
+    return __GCONV_NOCONV;}
   to_module = &modtab[toidx];
 
   /* Avoid copy-only transformations if the user requests.   */
@@ -243,7 +249,8 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
     return __GCONV_NOCONV;
 
   /* If there are special conversions available examine them first.  */
-  if (__builtin_expect (from_module->extra_offset, 0) != 0)
+  if (fromidx != 0 && toidx != 0
+      && __builtin_expect (from_module->extra_offset, 0) != 0)
     {
       /* Search through the list to see whether there is a module
 	 matching the destination character set.  */
@@ -317,8 +324,8 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
 
  try_internal:
   /* See whether we can convert via the INTERNAL charset.  */
-  if (__builtin_expect (from_module->fromname_offset, 1) == 0
-      || __builtin_expect (to_module->toname_offset, 1) == 0)
+  if ((fromidx != 0 && __builtin_expect (from_module->fromname_offset, 1) == 0)
+      || (toidx != 0 && __builtin_expect (to_module->toname_offset, 1) == 0))
     /* Not possible.  Nothing we can do.  */
     return __GCONV_NOCONV;
 
@@ -328,62 +335,75 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
     return __GCONV_NOMEM;
 
   *handle = result;
-  *nsteps = 2;
+  *nsteps = 0;
 
   /* Generate data structure for conversion to INTERNAL.  */
-  result[0].__from_name = (char *) strtab + from_module->canonname_offset;
-  result[0].__to_name = (char *) "INTERNAL";
+  if (fromidx != 0)
+    {
+      result[0].__from_name = (char *) strtab + from_module->canonname_offset;
+      result[0].__to_name = (char *) "INTERNAL";
 
-  result[0].__counter = 1;
-  result[0].__data = NULL;
+      result[0].__counter = 1;
+      result[0].__data = NULL;
 
 #ifndef STATIC_GCONV
-  if (strtab[from_module->todir_offset] != '\0')
-    {
-      /* Load the module, return handle for it.  */
-      int res = find_module (strtab + from_module->todir_offset,
-			     strtab + from_module->toname_offset,
-			     &result[0]);
-      if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
+      if (strtab[from_module->todir_offset] != '\0')
 	{
-	  /* Something went wrong.  */
-	  free (result);
-	  return res;
+	  /* Load the module, return handle for it.  */
+	  int res = find_module (strtab + from_module->todir_offset,
+				 strtab + from_module->toname_offset,
+				 &result[0]);
+	  if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
+	    {
+	      /* Something went wrong.  */
+	      free (result);
+	      return res;
+	    }
 	}
-    }
-  else
+      else
 #endif
-    /* It's a builtin transformation.  */
-    __gconv_get_builtin_trans (strtab + from_module->toname_offset,
-			       &result[0]);
+	/* It's a builtin transformation.  */
+	__gconv_get_builtin_trans (strtab + from_module->toname_offset,
+				   &result[0]);
+
+      ++*nsteps;
+    }
 
   /* Generate data structure for conversion from INTERNAL.  */
-  result[1].__from_name = (char *) "INTERNAL";
-  result[1].__to_name = (char *) strtab + to_module->canonname_offset;
+  if (toidx != 0)
+    {
+      int idx = *nsteps;
 
-  result[1].__counter = 1;
-  result[1].__data = NULL;
+      result[idx].__from_name = (char *) "INTERNAL";
+      result[idx].__to_name = (char *) strtab + to_module->canonname_offset;
+
+      result[idx].__counter = 1;
+      result[idx].__data = NULL;
 
 #ifndef STATIC_GCONV
-  if (strtab[to_module->fromdir_offset] != '\0')
-    {
-      /* Load the module, return handle for it.  */
-      int res = find_module (strtab + to_module->fromdir_offset,
-			     strtab + to_module->fromname_offset,
-			     &result[1]);
-      if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
+      if (strtab[to_module->fromdir_offset] != '\0')
 	{
-	  /* Something went wrong.  */
-	  __gconv_release_step (&result[0]);
-	  free (result);
-	  return res;
+	  /* Load the module, return handle for it.  */
+	  int res = find_module (strtab + to_module->fromdir_offset,
+				 strtab + to_module->fromname_offset,
+				 &result[idx]);
+	  if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
+	    {
+	      /* Something went wrong.  */
+	      if (idx != 0)
+		__gconv_release_step (&result[0]);
+	      free (result);
+	      return res;
+	    }
 	}
-    }
-  else
+      else
 #endif
-    /* It's a builtin transformation.  */
-    __gconv_get_builtin_trans (strtab + to_module->fromname_offset,
-			       &result[1]);
+	/* It's a builtin transformation.  */
+	__gconv_get_builtin_trans (strtab + to_module->fromname_offset,
+				   &result[idx]);
+
+      ++*nsteps;
+    }
 
   return __GCONV_OK;
 }

@@ -1,3 +1,10 @@
+2001-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_cache.c (__gconv_lookup_cache): Handle encoding from
+	and to INTERNAL.
+	* iconv/iconvconfig.c: Create a special record for the INTERNAL
+	encoding name in the output file.
+
 2001-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/svc_tcp.c (svctcp_rendezvous_abort): New.

@@ -714,6 +714,8 @@ add_builtins (void)
 
   /* add the builtin transformations.  */
   for (cnt = 0; cnt < nbuiltin_trans; ++cnt)
+    {
+      printf("%s: %s -> %s\n", builtin_trans[cnt].module,builtin_trans[cnt].from,builtin_trans[cnt].to);
     new_module (builtin_trans[cnt].from,
 		strlen (builtin_trans[cnt].from) + 1,
 		builtin_trans[cnt].to,
@@ -721,6 +723,7 @@ add_builtins (void)
 		"", builtin_trans[cnt].module,
 		strlen (builtin_trans[cnt].module) + 1,
 		builtin_trans[cnt].cost, 0);
+    }
 }
 
 
@@ -754,6 +757,11 @@ static void
 generate_name_list (void)
 {
   size_t i;
+
+  /* A name we always need.  */
+  tsearch (new_name ("INTERNAL", strtabadd (strtab, "INTERNAL",
+					    sizeof ("INTERNAL"))),
+	   &names, name_compare);
 
   for (i = 0; i < nmodule_list; ++i)
     {
@@ -796,9 +804,18 @@ static void
 generate_name_info (void)
 {
   size_t i;
+  int idx;
 
-  name_info = (struct name_info *) xcalloc (nmodule_list,
+  name_info = (struct name_info *) xcalloc (nmodule_list + 1,
 					    sizeof (struct name_info));
+
+  /* First add a special entry for the INTERNAL name.  This must have
+     index zero.  */
+  idx = name_to_module_idx ("INTERNAL", 1);
+  name_info[0].canonical_name = "INTERNAL";
+  name_info[0].canonical_strent = strtabadd (strtab, "INTERNAL",
+					     sizeof ("INTERNAL"));
+  assert (nname_info == 1);
 
   for (i = 0; i < nmodule_list; ++i)
     {
@@ -807,7 +824,7 @@ generate_name_info (void)
       for (runp = module_list[i]; runp != NULL; runp = runp->next)
 	if (strcmp (runp->fromname, "INTERNAL") == 0)
 	  {
-	    int idx = name_to_module_idx (runp->toname, 1);
+	    idx = name_to_module_idx (runp->toname, 1);
 	    name_info[idx].from_internal = runp;
 	    assert (name_info[idx].canonical_name == NULL
 		    || strcmp (name_info[idx].canonical_name,
@@ -817,7 +834,7 @@ generate_name_info (void)
 	  }
 	else if (strcmp (runp->toname, "INTERNAL") == 0)
 	  {
-	    int idx = name_to_module_idx (runp->fromname, 1);
+	    idx = name_to_module_idx (runp->fromname, 1);
 	    name_info[idx].to_internal = runp;
 	    assert (name_info[idx].canonical_name == NULL
 		    || strcmp (name_info[idx].canonical_name,

@@ -3618,6 +3618,8 @@ numbers and multiplexed through the @code{ioctl} function, defined in
 @code{sys/ioctl.h}.  The code numbers themselves are defined in many
 different headers.
 
+@comment sys/ioctl.h
+@comment BSD
 @deftypefun int ioctl (int @var{filedes}, int @var{command}, @dots{})
 
 The @code{ioctl} function performs the generic I/O operation
