@@ -1,3 +1,8 @@
+2001-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iofwide.c (_IO_fwide): Don't reset file position to
+	beginning of file, really get current position.
+
 2001-08-15  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/m68020/atomicity.h (atomic_add): Don't allow
