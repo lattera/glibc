@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_PARAM_H
-
 #define _SYS_PARAM_H	1
 
 #include <limits.h>
@@ -28,13 +27,16 @@
 
 #define	NBBY		CHAR_BIT
 #ifndef	NGROUPS
-# define NGROUPS		NGROUPS_MAX
+# define NGROUPS	NGROUPS_MAX
 #endif
 #define	MAXSYMLINKS	5
 #define	CANBSIZ		MAX_CANON
 #define	NCARGS		ARG_MAX
-#define MAXPATHLEN      PATH_MAX
-#define NOFILE          OPEN_MAX
+#define MAXPATHLEN	PATH_MAX
+/* The following is not really correct but it is a value we used for a
+   long time and which seems to be usable.  People should not use NOFILE
+   anyway.  */
+#define NOFILE		256
 
 
 #include <sys/types.h>
