@@ -302,6 +302,7 @@ $(objpfx)noload: $(objpfx)testobj1.so
 LDFLAGS-noload = -rdynamic
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
+LDFLAGS-nodelete = -rdynamic
 LDFLAGS-nodelmod1.so = -Wl,--enable-new-dtags,-z,nodelete
 LDFLAGS-nodelmod4.so = -Wl,--enable-new-dtags,-z,nodelete
 $(objpfx)nodelete: $(libdl)

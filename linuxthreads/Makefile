@@ -42,9 +42,15 @@ LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete))
 
 vpath %.c Examples
 
+include ../Makeconfig
+
 librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
-	tststack
+	tststack $(tests-nodelete-$(have-z-nodelete))
+
+ifeq (yes,$(build-shared))
+tests-nodelete-yes = unload
+endif
 
 include ../Rules
 
@@ -53,6 +59,7 @@ CFLAGS-specific.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-ptfork.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-unload.c += -DPREFIX=\"$(objpfx)\"
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
@@ -63,6 +70,7 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.so
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
+$(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.a
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a

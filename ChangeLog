@@ -1,3 +1,13 @@
+2000-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (LDFLAGS-nodelete): Add -rdynamic.
+	* elf/nodelete.c (fini_ran): New global variable.
+	(do_test): Before every dlclose call clear fini_ran and test
+	afterwards that it is not set by the destructors.
+	* elf/nodelmod1.c: Add destructor which sets fini_ran.
+	* elf/nodelmod2.c: Likewise.
+	* elf/nodelmod4.c: Likewise.
+
 2000-08-21  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add getrlimit and

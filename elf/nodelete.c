@@ -7,6 +7,9 @@
 static sigjmp_buf jmpbuf;
 
 
+int fini_ran;
+
+
 static void
 handler (int sig)
 {
@@ -60,6 +63,7 @@ do_test (void)
 	  *varp = 20000720;
 
 	  /* Now close the object.  */
+	  fini_ran = 0;
 	  if (dlclose (p) != 0)
 	    {
 	      puts ("failed to close \"nodelmod1.so\"");
@@ -71,6 +75,11 @@ do_test (void)
 	      if (*varp != 20000720)
 		{
 		  puts ("\"var1\" value not correct");
+		  result = 1;
+		}
+	      else if (fini_ran != 0)
+		{
+		  puts ("destructor of \"nodelmod1.so\" ran");
 		  result = 1;
 		}
 	      else
@@ -108,6 +117,7 @@ do_test (void)
 	  *varp = 42;
 
 	  /* Now close the object.  */
+	  fini_ran = 0;
 	  if (dlclose (p) != 0)
 	    {
 	      puts ("failed to close \"nodelmod2.so\"");
@@ -119,6 +129,11 @@ do_test (void)
 	      if (*varp != 42)
 		{
 		  puts ("\"var2\" value not correct");
+		  result = 1;
+		}
+	      else if (fini_ran != 0)
+		{
+		  puts ("destructor of \"nodelmod2.so\" ran");
 		  result = 1;
 		}
 	      else
@@ -158,6 +173,7 @@ do_test (void)
 	  *varp = -1;
 
 	  /* Now close the object.  */
+	  fini_ran = 0;
 	  if (dlclose (p) != 0)
 	    {
 	      puts ("failed to close \"nodelmod3.so\"");
@@ -169,6 +185,11 @@ do_test (void)
 	      if (*varp != -1)
 		{
 		  puts ("\"var_in_mod4\" value not correct");
+		  result = 1;
+		}
+	      else if (fini_ran != 0)
+		{
+		  puts ("destructor of \"nodelmod4.so\" ran");
 		  result = 1;
 		}
 	      else

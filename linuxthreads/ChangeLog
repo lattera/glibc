@@ -1,6 +1,9 @@
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* pthread.c (pthread_exit_process): Move thread_self us inside `if'.
+	* Makefile: Add rules to build and run unload.
+	* unload.c: New file.
+
+	* pthread.c (pthread_exit_process): Move thread_self use inside `if'.
 
 	* sysdeps/pthread/pthread.h
 	(PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP): Defined.
