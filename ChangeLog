@@ -1,3 +1,11 @@
+2004-02-19  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/generic/framestate.c [__USING_SJLJ_EXCEPTIONS__]
+	(__frame_state_for): Set frame_State_for to abort if the compiler
+	is using sjlj.
+	* sysdeps/generic/unwind-dw2.c: Allow sjlj enabled compilers to
+	build the code by removing __USING_SJLJ_EXCEPTIONS__ wrapper.
+
 2004-02-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* resolv/Versions: Remove semicolon from the end of libresolv's

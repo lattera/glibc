@@ -41,7 +41,11 @@ __frame_state_for (void *pc, struct frame_state *frame_state)
       if (handle == NULL
 	  || (frame_state_for
 	      = (framesf) __libc_dlsym (handle, "__frame_state_for")) == NULL)
+#ifndef __USING_SJLJ_EXCEPTIONS__
 	frame_state_for = fallback_frame_state_for;
+#else
+      	frame_state_for = abort;
+#endif
     }
 
   return frame_state_for (pc, frame_state);

@@ -39,7 +39,6 @@
 #endif
 
 
-#ifndef __USING_SJLJ_EXCEPTIONS__
 
 #ifndef STACK_GROWS_DOWNWARD
 #define STACK_GROWS_DOWNWARD 0
@@ -1287,4 +1286,3 @@ uw_identify_context (struct _Unwind_Context *context)
 #include "unwind.inc"
 
 #endif /* _LIBC */
-#endif /* !USING_SJLJ_EXCEPTIONS */
