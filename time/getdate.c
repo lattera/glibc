@@ -151,6 +151,9 @@ __getdate_r (const char *string, struct tm *tp)
       /* Do the conversion.  */
       tp->tm_year = tp->tm_mon = tp->tm_mday = tp->tm_wday = INT_MIN;
       tp->tm_hour = tp->tm_sec = tp->tm_min = INT_MIN;
+      tp->tm_isdst = -1;
+      tp->tm_gmtoff = 0;
+      tp->tm_zone = NULL;
       result = strptime (string, line, tp);
       if (result && *result == '\0')
 	break;
