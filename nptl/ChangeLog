@@ -1,5 +1,7 @@
 2002-12-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* forward.c (test_loaded): Prevent recursive calls.
+
 	* Makefile (routines): Add libc-cancellation.
 	* libc-cancellation.c: New file.
 	* descr.h (struct pthread): Add multiple_threads field.
