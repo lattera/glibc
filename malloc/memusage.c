@@ -53,6 +53,7 @@ enum
   idx_free,
   idx_mmap_r,
   idx_mmap_w,
+  idx_mmap_a,
   idx_mremap,
   idx_munmap,
   idx_last
@@ -542,7 +543,8 @@ mmap (void *start, size_t len, int prot, int flags, int fd, off_t offset)
 
   if (!not_me && trace_mmap)
     {
-      int idx = prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r;
+      int idx = (flags & MAP_ANON
+		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
       ++calls[idx];
@@ -593,7 +595,8 @@ mmap64 (void *start, size_t len, int prot, int flags, int fd, off64_t offset)
 
   if (!not_me && trace_mmap)
     {
-      int idx = prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r;
+      int idx = (flags & MAP_ANON
+		 ? idx_mmap_a : prot & PROT_WRITE ? idx_mmap_w : idx_mmap_r);
 
       /* Keep track of number of calls.  */
       ++calls[idx];
@@ -784,12 +787,15 @@ dest (void)
     fprintf (stderr, "\
 \e[00;34mmmap(r)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34mmmap(w)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
+\e[00;34mmmap(a)|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n\
 \e[00;34m mremap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m   (in place: %ld, dec: %ld)\n\
 \e[00;34m munmap|\e[0m %10lu   %12llu   %s%12lu\e[00;00m\n",
 	     calls[idx_mmap_r], total[idx_mmap_r],
 	     failed[idx_mmap_r] ? "\e[01;41m" : "", failed[idx_mmap_r],
 	     calls[idx_mmap_w], total[idx_mmap_w],
 	     failed[idx_mmap_w] ? "\e[01;41m" : "", failed[idx_mmap_w],
+	     calls[idx_mmap_a], total[idx_mmap_a],
+	     failed[idx_mmap_a] ? "\e[01;41m" : "", failed[idx_mmap_a],
 	     calls[idx_mremap], total[idx_mremap],
 	     failed[idx_mremap] ? "\e[01;41m" : "", failed[idx_mremap],
 	     inplace_mremap, decreasing_mremap,
