@@ -1,5 +1,8 @@
 2004-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/errno.c: Include <dl-sysdep.h>.  Use
+	RTLD_PRIVATE_ERRNO to decide whether errno compat symbols are needed.
+
 	* elf/dl-sym.c: Unify _dl_sym and _dl_vsym code and make the entry
 	points wrappers around the unified code.
 

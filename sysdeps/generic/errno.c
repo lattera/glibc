@@ -1,5 +1,5 @@
 /* Definition of `errno' variable.  Canonical version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <tls.h>
+#include <dl-sysdep.h>
 #undef errno
 
 #if USE___THREAD
@@ -36,7 +37,7 @@ strong_alias (errno, _errno)
    link time.  Programs must use the accessor functions.  RTLD is special,
    since it's not exported from there at any time.  */
 # if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING \
-     && !defined IS_IN_rtld
+     && !RTLD_PRIVATE_ERRNO
 #  include <shlib-compat.h>
 compat_symbol (libc, errno, errno, GLIBC_2_0);
 compat_symbol (libc, _errno, _errno, GLIBC_2_0);

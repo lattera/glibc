@@ -60,8 +60,8 @@ _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
 
 static void *
 internal_function
-do_sym (void *handle, const char *name, struct r_found_version *vers,
-	int flags, void *who)
+do_sym (void *handle, const char *name, void *who,
+	struct r_found_version *vers, int flags)
 {
   const ElfW(Sym) *ref = NULL;
   lookup_t result;
@@ -128,7 +128,6 @@ RTLD_NEXT used in code not dynamically loaded"));
 }
 
 
-
 void *
 internal_function
 _dl_vsym (void *handle, const char *name, const char *version, void *who)
@@ -142,7 +141,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   /* We don't have a specific file where the symbol can be found.  */
   vers.filename = NULL;
 
-  return do_sym (handle, name, &vers, 0, who);
+  return do_sym (handle, name, who, &vers, 0);
 }
 
 
@@ -150,5 +149,5 @@ void *
 internal_function
 _dl_sym (void *handle, const char *name, void *who)
 {
-  return do_sym (handle, name, NULL, DL_LOOKUP_RETURN_NEWEST, who);
+  return do_sym (handle, name, who, NULL, DL_LOOKUP_RETURN_NEWEST);
 }
