@@ -78,8 +78,15 @@ typedef unsigned int socklen_t;
 #define	AF_ASH		PF_ASH
 #define AF_MAX		PF_MAX
 
-/* Raw IP packet level.  */
+/* Socket level values.  Others are defined in the appropriate headers.
+
+   XXX These definitions also should go into the appropriate headers as
+   far as they are available.  */
+#define SOL_IPV6        41
+#define SOL_ICMPV6      58
 #define SOL_RAW		255
+#define SOL_DECNET      261
+#define SOL_X25         262
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
