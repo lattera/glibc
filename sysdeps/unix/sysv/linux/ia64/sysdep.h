@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
    Based on code originally written by David Mosberger-Tang
@@ -200,12 +200,13 @@
 #ifdef IA64_USE_NEW_STUB
 
 #define DO_INLINE_SYSCALL(name, nr, args...)					\
+    LOAD_ARGS_##nr (args)							\
     register long _r8 __asm ("r8");						\
     register long _r10 __asm ("r10");						\
     register long _r15 __asm ("r15") = __NR_##name;				\
     register void *_b7 __asm ("b7") = ((tcbhead_t *) __thread_self)->private;	\
     long _retval;								\
-    LOAD_ARGS_##nr (args);							\
+    LOAD_REGS_##nr								\
     /*										\
      * Don't specify any unwind info here.  We mark ar.pfs as			\
      * clobbered.  This will force the compiler to save ar.pfs			\
@@ -221,11 +222,12 @@
 #else /* !IA64_USE_NEW_STUB */
 
 #define DO_INLINE_SYSCALL(name, nr, args...)			\
+    LOAD_ARGS_##nr (args)					\
     register long _r8 asm ("r8");				\
     register long _r10 asm ("r10");				\
     register long _r15 asm ("r15") = __NR_##name;		\
     long _retval;						\
-    LOAD_ARGS_##nr (args);					\
+    LOAD_REGS_##nr						\
     __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
 		      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
 			ASM_OUTARGS_##nr			\
@@ -262,25 +264,44 @@
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(val)
 
-#define LOAD_ARGS_0()   do { } while (0)
-#define LOAD_ARGS_1(out0)				\
-  register long _out0 asm ("out0") = (long) (out0);	\
+#define LOAD_ARGS_0()
+#define LOAD_REGS_0
+#define LOAD_ARGS_1(a1)					\
+  long _arg1 = (long) (a1);				\
   LOAD_ARGS_0 ()
-#define LOAD_ARGS_2(out0, out1)				\
-  register long _out1 asm ("out1") = (long) (out1);	\
-  LOAD_ARGS_1 (out0)
-#define LOAD_ARGS_3(out0, out1, out2)			\
-  register long _out2 asm ("out2") = (long) (out2);	\
-  LOAD_ARGS_2 (out0, out1)
-#define LOAD_ARGS_4(out0, out1, out2, out3)		\
-  register long _out3 asm ("out3") = (long) (out3);	\
-  LOAD_ARGS_3 (out0, out1, out2)
-#define LOAD_ARGS_5(out0, out1, out2, out3, out4)	\
-  register long _out4 asm ("out4") = (long) (out4);	\
-  LOAD_ARGS_4 (out0, out1, out2, out3)
-#define LOAD_ARGS_6(out0, out1, out2, out3, out4, out5)	\
-  register long _out5 asm ("out5") = (long) (out5);	\
-  LOAD_ARGS_5 (out0, out1, out2, out3, out4)
+#define LOAD_REGS_1					\
+  register long _out0 asm ("out0") = _arg1;		\
+  LOAD_REGS_0
+#define LOAD_ARGS_2(a1, a2)				\
+  long _arg2 = (long) (a2);				\
+  LOAD_ARGS_1 (a1)
+#define LOAD_REGS_2					\
+  register long _out1 asm ("out1") = _arg2;		\
+  LOAD_REGS_1
+#define LOAD_ARGS_3(a1, a2, a3)				\
+  long _arg3 = (long) (a3);				\
+  LOAD_ARGS_2 (a1, a2)
+#define LOAD_REGS_3					\
+  register long _out2 asm ("out2") = _arg3;		\
+  LOAD_REGS_2
+#define LOAD_ARGS_4(a1, a2, a3, a4)			\
+  long _arg4 = (long) (a4);				\
+  LOAD_ARGS_3 (a1, a2, a3)
+#define LOAD_REGS_4					\
+  register long _out3 asm ("out3") = _arg4;		\
+  LOAD_REGS_3
+#define LOAD_ARGS_5(a1, a2, a3, a4, a5)			\
+  long _arg5 = (long) (a5);				\
+  LOAD_ARGS_4 (a1, a2, a3, a4)
+#define LOAD_REGS_5					\
+  register long _out4 asm ("out4") = _arg5;		\
+  LOAD_REGS_4
+#define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)		\
+  long _arg6 = (long) (a6);	    			\
+  LOAD_ARGS_5 (a1, a2, a3, a4, a5)
+#define LOAD_REGS_6					\
+  register long _out5 asm ("out5") = _arg6;		\
+  LOAD_REGS_5
 
 #define ASM_OUTARGS_0
 #define ASM_OUTARGS_1	ASM_OUTARGS_0, "=r" (_out0)
