@@ -533,7 +533,7 @@ getaddrinfo (const char *name, const char *service,
   if (hints == NULL)
     hints = &default_hints;
 
-  if (hints->ai_flags & ~3)
+  if (hints->ai_flags & ~(AI_PASSIVE|AI_CANANONNAME|AI_NUMERICHOST))
     return EAI_BADFLAGS;
 
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)

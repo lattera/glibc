@@ -1,3 +1,8 @@
+1999-02-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Correct test for
+	invalid ai_flags.
+
 1999-02-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/llio.texi (Waiting for I/O): Correct meaning.  Patch by
