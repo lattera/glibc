@@ -3531,11 +3531,11 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
   collseq = (const unsigned char *) _NL_CURRENT (LC_COLLATE,
 						 _NL_COLLATE_COLLSEQMB);
 
-  start_colseq = collseq[TRANSLATE (range_start_char)];
-  end_colseq = collseq[TRANSLATE (p[0])];
+  start_colseq = collseq[(unsigned char) TRANSLATE (range_start_char)];
+  end_colseq = collseq[(unsigned char) TRANSLATE (p[0])];
   for (this_char = 0; this_char <= (unsigned char) -1; ++this_char)
     {
-      unsigned int this_colseq = collseq[TRANSLATE (this_char)];
+      unsigned int this_colseq = collseq[(unsigned char) TRANSLATE (this_char)];
 
       if (start_colseq <= this_colseq && this_colseq <= end_colseq)
 	{
