@@ -97,7 +97,7 @@ struct termios
 # define ONOEOT	(1 << 3)	/* Discard EOT (^D) on output.  */
 #endif
 #ifdef __USE_GNU
-# define OLCUC	(1 << 8)	/* Translate lower case output to upper case */
+# define OLCUC	(1 << 9)	/* Translate lower case output to upper case */
 #endif
 
   /* Control modes.  */
