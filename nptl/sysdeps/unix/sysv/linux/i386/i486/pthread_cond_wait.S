@@ -236,13 +236,13 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
 
 
-	.type	__condvar_cleanup2, @function
-__condvar_cleanup2:
+	.type	__condvar_w_cleanup2, @function
+__condvar_w_cleanup2:
 	subl	$wakeup_seq, %ebx
-	.size	__condvar_cleanup2, .-__condvar_cleanup2
+	.size	__condvar_w_cleanup2, .-__condvar_w_cleanup2
 .LSbl4:
-	.type	__condvar_cleanup, @function
-__condvar_cleanup:
+	.type	__condvar_w_cleanup, @function
+__condvar_w_cleanup:
 	movl	%eax, %esi
 
 	/* Get internal lock.  */
@@ -295,7 +295,7 @@ __condvar_cleanup:
 	call	_Unwind_Resume
 	hlt
 .LENDCODE:
-	.size	__condvar_cleanup, .-__condvar_cleanup
+	.size	__condvar_w_cleanup, .-__condvar_w_cleanup
 
 
 	.section .gcc_except_table,"a",@progbits
@@ -308,15 +308,15 @@ __condvar_cleanup:
 .Lcstbegin:
 	.long	.LcleanupSTART-.LSTARTCODE
 	.long	.Ladd_wakeup-.LcleanupSTART
-	.long	__condvar_cleanup-.LSTARTCODE
+	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.Ladd_wakeup-.LSTARTCODE
 	.long	.Lsub_wakeup-.Ladd_wakeup
-	.long	__condvar_cleanup2-.LSTARTCODE
+	.long	__condvar_w_cleanup2-.LSTARTCODE
 	.uleb128  0
 	.long	.Lsub_wakeup-.LSTARTCODE
 	.long	.LcleanupEND-.Lsub_wakeup
-	.long	__condvar_cleanup-.LSTARTCODE
+	.long	__condvar_w_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LcallUR-.LSTARTCODE
 	.long	.LENDCODE-.LcallUR
@@ -399,7 +399,7 @@ __condvar_cleanup:
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Lsubl-.Lpush_ebx
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 36
+	.uleb128 28
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Laddl-.Lsubl
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -427,10 +427,10 @@ __condvar_cleanup:
 	.uleb128 4
 	.byte	0x40+.LSbl2-.LSbl1		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 52
+	.uleb128 28
 	.byte	0x40+.LSbl3-.LSbl2		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 20
+	.uleb128 16
 	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 28

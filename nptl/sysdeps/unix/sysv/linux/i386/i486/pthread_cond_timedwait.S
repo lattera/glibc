@@ -332,17 +332,17 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
 
 
-	.type	__condvar_cleanup3, @function
-__condvar_cleanup3:
+	.type	__condvar_tw_cleanup3, @function
+__condvar_tw_cleanup3:
 	leal	wakeup_seq(%edx), %ebx # XXX Is this correct?  %edx preserved?
 .LSbl5:
-	.size	__condvar_cleanup3, .-__condvar_cleanup3
-	.type	__condvar_cleanup2, @function
-__condvar_cleanup2:
+	.size	__condvar_tw_cleanup3, .-__condvar_tw_cleanup3
+	.type	__condvar_tw_cleanup2, @function
+__condvar_tw_cleanup2:
 	subl	$wakeup_seq, %ebx
-	.size	__condvar_cleanup2, .-__condvar_cleanup2
-	.type	__condvar_cleanup, @function
-__condvar_cleanup:
+	.size	__condvar_tw_cleanup2, .-__condvar_tw_cleanup2
+	.type	__condvar_tw_cleanup, @function
+__condvar_tw_cleanup:
 	movl	%eax, %esi
 
 	/* Get internal lock.  */
@@ -395,7 +395,7 @@ __condvar_cleanup:
 	call	_Unwind_Resume
 	hlt
 .LENDCODE:
-	.size	__condvar_cleanup, .-__condvar_cleanup
+	.size	__condvar_tw_cleanup, .-__condvar_tw_cleanup
 
 
 	.section .gcc_except_table,"a",@progbits
@@ -408,23 +408,23 @@ __condvar_cleanup:
 .Lcstbegin:
 	.long	.LcleanupSTART-.LSTARTCODE
 	.long	.Ladd_wakeup-.LcleanupSTART
-	.long	__condvar_cleanup-.LSTARTCODE
+	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LebxmovedUR-.LSTARTCODE
 	.long	.LebxbackUR-.LebxmovedUR
-	.long	__condvar_cleanup3-.LSTARTCODE
+	.long	__condvar_tw_cleanup3-.LSTARTCODE
 	.uleb128  0
 	.long	.LebxmovedUR-.LSTARTCODE
 	.long	.Ladd_wakeup-.LebxmovedUR
-	.long	__condvar_cleanup-.LSTARTCODE
+	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.Ladd_wakeup-.LSTARTCODE
 	.long	.Lsub_wakeup-.Ladd_wakeup
-	.long	__condvar_cleanup2-.LSTARTCODE
+	.long	__condvar_tw_cleanup2-.LSTARTCODE
 	.uleb128  0
 	.long	.Lsub_wakeup-.LSTARTCODE
 	.long	.LcleanupEND-.Lsub_wakeup
-	.long	__condvar_cleanup-.LSTARTCODE
+	.long	__condvar_tw_cleanup-.LSTARTCODE
 	.uleb128  0
 	.long	.LcallUR-.LSTARTCODE
 	.long	.LENDCODE-.LcallUR
@@ -555,9 +555,11 @@ __condvar_cleanup:
 	.byte	0x40+.LSbl4-.LSbl3		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 64
-	.byte	0x40+.LSbl5-.LSbl4		# DW_CFA_advance_loc+N
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.LSbl5-.LSbl4
 #else
-	.byte	0x40+.LSbl5-.LSbl3		# DW_CFA_advance_loc+N
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.LSbl5-.LSbl3
 #endif
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 40

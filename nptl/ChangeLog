@@ -1,3 +1,14 @@
+2003-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/librt-cancellation.c: Move __pthread_unwind
+	definition to the front.
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Rename
+	the cleanup functions to make the names unique.  Fix dwarf opcode
+	un unwind table.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Rename cleanup
+	functions to make the names unique.  Fix CFA offset for two blocks.
+
 2003-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h (class __pthread_cleanup_class): Add
