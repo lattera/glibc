@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,01 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,8 @@ routines := brk sbrk sstk ioctl \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \
-	    mmap munmap mprotect msync madvise mmap64 mincore \
+	    mmap mmap64 munmap mprotect msync madvise mincore \
+	    mlock munlock mlockall munlockall \
 	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \

@@ -23,13 +23,13 @@ klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
 madvise		-	madvise		i:pii	posix_madvise	madvise
 mincore		-	mincore		i:anV	mincore
-mlock		EXTRA	mlock		i:bn	__mlock	mlock
-mlockall	EXTRA	mlockall	i:i	__mlockall	mlockall
+mlock		-	mlock		i:bn	mlock
+mlockall	-	mlockall	i:i	mlockall
 mmap		-	mmap		b:aniiii	__mmap		mmap
 mount		EXTRA	mount		i:sssip	__mount	mount
 mremap		EXTRA	mremap		b:aini	__mremap	mremap
-munlock		EXTRA	munlock		i:ai	__munlock	munlock
-munlockall	EXTRA	munlockall	i:	__munlockall	munlockall
+munlock		-	munlock		i:ai	munlock
+munlockall	-	munlockall	i:	munlockall
 nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
 nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		i:	__libc_pause	pause

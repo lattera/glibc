@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994-1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1998,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,3 +79,9 @@
 # define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
 # define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif
+
+
+/* Flags for `mlockall' (can be OR'd together).  */
+#define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
+#define MCL_FUTURE	2		/* Lock all additions to address
+					   space.  */

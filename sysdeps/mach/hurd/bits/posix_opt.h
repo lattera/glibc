@@ -1,5 +1,5 @@
 /* Define POSIX options for GNU/Hurd.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,9 @@
 
 /* Mapping of files to memory is supported.  */
 #define	_POSIX_MAPPED_FILES	1
+
+/* Locking of ranges of memory is supported.  */
+#define	_POSIX_MEMLOCK_RANGE	1
 
 /* Setting of memory protections is supported.  */
 #define	_POSIX_MEMORY_PROTECTION	1

@@ -1,5 +1,19 @@
 2001-04-19  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/mlock.c: New file.
+	* sysdeps/mach/hurd/munlock.c: New file.
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_MEMLOCK_RANGE): Define it.
+
+	* misc/Makefile (routines): Add mlock munlock mlockall munlockall.
+	* sysdeps/generic/mlock.c: New file.
+	* sysdeps/generic/munlock.c: New file.
+	* sysdeps/generic/mlockall.c: New file.
+	* sysdeps/generic/munlockall.c: New file.
+	* sysdeps/generic/bits/mman.h (MCL_CURRENT, MCL_FUTURE): New macros.
+	* sysdeps/unix/sysv/linux/syscalls.list (mlock, munlock,
+	mlockall, munlockall): Change caller field to - from EXTRA.
+	Don't use __ names; not used (and not declared in include/sys/mman.h).
+
 	* hurd/privports.c (__get_privileged_ports): Renamed with __.
 	Use __ names for calls we make.
 	(get_privileged_ports): Add alias.
