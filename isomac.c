@@ -294,6 +294,17 @@ get_null_defines (void)
 	}
       puts (result[result_len - 1]);
     }
+  if (result_len == result_max)
+    {
+      result_max += 1;
+      result = realloc (result, result_max * sizeof (char **));
+      if (result == NULL)
+	{
+	  puts ("No more memory.");
+	  exit (1);
+	}
+    }
+  result[result_len] = NULL;
   fclose (input);
   remove (TMPFILE);
 

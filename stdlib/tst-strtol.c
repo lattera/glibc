@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <limits.h>
 
 struct ltest
   {
@@ -17,7 +18,7 @@ struct ltest
   };
 static const struct ltest tests[] =
   {
-#if ~0UL == 0xffffffff
+#if LONG_MAX == 0x7fffffff
     /* First, signed numbers.  */
     { "   -17",		-17,		0,	0,	0 },
     { " +0x123fg",	0x123f,		0,	'g',	0 },

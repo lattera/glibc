@@ -18,9 +18,6 @@
 
 ifdef in-Makerules
 
-subdirs := $(filter-out sunrpc,$(subdirs)) # XXX skip broken dirs
-# See hurd/Makefile for commands that install some crucial sunrpc headers.
-
 # Look for header files in hurd/ under the top-level library source directory.
 # Look for generated header files where they get created.
 includes += -I$(..)hurd -I$(common-objpfx)hurd/
@@ -117,6 +114,11 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 # objects directly into the shared object.
 ifeq (elf,$(subdir))
 $(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
+endif
+
+# We need the CThreads interface.
+ifeq (misc,$(subdir))
+sysdep_routines += cthreads
 endif
 
 

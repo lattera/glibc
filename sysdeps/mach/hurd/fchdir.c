@@ -25,9 +25,8 @@
 
 /* Change the current directory to FD.  */
 
-/* XXX should be __fchdir? */
 int
-fchdir (fd)
+__fchdir (fd)
      int fd;
 {
   error_t err;
@@ -44,3 +43,4 @@ fchdir (fd)
 
   return err ? __hurd_fail (err) : 0;
 }
+weak_alias (__fchdir, fchdir)

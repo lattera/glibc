@@ -66,7 +66,13 @@ else
 foo:=$(shell echo>&2 '+distinfo=$(+distinfo)')
 all-headers := $(patsubst +header+%,%,$(filter +header+%,$(+distinfo)))
 # Ignore subdir headers without top-level indirections.
-all-headers := $(sort $(headers) $(wildcard $(all-headers)))
+all-headers := $(sort $(headers) \
+		      $(patsubst include/%,%,\
+				 $(wildcard $(addprefix include/,\
+							$(all-headers)))))
+# Filter out names like ../conf/portability.h that would point outside
+# the source directory.
+all-headers := $(filter-out ../%,$(all-headers))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
 +subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
@@ -115,7 +121,7 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 	$(+subdir-nodist) $(dont_distribute)
 foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
 +tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers) $(distribute)) \
-	   $(+sysdeps)
+	   $(foreach l,$(extra-libs),$($l-map)) $(+sysdeps)
 foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo generated='$(generated)' >&2)
 #generated := $(sort $(generated) $(generated:.S=.c) $(generated:.s=.c))

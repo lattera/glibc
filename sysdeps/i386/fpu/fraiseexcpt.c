@@ -70,7 +70,7 @@ feraiseexcept (int excepts)
   /* Next: underflow.  */
   if ((FE_UNDERFLOW & excepts) != 0)
     {
-      /* There is no way to raise only the overflow flag.  Do it the
+      /* There is no way to raise only the underflow flag.  Do it the
 	 hard way.  */
       fenv_t temp;
 
@@ -91,7 +91,7 @@ feraiseexcept (int excepts)
   /* Last: inexact.  */
   if ((FE_INEXACT & excepts) != 0)
     {
-      /* There is no way to raise only the overflow flag.  Do it the
+      /* There is no way to raise only the inexact flag.  Do it the
 	 hard way.  */
       fenv_t temp;
 

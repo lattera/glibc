@@ -89,6 +89,10 @@ before-compile += $(objpfx)version-info.h
 
 echo-headers: subdir_echo-headers
 
+# The headers are in the include directory.
+subdir-dirs = include
+vpath %.h $(subdir-dirs)
+
 # What to install.
 install-others = $(inst_includedir)/gnu/stubs.h
 install-bin = glibcbug
@@ -284,7 +288,7 @@ tests: parent-tests
 
 # Run a test on the header files we use.
 parent-tests: $(objpfx)isomac
-	$(dir $<)$(notdir $<) '$(CC)' '$(+sysdep-includes)' > $<.out
+	$(dir $<)$(notdir $<) '$(CC)' '-Iinclude $(+sysdep-includes)' > $<.out
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)
@@ -295,7 +299,7 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk isomac.c			\
-	       ansidecl.h mkinstalldirs move-if-change install-sh	\
+	       libc.map mkinstalldirs move-if-change install-sh		\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\

@@ -22,6 +22,7 @@
 #include <hurd/signal.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <string.h>
+#include <hurd/id.h>
 #include "hurdfault.h"
 #include "hurdmalloc.h"		/* XXX */
 
@@ -1238,6 +1239,16 @@ reauth_proc (mach_port_t new)
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
   __mach_port_destroy (__mach_task_self (), ref);
+
+  /* Set the owner of the process here too. */
+  mutex_lock (&_hurd_id.lock);
+  if (!_hurd_check_ids ())
+    HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
+		   __proc_setowner (port,
+				    (_hurd_id.gen.nuids
+				     ? _hurd_id.gen.uids[0] : 0),
+				    !_hurd_id.gen.nuids));
+  mutex_unlock (&_hurd_id.lock);
 
   (void) &reauth_proc;		/* Silence compiler warning.  */
 }

@@ -354,9 +354,6 @@ extern int _IO_file_close_it __P((_IO_FILE*));
 extern _IO_fpos_t _IO_file_seek __P((_IO_FILE *, _IO_off_t, int));
 extern void _IO_file_finish __P((_IO_FILE*, int));
 
-/* Other file functions. */
-extern _IO_FILE* _IO_file_attach __P((_IO_FILE *, int));
-
 /* Jumptable functions for proc_files. */
 extern _IO_FILE* _IO_proc_open __P((_IO_FILE*, const char*, const char *));
 extern int _IO_proc_close __P((_IO_FILE*));

@@ -30,6 +30,9 @@ GLIBC_2.0 {
     __libc_calloc; __libc_free; __libc_mallinfo; __libc_malloc;
     __libc_mallopt; __libc_memalign; __libc_pvalloc; __libc_realloc;
     __libc_valloc;
+    __malloc_initialize_hook; __free_hook; __malloc_hook; __realloc_hook;
+    __memalign_hook; __after_morecore_hook;
+    __malloc_initialized; __default_morecore; __morecore;
 
     # functions with required interface outside normal name space
     _exit; __ivaliduser; __open_catalog;
@@ -50,6 +53,7 @@ GLIBC_2.0 {
     _IO_getc; _IO_peekc_unlocked; _IO_putc; _IO_feof; _IO_ferror;
     __xstat; __fxstat; __lxstat; __xmknod; __dcgettext;
     __uflow; __underflow; __overflow; __iswctype; __sigpause;
+    __ctype_get_mb_cur_max;
 
     # functions used in other libraries
     __printf_fp; __stpncpy;
@@ -75,7 +79,7 @@ GLIBC_2.0 {
     _IO_remove_marker; _IO_marker_difference; _IO_marker_delta;
     _IO_seekmark; _IO_unsave_markers; _IO_str_overflow;
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
-    _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all;
+    _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all; _IO_file_jumps;
     _rpc_dtablesize;
 
     # all functions and variables in the normal name space

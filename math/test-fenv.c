@@ -1,4 +1,24 @@
-/* Test for exception handling functions of libm */
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de> and
+   Ulrich Drepper <drepper@cygnus.com>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* Tests for ISO C 9X 7.6: Floating-point environment  */
 
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
@@ -10,9 +30,12 @@
 #include <fenv.h>
 
 #include <errno.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 /*
   Since not all architectures might define all exceptions, we define
@@ -87,6 +110,54 @@ test_exceptions (const char *test_name, short int exception)
 #endif
 }
 
+static void
+print_rounding (int rounding)
+{
+
+  switch (rounding) {
+#ifdef FE_TONEAREST
+  case FE_TONEAREST:
+    printf ("TONEAREST");
+    break;
+#endif
+#ifdef FE_UPWARD
+  case FE_UPWARD:
+    printf ("UPWARD");
+    break;
+#endif
+#ifdef FE_DOWNWARD
+  case FE_DOWNWARD:
+    printf ("DOWNWARD");
+    break;
+#endif
+#ifdef FE_TOWARDZERO
+  case FE_TOWARDZERO:
+    printf ("TOWARDZERO");
+    break;
+#endif
+  }
+  printf (".\n");
+}
+
+
+static void
+test_rounding (const char *test_name, int rounding_mode)
+{
+  int curr_rounding = fegetround ();
+
+  printf ("Test: %s\n", test_name);
+  if (curr_rounding == rounding_mode)
+    {
+      printf ("  Pass: Rounding mode is ");
+      print_rounding (curr_rounding);
+    }
+  else {
+    ++count_errors;
+    printf ("  Fail: Rounding mode is ");
+    print_rounding (curr_rounding);
+  }
+}
+
 
 static void
 set_single_exc (const char *test_name, int fe_exc, fexcept_t exception)
@@ -130,7 +201,6 @@ fe_tests (void)
                    ALL_EXC);
   feclearexcept (FE_ALL_EXCEPT);
 
-
 #ifdef FE_DIVBYZERO
   set_single_exc ("Set/Clear FE_DIVBYZERO", DIVBYZERO_EXC, FE_DIVBYZERO);
 #endif
@@ -148,11 +218,138 @@ fe_tests (void)
 #endif
 }
 
+/* Test that program aborts with no masked interrupts */
+static void
+feenv_nomask_test (const char *flag_name, int fe_exc)
+{
+  int status;
+  pid_t pid;
+
+  printf ("Test: after fesetenv (FE_NOMASK_ENV) processes will abort\n");
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name);
+  fesetenv (FE_NOMASK_ENV);
+  pid = fork  ();
+  if (pid == 0)
+    {
+      feraiseexcept (fe_exc);
+      exit (2);
+    }
+  else if (pid < 0)
+    {
+      if (errno != ENOSYS)
+	{
+	  printf ("  Fail: Could not fork.\n");
+	  ++count_errors;
+	}
+      else
+	printf ("  `fork' not implemented, test ignored.\n");
+    }
+  else {
+    if (waitpid (pid, &status, 0) != pid)
+      {
+	printf ("  Fail: waitpid call failed.\n");
+	++count_errors;
+      }
+    else if (WIFSIGNALED (status) && WTERMSIG (status) == SIGFPE)
+      printf ("  Pass: Process received SIGFPE.\n");
+    else
+      {
+	printf ("  Fail: Process didn't receive signal and exited with status %d.\n",
+		status);
+	++count_errors;
+      }
+  }
+}
+
+/* Test that program doesn't abort with default environment */
+static void
+feenv_mask_test (const char *flag_name, int fe_exc)
+{
+  int status;
+  pid_t pid;
+
+  printf ("Test: after fesetenv (FE_DFL_ENV) processes will not abort\n");
+  printf ("      when feraiseexcept (%s) is called.\n", flag_name);
+  fesetenv (FE_DFL_ENV);
+  pid = fork ();
+  if (pid == 0)
+    {
+      feraiseexcept (fe_exc);
+      exit (2);
+    }
+  else if (pid < 0)
+    {
+      if (errno != ENOSYS)
+	{
+	  printf ("  Fail: Could not fork.\n");
+	  ++count_errors;
+	}
+      else
+	printf ("  `fork' not implemented, test ignored.\n");
+    }
+  else {
+    if (waitpid (pid, &status, 0) != pid)
+      {
+	printf ("  Fail: waitpid call failed.\n");
+	++count_errors;
+      }
+    else if (WIFEXITED (status) && WEXITSTATUS (status) == 2)
+      printf ("  Pass: Process exited normally.\n");
+    else
+      {
+	printf ("  Fail: Process exited abnormally with status %d.\n",
+		status);
+	++count_errors;
+      }
+  }
+}
+
+
+
+static void
+feenv_tests (void)
+{
+
+#ifdef FE_DIVBYZERO
+  feenv_nomask_test ("FE_DIVBYZERO", FE_DIVBYZERO);
+  feenv_mask_test ("FE_DIVBYZERO", FE_DIVBYZERO);
+#endif
+#ifdef FE_INVALID
+  feenv_nomask_test ("FE_INVALID", FE_INVALID);
+  feenv_mask_test ("FE_INVALID", FE_INVALID);
+#endif
+#ifdef FE_INEXACT
+  feenv_nomask_test ("FE_INEXACT", FE_INEXACT);
+  feenv_mask_test ("FE_INEXACT", FE_INEXACT);
+#endif
+#ifdef FE_UNDERFLOW
+  feenv_nomask_test ("FE_UNDERFLOW", FE_UNDERFLOW);
+  feenv_mask_test ("FE_UNDERFLOW", FE_UNDERFLOW);
+#endif
+#ifdef FE_OVERFLOW
+  feenv_nomask_test ("FE_OVERFLOW", FE_OVERFLOW);
+  feenv_mask_test ("FE_OVERFLOW", FE_OVERFLOW);
+#endif
+  fesetenv (FE_DFL_ENV);
+}
+
+
+/* IEC 559 and ISO C 9X define a default startup environment */
+static void
+initial_tests (void)
+{
+  test_exceptions ("Initially all exceptions should be cleared",
+                   NO_EXC);
+  test_rounding ("Rounding direction should be initalized to nearest",
+                 FE_TONEAREST);
+}
+
 int
 main (void)
 {
+  initial_tests ();
   fe_tests ();
-  /* _LIB_VERSION = _SVID;*/
+  feenv_tests ();
 
   if (count_errors)
     {

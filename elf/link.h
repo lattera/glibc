@@ -62,7 +62,7 @@ struct r_debug
 	   the `r_brk' address is called.  */
 	RT_CONSISTENT,		/* Mapping change is complete.  */
 	RT_ADD,			/* Beginning to add a new object.  */
-	RT_DELETE,		/* Beginning to remove an object mapping.  */
+	RT_DELETE		/* Beginning to remove an object mapping.  */
       } r_state;
 
     ElfW(Addr) r_ldbase;	/* Base address the linker is loaded at.  */
@@ -152,7 +152,7 @@ struct link_map
       {
 	lt_executable,		/* The main executable program.  */
 	lt_library,		/* Library needed by main executable.  */
-	lt_loaded,		/* Extra run-time loaded shared object.  */
+	lt_loaded		/* Extra run-time loaded shared object.  */
       } l_type:2;
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
@@ -167,7 +167,7 @@ struct link_map
 
 
 /* Test whether given NAME matches any of the names of the given object.  */
-static inline int
+static __inline int
 __attribute__ ((unused))
 _dl_name_match_p (const char *__name, struct link_map *__map)
 {

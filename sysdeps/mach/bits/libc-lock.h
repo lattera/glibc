@@ -82,6 +82,10 @@ typedef cthread_key_t __libc_key_t;
 #define __libc_mutex_unlock __mutex_unlock
 #endif
 
+#define __libc_key_create(KEY,DEST) cthread_keycreate (KEY)
+#define __libc_setspecific(KEY,VAL) cthread_setspecific (KEY, VAL)
+void *__libc_getspecific (__libc_key_t key);
+
 /* XXX until cthreads supports recursive locks */
 #define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
 #define __libc_lock_init_recursive __libc_lock_init

@@ -933,7 +933,7 @@ echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
-	      versioned \
+	      $(extra-libs:%=%-map) versioned \
 	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')

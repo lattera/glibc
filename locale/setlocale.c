@@ -204,6 +204,9 @@ new_composite_name (int category, const char *newnames[LC_ALL])
 static inline void
 setname (int category, const char *name)
 {
+  if (_nl_current_names[category] == name)
+    return;
+
   if (_nl_current_names[category] != _nl_C_name)
     free ((void *) _nl_current_names[category]);
 

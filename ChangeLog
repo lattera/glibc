@@ -1,3 +1,146 @@
+1997-07-06 23:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* isomac.c (get_null_defines): Put NULL at end of list.
+
+	* hurd/Makefile: Remove special handling of sunrpc code.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	Compile CThreads code.
+	* sunrpc/rpc_main.c: Don't use MAXPATHLEN.
+	* sysdeps/mach/bits/libc-lock.h: Add definitions for key handling
+	functions.
+	* sysdeps/stub/bits/libc-lock.h: Likewise.
+	* sysdeps/mach/hurd/net/ethernet.h: New file.
+	* sysdeps/mach/hurd/net/if.h: New file.
+	* sysdeps/mach/hurd/net/if_arp.h: New file.
+	* sysdeps/mach/hurd/net/if_ether.h: New file.
+	* sysdeps/mach/hurd/net/if_ppp.h: New file.
+	* sysdeps/mach/hurd/net/route.h: New file.
+	Patches by  Fila Kolodny <fila@ibi.com>.
+
+	* math/fenv-test.c: Add more tests.
+	Patch by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+	* sysdeps/wordsize-32/inttypes.h: Correct values for INTFAST_MIN,
+	INTFAST_MAX, and UINTFAST_MAX.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	Correct intmax_t definition.
+
+1997-07-04 15:33  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main): Add '\n' to _dl_sysdep_fatal ().
+
+1997-07-01 09:18  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libc.map: Add missing symbol.
+
+1997-07-04 18:04  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* stdlib/tst-strtol.c: Don't assume cpp takes ~0UL as long
+	in cc1.  Cpp in gcc doesn't do it.
+
+1997-07-01 21:15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/libioP.h: Remove second definition of _IO_file_attach.
+
+	* sysdeps/i386/fpu/fraiseexcpt.c (feraiseexcept): Correct comments.
+
+	* sysdeps/sparc64/elf/start.S (_start): Update and reformat
+	copyright.
+	* manual/summary.awk: Likewise.
+	* misc/bits/stab.def: Likewise.
+	* posix/glob/Makefile.ami: Likewise.
+	* posix/glob/Makefile.in: Likewise.
+	* posix/glob/SMakefile: Likewise.
+	* sysdeps/gnu/errlist.awk: Likewise.
+	* sysdeps/mach/hurd/errnos.awk: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/target.ld: Likewise.
+	* sysdeps/standalone/m68k/m68020/mvme136/mvme136.ld: Likewise.
+	* sysdeps/unix/snarf-ioctls: Likewise.
+	* sysdeps/vax/setjmp.c: Likewise.
+
+1997-07-05 11:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/login.c (tty_name): Use newly allocated buffer.
+	Patch by Jaakko Hyvätti <jaakko.hyvatti@iki.fi>.
+
+	* time/asctime.c: Never translate week and month name according
+	to LC_TIME.  Patch by Paul Eggert <eggert@twinsun.com>.
+
+1997-07-03 22:50  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/setlocale.c (setname): Do nothing when reusing the same
+	name.
+
+1997-07-03 20:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add global variables of malloc.
+
+1997-07-03 13:24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-version.c (find_needed): Look for needed objects also in
+	the dependency list of the current object.  Added new parameter to
+	find its link map, caller changed.
+
+1997-07-03 12:33  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Correct the FE_INEXACT and
+	FE_UNDERFLOW cases.
+
+1997-07-01 13:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/link.h: Remove final comma from enumerator list, forbidden
+	by ISO C.  Use __inline instead of inline.
+
+1997-07-01 16:40  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c: Include <hurd/id.h>.
+	(reauth_proc): Call proc_setowner appropriately too.
+
+1997-07-01 09:18  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libc.map: Add missing symbol.
+
+1997-06-30 12:12  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/mach/hurd/fchdir.c: Make fchdir a weak alias of __fchdir.
+	* sysdeps/mach/hurd/getpeername.c (getpeername): Remove spurious
+	declaration of addr.
+
+1997-06-29 17:56  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/argp.texi (Argp Option Vectors): Fix use of @math to make
+	it work in TeX.
+
+1997-06-27 21:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (+includes): Add include directory to include path.
+	* configure.in (sysnames): Don't add it here.
+	* Makefile (subdir-dirs): Define and add it to vpath for headers.
+	* Make-dist (all-headers): Look in include directory for
+	indirection headers.  Filter out header names pointing outside the
+	source directory.
+
+	* Makefile (distribute): Remove ansidecl.h, add libc.map.
+	* Make-dist (+tsrcs): Add version scripts for extra libraries.
+	* Makerules (distinfo-vars): Add %-map for extra libraries.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Rename sys/kernel_termios.h
+	to kernel_termios.h.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Remove ioctl-types.h,
+	termbits.h and sys/kernel_termios.h.
+	* sysdeps/mips/mips64/Dist: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add stdio_lim.h.in.
+
+1997-06-29 23:03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/test-fenv.c (feenv_nomask_test): New test for non masked
+	exceptions.
+	(feenv_mask_test): New test for masked exceptions
+	(feenv_tests): New function calls feenv_nomask_test and
+	feenv_mask_test.
+	(main): Call new tests.
+	(initial_tests): New test for initilisation.
+
 1997-06-29 23:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* config.make.in: Define need-nopic-initfini.

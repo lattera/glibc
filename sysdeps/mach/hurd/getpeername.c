@@ -30,7 +30,6 @@
 int
 getpeername (fd, addrarg, len)
      int fd;
-     struct sockaddr *addr;
      __SOCKADDR_ARG addrarg;
      size_t *len;
 {

@@ -79,7 +79,7 @@ static const char *cmdname;
 static const char *svcclosetime = "120";
 static const char *CPP = SVR4_CPP;
 static char CPPFLAGS[] = "-C";
-static char pathbuf[MAXPATHLEN + 1];
+static char pathbuf[FILENAME_MAX + 1];
 static const char *allv[] = {
 	"rpcgen", "-s", "udp", "-s", "tcp",
 };

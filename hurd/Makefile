@@ -68,19 +68,6 @@ distribute += hurdmalloc.h
 include ../mach/Machrules
 include ../Rules
 
-# XXX sunrpc doesn't build yet for Hurd, but its headers are
-# crucial nontheless.  So sysdeps/mach/hurd/Makefile elides sunrpc
-# from $(subdirs), and this rule arranges for the headers in question
-# to get installed.
-sunrpc-headers = netdb.h pmap_prot.h xdr.h types.h auth.h \
-	rpc_msg.h auth_unix.h clnt.h
-installed-sunrpc-headers = $(addprefix $(inst_includedir)/rpc/, \
-				       $(sunrpc-headers))
-install-headers-nosubdir: $(installed-sunrpc-headers)
-$(installed-sunrpc-headers): $(inst_includedir)/%: $(..)sunrpc/%
-	$(do-install)
-
-
 # intr-rpc.defs defines the INTR_INTERFACE macro to make the generated RPC
 # stubs import <hurd/signal.h> and #define __mach_msg to
 # _hurd_intr_rpc_mach_msg.

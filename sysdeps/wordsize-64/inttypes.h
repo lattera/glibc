@@ -46,7 +46,7 @@ typedef unsigned long int  uint64_t;
 
 
 /* Largest integral types.  */
-typedef long long int      intmax_t;
+typedef long int	   intmax_t;
 typedef unsigned long int uintmax_t;
 
 
@@ -147,12 +147,12 @@ typedef unsigned long int uint_fast64_t;
 
 
 /* Minimum for most efficient signed integral types.  */
-#define INTFAST_MIN		(-128)
+#define INTFAST_MIN		(-9223372036854775807L-1)
 /* Maximum for most efficient signed integral types.  */
-#define INTFAST_MAX		(127)
+#define INTFAST_MAX		(9223372036854775807L)
 
 /* Maximum for most efficient unsigned integral types.  */
-#define UINTFAST_MAX		(255)
+#define UINTFAST_MAX		(18446744073709551615uL)
 
 
 /* Minimum for largest signed integral type.  */

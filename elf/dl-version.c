@@ -53,13 +53,19 @@ extern char **_dl_argv;
 
 
 static inline struct link_map *
-find_needed (const char *name)
+find_needed (const char *name, struct link_map *map)
 {
   unsigned int n;
 
   for (n = 0; n < _dl_loaded->l_nsearchlist; ++n)
     if (_dl_name_match_p (name, _dl_loaded->l_searchlist[n]))
       return _dl_loaded->l_searchlist[n];
+
+  /* The required object is not in the global scope, look to see if it is
+     a dependency of the current object.  */
+  for (n = 0; n < map->l_nsearchlist; n++)
+    if (_dl_name_match_p (name, map->l_searchlist[n]))
+      return map->l_searchlist[n];
 
   /* Should never happen.  */
   return NULL;
@@ -182,7 +188,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
       while (1)
 	{
 	  ElfW(Vernaux) *aux;
-	  struct link_map *needed = find_needed (strtab + ent->vn_file);
+	  struct link_map *needed = find_needed (strtab + ent->vn_file, map);
 
 	  /* If NEEDED is NULL this means a dependency was not found
 	     and no stub entry was created.  This should never happen.  */

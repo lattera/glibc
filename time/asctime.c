@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <time.h>
 
+/* This is defined in locale/C-time.c in the GNU libc.  */
+extern const struct locale_data _nl_C_LC_TIME;
+#define ab_day_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABDAY_1)].string)
+#define ab_month_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABMON_1)].string)
 
 static const char format[] = "%.3s %.3s%3d %.2d:%.2d:%.2d %d\n";
 static char result[	         3+1+ 3+1+20+1+20+1+20+1+20+1+20+1 + 1];
@@ -45,9 +49,9 @@ __asctime_r (const struct tm *tp, char *buf)
 
   if (sprintf (buf, format,
 	       (tp->tm_wday < 0 || tp->tm_wday >= 7 ?
-		"???" : _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday)),
+		"???" : ab_day_name[tp->tm_wday]),
 	       (tp->tm_mon < 0 || tp->tm_mon >= 12 ?
-		"???" : _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon)),
+		"???" : ab_month_name[tp->tm_mon]),
 	       tp->tm_mday, tp->tm_hour, tp->tm_min,
 	       tp->tm_sec, 1900 + tp->tm_year) < 0)
     return NULL;
