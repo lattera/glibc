@@ -1,3 +1,8 @@
+2004-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/clock_settime.c (clock_settime): Fix typo which
+	prevented system-dependent handling from being used.
+
 2004-02-18  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* test-skeleton.c (main): If set, use environment variable

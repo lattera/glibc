@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -65,6 +65,7 @@ __pthread_cond_signal:
 	movl	total_seq(%edi), %ecx
 	cmpl	4(%ebx), %eax
 #if cond_lock != 0
+	/* Must use leal to preserve the flags.  */
 	leal	cond_lock(%edi), %edi
 #endif
 	ja	3f
@@ -76,7 +77,7 @@ __pthread_cond_signal:
 3:	addl	$1, (%ebx)
 	adcl	$0, 4(%ebx)
 
-	/* Wake up one thread by moving it to the internal lock futex.  */
+	/* Wake up one thread.  */
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	movl	$1, %edx

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,8 +59,8 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 	retval = settimeofday (&tv, NULL);				      \
       } while (0)
 
-#ifdef SYSDEP_GETTIME
-      SYSDEP_GETTIME;
+#ifdef SYSDEP_SETTIME
+      SYSDEP_SETTIME;
 #endif
 
 #ifndef HANDLED_REALTIME
