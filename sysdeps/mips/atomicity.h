@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations. Mips version.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #define _MIPS_ATOMICITY_H    1
 
 #include <inttypes.h>
+#include <sgidefs.h>
 
 static inline int
 __attribute__ ((unused))
@@ -85,7 +86,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
 #if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
 #endif
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+#if _MIPS_SIM == _MIPS_SIM_ABI64
      "lld	%1,%5\n\t"
 #else
      "ll	%1,%5\n\t"
@@ -93,7 +94,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+#if _MIPS_SIM == _MIPS_SIM_ABI64
      "scd	%0,%2\n\t"
 #else
      "sc	%0,%2\n\t"

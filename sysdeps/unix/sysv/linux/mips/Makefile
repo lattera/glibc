@@ -21,15 +21,16 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/s
 	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
 	 echo '#endif'; \
 	 echo ''; \
+	 echo '#include <sgidefs.h>'; \
 	 rm -f $(@:.d=.h).newt; \
 	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t -MT '$(@:.d=.h) $(@:.h=.d)' \
 	       -x c -I $(common-objdir) $(sysincludes) $< -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' \
 	     > $(@:.d=.h).newt; \
 	 if grep SYS_O32_ $(@:.d=.h).newt > /dev/null; then \
-	   echo '#if defined _ABI64 && _MIPS_SIM == _ABI64'; \
+	   echo '#if _MIPS_SIM == _MIPS_SIM_ABI64'; \
 	   sed -n 's/^\(#define SYS_\)N64_/\1/p' < $(@:.d=.h).newt; \
-	   echo '#elif defined _ABIN32 && _MIPS_SIM == _ABIN32'; \
+	   echo '#elif _MIPS_SIM == _MIPS_SIM_NABI32'; \
 	   sed -n 's/^\(#define SYS_\)N32_/\1/p' < $(@:.d=.h).newt; \
 	   echo '#else'; \
 	   sed -n 's/^\(#define SYS_\)O32_/\1/p' < $(@:.d=.h).newt; \

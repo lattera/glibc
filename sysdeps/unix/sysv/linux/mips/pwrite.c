@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,6 +28,7 @@
 #include <bp-checks.h>
 
 #include <kernel-features.h>
+#include <sgidefs.h>
 
 #ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
 # ifdef __NR_pwrite
@@ -51,14 +53,14 @@ __libc_pwrite (fd, buf, count, offset)
 {
   ssize_t result;
 
-#if (defined _ABI64 && _MIPS_SIM != _ABI64)
+#if _MIPS_SIM == _MIPS_SIM_ABI64
   assert (sizeof (offset) == 4);
 #endif
 
   if (SINGLE_THREAD_P)
     {
       /* First try the syscall.  */
-#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+#if _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64
       result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
 			       offset);
 #else
@@ -76,7 +78,7 @@ __libc_pwrite (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* First try the syscall.  */
-#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+#if _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64
   result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,

@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  MIPS version.
-   Copyright (C) 1992, 1993, 1995, 1997, 2000, 2002, 2003
+   Copyright (C) 1992, 1993, 1995, 1997, 2000, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,6 +21,8 @@
 #ifndef _SETJMP_H
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
+
+#include <sgidefs.h>
 
 typedef struct
   {
@@ -60,7 +62,7 @@ typedef struct
     int __fpc_csr;
 
     /* Callee-saved floating point registers.  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+#if _MIPS_SIM == _MIPS_SIM_ABI64
     double __fpregs[8];
 #else
     double __fpregs[6];

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
+
+#include <sgidefs.h>
 
 #ifndef sigcontext_struct
 /* Kernel headers before 2.1.1 define a struct sigcontext_struct, but

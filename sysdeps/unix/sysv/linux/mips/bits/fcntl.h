@@ -23,7 +23,7 @@
 #endif
 
 #include <sys/types.h>
-
+#include <sgidefs.h>
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -143,7 +143,7 @@ typedef struct flock
 #ifndef __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-#if ! (defined _ABI64 && _MIPS_SIM == _ABI64)
+#if _MIPS_SIM != _MIPS_SIM_ABI64
     /* The 64-bit flock structure, used by the n64 ABI, and for 64-bit
        fcntls in o32 and n32, never has this field.  */
     long int l_sysid;
@@ -153,7 +153,7 @@ typedef struct flock
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
 #endif
     __pid_t l_pid;	/* Process holding the lock.  */
-#if ! defined __USE_FILE_OFFSET64 && ! (defined _ABI64 && _MIPS_SIM == _ABI64)
+#if ! defined __USE_FILE_OFFSET64 && _MIPS_SIM != _MIPS_SIM_ABI64
     /* The 64-bit flock structure, used by the n64 ABI, and for 64-bit
        flock in o32 and n32, never has this field.  */
     long int pad[4];

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maciej W. Rozycki <macro@ds2.pg.gda.pl>, 2000.
 
@@ -21,6 +21,8 @@
 #define _SYS_TAS_H 1
 
 #include <features.h>
+
+#include <sgidefs.h>
 
 __BEGIN_DECLS
 

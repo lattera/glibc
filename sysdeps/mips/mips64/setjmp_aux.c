@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -29,7 +29,7 @@ __sigsetjmp_aux (jmp_buf env, int savemask, long long sp, long long fp,
 		 long long gp)
 {
   /* Store the floating point callee-saved registers...  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
+#if _MIPS_SIM == _MIPS_SIM_ABI64
   asm volatile ("s.d $f24, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[0]));
   asm volatile ("s.d $f25, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[1]));
   asm volatile ("s.d $f26, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[2]));

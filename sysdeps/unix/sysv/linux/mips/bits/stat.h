@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003
+/* Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,6 +20,8 @@
 #ifndef _SYS_STAT_H
 # error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
 #endif
+
+#include <sgidefs.h>
 
 /* Versions of the `struct stat' data structure.  */
 #define _STAT_VER_LINUX_OLD	1

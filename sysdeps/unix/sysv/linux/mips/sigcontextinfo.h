@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -17,6 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+
+#include <sgidefs.h>
 
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 

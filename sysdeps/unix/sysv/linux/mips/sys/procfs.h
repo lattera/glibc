@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003
+/* Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,12 +28,13 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/user.h>
+#include <sgidefs.h>
 
 /* ELF register definitions */
 #define ELF_NGREG	45
 #define ELF_NFPREG	33
 
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if _MIPS_SIM == _MIPS_SIM_NABI32
 __extension__ typedef unsigned long long elf_greg_t;
 #else
 typedef unsigned long elf_greg_t;
@@ -64,7 +65,7 @@ struct elf_prstatus
   {
     struct elf_siginfo pr_info;		/* Info associated with signal.  */
     short int pr_cursig;		/* Current signal.  */
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if _MIPS_SIM == _MIPS_SIM_NABI32
     __extension__ unsigned long long int pr_sigpend;
     __extension__ unsigned long long int pr_sighold;
 #else
@@ -92,7 +93,7 @@ struct elf_prpsinfo
     char pr_sname;			/* Char for pr_state.  */
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if _MIPS_SIM == _MIPS_SIM_NABI32
     __extension__ unsigned long long int pr_flag;
 #else
     unsigned long int pr_flag;		/* Flags.  */

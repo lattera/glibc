@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 2000, 2002, 2003
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000, 2002, 2003, 2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,8 +26,9 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
+#include <sgidefs.h>
 
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+#if  _MIPS_SIM == _MIPS_SIM_NABI32
 __extension__ typedef long long int reg_type;
 #else
 typedef long int reg_type;
