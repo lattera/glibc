@@ -23,7 +23,9 @@
 /* Include macros to convert between `sigset_t' and old-style mask. */
 #include <sigset-cvt-mask.h>
 
-/* We use a wrapper handler to support SV_RESETHAND.  */
+#ifndef SA_RESETHAND
+/* When sigaction lacks the extension bit for it,
+   we use a wrapper handler to support SV_RESETHAND.  */
 struct sigvec_wrapper_data
 {
   __sighandler_t sw_handler;
@@ -33,6 +35,7 @@ struct sigvec_wrapper_data
 static void sigvec_wrapper_handler __P ((int sig));
 
 static struct sigvec_wrapper_data sigvec_wrapper_data[NSIG];
+#endif
 
 
 /* If VEC is non-NULL, set the handler for SIG to the `sv_handler' member
@@ -48,7 +51,9 @@ __sigvec (sig, vec, ovec)
 {
   struct sigaction old;
 
+#ifndef SA_RESETHAND
   if (vec == NULL || !(vec->sv_flags & SV_RESETHAND))
+#endif
     {
       struct sigaction new, *n;
 
@@ -78,6 +83,10 @@ __sigvec (sig, vec, ovec)
 	  if (!(sv_flags & SV_INTERRUPT))
 	    sa_flags |= SA_RESTART;
 #endif
+#ifdef SA_RESETHAND
+	  if (sv_flags & SV_RESETHAND)
+	    sa_flags |= SA_RESETHAND;
+#endif
 	  n = &new;
 	  new.sa_handler = handler;
 	  if (sigset_set_old_mask (&new.sa_mask, mask) < 0)
@@ -88,6 +97,7 @@ __sigvec (sig, vec, ovec)
       if (__sigaction (sig, n, &old) < 0)
 	return -1;
     }
+#ifndef SA_RESETHAND
   else
     {
       __sighandler_t handler;
@@ -106,6 +116,7 @@ __sigvec (sig, vec, ovec)
       if (__sigaction (sig, &wrapper, &old) < 0)
 	return -1;
     }
+#endif
 
   if (ovec != NULL)
     {
@@ -117,12 +128,17 @@ __sigvec (sig, vec, ovec)
       handler = old.sa_handler;
       sv_flags = 0;
       sa_flags = old.sa_flags;
+#ifndef SA_RESETHAND
       if (handler == sigvec_wrapper_handler)
 	{
 	  handler = sigvec_wrapper_data[sig].sw_handler;
 	  /* should we use data->sw_mask?? */
 	  sv_flags |= SV_RESETHAND;
 	}
+#else
+     if (sa_flags & SA_RESETHAND)
+	sv_flags |= SV_RESETHAND;
+#endif
       mask = sigset_get_old_mask (&old.sa_mask);
 #ifdef SA_ONSTACK
      if (sa_flags & SA_ONSTACK)
@@ -142,7 +158,7 @@ __sigvec (sig, vec, ovec)
 
 weak_alias (__sigvec, sigvec)
 
-
+#ifndef SA_RESETHAND
 static void
 sigvec_wrapper_handler (sig)
      int sig;
@@ -163,3 +179,4 @@ sigvec_wrapper_handler (sig)
 
   (*handler) (sig);
 }
+#endif
