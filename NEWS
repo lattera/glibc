@@ -107,8 +107,10 @@ Version 2.0
 * The resolver code has been updated from the BIND 4.9.4-T3B release.
 
 * The new function `malloc_find_object_address' finds the starting address
-  of a malloc'd block, given any address within the block.  This can be
-  useful for debugging.
+  of a malloc'd block, given any address within the block;
+  `malloc_object_allocated_size' returns the size of an allocated block;
+  and `malloc_walk' lets you walk through all allocated blocks.  These can
+  be useful for debugging; see <malloc.h> for the interfaces.
 
 * There is a new malloc debugging hook `__memalign_hook'.
 

@@ -22,13 +22,21 @@
 subdir	:= resolv
 
 headers	:= resolv.h netdb.h arpa/nameser.h sys/bitypes.h
-distribute := ../conf/portability.h res_hconf.h
+distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h
 
-routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
-	    herror nsap_addr res_comp res_debug res_data res_init res_mkquery \
-	    res_query res_send sethostent inet_addr inet_ntop inet_pton \
-	    res_hconf
+routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init
+
+extra-libs := libresolv
+libresolv-routines := gethnamaddr res_comp res_debug res_data res_mkquery \
+		      res_query res_send
 
 include ../Rules
 
+CPPFLAGS += -Dgethostbyname=res_gethostbyname \
+	    -Dgethostbyname2=res_gethostbyname2 \
+	    -Dgethostbyaddr=res_gethostbyaddr \
+	    -Dgetnetbyname=res_getnetbyname \
+	    -Dgetnetbyaddr=res_getnetbyaddr
+
+# The BIND code elicits some harmless warnings.
 +cflags += -Wno-strict-prototypes -Wno-comment -Wno-write-strings

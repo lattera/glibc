@@ -113,6 +113,13 @@ Sun Jun 23 15:24:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 Sun Jun 23 19:42:05 1996  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/Makefile (distribute): Remove res_hconf.h; add mapv4v6addr.h
+	and mapv4v6hostent.h.
+	(routines): Move res* and gethnamaddr into libresolv-routines.
+	(libresolv-routines): New variable, put them there.
+	(extra-libs): New variable, list libresolv.
+	(CPPFLAGS): Add -D for get*by* to res_get*by*.
+
 	* resolv/netdb.h (_PATH_NSSWITCH_CONF): New macro.
 
 	* inet/herrno.c: New file.
