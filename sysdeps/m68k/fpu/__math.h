@@ -85,7 +85,6 @@ __inline_mathop(__fabs, abs)
 __inline_mathop(__rint, int)
 __inline_mathop(__expm1, etoxm1)
 __inline_mathop(__log1p, lognp1)
-__inline_mathop(__logb, log2)
 __inline_mathop(__significand, getman)
 
 __inline_mathop(__log2, log2)
@@ -103,7 +102,6 @@ __inline_mathop(tanh, tanh)
 __inline_mathop(rint, int)
 __inline_mathop(expm1, etoxm1)
 __inline_mathop(log1p, lognp1)
-__inline_mathop(logb, log2)
 #endif
 
 #ifdef __USE_MISC
@@ -137,90 +135,6 @@ __m81_defun (float_type, __CONCAT(__ieee754_fmod,s),			     \
 {									     \
   float_type __result;							     \
   __asm("fmod%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));	     \
-  return __result;							     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__ieee754_atan2,s),			     \
-	     (float_type __y, float_type __x))				     \
-{									     \
-  float_type __pi, __pi_2;						     \
-									     \
-  __asm ("fmovecr%.x %#0, %0" : "=f" (__pi));				     \
-  __asm ("fscale%.w %#-1, %0" : "=f" (__pi_2) : "0" (__pi));		     \
-  if (__x > 0)								     \
-    {									     \
-      if (__y > 0)							     \
-	{								     \
-	  if (__x > __y)						     \
-	    return __m81_u(__CONCAT(__atan,s)) (__y / __x);		     \
-	  else								     \
-	    return __pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
-	}								     \
-      else								     \
-	{								     \
-	  if (__x > -__y)						     \
-	    return __m81_u(__CONCAT(__atan,s)) (__y / __x);		     \
-	  else								     \
-	    return -__pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
-	}								     \
-    }									     \
-  else									     \
-    {									     \
-      if (__y > 0)							     \
-	{								     \
-	  if (-__x < __y)						     \
-	    return __pi + __m81_u(__CONCAT(__atan,s)) (__y / __x);	     \
-	  else								     \
-	    return __pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
-	}								     \
-      else								     \
-	{								     \
-	  if (-__x > -__y)						     \
-	    return -__pi + __m81_u(__CONCAT(__atan,s)) (__y / __x);	     \
-	  else								     \
-	    return -__pi_2 - __m81_u(__CONCAT(__atan,s)) (__x / __y);	     \
-	}								     \
-    }									     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__ieee754_pow,s),			     \
-	     (float_type __x, float_type __y))				     \
-{									     \
-  float_type __result;							     \
-  if (__x == 0.0)							     \
-    {									     \
-      if (__y <= 0.0)							     \
-	__result = 0.0 / 0.0;						     \
-      else								     \
-	__result = 0.0;							     \
-    }									     \
-  else if (__y == 0.0 || __x == 1.0)					     \
-    __result = 1.0;							     \
-  else if (__y == 1.0)							     \
-    __result = __x;							     \
-  else if (__y == 2.0)							     \
-    __result = __x * __x;						     \
-  else if (__x == 10.0)							     \
-    __asm("ftentox%.x %1, %0" : "=f" (__result) : "f" (__y));		     \
-  else if (__x == 2.0)							     \
-    __asm("ftwotox%.x %1, %0" : "=f" (__result) : "f" (__y));		     \
-  else if (__x < 0.0)							     \
-    {									     \
-      float_type __temp = __m81_u (__CONCAT(__rint,s)) (__y);		     \
-      if (__y == __temp)						     \
-	{								     \
-	  int __i = (int) __y;						     \
-	  __result = (__m81_u(__CONCAT(__ieee754_exp,s))		     \
-		      (__y * __m81_u(__CONCAT(__ieee754_log,s)) (-__x)));    \
-	  if (__i & 1)							     \
-	    __result = -__result;					     \
-	}								     \
-      else								     \
-	__result = 0.0 / 0.0;						     \
-    }									     \
-  else									     \
-    __result = (__m81_u(__CONCAT(__ieee754_exp,s))			     \
-		(__y * __m81_u(__CONCAT(__ieee754_log,s)) (__x)));	     \
   return __result;							     \
 }									     \
 									     \
