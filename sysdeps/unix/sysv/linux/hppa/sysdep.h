@@ -380,22 +380,22 @@
 
 #define LOAD_ARGS_0()
 #define LOAD_ARGS_1(r26)					\
-	register unsigned long __r26 __asm__("r26") = (unsigned long)r26;     \
+	register unsigned long __r26 __asm__("r26") = (unsigned long)(r26);   \
 	LOAD_ARGS_0()
 #define LOAD_ARGS_2(r26,r25)					\
-	register unsigned long __r25 __asm__("r25") = (unsigned long)r25;     \
+	register unsigned long __r25 __asm__("r25") = (unsigned long)(r25);   \
 	LOAD_ARGS_1(r26)
 #define LOAD_ARGS_3(r26,r25,r24)				\
-	register unsigned long __r24 __asm__("r24") = (unsigned long)r24;     \
+	register unsigned long __r24 __asm__("r24") = (unsigned long)(r24);   \
 	LOAD_ARGS_2(r26,r25)
 #define LOAD_ARGS_4(r26,r25,r24,r23)				\
-	register unsigned long __r23 __asm__("r23") = (unsigned long)r23;     \
+	register unsigned long __r23 __asm__("r23") = (unsigned long)(r23);   \
 	LOAD_ARGS_3(r26,r25,r24)
 #define LOAD_ARGS_5(r26,r25,r24,r23,r22)			\
-	register unsigned long __r22 __asm__("r22") = (unsigned long)r22;     \
+	register unsigned long __r22 __asm__("r22") = (unsigned long)(r22);   \
 	LOAD_ARGS_4(r26,r25,r24,r23)
 #define LOAD_ARGS_6(r26,r25,r24,r23,r22,r21)			\
-	register unsigned long __r21 __asm__("r21") = (unsigned long)r21;     \
+	register unsigned long __r21 __asm__("r21") = (unsigned long)(r21);   \
 	LOAD_ARGS_5(r26,r25,r24,r23,r22)
 
 /* Even with zero args we use r20 for the syscall number */
