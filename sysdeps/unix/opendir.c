@@ -40,6 +40,10 @@
    a guinea pig.  It may be missing in chroot environments, so we
    make sure to fail safe. */
 #ifdef O_DIRECTORY
+# ifdef O_DIRECTORY_WORKS
+#  define o_directory_works 1
+#  define tryopen_o_directory() while (1) /* This must not be called.  */
+# else
 static int o_directory_works;
 
 static void
@@ -60,6 +64,7 @@ tryopen_o_directory (void)
 
   __set_errno (serrno);
 }
+# endif
 # define EXTRA_FLAGS O_DIRECTORY
 #else
 # define EXTRA_FLAGS 0

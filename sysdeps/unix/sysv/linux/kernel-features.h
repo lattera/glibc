@@ -142,3 +142,9 @@
 #if __LINUX_KERNEL_VERSION >= 132097
 # define __ASSUME_GETDENTS64_SYSCALL	1
 #endif
+
+/* When did O_DIRECTORY became available?  Early in 2.3 but when?
+   Be safe, use 2.3.99.  */
+#if __LINUX_KERNEL_VERSION >= 131939
+# define __ASSUME_O_DIRECTORY	1
+#endif

@@ -1,5 +1,12 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/opendir.c: If O_DIRECTORY_WORKS is defined don't
+	use the hack with tryopen_o_directory to determine at runtime
+	whether it works.
+	* sysdeps/unix/sysv/linux/opendir.c: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_O_DIRECTORY if kernel knows O_DIRECTORY.
+
 	* catgets/Depend: New file.  Add intl.
 	* catgets/Makefile (tests): Add tst-catgets.
 	(generated): Remove de.msg.
