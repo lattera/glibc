@@ -39,6 +39,7 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 extern size_t _dl_pagesize;
+extern int _dl_clktck;
 extern const char *_dl_platform;
 extern unsigned long int _dl_hwcap;
 extern size_t _dl_platformlen;
@@ -132,6 +133,9 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       case AT_HWCAP:
 	_dl_hwcap = av->a_un.a_val;
+	break;
+      case AT_CLKTCK:
+	_dl_clktck = av->a_un.a_val;
 	break;
       case AT_FPUCW:
 	_dl_fpu_control = av->a_un.a_val;
@@ -264,13 +268,19 @@ _dl_show_auxv (void)
       case AT_HWCAP:
 	_dl_hwcap = av->a_un.a_val;
 	if (_dl_procinfo (_dl_hwcap) < 0)
-	  _dl_sysdep_message ("AT_HWCAP:    ",
+	  _dl_sysdep_message ("AT_HWCAP:  ",
 			      _itoa_word (_dl_hwcap, buf + sizeof buf - 1,
 					  16, 0),
 			      "\n", NULL);
 	break;
+      case AT_CLKTCK:
+	_dl_sysdep_message ("AT_CLKTCK:   ",
+			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
+					10, 0),
+			    "\n", NULL);
+	break;
       case AT_FPUCW:
-	_dl_sysdep_message ("AT_FPUCW:     ",
+	_dl_sysdep_message ("AT_FPUCW:    ",
 			    _itoa_word (av->a_un.a_val, buf + sizeof buf - 1,
 					10, 0),
 			    "\n", NULL);

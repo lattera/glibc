@@ -862,6 +862,7 @@ typedef struct
 #define AT_EUID		12		/* Effective uid */
 #define AT_GID		13		/* Real gid */
 #define AT_EGID		14		/* Effective gid */
+#define AT_CLKTCK	17		/* Frequency of times() */
 
 /* Some more special a_type values describing the hardware.  */
 #define AT_PLATFORM	15		/* String identifying platform.  */
@@ -870,7 +871,7 @@ typedef struct
 
 /* This entry gives some information about the FPU initialization
    performed by the kernel.  */
-#define AT_FPUCW	17		/* Used FPU control word.  */
+#define AT_FPUCW	18		/* Used FPU control word.  */
 
 
 /* Note section contents.  Each entry in the note section begins with

@@ -1,5 +1,24 @@
 2000-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Versions [ld] (GLIBC_2.2): Export _dl_clktck and _dl_pagesize.
+	* elf/dl-load.c: Define _dl_clktck.
+	* elf/elf.h: Define AT_CLKTCK.
+	* include/time.h: Declare __getclktck.
+	* misc/Makefile (routines): Add getclktck.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Handle AT_CLKTCK.
+	(_dl_show_auxv): Show AT_CLKTCK value.
+	* sysdeps/generic/getclktck.c: New file.
+	* sysdeps/unix/sysv/linux/getclktck.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/getclktck.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/getclktck.c: New file.
+	* sysdeps/posix/sysconf.c: Use __getclktck to handle _SC_CLK_TCK.
+	* sysdeps/unix/sysv/linux/getpagesize.c: New file.
+	* sysdeps/unix/sysv/linux/bits/time.h: Use __sysconf to for CLK_TCK.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/time.h: Likewise.
+
 	* sunrpc/clnt_gen.c (clnt_create): Don't set timeout with
 	clnt_control for any protocol.  This would make it impossible for
 	the user to provide one in clnt_call().

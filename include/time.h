@@ -64,5 +64,9 @@ extern long int __tzname_max (void);
 extern int __nanosleep (__const struct timespec *__requested_time,
 			struct timespec *__remaining);
 extern int __getdate_r (__const char *__string, struct tm *__resbufp);
+
+
+/* Determine CLK_TCK value.  */
+extern int __getclktck (void);
 #endif
 #endif

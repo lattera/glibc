@@ -55,11 +55,7 @@ __sysconf (name)
 #endif
 
     case _SC_CLK_TCK:
-#ifdef	CLK_TCK
-      return CLK_TCK;
-#else
-      return 60;
-#endif
+      return __getclktck ();
 
     case _SC_NGROUPS_MAX:
 #ifdef	NGROUPS_MAX

@@ -112,6 +112,8 @@ struct filebuf
 
 size_t _dl_pagesize;
 
+int _dl_clktck;
+
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 

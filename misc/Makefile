@@ -57,7 +57,7 @@ routines := brk sbrk sstk ioctl \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \
 	    getsysstats dirname regexp \
-	    getloadavg
+	    getloadavg getclktck
 
 distribute := device-nrs.h
 
