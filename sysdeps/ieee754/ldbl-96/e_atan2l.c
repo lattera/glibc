@@ -80,7 +80,7 @@ pi_lo   = -5.01655761266833202345176e-20L;/* 0xBFBE, 0xECE675D1, 0xFC8F8CBB */
 	if(((2*ix|((lx|-lx)>>31))>0xfffe)||
 	   ((2*iy|((ly|-ly)>>31))>0xfffe))	/* x or y is NaN */
 	   return x+y;
-	if((sx-0x3fff|lx)==0) return __atanl(y);   /* x=1.0 */
+	if(((sx-0x3fff)|lx)==0) return __atanl(y);   /* x=1.0 */
 	m = ((sy>>15)&1)|((sx>>14)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */
