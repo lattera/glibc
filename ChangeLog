@@ -1,3 +1,9 @@
+2002-12-16  Jakub Jelinek  <jakub@redhat.com>
+            Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (group_nodes_into_DFAstates): Never produce
+	dests_ch items that are empty.
+
 2003-12-14  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (check_arrival): Remove duplicate test.

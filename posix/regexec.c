@@ -3402,30 +3402,36 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 
 	  if (constraint & NEXT_WORD_CONSTRAINT)
 	    {
+	      unsigned int any_set = 0;
 #ifdef RE_ENABLE_I18N
 	      if (dfa->mb_cur_max > 1)
 		for (j = 0; j < BITSET_UINTS; ++j)
-		  accepts[j] &= (dfa->word_char[j] | ~dfa->sb_char[j]);
+		  any_set |= (accepts[j] &= (dfa->word_char[j] | ~dfa->sb_char[j]));
 	      else
 #endif
 		for (j = 0; j < BITSET_UINTS; ++j)
-		  accepts[j] &= dfa->word_char[j];
+		  any_set |= (accepts[j] &= dfa->word_char[j]);
+	      if (!any_set)
+		continue;
 	    }
 	  if (constraint & NEXT_NOTWORD_CONSTRAINT)
 	    {
+	      unsigned int any_set = 0;
 #ifdef RE_ENABLE_I18N
 	      if (dfa->mb_cur_max > 1)
 		for (j = 0; j < BITSET_UINTS; ++j)
-		  accepts[j] &= ~(dfa->word_char[j] & dfa->sb_char[j]);
+		  any_set |= (accepts[j] &= ~(dfa->word_char[j] & dfa->sb_char[j]));
 	      else
 #endif
 		for (j = 0; j < BITSET_UINTS; ++j)
-		  accepts[j] &= ~dfa->word_char[j];
+		  any_set |= (accepts[j] &= ~dfa->word_char[j]);
+	      if (!any_set)
+		continue;
 	    }
 	}
 
       /* Then divide `accepts' into DFA states, or create a new
-	 state.  */
+	 state.  Above, we make sure that accepts is not empty.  */
       for (j = 0; j < ndests; ++j)
 	{
 	  bitset intersec; /* Intersection sets, see below.  */
