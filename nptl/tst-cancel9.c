@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -31,7 +31,7 @@ static pthread_barrier_t b;
 static void
 cleanup (void *arg)
 {
-  fprintf (stderr, "in cleanup\n");
+  fputs ("in cleanup\n", stdout);
 }
 
 
