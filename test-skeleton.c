@@ -166,6 +166,10 @@ main (int argc, char *argv[])
   /* make sure temporary files are deleted.  */
   atexit (delete_temp_files);
 
+  /* Correct for the possible parameters.  */
+  argv += optind - 1;
+  argc -= optind - 1;
+
   /* Call the initializing function, if one is available.  */
 #ifdef PREPARE
   PREPARE (argc, argv);

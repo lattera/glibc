@@ -126,24 +126,27 @@ do_test (int argc, char *argv[])
   int status;
 
   /* We must have
-     - five parameters left of called initially
-       + --
+     - four parameters left of called initially
        + path for ld.so
        + "--library-path"
        + the library path
        + the application name
-     - five parameters left if called through re-execution
-       + --direct
-       + --restart
+     - three parameters left if called through re-execution
        + file descriptor number which is supposed to be closed
        + the open file descriptor
        + the name of the closed desriptor
   */
-  if (argc != 6)
-    error (EXIT_FAILURE, 0, "wrong number of arguments (%d)", argc);
 
   if (restart)
-    return handle_restart (argv[3], argv[4], argv[5]);
+    {
+      if (argc != 4)
+	error (EXIT_FAILURE, 0, "wrong number of arguments (%d)", argc);
+
+      return handle_restart (argv[1], argv[2], argv[3]);
+    }
+
+  if (argc != 5)
+    error (EXIT_FAILURE, 0, "wrong number of arguments (%d)", argc);
 
   /* Prepare the test.  We are creating two files: one which file descriptor
      will be marked with FD_CLOEXEC, another which is not.  */
@@ -182,7 +185,7 @@ do_test (int argc, char *argv[])
       snprintf (fd2name, sizeof fd2name, "%d", fd2);
 
       /* This is the child.  Construct the command line.  */
-      execl (argv[2], argv[2], argv[3], argv[4], argv[5], "--direct",
+      execl (argv[1], argv[1], argv[2], argv[3], argv[4], "--direct",
 	     "--restart", fd1name, fd2name, name1, NULL);
 
       error (EXIT_FAILURE, errno, "cannot exec");

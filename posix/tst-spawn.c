@@ -171,26 +171,23 @@ do_test (int argc, char *argv[])
   char *spargv[12];
 
   /* We must have
-     - five parameters left of called initially
-       + --
+     - four parameters left of called initially
        + path for ld.so
        + "--library-path"
        + the library path
        + the application name
-     - seven parameters left if called through re-execution
-       + --direct
-       + --restart
+     - five parameters left if called through re-execution
        + file descriptor number which is supposed to be closed
        + the open file descriptor
        + the newly opened file descriptor
        + thhe duped second descriptor
        + the name of the closed descriptor
   */
-  if (argc != (restart ? 8 : 6))
+  if (argc != (restart ? 6 : 5))
     error (EXIT_FAILURE, 0, "wrong number of arguments (%d)", argc);
 
   if (restart)
-    return handle_restart (argv[3], argv[4], argv[5], argv[6], argv[7]);
+    return handle_restart (argv[1], argv[2], argv[3], argv[4], argv[5]);
 
   /* Prepare the test.  We are creating two files: one which file descriptor
      will be marked with FD_CLOEXEC, another which is not.  */
@@ -238,10 +235,10 @@ do_test (int argc, char *argv[])
    snprintf (fd3name, sizeof fd3name, "%d", fd3);
    snprintf (fd4name, sizeof fd4name, "%d", fd4);
 
-   spargv[0] = argv[2];
-   spargv[1] = argv[3];
-   spargv[2] = argv[4];
-   spargv[3] = argv[5];
+   spargv[0] = argv[1];
+   spargv[1] = argv[2];
+   spargv[2] = argv[3];
+   spargv[3] = argv[4];
    spargv[4] = (char *) "--direct";
    spargv[5] = (char *) "--restart";
    spargv[6] = fd1name;
@@ -251,7 +248,7 @@ do_test (int argc, char *argv[])
    spargv[10] = name1;
    spargv[11] = NULL;
 
-   if (posix_spawn (&pid, argv[2], &actions, NULL, spargv, environ) != 0)
+   if (posix_spawn (&pid, argv[1], &actions, NULL, spargv, environ) != 0)
      error (EXIT_FAILURE, errno, "posix_spawn");
 
    /* Cleanup.  */

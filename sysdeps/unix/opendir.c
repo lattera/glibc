@@ -81,7 +81,7 @@ __opendir (const char *name)
   size_t allocation;
   int save_errno;
 
-  if (name[0] == '\0')
+  if (__builtin_expect (name[0], '\1') == '\0')
     {
       /* POSIX.1-1990 says an empty name gets ENOENT;
 	 but `open' might like it fine.  */
@@ -101,9 +101,9 @@ __opendir (const char *name)
       /* We first have to check whether the name is for a directory.  We
 	 cannot do this after the open() call since the open/close operation
 	 performed on, say, a tape device might have undesirable effects.  */
-      if (__xstat64 (_STAT_VER, name, &statbuf) < 0)
+      if (__builtin_expect (__xstat64 (_STAT_VER, name, &statbuf), 0) < 0)
 	return NULL;
-      if (! S_ISDIR (statbuf.st_mode))
+      if (__builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
 	{
 	  __set_errno (ENOTDIR);
 	  return NULL;
@@ -111,24 +111,27 @@ __opendir (const char *name)
     }
 
   fd = __open (name, O_RDONLY|O_NDELAY|EXTRA_FLAGS);
-  if (fd < 0)
+  if (__builtin_expect (fd, 0) < 0)
     return NULL;
 
   /* Now make sure this really is a directory and nothing changed since
-     the `stat' call.  */
-  if (__fxstat64 (_STAT_VER, fd, &statbuf) < 0)
+     the `stat' call.  We do not have to perform the test for the
+     descriptor being associated with a directory if we know the
+     O_DIRECTORY flag is honored by the kernel.  */
+  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
     goto lose;
-  if (! S_ISDIR (statbuf.st_mode))
+  if (o_directory_works <= 0
+      && __builtin_expect (! S_ISDIR (statbuf.st_mode), 0))
     {
       save_errno = ENOTDIR;
       goto lose;
     }
 
-  if (__fcntl (fd, F_SETFD, FD_CLOEXEC) < 0)
+  if (__builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
     goto lose;
 
 #ifdef _STATBUF_ST_BLKSIZE
-  if (statbuf.st_blksize < sizeof (struct dirent))
+  if (__builtin_expect (statbuf.st_blksize < sizeof (struct dirent), 0))
     allocation = sizeof (struct dirent);
   else
     allocation = statbuf.st_blksize;

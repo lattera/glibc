@@ -68,7 +68,8 @@ aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
-		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir
+		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
+		   tst-chmod
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -114,6 +115,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` "$(objdir)/$(subdir)" "$(common-objdir)" $(objpfx)tst-dir
+tst-chmod-ARGS = $(objpfx)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata

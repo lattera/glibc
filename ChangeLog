@@ -1,3 +1,17 @@
+2000-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-chmod.
+	(tst-chmod-ARGS): Define.
+	* posix/tst-chmod.c: New file.
+
+	* test-skeleton.c: Before calling user-defined function remove
+	parameters from argument list.
+	* posix/tst-exec.c: Adjust to this change.
+	* posix/tst-spawn.c: Likewise.
+
+	* sysdeps/unix/opendir.c (__opendir): Optimize a bit.  Add
+	__builtin_expect.
+
 2000-10-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile (tests): Add tst-ngettext.
