@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,13 +26,7 @@
 #include <linux/posix_types.h>
 #include "kernel-features.h"
 
-extern int __syscall_chown (const char *__unbounded __file,
-			    __kernel_uid_t __owner, __kernel_gid_t __group);
-
 #ifdef __NR_chown32
-extern int __syscall_chown32 (const char *__unbounded __file,
-			      __kernel_uid32_t owner, __kernel_gid32_t group);
-
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */

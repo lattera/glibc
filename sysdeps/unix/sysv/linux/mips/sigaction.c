@@ -35,11 +35,7 @@
    functions which have RT equivalents.	 This is the definition.  */
 int __libc_missing_rt_sigs;
 
-extern int __syscall_sigaction (int, const struct old_kernel_sigaction *__unbounded,
-				struct old_kernel_sigaction *__unbounded);
 #endif
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
-				   struct kernel_sigaction *__unbounded, size_t);
 
 #if _MIPS_SIM != _MIPS_SIM_ABI32
 

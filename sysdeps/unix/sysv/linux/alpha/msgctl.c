@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -44,8 +44,6 @@ struct __old_msqid_ds
   __ipc_pid_t msg_lspid;		/* pid of last msgsnd() */
   __ipc_pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
-
-extern int __syscall_msgctl (int, int, void *);
 
 /* Allows to control internal state and destruction of message queue
    objects.  */
