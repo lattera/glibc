@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include "pthread.h"
 #include "internals.h"
+#include "spinlock.h"
 
 /* Table of keys. */
 
@@ -78,8 +79,13 @@ int pthread_key_delete(pthread_key_t key)
   th = self;
   do {
     /* If the thread already is terminated don't modify the memory.  */
-    if (!th->p_terminated && th->p_specific[idx1st] != NULL)
-      th->p_specific[idx1st][idx2nd] = NULL;
+    if (!th->p_terminated) {
+      /* pthread_exit() may try to free th->p_specific[idx1st] concurrently. */
+      __pthread_lock(THREAD_GETMEM(th, p_lock), self);
+      if (th->p_specific[idx1st] != NULL)
+	th->p_specific[idx1st][idx2nd] = NULL;
+      __pthread_unlock(THREAD_GETMEM(th, p_lock));
+    }
     th = th->p_nextlive;
   } while (th != self);
   pthread_mutex_unlock(&pthread_keys_mutex);
@@ -151,10 +157,14 @@ void __pthread_destroy_specifics()
           }
         }
   }
+  __pthread_lock(THREAD_GETMEM(self, p_lock), self);
   for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++) {
-    if (THREAD_GETMEM_NC(self, p_specific[i]) != NULL)
+    if (THREAD_GETMEM_NC(self, p_specific[i]) != NULL) {
       free(THREAD_GETMEM_NC(self, p_specific[i]));
+      THREAD_SETMEM_NC(self, p_specific[i], NULL);
+    }
   }
+  __pthread_unlock(THREAD_GETMEM(self, p_lock));
 }
 
 /* Thread-specific data for libc. */

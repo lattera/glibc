@@ -1,3 +1,10 @@
+2000-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* specific.c: Protect tsd array modification in thread data
+	structures by getting the thread lock in pthread_key_delete and
+	__pthread_destroy_specifics.
+	Patch by Wolfram Gloger <Wolfram.Gloger@dent.med.uni-muenchen.de>.
+
 2000-10-12  Alan Modra <alan@linuxcare.com.au>
 
 	* sysdeps/pthread/bits/initspin.h: New file.
