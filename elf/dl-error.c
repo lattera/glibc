@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,12 +75,13 @@ _dl_signal_error (int errcode,
       lcatch->errstring = malloc (objname_len + errstring_len);
       if (lcatch->errstring != NULL)
 	{
+	  char *cp = lcatch->errstring;
 	  if (objname_len > 0)
 	    {
-	      memcpy (lcatch->errstring, objname, objname_len - 2);
-	      memcpy (lcatch->errstring + objname_len - 2, ": ", 2);
+	      cp = __mempcpy (cp, objname, objname_len - 2);
+	      cp = __mempcpy (cp, ": ", 2);
 	    }
-	  memcpy (lcatch->errstring + objname_len, errstring, errstring_len);
+	  memcpy (cp, errstring, errstring_len);
 	}
       longjmp (lcatch->env, errcode ?: -1);
     }
@@ -89,7 +90,7 @@ _dl_signal_error (int errcode,
       /* Lossage while resolving the program's own symbols is always fatal.  */
       char buffer[1024];
       _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			": error in loading shared libraries: ",
+			": error while loading shared libraries: ",
 			objname ?: "", objname && *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode

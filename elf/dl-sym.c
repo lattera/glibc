@@ -35,7 +35,7 @@ _dl_sym (void *handle, const char *name, void *who)
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
     loadbase = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
-  else if (handle == RTLD_NEXT)
+  else
     {
       struct link_map *l, *match;
       ElfW(Addr) caller = (ElfW(Addr)) who;
@@ -46,22 +46,32 @@ _dl_sym (void *handle, const char *name, void *who)
 	if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
 	  match = l;
 
-      if (! match)
-	_dl_signal_error (0, NULL, _("\
+      if (handle != RTLD_NEXT)
+	{
+	  /* Search the scope of the given object.  */
+	  struct link_map *map = handle;
+
+	  if (match == NULL)
+	    /* If the address is not recognized the call comes from the
+	       main program (we hope).  */
+	    match = _dl_loaded;
+
+	  loadbase = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
+					0);
+	}
+      else
+	{
+	  if (! match)
+	    _dl_signal_error (0, NULL, _("\
 RTLD_NEXT used in code not dynamically loaded"));
 
-      l = match;
-      while (l->l_loader)
-	l = l->l_loader;
+	  l = match;
+	  while (l->l_loader)
+	    l = l->l_loader;
 
-      loadbase = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
-					 match);
-    }
-  else
-    {
-      /* Search the scope of the given object.  */
-      struct link_map *map = handle;
-      loadbase = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
+	  loadbase = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
+					     match);
+	}
     }
 
   if (loadbase)

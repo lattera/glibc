@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 struct dl_action_result
   {
     int errcode;
+    int returned;
     char *errstring;
   };
 static struct dl_action_result last_result;
@@ -44,37 +45,40 @@ static void free_key_mem (void *mem);
 char *
 dlerror (void)
 {
-  static char *buf;
+  char *buf;
   struct dl_action_result *result;
-
-  if (buf)
-    {
-      free (buf);
-      buf = NULL;
-    }
 
   /* Get error string.  */
   result = (struct dl_action_result *) __libc_getspecific (key);
   if (result == NULL)
     result = &last_result;
 
-  if (! result->errstring)
-    return NULL;
-
-  if (result->errcode == 0)
-    buf = result->errstring;
+  /* Test whether we already returned the string.  */
+  if (result->returned != 0)
+    {
+      /* We can now free the string.  */
+      if (result->errstring != NULL)
+	{
+	  free (result->errstring);
+	  result->errstring = NULL;
+	}
+      buf = NULL;
+    }
   else
     {
-      if (__asprintf (&buf, "%s: %s",
-		      result->errstring, strerror (result->errcode)) == -1)
-	buf = NULL;
+      buf = result->errstring;
+      if (result->errcode != 0
+	  && __asprintf (&buf, "%s: %s",
+			 result->errstring, strerror (result->errcode)) != -1)
+	{
+	  /* We don't need the error string anymore.  */
+	  free (result->errstring);
+	  result->errstring = buf;
+	}
 
-      /* We don't need the error string anymore.  */
-      free (result->errstring);
+      /* Mark the error as returned.  */
+      result->returned = 1;
     }
-
-  /* Reset the error indicator.  */
-  result->errstring = NULL;
 
   return buf;
 }
@@ -118,6 +122,9 @@ _dlerror_run (void (*operate) (void *), void *args)
     free (result->errstring);
 
   result->errcode = _dl_catch_error (&result->errstring, operate, args);
+
+  /* If no error we mark that no error string is available.  */
+  result->returned = result->errstring == NULL;
 
   return result->errstring != NULL;
 }

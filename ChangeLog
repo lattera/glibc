@@ -1,3 +1,13 @@
+1999-08-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-sym.c (_dl_sym): Always determine module of the caller to
+	pass it to _dl_lookup_symbol.
+
+	* elf/dl-error.c (_dl_signal_error): Optimize string generation a
+	bit.  Reword message.
+
+	* dlfcn/dlerror.c: Make code thread-safe.
+
 1999-07-31  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Fix msgt_size member
