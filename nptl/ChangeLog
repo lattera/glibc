@@ -1,5 +1,7 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: New needed anymore.
+
 	* sysdeps/unix/sysv/linux/Makefile (gen-as-const-headers): Add
 	lowlevelrwlock.sym.
 	* sysdeps/unix/sysv/linux/lowlevelrwlock.sym: New file.
