@@ -46,9 +46,9 @@ install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
 distribute := _itoa.h _itowa.h _i18n_itoa.h _i18n_itowa.h \
-	      printf-parse.h stdio_lim.h.in
+	      printf-parse.h stdio_lim.h.in tst-unbputc.sh tst-printf.sh
 
-tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
+tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite tst-ungetc tst-ferror \
 	 xbug errnobug \
 	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 bug12 bug13 \
@@ -56,16 +56,20 @@ tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf7 scanf8 scanf9 scanf10 \
 	 scanf12 tst-tmpnam tst-cookie tst-obprintf
 
-test-srcs = tst-unbputc
+test-srcs = tst-unbputc tst-printf
 
 include ../Rules
 
-.PHONY: do-tst-unbputc
-tests: do-tst-unbputc
+.PHONY: do-tst-unbputc do-tst-printf
+tests: do-tst-unbputc do-tst-printf
 
 do-tst-unbputc: $(objpfx)tst-unbputc.out
 $(objpfx)tst-unbputc.out: $(objpfx)tst-unbputc tst-unbputc.sh
 	$(SHELL) -e tst-unbputc.sh $(common-objpfx)
+
+do-tst-printf: $(objpfx)tst-printf.out
+$(objpfx)tst-printf.out: $(objpfx)tst-printf tst-printf.sh
+	$(SHELL) -e tst-printf.sh $(common-objpfx)
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-tst-printf.c = -Wno-format
