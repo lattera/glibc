@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ getttyname_r (buf, buflen, mydev, myino, save, dostat)
 	cp = __stpncpy (buf + devlen, d->d_name, needed);
 	cp[0] = '\0';
 
-	if (stat (buf, &st) == 0
+	if (__xstat (_STAT_VER, buf, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
@@ -141,14 +141,14 @@ __ttyname_r (fd, buf, buflen)
       return ERANGE;
     }
 
-  if (fstat (fd, &st) < 0)
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
     return errno;
 
   /* Prepare the result buffer.  */
   memcpy (buf, "/dev/pts/", sizeof ("/dev/pts/"));
   buflen -= sizeof ("/dev/pts/") - 1;
 
-  if (stat (buf, &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (__xstat (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
       ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,

@@ -1,3 +1,9 @@
+1999-02-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ttyname.c: Use __xstat and __fxstat
+	instead of stat and fstat.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+
 1999-02-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* elf/dl-error.c (_dl_signal_cerror): New function.

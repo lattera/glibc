@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ getttyname (dev, mydev, myino, save, dostat)
 	    *((char *) __mempcpy (name, dev, devlen - 1)) = '/';
 	  }
 	memcpy (&name[devlen], d->d_name, dlen);
-	if (stat (name, &st) == 0
+	if (__xstat (_STAT_VER, name, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
@@ -107,6 +107,7 @@ ttyname (fd)
 {
   static char *buf;
   static size_t buflen = 0;
+  static int dev_pts_available = 1;
   char procname[30];
   struct stat st, st1;
   int dostat = 0;
@@ -135,10 +136,11 @@ ttyname (fd)
       && buf[0] != '[')
     return buf;
 
-  if (fstat (fd, &st) < 0)
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
     return NULL;
 
-  if (stat ("/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (dev_pts_available
+      && __xstat (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
 #ifdef _STATBUF_ST_RDEV
       name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);
@@ -150,6 +152,7 @@ ttyname (fd)
     {
       __set_errno (save);
       name = NULL;
+      dev_pts_available = 1;
     }
 
   if (!name && dostat != -1)
