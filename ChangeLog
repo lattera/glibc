@@ -1,3 +1,22 @@
+2003-03-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
+	* math/libm-test.inc (tgamma_test): Recompute some constants with
+	36 digits precision.
+	(lgamma_test): Likewise.
+	(ccos_test): Likewise.
+	(ccosh_test): Likewise.
+	(clog10_test): Likewise.
+	(csin_test): Likewise.
+	(csinh_test): Likewise.
+	(ctan_test): Likewise.
+	(ctanh_test): Likewise.
+
+2003-03-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Regenerated.
+
 2003-03-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h (atomic_bit_set): Use "ir"
