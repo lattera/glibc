@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/IA-64 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ register struct pthread *__thread_self __asm__("r13");
 #define THREAD_SYSINFO(pd)	(((tcbhead_t *) ((pd) + 1))->private)
 
 #if defined NEED_DL_SYSINFO
-# define INIT_SYSINFO   THREAD_SELF_SYSINFO = (void *) GL(dl_sysinfo)
+# define INIT_SYSINFO   THREAD_SELF_SYSINFO = (void *) GLRO(dl_sysinfo)
 #else
 # define INIT_SYSINFO   NULL
 #endif

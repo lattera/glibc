@@ -1,5 +1,8 @@
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/tls.h (INIT_SYSINFO): _dl_sysinfo is now in
+	_rtlf_global_ro.
+
 	* tst-once4.c: Remove unnecessary macro definition.
 
 	* tst-mutex7.c (do_test): Limit thread stack size.

@@ -1,3 +1,9 @@
+2004-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/tls.h (INIT_SYSINFO): _dl_sysinfo is now in
+	_rtlf_global_ro.
+	* sysdeps/ia64/tls.h (INIT_SYSINFO): Likewise.
+
 2004-02-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/ptlongjmp.c [SHARED]: Code only

@@ -1,5 +1,8 @@
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c (_dl_static_init): Call
+	_dl_lookup_symbol_x not _dl_lookup_symbol.
+
 	* sysdeps/powerpc/elf/rtld-global-offsets.sym: Adjust for moving
 	_dl_hwcap into _rtld_global_ro.
 	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.

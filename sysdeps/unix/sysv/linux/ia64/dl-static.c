@@ -55,8 +55,8 @@ _dl_static_init (struct link_map *map)
 
   __libc_lock_lock_recursive (_dl_static_lock);
 
-  loadbase = _dl_lookup_symbol ("_dl_var_init", map, &ref,
-				map->l_local_scope, 0, 1);
+  loadbase = _dl_lookup_symbol_x ("_dl_var_init", map, &ref,
+				  map->l_local_scope, NULL, 0, 1, NULL);
   if (ref != NULL)
     {
       f = (void (*) (void *[])) DL_SYMBOL_ADDRESS (loadbase, ref);
