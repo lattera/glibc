@@ -31,7 +31,6 @@
 #include <bp-sym.h>
 
 #include <dl-dst.h>
-#include <dl-tls.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
@@ -498,12 +497,14 @@ _dl_open (const char *file, int mode, const void *caller)
 	    for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
 	      ++args.map->l_searchlist.r_list[i]->l_opencount;
 
+#ifdef USE_TLS
 	  /* Maybe some of the modules which were loaded uses TLS.
 	     Since it will be removed in the folowing _dl_close call
 	     we have to mark the dtv array as having gaps to fill
 	     the holes.  This is a pessimistic assumption which won't
 	     hurt if not true.  */
 	  GL(dl_tls_dtv_gaps) = true;
+#endif
 
 	  _dl_close (args.map);
 	}

@@ -1,3 +1,7 @@
+2002-02-12  Andreas Schwab  <schwab@suse.de>
+
+	* csu/gmon-start.c (__gmon_start__): Remove '&' from ENTRY_POINT.
+
 2002-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (TLS_DTV_UNALLOCATED): Renamed from
