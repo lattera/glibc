@@ -630,6 +630,13 @@ AC_SUBST(libc_cv_have_ksh)
 
 AC_PROG_AWK
 AC_PATH_PROG(PERL, perl, no)
+if [ -n "$PERL" ] ; then
+   eval $($PERL -V:apiversion)
+   if expr $apiversion \< "5" ; then
+       PERL=no
+   fi
+   unset apiversion
+fi
 AC_SUBST(PERL)
 AC_PATH_PROG(INSTALL_INFO, install-info, no,
 	     $PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
