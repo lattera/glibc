@@ -1,3 +1,7 @@
+2001-06-01  Andreas Jaeger  <aj@suse.de>
+
+	* Versions.def: Add version 2.2.4.
+
 2001-06-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* socket/Makefile (routines): Add sockatmark.
