@@ -61,23 +61,6 @@
    in l_info array.  */
 #define DT_MIPS(x) (DT_MIPS_##x - DT_LOPROC + DT_NUM)
 
-/*
- * MIPS libraries are usually linked to a non-zero base address.  We
- * subtract the base address from the address where we map the object
- * to.  This results in more efficient address space usage.
- *
- * FIXME: By the time when MAP_BASE_ADDR is called we don't have the
- * DYNAMIC section read.  Until this is fixed make the assumption that
- * libraries have their base address at 0x5ffe0000.  This needs to be
- * fixed before we can safely get rid of this MIPSism.
- */
-#if 0
-#define MAP_BASE_ADDR(l) ((l)->l_info[DT_MIPS(BASE_ADDRESS)] ? \
-			  (l)->l_info[DT_MIPS(BASE_ADDRESS)]->d_un.d_ptr : 0)
-#else
-#define MAP_BASE_ADDR(l) 0x5ffe0000
-#endif
-
 /* If there is a DT_MIPS_RLD_MAP entry in the dynamic section, fill it in
    with the run-time address of the r_debug structure  */
 #define ELF_MACHINE_DEBUG_SETUP(l,r) \
@@ -557,51 +540,30 @@ elf_machine_lazy_rel (struct link_map *map,
   /* Do nothing.  */
 }
 
+#ifndef RTLD_BOOTSTRAP
 /* Relocate GOT. */
 static inline void
 elf_machine_got_rel (struct link_map *map, int lazy)
 {
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
+  const ElfW(Half) *vernum;
   int i, n, symidx;
-  /*  This function is loaded in dl-reloc as a nested function and can
-      therefore access the variables scope and strtab from
-      _dl_relocate_object.  */
-#ifdef RTLD_BOOTSTRAP
-# define RESOLVE_GOTSYM(sym,sym_index) 0
-#else
-# define RESOLVE_GOTSYM(sym,sym_index)					  \
+
+#define RESOLVE_GOTSYM(sym,vernum,sym_index)				  \
     ({									  \
       const ElfW(Sym) *ref = sym;					  \
+      const struct r_found_version *version				  \
+        = vernum ? &map->l_versions [vernum [sym_index]] : NULL;	  \
       ElfW(Addr) value;							  \
-									  \
-      switch (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)		  \
-	{								  \
-	default:							  \
-	  {								  \
-	    const ElfW(Half) *vernum =					  \
-	      (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);  \
-	    ElfW(Half) ndx = vernum[sym_index];				  \
-	    const struct r_found_version *version = &l->l_versions[ndx];  \
-									  \
-	    if (version->hash != 0)					  \
-	      {								  \
-		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,\
-						    map,		  \
-						    &ref, scope, version, \
-						    R_MIPS_REL32, 0);	  \
-		break;							  \
-	      }								  \
-	    /* Fall through.  */					  \
-	  }								  \
-	case 0:								  \
-	  value = _dl_lookup_symbol (strtab + sym->st_name, map, &ref,	  \
-				     scope, R_MIPS_REL32, 0);		  \
-	}								  \
-									  \
+      value = RESOLVE (&ref, version, R_MIPS_REL32);			  \
       (ref)? value + ref->st_value: 0;					  \
     })
-#endif /* RTLD_BOOTSTRAP */
+
+  if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+    vernum = (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+  else
+    vernum = NULL;
 
   got = (ElfW(Addr) *) D_PTR (map, l_info[DT_PLTGOT]);
 
@@ -639,10 +601,10 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	      && sym->st_value && lazy)
 	    *got = sym->st_value + map->l_addr;
 	  else
-	    *got = RESOLVE_GOTSYM (sym, symidx);
+	    *got = RESOLVE_GOTSYM (sym, vernum, symidx);
 	}
       else if (sym->st_shndx == SHN_COMMON)
-	*got = RESOLVE_GOTSYM (sym, symidx);
+	*got = RESOLVE_GOTSYM (sym, vernum, symidx);
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
 	       && *got != sym->st_value
 	       && lazy)
@@ -653,7 +615,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	    *got += map->l_addr;
 	}
       else
-	*got = RESOLVE_GOTSYM (sym, symidx);
+	*got = RESOLVE_GOTSYM (sym, vernum, symidx);
 
       ++got;
       ++sym;
@@ -661,9 +623,8 @@ elf_machine_got_rel (struct link_map *map, int lazy)
     }
 
 #undef RESOLVE_GOTSYM
-
-  return;
 }
+#endif
 
 /* Set up the loaded object described by L so its stub function
    will jump to the on-demand fixup code __dl_runtime_resolve.  */
