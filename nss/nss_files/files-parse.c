@@ -67,7 +67,7 @@ struct parser_data
 #ifdef ENTDATA
 /* The function can't be exported, because the entdata structure
    is defined only in files-foo.c.  */
-# define parser_stclass static inline
+# define parser_stclass static
 # define nss_files_parse_hidden_def(name)
 #else
 /* Export the line parser function so it can be used in nss_db.  */

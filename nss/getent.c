@@ -229,7 +229,7 @@ group_keys (int number, char *key[])
 }
 
 /* This is for hosts */
-static inline void
+static void
 print_hosts (struct hostent *host)
 {
   unsigned int cnt;
@@ -396,7 +396,7 @@ netgroup_keys (int number, char *key[])
 }
 
 /* This is for networks */
-static inline void
+static void
 print_networks (struct netent *net)
 {
   unsigned int i;
@@ -691,7 +691,7 @@ services_keys (int number, char *key[])
 }
 
 /* This is for shadow */
-static inline void
+static void
 print_shadow (struct spwd *sp)
 {
   printf ("%s:%s:",
@@ -791,7 +791,7 @@ parse_option (int key, char *arg, struct argp_state *state)
 }
 
 /* build doc */
-static inline void
+static void
 build_doc (void)
 {
   int i, j, len;

@@ -50,10 +50,10 @@ static int re_search_stub (struct re_pattern_buffer *bufp,
 			   int ret_len);
 static unsigned re_copy_regs (struct re_registers *regs, regmatch_t *pmatch,
 			      int nregs, int regs_allocated);
-static inline re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
-							 const regex_t *preg,
-							 const re_match_context_t *mctx,
-							 int idx);
+static re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
+						  const regex_t *preg,
+						  const re_match_context_t *mctx,
+						  int idx);
 static reg_errcode_t prune_impossible_nodes (const regex_t *preg,
 					     re_match_context_t *mctx);
 static int check_matching (const regex_t *preg, re_match_context_t *mctx,
@@ -906,7 +906,7 @@ prune_impossible_nodes (preg, mctx)
    We must select appropriate initial state depending on the context,
    since initial states may have constraints like "\<", "^", etc..  */
 
-static inline re_dfastate_t *
+static re_dfastate_t *
 acquire_init_state_context (err, preg, mctx, idx)
      reg_errcode_t *err;
      const regex_t *preg;
@@ -1507,7 +1507,7 @@ sift_states_backward (preg, mctx, sctx)
 
 /* Helper functions.  */
 
-static inline reg_errcode_t
+static reg_errcode_t
 clean_state_log_if_need (mctx, next_state_log_idx)
     re_match_context_t *mctx;
     int next_state_log_idx;
@@ -3528,7 +3528,7 @@ check_node_accept_bytes (preg, node_idx, input, str_idx)
 	      if (elem_len <= char_len)
 		{
 		  collseqwc = _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQWC);
-		  in_collseq = collseq_table_lookup (collseqwc, wc);
+		  in_collseq = __collseq_table_lookup (collseqwc, wc);
 		}
 	      else
 		in_collseq = find_collation_sequence_value (pin, elem_len);

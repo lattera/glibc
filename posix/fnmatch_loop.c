@@ -622,7 +622,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 
 # ifdef WIDE_CHAR_VERSION
 			/* Search in the `names' array for the characters.  */
-			fcollseq = collseq_table_lookup (collseq, fn);
+			fcollseq = __collseq_table_lookup (collseq, fn);
 			if (fcollseq == ~((uint32_t) 0))
 			  /* XXX We don't know anything about the character
 			     we are supposed to match.  This means we are
@@ -632,7 +632,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 			if (is_seqval)
 			  lcollseq = cold;
 			else
-			  lcollseq = collseq_table_lookup (collseq, cold);
+			  lcollseq = __collseq_table_lookup (collseq, cold);
 # else
 			fcollseq = collseq[fn];
 			lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
@@ -794,7 +794,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 			      {
 # ifdef WIDE_CHAR_VERSION
 				hcollseq =
-				  collseq_table_lookup (collseq, cend);
+				  __collseq_table_lookup (collseq, cend);
 				if (hcollseq == ~((uint32_t) 0))
 				  {
 				    /* Hum, no information about the upper

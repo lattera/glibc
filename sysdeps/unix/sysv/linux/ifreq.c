@@ -19,6 +19,13 @@
 
 #include "ifreq.h"
 
+/* Variable to signal whether SIOCGIFCONF is not available.  */
+#if __ASSUME_SIOCGIFNAME == 0 || 1
+static int old_siocgifconf;
+#else
+# define old_siocgifconf 0
+#endif
+
 
 void
 __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)

@@ -547,6 +547,7 @@ hol_entry_short_iterate (const struct hol_entry *entry,
 }
 
 static inline int
+__attribute ((always_inline))
 hol_entry_long_iterate (const struct hol_entry *entry,
 			int (*func)(const struct argp_option *opt,
 				    const struct argp_option *real,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -42,6 +42,7 @@
 #define obstack_chunk_free free
 
 static inline void
+__attribute ((always_inline))
 obstack_int32_grow (struct obstack *obstack, int32_t data)
 {
   if (sizeof (int32_t) == sizeof (int))
@@ -51,6 +52,7 @@ obstack_int32_grow (struct obstack *obstack, int32_t data)
 }
 
 static inline void
+__attribute ((always_inline))
 obstack_int32_grow_fast (struct obstack *obstack, int32_t data)
 {
   if (sizeof (int32_t) == sizeof (int))
@@ -249,6 +251,7 @@ static uint32_t nrules;
 
 /* We need UTF-8 encoding of numbers.  */
 static inline int
+__attribute ((always_inline))
 utf8_encode (char *buf, int val)
 {
   int retval;
@@ -606,10 +609,10 @@ static struct element_t *
 find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 	      const char *str, size_t len)
 {
-  struct element_t *result = NULL;
+  void *result = NULL;
 
   /* Search for the entries among the collation sequences already define.  */
-  if (find_entry (&collate->seq_table, str, len, (void **) &result) != 0)
+  if (find_entry (&collate->seq_table, str, len, &result) != 0)
     {
       /* Nope, not define yet.  So we see whether it is a
          collation symbol.  */
@@ -625,8 +628,7 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 	    result = sym->order = new_element (collate, NULL, 0, NULL,
 					       NULL, 0, 0);
 	}
-      else if (find_entry (&collate->elem_table, str, len,
-			   (void **) &result) != 0)
+      else if (find_entry (&collate->elem_table, str, len, &result) != 0)
 	{
 	  /* It's also no collation element.  So it is a character
 	     element defined later.  */
@@ -636,7 +638,7 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 	}
     }
 
-  return result;
+  return (struct element_t *) result;
 }
 
 
@@ -944,8 +946,8 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
     {
       /* It's no character, so look through the collation elements and
 	 symbol list.  */
-      if (find_entry (&collate->elem_table, symstr, symlen,
-			   (void **) &elem) != 0)
+      void *ptr = elem;
+      if (find_entry (&collate->elem_table, symstr, symlen, &ptr) != 0)
 	{
 	  void *result;
 	  struct symbol_t *sym = NULL;
@@ -976,12 +978,15 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 		insert_entry (&collate->seq_table, symstr, symlen, elem);
 	    }
 	}
+      else
+	/* Copy the result back.  */
+	elem = ptr;
     }
   else
     {
       /* Otherwise the symbols stands for a character.  */
-      if (find_entry (&collate->seq_table, symstr, symlen,
-		      (void **) &elem) != 0)
+      void *ptr = elem;
+      if (find_entry (&collate->seq_table, symstr, symlen, &ptr) != 0)
 	{
 	  uint32_t wcs[2] = { wc, 0 };
 
@@ -998,6 +1003,9 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 	}
       else
 	{
+	  /* Copy the result back.  */
+	  elem = ptr;
+
 	  /* Maybe the character was used before the definition.  In this case
 	     we have to insert the byte sequences now.  */
 	  if (elem->mbs == NULL && seq != NULL)
@@ -1169,8 +1177,9 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 		  /* Now we are ready to insert the new value in the
 		     sequence.  Find out whether the element is
 		     already known.  */
+		  void *ptr;
 		  if (find_entry (&collate->seq_table, seq->name, namelen,
-				  (void **) &elem) != 0)
+				  &ptr) != 0)
 		    {
 		      uint32_t wcs[2] = { seq->ucs4, 0 };
 
@@ -1186,6 +1195,9 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 			/* This cannot happen.  */
 			assert (! "Internal error");
 		    }
+		  else
+		    /* Copy the result.  */
+		    elem = ptr;
 
 		  /* Test whether this element is not already in the list.  */
 		  if (elem->next != NULL || (collate->cursor != NULL
@@ -1324,9 +1336,12 @@ order for `%.*s' already defined at %s:%Zu"),
 	      sprintf (buf + preflen, base == 10 ? "%ld" : "%lX", from);
 
 	      /* Look whether this name is already defined.  */
-	      if (find_entry (&collate->seq_table, buf, symlen,
-			      (void **) &elem) == 0)
+	      void *ptr;
+	      if (find_entry (&collate->seq_table, buf, symlen, &ptr) == 0)
 		{
+		  /* Copy back the result.  */
+		  elem = ptr;
+
 		  if (elem->next != NULL || (collate->cursor != NULL
 					     && elem->next == collate->cursor))
 		    {
@@ -3009,7 +3024,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      size_t newname_len = arg->val.str.lenmb;
 	      const char *symname;
 	      size_t symname_len;
-	      struct symbol_t *symval;
+	      void *symval;	/* Actually struct symbol_t*  */
 
 	      arg = lr_token (ldfile, charmap, result, repertoire, verbose);
 	      if (arg->tok != tok_bsymbol)
@@ -3045,7 +3060,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
 	      /* See whether the symbol name is already defined.  */
 	      if (find_entry (&collate->sym_table, symname, symname_len,
-			      (void **) &symval) != 0)
+			      &symval) != 0)
 		{
 		  lr_error (ldfile, _("\
 %s: unknown symbol `%s' in equivalent definition"),
@@ -3294,6 +3309,7 @@ error while adding equivalent collating symbol"));
 	      size_t lenmb;
 	      struct element_t *insp;
 	      int no_error = 1;
+	      void *ptr;
 
 	      if (arg->tok == tok_bsymbol)
 		{
@@ -3307,18 +3323,20 @@ error while adding equivalent collating symbol"));
 		  lenmb = 9;
 		}
 
-	      if (find_entry (&collate->seq_table, startmb, lenmb,
-			      (void **) &insp) == 0)
+	      if (find_entry (&collate->seq_table, startmb, lenmb, &ptr) == 0)
 		/* Yes, the symbol exists.  Simply point the cursor
 		   to it.  */
-		collate->cursor = insp;
+		collate->cursor = (struct element_t *) ptr;
 	      else
 		{
 		  struct symbol_t *symbp;
+		  void *ptr;
 
 		  if (find_entry (&collate->sym_table, startmb, lenmb,
-				  (void **) &symbp) == 0)
+				  &ptr) == 0)
 		    {
+		      symbp = ptr;
+
 		      if (symbp->order->last != NULL
 			  || symbp->order->next != NULL)
 			collate->cursor = symbp->order;
@@ -3334,8 +3352,10 @@ error while adding equivalent collating symbol"));
 			}
 		    }
 		  else if (find_entry (&collate->elem_table, startmb, lenmb,
-				       (void **) &insp) == 0)
+				       &ptr) == 0)
 		    {
+		      insp = (struct element_t *) ptr;
+
 		      if (insp->last != NULL || insp->next != NULL)
 			collate->cursor = insp;
 		      else
@@ -3517,10 +3537,12 @@ error while adding equivalent collating symbol"));
                  collation symbols since these are purely abstract
                  values and don't need directions associated.  */
 	      struct element_t *seqp;
+	      void *ptr;
 
-	      if (find_entry (&collate->seq_table, symstr, symlen,
-			      (void **) &seqp) == 0)
+	      if (find_entry (&collate->seq_table, symstr, symlen, &ptr) == 0)
 		{
+		  seqp = ptr;
+
 		  /* It's already defined.  First check whether this
 		     is really a collating symbol.  */
 		  if (seqp->is_character)
@@ -3561,8 +3583,9 @@ error while adding equivalent collating symbol"));
 	    {
 	      /* It is possible that we already have this collation sequence.
 		 In this case we move the entry.  */
-	      struct element_t *seqp;
+	      struct element_t *seqp = NULL;
 	      void *sym;
+	      void *ptr;
 
 	      /* If the symbol after which we have to insert was not found
 		 ignore all entries.  */
@@ -3572,17 +3595,19 @@ error while adding equivalent collating symbol"));
 		  break;
 		}
 
-	      if (find_entry (&collate->seq_table, symstr, symlen,
-			      (void **) &seqp) == 0)
-		goto move_entry;
+	      if (find_entry (&collate->seq_table, symstr, symlen, &ptr) == 0)
+		{
+		  seqp = (struct element_t *) ptr;
+		  goto move_entry;
+		}
 
 	      if (find_entry (&collate->sym_table, symstr, symlen, &sym) == 0
 		  && (seqp = ((struct symbol_t *) sym)->order) != NULL)
 		goto move_entry;
 
-	      if (find_entry (&collate->elem_table, symstr, symlen,
-			      (void **) &seqp) == 0
-		  && (seqp->last != NULL || seqp->next != NULL
+	      if (find_entry (&collate->elem_table, symstr, symlen, &ptr) == 0
+		  && (seqp = (struct element_t *) ptr,
+		      seqp->last != NULL || seqp->next != NULL
 		      || (collate->start != NULL && seqp == collate->start)))
 		{
 		move_entry:

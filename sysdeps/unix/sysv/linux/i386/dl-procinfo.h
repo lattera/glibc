@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -97,7 +97,7 @@ enum
 };
 
 static inline int
-__attribute__ ((unused))
+__attribute__ ((unused, always_inline))
 _dl_string_hwcap (const char *str)
 {
   int i;
@@ -112,7 +112,7 @@ _dl_string_hwcap (const char *str)
 
 
 static inline int
-__attribute__ ((unused))
+__attribute__ ((unused, always_inline))
 _dl_string_platform (const char *str)
 {
   int i;

@@ -108,63 +108,46 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 
 /* From ev_streams.c.  */
 
-static inline struct iovec
-evConsIovec(void *buf, size_t cnt) {
-	struct iovec ret;
-
-	memset(&ret, 0xf5, sizeof ret);
-	ret.iov_base = buf;
-	ret.iov_len = cnt;
-	return (ret);
+static inline void
+__attribute ((always_inline))
+evConsIovec(void *buf, size_t cnt, struct iovec *vec) {
+	memset(vec, 0xf5, sizeof (*vec));
+	vec->iov_base = buf;
+	vec->iov_len = cnt;
 }
 
 /* From ev_timers.c.  */
 
 #define BILLION 1000000000
 
-static inline struct timespec
-evTimeSpec(struct timeval tv) {
-        struct timespec ts;
-
-        ts.tv_sec = tv.tv_sec;
-        ts.tv_nsec = tv.tv_usec * 1000;
-        return (ts);
+static inline void
+evConsTime(struct timespec *res, time_t sec, long nsec) {
+	res->tv_sec = sec;
+	res->tv_nsec = nsec;
 }
 
-static inline struct timespec
-evConsTime(time_t sec, long nsec) {
-	struct timespec x;
-
-	x.tv_sec = sec;
-	x.tv_nsec = nsec;
-	return (x);
-}
-
-static inline struct timespec
-evAddTime(struct timespec addend1, struct timespec addend2) {
-	struct timespec x;
-
-	x.tv_sec = addend1.tv_sec + addend2.tv_sec;
-	x.tv_nsec = addend1.tv_nsec + addend2.tv_nsec;
-	if (x.tv_nsec >= BILLION) {
-		x.tv_sec++;
-		x.tv_nsec -= BILLION;
+static inline void
+evAddTime(struct timespec *res, const struct timespec *addend1,
+	  const struct timespec *addend2) {
+	res->tv_sec = addend1->tv_sec + addend2->tv_sec;
+	res->tv_nsec = addend1->tv_nsec + addend2->tv_nsec;
+	if (res->tv_nsec >= BILLION) {
+		res->tv_sec++;
+		res->tv_nsec -= BILLION;
 	}
-	return (x);
 }
 
-static inline struct timespec
-evSubTime(struct timespec minuend, struct timespec subtrahend) {
-	struct timespec x;
-
-	x.tv_sec = minuend.tv_sec - subtrahend.tv_sec;
-	if (minuend.tv_nsec >= subtrahend.tv_nsec)
-		x.tv_nsec = minuend.tv_nsec - subtrahend.tv_nsec;
+static inline void
+evSubTime(struct timespec *res, const struct timespec *minuend,
+	  const struct timespec *subtrahend) {
+       res->tv_sec = minuend->tv_sec - subtrahend->tv_sec;
+	if (minuend->tv_nsec >= subtrahend->tv_nsec)
+		res->tv_nsec = minuend->tv_nsec - subtrahend->tv_nsec;
 	else {
-		x.tv_nsec = BILLION - subtrahend.tv_nsec + minuend.tv_nsec;
-		x.tv_sec--;
+		res->tv_nsec = (BILLION
+				- subtrahend->tv_nsec + minuend->tv_nsec);
+		res->tv_sec--;
 	}
-	return (x);
 }
 
 static inline int
@@ -176,13 +159,14 @@ evCmpTime(struct timespec a, struct timespec b) {
 	return (x < 0L ? (-1) : x > 0L ? (1) : (0));
 }
 
-static inline struct timespec
-evNowTime() {
+static inline void
+evNowTime(struct timespec *res) {
 	struct timeval now;
 
 	if (gettimeofday(&now, NULL) < 0)
-		return (evConsTime(0, 0));
-	return (evTimeSpec(now));
+		evConsTime(res, 0, 0);
+	else
+		TIMEVAL_TO_TIMESPEC (&now, res);
 }
 
 #endif
@@ -561,9 +545,11 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 				res_sendhookact act;
 
 #ifdef _LIBC
-				act = (*statp->qhook)((struct sockaddr_in **)
-						      &nsap, &buf, &buflen,
+				struct sockaddr_in *nsap4;
+				nsap4 = (struct sockaddr_in *) nsap;
+				act = (*statp->qhook)(&nsap4, &buf, &buflen,
 						      ans, anssiz, &resplen);
+				nsap = (struct sockaddr_in6 *) nsap4;
 #else
 				act = (*statp->qhook)(&nsap, &buf, &buflen,
 						      ans, anssiz, &resplen);
@@ -768,9 +754,10 @@ send_vc(res_state statp,
 	 * Send length & message
 	 */
 	putshort((u_short)buflen, (u_char*)&len);
-	iov[0] = evConsIovec(&len, INT16SZ);
-	iov[1] = evConsIovec((void*)buf, buflen);
-	if (writev(statp->_vcsock, iov, 2) != (INT16SZ + buflen)) {
+	evConsIovec(&len, INT16SZ, &iov[0]);
+	evConsIovec((void*)buf, buflen, &iov[1]);
+	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, 2))
+	    != (INT16SZ + buflen)) {
 		*terrno = errno;
 		Perror(statp, stderr, "write failed", errno);
 		res_nclose(statp);
@@ -782,7 +769,8 @@ send_vc(res_state statp,
  read_len:
 	cp = ans;
 	len = INT16SZ;
-	while ((n = read(statp->_vcsock, (char *)cp, (int)len)) > 0) {
+	while ((n = TEMP_FAILURE_RETRY (read(statp->_vcsock, (char *)cp,
+					     (int)len))) > 0) {
 		cp += n;
 		if ((len -= n) <= 0)
 			break;
@@ -998,9 +986,9 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	now = evNowTime();
-	timeout = evConsTime(seconds, 0);
-	finish = evAddTime(now, timeout);
+	evNowTime(&now);
+	evConsTime(&timeout, seconds, 0);
+	evAddTime(&finish, &now, &timeout);
  wait:
 #ifdef _LIBC
         /* Convert struct timespec in milliseconds.  */
@@ -1021,9 +1009,9 @@ send_dg(res_state statp,
 	}
 	if (n < 0) {
 		if (errno == EINTR) {
-			now = evNowTime();
+			evNowTime(&now);
 			if (evCmpTime(finish, now) > 0) {
-				timeout = evSubTime(finish, now);
+				evSubTime(&timeout, &finish, &now);
 				goto wait;
 			}
 		}
@@ -1244,7 +1232,7 @@ pselect(int nfds, void *rfds, void *wfds, void *efds,
 	if (sigmask)
 		sigprocmask(SIG_SETMASK, &sigs, NULL);
 	if (tsp)
-		*tsp = evTimeSpec(tv);
+		TIMEVAL_TO_TIMESPEC (tv, *tsp);
 	return (n);
 }
 #endif

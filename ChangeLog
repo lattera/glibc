@@ -1,3 +1,60 @@
+2003-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	Fixing gcc 3.3 warnings, part II.
+	* argp/argp-help.c (hol_entry_long_iterate): Always inline.
+	* elf/dl-load.c (cache_rpath): Don't inline.
+	* iconvdata/cns11642l2.h: Always inline all functions.
+	* iconvdata/iso-ir-165.h: Likewise.
+	* locale/Makefile (aux): Add coll-lookup.
+	* locale/coll-lookup.c: New file.
+	* locale/coll-lookup.h (collidx_table_lookup): Do not define here.
+	(collseq_table_lookup): Likewise.
+	* locale/weightwc.h: Adjust collidx_table_lookup calls for name change.
+	* posix/fnmatch_loop.c: Adjust collseq_table_lookup calls for name
+	change.
+	* posix/regcomp.c: Likewise.
+	* posix/regexec.c: Likewise.
+	* locale/programs/3level.h (*_get): Always inline.
+	* locale/programs/locfile.h: Move definition of handle_copy to...
+	* locale/programs/locfile.c: ...here.
+	* locale/programs/ld-collate.c (obstack_int32_grow): Always inline.
+	(obstack_int32_grow_fast): Likewise.
+	(utf8_encode): Likewise.
+	(find_element): Avoid aliasing problems.
+	(insert_value): Likewise.
+	(collate_read): Likewise.
+	* nss/getent.c (print_hosts): Don't inline
+	(print_networks): Likewise.
+	(print_shadow): Likewise.
+	(build_doc): Likewise.
+	* nss/nss_files/files-parse.c [ENTDATA] (parser_stclass): Don't
+	inline.
+	* posix/regcomp.c (re_set_fastmap): Always inline.
+	(seek_collating_symbol_entry): Likewise.
+	(lookup_collation_sequence_value): Likewise.
+	(build_range_exp): Likewise.
+	(build_collating_symbol): Likewise.
+	* posix/regexec.c (acquire_init_state_context): Don't inline.
+	(clean_state_log_if_need): Likewise.
+	* resolv/res_send.c (eConsIovec): Rewrite to not return struct and
+	adjust all callers.
+	(evConsTime): Likewise.
+	(evAddTime): Likewise.
+	(evSubTime): Likewise.
+	(evNowTime): Likewise.
+	(evTimeSpec): Removed.
+	(__libc_res_nsend): Avoid aliasing problem.
+	* sysdeps/unix/sysv/linux/ifreq.h: Move old_siocgifconf definition to..
+	* sysdeps/unix/sysv/linux/ifreq.c: ...here.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (_dl_string_hwcap):
+	Always inline.
+	(_dl_string_platform): Likewise.
+	* wctype/wchar-lookup.h (wctype_table_lookup): Always inline.
+	(wcwidth_table_lookup): Likewise.
+	(wctrans_table_lookup): Likewise.
+
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Include <stdint.h>.
+
 2003-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/wchar.h: Define wint_t in std namespace, too [PR libc/5034].

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -80,6 +80,7 @@ CONCAT(TABLE,_init) (struct TABLE *t)
 
 /* Retrieve an entry.  */
 static inline ELEMENT
+__attribute ((always_inline))
 CONCAT(TABLE,_get) (struct TABLE *t, uint32_t wc)
 {
   uint32_t index1 = wc >> (t->q + t->p);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -45,64 +45,12 @@ struct locale_file
 
 
 /* General handling of `copy'.  */
-static inline void
-handle_copy (struct linereader *ldfile, const struct charmap_t *charmap,
-	     const char *repertoire_name, struct localedef_t *result,
-	     enum token_t token, int locale, const char *locale_name,
-	     int ignore_content)
-{
-  struct token *now;
-  int warned = 0;
-
-  now = lr_token (ldfile, charmap, result, NULL, verbose);
-  if (now->tok != tok_string)
-    lr_error (ldfile, _("expect string argument for `copy'"));
-  else if (!ignore_content)
-    {
-      if (now->val.str.startmb == NULL)
-	lr_error (ldfile, _("\
-locale name should consist only of portable characters"));
-      else
-	{
-	  (void) add_to_readlist (locale, now->val.str.startmb,
-				  repertoire_name, 1, NULL);
-	  result->copy_name[locale] = now->val.str.startmb;
-	}
-    }
-
-  lr_ignore_rest (ldfile, now->tok == tok_string);
-
-  /* The rest of the line must be empty and the next keyword must be
-     `END xxx'.  */
-  while ((now = lr_token (ldfile, charmap, result, NULL, verbose))->tok
-	 != tok_end && now->tok != tok_eof)
-    {
-      if (warned == 0)
-	{
-	  lr_error (ldfile, _("\
-no other keyword shall be specified when `copy' is used"));
-	  warned = 1;
-	}
-
-      lr_ignore_rest (ldfile, 0);
-    }
-
-  if (now->tok != tok_eof)
-    {
-      /* Handle `END xxx'.  */
-      now = lr_token (ldfile, charmap, result, NULL, verbose);
-
-      if (now->tok != token)
-	lr_error (ldfile, _("\
-`%1$s' definition does not end with `END %1$s'"), locale_name);
-
-      lr_ignore_rest (ldfile, now->tok == token);
-    }
-  else
-    /* When we come here we reached the end of the file.  */
-    lr_error (ldfile, _("%s: premature end of file"), locale_name);
-}
-
+extern void handle_copy (struct linereader *ldfile,
+			 const struct charmap_t *charmap,
+			 const char *repertoire_name,
+			 struct localedef_t *result, enum token_t token,
+			 int locale, const char *locale_name,
+			 int ignore_content);
 
 /* Found in locfile.c.  */
 extern int locfile_read (struct localedef_t *result,

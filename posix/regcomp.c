@@ -291,6 +291,7 @@ weak_alias (__re_compile_fastmap, re_compile_fastmap)
 #endif
 
 static inline void
+__attribute ((always_inline))
 re_set_fastmap (char *fastmap, int icase, int ch)
 {
   fastmap[ch] = 1;
@@ -2515,6 +2516,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
      Return the index of the symbol in the SYMB_TABLE.  */
 
   static inline int32_t
+  __attribute ((always_inline))
   seek_collating_symbol_entry (name, name_len)
 	 const unsigned char *name;
 	 size_t name_len;
@@ -2547,6 +2549,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
      Return the value if succeeded, UINT_MAX otherwise.  */
 
   static inline unsigned int
+  __attribute ((always_inline))
   lookup_collation_sequence_value (br_elem)
 	 bracket_elem_t *br_elem;
     {
@@ -2560,12 +2563,12 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  else
 	    {
 	      wint_t wc = __btowc (br_elem->opr.ch);
-	      return collseq_table_lookup (collseqwc, wc);
+	      return __collseq_table_lookup (collseqwc, wc);
 	    }
 	}
       else if (br_elem->type == MB_CHAR)
 	{
-	  return collseq_table_lookup (collseqwc, br_elem->opr.wch);
+	  return __collseq_table_lookup (collseqwc, br_elem->opr.wch);
 	}
       else if (br_elem->type == COLL_SYM)
 	{
@@ -2614,6 +2617,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
      update it.  */
 
   static inline reg_errcode_t
+  __attribute ((always_inline))
 # ifdef RE_ENABLE_I18N
   build_range_exp (sbcset, mbcset, range_alloc, start_elem, end_elem)
 	 re_charset_t *mbcset;
@@ -2686,7 +2690,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  if (nrules == 0)
 	    ch_collseq = collseqmb[ch];
 	  else
-	    ch_collseq = collseq_table_lookup (collseqwc, __btowc (ch));
+	    ch_collseq = __collseq_table_lookup (collseqwc, __btowc (ch));
 	  if (start_collseq <= ch_collseq && ch_collseq <= end_collseq)
 	    bitset_set (sbcset, ch);
 	}
@@ -2700,6 +2704,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
      pointer argument sinse we may update it.  */
 
   static inline reg_errcode_t
+  __attribute ((always_inline))
 # ifdef RE_ENABLE_I18N
   build_collating_symbol (sbcset, mbcset, coll_sym_alloc, name)
 	 re_charset_t *mbcset;

@@ -578,7 +578,7 @@ decompose_rpath (struct r_search_path_struct *sps,
 
 /* Make sure cached path information is stored in *SP
    and return true if there are any paths to search there.  */
-static inline bool
+static bool
 cache_rpath (struct link_map *l,
 	     struct r_search_path_struct *sp,
 	     int tag,

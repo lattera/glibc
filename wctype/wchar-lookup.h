@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -49,6 +49,7 @@
 */
 
 static __inline int
+__attribute ((always_inline))
 wctype_table_lookup (const char *table, uint32_t wc)
 {
   uint32_t shift1 = ((const uint32_t *) table)[0];
@@ -80,6 +81,7 @@ wctype_table_lookup (const char *table, uint32_t wc)
    unit is a single byte, and no 5 bits are used as a word index.  */
 
 static __inline int
+__attribute ((always_inline))
 wcwidth_table_lookup (const char *table, uint32_t wc)
 {
   uint32_t shift1 = ((const uint32_t *) table)[0];
@@ -113,6 +115,7 @@ wcwidth_table_lookup (const char *table, uint32_t wc)
    bits are used as a word index.  */
 
 static __inline uint32_t
+__attribute ((always_inline))
 wctrans_table_lookup (const char *table, uint32_t wc)
 {
   uint32_t shift1 = ((const uint32_t *) table)[0];

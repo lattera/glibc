@@ -27,7 +27,7 @@ findidx (const wint_t **cpp)
   wint_t ch;
 
   ch = *(*cpp)++;
-  i = collidx_table_lookup ((const char *) table, ch);
+  i = __collidx_table_lookup ((const char *) table, ch);
 
   if (i >= 0)
     /* This is an index into the weight table.  Cool.  */

@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,1995-1999,2000,2001,2002 Free Software Foundation, Inc.
+# Copyright (C) 1991,1992,1995-2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ tests		= tst-C-locale
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
-		  xlocale localename global-locale
+		  xlocale localename global-locale coll-lookup
 others		= localedef locale
 #others-static	= localedef locale
 install-bin	= localedef locale
