@@ -1,3 +1,8 @@
+2001-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strcoll.c [USE_IN_EXTENDED_LOCALE_MODEL]: Correct get
+	nrules value.
+
 2001-09-14  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/fpu/libm-test-ulps: Updated.
