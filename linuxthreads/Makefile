@@ -36,7 +36,8 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
 		       oldsemaphore events getcpuclockid pspinlock barrier \
-		       ptclock_gettime ptclock_settime sighandler
+		       ptclock_gettime ptclock_settime sighandler \
+		       pthandles
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst

@@ -36,25 +36,6 @@
 #include "restart.h"
 #include "semaphore.h"
 
-/* Array of active threads. Entry 0 is reserved for the initial thread. */
-struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX]
-#ifdef USE_TLS
-# if __LT_SPINLOCK_INIT != 0
-= {
-  { __LOCK_INITIALIZER, NULL, 0},
-  { __LOCK_INITIALIZER, NULL, 0},
-  /* All NULLs */
-}
-# endif
-#else
-= {
-  { __LOCK_INITIALIZER, &__pthread_initial_thread, 0},
-  { __LOCK_INITIALIZER, &__pthread_manager_thread, 0},
-  /* All NULLs */
-}
-#endif
-;
-
 /* For debugging purposes put the maximum number of threads in a variable.  */
 const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
 

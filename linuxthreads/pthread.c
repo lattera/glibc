@@ -420,6 +420,11 @@ __pthread_initialize_minimal(void)
 #ifdef USE_TLS
   pthread_descr self;
 
+  /* First of all init __pthread_handles[0] and [1] if needed.  */
+# if __LT_SPINLOCK_INIT != 0
+  __pthread_handles[0].h_lock = __LOCK_INITIALIZER;
+  __pthread_handles[1].h_lock = __LOCK_INITIALIZER;
+# endif
 # ifndef SHARED
   /* Unlike in the dynamically linked case the dynamic linker has not
      taken care of initializing the TLS data structures.  */
@@ -451,6 +456,14 @@ __pthread_initialize_minimal(void)
   /* And fill in the pointer the the thread __pthread_handles array.  */
   __pthread_handles[0].h_descr = self;
 #else
+  /* First of all init __pthread_handles[0] and [1].  */
+# if __LT_SPINLOCK_INIT != 0
+  __pthread_handles[0].h_lock = __LOCK_INITIALIZER;
+  __pthread_handles[1].h_lock = __LOCK_INITIALIZER;
+# endif
+  __pthread_handles[0].h_descr = &__pthread_initial_thread;
+  __pthread_handles[1].h_descr = &__pthread_manager_thread;
+
   /* If we have special thread_self processing, initialize that for the
      main thread now.  */
 # ifdef INIT_THREAD_SELF
