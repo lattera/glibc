@@ -1,5 +1,8 @@
 2000-04-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* catgets/gencat.c (read_input_file): Use isblank and not isspace
+	to recognize second character in comment line.
+
 	* sysdeps/unix/sysv/linux/if_index.c (if_nameindex): Set errno to
 	ENOBUFS if we are out of memory.
 

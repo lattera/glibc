@@ -327,7 +327,7 @@ read_input_file (struct catalog *current, const char *fname)
       used = 0;
       if (this_line[0] == '$')
 	{
-	  if (isspace (this_line[1]))
+	  if (isblank (this_line[1]))
 	    /* This is a comment line.  Do nothing.  */;
 	  else if (strncmp (&this_line[1], "set", 3) == 0)
 	    {
