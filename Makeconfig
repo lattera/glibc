@@ -94,9 +94,11 @@ $(common-objpfx)config.make: $(common-objpfx)config.status $(..)config.h.in
 # configure when any of them changes.
 $(common-objpfx)config.status: $(..)configure \
 			       $(foreach dir,$(config-sysdirs),\
+					 $(wildcard \
+					   $(sysdep_dir)/$(dir)/Implies) \
 					 $(patsubst %.in,%,\
 						    $(firstword $(wildcard \
- $(addprefix $(sysdep_dir)/$(dir)/,configure configure.in Implies)))))
+ $(addprefix $(sysdep_dir)/$(dir)/,configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
 	 echo The GNU C library has not been configured. >&2; \
 	 echo Run \`configure\' to configure it before building. >&2; \

@@ -1,3 +1,13 @@
+Mon Jun 17 19:09:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Make-dist (+sysdeps): Move wildcard inside loop to avoid consing
+	up a huge list just to discard most of it.
+
+	* configure.in (sysnames): Avoid fgrep by using the case shell
+	builtin.
+
+	* Makeconfig (config.status): Fix dependency on Implies files.
+
 Wed Jun 19 01:27:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* math/Makefile (distribute): Add ieee-math.c.

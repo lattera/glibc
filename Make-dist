@@ -93,8 +93,8 @@ vpath % $(subdir-dirs)
 endif
 
 # Now find all the sysdep versions of those files.
-+sysdeps := $(wildcard $(foreach dir,$(sysdep_dirs) $(source_dirs),\
-				 $(addprefix $(dir)/, \
++sysdeps := $(foreach dir,$(sysdep_dirs) $(source_dirs),\
+		      $(wildcard $(addprefix $(dir)/, \
 					     $(+sysdep-names) \
 					     $(+sysdep-names:.c=.s) \
 					     $(+sysdep-names:.c=.S) \

@@ -233,15 +233,15 @@ sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
 set $sysnames
-names= seen=
+names=
 while test $# -gt 0; do
   name=$1
   shift
 
-  if echo "$seen" | fgrep -x $name >/dev/null; then
+  case " $names " in *" $name "*)
     # Already in the list.
     continue
-  fi
+  esac
 
   # Report each name as we discover it, so there is no long pause in output.
   echo $ac_n "$name $ac_c" >&AC_FD_MSG
@@ -260,9 +260,6 @@ while test $# -gt 0; do
 
   # Add NAME to the list of names.
   names="$names $name"
-  # We maintain a parallel newline-separated list for the fgrep check above.
-  seen="$seen
-$name"
 
   # Find the parent of NAME, using the empty string if it has none.
 changequote(,)dnl
