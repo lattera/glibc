@@ -1,6 +1,6 @@
 /* strlen(str) -- determine the length of the string STR.
    Optimized for Intel 80x86, x>=4.
-   Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
    This file is part of the GNU C Library.
 
@@ -21,15 +21,16 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-*/
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define STR	PARMS
 
 	.text
 ENTRY (strlen)
-	movl 4(%esp), %ecx	/* get string pointer */
+	ENTER
+
+	movl STR(%esp), %ecx
 	movl %ecx, %eax		/* duplicate it */
 
 	andl $3, %ecx		/* mask alignment bits */
@@ -127,7 +128,8 @@ L(3):	testb %cl, %cl		/* is first byte NUL? */
 	jz L(2)			/* yes => return pointer */
 	incl %eax		/* increment pointer */
 
-L(2):	subl 4(%esp), %eax	/* compute difference to string start */
+L(2):	subl STR(%esp), %eax	/* compute difference to string start */
 
+	LEAVE
 	ret
 END (strlen)

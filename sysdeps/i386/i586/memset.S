@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund, <tege@matematik.su.se>
 
@@ -21,27 +21,33 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   (memset)			(bzero)
-   dst          (sp + 4)	dst	(sp + 4)
-   ch           (sp + 8)	len	(sp + 8)
-   len		(sp + 12)
-*/
+/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
+#define BZERO_P (defined memset)
 
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#if BZERO_P
+# define LEN	DEST+PTR_SIZE
+#else
+# define CHR	DEST+PTR_SIZE
+# define LEN	CHR+4
+#endif
 
         .text
 ENTRY (memset)
+	ENTER
+
 	pushl	%edi
 
-	movl	8(%esp), %edi	/* destination pointer */
-#ifdef memset
+	movl	DEST(%esp), %edi
+	movl	LEN(%esp), %edx
+#if BZERO_P
 	xorl	%eax, %eax	/* we fill with 0 */
-	movl	12(%esp), %edx	/* size (in 8-bit words) */
 #else
-	movb	12(%esp), %al	/* use CH to fill */
-	movl	16(%esp), %edx	/* size (in 8-bit words) */
+	movb	CHR(%esp), %al
 
 	movb	%al, %ah
 	movl	%eax, %ecx
@@ -93,11 +99,16 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	rep
 	stosb
 
+#if !BZERO_P
 	/* Load result (only if used as memset).  */
-#ifndef memset
-	movl	8(%esp), %eax
+	movl	DEST(%esp), %eax
 #endif
 	popl	%edi
 
+	LEAVE
+#if BZERO_P
 	ret
+#else
+	RET_PTR
+#endif
 END (memset)

@@ -21,6 +21,11 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include "bp-asm.h"
+
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define JBUF	PARMS
+#define SGMSK	JBUF+PRT_SIZE
 
 	/* We include the BSD entry points here as well but we make
 	   them weak.  */
@@ -55,7 +60,7 @@ ENTRY (__sigsetjmp)
 	movl %esi, (JB_SI*4)(%eax)
 	movl %edi, (JB_DI*4)(%eax)
 	movl %ebp, (JB_BP*4)(%eax)
-	leal 4(%esp), %ecx	/* Save SP as it will be after we return.  */
+	leal JBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
      	movl %ecx, (JB_SP*4)(%eax)
 	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
      	movl %ecx, (JB_PC*4)(%eax)

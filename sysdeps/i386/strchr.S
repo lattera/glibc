@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -22,19 +22,20 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   ch		(sp + 8)
-*/
+#define PARMS	LINKAGE+4		/* space for 1 saved reg */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
 
 	.text
 ENTRY (strchr)
-	pushl %edi		/* Save callee-safe registers used here.  */
+	ENTER
 
-	movl 8(%esp), %eax	/* get string pointer */
-	movl 12(%esp), %edx	/* get character we are looking for */
+	pushl %edi		/* Save callee-safe registers used here.  */
+	movl STR(%esp), %eax
+	movl CHR(%esp), %edx
 
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -240,7 +241,9 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 L(2):	/* Return NULL.  */
 	xorl %eax, %eax		/* load NULL in return value register */
 	popl %edi		/* restore saved register content */
-	ret
+
+	LEAVE
+	RET_PTR
 
 L(73):	addl $4, %eax		/* adjust pointer */
 L(72):	addl $4, %eax
@@ -273,7 +276,8 @@ L(7):	testb %cl, %cl		/* is first byte C? */
 
 L(6):	popl %edi		/* restore saved register content */
 
-	ret
+	LEAVE
+	RET_PTR
 END (strchr)
 
 weak_alias (strchr, index)

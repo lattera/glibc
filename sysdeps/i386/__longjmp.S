@@ -1,5 +1,5 @@
 /* longjmp for i386.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,19 @@
 #define _ASM
 #define _SETJMP_H
 #include <bits/setjmp.h>
+#include <bp-asm.h>
+
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define JBUF	PARMS
+#define VAL	JBUF+PTR_SIZE
 
 ENTRY (__longjmp)
-	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
-	movl 8(%esp), %eax	/* Second argument is return value.  */
+	ENTER
+
+	movl JBUF(%esp), %ecx	/* User's jmp_buf in %ecx.  */
+	LEAVE
+
+	movl VAL(%esp), %eax	/* Second argument is return value.  */
 	/* Save the return address now.  */
 	movl (JB_PC*4)(%ecx), %edx
      	/* Restore registers.  */

@@ -1,6 +1,6 @@
 /* Add two limb vectors of the same length > 0 and store sum in a third
    limb vector.
-   Copyright (C) 1992, 94, 95, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 95, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -18,26 +18,27 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-/*
-  INPUT PARAMETERS
-  res_ptr	(sp + 4)
-  s1_ptr	(sp + 8)
-  s2_ptr	(sp + 12)
-  size		(sp + 16)
-*/
-
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-asm.h"
+
+#define PARMS	LINKAGE+8	/* space for 2 saved regs */
+#define RES	PARMS
+#define S1	RES+PTR_SIZE
+#define S2	S1+PTR_SIZE
+#define SIZE	S2+PTR_SIZE
 
 	.text
 ENTRY(__mpn_add_n)
+	ENTER
+
 	pushl %edi
 	pushl %esi
 
-	movl 12(%esp),%edi		/* res_ptr */
-	movl 16(%esp),%esi		/* s1_ptr */
-	movl 20(%esp),%edx		/* s2_ptr */
-	movl 24(%esp),%ecx		/* size */
+	movl RES(%esp),%edi
+	movl S1(%esp),%esi
+	movl S2(%esp),%edx
+	movl SIZE(%esp),%ecx
 
 	movl	%ecx,%eax
 	shrl	$3,%ecx			/* compute count for unrolled loop */
@@ -99,5 +100,7 @@ L(oop):	movl	(%esi),%eax
 
 	popl %esi
 	popl %edi
+
+	LEAVE
 	ret
 END(__mpn_add_n)

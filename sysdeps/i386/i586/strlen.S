@@ -1,6 +1,6 @@
 /* strlen -- Compute length og NUL terminated string.
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
 /* This version is especially optimized for the i586 (and following?)
    processors.  This is mainly done by using the two pipelines.  The
@@ -35,14 +36,14 @@
 /* The magic value which is used throughout in the whole code.  */
 #define magic 0xfefefeff
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-*/
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define STR	PARMS
 
 	.text
 ENTRY(strlen)
-	movl 4(%esp), %eax	/* get string pointer */
+	ENTER
+
+	movl STR(%esp), %eax
 	movl $3, %edx		/* load mask (= 3) */
 
 	andl %eax, %edx		/* separate last two bits of address */
@@ -176,9 +177,9 @@ L(3):	subl $4, %eax		/* correct too early pointer increment */
 
 	incl %eax		/* increment pointer */
 
-L(2):	subl 4(%esp), %eax	/* now compute the length as difference
+L(2):	subl STR(%esp), %eax	/* now compute the length as difference
 				   between start and terminating NUL
 				   character */
-
+	LEAVE
 	ret
 END (strlen)

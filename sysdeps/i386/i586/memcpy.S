@@ -1,5 +1,5 @@
 /* Highly optimized version for i586.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,23 +20,31 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   dst          (sp + 4)
-   src          (sp + 8)
-   len		(sp + 12)
-*/
+/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
+#define BCOPY_P (defined memcpy)
 
+#define PARMS	LINKAGE+8	/* space for 2 saved regs */
+#if BCOPY_P
+# define DEST	PARMS
+#else
+# define RTN	PARMS
+# define DEST	RTN+RTN_SIZE
+#endif
+#define SRC	DEST+PTR_SIZE
+#define LEN	SRC+PTR_SIZE
 
         .text
 ENTRY (memcpy)
+	ENTER
+
 	pushl	%edi
 	pushl	%esi
 
-	movl	12(%esp), %edi	/* dst */
-	movl	16(%esp), %esi	/* src */
-	movl	20(%esp), %ecx	/* len */
+	movl	DEST(%esp), %edi
+	movl	SRC(%esp), %esi
+	movl	LEN(%esp), %ecx
 	movl	%edi, %eax
 
 	/* We need this in any case.  */
@@ -91,18 +99,23 @@ L(3):	movl	28(%edi), %edx
 
 	/* Correct extra loop counter modification.  */
 L(2):	addl	$32, %ecx
-#ifndef memcpy
-	movl	12(%esp), %eax	/* dst */
+#if !BCOPY_P
+	movl	DEST(%esp), %eax
 #endif
 
 L(1):	rep; movsb
 
-#ifdef memcpy
+#if BCOPY_P
 	movl	%edi, %eax
 #endif
 
 	popl	%esi
 	popl	%edi
 
+	LEAVE
+#if BCOPY_P
 	ret
+#else
+	RET_PTR
+#endif
 END (memcpy)

@@ -1,5 +1,5 @@
 /* strcpy/stpcpy implementation for i586.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,6 +20,12 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
+
+#define PARMS	LINKAGE+12	/* space for 3 saved regs */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
 
 #ifndef USE_AS_STPCPY
 # define STRCPY strcpy
@@ -29,12 +35,14 @@
 
 	.text
 ENTRY(STRCPY)
+	ENTER
+
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 
-	movl	16(%esp), %edi
-	movl	20(%esp), %esi
+	movl	DEST(%esp), %edi
+	movl	SRC(%esp), %esi
 
 	xorl	%eax, %eax
 	leal	-1(%esi), %ecx
@@ -136,12 +144,13 @@ L(end):	movb	%ah, (%edi)
 L(end2):
 #ifdef USE_AS_STPCPY
 	movl	%edi, %eax
+#else
+	movl	DEST(%esp), %eax
 #endif
 	popl	%ebx
 	popl	%esi
 	popl	%edi
-#ifndef USE_AS_STPCPY
-	movl	4(%esp), %eax
-#endif
-	ret
+
+	LEAVE
+	RET_PTR
 END(STRCPY)

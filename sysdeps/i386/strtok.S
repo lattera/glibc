@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
 /* This file can be used for three variants of the strtok function:
 
@@ -48,12 +49,19 @@ save_ptr:
 #define FUNCTION strtok
 #endif
 
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define DELIM	STR+PTR_SIZE
+#define SAVE	DELIM+PTR_SIZE
+
 	.text
 
 ENTRY (FUNCTION)
+	ENTER
 
-	movl 4(%esp), %edx		/* Get start of string.  */
-	movl 8(%esp), %eax		/* Get start of delimiter set.  */
+	movl STR(%esp), %edx
+	movl DELIM(%esp), %eax
 
 #if !defined (USE_AS_STRTOK_R) && defined (PIC)
 	pushl %ebx			/* Save PIC register.  */
@@ -70,7 +78,7 @@ L(here):
 
 #ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
-	movl 12(%esp), %edx
+	movl SAVE(%esp), %edx
 	movl (%edx), %edx
 #else
 	/* The value is in the local variable defined above.  But
@@ -257,7 +265,7 @@ L(11):
 L(return):
 	/* Store the pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
-	movl 12(%esp), %ecx
+	movl SAVE(%esp), %ecx
 	movl %edx, (%ecx)
 #else
 # ifndef PIC
@@ -267,7 +275,8 @@ L(return):
 	popl %ebx
 # endif
 #endif
-	ret
+	LEAVE
+	RET_PTR
 
 L(returnNULL):
 	xorl %eax, %eax

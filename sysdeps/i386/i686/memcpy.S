@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to beginning of destination block
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,20 +21,23 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/* memcpy:
-	INPUT PARAMETER:
-	dest		(sp + 4)
-	src		(sp + 8)
-	len		(sp + 12)
-*/
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
+#define LEN	SRC+PTR_SIZE
 
+	.text
 ENTRY(memcpy)
-	movl	12(%esp), %ecx
+	ENTER
+
+	movl	LEN(%esp), %ecx
 	movl	%edi, %eax
-	movl	4(%esp), %edi
+	movl	DEST(%esp), %edi
 	movl	%esi, %edx
-	movl	8(%esp), %esi
+	movl	SRC(%esp), %esi
 	cld
 	shrl	$1, %ecx
 	jnc	1f
@@ -46,6 +49,8 @@ ENTRY(memcpy)
 	movsl
 	movl	%eax, %edi
 	movl	%edx, %esi
-	movl	4(%esp), %eax
-	ret
+	movl	DEST(%esp), %eax
+
+	LEAVE
+	RET_PTR
 END(memcpy)

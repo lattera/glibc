@@ -1,7 +1,7 @@
-/* strchrnul (str, ch) -- Return pointer to first occurrence of CH in STR
+/* strchrnul (str, chr) -- Return pointer to first occurrence of CHR in STR
    or the final NUL byte.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -23,22 +23,24 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   ch		(sp + 8)
-*/
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
 
 	.text
 ENTRY (__strchrnul)
+	ENTER
+
 	pushl %edi		/* Save callee-safe registers used here.  */
 
-	movl 8(%esp), %eax	/* get string pointer */
-	movl 12(%esp), %edx	/* get character we are looking for */
+	movl STR(%esp), %eax
+	movl CHR(%esp), %edx
 
-	/* At the moment %edx contains C.  What we need for the
-	   algorithm is C in all bytes of the dword.  Avoid
+	/* At the moment %edx contains CHR.  What we need for the
+	   algorithm is CHR in all bytes of the dword.  Avoid
 	   operations on 16 bit words because these require an
 	   prefix byte (and one more cycle).  */
 	movb %dl, %dh		/* now it is 0|0|c|c */
@@ -108,9 +110,9 @@ ENTRY (__strchrnul)
 	 into bit 32 (=carry flag), so all of the hole bits will
 	 be changed.
 
-	 3) But wait!  Aren't we looking for C, not zero?
+	 3) But wait!  Aren't we looking for CHR, not zero?
 	 Good point.  So what we do is XOR LONGWORD with a longword,
-	 each of whose bytes is C.  This turns each byte that is C
+	 each of whose bytes is CHR.  This turns each byte that is CHR
 	 into a zero.  */
 
 	/* Each round the main loop processes 16 bytes.  */
@@ -125,7 +127,7 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
-				   is *not* C */
+				   is *not* CHR */
 
 	/* According to the algorithm we had to reverse the effect of the
 	   XOR first and then test the overflow bits.  But because the
@@ -144,7 +146,7 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
 
-	/* If at least one byte of the word is C we don't get 0 in %edi.  */
+	/* If at least one byte of the word is CHR we don't get 0 in %edi.  */
 	jnz L(7)		/* found it => return pointer */
 
 	/* Now we made sure the dword does not contain the character we are
@@ -169,8 +171,8 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
-				   is *not* C */
-	jnc L(71)		/* highest byte is C => return pointer */
+				   is *not* CHR */
+	jnc L(71)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -194,8 +196,8 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
-				   is *not* C */
-	jnc L(72)		/* highest byte is C => return pointer */
+				   is *not* CHR */
+	jnc L(72)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -219,8 +221,8 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
-				   is *not* C */
-	jnc L(73)		/* highest byte is C => return pointer */
+				   is *not* CHR */
+	jnc L(73)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -246,20 +248,20 @@ L(71):	addl $4, %eax
 	   But we have to take care of the case that a NUL char is
 	   found before this in the dword.  */
 
-L(7):	testb %cl, %cl		/* is first byte C? */
+L(7):	testb %cl, %cl		/* is first byte CHR? */
 	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %cl		/* is first byte NUL? */
 	je L(6)			/* yes => return NULL */
 	incl %eax		/* it's not in the first byte */
 
-	testb %ch, %ch		/* is second byte C? */
+	testb %ch, %ch		/* is second byte CHR? */
 	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %ch		/* is second byte NUL? */
 	je L(6)			/* yes => return NULL? */
 	incl %eax		/* it's not in the second byte */
 
 	shrl $16, %ecx		/* make upper byte accessible */
-	testb %cl, %cl		/* is third byte C? */
+	testb %cl, %cl		/* is third byte CHR? */
 	jz L(6)			/* yes => return pointer */
 	cmpb %dl, %cl		/* is third byte NUL? */
 	je L(6)			/* yes => return NULL */
@@ -269,7 +271,8 @@ L(7):	testb %cl, %cl		/* is first byte C? */
 
 L(6):	popl %edi		/* restore saved register content */
 
-	ret
+	LEAVE
+	RET_PTR
 END (__strchrnul)
 
 weak_alias (__strchrnul, strchrnul)

@@ -1,6 +1,6 @@
 /* Copy SRC to DEST returning the address of the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper (drepper@gnu.ai.mit.edu).
 
@@ -24,18 +24,19 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   dest		(sp + 4)
-   src		(sp + 8)
-*/
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
 
 	.text
 ENTRY (__stpcpy)
-	movl 4(%esp), %eax	/* load destination pointer */
-	movl 8(%esp), %ecx	/* load source pointer */
+	ENTER
 
+	movl DEST(%esp), %eax
+	movl SRC(%esp), %ecx
 	subl %eax, %ecx		/* magic: reduce number of loop variants
 				   to one using addressing mode */
 
@@ -81,7 +82,9 @@ L(1):	addl $4, %eax		/* increment loop counter */
 L(4):	incl %eax
 L(3):	incl %eax
 L(2):
-	ret
+
+	LEAVE
+	RET_PTR
 END (__stpcpy)
 
 weak_alias (__stpcpy, stpcpy)

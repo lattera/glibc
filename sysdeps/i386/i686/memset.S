@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -21,27 +21,34 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   (memset)			(bzero)
-   dst          (sp + 4)	dst	(sp + 4)
-   ch           (sp + 8)	len	(sp + 8)
-   len		(sp + 12)
-*/
+/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
+#define BZERO_P (defined memset)
 
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#if BZERO_P
+# define DEST	PARMS
+# define LEN	DEST+PTR_SIZE
+#else
+# define RTN	PARMS
+# define DEST	RTN+RTN_SIZE
+# define CHR	DEST+PTR_SIZE
+# define LEN	CHR+4
+#endif
 
         .text
 ENTRY (memset)
+	ENTER
+
 	cld
 	pushl	%edi
-	movl	8(%esp), %edx
-#ifdef memset
-	movl	12(%esp), %ecx
-	xorl	%eax, %eax
+	movl	DEST(%esp), %edx
+	movl	LEN(%esp), %ecx
+#if BZERO_P
+	xorl	%eax, %eax	/* fill with 0 */
 #else
-	movzbl	12(%esp), %eax
-	movl	16(%esp), %ecx
+	movzbl	CHR(%esp), %eax
 #endif
 	jecxz	1f
 	movl	%edx, %edi
@@ -61,7 +68,7 @@ ENTRY (memset)
 2:	movl	%ecx, %edx
 	shrl	$2, %ecx
 	andl	$3, %edx
-#ifndef memset
+#if !BZERO_P
 	imul	$0x01010101, %eax
 #endif
 	rep
@@ -71,9 +78,15 @@ ENTRY (memset)
 	stosb
 
 1:
-#ifndef memset
-	movl	8(%esp), %eax
+#if !BZERO_P
+	movl	DEST(%esp), %eax
 #endif
 	popl	%edi
+
+	LEAVE
+#if BZERO_P
 	ret
+#else
+	RET_PTR
+#endif
 END (memset)

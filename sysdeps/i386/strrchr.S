@@ -1,6 +1,6 @@
 /* strrchr (str, ch) -- Return pointer to last occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -22,21 +22,23 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   ch		(sp + 8)
-*/
+#define PARMS	LINKAGE+8	/* space for 2 saved regs */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
 
 	.text
 ENTRY (strrchr)
+	ENTER
+
 	pushl %edi		/* Save callee-safe registers used here.  */
 	pushl %esi
 
 	xorl %eax, %eax
-	movl 12(%esp), %esi	/* get string pointer */
-	movl 16(%esp), %ecx	/* get character we are looking for */
+	movl STR(%esp), %esi
+	movl CHR(%esp), %ecx
 
 	/* At the moment %ecx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -320,7 +322,8 @@ L(26):	testb %dl, %dl		/* is third byte == NUL */
 L(2):	popl %esi		/* restore saved register content */
 	popl %edi
 
-	ret
+	LEAVE
+	RET_PTR
 END (strrchr)
 
 weak_alias (strrchr, rindex)

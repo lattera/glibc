@@ -1,5 +1,5 @@
 /* Pentium optimized __mpn_lshift --
-   Copyright (C) 1992, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or modify
@@ -17,28 +17,29 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-/*
-  INPUT PARAMETERS
-  res_ptr	(sp + 4)
-  s_ptr		(sp + 8)
-  size		(sp + 12)
-  cnt		(sp + 16)
-*/
-
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-.text
+#define PARMS	LINKAGE+16		/* space for 4 saved regs */
+#define RES	PARMS
+#define S	RES+PTR_SIZE
+#define SIZE	S+PTR_SIZE
+#define CNT	SIZE+4
+
+	.text
 ENTRY(__mpn_lshift)
+	ENTER
+
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 	pushl	%ebp
 
-	movl	20(%esp),%edi		/* res_ptr */
-	movl	24(%esp),%esi		/* s_ptr */
-	movl	28(%esp),%ebp		/* size */
-	movl	32(%esp),%ecx		/* cnt */
+	movl	RES(%esp),%edi
+	movl	S(%esp),%esi
+	movl	SIZE(%esp),%ebp
+	movl	CNT(%esp),%ecx
 
 /* We can use faster code for shift-by-1 under certain conditions.  */
 	cmp	$1,%ecx
@@ -127,6 +128,8 @@ L(end2):
 	popl	%ebx
 	popl	%esi
 	popl	%edi
+
+	LEAVE
 	ret
 
 /* We loop from least significant end of the arrays, which is only
@@ -216,5 +219,7 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 	popl	%ebx
 	popl	%esi
 	popl	%edi
+
+	LEAVE
 	ret
 END(__mpn_lshift)

@@ -1,5 +1,5 @@
 /* Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -20,29 +20,34 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   s1          (sp + 4)
-   s2          (sp + 8)
-*/
-
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define STR1	PARMS
+#define STR2	STR1+PTR_SIZE
 
         .text
 ENTRY (strcmp)
-	movl	4(%esp), %ecx
-	movl	8(%esp), %edx
-1:	movb	(%ecx), %al
+	ENTER
+
+	movl	STR1(%esp), %ecx
+	movl	STR2(%esp), %edx
+
+L(oop):	movb	(%ecx), %al
 	incl	%ecx
 	cmpb	(%edx), %al
-	jne	2f
+	jne	L(neq)
 	incl	%edx
 	testb	%al, %al
-	jnz	1b
+	jnz	L(oop)
+
 	xorl	%eax, %eax
-	jmp	3f
-2:	movl	$1, %eax
-	ja	3f
+	jmp	L(out)
+
+L(neq):	movl	$1, %eax
+	ja	L(out)
 	negl	%eax
-3:	ret
+
+L(out):	LEAVE
+	ret
 END (strcmp)

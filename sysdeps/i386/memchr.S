@@ -1,7 +1,7 @@
-/* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
-   than N.
+/* memchr (str, chr, len) -- Return pointer to first occurrence of CHR in STR less
+   than LEN.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -32,32 +32,34 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   c		(sp + 8)
-   len		(sp + 12)
-*/
+#define PARMS	LINKAGE+8		/* space for 2 saved regs */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
+#define LEN	CHR+4
 
 	.text
 ENTRY (memchr)
+	ENTER
+
 	/* Save callee-safe registers used in this function.  */
 	pushl %esi
 	pushl %edi
 
 	/* Load parameters into registers.  */
-	movl 12(%esp), %eax	/* str: pointer to memory block.  */
-	movl 16(%esp), %edx	/* c: byte we are looking for.  */
-	movl 20(%esp), %esi	/* len: length of memory block.  */
+	movl STR(%esp), %eax	/* str: pointer to memory block.  */
+	movl CHR(%esp), %edx	/* c: byte we are looking for.  */
+	movl LEN(%esp), %esi	/* len: length of memory block.  */
 
 	/* If my must not test more than three characters test
 	   them one by one.  This is especially true for 0.  */
 	cmpl $4, %esi
 	jb L(3)
 
-	/* At the moment %edx contains C.  What we need for the
-	   algorithm is C in all bytes of the dword.  Avoid
+	/* At the moment %edx contains CHR.  What we need for the
+	   algorithm is CHR in all bytes of the dword.  Avoid
 	   operations on 16 bit words because these require an
 	   prefix byte (and one more cycle).  */
 	movb %dl, %dh		/* Now it is 0|0|c|c */
@@ -117,9 +119,9 @@ ENTRY (memchr)
 	 into bit 32 (=carry flag), so all of the hole bits will
 	 be changed.
 
-	 3) But wait!  Aren't we looking for C, not zero?
+	 3) But wait!  Aren't we looking for CHR, not zero?
 	 Good point.  So what we do is XOR LONGWORD with a longword,
-	 each of whose bytes is C.  This turns each byte that is C
+	 each of whose bytes is CHR.  This turns each byte that is CHR
 	 into a zero.  */
 
 
@@ -152,7 +154,7 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
 
-	/* If at least one byte of the word is C we don't get 0 in %edi.  */
+	/* If at least one byte of the word is CHR we don't get 0 in %edi.  */
 	jnz L(8)		/* found it => return pointer */
 
 	/* This process is unfolded four times for better performance.
@@ -169,7 +171,7 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(7)		/* highest byte is C => return pointer */
+	jnc L(7)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -183,7 +185,7 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(6)		/* highest byte is C => return pointer */
+	jnc L(6)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -197,7 +199,7 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(5)		/* highest byte is C => return pointer */
+	jnc L(5)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -220,7 +222,7 @@ L(2):	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(8)		/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -238,7 +240,7 @@ L(2):	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(8)		/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -256,7 +258,7 @@ L(2):	subl $16, %esi
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(8)		/* highest byte is C => return pointer */
+	jnc L(8)		/* highest byte is CHR => return pointer */
 	xorl %ecx, %edi		/* ((word^charmask)+magic)^(word^charmask) */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
@@ -268,19 +270,19 @@ L(2):	subl $16, %esi
 L(3):	andl $3, %esi		/* mask out uninteresting bytes */
 	jz L(4)			/* no remaining bytes => return NULL */
 
-	cmpb %dl, (%eax)	/* compare byte with C */
+	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
 	jz L(4)			/* no remaining bytes => return NULL */
 
-	cmpb %dl, (%eax)	/* compare byte with C */
+	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
 	jz L(4)			/* no remaining bytes => return NULL */
 
-	cmpb %dl, (%eax)	/* compare byte with C */
+	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 
 L(4):	/* no byte found => return NULL */
@@ -312,5 +314,6 @@ L(8):	testb %cl, %cl		/* test first byte in dword */
 L(9):	popl %edi		/* pop saved registers */
 	popl %esi
 
-	ret
+	LEAVE
+	RET_PTR
 END (memchr)

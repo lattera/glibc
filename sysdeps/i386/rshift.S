@@ -1,5 +1,5 @@
 /* i80386 __mpn_rshift --
-   Copyright (C) 1992, 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -17,27 +17,28 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-/*
-  INPUT PARAMETERS
-  res_ptr	(sp + 4)
-  s_ptr		(sp + 8)
-  size		(sp + 12)
-  cnt		(sp + 16)
-*/
-
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-asm.h"
+
+#define PARMS	LINKAGE+12		/* space for 3 saved regs */
+#define RES	PARMS
+#define S	RES+PTR_SIZE
+#define SIZE	S+PTR_SIZE
+#define CNT	SIZE+4
 
 	.text
 ENTRY(__mpn_rshift)
+	ENTER
+
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
 
-	movl	16(%esp),%edi		/* res_ptr */
-	movl	20(%esp),%esi		/* s_ptr */
-	movl	24(%esp),%edx		/* size */
-	movl	28(%esp),%ecx		/* cnt */
+	movl	RES(%esp),%edi
+	movl	S(%esp),%esi
+	movl	SIZE(%esp),%edx
+	movl	CNT(%esp),%ecx
 
 	leal	-4(%edi,%edx,4),%edi
 	leal	(%esi,%edx,4),%esi
@@ -72,6 +73,8 @@ L(1):	movl	(%esi,%edx,4),%eax
 	popl	%ebx
 	popl	%esi
 	popl	%edi
+
+	LEAVE
 	ret
 
 L(end):	shrl	%cl,%ebx		/* compute most significant limb */
@@ -80,5 +83,7 @@ L(end):	shrl	%cl,%ebx		/* compute most significant limb */
 	popl	%ebx
 	popl	%esi
 	popl	%edi
+
+	LEAVE
 	ret
 END(__mpn_rshift)

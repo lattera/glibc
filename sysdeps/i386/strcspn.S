@@ -1,7 +1,7 @@
 /* strcspn (str, ss) -- Return the length of the initial segment of STR
 			which contains no characters from SS.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -23,17 +23,18 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   stopset	(sp + 8)
-*/
+#define PARMS	LINKAGE		/* no space for saved regs */
+#define STR	PARMS
+#define STOP	STR+PTR_SIZE
 
 	.text
 ENTRY (strcspn)
-	movl 4(%esp), %edx	/* get string pointer */
-	movl 8(%esp), %eax	/* get stopset pointer */
+	ENTER
+
+	movl STR(%esp), %edx
+	movl STOP(%esp), %eax
 
 	/* First we create a table with flags for all possible characters.
 	   For the ASCII (7bit/8bit) or ISO-8859-X character sets which are
@@ -173,5 +174,6 @@ L(4):	subl %edx, %eax		/* we have to return the number of valid
 				   non-valid character */
 	addl $256, %esp		/* remove stopset */
 
+	LEAVE
 	ret
 END (strcspn)

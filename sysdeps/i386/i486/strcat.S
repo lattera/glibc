@@ -1,6 +1,6 @@
 /* strcat(dest, src) -- Append SRC on the end of DEST.
    For Intel 80x86, x>=4.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@ipd.info.uni-karlsruhe.de>.
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -22,19 +22,21 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   dest		(sp + 4)
-   src		(sp + 8)
-*/
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
 
 	.text
 ENTRY (strcat)
+	ENTER
+
 	pushl %edi		/* Save callee-safe register.  */
 
-	movl 12(%esp), %ecx	/* load source pointer */
-	movl 8(%esp), %edx	/* load destination pointer */
+	movl DEST(%esp), %edx
+	movl SRC(%esp), %ecx
 
 	testb $0xff, (%ecx)	/* Is source string empty? */
 	jz L(8)			/* yes => return */
@@ -254,8 +256,9 @@ L(9):	movb %al, (%ecx,%edx)	/* store first byte of last word */
 
 	movb %ah, 3(%ecx,%edx)	/* store fourth byte of last word */
 
-L(8):	movl 8(%esp), %eax	/* start address of destination is result */
+L(8):	movl DEST(%esp), %eax	/* start address of destination is result */
 	popl %edi		/* restore saved register */
 
-	ret
+	LEAVE
+	RET_PTR
 END (strcat)

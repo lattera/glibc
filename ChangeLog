@@ -1,3 +1,46 @@
+2000-06-08  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/bp-asm.h: New file.
+	* sysdeps/i386/__longjmp.S: Define & use symbolic argument stack
+	offsets.  Add ENTER/LEAVE macros for optionally maintaining
+	frame-pointer chain when debugging.
+	* sysdeps/i386/add_n.S: Likewise.
+	* sysdeps/i386/addmul_1.S: Likewise.
+	* sysdeps/i386/lshift.S: Likewise.
+	* sysdeps/i386/memchr.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/rawmemchr.S: Likewise.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/stpcpy.S: Likewise.
+	* sysdeps/i386/stpncpy.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/i386/strchrnul.S: Likewise.
+	* sysdeps/i386/strcspn.S: Likewise.
+	* sysdeps/i386/strpbrk.S: Likewise.
+	* sysdeps/i386/strrchr.S: Likewise.
+	* sysdeps/i386/strspn.S: Likewise.
+	* sysdeps/i386/strtok.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/elf/setjmp.S: Likewise.
+	* sysdeps/i386/i486/strcat.S: Likewise.
+	* sysdeps/i386/i486/strlen.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/memcpy.S: Likewise.
+	* sysdeps/i386/i586/memset.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+	* sysdeps/i386/i586/strcpy.S: Likewise.
+	* sysdeps/i386/i586/strlen.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i686/add_n.S: Likewise.
+	* sysdeps/i386/i686/memcpy.S: Likewise.
+	* sysdeps/i386/i686/mempcpy.S: Likewise.
+	* sysdeps/i386/i686/memset.S: Likewise.
+	* sysdeps/i386/i686/strcmp.S: Likewise.
+
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getdtsz.c: New file.

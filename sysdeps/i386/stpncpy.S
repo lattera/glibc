@@ -1,7 +1,7 @@
 /* copy no more then N bytes from SRC to DEST, returning the address of
    the terminating '\0' in DEST.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -26,22 +26,23 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   dest		(sp + 4)
-   src		(sp + 8)
-   maxlen	(sp + 12)
-*/
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
+#define LEN	SRC+PTR_SIZE
 
 	.text
 ENTRY (__stpncpy)
+	ENTER
 
 	pushl %esi
 
-	movl 8(%esp), %eax	/* load destination pointer */
-	movl 12(%esp), %esi	/* load source pointer */
-	movl 16(%esp), %ecx	/* load maximal length */
+	movl DEST(%esp), %eax
+	movl SRC(%esp), %esi
+	movl LEN(%esp), %ecx
 
 	subl %eax, %esi		/* magic: reduce number of loop variants
 				   to one using addressing mode */
@@ -138,7 +139,8 @@ L(3):	decl %ecx		/* all bytes written? */
 
 L(9):	popl %esi		/* restore saved register content */
 
-	ret
+	LEAVE
+	RET_PTR
 END (__stpncpy)
 
 weak_alias (__stpncpy, stpncpy)

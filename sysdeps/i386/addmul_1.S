@@ -1,6 +1,6 @@
 /* i80386 __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
-   Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -18,16 +18,15 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
    MA 02111-1307, USA. */
 
-/*
-   INPUT PARAMETERS
-   res_ptr	(sp + 4)
-   s1_ptr	(sp + 8)
-   sizeP	(sp + 12)
-   s2_limb	(sp + 16)
-*/
-
 #include "sysdep.h"
 #include "asm-syntax.h"
+#include "bp-asm.h"
+
+#define PARMS	LINKAGE+16	/* space for 4 saved regs */
+#define RES	PARMS
+#define S1	RES+PTR_SIZE
+#define SIZE	S1+PTR_SIZE
+#define S2LIMB	SIZE+4
 
 #define res_ptr edi
 #define s1_ptr esi
@@ -42,10 +41,10 @@ ENTRY(__mpn_addmul_1)
 	INSN1(push,l	,R(ebx))
 	INSN1(push,l	,R(ebp))
 
-	INSN2(mov,l	,R(res_ptr),MEM_DISP(esp,20))
-	INSN2(mov,l	,R(s1_ptr),MEM_DISP(esp,24))
-	INSN2(mov,l	,R(sizeP),MEM_DISP(esp,28))
-	INSN2(mov,l	,R(s2_limb),MEM_DISP(esp,32))
+	INSN2(mov,l	,R(res_ptr),MEM_DISP(esp,RES))
+	INSN2(mov,l	,R(s1_ptr),MEM_DISP(esp,S1))
+	INSN2(mov,l	,R(sizeP),MEM_DISP(esp,SIZE))
+	INSN2(mov,l	,R(s2_limb),MEM_DISP(esp,S2LIMB))
 
 	INSN2(lea,l	,R(res_ptr),MEM_INDEX(res_ptr,sizeP,4))
 	INSN2(lea,l	,R(s1_ptr),MEM_INDEX(s1_ptr,sizeP,4))

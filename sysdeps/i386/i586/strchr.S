@@ -1,6 +1,6 @@
 /* Find character CH in a NUL terminated string.
    Highly optimized version for ix85, x>=5.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
 /* This version is especially optimized for the i586 (and following?)
    processors.  This is mainly done by using the two pipelines.  The
@@ -35,22 +36,23 @@
 /* The magic value which is used throughout in the whole code.  */
 #define magic 0xfefefeff
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   ch		(sp + 8)
-*/
+#define PARMS	LINKAGE+16	/* space for 4 saved regs */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
 
 	.text
 ENTRY (strchr)
+	ENTER
+
 	pushl %edi		/* Save callee-safe registers.  */
 	pushl %esi
 
 	pushl %ebx
 	pushl %ebp
 
-	movl 20(%esp), %eax	/* get string pointer */
-	movl 24(%esp), %edx	/* get character we are looking for */
+	movl STR(%esp), %eax
+	movl CHR(%esp), %edx
 
 	movl %eax, %edi		/* duplicate string pointer for later */
 	xorl %ecx, %ecx		/* clear %ecx */
@@ -283,7 +285,8 @@ L(2):	popl %ebp		/* restore saved registers */
 	popl %esi
 	popl %edi
 
-	ret
+	LEAVE
+	RET_PTR
 
 	/* We know there is a NUL byte in the word.  But we have to test
 	   whether there is an C byte before it in the word.  */
@@ -326,7 +329,8 @@ L(3):	xorl %eax, %eax		/* set return value = NULL */
 	popl %esi
 	popl %edi
 
-	ret
+	LEAVE
+	RET_PTR
 END (strchr)
 
 #undef index

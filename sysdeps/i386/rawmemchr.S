@@ -1,6 +1,6 @@
 /* rawmemchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -31,21 +31,23 @@
 
 #include <sysdep.h>
 #include "asm-syntax.h"
+#include "bp-asm.h"
 
-/*
-   INPUT PARAMETERS:
-   str		(sp + 4)
-   c		(sp + 8)
-*/
+#define PARMS	LINKAGE+4	/* space for 1 saved reg */
+#define RTN	PARMS
+#define STR	RTN+RTN_SIZE
+#define CHR	STR+PTR_SIZE
 
 	.text
 ENTRY (__rawmemchr)
+	ENTER
+
 	/* Save callee-safe register used in this function.  */
 	pushl %edi
 
 	/* Load parameters into registers.  */
-	movl 8(%esp), %eax	/* str: pointer to memory block.  */
-	movl 12(%esp), %edx	/* c: byte we are looking for.  */
+	movl STR(%esp), %eax
+	movl CHR(%esp), %edx
 
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -213,6 +215,7 @@ L(8):	testb %cl, %cl		/* test first byte in dword */
 
 L(9):	popl %edi		/* pop saved register */
 
+	LEAVE
 	ret
 END (__rawmemchr)
 weak_alias (__rawmemchr, rawmemchr)
