@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,11 +54,6 @@ _IO_wstrn_overflow (fp, c)
 
   if (fp->_wide_data->_IO_buf_base != snf->overflow_buf)
     {
-      /* Terminate the string.  We know that there is room for at
-	 least one more character since we initialized the stream with
-	 a size to make this possible.  */
-      *fp->_wide_data->_IO_write_ptr = '\0';
-
       _IO_wsetb (fp, snf->overflow_buf,
 		 snf->overflow_buf + (sizeof (snf->overflow_buf)
 				      / sizeof (wchar_t)), 0);
@@ -120,13 +115,10 @@ _IO_vswprintf (string, maxlen, format, args)
   sf.f._sbf._f._lock = &lock;
 #endif
 
-  /* We need to handle the special case where MAXLEN is 0.  Use the
-     overflow buffer right from the start.  */
   if (maxlen == 0)
-    {
-      string = sf.overflow_buf;
-      maxlen = sizeof (sf.overflow_buf) / sizeof (wchar_t);
-    }
+    /* Since we have to write at least the terminating L'\0' a buffer
+       length of zero always makes the function fail.  */
+    return -1;
 
   _IO_no_init (&sf.f._sbf._f, 0, 0, &wd, &_IO_wstrn_jumps);
   _IO_fwide (&sf.f._sbf._f, 1);
@@ -134,8 +126,14 @@ _IO_vswprintf (string, maxlen, format, args)
   _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
   ret = _IO_vfwprintf ((_IO_FILE *) &sf.f._sbf, format, args);
 
-  if (sf.f._sbf._f._wide_data->_IO_buf_base != sf.overflow_buf)
-    *sf.f._sbf._f._wide_data->_IO_write_ptr = '\0';
+  if (sf.f._sbf._f._wide_data->_IO_buf_base == sf.overflow_buf)
+    /* ISO C99 requires swprintf/vswprintf to return an error if the
+       output does not fit int he provided buffer.  */
+    return -1;
+
+  /* Terminate the string.  */
+  *sf.f._sbf._f._wide_data->_IO_write_ptr = '\0';
+
   return ret;
 }
 
