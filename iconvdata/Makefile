@@ -44,7 +44,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
-	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U
+	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -92,7 +92,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ebcdic-es-a.c ebcdic-es-s.c ebcdic-fr.c ebcdic-fi-se.c	    \
 	      ebcdic-fi-se-a.c ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c    \
 	      ebcdic-uk.c ebcdic-us.c ecma-cyrillic.c euc-cn.c euc-jp.c	    \
-	      euc-kr.c euc-tw.c gb2312.c gb2312.h gost_19768-74.c	    \
+	      euc-kr.c euc-tw.c gb2312.c gb2312.h gbk.c gost_19768-74.c	    \
 	      greek-ccitt.c greek7.c greek7-old.c hp-roman8.c ibm037.c	    \
 	      ibm038.c ibm256.c ibm273.c ibm274.c ibm275.c ibm277.c	    \
 	      ibm278.c ibm280.c ibm281.c ibm284.c ibm285.c ibm290.c	    \
