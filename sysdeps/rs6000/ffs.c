@@ -1,6 +1,6 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    For IBM rs6000.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@ Cambridge, MA 02139, USA.  */
 
 #undef	ffs
 
+#ifdef	__GNUC__
+
 int
 DEFUN(ffs, (x), int x)
 {
@@ -31,3 +33,7 @@ DEFUN(ffs, (x), int x)
   asm ("cntlz %0,%1" : "=r" (cnt) : "r" (x & -x));
   return 32 - cnt;
 }
+
+#else
+#include <sysdeps/generic/ffs.c>
+#endif

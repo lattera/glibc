@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
    Derived from @(#)_setjmp.s	5.7 (Berkeley) 6/27/88,
    Copyright (c) 1980 Regents of the University of California.
 
@@ -19,6 +19,10 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <setjmp.h>
+
+#ifndef	__GNUC__
+  #error This file uses GNU C extensions; you must compile with GCC.
+#endif
 
 
 /* Save the current program position in ENV and return 0.  */
