@@ -1,3 +1,7 @@
+2001-03-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/ldconfig.h: Fix typo.
+
 2001-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/fpu/Dist: Add new files to distribute.
