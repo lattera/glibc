@@ -357,10 +357,13 @@ realloc (void *old, size_t len)
 
   /* Keep track of number of calls.  */
   ++calls[idx_realloc];
-  /* Keep track of total memory consumption for `realloc'.  */
-  total[idx_realloc] += len;
-  /* Keep track of total memory requirement.  */
-  grand_total += len;
+  if (len > old_len)
+    {
+      /* Keep track of total memory consumption for `realloc'.  */
+      total[idx_realloc] += len - old_len;
+      /* Keep track of total memory requirement.  */
+      grand_total += len - old_len;
+    }
   /* Remember the size of the request.  */
   if (len < 65536)
     ++histogram[len / 16];
