@@ -1,3 +1,23 @@
+1998-05-06 12:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (pow): Use long long int for
+	test for integer.
+
+	* sysdeps/libm-i387/e_pow.S: Correctly shift double word.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+1998-03-31  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (chunk2mem_check, top_check): New functions.
+	(malloc_check, free_check, realloc_check, memalign_check): Use
+	them to improve overrun checking.  Overruns of a single byte and
+	corruption of the top chunk are now detected much more reliably.
+
+1998-05-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (pow_test): Add test for special value from PR
+	libc/590.
+
 1998-05-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/errno.h: Undefine EILSEQ before

@@ -754,4 +754,36 @@ have-thread-library = yes
 rpath-link := $(rpath-link):$(common-objpfx)linuxthreads
 endif
 
+ifndef avoid-generated
+-include $(common-objpfx)sysd-dirs
+define \n
+
+
+endef
+sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
+endif
+
+# These are the subdirectories containing the library source.
+subdirs = csu assert ctype db2 locale intl catgets math setjmp signal stdlib \
+	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
+	  posix io termios resource misc socket sysvipc gmon gnulib iconv \
+	  iconvdata wctype manual shadow md5-crypt po argp $(add-ons) nss \
+	  localedata timezone rt $(sysdep-subdirs) $(binfmt-subdir)
+
+# The mach and hurd subdirectories have many generated header files which
+# much of the rest of the library depends on, so it is best to build them
+# first (and mach before hurd, at that).  The before-compile additions in
+# sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
+# not to exist when making in other directories, but it will be slower that
+# way with more somewhat expensive `make' invocations.
+subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
+	   $(filter-out mach hurd,$(subdirs))
+
+all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
+$(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
+	(echo define sysdep-subdirs;				\
+	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\
+	 echo endef) > $@-tmp
+	mv -f $@-tmp $@
+
 endif # Makeconfig not yet included

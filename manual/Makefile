@@ -198,7 +198,7 @@ subdir_%: ;
 # None of these should be `subdir_TARGET'; those targets are transformed
 # by the implicit rule above into `TARGET' deps.
 glibc-targets	:= lib objects objs others tests lint.out \
-		   echo-headers echo-distinfo stubs
+		   echo-headers echo-distinfo
 .PHONY: $(glibc-targets)
 $(glibc-targets):
 
@@ -206,7 +206,10 @@ $(glibc-targets):
 # updating the library archives are happy with us, and never think we have
 # changed the library.
 lib: $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
+ifdef objpfx
+.PHONY: stubs
 stubs: $(objpfx)stubs
+endif
 $(objpfx)stubs ../po/manual.pot $(objpfx)stamp%:
 	$(make-target-directory)
 	cp /dev/null $@

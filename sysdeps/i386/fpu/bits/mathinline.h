@@ -376,7 +376,7 @@ __inline_mathcode2 (fmod, __x, __y, \
 __inline_mathcode2 (pow, __x, __y, \
   register long double __value;						      \
   register long double __exponent;					      \
-  long int __p = (long int) __y;					      \
+  long long int __p = (long long int) __y;				      \
   if (__x == 0.0 && __y > 0.0)						      \
     return 0.0;								      \
   if (__y == (double) __p)						      \

@@ -369,22 +369,16 @@ ifndef libc.so-version
 static-only-routines =
 endif
 
-elide-routines.oS = $(filter-out $(static-only-routines),\
-				 $(routines) $(aux) $(sysdep_routines))
-
-ifdef static-only-routines
+elide-routines.oS += $(filter-out $(static-only-routines),\
+				  $(routines) $(aux) $(sysdep_routines))
 elide-routines.os += $(static-only-routines)
-endif
 
-ifdef shared-only-routines
 # If we have versioned code we don't need the old versions in any of the
 # static libraries.
-define o-iterator-doit
-elide-routines.$o := $(shared-only-routines)
-endef
-object-suffixes-left := $(filter-out .os,$(object-suffixes))
-include $(o-iterator)
-endif
+elide-routines.o  += $(shared-only-routines)
+elide-routines.op += $(shared-only-routines)
+elide-routines.og += $(shared-only-routines)
+elide-routines.ob += $(shared-only-routines)
 
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want
@@ -497,14 +491,14 @@ CREATE_ARFLAGS := cru$(verbose)
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib lib-noranlib
-lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
+lib: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
+lib-noranlib: libobjs
 
 # For object-suffix $o, the list of objects with that suffix.
 # Makefiles can define `elide-routines.so = foo' to leave foo.so out.
 o-objects = $(patsubst %.o,%$o,$(filter-out $(patsubst %,$(objpfx)%.o,\
 						       $(elide-routines$o)),\
 					    $(objects)))
-lib-noranlib: libobjs
 others: $(addprefix $(objpfx),$(install-lib))
 
 ifndef objects
@@ -525,52 +519,33 @@ define o-iterator-doit
 $(objpfx)stamp$o: $(o-objects); $$(do-stamp)
 endef
 define do-stamp
-	echo '$(patsubst $(common-objpfx)%,%,$^)' > $@T
-	mv -f $@T $@
+echo '$(patsubst $(common-objpfx)%,%,$^)' > $@T
+mv -f $@T $@
 endef
-ifdef static-only-routines
 object-suffixes-left := $(object-suffixes-for-libc)
-else
-object-suffixes-left := $(object-suffixes)
-endif
 include $(o-iterator)
-
-ifndef static-only-routines
-subdir_lib: $(objpfx)stamp.oS
-$(objpfx)stamp.oS:
-	$(make-target-directory)
-	rm -f $@; > $@
-endif
 
 endif
 
 # Now define explicit rules to build the library archives; these depend
 # on the stamp files built above.  The rule always destroys and recreates
-# the library from scratch; it's faster (!) that way.
+# the library from scratch; it's faster that way.
 define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c): \
 		$(subdirs-stamp-o) $(common-objpfx)stamp$o; $$(do-makelib)
 endef
 define do-makelib
-	(set -e; cd $(common-objdir); 			  \
-	$(AR) $(CREATE_ARFLAGS) $(@F)T			  \
-		`cat $(patsubst $(common-objpfx)%,%,$^)`; \
-	$(RANLIB) $(@F)T;				  \
-	mv -f $(@F)T $(@F))
+cd $(common-objdir) && \
+$(AR) $(CREATE_ARFLAGS) $(@F)T `cat $(patsubst $(common-objpfx)%,%,$^)`
+$(RANLIB) $@T
+mv -f $@T $@
 endef
+subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
+subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 ifndef subdir
-subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
-subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
-$(subdirs-stamps): subdir_lib;
+$(subdirs-stamps): $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o) \
+		   subdir_lib;
 endif
-# The elf directory needs to know subdirs-stamp-o; otherwise libc_pic.a
-# is mangled. FIXME: It would be cleaner to move the final construction
-# of ld.so to top level.
-ifeq ($(subdir),elf)
-subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
-subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
-endif
-
 object-suffixes-left = $(object-suffixes-for-libc)
 include $(o-iterator)
 
@@ -939,8 +914,10 @@ common-clean: common-mostlyclean
 # looking for references to <stub-tag.h>.  Then we grovel over each
 # referenced source file to see what stub function it defines.
 
+ifdef objpfx
 .PHONY: stubs # The parent Makefile calls this target.
 stubs: $(objpfx)stubs
+endif
 s = $(sysdep_dir)/generic
 $(objpfx)stubs: $(+depfiles)
 # Use /dev/null since `...` might expand to empty.

@@ -523,6 +523,14 @@ do {                                                                          \
 #define MAP_ANONYMOUS MAP_ANON
 #endif
 
+#ifndef MAP_NORESERVE
+# ifdef MAP_AUTORESRV
+#  define MAP_NORESERVE MAP_AUTORESRV
+# else
+#  define MAP_NORESERVE 0
+# endif
+#endif
+
 #endif /* HAVE_MMAP */
 
 /*
@@ -1757,15 +1765,15 @@ __malloc_check_init()
 
 static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 
-#define MMAP(size, prot) ((dev_zero_fd < 0) ? \
+#define MMAP(size, prot, flags) ((dev_zero_fd < 0) ? \
  (dev_zero_fd = open("/dev/zero", O_RDWR), \
-  mmap(0, (size), (prot), MAP_PRIVATE, dev_zero_fd, 0)) : \
-   mmap(0, (size), (prot), MAP_PRIVATE, dev_zero_fd, 0))
+  mmap(0, (size), (prot), (flags), dev_zero_fd, 0)) : \
+   mmap(0, (size), (prot), (flags), dev_zero_fd, 0))
 
 #else
 
-#define MMAP(size, prot) \
- (mmap(0, (size), (prot), MAP_PRIVATE|MAP_ANONYMOUS, -1, 0))
+#define MMAP(size, prot, flags) \
+ (mmap(0, (size), (prot), (flags)|MAP_ANONYMOUS, -1, 0))
 
 #endif
 
@@ -1791,7 +1799,7 @@ mmap_chunk(size) size_t size;
    */
   size = (size + SIZE_SZ + page_mask) & ~page_mask;
 
-  p = (mchunkptr)MMAP(size, PROT_READ|PROT_WRITE);
+  p = (mchunkptr)MMAP(size, PROT_READ|PROT_WRITE, MAP_PRIVATE);
   if(p == (mchunkptr) MAP_FAILED) return 0;
 
   n_mmaps++;
@@ -1920,7 +1928,11 @@ new_heap(size) size_t size;
     size = HEAP_MAX_SIZE;
   size = (size + page_mask) & ~page_mask;
 
-  p1 = (char *)MMAP(HEAP_MAX_SIZE<<1, PROT_NONE);
+  /* A memory region aligned to a multiple of HEAP_MAX_SIZE is needed.
+     No swap space needs to be reserved for the following large
+     mapping (on Linux, this is the case for all non-writable mappings
+     anyway). */
+  p1 = (char *)MMAP(HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
   if(p1 == MAP_FAILED)
     return 0;
   p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
@@ -2014,6 +2026,7 @@ arena_get2(a_tsd, size) arena *a_tsd; size_t size;
   }
 
   /* Check the global, circularly linked list for available arenas. */
+ repeat:
   do {
     if(!mutex_trylock(&a->mutex)) {
       THREAD_STAT(++(a->stat_lock_loop));
@@ -2022,6 +2035,16 @@ arena_get2(a_tsd, size) arena *a_tsd; size_t size;
     }
     a = a->next;
   } while(a != a_tsd);
+
+  /* If not even the list_lock can be obtained, try again.  This can
+     happen during `atfork', or for example on systems where thread
+     creation makes it temporarily impossible to obtain _any_
+     locks. */
+  if(mutex_trylock(&list_lock)) {
+    a = a_tsd;
+    goto repeat;
+  }
+  (void)mutex_unlock(&list_lock);
 
   /* Nothing immediately available, so generate a new arena. */
   h = new_heap(size + (sizeof(*h) + sizeof(*a) + MALLOC_ALIGNMENT));
@@ -3780,9 +3803,6 @@ malloc_update_mallinfo(ar_ptr, mi) arena *ar_ptr; struct mallinfo *mi;
 #endif
   INTERNAL_SIZE_T avail;
 
-  /* Initialize the memory.  */
-  memset (mi, '\0', sizeof (struct mallinfo));
-
   (void)mutex_lock(&ar_ptr->mutex);
   avail = chunksize(top(ar_ptr));
   navail = ((long)(avail) >= (long)MINSIZE)? 1 : 0;
@@ -3806,6 +3826,7 @@ malloc_update_mallinfo(ar_ptr, mi) arena *ar_ptr; struct mallinfo *mi;
 
   mi->arena = ar_ptr->size;
   mi->ordblks = navail;
+  mi->smblks = mi->usmblks = mi->fsmblks = 0; /* clear unused fields */
   mi->uordblks = ar_ptr->size - avail;
   mi->fordblks = avail;
   mi->hblks = n_mmaps;
@@ -4136,13 +4157,39 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
    byte per chunk; still this will catch most cases of double frees or
-   overruns. */
+   overruns.  The goal here is to avoid obscure crashes due to invalid
+   usage, unlike in the MALLOC_DEBUG code. */
 
 #define MAGICBYTE(p) ( ( ((size_t)p >> 3) ^ ((size_t)p >> 11)) & 0xFF )
 
+/* Instrument a chunk with overrun detector byte(s) and convert it
+   into a user pointer with requested size sz. */
+
+static Void_t*
+#if __STD_C
+chunk2mem_check(mchunkptr p, size_t sz)
+#else
+chunk2mem_check(p, sz) mchunkptr p; size_t sz;
+#endif
+{
+  unsigned char* m_ptr = (unsigned char*)chunk2mem(p);
+  size_t i;
+
+  for(i = chunksize(p) - (chunk_is_mmapped(p) ? 2*SIZE_SZ+1 : SIZE_SZ+1);
+      i > sz;
+      i -= 0xFF) {
+    if(i-sz < 0x100) {
+      m_ptr[i] = (unsigned char)(i-sz);
+      break;
+    }
+    m_ptr[i] = 0xFF;
+  }
+  m_ptr[sz] = MAGICBYTE(p);
+  return (Void_t*)m_ptr;
+}
+
 /* Convert a pointer to be free()d or realloc()ed to a valid chunk
-   pointer.  If the provided pointer is not valid, return NULL.  The
-   goal here is to avoid crashes, unlike in the MALLOC_DEBUG code. */
+   pointer.  If the provided pointer is not valid, return NULL. */
 
 static mchunkptr
 internal_function
@@ -4153,7 +4200,8 @@ mem2chunk_check(mem) Void_t* mem;
 #endif
 {
   mchunkptr p;
-  INTERNAL_SIZE_T sz;
+  INTERNAL_SIZE_T sz, c;
+  unsigned char magic;
 
   p = mem2chunk(mem);
   if(!aligned_OK(p)) return NULL;
@@ -4166,9 +4214,11 @@ mem2chunk_check(mem) Void_t* mem;
                             (long)prev_chunk(p)<(long)sbrk_base ||
                             next_chunk(prev_chunk(p))!=p) ))
       return NULL;
-    if(*((unsigned char*)p + sz + (SIZE_SZ-1)) != MAGICBYTE(p))
-      return NULL;
-    *((unsigned char*)p + sz + (SIZE_SZ-1)) ^= 0xFF;
+    magic = MAGICBYTE(p);
+    for(sz += SIZE_SZ-1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
+      if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
+    }
+    ((unsigned char*)p)[sz] ^= 0xFF;
   } else {
     unsigned long offset, page_mask = malloc_getpagesize-1;
 
@@ -4184,11 +4234,51 @@ mem2chunk_check(mem) Void_t* mem;
        ( (((unsigned long)p - p->prev_size) & page_mask) != 0 ) ||
        ( (sz = chunksize(p)), ((p->prev_size + sz) & page_mask) != 0 ) )
       return NULL;
-    if(*((unsigned char*)p + sz - 1) != MAGICBYTE(p))
-      return NULL;
-    *((unsigned char*)p + sz - 1) ^= 0xFF;
+    magic = MAGICBYTE(p);
+    for(sz -= 1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
+      if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
+    }
+    ((unsigned char*)p)[sz] ^= 0xFF;
   }
   return p;
+}
+
+/* Check for corruption of the top chunk, and try to recover if
+   necessary. */
+
+static int
+top_check()
+{
+  mchunkptr t = top(&main_arena);
+  char* brk, * new_brk;
+  INTERNAL_SIZE_T front_misalign, sbrk_size;
+  unsigned long pagesz = malloc_getpagesize;
+
+  if((char*)t + chunksize(t) == sbrk_base + sbrked_mem ||
+     t == initial_top(&main_arena)) return 0;
+
+  switch(check_action) {
+  case 1:
+    fprintf(stderr, "malloc: top chunk is corrupt\n");
+    break;
+  case 2:
+    abort();
+  }
+  /* Try to set up a new top chunk. */
+  brk = MORECORE(0);
+  front_misalign = (unsigned long)chunk2mem(brk) & MALLOC_ALIGN_MASK;
+  if (front_misalign > 0)
+    front_misalign = MALLOC_ALIGNMENT - front_misalign;
+  sbrk_size = front_misalign + top_pad + MINSIZE;
+  sbrk_size += pagesz - ((unsigned long)(brk + sbrk_size) & (pagesz - 1));
+  new_brk = (char*)(MORECORE (sbrk_size));
+  if (new_brk == (char*)(MORECORE_FAILURE)) return -1;
+  sbrked_mem = (new_brk - sbrk_base) + sbrk_size;
+
+  top(&main_arena) = (mchunkptr)(brk + front_misalign);
+  set_head(top(&main_arena), (sbrk_size - front_misalign) | PREV_INUSE);
+
+  return 0;
 }
 
 static Void_t*
@@ -4202,16 +4292,10 @@ malloc_check(sz, caller) size_t sz; const Void_t *caller;
   INTERNAL_SIZE_T nb = request2size(sz + 1);
 
   (void)mutex_lock(&main_arena.mutex);
-  victim = chunk_alloc(&main_arena, nb);
+  victim = (top_check() >= 0) ? chunk_alloc(&main_arena, nb) : NULL;
   (void)mutex_unlock(&main_arena.mutex);
   if(!victim) return NULL;
-  nb = chunksize(victim);
-  if(chunk_is_mmapped(victim))
-    --nb;
-  else
-    nb += SIZE_SZ - 1;
-  *((unsigned char*)victim + nb) = MAGICBYTE(victim);
-  return chunk2mem(victim);
+  return chunk2mem_check(victim, sz);
 }
 
 static void
@@ -4290,7 +4374,7 @@ realloc_check(oldmem, bytes, caller)
       if(oldsize - SIZE_SZ >= nb) newp = oldp; /* do nothing */
       else {
         /* Must alloc, copy, free. */
-        newp = chunk_alloc(&main_arena, nb);
+        newp = (top_check() >= 0) ? chunk_alloc(&main_arena, nb) : NULL;
         if (newp) {
           MALLOC_COPY(chunk2mem(newp), oldmem, oldsize - 2*SIZE_SZ);
           munmap_chunk(oldp);
@@ -4301,7 +4385,8 @@ realloc_check(oldmem, bytes, caller)
 #endif
   } else {
 #endif /* HAVE_MMAP */
-    newp = chunk_realloc(&main_arena, oldp, oldsize, nb);
+    newp = (top_check() >= 0) ?
+      chunk_realloc(&main_arena, oldp, oldsize, nb) : NULL;
 #if 0 /* Erase freed memory. */
     nb = chunksize(newp);
     if(oldp<newp || oldp>=chunk_at_offset(newp, nb)) {
@@ -4317,13 +4402,7 @@ realloc_check(oldmem, bytes, caller)
   (void)mutex_unlock(&main_arena.mutex);
 
   if(!newp) return NULL;
-  nb = chunksize(newp);
-  if(chunk_is_mmapped(newp))
-    --nb;
-  else
-    nb += SIZE_SZ - 1;
-  *((unsigned char*)newp + nb) = MAGICBYTE(newp);
-  return chunk2mem(newp);
+  return chunk2mem_check(newp, bytes);
 }
 
 static Void_t*
@@ -4342,16 +4421,10 @@ memalign_check(alignment, bytes, caller)
 
   nb = request2size(bytes+1);
   (void)mutex_lock(&main_arena.mutex);
-  p = chunk_align(&main_arena, nb, alignment);
+  p = (top_check() >= 0) ? chunk_align(&main_arena, nb, alignment) : NULL;
   (void)mutex_unlock(&main_arena.mutex);
   if(!p) return NULL;
-  nb = chunksize(p);
-  if(chunk_is_mmapped(p))
-    --nb;
-  else
-    nb += SIZE_SZ - 1;
-  *((unsigned char*)p + nb) = MAGICBYTE(p);
-  return chunk2mem(p);
+  return chunk2mem_check(p, bytes);
 }
 
 /* The following hooks are used when the global initialization in

@@ -1,5 +1,5 @@
 /* ix87 specific implementation of pow function.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -125,6 +125,7 @@ ENTRY(__ieee754_pow)
 	fmul	%st(1)		// x : ST*x
 	fxch
 5:	fmul	%st(0), %st	// x*x : ST*x
+	shrl	$1, %edx
 	movl	%eax, %ecx
 	orl	%edx, %ecx
 	jnz	6b

@@ -2203,6 +2203,11 @@ pow_test (void)
 
   check_eps ("pow (0.7, 1.2) == 0.65180...", FUNC(pow) (0.7, 1.2),
 	     0.65180494056638638188L, CHOOSE(4e-17L, 0, 0));
+
+#ifdef TEST_DOUBLE
+  check ("pow (-7.49321e+133, -9.80818e+16) == 0",
+	 FUNC(pow) (-7.49321e+133, -9.80818e+16), 0);
+#endif
 }
 
 

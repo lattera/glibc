@@ -50,32 +50,6 @@ endif
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
-ifndef avoid-generated
--include $(objpfx)sysd-dirs
-define \n
-
-
-endef
-sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
-endif
-
-# These are the subdirectories containing the library source.
-subdirs = csu assert ctype db2 locale intl catgets math setjmp signal stdlib \
-	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
-	  posix io termios resource misc socket sysvipc gmon gnulib iconv \
-	  iconvdata wctype manual shadow md5-crypt po argp $(add-ons) nss \
-	  localedata timezone rt $(sysdep-subdirs) $(binfmt-subdir)
-export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
-
-# The mach and hurd subdirectories have many generated header files which
-# much of the rest of the library depends on, so it is best to build them
-# first (and mach before hurd, at that).  The before-compile additions in
-# sysdeps/{mach,hurd}/Makefile should make it reliably work for these files
-# not to exist when making in other directories, but it will be slower that
-# way with more somewhat expensive `make' invocations.
-subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
-	   $(filter-out mach hurd,$(subdirs))
-
 # All initialization source files.
 +subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
 # All subdirectories containing initialization source files.
@@ -158,13 +132,6 @@ ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
 lib: $(common-objpfx)libc.so
 endif
-
-all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
-$(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
-	(echo define sysdep-subdirs;				\
-	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\
-	 echo endef) > $@-tmp
-	mv -f $@-tmp $@
 
 all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
 $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
