@@ -1,5 +1,5 @@
 /* Print output of stream to given obstack.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #endif
 #include "libioP.h"
+#include <assert.h>
 #include <string.h>
 #include <errno.h>
 #include <obstack.h>
@@ -40,18 +41,20 @@ static int
 _IO_obstack_overflow (_IO_FILE *fp, int c)
 {
   struct obstack *obstack = ((struct _IO_obstack_file *) fp)->obstack;
+  int size;
 
   /* Make room for another character.  This might as well allocate a
      new chunk a memory and moves the old contents over.  */
-  if (c != EOF)
-    obstack_1grow (obstack, c);
+  assert (c != EOF);
+  obstack_1grow (obstack, c);
 
   /* Setup the buffer pointers again.  */
   fp->_IO_write_base = obstack_base (obstack);
   fp->_IO_write_ptr = obstack_next_free (obstack);
-  fp->_IO_write_end = fp->_IO_write_ptr + obstack_room (obstack);
+  size = obstack_room (obstack);
+  fp->_IO_write_end = fp->_IO_write_ptr + size;
   /* Now allocate the rest of the current chunk.  */
-  obstack_blank_fast (obstack, fp->_IO_write_end - fp->_IO_write_ptr);
+  obstack_blank_fast (obstack, size);
 
   return c;
 }
@@ -64,6 +67,8 @@ _IO_obstack_xsputn (_IO_FILE *fp, const void *data, _IO_size_t n)
 
   if (fp->_IO_write_ptr + n > fp->_IO_write_end)
     {
+      int size;
+
       /* We need some more memory.  First shrink the buffer to the
 	 space we really currently need.  */
       obstack_blank_fast (obstack, fp->_IO_write_ptr - fp->_IO_write_end);
@@ -74,9 +79,10 @@ _IO_obstack_xsputn (_IO_FILE *fp, const void *data, _IO_size_t n)
       /* Setup the buffer pointers again.  */
       fp->_IO_write_base = obstack_base (obstack);
       fp->_IO_write_ptr = obstack_next_free (obstack);
-      fp->_IO_write_end = (fp->_IO_write_ptr + obstack_room (obstack));
+      size = obstack_room (obstack);
+      fp->_IO_write_end = fp->_IO_write_ptr + size;
       /* Now allocate the rest of the current chunk.  */
-      obstack_blank_fast (obstack, fp->_IO_write_end - fp->_IO_write_ptr);
+      obstack_blank_fast (obstack, size);
     }
   else
     fp->_IO_write_ptr = __mempcpy (fp->_IO_write_ptr, data, n);
@@ -122,6 +128,8 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 #endif
   } new_f;
   int result;
+  int size;
+  int room;
 
 #ifdef _IO_MTSAFE_IO
   new_f.ofile.file.file._lock = &new_f.lock;
@@ -129,13 +137,35 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
 
   _IO_no_init (&new_f.ofile.file.file, 0, -1, NULL, NULL);
   _IO_JUMPS (&new_f.ofile.file) = &_IO_obstack_jumps;
+  room = obstack_room (obstack);
+  size = obstack_object_size (obstack) + room;
+  if (size == 0)
+    {
+      /* We have to handle the allocation a bit different since the
+	 `_IO_str_init_static' function would handle a size of zero
+	 different from what we expect.  */
+      size = 64;
+
+      /* Get more memory.  */
+      obstack_blank (obstack, size);
+
+      /* Recompute who much room we have.  */
+      room = obstack_room (obstack);
+      size += room;
+
+      assert (size != 0);
+    }
+
   _IO_str_init_static (&new_f.ofile.file.file, obstack_base (obstack),
-		       (obstack_object_size (obstack) +
-			obstack_room (obstack)), obstack_next_free (obstack));
+		       size, obstack_next_free (obstack));
   /* Now allocate the rest of the current chunk.  */
-  obstack_blank_fast (obstack,
-		      (new_f.ofile.file.file._IO_write_end
-		       - new_f.ofile.file.file._IO_write_ptr));
+  assert (size == (new_f.ofile.file.file._IO_write_end
+		   - new_f.ofile.file.file._IO_write_base));
+  assert (new_f.ofile.file.file._IO_write_ptr
+	  == (new_f.ofile.file.file._IO_write_base
+	      + obstack_object_size (obstack)));
+  obstack_blank_fast (obstack, room);
+
   new_f.ofile.obstack = obstack;
 
   result = _IO_vfprintf (&new_f.ofile.file.file, format, args);
