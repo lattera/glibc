@@ -1,4 +1,7 @@
-2000-01-28  Ulrich Drepper  <drepper@cygnus.com>
+2000-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c [COMPILE_WPRINT] (_i18n_itoa_word,
+	_i18n_itoa): Fix parameter lists.
 
 	* locale/C-monetary.c: Add initializers for new fields.
 	* locale/C-numeric.c: Likewise.

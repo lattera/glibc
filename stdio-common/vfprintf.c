@@ -100,9 +100,8 @@
 
 #  define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
 #  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
-#  define _i18n_itoa(Val, Buf, Base, Case) _i18n_itowa (Val, Buf, Base, Case)
-#  define _i18n_itoa_word(Val, Buf, Base, Case) \
-  _i18n_itowa_word (Val, Buf, Base, Case)
+#  define _i18n_itoa(Val, Buf) _i18n_itowa (Val, Buf)
+#  define _i18n_itoa_word(Val, Buf) _i18n_itowa_word (Val, Buf)
 #  undef EOF
 #  define EOF WEOF
 # endif
