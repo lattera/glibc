@@ -1,5 +1,5 @@
 /* Code to enable profiling at program startup.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,12 +30,20 @@ extern void _start (), etext ();
 extern void monstartup (u_long, u_long);
 extern void _mcleanup (void);
 
+#ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor
    mechanism.  We link this file together with start.o to produce gcrt1.o,
    so this constructor will be first in the list.  */
-static void gmon_start (void) __attribute__ ((constructor));
-static void
-gmon_start (void)
+
+void __gmon_start__ (void) __attribute__ ((constructor));
+#else
+/* In ELF and COFF, we cannot use the normal constructor mechanism to call
+   __gmon_start__ because gcrt1.o appears before crtbegin.o in the link.
+   Instead crti.o calls it specially (see initfini.c).  */
+#endif
+
+void
+__gmon_start__ (void)
 {
   /* Start keeping profiling records.  */
   monstartup ((u_long) &_start, (u_long) &etext);

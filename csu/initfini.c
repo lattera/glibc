@@ -63,6 +63,17 @@ SECTION (".init")
 void
 _init (void)
 {
+  /* We cannot use the normal constructor mechanism in gcrt1.o because it
+     appears before crtbegin.o in the link, so the header elt of .ctors
+     would come after the elt for __gmon_start__.  One approach is for
+     gcrt1.o to reference a symbol which would be defined by some library
+     module which has a constructor; but then user code's constructors
+     would come first, and not be profiled.  */
+  extern void __gmon_start__ (void) __attribute__ ((weak));
+  weak_symbol (__gmon_start__)
+  if (&__gmon_start__)
+    __gmon_start__ ();
+
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */
