@@ -716,6 +716,8 @@ OLD_DEBIAN_INSTALL_INFO=$libc_cv_old_debian_install_info
 fi
 AC_SUBST(OLD_DEBIAN_INSTALL_INFO)
 
+AC_PATH_PROG(BISON, bison, no, $PATH:/usr/local/bin:/usr/bin:/bin)
+
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
