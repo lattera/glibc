@@ -1,3 +1,7 @@
+2000-09-14  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/GB2312: Change code_set_name to GB2312.
+
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/locales/ar_AE: Remove extra <U0020> from day and abday.

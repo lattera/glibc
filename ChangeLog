@@ -1,3 +1,8 @@
+2000-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Change
+	to not use sysctl().  Too many architectures have problems with it.
+
 2000-09-14  Andreas Jaeger  <aj@suse.de>
 
 	* scripts/config.sub: New version from subversions.gnu.org.

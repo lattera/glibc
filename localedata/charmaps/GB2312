@@ -1,9 +1,9 @@
-<code_set_name> GB2312-1980
+<code_set_name> GB2312
 <mb_cur_max> 2
 <mb_cur_min> 1
 <comment_char> %
 <escape_char> /
-% Chinese charmap for GB2312-1980
+% Chinese charmap for EUC-CN = GB2312 = union of ASCII and GB_2312-80
 % version: 1.0
 % Contact: ha_shao
 % Email: hashao@china.com
