@@ -1,4 +1,17 @@
-2002-01-07  Stephen L Moshier <moshier@mediaone.net>
+2002-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (routines, shared-only-routines): Add
+	unwind-dw2-fde-glibc instead of unwind-dw2-fde.
+	* elf/elf.h (PT_GNU_EH_FRAME): Define.
+	* sysdeps/generic/unwind-dw2-fde-glibc.c: New file.
+	* sysdeps/generic/unwind-dw2-fde.c (__register_frame_info_bases):
+	Optimize if .eh_frame section contains no FDEs.
+	(__register_frame, __deregister_frame_info_bases,
+	__deregister_frame): Likewise.
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Fix
+	DW_CFA_restore handling.
+
+2002-01-07  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/ldbl-96/s_erfl.c (erfcl): Fix K&R header.
 

@@ -721,9 +721,9 @@ execute_cfa_program (const unsigned char *insn_ptr,
       _Unwind_Sword offset;
       _Unwind_Ptr ptrtmp;
 
-      if (insn & DW_CFA_advance_loc)
+      if ((insn & 0xc0) == DW_CFA_advance_loc)
 	fs->pc += (insn & 0x3f) * fs->code_align;
-      else if (insn & DW_CFA_offset)
+      else if ((insn & 0xc0) == DW_CFA_offset)
 	{
 	  reg = insn & 0x3f;
 	  insn_ptr = read_uleb128 (insn_ptr, &ptrtmp);
@@ -731,7 +731,7 @@ execute_cfa_program (const unsigned char *insn_ptr,
 	  fs->regs.reg[reg].how = REG_SAVED_OFFSET;
 	  fs->regs.reg[reg].loc.offset = offset;
 	}
-      else if (insn & DW_CFA_restore)
+      else if ((insn & 0xc0) == DW_CFA_restore)
 	{
 	  reg = insn & 0x3f;
 	  fs->regs.reg[reg].how = REG_UNSAVED;

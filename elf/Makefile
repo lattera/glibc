@@ -67,8 +67,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 include ../Makeconfig
 
 ifeq ($(unwind-find-fde),yes)
-routines += unwind-dw2-fde
-shared-only-routines = unwind-dw2-fde
+routines += unwind-dw2-fde-glibc
+shared-only-routines = unwind-dw2-fde-glibc
 endif
 
 before-compile  = $(objpfx)trusted-dirs.h

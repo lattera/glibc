@@ -101,6 +101,10 @@ void
 __register_frame_info_bases (void *begin, struct object *ob,
 			     void *tbase, void *dbase)
 {
+  /* If .eh_frame is empty, don't register at all.  */
+  if (*(uword *)begin == 0)
+    return;
+
   ob->pc_begin = (void *)-1;
   ob->tbase = tbase;
   ob->dbase = dbase;
@@ -126,7 +130,13 @@ __register_frame_info (void *begin, struct object *ob)
 void
 __register_frame (void *begin)
 {
-  struct object *ob = (struct object *) malloc (sizeof (struct object));
+  struct object *ob;
+
+  /* If .eh_frame is empty, don't register at all.  */
+  if (*(uword *)begin == 0)
+    return;
+
+  ob = (struct object *) malloc (sizeof (struct object));
   __register_frame_info (begin, ob);
 }
 
@@ -186,6 +196,10 @@ __deregister_frame_info_bases (void *begin)
   struct object **p;
   struct object *ob = 0;
 
+  /* If .eh_frame is empty, we haven't registered.  */
+  if (*(uword *)begin == 0)
+    return ob;
+
   init_object_mutex_once ();
   __gthread_mutex_lock (&object_mutex);
 
@@ -235,7 +249,9 @@ __deregister_frame_info (void *begin)
 void
 __deregister_frame (void *begin)
 {
-  free (__deregister_frame_info (begin));
+  /* If .eh_frame is empty, we haven't registered.  */
+  if (*(uword *)begin != 0)
+    free (__deregister_frame_info (begin));
 }
 
 
@@ -968,7 +984,7 @@ _Unwind_Find_FDE (void *pc, struct dwarf_eh_bases *bases)
   __gthread_mutex_lock (&object_mutex);
 
   /* Linear search through the classified objects, to find the one
-     containing the pc.  Note that pc_begin is sorted decending, and
+     containing the pc.  Note that pc_begin is sorted descending, and
      we expect objects to be non-overlapping.  */
   for (ob = seen_objects; ob; ob = ob->next)
     if (pc >= ob->pc_begin)
