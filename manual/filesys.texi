@@ -531,7 +531,7 @@ added or removed since you last called @code{opendir} or
 
 @comment dirent.h
 @comment BSD
-@deftypefun off_t telldir (DIR *@var{dirstream})
+@deftypefun long int telldir (DIR *@var{dirstream})
 The @code{telldir} function returns the file position of the directory
 stream @var{dirstream}.  You can use this value with @code{seekdir} to
 restore the directory stream to that position.
@@ -539,7 +539,7 @@ restore the directory stream to that position.
 
 @comment dirent.h
 @comment BSD
-@deftypefun void seekdir (DIR *@var{dirstream}, off_t @var{pos})
+@deftypefun void seekdir (DIR *@var{dirstream}, long int @var{pos})
 The @code{seekdir} function sets the file position of the directory
 stream @var{dirstream} to @var{pos}.  The value @var{pos} must be the
 result of a previous call to @code{telldir} on this particular stream;
@@ -1740,7 +1740,7 @@ is transparently replaced by @code{ino64_t}.
 @deftp {Data Type} ino64_t
 This is an arithmetic data type used to represent file serial numbers
 for the use in LFS.  In the GNU system, this type is equivalent to
-@code{unsigned long longint}.
+@code{unsigned long long int}.
 
 When compiling with @code{_FILE_OFFSET_BITS == 64} this type is
 available under the name @code{ino_t}.
