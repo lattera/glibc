@@ -1,5 +1,5 @@
 /* Common code for DB-based databases in nss_db module.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <db.h>
+#include <dlfcn.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>
 #include "nsswitch.h"
+#include "nss_db.h"
 
 /* These symbols are defined by the including source file:
 
@@ -51,68 +52,12 @@ __libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the shared handle open on the database.  */
 
-static DB *db;
+static NSS_DB *db;
 static int keep_db;
-static unsigned int entidx;	/* Index for `getENTNAME'. */
-
-/* Open database file if not already opened.  */
-static enum nss_status
-internal_setent (int stayopen)
-{
-  enum nss_status status = NSS_STATUS_SUCCESS;
-  int err;
-
-  if (db == NULL)
-    {
-      err = __nss_db_open (DBFILE, DB_BTREE, DB_RDONLY, 0, NULL, NULL, &db);
-
-      if (err != 0)
-	{
-	  __set_errno (err);
-	  status = err == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
-	}
-      else
-	{
-	  /* We have to make sure the file is `closed on exec'.  */
-	  int fd;
-	  int result;
-
-	  err = db->fd (db, &fd);
-	  if (err != 0)
-	    {
-	      __set_errno (err);
-	      result = -1;
-	    }
-	  else
-	    {
-	      int flags = result = fcntl (fd, F_GETFD, 0);
-
-	      if (result >= 0)
-		{
-		  flags |= FD_CLOEXEC;
-		  result = fcntl (fd, F_SETFD, flags);
-		}
-	    }
-	  if (result < 0)
-	    {
-	      /* Something went wrong.  Close the stream and return a
-		 failure.  */
-	      db->close (db, 0);
-	      db = NULL;
-	      status = NSS_STATUS_UNAVAIL;
-	    }
-	}
-    }
-
-  /* Remember STAYOPEN flag.  */
-  if (db != NULL)
-    keep_db |= stayopen;
-
-  return status;
-}
+static int entidx;
 
 
-/* Thread-safe, exported version of that.  */
+/* Open the database.  */
 enum nss_status
 CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 {
@@ -120,8 +65,11 @@ CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 
   __libc_lock_lock (lock);
 
-  status = internal_setent (stayopen);
+  status = internal_setent (DBFILE, &db);
 
+  /* Remember STAYOPEN flag.  */
+  if (db != NULL)
+    keep_db |= stayopen;
   /* Reset the sequential index.  */
   entidx = 0;
 
@@ -131,25 +79,13 @@ CONCAT(_nss_db_set,ENTNAME) (int stayopen)
 }
 
 
-/* Close the database file.  */
-static void
-internal_endent (void)
-{
-  if (db != NULL)
-    {
-      db->close (db, 0);
-      db = NULL;
-    }
-}
-
-
-/* Thread-safe, exported version of that.  */
+/* Close it again.  */
 enum nss_status
 CONCAT(_nss_db_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endent ();
+  internal_endent (&db);
 
   /* Reset STAYOPEN flag.  */
   keep_db = 0;
@@ -170,17 +106,20 @@ lookup (DBT *key, struct STRUCTURE *result,
   DBT value;
 
   /* Open the database.  */
-  status = internal_setent (keep_db);
-  if (status != NSS_STATUS_SUCCESS)
+  if (db == NULL)
     {
-      *errnop = errno;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      return status;
+      status = internal_setent (DBFILE, &db);
+      if (status != NSS_STATUS_SUCCESS)
+	{
+	  *errnop = errno;
+	  H_ERRNO_SET (NETDB_INTERNAL);
+	  return status;
+	}
     }
 
   /* Succeed iff it matches a value that parses correctly.  */
   value.flags = 0;
-  err = db->get (db, NULL, key, &value, 0);
+  err = DL_CALL_FCT (db->get, (db->db, NULL, key, &value, 0));
   if (err != 0)
     {
       if (err == DB_NOTFOUND)
@@ -240,7 +179,7 @@ lookup (DBT *key, struct STRUCTURE *result,
     }
 
   if (! keep_db)
-    internal_endent ();
+    internal_endent (&db);
 
   return status;
 }

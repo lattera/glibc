@@ -1,5 +1,18 @@
 2000-01-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/nss_db/db-XXX.c: Move internal_setent and internal_endent
+	functions from here...
+	* nss/db-alias.c: ...and here...
+	* nss/db-netgrp.c: ...and here...
+	* nss/nss_db/db-open.c: ...to here.  New file.
+	* nss/nss_db/dummy-db.h: New file.
+	* nss/nss_db/nss_db.h: New file.
+	* nss/Depend: Depend in dlfcn, not db2.
+	* nss/Makefile (libnss_db-routines): Add db-open.
+	(distribute): Add nss_db.h dummy-db.h.
+	(libnss_db.so): Replace libdb dependency by $(libdl).
+	Based on a patch by Zack Weinberg.
+
 	* locale/programs/ld-ctype.c: Implement rest of transliteration
 	definition parsing.
 	* locale/programs/locfile-kw.gperf: New keyword translit_ignore.

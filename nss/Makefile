@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -65,10 +65,11 @@ libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
-							$(databases)))
+							$(databases))) \
+			   db-open
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
-distribute		+= db-XXX.c
+distribute		+= db-XXX.c nss_db.h dummy-db.h
 
 
 # Build static module if requested
@@ -80,7 +81,7 @@ libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
 include ../Rules
 
 
-$(objpfx)libnss_db.so: $(dbobjdir)/libdb.so $(objpfx)libnss_files.so
+$(objpfx)libnss_db.so: $(objpfx)libnss_files.so $(libdl)
 
 $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	@rm -f $@.new

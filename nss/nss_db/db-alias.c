@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_db module.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,81 +21,26 @@
 #include <aliases.h>
 #include <alloca.h>
 #include <ctype.h>
-#include <db.h>
+#include <dlfcn.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <bits/libc-lock.h>
 #include <paths.h>
 #include <string.h>
 
 #include "nsswitch.h"
+#include "nss_db.h"
 
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the shared handle open on the database.  */
 
-static DB *db;
+static NSS_DB *db;
 static int keep_db;
 static unsigned int entidx;	/* Index for `getaliasent_r'. */
 
-/* Open database file if not already opened.  */
-static enum nss_status
-internal_setent (int stayopen)
-{
-  enum nss_status status = NSS_STATUS_SUCCESS;
-  int err;
 
-  if (db == NULL)
-    {
-      err = __nss_db_open (_PATH_VARDB "aliases.db", DB_BTREE, DB_RDONLY, 0,
-			   NULL, NULL, &db);
-
-      if (err != 0)
-	{
-	  __set_errno (err);
-	  status = NSS_STATUS_UNAVAIL;
-	}
-      else
-	{
-	  /* We have to make sure the file is  `closed on exec'.  */
-	  int fd;
-	  int result;
-
-	  err = db->fd (db, &fd);
-	  if (err != 0)
-	    {
-	      __set_errno (err);
-	      result = -1;
-	    }
-	  else
-	    {
-	      result = fcntl (fd, F_GETFD, 0);
-
-	      if (result >= 0)
-		result = fcntl (fd, F_SETFD, result | FD_CLOEXEC);
-	    }
-
-	  if (result < 0)
-	    {
-	      /* Something went wrong.  Close the stream and return a
-		 failure.  */
-	      db->close (db, 0);
-	      db = NULL;
-	      status = NSS_STATUS_UNAVAIL;
-	    }
-	}
-    }
-
-  /* Remember STAYOPEN flag.  */
-  if (db != NULL)
-    keep_db |= stayopen;
-
-  return status;
-}
-
-
-/* Thread-safe, exported version of that.  */
+/* Open database.  */
 enum nss_status
 _nss_db_setaliasent (int stayopen)
 {
@@ -103,7 +48,11 @@ _nss_db_setaliasent (int stayopen)
 
   __libc_lock_lock (lock);
 
-  status = internal_setent (stayopen);
+  status = internal_setent (_PATH_VARDB "aliases.db", &db);
+
+  /* Remember STAYOPEN flag.  */
+  if (db != NULL)
+    keep_db |= stayopen;
 
   /* Reset the sequential index.  */
   entidx = 0;
@@ -114,25 +63,13 @@ _nss_db_setaliasent (int stayopen)
 }
 
 
-/* Close the database file.  */
-static void
-internal_endent (void)
-{
-  if (db != NULL)
-    {
-      db->close (db, 0);
-      db = NULL;
-    }
-}
-
-
-/* Thread-safe, exported version of that.  */
+/* Close it again.  */
 enum nss_status
 _nss_db_endaliasent (void)
 {
   __libc_lock_lock (lock);
 
-  internal_endent ();
+  internal_endent (&db);
 
   /* Reset STAYOPEN flag.  */
   keep_db = 0;
@@ -154,17 +91,22 @@ lookup (DBT *key, struct aliasent *result, char *buffer,
   DBT value;
 
   /* Open the database.  */
-  status = internal_setent (keep_db);
-  if (status != NSS_STATUS_SUCCESS)
+  if (db == NULL)
     {
-      *errnop = errno;
-      return status;
+      status = internal_setent (_PATH_VARDB "aliases.db", &db);
+      if (status != NSS_STATUS_SUCCESS)
+	{
+	  *errnop = errno;
+	  return status;
+	}
     }
 
   value.flags = 0;
-  if (db->get (db, NULL, key, &value, 0) == 0)
+  if (DL_CALL_FCT (db->get, (db->db, NULL, key, &value, 0)) == 0)
     {
       const char *src = value.data;
+      char *cp;
+      size_t cnt;
 
       result->alias_members_len = 0;
 
@@ -176,61 +118,55 @@ lookup (DBT *key, struct aliasent *result, char *buffer,
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      if (status == NSS_STATUS_SUCCESS)
+      buffer = stpncpy (buffer, key->data, key->size) + 1;
+      buflen -= key->size + 1;
+
+      while (*src != '\0')
 	{
-	  char *cp;
-	  size_t cnt;
+	  const char *end, *upto;
+	  while (isspace (*src))
+	    ++src;
 
-	  buffer = stpncpy (buffer, key->data, key->size) + 1;
-	  buflen -= key->size + 1;
+	  end = strchr (src, ',');
+	  if (end == NULL)
+	    end = strchr (src, '\0');
+	  for (upto = end; upto > src && isspace (upto[-1]); --upto);
 
-	  while (*src != '\0')
+	  if (upto != src)
 	    {
-	      const char *end, *upto;
-	      while (isspace (*src))
-		++src;
-
-	      end = strchr (src, ',');
-	      if (end == NULL)
-		end = strchr (src, '\0');
-	      for (upto = end; upto > src && isspace (upto[-1]); --upto);
-
-	      if (upto != src)
-		{
-		  if ((upto - src) + __alignof__ (char *) > buflen)
-		    goto no_more_room;
-		  buffer = stpncpy (buffer, src, upto - src) + 1;
-		  buflen -= (upto - src) + __alignof (char *);
-		  ++result->alias_members_len;
-		}
-	      src = end + (*end != '\0');
+	      if ((upto - src) + __alignof__ (char *) > buflen)
+		goto no_more_room;
+	      buffer = stpncpy (buffer, src, upto - src) + 1;
+	      buflen -= (upto - src) + __alignof (char *);
+	      ++result->alias_members_len;
 	    }
-
-	  /* Now prepare the return.  Provide string pointers for the
-	     currently selected aliases.  */
-
-	  /* Adjust the pointer so it is aligned for storing pointers.  */
-	  buffer += __alignof__ (char *) - 1;
-	  buffer -= ((buffer - (char *) 0) % __alignof__ (char *));
-	  result->alias_members = (char **) buffer;
-
-	  /* Compute addresses of alias entry strings.  */
-	  cp = result->alias_name;
-	  for (cnt = 0; cnt < result->alias_members_len; ++cnt)
-	    {
-	      cp = strchr (cp, '\0') + 1;
-	      result->alias_members[cnt] = cp;
-	    }
-
-	  status = (result->alias_members_len == 0
-		    ? NSS_STATUS_RETURN : NSS_STATUS_SUCCESS);
+	  src = end + (*end != '\0');
 	}
+
+      /* Now prepare the return.  Provide string pointers for the
+	 currently selected aliases.  */
+
+      /* Adjust the pointer so it is aligned for storing pointers.  */
+      buffer += __alignof__ (char *) - 1;
+      buffer -= ((buffer - (char *) 0) % __alignof__ (char *));
+      result->alias_members = (char **) buffer;
+
+      /* Compute addresses of alias entry strings.  */
+      cp = result->alias_name;
+      for (cnt = 0; cnt < result->alias_members_len; ++cnt)
+	{
+	  cp = strchr (cp, '\0') + 1;
+	  result->alias_members[cnt] = cp;
+	}
+
+      status = (result->alias_members_len == 0
+		? NSS_STATUS_RETURN : NSS_STATUS_SUCCESS);
     }
   else
     status = NSS_STATUS_NOTFOUND;
 
   if (! keep_db)
-    internal_endent ();
+    internal_endent (&db);
 
   return status;
 }
