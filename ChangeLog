@@ -1,5 +1,8 @@
 2001-02-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makerules (build-shlib): Work around different order of
+	processing of -B option in different gcc versions.
+
 	* posix/regex.c: Fix alignment problem.
 	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
 

@@ -415,7 +415,8 @@ lib%.so: lib%_pic.a $(+preinit) $(+postinit) $(+interp)
 
 define build-shlib
 $(LINK.o) -shared -Wl,-O1 -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) $(load-map-file) \
+	  $(extra-B-$(@F:lib%.so=%).so) -B$(csu-objpfx) \
+	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
