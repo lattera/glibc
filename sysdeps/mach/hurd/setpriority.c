@@ -95,3 +95,4 @@ setpriority (enum __priority_which which, id_t who, int prio)
 
   return err ? __hurd_fail (err) : 0;
 }
+libc_hidden_def (setpriority)

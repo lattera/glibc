@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1996-1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-93,96-99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -369,6 +369,7 @@ versioned_symbol (libc, __fnmatch, fnmatch, GLIBC_2_2_3);
 strong_alias (__fnmatch, __fnmatch_old)
 compat_symbol (libc, __fnmatch_old, fnmatch, GLIBC_2_0);
 #  endif
+libc_hidden_ver (__fnmatch, fnmatch)
 # endif
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */

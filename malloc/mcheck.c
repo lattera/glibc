@@ -133,6 +133,9 @@ mcheck_check_all ()
   /* Turn checks on again.  */
   pedantic = 1;
 }
+#ifdef _LIBC
+libc_hidden_def (mcheck_check_all)
+#endif
 
 static void unlink_blk __P ((struct hdr *ptr));
 static void

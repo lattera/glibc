@@ -1,6 +1,9 @@
 #ifndef _SYS_RESOURCE_H
 #include <resource/sys/resource.h>
 
+libc_hidden_proto (getpriority)
+libc_hidden_proto (setpriority)
+
 /* Now define the internal interfaces.  */
 extern int __getrlimit (enum __rlimit_resource __resource,
 			struct rlimit *__rlimits);

@@ -1,6 +1,8 @@
 #ifndef _SEARCH_H
 #include <misc/search.h>
 
+libc_hidden_proto (hcreate_r)
+libc_hidden_proto (hdestroy_r)
 libc_hidden_proto (hsearch_r)
 libc_hidden_proto (lfind)
 

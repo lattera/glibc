@@ -82,3 +82,4 @@ getpriority (enum __priority_which which, id_t who)
 
   return MACH_PRIORITY_TO_NICE (maxpri);
 }
+libc_hidden_def (getpriority)

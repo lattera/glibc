@@ -1,8 +1,11 @@
-2002-08-03  Ulrich Drepper  <drepper@redhat.com>
-
-	* sysdeps/pthread/bits/libc-tsd.h: Add _LIBC_TSD_KEY_LOCALE.
-
 2002-08-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/bits/libc-tsd.h (enum __libc_tsd_key_t):
+	Add _LIBC_TSD_KEY_LOCALE.
+	* manager.c (pthread_start_thread) [!(USE_TLS && HAVE___THREAD)]:
+	Call __uselocale to initialize our per-thread locale pointer to
+	the global one.
+	* pthread.c (__pthread_initialize_minimal): Likewise.
 
 	* sysdeps/i386/tls.h (TLS_DO_SET_THREAD_AREA): Add missing \s.
 

@@ -1,5 +1,23 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* include/sys/resource.h: Use libc_hidden_proto for getpriority,
+	setpriority.
+	* sysdeps/unix/sysv/linux/getpriority.c: Add libc_hidden_def.
+	* sysdeps/unix/sysv/irix4/getpriority.c: Likewise.
+	* sysdeps/mach/hurd/setpriority.c: Likewise.
+	* sysdeps/mach/hurd/getpriority.c: Likewise.
+	* sysdeps/generic/setpriority.c: Likewise.
+	* sysdeps/generic/getpriority.c: Likewise.
+
+	* include/mcheck.h: Use libc_hidden_proto for mcheck_check_all.
+	* malloc/mcheck.c: Add libc_hidden_def.
+
+	* include/search.h: Use libc_hidden_proto for hcreate_r, hdestroy_r.
+	* misc/hsearch_r.c: Add libc_hidden_def.
+
+	* include/fnmatch.h: Use libc_hidden_proto for fnmatch.
+	* posix/fnmatch.c: Add libc_hidden_weak.
+
 	* include/unistd.h: Use libc_hidden_proto for _exit, alarm, confstr,
 	execl, execle, execlp, execvp, getpid, getsid.
 	* sysdeps/generic/alarm.c: Add libc_hidden_def.

@@ -1,5 +1,5 @@
 /* getpriority for Linux.
-   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,98,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,3 +44,4 @@ getpriority (enum __priority_which which, id_t who)
     res = PZERO - res;
   return res;
 }
+libc_hidden_def (getpriority)
