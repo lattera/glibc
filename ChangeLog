@@ -1,3 +1,16 @@
+2000-07-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (free_mem): Revert last
+	patch.
+
+	* grp/fgetgrent.c (free_mem): Remove if - free (0) is valid.
+	* inet/getnetgrent.c (free_mem): Likewise.
+	* misc/mntent.c (free_mem): Likewise.
+	* nss/getXXbyYY.c (free_mem): Likewise.
+	* nss/getXXent.c (free_mem): Likewise.
+	* pwd/fgetpwent.c (free_mem): Likewise.
+	* shadow/fgetspent.c (free_mem): Likewise.
+
 2000-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/xdr.c (xdr_u_long): Handle reading of unsigned long on
