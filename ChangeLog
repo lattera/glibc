@@ -1,3 +1,15 @@
+2001-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/Makefile (routines): Add cxa_on_exit.
+	* stdlib/Versions [libc] (GLIBC_2.2.1): Add __cxa_on_exit.
+	* stdlib/cxa_on_exit.c: New file.
+	* include/stdlib.h: Add prototype for __cxa_on_exit.
+	* stdlib/exit.c: Handle ef_cxa2.
+	* stdlib/exit.h (enum): Add ef_cxa2.
+	(struct exit_function): Add cxa2.
+
+	* Versions.def [ld]: Add GLIBC_2.2.1.
+
 2001-01-10  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-libc.c (do_dlopen): Call DL_STATIC_INIT for static binaries.

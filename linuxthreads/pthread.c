@@ -435,10 +435,8 @@ static void pthread_initialize(void)
   /* Do it early so that user-registered atexit functions are called
      before pthread_exit_process. */
   if (__builtin_expect (&__dso_handle != NULL, 1))
-    /* The cast is a bit unclean.  The function expects two arguments but
-       we can only pass one.  Fortunately this is not a problem since the
-       second argument of `pthread_exit_process' is simply ignored.  */
-    __cxa_atexit((void (*) (void *)) pthread_exit_process, NULL, __dso_handle);
+    __cxa_on_exit((void (*) (void *)) pthread_exit_process, NULL,
+		  __dso_handle);
   else
     __on_exit (pthread_exit_process, NULL);
   /* How many processors.  */

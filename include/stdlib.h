@@ -55,6 +55,7 @@ extern void _quicksort (void *const pbase, size_t total_elems,
 			size_t size, __compar_fn_t cmp);
 
 extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+extern int __cxa_on_exit (void (*func) (int, void *), void *arg, void *d);
 
 extern void __cxa_finalize (void *d);
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ include ../Makeconfig
 
 librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
-	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14
+	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15
 
 ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
