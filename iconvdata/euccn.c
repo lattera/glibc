@@ -1,7 +1,7 @@
-/* Mapping tables for EUC-KR handling.
+/* Mapping tables for EUC-CN handling.
    Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jungshik Shin <jshin@pantheon.yale.edu>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -23,64 +23,41 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <ksc5601.h>
+#include <gb2312.h>
 
 /* Direction of the transformation.  */
 enum direction
 {
   illegal,
-  to_euckr,
-  from_euckr
+  to_euccn,
+  from_euccn
 };
 
-struct euckr_data
+struct euccn_data
 {
   enum direction dir;
 };
-
-
-
-static inline void
-euckr_from_ucs4(wchar_t ch, unsigned char *cp)
-{
-  if (ch > 0x7f)
-    {
-      uint16_t idx=0;
-
-      if (ucs4_to_ksc5601 (ch, &idx))
-	idx |= 0x8080;
-
-      *cp = (unsigned char) (idx/256);
-      *(cp+1) = (unsigned char) (idx & 0xff) ;
-    }
-  /* think about 0x5c ; '\' */
-  else
-    {
-      *cp = (unsigned char) (0x7f & ch) ;
-      *(cp+1) = (unsigned char) 0;
-    }
-}
 
 
 int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct euckr_data *new_data;
+  struct euccn_data *new_data;
   enum direction dir;
   int result;
 
-  if (strcasestr (step->from_name, "EUC-KR") != NULL)
-    dir = from_euckr;
-  else if (strcasestr (step->to_name, "EUC-KR") != NULL)
-    dir = to_euckr;
+  if (strcasestr (step->from_name, "EUC-CN") != NULL)
+    dir = from_euccn;
+  else if (strcasestr (step->to_name, "EUC-CN") != NULL)
+    dir = to_euccn;
   else
     dir = illegal;
 
   result = GCONV_NOCONV;
   if (dir != illegal
       && ((new_data
-	   = (struct euckr_data *) malloc (sizeof (struct euckr_data)))
+	   = (struct euccn_data *) malloc (sizeof (struct euccn_data)))
 	  != NULL))
     {
       new_data->dir = dir;
@@ -132,7 +109,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct euckr_data *) step->data)->dir;
+      enum direction dir = ((struct euccn_data *) step->data)->dir;
 
       do_write = 0;
 
@@ -140,7 +117,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_euckr)
+	  if (dir == from_euccn)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -153,28 +130,17 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		  int inchar = (unsigned char) inbuf[cnt];
 		  wchar_t ch;
 
-		  /*
-		    half-width Korean Currency WON sign
-
-		    if (inchar == 0x5c)
-		      ch =  0x20a9;
-		    else if (inchar <= 0x7f)
-		      ch = (wchar_t) inchar;
-		  */
-
 		  if (inchar <= 0x7f)
 		    ch = (wchar_t) inchar;
-
-
-/* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are user-defined areas */
-
-                  else if ( inchar <= 0xa0 || inchar > 0xfe || inchar == 0xc9)
+                  else if ((inchar <= 0xa0 || inchar > 0xfe)
+			   && inchar != 0x8e && inchar != 0x8f)
                       /* This is illegal.  */
                       ch = L'\0';
 		  else
 		    {
-		      /* Two-byte character.  First test whether the next
-			 character is also available.  */
+		      /* Two or more byte character.  First test whether the
+			 next character is also available.  */
+		      const char *endp;
 		      int inchar2;
 
 		      if (cnt + 1 >= inchars)
@@ -187,8 +153,23 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 
 		      inchar2 = (unsigned char) inbuf[++cnt];
 
-		      ch = ksc5601_to_ucs4 ((uint16_t) (inchar * 256 + inchar2)
-					    & 0x7f7f);
+		      /* All second bytes of a multibyte character must be
+			 >= 0xa1. */
+		      if (inchar2 < 0xa1)
+			{
+			  /* This is an illegal character.  */
+			  --cnt;
+			  result = GCONV_ILLEGAL_INPUT;
+			  break;
+			}
+
+		      /* This is code set 1: GB 2312-80.  */
+		      endp = &inbuf[cnt - 1];
+
+		      ch = gb2312_to_ucs4 (&endp, 2, 0x80);
+		      if (ch != L'\0')
+			++cnt;
+
 		      if (ch == UNKNOWN_10646_CHAR)
                          ch = L'\0';
 
@@ -223,29 +204,34 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		     && outchars < data->outbufsize)
 		{
 		  wchar_t ch = *((wchar_t *) (inbuf + cnt));
-		  unsigned char cp[2];
 
-/* decomposing Hangul syllables not available in KS C 5601 into Jamos
-   should be considered either here or in euckr_from_ucs4() */
-
-                  euckr_from_ucs4(ch,cp) ;
-
-		  if (cp[0] == '\0' && ch != 0)
-		    /* Illegal character.  */
-		    break;
-
-		  outbuf[outchars] = cp[0];
-		  /* Now test for a possible second byte and write this
-		     if possible.  */
-		  if (cp[1] != '\0')
+		  if (ch <= L'\x7f')
+		    /* It's plain ASCII.  */
+		    outbuf[outchars] = ch;
+		  else
 		    {
-		      if (outchars + 1 >= data->outbufsize)
+		      /* Try the JIS character sets.  */
+		      size_t found;
+
+		      found = ucs4_to_gb2312 (ch, &outbuf[outchars],
+					      (data->outbufsize
+					       - outchars));
+		      if (found > 0)
 			{
-			  /* The result does not fit into the buffer.  */
-			  extra = 1;
+			  /* It's a GB 2312 character, adjust it for
+			     EUC-CN.  */
+			  outbuf[outchars++] += 0x80;
+			  outbuf[outchars] += 0x80;
+			}
+		      else if (found == 0)
+			{
+			  /* We ran out of space.  */
+			  extra = 2;
 			  break;
 			}
-		      outbuf[++outchars] = cp[1];
+		      else
+			/* Illegal character.  */
+			break;
 		    }
 
 		  ++do_write;
@@ -281,7 +267,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_euckr
+	      result = (*inbufsize > (dir == from_euccn
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

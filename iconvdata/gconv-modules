@@ -226,3 +226,13 @@ alias	BIGFIVE//		BIG5//
 alias	BIG-5//			BIG5//
 module	BIG5//			ISO-10646/UCS4/		BIG5		1
 module	ISO-10646/UCS4/		BIG5//			BIG5		1
+
+#	from			  to			module		cost
+alias	EUCJP//			EUC-JP//
+module	EUC-JP//		ISO-10646/UCS4/		EUC-JP		1
+module	ISO-10646/UCS4/		EUC-JP//		EUC-JP		1
+
+#	from			  to			module		cost
+alias	EUCCN//			EUC-CN//
+module	EUC-CN//		ISO-10646/UCS4/		EUC-CN		1
+module	ISO-10646/UCS4/		EUC-CN//		EUC-CN		1

@@ -26,7 +26,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
 	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
 	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR		\
-	   EUC-KR UHC JOHAB libJIS libKSC ISO646 BIG5
+	   EUC-KR UHC JOHAB libJIS libKSC ISO646 BIG5 EUC-JP libGB	\
+	   EUC-CN
 modules.so := $(addsuffix .so, $(modules))
 
 
@@ -58,8 +59,11 @@ EUC-KR-routines := euckr
 JOHAB-routines := johab
 UHC-routines := uhc
 BIG5-routines := big5
+EUC-JP-routines := eucjp
+EUC-CN-routines := euccn
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
+libGB-routines := gb2312
 
 LDFLAGS-EUC-KR.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
@@ -67,9 +71,14 @@ LDFLAGS-JOHAB.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)JOHAB.so: $(objpfx)libKSC.so
 LDFLAGS-UHC.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)UHC.so: $(objpfx)libKSC.so
+LDFLAGS-EUC-JP.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)EUC-JP.so: $(objpfx)libJIS.so
+LDFLAGS-EUC-CN.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)EUC-CN.so: $(objpfx)libGB.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
+LDFLAGS-libGB.so = -Wl,-soname,$(@F)
 
 distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
@@ -79,7 +88,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c  \
 	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
 	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h	    \
-	      iso646.c big5.c
+	      iso646.c big5.c eucjp.c gb2312.c gb2312.h euccn.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

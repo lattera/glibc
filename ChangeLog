@@ -1,3 +1,14 @@
+1998-04-13 09:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/eucjp.c: New file.
+	* iconvdata/euccn.c: New file.
+	* iconvdata/gb2312.h: New file.
+	* iconvdata/gb2312.c: New file.
+	* iconvdata/Makefile: Add rules for EUC-JP and EUC-CN.
+	* iconvdata/gconv-modules: Likewise.
+
+	* iconvdata/euckr.c: Use stdint.h instead of inttypes.h.
+
 1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
