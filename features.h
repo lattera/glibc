@@ -79,6 +79,13 @@ Cambridge, MA 02139, USA.  */
 #define	__FAVOR_BSD	1
 #endif
 
+/* Explicit features turn off -ansi.  */
+#if (defined (_GNU_SOURCE) || \
+     defined (_BSD_SOURCE) || defined (_SVID_SOURCE) || \
+     defined (_POSIX_SOURCE) || defined (_POSIX_C_SOURCE))
+#undef __STRICT_ANSI__
+#endif
+
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE
 /* If the user specifies some of the following without _GNU_SOURCE,
