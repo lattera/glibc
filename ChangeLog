@@ -1,3 +1,10 @@
+2000-07-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/alpha/memchr.S: Fix copy & error in weak_alias.
+
+	* sysdeps/generic/memchr.c: Fix copy & paste error: Use memchr
+	instead of memrchr.
+
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile: Make sure tst-translit is run after tst-gettext.
