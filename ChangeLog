@@ -1,3 +1,8 @@
+2001-08-24  Roland McGrath  <roland@frob.com>
+
+	* string/tester.c (test_strerror): Don't use _sys_errlist/_sys_nerr.
+	Just test that strerror returns non-null for a few errno codes.
+
 2001-08-23  Roland McGrath  <roland@frob.com>
 
 	* hurd/Versions (libc: GLIBC_2.2.5): New set; add _hurd_raise_signal,

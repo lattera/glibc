@@ -1272,11 +1272,10 @@ test_bcmp (void)
 static void
 test_strerror (void)
 {
-  int f;
   it = "strerror";
-  f = __open("/", O_WRONLY);	/* Should always fail. */
-  check(f < 0 && errno > 0 && errno < _sys_nerr, 1);
-  equal(strerror(errno), _sys_errlist[errno], 2);
+  check(strerror(EDOM) != 0, 1);
+  check(strerror(ERANGE) != 0, 2);
+  check(strerror(ENOENT) != 0, 3);
 }
 
 int
