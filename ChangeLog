@@ -1,5 +1,8 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/tst-tls1.c (main): Add complete set of tests.  Split
+	architecture specific definitions from the actual test code.
+
 	* po/tr.po: Update from translation team.
 
 2002-02-09  Ulrich Drepper  <drepper@redhat.com>
