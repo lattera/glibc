@@ -1,5 +1,5 @@
 /* Notify initiator of AIO request.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,6 +23,16 @@
 #include <stdlib.h>
 #include "aio_misc.h"
 
+
+static void *
+notify_func_wrapper (void *arg)
+{
+  struct sigevent *sigev = arg;
+  sigev->sigev_notify_function (sigev->sigev_value);
+  return NULL;
+}
+
+
 int
 internal_function
 __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
@@ -44,9 +54,7 @@ __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
 	  pattr = &attr;
 	}
 
-      if (pthread_create (&tid, pattr,
-			  (void *(*) (void *)) sigev->sigev_notify_function,
-			  sigev->sigev_value.sival_ptr) < 0)
+      if (pthread_create (&tid, pattr, notify_func_wrapper, sigev) < 0)
 	result = -1;
     }
   else if (sigev->sigev_notify == SIGEV_SIGNAL)
