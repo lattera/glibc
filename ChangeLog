@@ -1,3 +1,7 @@
+1999-07-31  H.J. Lu  <hjl@gnu.org>
+
+	* string/bits/string2.h (__strcpy_small): Fix a typo.
+
 1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (link-libc): Always define it, not only for shared

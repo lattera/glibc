@@ -234,6 +234,9 @@ EGCS and gcc 2.8.1 shows this:
 
 Make up your own decision.
 
+GNU CC versions 2.95 and above are derived from egcs, and they may do even
+better.
+
 
 1.3.	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -267,16 +270,8 @@ them.
 
 1.5.	Which compiler should I use for powerpc?
 
-{GK} You want to use egcs 1.1 or later (together with the right versions
-of all the other tools, of course).
-
-In fact, egcs 1.1 has a bug that causes linuxthreads to be
-miscompiled, resulting in segmentation faults when using condition
-variables.  There is a temporary patch at:
-
-<http://discus.anu.edu.au/~geoffk/egcs-3.diff>
-
-Later versions of egcs may fix this problem.
+{GK} You want to use at least gcc 2.95 (together with the right versions
+of all the other tools, of course).  See also question question 2.8.
 
 
 1.6.	Which tools should I use for ARM?
@@ -332,6 +327,9 @@ Binutils 2.9.1.0.16 or later is also required.
   Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and Jan Barte
   <yann@plato.uni-paderborn.de> reports 22h48m on Atari TT030
   (Motorola 68030 @ 32 Mhz, 34 Mb memory)
+
+  A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
+  64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb. 
 
   If you have some more measurements let me know.
 
@@ -783,6 +781,24 @@ libraries from doing it.
 newer since we have explicitly add references to the functions causing the
 problem.  But you nevertheless should use EGCS for other reasons
 (see question 1.2).
+
+{GK} On some Linux distributions for PowerPC, you can see this when you have
+built gcc or egcs from the Web sources (gcc versions 2.95 or earlier), then
+re-built glibc.  This happens because in these versions of gcc, exception
+handling is implemented using an older method; the people making the
+distributions are a little ahead of their time.
+
+A quick solution to this is to find the libgcc.a file that came with the
+distribution (it would have been installed under /usr/lib/gcc-lib), do 
+`ar x libgcc.a frame.o' to get the frame.o file out, and add a line saying
+`LDLIBS-c.so += frame.o' to the file `configparms' in the directory you're
+building in.  You can check you've got the right `frame.o' file by running
+`nm frame.o' and checking that it has the symbols defined that you're
+missing.
+
+This will let you build glibc with the C compiler.  The C++ compiler
+will still be binary incompatible with any C++ shared libraries that
+you got with your distribution.
 
 
 2.9.	How can I compile gcc 2.7.2.1 from the gcc source code using

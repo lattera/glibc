@@ -441,7 +441,7 @@ __strcpy_small (char *__dest,
     case 8:
       __u->__ui = __src0_4;
       __u = (void *) __u + 4;
-      __u->__usi = __src4_4;
+      __u->__ui = __src4_4;
       break;
     }
   return __dest;
