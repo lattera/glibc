@@ -21,7 +21,7 @@
 #
 subdir	:= linuxthreads
 
-libpthread-version=0.7
+linuxthreads-version=0.7
 
 headers := pthread.h semaphore.h bits/semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h

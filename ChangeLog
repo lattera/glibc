@@ -1,3 +1,9 @@
+1998-04-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/sys/cdefs.h (__REDIRECT): Handle systems with non-empty
+	__USER_LABEL_PREFIX__.
+	(__ASMNAME, __ASMNAME2): New macros.
+
 1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c: Include sys/param.h for MAX.

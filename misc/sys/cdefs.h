@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,14 +107,16 @@
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
-# define __REDIRECT(name, proto, asname) name proto __asm__ (#asname)
+# define __REDIRECT(name, proto, alias) name proto __asm__ (__ASMNAME (#alias))
+# define __ASMNAME(cname)  __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
+# define __ASMNAME2(prefix, cname) __STRING (prefix) cname
 
 /*
 #elif __SOME_OTHER_COMPILER__
 
 # define __attribute__(xyz)
-# define __ALIAS(name, proto, asname) name proto; \
-                  _Pragma("let " #name " = " #asname)
+# define __REDIRECT(name, proto, alias) name proto; \
+	_Pragma("let " #name " = " #alias)
 */
 #endif
 
