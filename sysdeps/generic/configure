@@ -14,30 +14,37 @@ if eval "test \"\${$as_ac_var+set}\" = set"; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char $ac_func (); below.  */
 #include <assert.h>
 /* Override any gcc2 internal prototype to avoid an error.  */
 #ifdef __cplusplus
 extern "C"
+{
 #endif
 /* We use char because int might match the return type of a gcc2
    builtin and then its argument prototype would still apply.  */
 char $ac_func ();
-char (*f) ();
-
-int
-main ()
-{
 /* The GNU C library defines this for functions which it implements
     to always fail with ENOSYS.  Some functions are actually named
     something starting with __ and the normal name is an alias.  */
 #if defined (__stub_$ac_func) || defined (__stub___$ac_func)
 choke me
 #else
-f = $ac_func;
+char (*f) () = $ac_func;
 #endif
+#ifdef __cplusplus
+}
+#endif
+
+int
+main ()
+{
 
   ;
   return 0;
@@ -58,7 +65,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   eval "$as_ac_var=yes"
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 eval "$as_ac_var=no"
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
