@@ -1608,7 +1608,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			&realname, &fb);
 
       /* Look at the RUNPATH information for this binary.  */
-      if (loader != NULL && loader->l_runpath_dirs.dirs != (void *) -1)
+      if (fd == -1 && loader != NULL
+	  && loader->l_runpath_dirs.dirs != (void *) -1)
 	{
 	  if (loader->l_runpath_dirs.dirs == NULL)
 	    {
@@ -1622,13 +1623,10 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				   + loader->l_info[DT_RUNPATH]->d_un.d_val);
 		  decompose_rpath (&loader->l_runpath_dirs,
 				   (const char *) ptrval, loader, "RUNPATH");
-
-		  if (loader->l_runpath_dirs.dirs != (void *) -1)
-		    fd = open_path (name, namelen, preloaded,
-				    &loader->l_runpath_dirs, &realname, &fb);
 		}
 	    }
-	  else if (loader->l_runpath_dirs.dirs != (void *) -1)
+
+	  if (loader->l_runpath_dirs.dirs != (void *) -1)
 	    fd = open_path (name, namelen, preloaded,
 			    &loader->l_runpath_dirs, &realname, &fb);
 	}

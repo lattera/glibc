@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -243,7 +243,7 @@
 #define __STDC_IEC_559__		1
 #define __STDC_IEC_559_COMPLEX__	1
 
-/* wchar_t uses ISO 10646-1 (2nd ed., published 2000-09-15) / Unicode 3.0.  */
+/* wchar_t uses ISO 10646-1 (2nd ed., published 2000-09-15) / Unicode 3.1.  */
 #define __STDC_ISO_10646__		200009L
 
 /* This macro indicates that the installed library is the GNU C Library.
@@ -279,9 +279,9 @@
 
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
-#ifndef _SYS_CDEFS_H
-# include <sys/cdefs.h>
-#endif
+# ifndef _SYS_CDEFS_H
+#  include <sys/cdefs.h>
+# endif
 
 /* If we don't have __REDIRECT, prototypes will be missing if
    __USE_FILE_OFFSET64 but not __USE_LARGEFILE[64]. */

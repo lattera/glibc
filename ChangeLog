@@ -1,3 +1,13 @@
+2001-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object): Make code a bit more compact by
+	avoiding unnecessary duplication.
+
+2001-10-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object): If library was found using
+	LD_LIBRARY_PATH, don't try RUNPATH list.
+
 2001-10-31  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/register-dump (REGISTER_DUMP):
@@ -37,7 +47,7 @@
 
 	* sysdeps/ieee754/dbl-64/mpa.h: Add prototypes for internal functions.
 
-2001-10-29  Kevin Ryde <user42@zip.com.au>
+2001-10-29  Kevin Ryde  <user42@zip.com.au>
 
 	* manual/stdio.texi (Integer Conversions): Corrections to sample printf
 	output, clarify `#' behaviour on 0.
