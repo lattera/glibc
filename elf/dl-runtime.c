@@ -66,32 +66,40 @@ fixup (
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-   /* Look up the target symbol.  */
-  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+   /* Look up the target symbol.  If the symbol is marked STV_PROTEXTED
+      don't look in the global scope.  */
+  if (ELFW(ST_VISIBILITY) (sym->st_other) != STV_PROTECTED)
     {
-    default:
-      {
-	const ElfW(Half) *vernum =
-	  (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
-	ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
-	const struct r_found_version *version = &l->l_versions[ndx];
-
-	if (version->hash != 0)
+      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	{
+	default:
 	  {
-	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-						&sym, l->l_scope, l->l_name,
-						version, ELF_MACHINE_JMP_SLOT);
-	    break;
-	  }
-      }
-    case 0:
-      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, l->l_scope,
-				 l->l_name, ELF_MACHINE_JMP_SLOT);
-    }
+	    const ElfW(Half) *vernum =
+	      (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
+	    const struct r_found_version *version = &l->l_versions[ndx];
 
-  /* Currently value contains the base load address of the object
-     that defines sym.  Now add in the symbol offset.  */
-  value = (sym ? value + sym->st_value : 0);
+	    if (version->hash != 0)
+	      {
+		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l,
+						    &sym, l->l_scope, version,
+						    ELF_MACHINE_JMP_SLOT);
+		break;
+	      }
+	  }
+	case 0:
+	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+				     l->l_scope, ELF_MACHINE_JMP_SLOT);
+	}
+
+      /* Currently value contains the base load address of the object
+	 that defines sym.  Now add in the symbol offset.  */
+      value = (sym ? value + sym->st_value : 0);
+    }
+  else
+    /* We already found the symbol.  The module (and therefore its load
+       address) is also known.  */
+    value = l->l_addr + sym->st_value;
 
   /* And now perhaps the relocation addend.  */
   value = elf_machine_plt_value (l, reloc, value);
@@ -141,33 +149,41 @@ profile_fixup (
       /* Sanity check that we're really looking at a PLT relocation.  */
       assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
-      /* Look up the target symbol.  */
-      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+      /* Look up the target symbol.  If the symbol is marked STV_PROTEXTED
+	 don't look in the global scope.  */
+      if (ELFW(ST_VISIBILITY) (sym->st_other) != STV_PROTECTED)
 	{
-	default:
-	  {
-	    const ElfW(Half) *vernum =
-	      (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
-	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
-	    const struct r_found_version *version = &l->l_versions[ndx];
-
-	    if (version->hash != 0)
+	  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	    {
+	    default:
 	      {
-		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-						    &sym, l->l_scope,
-						    l->l_name, version,
-						    ELF_MACHINE_JMP_SLOT);
-		break;
-	      }
-	  }
-	case 0:
-	  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, l->l_scope,
-				     l->l_name, ELF_MACHINE_JMP_SLOT);
-	}
+		const ElfW(Half) *vernum =
+		  (const void *) l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
+		ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
+		const struct r_found_version *version = &l->l_versions[ndx];
 
-      /* Currently value contains the base load address of the object
-	 that defines sym.  Now add in the symbol offset.  */
-      value = (sym ? value + sym->st_value : 0);
+		if (version->hash != 0)
+		  {
+		    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
+							l, &sym, l->l_scope,
+							version,
+							ELF_MACHINE_JMP_SLOT);
+		    break;
+		  }
+	      }
+	    case 0:
+	      value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+					 l->l_scope, ELF_MACHINE_JMP_SLOT);
+	    }
+
+	  /* Currently value contains the base load address of the object
+	     that defines sym.  Now add in the symbol offset.  */
+	  value = (sym ? value + sym->st_value : 0);
+	}
+      else
+	/* We already found the symbol.  The module (and therefore its load
+	   address) is also known.  */
+	value = l->l_addr + sym->st_value;
 
       /* And now perhaps the relocation addend.  */
       value = elf_machine_plt_value (l, reloc, value);

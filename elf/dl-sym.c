@@ -34,7 +34,7 @@ _dl_sym (void *handle, const char *name, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    loadbase = _dl_lookup_symbol (name, &ref, _dl_global_scope, NULL, 0);
+    loadbase = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
   else if (handle == RTLD_NEXT)
     {
       struct link_map *l, *match;
@@ -54,15 +54,14 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader)
 	l = l->l_loader;
 
-      loadbase = _dl_lookup_symbol_skip (name, &ref, l->l_local_scope,
-					 NULL, match);
+      loadbase = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
+					 match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
-      loadbase = _dl_lookup_symbol (name, &ref, map->l_local_scope,
-				    map->l_name, 0);
+      loadbase = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
     }
 
   if (loadbase)
@@ -88,8 +87,8 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    loadbase = _dl_lookup_versioned_symbol (name, &ref, _dl_global_scope,
-					    NULL, &vers, 0);
+    loadbase = _dl_lookup_versioned_symbol (name, NULL, &ref, _dl_global_scope,
+					    &vers, 0);
   else if (handle == RTLD_NEXT)
     {
       struct link_map *l, *match;
@@ -109,17 +108,16 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader)
 	l = l->l_loader;
 
-      loadbase = _dl_lookup_versioned_symbol_skip (name, &ref,
+      loadbase = _dl_lookup_versioned_symbol_skip (name, l, &ref,
 						   l->l_local_scope,
-						   NULL, &vers, match);
+						   &vers, match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
-      loadbase = _dl_lookup_versioned_symbol (name, &ref,
-					      map->l_local_scope,
-					      map->l_name, &vers, 0);
+      loadbase = _dl_lookup_versioned_symbol (name, map, &ref,
+					      map->l_local_scope, &vers, 0);
     }
 
   if (loadbase)

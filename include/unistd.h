@@ -63,4 +63,13 @@ extern int __profil __P ((unsigned short int *__sample_buffer, size_t __size,
 			  size_t __offset, unsigned int __scale));
 extern int __getdtablesize __P ((void));
 extern int __brk __P ((__ptr_t __addr));
+
+
+/* This variable is set nonzero at startup if the process's effective
+   IDs differ from its real IDs, or it is otherwise indicated that
+   extra security should be used.  When this is set the dynamic linker
+   and some functions contained in the C library ignore various
+   environment variables that normally affect them.  */
+extern int __libc_enable_secure;
+
 #endif

@@ -260,35 +260,35 @@ extern void _dl_setup_hash (struct link_map *map) internal_function;
    the `elf_machine_lookup_*_p' macros in dl-machine.h to affect which
    symbols can be chosen.  */
 extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
+				     struct link_map *undef_map,
 				     const ElfW(Sym) **sym,
 				     struct r_scope_elem *symbol_scope[],
-				     const char *reference_name,
 				     int reloc_type)
      internal_function;
 
 /* Lookup versioned symbol.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
+					       struct link_map *undef_map,
 					       const ElfW(Sym) **sym,
 					       struct r_scope_elem *symbol_scope[],
-					       const char *reference_name,
 					       const struct r_found_version *version,
 					       int reloc_type)
      internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
+					  struct link_map *undef_map,
 					  const ElfW(Sym) **sym,
 					  struct r_scope_elem *symbol_scope[],
-					  const char *reference_name,
 					  struct link_map *skip_this)
      internal_function;
 
 /* For handling RTLD_NEXT with versioned symbols we must be able to
    skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
+						    struct link_map *undef_map,
 						    const ElfW(Sym) **sym,
 						    struct r_scope_elem *symbol_scope[],
-						    const char *reference_name,
 						    const struct r_found_version *version,
 						    struct link_map *skip_this)
      internal_function;

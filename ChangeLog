@@ -13,6 +13,33 @@
 	DT_PREINIT_ARRAY, DT_PREINIT_ARRAYSZ.
 	Add DF_ORIGIN, DF_SYMBOLIC, DF_TEXTREL, and DF_BIND_NOW.
 
+	* posix/unistd.h: Move declaration of __libc_enable_secure to...
+	* include/unistd.h: ...here.
+
+	* elf/dl-open.c (dl_open_worker): If DST is used in SUID program punt.
+	* elf/dl-deps.c (expand_dst): Likewise.
+
+	* elf/dynamic-link.h: Set DT_SYMBOLIC, DT_TEXTREL, and DT_BIND_NOW
+	based on DT_FLAGS value.
+
+	* elf/do-lookup.h: Remove reference_name parameter, add undef_map.
+	Add test for symbols marked STV_HIDDEN.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Remove reference_name parameter,
+	add undef_map.  Compute reference_name locally.  Update call to
+	do_lookup.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-libc.c: Update call to _dl_lookup_*symbol.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/ldsodefs.h: Adjust prototypes.
+
+	* elf/dl-reloc.c (RESOLV): Add test for STV_PROTECTED flag set and
+	handle appropriately.  Add comment about DT_TEXTREL.
+	* elf/dl-runtime.c: Likewise.
+
 1999-07-21  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* elf/dl-reloc.c (_dl_reloc_bad_type): New function.

@@ -20,9 +20,10 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libintl.h>
+#include <unistd.h>
 #include <sys/mman.h>		/* Check whether MAP_COPY is defined.  */
 #include <sys/param.h>
 #include <bits/libc-lock.h>
@@ -99,6 +100,12 @@ dl_open_worker (void *a)
       size_t required;
       struct link_map *call_map;
       char *new_file;
+
+      /* DSTs must not appear in SUID/SGID programs.  */
+      if (__libc_enable_secure)
+	/* This is an error.  */
+	_dl_signal_error (0, "dlopen",
+			  "DST not allowed in SUID/SGID programs");
 
       /* We have to find out from which object the caller is calling.
 	 Find the highest-addressed object that ADDRESS is not below.  */

@@ -71,11 +71,13 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE(ref, version, flags) \
-    ((version) != NULL && (version)->hash != 0				      \
-     ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, (ref), scope,   \
-				    l->l_name, (version), (flags))	      \
-     : _dl_lookup_symbol (strtab + (*ref)->st_name, (ref), scope,	      \
-			  l->l_name, (flags)))
+    (ELFW(ST_VISIBILITY) ((*ref)->st_other) != STV_PROTECTED		      \
+     ? ((version) != NULL && (version)->hash != 0			      \
+	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
+				       scope, (version), (flags))	      \
+	: _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref), scope,	      \
+			     (flags)))					      \
+     : l->l_addr)
 
 #include "dynamic-link.h"
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
@@ -96,6 +98,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   /* Mark the object so we know this work has been done.  */
   l->l_relocated = 1;
 
+  /* DT_TEXTREL is now in level 2 and might phase out at some time.
+     But we rewrite the DT_FLAGS entry to make testing easier and
+     therefore it will be available at all time.  */
   if (l->l_info[DT_TEXTREL])
     {
       /* Undo the protection change we made before relocating.  */

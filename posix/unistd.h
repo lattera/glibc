@@ -927,16 +927,7 @@ extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));
     ({ long int __result;						      \
        do __result = (long int) (expression);				      \
        while (__result == -1L && errno == EINTR);			      \
-       __result; }))							      \
-
-
-/* This variable is set nonzero at startup if the process's effective
-   IDs differ from its real IDs, or it is otherwise indicated that
-   extra security should be used.  When this is set the dynamic linker
-   and some functions contained in the C library ignore various
-   environment variables that normally affect them.  */
-extern int __libc_enable_secure;
-
+       __result; }))
 #endif
 
 #if defined __USE_POSIX199309 || defined __USE_UNIX98

@@ -75,11 +75,11 @@ unsigned long int _dl_num_relocations;
 
 ElfW(Addr)
 internal_function
-_dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
-		   struct r_scope_elem *symbol_scope[],
-		   const char *reference_name,
+_dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
+		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
 		   int reloc_type)
 {
+  const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
@@ -88,8 +88,8 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, hash, *ref, &current_value,
-		   *scope, 0, reference_name, NULL, reloc_type))
+    if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
+		   *scope, 0, NULL, reloc_type))
       break;
 
   if (current_value.s == NULL)
@@ -125,11 +125,12 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
    SKIP_MAP is only skipped.  */
 ElfW(Addr)
 internal_function
-_dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
+_dl_lookup_symbol_skip (const char *undef_name,
+			struct link_map *undef_map, const ElfW(Sym) **ref,
 			struct r_scope_elem *symbol_scope[],
-			const char *reference_name,
 			struct link_map *skip_map)
 {
+  const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
@@ -143,11 +144,11 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
     assert (i < (*scope)->r_nduplist);
 
   if (i >= (*scope)->r_nlist
-      || ! do_lookup (undef_name, hash, *ref, &current_value,
-		      *scope, i, reference_name, skip_map, 0))
+      || ! do_lookup (undef_name, undef_map, hash, *ref, &current_value,
+		      *scope, i, skip_map, 0))
     while (*++scope)
-      if (do_lookup (undef_name, hash, *ref, &current_value,
-		     *scope, 0, reference_name, skip_map, 0))
+      if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
+		     *scope, 0, skip_map, 0))
 	break;
 
   if (current_value.s == NULL)
@@ -177,12 +178,13 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
    XXX We'll see whether we need this separate function.  */
 ElfW(Addr)
 internal_function
-_dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
+_dl_lookup_versioned_symbol (const char *undef_name,
+			     struct link_map *undef_map, const ElfW(Sym) **ref,
 			     struct r_scope_elem *symbol_scope[],
-			     const char *reference_name,
 			     const struct r_found_version *version,
 			     int reloc_type)
 {
+  const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
@@ -192,8 +194,8 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     {
-      int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				     *scope, 0, reference_name, version, NULL,
+      int res = do_lookup_versioned (undef_name, undef_map, hash, *ref,
+				     &current_value, *scope, 0, version, NULL,
 				     reloc_type);
       if (res > 0)
 	break;
@@ -250,12 +252,13 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 ElfW(Addr)
 internal_function
 _dl_lookup_versioned_symbol_skip (const char *undef_name,
+				  struct link_map *undef_map,
 				  const ElfW(Sym) **ref,
 				  struct r_scope_elem *symbol_scope[],
-				  const char *reference_name,
 				  const struct r_found_version *version,
 				  struct link_map *skip_map)
 {
+  const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
@@ -269,11 +272,13 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
     assert (i < (*scope)->r_nduplist);
 
   if (i >= (*scope)->r_nlist
-      || ! do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
-				i, reference_name, version, skip_map, 0))
+      || ! do_lookup_versioned (undef_name, undef_map, hash, *ref,
+				&current_value, *scope, i, version, skip_map,
+				0))
     while (*++scope)
-      if (do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
-			       0, reference_name, version, skip_map, 0))
+      if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
+			       &current_value, *scope, 0, version, skip_map,
+			       0))
 	break;
 
   if (current_value.s == NULL)

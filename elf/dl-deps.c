@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/param.h>
 #include <elf/ldsodefs.h>
 
@@ -96,9 +97,15 @@ struct list
 									      \
     if (__cnt != 0)							      \
       {									      \
-	char *__newp = (char *) alloca (DL_DST_REQUIRED (l, __str,	      \
-							 strlen (__str),      \
-							 __cnt));	      \
+	char *__newp;							      \
+									      \
+	/* DST must not appear in SUID/SGID programs.  */		      \
+	if (__libc_enable_secure)					      \
+	  _dl_signal_error (0, __str,					      \
+			    "DST not allowed in SUID/SGID programs");	      \
+									      \
+	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
+						   __cnt));		      \
 									      \
 	__result = DL_DST_SUBSTITUTE (l, __str, __newp, 0);		      \
 									      \

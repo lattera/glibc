@@ -29,10 +29,10 @@
    found the symbol, the value 0 if nothing is found and < 0 if
    something bad happened.  */
 static inline int
-FCT (const char *undef_name, unsigned long int hash,
-     const ElfW(Sym) *ref, struct sym_val *result,
-     struct r_scope_elem *scope, size_t i, const char *reference_name,
-     ARG struct link_map *skip, int reloc_type)
+FCT (const char *undef_name, struct link_map *undef_map,
+     unsigned long int hash, const ElfW(Sym) *ref, struct sym_val *result,
+     struct r_scope_elem *scope, size_t i, ARG struct link_map *skip,
+     int reloc_type)
 {
   struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
@@ -154,7 +154,12 @@ FCT (const char *undef_name, unsigned long int hash,
 	sym = num_versions == 1 ? versioned_sym : NULL;
 #endif
 
-      if (sym != NULL)
+      if (sym != NULL
+	  /* Don't allow binding if the symbol is hidden.  When processor
+	     specific definitions for STV_INTERNAL are defined we might
+	     have to extend this conditional.  */
+	  && (ELFW(ST_VISIBILITY) (sym->st_other) != STV_HIDDEN
+	      || map == undef_map))
 	{
 	found_it:
 	  switch (ELFW(ST_BIND) (sym->st_info))
