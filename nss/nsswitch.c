@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -26,6 +26,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <aliases.h>
+#include <grp.h>
+#include <netinet/ether.h>
+#include <pwd.h>
+#include <shadow.h>
 
 #if !defined DO_STATIC_NSS || defined SHARED
 # include <gnu/lib-names.h>
@@ -361,18 +367,6 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 #else
 	  /* We can't get function address dynamically in static linking. */
 	  {
-# define DEFINE_ENT(h,nm)						      \
-	    extern void _nss_##h##_get##nm##ent_r (void);		      \
-	    extern void _nss_##h##_end##nm##ent (void);			      \
-	    extern void _nss_##h##_set##nm##ent (void);
-# define DEFINE_GET(h,nm)						      \
-	    extern void _nss_##h##_get##nm##_r (void);
-# define DEFINE_GETBY(h,nm,ky)						      \
-	    extern void _nss_##h##_get##nm##by##ky##_r (void);
-# include "function.def"
-# undef DEFINE_ENT
-# undef DEFINE_GET
-# undef DEFINE_GETBY
 # define DEFINE_ENT(h,nm)						      \
 	    { #h"_get"#nm"ent_r", _nss_##h##_get##nm##ent_r },		      \
 	    { #h"_end"#nm"ent", _nss_##h##_end##nm##ent },		      \

@@ -1,3 +1,8 @@
+2001-01-04  Andreas Jaeger  <aj@suse.de>
+
+	* nss/nsswitch.c: Include files for missing prototypes, remove
+	buggy declaration of prototypes.
+
 2001-01-03  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* resolv/Versions: Fix bracing.
