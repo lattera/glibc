@@ -148,6 +148,14 @@ main (int argc, char ** argv)
       status = 1;
     }
 
+  const char input2[] = "+1.000000000116415321826934814453125";
+  if (strtold (input2, NULL) != +1.000000000116415321826934814453125)
+    {
+      printf ("input2: %La != %La\n", strtold (input2, NULL),
+	      +1.000000000116415321826934814453125);
+      status = 1;
+    }
+
   status |= long_dbl ();
 
   status |= locale_test ();
