@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 Written by Ulrich Drepper.
 
 This file is part of the GNU C Library.
@@ -128,10 +128,9 @@ static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
 
 
 int
-__printf_fp (fp, info, args)
-     FILE *fp;
-     const struct printf_info *info;
-     const *const *args;
+__printf_fp (FILE *fp,
+	     const struct printf_info *info,
+	     const *const *args)
 {
   /* The floating-point value to output.  */
   union

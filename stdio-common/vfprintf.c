@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -759,9 +759,7 @@ struct helper_file
   };
 
 static int
-_IO_helper_overflow (s, c)
-  _IO_FILE *s;
-  int c;
+_IO_helper_overflow (_IO_FILE *s, int c)
 {
   _IO_FILE *target = ((struct helper_file*) s)->_put_stream;
   int used = s->_IO_write_ptr - s->_IO_write_base;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ poll (fds, nfds, timeout)
       }
 
   tv.tv_sec = timeout / 1000;
-  tv.tv_usec = (timeout + 999) / 1000;
+  tv.tv_usec = (timeout % 1000) * 1000;
 
   ready = __select (maxfd + 1, &rset, &wset, &xset,
 		    timeout == -1 ? NULL : &tv);

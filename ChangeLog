@@ -1,3 +1,13 @@
+Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/mkdir.c, syspdep/unix/rmdir.c: Moved from unix/sysv.
+	They will be overridden with syscalls if extant by unix/syscalls.list.
+
+	* Makeconfig (+gccwarn): Add -Wstrict-prototypes.
+
+	* stdio-common/printf_fp.c (__printf_fp): Define with prototype.
+	* stdio-common/vfprintf.c (_IO_helper_overflow): Likewise.
+
 Thu Jan 18 00:32:43 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* io/Makefile (routines): Add mknod, xstat fxstat lxstat xmknod.
