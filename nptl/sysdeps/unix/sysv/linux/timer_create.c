@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -134,7 +134,8 @@ timer_create (clock_id, evp, timerid)
 	      INTERNAL_SYSCALL_DECL (err);
 	      struct timespec ts;
 	      int res;
-	      res = INTERNAL_SYSCALL (clock_getres, err, 1, &ts);
+	      res = INTERNAL_SYSCALL (clock_getres, err, 2,
+				      CLOCK_REALTIME, &ts);
 	      __no_posix_timers = (INTERNAL_SYSCALL_ERROR_P (res, err)
 				   ? -1 : 1);
 	    }
