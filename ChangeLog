@@ -1,5 +1,10 @@
 2000-03-02  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/scsi/sg.h: Integrate changes from Linux
+	2.3.43.
+
+2000-03-02  Andreas Jaeger  <aj@suse.de>
+
 	* resolv/Makefile (headers): Add arpa/nameser_compat.h.
 
 2000-03-01  Andreas Jaeger  <aj@suse.de>
