@@ -1,3 +1,12 @@
+2002-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/Makefile (CFLAGS-wcstod.c): Add -I../stdlib.
+	(CFLAGS-wcstof.c): Likewise.
+	(CFLAGS-wcstold.c): Likewise.
+	(CFLAGS-wcstod_l.c): Likewise.
+	(CFLAGS-wcstof_l.c): Likewise.
+	(CFLAGS-wcstold_l.c): Likewise.
+
 2002-07-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* resource/sys/resource.h (__rlimit_resource_t, __rusage_who_t,
