@@ -1,5 +1,5 @@
 /* Single-precision floating point square root.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -139,3 +139,8 @@ weak_alias (__sqrt, sqrt)
 /* Strictly, this is wrong, but the only places where _ieee754_sqrt is
    used will not pass in a negative result.  */
 strong_alias(__sqrt,__ieee754_sqrt)
+
+#ifdef NO_LONG_DOUBLE
+weak_alias (__sqrt, __sqrtl)
+weak_alias (__sqrt, sqrtl)
+#endif
