@@ -29,10 +29,10 @@
 #include "nss-nis.h"
 
 
-/* The parser is defined in a different module.  */
-extern int _nss_files_parse_servent (char *line, struct servent *result,
-				     char *data, size_t datalen, int *errnop);
-
+/* Get the declaration of the parser function.  */
+#define ENTNAME servent
+#define EXTERN_PARSER
+#include <nss/nss_files/files-parse.c>
 
 __libc_lock_define_initialized (static, lock)
 
@@ -156,6 +156,7 @@ static enum nss_status
 internal_nis_getservent_r (struct servent *serv, char *buffer,
 			   size_t buflen, int *errnop, intern_t *data)
 {
+  struct parser_data *pdata = (void *) buffer;
   int parse_res;
   char *p;
 
@@ -174,7 +175,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
            while (isspace (*p))
         ++p;
 
-      parse_res = _nss_files_parse_servent (p, serv, buffer, buflen, errnop);
+      parse_res = _nss_files_parse_servent (p, serv, pdata, buflen, errnop);
       if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       data->next = data->next->next;

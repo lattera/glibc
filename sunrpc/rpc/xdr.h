@@ -271,12 +271,16 @@ struct xdr_discrim
 extern bool_t xdr_void __P ((void));
 extern bool_t xdr_int __P ((XDR *__xdrs, int *__ip));
 extern bool_t xdr_u_int __P ((XDR *__xdrs, u_int *__up));
-extern bool_t xdr_int32_t __P ((XDR *__xdrs, int32_t *__ip));
-extern bool_t xdr_uint32_t __P ((XDR *__xdrs, uint32_t *__up));
 extern bool_t xdr_long __P ((XDR *__xdrs, long *__lp));
 extern bool_t xdr_u_long __P ((XDR *__xdrs, u_long *__ulp));
 extern bool_t xdr_short __P ((XDR *__xdrs, short *__sp));
 extern bool_t xdr_u_short __P ((XDR *__xdrs, u_short *__usp));
+extern bool_t xdr_int8_t __P ((XDR *__xdrs, int8_t *__ip));
+extern bool_t xdr_uint8_t __P ((XDR *__xdrs, uint8_t *__up));
+extern bool_t xdr_int16_t __P ((XDR *__xdrs, int16_t *__ip));
+extern bool_t xdr_uint16_t __P ((XDR *__xdrs, uint16_t *__up));
+extern bool_t xdr_int32_t __P ((XDR *__xdrs, int32_t *__ip));
+extern bool_t xdr_uint32_t __P ((XDR *__xdrs, uint32_t *__up));
 extern bool_t xdr_bool __P ((XDR *__xdrs, bool_t *__bp));
 extern bool_t xdr_enum __P ((XDR *__xdrs, enum_t *__ep));
 extern bool_t xdr_array __P ((XDR * _xdrs, caddr_t *__addrp, u_int *__sizep,

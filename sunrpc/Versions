@@ -96,8 +96,8 @@ libc {
     # x*
     xdecrypt; xdr_authdes_cred; xdr_authdes_verf;
     xdr_cryptkeyarg; xdr_cryptkeyarg2; xdr_cryptkeyres; xdr_des_block;
-    xdr_getcredres; xdr_int32_t; xdr_key_netstarg; xdr_key_netstres;
-    xdr_keybuf; xdr_keystatus; xdr_netnamestr; xdr_sizeof; xdr_uint32_t;
-    xdr_unixcred;
+    xdr_getcredres; xdr_int16_t; xdr_int32_t; xdr_int8_t; xdr_key_netstarg;
+    xdr_key_netstres; xdr_keybuf; xdr_keystatus; xdr_netnamestr; xdr_sizeof;
+    xdr_uint16_t; xdr_uint32_t; xdr_uint8_t; xdr_unixcred;
   }
 }

@@ -1,3 +1,15 @@
+1998-11-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/Makefile: Add xdr_intXX_t to routines.
+	* sunrpc/Versions: Add xdr_int8_t, xdr_uint8_t, xdr_in16_t and
+	  xdr_uint16_t.
+	* sunrpc/rpc/xdr.h: Add prototypes for new xdr_intXX_t functions.
+	* sunrpc/xdr.c: Remove xdr_int32_t and xdr_uint32_t.
+	* sunrpc/xdr_intXX_t.c: New, contains all xdr_intXX_t functions.
+
+	* nis/Depend: New.
+	* nis/nss_nis/nis-service.c: Include generated prototype for parser.
+
 1998-11-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nscd/nscd_getpw_r.c: Include nscd_proto.h for prototypes.

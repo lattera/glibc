@@ -67,7 +67,7 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    xdr_rec xdr_ref xdr_stdio publickey xdr_sizeof \
 	    auth_des authdes_prot des_crypt des_impl des_soft \
 	    key_call key_prot netname openchild rtime svcauth_des xcrypt\
-	    clnt_unix svc_unix create_xid
+	    clnt_unix svc_unix create_xid xdr_intXX_t
 
 others := rpcinfo
 install-bin := rpcgen

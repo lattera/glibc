@@ -152,45 +152,6 @@ xdr_u_int (XDR *xdrs, u_int *up)
 }
 
 /*
- * XDR 32bit integers
- */
-bool_t
-xdr_int32_t (XDR *xdrs, int32_t *lp)
-{
-
-  if (xdrs->x_op == XDR_ENCODE)
-    return XDR_PUTINT32 (xdrs, lp);
-
-  if (xdrs->x_op == XDR_DECODE)
-    return XDR_GETINT32 (xdrs, lp);
-
-  if (xdrs->x_op == XDR_FREE)
-    return TRUE;
-
-  return FALSE;
-}
-
-/*
- * XDR 32bit unsigned integers
- */
-bool_t
-xdr_uint32_t (XDR *xdrs, uint32_t *ulp)
-{
-  switch (xdrs->x_op)
-    {
-    case XDR_DECODE:
-      return XDR_GETINT32 (xdrs, (uint32_t *) ulp);
-
-    case XDR_ENCODE:
-      return XDR_PUTINT32 (xdrs, (uint32_t *) ulp);
-
-    case XDR_FREE:
-      return TRUE;
-    }
-  return FALSE;
-}
-
-/*
  * XDR long integers
  * same as xdr_u_long - open coded to save a proc call!
  */
