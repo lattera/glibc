@@ -1,4 +1,16 @@
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/Makefile (nscd-modules): Add nscd_setup_thread.
+	* nscd/connections.c (nscd_run): Call setup_thread for maintenance
+	threads.
+	* nscd/nscd-client.h (struct database_pers_head): Add
+	nscd_certainly_running field.
+	* nscd/nscd.h: Declare setup_thread.
+	* nscd/nscd_helper.c (__nscd_get_map_ref): Avoid the time test if
+	nscd_certainly_running is nonzero.
+
+2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c: Implement r/o sharing of nscd's cache with client
 	processes via shared memory.

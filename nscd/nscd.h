@@ -195,4 +195,8 @@ extern void readdhstbyaddrv6 (struct database_dyn *db, struct hashentry *he,
 extern void *mempool_alloc (struct database_dyn *db, size_t len);
 extern void gc (struct database_dyn *db);
 
+
+/* nscd_setup_thread.c */
+extern void setup_thread (struct database_dyn *db);
+
 #endif /* nscd.h */

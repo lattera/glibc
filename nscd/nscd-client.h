@@ -180,6 +180,7 @@ struct database_pers_head
   int version;
   int header_size;
   int gc_cycle;
+  int nscd_certainly_running;
   volatile time_t timestamp;
 
   size_t module;

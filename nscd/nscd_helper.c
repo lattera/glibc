@@ -234,11 +234,8 @@ __nscd_get_map_ref (request_type type, const char *name,
     {
       /* If not mapped or timestamp not updated, request new map.  */
       if (cur == NULL
-	  // XXX The following syscalls increases the cost of the entire
-	  // XXX lookup by a factor of 5 but unfortunately there is not
-	  // XXX much we can do except hoping we get a userlevel
-	  // XXX implementation soon.
-	  || cur->head->timestamp + MAPPING_TIMEOUT < time (NULL))
+	  || (cur->head->nscd_certainly_running == 0
+	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL)))
 	cur = get_mapping (type, name, &mapptr->mapped);
 
       if (__builtin_expect (cur != NO_MAPPING, 1))

@@ -31,7 +31,8 @@ vpath %.c ../locale/programs
 
 nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getgrnam_r getgrgid_r hstcache gethstbyad_r gethstbynm2_r \
-		dbg_log nscd_conf nscd_stat cache mem xmalloc xstrdup
+		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
+		xmalloc xstrdup
 
 ifeq ($(have-thread-library),yes)
 
