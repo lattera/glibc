@@ -20,12 +20,18 @@
 # error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 #include <bits/wordsize.h>
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
-#define MSG_EXCEPT	020000	/* recv any msg except of specified type */
+#ifdef __USE_GNU
+# define MSG_EXCEPT	020000	/* recv any msg except of specified type */
+#endif
+
+/* Types used in the structure definition.  */
+typedef unsigned long int msgqnum_t;
+typedef unsigned long int msglen_t;
 
 
 /* Structure of record for one message inside the kernel.
@@ -46,8 +52,8 @@ struct msqid_ds
 #endif
   __time_t msg_ctime;		/* time of last change */
   unsigned long int __msg_cbytes; /* current number of bytes on queue */
-  unsigned long int msg_qnum;	/* number of messages currently on queue */
-  unsigned long int msg_qbytes;	/* max number of bytes allowed on queue */
+  msgqnum_t msg_qnum;		/* number of messages currently on queue */
+  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
   pid_t msg_lspid;		/* pid of last msgsnd() */
   pid_t msg_lrpid;		/* pid of last msgrcv() */
   unsigned long int __unused1;

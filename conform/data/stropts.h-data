@@ -1,0 +1,123 @@
+type {struct bandinfo}
+
+element {struct bandinfo} {unsigned char} bi_pri
+element {struct bandinfo} int bi_flag
+
+type {struct strpeek}
+
+element {struct strpeek} {struct strbuf} ctlbuf
+element {struct strpeek} {struct strbuf} databuf
+element {struct strpeek} t_uscalar_t flags
+
+type {struct strbuf}
+
+element {struct strbuf} int maxlen
+element {struct strbuf} int len
+element {struct strbuf} {char*} buf
+
+type {struct strfdinsert}
+
+element {struct strfdinsert} {struct strbuf} ctlbuf
+element {struct strfdinsert} {struct strbuf} databuf
+element {struct strfdinsert} t_uscalar_t flags
+element {struct strfdinsert} int fildes
+element {struct strfdinsert} int offset
+
+type {struct strioctl}
+
+element {struct strioctl} int ic_cmd
+element {struct strioctl} int ic_timout
+element {struct strioctl} int ic_len
+element {struct strioctl} {char*} ic_dp
+
+type {struct strrecvfd}
+
+element {struct strrecvfd} int fd
+element {struct strrecvfd} uid_t uid
+element {struct strrecvfd} gid_t gid
+
+type uid_t
+type gid_t
+
+type t_uscalar_t
+
+type {struct str_list}
+
+element {struct str_list} int sl_nmods
+element {struct str_list} {struct str_mlist*} sl_modlist
+
+type {struct str_mlist}
+
+element {struct str_mlist} char l_name [FMNAMESZ+1]
+
+macro I_PUSH
+macro I_POP
+macro I_LOOK
+macro FMNAMESZ
+macro I_FLUSH
+macro FLUSHR
+macro FLUSHW
+macro FLUSHRW
+macro I_FLUSHBAND
+macro I_SETSIG
+macro S_RDNORM
+macro S_RDBAND
+macro S_INPUT
+macro S_HIPRI
+macro S_OUTPUT
+macro S_WRNORM
+macro S_WRBAND
+macro S_MSG
+macro S_ERROR
+macro S_HANGUP
+macro S_BANDURG
+macro I_GETSIG
+macro I_FIND
+macro I_PEEK
+macro RS_HIPRI
+macro I_SRDOPT
+macro RNORM
+macro RMSGD
+macro RMSGN
+macro RPROTNORM
+macro RPROTDAT
+macro RPROTDIS
+macro I_GRDOPT
+macro I_NREAD
+macro I_FDINSERT
+macro I_STR
+macro I_SWROPT
+macro SNDZERO
+macro I_GWROPT
+macro I_SENDFD
+macro I_RECVFD
+macro I_LIST
+macro I_ATMARK
+macro ANYMARK
+macro LASTMARK
+macro I_CKBAND
+macro I_GETBAND
+macro I_CANPUT
+macro I_SETCLTIME
+macro I_GETCLTIME
+macro I_LINK
+macro I_UNLINK
+macro I_PLINK
+macro I_PUNLINK
+
+macro MSG_ANY
+macro MSG_BAND
+macro MSG_HIPRI
+macro MORECTL
+macro MOREDATA
+
+function int isastream (int)
+function int getmsg (int, struct strbuf*, struct strbuf*, int*)
+function int getpmsg (int, struct strbuf*, struct strbuf*, int*, int*)
+function int ioctl (int, int, ...)
+function int putmsg (int, const struct strbuf*, const struct strbuf*, int)
+function int putpmsg (int, const struct strbuf*, const struct strbuf*, int, int)
+function int fattach (int, const char*)
+function int fdetach (const char*)
+
+allow-header unistd.h

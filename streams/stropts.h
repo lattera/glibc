@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,18 @@
 
 #include <features.h>
 #include <bits/types.h>
+
+#ifndef __gid_t_defined
+typedef __gid_t gid_t;
+# define __gid_t_defined
+#endif
+
+#ifndef __uid_t_defined
+typedef __uid_t uid_t;
+# define __uid_t_defined
+#endif
+
+typedef __t_uscalar_t t_uscalar_t;
 
 /* Get system specific contants.  */
 #include <bits/stropts.h>

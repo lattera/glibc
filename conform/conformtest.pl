@@ -4,7 +4,8 @@ $CC = "gcc";
 $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 
 # List of the headers we are testing.
-@headers = ("strings.h", "string.h", "stdlib.h", "stdio.h",
+@headers = ("sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h",
+	    "stropts.h", "strings.h", "string.h", "stdlib.h", "stdio.h",
 	    "stddef.h", "stdarg.h", "signal.h", "setjmp.h", "semaphore.h",
 	    "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
 	    "poll.h", "nl_types.h", "ndbm.h", "mqueue.h", "monetary.h",
@@ -13,7 +14,7 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 	    "fmtmsg.h", "float.h", "fcntl.h", "errno.h", "dlfcn.h", "dirent.h",
 	    "ctype.h", "cpio.h", "assert.h", "aio.h");
 
-# These are the ISO C9x keywords.
+# These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
 	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
 	     'if', 'inline', 'int', 'long', 'register', 'restrict', 'return',
@@ -234,7 +235,9 @@ sub checknamespace {
 
 while ($#headers >= 0) {
   my($h) = pop (@headers);
-  my($fnamebase) = "$tmpdir/$h-test";
+  my($hf) = $h;
+  $hf =~ s|/|-|;
+  my($fnamebase) = "$tmpdir/$hf-test";
   my($missing);
   my(@allow) = ();
   my($prepend) = $mustprepend{$h};

@@ -1,3 +1,45 @@
+2000-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl (@headers): Add "sys/msg.h", "sys/mman.h",
+	"sys/ipc.h", "syslog.h", and "stropts.h".
+	Handle / in header names correctly.
+	* conform/data/stropts.h-data: New file.
+	* conform/data/syslog.h-data: New file.
+	* conform/data/sys/ipc.h-data: New file.
+	* conform/data/sys/mman.h-data: New file.
+	* conform/data/sys/msg.h-data: New file.
+
+	* misc/sys/mman.h: Define off_t and mode_t if not already done.
+
+	* streams/stropts.h: Define gid_t and uid_t if not already done.
+
+	* sysdeps/gnu/bits/ipc.h (IPC_INFO): Only define if __USE_GNU.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ipc.h: Likewise.
+
+	* sysvipc/sys/msg.h: Don't include sys/types.h.
+	Define time_t, pid_t, and ssize_t if not already done.
+	(struct msgbuf): Define only if __USE_GNU.
+
+	* sysdeps/generic/bits/msq.h: Include bits/types.h, not sys/types.h.
+	(MSG_EXCEPT): Only define if __USE_GNU.
+	Define msgqnum_t and msglen_t and use them in struct msqid_ds
+	definition.
+	* sysdeps/gnu/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h: Likewise.
+
+	* sysdeps/generic/bits/stropts.h (I_GWROPT): Renamed from I_GWRSET.
+	(FLUSHBAND): Only define is __USE_GNU.
+	(RPROTMASK): Likewise.
+	(SNDPIPE): Likewise.
+	(MUXID_ALL): Likewise.
+	(struct strrecvfd): Rename fill to __fill.
+
 2000-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/stdlib.h: Move definition X/Open compatibility stuff

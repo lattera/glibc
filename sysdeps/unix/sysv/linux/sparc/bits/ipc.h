@@ -32,7 +32,9 @@
 #define IPC_RMID	0		/* Remove identifier.  */
 #define IPC_SET		1		/* Set `ipc_perm' options.  */
 #define IPC_STAT	2		/* Get `ipc_perm' options.  */
-#define IPC_INFO	3		/* See ipcs.  */
+#ifdef __USE_GNU
+# define IPC_INFO	3		/* See ipcs.  */
+#endif
 
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
@@ -51,7 +53,7 @@ struct ipc_perm
     unsigned short int mode;		/* Read/write permission.  */
     unsigned short int __pad2;
 #else
-    unsigned int mode;			/* Read/write permission.  */
+    __mode_t mode;			/* Read/write permission.  */
     unsigned short int __pad1;
 #endif
     unsigned short int __seq;		/* Sequence number.  */

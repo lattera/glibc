@@ -1,0 +1,24 @@
+type {struct ipc_perm}
+
+element {struct ipc_perm} uid_t uid
+element {struct ipc_perm} gid_t gid
+element {struct ipc_perm} uid_t cuid
+element {struct ipc_perm} gid_t cgid
+element {struct ipc_perm} mode_t mode
+
+type uid_t
+type gid_t
+type mode_t
+type key_t
+
+constant IPC_CREAT
+constant IPC_EXCL
+constant IPC_NOWAIT
+
+constant IPC_PRIVATE
+
+constant IPC_RMID
+constant IPC_SET
+constant IPC_STAT
+
+function key_t ftok (const char*, int)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,14 @@
 #error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
+
+/* Types used in the structure definition.  */
+typedef unsigned short int msgqnum_t;
+typedef unsigned short int msglen_t;
 
 
 /* Structure of record for one message inside the kernel.
@@ -34,8 +38,8 @@ struct msqid_ds
   __time_t msg_stime;		/* time of last msgsnd command */
   __time_t msg_rtime;		/* time of last msgrcv command */
   __time_t msg_ctime;		/* time of last change */
-  unsigned short int msg_qnum;	/* number of messages currently on queue */
-  unsigned short int msg_qbytes;/* max number of bytes allowed on queue */
+  msgqnum_t msg_qnum;		/* number of messages currently on queue */
+  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
   __pid_t msg_lspid;		/* pid of last msgsnd() */
   __pid_t msg_lrpid;		/* pid of last msgrcv() */
 };

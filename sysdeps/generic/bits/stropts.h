@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@
 				   of a STREAMS pipe.  */
 #define I_RECVFD    (__SID |14) /* Non-EFT definition.  */
 #define I_SWROPT    (__SID |19) /* Set the write mode.  */
-#define I_GWRSET    (__SID |20) /* Return the current write mode setting.  */
+#define I_GWROPT    (__SID |20) /* Return the current write mode setting.  */
 #define I_LIST	    (__SID |21) /* List all the module names on the STREAM, up
 				   to and including the topmost driver name. */
 #define I_PLINK	    (__SID |22) /* Connect two STREAMs with a persistent
@@ -91,7 +91,9 @@
 #define FLUSHR		0x01	/* Flush read queues.  */
 #define FLUSHW		0x02	/* Flush write queues.  */
 #define FLUSHRW		0x03	/* Flush read and write queues.  */
-#define FLUSHBAND	0x04	/* Flush only specified band.  */
+#ifdef __USE_GNU
+# define FLUSHBAND	0x04	/* Flush only specified band.  */
+#endif
 
 /* Possible arguments for `I_SETSIG'.  */
 #define S_INPUT		0x0001	/* A message, other than a high-priority
@@ -129,13 +131,17 @@
 #define RPROTNORM	0x0010	/* Fail `read' with EBADMSG if a message
 				   containing a control part is at the front
 				   of the STREAM head read queue.  */
-#define RPROTMASK	0x001C	/* The RPROT bits */
+#ifdef __USE_GNU
+# define RPROTMASK	0x001C	/* The RPROT bits */
+#endif
 
 /* Possible mode for `I_SWROPT'.  */
 #define SNDZERO		0x001	/* Send a zero-length message downstream when a
 				   `write' of 0 bytes occurs.  */
-#define	SNDPIPE		0x002	/* Send SIGPIPE on write and putmsg if
+#ifdef __USE_GNU
+# define SNDPIPE	0x002	/* Send SIGPIPE on write and putmsg if
 				   sd_werror is set.  */
+#endif
 
 /* Arguments for `I_ATMARK'.  */
 #define ANYMARK		0x01	/* Check if the message is marked.  */
@@ -143,8 +149,10 @@
 				   on the queue.  */
 
 /* Argument for `I_UNLINK'.  */
-#define MUXID_ALL	(-1)	/* Unlink all STREAMs linked to the STREAM
+#ifdef __USE_GNU
+# define MUXID_ALL	(-1)	/* Unlink all STREAMs linked to the STREAM
 				   associated with `fildes'.  */
+#endif
 
 
 /* Macros for `getmsg', `getpmsg', `putmsg' and `putpmsg'.  */
@@ -176,14 +184,14 @@ struct strpeek
   {
     struct strbuf ctlbuf;
     struct strbuf databuf;
-    __t_uscalar_t flags;		/* UnixWare/Solaris compatibility.  */
+    t_uscalar_t flags;			/* UnixWare/Solaris compatibility.  */
   };
 
 struct strfdinsert
   {
     struct strbuf ctlbuf;
     struct strbuf databuf;
-    __t_uscalar_t flags;		/* UnixWare/Solaris compatibility.  */
+    t_uscalar_t flags;			/* UnixWare/Solaris compatibility.  */
     int fildes;
     int offset;
   };
@@ -199,9 +207,9 @@ struct strioctl
 struct strrecvfd
   {
     int fd;
-    __uid_t uid;
-    __gid_t gid;
-    char fill[8];			/* UnixWare/Solaris compatibility */
+    uid_t uid;
+    gid_t gid;
+    char __fill[8];			/* UnixWare/Solaris compatibility */
   };
 
 

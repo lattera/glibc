@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #define _SYS_MSG_H
 
 #include <features.h>
-#include <sys/types.h>
 
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
@@ -28,15 +27,31 @@
 /* Get system dependent definition of `struct msqid_ds' and more.  */
 #include <bits/msq.h>
 
+/* Define types required by the standard.  */
+#define	__need_time_t
+#include <time.h>
+
+#ifndef __pid_t_defined
+typedef __pid_t pid_t;
+# define __pid_t_defined
+#endif
+
+#ifndef __ssize_t_defined
+typedef __ssize_t ssize_t;
+# define __ssize_t_defined
+#endif
+
 /* The following System V style IPC functions implement a message queue
    system.  The definition is found in XPG2.  */
 
+#ifdef __USE_GNU
 /* Template for struct to be used as argument for `msgsnd' and `msgrcv'.  */
 struct msgbuf
   {
     long int mtype;		/* type of received/sent message */
     char mtext[1];		/* text of the message */
   };
+#endif
 
 
 __BEGIN_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +20,17 @@
 # error "Never use <bits/msq.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
-#define MSG_EXCEPT	020000	/* recv any msg except of specified type */
+#ifdef __USE_GNU
+# define MSG_EXCEPT	020000	/* recv any msg except of specified type */
+#endif
+
+/* Types used in the structure definition.  */
+typedef unsigned short int msgqnum_t;
+typedef unsigned short int msglen_t;
 
 
 /* Structure of record for one message inside the kernel.
@@ -40,8 +46,8 @@ struct msqid_ds
   struct wait_queue *__wwait;	/* ??? */
   struct wait_queue *__rwait;	/* ??? */
   unsigned short int __msg_cbytes;/* current number of bytes on queue */
-  unsigned short int msg_qnum;	/* number of messages currently on queue */
-  unsigned short int msg_qbytes;/* max number of bytes allowed on queue */
+  msgqnum_t msg_qnum;		/* number of messages currently on queue */
+  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
   __ipc_pid_t msg_lspid;	/* pid of last msgsnd() */
   __ipc_pid_t msg_lrpid;	/* pid of last msgrcv() */
 };
