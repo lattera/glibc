@@ -1,5 +1,7 @@
 2003-05-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h (IPCOP_semtimedop): Define.
+
 	* sysdeps/generic/dl-fptr.c (_dl_make_fptr): Use 0 not NULL for
 	comparing ftab elements.
 	(_dl_unmap): Fix typo in test.
