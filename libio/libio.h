@@ -201,26 +201,26 @@ enum __codecvt_result
    of the virtual functions in the libstdc++ codecvt class.  */
 struct _IO_codecvt
 {
-  void (*__codecvt_destr) __P ((struct _IO_codecvt *));
-  enum __codecvt_result (*__codecvt_do_out) __P ((struct _IO_codecvt *,
-						  __mbstate_t *,
-						  const wchar_t *,
-						  const wchar_t *,
-						  const wchar_t **, char *,
-						  char *, char **));
-  enum __codecvt_result (*__codecvt_do_unshift) __P ((struct _IO_codecvt *,
-						      __mbstate_t *, char *,
-						      char *, char **));
-  enum __codecvt_result (*__codecvt_do_in) __P ((struct _IO_codecvt *,
-						 __mbstate_t *,
-						 const char *, const char *,
-						 const char **, wchar_t *,
-						 wchar_t *, wchar_t **));
-  int (*__codecvt_do_encoding) __P ((struct _IO_codecvt *));
-  int (*__codecvt_do_always_noconv) __P ((struct _IO_codecvt *));
-  int (*__codecvt_do_length) __P ((struct _IO_codecvt *, __mbstate_t *,
-				   const char *, const char *, _IO_size_t));
-  int (*__codecvt_do_max_length) __P ((struct _IO_codecvt *));
+  void (*__codecvt_destr) __PMT ((struct _IO_codecvt *));
+  enum __codecvt_result (*__codecvt_do_out) __PMT ((struct _IO_codecvt *,
+						    __mbstate_t *,
+						    const wchar_t *,
+						    const wchar_t *,
+						    const wchar_t **, char *,
+						    char *, char **));
+  enum __codecvt_result (*__codecvt_do_unshift) __PMT ((struct _IO_codecvt *,
+							__mbstate_t *, char *,
+							char *, char **));
+  enum __codecvt_result (*__codecvt_do_in) __PMT ((struct _IO_codecvt *,
+						   __mbstate_t *,
+						   const char *, const char *,
+						   const char **, wchar_t *,
+						   wchar_t *, wchar_t **));
+  int (*__codecvt_do_encoding) __PMT ((struct _IO_codecvt *));
+  int (*__codecvt_do_always_noconv) __PMT ((struct _IO_codecvt *));
+  int (*__codecvt_do_length) __PMT ((struct _IO_codecvt *, __mbstate_t *,
+				     const char *, const char *, _IO_size_t));
+  int (*__codecvt_do_max_length) __PMT ((struct _IO_codecvt *));
 
   _IO_iconv_t __cd_in;
   _IO_iconv_t __cd_out;

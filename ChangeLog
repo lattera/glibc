@@ -1,8 +1,10 @@
 1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/libio.h (_IO_codecvt): Change __P ot __PMT.
+
 	* nss/getXXbyYY_r.c: Return error code not -1.
 	* nss/getXXent_r.c: Likewise.
-	* nss/getXXbyYY.c: Expect return alue to be ERANGE if buffer is too
+	* nss/getXXbyYY.c: Expect return value to be ERANGE if buffer is too
 	small.
 	* nscd/nscd_getgr_r.c: Return -1 in case nscd is not available and
 	value > 0 for error.
