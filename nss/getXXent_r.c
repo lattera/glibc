@@ -52,7 +52,7 @@ Boston, MA 02111-1307, USA.  */
 #define APPEND_R1(name) name##_r
 
 #define SETFUNC_NAME_STRING STRINGIZE (SETFUNC_NAME)
-#define GETFUNC_NAME_STRING STRINGIZE (GETFUNC_NAME)
+#define GETFUNC_NAME_STRING STRINGIZE (REENTRANT_GETNAME)
 #define ENDFUNC_NAME_STRING STRINGIZE (ENDFUNC_NAME)
 #define DATABASE_NAME_STRING STRINGIZE (DATABASE_NAME)
 #define STRINGIZE(name) STRINGIZE1 (name)
@@ -103,12 +103,12 @@ extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
    current location if it's not nil.  Return nonzero if there are no
    services (left).  */
 static enum nss_status
-setup (void **fctp, int all)
+setup (void **fctp, const char *func_name, int all)
 {
   int no_more;
   if (startp == NULL)
     {
-      no_more = DB_LOOKUP_FCT (&nip, SETFUNC_NAME_STRING, fctp);
+      no_more = DB_LOOKUP_FCT (&nip, func_name, fctp);
       startp = no_more ? (service_user *) -1 : nip;
     }
   else if (startp == (service_user *) -1)
@@ -120,7 +120,7 @@ setup (void **fctp, int all)
 	/* Reset to the beginning of the service list.  */
 	nip = startp;
       /* Look up the first function.  */
-      no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING, fctp);
+      no_more = __nss_lookup (&nip, func_name, fctp);
     }
   return no_more;
 }
@@ -142,7 +142,7 @@ SETFUNC_NAME (STAYOPEN)
   __libc_lock_lock (lock);
 
   /* Cycle through all the services and run their setXXent functions.  */
-  no_more = setup ((void **) &fct, 1);
+  no_more = setup ((void **) &fct, SETFUNC_NAME_STRING, 1);
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
@@ -172,7 +172,7 @@ ENDFUNC_NAME (void)
   __libc_lock_lock (lock);
 
   /* Cycle through all the services and run their endXXent functions.  */
-  no_more = setup ((void **) &fct, 1);
+  no_more = setup ((void **) &fct, ENDFUNC_NAME_STRING, 1);
   while (! no_more)
     {
       /* Ignore status, we force check in __NSS_NEXT.  */
@@ -208,7 +208,7 @@ REENTRANT_GETNAME (LOOKUP_TYPE *result, char *buffer, int buflen H_ERRNO_PARM)
   /* Run through available functions, starting with the same function last
      run.  We will repeat each function as long as it succeeds, and then go
      on to the next service action.  */
-  no_more = setup ((void **) &fct, 0);
+  no_more = setup ((void **) &fct, GETFUNC_NAME_STRING, 0);
   while (! no_more)
     {
       status = (*fct) (result, buffer, buflen H_ERRNO_VAR);
