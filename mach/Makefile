@@ -184,7 +184,6 @@ endif
 # Be sure not to make these with implicit rules from foo.defs.
 mach.h mach/memory_object.h: ;
 
-ifneq (,)
 # A gcc bug prevents the generated file from working properly,
 # so we have one in the distribution for the time being.
 generated += errsystems.c
@@ -192,4 +191,3 @@ $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
 	gawk -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
 	mv $@.n $@
-endif

@@ -1,4 +1,28 @@
+Tue Oct 10 23:08:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (build-shlib): Pass -rpath and -rpath-link options.
+	(LDFLAGS-c.so): Don't pass -dynamic-linker here.
+	* Makeconfig (+link): Pass $(sysdep-LDFLAGS).
+	(link-libc): Pass -rpath and -rpath-link options.
+
+	* MakeTAGS (all-dirs): Omit CVS directories.
+	Specify vpath directives to find source files in $(all-dirs).
+	(sources, headers): Append sources and headers from $(all-dist) to
+	these. 
+	(all-dist): Filter them out of this.
+	(all-headers, all-sources): Use $(shell find ...) instead of
+	$(wildcard ...).
+
+	* sysdeps/mach/hurd/Makefile (sysdep-LDFLAGS): New variable; pass
+	-rpath-link.
+
+	* hurd/hurdexec.c: Pass poly and dealloc args to __file_exec.
+
+	* elf/Makefile (install-others): Add missing $.
+
 Mon Oct  9 02:54:14 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* mach/Makefile ($(objpfx)errsystems.c): Rule reenabled.
 
 	* Makeconfig (config-LDFLAGS): Define to
 	-Wl-dynamic-linker=$(libdir)$(rtld-installed-name).

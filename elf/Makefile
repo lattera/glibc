@@ -37,7 +37,7 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
-install-others	= $(libdir)(rtld-installed-name)
+install-others	= $(libdir)$(rtld-installed-name)
 install-bin	= ldd
 endif
 

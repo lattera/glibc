@@ -43,7 +43,8 @@ sysdep-dirs := $(addprefix $(sysdep_dir)/,$(sysdirs))
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
-sysdep_dirs := $(shell find $(..)sysdeps -type d ! -name RCS -print)
+sysdep_dirs := $(shell find $(..)sysdeps -type d \
+					 ! -name RCS ! -name CVS -print)
 endif
 
 # Find all sysdep dirs there are, but putting the ones
@@ -52,6 +53,11 @@ all-dirs := $(objdir) \
 	    $(sysdep-dirs) \
 	    $(source_dirs) \
 	    $(filter-out $(sysdep-dirs),$(sysdep_dirs))
+
+vpath %.h $(all-dirs)
+vpath %.c $(all-dirs)
+vpath %.S $(all-dirs)
+vpath %.s $(all-dirs)
 
 # Find all the subdirs there are, but putting the ones
 # we are configured to use first and preserving their order.
@@ -71,18 +77,21 @@ else
 all-dist = $(distribute)
 endif
 
+sources += $(filter %.c %.s %.S,$(all-dist))
+headers += $(filter %.h,$(all-dist))
+all-dist := $(filter-out %.h %.c %.s %.S,$(all-dist))
+
 # All different versions of $(sources), preserving the configured sysdep
 # directory order.
-all-sources = $(wildcard $(foreach file,$(sources),\
-				   $(file) \
-				   $(foreach dir,$(all-dirs),\
-					     $(dir)/$(file) \
-					     $(dir)/$(file:.c=.S) \
-					     $(dir)/$(file:.c=.s))))
+all-sources = $(shell find $(all-dirs) -maxdepth 1 \( -name fnord \
+			   $(foreach file,$(sort $(sources) $(sources:.c=.S) \
+						 $(sources:.c=.s)),\
+				     -o -name $(file)) \
+			   \) -print)
 
-all-headers = $(wildcard $(foreach file,$(headers),\
-				   $(file) \
-				   $(foreach dir,$(all-dirs),$(dir)/$(file))))
+all-headers = $(shell find $(all-dirs) -maxdepth 1 \( -name fnord \
+			   $(foreach file,$(headers),-o -name $(file)) \
+			   \) -print)
 
 tags_sources := $(strip $(tags_sources))
 

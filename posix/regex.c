@@ -4365,7 +4365,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
              for that group and all inner ones, so that if we fail back
              to this point, the group's information will be correct.
              For example, in \(a*\)*\1, we need the preceding group,
-             and in \(\(a*\)b*\)\2, we need the inner group.  */
+             and in \(zz\(a*\)b*\)\2, we need the inner group.  */
 
           /* We can't use `p' to check ahead because we push
              a failure point to `p + mcnt' after we do this.  */

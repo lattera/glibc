@@ -553,10 +553,10 @@ ifeq (yes,$(build-shared))
 lib%.so: lib%_pic.a; $(build-shlib)
 
 define build-shlib
-$(LINK.o) -shared -o $@ -Wl,-soname \
-	  -Wl,lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
+$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
+	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
+	  -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(libdir) \
 	  -Wl,--whole-archive $^ $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -565,7 +565,7 @@ endef
 # since we define our own `.init' section specially.
 LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
+LDFLAGS-c.so += -e __libc_print_version
 # Use our own special initializer and finalizer files for libc.so.
 elfobjdir := $(firstword $(objdir) $(..)elf)
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \

@@ -217,14 +217,14 @@ _hurd_exec (task_t task, file_t file,
 	  *pdp++ = dtable[i];
       }
 
-    err = __file_exec (file, task,
+    err = __file_exec (file, task, MACH_MSG_TYPE_COPY_SEND,
 		       _hurd_exec_flags & EXEC_INHERITED,
-		       args, argslen, env, envlen,
-		       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize, 
-		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports, 
-		       ints, INIT_INT_MAX,
-		       please_dealloc, pdp - please_dealloc,
-		       NULL, 0);
+		       args, argslen, 0, env, envlen, 0,
+		       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,  0,
+		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports, 0,
+		       ints, INIT_INT_MAX, 0,
+		       please_dealloc, pdp - please_dealloc, 0,
+		       NULL, 0, 0);
   }
 
   /* Release references to the standard ports.  */
