@@ -27,10 +27,10 @@ Boston, MA 02111-1307, USA.  */
 # include "../libio/libioP.h"
 # include "../libio/strfile.h"
 #endif
+#include <printf.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include "../stdio-common/printf.h"
 #include "../locale/localeinfo.h"
 
 

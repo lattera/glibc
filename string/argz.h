@@ -71,6 +71,13 @@ extern error_t __argz_add __P ((char **__argz, size_t *__argz_len,
 extern error_t argz_add __P ((char **__argz, size_t *__argz_len,
 			      __const char *__str));
 
+/* Append SEP separated list in STRING to the argz vector in ARGZ &
+   ARGZ_LEN.  */
+extern error_t __argz_add_sep __P ((char **__argz, size_t *__argz_len,
+				    __const char *__string, int __delim));
+extern error_t argz_add_sep __P ((char **__argz, size_t *__argz_len,
+				  __const char *__string, int __delim));
+
 /* Delete ENTRY from ARGZ & ARGZ_LEN, if it appears there.  */
 extern void __argz_delete __P ((char **__argz, size_t *__argz_len,
 				char *__entry));

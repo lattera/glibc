@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <alloca.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <netdb.h>
@@ -63,20 +64,35 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	const char *locuser, *remuser, *cmd;
 	int *fd2p;
 {
-	struct hostent *hp;
+	struct hostent hostbuf, *hp;
+	size_t hstbuflen;
+	char *tmphstbuf;
 	struct sockaddr_in sin, from;
 	fd_set reads;
 	int32_t oldmask;
 	pid_t pid;
 	int s, lport, timo;
 	char c;
+	int herr;
 
 	pid = getpid();
-	hp = gethostbyname(*ahost);
-	if (hp == NULL) {
-		herror(*ahost);
-		return (-1);
-	}
+
+	hstbuflen = 1024;
+	tmphstbuf = __alloca (hstbuflen);
+	while (__gethostbyname_r (*ahost, &hostbuf, tmphstbuf, hstbuflen,
+				  &hp, &herr) < 0)
+	  if (herr != NETDB_INTERNAL || errno != ERANGE)
+	    {
+	      herror(*ahost);
+	      return -1;
+	    }
+	  else
+	    {
+	      /* Enlarge the buffer.  */
+	      hstbuflen *= 2;
+	      tmphstbuf = __alloca (hstbuflen);
+	    }
+
 	*ahost = hp->h_name;
 	oldmask = sigblock(sigmask(SIGURG));
 	for (timo = 1, lport = IPPORT_RESERVED - 1;;) {
@@ -244,12 +260,27 @@ ruserok(rhost, superuser, ruser, luser)
 	const char *rhost, *ruser, *luser;
 	int superuser;
 {
-	struct hostent *hp;
+	struct hostent hostbuf, *hp;
+	size_t buflen;
+	char *buffer;
 	u_int32_t addr;
 	char **ap;
+	int herr;
 
-	if ((hp = gethostbyname(rhost)) == NULL)
-		return (-1);
+	buflen = 1024;
+	buffer = __alloca (buflen);
+
+	while (__gethostbyname_r (rhost, &hostbuf, buffer, buflen, &hp, &herr)
+	       < 0)
+	  if (herr != NETDB_INTERNAL || errno != ERANGE)
+	    return -1;
+	  else
+	    {
+	      /* Enlarge the buffer.  */
+	      buflen *= 2;
+	      buffer = __alloca (buflen);
+	    }
+
 	for (ap = hp->h_addr_list; *ap; ++ap) {
 		bcopy(*ap, &addr, sizeof(addr));
 		if (iruserok(addr, superuser, ruser, luser) == 0)
@@ -275,7 +306,7 @@ iruserok(raddr, superuser, ruser, luser)
 {
 	register char *cp;
 	struct stat sbuf;
-	struct passwd *pwd;
+	struct passwd pwdbuf, *pwd;
 	FILE *hostf;
 	uid_t uid;
 	int first;
@@ -293,10 +324,12 @@ again:
 	if (first == 1 && (__check_rhosts_file || superuser)) {
 		char *pbuf;
 		size_t dirlen;
+		size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
+		char buffer = __alloca (buflen);
 
 		first = 0;
-		if ((pwd = getpwnam(luser)) == NULL)
-			return (-1);
+		if (getpwnam_r (luser, &pwdbuf, buffer, buflen, &pwd) < 0)
+			return -1;
 
 		dirlen = strlen (pwd->pw_dir);
 		pbuf = alloca (dirlen + sizeof "/.rhosts");
@@ -395,17 +428,30 @@ __icheckhost(raddr, lhost)
 	u_int32_t raddr;
 	register char *lhost;
 {
-	register struct hostent *hp;
+	register struct hostent hostbuf, *hp;
+	size_t buflen;
+	char *buffer;
 	register u_int32_t laddr;
 	register char **pp;
+	int herr;
 
 	/* Try for raw ip address first. */
 	if (isdigit(*lhost) && (int32_t)(laddr = inet_addr(lhost)) != -1)
 		return (raddr == laddr);
 
 	/* Better be a hostname. */
-	if ((hp = gethostbyname(lhost)) == NULL)
-		return (0);
+	buflen = 1024;
+	buffer = __alloca (buflen);
+	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
+	       < 0)
+	  if (herr != NETDB_INTERNAL || errno != ERANGE)
+	    return 0;
+	  else
+	    {
+	      /* Enlarge the buffer.  */
+	      buflen *= 2;
+	      buflen = __alloca (buflen);
+	    }
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)

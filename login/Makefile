@@ -27,7 +27,7 @@ headers	:= utmp.h utmpbits.h lastlog.h pty.h
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 	    utmp_file utmp_db
 
-distribtue := utmp-private.h
+distribute := utmp-private.h
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil

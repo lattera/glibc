@@ -53,5 +53,5 @@ l64a (n)
       n >>= 6;
     }
 
-  return &result[n + 1];
+  return &result[cnt + 1];
 }

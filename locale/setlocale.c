@@ -255,8 +255,7 @@ setlocale (int category, const char *locale)
 			   &locale_path, &locale_path_len) != 0)
       return NULL;
 
-  if (__argz_append (&locale_path, &locale_path_len,
-		     LOCALE_PATH, sizeof (LOCALE_PATH)) != 0)
+  if (__argz_add_sep (&locale_path, &locale_path_len, LOCALE_PATH, ':') != 0)
     return NULL;
 
   if (category == LC_ALL)

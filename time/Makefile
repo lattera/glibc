@@ -99,7 +99,7 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	mv $@.new $@
 
 .PHONY: echo-zonenames
-echo-zonenames: zonenames
+echo-zonenames:
 	@echo 'Known zones: $(zonenames)'
 
 

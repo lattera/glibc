@@ -40,6 +40,7 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 
 #include <netinet/in.h>
 
+#include <alloca.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <errno.h>
@@ -56,16 +57,30 @@ rexec(ahost, rport, name, pass, cmd, fd2p)
 	int *fd2p;
 {
 	struct sockaddr_in sin, sin2, from;
-	struct hostent *hp;
+	struct hostent hostbuf, *hp;
+	size_t hstbuflen;
+	char *hsttmpbuf;
 	u_short port;
 	int s, timo = 1, s3;
 	char c;
+	int herr;
 
-	hp = gethostbyname(*ahost);
-	if (hp == 0) {
-		herror(*ahost);
-		return (-1);
-	}
+	hstbuflen = 1024;
+	hsttmpbuf = __alloca (hstbuflen);
+	while (__gethostbyname_r (*ahost, &hostbuf, hsttmpbuf, hstbuflen,
+				  &hp, &herr) < 0)
+	  if (herr != NETDB_INTERNAL || errno != ERANGE)
+	    {
+	      herror(*ahost);
+	      return -1;
+	    }
+	  else
+	    {
+	      /* Enlarge the buffer.  */
+	      hstbuflen *= 2;
+	      hsttmpbuf = __alloca (hstbuflen);
+	    }
+
 	*ahost = hp->h_name;
 	ruserpass(hp->h_name, &name, &pass);
 retry:

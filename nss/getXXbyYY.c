@@ -96,15 +96,22 @@ FUNCTION_NAME (ADD_PARAMS)
   while (buffer != NULL
 	 && INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
 				       buffer_size, &result H_ERRNO_VAR) != 0
+#ifdef NEED_H_ERRNO
+	 && h_errno_tmp == NETDB_INTERNAL
+#endif
 	 && errno == ERANGE)
     {
       char *new_buf;
       buffer_size += BUFLEN;
       new_buf = realloc (buffer, buffer_size);
       if (new_buf == NULL)
-	/* We are out of memory.  Free the current buffer so that the
-	   process gets a chance for a normal termination.  */
-	free (buffer);
+	{
+	  /* We are out of memory.  Free the current buffer so that the
+	     process gets a chance for a normal termination.  */
+	  save = errno;
+	  free (buffer);
+	  __set_errno (save);
+	}
       buffer = new_buf;
     }
 

@@ -74,7 +74,7 @@ STRCOLL (s1, s2)
 	  u_int32_t w1, w2;
 
 	  /* Here we have to check for IGNORE entries.  If these are
-	     found we count them and go on witht he next value.  */
+	     found we count them and go on with the next value.  */
 	  while ((w1 = s1run->data[pass].value[s1idx])
 		 == (u_int32_t) IGNORE_CHAR)
 	    {

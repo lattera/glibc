@@ -22,13 +22,13 @@
 #include <errno.h>
 #include <netdb.h>
 #include <libc-lock.h>
+#include <link.h>	/* We need some help from ld.so.  */
 #include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "nsswitch.h"
-#include "../elf/link.h"	/* We need some help from ld.so.  */
 
 /* Prototypes for the local functions.  */
 static void *nss_lookup_function (service_user *ni, const char *fct_name);

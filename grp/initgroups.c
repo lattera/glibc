@@ -1,20 +1,20 @@
 /* Copyright (C) 1989, 1991, 1993, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
 #include <unistd.h>
@@ -39,7 +39,9 @@ initgroups (user, group)
 
 #else
 
-  struct group *g;
+  struct group grpbuf, *g;
+  size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+  char *tmpbuf;
   register size_t n;
   size_t ngroups;
   gid_t *groups;
@@ -58,13 +60,14 @@ initgroups (user, group)
 #endif
 
   groups = __alloca (ngroups * sizeof *groups);
+  tmpbuf = __alloca (buflen);
 
   setgrent ();
 
   n = 0;
   groups[n++] = group;
 
-  while ((g = getgrent ()) != NULL)
+  while (__getgrent_r (&grpbuf, tmpbuf, buflen, &g) >= 0)
     if (g->gr_gid != group)
       {
 	register char **m;

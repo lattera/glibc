@@ -55,7 +55,7 @@ libnss_dns-routines	:= dns-host dns-network
 
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
 							$(databases)))
-generated		+= $(filter-out db-netgrp.c, \
+generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c
 

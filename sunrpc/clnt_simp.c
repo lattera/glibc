@@ -38,6 +38,8 @@ static char sccsid[] = "@(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro";
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
+#include <alloca.h>
+#include <errno.h>
 #include <stdio.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
@@ -59,7 +61,7 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 	register struct callrpc_private *crp = callrpc_private;
 	struct sockaddr_in server_addr;
 	enum clnt_stat clnt_stat;
-	struct hostent *hp;
+	struct hostent hostbuf, *hp;
 	struct timeval timeout, tottimeout;
 
 	if (crp == 0) {
@@ -77,6 +79,10 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 		&& strcmp(crp->oldhost, host) == 0) {
 		/* reuse old client */
 	} else {
+		size_t buflen;
+		char *buffer;
+		int herr;
+
 		crp->valid = 0;
 		if (crp->socket != RPC_ANYSOCK)
 		  {
@@ -87,8 +93,20 @@ callrpc(host, prognum, versnum, procnum, inproc, in, outproc, out)
 			clnt_destroy(crp->client);
 			crp->client = NULL;
 		}
-		if ((hp = gethostbyname(host)) == NULL)
-			return ((int) RPC_UNKNOWNHOST);
+
+		buflen = 1024;
+		buffer = __alloca (buflen);
+		while (__gethostbyname_r (host, &hostbuf, buffer, buflen,
+					  &hp, &herr) < 0)
+		  if (herr != NETDB_INTERNAL || errno != ERANGE)
+		    return (int) RPC_UNKNOWNHOST;
+		  else
+		    {
+		      /* Enlarge the buffer.  */
+		      buflen *= 2;
+		      buffer = __alloca (buflen);
+		    }
+
 		timeout.tv_usec = 0;
 		timeout.tv_sec = 5;
 		bcopy(hp->h_addr, (char *)&server_addr.sin_addr, hp->h_length);

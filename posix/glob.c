@@ -56,7 +56,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #endif
 
-#ifdef	HAVE_UNISTD_H
+#if defined HAVE_UNISTD_H || defined _LIBC
 #include <unistd.h>
 #ifndef POSIX
 #ifdef	_POSIX_VERSION
@@ -467,11 +467,40 @@ glob (pattern, flags, errfunc, pglob)
 	  if (dirname == NULL || dirname[0] == '\0')
 	    {
 	      extern char *getlogin __P ((void));
-	      char *name = getlogin ();
-	      if (name != NULL)
+	      extern int getlogin_r __P ((char *, size_t));
+	      int success;
+
+#if defined HAVE_GETLOGIN_R || defined _LIBC
+	      size_t buflen = sysconf (_SC_LOGIN_NAME_MAX) + 1;
+	      char *name;
+
+	      if (buflen == 0)
+		/* `sysconf' does not support _SC_LOGIN_NAME_MAX.  Try
+		   a moderate value.  */
+		buflen = 16;
+	      name = __alloca (buflen);
+
+	      success = getlogin_r (name, buflen) >= 0;
+#else
+	      char *name;
+	      success = (name = getlogin ()) != NULL;
+#endif
+	      if (success)
 		{
+#if defined HAVE_GETPWNAM_R || defined _LIBC
+		  size_t pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+		  char *pwtmpbuf;
+		  struct passwd pwbuf, *p;
+
+		  pwtmpbuf = __alloca (pwbuflen);
+
+		  success = (__getpwnam_r (name, &pwbuf, pwtmpbuf,
+					   pwbuflen, &p) >= 0);
+#else
 		  struct passwd *p = getpwnam (name);
-		  if (p != NULL)
+		  success = p != NULL;
+#endif
+		  if (success)
 		    dirname = p->pw_dir;
 		}
 	    }
@@ -491,9 +520,17 @@ glob (pattern, flags, errfunc, pglob)
             dirname = "c:/users/default"; /* poor default */
 #else
 	  /* Look up specific user's home directory.  */
+#if defined HAVE_GETPWNAM_R || defined _LIBC
+	  size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+	  char *pwtmpbuf = __alloca (buflen);
+	  struct passwd pwbuf, *p;
+	  if (__getpwnam_r (dirname + 1, &pwbuf, pwtmpbuf, buflen, &p) >= 0)
+	    dirname = p->pw_dir;
+#else
 	  struct passwd *p = getpwnam (dirname + 1);
 	  if (p != NULL)
 	    dirname = p->pw_dir;
+#endif
 #endif /* WIN32 */
 #endif
 	}

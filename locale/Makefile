@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Makefile for locales.
@@ -64,7 +64,10 @@ $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
-CPPFLAGS := -DLOCALE_PATH='"$(localedir)"' \
+localepath = "$(localeddir)"
+
+CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
+	    -DLOCALEDIR='"$(localedir)"' \
 	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)

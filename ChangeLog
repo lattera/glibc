@@ -1,3 +1,80 @@
+Mon Dec  2 03:59:38 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/initgroups.c: Update and reformat copyright.
+	Use __getgrent_r instead of getgrent.
+
+	* inet/rcmd.c: Update and reformat copyright.
+	Use __gethostbyname_r instead of gethostbyname.
+	* inet/rexec.c: Likewise.
+
+	* intl/finddomain.c: Correct comment about CEN sponsor and revision.
+	* locale/findlocale.c: Likewise.
+	* intl/l10nflist.c: Correct handling of CEN sponsor and revision.
+	* locale/Makefile (CPPFLAGS): Add definition of LOCALEDIR.
+	* locale/setlocale.c (setlocale): Correctly split value of
+	LOCALE_PATH.
+	* locale/programs/localedef.c: Use LOCALEDIR not LOCALE_PATH to
+	find output directory.
+
+	* nss/getXXbyYY.c [NEED_H_ERRNO]: Before enlarging buffer test
+	h_errno_tmp variable.
+	Save error value from being changed during `free' call.
+	* nss/getXXent.c: Likewise.
+
+	* nss/nss_files/files-XXX.c: Set h_errno variable to NETDB_INTERNAL
+	before returning ERANGE error.
+
+	* posix/glob.c: Use getlogin_r and getpwnam_r function when available
+	or in GNU libc.
+
+	* pwd/getpw.c: Use getpwuid_r instead of getpwuid.
+
+	* sunrpc/clnt_gen.c: Use gethostbyname_r and getprotobyname_r.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/getrpcport.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
+
+	* posix/getconf.c: Treat _SC_UNIT_MAX and _SC_ULONG_MAX separately
+	since the value might be outsode the range of the `long int'.
+	Print string `undefined' when a value is undefined.
+
+	* stdlib/l64a.c: Return correct pointer.
+	Patch by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+	* string/Makefile (routines): Add argz-addsep.
+	* string/argz-addsep.c: New file.
+	* string/argz.h: Add prototypes for argz_add_sep.
+
+	* string/argz-ctsep.c: Prevent memory leak.
+
+	* string/strcoll.c: Correct typo in comment.
+
+Sat Nov 30 02:53:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/serial.h: Removed again.  The file is
+	not general enough to be part of the libc.
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/serial.h.
+	* sysdeps/unix/sysv/linux/Makefile: Don't install sys/serial.h.
+
+Thu Nov 28 20:04:41 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/Makefile: Fix typo.
+
+	* nss/Makefile (generated): Filter out db-alias.c.
+
+Thu Nov 28 14:44:01 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/Makefile (echo-zonenames): Don't depend on non-existing
+	target `zonenames'.
+
+Thu Nov 28 12:34:05 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* link.h: New file.
+	* nss/nsswitch.c: Use it.
+
+	* printf.h: Fix file name.
+	* stdlib/strfmon.c: Use it.
+
 Thu Nov 28 23:03:32 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/netinet/in_systm.h: New file.

@@ -149,6 +149,7 @@ internal_getent (struct STRUCTURE *result,
   if (buflen < (int) sizeof *data + 1)
     {
       __set_errno (ERANGE);
+      HERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;
     }
 

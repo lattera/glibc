@@ -24,7 +24,7 @@
 
 
 error_t
-__argz_create_sep (const char *string, int delim, char **argz, size_t *len)
+__argz_add_sep (char **argz, size_t *argz_len, const char *string, int delim)
 {
   size_t nlen = strlen (string) + 1;
 
@@ -33,12 +33,12 @@ __argz_create_sep (const char *string, int delim, char **argz, size_t *len)
       const char *rp;
       char *wp;
 
-      *argz = (char *) malloc (nlen);
+      *argz = (char *) realloc (*argz, *argz_len + nlen);
       if (*argz == NULL)
 	return ENOMEM;
 
+      wp = *argz + *argz_len;
       rp = string;
-      wp = *argz;
       do
 	if (*rp == delim)
 	  {
@@ -51,17 +51,7 @@ __argz_create_sep (const char *string, int delim, char **argz, size_t *len)
 	  *wp++ = *rp;
       while (*rp++ != '\0');
 
-      if (nlen == 0)
-	{
-	  free (*argz);
-	  *argz = NULL;
-	  *len = 0;
-	}
-    }
-  else
-    {
-      *argz = NULL;
-      *len = 0;
+      *argz_len += nlen;
     }
 
   return 0;

@@ -21,7 +21,6 @@ sys/mount.h
 sys/mtio.h
 sys/procfs.h
 sys/quota.h
-sys/serial.h
 sys/socketcall.h
 sys/soundcard.h
 sys/sysctl.h
