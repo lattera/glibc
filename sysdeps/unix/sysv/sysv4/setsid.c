@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <unistd.h>
 
-extern int __sco_pgrp __P ((int type, ...));
+extern int __pgrpsys __P ((int type, ...));
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
@@ -28,5 +28,5 @@ extern int __sco_pgrp __P ((int type, ...));
 int
 DEFUN_VOID(__setsid)
 {
-  return __sco_pgrp (3);
+  return __pgrpsys (3);
 }
