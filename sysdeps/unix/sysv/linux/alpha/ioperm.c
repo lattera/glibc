@@ -116,13 +116,9 @@ static inline unsigned long
 port_to_cpu_addr (unsigned long port, int iosys, int size)
 {
   if (iosys == IOSYS_JENSEN)
-    {
-      return (port << 7) + ((size - 1) << 4) + io.base;
-    }
+    return (port << 7) + ((size - 1) << 5) + io.base;
   else
-    {
-      return (port << 5) + ((size - 1) << 3) + io.base;
-    }
+    return (port << 5) + ((size - 1) << 3) + io.base;
 }
 
 
@@ -303,17 +299,18 @@ init_iosys (void)
     }
   else
     {
-      char name[256];
       FILE * fp;
 
       fp = fopen (PATH_CPUINFO, "r");
       if (!fp)
 	return -1;
-      while ((n = fscanf (fp, "%256[^:]: %256[^\n]\n", name, systype)) != EOF)
+      while ((n = fscanf (fp, "system type : %256[^\n]\n", systype))
+	     != EOF)
 	{
-	  if (n == 2 && strncmp (name, "system type", 11) == 0) {
+	  if (n == 1)
 	    break;
-	  }
+	  else
+	    fgets (systype, 256, fp);
 	}
       fclose(fp);
 
