@@ -22,7 +22,7 @@
 @set UPDATED 2001-07-06
 @set ISBN 1-882114-55-8
 
-@ifinfo
+@ifnottex
 This file documents the GNU C library.
 
 This is Edition @value{EDITION}, last updated @value{UPDATED},
@@ -49,7 +49,7 @@ Documentation License".
      You have freedom to copy and modify this GNU Manual, like GNU
      software.  Copies published by the Free Software Foundation raise
      funds for GNU development.
-@end ifinfo
+@end ifnottex
 
 @iftex
 @shorttitlepage The GNU C Library Reference Manual
