@@ -34,9 +34,9 @@ __pthread_setcancelstate (state, oldstate)
 
   self = THREAD_SELF;
 
+  int oldval = THREAD_GETMEM (self, cancelhandling);
   while (1)
     {
-      int oldval = THREAD_GETMEM (self, cancelhandling);
       int newval = (state == PTHREAD_CANCEL_DISABLE
 		    ? oldval | CANCELSTATE_BITMASK
 		    : oldval & ~CANCELSTATE_BITMASK);
@@ -54,14 +54,18 @@ __pthread_setcancelstate (state, oldstate)
 
       /* Update the cancel handling word.  This has to be done
 	 atomically since other bits could be modified as well.  */
-      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						  newval, oldval))
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    __do_cancel ();
 
 	  break;
 	}
+
+      /* Prepare for the next round.  */
+      oldval = curval;
     }
 
   return 0;

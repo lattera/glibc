@@ -135,20 +135,21 @@ sigcancel_handler (int sig __attribute ((unused)))
 {
   struct pthread *self = THREAD_SELF;
 
+  int oldval = THREAD_GETMEM (self, cancelhandling);
   while (1)
     {
       /* We are canceled now.  When canceled by another thread this flag
 	 is already set but if the signal is directly send (internally or
 	 from another process) is has to be done here.  */
-      int oldval = THREAD_GETMEM (self, cancelhandling);
       int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
       if (oldval == newval || (oldval & EXITING_BITMASK) != 0)
 	/* Already canceled or exiting.  */
 	break;
 
-      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						  newval, oldval))
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (curval == oldval)
 	{
 	  /* Set the return value.  */
 	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
@@ -160,6 +161,8 @@ sigcancel_handler (int sig __attribute ((unused)))
 
 	  break;
 	}
+
+      oldval = curval;
     }
 }
 

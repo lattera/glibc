@@ -20,7 +20,6 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include "pthreadP.h"
-#include "atomic.h"
 
 
 /* The next two functions are similar to pthread_setcanceltype() but
@@ -31,18 +30,18 @@ attribute_hidden
 __pthread_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
-  int oldval;
+  int oldval = THREAD_GETMEM (self, cancelhandling);
 
   while (1)
     {
-      oldval = THREAD_GETMEM (self, cancelhandling);
       int newval = oldval | CANCELTYPE_BITMASK;
 
       if (newval == oldval)
 	break;
 
-      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						  newval, oldval))
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
@@ -52,6 +51,9 @@ __pthread_enable_asynccancel (void)
 
 	  break;
 	}
+
+      /* Prepare the next round.  */
+      oldval = curval;
     }
 
   return oldval;
@@ -63,17 +65,22 @@ internal_function attribute_hidden
 __pthread_enable_asynccancel_2 (int *oldvalp)
 {
   struct pthread *self = THREAD_SELF;
+  int oldval = THREAD_GETMEM (self, cancelhandling);
 
   while (1)
     {
-      int oldval = *oldvalp = THREAD_GETMEM (self, cancelhandling);
       int newval = oldval | CANCELTYPE_BITMASK;
 
       if (newval == oldval)
 	break;
 
-      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						  newval, oldval))
+      /* We have to store the value before enablying asynchronous
+	 cancellation.  */
+      *oldvalp = oldval;
+
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
@@ -97,17 +104,21 @@ __pthread_disable_asynccancel (int oldtype)
     return;
 
   struct pthread *self = THREAD_SELF;
+  int oldval = THREAD_GETMEM (self, cancelhandling);
 
   while (1)
     {
-      int oldval = THREAD_GETMEM (self, cancelhandling);
       int newval = oldval & ~CANCELTYPE_BITMASK;
 
       if (newval == oldval)
 	break;
 
-      if (! atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						  newval, oldval))
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
 	break;
+
+      /* Prepare the next round.  */
+      oldval = curval;
     }
 }

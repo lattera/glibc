@@ -169,6 +169,14 @@ union user_desc_init
 # define INIT_SYSINFO
 #endif
 
+#ifndef LOCK
+# ifdef UP
+#  define LOCK  /* nothing */
+# else
+#  define LOCK "lock;"
+# endif
+#endif
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
@@ -350,6 +358,32 @@ union user_desc_init
 			 "i" (offsetof (struct pthread, member)),	      \
 			 "r" (idx));					      \
        }})
+
+
+/* Atomic compare and exchange on TLS, returning old value.  */
+#define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, newval, oldval) \
+  ({ __typeof (descr->member) __ret;					      \
+     __typeof (oldval) __old = (oldval);				      \
+     if (sizeof (descr->member) == 4)					      \
+       asm volatile (LOCK "cmpxchgl %2, %%gs:%P3"			      \
+		     : "=a" (__ret)					      \
+		     : "0" (__old), "r" (newval),			      \
+		       "i" (offsetof (struct pthread, member)));	      \
+     else								      \
+       /* Not necessary for other sizes in the moment.  */		      \
+       abort ();							      \
+     __ret; })
+
+
+/* Atomic set bit.  */
+#define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
+  (void) ({ if (sizeof ((descr)->member) == 4)				      \
+	      asm volatile (LOCK "orl %1, %%gs:%P0"			      \
+			    :: "i" (offsetof (struct pthread, member)),	      \
+			       "ir" (1 << (bit)));			      \
+	    else							      \
+	      /* Not necessary for other sizes in the moment.  */	      \
+	      abort (); })
 
 
 /* Call the user-provided thread function.  */

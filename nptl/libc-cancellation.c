@@ -33,13 +33,11 @@ attribute_hidden
 __libc_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
-  int oldval;
-  int newval;
+  int oldval = THREAD_GETMEM (self, cancelhandling);
 
-  do
+  while (1)
     {
-      oldval = THREAD_GETMEM (self, cancelhandling);
-      newval = oldval | CANCELTYPE_BITMASK;
+      int newval = oldval | CANCELTYPE_BITMASK;
 
       if (__builtin_expect ((oldval & CANCELED_BITMASK) != 0, 0))
 	{
@@ -47,10 +45,14 @@ __libc_enable_asynccancel (void)
 	  if ((oldval & EXITING_BITMASK) != 0)
 	    break;
 
-	  if (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						    newval, oldval))
-	    /* Somebody else modified the word, try again.  */
-	    continue;
+	  int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+						  newval, oldval);
+	  if (__builtin_expect (curval != oldval, 0))
+	    {
+	      /* Somebody else modified the word, try again.  */
+	      oldval = curval;
+	      continue;
+	    }
 
 	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
 
@@ -58,9 +60,15 @@ __libc_enable_asynccancel (void)
 
 	  /* NOTREACHED */
 	}
+
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
+	break;
+
+      /* Prepare the next round.  */
+      oldval = curval;
     }
-  while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-					       newval, oldval));
 
   return oldval;
 }
@@ -76,19 +84,23 @@ __libc_disable_asynccancel (int oldtype)
     return;
 
   struct pthread *self = THREAD_SELF;
-  int oldval;
-  int newval;
+  int oldval = THREAD_GETMEM (self, cancelhandling);
 
-  do
+  while (1)
     {
-      oldval = THREAD_GETMEM (self, cancelhandling);
-      newval = oldval & ~CANCELTYPE_BITMASK;
+      int newval = oldval & ~CANCELTYPE_BITMASK;
 
       if (newval == oldval)
 	break;
+
+      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
+					      oldval);
+      if (__builtin_expect (curval == oldval, 1))
+	break;
+
+      /* Prepare the next round.  */
+      oldval = curval;
     }
-  while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling, newval,
-					       oldval));
 }
 
 #endif

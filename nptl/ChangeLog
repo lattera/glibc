@@ -1,3 +1,25 @@
+2003-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/createthread.c (create_thread): Add some more
+	comments explaining when to set multiple_threads and when not.
+
+	* pthreadP.h: Define THREAD_ATOMIC_CMPXCHG_VAL and
+	THREAD_ATOMIC_BIT_SET if not already defined.
+	* sysdeps/i386/tls.h: Define THREAD_ATOMIC_CMPXCHG_VAL and
+	THREAD_ATOMIC_BIT_SET:
+	* sysdeps/x86_64/tls.h: Likewise.
+	* cleanup_defer.c (_pthread_cleanup_push_defer): Rewrite to use
+	THREAD_ATOMIC_CMPXCHG_VAL.
+	(_pthread_cleanup_pop_restore): Likewise.
+	* cancellation.c (__pthread_enable_asynccancel): Likewise.
+	(__pthread_enable_asynccancel_2): Likewise.
+	(__pthread_disable_asynccancel): Likewise.
+	* libc-cancellation.c (__libc_enable_asynccancel): Likewise.
+	(__libc_disable_asynccancel): Likewise.
+	* init.c (sigcancel_handler): Likewise.
+	* pthread_setcancelstate.c (__pthread_setcancelstate): Likewise.
+	* pthread_setcanceltype.c (__pthread_setcanceltype): Likewise.
+
 2003-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (sigcancel_handler): Don't set EXITING_BIT here.

@@ -18,7 +18,6 @@
    02111-1307 USA.  */
 
 #include "pthreadP.h"
-#include <atomic.h>
 
 
 void
@@ -37,13 +36,19 @@ _pthread_cleanup_push_defer (buffer, routine, arg)
 
   /* Disable asynchronous cancellation for now.  */
   if (__builtin_expect (cancelhandling & CANCELTYPE_BITMASK, 0))
-    {
-      while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						   cancelhandling
-						   & ~CANCELTYPE_BITMASK,
-						   cancelhandling))
-	cancelhandling = self->cancelhandling;
-    }
+    while (1)
+      {
+	int newval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+						cancelhandling
+						& ~CANCELTYPE_BITMASK,
+						cancelhandling);
+	if (__builtin_expect (newval == cancelhandling, 1))
+	  /* Successfully replaced the value.  */
+	  break;
+
+	/* Prepare for the next round.  */
+	cancelhandling = newval;
+      }
 
   buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
 			  ? PTHREAD_CANCEL_ASYNCHRONOUS
@@ -52,6 +57,7 @@ _pthread_cleanup_push_defer (buffer, routine, arg)
   THREAD_SETMEM (self, cleanup, buffer);
 }
 strong_alias (_pthread_cleanup_push_defer, __pthread_cleanup_push_defer)
+
 
 void
 _pthread_cleanup_pop_restore (buffer, execute)
@@ -67,11 +73,19 @@ _pthread_cleanup_pop_restore (buffer, execute)
       && ((cancelhandling = THREAD_GETMEM (self, cancelhandling))
 	  & CANCELTYPE_BITMASK) == 0)
     {
-      while (atomic_compare_and_exchange_bool_acq (&self->cancelhandling,
-						   cancelhandling
-						   | CANCELTYPE_BITMASK,
-						   cancelhandling))
-	cancelhandling = self->cancelhandling;
+      while (1)
+	{
+	  int newval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+						  cancelhandling
+						  | CANCELTYPE_BITMASK,
+						  cancelhandling);
+	  if (__builtin_expect (newval == cancelhandling, 1))
+	    /* Successfully replaced the value.  */
+	    break;
+
+	  /* Prepare for the next round.  */
+	  cancelhandling = newval;
+	}
 
       CANCELLATION_P (self);
     }
