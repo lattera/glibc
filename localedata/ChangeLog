@@ -1,3 +1,9 @@
+2003-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/charmaps/WINDOWS-31J: New file.
+	* localedata/charmaps/EUC-JP-MS: New file
+	Patch by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>.
+
 2003-07-27  Andreas Jaeger  <aj@suse.de>
 
 	* collate-test.c: Include error.h for error prototype.

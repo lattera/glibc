@@ -209,6 +209,7 @@ cat <<EOF |
   # Multibyte encodings come here
   #
   SJIS              SHIFT_JIS
+  CP932             WINDOWS-31J
   #IBM932                               This converter looks quite strange
   #IBM943                               This converter looks quite strange
   EUC-KR
@@ -217,6 +218,7 @@ cat <<EOF |
   BIG5
   BIG5HKSCS         BIG5-HKSCS
   EUC-JP
+  EUC-JP-MS
   EUC-CN            GB2312
   GBK
   EUC-TW

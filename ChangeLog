@@ -1,3 +1,15 @@
+2003-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/cp932.c: Fixed checking of a few border of code areas.
+	Changed conversion of JIS X 0201 from using a table to calculating.
+	* iconvdata/euc-jp-ms.c: Fixed conversion table and rewrote
+	conversion routine.  Changed CHARSET_NAME definition from EUCJP-MS to
+	EUC-JP-MS.
+	* iconvdata/tst-tables.sh: Add CP932 and EUC-JP-MS.
+	* iconvdata/CP932.irreversible: New file.
+	* iconvdata/EUC-JP-MS.irreversible: New file.
+	Patch by MORIYAMA Masayuki <msyk@mtg.biglobe.ne.jp>.
+
 2003-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add time syscall.

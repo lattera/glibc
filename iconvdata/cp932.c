@@ -22,18 +22,6 @@
 #include <stdint.h>
 #include <wchar.h>
 
-static const uint32_t halfkana_to_ucs4[] =
-{
-  0xff61,  0xff62,  0xff63,  0xff64,  0xff65,  0xff66,  0xff67,  0xff68,
-  0xff69,  0xff6a,  0xff6b,  0xff6c,  0xff6d,  0xff6e,  0xff6f,  0xff70,
-  0xff71,  0xff72,  0xff73,  0xff74,  0xff75,  0xff76,  0xff77,  0xff78,
-  0xff79,  0xff7a,  0xff7b,  0xff7c,  0xff7d,  0xff7e,  0xff7f,  0xff80,
-  0xff81,  0xff82,  0xff83,  0xff84,  0xff85,  0xff86,  0xff87,  0xff88,
-  0xff89,  0xff8a,  0xff8b,  0xff8c,  0xff8d,  0xff8e,  0xff8f,  0xff90,
-  0xff91,  0xff92,  0xff93,  0xff94,  0xff95,  0xff96,  0xff97,  0xff98,
-  0xff99,  0xff9a,  0xff9b,  0xff9c,  0xff9d,  0xff9e,  0xff9f
-};
-
 static const uint16_t cjk_block1[703] =
 {
   /* start = 0x8140, end = 0x84be */
@@ -4559,10 +4547,10 @@ static const char from_ucs4_extra[229][2] =
 									      \
     if (ch < 0x80)							      \
       ++inptr;								      \
-    else if (ch >= 0xa1 && ch <= 0xdf)					      \
-      {									      \
-	ch = halfkana_to_ucs4[ch - 0xa1];				      \
-	++inptr;							      \
+    else if (ch >= 0xa1 && ch <= 0xdf)                                        \
+      {                                                                       \
+        ch += 0xfec0;                                                         \
+        ++inptr;                                                              \
       }									      \
     else if (__builtin_expect (ch, 0) == 0xa0				      \
 	     || __builtin_expect (ch <= 0x80, 0)			      \
@@ -4598,11 +4586,14 @@ static const char from_ucs4_extra[229][2] =
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
 	if (__builtin_expect (ch2 < 0x40, 0)				      \
+	    || __builtin_expect (ch2 > 0xfc, 0)				      \
+	    || __builtin_expect (ch2 == 0x7f, 0)			      \
 	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x8740)      \
 	    || (__builtin_expect (idx > 0x879c, 0) && idx < 0x889f)      \
 	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)      \
 	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)      \
 	    || (__builtin_expect (idx > 0xeaa4, 0) && idx < 0xed40)      \
+	    || (__builtin_expect (idx > 0xeefc, 0) && idx < 0xf040)      \
 	    || __builtin_expect (idx > 0xfc4b, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
@@ -4693,7 +4684,7 @@ static const char from_ucs4_extra[229][2] =
 	else if (ch >= 0xf929 && ch <= 0xfa2d)				      \
 	  cp = from_ucs4_cjkcpt[ch - 0xf929];				      \
 	else if (__builtin_expect (ch >= 0xff01, 1)			      \
-		 && __builtin_expect (ch <= 0xffef, 1))			      \
+		 && __builtin_expect (ch <= 0xffe5, 1))			      \
 	  cp = from_ucs4_extra[ch - 0xff01];				      \
 	else								      \
 	  {								      \
