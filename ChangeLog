@@ -1,5 +1,8 @@
 2000-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c (compile_range): Transliate range start and end
+	characters to avoid empty range in case of REG_ICASE [PR libc/1842].
+
 	* sysdeps/unix/sysv/linux/ia64/bits/resource.h: Don't include
 	asm/resource.h.
 

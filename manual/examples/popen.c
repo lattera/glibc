@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void 
+void
 write_data (FILE * stream)
 {
   int i;
@@ -23,11 +23,16 @@ main (void)
   output = popen ("more", "w");
   if (!output)
     {
-      fprintf (stderr, "Could not run more.\n");
+      fprintf (stderr,
+	       "incorrect parameters or too many files.\n");
       return EXIT_FAILURE;
     }
   write_data (output);
-  pclose (output);
+  if (pclose (output) != 0)
+    {
+      fprintf (stderr,
+	       "Could not run more or other error.\n");
+    }
   return EXIT_SUCCESS;
 }
 /*@end group*/

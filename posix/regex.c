@@ -3518,9 +3518,9 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
 
   /* Fetch the endpoints without translating them; the
      appropriate translation is done in the bit-setting loop below.  */
-  range_start[0] = range_start_char;
+  range_start[0] = TRANSLATE (range_start_char);
   range_start[1] = '\0';
-  range_end[0] = p[0];
+  range_end[0] = TRANSLATE (p[0]);
   range_end[1] = '\0';
 
   /* Have to increment the pointer into the pattern string, so the
