@@ -1084,7 +1084,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outstring (string, len);					      \
 	if (left)							      \
 	  PAD (L' ');							      \
-	if (__builin_expect (string_malloced, 0))			      \
+	if (__builtin_expect (string_malloced, 0))			      \
 	  free (string);						      \
       }									      \
       break;
