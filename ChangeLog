@@ -1,3 +1,29 @@
+1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* conform/Makefile: New file.
+	* conform/conformtest.pl: New file.
+	* conform/data/aio.h-data: New file.
+	* conform/data/assert.h-data: New file.
+	* conform/data/cpio.h-data: New file.
+	* conform/data/ctype.h-data: New file.
+	* conform/data/dirent.h-data: New file.
+	* conform/data/dlfcn.h-data: New file.
+	* conform/data/errno.h-data: New file.
+	* conform/data/fcntl.h-data: New file.
+	* conform/data/float.h-data: New file.
+	* conform/data/fmtmsg.h-data: New file.
+	* conform/data/fnmatch.h-data: New file.
+	* conform/data/ftw.h-data: New file.
+	* conform/data/glob.h-data: New file.
+	* conform/data/grp.h-data: New file.
+	* conform/data/iconv.h-data: New file.
+	* conform/data/inttypes.h-data: New file.
+	* conform/data/iso646.h-data: New file.
+	* conform/data/langinfo.h-data: New file.
+	* conform/data/libgen.h-data: New file.
+	* conform/data/locale.h-data: New file.
+	* conform/data/math.h-data: New file.
+
 1999-08-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/execvp.c (execvp): Correct copying of file name.

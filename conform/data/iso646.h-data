@@ -1,0 +1,11 @@
+macro and
+macro and_eq
+macro bitand
+macro bitor
+macro compl
+macro not
+macro not_eq
+macro or
+macro or_eq
+macro xor
+macro xor_eq

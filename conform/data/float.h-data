@@ -1,0 +1,39 @@
+macro FLT_RADIX
+
+constant FLT_ROUNDS
+
+macro FLT_MANT_DIG
+macro DBL_MANT_DIG
+macro LDBL_MANT_DIG
+
+macro FLT_DIG
+macro DBL_DIG
+macro LDBL_DIG
+
+macro FLT_MIN_EXP
+macro DBL_MIN_EXP
+macro LDBL_MIN_EXP
+
+macro FLT_MIN_10_EXP
+macro DBL_MIN_10_EXP
+macro LDBL_MIN_10_EXP
+
+macro FLT_MAX_EXP
+macro DBL_MAX_EXP
+macro LDBL_MAX_EXP
+
+macro FLT_MAX_10_EXP
+macro DBL_MAX_10_EXP
+macro LDBL_MAX_10_EXP
+
+macro FLT_MAX
+macro DBL_MAX
+macro LDBL_MAX
+
+macro FLT_EPSILON
+macro DBL_EPSILON
+macro LDBL_EPSILON
+
+macro FLT_MIN
+macro DBL_MIN
+macro LDBL_MIN

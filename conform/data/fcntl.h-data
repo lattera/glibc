@@ -1,0 +1,55 @@
+#if !defined ISO && !defined POSIX
+constant F_DUPFD
+constant F_GETFD
+constant F_SETFD
+constant F_GETFL
+constant F_SETFL
+constant F_GETLK
+constant F_SETLK
+constant F_SETLKW
+
+constant FD_CLOEXEC
+
+constant F_RDLCK
+constant F_UNLCK
+constant F_WRLCK
+
+constant O_CREAT
+constant O_EXCL
+constant O_NOCTTY
+constant O_TRUNC
+
+constant O_APPEND
+constant O_DSYNC
+constant O_NONBLOCK
+constant O_RSYNC
+constant O_SYNC
+
+constant O_ACCMODE
+
+constant O_RDONLY
+constant O_RDWR
+constant O_WRONLY
+
+type {struct flock}
+
+element {struct flock} short l_type
+element {struct flock} short l_whence
+element {struct flock} off_t l_start
+element {struct flock} off_t l_len
+element {struct flock} pid_t l_pid
+
+type mode_t
+type off_t
+type pid_t
+
+function int creat (const char*, mode_t)
+function int fcntl (int, int, ...)
+function int open (const char*, int, ...)
+
+allow-header sys/stat.h
+allow-header unistd.h
+
+allow *_t
+allow l_*
+#endif

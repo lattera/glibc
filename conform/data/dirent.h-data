@@ -1,0 +1,20 @@
+#ifndef ISO
+type DIR
+
+type {struct dirent}
+
+element {struct dirent} ino_t d_ino
+element {struct dirent} char d_name []
+
+type ino_t
+
+function int closedir (DIR*)
+function DIR* opendir (const char*)
+function {struct dirent*} readdir (DIR*)
+function int readdir_r (DIR*, struct dirent*, struct dirent**)
+function void rewinddir (DIR*)
+function void seekdir (DIR*, long int)
+function {long int} telldir (DIR*)
+
+allow d_*
+#endif

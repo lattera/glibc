@@ -1,0 +1,4 @@
+#if !defined ISO && !defined POSIX
+function {char*} basename (char*)
+function {char*} dirname (char*)
+#endif

@@ -1,0 +1,13 @@
+type int8_t
+type int16_t
+type int32_t
+type int64_t
+type uint8_t
+type uint16_t
+type uint32_t
+type uint64_t
+type intptr_t
+type uintptr_t
+
+allow PRI*
+allow SCN*

@@ -1,0 +1,11 @@
+#if !defined ISO && !defined POSIX
+macro RTLD_LAZY
+macro RTLD_NOW
+macro RTLD_GLOBAL
+macro RTLD_LOCAL
+
+function {void*} dlopen (const char*, int)
+function {void*} dlsym (void *, const char*)
+function int dlclose (void*)
+function {char*} dlerror (void)
+#endif

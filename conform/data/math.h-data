@@ -1,0 +1,158 @@
+#if !defined ISO && !defined POSIX
+constant M_E
+constant M_LOG2E
+constant M_LOG10E
+constant M_LN2
+constant M_LN10
+constant M_PI
+constant M_PI_2
+constant M_PI_4
+constant M_1_PI
+constant M_2_PI
+constant M_2_SQRTPI
+constant M_SQRT2
+constant M_SQRT1_2
+
+constant MAXFLOAT
+constant HUGE_VAL
+
+function double acos (double)
+function double asin (double)
+function double atan (double)
+function double atan2 (double, double)
+function double ceil (double)
+function double cos (double)
+function double cosh (double)
+function double exp (double)
+function double fabs (double)
+function double floor (double)
+function double fmod (double, double)
+function double frexp (double, int*)
+function double ldexp (double, int)
+function double log (double)
+function double log10 (double)
+function double pow (double, double)
+function double sin (double)
+function double sinh (double)
+function double sqrt (double)
+function double tan (double)
+function double tanh (double)
+function double erf (double)
+function double erfc (double)
+function double gamma (double)
+function double hypot (double, double)
+function double j0 (double)
+function double j1 (double)
+function double jn (double)
+function double lgamma (double)
+function double y0 (double)
+function double y1 (double)
+function double yn (double)
+function int isnan (double)
+function double acosh (double)
+function double asinh (double)
+function double atanh (double)
+function double cbrt (double)
+function double expm1 (double)
+function int ilogb (double)
+function double log1p (double)
+function double logb (double)
+function double nextafter (double, double)
+function double remainder (double, double)
+function double rint (double)
+function double scalb (double, double)
+
+# variable signgam
+allow signgam
+
+allow acosf
+allow asinf
+allow atanf
+allow atan2f
+allow ceilf
+allow cosf
+allow coshf
+allow expf
+allow fabsf
+allow floorf
+allow fmodf
+allow frexpf
+allow ldexpf
+allow logf
+allow log10f
+allow powf
+allow sinf
+allow sinhf
+allow sqrtf
+allow tanf
+allow tanhf
+allow erff
+allow erfcf
+allow gammaf
+allow hypotf
+allow j0f
+allow j1f
+allow jnf
+allow lgammaf
+allow y0f
+allow y1f
+allow ynf
+allow isnanf
+allow acoshf
+allow asinhf
+allow atanhf
+allow cbrtf
+allow expm1f
+allow ilogbf
+allow log1pf
+allow logbf
+allow nextafterf
+allow remainderf
+allow rintf
+allow scalbf
+
+allow acosl
+allow asinl
+allow atanl
+allow atan2l
+allow ceill
+allow cosl
+allow coshl
+allow expl
+allow fabsl
+allow floorl
+allow fmodl
+allow frexpl
+allow ldexpl
+allow logl
+allow log10l
+allow powl
+allow sinl
+allow sinhl
+allow sqrtl
+allow tanl
+allow tanhl
+allow erfl
+allow erfcl
+allow gammal
+allow hypotl
+allow j0l
+allow j1l
+allow jnl
+allow lgammal
+allow y0l
+allow y1l
+allow ynl
+allow isnanl
+allow acoshl
+allow asinhl
+allow atanhl
+allow cbrtl
+allow expm1l
+allow ilogbl
+allow log1pl
+allow logbl
+allow nextafterl
+allow remainderl
+allow rintl
+allow scalbl

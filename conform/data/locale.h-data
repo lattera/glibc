@@ -1,0 +1,34 @@
+type {struct lconv}
+element {struct lconv} {char*} currency_symbol
+element {struct lconv} {char*} decimal_point
+element {struct lconv} char frac_digits
+element {struct lconv} {char*} grouping
+element {struct lconv} {char*} int_curr_symbol
+element {struct lconv} char int_frac_digits
+element {struct lconv} {char*} mon_decimal_point
+element {struct lconv} {char*} mon_thousands_sep
+element {struct lconv} {char*} mon_grouping
+element {struct lconv} {char*} negative_sign
+element {struct lconv} char n_cs_precedes
+element {struct lconv} char n_sep_by_space
+element {struct lconv} char n_sign_posn
+element {struct lconv} {char*} positive_sign
+element {struct lconv} char p_cs_precedes
+element {struct lconv} char p_sep_by_space
+element {struct lconv} char p_sign_pos
+element {struct lconv} {char*} thousands_sep
+
+constant NULL
+
+macro LC_ALL
+macro LC_COLLATE
+macro LC_CTYPE
+macro LC_MESSAGES
+macro LC_MONETARY
+macro LC_NUMERIC
+macro LC_TIME
+
+function {struct lconv*) localeconv (void)
+function {char*} setlocale (int, const char*)
+
+allow LC_*

@@ -1,0 +1,22 @@
+#ifndef ISO
+type {struct group}
+element {struct group} {char*} gr_name
+element {struct group} gid_t gr_gid
+element {struct group} {char**} gr_mem
+
+# ifndef POSIX
+type gid_t
+# endif
+
+function {struct group*} getgrgid (gid_t)
+function {struct group*} getgrnam (const char*)
+# ifndef POSIX
+function int getgrgid_r (gid_t, struct group*, char *, size_t, struct group**)
+function int getgrnam_r (const char *, struct group *, char *, size_t, struct group**)
+function {struct group*} getgrent (void)
+function void endgrent (void)
+function void setgrent (void)
+# endif
+
+allow gr_
+#endif
