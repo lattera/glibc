@@ -1,5 +1,7 @@
 /* @(#)w_exp10.c
  * Conversion to exp10 by Ulrich Drepper <drepper@cygnus.com>.
+ */
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.

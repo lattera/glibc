@@ -1,3 +1,24 @@
+1998-06-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/getenv.c: Fix last change.
+
+1998-06-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/backtrace.c: Provide generic implementation.
+
+1998-06-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Give visual feedback of the default directories we
+	added.
+
+1998-06-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* io/fts.c (fts_build): Define oflag only if needed.
+
+1998-06-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/w_exp10.c: Add missing close comment.
+
 1998-06-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Don't export argp's fmtstream handling functions.

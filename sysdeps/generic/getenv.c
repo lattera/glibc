@@ -37,7 +37,7 @@ char *
 getenv (name)
      const char *name;
 {
-  const size_t len = strlen (name);
+  size_t len = strlen (name);
   char **ep;
   uint16_t name_start;
 

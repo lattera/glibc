@@ -578,8 +578,11 @@ fts_build(sp, type)
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *adjaddr;
-	int cderrno, descend, len, level, maxlen, nlinks, oflag, saved_errno;
+	int cderrno, descend, len, level, maxlen, nlinks, saved_errno;
 	char *cp;
+#ifdef DTF_HIDEW
+	int oflag;
+#endif
 
 	/* Set current node pointer. */
 	cur = sp->fts_cur;
