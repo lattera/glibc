@@ -16,7 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <setjmp.h>
+/*#include <setjmp.h>*/
+#include "jmp_buf.h"
+#define jmp_buf __jmp_buf
 
 #ifndef __GNUC__
 #error This file uses GNU C extensions; you must compile with GCC.
@@ -36,7 +38,7 @@ register double
 
 /* Save the current program position in ENV and return 0.  */
 int
-__setjmp (jmp_buf env)
+__setjmp_aux (jmp_buf env, long int *sp, long int *fp)
 {
   /* Save the integer registers.  */
   env[0].__9 = r9;
@@ -46,13 +48,26 @@ __setjmp (jmp_buf env)
   env[0].__13 = r13;
   env[0].__14 = r14;
 
+#if 1				/* XXX */
+  /* Save the floating point registers.  */
+  env[0].__f2 = f2;
+  env[0].__f3 = f3;
+  env[0].__f4 = f4;
+  env[0].__f5 = f5;
+  env[0].__f6 = f6;
+  env[0].__f7 = f7;
+  env[0].__f8 = f8;
+  env[0].__f9 = f9;
+#endif
+
   /* Save the return address of our caller, where longjmp will jump to.  */
   env[0].__pc = retpc;
 
-  /* We lose if the compiler uses the FP in __setjmp.  XXX */
+  /* Save the FP and SP of our caller.  The __setjmp entry point
+     simply puts these in the argument register for us to fetch.  */
   env[0].__fp = fp;
-
   env[0].__sp = sp;
 
+  /* Return to the original caller of __setjmp.  */
   return 0;
 }
