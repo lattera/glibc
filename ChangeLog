@@ -1,5 +1,8 @@
 1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use
+	_dl_cache_libcmp instead of strcmp.
+
 	* sysdeps/generic/glob.c (glob_in_dir): It's no error if opendir
 	fails on a file.
 	Reported by Sergei Ivanov <svivanov@pdmi.ras.ru> [PR libc/1032].

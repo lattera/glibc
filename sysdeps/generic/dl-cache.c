@@ -179,7 +179,9 @@ _dl_load_cache_lookup (const char *name)
                 using them.  */
 	     && cache->libs[middle - 1].key < cachesize - sizeof *cache
 	     /* Actually compare the entry.  */
-	     && strcmp (name, cache_data + cache->libs[middle - 1].key) == 0)
+	     && (_dl_cache_libcmp (name,
+				   cache_data + cache->libs[middle - 1].key)
+		 == 0))
 	--middle;
 
       do
@@ -192,7 +194,9 @@ _dl_load_cache_lookup (const char *name)
 		 index is ok and whether the name matches.  Otherwise
 		 we are done.  */
 	      && (cache->libs[middle].key >= cachesize - sizeof *cache
-		  || strcmp (name, cache_data + cache->libs[middle].key) != 0))
+		  || (_dl_cache_libcmp (name,
+					cache_data + cache->libs[middle].key)
+		      != 0)))
 	    break;
 
 	  flags = cache->libs[middle].flags;
