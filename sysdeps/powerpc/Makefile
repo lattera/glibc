@@ -41,6 +41,6 @@ CFLAGS-memcmp.c += -Wno-uninitialized
 endif
 
 ifeq ($(subdir),elf)
-dl-routines += dl-machine
-rtld-routines += dl-machine dl-start
+sysdep-dl-routines += dl-machine
+sysdep_routines += dl-machine dl-start
 endif

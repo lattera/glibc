@@ -1,3 +1,27 @@
+2000-09-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/powerpc/Makefile [$(subdir) = elf]: Modify
+	sysdep-dl-routines and sysdep_routines instead of rtld-routines
+	and dl-routines.
+
+	* soft-fp/ChangeLog: Merged with this file.
+
+2000-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+        * soft-fp/Makefile (distribute): Add op-8.h and testit.c.
+
+        * soft-fp/Makefile (distribute): Add the math functions, too.
+
+        * soft-fp/Makefile (distribute): Add ChangeLog, Banner, and configure.
+
+2000-03-03  Geoff Keating  <geoffk@cygnus.com>
+
+        * soft-fp/soft-fp.h (_FP_ROUND_ZERO): Cast 0 to void before using it
+        as a statement.
+
+        * soft-fp/sysdeps/powerpc/Makefile (routines): New file.
+        * soft-fp/sysdeps/powerpc/q_*: New files.
+
 2000-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (process_string_arg): Handle precision
