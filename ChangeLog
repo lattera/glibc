@@ -1,5 +1,8 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/Makefile (tests): Add tst-timer.
+	* sysdeps/generic/tst-timer.c: New file.
+
 	* Makerules (sources): Don't add BP sources here.
 
 	* login/Makefile (distribute): Remove xtmp.h.

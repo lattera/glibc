@@ -1,9 +1,5 @@
 ifeq ($(subdir),rt)
-librt-routines += timer_routines
-
-ifeq ($(have-thread-library),yes)
-tests += tst-timer
-endif
+librt-sysdep_routines += timer_routines
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)
