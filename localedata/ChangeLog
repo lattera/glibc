@@ -1,3 +1,7 @@
+2003-05-29  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/uk_UA: Correct mail address of Denys Dmytriyenko.
+
 2003-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/st_ZA: New file.

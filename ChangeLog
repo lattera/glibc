@@ -1,3 +1,7 @@
+2003-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h (CLONE_PID): Remove.
+
 2003-06-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/dl-machine.h: Include <sysdep.h>.
