@@ -30,7 +30,9 @@
 static inline int
 do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
-  return INLINE_SYSCALL (waitid, 4, idtype, id, infop, options);
+  /* The unused fifth argument is a `struct rusage *' that we could
+     pass if we were using waitid to simulate wait3/wait4.  */
+  return INLINE_SYSCALL (waitid, 5, idtype, id, infop, options, NULL);
 }
 # define NO_DO_WAITID
 
