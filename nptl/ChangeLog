@@ -1,5 +1,7 @@
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-mutex3.c (do_test): Add tests for trylock with RECURSIVE mutexes.
+
 	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Don't
 	use INLINE_SYSCALL.  Error number is returned, not -1.
 

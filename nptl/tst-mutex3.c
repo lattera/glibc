@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -20,12 +20,34 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+
+static pthread_mutex_t m;
+
+
+static void *
+tf (void *arg)
+{
+  int e = pthread_mutex_trylock (&m);
+  if (e == 0)
+    {
+      puts ("mutex_trylock in second thread succeeded");
+      exit (1);
+    }
+  if (e != EBUSY)
+    {
+      puts ("mutex_trylock returned wrong value");
+      exit (1);
+    }
+
+  return NULL;
+}
 
 
 static int
 do_test (void)
 {
-  pthread_mutex_t m;
   pthread_mutexattr_t a;
 
   if (pthread_mutexattr_init (&a) != 0)
@@ -58,6 +80,12 @@ do_test (void)
       return 1;
     }
 
+  if (pthread_mutex_trylock (&m) != 0)
+    {
+      puts ("1st trylock failed");
+      return 1;
+    }
+
   if (pthread_mutex_unlock (&m) != 0)
     {
       puts ("mutex_unlock failed");
@@ -67,6 +95,25 @@ do_test (void)
   if (pthread_mutex_unlock (&m) != 0)
     {
       puts ("2nd mutex_unlock failed");
+      return 1;
+    }
+
+  pthread_t th;
+  if (pthread_create (&th, NULL, tf, NULL) != 0)
+    {
+      puts ("create failed");
+      return 1;
+    }
+
+  if (pthread_join (th, NULL) != 0)
+    {
+      puts ("join failed");
+      return 1;
+    }
+
+  if (pthread_mutex_unlock (&m) != 0)
+    {
+      puts ("3rd mutex_unlock failed");
       return 1;
     }
 
