@@ -1,5 +1,7 @@
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* include/shlib-compat.h: Include <abi-versions.h> unconditionally.
+
 	* posix/unistd.h (intptr_t): Conditionalize on [__USE_MISC ||
 	__USE_XOPEN_EXTENDED] rather than on [__USE_UNIX98].
 	We need this for the sbrk decl, which can be included without Unix98.
