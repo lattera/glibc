@@ -75,8 +75,6 @@ typedef _IO_fpos_t fpos_t;
 #define FILENAME_MAX _G_FILENAME_MAX
 #define TMP_MAX 999 /* Only limited by filename length */
 
-#define L_ctermid     9
-#define L_cuserid     9
 #define P_tmpdir      "/tmp"
 #define L_tmpnam      20
 
@@ -108,7 +106,7 @@ extern int fgetc __P ((FILE *));
 extern int fgetpos __P ((FILE* fp, fpos_t *pos));
 extern char* fgets __P ((char*, int, FILE*));
 extern FILE* fopen __P ((__const char*, __const char*));
-extern FILE* fopencookie __P ((void *cookie, __const char *mode, 
+extern FILE* fopencookie __P ((void *cookie, __const char *mode,
 			       _IO_cookie_io_functions_t io_functions));
 extern int fprintf __P ((FILE*, __const char* format, ...));
 extern int fputc __P ((int, FILE*));
@@ -163,6 +161,15 @@ extern FILE *fdopen __P ((int, __const char *));
 extern int fileno __P ((FILE*));
 extern FILE* popen __P ((__const char*, __const char*));
 extern int pclose __P ((FILE*));
+
+#define L_ctermid     9
+#define L_cuserid     9
+
+/* Return the name of the controlling terminal.  */
+extern char *ctermid __P ((char *__buf));
+
+/* Get character login name of the user.  */
+extern char *cuserid __P ((char * __buf));
 #endif
 
 #ifdef __USE_GNU

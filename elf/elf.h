@@ -546,8 +546,8 @@ typedef struct
 /* Special section indices.  */
 
 #define SHN_MIPS_ACOMMON 0xff00		/* Allocated common symbols */
-#define SHN_MIPS_TEXT	 0xff01		/* Allocated test symbol.  */
-#define SHN_MIPS_DATA	 0xff02		/* Allocated data symbol.  */
+#define SHN_MIPS_TEXT	 0xff01		/* Allocated test symbols.  */
+#define SHN_MIPS_DATA	 0xff02		/* Allocated data symbols.  */
 #define SHN_MIPS_SCOMMON 0xff03		/* Small common symbols */
 #define SHN_MIPS_SUNDEFINED 0xff04	/* Small undefined symbols */
 

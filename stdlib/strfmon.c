@@ -255,7 +255,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	  ++fmt;
 	  is_long_double = 1;
 	}
-      
+
       /* Handle format specifier.  */
       switch (*fmt++)
 	{
@@ -288,7 +288,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 				       _NL_CURRENT (LC_MONETARY, MON_GROUPING),
 				       *_NL_CURRENT (LC_MONETARY,
 						     MON_THOUSANDS_SEP));
-      
+
       /* Now it's time to get the value.  */
       if (is_long_double == 1)
 	{
@@ -348,7 +348,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	sep_by_space = 0;
       if (left_prec == -1)
 	left_prec = 0;
-	
+
 
       /* Perhaps we'll someday make these things configurable so
 	 better start using symbolic names now.  */
@@ -356,7 +356,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 #define right_paren ')'
 
       startp = dest;		/* Remember start so we can compute lenght.  */
-      
+
       if (sign_posn == 0)
 	out_char (left_paren);
       if (sign_posn == 5)	/* This is for positive number and ( flag.  */
@@ -371,7 +371,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	      if (sep_by_space == 2)
 		out_char (' ');
 	    }
-	  
+
 	  if (print_curr_symbol)
 	    {
 	      out_string (currency_symbol);
@@ -398,7 +398,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
       _IO_JUMPS ((_IO_FILE *) &f) = &_IO_str_jumps;
       _IO_str_init_static ((_IO_FILE *) &f, dest, (s + maxsize) - dest, dest);
 #else
-      memset((PTR) &f, 0, sizeof(f));
+      memset((void *) &f, 0, sizeof(f));
       f.__magic = _IOMAGIC;
       f.__mode.__write = 1;
       /* The buffer size is one less than MAXLEN
@@ -443,7 +443,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	return -1;
 
       dest += done;
-      
+
       if (!cs_precedes)
 	{
 	  if (sign_posn == 3)
@@ -467,7 +467,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 	      out_char (' ');
 	    out_char (sign_char);
 	  }
-      
+
       if (sign_posn == 0)
 	out_char (right_paren);
       if (sign_posn == 5)
@@ -497,7 +497,7 @@ strfmon (char *s, size_t maxsize, const char *format, ...)
 
   /* Terminate the string.  */
   out_char ('\0');
-  
+
   va_end (ap);
 
   return dest - s - 1;

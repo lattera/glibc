@@ -13,8 +13,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
 
@@ -31,9 +31,9 @@ strsep (char **stringp, const char *delim)
   end = strpbrk (begin, delim);
   if (end)
     {
-      /* Terminate the token and advance *STRINGP past the delimiters.  */
+      /* Terminate the token and set *STRINGP past NUL character.  */
       *end++ = '\0';
-      *stringp = end + strspn (end, delim);
+      *stringp = end;
     }
   else
     /* No more delimiters; this is the last token.  */

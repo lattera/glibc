@@ -30,3 +30,6 @@ static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
 	return (hx == 0);
 }
 weak_alias (__isinf, isinf)
+#ifdef NO_LONG_DOUBLE
+weak_alias (__isinf, isinfl)
+#endif

@@ -10,12 +10,15 @@ RCSID("$NetBSD: e_exp.S,v 1.4 1995/05/08 23:47:04 jtc Exp $")
 /* e^x = 2^(x * log2(e)) */
 ENTRY(__ieee754_exp)
 	fldl	4(%esp)
-	fxam
+/* I added the following ugly construct because exp(+-Inf) resulted
+   in NaN.  The ugliness results from the bright minds at Intel.
+   -- drepper@cygnus.com.  */
+	fxam				/* Is NaN or +-Inf?  */
 	fstsw	%ax
 	sahf
-	jnc	.LnoInf
-	jp	.LisInf
-.LnoInf:
+	jnc	.LnoInfNaN		/* No, jump.   */
+	jp	.LisInf			/* Is +-Inf, jump.  */
+.LnoInfNaN:
 	fldl2e
 	fmulp				/* x * log2(e) */
 	fstl	%st(1)
@@ -29,7 +32,7 @@ ENTRY(__ieee754_exp)
 	ret
 
 .LisInf:
-	andb	$2, %ah
-	jz	.LpInf
-	fldz
+	andb	$2, %ah			/* Test sign.  */
+	jz	.LpInf			/* If positive, jump.  */
+	fldz				/* Set result to 0.  */
 .LpInf:	ret

@@ -129,6 +129,9 @@ Older releases are known to have bugs that affect building the GNU C library.
 
   If you are interested in some more measurements let me know.
 
+* Some files depend on special tools.  E.g., files ending in .gperf
+  need a `gperf' program.  The GNU version (part of libg++) is known
+  to work while some vendor versions do not.
 
 * When compiling for Linux:
 

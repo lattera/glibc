@@ -196,6 +196,10 @@ main (int argc, char *argv[])
       exit (EXIT_SUCCESS);
     }
 
+  /* Specific information about the current locale are requested.
+     Change to this locale now.  */
+  setlocale (LC_ALL, "");
+
   /* If no real argument is given we have to print the contents of the
      current locale definition variables.  These are LANG and the LC_*.  */
   if (optind == argc && show_keyword_name == 0 && show_category_name == 0)

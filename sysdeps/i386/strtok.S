@@ -19,7 +19,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <errnos.h>
 #include <sysdep.h>
 
 /* This file can be used for three variants of the strtok function:
@@ -35,14 +34,9 @@ Boston, MA 02111-1307, USA.  */
 	delim		(sp + 8)
 	save_ptr	(sp + 12)
 
-   strsep:
-	INPUT PARAMETERS
-	str_ptr		(sp + 4)
-	delim		(sp + 8)
-
    We do a common implementation here.  */
 
-#if !defined (USE_AS_STRTOK_R) && !defined (USE_AS_STRSEP)
+#ifndef USE_AS_STRTOK_R
 	.bss
 	.local save_ptr
 	ASM_TYPE_DIRECTIVE (save_ptr, @object)
@@ -53,73 +47,40 @@ save_ptr:
 #define FUNCTION strtok
 #endif
 
-	/* We use the possibility to do some more initialization
-	   for the strtok implementation.  */
 	.text
-Lillegal_argument:
-#ifndef PIC
-	movl $EINVAL, C_SYMBOL_NAME(errno)
-	xorl %eax, %eax
-#else
-# if defined (USE_AS_STRTOK_R) || defined (USE_AS_STRSEP)
-	pushl %ebx			/* Save PIC register.  */
-	call Lhere2
-Lhere2:	popl %ebx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-Lhere2], %ebx
-# endif
-	movl errno@GOT(%ebx), %ebx
-	movl $EINVAL, (%ebx)
-	xorl %eax, %eax
-	popl %ebx
-#endif
-	ret
-
 
 ENTRY (FUNCTION)
 
 	movl 4(%esp), %edx		/* Get start of string.  */
 	movl 8(%esp), %eax		/* Get start of delimiter set.  */
 
-#ifdef USE_AS_STRSEP
-	/* %EDX does not yet contain the string starting point.  Only
-	   a pointer to the location where it is stored.  */
-	movl (%edx), %edx
-#else
-# if !defined (USE_AS_STRTOK_R) && defined (PIC)
+#if !defined (USE_AS_STRTOK_R) && defined (PIC)
 	pushl %ebx			/* Save PIC register.  */
 	call Lhere
 Lhere:	popl %ebx
 	addl $_GLOBAL_OFFSET_TABLE_+[.-Lhere], %ebx
-# endif
+#endif
 
 	/* If the pointer is NULL we have to use the stored value of
 	   the last run.  */
 	cmpl $0, %edx
 	jne L0
 
-# ifdef USE_AS_STRTOK_R
+#ifdef USE_AS_STRTOK_R
 	/* The value is stored in the third argument.  */
 	movl 12(%esp), %edx
 	movl (%edx), %edx
-# else
+#else
 	/* The value is in the local variable defined above.  But
 	   we have to take care for PIC code.  */
-#  ifndef PIC
+# ifndef PIC
 	movl save_ptr, %edx
-#  else
+# else
 	movl save_ptr@GOTOFF(%ebx), %edx
-#  endif
 # endif
 #endif
 
-	/* Compare whether pointer is NULL.  We are tolerant here
-	   because the C function do the same.  */
-	cmpl $0, %edx
-	je Lillegal_argument
-
-#ifndef USE_AS_STRSEP
 L0:
-#endif
 	/* First we create a table with flags for all possible characters.
 	   For the ASCII (7bit/8bit) or ISO-8859-X character sets which are
 	   supported by the C string functions we have 256 characters.
@@ -224,8 +185,8 @@ L1:	leal -4(%edx), %eax	/* prepare loop */
 	   1. a character in the stopset was found
 	   and
 	   2. the end of the string was found
-	   But as a sign that the chracter is in the stopset we store its
-	   value in the table.  But the value of NUL is NUL so the loop
+	   As a sign that the character is in the stopset we store its
+	   value in the table.  The value of NUL is NUL so the loop
 	   terminates for NUL in every case.  */
 
 L3:	addl $4, %eax		/* adjust pointer for full loop round */
@@ -295,9 +256,6 @@ L11:
 #ifdef USE_AS_STRTOK_R
 	movl 12(%esp), %ecx
 	movl %edx, (%ecx)
-#elif USE_AS_STRSEP
-	movl 4(%esp), %ecx
-	movl %edx, (%ecx)
 #else
 # ifndef PIC
 	movl %edx, save_ptr
@@ -314,9 +272,6 @@ LreturnNULL:
 	/* Store NULL as pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
 	movl 12(%esp), %ecx
-	movl %eax, (%ecx)
-#elif USE_AS_STRSEP
-	movl 4(%esp), %ecx
 	movl %eax, (%ecx)
 #else
 # ifndef PIC

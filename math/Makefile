@@ -30,7 +30,7 @@ distribute	:= math_private.h machine/asm.h machine/endian.h
 # Build the -lm library.
 
 extra-libs	:= libm
-libm-routines	:= e_acos e_acosf e_acosh e_acoshf e_asin e_asinf	\
+libm-routines	 = e_acos e_acosf e_acosh e_acoshf e_asin e_asinf	\
 		   e_atan2 e_atan2f e_atanh e_atanhf e_cosh e_coshf	\
 		   e_exp e_expf e_fmod e_fmodf e_hypot e_hypotf e_j0	\
 		   e_j0f e_j1 e_j1f e_jn e_jnf e_lgamma_r e_lgammaf_r	\
@@ -55,12 +55,22 @@ libm-routines	:= e_acos e_acosf e_acosh e_acoshf e_asin e_asinf	\
 		   w_j0f w_j1 w_j1f w_jn w_jnf w_lgamma w_lgamma_r	\
 		   w_lgammaf w_lgammaf_r w_log w_log10 w_log10f w_logf	\
 		   w_pow w_powf w_remainder w_remainderf w_scalb	\
-		   w_scalbf w_sinh w_sinhf w_sqrt w_sqrtf
+		   w_scalbf w_sinh w_sinhf w_sqrt w_sqrtf		\
+		   $(long-m-routines)
+
+ifeq ($(long-double-fcts),yes)
+long-m-routines	:= s_ceill s_copysignl s_fabsl s_finitel s_floorl	\
+		   s_nextafterl s_rintl s_significandl
+endif
 
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
-routines := s_isinf s_isinff s_isnan s_isnanf isinfl isnanl
+routines = s_isinf s_isinff s_isnan s_isnanf $(long-c-routines)
+
+ifeq ($(long-double-fcts),yes)
+long-c-routines	:= s_isinfl s_isnanl
+endif
 
 
 include ../Rules

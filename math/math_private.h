@@ -147,6 +147,93 @@ do {								\
   (d) = sf_u.value;						\
 } while (0)
 
+/* A union which permits us to convert between a long double and
+   three 32 bit ints.  */
+
+#if BYTE_ORDER == BIG_ENDIAN
+
+typedef union
+{
+  long double value;
+  struct
+  {
+    unsigned int sign_exponent:16;
+    unsigned int empty:16;
+    u_int32_t msw;
+    u_int32_t lsw;
+  } parts;
+} ieee_long_double_shape_type;
+
+#endif
+
+#if BYTE_ORDER == LITTLE_ENDIAN
+
+typedef union
+{
+  long double value;
+  struct
+  {
+    u_int32_t lsw;
+    u_int32_t msw;
+    unsigned int sign_exponent:16;
+    unsigned int empty:16;
+  } parts;
+} ieee_long_double_shape_type;
+
+#endif
+
+/* Get three 32 bit ints from a double.  */
+
+#define GET_LDOUBLE_WORDS(exp,ix0,ix1,d)			\
+do {								\
+  ieee_long_double_shape_type ew_u;				\
+  ew_u.value = (d);						\
+  (exp) = ew_u.parts.sign_exponent;				\
+  (ix0) = ew_u.parts.msw;					\
+  (ix1) = ew_u.parts.lsw;					\
+} while (0)
+
+/* Set a double from two 32 bit ints.  */
+
+#define SET_LDOUBLE_WORDS(d,exp,ix0,ix1)			\
+do {								\
+  ieee_long_double_shape_type iw_u;				\
+  iw_u.parts.sign_exponent = (exp);				\
+  iw_u.parts.msw = (ix0);					\
+  iw_u.parts.lsw = (ix1);					\
+  (d) = iw_u.value;						\
+} while (0)
+
+/* Set the more significant 32 bits of a long double mantissa from an int.  */
+
+#define SET_LDOUBLE_MSW(d,v)					\
+do {								\
+  ieee_long_double_shape_type sh_u;				\
+  sh_u.value = (d);						\
+  sh_u.parts.msw = (v);						\
+  (d) = sh_u.value;						\
+} while (0)
+
+/* Get int from the exponent of a long double.  */
+
+#define GET_LDOUBLE_EXP(exp,d)					\
+do {								\
+  ieee_long_double_shape_type ge_u;				\
+  ge_u.value = (d);
+  (exp) = ge_u.parts.sign_exponent;				\
+} while (0)
+
+/* Set exponent of a long double from an int.  */
+
+#define SET_LDOUBLE_EXP(d,exp)					\
+do {								\
+  ieee_long_double_shape_type se_u;				\
+  se_u.value = (d);						\
+  se_u.parts.sign_exponent = (exp);				\
+  (d) = se_u.value;						\
+} while (0)
+
+
 /* ieee style elementary functions */
 extern double __ieee754_sqrt __P((double));
 extern double __ieee754_acos __P((double));
@@ -218,5 +305,42 @@ extern float __kernel_sinf __P((float,float,int));
 extern float __kernel_cosf __P((float,float));
 extern float __kernel_tanf __P((float,float,int));
 extern int   __kernel_rem_pio2f __P((float*,float*,int,int,int,const int*));
+
+
+/* ieee style elementary long double functions */
+extern long double __ieee754_sqrtl __P((long double));
+extern long double __ieee754_acosl __P((long double));
+extern long double __ieee754_acoshl __P((long double));
+extern long double __ieee754_logl __P((long double));
+extern long double __ieee754_atanhl __P((long double));
+extern long double __ieee754_asinl __P((long double));
+extern long double __ieee754_atan2l __P((long double,long double));
+extern long double __ieee754_expl __P((long double));
+extern long double __ieee754_coshl __P((long double));
+extern long double __ieee754_fmodl __P((long double,long double));
+extern long double __ieee754_powl __P((long double,long double));
+extern long double __ieee754_lgammal_r __P((long double,int *));
+extern long double __ieee754_gammal_r __P((long double,int *));
+extern long double __ieee754_lgammal __P((long double));
+extern long double __ieee754_gammal __P((long double));
+extern long double __ieee754_log10l __P((long double));
+extern long double __ieee754_sinhl __P((long double));
+extern long double __ieee754_hypotl __P((long double,long double));
+extern long double __ieee754_j0l __P((long double));
+extern long double __ieee754_j1l __P((long double));
+extern long double __ieee754_y0l __P((long double));
+extern long double __ieee754_y1l __P((long double));
+extern long double __ieee754_jnl __P((int,long double));
+extern long double __ieee754_ynl __P((int,long double));
+extern long double __ieee754_remainderl __P((long double,long double));
+extern int   __ieee754_rem_pio2l __P((long double,long double*));
+extern long double __ieee754_scalbl __P((long double,long double));
+
+/* long double versions of fdlibm kernel functions */
+extern long double __kernel_sinl __P((long double,long double,int));
+extern long double __kernel_cosl __P((long double,long double));
+extern long double __kernel_tanl __P((long double,long double,int));
+extern int   __kernel_rem_pio2l __P((long double*,long double*,int,int,
+				     int,const int*));
 
 #endif /* _MATH_PRIVATE_H_ */

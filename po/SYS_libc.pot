@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 1.09.7\n"
-"PO-Revision-Date: 1996-05-29 13:04\n"
+"Project-Id-Version: libc 1.90\n"
+"PO-Revision-Date: 1996-05-29 14:03\n"
 "Last-Translator: GNU libc maintainers <bug-glibc@prep.ai.mit.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -259,6 +259,10 @@ msgstr ""
 msgid "(unknown)"
 msgstr ""
 
+#: catgets/gencat.c:242
+msgid "*standard input*"
+msgstr ""
+
 #: inet/rcmd.c:325
 msgid ".rhosts fstat failed"
 msgstr ""
@@ -284,22 +288,18 @@ msgstr ""
 msgid "; why = "
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:112
 msgid "?"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:58
 msgid "Address already in use"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:57
 msgid "Address family not supported by protocol family"
 msgstr ""
 
 msgid "Alarm clock"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:17
 msgid "Argument list too long"
 msgstr ""
 
@@ -307,19 +307,15 @@ msgstr ""
 msgid "Authentication OK"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:90
 msgid "Authentication error"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:24
 msgid "Bad address"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:19
 msgid "Bad file descriptor"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:25
 msgid "Block device required"
 msgstr ""
 
@@ -327,7 +323,6 @@ msgstr ""
 msgid "Broadcast select problem"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:42
 msgid "Broken pipe"
 msgstr ""
 
@@ -337,15 +332,12 @@ msgstr ""
 msgid "CPU time limit exceeded"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:59
 msgid "Can't assign requested address"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:68
 msgid "Can't send after socket shutdown"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:22
 msgid "Cannot allocate memory"
 msgstr ""
 
@@ -376,42 +368,33 @@ msgstr ""
 msgid "Client credential too weak"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:114
 msgid "Computer bought the farm"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:71
 msgid "Connection refused"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:64
 msgid "Connection reset by peer"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:70
 msgid "Connection timed out"
 msgstr ""
 
 msgid "Continued"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:49
 msgid "Destination address required"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:26
 msgid "Device busy"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:16
 msgid "Device not configured"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:76
 msgid "Directory not empty"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:79
 msgid "Disc quota exceeded"
 msgstr ""
 
@@ -424,7 +407,6 @@ msgstr ""
 msgid "Error in unknown error system: "
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:18
 msgid "Exec format error"
 msgstr ""
 
@@ -432,36 +414,30 @@ msgstr ""
 msgid "Failed (unspecified error)"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:27
 msgid "File exists"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:73
 msgid "File name too long"
 msgstr ""
 
 msgid "File size limit exceeded"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:37
 msgid "File too large"
 msgstr ""
 
 msgid "Floating point exception"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:88
 msgid "Function not implemented"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:115
 msgid "Gratuitous error"
 msgstr ""
 
 msgid "Hangup"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:74
 msgid "Host is down"
 msgstr ""
 
@@ -478,34 +454,27 @@ msgstr ""
 msgid "Illegal Instruction"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:39
 msgid "Illegal seek"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:89
 msgid "Inappropriate file type or format"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:35
 msgid "Inappropriate ioctl for device"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:110
 msgid "Inappropriate operation for background process"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:15
 msgid "Input/output error"
 msgstr ""
 
 msgid "Interrupt"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:14
 msgid "Interrupted system call"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:32
 msgid "Invalid argument"
 msgstr ""
 
@@ -533,7 +502,6 @@ msgstr ""
 msgid "Invalid content of \\{\\}"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:28
 msgid "Invalid cross-device link"
 msgstr ""
 
@@ -553,7 +521,6 @@ msgstr ""
 msgid "Invalid server verifier"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:31
 msgid "Is a directory"
 msgstr ""
 
@@ -564,23 +531,18 @@ msgstr ""
 msgid "Memory exhausted"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:50
 msgid "Message too long"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:91
 msgid "Need authenticator"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:62
 msgid "Network dropped connection on reset"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:60
 msgid "Network is down"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:61
 msgid "Network is unreachable"
 msgstr ""
 
@@ -588,15 +550,12 @@ msgstr ""
 msgid "No address associated with name"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:65
 msgid "No buffer space available"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:20
 msgid "No child processes"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:87
 msgid "No locks available"
 msgstr ""
 
@@ -612,31 +571,24 @@ msgstr ""
 msgid "No remote programs registered.\n"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:75
 msgid "No route to host"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:38
 msgid "No space left on device"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:12
 msgid "No such file or directory"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:13
 msgid "No such process"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:30
 msgid "Not a directory"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:43
 msgid "Numerical argument out of domain"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:44
 msgid "Numerical result out of range"
 msgstr ""
 
@@ -644,27 +596,21 @@ msgstr ""
 msgid "Odd number of quotation marks"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:47
 msgid "Operation already in progress"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:11
 msgid "Operation not permitted"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:55
 msgid "Operation not supported"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:29
 msgid "Operation not supported by device"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:46
 msgid "Operation now in progress"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:23
 msgid "Permission denied"
 msgstr ""
 
@@ -678,42 +624,33 @@ msgstr ""
 msgid "Profiling timer expired"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:56
 msgid "Protocol family not supported"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:52
 msgid "Protocol not available"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:53
 msgid "Protocol not supported"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:51
 msgid "Protocol wrong type for socket"
 msgstr ""
 
 msgid "Quit"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:86
 msgid "RPC bad procedure for program"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:84
 msgid "RPC program not available"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:85
 msgid "RPC program version wrong"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:82
 msgid "RPC struct is bad"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:83
 msgid "RPC version wrong"
 msgstr ""
 
@@ -793,7 +730,6 @@ msgstr ""
 msgid "RPC: Unknown protocol"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:40
 msgid "Read-only file system"
 msgstr ""
 
@@ -801,75 +737,57 @@ msgstr ""
 msgid "Regular expression too big"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:92
 msgid "Reserved error 82"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:93
 msgid "Reserved error 83"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:94
 msgid "Reserved error 84"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:95
 msgid "Reserved error 85"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:96
 msgid "Reserved error 86"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:97
 msgid "Reserved error 87"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:98
 msgid "Reserved error 88"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:99
 msgid "Reserved error 89"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:100
 msgid "Reserved error 90"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:101
 msgid "Reserved error 91"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:102
 msgid "Reserved error 92"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:103
 msgid "Reserved error 93"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:104
 msgid "Reserved error 94"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:105
 msgid "Reserved error 95"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:106
 msgid "Reserved error 96"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:107
 msgid "Reserved error 97"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:108
 msgid "Reserved error 98"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:109
 msgid "Reserved error 99"
 msgstr ""
 
@@ -881,11 +799,9 @@ msgstr ""
 msgid "Resolver internal error"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:21
 msgid "Resource deadlock avoided"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:45
 msgid "Resource temporarily unavailable"
 msgstr ""
 
@@ -900,27 +816,21 @@ msgstr ""
 msgid "Server rejected verifier"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:66
 msgid "Socket is already connected"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:67
 msgid "Socket is not connected"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:48
 msgid "Socket operation on non-socket"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:54
 msgid "Socket type not supported"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:63
 msgid "Software caused connection abort"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:80
 msgid "Stale NFS file handle"
 msgstr ""
 
@@ -936,46 +846,37 @@ msgstr ""
 msgid "Stopped (tty output)"
 msgstr ""
 
-#: posix/regex.c:940 sysdeps/mach/hurd/errlist.c:10
+#: posix/regex.c:940
 msgid "Success"
 msgstr ""
 
 msgid "Terminated"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:36
 msgid "Text file busy"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:81
 msgid "Too many levels of remote in path"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:72
 msgid "Too many levels of symbolic links"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:41
 msgid "Too many links"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:34
 msgid "Too many open files"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:33
 msgid "Too many open files in system"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:77
 msgid "Too many processes"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:69
 msgid "Too many references: can't splice"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:78
 msgid "Too many users"
 msgstr ""
 
@@ -986,8 +887,12 @@ msgstr ""
 msgid "Trailing backslash"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:111
 msgid "Translator died"
+msgstr ""
+
+#: catgets/gencat.c:201
+#, c-format
+msgid "Try `%s --help' for more information.\n"
 msgstr ""
 
 #: inet/rcmd.c:118
@@ -1039,6 +944,21 @@ msgstr ""
 msgid "Urgent I/O condition"
 msgstr ""
 
+#: catgets/gencat.c:204
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
+"       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -H, --header        create C header file containing symbol definitions\n"
+"  -h, --help          display this help and exit\n"
+"      --new           do not use existing catalog, force new output file\n"
+"  -o, --output=NAME   write output to file NAME\n"
+"  -V, --version       output version information and exit\n"
+"If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+
 #: posix/getconf.c:81
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
@@ -1064,7 +984,6 @@ msgstr ""
 msgid "Window changed"
 msgstr ""
 
-#: sysdeps/mach/hurd/errlist.c:113
 msgid "You really blew it this time"
 msgstr ""
 
@@ -1117,6 +1036,16 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr ""
 
+#: catgets/gencat.c:248
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr ""
+
+#: catgets/gencat.c:753 gencat.c:794
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr ""
+
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr ""
@@ -1151,9 +1080,21 @@ msgstr ""
 msgid "definition keyword expected"
 msgstr ""
 
+#: catgets/gencat.c:367
+msgid "duplicate set definition"
+msgstr ""
+
 #: time/zic.c:928
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr ""
+
+#: catgets/gencat.c:530
+msgid "duplicated message identifier"
+msgstr ""
+
+#: catgets/gencat.c:503
+msgid "duplicated message number"
 msgstr ""
 
 #: sunrpc/svc_udp.c:344
@@ -1215,6 +1156,10 @@ msgstr ""
 msgid "illegal result type"
 msgstr ""
 
+#: catgets/gencat.c:340 gencat.c:417
+msgid "illegal set number"
+msgstr ""
+
 #: time/zic.c:777
 msgid "input line of unknown type"
 msgstr ""
@@ -1261,6 +1206,10 @@ msgstr ""
 
 #: time/zic.c:757
 msgid "line too long"
+msgstr ""
+
+#: catgets/gencat.c:598
+msgid "malformed line ignored"
 msgstr ""
 
 #: malloc/mcheck.c:168
@@ -1422,6 +1371,10 @@ msgstr ""
 msgid "svcudp_create: socket creation problem"
 msgstr ""
 
+#: catgets/gencat.c:369 gencat.c:505 gencat.c:532
+msgid "this is the first definition"
+msgstr ""
+
 #: time/zic.c:1083
 msgid "time before zero"
 msgstr ""
@@ -1459,11 +1412,25 @@ msgstr ""
 msgid "typed single year"
 msgstr ""
 
+#: catgets/gencat.c:466
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr ""
+
+#: catgets/gencat.c:445
+#, c-format
+msgid "unknown set `%s'"
+msgstr ""
+
 msgid "unknown signal"
 msgstr ""
 
 #: time/zic.c:714
 msgid "unruly zone"
+msgstr ""
+
+#: catgets/gencat.c:950
+msgid "unterminated message"
 msgstr ""
 
 #: sunrpc/rpc_scan.c:319
@@ -1489,6 +1456,10 @@ msgstr ""
 
 #: login/setutent_r.c:47
 msgid "while opening UTMP file"
+msgstr ""
+
+#: catgets/gencat.c:977
+msgid "while opening old catalog file"
 msgstr ""
 
 #: time/zic.c:1041

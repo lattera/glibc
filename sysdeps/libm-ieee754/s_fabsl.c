@@ -1,4 +1,8 @@
-/* @(#)s_isnan.c 5.1 93/09/24 */
+/* s_fabsl.c -- long double version of s_fabs.c.
+ * Conversion to long double by Ulrich Drepper,
+ * Cygnus Support, drepper@cygnus.com.
+ */
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -11,32 +15,26 @@
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_isnan.c,v 1.8 1995/05/10 20:47:36 jtc Exp $";
+static char rcsid[] = "$NetBSD: $";
 #endif
 
 /*
- * isnan(x) returns 1 is x is nan, else 0;
- * no branching!
+ * fabsl(x) returns the absolute value of x.
  */
 
 #include "math.h"
 #include "math_private.h"
 
 #ifdef __STDC__
-	int __isnan(double x)
+	long double __fabsl(long double x)
 #else
-	int __isnan(x)
-	double x;
+	long double __fabsl(x)
+	long double x;
 #endif
 {
-	int32_t hx,lx;
-	EXTRACT_WORDS(hx,lx,x);
-	hx &= 0x7fffffff;
-	hx |= (u_int32_t)(lx|(-lx))>>31;
-	hx = 0x7ff00000 - hx;
-	return (int)((u_int32_t)(hx))>>31;
+	u_int32_t exp;
+	GET_LDOUBLE_EXP(exp,x);
+	SET_LDOUBLE_EXP(x,exp&0x7fff);
+        return x;
 }
-weak_alias (__isnan, isnan)
-#ifdef NO_LONG_DOUBLE
-weak_alias (__isnan, isnanl)
-#endif
+weak_alias (__fabsl, fabsl)

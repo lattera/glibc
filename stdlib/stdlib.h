@@ -107,6 +107,16 @@ extern unsigned long long int strtouq __P ((__const char *__nptr,
 					    char **__endptr, int __base));
 #endif /* GCC and use BSD.  */
 
+#if defined (__GNUC__) && defined (__USE_MISC)
+/* Convert a string to a quadword integer.  */
+extern long long int strtoll __P ((__const char *__nptr, char **__endptr,
+				   int __base));
+/* Convert a string to an unsigned quadword integer.  */
+extern unsigned long long int strtoull __P ((__const char *__nptr,
+					     char **__endptr, int __base));
+#endif /* GCC and use MISC.  */
+
+
 
 /* The internal entry points for `strtoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */
@@ -157,6 +167,15 @@ extern __inline long long int strtoq (__const char *__nptr, char **__endptr,
 { return __strtoq_internal (__nptr, __endptr, __base, 0); }
 extern __inline unsigned long long int strtouq (__const char *__nptr,
 						char **__endptr, int __base)
+{ return __strtouq_internal (__nptr, __endptr, __base, 0); }
+#endif
+
+#ifdef __USE_MISC
+extern __inline long long int strtoll (__const char *__nptr, char **__endptr,
+				       int __base)
+{ return __strtoq_internal (__nptr, __endptr, __base, 0); }
+extern __inline unsigned long long int strtoull (__const char *__nptr,
+						 char **__endptr, int __base)
 { return __strtouq_internal (__nptr, __endptr, __base, 0); }
 #endif
 

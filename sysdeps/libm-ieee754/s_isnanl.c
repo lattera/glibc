@@ -1,4 +1,8 @@
-/* @(#)s_isnan.c 5.1 93/09/24 */
+/* s_isnanl.c -- long double version of s_isnan.c.
+ * Conversion to long double by Ulrich Drepper,
+ * Cygnus Support, drepper@cygnus.com.
+ */
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -11,11 +15,11 @@
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_isnan.c,v 1.8 1995/05/10 20:47:36 jtc Exp $";
+static char rcsid[] = "$NetBSD: $";
 #endif
 
 /*
- * isnan(x) returns 1 is x is nan, else 0;
+ * isnanl(x) returns 1 is x is nan, else 0;
  * no branching!
  */
 
@@ -23,20 +27,18 @@ static char rcsid[] = "$NetBSD: s_isnan.c,v 1.8 1995/05/10 20:47:36 jtc Exp $";
 #include "math_private.h"
 
 #ifdef __STDC__
-	int __isnan(double x)
+	int __isnanl(long double x)
 #else
-	int __isnan(x)
-	double x;
+	int __isnanl(x)
+	long double x;
 #endif
 {
-	int32_t hx,lx;
-	EXTRACT_WORDS(hx,lx,x);
-	hx &= 0x7fffffff;
-	hx |= (u_int32_t)(lx|(-lx))>>31;
-	hx = 0x7ff00000 - hx;
-	return (int)((u_int32_t)(hx))>>31;
+	int32_t se,hx,lx;
+	GET_LDOUBLE_WORDS(se,hx,lx,x);
+	se = (se & 0x7fff) << 1;
+	hx |= lx;
+	se |= (u_int32_t)(hx|(-hx))>>31;
+	se = 0xfffe - se;
+	return (int)((u_int32_t)(se))>>16;
 }
-weak_alias (__isnan, isnan)
-#ifdef NO_LONG_DOUBLE
-weak_alias (__isnan, isnanl)
-#endif
+weak_alias (__isnanl, isnanl)

@@ -1,15 +1,15 @@
-# GNU libc message catalog of translations
-# Copyright (C) 1996 Free Software Foundation, Inc.
-# Automatically generated; contact <bug-glibc@prep.ai.mit.edu>
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: libc VERSION\n"
-"PO-Revision-Date: DATE\n"
-"Last-Translator: GNU libc maintainers <bug-glibc@prep.ai.mit.edu>\n"
+"POT-Creation-Date: DATE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
-"Content-Transfer-Encoding: 8-bit\n"
-
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"

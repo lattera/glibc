@@ -413,51 +413,64 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   cp = strcpy(one, "first, second, third");
   equal(strsep(&cp, ", "), "first", 1);	/* Basic test. */
   equal(one, "first", 2);
-  equal(strsep(&cp, ", "), "second", 3);
-  equal(strsep(&cp, ", "), "third", 4);
-  check(strsep(&cp, ", ") == NULL, 5);
+  equal(strsep(&cp, ", "), "", 3);
+  equal(strsep(&cp, ", "), "second", 4);
+  equal(strsep(&cp, ", "), "", 5);
+  equal(strsep(&cp, ", "), "third", 6);
+  check(strsep(&cp, ", ") == NULL, 7);
   cp = strcpy(one, ", first, ");
-  equal(strsep(&cp, ", "), "", 6);	/* null token. */
-  equal(strsep(&cp, ", "), "", 7);
+  equal(strsep(&cp, ", "), "", 8);
+  equal(strsep(&cp, ", "), "", 9);
+  equal(strsep(&cp, ", "), "first", 10);	/* Extra delims, 1 tok. */
+  equal(strsep(&cp, ", "), "", 11);
+  check(strsep(&cp, ", ") == NULL, 12);
   cp = strcpy(one, "1a, 1b; 2a, 2b");
-  equal(strsep(&cp, ", "), "1a", 8);	/* Changing delim lists. */
-  equal(strsep(&cp, "; "), "1b", 9);
-  equal(strsep(&cp, ", "), "2a", 10);
+  equal(strsep(&cp, ", "), "1a", 13);	/* Changing delim lists. */
+  equal(strsep(&cp, ", "), "", 14);
+  equal(strsep(&cp, "; "), "1b", 15);
+  equal(strsep(&cp, ", "), "", 16);
+  equal(strsep(&cp, ", "), "2a", 17);
   cp = strcpy(two, "x-y");
-  equal(strsep(&cp, "-"), "x", 11);	/* New string before done. */
-  equal(strsep(&cp, "-"), "y", 12);
-  check(strsep(&cp, "-") == NULL, 13);
+  equal(strsep(&cp, "-"), "x", 18);	/* New string before done. */
+  equal(strsep(&cp, "-"), "y", 19);
+  check(strsep(&cp, "-") == NULL, 20);
   cp = strcpy(one, "a,b, c,, ,d");
-  equal(strsep(&cp, ", "), "a", 14);	/* Different separators. */
-  equal(strsep(&cp, ", "), "b", 15);
-  equal(strsep(&cp, " ,"), "c", 16);	/* Permute list too. */
-  equal(strsep(&cp, " ,"), "d", 17);
-  check(strsep(&cp, ", ") == NULL, 18);
-  check(strsep(&cp, ", ") == NULL, 19);	/* Persistence. */
+  equal(strsep(&cp, ", "), "a", 21);	/* Different separators. */
+  equal(strsep(&cp, ", "), "b", 22);
+  equal(strsep(&cp, " ,"), "", 23);
+  equal(strsep(&cp, " ,"), "c", 24);	/* Permute list too. */
+  equal(strsep(&cp, " ,"), "", 25);
+  equal(strsep(&cp, " ,"), "", 26);
+  equal(strsep(&cp, " ,"), "", 27);
+  equal(strsep(&cp, " ,"), "d", 28);
+  check(strsep(&cp, ", ") == NULL, 29);
+  check(strsep(&cp, ", ") == NULL, 30);	/* Persistence. */
   cp = strcpy(one, ", ");
-  check(strsep(&cp, ", ") == one, 20);	/* Null token. */
+  equal(strsep(&cp, ", "), "", 31);
+  equal(strsep(&cp, ", "), "", 32);
+  check(strsep(&cp, ", ") == NULL, 33);	/* No tokens. */
   cp = strcpy(one, "");
-  check(strsep(&cp, ", ") == NULL, 21);	/* Empty string. */
+  check(strsep(&cp, ", ") == NULL, 34);	/* Empty string. */
   cp = strcpy(one, "abc");
-  equal(strsep(&cp, ", "), "abc", 22);	/* No delimiters. */
-  check(strsep(&cp, ", ") == NULL, 23);
+  equal(strsep(&cp, ", "), "abc", 35);	/* No delimiters. */
+  check(strsep(&cp, ", ") == NULL, 36);
   cp = strcpy(one, "abc");
-  equal(strsep(&cp, ""), "abc", 24);	/* Empty delimiter list. */
-  check(strsep(&cp, "") == NULL, 25);
+  equal(strsep(&cp, ""), "abc", 37);	/* Empty delimiter list. */
+  check(strsep(&cp, "") == NULL, 38);
   (void) strcpy(one, "abcdefgh");
   cp = strcpy(one, "a,b,c");
-  equal(strsep(&cp, ","), "a", 26);	/* Basics again... */
-  equal(strsep(&cp, ","), "b", 27);
-  equal(strsep(&cp, ","), "c", 28);
-  check(strsep(&cp, ",") == NULL, 29);
-  equal(one+6, "gh", 30);			/* Stomped past end? */
-  equal(one, "a", 31);			/* Stomped old tokens? */
-  equal(one+2, "b", 32);
-  equal(one+4, "c", 33);
+  equal(strsep(&cp, ","), "a", 39);	/* Basics again... */
+  equal(strsep(&cp, ","), "b", 40);
+  equal(strsep(&cp, ","), "c", 41);
+  check(strsep(&cp, ",") == NULL, 42);
+  equal(one+6, "gh", 43);		/* Stomped past end? */
+  equal(one, "a", 44);			/* Stomped old tokens? */
+  equal(one+2, "b", 45);
+  equal(one+4, "c", 46);
 
   /* memcmp.  */
   it = "memcmp";
-  check(memcmp("a", "a", 1) == 0, 1);	/* Identity. */
+  check(memcmp("a", "a", 1) == 0, 1);		/* Identity. */
   check(memcmp("abc", "abc", 3) == 0, 2);	/* Multicharacter. */
   check(memcmp("abcd", "abce", 4) < 0, 3);	/* Honestly unequal. */
   check(memcmp("abce", "abcd", 4) > 0, 4);

@@ -1,4 +1,93 @@
+Thu May 30 11:24:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* po/header.pot: Replace with exact boilerplate pinard dictates.
+
+	* sysdeps/i386/strtok.S (Lillegal_argument): Remove this code to set
+	errno and the check that jumped to it.
+
+	* sysdeps/mach/hurd/Makefile (errnos.d): Use $(sed-remove-objpfx).
+
+Thu May 30 03:21:57 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* FAQ: Document need of gperf program for developers.
+
+	* elf/elf.h: Fix typos in comments.
+
+	* libio/stdio.h [!__STRICT_ANSI__ || _POSIX_SOURCE]: Add
+        prototypes for `ctermid' and `cuserid'.
+
+	* locale/programs/locale.c: Switch to user selected locale
+	before printing variables.
+
+	* math/Makefile [$(long-double-fcts)==yes]: Define long-m-routines
+        and long-c-routines.  Only if the `long double' data type is
+        available we need to compile the functions.
+	(libm-routines): Add $(long-m-routines).
+	(routines): Remove isinfl, isnanl.  Use new file s_isinfl and
+	s_isnanl instead if `long double' is available.
+
+	* math/math.h: Include <mathcalls.h> again to define `long double'
+        functions.
+
+	* math/math_private.h: Define data types, prototypes and access
+        macros for `long double'.
+
+	* stdlib/stdlib.h: Add prototypes for `strtoll' and `strtoull'.
+	[GCC2 && OPTIMIZE]: Define strto{,u}ll as inline function which
+	calls __strto{,u}q_internal.
+
+	* stdlib/strfmon.c: Replace PTR by `void *'.
+
+	* stdlib/strtoq.c: Define strtoll as weak alias.
+	* stdlib/strtouq.c: Define strtoull as weak alias.
+
+	* string/tester.c: Correct `strsep' test.
+
+	* sysdeps/generic/strsep.c: Make compatible with BSD version.
+        Trailing characters of skip set are not skipped.  In this case
+        empty tokens are returned.
+
+	* sysdeps/i386/isinfl.c, sysdeps/i386/isnanl.c,
+        sysdeps/ieee754/isinf.c, sysdeps/ieee754/isinfl.c,
+        sysdeps/ieee754/isnan.c, sysdeps/ieee754/isnanl.c: Removed.  We
+        now use the versions part of libm.
+
+	* sysdeps/i386/strsep.S: Removed.  Generic C version is of
+	similar speed.
+	* sysdeps/i386/strtok.S: Remove support for `strsep'.
+
+	* sysdeps/libm-i387/e_acosl.S, sysdeps/libm-i387/s_ceill.S,
+        sysdeps/libm-i387/s_copysignl.S, sysdeps/libm-i387/s_finitel.S,
+        sysdeps/libm-i387/s_floorl.S, sysdeps/libm-i387/s_isinfl.c,
+        sysdeps/libm-i387/s_isnanl.c, sysdeps/libm-i387/s_nextafterl.c,
+        sysdeps/libm-i387/s_rintl.S, sysdeps/libm-i387/s_significandl.S:
+        New i387 specific math functions implementing `long double'
+        versions.
+
+	* sysdeps/libm-ieee754/s_ceill.c,
+        sysdeps/libm-ieee754/s_copysignl.c,
+        sysdeps/libm-ieee754/s_fabsl.c, sysdeps/libm-ieee754/s_finitel.c,
+        sysdeps/libm-ieee754/s_floorl.c, sysdeps/libm-ieee754/s_isinfl.c,
+        sysdeps/libm-ieee754/s_isnanl.c,
+        sysdeps/libm-ieee754/s_nextafterl.c,
+        sysdeps/libm-ieee754/s_rintl.c, sysdeps/libm-ieee754/s_scalbnl.c,
+        sysdeps/libm-ieee754/s_significandl.c: New generic `long double'
+        versions of libm functions.
+
+	* sysdeps/libm-i387/e_exp.S: Add a few comments to explain the
+        Intel FPU nonsense.
+
+	* sysdeps/libm-i387/s_ceil.S, sysdeps/libm-i387/s_ceilf.S,
+        sysdeps/libm-i387/s_floor.S, sysdeps/libm-i387/s_floorf.S: Correct
+        handling of local variables.  The old version created a stack
+        frame but stored the values outside.
+
+	* sysdeps/libm-ieee754/s_isinf.c, sysdeps/libm-ieee754/s_isnan.c
+        [!NO_LONG_DOUBLE]: Define alias with `long double' versions name.
+
 Wed May 29 12:53:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* login/pututline_r.c: Include sys/stat.h.  Fix typos.
 
 	* version.h (VERSION): Set to 1.90.
 
@@ -43,7 +132,7 @@ Tue May 28 04:38:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* locale/programs/ld-ctype.c: Determine value of mb_cur_max
         according to current character set and write it out with the rest.
 	* stdlib/stdlib.h (MB_CUR_MAX): Not constant anymore.  Get value
-        according to currently used locale for catefory LC_CTYPE by
+        according to currently used locale for category LC_CTYPE by
         calling the function __ctype_get_mb_cur_max.
 
 Tue May 28 03:27:46 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -288,7 +377,7 @@ Thu May 23 23:09:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* resolv/inet_ntop.c: Correct compatibility problems (sprintf).
 	* resolv/inet_pton.c: Remove fourth argument.
 	* resolv/resolv.h: Remove prototypes for inet_nsap_addr and
-	inet_nsap_ntoa.  Now on <arpa/inet.h>.
+	inet_nsap_ntoa.  Now in <arpa/inet.h>.
 
 	* stdlib/gmp-impl.h: Add prototypes for internal functions.
 
@@ -405,7 +494,7 @@ Thu May 23 00:01:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Add prototypes for local functions to prevent warnings.
 
 	* libio/iopopen.c: Change prototypes for _IO_fork, _IO_pipe, and
-        _IO_DUP2 to contain complete parameter list.
+        _IO_dup2 to contain complete parameter list.
 
 	* libio/libio.h: Add definition of struct _IO_cookie_file.
 

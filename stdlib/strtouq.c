@@ -1,5 +1,5 @@
 /* strtouq -- Function to parse an `unsigned long long int' from text.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,5 @@ Cambridge, MA 02139, USA.  */
 #define	QUAD	1
 
 #include <strtoul.c>
+
+weak_alias (strtouq, strotull)

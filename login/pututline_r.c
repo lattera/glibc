@@ -24,13 +24,14 @@ Boston, MA 02111-1307, USA.  */
 #include <unistd.h>
 #include <utmp.h>
 #include <sys/file.h>
+#include <sys/stat.h>
 
 
 /* XXX An alternative solution would be to call a SUID root program
    which write the new value.  */
 
 int
-pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
+pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
 {
   struct stat st;
   int result = 0;
@@ -59,17 +60,16 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
 
 #if _HAVE_UT_TYPE - 0
   /* Seek position to write.  */
-  if (utmp_data->ubuf.ut_type != utmp_ptr->ut_type)
+  if (utmp_data->ubuf.ut_type != id->ut_type)
     {
       /* We must not overwrite the data in UTMP_DATA.  */
       struct utmp_data *data_tmp = alloca (sizeof (utmp_data));
       struct utmp *dummy;
-      off_t new_pos;
 
       *data_tmp = *utmp_data;
       utmp_data = data_tmp;
 
-      if (getutid_r (utmp_ptr, &dummy, utmp_data) < 0)
+      if (getutid_r (id, &dummy, utmp_data) < 0)
 	{
 	  if (errno != ESRCH)
 	    /* Some error occured.  If no entry was found, the position
@@ -78,6 +78,7 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
 
 	  /* Set position pointer to position after adding of the record.  */
 	  utmp_data->loc_utmp += sizeof (struct utmp);
+	}
     }
 #endif
 
@@ -102,7 +103,7 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
     }
 
   /* Write the new data.  */
-  if (write (utmp_data->ut_fd, utmp_ptr, sizeof (struct utmp))
+  if (write (utmp_data->ut_fd, id, sizeof (struct utmp))
       != sizeof (struct utmp))
     {
       /* If we appended a new record this is only partially written.
