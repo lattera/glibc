@@ -6,6 +6,7 @@
 	($(common-objpfx)libc.so): Depend on it.
 	(lib%.so rule): Likewise.
 	(build-module-helper-objlist): Remove %.lds.
+	(LDSEDCMD-c.so): Variable removed.
 	* iconvdata/extra-module.mk ($(objpfx)$(mod).so):
 	Depend on $(common-objpfx)shlib.lds.
 	* dlfcn/Makefile ($(test-modules)): Likewise.
