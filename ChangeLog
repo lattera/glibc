@@ -1,3 +1,9 @@
+2002-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/bug-rewind.c: Use test skeleton.  Use create_temp_file for
+	file creation.
+	* test-skeleton.c (create_temp_file): New function.
+
 2002-07-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_load_address): Use

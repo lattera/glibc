@@ -5,24 +5,35 @@
 #define	FAILED  3
 
 
-int
-main (void)
+#define TEST_FUNCTION do_test ()
+static int do_test (void);
+#include "../test-skeleton.c"
+
+
+static int
+do_test (void)
 {
   FILE *fptr;
   char arg1;
   char arg2;
-  int ret, ret1, ret2, result, num;
+  int ret1, ret2, result, num;
+  int fd;
+
+  fd = create_temp_file ("wrewind.", NULL);
+  if (fd == -1)
+    return 3;
 
   ret1 = 0;
   ret2 = 0;
 
-  if ((fptr = fopen ("./wrewind.dat", "w+")) == NULL)
+  fptr = fdopen (fd, "w+");
+  if (fptr == NULL)
     {
       printf ("Unable to open file.\n");
       return 1;
     }
 
-  if ((ret = fwprintf (fptr, L"cderf")) <= 0)
+  if (fwprintf (fptr, L"cderf") <= 0)
     {
       printf ("Unable to write to file with fwprintf().\n");
       fclose (fptr);
