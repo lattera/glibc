@@ -187,19 +187,20 @@ inet_aton(cp, addr)
 		break;
 
 	case 2:				/* a.b -- 8.24 bits */
-		if (val > 0xffffff)
+		if (parts[0] > 0xff || val > 0xffffff)
 			goto ret_0;
 		val |= parts[0] << 24;
 		break;
 
 	case 3:				/* a.b.c -- 8.8.16 bits */
-		if (val > 0xffff)
+		if (parts[0] > 0xff || parts[1] > 0xff || val > 0xffff)
 			goto ret_0;
 		val |= (parts[0] << 24) | (parts[1] << 16);
 		break;
 
 	case 4:				/* a.b.c.d -- 8.8.8.8 bits */
-		if (val > 0xff)
+		if (parts[0] > 0xff || parts[1] > 0xff || parts[2] > 0xff
+		    || val > 0xff)
 			goto ret_0;
 		val |= (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8);
 		break;
