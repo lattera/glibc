@@ -1,7 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
-   Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
-     On-Line Applications Research Corporation.
- 
+/* Copyright (C) 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _DIRSTREAM_H
+#ifndef	_DIRSTREAM_H
 
-#define _DIRSTREAM_H    1
+#define	_DIRSTREAM_H	1
 
 #define __need_size_t
 #include <stddef.h>
@@ -29,19 +26,18 @@ Cambridge, MA 02139, USA.  */
 /* Directory stream type.
 
    The miscellaneous Unix `readdir' implementations read directory data
-   into a buffer and fill in a `struct dirent' copy in the `DIR' object. 
-*/
+   into a buffer and fill in a `struct dirent' copy in the `DIR' object. */
 
 typedef struct
   {
-    int __fd;                   /* File descriptor.  */
+    int __fd;			/* File descriptor.  */
 
-    char *__data;               /* Directory block.  */
-    size_t __allocation;        /* Space allocated for the block.  */
-    size_t __offset;            /* Current offset into the block.  */
-    size_t __size;              /* Total valid data in the block.  */
+    char *__data;		/* Directory block.  */
+    size_t __allocation;	/* Space allocated for the block.  */
+    size_t __offset;		/* Current offset into the block.  */
+    size_t __size;		/* Total valid data in the block.  */
 
-    struct dirent __entry;      /* Returned by `readdir'.  */
+    struct dirent __entry;	/* Returned by `readdir'.  */
   } DIR;
 
-#endif  /* dirstream.h */
+#endif	/* dirstream.h */
