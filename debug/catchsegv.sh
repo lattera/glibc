@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2001, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -19,7 +19,7 @@
 # 02111-1307 USA.
 
 if test $# -eq 0; then
-  echo "$0: missing programm name" >&2
+  echo "$0: missing program name" >&2
   echo "Try \`$0 --help' for more information." >&2
   exit 1
 fi
@@ -38,7 +38,7 @@ if test $# -eq 0; then
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv (GNU libc) @VERSION@'
-      echo 'Copyright (C) 2002 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2003 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'
