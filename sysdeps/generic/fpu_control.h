@@ -20,18 +20,18 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
-#define _FPU_RESERVED ???	/* These bits are reserved are not changed.  */
+#define _FPU_RESERVED 0xffffffff    /* These bits are reserved and not changed.  */
 
 /* The fdlibm code requires no interrupts for exceptions.  Don't
    change the rounding mode, it would break long double I/O!  */
 #define _FPU_DEFAULT  0x00000000 /* Default value.  */
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__?I__)));
+typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw) __asm__ ("fetch fpu control word into %0" : "=g" (cw))
-#define _FPU_SETCW(cw) __asm__ ("set fpu control word to %0" : : "g" (cw))
+#define _FPU_GETCW(cw) 0
+#define _FPU_SETCW(cw) do { } while (0)
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

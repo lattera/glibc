@@ -228,6 +228,10 @@ fnmatch (pattern, string, flags)
 		(n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	      return FNM_NOMATCH;
 
+	    if (*n == '/' && (flags & FNM_FILE_NAME))
+	      /* `/' cannot be matched.  */
+	      return FNM_NOMATCH;
+
 	    not = (*p == '!' || (posixly_correct < 0 && *p == '^'));
 	    if (not)
 	      ++p;
@@ -246,9 +250,6 @@ fnmatch (pattern, string, flags)
 		    if (c == fn)
 		      goto matched;
 		  }
-		else if ((flags & FNM_FILE_NAME) && c == '/')
-		  /* [/] can never match.  */
-		  return FNM_NOMATCH;
 		else if (c == '[' && *p == ':')
 		  {
 		    /* Leave room for the null.  */

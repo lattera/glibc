@@ -398,35 +398,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
-
-#if 0
-#define _HEX(i) for (j=28; j>=0; j-=4) b[7-j/4]="0123456789abcdef"[((int)i>>j)&15];
-{
-char b[10];
-int j;
-_HEX(map->l_addr);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-_HEX(sym->st_size);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-_HEX(&sym->st_value);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-_HEX(sym->st_value);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-_HEX(sym);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-_HEX(reloc_addr);
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #9; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-b[0]=' '; b[1]='\n';
-__asm__ (" mov r0, #2; mov r1, %0; mov r2, #2; swi 0x00900004; "
-	: : "r"(b) : "r0", "r1", "r2" );
-}
-#endif
 	  *reloc_addr = value;
 	  break;
 	case R_ARM_ABS32:
@@ -451,7 +422,12 @@ __asm__ (" mov r0, #2; mov r1, %0; mov r2, #2; swi 0x00900004; "
 	    break;
 	  }
 	case R_ARM_PC24:
-	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
+	  {
+	    long int disp = (value - (Elf32_Addr) reloc_addr) / 4;
+	    if ((disp >= (1<<24)) || (disp <= -(1<<24)))
+	      assert (! "address out of range for PC24 reloc");
+	    *reloc_addr += disp;
+	  }
 	  break;
 	default:
 	  assert (! "unexpected dynamic reloc type");

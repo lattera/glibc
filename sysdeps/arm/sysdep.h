@@ -73,10 +73,10 @@
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
-/* The mcount code relies on a normal frame pointer being on the stack
-   to locate our caller, so push one just for its benefit.  */
-#define CALL_MCOUNT \
-#error Profiling not supported.
+#define CALL_MCOUNT			\
+	str	lr,[sp, #-4]!		\
+	bl	PLTJMP(mcount)		\
+	ldr	lr, [sp], #4
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif

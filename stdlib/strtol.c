@@ -128,27 +128,27 @@ extern int errno;
    operating on `long long int's.  */
 #ifdef QUAD
 # define LONG long long
-# undef LONG_MIN
-# define LONG_MIN LONG_LONG_MIN
-# undef LONG_MAX
-# define LONG_MAX LONG_LONG_MAX
-# undef ULONG_MAX
-# define ULONG_MAX ULONG_LONG_MAX
+# define STRTOL_LONG_MIN LONG_LONG_MIN
+# define STRTOL_LONG_MAX LONG_LONG_MAX
+# define STRTOL_ULONG_MAX ULONG_LONG_MAX
 # if __GNUC__ == 2 && __GNUC_MINOR__ < 7
    /* Work around gcc bug with using this constant.  */
    static const unsigned long long int maxquad = ULONG_LONG_MAX;
-#  undef ULONG_MAX
-#  define ULONG_MAX maxquad
+#  undef STRTOL_ULONG_MAX
+#  define STRTOL_ULONG_MAX maxquad
 # endif
 #else
 # define LONG long
 
-#ifndef ULONG_MAX
-# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
-#endif
-#ifndef LONG_MAX
-# define LONG_MAX ((long int) (ULONG_MAX >> 1))
-#endif
+# ifndef ULONG_MAX
+#  define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# endif
+# ifndef LONG_MAX
+#  define LONG_MAX ((long int) (ULONG_MAX >> 1))
+# endif
+# define STRTOL_LONG_MIN LONG_MIN
+# define STRTOL_LONG_MAX ULONG_MAX
+# define STRTOL_ULONG_MAX ULONG_MAX
 #endif
 
 
@@ -339,8 +339,8 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 #endif
     end = NULL;
 
-  cutoff = ULONG_MAX / (unsigned LONG int) base;
-  cutlim = ULONG_MAX % (unsigned LONG int) base;
+  cutoff = STRTOL_ULONG_MAX / (unsigned LONG int) base;
+  cutlim = STRTOL_ULONG_MAX % (unsigned LONG int) base;
 
   overflow = 0;
   i = 0;
@@ -380,8 +380,8 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
      `unsigned LONG int', but outside the range of `LONG int'.  */
   if (overflow == 0
       && i > (negative
-	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
-	      : (unsigned LONG int) LONG_MAX))
+	      ? -((unsigned LONG int) (STRTOL_LONG_MIN + 1)) + 1
+	      : (unsigned LONG int) STRTOL_LONG_MAX))
     overflow = 1;
 #endif
 
@@ -389,9 +389,9 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
     {
       __set_errno (ERANGE);
 #if UNSIGNED
-      return ULONG_MAX;
+      return STRTOL_ULONG_MAX;
 #else
-      return negative ? LONG_MIN : LONG_MAX;
+      return negative ? STRTOL_LONG_MIN : STRTOL_LONG_MAX;
 #endif
     }
 

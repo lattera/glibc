@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,36 +16,93 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <getopt.h>
 #include <stdio.h>
-#include <glob.h>
 #include <unistd.h>
+#include <glob.h>
 
 int
 main (int argc, char *argv[])
 {
-  int i;
-  int glob_flags = GLOB_NOSORT;
-  glob_t filenames;
+  int i, j;
+  int glob_flags = 0;
+  glob_t g;
+  int quotes = 1;
 
-  if (argc != 3)
-    exit (1);
-  if (chdir (argv[1]))
-    exit (1);
-  i = glob (argv[2], glob_flags, NULL, &filenames);
+  while ((i = getopt (argc, argv, "bcdegmopqst")) != -1)
+    switch(i)
+      {
+      case 'b':
+	glob_flags |= GLOB_BRACE;
+	break;
+      case 'c':
+	glob_flags |= GLOB_NOCHECK;
+	break;
+      case 'd':
+	glob_flags |= GLOB_ONLYDIR;
+	break;
+      case 'e':
+	glob_flags |= GLOB_NOESCAPE;
+	break;
+      case 'g':
+	glob_flags |= GLOB_NOMAGIC;
+	break;
+      case 'm':
+	glob_flags |= GLOB_MARK;
+	break;
+      case 'o':
+	glob_flags |= GLOB_DOOFFS;
+	g.gl_offs = 1;
+	break;
+      case 'p':
+	glob_flags |= GLOB_PERIOD;
+	break;
+      case 'q':
+	quotes = 0;
+	break;
+      case 's':
+	glob_flags |= GLOB_NOSORT;
+	break;
+      case 't':
+	glob_flags |= GLOB_TILDE;
+	break;
+      default:
+	exit (-1);
+      }
 
+  if (optind >= argc || chdir (argv[optind]))
+    exit(1);
+
+  j = optind + 1;
+  if (optind + 1 >= argc)
+    exit (1);
+
+  /* Do a glob on each remaining argument.  */
+  for (j = optind + 1; j < argc; j++) {
+    i = glob (argv[j], glob_flags, NULL, &g);
+    if (i != 0)
+      break;
+    glob_flags |= GLOB_APPEND;
+  }
+
+  /* Was there an error? */
   if (i == GLOB_NOSPACE)
     puts ("GLOB_NOSPACE");
-  else if (i == GLOB_ABEND)
-    puts ("GLOB_ABEND");
+  else if (i == GLOB_ABORTED)
+    puts ("GLOB_ABORTED");
   else if (i == GLOB_NOMATCH)
     puts ("GLOB_NOMATCH");
 
-  printf ("%sNULL\n", filenames.gl_pathv ? "not " : "");
+  /* If we set an offset, fill in the first field.  */
+  if (glob_flags & GLOB_DOOFFS)
+    g.gl_pathv[0] = (char *) "abc";
 
-  if (filenames.gl_pathv)
+  /* Print out the names.  Unless otherwise specified, qoute them.  */
+  if (g.gl_pathv)
     {
-      for (i = 0; i < filenames.gl_pathc; ++i)
-	printf ("`%s'\n", filenames.gl_pathv[i]);
+      for (i = 0; i < g.gl_pathc; ++i)
+        printf ("%s%s%s\n", quotes ? "`" : "", g.gl_pathv[i],
+		quotes ? "'" : "");
     }
   return 0;
 }

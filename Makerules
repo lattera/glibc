@@ -171,21 +171,21 @@ $(common-objpfx)dummy.d:
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
@@ -197,21 +197,21 @@ ifdef objpfx
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes-for-libc)
+object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif

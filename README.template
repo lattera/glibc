@@ -13,6 +13,7 @@ configurations:
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 		arm-*-none		ARM standalone systems
+		arm-*-linux		Linux-2.x on ARM
 		arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 

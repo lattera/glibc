@@ -160,8 +160,10 @@ static const char *const limits_syms[] =
   "_POSIX_THREAD_DESTRUCTOR_ITERATIONS", "_POSIX_THREAD_KEYS_MAX",
   "_POSIX_THREAD_THREADS_MAX", "_POSIX_TIMER_MAX", "_POSIX_TTY_NAME_MAX",
   "_POSIX_TZNAME_MAX", "_POSIX_THREAD_DESTRUCTOR_ITERATIONS",
-  "CHAR_BIT", "CHAR_MAX", "CHAR_MIN", "INT_MAX", "INT_MIN", "MB_LEN_MAX",
-  "NGROUPS_MAX", "PAGESIZE", "SCHAR_MIN", "SCHAR_MAX"
+  "CHAR_BIT", "CHAR_MAX", "CHAR_MIN", "INT_MAX", "INT_MIN", "LONG_MAX",
+  "LONG_MIN", "MB_LEN_MAX", "NGROUPS_MAX", "PAGESIZE", "SCHAR_MAX",
+  "SCHAR_MIN", "SHRT_MAX", "SHRT_MIN", "UCHAR_MAX", "UINT_MAX",
+  "ULONG_MAX", "USHRT_MAX"
 };
 static const char *const limits_maybe[] =
 {
@@ -333,10 +335,11 @@ static const char *const signal_maybe[] =
 /* <stdarg.h>.  */
 static const char *const stdarg_syms[] =
 {
-  "va_arg", "va_end", "va_list", "va_start"
+  "va_arg", "va_end", "va_start"
 };
 static const char *const stdarg_maybe[] =
 {
+  "va_list"
 };
 
 /* <stddef.h>.  */
@@ -351,9 +354,9 @@ static const char *const stddef_maybe[] =
 /* <stdio.h>.  */
 static const char *const stdio_syms[] =
 {
-  "BUFSIZ", "EOF", "FILENAME_MAX", "L_ctermid", "L_cuserid", "L_tmpnam",
-  "NULL", "SEEK_CUR", "SEEK_END", "SEEK_SET", "STREAM_MAX", "TMP_MAX",
-  "stderr", "stdin", "stdout", "_IOFBF", "_IOLBF", "_IONBF"
+  "BUFSIZ", "EOF", "FILENAME_MAX", "FOPEN_MAX", "L_ctermid", "L_cuserid",
+  "L_tmpnam", "NULL", "SEEK_CUR", "SEEK_END", "SEEK_SET", "STREAM_MAX",
+  "TMP_MAX", "stderr", "stdin", "stdout", "_IOFBF", "_IOLBF", "_IONBF"
 };
 static const char *const stdio_maybe[] =
 {

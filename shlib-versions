@@ -17,6 +17,7 @@ alpha.*-.*-linux.*	libm=6.1
 alpha.*-.*-.*		libm=6
 powerpc-.*-.*		libm=6
 mips-.*-.*		libm=6
+arm.*-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
@@ -36,6 +37,7 @@ i.86-.*-linux.*		ld=ld-linux.so.2
 sparc-.*-linux.*	ld=ld-linux.so.2
 sparc64-.*-linux.*	ld=ld-linux64.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
+arm.*-.*-linux.*	ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 

@@ -35,7 +35,9 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
+ifeq ($(versioning),yes)
 ld-map		= $(common-objpfx)libc.map
+endif
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \

@@ -1,3 +1,74 @@
+1998-07-27 17:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-parse.c (INT_FIELD): Use strtoul instead of
+	strtol.
+	(INT_FIELD_MAYBE_NULL): Likewise.
+
+	* posix/globtest.c: Rewrite for extended test suite.
+	* posix/globtest.sh: More tests.
+	Patch by Brian Wellington <bwelling@anomaly.munge.com>.
+
+	* stdlib/strtol.c: Don't redefine LONG_MAX, LONG_MIN, and ULONG_MAX.
+	Use new macro.
+
+	* sysdeps/generic/readv.c: Correct return type.
+	* sysdeps/generic/writev.c: Likewise.
+
+1998-07-24  Gordon Matzigkeit  <gord@fig.org>
+
+	* argp/argp-help.c (_GNU_SOURCE): Define, to suck in
+	program_invocation_name when compiling outside of glibc.
+
+1998-07-26  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/siglist.c: New file; ARM tools don't
+	like `@' in .type directives.
+
+	* sysdeps/libm-ieee754/e_expf.c (__ieee754_expf): Check whether
+	FE_TONEAREST exists for this platform before using it.
+	* sysdeps/libm-ieee754/e_exp.c (__ieee754_exp): Likewise.
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Delete redundant
+	debugging code.  Correct handling of PC24 relocs.
+
+	* elf/Makefile (ld-map): Only define if versioning is in use.
+
+	* sysdeps/arm/fpu_control.h: Move to ...
+	* sysdeps/arm/fpu/fpu_control.h: ... here.
+	* sysdeps/generic/fpu_control.h: Made usable as a dummy
+	implementation.
+
+	* sysdeps/unix/sysv/linux/arm/brk.c: New file.
+
+	* sysdeps/arm/machine-gmon.h: Improved profiling for ARM.
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Replace stub with real
+	implementation.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	Based on patch from Scott Bambrough and Pat Beirne.
+
+	* shlib-versions: Add appropriate definitions for ARM machines.
+
+	* README.template: Mention that Linux/ARM with ELF works now.
+
+1998-07-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules: Generate compilation rules for all object suffixes,
+	not only those currently selected, for sources in the current or
+	object directory.
+
+1998-07-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/fnmatch.c (fnmatch): Allow `/' in character class.  Don't
+	match `/' in filename by a character class if requested.
+	* posix/testfnm.c: Rewritten.
+	* posix/testfnm.args: Removed.
+
+1998-07-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/annexc.c (limits_syms): Add missing symbols.
+	(stdarg_syms): Move va_list to `maybe' list.
+	(stdio_syms): Add FOPEN_MAX.
+
 1998-07-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/bits/byteswap.h (__bswap_64): Change __v to __w to

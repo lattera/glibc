@@ -109,7 +109,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 # define INT_FIELD(variable, terminator_p, swallow, base, convert)	      \
   {									      \
     char *endp;								      \
-    variable = convert (strtol (line, &endp, base));			      \
+    variable = convert (strtoul (line, &endp, base));			      \
     if (endp == line)							      \
       return 0;								      \
     else if (terminator_p (*endp))					      \
@@ -127,7 +127,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
     if (*line == '\0')							      \
       /* We expect some more input, so don't allow the string to end here. */ \
       return 0;								      \
-    variable = convert (strtol (line, &endp, base));			      \
+    variable = convert (strtoul (line, &endp, base));			      \
     if (endp == line)							      \
       variable = default;						      \
     if (terminator_p (*endp))						      \

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* brk system call for Linux/ARM.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,23 +19,31 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/uio.h>
+#include <sysdep.h>
 
-/* Read data from file descriptor FD, and put the result in the
-   buffers described by VECTOR, which is a vector of COUNT `struct iovec's.
-   The buffers are filled in the order specified.
-   Operates just like `read' (see <unistd.h>) except that data are
-   put in VECTOR instead of a contiguous buffer.  */
-ssize_t
-__readv (fd, vector, count)
-     int fd;
-     const struct iovec *vector;
-     int count;
+/* This must be initialized data because commons can't have aliases.  */
+void *__curbrk = 0;
+
+int
+__brk (void *addr)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-weak_alias (__readv, readv)
+  void *newbrk;
 
-stub_warning (readv)
-#include <stub-tag.h>
+  asm ("mov a1, %1\n"	/* save the argment in r0 */
+       "swi %2\n"	/* do the system call */
+       "mov %0, a1;"	/* keep the return value */
+       : "=r"(newbrk) 
+       : "r"(addr), "i" (SYS_ify (brk))
+       : "a1");
+
+  __curbrk = newbrk;
+
+  if (newbrk < addr)
+    {
+      __set_errno (ENOMEM);
+      return -1;
+    }
+
+  return 0;
+}
+weak_alias (__brk, brk)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
-int
+ssize_t
 __writev (fd, vector, count)
      int fd;
      const struct iovec *vector;

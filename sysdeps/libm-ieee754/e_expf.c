@@ -87,7 +87,9 @@ __ieee754_expf (float x)
       fenv_t oldenv;
 
       feholdexcept (&oldenv);
+#ifdef FE_TONEAREST
       fesetround (FE_TONEAREST);
+#endif
 
       /* Calculate n.  */
       n = x * M_1_LN2 + THREEp22;
