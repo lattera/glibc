@@ -44,62 +44,62 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 
 int	rexecoptions;
+char	ahostbuf[NI_MAXHOST];
 
 int
-rexec(ahost, rport, name, pass, cmd, fd2p)
+rexec_af(ahost, rport, name, pass, cmd, fd2p, af)
 	char **ahost;
 	int rport;
 	const char *name, *pass, *cmd;
 	int *fd2p;
+	sa_family_t af;
 {
-	struct sockaddr_in sin, sin2, from;
-	struct hostent hostbuf, *hp;
+	struct sockaddr_storage sa2, from;
+	struct addrinfo hints, *res0;
 	const char *orig_name = name;
 	const char *orig_pass = pass;
-	size_t hstbuflen;
-	char *hsttmpbuf;
 	u_short port;
 	int s, timo = 1, s3;
 	char c;
 	int herr;
+	int gai, ok;
+	char servbuff[NI_MAXSERV];
 
-	hstbuflen = 1024;
-	hsttmpbuf = __alloca (hstbuflen);
-	while (__gethostbyname_r (*ahost, &hostbuf, hsttmpbuf, hstbuflen,
-				  &hp, &herr) != 0
-	       || hp == NULL)
-	  if (herr != NETDB_INTERNAL || errno != ERANGE)
-	    {
-	      __set_h_errno (herr);
-	      herror(*ahost);
-	      return -1;
-	    }
-	  else
-	    {
-	      /* Enlarge the buffer.  */
-	      hstbuflen *= 2;
-	      hsttmpbuf = __alloca (hstbuflen);
-	    }
+	snprintf(servbuff, sizeof(servbuff), "%d", rport);
+	servbuff[sizeof(servbuff) - 1] = '\0';
 
-	*ahost = hp->h_name;
-	ruserpass(hp->h_name, &name, &pass);
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = af;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_CANONNAME;
+	if (gai = getaddrinfo(*ahost, servbuff, &hints, &res0)){
+		/* XXX: set errno? */
+		return -1;
+	}
+
+	if (res0->ai_canonname){
+		strncpy(ahostbuf, res0->ai_canonname, sizeof(ahostbuf));
+		ahostbuf[sizeof(ahostbuf)-1] = '\0';
+		*ahost = ahostbuf;
+	}
+	else{
+		*ahost = NULL;
+	}
+	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
-	s = __socket(AF_INET, SOCK_STREAM, 0);
+	s = __socket(res0->ai_family, res0->ai_socktype, 0);
 	if (s < 0) {
 		perror("rexec: socket");
 		return (-1);
 	}
-	sin.sin_family = hp->h_addrtype;
-	sin.sin_port = rport;
-	bcopy(hp->h_addr, (caddr_t)&sin.sin_addr, hp->h_length);
-	if (__connect(s, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+	if (__connect(s, res0->ai_addr, res0->ai_addrlen) < 0) {
 		if (errno == ECONNREFUSED && timo <= 16) {
 			(void) __close(s);
 			__sleep(timo);
 			timo *= 2;
 			goto retry;
 		}
-		perror(hp->h_name);
+		perror(res0->ai_canonname);
 		return (-1);
 	}
 	if (fd2p == 0) {
@@ -107,22 +107,26 @@ retry:
 		port = 0;
 	} else {
 		char num[32];
-		int s2, sin2len;
+		int s2, sa2len;
 
-		s2 = __socket(AF_INET, SOCK_STREAM, 0);
+		s2 = __socket(res0->ai_family, res0->ai_socktype, 0);
 		if (s2 < 0) {
 			(void) __close(s);
 			return (-1);
 		}
 		listen(s2, 1);
-		sin2len = sizeof (sin2);
-		if (getsockname(s2, (struct sockaddr *)&sin2, &sin2len) < 0 ||
-		  sin2len != sizeof (sin2)) {
+		sa2len = sizeof (sa2);
+		if (getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0 ||
+		    sa2len != __libc_sa_len(sa2.__ss_family)) {
 			perror("getsockname");
 			(void) __close(s2);
 			goto bad;
 		}
-		port = ntohs((u_short)sin2.sin_port);
+		port = 0;
+		if (!getnameinfo((struct sockaddr *)&sa2, sa2len,
+				 NULL, 0, servbuff, sizeof(servbuff),
+				 NI_NUMERICSERV))
+			port = atoi(servbuff);
 		(void) sprintf(num, "%u", port);
 		(void) __write(s, num, strlen(num)+1);
 		{ int len = sizeof (from);
@@ -160,10 +164,22 @@ retry:
 		}
 		goto bad;
 	}
+	freeaddrinfo(res0);
 	return (s);
 bad:
 	if (port)
 		(void) __close(*fd2p);
 	(void) __close(s);
+	freeaddrinfo(res0);
 	return (-1);
+}
+
+int
+rexec(ahost, rport, name, pass, cmd, fd2p)
+	char **ahost;
+	int rport;
+	const char *name, *pass, *cmd;
+	int *fd2p;
+{
+	return rexec_af(ahost, rport, name, pass, cmd, fd2p, AF_INET);
 }

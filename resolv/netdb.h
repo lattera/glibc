@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -368,6 +368,14 @@ extern int rcmd (char **__restrict __ahost, unsigned short int __rport,
 		 __const char *__restrict __cmd, int *__restrict __fd2p)
      __THROW;
 
+/* This is the equivalent function where the protocol can be selected
+   and which therefore can be used for IPv6.  */
+extern int rcmd_af (char **__restrict __ahost, unsigned short int __rport,
+		    __const char *__restrict __locuser,
+		    __const char *__restrict __remuser,
+		    __const char *__restrict __cmd, int *__restrict __fd2p,
+		    sa_family_t __af) __THROW;
+
 /* Call `rexecd' at port RPORT on remote machine *AHOST to execute
    CMD.  The process runs at the remote machine using the ID of user
    NAME whose cleartext password is PASSWD.  In *FD2P the descriptor
@@ -379,15 +387,33 @@ extern int rexec (char **__restrict __ahost, int __rport,
 		  __const char *__restrict __cmd, int *__restrict __fd2p)
      __THROW;
 
+/* This is the equivalent function where the protocol can be selected
+   and which therefore can be used for IPv6.  */
+extern int rexec_af (char **__restrict __ahost, int __rport,
+		     __const char *__restrict __name,
+		     __const char *__restrict __pass,
+		     __const char *__restrict __cmd, int *__restrict __fd2p,
+		     sa_family_t __af) __THROW;
+
 /* Check whether user REMUSER on system RHOST is allowed to login as LOCUSER.
    If SUSER is not zero the user tries to become superuser.  Return 0 if
    it is possible.  */
 extern int ruserok (__const char *__rhost, int __suser,
 		    __const char *__remuser, __const char *__locuser) __THROW;
 
+/* This is the equivalent function where the protocol can be selected
+   and which therefore can be used for IPv6.  */
+extern int ruserok_af (__const char *__rhost, int __suser,
+		       __const char *__remuser, __const char *__locuser,
+		       sa_family_t __af) __THROW;
+
 /* Try to allocate reserved port, returning a descriptor for a socket opened
    at this port or -1 if unsuccessful.  The search for an available port
    will start at ALPORT and continues with lower numbers.  */
+extern int rresvport_af (int *__alport, sa_family_t __af) __THROW;
+
+/* This is the equivalent function where the protocol can be selected
+   and which therefore can be used for IPv6.  */
 extern int rresvport (int *__alport) __THROW;
 #endif
 
