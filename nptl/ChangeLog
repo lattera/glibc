@@ -21,6 +21,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/not-cancel.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/not-cancel.h: New file.
 
+
 	* sysdeps/unix/sysv/linux/x86_64/not-cancel.h: Fix a typo.
 
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
