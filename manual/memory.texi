@@ -892,7 +892,7 @@ uses whenever it is called.  You should define this function to look
 like @code{memalign}; that is, like:
 
 @smallexample
-void *@var{function} (size_t @var{size}, size_t @var{alignment}, const void *@var{caller})
+void *@var{function} (size_t @var{alignment}, size_t @var{size}, const void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
