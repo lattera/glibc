@@ -1,5 +1,8 @@
 2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/hstcache.c: Don't count in mapped IPv6 addresses in total
+	size anymore.
+
 	* locale/programs/ld-collate.c (collate_output): Also handle
 	IGNOREd characters in the simple way when generating the multibyte
 	table.

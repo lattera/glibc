@@ -157,9 +157,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       total += (sizeof (struct hostdata)
 		+ h_name_len
 		+ h_aliases_cnt * sizeof (size_t)
-		+ h_addr_list_cnt * (hst->h_length
-				     + (hst->h_length == NS_INADDRSZ
-					? NS_IN6ADDRSZ : 0)));
+		+ h_addr_list_cnt * hst->h_length);
 
       data = (struct hostdata *) malloc (total + req->key_len);
       if (data == NULL)
