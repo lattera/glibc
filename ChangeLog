@@ -1,3 +1,9 @@
+2000-03-01  Andreas Jaeger  <aj@suse.de>
+
+	* time/getdate.c (check_mday): Fix check for february.
+	Reported by ane@np.bs1.fc.nec.co.jp and Akira YOSHIYAMA
+	<yosshy@cts.ne.jp>, closes PR libc/1617 and PR libc/1619.
+
 2000-03-02  Andreas Jaeger  <aj@suse.de>
 
 	* posix/unistd.h: __THROW has to precede __attribute__, otherwise

@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -91,7 +91,7 @@ check_mday (int year, int mon, int mday)
 	return 1;
       break;
     case 1:
-      if (mday >= 1 && mday < (__isleap (year) ? 29 : 28))
+      if (mday >= 1 && mday <= (__isleap (year) ? 29 : 28))
 	return 1;
       break;
     }
