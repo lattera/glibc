@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,10 +29,7 @@
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 int
-__connect (fd, addrarg, len)
-     int fd;
-     __CONST_SOCKADDR_ARG addrarg;
-     size_t len;
+__connect (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 {
   error_t err;
   addr_port_t aport;

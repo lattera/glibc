@@ -1,5 +1,5 @@
 /* Return from signal handler in GNU C library for Hurd.  Alpha version.
-   Copyright (C) 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,6 @@
 #include <hurd/msg.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mach/machine/alpha_instruction.h>
 
 int
 __sigreturn (struct sigcontext *scp)
@@ -58,7 +57,7 @@ __sigreturn (struct sigcontext *scp)
 	 thread will examine us while we are blocked in the sig_post RPC.  */
       ss->intr_port = MACH_PORT_NULL;
       __spin_unlock (&ss->lock);
-      __msg_sig_post (_hurd_msgport, 0, __mach_task_self ());
+      __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
       /* If a pending signal was handled, sig_post never returned.  */
       __spin_lock (&ss->lock);
     }
@@ -200,9 +199,9 @@ __sigreturn (struct sigcontext *scp)
        the user stack and do the magical `rei' PAL call.  */
     asm volatile ("mov %0, $30\n"
 		  "call_pal %1"
-		  : : "r" (rei_frame), "i" (op_rei));
+		  : : "r" (rei_frame), "i" (63)); /* PAL_rti */
     /* Firewall.  */
-    asm volatile ("call_pal %0" : : "i" (op_halt));
+    asm volatile ("halt");
   }
 
   /* NOTREACHED */

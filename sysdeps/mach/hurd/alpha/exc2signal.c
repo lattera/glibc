@@ -1,5 +1,5 @@
 /* Translate Mach exception codes into signal numbers.  Alpha version.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,52 +25,51 @@
    into a signal number and signal subcode.  */
 
 void
-_hurd_exception2signal (int exception, int code, int subcode,
-			int *signo, long int *sigcode, int *error)
+_hurd_exception2signal (struct hurd_signal_detail *detail, int *signo)
 {
-  *error = 0;
+  detail->error = 0;
 
-  switch (exception)
+  switch (detail->exc)
     {
     default:
       *signo = SIGIOT;
-      *sigcode = exception;
+      detail->code = detail->exc;
       break;
 
     case EXC_BAD_ACCESS:
-      if (code == KERN_PROTECTION_FAILURE)
+      if (detail->exc_code == KERN_PROTECTION_FAILURE)
 	*signo = SIGSEGV;
       else
 	*signo = SIGBUS;
-      *sigcode = subcode;
-      *error = code;
+      detail->code = detail->exc_subcode;
+      detail->error = detail->exc_code;
       break;
 
     case EXC_BAD_INSTRUCTION:
       *signo = SIGILL;
-      *sigcode = code;
+      detail->code = detail->exc_code;
       break;
 
     case EXC_ARITHMETIC:
       *signo = SIGFPE;
-      *sigcode = code;
+      detail->code = detail->exc_code;
       break;
       break;
 
     case EXC_EMULATION:
       /* 3.0 doesn't give this one, why, I don't know.  */
       *signo = SIGEMT;
-      *sigcode = code;
+      detail->code = detail->exc_code;
       break;
 
     case EXC_SOFTWARE:
       *signo = SIGEMT;
-      *sigcode = code;
+      detail->code = detail->exc_code;
       break;
 
     case EXC_BREAKPOINT:
       *signo = SIGTRAP;
-      *sigcode = code;
+      detail->code = detail->exc_code;
       break;
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,94,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
     return error;
 
   return __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			     (int *) &ts, tssize);
+			     (natural_t *) &ts, tssize);
 }
 
 weak_alias (__mach_setup_thread, mach_setup_thread)

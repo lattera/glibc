@@ -1,3 +1,26 @@
+2002-04-06  Roland McGrath  <roland@frob.com>
+
+	* mach/setup-thread.c (__mach_setup_thread): int -> natural_t
+
+	* sysdeps/mach/hurd/dl-sysdep.c: Use ElfW(TYPE) in place of Elf32_TYPE.
+	(__mmap): Use MAP_FAILED instead of widening __hurd_fail value.
+
+	* sysdeps/mach/hurd/bind.c: Use prototype definition.
+	* sysdeps/mach/hurd/connect.c: Likewise.
+	* sysdeps/mach/hurd/getsockopt.c: Likewise.
+	* sysdeps/mach/hurd/setsockopt.c: Likewise.
+
+	* sysdeps/mach/hurd/alpha/sigreturn.c: Pass missing argument to
+	__msg_sig_post RPC.
+
+	* hurd/catch-exc.c: Use integer_t instead of int.
+	* hurd/hurdfault.c: Likewise.
+
+	* sysdeps/mach/hurd/alpha/exc2signal.c
+	(_hurd_exception2signal): Rewritten.
+	* sysdeps/mach/hurd/alpha/longjmp-ts.c
+	(_hurd_longjmp_thread_state): Rewritten.
+
 2002-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c: If NSS_attribute_hidden is defined use it with the

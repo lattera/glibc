@@ -104,10 +104,10 @@ static void fmh(void) {
 #endif
 
 
-Elf32_Addr
+ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
-		  void (*dl_main) (const Elf32_Phdr *phdr, Elf32_Word phent,
-				   Elf32_Addr *user_entry))
+		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phent,
+				   ElfW(Addr) *user_entry))
 {
   void go (int *argdata)
     {
@@ -186,8 +186,8 @@ unfmh();			/* XXX */
 
       /* Call elf/rtld.c's main program.  It will set everything
 	 up and leave us to transfer control to USER_ENTRY.  */
-      (*dl_main) ((const Elf32_Phdr *) _dl_hurd_data->phdr,
-		  _dl_hurd_data->phdrsz / sizeof (Elf32_Phdr),
+      (*dl_main) ((const ElfW(Phdr) *) _dl_hurd_data->phdr,
+		  _dl_hurd_data->phdrsz / sizeof (ElfW(Phdr)),
 		  &_dl_hurd_data->user_entry);
 
       /* The call above might screw a few things up.
@@ -481,7 +481,9 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   if ((flags & MAP_ANON) == 0)
     __mach_port_deallocate (__mach_task_self (), memobj_rd);
 
-  return err ? (__ptr_t) __hurd_fail (err) : (__ptr_t) mapaddr;
+  if (err)
+    return __hurd_fail (err), MAP_FAILED;
+  return (__ptr_t) mapaddr;
 }
 
 int weak_function

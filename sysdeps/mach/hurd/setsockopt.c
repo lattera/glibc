@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992,94,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,11 @@
    Returns 0 on success, -1 for errors.  */
 /* XXX __setsockopt ? */
 int
-setsockopt (fd, level, optname, optval, optlen)
-     int fd;
-     int level;
-     int optname;
-     const void *optval;
-     size_t optlen;
+setsockopt (int fd,
+	    int level,
+	    int optname,
+	    const void *optval,
+	    socklen_t optlen)
 {
   error_t err = HURD_DPORT_USE (fd, __socket_setopt (port,
 						     level, optname,
