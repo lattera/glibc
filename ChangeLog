@@ -1,3 +1,9 @@
+1999-07-26  Jakub Jelinek  <jj@ultra.linux.jz>
+
+	* string/bits/string2.h (__strcpy_small): Avoid compile time warning.
+	(__stpcpy_small): Likewise.
+	Union has no __uc member but __c.
+
 1999-07-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Call pre-init funtions.

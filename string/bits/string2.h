@@ -497,7 +497,7 @@ __strcpy_small (char *__dest,
     __STRING2_COPY_ARR6 __sca6;
     __STRING2_COPY_ARR7 __sca7;
     __STRING2_COPY_ARR8 __sca8;
-  } *__u = __dest;
+  } *__u = (void *) __dest;
   switch (__srclen)
     {
     case 1:
@@ -660,11 +660,11 @@ __stpcpy_small (char *__dest,
     __STRING2_COPY_ARR6 __sca6;
     __STRING2_COPY_ARR7 __sca7;
     __STRING2_COPY_ARR8 __sca8;
-  } *__u = __dest;
+  } *__u = (void *) __dest;
   switch (__srclen)
     {
     case 1:
-      __u->__uc = '\0';
+      __u->__c = '\0';
       break;
     case 2:
       __extension__ __u->__sca2 = __src2;
