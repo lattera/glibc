@@ -1,5 +1,7 @@
 2002-10-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h (R_X86_64_GOTTPOFF): Renamed from r_x86_64_GOTTPOFF.
+
 	* elf/elf.h: Define ELF_NOTE_OS_FREEBSD and NT_TASKSTRUCT.
 
 2002-10-24  Jakub Jelinek  <jakub@redhat.com>

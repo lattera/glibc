@@ -2310,7 +2310,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_X86_64_TLSLD		20	/* 32 bit signed PC relative offset
 					   to two GOT entries for LD symbol */
 #define R_X86_64_DTPOFF32	21	/* Offset in TLS block */
-#define r_x86_64_GOTTPOFF	22	/* 32 bit signed PC relative offset
+#define R_X86_64_GOTTPOFF	22	/* 32 bit signed PC relative offset
 					   to GOT entry for IE symbol */
 #define R_X86_64_TPOFF32	23	/* Offset in initial TLS block */
 
