@@ -1,12 +1,12 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-accept		-	accept		i:ipi	__libc_accept	accept
+accept		-	accept		i:ipp	__libc_accept	accept
 bind		-	bind		i:ipi	bind
 connect		-	connect		i:ipi	__libc_connect	__connect connect
 gethostid	-	gethostid	i:	gethostid
 gethostname	-	gethostname	i:si	__gethostname	gethostname
-getpeername	-	getpeername	i:ipi	getpeername
-getsockname	-	getsockname	i:ipi	getsockname
+getpeername	-	getpeername	i:ipp	getpeername
+getsockname	-	getsockname	i:ipp	getsockname
 getsockopt	-	getsockopt	i:iiipp	getsockopt
 listen		-	listen		i:ii	listen
 recv		-	recv		i:ipii	__libc_recv	recv

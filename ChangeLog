@@ -1,3 +1,9 @@
+2000-06-22  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/syscalls.list (sys_mknod): Fix signatures.
+	* sysdeps/unix/inet/syscalls.list (accept, getpeername, getsockname):
+	Fix signatures.
+
 2000-06-23  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/ia64/memcpy.S: Disable branch predict instruction.
