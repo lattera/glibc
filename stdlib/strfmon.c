@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -296,7 +296,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	case 'i':		/* Use international currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
 	  if (right_prec == -1)
-	    if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == '\177')
+	    if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == CHAR_MAX)
 	      right_prec = 2;
 	    else
 	      right_prec = *_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS);
@@ -304,7 +304,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	case 'n':		/* Use national currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
 	  if (right_prec == -1)
-	    if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == '\177')
+	    if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == CHAR_MAX)
 	      right_prec = 2;
 	    else
 	      right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);

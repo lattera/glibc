@@ -45,9 +45,9 @@ wctype (const char *property)
 #if __BYTE_ORDER == __BIG_ENDIAN
   return result;
 #else
-#define XSWAPU32(w) \
-  ((((w) & 0xff00ff00) >> 8) | (((w) & 0xff00ff) << 8))
+# define SWAPU32(w) \
+  (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
 
-  return XSWAPU32 (result);
+  return SWAPU32 (result);
 #endif
 }

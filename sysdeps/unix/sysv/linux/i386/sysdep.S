@@ -25,12 +25,14 @@
    it somewhere else.
 
    ...and this place is here.  */
-	.data
+	.bss
 	.globl	errno
+	.type errno,@object
+	.size errno,4
 errno:
+	.space	4
 	.globl	_errno
-_errno:
-	.long	4
+_errno = errno
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines

@@ -85,7 +85,7 @@ END {
   print "  };";
   print "";
   print "const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];";
-  print "#ifndef PIC";
+  print "#if !defined HAVE_ELF || !defined PIC || !defined DO_VERSIONING";
   print "weak_alias (_sys_errlist, sys_errlist)";
   print "weak_alias (_sys_nerr, sys_nerr)";
   print "#endif";

@@ -454,17 +454,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (*f == '\0')
 	conv_error ();
 
-      /* We must take care for EINTR errors.  */
-      if (c == EOF && errno == EINTR)
-	input_error ();
-
       /* Find the conversion specifier.  */
       fc = *f++;
       if (skip_space || (fc != '[' && fc != 'c' && fc != 'C' && fc != 'n'))
 	{
 	  /* Eat whitespace.  */
 	  do
-	    if (inchar () == EOF && errno == EINTR)
+	    if (inchar () == EOF)
 	      input_error ();
 	  while (isspace (c));
 	  ungetc (c, s);
@@ -474,6 +470,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       switch (fc)
 	{
 	case '%':	/* Must match a literal '%'.  */
+	  if (c == EOF)
+	    input_error ();
 	  c = inchar ();
 	  if (c != fc)
 	    {
@@ -538,7 +536,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    conv_error ();
 		}
 
-	      c = inchar ();
+	      if (c != EOF)
+		c = inchar ();
 	      if (c == EOF)
 		input_error ();
 
@@ -553,10 +552,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      else
 		while (--width > 0 && inchar () != EOF);
-
-	      if (width > 0)
-		/* I.e., EOF was read.  */
-		--read_in;
 
 	      if (!(flags & SUPPRESS))
 		++done;
@@ -580,6 +575,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  conv_error ();
 	      }
 
+	    if (c == EOF)
+	      input_error ();
+
 	    do
 	      {
 #define NEXT_WIDE_CHAR(First)						      \
@@ -589,10 +587,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  if (First)						      \
 		    input_error ();					      \
 		  else							      \
-		    {							      \
-		      --read_in;					      \
-		      break;						      \
-		    }							      \
+		    break;						      \
 		val = c;						      \
 		if (val >= 0x80)					      \
 		  {							      \
@@ -643,15 +638,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 									      \
 		if (!(flags & SUPPRESS))				      \
 		  *wstr++ = val;					      \
-		first = 0
+		First = 0
 
 		NEXT_WIDE_CHAR (first);
 	      }
 	    while (--width > 0);
-
-	    if (width > 0)
-	      /* I.e., EOF was read.  */
-	      --read_in;
 
 	    if (!(flags & SUPPRESS))
 	      ++done;
@@ -684,7 +675,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  STRING_ARG (str, char);
 
-	  c = inchar ();
+	  if (c != EOF)
+	    c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -750,6 +742,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    int first = 1;
 	    STRING_ARG (wstr, wchar_t);
 
+	    if (c == EOF)
+	      input_error ();
+
 	    do
 	      {
 		size_t cnt = 0;
@@ -805,7 +800,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  number_signed = 1;
 
 	number:
-	  c = inchar ();
+	  if (c != EOF)
+	    c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -926,7 +922,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'G':
 	case 'a':
 	case 'A':
-	  c = inchar ();
+	  if (c != EOF)
+	    c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -1035,13 +1032,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (flags & LONG)
 	    {
 	      STRING_ARG (wstr, wchar_t);
-	      c = '\0';		/* This is to keep gcc quiet.  */
 	    }
 	  else
 	    {
 	      STRING_ARG (str, char);
 
-	      c = inchar ();
+	      if (c != EOF)
+		c = inchar ();
 	      if (c == EOF)
 		input_error ();
 	    }
@@ -1098,6 +1095,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      wint_t val;
 	      int first = 1;
+
+	      if (c == EOF)
+		input_error ();
 
 	      do
 		{
@@ -1168,7 +1168,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	}
     }
 
-  /* The last thing we saw int the format string was a white space.
+  /* The last thing we saw in the format string was a white space.
      Consume the last white spaces.  */
   if (skip_space)
     {

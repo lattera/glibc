@@ -25,17 +25,17 @@
   int name (wint_t wc, __locale_t locale)				      \
   { return __iswctype_l (wc, type, locale); }
 
-func (__iswalnum_l, _ISalnum)
-func (__iswalpha_l, _ISalpha)
-func (__iswcntrl_l, _IScntrl)
-func (__iswdigit_l, _ISdigit)
-func (__iswlower_l, _ISlower)
-func (__iswgraph_l, _ISgraph)
-func (__iswprint_l, _ISprint)
-func (__iswpunct_l, _ISpunct)
-func (__iswspace_l, _ISspace)
-func (__iswupper_l, _ISupper)
-func (__iswxdigit_l, _ISxdigit)
+func (__iswalnum_l, _ISwalnum)
+func (__iswalpha_l, _ISwalpha)
+func (__iswcntrl_l, _ISwcntrl)
+func (__iswdigit_l, _ISwdigit)
+func (__iswlower_l, _ISwlower)
+func (__iswgraph_l, _ISwgraph)
+func (__iswprint_l, _ISwprint)
+func (__iswpunct_l, _ISwpunct)
+func (__iswspace_l, _ISwspace)
+func (__iswupper_l, _ISwupper)
+func (__iswxdigit_l, _ISwxdigit)
 
 wint_t
 (__towlower_l) (wint_t wc, __locale_t locale)

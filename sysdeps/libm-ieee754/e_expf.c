@@ -1,104 +1,157 @@
-/* e_expf.c -- float version of e_exp.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Single-precision floating point e^x.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_expf.c,v 1.6 1996/04/08 15:43:43 phil Exp $";
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* How this works:
+
+   The input value, x, is written as
+
+   x = n * ln(2) + t/512 + delta[t] + x;
+
+   where:
+   - n is an integer, 127 >= n >= -150;
+   - t is an integer, 177 >= t >= -177
+   - delta is based on a table entry, delta[t] < 2^-28
+   - x is whatever is left, |x| < 2^-10
+
+   Then e^x is approximated as
+
+   e^x = 2^n ( e^(t/512 + delta[t])
+               + ( e^(t/512 + delta[t])
+                   * ( p(x + delta[t] + n * ln(2)) - delta ) ) )
+
+   where
+   - p(x) is a polynomial approximating e(x)-1;
+   - e^(t/512 + delta[t]) is obtained from a table.
+
+   The table used is the same one as for the double precision version;
+   since we have the table, we might as well use it.
+
+   It turns out to be faster to do calculations in double precision than
+   to perform an 'accurate table method' expf, because of the range reduction
+   overhead (compare exp2f).
+   */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
 #endif
+#include <float.h>
+#include <ieee754.h>
+#include <math.h>
+#include <fenv.h>
+#include <inttypes.h>
+#include <math_private.h>
 
-#include "math.h"
-#include "math_private.h"
+extern const float __exp_deltatable[178];
+extern const double __exp_atable[355] /* __attribute__((mode(DF))) */;
 
-static const float huge = 1.0e+30;
+static const volatile float TWOM100 = 7.88860905e-31;
+static const volatile float TWO127 = 1.7014118346e+38;
 
-#ifdef __STDC__
-static const float
-#else
-static float
-#endif
-one	= 1.0,
-halF[2]	= {0.5,-0.5,},
-twom100 = 7.8886090522e-31,      /* 2**-100=0x0d800000 */
-o_threshold=  8.8721679688e+01,  /* 0x42b17180 */
-u_threshold= -1.0397208405e+02,  /* 0xc2cff1b5 */
-ln2HI[2]   ={ 6.9313812256e-01,		/* 0x3f317180 */
-	     -6.9313812256e-01,},	/* 0xbf317180 */
-ln2LO[2]   ={ 9.0580006145e-06,  	/* 0x3717f7d1 */
-	     -9.0580006145e-06,},	/* 0xb717f7d1 */
-invln2 =  1.4426950216e+00, 		/* 0x3fb8aa3b */
-P1   =  1.6666667163e-01, /* 0x3e2aaaab */
-P2   = -2.7777778450e-03, /* 0xbb360b61 */
-P3   =  6.6137559770e-05, /* 0x388ab355 */
-P4   = -1.6533901999e-06, /* 0xb5ddea0e */
-P5   =  4.1381369442e-08; /* 0x3331bb4c */
-
-#ifdef __STDC__
-	float __ieee754_expf(float x)	/* default IEEE double exp */
-#else
-	float __ieee754_expf(x)	/* default IEEE double exp */
-	float x;
-#endif
+float
+__ieee754_expf (float x)
 {
-	float y,hi,lo,c,t;
-	int32_t k,xsb;
-	u_int32_t hx;
+  static const uint32_t a_minf = 0xff800000;
+  static const float himark = 88.72283935546875;
+  static const float lomark = -103.972084045410;
+  /* Check for usual case.  */
+  if (isless (x, himark) && isgreater (x, lomark))
+    {
+      static const float TWO43 = 8796093022208.0;
+      static const float TWO23 = 8388608.0;
+      /* 1/ln(2).  */
+#undef M_1_LN2
+      static const float M_1_LN2 = 1.44269502163f;
+      /* ln(2) */
+#undef M_LN2
+      static const double M_LN2 = .6931471805599452862;
 
-	GET_FLOAT_WORD(hx,x);
-	xsb = (hx>>31)&1;		/* sign bit of x */
-	hx &= 0x7fffffff;		/* high word of |x| */
+      int tval;
+      double x22, t, result, dx;
+      float n, delta;
+      union ieee754_double ex2_u;
+      fenv_t oldenv;
 
-    /* filter out non-finite argument */
-	if(hx >= 0x42b17218) {			/* if |x|>=88.721... */
-	    if(hx>0x7f800000)
-		 return x+x;	 		/* NaN */
-            if(hx==0x7f800000)
-		return (xsb==0)? x:0.0;		/* exp(+-inf)={inf,0} */
-	    if(x > o_threshold) return huge*huge; /* overflow */
-	    if(x < u_threshold) return twom100*twom100; /* underflow */
+      feholdexcept (&oldenv);
+      fesetround (FE_TONEAREST);
+
+      /* Calculate n.  */
+      if (x >= 0)
+	{
+	  n = x * M_1_LN2 + TWO23;
+	  n -= TWO23;
+	}
+      else
+	{
+	  n = x * M_1_LN2 - TWO23;
+	  n += TWO23;
+	}
+      dx = x - n*M_LN2;
+      if (dx >= 0)
+	{
+	  /* Calculate t/512.  */
+	  t = dx + TWO43;
+	  t -= TWO43;
+	  dx -= t;
+
+	  /* Compute tval = t.  */
+	  tval = (int) (t * 512.0);
+
+	  delta = - __exp_deltatable[tval];
+	}
+      else
+	{
+	  /* As above, but x is negative.  */
+	  t = dx - TWO43;
+	  t += TWO43;
+	  dx -= t;
+
+	  tval = (int) (t * 512.0);
+
+	  delta = __exp_deltatable[-tval];
 	}
 
-    /* argument reduction */
-	if(hx > 0x3eb17218) {		/* if  |x| > 0.5 ln2 */
-	    if(hx < 0x3F851592) {	/* and |x| < 1.5 ln2 */
-		hi = x-ln2HI[xsb]; lo=ln2LO[xsb]; k = 1-xsb-xsb;
-	    } else {
-		k  = invln2*x+halF[xsb];
-		t  = k;
-		hi = x - t*ln2HI[0];	/* t*ln2HI is exact here */
-		lo = t*ln2LO[0];
-	    }
-	    x  = hi - lo;
-	}
-	else if(hx < 0x31800000)  {	/* when |x|<2**-28 */
-	    if(huge+x>one) return one+x;/* trigger inexact */
-	}
-	else k = 0;
+      /* Compute ex2 = 2^n e^(t/512+delta[t]).  */
+      ex2_u.d = __exp_atable[tval+177];
+      ex2_u.ieee.exponent += (int) n;
 
-    /* x is now in primary range */
-	t  = x*x;
-	c  = x - t*(P1+t*(P2+t*(P3+t*(P4+t*P5))));
-	if(k==0) 	return one-((x*c)/(c-(float)2.0)-x);
-	else 		y = one-((lo-(x*c)/((float)2.0-c))-hi);
-	if(k >= -125) {
-	    u_int32_t hy;
-	    GET_FLOAT_WORD(hy,y);
-	    SET_FLOAT_WORD(y,hy+(k<<23));	/* add k to y's exponent */
-	    return y;
-	} else {
-	    u_int32_t hy;
-	    GET_FLOAT_WORD(hy,y);
-	    SET_FLOAT_WORD(y,hy+((k+100)<<23));	/* add k to y's exponent */
-	    return y*twom100;
-	}
+      /* Approximate e^(dx+delta) - 1, using a second-degree polynomial,
+	 with maximum error in [-2^-10-2^-28,2^-10+2^-28]
+	 less than 5e-11.  */
+      x22 = (0.5000000496709180453 * dx + 1.0000001192102037084) * dx + delta;
+
+      /* Return result.  */
+      fesetenv (&oldenv);
+
+      result = x22 * ex2_u.d + ex2_u.d;
+      return (float) result;
+    }
+  /* Exceptional cases:  */
+  else if (isless (x, himark))
+    {
+      if (x == *(const float *) &a_minf)
+	/* e^-inf == 0, with no error.  */
+	return 0;
+      else
+	/* Underflow */
+	return TWOM100 * TWOM100;
+    }
+  else
+    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
+    return TWO127*x;
 }

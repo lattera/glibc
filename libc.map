@@ -433,6 +433,8 @@ GLIBC_2.0 {
     _dl_map_object; _dl_map_object_deps; _dl_object_relocation_scope;
     _dl_relocate_object; _dl_signal_error; _dl_starting_up;
     _dl_sysdep_start; _r_debug;
+    _dl_global_scope; _dl_lookup_symbol_skip;
+    _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
 
   local:
     *;
@@ -464,4 +466,7 @@ GLIBC_2.1 {
 
     # New errlist.
     _sys_errlist; sys_errlist; sys_nerr;
+
+    # New special glibc functions.
+    gnu_get_libc_release; gnu_get_libc_version;
 } GLIBC_2.0;

@@ -38,20 +38,22 @@
 #include "t_exp2f.h"
 
 static const volatile float TWOM100 = 7.88860905e-31;
-static const volatile float huge = 1e+30;
+static const volatile float TWO127 = 1.7014118346e+38;
 
 float
 __ieee754_exp2f (float x)
 {
-  static const uint32_t a_inf = 0x7f800000;
+  static const uint32_t a_minf = 0xff800000;
+  static const float himark = (float) FLT_MAX_EXP;
+  static const float lomark = (float) (FLT_MIN_EXP - FLT_MANT_DIG - 1) - 1.0;
+
   /* Check for usual case.  */
-  if (isless (x, (float) FLT_MAX_EXP)
-      && isgreater (x, (float) (FLT_MIN_EXP - 1)))
+  if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const float TWO16 = 65536.0;
-      int tval;
-      float rx, x22;
-      union ieee754_float ex2_u;
+      static const float TWO15 = 32768.0;
+      int tval, unsafe;
+      float rx, x22, result;
+      union ieee754_float ex2_u, scale_u;
       fenv_t oldenv;
 
       feholdexcept (&oldenv);
@@ -68,13 +70,13 @@ __ieee754_exp2f (float x)
 	 First, calculate rx = ex + t/256.  */
       if (x >= 0)
 	{
-	  rx = x + TWO16;
-	  rx -= TWO16;
+	  rx = x + TWO15;
+	  rx -= TWO15;
 	}
       else
 	{
-	  rx = x - TWO16;
-	  rx += TWO16;
+	  rx = x - TWO15;
++	  rx += TWO15;
 	}
       x -= rx;  /* Compute x=x1. */
       /* Compute tval = (ex*256 + t)+128.
@@ -92,40 +94,43 @@ __ieee754_exp2f (float x)
       /* 'tval & 255' is the same as 'tval%256' except that it's always
 	 positive.
 	 Compute x = x2.  */
-      x -= exp2_deltatable[tval & 255];
+      x -= __exp2_deltatable[tval & 255];
 
       /* 3. Compute ex2 = 2^(t/255+e+ex).  */
-      ex2_u.f = exp2_accuratetable[tval & 255];
-      ex2_u.ieee.exponent += tval >> 8;
+      ex2_u.f = __exp2f_atable[tval & 255];
+      tval >>= 8;
+      unsafe = abs(tval) >= -FLT_MIN_EXP - 1;
+      ex2_u.ieee.exponent += tval >> unsafe;
+      scale_u.f = 1.0;
+      scale_u.ieee.exponent += tval - (tval >> unsafe);
 
       /* 4. Approximate 2^x2 - 1, using a second-degree polynomial,
-	 2^x2 ~= sum(k=0..2 | (x2 * ln(2))^k / k! ) +
-	 so
-	 2^x2 - 1 ~= sum(k=1..4 | (x2 * ln(2))^k / k! )
-	 with error less than 2^(1/512+7e-4) * (x2 * ln(2))^3 / 3! < 1.2e-18.  */
+	 with maximum error in [-2^-9 - 2^-14, 2^-9 + 2^-14]
+	 less than 1.3e-10.  */
 
-      x22 = (.240226507f * x + .6931471806f) * ex2_u.f;
+      x22 = (.24022656679f * x + .69314736128f) * ex2_u.f;
 
       /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
       fesetenv (&oldenv);
 
-      /* Need to check: does this set FE_INEXACT correctly? */
-      return x22 * x + ex2_u.f;
+      result = x22 * x + ex2_u.f;
+
+      if (!unsafe)
+	return result;
+      else
+	return result * scale_u.f;
     }
-  /* 2^inf == inf, with no error.  */
-  else if (x == *(const float *)&a_inf)
+  /* Exceptional cases:  */
+  else if (isless (x, himark))
     {
-      return x;
+      if (x == *(const float *) &a_minf)
+	/* e^-inf == 0, with no error.  */
+	return 0;
+      else
+	/* Underflow */
+	return TWOM100 * TWOM100;
     }
-  /* Check for overflow.  */
-  else if (isgreaterequal (x, (float) FLT_MAX_EXP))
-    return huge * huge;
-  /* And underflow (including -inf).  */
-  else if (isless (x, (float) (FLT_MIN_EXP - FLT_MANT_DIG)))
-    return TWOM100 * TWOM100;
-  /* Maybe the result needs to be a denormalised number...  */
-  else if (!isnan (x))
-    return __ieee754_exp2f (x + 100.0) * TWOM100;
-  else /* isnan(x) */
-    return x + x;
+  else
+    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
+    return TWO127*x;
 }

@@ -1,5 +1,5 @@
-/* Internal libc stuff for 128-bit IEEE FP emulation routines.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Interface to GNU libc specific functions for version information.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,28 +17,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _QUAD_FLOAT_H
-#define _QUAD_FLOAT_H	1
+#ifndef _GNU_LIBC_VERSION_H
+#define	_GNU_LIBC_VERSION_H	1
 
-#include <fenv_libc.h>
+#include <features.h>
 
-/* Returns the number of leading zero bits in 'x' (between 0 and 32
-   inclusive).  'x' is treated as being 32 bits long.  */
-#define cntlzw(x) \
-        ({ unsigned p = (x); \
-	   unsigned r; \
-	   asm ("cntlzw %0,%1" : "=r"(r) : "r"(p)); \
-	   r; })
+__BEGIN_DECLS
 
-/* Returns the number of leading zero bits in 'x' (between 0 and 64
-   inclusive).  'x' is treated as being 64 bits long.  */
-#define cntlzd(x) \
-        ({ unsigned long long q = (x); \
-	   unsigned int c1, c2; \
-	   c1 = cntlzw(q >> 32); \
-	   c2 = cntlzw(q); \
-	   c1 + (-(c1 >> 5) & c2); })
+/* Return string describing release status of currently running GNU libc.  */
+extern const char *__gnu_get_libc_release __P ((void));
+extern const char *gnu_get_libc_release __P ((void));
 
-#define shift_and_or
- 
-#endif /* quad_float.h */
+/* Return string describing version of currently running GNU libc.  */
+extern const char *__gnu_get_libc_version __P ((void));
+extern const char *gnu_get_libc_version __P ((void));
+
+__END_DECLS
+
+#endif	/* gnu/libc-version.h */

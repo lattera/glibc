@@ -1,3 +1,143 @@
+1998-02-13 17:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Don't use --version-script parameter to link ld.so
+	unconditionally.
+
+1998-01-02 04:19  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* math/Makefile: Add t_exp.
+	* math/libm-test.c: Tighten accuracy bounds for exp(), correct
+	constants.
+	* math/test-reduce.c: Remove temporarily, it seems to be broken.
+	* sysdeps/libm-ieee754/e_exp.c: Use accurate table method.
+	* sysdeps/libm-ieee754/e_expf.c: Use table & double precision for
+	better accuracy.
+	* sysdeps/libm-ieee754/s_exp2.c: Use better polynomial; correct
+	algorithm for very large/very small arguments.
+	* sysdeps/libm-ieee754/s_exp2f.c: Use slightly better polynomial;
+	correct algorithm for very large/very small arguments; adjust for
+	new table.
+	* sysdeps/libm-ieee754/t_exp.c: New file.
+	* sysdeps/libm-ieee754/t_exp2f.h: Use table with smaller deltas.
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Put 'strange test'
+	back, with comment that explains what breaks when you remove it :-(.
+
+	* localedata/xfrm-test.c: Avoid integer overflow.
+
+	* stdlib/strfmon.c: char is unsigned, sometimes.
+
+	*sysdeps/powerpc
+	* sysdeps/powerpc/Makefile: Remove quad float support.
+	* sysdeps/powerpc/q_*.c: Remove, they will become an add-on.
+	* sysdeps/powerpc/quad_float.h: Likewise.
+	* sysdeps/powerpc/test-arith.c: Likewise.
+	* sysdeps/powerpc/test-arithf.c: Likewise.
+
+	* sysdeps/generic/s_exp2.c: Remove, we have this implemented now.
+	* sysdeps/generic/s_exp2f.c: Likewise.
+
+	* sysdeps/powerpc/bits/mathinline.h: Use underscores around __asm__,
+	don't try anything if _SOFT_FLOAT.
+
+1997-12-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_class32): Undo last change.
+	* locale/programs/ld-ctype.c (CHAR_CLASS32_TRANS): Likewise.
+	* wctype/wctype.c: Likewise.
+	* wctype/wctype.h (_ISwxxx): Renamed from _ISxxx, all uses
+	changed.  They are incompatible with the _ISxxx values from
+	<ctype.h> on little endian machines.
+	(_ISwbit) [__BYTE_ORDER == __LITTLE_ENDIAN]: Correctly transform
+	bit number.  This fixes the real bug and restores the integrity of
+	the ctype locale file.
+	* wctype/wcfuncs.c: Change all _ISxxx to _ISwxxx.
+	* wctype/wcfuncs_l.c: Likewise.
+	* wctype/wcextra.c: Likewise.
+	* wctype/wctype_l.c [__BYTE_ORDER == __LITTLE_ENDIAN]: Use correct
+	byte swapping.
+
+1998-02-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.S (errno): Put it
+	into .bss segment instead of .common, so that aliases on it work.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (errno): Add .type and
+	.size directives, put into .bss segment instead of initializing it
+	to 4.
+
+1998-02-12 08:00  H.J. Lu  <hjl@gnu.org>
+
+	* libc.map (gnu_get_libc_release, gnu_get_libc_version): Added.
+
+	* version.c (__gnu_get_libc_release, __gnu_get_libc_version): New
+	functions.
+	Make names without __ weak aliases.
+	(__libc_release, __libc_version): Make them static.
+
+	* include/gnu/libc-version.h: New file.
+	* Makefile (headers): Add gnu/libc-version.h.
+
+1998-02-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/stdlib.h (struct drand48_data): Leave X to user macros
+	and use x for member name.
+	Reported by Daniel Lyddy <daniell@cs.berkeley.edu>.
+
+	* stdlib/drand48.c: Change according to member name change.
+	* stdlib/drand48_r.c: Likewise.
+	* stdlib/lcong48_r.c: Likewise.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/lrand48_r.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/mrand48_r.c: Likewise.
+	* stdlib/seed48.c: Likewise.
+	* stdlib/seed48_r.c: Likewise.
+	* stdlib/srand48_r.c: Likewise.
+
+1998-02-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/test-netdb.c: Add some more test cases.
+
+1998-02-13 11:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iovsscanf.c: Undo last change modifying errno.
+
+1998-02-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c: Never try to read another character
+	after EOF.  Don't decrement read_in after EOF, it wasn't
+	incremented in the first place.
+	(NEXT_WIDE_CHAR): Set First, not first.
+
+1998-02-06 07:48  H.J. Lu  <hjl@gnu.org>
+
+	* db/Makefile ($(inst_libdir)/libndbm.a,
+	$(inst_libdir)/libndbm.so): New targets.
+	* db2/Makefile: Likewise.
+
+1998-02-12 08:20  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/gnu/errlist.awk (sys_errlist, sys_nerr): Create weak
+	aliases if HAVE_ELF or PIC or DO_VERSIONING is not defined.
+
+1998-02-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/_G_config.h: Define _G_wchar_t, for C++
+	<streambuf.h>.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
+
+1998-02-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/make-syscalls.sh: Fix sed pattern when dealing with
+	versioned symbols.
+
+1998-02-13 08:14  H.J. Lu  <hjl@gnu.org>
+
+	* libc.map (_dl_global_scope, _dl_lookup_symbol_skip,
+	_dl_lookup_versioned_symbol, _dl_lookup_versioned_symbol_skip):
+	Added for libdl.so.
+
 1998-02-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Don't mark lchown as
@@ -78,7 +218,7 @@
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_missing_rt_sigs):
 	Rename from __libc_have_rt_sigs and leave as COMMON data.
-	
+
 1998-02-11 08:30  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/libm-ieee754/w_powl.c (__powl): Use __finitel instead
@@ -129,7 +269,7 @@
 
 	* io/fts.c (fts_build): Don't try to use d_type if it doesn't
 	exist.
-	
+
 	* sysdeps/arm/sys/ucontext.h: New file.
 
 1998-02-04 10:11  Philip Blundell  <pb@nexus.co.uk>
@@ -137,7 +277,7 @@
 	* manual/stdio.texi (Formatted Output Functions): Explicitly say
 	that the return value from snprintf() does not count the
 	terminating NUL as a character.
-	
+
 1998-02-10 16:57  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* manual/users.texi: Rewrite to describe correct POSIX behaviour,
@@ -185,7 +325,7 @@
 1998-02-10 16:57  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* resolv/nss_dns/dns-host.c: Various code cleanups.
-	
+
 1998-02-09 08:10  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/gethnamaddr.c (getanswer): Fix the PTR/CNAME bug.
@@ -214,7 +354,7 @@
 
 	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Correct last patch
 	to support obsolete tty major numbers correctly.
-	
+
 1998-02-02 08:47  H.J. Lu  <hjl@gnu.org>
 
 	* login/Makefile ($(inst_libexecdir)/pt_chown): Make the target
@@ -264,20 +404,20 @@
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_missing_rt_sigs):
 	Rename from __libc_have_rt_sigs and leave as COMMON data.
-	
+
 1998-02-04 11:58  Richard Henderson  <rth@twiddle.rth.home>
 
 	* Makeconfig (CFLAGS-.os): Kill -fno-common.
 	* Makerules (libc.so): Prelink libc_pic.a, allocating commons.
 
 	* libc.map (GLIBC_2.1): Add Linux/Alpha tv64 symbols.
-	* elf/rtld.map: New file.  Needed to define the GLIBC_2.* 
+	* elf/rtld.map: New file.  Needed to define the GLIBC_2.*
 	version symbols.
 	* include/libc-symbols.h (symbol_version, default_symbol_version):
 	Provide asm versions and correct !DO_VERSIONING versions.
 	* sysdeps/unix/make-syscalls.sh: Recognize version symbols in
 	the weak symbol list.
-	
+
 	* sysdeps/unix/sysv/linux/sigaction.c (__libc_missing_rt_sigs):
 	Rename from __libc_have_rt_sigs and leave as COMMON data.
 	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
@@ -306,7 +446,7 @@
 
 1998-01-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* manual/socket.texi (Host Address Functions): Clarify description 
+	* manual/socket.texi (Host Address Functions): Clarify description
 	of inet_network.
 
 1998-02-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
@@ -352,7 +492,7 @@
 	* sysdeps/unix/sysv/linux/alpha/clone.S: Elide terminal ldgp for PROF.
 	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Fix typos.
 
-	* sysdeps/unix/sysv/linux/alpha/bits/time.h (struct timeval): 
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h (struct timeval):
 	Follow POSIX and make tv_sec a time_t.
 	* sysdeps/unix/sysv/linux/alpha/getitimer.S: New file to handle
 	new tv64 syscall as well as fall back to tv32.

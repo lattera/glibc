@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +17,15 @@
    Boston, MA 02111-1307, USA.  */
 
 #include "version.h"
-const char __libc_release[] = RELEASE;
-const char __libc_version[] = VERSION;
+#include <gnu/libc-version.h>
+
+static const char __libc_release[] = RELEASE;
+static const char __libc_version[] = VERSION;
 
 static const char banner[] =
 "GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
 Compiled by GNU CC version "__VERSION__".\n\
-Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.\n\
+Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"
@@ -37,6 +39,20 @@ __libc_print_version (void)
 {
   __write (STDOUT_FILENO, banner, sizeof banner - 1);
 }
+
+const char *
+__gnu_get_libc_release (void)
+{
+  return __libc_release;
+}
+weak_alias (__gnu_get_libc_release, gnu_get_libc_release)
+
+const char *
+__gnu_get_libc_version (void)
+{
+  return __libc_version;
+}
+weak_alias (__gnu_get_libc_version, gnu_get_libc_version)
 
 #ifdef HAVE_ELF
 /* This function is the entry point for the shared object.

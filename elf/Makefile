@@ -103,11 +103,13 @@ $(objpfx)rtld-ldscript: $(rtld-ldscript-in) $(rtld-parms)
 $(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
 
+RTLD-VERSIONS=$(addprefix -Wl,--version-script=,$(libc-map))
+
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
 	  $(filter-out $(objpfx)rtld-ldscript,$^) \
-	  -Wl,--version-script=$(libc-map)
+	  $(RTLD-VERSIONS)
 endef
 else
 $(objpfx)ld.so: $(objpfx)librtld.os
@@ -115,8 +117,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os
 
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
-	  -Wl,-rpath=$(default-rpath) $^ \
-	  -Wl,--version-script=$(libc-map)
+	  -Wl,-rpath=$(default-rpath) $^ $(RTLD-VERSIONS)
 endef
 endif
 

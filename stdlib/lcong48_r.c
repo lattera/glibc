@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -28,12 +28,12 @@ __lcong48_r (param, buffer)
 {
   /* Store the given values.  */
 #if USHRT_MAX == 0xffffU
-  memcpy (buffer->X, &param[0], sizeof (buffer->X));
+  memcpy (buffer->x, &param[0], sizeof (buffer->x));
   memcpy (buffer->a, &param[3], sizeof (buffer->a));
 #else
-  buffer->X[2] = (param[2] << 16) | param[1];
-  buffer->X[1] = param[0] << 16;
-  buffer->X[0] = 0;
+  buffer->x[2] = (param[2] << 16) | param[1];
+  buffer->x[1] = param[0] << 16;
+  buffer->x[0] = 0;
 
   buffer->a[2] = (param[5] << 16) | param[4];
   buffer->a[1] = param[3] << 16;

@@ -36,21 +36,23 @@
 
 #include "t_exp2.h"
 
-static const volatile double TWO1000 = 1.071508607186267320948e+301;
+static const volatile double TWO1023 = 8.988465674311579539e+307;
 static const volatile double TWOM1000 = 9.3326361850321887899e-302;
 
 double
 __ieee754_exp2 (double x)
 {
-  static const uint32_t a_inf = 0x7f800000;
+  static const uint32_t a_minf = 0xff800000;
+  static const double himark = (double) DBL_MAX_EXP;
+  static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1) - 1.0;
+
   /* Check for usual case.  */
-  if (isless (x, (double) DBL_MAX_EXP)
-      && isgreater (x, (double) (DBL_MIN_EXP - 1)))
+  if (isless (x, himark) && isgreater (x, lomark))
     {
       static const float TWO43 = 8796093022208.0;
-      int tval;
-      double rx, x22;
-      union ieee754_double ex2_u;
+      int tval, unsafe;
+      double rx, x22, result;
+      union ieee754_double ex2_u, scale_u;
       fenv_t oldenv;
 
       feholdexcept (&oldenv);
@@ -95,37 +97,42 @@ __ieee754_exp2 (double x)
 
       /* 3. Compute ex2 = 2^(t/512+e+ex).  */
       ex2_u.d = exp2_accuratetable[tval & 511];
-      ex2_u.ieee.exponent += tval >> 9;
+      tval >>= 9;
+      unsafe = abs(tval) >= -DBL_MIN_EXP - 1;
+      ex2_u.ieee.exponent += tval >> unsafe;
+      scale_u.d = 1.0;
+      scale_u.ieee.exponent += tval - (tval >> unsafe);
 
       /* 4. Approximate 2^x2 - 1, using a fourth-degree polynomial,
-	 2^x2 ~= sum(k=0..4 | (x2 * ln(2))^k / k! ) +
-	 so
-	 2^x2 - 1 ~= sum(k=1..4 | (x2 * ln(2))^k / k! )
-	 with error less than 2^(1/1024) * (x2 * ln(2))^5 / 5! < 1.2e-18.  */
+	 with maximum error in [-2^-10-2^-30,2^-10+2^-30]
+	 less than 10^-19.  */
 
-      x22 = (((.0096181291076284772
-	       * x + .055504108664821580)
-	      * x + .240226506959100712)
-	     * x + .69314718055994531) * ex2_u.d;
+      x22 = (((.0096181293647031180
+	       * x + .055504110254308625)
+	      * x + .240226506959100583)
+	     * x + .69314718055994495) * ex2_u.d;
 
       /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
       fesetenv (&oldenv);
 
-      /* Need to check: does this set FE_INEXACT correctly? */
-      return x22 * x + ex2_u.d;
+      result = x22 * x + ex2_u.d;
+
+      if (!unsafe)
+	return result;
+      else
+	return result * scale_u.d;
     }
-  /* 2^inf == inf, with no error.  */
-  else if (x == *(const float *) &a_inf)
-    return x;
-  /* Check for overflow.  */
-  else if (isgreaterequal (x, (double) DBL_MAX_EXP))
-    return TWO1000 * TWO1000;
-  /* And underflow (including -inf).  */
-  else if (isless (x, (double) (DBL_MIN_EXP - DBL_MANT_DIG)))
-    return TWOM1000 * TWOM1000;
-  /* Maybe the result needs to be a denormalised number...  */
-  else if (!isnan (x))
-    return __ieee754_exp2 (x + 1000.0) * TWOM1000;
-  else /* isnan(x) */
-    return x + x;
+  /* Exceptional cases:  */
+  else if (isless (x, himark))
+    {
+      if (x == *(const float *) &a_minf)
+	/* e^-inf == 0, with no error.  */
+	return 0;
+      else
+	/* Underflow */
+	return TWOM1000 * TWOM1000;
+    }
+  else
+    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
+    return TWO1023*x;
 }

@@ -83,6 +83,13 @@ test_services (void)
   sptr = getservbyname ("not-existant", NULL);
   output_servent ("getservbyname (\"not-existant\", NULL)", sptr);
 
+  /* This shouldn't return anything.  */
+  sptr = getservbyname ("", "");
+  output_servent ("getservbyname (\"\", \"\")", sptr);
+
+  sptr = getservbyname ("", "tcp");
+  output_servent ("getservbyname (\"\", \"tcp\")", sptr);
+
   sptr = getservbyport (htons(53), "tcp");
   output_servent ("getservbyport (htons(53), \"tcp\")", sptr);
 
@@ -157,6 +164,11 @@ test_hosts (void)
 	output_hostent ("gethostbyname(\"localhost\")", hptr1);
     }
 
+  hptr1 = gethostbyname ("127.0.0.1");
+  output_hostent ("gethostbyname (\"127.0.0.1\")", hptr1);
+
+  hptr1 = gethostbyname2 ("localhost", AF_INET);
+  output_hostent ("gethostbyname2 (\"localhost\", AF_INET)", hptr1);
 
   if (gethostname (name, namelen) == 0)
     {
@@ -211,11 +223,14 @@ test_network (void)
   u_int32_t ip;
 
   /*
-    this test needs the following line in /etc/networks:
+     This test needs the following line in /etc/networks:
      loopback        127.0.0.0
   */
   nptr = getnetbyname ("loopback");
   output_netent ("getnetbyname (\"loopback\")",nptr);
+
+  nptr = getnetbyname ("LoopBACK");
+  output_netent ("getnetbyname (\"LoopBACK\")",nptr);
 
   ip = inet_network ("127.0.0.0");
   nptr = getnetbyaddr (ip, AF_INET);
@@ -335,6 +350,7 @@ main (void)
   /*
     setdb ("db");
   */
+
   test_hosts ();
   test_network ();
   test_protocols ();

@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ libm-map	:= libm.map
 libm-support = k_standard s_lib_version s_matherr s_signgam		\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
-	       fesetenv feupdateenv
+	       fesetenv feupdateenv t_exp
 libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     e_hypot e_j0 e_j1 e_jn e_lgamma_r e_log e_log10 e_pow	\
 	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt e_gamma_r	\
@@ -78,7 +78,7 @@ distribute += $(long-c-yes:=.c)
 # Rules for the test suite.
 tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 	test-ifloat test-idouble test-matherr test-fenv \
-	atest-exp atest-sincos atest-exp2 # test-reduce
+	atest-exp atest-sincos atest-exp2
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl

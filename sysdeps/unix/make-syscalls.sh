@@ -73,8 +73,8 @@ EOF
   for name in $weak; do
     case $name in
       *@@*)
-	base=`echo $name | sed 's/@.*//'`
-	ver=`echo $name | sed 's/@.*//'`
+	base=`echo $name | sed 's/@@.*//'`
+	ver=`echo $name | sed 's/.*@@//'`
 	if test -z "$vcount" ; then
 	  source=$strong
 	  vcount=1

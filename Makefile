@@ -92,7 +92,8 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := errno.h sys/errno.h bits/errno.h limits.h values.h	\
-	   features.h gnu-versions.h bits/libc-lock.h bits/xopen_lim.h
+	   features.h gnu-versions.h bits/libc-lock.h bits/xopen_lim.h	\
+	   gnu/libc-version.h
 aux	 = sysdep $(libc-init) version
 before-compile += $(objpfx)version-info.h
 

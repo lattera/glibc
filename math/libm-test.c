@@ -138,6 +138,8 @@
 
 /* Various constants (we must supply them precalculated for accuracy).  */
 #define M_PI_6  .52359877559829887308L
+#define M_E2	7.389056098930650227230L
+#define M_E3	20.08553692318766774093L
 
 static int noErrors;   /* number of errors */
 static int noTests;    /* number of tests (without testing exceptions) */
@@ -1175,11 +1177,11 @@ exp_test (void)
   check_isinfp ("exp (+inf) == +inf", FUNC(exp) (plus_infty));
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
 #endif
-  check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 5e-16, 0));
+  check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 0, 0));
 
-  check_eps ("exp (2) == e^2", FUNC(exp) (2), M_E * M_E,
+  check_eps ("exp (2) == e^2", FUNC(exp) (2), M_E2,
 	     CHOOSE (1e-18, 0, 0));
-  check_eps ("exp (3) == e^3", FUNC(exp) (3), M_E * M_E * M_E,
+  check_eps ("exp (3) == e^3", FUNC(exp) (3), M_E3,
 	     CHOOSE (1.5e-17, 0, 0));
   check_eps ("exp (0.7) == 2.0137527074...", FUNC(exp) (0.7),
 	     2.0137527074704765216L, CHOOSE(9e-17L, 0, 0));

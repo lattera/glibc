@@ -1,5 +1,5 @@
 /* Inline math functions for powerpc.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifdef __GNUC__
+#if defined __GNUC__ && !defined _SOFT_FLOAT
 
-#if __USE_ISOC9X && !defined _SOFT_FLOAT
+#ifdef __USE_ISOC9X
 # define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
@@ -53,7 +53,7 @@ lrint (double __x)
     double __d;
     long int __ll[2];
   } __u;
-  asm ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
+  __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
   return __u.__ll[1];
 }
 
@@ -65,7 +65,7 @@ lrintf (float __x)
     double __d;
     long int __ll[2];
   } __u;
-  asm ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
+  __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
   return __u.__ll[1];
 }
 
@@ -85,4 +85,4 @@ fdimf (float __x, float __y)
 
 #endif /* __USE_ISOC9X */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
-#endif /* __GNUC__  */
+#endif /* __GNUC__ && !_SOFT_FLOAT */

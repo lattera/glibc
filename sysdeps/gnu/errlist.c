@@ -815,7 +815,7 @@ TRANS This error code has no purpose. */
   };
 
 const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];
-#ifndef PIC
+#if !defined HAVE_ELF || !defined PIC || !defined DO_VERSIONING
 weak_alias (_sys_errlist, sys_errlist)
 weak_alias (_sys_nerr, sys_nerr)
 #endif

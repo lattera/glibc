@@ -60,34 +60,34 @@ typedef unsigned int wint_t;
    character classifications.  */
 typedef unsigned long int wctype_t;
 
-# ifndef _ISbit
+# ifndef _ISwbit
 /* The characteristics are stored always in network byte order (big
    endian).  We define the bit value interpretations here dependent on the
    machine's byte order.  */
 
 #  include <endian.h>
 #  if __BYTE_ORDER == __BIG_ENDIAN
-#   define _ISbit(bit)	(1 << bit)
+#   define _ISwbit(bit)	(1 << bit)
 #  else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#   define _ISbit(bit)	(bit < 8 ? ((1 << bit) << 8) : ((1 << bit) >> 8))
+#   define _ISwbit(bit)	(bit < 8 ? 1UL << (bit + 24) : 1UL << (bit + 8))
 #  endif
 
 enum
 {
-  _ISupper = _ISbit (0),	/* UPPERCASE.  */
-  _ISlower = _ISbit (1),	/* lowercase.  */
-  _ISalpha = _ISbit (2),	/* Alphabetic.  */
-  _ISdigit = _ISbit (3),	/* Numeric.  */
-  _ISxdigit = _ISbit (4),	/* Hexadecimal numeric.  */
-  _ISspace = _ISbit (5),	/* Whitespace.  */
-  _ISprint = _ISbit (6),	/* Printing.  */
-  _ISgraph = _ISbit (7),	/* Graphical.  */
-  _ISblank = _ISbit (8),	/* Blank (usually SPC and TAB).  */
-  _IScntrl = _ISbit (9),	/* Control character.  */
-  _ISpunct = _ISbit (10),	/* Punctuation.  */
-  _ISalnum = _ISbit (11)	/* Alphanumeric.  */
+  _ISwupper = _ISwbit (0),	/* UPPERCASE.  */
+  _ISwlower = _ISwbit (1),	/* lowercase.  */
+  _ISwalpha = _ISwbit (2),	/* Alphabetic.  */
+  _ISwdigit = _ISwbit (3),	/* Numeric.  */
+  _ISwxdigit = _ISwbit (4),	/* Hexadecimal numeric.  */
+  _ISwspace = _ISwbit (5),	/* Whitespace.  */
+  _ISwprint = _ISwbit (6),	/* Printing.  */
+  _ISwgraph = _ISwbit (7),	/* Graphical.  */
+  _ISwblank = _ISwbit (8),	/* Blank (usually SPC and TAB).  */
+  _ISwcntrl = _ISwbit (9),	/* Control character.  */
+  _ISwpunct = _ISwbit (10),	/* Punctuation.  */
+  _ISwalnum = _ISwbit (11)	/* Alphanumeric.  */
 };
-# endif /* Not _ISbit  */
+# endif /* Not _ISwbit  */
 
 
 __BEGIN_DECLS
@@ -178,20 +178,20 @@ extern wint_t __towctrans __P ((wint_t __wc, wctrans_t __desc));
 
 
 # ifndef __NO_WCTYPE
-#  define iswalnum(wc)	__iswctype ((wc), _ISalnum)
-#  define iswalpha(wc)	__iswctype ((wc), _ISalpha)
-#  define iswcntrl(wc)	__iswctype ((wc), _IScntrl)
-#  define iswdigit(wc)	__iswctype ((wc), _ISdigit)
-#  define iswlower(wc)	__iswctype ((wc), _ISlower)
-#  define iswgraph(wc)	__iswctype ((wc), _ISgraph)
-#  define iswprint(wc)	__iswctype ((wc), _ISprint)
-#  define iswpunct(wc)	__iswctype ((wc), _ISpunct)
-#  define iswspace(wc)	__iswctype ((wc), _ISspace)
-#  define iswupper(wc)	__iswctype ((wc), _ISupper)
-#  define iswxdigit(wc)	__iswctype ((wc), _ISxdigit)
+#  define iswalnum(wc)	__iswctype ((wc), _ISwalnum)
+#  define iswalpha(wc)	__iswctype ((wc), _ISwalpha)
+#  define iswcntrl(wc)	__iswctype ((wc), _ISwcntrl)
+#  define iswdigit(wc)	__iswctype ((wc), _ISwdigit)
+#  define iswlower(wc)	__iswctype ((wc), _ISwlower)
+#  define iswgraph(wc)	__iswctype ((wc), _ISwgraph)
+#  define iswprint(wc)	__iswctype ((wc), _ISwprint)
+#  define iswpunct(wc)	__iswctype ((wc), _ISwpunct)
+#  define iswspace(wc)	__iswctype ((wc), _ISwspace)
+#  define iswupper(wc)	__iswctype ((wc), _ISwupper)
+#  define iswxdigit(wc)	__iswctype ((wc), _ISwxdigit)
 
 #  ifdef __USE_GNU
-#   define iswblank(wc)	__iswctype ((wc), _ISblank)
+#   define iswblank(wc)	__iswctype ((wc), _ISwblank)
 #  endif
 
 
@@ -307,19 +307,19 @@ extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
 
 
 #  ifndef __NO_WCTYPE
-#   define __iswalnum_l(wc, loc) __iswctype_l ((wc), _ISalnum, (loc))
-#   define __iswalpha_l(wc, loc) __iswctype_l ((wc), _ISalpha, (loc))
-#   define __iswcntrl_l(wc, loc) __iswctype_l ((wc), _IScntrl, (loc))
-#   define __iswdigit_l(wc, loc) __iswctype_l ((wc), _ISdigit, (loc))
-#   define __iswlower_l(wc, loc) __iswctype_l ((wc), _ISlower, (loc))
-#   define __iswgraph_l(wc, loc) __iswctype_l ((wc), _ISgraph, (loc))
-#   define __iswprint_l(wc, loc) __iswctype_l ((wc), _ISprint, (loc))
-#   define __iswpunct_l(wc, loc) __iswctype_l ((wc), _ISpunct, (loc))
-#   define __iswspace_l(wc, loc) __iswctype_l ((wc), _ISspace, (loc))
-#   define __iswupper_l(wc, loc) __iswctype_l ((wc), _ISupper, (loc))
-#   define __iswxdigit_l(wc, loc) __iswctype_l ((wc), _ISxdigit, (loc))
+#   define __iswalnum_l(wc, loc) __iswctype_l ((wc), _ISwalnum, (loc))
+#   define __iswalpha_l(wc, loc) __iswctype_l ((wc), _ISwalpha, (loc))
+#   define __iswcntrl_l(wc, loc) __iswctype_l ((wc), _ISwcntrl, (loc))
+#   define __iswdigit_l(wc, loc) __iswctype_l ((wc), _ISwdigit, (loc))
+#   define __iswlower_l(wc, loc) __iswctype_l ((wc), _ISwlower, (loc))
+#   define __iswgraph_l(wc, loc) __iswctype_l ((wc), _ISwgraph, (loc))
+#   define __iswprint_l(wc, loc) __iswctype_l ((wc), _ISwprint, (loc))
+#   define __iswpunct_l(wc, loc) __iswctype_l ((wc), _ISwpunct, (loc))
+#   define __iswspace_l(wc, loc) __iswctype_l ((wc), _ISwspace, (loc))
+#   define __iswupper_l(wc, loc) __iswctype_l ((wc), _ISwupper, (loc))
+#   define __iswxdigit_l(wc, loc) __iswctype_l ((wc), _ISwxdigit, (loc))
 
-#   define __iswblank_l(wc, loc) __iswctype_l ((wc), _ISblank, (loc))
+#   define __iswblank_l(wc, loc) __iswctype_l ((wc), _ISwblank, (loc))
 
 #   define __towlower_l(wc, loc) __towctrans_l ((wc), (loc)->__ctype_tolower, \
 						(loc))

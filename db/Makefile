@@ -51,3 +51,13 @@ endif
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libdb.so: $(common-objpfx)libc.so
+
+subdir_install: $(inst_libdir)/libndbm.a
+$(inst_libdir)/libndbm.a: $(inst_libdir)/libdb.a
+	$(make-link)
+
+ifeq ($(build-shared),yes)
+subdir_install: $(inst_libdir)/libndbm.so
+$(inst_libdir)/libndbm.so: $(inst_libdir)/libdb.so
+	$(make-link)
+endif

@@ -8,6 +8,7 @@
 
 #include <bits/types.h>
 #define __need_size_t
+#define __need_wchar_t
 #define __need_wint_t
 #define __need_NULL
 #include <stddef.h>
@@ -27,6 +28,7 @@ typedef unsigned int wint_t;
 #define _G_off64_t	__off_t
 #define	_G_pid_t	__pid_t
 #define	_G_uid_t	__uid_t
+#define _G_wchar_t	wchar_t
 #define _G_wint_t	wint_t
 #define _G_stat64	stat
 

@@ -24,12 +24,12 @@
 int
 iswblank (wint_t wc)
 {
-  return __iswctype (wc, _ISblank);
+  return __iswctype (wc, _ISwblank);
 }
 
 
 int
 (__iswblank_l) (wint_t wc, __locale_t locale)
 {
-  return __iswctype_l (wc, _ISblank, locale);
+  return __iswctype_l (wc, _ISwblank, locale);
 }

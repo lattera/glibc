@@ -1,5 +1,5 @@
 /* Test collation function via transformation using real data.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -102,12 +102,12 @@ main (int argc, char *argv[])
       /* While we are at it a first little test.  */
       r1 = strcmp (strings[idx1].xfrm, strings[idx2].xfrm);
       r2 = strcmp (strings[idx2].xfrm, strings[idx1].xfrm);
-      r = -(r1 * r2);
+      r = -(r1 ^ r2);
       if (r)
-	r /= abs (r1 * r2);
+	r /= abs (r1 ^ r2);
 
       if (r < 0 || (r == 0 && (r1 != 0 || r2 != 0))
-	  || (r > 0 && (r1 * r2) >= 0))
+	  || (r > 0 && (r1 ^ r2) >= 0))
 	printf ("collate wrong: %d vs. %d\n", r1, r2);
     }
 

@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Linux/PPC version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 
 #define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
   do {								\
-    void **_tmp;						\
+    char **_tmp;						\
     (argc) = *(long *) cookie;					\
     (argv) = (char **) cookie + 1;				\
     (envp) = (argv) + (argc) + 1;				\
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
+    for (_tmp = (envp); *_tmp; ++_tmp)				\
       continue;							\
     /* The following '++' is important!  */			\
     ++_tmp;							\
@@ -35,9 +35,15 @@
       {								\
 	size_t _test = (size_t)_tmp;				\
 	_test = _test + 0xf & ~0xf;				\
-	_tmp = (void **)_test;					\
+	/* When ld.so is being run directly, there is no	\
+	   alignment (and no argument vector), so we make a	\
+	   basic sanity check of the argument vector.  Of	\
+	   course, this means that in future, the argument	\
+	   vector will have to be laid out to allow for this	\
+	   test :-(.  */					\
+	if (((ElfW(auxv_t) *)_test)->a_type <= AT_PHDR)		\
       }								\
-    (auxp) = (void *) _tmp;					\
+    (auxp) = (ElfW(auxv_t) *) _tmp;				\
   } while (0)
 
 

@@ -416,10 +416,10 @@ extern void lcong48 __P ((unsigned short int __param[7]));
 /* Data structure for communication with thread safe versions.  */
 struct drand48_data
   {
-    unsigned short int X[3];	/* Current state.  */
+    unsigned short int x[3];	/* Current state.  */
     unsigned short int a[3];	/* Factor in congruential formula.  */
     unsigned short int c;	/* Additive const. in congruential formula.  */
-    unsigned short int old_X[3]; /* Old state.  */
+    unsigned short int old_x[3]; /* Old state.  */
     int init;			/* Flag for initializing.  */
   };
 
