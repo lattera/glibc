@@ -57,7 +57,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
   if ((*name)[0] == '\0'
       /* In SUID binaries we must not allow people to access files
 	 outside the dedicated locale directories.  */
-      || (__libc_enable_secure
+      || (__builtin_expect (__libc_enable_secure, 0)
 	  && memchr (*name, '/', _nl_find_language (*name) - *name) != NULL))
     {
       /* The user decides which locale to use by setting environment
@@ -71,7 +71,8 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	*name = (char *) _nl_C_name;
     }
 
-  if (strcmp (*name, _nl_C_name) == 0 || strcmp (*name, _nl_POSIX_name) == 0)
+  if (__builtin_expect (strcmp (*name, _nl_C_name), 1) == 0
+      || __builtin_expect (strcmp (*name, _nl_POSIX_name), 1) == 0)
     {
       /* We need not load anything.  The needed data is contained in
 	 the library itself.  */
@@ -159,10 +160,10 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 	 successors.  */
       locale_file->successor[0] = locale_file->successor[cnt];
       locale_file = locale_file->successor[cnt];
-    }
 
-  if (locale_file == NULL)
-    return NULL;
+      if (locale_file == NULL)
+	return NULL;
+    }
 
   /* Determine the locale name for which loading succeeded.  This
      information comes from the file name.  The form is
@@ -214,7 +215,7 @@ _nl_remove_locale (int locale, struct locale_data *data)
 
 #ifdef _POSIX_MAPPED_FILES
       /* Really delete the data.  First delete the real data.  */
-      if (data->mmaped)
+      if (__builtin_expect (data->mmaped, 1))
 	{
 	  /* Try to unmap the area.  If this fails we mark the area as
 	     permanent.  */

@@ -78,13 +78,13 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   file->data = NULL;
 
   fd = __open (file->filename, O_RDONLY);
-  if (fd < 0)
+  if (__builtin_expect (fd, 0) < 0)
     /* Cannot open the file.  */
     return;
 
-  if (__fstat (fd, &st) < 0)
+  if (__builtin_expect (__fstat (fd, &st), 0) < 0)
     goto puntfd;
-  if (S_ISDIR (st.st_mode))
+  if (__builtin_expect (S_ISDIR (st.st_mode), 0))
     {
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
            instead.  */
@@ -102,10 +102,10 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 		 _nl_category_name_sizes[category] + 1);
 
       fd = __open (newp, O_RDONLY);
-      if (fd < 0)
+      if (__builtin_expect (fd, 0) < 0)
 	return;
 
-      if (__fstat (fd, &st) < 0)
+      if (__builtin_expect (__fstat (fd, &st), 0) < 0)
 	goto puntfd;
     }
 
@@ -126,15 +126,15 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 # endif
   filedata = (void *) __mmap ((caddr_t) 0, st.st_size, PROT_READ,
 			      MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
-  if ((void *) filedata != MAP_FAILED)
+  if (__builtin_expect ((void *) filedata != MAP_FAILED, 1))
     {
-      if (st.st_size < sizeof (*filedata))
+      if (__builtin_expect (st.st_size < sizeof (*filedata), 0))
 	/* This cannot be a locale data file since it's too small.  */
 	goto puntfd;
     }
   else
     {
-      if (errno == ENOSYS)
+      if (__builtin_expect (errno, ENOSYS) == ENOSYS)
 	{
 #endif	/* _POSIX_MAPPED_FILES */
 	  /* No mmap; allocate a buffer and read from the file.  */
@@ -148,7 +148,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	      while (to_read > 0)
 		{
 		  nread = __read (fd, p, to_read);
-		  if (nread <= 0)
+		  if (__builtin_expect (nread, 1) <= 0)
 		    {
 		      free (filedata);
 		      if (nread == 0)
@@ -169,7 +169,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     }
 #endif	/* _POSIX_MAPPED_FILES */
 
-  if (filedata->magic != LIMAGIC (category))
+  if (__builtin_expect (filedata->magic != LIMAGIC (category), 0))
     /* Bad data file in either byte order.  */
     {
     puntmap:
@@ -181,9 +181,11 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       return;
     }
 
-  if (filedata->nstrings < _nl_category_num_items[category] ||
-      (sizeof *filedata + filedata->nstrings * sizeof (unsigned int)
-       >= (size_t) st.st_size))
+  if (__builtin_expect (filedata->nstrings < _nl_category_num_items[category],
+			0)
+      || (__builtin_expect (sizeof *filedata
+			    + filedata->nstrings * sizeof (unsigned int)
+			    >= (size_t) st.st_size, 0)))
     {
       /* Insufficient data.  */
       __set_errno (EINVAL);
@@ -192,7 +194,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 
   newdata = malloc (sizeof *newdata
 		    + filedata->nstrings * sizeof (union locale_data_value));
-  if (! newdata)
+  if (newdata == NULL)
     goto puntmap;
 
   newdata->name = NULL;	/* This will be filled if necessary in findlocale.c. */
@@ -204,13 +206,13 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       off_t idx = filedata->strindex[cnt];
-      if (idx > newdata->filesize)
+      if (__builtin_expect (idx > newdata->filesize, 0))
 	{
 	  free (newdata);
 	  __set_errno (EINVAL);
 	  goto puntmap;
 	}
-      if (_nl_value_types[category][cnt] == word)
+      if (__builtin_expect (_nl_value_types[category][cnt] == word, 0))
 	newdata->values[cnt].word = *((u_int32_t *) (newdata->filedata + idx));
       else
 	newdata->values[cnt].string = newdata->filedata + idx;
@@ -224,7 +226,7 @@ void
 _nl_unload_locale (struct locale_data *locale)
 {
 #ifdef _POSIX_MAPPED_FILES
-  if (locale->mmaped)
+  if (__builtin_expect (locale->mmaped, 1))
     __munmap ((caddr_t) locale->filedata, locale->filesize);
   else
 #endif
