@@ -56,6 +56,9 @@ ENTRY(_start)
 
  /* and continue in libc-start, in glibc.  */
 	b	JUMPTARGET(BP_SYM(__libc_start_main))
+/* The linker needs this nop to recognize that it's OK to call via a
+   TOC adjusting stub.  */
+	nop
 
 END(_start)
 
