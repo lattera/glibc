@@ -67,25 +67,12 @@ __fopen_maybe_mmap (fp)
 # endif
 	  if (p != MAP_FAILED)
 	    {
-	      if (
-# ifdef _G_LSEEK64
-		  _G_LSEEK64 (fp->_fileno, st.st_size, SEEK_SET)
-# else
-		  __lseek (fp->_fileno, st.st_size, SEEK_SET)
-# endif
-		  != st.st_size)
-		{
-		  /* We cannot search the file.  Don't mmap then.  */
-		  __munmap (p, st.st_size);
-		  return fp;
-		}
-
 	      /* OK, we managed to map the file.  Set the buffer up
 		 and use a special jump table with simplified
 		 underflow functions which never tries to read
 		 anything from the file.  */
 	      _IO_setb (fp, p, (char *) p + st.st_size, 0);
-	      _IO_setg (fp, p, p, (char *) p + st.st_size);
+	      _IO_setg (fp, p, p, p);
 
 	      if (fp->_mode <= 0)
 		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
@@ -93,7 +80,7 @@ __fopen_maybe_mmap (fp)
 		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_mmap;
 	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
 
-	      fp->_offset = st.st_size;
+	      fp->_offset = 0;
 	    }
 	}
     }

@@ -15,7 +15,7 @@ static int do_test (void);
 
 
 static int
-fp_test (FILE *fp)
+fp_test (const char *name, FILE *fp)
 {
   int result = 0;
   int rounds = 10000;
@@ -28,7 +28,7 @@ fp_test (FILE *fp)
 
       if (fseek (fp, idx, SEEK_SET) != 0)
 	{
-	  printf ("%d: fseek failed: %m\n", rounds);
+	  printf ("%s: %d: fseek failed: %m\n", name, rounds);
 	  result = 1;
 	  break;
 	}
@@ -37,8 +37,8 @@ fp_test (FILE *fp)
       ch2 = tempdata[idx];
       if (ch1 != ch2)
 	{
-	  printf ("%d: character at index %d not what is expected ('%c' vs '%c')\n",
-		  rounds, idx, ch1, ch2);
+	  printf ("%s: %d: character at index %d not what is expected ('%c' vs '%c')\n",
+		  name, rounds, idx, ch1, ch2);
 	  result = 1;
 	  break;
 	}
@@ -47,8 +47,8 @@ fp_test (FILE *fp)
       ch2 = tempdata[idx + 1];
       if (ch1 != ch2)
 	{
-	  printf ("%d: character at index %d not what is expected ('%c' vs '%c')\n",
-		  rounds, idx + 1, ch1, ch2);
+	  printf ("%s: %d: character at index %d not what is expected ('%c' vs '%c')\n",
+		  name, rounds, idx + 1, ch1, ch2);
 	  result = 1;
 	  break;
 	}
@@ -83,7 +83,7 @@ do_test (void)
 
   /* First create some temporary data.  */
   for (i = 0; i < sizeof (tempdata); ++i)
-    tempdata[i] = (char) random ();
+    tempdata[i] = 'a' + random () % 26;
 
   /* Write this data to a file.  */
   if (TEMP_FAILURE_RETRY (write (fd, tempdata, sizeof (tempdata)))
@@ -121,23 +121,23 @@ do_test (void)
 	}
     }
 
-  result = fp_test (fp);
+  result = fp_test ("fdopen(\"r\")", fp);
 
   fp = fopen (fname, "r");
-  result |= fp_test (fp);
+  result |= fp_test ("fopen(\"r\")", fp);
 
   fp = fopen64 (fname, "r");
-  result |= fp_test (fp);
+  result |= fp_test ("fopen64(\"r\")", fp);
 
   /* The "rw" mode will prevent the mmap-using code from being used.  */
   fp = fdopen (fd, "rw");
-  result = fp_test (fp);
+  result = fp_test ("fdopen(\"rw\")", fp);
 
   fp = fopen (fname, "rw");
-  result |= fp_test (fp);
+  result |= fp_test ("fopen(\"rw\")", fp);
 
   fp = fopen64 (fname, "rw");
-  result |= fp_test (fp);
+  result |= fp_test ("fopen64(\"rw\")", fp);
 
   return result;
 }

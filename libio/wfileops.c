@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -313,6 +313,7 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
 {
   struct _IO_codecvt *cd;
   enum __codecvt_result status;
+  const char *read_stop;
 
   if (__builtin_expect (fp->_flags & _IO_NO_READS, 0))
     {
@@ -326,45 +327,48 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
   cd = fp->_codecvt;
 
   /* Maybe there is something left in the external buffer.  */
-  if (fp->_IO_read_ptr < fp->_IO_read_end)
+  if (fp->_IO_read_ptr >= fp->_IO_read_end
+      /* No.  But maybe the read buffer is not fully set up.  */
+      && _IO_file_underflow_mmap (fp) == EOF)
     {
-      /* There is more in the external.  Convert it.  */
-      const char *read_stop = (const char *) fp->_IO_read_ptr;
-
-      if (fp->_wide_data->_IO_buf_base == NULL)
-	{
-	  /* Maybe we already have a push back pointer.  */
-	  if (fp->_wide_data->_IO_save_base != NULL)
-	    {
-	      free (fp->_wide_data->_IO_save_base);
-	      fp->_flags &= ~_IO_IN_BACKUP;
-	    }
-	  _IO_wdoallocbuf (fp);
-	}
-
-      fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
-      fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr =
-	fp->_wide_data->_IO_buf_base;
-      status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
-				       fp->_IO_read_ptr, fp->_IO_read_end,
-				       &read_stop,
-				       fp->_wide_data->_IO_read_ptr,
-				       fp->_wide_data->_IO_buf_end,
-				       &fp->_wide_data->_IO_read_end);
-
-      fp->_IO_read_ptr = (char *) read_stop;
-
-      /* If we managed to generate some text return the next character.  */
-      if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
-	return *fp->_wide_data->_IO_read_ptr;
-
-      /* There is some garbage at the end of the file.  */
-      __set_errno (EILSEQ);
-      fp->_flags |= _IO_ERR_SEEN;
+      /* Nothing available.  */
+      fp->_flags |= _IO_EOF_SEEN;
       return WEOF;
     }
 
-  fp->_flags |= _IO_EOF_SEEN;
+  /* There is more in the external.  Convert it.  */
+  read_stop = (const char *) fp->_IO_read_ptr;
+
+  if (fp->_wide_data->_IO_buf_base == NULL)
+    {
+      /* Maybe we already have a push back pointer.  */
+      if (fp->_wide_data->_IO_save_base != NULL)
+	{
+	  free (fp->_wide_data->_IO_save_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
+      _IO_wdoallocbuf (fp);
+    }
+
+  fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
+  fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr =
+    fp->_wide_data->_IO_buf_base;
+  status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
+				   fp->_IO_read_ptr, fp->_IO_read_end,
+				   &read_stop,
+				   fp->_wide_data->_IO_read_ptr,
+				   fp->_wide_data->_IO_buf_end,
+				   &fp->_wide_data->_IO_read_end);
+
+  fp->_IO_read_ptr = (char *) read_stop;
+
+  /* If we managed to generate some text return the next character.  */
+  if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
+    return *fp->_wide_data->_IO_read_ptr;
+
+  /* There is some garbage at the end of the file.  */
+  __set_errno (EILSEQ);
+  fp->_flags |= _IO_ERR_SEEN;
   return WEOF;
 }
 

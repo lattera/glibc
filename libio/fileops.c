@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -33,6 +33,7 @@
 #include "libioP.h"
 #include <assert.h>
 #include <fcntl.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -558,7 +559,7 @@ _IO_new_file_underflow (fp)
 
 /* Special callback replacing the underflow callbacks if we mmap the
    file.  */
-static int
+int
 _IO_file_underflow_mmap (_IO_FILE *fp)
 {
   if (fp->_IO_read_end < fp->_IO_buf_end)
@@ -576,6 +577,7 @@ _IO_file_underflow_mmap (_IO_FILE *fp)
 	  return EOF;
 	}
 
+      fp->_offset = fp->_IO_buf_end - fp->_IO_buf_base;
       fp->_IO_read_end = fp->_IO_buf_end;
       return *fp->_IO_read_ptr;
     }
@@ -857,6 +859,52 @@ resync:
   return offset;
 }
 
+_IO_off64_t
+_IO_file_seekoff_mmap (fp, offset, dir, mode)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+     int mode;
+{
+  _IO_off64_t result;
+
+  if (mode == 0)
+    dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
+
+  switch (dir)
+    {
+    case _IO_seek_cur:
+      /* Adjust for read-ahead (bytes is buffer). */
+      offset += fp->_IO_read_ptr - fp->_IO_read_base;
+      break;
+    case _IO_seek_set:
+      break;
+    case _IO_seek_end:
+      offset = fp->_IO_read_end - fp->_IO_read_base + offset;
+      break;
+    }
+  /* At this point, dir==_IO_seek_set. */
+
+  if (offset < 0)
+    /* No negative offsets are valid.  */
+    return EOF;
+
+  /* If we are only interested in the current position we've found it now.  */
+  if (mode == 0)
+    return offset;
+
+  result = _IO_SYSSEEK (fp, offset, 0);
+  if (result < 0)
+    return EOF;
+
+  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + offset,
+	    fp->_IO_buf_base + offset);
+
+  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
+
+  return offset;
+}
+
 _IO_ssize_t
 _IO_file_read (fp, buf, size)
      _IO_FILE *fp;
@@ -1122,6 +1170,39 @@ _IO_file_xsgetn (fp, data, n)
   return n - want;
 }
 
+static _IO_size_t _IO_file_xsgetn_mmap __P ((_IO_FILE *, void *, _IO_size_t));
+static _IO_size_t
+_IO_file_xsgetn_mmap (fp, data, n)
+     _IO_FILE *fp;
+     void *data;
+     _IO_size_t n;
+{
+  register _IO_size_t have;
+  char *read_ptr = fp->_IO_read_ptr;
+
+  have = fp->_IO_read_end - fp->_IO_read_ptr;
+
+  if (have < n)
+    {
+      /* Maybe the read buffer is not yet fully set up.  */
+      fp->_IO_read_ptr = fp->_IO_read_end;
+      if (fp->_IO_read_end < fp->_IO_buf_end
+	  && _IO_file_underflow_mmap (fp) != EOF)
+	have = fp->_IO_read_end - read_ptr;
+    }
+
+  if (have == 0)
+    fp->_flags |= _IO_EOF_SEEN;
+  else
+    {
+      have = MIN (have, n);
+      memcpy (data, read_ptr, have);
+      fp->_IO_read_ptr = read_ptr + have;
+    }
+
+  return have;
+}
+
 struct _IO_jump_t _IO_file_jumps =
 {
   JUMP_INIT_DUMMY,
@@ -1155,8 +1236,8 @@ struct _IO_jump_t _IO_file_jumps_mmap =
   JUMP_INIT(uflow, _IO_default_uflow),
   JUMP_INIT(pbackfail, _IO_default_pbackfail),
   JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn),
-  JUMP_INIT(seekoff, _IO_new_file_seekoff),
+  JUMP_INIT(xsgetn, _IO_file_xsgetn_mmap),
+  JUMP_INIT(seekoff, _IO_file_seekoff_mmap),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, _IO_new_file_setbuf),
   JUMP_INIT(sync, _IO_new_file_sync),

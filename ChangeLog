@@ -1,3 +1,18 @@
+2002-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_file_underflow_mmap): Don't define as static.
+	Set offset if read end wasn't the buffer end.
+	(_IO_file_seekoff_mmap): New function.
+	(_IO_file_xsgetn_mmap): New function.
+	(_IO_file_jumps_mmap): Use the two new functions.
+	* libio/wfileops.c (_IO_wfile_underflow_mmap): Handle end read buffer
+	!= end buffer.
+	* libio/libioP.h: Declare _IO_file_seekoff_mmap and
+	_IO_file_underflow_mmap.
+	* libio/iofopen.c: Don't position file descriptor at end of file.
+	* libio/tst-widetext.c: Improve error messages.
+	* stdio-common/tst-rndseek.c: Likewise.
+
 2002-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/statvfs.h: Avoid warning about comma at
