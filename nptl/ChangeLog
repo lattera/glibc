@@ -1,3 +1,18 @@
+2004-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Make rwlock prototypes available also
+	for __USE_XOPEN2K.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Define rwlock
+	types also for __USE_XOPEN2K.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+	[BZ #320]
+
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h

@@ -175,7 +175,7 @@ vsyslog(pri, fmt, ap)
 	      *--nump = '0' + pid % 10;
 	    while ((pid /= 10) != 0);
 
-	    endp = __mempcpy (endp, nump, (nump + sizeof (numbuf)) - nump);
+	    endp = __mempcpy (endp, nump, (numbuf + sizeof (numbuf)) - nump);
 	    *endp++ = ']';
 	    *endp = '\0';
 	    buf = failbuf;

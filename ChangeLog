@@ -1,5 +1,11 @@
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/syslog.c (vsyslog): Fix copying of PID in case of
+	out-of-memory situation.  [BZ #365].
+
+	* sysdeps/alpha/fpu/bits/mathinline.h: Use __NTH instead of
+	__THROW in inline function definitions.
+
 	* posix/spawn.h [__USE_GNU]: Define POSIX_SPAWN_USEVFORK.
 	* posix/spawnattr_setflags.c: Check whether any unknown bit is set
 	in FLAGS parameter and fail if this is the case.

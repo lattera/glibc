@@ -103,7 +103,7 @@ typedef unsigned int pthread_key_t;
 typedef int pthread_once_t;
 
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 /* Data structure for read-write lock variable handling.  The
    structure of the attribute type is deliberately not exposed.  */
 typedef union

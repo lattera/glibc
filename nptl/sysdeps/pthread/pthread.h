@@ -718,7 +718,7 @@ extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
 #endif
 
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 /* Functions for handling read-write locks.  */
 
 /* Initialize read-write lock RWLOCK using attributes ATTR, or use

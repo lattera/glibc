@@ -43,7 +43,7 @@ __BEGIN_DECLS
 
 #define PTHREAD_COND_INITIALIZER {__LOCK_INITIALIZER, 0, "", 0}
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 # define PTHREAD_RWLOCK_INITIALIZER \
   { __LOCK_INITIALIZER, 0, NULL, NULL, NULL,				      \
     PTHREAD_RWLOCK_DEFAULT_NP, PTHREAD_PROCESS_PRIVATE }
@@ -107,7 +107,7 @@ enum
 #define PTHREAD_PROCESS_SHARED	PTHREAD_PROCESS_SHARED
 };
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 enum
 {
   PTHREAD_RWLOCK_PREFER_READER_NP,
@@ -433,7 +433,7 @@ extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
 					int __pshared) __THROW;
 
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 /* Functions for handling read-write locks.  */
 
 /* Initialize read-write lock RWLOCK using attributes ATTR, or use
@@ -451,12 +451,12 @@ extern int pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock) __THROW;
 /* Try to acquire read lock for RWLOCK.  */
 extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock) __THROW;
 
-#ifdef __USE_XOPEN2K
+# ifdef __USE_XOPEN2K
 /* Try to acquire read lock for RWLOCK or return after specfied time.  */
 extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
 				       __const struct timespec *__restrict
 				       __abstime) __THROW;
-#endif
+# endif
 
 /* Acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock) __THROW;
@@ -464,12 +464,12 @@ extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock) __THROW;
 /* Try to acquire write lock for RWLOCK.  */
 extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock) __THROW;
 
-#ifdef __USE_XOPEN2K
+# ifdef __USE_XOPEN2K
 /* Try to acquire write lock for RWLOCK or return after specfied time.  */
 extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
 				       __const struct timespec *__restrict
 				       __abstime) __THROW;
-#endif
+# endif
 
 /* Unlock RWLOCK.  */
 extern int pthread_rwlock_unlock (pthread_rwlock_t *__rwlock) __THROW;

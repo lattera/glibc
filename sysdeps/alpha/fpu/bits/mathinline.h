@@ -1,5 +1,5 @@
 /* Inline math functions for Alpha.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999-2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang.
 
@@ -48,42 +48,46 @@
 
 #define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\
-NAME (TYPE __x, TYPE __y) __THROW					\
+__NTH (NAME (TYPE __x, TYPE __y))					\
 {									\
   TYPE __z;								\
   __asm ("cpys %1, %2, %0" : "=f" (__z) : "f" (__y), "f" (__x));	\
   return __z;								\
 }
 
-__inline_copysign(__copysignf, float)
-__inline_copysign(copysignf, float)
-__inline_copysign(__copysign, double)
-__inline_copysign(copysign, double)
+__inline_copysign (__copysignf, float)
+__inline_copysign (copysignf, float)
+__inline_copysign (__copysign, double)
+__inline_copysign (copysign, double)
 
 #undef __MATH_INLINE_copysign
 
 
 #if __GNUC_PREREQ (2, 8)
-__MATH_INLINE float __fabsf (float __x) __THROW { return __builtin_fabsf (__x); }
-__MATH_INLINE float fabsf (float __x) __THROW { return __builtin_fabsf (__x); }
-__MATH_INLINE double __fabs (double __x) __THROW { return __builtin_fabs (__x); }
-__MATH_INLINE double fabs (double __x) __THROW { return __builtin_fabs (__x); }
+__MATH_INLINE float
+__NTH (__fabsf (float __x)) { return __builtin_fabsf (__x); }
+__MATH_INLINE float
+__NTH (fabsf (float __x)) { return __builtin_fabsf (__x); }
+__MATH_INLINE double
+__NTH (__fabs (double __x)) { return __builtin_fabs (__x); }
+__MATH_INLINE double
+__NTH (fabs (double __x)) { return __builtin_fabs (__x); }
 #else
-#define __inline_fabs(NAME, TYPE)			\
+# define __inline_fabs(NAME, TYPE)			\
 __MATH_INLINE TYPE					\
-NAME (TYPE __x) __THROW					\
+__NTH (NAME (TYPE __x))					\
 {							\
   TYPE __z;						\
   __asm ("cpys $f31, %1, %0" : "=f" (__z) : "f" (__x));	\
   return __z;						\
 }
 
-__inline_fabs(__fabsf, float)
-__inline_fabs(fabsf, float)
-__inline_fabs(__fabs, double)
-__inline_fabs(fabs, double)
+__inline_fabs (__fabsf, float)
+__inline_fabs (fabsf, float)
+__inline_fabs (__fabs, double)
+__inline_fabs (fabs, double)
 
-#undef __inline_fabs
+# undef __inline_fabs
 #endif
 
 
@@ -92,7 +96,7 @@ __inline_fabs(fabs, double)
    must be integral, as this avoids unpleasant integer overflows.  */
 
 __MATH_INLINE float
-__floorf (float __x) __THROW
+__NTH (__floorf (float __x))
 {
   /* Check not zero since floor(-0) == -0.  */
   if (__x != 0 && fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
@@ -118,7 +122,7 @@ __floorf (float __x) __THROW
 }
 
 __MATH_INLINE double
-__floor (double __x) __THROW
+__NTH (__floor (double __x))
 {
   if (__x != 0 && fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
     {
@@ -136,40 +140,46 @@ __floor (double __x) __THROW
   return __x;
 }
 
-__MATH_INLINE float floorf (float __x) __THROW { return __floorf(__x); }
-__MATH_INLINE double floor (double __x) __THROW { return __floor(__x); }
+__MATH_INLINE float __NTH (floorf (float __x)) { return __floorf(__x); }
+__MATH_INLINE double __NTH (floor (double __x)) { return __floor(__x); }
 
 
 #ifdef __USE_ISOC99
 
-__MATH_INLINE float __fdimf (float __x, float __y) __THROW
+__MATH_INLINE float
+__NTH (__fdimf (float __x, float __y))
 {
   return __x < __y ? 0.0f : __x - __y;
 }
 
-__MATH_INLINE float fdimf (float __x, float __y) __THROW
+__MATH_INLINE float
+__NTH (fdimf (float __x, float __y))
 {
   return __x < __y ? 0.0f : __x - __y;
 }
 
-__MATH_INLINE double __fdim (double __x, double __y) __THROW
+__MATH_INLINE double
+__NTH (__fdim (double __x, double __y))
 {
   return __x < __y ? 0.0 : __x - __y;
 }
 
-__MATH_INLINE double fdim (double __x, double __y) __THROW
+__MATH_INLINE double
+__NTH (fdim (double __x, double __y))
 {
   return __x < __y ? 0.0 : __x - __y;
 }
 
 /* Test for negative number.  Used in the signbit() macro.  */
-__MATH_INLINE int __signbitf (float __x) __THROW
+__MATH_INLINE int
+__NTH (__signbitf (float __x))
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
 }
 
-__MATH_INLINE int __signbit (double __x) __THROW
+__MATH_INLINE int
+__NTH (__signbit (double __x))
 {
   __extension__ union { double __d; long __i; } __u = { __d: __x };
   return __u.__i < 0;
