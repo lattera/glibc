@@ -45,7 +45,7 @@ get_proc_path (char *buffer, size_t bufsize)
 {
   struct mntent mount_point;
   struct mntent *entry;
-  char *result;
+  char *result = NULL;
   char *copy_result;
   FILE *fp;
 

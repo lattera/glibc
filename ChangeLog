@@ -1,5 +1,8 @@
 2000-07-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path):
+	Initialize result.
+
 	* math/test-fpucw.c: Include <stdio.h> for printf.
 
 2000-07-05  Greg McGary  <greg@mcgary.org>
