@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,48 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stddef.h>
+#include <string.h>
 #include <unistd.h>
+
 #include <hurd.h>
-#include <fcntl.h>
 #include <hurd/port.h>
 
-/* Change the current root to FILE_NAME.  */
-
-/* XXX shouldn't this be __chroot? */
+/* Make PATH be the root directory (the starting point for absolute
+   paths).  Note that while on traditional UNIX systems this call is
+   restricted to the super-user, it isn't on the Hurd.  */
 int
-chroot (file_name)
-     const char *file_name;
+chroot (const char *path)
 {
-  return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CRDIR],
-						file_name);
+  const char *lookup;
+  size_t len;
+  file_t dir, root;
+  error_t err;
+
+  /* Append trailing "/." to directory name to force ENOTDIR if it's not a
+     directory and EACCES if we don't have search permission.  */
+  len = strlen (path);
+  if (path[len - 2] == '/' && path[len - 1] == '.')
+    lookup = path;
+  else
+    {
+      char *n = alloca (len + 2);
+      memcpy (n, path, len);
+      n[len] = '/';
+      n[len + 1] = '.';
+      n[len + 2] = '\0';
+      lookup = n;
+    }
+
+  dir = __file_name_lookup (lookup, 0, 0);
+  if (dir == MACH_PORT_NULL)
+    return -1;
+
+  /* Prevent going through DIR's ..  */
+  err = __file_reparent (dir, MACH_PORT_NULL, &root);
+  __mach_port_deallocate (__mach_task_self (), dir);
+  if (err)
+    return __hurd_fail (err);
+
+  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
+  return 0;
 }

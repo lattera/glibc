@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,14 +17,34 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <unistd.h>
+
 #include <hurd.h>
 #include <hurd/fd.h>
-#include <fcntl.h>
+#include <hurd/port.h>
 
 /* Change the current root directory to FD.  */
 int
 fchroot (int fd)
 {
-  return _hurd_change_directory_port_from_fd (&_hurd_ports[INIT_PORT_CRDIR],
-					      fd);
+  error_t err;
+  file_t dir;
+
+  err = HURD_DPORT_USE (fd,
+			({
+			  dir = __file_name_lookup_under (port, ".", 0, 0);
+			  dir == MACH_PORT_NULL ? errno : 0;
+			}));
+
+  if (! err)
+    {
+      file_t root;
+
+      /* Prevent going through DIR's ..  */
+      err = __file_reparent (dir, MACH_PORT_NULL, &root);
+      __mach_port_deallocate (__mach_task_self (), dir);
+      if (! err)
+	_hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
+    }
+
+  return err ? __hurd_fail (err) : 0;
 }

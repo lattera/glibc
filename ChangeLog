@@ -1,3 +1,10 @@
+2001-01-19  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/chroot.c (chroot): Revert 1999-02-27 changes,
+	but change looking up the initial directory port in a similar way
+	as done by _hurd_change_directory_port_from_name.
+	* hurd/fchroot.c (fchroot): Likewise.
+
 2001-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): If HAVE_AUX_XID is
