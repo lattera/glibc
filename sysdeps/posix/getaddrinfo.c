@@ -89,7 +89,7 @@ struct gaih_addrtuple
   {
     struct gaih_addrtuple *next;
     int family;
-    char addr[16];
+    uint32_t addr[4];
     uint32_t scopeid;
   };
 
@@ -290,92 +290,6 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   no_data = 0;								      \
   do {									      \
     tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
-    rc = __gethostbyname2_r (name, _family, &th, tmpbuf,		      \
-         tmpbuflen, &h, &herrno);					      \
-  } while (rc == ERANGE && herrno == NETDB_INTERNAL);			      \
-  if (rc != 0)								      \
-    {									      \
-      if (herrno == NETDB_INTERNAL)					      \
-	{								      \
-	  __set_h_errno (herrno);					      \
-	  return -EAI_SYSTEM;						      \
-	}								      \
-      if (herrno == TRY_AGAIN)						      \
-	no_data = EAI_AGAIN;						      \
-      else								      \
-	no_data = herrno == NO_DATA;					      \
-    }									      \
-  else if (h != NULL)							      \
-    {									      \
-      for (i = 0; h->h_addr_list[i]; i++)				      \
-	{								      \
-	  if (*pat == NULL) {						      \
-	    *pat = __alloca (sizeof (struct gaih_addrtuple));		      \
-	    (*pat)->scopeid = 0;					      \
-	  }								      \
-	  (*pat)->next = NULL;						      \
-	  (*pat)->family = _family;					      \
-	  memcpy ((*pat)->addr, h->h_addr_list[i],			      \
-		 sizeof(_type));					      \
-	  pat = &((*pat)->next);					      \
-	}								      \
-      if (_family == AF_INET6)						      \
-	got_ipv6 = true;						      \
-    }									      \
-  else if (_family == AF_INET6 && (req->ai_flags & AI_V4MAPPED))	      \
-    {									      \
-      /* We have to add V4 mapped addresses.  Maybe we discard them	      \
-         later again but we get them anyhow for now.  */		      \
-      while ((rc = __gethostbyname2_r (name, AF_INET6, &th, tmpbuf,	      \
-				       tmpbuflen, &h, &herrno)) == ERANGE     \
-	     && herrno == NETDB_INTERNAL)				      \
-	tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	      \
-									      \
-      if (rc != 0)							      \
-	{								      \
-	  if (herrno == NETDB_INTERNAL)					      \
-	    {								      \
-	      __set_h_errno (herrno);					      \
-	      return -EAI_SYSTEM;					      \
-	    }								      \
-	  if (herrno == TRY_AGAIN)					      \
-	    no_data = EAI_AGAIN;					      \
-	  else								      \
-	    no_data = herrno == NO_DATA;				      \
-	}								      \
-      else if (h != NULL)						      \
-	{								      \
-	  for (i = 0; h->h_addr_list[i]; ++i)				      \
-	    {								      \
-	      if (*pat == NULL)						      \
-		{							      \
-		  *pat = __alloca (sizeof (struct gaih_addrtuple));	      \
-		  (*pat)->scopeid = 0;					      \
-		}							      \
-	      uint32_t *addr = (uint32_t *) (*pat)->addr;		      \
-	      (*pat)->next = NULL;					      \
-	      (*pat)->family = _family;					      \
-	      addr[3] = *(uint32_t *) h->h_addr_list[i];		      \
-	      addr[2] = htonl (0xffff);					      \
-	      addr[1] = 0;						      \
-	      addr[0] = 0;						      \
-	      pat = &((*pat)->next);					      \
-	    }								      \
-	}								      \
-    }									      \
- }
-
-
-#define gethosts2(_family, _type) \
- {									      \
-  int i, herrno;							      \
-  size_t tmpbuflen;							      \
-  struct hostent th;							      \
-  char *tmpbuf = NULL;							      \
-  tmpbuflen = 512;							      \
-  no_data = 0;								      \
-  do {									      \
-    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
     rc = 0;								      \
     status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,		      \
            tmpbuflen, &rc, &herrno));					      \
@@ -400,23 +314,42 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
     {									      \
       for (i = 0; h->h_addr_list[i]; i++)				      \
 	{								      \
-	  if (*pat == NULL) {						      \
-	    *pat = __alloca (sizeof (struct gaih_addrtuple));		      \
-	    (*pat)->scopeid = 0;					      \
-	  }								      \
+	  if (*pat == NULL)						      \
+	    {								      \
+	      *pat = __alloca (sizeof (struct gaih_addrtuple));		      \
+	      (*pat)->scopeid = 0;					      \
+	    }								      \
+	  uint32_t *addr = (*pat)->addr;				      \
 	  (*pat)->next = NULL;						      \
-	  (*pat)->family = _family;					      \
-	  memcpy ((*pat)->addr, h->h_addr_list[i],			      \
-		 sizeof(_type));					      \
+	  if (_family == AF_INET && req->ai_family == AF_INET6)		      \
+	    {								      \
+	      (*pat)->family = AF_INET6;				      \
+	      addr[3] = *(uint32_t *) h->h_addr_list[i];		      \
+	      addr[2] = htonl (0xffff);					      \
+	      addr[1] = 0;						      \
+	      addr[0] = 0;						      \
+	    }								      \
+	  else								      \
+	    {								      \
+	      (*pat)->family = _family;					      \
+	      memcpy (addr, h->h_addr_list[i], sizeof(_type));		      \
+	    }								      \
 	  pat = &((*pat)->next);					      \
 	}								      \
+									      \
+      if (_family == AF_INET6 && i > 0)					      \
+	got_ipv6 = true;						      \
     }									      \
  }
+
 
 typedef enum nss_status (*nss_gethostbyname2_r)
   (const char *name, int af, struct hostent *host,
    char *buffer, size_t buflen, int *errnop,
    int *h_errnop);
+typedef enum nss_status (*nss_getcanonname_r)
+  (const char *name, char *buffer, size_t buflen, char **result,
+   int *errnop, int *h_errnop);
 extern service_user *__nss_hosts_database attribute_hidden;
 
 static int
@@ -428,6 +361,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   struct gaih_addrtuple *at = NULL;
   int rc;
   bool got_ipv6 = false;
+  const char *canon = NULL;
 
   if (req->ai_protocol || req->ai_socktype)
     {
@@ -581,10 +515,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    at->family = AF_INET;
 	  else if (req->ai_family == AF_INET6 && req->ai_flags & AI_V4MAPPED)
 	    {
-	      ((uint32_t *) at->addr)[3] = *(uint32_t *) at->addr;
-	      ((uint32_t *) at->addr)[2] = htonl (0xffff);
-	      ((uint32_t *) at->addr)[1] = 0;
-	      ((uint32_t *) at->addr)[0] = 0;
+	      at->addr[3] = at->addr[0];
+	      at->addr[2] = htonl (0xffff);
+	      at->addr[1] = 0;
+	      at->addr[0] = 0;
 	      at->family = AF_INET6;
 	    }
 	  else
@@ -607,7 +541,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      else if (req->ai_family == AF_INET
 		       && IN6_IS_ADDR_V4MAPPED (at->addr))
 		{
-		  *(uint32_t *) at->addr = ((uint32_t *) at->addr)[3];
+		  at->addr[0] = at->addr[3];
 		  at->family = AF_INET;
 		}
 	      else
@@ -645,81 +579,109 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
+	  service_user *nip = NULL;
+	  enum nss_status inet6_status = NSS_STATUS_UNAVAIL;
+	  enum nss_status status = NSS_STATUS_UNAVAIL;
+	  int no_more;
+	  nss_gethostbyname2_r fct;
+	  int old_res_options;
+
+	  if (__nss_hosts_database != NULL)
+	    {
+	      no_more = 0;
+	      nip = __nss_hosts_database;
+	    }
+	  else
+	    no_more = __nss_database_lookup ("hosts", NULL,
+					     "dns [!UNAVAIL=return] files",
+					     &nip);
+
+	  if (__res_maybe_init (&_res, 0) == -1)
+	    no_more = 1;
+
 	  /* If we are looking for both IPv4 and IPv6 address we don't
 	     want the lookup functions to automatically promote IPv4
 	     addresses to IPv6 addresses.  Currently this is decided
 	     by setting the RES_USE_INET6 bit in _res.options.  */
-	  if (req->ai_family == AF_UNSPEC)
+	  old_res_options = _res.options;
+	  _res.options &= ~RES_USE_INET6;
+
+	  while (!no_more)
 	    {
-	      service_user *nip = NULL;
-	      enum nss_status inet6_status, status = NSS_STATUS_UNAVAIL;
-	      int no_more;
-	      nss_gethostbyname2_r fct;
-	      int old_res_options;
+	      fct = __nss_lookup_function (nip, "gethostbyname2_r");
 
-	      if (__nss_hosts_database != NULL)
+	      if (fct != NULL)
 		{
-		  no_more = 0;
-		  nip = __nss_hosts_database;
-		}
-	      else
-		no_more = __nss_database_lookup ("hosts", NULL,
-						 "dns [!UNAVAIL=return] files",
-						 &nip);
-
-	      if (__res_maybe_init (&_res, 0) == -1)
-		no_more = 1;
-	      old_res_options = _res.options;
-	      _res.options &= ~RES_USE_INET6;
-
-	      while (!no_more)
-		{
-		  fct = __nss_lookup_function (nip, "gethostbyname2_r");
-
-		  if (fct != NULL)
+		  if (req->ai_family == AF_INET6
+		      || req->ai_family == AF_UNSPEC)
 		    {
-		      gethosts2 (AF_INET6, struct in6_addr);
+		      gethosts (AF_INET6, struct in6_addr);
 		      no_inet6_data = no_data;
 		      inet6_status = status;
-		      gethosts2 (AF_INET, struct in_addr);
+		    }
+		  if (req->ai_family == AF_INET
+		      || req->ai_family == AF_UNSPEC
+		      || (req->ai_family == AF_INET6
+			  && (req->ai_flags & AI_V4MAPPED)))
+		    {
+		      gethosts (AF_INET, struct in_addr);
 
-		      /* If we found one address for AF_INET or AF_INET6,
-			 don't continue the search.  */
-		      if (inet6_status == NSS_STATUS_SUCCESS ||
-			  status == NSS_STATUS_SUCCESS)
-			break;
-
-		      /* We can have different states for AF_INET
-			 and AF_INET6. Try to find a usefull one for
-			 both.  */
-		      if (inet6_status == NSS_STATUS_TRYAGAIN)
-			status = NSS_STATUS_TRYAGAIN;
-		      else if (status == NSS_STATUS_UNAVAIL &&
-			       inet6_status != NSS_STATUS_UNAVAIL)
-			status = inet6_status;
+		      if (req->ai_family == AF_INET)
+			{
+			  no_inet6_data = no_data;
+			  inet6_status = status;
+			}
 		    }
 
-		  if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
-		    break;
+		  /* If we found one address for AF_INET or AF_INET6,
+		     don't continue the search.  */
+		  if (inet6_status == NSS_STATUS_SUCCESS
+		      || status == NSS_STATUS_SUCCESS)
+		    {
+		      /* If we need the canonical name, get it from the same
+			 service as the result.  */
+		      nss_getcanonname_r cfct;
+		      int herrno;
 
-		  if (nip->next == NULL)
-		    no_more = -1;
-		  else
-		    nip = nip->next;
+		      cfct = __nss_lookup_function (nip, "getcanonname_r");
+		      if (cfct != NULL)
+			{
+			  const size_t max_fqdn_len = 256;
+			  char *buf = alloca (max_fqdn_len);
+			  char *s;
+
+			  if (DL_CALL_FCT (cfct, (name, buf, max_fqdn_len,
+						  &s, &rc, &herrno))
+			      == NSS_STATUS_SUCCESS)
+			    canon = s;
+			  else
+			    /* Set to name now to avoid using
+			       gethostbyaddr.  */
+			    canon = name;
+			}
+
+		      break;
+		    }
+
+		  /* We can have different states for AF_INET and
+		     AF_INET6.  Try to find a useful one for both.  */
+		  if (inet6_status == NSS_STATUS_TRYAGAIN)
+		    status = NSS_STATUS_TRYAGAIN;
+		  else if (status == NSS_STATUS_UNAVAIL &&
+			   inet6_status != NSS_STATUS_UNAVAIL)
+		    status = inet6_status;
 		}
 
-	      _res.options = old_res_options;
+	      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
+		break;
+
+	      if (nip->next == NULL)
+		no_more = -1;
+	      else
+		nip = nip->next;
 	    }
-	  else if (req->ai_family == AF_INET6)
-	    {
-	      gethosts (AF_INET6, struct in6_addr);
-	      no_inet6_data = no_data;
-	    }
-	  else if (req->ai_family == AF_INET)
-	    {
-	      gethosts (AF_INET, struct in_addr);
-	      no_inet6_data = no_data;
-	    }
+
+	  _res.options = old_res_options;
 
 	  if (no_data != 0 && no_inet6_data != 0)
 	    {
@@ -742,13 +704,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
       atr = at = __alloca (sizeof (struct gaih_addrtuple));
       memset (at, '\0', sizeof (struct gaih_addrtuple));
 
-      if (req->ai_family == 0)
+      if (req->ai_family == AF_UNSPEC)
 	{
 	  at->next = __alloca (sizeof (struct gaih_addrtuple));
 	  memset (at->next, '\0', sizeof (struct gaih_addrtuple));
 	}
 
-      if (req->ai_family == 0 || req->ai_family == AF_INET6)
+      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	{
 	  at->family = AF_INET6;
 	  if ((req->ai_flags & AI_PASSIVE) == 0)
@@ -756,11 +718,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  atr = at->next;
 	}
 
-      if (req->ai_family == 0 || req->ai_family == AF_INET)
+      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	{
 	  atr->family = AF_INET;
 	  if ((req->ai_flags & AI_PASSIVE) == 0)
-	    *(uint32_t *) atr->addr = htonl (INADDR_LOOPBACK);
+	    atr->addr[0] = htonl (INADDR_LOOPBACK);
 	}
     }
 
@@ -770,7 +732,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
   {
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
-    size_t socklen, namelen;
+    size_t socklen;
+    size_t canonlen;
     sa_family_t family;
 
     /*
@@ -778,76 +741,45 @@ gaih_inet (const char *name, const struct gaih_service *service,
      */
     while (at2 != NULL)
       {
-	const char *c = NULL;
-
 	/* Only the first entry gets the canonical name.  */
 	if (at2 == at && (req->ai_flags & AI_CANONNAME) != 0)
 	  {
-	    struct hostent *h = NULL;
-
-	    int herrno;
-	    struct hostent th;
-	    size_t tmpbuflen = 512;
-	    char *tmpbuf = NULL;
-
-	    do
+	    if (canon == NULL)
 	      {
-		tmpbuf = extend_alloca (tmpbuf, tmpbuflen, tmpbuflen * 2);
-		rc = __gethostbyaddr_r (at2->addr,
-					((at2->family == AF_INET6)
-					 ? sizeof(struct in6_addr)
-					 : sizeof(struct in_addr)),
-					at2->family, &th, tmpbuf, tmpbuflen,
-					&h, &herrno);
+		struct hostent *h = NULL;
+		int herrno;
+		struct hostent th;
+		size_t tmpbuflen = 512;
+		char *tmpbuf = NULL;
 
-	      }
-	    while (rc == ERANGE && herrno == NETDB_INTERNAL);
-
-	    if (rc != 0 && herrno == NETDB_INTERNAL)
-	      {
-		__set_h_errno (herrno);
-		return -EAI_SYSTEM;
-	      }
-
-	    if (h != NULL)
-	      c = h->h_name;
-	    else
-	      {
-		/* We have to try to get the canonical in some other
-		   way.  If we are looking for either AF_INET or
-		   AF_INET6 try the other line.  */
-		if (req->ai_family == AF_UNSPEC)
+		do
 		  {
-		    struct addrinfo *p = NULL;
-		    struct addrinfo **end = &p;
-		    struct addrinfo localreq = *req;
-		    struct addrinfo *runp;
+		    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, tmpbuflen * 2);
+		    rc = __gethostbyaddr_r (at2->addr,
+					    ((at2->family == AF_INET6)
+					     ? sizeof (struct in6_addr)
+					     : sizeof (struct in_addr)),
+					    at2->family, &th, tmpbuf,
+					    tmpbuflen, &h, &herrno);
+		  }
+		while (rc == ERANGE && herrno == NETDB_INTERNAL);
 
-		    localreq.ai_family = AF_INET + AF_INET6 - at2->family;
-		    (void) gaih_inet (name, service, &localreq, end);
-
-		    runp = p;
-		    while (runp != NULL)
-		      {
-			if (p->ai_canonname != name)
-			  {
-			    c = strdupa (p->ai_canonname);
-			    break;
-			  }
-			runp = runp->ai_next;
-		      }
-
-		    freeaddrinfo (p);
+		if (rc != 0 && herrno == NETDB_INTERNAL)
+		  {
+		    __set_h_errno (herrno);
+		    return -EAI_SYSTEM;
 		  }
 
-		/* If this code is used the missing canonical name is
-		   substituted with the name passed in by the user.  */
-		if (c == NULL)
-		  c = name;
+		if (h != NULL)
+		  canon = h->h_name;
+		else
+		  {
+		    assert (name != NULL);
+		    /* If the canonical name cannot be determined, use
+		       the passed in string.  */
+		    canon = name;
+		  }
 	      }
-
-	    if (c == NULL)
-	      return GAIH_OKIFUNSPEC | -EAI_NONAME;
 
 #ifdef HAVE_LIBIDN
 	    if (req->ai_flags & AI_CANONIDN)
@@ -859,7 +791,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  idn_flags |= IDNA_USE_STD3_ASCII_RULES;
 
 		char *out;
-		int rc = __idna_to_unicode_lzlz (c, &out, idn_flags);
+		int rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
 		if (rc != IDNA_SUCCESS)
 		  {
 		    if (rc == IDNA_MALLOC_ERROR)
@@ -870,18 +802,18 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  }
 		/* In case the output string is the same as the input
 		   string no new string has been allocated.  */
-		if (out != c)
+		if (out != canon)
 		  {
-		    c = strdupa (out);
+		    canon = strdupa (out);
 		    free (out);
 		  }
 	      }
 #endif
 
-	    namelen = strlen (c) + 1;
+	    canonlen = strlen (canon) + 1;
 	  }
 	else
-	  namelen = 0;
+	  canonlen = 0;
 
 	if (at2->family == AF_INET6)
 	  {
@@ -891,7 +823,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    /* If we looked up IPv4 mapped address discard them here if
 	       the caller isn't interested in all address and we have
 	       found at least one IPv6 address.  */
-	    if (! got_ipv6
+	    if (got_ipv6
 		&& (req->ai_flags & (AI_V4MAPPED|AI_ALL)) == AI_V4MAPPED
 		&& IN6_IS_ADDR_V4MAPPED (at2->addr))
 	      goto ignore;
@@ -904,7 +836,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
-	    *pai = malloc (sizeof (struct addrinfo) + socklen + namelen);
+	    *pai = malloc (sizeof (struct addrinfo) + socklen + canonlen);
 	    if (*pai == NULL)
 	      return -EAI_MEMORY;
 
@@ -913,7 +845,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    (*pai)->ai_socktype = st2->socktype;
 	    (*pai)->ai_protocol = st2->protocol;
 	    (*pai)->ai_addrlen = socklen;
-	    (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
+	    (*pai)->ai_addr = (void *) (*pai + 1);
 #if SALEN
 	    (*pai)->ai_addr->sa_len = socklen;
 #endif /* SALEN */
@@ -924,30 +856,30 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		struct sockaddr_in6 *sin6p =
 		  (struct sockaddr_in6 *) (*pai)->ai_addr;
 
+		sin6p->sin6_port = st2->port;
 		sin6p->sin6_flowinfo = 0;
 		memcpy (&sin6p->sin6_addr,
 			at2->addr, sizeof (struct in6_addr));
-		sin6p->sin6_port = st2->port;
 		sin6p->sin6_scope_id = at2->scopeid;
 	      }
 	    else
 	      {
 		struct sockaddr_in *sinp =
 		  (struct sockaddr_in *) (*pai)->ai_addr;
+		sinp->sin_port = st2->port;
 		memcpy (&sinp->sin_addr,
 			at2->addr, sizeof (struct in_addr));
-		sinp->sin_port = st2->port;
 		memset (sinp->sin_zero, '\0', sizeof (sinp->sin_zero));
 	      }
 
-	    if (namelen != 0)
+	    if (canonlen != 0)
 	      {
 		(*pai)->ai_canonname = ((void *) (*pai) +
 					sizeof (struct addrinfo) + socklen);
-		strcpy ((*pai)->ai_canonname, c);
+		strcpy ((*pai)->ai_canonname, canon);
 
 		/* We do not need to allocate the canonical name anymore.  */
-		namelen = 0;
+		canonlen = 0;
 	      }
 	    else
 	      (*pai)->ai_canonname = NULL;

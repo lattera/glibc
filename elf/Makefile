@@ -82,7 +82,7 @@ distribute	:= rtld-Rules \
 		   tst-array1.exp tst-array2.exp tst-array4.exp \
 		   tst-array2dep.c tst-piemod1.c \
 		   tst-execstack-mod.c tst-dlmodcount.c \
-		   check-textrel.c dl-sysdep.h
+		   check-textrel.c dl-sysdep.h test-dlopenrpathmod.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -152,7 +152,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
-	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount
+	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount tst-dlopenrpath
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -184,7 +184,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod $(modules-execstack-$(have-z-execstack))
+		tst-alignmod $(modules-execstack-$(have-z-execstack)) \
+		tst-dlopenrpathmod
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -747,3 +748,9 @@ $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
 endif
+
+$(objpfx)tst-dlopenrpathmod.so: $(libdl)
+$(objpfx)tst-dlopenrpath: $(objpfx)tst-dlopenrpathmod.so $(libdl)
+CFLAGS-tst-dlopenrpath.c += -DPFX=\"$(objpfx)\"
+LDFLAGS-tst-dlopenrpathmod.so += -Wl,-rpath,\$$ORIGIN/test-subdir
+$(objpfx)tst-dlopenrpath.out: $(objpfx)firstobj.so

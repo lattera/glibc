@@ -57,7 +57,7 @@ libanl-routines := gai_cancel gai_error gai_misc gai_notify gai_suspend \
 subdir-dirs = nss_dns
 vpath %.c nss_dns
 
-libnss_dns-routines	:= dns-host dns-network
+libnss_dns-routines	:= dns-host dns-network dns-canon
 ifneq ($(build-static-nss),yes)
 libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif

@@ -1,6 +1,24 @@
 2004-08-15  Ulrich Drepper  <drepper@redhat.com>
 
-	* intl/tst-gettext.sh: Adjust for change for de.po file to UTF-8.
+	* sysdeps/posix/getaddrinfo.c (gaih_addrtuple): Change type of
+	addr to avoid casts.
+	(gethosts): Removed.
+	(gethosts2): Renamed to gethosts.  Make it usable for family !=
+	AF_UNSPEC.  Fix AI_V4MAPPED.
+	(gaih_inet): Remove use of old gethosts.  Always use what used to be
+	gethosts2.  If entry is found, try to use the same NSS module's
+	getcanonname_r function.  Use gethostbyaddr for AI_CANONNAME only
+	if getcanonname_r was not available.  Fix filtering of AI_V4MAPPED
+	addresses.  Numerous cleanups.
+	* resolv/nss_dns/dns-canon.c: New file.
+	* resolv/Makefile (libnss_dns-routines): Add dns-canon.
+	* resolv/Versions (libnss_dns): Add _nss_dns_getcanonname_r.
+
+	* elf/Makefile: Add rules to build and run tst-dlopenrpath.
+	* elf/tst-dlopenrpath.c: New file.
+	* elf/tst-dlopenrpathmod.c: New file.
+
+	* intl/tst-gettext.sh: Adjust for change of de.po file to UTF-8.
 	* intl/tst-gettext.c: Likewise.
 
 	* nss/getent.c (ahosts_keys_int): Correctly print IPv6 addresses.

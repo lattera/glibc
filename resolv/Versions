@@ -86,7 +86,7 @@ libnss_dns {
   GLIBC_PRIVATE {
     _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
     _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
-    _nss_dns_getnetbyname_r;
+    _nss_dns_getnetbyname_r; _nss_dns_getcanonname_r;
   }
 }
 
