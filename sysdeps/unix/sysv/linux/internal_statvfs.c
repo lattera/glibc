@@ -40,7 +40,7 @@
      file.  The way we can test for matching filesystem is using the
      device number.  */
   buf->f_flag = 0;
-  if (fstat (fd, &st) >= 0)
+  if (STAT (&st) >= 0)
     {
       int save_errno = errno;
       struct mntent mntbuf;

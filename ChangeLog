@@ -1,5 +1,8 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/TESTS: Fix expected result for test cases with * with no
+	leading expression.
+
 	* sysdeps/unix/sysv/linux/fstatvfs.c: Move actual code in...
 	* sysdeps/unix/sysv/linux/internal_statvfs.c: ...here.  New file.
 	* sysdeps/unix/sysv/linux/statvfs.c: Don't use fstatvfs since the

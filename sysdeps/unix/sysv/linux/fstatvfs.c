@@ -37,8 +37,9 @@ fstatvfs (int fd, struct statvfs *buf)
   if (__fstatfs (fd, &fsbuf) < 0)
     return -1;
 
+#define STAT(st) fstat (fd, st)
 #include "internal_statvfs.c"
-  
+
   /* We signal success if the statfs call succeeded.  */
   return 0;
 }

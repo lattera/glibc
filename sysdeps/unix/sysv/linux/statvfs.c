@@ -18,8 +18,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <mntent.h>
+#include <paths.h>
+#include <string.h>
+#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/statfs.h>
 #include <sys/statvfs.h>
 
 
@@ -30,11 +34,12 @@ statvfs (const char *file, struct statvfs *buf)
   struct stat st;
 
   /* Get as much information as possible from the system.  */
-  if (__statfs (fd, &fsbuf) < 0)
+  if (__statfs (file, &fsbuf) < 0)
     return -1;
 
+#define STAT(st) stat (file, st)
 #include "internal_statvfs.c"
-  
+
   /* We signal success if the statfs call succeeded.  */
   return 0;
 }
