@@ -39,6 +39,7 @@ Cambridge, MA 02139, USA.  */
 #define _SC_VERSION		7
 #define _SC_PASS_MAX		8
 #define _SC_XOPEN_VERSION	9
+#define _SC_TZNAME_MAX		666 /* Not handled by SCO's system call.  */
 
 #ifdef __USE_POSIX2
 /* Values for the NAME argument to `confstr'.  */
