@@ -1,3 +1,10 @@
+2003-03-16  Roland McGrath  <roland@redhat.com>
+
+	* tst-fork4.c: Include <string.h>.
+	* tst-signal2.c: Likewise.
+	* tst-mutex5.c (do_test): exit -> return.
+	* tst-mutex2.c: Include <stdlib.h>.
+
 2003-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Work around red
