@@ -212,9 +212,6 @@ extern char *tzname[2];
 extern long int __tzname_max __P ((void));
 
 extern void tzset __P ((void));
-#ifdef	__OPTIMIZE__
-#define	tzset()	__tzset()
-#endif /* Optimizing.  */
 #endif
 
 #ifdef	__USE_SVID
