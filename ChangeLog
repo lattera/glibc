@@ -1,5 +1,8 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/features.h: Correct description of what happens if no
+	*_SOURCE macro is defined.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Handle req->ai_socktype
 	correctly.  Reported by Felix von Leitner <leitner@convergence.de>.
 
