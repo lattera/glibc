@@ -1073,6 +1073,11 @@ typedef struct
 #define R_386_GOTOFF	   9		/* 32 bit offset to GOT */
 #define R_386_GOTPC	   10		/* 32 bit PC relative offset to GOT */
 #define R_386_32PLT	   11
+#define R_386_TLS_GD	   18		/* Direct 32 bit for GNU version of
+					   general dynamic thread local data */
+#define R_386_TLS_LDM	   19		/* Direct 32 bit for GNU version of
+					   local dynamic thread local data
+					   in LE code */
 #define R_386_16	   20
 #define R_386_PC16	   21
 #define R_386_8		   22
@@ -1084,7 +1089,7 @@ typedef struct
 					   __tls_get_addr() */
 #define R_386_TLS_GD_POP   27		/* Tag for popl in GD TLS code */
 #define R_386_TLS_LDM_32   28		/* Direct 32 bit for local dynamic
-					   thread local data in GD code */
+					   thread local data in LE code */
 #define R_386_TLS_LDM_PUSH 29		/* Tag for pushl in LDM TLS code */
 #define R_386_TLS_LDM_CALL 30		/* Relocation for call to
 					   __tls_get_addr() in LDM code */

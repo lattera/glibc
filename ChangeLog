@@ -1,5 +1,7 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Define R_386_TLS_GD and R_386_TLS_LDM.
+
 	* elf/tst-tls3.c: New file.
 	* elf/tst-tlsmod1.c: New file.
 	* elf/Makefile: Add rules to build and run tst-tls3.
