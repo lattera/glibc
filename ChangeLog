@@ -1,3 +1,21 @@
+1998-04-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile [$(subdirs)=misc]
+	(sysdep_routines): Add s_pread64 and s_pwrite64.
+
+1998-04-27 09:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile (distribute): Remove generated .h files.
+	* iconvdata/koi8-r.h: Removed.
+	* iconvdata/latin-greek-1.h: Removed.
+	* iconvdata/latin-greek.h: Removed.
+
+	* iconvdata/testdata/CP1258..UTF8: New iconv test source.
+	* iconvdata/KOI-8: Likewise.
+	* iconvdata/KOI-8..UTF8: Likewise.
+	* iconvdata/KOI8-R: Likewise.
+	* iconvdata/KOI8-R..UTF8: Likewise.
+
 1998-04-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* streams/Makefile (headers): Add sys/stropts.h.

@@ -177,26 +177,25 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
 	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	    \
-	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	    \
-	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c  \
-	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
-	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h	    \
-	      iso646.c big5.c eucjp.c gb2312.c gb2312.h euccn.c euctw.c	    \
-	      cns11643l1.c cns11643l1.h cns11643.h cns11643.c		    \
-	      run-iconv-test.sh $(wildcard testdata/*) ebcdic-dk-no.c	    \
-	      ebcdic-dk-no-a.c ebcdic-es.c ebcdic-es-a.c ebcdic-es-s.c	    \
-	      ebcdic-fi-se.c ebcdic-fi-se-a.c ebcdic-fr.c ebcdic-is-friss.c \
-	      ebcdic-it.c ebcdic-pt.c ebcdic-uk.c ebcdic-us.c ibm037.c	    \
-	      ibm038.c ibm256.c ibm273.c ibm274.c ibm275.c ibm277.c	    \
-	      ibm278.c ibm280.c ibm281.c ibm284.c ibm285.c ibm290.c	    \
-	      ibm297.c ibm420.c ibm423.c ibm424.c ibm437.c ibm500.c	    \
-	      ibm850.c ibm851.c ibm852.c ibm855.c ibm857.c ibm860.c	    \
-	      ibm861.c ibm862.c ibm863.c ibm864.c ibm865.c ibm868.c	    \
-	      ibm869.c ibm870.c ibm871.c ibm875.c ibm880.c ibm891.c	    \
-	      ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c ibm1026.c	    \
-	      ibm1047.c cp1250.c cp1251.c cp1252.c cp1253.c cp1254.c	    \
-	      cp1255.c cp1256.c cp1257.c cp874.c cp874.h cp737.c cp737.h    \
-	      cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c
+	      koi-8.c koi8-r.c hp-roman8.c latin-greek.c latin-greek-1.c    \
+	      ebcdic-at-de.c ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c	    \
+	      jis0208.c jis0212.c extra-module.mk euckr.c johab.c uhc.c	    \
+	      ksc5601.c ksc5601.h iso646.c big5.c eucjp.c gb2312.c gb2312.h \
+	      euccn.c euctw.c cns11643l1.c cns11643l1.h cns11643.h	    \
+	      cns11643.c run-iconv-test.sh $(wildcard testdata/*)	    \
+	      ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c ebcdic-es-a.c	    \
+	      ebcdic-es-s.c ebcdic-fi-se.c ebcdic-fi-se-a.c ebcdic-fr.c	    \
+	      ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c ebcdic-uk.c	    \
+	      ebcdic-us.c ibm037.c ibm038.c ibm256.c ibm273.c ibm274.c	    \
+	      ibm275.c ibm277.c ibm278.c ibm280.c ibm281.c ibm284.c	    \
+	      ibm285.c ibm290.c ibm297.c ibm420.c ibm423.c ibm424.c	    \
+	      ibm437.c ibm500.c ibm850.c ibm851.c ibm852.c ibm855.c	    \
+	      ibm857.c ibm860.c ibm861.c ibm862.c ibm863.c ibm864.c	    \
+	      ibm865.c ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c	    \
+	      ibm880.c ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c	    \
+	      ibm1004.c ibm1026.c ibm1047.c cp1250.c cp1251.c cp1252.c	    \
+	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
+	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
