@@ -31,7 +31,7 @@ sigemptyset (set)
       return -1;
     }
 
-  memset (set, 0xff, sizeof (sigset_t));
+  memset (set, 0, sizeof (sigset_t));
 
   return 0;
 }

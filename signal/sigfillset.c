@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <string.h>
 
 /* Set all signals in SET.  */
 int

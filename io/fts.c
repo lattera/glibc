@@ -57,7 +57,7 @@ static char sccsid[] = "@(#)fts.c	8.2 (Berkeley) 1/2/94";
 #endif
 
 
-static FTSENT	*fts_alloc __P((FTS *, char *, int));
+static FTSENT	*fts_alloc __P((FTS *, const char *, int));
 static FTSENT	*fts_build __P((FTS *, int));
 static void	 fts_lfree __P((FTSENT *));
 static void	 fts_load __P((FTS *, FTSENT *));
@@ -886,7 +886,7 @@ fts_sort(sp, head, nitems)
 static FTSENT *
 fts_alloc(sp, name, namelen)
 	FTS *sp;
-	char *name;
+	const char *name;
 	register int namelen;
 {
 	register FTSENT *p;

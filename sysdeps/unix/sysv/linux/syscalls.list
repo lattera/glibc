@@ -53,7 +53,8 @@ setpgid		-	setpgid		2	__setpgid	setpgid
 setresuid	EXTRA	setresuid	3	setresuid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sigreturn	EXTRA	sigreturn	1	__sigreturn	sigreturn
+sigreturn	-	sigreturn	1	__sigreturn	sigreturn
+sys_mknod	xmknod	mknod		3	__syscall_mknod
 sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	swapon
 umount		EXTRA	umount		1	__umount	umount

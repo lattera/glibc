@@ -546,11 +546,6 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	     that we previously skipped, so the caller will digest them.  */
 	  if (first_nonopt != last_nonopt)
 	    optind = first_nonopt;
-
-	  /* Before we can be provide the next result we must be
-	     reinitialized.  */
-	  __getopt_initialized = 0;
-
 	  return EOF;
 	}
 
@@ -560,12 +555,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       if (NONOPTION_P)
 	{
 	  if (ordering == REQUIRE_ORDER)
-	    {
-	      /* Before we can be provide the next result we must be
-		 reinitialized.  */
-	      __getopt_initialized = 0;
-	      return EOF;
-	    }
+	    return EOF;
 	  optarg = argv[optind++];
 	  return 1;
 	}

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,6 +93,13 @@ FUNCTION_NAME (ADD_PARAMS)
       buffer = malloc (buffer_size);
     }
 
+  if (buffer != NULL)
+    {
+#ifdef HANDLE_DIGITS_DOTS
+# include "digits_dots.c"
+#endif
+    }
+
   while (buffer != NULL
 	 && INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,
 				       buffer_size, &result H_ERRNO_VAR) != 0
@@ -115,6 +122,9 @@ FUNCTION_NAME (ADD_PARAMS)
       buffer = new_buf;
     }
 
+#ifdef HANDLE_DIGITS_DOTS
+done:
+#endif
   /* Release lock.  Preserve error value.  */
   save = errno;
   __libc_lock_unlock (lock);

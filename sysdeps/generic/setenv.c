@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,12 @@
 #endif
 
 #include <errno.h>
+#if !_LIBC
+# if !defined(errno) && !defined(HAVE_ERRNO_DECL)
+extern int errno;
+# endif
+# define __set_errno(ev) ((errno) = (ev))
+#endif
 
 #if _LIBC || HAVE_STDLIB_H
 # include <stdlib.h>
@@ -32,11 +38,14 @@
 # include <unistd.h>
 #endif
 
-#if _LIBC - 0 == 0
+#if !_LIBC
 # define __environ	environ
+# ifndef HAVE_ENVIRON_DECL
+extern char **environ;
+# endif
 #endif
 
-#if _LIBC - 0
+#if _LIBC
 /* This lock protects against simultaneous modifications of `environ'.  */
 # include <libc-lock.h>
 __libc_lock_define_initialized (static, envlock)

@@ -52,12 +52,13 @@ typedef void (*__sighandler_t) __P ((int));
    By default `signal' has the BSD semantic.  */
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 
-#if defined __USE_XOPEN && !defined __USE_GNU
 /* The X/Open definition of `signal' specifies the SVID semantic.  Use
    the additional function `sysv_signal' when X/Open compatibility is
    requested.  */
 extern __sighandler_t __sysv_signal __P ((int __sig,
 					  __sighandler_t __handler));
+
+#if defined __USE_XOPEN && !defined __USE_GNU
 extern __sighandler_t sysv_signal __P ((int __sig, __sighandler_t __handler));
 
 /* Make sure the used `signal' implementation is the SVID version.  */

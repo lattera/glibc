@@ -1,3 +1,65 @@
+Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* signal/sigempty.c (sigemptyset): Correct typo: Empty set should
+	have all bits zero.
+
+Tue Jan  7 23:44:39 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/gethstbynm.c: Include additional headers for additional
+	code in nss/digits_dots.c.
+	* inet/gethstbynm_r.c: Likewise.
+	* inet/gethstbynm2.c: Likewise.
+	* inet/gethstbynm2_r.c: Likewise.
+	* nss/digits_dots.c: New file.  Handle dotted pair notation for
+	gethstbynm functions.
+	* nss/getXXbyYY.c: Include digits_dots.c to get extra code for
+	handling dotted pair notation.
+	* nss/getXXbyYY_r.c: Likewise.
+	Patches by HJ Lu.
+
+	* resolv/nss_dns/dns-host.c: Don't handle dotted pair notation.
+
+	* io/getwd.c: Optimized a bit.
+
+	* signal/signal.h: Always declare __sysv_signal.
+
+	* sysdeps/generic/setenv.c: Add some portability code.
+
+	* sysdeps/unix/sysv/fcntlbits.h: Update copyright.
+
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Add definitions from kernel
+	to avoid using kernel headers.
+	* sysdeps/unix/sysv/linux/alpha/fcntlbits.h: New file.  Alpha
+	specific version.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sys_mknod.  Don't
+	mark sigreturn as EXTRA.
+
+	* sysdeps/unix/sysv/linux/ustat.c: Declare __syscall_ustat.
+	* sysdeps/unix/sysv/linux/alpha/ustat.c: New file.  Alpha version.
+
+Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* io/fts.c (fts_alloc): Add const to second parameter of function.
+
+	* io/Makefile: Change CFLAGS-fts.c and define CFLAGS-ftw.c to
+	prevent warnings.
+
+	* signal/sigfillset.c: Include <string.h> for memset declaration.
+
+Tue Jan  7 11:14:32 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/generic/setenv.c: Fix portability problems.
+
+Tue Jan  7 02:10:17 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/getopt.c (_getopt_internal): Don't reset __getopt_initialized
+	after the last option was seen.
+
+Mon Jan  6 15:30:21 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h (DT_EXTRANUM): Set to 3 since 0x7ffffffd is used.
+
 Mon Jan  6 13:57:05 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/ftw.c: Add `const' to second parameter of function given as

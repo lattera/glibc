@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -93,6 +93,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   int no_more;
   enum nss_status status = NSS_STATUS_UNAVAIL;
 
+#ifdef HANDLE_DIGITS_DOTS
+# include "digits_dots.c"
+#endif
+
   if (startp == NULL)
     {
       no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING, (void **) &fct);
@@ -129,6 +133,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 			    (void **) &fct, status, 0);
     }
 
+#ifdef HANDLE_DIGITS_DOTS
+done:
+#endif
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
   return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
