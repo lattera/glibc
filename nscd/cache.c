@@ -317,6 +317,10 @@ prune_cache (struct database_dyn *table, time_t now)
 			  readdhstai (table, runp, dh);
 			  break;
 
+			case INITGROUPS:
+			  readdinitgroups (table, runp, dh);
+			  break;
+
 			default:
 			  assert (! "should never happen");
 			}

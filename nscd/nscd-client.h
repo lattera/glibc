@@ -62,6 +62,7 @@ typedef enum
   GETFDGR,
   GETFDHST,
   GETAI,
+  INITGROUPS,
   LASTREQ
 } request_type;
 
@@ -140,6 +141,15 @@ struct nscd_ai_result
   char *addrs;
 };
 
+/* Structure sent in reply to initgroups query.  Note that this struct is
+   sent also if the service is disabled or there is no record found.  */
+typedef struct
+{
+  int32_t version;
+  int32_t found;
+  nscd_ssize_t ngrps;
+} initgr_response_header;
+
 
 /* Type for offsets in data part of database.  */
 typedef uint32_t ref_t;
@@ -173,6 +183,7 @@ struct datahead
     gr_response_header grdata;
     hst_response_header hstdata;
     ai_response_header aidata;
+    initgr_response_header initgrdata;
     nscd_ssize_t align1;
     nscd_time_t align2;
   } data[0];
@@ -244,7 +255,7 @@ struct mapped_database
   const struct database_pers_head *head;
   const char *data;
   size_t mapsize;
-  int counter;		/* > 0 indicates it isusable.  */
+  int counter;		/* > 0 indicates it is usable.  */
 };
 #define NO_MAPPING ((struct mapped_database *) -1l)
 

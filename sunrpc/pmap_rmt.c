@@ -191,6 +191,7 @@ getbroadcastnets (struct in_addr *addrs, int naddrs)
     {
       if ((run->ifa_flags & IFF_BROADCAST) != 0
 	  && (run->ifa_flags & IFF_UP) != 0
+	  && run->ifa_addr != NULL
 	  && run->ifa_addr->sa_family == AF_INET)
 	/* Copy the broadcast address.  */
 	addrs[i++] = ((struct sockaddr_in *) run->ifa_broadaddr)->sin_addr;

@@ -22,7 +22,7 @@
 subdir	:= grp
 headers := grp.h
 
-distribute := tst_fgetgrent.c tst_fgetgrent.sh
+distribute := tst_fgetgrent.c tst_fgetgrent.sh compat-initgroups.c
 
 routines := fgetgrent initgroups setgroups \
 	    getgrent getgrgid getgrnam putgrent \
@@ -54,7 +54,7 @@ CFLAGS-getgrent.c = -fexceptions
 CFLAGS-fgetgrent.c = -fexceptions
 CFLAGS-fgetgrent_r.c = -fexceptions -D_IO_MTSAFE_IO
 CFLAGS-putgrent.c = -fexceptions -D_IO_MTSAFE_IO
-CFLAGS-initgroups.c = -fexceptions
+CFLAGS-initgroups.c = -DUSE_NSCD=1 -fexceptions
 CFLAGS-getgrgid.c = -fexceptions
 
 endif

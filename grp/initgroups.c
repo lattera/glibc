@@ -27,19 +27,14 @@
 #include <sys/types.h>
 #include <nsswitch.h>
 
+#include "../nscd/nscd-client.h"
+#include "../nscd/nscd_proto.h"
+
+
 /* Type of the lookup function.  */
 typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
 						    long int *, long int *,
 						    gid_t **, long int, int *);
-/* Prototype for the setgrent functions we use here.  */
-typedef enum nss_status (*set_function) (void);
-
-/* Prototype for the endgrent functions we use here.  */
-typedef enum nss_status (*end_function) (void);
-
-/* Prototype for the setgrent functions we use here.  */
-typedef enum nss_status (*get_function) (struct group *, char *,
-					 size_t, int *);
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_group_lookup (service_user **nip, const char *name,
@@ -48,99 +43,29 @@ extern void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 extern service_user *__nss_group_database attribute_hidden;
 
-static enum nss_status
-compat_call (service_user *nip, const char *user, gid_t group, long int *start,
-	     long int *size, gid_t **groupsp, long int limit, int *errnop)
-{
-  struct group grpbuf;
-  size_t buflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
-  char *tmpbuf;
-  enum nss_status status;
-  set_function setgrent_fct;
-  get_function getgrent_fct;
-  end_function endgrent_fct;
-  gid_t *groups = *groupsp;
 
-  getgrent_fct = __nss_lookup_function (nip, "getgrent_r");
-  if (getgrent_fct == NULL)
-    return NSS_STATUS_UNAVAIL;
+#include "compat-initgroups.c"
 
-  setgrent_fct = __nss_lookup_function (nip, "setgrent");
-  if (setgrent_fct)
-    {
-      status = DL_CALL_FCT (setgrent_fct, ());
-      if (status != NSS_STATUS_SUCCESS)
-	return status;
-    }
-
-  endgrent_fct = __nss_lookup_function (nip, "endgrent");
-
-  tmpbuf = __alloca (buflen);
-
-  do
-    {
-      while ((status = DL_CALL_FCT (getgrent_fct,
-				     (&grpbuf, tmpbuf, buflen, errnop)),
-	      status == NSS_STATUS_TRYAGAIN)
-	     && *errnop == ERANGE)
-        {
-          buflen *= 2;
-          tmpbuf = __alloca (buflen);
-        }
-
-      if (status != NSS_STATUS_SUCCESS)
-        goto done;
-
-      if (grpbuf.gr_gid != group)
-        {
-          char **m;
-
-          for (m = grpbuf.gr_mem; *m != NULL; ++m)
-            if (strcmp (*m, user) == 0)
-              {
-                /* Matches user.  Insert this group.  */
-                if (__builtin_expect (*start == *size, 0))
-                  {
-                    /* Need a bigger buffer.  */
-		    gid_t *newgroups;
-		    long int newsize;
-
-		    if (limit > 0 && *size == limit)
-		      /* We reached the maximum.  */
-		      goto done;
-
-		    if (limit <= 0)
-		      newsize = 2 * *size;
-		    else
-		      newsize = MIN (limit, 2 * *size);
-
-                    newgroups = realloc (groups, newsize * sizeof (*groups));
-                    if (newgroups == NULL)
-                      goto done;
-		    *groupsp = groups = newgroups;
-                    *size = newsize;
-                  }
-
-                groups[*start] = grpbuf.gr_gid;
-                *start += 1;
-
-                break;
-              }
-        }
-    }
-  while (status == NSS_STATUS_SUCCESS);
-
- done:
-  if (endgrent_fct)
-    DL_CALL_FCT (endgrent_fct, ());
-
-  return NSS_STATUS_SUCCESS;
-}
 
 static int
 internal_getgrouplist (const char *user, gid_t group, long int *size,
 		       gid_t **groupsp, long int limit)
 {
+#ifdef USE_NSCD
+  if (__nss_not_use_nscd_group > 0
+      && ++__nss_not_use_nscd_group > NSS_NSCD_RETRY)
+    __nss_not_use_nscd_group = 0;
+  if (!__nss_not_use_nscd_group)
+    {
+      int n = __nscd_getgrouplist (user, group, size, groupsp, limit);
+      if (n >= 0)
+	return n;
+
+      /* nscd is not usable.  */
+      __nss_not_use_nscd_group = 1;
+    }
+#endif
+
   service_user *nip = NULL;
   initgroups_dyn_function fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
@@ -205,6 +130,10 @@ getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
   newgroups = (gid_t *) malloc (size * sizeof (gid_t));
   if (__builtin_expect (newgroups == NULL, 0))
     /* No more memory.  */
+    // XXX This is wrong.  The user provided memory, we have to use
+    // XXX it.  The internal functions must be called with the user
+    // XXX provided buffer and not try to increase the size if it is
+    // XXX too small.  For initgroups a flag could say: increase size.
     return -1;
 
   result = internal_getgrouplist (user, group, &size, &newgroups, -1);

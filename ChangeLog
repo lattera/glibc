@@ -1,5 +1,29 @@
 2004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c: Move compat_call implementation...
+	* grp/compat-initgroups.c: ...to here.  New file.
+	* grp/Makefile (distribute): Add compat-initgroups.c.
+	(CFLAGS-initgroups.c): Add -DUSE_NSCD=1.
+	* mscd/initgrcache.c: New file.
+	* nscd/nscd_initgroups.c: New file.
+	* nscd/Makefile (routines): Add nscd_initgroups.
+	(nscd-modules): Add initgrcache.
+	* nscd/cache.c (prune_cache): Add support for INITGROUPS entries.
+	* nscd/connections.c: Handle INITGROUPS requests.
+	* nscd/nscd-client.h: Define INITGROUPS, initgr_response_header.
+	Add initgrdata element to struct datahead.  Fix typo in comment.
+	* nscd/nscd_proto.h: Declare __nscd_getgrouplist.  Fix parameter
+	type in __nscd_getgrgrid_r.
+	* nscd/selinux.c (perms): Add INITGROUPS entry.
+
+	* nscd/nscd_getai.c: No need to include <sys/mman.h>.
+
+	* sunrpc/get_myaddr.c (get_myaddress): Account for interfaces without
+	assigned addresses.
+	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
+	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.
+	* sunrpc/clnt_udp.c (is_network_up): Likewise.
+
 	* nscd/nscd.c: Define getaddrinfo hidden so that it is never found
 	outside.
 

@@ -56,7 +56,8 @@ static const int perms[LASTREQ] =
   [GETFDPW] = NSCD__SHMEMPWD,
   [GETFDGR] = NSCD__SHMEMGRP,
   [GETFDHST] = NSCD__SHMEMHOST,
-  [GETAI] = NSCD__GETHOST
+  [GETAI] = NSCD__GETHOST,
+  [INITGROUPS] = NSCD__GETGRP
 };
 
 /* Store an entry ref to speed AVC decisions.  */

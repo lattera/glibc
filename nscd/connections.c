@@ -85,7 +85,8 @@ const char *serv2str[LASTREQ] =
   [GETFDPW] = "GETFDPW",
   [GETFDGR] = "GETFDGR",
   [GETFDHST] = "GETFDHST",
-  [GETAI] = "GETAI"
+  [GETAI] = "GETAI",
+  [INITGROUPS] = "INITGROUPS"
 };
 
 /* The control data structures for the services.  */
@@ -154,6 +155,7 @@ static struct database_dyn *const serv2db[LASTREQ] =
   [GETFDGR] = &dbs[grpdb],
   [GETFDHST] = &dbs[hstdb],
   [GETAI] = &dbs[hstdb],
+  [INITGROUPS] = &dbs[grpdb]
 };
 
 
@@ -604,9 +606,11 @@ cannot handle old request version %d; current version is %d"),
 
   struct database_dyn *db = serv2db[req->type];
 
+  // XXX Clean up so that each new command need not introduce a
+  // XXX new conditional.
   if ((__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
        && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
-      || req->type == GETAI)
+      || req->type == GETAI || req->type == INITGROUPS)
     {
       if (__builtin_expect (debug_level, 0) > 0)
 	{
@@ -717,6 +721,10 @@ cannot handle old request version %d; current version is %d"),
 
     case GETAI:
       addhstai (db, fd, req, key, uid);
+      break;
+
+    case INITGROUPS:
+      addinitgroups (db, fd, req, key, uid);
       break;
 
     case GETSTAT:

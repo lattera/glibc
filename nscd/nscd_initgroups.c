@@ -19,7 +19,7 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <netdb.h>
+#include <grp.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -29,15 +29,11 @@
 #include "nscd_proto.h"
 
 
-/* Define in nscd_gethst_r.c.  */
-extern int __nss_not_use_nscd_hosts;
-
-
 libc_locked_map_ptr (map_handle);
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
-libc_freeres_fn (ai_map_free)
+libc_freeres_fn (gr_map_free)
 {
 
   if (map_handle.mapped != NO_MAPPING)
@@ -46,12 +42,11 @@ libc_freeres_fn (ai_map_free)
 
 
 int
-__nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
+__nscd_getgrouplist (const char *user, gid_t group, long int *size,
+		     gid_t **groupsp, long int limit)
 {
-  size_t keylen = strlen (key) + 1;
-  const ai_response_header *ai_resp = NULL;
-  struct nscd_ai_result *resultbuf = NULL;
-  const char *recend = (const char *) ~UINTMAX_C (0);
+  size_t userlen = strlen (user) + 1;
+  const initgr_response_header *initgr_resp = NULL;
   char *respdata = NULL;
   int retval = -1;
   int sock = -1;
@@ -59,92 +54,91 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
-  struct mapped_database *mapped = __nscd_get_map_ref (GETFDHST, "hosts",
+  struct mapped_database *mapped = __nscd_get_map_ref (GETFDGR, "group",
 						       &map_handle, &gc_cycle);
  retry:
   if (mapped != NO_MAPPING)
     {
-      const struct datahead *found = __nscd_cache_search (GETAI, key, keylen,
-							  mapped);
+      const struct datahead *found = __nscd_cache_search (INITGROUPS, user,
+							  userlen, mapped);
       if (found != NULL)
 	{
-	  ai_resp = &found->data[0].aidata;
-	  respdata = (char *) (ai_resp + 1);
-	  recend = (const char *) found->data + found->recsize;
+	  initgr_resp = &found->data[0].initgrdata;
+	  respdata = (char *) (initgr_resp + 1);
+	  char *recend = (char *) found->data + found->recsize;
+
+	  if (respdata + initgr_resp->ngrps * sizeof (int32_t) > recend)
+	    goto out;
 	}
     }
 
   /* If we do not have the cache mapped, try to get the data over the
      socket.  */
-  ai_response_header ai_resp_mem;
-  if (ai_resp == NULL)
+  initgr_response_header initgr_resp_mem;
+  if (initgr_resp == NULL)
     {
-      sock = __nscd_open_socket (key, keylen, GETAI, &ai_resp_mem,
-				 sizeof (ai_resp_mem));
+      sock = __nscd_open_socket (user, userlen, INITGROUPS, &initgr_resp_mem,
+				 sizeof (initgr_resp_mem));
       if (sock == -1)
-	{
-	  /* nscd not running or wrong version or hosts caching disabled.  */
-	  __nss_not_use_nscd_hosts = 1;
-	  goto out;
-	}
+	/* nscd not running or wrong version or hosts caching disabled.  */
+	__nss_not_use_nscd_group = 1;
 
-      ai_resp = &ai_resp_mem;
+      initgr_resp = &initgr_resp_mem;
     }
 
-  if (ai_resp->found == 1)
+  if (initgr_resp->found == 1)
     {
-      size_t datalen = ai_resp->naddrs + ai_resp->addrslen + ai_resp->canonlen;
+      /* The following code assumes that gid_t and int32_t are the
+	 same size.  This is the case for al existing implementation.
+	 If this should change some code needs to be added which
+	 doesn't use memcpy but instead copies each array element one
+	 by one.  */
+      assert (sizeof (int32_t) == sizeof (gid_t));
 
-      /* This check is really only affects the case where the data
-	 comes from the mapped cache.  */
-      if ((char *) (ai_resp + 1) + datalen > recend)
+      /* Make sure we have enough room.  We always count GROUP in even
+	 though we might not end up adding it.  */
+      if (*size < initgr_resp->ngrps + 1)
 	{
-	  assert (sock == -1);
-	  goto out;
-	}
+	  gid_t *newp = realloc (*groupsp,
+				 (initgr_resp->ngrps + 1) * sizeof (gid_t));
+	  if (newp == NULL)
+	    /* We cannot increase the buffer size.  */
+	    goto out;
 
-      /* Create result.  */
-      resultbuf = (struct nscd_ai_result *) malloc (sizeof (*resultbuf)
-						    + datalen);
-      if (resultbuf == NULL)
-	{
-	  *h_errnop = NETDB_INTERNAL;
-	  return -1;
+	  *groupsp = newp;
+	  *size = initgr_resp->ngrps + 1;
 	}
-
-      /* Set up the data structure, including pointers.  */
-      resultbuf->naddrs = ai_resp->naddrs;
-      resultbuf->addrs = (char *) (resultbuf + 1);
-      resultbuf->family = (uint8_t *) (resultbuf->addrs + ai_resp->addrslen);
-      if (ai_resp->canonlen != 0)
-	resultbuf->canon = (char *) (resultbuf->family + resultbuf->naddrs);
-      else
-	resultbuf->canon = NULL;
 
       if (respdata == NULL)
 	{
 	  /* Read the data from the socket.  */
-	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf + 1,
-						   datalen)) == datalen)
-	    {
-	      retval = 0;
-	      *result = resultbuf;
-	    }
+	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock, *groupsp,
+						   initgr_resp->ngrps
+						   * sizeof (gid_t)))
+	      == initgr_resp->ngrps * sizeof (gid_t))
+	    retval = initgr_resp->ngrps;
 	}
       else
 	{
-	  /* Copy the data in the block.  */
-	  memcpy (resultbuf + 1, respdata, datalen);
+	  /* Just copy the data.  */
+	  retval = initgr_resp->ngrps;
+	  memcpy (*groupsp, respdata, retval * sizeof (gid_t));
+	}
 
-	  retval = 0;
-	  *result = resultbuf;
+      /* Check whether GROUP is part of the mix.  If not, add it.  */
+      if (retval >= 0)
+	{
+	  int cnt;
+	  for (cnt = 0; cnt < retval; ++cnt)
+	    if ((*groupsp)[cnt] == group)
+	      break;
+
+	  if (cnt == retval)
+	    (*groupsp)[retval++] = group;
 	}
     }
   else
     {
-      /* Store the error number.  */
-      *h_errnop = ai_resp->error;
-
       /* The `errno' to some value != ERANGE.  */
       __set_errno (ENOENT);
       /* Even though we have not found anything, the result is zero.  */

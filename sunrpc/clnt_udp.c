@@ -244,6 +244,7 @@ is_network_up (int sock)
   while (run != NULL)
     {
       if ((run->ifa_flags & IFF_UP) != 0
+	  && run->ifa_addr != NULL
 	  && run->ifa_addr->sa_family == AF_INET)
 	break;
 

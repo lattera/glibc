@@ -45,7 +45,7 @@ extern int __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf,
 extern int __nscd_getgrnam_r (const char *name, struct group *resultbuf,
 			      char *buffer, size_t buflen,
 			      struct group **result);
-extern int __nscd_getgrgid_r (uid_t uid, struct group *resultbuf,
+extern int __nscd_getgrgid_r (gid_t gid, struct group *resultbuf,
 			      char *buffer,  size_t buflen,
 			      struct group **result);
 extern int __nscd_gethostbyname_r (const char *name,
@@ -62,5 +62,6 @@ extern int __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 				   struct hostent **result, int *h_errnop);
 extern int __nscd_getai (const char *key, struct nscd_ai_result **result,
 			 int *h_errnop);
-
+extern int __nscd_getgrouplist (const char *user, gid_t group, long int *size,
+				gid_t **groupsp, long int limit);
 #endif /* _NSCD_PROTO_H */

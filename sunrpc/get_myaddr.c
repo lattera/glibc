@@ -76,7 +76,9 @@ get_myaddress (struct sockaddr_in *addr)
   run = ifa;
   while (run != NULL)
     {
-      if ((run->ifa_flags & IFF_UP) && run->ifa_addr->sa_family == AF_INET
+      if ((run->ifa_flags & IFF_UP)
+	  && run->ifa_addr != NULL
+	  && run->ifa_addr->sa_family == AF_INET
 	  && (!(run->ifa_flags & IFF_LOOPBACK)
 	      || (loopback == 1 && (run->ifa_flags & IFF_LOOPBACK))))
 	{
