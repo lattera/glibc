@@ -36,7 +36,7 @@ export GCONV_PATH
 LIBPATH=$codir:$codir/iconvdata
 
 # How the start the iconv(1) program.
-ICONV='$codir/elf/ld.so --library-path $LIBPATH --ignore-rpath ${from}.so \
+ICONV='$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so \
        $codir/iconv/iconv_prog'
 
 # We read the file named TESTS.  All non-empty lines not starting with

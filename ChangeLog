@@ -1,3 +1,12 @@
+1998-05-20 00:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c: Rename option and variable from ignore-rpath to
+	inhibit-rpath.
+	* elf/dl-support.c: Likewise.
+	* elf/ldsodefs.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* iconvdata/run-iconv-test.sh: Likewise.
+
 1998-05-19 23:08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: Recognize --ignore-rpath argument and set _dl_ignore_path

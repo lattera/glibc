@@ -290,13 +290,13 @@ decompose_rpath (const char *rpath, size_t additional_room, const char *where)
   size_t nelems;
 
   /* First see whether we must forget the RPATH from this object.  */
-  if (_dl_ignore_rpath != NULL && !__libc_enable_secure)
+  if (_dl_inhibit_rpath != NULL && !__libc_enable_secure)
     {
-      const char *found = strstr (_dl_ignore_rpath, where);
+      const char *found = strstr (_dl_inhibit_rpath, where);
       if (found != NULL)
 	{
 	  size_t len = strlen (where);
-	  if ((found == _dl_ignore_rpath || found[-1] == ':')
+	  if ((found == _dl_inhibit_rpath || found[-1] == ':')
 	      && (found[len] == '\0' || found[len] == ':'))
 	    {
 	      /* This object is on the list of objects for which the RPATH

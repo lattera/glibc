@@ -56,7 +56,7 @@ const char *_dl_profile;
 struct link_map *_dl_profile_map;
 
 /* Names of shared object for which the RPATHs should be ignored.  */
-const char *_dl_ignore_rpath;
+const char *_dl_inhibit_rpath;
 
 
 static void non_dynamic_init (void) __attribute__ ((unused));

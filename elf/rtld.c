@@ -81,7 +81,7 @@ int _dl_debug_symbols;
 int _dl_debug_versions;
 int _dl_debug_reloc;
 int _dl_debug_files;
-const char *_dl_ignore_rpath;		/* RPATH values which should be
+const char *_dl_inhibit_rpath;		/* RPATH values which should be
 					   ignored.  */
 
 /* Set nonzero during loading and initialization of executable and
@@ -344,9 +344,9 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
-	else if (! strcmp (_dl_argv[1], "--ignore-rpath") && _dl_argc > 2)
+	else if (! strcmp (_dl_argv[1], "--inhibit-rpath") && _dl_argc > 2)
 	  {
-	    _dl_ignore_rpath = _dl_argv[2];
+	    _dl_inhibit_rpath = _dl_argv[2];
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
@@ -372,12 +372,12 @@ specified, instead of the helper program file specified in the executable\n\
 file you run.  This is mostly of use for maintainers to test new versions\n\
 of this helper program; chances are you did not intend to run this program.\n\
 \n\
-  --list               list all dependencies and how they are resolved\n\
-  --verify             verify that given object really is a dynamically linked\n\
-                       object we get handle\n\
-  --library-path PATH  use given PATH instead of content of the environment\n\
-                       variable LD_LIBRARY_PATH\n\
-  --ignore-rpath LIST  ignore RPATH information in object names in LIST\n",
+  --list                list all dependencies and how they are resolved\n\
+  --verify              verify that given object really is a dynamically linked\n\
+                        object we get handle\n\
+  --library-path PATH   use given PATH instead of content of the environment\n\
+                        variable LD_LIBRARY_PATH\n\
+  --inhibit-rpath LIST  ignore RPATH information in object names in LIST\n",
 			  NULL);
 
       ++_dl_skip_args;
