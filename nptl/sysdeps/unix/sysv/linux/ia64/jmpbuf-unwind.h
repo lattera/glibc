@@ -32,5 +32,8 @@
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
   ((uintptr_t)(_address) - (_adj) < (uintptr_t)(((long *)_jmpbuf)[0]) - (_adj))
 
-/* We use the normal lobngjmp for unwinding.  */
-#define __libc_unwind_longjmp(buf, val) __libc_longjmp (buf, val)
+/* We use a longjmp() which can cross from the alternate signal-stack
+   to the normal stack.  */
+extern void __libc_unwind_longjmp (sigjmp_buf env, int val)
+          __attribute__ ((noreturn));
+hidden_proto (__libc_unwind_longjmp)

@@ -1,3 +1,14 @@
+2004-09-01  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h
+	(__libc_unwind_longjmp): Delete macro and declare as function.
+	* sysdeps/unix/sysv/linux/ia64/Makefile (sysdep_routines): Mention
+	__ia64_longjmp, sigstack_longjmp, and __sigstack_longjmp for
+	nptl directory.
+	* sysdeps/unix/sysv/linux/ia64/__ia64_longjmp.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/__sigstack_longjmp.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/unwind_longjmp.c: New file.
+
 2004-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Make rwlock prototypes available also
