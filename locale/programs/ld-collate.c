@@ -608,6 +608,8 @@ Computing table size for collation information might take a while..."),
     size_t idx, cnt;
 
     undefined_offset = obstack_object_size (&non_simple);
+    assert (undefined_offset % sizeof (u_int32_t) == 0);
+    undefined_offset /= sizeof (u_int32_t);
 
     idx = collate->nrules;
     for (cnt = 0; cnt < collate->nrules; ++cnt)
@@ -634,7 +636,7 @@ Computing table size for collation information might take a while..."),
     table2[cnt] = SWAPU32 (table[cnt]);
 
   for (cnt = 0; cnt < extra_len / sizeof (u_int32_t); ++cnt)
-    extra2[cnt] = SWAPU32 (extra2[cnt]);
+    extra2[cnt] = SWAPU32 (extra[cnt]);
 
   /* We need a simple hashing table to get a collation-element->chars
      mapping.  We again use internal hashing using a secondary hashing
