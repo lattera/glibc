@@ -1,5 +1,5 @@
-/* Directory entry structure `struct dirent'.  Stub version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Low-level statistical profiling support function.  Linux/ARM version.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-struct dirent
-  {
-    char d_name[1];		/* Variable length.  */
-    int d_fileno;
-  };
+#include <sigcontext.h>
+
+void
+profil_counter (int signo, struct sigcontext sc)
+{
+  profil_count ((void *) sc.eip);
+}

@@ -158,9 +158,13 @@ struct cmsghdr
 #endif
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 #define CMSG_FIRSTHDR(mhdr) \
-  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)			      \
+  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
-
+#define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
+			 & ~(sizeof (size_t) - 1))
+#define CMSG_SPACE(len) (CMSG_ALIGN (len) \
+			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+#define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
 #ifndef _EXTERN_INLINE
 # define _EXTERN_INLINE extern __inline

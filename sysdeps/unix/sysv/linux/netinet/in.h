@@ -301,7 +301,7 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
          (((u_int32_t *)(a))[2] == 0) && (ntohl(((u_int32_t *)(a))[3]) > 1))
 
 
-/* Bind socket to a priviledged IP port.  */
+/* Bind socket to a privileged IP port.  */
 extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
 
 

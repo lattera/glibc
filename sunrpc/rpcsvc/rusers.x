@@ -85,6 +85,8 @@ program RUSERSPROG {
 %extern "C" {
 %#endif
 %
+%#include <rpc/xdr.h>
+%
 %/*
 % * The following structures are used by version 2 of the rusersd protocol.
 % * They were not developed with rpcgen, so they do not appear as RPCL.
@@ -110,7 +112,7 @@ program RUSERSPROG {
 %       int uta_cnt;
 %};
 %typedef struct utmparr utmparr;
-%int xdr_utmparr();
+%int xdr_utmparr(XDR *xdrs, struct utmparr *objp);
 %
 %struct utmpidle {
 %	struct ru_utmp ui_utmp;
@@ -122,7 +124,7 @@ program RUSERSPROG {
 %	int uia_cnt;
 %};
 %
-%int xdr_utmpidlearr();
+%int xdr_utmpidlearr(XDR *xdrs, struct utmpidlearr *objp);
 %
 %#ifdef	__cplusplus
 %}

@@ -29,7 +29,7 @@ int
 __writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
-     size_t count;
+     int count;
 {
   __set_errno (ENOSYS);
   return -1;

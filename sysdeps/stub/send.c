@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 int
 send (fd, buf, n, flags)
      int fd;
-     void *buf;
+     __const __ptr_t buf;
      size_t n;
      int flags;
 {

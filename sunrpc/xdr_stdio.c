@@ -48,11 +48,11 @@ static char sccsid[] = "@(#)xdr_stdio.c 1.16 87/08/11 Copyr 1984 Sun Micro";
 static bool_t xdrstdio_getlong (XDR *, long *);
 static bool_t xdrstdio_putlong (XDR *, const long *);
 static bool_t xdrstdio_getbytes (XDR *, caddr_t, u_int);
-static bool_t xdrstdio_putbytes (XDR *, const caddr_t, u_int);
-static u_int xdrstdio_getpos (XDR *);
+static bool_t xdrstdio_putbytes (XDR *, const char *, u_int);
+static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
 static long *xdrstdio_inline (XDR *, int);
-static void xdrstdio_destroy (XDR *);
+static void xdrstdio_destroy (const XDR *);
 
 /*
  * Ops vector for stdio type XDR
@@ -94,7 +94,7 @@ xdrstdio_create (xdrs, file, op)
  */
 static void
 xdrstdio_destroy (xdrs)
-     XDR *xdrs;
+     const XDR *xdrs;
 {
   (void) fflush ((FILE *) xdrs->x_private);
   /* xx should we close the file ?? */
@@ -137,7 +137,7 @@ xdrstdio_getbytes (xdrs, addr, len)
 }
 
 static bool_t
-xdrstdio_putbytes (XDR *xdrs, const caddr_t addr, u_int len)
+xdrstdio_putbytes (XDR *xdrs, const char *addr, u_int len)
 {
   if ((len != 0) && (fwrite (addr, (int) len, 1, (FILE *) xdrs->x_private) != 1))
     return FALSE;
@@ -145,7 +145,7 @@ xdrstdio_putbytes (XDR *xdrs, const caddr_t addr, u_int len)
 }
 
 static u_int
-xdrstdio_getpos (XDR *xdrs)
+xdrstdio_getpos (const XDR *xdrs)
 {
   return (u_int) ftell ((FILE *) xdrs->x_private);
 }

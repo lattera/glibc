@@ -26,7 +26,7 @@ int
 ttyname_r (fd, buf, buflen)
      int fd;
      char *buf;
-     int buflen;
+     size_t buflen;
 {
   __set_errno (ENOSYS);
   return -1;

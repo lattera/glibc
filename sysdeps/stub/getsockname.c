@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 int
 getsockname (fd, addr, len)
      int fd;
-     struct sockaddr *addr;
+     __SOCKADDR_ARG addr;
      size_t *len;
 {
   __set_errno (ENOSYS);

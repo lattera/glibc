@@ -28,7 +28,7 @@ recvfrom (fd, buf, n, flags, addr, addr_len)
      void *buf;
      size_t n;
      int flags;
-     struct sockaddr *addr;
+     __SOCKADDR_ARG addr;
      size_t *addr_len;
 {
   __set_errno (ENOSYS);

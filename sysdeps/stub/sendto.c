@@ -24,10 +24,10 @@ Cambridge, MA 02139, USA.  */
 int
 sendto (fd, buf, n, flags, addr, addr_len)
      int fd;
-     void *buf;
+     __const __ptr_t buf;
      size_t n;
      int flags;
-     const struct sockaddr *addr;
+     __CONST_SOCKADDR_ARG addr;
      size_t addr_len;
 {
   __set_errno (ENOSYS);

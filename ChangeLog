@@ -1,3 +1,61 @@
+1997-05-22 04:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/clnt_perr.c (clnt_sperrno): Change type of variable i
+	to size_t to prevent warning.
+	* sunrpc/rpcinfo.c (get_inet_address): Use UNADDR_NONE and INADDR_ANY
+	instead of numeric values.
+	Various cleanups.
+	* sunrpc/xdr_mem.c: Use `const char *' instead of `const caddr_t'
+	for xdrmem_putbytes.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/syscall.s: Pretty printing.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+
+1997-05-21 22:22  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* inet/Makefile (headers): Add netinet/ip6.h, netinet/icmp6.h.
+	* sysdeps/generic/netinet/ip6.h: New file (for IPv6 Advanced API).
+	* sysdeps/generic/netinet/icmp6.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Fix typo.
+	* sysdeps/stub/direntry.h (struct dirent): Add d_fileno (needed by
+	glob.c).
+	* sysdeps/standalone/arm/errnos.h: Add EPROTOTYPE, ESRCH.
+	* sysdeps/unix/arm/sysdep.h: Avoid warning about nested comments.
+	* sysdeps/stub/accept.c (accept): Make args match prototype.
+	* sysdeps/stub/bind.c (bind): Likewise.
+	* sysdeps/stub/connect.c (connect): Likewise.
+	* sysdeps/stub/getpeername.c (getpeername): Likewise.
+	* sysdeps/stub/getsockname.c (getsockname): Likewise.
+	* sysdeps/stub/recvfrom.c (recvfrom): Likewise.
+	* sysdeps/stub/send.c (send): Likewise.
+	* sysdeps/stub/ttyname_r.c (ttyname_r): Likewise.
+	* sysdeps/stub/readv.c (readv): Likewise.
+	* sysdeps/stub/writev.c (writev): Likewise.
+	* sysdeps/stub/sendto.c (sendto): Likewise.
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: New file.
+
+1997-05-18 12:46  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Add new macros CMSG_SPACE,
+	CMSG_LEN, CMSG_ALIGN (for IPv6 Advanced API).
+
+1997-05-21 13:51  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Add cast to prevent warning.
+
+	* sunrpc/rpcsvc/rusers.x: Provide prototypes for implemented
+	functions, include <rpc/xdr.h>.
+
+	* string/strverscmp.c: Correct typos in comment.
+
+	* sunrpc/rpc/xdr.h: Add more `const'.
+	* sunrpc/xdr_stdio.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+
 1997-05-21 17:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (dl-routines): Add dl-sysdepio.

@@ -197,7 +197,7 @@ static const struct rpc_errtab rpc_errlist[] =
 char *
 clnt_sperrno (enum clnt_stat stat)
 {
-  int i;
+  size_t i;
 
   for (i = 0; i < sizeof (rpc_errlist) / sizeof (struct rpc_errtab); i++)
     {

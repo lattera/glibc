@@ -123,16 +123,16 @@ struct XDR
 	/* put a long to " */
 	bool_t (*x_getbytes) __P ((XDR * __xdrs, caddr_t __addr, u_int __len));
 	/* get some bytes from " */
-	bool_t (*x_putbytes) __P ((XDR * __xdrs, __const caddr_t __addr,
+	bool_t (*x_putbytes) __P ((XDR * __xdrs, __const char *__addr,
 				   u_int __len));
 	/* put some bytes to " */
-	u_int (*x_getpostn) __P ((XDR * __xdrs));
+	u_int (*x_getpostn) __P ((__const XDR * __xdrs));
 	/* returns bytes off from beginning */
 	bool_t (*x_setpostn) __P ((XDR * __xdrs, u_int pos));
 	/* lets you reposition the stream */
 	long *(*x_inline) __P ((XDR * __xdrs, int len));
 	/* buf quick ptr to buffered data */
-	void (*x_destroy) __P ((XDR * __xdrs));
+	void (*x_destroy) __P ((__const XDR * __xdrs));
 	/* free privates of this xdr_stream */
       }
      *x_ops;

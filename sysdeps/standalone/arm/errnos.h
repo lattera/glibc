@@ -44,6 +44,8 @@ Cambridge, MA 02139, USA.  */
 #define EILSEQ		16
 #define ENOEXEC		17
 #define ENOENT		18
+#define EPROTOTYPE	19
+#define ESRCH		20
 #endif
 
 #define __set_errno(val) errno = (val)

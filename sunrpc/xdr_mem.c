@@ -49,7 +49,7 @@ static char sccsid[] = "@(#)xdr_mem.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 static bool_t xdrmem_getlong (XDR *, long *);
 static bool_t xdrmem_putlong (XDR *, const long *);
 static bool_t xdrmem_getbytes (XDR *, caddr_t, u_int);
-static bool_t xdrmem_putbytes (XDR *, const caddr_t, u_int);
+static bool_t xdrmem_putbytes (XDR *, const char *, u_int);
 static u_int xdrmem_getpos (const XDR *);
 static bool_t xdrmem_setpos (XDR *, u_int);
 static long *xdrmem_inline (XDR *, int);
@@ -158,7 +158,7 @@ xdrmem_getbytes (xdrs, addr, len)
 static bool_t
 xdrmem_putbytes (xdrs, addr, len)
      XDR *xdrs;
-     const caddr_t addr;
+     const char *addr;
      u_int len;
 {
 

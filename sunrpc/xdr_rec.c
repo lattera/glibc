@@ -56,11 +56,11 @@ static char sccsid[] = "@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 static bool_t xdrrec_getlong (XDR *, long *);
 static bool_t xdrrec_putlong (XDR *, const long *);
 static bool_t xdrrec_getbytes (XDR *, caddr_t, u_int);
-static bool_t xdrrec_putbytes (XDR *, const caddr_t, u_int);
-static u_int xdrrec_getpos (XDR *);
+static bool_t xdrrec_putbytes (XDR *, const char *, u_int);
+static u_int xdrrec_getpos (const XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
 static long *xdrrec_inline (XDR *, int);
-static void xdrrec_destroy (XDR *);
+static void xdrrec_destroy (const XDR *);
 
 static const struct xdr_ops xdrrec_ops =
 {
@@ -276,7 +276,7 @@ xdrrec_getbytes (xdrs, addr, len)
 static bool_t
 xdrrec_putbytes (xdrs, addr, len)
      XDR *xdrs;
-     const caddr_t addr;
+     const char *addr;
      u_int len;
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
@@ -301,7 +301,7 @@ xdrrec_putbytes (xdrs, addr, len)
 }
 
 static u_int
-xdrrec_getpos (XDR *xdrs)
+xdrrec_getpos (const XDR *xdrs)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   long pos;
@@ -403,7 +403,7 @@ xdrrec_inline (XDR *xdrs, int len)
 
 static void
 xdrrec_destroy (xdrs)
-     XDR *xdrs;
+     const XDR *xdrs;
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
 
