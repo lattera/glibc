@@ -73,7 +73,7 @@ getttyent()
 		return (NULL);
 	flockfile (tf);
 	for (;;) {
-		if (!fgets(p = line, sizeof(line), tf))
+		if (!fgets_unlocked(p = line, sizeof(line), tf))
 			return (NULL);
 		/* skip lines that are too big */
 		if (!index(p, '\n')) {

@@ -259,7 +259,7 @@ res_init()
 #endif
 	if ((fp = fopen(_PATH_RESCONF, "r")) != NULL) {
 	    /* read the config file */
-	    while (fgets(buf, sizeof(buf), fp) != NULL) {
+	    while (fgets_unlocked(buf, sizeof(buf), fp) != NULL) {
 		/* skip comments */
 		if (*buf == ';' || *buf == '#')
 			continue;

@@ -1,3 +1,25 @@
+1998-07-05 11:49  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_conf.c (read_conf_file): Use feof_unlocked on private
+	stream.
+	* inet/ruserpass.c (token): Likewise.
+	* nss/nsswitch.c (nss_parse_file): Likewise.
+	* intl/localealias.c: Likewise.  Also for ferror.
+	* time/getdate.c (__getdate_r): Likewise.
+
+	* libio/Makefile (routines): Add iofgets_u.
+	* libio/iofgets_u.c: New file.
+	* libio/Versions: Add fgets_unlocked.
+	* libio/stdio.h: Add prototype for fgets_unlocked.
+
+	* misc/getttyent.c (getttyent): Use fgets_unlocked instead of fgets.
+	* misc/getusershell.c (initshells): Likewise.
+	* misc/mntent_r.c (__getmntent_r): Explicitly lock stream.  Use
+	fgets_unlocked.
+	* nss/nss_files/files-XXX.c (internal_getent): Likewise.
+	* resolv/res_init.c (res_init): Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c: Likewise.
+
 1998-05-23  Philip Blundell  <Philip.Blundell@pobox.com>
 
 	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add `syscall'.

@@ -536,7 +536,7 @@ nss_parse_file (const char *fname)
 	  last = this;
 	}
     }
-  while (!feof (fp));
+  while (!feof_unlocked (fp));
 
   /* Free the buffer.  */
   free (line);

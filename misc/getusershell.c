@@ -96,6 +96,7 @@ initshells()
 	register char **sp, *cp;
 	register FILE *fp;
 	struct stat statb;
+	int flen;
 
 	if (shells != NULL)
 		free(shells);
@@ -122,7 +123,8 @@ initshells()
 	}
 	sp = shells;
 	cp = strings;
-	while (fgets(cp, statb.st_size - (cp - strings), fp) != NULL) {
+	flen = statb.st_size;
+	while (fgets_unlocked(cp, flen - (cp - strings), fp) != NULL) {
 		while (*cp != '#' && *cp != '/' && *cp != '\0')
 			cp++;
 		if (*cp == '#' || *cp == '\0')

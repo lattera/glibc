@@ -181,7 +181,7 @@ internal_getent (struct STRUCTURE *result,
       /* Terminate the line so that we can test for overflow.  */
       data->linebuffer[linebuflen - 1] = '\xff';
 
-      p = fgets (data->linebuffer, linebuflen, stream);
+      p = fgets_unlocked (data->linebuffer, linebuflen, stream);
       if (p == NULL)
 	{
 	  /* End of file or read error.  */
