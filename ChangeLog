@@ -1,3 +1,12 @@
+1999-04-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/digits_dots.c: Use inet_aton to parse IPv4 numbers.
+	This allows e.g. gethostbyname to accept "10.1234".
+	Reported by Alexander V. Lukyanov <lav@long.yar.ru> [PR libc/1096].
+
+	* nss/test-netdb.c (test_hosts): Add test for gethostbyname and
+	non quad IPv4 numbers.
+
 1999-04-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/res_hconf.c (_res_hconf_init): Remove unused variable end.
@@ -1549,7 +1558,7 @@
 
 	* elf/link.h (link_map): Add l_dev and l_ino.
 	* elf/dl-load.c (_dl_map_object_from_fd): Test dev/ino of newly
-	loaded shared object with all laoded objects.  Initialize l_ino
+	loaded shared object with all loaded objects.  Initialize l_ino
 	and l_dev in case it's new.
 	* elf/rtld.c (dl_main): Explain situation is l_dev/l_ino with main
 	object.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by H.J. Lu <hjl@gnu.ai.mit.edu>, 1997.
 
@@ -98,13 +98,27 @@
 	    {
 	      if (!*cp)
 		{
-		  if (*--cp == '.') break;
+		  int not_ok;
+
+		  if (*--cp == '.')
+		    break;
 
 	/* All-numeric, no dot at the end. Fake up a hostent as if
 	   we'd actually done a lookup.  What if someone types
 	   255.255.255.255?  The test below will succeed
 	   spuriously... ???  */
-		  if (inet_pton (af, name, host_addr) <= 0)
+		  switch (af)
+		    {
+		    case AF_INET:
+		      not_ok = inet_aton (name, (struct in_addr *) host_addr);
+		      break;
+		    case AF_INET6:
+		      not_ok = (inet_pton (af, name, host_addr) <= 0);
+		      break;
+		    default:
+		      assert (! "There should be no other `af' value");
+		    }
+		  if (not_ok)
 		    {
 		      __set_h_errno (HOST_NOT_FOUND);
 #ifndef HAVE_LOOKUP_BUFFER

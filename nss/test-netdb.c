@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
 
@@ -166,6 +166,9 @@ test_hosts (void)
 
   hptr1 = gethostbyname ("127.0.0.1");
   output_hostent ("gethostbyname (\"127.0.0.1\")", hptr1);
+
+  hptr1 = gethostbyname ("10.1234");
+  output_hostent ("gethostbyname (\"10.1234\")", hptr1);
 
   hptr1 = gethostbyname2 ("localhost", AF_INET);
   output_hostent ("gethostbyname2 (\"localhost\", AF_INET)", hptr1);

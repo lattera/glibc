@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  1999-02-07
+GNU C Library NEWS -- history of user-visible changes.  1999-04-29
 
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -11,9 +11,18 @@ Version 2.1.1
 
 * New ISO C 9x function _Exit, imaxabs, and imaxdiv are added.
 
-* New xdr functions are added.
+* New xdr functions are added; some rpc functions are now 64bit clean.
 
-* Fixed a number of bugs and incompatibilities with glibc 2.0.
+* Fixed a number of bugs.
+
+* Fixed known incompatibilities with glibc 2.0.
+
+* New functions lock64 and strchrnul.
+
+* Optimized a number of functions.
+
+* Update timezone data files.
+
 
 Version 2.1
 
