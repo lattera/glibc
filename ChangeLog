@@ -1,3 +1,18 @@
+2004-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules: Use extra-modules.mk if modules-names is defined.
+	* extra-modules.mk: New file.
+	* dlfcn/Makefile (CPPFLAGS-modcxaatexit.c): Removed.
+	* elf/Makefile (CFLAGS-interp.c): Add -DNOT_IN_libc=1.
+	* csu/Makefile ($(objpfx)version-info.h): Pass -DNOT_IN_libc=1 to
+	compiler.
+	* Makefile (distribute): Add symbol-hacks.h.
+	* sysdeps/generic/symbol-hacks.h: New file.
+	* sysdeps/wordsize-32/symbol-hacks.h: New file.
+	* sysdeps/wordsize-32/divdi3.c: Define *_internal aliases for __divdi3,
+	__moddi3, __udivdi3, and __umoddi3.
+	* include/libc-symbols.h: Include <symbol-hacks.h>.
+
 2004-03-08  Jeroen Dekkers  <jeroen@dekkers.cx>
 
 	* elf/rtld.c (_rtld_global_ro) [MAP_COPY]: Don't set _dl_unload_cache.

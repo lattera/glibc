@@ -756,4 +756,7 @@ for linking")
 # define libc_hidden_builtin_ver(local, name)
 #endif
 
+/* Get some dirty hacks.  */
+#include <symbol-hacks.h>
+
 #endif /* libc-symbols.h */

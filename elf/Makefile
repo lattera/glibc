@@ -273,7 +273,8 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	rm -f $@.lds
 
 # interp.c exists just to get this string into the libraries.
-CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'
+CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"' \
+		  -DNOT_IN_libc=1
 $(objpfx)interp.os: $(common-objpfx)config.make
 
 ifneq (ld.so,$(rtld-installed-name))

@@ -1,5 +1,5 @@
 /* 64-bit multiplication and division
-   Copyright (C) 1989, 1992-1999, 2000, 2001, 2002, 2003
+   Copyright (C) 1989, 1992-1999, 2000, 2001, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -294,6 +294,7 @@ __divdi3 (DWtype u, DWtype v)
     w = -w;
   return w;
 }
+strong_alias (__divdi3, __divdi3_internal)
 
 DWtype
 __moddi3 (DWtype u, DWtype v)
@@ -313,12 +314,14 @@ __moddi3 (DWtype u, DWtype v)
     w = -w;
   return w;
 }
+strong_alias (__moddi3, __moddi3_internal)
 
 UDWtype
 __udivdi3 (UDWtype u, UDWtype v)
 {
   return __udivmoddi4 (u, v, NULL);
 }
+strong_alias (__udivdi3, __udivdi3_internal)
 
 UDWtype
 __umoddi3 (UDWtype u, UDWtype v)
@@ -328,6 +331,7 @@ __umoddi3 (UDWtype u, UDWtype v)
   __udivmoddi4 (u, v, &w);
   return w;
 }
+strong_alias (__umoddi3, __umoddi3_internal)
 
 /* We declare these with compat_symbol so that they are not visible at
    link time.  Programs must use the functions from libgcc.  */

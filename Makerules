@@ -661,6 +661,17 @@ ifdef extra-libs
 extra-libs-left := $(extra-libs)
 include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
+
+
+# The makefile may define $(modules-names) # to build additional
+# modules.
+ifdef modules-names
+# extra-lib.mk is included once for each extra lib to define rules
+# to build it, and to add its objects to the various variables.
+# During its evaluation, $(lib) is set to the name of the library.
+extra-modules-left := $(modules-names)
+include $(patsubst %,$(..)extra-modules.mk,$(modules-names))
+endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \

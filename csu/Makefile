@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995,96,97,98,99,2000,01,02,2003 Free Software Foundation, Inc.
+# Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -217,7 +217,7 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \
 	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
-			     | $(CC) $(CPPFLAGS) -E -P - | \
+			     | $(CC) $(CPPFLAGS) -E -P - -DNOT_IN_libc=1 | \
 			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
 		   if [ -z "$$version" ]; then \
 		     if [ -r /proc/version ]; then \

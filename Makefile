@@ -285,7 +285,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
 		cppflags-iterator.mk tls.make.c				\
 		include/stubs-prologue.h include/gnu/stubs.h		\
-		include/atomic.h bits/atomic.h				\
+		include/atomic.h bits/atomic.h symbol-hacks.h		\
 		INTERFACE CONFORMANCE NAMESPACE LICENSES	        \
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\

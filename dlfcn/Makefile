@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +99,6 @@ $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so
 $(objpfx)tstatexit: $(libdl)
 $(objpfx)tstatexit.out: $(objpfx)tstatexit $(objpfx)modatexit.so
 
-CPPFLAGS-modcxaatexit.c = -DNOT_IN_libc
 $(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 
