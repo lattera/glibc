@@ -23,6 +23,7 @@
 #include <sysdep.h>
 
 ENTRY(__copysign)
+	CALL_MCOUNT 0
 /* double [f1] copysign (double [f1] x, double [f2] y);
    copysign(x,y) returns a value with the magnitude of x and
    with the sign bit of y.  */

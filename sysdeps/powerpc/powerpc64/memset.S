@@ -41,6 +41,7 @@
    to 0, to take advantage of the dcbz instruction.  */
 
 EALIGN (BP_SYM (memset), 5, 0)
+	CALL_MCOUNT 3
 
 #define rTMP	r0
 #define rRTN	r3	/* Initial value of 1st argument.  */
@@ -274,6 +275,7 @@ libc_hidden_builtin_def (memset)
 /* Copied from bzero.S to prevent the linker from inserting a stub
    between bzero and memset.  */
 ENTRY (BP_SYM (__bzero))
+	CALL_MCOUNT 3
 #if __BOUNDED_POINTERS__
 	mr	r6,r4
 	li	r5,0

@@ -28,6 +28,7 @@
 	.section	".text"
 
 ENTRY (__rint)
+	CALL_MCOUNT 0
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
 	fsub	fp12,fp13,fp13	/* generate 0.0  */

@@ -37,6 +37,7 @@
    to the integer value.  */
 
 ENTRY (__llroundf)
+	CALL_MCOUNT 0
 	lfd	fp12,.LC0@toc(2)
 	lfd	fp10,.LC1@toc(2)
 	fcmpu	cr6,fp1,fp12	/* if (x < 0.0)  */

@@ -41,6 +41,10 @@
 
 	.machine	"altivec"
 ENTRY (BP_SYM (__sigsetjmp))
+	CALL_MCOUNT 2
+	.globl JUMPTARGET(GLUE(__sigsetjmp,_ent))
+	.hidden JUMPTARGET(GLUE(__sigsetjmp,_ent))
+JUMPTARGET(GLUE(__sigsetjmp,_ent)):
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 	std  r1,(JB_GPR1*8)(3)
 	mflr r0

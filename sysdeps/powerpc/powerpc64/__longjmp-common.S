@@ -42,6 +42,7 @@
 
 	.machine	"altivec"
 ENTRY (BP_SYM (__longjmp))
+	CALL_MCOUNT 2
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 #ifndef __NO_VMX__
 	ld    r5,.LC__dl_hwcap@toc(r2)

@@ -22,3 +22,10 @@ ifeq ($(subdir),elf)
 # help gcc inline asm code from dl-machine.h
 +cflags += -finline-limit=2000
 endif
+
+ifeq ($(subdir),gmon)
+# The assembly functions assume that fp arg regs are not trashed.
+# Compiling with -msoft-float ensures that fp regs are not used
+# for moving memory around.
+CFLAGS-mcount.c += -msoft-float
+endif

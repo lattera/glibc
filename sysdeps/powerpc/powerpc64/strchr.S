@@ -26,6 +26,7 @@
 /* char * [r3] strchr (const char *s [r3] , int c [r4] )  */
 
 ENTRY (BP_SYM (strchr))
+	CALL_MCOUNT 2
 
 #define rTMP1	r0
 #define rRTN	r3	/* outgoing result */

@@ -23,37 +23,36 @@
 
 #ifdef __ASSEMBLER__
 
+/* Support macros for CALL_MCOUNT.  */
+	.macro SAVE_ARG NARG
+	.if \NARG
+	SAVE_ARG \NARG-1
+	std	2+\NARG,-72+8*(\NARG)(1)
+	.endif
+	.endm
+
+	.macro REST_ARG NARG
+	.if \NARG
+	REST_ARG \NARG-1
+	ld	2+\NARG,40+8*(\NARG)(1)
+	.endif
+	.endm
+
 /* If compiled for profiling, call `_mcount' at the start of each function.
    see ppc-mcount.S for more details.  */
+	.macro CALL_MCOUNT NARG
 #ifdef	PROF
-/* The mcount code relies on a the return address being on the stack
-   to locate our caller and so it can restore it; so store one just
-   for its benefit.  */
-#ifdef SYSV_ELF_PROFILING
-#define CALL_MCOUNT	\
-  .pushsection;			\
-  .section ".data";		\
-  .align ALIGNARG(2);		\
-__mcount:			\
-  .long  0;			\
-  .previous;			\
-  .section ".toc","aw";		\
-.LC__mcount:;			\
-  .tc __mcount[TC],__mcount;	\
-  .previous;			\
-  mflr  r0;			\
-  std   r0,16(r1);		\
-  ld    r0,.LC__mcount@toc(r2);	\
-  bl    JUMPTARGET(_mcount);
-#else /* SYSV_ELF_PROFILING */
-#define CALL_MCOUNT	\
-  mflr  r0;			\
-  std   r0,16(r1);		\
-  bl    JUMPTARGET(_mcount);
-#endif /* SYSV_ELF_PROFILING */
-#else  /* PROF */
-#define CALL_MCOUNT		/* Do nothing.  */
-#endif /* PROF */
+	mflr	r0
+	SAVE_ARG \NARG
+	std	r0,16(r1)
+	stdu	r1,-112(r1)
+	bl	JUMPTARGET (_mcount)
+	ld	r0,128(r1)
+	REST_ARG \NARG
+	addi	r1,r1,112
+	mtlr	r0
+#endif
+	.endm
 
 #ifdef USE_PPC64_OVERLAPPING_OPD
 # define OPD_ENT(name)	.quad BODY_LABEL (name), .TOC.@tocbase
@@ -106,24 +105,11 @@ BODY_LABEL(name):
 
 /* EALIGN is like ENTRY, but does alignment to 'words'*4 bytes
    past a 2^alignt boundary.  */
-#ifdef PROF
-#define EALIGN(name, alignt, words) \
-	ENTRY_2(name)				\
-	.align ALIGNARG(alignt);		\
-	EALIGN_W_##words;			\
-BODY_LABEL(name):				\
-	CALL_MCOUNT				\
-	b 0f;					\
-	.align ALIGNARG(alignt);		\
-	EALIGN_W_##words;			\
-0:
-#else /* PROF */
 #define EALIGN(name, alignt, words) \
 	ENTRY_2(name)				\
 	.align ALIGNARG(alignt);		\
 	EALIGN_W_##words;			\
 BODY_LABEL(name):
-#endif
 
 /* Local labels stripped out by the linker.  */
 #undef L

@@ -1,3 +1,44 @@
+2004-10-06  Alan Modra  <amodra@bigpond.net.au>
+
+	* gmon/Makefile (CFLAGS-mcount.c): Move before inclusion of "Rules".
+	* sysdeps/powerpc/powerpc64/Makefile (CFLAGS-mcount.c): Add
+	-msoft-float.
+	* sysdeps/powerpc/powerpc64/sysdep.h (SAVE_ARG, REST_ARG): New macros.
+	(CALL_MCOUNT): Replace with a gas macro implementation.
+	(EALIGN): Delete PROF version.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Invoke CALL_MCOUNT.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/stpcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Likewise.
+
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: Add extra entry point
+	past _mcount call.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Use it.
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: Likewise.
+
 2004-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_mkquery.c (res_nmkquery): Reject randombits value if

@@ -25,8 +25,9 @@
 
 
 ENTRY (__novmxsetjmp)
+	CALL_MCOUNT 1
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (__novmx__sigsetjmp)
+	b JUMPTARGET (__novmx__sigsetjmp_ent)
 END (__novmxsetjmp)
 strong_alias (__novmxsetjmp, __novmx__setjmp)
 symbol_version (__novmxsetjmp, setjmp, GLIBC_2.3)
@@ -35,8 +36,9 @@ symbol_version (__novmxsetjmp, setjmp, GLIBC_2.3)
 
 
 ENTRY (__vmxsetjmp)
+	CALL_MCOUNT 1
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (__vmx__sigsetjmp)
+	b JUMPTARGET (__vmx__sigsetjmp_ent)
 END (__vmxsetjmp)
 strong_alias (__vmxsetjmp, __vmx__setjmp)
 strong_alias (__vmx__sigsetjmp, __setjmp)

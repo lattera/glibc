@@ -37,6 +37,8 @@
    Each case has a optimized unrolled loop.   */
 
 EALIGN (BP_SYM (memcpy), 5, 0)
+	CALL_MCOUNT 3
+
     cmpldi cr1,5,31
     neg   0,3
     std   3,-16(1)

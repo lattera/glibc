@@ -26,6 +26,7 @@
 /* char * [r3] strcpy (char *dest [r3], const char *src [r4])  */
 
 EALIGN (BP_SYM (strcpy), 4, 0)
+	CALL_MCOUNT 2
 
 #define rTMP	r0
 #define rRTN	r3	/* incoming DEST arg preserved as result */

@@ -79,6 +79,7 @@
 /* int [r3] strlen (char *s [r3])  */
 
 ENTRY (BP_SYM (strlen))
+	CALL_MCOUNT 1
 
 #define rTMP1	r0
 #define rRTN	r3	/* incoming STR arg, outgoing result */

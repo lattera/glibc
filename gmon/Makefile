@@ -29,10 +29,10 @@ elide-routines.os = bb_init_func bb_exit_func
 
 tests	:= tst-sprofil
 
-include ../Rules
-
 # The mcount code won't work without a frame pointer.
 CFLAGS-mcount.c := -fno-omit-frame-pointer
+
+include ../Rules
 
 # We cannot compile mcount.c with -pg because that would
 # create recursive calls.  Just copy the normal static object.

@@ -26,6 +26,7 @@
 /* int [r3] strcmp (const char *s1 [r3], const char *s2 [r4])  */
 
 EALIGN (BP_SYM(strcmp), 4, 0)
+	CALL_MCOUNT 2
 
 #define rTMP	r0
 #define rRTN	r3

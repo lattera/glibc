@@ -21,6 +21,7 @@
 
 /* long long int[r3] __llrintf (float x[fp1])  */
 ENTRY (__llrintf)	
+	CALL_MCOUNT 0
 	fctid	fp13,fp1
 	stfd	fp13,-16(r1)
 	nop	/* Insure the following load is in a different dispatch group */

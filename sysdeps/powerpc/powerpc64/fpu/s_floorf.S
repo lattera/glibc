@@ -25,6 +25,7 @@
 	.section	".text"
 
 ENTRY (__floorf)
+	CALL_MCOUNT 0
 	mffs	fp11		/* Save current FPU rounding mode.  */
 	lfd	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
