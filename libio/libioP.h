@@ -87,6 +87,16 @@ extern "C" {
  * object being acted on (i.e. the 'this' parameter).
  */
 
+#ifdef _LIBC
+# include <shlib-compat.h>
+# if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+   /* Setting this macro disables the use of the _vtable_offset
+      bias in _IO_JUMPS_FUNCS, below.  That is only needed if we
+      want to support old binaries (see oldfileops.c).  */
+#  define _G_IO_NO_BACKWARD_COMPAT 1
+# endif
+#endif
+
 #if (!defined _IO_USE_OLD_IO_FILE \
      && (!defined _G_IO_NO_BACKWARD_COMPAT || _G_IO_NO_BACKWARD_COMPAT == 0))
 # define _IO_JUMPS_OFFSET 1
