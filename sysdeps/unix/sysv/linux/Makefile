@@ -25,7 +25,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 install-others += $(inst_includedir)/bits/syscall.h
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
-# For bi-arch platforms, the CPU/Makefile defines 64bit-predefine and
+# For bi-arch platforms, the CPU/Makefile defines {32,64}bit-predefine and
 # we generate a file that uses <bits/wordsize.h>.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)-t
@@ -37,11 +37,13 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo '#endif'; \
 	 echo ''; \
 	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) -D_LIBC -dM | \
+	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
+	   $(addprefix -D,$(32bit-predefine)) -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new32; \
 	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
+	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
+	   $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new64; \
 	 if cmp -s $(@:.d=.h).new32 $(@:.d=.h).new64; then \

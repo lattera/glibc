@@ -1,3 +1,4 @@
+32bit-predefine = __i386__
 64bit-predefine = __x86_64__
 
 ifeq ($(subdir),misc)
