@@ -16,13 +16,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
 #include <sys/types.h>
-#include <errno.h>
+#include <sys/wait.h>
+#include <bits/libc-lock.h>
 
 
 #ifndef	HAVE_GNU_LD
@@ -32,13 +33,36 @@
 #define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
 #define	SHELL_NAME	"sh"		/* Name to give it.  */
 
+
+#ifdef _LIBC_REENTRANT
+static struct sigaction intr, quit;
+static int sa_refcntr;
+__libc_lock_define_initialized (static, lock);
+
+# define DO_LOCK() __libc_lock_lock (lock)
+# define DO_UNLOCK() __libc_lock_unlock (lock)
+# define INIT_LOCK() ({ __libc_lock_init (lock); sa_refcntr = 0; })
+# define ADD_REF() sa_refcntr++
+# define SUB_REF() --sa_refcntr
+#else
+# define DO_LOCK()
+# define DO_UNLOCK()
+# define INIT_LOCK()
+# define ADD_REF() (void) 0
+# define SUB_REF() 0
+#endif
+
+
 /* Execute LINE as a shell command, returning its status.  */
 static int
 do_system (const char *line)
 {
   int status, save;
   pid_t pid;
-  struct sigaction sa, intr, quit;
+  struct sigaction sa;
+#ifndef _LIBC_REENTRANT
+  struct sigaction intr, quit;
+#endif
 #ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
   sigset_t block, omask;
 #endif
@@ -47,13 +71,22 @@ do_system (const char *line)
   sa.sa_flags = 0;
   __sigemptyset (&sa.sa_mask);
 
-  if (__sigaction (SIGINT, &sa, &intr) < 0)
-    return -1;
-  if (__sigaction (SIGQUIT, &sa, &quit) < 0)
+  DO_LOCK ();
+  if (ADD_REF () == 0)
     {
-      save = errno;
-      goto out_restore_sigint;
+      if (__sigaction (SIGINT, &sa, &intr) < 0)
+	{
+	  SUB_REF ();
+	  DO_UNLOCK ();
+	  return -1;
+	}
+      if (__sigaction (SIGQUIT, &sa, &quit) < 0)
+	{
+	  save = errno;
+	  goto out_restore_sigint;
+	}
     }
+  DO_UNLOCK ();
 
   __sigemptyset (&block);
   __sigaddset (&block, SIGCHLD);
@@ -65,9 +98,14 @@ do_system (const char *line)
       else
 	{
 	  save = errno;
-	  (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
+	  DO_LOCK ();
+	  if (SUB_REF () == 0)
+	    {
+	      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
 	out_restore_sigint:
-	  (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+	      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+	    }
+	  DO_UNLOCK ();
 	  __set_errno (save);
 	  return -1;
 	}
@@ -87,6 +125,7 @@ do_system (const char *line)
       (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
       (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
       (void) __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL);
+      INIT_LOCK ();
 
       /* Exec the shell.  */
       (void) __execve (SHELL_PATH, (char *const *) new_argv, __environ);
@@ -119,9 +158,11 @@ do_system (const char *line)
     }
 
   save = errno;
-  if ((__sigaction (SIGINT, &intr, (struct sigaction *) NULL)
-       | __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL)
-       | __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)) != 0)
+  DO_LOCK ();
+  if ((SUB_REF () == 0
+       && (__sigaction (SIGINT, &intr, (struct sigaction *) NULL)
+	   | __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL)) != 0)
+      || __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL) != 0)
     {
 #ifndef _LIBC
       /* glibc cannot be used on systems without waitpid.  */
@@ -129,8 +170,9 @@ do_system (const char *line)
 	__set_errno (save);
       else
 #endif
-	return -1;
+	status = -1;
     }
+  DO_UNLOCK ();
 
   return status;
 }

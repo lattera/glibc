@@ -1,3 +1,8 @@
+2002-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/system.c (do_system): Make signal handler
+	installation thread safe.
+
 2002-12-02  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (readahead): Change
