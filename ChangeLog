@@ -1,3 +1,7 @@
+1999-07-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/Versions: Add POSIX.1b timer and clock functions to GLIBC_2.2.
+
 1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* elf/link.h (struct link_map): Use Elf_Symndx instead of ElfXX_Symndx.

@@ -47,6 +47,13 @@ libc {
     getdate; getdate_r; getitimer;
   }
   GLIBC_2.2 {
+    # c*
+    clock_getres; clock_gettime; clock_settime;
+
+    # t*
+    timer_create; timer_delete; timer_getoverrun; timer_gettime;
+    timer_settime;
+
     # w*
     wcsftime;
   }
