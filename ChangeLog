@@ -1,3 +1,7 @@
+2002-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (gettext): Use INTUSE for _libc_intl_domainname.
+
 2002-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/sys/stat.h: Fix typo.  Patch by HJ Lu.
@@ -46,7 +50,7 @@
 	* sysdeps/generic/lxstat64.c: Use INTDEF for __lxstat64.
 	* sysdeps/mach/hurd/lxstat64.c: Likewise.
 	* sysdeps/unix/sysv/aix/lxstat64.c: Likewise.
-	* sysdeps/unix/sysv/linuxx/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
 
 	* include/wchar.h: Declare __mbrtowc_internal and __mbrlen_internal
 	prototypes.  Add __mbrlen and __mbrtowc macros.
