@@ -1,5 +1,7 @@
 2002-04-10  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/glob.c: New.
+
 	* include/argz.h: Remove extra char from last patch.
 
 2002-04-09  Ulrich Drepper  <drepper@redhat.com>
