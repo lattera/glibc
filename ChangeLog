@@ -1,3 +1,13 @@
+2003-09-28  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h (__libc_cleanup_pop):
+	Redefine and use __libc_cleanup_region_end instead.
+
+2003-09-29  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Use __inline and
+	fix prototypes for picky C++ compilers.
+
 2003-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ustat.c (ustat): Set errno to EINVAL if

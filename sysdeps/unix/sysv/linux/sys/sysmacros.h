@@ -26,28 +26,28 @@
    not going to hack weird hacks to support the dev_t representation
    they need.  */
 #ifdef __GLIBC_HAVE_LONG_LONG
-extern unsigned int inline gnu_dev_major (unsigned long long int __dev)
+extern __inline unsigned int gnu_dev_major (unsigned long long int __dev)
      __THROW;
-extern unsigned int inline gnu_dev_minor (unsigned long long int __dev)
+extern __inline unsigned int gnu_dev_minor (unsigned long long int __dev)
      __THROW;
-extern unsigned long long int inline gnu_dev_makedev (unsigned int __major,
+extern __inline unsigned long long int gnu_dev_makedev (unsigned int __major,
 						      unsigned int __minor)
      __THROW;
 
 # if defined __GNUC__ && __GNUC__ >= 2
-extern inline unsigned int
+extern __inline unsigned int
 gnu_dev_major (unsigned long long int __dev) __THROW
 {
   return ((__dev >> 8) & 0xfff) | ((unsigned int) (__dev >> 32) & ~0xfff);
 }
 
-extern inline unsigned int
+extern __inline unsigned int
 gnu_dev_minor (unsigned long long int __dev) __THROW
 {
   return (__dev & 0xff) | ((unsigned int) (__dev >> 12) & ~0xff);
 }
 
-extern inline unsigned long long int
+extern __inline unsigned long long int
 gnu_dev_makedev (unsigned int __major, unsigned int __minor) __THROW
 {
   return ((__minor & 0xff) | ((__major & 0xfff) << 8)

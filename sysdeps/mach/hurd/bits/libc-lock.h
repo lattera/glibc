@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Hurd version using Mach cthreads.
-   Copyright (C) 1996,97,98,2000,01, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2000,01, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -160,7 +160,7 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
     (*__save_FCT)(__save_ARG);						    \
 
 #define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
-#define __libc_cleanup_pop(execute) __libc_cleanup_end (execute)
+#define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)
 
 #if (_CTHREADS_ - 0)
 
