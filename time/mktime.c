@@ -77,7 +77,7 @@ verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
 /* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
 static inline int
-leapyear (int year)
+leapyear (long int year)
 {
   /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.
      Also, work even if YEAR is negative.  */
@@ -119,7 +119,7 @@ const unsigned short int __mon_yday[2][13] =
    If TP is null, return a nonzero value.
    If overflow occurs, yield the low order bits of the correct answer.  */
 static time_t
-ydhms_tm_diff (int year, int yday, int hour, int min, int sec,
+ydhms_tm_diff (long int year, int yday, int hour, int min, int sec,
 	       const struct tm *tp)
 {
   if (!tp)
@@ -231,7 +231,8 @@ __mktime_internal (struct tm *tp,
   int mon_remainder = mon % 12;
   int negative_mon_remainder = mon_remainder < 0;
   int mon_years = mon / 12 - negative_mon_remainder;
-  int year = year_requested + mon_years;
+  long int lyear_requested = year_requested;
+  long int year = lyear_requested + mon_years;
 
   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,

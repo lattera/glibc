@@ -1,5 +1,13 @@
 2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	[BZ #471] Fix imported from gnulib.
+	* time/mktime.c (leapyear, ydms_tm_diff): Year is of type
+	long int, not int, to avoid problems when tm_year == INT_MAX
+	and tm_mon > 12.
+	(__mktime_intenral): Compute year using long int arithmetic,
+	not int arithmetic, to avoid problems on hosts where time_t
+	and long are 64 bits but int is 32.
+
 	[BZ #468] Import a fix from gnulib.
 	* time/mktime.c [! DEBUG]: Do not include <string.h>.
 	It's needed only if DEBUG is nonzero.
