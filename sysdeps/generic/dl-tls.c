@@ -324,6 +324,21 @@ _dl_allocate_tls (void)
 
   return result;
 }
+INTDEF(_dl_allocate_tls)
+
+
+void
+internal_function
+_dl_deallocate_tls (void *tcb)
+{
+  dtv_t *dtv = GET_DTV (tcb);
+
+  /* The array starts with dtv[-1].  */
+  free (dtv - 1);
+
+  munmap (tcb, GL(dl_tls_static_size));
+}
+
 
 
 # ifdef SHARED

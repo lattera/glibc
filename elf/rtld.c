@@ -1240,7 +1240,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 for the thread descriptor.  The memory for the TLS block will
 	 never be freed.  It should be allocated accordingly.  The dtv
 	 array can be changed if dynamic loading requires it.  */
-      tcbp = _dl_allocate_tls ();
+      tcbp = INTUSE(_dl_allocate_tls) ();
       if (tcbp == NULL)
 	_dl_fatal_printf ("\
 cannot allocate TLS data structures for inital thread");

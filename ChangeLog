@@ -1,3 +1,12 @@
+2002-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Versions: Add _dl_allocate_tls and _dl_deallocate_tls.
+	* elf/rtld.c (dl_main): Use _dl_allocate_tls with INTUSE.
+	* sysdeps/generic/dl-tls.c: Add INTDEF for _dl_allocate_tls.
+	(_dl_deallocate_tls): New function.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_allocate_tls_internal and
+	_dl_deallocate_tls.
+
 2002-02-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/fileops.c (_IO_file_seekoff_mmap): Fix fseek SEEK_END.

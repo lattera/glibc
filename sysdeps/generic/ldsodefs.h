@@ -688,6 +688,10 @@ extern void _dl_determine_tlsoffset (void) internal_function;
 
 /* Allocate memory for static TLS block and dtv.  */
 extern void *_dl_allocate_tls (void) internal_function;
+extern void *_dl_allocate_tls_internal (void) internal_function;
+
+/* Deallocate memory allocated with _dl_allocate_tls.  */
+extern void _dl_deallocate_tls (void *tcb) internal_function;
 
 /* Return the symbol address given the map of the module it is in and
    the symbol record.  */
