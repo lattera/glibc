@@ -22,22 +22,15 @@ Cambridge, MA 02139, USA.  */
 
 #include <regdef.h>
 
-#ifdef __STDC__
 #define ENTRY(name) \
   .globl name;								      \
   .align 2;								      \
+  .ent name,0;								      \
   name##:
-#else
-#define ENTRY(name) \
-  .globl name;								      \
-  .align 2;								      \
-  name/**/:
-#endif
 
 /* Note that while it's better structurally, going back to call syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
-#ifdef __STDC__
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
   .align 2;								      \
@@ -49,19 +42,6 @@ Cambridge, MA 02139, USA.  */
   bne a3, zero, 99b;							      \
   nop;									      \
 syse1:
-#else
-#define PSEUDO(name, syscall_name, args) \
-  .set noreorder;							      \
-  .align 2;								      \
-  99: j syscall_error;							      \
-  nop;							      		      \
-  ENTRY(name)								      \
-  li v0, SYS_/**/syscall_name;						      \
-  syscall;								      \
-  bne a3, zero, 99b;							      \
-  nop;									      \
-syse1:
-#endif
 
 #define ret	j ra ; nop
 #define r0	v0
