@@ -8,8 +8,6 @@
 
 - nice level is process property
 
-- process file creation mask (mkdir, mkfifo, open, creat) after umask call
-
 - getppid(() must return process ID of parent process of the thread
   group leader
   + test core file content (psinfo, prstatus)
