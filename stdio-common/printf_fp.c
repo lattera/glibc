@@ -747,6 +747,7 @@ __printf_fp (FILE *fp,
   {
     int width = info->width;
     char *buffer, *startp, *cp;
+    int buffer_malloced;
     int chars_needed;
     int expscale;
     int intdig_max, intdig_no = 0;
@@ -816,8 +817,18 @@ __printf_fp (FILE *fp,
 
     /* Allocate buffer for output.  We need two more because while rounding
        it is possible that we need two more characters in front of all the
-       other output.  */
-    buffer = alloca (2 + chars_needed);
+       other output.  If the amount of memory we have to allocate is too
+       large use `malloc' instead of `alloca'.  */
+    buffer_malloced = chars_needed > 20000;
+    if (buffer_malloced)
+      {
+	buffer = (char *) malloc (2 + chars_needed);
+	if (buffer == NULL)
+	  /* Signal an error to the caller.  */
+	  return -1;
+      }
+    else
+      buffer = (char *) alloca (2 + chars_needed);
     cp = startp = buffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */
@@ -1025,6 +1036,10 @@ __printf_fp (FILE *fp,
 
     if (info->left && width > 0)
       PADN (info->pad, width);
+
+    /* Free the memory if necessary.  */
+    if (buffer_malloced)
+      free (buffer);
   }
   return done;
 }

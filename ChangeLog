@@ -1,3 +1,10 @@
+1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/printf_fp.c (__printf_fp): Allocate buffer to
+	generate mantissa output in using malloc if it is larger than
+	20000 characters.
+	Reported by Jim Meyering <meyering@ascend.com>.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/sys/cdefs.h: Define __attribute_malloc__ according to
