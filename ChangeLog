@@ -1,3 +1,10 @@
+Mon Aug 24 10:37:38 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep_headers): Add
+	sys/reg.h.
+	* sysdeps/unix/sysv/linux/m68k/sys/reg.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Distribute it.
+
 1998-08-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Versions [GLIBC_2.1]: Add
