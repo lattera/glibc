@@ -306,8 +306,8 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	  /* If the request was by GID, add that entry first.  */
 	  if (req->type != GETGRBYNAME)
 	    {
-	      if (cache_add (GETGRBYGID, cp, n, &dataset->head, true, db,
-			     owner) < 0)
+	      if (cache_add (GETGRBYGID, cp, key_offset, &dataset->head, true,
+			     db, owner) < 0)
 		{
 		  /* Could not allocate memory.  Make sure the data gets
 		     discarded.  */
@@ -336,7 +336,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 				== 0, 1))
 	    {
 	      if (req->type == GETGRBYNAME)
-		(void) cache_add (GETGRBYGID, cp, n, &dataset->head,
+		(void) cache_add (GETGRBYGID, cp, key_offset, &dataset->head,
 				  req->type != GETGRBYNAME, db, owner);
 	    }
 	  else if (first)
