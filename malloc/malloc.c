@@ -4370,13 +4370,7 @@ _int_free(mstate av, Void_t* mem)
 
   else {
 #if HAVE_MMAP
-    int ret;
-    INTERNAL_SIZE_T offset = p->prev_size;
-    mp_.n_mmaps--;
-    mp_.mmapped_mem -= (size + offset);
-    ret = munmap((char*)p - offset, size + offset);
-    /* munmap returns non-zero on failure */
-    assert(ret == 0);
+    munmap_chunk (p);
 #endif
   }
 }

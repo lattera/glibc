@@ -2336,19 +2336,29 @@ print_statistics (hp_timing_t *rtld_total_timep)
   unsigned long int num_relative_relocations = 0;
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     {
+      if (GL(dl_ns)[ns]._ns_loaded == NULL)
+	continue;
+
       struct r_scope_elem *scope = &GL(dl_ns)[ns]._ns_loaded->l_searchlist;
 
       for (unsigned int i = 0; i < scope->r_nlist; i++)
 	{
 	  struct link_map *l = scope->r_list [i];
 
-	  if (!l->l_addr)
-	    continue;
-
-	  if (l->l_info[VERSYMIDX (DT_RELCOUNT)])
+	  if (l->l_addr != 0 && l->l_info[VERSYMIDX (DT_RELCOUNT)])
 	    num_relative_relocations
 	      += l->l_info[VERSYMIDX (DT_RELCOUNT)]->d_un.d_val;
-	  if (l->l_info[VERSYMIDX (DT_RELACOUNT)])
+#ifndef ELF_MACHINE_REL_RELATIVE
+	  /* Relative relocations are processed on these architectures if
+	     library is loaded to different address than p_vaddr or
+	     if not prelinked.  */
+	  if ((l->l_addr != 0 || !l->l_info[VALIDX(DT_GNU_PRELINKED)])
+	      && l->l_info[VERSYMIDX (DT_RELACOUNT)])
+#else
+	  /* On e.g. IA-64 or Alpha, relative relocations are processed
+	     only if library is loaded to different address than p_vaddr.  */
+	  if (l->l_addr != 0 && l->l_info[VERSYMIDX (DT_RELACOUNT)])
+#endif
 	    num_relative_relocations
 	      += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
 	}

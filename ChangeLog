@@ -1,3 +1,14 @@
+2004-11-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (print_statistics): Avoid segfaults if not all namespaces
+	are used.  Fix computation of num_relative_relocations on RELA
+	architectures other than IA-64 and Alpha.
+
+2004-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Use munmap_chunk for handling
+	mmaped memory.
+
 2004-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (_int_free): Remove test for NULL parameter.
