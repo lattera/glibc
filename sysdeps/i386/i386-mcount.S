@@ -45,7 +45,7 @@ C_LABEL(_mcount)
 	call 1f
 1:	popl %ecx
 	addl $_GLOBAL_OFFSET_TABLE_+[.-1b], %ecx
-	movl C_SYMBOL_NAME(__mcount_internal@GOTOFF)(%ecx), %eax
+	movl C_SYMBOL_NAME(__mcount_internal@GOT)(%ecx), %eax
 	call *%eax
 #else
 	call C_SYMBOL_NAME(__mcount_internal)

@@ -20,6 +20,8 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 
+#include <xlocale.h>
+
 extern long int ____strtol_l_internal (const char *, char **, int, int,
 				       __locale_t);
 

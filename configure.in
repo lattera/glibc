@@ -361,7 +361,7 @@ fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
 
-AC_PROG_CC
+AC_PROG_CC_LOCAL
 AC_CANONICAL_BUILD
 if test $host != $build; then
   AC_CHECK_PROGS(BUILD_CC, gcc cc)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <sys/types.h>
 #include <hurd.h>
 #include <hurd/fd.h>
@@ -37,9 +36,12 @@
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
 int
-DEFUN(__select, (nfds, readfds, writefds, exceptfds, timeout),
-      int nfds AND fd_set *readfds AND fd_set *writefds AND
-      fd_set *exceptfds AND struct timeval *timeout)
+__select (nfds, readfds, writefds, exceptfds, timeout)
+     int nfds;
+     fd_set *readfds;
+     fd_set *writefds;
+     fd_set *exceptfds;
+     struct timeval *timeout;
 {
   int i;
   mach_port_t portset;

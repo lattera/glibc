@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
@@ -31,7 +30,8 @@
    bytes written on FDS[1] can be read from FDS[0].
    Returns 0 if successful, -1 if not.  */
 int
-DEFUN(__pipe, (fds), int fds[2])
+__pipe (fds)
+     int fds[2];
 {
   error_t err;
   socket_t server, sock1, sock2;

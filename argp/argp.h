@@ -274,7 +274,7 @@ struct argp_child
 struct argp_state
 {
   /* The top level ARGP being parsed.  */
-  __const struct argp *argp;
+  __const struct argp *root_argp;
 
   /* The argument vector being parsed.  May be modified.  */
   int argc;

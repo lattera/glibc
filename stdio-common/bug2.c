@@ -1,8 +1,7 @@
-#include <ansidecl.h>
 #include <stdio.h>
 
 int
-DEFUN_VOID(main)
+main (void)
 {
   int i;
   puts ("This should print \"wow = I\" for I from 0 to 39 inclusive.");

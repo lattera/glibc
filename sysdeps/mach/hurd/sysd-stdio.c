@@ -1,29 +1,27 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <hurd.h>
 #include <fcntl.h>
 #include <hurd/fd.h>
-
 
 /* Check ERR for wanting to generate a signal.  */
 
@@ -47,8 +45,10 @@ fd_fail (struct hurd_fd *fd, error_t err)
 /* Read up to N chars into BUF from COOKIE.
    Return how many chars were read, 0 for EOF or -1 for error.  */
 ssize_t
-DEFUN(__stdio_read, (cookie, buf, n),
-      PTR cookie AND register char *buf AND size_t n)
+__stdio_read (cookie, buf, n)
+     void *cookie;
+     char *buf;
+     size_t n;
 {
   error_t err;
   struct hurd_fd *fd = cookie;
@@ -65,8 +65,10 @@ DEFUN(__stdio_read, (cookie, buf, n),
 /* Write up to N chars from BUF to COOKIE.
    Return how many chars were written or -1 for error.  */
 ssize_t
-DEFUN(__stdio_write, (cookie, buf, n),
-      PTR cookie AND register CONST char *buf AND size_t n)
+__stdio_write (cookie, buf, n)
+     void *cookie;
+     const char *buf;
+     size_t n;
 {
   error_t err;
   size_t wrote, nleft;
@@ -92,8 +94,10 @@ DEFUN(__stdio_write, (cookie, buf, n),
    The current file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
-DEFUN(__stdio_seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
+__stdio_seek (cookie, pos, whence)
+     void *cookie;
+     fpos_t *pos;
+     int whence;
 {
   error_t err;
   struct hurd_fd *fd = cookie;
@@ -106,7 +110,8 @@ DEFUN(__stdio_seek, (cookie, pos, whence),
 /* Close the file associated with COOKIE.
    Return 0 for success or -1 for failure.  */
 int
-DEFUN(__stdio_close, (cookie), PTR cookie)
+__stdio_close (cookie)
+     void *cookie;
 {
   error_t error = cookie ? _hurd_fd_close (cookie) : EBADF;
   return error ? fd_fail (cookie, error) : 0;
@@ -134,8 +139,10 @@ modeflags (__io_mode m)
 
 /* Open FILENAME with the mode in M.  */
 int
-DEFUN(__stdio_open, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND PTR *cookieptr)
+__stdio_open (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
 {
   int flags;
   file_t port;
@@ -163,9 +170,11 @@ DEFUN(__stdio_open, (filename, m, cookieptr),
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-DEFUN(__stdio_reopen, (filename, m, cookieptr),
-      CONST char *filename AND __io_mode m AND
-      PTR *cookieptr AND __io_close_fn closefn)
+__stdio_reopen (filename, m, cookieptr)
+     const char *filename;
+     __io_mode m;
+     void **cookieptr;
+     __io_close_fn closefn;
 {
   int flags;
   file_t port;
@@ -202,7 +211,9 @@ DEFUN(__stdio_reopen, (filename, m, cookieptr),
 /* Write a message to the error output.
    Try hard to make it really get out.  */
 void
-DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
+__stdio_errmsg (msg, len)
+     const char *msg;
+     size_t len;
 {
   io_t server;
   mach_msg_type_number_t wrote;
@@ -217,7 +228,8 @@ DEFUN(__stdio_errmsg, (msg, len), CONST char *msg AND size_t len)
    or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
    descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
 int
-DEFUN(__stdio_fileno, (cookie), PTR cookie)
+__stdio_fileno (cookie)
+     void *cookie;
 {
   int fd;
 

@@ -177,10 +177,6 @@ __initstate_r (seed, arg_state, n, buf)
   if (buf == NULL)
     return -1;
 
-  if (buf->rand_type == TYPE_0)
-    buf->state[-1] = buf->rand_type;
-  else
-    buf->state[-1] = (MAX_TYPES * (buf->rptr - buf->state)) + buf->rand_type;
   if (n < BREAK_1)
     {
       if (n < BREAK_0)

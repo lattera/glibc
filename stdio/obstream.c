@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <obstack.h>
 #include <stdarg.h>
@@ -25,7 +24,9 @@
 /* Output-room function for obstack streams.  */
 
 static void
-DEFUN(grow, (stream, c), FILE *stream AND int c)
+grow (stream, c)
+     FILE *stream;
+     int c;
 {
   struct obstack *const obstack = (struct obstack *) stream->__cookie;
 
@@ -82,8 +83,10 @@ DEFUN(grow, (stream, c), FILE *stream AND int c)
    There is no external state to munge.  */
 
 static int
-DEFUN(seek, (cookie, pos, whence),
-      PTR cookie AND fpos_t *pos AND int whence)
+seek (cookie, pos, whence)
+     void *cookie;
+     fpos_t *pos;
+     int whence;
 {
   switch (whence)
     {
@@ -107,7 +110,8 @@ DEFUN(seek, (cookie, pos, whence),
    Only what has been written to the stream can be read back.  */
 
 static int
-DEFUN(input, (stream), FILE *stream)
+input (stream)
+     FILE *stream;
 {
   /* Re-sync with the obstack, growing the object if necessary.  */
   grow (stream, EOF);
@@ -122,8 +126,9 @@ DEFUN(input, (stream), FILE *stream)
 /* Initialize STREAM to talk to OBSTACK.  */
 
 static void
-DEFUN(init_obstream, (stream, obstack),
-      FILE *stream AND struct obstack *obstack)
+init_obstream (stream, obstack)
+      FILE *stream;
+      struct obstack *obstack;
 {
   stream->__mode.__write = 1;
   stream->__mode.__read = 1;
@@ -165,8 +170,10 @@ open_obstack_stream (obstack)
 }
 
 int
-DEFUN(obstack_vprintf, (obstack, format, args),
-      struct obstack *obstack AND const char *format AND va_list args)
+obstack_vprintf (obstack, format, args)
+      struct obstack *obstack;
+      const char *format;
+      va_list args;
 {
   FILE f;
   bzero (&f, sizeof (f));
@@ -175,8 +182,9 @@ DEFUN(obstack_vprintf, (obstack, format, args),
 }
 
 int
-DEFUN(obstack_printf, (obstack, format),
-      struct obstack *obstack AND const char *format DOTS)
+obstack_printf (obstack, format DOTS)
+      struct obstack *obstack;
+      const char *format;
 {
   int result;
   va_list ap;

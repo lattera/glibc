@@ -206,11 +206,11 @@ compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
 have problems.
 
 @item
-@code{binutils} 2.7
+@code{binutils} 2.8
 
 Using the GNU @code{binutils} (assembler, linker, and related tools) is
 preferable when possible, and they are required to build an ELF shared C
-library.  We recommend @code{binutils} version 2.7 or later; earlier
+library.  We recommend @code{binutils} version 2.8 or later; earlier
 versions are known to have problems or to not support all architectures.
 @end itemize
 
@@ -222,14 +222,21 @@ The GNU C Library currently supports configurations that match the
 following patterns:
 
 @smallexample
-alpha-dec-osf1
 alpha-@var{anything}-linux
 alpha-@var{anything}-linuxecoff
-i@var{x}86-@var{anything}-bsd4.3
 i@var{x}86-@var{anything}-gnu
+i@var{x}86-@var{anything}-linux
+m68k-@var{anything}-linux
+@end smallexample
+
+Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
+
+@smallexample
+alpha-dec-osf1
+i@var{x}86-@var{anything}-bsd4.3
 i@var{x}86-@var{anything}-isc2.2
 i@var{x}86-@var{anything}-isc3.@var{n}
-i@var{x}86-@var{anything}-linux
 i@var{x}86-@var{anything}-sco3.2
 i@var{x}86-@var{anything}-sco3.2v4
 i@var{x}86-@var{anything}-sysv
@@ -249,8 +256,14 @@ sparc-sun-solaris2.@var{n}
 sparc-sun-sunos4.@var{n}
 @end smallexample
 
+Since no one has volunteered to test and fix the above configurations,
+these are not supported at the moment.  It's expected that these don't
+work anymore.  Porting the library is not hard.  If you are interested
+in doing a port, please contact the glibc maintainers by sending
+electronic mail to @email{bug-glibc@@prep.ai.mit.edu}.
+
 Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
-@samp{i586}, or @samp{i686}..  All of those configurations produce a
+@samp{i586}, or @samp{i686}.  All of those configurations produce a
 library that can run on any of these processors.  The library will be
 optimized for the specified processor, but will not use instructions not
 available on all of them.
@@ -309,8 +322,8 @@ conform to the ISO and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
 Send bug reports to the Internet address
-@samp{bug-glibc@@prep.ai.mit.edu} or the UUCP path
-@samp{mit-eddie!prep.ai.mit.edu!bug-glibc}.  If you have other problems
+@email{bug-glibc@@prep.ai.mit.edu} or the UUCP path
+@email{mit-eddie!prep.ai.mit.edu!bug-glibc}.  If you have other problems
 with installation or use, please report those as well.@refill
 
 If you are not sure how a function should behave, and this manual
@@ -318,8 +331,8 @@ doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
-address @samp{bug-glibc-manual@@prep.ai.mit.edu} or the UUCP path
-@samp{mit-eddie!prep.ai.mit.edu!bug-glibc-manual}.
+address @email{bug-glibc-manual@@prep.ai.mit.edu} or the UUCP path
+@email{mit-eddie!prep.ai.mit.edu!bug-glibc-manual}.
 
 @node Source Layout
 @appendixsec Adding New Functions
@@ -1060,7 +1073,7 @@ Carnegie Mellon requests users of this software to return to
 @end display
 
 @noindent
-or @samp{Software.Distribution@@CS.CMU.EDU} any improvements or
+or @email{Software.Distribution@@CS.CMU.EDU} any improvements or
 extensions that they make and grant Carnegie Mellon the rights to
 redistribute these changes.
 @end quotation

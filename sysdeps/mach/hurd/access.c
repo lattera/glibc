@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
@@ -26,7 +25,9 @@ Cambridge, MA 02139, USA.  */
 
 /* Test for access to FILE by our real user and group IDs.  */
 int
-DEFUN(__access, (file, type), CONST char *file AND int type)
+__access (file, type)
+     const char *file;
+     int type;
 {
   error_t err;
   file_t rcrdir, rcwdir, io;

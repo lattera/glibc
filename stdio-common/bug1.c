@@ -1,9 +1,8 @@
-#include <ansidecl.h>
 #include <stdio.h>
 #include <string.h>
 
 int
-DEFUN_VOID(main)
+main (void)
 {
   char *bp;
   size_t size;

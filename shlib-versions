@@ -11,12 +11,14 @@
 # The interface to -lm depends only on cpu, not on operating system.
 i.86-.*-.*		libm=6
 m68k-.*-.*		libm=6
+sparc-.*-linux.*	libm=6
 alpha-.*-linux.*	libm=6.1
 alpha-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 i.86-.*-linux.*		libc=6
 m68k-.*-linux.*		libc=6
+sparc-.*-linux.*	libc=6
 alpha-.*-linux.*	libc=6.1
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -30,6 +32,7 @@ alpha-.*-linux.*	libc=6.1
 
 # The dynamic loader also requires different names.
 i.86-.*-linux.*		ld=ld-linux.so.2
+sparc-.*-linux.*	ld=ld-linux.so.2
 alpha-.*-linux.*	ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1

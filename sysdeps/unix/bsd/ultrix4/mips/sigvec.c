@@ -1,20 +1,20 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* The sigvec system call on MIPS Ultrix takes an additional
    parameter, which is the address that is actually called when the
@@ -28,7 +28,6 @@ Cambridge, MA 02139, USA.  */
    different because since we get passed the user signal handler we
    don't actually need a trampoline.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <stddef.h>
 #include <errno.h>
@@ -36,19 +35,21 @@ Cambridge, MA 02139, USA.  */
 /* The user's signal handler is called with three arguments.  */
 typedef void (*handler_type) (int sig, int code, struct sigcontext *);
 
-extern int EXFUN(__raw_sigvec, (int sig, CONST struct sigvec *vec,
-				struct sigvec *ovec,
-				void (*)(int sig, int code,
-					 struct sigcontext *,
-					 handler_type)));
+extern int __raw_sigvec __P ((int sig, CONST struct sigvec *vec,
+			     struct sigvec *ovec,
+			     void (*)(int sig, int code,
+				      struct sigcontext *,
+				      handler_type)));
 
-extern void EXFUN(__handler, (int sig, int code,
-			      struct sigcontext *,
-			      handler_type));
+extern void __handler __P ((int sig, int code,
+			    struct sigcontext *,
+			    handler_type));
 
 int
-DEFUN(__sigvec, (sig, vec, ovec),
-      int sig AND CONST struct sigvec *vec AND struct sigvec *ovec)
+__sigvec (sig, vec, ovec)
+     int sig;
+     const struct sigvec *vec;
+     struct sigvec *ovec;
 {
   return __raw_sigvec (sig, vec, ovec, __handler);
 }

@@ -1,6 +1,6 @@
-/* memmove -- copy memory to memory until the specified number of bytes
+/* Copy memory to memory until the specified number of bytes
    has been copied.  Overlap is handled correctly.
-   Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 #include <memcopy.h>
 #include <pagecopy.h>
@@ -29,16 +28,18 @@
 #define	a1	dest	/* First arg is DEST.  */
 #define	a1const
 #define	a2	src	/* Second arg is SRC.  */
-#define	a2const	CONST
+#define	a2const	const
 #endif
 #if	!defined(RETURN) || !defined(rettype)
 #define	RETURN(s)	return (s)	/* Return DEST.  */
-#define	rettype		PTR
+#define	rettype		void *
 #endif
 
 rettype
-DEFUN(memmove, (a1, a2, len),
-      a1const PTR a1 AND a2const PTR a2 AND size_t len)
+memmove (a1, a2, len)
+     a1const void *a1;
+     a2const void *a2;
+     size_t len;
 {
   unsigned long int dstp = (long int) dest;
   unsigned long int srcp = (long int) src;
@@ -101,5 +102,5 @@ DEFUN(memmove, (a1, a2, len),
       BYTE_COPY_BWD (dstp, srcp, len);
     }
 
-  RETURN(dest);
+  RETURN (dest);
 }

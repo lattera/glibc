@@ -319,5 +319,8 @@ _mcleanup ()
     /* write basic-block execution counts: */
     write_bb_counts (fd);
 
+    /* free the memory. */
+    free (_gmonparam.tos);
+
     __close (fd);
 }

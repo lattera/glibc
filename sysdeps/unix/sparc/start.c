@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -44,13 +43,13 @@ VOLATILE int __errno;
 strong_alias (__errno, errno)
 
 
-extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
-extern int EXFUN(main, (int argc, char **argv, char **envp));
+extern void __libc_init __P ((int argc, char **argv, char **envp));
+extern int main __P ((int argc, char **argv, char **envp));
 
 register long int sp asm("%sp"), fp asm("%fp");
 
 #ifndef NO_SHLIB
-static void EXFUN(init_shlib, (NOARGS));
+static void init_shlib __P ((void));
 #endif
 
 #ifndef NO_EXPLICIT_START
@@ -110,7 +109,7 @@ asm ("init_syscall:\n"
      "	nop");
 
 static void
-DEFUN_VOID(init_shlib)
+init_shlib ()
 {
   extern struct link_dynamic _DYNAMIC;
   int so, zf;
@@ -138,7 +137,7 @@ DEFUN_VOID(init_shlib)
   if (syscall (SYS_read, so, &soexec, sizeof (soexec)) != sizeof (soexec)
       || soexec.a_magic != ZMAGIC)
     {
-      static CONST char emsg[] = "crt0: no /usr/lib/ld.so\n";
+      static const char emsg[] = "crt0: no /usr/lib/ld.so\n";
 
       syscall (SYS_write, 2, emsg, sizeof (emsg) - 1);
       syscall (SYS_exit, 127);

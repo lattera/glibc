@@ -1,25 +1,23 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
- 
-This file is part of the GNU C Library.
- 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
- 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
- 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
 #include <standalone.h>
 #include "i386.h"
 
@@ -30,7 +28,7 @@ Cambridge, MA 02139, USA.  */
  * The following determines whether Port B or the Console should
  * be used for console I/O.  Setting ONE (and only ONE) of these to 1
  * enables I/O on that port.
- * 
+ *
  *     PORT A - DUSCC MC68562 Channel A  (*** not supported here ***)
  *     PORT B - DUSCC MC68562 Channel B
  *     PORT C - MFP MC68901 Channel      (*** FORCEbug console ***)
@@ -47,7 +45,7 @@ Cambridge, MA 02139, USA.  */
 #define Is_tx_ready( _status ) ( (_status) & 0x20 )
 #define Is_rx_ready( _status ) ( (_status) & 0x10 )
 #endif
- 
+
 #if ( PORTC == 1 )
 #define TX_STATUS     0x12c           /* MFP Transmit Status Register */
 #define RX_STATUS     0x12a           /* MFP Receive Status Register */
@@ -56,20 +54,20 @@ Cambridge, MA 02139, USA.  */
 #define Is_tx_ready( _status ) ( (_status) & 0x80 )
 #define Is_rx_ready( _status ) ( (_status) & 0x80 )
 #endif
-   
+
 /* _Console_Initialize
 
 On the Force board the console require some initialization. */
 
 void
-DEFUN_VOID(_Console_Initialize)
+_Console_Initialize ()
 {
   register unsigned8 ignored;
 
   /* FORCE technical support mentioned that it may be necessary to
      read the DUSCC RX_BUFFER port four times to remove all junk.
      This code is a little more paranoid.  */
- 
+
   inport_byte( RX_BUFFER, ignored );
   inport_byte( RX_BUFFER, ignored );
   inport_byte( RX_BUFFER, ignored );
@@ -79,7 +77,7 @@ DEFUN_VOID(_Console_Initialize)
 
 /* Miscellaneous support for console IO */
 
-static inline int _Force386_is_rx_ready()
+static inline int _Force386_is_rx_ready ()
 {
   register unsigned8 status;
 
@@ -88,8 +86,8 @@ static inline int _Force386_is_rx_ready()
   if ( Is_rx_ready( status ) ) return 1;
   else                         return 0;
 }
- 
-static inline int _Force386_is_tx_ready()
+
+static inline int _Force386_is_tx_ready ()
 {
   register unsigned8 status;
 
@@ -100,14 +98,14 @@ static inline int _Force386_is_tx_ready()
 }
 
 
-static inline int _Force386_read_data()
+static inline int _Force386_read_data ()
 {
   register unsigned8 ch;
 
 #if ( PORTB == 1 )
     /* Force example code resets the Channel B Receiver here.
      * It appears to cause XON's to be lost.
-     */  
+     */
 
      /* outport_byte( RX_STATUS, 0x10 );  */
 #endif
@@ -125,7 +123,8 @@ This routine transmits a character.  It supports XON/XOFF flow control.  */
 #define XOFF            0x13            /* control-S */
 
 int
-DEFUN( _Console_Putc, (ch), char ch )
+_Console_Putc (ch)
+     char ch;
 {
   register unsigned8 inch;
 
@@ -139,7 +138,7 @@ DEFUN( _Console_Putc, (ch), char ch )
         inch = _Force386_read_data();
       } while ( inch != XON );
   }
- 
+
   outport_byte( TX_BUFFER, ch );
   return( 0 );
 }
@@ -149,7 +148,8 @@ DEFUN( _Console_Putc, (ch), char ch )
 This routine reads a character from the UART and returns it. */
 
 int
-DEFUN( _Console_Getc, (poll), int poll )
+_Console_Getc (poll)
+     int poll;
 {
   if ( poll ) {
     if ( !_Force386_is_rx_ready() )

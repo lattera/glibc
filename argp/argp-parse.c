@@ -526,7 +526,7 @@ parser_init (struct parser *parser, const struct argp *argp,
   parser_convert (parser, argp, flags);
 
   memset (&parser->state, 0, sizeof (struct argp_state));
-  parser->state.argp = parser->argp;
+  parser->state.root_argp = parser->argp;
   parser->state.argc = argc;
   parser->state.argv = argv;
   parser->state.flags = flags;
@@ -548,6 +548,14 @@ parser_init (struct parser *parser, const struct argp *argp,
       if (group->parent)
 	/* If a child parser, get the initial input value from the parent. */
 	group->input = group->parent->child_inputs[group->parent_index];
+
+      if (!group->parser
+	  && group->argp->children && group->argp->children->argp)
+	/* For the special case where no parsing function is supplied for an
+	   argp, propagate its input to its first child, if any (this just
+	   makes very simple wrapper argps more convenient).  */
+	group->child_inputs[0] = group->input;
+
       err = group_parse (group, &parser->state, ARGP_KEY_INIT, 0);
     }
   if (err == EBADKEY)

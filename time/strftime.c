@@ -31,7 +31,6 @@
 # define HAVE_TZSET 1
 # define MULTIBYTE_IS_FORMAT_SAFE 1
 # define STDC_HEADERS 1
-# include <ansidecl.h>
 # include "../locale/localeinfo.h"
 #endif
 

@@ -1,7 +1,6 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,12 +15,13 @@
 
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
 
-CONST char *it = "<UNSET>";	/* Routine name for message routines. */
+const char *it = "<UNSET>";	/* Routine name for message routines. */
 size_t errors = 0;
 
 /* Complain if condition is not true.  */
 void
-DEFUN(check, (thing, number), int thing AND int number)
+check (thing, number)
+     int thing, number;
 {
   if (!thing)
     {
@@ -31,318 +31,318 @@ DEFUN(check, (thing, number), int thing AND int number)
 }
 
 /* Complain if first two args don't strcmp as equal.  */
-void equal(CONST char *a, CONST char *b, int number);
-void
-DEFUN(equal, (a, b, number), CONST char *a AND CONST char *b AND int number)
+void equal (const char *a, const char *b, int number)
 {
-  check(a != NULL && b != NULL && STREQ(a, b), number);
+  check(a != NULL && b != NULL && STREQ (a, b), number);
 }
 
 char one[50];
 char two[50];
 
 int
-DEFUN(main, (argc, argv), int argc AND char **argv)
+main (argc, argv)
+     int argc;
+     char **argv;
 {
   char *cp;
 
   /* Test strcmp first because we use it to test other things.  */
   it = "strcmp";
-  check(strcmp("", "") == 0, 1);		/* Trivial case. */
-  check(strcmp("a", "a") == 0, 2);		/* Identity. */
-  check(strcmp("abc", "abc") == 0, 3);		/* Multicharacter. */
-  check(strcmp("abc", "abcd") < 0, 4);		/* Length mismatches. */
-  check(strcmp("abcd", "abc") > 0, 5);
-  check(strcmp("abcd", "abce") < 0, 6);		/* Honest miscompares. */
-  check(strcmp("abce", "abcd") > 0, 7);
-  check(strcmp("a\203", "a") > 0, 8);		/* Tricky if char signed. */
-  check(strcmp("a\203", "a\003") > 0, 9);
+  check (strcmp ("", "") == 0, 1);		/* Trivial case. */
+  check (strcmp ("a", "a") == 0, 2);		/* Identity. */
+  check (strcmp ("abc", "abc") == 0, 3);	/* Multicharacter. */
+  check (strcmp ("abc", "abcd") < 0, 4);	/* Length mismatches. */
+  check (strcmp ("abcd", "abc") > 0, 5);
+  check (strcmp ("abcd", "abce") < 0, 6);	/* Honest miscompares. */
+  check (strcmp ("abce", "abcd") > 0, 7);
+  check (strcmp ("a\203", "a") > 0, 8);		/* Tricky if char signed. */
+  check (strcmp ("a\203", "a\003") > 0, 9);
 
   {
     char buf1[0x40], buf2[0x40];
     int i, j;
     for (i=0; i < 0x10; i++)
       for (j = 0; j < 0x10; j++)
-      {
-	int k;
-	for (k = 0; k < 0x3f; k++)
-	  {
-	    buf1[j] = '0' ^ (k & 4);
-	    buf2[j] = '4' ^ (k & 4);
-	  }
-	buf1[i] = buf1[0x3f] = 0;
-	buf2[j] = buf2[0x3f] = 0;
-	for (k = 0; k < 0xf; k++)
-	  {
-	    int cnum = 0x10+0x10*k+0x100*j+0x1000*i;
-	    check(strcmp(buf1+i,buf2+j) == 0, cnum);
-	    buf1[i+k] = 'A' + i + k;
-	    buf1[i+k+1] = 0;
-	    check(strcmp(buf1+i,buf2+j) > 0, cnum+1);
-	    check(strcmp(buf2+j,buf1+i) < 0, cnum+2);
-	    buf2[j+k] = 'B' + i + k;
-	    buf2[j+k+1] = 0;
-	    check(strcmp(buf1+i,buf2+j) < 0, cnum+3);
-	    check(strcmp(buf2+j,buf1+i) > 0, cnum+4);
-	    buf2[j+k] = 'A' + i + k;
-	    buf1[i] = 'A' + i + 0x80;
-	    check(strcmp(buf1+i,buf2+j) > 0, cnum+5);
-	    check(strcmp(buf2+j,buf1+i) < 0, cnum+6);
-	    buf1[i] = 'A' + i;
-	  }
-      }
-   }
+	{
+	  int k;
+	  for (k = 0; k < 0x3f; k++)
+	    {
+	      buf1[j] = '0' ^ (k & 4);
+	      buf2[j] = '4' ^ (k & 4);
+	    }
+	  buf1[i] = buf1[0x3f] = 0;
+	  buf2[j] = buf2[0x3f] = 0;
+	  for (k = 0; k < 0xf; k++)
+	    {
+	      int cnum = 0x10+0x10*k+0x100*j+0x1000*i;
+	      check (strcmp (buf1+i,buf2+j) == 0, cnum);
+	      buf1[i+k] = 'A' + i + k;
+	      buf1[i+k+1] = 0;
+	      check (strcmp (buf1+i,buf2+j) > 0, cnum+1);
+	      check (strcmp (buf2+j,buf1+i) < 0, cnum+2);
+	      buf2[j+k] = 'B' + i + k;
+	      buf2[j+k+1] = 0;
+	      check (strcmp (buf1+i,buf2+j) < 0, cnum+3);
+	      check (strcmp (buf2+j,buf1+i) > 0, cnum+4);
+	      buf2[j+k] = 'A' + i + k;
+	      buf1[i] = 'A' + i + 0x80;
+	      check (strcmp (buf1+i,buf2+j) > 0, cnum+5);
+	      check (strcmp (buf2+j,buf1+i) < 0, cnum+6);
+	      buf1[i] = 'A' + i;
+	    }
+	}
+  }
 
   /* Test strcpy next because we need it to set up other tests.  */
   it = "strcpy";
-  check(strcpy(one, "abcd") == one, 1);	/* Returned value. */
-  equal(one, "abcd", 2);		/* Basic test. */
+  check (strcpy (one, "abcd") == one, 1); /* Returned value. */
+  equal (one, "abcd", 2);		/* Basic test. */
 
-  (void) strcpy(one, "x");
-  equal(one, "x", 3);			/* Writeover. */
-  equal(one+2, "cd", 4);		/* Wrote too much? */
+  (void) strcpy (one, "x");
+  equal (one, "x", 3);			/* Writeover. */
+  equal (one+2, "cd", 4);		/* Wrote too much? */
 
-  (void) strcpy(two, "hi there");
-  (void) strcpy(one, two);
-  equal(one, "hi there", 5);		/* Basic test encore. */
-  equal(two, "hi there", 6);		/* Stomped on source? */
+  (void) strcpy (two, "hi there");
+  (void) strcpy (one, two);
+  equal (one, "hi there", 5);		/* Basic test encore. */
+  equal (two, "hi there", 6);		/* Stomped on source? */
 
-  (void) strcpy(one, "");
-  equal(one, "", 7);			/* Boundary condition. */
+  (void) strcpy (one, "");
+  equal (one, "", 7);			/* Boundary condition. */
 
   /* stpncpy.  */
   it = "stpncpy";
 
-  memset(one, 'x', sizeof(one));
-  check(stpncpy(one, "abc", 2) == one + 2, 1);
-  check(stpncpy(one, "abc", 3) == one + 3, 2);
-  check(stpncpy(one, "abc", 4) == one + 3, 3);
-  check(one[3] == '\0' && one[4] == 'x', 4);
-  check(stpncpy(one, "abcd", 5) == one + 4, 5);
-  check(one[4] == '\0' && one[5] == 'x', 6);
-  check(stpncpy(one, "abcd", 6) == one + 4, 7);
-  check(one[4] == '\0' && one[5] == '\0' && one[6] == 'x', 8);
+  memset (one, 'x', sizeof (one));
+  check (stpncpy (one, "abc", 2) == one + 2, 1);
+  check (stpncpy (one, "abc", 3) == one + 3, 2);
+  check (stpncpy (one, "abc", 4) == one + 3, 3);
+  check (one[3] == '\0' && one[4] == 'x', 4);
+  check (stpncpy (one, "abcd", 5) == one + 4, 5);
+  check (one[4] == '\0' && one[5] == 'x', 6);
+  check (stpncpy (one, "abcd", 6) == one + 4, 7);
+  check (one[4] == '\0' && one[5] == '\0' && one[6] == 'x', 8);
 
   /* strcat.  */
   it = "strcat";
-  (void) strcpy(one, "ijk");
-  check(strcat(one, "lmn") == one, 1);	/* Returned value. */
-  equal(one, "ijklmn", 2);		/* Basic test. */
+  (void) strcpy (one, "ijk");
+  check (strcat (one, "lmn") == one, 1); /* Returned value. */
+  equal (one, "ijklmn", 2);		/* Basic test. */
 
-  (void) strcpy(one, "x");
-  (void) strcat(one, "yz");
-  equal(one, "xyz", 3);			/* Writeover. */
-  equal(one+4, "mn", 4);			/* Wrote too much? */
+  (void) strcpy (one, "x");
+  (void) strcat (one, "yz");
+  equal (one, "xyz", 3);			/* Writeover. */
+  equal (one+4, "mn", 4);			/* Wrote too much? */
 
-  (void) strcpy(one, "gh");
-  (void) strcpy(two, "ef");
-  (void) strcat(one, two);
-  equal(one, "ghef", 5);			/* Basic test encore. */
-  equal(two, "ef", 6);			/* Stomped on source? */
+  (void) strcpy (one, "gh");
+  (void) strcpy (two, "ef");
+  (void) strcat (one, two);
+  equal (one, "ghef", 5);			/* Basic test encore. */
+  equal (two, "ef", 6);			/* Stomped on source? */
 
-  (void) strcpy(one, "");
-  (void) strcat(one, "");
-  equal(one, "", 7);			/* Boundary conditions. */
-  (void) strcpy(one, "ab");
-  (void) strcat(one, "");
-  equal(one, "ab", 8);
-  (void) strcpy(one, "");
-  (void) strcat(one, "cd");
-  equal(one, "cd", 9);
+  (void) strcpy (one, "");
+  (void) strcat (one, "");
+  equal (one, "", 7);			/* Boundary conditions. */
+  (void) strcpy (one, "ab");
+  (void) strcat (one, "");
+  equal (one, "ab", 8);
+  (void) strcpy (one, "");
+  (void) strcat (one, "cd");
+  equal (one, "cd", 9);
 
   /* strncat - first test it as strcat, with big counts,
      then test the count mechanism.  */
   it = "strncat";
-  (void) strcpy(one, "ijk");
-  check(strncat(one, "lmn", 99) == one, 1);	/* Returned value. */
-  equal(one, "ijklmn", 2);		/* Basic test. */
+  (void) strcpy (one, "ijk");
+  check (strncat (one, "lmn", 99) == one, 1);	/* Returned value. */
+  equal (one, "ijklmn", 2);		/* Basic test. */
 
-  (void) strcpy(one, "x");
-  (void) strncat(one, "yz", 99);
-  equal(one, "xyz", 3);			/* Writeover. */
-  equal(one+4, "mn", 4);			/* Wrote too much? */
+  (void) strcpy (one, "x");
+  (void) strncat (one, "yz", 99);
+  equal (one, "xyz", 3);		/* Writeover. */
+  equal (one+4, "mn", 4);		/* Wrote too much? */
 
-  (void) strcpy(one, "gh");
-  (void) strcpy(two, "ef");
-  (void) strncat(one, two, 99);
-  equal(one, "ghef", 5);			/* Basic test encore. */
-  equal(two, "ef", 6);			/* Stomped on source? */
+  (void) strcpy (one, "gh");
+  (void) strcpy (two, "ef");
+  (void) strncat (one, two, 99);
+  equal (one, "ghef", 5);			/* Basic test encore. */
+  equal (two, "ef", 6);			/* Stomped on source? */
 
-  (void) strcpy(one, "");
-  (void) strncat(one, "", 99);
-  equal(one, "", 7);			/* Boundary conditions. */
-  (void) strcpy(one, "ab");
-  (void) strncat(one, "", 99);
-  equal(one, "ab", 8);
-  (void) strcpy(one, "");
-  (void) strncat(one, "cd", 99);
-  equal(one, "cd", 9);
+  (void) strcpy (one, "");
+  (void) strncat (one, "", 99);
+  equal (one, "", 7);			/* Boundary conditions. */
+  (void) strcpy (one, "ab");
+  (void) strncat (one, "", 99);
+  equal (one, "ab", 8);
+  (void) strcpy (one, "");
+  (void) strncat (one, "cd", 99);
+  equal (one, "cd", 9);
 
-  (void) strcpy(one, "ab");
-  (void) strncat(one, "cdef", 2);
-  equal(one, "abcd", 10);			/* Count-limited. */
+  (void) strcpy (one, "ab");
+  (void) strncat (one, "cdef", 2);
+  equal (one, "abcd", 10);			/* Count-limited. */
 
-  (void) strncat(one, "gh", 0);
-  equal(one, "abcd", 11);			/* Zero count. */
+  (void) strncat (one, "gh", 0);
+  equal (one, "abcd", 11);			/* Zero count. */
 
-  (void) strncat(one, "gh", 2);
-  equal(one, "abcdgh", 12);		/* Count and length equal. */
+  (void) strncat (one, "gh", 2);
+  equal (one, "abcdgh", 12);		/* Count and length equal. */
 
   /* strncmp - first test as strcmp with big counts,
      then test count code.  */
   it = "strncmp";
-  check(strncmp("", "", 99) == 0, 1);	/* Trivial case. */
-  check(strncmp("a", "a", 99) == 0, 2);	/* Identity. */
-  check(strncmp("abc", "abc", 99) == 0, 3);	/* Multicharacter. */
-  check(strncmp("abc", "abcd", 99) < 0, 4);	/* Length unequal. */
-  check(strncmp("abcd", "abc", 99) > 0, 5);
-  check(strncmp("abcd", "abce", 99) < 0, 6);	/* Honestly unequal. */
-  check(strncmp("abce", "abcd", 99) > 0, 7);
-  check(strncmp("a\203", "a", 2) > 0, 8);	/* Tricky if '\203' < 0 */
-  check(strncmp("a\203", "a\003", 2) > 0, 9);
-  check(strncmp("abce", "abcd", 3) == 0, 10);	/* Count limited. */
-  check(strncmp("abce", "abc", 3) == 0, 11);	/* Count == length. */
-  check(strncmp("abcd", "abce", 4) < 0, 12);	/* Nudging limit. */
-  check(strncmp("abc", "def", 0) == 0, 13);	/* Zero count. */
+  check (strncmp ("", "", 99) == 0, 1);	/* Trivial case. */
+  check (strncmp ("a", "a", 99) == 0, 2);	/* Identity. */
+  check (strncmp ("abc", "abc", 99) == 0, 3);	/* Multicharacter. */
+  check (strncmp ("abc", "abcd", 99) < 0, 4);	/* Length unequal. */
+  check (strncmp ("abcd", "abc", 99) > 0, 5);
+  check (strncmp ("abcd", "abce", 99) < 0, 6);	/* Honestly unequal. */
+  check (strncmp ("abce", "abcd", 99) > 0, 7);
+  check (strncmp ("a\203", "a", 2) > 0, 8);	/* Tricky if '\203' < 0 */
+  check (strncmp ("a\203", "a\003", 2) > 0, 9);
+  check (strncmp ("abce", "abcd", 3) == 0, 10);	/* Count limited. */
+  check (strncmp ("abce", "abc", 3) == 0, 11);	/* Count == length. */
+  check (strncmp ("abcd", "abce", 4) < 0, 12);	/* Nudging limit. */
+  check (strncmp ("abc", "def", 0) == 0, 13);	/* Zero count. */
 
   /* strncpy - testing is a bit different because of odd semantics.  */
   it = "strncpy";
-  check(strncpy(one, "abc", 4) == one, 1);	/* Returned value. */
-  equal(one, "abc", 2);			/* Did the copy go right? */
+  check (strncpy (one, "abc", 4) == one, 1);	/* Returned value. */
+  equal (one, "abc", 2);			/* Did the copy go right? */
 
-  (void) strcpy(one, "abcdefgh");
-  (void) strncpy(one, "xyz", 2);
-  equal(one, "xycdefgh", 3);		/* Copy cut by count. */
+  (void) strcpy (one, "abcdefgh");
+  (void) strncpy (one, "xyz", 2);
+  equal (one, "xycdefgh", 3);		/* Copy cut by count. */
 
-  (void) strcpy(one, "abcdefgh");
-  (void) strncpy(one, "xyz", 3);		/* Copy cut just before NUL. */
-  equal(one, "xyzdefgh", 4);
+  (void) strcpy (one, "abcdefgh");
+  (void) strncpy (one, "xyz", 3);		/* Copy cut just before NUL. */
+  equal (one, "xyzdefgh", 4);
 
-  (void) strcpy(one, "abcdefgh");
-  (void) strncpy(one, "xyz", 4);		/* Copy just includes NUL. */
-  equal(one, "xyz", 5);
-  equal(one+4, "efgh", 6);		/* Wrote too much? */
+  (void) strcpy (one, "abcdefgh");
+  (void) strncpy (one, "xyz", 4);		/* Copy just includes NUL. */
+  equal (one, "xyz", 5);
+  equal (one+4, "efgh", 6);		/* Wrote too much? */
 
-  (void) strcpy(one, "abcdefgh");
-  (void) strncpy(one, "xyz", 5);		/* Copy includes padding. */
-  equal(one, "xyz", 7);
-  equal(one+4, "", 8);
-  equal(one+5, "fgh", 9);
+  (void) strcpy (one, "abcdefgh");
+  (void) strncpy (one, "xyz", 5);		/* Copy includes padding. */
+  equal (one, "xyz", 7);
+  equal (one+4, "", 8);
+  equal (one+5, "fgh", 9);
 
-  (void) strcpy(one, "abc");
-  (void) strncpy(one, "xyz", 0);		/* Zero-length copy. */
-  equal(one, "abc", 10);
+  (void) strcpy (one, "abc");
+  (void) strncpy (one, "xyz", 0);		/* Zero-length copy. */
+  equal (one, "abc", 10);
 
-  (void) strncpy(one, "", 2);		/* Zero-length source. */
-  equal(one, "", 11);
-  equal(one+1, "", 12);
-  equal(one+2, "c", 13);
+  (void) strncpy (one, "", 2);		/* Zero-length source. */
+  equal (one, "", 11);
+  equal (one+1, "", 12);
+  equal (one+2, "c", 13);
 
-  (void) strcpy(one, "hi there");
-  (void) strncpy(two, one, 9);
-  equal(two, "hi there", 14);		/* Just paranoia. */
-  equal(one, "hi there", 15);		/* Stomped on source? */
+  (void) strcpy (one, "hi there");
+  (void) strncpy (two, one, 9);
+  equal (two, "hi there", 14);		/* Just paranoia. */
+  equal (one, "hi there", 15);		/* Stomped on source? */
 
   /* strlen.  */
   it = "strlen";
-  check(strlen("") == 0, 1);		/* Empty. */
-  check(strlen("a") == 1, 2);		/* Single char. */
-  check(strlen("abcd") == 4, 3);	/* Multiple chars. */
+  check (strlen ("") == 0, 1);		/* Empty. */
+  check (strlen ("a") == 1, 2);		/* Single char. */
+  check (strlen ("abcd") == 4, 3);	/* Multiple chars. */
   {
     char buf[4096];
     int i;
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
+	p = (char *) ((unsigned long int)(buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
-	check(strlen(p) == 2, 4+i);
+	check (strlen (p) == 2, 4+i);
       }
    }
 
   /* strchr.  */
   it = "strchr";
-  check(strchr("abcd", 'z') == NULL, 1);	/* Not found. */
-  (void) strcpy(one, "abcd");
-  check(strchr(one, 'c') == one+2, 2);	/* Basic test. */
-  check(strchr(one, 'd') == one+3, 3);	/* End of string. */
-  check(strchr(one, 'a') == one, 4);	/* Beginning. */
-  check(strchr(one, '\0') == one+4, 5);	/* Finding NUL. */
-  (void) strcpy(one, "ababa");
-  check(strchr(one, 'b') == one+1, 6);	/* Finding first. */
-  (void) strcpy(one, "");
-  check(strchr(one, 'b') == NULL, 7);	/* Empty string. */
-  check(strchr(one, '\0') == one, 8);	/* NUL in empty string. */
+  check (strchr ("abcd", 'z') == NULL, 1);	/* Not found. */
+  (void) strcpy (one, "abcd");
+  check (strchr (one, 'c') == one+2, 2);	/* Basic test. */
+  check (strchr (one, 'd') == one+3, 3);	/* End of string. */
+  check (strchr (one, 'a') == one, 4);		/* Beginning. */
+  check (strchr (one, '\0') == one+4, 5);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (strchr (one, 'b') == one+1, 6);	/* Finding first. */
+  (void) strcpy (one, "");
+  check (strchr (one, 'b') == NULL, 7);		/* Empty string. */
+  check (strchr (one, '\0') == one, 8);		/* NUL in empty string. */
   {
     char buf[4096];
     int i;
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
+	p = (char *) ((unsigned long int) (buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
-	check(strchr(p, '/') == NULL, 9+i);
+	check (strchr (p, '/') == NULL, 9+i);
       }
    }
 
 #if 0
   /* index - just like strchr.  */
   it = "index";
-  check(index("abcd", 'z') == NULL, 1);	/* Not found. */
-  (void) strcpy(one, "abcd");
-  check(index(one, 'c') == one+2, 2);	/* Basic test. */
-  check(index(one, 'd') == one+3, 3);	/* End of string. */
-  check(index(one, 'a') == one, 4);	/* Beginning. */
-  check(index(one, '\0') == one+4, 5);	/* Finding NUL. */
-  (void) strcpy(one, "ababa");
-  check(index(one, 'b') == one+1, 6);	/* Finding first. */
-  (void) strcpy(one, "");
-  check(index(one, 'b') == NULL, 7);	/* Empty string. */
-  check(index(one, '\0') == one, 8);	/* NUL in empty string. */
+  check (index ("abcd", 'z') == NULL, 1);	/* Not found. */
+  (void) strcpy (one, "abcd");
+  check (index (one, 'c') == one+2, 2);	/* Basic test. */
+  check (index (one, 'd') == one+3, 3);	/* End of string. */
+  check (index (one, 'a') == one, 4);	/* Beginning. */
+  check (index (one, '\0') == one+4, 5);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (index (one, 'b') == one+1, 6);	/* Finding first. */
+  (void) strcpy (one, "");
+  check (index (one, 'b') == NULL, 7);	/* Empty string. */
+  check (index (one, '\0') == one, 8);	/* NUL in empty string. */
 #endif
 
   /* strrchr.  */
   it = "strrchr";
-  check(strrchr("abcd", 'z') == NULL, 1);	/* Not found. */
-  (void) strcpy(one, "abcd");
-  check(strrchr(one, 'c') == one+2, 2);	/* Basic test. */
-  check(strrchr(one, 'd') == one+3, 3);	/* End of string. */
-  check(strrchr(one, 'a') == one, 4);	/* Beginning. */
-  check(strrchr(one, '\0') == one+4, 5);	/* Finding NUL. */
-  (void) strcpy(one, "ababa");
-  check(strrchr(one, 'b') == one+3, 6);	/* Finding last. */
-  (void) strcpy(one, "");
-  check(strrchr(one, 'b') == NULL, 7);	/* Empty string. */
-  check(strrchr(one, '\0') == one, 8);	/* NUL in empty string. */
+  check (strrchr ("abcd", 'z') == NULL, 1);	/* Not found. */
+  (void) strcpy (one, "abcd");
+  check (strrchr (one, 'c') == one+2, 2);	/* Basic test. */
+  check (strrchr (one, 'd') == one+3, 3);	/* End of string. */
+  check (strrchr (one, 'a') == one, 4);		/* Beginning. */
+  check (strrchr (one, '\0') == one+4, 5);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (strrchr (one, 'b') == one+3, 6);	/* Finding last. */
+  (void) strcpy (one, "");
+  check (strrchr (one, 'b') == NULL, 7);	/* Empty string. */
+  check (strrchr (one, '\0') == one, 8);	/* NUL in empty string. */
   {
     char buf[4096];
     int i;
     char *p;
     for (i=0; i < 0x100; i++)
       {
-	p = (char *)((unsigned long int)(buf + 0xff) & ~0xff) + i;
+	p = (char *) ((unsigned long int) (buf + 0xff) & ~0xff) + i;
 	strcpy (p, "OK");
 	strcpy (p+3, "BAD/WRONG");
-	check(strrchr(p, '/') == NULL, 9+i);
+	check (strrchr (p, '/') == NULL, 9+i);
       }
    }
 
 #if 0
   /* rindex - just like strrchr.  */
   it = "rindex";
-  check(rindex("abcd", 'z') == NULL, 1);	/* Not found. */
-  (void) strcpy(one, "abcd");
-  check(rindex(one, 'c') == one+2, 2);	/* Basic test. */
-  check(rindex(one, 'd') == one+3, 3);	/* End of string. */
-  check(rindex(one, 'a') == one, 4);	/* Beginning. */
-  check(rindex(one, '\0') == one+4, 5);	/* Finding NUL. */
-  (void) strcpy(one, "ababa");
-  check(rindex(one, 'b') == one+3, 6);	/* Finding last. */
-  (void) strcpy(one, "");
-  check(rindex(one, 'b') == NULL, 7);	/* Empty string. */
-  check(rindex(one, '\0') == one, 8);	/* NUL in empty string. */
+  check (rindex ("abcd", 'z') == NULL, 1);	/* Not found. */
+  (void) strcpy (one, "abcd");
+  check (rindex (one, 'c') == one+2, 2);	/* Basic test. */
+  check (rindex (one, 'd') == one+3, 3);	/* End of string. */
+  check (rindex (one, 'a') == one, 4);	/* Beginning. */
+  check (rindex (one, '\0') == one+4, 5);	/* Finding NUL. */
+  (void) strcpy (one, "ababa");
+  check (rindex (one, 'b') == one+3, 6);	/* Finding last. */
+  (void) strcpy (one, "");
+  check (rindex (one, 'b') == NULL, 7);	/* Empty string. */
+  check (rindex (one, '\0') == one, 8);	/* NUL in empty string. */
 #endif
 
   /* strpbrk - somewhat like strchr.  */
@@ -720,7 +720,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     int j;
     int k;
     int c;
-    
+
     for (i = 0; i < 512; i++)
       data[i] = 'x';
     for (c = 0; c <= 'y'; c += 'y')  /* check for memset(,0,) and
@@ -744,7 +744,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	    continue;
 
 	  fail:
-	    check(0,7+i+j*256+(c != 0)*256*256); 
+	    check(0,7+i+j*256+(c != 0)*256*256);
 	  }
   }
 

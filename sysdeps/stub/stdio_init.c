@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 
 /* Initialize STREAM as necessary.
@@ -24,7 +23,8 @@ Cambridge, MA 02139, USA.  */
    If no buffer is allocated, but the bufsize is set,
    the bufsize will be used to allocate the buffer.  */
 void
-DEFUN(__stdio_init_stream, (stream), FILE *stream)
+__stdio_init_stream (stream)
+     FILE *stream;
 {
   stream->__bufsize = BUFSIZ;
 }

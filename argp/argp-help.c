@@ -1136,7 +1136,7 @@ hol_help (struct hol *hol, const struct argp_state *state,
 Mandatory or optional arguments to long options are also mandatory or \
 optional for any corresponding short options.");
       const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_DUP_ARGS_NOTE,
-				     state ? state->argp : 0, state);
+				     state ? state->root_argp : 0, state);
       if (fstr && *fstr)
 	{
 	  __argp_fmtstream_putc (stream, '\n');
@@ -1316,7 +1316,7 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
   const struct argp_child *child = argp->children;
   const char *tdoc = gettext (argp->args_doc), *nl = 0;
   const char *fdoc = filter_doc (tdoc, ARGP_KEY_HELP_ARGS_DOC,
-				 state ? state->argp : 0, state);
+				 state ? state->root_argp : 0, state);
 
   if (fdoc)
     {
@@ -1601,7 +1601,7 @@ __argp_state_help (const struct argp_state *state, FILE *stream, unsigned flags)
       if (state && (state->flags & ARGP_LONG_ONLY))
 	flags |= ARGP_HELP_LONG_ONLY;
 
-      _help (state ? state->argp : 0, state, stream, flags,
+      _help (state ? state->root_argp : 0, state, stream, flags,
 	     state ? state->name : program_invocation_short_name);
 
       if (!state || ! (state->flags & ARGP_NO_EXIT))

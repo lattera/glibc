@@ -39,11 +39,11 @@ __erand48_r (xsubi, buffer, result)
 
 #if USHRT_MAX == 65535
   temp.ieee.negative = 0;
-  temp.ieee.exponent = IEEE754_DOUBLE_BIAS - 1;
+  temp.ieee.exponent = IEEE754_DOUBLE_BIAS;
   temp.ieee.mantissa0 = (xsubi[2] << 4) | (xsubi[1] >> 12);
   temp.ieee.mantissa1 = ((xsubi[1] & 0xfff) << 20) | (xsubi[0] << 4);
   /* Please note the lower 4 bits of mantissa1 are always 0.  */
-  *result = temp.d;
+  *result = temp.d - 1.0;
 #else
 # error Unsupported size of short int
 #endif

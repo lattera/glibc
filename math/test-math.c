@@ -1,4 +1,3 @@
-#include <ansidecl.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -8,9 +7,9 @@
 void print_trig_stuff __P ((void));
 
 int
-DEFUN_VOID(main)
+main (void)
 {
-  CONST char str[] = "123.456";
+  const char str[] = "123.456";
   double x,h,li,lr,a,lrr;
 
   x = atof (str);
@@ -89,29 +88,26 @@ DEFUN_VOID(main)
 }
 
 
-#define PI 3.14159265358979323846264338327
-
-const double RAD[5] = { 0, PI/2, PI, (3*PI)/2, 2*PI };
-const int    DEG[5] = { 0, 90, 180, 360 };
+const double RAD[5] = { 0, M_PI/2, M_PI, (3*M_PI)/2, 2*M_PI };
 
 #define PRINT_IT_1_ARG(_func, _arg, _value) \
-    (_value) = (_func)((_arg)); \
+    (_value) = (_func) ((_arg)); \
     if (errno) { \
       errno = 0; \
-      printf("%s = ERROR %s\n", #_func, strerror(errno)); \
+      printf ("%s = ERROR %s\n", #_func, strerror (errno)); \
     } else \
-      printf("%s(%g) = %g\n", #_func, _arg, (_value)); \
+      printf ("%s(%g) = %g\n", #_func, _arg, (_value)); \
 
 #define PRINT_IT_2_ARG(_func, _arg1, _arg2, _value) \
-    (_value) = (_func)((_arg1),(_arg2)); \
+    (_value) = (_func) ((_arg1),(_arg2)); \
     if (errno) { \
       errno = 0; \
-      printf("%s = ERROR %s\n", #_func, strerror(errno)); \
+      printf ("%s = ERROR %s\n", #_func, strerror (errno)); \
     } else \
-      printf("%s(%g, %g) = %g\n", #_func, _arg1, _arg2, (_value)); \
+      printf ("%s(%g, %g) = %g\n", #_func, _arg1, _arg2, (_value)); \
 
 void
-DEFUN_VOID (print_trig_stuff)
+print_trig_stuff(void)
 {
   double value, arg1, arg2;
   int i;

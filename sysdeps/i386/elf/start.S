@@ -50,12 +50,12 @@ _start:
 	   pointer; hopefully it will be zero so we don't try to call
 	   random pointers.  */
 	testl %edx,%edx
-	jz nofini
+	jz .Lnofini
 	pushl %edx
 	call atexit
 	popl %eax		/* Pop value to unused register to remove
 				   argument from stack.  */
-nofini:
+.Lnofini:
 
 	/* Do essential libc initialization.  In statically linked
 	   programs under the GNU Hurd, this is what sets up the

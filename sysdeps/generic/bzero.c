@@ -1,33 +1,33 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
-   
-This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 #include <memcopy.h>
 
 /* Set N bytes of S to 0.  */
 void
-DEFUN(bzero, (s, n), PTR s AND size_t len)
+bzero (s, n)
+     void *s;
+     size_t len;
 {
   long int dstp = (long int) s;
-  CONST op_t zero = 0;
+  const op_t zero = 0;
 
   if (len >= 8)
     {
@@ -78,4 +78,3 @@ DEFUN(bzero, (s, n), PTR s AND size_t len)
       len -= 1;
     }
 }
-

@@ -1,8 +1,7 @@
-#include <ansidecl.h>
 #include <stdio.h>
 
 int
-DEFUN_VOID(main)
+main (void)
 {
   char buf[80];
   int i;

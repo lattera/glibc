@@ -1,4 +1,3 @@
-#include <ansidecl.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,38 +6,39 @@
 int win = 0;
 
 void
-DEFUN(handler, (sig), int sig)
+handler (sig)
+     int sig;
 {
-  printf("Received signal %d (%s).\n", sig, strsignal(sig));
+  printf ("Received signal %d (%s).\n", sig, strsignal(sig));
   win = 1;
 }
 
 int
-DEFUN_VOID(main)
+main (void)
 {
-  if (signal(SIGTERM, handler) == SIG_ERR)
+  if (signal (SIGTERM, handler) == SIG_ERR)
     {
-      perror("signal: SIGTERM");
-      exit(EXIT_FAILURE);
+      perror ("signal: SIGTERM");
+      exit (EXIT_FAILURE);
     }
 
-  puts("Set handler.");
+  puts ("Set handler.");
 
-  printf("Sending myself signal %d.\n", SIGTERM);
-  fflush(stdout);
+  printf ("Sending myself signal %d.\n", SIGTERM);
+  fflush (stdout);
 
-  if (raise(SIGTERM) < 0)
+  if (raise (SIGTERM) < 0)
     {
-      perror("raise: SIGTERM");
-      exit(EXIT_FAILURE);
+      perror ("raise: SIGTERM");
+      exit (EXIT_FAILURE);
     }
 
   if (!win)
     {
-      puts("Didn't get any signal.  Test FAILED!");
-      exit(EXIT_FAILURE);
+      puts ("Didn't get any signal.  Test FAILED!");
+      exit (EXIT_FAILURE);
     }
 
-  puts("Got a signal.  Test succeeded.");
-  exit(EXIT_SUCCESS);
+  puts ("Got a signal.  Test succeeded.");
+  exit (EXIT_SUCCESS);
 }

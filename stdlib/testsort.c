@@ -1,17 +1,16 @@
-#include <ansidecl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 int
-DEFUN(compare, (a, b), CONST PTR a AND CONST PTR b)
+compare (a, b)
+     const char *a, *b;
 {
   return strcmp (*(char **) a, *(char **) b);
 }
 
-
 int
-DEFUN_VOID(main)
+main (void)
 {
   char bufs[500][20];
   char *lines[500];

@@ -3,27 +3,28 @@ if test -z "$inhibit_glue"; then
 
 # Find out what this system calls `sys_siglist'.
 echo $ac_n "checking for sys_siglist""... $ac_c" 1>&6
+echo "configure:7: checking for sys_siglist" >&5
 if eval "test \"`echo '$''{'ac_cv_check_symbol_sys_siglist'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 11 "configure"
+#line 12 "configure"
 #include "confdefs.h"
 
-int main() { return 0; }
-int t() {
+int main() {
 extern char *sys_siglist[]; puts(*sys_siglist);
 ; return 0; }
 EOF
-if eval $ac_link; then
+if { (eval echo configure:19: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   	    ac_cv_check_symbol_sys_siglist=yes
 else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
   rm -rf conftest*
   ac_cv_check_symbol_sys_siglist=no
 fi
 rm -f conftest*
-
 fi
 
 if test "$ac_cv_check_symbol_sys_siglist" = yes; then
@@ -35,27 +36,28 @@ EOF
 fi
 echo "$ac_t""$ac_cv_check_symbol_sys_siglist" 1>&6
 echo $ac_n "checking for _sys_siglist""... $ac_c" 1>&6
+echo "configure:40: checking for _sys_siglist" >&5
 if eval "test \"`echo '$''{'ac_cv_check_symbol__sys_siglist'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 43 "configure"
+#line 45 "configure"
 #include "confdefs.h"
 
-int main() { return 0; }
-int t() {
+int main() {
 extern char *_sys_siglist[]; puts(*_sys_siglist);
 ; return 0; }
 EOF
-if eval $ac_link; then
+if { (eval echo configure:52: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   	    ac_cv_check_symbol__sys_siglist=yes
 else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
   rm -rf conftest*
   ac_cv_check_symbol__sys_siglist=no
 fi
 rm -f conftest*
-
 fi
 
 if test "$ac_cv_check_symbol__sys_siglist" = yes; then
@@ -70,25 +72,27 @@ echo "$ac_t""$ac_cv_check_symbol__sys_siglist" 1>&6
 # Find out the name of the table the system's <ctype.h> uses for character
 # classification.  This is used by sysdeps/unix/common/glue-ctype.c.
 echo $ac_n "checking ctype array name for glue""... $ac_c" 1>&6
+echo "configure:76: checking ctype array name for glue" >&5
 if eval "test \"`echo '$''{'libc_cv_ctype_glue'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
 cat > conftest.$ac_ext <<EOF
-#line 79 "configure"
+#line 82 "configure"
 #include "confdefs.h"
 #include <ctype.h>
-int main() { return 0; }
-int t() {
+int main() {
 $ctype[13];
 ; return 0; }
 EOF
-if eval $ac_link; then
+if { (eval echo configure:89: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   libc_cv_ctype_glue="$ctype"; break
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
 fi
 rm -f conftest*
-
 done
 fi
 

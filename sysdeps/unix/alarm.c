@@ -1,22 +1,21 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1992, 1994, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <unistd.h>
 #include <sys/time.h>
 
@@ -28,7 +27,8 @@ Cambridge, MA 02139, USA.  */
    to 0 and check its value after calling `alarm', and this might tell you.
    The signal may come late due to processor scheduling.  */
 unsigned int
-DEFUN(alarm, (seconds), unsigned int seconds)
+alarm (seconds)
+     unsigned int seconds;
 {
   struct itimerval old, new;
   unsigned int retval;
@@ -37,7 +37,7 @@ DEFUN(alarm, (seconds), unsigned int seconds)
   new.it_interval.tv_sec = 0;
   new.it_value.tv_usec = 0;
   new.it_value.tv_sec = (long int) seconds;
-  if (__setitimer(ITIMER_REAL, &new, &old) < 0)
+  if (__setitimer (ITIMER_REAL, &new, &old) < 0)
     return 0;
 
   retval = old.it_value.tv_sec;

@@ -1,8 +1,284 @@
+1997-05-26 22:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Use AC_PROG_CC_LOCAL instead of AC_PROC_CC.
+	* aclocal.m4: Add AC_PROG_CC_LOCAL which does not fail for
+	environments in which linking is not possible at configure time
+	(since te libc is just build).
+	Based on patches by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+	* time/scheck.c (scheck): Make 2nd parameter const.
+	* time/private.h: Likewise.
+
+1997-05-26 18:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/random_r.c (__initstate_r): Initialize randomizer type in
+	state array only at right place.
+	Reported by Sven Verdoolaege <skimo@breughel.ufsia.ac.be>.
+
+	* stdlib/erand48_r.c (__erand48_r): Don't generate numbers in
+	[0.5,1.0) but really in [0.0, 1.0).
+	Patch by Oliver Gathmann <gathmann@scar.utoronto.ca>.
+
+1997-05-22 12:50  Eric Delaunay  <delaunay@lix.polytechnique.fr>
+
+	* shlib-versions: Provide Linux/SPARC defaults.
+
+1997-05-26 15:00  Matthias Urlichs  <urlichs@noris.de>
+
+	* stdlib/strtod_l.c: Add missing #include <xlocale.h>.
+	* stdlib/strtof_l.c: Likewise.
+	* stdlib/strtol_l.c: Likewise.
+	* stdlib/strtold_l.c: Likewise.
+	* stdlib/strtoll_l.c: Likewise.
+	* stdlib/strtoul_l.c: Likewise.
+	* stdlib/strtoull_l.c: Likewise.
+
+1997-05-26 02:42  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* hurd/dtable.c: De-ansidecl-fy.
+	* math/test-math.c: Likewise.
+	* signal/tst-signal.c: Likewise.
+	* stdio/getc.c: Likewise.
+	* stdio/obstream.c: Likewise.
+	* stdio/putc.c: Likewise.
+	* stdio-common/bug1.c: Likewise.
+	* stdio-common/bug2.c: Likewise.
+	* stdio-common/bug6.c: Likewise.
+	* stdio-common/fscanf.c: Likewise.
+	* stdlib/testsort.c: Likewise.
+	* string/tester.c: Likewise.
+	* sysdeps/am29k/ffs.c: Likewise.
+	* sysdeps/generic/bb_init_func.c: Likewise.
+	* sysdeps/generic/bcopy.c: Likewise.
+	* sysdeps/generic/bzero.c: Likewise.
+	* sysdeps/generic/div.c: Likewise.
+	* sysdeps/generic/ffs.c: Likewise.
+	* sysdeps/generic/memccpy.c: Likewise.
+	* sysdeps/generic/memcpy.c: Likewise.
+	* sysdeps/generic/memmove.c: Likewise.
+	* sysdeps/generic/memset.c: Likewise.
+	* sysdeps/generic/vfork.c: Likewise.
+	* sysdeps/generic/vtimes.c: Likewise.
+	* sysdeps/i386/bzero.c: Likewise.
+	* sysdeps/i386/ffs.c: Likewise.
+	* sysdeps/i960/ffs.c: Likewise.
+	* sysdeps/m68k/ffs.c: Likewise.
+	* sysdeps/m88k/ffs.c: Likewise.
+	* sysdeps/mach/hurd/_exit.c: Likewise.
+	* sysdeps/mach/hurd/accept.c: Likewise.
+	* sysdeps/mach/hurd/access.c: Likewise.
+	* sysdeps/mach/hurd/adjtime.c: Likewise.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+	* sysdeps/mach/hurd/brk.c: Likewise.
+	* sysdeps/mach/hurd/chdir.c: Likewise.
+	* sysdeps/mach/hurd/chflags.c: Likewise.
+	* sysdeps/mach/hurd/chmod.c: Likewise.
+	* sysdeps/mach/hurd/chown.c: Likewise.
+	* sysdeps/mach/hurd/chroot.c: Likewise.
+	* sysdeps/mach/hurd/close.c: Likewise.
+	* sysdeps/mach/hurd/connect.c: Likewise.
+	* sysdeps/mach/hurd/defs.c: Likewise.
+	* sysdeps/mach/hurd/dup2.c: Likewise.
+	* sysdeps/mach/hurd/execve.c: Likewise.
+	* sysdeps/mach/hurd/fchdir.c: Likewise.
+	* sysdeps/mach/hurd/fchflags.c: Likewise.
+	* sysdeps/mach/hurd/fchmod.c: Likewise.
+	* sysdeps/mach/hurd/fchown.c: Likewise.
+	* sysdeps/mach/hurd/fcntl.c: Likewise.
+	* sysdeps/mach/hurd/fdopen.c: Likewise.
+	* sysdeps/mach/hurd/flock.c: Likewise.
+	* sysdeps/mach/hurd/fsync.c: Likewise.
+	* sysdeps/mach/hurd/ftruncate.c: Likewise.
+	* sysdeps/mach/hurd/getdtsz.c: Likewise.
+	* sysdeps/mach/hurd/getegid.c: Likewise.
+	* sysdeps/mach/hurd/geteuid.c: Likewise.
+	* sysdeps/mach/hurd/getgid.c: Likewise.
+	* sysdeps/mach/hurd/getgroups.c: Likewise.
+	* sysdeps/mach/hurd/gethostid.c: Likewise.
+	* sysdeps/mach/hurd/gethostname.c: Likewise.
+	* sysdeps/mach/hurd/getitimer.c: Likewise.
+	* sysdeps/mach/hurd/getlogin.c: Likewise.
+	* sysdeps/mach/hurd/getpeername.c: Likewise.
+	* sysdeps/mach/hurd/getpgid.c: Likewise.
+	* sysdeps/mach/hurd/getpid.c: Likewise.
+	* sysdeps/mach/hurd/getppid.c: Likewise.
+	* sysdeps/mach/hurd/getsockname.c: Likewise.
+	* sysdeps/mach/hurd/getsockopt.c: Likewise.
+	* sysdeps/mach/hurd/getuid.c: Likewise.
+	* sysdeps/mach/hurd/ioctl.c: Likewise.
+	* sysdeps/mach/hurd/isatty.c: Likewise.
+	* sysdeps/mach/hurd/link.c: Likewise.
+	* sysdeps/mach/hurd/listen.c: Likewise.
+	* sysdeps/mach/hurd/lseek.c: Likewise.
+	* sysdeps/mach/hurd/mkdir.c: Likewise.
+	* sysdeps/mach/hurd/open.c: Likewise.
+	* sysdeps/mach/hurd/pipe.c: Likewise.
+	* sysdeps/mach/hurd/read.c: Likewise.
+	* sysdeps/mach/hurd/readlink.c: Likewise.
+	* sysdeps/mach/hurd/reboot.c: Likewise.
+	* sysdeps/mach/hurd/recv.c: Likewise.
+	* sysdeps/mach/hurd/recvfrom.c: Likewise.
+	* sysdeps/mach/hurd/rename.c: Likewise.
+	* sysdeps/mach/hurd/rewinddir.c: Likewise.
+	* sysdeps/mach/hurd/rmdir.c: Likewise.
+	* sysdeps/mach/hurd/sbrk.c: Likewise.
+	* sysdeps/mach/hurd/seekdir.c: Likewise.
+	* sysdeps/mach/hurd/select.c: Likewise.
+	* sysdeps/mach/hurd/setegid.c: Likewise.
+	* sysdeps/mach/hurd/seteuid.c: Likewise.
+	* sysdeps/mach/hurd/setgid.c: Likewise.
+	* sysdeps/mach/hurd/setgroups.c: Likewise.
+	* sysdeps/mach/hurd/sethostid.c: Likewise.
+	* sysdeps/mach/hurd/sethostname.c: Likewise.
+	* sysdeps/mach/hurd/setlogin.c: Likewise.
+	* sysdeps/mach/hurd/setpgid.c: Likewise.
+	* sysdeps/mach/hurd/setregid.c: Likewise.
+	* sysdeps/mach/hurd/setreuid.c: Likewise.
+	* sysdeps/mach/hurd/setrlimit.c: Likewise.
+	* sysdeps/mach/hurd/setsid.c: Likewise.
+	* sysdeps/mach/hurd/setsockopt.c: Likewise.
+	* sysdeps/mach/hurd/settimeofday.c: Likewise.
+	* sysdeps/mach/hurd/setuid.c: Likewise.
+	* sysdeps/mach/hurd/shutdown.c: Likewise.
+	* sysdeps/mach/hurd/sigaction.c: Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c: Likewise.
+	* sysdeps/mach/hurd/sigpending.c: Likewise.
+	* sysdeps/mach/hurd/sigprocmask.c: Likewise.
+	* sysdeps/mach/hurd/sigstack.c: Likewise.
+	* sysdeps/mach/hurd/sigsuspend.c: Likewise.
+	* sysdeps/mach/hurd/socket.c: Likewise.
+	* sysdeps/mach/hurd/socketpair.c: Likewise.
+	* sysdeps/mach/hurd/stdio_init.c: Likewise.
+	* sysdeps/mach/hurd/symlink.c: Likewise.
+	* sysdeps/mach/hurd/sync.c: Likewise.
+	* sysdeps/mach/hurd/sysd-stdio.c: Likewise.
+	* sysdeps/mach/hurd/telldir.c: Likewise.
+	* sysdeps/mach/hurd/truncate.c: Likewise.
+	* sysdeps/mach/hurd/umask.c: Likewise.
+	* sysdeps/mach/hurd/unlink.c: Likewise.
+	* sysdeps/mach/hurd/wait4.c: Likewise.
+	* sysdeps/mach/hurd/utimes.c: Likewise.
+	* sysdeps/mach/hurd/write.c: Likewise.
+	* sysdeps/mach/adjtime.c: Likewise.
+	* sysdeps/mach/gettimeofday.c: Likewise.
+	* sysdeps/mach/usleep.c: Likewise.
+	* sysdeps/mips/__longjmp.c: Likewise.
+	* sysdeps/posix/clock.c: Likewise.
+	* sysdeps/posix/ctermid.c: Likewise.
+	* sysdeps/posix/defs.c: Likewise.
+	* sysdeps/posix/dup.c: Likewise.
+	* sysdeps/posix/libc_fatal.c: Likewise.
+	* sysdeps/posix/stdio_init.c: Likewise.
+	* sysdeps/rs6000/ffs.c: Likewise.
+	* sysdeps/sparc/e_sqrt.c: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/_exit.c: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/brdinit.c: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/console.c: Likewise.
+	* sysdeps/standalone/i960/nindy960/_exit.c: Likewise.
+	* sysdeps/standalone/i960/nindy960/brdinit.c: Likewise.
+	* sysdeps/standalone/i960/nindy960/console.c: Likewise.
+	* sysdeps/standalone/m68k/m68020/mvme136/_exit.c: Likewise.
+	* sysdeps/standalone/m68k/m68020/mvme136/brdinit.c: Likewise.
+	* sysdeps/standalone/brk.c: Likewise.
+	* sysdeps/stub/_exit.c: Likewise.
+	* sysdeps/stub/brdinit.c: Likewise.
+	* sysdeps/stub/console.c: Likewise.
+	* sysdeps/stub/defs.c: Likewise.
+	* sysdeps/stub/errlist.c: Likewise.
+	* sysdeps/stub/libc_fatal.c: Likewise.
+	* sysdeps/stub/siglist.c: Likewise.
+	* sysdeps/stub/stdio_init.c: Likewise.
+	* sysdeps/stub/strtsupp.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/tcgetattr.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/tcsetattr.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/wait3.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcflow.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcflush.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcgetattr.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/tcsendbrk.c: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/wait4.c: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/sigvec.c: Likewise.
+	* sysdeps/unix/bsd/bsdstat.h: Likewise.
+	* sysdeps/unix/bsd/clock.c: Likewise.
+	* sysdeps/unix/bsd/gtty.c: Likewise.
+	* sysdeps/unix/bsd/init-posix.c: Likewise.
+	* sysdeps/unix/bsd/setgid.c: Likewise.
+	* sysdeps/unix/bsd/setrgid.c: Likewise.
+	* sysdeps/unix/bsd/setruid.c: Likewise.
+	* sysdeps/unix/bsd/setuid.c: Likewise.
+	* sysdeps/unix/bsd/stty.c: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.
+	* sysdeps/unix/bsd/ualarm.c: Likewise.
+	* sysdeps/unix/common/glue-ctype.c: Likewise.
+	* sysdeps/unix/sparc/start.c: Likewise.
+	* sysdeps/unix/sysv/irix4/fpathconf.c: Likewise.
+	* sysdeps/unix/sysv/irix4/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/irix4/getrusage.c: Likewise.
+	* sysdeps/unix/sysv/irix4/pathconf.c: Likewise.
+	* sysdeps/unix/sysv/irix4/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/irix4/sigtramp.c: Likewise.
+	* sysdeps/unix/sysv/irix4/start.c: Likewise.
+	* sysdeps/unix/sysv/irix4/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/__setpgid.c: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/__getpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/__setpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/ftruncate.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/gethostname.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/getpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/sethostname.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/setpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/setsid.c: Likewise.
+	* sysdeps/unix/sysv/gethostname.c: Likewise.
+	* sysdeps/unix/sysv/tcgetpgrp.c: Likewise.
+	* sysdeps/unix/sysv/tcsetpgrp.c: Likewise.
+	* sysdeps/unix/alarm.c: Likewise.
+	* sysdeps/unix/make_errlist.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.
+	* sysdeps/unix/seekdir.c: Likewise.
+	* sysdeps/unix/time.c: Likewise.
+	* sysdeps/unix/utime.c: Likewise.
+	* sysdeps/vax/__longjmp.c: Likewise.
+	* sysdeps/vax/memccpy.c: Likewise.
+	* time/strftime.c: Likewise.
+
+1997-05-25 21:57  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-parse.c (parser_init): For the special case where no
+	parsing function is supplied for an argp, propagate its input to
+	its first child, if any.
+
+	* argp.h (struct argp_state): `argp' field renamed to `root_argp'.
+	* argp-help.c (__argp_state_help, argp_args_usage, hol_help):
+	Replace references to STATE->argp with STATE->root_argp.
+	* argp-parse.c (parser_init): Likewise.
+
+1997-05-26 14:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/main.texi: Clarify situation for other not supported ports.
+	Proposed by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+	We recommend binutils 2.8.
+
+1997-05-26 12:17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* netinet/in.h: New file.  Wrapper around inet/netinet/in.h.
+
+1997-05-25 09:51  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/i386/elf/start.S: Change local label "nofini"
+	to ".Lnofini".
+
+	* sysdeps/i386/i386-mcount.S: Use GOT, instead of GOTOFF.
+
+1997-05-24 17:45  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* gmon/gmon.c (_mcleanup): Free tostruct array allocated in monstartup.
+
 1997-05-25 03:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dynamic-link.h (_dl_verbose): New variable, declare.
 	* elf/rtld.c (_dl_verbose): New variable, define.
-	(dl_main): Define _dl-verbose based on DL_WARN environment variable.
+	(dl_main): Define _dl_verbose based on DL_WARN environment variable.
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Print warning about
 	changed size in copy relocation only if symbol in shared object
 	is larger or _dl_verbose is nonzero.
