@@ -1,3 +1,18 @@
+2002-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gb18030.c: Bug fixes and support for more characters.
+	Patch by Yu Shao <yshao@redhat.com>.
+
+2002-01-16  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/swapcontext.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S: New file.
+
+2002-01-14  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
 2002-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Update x86 relocations.
