@@ -22,7 +22,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
@@ -84,7 +84,7 @@
 #   define CENABLE	jbsr __pthread_enable_asynccancel
 #   define CDISABLE	jbsr __pthread_disable_asynccancel
 #  endif
-# else
+# elif !defined NOT_IN_libc
 #  ifdef PIC
 #   define CENABLE	jbsr __libc_enable_asynccancel@PLTPC
 #   define CDISABLE	jbsr __libc_disable_asynccancel@PLTPC
@@ -92,12 +92,22 @@
 #   define CENABLE	jbsr __libc_enable_asynccancel
 #   define CDISABLE	jbsr __libc_disable_asynccancel
 #  endif
+# else
+#  ifdef PIC
+#   define CENABLE	jbsr __librt_enable_asynccancel@PLTPC
+#   define CDISABLE	jbsr __librt_disable_asynccancel@PLTPC
+#  else
+#   define CENABLE	jbsr __librt_enable_asynccancel
+#   define CDISABLE	jbsr __librt_disable_asynccancel
+#  endif
 # endif
 
 # if !defined NOT_IN_libc
 #  define __local_multiple_threads __libc_multiple_threads
-# else
+# elif defined IS_IN_libpthread
 #  define __local_multiple_threads __pthread_multiple_threads
+# else
+#  define __local_multiple_threads __librt_multiple_threads
 # endif
 
 # ifndef __ASSEMBLER__
