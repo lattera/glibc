@@ -106,13 +106,13 @@ cache_grpinit ()
   pthread_attr_t attr;
   pthread_t thread;
 
-  grptbl = calloc (1, modulo * sizeof (grphash));
+  grptbl = calloc (modulo, sizeof (grphash));
   if (grptbl == NULL)
     return -1;
-  calloc (1, modulo * sizeof (grphash));
+  calloc (modulo, sizeof (grphash));
   if (gidtbl == NULL)
     return -1;
-  negtbl = calloc (1, modulo * sizeof (neghash));
+  negtbl = calloc (modulo, sizeof (neghash));
   if (negtbl == NULL)
     return -1;
 

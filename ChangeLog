@@ -1,8 +1,17 @@
+1998-01-31 20:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/grpcache.c (cache_grpinit): Let calloc do the multiplication.
+
+	* nscd/pwdcache.c (cache_pwdinit): Use thread attribute to detach
+	thread and no pthread_detach.
+
+	* nscd/nscd.c: Rewrite to use argp instead of getopt.
+
 1998-01-31  Phil Blundell  <philb@gnu.org>
 
 	* configure.in: Add --without-cvs option to suppress automatic
 	checkin of regenerated files.
-	* config.make: Likewise.
+	* config.make.in: Likewise.
 	* Makefile: Respect with-cvs setting.
 	* Makerules: Likewise.
 

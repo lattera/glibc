@@ -520,6 +520,15 @@ client (the NIS_COLD_START file is byte order independent) or generate
 it with nisinit from the nis-tools package (available at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
+??	I have killed ypbind to stop using NIS, but glibc will
+        continue using NIS.
+
+{TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
+from ypbind.  ypbind 3.3 and older versions don't always remove these
+files, so glibc will use them furthermore.  Other BSD versions seem to
+work correct.  Until ypbind 3.4 is released, you can find a patch at
+ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc2.diff.
+
 ??	After installing glibc name resolving doesn't work properly.
 
 {AJ} You probably should read the manual section describing

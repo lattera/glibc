@@ -27,6 +27,7 @@ defines = @DEFINES@
 elf = @elf@
 have-initfini = @libc_cv_have_initfini@
 need-nopic-initfini = @nopic_initfini@
+with-cvs = @with_cvs@
 
 versioning = @VERSIONING@
 

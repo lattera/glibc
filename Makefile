@@ -28,6 +28,7 @@ endif
 .PHONY: all
 all: lib others
 
+ifeq ($(with-cvs),yes)
 define autoconf-it
 @-rm -f $@.new
 autoconf $(ACFLAGS) $< > $@.new
@@ -35,6 +36,14 @@ chmod a-w,a+x $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
+else
+define autoconf-it
+@-rm -f $@.new
+autoconf $(ACFLAGS) $< > $@.new
+chmod a-w,a+x $@.new
+mv -f $@.new $@
+endef
+endif
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)

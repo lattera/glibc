@@ -42,6 +42,10 @@ AC_ARG_WITH(binutils, dnl
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
 	    elf=$withval, elf=no)
+AC_ARG_WITH(cvs, dnl
+[  --without-cvs	  if CVS should not be used],
+	    with_cvs=$withval, with_cvs=yes)
+AC_SUBST(with_cvs)
 
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
@@ -140,8 +144,8 @@ esac
 ### platforms.
 ###
 if test -z "$enable_hacker_mode"; then
-  case "$host_os" in
-  linux* | gnu*)
+  case "$machine-$host_os" in
+  *-linux* | *-gnu* | arm*-none*)
     ;;
   *)
     echo "*** The GNU C library is currently not available for this platform."

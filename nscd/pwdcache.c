@@ -103,6 +103,7 @@ set_neg_pwd_ttl (unsigned long int ttl)
 int
 cache_pwdinit ()
 {
+  pthread_attr_t attr;
   pthread_t thread;
 
   pwdtbl = calloc (modulo, sizeof (pwdhash));
@@ -115,10 +116,14 @@ cache_pwdinit ()
   if (negtbl == NULL)
     return -1;
 
-  pthread_create (&thread, NULL, pwdtable_update, (void *)NULL);
-  pthread_detach (thread);
-  pthread_create (&thread, NULL, negtable_update, (void *)NULL);
-  pthread_detach (thread);
+  pthread_attr_init (&attr);
+  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+
+  pthread_create (&thread, NULL, pwdtable_update, &attr);
+  pthread_create (&thread, NULL, negtable_update, &attr);
+
+  pthread_attr_destroy (&attr);
+
   return 0;
 }
 

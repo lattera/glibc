@@ -60,15 +60,17 @@ please let me know.
 	were used on my Linux libc5 based system.  Why?
 2.10.	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
-2.11.	After installing glibc name resolving doesn't work properly.
-2.12.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.11.	I have killed ypbind to stop using NIS, but glibc will
+        continue using NIS.
+2.12.	After installing glibc name resolving doesn't work properly.
+2.13.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
-2.13.	Programs like `logname', `top', `uptime' `users', `w' and
+2.14.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
-2.14.	After upgrading to glibc 2.1 with symbol versioning I get
+2.15.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
-2.15.	When I start the program XXX after upgrading the library
+2.16.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking
@@ -638,14 +640,24 @@ it with nisinit from the nis-tools package (available at
 http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
 
 
-2.11.	After installing glibc name resolving doesn't work properly.
+2.11.	I have killed ypbind to stop using NIS, but glibc will
+        continue using NIS.
+
+{TK} For faster NIS lookups, glibc uses the /var/yp/binding/ files
+from ypbind.  ypbind 3.3 and older versions don't always remove these
+files, so glibc will use them furthermore.  Other BSD versions seem to
+work correct.  Until ypbind 3.4 is released, you can find a patch at
+ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc2.diff.
+
+
+2.12.	After installing glibc name resolving doesn't work properly.
 
 {AJ} You probably should read the manual section describing
 nsswitch.conf (just type `info libc "NSS Configuration File"').
 The NSS configuration file is usually the culprit.
 
 
-2.12.	I have /usr/include/net and /usr/include/scsi as symlinks
+2.13.	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
 {PB} This was necessary for libc5, but is not correct when using
@@ -656,14 +668,14 @@ any symlink that you have in place before you install glibc.  However,
 /usr/include/asm and /usr/include/linux should remain as they were.
 
 
-2.13.	Programs like `logname', `top', `uptime' `users', `w' and
+2.14.	Programs like `logname', `top', `uptime' `users', `w' and
 	`who', show incorrect information about the (number of)
 	users on my system.  Why?
 
 {MK} See question 3.2.
 
 
-2.14.	After upgrading to glibc 2.1 with symbol versioning I get
+2.15.	After upgrading to glibc 2.1 with symbol versioning I get
 	errors about undefined symbols.  What went wrong?
 
 {AJ} The problem is caused either by wrong program code or tools.  In
@@ -677,7 +689,7 @@ the price you might have to pay once for quite a number of advantages
 with symbol versioning.
 
 
-2.15.	When I start the program XXX after upgrading the library
+2.16.	When I start the program XXX after upgrading the library
 	I get
 	  XXX: Symbol `_sys_errlist' has different size in shared
 	  object, consider re-linking

@@ -19,8 +19,9 @@
 
 /* nscd - Name Service Cache Daemon. Caches passwd and group.  */
 
+#include <argp.h>
 #include <errno.h>
-#include <getopt.h>
+#include <error.h>
 #include <libintl.h>
 #include <locale.h>
 #include <pthread.h>
@@ -58,90 +59,59 @@ thread_info_t thread_info;
 int do_shutdown = 0;
 int disabled_passwd = 0;
 int disabled_group = 0;
+int go_background = 1;
+const char *conffile = _PATH_NSCDCONF;
 
 static void termination_handler (int signum);
 static int check_pid (const char *file);
 static int write_pid (const char *file);
-static void usage (int status) __attribute__ ((noreturn));
 static void handle_requests (void);
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+
+/* Definitions of arguments for argp functions.  */
+static const struct argp_option options[] =
+{
+  { "config-file", 'f', N_("NAME"), 0,
+    N_("Read configuration data from NAME") },
+  { "debug", 'd', NULL, 0,
+    N_("Do not fork and display messages on the current tty") },
+  { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
+  { NULL, 0, NULL, 0, NULL }
+};
+
+/* Short description of program.  */
+static const char doc[] = N_("Name Switch Cache Daemon.");
+
+/* Prototype for option handler.  */
+static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, NULL, doc,
+};
 
 int
 main (int argc, char **argv)
 {
-  int go_background = 1;
-  const char *conffile = _PATH_NSCDCONF;
+  int remaining;
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
   /* Set the text message domain.  */
   textdomain (PACKAGE);
 
-  while (1)
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
+
+  if (remaining != 0)
     {
-      int c;
-      int option_index = 0;
-      static struct option long_options[] = {
-	{ "debug", no_argument, NULL, 'd' },
-	{ "help", no_argument, NULL, 'h' },
-	{ "version", no_argument, NULL, 'V' },
-	{ "shutdown", no_argument, NULL, 'K' },
-        {NULL, 0, NULL, '\0'}
-      };
-
-      c = getopt_long (argc, argv, "df:ghKV", long_options, &option_index);
-      if (c == (-1))
-        break;
-      switch (c)
-	{
-	case 'd':
-	  debug_flag = 1;
-	  go_background = 0;
-	  break;
-	case 'f':
-	  conffile = optarg;
-	  break;
-	case 'h':
-	  usage (EXIT_SUCCESS);
-	  break;
-	case 'K':
-	  if (getuid () != 0)
-	    {
-	      printf (_("Only root is allowed to use this option!\n\n"));
-	      usage (EXIT_FAILURE);
-	    }
-	  {
-	    int sock = __nscd_open_socket ();
-	    request_header req;
-	    ssize_t nbytes;
-
-	    if (sock == -1)
-	      exit (EXIT_FAILURE);
-
-	    req.version = NSCD_VERSION;
-	    req.type = SHUTDOWN;
-	    req.key_len = 0;
-	    nbytes = write (sock, &req, sizeof (request_header));
-	    close (sock);
-	    if (nbytes != req.key_len)
-	      exit (EXIT_FAILURE);
-	    else
-	      exit (EXIT_SUCCESS);
-	  }
-	case 'g':
-	  print_stat ();
-	  exit (EXIT_SUCCESS);
-	case 'V':
-	  printf ("nscd (GNU %s) %s\n", PACKAGE, VERSION);
-	  printf (_("\
-Copyright (C) %s Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1998");
-	  printf (_("Written by %s.\n"), "Thorsten Kukuk");
-	  exit (EXIT_SUCCESS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+      error (0, 0, gettext ("wrong number of arguments"));
+      argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
+      exit (EXIT_FAILURE);
     }
 
   signal (SIGINT, termination_handler);
@@ -190,6 +160,67 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   return 0;
 }
 
+
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  switch (key)
+    {
+    case 'd':
+      debug_flag = 1;
+      go_background = 0;
+      break;
+    case 'f':
+      conffile = arg;
+      break;
+    case 'K':
+      if (getuid () != 0)
+	{
+	  printf (_("Only root is allowed to use this option!\n\n"));
+	  exit (EXIT_FAILURE);
+	}
+      {
+	int sock = __nscd_open_socket ();
+	request_header req;
+	ssize_t nbytes;
+
+	if (sock == -1)
+	  exit (EXIT_FAILURE);
+
+	req.version = NSCD_VERSION;
+	req.type = SHUTDOWN;
+	req.key_len = 0;
+	nbytes = write (sock, &req, sizeof (request_header));
+	close (sock);
+	if (nbytes != req.key_len)
+	  exit (EXIT_FAILURE);
+	else
+	  exit (EXIT_SUCCESS);
+      }
+    case 'g':
+      print_stat ();
+      exit (EXIT_SUCCESS);
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "nscd (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1998");
+  fprintf (stream, gettext ("Written by %s.\n"), "Thorsten Kukuk");
+}
+
+
 /* Create a socket connected to a name. */
 int
 __nscd_open_socket (void)
@@ -225,31 +256,6 @@ termination_handler (int signum)
   unlink (_PATH_NSCDPID);
 
   exit (EXIT_SUCCESS);
-}
-
-/* Display usage information and exit.  */
-static void
-usage (int status)
-{
-  if (status != EXIT_SUCCESS)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-             program_invocation_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]...\n\
-  -d, --debug           do not fork and display messages on the current tty\n\
-  -h, --help            display this help and exit\n\
-  -V, --version         output version information and exit\n\
-  -f configuration-file read configuration data from the specified file.\n\
-  -K, --shutdown        shut the server down.\n\
-  -g                    Prints configuration and statistics to stdout.\n"),
-              program_invocation_name);
-      fputs (_("\
-Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"),
-             stdout);
-    }
-  exit (status);
 }
 
 /* Returns 1 if the process in pid file FILE is running, 0 if not.  */
