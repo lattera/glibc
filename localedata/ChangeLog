@@ -1,5 +1,8 @@
 1999-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locales/en_DK: Add Euro symbol to collation and characterization
+	tables.  Patch by Geoff Keating.
+
 	* charmaps/ISO-8859-15: Remove duplicate <OC>.
 
 1999-08-16  Ulrich Drepper  <drepper@cygnus.com>

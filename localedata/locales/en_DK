@@ -313,6 +313,7 @@ order_start forward;forward/
 <Rg>	IGNORE;IGNORE;IGNORE;<Rg>
 <At>	IGNORE;IGNORE;IGNORE;<At>
 <Cu>	IGNORE;IGNORE;IGNORE;<Cu>
+<Eu>	IGNORE;IGNORE;IGNORE;<Eu>
 <Ct>	IGNORE;IGNORE;IGNORE;<Ct>
 <DO>	IGNORE;IGNORE;IGNORE;<DO>
 <Pd>	IGNORE;IGNORE;IGNORE;<Pd>
@@ -2538,7 +2539,7 @@ punct   <!>;<">;<Nb>;<DO>;<%>;<&>;<'>;/
         <//>;<:>;<;>;<<>;<=>;</>>;<?>;/
         <At>;<<(>;<////>;<)/>>;<'/>>;/
         <_>;<'!>;<(!>;<!!>;<!)>;<'?>;/
-        <!I>;<Ct>;<Pd>;<Cu>;<Ye>;<BB>;/
+        <!I>;<Ct>;<Pd>;<Cu>;<Eu>;<Ye>;<BB>;/
         <SE>;<':>;<Co>;<-a>;<<<>;<NO>;/
         <Rg>;<'m>;<DG>;<+->;<2S>;<3S>;/
         <''>;<My>;<PI>;<.M>;<',>;<1S>;/

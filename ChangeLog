@@ -1,3 +1,8 @@
+1999-08-31  Andreas Schwab  <schwab@suse.de>
+
+	* locale/C-collate.c: Add missing initialisations.
+	* locale/C-ctype.c: Likewise.
+
 1999-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/strftime.c (my_strftime): Remove unneeded variable len.

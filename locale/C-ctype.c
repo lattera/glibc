@@ -361,8 +361,11 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: (const char *) _nl_C_LC_CTYPE_names },
 #if BYTE_ORDER == BIG_ENDIAN
     { string: NULL },
-#endif
     { word: 256 }, { word: 1 },
+#endif
+#if BYTE_ORDER == LITTLE_ENDIAN
+    { word: 0 }, { word: 0 },
+#endif
     { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0"
 	      "left_to_right\0" "right_to_left\0" "num_terminator\0"
@@ -375,7 +378,14 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: _nl_C_LC_CTYPE_width },
     { word: 1 },
     { string: "ANSI_X3.4-1968" },
-    { word: 1 },
+#if BYTE_ORDER == BIG_ENDIAN
+    { word: 0 }, { word: 0 },
+    { word: 1 }, { word: 0 },
+#endif
+#if BYTE_ORDER == LITTLE_ENDIAN
+    { word: 256 }, { word: 1 },
+    { word: 0 }, { word: 1 },
+#endif
     { string: "0" },
     { string: "1" },
     { string: "2" },
@@ -386,6 +396,12 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "7" },
     { string: "8" },
     { string: "9" },
+#if BYTE_ORDER == BIG_ENDIAN
+    { word: 1 }, { word: 0 },
+#endif
+#if BYTE_ORDER == LITTLE_ENDIAN
+    { word: 0 }, { word: 1 },
+#endif
 #if BYTE_ORDER == LITTLE_ENDIAN
     { wstr: (uint32_t *) L"" },
     { wstr: (uint32_t *) L"" },
@@ -468,6 +484,8 @@ const struct locale_data _nl_C_LC_CTYPE =
     { word: 0 },
     { word: 0 },
     { word: 0 },
+    { string: "" },
+    { string: "" },
     { string: "" },
     { string: "" },
     { string: "" },
