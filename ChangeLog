@@ -1,3 +1,8 @@
+2003-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/hstcache.c (addhstbynamev6): Don't interpret hostname as
+	IPv6 address in debug output.
+
 2003-01-14  Roland McGrath  <roland@redhat.com>
 
 	* Makerules (check-abi-%): Use two rules for $(common-objpfx) and
