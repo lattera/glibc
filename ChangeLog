@@ -2,6 +2,9 @@
 
 	* version.h (VERSION): Bump to 2.0.98.
 
+	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Define __kernel_termios
+	here instead of including kernel_termios.h.
+
 1998-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
  
 	* sysdeps/unix/opendir.c (__opendir): Remove label lose2 which is 
