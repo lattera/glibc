@@ -37,7 +37,7 @@ distribute := utmp-private.h pty-private.h
 subdir-dirs = programs
 vpath %.c programs
 
-tests := tst-utmp tst-utmpx
+tests := tst-utmp tst-utmpx tst-grantpt
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil

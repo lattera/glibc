@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <regex.h>
@@ -75,7 +76,7 @@ __sysconf (name)
 #endif
 
     case _SC_TZNAME_MAX:
-      return __tzname_max ();
+      return MAX (__tzname_max (), _POSIX_TZNAME_MAX);
 
     case _SC_JOB_CONTROL:
 #ifdef	_POSIX_JOB_CONTROL

@@ -40,7 +40,7 @@ __clone:
 	 mov	%i3, %l3		/* save arg */
 
 	/* Do the system call */
-	mov	%i1, %o1
+	sub	%i1, 0x7ff, %o1
 	mov	%i2, %o0
 	set	__NR_clone, %g1
 	ta	0x6d

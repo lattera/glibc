@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <sys/statfs.h>
@@ -25,7 +27,7 @@
 /* Prototype for function that changes ownership and access permission
    for slave pseudo terminals that do not live on a `devpts'
    filesystem.  */
-int __unix_grantpt (int fd);
+static int __unix_grantpt (int fd);
 
 /* Prototype for private function that gets the name of the slave
    pseudo terminal in a safe way.  */
@@ -45,9 +47,24 @@ grantpt (int fd)
 #endif
   char *buf = _buf;
 
-  if (pts_name (fd, &buf, sizeof (_buf)))
-    return -1;
-  
+  if (__builtin_expect (pts_name (fd, &buf, sizeof (_buf)), 0))
+    {
+      int save_errno = errno;
+
+      /* Check, if the file descriptor is valid. pts_name returns the
+	 wrong errno number, so we cannot use that.  */
+      if (__libc_fcntl (fd, F_GETFD) == -1 && errno == EBADF)
+	return -1;
+
+      __set_errno (save_errno);
+
+       /* If the filedescriptor is no TTY, grantpt has to set errno
+          to EINVAL.  */
+       if (errno == ENOTTY)
+         __set_errno (EINVAL);
+       return -1;
+    }
+
   if (__statfs (buf, &fsbuf) < 0)
     return -1;
 
@@ -59,5 +76,5 @@ grantpt (int fd)
   return __unix_grantpt (fd);
 }
 
-#define grantpt __unix_grantpt
+#define grantpt static __unix_grantpt
 #include <sysdeps/unix/grantpt.c>

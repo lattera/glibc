@@ -1,3 +1,28 @@
+2001-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (clone): Subtract
+	stack bias from child stack pointer before passing it to clone syscall.
+
+2001-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf): Respect POSIX minimum for
+	_SC_TZNAME_MAX.
+	* sysdeps/generic/sysconf.c (__sysconf): Likewise.
+	Reported by Thorsten Kukuk <kukuk@suse.de>.
+
+	* sysdeps/unix/grantpt.c (grantpt): Correct typo in comment and
+	add some casts.
+
+	* sysdeps/unix/sysv/linux/grantpt.c: Make __unix_grantpt static.
+
+2001-12-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/grantpt.c: Make errno results standard
+	conforming: return EBADF if file descriptor is invalid and EINVAL
+	if file descriptor is no valid tty.
+	* login/tst-grantpt.c: New file.
+	* login/Makefile (tests): Add tst-grantpt.
+
 2001-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/ftw.c (ftw_dir): Handle inaccessibility of toplevel dir

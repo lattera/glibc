@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -64,9 +64,9 @@ pts_name (int fd, char **pts, size_t buf_len)
 
       if (buf != *pts)
 	/* We've already malloced another buffer at least once.  */
-	new_buf = realloc (buf, buf_len);
+	new_buf = (char *) realloc (buf, buf_len);
       else
-	new_buf = malloc (buf_len);
+	new_buf = (char *) malloc (buf_len);
       if (! new_buf)
 	{
 	  rv = -1;
@@ -159,7 +159,7 @@ grantpt (int fd)
       struct rlimit rl = { 0, 0 };
       __setrlimit (RLIMIT_CORE, &rl);
 
-      /* We pase the master pseudo terminal as file descriptor PTY_FILENO.  */
+      /* We pass the master pseudo terminal as file descriptor PTY_FILENO.  */
       if (fd != PTY_FILENO)
 	if (__dup2 (fd, PTY_FILENO) < 0)
 	  _exit (FAIL_EBADF);

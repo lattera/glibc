@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995,1996,1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <limits.h>
+#include <sys/param.h>
 #include <sys/sysinfo.h>
 
 
@@ -36,7 +37,7 @@ __sysconf (name)
       return -1;
 
     case _SC_TZNAME_MAX:
-      return __tzname_max ();
+      return MAX (__tzname_max (), _POSIX_TZNAME_MAX);
 
     case _SC_CHARCLASS_NAME_MAX:
 #ifdef	CHARCLASS_NAME_MAX
