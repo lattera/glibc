@@ -1,11 +1,28 @@
 1998-11-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/rtld.c: Add a few __builtin_expects where they will improve
+	a lot.
+
+1998-11-05  Ulrich Drepper  <drepper@cygnus.com>
+
 	* version.h (VERSION): Bump to 2.0.100.
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__pow2): Fix fldl -> fld.
 
 	* sysdeps/libm-i387/s_fma.S: Optimize a bit.
 	* sysdeps/libm-i387/s_fmaf.S: Likewise.
+
+1998-11-04  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/genops.c (_IO_least_marker): Add additional parameter
+	end_p replacing fp->_IO_read_end.
+	(save_for_backup): Likewise.  All callers changed.  Use _IO_size_t
+	and _IO_ssize_t instead of int.
+	(_IO_switch_to_main_get_area): Remove use of _IO_save_ptr.
+	(_IO_switch_to_backup_area): Likewise.  Fix comments.
+	(_IO_seekmark): Undo last change.
+	(_IO_default_pbackfail): Correct use of backup area.
+	* libio/libio.h (_IO_FILE_complete): Remove _IO_save_ptr.
 
 1998-11-04 19:47 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 

@@ -398,7 +398,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       _dl_init_paths (library_path);
       paths_initialized = 1;
 
-      if (mode == verify)
+      if (__builtin_expect (mode, normal) == verify)
 	{
 	  char *err_str = NULL;
 	  struct map_args args;
@@ -514,7 +514,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     /* Set up our cache of pointers into the hash table.  */
     _dl_setup_hash (_dl_loaded);
 
-  if (mode == verify)
+  if (__builtin_expect (mode, normal) == verify)
     {
       /* We were called just to verify that this is a dynamic
 	 executable using us as the program interpreter.  Exit with an
@@ -684,7 +684,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (_dl_rtld_map.l_next)
     _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
 
-  if (_dl_rtld_map.l_opencount > 1)
+  if (__builtin_expect (_dl_rtld_map.l_opencount, 2) > 1)
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the
@@ -714,7 +714,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     _dl_receive_error (print_missing_version, version_check_doit, &args);
   }
 
-  if (mode != normal)
+  if (__builtin_expect (mode, normal) != normal)
     {
       /* We were run just to list the shared libraries.  It is
 	 important that we do this before real relocation, because the
@@ -744,7 +744,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      }
 	}
 
-      if (mode != trace)
+      if (__builtin_expect (mode, trace) != trace)
 	for (i = 1; i < _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;
@@ -1283,7 +1283,7 @@ process_envvars (enum mode *modep, int *lazyp)
 
   /* LAZY is determined by the environment variable LD_WARN and
      LD_BIND_NOW if we trace the binary.  */
-  if (mode == trace)
+  if (__builtin_expect (mode, normal) == trace)
     *lazyp = _dl_verbose ? !bind_now : -1;
   else
     *lazyp = !__libc_enable_secure && !bind_now;

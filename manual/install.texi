@@ -301,6 +301,7 @@ following patterns:
 
 @smallexample
 alpha-@var{*}-linux
+arm-@var{*}-linux
 arm-@var{*}-linuxaout
 arm-@var{*}-none
 i@var{x}86-@var{*}-gnu
