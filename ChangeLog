@@ -1,3 +1,30 @@
+2003-06-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SETRESGID_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/setegid.c: Use __ASSUME_SETRESGID_SYSCALL
+	instead of __ASSUME_SETRESUID_SYSCALL.
+	(setegid): Only use setresgid32 inline syscall if __NR_setresgid32 is
+	defined.
+	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Only use setresgid32
+	inline syscall if __NR_setresuid32 is defined.
+	* sysdeps/unix/sysv/linux/i386/setegid.c (setegid): Use
+	__ASSUME_SETRESGID_SYSCALL instead of __ASSUME_SETRESUID_SYSCALL.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Backout last changes.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setegid.c (setegid): Protect
+	code handling non-existant setresgid32 syscall with
+	#if __ASSUME_SETRESGID_SYSCALL == 0.
+
+2003-06-09  Andreas Schwab  <schwab@suse.de>
+
+	* sunrpc/Makefile (generated): Remove rpc-proto.c, rpc-proto.d.
+	($(rpcsvc:%.x=$(objpfx)x%$o)): Don't depend on
+	$(objpfx)rpc-proto.d.
+	(rpcsvc-dt-files, rpcsvc-depfiles): Define.  Include
+	$(rpcsvc-depfiles) instead of $(objpfx)rpc-proto.d.
+	($(objpfx)rpc-proto.d, $(objpfx)rpc-proto.c): Remove rules.
+
 2003-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/seteuid.c (seteuid): Use setresuid32

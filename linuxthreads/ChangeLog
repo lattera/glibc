@@ -1,3 +1,8 @@
+2003-06-09  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile: Move inclusion of ../Rules down after extra-objs is
+	fully known.
+
 2003-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h: New sequences for

@@ -39,7 +39,7 @@ seteuid (uid_t uid)
       return -1;
     }
 
-# if __ASSUME_32BITUIDS > 0
+# if __ASSUME_32BITUIDS > 0 && defined __NR_setresuid32
   return INLINE_SYSCALL (setresuid32, 3, -1, uid, -1);
 # else
   /* First try the syscall.  */

@@ -127,6 +127,10 @@
 # define __ASSUME_SETRESUID_SYSCALL	1
 #endif
 
+#if __LINUX_KERNEL_VERSION >= 131879
+# define __ASSUME_SETRESGID_SYSCALL	1
+#endif
+
 /* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
 #if __LINUX_KERNEL_VERSION >= 131879 && !defined __powerpc__
 # define __ASSUME_IPC64		1

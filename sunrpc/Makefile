@@ -54,7 +54,7 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 	  $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
-	    $(rpcsvc:%.x=rpcsvc/%.stmp) rpc-proto.c rpc-proto.d rpcgen
+	    $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
 generated-dirs := rpcsvc
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
@@ -168,26 +168,20 @@ $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 # Gratuitous dependency on generated .c file here just gets it mentioned to
 # avoid being an intermediate file and getting removed.
 define o-iterator-doit
-$(rpcsvc:%.x=$(objpfx)x%$o): $(objpfx)x%$o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h \
-					    $(objpfx)rpc-proto.d
+$(rpcsvc:%.x=$(objpfx)x%$o): $(objpfx)x%$o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h
 endef
 object-suffixes-left = $(filter-out $(librpcsvc-inhibit-o),$(object-suffixes))
 include $(o-iterator)
 
-ifndef no_deps
--include $(objpfx)rpc-proto.d
+rpcsvc-dt-files := $(foreach o,$(filter-out $(librpcsvc-inhibit-o),\
+					    $(object-suffixes)),\
+			     $(rpcsvc:%.x=$(objpfx)x%$o.dt))
+rpcsvc-depfiles := $(patsubst %.dt,%.d,$(wildcard $(rpcsvc-dt-files))) \
+		   $(wildcard $(rpcsvc-dt-files:.dt=.d))
+ifdef rpcsvc-depfiles
+ifneq ($(no_deps),t)
+-include $(rpcsvc-depfiles)
 endif
-
-$(objpfx)rpc-proto.d: $(objpfx)%.d: $(objpfx)%.c
-	$(+make-deps)
-# Special file to generate dependencies for the RPC service objects.
-# Collect all include directives from the source files.
-$(objpfx)rpc-proto.c: $(rpcsvc:%=rpcsvc/%)
-	$(make-target-directory)
-	{ echo '#include <rpc/types.h>'; \
-	  echo '#include <rpc/xdr.h>'; \
-	  echo '#include <rpc/rpc.h>'; \
-	  sed -n '/^%#include/s/%//p' $^; } > $@T
-	mv -f $@T $@
+endif
 
 $(objpfx)thrsvc: $(shared-thread-library)

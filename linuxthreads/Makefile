@@ -121,7 +121,7 @@ ifeq (yes,$(build-shared))
 tests-nodelete-yes = unload
 endif
 
-include ../Rules
+all: # Make this the default target; it will be defined in Rules.
 
 # What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
@@ -203,6 +203,8 @@ generated += libc_pic_lite.a libc_pic_lite.os libc.so
 else
 libc-link.so = $(common-objpfx)libc.so
 endif
+
+include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

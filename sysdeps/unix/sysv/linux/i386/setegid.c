@@ -39,7 +39,7 @@ setegid (gid)
   /* First try the syscall.  */
 # ifdef __NR_setresgid
   result = __setresgid (-1, gid, -1);
-#  if __ASSUME_SETRESUID_SYSCALL > 0
+#  if __ASSUME_SETRESGID_SYSCALL > 0
   if (0)
 #  else
   if (result == -1 && errno == ENOSYS)

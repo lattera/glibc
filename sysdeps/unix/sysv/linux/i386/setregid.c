@@ -42,15 +42,15 @@ int
 __setregid (gid_t rgid, gid_t egid)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setresgid32, 3, rgid, egid, -1);
+  return INLINE_SYSCALL (setregid32, 2, rgid, egid);
 #else
-# ifdef __NR_setresgid32
+# ifdef __NR_setregid32
   if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setresgid32, 3, rgid, egid, -1);
+      result = INLINE_SYSCALL (setregid32, 2, rgid, egid);
 
       if (result == 0 || errno != ENOSYS)
 	return result;
@@ -66,13 +66,7 @@ __setregid (gid_t rgid, gid_t egid)
       return -1;
     }
 
-# ifdef __NR_setresgid
-  int result = INLINE_SYSCALL (setresgid, 3, rgid, egid, -1);
-# endif
-  if (result == -1 && errno == ENOSYS)
-    result = INLINE_SYSCALL (setregid, 2, rgid, egid);
-
-  return result;
+  return INLINE_SYSCALL (setregid, 2, rgid, egid);
 #endif
 }
 weak_alias (__setregid, setregid)
