@@ -75,6 +75,7 @@ RANLIB = @RANLIB@
 MAKEINFO = @MAKEINFO@
 AS = $(CC) -c
 MIG = @MIG@
+PWD_P = @PWD_P@
 
 # Installation tools.
 INSTALL = @INSTALL@

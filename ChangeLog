@@ -1,3 +1,9 @@
+2000-07-14  Mark Kettenis  <kettenis@gnu.org>
+
+	* configure.in: Check for pwd binary.
+	* config.make.in: Add PWD_P to be subsituted.
+	* Makerules: Use $(PWD_P) instead of /bin/pwd.
+
 2000-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile (modules): Add GB18030.

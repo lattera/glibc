@@ -985,7 +985,7 @@ endif
 s = $(sysdep_dir)/generic
 $(objpfx)stubs: $(+depfiles)
 # Use /dev/null since `...` might expand to empty.
-	(s=`cd $s && /bin/pwd`; \
+	(s=`cd $s && $(PWD_P)`; \
 	 $(patsubst %/,cd % &&,$(objpfx)) \
 	 sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
 	  `sed -n -e '\@ $s/[^ ]*\.c@{; s@^.* $s/\([^ ]*\.c\).*$$@'"$$s"'/\1@; h; }' \
