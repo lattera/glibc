@@ -45,7 +45,7 @@ endif
 install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
-distribute := _itoa.h _itowa.h _i18n_itoa.h _i18n_itowa.h \
+distribute := _itoa.h _itowa.h _i18n_number.h \
 	      printf-parse.h stdio_lim.h.in tst-unbputc.sh tst-printf.sh
 
 tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
