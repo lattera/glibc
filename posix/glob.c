@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 
 /* Comment out all this code if we are using the GNU C Library, and are not
@@ -171,6 +172,17 @@ extern char *alloca ();
 
 #define	__alloca	alloca
 
+#endif
+
+#ifndef __GNU_LIBRARY__
+#define __lstat lstat
+#ifndef HAVE_LSTAT
+#define lstat stat
+#endif
+#ifdef STAT_MACROS_BROKEN
+#undef S_ISDIR
+#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
+#endif
 #endif
 
 #ifndef	STDC_HEADERS
@@ -394,9 +406,21 @@ glob (pattern, flags, errfunc, pglob)
 	}
     }
 
+  if (flags & GLOB_MARK)
+    {
+      /* Append slashes to directory names.  glob_in_dir has already
+	 allocated the extra character for us.  */
+      int i;
+      struct stat st;
+      for (i = oldcount; i < pglob->gl_pathc; ++i)
+	if (__lstat (pglob->gl_pathv[i], &st) == 0 &&
+	    S_ISDIR (st.st_mode))
+	  strcat (pglob->gl_pathv[i], "/");
+    }
+
   if (!(flags & GLOB_NOSORT))
     /* Sort the vector.  */
-    qsort ((__ptr_t) & pglob->gl_pathv[oldcount],
+    qsort ((__ptr_t) &pglob->gl_pathv[oldcount],
 	   pglob->gl_pathc - oldcount,
 	   sizeof (char *), collated_compare);
 
@@ -595,8 +619,6 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		if (new->name == NULL)
 		  goto memory_error;
 		memcpy ((__ptr_t) new->name, name, len);
-		if (flags & GLOB_MARK)
-		  new->name[len++] = '/';
 		new->name[len] = '\0';
 		new->next = names;
 		names = new;
@@ -611,12 +633,10 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       nfound = 1;
       names = (struct globlink *) __alloca (sizeof (struct globlink));
       names->next = NULL;
-      names->name = (char *) malloc (len + ((flags & GLOB_MARK) ? 1 : 0) + 1);
+      names->name = (char *) malloc (len + 1);
       if (names->name == NULL)
 	goto memory_error;
       memcpy (names->name, pattern, len);
-      if (flags & GLOB_MARK)
-	names->name[len++] = '/';
       names->name[len] = '\0';
     }
 
