@@ -37,11 +37,11 @@
 #include <time.h>
 
 #include <limits.h>
-#include <string.h>		/* For string function builtin redirect.  */
 
 #if DEBUG
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */

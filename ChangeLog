@@ -1,5 +1,9 @@
 2004-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	[BZ #468] Import a fix from gnulib.
+	* time/mktime.c [! DEBUG]: Do not include <string.h>.
+	It's needed only if DEBUG is nonzero.
+
 	[BZ #470] Import fix from gnulib.
 	* time/mktime.c [!_LIBC] (__mktime_internal): Define to
 	mktime_internal, to avoid clashes with any __mktime_internal
