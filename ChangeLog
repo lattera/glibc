@@ -1,3 +1,7 @@
+2001-03-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/configure.in: Add a sanity check on $prefix.
+
 2001-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	Last-bit accurate math library implementation by IBM Haifa.
