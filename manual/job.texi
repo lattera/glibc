@@ -1166,7 +1166,7 @@ different sessions, and the implementation doesn't allow to access the
 process group ID of the process with ID @var{pid} from the calling
 process.
 @end table
-@end deftypefun
+@end deftypefn
 
 @comment unistd.h
 @comment POSIX.1

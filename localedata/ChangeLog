@@ -1,3 +1,8 @@
+1999-08-16  Andreas Schwab  <schwab@suse.de>
+
+	* charmaps/UTF8: Add entries for /x00.  Remove spurious
+	<percent-sign/> entry.  Correct typo.
+
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/UTF8: Generated from the charDB.

@@ -7,6 +7,8 @@
 
 % alias ISO-10646/UTF-8
 CHARMAP
+<NU>                   /x00         <U0000> NULL
+<NUL>                  /x00         <U0000> NULL
 <SH>                   /x01         <U0001> START OF HEADING
 <SOH>                  /x01         <U0001> START OF HEADING
 <STX>                  /x02         <U0002> START OF TEXT
@@ -82,7 +84,6 @@ CHARMAP
 <dollar-sign>          /x24         <U0024> DOLLAR SIGN
 <%>                    /x25         <U0025> PERCENT SIGN
 <percent-sign>         /x25         <U0025> PERCENT SIGN
-<percent-sign/>>       /x25         <U0025> PERCENT SIGN
 <&>                    /x26         <U0026> AMPERSAND
 <ampersand>            /x26         <U0026> AMPERSAND
 <'>                    /x27         <U0027> APOSTROPHE
@@ -239,7 +240,7 @@ CHARMAP
 <S3>                   /xC2/x8F     <U008F> SINGLE-SHIFT THREE (SS3)
 <DC>                   /xC2/x90     <U0090> DEVICE CONTROL STRING (DCS)
 <P1>                   /xC2/x91     <U0091> PRIVATE USE ONE (PU1)
-<P2>                   /xC2/x92     <U0092> PRIVATE USE ONE (PU2)
+<P2>                   /xC2/x92     <U0092> PRIVATE USE TWO (PU2)
 <TS>                   /xC2/x93     <U0093> SET TRANSMIT STATE (STS)
 <CC>                   /xC2/x94     <U0094> CANCEL CHARACTER (CCH)
 <MW>                   /xC2/x95     <U0095> MESSAGE WAITING (MW)
