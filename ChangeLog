@@ -1,5 +1,10 @@
 2003-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/setregid.c (__setregid): Make POSIX
+	compliant.  Don't change sgid.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c (__setreuid): Make POSIX
+	compliant.  Don't change suid.
+
 	* config.h.in: Add have-forced-unwind.
 	* configure.in: Add AC_SUBST(libc_cv_forced_unwind).
 

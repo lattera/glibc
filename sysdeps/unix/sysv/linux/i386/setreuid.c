@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ int
 __setreuid (uid_t ruid, uid_t euid)
 {
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (setreuid32, 2, ruid, euid);
+  return INLINE_SYSCALL (setresuid32, 3, ruid, euid, -1);
 #else
 # ifdef __NR_setreuid32
   if (__libc_missing_32bit_uids <= 0)
@@ -50,7 +50,7 @@ __setreuid (uid_t ruid, uid_t euid)
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (setreuid32, 2, ruid, euid);
+      result = INLINE_SYSCALL (setresuid32, 3, ruid, euid, -1);
 
       if (result == 0 || errno != ENOSYS)
 	return result;
@@ -66,7 +66,7 @@ __setreuid (uid_t ruid, uid_t euid)
       return -1;
     }
 
-  return INLINE_SYSCALL (setreuid, 2, ruid, euid);
+  return INLINE_SYSCALL (setresuid, 3, ruid, euid, -1);
 #endif
 }
 weak_alias (__setreuid, setreuid)
