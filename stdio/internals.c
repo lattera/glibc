@@ -199,9 +199,14 @@ DEFUN(flushbuf, (fp, c),
 
       size_t buffer_offset = 0;
 
-      /* If the user has read some of the buffer, the target position
-	 is incremented for each character he has read.  */
-      fp->__target += fp->__bufp - fp->__buffer;
+      if (fp->__target == -1)
+	/* For an unseekable object, data recently read bears no relation
+	   to data we will write later.  Discard the buffer.  */
+	fp->__get_limit = fp->__buffer;
+      else
+	/* If the user has read some of the buffer, the target position
+	   is incremented for each character he has read.  */
+	fp->__target += fp->__bufp - fp->__buffer;
 
       if (fp->__mode.__read && fp->__room_funcs.__input != NULL &&
 	  !fp->__mode.__append)
@@ -231,12 +236,12 @@ DEFUN(flushbuf, (fp, c),
 		/* Start bufp as far into the buffer as we were into
 		   this block before we read it.  */
 		buffer_offset = o;
-	    }
 
-	  /* The target position is now set to where the beginning of the
-	     buffer maps to; and the get_limit was set by the input-room
-	     function.  */
-	  twiddled = 1;
+	      /* The target position is now set to where the beginning of the
+		 buffer maps to; and the get_limit was set by the input-room
+		 function.  */
+	      twiddled = 1;
+	    }
 	}
 
       if (fp->__buffer != NULL)
@@ -289,7 +294,8 @@ DEFUN(flushbuf, (fp, c),
 	 call with nothing in the buffer, so just say the buffer's
 	 been flushed, increment the file offset, and return.  */
       fp->__bufp = fp->__buffer;
-      fp->__offset += to_write;
+      if (fp->__offset != -1)
+	fp->__offset += to_write;
       goto end;
     }
 
@@ -315,7 +321,7 @@ DEFUN(flushbuf, (fp, c),
 		   bother to find the current position; we can get it
 		   later if we need it.  */
 		fp->__offset = fp->__target = -1;
-	      else
+	      else if (fp->__offset != -1)
 		/* Record that we've moved forward in the file.  */
 		fp->__offset += wrote;
 	    }
@@ -339,7 +345,7 @@ DEFUN(flushbuf, (fp, c),
 	  char cc = (unsigned char) c;
 	  if ((*fp->__io_funcs.__write)(fp->__cookie, &cc, 1) < 1)
 	    fp->__error = 1;
-	  else
+	  else if (fp->__offset != -1)
 	    {
 	      /* Record that we've moved forward in the file.  */
 	      ++fp->__offset;
@@ -355,9 +361,10 @@ DEFUN(flushbuf, (fp, c),
 
   if (!twiddled)
     {
-      /* The new target position moves up as
-	 much as the user wrote into the buffer.  */
-      fp->__target += buffer_written;
+      if (fp->__target != -1)
+	/* The new target position moves up as
+	   much as the user wrote into the buffer.  */
+	fp->__target += buffer_written;
 
       /* Set the reading limit to the beginning of the buffer,
 	 so the next `getc' will call __fillbf.  */
@@ -433,8 +440,9 @@ DEFUN(fillbuf, (fp), register FILE *fp)
 	  buffer += count;
 	  nread += count;
 	  to_read -= count;
-	  /* Record that we've moved forward in the file.  */
-	  fp->__offset += count;
+	  if (fp->__offset != -1)
+	    /* Record that we've moved forward in the file.  */
+	    fp->__offset += count;
 	}
     }
 

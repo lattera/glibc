@@ -1,3 +1,10 @@
+Wed Dec 20 18:23:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/internals.c (flushbuf): If the target is -1, always
+	discard the buffer of read data.
+	Only set TWIDDLED flag in !ALIGNED case.
+	Never increment target or offset when old value is -1.
+
 Tue Dec 19 17:00:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdpid.c (_S_msg_proc_newids): Only run the hook when the
