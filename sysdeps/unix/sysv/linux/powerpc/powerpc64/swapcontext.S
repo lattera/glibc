@@ -1,5 +1,5 @@
 /* Save current context and install the given one.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -150,7 +150,7 @@ ENTRY(__novec_swapcontext)
  * of a procedure call (makecontext), so we don't need to restore
  * msr and ctr.  We don't restore r13 since it will be used as
  * the TLS pointer.  */
-  lwz	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
+  ld	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
   cmpdi r0,0
   bne	  L(nv_do_sigret)
 
@@ -199,7 +199,7 @@ ENTRY(__novec_swapcontext)
   ld   r4,(SIGCONTEXT_GP_REGS+(PT_R4*8))(r31)
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_CCR*8))(r31)
   ld   r5,(SIGCONTEXT_GP_REGS+(PT_R5*8))(r31)
-  mfcr r0
+  mtcr r0
   ld   r6,(SIGCONTEXT_GP_REGS+(PT_R6*8))(r31)
   ld   r7,(SIGCONTEXT_GP_REGS+(PT_R7*8))(r31)
   ld   r8,(SIGCONTEXT_GP_REGS+(PT_R8*8))(r31)
@@ -521,7 +521,7 @@ L(has_no_vec):
  * of a procedure call (makecontext), so we don't need to restore
  * msr and ctr.  We don't restore r13 since it will be used as
  * the TLS pointer.  */
-  lwz	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
+  ld	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
   cmpdi r0,0
   bne	  L(do_sigret)
 
@@ -681,11 +681,11 @@ L(has_no_vec2):
   ld   r4,(SIGCONTEXT_GP_REGS+(PT_R4*8))(r31)
   ld   r0,(SIGCONTEXT_GP_REGS+(PT_CCR*8))(r31)
   ld   r5,(SIGCONTEXT_GP_REGS+(PT_R5*8))(r31)
-  mfcr r0
   ld   r6,(SIGCONTEXT_GP_REGS+(PT_R6*8))(r31)
   ld   r7,(SIGCONTEXT_GP_REGS+(PT_R7*8))(r31)
   ld   r8,(SIGCONTEXT_GP_REGS+(PT_R8*8))(r31)
   ld   r9,(SIGCONTEXT_GP_REGS+(PT_R9*8))(r31)
+  mtcr r0
   ld   r10,(SIGCONTEXT_GP_REGS+(PT_R10*8))(r31)
   ld   r11,(SIGCONTEXT_GP_REGS+(PT_R11*8))(r31)
   ld   r12,(SIGCONTEXT_GP_REGS+(PT_R12*8))(r31)

@@ -1,3 +1,12 @@
+2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #700]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(__novec_setcontext, __setcontext): Fix typo so CCR is restored.
+	Load MSR as a doubleword.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(__novec_swapcontext, __swapcontext): Likewise.
+
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (main): Provide more help in case on an error.
