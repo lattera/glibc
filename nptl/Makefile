@@ -364,6 +364,7 @@ CFLAGS-tst-cancelx14.c += -fexceptions
 CFLAGS-tst-cancelx15.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
+CFLAGS-tst-cancelx18.c += -fexceptions
 CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions

@@ -1,5 +1,12 @@
 2003-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_mutex_lock):
+	Add ax to clobber list.
+	(lll_mutex_cond_lock): Likewise.
+	(lll_mutex_unlock): Likewise.
+	(lll_lock): Likewise.
+	(lll_unlock): Likewise.
+
 	* Makefile: Add rules to build and run tst-cancel18 and tst-cancelx18.
 	* tst-cancel18.c: New file.
 	* tst-cancelx18.c: New file.
