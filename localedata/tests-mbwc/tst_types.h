@@ -116,11 +116,11 @@ typedef struct
 {
   struct
   {
-    char s_flg;
+    int s_flg;
     char s[MBSSIZE];
     size_t n;
-    char t_flg;
-    char t_init;
+    int t_flg;
+    int t_init;
   }
   seq[WCSTOK_SEQNUM];
 }
@@ -139,12 +139,12 @@ typedef struct
 {
   struct
   {
-    char w_flg;
-    char s_flg;
+    int w_flg;
+    int s_flg;
     char s[MBSSIZE];
     size_t n;
-    char t_flg;
-    char t_init;
+    int t_flg;
+    int t_init;
   }
   seq[MBRTOWC_SEQNUM];
 }
@@ -173,11 +173,11 @@ typedef struct
 {
   struct
   {
-    char w_flg;
+    int w_flg;
     char s[MBSSIZE];
     size_t n;
-    char t_flg;
-    char t_init;
+    int t_flg;
+    int t_init;
   }
   seq[MBSRTOWCS_SEQNUM];
 }
@@ -205,8 +205,8 @@ typedef struct
 {
   struct
   {
-    char w_flg;
-    char s_flg;
+    int w_flg;
+    int s_flg;
     const char *s;
     size_t n;
   }
@@ -302,7 +302,7 @@ typedef struct
 {
   wchar_t ws[WCSSIZE * 3];
   wchar_t fmt[WCSSIZE * 3];
-  char wch;
+  int wch;
 }
 TIN_SWSCANF_REC;
 
@@ -312,7 +312,7 @@ typedef struct
   int val_int;		/* %d */
   unsigned val_uns;	/* %u */
   float val_flt;		/* %f */
-  char val_c;		/* %c */
+  int val_c;		/* %c */
   char val_s[MBSSIZE * 2];	/* %s */
   wchar_t val_S[WCSSIZE * 2];	/* %lc, %ls, %C, %S */
 }
@@ -344,10 +344,10 @@ TST_TOW_STRUCT (UPPER, upper);
 
 typedef struct
 {
-  char s_flg;
+  int s_flg;
   wchar_t wc;
-  char t_flg;
-  char t_init;
+  int t_flg;
+  int t_init;
 }
 TIN_WCRTOMB_REC;
 
@@ -414,7 +414,7 @@ typedef TIN_WCSCMP_REC TIN_WCSCOLL_REC;
 typedef struct
 {
   TMD_ERRET (int);
-  char cmp_flg;
+  int cmp_flg;
 }
 TEX_WCSCOLL_REC;
 TMD_RECHEAD (WCSCOLL);
@@ -518,12 +518,12 @@ TMD_RECHEAD (WCSPBRK);
 
 typedef struct
 {
-  char s_flg;
-  char w_flg;		/* don't need this */
+  int s_flg;
+  int w_flg;		/* don't need this */
   wchar_t ws[WCSSIZE];
   size_t n;
-  char t_flg;
-  char t_init;
+  int t_flg;
+  int t_init;
 }
 TIN_WCSRTOMBS_REC;
 
@@ -585,7 +585,7 @@ typedef struct
 {
   struct
   {
-    char w_flg;
+    int w_flg;
     wchar_t ws[WCSSIZE];
     wchar_t dt[WCSSIZE];	/* delimiter */
   }
@@ -613,8 +613,8 @@ TMD_RECHEAD (WCSTOK);
 
 typedef struct
 {
-  char s_flg;
-  char w_flg;		/* currently we don't need it. */
+  int s_flg;
+  int w_flg;		/* currently we don't need it. */
   wchar_t ws[WCSSIZE];
   size_t n;
 }
@@ -675,7 +675,7 @@ TMD_RECHEAD (WCTOB);
 
 typedef struct
 {
-  char s_flg;
+  int s_flg;
   wchar_t wc;
 }
 TIN_WCTOMB_REC;
