@@ -149,8 +149,13 @@ struct cmsghdr
 #endif
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 #define CMSG_FIRSTHDR(mhdr) \
-  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)			      \
+  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
+#define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
+			 & ~(sizeof (size_t) - 1))
+#define CMSG_SPACE(len) (CMSG_ALIGN (len) \
+			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+#define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
 
 #ifndef _EXTERN_INLINE
@@ -161,18 +166,19 @@ extern struct cmsghdr *__cmsg_nxthdr __P ((struct msghdr *__mhdr,
 _EXTERN_INLINE struct cmsghdr *
 __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg)
 {
-  unsigned char *__p;
-
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
     return NULL;
 
-  __p = (((unsigned char *) __cmsg)
-	 + ((__cmsg->cmsg_len + sizeof (long int) - 1) & ~sizeof (long int)));
-  if (__p >= (unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)
+  __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
+			       + CMSG_ALIGN (__cmsg->cmsg_len));
+  if ((unsigned char *) (__cmsg + 1) >= ((unsigned char *) __mhdr->msg_control
+					 + __mhdr->msg_controllen)
+      || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
+	  >= ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
     return NULL;
-  return (struct cmsghdr *) __p;
+  return __cmsg;
 }
 
 
