@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ struct in_pktinfo
 #define IPV6_PKTINFO		2
 #define IPV6_HOPOPTS		3
 #define IPV6_DSTOPTS		4
-#define IPV6_RXSRCRT		5
+#define IPV6_RTHDR		5
 #define IPV6_PKTOPTIONS		6
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
@@ -126,3 +126,9 @@ struct in_pktinfo
 /* Socket level values for IPv6.  */
 #define SOL_IPV6        41
 #define SOL_ICMPV6      58
+
+/* Routing header options for IPv6.  */
+#define IPV6_RTHDR_LOOSE	0	/* Hop doesn't need to be neighbour. */
+#define IPV6_RTHDR_STRICT	1	/* Hop must be a neighbour.  */
+
+#define IPV6_RTHDR_TYPE_0	0	/* IPv6 Routing header type 0.  */

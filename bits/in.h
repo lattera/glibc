@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ struct ip_mreq
 #define IPV6_RXINFO		2
 #define IPV6_RXHOPOPTS		3
 #define IPV6_RXDSTOPTS		4
-#define IPV6_RXSRCRT		5
+#define IPV6_RTHDR		5
 #define IPV6_PKTOPTIONS		6
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
@@ -81,3 +81,9 @@ struct ip_mreq
 #define IPV6_MULTICAST_LOOP	19
 #define IPV6_ADD_MEMBERSHIP	20
 #define IPV6_DROP_MEMBERSHIP	21
+
+/* Routing header options for IPv6.  */
+#define IPV6_RTHDR_LOOSE	0	/* Hop doesn't need to be neighbour. */
+#define IPV6_RTHDR_STRICT	1	/* Hop must be a neighbour.  */
+
+#define IPV6_RTHDR_TYPE_0	0	/* IPv6 Routing header type 0.  */

@@ -1,4 +1,4 @@
-# @(#)australasia	7.54
+# @(#)australasia	7.55
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -151,11 +151,13 @@ Zone Australia/Broken_Hill 9:25:48 -	LMT	1895 Feb
 Rule	LH	1981	1984	-	Oct	lastSun	2:00s	1:00	-
 Rule	LH	1982	1985	-	Mar	Sun>=1	2:00s	0	-
 Rule	LH	1985	only	-	Oct	lastSun	2:00s	0:30	-
-Rule	LH	1986	1991	-	Mar	Sun>=15	2:00s	0	-
+Rule	LH	1986	1989	-	Mar	Sun>=15	2:00s	0	-
 Rule	LH	1986	only	-	Oct	19	2:00s	0:30	-
-Rule	LH	1987	max	-	Oct	lastSun	2:00s	0:30	-
-Rule	LH	1992	1995	-	Mar	Sun>=1	2:00s	0	-
+Rule	LH	1987	1999	-	Oct	lastSun	2:00s	0:30	-
+Rule	LH	1990	1995	-	Mar	Sun>=1	2:00s	0	-
 Rule	LH	1996	max	-	Mar	lastSun	2:00s	0	-
+Rule	LH	2000	only	-	Aug	lastSun	2:00s	0:30	-
+Rule	LH	2001	max	-	Oct	lastSun	2:00s	0:30	-
 Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 			10:00	-	EST	1981 Mar
 			10:30	LH	LHST
@@ -164,7 +166,7 @@ Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 #
 # Ashmore Is, Cartier
 # no indigenous inhabitants; only seasonal caretakers
-# no information; probably like Australia/Perth
+# like Australia/Perth, says Turner
 #
 # Coral Sea Is
 # no indigenous inhabitants; only meteorologists
@@ -173,10 +175,7 @@ Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 # Macquarie
 # permanent occupation (scientific station) since 1948;
 # sealing and penguin oil station operated 1888/1917
-# <a href="http://www.bom.gov.au/faq/faqgen.htm">
-# The Australian Bureau of Meteorology FAQ
-# </a> (1999-09-27) writes that Macquarie Island follows Tasmanian practice
-# irrespective of any local use of DST.  This is unclear; ignore it for now.
+# like Australia/Hobart, says Turner
 
 # Christmas
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -504,6 +503,10 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 ###############################################################################
 
 # Australia
+
+# <a href="http://www.dstc.qut.edu.au/DST/marg/daylight.html">
+# Australia's Daylight Saving Times
+# </a>, by Margaret Turner, summarizes daylight saving issues in Australia.
 
 # From John Mackin (1991-03-06):
 # We in Australia have _never_ referred to DST as `daylight' time.
@@ -843,11 +846,19 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Lord Howe Island is located off the New South Wales coast, and is half an
 # hour ahead of NSW time.
 
-# From Paul Eggert (1995-12-19):
-# For Lord Howe we use Shanks through 1991.
-# Lord Howe is part of NSW, so we'll guess it has used the same transition
-# times as NSW since 1991, even though Shanks writes that Lord Howe went
-# with Victoria when NSW and Victoria disagreed in 1982.
+# From James Lonergan, Secretary, Lord Howe Island Board (2000-01-27):
+# Lord Howe Island summer time in 2000/2001 will commence on the same
+# date as the rest of NSW (i.e. 2000-08-27).  For your information the
+# Lord Howe Island Board (controlling authority for the Island) is
+# seeking the community's views on various options for summer time
+# arrangements on the Island, e.g. advance clocks by 1 full hour
+# instead of only 30 minutes.  Dependant on the wishes of residents
+# the Board may approach the NSW government to change the existing
+# arrangements.  The starting date for summer time on the Island will
+# however always coincide with the rest of NSW.
+
+# From Paul Eggert (2000-01-31):
+# For Lord Howe we use Shanks through 1989, and Lonergan thereafter.
 
 ###############################################################################
 

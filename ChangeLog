@@ -1,3 +1,23 @@
+2000-02-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_RXSRCRT): Renamed to
+	IPV6_RTHDR; added IPV6_RTHDR_LOOSE, IPV6_RTHDR_STRICT and
+	IPV6_RTHDR_TYPE_0 to synch with RFC 2292.
+	* sysdeps/generic/bits/in.h: Likewise.
+
+2000-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/gl.po: Update from translation team.
+
+	* timezone/antarctica: Update from tzdata2000b.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+
+	* malloc/malloc.c (vALLOc): Call ptmalloc_init before mEMALIGn
+	call to initialize malloc_getpagesize.
+	(pvALLOc): Likewise.
+
 2000-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/it.po: Update from translation team.

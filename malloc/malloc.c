@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -3618,6 +3618,8 @@ Void_t* vALLOc(size_t bytes)
 Void_t* vALLOc(bytes) size_t bytes;
 #endif
 {
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
   return mEMALIGn (malloc_getpagesize, bytes);
 }
 
@@ -3633,7 +3635,10 @@ Void_t* pvALLOc(size_t bytes)
 Void_t* pvALLOc(bytes) size_t bytes;
 #endif
 {
-  size_t pagesize = malloc_getpagesize;
+  size_t pagesize;
+  if(__malloc_initialized < 0)
+    ptmalloc_init ();
+  pagesize = malloc_getpagesize;
   return mEMALIGn (pagesize, (bytes + pagesize - 1) & ~(pagesize - 1));
 }
 

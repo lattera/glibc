@@ -1,4 +1,4 @@
-# @(#)antarctica	7.17
+# @(#)antarctica	7.18
 
 # From Paul Eggert (1999-11-15):
 # To keep things manageable, we list only locations occupied year-round; see
@@ -47,6 +47,10 @@ Rule	ChileAQ	2000	max	-	Mar	Sun>=9	0:00	0	-
 # Australia - territories
 # Heard Island, McDonald Islands (uninhabited)
 #	previously sealers and scientific personnel wintered
+#	<a href="http://www.dstc.qut.edu.au/DST/marg/daylight.html">
+#	Margaret Turner reports
+#	</a> (1999-09-30) that they're UTC+5, with no DST;
+#	presumably this is when they have visitors.
 #
 # year-round bases
 # Casey, Bailey Peninsula, -6617+11032, since 1969
@@ -210,7 +214,7 @@ Rule	NZAQ	1990	max	-	Mar	Sun>=15	2:00s	0	S
 # Rothera, Adelaide Island, -6734-6808, since 1976-12-01
 
 # Uruguay - year round base
-# Artigas, King George Island, -9621104-0585107
+# Artigas, King George Island, -621104-0585107
 
 # USA - year-round bases
 #

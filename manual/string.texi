@@ -480,7 +480,7 @@ This function has undefined results if the strings overlap.
 @end deftypefun
 
 Programmers using the @code{strcat} function (or the following
-@code{strncat} function for that matter) can easily be recognize as
+@code{strncat} function for that matter) can easily be recognized as
 lazy.  In almost all situations the lengths of the participating strings
 are known.  Or at least, one could know them if one keeps track of the
 results of the various function calls.  But then it is very inefficient
