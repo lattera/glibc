@@ -1,3 +1,8 @@
+2004-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (hosts_keys): Let inet_pton decide whether the
+	string is an address or not.
+
 2004-10-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-addr.c (_dl_addr): Don't look at STT_TLS symbols.

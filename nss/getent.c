@@ -276,19 +276,12 @@ hosts_keys (int number, char *key[])
   for (i = 0; i < number; ++i)
     {
       struct hostent *host = NULL;
+      char addr[IN6ADDRSZ];
 
-      if (strchr (key[i], ':') != NULL)
-	{
-	  char addr[IN6ADDRSZ];
-	  if (inet_pton (AF_INET6, key[i], &addr))
-	    host = gethostbyaddr (addr, sizeof (addr), AF_INET6);
-	}
-      else if (isdigit (key[i][0]))
-	{
-	  char addr[INADDRSZ];
-	  if (inet_pton (AF_INET, key[i], &addr))
-	    host = gethostbyaddr (addr, sizeof (addr), AF_INET);
-	}
+      if (inet_pton (AF_INET6, key[i], &addr) > 0)
+	host = gethostbyaddr (addr, sizeof (addr), AF_INET6);
+      else if (inet_pton (AF_INET, key[i], &addr) > 0)
+	host = gethostbyaddr (addr, sizeof (addr), AF_INET);
       else if ((host = gethostbyname2 (key[i], AF_INET6)) == NULL)
 	host = gethostbyname2 (key[i], AF_INET);
 
