@@ -1,3 +1,8 @@
+2000-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/Makefile (tests): Add tst-ngettext.
+	* intl/tst-ngettext.c: New file.
+
 2000-10-25  Bruno Haible  <haible@clisp.cons.org>
 
 	* manual/charset.texi: Fix spelling of __GCONV_FULL_OUTPUT.

@@ -29,6 +29,7 @@ distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     translit.po
 
 test-srcs := tst-gettext tst-translit
+tests = tst-ngettext
 
 before-compile = $(objpfx)msgs.h
 

@@ -1,3 +1,9 @@
+2000-10-26  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
+	    Yutaka Niibe  <gniibe@chroot.org>
+
+	* sysdeps/sh/pt-machine.h (testandset): Since the operand of TAS.B
+	has restrictions, use register.
+
 2000-10-23  Andreas Schwab  <schwab@suse.de>
 
 	* Examples/ex14.c (TIMEOUT): Override default timeout.
