@@ -513,6 +513,29 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
       /* Try an environment variable (unless setuid).  */
       if (fd == -1 && ! _dl_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
+      if (fd == -1)
+	{
+	  /* Check the list of libraries in the file /etc/ld.so.cache,
+	     for compatibility with Linux's ldconfig program.  */
+	  extern const char *_dl_load_cache_lookup (const char *name);
+	  const char *cached = _dl_load_cache_lookup (name);
+	  if (cached)
+	    {
+	      fd = __open (cached, O_RDONLY);
+	      if (fd != -1)
+		{
+		  size_t cl = strlen (cached) + 1;
+		  realname = malloc (cl);
+		  if (realname)
+		    memcpy (realname, cached, cl);
+		  else
+		    {
+		      __close (fd);
+		      fd = -1;
+		    }
+		}
+	    }
+	}
       /* Finally, try the default path.  */
       if (fd == -1)
 	{

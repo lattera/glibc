@@ -1,3 +1,9 @@
+Wed Jul 17 21:53:45 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/Makefile (dl-routines): Add dl-cache.
+	* elf/dl-cache.c: New file.
+	* elf/dl-load.c (_dl_map_object): Check cache before default path.
+
 Wed Jul 17 20:41:30 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfscanf.c: Major change.  Now read character
