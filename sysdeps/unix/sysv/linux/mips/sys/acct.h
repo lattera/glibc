@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,8 @@ struct acct
     time_t ac_stime;			/* Accounting system time.  */
     time_t ac_etime;			/* Accounting elapsed time.  */
     time_t ac_btime;			/* Beginning time.  */
-    long ac_uid;			/* Accounting user ID.  */
-    long ac_gid;			/* Accounting group ID.  */
+    long int ac_uid;			/* Accounting user ID.  */
+    long int ac_gid;			/* Accounting group ID.  */
     unsigned long int ac_tty;		/* Controlling tty.  */
     /* Please note that the value of the `ac_tty' field, a device number,
        is encoded differently in the kernel and for the libc dev_t type.  */
@@ -59,7 +59,7 @@ enum
 
 
 /* Switch process accounting on and off.  */
-extern int acct __P ((__const char *__filename));
+extern int acct (__const char *__filename) __THROW;
 
 __END_DECLS
 

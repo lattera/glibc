@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,8 @@ struct ipc_perm
 __BEGIN_DECLS
 
 /* The actual system call: all functions are multiplexed by this.  */
-extern int __ipc __P ((int __call, int __first, int __second, int __third,
-		       void *__ptr));
+extern int __ipc (int __call, int __first, int __second, int __third,
+		  void *__ptr) __THROW;
 
 __END_DECLS
 

@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux/MIPS version.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -203,13 +203,13 @@ enum
    `sendmsg' and received by `recvmsg'.  */
 struct msghdr
   {
-    __ptr_t msg_name;		/* Address to send to/receive from.  */
+    void *msg_name;		/* Address to send to/receive from.  */
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
-    __ptr_t msg_control;	/* Ancillary data (eg BSD filedesc passing). */
+    void  *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
     size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
@@ -244,8 +244,8 @@ struct cmsghdr
 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
-extern struct cmsghdr *__cmsg_nxthdr __P ((struct msghdr *__mhdr,
-					   struct cmsghdr *__cmsg));
+extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
+				      struct cmsghdr *__cmsg) __THROW;
 #ifdef __USE_EXTERN_INLINES
 # ifndef _EXTERN_INLINE
 #  define _EXTERN_INLINE extern __inline
