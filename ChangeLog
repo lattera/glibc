@@ -1,5 +1,7 @@
 2000-06-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-ctype.c (allocate_arrays): Correct a comment.
+
 	* misc/syslog.c (vsyslog): Initialize msgoff in all cases.
 
 2000-06-14  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>

@@ -3460,11 +3460,10 @@ Computing table size for character classes might take a while..."),
       /* The next step is putting all the possible transliteration
 	 strings in one memory block so that we can write it out.
 	 We need several different blocks:
-	 - index to the tfromstring array
+	 - index to the from-string array
 	 - from-string array
 	 - index to the to-string array
 	 - to-string array.
-	 And this all must be available for both endianes variants.
       */
       from_len = to_len = 0;
       for (cnt = 0; cnt < number; ++cnt)
