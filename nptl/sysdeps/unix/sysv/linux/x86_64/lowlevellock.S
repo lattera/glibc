@@ -78,6 +78,8 @@ __lll_mutex_timedlock_wait:
 	cmpq	$1000000000, 8(%rdx)
 	jae	3f
 
+	pushq	%r8
+	pushq	%r9
 	pushq	%r12
 	pushq	%r13
 	pushq	%r14
@@ -142,6 +144,8 @@ __lll_mutex_timedlock_wait:
 	popq	%r14
 	popq	%r13
 	popq	%r12
+	popq	%r9
+	popq	%r8
 	retq
 
 	/* Check whether the time expired.  */

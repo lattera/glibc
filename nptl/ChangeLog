@@ -1,5 +1,9 @@
 2004-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_timedlock_wait): Preserve r8 and r9 since the
+	vgettimeofday call miht destroy the content.
+
 	* sysdeps/ia64/pthread_spin_lock.c (pthread_spin_lock): Use hint
 	@pause in the loop.
 
