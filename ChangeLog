@@ -1,5 +1,9 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/bits/posix2_lim.h: Set correct values for
+	_POSIX2_COLL_WEIGHTS_MAX and _POSIX2_CHARCLASS_NAME_MAX.  Remove
+	EQUIV_CLASS_MAX.
+
 	* posix/bits/posix1_lim.h: Define _POSIX_TZNAME_MAX as 6.
 	Required by POSIX.
 
