@@ -69,8 +69,8 @@ __lll_lock_wait:
 	.globl	__lll_unlock_wake
 	.type	__lll_unlock_wake,@function
 	.hidden	__lll_unlock_wake
+	.align	16
 __lll_unlock_wake:
-	pushl	%esi
 	pushl	%ebx
 	pushl	%ecx
 	pushl	%edx
@@ -78,80 +78,12 @@ __lll_unlock_wake:
 	movl	%eax, %ebx
 1:	movl	$FUTEX_WAKE, %ecx
 	movl	$1, %edx	/* Wake one thread.  */
-	xorl	%esi, %esi
-	movl	%edx, (%ebx)	/* Stores '$1'.  */
 	movl	$SYS_futex, %eax
+	movl	%edx, (%ebx)	/* Stores '$1'.  */
 	ENTER_KERNEL
 
 	popl	%edx
 	popl	%ecx
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	__lll_unlock_wake,.-__lll_unlock_wake
-
-
-	.globl	__lll_timedwait_tid
-	.type	__lll_timedwait_tid,@function
-	.hidden	__lll_timedwait_tid
-__lll_timedwait_tid:
-	pushl	%edi
-	pushl	%esi
-	pushl	%ebx
-	pushl	%ebp
-
-	movl	%eax, %ebp
-	movl	%edx, %edi
-	subl	$8, %esp
-
-	/* Get current time.  */
-2:	movl	%esp, %ebx
-	xorl	%ecx, %ecx
-	movl	$SYS_gettimeofday, %eax
-	ENTER_KERNEL
-
-	/* Compute relative timeout.  */
-	movl	4(%esp), %eax
-	movl	$1000, %edx
-	mul	%edx		/* Milli seconds to nano seconds.  */
-	movl	(%edi), %ecx
-	movl	4(%edi), %edx
-	subl	(%esp), %ecx
-	subl	%eax, %edx
-	jns	5f
-	addl	$1000000000, %edx
-	decl	%ecx
-5:	testl	%ecx, %ecx
-	js	6f		/* Time is already up.  */
-
-	movl	%ecx, (%esp)	/* Store relative timeout.  */
-	movl	%edx, 4(%esp)
-
-	movl	(%ebp), %edx
-	testl	%edx, %edx
-	jz	4f
-
-	movl	%esp, %esi
-	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
-	movl	%ebp, %ebx
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
-
-	movl	%eax, %edx
-
-	cmpl	$0, (%ebx)
-	jne	1f
-4:	xorl	%eax, %eax
-
-3:	addl	$8, %esp
-	popl	%ebp
-	popl	%ebx
-	popl	%esi
-	popl	%edi
-	ret
-
-1:	cmpl	$-ETIMEDOUT, %edx
-	jne	2b
-6:	movl	$ETIMEDOUT, %eax
-	jmp	3b
-	.size	__lll_timedwait_tid,.-__lll_timedwait_tid

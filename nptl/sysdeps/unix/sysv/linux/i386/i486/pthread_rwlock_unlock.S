@@ -39,10 +39,9 @@
 	.align	16
 __pthread_rwlock_unlock:
 	pushl	%ebx
-	pushl	%esi
 	pushl	%edi
 
-	movl	16(%esp), %edi
+	movl	12(%esp), %edi
 
 	/* Get the lock.  */
 	movl	$1, %eax
@@ -84,13 +83,11 @@ __pthread_rwlock_unlock:
 #endif
 	jne	7f
 
-8:	xorl	%esi, %esi
-	movl	$SYS_futex, %eax
+8:	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 	xorl	%eax, %eax
 	popl	%edi
-	popl	%esi
 	popl	%ebx
 	ret
 
@@ -105,7 +102,6 @@ __pthread_rwlock_unlock:
 
 4:	xorl	%eax, %eax
 	popl	%edi
-	popl	%esi
 	popl	%ebx
 	ret
 

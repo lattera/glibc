@@ -40,10 +40,9 @@
 	.align	16
 __pthread_cond_signal:
 
-	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %ebx
+	movl	8(%esp), %ebx
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -71,7 +70,6 @@ __pthread_cond_signal:
 
 	/* Wake up one thread.  */
 	movl	$FUTEX_WAKE, %ecx
-	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	%ecx, %edx	/* movl $1, %edx */
 	ENTER_KERNEL
@@ -83,7 +81,6 @@ __pthread_cond_signal:
 
 6:	xorl	%eax, %eax
 	popl	%ebx
-	popl	%esi
 	ret
 
 	/* Initial locking failed.  */

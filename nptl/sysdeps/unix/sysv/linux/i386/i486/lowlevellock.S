@@ -71,7 +71,6 @@ __lll_lock_wait:
 	.hidden	lll_unlock_wake_cb
 	.align	16
 lll_unlock_wake_cb:
-	pushl	%esi
 	pushl	%ebx
 	pushl	%ecx
 	pushl	%edx
@@ -84,7 +83,6 @@ lll_unlock_wake_cb:
 	popl	%edx
 	popl	%ecx
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
 
@@ -92,8 +90,8 @@ lll_unlock_wake_cb:
 	.globl	__lll_unlock_wake
 	.type	__lll_unlock_wake,@function
 	.hidden	__lll_unlock_wake
+	.align	16
 __lll_unlock_wake:
-	pushl	%esi
 	pushl	%ebx
 	pushl	%ecx
 	pushl	%edx
@@ -101,7 +99,6 @@ __lll_unlock_wake:
 	movl	%eax, %ebx
 1:	movl	$FUTEX_WAKE, %ecx
 	movl	$1, %edx	/* Wake one thread.  */
-	xorl	%esi, %esi
 	movl	%edx, (%ebx)	/* Stores '$1'.  */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
@@ -109,7 +106,6 @@ __lll_unlock_wake:
 	popl	%edx
 	popl	%ecx
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	__lll_unlock_wake,.-__lll_unlock_wake
 
@@ -117,6 +113,7 @@ __lll_unlock_wake:
 	.globl	__lll_timedwait_tid
 	.type	__lll_timedwait_tid,@function
 	.hidden	__lll_timedwait_tid
+	.align	16
 __lll_timedwait_tid:
 	pushl	%edi
 	pushl	%esi

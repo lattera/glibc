@@ -41,11 +41,9 @@
 	.type	pthread_barrier_wait,@function
 	.align	16
 pthread_barrier_wait:
-	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %ebx
-	xorl	%esi, %esi
+	movl	8(%esp), %ebx
 
 	/* Get the mutex.  */
 	orl	$-1, %eax
@@ -59,6 +57,8 @@ pthread_barrier_wait:
 	je	3f
 
 	/* There are more threads to come.  */
+	pushl	%esi
+
 #if CURR_EVENT == 0
 	movl	(%ebx), %edx
 #else
@@ -72,7 +72,8 @@ pthread_barrier_wait:
 
 	/* Wait for the remaining threads.  The call will return immediately
 	   if the CURR_EVENT memory has meanwhile been changed.  */
-7:	movl	%esi, %ecx		/* movl $FUTEX_WAIT, %ecx */
+7:	xorl	%ecx, %ecx		/* movl $FUTEX_WAIT, %ecx */
+	xorl	%esi, %esi
 8:	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
@@ -89,8 +90,8 @@ pthread_barrier_wait:
 	/* Note: %esi is still zero.  */
 	movl	%esi, %eax		/* != PTHREAD_BARRIER_SERIAL_THREAD */
 
-	popl	%ebx
 	popl	%esi
+	popl	%ebx
 	ret
 
 	/* The necessary number of threads arrived.  */
@@ -119,7 +120,6 @@ pthread_barrier_wait:
 5:	orl	$-1, %eax		/* == PTHREAD_BARRIER_SERIAL_THREAD */
 
 	popl	%ebx
-	popl	%esi
 	ret
 
 1:	leal	MUTEX(%ebx), %ecx

@@ -76,6 +76,10 @@ struct pthread
     void *__padding[16];
   } header;
 
+  /* Thread ID - which is also a 'is this thread descriptor (and
+     therefore stack) used' flag.  */
+  pid_t tid;
+
   /* Two-level array for the thread-specific data.  */
   struct pthread_key_data
   {
@@ -152,10 +156,6 @@ struct pthread
   /* Setjmp buffer to be used if try/finally is not available.  */
   sigjmp_buf cancelbuf;
 #define HAVE_CANCELBUF	1
-
-  /* Thread ID - which is also a 'is this thread descriptor (and
-     therefore stack) used' flag.  */
-  pid_t tid;
 
   /* Flags.  Including those copied from the thread attribute.  */
   int flags;

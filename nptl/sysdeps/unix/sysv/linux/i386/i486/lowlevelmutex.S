@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -155,14 +155,12 @@ __lll_mutex_timedlock_wait:
 	.hidden	__lll_mutex_unlock_wake
 	.align	16
 __lll_mutex_unlock_wake:
-	pushl	%esi
 	pushl	%ebx
 	pushl	%ecx
 	pushl	%edx
 
 	movl	$FUTEX_WAKE, %ecx
 	movl	%eax, %ebx
-	xorl	%esi, %esi
 	movl	$0, (%ebx)
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
@@ -171,6 +169,5 @@ __lll_mutex_unlock_wake:
 	popl	%edx
 	popl	%ecx
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	__lll_mutex_unlock_wake,.-__lll_mutex_unlock_wake

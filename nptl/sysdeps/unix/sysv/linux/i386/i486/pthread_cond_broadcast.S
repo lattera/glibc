@@ -40,10 +40,9 @@
 	.align	16
 __pthread_cond_broadcast:
 
-	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %ebx
+	movl	8(%esp), %ebx
 
 	/* Get internal lock.  */
 	movl	$1, %eax
@@ -77,14 +76,12 @@ __pthread_cond_broadcast:
 
 	/* Wake up all threads.  */
 8:	movl	$FUTEX_WAKE, %ecx
-	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
 	xorl	%eax, %eax
 	popl	%ebx
-	popl	%esi
 	ret
 
 	.align	16
@@ -95,7 +92,6 @@ __pthread_cond_broadcast:
 
 6:	xorl	%eax, %eax
 	popl	%ebx
-	popl	%esi
 	ret
 
 	/* Initial locking failed.  */

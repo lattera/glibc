@@ -1,3 +1,34 @@
+2003-03-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread): Move tid field to the front now that
+	it is often used.
+
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S
+	(__lll_mutex_timedlock_wait): Remove.
+	(__lll_mutex_unlock_wake): Don't save, load, and restore %esi.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S
+	(__lll_mutex_unlock_wake): Don't save, load, and restore %esi.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(lll_unlock_wake_cb): Don't save and restore %esi.
+	(__lll_unlock_wake): Add alignment.  Don't save, load, and restore
+	%esi.
+	(__lll_timedwait_tid): Add alignment.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S
+	(__lll_unlock_wake): Add alignment.  Don't save, load, and restore
+	%esi.
+	(__lll_timedwait_tid): Removed.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Don't save, load, and restore %esi.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S
+	(pthread_barrier_wait): Don't save, load, and restore %esi for
+	last thread.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S
+	(__pthread_cond_signal): Don't save, load, and restore %esi.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S
+	(__pthread_rwlock_unlock): Don't save, load, and restore %esi.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S (__new_sem_post):
+	Don't save, load, and restore %esi.
+
 2003-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S:

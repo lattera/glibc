@@ -39,15 +39,13 @@
 	.type	__new_sem_post,@function
 	.align	16
 __new_sem_post:
-	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %ebx
+	movl	8(%esp), %ebx
 	movl	$1, %edx
 	LOCK
 	xaddl	%edx, (%ebx)
 
-	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %ecx
 	incl	%edx
@@ -58,7 +56,6 @@ __new_sem_post:
 
 	xorl	%eax, %eax
 	popl	%ebx
-	popl	%esi
 	ret
 
 1:
@@ -80,7 +77,6 @@ __new_sem_post:
 
 	orl	$-1, %eax
 	popl	%ebx
-	popl	%esi
 	ret
 	.size	__new_sem_post,.-__new_sem_post
 	.symver	__new_sem_post, sem_post@@GLIBC_2.1
