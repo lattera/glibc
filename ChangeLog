@@ -1,5 +1,8 @@
 Sun Apr  2 13:13:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* posix/execvp.c: Don't use stat to search path; just try execv
+ 	until it works.
+
 	* sysdeps/mach/hurd/i386/trampoline.c: Add a link to
  	SS->active_resources, so that _hurdsig_longjmp_from_handler will
  	be called when a longjmp unwinds the signal frame.
