@@ -1,6 +1,6 @@
 2001-07-05  Andreas Jaeger  <aj@suse.de>
 
-	Synch with Linux 2.4.5:
+	Synch with Linux 2.4.6:
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h (PF_BLUETOOTH):
 	New.
 	(AF_BLUETOOTH): New.
