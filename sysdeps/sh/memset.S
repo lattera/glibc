@@ -1,6 +1,7 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@rr.iij4u.or.jp>
+   Optimized by Toshiyasu Morita <toshiyasu.morita@hsa.hitachi.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,61 +20,68 @@
 
 #include <sysdep.h>
 
-/* void *memset (t, c, len)  */
+/* void *memset (t, c, len);  */
 
 ENTRY(memset)
-	tst	r6, r6
-	bt/s	end
-	mov	r4, r3
-	mov	#3, r0
-	cmp/hs	r6, r0
-	bt/s	2f
-	and	r4, r0
-	tst	r0, r0
-	bt/s	1f
-	add	r0, r6
-	add	#-1, r0
-	shll2	r0
-	braf	r0
-	add	#-4, r6
+	mov	#12,r0
+	cmp/gt	r6,r0
+	bt.s	L_byte_loop_init
+	mov	r4,r7
 
-	mov.b	r5, @r4
-	add	#1, r4
-	mov.b	r5, @r4
-	add	#1, r4
-	mov.b	r5, @r4
-	add	#1, r4
-1:
-	extu.b	r5, r0
-	shll8	r5
-	or	r5, r0
-	extu.w	r0, r0
-	mov	r0, r5
-	swap.w	r5, r5
-	or	r0, r5
-	
-2:
-	add	#-4, r6
-	cmp/pz	r6
-	bf	afew
-	mov.l	r5, @r4
-	bra	2b
-	add	#4, r4
+	swap.b	r5,r1
+	or	r1,r5
+	swap.w	r5,r1
+	or	r1,r5
 
-afew:
-	mov	#-1, r0
-	sub	r6, r0
-	shll2	r0
-	braf	r0
-	nop
+	mov	r4,r0
+	tst	#1,r0
+	bt	L_wordalign
 
-	mov.b	r5, @r4
-	add	#1, r4
-	mov.b	r5, @r4
-	add	#1, r4
-	mov.b	r5, @r4
-	add	#1, r4
-end:
+	mov.b	r5,@r4
+	add	#-1,r6	
+	add	#1,r4
+	mov	r4,r0
+
+	.balignw 4,0x0009
+L_wordalign:
+	tst	#2,r0
+	bt	L_word_loop_init
+
+	mov.w	r5,@r4
+	add	#-2,r6
+	add	#2,r4
+	mov	r4,r0
+
+	.balignw 4,0x0009
+L_word_loop_init:
+	mov	r6,r3
+	shlr2	r3
+	mov	#7,r0
+	shlr	r3
+	and	r0,r6
+
+	.balignw 4,0x0009
+L_2word_loop:
+	mov.l	r5,@r4
+	dt	r3
+	mov.l	r5,@(4,r4)
+	bf.s	L_2word_loop
+	add	#8,r4
+
+	.balignw 4,0x0009
+L_byte_loop_init:
+	tst	r6,r6
+	bt	L_byte_exit
+
+	.balignw 4,0x0009
+L_byte_loop:
+	mov.b	r5,@r4
+	dt	r6
+	bf.s	L_byte_loop
+	add	#1,r4
+
+	.balignw 4,0x0009
+L_byte_exit:
 	rts
-	mov	r3, r0
+	mov	r7,r0
 END(memset)

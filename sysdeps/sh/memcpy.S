@@ -1,5 +1,7 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Kazumoto Kojima <kkojima@rr.iij4u.or.jp>
+   Optimized by Toshiyasu Morita <toshiyasu.morita@hsa.hitachi.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,213 +21,179 @@
 #include <sysdep.h>
 #include <endian.h>
 
-/*
- * void *memcpy(void *dst, const void *src, size_t n);
- * No overlap between the memory of DST and of SRC are assumed.
- */
+/* void *memcpy(void *dst, const void *src, size_t n);
+    No overlap between the memory of DST and of SRC are assumed.  */
 
 ENTRY(memcpy)
-	tst	r6,r6
-	bt/s	1f
-	mov	r4,r0
-	mov	#12,r1
-	cmp/gt	r6,r1
-	bf	2f
-0:
-	mov.b	@r5+,r1
-	dt	r6
-	mov.b	r1,@r4
-	bf/s	0b
-	add	#1,r4
-1:
-	rts
-	nop
-2:	
-	mov.l	r8,@-r15
-	mov.l	r9,@-r15
-	mov	r6,r2
-	mov.l	r10,@-r15
-	mov.l	r11,@-r15
-	mov.l	r14,@-r15
-	mov	r4,r11
-	mov	r15,r14
+	mov	r4,r3		/* Save destination.  */
+
+	/* If less than 11 bytes, just do a byte copy.  */
+	mov	#11,r0
+	cmp/gt	r6,r0
+	bt	L_byteloop_init
+
+	/* Check if we need to word-align source.  */
 	mov	r5,r0
-	and	#1,r0
-	tst	r0,r0
-	bt/s	.L42
-	mov	r5,r0
-	mov.b	@r5+,r1
-	add	#-1,r2
-	add	#1,r4
-	mov.b	r1,@r11
-	mov	r5,r0
-.L42:
-	and	#2,r0
-	tst	r0,r0
-	bt/s	.L43
-	mov	r4,r0
-	mov.b	@r5+,r1
-	mov.b	r1,@r4
-	mov.b	@r5+,r1
-	add	#1,r4
-	add	#-2,r2
+	tst	#1,r0
+	bt	L_wordalign
+
+	mov.b	@r0+,r1		/* Copy one byte.  */
+	add	#-1,r6
 	mov.b	r1,@r4
 	add	#1,r4
-	mov	r4,r0
-.L43:
-	and	#1,r0
-	tst	r0,r0
-	bf/s	.L38
-	mov	r4,r0
-	and	#2,r0
-	tst	r0,r0
-	bf/s	.L7
-	mov	r2,r0
-	shlr2	r0
-	and	#3,r0
-	cmp/eq	#2,r0
-	bt/s	.L10
-	mov	#2,r1
-	cmp/gt	r1,r0
-	bt/s	.L14
-	cmp/eq	#3,r0
-	cmp/eq	#1,r0
-	bt/s	.L11
-	mov	r0,r1
-	bra	.L44
-	shll2	r1
-	.align 5
-.L14:
-	bf	.L8
-	mov.l	@(8,r5),r1
-	mov.l	r1,@(8,r4)
-.L10:
-	mov.l	@(4,r5),r1
-	mov.l	r1,@(4,r4)
-.L11:
-	mov.l	@r5,r1
-	mov.l	r1,@r4
-.L8:
-	mov	r0,r1
-	shll2	r1
-.L44:
-	add	r1,r4
-	add	r1,r5
-	mov	r2,r0
-	mov	#-4,r1
-	shad	r1,r0
-	mov	#3,r6
-	bra	.L37
-	and	r2,r6
-	.align 5
-.L18:
-	mov.l	@r5+,r1
-	mov.l	@r5+,r2
-	mov.l	@r5+,r3
-	mov.l	@r5+,r7
-	mov.l	r1,@r4
-	mov.l	r2,@(4,r4)
-	mov.l	r3,@(8,r4)
-	mov.l	r7,@(12,r4)
-	add	#16,r4
-.L37:
-	cmp/pl	r0
-	bt/s	.L18
-	add	#-1,r0
-	mov	r6,r2
-.L38:
-	bra	.L40
-	mov	r2,r0
-	.align 5
-.L7:
-	shar	r0
-	and	#3,r0
-	cmp/eq	#2,r0
-	bt/s	.L23
-	mov	#2,r1
-	cmp/gt	r1,r0
-	bt/s	.L27
-	cmp/eq	#3,r0
-	cmp/eq	#1,r0
-	bt/s	.L24
-	mov	r0,r1
-	bra	.L45
-	add	r0,r1
-	.align 5
-.L27:
-	bf	.L21
-	add	#4,r5
-	mov.w	@r5,r1
-	add	#4,r4
-	mov.w	r1,@r4
-	add	#-4,r5
-	add	#-4,r4
-.L23:
-	add	#2,r5
-	mov.w	@r5,r1
+
+	.balignw 4,0x0009
+L_wordalign:
+	/* Check if we need to longword-align source.  */
+	tst	#2,r0
+	bt	L_copy
+
+	mov.w	@r0+,r1		/* Copy one word.  */
+	add	#-2,r6
+#if __BYTE_ORDER == __BIG_ENDIAN
+	add	#1,r4
+	mov.b	r1,@r4
+	shlr8	r1
+	mov.b	r1,@-r4
 	add	#2,r4
-	mov.w	r1,@r4
-	add	#-2,r5
-	add	#-2,r4
-.L24:
-	mov.w	@r5,r1
-	mov.w	r1,@r4
-.L21:
-	mov	r0,r1
-	add	r0,r1
-.L45:
-	add	r1,r4
-	add	r1,r5
-	mov	r2,r0
-	mov	#-3,r1
-	shad	r1,r0
-	mov	#1,r10
-	mov	r0,r1
-	and	r2,r10
-	cmp/pl	r1
-	bf/s	.L29
-	add	#-1,r0
-	mov	r4,r9
-	mov	r4,r8
-	add	#4,r9
-	mov	r4,r6
-	add	#6,r8
-	add	#2,r6
-.L31:
-	mov.w	@r5+,r1
-	mov.w	@r5+,r2
-	mov.w	@r5+,r3
-	mov.w	@r5+,r7
-	mov.w	r1,@r4
-	mov.w	r2,@r6
-	add	#8,r4
-	mov	r0,r1
-	add	#8,r6
-	mov.w	r3,@r9
-	add	#-1,r0
-	add	#8,r9
-	mov.w	r7,@r8
-	cmp/pl	r1
-	bt/s	.L31
-	add	#8,r8
-.L29:
-	mov	r10,r2
-	mov	r2,r0
-.L40:
-	cmp/pl	r0
-	bf	.L34
-.L35:
-	mov.b	@r5+,r1
-	dt	r2
+#else
 	mov.b	r1,@r4
-	bf/s	.L35
 	add	#1,r4
-.L34:
-	mov	r11,r0
-	mov	r14,r15
-	mov.l	@r15+,r14
-	mov.l	@r15+,r11
-	mov.l	@r15+,r10
-	mov.l	@r15+,r9
-	rts	
-	mov.l	@r15+,r8
+	shlr8	r1
+	mov.b	r1,@r4
+	add	#1,r4
+#endif
+L_copy:
+	mov	r0,r5
+
+	/* Calculate the correct routine to handle the destination
+	   alignment and simultaneously calculate the loop counts for
+	   both the 2 word copy loop and byte copy loop.  */
+	mova	L_jumptable,r0
+	mov	r0,r1
+	mov	r4,r0
+	mov	r6,r7
+	and	#3,r0
+	shlr2	r7
+	shll	r0
+	shlr	r7
+	mov.w	@(r0,r1),r2
+	mov	#7,r0
+	braf	r2
+	and	r0,r6
+L_base:
+
+	.balign	4
+L_jumptable:
+	.word	L_copydest0 - L_base
+	.word	L_copydest1_or_3 - L_base
+	.word	L_copydest2 - L_base
+	.word	L_copydest1_or_3 - L_base
+
+	.balign	4
+	/* Copy routine for (dest mod 4) == 1 or == 3.  */
+L_copydest1_or_3:
+	add	#-1,r4
+	.balignw 4,0x0009
+L_copydest1_or_3_loop:
+	mov.l	@r5+,r0		/* Read first longword.  */
+	dt	r7
+	mov.l	@r5+,r1		/* Read second longword.  */
+#if __BYTE_ORDER == __BIG_ENDIAN
+	/* Write first longword as byte, word, byte.  */
+	mov.b	r0,@(4,r4)
+	shlr8	r0
+	mov.w	r0,@(2,r4)
+	shlr16	r0
+	mov.b	r0,@(1,r4)
+	mov	r1,r0
+	/* Write second longword as byte, word, byte.  */
+	mov.b	r0,@(8,r4)
+	shlr8	r0
+	mov.w	r0,@(6,r4)
+	shlr16	r0
+	mov.b	r0,@(5,r4)
+#else
+	/* Write first longword as byte, word, byte.  */
+	mov.b	r0,@(1,r4)
+	shlr8	r0
+	mov.w	r0,@(2,r4)
+	shlr16	r0
+	mov.b	r0,@(4,r4)
+	mov	r1,r0
+	/* Write second longword as byte, word, byte.  */
+	mov.b	r0,@(5,r4)
+	shlr8	r0
+	mov.w	r0,@(6,r4)
+	shlr16	r0
+	mov.b	r0,@(8,r4)
+#endif
+	bf/s	L_copydest1_or_3_loop
+	add	#8,r4
+
+	bra	L_byteloop_init
+	add	#1,r4
+
+	.balign 4
+	/* Copy routine for (dest mod 4) == 2.  */
+L_copydest2:
+L_copydest2_loop:
+	mov.l	@r5+,r0
+	dt	r7
+	mov.l	@r5+,r1
+#if __BYTE_ORDER == __BIG_ENDIAN
+	mov.w	r0,@(2,r4)
+	shlr16	r0
+	mov.w	r0,@r4
+	mov	r1,r0
+	mov.w	r0,@(6,r4)
+	shlr16	r0
+	mov.w	r0,@(4,r4)
+#else
+	mov.w	r0,@r4
+	shlr16	r0
+	mov.w	r0,@(2,r4)
+	mov	r1,r0
+	mov.w	r0,@(4,r4)
+	shlr16	r0
+	mov.w	r0,@(6,r4)
+#endif
+	bf/s	L_copydest2_loop
+	add	#8,r4
+
+	bra	L_byteloop_init
+	nop
+
+	.balign 4
+	/* Copy routine for (dest mod 4) == 0.  */
+L_copydest0:
+	add	#-8,r4
+	.balignw 4,0x0009
+L_copydest0_loop:
+	mov.l	@r5+,r0
+	dt	r7
+	mov.l	@r5+,r1
+	add	#8,r4
+	mov.l	r0,@r4
+	bf/s	L_copydest0_loop
+	mov.l	r1,@(4,r4)
+
+	add	#8,r4		/* Fall through.  */
+
+L_byteloop_init:
+	tst	r6,r6
+	bt	L_exit
+
+	.balignw 4,0x0009
+	/* Copy remaining bytes.  */
+L_byteloop:
+	mov.b	@r5+,r0
+	dt	r6
+	mov.b	r0,@r4
+	bf/s	L_byteloop
+	add	#1,r4
+
+L_exit:
+	rts
+	mov	r3,r0		/* Return destination.  */
+END(memcpy)

@@ -1,3 +1,9 @@
+2002-07-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/memcpy.S: Optimize.  Based on a patch by Toshiyasu
+	Morita <toshiyasu.morita@hsa.hitachi.com>.
+	* sysdeps/sh/memcpy.S: Likewise.
+
 2003-01-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/aio_suspend.c (aio_suspend): Don't quite remove
