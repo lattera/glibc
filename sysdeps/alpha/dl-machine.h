@@ -293,6 +293,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
 #endif
 
+/* _dl_argv cannot be attribute_relro, because _dl_start_user below
+   might write into it after _dl_start returns.  */
+#define DL_ARGV_NOT_RELRO 1
+
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
