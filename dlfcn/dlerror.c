@@ -120,9 +120,12 @@ _dlerror_run (void (*operate) (void *), void *args)
     }
 
   if (result->errstring != NULL)
-    /* Free the error string from the last failed command.  This can
-       happen if `dlerror' was not run after an error was found.  */
-    free ((char *) result->errstring);
+    {
+      /* Free the error string from the last failed command.  This can
+	 happen if `dlerror' was not run after an error was found.  */
+      free ((char *) result->errstring);
+      result->errstring = NULL;
+    }
 
   result->errcode = _dl_catch_error (&result->objname, &result->errstring,
 				     operate, args);

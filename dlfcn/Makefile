@@ -20,7 +20,7 @@ subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
-distribute	:= dlopenold.c glreflib1.c glreflib2.c
+distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c
 
 extra-libs-others := libdl
 
@@ -32,9 +32,9 @@ libdl-shared-only-routines := dlopenold
 endif
 
 ifeq (yes,$(build-shared))
-tests = glrefmain
+tests = glrefmain failtest
 endif
-modules-names = glreflib1 glreflib2
+modules-names = glreflib1 glreflib2 failtestmod
 extra-objs += $(modules-names:=.os)
 
 include ../Rules
@@ -46,3 +46,6 @@ $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 $(objpfx)glrefmain: $(objpfx)libdl.so
 $(objpfx)glrefmain.out: $(objpfx)glrefmain \
 			$(objpfx)glreflib1.so $(objpfx)glreflib2.so
+
+$(objpfx)failtest: $(libdl)
+$(objpfx)failtest.out: $(objpfx)failtestmod.so

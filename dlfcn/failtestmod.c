@@ -1,0 +1,25 @@
+#include <dlfcn.h>
+#include <stdio.h>
+
+
+void
+__attribute__ ((__constructor__))
+constr (void)
+{
+  void *handle;
+  void *m;
+
+  /* Open the library.  */
+  handle = dlopen (NULL, RTLD_NOW);
+  if (handle == NULL)
+    {
+      puts ("Cannot get handle to own object");
+      return;
+    }
+
+  /* Get a symbol.  */
+  m = dlsym (handle, "main");
+  puts ("called dlsym() to get main");
+
+  dlclose (handle);
+}
