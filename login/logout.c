@@ -25,7 +25,7 @@ Boston, MA 02111-1307, USA.  */
 int
 logout (const char *line)
 {
-  struct utmp_data data;
+  struct utmp_data data = { ut_fd: -1 };
   struct utmp tmp;
   struct utmp *ut;
   int result = 0;
