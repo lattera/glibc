@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -75,7 +75,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2001");
+"), "2002");
   fprintf (stream, gettext ("Written by %s.\n"), "Thorsten Kukuk");
 }
 
@@ -209,7 +209,7 @@ group_keys (int number, char *key[])
       if (isdigit (key[i][0]))
 	{
            char *ep;
-           gid_t arg_gid = strtoul (key[i], &ep, 10); 
+           gid_t arg_gid = strtoul (key[i], &ep, 10);
 
            if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
              grp = getgrgid (arg_gid);
@@ -414,7 +414,7 @@ passwd_keys (int number, char *key[])
       if (isdigit (key[i][0]))
         {
 	   char *ep;
-	   uid_t arg_uid = strtoul (key[i], &ep, 10); 
+	   uid_t arg_uid = strtoul (key[i], &ep, 10);
 
            if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
 	     pwd = getpwuid (arg_uid);

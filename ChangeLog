@@ -1,5 +1,29 @@
 2002-01-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* nscd/nscd_nischeck.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+
+2002-01-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: Fix regexp to
+	reliably remove "-ia64" from rtld name.
+
+2002-01-16  Ulrich Drepper  <drepper@redhat.com>
+
 	* iconvdata/gb18030.c: Bug fixes and support for more characters.
 	Patch by Yu Shao <yshao@redhat.com>.
 
