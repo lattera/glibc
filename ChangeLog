@@ -1,3 +1,35 @@
+2003-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): Add err
+	argument.
+	(INTERNAL_SYSCALL_DECL): Define.
+
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): Add err
+	argument.
+	(INTERNAL_SYSCALL_DECL): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Likewise.
+	(INLINE_SYSCALL): Adjust.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Add INTERNAL_SYSCALL_DECL,
+	add err argument to INTERNAL_SYSCALL* macros.
+	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Likewise.
+	* sysdeps/unix/sysv/linux/i386/system.c (cancel_handler): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/brk.c (__brk): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getpagesize.c  (__getpagesize):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c (do_sigwait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction): Use
+	INLINE_SYSCALL instead of INTERNAL_SYSCALL and setting errno.
+
 2003-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	Unify symbols in user namespace exported by libc.so and libc.a.

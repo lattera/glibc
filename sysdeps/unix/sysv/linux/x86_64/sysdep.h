@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -186,16 +186,19 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
-    unsigned long resultvar = INTERNAL_SYSCALL (name, nr, args);	      \
-    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar), 0))	      \
+    unsigned long resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, ), 0))	      \
       {									      \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar));		      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
 	resultvar = (unsigned long) -1;					      \
       }									      \
     (long) resultvar; })
 
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...) \
+#define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     unsigned long resultvar;						      \
     LOAD_ARGS_##nr (args)						      \
@@ -207,10 +210,11 @@
     (long) resultvar; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -4095L)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long) (val) >= -4095L)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

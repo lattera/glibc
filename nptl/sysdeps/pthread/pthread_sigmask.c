@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -44,11 +44,12 @@ pthread_sigmask (how, newmask, oldmask)
 
 #ifdef INTERNAL_SYSCALL
   /* We know that realtime signals are available if NPTL is used.  */
-  int result = INTERNAL_SYSCALL (rt_sigprocmask, 4, how, newmask, oldmask,
-				 _NSIG / 8);
+  INTERNAL_SYSCALL_DECL (err);
+  int result = INTERNAL_SYSCALL (rt_sigprocmask, err, 4, how, newmask,
+				 oldmask, _NSIG / 8);
 
-  return (INTERNAL_SYSCALL_ERROR_P (result)
-	  ? INTERNAL_SYSCALL_ERRNO (result)
+  return (INTERNAL_SYSCALL_ERROR_P (result, err)
+	  ? INTERNAL_SYSCALL_ERRNO (result, err)
 	  : 0);
 #else
   return sigprocmask (how, newmask, oldmask) == -1 ? errno : 0;

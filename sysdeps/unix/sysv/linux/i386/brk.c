@@ -1,5 +1,5 @@
 /* brk system call for Linux/i386.
-   Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,9 @@ __brk (void *addr)
 {
   void *__unbounded newbrk;
 
-  newbrk = (void *__unbounded) INTERNAL_SYSCALL (brk, 1, __ptrvalue (addr));
+  INTERNAL_SYSCALL_DECL (err);
+  newbrk = (void *__unbounded) INTERNAL_SYSCALL (brk, err, 1,
+						 __ptrvalue (addr));
 
   __curbrk = newbrk;
 

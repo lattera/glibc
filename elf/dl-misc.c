@@ -248,7 +248,8 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 
   /* Finally write the result.  */
 #ifdef INTERNAL_SYSCALL
-  INTERNAL_SYSCALL (writev, 3, fd, &iov, niov);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (writev, err, 3, fd, &iov, niov);
 #elif RTLD_PRIVATE_ERRNO
   /* We have to take this lock just to be sure we don't clobber the private
      errno when it's being used by another thread that cares about it.

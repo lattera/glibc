@@ -55,7 +55,7 @@
 # include <errno.h>
 
 /* On powerpc a system call basically clobbers the same registers like a
-   function call, with the exception of LR (which is needed for the 
+   function call, with the exception of LR (which is needed for the
    "sc; bnslr" sequence) and CR (where only CR0.SO is clobbered to signal
    an error return status).  */
 
@@ -99,8 +99,11 @@
    gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
    the negation of the return value in the kernel gets reverted.  */
 
+# undef INTERNAL_SYSCALL_DECL
+# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
 # undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, nr, args...)				\
+# define INTERNAL_SYSCALL(name, err, nr, args...)			\
   ({									\
     register long r0  __asm__ ("r0");					\
     register long r3  __asm__ ("r3");					\
@@ -126,12 +129,13 @@
        : "cr0", "ctr", "memory");					\
     (int) r3;								\
   })
-  
+
 # undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= 0xfffff001u)
-  
+# define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long) (val) >= 0xfffff001u)
+
 # undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
+# define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 # define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name

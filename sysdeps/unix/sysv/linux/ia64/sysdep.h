@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
    Based on code originally written by David Mosberger-Tang
@@ -134,8 +134,11 @@
       }								\
     _retval; })
 
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) long int err
+
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)			\
+#define INTERNAL_SYSCALL(name, err, nr, args...)		\
   ({								\
     register long _r8 asm ("r8");				\
     register long _r10 asm ("r10");				\
@@ -148,15 +151,14 @@
 			ASM_ARGS_##nr				\
                       : "memory" ASM_CLOBBERS_##nr);		\
     _retval = _r8;						\
-    if (_r10 == -1)						\
-      _retval = -_retval;					\
+    err = _r10;							\
     _retval; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -4095UL)
+#define INTERNAL_SYSCALL_ERROR_P(val, err)	(err == -1)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(val)
 
 #define LOAD_ARGS_0()   do { } while (0)
 #define LOAD_ARGS_1(out0)				\

@@ -1,5 +1,5 @@
 /* brk system call for Linux/m68k.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,8 @@ __brk (void *addr)
 {
   void *newbrk;
 
-  newbrk = (void *) INTERNAL_SYSCALL (brk, 1, addr);
+  INTERNAL_SYSCALL_DECL (err);
+  newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
   __curbrk = newbrk;
 
   if (newbrk < addr)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -33,7 +33,8 @@ raise (sig)
     {
       /* This system call is not supposed to fail.  */
 #ifdef INTERNAL_SYSCALL
-      selftid = INTERNAL_SYSCALL (gettid, 0);
+      INTERNAL_SYSCALL_DECL (err);
+      selftid = INTERNAL_SYSCALL (gettid, err, 0);
 #else
       selftid = INLINE_SYSCALL (gettid, 0);
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,95,96,97,98,99,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1993,1995-2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.org>, August 1995.
 
@@ -313,10 +313,10 @@ asm (".L__X'%ebx = 1\n\t"
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
-    unsigned int resultvar = INTERNAL_SYSCALL (name, nr, args);		      \
-    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar), 0))	      \
+    unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar, ), 0))	      \
       {									      \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar));		      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
 	resultvar = 0xffffffff;						      \
       }									      \
     (int) resultvar; })
@@ -328,7 +328,7 @@ asm (".L__X'%ebx = 1\n\t"
 #undef INTERNAL_SYSCALL
 #ifdef I386_USE_SYSENTER
 # ifdef SHARED
-#  define INTERNAL_SYSCALL(name, nr, args...) \
+#  define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
@@ -341,7 +341,7 @@ asm (".L__X'%ebx = 1\n\t"
       ASMFMT_##nr(args) : "memory", "cc");				      \
     (int) resultvar; })
 # else
-#  define INTERNAL_SYSCALL(name, nr, args...) \
+#  define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
@@ -354,7 +354,7 @@ asm (".L__X'%ebx = 1\n\t"
     (int) resultvar; })
 # endif
 #else
-# define INTERNAL_SYSCALL(name, nr, args...) \
+# define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
@@ -367,11 +367,15 @@ asm (".L__X'%ebx = 1\n\t"
     (int) resultvar; })
 #endif
 
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned int) (val) >= 0xfffff001u)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOADARGS_0
 #if defined I386_USE_SYSENTER && defined SHARED

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -24,15 +24,19 @@
 #define INLINE_SYSCALL(name, nr, args...) \
   inline_syscall##nr(__SYSCALL_STRING, name, args)
 
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
+
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...) \
+#define INTERNAL_SYSCALL(name, err, nr, args...) \
   inline_syscall##nr(__INTERNAL_SYSCALL_STRING, name, args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -515L)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long) (val) >= -515L)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define inline_syscall0(string,name,dummy...)				\
 ({									\

@@ -39,15 +39,16 @@ do_sigwait (const sigset_t *set, int *sig)
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
 #ifdef INTERNAL_SYSCALL
-  ret = INTERNAL_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+  INTERNAL_SYSCALL_DECL (err);
+  ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, CHECK_SIGSET (set),
 			  NULL, NULL, _NSIG / 8);
-  if (! INTERNAL_SYSCALL_ERROR_P (ret))
+  if (! INTERNAL_SYSCALL_ERROR_P (ret, err))
     {
       *sig = ret;
       ret = 0;
     }
   else
-    ret = INTERNAL_SYSCALL_ERRNO (ret);
+    ret = INTERNAL_SYSCALL_ERRNO (ret, err);
 #else
   ret = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
 			NULL, NULL, _NSIG / 8);

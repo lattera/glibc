@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,8 @@ cancel_handler (void *arg)
 {
   pid_t child = *(pid_t *) arg;
 
-  INTERNAL_SYSCALL (kill, 2, child, SIGKILL);
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (kill, err, 2, child, SIGKILL);
 
   TEMP_FAILURE_RETRY (__waitpid (child, NULL, 0));
 

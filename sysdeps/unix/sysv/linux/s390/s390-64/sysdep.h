@@ -115,33 +115,37 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				      \
   ({									      \
-    unsigned int err = INTERNAL_SYSCALL (name, nr, args);		      \
-    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (err), 0))		      \
+    unsigned int _ret = INTERNAL_SYSCALL (name, , nr, args);		      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_ret, ), 0))	      \
      {									      \
-       __set_errno (INTERNAL_SYSCALL_ERRNO (err));			      \
-       err = -1;							      \
+       __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
+       _ret = -1;							      \
      }									      \
-    (int) err; })
+    (int) _ret; })
+
+#undef INTERNAL_SYSCALL_DECL
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)				      \
+#define INTERNAL_SYSCALL(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    int err;								      \
+    int _ret;								      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "svc    %b1\n\t"							      \
     "lgr    %0,%%r2\n\t"						      \
-    : "=d" (err)							      \
+    : "=d" (_ret)							      \
     : "I" (__NR_##name) ASMFMT_##nr					      \
     : "memory", "cc", "2", "3", "4", "5", "6");				      \
-    (int) err; })
+    (int) _ret; })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
+#define INTERNAL_SYSCALL_ERROR_P(val, err)				      \
+  ((unsigned int) (val) >= 0xfffff001u)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \

@@ -172,7 +172,8 @@ __pthread_initialize_minimal_internal (void)
 
   /* Minimal initialization of the thread descriptor.  */
   struct pthread *pd = THREAD_SELF;
-  pd->tid = INTERNAL_SYSCALL (set_tid_address, 1, &pd->tid);
+  INTERNAL_SYSCALL_DECL (err);
+  pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)

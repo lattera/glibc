@@ -1,3 +1,10 @@
+2003-01-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Add
+	INTERNAL_SYSCALL_DECL, add err argument to INTERNAL_SYSCALL* macros.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Likewise.
+	* init.c (__pthread_initialize_minimal_internal): Likewise.
+
 2003-01-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthreadP.h (__pthread_cond_timedwait): Add prototype.

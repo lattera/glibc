@@ -131,15 +131,12 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       k_newact.sa_restorer = &restore;
     }
 
-  result = INTERNAL_SYSCALL (sigaction, 3, sig,
-			     act ? __ptrvalue (&k_newact) : 0,
-			     oact ? __ptrvalue (&k_oldact) : 0);
+  result = INLINE_SYSCALL (sigaction, 3, sig,
+			   act ? __ptrvalue (&k_newact) : 0,
+			   oact ? __ptrvalue (&k_oldact) : 0);
 
   if (result < 0)
-    {
-      __set_errno (-result);
-      return -1;
-    }
+    return -1;
 
   if (oact)
     {
