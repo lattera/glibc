@@ -1,8 +1,20 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/sh/Dist: Removed.  There is no ieee754.h file.
+	* sysdeps/sh/sh3/dl-machine.h: Moved to...
+	* sysdeps/sh/dl-machine.h: ...here.  New file.
+	* sysdeps/sh/sh4/dl-machine.h: Simply define KERNEL_MATH_EMULATION
+	and include generic SH version.
+	* sysdeps/sh/sh3/bits/endian.h: Move to...
+	* sysdeps/sh/bits/endian.h: ...here.  New file.
+	* sysdeps/sh/sh4/bits/endian.h: Removed.
+	* sysdeps/sh/sh3/bits/huge_val.h: Move to...
+	* sysdeps/sh/bits/huge_val.h: ...here.  New file.
+	* sysdeps/sh/sh4/bits/huge_val.h: Removed.
+
 	* include/libc-symbols.h (link_warning): Work around a change in
-	GAS which wrns about changing section attributes.
-	Proposed by Nich Clifton <nickc@redhat.com>.
+	GAS which warns about changing section attributes.
+	Proposed by Nick Clifton <nickc@redhat.com>.
 
 2000-06-12  H.J. Lu  <hjl@gnu.org>
 
@@ -34,6 +46,7 @@
 
 	* sysdeps/sh/Dist: New file.
 	* sysdeps/sh/Implies: New file.
+	* sysdeps/sh/elf/initfini.c: New file.
 	* sysdeps/sh/gmp-mparam.h: New file.
 	* sysdeps/sh/init-first.c: New file.
 	* sysdeps/sh/machine-gmon.h: New file.
@@ -47,10 +60,7 @@
 	* sysdeps/sh/sh3/bsd-_setjmp.S: New file.
 	* sysdeps/sh/sh3/bsd-setjmp.S: New file.
 	* sysdeps/sh/sh3/dl-machine.h: New file.
-	* sysdeps/sh/sh3/elf/initfini.c: New file.
-	* sysdeps/sh/sh3/elf/start.S: New file.
 	* sysdeps/sh/sh3/setjmp.S: New file.
-	* sysdeps/sh/sh3/sys/ucontext.h: New file.
 	* sysdeps/sh/sh4/__longjmp.S: New file.
 	* sysdeps/sh/sh4/bits/endian.h: New file.
 	* sysdeps/sh/sh4/bits/huge_val.h: New file.
@@ -58,8 +68,6 @@
 	* sysdeps/sh/sh4/bsd-_setjmp.S: New file.
 	* sysdeps/sh/sh4/bsd-setjmp.S: New file.
 	* sysdeps/sh/sh4/dl-machine.h: New file.
-	* sysdeps/sh/sh4/elf/initfini.c: New file.
-	* sysdeps/sh/sh4/elf/start.S: New file.
 	* sysdeps/sh/sh4/fpu/bits/fenv.h: New file.
 	* sysdeps/sh/sh4/fpu/bits/huge_val.h: New file.
 	* sysdeps/sh/sh4/fpu/bits/mathdef.h: New file.
@@ -75,7 +83,8 @@
 	* sysdeps/sh/sh4/fpu/ftestexcept.c: New file.
 	* sysdeps/sh/sh4/fpu/libm-test-ulps: New file.
 	* sysdeps/sh/sh4/setjmp.S: New file.
-	* sysdeps/sh/sh4/sys/ucontext.h: New file.
+	* sysdeps/sh/elf/start.S: New file.
+	* sysdeps/sh/sys/ucontext.h: New file.
 	* sysdeps/sh/strlen.S: New file.
 	* sysdeps/sh/sysdep.h: New file.
 	* sysdeps/unix/sh/sysdep.S: New file.
