@@ -214,7 +214,7 @@ mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
 mips*)		base_machine=mips
 		case "`uname -m`" in
 		IP22) machine=mips/mips3 ;;
-		*)    machine=mips/$machine ,,
+		*)    machine=mips/$machine ;;
 		esac ;;
 sparc | sparcv[67])
 		base_machine=sparc machine=sparc/sparc32 ;;

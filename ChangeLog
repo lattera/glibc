@@ -1,3 +1,9 @@
+1998-11-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in (mips): Fix typo (Replace ,, by ;;).
+
+	* libio/Versions: Clean up entries.
+
 1998-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Add optimizations for lrint
