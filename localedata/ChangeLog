@@ -1,6 +1,7 @@
 1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* SUPPORTED: Update greek entry.
+	Reported by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
 
 1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
