@@ -3365,14 +3365,37 @@ error while adding equivalent collating symbol"));
 		  collate->cursor = insp;
 	      else
 		{
-		  /* This is bad.  The symbol after which we have to
-                     insert does not exist.  */
-		  lr_error (ldfile, _("\
+		  struct symbol_t *symbp;
+
+		  if (find_entry (&collate->sym_table, arg->val.str.startmb,
+				  arg->val.str.lenmb, (void **) &symbp) == 0)
+		    {
+		      if (symbp->order->last != NULL
+			  || symbp->order->next != NULL)
+			collate->cursor = symbp->order;
+		      else
+			{
+			  /* This is a collating symbol but its position
+			     is not yet defined.  */
+			  lr_error (ldfile, _("\
+%s: order for collating symbol %.*s not yet defined"),
+				    "LC_COLLATE", (int) arg->val.str.lenmb,
+				    arg->val.str.startmb);
+			  collate->cursor = NULL;
+			  no_error = 0;
+			}
+		    }
+		  else
+		    {
+		      /* This is bad.  The symbol after which we have to
+			 insert does not exist.  */
+		      lr_error (ldfile, _("\
 %s: cannot reorder after %.*s: symbol not known"),
-			    "LC_COLLATE", (int) arg->val.str.lenmb,
-			    arg->val.str.startmb);
-		  collate->cursor = NULL;
-		  no_error = 0;
+				"LC_COLLATE", (int) arg->val.str.lenmb,
+				arg->val.str.startmb);
+		      collate->cursor = NULL;
+		      no_error = 0;
+		    }
 		}
 
 	      lr_ignore_rest (ldfile, no_error);
