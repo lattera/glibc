@@ -42,6 +42,8 @@ struct kernel_stat
 #define _HAVE_STAT___UNUSED5
 #define _HAVE_STAT___PAD1
 #define _HAVE_STAT___PAD2
+#define _HAVE_STAT_NSEC
 #define _HAVE_STAT64___UNUSED4
 #define _HAVE_STAT64___UNUSED5
 #define _HAVE_STAT64___PAD2
+#define _HAVE_STAT64_NSEC

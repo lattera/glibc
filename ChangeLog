@@ -1,3 +1,8 @@
+2004-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/kernel_stat.h: Define
+	_HAVE_STAT_NSEC and _HAVE_STAT64_NSEC.  Patch by Anton Blanchard.
+
 2004-02-02  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (check_matching): Add P_MATCH_FIRST parameter.
