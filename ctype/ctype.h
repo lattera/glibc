@@ -151,13 +151,13 @@ __exctype (_tolower);
 #if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
  && defined __USE_EXTERN_INLINES
 extern __inline int
-tolower (int __c)
+tolower (int __c) __THROW
 {
   return __c >= -128 && __c < 256 ? __ctype_tolower[__c] : __c;
 }
 
 extern __inline int
-toupper (int __c)
+toupper (int __c) __THROW
 {
   return __c >= -128 && __c < 256 ? __ctype_toupper[__c] : __c;
 }

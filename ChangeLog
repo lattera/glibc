@@ -1,3 +1,8 @@
+1999-03-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* ctype/ctype.h (tolower, toupper): Add __THROW declaration to
+	inline functions.  Closes PR libc/1049.
+
 1999-03-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* timezone/README: Update from tzdata1999c and tzcode1999c.
