@@ -144,10 +144,9 @@ vpath %.sym $(sysdirs)
 before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
 
-# When we have no deps pass doing it, then make sure the subdirectory
-# for object files gets created.
-ifdef no_deps
+# Make sure the subdirectory for object files gets created.
 ifdef objpfx
+ifeq (,$(wildcard $(objpfx).))
 before-compile += $(objpfx).
 $(objpfx).:
 	$(make-target-directory)
@@ -166,20 +165,25 @@ ifdef before-compile
 $(before-compile):
 endif
 
+ifndef subdir
 # If a makefile needs to do something conditional on something that
 # can only be figured out from headers, write a FOO.make.c input
 # file that uses cpp contructs and contains @@@ LINE @@@ for each LINE
 # to emit in the generated makefile, and use -include $(common-objpfx)FOO.make.
+#
+# We only generate these in the top-level makefile, to avoid any weirdness
+# from subdir-specific makefile tweaks creeping in on an update.
 $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(before-compile)
 	rm -f $@T $@.dT
 	(echo '# Generated from $*.make.c by Makerules.'; \
-	 SUNPRO_DEPENDENCIES='$@.dT $$(common-objpfx)$*.make' \
 	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
+	       -MD -MT '$$(common-objpfx)$*.make' -MF $@.dT \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \
 	 sed $(sed-remove-objpfx) $(sed-remove-dotdot) $@.dT; \
 	 rm -f $@.dT) > $@T
 	mv -f $@T $@
+endif
 
 ifdef subdir
 sed-remove-dotdot := -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g'
@@ -193,15 +197,6 @@ endif
 # later directory would be chosen over a .c file in an earlier directory,
 # which does not preserve the desired sysdeps ordering behavior.
 
-# When making the list of .d files to include, we can't know which ones
-# have source in .s files, and thus do not in fact need a .d file.
-# So we must define rules to make .d files for .s files.
-define make-dummy-dep
-$(addprefix ln $(common-objpfx)dummy.d ,$(filter-out $(wildcard $@),$@))
-endef
-$(common-objpfx)dummy.d:
-	echo '# .s files cannot contain includes, so they need no deps.' > $@
-
 # It matters that this set of rules, for compiling from sources in
 # the current directory (the $srcdir/$subdir) come before the
 # generated sysdep rules in included from sysd-rules below.  When
@@ -212,21 +207,18 @@ $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
 # Omit the objpfx rules when building in the source tree, because
 # objpfx is empty and so these rules just override the ones above.
@@ -238,21 +230,18 @@ $(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
-$(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
 
 # System-dependent makefiles can put in `inhibit-sysdep-asm' wildcard
@@ -301,26 +290,6 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	   done; \
-	   $(open-check-inhibit-asm) \
-	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
-		\$$(make-dummy-dep)";			       \
-	   echo "\$$(objpfx)rtld-%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
-		\$$(make-dummy-dep)";			       \
-	   echo "\$$(objpfx)ptw-%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
-		\$$(make-dummy-dep)";			       \
-	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
-		\$$(+make-deps)";					      \
-	   echo "\$$(objpfx)rtld-%.d: $$dir/%.S \$$(before-compile); \
-		\$$(+make-deps)";					      \
-	   echo "\$$(objpfx)ptw-%.d: $$dir/%.S \$$(before-compile); \
-		\$$(+make-deps)";					      \
-	   $(close-check-inhibit-asm)	\
-	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
-		\$$(+make-deps)";					      \
-	   echo "\$$(objpfx)rtld-%.d: $$dir/%.c \$$(before-compile); \
-		\$$(+make-deps)";					      \
-	   echo "\$$(objpfx)ptw-%.d: $$dir/%.c \$$(before-compile); \
-		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
 	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \
 	 done;								      \
@@ -383,16 +352,11 @@ endif # avoid-generated
 endif # $(versioning) = yes
 endif # sysd-sorted-done
 
-
-ifndef compile-command.S
-compile-command.S = $(compile.S) $(OUTPUT_OPTION)
-endif
-ifndef compile-command.s
-compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION)
-endif
-ifndef compile-command.c
-compile-command.c = $(compile.c) $(OUTPUT_OPTION)
-endif
+# Generate .dT files as we compile.
+compile-mkdep-flags = -MD -MP -MF $@.dt
+compile-command.S = $(compile.S) $(OUTPUT_OPTION) $(compile-mkdep-flags)
+compile-command.s = $(COMPILE.s) $< $(OUTPUT_OPTION) $(compile-mkdep-flags)
+compile-command.c = $(compile.c) $(OUTPUT_OPTION) $(compile-mkdep-flags)
 
 # GCC can grok options after the file name, and it looks nicer that way.
 compile.c = $(CC) $< -c $(CFLAGS) $(CPPFLAGS)
@@ -401,15 +365,6 @@ compile.S = $(CC) $< -c $(CPPFLAGS) $(S-CPPFLAGS) \
 COMPILE.S = $(CC) -c $(CPPFLAGS) $(S-CPPFLAGS) \
 		  $(ASFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
-
-# If we want to generate MD5 checksums for the sources do this now.
-ifeq ($(md5),yes)
-generate-md5 = ; rm -f $(@:.d=.md5); \
-$(CC) -E $< $(CFLAGS) $(CPPFLAGS) $($(patsubst .%,%,$(suffix $(<F)))-CPPFLAGS) | \
-sed '/^\#/d;/^[[:space:]]*$$/d' | md5sum > $(@:.d=.md5)
-else
-generate-md5 =
-endif
 
 # We need this for the output to go in the right place.  It will default to
 # empty if make was configured to work with a cc that can't grok -c and -o
@@ -420,6 +375,7 @@ OUTPUT_OPTION = -o $@
 # the dependency run for C sources.  But having it for assembly sources can
 # get the wrong predefines.
 S-CPPFLAGS = -DASSEMBLER $(asm-CPPFLAGS)
+
 define +make-deps
 $(make-target-directory)
 $(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
@@ -428,6 +384,7 @@ $(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
 $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@ $(generate-md5)
 endef
+
 ifneq (,$(objpfx))
 # Continuation lines here are dangerous because they introduce spaces!
 define sed-remove-objpfx
@@ -689,6 +646,15 @@ endif
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
 				      $(+depfiles)))
+all-dt-files := $(foreach o,$(object-suffixes-for-libc),$(+depfiles:.d=$o.dt))
++depfiles := $(patsubst %.dt,%.d,$(wildcard $(all-dt-files))) \
+	     $(wildcard $(all-dt-files:.dt=.d))
+
+# This is a funny rule in that it removes its input file.
+%.d: %.dt
+	@sed $(sed-remove-objpfx) $< > $(@:.d=.T) && \
+	 mv -f $(@:.d=.T) $@ && \
+	 rm -f $<
 
 # Avoid the .h.d files for any .sym files whose .h files don't exist yet.
 # They will be generated when they're needed, and trying too early won't work.
@@ -1368,8 +1334,8 @@ endef
 
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
-	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
-	-rm -f $(objpfx)rtld-*.d
+	-rm -f $(addprefix $(objpfx),$(generated))
+	-rm -f $(objpfx)*.d $(objpfx)*.dt
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(objpfx)distinfo
