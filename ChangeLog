@@ -1,3 +1,9 @@
+2000-03-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): For MACH_SEND_INTERRUPTED
+	and other errors that indicate a pseudo-receive happened, grok through
+	the message buffer for port rights that need references fixed up.
+
 2000-03-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Added madvise and mincore.
@@ -26,7 +32,7 @@
 	* nis/nss_nis/nis-rpc.c: Likewise.
 	* nis/nss_nis/nis-service.c: Likewise.
 	* nis/ypclnt.c: Likewise.
-	
+
 2000-03-16  Andreas Jaeger  <aj@suse.de>
 
 	* manual/Makefile: MAKEINFO is set to `:' from configure if it
