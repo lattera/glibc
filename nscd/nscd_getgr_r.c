@@ -81,6 +81,9 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       return -1;
     }
 
+  /* No value found so far.  */
+  *result = NULL;
+
   req.version = NSCD_VERSION;
   req.type = type;
   req.key_len = keylen;
