@@ -1,3 +1,7 @@
+2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Examples/ex6.c: Test return value of pthread_join.
+
 2000-06-11  Geoff Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/pspinlock.c (__pthread_spin_lock): Implement.
