@@ -1,3 +1,7 @@
+2001-03-05  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/msort.c (qsort): Don't use alloca in a function call.
+
 2001-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/stat.h (__S_TYPEISMQ, __S_TYPEISSEM,
