@@ -61,9 +61,23 @@ __BEGIN_DECLS
    always available.  If not, they may be available sometimes.
    The current values can be obtained with `sysconf'.
 
-   _POSIX_JOB_CONTROL	Job control is supported.
-   _POSIX_SAVED_IDS	Processes have a saved set-user-ID
-   			and a saved set-group-ID.
+   _POSIX_JOB_CONTROL		Job control is supported.
+   _POSIX_SAVED_IDS		Processes have a saved set-user-ID
+   				and a saved set-group-ID.
+   _POSIX_REALTIME_SIGNALS	Real-time, queued signals are supported.
+   _POSIX_PRIORITY_SCHEDULING	Priority scheduling is supported.
+   _POSIX_TIMERS		POSIX.4 clocks and timers are supported.
+   _POSIX_ASYNCHRONOUS_IO	Asynchronous I/O is supported.
+   _POSIX_PRIORITIZED_IO	Prioritized asynchronous I/O is supported.
+   _POSIX_SYNCHRONIZED_IO	Synchronizing file data is supported.
+   _POSIX_FSYNC			The fsync function is present.
+   _POSIX_MAPPED_FILES		Mapping of files to memory is supported.
+   _POSIX_MEMLOCK		Locking of all memory is supported.
+   _POSIX_MEMLOCK_RANGE		Locking of ranges of memory is supported.
+   _POSIX_MEMORY_PROTECTION	Setting of memory protections is supported.
+   _POSIX_MESSAGE_PASSING	POSIX.4 message queues are supported.
+   _POSIX_SEMAPHORES		POSIX.4 counting semaphores are supported.
+   _POSIX_SHARED_MEMORY_OBJECTS	POSIX.4 shared memory objects are supported.
 
    If any of these symbols is defined as -1, the corresponding option is not
    true for any file.  If any is defined as other than -1, the corresponding
@@ -731,6 +745,12 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
        __result; })
 
 #endif
+
+#ifdef __USE_POSIX
+/* Synchronize at least the data part of a file with the underlying
+   media.  */
+extern int fdatasync __P ((int __fildes));
+#endif /* Use POSIX */
 
 __END_DECLS
 

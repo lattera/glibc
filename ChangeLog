@@ -1,3 +1,80 @@
+Sun Apr 28 14:14:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/Makefile: New file.
+
+Wed Apr 24 17:35:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h, socket/sys/socket.h: Move to
+	sysdeps/generic/netinet/in.h, sysdeps/generic/sys/socket.h.
+	* netinet/in.h, sys/socket.h: Remove file.
+
+	* misc/Makefile (routines): Add fdatasync.
+
+	* posix/Makefile (headers): Add sched.h.
+	(routines): Add nanosleep, sched_setp, sched_getp, sched_sets,
+	sched_gets, sched_yield, sched_primax, sched_primin, sched_rr_gi.
+
+	* posix/getconf.c (vars): Add entries for _POSIX_REALTIME_SIGNALS,
+	_POSIX_PRIORITY_SCHEDULING, _POSIX_TIMERS, _POSIX_ASYNCHRONOUS_IO,
+	_POSIX_PRIORITIZED_IO, _POSIX_SYNCHRONIZED_IO, _POSIX_FSYNC,
+	_POSIX_MAPPED_FILES, _POSIX_MEMLOCK, _POSIX_MEMLOCK_RANGE,
+	_POSIX_MEMORY_PROTECTION, _POSIX_MESSAGE_PASSING,
+	_POSIX_SEMAPHORES, _POSIX_SHARED_MEMORY_OBJECTS.
+
+	* posix/sched.h: New file.  Header for POSIX scheduling interface.
+
+	* posix/unistd.h: Describe options from POSIX.4.
+	Add declaration of fdatasync.
+
+	* sysdeps/generic/confname.h: Add definition for
+	 _SC_REALTIME_SIGNALS, _SC_PRIORITY_SCHEDULING, _SC_TIMERS,
+	_SC_ASYNCHRONOUS_IO, _SC_PRIORITIZED_IO, _SC_SYNCHRONIZED_IO,
+	_SC_FSYNC, _SC_MAPPED_FILES, _SC_MEMLOCK, _SC_MEMLOCK_RANGE,
+	_SC_MEMORY_PROTECTION, _SC_MESSAGE_PASSING,
+	_SC_SEMAPHORES, _SC_SHARED_MEMORY_OBJECTS.
+
+	* sysdeps/generic/fdatasync.c: New file.  Default implementation
+	simply uses fsync.
+
+	* sysdeps/generic/netinit/in.h: Moved to here from inet/netinet/in.h.
+
+	* sysdeps/generic/schedbits.h: New file.  System dependent
+	defintion for POSIX.4 scheduling interface.
+
+	* sysdeps/generic/sys/socket.h: Moved to here from socket/sys/socket.h.
+
+	* sysdeps/stub/nanosleep.c, sysdeps/stub/sched_getp.c,
+	sysdeps/stub/sched_gets.c, sysdeps/stub/sched_primax.c,
+	sysdeps/stub/sched_primin.c, sysdeps/stub/sched_rr_gi.c,
+	sysdeps/stub/sched_setp.c, sysdeps/stub/sched_sets.c,
+	sysdeps/stub/sched_yield.c: New file:  Stub implementation
+	for systems missing these POSIX.4 system calls.
+
+	* sysdeps/unix/sysv/linux/gnu/types.h,
+	sysdeps/unix/sysv/linux/ioctls.h: Use kernel header for
+	data type definitions.
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: New file.  Linux
+	specific version.
+
+	* sysdeps/unix/sysv/linux/posix_opt.h: New file.  Define POSIX
+	options applicable for Linux.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add definitions for
+	fdatasync, nanosleep, sched_setparam, sched_getparam,
+	sched_setscheduler, sched_getscheduler, sched_yield,
+	sched_get_priority_max, sched_get_priority_min, and
+	sched_rr_get_interval.
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Add handling of POSIX.4
+	options.
+
+	* sysdeps/unix/sysv/linux/termbits.h: Use kernel headers.
+
+	* time/sys/time.h: Remove definition of `struct timespec'.
+
+	* time/time.h (struct timespec): Move definition to here.
+
 Fri Apr 26 01:55:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* malloc/mcheck.c (mabort): Use __libc_fatal only #ifdef _LIBC.
@@ -23,7 +100,7 @@ Wed Apr 24 00:22:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 Tue Apr 23 21:09:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (signal_allowed): For SIGIO/SIGURG, add a new
- 	variable, LUCKY, to use instead of setting D to -1 (which fucks
+ 	variable, LUCKY, to use instead of setting D to -1 (which fouls
  	things up).
 
 Tue Apr 23 15:56:56 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>

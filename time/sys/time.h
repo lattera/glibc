@@ -33,14 +33,6 @@ struct timeval
     int tv_usec;		/* Microseconds.  */
   };
 
-/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
-   has nanoseconds instead of microseconds.  */
-struct timespec
-  {
-    long int ts_sec;		/* Seconds.  */
-    long int ts_nsec;		/* Nanoseconds.  */
-  };
-
 /* Macros for converting between `struct timeval' and `struct timespec'.  */
 #define TIMEVAL_TO_TIMESPEC(tv, ts) {                                   \
         (ts)->ts_sec = (tv)->tv_sec;                                    \

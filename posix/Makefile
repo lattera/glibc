@@ -21,10 +21,11 @@
 #
 subdir	:= posix
 
-headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	\
-	   glob.h regex.h wordexp.h fnmatch.h gnu/types.h getopt.h	\
-	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h	\
-	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h
+headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
+	   glob.h regex.h wordexp.h fnmatch.h gnu/types.h getopt.h	      \
+	   posix1_lim.h posix2_lim.h posix_opt.h local_lim.h tar.h	      \
+	   utsnamelen.h confname.h waitflags.h waitstatus.h sys/unistd.h      \
+	   sched.h
 
 distribute := confstr.h
 
@@ -32,7 +33,7 @@ routines :=								      \
 	uname								      \
 	times								      \
 	wait waitpid wait3 wait4					      \
-	alarm sleep pause						      \
+	alarm sleep pause nanosleep					      \
 	fork vfork _exit	      					      \
 	execve fexecve execv execle execl execvp execlp			      \
 	getpid getppid							      \
@@ -42,7 +43,10 @@ routines :=								      \
 	pathconf sysconf fpathconf					      \
 	glob fnmatch regex						      \
 	confstr								      \
-	getopt getopt1
+	getopt getopt1							      \
+	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
+	sched_primin sched_rr_gi
+
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm
 others		:= getconf

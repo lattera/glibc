@@ -36,7 +36,7 @@ routines := brk sbrk sstk ioctl \
 	    getdtsz \
 	    gethostname sethostname getdomain setdomain \
 	    select \
-	    acct chroot fsync sync reboot \
+	    acct chroot fsync sync fdatasync reboot \
 	    gethostid sethostid \
 	    revoke vhangup \
 	    swapon mktemp mkstemp \

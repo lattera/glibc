@@ -19,6 +19,9 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_GNU_TYPES_H
 #define	_GNU_TYPES_H	1
 
+/* Get actual type definitions for architecture from kernel headers.  */
+#include <linux/posix_types.h>
+
 /* Convenience types.  */
 typedef unsigned char __u_char;
 typedef unsigned short __u_short;
@@ -38,15 +41,15 @@ typedef struct
   __u_long val[2];
 } __u_quad_t;
 #endif
-typedef unsigned short int __dev_t;	/* Type of device numbers.  */
-typedef unsigned short int __uid_t;	/* Type of user identifications.  */
-typedef unsigned short int __gid_t;	/* Type of group identifications.  */
-typedef unsigned long int __ino_t;	/* Type of file serial numbers.  */
-typedef unsigned short int __mode_t;	/* Type of file attribute bitmasks.  */
-typedef unsigned short int __nlink_t; 	/* Type of file link counts.  */
-typedef long int __off_t;		/* Type of file sizes and offsets.  */
-typedef int __pid_t;			/* Type of process identifications.  */
-typedef int __ssize_t;			/* Type of a byte count, or error.  */
+typedef __kernel_dev_t __dev_t;		/* Type of device numbers.  */
+typedef __kernel_uid_t __uid_t;		/* Type of user identifications.  */
+typedef __kernel_gid_t __gid_t;		/* Type of group identifications.  */
+typedef __kernel_ino_t __ino_t;		/* Type of file serial numbers.  */
+typedef __kernel_mode_t __mode_t;	/* Type of file attribute bitmasks.  */
+typedef __kernel_nlink_t __nlink_t; 	/* Type of file link counts.  */
+typedef __kernel_off_t __off_t;		/* Type of file sizes and offsets.  */
+typedef __kernel_pid_t __pid_t;		/* Type of process identifications.  */
+typedef __kernel_ssize_t __ssize_t;	/* Type of a byte count, or error.  */
 #ifdef __GNUC__
 typedef long long int __fsid_t;		/* Type of file system IDs.  */
 #else
@@ -56,33 +59,12 @@ typedef struct {			/* Type of file system IDs.  */
 #endif
 
 /* Everythin' else.  */
-typedef int __daddr_t;			/* The type of a disk address.  */
-typedef char *__caddr_t;
-typedef long int __time_t;
+typedef __kernel_daddr_t __daddr_t;	/* The type of a disk address.  */
+typedef __kernel_caddr_t __caddr_t;
+typedef __kernel_time_t __time_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 
 /* fd_set for select.  */
-
-/* Number of descriptors that can fit in an `fd_set'.  */
-#define	__FD_SETSIZE	256
-
-/* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
-#define	__NFDBITS	(sizeof (unsigned long int) * 8)
-#define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	(1 << ((d) % __NFDBITS))
-
-typedef struct
-  {
-    /* Some braindead old software uses this member name.  */
-    unsigned long int fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
-  } __fd_set;
-
-/* This line MUST be split!  Otherwise m4 will not change it.  */
-#define	__FD_ZERO(set)	\
-  ((void) memset ((__ptr_t) (set), 0, sizeof (fd_set)))
-#define	__FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
-#define	__FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
-#define	__FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
-
+typedef __kernel_fd_set __fd_set;
 
 #endif /* gnu/types.h */

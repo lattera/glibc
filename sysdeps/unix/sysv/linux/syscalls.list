@@ -1,6 +1,7 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 adjtimex	adjtime	adjtimex	1	__adjtimex
+fdatasync	-	fdatasync	1	fdatasync
 fork		-	fork		0	__fork		fork
 getegid		-	getegid		0	__getegid	getegid
 geteuid		-	geteuid		0	__geteuid	geteuid
@@ -14,11 +15,20 @@ mlockall	-	mlockall	1	__mlockall	mlockall
 mount		-	mount		5	__mount	mount
 munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
+nanosleep	-	nanosleep	2	nanosleep
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe	pipe
 reboot		-	reboot		3	reboot
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
+sched_setp	-	sched_setparam	2	__sched_setparam	sched_setparam
+sched_getp	-	sched_getparam	2	__sched_getparam	sched_getparam
+sched_sets	-	sched_setscheduler	3	__sched_setscheduler	sched_setscheduler
+sched_gets	-	sched_getscheduler	1	__sched_getscheduler	sched_getscheduler
+sched_yield	-	sched_yield	0	__sched_yield	sched_yield
+sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
+sched_primin	-	sched_get_priority_min	1	__sched_get_priority_min	sched_get_priority_min
+sched_rr_gi	-	sched_rr_get_interval	2	__sched_rr_get_interval	sched_rr_get_interval
 setpgid		-	setpgid		2	setpgid
 sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask

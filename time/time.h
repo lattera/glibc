@@ -217,6 +217,21 @@ extern int dysize __P ((int __year));
 #endif
 
 
+/* POSIX.4 structure for a time value.  This is like a `struct timeval' but
+   has nanoseconds instead of microseconds.  */
+struct timespec
+  {
+    long int ts_sec;		/* Seconds.  */
+    long int ts_nsec;		/* Nanoseconds.  */
+  };
+
+#ifdef __USE_POSIX
+/* Pause execution for a number of nanoseconds.  */
+extern int nanosleep __P ((__const struct timespec *__requested_time,
+			   struct timespec *__remaining));
+#endif
+
+
 __END_DECLS
 
 #endif /* <time.h> included.  */
