@@ -379,6 +379,15 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd = get_cached_stack (&size, &mem);
       if (pd == NULL)
 	{
+	  /* To avoid aliasing effects on a larger scale then pages we
+	     adjust the allocated stack size if necessary.  This way
+	     allocations directly following each other will not have
+	     aliasing problems.  */
+#if MULTI_PAGE_ALIASING != 0
+	  if ((size % MULTI_PAGE_ALIASING) == 0)
+	    size += pagesize_m1 + 1;
+#endif
+
 	  mem = mmap (NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC,
 		      MAP_PRIVATE | MAP_ANONYMOUS | ARCH_MAP_FLAGS, -1, 0);
 
