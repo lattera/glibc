@@ -709,9 +709,9 @@ $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
 	while read lib number setname; do \
 	  case $$number in \
 	    [0-9]*) echo "$$lib.so-version=.$$number"; \
-		    echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
+		    echo "all-sonames+=$$lib=$$lib.so\$$($$lib.so-version)";;\
 	    *)	    echo "$$lib.so-version=$$number"; \
-		    echo "all-sonames+=\$$($$lib.so-version)";;\
+		    echo "all-sonames+=$$lib=\$$($$lib.so-version)";;\
 	  esac; \
 	done < $< > $@T; exit 0
 	mv -f $@T $@
@@ -735,10 +735,17 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	 echo; \
 	 (libs='$(all-sonames)';\
 	  for l in $$libs; do \
-	    upname=`echo $$l | sed 's/[.]so.*//' | \
+	    name=`echo $$l | sed 's/.*=//'`; \
+	    upname=`echo $$l | sed 's/=.*//' | \
 		    tr 'abcdefghijklmnopqrstuvwxyz-' \
 		       'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`; \
-	    echo "#define	$${upname}_SO	\"$$l\""; \
+	    upname2=`echo $$name | sed 's/[.]so.*//' | \
+		     tr 'abcdefghijklmnopqrstuvwxyz-' \
+		        'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`; \
+	    echo "#define	$${upname}_SO	\"$$name\""; \
+	    if test $$upname != $$upname2; then \
+	      echo "#define	$${upname2}_SO	\"$$name\""; \
+	    fi; \
 	  done;) | sort; \
 	 echo; \
 	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}

@@ -340,11 +340,9 @@ rresvport_af(alport, family)
 	ss.__ss_family = family;
 
 	for (;;) {
-		*sport = htons(i);
-		if (bind(s, (struct sockaddr *)&ss, len) >= 0){
-			*alport = i;
+		*sport = htons((uint16_t) *alport);
+		if (bind(s, (struct sockaddr *)&ss, len) >= 0)
 			return s;
-		}
 		if (errno != EADDRINUSE) {
 			(void)__close(s);
 			return -1;

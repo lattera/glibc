@@ -1,3 +1,14 @@
+2000-05-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/rcmd.c (rresvport_af): Use correct port number.
+
+2000-05-26  Andreas Schwab  <schwab@suse.de>
+
+	* Makeconfig ($(common-objpfx)soversions.mk): Prepend `$lib=' to
+	entries in all-sonames.
+	($(common-objpfx)gnu/lib-names.h): Use it for the CPP symbol,
+	preserving the old name if different for compatibility.
+
 2000-05-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-spawn.
