@@ -1,3 +1,8 @@
+2000-01-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_LARGEFILE): Add
+	definition from 2.3.36.
+
 2000-01-04  Andreas Jaeger  <aj@suse.de>
 
 	* nss/nss_db/dummy-db.h (struct db24): Add missing field flags.
