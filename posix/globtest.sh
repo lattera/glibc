@@ -30,6 +30,7 @@ testout=$TMPDIR/globtest-out
 
 trap 'chmod 777 $testdir/noread; rm -fr $testdir $testout' 1 2 3 15
 
+test -d $testdir/noread && chmod 777 $testdir/noread
 rm -fr $testdir 2>/dev/null
 mkdir $testdir
 echo 1 > $testdir/file1
@@ -44,6 +45,7 @@ test -d $testdir/noread || mkdir $testdir/noread
 chmod a-r $testdir/noread
 echo 1_1 > $testdir/dir1/file1_1
 echo 1_2 > $testdir/dir1/file1_2
+ln -fs dir1 $testdir/link1
 
 # Run some tests.
 result=0
@@ -61,6 +63,7 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir2'
 `file1'
 `file2'
+`link1'
 `noread'
 `~file4'
 EOF
@@ -81,6 +84,7 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir2'
 `file1'
 `file2'
+`link1'
 `noread'
 `~file4'
 EOF
@@ -101,6 +105,7 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir2/'
 `file1'
 `file2'
+`link1/'
 `noread/'
 `~file4'
 EOF
@@ -124,6 +129,7 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir2'
 `file1'
 `file2'
+`link1'
 `noread'
 `~file4'
 EOF
@@ -232,6 +238,8 @@ sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "Subdirs test failed" >> $logfile
@@ -258,6 +266,7 @@ ${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
+`link1/file1_1'
 EOF
 if test $failed -ne 0; then
   echo "Wildcard subdir test failed" >> $logfile
@@ -272,6 +281,8 @@ sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "Wildcard2 subdir test failed" >> $logfile
@@ -284,6 +295,7 @@ ${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
+`link1/file1_1'
 EOF
 if test $failed -ne 0; then
   echo "Wildcard3 subdir test failed" >> $logfile
@@ -322,6 +334,8 @@ sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "Wildcard6 subdir test failed" >> $logfile
@@ -336,6 +350,8 @@ sort > $testout
 cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "Brackets test failed" >> $logfile
@@ -544,6 +560,8 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `file1'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "GLOB_APPEND test failed" >> $logfile
@@ -560,6 +578,8 @@ cat <<"EOF" | cmp - $testout >> $logfile || failed=1
 `dir1/file1_1'
 `dir1/file1_2'
 `file1'
+`link1/file1_1'
+`link1/file1_2'
 EOF
 if test $failed -ne 0; then
   echo "GLOB_APPEND2 test failed" >> $logfile

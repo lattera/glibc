@@ -1,3 +1,9 @@
+2003-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c [HAVE_D_TYPE] (glob_in_dir): Also allow
+	DT_LNK entries if GLOB_ONLYDIR is set [PR libc/5043].
+	* posix/globtest.sh: Adjust for this change.
+
 2003-06-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c (netlink_open): Call getsockname
