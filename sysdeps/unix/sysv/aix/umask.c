@@ -16,17 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <assert.h>
 #include <sys/stat.h>
 
-#define STX_NORMAL      0x00
-
-
-extern int statx (const char *pathname, struct stat *st, int len, int cmd);
-
-int
-__xstat (int ver, const char *pathname, struct stat *st)
+mode_t
+__umask (mask)
+     mode_t mask;
 {
-  assert (ver == 0);
-  return statx (pathname, st, sizeof (*st), STX_NORMAL);
+  return umask (mask);
 }

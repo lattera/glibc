@@ -16,17 +16,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <assert.h>
-#include <sys/stat.h>
+#include <stdarg.h>
+#include <sys/resource.h>
 
-#define STX_NORMAL      0x00
-
-
-extern int statx (const char *pathname, struct stat *st, int len, int cmd);
-
-int
-__xstat (int ver, const char *pathname, struct stat *st)
+long int
+__ulimit (int cmd, ...)
 {
-  assert (ver == 0);
-  return statx (pathname, st, sizeof (*st), STX_NORMAL);
+  va_list va;
+  long int arg;
+  long int res;
+
+  va_start (va, cmd);
+  arg = va_arg (va, long int);
+
+  res = ulimit (cmd, arg);
+
+  va_end (va);
+
+  return res;
 }

@@ -1,3 +1,57 @@
+2000-04-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/xstat64.c: Define STX_NORMAL and STX_64.
+	* sysdeps/unix/sysv/aix/xstat.c: Define STX_NORMAL.
+	* sysdeps/unix/sysv/aix/sys/param.h: Define NGROUPS.
+	* sysdeps/unix/sysv/aix/setreuid.c: Define ID_EFFECTIVE and ID_REAL.
+	* sysdeps/unix/sysv/aix/setregid.c: Likewise.
+	* sysdeps/unix/sysv/aix/setuid.c: Define ID_REAL.
+	* sysdeps/unix/sysv/aix/setgid.c: Likewise.
+	* sysdeps/unix/sysv/aix/seteuid.c: Define ID_EFFECTIVE.
+	* sysdeps/unix/sysv/aix/setegid.c: Likewise.
+	* sysdeps/unix/sysv/aix/sbrk.c: Update parameter type.
+	* sysdeps/unix/sysv/aix/nanosleep.c (struct timestruc_t): Define
+	it here.
+	* sysdeps/unix/sysv/aix/msync.c: New file.
+	* sysdeps/unix/sysv/aix/msgsnd.c: New file.
+	* sysdeps/unix/sysv/aix/net/if.h: New file.
+	* sysdeps/unix/sysv/aix/pipe.c: New file.
+	* sysdeps/unix/sysv/aix/poll.c: New file.
+	* sysdeps/unix/sysv/aix/rename.c: New file.
+	* sysdeps/unix/sysv/aix/rmdir.c: New file.
+	* sysdeps/unix/sysv/aix/select.c: New file.
+	* sysdeps/unix/sysv/aix/semctl.c: New file.
+	* sysdeps/unix/sysv/aix/semget.c: New file.
+	* sysdeps/unix/sysv/aix/semop.c: New file.
+	* sysdeps/unix/sysv/aix/sendto.c: New file.
+	* sysdeps/unix/sysv/aix/setgroups.c: New file.
+	* sysdeps/unix/sysv/aix/setpgid.c: New file.
+	* sysdeps/unix/sysv/aix/setpgrp.c: New file.
+	* sysdeps/unix/sysv/aix/setpriority.c: New file.
+	* sysdeps/unix/sysv/aix/setrlimit.c: New file.
+	* sysdeps/unix/sysv/aix/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/aix/setsid.c: New file.
+	* sysdeps/unix/sysv/aix/setsockopt.c: New file.
+	* sysdeps/unix/sysv/aix/shmat.c: New file.
+	* sysdeps/unix/sysv/aix/shmctl.c: New file.
+	* sysdeps/unix/sysv/aix/shmdt.c: New file.
+	* sysdeps/unix/sysv/aix/shmget.c: New file.
+	* sysdeps/unix/sysv/aix/sigaltstack.c: New file.
+	* sysdeps/unix/sysv/aix/sigstack.c: New file.
+	* sysdeps/unix/sysv/aix/socket.c: New file.
+	* sysdeps/unix/sysv/aix/socketpair.c: New file.
+	* sysdeps/unix/sysv/aix/speed.c: New file.
+	* sysdeps/unix/sysv/aix/symlink.c: New file.
+	* sysdeps/unix/sysv/aix/sync.c: New file.
+	* sysdeps/unix/sysv/aix/tcgetattr.c: New file.
+	* sysdeps/unix/sysv/aix/tcsetattr.c: New file.
+	* sysdeps/unix/sysv/aix/times.c: New file.
+	* sysdeps/unix/sysv/aix/ulimit.c: New file.
+	* sysdeps/unix/sysv/aix/umask.c: New file.
+	* sysdeps/unix/sysv/aix/unlink.c: New file.
+	* sysdeps/unix/sysv/aix/ustat.c: New file.
+	* sysdeps/unix/sysv/aix/utimes.c: New file.
+
 2000-04-18  Andreas Jaeger  <aj@suse.de>
 
 	* manual/startup.texi (Environment Access): Fix putenv prototype
