@@ -17,7 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifdef USE_TLS
 /* Type used for the representation of TLS information in the GOT.  */
 typedef struct
 {
@@ -46,5 +45,3 @@ __tls_get_addr (tls_index *ti)
 /* Prepare using the definition of __tls_get_addr in the generic
    version of this file.  */
 #define __tls_get_addr __attribute__ ((__regparm__ (1))) ___tls_get_addr
-
-#endif	/* use TLS */

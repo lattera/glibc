@@ -1,3 +1,7 @@
+2002-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-tls.h: No need for #ifdef USE_TLS.
+
 2002-02-07  Andreas Schwab  <schwab@suse.de>
 
 	* configure.in: Fix check for -zcombreloc.
