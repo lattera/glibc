@@ -1,6 +1,8 @@
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Fix handling of I flag.
+	* stdio-common/tiformat.c (sprint_ints): Add tests for I flag.
+	* libio/tst_wprintf.c (main): Add test for I flag.
 
 	* iconv/gconv_trans.c: Implement handling if translit_ignore.
 	* locale/langinfo.h: Add entries for translit_ignore information.
