@@ -7,6 +7,8 @@
 	* nscd/nscd_getgr_r.c: Mark local functions as internal.
 	* nscd/nscd_gethst_r.c: Likewise.
 
+	* elf/dl-load.c: Use alloca, not __alloca.
+
 	* sysdeps/unix/sysv/linux/reboot.c: Make sure first parameter is
 	correctly passed to the kernel even on 64bit platforms.
 	Patch by Bruce Elliott <bde@nwlink.com>.

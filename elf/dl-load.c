@@ -1013,7 +1013,7 @@ open_path (const char *name, size_t namelen, int preloaded,
       return -1;
     }
 
-  buf = __alloca (max_dirnamelen + max_capstrlen + namelen);
+  buf = alloca (max_dirnamelen + max_capstrlen + namelen);
   do
     {
       struct r_search_path_elem *this_dir = *dirs;
