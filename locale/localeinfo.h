@@ -23,12 +23,10 @@
 #include <stddef.h>
 #include <langinfo.h>
 #include <limits.h>
+#include <locale.h>
 #include <time.h>
 #include <stdint.h>
 #include <sys/types.h>
-
-/* This has to be changed whenever a new locale is defined.  */
-#define __LC_LAST	13
 
 #include <intl/loadinfo.h>	/* For loaded_l10nfile definition.  */
 

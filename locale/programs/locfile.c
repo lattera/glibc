@@ -37,7 +37,7 @@
 
 
 int
-locfile_read (struct localedef_t *result, struct charmap_t *charmap)
+locfile_read (struct localedef_t *result, const struct charmap_t *charmap)
 {
   const char *filename = result->name;
   const char *repertoire_name = result->repertoire_name;
@@ -97,7 +97,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
     /* Parse locale definition file and store result in RESULT.  */
   while (1)
     {
-      struct token *now = lr_token (ldfile, charmap, NULL, verbose);
+      struct token *now = lr_token (ldfile, charmap, NULL, NULL, verbose);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -113,7 +113,7 @@ locfile_read (struct localedef_t *result, struct charmap_t *charmap)
 	case tok_escape_char:
 	case tok_comment_char:
 	  /* We need an argument.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, NULL, NULL, verbose);
 
 	  if (arg->tok != tok_ident)
 	    {
@@ -140,7 +140,7 @@ argument to `%s' must be a single character"),
 
 	case tok_repertoiremap:
 	  /* We need an argument.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, NULL, NULL, verbose);
 
 	  if (arg->tok != tok_ident)
 	    {
@@ -265,7 +265,7 @@ syntax error: not inside a locale definition section"));
 /* Semantic checking of locale specifications.  */
 
 static void (*const check_funcs[]) (struct localedef_t *,
-				    struct charmap_t *) =
+				    const struct charmap_t *) =
 {
   [LC_CTYPE] = ctype_finish,
   [LC_COLLATE] = collate_finish,
@@ -283,7 +283,7 @@ static void (*const check_funcs[]) (struct localedef_t *,
 
 void
 check_all_categories (struct localedef_t *definitions,
-		      struct charmap_t *charmap)
+		      const struct charmap_t *charmap)
 {
   int cnt;
 
@@ -295,8 +295,8 @@ check_all_categories (struct localedef_t *definitions,
 
 /* Writing the locale data files.  All files use the same output_path.  */
 
-static void (*const write_funcs[]) (struct localedef_t *, struct charmap_t *,
-				    const char *) =
+static void (*const write_funcs[]) (struct localedef_t *,
+				    const struct charmap_t *, const char *) =
 {
   [LC_CTYPE] = ctype_output,
   [LC_COLLATE] = collate_output,
@@ -314,7 +314,7 @@ static void (*const write_funcs[]) (struct localedef_t *, struct charmap_t *,
 
 void
 write_all_categories (struct localedef_t *definitions,
-		      struct charmap_t *charmap,
+		      const struct charmap_t *charmap,
 		      const char *output_path)
 {
   int cnt;

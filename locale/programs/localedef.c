@@ -505,7 +505,7 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
 
 struct localedef_t *
 find_locale (int locale, const char *name, const char *repertoire_name,
-	     struct charmap_t *charmap)
+	     const struct charmap_t *charmap)
 {
   struct localedef_t *result;
 
@@ -525,7 +525,7 @@ find_locale (int locale, const char *name, const char *repertoire_name,
 
 struct localedef_t *
 load_locale (int locale, const char *name, const char *repertoire_name,
-	     struct charmap_t *charmap, struct localedef_t *copy_locale)
+	     const struct charmap_t *charmap, struct localedef_t *copy_locale)
 {
   struct localedef_t *result;
 

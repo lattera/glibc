@@ -60,7 +60,7 @@ name_startup (struct linereader *lr, struct localedef_t *locale,
 
 
 void
-name_finish (struct localedef_t *locale, struct charmap_t *charmap)
+name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 {
   struct locale_name_t *name = locale->categories[LC_NAME].name;
   int nothing = 0;
@@ -151,7 +151,7 @@ name_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 
 void
-name_output (struct localedef_t *locale, struct charmap_t *charmap,
+name_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	     const char *output_path)
 {
   struct locale_name_t *name = locale->categories[LC_NAME].name;
@@ -215,7 +215,7 @@ name_output (struct localedef_t *locale, struct charmap_t *charmap,
 /* The parser for the LC_NAME section of the locale definition.  */
 void
 name_read (struct linereader *ldfile, struct localedef_t *result,
-	   struct charmap_t *charmap, const char *repertoire_name,
+	   const struct charmap_t *charmap, const char *repertoire_name,
 	   int ignore_content)
 {
   struct locale_name_t *name;
@@ -228,7 +228,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -254,7 +254,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -271,7 +271,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  arg = lr_token (ldfile, charmap, NULL, verbose);		      \
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);	      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (name->cat != NULL)					      \
@@ -296,7 +296,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_NAME'.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok == tok_eof)
 	    break;
 	  if (arg->tok == tok_eol)
@@ -313,7 +313,7 @@ name_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
 

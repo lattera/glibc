@@ -95,7 +95,7 @@ address_startup (struct linereader *lr, struct localedef_t *locale,
 
 
 void
-address_finish (struct localedef_t *locale, struct charmap_t *charmap)
+address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 {
   struct locale_address_t *address = locale->categories[LC_ADDRESS].address;
   size_t cnt;
@@ -324,7 +324,7 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 
 void
-address_output (struct localedef_t *locale, struct charmap_t *charmap,
+address_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		const char *output_path)
 {
   struct locale_address_t *address = locale->categories[LC_ADDRESS].address;
@@ -425,7 +425,7 @@ address_output (struct localedef_t *locale, struct charmap_t *charmap,
 /* The parser for the LC_ADDRESS section of the locale definition.  */
 void
 address_read (struct linereader *ldfile, struct localedef_t *result,
-	      struct charmap_t *charmap, const char *repertoire_name,
+	      const struct charmap_t *charmap, const char *repertoire_name,
 	      int ignore_content)
 {
   struct locale_address_t *address;
@@ -439,7 +439,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -465,7 +465,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -482,7 +482,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  arg = lr_token (ldfile, charmap, NULL, verbose);		      \
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);	      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (address->cat != NULL)					      \
@@ -519,7 +519,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  arg = lr_token (ldfile, charmap, NULL, verbose);		      \
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);	      \
 	  if (arg->tok != tok_string && arg->tok != tok_number)		      \
 	    goto err_label;						      \
 	  if (address->cat != NULL)					      \
@@ -557,7 +557,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  arg = lr_token (ldfile, charmap, NULL, verbose);		      \
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);	      \
 	  if (arg->tok != tok_number)					      \
 	    goto err_label;						      \
 	  else if (address->cat != 0)					      \
@@ -571,7 +571,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_ADDRESS'.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok == tok_eof)
 	    break;
 	  if (arg->tok == tok_eol)
@@ -589,7 +589,7 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
 

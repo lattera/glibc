@@ -46,7 +46,7 @@ struct locale_file
 
 /* General handling of `copy'.  */
 static inline void
-handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
+handle_copy (struct linereader *ldfile, const struct charmap_t *charmap,
 	     const char *repertoire_name, struct localedef_t *result,
 	     enum token_t token, int locale, const char *locale_name,
 	     int ignore_content)
@@ -54,7 +54,7 @@ handle_copy (struct linereader *ldfile, struct charmap_t *charmap,
   struct token *now;
   int warned = 0;
 
-  now = lr_token (ldfile, charmap, NULL, verbose);
+  now = lr_token (ldfile, charmap, result, NULL, verbose);
   if (now->tok != tok_string)
     lr_error (ldfile, _("expect string argument for `copy'"));
   else if (!ignore_content)
@@ -74,8 +74,8 @@ locale name should consist only of portable characters"));
 
   /* The rest of the line must be empty and the next keyword must be
      `END xxx'.  */
-  while ((now = lr_token (ldfile, charmap, NULL, verbose))->tok != tok_end
-	 && now->tok != tok_eof)
+  while ((now = lr_token (ldfile, charmap, result, NULL, verbose))->tok
+	 != tok_end && now->tok != tok_eof)
     {
       if (warned == 0)
 	{
@@ -90,7 +90,7 @@ no other keyword shall be specified when `copy' is used"));
   if (now->tok != tok_eof)
     {
       /* Handle `END xxx'.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
 
       if (now->tok != token)
 	lr_error (ldfile, _("\
@@ -106,15 +106,15 @@ no other keyword shall be specified when `copy' is used"));
 
 /* Found in locfile.c.  */
 extern int locfile_read (struct localedef_t *result,
-			 struct charmap_t *charmap);
+			 const struct charmap_t *charmap);
 
 /* Check validity of all the locale data.  */
 extern void check_all_categories (struct localedef_t *definitions,
-				  struct charmap_t *charmap);
+				  const struct charmap_t *charmap);
 
 /* Write out all locale categories.  */
 extern void write_all_categories (struct localedef_t *definitions,
-				  struct charmap_t *charmap,
+				  const struct charmap_t *charmap,
 				  const char *output_path);
 
 /* Write out the data.  */
@@ -127,145 +127,147 @@ extern void write_locale_data (const char *output_path, const char *category,
 /* Handle LC_CTYPE category.  */
 extern void ctype_read (struct linereader *ldfile,
 			struct localedef_t *result,
-			struct charmap_t *charmap,
+			const struct charmap_t *charmap,
 			const char *repertoire_name,
 			int ignore_content);
 extern void ctype_finish (struct localedef_t *locale,
-			  struct charmap_t *charmap);
+			  const struct charmap_t *charmap);
 extern void ctype_output (struct localedef_t *locale,
-			  struct charmap_t *charmap,
+			  const struct charmap_t *charmap,
 			  const char *output_path);
+extern uint32_t *find_translit (struct localedef_t *locale,
+				const struct charmap_t *charmap, uint32_t wch);
 
 /* Handle LC_COLLATE category.  */
 extern void collate_read (struct linereader *ldfile,
 			  struct localedef_t *result,
-			  struct charmap_t *charmap,
+			  const struct charmap_t *charmap,
 			  const char *repertoire_name,
 			  int ignore_content);
 extern void collate_finish (struct localedef_t *locale,
-			    struct charmap_t *charmap);
+			    const struct charmap_t *charmap);
 extern void collate_output (struct localedef_t *locale,
-			    struct charmap_t *charmap,
+			    const struct charmap_t *charmap,
 			    const char *output_path);
 
 /* Handle LC_MONETARY category.  */
 extern void monetary_read (struct linereader *ldfile,
 			   struct localedef_t *result,
-			   struct charmap_t *charmap,
+			   const struct charmap_t *charmap,
 			   const char *repertoire_name,
 			   int ignore_content);
 extern void monetary_finish (struct localedef_t *locale,
-			     struct charmap_t *charmap);
+			     const struct charmap_t *charmap);
 extern void monetary_output (struct localedef_t *locale,
-			     struct charmap_t *charmap,
+			     const struct charmap_t *charmap,
 			     const char *output_path);
 
 /* Handle LC_NUMERIC category.  */
 extern void numeric_read (struct linereader *ldfile,
 			  struct localedef_t *result,
-			  struct charmap_t *charmap,
+			  const struct charmap_t *charmap,
 			  const char *repertoire_name,
 			  int ignore_content);
 extern void numeric_finish (struct localedef_t *locale,
-			    struct charmap_t *charmap);
+			    const struct charmap_t *charmap);
 extern void numeric_output (struct localedef_t *locale,
-			    struct charmap_t *charmap,
+			    const struct charmap_t *charmap,
 			    const char *output_path);
 
 /* Handle LC_MESSAGES category.  */
 extern void messages_read (struct linereader *ldfile,
 			   struct localedef_t *result,
-			   struct charmap_t *charmap,
+			   const struct charmap_t *charmap,
 			   const char *repertoire_name,
 			   int ignore_content);
 extern void messages_finish (struct localedef_t *locale,
-			     struct charmap_t *charmap);
+			     const struct charmap_t *charmap);
 extern void messages_output (struct localedef_t *locale,
-			     struct charmap_t *charmap,
+			     const struct charmap_t *charmap,
 			     const char *output_path);
 
 /* Handle LC_TIME category.  */
 extern void time_read (struct linereader *ldfile,
 		       struct localedef_t *result,
-		       struct charmap_t *charmap,
+		       const struct charmap_t *charmap,
 		       const char *repertoire_name,
 		       int ignore_content);
 extern void time_finish (struct localedef_t *locale,
-			 struct charmap_t *charmap);
+			 const struct charmap_t *charmap);
 extern void time_output (struct localedef_t *locale,
-			 struct charmap_t *charmap,
+			 const struct charmap_t *charmap,
 			 const char *output_path);
 
 /* Handle LC_PAPER category.  */
 extern void paper_read (struct linereader *ldfile,
 			struct localedef_t *result,
-			struct charmap_t *charmap,
+			const struct charmap_t *charmap,
 			const char *repertoire_name,
 			int ignore_content);
 extern void paper_finish (struct localedef_t *locale,
-			  struct charmap_t *charmap);
+			  const struct charmap_t *charmap);
 extern void paper_output (struct localedef_t *locale,
-			  struct charmap_t *charmap,
+			  const struct charmap_t *charmap,
 			  const char *output_path);
 
 /* Handle LC_NAME category.  */
 extern void name_read (struct linereader *ldfile,
 		       struct localedef_t *result,
-		       struct charmap_t *charmap,
+		       const struct charmap_t *charmap,
 		       const char *repertoire_name,
 		       int ignore_content);
 extern void name_finish (struct localedef_t *locale,
-			 struct charmap_t *charmap);
+			 const struct charmap_t *charmap);
 extern void name_output (struct localedef_t *locale,
-			 struct charmap_t *charmap,
+			 const struct charmap_t *charmap,
 			 const char *output_path);
 
 /* Handle LC_ADDRESS category.  */
 extern void address_read (struct linereader *ldfile,
 			  struct localedef_t *result,
-			  struct charmap_t *charmap,
+			  const struct charmap_t *charmap,
 			  const char *repertoire_name,
 			  int ignore_content);
 extern void address_finish (struct localedef_t *locale,
-			    struct charmap_t *charmap);
+			    const struct charmap_t *charmap);
 extern void address_output (struct localedef_t *locale,
-			    struct charmap_t *charmap,
+			    const struct charmap_t *charmap,
 			    const char *output_path);
 
 /* Handle LC_TELEPHONE category.  */
 extern void telephone_read (struct linereader *ldfile,
 			    struct localedef_t *result,
-			    struct charmap_t *charmap,
+			    const struct charmap_t *charmap,
 			    const char *repertoire_name,
 			    int ignore_content);
 extern void telephone_finish (struct localedef_t *locale,
-			      struct charmap_t *charmap);
+			      const struct charmap_t *charmap);
 extern void telephone_output (struct localedef_t *locale,
-			      struct charmap_t *charmap,
+			      const struct charmap_t *charmap,
 			      const char *output_path);
 
 /* Handle LC_MEASUREMENT category.  */
 extern void measurement_read (struct linereader *ldfile,
 			      struct localedef_t *result,
-			      struct charmap_t *charmap,
+			      const struct charmap_t *charmap,
 			      const char *repertoire_name,
 			      int ignore_content);
 extern void measurement_finish (struct localedef_t *locale,
-				struct charmap_t *charmap);
+				const struct charmap_t *charmap);
 extern void measurement_output (struct localedef_t *locale,
-				struct charmap_t *charmap,
+				const struct charmap_t *charmap,
 				const char *output_path);
 
 /* Handle LC_IDENTIFICATION category.  */
 extern void identification_read (struct linereader *ldfile,
 				 struct localedef_t *result,
-				 struct charmap_t *charmap,
+				 const struct charmap_t *charmap,
 				 const char *repertoire_name,
 				 int ignore_content);
 extern void identification_finish (struct localedef_t *locale,
-				   struct charmap_t *charmap);
+				   const struct charmap_t *charmap);
 extern void identification_output (struct localedef_t *locale,
-				   struct charmap_t *charmap,
+				   const struct charmap_t *charmap,
 				   const char *output_path);
 
 #endif /* locfile.h */

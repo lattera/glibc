@@ -21,6 +21,7 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <libintl.h>
@@ -31,6 +32,8 @@
 #include "charmap.h"
 #include "error.h"
 #include "linereader.h"
+#include "localedef.h"
+#include "locfile.h"
 
 /* Prototypes for a few program-wide used functions.  */
 extern void *xmalloc (size_t __n);
@@ -44,6 +47,7 @@ static struct token *get_symname (struct linereader *lr);
 static struct token *get_ident (struct linereader *lr);
 static struct token *get_string (struct linereader *lr,
 				 const struct charmap_t *charmap,
+				 struct localedef_t *locale,
 				 const struct repertoire_t *repertoire,
 				 int verbose);
 
@@ -163,7 +167,8 @@ extern char *program_name;
 
 struct token *
 lr_token (struct linereader *lr, const struct charmap_t *charmap,
-	  const struct repertoire_t *repertoire, int verbose)
+	  struct localedef_t *locale, const struct repertoire_t *repertoire,
+	  int verbose)
 {
   int ch;
 
@@ -295,7 +300,7 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
       return &lr->token;
 
     case '"':
-      return get_string (lr, charmap, repertoire, verbose);
+      return get_string (lr, charmap, locale, repertoire, verbose);
 
     case '-':
       ch = lr_getc (lr);
@@ -568,7 +573,8 @@ get_ident (struct linereader *lr)
 
 static struct token *
 get_string (struct linereader *lr, const struct charmap_t *charmap,
-	    const struct repertoire_t *repertoire, int verbose)
+	    struct localedef_t *locale, const struct repertoire_t *repertoire,
+	    int verbose)
 {
   int return_widestr = lr->return_widestr;
   char *buf;
@@ -690,7 +696,6 @@ non-symbolic character value should not be used"));
 	      if (cp == &buf[bufact])
 		{
 		  char utmp[10];
-		  const char *symbol = NULL;
 
 		  /* Yes, it is.  */
 		  ADDC ('\0');
@@ -712,21 +717,65 @@ non-symbolic character value should not be used"));
 			the repertoire the name of the character and
 			find it in the charmap.  */
 		      if (repertoire != NULL)
-			symbol = repertoire_find_symbol (repertoire, wch);
-
-		      if (symbol == NULL)
-			/* We cannot generate a string since we
-			   cannot map from the Unicode number to the
-			   character symbol.  */
-			illegal_string = 1;
-		      else
 			{
-			  seq = charmap_find_value (charmap, symbol,
-						    strlen (symbol));
+			  const char *symbol;
 
-			  if (seq == NULL)
-			    /* Not a known name.  */
-			    illegal_string = 1;
+			  symbol = repertoire_find_symbol (repertoire, wch);
+
+			  if (symbol != NULL)
+			    seq = charmap_find_value (charmap, symbol,
+						      strlen (symbol));
+			}
+
+		      if (seq == NULL)
+			{
+#ifndef NO_TRANSLITERATION
+			  /* Transliterate if possible.  */
+			  if (locale != NULL)
+			    {
+			      uint32_t *translit;
+
+			      if ((locale->avail & CTYPE_LOCALE) == 0)
+				{
+				  /* Load the CTYPE data now.  */
+				  int old_needed = locale->needed;
+
+				  locale->needed = 0;
+				  locale = load_locale (CTYPE_LOCALE,
+							locale->name,
+							locale->repertoire_name,
+							charmap, locale);
+				  locale->needed = old_needed;
+				}
+
+			      if ((locale->avail & CTYPE_LOCALE) != 0
+				  && ((translit = find_translit (locale,
+								 charmap, wch))
+				      != NULL))
+				/* The CTYPE data contains a matching
+				   transliteration.  */
+				{
+				  int i;
+
+				  for (i = 0; translit[i] != 0; ++i)
+				    {
+				      char utmp[10];
+
+				      snprintf (utmp, sizeof (utmp), "U%08X",
+						translit[i]);
+				      seq = charmap_find_value (charmap, utmp,
+								9);
+				      assert (seq != NULL);
+				      ADDS (seq->bytes, seq->nbytes);
+				    }
+
+				  continue;
+				}
+			    }
+#endif	/* NO_TRANSLITERATION */
+
+			  /* Not a known name.  */
+			  illegal_string = 1;
 			}
 		    }
 

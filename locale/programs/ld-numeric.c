@@ -65,7 +65,7 @@ numeric_startup (struct linereader *lr, struct localedef_t *locale,
 
 
 void
-numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
+numeric_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
   int nothing = 0;
@@ -129,7 +129,7 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 
 void
-numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
+numeric_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		const char *output_path)
 {
   struct locale_numeric_t *numeric = locale->categories[LC_NUMERIC].numeric;
@@ -194,7 +194,7 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
 /* The parser for the LC_NUMERIC section of the locale definition.  */
 void
 numeric_read (struct linereader *ldfile, struct localedef_t *result,
-	      struct charmap_t *charmap, const char *repertoire_name,
+	      const struct charmap_t *charmap, const char *repertoire_name,
 	      int ignore_content)
 {
   struct repertoire_t *repertoire = NULL;
@@ -212,7 +212,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -238,7 +238,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ingore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -256,7 +256,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	    }								      \
 									      \
 	  ldfile->return_widestr = 1;					      \
-	  now = lr_token (ldfile, charmap, repertoire, verbose);	      \
+	  now = lr_token (ldfile, charmap, result, repertoire, verbose);	      \
 	  if (now->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (numeric->cat != NULL)					      \
@@ -296,7 +296,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (now->tok != tok_minus1 && now->tok != tok_number)
 	    goto err_label;
 	  else
@@ -343,11 +343,11 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 		    grouping[act++] = now->val.num;
 
 		  /* Next must be semicolon.  */
-		  now = lr_token (ldfile, charmap, NULL, verbose);
+		  now = lr_token (ldfile, charmap, result, NULL, verbose);
 		  if (now->tok != tok_semicolon)
 		    break;
 
-		  now = lr_token (ldfile, charmap, NULL, verbose);
+		  now = lr_token (ldfile, charmap, result, NULL, verbose);
 		}
 	      while (now->tok == tok_minus1 || now->tok == tok_number);
 
@@ -366,7 +366,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_NUMERIC'.  */
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (now->tok == tok_eof)
 	    break;
 	  if (now->tok == tok_eol)
@@ -383,7 +383,7 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
 

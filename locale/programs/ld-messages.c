@@ -63,7 +63,7 @@ messages_startup (struct linereader *lr, struct localedef_t *locale,
 
 
 void
-messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
+messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 {
   struct locale_messages_t *messages
     = locale->categories[LC_MESSAGES].messages;
@@ -178,7 +178,7 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 
 void
-messages_output (struct localedef_t *locale, struct charmap_t *charmap,
+messages_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		 const char *output_path)
 {
   struct locale_messages_t *messages
@@ -232,7 +232,7 @@ messages_output (struct localedef_t *locale, struct charmap_t *charmap,
 /* The parser for the LC_MESSAGES section of the locale definition.  */
 void
 messages_read (struct linereader *ldfile, struct localedef_t *result,
-	       struct charmap_t *charmap, const char *repertoire_name,
+	       const struct charmap_t *charmap, const char *repertoire_name,
 	       int ignore_content)
 {
   struct repertoire_t *repertoire = NULL;
@@ -250,7 +250,7 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -278,7 +278,7 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -302,7 +302,7 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
 	      lr_ignore_rest (ldfile, 0);				      \
 	      break;							      \
 	    }								      \
-	  now = lr_token (ldfile, charmap, repertoire, verbose);	      \
+	  now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
 	  if (now->tok != tok_string)					      \
 	    goto syntax_error;						      \
 	  else if (!ignore_content && now->val.str.startmb == NULL)	      \
@@ -322,7 +322,7 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_MESSAGES'.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok == tok_eof)
 	    break;
 	  if (arg->tok == tok_eol)
@@ -339,7 +339,7 @@ messages_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
 

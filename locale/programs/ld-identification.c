@@ -95,7 +95,8 @@ identification_startup (struct linereader *lr, struct localedef_t *locale,
 
 
 void
-identification_finish (struct localedef_t *locale, struct charmap_t *charmap)
+identification_finish (struct localedef_t *locale,
+		       const struct charmap_t *charmap)
 {
   struct locale_identification_t *identification
     = locale->categories[LC_IDENTIFICATION].identification;
@@ -174,7 +175,8 @@ identification_finish (struct localedef_t *locale, struct charmap_t *charmap)
 
 
 void
-identification_output (struct localedef_t *locale, struct charmap_t *charmap,
+identification_output (struct localedef_t *locale,
+		       const struct charmap_t *charmap,
 		       const char *output_path)
 {
   struct locale_identification_t *identification
@@ -294,7 +296,7 @@ identification_output (struct localedef_t *locale, struct charmap_t *charmap,
 /* The parser for the LC_IDENTIFICATION section of the locale definition.  */
 void
 identification_read (struct linereader *ldfile, struct localedef_t *result,
-	       struct charmap_t *charmap, const char *repertoire_name,
+	       const struct charmap_t *charmap, const char *repertoire_name,
 	       int ignore_content)
 {
   struct locale_identification_t *identification;
@@ -309,7 +311,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 
   do
     {
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
   while (nowtok == tok_eol);
@@ -336,7 +338,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
       /* Ignore empty lines.  */
       if (nowtok == tok_eol)
 	{
-	  now = lr_token (ldfile, charmap, NULL, verbose);
+	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	  continue;
 	}
@@ -353,7 +355,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;							      \
 	    }								      \
 									      \
-	  arg = lr_token (ldfile, charmap, NULL, verbose);		      \
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);	      \
 	  if (arg->tok != tok_string)					      \
 	    goto err_label;						      \
 	  if (identification->cat != NULL)				      \
@@ -394,15 +396,15 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 	    }
 
 	  /* We expect two operands.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok != tok_string && arg->tok != tok_ident)
 	    goto err_label;
 	  /* Next is a semicolon.  */
-	  cattok = lr_token (ldfile, charmap, NULL, verbose);
+	  cattok = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (cattok->tok != tok_semicolon)
 	    goto err_label;
 	  /* Now a LC_xxx identifier.  */
-	  cattok = lr_token (ldfile, charmap, NULL, verbose);
+	  cattok = lr_token (ldfile, charmap, result, NULL, verbose);
 	  switch (cattok->tok)
 	    {
 #define CATEGORY(lname, uname) \
@@ -438,7 +440,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 
 	case tok_end:
 	  /* Next we assume `LC_IDENTIFICATION'.  */
-	  arg = lr_token (ldfile, charmap, NULL, verbose);
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok == tok_eof)
 	    break;
 	  if (arg->tok == tok_eol)
@@ -456,7 +458,7 @@ identification_read (struct linereader *ldfile, struct localedef_t *result,
 	}
 
       /* Prepare for the next round.  */
-      now = lr_token (ldfile, charmap, NULL, verbose);
+      now = lr_token (ldfile, charmap, result, NULL, verbose);
       nowtok = now->tok;
     }
 

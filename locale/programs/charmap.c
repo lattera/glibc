@@ -117,18 +117,14 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 		      cmfile = cmlr_open (path, filename, charmap_hash);
 
 		      if (cmfile == NULL)
-			{
-			  /* Try without the "/charmaps" part.  */
-			  cmfile = cmlr_open (next, filename, charmap_hash);
-			}
+			/* Try without the "/charmaps" part.  */
+			cmfile = cmlr_open (next, filename, charmap_hash);
 		    }
 		}
 
 	      if (cmfile == NULL)
-		{
-		  /* Try the default directory.  */
-		  cmfile = cmlr_open (CHARMAP_PATH, filename, charmap_hash);
-		}
+		/* Try the default directory.  */
+		cmfile = cmlr_open (CHARMAP_PATH, filename, charmap_hash);
 	    }
 	}
 
@@ -298,7 +294,7 @@ parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
   while (1)
     {
       /* What's on?  */
-      struct token *now = lr_token (cmfile, NULL, NULL, verbose);
+      struct token *now = lr_token (cmfile, NULL, NULL, NULL, verbose);
       enum token_t nowtok = now->tok;
       struct token *arg;
 
@@ -356,7 +352,7 @@ parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
 	    }
 
 	  /* We know that we need an argument.  */
-	  arg = lr_token (cmfile, NULL, NULL, verbose);
+	  arg = lr_token (cmfile, NULL, NULL, NULL, verbose);
 
 	  switch (nowtok)
 	    {

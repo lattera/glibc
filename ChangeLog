@@ -1,3 +1,44 @@
+2001-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	Implement transliteration of characters in strings of the locale
+	definitions.
+	* locale/programs/linereader.c: Adjust for additional parameter to
+	lr_token.
+	(get_string): If character <Uxxxx> is not found try to transliterate
+	it.
+	* locale/programs/ld-ctype.c: Adjust for additional parameter to
+	lr_token.  Add const to charmap parameter of all functions.
+	(find_translit, find_translit2): New functions.
+	* locale/programs/charmap.c: Adjust for additional parameter to
+	lr_token.
+	* locale/programs/repertoire.c: Likewise.
+	* locale/programs/linereader.h: Likewise.
+	* locale/programs/ld-address.c: Likewise.  Add const to charmap
+	parameter of all functions.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/localedef.h: Likewise.
+	* locale/programs/locfile.h: Likewise.  Add declaration for
+	find_translit.
+	* locale/programs/simple-hash.c: Add const to first parameter of
+	find_entry, iterate_table, and lookup.
+	* locale/programs/simple-hash.h: Likewise.
+	* locale/localeinfo.h: Don't define __LC_LAST here.  Include <locale.h>
+	instead.
+	* include/locale.h: Define __LC_LAST.
+	* iconv/Makefile (CFLAGS-linereader.c): Define to -DNO_TRANSLITERATION.
+
 2001-12-07  Geoff Keating  <geoffk@redhat.com>
 
 	* sysdeps/powerpc/Dist: Update for recent FP changes.
