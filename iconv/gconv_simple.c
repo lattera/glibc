@@ -1081,7 +1081,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     ch <<= r * 6;							      \
 									      \
     /* Store the number of bytes expected for the entire sequence.  */	      \
-    ch = ch << 3 | cnt;							      \
+    state->__count |= cnt << 8;						      \
 									      \
     /* Store the value.  */						      \
     state->__value.__wch = ch;						      \
@@ -1091,10 +1091,9 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     static const unsigned char inmask[5] = { 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };  \
     wint_t wch = state->__value.__wch;					      \
-    size_t ntotal = wch & 7;						      \
-    wch >>= 3;								      \
+    size_t ntotal = state->__count >> 8;				      \
 									      \
-    inlen = state->__count;						      \
+    inlen = state->__count & 255;					      \
 									      \
     bytebuf[0] = inmask[ntotal - 2];					      \
 									      \
@@ -1108,6 +1107,10 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 									      \
     bytebuf[0] |= wch;							      \
   }
+
+#define CLEAR_STATE \
+  state->__count = 0
+
 
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>

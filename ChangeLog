@@ -3,6 +3,7 @@
 	* iconv/gconv_simple.c (STORE_REST): Explicitly store the total
 	expected size into state.
 	(UNPACK_BYTES): Do the reverse.
+	* iconv/loop.c: Use CLEAR_STATE if defined to clear __state element.
 	* wcsmbs/tst-mbrtowc.c (utf8_test_1): Add test for the bug.
 	Reported by Al Viro <aviro@redhat.com>.
 

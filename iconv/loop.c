@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -428,7 +428,11 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       result = __GCONV_OK;
 
       /* Clear the state buffer.  */
+#ifdef CLEAR_STATE
+      CLEAR_STATE;
+#else
       state->__count &= ~7;
+#endif
     }
   else if (result == __GCONV_INCOMPLETE_INPUT)
     {
@@ -479,6 +483,7 @@ gconv_btowc (struct __gconv_step *step, unsigned char c)
 #undef UPDATE_PARAMS
 #undef ONEBYTE_BODY
 #undef UNPACK_BYTES
+#undef CLEAR_STATE
 #undef LOOP_NEED_STATE
 #undef LOOP_NEED_FLAGS
 #undef LOOP_NEED_DATA
