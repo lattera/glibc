@@ -1,5 +1,5 @@
-/* BSD `setjmp' entry point to `sigsetjmp (..., 0)'.  Stub version.
-   Copyright (C) 1994, 1997, 1999 Free Software Foundation, Inc.
+/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  Stub version.
+   Copyright (C) 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <sysdep.h>
 #include <setjmp.h>
 
-#undef setjmp
+#undef _setjmp
 
 /* This implementation in C will not usually work, because the call
    really needs to be a tail-call so __sigsetjmp saves the state of
