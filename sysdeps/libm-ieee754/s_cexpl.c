@@ -38,16 +38,19 @@ __cexpl (__complex__ long double x)
 	{
 	  /* Imaginary part is finite.  */
 	  long double exp_val = __ieee754_expl (__real__ x);
+	  long double sinix, cosix;
+
+	  __sincosl (__imag__ x, &sinix, &cosix);
 
 	  if (isfinite (exp_val))
 	    {
-	      __real__ retval = exp_val * __cosl (__imag__ x);
-	      __imag__ retval = exp_val * __sinl (__imag__ x);
+	      __real__ retval = exp_val * cosix;
+	      __imag__ retval = exp_val * sinix;
 	    }
 	  else
 	    {
-	      __real__ retval = __copysignl (exp_val, __cosl (__imag__ x));
-	      __imag__ retval = __copysignl (exp_val, __sinl (__imag__ x));
+	      __real__ retval = __copysignl (exp_val, cosix);
+	      __imag__ retval = __copysignl (exp_val, sinix);
 	    }
 	}
       else
@@ -74,8 +77,12 @@ __cexpl (__complex__ long double x)
 	    }
 	  else
 	    {
-	      __real__ retval = __copysignl (value, __cosl (__imag__ x));
-	      __imag__ retval = __copysignl (value, __sinl (__imag__ x));
+	      long double sinix, cosix;
+
+	      __sincosl (__imag__ x, &sinix, &cosix);
+
+	      __real__ retval = __copysignl (value, cosix);
+	      __imag__ retval = __copysignl (value, sinix);
 	    }
 	}
       else if (signbit (__real__ x) == 0)

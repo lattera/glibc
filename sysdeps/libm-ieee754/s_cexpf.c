@@ -38,16 +38,19 @@ __cexpf (__complex__ float x)
 	{
 	  /* Imaginary part is finite.  */
 	  float exp_val = __ieee754_expf (__real__ x);
+	  float sinix, cosix;
+
+	  __sincosf (__imag__ x, &sinix, &cosix);
 
 	  if (isfinite (exp_val))
 	    {
-	      __real__ retval = exp_val * __cosf (__imag__ x);
-	      __imag__ retval = exp_val * __sinf (__imag__ x);
+	      __real__ retval = exp_val * cosix;
+	      __imag__ retval = exp_val * sinix;
 	    }
 	  else
 	    {
-	      __real__ retval = __copysignf (exp_val, __cosf (__imag__ x));
-	      __imag__ retval = __copysignf (exp_val, __sinf (__imag__ x));
+	      __real__ retval = __copysignf (exp_val, cosix);
+	      __imag__ retval = __copysignf (exp_val, sinix);
 	    }
 	}
       else
@@ -74,8 +77,12 @@ __cexpf (__complex__ float x)
 	    }
 	  else
 	    {
-	      __real__ retval = __copysignf (value, __cosf (__imag__ x));
-	      __imag__ retval = __copysignf (value, __sinf (__imag__ x));
+	      float sinix, cosix;
+
+	      __sincosf (__imag__ x, &sinix, &cosix);
+
+	      __real__ retval = __copysignf (value, cosix);
+	      __imag__ retval = __copysignf (value, sinix);
 	    }
 	}
       else if (signbit (__real__ x) == 0)

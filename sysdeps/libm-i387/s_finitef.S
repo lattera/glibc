@@ -6,9 +6,10 @@
 
 ENTRY(__finitef)
 	movl	4(%esp),%eax
-	orl	$0x807fffff, %eax
-	incl	%eax
-	shrl	$31, %eax
+	movl    $0xFF7FFFFF,%ecx
+	subl    %eax,%ecx
+	xorl    %ecx,%eax
+	shrl    $31,%eax
 	ret
 END (__finitef)
 weak_alias (__finitef, finitef)

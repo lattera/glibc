@@ -630,7 +630,7 @@ getspent_next_file_plususer (struct spwd *result, char *buffer,
           != YPERR_SUCCESS)
         return NSS_STATUS_TRYAGAIN;
       p = strncpy (buffer, outval,
-                   buflen < outvallen ? buflen : outvallen);
+                   buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
       free (outval);
       while (isspace (*p))
         p++;

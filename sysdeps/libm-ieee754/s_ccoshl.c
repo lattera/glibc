@@ -40,9 +40,12 @@ __ccoshl (__complex__ long double x)
 	{
 	  /* Imaginary part is finite.  */
 	  long double cosh_val = __ieee754_coshl (__real__ x);
+	  long double sinix, cosix;
 
-	  __real__ retval = cosh_val * __cosl (__imag__ x);
-	  __imag__ retval = cosh_val * __sinl (__imag__ x);
+	  __sincosl (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = cosh_val * cosix;
+	  __imag__ retval = cosh_val * sinix;
 	}
       else
 	{
@@ -62,8 +65,12 @@ __ccoshl (__complex__ long double x)
       else if (icls > FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	  __real__ retval = __copysignl (HUGE_VALL, __cosl (__imag__ x));
-	  __imag__ retval = __copysignl (HUGE_VALL, __sinl (__imag__ x));
+	  long double sinix, cosix;
+
+	  __sincosl (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = __copysignl (HUGE_VALL, cosix);
+	  __imag__ retval = __copysignl (HUGE_VALL, sinix);
 	}
       else
 	{

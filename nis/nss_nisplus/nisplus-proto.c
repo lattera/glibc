@@ -56,7 +56,7 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
 {
   char *p = buffer;
   size_t room_left = buflen;
-  int i;
+  unsigned int i;
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)

@@ -40,10 +40,13 @@ __csinh (__complex__ double x)
       if (icls >= FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	   double sinh_val = __ieee754_sinh (__real__ x);
+	  double sinh_val = __ieee754_sinh (__real__ x);
+	  double sinix, cosix;
 
-	  __real__ retval = sinh_val * __cos (__imag__ x);
-	  __imag__ retval = sinh_val * __sin (__imag__ x);
+	  __sincos (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = sinh_val * cosix;
+	  __imag__ retval = sinh_val * sinix;
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;
@@ -75,8 +78,12 @@ __csinh (__complex__ double x)
       else if (icls > FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	  __real__ retval = __copysign (HUGE_VAL, __cos (__imag__ x));
-	  __imag__ retval = __copysign (HUGE_VAL, __sin (__imag__ x));
+	  double sinix, cosix;
+
+	  __sincos (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = __copysign (HUGE_VAL, cosix);
+	  __imag__ retval = __copysign (HUGE_VAL, sinix);
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;

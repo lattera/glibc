@@ -1801,11 +1801,16 @@ new_heap(size) size_t size;
   unsigned long ul;
   heap_info *h;
 
-  if(size < HEAP_MIN_SIZE)
+  if(size+top_pad < HEAP_MIN_SIZE)
     size = HEAP_MIN_SIZE;
-  size = (size + page_mask) & ~page_mask;
-  if(size > HEAP_MAX_SIZE)
+  else if(size+top_pad <= HEAP_MAX_SIZE)
+    size += top_pad;
+  else if(size > HEAP_MAX_SIZE)
     return 0;
+  else
+    size = HEAP_MAX_SIZE;
+  size = (size + page_mask) & ~page_mask;
+
   p1 = (char *)MMAP(HEAP_MAX_SIZE<<1, PROT_NONE);
   if(p1 == (char *)-1)
     return 0;
@@ -2228,9 +2233,11 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
         (brk < old_end && old_top != initial_top(&main_arena)))
       return;
 
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
     /* Call the `morecore' hook if necessary.  */
     if (__after_morecore_hook)
       (*__after_morecore_hook) ();
+#endif
 
     sbrked_mem += sbrk_size;
 
@@ -2260,9 +2267,11 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
       new_brk = (char*)(MORECORE (correction));
       if (new_brk == (char*)(MORECORE_FAILURE)) return;
 
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
       /* Call the `morecore' hook if necessary.  */
       if (__after_morecore_hook)
-	(*__after_morecore_hook) ();
+        (*__after_morecore_hook) ();
+#endif
 
       sbrked_mem += correction;
 
@@ -2303,7 +2312,7 @@ static void malloc_extend_top(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     }
 
     /* A new heap must be created. */
-    heap = new_heap(nb + top_pad + (MINSIZE + sizeof(*heap)));
+    heap = new_heap(nb + (MINSIZE + sizeof(*heap)));
     if(!heap)
       return;
     heap->ar_ptr = ar_ptr;
@@ -2425,12 +2434,21 @@ Void_t* mALLOc(bytes) size_t bytes;
 #endif
 
   nb = request2size(bytes);
-  arena_get(ar_ptr, nb + top_pad);
+  arena_get(ar_ptr, nb);
   if(!ar_ptr)
     return 0;
   victim = chunk_alloc(ar_ptr, nb);
   (void)mutex_unlock(&ar_ptr->mutex);
-  return victim ? chunk2mem(victim) : 0;
+  if(!victim) {
+    /* Maybe the failure is due to running out of mmapped areas. */
+    if(ar_ptr != &main_arena) {
+      (void)mutex_lock(&main_arena.mutex);
+      victim = chunk_alloc(&main_arena, nb);
+      (void)mutex_unlock(&main_arena.mutex);
+    }
+    if(!victim) return 0;
+  }
+  return chunk2mem(victim);
 }
 
 static mchunkptr
@@ -2792,8 +2810,6 @@ chunk_free(ar_ptr, p) arena *ar_ptr; mchunkptr p;
     return;
   }
 
-  set_head(next, nextsz);                    /* clear inuse bit */
-
   islr = 0;
 
   if (!(hd & PREV_INUSE))                    /* consolidate backward */
@@ -2820,12 +2836,29 @@ chunk_free(ar_ptr, p) arena *ar_ptr; mchunkptr p;
     }
     else
       unlink(next, bck, fwd);
+
+    next = chunk_at_offset(p, sz);
   }
+  else
+    set_head(next, nextsz);                  /* clear inuse bit */
 
   set_head(p, sz | PREV_INUSE);
-  set_foot(p, sz);
+  next->prev_size = sz;
   if (!islr)
     frontlink(ar_ptr, p, sz, idx, bck, fwd);
+
+#ifndef NO_THREADS
+  /* Check whether the heap containing top can go away now. */
+  if(next->size < MINSIZE &&
+     (unsigned long)sz > trim_threshold &&
+     ar_ptr != &main_arena) {                /* fencepost */
+    heap_info* heap = heap_for_ptr(top(ar_ptr));
+
+    if(top(ar_ptr) == chunk_at_offset(heap, sizeof(*heap)) &&
+       heap->prev == heap_for_ptr(p))
+      heap_trim(heap, top_pad);
+  }
+#endif
 }
 
 
@@ -3063,8 +3096,16 @@ arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
 
     newp = chunk_alloc (ar_ptr, nb);
 
-    if (newp == 0)  /* propagate failure */
-      return 0;
+    if (newp == 0) {
+      /* Maybe the failure is due to running out of mmapped areas. */
+      if (ar_ptr != &main_arena) {
+        (void)mutex_lock(&main_arena.mutex);
+        newp = chunk_alloc(&main_arena, nb);
+        (void)mutex_unlock(&main_arena.mutex);
+      }
+      if (newp == 0) /* propagate failure */
+        return 0;
+    }
 
     /* Avoid copy if newp is next chunk after oldp. */
     /* (This can only happen when new chunk is sbrk'ed.) */
@@ -3159,7 +3200,16 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     return 0;
   p = chunk_align(ar_ptr, nb, alignment);
   (void)mutex_unlock(&ar_ptr->mutex);
-  return p ? chunk2mem(p) : NULL;
+  if(!p) {
+    /* Maybe the failure is due to running out of mmapped areas. */
+    if(ar_ptr != &main_arena) {
+      (void)mutex_lock(&main_arena.mutex);
+      p = chunk_align(&main_arena, nb, alignment);
+      (void)mutex_unlock(&main_arena.mutex);
+    }
+    if(!p) return 0;
+  }
+  return chunk2mem(p);
 }
 
 static mchunkptr
@@ -3329,31 +3379,34 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   /* Only clearing follows, so we can unlock early. */
   (void)mutex_unlock(&ar_ptr->mutex);
 
-  if (p == 0)
-    return 0;
-  else
-  {
-    mem = chunk2mem(p);
+  if (p == 0) {
+    /* Maybe the failure is due to running out of mmapped areas. */
+    if(ar_ptr != &main_arena) {
+      (void)mutex_lock(&main_arena.mutex);
+      p = chunk_alloc(&main_arena, sz);
+      (void)mutex_unlock(&main_arena.mutex);
+    }
+    if (p == 0) return 0;
+  }
+  mem = chunk2mem(p);
 
-    /* Two optional cases in which clearing not necessary */
+  /* Two optional cases in which clearing not necessary */
 
 #if HAVE_MMAP
-    if (chunk_is_mmapped(p)) return mem;
+  if (chunk_is_mmapped(p)) return mem;
 #endif
 
-    csz = chunksize(p);
+  csz = chunksize(p);
 
 #if MORECORE_CLEARS
-    if (p == oldtop && csz > oldtopsize)
-    {
-      /* clear only the bytes from non-freshly-sbrked memory */
-      csz = oldtopsize;
-    }
+  if (p == oldtop && csz > oldtopsize) {
+    /* clear only the bytes from non-freshly-sbrked memory */
+    csz = oldtopsize;
+  }
 #endif
 
-    MALLOC_ZERO(mem, csz - SIZE_SZ);
-    return mem;
-  }
+  MALLOC_ZERO(mem, csz - SIZE_SZ);
+  return mem;
 }
 
 /*
@@ -3444,9 +3497,11 @@ main_trim(pad) size_t pad;
 
   new_brk = (char*)(MORECORE (-extra));
 
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
   /* Call the `morecore' hook if necessary.  */
   if (__after_morecore_hook)
     (*__after_morecore_hook) ();
+#endif
 
   if (new_brk == (char*)(MORECORE_FAILURE)) { /* sbrk failed? */
     /* Try to figure out what we have */
@@ -3702,7 +3757,11 @@ void mALLOC_STATs()
     ar_ptr = ar_ptr->next;
     if(ar_ptr == &main_arena) break;
   }
+#if HAVE_MMAP
   fprintf(stderr, "Total (incl. mmap):\n");
+#else
+  fprintf(stderr, "Total:\n");
+#endif
   fprintf(stderr, "system bytes     = %10u\n", system_b);
   fprintf(stderr, "in use bytes     = %10u\n", in_use_b);
 #ifdef NO_THREADS
@@ -3710,6 +3769,7 @@ void mALLOC_STATs()
 #endif
 #if HAVE_MMAP
   fprintf(stderr, "max mmap regions = %10u\n", (unsigned int)max_n_mmaps);
+  fprintf(stderr, "max mmap bytes   = %10lu\n", max_mmapped_mem);
 #endif
 #if THREAD_STATS
   fprintf(stderr, "heaps created    = %10d\n",  stat_n_heaps);

@@ -63,6 +63,11 @@ __MATHCALL (sin,, (_Mdouble_ __x));
 /* Tangent of X.  */
 __MATHCALL (tan,, (_Mdouble_ __x));
 
+#ifdef __USE_GNU
+/* Cosine and sine of X.  */
+__MATHDECL (void, sincos,,
+	    (_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
+#endif
 
 /* Hyperbolic functions.  */
 

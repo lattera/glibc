@@ -1,4 +1,4 @@
-/* Complex tangent function for double.
+/* Compute sine and cosine of argument.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -18,51 +18,57 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <complex.h>
 #include <math.h>
 
 #include "math_private.h"
 
 
-__complex__ double
-__ctan (__complex__ double x)
+void
+__sincosf (float x, float *sinx, float *cosx)
 {
-  __complex__ double res;
+  int32_t ix;
 
-  if (!finite (__real__ x) || !finite (__imag__ x))
+  /* High word of x. */
+  GET_FLOAT_WORD (ix, x);
+
+  /* |x| ~< pi/4 */
+  ix &= 0x7fffffff;
+  if (ix <= 0x3f490fd8)
     {
-      if (__isinf (__imag__ x))
-	{
-	  __real__ res = __copysign (0.0, __real__ x);
-	  __imag__ res = __copysign (1.0, __imag__ x);
-	}
-      else if (__real__ x == 0.0)
-	{
-	  res = x;
-	}
-      else
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
-	}
+      *sinx = __kernel_sinf (x, 0.0, 0);
+      *cosx = __kernel_cosf (x, 0.0);
+    }
+  else if (ix>=0x7ff00000)
+    {
+      /* sin(Inf or NaN) is NaN */
+      *sinx = *cosx = x - x;
     }
   else
     {
-      double sin2rx, cos2rx;
-      double den;
+      /* Argument reduction needed.  */
+      float y[2];
+      int n;
 
-      __sincos (2.0 * __real__ x, &sin2rx, &cos2rx);
-
-      den = cos2rx + __ieee754_cosh (2.0 * __imag__ x);
-
-      __real__ res = sin2rx / den;
-      __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
+      n = __ieee754_rem_pio2f (x, y);
+      switch (n & 3)
+	{
+	case 0:
+	  *sinx = __kernel_sinf (y[0], y[1], 1);
+	  *cosx = __kernel_cosf (y[0], y[1]);
+	  break;
+	case 1:
+	  *sinx = __kernel_cosf (y[0], y[1]);
+	  *cosx = -__kernel_sinf (y[0], y[1], 1);
+	  break;
+	case 2:
+	  *sinx = -__kernel_sinf (y[0], y[1], 1);
+	  *cosx = -__kernel_cosf (y[0], y[1]);
+	  break;
+	default:
+	  *sinx = -__kernel_cosf (y[0], y[1]);
+	  *cosx = __kernel_sinf (y[0], y[1], 1);
+	  break;
+	}
     }
-
-  return res;
 }
-weak_alias (__ctan, ctan)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ctan, __ctanl)
-weak_alias (__ctan, ctanl)
-#endif
+weak_alias (__sincosf, sincosf)

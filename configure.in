@@ -119,7 +119,8 @@ gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   gnu_ld=yes gnu_as=yes ;;
 esac
 case "$host_os" in
-linux*ecoff*)
+# i586-linuxaout is mangled into i586-pc-linux-gnuaout
+linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
   ;;
 gnu* | linux* | sysv4* | solaris2*)
   # These systems (almost) always use the ELF format.
@@ -138,6 +139,7 @@ changequote(,)dnl
 case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
+arm*)		base_machine=arm machine=arm/$machine ;;
 hppa*)		base_machine=hppa machine=hppa/$machine ;;
 i[3456]86)	base_machine=i386 machine=i386/$machine ;;
 m680?0)		base_machine=m68k machine=m68k/$machine ;;

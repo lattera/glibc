@@ -30,7 +30,7 @@ databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp alias publickey
 
 # Specify rules for the nss_* modules.
-services		:= nis compat nisplus
+services		:= nis nisplus compat
 
 extra-libs		= libnsl $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than

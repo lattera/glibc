@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,17 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+ifeq (yes,$(cross-compiling))
+$(common-objpfx)stdio_lim.h:
+	@echo
+	@echo "You must build stdio_lim.h by hand.  Stop."
+	@echo
+	@exit 1
+else
 $(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
 	mv $@-t $@
+endif
 
 # Turn into a version that works when cd'd into $(objdir).
 mk-stdiolim-CFLAGS = $(patsubst -I$(shell pwd)//%,-I/%,\

@@ -59,7 +59,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
 {
   char *p = buffer;
   size_t room_left = buflen;
-  int i;
+  unsigned int i;
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)

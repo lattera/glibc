@@ -48,10 +48,14 @@ __ctanl (__complex__ long double x)
     }
   else
     {
-      long double den = (__cosl (2.0 * __real__ x)
-			 + __ieee754_coshl (2.0 * __imag__ x));
+      long double sin2rx, cos2rx;
+      long double den;
 
-      __real__ res = __sinl (2.0 * __real__ x) / den;
+      __sincosl (2.0 * __real__ x, &sin2rx, &cos2rx);
+
+      den = cos2rx + __ieee754_coshl (2.0 * __imag__ x);
+
+      __real__ res = sin2rx / den;
       __imag__ res = __ieee754_sinhl (2.0 * __imag__ x) / den;
     }
 

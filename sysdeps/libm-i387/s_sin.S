@@ -14,6 +14,7 @@ ENTRY(__sin)
 	testl	$0x400,%eax
 	jnz	1f
 	ret
+	.align ALIGNARG(4)
 1:	fldpi
 	fadd	%st(0)
 	fxch	%st(1)

@@ -40,9 +40,12 @@ __ccoshf (__complex__ float x)
 	{
 	  /* Imaginary part is finite.  */
 	  float cosh_val = __ieee754_coshf (__real__ x);
+	  float sinix, cosix;
 
-	  __real__ retval = cosh_val * __cosf (__imag__ x);
-	  __imag__ retval = cosh_val * __sinf (__imag__ x);
+	  __sincosf (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = cosh_val * cosix;
+	  __imag__ retval = cosh_val * sinix;
 	}
       else
 	{
@@ -62,8 +65,12 @@ __ccoshf (__complex__ float x)
       else if (icls > FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	  __real__ retval = __copysignf (HUGE_VALF, __cosf (__imag__ x));
-	  __imag__ retval = __copysignf (HUGE_VALF, __sinf (__imag__ x));
+	  float sinix, cosix;
+
+	  __sincosf (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = __copysignf (HUGE_VALF, cosix);
+	  __imag__ retval = __copysignf (HUGE_VALF, sinix);
 	}
       else
 	{

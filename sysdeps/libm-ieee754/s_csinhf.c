@@ -40,10 +40,13 @@ __csinhf (__complex__ float x)
       if (icls >= FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	   float sinh_val = __ieee754_sinhf (__real__ x);
+	  float sinh_val = __ieee754_sinhf (__real__ x);
+	  float sinix, cosix;
 
-	  __real__ retval = sinh_val * __cosf (__imag__ x);
-	  __imag__ retval = sinh_val * __sinf (__imag__ x);
+	  __sincosf (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = sinh_val * cosix;
+	  __imag__ retval = sinh_val * sinix;
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;
@@ -75,8 +78,12 @@ __csinhf (__complex__ float x)
       else if (icls > FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
-	  __real__ retval = __copysignf (HUGE_VALF, __cosf (__imag__ x));
-	  __imag__ retval = __copysignf (HUGE_VALF, __sinf (__imag__ x));
+	  float sinix, cosix;
+
+	  __sincosf (__imag__ x, &sinix, &cosix);
+
+	  __real__ retval = __copysignf (HUGE_VALF, cosix);
+	  __imag__ retval = __copysignf (HUGE_VALF, sinix);
 
 	  if (negate)
 	    __real__ retval = -__real__ retval;

@@ -56,7 +56,7 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
 {
   char *p = buffer;
   size_t room_left = buflen;
-  int i;
+  unsigned int i;
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)

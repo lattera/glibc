@@ -48,11 +48,15 @@ __ctanhl (__complex__ long double x)
     }
   else
     {
-      long double den = (__ieee754_coshl (2.0 * __real__ x)
-			 + __cosl (2.0 * __imag__ x));
+      long double sin2ix, cos2ix;
+      long double den;
+
+      __sincosl (2.0 * __imag__ x, &sin2ix, &cos2ix);
+
+      den = (__ieee754_coshl (2.0 * __real__ x) + cos2ix);
 
       __real__ res = __ieee754_sinhl (2.0 * __real__ x) / den;
-      __imag__ res = __sinl (2.0 * __imag__ x) / den;
+      __imag__ res = sin2ix / den;
     }
 
   return res;

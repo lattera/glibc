@@ -95,3 +95,6 @@ foundneedle:
 ret0:
   return NULL;
 }
+/* This alias is for backward compatibility with drafts of the ISO C
+   standard.  Unfortunately the Unix(TM) standard requires this name.  */
+weak_alias (wcsstr, wcswcs)

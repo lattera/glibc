@@ -1,3 +1,113 @@
+1997-04-15 03:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsstr.c: Add weak alias wcswcs for Unix98 compliance.
+
+	* math/Makefile (libm-calls): Add s_sincos and s_cproj.
+	* math/mathcalls.h: Add prototype for sincos.
+	* sysdeps/i386/fpu/__math.h: Warn about restriction on arguments to
+	inlined sin and cos function.
+	Define functions new in ISO C 9X when __USE_ISOC9X is defined.
+	Add optimized version of finite.
+	Rewrite sincos function to handle too large arguments.
+	* sysdeps/libm-i387/s_cos.S: Better code alignment.
+	* sysdeps/libm-i387/s_cosl.S: Likewise.
+	* sysdeps/libm-i387/s_sin.S: Likewise.
+	* sysdeps/libm-i387/s_sinl.S: Likewise.
+	* sysdeps/libm-i387/s_finite.S: Yet better code.
+	* sysdeps/libm-i387/s_finitef.S: Likewise.
+	* sysdeps/libm-i387/s_sincos.S: New file.
+	* sysdeps/libm-i387/s_sincosf.S: New file.
+	* sysdeps/libm-i387/s_sincosl.S: New file.
+	* sysdeps/libm-ieee754/s_sincos.c: New file.
+	* sysdeps/libm-ieee754/s_sincosf.c: New file.
+	* sysdeps/libm-ieee754/s_sincosl.c: New file.
+
+	* sysdeps/libm-ieee754/s_ccosh.c: Change to use sincos function.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinh.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctan.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanl.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanh.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanhl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_cosl.c: Correct check for range.
+	* sysdeps/libm-ieee754/s_sinl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_roundtol.c: Fix typos.
+	* sysdeps/libm-ieee754/s_roundtoll.c: Likewise.
+
+	* nis/Makefile (services): Mention nisplus before compat.
+	* nis/nis_call.c (__do_niscall): Change type of variable server_len
+	to prevent warning.
+	* nis/nss_compat/compat-grp.c (getgrent_next_file_plusgroup): Add
+	cast to prevent warning.
+	* nis/nss_compat/compat-pwd.c (getpwent_next_file_plususer): Likewise.
+	* nis/nss_compat/compat-spwd.c (getspent_next_file_plususer): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent): Change
+	type of variable `i' to prevent warning.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_parse_netent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_parse_protoent):
+	Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_parse_rpcent): Likewise.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_parse_servent):
+	Likewise.
+
+	* sysdeps/generic/Dist: Remove old math implementation files.
+	* sysdeps/generic/mathimpl.h: Removed.
+	* sysdeps/generic/trig.h: Removed.
+	* sysdeps/generic/sincos.c: Removed.
+	* sysdeps/generic/asincos.c: Removed.
+	* sysdeps/generic/exp__E.c: Removed.
+	* sysdeps/generic/log__L.c: Removed.
+
+1997-04-13 17:18  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (fREe): Small optimization.  Before returning,
+	add fast check whether the heap containing top can go away.
+
+1997-04-11 16:46  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (mALLOc, rEALLOc, cALLOc, mEMALIGn): When
+	failing to allocate a new chunk, also try the main_arena.  It may
+	be that we are only running out of mmapped regions, and other
+	arenas cannot be enlarged sufficiently.
+	(new_heap, malloc_extend_top): Handle top_pad more consistently,
+	i.e. only in new_heap().
+
+1997-04-13 21:10  Philip Blundell  <pjb27@cl.cam.ac.uk>
+
+	* sysdeps/posix/Makefile: Don't try to build and run mk-stdiolim
+	if cross-compiling.
+
+	* configure.in: Recognise "...linuxaout" OS names and turn off ELF.
+
+	* configure.in: Add ARM support.
+	* sysdeps/arm/Implies: New file.
+	* sysdeps/arm/__longjmp.S: New file.
+	* sysdeps/arm/bsd-_setjmp: New file.
+	* sysdeps/arm/bsd-setjmp: New file.
+	* sysdeps/arm/bytesex.h: New file.
+	* sysdeps/arm/fpu_control.h: New file.
+	* sysdeps/arm/jmp_buf.h: New file.
+	* sysdeps/arm/setjmp.h: New file.
+	* sysdeps/arm/sysdep.h: New file.
+	* sysdeps/unix/arm/config.h: New file.
+
+1997-04-14 04:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cproj.c: New file.
+	* sysdeps/libm-ieee754/s_cprojf.c: New file.
+	* sysdeps/libm-ieee754/s_cprojl.c: New file.
+
 1997-04-13 01:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* isomac.c: Improve messages.

@@ -63,7 +63,7 @@ __roundtoll (long double x)
     }
   else
     {
-      i = ((u_int32_t) (0xffffffff)) >> (j0 - 20);
+      u_int32_t i = ((u_int32_t) (0xffffffff)) >> (j0 - 20);
       if ((i1 & i) != 0)
 	{
 	  /* x is not integral.  */
@@ -95,7 +95,7 @@ __roundtoll (long double x)
 	{
 	  result = (long long int) ((i0 & 0xfffff) | 0x100000) << (j0 - 31);
 	  if (sizeof (long long int) > 4 && j0 > 31)
-	    result |= j >> (63 - j0);
+	    result |= i1 >> (63 - j0);
 	}
     }
 

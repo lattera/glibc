@@ -117,7 +117,8 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
 {
   char *p = buffer;
   size_t room_left = buflen;
-  int parse_res, i;
+  int parse_res;
+  unsigned int i;
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)

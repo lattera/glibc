@@ -1,4 +1,4 @@
-/* Complex tangent function for double.
+/* Compute sine and cosine of argument.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -18,51 +18,31 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <complex.h>
-#include <math.h>
+#include <machine/asm.h>
 
-#include "math_private.h"
-
-
-__complex__ double
-__ctan (__complex__ double x)
-{
-  __complex__ double res;
-
-  if (!finite (__real__ x) || !finite (__imag__ x))
-    {
-      if (__isinf (__imag__ x))
-	{
-	  __real__ res = __copysign (0.0, __real__ x);
-	  __imag__ res = __copysign (1.0, __imag__ x);
-	}
-      else if (__real__ x == 0.0)
-	{
-	  res = x;
-	}
-      else
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
-	}
-    }
-  else
-    {
-      double sin2rx, cos2rx;
-      double den;
-
-      __sincos (2.0 * __real__ x, &sin2rx, &cos2rx);
-
-      den = cos2rx + __ieee754_cosh (2.0 * __imag__ x);
-
-      __real__ res = sin2rx / den;
-      __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
-    }
-
-  return res;
-}
-weak_alias (__ctan, ctan)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ctan, __ctanl)
-weak_alias (__ctan, ctanl)
-#endif
+ENTRY(__sincos)
+	fldl	4(%esp)
+	fsincos
+	movl	12(%esp), %ecx
+	movl	16(%esp), %edx
+	fnstsw	%ax
+	testl	$0x400,%eax
+	jnz	1f
+	fstpl	(%edx)
+	fstpl	(%ecx)
+	ret
+	.align ALIGNARG(4)
+1:	fldpi
+	fadd	%st(0)
+	fxch	%st(1)
+2:	fprem1
+	fnstsw	%ax
+	testl	$0x400,%eax
+	jnz	2b
+	fstp	%st(1)
+	fsincos
+	fstpl	(%edx)
+	fstpl	(%ecx)
+	ret
+END(__sincos)
+weak_alias(__sincos, sincos)

@@ -113,7 +113,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 	  }
 	else
 	  continue;
-      
+
       clnt_sock = RPC_ANYSOCK;
       if ((flags & USE_DGRAM) == USE_DGRAM)
 	client = clntudp_create (&clnt_saddr, NIS_PROG, NIS_VERSION,
@@ -121,7 +121,7 @@ __nis_dobind (const nis_server *server, u_long flags)
       else
 	client = clnttcp_create (&clnt_saddr, NIS_PROG, NIS_VERSION,
 				 &clnt_sock, 0, 0);
-      
+
       if (client == NULL)
 	continue;
       if (clnt_call (client, 0, (xdrproc_t) xdr_void, NULL,
@@ -138,7 +138,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 	    {
 	      char netname[MAXNETNAMELEN+1];
 	      char *p;
-	      
+
 	      p = stpcpy (netname, "unix.");
 	      strncpy (p, server->name,MAXNETNAMELEN-5);
 	      netname[MAXNETNAMELEN] = '\0';
@@ -155,7 +155,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 	}
       return client;
     }
-  
+
   return NULL;
 }
 
@@ -167,7 +167,8 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
   CLIENT *clnt;
   directory_obj *dir = NULL;
   const nis_server *server;
-  int try, result, server_len;
+  int try, result;
+  unsigned int server_len;
 
   if (serv == NULL || serv_len == 0)
     {
@@ -195,10 +196,10 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
   while (try < MAXTRIES && result != RPC_SUCCESS)
     {
       unsigned int i;
-      
+
       if ((flags & HARD_LOOKUP) == 0)
 	++try;
-      
+
       for (i = 0; i < server_len; i++)
 	{
 	  if ((clnt = __nis_dobind (&server[i], flags)) == NULL)

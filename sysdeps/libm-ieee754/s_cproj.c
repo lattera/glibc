@@ -1,4 +1,4 @@
-/* Complex tangent function for double.
+/* Compute projection of complex double value to Riemann sphere.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,48 +21,29 @@
 #include <complex.h>
 #include <math.h>
 
-#include "math_private.h"
-
 
 __complex__ double
-__ctan (__complex__ double x)
+__cproj (__complex__ double x)
 {
   __complex__ double res;
 
   if (!finite (__real__ x) || !finite (__imag__ x))
     {
-      if (__isinf (__imag__ x))
-	{
-	  __real__ res = __copysign (0.0, __real__ x);
-	  __imag__ res = __copysign (1.0, __imag__ x);
-	}
-      else if (__real__ x == 0.0)
-	{
-	  res = x;
-	}
-      else
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
-	}
+      __real__ res = INFINITY;
+      __imag__ res = __copysign (0.0, __imag__ x);
     }
   else
     {
-      double sin2rx, cos2rx;
-      double den;
+      double den = __real__ x * __real__ x + __imag__ x * __imag__ x + 1.0;
 
-      __sincos (2.0 * __real__ x, &sin2rx, &cos2rx);
-
-      den = cos2rx + __ieee754_cosh (2.0 * __imag__ x);
-
-      __real__ res = sin2rx / den;
-      __imag__ res = __ieee754_sinh (2.0 * __imag__ x) / den;
+      __real__ res = (2.0 * __real__ x) / den;
+      __imag__ res = (2.0 * __imag__ x) / den;
     }
 
   return res;
 }
-weak_alias (__ctan, ctan)
+weak_alias (__cproj, cproj)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__ctan, __ctanl)
-weak_alias (__ctan, ctanl)
+strong_alias (__cproj, __cprojl)
+weak_alias (__cproj, cprojl)
 #endif

@@ -48,11 +48,15 @@ __ctanh (__complex__ double x)
     }
   else
     {
-      double den = (__ieee754_cosh (2.0 * __real__ x)
-		    + __cos (2.0 * __imag__ x));
+      double sin2ix, cos2ix;
+      double den;
+
+      __sincos (2.0 * __imag__ x, &sin2ix, &cos2ix);
+
+      den = (__ieee754_cosh (2.0 * __real__ x) + cos2ix);
 
       __real__ res = __ieee754_sinh (2.0 * __real__ x) / den;
-      __imag__ res = __sin (2.0 * __imag__ x) / den;
+      __imag__ res = sin2ix / den;
     }
 
   return res;

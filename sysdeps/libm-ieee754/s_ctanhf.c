@@ -48,11 +48,15 @@ __ctanhf (__complex__ float x)
     }
   else
     {
-      float den = (__ieee754_coshf (2.0 * __real__ x)
-		   + __cosf (2.0 * __imag__ x));
+      float sin2ix, cos2ix;
+      float den;
+
+      __sincosf (2.0 * __imag__ x, &sin2ix, &cos2ix);
+
+      den = (__ieee754_coshf (2.0 * __real__ x) + cos2ix);
 
       __real__ res = __ieee754_sinhf (2.0 * __real__ x) / den;
-      __imag__ res = __sinf (2.0 * __imag__ x) / den;
+      __imag__ res = sin2ix / den;
     }
 
   return res;
