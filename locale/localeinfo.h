@@ -91,7 +91,10 @@ enum value_type
   bytearray,
   word,
   stringlist,
-  wordarray
+  wordarray,
+  wstring,
+  wstringarray,
+  wstringlist
 };
 
 

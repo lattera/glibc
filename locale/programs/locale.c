@@ -551,17 +551,15 @@ show_info (const char *name)
 
   void print_item (struct cat_item *item)
     {
-      if (show_keyword_name != 0)
-	printf ("%s=", item->name);
-
       switch (item->value_type)
 	{
 	case string:
 	  if (show_keyword_name)
-	    putchar ('"');
+	    printf ("%s=\"", item->name);
 	  print_escaped (nl_langinfo (item->item_id) ? : "");
 	  if (show_keyword_name)
 	    putchar ('"');
+	  putchar ('\n');
 	  break;
 	case stringarray:
 	  {
@@ -569,7 +567,7 @@ show_info (const char *name)
 	    const char *val;
 
 	    if (show_keyword_name)
-	      putchar ('"');
+	      printf ("%s=\"", item->name);
 
 	    for (cnt = 0; cnt < item->max - 1; ++cnt)
 	      {
@@ -585,12 +583,16 @@ show_info (const char *name)
 
 	    if (show_keyword_name)
 	      putchar ('"');
+	    putchar ('\n');
 	  }
 	  break;
 	case stringlist:
 	  {
 	    int first = 1;
 	    const char *val = nl_langinfo (item->item_id) ? : "";
+
+	    if (show_keyword_name)
+	      printf ("%s=", item->name);
 
 	    while (*val != '\0')
 	      {
@@ -600,20 +602,28 @@ show_info (const char *name)
 		val = strchr (val, '\0') + 1;
 		first = 0;
 	      }
+	    putchar ('\n');
 	  }
 	  break;
 	case byte:
 	  {
 	    const char *val = nl_langinfo (item->item_id);
 
+	    if (show_keyword_name)
+	      printf ("%s=", item->name);
+
 	    if (val != NULL)
 	      printf ("%d", *val == CHAR_MAX ? -1 : *val);
+	    putchar ('\n');
 	  }
 	  break;
 	case bytearray:
 	  {
 	    const char *val = nl_langinfo (item->item_id);
 	    int cnt = val ? strlen (val) : 0;
+
+	    if (show_keyword_name)
+	      printf ("%s=", item->name);
 
 	    while (cnt > 1)
 	      {
@@ -622,19 +632,26 @@ show_info (const char *name)
 		++val;
 	      }
 
-	    printf ("%d", cnt == 0 || *val == CHAR_MAX ? -1 : *val);
+	    printf ("%d\n", cnt == 0 || *val == CHAR_MAX ? -1 : *val);
 	  }
 	  break;
 	case word:
 	  {
 	    unsigned int val =
 	      (unsigned int) (unsigned long int) nl_langinfo (item->item_id);
-	    printf ("%d", val);
+	    if (show_keyword_name)
+	      printf ("%s=", item->name);
+
+	    printf ("%d\n", val);
 	  }
 	  break;
+	case wstring:
+	case wstringarray:
+	case wstringlist:
+	  /* We don't print wide character information since the same
+	     information is available in a multibyte string.  */
 	default:
 	}
-      putchar ('\n');
     }
 
   for (cat_no = 0; cat_no < NCATEGORIES; ++cat_no)

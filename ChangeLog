@@ -1,5 +1,16 @@
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/localeinfo.h (enum value_type): Add wstring, wstringarray,
+	and wstringlist.
+	* locale/categories.def: Mark wide char strings as wstring or
+	stringarray.
+	* locale/programs/locale.c (show_info): Handle wstring, wstringarray,
+	and wstringlist.  Print keywords only if there is real output.
+	Reported by Chen Xiangyang <chenxy@opencjk.org>.
+
+	* sysdeps/sparc/fpu/bits/mathinline.h: Add __THROW where necessary.
+	Patch by Ben Collins <bcollins@debian.org>.
+
 	* stdio-common/Makefile (tests): Add tst-fmemopen.
 	* stdio-common/tst-fmemopen.c: New file.
 	Test case by Ben Collins <bcollins@debian.org>.

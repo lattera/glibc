@@ -100,11 +100,10 @@
 
 /* The gcc, version 2.7 or below, has problems with all this inlining
    code.  So disable it for this version of the compiler.  */
-
-# if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7))
+# if __GNUC_PREREQ (2, 8)
    /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
-__signbitf (float __x)
+__signbitf (float __x) __THROW
 {
   __extension__ union { float __f; int __i; } __u = { __f: __x };
   return __u.__i < 0;
@@ -113,14 +112,14 @@ __signbitf (float __x)
 #if __WORDSIZE == 32
 
 __MATH_INLINE int
-__signbit (double __x)
+__signbit (double __x) __THROW
 {
   __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
   return __u.__i[0] < 0;
 }
 
 __MATH_INLINE int
-__signbitl (long double __x)
+__signbitl (long double __x) __THROW
 {
   return __signbit ((double)__x);
 }
@@ -128,14 +127,14 @@ __signbitl (long double __x)
 #else /* sparc64 */
 
 __MATH_INLINE int
-__signbit (double __x)
+__signbit (double __x) __THROW
 {
   __extension__ union { double __d; long __i; } __u = { __d: __x };
   return __u.__i < 0;
 }
 
 __MATH_INLINE int
-__signbitl (long double __x)
+__signbitl (long double __x) __THROW
 {
   __extension__ union { long double __l; long __i[2]; } __u = { __l: __x };
   return __u.__i[0] < 0;
