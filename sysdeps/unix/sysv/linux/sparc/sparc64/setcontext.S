@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,19 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include "ucontext_i.h"
 
-
-/* void setcontext(ucontext_t *ctx); */
+/* int setcontext(ucontext_t *ctx); */
 .weak setcontext
 ENTRY(setcontext)
 
 	mov	1, %o1
 
-/* void __setcontext(ucontext_t *ctx, int restoremask); */
+/* int __setcontext(ucontext_t *ctx, int restoremask); */
 ENTRY(__setcontext)
 
+	ldx	[%o0 + UC_SIGMASK], %o2
+	stx	%o2, [%o0 + __UC_SIGMASK]
 	ta	0x6f
 
 END(__setcontext)

@@ -81,8 +81,10 @@ typedef struct {
 typedef struct ucontext {
 	struct ucontext		*uc_link;
 	unsigned long		uc_flags;
-	unsigned long		uc_sigmask;
+	unsigned long		__uc_sigmask;
 	mcontext_t		uc_mcontext;
+	stack_t			uc_stack;
+	__sigset_t		uc_sigmask;
 } ucontext_t;
 
 #endif /* __WORDISIZE == 64 */
@@ -259,10 +261,9 @@ typedef struct ucontext
   {
     unsigned long   uc_flags;
     struct ucontext *uc_link;
-    unsigned long   uc_sigmask[4];	/* a svr4 sigset_t */
+    __sigset_t	    uc_sigmask;
     stack_t         uc_stack;
     mcontext_t      uc_mcontext;
-    long            uc_filler[23];
   } ucontext_t;
 
 #endif /* __WORDSIZE == 32 */

@@ -11,7 +11,7 @@ configurations:
 		alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 		sparc-*-linux-gnu	Linux-2.x on SPARC
-		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
+		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC 64-bit
 		arm-*-none		ARM standalone systems
 		arm-*-linux		Linux-2.x on ARM
 		arm-*-linuxaout		Linux-2.x on ARM using a.out binaries

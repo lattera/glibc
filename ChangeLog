@@ -1,12 +1,26 @@
+2001-04-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/swapcontext.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setcontext.S (__setcontext):
+	Copy first word of uc_sigmask into __uc_sigmask.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/getcontext.S (__getcontext):
+	Save uc_link around trap. Copy __uc_sigmask into first word of
+	uc_sigmask, clear the rest. Make sure setcontext to the created
+	context doesn't do this though.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h (ucontext_t): Add
+	uc_stack and uc_sigmask, rename old uc_sigmask to __uc_sigmask in the
+	64bit version, make uc_sigmask __sigset_t in the 32bit version.
+
 2001-04-19  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/hppa/umount.c: Fix typos in last patch.
 
-2001-04-18  Andreas Jaeger  <aj@suse.de>
+	* rt/Makefile (otherlibs): Added for static NSS.
 
-        * rt/Makefile (otherlibs): Added.
-
-        * glibcbug.in (BUGGLIBC): Send to new alias.
+	* glibcbug.in (BUGGLIBC): Send to new alias.
 
 2001-04-02  Andreas Schwab  <schwab@suse.de>
 
