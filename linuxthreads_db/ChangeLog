@@ -1,3 +1,7 @@
+2000-01-20  Andreas Jaeger  <aj@suse.de>
+
+	* td_thr_getgregs.c (td_thr_getgregs): Fix typo.
+
 2000-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_thr_getgregs.c: Correct size parameter of memset call.

@@ -35,7 +35,7 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   /* If the thread already terminated we return all zeroes.  */
   if (pds.p_terminated)
-    memset (gregs, '\0', sizeof (prgrepset_t));
+    memset (gregs, '\0', sizeof (prgregset_t));
   /* Otherwise get the register content through the callback.  */
   else if (ps_lgetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
     return TD_ERR;

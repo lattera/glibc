@@ -112,6 +112,7 @@ struct element_t
 
   /* Next element in wide character output list.  */
   struct element_t *wcnext;
+  struct element_t *wclast;
 };
 
 /* Special element value.  */
@@ -1669,6 +1670,7 @@ Computing table size for collation table might take a while..."),
       if (runp->wcs != NULL)
 	{
 	  struct element_t **eptr;
+	  struct element_t *lastp = NULL;
 	  size_t idx;
 
 	  /* Find a free index.  */
@@ -1712,11 +1714,15 @@ Computing table size for collation table might take a while..."),
 		}
 
 	      /* To the next entry.  */
+	      lastp = *eptr;
 	      eptr = &(*eptr)->wcnext;
 	    }
 
 	  /* Set the pointers.  */
 	  runp->wcnext = *eptr;
+	  runp->wclast = lastp;
+	  if (*eptr != NULL)
+	    (*eptr)->wclast = runp;
 	  *eptr = runp;
 	dont_insertwc:
 	}
@@ -2286,19 +2292,18 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    int32_t weightidx;
 	    int added;
 
-	    /* Output the weight info.  */
-	    weightidx = output_weightwc (&weightpool, collate, runp);
-
 	    /* Find out wether this is a single entry or we have more than
 	       one consecutive entry.  */
 	    if (runp->wcnext != NULL
 		&& runp->nwcs == runp->wcnext->nwcs
 		&& wmemcmp ((wchar_t *) runp->wcs,
 			    (wchar_t *)runp->wcnext->wcs, runp->nwcs - 1) == 0
-		&& (runp->wcs[runp->nwcs - 1] + 1
-		    == runp->wcnext->wcs[runp->nwcs - 1]))
+		&& (runp->wcs[runp->nwcs - 1]
+		    == runp->wcnext->wcs[runp->nwcs - 1] + 1))
 	      {
 		int i;
+		struct element_t *series_startp = runp;
+		struct element_t *curp;
 
 		/* Now add first the initial byte sequence.  */
 		added = (1 + 1 + 2 * (runp->nwcs - 1)) * sizeof (int32_t);
@@ -2322,34 +2327,46 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		    i = runp->nwcs - 1;
 		    obstack_grow (&extrapool, &i, sizeof (int32_t));
 		  }
+
+		do
+		  runp = runp->wcnext;
+		while (runp->wcnext != NULL
+		       && runp->nwcs == runp->wcnext->nwcs
+		       && wmemcmp ((wchar_t *) runp->wcs,
+				   (wchar_t *)runp->wcnext->wcs,
+				   runp->nwcs - 1) == 0
+		       && (runp->wcs[runp->nwcs - 1]
+			   == runp->wcnext->wcs[runp->nwcs - 1] + 1));
+
+		/* Now walk backward from here to the beginning.  */
+		curp = runp;
+
 		for (i = 1; i < runp->nwcs; ++i)
 		  if (sizeof (int32_t) == sizeof (int))
-		    obstack_int_grow_fast (&extrapool, runp->wcs[i]);
+		    obstack_int_grow_fast (&extrapool, curp->wcs[i]);
 		  else
-		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
+		    obstack_grow (&extrapool, &curp->wcs[i], sizeof (int32_t));
 
 		/* Now find the end of the consecutive sequence and
                    add all the indeces in the indirect pool.  */
-		while (1)
+		do
 		  {
+		    weightidx = output_weightwc (&weightpool, collate, curp);
 		    if (sizeof (int32_t) == sizeof (int))
 		      obstack_int_grow (&extrapool, weightidx);
 		    else
 		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 
-		    runp = runp->next;
-		    if (runp->wcnext == NULL
-			|| runp->nwcs != runp->wcnext->nwcs
-			|| wmemcmp ((wchar_t *) runp->wcs,
-				    (wchar_t *) runp->wcnext->wcs,
-				    runp->nwcs - 1) != 0
-			|| (runp->wcs[runp->nwcs - 1] + 1
-			    != runp->wcnext->wcs[runp->nwcs - 1]))
-		      break;
-
-		    /* Insert the weight.  */
-		    weightidx = output_weightwc (&weightpool, collate, runp);
+		    curp = curp->wclast;
 		  }
+		while (curp != series_startp);
+
+		/* Add the final weight.  */
+		weightidx = output_weightwc (&weightpool, collate, curp);
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow (&indirectpool, weightidx);
+		else
+		  obstack_grow (&indirectpool, &weightidx, sizeof (int32_t));
 
 		/* And add the end byte sequence.  Without length this
                    time.  */
@@ -2358,12 +2375,6 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		    obstack_int_grow (&extrapool, runp->wcs[i]);
 		  else
 		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
-
-		weightidx = output_weightwc (&weightpool, collate, runp);
-		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow (&extrapool, weightidx);
-		else
-		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 	      }
 	    else
 	      {
@@ -2371,6 +2382,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		   string (except for the first character which is already
 		   tested for).  */
 		int i;
+
+		/* Output the weight info.  */
+		weightidx = output_weightwc (&weightpool, collate, runp);
 
 		added = (1 + 1 + runp->nwcs - 1) * sizeof (int32_t);
 		if (sizeof (int) == sizeof (int32_t))

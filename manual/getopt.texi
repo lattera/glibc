@@ -85,7 +85,7 @@ written to expect this.
 @item
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
 is treated specially.  It permits arguments that are not options to be
-returned as if they were associated with option character @samp{\0}.
+returned as if they were associated with option character @samp{\1}.
 
 @item
 POSIX demands the following behaviour: The first non-option stops option
