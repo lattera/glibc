@@ -1,3 +1,9 @@
+2000-07-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* locale/findlocale.c (locale_file_list): Use __LC_LAST as array
+	size instead of LC_ALL to take into account the new locale
+	categories.
+
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_trans.c: Correct a few bugs in the search loop.  Remove

@@ -34,7 +34,7 @@ extern struct locale_data *const _nl_C[];
 
 /* For each category we keep a list of records for the locale files
    which are somehow addressed.  */
-static struct loaded_l10nfile *locale_file_list[LC_ALL];
+static struct loaded_l10nfile *locale_file_list[__LC_LAST];
 
 
 struct locale_data *

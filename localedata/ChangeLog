@@ -1,6 +1,7 @@
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/i18n: Remove U00A0 from blank as well.
+	* tst-ctype-de_DE.ISO-8859-1.in: Remove U00A0 from blank as well.
 
 2000-07-21  Ulrich Drepper  <drepper@redhat.com>
 
