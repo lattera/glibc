@@ -1,4 +1,3 @@
-
 /*
  * IBM Accurate Mathematical Library
  * Copyright (c) International Business Machines Corp., 2001
@@ -36,7 +35,7 @@
 #include "endian.h"
 #include "mydefs.h"
 #include "branred.h"
-
+#include "math_private.h"
 
 
 /*******************************************************************/
