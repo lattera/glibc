@@ -1,5 +1,8 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/_G_config.h: Moved to...
+	* sysdeps/gnu/_G_config.h: ...here to be shared with Hurd.
+
 	* sysdeps/posix/signal.c: Add sig to act.sa_mask for completeness.
 
 	* stdlib/Makefile (tests): Add tst-bsearch.
