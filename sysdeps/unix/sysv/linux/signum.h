@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@ Cambridge, MA 02139, USA.  */
 #ifdef	_SIGNAL_H
 
 /* Fake signal functions.  */
-#define	SIG_ERR	((__sighandler_t) -1) /* Error return.  */
-#define	SIG_DFL	((__sighandler_t) 0) /* Default action.  */
-#define	SIG_IGN	((__sighandler_t) 1) /* Ignore signal.  */
+#define SIG_ERR ((__sighandler_t) -1) /* Error return.  */
+#define SIG_DFL ((__sighandler_t) 0) /* Default action.  */
+#define SIG_IGN ((__sighandler_t) 1) /* Ignore signal.  */
 
 
 /* Signals.  */
@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
 #define	SIGQUIT		3	/* Quit (POSIX).  */
 #define	SIGILL		4	/* Illegal instruction (ANSI).  */
 #define	SIGTRAP		5	/* Trace trap (POSIX).  */
-#define	SIGABRT		SIGIOT	/* Abort (ANSI).  */
+#define	SIGABRT		6	/* Abort (ANSI).  */
 #define	SIGIOT		6	/* IOT trap (4.2 BSD).  */
 #define	SIGBUS		7	/* BUS error (4.2 BSD).  */
 #define	SIGFPE		8	/* Floating-point exception (ANSI).  */
@@ -61,6 +61,6 @@ Cambridge, MA 02139, USA.  */
 #define	SIGPWR		30	/* Power failure restart (System V).  */
 #define SIGUNUSED	31
 
-#endif	/* <signal.h> included.  */
-
 #define	_NSIG		32	/* Biggest signal number + 1.  */
+
+#endif	/* <signal.h> included.  */
