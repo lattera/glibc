@@ -24,11 +24,7 @@
 	.type C_SYMBOL_NAME(errno),%object
 	.size C_SYMBOL_NAME(errno),4
 C_SYMBOL_NAME(errno):	.zero 4
-	.globl C_SYMBOL_NAME(_errno)
-	.type C_SYMBOL_NAME(_errno),%object
-/* This name is expected by hj's libc.so.5 startup code.  It seems to be needed
-   by pthreads as well.  */
-C_SYMBOL_NAME(_errno) = C_SYMBOL_NAME(errno)
+weak_alias (C_SYMBOL_NAME(errno), C_SYMBOL_NAME(_errno))
 	.text
 
 /* The syscall stubs jump here when they detect an error.
