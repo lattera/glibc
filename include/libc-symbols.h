@@ -244,7 +244,7 @@
 #  define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
   static const char __evoke_link_warning_##symbol[]	\
-    __attribute__ ((unused, section (".gnu.warning." #symbol __sec_comment))) \
+    __attribute__ ((used, section (".gnu.warning." #symbol __sec_comment))) \
     = msg;
 #  define libc_freeres_ptr(decl) \
   __make_section_unallocated ("__libc_freeres_ptrs, \"aw\", %nobits") \
@@ -344,11 +344,11 @@ for linking")
    because it will need to be relocated at run time anyway.  */
 #   define _elf_set_element(set, symbol) \
   static const void *__elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((unused, section (#set))) = &(symbol)
+    __attribute__ ((used, section (#set))) = &(symbol)
 #  else
 #   define _elf_set_element(set, symbol) \
   static const void *const __elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((unused, section (#set))) = &(symbol)
+    __attribute__ ((used, section (#set))) = &(symbol)
 #  endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to
