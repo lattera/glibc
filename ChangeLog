@@ -1,3 +1,7 @@
+2005-01-03  Andreas Jaeger  <aj@suse.de>
+
+	* elf/Makefile (tests): Revert patch from 2005-01-03.
+
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c [!DONT_USE_BOOTSTRAP_MAP] (_dl_start_final): Initialize
