@@ -60,7 +60,13 @@ aio_cancel (fildes, aiocbp)
     {
       /* If the AIO request is not for this descriptor it has no value
 	 to look for the request block.  */
-      if (aiocbp->aio_fildes == fildes)
+      if (aiocbp->aio_fildes != fildes)
+	{
+	  pthread_mutex_unlock (&__aio_requests_mutex);
+	  __set_errno (EINVAL);
+	  return -1;
+	}
+      else if (aiocbp->__error_code == EINPROGRESS)
 	{
 	  struct requestlist *last = NULL;
 

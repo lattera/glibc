@@ -98,7 +98,7 @@ do_test (void)
       return 1;
     }
 
-  struct aiocb a;
+  struct aiocb a, a2, *ap;
   char mem[1];
   memset (&a, '\0', sizeof (a));
   a.aio_fildes = fds[0];
@@ -214,22 +214,37 @@ do_test (void)
     }
 
   puts ("in-time cancellation succeeded");
-  aio_cancel (fds[0], &a);
+
+  ap = &a;
+  if (aio_cancel (fds[0], &a) != AIO_CANCELED)
+    {
+      puts ("aio_cancel failed");
+      /* If aio_cancel failed, we cannot reuse aiocb a.  */
+      ap = &a2;
+    }
 
 
   cl_called = 0;
 
-  memset (&a, '\0', sizeof (a));
-  a.aio_fildes = fds[1];
-  a.aio_buf = mem;
-  a.aio_nbytes = sizeof (mem);
-  if (aio_write (&a) != 0)
+  size_t len2 = fpathconf (fds[1], _PC_PIPE_BUF) + sizeof (mem) + 1;
+  char *mem2 = malloc (len2);
+  if (mem2 == NULL)
+    {
+      puts ("could not allocate memory for pipe write");
+      return 1;
+    }
+
+  memset (ap, '\0', sizeof (*ap));
+  ap->aio_fildes = fds[1];
+  ap->aio_buf = mem2;
+  ap->aio_nbytes = len2;
+  if (aio_write (ap) != 0)
     {
       puts ("aio_write failed");
       return 1;
     }
 
-  if (pthread_create (&th, NULL, tf, &a) != 0)
+  if (pthread_create (&th, NULL, tf, ap) != 0)
     {
       puts ("3rd create failed");
       return 1;
@@ -262,18 +277,18 @@ do_test (void)
 
   if (cl_called == 0)
     {
-      printf ("tf cleanup handler not called\n");
+      puts ("tf cleanup handler not called");
       return 1;
     }
   if (cl_called > 1)
     {
-      printf ("tf cleanup handler called more than once\n");
+      puts ("tf cleanup handler called more than once");
       return 1;
     }
 
   cl_called = 0;
 
-  if (pthread_create (&th, NULL, tf2, &a) != 0)
+  if (pthread_create (&th, NULL, tf2, ap) != 0)
     {
       puts ("4th create failed");
       return 1;
@@ -306,12 +321,12 @@ do_test (void)
 
   if (cl_called == 0)
     {
-      printf ("tf2 cleanup handler not called\n");
+      puts ("tf2 cleanup handler not called");
       return 1;
     }
   if (cl_called > 1)
     {
-      printf ("tf2 cleanup handler called more than once\n");
+      puts ("tf2 cleanup handler called more than once");
       return 1;
     }
 

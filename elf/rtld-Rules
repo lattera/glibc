@@ -31,7 +31,7 @@ rtld-all:
 ifeq ($(subdir),elf)
 
 ifndef rtld-subdirs
-error This is makefile is a subroutine of elf/Makefile not to be used directly
+error This makefile is a subroutine of elf/Makefile not to be used directly
 endif
 
 include ../Makeconfig

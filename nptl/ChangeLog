@@ -1,3 +1,10 @@
+2003-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-cancel17.c (do_test): Check if aio_cancel failed.
+	Don't reuse struct aiocb A if it failed.
+	Write fpathconf (fds[1], _PC_PIPE_BUF) + 2 bytes using aio_write,
+	not just one byte, as that does not block.
+
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/unwind-resume.c: New file.
