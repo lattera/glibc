@@ -1,5 +1,7 @@
 2003-06-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/posix-timer.h (timespec_compare): Always inline.
+
 	* sysdeps/unix/sysv/linux/fork.h: Add libc_hidden_proto for
 	__register_atfork.
 	* sysdeps/unix/sysv/linux/register-atfork.c (__register_atfork):
