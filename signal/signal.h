@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -327,7 +327,8 @@ extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
 # include <bits/sigstack.h>
 # ifdef __USE_XOPEN
-#  include <ucontext.h>
+/* This will define `ucontext_t' and `mcontext_t'.  */
+#  include <sys/ucontext.h>
 # endif
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
