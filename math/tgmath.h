@@ -83,11 +83,11 @@
 			: Fct##f (Val1, Val2, Val3))))
 
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
-     (__extension__ (sizeof (__real__ (val)) > sizeof (double)		      \
+     (__extension__ (sizeof (__real__ (Val)) > sizeof (double)		      \
 		     ? (sizeof (__real__ (Val)) == sizeof (Val)		      \
 			? Fct##l (Val)					      \
 			: Cfct##l (Val))				      \
-		     : (sizeof (__real__ (val)) == sizeof (double)	      \
+		     : (sizeof (__real__ (Val)) == sizeof (double)	      \
 			? (sizeof (__real__ (Val)) == sizeof (Val)	      \
 			   ? Fct (Val)					      \
 			   : Cfct (Val))				      \
@@ -138,7 +138,7 @@
 /* Arc tangent of X.  */
 #define atan(Val) __TGMATH_UNARY_REAL_IMAG (Val, atan, catan)
 /* Arc tangent of Y/X.  */
-#define atan2(Val) __TGMATH_UNARY_REAL_ONLY (Val, atan2)
+#define atan2(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, atan2)
 
 /* Cosine of X.  */
 #define cos(Val) __TGMATH_UNARY_REAL_IMAG (Val, cos, ccos)

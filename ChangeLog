@@ -1,3 +1,8 @@
+1998-10-19 18:59 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* math/tgmath.h (__TGMATH_UNARY_REAL_IMAG): Fix typo: val -> Val.
+	(atan2): Takes two arguments.
+
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/ldsodefs.h: New file.
