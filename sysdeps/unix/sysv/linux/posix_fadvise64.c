@@ -33,8 +33,10 @@ __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
 #ifdef __NR_fadvise64_64
   INTERNAL_SYSCALL_DECL (err);
   int ret = INTERNAL_SYSCALL (fadvise64_64, err, 6, fd,
-			      __LONG_LONG_PAIR ((long)(offset >> 32), (long)offset),
-			      __LONG_LONG_PAIR ((long)(len >> 32), (long)len),
+			      __LONG_LONG_PAIR ((long) (offset >> 32),
+						(long) offset),
+			      __LONG_LONG_PAIR ((long) (len >> 32),
+						(long) len),
 			      advise);
   if (!INTERNAL_SYSCALL_ERROR_P (ret, err))
     return 0;
@@ -50,7 +52,8 @@ __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
 
   INTERNAL_SYSCALL_DECL (err2);
   int ret2 = INTERNAL_SYSCALL (fadvise64, err2, 5, fd,
-			       __LONG_LONG_PAIR ((long)(offset >> 32), (long)offset),
+			       __LONG_LONG_PAIR ((long) (offset >> 32),
+						 (long) offset),
 			       (off_t) len, advise);
   if (!INTERNAL_SYSCALL_ERROR_P (ret2, err2))
     return 0;
