@@ -57,33 +57,12 @@ contact <bug-glibc@prep.ai.mit.edu>
 [ 7] Several math functions have to be written:
 
      - exp2
-     - nearbyint
 
-     each with float, double, and long double arguments.  Writing these
-     functions should be possible when following the implementation of
-     the existing exp/log functions for other bases.
+     each with float, double, and long double arguments.
 
      Beside this most of the complex math functions which are new in
-     ISO C 9X.  gcc already has support for numbers of complex type so the
-     implementation should be possible today.  I mention here the names
-     and the way to write them (argument is z = x + iy):
-
-     - sin(z)	= 1/(2i) (e^(iz) - e^-(iz)) = sin(x) cosh(y) + i cos(x) sinh(y)
-     - cos(z)	= 1/2 (e^(iz) + e^-(iz)) = cos(x) cosh(y) - i sin(x) sinh(y)
-     - tan(z)	= 1/i (e^(iz) - e^-(iz))/(e^(iz) + e^-(iz))
-     - cot(z)	= i (e^(iz) + e^-(iz))/(e^(iz) - e^-(iz))
-     - asin(z)	= -i ln(iz + sqrt(1-z^2))
-     - acos(z)	= -i ln(z + sqrt(z^2-1))
-     - atan(z)	= 1/(2i) ln((1+iz)/(1-iz))
-     - acot(z)	= -1/(2i) ln((iz+1)/(iz-1))
-     - tanh(z)	= (e^z - e^-z)/(e^z + e^-z)
-     - coth(z)	= (e^z + e^-z)/(e^z - e^-z)
-
-     All functions should we written with all the parallelism in mind.
-     And assembler versions are highly expreciated since, e.g., the ix87
-     FPU provides an `fsincos' instructions which is certainly useful for
-     the `sin' function.  The implementations for the normal math functions
-     shows other optimization techniques.
+     ISO C 9X should be improved.  Writing some of them in assembler is
+     useful to exploit the parallelism which often is available.
 
 
 [ 8] If you enjoy assembler programming (as I do --drepper :-) you might
