@@ -43,7 +43,6 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* int p_priority */
   &__pthread_handles[0].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
-  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
   0,                          /* char p_terminated */
@@ -56,8 +55,6 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  0,                          /* char p_woken_by_cancel */
-  NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,                       /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
@@ -72,7 +69,12 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
   &__pthread_initial_thread,  /* pthread_descr p_self */
-  0                           /* Always index 0 */
+  0,                          /* Always index 0 */
+  0,                          /* int p_report_events */
+  {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
+  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
+  0,                          /* char p_woken_by_cancel */
+  NULL                        /* struct pthread_extricate_if *p_extricate */
 };
 
 /* Descriptor of the manager thread; none of this is used but the error
@@ -89,7 +91,6 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_priority */
   &__pthread_handles[1].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
-  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
   0,                          /* char p_terminated */
@@ -102,8 +103,6 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  0,                          /* char p_woken_by_cancel */
-  NULL,                       /* struct pthread_extricate_if *p_extricate */
   &__pthread_manager_thread.p_errno, /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
@@ -118,7 +117,12 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
   &__pthread_manager_thread,  /* pthread_descr p_self */
-  1                           /* Always index 1 */
+  1,                          /* Always index 1 */
+  0,                          /* int p_report_events */
+  {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
+  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
+  0,                          /* char p_woken_by_cancel */
+  NULL                        /* struct pthread_extricate_if *p_extricate */
 };
 
 /* Pointer to the main thread (the father of the thread manager thread) */
@@ -150,7 +154,7 @@ char *__pthread_manager_thread_tos = NULL;
 int __pthread_exit_requested = 0;
 int __pthread_exit_code = 0;
 
-/* Pointers that select new or old suspend/resume functions 
+/* Pointers that select new or old suspend/resume functions
    based on availability of rt signals. */
 
 void (*__pthread_restart)(pthread_descr) = __pthread_restart_old;
@@ -813,7 +817,7 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
    Since the restart signal does not queue, we use an atomic counter to create
    queuing semantics. This is needed to resolve a rare race condition in
    pthread_cond_timedwait_relative. */
-    
+
 void __pthread_restart_old(pthread_descr th)
 {
   if (atomic_increment(&th->p_resume_count) == -1)

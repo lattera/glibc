@@ -1,5 +1,7 @@
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* pthread.c (__pthread_initial_thread, pthread_manager_thread):
+	Adjust initializers for struct _pthread_descr_struct change.
 	* internals.h (struct _pthread_descr_struct): Move new elements to
 	the end.
 
