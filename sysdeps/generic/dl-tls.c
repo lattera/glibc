@@ -577,7 +577,7 @@ __tls_get_addr (GET_ADDR_ARGS)
 	    {
 	      size_t cnt;
 
-	      for (cnt = total = 0 ? 1 : 0; cnt < listp->len; ++cnt)
+	      for (cnt = total == 0 ? 1 : 0; cnt < listp->len; ++cnt)
 		{
 		  size_t gen = listp->slotinfo[cnt].gen;
 		  struct link_map *map;
