@@ -194,7 +194,7 @@ init_rtsigs (void)
   if (rtsigs_initialized)
     return;
 
-  if (__builtin_expect (__libc_current_sigrtmin_private () == -1))
+  if (__libc_current_sigrtmin_private () == -1)
     {
       __pthread_sig_restart = SIGUSR1;
       __pthread_sig_cancel = SIGUSR2;

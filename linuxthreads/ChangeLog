@@ -1,3 +1,8 @@
+2002-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (init_rtsigs): Remove incomplete __builtin_expect.
+	Reported by Art Hass <ahaas@airmail.net>.
+
 2002-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* forward.c (pthread_attr_init_2_0, pthread_attr_init_2_1):
