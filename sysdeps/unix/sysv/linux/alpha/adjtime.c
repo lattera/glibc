@@ -87,14 +87,15 @@ compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2_0);
 #define TIMEVAL		timeval
 #undef TIMEX
 #define TIMEX		timex
-#undef ADJTIME
-#define ADJTIME		__adjtime_tv64
 #undef ADJTIMEX
 #define ADJTIMEX(x)	INLINE_SYSCALL (adjtimex, 1, x)
-#undef LINKAGE
-#define LINKAGE		static
 
-LINKAGE int ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv);
+#undef LINKAGE
+#undef ADJTIME
+#if !defined __ASSUME_TIMEVAL64
+#define LINKAGE		static
+#define ADJTIME		__adjtime_tv64
+#endif
 
 #include <sysdeps/unix/sysv/linux/adjtime.c>
 #include <stdbool.h>
@@ -135,8 +136,6 @@ __adjtime (itv, otv)
 
   return ret;
 }
-#else
-strong_alias (__adjtime_tv64, __adjtime);
 #endif
 
 versioned_symbol (libc, __adjtime, adjtime, GLIBC_2_1);

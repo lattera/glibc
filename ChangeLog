@@ -1,3 +1,15 @@
+2004-10-14  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Mark auto
+	instead of static.
+
+	* sysdeps/unix/sysv/linux/adjtime.c (ADJTIME): Use prototype
+	style definition.
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (ADJTIME): If
+	__ASSUME_TIMEVAL64, define __adjtime directly rather than
+	via strong_alias.
+
 2004-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/Makefile: When using compilers without -fpie support, also
