@@ -51,6 +51,13 @@ DEFUN(socket, (domain, type, protocol),
       err = __socket_create (server, type, protocol, &sock);
     }
 
+  /* These errors all mean that the server node doesn't support the
+     socket.defs protocol, which we'll take to mean that the protocol
+     isn't supported.  */
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED
+      || err == MIG_BAD_ID || err == EOPNOTSUPP)
+    err = EPFNOSUPPORT;
+
   if (err)
     return __hurd_fail (err);
 
