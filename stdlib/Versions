@@ -90,4 +90,8 @@ libc {
     # i*
     imaxabs; imaxdiv;
   }
+  GLIBC_2.1.3 {
+    # used by new G++ ABI
+    __cxa_atexit; __cxa_finalize;
+  }
 }

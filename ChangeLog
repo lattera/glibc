@@ -1,3 +1,16 @@
+1999-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/Versions: Export __cxa_atexit and __cxa_finalize.
+
+1999-12-16  Mark Mitchell  <mark@codesourcery.com>
+
+	* stdlib/Makefile (routines): Add cxa_atexit and cxa_finalize.
+	* stdlib/exit.h (flavor): Add ef_cxa.
+	(exit_function): Add cxa variant.
+	* stdlib/exit.c (exit): Handle ef_cxa exit functions.
+	* stdlib/cxa_atexit.c: New file.
+	* stdlib/cxa_finalize.c: New file.
+
 1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gb2312.c: Update mapping of GB 0x212c from latest

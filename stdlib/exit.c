@@ -56,6 +56,9 @@ exit (int status)
 	    case ef_at:
 	      (*f->func.at) ();
 	      break;
+	    case ef_cxa:
+	      (*f->func.cxa.fn) (f->func.cxa.arg);
+	      break;
 	    }
 	}
 

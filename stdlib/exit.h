@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +19,21 @@
 #ifndef	_EXIT_H
 #define _EXIT_H 1
 
+
+enum
+{
+  ef_free,	/* `ef_free' MUST be zero!  */
+  ef_us,
+  ef_on,
+  ef_at,
+  ef_cxa
+};
+
 struct exit_function
   {
-    enum { ef_free, ef_us, ef_on, ef_at } flavor; /* `ef_free' MUST be zero! */
+    /* `flavour' should be of type of the `enum' above but since we need
+       this element in an atomic operation we have to use `long int'.  */
+    long int flavor;
     union
       {
 	void (*at) (void);
@@ -30,6 +42,12 @@ struct exit_function
 	    void (*fn) (int status, void *arg);
 	    void *arg;
 	  } on;
+	struct
+	  {
+	    void (*fn) (void *arg);
+	    void *arg;
+	    void *dso_handle;
+	  } cxa;
       } func;
   };
 struct exit_function_list

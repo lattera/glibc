@@ -29,7 +29,7 @@ routines	:=							      \
 	abort								      \
 	bsearch qsort msort						      \
 	getenv putenv setenv secure-getenv				      \
-	exit on_exit atexit						      \
+	exit on_exit atexit cxa_atexit cxa_finalize			      \
 	abs labs llabs							      \
 	div ldiv lldiv							      \
 	mblen mbstowcs mbtowc wcstombs wctomb				      \
