@@ -1,9 +1,9 @@
-<code_set_name> IBM864
+<code_set_name> IBM874
 <comment_char> %
 <escape_char> /
 % automatically generated from the charDB
 
-% alias CP864
+% alias CP874
 CHARMAP
 <NU>                   /x00     <U0000> NULL
 <NUL>                  /x00     <U0000> NULL
@@ -80,6 +80,9 @@ CHARMAP
 <!S>                   /x24     <U0024> DOLLAR SIGN
 <DO>                   /x24     <U0024> DOLLAR SIGN
 <dollar-sign>          /x24     <U0024> DOLLAR SIGN
+<%>                    /x25     <U0025> PERCENT SIGN
+<percent-sign>         /x25     <U0025> PERCENT SIGN
+<percent-sign/>>       /x25     <U0025> PERCENT SIGN
 <&>                    /x26     <U0026> AMPERSAND
 <ampersand>            /x26     <U0026> AMPERSAND
 <'>                    /x27     <U0027> APOSTROPHE
@@ -218,137 +221,100 @@ CHARMAP
 <tilde>                /x7E     <U007E> TILDE
 <DEL>                  /x7F     <U007F> DELETE
 <DT>                   /x7F     <U007F> DELETE
-<DG>                   /x80     <U00B0> DEGREE SIGN
-<.M>                   /x81     <U00B7> MIDDLE DOT
-<Sb>                   /x82     <U2219> BULLET OPERATOR
-<RT>                   /x83     <U221A> SQUARE ROOT
-<:S>                   /x84     <U2592> MEDIUM SHADE
-<hh>                   /x85     <U2500> BOX DRAWINGS LIGHT HORIZONTAL
-<_->                   /x85     <U2500> BOX DRAWINGS LIGHT HORIZONTAL
-<vv>                   /x86     <U2502> BOX DRAWINGS LIGHT VERTICAL
-<_!>                   /x86     <U2502> BOX DRAWINGS LIGHT VERTICAL
-<vh>                   /x87     <U253C> BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL
-<_!->                  /x87     <U253C> BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL
-<vl>                   /x88     <U2524> BOX DRAWINGS LIGHT VERTICAL AND LEFT
-<_!<>                  /x88     <U2524> BOX DRAWINGS LIGHT VERTICAL AND LEFT
-<dh>                   /x89     <U252C> BOX DRAWINGS LIGHT DOWN AND HORIZONTAL
-<_V->                  /x89     <U252C> BOX DRAWINGS LIGHT DOWN AND HORIZONTAL
-<vr>                   /x8A     <U251C> BOX DRAWINGS LIGHT VERTICAL AND RIGHT
-<_!/>>                 /x8A     <U251C> BOX DRAWINGS LIGHT VERTICAL AND RIGHT
-<uh>                   /x8B     <U2534> BOX DRAWINGS LIGHT UP AND HORIZONTAL
-<_-A>                  /x8B     <U2534> BOX DRAWINGS LIGHT UP AND HORIZONTAL
-<dl>                   /x8C     <U2510> BOX DRAWINGS LIGHT DOWN AND LEFT
-<_V<w>                 /x8C     <U2510> BOX DRAWINGS LIGHT DOWN AND LEFT
-<dr>                   /x8D     <U250C> BOX DRAWINGS LIGHT DOWN AND RIGHT
-<_V/>>                 /x8D     <U250C> BOX DRAWINGS LIGHT DOWN AND RIGHT
-<ur>                   /x8E     <U2514> BOX DRAWINGS LIGHT UP AND RIGHT
-<_A/>>                 /x8E     <U2514> BOX DRAWINGS LIGHT UP AND RIGHT
-<ul>                   /x8F     <U2518> BOX DRAWINGS LIGHT UP AND LEFT
-<_A<>                  /x8F     <U2518> BOX DRAWINGS LIGHT UP AND LEFT
-<b*>                   /x90     <U03B2> GREEK SMALL LETTER BETA
-<00>                   /x91     <U221E> INFINITY
-<f*>                   /x92     <U03C6> GREEK SMALL LETTER PHI
-<+->                   /x93     <U00B1> PLUS-MINUS SIGN
-<12>                   /x94     <U00BD> VULGAR FRACTION ONE HALF
-<14>                   /x95     <U00BC> VULGAR FRACTION ONE QUARTER
-<?2>                   /x96     <U2248> ALMOST EQUAL TO
-<<<>                   /x97     <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
-</>/>>                 /x98     <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
-<lH->                  /x99     <UFEF7> ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE ISOLATED FORM
-<lH.>                  /x9A     <UFEF8> ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE FINAL FORM
-<la->                  /x9D     <UFEFB> ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM
-<la.>                  /x9E     <UFEFC> ARABIC LIGATURE LAM WITH ALEF FINAL FORM
+<.3>                   /x85     <U2026> HORIZONTAL ELLIPSIS
+<'6>                   /x91     <U2018> LEFT SINGLE QUOTATION MARK
+<'9>                   /x92     <U2019> RIGHT SINGLE QUOTATION MARK
+<"6>                   /x93     <U201C> LEFT DOUBLE QUOTATION MARK
+<"9>                   /x94     <U201D> RIGHT DOUBLE QUOTATION MARK
+<sb>                   /x95     <U2022> BULLET
+<-N>                   /x96     <U2013> EN DASH
+<-M>                   /x97     <U2014> EM DASH
 <NS>                   /xA0     <U00A0> NO-BREAK SPACE
-<-->                   /xA1     <U00AD> SOFT HYPHEN
-<aM.>                  /xA2     <UFE82> ARABIC LETTER ALEF WITH MADDA ABOVE FINAL FORM
-<L->                   /xA3     <U00A3> POUND SIGN
-<Pd>                   /xA3     <U00A3> POUND SIGN
-<Cu>                   /xA4     <U00A4> CURRENCY SIGN
-<Xo>                   /xA4     <U00A4> CURRENCY SIGN
-<aH.>                  /xA5     <UFE84> ARABIC LETTER ALEF WITH HAMZA ABOVE FINAL FORM
-<a+.>                  /xA8     <UFE8E> ARABIC LETTER ALEF FINAL FORM
-<b+->                  /xA9     <UFE8F> ARABIC LETTER BEH ISOLATED FORM
-<t+->                  /xAA     <UFE95> ARABIC LETTER TEH ISOLATED FORM
-<tk->                  /xAB     <UFE99> ARABIC LETTER THEH ISOLATED FORM
-<,+>                   /xAC     <U060C> ARABIC COMMA
-<g+->                  /xAD     <UFE9D> ARABIC LETTER JEEM ISOLATED FORM
-<hk->                  /xAE     <UFEA1> ARABIC LETTER HAH ISOLATED FORM
-<x+->                  /xAF     <UFEA5> ARABIC LETTER KHAH ISOLATED FORM
-<0a>                   /xB0     <U0660> ARABIC-INDIC DIGIT ZERO
-<1a>                   /xB1     <U0661> ARABIC-INDIC DIGIT ONE
-<2a>                   /xB2     <U0662> ARABIC-INDIC DIGIT TWO
-<3a>                   /xB3     <U0663> ARABIC-INDIC DIGIT THREE
-<4a>                   /xB4     <U0664> ARABIC-INDIC DIGIT FOUR
-<5a>                   /xB5     <U0665> ARABIC-INDIC DIGIT FIVE
-<6a>                   /xB6     <U0666> ARABIC-INDIC DIGIT SIX
-<7a>                   /xB7     <U0667> ARABIC-INDIC DIGIT SEVEN
-<8a>                   /xB8     <U0668> ARABIC-INDIC DIGIT EIGHT
-<9a>                   /xB9     <U0669> ARABIC-INDIC DIGIT NINE
-<f+->                  /xBA     <UFED1> ARABIC LETTER FEH ISOLATED FORM
-<;+>                   /xBB     <U061B> ARABIC SEMICOLON
-<s+->                  /xBC     <UFEB1> ARABIC LETTER SEEN ISOLATED FORM
-<sn->                  /xBD     <UFEB5> ARABIC LETTER SHEEN ISOLATED FORM
-<c+->                  /xBE     <UFEB9> ARABIC LETTER SAD ISOLATED FORM
-<?+>                   /xBF     <U061F> ARABIC QUESTION MARK
-<Ct>                   /xC0     <U00A2> CENT SIGN
-<!C>                   /xC0     <U00A2> CENT SIGN
-<e+.>                  /xC5     <UFECA> ARABIC LETTER AIN FINAL FORM
-<a+->                  /xC7     <UFE8D> ARABIC LETTER ALEF ISOLATED FORM
-<b+,>                  /xC8     <UFE91> ARABIC LETTER BEH INITIAL FORM
-<tm->                  /xC9     <UFE93> ARABIC LETTER TEH MARBUTA ISOLATED FORM
-<t+,>                  /xCA     <UFE97> ARABIC LETTER TEH INITIAL FORM
-<tk,>                  /xCB     <UFE9B> ARABIC LETTER THEH INITIAL FORM
-<g+,>                  /xCC     <UFE9F> ARABIC LETTER JEEM INITIAL FORM
-<hk,>                  /xCD     <UFEA3> ARABIC LETTER HAH INITIAL FORM
-<x+,>                  /xCE     <UFEA7> ARABIC LETTER KHAH INITIAL FORM
-<d+->                  /xCF     <UFEA9> ARABIC LETTER DAL ISOLATED FORM
-<dk->                  /xD0     <UFEAB> ARABIC LETTER THAL ISOLATED FORM
-<r+->                  /xD1     <UFEAD> ARABIC LETTER REH ISOLATED FORM
-<z+->                  /xD2     <UFEAF> ARABIC LETTER ZAIN ISOLATED FORM
-<s+,>                  /xD3     <UFEB3> ARABIC LETTER SEEN INITIAL FORM
-<sn,>                  /xD4     <UFEB7> ARABIC LETTER SHEEN INITIAL FORM
-<c+,>                  /xD5     <UFEBB> ARABIC LETTER SAD INITIAL FORM
-<dd,>                  /xD6     <UFEBF> ARABIC LETTER DAD INITIAL FORM
-<tj->                  /xD7     <UFEC1> ARABIC LETTER TAH ISOLATED FORM
-<zH->                  /xD8     <UFEC5> ARABIC LETTER ZAH ISOLATED FORM
-<e+,>                  /xD9     <UFECB> ARABIC LETTER AIN INITIAL FORM
-<i+,>                  /xDA     <UFECF> ARABIC LETTER GHAIN INITIAL FORM
-<BB>                   /xDB     <U00A6> BROKEN BAR
-<!B>                   /xDB     <U00A6> BROKEN BAR
-<NO>                   /xDC     <U00AC> NOT SIGN
-<7!>                   /xDC     <U00AC> NOT SIGN
-<-:>                   /xDD     <U00F7> DIVISION SIGN
-<*X>                   /xDE     <U00D7> MULTIPLICATION SIGN
-<e+->                  /xDF     <UFEC9> ARABIC LETTER AIN ISOLATED FORM
-<++>                   /xE0     <U0640> ARABIC TATWEEL
-<f+,>                  /xE1     <UFED3> ARABIC LETTER FEH INITIAL FORM
-<q+,>                  /xE2     <UFED7> ARABIC LETTER QAF INITIAL FORM
-<k+,>                  /xE3     <UFEDB> ARABIC LETTER KAF INITIAL FORM
-<l+,>                  /xE4     <UFEDF> ARABIC LETTER LAM INITIAL FORM
-<m+,>                  /xE5     <UFEE3> ARABIC LETTER MEEM INITIAL FORM
-<n+,>                  /xE6     <UFEE7> ARABIC LETTER NOON INITIAL FORM
-<h+,>                  /xE7     <UFEEB> ARABIC LETTER HEH INITIAL FORM
-<w+->                  /xE8     <UFEED> ARABIC LETTER WAW ISOLATED FORM
-<j+->                  /xE9     <UFEEF> ARABIC LETTER ALEF MAKSURA ISOLATED FORM
-<y+,>                  /xEA     <UFEF3> ARABIC LETTER YEH INITIAL FORM
-<dd->                  /xEB     <UFEBD> ARABIC LETTER DAD ISOLATED FORM
-<e+;>                  /xEC     <UFECC> ARABIC LETTER AIN MEDIAL FORM
-<i+.>                  /xED     <UFECE> ARABIC LETTER GHAIN FINAL FORM
-<i+->                  /xEE     <UFECD> ARABIC LETTER GHAIN ISOLATED FORM
-<m+->                  /xEF     <UFEE1> ARABIC LETTER MEEM ISOLATED FORM
-<3+;>                  /xF0     <UFE7D> ARABIC SHADDA MEDIAL FORM
-<3+>                   /xF1     <U0651> ARABIC SHADDA
-<n+->                  /xF2     <UFEE5> ARABIC LETTER NOON ISOLATED FORM
-<h+->                  /xF3     <UFEE9> ARABIC LETTER HEH ISOLATED FORM
-<h+;>                  /xF4     <UFEEC> ARABIC LETTER HEH MEDIAL FORM
-<j+.>                  /xF5     <UFEF0> ARABIC LETTER ALEF MAKSURA FINAL FORM
-<y+.>                  /xF6     <UFEF2> ARABIC LETTER YEH FINAL FORM
-<i+;>                  /xF7     <UFED0> ARABIC LETTER GHAIN MEDIAL FORM
-<q+->                  /xF8     <UFED5> ARABIC LETTER QAF ISOLATED FORM
-<lM->                  /xF9     <UFEF5> ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE ISOLATED FORM
-<lM.>                  /xFA     <UFEF6> ARABIC LIGATURE LAM WITH ALEF WITH MADDA ABOVE FINAL FORM
-<l+->                  /xFB     <UFEDD> ARABIC LETTER LAM ISOLATED FORM
-<k+->                  /xFC     <UFED9> ARABIC LETTER KAF ISOLATED FORM
-<y+->                  /xFD     <UFEF1> ARABIC LETTER YEH ISOLATED FORM
-<fS>                   /xFE     <U25A0> BLACK SQUARE
+<th161>                /xA1     <U0E01> THAI CHARACTER KO KAI
+<th162>                /xA2     <U0E02> THAI CHARACTER KHO KHAI
+<th163>                /xA3     <U0E03> THAI CHARACTER KHO KHUAT
+<th164>                /xA4     <U0E04> THAI CHARACTER KHO KHWAI
+<th165>                /xA5     <U0E05> THAI CHARACTER KHO KHON
+<th166>                /xA6     <U0E06> THAI CHARACTER KHO RAKHANG
+<th167>                /xA7     <U0E07> THAI CHARACTER NGO NGU
+<th168>                /xA8     <U0E08> THAI CHARACTER CHO CHAN
+<th169>                /xA9     <U0E09> THAI CHARACTER CHO CHING
+<th170>                /xAA     <U0E0A> THAI CHARACTER CHO CHANG
+<th171>                /xAB     <U0E0B> THAI CHARACTER SO SO
+<th172>                /xAC     <U0E0C> THAI CHARACTER CHO CHOE
+<th173>                /xAD     <U0E0D> THAI CHARACTER YO YING
+<th174>                /xAE     <U0E0E> THAI CHARACTER DO CHADA
+<th175>                /xAF     <U0E0F> THAI CHARACTER TO PATAK
+<th176>                /xB0     <U0E10> THAI CHARACTER THO THAN
+<th177>                /xB1     <U0E11> THAI CHARACTER THO NANGMONTHO
+<th178>                /xB2     <U0E12> THAI CHARACTER THO PHUTHAO
+<th179>                /xB3     <U0E13> THAI CHARACTER NO NEN
+<th180>                /xB4     <U0E14> THAI CHARACTER DO DEK
+<th181>                /xB5     <U0E15> THAI CHARACTER TO TAO
+<th182>                /xB6     <U0E16> THAI CHARACTER THO THUNG
+<th183>                /xB7     <U0E17> THAI CHARACTER THO THAHAN
+<th184>                /xB8     <U0E18> THAI CHARACTER THO THONG
+<th185>                /xB9     <U0E19> THAI CHARACTER NO NU
+<th186>                /xBA     <U0E1A> THAI CHARACTER BO BAIMAI
+<th187>                /xBB     <U0E1B> THAI CHARACTER PO PLA
+<th188>                /xBC     <U0E1C> THAI CHARACTER PHO PHUNG
+<th189>                /xBD     <U0E1D> THAI CHARACTER FO FA
+<th190>                /xBE     <U0E1E> THAI CHARACTER PHO PHAN
+<th191>                /xBF     <U0E1F> THAI CHARACTER FO FAN
+<th192>                /xC0     <U0E20> THAI CHARACTER PHO SAMPHAO
+<th193>                /xC1     <U0E21> THAI CHARACTER MO MA
+<th194>                /xC2     <U0E22> THAI CHARACTER YO YAK
+<th195>                /xC3     <U0E23> THAI CHARACTER RO RUA
+<th196>                /xC4     <U0E24> THAI CHARACTER RU
+<th197>                /xC5     <U0E25> THAI CHARACTER LO LING
+<th198>                /xC6     <U0E26> THAI CHARACTER LU
+<th199>                /xC7     <U0E27> THAI CHARACTER WO WAEN
+<th200>                /xC8     <U0E28> THAI CHARACTER SO SALA
+<th201>                /xC9     <U0E29> THAI CHARACTER SO RUSI
+<th202>                /xCA     <U0E2A> THAI CHARACTER SO SUA
+<th203>                /xCB     <U0E2B> THAI CHARACTER HO HIP
+<th204>                /xCC     <U0E2C> THAI CHARACTER LO CHULA
+<th205>                /xCD     <U0E2D> THAI CHARACTER O ANG
+<th206>                /xCE     <U0E2E> THAI CHARACTER HO NOKHUK
+<th207>                /xCF     <U0E2F> THAI CHARACTER PAIYANNOI
+<th208>                /xD0     <U0E30> THAI CHARACTER SARA A
+<th209>                /xD1     <U0E31> THAI CHARACTER MAI HAN-AKAT
+<th210>                /xD2     <U0E32> THAI CHARACTER SARA AA
+<th211>                /xD3     <U0E33> THAI CHARACTER SARA AM
+<th212>                /xD4     <U0E34> THAI CHARACTER SARA I
+<th213>                /xD5     <U0E35> THAI CHARACTER SARA II
+<th214>                /xD6     <U0E36> THAI CHARACTER SARA UE
+<th215>                /xD7     <U0E37> THAI CHARACTER SARA UEE
+<th216>                /xD8     <U0E38> THAI CHARACTER SARA U
+<th217>                /xD9     <U0E39> THAI CHARACTER SARA UU
+<th218>                /xDA     <U0E3A> THAI CHARACTER PHINTHU
+<th223>                /xDF     <U0E3F> THAI CURRENCY SYMBOL BAHT
+<th224>                /xE0     <U0E40> THAI CHARACTER SARA E
+<th225>                /xE1     <U0E41> THAI CHARACTER SARA AE
+<th226>                /xE2     <U0E42> THAI CHARACTER SARA O
+<th227>                /xE3     <U0E43> THAI CHARACTER SARA AI MAIMUAN
+<th228>                /xE4     <U0E44> THAI CHARACTER SARA AI MAIMALAI
+<th229>                /xE5     <U0E45> THAI CHARACTER LAKKHANGYAO
+<th230>                /xE6     <U0E46> THAI CHARACTER MAIYAMOK
+<th231>                /xE7     <U0E47> THAI CHARACTER MAITAIKHU
+<th232>                /xE8     <U0E48> THAI CHARACTER MAI EK
+<th233>                /xE9     <U0E49> THAI CHARACTER MAI THO
+<th234>                /xEA     <U0E4A> THAI CHARACTER MAI TRI
+<th235>                /xEB     <U0E4B> THAI CHARACTER MAI CHATTAWA
+<th236>                /xEC     <U0E4C> THAI CHARACTER THANTHAKHAT
+<th237>                /xED     <U0E4D> THAI CHARACTER NIKHAHIT
+<th238>                /xEE     <U0E4E> THAI CHARACTER YAMAKKAN
+<th239>                /xEF     <U0E4F> THAI CHARACTER FONGMAN
+<th240>                /xF0     <U0E50> THAI DIGIT ZERO
+<th241>                /xF1     <U0E51> THAI DIGIT ONE
+<th242>                /xF2     <U0E52> THAI DIGIT TWO
+<th243>                /xF3     <U0E53> THAI DIGIT THREE
+<th244>                /xF4     <U0E54> THAI DIGIT FOUR
+<th245>                /xF5     <U0E55> THAI DIGIT FIVE
+<th246>                /xF6     <U0E56> THAI DIGIT SIX
+<th247>                /xF7     <U0E57> THAI DIGIT SEVEN
+<th248>                /xF8     <U0E58> THAI DIGIT EIGHT
+<th249>                /xF9     <U0E59> THAI DIGIT NINE
+<th250>                /xFA     <U0E5A> THAI CHARACTER ANGKHANKHU
+<th251>                /xFB     <U0E5B> THAI CHARACTER KHOMUT
 END CHARMAP

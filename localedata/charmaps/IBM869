@@ -141,10 +141,10 @@ CHARMAP
 <.M>                   /x88   <U00B7> MIDDLE DOT
 <NO>                   /x89   <U00AC> NOT SIGN
 <BB>                   /x8A   <U00A6> BROKEN BAR
-<9'>                   /x8B   <U201B> SINGLE HIGH-REVERSED-9 QUOTATION MARK
+<'6>                   /x8B   <U2018> LEFT SINGLE QUOTATION MARK
 <'9>                   /x8C   <U2019> RIGHT SINGLE QUOTATION MARK
 <E%>                   /x8D   <U0388> GREEK CAPITAL LETTER EPSILON WITH TONOS
-<-M>                   /x8E   <U2014> EM DASH
+<-3>                   /x8E   <U2015> HORIZONTAL BAR
 <Y%>                   /x8F   <U0389> GREEK CAPITAL LETTER ETA WITH TONOS
 <I%>                   /x90   <U038A> GREEK CAPITAL LETTER IOTA WITH TONOS
 <J*>                   /x91   <U03AA> GREEK CAPITAL LETTER IOTA WITH DIALYTIKA
@@ -239,7 +239,7 @@ CHARMAP
 <s*>                   /xEC   <U03C3> GREEK SMALL LETTER SIGMA
 <*s>                   /xED   <U03C2> GREEK SMALL LETTER FINAL SIGMA
 <t*>                   /xEE   <U03C4> GREEK SMALL LETTER TAU
-<''>                   /xEF   <U00B4> ACUTE ACCENT
+<'*>                   /xEF   <U0384> GREEK TONOS
 <-->                   /xF0   <U00AD> SOFT HYPHEN
 <+->                   /xF1   <U00B1> PLUS-MINUS SIGN
 <u*>                   /xF2   <U03C5> GREEK SMALL LETTER UPSILON

@@ -32,7 +32,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
-	   CP874 CP737 CP775 ISO-2022-KR				 \
+	   IBM874 CP737 CP775 ISO-2022-KR				 \
 	   KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
@@ -84,7 +84,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      TESTS $(wildcard testdata/*) run-iconv-test.sh		    \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c baltic.c big5.c cp737.c cp737.h	    \
-	      cp775.c cp775.h cp874.c cp874.h cns11643.c cns11643.h	    \
+	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
 	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c		    \
 	      csn_369103.c cwi.c dec-mcs.c ebcdic-at-de.c ebcdic-at-de-a.c  \
@@ -151,7 +151,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
-			iso-ir-197 cp1258 tis-620 koi8-u
+			iso-ir-197 cp1258 tis-620 koi8-u ibm874
 
 gen-special-modules := iso8859-7jp
 

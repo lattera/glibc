@@ -934,9 +934,10 @@ module	CP1258//		INTERNAL		CP1258		1
 module	INTERNAL		CP1258//		CP1258		1
 
 #	from			to			module		cost
-alias	874//			CP874//
-module	CP874//			INTERNAL		CP874		1
-module	INTERNAL		CP874//			CP874		1
+alias	874//			IBM874//
+alias	CP874//			IBM874//
+module	IBM874//		INTERNAL		IBM874		1
+module	INTERNAL		IBM874//		IBM874		1
 
 #	from			to			module		cost
 module	CP737//			INTERNAL		CP737		1

@@ -183,7 +183,7 @@ CHARMAP
 <14>                   /xAC   <U00BC> VULGAR FRACTION ONE QUARTER
 <!I>                   /xAD   <U00A1> INVERTED EXCLAMATION MARK
 <<<>                   /xAE   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
-</>/>>                 /xAF   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+<Cu>                   /xAF   <U00A4> CURRENCY SIGN
 <.S>                   /xB0   <U2591> LIGHT SHADE
 <:S>                   /xB1   <U2592> MEDIUM SHADE
 <?S>                   /xB2   <U2593> DARK SHADE
@@ -245,7 +245,7 @@ CHARMAP
 <W*>                   /xEA   <U03A9> GREEK CAPITAL LETTER OMEGA
 <d*>                   /xEB   <U03B4> GREEK SMALL LETTER DELTA
 <00>                   /xEC   <U221E> INFINITY
-<//0>                  /xED   <U2205> EMPTY SET
+<f*>                   /xED   <U03C6> GREEK SMALL LETTER PHI
 <e*>                   /xEE   <U03B5> GREEK SMALL LETTER EPSILON
 <(U>                   /xEF   <U2229> INTERSECTION
 <=3>                   /xF0   <U2261> IDENTICAL TO
@@ -256,9 +256,9 @@ CHARMAP
 <Il>                   /xF5   <U2321> BOTTOM HALF INTEGRAL
 <-:>                   /xF6   <U00F7> DIVISION SIGN
 <?2>                   /xF7   <U2248> ALMOST EQUAL TO
-<Ob>                   /xF8   <U2218> RING OPERATOR
-<.M>                   /xF9   <U00B7> MIDDLE DOT
-<sb>                   /xFA   <U2022> BULLET
+<DG>                   /xF8   <U00B0> DEGREE SIGN
+<Sb>                   /xF9   <U2219> BULLET OPERATOR
+<.M>                   /xFA   <U00B7> MIDDLE DOT
 <RT>                   /xFB   <U221A> SQUARE ROOT
 <nS>                   /xFC   <U207F> SUPERSCRIPT LATIN SMALL LETTER N
 <2S>                   /xFD   <U00B2> SUPERSCRIPT TWO

@@ -1,5 +1,13 @@
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/IBM874: New file.
+
+	* charmaps/IBM869: Correct entries 8b, 8e, and ef.
+
+	* charmaps/IBM865: Correct entries af, ed, f8, f9, and fa.
+
+	* charmaps/IBM864: Major update from Unicode data.
+
 	* charmaps/IBM863: Correct entries 8d, ed, f8, f9, and fa.
 
 	* charmaps/IBM862: Correct entries 9d, 9f, a9, f9, and fa.

@@ -1,3 +1,11 @@
+1999-04-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gconv-modules: Rename CP874 to IBM874.
+	* iconvdata/Makefile: Likewise.
+	* iconvdata/cp874.h: Removed.
+	* iconvdata/cp874.c: Renamed to...
+	* iconvdata/ibm874.c: ...this.
+
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/types.h: Correct
