@@ -1,5 +1,9 @@
 2000-04-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): If output buffer is too small
+	don't search for NUL byte to decrement counter.
+	Reported by Ulrich.Brink@sap.com.
+
 	* iconv/gconv_simple.c: Define separate functions to convert from
 	UCS4/UCS4-LE to the internal encoding.
 	* iconv/gconv_builtin.h: Use separate functions to convert from

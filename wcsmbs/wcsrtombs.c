@@ -114,8 +114,7 @@ __wcsrtombs (dst, src, len, ps)
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
-      if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
-	   || status == __GCONV_FULL_OUTPUT)
+      if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
 	  && data.__outbuf[-1] == '\0')
 	{
 	  assert (data.__outbuf != (unsigned char *) dst);
