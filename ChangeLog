@@ -1,3 +1,7 @@
+2001-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Increment l_opencount for main binary.
+
 2001-08-27  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/unix/sysv/gethostname.c (__gethostname): When LEN is too
