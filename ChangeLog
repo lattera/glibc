@@ -2,8 +2,6 @@
 
 	* iconv/iconvconfig.c (name_insert): Make static to avoid warning.
 
-	* iconv/gconv_cache.c: Include stdio.h for puts declaration.
-
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c (write_locales): Disable implicit
