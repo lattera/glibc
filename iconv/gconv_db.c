@@ -305,6 +305,15 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 	    result = __GCONV_NOCONV;
 	    break;
 	  }
+
+	steps[cnt].__init_fct = steps[cnt].__shlib_handle->init_fct;
+	steps[cnt].__fct = steps[cnt].__shlib_handle->fct;
+	steps[cnt].__end_fct = steps[cnt].__shlib_handle->end_fct;
+
+	if (steps[cnt].__end_fct != NULL)
+	  DL_CALL_FCT (steps[cnt].__end_fct, &steps[cnt]);
+	if (steps[cnt].__init_fct != NULL)
+	  DL_CALL_FCT (steps[cnt].__init_fct, &steps[cnt]);
       }
   return result;
 }

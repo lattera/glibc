@@ -1,3 +1,10 @@
+2000-08-29  Akira Higuchi  <a@kondara.org>
+
+	* charmaps/GB2312: Fix ".." -> "..." in width definitions.
+	* charmaps/GBK: Likewise.
+
+	* SUPPORTED: Add zh_CN.GB2312 and zh_TW.BIG5.
+
 2000-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/sv_SE: Remove old LC_COLLATE definition.  Use iso14651_t1

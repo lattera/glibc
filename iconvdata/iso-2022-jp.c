@@ -258,7 +258,7 @@ gconv_end (struct __gconv_step *data)
 		&& __builtin_expect (inptr + 3 >= inend, 0)))		      \
 	  {								      \
 	    /* Not enough input available.  */				      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -399,6 +399,18 @@ gconv_end (struct __gconv_step *data)
 	    continue;							      \
 	  }								      \
       }									      \
+    else if (ch >= 0x80)						      \
+      {									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	++inptr;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
     else if (set == ASCII_set || (ch < 0x21 || ch == 0x7f))		      \
       /* Almost done, just advance the input pointer.  */		      \
       ++inptr;								      \
@@ -462,7 +474,7 @@ gconv_end (struct __gconv_step *data)
 									      \
 	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \

@@ -1941,7 +1941,7 @@ static const char from_ucs4_lat1[0xf8][2] =
   [0x0075] = "\x75\x00", [0x0076] = "\x76\x00", [0x0077] = "\x77\x00",
   [0x0078] = "\x78\x00", [0x0079] = "\x79\x00", [0x007a] = "\x7a\x00",
   [0x007b] = "\x7b\x00", [0x007c] = "\x7c\x00", [0x007d] = "\x7d\x00",
-  [0x007e] = "\x7e\x00",
+  [0x007e] = "\x7e\x00", [0x007f] = "\x7f\x00",
   [0x00a2] = "\x81\x91", [0x00a3] = "\x81\x92", [0x00a5] = "\x5c\x00",
   [0x00a7] = "\x81\x98", [0x00a8] = "\x81\x4e", [0x00ac] = "\x81\xca",
   [0x00b0] = "\x81\x8b", [0x00b1] = "\x81\x7d", [0x00b4] = "\x81\x4c",
@@ -4353,7 +4353,7 @@ static const char from_ucs4_extra[0x100][2] =
 	ch = 0x203e;							      \
 	++inptr;							      \
       }									      \
-    else if (ch < 0x7e)							      \
+    else if (ch < 0x80)							      \
       ++inptr;								      \
     else if (ch >= 0xa1 && ch <= 0xdf)					      \
       {									      \

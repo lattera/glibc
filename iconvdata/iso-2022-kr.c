@@ -149,7 +149,7 @@ enum
 			&& __builtin_expect (inptr + 3 > inend, 0)))))	      \
 									      \
 	  {								      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 	if (inptr[1] == '$' && inptr[2] == ')' && inptr[3] == 'C')	      \
@@ -188,7 +188,7 @@ enum
 									      \
 	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \

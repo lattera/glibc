@@ -99,7 +99,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       {									      \
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
-	ch = ksc5601_to_ucs4 (&inptr, inptr - inend, 0x80);		      \
+	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);		      \
 	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* The second character is not available.  */		      \

@@ -1,3 +1,25 @@
+2000-08-29  Akira Higuchi  <a@kondara.org>
+
+	* iconv/gconv_db.c (increment_counter): Reset __init_fct, __fct,
+	and __end_fct fields of struct __gconv_step.
+	* iconv/Makefile (tests): Add iconv-bug2.
+	* iconv/iconv-bug2.c: New file.
+
+	* iconvdata/euc-kr.c (BODY for FROM_LOOP): Pass 'inend - inptr'
+	instead of 'inptr - inend' to ksc5601_to_ucs4.
+
+	* iconvdata/sjis.c (BODY for FROM_LOOP): Allow 0x7f character.
+
+	* iconvdata/iso-2022-cn.c (BODY for FROM_LOOP): If an incomplete
+	character or shift sequence is found at the end of the input
+	string, return__GCONV_INCOMPLETE_INPUT instead of
+	__GCONV_EMPTY_INPUT.
+	* iconvdata/iso-2022-jp.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso-2022-kr.c (BODY for FROM_LOOP): Likewise.
+
+	* iconvdata/iso-2022-jp.c (BODY for FROM_LOOP): Return
+	__GCONV_ILLEGAL_INPUT for 8bit characters.
+
 2000-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* signal/signal.h (sigpause): Move __THROW before __asm__.
