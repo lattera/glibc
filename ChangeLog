@@ -1,3 +1,7 @@
+2003-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/syscalls.list: umask syscall never fails.
+
 2003-07-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Mark init as used.
