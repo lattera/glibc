@@ -20,6 +20,7 @@ Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/unix/bsd/osf/alpha/start.S: Change comments to be
 	preprocessor comments, not assembler comments.
+	* sysdeps/unix/bsd/osf/alpha/brk.S: Likewise.
 	* sysdeps/unix/bsd/osf/alpha/sysdep.h (NO_UNDERSCORES): Define.
 
 Fri Apr 14 15:53:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
