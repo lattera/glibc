@@ -25,6 +25,16 @@ main (void)
 	obstack_finish (&ob);
     }
 
+  /* Another loop where we finish all objects, each of size 1.  This will
+     manage to call `obstack_print' with all possible positions inside
+     an obstack chunk.  */
+  for (n = 0; n < 40000; ++n)
+    {
+      mcheck_check_all ();
+      obstack_printf (&ob, "%c", 'a' + n % 26);
+      obstack_finish (&ob);
+    }
+
   /* And a final check.  */
   mcheck_check_all ();
 

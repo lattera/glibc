@@ -1,3 +1,7 @@
+2000-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fmon.data: Update test after last strfmon change.
+
 2000-03-15  Andreas Jaeger  <aj@suse.de>
 
 	* locales/sl_SI: Fix entries for june and july.
