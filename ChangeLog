@@ -1,3 +1,17 @@
+2001-12-06  Geoff Keating  <geoffk@redhat.com>
+
+	* sysdeps/powerpc/Makefile (sysdep_routines): Don't build the fpr
+	save/restore functions here.
+	(libm-support): Don't define these functions here.
+	* sysdeps/powerpc/fpu/Makefile: Build the fpr save/restore
+	functions here.
+	* sysdeps/powerpc/fe_nomask.c: Move to...
+	* sysdeps/powerpc/fpu/fe_nomask.c: ... here.
+	* sysdeps/powerpc/fprrest.S: Move to...
+	* sysdeps/powerpc/fpu/fprrest.S: ... here.
+	* sysdeps/powerpc/fprsave.S: Move to...
+	* sysdeps/powerpc/fpu/fprsave.S: ... here.
+
 2001-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/opensock.c: New file.

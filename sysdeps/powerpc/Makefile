@@ -6,10 +6,6 @@ asm-CPPFLAGS += -Wa,-mppc
 ifeq ($(with-fp),no)
 +cflags += -msoft-float
 sysdep-LDFLAGS += -msoft-float
-else
-ifeq ($(subdir),math)
-libm-support += fenv_const fe_nomask
-endif
 endif
 
 ifeq ($(subdir),gmon)
@@ -17,7 +13,7 @@ sysdep_routines += ppc-mcount
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1 fprsave fprrest
+sysdep_routines += gprsave0 gprrest0 gprsave1 gprrest1
 endif
 
 # On PPC, -fpic works until the GOT contains 2^15 bytes, and possibly
