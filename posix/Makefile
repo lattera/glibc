@@ -138,24 +138,28 @@ CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitid.c = -fexceptions
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
-CFLAGS-wordexp.c = -fexceptions -fomit-frame-pointer
+CFLAGS-wordexp.c = -fexceptions
+CFLAGS-wordexp.os = -fomit-frame-pointer
 CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
-CFLAGS-spawn.c = -fexceptions -fomit-frame-pointer
-CFLAGS-spawnp.c = -fexceptions -fomit-frame-pointer
-CFLAGS-spawni.c = -fexceptions -fomit-frame-pointer
+CFLAGS-spawn.c = -fexceptions
+CFLAGS-spawn.os = -fomit-frame-pointer
+CFLAGS-spawnp.c = -fexceptions
+CFLAGS-spawnp.os = -fomit-frame-pointer
+CFLAGS-spawni.c = -fexceptions
+CFLAGS-spawni.os = -fomit-frame-pointer
 CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
 CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
-CFLAGS-execve.c = -fomit-frame-pointer
-CFLAGS-fexecve.c = -fomit-frame-pointer
-CFLAGS-execv.c = -fomit-frame-pointer
-CFLAGS-execle.c = -fomit-frame-pointer
-CFLAGS-execl.c = -fomit-frame-pointer
-CFLAGS-execvp.c = -fomit-frame-pointer
-CFLAGS-execlp.c = -fomit-frame-pointer
+CFLAGS-execve.os = -fomit-frame-pointer
+CFLAGS-fexecve.os = -fomit-frame-pointer
+CFLAGS-execv.os = -fomit-frame-pointer
+CFLAGS-execle.os = -fomit-frame-pointer
+CFLAGS-execl.os = -fomit-frame-pointer
+CFLAGS-execvp.os = -fomit-frame-pointer
+CFLAGS-execlp.os = -fomit-frame-pointer
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
