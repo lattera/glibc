@@ -4135,8 +4135,14 @@ _int_free(mstate av, Void_t* mem)
        allocator never wrapps around at the end of the address space.
        Therefore we can exclude some size values which might appear
        here by accident or by "design" from some intruder.  */
-    if ((uintptr_t) p > (uintptr_t) -size)
-      return;
+    if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
+      {
+	if (check_action & 1)
+	  fprintf (stderr, "free(): invalid pointer %p!\n", mem);
+	if (check_action & 2)
+	  abort ();
+	return;
+      }
 
     check_inuse_chunk(av, p);
 

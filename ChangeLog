@@ -1,5 +1,8 @@
 2003-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/test-vfprintf.c (main): Don't write temporary file
+	into source directory.
+
 	* malloc/malloc.c (_int_free): Add cheap test for some invalid
 	block sizes.
 

@@ -1,5 +1,5 @@
 /* Tests of *printf for very large strings.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -40,14 +40,14 @@ char large[50000];
 int
 main (void)
 {
-  char buf[20];
+  char buf[25];
   size_t i;
   int res = 0;
   int fd;
 
   mtrace ();
 
-  strcpy (buf, "test-vfprintfXXXXXX");
+  strcpy (buf, "/tmp/test-vfprintfXXXXXX");
   fd = mkstemp (buf);
   if (fd == -1)
     {
