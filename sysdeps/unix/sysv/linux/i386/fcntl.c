@@ -18,10 +18,10 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <sysdep-cancel.h>	/* Must come before <fcntl.h>.  */
 #include <fcntl.h>
 #include <stdarg.h>
 
-#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include "../kernel-features.h"
 
@@ -31,10 +31,10 @@ int __have_no_fcntl64;
 #endif
 
 
-int
 #ifdef NO_CANCELLATION
 static inline __attribute ((always_inline))
 #endif
+int
 __fcntl_nocancel (int fd, int cmd, ...)
 {
   va_list ap;

@@ -1,3 +1,12 @@
+2004-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fcntl.c (__fcntl_nocancel): Move attribute
+	to the front for gcc 3.5+.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c: Likewise.
+	* include/fcntl.h: Don't declare __fcntl_nocancel here if
+	NO_CANCELLATION is defined.
+
 2004-07-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-fini.c (_dl_fini): Add nloaded variable, load
