@@ -61,7 +61,7 @@ _IO_new_fclose (fp)
 #if _LIBC
       /* This stream has a wide orientation.  This means we have to free
 	 the conversion functions.  */
-      struct _IO_codecvt *cc = &fp->_codecvt;
+      struct _IO_codecvt *cc = fp->_codecvt;
 
       if (cc->__cd_in.__cd.__steps->__shlib_handle != NULL)
 	{
