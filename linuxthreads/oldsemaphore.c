@@ -113,7 +113,8 @@ int __old_sem_wait(old_sem_t * sem)
 	while (! sem_compare_and_swap(sem, oldstatus, newstatus));
 	if (newstatus & 1) {
 	    /* We got the semaphore. */
-	  __pthread_set_own_extricate_if(self, 0);
+	    __pthread_set_own_extricate_if(self, 0);
+	    self->p_nextwaiting = NULL;
 	    return 0;
 	}
 	/* Wait for sem_post or cancellation */

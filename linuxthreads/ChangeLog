@@ -1,3 +1,9 @@
+2001-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* oldsemaphore.c (__old_sem_wait): Clear p_nextwaiting before
+	returning successfully.
+	Patch by Gene Cooperman <gene@ccs.neu.edu>.
+
 2001-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.c (__pthread_lock) [HAS_COMPARE_AND_SWAP]: Before doing any
