@@ -4201,6 +4201,13 @@ _int_free(mstate av, Void_t* mem)
 
       set_fastchunks(av);
       fb = &(av->fastbins[fastbin_index(size)]);
+      /* Another simple check: make sure the top of the bin is not the
+	 record we are going to add (i.e., double free).  */
+      if (__builtin_expect (*fb == p, 0))
+	{
+	  malloc_printf_nc (check_action, "double free(%p)!\n", mem);
+	  return;
+	}
       p->fd = *fb;
       *fb = p;
     }

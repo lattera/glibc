@@ -1,3 +1,7 @@
+2004-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Add inexpensive double free test.
+
 2004-09-08  Roland McGrath  <roland@redhat.com>
 
 	* malloc/mcheck.c: Don't use __P.
