@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusage.c (me): Use access() to determine whether we
+	should write the output file or not.
+
 	* libio/bits/stdio.h (printf): Define macro to map printf call to
 	fprintf which gcc can optimize.
 	* stdio-common/printf.c: Undefine printf.

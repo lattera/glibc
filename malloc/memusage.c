@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -200,7 +200,8 @@ me (void)
   if (!not_me && fd == -1)
     {
       const char *outname = getenv ("MEMUSAGE_OUTPUT");
-      if (outname != NULL)
+      if (outname != NULL && outname[0] != '\0'
+	  && access (outname, R_OK | W_OK) == 0)
 	{
 	  fd = creat (outname, 0666);
 
