@@ -55,9 +55,9 @@ long-m-routines = $(patsubst %_rl,%l_r,$(libm-calls:=l)) # not ready yet
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,
 # and we don't want to have to link every program with -lm.
-calls = s_isinf s_isnan
+calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts)) \
-	    s_frexp s_ldexp s_modf
+	   s_frexp s_ldexp s_frexpf s_ldexpf
 long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
@@ -83,8 +83,10 @@ CPPFLAGS += -D__NO_MATH_INLINES
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
 # We won't compile the `long double' code at all.  Tell the `double' code
-# to define aliases for the `FUNCl' names.
-CPPFLAGS += -DNO_LONG_DOUBLE
+# to define aliases for the `FUNCl' names.  To avoid type conflicts in
+# defining those aliases, tell <math.h> to declare the `FUNCl' names with
+# `double' instead of `long double'.
+CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
 endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.
