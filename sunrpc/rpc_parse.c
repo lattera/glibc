@@ -622,7 +622,7 @@ get_type (const char **prefixp, const char **typep, defkind dkind)
       (void) peekscan (TOK_INT, &tok);
       break;
     case TOK_HYPER:
-      *typep = "long long";
+      *typep = "quad_t";
       (void) peekscan(TOK_INT, &tok);
       break;
     case TOK_VOID:
@@ -670,7 +670,7 @@ unsigned_dec (const char **typep)
       break;
     case TOK_HYPER:
       get_token (&tok);
-      *typep = "unsigned long long";
+      *typep = "u_quad_t";
       (void) peekscan(TOK_INT, &tok);
       break;
     case TOK_INT:
