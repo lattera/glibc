@@ -169,6 +169,17 @@
 # define __attribute_format_arg__(x) /* Ignore */
 #endif
 
+/* At some point during the gcc 2.97 development the `strfmon' format
+   attribute for functions was introduced.  We don't want to use it
+   unconditionally (although this would be possible) since it
+   generates warnings.  */
+#if __GNUC_PREREQ (2,97)
+# define __attribute_format_strfmon__(a,b) \
+  __attribute__ ((__format__ (__strfmon__, a, b)))
+#else
+# define __attribute_format_strfmon__(a,b) /* Ignore */
+#endif
+
 /* It is possible to compile containing GCC extensions even if GCC is
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before
