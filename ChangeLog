@@ -1,3 +1,7 @@
+2001-01-17  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/connections.c (nscd_run): Use proper format specifier.
+
 2001-01-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Move x86_cap_flags and
