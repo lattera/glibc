@@ -1,3 +1,9 @@
+2003-07-20  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/cp932.c (BODY): STANDARD_ERR_HANDLER is now called
+	STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/euc-jp-ms.c (BODY): Likewise.
+
 2003-07-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove affinity syscalls.
