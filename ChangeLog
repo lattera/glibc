@@ -1,5 +1,7 @@
 2003-09-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/memstream.c (open_memstream): Don't allow wide char operations.
+
 	* dirent/dirent.h: Remove __THROW from scandir.
 
 2003-09-14  Philip Blundell  <philb@gnu.org>

@@ -112,7 +112,7 @@ open_memstream (bufloc, sizeloc)
   buf = malloc (_IO_BUFSIZ);
   if (buf == NULL)
     return NULL;
-  _IO_no_init (&new_f->fp._sf._sbf._f, 0, 0, &new_f->wd, &_IO_wmem_jumps);
+  _IO_old_init (&new_f->fp._sf._sbf._f, 0);
   _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp._sf._sbf) = &_IO_mem_jumps;
   _IO_str_init_static_internal (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
   new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
