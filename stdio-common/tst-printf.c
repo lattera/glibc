@@ -236,10 +236,15 @@ I am ready for my first lesson today.";
   printf ("%g should be 10\n", 10.0);
   printf ("%g should be 0.02\n", 0.02);
 
+#if 0
+  /* This test rather checks the way the compiler handles constant
+     folding.  gcc behavior wrt to this changed in 3.2 so it is not a
+     portable test.  */
   {
     double x=1.0;
     printf("%.17f\n",(1.0/x/10.0+1.0)*x-x);
   }
+#endif
 
   {
     char buf[200];
@@ -364,7 +369,7 @@ rfg3 (void)
   double g = 5.0000001;
   unsigned long l = 1234567890;
   double d = 321.7654321;
-  char *s = "test-string";
+  const char s[] = "test-string";
   int i = 12345;
   int h = 1234;
 

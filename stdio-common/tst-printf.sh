@@ -132,7 +132,6 @@ prefix  6d      6o      6x      6X      6u
 1e+06 should be 1e+06
 10 should be 10
 0.02 should be 0.02
-0.10000000000000009
 Test ok.
 sprintf (buf, "%07Lo", 040000000000ll) = 40000000000
 printf ("%hhu", 257) = 1
@@ -243,7 +242,6 @@ prefix  6d      6o      6x      6X      6u
 1e+06 should be 1e+06
 10 should be 10
 0.02 should be 0.02
-0.10000000000000009
 Test ok.
 sprintf (buf, "%07Lo", 040000000000ll) = 40000000000
 printf ("%hhu", 257) = 1

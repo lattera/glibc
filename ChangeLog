@@ -1,5 +1,11 @@
 2002-03-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/tst-printf.c (main): Comment out one test which
+	checked the compiler's ability to fold floating-point constants
+	but not really printf.
+	(rfg3): Make s const.
+	* stdio-common/tst-printf.sh: Adjust for removed test.
+
 	* sysdeps/i386/i386-mcount.S: Just call __mcount_internal, it is an
 	internal function.  Adjust for internal_function calling convention.
 	* sysdeps/i386/machine-gmon.h: Declare and define __mcount_internal
