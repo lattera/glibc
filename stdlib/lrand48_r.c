@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995,97,98,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -30,3 +30,4 @@ lrand48_r (buffer, result)
 
   return __nrand48_r (buffer->__x, buffer, result);
 }
+libc_hidden_def (lrand48_r)

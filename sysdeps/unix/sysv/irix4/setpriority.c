@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994,96,97,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,3 +39,4 @@ setpriority (which, who, prio)
   __set_errno (EINVAL);
   return -1;
 }
+libc_hidden_def (setpriority)
