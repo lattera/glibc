@@ -201,5 +201,6 @@ __libc_fcntl (int fd, int cmd, ...)
   return result;
 }
 
+INTDEF2 (__libc_fcntl, __fcntl)
 weak_alias (__libc_fcntl, __fcntl)
 weak_alias (__libc_fcntl, fcntl)

@@ -1,3 +1,13 @@
+2002-05-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/close.c: #undef __close before function defn,
+	and use INTDEF on it.
+	* sysdeps/mach/hurd/fcntl.c: Use INTDEF2.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (errno): New variable.
+
+	* sysdeps/mach/hurd/alpha/static-start.S: New file (unfinished).
+
 2002-05-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/memusage.c: Add support for tracking mmap & friends.

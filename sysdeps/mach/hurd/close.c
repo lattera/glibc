@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,11 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#undef __close
+
 /* Close the file descriptor FD.  */
 int
-__close (fd)
-     int fd;
+__close (int fd)
 {
   error_t err;
 
@@ -33,4 +34,5 @@ __close (fd)
   return err ? __hurd_fail (err) : 0;
 }
 
+INTDEF (__close)
 weak_alias (__close, close)
