@@ -54,10 +54,6 @@ include ../Rules
 $(objpfx)librt.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
 		   $(shared-thread-library)
 
-ifeq (yes,$(have-thread-library))
-LDFLAGS-rt.so += -Wl,-F,lib$(libprefix)$(patsubst lib%.so,%,$(notdir $(shared-thread-library))).so$($(notdir $(shared-thread-library))-version)
-endif
-
 ifeq (yes,$(build-shared))
 $(addprefix $(objpfx),$(tests)): $(objpfx)librt.so $(shared-thread-library)
 else
