@@ -48,9 +48,9 @@ static struct
 
 static struct
 {
-  const char ab[2];
-  const char term[3];
-  const char lib[3];
+  const char ab[3];
+  const char term[4];
+  const char lib[4];
 } iso639[] =
 {
 #define DEFINE_LANGUAGE_CODE(Name, Ab, Term, Lib) \
@@ -499,11 +499,47 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	  STR_ELEM (country_ab2);
 	  STR_ELEM (country_ab3);
 	  STR_ELEM (country_car);
-	  STR_ELEM (country_isbn);
 	  STR_ELEM (lang_name);
 	  STR_ELEM (lang_ab);
 	  STR_ELEM (lang_term);
 	  STR_ELEM (lang_lib);
+
+#define INT_STR_ELEM(cat) \
+	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
+	  arg = lr_token (ldfile, charmap, NULL);			      \
+	  if (arg->tok != tok_string && arg->tok != tok_number)		      \
+	    goto err_label;						      \
+	  if (address->cat != NULL)					      \
+	    lr_error (ldfile, _("\
+%s: field `%s' declared more than once"), "LC_ADDRESS", #cat);		      \
+	  else if (!ignore_content && arg->val.str.startmb == NULL)	      \
+	    {								      \
+	      lr_error (ldfile, _("\
+%s: unknown character in field `%s'"), "LC_ADDRESS", #cat);		      \
+	      address->cat = "";					      \
+	    }								      \
+	  else if (!ignore_content)					      \
+	    {								      \
+	      if (arg->tok == tok_string)				      \
+		address->cat = arg->val.str.startmb;			      \
+	      else							      \
+		{							      \
+		  char *numbuf = (char *) xmalloc (11);			      \
+		  snprintf (numbuf, 11, "%ld", arg->val.num);		      \
+		  address->cat = numbuf;				      \
+		}							      \
+	    }								      \
+	  break
+
+	  INT_STR_ELEM (country_isbn);
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \
