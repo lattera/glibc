@@ -166,7 +166,9 @@ dist: $(..)$(tardir) $(+tardeps)
 	@cd ..; if test -f dist.tar; then c=u; else c=c; fi;	\
 	$(+cmdecho) "cd ..; tar $${c}h$(verbose)f dist.tar ...";	\
 	tar $${c}h$(verbose)f dist.tar \
-	    $(addprefix $(tardir)/$(subdir)/,$(filter-out $<,$^))
+	    $(addprefix $(tardir)/$(subdir)/,$(filter-out $< ../%,$^))	\
+	    $(addprefix $(tardir)/,\
+			$(patsubst ../%,%,$(filter-out $<,$(filter ../%,$^))))
 
 else	# Parent makefile.
 

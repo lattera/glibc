@@ -1,3 +1,7 @@
+2000-08-01  Andreas Schwab  <schwab@suse.de>
+
+        * Make-dist (dist): Resolve `..' in file names.
+
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/Makefile (distribute): Remove removed files, add
