@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 95, 96, 97, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,95,96,97,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1053,25 +1053,31 @@ __sysconf (name)
       return -1;
 #endif
 
-    case _SC_PBS:
+    case _SC_2_PBS:
 #ifdef _POSIX2_PBS
       return _POSIX2_PBS;
 #else
       return -1;
 #endif
-    case _SC_PBS_ACCOUNTING:
+    case _SC_2_PBS_ACCOUNTING:
 #ifdef _POSIX2_PBS_ACCOUNTING
       return _POSIX2_PBS_ACCOUNTING;
 #else
       return -1;
 #endif
-    case _SC_PBS_LOCATE:
+    case _SC_2_PBS_CHECKPOINT:
+#ifdef _POSIX2_PBS_CHECKPOINT
+      return _POSIX2_PBS_CHECKPOINT;
+#else
+      return -1;
+#endif
+    case _SC_2_PBS_LOCATE:
 #ifdef _POSIX2_PBS_LOCATE
       return _POSIX2_PBS_LOCATE;
 #else
       return -1;
 #endif
-    case _SC_PBS_TRACK:
+    case _SC_2_PBS_TRACK:
 #ifdef _POSIX2_PBS_TRACK
       return _POSIX2_PBS_TRACK;
 #else
@@ -1081,6 +1087,13 @@ __sysconf (name)
     case _SC_SYMLOOP:
 #ifdef SYMLOOP_MAX
       return SYMLOOP_MAX;
+#else
+      return -1;
+#endif
+
+    case _SC_STREAMS:
+#ifdef _XOPEN_STREAMS
+      return _XOPEN_STREAMS;
 #else
       return -1;
 #endif

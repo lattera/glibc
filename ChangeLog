@@ -1,5 +1,9 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/confname.h: Correct names of _SC_PBS
+	constants and add _SC_STREAMS.
+	* sysdeps/posix/sysconf.c (__sysconf): Likewise.
+
 	* sysdeps/unix/sysv/linux/statvfs64.c: Rename to __statvfs64 and
 	make old name weak alias.
 	* sysdeps/generic/statvfs64.c: Likewise.

@@ -22,8 +22,6 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 	    "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
 	    "arpa/inet.h", "aio.h");
 
-@headers = ('unistd.h');
-
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
 	     'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
@@ -744,7 +742,7 @@ printf ("  Total number of tests   : %4d\n", $total);
 
 printf ("  Number of known failures: %4d (", $known);
 $percent = ($known * 100) / $total;
-if ($percent < 1.0) {
+if ($known > 0 && $percent < 1.0) {
   printf (" <1%%)\n");
 } else {
   printf ("%3d%%)\n", $percent);
@@ -752,7 +750,7 @@ if ($percent < 1.0) {
 
 printf ("  Number of failed tests  : %4d (", $errors);
 $percent = ($errors * 100) / $total;
-if ($percent < 1.0) {
+if ($errors > 0 && $percent < 1.0) {
   printf (" <1%%)\n");
 } else {
   printf ("%3d%%)\n", $percent);
@@ -760,7 +758,7 @@ if ($percent < 1.0) {
 
 printf ("  Number of skipped tests : %4d (", $skipped);
 $percent = ($skipped * 100) / $total;
-if ($percent < 1.0) {
+if ($skipped > 0 && $percent < 1.0) {
   printf (" <1%%)\n");
 } else {
   printf ("%3d%%)\n", $percent);
