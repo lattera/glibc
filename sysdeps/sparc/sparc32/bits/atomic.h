@@ -22,28 +22,34 @@
 #define _BITS_ATOMIC_H	1
 
 /* We have no compare and swap, just test and set.
-   The following implementation contends on one single global lock
+   The following implementation contends on 64 global locks
    per library and assumes no variable will be accessed using atomic.h
    macros from two different libraries.  */
 
-volatile unsigned char __sparc32_atomic_lock
-  __attribute__ ((nocommon, section (".gnu.linkonce.b.__sparc32_atomic_lock"),
+volatile unsigned char __sparc32_atomic_locks[64]
+  __attribute__ ((nocommon, section (".gnu.linkonce.b.__sparc32_atomic_locks"),
 		  visibility ("hidden")));
 
-#define __sparc32_atomic_do_lock() \
+#define __sparc32_atomic_do_lock(addr) \
   do								      \
     {								      \
       unsigned int __old_lock;					      \
+      unsigned int __idx = (((long) addr >> 2) ^ ((long) addr >> 12)) \
+			   & 63;				      \
       do							      \
 	__asm ("ldstub %1, %0"					      \
-	       : "=r" (__old_lock), "=m" (__sparc32_atomic_lock)      \
-	       : "m" (__sparc32_atomic_lock));			      \
+	       : "=r" (__old_lock),				      \
+		 "=m" (__sparc32_atomic_locks[__idx])		      \
+	       : "m" (__sparc32_atomic_locks[__idx]));		      \
       while (__old_lock);					      \
     }								      \
   while (0)
 
-#define __sparc32_atomic_do_unlock() \
-  do __sparc32_atomic_lock = 0; while (0)
+#define __sparc32_atomic_do_unlock(addr) \
+  do								      \
+    __sparc32_atomic_locks[(((long) addr >> 2)			      \
+			    ^ ((long) addr >> 12)) & 63] = 0;	      \
+  while (0)
 
 /* The only basic operation needed is compare and exchange.  */
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
@@ -51,11 +57,11 @@ volatile unsigned char __sparc32_atomic_lock
      __typeof (*mem) __acev_ret;				      \
      __typeof (*mem) __acev_newval = (newval);			      \
 								      \
-     __sparc32_atomic_do_lock ();				      \
+     __sparc32_atomic_do_lock (__acev_memp);			      \
      __acev_ret = *__acev_memp;					      \
      if (__acev_ret == (oldval))				      \
        *__acev_memp = __acev_newval;				      \
-     __sparc32_atomic_do_unlock ();				      \
+     __sparc32_atomic_do_unlock (__acev_memp);			      \
      __acev_ret; })
 
 #define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
@@ -63,13 +69,13 @@ volatile unsigned char __sparc32_atomic_lock
      int __aceb_ret;						      \
      __typeof (*mem) __aceb_newval = (newval);			      \
 								      \
-     __sparc32_atomic_do_lock ();				      \
+     __sparc32_atomic_do_lock (__aceb_memp);			      \
      __aceb_ret = 0;						      \
      if (*__aceb_memp == (oldval))				      \
        *__aceb_memp = __aceb_newval;				      \
      else							      \
        __aceb_ret = 1;						      \
-     __sparc32_atomic_do_unlock ();				      \
+     __sparc32_atomic_do_unlock (__aceb_memp);			      \
      __aceb_ret; })
 
 #endif	/* bits/atomic.h */

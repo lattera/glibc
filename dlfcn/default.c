@@ -36,7 +36,7 @@ main (int argc, char *argv[])
       printf ("%s: main not found\n", __FILE__);
       result = 1;
     }
-  else if (p != (void *) &main)
+  else if ((int (*)(int, char **))p != main)
     {
       printf ("%s: wrong address returned for main\n", __FILE__);
       result = 1;
@@ -72,9 +72,9 @@ main (int argc, char *argv[])
   else
     printf ("%s: found_in_mod2 correctly found\n", __FILE__);
 
-  result |= test_in_mod1 ((void *) &main);
+  result |= test_in_mod1 (main);
 
-  result |= test_in_mod2 ((void *) &main);
+  result |= test_in_mod2 (main);
 
   return result;
 }

@@ -16,9 +16,9 @@ found_in_mod2 (void)
 }
 
 
-extern int test_in_mod2 (void *mainp);
+extern int test_in_mod2 (int (*mainp)(int, char **));
 int
-test_in_mod2 (void *mainp)
+test_in_mod2 (int (*mainp)(int, char **))
 {
   int (*ifp) (void);
   void *p;
@@ -31,7 +31,7 @@ test_in_mod2 (void *mainp)
       printf ("%s: main not found\n", __FILE__);
       result = 1;
     }
-  else if (p != mainp)
+  else if ((int (*)(int, char **))p != mainp)
     {
       printf ("%s: wrong address returned for main\n", __FILE__);
       result = 1;

@@ -1,3 +1,28 @@
+2003-08-11  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* dlfcn/default.c (main): Cast dlsym loaded value to same type as main.
+	Address passed to test_in_mod1 and test_in_mod2 without casting.
+	* dlfcn/defaultmod1.c: Change prototype of test_in_mod1.
+	(test_in_mod1): Cast dlsym loaded value to same type as mainp.
+	* dlfcn/defaultmod2.c: Change prototype of test_in_mod2.
+	(test_in_mod2): Cast dlsym loaded value to same type as mainp.
+
+2003-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/elf/configure.in (libc_cv_sparc32_tls):
+	Change quotes before using [].
+
+	* sysdeps/unix/sysv/linux/sparc/sys/user.h: New file.
+
+	* sysdeps/sparc/sparc32/bits/atomic.h (__sparc32_atomic_lock):
+	Renamed to...
+	(__sparc32_atomic_locks): ...this.  Change into 64-byte array.
+	(__sparc32_atomic_do_lock, __sparc32_atomic_do_unlock): Add addr
+	argument.  Select one of 64 locks from address bits.
+	(atomic_compare_and_exchange_val_acq,
+	atomic_compare_and_exchange_bool_acq): Pass memory address to
+	__sparc32_atomic_do_{,un}lock.
+
 2003-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert.h (assert): Use !! in front of expression to allow
