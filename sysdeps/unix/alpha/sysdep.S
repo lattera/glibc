@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1998 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@ errno:	.space 4
 #endif
 	.globl __errno
 __errno = errno
+	.globl _errno
+_errno = errno
 
 	.text
 	.align 2
