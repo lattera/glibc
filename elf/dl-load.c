@@ -1467,21 +1467,48 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  const char *cached = _dl_load_cache_lookup (name);
 	  if (cached)
 	    {
-	      fd = __open (cached, O_RDONLY);
-	      if (fd != -1)
+	      /* If the loader has the DF_1_NODEFLIB flag set we must not
+		 use a cache entry from any of these directories.  */
+	      if (__builtin_expect (loader->l_flags_1 & DF_1_NODEFLIB, 0))
 		{
-		  realname = local_strdup (cached);
-		  if (realname == NULL)
+		  const char *dirp = system_dirs;
+		  int cnt = 0;
+
+		  do
 		    {
-		      __close (fd);
-		      fd = -1;
+		      if (memcmp (cached, dirp, system_dirs_len[cnt]) == 0)
+			{
+			  /* The prefix matches.  Don't use the entry.  */
+			  cached = NULL;
+			  break;
+			}
+
+		      dirp += system_dirs_len[cnt] + 1;
+		      ++cnt;
+		    }
+		  while (cnt < (sizeof (system_dirs_len)
+				/ sizeof (system_dirs_len[0])));
+		}
+
+	      if (cached)
+		{
+		  fd = __open (cached, O_RDONLY);
+		  if (fd != -1)
+		    {
+		      realname = local_strdup (cached);
+		      if (realname == NULL)
+			{
+			  __close (fd);
+			  fd = -1;
+			}
 		    }
 		}
 	    }
 	}
 
       /* Finally, try the default path.  */
-      if (fd == -1)
+      if (fd == -1
+	  && __builtin_expect (!(loader->l_flags_1 & DF_1_NODEFLIB), 1))
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname);
 
