@@ -98,7 +98,12 @@ elf_dynamic_do_rel (struct link_map *map,
 	    elf_machine_rel_relative (l_addr, relative,
 				      (void *) (l_addr + relative->r_offset));
 
+#ifdef RTLD_BOOTSTRAP
+      /* The dynamic linker always uses versioning.  */
+      assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
+#else
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
+#endif
 	{
 	  const ElfW(Half) *const version =
 	    (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
@@ -111,10 +116,12 @@ elf_dynamic_do_rel (struct link_map *map,
 			       (void *) (l_addr + r->r_offset));
 	    }
 	}
+#ifndef RTLD_BOOTSTRAP
       else
 	for (; r < end; ++r)
 	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
 			   (void *) (l_addr + r->r_offset));
+#endif
     }
 }
 

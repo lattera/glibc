@@ -141,6 +141,12 @@ elf_get_dynamic_info (struct link_map *l)
 
 #ifdef RESOLVE
 
+# ifdef RTLD_BOOTSTRAP
+#  define ELF_DURING_STARTUP (1)
+# else
+#  define ELF_DURING_STARTUP (0)
+# endif
+
 /* Get the definitions of `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.
    These functions are almost identical, so we use cpp magic to avoid
    duplicating their code.  It cannot be done in a more general function
@@ -167,7 +173,7 @@ elf_get_dynamic_info (struct link_map *l)
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
 									      \
-     if ((do_lazy)							      \
+    if ((do_lazy)							      \
 	&& (map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
@@ -188,7 +194,6 @@ elf_get_dynamic_info (struct link_map *l)
 #  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, test_rel) \
   do {									      \
     struct { ElfW(Addr) start, size; int lazy; } ranges[2];		      \
-    int ranges_index;							      \
     ranges[0].lazy = 0;							      \
     ranges[0].size = ranges[1].size = 0;				      \
     ranges[0].start = 0;						      \
@@ -203,26 +208,36 @@ elf_get_dynamic_info (struct link_map *l)
       {									      \
 	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 									      \
-	if ((do_lazy)							      \
-	    /* This test does not only detect whether the relocation	      \
-	       sections are in the right order, it also checks whether	      \
-	       there is a DT_REL/DT_RELA section.  */			      \
-	    || ranges[0].start + ranges[0].size != start)		      \
+	if (! ELF_DURING_STARTUP					      \
+	    && ((do_lazy)						      \
+		/* This test does not only detect whether the relocation      \
+		   sections are in the right order, it also checks whether    \
+		   there is a DT_REL/DT_RELA section.  */		      \
+		|| ranges[0].start + ranges[0].size != start))		      \
 	  {								      \
 	    ranges[1].start = start;					      \
 	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 	    ranges[1].lazy = (do_lazy);					      \
 	  }								      \
 	else								      \
-	  /* Combine processing the sections.  */			      \
-	  ranges[0].size += (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	  {								      \
+	    /* Combine processing the sections.  */			      \
+	    assert (ranges[0].start + ranges[0].size == start);		      \
+	    ranges[0].size += (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	  }								      \
       }									      \
 									      \
-    for (ranges_index = 0; ranges_index < 2; ++ranges_index)		      \
-      elf_dynamic_do_##reloc ((map),					      \
-			      ranges[ranges_index].start,		      \
-			      ranges[ranges_index].size,		      \
-			      ranges[ranges_index].lazy);		      \
+    if (ELF_DURING_STARTUP)						      \
+      elf_dynamic_do_##reloc ((map), ranges[0].start, ranges[0].size, 0);     \
+    else								      \
+      {									      \
+	int ranges_index;						      \
+	for (ranges_index = 0; ranges_index < 2; ++ranges_index)	      \
+	  elf_dynamic_do_##reloc ((map),				      \
+				  ranges[ranges_index].start,		      \
+				  ranges[ranges_index].size,		      \
+				  ranges[ranges_index].lazy);		      \
+      }									      \
   } while (0)
 # endif
 

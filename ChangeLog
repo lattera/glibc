@@ -1,8 +1,12 @@
 2002-02-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-rel.h (elf_dynamic_do_rel): Help the compiler recognize
+	code which is never used when relocating ld.so itself.
+
 	* elf/dynamic-link.h (elf_get_dynamic_info): Optimize a bit for
 	starting ld.so itself.  Move l_addr variable initialization closer
 	to use.
+	(_ELF_DYNAMIC_DO_RELOC): Help the compiler optimize a bit.
 
 2002-02-01  Jakub Jelinek  <jakub@redhat.com>
 
