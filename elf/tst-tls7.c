@@ -32,9 +32,9 @@ do_test (void)
 	 time.  The value of the first round is used.  */
       if (modid == -1)
 	modid = ((struct link_map *) h)->l_tls_modid;
-      else if (((struct link_map *) h)->l_tls_modid != modid)
+      else if (((struct link_map *) h)->l_tls_modid != (size_t) modid)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zu, initially %d\n",
 		  i, ((struct link_map *) h)->l_tls_modid, modid);
 	  result = 1;
 	}

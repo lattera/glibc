@@ -1,3 +1,10 @@
+2002-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sigpause.c: Define all functions as weak.
+
+	* elf/tst-tls7.c (do_test): Adjustments for l_tls_modid being of
+	type size_t.
+
 2002-12-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/tst-array1.c (preinit_array, init_array, fini_array):
