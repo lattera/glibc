@@ -65,6 +65,8 @@ libpthread-static-only-routines = pthread_atfork
 
 libpthread-nonshared = pthread_atfork
 
+linuxthreads-CPPFLAGS = -DIS_IN_linuxthreads=1
+
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete

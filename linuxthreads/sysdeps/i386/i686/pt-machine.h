@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i686 version.
-   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -69,9 +69,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 #endif
 
-/* If tls.h was included, it will include useldt.h after defining USE_TLS.
-   We don't want to include it here first when tls.h includes us.  */
-#if __ASSUME_LDT_WORKS > 0 && !defined _TLS_H
+#if __ASSUME_LDT_WORKS > 0
 #include "../useldt.h"
 #endif
 
