@@ -164,37 +164,58 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	}
     }
 
-#define TESTARR_ELEM(cat) \
+#define noparen(arg1, argn...) arg1, ##argn
+#define TESTARR_ELEM(cat, val) \
   if (!time->cat##_defined)						      \
     {									      \
-      if(! be_quiet && ! nothing)					      \
+      const char *initval[] = { noparen val };				      \
+      int i;								      \
+									      \
+      if (! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+									      \
+      for (i = 0; i < sizeof (initval) / sizeof (initval[0]); ++i)	      \
+	time->cat[i] = initval[i];					      \
     }
 
-  TESTARR_ELEM (abday);
-  TESTARR_ELEM (day);
-  TESTARR_ELEM (abmon);
-  TESTARR_ELEM (mon);
-  TESTARR_ELEM (am_pm);
+  TESTARR_ELEM (abday, ( "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ));
+  TESTARR_ELEM (day, ( "Sunday", "Monday", "Tuesday", "Wednesday",
+		        "Thursday", "Friday", "Saturday" ));
+  TESTARR_ELEM (abmon, ( "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ));
+  TESTARR_ELEM (mon, ( "January", "February", "March", "April",
+			"May", "June", "July", "August",
+			"September", "October", "November", "December" ));
+  TESTARR_ELEM (am_pm, ( "AM", "PM" ));
 
-#define TEST_ELEM(cat) \
+#define TEST_ELEM(cat, initval) \
   if (time->cat == NULL)						      \
     {									      \
       if (! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+									      \
+      time->cat = initval;						      \
     }
 
-  TEST_ELEM (d_t_fmt);
-  TEST_ELEM (d_fmt);
-  TEST_ELEM (t_fmt);
+  TEST_ELEM (d_t_fmt, "%a %b %e %H:%M:%S %Y");
+  TEST_ELEM (d_fmt, "%m/%d/%y");
+  TEST_ELEM (t_fmt, "%H:%M:%S");
 
   /* According to C.Y.Alexis Cheng <alexis@vnet.ibm.com> the T_FMT_AMPM
      field is optional.  */
   if (time->t_fmt_ampm == NULL)
     {
-      /* Use the 24h format as default.  */
-      time->t_fmt_ampm = time->t_fmt;
-      time->wt_fmt_ampm = time->wt_fmt;
+      if (time->am_pm[0][0] == '\0' && time->am_pm[1][0] == '\0')
+	{
+	  /* No AM/PM strings defined, use the 24h format as default.  */
+	  time->t_fmt_ampm = time->t_fmt;
+	  time->wt_fmt_ampm = time->wt_fmt;
+	}
+      else
+	{
+	  time->t_fmt_ampm = "%I:%M:%S %p";
+	  time->wt_fmt_ampm = (const uint32_t *) L"%I:%M:%S %p";
+	}
     }
 
   /* Now process the era entries.  */
