@@ -1,3 +1,7 @@
+2003-06-12  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(objpfx)stubs): Rewrite sed magic.
+
 2003-02-28  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (parse_expression): Deliver translation to
