@@ -69,7 +69,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	{
 	  kact.k_sa_handler = act->sa_handler;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-	  kact.sa_flags = act->sa_flags;
+	  kact.sa_flags = act->sa_flags | SA_RESTORER;
 
 	  kact.sa_restorer = ((act->sa_flags & SA_NOMASK)
 			      ? &&restore_nomask : &&restore);
@@ -106,7 +106,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     {
       k_newact.k_sa_handler = act->sa_handler;
       k_newact.sa_mask = act->sa_mask.__val[0];
-      k_newact.sa_flags = act->sa_flags;
+      k_newact.sa_flags = act->sa_flags | SA_RESTORER;
 
       k_newact.sa_restorer = ((act->sa_flags & SA_NOMASK)
 			      ? &&restore_nomask : &&restore);

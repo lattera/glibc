@@ -1,3 +1,8 @@
+1999-06-06  Andi Kleen  <ak@muc.de>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Set
+	SA_RESTORER flag.
+
 1999-06-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* math/libm-test.c (yn_test): Change one delta.
