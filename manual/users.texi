@@ -875,7 +875,7 @@ strings which are pointed to by the elements of the result structure.
 This stream must correspond to a file in the same format as the standard
 password database file.
 
-If the funciton returns null @var{result} points to the structure with
+If the function returns null @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
 occured the return value is non-null and @var{result} contains a null
 pointer.
@@ -914,9 +914,9 @@ result is placed in the user supplied structure pointed to by
 the elements of the result structure, are placed in the additional
 buffer or length @var{buflen} starting at @var{buffer}.
 
-If the function returns null @var{result} points to the structure with
+If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-null and @var{result} contains a null
+occured the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1023,8 +1023,8 @@ strings which are pointed to by the elements of the result structure.
 
 If the return value is @code{0} the pointer returned in @var{result}
 points to the record which contains the wanted data (i.e., @var{result}
-contains the value @var{result_buf}).  In case the return value is non
-null there is no group in the data base with group ID @var{gid} or the
+contains the value @var{result_buf}).  If the return value is non-zero
+there is no group in the data base with group ID @var{gid} or the
 buffer @var{buffer} is too small to contain all the needed information.
 In the later case the global @var{errno} variable is set to
 @code{ERANGE}.
@@ -1054,8 +1054,8 @@ strings which are pointed to by the elements of the result structure.
 
 If the return value is @code{0} the pointer returned in @var{result}
 points to the record which contains the wanted data (i.e., @var{result}
-contains the value @var{result_buf}).  In case the return value is non
-null there is no group in the data base with group name @var{name} or the
+contains the value @var{result_buf}).  If the return value is non-zero
+there is no group in the data base with group name @var{name} or the
 buffer @var{buffer} is too small to contain all the needed information.
 In the later case the global @var{errno} variable is set to
 @code{ERANGE}.
@@ -1098,9 +1098,9 @@ strings which are pointed to by the elements of the result structure.
 This stream must correspond to a file in the same format as the standard
 group database file.
 
-If the funciton returns null @var{result} points to the structure with
+If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-null and @var{result} contains a null
+occured the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1135,9 +1135,9 @@ result is placed in the user supplied structure pointed to by
 the elements of the result structure, are placed in the additional
 buffer or length @var{buflen} starting at @var{buffer}.
 
-If the function returns null @var{result} points to the structure with
+If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
-occured the return value is non-null and @var{result} contains a null
+occured the return value is non-zero and @var{result} contains a null
 pointer.
 @end deftypefun
 
@@ -1186,8 +1186,8 @@ in either of the input services must have the following form:
 @end smallexample
 
 Any of the fields in the triple can be empty which means anything
-matches.  While describing te functions we will see that the opposite
-case is useful as well.  I.e., there shall be entries which will not
+matches.  While describing the functions we will see that the opposite
+case is useful as well.  I.e., there may be entries which will not
 match any input.  For entries like a name consisting of the single
 character @code{-} shall be used.
 
@@ -1290,7 +1290,7 @@ also true for the name @code{-} which should not match any other string
 otherwise.
 
 The return value is @code{1} if an entry matching the given triple is
-found in the netgroup.  The return value is @code{0} is the netgroup
+found in the netgroup.  The return value is @code{0} if the netgroup
 itself is not found, the netgroup does not contain the triple or
 internal errors occured.
 @end deftypefun

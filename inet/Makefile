@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Sub-makefile for inet portion of the library.
@@ -22,7 +22,8 @@
 subdir	:= inet
 
 headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
-	   netinet/tcp.h $(wildcard arpa/*.h protocols/*.h)
+	   netinet/tcp.h $(wildcard arpa/*.h protocols/*.h) \
+	   aliases.h
 
 distribute := netgroup.h
 
@@ -41,7 +42,8 @@ routines := ntohl ntohs htonl htons		\
 	    ether_aton ether_aton_r ether_hton ether_line \
 	    ether_ntoa ether_ntoa_r ether_ntoh \
 	    rcmd rexec ruserpass \
-	    getnetgrent_r getnetgrent
+	    getnetgrent_r getnetgrent \
+	    getaliasent_r getaliasent getaliasname getaliasname_r
 
 # No warnings about losing BSD code.
 override +gccwarn := -w

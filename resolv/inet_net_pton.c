@@ -97,9 +97,7 @@ inet_net_pton_ipv4(src, dst, size)
 	int n, ch, tmp, dirty, bits;
 	const u_char *odst = dst;
 
-	bits = -1;
 	ch = *src++;
-
 	if (ch == '0' && (src[0] == 'x' || src[0] == 'X')
 	    && isascii(src[1]) && isxdigit(src[1])) {
 		/* Hexadecimal: Eat nybble string. */
@@ -150,6 +148,7 @@ inet_net_pton_ipv4(src, dst, size)
 	} else
 		goto enoent;
 
+	bits = -1;
 	if (ch == '/' && isascii(src[0]) && isdigit(src[0]) && dst > odst) {
 		/* CIDR width specifier.  Nothing can follow it. */
 		ch = *src++;	/* Skip over the /. */
@@ -163,6 +162,8 @@ inet_net_pton_ipv4(src, dst, size)
 			 isascii(ch) && isdigit(ch));
 		if (ch != '\0')
 			goto enoent;
+		if (bits > 32)
+			goto emsgsize;
 	}
 
 	/* Firey death and destruction unless we prefetched EOS. */
@@ -174,14 +175,19 @@ inet_net_pton_ipv4(src, dst, size)
 		goto enoent;
 	/* If no CIDR spec was given, infer width from net class. */
 	if (bits == -1) {
-		if (*odst >= 224)
+		if (*odst >= 240)	/* Class E */
+			bits = 32;
+		else if (*odst >= 224)	/* Class D */
 			bits = 4;
-		else if (*odst >= 192)
+		else if (*odst >= 192)	/* Class C */
 			bits = 24;
-		else if (*odst >= 128)
+		else if (*odst >= 128)	/* Class B */
 			bits = 16;
-		else
+		else			/* Class A */
 			bits = 8;
+		/* If imputed mask is narrower than specified octets, widen. */
+		if (bits >= 8 && bits < ((dst - odst) * 8))
+			bits = (dst - odst) * 8;
 	}
 	/* Extend network to cover the actual mask. */
 	while (bits > ((dst - odst) * 8)) {

@@ -295,7 +295,7 @@ __fp_nquery(msg, len, file)
 	 */
 	hp = (HEADER *)msg;
 	cp = msg + HFIXEDSZ;
-	endMark = cp + len;
+	endMark = msg + len;
 	if ((!_res.pfcode) || (_res.pfcode & RES_PRF_HEADX) || hp->rcode) {
 		fprintf(file, ";; ->>HEADER<<- opcode: %s, status: %s, id: %d",
 			_res_opcodes[hp->opcode],

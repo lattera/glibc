@@ -72,7 +72,7 @@ __BEGIN_DECLS
 /* Encryption is present.  */
 #define	_XOPEN_CRYPT	1
 
-/* The enchanced internationalization capabilities accoring to XPG4.2
+/* The enchanced internationalization capabilities according to XPG4.2
    are present.  */
 #define	_XOPEN_ENH_I18N	1
 

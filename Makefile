@@ -188,7 +188,8 @@ $(includedir)/gnu/lib-names.h: $(common-objpfx)soversions.mk
 	 echo; \
 	 (libs='$(all-sonames)';\
 	  for l in $$libs; do \
-	    upname=`echo $$l | sed 's/[.]so.*//' | tr [:lower:]- [:upper:]_`; \
+	    upname=`echo $$l | sed 's/[.]so.*//' | \
+		    tr '[:lower:]-' '[:upper:]_'`; \
 	    echo "#define	$${upname}_SO	$$l"; \
 	  done;) | sort; \
 	 echo; \

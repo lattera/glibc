@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <assert.h>
+#include <errno.h>
 #include <libc-lock.h>
 #include "nsswitch.h"
 
@@ -39,13 +40,13 @@
 #define DATAFILE	"/etc/" DATABASE
 
 #ifdef NEED_H_ERRNO
-#define H_ERRNO_PROTO	, int *herrnop
-#define H_ERRNO_ARG	, herrnop
-#define H_ERRNO_SET(val) (*herrnop = (val))
+# define H_ERRNO_PROTO	, int *herrnop
+# define H_ERRNO_ARG	, herrnop
+# define H_ERRNO_SET(val) (*herrnop = (val))
 #else
-#define H_ERRNO_PROTO
-#define H_ERRNO_ARG
-#define H_ERRNO_SET(val) ((void) 0)
+# define H_ERRNO_PROTO
+# define H_ERRNO_ARG
+# define H_ERRNO_SET(val) ((void) 0)
 #endif
 
 /* Locks the static variables in this file.  */
@@ -59,10 +60,10 @@ static enum { none, getent, getby } last_use;
 static int keep_stream;
 
 /* Open database file if not already opened.  */
-static int
+static enum nss_status
 internal_setent (int stayopen)
 {
-  int status = NSS_STATUS_SUCCESS;
+  enum nss_status status = NSS_STATUS_SUCCESS;
 
   if (stream == NULL)
     {
@@ -83,10 +84,10 @@ internal_setent (int stayopen)
 
 
 /* Thread-safe, exported version of that.  */
-int
+enum nss_status
 CONCAT(_nss_files_set,ENTNAME) (int stayopen)
 {
-  int status;
+  enum nss_status status;
 
   __libc_lock_lock (lock);
 
@@ -120,7 +121,7 @@ internal_endent (void)
 
 
 /* Thread-safe, exported version of that.  */
-int
+enum nss_status
 CONCAT(_nss_files_end,ENTNAME) (void)
 {
   __libc_lock_lock (lock);
@@ -145,16 +146,6 @@ internal_getent (struct STRUCTURE *result,
   struct parser_data *data = (void *) buffer;
   int linebuflen = buffer + buflen - data->linebuffer;
 
-  /* Be prepared that the set*ent function was not called before.  */
-  if (stream == NULL)
-    {
-      enum nss_status status;
-
-      status = internal_setent (0);
-      if (status != NSS_STATUS_SUCCESS)
-	return status;
-    }
-
   if (buflen < (int) sizeof *data + 1)
     {
       __set_errno (ERANGE);
@@ -163,6 +154,9 @@ internal_getent (struct STRUCTURE *result,
 
   do
     {
+      /* Terminate the line so that we can test for overflow.  */
+      data->linebuffer[linebuflen - 1] = '\0';
+
       p = fgets (data->linebuffer, linebuflen, stream);
       if (p == NULL)
 	{
@@ -170,17 +164,23 @@ internal_getent (struct STRUCTURE *result,
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}
-
-      /* Terminate the line for any case.  */
-      data->linebuffer[linebuflen - 1] = '\0';
+      else if (data->linebuffer[linebuflen - 1] != '\0')
+	{
+	  /* The line is too long.  Give the user the opportunity to
+	     enlarge the buffer.  */
+	  __set_errno (ERANGE);
+	  H_ERRNO_SET (NETDB_INTERNAL);
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       /* Skip leading blanks.  */
       while (isspace (*p))
 	++p;
-    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
-	     /* Parse the line.  If it is invalid, loop to
-		get the next line of the file to parse.  */
-	     ! parse_line (p, result, data, buflen));
+    }
+  while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
+	 /* Parse the line.  If it is invalid, loop to get the next
+	    line of the file to parse.  */
+	 || ! parse_line (p, result, data, buflen));
 
   /* Filled in RESULT with the next entry from the database file.  */
   return NSS_STATUS_SUCCESS;
@@ -188,29 +188,42 @@ internal_getent (struct STRUCTURE *result,
 
 
 /* Return the next entry from the database file, doing locking.  */
-int
+enum nss_status
 CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
-				  char *buffer, int buflen H_ERRNO_PROTO)
+				  char *buffer, size_t buflen H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
-  int status = NSS_STATUS_SUCCESS;
+  enum nss_status status = NSS_STATUS_SUCCESS;
 
   __libc_lock_lock (lock);
 
-  /* If the last use was not by the getent function we need the
-     position the stream.  */
-  if (last_use != getent)
-    if (fsetpos (stream, &position) < 0)
-      status = NSS_STATUS_UNAVAIL;
-    else
-      last_use = getent;
+  /* Be prepared that the set*ent function was not called before.  */
+  if (stream == NULL)
+    status = internal_setent (0);
 
-  if (status == NSS_STATUS_SUCCESS)
+  if (status != NSS_STATUS_SUCCESS)
     {
-      status = internal_getent (result, buffer, buflen H_ERRNO_ARG);
+      /* If the last use was not by the getent function we need the
+	 position the stream.  */
+      if (last_use != getent)
+	if (fsetpos (stream, &position) < 0)
+	  status = NSS_STATUS_UNAVAIL;
+	else
+	  last_use = getent;
 
-      /* Remember this position.  */
-      fgetpos (stream, &position);
+      if (status == NSS_STATUS_SUCCESS)
+	{
+	  status = internal_getent (result, buffer, buflen H_ERRNO_ARG);
+
+	  /* Remember this position if we were successful.  If the
+	     operation failed we give the user a chance to repeat the
+	     operation (perhaps the buffer was too small).  */
+	  if (status == NSS_STATUS_SUCCESS)
+	    fgetpos (stream, &position);
+	  else
+	    /* We must make sure we reposition the stream the next call.  */
+	    last_use = none;
+	}
     }
 
   __libc_lock_unlock (lock);
@@ -234,24 +247,27 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
 enum nss_status								      \
 _nss_files_get##name##_r (proto,					      \
 			  struct STRUCTURE *result,			      \
-			  char *buffer, int buflen H_ERRNO_PROTO)	      \
+			  char *buffer, size_t buflen H_ERRNO_PROTO)	      \
 {									      \
   enum nss_status status;						      \
 									      \
   __libc_lock_lock (lock);						      \
 									      \
   /* Reset file pointer to beginning or open file.  */			      \
-  internal_setent (keep_stream);					      \
+  status = internal_setent (keep_stream);				      \
 									      \
-  /* Tell getent function that we have repositioned the file pointer.  */     \
-  last_use = getby;							      \
+  if (status == NSS_STATUS_SUCCESS)					      \
+    {									      \
+      /* Tell getent function that we have repositioned the file pointer.  */ \
+      last_use = getby;							      \
 									      \
-  while ((status = internal_getent (result, buffer, buflen H_ERRNO_ARG))      \
-	 == NSS_STATUS_SUCCESS)						      \
-    { break_if_match }							      \
+      while ((status = internal_getent (result, buffer, buflen H_ERRNO_ARG))  \
+	     == NSS_STATUS_SUCCESS)					      \
+	{ break_if_match }						      \
 									      \
-  if (! keep_stream)							      \
-    internal_endent ();							      \
+      if (! keep_stream)						      \
+	internal_endent ();						      \
+    }									      \
 									      \
   __libc_lock_unlock (lock);						      \
 									      \

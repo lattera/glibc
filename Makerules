@@ -605,7 +605,7 @@ rm -f $(@F).new; \
 if test '$(@D)' = '$(<D)'; then \
   $(LN_S) $(<F) $(@F).new; \
 else \
-  $(SHELL) $(common-objpfx)$(..)rellns-sh $< $(@F).new; \
+  $(SHELL) $(top_absdir)/rellns-sh $< $(@F).new; \
 fi; \
 mv -f $(@F).new $(@F)
 endef

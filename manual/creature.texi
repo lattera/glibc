@@ -78,7 +78,7 @@ Portability Guide is included.  This is an superset of the POSIX.1 and
 POSIX.2 functionality and in fact @code{_POSIX_SOURCE} and
 @code{_POSIX_C_SOURCE} get automatically be defined.
 
-But as the great unifaction of all Unices there is also functionality
+But as the great unifiction of all Unices there is also functionality
 only available in BSD and SVID is included.
 
 If the macro @code{_XOPEN_SOURCE_EXTENDED} is also defined, even more
@@ -111,8 +111,9 @@ get very strange errors at run time.
 
 @comment (none)
 @comment GNU
-@defvr Macro _REENTRANT,_THREAD_SAFE
-If you define one this macro, reentrant versions of several functions get
+@defvr Macro _REENTRANT
+@defvrx Macro _THREAD_SAFE
+If you define one of these macros, reentrant versions of several functions get
 declared.  Some of the functions are specified in POSIX.1c but many others
 are only available on a few other systems or are unique to GNU libc.
 The problem is that the standardization of the thread safe C library

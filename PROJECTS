@@ -87,8 +87,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      duplicated work.
 
 
-[11] Write access function for netmasks, bootparams, publickey, automount,
-     and aliases databases for nss_files and nss_db module.
+[11] Write access function for netmasks, bootparams, and automount
+     databases for nss_files and nss_db module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
 

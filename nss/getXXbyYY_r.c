@@ -71,7 +71,7 @@
 
 
 /* Type of the lookup function we need here.  */
-typedef int (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *, int
+typedef int (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *, size_t
 				H_ERRNO_PARM);
 
 /* Some usages of this file might use this variable.  */

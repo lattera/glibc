@@ -588,9 +588,9 @@ In these situation one could use the function
 @code{__strto@var{XXX}_internal}.  @var{XXX} here stands for any of the
 above forms.  All numeric conversion functions (including the functions
 to process floating-point numbers) have such a counterpart.  The
-difference to the normal for is the extra argument at the end of the
+difference to the normal form is the extra argument at the end of the
 parameter list.  If this value has an non-zero value the handling of
-number grouping is enabled.  The advantage from using these functions is
+number grouping is enabled.  The advantage of using these functions is
 that the @var{tailptr} parameters allow to determine which part of the
 input is processed.  The @code{scanf} functions don't provide this
 information.  The drawback of using these functions is that they are not
@@ -678,7 +678,7 @@ number, no conversion is performed.  In this case, @code{strtod} returns
 a value of zero and the value returned in @code{*@var{tailptr}} is the
 value of @var{string}.
 
-In a locale other than the standard @code{"C"} or @code{"POSIX"} locale,
+In a locale other than the standard @code{"C"} or @code{"POSIX"} locales,
 this function may recognize additional locale-dependent syntax.
 
 If the string has valid syntax for a floating-point number but the value
@@ -689,7 +689,7 @@ because of underflow, @code{strtod} returns zero.  It also sets @code{errno}
 to @code{ERANGE} if there was overflow or underflow.
 
 Since the value zero which is returned in the error case is also a valid
-result the user should set the global variable @code{errno} to null
+result the user should set the global variable @code{errno} to zero
 before calling this function.  So one can test for failures after the
 call since all failures set @code{errno} to a non-zero value.
 @end deftypefun

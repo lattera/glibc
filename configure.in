@@ -1,11 +1,15 @@
 Dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.10)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.10.2)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
 AC_CONFIG_HEADER(config.h)
 
 # This will get text that should go into config.make.
 config_vars=
+
+# We need a variable with the absolute path to the toplevel build directory.
+top_absdir=`cd $srcdir; pwd`
+AC_SUBST(top_absdir)
 
 # Check for a --with-gmp argument and set gmp-srcdir in config.make.
 AC_ARG_WITH(gmp, dnl
@@ -330,9 +334,9 @@ AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
 ### Locate tools.
 
 AC_PROG_INSTALL
-if test "$INSTALL" = "${srcdir}/install-sh"; then
+if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='$(..)./install-sh'
+  INSTALL="$top_absdir/install-sh -c"
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)

@@ -3,6 +3,7 @@
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
 # Installation prefixes.
+top_absdir = @top_absdir@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 

@@ -1,3 +1,110 @@
+Thu Nov 14 02:00:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/Makefile (headers): Add aliases.h.
+	(routines): Add getaliasent_r, getaliasent, getaliasname, and
+	getaliasname_r.
+	* aliases.h: New file.
+	* inet/aliases.h: New file.
+	* inet/getaliasent.c: New file.
+	* inet/getaliasent_r.c: New file.
+	* inet/getaliasname.c: New file.
+	* inet/getaliasname_r.c: New file.
+	* nss/Makefile (databases): Add alias.
+	* nss/alias-lookup.c: New file.
+	* nss/databases.def: Add aliases and publickey.
+	* nss/nss_db/db-alias.c: New file.
+	* nss/nss_files/files-alias.c: New file.
+
+	* inet/getnetgrent_r.c (__internal_getnetgrent): Buffer length
+	argument to lookup function is of type size_t.
+	(innetgr): Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nss_db/db-XXX.c: Likewise.
+
+	* nss/getXXbyYY.c: Don't provide static buffer.  Resize if call
+	failed because buffer was too small.
+	* nss/getXXent.c: Likewise.
+
+	* nss/nss_files/files-XXX.c: Correct handling of shared file.  The
+	getXXent_r function now uses f[gs]etpos to get to the correct
+	position.
+
+	* nss/nss_files/files-parse.c: Indent lines for better readability.
+
+	* malloc/obstack.c: Add new variable obstack_alloc_failed_handler
+	and new function print_and_abort.  Remove all references to
+	alloc_failed field.
+	Add new function _obstack_memory_used.
+	* malloc/obstack.h (struct obstack): Remove field alloc_field.
+	Remove all references to alloc_failed field.
+	Add prototype for _obstack_memory_used.
+
+	* posix/unistd.h: Correct typo.
+
+Wed Nov 13 03:09:16 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Require at least autoconf-2.10.2.
+
+Tue Nov 12 03:35:01 1996  Christian von Roques  <roques@pond.sub.org>
+
+	* malloc/obstack.h: Add new macro `obstack_make_room'.
+	* malloc/obstack.c: Add function implementation for
+	`obstack_make_room'.
+
+Mon Nov 11 13:54:04 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Update to BIND-4.9.5-REL.
+	* resolv/Banner: Set to 4.9.5-REL.
+	* resolv/inet_net_pton.c: Was doing bad things to subnets and b'casts.
+	* resolv/res_debug.c (__fp_nquery): Could read past end of buffer.
+	(fix from BIND 8.1)
+
+	* config.make.in: Add definition for top_absdir.
+	* Makerules (make-link): Fix path to rellns-sh script.
+
+Sat Nov  9 02:15:24 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/unistd.h: Fix comment.
+
+	* manual/arith.texi: Fix misspellings.  Use `zero', not `null',
+	when talking about numbers.
+	* manual/users.texi: Likewise.
+	* manual/creature.texi: Likewise.  Use @defvarx for a secondary
+	description header.
+
+Sat Nov  9 19:25:11 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/Makefile ($(common-objpfx)mk-stdiolim): Depend on
+	the real posix1_lim.h file so that it works in all subdirs, not
+	only in posix.
+
+Sat Nov  9 02:08:34 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile ($(includedir)/gnu/lib-names.h): Quote arguments of tr.
+
+Sat Nov  9 02:06:17 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)s-proto.d): Don't depend
+	on $(before-compile) which hasn't been properly setup yet at this
+	point.
+
+Sat Nov  9 02:02:48 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/sigset.h: Don't use implicit int which will
+	probably require a diagnostic in the next revision of the C
+	standard.
+	* sysdeps/stub/lockfile.c: Likewise.
+
+Sat Nov  9 01:57:17 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Correct last change.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Likewise.
+
+Mon Nov 11 02:53:14 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c: Update copyright.  Small cosmetic changes.
+
 Sun Nov 10 23:28:16 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getprtname_r.c: Reformat copyright.
@@ -396,9 +503,9 @@ Sun Nov  3 17:29:06 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/stub/mktemp.c: Likewise.
 
 	* sysvipc/sys/ipc.h: Prototypes of ftok have to be of types `const
- 	char *' and `int'.
+	char *' and `int'.
 	* sysvipc/ftok.c: Likewise.  Make sure only lower 8 bits of
- 	PROJ_ID are used.
+	PROJ_ID are used.
 
 Sun Nov  3 03:21:28 1996  Heiko Schroeder  <Heiko.Schroeder@post.rwth-aachen.de>
 

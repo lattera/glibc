@@ -25,7 +25,7 @@ cded-objdir-includes = $(patsubst -I$$cwd//%,-I/%,\
 				  $(patsubst -I%,-I$$cwd/%,$(+includes)))
 # $(BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
-			     posix1_lim.h local_lim.h
+			     ../posix/posix1_lim.h local_lim.h
 	cwd=`pwd`; cd $(objpfx).; \
 	$(BUILD_CC) $(cded-objdir-includes) $(BUILD_CFLAGS) \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,$(..)%,$@)

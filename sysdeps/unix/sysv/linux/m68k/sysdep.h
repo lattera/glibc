@@ -75,13 +75,12 @@ Cambridge, MA 02139, USA.  */
    a large offset.  Therefore we must not anymore test for < 0, but test
    for a real error by making sure the value in %d0 is a real error
    number.  Linus said he will make sure the no syscall returns a value
-   in -1 .. -4095 as a valid result so we can savely test with -4096.  */
+   in -1 .. -4095 as a valid result so we can savely test with -4095.  */
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     DO_CALL (&SYS_ify (syscall_name), args);				      \
-    moveq.l &-4096, %d1;						      \
-    cmp.l %d1, %d0;							      \
+    cmp.l &-4095, %d0;							      \
     jcc syscall_error
 
 #undef PSEUDO_END

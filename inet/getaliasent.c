@@ -1,7 +1,5 @@
-/* List of all databases defined for the NSS in GNU C Library.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,17 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This list must be kept sorted!!!  */
+#include <aliases.h>
 
-DEFINE_DATABASE (aliases)
-DEFINE_DATABASE (ethers)
-DEFINE_DATABASE (group)
-DEFINE_DATABASE (hosts)
-DEFINE_DATABASE (netgroup)
-DEFINE_DATABASE (networks)
-DEFINE_DATABASE (passwd)
-DEFINE_DATABASE (protocols)
-DEFINE_DATABASE (publickey)
-DEFINE_DATABASE (rpc)
-DEFINE_DATABASE (services)
-DEFINE_DATABASE (shadow)
+
+#define LOOKUP_TYPE	struct aliasent
+#define	GETFUNC_NAME	getaliasent
+#define BUFLEN		1024
+
+#include "../nss/getXXent.c"

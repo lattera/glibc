@@ -39,7 +39,7 @@
 #define CONCAT1(a,b) a##b
 
 #ifndef STRUCTURE
-#define STRUCTURE ENTNAME
+# define STRUCTURE ENTNAME
 #endif
 
 
@@ -47,9 +47,9 @@ struct parser_data
   {
 #ifdef ENTDATA
     struct ENTDATA entdata;
-#define ENTDATA_DECL(data) struct ENTDATA *const entdata = &data->entdata;
+# define ENTDATA_DECL(data) struct ENTDATA *const entdata = &data->entdata;
 #else
-#define ENTDATA_DECL(data)
+# define ENTDATA_DECL(data)
 #endif
     char linebuffer[0];
   };
@@ -57,11 +57,11 @@ struct parser_data
 #ifdef ENTDATA
 /* The function can't be exported, because the entdata structure
    is defined only in files-foo.c.  */
-#define parser_stclass static inline
+# define parser_stclass static inline
 #else
 /* Export the line parser function so it can be used in nss_db.  */
-#define parser_stclass /* Global */
-#define parse_line CONCAT(_nss_files_parse_,ENTNAME)
+# define parser_stclass /* Global */
+# define parse_line CONCAT(_nss_files_parse_,ENTNAME)
 #endif
 
 
@@ -71,20 +71,20 @@ struct parser_data
 extern int parse_line (char *line, struct STRUCTURE *result,
 		       struct parser_data *data, int datalen);
 
-#define LINE_PARSER(EOLSET, BODY) /* Do nothing */
+# define LINE_PARSER(EOLSET, BODY) /* Do nothing */
 
 #else
 
 /* Define a line parsing function.  */
 
-#define LINE_PARSER(EOLSET, BODY)					      \
+# define LINE_PARSER(EOLSET, BODY)					      \
 parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
 	    struct parser_data *data, int datalen)			      \
 {									      \
   ENTDATA_DECL (data)							      \
   char *p = strpbrk (line, EOLSET "\n");				      \
-  if (p)								      \
+  if (p != NULL)							      \
     *p = '\0';								      \
   BODY;									      \
   TRAILING_LIST_PARSER;							      \
@@ -92,7 +92,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 }
 
 
-#define STRING_FIELD(variable, terminator_p, swallow)			      \
+# define STRING_FIELD(variable, terminator_p, swallow)			      \
   {									      \
     variable = line;							      \
     while (*line != '\0' && !terminator_p (*line))			      \
@@ -106,7 +106,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
       }									      \
   }
 
-#define INT_FIELD(variable, terminator_p, swallow, base, convert)	      \
+# define INT_FIELD(variable, terminator_p, swallow, base, convert)	      \
   {									      \
     char *endp;								      \
     variable = convert (strtol (line, &endp, base));			      \
@@ -121,7 +121,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
     line = endp;							      \
   }
 
-#define INT_FIELD_MAYBE_NULL(variable, terminator_p, swallow, base, convert, default)	      \
+# define INT_FIELD_MAYBE_NULL(variable, terminator_p, swallow, base, convert, default)	      \
   {									      \
     char *endp;								      \
     if (*line == '\0')							      \
@@ -139,14 +139,14 @@ parse_line (char *line, struct STRUCTURE *result,			      \
     line = endp;							      \
   }
 
-#define ISCOLON(c) ((c) == ':')
+# define ISCOLON(c) ((c) == ':')
 
 
-#ifndef TRAILING_LIST_MEMBER
-#define TRAILING_LIST_PARSER /* Nothing to do.  */
-#else
+# ifndef TRAILING_LIST_MEMBER
+#  define TRAILING_LIST_PARSER /* Nothing to do.  */
+# else
 
-#define TRAILING_LIST_PARSER						      \
+#  define TRAILING_LIST_PARSER						      \
 {									      \
   char **list = parse_list (line, data, datalen);			      \
   if (list)								      \
@@ -198,10 +198,10 @@ parse_list (char *line, struct parser_data *data, int datalen)
 	      *line = '\0';
 	      do
 		++line;
-	      while (TRAILING_LIST_SEPARATOR_P (*line));
+	      while (isspace (*line));
 	      elt = line;
 	    }
-	  else if (*line == '\0' || *line == '\n')
+	  else if (*line == '\0')
 	    {
 	      /* End of the line.  */
 	      if (line > elt)
@@ -219,7 +219,7 @@ parse_list (char *line, struct parser_data *data, int datalen)
   return list;
 }
 
-#endif	/* TRAILING_LIST_MEMBER */
+# endif	/* TRAILING_LIST_MEMBER */
 #endif	/* EXTERN_PARSER */
 
 
@@ -238,5 +238,5 @@ parse_list (char *line, struct parser_data *data, int datalen)
 
 /* This is defined by db-*.c to include "../nss_db/db-XXX.c" instead.  */
 #ifndef GENERIC
-#define GENERIC "files-XXX.c"
+# define GENERIC "files-XXX.c"
 #endif

@@ -1328,7 +1328,7 @@ collate_order_elem (struct linereader *lr, struct localedef_t *locale,
 	    {
 	      lr_error (lr, _("\
 collation element `%.*s' appears more than once: ignore line"),
-			code->val.str.len, code->val.str.start);
+			(int) code->val.str.len, code->val.str.start);
 	      lr_ignore_rest (lr, 0);
 	      result = -1;
 	      break;

@@ -90,7 +90,7 @@ typedef int (*set_function) (STAYOPEN);
 typedef int (*end_function) (void);
 
 /* Prototype for the setXXXent functions we use here.  */
-typedef int (*get_function) (LOOKUP_TYPE *, char *, int H_ERRNO_PARM);
+typedef int (*get_function) (LOOKUP_TYPE *, char *, size_t H_ERRNO_PARM);
 
 
 /* This handle for the NSS data base is shared between all

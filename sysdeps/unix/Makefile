@@ -302,8 +302,7 @@ ifndef no_deps
 endif
 endif
 
-$(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
-			   $(before-compile)
+$(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S
 	$(+make-deps)
 
 endif

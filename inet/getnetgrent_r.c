@@ -190,7 +190,7 @@ __internal_getnetgrent (char **hostp, char **userp, char **domainp,
 			struct __netgrent *datap,
 			char *buffer, size_t buflen)
 {
-  enum nss_status (*fct) (struct __netgrent *, char *, int);
+  enum nss_status (*fct) (struct __netgrent *, char *, size_t);
   int no_more;
 
   /* Initialize status to return if no more functions are found.  */
@@ -293,7 +293,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 {
   int (*setfct) (const char *, struct __netgrent *);
   void (*endfct) (struct __netgrent *);
-  int (*getfct) (struct __netgrent *, char *, int);
+  int (*getfct) (struct __netgrent *, char *, size_t);
   struct name_list *known;
   struct name_list *needed;
   int result = 0;
