@@ -21,11 +21,11 @@
    Modern devices hopefully are sane enough not to put any performance
    critical registers in i/o space.
 
-   On the first call to ioperm() or _sethae(), the entire (E)ISA port
-   space is mapped into the virtual address space at address io.base.
-   mprotect() calls are then used to enable/disable access to ports.  Per
-   page, there are PAGE_SIZE>>IO_SHIFT I/O ports (e.g., 256 ports on a
-   Low Cost Alpha based system using 8KB pages).
+   On the first call to ioperm, the entire (E)ISA port space is mapped
+   into the virtual address space at address io.base.  mprotect calls
+   are then used to enable/disable access to ports.  Per page, there
+   are PAGE_SIZE>>IO_SHIFT I/O ports (e.g., 256 ports on a Low Cost Alpha
+   based system using 8KB pages).
 
    Keep in mind that this code should be able to run in a 32bit address
    space.  It is therefore unreasonable to expect mmap'ing the entire
@@ -42,57 +42,62 @@
 
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <sys/io.h>
 
-#include <asm/page.h>
-#include <asm/system.h>
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #define PATH_ALPHA_SYSTYPE	"/etc/alpha_systype"
 #define PATH_CPUINFO		"/proc/cpuinfo"
 
 #define MAX_PORT	0x10000
+#define vip		volatile int *
 #define vuip		volatile unsigned int *
+#define vusp		volatile unsigned short *
+#define vucp		volatile unsigned char *
 
-#define JENSEN_IO_BASE		(0xfffffc0300000000UL)
-#define JENSEN_SPARSE_MEM	(0xfffffc0200000000UL)
+#define JENSEN_IO_BASE		(0x300000000UL)
+#define JENSEN_SPARSE_MEM	(0x200000000UL)
 
 /* With respect to the I/O architecture, APECS and LCA are identical,
    so the following defines apply to LCA as well.  */
-#define APECS_IO_BASE		(0xfffffc01c0000000UL)
-#define APECS_SPARSE_MEM	(0xfffffc0200000000UL)
-#define APECS_DENSE_MEM		(0xfffffc0300000000UL)
+#define APECS_IO_BASE		(0x1c0000000UL)
+#define APECS_SPARSE_MEM	(0x200000000UL)
+#define APECS_DENSE_MEM		(0x300000000UL)
 
-/* The same holds for CIA and PYXIS.  */
-#define CIA_IO_BASE		(0xfffffc8580000000UL)
-#define CIA_SPARSE_MEM		(0xfffffc8000000000UL)
-#define CIA_DENSE_MEM		(0xfffffc8600000000UL)
+/* The same holds for CIA and PYXIS, except for PYXIS we prefer BWX.  */
+#define CIA_IO_BASE		(0x8580000000UL)
+#define CIA_SPARSE_MEM		(0x8000000000UL)
+#define CIA_DENSE_MEM		(0x8600000000UL)
+
+#define PYXIS_IO_BASE		(0x8900000000UL)
+#define PYXIS_DENSE_MEM		(0x8800000000UL)
 
 /* SABLE is EV4, GAMMA is EV5 */
-#define T2_IO_BASE		(0xfffffc03a0000000UL)
-#define T2_SPARSE_MEM		(0xfffffc0200000000UL)
-#define T2_DENSE_MEM		(0xfffffc03c0000000UL)
+#define T2_IO_BASE		(0x3a0000000UL)
+#define T2_SPARSE_MEM		(0x200000000UL)
+#define T2_DENSE_MEM		(0x3c0000000UL)
 
-#define GAMMA_IO_BASE		(0xfffffc83a0000000UL)
-#define GAMMA_SPARSE_MEM	(0xfffffc8200000000UL)
-#define GAMMA_DENSE_MEM		(0xfffffc83c0000000UL)
+#define GAMMA_IO_BASE		(0x83a0000000UL)
+#define GAMMA_SPARSE_MEM	(0x8200000000UL)
+#define GAMMA_DENSE_MEM		(0x83c0000000UL)
 
-/* these are for the RAWHIDE family */
-#define MCPCIA_IO_BASE		(0xfffffcf980000000UL)
-#define MCPCIA_SPARSE_MEM	(0xfffffcf800000000UL)
-#define MCPCIA_DENSE_MEM	(0xfffffcf900000000UL)
-
-/* Tsunami has no SPARSE space */
 /* NOTE: these are hardwired to PCI bus 0 addresses!!! */
-/* Also, these are PHYSICAL, as/so there's no KSEG translation */
-#define TSUNAMI_IO_BASE		(0x00000801fc000000UL + 0xfffffc0000000000UL)
-#define TSUNAMI_DENSE_MEM	(0x0000080000000000UL + 0xfffffc0000000000UL)
+#define MCPCIA_IO_BASE		(0xf980000000UL)
+#define MCPCIA_SPARSE_MEM	(0xf800000000UL)
+#define MCPCIA_DENSE_MEM	(0xf900000000UL)
 
-/* Polaris has SPARSE space, but we prefer to use only DENSE */
-/* because of some idiosyncracies in actually using SPARSE */
-#define POLARIS_IO_BASE		(0xfffffcf9fc000000UL)
-#define POLARIS_DENSE_MEM	(0xfffffcf900000000UL)
+/* Tsunami and Irongate use the same offsets, at least for hose 0.  */
+#define TSUNAMI_IO_BASE		(0x801fc000000UL)
+#define TSUNAMI_DENSE_MEM	(0x80000000000UL)
+
+/* Polaris has SPARSE space, but we prefer to use only DENSE
+   because of some idiosyncracies in actually using SPARSE.  */
+#define POLARIS_IO_BASE		(0xf9fc000000UL)
+#define POLARIS_DENSE_MEM	(0xf900000000UL)
 
 typedef enum {
-  IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_T2,
+  IOSYS_UNKNOWN, IOSYS_JENSEN, IOSYS_APECS, IOSYS_CIA, IOSYS_PYXIS, IOSYS_T2,
   IOSYS_TSUNAMI, IOSYS_MCPCIA, IOSYS_GAMMA, IOSYS_POLARIS,
   IOSYS_CPUDEP, IOSYS_PCIDEP
 } iosys_t;
@@ -102,22 +107,22 @@ typedef enum {
 } ioswizzle_t;
 
 static struct io_system {
-  int		    hae_shift;
   unsigned long	int bus_memory_base;
   unsigned long	int sparse_bus_mem_base;
   unsigned long	int bus_io_base;
 } io_system[] = { /* NOTE! must match iosys_t enumeration */
-/* UNKNOWN */	{0, 0, 0, 0},
-/* JENSEN */	{7, 0, JENSEN_SPARSE_MEM, JENSEN_IO_BASE},
-/* APECS */	{5, APECS_DENSE_MEM, APECS_SPARSE_MEM, APECS_IO_BASE},
-/* CIA */	{5, CIA_DENSE_MEM, CIA_SPARSE_MEM, CIA_IO_BASE},
-/* T2 */	{5, T2_DENSE_MEM, T2_SPARSE_MEM, T2_IO_BASE},
-/* TSUNAMI */	{0, TSUNAMI_DENSE_MEM, 0, TSUNAMI_IO_BASE},
-/* MCPCIA */	{5, MCPCIA_DENSE_MEM, MCPCIA_SPARSE_MEM, MCPCIA_IO_BASE},
-/* GAMMA */	{5, GAMMA_DENSE_MEM, GAMMA_SPARSE_MEM, GAMMA_IO_BASE},
-/* POLARIS */	{0, POLARIS_DENSE_MEM, 0, POLARIS_IO_BASE},
-/* CPUDEP */	{0, 0, 0, 0}, /* for platforms dependent on CPU type */
-/* PCIDEP */	{0, 0, 0, 0}, /* for platforms dependent on core logic */
+/* UNKNOWN */	{0, 0, 0},
+/* JENSEN */	{0, JENSEN_SPARSE_MEM, JENSEN_IO_BASE},
+/* APECS */	{APECS_DENSE_MEM, APECS_SPARSE_MEM, APECS_IO_BASE},
+/* CIA */	{CIA_DENSE_MEM, CIA_SPARSE_MEM, CIA_IO_BASE},
+/* PYXIS */	{PYXIS_DENSE_MEM, 0, PYXIS_IO_BASE},
+/* T2 */	{T2_DENSE_MEM, T2_SPARSE_MEM, T2_IO_BASE},
+/* TSUNAMI */	{TSUNAMI_DENSE_MEM, 0, TSUNAMI_IO_BASE},
+/* MCPCIA */	{MCPCIA_DENSE_MEM, MCPCIA_SPARSE_MEM, MCPCIA_IO_BASE},
+/* GAMMA */	{GAMMA_DENSE_MEM, GAMMA_SPARSE_MEM, GAMMA_IO_BASE},
+/* POLARIS */	{POLARIS_DENSE_MEM, 0, POLARIS_IO_BASE},
+/* CPUDEP */	{0, 0, 0}, /* for platforms dependent on CPU type */
+/* PCIDEP */	{0, 0, 0}, /* for platforms dependent on core logic */
 };
 
 static struct platform {
@@ -126,23 +131,23 @@ static struct platform {
 } platform[] = {
   {"Alcor",	IOSYS_CIA},
   {"Avanti",	IOSYS_APECS},
-  {"XL",	IOSYS_APECS},
   {"Cabriolet",	IOSYS_APECS},
   {"EB164",	IOSYS_PCIDEP},
   {"EB64+",	IOSYS_APECS},
   {"EB66",	IOSYS_APECS},
   {"EB66P",	IOSYS_APECS},
   {"Jensen",	IOSYS_JENSEN},
+  {"Miata",	IOSYS_PYXIS},
   {"Mikasa",	IOSYS_CPUDEP},
-  {"Noritake",	IOSYS_CPUDEP},
-  {"Noname",	IOSYS_APECS},
-  {"Sable",	IOSYS_CPUDEP},
-  {"Miata",	IOSYS_CIA},
-  {"Tsunami",	IOSYS_TSUNAMI},
   {"Nautilus",	IOSYS_TSUNAMI},
+  {"Noname",	IOSYS_APECS},
+  {"Noritake",	IOSYS_CPUDEP},
   {"Rawhide",	IOSYS_MCPCIA},
-  {"Ruffian",	IOSYS_CIA},
+  {"Ruffian",	IOSYS_PYXIS},
+  {"Sable",	IOSYS_CPUDEP},
   {"Takara",	IOSYS_CIA},
+  {"Tsunami",	IOSYS_TSUNAMI},
+  {"XL",	IOSYS_APECS},
 };
 
 struct ioswtch {
@@ -156,31 +161,58 @@ struct ioswtch {
 };
 
 static struct {
-  struct hae {
-    unsigned long int	cache;
-    unsigned long int *	reg;
-  } hae;
+  unsigned long int hae_cache;
   unsigned long int	base;
   struct ioswtch *	swp;
   unsigned long int	bus_memory_base;
   unsigned long int	sparse_bus_memory_base;
   unsigned long int	io_base;
-  iosys_t		sys;
   ioswizzle_t		swiz;
-  int			hae_shift;
 } io;
 
-extern void __sethae (unsigned long int);	/* we can't use asm/io.h */
+static inline void
+stb_mb(unsigned char val, unsigned long addr)
+{
+  __asm__("stb %1,%0; mb" : "=m"(*(vucp)addr) : "r"(val));
+}
+
+static inline void
+stw_mb(unsigned short val, unsigned long addr)
+{
+  __asm__("stw %1,%0; mb" : "=m"(*(vusp)addr) : "r"(val));
+}
+
+static inline void
+stl_mb(unsigned int val, unsigned long addr)
+{
+  __asm__("stl %1,%0; mb" : "=m"(*(vip)addr) : "r"(val));
+}
+
+/* No need to examine error -- sethae never fails.  */
+static inline void
+__sethae(unsigned long value)
+{
+  register unsigned long r16 __asm__("$16") = value;
+  register unsigned long r0 __asm__("$0") = __NR_sethae;
+  __asm__ __volatile__ ("callsys"
+			: "=r"(r0)
+			: "0"(r0), "r" (r16)
+			: inline_syscall_clobbers, "$19");
+}
+
+extern long __pciconfig_iobase(enum __pciconfig_iobase_which __which,
+			       unsigned long int __bus,
+			       unsigned long int __dfn);
 
 static inline unsigned long int
 port_to_cpu_addr (unsigned long int port, ioswizzle_t ioswiz, int size)
 {
   if (ioswiz == IOSWIZZLE_SPARSE)
-    return (port << 5) + ((size - 1) << 3) + io.base;
+    return io.base + (port << 5) + ((size - 1) << 3);
   else if (ioswiz == IOSWIZZLE_DENSE)
     return port + io.base;
   else
-    return (port << 7) + ((size - 1) << 5) + io.base;
+    return io.base + (port << 7) + ((size - 1) << 5);
 }
 
 static inline void
@@ -192,20 +224,20 @@ inline_sethae (unsigned long int addr, ioswizzle_t ioswiz)
 
       /* no need to set hae if msb is 0: */
       msb = addr & 0xf8000000;
-      if (msb && msb != io.hae.cache)
+      if (msb && msb != io.hae_cache)
 	{
+	  io.hae_cache = msb;
 	  __sethae (msb);
-	  io.hae.cache = msb;
 	}
     }
-  else
+  else if (ioswiz == IOSWIZZLE_JENSEN)
     {
-      /* hae on the Jensen is bits 31:25 shifted right */
+      /* HAE on the Jensen is bits 31:25 shifted right.  */
       addr >>= 25;
-      if (addr != io.hae.cache)
+      if (addr != io.hae_cache)
 	{
+	  io.hae_cache = addr;
 	  __sethae (addr);
-	  io.hae.cache = addr;
 	}
     }
 }
@@ -216,23 +248,19 @@ inline_outb (unsigned char b, unsigned long int port, ioswizzle_t ioswiz)
   unsigned int w;
   unsigned long int addr = port_to_cpu_addr (port, ioswiz, 1);
 
-  inline_sethae (0, ioswiz);
   asm ("insbl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
-  *(vuip)addr = w;
-  mb ();
+  stl_mb(w, addr);
 }
 
 
 static inline void
 inline_outw (unsigned short int b, unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned int w;
+  unsigned long w;
   unsigned long int addr = port_to_cpu_addr (port, ioswiz, 2);
 
-  inline_sethae (0, ioswiz);
   asm ("inswl %2,%1,%0" : "=r" (w) : "ri" (port & 0x3), "r" (b));
-  *(vuip)addr = w;
-  mb ();
+  stl_mb(w, addr);
 }
 
 
@@ -241,19 +269,17 @@ inline_outl (unsigned int b, unsigned long int port, ioswizzle_t ioswiz)
 {
   unsigned long int addr = port_to_cpu_addr (port, ioswiz, 4);
 
-  inline_sethae (0, ioswiz);
-  *(vuip)addr = b;
-  mb ();
+  stl_mb(b, addr);
 }
 
 
 static inline unsigned int
 inline_inb (unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int result, addr = port_to_cpu_addr (port, ioswiz, 1);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 1);
+  int result;
 
-  inline_sethae (0, ioswiz);
-  result = *(vuip) addr;
+  result = *(vip) addr;
   result >>= (port & 3) * 8;
   return 0xffUL & result;
 }
@@ -262,10 +288,10 @@ inline_inb (unsigned long int port, ioswizzle_t ioswiz)
 static inline unsigned int
 inline_inw (unsigned long int port, ioswizzle_t ioswiz)
 {
-  unsigned long int result, addr = port_to_cpu_addr (port, ioswiz, 2);
+  unsigned long int addr = port_to_cpu_addr (port, ioswiz, 2);
+  int result;
 
-  inline_sethae (0, ioswiz);
-  result = *(vuip) addr;
+  result = *(vip) addr;
   result >>= (port & 3) * 8;
   return 0xffffUL & result;
 }
@@ -276,7 +302,6 @@ inline_inl (unsigned long int port, ioswizzle_t ioswiz)
 {
   unsigned long int addr = port_to_cpu_addr (port, ioswiz, 4);
 
-  inline_sethae (0, ioswiz);
   return *(vuip) addr;
 }
 
@@ -303,45 +328,41 @@ static inline void
 inline_bwx_outb (unsigned char b, unsigned long int port)
 {
   unsigned long int addr = dense_port_to_cpu_addr (port);
-
-  __asm__ __volatile__ ("stb %1,%0" : : "m"(*(unsigned char *)addr), "r"(b));
-  mb ();
+  stb_mb (b, addr);
 }
 
 static inline void
 inline_bwx_outw (unsigned short int b, unsigned long int port)
 {
   unsigned long int addr = dense_port_to_cpu_addr (port);
-
-  __asm__ __volatile__ ("stw %1,%0" : : "m"(*(unsigned short *)addr), "r"(b));
-  mb ();
+  stw_mb (b, addr);
 }
 
 static inline void
 inline_bwx_outl (unsigned int b, unsigned long int port)
 {
   unsigned long int addr = dense_port_to_cpu_addr (port);
-
-  *(vuip)addr = b;
-  mb ();
+  stl_mb (b, addr);
 }
 
 static inline unsigned int
 inline_bwx_inb (unsigned long int port)
 {
-  unsigned long int r, addr = dense_port_to_cpu_addr (port);
+  unsigned long int addr = dense_port_to_cpu_addr (port);
+  unsigned char r;
 
-  __asm__ __volatile__ ("ldbu %0,%1" : "=r"(r) : "m"(*(unsigned char *)addr));
-  return 0xffUL & r;
+  __asm__ ("ldbu %0,%1" : "=r"(r) : "m"(*(vucp)addr));
+  return r;
 }
 
 static inline unsigned int
 inline_bwx_inw (unsigned long int port)
 {
-  unsigned long int r, addr = dense_port_to_cpu_addr (port);
+  unsigned long int addr = dense_port_to_cpu_addr (port);
+  unsigned short r;
 
-  __asm__ __volatile__ ("ldwu %0,%1" : "=r"(r) : "m"(*(unsigned short *)addr));
-  return 0xffffUL & r;
+  __asm__ ("ldwu %0,%1" : "=r"(r) : "m"(*(vusp)addr));
+  return r;
 }
 
 static inline unsigned int
@@ -411,6 +432,7 @@ DCL_IN(sparse, inb, SPARSE)
 DCL_IN(sparse, inw, SPARSE)
 DCL_IN(sparse, inl, SPARSE)
 
+DCL_SETHAE(dense, DENSE)
 DCL_OUT_BWX(dense, outb, char)
 DCL_OUT_BWX(dense, outw, short int)
 DCL_OUT_BWX(dense, outl, int)
@@ -431,7 +453,7 @@ static struct ioswtch ioswtch[] = {
     sparse_inb, sparse_inw, sparse_inl
   },
   {
-    NULL,
+    dense_sethae,
     dense_outb, dense_outw, dense_outl,
     dense_inb, dense_inw, dense_inl
   }
@@ -439,171 +461,216 @@ static struct ioswtch ioswtch[] = {
 
 #undef DEBUG_IOPERM
 
-/* routine to process the /proc/cpuinfo information into the fields */
-/* that are required for correctly determining the platform parameters */
+/* Routine to process the /proc/cpuinfo information into the fields
+   that are required for correctly determining the platform parameters.  */
 
-char systype[256]; /* system type field */
-char sysvari[256]; /* system variation field */
-char cpumodel[256]; /* cpu model field */
-int got_type, got_vari, got_model;
-
-static int
-process_cpuinfo(void)
+struct cpuinfo_data
 {
+  char systype[256];		/* system type field */
+  char sysvari[256];		/* system variation field */
+  char cpumodel[256];		/* cpu model field */
+};
+
+static inline int
+process_cpuinfo(struct cpuinfo_data *data)
+{
+  int got_type, got_vari, got_model;
   char dummy[256];
   FILE * fp;
+  int n;
+
+  data->systype[0] = 0;
+  data->sysvari[0] = 0;
+  data->cpumodel[0] = 0;
+
+  /* If there's an /etc/alpha_systype link, we're intending to override
+     whatever's in /proc/cpuinfo.  */
+  n = __readlink (PATH_ALPHA_SYSTYPE, data->systype, 256 - 1);
+  if (n > 0)
+    {
+      data->systype[n] = '\0';
+      return 1;
+    }
 
   fp = fopen (PATH_CPUINFO, "r");
   if (!fp)
     return 0;
 
   got_type = got_vari = got_model = 0;
-  systype[0] = sysvari[0] = cpumodel[0] = 0;
 
   while (1)
     {
-      if (fgets (dummy, 256, fp) == NULL) break;
-      /*	  fprintf(stderr, "read: %s", dummy); */
+      if (fgets (dummy, 256, fp) == NULL)
+	break;
       if (!got_type &&
-	  sscanf (dummy, "system type : %256[^\n]\n", systype) == 1)
+	  sscanf (dummy, "system type : %256[^\n]\n", data->systype) == 1)
 	got_type = 1;
       if (!got_vari &&
-	  sscanf (dummy, "system variation : %256[^\n]\n", sysvari) == 1)
+	  sscanf (dummy, "system variation : %256[^\n]\n", data->sysvari) == 1)
 	got_vari = 1;
       if (!got_model &&
-	  sscanf (dummy, "cpu model : %256[^\n]\n", cpumodel) == 1)
+	  sscanf (dummy, "cpu model : %256[^\n]\n", data->cpumodel) == 1)
 	got_model = 1;
     }
 
   fclose (fp);
 
 #ifdef DEBUG_IOPERM
-  fprintf(stderr, "system type: %s\n", systype);
-  fprintf(stderr, "system vari: %s\n", sysvari);
-  fprintf(stderr, "cpu model: %s\n", cpumodel);
+  fprintf(stderr, "system type: `%s'\n", data->systype);
+  fprintf(stderr, "system vari: `%s'\n", data->sysvari);
+  fprintf(stderr, "cpu model: `%s'\n", data->cpumodel);
 #endif
 
-  return got_type+got_vari+got_model;
+  return got_type + got_vari + got_model;
 }
+
+
 /*
- * Initialize I/O system.  To determine what I/O system we're dealing
- * with, we first try to read the value of symlink PATH_ALPHA_SYSTYPE,
- * if that fails, we lookup the "system type" field in /proc/cpuinfo.
- * If that fails as well, we give up.
- *
- * If the value received from PATH_ALPHA_SYSTYPE begins with a number,
- * assume this is a previously unsupported system and the values encode,
- * in order, "<io_base>,<hae_shift>,<dense_base>,<sparse_base>".
+ * Initialize I/O system.
  */
 static int
 init_iosys (void)
 {
-  int i, n;
+  long addr;
+  int i, olderrno = errno;
+  struct cpuinfo_data data;
 
-  n = readlink (PATH_ALPHA_SYSTYPE, systype, sizeof (systype) - 1);
-  if (n > 0)
+  /* First try the pciconfig_iobase syscall added to 2.2.15 and 2.3.99.  */
+
+  addr = __pciconfig_iobase (IOBASE_DENSE_MEM, 0, 0);
+  if (addr != -1)
     {
-      systype[n] = '\0';
-      if (isdigit (systype[0]))
+      ioswizzle_t io_swiz;
+
+      if (addr == 0)
+        {
+	  /* Only Jensen doesn't have dense mem space.  */
+	  io.sparse_bus_memory_base
+	    = io_system[IOSYS_JENSEN].sparse_bus_mem_base;
+	  io.io_base = io_system[IOSYS_JENSEN].bus_io_base;
+	  io_swiz = IOSWIZZLE_JENSEN;
+	}
+      else
 	{
-	  if (sscanf (systype, "%li,%i,%li,%li", &io.io_base, &io.hae_shift,
-		      &io.bus_memory_base, &io.sparse_bus_memory_base) == 4)
+	  io.bus_memory_base = addr;
+
+	  addr = __pciconfig_iobase (IOBASE_DENSE_IO, 0, 0);
+	  if (addr != 0)
 	    {
-	      io.sys = IOSYS_UNKNOWN;
-	      io.swiz = IOSWIZZLE_SPARSE;
-	      io.swp = &ioswtch[IOSWIZZLE_SPARSE];
-	      return 0;
+	      /* The X server uses _bus_base_sparse == 0 to know that
+		 BWX access are supported to dense mem space.  This is
+		 true of every system that supports dense io space, so
+	         never fill in io.sparse_bus_memory_base in this case.  */
+	      io_swiz = IOSWIZZLE_DENSE;
+              io.io_base = addr;
 	    }
-	  /* else we're likely going to fail with the system match below */
+	  else
+	    {
+	      io.sparse_bus_memory_base
+		= __pciconfig_iobase (IOBASE_SPARSE_MEM, 0, 0);
+	      io.io_base = __pciconfig_iobase (IOBASE_SPARSE_IO, 0, 0);
+	      io_swiz = IOSWIZZLE_SPARSE;
+	    }
 	}
+
+      io.swiz = io_swiz;
+      io.swp = &ioswtch[io_swiz];
+
+      return 0;
     }
-  else
+
+  /* Second, collect the contents of /etc/alpha_systype or /proc/cpuinfo.  */
+
+  if (process_cpuinfo(&data) == 0)
     {
-      n = process_cpuinfo();
-
-      if (!n)
-	{
-	  /* this can happen if the format of /proc/cpuinfo changes...  */
-	  fprintf (stderr,
-		   "ioperm.init_iosys(): Unable to determine system type.\n"
-		   "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
-	  __set_errno (ENODEV);
-	  return -1;
-	}
+      /* This can happen if the format of /proc/cpuinfo changes.  */
+      fprintf (stderr,
+	       "ioperm.init_iosys: Unable to determine system type.\n"
+	       "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
+      __set_errno (ENODEV);
+      return -1;
     }
 
-  /* translate systype name into i/o system: */
+  /* Translate systype name into i/o system.  */
   for (i = 0; i < sizeof (platform) / sizeof (platform[0]); ++i)
     {
-      if (strcmp (platform[i].name, systype) == 0)
+      if (strcmp (platform[i].name, data.systype) == 0)
 	{
-	  io.sys = platform[i].io_sys;
-	  /* some platforms can have either EV4 or EV5 CPUs */
-	  if (io.sys == IOSYS_CPUDEP) /* SABLE or MIKASA or NORITAKE so far */
+	  iosys_t io_sys = platform[i].io_sys;
+
+	  /* Some platforms can have either EV4 or EV5 CPUs.  */
+	  if (io_sys == IOSYS_CPUDEP)
 	    {
+	      /* SABLE or MIKASA or NORITAKE so far.  */
 	      if (strcmp (platform[i].name, "Sable") == 0)
 		{
-		  if (strncmp (cpumodel, "EV4", 3) == 0)
-		    io.sys = IOSYS_T2;
-		  else if (strncmp (cpumodel, "EV5", 3) == 0)
-		    io.sys = IOSYS_GAMMA;
+		  if (strncmp (data.cpumodel, "EV4", 3) == 0)
+		    io_sys = IOSYS_T2;
+		  else if (strncmp (data.cpumodel, "EV5", 3) == 0)
+		    io_sys = IOSYS_GAMMA;
 		}
 	      else
-		{ /* this covers MIKASA/NORITAKE */
-		  if (strncmp (cpumodel, "EV4", 3) == 0)
-		    io.sys = IOSYS_APECS;
-		  else if (strncmp (cpumodel, "EV5", 3) == 0)
-		    io.sys = IOSYS_CIA;
+		{
+		  /* This covers MIKASA/NORITAKE.  */
+		  if (strncmp (data.cpumodel, "EV4", 3) == 0)
+		    io_sys = IOSYS_APECS;
+		  else if (strncmp (data.cpumodel, "EV5", 3) == 0)
+		    io_sys = IOSYS_CIA;
 		}
-	      if (io.sys == IOSYS_CPUDEP)
+	      if (io_sys == IOSYS_CPUDEP)
 		{
 		  /* This can happen if the format of /proc/cpuinfo changes.*/
-		  fprintf (stderr, "ioperm.init_iosys(): Unable to determine"
+		  fprintf (stderr, "ioperm.init_iosys: Unable to determine"
 			   " CPU model.\n");
 		  __set_errno (ENODEV);
 		  return -1;
 		}
 	    }
-	  /* some platforms can have different core logic chipsets */
-	  if (io.sys == IOSYS_PCIDEP) /* EB164 so far */
+	  /* Some platforms can have different core logic chipsets */
+	  if (io_sys == IOSYS_PCIDEP)
 	    {
-	      if (strcmp (systype, "EB164") == 0)
+	      /* EB164 so far */
+	      if (strcmp (data.systype, "EB164") == 0)
 		{
-		  if (strncmp (sysvari, "RX164", 5) == 0)
-		    io.sys = IOSYS_POLARIS;
+		  if (strncmp (data.sysvari, "RX164", 5) == 0)
+		    io_sys = IOSYS_POLARIS;
+		  else if (strncmp (data.sysvari, "LX164", 5) == 0
+			   || strncmp (data.sysvari, "SX164", 5) == 0)
+		    io_sys = IOSYS_PYXIS;
 		  else
-		    io.sys = IOSYS_CIA;
+		    io_sys = IOSYS_CIA;
 		}
-	      if (io.sys == IOSYS_PCIDEP)
+	      if (io_sys == IOSYS_PCIDEP)
 		{
 		  /* This can happen if the format of /proc/cpuinfo changes.*/
-		  fprintf (stderr, "ioperm.init_iosys(): Unable to determine"
+		  fprintf (stderr, "ioperm.init_iosys: Unable to determine"
 			   " core logic chipset.\n");
 		  __set_errno (ENODEV);
 		  return -1;
 		}
 	    }
-	  io.hae_shift = io_system[io.sys].hae_shift;
-	  io.bus_memory_base = io_system[io.sys].bus_memory_base;
-	  io.sparse_bus_memory_base = io_system[io.sys].sparse_bus_mem_base;
-	  io.io_base = io_system[io.sys].bus_io_base;
+	  io.bus_memory_base = io_system[io_sys].bus_memory_base;
+	  io.sparse_bus_memory_base = io_system[io_sys].sparse_bus_mem_base;
+	  io.io_base = io_system[io_sys].bus_io_base;
 
-	  if (io.sys == IOSYS_JENSEN)
+	  if (io_sys == IOSYS_JENSEN)
 	    io.swiz = IOSWIZZLE_JENSEN;
-	  else if (io.sys == IOSYS_TSUNAMI || io.sys == IOSYS_POLARIS)
+	  else if (io_sys == IOSYS_TSUNAMI
+		   || io_sys == IOSYS_POLARIS
+		   || io_sys == IOSYS_PYXIS)
 	    io.swiz = IOSWIZZLE_DENSE;
 	  else
 	    io.swiz = IOSWIZZLE_SPARSE;
 	  io.swp = &ioswtch[io.swiz];
+
+	  __set_errno (olderrno);
 	  return 0;
 	}
     }
 
-  /* systype is not a know platform name... */
-  __set_errno (EINVAL);
-#ifdef DEBUG_IOPERM
-  fprintf(stderr, "init_iosys: platform not recognized\n");
-#endif
+  __set_errno (ENODEV);
+  fprintf(stderr, "ioperm.init_iosys: Platform not recognized.\n"
+	  "\t(May need " PATH_ALPHA_SYSTYPE " symlink?)\n");
   return -1;
 }
 
@@ -611,17 +678,18 @@ init_iosys (void)
 int
 _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
-  unsigned long int addr, len;
-  int prot, err;
+  unsigned long int addr, len, pagesize = __getpagesize();
+  int prot;
 
-  if (!io.swp && init_iosys() < 0) {
+  if (!io.swp && init_iosys() < 0)
+    {
 #ifdef DEBUG_IOPERM
-	    fprintf(stderr, "ioperm: init_iosys() failed\n");
+      fprintf(stderr, "ioperm: init_iosys() failed (%m)\n");
 #endif
-    return -1;
-  }
+      return -1;
+    }
 
-  /* this test isn't as silly as it may look like; consider overflows! */
+  /* This test isn't as silly as it may look like; consider overflows! */
   if (from >= MAX_PORT || from + num > MAX_PORT)
     {
       __set_errno (EINVAL);
@@ -632,7 +700,7 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
     }
 
 #ifdef DEBUG_IOPERM
-      fprintf(stderr, "ioperm: turn_on %d io.base %ld\n", turn_on, io.base);
+  fprintf(stderr, "ioperm: turn_on %d io.base %ld\n", turn_on, io.base);
 #endif
 
   if (turn_on)
@@ -641,25 +709,28 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	{
 	  int fd;
 
-	  io.hae.reg   = 0;		/* not used in user-level */
-	  io.hae.cache = 0;
+	  io.hae_cache = 0;
 	  if (io.swiz != IOSWIZZLE_DENSE)
-	    __sethae (io.hae.cache);	/* synchronize with hw */
+	    {
+	      /* Synchronize with hw.  */
+	      __sethae (0);
+	    }
 
-	  fd = open ("/dev/mem", O_RDWR);
-	  if (fd < 0) {
+	  fd = __open ("/dev/mem", O_RDWR);
+	  if (fd < 0)
+	    {
 #ifdef DEBUG_IOPERM
-	    fprintf(stderr, "ioperm: /dev/mem open failed\n");
+	      fprintf(stderr, "ioperm: /dev/mem open failed (%m)\n");
 #endif
-	    return -1;
-	  }
+	      return -1;
+	    }
 
 	  addr = port_to_cpu_addr (0, io.swiz, 1);
 	  len = port_to_cpu_addr (MAX_PORT, io.swiz, 1) - addr;
 	  io.base =
 	    (unsigned long int) __mmap (0, len, PROT_NONE, MAP_SHARED,
 					fd, io.io_base);
-	  close (fd);
+	  __close (fd);
 #ifdef DEBUG_IOPERM
 	  fprintf(stderr, "ioperm: mmap of len 0x%lx  returned 0x%lx\n",
 		  len, io.base);
@@ -678,29 +749,27 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
       prot = PROT_NONE;
     }
   addr = port_to_cpu_addr (from, io.swiz, 1);
-  addr &= PAGE_MASK;
+  addr &= ~(pagesize - 1);
   len = port_to_cpu_addr (from + num, io.swiz, 1) - addr;
-  err = mprotect ((void *) addr, len, prot);
-#ifdef DEBUG_IOPERM
-  fprintf(stderr, "ioperm: mprotect returned %d\n", err);
-#endif
-  return err;
+  return __mprotect ((void *) addr, len, prot);
 }
 
 
 int
-_iopl (unsigned int level)
+_iopl (int level)
 {
-    if (level > 3)
-      {
-	__set_errno (EINVAL);
-	return -1;
-      }
-    if (level)
-      {
-	return _ioperm (0, MAX_PORT, 1);
-      }
-    return 0;
+  switch (level)
+    {
+    case 0:
+      return 0;
+
+    case 1: case 2: case 3:
+      return _ioperm (0, MAX_PORT, 1);
+
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
 }
 
 
@@ -786,7 +855,11 @@ _hae_shift(void)
 {
   if (!io.swp && init_iosys () < 0)
     return -1;
-  return io.hae_shift;
+  if (io.swiz == IOSWIZZLE_JENSEN)
+    return 7;
+  if (io.swiz == IOSWIZZLE_SPARSE)
+    return 5;
+  return 0;
 }
 
 weak_alias (_sethae, sethae);

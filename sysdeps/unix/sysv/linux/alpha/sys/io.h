@@ -51,6 +51,24 @@ extern unsigned long bus_base_sparse (void) __THROW __attribute__ ((const));
 extern int _hae_shift (void) __THROW __attribute__ ((const));
 extern int hae_shift (void) __THROW __attribute__ ((const));
 
+/* Previous three are deprecated in favour of the following, which
+   knows about multiple PCI "hoses".  Provide the PCI bus and dfn
+   numbers just as to pciconfig_read/write.  */
+
+enum __pciconfig_iobase_which
+{
+  IOBASE_HOSE = 0,		/* Return hose index. */
+  IOBASE_SPARSE_MEM = 1,	/* Return physical memory addresses.  */
+  IOBASE_DENSE_MEM = 2,
+  IOBASE_SPARSE_IO = 3,
+  IOBASE_DENSE_IO = 4
+};
+
+extern long pciconfig_iobase(enum __pciconfig_iobase_which __which,
+			     unsigned long int __bus,
+			     unsigned long int __dfn)
+     __THROW __attribute__ ((const));
+
 /* Access PCI space protected from machine checks.  */
 extern int pciconfig_read (unsigned long int __bus,
 			   unsigned long int __dfn,

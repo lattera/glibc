@@ -1,8 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-# used to implement inb()/outb() etc.
-sethae		-	sethae		1	__sethae
-
 oldmsgctl	EXTRA	msgctl		3	__old_msgctl	msgctl@GLIBC_2.0
 msgget		-	msgget		2	__msgget	msgget
 msgrcv		-	msgrcv		5	__msgrcv	msgrcv
@@ -63,6 +60,7 @@ getresgid	-	getresgid	3	getresgid
 # access pci space protected from machine checks:
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
+pciconfig_iobase EXTRA	pciconfig_iobase 3	__pciconfig_iobase pciconfig_iobase
 
 # Wrapper for adjtimex.
 adjtimex       -       syscall_adjtimex 1      __syscall_adjtimex syscall_adjtimex
