@@ -39,7 +39,7 @@ extern size_t __default_stacksize attribute_hidden;
 
 /* Size and alignment of static TLS block.  */
 extern size_t __static_tls_size attribute_hidden;
-extern size_t __static_tls_align attribute_hidden;
+extern size_t __static_tls_align_m1 attribute_hidden;
 
 /* Thread descriptor handling.  */
 extern list_t __stack_user;

@@ -1,3 +1,13 @@
+2003-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__static_tls_align_m1): Renamed from __static_tls_align.
+	(__pthread_initialize_minimal_internal): Change initialization of
+	__static_tls_align_m1 appropriately.
+	* pthreadP.h (__static_tls_align_m1): Renamed from
+	__static_tls_align.
+	* allocatestack.c (allocate_stack): Use __static_tls_align_m1
+	instead of __static_tls_align-1.
+
 2003-03-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: New file.

@@ -248,7 +248,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	return EINVAL;
 
       /* Adjust stack size for alignment of the TLS block.  */
-      adj = ((uintptr_t) attr->stackaddr) & (__static_tls_align - 1);
+      adj = ((uintptr_t) attr->stackaddr) & __static_tls_align_m1;
       assert (size > adj);
 
       /* The user provided some memory.  Let's hope it matches the
@@ -308,7 +308,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       size_t reqsize;
       void *mem;
 
-#undef COLORING_INCREMENT
 #if COLORING_INCREMENT != 0
       /* Add one more page for stack coloring.  Don't to it for stacks
 	 with 16 times pagesize or larger.  This might just cause
@@ -318,7 +317,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #endif
 
       /* Adjust the stack size for alignment.  */
-      size &= ~(__static_tls_align - 1);
+      size &= ~__static_tls_align_m1;
       assert (size != 0);
 
       /* Make sure the size of the stack is enough for the guard and
@@ -359,9 +358,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* Make sure the coloring offsets does not disturb the alignment
 	     of the TCB and static TLS block.  */
-	  if (__builtin_expect ((coloring & (__static_tls_align - 1)) != 0, 0))
-	    coloring = (((coloring + __static_tls_align - 1)
-			 & ~(__static_tls_align - 1))
+	  if (__builtin_expect ((coloring & __static_tls_align_m1) != 0, 0))
+	    coloring = (((coloring + __static_tls_align_m1)
+			 & ~(__static_tls_align_m1))
 			& ~pagesize_m1);
 #else
 	  /* Unless specified we do not make any adjustments.  */
