@@ -131,6 +131,9 @@ typedef pthread_key_t __libc_key_t;
 #define _RTLD_LOCK_RECURSIVE_INITIALIZER \
   {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 
+#define __rtld_lock_initialize(NAME) \
+  (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
+
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
    PIC is unnecessarily slow.  What would happen is that the function

@@ -151,6 +151,9 @@ __libc_fork (void)
       /* Reset locks in the I/O code.  */
       _IO_list_resetlock ();
 
+      /* Reset the lock the dynamic loader uses to protect its data.  */
+      __rtld_lock_initialize (GL(dl_load_lock));
+
       /* Run the handlers registered for the child.  */
       while (allp != NULL)
 	{

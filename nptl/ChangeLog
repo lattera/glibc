@@ -1,3 +1,10 @@
+2003-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__rtld_lock_initialize): Define.
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Call
+	__rtld_lock_initialize for ld.so lock.
+	Patch in part by Adam Li <adam.li@intel.com>.
+
 2003-12-02  David Mosberger  <davidm@hpl.hp.com>
 
 	* Makefile (link-libc-static): Remove -lgcc_eh---it's already mentioned
