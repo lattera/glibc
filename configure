@@ -2795,17 +2795,21 @@ default) stdio=stdio ;;
 esac
 echo "$ac_t""$stdio" 1>&6
 
-echo $ac_n "checking ldap selection""... $ac_c" 1>&6
-echo "configure:2800: checking ldap selection" >&5
-
-case $add_ons in
-*ldap*)
-   ldap=yes
-   LDAP=ldap ;;
-*) ldap=no
-   LDAP= ;;
-esac
-echo "$ac_t""$ldap" 1>&6
+# Test for old glibc 2.0.x headers so that they can be removed properly
+# Search only in includedir.
+echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
+echo "configure:2802: checking for old glibc 2.0.x headers" >&5
+if eval test -e "${includedir}/elfclass.h" -a -e "${includedir}/fcntlbits.h"
+then
+  old_glibc_headers=yes
+else
+  old_glibc_headers=no
+fi
+echo "$ac_t""$old_glibc_headers" 1>&6
+if test ${old_glibc_headers} = yes; then
+  echo "configure: warning: *** During \"make install\" old headers from glibc 2.0.x will" 1>&2
+  echo "configure: warning: *** be removed." 1>&2
+fi
 
 
 
@@ -2847,7 +2851,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:2851: checking whether -fPIC is default" >&5
+echo "configure:2855: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3060,7 +3064,6 @@ s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
 s%@stdio@%$stdio%g
-s%@LDAP@%$LDAP%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g

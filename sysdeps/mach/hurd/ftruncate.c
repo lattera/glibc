@@ -16,15 +16,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int
-ftruncate (fd, length)
+__ftruncate (fd, length)
      int fd;
      __off_t length;
 {

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -27,9 +27,10 @@
 static int
 internal_ismember (const_nis_name principal, const_nis_name group)
 {
-  char buf[strlen (group) + 50];
-  char leafbuf[strlen (group) + 2];
-  char domainbuf[strlen (group) + 2];
+  size_t grouplen = strlen (group);
+  char buf[grouplen + 50];
+  char leafbuf[grouplen + 2];
+  char domainbuf[grouplen + 2];
   nis_result *res;
   char *cp, *cp2;
   u_int i;
@@ -37,7 +38,7 @@ internal_ismember (const_nis_name principal, const_nis_name group)
   cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
   cp = stpcpy (cp, ".groups_dir");
   cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
-  if (cp2 != NULL && strlen (cp2) > 0)
+  if (cp2 != NULL && cp2[0] != '\0')
     {
       *cp++ = '.';
       strcpy (cp, cp2);
@@ -117,7 +118,7 @@ internal_ismember (const_nis_name principal, const_nis_name group)
 bool_t
 nis_ismember (const_nis_name principal, const_nis_name group)
 {
-  if (group != NULL && strlen (group) > 0 && principal != NULL)
+  if (group != NULL && group[0] != '\0' && principal != NULL)
     return internal_ismember (principal, group) == 1 ? TRUE : FALSE;
   else
     return FALSE;

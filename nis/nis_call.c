@@ -484,9 +484,10 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
     case LOWER_NAME:
       {
 	directory_obj *obj;
-	char leaf [strlen (name) + 3];
-	char domain [strlen (name) + 3];
-	char ndomain [strlen (name) + 3];
+	size_t namelen = strlen (name);
+	char leaf [namelen + 3];
+	char domain [namelen + 3];
+	char ndomain [namelen + 3];
 	char *cp;
 	u_int run = 0;
 
@@ -494,7 +495,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 
 	do
 	  {
-	    if (strlen (domain) == 0)
+	    if (domain[0] == '\0')
 	      {
 		nis_free_directory (dir);
 		return NULL;

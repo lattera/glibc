@@ -35,6 +35,7 @@ elf = @elf@
 have-initfini = @libc_cv_have_initfini@
 need-nopic-initfini = @nopic_initfini@
 with-cvs = @with_cvs@
+old-glibc-headers = @old_glibc_headers@
 
 versioning = @VERSIONING@
 no-whole-archive = @no_whole_archive@

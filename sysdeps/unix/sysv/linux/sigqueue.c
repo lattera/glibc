@@ -23,7 +23,6 @@ extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
 /* These variables are used quite often in the libc code.  */
 extern pid_t __libc_pid;
-extern uid_t __libc_uid;
 
 
 /* Return any pending signal or wait for one for the given time.  */
@@ -40,14 +39,11 @@ __sigqueue (pid, sig, val)
   info.si_errno = 0;
   info.si_code = SI_QUEUE;
 
-  if (__libc_pid ==0xf00baa)
+  if (__libc_pid == 0xf00baa)
     __libc_pid = __getpid ();
   info.si_pid = __libc_pid;
 
-  if (__libc_uid ==0xf00baa)
-    __libc_pid = __getuid ();
-  info.si_uid = __libc_uid;
-
+  info.si_uid = __getuid ();
   info.si_value = val;
 
   return __syscall_rt_sigqueueinfo (pid, sig, &info);

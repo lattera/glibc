@@ -1,3 +1,73 @@
+1998-06-22 17:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/enbl-secure.c: Don't use __libc_uid.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Don't initialize __libc_uid.
+
+1998-06-02  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* mach/Makefile: Change `mv' invocations to `mv -f'.
+	* mach/Machrules: Likewise.
+
+1998-06-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* config.make.in (old-glibc-headers): Add it.
+
+	* configure.in: Add test for glibc 2.0.x headers.
+
+	* Makefile (headers2_0): New variable - contains so far only
+	Linux/Intel glibc 2.0.x headers.
+	(remove-old-headers): New rule to remove headers from glibc 2.0.x.
+	(install): Depend on remove-old-headers.
+
+1998-06-19  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/ftruncate.c: Define function as __ftruncate and
+	make ftruncate a weak alias.
+	* sysdeps/mach/hurd/ftruncate.c: Really define function as
+	__ftruncate.
+	* sysdeps/mach/hurd/truncate.c: Include <unistd.h>.
+	(truncate): Fix function defenition to match prototype.
+
+1998-06-20  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* manual/terminal.texi: Document ttyname_r, getpt, grantpt,
+	unlockpt, ptsname, ptsname_r, openpty and forkpty.
+
+1998-06-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c: Make it possible to include glob.h
+	before loading glob.c.
+	Reported by Felix von Leitner <leitner@math.fu-berlin.de>.
+
+1998-06-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/connections.c: Use poll() instead of select().
+
+1998-06-22 14:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/Dist: Fix typo.
+
+1998-06-20  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_add.c: Avoid unnecessary strlen () calls.
+	* nis/nis_addmember.c: Likewise.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_creategroup.c: Likewise.
+	* nis/nis_destroygroup.c: Likewise.
+	* nis/nis_findserv.c: Likewise.
+	* nis/nis_ismember.c: Likewise.
+	* nis/nis_print.c: Likewise.
+	* nis/nis_print_group_entry.c: Likewise.
+	* nis/nis_removemember.c: Likewise.
+	* nis/nis_verifygroup.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+
+	* nis/nis_file.c: Close file handles.
+
+	* nis/nis_callback.c: Fix typo.
+
 1998-06-10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/Makefile: Add nis-initgroups and compat-initgroups.

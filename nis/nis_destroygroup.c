@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -23,11 +23,12 @@
 nis_error
 nis_destroygroup (const_nis_name group)
 {
-  if (group != NULL && strlen (group) > 0)
+  if (group != NULL && group[0] != '\0')
     {
-      char buf[strlen (group) + 50];
-      char leafbuf[strlen (group) + 3];
-      char domainbuf[strlen (group) + 3];
+      size_t grouplen = strlen (group);
+      char buf[grouplen + 50];
+      char leafbuf[grouplen + 3];
+      char domainbuf[grouplen + 3];
       nis_error status;
       nis_result *res;
       char *cp, *cp2;
@@ -35,7 +36,7 @@ nis_destroygroup (const_nis_name group)
       cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
       cp = stpcpy (cp, ".groups_dir");
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
-      if (cp2 != NULL && strlen (cp2) > 0)
+      if (cp2 != NULL && cp2[0] != '\0')
 	{
 	  *cp++ = '.';
 	  stpcpy (cp, cp2);

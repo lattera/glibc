@@ -77,7 +77,7 @@ $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
 	| $(AWK) -f $< > $@-new
 	cat $@-dep >> $@-new; rm -f $@-dep
-	mv $@-new $@
+	mv -f $@-new $@
 generated += mach-syscalls.mk
 
 ifndef mach-syscalls
@@ -89,7 +89,7 @@ $(mach-syscalls:%=$(objpfx)%.S): $(objpfx)%.S: $(objpfx)mach-syscalls.mk
 	(echo '#include <sysdep.h>'; \
 	 echo 'kernel_trap(__$*,$(sysno-$*),$(nargs-$*))'; \
 	 echo 'weak_alias (__$*, $*)') > $@-new
-	 mv $@-new $@
+	 mv -f $@-new $@
 generated += $(mach-syscalls:=.S)
 endif	# mach-syscalls
 
@@ -119,7 +119,7 @@ $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: shortcut.awk \
 						$(objpfx)RPC_%_rpc.c
 	$(AWK)	-v alias=$* -v call=__$* -v rpc=__$*_rpc \
 		-v syscall=__syscall_$* -f $^ > $@-new
-	mv $@-new $@
+	mv -f $@-new $@
 generated += $(mach-shortcuts:%=%.c)
 endif	# mach-shortcuts
 
@@ -134,7 +134,7 @@ $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
 	cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
 	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
 	| sed 's/_rpc//g' | tr @ \\012 > $@-new
-	mv $@-new $@
+	mv -f $@-new $@
 generated += mach-shortcuts.h
 
 before-compile += $(objpfx)mach-shortcuts.h
@@ -149,4 +149,4 @@ generated += errsystems.c
 $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
 	$(AWK) -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
-	mv $@.n $@
+	mv -f $@.n $@

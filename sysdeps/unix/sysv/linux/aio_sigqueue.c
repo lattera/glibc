@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,8 @@
 
 extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
-/* These variables are used quite often in the libc code.  */
+/* This variable is used quite often in the libc code.  */
 extern pid_t __libc_pid;
-extern uid_t __libc_uid;
 
 
 /* Return any pending signal or wait for one for the given time.  */
@@ -46,7 +45,7 @@ __aio_sigqueue (sig, val)
     __libc_pid = __getpid ();
   info.si_pid = __libc_pid;
 
-  info.si_uid = __libc_uid;
+  info.si_uid = getuid ();
 
   info.si_value = val;
 

@@ -29,8 +29,9 @@ nis_add (const_nis_name name, const nis_object *obj2)
   nis_result *res;
   nis_error status;
   struct ns_request req;
-  char buf1 [strlen (name) + 20];
-  char buf4 [strlen (name) + 20];
+  size_t namelen = strlen (name);
+  char buf1 [namelen + 20];
+  char buf4 [namelen + 20];
 
   res = calloc (1, sizeof (nis_result));
   if (res == NULL)
@@ -40,13 +41,13 @@ nis_add (const_nis_name name, const nis_object *obj2)
 
   memcpy (&obj, obj2, sizeof (nis_object));
 
-  if (obj.zo_name == NULL || strlen (obj.zo_name) == 0)
+  if (obj.zo_name == NULL || obj.zo_name[0] == '\0')
     obj.zo_name = nis_leaf_of_r (name, buf1, sizeof (buf1));
 
-  if (obj.zo_owner == NULL || strlen (obj.zo_owner) == 0)
+  if (obj.zo_owner == NULL || obj.zo_owner[0] == '\0')
     obj.zo_owner = nis_local_principal ();
 
-  if (obj.zo_group == NULL || strlen (obj.zo_group) == 0)
+  if (obj.zo_group == NULL || obj.zo_group[0] == '\0')
     obj.zo_group = nis_local_group ();
 
   obj.zo_domain = nis_domain_of_r (name, buf4, sizeof (buf4));
@@ -59,11 +60,11 @@ nis_add (const_nis_name name, const nis_object *obj2)
     }
   req.ns_object.ns_object_len = 1;
 
-  if ((status = __do_niscall (req.ns_object.ns_object_val[0].zo_domain,
-			      NIS_ADD, (xdrproc_t) _xdr_ns_request,
-			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, MASTER_ONLY,
-			      NULL)) != RPC_SUCCESS)
+  status = __do_niscall (req.ns_object.ns_object_val[0].zo_domain,
+			 NIS_ADD, (xdrproc_t) _xdr_ns_request,
+			 (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
+			 (caddr_t) res, MASTER_ONLY, NULL);
+  if (status != RPC_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   nis_destroy_object (req.ns_object.ns_object_val);

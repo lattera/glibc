@@ -87,7 +87,7 @@ $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
 	        { printf \"$*-calls += %s\\n\", \$$3 }" $<	;\
 	 echo '$$($*-calls:%=$$(objpfx)R\%C_%.c): $$(objpfx)$*.ustamp ;';\
 	) > $@-new
-	mv $@-new $@
+	mv -f $@-new $@
 vpath Machrules ../mach	# Find ourselves.
 
 ifndef transform-user-stub-output
@@ -161,7 +161,7 @@ $(objpfx)%.h: $(objpfx)%.__h $(objpfx)%.uh
 # The last line of foo.__h is "#endif _foo_user_".
 # The first two lines of foo.uh are "#ifndef _foo_user_"/"#define _foo_user_".
 	(sed -e '$$d' $<; sed -e '1,2d' $(word 2,$^)) > $@-new
-	mv $@-new $@
+	mv -f $@-new $@
 
 interface-routines := $(foreach if,$(user-interfaces),			\
 				$(addprefix RPC_,$($(if)-calls)))	\

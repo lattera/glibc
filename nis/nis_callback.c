@@ -313,7 +313,7 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
 #else
       cb->serv->pkey.n_len =0;
       cb->serv->pkey.n_bytes = NULL;
-      cb->serv->key_type = NIS_PK_DH;
+      cb->serv->key_type = NIS_PK_NONE;
 #endif
     }
 

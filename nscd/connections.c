@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -37,10 +38,11 @@
 #include "dbg_log.h"
 
 /* Socket 0 in the array is named and exported into the file namespace
-   as a connection point for clients.  */
+   as a connection point for clients.  There's a one to one
+   correspondence between sock[i] and read_polls[i].  */
 static int sock[MAX_NUM_CONNECTIONS];
 static int socks_active;
-static fd_set read_set;
+static struct pollfd read_polls[MAX_NUM_CONNECTIONS];
 static pthread_mutex_t sock_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -63,6 +65,7 @@ close_sockets (void)
 	  dbg_log (_("socket [%d|%d] close: %s"), strerror (errno));
 
 	sock[i] = 0;
+	read_polls[i].fd = -1;
 	--socks_active;
       }
 
@@ -79,12 +82,13 @@ close_socket (int conn)
 
   close (sock[conn]);
   sock[conn] = 0;
+  read_polls[conn].fd = -1;
   --socks_active;
 
   pthread_mutex_unlock (&sock_lock);
 }
 
-/* Local rountine, assigns a socket to a new connection request.  */
+/* Local routine, assigns a socket to a new connection request.  */
 static void
 handle_new_connection (void)
 {
@@ -107,7 +111,8 @@ handle_new_connection (void)
 		return;
 	      }
 	    ++socks_active;
-	    FD_SET (sock[i], &read_set);
+	    read_polls[i].fd = sock[i];
+	    read_polls[i].events = POLLRDNORM;
 	    if (debug_flag > 2)
 	      dbg_log (_("handle_new_connection used socket %d|%d"), i,
 		       sock[i]);
@@ -127,10 +132,9 @@ handle_new_connection (void)
   pthread_mutex_unlock (&sock_lock);
 }
 
-/* Local routine, reads a request off a socket indicated by a selectset.  */
+/* Local routine, reads a request off a socket indicated by read_polls.  */
 static int
-handle_new_request (fd_set read_selects, int **connp, request_header **reqp,
-		    char **key)
+handle_new_request (int **connp, request_header **reqp, char **key)
 {
   ssize_t nbytes;
   int i;
@@ -140,7 +144,7 @@ handle_new_request (fd_set read_selects, int **connp, request_header **reqp,
 
   /* Find the descriptor.  */
   for (i = 1; i < MAX_NUM_CONNECTIONS; ++i)
-    if (FD_ISSET(sock[i], &read_selects))
+    if (read_polls[i].revents & (POLLRDNORM|POLLERR))
       break;
 
   if (debug_flag > 2)
@@ -158,7 +162,7 @@ handle_new_request (fd_set read_selects, int **connp, request_header **reqp,
 	    dbg_log (_("Real close socket %d|%d"), i, sock[i]);
 
 	  pthread_mutex_lock (&sock_lock);
-	  FD_CLR (sock[i], &read_set);
+	  read_polls[i].fd = -1;
 	  close (sock[i]);
 	  sock[i] = 0;
 	  --socks_active;
@@ -191,7 +195,7 @@ handle_new_request (fd_set read_selects, int **connp, request_header **reqp,
 		dbg_log (_("Real close socket %d|%d"), i, sock[i]);
 
 	      pthread_mutex_lock (&sock_lock);
-	      FD_CLR (sock[i], &read_set);
+	      read_polls[i].fd = -1;
 	      close (sock[i]);
 	      sock[i] = 0;
 	      --socks_active;
@@ -223,8 +227,8 @@ handle_new_request (fd_set read_selects, int **connp, request_header **reqp,
 void
 get_request (int *conn, request_header *req, char **key)
 {
-  int i, nr, done = 0;
-  fd_set read_selects;
+  int done = 0;
+  int nr;
 
   if (debug_flag)
     dbg_log ("get_request");
@@ -233,35 +237,21 @@ get_request (int *conn, request_header *req, char **key)
      is read in on an existing connection.  */
   while (!done)
     {
-      /* Set up the socket descriptor mask for the select.
-	 copy read_set into the local copy.  */
-
-      FD_ZERO (&read_selects);
-      pthread_mutex_lock (&sock_lock);
-      for (i = 0; i < MAX_NUM_CONNECTIONS; ++i)
-	{
-	  if (FD_ISSET (sock[i], &read_set))
-	    FD_SET (sock[i], &read_selects);
-	}
-      pthread_mutex_unlock (&sock_lock);
-      /* Poll active connections using select().  */
-      nr = select (FD_SETSIZE, &read_selects, NULL, NULL, NULL);
+      /* Poll active connections.  */
+      nr = poll (read_polls, MAX_NUM_CONNECTIONS, -1);
       if (nr <= 0)
 	{
-	  perror (_("Select new reads"));
+	  perror (_("Poll new reads"));
 	  exit (1);
 	}
-      if (FD_ISSET (sock[0], &read_selects))
+      if (read_polls[0].revents & (POLLRDNORM|POLLERR))
 	/* Handle the case of a new connection request on the named socket.  */
 	handle_new_connection ();
       else
 	{
 	  /* Read data from client specific descriptor.  */
-	  if (handle_new_request (read_selects, &conn, &req, key) == 0)
-	    {
-	      FD_CLR (sock[*conn], &read_set);
-	      done = 1;
-	    }
+	  if (handle_new_request (&conn, &req, key) == 0)
+	    done = 1;
 	}
     } /* While not_done.  */
 }
@@ -270,10 +260,14 @@ void
 init_sockets (void)
 {
   struct sockaddr_un sock_addr;
+  int i;
 
   /* Initialize the connections db.  */
   socks_active = 0;
-  FD_ZERO (&read_set);
+
+  /* Initialize the poll array. */
+  for (i = 0; i < MAX_NUM_CONNECTIONS; i++)
+    read_polls[i].fd = -1;
 
   /* Create the socket.  */
   sock[0] = socket (AF_UNIX, SOCK_STREAM, 0);
@@ -301,7 +295,8 @@ init_sockets (void)
     }
 
   /* Add the socket to the server's set of active sockets.  */
-  FD_SET (sock[0], &read_set);
+  read_polls[0].fd = sock[0];
+  read_polls[0].events = POLLRDNORM;
   ++socks_active;
 }
 

@@ -138,7 +138,7 @@ __nis_findfastest (dir_binding * bind)
       if (strcmp (bind->server_val[i].ep.ep_val[j].family, "inet") == 0)
 	if ((bind->server_val[i].ep.ep_val[j].proto == NULL) ||
 	    (strcmp (bind->server_val[i].ep.ep_val[j].proto, "-") == 0) ||
-	    (strlen (bind->server_val[i].ep.ep_val[j].proto) == 0))
+	    (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
 	  {
 	    sin.sin_addr.s_addr =
 	      inetstr2int (bind->server_val[i].ep.ep_val[j].uaddr);

@@ -1101,16 +1101,20 @@ default) stdio=stdio ;;
 esac
 AC_MSG_RESULT($stdio)
 
-AC_MSG_CHECKING(ldap selection)
-AC_SUBST(LDAP)
-case $add_ons in
-*ldap*)
-   ldap=yes
-   LDAP=ldap ;;
-*) ldap=no
-   LDAP= ;;
-esac
-AC_MSG_RESULT($ldap)
+# Test for old glibc 2.0.x headers so that they can be removed properly
+# Search only in includedir.
+AC_MSG_CHECKING(for old glibc 2.0.x headers)
+if eval test -e "${includedir}/elfclass.h" -a -e "${includedir}/fcntlbits.h"
+then
+  old_glibc_headers=yes
+else
+  old_glibc_headers=no
+fi
+AC_MSG_RESULT($old_glibc_headers)
+if test ${old_glibc_headers} = yes; then
+  AC_MSG_WARN(*** During \"make install\" old headers from glibc 2.0.x will)
+  AC_MSG_WARN(*** be removed.)
+fi
 
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
 #include <errno.h>
-#include <hurd.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <hurd.h>
 
 /* Truncate FILE_NAME to LENGTH bytes.  */
 int
 truncate (file_name, length)
-     char *file_name;
+     const char *file_name;
      off_t length;
 {
   error_t err;

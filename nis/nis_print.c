@@ -202,15 +202,15 @@ nis_print_directory (const directory_obj *dir)
 	  for (j = 0; j < sptr->ep.ep_len; j++)
 	    {
 	      printf ("\t[%d] - ", j + 1);
-	      if (ptr->proto != NULL && strlen (ptr->proto) > 0)
+	      if (ptr->proto != NULL && ptr->proto[0] != '\0')
 		printf ("%s, ", ptr->proto);
 	      else
 		printf ("-, ");
-	      if (ptr->family != NULL && strlen (ptr->family) > 0)
+	      if (ptr->family != NULL && ptr->family[0] != '\0')
 		printf ("%s, ", ptr->family);
 	      else
 		printf ("-, ");
-	      if (ptr->uaddr != NULL && strlen (ptr->uaddr) > 0)
+	      if (ptr->uaddr != NULL && ptr->uaddr[0] != '\0')
 		printf ("%s\n", ptr->uaddr);
 	      else
 		fputs ("-\n", stdout);

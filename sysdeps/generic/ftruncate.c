@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int
-ftruncate (fd, length)
+__ftruncate (fd, length)
      int fd;
      off_t length;
 {
@@ -30,5 +30,7 @@ ftruncate (fd, length)
   return -1;
 }
 
+weak_alias (__ftruncate, ftruncate)
+     
 stub_warning (ftruncate)
 #include <stub-tag.h>

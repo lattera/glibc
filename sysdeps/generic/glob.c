@@ -253,14 +253,16 @@ extern char *alloca ();
 
 /* Some system header files erroneously define these.
    We want our own definitions from <glob.h> to take precedence.  */
-#undef	GLOB_ERR
-#undef	GLOB_MARK
-#undef	GLOB_NOSORT
-#undef	GLOB_DOOFFS
-#undef	GLOB_NOCHECK
-#undef	GLOB_APPEND
-#undef	GLOB_NOESCAPE
-#undef	GLOB_PERIOD
+#ifndef __GNU_LIBRARY__
+# undef	GLOB_ERR
+# undef	GLOB_MARK
+# undef	GLOB_NOSORT
+# undef	GLOB_DOOFFS
+# undef	GLOB_NOCHECK
+# undef	GLOB_APPEND
+# undef	GLOB_NOESCAPE
+# undef	GLOB_PERIOD
+#endif
 #include <glob.h>
 
 static

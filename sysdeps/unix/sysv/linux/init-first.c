@@ -45,7 +45,6 @@ char **__libc_argv;
 
 /* We often need the UID and PID.  Cache these values.  */
 pid_t __libc_pid = 0xf00baa;
-uid_t __libc_uid = 0xf00baa;
 
 
 static void

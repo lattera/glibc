@@ -30,6 +30,7 @@ readColdStartFile (void)
 {
   XDR xdrs;
   FILE *in;
+  bool_t status;
   directory_obj obj;
 
   in = fopen (cold_start_file, "rb");
@@ -37,10 +38,11 @@ readColdStartFile (void)
     return NULL;
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  if (!_xdr_directory_obj (&xdrs, &obj))
-    return NULL;
+  status = _xdr_directory_obj (&xdrs, &obj);
+  xdr_destroy (&xdrs);
+  fclose (in);
 
-  return nis_clone_directory (&obj, NULL);
+  return status ? nis_clone_directory (&obj, NULL) : NULL;
 }
 
 bool_t
@@ -48,16 +50,18 @@ writeColdStartFile (const directory_obj *obj)
 {
   XDR xdrs;
   FILE *out;
+  bool_t status;
 
   out = fopen (cold_start_file, "wb");
   if (out == NULL)
     return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  if (!_xdr_directory_obj (&xdrs, (directory_obj *) obj))
-    return FALSE;
+  status = _xdr_directory_obj (&xdrs, (directory_obj *) obj);
+  xdr_destroy (&xdrs);
+  fclose (out);
 
-  return TRUE;
+  return status;
 }
 
 nis_object *
@@ -65,6 +69,7 @@ nis_read_obj (const char *name)
 {
   XDR xdrs;
   FILE *in;
+  bool_t status;
   nis_object obj;
 
   in = fopen (name, "rb");
@@ -73,10 +78,11 @@ nis_read_obj (const char *name)
 
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
-  if (!_xdr_nis_object (&xdrs, &obj))
-    return NULL;
+  status =_xdr_nis_object (&xdrs, &obj);
+  xdr_destroy (&xdrs);
+  fclose (in);
 
-  return nis_clone_object (&obj, NULL);
+  return status ? nis_clone_object (&obj, NULL) : NULL;
 }
 
 bool_t
@@ -84,14 +90,16 @@ nis_write_obj (const char *name, const nis_object *obj)
 {
   XDR xdrs;
   FILE *out;
+  bool_t status;
 
   out = fopen (name, "wb");
   if (out == NULL)
     return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  if (!_xdr_nis_object (&xdrs, (nis_object *) obj))
-    return FALSE;
+  status = _xdr_nis_object (&xdrs, (nis_object *) obj);
+  xdr_destroy (&xdrs);
+  fclose (out);
 
-  return TRUE;
+  return status;
 }

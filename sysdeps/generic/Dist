@@ -1,6 +1,6 @@
 make_siglist.c signame.c signame.h
 det_endian.c
 entry.h
-errno-loc.c.
+errno-loc.c
 getresgid.c
 getresuid.c

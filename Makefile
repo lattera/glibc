@@ -284,3 +284,29 @@ iconvdata/%:
 # need the only-MD5 based one as well.
 md5-crypt/libmd5crypt:
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+
+# glibc 2.0 contains some header files which aren't used with glibc 2.1
+# anymore.
+# These rules should remove those headers
+ifeq (,$(install_root))
+ifeq ($(old-glibc-headers),yes)
+install: remove-old-headers
+endif
+endif
+
+headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
+		errnos.h fcntlbits.h huge_val.h ioctl-types.h 		\
+		ioctls.h iovec.h jmp_buf.h libc-lock.h local_lim.h 	\
+		mathcalls.h mpool.h nan.h ndbm.h posix1_lim.h  		\
+		posix2_lim.h posix_opt.h resourcebits.h schedbits.h 	\
+		selectbits.h semaphorebits.h sigaction.h sigcontext.h 	\
+		signum.h sigset.h sockaddrcom.h socketbits.h stab.def 	\
+		statbuf.h statfsbuf.h stdio-lock.h stdio_lim.h 		\
+		syscall-list.h termbits.h timebits.h ustatbits.h 	\
+		utmpbits.h utsnamelen.h waitflags.h waitstatus.h 	\
+		xopen_lim.h gnu/types.h sys/ipc_buf.h 			\
+		sys/kernel_termios.h sys/msq_buf.h sys/sem_buf.h 	\
+		sys/shm_buf.h sys/socketcall.h
+
+remove-old-headers:
+	rm -f $(addprefix $(inst_includedir)/, $(headers2_0))

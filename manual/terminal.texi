@@ -22,6 +22,7 @@ descriptor is and how to open a file descriptor for a terminal device.
 * Line Control::                Sending break sequences, clearing
                                  terminal buffers @dots{}
 * Noncanon Example::            How to read single characters without echo.
+* Pseudo-Terminals::            How to open a pseudo-terminal.
 @end menu
 
 @node Is It a Terminal
@@ -35,14 +36,14 @@ descriptor is associated with a terminal by using the @code{isatty}
 function.
 
 @pindex unistd.h
-Prototypes for both @code{isatty} and @code{ttyname} are declared in
-the header file @file{unistd.h}.
+Prototypes for the functions in this section are declared in the header
+file @file{unistd.h}.
 
 @comment unistd.h
 @comment POSIX.1
 @deftypefun int isatty (int @var{filedes})
 This function returns @code{1} if @var{filedes} is a file descriptor
-associated with an open terminal device, and @code{0} otherwise.
+associated with an open terminal device, and @math{0} otherwise.
 @end deftypefun
 
 If a file descriptor is associated with a terminal, you can get its
@@ -57,6 +58,30 @@ device, the @code{ttyname} function returns a pointer to a
 statically-allocated, null-terminated string containing the file name of
 the terminal file.  The value is a null pointer if the file descriptor
 isn't associated with a terminal, or the file name cannot be determined.
+@end deftypefun
+
+@comment unistd.h
+@comment POSIX.1
+@deftypefun int ttyname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+The @code{ttyname_r} function is similar to the @code{ttyname} function
+except that it places its result into the user-specified buffer starting
+at @var{buf} with length @var{len}.
+
+The normal return value from @code{ttyname_r} is @math{0}.  Otherwise an
+error number is returned to indicate the error.  The following
+@code{errno} error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENOTTY
+The @var{filedes} is not associated with a terminal.
+
+@item ERANGE
+The buffer length @var{len} is too small to store the string to be
+returned.
+@end table
 @end deftypefun
 
 @node I/O Queues
@@ -237,7 +262,7 @@ This function is used to examine the attributes of the terminal
 device with file descriptor @var{filedes}.  The attributes are returned
 in the structure that @var{termios-p} points to.
 
-If successful, @code{tcgetattr} returns @code{0}.  A return value of @code{-1}
+If successful, @code{tcgetattr} returns @math{0}.  A return value of @math{-1}
 indicates an error.  The following @code{errno} error conditions are
 defined for this function:
 
@@ -302,8 +327,8 @@ write to the terminal.  The exception is if the calling process itself
 is ignoring or blocking @code{SIGTTOU} signals, in which case the
 operation is performed and no signal is sent.  @xref{Job Control}.
 
-If successful, @code{tcsetattr} returns @code{0}.  A return value of
-@code{-1} indicates an error.  The following @code{errno} error
+If successful, @code{tcsetattr} returns @math{0}.  A return value of
+@math{-1} indicates an error.  The following @code{errno} error
 conditions are defined for this function:
 
 @table @code
@@ -997,27 +1022,27 @@ This function returns the input line speed stored in the structure
 @comment POSIX.1
 @deftypefun int cfsetospeed (struct termios *@var{termios-p}, speed_t @var{speed})
 This function stores @var{speed} in @code{*@var{termios-p}} as the output
-speed.  The normal return value is @code{0}; a value of @code{-1}
+speed.  The normal return value is @math{0}; a value of @math{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
-returns @code{-1}.
+returns @math{-1}.
 @end deftypefun
 
 @comment termios.h
 @comment POSIX.1
 @deftypefun int cfsetispeed (struct termios *@var{termios-p}, speed_t @var{speed})
 This function stores @var{speed} in @code{*@var{termios-p}} as the input
-speed.  The normal return value is @code{0}; a value of @code{-1}
+speed.  The normal return value is @math{0}; a value of @math{-1}
 indicates an error.  If @var{speed} is not a speed, @code{cfsetospeed}
-returns @code{-1}.
+returns @math{-1}.
 @end deftypefun
 
 @comment termios.h
 @comment BSD
 @deftypefun int cfsetspeed (struct termios *@var{termios-p}, speed_t @var{speed})
 This function stores @var{speed} in @code{*@var{termios-p}} as both the
-input and output speeds.  The normal return value is @code{0}; a value
-of @code{-1} indicates an error.  If @var{speed} is not a speed,
-@code{cfsetspeed} returns @code{-1}.  This function is an extension in
+input and output speeds.  The normal return value is @math{0}; a value
+of @math{-1} indicates an error.  If @var{speed} is not a speed,
+@code{cfsetspeed} returns @math{-1}.  This function is an extension in
 4.4 BSD.
 @end deftypefun
 
@@ -1035,7 +1060,7 @@ will succeed.  But they do not check that a particular hardware device
 can actually support the specified speeds---in fact, they don't know
 which device you plan to set the speed for.  If you use @code{tcsetattr}
 to set the speed of a particular device to a value that it cannot
-handle, @code{tcsetattr} returns @code{-1}.
+handle, @code{tcsetattr} returns @math{-1}.
 
 @strong{Portability note:} In the GNU library, the functions above
 accept speeds measured in bits per second as input, and return speed
@@ -1629,7 +1654,7 @@ This function does nothing if the terminal is not an asynchronous serial
 data port.
 
 The return value is normally zero.  In the event of an error, a value
-of @code{-1} is returned.  The following @code{errno} error conditions
+of @math{-1} is returned.  The following @code{errno} error conditions
 are defined for this function:
 
 @table @code
@@ -1659,7 +1684,7 @@ protected using cancelation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The return value is normally zero.  In the event of an error, a value
-of @code{-1} is returned.  The following @code{errno} error conditions
+of @math{-1} is returned.  The following @code{errno} error conditions
 are defined for this function:
 
 @table @code
@@ -1705,7 +1730,7 @@ Clear both queued input and output.
 @end table
 
 The return value is normally zero.  In the event of an error, a value
-of @code{-1} is returned.  The following @code{errno} error conditions
+of @math{-1} is returned.  The following @code{errno} error conditions
 are defined for this function:
 
 @table @code
@@ -1759,7 +1784,7 @@ For more information about the STOP and START characters, see @ref{Special
 Characters}.
 
 The return value is normally zero.  In the event of an error, a value
-of @code{-1} is returned.  The following @code{errno} error conditions
+of @math{-1} is returned.  The following @code{errno} error conditions
 are defined for this function:
 
 @table @code
@@ -1805,3 +1830,231 @@ a process is stopped or continued; see @ref{Job Control}.  But some
 existing shells do not actually do this, so you may wish to establish
 handlers for job control signals that reset terminal modes.  The above
 example does so.
+
+
+@node Pseudo-Terminals
+@section Pseudo-Terminals
+@cindex pseudo-terminals
+
+A @dfn{pseudo-terminal} is a special interprocess communication channel
+that acts like a terminal.  On one end of the channel is called the
+@dfn{master} side or @dfn{master pseudo-terminal device}, the other side
+is called the @dfn{slave} side.  Data written to the the master side is
+received by the slave side as if it was the result of a user typing at
+an ordinary terminal, and data written to the slave side is sent to the
+master side as if it was written on an ordinary terminal.
+
+Pseudo terminals are the way programs like @code{xterm} and @code{emacs}
+implement their terminal emulation functionality.
+
+@menu
+* Allocation::             Allocating a pseudo terminal.
+* Pseudo-Terminal Pairs::  How to open both sides of a
+                            pseudo-terminal in a single operation.
+@end menu
+
+@node Allocation
+@subsection Allocating Pseudo-Terminals
+@cindex allocating pseudo-terminals
+
+@pindex stdlib.h
+This subsection describes functions for allocating a pseudo-terminals,
+and for making this pseudo-terminal available for actual use.  These
+functions are declared in the header file @file{stdlib.h}.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int getpt (void)
+The @code{getpt} function returns a new file descriptor for the next
+available master pseudo-terminal.  The normal return value from
+@code{getpt} is a non-negative integer file descriptor.  In the case of
+an error, a value of @math{-1} is returned instead.  The following
+@code{errno} conditions are defined for this function:
+
+@table @code
+@item ENFILE
+There are no master pseudo-terminals available.
+@end table
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment stdlib.h
+@comment SVID, XPG4.2
+@deftypefun int grantpt (int @var{filedes})
+The @code{grantpt} function changes the ownership and access permission
+of the slave pseudo-terminal device corresponding to the master
+pseudo-terminal device associated with the file descriptor
+@var{filedes}.  The owner is set from the real user ID of the calling
+process (@pxref{Process Persona}), and the group is set to a special
+group (typically @dfn{tty}) or from the real group ID of the calling
+process.  The access permission is set such that the file is both
+readable and writable by the owner and only writable by the group.
+
+On some systems this function is implemented by invoking a special
+@code{setuid} root program (@pxref{How Change Persona}).  As a
+consequence, installing a signal handler for the @code{SIGCHLD} signal
+(@pxref{Job Control Signals}) may interfere with a call to
+@code{grantpt}.
+
+The normal return value from @code{grantpt} is @math{0}; a value of
+@math{-1} is returned in case of failure.  The following @code{errno}
+error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item ENINVAL
+The @var{filedes} argument is not associated with a master pseudo-terminal
+device.
+
+@item EACCESS
+The slave pseudo-terminal device corresponding to the master associated
+with @var{filedes} could not be accessed.
+@end table
+
+@end deftypefun
+
+@comment stdlib.h
+@comment SVID, XPG4.2
+@deftypefun int unlockpt (int @var{filedes})
+The @code{unlockpt} function unlocks the slave pseudo-terminal device
+corresponding to the master pseudo-terminal device associated with the
+file descriptor @var{filedes}.  On many systems, the slave can only be
+opened after unlocking, so portable applications should always call
+@code{unlockpt} before trying to open the slave.
+
+The normal return value from @code{unlockpt} is @math{0}; a value of
+@math{-1} is returned in case of failure.  The following @code{errno}
+error conditions are defined for this function:
+
+@table @code
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EINVAL
+The @var{filedes} argument is not associated with a master pseudo-terminal
+device.
+@end table
+@end deftypefun
+
+@comment stdlib.h
+@comment SVID, XPG4.2
+@deftypefun {char *} ptsname (int @var{filedes})
+If the file descriptor @var{filedes} is associated with a
+master pseudo-terminal device, the @code{ptsname} function returns a
+pointer to a statically-allocated, null-terminated string containing the
+file name of the associated slave pseudo-terminal file.  This string
+might be overwritten by subsequent calls to @code{ptsname}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun int ptsname_r (int @var{filedes}, char *@var{buf}, size_t @var{len})
+The @code{ptsname_r} function is similar to the @code{ptsname} function
+except that it places its result into the user-specified buffer starting
+at @var{buf} with length @var{len}.
+
+This function is a GNU extension.
+@end deftypefun
+
+@strong{Portability Note:} On @w{System V} derived systems, the file
+returned by the @code{ptsname} and @code{ptsname_r} functions may be
+STREAMS-based, and therefore require additional processing after opening
+before it actually behaves as a pseudo terminal.
+@c FIXME: xref STREAMS
+
+Typical usage of these functions is illustrated by the following example:
+@smallexample
+int
+open_pty_pair (int *amaster, int *aslave)
+@{
+  int master, slave;
+  char *name
+
+  master = getpt ();
+  if (master < 0)
+    return 0;
+
+  if (grantpt (master) < 0 || unlockpt (master) < 0)
+    goto close_master;
+  name = ptsname (master);
+  if (name == NULL)
+    goto close_master;
+
+  slave open (name, O_RDWR);
+  if (slave == -1)
+    goto close_master;
+
+  if (isastream (slave))
+    @{
+      if (ioctl (slave, I_PUSH, "ptem") < 0
+          || ioctl (slave, I_PUSH, "ldterm") < 0)
+        goto close_slave;
+    @}
+
+  *amaster = master;
+  *aslave = slave;
+  return 1;
+
+close_slave:
+  close (slave);
+
+close_master:
+  close (master);
+  return 0;
+@}
+@end smallexample
+
+@node Pseudo-Terminal Pairs
+@subsection Opening a Pseudo-Terminal Pair
+@cindex opening a pseudo-terminal pair
+
+These functions, derived from BSD, are available in the separate
+@file{libutil} library, and declared in @file{pty.h}.
+
+@comment pty.h
+@comment BSD
+@deftypefun int openpty (int *@var{amaster}, int *@var{aslave}, char *@var{name}, struct termios *@var{termp}, struct winsize *@var{winp})
+This function allocates and opens a pseudo-terminal pair, returning the
+file descriptor for the master in @var{*amaster}, and the file
+descriptor for the slave in @var{*aslave}.  If the argument @var{name}
+is not a null pointer, the name file name of the slave pseudo-terminal
+device is stored in @code{*name}.  If @var{termp} is not a null pointer,
+the terminal attributes of the slave are set to the ones specified in
+the structure that @var{termp} points to (@pxref{Terminal Modes}).
+Likewise, if the @var{winp} is not a null pointer, the screen size of
+the slave is set to the values specified in the structure that
+@var{winp} points to.
+
+The normal return value from @code{openpty} is @math{0}; a value of
+@math{-1} is returned in case of failure.
+
+@strong{Warning:} Using the @code{openpty} with @var{name} not set to
+@code{NULL} is @strong{very dangerous} because it provides no protection
+against overflowing the string @var{name}.  You should use the
+@code{ttyname} function on the file descriptor returned in @var{*slave}
+to find out the file name of the slave pseudo-terminal device instead.
+@end deftypefun
+
+@comment pty.h
+@comment BSD
+@deftypefun int forkpty (int *@var{amaster}, char *@var{name}, struct termios *@var{termp}, struct winsize *@var{winp})
+This function is similar to the @code{openpty} function, but in
+addition, forks creates a new process (@pxref{Creating a Process}) and
+makes the newly opened slave pseudo-terminal device the controlling
+terminal (@pxref{Controlling Terminal}) for the child process.
+
+If the operation is successful, there are then both parent and child
+processes and both see @code{forkpty} return, but with different values:
+it returns a value of @math{0} in the child process and returns the child's
+process ID in the parent process.
+
+If the allocation of a pseudo-terminal pair or the process creation
+failed, @code{forkpty} returns a value of @math{-1} in the parent
+process.
+
+@strong{Warning:} The @code{forkpty} function has the same problems with
+respect to the @var{name} argument as @code{openpty}.
+@end deftypefun

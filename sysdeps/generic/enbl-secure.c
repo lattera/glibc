@@ -1,5 +1,5 @@
 /* Define and initialize the `__libc_enable_secure' flag.  Generic version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,13 +26,9 @@
 /* Safest assumption, if somehow the initializer isn't run.  */
 int __libc_enable_secure = 1;
 
-/* We often need the UID.  */
-extern uid_t __libc_uid;
-
 void
 __libc_init_secure (void)
 {
-  __libc_uid = __getuid ();
-  __libc_enable_secure = (__geteuid () != __libc_uid
+  __libc_enable_secure = (__geteuid () != __getuid ()
 			  || __getegid () != __getgid ());
 }

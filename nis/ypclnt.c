@@ -64,7 +64,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
   int is_new = 0;
   int try;
 
-  if ((domain == NULL) || (strlen (domain) == 0))
+  if ((domain == NULL) || (domain[0] == '\0'))
     return YPERR_BADARGS;
 
   if (ypdb != NULL)
