@@ -129,6 +129,7 @@ timer_delref (struct timer_node *timer)
 
 /* Timespec helper routines.  */
 static inline int
+__attribute ((always_inline))
 timespec_compare (const struct timespec *left, const struct timespec *right)
 {
   if (left->tv_sec < right->tv_sec)
