@@ -1,7 +1,14 @@
+2002-11-24  Robert Love  <rml@tech9.net>
+
+	* posix/sched.h: Second parameter of sched_setaffinity and
+	sched_getaffinity is `unsigned int', not `unsigned long'.
+	* sysdeps/generic/sched_setaffinity.c: Likewise.
+	* sysdeps/generic/sched_getaffinity.c: Likewise.
+
 2003-02-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* debug/catchsegv.sh: Fix typo in error messsage.
-	Reported by John Levon <leven@movementarian.org>.
+	Reported by John Levon <levon@movementarian.org>.
 
 	* sysdeps/unix/sysv/linux/posix_fadvise.c: New file.
 	* sysdeps/unix/sysv/linux/syscalls.list: Add posix_fadvise64 syscall.

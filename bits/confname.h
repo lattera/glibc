@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993, 1995-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1993,1995-1998,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -474,7 +474,7 @@ enum
 # if (defined __USE_FILE_OFFSET64 || defined __USE_LARGEFILE64 \
      || defined __USE_LARGEFILE)
     _CS_LFS_CFLAGS = 1000,
-#  define _CS_LFS_CFLAGS		_CS_LFS_CFLAGS
+#  define _CS_LFS_CFLAGS	_CS_LFS_CFLAGS
     _CS_LFS_LDFLAGS,
 #  define _CS_LFS_LDFLAGS	_CS_LFS_LDFLAGS
     _CS_LFS_LIBS,
@@ -486,7 +486,7 @@ enum
     _CS_LFS64_LDFLAGS,
 #  define _CS_LFS64_LDFLAGS	_CS_LFS64_LDFLAGS
     _CS_LFS64_LIBS,
-#  define _CS_LFS64_LIBS		_CS_LFS64_LIBS
+#  define _CS_LFS64_LIBS	_CS_LFS64_LIBS
     _CS_LFS64_LINTFLAGS,
 #  define _CS_LFS64_LINTFLAGS	_CS_LFS64_LINTFLAGS
 # endif

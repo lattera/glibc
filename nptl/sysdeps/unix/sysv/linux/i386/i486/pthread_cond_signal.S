@@ -56,20 +56,20 @@ __pthread_cond_signal:
 	testl	%eax, %eax
 	jne	1f
 
-2:	movl	total_seq+4(%ebx), %eax
-	movl	total_seq(%ebx), %ecx
-	cmpl	wakeup_seq+4(%ebx), %eax
+2:	addl	$wakeup_seq, %ebx
+	movl	total_seq+4-wakeup_seq(%ebx), %eax
+	movl	total_seq-wakeup_seq(%ebx), %ecx
+	cmpl	4(%ebx), %eax
 	ja	3f
 	jb	4f
-	cmpl	wakeup_seq(%ebx), %ecx
+	cmpl	(%ebx), %ecx
 	jbe	4f
 
 	/* Bump the wakeup number.  */
-3:	addl	$1, wakeup_seq(%ebx)
-	adcl	$0, wakeup_seq+4(%ebx)
+3:	addl	$1, (%ebx)
+	adcl	$0, 4(%ebx)
 
 	/* Wake up one thread.  */
-	addl	$wakeup_seq, %ebx
 	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax

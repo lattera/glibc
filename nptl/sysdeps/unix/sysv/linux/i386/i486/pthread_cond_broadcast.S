@@ -56,20 +56,20 @@ __pthread_cond_broadcast:
 	testl	%eax, %eax
 	jne	1f
 
-2:	movl	total_seq+4(%ebx), %eax
-	movl	total_seq(%ebx), %ecx
-	cmpl	wakeup_seq+4(%ebx), %eax
+2:	addl	$wakeup_seq, %ebx
+	movl	total_seq+4-wakeup_seq(%ebx), %eax
+	movl	total_seq-wakeup_seq(%ebx), %ecx
+	cmpl	4(%ebx), %eax
 	ja	3f
 	jb	4f
-	cmpl	wakeup_seq(%ebx), %ecx
+	cmpl	(%ebx), %ecx
 	jna	4f
 
 	/* Case all currently waiting threads to wake up.  */
-3:	movl	%ecx, wakeup_seq(%ebx)
-	movl	%eax, wakeup_seq+4(%ebx)
+3:	movl	%ecx, (%ebx)
+	movl	%eax, 4(%ebx)
 
 	/* Wake up all threads.  */
-	addl	$wakeup_seq, %ebx
 	movl	$FUTEX_WAKE, %ecx
 	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
