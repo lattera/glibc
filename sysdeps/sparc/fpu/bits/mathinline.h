@@ -1,5 +1,5 @@
 /* Inline math functions for SPARC.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>.
 
@@ -213,16 +213,16 @@ __ieee754_sqrtl (long double __x)
 
 #  ifndef __NO_MATH_INLINES
 
-__MATH_INLINE double fdim (double __x, double __y);
+__MATH_INLINE double fdim (double __x, double __y) __THROW;
 __MATH_INLINE double
-fdim (double __x, double __y)
+fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0 : __x - __y;
 }
 
-__MATH_INLINE float fdimf (float __x, float __y);
+__MATH_INLINE float fdimf (float __x, float __y) __THROW;
 __MATH_INLINE float
-fdimf (float __x, float __y)
+fdimf (float __x, float __y) __THROW
 {
   return __x < __y ? 0 : __x - __y;
 }
