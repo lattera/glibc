@@ -51,7 +51,7 @@
 		      char **argv, void (*init) (void), void (*fini) (void),
 		      void (*rtld_fini) (void), void *stack_end)
 */
-#ifdef PIC
+#ifdef __PIC__
 /* A macro to (re)initialize gp. We can get the run time address of 0f in
    ra ($31) by blezal instruction. In this early phase, we can't save gp
    in stack and .cprestore doesn't work properly. So we set gp by using
@@ -67,7 +67,7 @@
 	.text
 	.globl ENTRY_POINT
 ENTRY_POINT:
-#ifdef PIC
+#ifdef __PIC__
 	SET_GP
 #endif
 	move $31, $0
@@ -93,7 +93,6 @@ ENTRY_POINT:
 	sw $2, 20($29)		/* rtld_fini */
 	sw $29, 24($29)		/* stack_end */
 	jal __libc_start_main
-
 hlt:	b hlt			/* Crash if somehow it does return.  */
 
 /* Define a symbol for the first piece of initialized data.  */

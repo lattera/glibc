@@ -218,7 +218,7 @@ int _dl_mips_gnu_objects = 1;						      \
 /* This is called from assembly stubs below which the compiler can't see.  */ \
 static ElfW(Addr)							      \
 __dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr))	      \
-                  __attribute__ ((unused));				      \
+		  __attribute__ ((unused));				      \
 									      \
 static ElfW(Addr)							      \
 __dl_runtime_resolve (ElfW(Word) sym_index,				      \
@@ -274,7 +274,7 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
     /* We already found the symbol.  The module (and therefore its load	      \
        address) is also known.  */					      \
     value = l->l_addr + sym->st_value;					      \
-  									      \
+									      \
   /* Apply the relocation with that value.  */				      \
   *(got + local_gotno + sym_index - gotsym) = value;			      \
 									      \
@@ -297,7 +297,7 @@ _dl_runtime_resolve:\n							      \
 	.cpload $25\n							      \
 	.set reorder\n							      \
 	# Save slot call pc.\n						      \
-        move	$2, $31\n						      \
+	move	$2, $31\n						      \
 	# Save arguments and sp value in stack.\n			      \
 	subu	$29, 40\n						      \
 	.cprestore 32\n							      \
@@ -468,11 +468,9 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
   int i, n, symidx;
-#ifndef RTLD_BOOTSTRAP
-  const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-#endif
   /*  This function is loaded in dl-reloc as a nested function and can
-      therefore access the variable scope from _dl_relocate_object.  */
+      therefore access the variables scope and strtab from
+      _dl_relocate_object.  */
 #ifdef RTLD_BOOTSTRAP
 # define RESOLVE_GOTSYM(sym,sym_index) 0
 #else
