@@ -6,5 +6,5 @@ ENTRY(bcopy)
 	mov in0 = in1
 	;;
 	mov in1 = r8
-	br.cond.sptk.many HIDDEN_JUMPTARGET(memmove)
+	br.cond.sptk.many HIDDEN_BUILTIN_JUMPTARGET(memmove)
 END(bcopy)

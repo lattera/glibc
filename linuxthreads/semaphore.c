@@ -22,6 +22,7 @@
 #include "restart.h"
 #include "queue.h"
 #include <shlib-compat.h>
+#include <not-cancel.h>
 
 int __new_sem_init(sem_t *sem, int pshared, unsigned int value)
 {
@@ -168,8 +169,8 @@ int __new_sem_post(sem_t * sem)
     }
     request.req_kind = REQ_POST;
     request.req_args.post = sem;
-    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				    (char *) &request, sizeof(request)));
+    TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+					(char *) &request, sizeof(request)));
   }
   return 0;
 }

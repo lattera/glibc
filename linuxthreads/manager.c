@@ -36,6 +36,7 @@
 #include "spinlock.h"
 #include "restart.h"
 #include "semaphore.h"
+#include <not-cancel.h>
 
 /* For debugging purposes put the maximum number of threads in a variable.  */
 const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
@@ -141,8 +142,8 @@ __pthread_manager(void *arg)
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
   /* Synchronize debugging of the thread manager */
-  n = TEMP_FAILURE_RETRY(__libc_read(reqfd, (char *)&request,
-				     sizeof(request)));
+  n = TEMP_FAILURE_RETRY(read_not_cancel(reqfd, (char *)&request,
+					 sizeof(request)));
   ASSERT(n == sizeof(request) && request.req_kind == REQ_DEBUG);
   ufd.fd = reqfd;
   ufd.events = POLLIN;
@@ -162,8 +163,8 @@ __pthread_manager(void *arg)
     }
     /* Read and execute request */
     if (n == 1 && (ufd.revents & POLLIN)) {
-      n = TEMP_FAILURE_RETRY(__libc_read(reqfd, (char *)&request,
-					 sizeof(request)));
+      n = TEMP_FAILURE_RETRY(read_not_cancel(reqfd, (char *)&request,
+					     sizeof(request)));
 #ifdef DEBUG
       if (n < 0) {
 	char d[64];
@@ -301,8 +302,8 @@ pthread_start_thread(void *arg)
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {
     request.req_thread = self;
     request.req_kind = REQ_DEBUG;
-    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				    (char *) &request, sizeof(request)));
+    TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+					(char *) &request, sizeof(request)));
     suspend(self);
   }
   /* Run the thread code */
@@ -970,7 +971,7 @@ static void pthread_reap_children(void)
   pid_t pid;
   int status;
 
-  while ((pid = __libc_waitpid(-1, &status, WNOHANG | __WCLONE)) > 0) {
+  while ((pid = waitpid_not_cancel(-1, &status, WNOHANG | __WCLONE)) > 0) {
     pthread_exited(pid);
     if (WIFSIGNALED(status)) {
       /* If a thread died due to a signal, send the same signal to
@@ -1090,8 +1091,8 @@ void __pthread_manager_sighandler(int sig)
     struct pthread_request request;
     request.req_thread = 0;
     request.req_kind = REQ_KICK;
-    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				    (char *) &request, sizeof(request)));
+    TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+					(char *) &request, sizeof(request)));
   }
 }
 

@@ -1,3 +1,18 @@
+2004-04-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/fpu/libm_support.h (__libm_error_support): Add
+	libc_hidden_proto.  Define to __GI___libm_error_support for
+	assembly going into libc.so.
+	* sysdeps/ia64/fpu/libc_libm_error.c (__libm_error_support): Add
+	libc_hidden_def.
+
+	* include/libc-symbols.h (HIDDEN_BUILTIN_JUMPTARGET): Define.
+	* sysdeps/ia64/bcopy.S (bcopy): Use it for jump to memmove.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S (__syscall_error): Access
+	gprel errno if RTLD_PRIVATE_ERRNO or __thread __libc_errno/errno
+	if USE___THREAD.
+
 2004-05-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/bsd/bits/fcntl.h (F_SETOWN, F_GETOWN): Define if

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -27,9 +27,58 @@
 
 # undef PSEUDO
 
-#ifndef USE_DL_SYSINFO
+# ifdef USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSDEP_CANCEL_ERRNO __libc_errno
+#  else
+#   define SYSDEP_CANCEL_ERRNO errno
+#  endif
+#  define SYSDEP_CANCEL_ERROR(args)					      \
+.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
+     .align 32;								      \
+     .proc __syscall_error_##args;					      \
+     .global __syscall_error_##args;					      \
+     .hidden __syscall_error_##args;					      \
+     .size __syscall_error_##args, 64;					      \
+__syscall_error_##args:							      \
+     .prologue;								      \
+     .regstk args, 5, args, 0;						      \
+     .save ar.pfs, loc0;						      \
+     .save rp, loc1;							      \
+     .body;								      \
+     addl loc4 = @ltoff(@tprel(SYSDEP_CANCEL_ERRNO)), gp;;		      \
+     ld8 loc4 = [loc4];							      \
+     mov rp = loc1;;							      \
+     mov r8 = -1;							      \
+     add loc4 = loc4, r13;;						      \
+     st4 [loc4] = loc3;							      \
+     mov ar.pfs = loc0
+# else
+#  define SYSDEP_CANCEL_ERROR(args)					      \
+.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
+     .align 32;								      \
+     .proc __syscall_error_##args;					      \
+     .global __syscall_error_##args;					      \
+     .hidden __syscall_error_##args;					      \
+     .size __syscall_error_##args, 64;					      \
+__syscall_error_##args:							      \
+     .prologue;								      \
+     .regstk args, 5, args, 0;						      \
+     .save ar.pfs, loc0;						      \
+     .save rp, loc1;							      \
+     .body;								      \
+     mov loc4 = r1;;							      \
+     br.call.sptk.many b0 = __errno_location;;				      \
+     st4 [r8] = loc3;							      \
+     mov r1 = loc4;							      \
+     mov rp = loc1;							      \
+     mov r8 = -1;							      \
+     mov ar.pfs = loc0
+# endif
 
-# define PSEUDO(name, syscall_name, args)				      \
+# ifndef USE_DL_SYSINFO
+
+#  define PSEUDO(name, syscall_name, args)				      \
 .text;									      \
 ENTRY (name)								      \
      adds r14 = MULTIPLE_THREADS_OFFSET, r13;;				      \
@@ -71,29 +120,11 @@ __GC_##name:								      \
 .Lpseudo_end:								      \
      ret;								      \
      .endp __GC_##name;							      \
-.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
-     .align 32;								      \
-     .proc __syscall_error_##args;					      \
-     .global __syscall_error_##args;					      \
-     .hidden __syscall_error_##args;					      \
-     .size __syscall_error_##args, 64;					      \
-__syscall_error_##args:							      \
-     .prologue;								      \
-     .regstk args, 5, args, 0;						      \
-     .save ar.pfs, loc0;						      \
-     .save rp, loc1;							      \
-     .body;								      \
-     mov loc4 = r1;;							      \
-     br.call.sptk.many b0 = __errno_location;;				      \
-     st4 [r8] = loc3;							      \
-     mov r1 = loc4;							      \
-     mov rp = loc1;							      \
-     mov r8 = -1;							      \
-     mov ar.pfs = loc0
+     SYSDEP_CANCEL_ERROR(args)
 
-#else /* USE_DL_SYSINFO */
+# else /* USE_DL_SYSINFO */
 
-# define PSEUDO(name, syscall_name, args)				      \
+#  define PSEUDO(name, syscall_name, args)				      \
 .text;									      \
 ENTRY (name)								      \
      .prologue;								      \
@@ -146,30 +177,12 @@ __GC_##name:								      \
 .Lpseudo_end:								      \
      ret;								      \
      .endp __GC_##name;							      \
-.section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
-     .align 32;								      \
-     .proc __syscall_error_##args;					      \
-     .global __syscall_error_##args;					      \
-     .hidden __syscall_error_##args;					      \
-     .size __syscall_error_##args, 64;					      \
-__syscall_error_##args:							      \
-     .prologue;								      \
-     .regstk args, 5, args, 0;						      \
-     .save ar.pfs, loc0;						      \
-     .save rp, loc1;							      \
-     .body;								      \
-     mov loc4 = r1;;							      \
-     br.call.sptk.many b0 = __errno_location;;				      \
-     st4 [r8] = loc3;							      \
-     mov r1 = loc4;							      \
-     mov rp = loc1;							      \
-     mov r8 = -1;							      \
-     mov ar.pfs = loc0
+     SYSDEP_CANCEL_ERROR(args)
 
-#endif /* USE_DL_SYSINFO */
+# endif /* USE_DL_SYSINFO */
 
-#undef PSEUDO_END
-#define PSEUDO_END(name) .endp
+# undef PSEUDO_END
+# define PSEUDO_END(name) .endp
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	br.call.sptk.many b0 = __pthread_enable_asynccancel
@@ -184,14 +197,14 @@ __syscall_error_##args:							      \
 #  error Unsupported library
 # endif
 
-#define COPY_ARGS_0	/* Nothing */
-#define COPY_ARGS_1	COPY_ARGS_0 mov out0 = in0;
-#define COPY_ARGS_2	COPY_ARGS_1 mov out1 = in1;
-#define COPY_ARGS_3	COPY_ARGS_2 mov out2 = in2;
-#define COPY_ARGS_4	COPY_ARGS_3 mov out3 = in3;
-#define COPY_ARGS_5	COPY_ARGS_4 mov out4 = in4;
-#define COPY_ARGS_6	COPY_ARGS_5 mov out5 = in5;
-#define COPY_ARGS_7	COPY_ARGS_6 mov out6 = in6;
+# define COPY_ARGS_0	/* Nothing */
+# define COPY_ARGS_1	COPY_ARGS_0 mov out0 = in0;
+# define COPY_ARGS_2	COPY_ARGS_1 mov out1 = in1;
+# define COPY_ARGS_3	COPY_ARGS_2 mov out2 = in2;
+# define COPY_ARGS_4	COPY_ARGS_3 mov out3 = in3;
+# define COPY_ARGS_5	COPY_ARGS_4 mov out4 = in4;
+# define COPY_ARGS_6	COPY_ARGS_5 mov out5 = in5;
+# define COPY_ARGS_7	COPY_ARGS_6 mov out6 = in6;
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \

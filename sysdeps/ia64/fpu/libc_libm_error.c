@@ -11,3 +11,4 @@ __libm_error_support (void *arg1, void *arg2, void *retval,
 {
   __set_errno (ERANGE);
 }
+libc_hidden_def (__libm_error_support)

@@ -239,6 +239,7 @@ typedef enum
 } error_types;
 
 void __libm_error_support(void*,void*,void*,error_types);
+libc_hidden_proto(__libm_error_support)
 
 #define BIAS_64  1023
 #define EXPINF_64  2047
@@ -339,6 +340,13 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 
 // This is a run-time variable and may effect
 // floating point behavior of the libm functions
+
+#elif defined _LIBC
+
+# if !defined NOT_IN_libc && defined SHARED && defined DO_VERSIONING \
+     && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE && !defined NO_HIDDEN
+#  define __libm_error_support  __GI___libm_error_support
+# endif
 
 #endif	/* __ASSEMBLER__ */
 

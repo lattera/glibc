@@ -749,11 +749,17 @@ for linking")
 # define libc_hidden_builtin_def(name) libc_hidden_def (name)
 # define libc_hidden_builtin_weak(name) libc_hidden_weak (name)
 # define libc_hidden_builtin_ver(local, name) libc_hidden_ver (local, name)
+# ifdef __ASSEMBLER__
+#  define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
+# endif
 #else
 # define libc_hidden_builtin_proto(name, attrs...)
 # define libc_hidden_builtin_def(name)
 # define libc_hidden_builtin_weak(name)
 # define libc_hidden_builtin_ver(local, name)
+# ifdef __ASSEMBLER__
+#  define HIDDEN_BUILTIN_JUMPTARGET(name) JUMPTARGET(name)
+# endif
 #endif
 
 /* Get some dirty hacks.  */

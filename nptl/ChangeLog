@@ -1,3 +1,9 @@
+2004-04-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (SYSDEP_CANCEL_ERRNO,
+	SYSDEP_CANCEL_ERROR): Define.
+	(PSEUDO): Use it.
+
 2004-05-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Versions (libpthread): Remove __pthread_cleanup_upto@@GLIBC_PRIVATE.

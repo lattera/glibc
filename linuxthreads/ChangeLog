@@ -1,3 +1,27 @@
+2004-05-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* manager.c: Include not-cancel.h.
+	(__pthread_manager): Use read_not_cancel instead of __libc_read.
+	(pthread_start_thread, __pthread_manager_sighandler): Use
+	write_not_cancel instead of __libc_write.
+	(pthread_reap_children): Use waitpid_not_cancel instead of
+	__libc_waitpid.
+	* pthread.c: Include not-cancel.h.
+	(__pthread_initialize_minimal, __pthread_create_2_1,
+	pthread_onexit_process, __pthread_message): Use
+	write_not_cancel instead of __libc_write.
+	(__pthread_initialize_manager): Likewise.  Use close_not_cancel
+	instead of __libc_close.
+	(__pthread_reset_main_thread): Use close_not_cancel instead of
+	__libc_close.
+	* join.c: Include not-cancel.h.
+	(__pthread_do_exit, pthread_join, pthread_detach): Use
+	write_not_cancel instead of __libc_write.
+	* semaphore.c: Include not-cancel.h.
+	(__new_sem_post): Use write_not_cancel instead of __libc_write.
+	* specific.c: Include not-cancel.h.
+	(pthread_key_delete): Use write_not_cancel instead of __libc_write.
+
 2004-05-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Versions (libc): Add __on_exit and __libc_sigaction.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -19,9 +19,34 @@
 
 #include <sysdep.h>
 #include <features.h>
+#include <tls.h>
 
 ENTRY(__syscall_error)
-#ifdef _LIBC_REENTRANT
+#if RTLD_PRIVATE_ERRNO
+	/*
+	 * Note that the gp has to be set properly for this to work.
+	 * As long as all syscalls are in the same load unit
+	 * (executable or shared library) as this routine, we should
+	 * be fine.  Otherwise, we would have to first load the global
+	 * pointer register from __gp.
+	 */
+	addl	r2=@gprel(errno),gp
+	;;
+	st4	[r2]=r8
+	mov	r8=-1
+#elif defined USE___THREAD
+# ifndef NOT_IN_libc
+#  define SYSCALL_ERROR_ERRNO __libc_errno
+# else
+#  define SYSCALL_ERROR_ERRNO errno
+# endif
+	addl	r2=@ltoff(@tprel(SYSCALL_ERROR_ERRNO)), gp;;
+	ld8	r2=[r2]
+	mov	r3=r8;;
+	mov	r8=-1
+	add	r2=r2,r13;;
+	st4	[r2]=r3
+#elif defined _LIBC_REENTRANT
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(0)
 	alloc	r33=ar.pfs, 0, 4, 0, 0
 	mov	r32=rp

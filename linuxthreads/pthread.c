@@ -34,6 +34,7 @@
 #include <ldsodefs.h>
 #include <tls.h>
 #include <version.h>
+#include <not-cancel.h>
 
 /* Sanity check.  */
 #if !defined __SIGRTMIN || (__SIGRTMAX - __SIGRTMIN) < 3
@@ -328,8 +329,8 @@ __pthread_initialize_minimal(void)
 	{
 	  static const char msg[] = "\
 cannot allocate TLS data structures for initial thread\n";
-	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
-					    msg, sizeof msg - 1));
+	  TEMP_FAILURE_RETRY (write_not_cancel (STDERR_FILENO,
+						msg, sizeof msg - 1));
 	  abort ();
 	}
       const char *lossage = TLS_INIT_TP (tcbp, 0);
@@ -337,11 +338,11 @@ cannot allocate TLS data structures for initial thread\n";
 	{
 	  static const char msg[] = "cannot set up thread-local storage: ";
 	  const char nl = '\n';
-	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
-					    msg, sizeof msg - 1));
-	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO,
-					    lossage, strlen (lossage)));
-	  TEMP_FAILURE_RETRY (__libc_write (STDERR_FILENO, &nl, 1));
+	  TEMP_FAILURE_RETRY (write_not_cancel (STDERR_FILENO,
+						msg, sizeof msg - 1));
+	  TEMP_FAILURE_RETRY (write_not_cancel (STDERR_FILENO,
+						lossage, strlen (lossage)));
+	  TEMP_FAILURE_RETRY (write_not_cancel (STDERR_FILENO, &nl, 1));
 	}
 
       /* Though it was allocated with libc's malloc, that was done without
@@ -657,8 +658,8 @@ int __pthread_initialize_manager(void)
   tcbp = _dl_allocate_tls (NULL);
   if (tcbp == NULL) {
     free(__pthread_manager_thread_bos);
-    __libc_close(manager_pipe[0]);
-    __libc_close(manager_pipe[1]);
+    close_not_cancel(manager_pipe[0]);
+    close_not_cancel(manager_pipe[1]);
     return -1;
   }
 
@@ -787,8 +788,8 @@ int __pthread_initialize_manager(void)
     _dl_deallocate_tls (tcbp, true);
 #endif
     free(__pthread_manager_thread_bos);
-    __libc_close(manager_pipe[0]);
-    __libc_close(manager_pipe[1]);
+    close_not_cancel(manager_pipe[0]);
+    close_not_cancel(manager_pipe[1]);
     return -1;
   }
   mgr->p_tid = 2* PTHREAD_THREADS_MAX + 1;
@@ -803,8 +804,8 @@ int __pthread_initialize_manager(void)
     }
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
-  TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				  (char *) &request, sizeof(request)));
+  TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+				      (char *) &request, sizeof(request)));
   return 0;
 }
 
@@ -826,8 +827,8 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   request.req_args.create.arg = arg;
   sigprocmask(SIG_SETMASK, (const sigset_t *) NULL,
               &request.req_args.create.mask);
-  TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				  (char *) &request, sizeof(request)));
+  TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+				      (char *) &request, sizeof(request)));
   suspend(self);
   retval = THREAD_GETMEM(self, p_retcode);
   if (__builtin_expect (retval, 0) == 0)
@@ -1004,8 +1005,8 @@ static void pthread_onexit_process(int retcode, void *arg)
     request.req_thread = self;
     request.req_kind = REQ_PROCESS_EXIT;
     request.req_args.exit.code = retcode;
-    TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				    (char *) &request, sizeof(request)));
+    TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+					(char *) &request, sizeof(request)));
     suspend(self);
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
@@ -1127,8 +1128,8 @@ void __pthread_reset_main_thread(void)
     free(__pthread_manager_thread_bos);
     __pthread_manager_thread_bos = __pthread_manager_thread_tos = NULL;
     /* Close the two ends of the pipe */
-    __libc_close(__pthread_manager_request);
-    __libc_close(__pthread_manager_reader);
+    close_not_cancel(__pthread_manager_request);
+    close_not_cancel(__pthread_manager_reader);
     __pthread_manager_request = __pthread_manager_reader = -1;
   }
 
@@ -1399,7 +1400,7 @@ void __pthread_message(const char * fmt, ...)
   va_start(args, fmt);
   vsnprintf(buffer + 8, sizeof(buffer) - 8, fmt, args);
   va_end(args);
-  TEMP_FAILURE_RETRY(__libc_write(2, buffer, strlen(buffer)));
+  TEMP_FAILURE_RETRY(write_not_cancel(2, buffer, strlen(buffer)));
 }
 
 #endif

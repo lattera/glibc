@@ -22,7 +22,7 @@
 #include "spinlock.h"
 #include "restart.h"
 #include <bits/libc-lock.h>
-
+#include <not-cancel.h>
 
 /* Table of keys. */
 
@@ -120,8 +120,8 @@ int pthread_key_delete(pthread_key_t key)
       request.req_args.for_each.arg = &args;
       request.req_args.for_each.fn = pthread_key_delete_helper;
 
-      TEMP_FAILURE_RETRY(__libc_write(__pthread_manager_request,
-				      (char *) &request, sizeof(request)));
+      TEMP_FAILURE_RETRY(write_not_cancel(__pthread_manager_request,
+					  (char *) &request, sizeof(request)));
       suspend(self);
     }
 
