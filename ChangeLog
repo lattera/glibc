@@ -1,5 +1,27 @@
 1999-06-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/vax/bcopy.s: Remove advertising clause of copyright.
+	* sysdeps/vax/bzero.s: Likewise.
+	* sysdeps/vax/ffs.s: Likewise.
+	* sysdeps/vax/memchr.s: Likewise.
+	* sysdeps/vax/memcmp.s: Likewise.
+	* sysdeps/vax/memmove.s: Likewise.
+	* sysdeps/vax/memset.s: Likewise.
+	* sysdeps/vax/strcat.s: Likewise.
+	* sysdeps/vax/strchr.s: Likewise.
+	* sysdeps/vax/strcmp.s: Likewise.
+	* sysdeps/vax/strcpy.s: Likewise.
+	* sysdeps/vax/strcspn.s: Likewise.
+	* sysdeps/vax/strlen.s: Likewise.
+	* sysdeps/vax/strncat.s: Likewise.
+	* sysdeps/vax/strncmp.s: Likewise.
+	* sysdeps/vax/strncpy.s: Likewise.
+	* sysdeps/vax/strpbrk.s: Likewise.
+	* sysdeps/vax/strrchr.s: Likewise.
+	* sysdeps/vax/strsep.s: Likewise.
+	* sysdeps/vax/strspn.s: Likewise.
+	* sysdeps/vax/strstr.s: Likewise.
+
 	* libio/iofopncook.c: Adjust for renaming of structure elements.
 	* libio/libio.h: Define cookie functions with all the names.
 
