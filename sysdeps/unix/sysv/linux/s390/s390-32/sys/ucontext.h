@@ -39,7 +39,8 @@ typedef unsigned long greg_t;
    that has the same size as s390_regs. */
 #define NGREG 36
 #define NUM_FPRS 16
-typedef greg_t gregset_t[NGREG];
+/* Must match kernels psw_t alignment */
+typedef greg_t gregset_t[NGREG] __attribute__ ((aligned(8)));
 
 typedef union
 {
