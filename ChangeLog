@@ -1,3 +1,23 @@
+2004-09-23  Andreas Jaeger  <aj@suse.de>
+
+	* locale/weight.h (findidx): Remove static, it's not supported
+	anymore with GCC 4.0 in a block scope.
+	* locale/weightwc.h (findidx): Likewise.
+	* posix/regcomp.c (seek_collating_symbol_entry): Likewise.
+	(lookup_collation_sequence_value): Likewise.
+	(build_range_exp): Likewise.
+	(build_collating_symbol): Likewise.
+	* iconv/iconvconfig.c (write_output): Likewise.
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela_relative): Remove
+	static, add always_inline attribute.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Make static dependend
+	on !RESOLVE so that it's not defined in local scope.
+
 2004-09-23  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep.h (INTERNAL_SYSCALL_NCS): Define.
