@@ -39,7 +39,7 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
-generated	= librtld.so
+generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 
@@ -52,14 +52,19 @@ endif
 include ../Rules
 
 
+# Command to link into a larger single relocatable object.
+reloc-link = $(LINK.o) -nostdlib -nostartfiles -r -o $@
+
+$(objpfx)dl-allobjs.so: $(rtld-routines:%=$(objpfx)%.so)
+	$(reloc-link) $^
+
 # Link together the dynamic linker into a single relocatable object.
 # We use this to produce both the ABI-compliant and Linux-compatible
 # dynamic linker shared objects below.
-$(objpfx)librtld.so: $(rtld-routines:%=$(objpfx)%.so) \
+$(objpfx)librtld.so: $(objpfx)dl-allobjs.so \
 		     $(patsubst %,$(common-objpfx)lib%_pic.a,\
 				elf c $(LDLIBS-c.so:-l%=%))
-	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-		  '-Wl,-(' $^ -lgcc '-Wl,-)'
+	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so: $(objpfx)librtld.so
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)

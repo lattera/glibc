@@ -1,5 +1,20 @@
 Sat May  4 05:44:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* locale/setlocale.c (_nl_C_name): Variable removed.
+	* locale/C_name.c: New file.
+	(_nl_C_name): Put it here instead.
+	* locale/Makefile (aux): Add C_name.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (open): Don't pass io port in
+	auth_user_authenticate rpc.
+	(open): Avoid using strtol in digit conversion for "fd/N" magic.
+	(_dl_sysdep_start): Likewise for memobj name in magic switches.
+
+	* elf/Makefile (reloc-link): New variable.
+	(dl-allobjs.so): New target, link together $(rtld-routines).
+	(librtld.so): Depend on that instead of the rtld components.
+	(generated): Add dl-allobjs.so.
+
 	* hurd/hurd-raise.c (_hurd_raise_signal): Pass sigcode in msg_sig_post
 	rpc.
 

@@ -30,7 +30,7 @@ distribute	= localeinfo.h categories.def \
 		  locales.h locfile.h stringtrans.h
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo
 categories	= ctype messages monetary numeric time collate
-aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc
+aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
 others		= localedef locale
 install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \

@@ -102,9 +102,6 @@ void (*const _nl_category_postload[]) (void) =
   };
 
 
-/* Name of our standard locale.  */
-const char _nl_C_name[] = "C";
-
 /* Name of current locale for each individual category.
    Each is malloc'd unless it is nl_C_name.  */
 static const char *_nl_current_names[] =
@@ -261,7 +258,7 @@ setlocale (int category, const char *locale)
   if (__argz_append (&locale_path, &locale_path_len,
 		     LOCALE_PATH, sizeof (LOCALE_PATH)) != 0)
     return NULL;
-  
+
   if (category == LC_ALL)
     {
       /* The user wants to set all categories.  The desired locales
@@ -274,7 +271,7 @@ setlocale (int category, const char *locale)
       /* Set all name pointers to the argument name.  */
       for (category = 0; category < LC_ALL; ++category)
 	newnames[category] = (char *) locale;
-      
+
       if (strchr (locale, ';') != NULL)
 	{
 	  /* This is a composite name.  Make a copy and split it up.  */
@@ -329,7 +326,7 @@ setlocale (int category, const char *locale)
 		int save_errno;
 	      abort_composite:
 		save_errno = errno;
-		
+
 		while (++category < LC_ALL)
 		  if (_nl_current[category] != NULL)
 		    _nl_free_locale (newdata[category]);

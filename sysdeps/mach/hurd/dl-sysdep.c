@@ -33,6 +33,7 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/auth.h>
 #include <hurd/term.h>
 #include <stdarg.h>
+#include <ctype.h>
 
 #include "dl-machine.h"
 
@@ -139,7 +140,9 @@ unfmh();			/* XXX */
 	    if (! memobjname)
 	      _dl_sysdep_fatal ("Bogus library spec: ", p, "\n", NULL);
 	    *memobjname++ = '\0';
-	    memobj = (mach_port_t) atoi (memobjname);
+	    memobj = 0;
+	    while (*memobjname != '\0')
+	      memobj = (memobj * 10) + (*memobjname++ - '0');
 
 	    /* Add a user reference on the memory object port, so we will
 	       still have one after _dl_map_object_from_fd calls our
@@ -307,7 +310,6 @@ open (const char *file_name, int mode, ...)
 	    if (! err)
 	      err = __auth_user_authenticate
 		(_dl_hurd_data->portarray[INIT_PORT_AUTH],
-		 fileport,
 		 ref, MACH_MSG_TYPE_MAKE_SEND,
 		 &newpt);
 	    __mach_port_destroy (__mach_task_self (), ref);
@@ -361,17 +363,19 @@ open (const char *file_name, int mode, ...)
 	      break;
 
 	    case 'f':
-	      if (retryname[1] == 'd' && retryname[2] == '/')
+	      if (retryname[1] == 'd' && retryname[2] == '/' &&
+		  isdigit (retryname[3]))
 		{
-		  int fd;
-		  char *end;
-		  err = 0;
-		  fd = (int) strtol (retryname, &end, 10);
-		  if (end == NULL || err || /* Malformed number.  */
-		      /* Check for excess text after the number.  A slash
-			 is valid; it ends the component.  Anything else
-			 does not name a numeric file descriptor.  */
-		      (*end != '/' && *end != '\0'))
+		  /* We can't use strtol for the decoding here
+		     because it brings in hairy locale bloat.  */
+		  char *p;
+		  int fd = 0;
+		  for (p = &retryname[3]; isdigit (*p); ++p)
+		    fd = (fd * 10) + (*p - '0');
+		  /* Check for excess text after the number.  A slash is
+		     valid; it ends the component.  Anything else does not
+		     name a numeric file descriptor.  */
+		  if (*p != '/' && *p != '\0')
 		    return __hurd_fail (ENOENT);
 		  if (fd < 0 || fd >= _dl_hurd_data->dtablesize ||
 		      _dl_hurd_data->dtable[fd] == MACH_PORT_NULL)
@@ -380,7 +384,7 @@ open (const char *file_name, int mode, ...)
 		       of ENOENT.  */
 		    return __hurd_fail (EBADF);
 		  fileport = _dl_hurd_data->dtable[fd];
-		  if (*end == '\0')
+		  if (*p == '\0')
 		    {
 		      /* This descriptor is the file port we want.  */
 		      dealloc_dir = 0;
@@ -391,7 +395,7 @@ open (const char *file_name, int mode, ...)
 		      /* Do a normal retry on the remaining components.  */
 		      startdir = fileport;
 		      dealloc_dir = 1;
-		      file_name = end + 1; /* Skip the slash.  */
+		      file_name = p + 1; /* Skip the slash.  */
 		      break;
 		    }
 		}
@@ -448,7 +452,6 @@ open (const char *file_name, int mode, ...)
 			    if (! err)
 			      err = __auth_user_authenticate
 				(_dl_hurd_data->portarray[INIT_PORT_AUTH],
-				 unauth,
 				 ref, MACH_MSG_TYPE_MAKE_SEND,
 				 result);
 			    __mach_port_deallocate (__mach_task_self (),
