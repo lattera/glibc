@@ -187,10 +187,8 @@ EOF
 	else
 		IBM_ARCH=powerpc
 	fi
-	if grep bos410 /usr/include/stdio.h >/dev/null 2>&1; then
-		IBM_REV=4.1
-	elif grep bos411 /usr/include/stdio.h >/dev/null 2>&1; then
-		IBM_REV=4.1.1
+	if [ -x /usr/bin/oslevel ] ; then
+		IBM_REV=`/usr/bin/oslevel`
 	else
 		IBM_REV=4.${UNAME_RELEASE}
 	fi
@@ -422,6 +420,10 @@ esac
 #echo "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" 1>&2
 
 cat >dummy.c <<EOF
+#ifdef _SEQUENT_
+# include <sys/types.h>
+# include <sys/utsname.h>
+#endif
 main ()
 {
 #if defined (sony)
@@ -485,7 +487,18 @@ main ()
 #endif
 
 #if defined (_SEQUENT_)
-  printf ("i386-sequent-ptx\n"); exit (0);
+    struct utsname un;
+
+    uname(&un);
+
+    if (strncmp(un.version, "V2", 2) == 0) {
+	printf ("i386-sequent-ptx2\n"); exit (0);
+    }
+    if (strncmp(un.version, "V1", 2) == 0) { /* XXX is V1 correct? */
+	printf ("i386-sequent-ptx1\n"); exit (0);
+    }
+    printf ("i386-sequent-ptx\n"); exit (0);
+
 #endif
 
 #if defined (vax)
