@@ -1,5 +1,8 @@
 2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ioctl.S: Sign-extend
+	with a single instruction.
+
 	* sysdeps/mips/dl-machine.h (ELF_MIPS_GNU_GOT1_MASK): Define
 	properly for n64.
 	(elf_machine_runtime_setup): Cast link_map pointer to Elf Addr

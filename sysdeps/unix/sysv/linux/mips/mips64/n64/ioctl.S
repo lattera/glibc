@@ -26,8 +26,7 @@
 	.text
 ENTRY (__ioctl)
 	li v0, __NR_ioctl
-	dsll a1,a1,32
-	dsra a1,a1,32
+	sll a1,a1,0
 	syscall			/* Do the system call.  */
 	bne a3, zero, L(error)
 	ret
