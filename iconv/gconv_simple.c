@@ -489,12 +489,15 @@ internal_ucs4le_loop_unaligned (struct __gconv_step *step,
 # endif
 
   /* Determine the status.  */
-  if (*inptrp + 4 > inend)
+  if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp + 4 > outend)
-    result = __GCONV_FULL_OUTPUT;
-  else
+  else if (*inptrp + 4 > inend)
     result = __GCONV_INCOMPLETE_INPUT;
+  else
+    {
+      assert (*outptrp + 4 > outend);
+      result = __GCONV_FULL_OUTPUT;
+    }
 
   return result;
 }
@@ -609,10 +612,13 @@ ucs4le_internal_loop (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp + 4 > outend)
-    result = __GCONV_FULL_OUTPUT;
-  else
+  else if (*inptrp + 4 > inend)
     result = __GCONV_INCOMPLETE_INPUT;
+  else
+    {
+      assert (*outptrp + 4 > outend);
+      result = __GCONV_FULL_OUTPUT;
+    }
 
   return result;
 }
@@ -678,10 +684,13 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp + 4 > outend)
-    result = __GCONV_FULL_OUTPUT;
-  else
+  else if (*inptrp + 4 > inend)
     result = __GCONV_INCOMPLETE_INPUT;
+  else
+    {
+      assert (*outptrp + 4 > outend);
+      result = __GCONV_FULL_OUTPUT;
+    }
 
   return result;
 }

@@ -49,7 +49,8 @@
 	{								      \
 	  /* We have to find out which byte order the file is encoded in.  */ \
 	  if (inptr + 4 > inend)					      \
-	    return __GCONV_EMPTY_INPUT;					      \
+	    return (inptr == inend					      \
+		    ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);	      \
 									      \
 	  if (get32u (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \

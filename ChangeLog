@@ -1,5 +1,17 @@
 2002-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_simple.c (internal_ucs4le_loop_unaligned): Return
+	__GCONV_EMPTY_INPUT only if input is really empty.  Otherwise
+	__GCONV_INCOMPLETE_INPUT.
+	(ucs4le_internal_loop): Likewise.
+	(ucs4le_internal_loop_unaligned): Likewise.
+	* iconvdata/unicode.c (PREPARE_LOOP): Likewise.
+	* iconvdata/utf-16.c (PREPARE_LOOP): Likewise.
+	* iconvdata/utf-32.c (PREPARE_LOOP): Likewise.
+
+	* iconv/loop.c (LOOPFCT): First test for empty input then for full
+	output buffer.
+
 	* inet/getnameinfo.c: Use extend_alloca where appropriate.
 	* sysdeps/posix/getaddrinfo.c: Likewise.
 

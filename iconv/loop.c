@@ -282,6 +282,14 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
       /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
 	 compiler generating better code.  They will be optimized away
 	 since MIN_NEEDED_OUTPUT is always a constant.  */
+      if (MIN_NEEDED_INPUT > 1
+	  && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
+	{
+	  /* We don't have enough input for another complete input
+	     character.  */
+	  result = __GCONV_INCOMPLETE_INPUT;
+	  break;
+	}
       if ((MIN_NEEDED_OUTPUT != 1
 	   && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
 	  || (MIN_NEEDED_OUTPUT == 1
@@ -289,14 +297,6 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 	{
 	  /* Overflow in the output buffer.  */
 	  result = __GCONV_FULL_OUTPUT;
-	  break;
-	}
-      if (MIN_NEEDED_INPUT > 1
-	  && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
-	{
-	  /* We don't have enough input for another complete input
-	     character.  */
-	  result = __GCONV_INCOMPLETE_INPUT;
 	  break;
 	}
 

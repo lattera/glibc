@@ -270,7 +270,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   int i, herrno;						\
   size_t tmpbuflen;						\
   struct hostent th;						\
-  char *tmpbuf = NULL;							\
+  char *tmpbuf = NULL;						\
   tmpbuflen = 512;						\
   no_data = 0;							\
   do {								\
