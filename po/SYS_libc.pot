@@ -1,826 +1,1130 @@
+# GNU libc message catalog of translations
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Automatically generated; contact <bug-glibc@prep.ai.mit.edu>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: libc \n"
+"PO-Revision-Date: 1996-04-22  0:05\n"
+"Last-Translator: GNU libc maintainers <bug-glibc@prep.ai.mit.edu>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+#: sunrpc/rpc_main.c:80
+#, c-format
+msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:83
+#, c-format
+msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
+msgstr ""
+
+#: assert/assert.c:48
+#, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr ""
 
+#: assert/assert-perr.c:46
+#, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr ""
 
+#: stdio-common/psignal.c:48
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr ""
 
-msgid "block freed twice"
-msgstr ""
-
-msgid "bogus mcheck_status, library is buggy"
-msgstr ""
-
-msgid "memory clobbered before allocated block"
-msgstr ""
-
-msgid "memory clobbered past end of allocated block"
-msgstr ""
-
-msgid "memory is consistent, library is buggy"
-msgstr ""
-
-msgid "Error in unknown error system: "
-msgstr ""
-
-msgid "Unknown error "
-msgstr ""
-
+#: sunrpc/rpc_util.c:258
 #, c-format
-msgid "Unknown signal %d"
+msgid "%s, line %d: "
 msgstr ""
 
+#: posix/getopt.c:673
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
+#: posix/getopt.c:676
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
+#: posix/getopt.c:597
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
+#: posix/getopt.c:568
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
+#: posix/getopt.c:614
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
+#: posix/getopt.c:592
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
+#: posix/getopt.c:712
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
 
+#: sunrpc/rpc_main.c:146
+#, c-format
+msgid "%s: output would overwrite %s\n"
+msgstr ""
+
+#: sunrpc/rpc_main.c:152
+#, c-format
+msgid "%s: unable to open "
+msgstr ""
+
+#: posix/getopt.c:647
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
+#: posix/getopt.c:643
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""
 
-msgid "Invalid back reference"
-msgstr ""
-
-msgid "Invalid character class name"
-msgstr ""
-
-msgid "Invalid collation character"
-msgstr ""
-
-msgid "Invalid content of \\{\\}"
-msgstr ""
-
-msgid "Invalid preceding regular expression"
-msgstr ""
-
-msgid "Invalid range end"
-msgstr ""
-
-msgid "Invalid regular expression"
-msgstr ""
-
-msgid "Memory exhausted"
-msgstr ""
-
-msgid "No match"
-msgstr ""
-
-msgid "No previous regular expression"
-msgstr ""
-
-msgid "Premature end of regular expression"
-msgstr ""
-
-msgid "Regular expression too big"
-msgstr ""
-
-msgid "Success"
-msgstr ""
-
-msgid "Trailing backslash"
-msgstr ""
-
-msgid "Unmatched ( or \\("
-msgstr ""
-
-msgid "Unmatched ) or \\)"
-msgstr ""
-
-msgid "Unmatched [ or [^"
-msgstr ""
-
-msgid "Unmatched \\{"
-msgstr ""
-
-msgid "Unknown system error"
-msgstr ""
-
-msgid ".rhosts fstat failed"
-msgstr ""
-
-msgid ".rhosts lstat failed"
-msgstr ""
-
-msgid ".rhosts not regular file"
-msgstr ""
-
-msgid ".rhosts writeable by other than owner"
-msgstr ""
-
-msgid "Trying %s...\n"
-msgstr ""
-
-msgid "bad .rhosts owner"
-msgstr ""
-
-msgid "connect to address %s: "
-msgstr ""
-
-msgid "rcmd: select (setting up stderr): %s\n"
-msgstr ""
-
-msgid "rcmd: socket: All ports in use\n"
-msgstr ""
-
-msgid "rcmd: write (setting up stderr): %s\n"
-msgstr ""
-
-msgid "select: protocol failure in circuit setup\n"
-msgstr ""
-
-msgid "socket: protocol failure in circuit setup.\n"
-msgstr ""
-
-msgid "Host name lookup failure"
-msgstr ""
-
-msgid "No address associated with name"
-msgstr ""
-
-msgid "Resolver Error 0 (no error)"
-msgstr ""
-
-msgid "Resolver internal error"
-msgstr ""
-
-msgid "Unknown host"
-msgstr ""
-
-msgid "Unknown resolver error"
-msgstr ""
-
-msgid "Unknown server error"
-msgstr ""
-
-msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
-msgstr ""
-
-msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
-msgstr ""
-
-msgid "%s, line %d: "
-msgstr ""
-
-msgid "%s: output would overwrite %s\n"
-msgstr ""
-
-msgid "%s: unable to open "
-msgstr ""
-
+#: sunrpc/clnt_perr.c:125
+#, c-format
 msgid "(unknown authentication error - %d)"
 msgstr ""
 
+#: inet/rcmd.c:325
+msgid ".rhosts fstat failed"
+msgstr ""
+
+#: inet/rcmd.c:321
+msgid ".rhosts lstat failed"
+msgstr ""
+
+#: inet/rcmd.c:323
+msgid ".rhosts not regular file"
+msgstr ""
+
+#: inet/rcmd.c:329
+msgid ".rhosts writeable by other than owner"
+msgstr ""
+
+#: clnt_perr.c:133 sunrpc/clnt_perr.c:112
+#, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr ""
 
+#: sunrpc/clnt_perr.c:119
 msgid "; why = "
 msgstr ""
 
-msgid "Authentication OK"
-msgstr ""
-
-msgid "Broadcast select problem"
-msgstr ""
-
-msgid "Cannot create socket for broadcast rpc"
-msgstr ""
-
-msgid "Cannot receive reply to broadcast"
-msgstr ""
-
-msgid "Cannot register service"
-msgstr ""
-
-msgid "Cannot send broadcast packet"
-msgstr ""
-
-msgid "Cannot set socket option SO_BROADCAST"
-msgstr ""
-
-msgid "Client credential too weak"
-msgstr ""
-
-msgid "Error %d"
-msgstr ""
-
-msgid "Failed (unspecified error)"
-msgstr ""
-
-msgid "Invalid client credential"
-msgstr ""
-
-msgid "Invalid client verifier"
-msgstr ""
-
-msgid "Invalid server verifier"
-msgstr ""
-
-msgid "RPC: (unknown error code)"
-msgstr ""
-
-msgid "RPC: Authentication error"
-msgstr ""
-
-msgid "RPC: Can't decode result"
-msgstr ""
-
-msgid "RPC: Can't encode arguments"
-msgstr ""
-
-msgid "RPC: Failed (unspecified error)"
-msgstr ""
-
-msgid "RPC: Incompatible versions of RPC"
-msgstr ""
-
-msgid "RPC: Port mapper failure"
-msgstr ""
-
-msgid "RPC: Procedure unavailable"
-msgstr ""
-
-msgid "RPC: Program not registered"
-msgstr ""
-
-msgid "RPC: Program unavailable"
-msgstr ""
-
-msgid "RPC: Program/version mismatch"
-msgstr ""
-
-msgid "RPC: Remote system error"
-msgstr ""
-
-msgid "RPC: Server can't decode arguments"
-msgstr ""
-
-msgid "RPC: Success"
-msgstr ""
-
-msgid "RPC: Timed out"
-msgstr ""
-
-msgid "RPC: Unable to receive"
-msgstr ""
-
-msgid "RPC: Unable to send"
-msgstr ""
-
-msgid "RPC: Unknown host"
-msgstr ""
-
-msgid "RPC: Unknown protocol"
-msgstr ""
-
-msgid "Server rejected credential"
-msgstr ""
-
-msgid "Server rejected verifier"
-msgstr ""
-
-msgid "array declaration expected"
-msgstr ""
-
-msgid "auth_none.c - Fatal marshalling problem"
-msgstr ""
-
-msgid "broadcast: ioctl (get interface configuration)"
-msgstr ""
-
-msgid "broadcast: ioctl (get interface flags)"
-msgstr ""
-
-msgid "cache_set: victim not found"
-msgstr ""
-
-msgid "can't reassign procedure number %d\n"
-msgstr ""
-
-msgid "clnt_raw.c - Fatal header serialization error."
-msgstr ""
-
-msgid "constant or identifier expected"
-msgstr ""
-
-msgid "couldn't create an rpc server\n"
-msgstr ""
-
-msgid "couldn't register prog %d vers %d\n"
-msgstr ""
-
-msgid "definition keyword expected"
-msgstr ""
-
-msgid "enablecache: cache already enabled"
-msgstr ""
-
-msgid "enablecache: could not allocate cache"
-msgstr ""
-
-msgid "enablecache: could not allocate cache data"
-msgstr ""
-
-msgid "enablecache: could not allocate cache fifo"
-msgstr ""
-
-msgid "expected '%s'"
-msgstr ""
-
-msgid "expected '%s' or '%s'"
-msgstr ""
-
-msgid "expected '%s', '%s' or '%s'"
-msgstr ""
-
-msgid "expected type specifier"
-msgstr ""
-
-msgid "get_myaddress: ioctl (get interface configuration)"
-msgstr ""
-
-msgid "illegal character in file: "
-msgstr ""
-
-msgid "illegal result type"
-msgstr ""
-
-msgid "never registered prog %d\n"
-msgstr ""
-
-msgid "no array-of-pointer declarations -- use typedef"
-msgstr ""
-
-msgid "preprocessor error"
-msgstr ""
-
-msgid "registerrpc: out of memory\n"
-msgstr ""
-
-msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr ""
-
-msgid "svctcp_.c - cannot getsockname or listen"
-msgstr ""
-
-msgid "svctcp_.c - udp socket creation problem"
-msgstr ""
-
-msgid "svctcp_create: out of memory\n"
-msgstr ""
-
-msgid "svcudp_create - cannot getsockname"
-msgstr ""
-
-msgid "svcudp_create: socket creation problem"
-msgstr ""
-
-msgid "too many files!\n"
-msgstr ""
-
-msgid "trouble replying to prog %d\n"
-msgstr ""
-
-msgid "unterminated string constant"
-msgstr ""
-
-msgid "usage: %s infile\n"
-msgstr ""
-
-msgid "variable-length array declaration expected"
-msgstr ""
-
-msgid "voids allowed only inside union and program definitions"
-msgstr ""
-
-msgid "Alarm clock"
-msgstr ""
-
-msgid "Broken pipe"
-msgstr ""
-
-msgid "Bus error"
-msgstr ""
-
-msgid "CPU time limit exceeded"
-msgstr ""
-
-msgid "Child exited"
-msgstr ""
-
-msgid "Continued"
-msgstr ""
-
-msgid "File size limit exceeded"
-msgstr ""
-
-msgid "Floating point exception"
-msgstr ""
-
-msgid "Hangup"
-msgstr ""
-
-msgid "I/O possible"
-msgstr ""
-
-msgid "IOT trap"
-msgstr ""
-
-msgid "Illegal Instruction"
-msgstr ""
-
-msgid "Interrupt"
-msgstr ""
-
-msgid "Killed"
-msgstr ""
-
-msgid "Power failure"
-msgstr ""
-
-msgid "Profiling timer expired"
-msgstr ""
-
-msgid "Quit"
-msgstr ""
-
-msgid "Segmentation fault"
-msgstr ""
-
-msgid "Stopped"
-msgstr ""
-
-msgid "Stopped (signal)"
-msgstr ""
-
-msgid "Stopped (tty input)"
-msgstr ""
-
-msgid "Stopped (tty output)"
-msgstr ""
-
-msgid "Terminated"
-msgstr ""
-
-msgid "Trace/breakpoint trap"
-msgstr ""
-
-msgid "Urgent I/O condition"
-msgstr ""
-
-msgid "User defined signal 1"
-msgstr ""
-
-msgid "User defined signal 2"
-msgstr ""
-
-msgid "Virtual timer expired"
-msgstr ""
-
-msgid "Window changed"
-msgstr ""
-
-msgid "unknown signal"
-msgstr ""
-
+#: sysdeps/mach/hurd/errlist.c:112
 msgid "?"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:58
 msgid "Address already in use"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:57
 msgid "Address family not supported by protocol family"
 msgstr ""
 
+#: i486-linux/siglist.c:22
+msgid "Alarm clock"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:17
 msgid "Argument list too long"
 msgstr ""
 
+#: sunrpc/clnt_perr.c:276
+msgid "Authentication OK"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:90
 msgid "Authentication error"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:24
 msgid "Bad address"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:19
 msgid "Bad file descriptor"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:25
 msgid "Block device required"
 msgstr ""
 
+#: sunrpc/pmap_rmt.c:336
+msgid "Broadcast select problem"
+msgstr ""
+
+#: i486-linux/siglist.c:21 sysdeps/mach/hurd/errlist.c:42
+msgid "Broken pipe"
+msgstr ""
+
+#: i486-linux/siglist.c:15
+msgid "Bus error"
+msgstr ""
+
+#: i486-linux/siglist.c:32
+msgid "CPU time limit exceeded"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:59
 msgid "Can't assign requested address"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:68
 msgid "Can't send after socket shutdown"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:22
 msgid "Cannot allocate memory"
 msgstr ""
 
+#: sunrpc/pmap_rmt.c:254
+msgid "Cannot create socket for broadcast rpc"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:348
+msgid "Cannot receive reply to broadcast"
+msgstr ""
+
+#: sunrpc/pmap_clnt.c:79
+msgid "Cannot register service"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:312
+msgid "Cannot send broadcast packet"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:260
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr ""
+
+#: i486-linux/siglist.c:25
+msgid "Child exited"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:286
+msgid "Client credential too weak"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:114
 msgid "Computer bought the farm"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:71
 msgid "Connection refused"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:64
 msgid "Connection reset by peer"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:70
 msgid "Connection timed out"
 msgstr ""
 
+#: i486-linux/siglist.c:26
+msgid "Continued"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:49
 msgid "Destination address required"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:26
 msgid "Device busy"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:16
 msgid "Device not configured"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:76
 msgid "Directory not empty"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:79
 msgid "Disc quota exceeded"
 msgstr ""
 
+#: sunrpc/clnt_perr.c:254
+#, c-format
+msgid "Error %d"
+msgstr ""
+
+#: string/../sysdeps/mach/_strerror.c:43
+msgid "Error in unknown error system: "
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:18
 msgid "Exec format error"
 msgstr ""
 
+#: sunrpc/clnt_perr.c:290
+msgid "Failed (unspecified error)"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:27
 msgid "File exists"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:73
 msgid "File name too long"
 msgstr ""
 
+#: i486-linux/siglist.c:33
+msgid "File size limit exceeded"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:37
 msgid "File too large"
 msgstr ""
 
+#: i486-linux/siglist.c:16
+msgid "Floating point exception"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:88
 msgid "Function not implemented"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:115
 msgid "Gratuitous error"
 msgstr ""
 
+#: i486-linux/siglist.c:9
+msgid "Hangup"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:74
 msgid "Host is down"
 msgstr ""
 
+#: resolv/herror.c:74
+msgid "Host name lookup failure"
+msgstr ""
+
+#: i486-linux/siglist.c:37
+msgid "I/O possible"
+msgstr ""
+
+#: i486-linux/siglist.c:14
+msgid "IOT trap"
+msgstr ""
+
+#: i486-linux/siglist.c:12
+msgid "Illegal Instruction"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:39
 msgid "Illegal seek"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:89
 msgid "Inappropriate file type or format"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:35
 msgid "Inappropriate ioctl for device"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:110
 msgid "Inappropriate operation for background process"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:15
 msgid "Input/output error"
 msgstr ""
 
+#: i486-linux/siglist.c:10
+msgid "Interrupt"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:14
 msgid "Interrupted system call"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:32
 msgid "Invalid argument"
 msgstr ""
 
+#: posix/regex.c:946
+msgid "Invalid back reference"
+msgstr ""
+
+#: posix/regex.c:944
+msgid "Invalid character class name"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:278
+msgid "Invalid client credential"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:282
+msgid "Invalid client verifier"
+msgstr ""
+
+#: posix/regex.c:943
+msgid "Invalid collation character"
+msgstr ""
+
+#: posix/regex.c:950
+msgid "Invalid content of \\{\\}"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:28
 msgid "Invalid cross-device link"
 msgstr ""
 
+#: posix/regex.c:953
+msgid "Invalid preceding regular expression"
+msgstr ""
+
+#: posix/regex.c:951
+msgid "Invalid range end"
+msgstr ""
+
+#: posix/regex.c:942
+msgid "Invalid regular expression"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:288
+msgid "Invalid server verifier"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:31
 msgid "Is a directory"
 msgstr ""
 
+#: i486-linux/siglist.c:17
+msgid "Killed"
+msgstr ""
+
+#: posix/regex.c:952
+msgid "Memory exhausted"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:50
 msgid "Message too long"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:91
 msgid "Need authenticator"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:62
 msgid "Network dropped connection on reset"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:60
 msgid "Network is down"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:61
 msgid "Network is unreachable"
 msgstr ""
 
+#: resolv/herror.c:76
+msgid "No address associated with name"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:65
 msgid "No buffer space available"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:20
 msgid "No child processes"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:87
 msgid "No locks available"
 msgstr ""
 
+#: posix/regex.c:941
+msgid "No match"
+msgstr ""
+
+#: posix/regex.c:5200
+msgid "No previous regular expression"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:75
 msgid "No route to host"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:38
 msgid "No space left on device"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:12
 msgid "No such file or directory"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:13
 msgid "No such process"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:30
 msgid "Not a directory"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:43
 msgid "Numerical argument out of domain"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:44
 msgid "Numerical result out of range"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:47
 msgid "Operation already in progress"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:11
 msgid "Operation not permitted"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:55
 msgid "Operation not supported"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:29
 msgid "Operation not supported by device"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:46
 msgid "Operation now in progress"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:23
 msgid "Permission denied"
 msgstr ""
 
+#: i486-linux/siglist.c:38
+msgid "Power failure"
+msgstr ""
+
+#: posix/regex.c:954
+msgid "Premature end of regular expression"
+msgstr ""
+
+#: i486-linux/siglist.c:35
+msgid "Profiling timer expired"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:56
 msgid "Protocol family not supported"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:52
 msgid "Protocol not available"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:53
 msgid "Protocol not supported"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:51
 msgid "Protocol wrong type for socket"
 msgstr ""
 
+#: i486-linux/siglist.c:11
+msgid "Quit"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:86
 msgid "RPC bad procedure for program"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:84
 msgid "RPC program not available"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:85
 msgid "RPC program version wrong"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:82
 msgid "RPC struct is bad"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:83
 msgid "RPC version wrong"
 msgstr ""
 
+#: sunrpc/clnt_perr.c:217
+msgid "RPC: (unknown error code)"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:179
+msgid "RPC: Authentication error"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:169
+msgid "RPC: Can't decode result"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:167
+msgid "RPC: Can't encode arguments"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:199
+msgid "RPC: Failed (unspecified error)"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:177
+msgid "RPC: Incompatible versions of RPC"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:195
+msgid "RPC: Port mapper failure"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:185
+msgid "RPC: Procedure unavailable"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:197
+msgid "RPC: Program not registered"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:181
+msgid "RPC: Program unavailable"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:183
+msgid "RPC: Program/version mismatch"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:189
+msgid "RPC: Remote system error"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:187
+msgid "RPC: Server can't decode arguments"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:165
+msgid "RPC: Success"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:175
+msgid "RPC: Timed out"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:173
+msgid "RPC: Unable to receive"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:171
+msgid "RPC: Unable to send"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:191
+msgid "RPC: Unknown host"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:193
+msgid "RPC: Unknown protocol"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:40
 msgid "Read-only file system"
 msgstr ""
 
+#: posix/regex.c:955
+msgid "Regular expression too big"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:92
 msgid "Reserved error 82"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:93
 msgid "Reserved error 83"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:94
 msgid "Reserved error 84"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:95
 msgid "Reserved error 85"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:96
 msgid "Reserved error 86"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:97
 msgid "Reserved error 87"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:98
 msgid "Reserved error 88"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:99
 msgid "Reserved error 89"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:100
 msgid "Reserved error 90"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:101
 msgid "Reserved error 91"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:102
 msgid "Reserved error 92"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:103
 msgid "Reserved error 93"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:104
 msgid "Reserved error 94"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:105
 msgid "Reserved error 95"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:106
 msgid "Reserved error 96"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:107
 msgid "Reserved error 97"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:108
 msgid "Reserved error 98"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:109
 msgid "Reserved error 99"
 msgstr ""
 
+#: resolv/herror.c:72
+msgid "Resolver Error 0 (no error)"
+msgstr ""
+
+#: resolv/herror.c:114
+msgid "Resolver internal error"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:21
 msgid "Resource deadlock avoided"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:45
 msgid "Resource temporarily unavailable"
 msgstr ""
 
+#: i486-linux/siglist.c:19
+msgid "Segmentation fault"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:280
+msgid "Server rejected credential"
+msgstr ""
+
+#: sunrpc/clnt_perr.c:284
+msgid "Server rejected verifier"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:66
 msgid "Socket is already connected"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:67
 msgid "Socket is not connected"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:48
 msgid "Socket operation on non-socket"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:54
 msgid "Socket type not supported"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:63
 msgid "Software caused connection abort"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:80
 msgid "Stale NFS file handle"
 msgstr ""
 
+#: i486-linux/siglist.c:28
+msgid "Stopped"
+msgstr ""
+
+#: i486-linux/siglist.c:27
+msgid "Stopped (signal)"
+msgstr ""
+
+#: i486-linux/siglist.c:29
+msgid "Stopped (tty input)"
+msgstr ""
+
+#: i486-linux/siglist.c:30
+msgid "Stopped (tty output)"
+msgstr ""
+
+#: posix/regex.c:940 sysdeps/mach/hurd/errlist.c:10
+msgid "Success"
+msgstr ""
+
+#: i486-linux/siglist.c:23
+msgid "Terminated"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:36
 msgid "Text file busy"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:81
 msgid "Too many levels of remote in path"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:72
 msgid "Too many levels of symbolic links"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:41
 msgid "Too many links"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:34
 msgid "Too many open files"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:33
 msgid "Too many open files in system"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:77
 msgid "Too many processes"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:69
 msgid "Too many references: can't splice"
 msgstr ""
 
+#: sysdeps/mach/hurd/errlist.c:78
 msgid "Too many users"
 msgstr ""
 
+#: i486-linux/siglist.c:13
+msgid "Trace/breakpoint trap"
+msgstr ""
+
+#: posix/regex.c:945
+msgid "Trailing backslash"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:111
 msgid "Translator died"
 msgstr ""
 
+#: inet/rcmd.c:118
+msgid "Trying %s...\n"
+msgstr ""
+
+#: ../sysdeps/mach/_strerror.c:58 string/../sysdeps/generic/_strerror.c:36
+msgid "Unknown error "
+msgstr ""
+
+#: resolv/herror.c:73
+msgid "Unknown host"
+msgstr ""
+
+#: resolv/herror.c:117
+msgid "Unknown resolver error"
+msgstr ""
+
+#: resolv/herror.c:75
+msgid "Unknown server error"
+msgstr ""
+
+#: string/strsignal.c:40
+#, c-format
+msgid "Unknown signal %d"
+msgstr ""
+
+#: misc/error.c:92
+msgid "Unknown system error"
+msgstr ""
+
+#: posix/regex.c:948
+msgid "Unmatched ( or \\("
+msgstr ""
+
+#: posix/regex.c:956
+msgid "Unmatched ) or \\)"
+msgstr ""
+
+#: posix/regex.c:947
+msgid "Unmatched [ or [^"
+msgstr ""
+
+#: posix/regex.c:949
+msgid "Unmatched \\{"
+msgstr ""
+
+#: i486-linux/siglist.c:31
+msgid "Urgent I/O condition"
+msgstr ""
+
+#: i486-linux/siglist.c:18
+msgid "User defined signal 1"
+msgstr ""
+
+#: i486-linux/siglist.c:20
+msgid "User defined signal 2"
+msgstr ""
+
+#: i486-linux/siglist.c:34
+msgid "Virtual timer expired"
+msgstr ""
+
+#: i486-linux/siglist.c:36
+msgid "Window changed"
+msgstr ""
+
+#: sysdeps/mach/hurd/errlist.c:113
 msgid "You really blew it this time"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:326
+msgid "array declaration expected"
+msgstr ""
+
+#: sunrpc/auth_unix.c:314
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr ""
+
+#: inet/rcmd.c:327
+msgid "bad .rhosts owner"
+msgstr ""
+
+#: malloc/mcheck.c:174
+msgid "block freed twice"
+msgstr ""
+
+#: malloc/mcheck.c:177
+msgid "bogus mcheck_status, library is buggy"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:177
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr ""
+
+#: sunrpc/pmap_rmt.c:184
+msgid "broadcast: ioctl (get interface flags)"
+msgstr ""
+
+#: sunrpc/svc_udp.c:398
+msgid "cache_set: victim not found"
+msgstr ""
+
+#: sunrpc/svc_simple.c:64
+#, c-format
+msgid "can't reassign procedure number %d\n"
+msgstr ""
+
+#: sunrpc/clnt_raw.c:106
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr ""
+
+#: inet/rcmd.c:112
+msgid "connect to address %s: "
+msgstr ""
+
+#: sunrpc/rpc_scan.c:109
+msgid "constant or identifier expected"
+msgstr ""
+
+#: sunrpc/svc_simple.c:70
+msgid "couldn't create an rpc server\n"
+msgstr ""
+
+#: sunrpc/svc_simple.c:77
+#, c-format
+msgid "couldn't register prog %d vers %d\n"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:77
+msgid "definition keyword expected"
+msgstr ""
+
+#: sunrpc/svc_udp.c:344
+msgid "enablecache: cache already enabled"
+msgstr ""
+
+#: sunrpc/svc_udp.c:349
+msgid "enablecache: could not allocate cache"
+msgstr ""
+
+#: sunrpc/svc_udp.c:356
+msgid "enablecache: could not allocate cache data"
+msgstr ""
+
+#: sunrpc/svc_udp.c:362
+msgid "enablecache: could not allocate cache fifo"
+msgstr ""
+
+#: sunrpc/rpc_util.c:300
+#, c-format
+msgid "expected '%s'"
+msgstr ""
+
+#: sunrpc/rpc_util.c:312
+#, c-format
+msgid "expected '%s' or '%s'"
+msgstr ""
+
+#: sunrpc/rpc_util.c:325
+#, c-format
+msgid "expected '%s', '%s' or '%s'"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:384
+msgid "expected type specifier"
+msgstr ""
+
+#: sunrpc/get_myaddr.c:73
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:281
+msgid "illegal character in file: "
+msgstr ""
+
+#: sunrpc/rpc_parse.c:146
+msgid "illegal result type"
+msgstr ""
+
+#: malloc/mcheck.c:168
+msgid "memory clobbered before allocated block"
+msgstr ""
+
+#: malloc/mcheck.c:171
+msgid "memory clobbered past end of allocated block"
+msgstr ""
+
+#: malloc/mcheck.c:165
+msgid "memory is consistent, library is buggy"
+msgstr ""
+
+#: sunrpc/svc_simple.c:140
+#, c-format
+msgid "never registered prog %d\n"
+msgstr ""
+
+#: rpc_parse.c:313 sunrpc/rpc_parse.c:305
+msgid "no array-of-pointer declarations -- use typedef"
+msgstr ""
+
+#: rpc_scan.c:464 sunrpc/rpc_scan.c:456
+msgid "preprocessor error"
+msgstr ""
+
+#: inet/rcmd.c:154
+msgid "rcmd: select (setting up stderr): %s\n"
+msgstr ""
+
+#: inet/rcmd.c:86
+msgid "rcmd: socket: All ports in use\n"
+msgstr ""
+
+#: inet/rcmd.c:141
+msgid "rcmd: write (setting up stderr): %s\n"
+msgstr ""
+
+#: sunrpc/svc_simple.c:83
+msgid "registerrpc: out of memory\n"
+msgstr ""
+
+#: inet/rcmd.c:158
+msgid "select: protocol failure in circuit setup\n"
+msgstr ""
+
+#: inet/rcmd.c:176
+msgid "socket: protocol failure in circuit setup.\n"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:199 svc_tcp.c:204
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:147
+msgid "svctcp_.c - cannot getsockname or listen"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:134
+msgid "svctcp_.c - udp socket creation problem"
+msgstr ""
+
+#: sunrpc/svc_tcp.c:154 svc_tcp.c:161
+msgid "svctcp_create: out of memory\n"
+msgstr ""
+
+#: sunrpc/svc_udp.c:119
+msgid "svcudp_create - cannot getsockname"
+msgstr ""
+
+#: sunrpc/svc_udp.c:107
+msgid "svcudp_create: socket creation problem"
+msgstr ""
+
+#: sunrpc/rpc_util.c:285
+msgid "too many files!\n"
+msgstr ""
+
+#: sunrpc/svc_simple.c:132
+#, c-format
+msgid "trouble replying to prog %d\n"
+msgstr ""
+
+#: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
+msgid "unknown signal"
+msgstr ""
+
+#: sunrpc/rpc_scan.c:319
+msgid "unterminated string constant"
+msgstr ""
+
+#: sunrpc/rpc_main.c:78
+#, c-format
+msgid "usage: %s infile\n"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:330
+msgid "variable-length array declaration expected"
+msgstr ""
+
+#: sunrpc/rpc_parse.c:370
+msgid "voids allowed only inside union and program definitions"
 msgstr ""

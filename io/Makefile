@@ -21,7 +21,7 @@
 #
 subdir	:= io
 
-headers := sys/stat.h statbuf.h \
+headers := sys/stat.h statbuf.h sys/statfs.h statfsbuf.h \
 	   fcntl.h sys/fcntl.h fcntlbits.h \
 	   poll.h sys/poll.h \
 	   utime.h ftw.h fts.h
@@ -31,6 +31,7 @@ routines :=							      \
 	mkfifo							      \
 	stat fstat lstat mknod					      \
 	xstat fxstat lxstat xmknod				      \
+	statfs fstatfs						      \
 	umask chmod fchmod mkdir				      \
 	open close read write lseek access euidaccess		      \
 	fcntl flock lockf					      \

@@ -1,3 +1,33 @@
+Tue Apr 23 15:56:56 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* config.h.in (HAVE_REGEX): New macro.
+
+	* sysdeps/unix/syscalls.list: Add statfs, fstatfs.
+	* io/Makefile (headers): Add sys/statfs.h, statfsbuf.h.
+	(routines): Add statfs, fstatfs.
+	* sysdeps/mach/hurd/statfs.c: New file.
+	* sysdeps/mach/hurd/fstatfs.c: New file.
+	* sysdeps/stub/fstatfs.c: New file.
+	* sysdeps/stub/statfs.c: New file.
+	* io/sys/statfs.h: New file.
+	* sysdeps/generic/statfsbuf.h: New file.
+	* sysdeps/unix/sysv/linux/statfsbuf.h: New file.
+
+Tue Apr 23 00:06:47 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* malloc/Makefile (gmalloc-routines): Add valloc back here.
+	(dist-routines): Remove it here.
+	* malloc/valloc.c [_MALLOC_INTERNAL && GMALLOC_INHIBIT_VALLOC]
+	(ELIDE_VALLOC): Define it.
+	[! ELIDE_VALLOC]: Make whole file conditional on this.
+	* malloc/malloc.h (valloc): Make decl conditional on
+	[!GMALLOC_INHIBIT_VALLOC] instead of [!emacs].
+
+Mon Apr 22 00:02:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* MakeTAGS: Include version.mk.
+	(po/SYS_libc.pot): Add missing / in sed s cmd.
+
 Sat Apr 20 18:13:00 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (no-whole-archive): Test $(have-no-whole-archive), not
