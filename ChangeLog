@@ -1,5 +1,8 @@
 2001-06-17  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/pthread/aio_misc.h (LIO_DSYNC): Define to LIO_NOP + 1,
+	not LIO_READ + 1 (which is the value of LIO_WRITE!).
+
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (restore, restore_rt):
 	Declare these without `static', to avoid warning that we haven't
 	defined them.

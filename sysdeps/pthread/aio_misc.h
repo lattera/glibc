@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 /* Extend the operation enum.  */
 enum
 {
-  LIO_DSYNC = LIO_READ + 1,
+  LIO_DSYNC = LIO_NOP + 1,
   LIO_SYNC,
   LIO_READ64 = LIO_READ | 128,
   LIO_WRITE64 = LIO_WRITE | 128
