@@ -1,5 +1,8 @@
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules [install-lib-non.a]: Find these things with $(objpfx)
+	instead of $(common-objpfx).
+
 	* Makeconfig (sysdep-configures): New variable.
 	(config.status): Depend on $(sysdep-configures).
 

@@ -92,7 +92,7 @@ sysdep-configures = $(foreach dir,$(config-sysdirs),\
 			      $(patsubst %.in,%,\
 					 $(firstword $(wildcard \
 					    $(dir)/configure \
-					    $(dir)/configure.in)))
+					    $(dir)/configure.in))))
 
 # Force the user to configure before making.
 $(common-objpfx)config.status: $(..)configure $(sysdep-configures)
