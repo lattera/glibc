@@ -294,7 +294,7 @@ if test "$INSTALL" = "${srcdir}/install-sh"; then
   INSTALL='$(..)./install-sh'
 fi
 AC_PROG_LN_S
-AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt)
+AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
 
 AC_CHECK_TOOL(CC, gcc)
 AC_CHECK_TOOL(AR, ar)

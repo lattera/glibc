@@ -1,3 +1,9 @@
+Wed May  8 12:08:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* configure.in (MSGFMT): Use : if none found.
+
+	* po/Makefile: Include ../Rules instead of ../Makerules.
+
 Tue May  7 23:18:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* po/Makefile: New file.

@@ -48,7 +48,7 @@ install-others = $(LINGUAS:%=$(mo-installed))
 distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo)
 
 
-include ../Makerules
+include ../Rules
 
 
 .SUFFIXES: .mo .po .pot
