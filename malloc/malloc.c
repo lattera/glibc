@@ -1649,6 +1649,9 @@ ptmalloc_init __MALLOC_P((void))
 
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
+#ifdef _LIBC
+  __libc_pagesize = __getpagesize();
+#endif
 #ifndef NO_THREADS
 #if defined _LIBC || defined MALLOC_HOOKS
   /* With some threads implementations, creating thread-specific data
@@ -1663,7 +1666,6 @@ ptmalloc_init __MALLOC_P((void))
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
-  __libc_pagesize = __getpagesize();
 #endif
   mutex_init(&main_arena.mutex);
   mutex_init(&list_lock);
@@ -1671,9 +1673,6 @@ ptmalloc_init __MALLOC_P((void))
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
 #else /* !defined NO_THREADS */
-#ifdef _LIBC
-  __libc_pagesize = __getpagesize();
-#endif
 #endif /* !defined NO_THREADS */
 #if defined _LIBC || defined MALLOC_HOOKS
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
