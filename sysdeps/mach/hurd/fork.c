@@ -596,6 +596,9 @@ __fork (void)
       err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
 					     &_hurd_orphaned));
 
+      /* Forking clears the trace flag.  */
+      _hurd_exec_flags &= ~EXEC_TRACED;
+
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
 

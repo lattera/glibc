@@ -221,6 +221,12 @@ extern int strlen (const char *);
 static int first_nonopt;
 static int last_nonopt;
 
+/* Bash 2.0 gives us an environment variable containing flags
+   indicating ARGV elements that should not be considered arguments.  */
+
+static const char *nonoption_flags;
+static int nonoption_flags_len;
+
 /* Exchange two adjacent subsequences of ARGV.
    One subsequence is elements [first_nonopt,last_nonopt)
    which contains all the non-options that have been skipped so far.
@@ -326,6 +332,21 @@ _getopt_initialize (optstring)
   else
     ordering = PERMUTE;
 
+  if (posixly_correct == NULL)
+    {
+      /* Bash 2.0 puts a special variable in the environment for each
+	 command it runs, specifying which ARGV elements are the results of
+	 file name wildcard expansion and therefore should not be
+	 considered as options.  */
+      char var[100];
+      sprintf (var, "_%d_GNU_nonoption_argv_flags_", getpid ());
+      nonoption_flags = getenv (var);
+      if (nonoption_flags == NULL)
+	nonoption_flags_len = 0;
+      else
+	nonoption_flags_len = strlen (nonoption_flags);
+    }
+
   return optstring;
 }
 
@@ -402,6 +423,13 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       optind = 1;		/* Don't scan ARGV[0], the program name.  */
     }
 
+  /* Test whether ARGV[optind] points to a non-option argument.
+     Either it does not have option syntax, or there is an environment flag
+     from the shell indicating it is not an option.  */
+#define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0'	      \
+		     || (optind < nonoption_flags_len			      \
+			 && nonoption_flags[optind] == '1'))
+
   if (nextchar == NULL || *nextchar == '\0')
     {
       /* Advance to the next ARGV-element.  */
@@ -419,8 +447,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	  /* Skip any additional non-options
 	     and extend the range of non-options previously skipped.  */
 
-	  while (optind < argc
-		 && (argv[optind][0] != '-' || argv[optind][1] == '\0'))
+	  while (optind < argc && NONOPTION_P)
 	    optind++;
 	  last_nonopt = optind;
 	}
@@ -458,7 +485,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       /* If we have come to a non-option and did not permute it,
 	 either stop the scan or describe it to the caller and pass it by.  */
 
-      if ((argv[optind][0] != '-' || argv[optind][1] == '\0'))
+      if (NONOPTION_P)
 	{
 	  if (ordering == REQUIRE_ORDER)
 	    return EOF;
