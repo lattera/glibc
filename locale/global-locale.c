@@ -58,6 +58,10 @@ __thread void *__libc_tsd_LOCALE = &_nl_global_locale;
 #else
 __libc_tsd_define (, LOCALE)
 /* This is a bad kludge presuming the variable name used by the macros.
-   Using typeof makes sure to barf if we do not match the macro definition.  */
+   Using typeof makes sure to barf if we do not match the macro definition.
+   This ifndef is a further bad kludge for Hurd, where there is an explicit
+   initialization.  */
+# ifndef _HURD_THREADVAR_H
 __typeof (__libc_tsd_LOCALE_data) __libc_tsd_LOCALE_data = &_nl_global_locale;
+# endif
 #endif

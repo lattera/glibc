@@ -26,6 +26,7 @@
 #include <set-hooks.h>
 #include "hurdstartup.h"
 #include "hurdmalloc.h"		/* XXX */
+#include "../locale/localeinfo.h"
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
@@ -145,6 +146,7 @@ init (int *data)
      for malloc et al, or so we can use malloc below for the real
      threadvars array.  */
   memset (threadvars, 0, sizeof threadvars);
+  threadvars[_HURD_THREADVAR_LOCALE] = (unsigned long int) &_nl_global_locale;
   __hurd_threadvar_stack_offset = (unsigned long int) threadvars;
 
   /* Since the cthreads initialization code uses malloc, and the
@@ -319,7 +321,7 @@ strong_alias (posixland_init, __libc_init_first);
 void
 _hurd_stack_setup (volatile int argc, ...)
 {
-  void doinit (int *data)
+  void doinit (intptr_t *data)
     {
       /* This function gets called with the argument data at TOS.  */
       void doinit1 (volatile int argc, ...)

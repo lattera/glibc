@@ -1,5 +1,14 @@
 2002-08-29  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup: doinit):
+	Change argument type from int to intptr_t.
+
+	* locale/global-locale.c (__libc_tsd_LOCALE_data): Conditionalize the
+	initializer on [! _HURD_THREADVAR_H] (bad kludge).
+	* sysdeps/mach/hurd/i386/init-first.c (init): Initialize
+	_HURD_THREADVAR_LOCALE slot to &_nl_global_locale.
+	* hurd/hurdsig.c (_hurdsig_init): Likewise.  Zero other slots.
+
 	* sysdeps/mach/_strerror.c (__strerror_r): Add libc_hidden_def.
 
 	* sysdeps/mach/hurd/pwrite64.c: No libc_hidden_def (__libc_pwrite64).

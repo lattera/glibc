@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,01
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,01,2002
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -31,6 +31,7 @@
 
 #include "hurdfault.h"
 #include "hurdmalloc.h"		/* XXX */
+#include "../locale/localeinfo.h"
 
 const char *_hurdsig_getenv (const char *);
 
@@ -1265,6 +1266,10 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 	malloc (__hurd_threadvar_max * sizeof (unsigned long int));
       if (__hurd_sigthread_variables == NULL)
 	__libc_fatal ("hurd: Can't allocate threadvars for signal thread\n");
+      memset (__hurd_sigthread_variables, 0,
+	      __hurd_threadvar_max * sizeof (unsigned long int));
+      __hurd_sigthread_variables[_HURD_THREADVAR_LOCALE]
+	= (unsigned long int) &_nl_global_locale;
 
       /* Reinitialize the MiG support routines so they will use a per-thread
 	 variable for the cached reply port.  */
