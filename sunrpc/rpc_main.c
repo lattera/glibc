@@ -1362,6 +1362,13 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
   cmd->Scflag = flag['C'];
   cmd->makefileflag = flag['M'];
 
+  if (mtflag || newstyle)
+    {
+      /* glibc doesn't support these flags.  */
+      f_print (stderr,
+	       _("This implementation doesn't support newstyle or MT-safe code!\n"));
+      return (0);
+    }
   if (tirpcflag)
     {
       pmflag = inetdflag ? 0 : 1;    /* pmflag or inetdflag is always TRUE */
