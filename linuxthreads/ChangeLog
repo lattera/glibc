@@ -1,3 +1,7 @@
+2004-04-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ia64/tls.h (INIT_SYSINFO): Cast dl_sysinfo to void*.
+
 2004-07-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/s390/pspinlock.c (__pthread_spin_lock,

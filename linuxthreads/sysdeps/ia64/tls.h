@@ -83,7 +83,7 @@ typedef struct
 
 #if defined NEED_DL_SYSINFO
 # define INIT_SYSINFO \
-  (((tcbhead_t *)__thread_self)->private = GLRO(dl_sysinfo))
+  (((tcbhead_t *) __thread_self)->private = (void *) GLRO(dl_sysinfo))
 #else
 # define INIT_SYSINFO 0
 #endif
