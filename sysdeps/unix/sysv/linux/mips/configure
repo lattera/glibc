@@ -56,4 +56,3 @@ if test $ac_verc_fail = yes; then
 *** the FAQ and INSTALL documents." 1>&2
 fi
 
-s%@AS@%$AS%g
