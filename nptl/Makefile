@@ -306,7 +306,8 @@ $(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
 generated += crti.S defs.h pt-initfini.s $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))
 
-before-compile = $(objpfx)banner.h
+$(objpfx)version.d: $(objpfx)banner.h
+$(objpfx)version.os: $(objpfx)banner.h
 $(objpfx)banner.h: Banner
 	sed 's/\(.*\)/"\1\\n"/' $< > $@
 generated += banner.h
