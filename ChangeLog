@@ -1,5 +1,15 @@
 2000-11-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/gconv-modules: Add CP950 alias.
+
+2000-11-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile: Allow ports to override
+	syscall-list.h goal.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: New file.
+
+2000-11-15  Ulrich Drepper  <drepper@redhat.com>
+
 	* intl/Makefile: tst-gettext2.sh does not need a third parameter.
 
 	* intl/tst-gettext2.sh: Copy locale data.  Adjust LOCPATH.  Verify
@@ -72,7 +82,6 @@
 	(_dl_string_platform): New.
 	(_DL_HWCAP_PLATFORM): New.
 	(_dl_platform_string): New.
-
 
 2000-11-14  Ulrich Drepper  <drepper@redhat.com>
 

@@ -934,6 +934,7 @@ alias	BIG-FIVE//		BIG5//
 alias	BIGFIVE//		BIG5//
 alias	BIG-5//			BIG5//
 alias	CN-BIG5//		BIG5//
+alias	CP950//			BIG5//
 module	BIG5//			INTERNAL		BIG5		1
 module	INTERNAL		BIG5//			BIG5		1
 

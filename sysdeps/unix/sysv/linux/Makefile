@@ -25,6 +25,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 
 install-others += $(inst_includedir)/bits/syscall.h
 
+ifndef no_syscall_list_h
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)-t
@@ -45,6 +46,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 					      $(@:.d=.h) $(@:.h=.d)),'
 	rm -f $(@:.h=.d)-t
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
+endif
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
 	$(make-target-directory)
