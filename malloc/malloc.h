@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,11 +55,36 @@
 # define __malloc_ptrdiff_t ptrdiff_t
 #endif
 
-#if defined __STDC__ || defined __cplusplus || defined __GNUC__
-# define __MALLOC_P(args)        args
-#else
-# define __MALLOC_P(args)        ()
-#endif
+#ifdef __GNUC__
+
+/* GCC can always grok prototypes.  For C++ programs we add throw()
+   to help it optimize the function calls.  But this works only with
+   gcc 2.8.x and egcs.  */
+# if defined __cplusplus && __GNUC_MINOR__ >= 8
+#  define __THROW	throw ()
+# else
+#  define __THROW
+# endif
+# define __MALLOC_P(args)	args __THROW
+/* This macro will be used for functions which might take C++ callback
+   functions.  */
+# define __MALLOC_PMT(args)	args
+
+#else	/* Not GCC.  */
+
+# if (defined __STDC__ && __STDC__) || defined __cplusplus
+
+#  define __MALLOC_P(args)	args
+#  define __MALLOC_PMT(args)	args
+
+# else	/* Not ANSI C or C++.  */
+
+#  define __MALLOC_P(args)	()	/* No prototypes.  */
+#  define __MALLOC_PMT(args)	()
+
+# endif	/* ANSI C or C++.  */
+
+#endif	/* GCC.  */
 
 #ifndef NULL
 # ifdef __cplusplus
@@ -114,7 +139,7 @@ extern __malloc_ptr_t  pvalloc __MALLOC_P ((size_t __size));
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
-extern __malloc_ptr_t (*__morecore) __MALLOC_P ((ptrdiff_t __size));
+extern __malloc_ptr_t (*__morecore) __MALLOC_PMT ((ptrdiff_t __size));
 
 /* Default value of `__morecore'.  */
 extern __malloc_ptr_t __default_morecore __MALLOC_P ((ptrdiff_t __size));
@@ -180,18 +205,18 @@ extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
 
 #if defined __GLIBC__ || defined MALLOC_HOOKS
 /* Hooks for debugging versions. */
-extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
-extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
+extern void (*__malloc_initialize_hook) __MALLOC_PMT ((void));
+extern void (*__free_hook) __MALLOC_PMT ((__malloc_ptr_t __ptr,
 					__const __malloc_ptr_t));
-extern __malloc_ptr_t (*__malloc_hook) __MALLOC_P ((size_t __size,
+extern __malloc_ptr_t (*__malloc_hook) __MALLOC_PMT ((size_t __size,
 						    __const __malloc_ptr_t));
-extern __malloc_ptr_t (*__realloc_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
+extern __malloc_ptr_t (*__realloc_hook) __MALLOC_PMT ((__malloc_ptr_t __ptr,
 						     size_t __size,
 						     __const __malloc_ptr_t));
-extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
+extern __malloc_ptr_t (*__memalign_hook) __MALLOC_PMT ((size_t __size,
 						      size_t __alignment,
 						      __const __malloc_ptr_t));
-extern void (*__after_morecore_hook) __MALLOC_P ((void));
+extern void (*__after_morecore_hook) __MALLOC_PMT ((void));
 
 /* Activate a standard set of debugging hooks. */
 extern void __malloc_check_init __MALLOC_P ((void));

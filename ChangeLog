@@ -1,3 +1,9 @@
+1999-05-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/malloc.h: Add __THROW for __MALLOC_P to synch with usage
+	of __P in the rest of glibc; define __MALLOC_PMT and use it.
+	Reported by Stephan Kulow <coolo@kde.org>.
+
 1999-05-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/alpha/fpu/bits/fenv.h: Pretty print.
