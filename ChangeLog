@@ -1,3 +1,10 @@
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
+	* test-skeleton.c (timeout_handler): Use WUNTRACED flag in waitpid.
+	Examine the child's status and print something different if it wasn't
+	just killed by our SIGKILL.
+	(main): In the child process call setpgid to put it in its own pgrp.
+
 2002-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): The return value
