@@ -1,5 +1,7 @@
 2001-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/lib_listio.c: Add a few asserts.
+
 	* elf/global.c: New file.
 	* elf/globalmod1.c: New file.
 	* elf/Makefile: Add rules to build and run global.
