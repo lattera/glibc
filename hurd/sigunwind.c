@@ -1,5 +1,5 @@
 /* longjmp cleanup function for unwinding past signal handlers.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -111,7 +111,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
       link = (void *) &scp[1];
       assert (! link->resource.next && ! link->resource.prevp);
       assert (link->thread.next == ss->active_resources);
-      assert (link->thread.prevp = &ss->active_resources);
+      assert (link->thread.prevp == &ss->active_resources);
       if (link->thread.next)
 	link->thread.next->thread.prevp = &link->thread.next;
       ss->active_resources = link;
