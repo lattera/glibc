@@ -54,7 +54,11 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 # define PAD(Padchar)							      \
   if (width > 0)							      \
     { ssize_t __res = __printf_pad (s, (Padchar), width);		      \
-      if (__res == -1) return -1;					      \
+      if (__res == -1)							      \
+	{								      \
+	  done = -1;							      \
+	  goto all_done;						      \
+	}								      \
       done += __res; }
 # endif
 #else
@@ -76,7 +80,11 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 #  define PAD(Padchar)							      \
   if (width > 0)							      \
     { ssize_t __res = __wprintf_pad (s, (Padchar), width);		      \
-      if (__res == -1) return -1;					      \
+      if (__res == -1)							      \
+	{								      \
+	  done = -1;							      \
+	  goto all_done;						      \
+	}								      \
       done += __res; }
 # endif
 #endif
@@ -151,7 +159,10 @@ extern void __funlockfile (FILE *);
     {									      \
       register const int outc = (Ch);					      \
       if (PUTC (outc, s) == EOF)					      \
-	return -1;							      \
+	{								      \
+	  done = -1;							      \
+	  goto all_done;						      \
+	}								      \
       else								      \
 	++done;								      \
     }									      \
@@ -161,7 +172,10 @@ extern void __funlockfile (FILE *);
   do									      \
     {									      \
       if ((size_t) PUT (s, (String), (Len)) != (size_t) (Len))		      \
-	return -1;							      \
+	{								      \
+	  done = -1;							      \
+	  goto all_done;						      \
+	}								      \
       done += (Len);							      \
     }									      \
   while (0)
@@ -763,8 +777,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  }								      \
 									      \
 	if (function_done < 0)						      \
-	  /* Error in print handler.  */				      \
-	  return -1;							      \
+	  {								      \
+	    /* Error in print handler.  */				      \
+	    done = -1;							      \
+	    goto all_done;						      \
+	  }								      \
 									      \
 	done += function_done;						      \
       }									      \
@@ -810,8 +827,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  }								      \
 									      \
 	if (function_done < 0)						      \
-	  /* Error in print handler.  */				      \
-	  return -1;							      \
+	  {								      \
+	    /* Error in print handler.  */				      \
+	    done = -1;							      \
+	    goto all_done;						      \
+	  }								      \
 									      \
 	done += function_done;						      \
       }									      \
@@ -897,8 +917,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
 	    len = __wcsrtombs (NULL, &s2, 0, &mbstate);			      \
 	    if (len == (size_t) -1)					      \
-	      /* Illegal wide-character string.  */			      \
-	      return -1;						      \
+	      {								      \
+	        /* Illegal wide-character string.  */			      \
+		done = -1;						      \
+		goto all_done;						      \
+	      }								      \
 									      \
 	    assert (__mbsinit (&mbstate));				      \
 	    s2 = (const wchar_t *) string;				      \
