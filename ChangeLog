@@ -1,3 +1,10 @@
+2002-11-18  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/arena.c
+	(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2): Do
+	nothing if not initialized.  Bug report from Marcus Brinkmann
+	<Marcus.Brinkmann@ruhr-uni-bochum.de>.
+
 2002-11-19  Roland McGrath  <roland@redhat.com>
 
 	* posix/Versions (libc: GLIBC_2.3.2): Add sched_getaffinity and
