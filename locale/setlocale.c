@@ -279,7 +279,7 @@ setlocale (int category, const char *locale)
 	  while ((cp = strchr (np, '=')) != NULL)
 	    {
 	      for (cnt = 0; cnt < LC_ALL; ++cnt)
-		if (cp - np == _nl_category_name_sizes[cnt]
+		if ((size_t) (cp - np) == _nl_category_name_sizes[cnt]
 		    && memcmp (np, _nl_category_names[cnt], cp - np) == 0)
 		  break;
 

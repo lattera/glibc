@@ -30,7 +30,6 @@ static mbstate_t internal;
 size_t
 mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
-  wchar_t to_wide;
   size_t used = 0;
 
   if (ps == NULL)

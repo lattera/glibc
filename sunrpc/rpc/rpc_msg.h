@@ -36,12 +36,6 @@
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
-#ifndef _RPC_RPC_MSG_H
-
-#define _RPC_RPC_MSG_H	1
-#include <features.h>
-
-
 #define RPC_MSG_VERSION		((u_long) 2)
 #define RPC_SERVICE_PORT	((u_short) 2048)
 

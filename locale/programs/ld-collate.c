@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -34,6 +34,7 @@ Boston, MA 02111-1307, USA.  */
 #include "locales.h"
 #include "simple-hash.h"
 #include "stringtrans.h"
+#include "strlen-hash.h"
 
 /* Uncomment the following line in the production version.  */
 /* #define NDEBUG 1 */
@@ -83,7 +84,7 @@ typedef struct element_t
 } element_t;
 
 
-/* The real definition of the struct for the LC_CTYPE locale.  */
+/* The real definition of the struct for the LC_COLLATE locale.  */
 struct locale_collate_t
 {
   /* Collate symbol table.  Simple mapping to number.  */
@@ -275,15 +276,13 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
   collate->undefined_len = 2;	/* For the name: 1 x wchar_t + L'\0'.  */
   for (cnt = 0; cnt < collate->nrules; ++cnt)
     collate->undefined_len += 1 + collate->undefined.ordering[cnt];
-
-  /* Collating symbols are not used anymore.  */
-  (void) delete_hash (&collate->symbols);
 }
 
 
 
 void
-collate_output (struct localedef_t *locale, const char *output_path)
+collate_output (struct localedef_t *locale, struct charset_t *charset,
+		const char *output_path)
 {
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
   u_int32_t table_size, table_best, level_best, sum_best;
@@ -296,10 +295,29 @@ collate_output (struct localedef_t *locale, const char *output_path)
   struct locale_file data;
   u_int32_t idx[nelems];
   struct obstack non_simple;
+  struct obstack string_pool;
   size_t cnt, entry_size;
   u_int32_t undefined_offset = UINT_MAX;
   u_int32_t *table, *extra, *table2, *extra2;
   size_t extra_len;
+  u_int32_t element_hash_tab_size;
+  u_int32_t *element_hash_tab;
+  u_int32_t *element_hash_tab_ob;
+  u_int32_t element_string_pool_size;
+  char *element_string_pool;
+  u_int32_t element_value_size;
+  wchar_t *element_value;
+  wchar_t *element_value_ob;
+  u_int32_t symbols_hash_tab_size;
+  u_int32_t *symbols_hash_tab;
+  u_int32_t *symbols_hash_tab_ob;
+  u_int32_t symbols_string_pool_size;
+  char *symbols_string_pool;
+  u_int32_t symbols_class_size;
+  u_int32_t *symbols_class;
+  u_int32_t *symbols_class_ob;
+  hash_table *hash_tab;
+  unsigned int dummy_weights[collate->nrules + 1];
 
   sum_best = UINT_MAX;
   table_best = 0xffff;
@@ -342,6 +360,7 @@ Computing table size for collation information might take a while..."),
   fputs (_(" done\n"), stderr);
 
   obstack_init (&non_simple);
+  obstack_init (&string_pool);
 
   data.magic = LIMAGIC (LC_COLLATE);
   data.n = nelems;
@@ -608,6 +627,258 @@ Computing table size for collation information might take a while..."),
   for (cnt = 0; cnt < extra_len / sizeof (u_int32_t); ++cnt)
     extra2[cnt] = SWAPU32 (extra2[cnt]);
 
+  /* We need a simple hashing table to get a collation-element->chars
+     mapping.  We again use internal hasing using a secondary hashing
+     function.
+
+     Each string has an associate hashing value V, computed by a
+     fixed function.  To locate the string we use open addressing with
+     double hashing.  The first index will be V % M, where M is the
+     size of the hashing table.  If no entry is found, iterating with
+     a second, independent hashing function takes place.  This second
+     value will be 1 + V % (M - 2).  The approximate number of probes
+     will be
+
+	  for unsuccessful search: (1 - N / M) ^ -1
+	  for successful search:   - (N / M) ^ -1 * ln (1 - N / M)
+
+     where N is the number of keys.
+
+     If we now choose M to be the next prime bigger than 4 / 3 * N,
+     we get the values 4 and 1.85 resp.  Because unsuccesful searches
+     are unlikely this is a good value.  Formulas: [Knuth, The Art of
+     Computer Programming, Volume 3, Sorting and Searching, 1973,
+     Addison Wesley]  */
+  if (collate->elements.filled == 0)
+    {
+      /* We don't need any element table since there are no collating
+	 elements.  */
+      element_hash_tab_size = 0;
+      element_hash_tab = NULL;
+      element_hash_tab_ob = NULL;
+      element_string_pool_size = 0;
+      element_string_pool = NULL;
+      element_value_size = 0;
+      element_value = NULL;
+      element_value_ob = NULL;
+    }
+  else
+    {
+      void *ptr;		/* Running pointer.  */
+      const char *key;		/* Key for current bucket.  */
+      size_t keylen;		/* Length of key data.  */
+      const element_t *data;	/* Data, i.e., the character sequence.  */
+
+      element_hash_tab_size = next_prime ((collate->elements.filled * 4) / 3);
+      if (element_hash_tab_size < 7)
+	/* We need a minimum to make the following code work.  */
+	element_hash_tab_size = 7;
+
+      element_hash_tab = obstack_alloc (&non_simple, (2 * element_hash_tab_size
+						      * sizeof (u_int32_t)));
+      memset (element_hash_tab, '\377', (2 * element_hash_tab_size
+					 * sizeof (u_int32_t)));
+
+      ptr = NULL;
+      while (iterate_table (&collate->elements, &ptr, (const void **) &key,
+			    &keylen, (void **) &data) == 0)
+	{
+	  size_t hash_val = hash_string (key, keylen);
+	  size_t idx = hash_val % element_hash_tab_size;
+
+	  if (element_hash_tab[2 * idx] != (~((u_int32_t) 0)))
+	    {
+	      /* We need the second hashing function.  */
+	      size_t c = 1 + (hash_val % (element_hash_tab_size - 2));
+
+	      do
+		if (idx >= element_hash_tab_size - c)
+		  idx -= element_hash_tab_size - c;
+		else
+		  idx += c;
+	      while (element_hash_tab[2 * idx] != (~((u_int32_t) 0)));
+	    }
+
+	  element_hash_tab[2 * idx] = obstack_object_size (&non_simple);
+	  element_hash_tab[2 * idx + 1] = (obstack_object_size (&string_pool)
+					   / sizeof (wchar_t));
+
+	  obstack_grow0 (&non_simple, key, keylen);
+	  obstack_grow (&string_pool, data->name,
+			(wcslen (data->name) + 1) * sizeof (wchar_t));
+	}
+
+      if (obstack_object_size (&non_simple) % 4 != 0)
+	obstack_blank (&non_simple,
+		       4 - (obstack_object_size (&non_simple) % 4));
+      element_string_pool_size = obstack_object_size (&non_simple);
+      element_string_pool = obstack_finish (&non_simple);
+
+      element_value_size = obstack_object_size (&string_pool);
+      element_value = obstack_finish (&string_pool);
+
+      /* Create the tables for the other byte order.  */
+      element_hash_tab_ob = obstack_alloc (&non_simple,
+					   (2 * element_hash_tab_size
+					    * sizeof (u_int32_t)));
+      for (cnt = 0; cnt < 2 * element_hash_tab_size; ++cnt)
+	element_hash_tab_ob[cnt] = SWAPU32 (element_hash_tab[cnt]);
+
+      element_value_ob = obstack_alloc (&string_pool, element_value_size);
+      if (sizeof (wchar_t) != 4)
+	{
+	  fputs ("sizeof (wchar_t) != 4 currently not handled", stderr);
+	  abort ();
+	}
+      for (cnt = 0; cnt < element_value_size / 4; ++cnt)
+	element_value_ob[cnt] = SWAPU32 (element_value[cnt]);
+    }
+
+  /* Store collation elements as map to collation class.  There are
+     three kinds of symbols:
+       - simple characters
+       - collation elements
+       - collation symbols
+     We need to make a table which lets the user to access the primary
+     weight based on the symbol string.  */
+  symbols_hash_tab_size = next_prime ((4 * (charset->char_table.filled
+					    + collate->elements.filled
+					    + collate->symbols.filled)) / 3);
+  symbols_hash_tab = obstack_alloc (&non_simple, (2 * symbols_hash_tab_size
+						  * sizeof (u_int32_t)));
+  memset (symbols_hash_tab, '\377', (2 * symbols_hash_tab_size
+				     * sizeof (u_int32_t)));
+
+  /* Now fill the array.  First the symbols from the character set,
+     then the collation elements and last the collation symbols.  */
+  hash_tab = &charset->char_table;
+  while (1)
+    {
+      void *ptr;	/* Running pointer.  */
+      const char *key;	/* Key for current bucket.  */
+      size_t keylen;	/* Length of key data.  */
+      void *data;	/* Data.  */
+
+      ptr = NULL;
+      while (iterate_table (hash_tab, &ptr, (const void **) &key,
+			    &keylen, (void **) &data) == 0)
+	{
+	  size_t hash_val;
+	  size_t idx;
+	  u_int32_t word;
+	  unsigned int *weights;
+
+	  if (hash_tab == &charset->char_table
+	      || hash_tab == &collate->elements)
+	    {
+	      element_t *lastp, *firstp;
+	      wchar_t dummy_name[2];
+	      const wchar_t *name;
+	      size_t name_len;
+
+	      if (hash_tab == &charset->char_table)
+		{
+		  dummy_name[0] = (wchar_t) ((unsigned long int) data);
+		  dummy_name[1] = L'\0';
+		  name = dummy_name;
+		  name_len = sizeof (wchar_t);
+		}
+	      else
+		{
+		  element_t *elemp = (element_t *) data;
+		  name = elemp->name;
+		  name_len = wcslen (name) * sizeof (wchar_t);
+		}
+
+	      /* First check whether this character is used at all.  */
+	      if (find_entry (&collate->result, name, name_len,
+			      (void *) &firstp) < 0)
+		/* The symbol is not directly mentioned in the collation.
+		   I.e., we use the value for UNDEFINED.  */
+		lastp = &collate->undefined;
+	      else
+		{
+		  /* The entry for the simple character is always found at
+		     the end.  */
+		  lastp = firstp;
+		  while (lastp->next != NULL && wcscmp (name, lastp->name))
+		    lastp = lastp->next;
+		}
+
+	      weights = lastp->ordering;
+	    }
+	  else
+	    {
+	      dummy_weights[0] = 1;
+	      dummy_weights[collate->nrules]
+		= (unsigned int) ((unsigned long int) data);
+
+	      weights = dummy_weights;
+	    }
+
+	  /* In LASTP->ordering we now have the collation class.
+	     Determine the place in the hashing table next.  */
+	  hash_val = hash_string (key, keylen);
+	  idx = hash_val % symbols_hash_tab_size;
+
+	  if (symbols_hash_tab[2 * idx] != (~((u_int32_t) 0)))
+	    {
+	      /* We need the second hashing function.  */
+	      size_t c = 1 + (hash_val % (symbols_hash_tab_size - 2));
+
+	      do
+		if (idx >= symbols_hash_tab_size - c)
+		  idx -= symbols_hash_tab_size - c;
+		else
+		  idx += c;
+	      while (symbols_hash_tab[2 * idx] != (~((u_int32_t) 0)));
+	    }
+
+	  symbols_hash_tab[2 * idx] = obstack_object_size (&string_pool);
+	  symbols_hash_tab[2 * idx + 1] = (obstack_object_size (&non_simple)
+					   / sizeof (u_int32_t));
+
+	  obstack_grow0 (&string_pool, key, keylen);
+	  /* Adding the first weight looks complicated.  We have to deal
+	     with the kind it is stored and with the fact that original
+	     form uses `unsigned int's while we need `u_int32_t' here.  */
+	  word = weights[0];
+	  obstack_grow (&non_simple, &word, sizeof (u_int32_t));
+	  for (cnt = 0; cnt < weights[0]; ++cnt)
+	    {
+	      word = weights[collate->nrules + cnt];
+	      obstack_grow (&non_simple, &word, sizeof (u_int32_t));
+	    }
+	}
+
+      if (hash_tab == &charset->char_table)
+	hash_tab = &collate->elements;
+      else if (hash_tab == &collate->elements)
+	hash_tab = &collate->symbols;
+      else
+	break;
+    }
+
+  /* Now we have the complete tables.  */
+  if (obstack_object_size (&string_pool) % 4 != 0)
+    obstack_blank (&non_simple, 4 - (obstack_object_size (&string_pool) % 4));
+  symbols_string_pool_size = obstack_object_size (&string_pool);
+  symbols_string_pool = obstack_finish (&string_pool);
+
+  symbols_class_size = obstack_object_size (&non_simple);
+  symbols_class = obstack_finish (&non_simple);
+
+  /* Generate tables with other byte order.  */
+  symbols_hash_tab_ob = obstack_alloc (&non_simple, (2 * symbols_hash_tab_size
+						     * sizeof (u_int32_t)));
+  for (cnt = 0; cnt < 2 * symbols_hash_tab_size; ++cnt)
+    symbols_hash_tab_ob[cnt] = SWAPU32 (symbols_hash_tab[cnt]);
+
+  symbols_class_ob = obstack_alloc (&non_simple, symbols_class_size);
+  for (cnt = 0; cnt < symbols_class_size / 4; ++cnt)
+    symbols_class_ob[cnt] = SWAPU32 (symbols_class[cnt]);
+
+
   /* Store table adresses and lengths.   */
 #if __BYTE_ORDER == __BIG_ENDIAN
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].iov_base = table;
@@ -642,12 +913,124 @@ Computing table size for collation information might take a while..."),
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].iov_base = &undefined_offset;
   iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED)].iov_len = sizeof (u_int32_t);
 
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_SIZE)].iov_base
+    = &element_hash_tab_size;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_SIZE)].iov_len
+    = sizeof (u_int32_t);
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EB)].iov_base
+    = element_hash_tab;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EB)].iov_len
+    = 2 * element_hash_tab_size * sizeof (u_int32_t);
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EL)].iov_base
+    = element_hash_tab_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EL)].iov_len
+    = 2 * element_hash_tab_size * sizeof (u_int32_t);
+#else
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EL)].iov_base
+    = element_hash_tab;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EL)].iov_len
+    = 2 * element_hash_tab_size * sizeof (u_int32_t);
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EB)].iov_base
+    = element_hash_tab_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_HASH_EB)].iov_len
+    = 2 * element_hash_tab_size * sizeof (u_int32_t);
+#endif
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_STR_POOL)].iov_base
+    = element_string_pool;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_STR_POOL)].iov_len
+    = element_string_pool_size;
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EB)].iov_base
+    = element_value;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EB)].iov_len
+    = element_value_size;
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EL)].iov_base
+    = element_value_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EL)].iov_len
+    = element_value_size;
+#else
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EL)].iov_base
+    = element_value;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EL)].iov_len
+    = element_value_size;
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EB)].iov_base
+    = element_value_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_VAL_EB)].iov_len
+    = element_value_size;
+#endif
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZE)].iov_base
+    = &symbols_hash_tab_size;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZE)].iov_len
+    = sizeof (u_int32_t);
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EB)].iov_base
+    = symbols_hash_tab;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EB)].iov_len
+    = 2 * symbols_hash_tab_size * sizeof (u_int32_t);
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EL)].iov_base
+    = symbols_hash_tab_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EL)].iov_len
+    = 2 * symbols_hash_tab_size * sizeof (u_int32_t);
+#else
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EL)].iov_base
+    = symbols_hash_tab;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EL)].iov_len
+    = 2 * symbols_hash_tab_size * sizeof (u_int32_t);
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EB)].iov_base
+    = symbols_hash_tab_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_EB)].iov_len
+    = 2 * symbols_hash_tab_size * sizeof (u_int32_t);
+#endif
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_STR_POOL)].iov_base
+    = symbols_string_pool;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_STR_POOL)].iov_len
+    = symbols_string_pool_size;
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EB)].iov_base
+    = symbols_class;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_ELEM_CLASS_EB)].iov_len
+    = symbols_class_size;
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EL)].iov_base
+    = symbols_class_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EL)].iov_len
+    = symbols_class_size;
+#else
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EL)].iov_base
+    = symbols_class;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EL)].iov_len
+    = symbols_class_size;
+
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EB)].iov_base
+    = symbols_class_ob;
+  iov[2 + _NL_ITEM_INDEX (_NL_COLLATE_SYMB_CLASS_EB)].iov_len
+    = symbols_class_size;
+#endif
+
   /* Update idx array.  */
   idx[0] = iov[0].iov_len + iov[1].iov_len;
   for (cnt = 1; cnt < nelems; ++cnt)
     idx[cnt] = idx[cnt - 1] + iov[1 + cnt].iov_len;
 
   write_locale_data (output_path, "LC_COLLATE", 2 + nelems, iov);
+
+  obstack_free (&non_simple, NULL);
+  obstack_free (&string_pool, NULL);
 }
 
 
@@ -729,7 +1112,7 @@ collate_element_from (struct linereader *lr, struct localedef_t *locale,
 
   if (elemp->name[0] == L'\0' || elemp->name[1] == L'\0')
     {
-      lr_error (lr, _("illegal colltion element"));
+      lr_error (lr, _("illegal collation element"));
       return;
     }
 
@@ -762,8 +1145,7 @@ collate_element_from (struct linereader *lr, struct localedef_t *locale,
 	    {
 	      if (set_entry (&collate->result, elemp->name, sizeof (wchar_t),
 			     elemp) < 0)
-		error (EXIT_FAILURE, 0,
-		       _("\
+		error (EXIT_FAILURE, 0, _("\
 error while inserting collation element into hash table"));
 	    }
 	  else
@@ -1019,7 +1401,7 @@ line before ellipsis does not contain definition for character constant"));
     }
 
   /* Now it's time to handle the ellipsis in the previous line.  We do
-     this only when the last line contained an definition for an
+     this only when the last line contained an definition for a
      character, the current line also defines an character, the
      character code for the later is bigger than the former.  */
   if (collate->was_ellipsis)

@@ -44,6 +44,7 @@ struct locale_data
   unsigned int nstrings;	/* Number of strings below.  */
   union locale_data_value
   {
+    const wchar_t *wstr;
     const char *string;
     unsigned int word;
   }
@@ -119,5 +120,11 @@ extern void _nl_free_locale (const struct locale_data *);
 /* Global variables for LC_COLLATE category data.  */
 extern const u_int32_t *__collate_table;
 extern const u_int32_t *__collate_extra;
+extern const u_int32_t *__collate_element_hash;
+extern const char *__collate_element_strings;
+extern const wchar_t *__collate_element_values;
+extern const u_int32_t *__collate_symbol_hash;
+extern const char *__collate_symbol_strings;
+extern const u_int32_t *__collate_symbol_classes;
 
 #endif	/* localeinfo.h */

@@ -122,7 +122,8 @@ void collate_startup (struct linereader *lr, struct localedef_t *locale,
 void collate_finish (struct localedef_t *locale,
 		     struct charset_t *charset);
 
-void collate_output (struct localedef_t *locale, const char *output_path);
+void collate_output (struct localedef_t *locale, struct charset_t *charset,
+		     const char *output_path);
 
 void collate_element_to (struct linereader *lr, struct localedef_t *locale,
 			 struct token *code, struct charset_t *charset);

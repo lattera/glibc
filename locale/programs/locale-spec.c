@@ -92,4 +92,37 @@ locale_special (const char *name, int show_category_name,
       putchar ('\n');
       return;
     }
+
+  if (strcmp (name, "collate-classes") == 0)
+    {
+      size_t nelem = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_SYMB_HASH_SIZE);
+      size_t cnt;
+      int first = 1;
+
+      if (show_category_name)
+	puts ("LC_COLLATE");
+      if (show_keyword_name)
+	fputs ("collate-classes=", stdout);
+
+      for (cnt = 0; cnt < nelem; ++cnt)
+	if (__collate_symbol_hash[2 * cnt] != 0xffffffff)
+	  {
+	    printf ("%s<%s>", first ? "" : ",",
+		    &__collate_symbol_strings[__collate_symbol_hash[2 * cnt]]);
+#if 1
+	    {
+	      size_t idx = __collate_symbol_hash[2 * cnt + 1];
+	      size_t cls;
+
+	      putchar ('=');
+	      for (cls = 0; cls < __collate_symbol_classes[idx]; ++cls)
+		printf ("%s%d", cls == 0 ? "" : ":",
+			__collate_symbol_classes[idx + 1 + cls]);
+	    }
+#endif
+	    first = 0;
+	  }
+      putchar ('\n');
+      return;
+    }
 }

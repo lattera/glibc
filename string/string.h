@@ -92,6 +92,7 @@ extern char *strdup __P ((__const char *__s));
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
+extern char *__strndup __P ((__const char *__string, size_t __n));
 extern char *strndup __P ((__const char *__string, size_t __n));
 
 #if defined (__USE_GNU) && defined (__GNUC__)

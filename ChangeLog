@@ -1,3 +1,67 @@
+Sun Jul 28 23:46:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/strftime.c (strftime: do_number): Initialize PRINTED to
+	MAXDIGITS in case P is null and so sprintf is never actually called.
+
+Mon Jul 29 02:46:23 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Add support for the to-be-written internationalized regexp.
+	This code must be able to use collation symbols and collation
+	equivalent classes.
+	* locale/C-collate.c (_nl_C_LC_COLLATE_symbol_hash,
+	_nl_C_LC_COLLATE_symbol_strings, _nl_C_LC_COLLATE_symbol_classes):
+	New global variables for collation classes.
+	* locale/categories.def: Add new descriptions for collation symbols
+	and collation classes.
+	* locale/langinfo.h: Add constants for collation symbols and
+	collation classes.
+	* locale/lc-collate.c: Add new global variables for collation symbols
+	and collation classes.
+	(_nl_postload_collate): Initialize new variables.
+	* locale/programs/ld-collate.c: Add code to emit tables for
+	collation symbols and collation classes.
+	* locale/programs/locales.h: Change prototype for `collate_output'.
+	* locale/programs/locfile.c (write_all_categories): Call
+	`collate_output' with new argument.
+	* locale/localeinfo.h: Add declaration for new global vars.
+	(union locale_data_value): New member wstr for `wchar_t' strings.
+	* locale/programs/locale-spec.c: Handle `collate-classes'
+	keyword and print information about available collation classes.
+	* locale/strlen-hash.h: New file.  Simple hashing function which
+	takes a string with known length.
+	* locale/Makefile (distribute): Add strlen-hash.h.
+	(locale-modules): New var.  Additional files for `locale' program.
+
+	* locale/C-ctype.c: Rewrite to avoid using string for giving values
+	which are of type `u_int32_t'.
+	Correct entry for EOF in toupper and tolower tables.
+
+	* locale/loadlocale.c (_nl_load_locale):  Add cast to prevent
+	warning.
+
+	* locale/programs/ld-ctype.c (ctype_output): Add code to make
+	sure that all tables in binary file are words aligned.
+
+	* locale/programs/locfile.c (write_locale_data): Correct handling
+	of LC_MESSAGES locale.  Create directory if necessary.
+
+	* locale/setlocale.c (setlocale): Add cast to avoid warning.
+
+	* string/string.h: Add prototype for `__strndup'.
+
+Wed Jul 24 19:10:00 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* wcsmbs/mbrtowc.c: Remove unused variable.
+
+Sun Jul 28 22:40:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION): Update to
+	2.0.10; some problems were reported with an earlier version, and this
+	one is known to work.
+
+	* sysdeps/generic/dl-sysdep.c (__libc_enable_secure): New variable.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+
 Sat Jul 27 13:02:09 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Ignore arguments when environment variable

@@ -32,7 +32,8 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 extern void _start (void);
-extern int _dl_secure;
+
+int __libc_enable_secure;
 
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,

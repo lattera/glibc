@@ -43,6 +43,8 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 
+int __libc_enable_secure;
+
 struct hurd_startup_data *_dl_hurd_data;
 
 unsigned int __hurd_threadvar_max = _HURD_THREADVAR_MAX;

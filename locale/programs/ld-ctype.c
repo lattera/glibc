@@ -387,8 +387,8 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 	  {
 #define CTYPE_DATA(name, base, len)					      \
 	  case _NL_ITEM_INDEX (name):					      \
-	    iov[2 + elem + offset].iov_base = base;			      \
-	    iov[2 + elem + offset].iov_len = len;			      \
+	    iov[2 + elem + offset].iov_base = (base);			      \
+	    iov[2 + elem + offset].iov_len = (len);			      \
 	    if (elem + 1 < nelems)					      \
 	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;     \
 	    break
@@ -443,9 +443,9 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 		  = strlen (ctype->classnames[cnt]) + 1;
 		total += iov[2 + elem + offset].iov_len;
 	      }
-	    iov[2 + elem + offset].iov_base = (void *) "";
-	    iov[2 + elem + offset].iov_len = 1;
-	    ++total;
+	    iov[2 + elem + offset].iov_base = (void *) "\0\0\0";
+	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
+	    total += 1 + (4 - ((total + 1) % 4));
 
 	    if (elem + 1 < nelems)
 	      idx[elem + 1] = idx[elem] + total;
@@ -462,9 +462,9 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 		  = strlen (ctype->mapnames[cnt]) + 1;
 		total += iov[2 + elem + offset].iov_len;
 	      }
-	    iov[2 + elem + offset].iov_base = (void *) "";
-	    iov[2 + elem + offset].iov_len = 1;
-	    ++total;
+	    iov[2 + elem + offset].iov_base = (void *) "\0\0\0";
+	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
+	    total += 1 + (4 - ((total + 1) % 4));
 
 	    if (elem + 1 < nelems)
 	      idx[elem + 1] = idx[elem] + total;
@@ -476,8 +476,21 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (u_int32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_CODESET_NAME,
-		      ctype->codeset_name, strlen (ctype->codeset_name) + 1);
+	  case _NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME):
+	    total = strlen (ctype->codeset_name) + 1;
+	    if (total % 4 == 0)
+	      iov[2 + elem + offset].iov_base = (char *) ctype->codeset_name;
+	    else
+	      {
+		iov[2 + elem + offset].iov_base = alloca ((total + 3) & ~3);
+		memcpy (iov[2 + elem + offset].iov_base, ctype->codeset_name,
+			total);
+		total = (total + 3) & ~3;
+	      }
+	    iov[2 + elem + offset].iov_len = total;
+	    if (elem + 1 < nelems)
+	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    break;
 
 	  default:
 	    assert (! "unknown CTYPE element");

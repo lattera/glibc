@@ -181,7 +181,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 
   if (W (filedata->nstrings) < _nl_category_num_items[category] ||
       (sizeof *filedata + W (filedata->nstrings) * sizeof (unsigned int)
-       >= st.st_size))
+       >= (unsigned int) st.st_size))
     {
       /* Insufficient data.  */
       errno = EINVAL;

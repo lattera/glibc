@@ -919,7 +919,7 @@ write_all_categories (struct localedef_t *locale, struct charset_t *charset,
 {
   /* Call all functions to write locale data.  */
   ctype_output (locale, charset, output_path);
-  collate_output (locale, output_path);
+  collate_output (locale, charset, output_path);
   monetary_output (locale, output_path);
   numeric_output (locale, output_path);
   time_output (locale, output_path);
@@ -943,13 +943,31 @@ write_locale_data (const char *output_path, const char *category,
      But for LC_MESSAGES we have to take care for the translation
      data.  This means we need to have a directory LC_MESSAGES in
      which we place the file under the name SYS_LC_MESSAGES.  */
+  sprintf (fname, "%s%s", output_path, category);
   if (strcmp (category, "LC_MESSAGES") == 0)
-    fd = -1;
-  else
     {
-      sprintf (fname, "%s%s", output_path, category);
-      fd = creat (fname, 0666);
+      struct stat st;
+
+      if (stat (fname, &st) < 0)
+	{
+	  if (mkdir (fname, 0777) < 0)
+	    fd = creat (fname, 0666);
+	  else
+	    {
+	      fd = -1;
+	      errno = EISDIR;
+	    }
+	}
+      else if (S_ISREG (st.st_mode))
+	fd = creat (fname, 0666);
+      else
+	{
+	  fd = -1;
+	  errno = EISDIR;
+	}
     }
+  else
+    fd = creat (fname, 0666);
 
   if (fd == -1)
     {
@@ -965,8 +983,9 @@ write_locale_data (const char *output_path, const char *category,
 
       if (fd == -1)
 	{
-	  error (0, save_err, _("cannot open output file for category `%s'"),
-		 category);
+	  error (0, save_err, _("\
+cannot open output file `%s' for category `%s'"),
+		 fname, category);
 	  return;
 	}
     }

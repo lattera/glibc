@@ -115,6 +115,18 @@ typedef enum
   _NL_COLLATE_UNDEFINED,
   _NL_COLLATE_EXTRA_EB,
   _NL_COLLATE_EXTRA_EL,
+  _NL_COLLATE_ELEM_HASH_SIZE,
+  _NL_COLLATE_ELEM_HASH_EB,
+  _NL_COLLATE_ELEM_HASH_EL,
+  _NL_COLLATE_ELEM_STR_POOL,
+  _NL_COLLATE_ELEM_VAL_EB,
+  _NL_COLLATE_ELEM_VAL_EL,
+  _NL_COLLATE_SYMB_HASH_SIZE,
+  _NL_COLLATE_SYMB_HASH_EB,
+  _NL_COLLATE_SYMB_HASH_EL,
+  _NL_COLLATE_SYMB_STR_POOL,
+  _NL_COLLATE_SYMB_CLASS_EB,
+  _NL_COLLATE_SYMB_CLASS_EL,
   _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.
@@ -181,7 +193,7 @@ typedef enum
    The string returned will not change until `setlocale' is called;
    it is usually in read-only memory and cannot be modified.  */
 
-extern char *nl_langinfo __P ((nl_item item));
+extern char *nl_langinfo __P ((nl_item __item));
 
 
 __END_DECLS
