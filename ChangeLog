@@ -1,3 +1,9 @@
+1999-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (my_strftime): Remove unneeded variable len.
+
+	* time/strptime.c: Undo last change.
+
 1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/Makefile (distribute): Add iso-639.def and iso-3166.def.

@@ -1202,7 +1202,6 @@ my_strftime (s, maxsize, format, tp ut_argument)
 		  /* The wide name is after the single byte name and
                      format.  */
 		  char *tcp = strchr (era->name_fmt, '\0') + 1;
-		  size_t len;
 		  subfmt = (wchar_t *) (strchr (tcp, '\0') + 1);
 		  subfmt = wcschr (subfmt, L'\0') + 1;
 # else
