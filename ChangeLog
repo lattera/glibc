@@ -1,3 +1,7 @@
+2003-12-21  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_exit): Define with attribute_hidden.
+
 2003-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (duplicate_node, duplicate_node_closure): Revert
