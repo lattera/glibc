@@ -1,1 +1,0 @@
-#define _UTSNAME_LENGTH 257
