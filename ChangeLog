@@ -2,6 +2,8 @@
 
 	* sysdeps/generic/usleep.c: Fix typo.
 
+	* sysdeps/generic/sys/ptrace.h: Remove K&R compatibility.
+
 	* sysdeps/unix/Makefile (param.h.dep): Filter out sys/param.h
 	itself.
 
