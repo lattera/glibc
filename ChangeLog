@@ -1,3 +1,9 @@
+2002-08-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/s_copysign.S: Fix algorithm.
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Add ulps for double tests.
+
 2002-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/Makefile (generated): Add errlist-compat.c.

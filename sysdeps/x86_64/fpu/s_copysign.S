@@ -27,10 +27,14 @@
 #endif
 
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(mask,@object)
-mask:
+	ASM_TYPE_DIRECTIVE(signmask,@object)
+signmask:
 	.byte 0, 0, 0, 0, 0, 0, 0, 0x80
-	ASM_SIZE_DIRECTIVE(mask)
+	.byte 0, 0, 0, 0, 0, 0, 0, 0
+othermask:
+	.byte 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
+	.byte 0, 0, 0, 0, 0, 0, 0, 0
+	ASM_SIZE_DIRECTIVE(othermask)
 
 #ifdef PIC
 #define MO(op) op##(%rip)
@@ -39,11 +43,10 @@ mask:
 #endif
 
 ENTRY(__copysign)
-	movlpd MO(mask),%xmm3
-	andps %xmm3,%xmm0
-	andnpd %xmm1,%xmm3
-	orpd %xmm3,%xmm0
-	retq
+	andpd MO(othermask),%xmm0
+	andpd MO(signmask),%xmm1
+	orpd %xmm1,%xmm0
+	ret
 END (__copysign)
 
 weak_alias (__copysign, copysign)
