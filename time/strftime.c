@@ -746,6 +746,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 	case L_('b'):
 	case L_('h'):		/* POSIX.2 extension.  */
+	  if (change_case)
+	    {
+	      to_uppcase = 1;
+	      to_lowcase = 0;
+	    }
 	  if (modifier != 0)
 	    goto bad_format;
 #if defined _NL_CURRENT || !HAVE_STRFTIME
