@@ -8,7 +8,7 @@
 	and __unused2 fields.
 	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h (shmid_ds)
 	[__WORDSIZE == 32]: Only PPC32 requires __unused1, __unused2,
-	__unused3,and __unused4 fields.
+	__unused3, and __unused4 fields.
 
 	* csu/gmon-start.c (__gmon_start__): Always use TEXT_START macro to
 	obtain lowest address for profiling in __monstartup call.
