@@ -42,7 +42,9 @@ typedef struct
   } __jmp_buf[1];
 #endif
 
+#if defined __USE_MISC || defined _ASM
 #define JB_SIZE		(4 * 15)
+#endif
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
