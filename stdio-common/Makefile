@@ -38,8 +38,6 @@ routines	:=							      \
 
 install-others = $(inst_includedir)/bits/stdio_lim.h
 
-generated = errlist-compat.c
-
 include ../Makeconfig
 
 aux	:= errlist siglist
