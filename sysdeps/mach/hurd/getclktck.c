@@ -1,5 +1,5 @@
 /* Return run-time value of CLK_TCK for Hurd.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,32 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <time.h>
-#include <unistd.h>
 
-#include <mach.h>
-#include <mach/host_info.h>
-
-#ifndef SYSTEM_CLK_TCK
-# define SYSTEM_CLK_TCK 100
-#endif
-
-/* Return frequency of times().  */
+/* Return frequency of `times'.
+   Since Mach reports CPU times in microseconds, we always use 1 million.  */
 int
 __getclktck ()
 {
-  struct host_sched_info hsi;
-  mach_msg_type_number_t count;
-  error_t err;
-
-  count = HOST_SCHED_INFO_COUNT;
-  err = __host_info (__mach_task_self (), HOST_SCHED_INFO,
-		     (host_info_t) &hsi, &count);
-  if (err)
-    return SYSTEM_CLK_TCK;
-
-  return hsi.min_quantum;
+  return 1000000;
 }
 
 /* Before glibc 2.2, the Hurd actually did this differently, so we

@@ -1,5 +1,10 @@
 2001-08-12  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/clock.c: New file.
+	* sysdeps/mach/hurd/times.c: New file.
+	* sysdeps/mach/hurd/getclktck.c (__getclktck): Always return 1000000.
+	* sysdeps/mach/hurd/init-posix.c: New file.
+
 	* hurd/hurdlookup.c (__hurd_file_name_lookup): Comment fix.
 
 2001-08-11  Roland McGrath  <roland@frob.com>
