@@ -1,3 +1,9 @@
+2003-04-18  Jes Sorensen  <jes@wildopensource.com>
+
+	* libc/sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Sync with Linux
+	2.5.67.
+	* libc/sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/cxa_finalize.c (__cxa_finalize): Don't call
