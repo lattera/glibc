@@ -403,7 +403,8 @@ _dl_start_user:\n\
 	# Pass our finalizer function to the user in $2 as per ELF ABI.\n\
 	la $2, _dl_fini\n\
 	# Jump to the user entry point.\n\
-	jr $17\n"\
+	move $25, $17\n\
+	jr $25\n"\
 _RTLD_EPILOGUE(ENTRY_POINT)\
 	"\n.previous"\
 );
