@@ -141,9 +141,9 @@ __monstartup (lowpc, highpc)
     }
   p->tos = (struct tostruct *)cp;
   cp += p->tossize;
-  p->kcount = (u_short *)cp;
+  p->kcount = (HISTCOUNTER *)cp;
   cp += p->kcountsize;
-  p->froms = (u_short *)cp;
+  p->froms = (ARCINDEX *)cp;
 
   p->tos[0].link = 0;
 
@@ -212,7 +212,8 @@ write_call_graph (fd)
   u_char tag = GMON_TAG_CG_ARC;
   struct gmon_cg_arc_record raw_arc[NARCS_PER_WRITEV]
     __attribute__ ((aligned (__alignof__ (char*))));
-  int from_index, to_index, from_len;
+  ARCINDEX from_index, to_index;
+  int from_len;
   u_long frompc;
   struct iovec iov[2 * NARCS_PER_WRITEV];
   int nfilled;
