@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ ENTRY(_dl_start_user)
 /*  the address of _start in r30, */
 	mr	r30,r3
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */
-	lwz	r28,_dl_loaded@got(r31)
+	lwz	r28,_rtld_global@got(r31)
 	lwz	r29,_dl_argc@got(r31)
 	lwz	r27,_dl_argv@got(r31)
 

@@ -993,6 +993,7 @@ EOF
   fi
   rm -f conftest*])
   AC_SUBST(libc_cv_asm_protected_directive)
+  AC_DEFINE(HAVE_PROTECTED)
 
   AC_CACHE_CHECK(for -z nodelete option,
 		 libc_cv_z_nodelete, [dnl

@@ -96,6 +96,9 @@
 /* Define if the linker supports the -z combreloc option.  */
 #undef	HAVE_Z_COMBRELOC
 
+/* Define if the assembler supported .protected.  */
+#undef	HAVE_PROTECTED
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */

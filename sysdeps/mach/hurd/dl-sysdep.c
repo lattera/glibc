@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,6 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable containts the lowest stack address ever used.  */
 void *__libc_stack_end;
-unsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
 
 
 struct hurd_startup_data *_dl_hurd_data;
@@ -236,7 +235,7 @@ unfmh();			/* XXX */
   __mach_init ();
 
   /* Initialize frequently used global variable.  */
-  _dl_pagesize = __getpagesize ();
+  GL(dl_pagesize) = __getpagesize ();
 
 fmh();				/* XXX */
 

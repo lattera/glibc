@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 #include "kernel-features.h"
 #include <libc-internal.h>
 
+#include <ldsodefs.h>
 #ifndef SHARED
-# include <ldsodefs.h>
 # include "dl-osinfo.h"
 #endif
 
@@ -41,7 +41,6 @@ static void init (int, char **, char **) __attribute__ ((unused));
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 
-extern fpu_control_t _dl_fpu_control;
 extern int _dl_fpu_control_set;
 
 /* Set nonzero if we have to be prepared for more then one libc being
@@ -78,7 +77,7 @@ init (int argc, char **argv, char **envp)
 	 kernel would use a different value.  (In a static program we
 	 don't have this information.)  */
 #ifdef SHARED
-      if (__fpu_control != _dl_fpu_control)
+      if (__fpu_control != GL(dl_fpu_control))
 #endif
 	__setfpucw (__fpu_control);
     }

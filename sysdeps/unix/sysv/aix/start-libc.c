@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the XCOFF startup code.  AIX version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,10 +73,6 @@ extern int __loadx (int flag, void *module, void *arg1, void *arg2,
 		    void *arg3);
 /* Needed by setenv */
 char  **__environ;
-
-/* Needed by dl-support.c */
-/* XXX stubbing out dl-support.c for now..
-   size_t _dl_pagesize = 0; */
 
 /*
    Find __rtinit symbol

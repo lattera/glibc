@@ -259,7 +259,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Only do lazy relocation if `LD_BIND_NOW' is not set.  */
-  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && _dl_lazy;
+  lazy = (mode & RTLD_BINDING_MASK) == RTLD_LAZY && GL(dl_lazy);
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
@@ -400,7 +400,7 @@ _dl_open (const char *file, int mode, const void *caller)
     _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
-  __libc_lock_lock_recursive (_dl_load_lock);
+  __libc_lock_lock_recursive (GL(dl_load_lock));
 
   args.file = file;
   args.mode = mode;
@@ -414,7 +414,7 @@ _dl_open (const char *file, int mode, const void *caller)
 #endif
 
   /* Release the lock.  */
-  __libc_lock_unlock_recursive (_dl_load_lock);
+  __libc_lock_unlock_recursive (GL(dl_load_lock));
 
   if (errstring)
     {

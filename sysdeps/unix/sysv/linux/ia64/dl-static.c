@@ -1,5 +1,5 @@
 /* Variable initialization.  IA-64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,6 @@
    02111-1307 USA.  */
 
 #include <ldsodefs.h>
-
-extern int _dl_clktck;
 
 #ifdef SHARED
 
@@ -44,8 +42,8 @@ __libc_lock_define_initialized_recursive (static, _dl_static_lock)
 
 static void *variables[] =
 {
-  &_dl_pagesize,
-  &_dl_clktck
+  &GL(dl_pagesize),
+  &GL(dl_clktck)
 };
 
 void

@@ -27,6 +27,7 @@
 #include <ldsodefs.h>
 #include <dl-machine.h>
 #include <bits/libc-lock.h>
+#include <dl-cache.h>
 #include <dl-librecon.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
@@ -118,6 +119,11 @@ struct r_search_path_elem *_dl_init_all_dirs;
 
 /* The object to be initialized first.  */
 struct link_map *_dl_initfirst;
+
+/* Descriptor to write debug messages to.  */
+int _dl_debug_fd = STDERR_FILENO;
+
+int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we

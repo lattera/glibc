@@ -328,8 +328,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
 	 common defn for _dl_rtld_map, which is incompatible with a
 	 weak decl in the same file.  */
+#  ifndef SHARED
       weak_extern (_dl_rtld_map);
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+#  endif
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
 # endif
 	*reloc_addr += map->l_addr;
     }

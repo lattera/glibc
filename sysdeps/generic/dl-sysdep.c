@@ -39,7 +39,6 @@
 #include <hp-timing.h>
 
 extern char **_environ;
-extern fpu_control_t _dl_fpu_control;
 extern void _end;
 
 /* Protect SUID program against misuse of file descriptors.  */
@@ -54,10 +53,6 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 /* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end;
 static ElfW(auxv_t) *_dl_auxv;
-//Xunsigned long int _dl_hwcap_mask = HWCAP_IMPORTANT;
-#if HP_TIMING_AVAIL
-hp_timing_t _dl_cpuclock_offset;
-#endif
 
 #ifndef DL_FIND_ARG_COMPONENTS
 # define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
@@ -95,7 +90,7 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
 #if HP_TIMING_AVAIL
-  HP_TIMING_NOW (_dl_cpuclock_offset);
+  HP_TIMING_NOW (GL(dl_cpuclock_offset));
 #endif
 
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
@@ -146,7 +141,7 @@ _dl_sysdep_start (void **start_argptr,
 	GL(dl_clktck) = av->a_un.a_val;
 	break;
       case AT_FPUCW:
-	_dl_fpu_control = av->a_un.a_val;
+	GL(dl_fpu_control) = av->a_un.a_val;
 	break;
       }
 

@@ -30,6 +30,7 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
+#include <ldsodefs.h>
 
 /* We need the global/static resolver state here.  */
 #include <resolv.h>
@@ -225,11 +226,6 @@ static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
 static void pthread_handle_sigdebug(int sig);
 
-/* CPU clock handling.  */
-#if HP_TIMING_AVAIL
-extern hp_timing_t _dl_cpuclock_offset;
-#endif
-
 /* Signal numbers used for the communication.
    In these variables we keep track of the used variables.  If the
    platform does not support any real-time signals we will define the
@@ -396,7 +392,7 @@ __pthread_initialize_minimal(void)
   INIT_THREAD_SELF(&__pthread_initial_thread, 0);
 #endif
 #if HP_TIMING_AVAIL
-  __pthread_initial_thread.p_cpuclock_offset = _dl_cpuclock_offset;
+  __pthread_initial_thread.p_cpuclock_offset = GL(dl_cpuclock_offset);
 #endif
 }
 

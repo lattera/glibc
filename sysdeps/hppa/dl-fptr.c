@@ -1,5 +1,5 @@
 /* Make dynamic PLABELs for function pointers. HPPA version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,10 +44,9 @@ static int __hppa_fptr_lock = 1;
 
 #ifdef MAP_ANON
 /* The fd is not examined when using MAP_ANON.  */
-#define ANONFD -1
+# define ANONFD -1
 #else
-extern int _dl_zerofd;
-#define ANONFD _dl_zerofd
+# define ANONFD GL(dl_zerofd)
 #endif
 
 struct hppa_fptr __boot_ldso_fptr[HPPA_BOOT_FPTR_SIZE];
@@ -95,10 +94,10 @@ __hppa_make_fptr (const struct link_map *sym_map, Elf32_Addr value,
 	{
 #ifndef MAP_ANON
 # define MAP_ANON 0
-	  if (_dl_zerofd == -1)
+	  if (GL(dl_zerofd) == -1)
 	    {
-	      _dl_zerofd = _dl_sysdep_open_zero_fill ();
-	      if (_dl_zerofd == -1)
+	      GL(dl_zerofd) = _dl_sysdep_open_zero_fill ();
+	      if (GL(dl_zerofd) == -1)
 		{
 		  __close (fd);
 		  _dl_signal_error (errno, NULL, NULL,
@@ -107,11 +106,11 @@ __hppa_make_fptr (const struct link_map *sym_map, Elf32_Addr value,
 	    }
 #endif
 
-	  __fptr_next = __mmap (0, _dl_pagesize, PROT_READ | PROT_WRITE,
+	  __fptr_next = __mmap (0, GL(dl_pagesize), PROT_READ | PROT_WRITE,
 				MAP_ANON | MAP_PRIVATE, ANONFD, 0);
 	  if (__fptr_next == MAP_FAILED)
 	    _dl_signal_error(errno, NULL, NULL, "cannot map page for fptr");
-	  __fptr_count = _dl_pagesize / sizeof (struct hppa_fptr);
+	  __fptr_count = GL(dl_pagesize) / sizeof (struct hppa_fptr);
 	}
       f = __fptr_next++;
       __fptr_count--;

@@ -1,5 +1,64 @@
 2002-01-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Add _dl_load_lock, _dl_lazy,
+	_dl_dynamic_weak, _dl_fpu_control, _dl_cpuclock_offset, and
+	_dl_debug_fd to rtld_global.
+	* elf/Versions: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/ia64/Versions: Likewise.
+	* sysdeps/unix/clock_gettime.c: Likewise.
+	* sysdeps/unix/clock_settime.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* sysdeps/sparc/Versions: Removed.
+	* sysdeps/i386/i686/Versions : Removed.
+	* sysdeps/x86_64/Versions: Removed.
+	* configure.in: Define HAVE_PROTECTED if .protected is available.
+	* config.h.in: Add entry for HAVE_PROTECTED.
+
+2002-01-31  Jakub Jelinek  <jakub@redhat.com.
+
+	* sysdeps/alpha/dl-machine.h: Move global variables for SHARED
+	code in struct _rtld_global.  Export this struct, remove all
+	exports for the signal variables.
+	* sysdeps/arm/dl-machine: Likewise.
+	* sysdeps/generic/dl-origin: Likewise.
+	* sysdeps/generic/dl-sysdep: Likewise.
+	* sysdeps/generic/dl-cache: Likewise.
+	* sysdeps/hppa/dl-fptr: Likewise.
+	* sysdeps/hppa/dl-machine: Likewise.
+	* sysdeps/cris/dl-machine: Likewise.
+	* sysdeps/i386/dl-machine: Likewise.
+	* sysdeps/ia64/dl-machine: Likewise.
+	* sysdeps/m68k/dl-machine: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep: Likewise.
+	* sysdeps/mips/mips64/dl-machine: Likewise.
+	* sysdeps/mips/dl-machine: Likewise.
+	* sysdeps/powerpc/elf/libc-start: Likewise.
+	* sysdeps/powerpc/dl-machine: Likewise.
+	* sysdeps/powerpc/dl-start: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine: Likewise.
+	* sysdeps/sh/dl-machine: Likewise.
+	* sysdeps/s390/s390-32/dl-machine: Likewise.
+	* sysdeps/s390/s390-64/dl-machine: Likewise.
+	* sysdeps/unix/sysv/aix/libc-start: Likewise.
+	* sysdeps/unix/sysv/aix/start-libc: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/dl-static: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getpagesize: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize: Likewise.
+	* sysdeps/x86_64/dl-machine: Likewise.
+
+2002-01-31  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/posix/readv.c: Don't use alloca if the memory requirements
 	are too high.
 

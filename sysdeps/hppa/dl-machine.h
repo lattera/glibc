@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PA-RISC version.
-   Copyright (C) 1995,1996,1997,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    Contributed by David Huggins-Daines <dhd@debian.org>
    This file is part of the GNU C Library.
 
@@ -227,12 +227,12 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 			    ((unsigned long) &_dl_runtime_resolve & ~3))->func;
 	  else
 	    {
-	      if (_dl_name_match_p (_dl_profile, l))
+	      if (_dl_name_match_p (GL(dl_profile), l))
 		{
 		  /* This is the object we are looking for.  Say that
 		     we really want profiling and the timers are
 		     started.  */
-		  _dl_profile_map = l;
+		  GL(dl_profile_map) = l;
 		}
 	      got[-2] =
 		(Elf32_Addr) ((struct hppa_fptr *)
@@ -362,8 +362,8 @@ asm (									\
 "	stw	%r24,-44(%sp)\n"					\
 									\
 ".Lnofix:\n"								\
-"	addil	LT'_dl_loaded,%r19\n"					\
-"	ldw	RT'_dl_loaded(%r1),%r26\n"				\
+"	addil	LT'_rtld_global,%r19\n"					\
+"	ldw	RT'_rtld_global(%r1),%r26\n"				\
 "	bl	set_dp, %r2\n"						\
 "	ldw	0(%r26),%r26\n"						\
 									\
@@ -488,13 +488,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   struct link_map *sym_map;
   Elf32_Addr value;
 
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined SHARED
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
      because rtld.c contains the common defn for _dl_rtld_map, which is
      incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
+  weak_extern (GL(dl_rtld_map));
 #endif
 
   /* RESOLVE_MAP will return a null value for undefined syms, and
@@ -527,7 +527,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
          other ones will have their values reset.  In particular,
          __fptr_next will be reset, sometimes causing endless loops in
          __hppa_make_fptr().  So don't do that. */
-      if (map == &_dl_rtld_map)
+      if (map == &GL(dl_rtld_map))
 	return;
 #endif
       /* .eh_frame can have unaligned relocs.  */
@@ -604,7 +604,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	break;
       if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	  || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-	      && __builtin_expect (_dl_verbose, 0)))
+	      && __builtin_expect (GL(dl_verbose), 0)))
 	{
 	  const char *strtab;
 

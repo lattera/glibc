@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,7 +105,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 	  /* Say that we really want profiling and the timers are started.  */
-	  _dl_profile_map = l;
+	  GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -388,7 +388,7 @@ _dl_start_user:\n\
 .L_dl_init:\n\
 	.long _dl_init@PLT\n\
 .L_dl_loaded:\n\
-	.long _dl_loaded@GOT\n\
+	.long _rtld_global@GOT\n\
 .L_dl_starting_up:\n\
 	.long _dl_starting_up@GOT\n\
 .L_dl_fini:\n\
@@ -411,14 +411,12 @@ _dl_start_user:\n\
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -481,7 +479,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   if (__builtin_expect (r_type == R_SH_RELATIVE, 0))
     {
 #ifndef RTLD_BOOTSTRAP
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.	 */
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.	 */
 #endif
 	{
 	  if (reloc->r_addend)
@@ -515,7 +513,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (sym->st_size < refsym->st_size && _dl_verbose))
+	      || (sym->st_size < erefsym->st_size && GL(dl_verbose)))
 	    {
 	      const char *strtab;
 
@@ -542,8 +540,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      compiling rtld.c (i.e. #ifdef RTLD_BOOTSTRAP) because
 	      rtld.c contains the common defn for _dl_rtld_map, which
 	      is incompatible with a weak decl in the same file.  */
-	    weak_extern (_dl_rtld_map);
-	    if (map == &_dl_rtld_map)
+# ifndef SHARED
+	    weak_extern (GL(dl_rtld_map));
+# endif
+	    if (map == &GL(dl_rtld_map))
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate it anew, possibly using a
 		 binding found in the user program or a loaded library

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -110,11 +110,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
-	      _dl_profile_map = l;
+	      GL(dl_profile_map) = l;
 	    }
 	}
 
@@ -328,7 +328,7 @@ $fixup_stack_ret:						\n\
 " RTLD_START_SPECIAL_INIT "					\n\
 	/* Call _dl_init(_dl_loaded, argc, argv, envp) to run	\n\
 	   initializers.  */					\n\
-	ldq	$16, _dl_loaded					\n\
+	ldq	$16, _rtld_global				\n\
 	ldq	$17, 0($sp)					\n\
 	lda	$18, 8($sp)					\n\
 	s8addq	$17, 8, $19					\n\
@@ -498,7 +498,7 @@ elf_machine_rela (struct link_map *map,
 {
   unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
-#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
      reference weak so static programs can still link.  This declaration
      cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
@@ -515,7 +515,7 @@ elf_machine_rela (struct link_map *map,
     {
 # if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
       /* Already done in dynamic linker.  */
-      if (map != &_dl_rtld_map)
+      if (map != &GL(dl_rtld_map))
 # endif
 	{
 	  /* XXX Make some timings.  Maybe it's preverable to test for

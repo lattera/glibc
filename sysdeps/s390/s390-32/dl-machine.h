@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  S390 Version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Carl Pederson & Martin Schwidefsky.
    This file is part of the GNU C Library.
 
@@ -112,10 +112,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
-	    _dl_profile_map = l;
+	    GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -287,7 +287,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	# Load the parameters:\n\
 	# (%r2, %r3, %r4, %r5) = (_dl_loaded, argc, argv, envp)\n\
-	l     %r2,_dl_loaded@GOT(%r12)\n\
+	l     %r2,_rtld_global@GOT(%r12)\n\
 	l     %r2,0(%r2)\n\
 	l     %r3,96(%r15)\n\
 	la    %r4,100(%r15)\n\
@@ -333,14 +333,12 @@ _dl_start_user:\n\
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -401,7 +399,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	    break;
 	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && __builtin_expect (_dl_verbose, 0)))
+		  && __builtin_expect (GL(dl_verbose), 0)))
 	    {
 	      const char *strtab;
 

@@ -29,10 +29,12 @@
 
 #include <elf.h>
 #include <dlfcn.h>
+#include <fpu_control.h>
 #include <sys/mman.h>
 #include <link.h>
 #include <dl-lookupcfg.h>
 #include <bits/libc-lock.h>
+#include <hp-timing.h>
 
 __BEGIN_DECLS
 
@@ -234,6 +236,15 @@ struct rtld_global
   /* Cached value of `getpagesize ()'.  */
   EXTERN size_t _dl_pagesize;
 
+  /* During the program run we must not modify the global data of
+     loaded shared object simultanously in two threads.  Therefore we
+     protect `_dl_open' and `_dl_close' in dl-close.c.
+
+     This must be a recursive lock since the initializer function of
+     the loaded object might as well require a call to this function.
+     At this time it is not anymore a problem to modify the tables.  */
+  __libc_lock_define_recursive (EXTERN, _dl_load_lock)
+
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
@@ -251,11 +262,26 @@ struct rtld_global
   /* If nonzero print warnings messages.  */
   EXTERN int _dl_verbose;
 
+  /* Do we do lazy relocations?  */
+  EXTERN int _dl_lazy;
+
   /* Nonzero if runtime lookups should not update the .got/.plt.  */
   EXTERN int _dl_bind_not;
 
+  /* Nonzero if references should be treated as weak during runtime
+     linking.  */
+  EXTERN int _dl_dynamic_weak;
+
+  /* Default floating-point control word.  */
+  EXTERN fpu_control_t _dl_fpu_control;
+
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
+
+  /* Start time on CPU clock.  */
+#if HP_TIMING_AVAIL
+  EXTERN hp_timing_t _dl_cpuclock_offset;
+#endif
 
   /* Name of the shared object to be profiled (if any).  */
   EXTERN const char *_dl_profile;
@@ -268,7 +294,7 @@ struct rtld_global
   /* Name of the object we want to trace the prelinking.  */
   EXTERN const char *_dl_trace_prelink;
 
-  /* Expect cache ID.  */
+  /* Expected cache ID.  */
   EXTERN int _dl_correct_cache_id;
 
   /* Counters for the number of relocations performed.  */
@@ -291,6 +317,9 @@ struct rtld_global
   EXTERN struct r_search_path_elem *_dl_all_dirs;
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
+  /* File descriptor to write debug messages to.  */
+  EXTERN int _dl_debug_fd;
+
   /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;
 #ifdef SHARED
@@ -303,21 +332,8 @@ extern struct rtld_global _rtld_global;
 extern int _dl_argc;
 extern char **_dl_argv;
 
-/* Do we do lazy relocations?  */
-extern int _dl_lazy;
-
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
-
-/* File descriptor to write debug messages to.  */
-extern int _dl_debug_fd;
-
-/* Nonzero if references should be treated as weak during runtime
-   linking.
-
-   XXX Once we can set the default for this variable to zero move it
-   into _rtld_global.  */
-extern int _dl_dynamic_weak;
 
 
 /* OS-dependent function to open the zero-fill device.  */

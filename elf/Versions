@@ -30,9 +30,6 @@ libc {
 
 ld {
   GLIBC_2.0 {
-    # global variables
-    _dl_debug_fd;
-
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure; _dl_catch_error; _dl_check_all_versions;
     _dl_debug_initialize; _dl_debug_state;
@@ -48,20 +45,17 @@ ld {
   }
   GLIBC_2.1 {
     # global variables
-    _dl_fpu_control; __libc_stack_end;
+    __libc_stack_end;
 
     # functions used in other libraries
     _dl_start_profile; _dl_mcount; _dl_unload_cache;
   }
   GLIBC_2.1.1 {
-    # global variables
-    _dl_lazy;
-
     # functions used in other libraries
     _dl_dst_count; _dl_dst_substitute;
   }
   GLIBC_2.2 {
-    _dl_init; _dl_load_lock; _dl_argv; _dl_check_map_versions;
+    _dl_init; _dl_argv; _dl_check_map_versions;
 
     # variables used elsewhere
     _dl_out_of_memory;

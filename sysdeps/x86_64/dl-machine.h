@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  x86-64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -96,10 +96,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
-	    _dl_profile_map = l;
+	    GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -250,7 +250,7 @@ _dl_start_user:\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
 	# _dl_loaded -> rdi\n\
-	movq _dl_loaded@GOTPCREL(%rip), %rdi\n\
+	movq _rtld_global@GOTPCREL(%rip), %rdi\n\
 	movq (%rdi), %rdi\n\
 	# env -> rcx\n\
 	leaq 16(%rsp,%rdx,8), %rcx\n\
@@ -283,14 +283,12 @@ _dl_start_user:\n\
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf64_Addr
@@ -334,8 +332,10 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
 	 common defn for _dl_rtld_map, which is incompatible with a
 	 weak decl in the same file.  */
-      weak_extern (_dl_rtld_map);
-      if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+#  ifndef SHARED
+      weak_extern (GL(dl_rtld_map));
+#  endif
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
 # endif
 	*reloc_addr = map->l_addr + reloc->r_addend;
     }
@@ -379,7 +379,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    break;
 	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && _dl_verbose))
+		  && GL(dl_verbose)))
 	    {
 	      const char *strtab;
 

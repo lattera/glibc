@@ -38,10 +38,6 @@ static size_t cachesize;
 /* 1 if cache_data + PTR points into the cache.  */
 #define _dl_cache_verify_ptr(ptr) (ptr < cache_data_size)
 
-/* This is the cache ID we expect.  Normally it is 3 for glibc linked
-   binaries.  */
-int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
-
 #define SEARCH_CACHE(cache) \
 /* We use binary search since the table is sorted in the cache file.	      \
    The first matching entry in the table is returned.			      \
@@ -111,12 +107,12 @@ do									      \
 		if (_dl_cache_check_flags (flags)			      \
 		    && _dl_cache_verify_ptr (lib->value))		      \
 		  {							      \
-		    if (best == NULL || flags == _dl_correct_cache_id)	      \
+		    if (best == NULL || flags == GL(dl_correct_cache_id))     \
 		      {							      \
 			HWCAP_CHECK;					      \
 			best = cache_data + lib->value;			      \
 									      \
-			if (flags == _dl_correct_cache_id)		      \
+			if (flags == GL(dl_correct_cache_id))		      \
 			  /* We've found an exact match for the shared	      \
 			     object and no general `ELF' release.  Stop	      \
 			     searching.  */				      \

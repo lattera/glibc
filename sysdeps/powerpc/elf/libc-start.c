@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,2000,01,02 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Call the initializer of the libc.  */
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ninitialize libc\n\n");
 #endif
   __libc_init_first (argc, argv, __environ);
@@ -107,14 +107,14 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (stinfo->init)
     stinfo->init (argc, argv, __environ, auxvec);
 
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 

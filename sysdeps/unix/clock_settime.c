@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <libc-internal.h>
+#include <ldsodefs.h>
 
 
 #if HP_TIMING_AVAIL
@@ -27,10 +28,6 @@
    because some jokers are already playing with processors with more
    than 4GHz.  */
 static hp_timing_t freq;
-
-
-/* We need the starting time for the process.  */
-extern hp_timing_t _dl_cpuclock_offset;
 
 
 /* This function is defined in the thread library.  */
@@ -92,7 +89,7 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
 	/* Determine the offset and use it as the new base value.  */
 	if (clock_id != CLOCK_THREAD_CPUTIME_ID
 	    || __pthread_clock_settime == NULL)
-	  _dl_cpuclock_offset = tsc - usertime;
+	  GL(dl_cpuclock_offset) = tsc - usertime;
 	else
 	  __pthread_clock_settime (tsc - usertime);
 

@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,10 +78,6 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
     }
   return result;
 }
-
-
-/* Descriptor to write debug messages to.  */
-int _dl_debug_fd = 2;
 
 
 /* Bare-bone printf implementation.  This function only knows about
@@ -250,7 +246,7 @@ _dl_debug_printf (const char *fmt, ...)
   va_list arg;
 
   va_start (arg, fmt);
-  _dl_debug_vdprintf (_dl_debug_fd, 1, fmt, arg);
+  _dl_debug_vdprintf (GL(dl_debug_fd), 1, fmt, arg);
   va_end (arg);
 }
 
@@ -262,7 +258,7 @@ _dl_debug_printf_c (const char *fmt, ...)
   va_list arg;
 
   va_start (arg, fmt);
-  _dl_debug_vdprintf (_dl_debug_fd, -1, fmt, arg);
+  _dl_debug_vdprintf (GL(dl_debug_fd), -1, fmt, arg);
   va_end (arg);
 }
 

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,8 @@
 
 /* Use a different preload file when running in 32-bit emulation mode
    on a 64-bit host.  */
-#define LD_SO_PRELOAD ((_dl_hwcap & HWCAP_SPARC_V9) ? "/etc/ld.so.preload32" \
+#define LD_SO_PRELOAD ((GL(dl_hwcap) & HWCAP_SPARC_V9) \
+		       ? "/etc/ld.so.preload32" \
 		       : "/etc/ld.so.preload")
 
 
@@ -57,13 +58,15 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
   else if (ehdr->e_machine == EM_SPARC32PLUS)
     {
       unsigned long *hwcap;
+#ifndef SHARED
       weak_extern (_dl_hwcap);
       weak_extern (_dl_hwcap_mask);
+#endif
 
-      hwcap = WEAKADDR(_dl_hwcap);
+      hwcap = WEAKADDR (GL(dl_hwcap));
       /* XXX The following is wrong!  Dave Miller rejected to implement it
 	 correctly.  If this causes problems shoot *him*!  */
-      return hwcap == NULL || (*hwcap & _dl_hwcap_mask & HWCAP_SPARC_V9);
+      return hwcap == NULL || (*hwcap & GL(dl_hwcap_mask) & HWCAP_SPARC_V9);
     }
   else
     return 0;
@@ -124,8 +127,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  rfunc = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
-	    _dl_profile_map = l;
+	  if (_dl_name_match_p (GL(dl_profile), l))
+	    GL(dl_profile_map) = l;
 	}
 
       /* The beginning of the PLT does:
@@ -154,8 +157,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  Elf32_Rela *relaend
 	    = (Elf32_Rela *) ((char *) rela
 			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
+#ifndef SHARED
 	  weak_extern (_dl_hwcap);
-	  hwcap = WEAKADDR(_dl_hwcap);
+#endif
+	  hwcap = WEAKADDR (GL(dl_hwcap));
 	  do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
 
 	  /* prelink must ensure there are no R_SPARC_NONE relocs left
@@ -307,9 +312,9 @@ _dl_start_user:
 	bne	23b
 	 add	%i1, 8, %i1
   /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */
-3:	sethi	%hi(_dl_loaded), %o0
+3:	sethi	%hi(_rtld_global), %o0
 	add	%sp, 23*4, %o2
-	orcc	%o0, %lo(_dl_loaded), %o0
+	orcc	%o0, %lo(_rtld_global), %o0
 	sll	%i5, 2, %o3
 	ld	[%l7+%o0], %o0
 	add	%o3, 4, %o3
@@ -337,15 +342,17 @@ sparc_fixup_plt (const Elf32_Rela *reloc, Elf32_Addr *reloc_addr,
      functionality on those cpu's that implement it.  */
   unsigned long *hwcap;
   int do_flush;
+# ifndef SHARED
   weak_extern (_dl_hwcap);
-  hwcap = WEAKADDR(_dl_hwcap);
+# endif
+  hwcap = WEAKADDR (GL(dl_hwcap));
   do_flush = (!hwcap || (*hwcap & HWCAP_SPARC_FLUSH));
 #else
   /* Unfortunately, this is necessary, so that we can ensure
      ld.so will not execute corrupt PLT entry instructions. */
   const int do_flush = 1;
 #endif
-  
+
   if (0 && disp >= -0x800000 && disp < 0x800000)
     {
       /* Don't need to worry about thread safety. We're writing just one
@@ -451,7 +458,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      extern char **_dl_argv;
 	      const char *strtab;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <libc-internal.h>
-#include <hp-timing.h>
+#include <ldsodefs.h>
 
 
 #if HP_TIMING_AVAIL
@@ -29,10 +29,6 @@
    because some jokers are already playing with processors with more
    than 4GHz.  */
 static hp_timing_t freq;
-
-
-/* We need the starting time for the process.  */
-extern hp_timing_t _dl_cpuclock_offset;
 
 
 /* This function is defined in the thread library.  */
@@ -86,7 +82,7 @@ clock_gettime (clockid_t clock_id, struct timespec *tp)
 	HP_TIMING_NOW (tsc);
 
 	/* Compute the offset since the start time of the process.  */
-	tsc -= _dl_cpuclock_offset;
+	tsc -= GL(dl_cpuclock_offset);
 
 	/* Compute the seconds.  */
 	tp->tv_sec = tsc / freq;

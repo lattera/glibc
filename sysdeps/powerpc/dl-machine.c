@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC version.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -112,11 +112,11 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
      be superceded by the program's load address).  */
   low =  0x0003FFFF;
   high = 0x70000000;
-  for (l = _dl_loaded; l; l = l->l_next)
+  for (l = GL(dl_loaded); l; l = l->l_next)
     {
       ElfW(Addr) mapstart, mapend;
-      mapstart = l->l_map_start & ~(_dl_pagesize - 1);
-      mapend = l->l_map_end | (_dl_pagesize - 1);
+      mapstart = l->l_map_start & ~(GL(dl_pagesize) - 1);
+      mapend = l->l_map_end | (GL(dl_pagesize) - 1);
       assert (mapend > mapstart);
 
       /* Prefer gaps below the main executable, note that l ==
@@ -137,7 +137,7 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
     }
 
   high -= 0x10000; /* Allow some room between objects.  */
-  maplength = (maplength | (_dl_pagesize-1)) + 1;
+  maplength = (maplength | (GL(dl_pagesize) - 1)) + 1;
   if (high <= low || high - low < maplength )
     return 0;
   return high - maplength;  /* Both high and maplength are page-aligned.  */
@@ -235,10 +235,10 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 					 : _dl_runtime_resolve);
 	  Elf32_Word offset;
 
-	  if (profile && _dl_name_match_p (_dl_profile, map))
+	  if (profile && _dl_name_match_p (GL(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
-	    _dl_profile_map = map;
+	    GL(dl_profile_map) = map;
 
 	  /* For the long entries, subtract off data_words.  */
 	  tramp[0] = OPCODE_ADDIS_HI (11, 11, -data_words);
@@ -467,7 +467,7 @@ __process_machine_rela (struct link_map *map,
 	   found.  */
 	return;
       if (sym->st_size > refsym->st_size
-	  || (_dl_verbose && sym->st_size < refsym->st_size))
+	  || (GL(dl_verbose) && sym->st_size < refsym->st_size))
 	{
 	  const char *strtab;
 

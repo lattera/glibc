@@ -33,6 +33,8 @@
 #include "dynamic-link.h"
 #include "dl-librecon.h"
 #include <unsecvars.h>
+#include <dl-cache.h>
+#include <dl-procinfo.h>
 
 #include <assert.h>
 
@@ -58,25 +60,6 @@ static void process_envvars (enum mode *modep);
 int _dl_argc;
 char **_dl_argv;
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
-fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
-int _dl_lazy = 1;
-/* XXX I know about at least one case where we depend on the old weak
-   behavior (it has to do with librt).  Until we get DSO groups implemented
-   we have to make this the default.  Bummer. --drepper  */
-#if 0
-int _dl_dynamic_weak;
-#else
-int _dl_dynamic_weak = 1;
-#endif
-
-/* During the program run we must not modify the global data of
-   loaded shared object simultanously in two threads.  Therefore we
-   protect `_dl_open' and `_dl_close' in dl-close.c.
-
-   This must be a recursive lock since the initializer function of
-   the loaded object might as well require a call to this function.
-   At this time it is not anymore a problem to modify the tables.  */
-__libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -89,7 +72,26 @@ int _dl_starting_up;
 
 /* This is the structure which defines all variables global to ld.so
    (except those which cannot be added for some reason).  */
-struct rtld_global _rtld_global;
+struct rtld_global _rtld_global =
+  {
+    ._dl_debug_fd = STDERR_FILENO,
+#if 1
+    /* XXX I know about at least one case where we depend on the old
+       weak behavior (it has to do with librt).  Until we get DSO
+       groups implemented we have to make this the default.
+       Bummer. --drepper  */
+    ._dl_dynamic_weak = 1,
+#endif
+    ._dl_lazy = 1,
+    ._dl_fpu_control = _FPU_DEFAULT,
+    ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
+    ._dl_hwcap_mask = HWCAP_IMPORTANT,
+    ._dl_load_lock = _LIBC_LOCK_RECURSIVE_INITIALIZER
+  };
+/* There must only be the definition in ld.so itself.  */
+#ifdef HAVE_PROTECTED
+asm (".protected _rtld_global");
+#endif
 
 
 static void dl_main (const ElfW(Phdr) *phdr,
@@ -418,7 +420,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	if (! strcmp (_dl_argv[1], "--list"))
 	  {
 	    mode = list;
-	    _dl_lazy = -1;	/* This means do no dependency analysis.  */
+	    GL(dl_lazy) = -1;	/* This means do no dependency analysis.  */
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -941,13 +943,13 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  /* If LD_WARN is set warn about undefined symbols.  */
-	  if (_dl_lazy >= 0 && GL(dl_verbose))
+	  if (GL(dl_lazy) >= 0 && GL(dl_verbose))
 	    {
 	      /* We have to do symbol dependency testing.  */
 	      struct relocate_args args;
 	      struct link_map *l;
 
-	      args.lazy = _dl_lazy;
+	      args.lazy = GL(dl_lazy);
 
 	      l = GL(dl_loaded);
 	      while (l->l_next)
@@ -1142,7 +1144,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 #endif
 
     /* If we are profiling we also must do lazy reloaction.  */
-    _dl_lazy |= consider_profiling;
+    GL(dl_lazy) |= consider_profiling;
 
     l = GL(dl_loaded);
     while (l->l_next)
@@ -1163,7 +1165,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
 
 	if (l != &GL(dl_rtld_map))
-	  _dl_relocate_object (l, l->l_scope, _dl_lazy, consider_profiling);
+	  _dl_relocate_object (l, l->l_scope, GL(dl_lazy), consider_profiling);
 
 	l = l->l_prev;
       }
@@ -1327,6 +1329,7 @@ process_dl_debug (const char *dl_debug)
 		&& debopts[cnt].name[len] == '\0')
 	      {
 		GL(dl_debug_mask) |= debopts[cnt].mask;
+		any_debug = 1;
 		break;
 	      }
 
@@ -1428,7 +1431,7 @@ process_envvars (enum mode *modep)
 	  /* Do we bind early?  */
 	  if (memcmp (envline, "BIND_NOW", 8) == 0)
 	    {
-	      _dl_lazy = envline[9] == '\0';
+	      GL(dl_lazy) = envline[9] == '\0';
 	      break;
 	    }
 	  if (memcmp (envline, "BIND_NOT", 8) == 0)
@@ -1471,7 +1474,7 @@ process_envvars (enum mode *modep)
 	    }
 
 	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
-	    _dl_dynamic_weak = 1;
+	    GL(dl_dynamic_weak) = 1;
 	  break;
 
 	case 14:
@@ -1553,10 +1556,10 @@ process_envvars (enum mode *modep)
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
-      _dl_debug_fd = __open (startp, flags, DEFFILEMODE);
-      if (_dl_debug_fd == -1)
+      GL(dl_debug_fd) = __open (startp, flags, DEFFILEMODE);
+      if (GL(dl_debug_fd) == -1)
 	/* We use standard output if opening the file failed.  */
-	_dl_debug_fd = STDOUT_FILENO;
+	GL(dl_debug_fd) = STDOUT_FILENO;
     }
 }
 

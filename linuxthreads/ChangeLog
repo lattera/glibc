@@ -1,3 +1,8 @@
+2002-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c: _dl_cpuclock_offset is not any longer a global variable
+	in SHARED code, use GL(dl_cpuclock_offset).
+
 2002-01-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/pspinlock.c (__pthread_spin_init): Clear *LOCK to

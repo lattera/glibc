@@ -160,7 +160,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	    {
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (__builtin_expect (_dl_dynamic_weak, 0))
+	      if (__builtin_expect (GL(dl_dynamic_weak), 0))
 		{
 		  if (! result->s)
 		    {

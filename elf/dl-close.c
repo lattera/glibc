@@ -57,7 +57,7 @@ _dl_close (void *_map)
     _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
 
   /* Acquire the lock.  */
-  __libc_lock_lock_recursive (_dl_load_lock);
+  __libc_lock_lock_recursive (GL(dl_load_lock));
 
   /* Decrement the reference count.  */
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
@@ -70,7 +70,7 @@ _dl_close (void *_map)
       /* One decrement the object itself, not the dependencies.  */
       --map->l_opencount;
 
-      __libc_lock_unlock_recursive (_dl_load_lock);
+      __libc_lock_unlock_recursive (GL(dl_load_lock));
       return;
     }
 
@@ -298,7 +298,7 @@ _dl_close (void *_map)
   free (list);
 
   /* Release the lock.  */
-  __libc_lock_unlock_recursive (_dl_load_lock);
+  __libc_lock_unlock_recursive (GL(dl_load_lock));
 }
 
 

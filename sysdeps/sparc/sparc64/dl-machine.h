@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,7 +284,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      extern char **_dl_argv;
 	      const char *strtab;
@@ -498,8 +498,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  res0_addr = (Elf64_Addr) &_dl_runtime_profile_0;
 	  res1_addr = (Elf64_Addr) &_dl_runtime_profile_1;
-	  if (_dl_name_match_p (_dl_profile, l))
-	    _dl_profile_map = l;
+	  if (_dl_name_match_p (GL(dl_profile), l))
+	    GL(dl_profile_map) = l;
 	}
 
       /* PLT0 looks like:
@@ -745,9 +745,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	 add	%i1, 16, %i1\n"						\
 "	stx	%l5, [%l4]\n"						\
 "  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"	\
-"2:	sethi	%hi(_dl_loaded), %o0\n"					\
+"2:	sethi	%hi(_rtld_global), %o0\n"				\
 "	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"			\
-"	orcc	%o0, %lo(_dl_loaded), %o0\n"				\
+"	orcc	%o0, %lo(_rtld_global), %o0\n"				\
 "	sllx	%i5, 3, %o3\n"						\
 "	ldx	[%l7 + %o0], %o0\n"					\
 "	add	%o3, 8, %o3\n"						\

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  CRIS version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,11 +106,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
-	      _dl_profile_map = l;
+	      GL(dl_profile_map) = l;
 	    }
 	}
       else
@@ -212,7 +212,7 @@ _dl_start_user:
 	move.d	$sp,$r12
 	addq	4,$r12
 	;  main_map: at _dl_loaded.
-	move.d	[$r0+_dl_loaded:GOT16],$r9
+	move.d	[$r0+_rtld_global:GOT16],$r9
 	move.d	[$r9],$r10
 	move.d	_dl_init:PLTG,$r9
 	add.d	$r0,$r9
@@ -246,14 +246,12 @@ _dl_start_user:
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -314,7 +312,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      extern char **_dl_argv;
 	      const char *strtab;

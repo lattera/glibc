@@ -94,7 +94,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
     return 0;
 
   /* Make sure nobody can unload the object while we are at it.  */
-  __libc_lock_lock_recursive (_dl_load_lock);
+  __libc_lock_lock_recursive (GL(dl_load_lock));
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
@@ -180,7 +180,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
  out:
   /* Release the lock.  */
-  __libc_lock_unlock_recursive (_dl_load_lock);
+  __libc_lock_unlock_recursive (GL(dl_load_lock));
 
   return result;
 }
