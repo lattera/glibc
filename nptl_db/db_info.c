@@ -71,10 +71,12 @@ DESC (_thread_db_pthread_dtvp,
 #define DB_VARIABLE(name) DESC (_thread_db_##name, 0, name)
 #define DB_ARRAY_VARIABLE(name) ARRAY_DESC (_thread_db_##name, 0, name)
 #define DB_SYMBOL(name)	/* Nothing.  */
+#define DB_FUNCTION(name) /* Nothing.  */
 #include "structs.def"
 #undef DB_STRUCT
 #undef DB_STRUCT_FIELD
 #undef DB_SYMBOL
+#undef DB_FUNCTION
 #undef DB_VARIABLE
 #undef DESC
 

@@ -36,11 +36,13 @@ enum
 # define DB_STRUCT(type)		SYM_SIZEOF_##type,
 # define DB_STRUCT_FIELD(type, field)	SYM_##type##_FIELD_##field,
 # define DB_SYMBOL(name)		SYM_##name,
+# define DB_FUNCTION(name)		SYM_##name,
 # define DB_VARIABLE(name)		SYM_##name, SYM_DESC_##name,
 # include "structs.def"
 # undef DB_STRUCT
 # undef DB_STRUCT_FIELD
 # undef DB_SYMBOL
+# undef DB_FUNCTION
 # undef DB_VARIABLE
 
     SYM_TH_UNIQUE_CONST_THREAD_AREA,
@@ -88,12 +90,15 @@ struct td_thragent
   db_desc_t ta_field_##type##_##field;
 # define DB_SYMBOL(name) \
   psaddr_t ta_addr_##name;
+# define DB_FUNCTION(name) \
+  psaddr_t ta_addr_##name;
 # define DB_VARIABLE(name) \
   psaddr_t ta_addr_##name; \
   db_desc_t ta_var_##name;
 # include "structs.def"
 # undef DB_STRUCT
 # undef DB_STRUCT_FIELD
+# undef DB_FUNCTION
 # undef DB_SYMBOL
 # undef DB_VARIABLE
 
