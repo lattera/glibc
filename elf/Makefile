@@ -188,8 +188,10 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 # for us.  Then we do the real link using rtld-libc.a instead of libc_pic.a.
 
 $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
-	$(reloc-link) -o $@.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@
+	@-rm -f $@T
+	$(reloc-link) -o $@.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
 	rm -f $@.o
+	mv -f $@T $@
 
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 	sed -n 's@^$(common-objpfx)\([^(]*\)(\(.*.os\))$$@\1 \2@p' $< | \

@@ -653,6 +653,7 @@ re_comp (s)
      const char *s;
 {
   reg_errcode_t ret;
+  char *fastmap;
 
   if (!s)
     {
@@ -661,7 +662,17 @@ re_comp (s)
       return 0;
     }
 
-  if (!re_comp_buf.buffer)
+  if (re_comp_buf.buffer)
+    {
+      fastmap = re_comp_buf.fastmap;
+      re_comp_buf.fastmap = NULL;
+      __regfree (&re_comp_buf);
+      re_comp_buf.buffer = NULL;
+      re_comp_buf.allocated = 0;
+      re_comp_buf.fastmap = fastmap;
+    }
+
+  if (re_comp_buf.fastmap == NULL)
     {
       re_comp_buf.fastmap = (char *) malloc (SBC_MAX);
       if (re_comp_buf.fastmap == NULL)
@@ -683,6 +694,16 @@ re_comp (s)
   /* Yes, we're discarding `const' here if !HAVE_LIBINTL.  */
   return (char *) gettext (__re_error_msgid + __re_error_msgid_idx[(int) ret]);
 }
+
+#ifdef _LIBC
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  __regfree (&re_comp_buf);
+}
+text_set_element (__libc_subfreeres, free_mem);
+#endif
+
 #endif /* _REGEX_RE_COMP */
 
 /* Internal entry point.

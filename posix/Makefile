@@ -75,7 +75,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
 		   tst-gnuglob tst-regex bug-regex5 bug-regex6 bug-regex7 \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
-		   bug-regex13
+		   bug-regex13 bug-regex14
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -89,7 +89,8 @@ before-compile	:= testcases.h ptestcases.h
 # So they get cleaned up.
 generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem \
-	     bug-regex2.mtrace tst-getconf.out
+	     bug-regex2.mtrace bug-regex14-mem bug-regex14.mtrace \
+	     tst-getconf.out
 
 include ../Rules
 
@@ -149,7 +150,7 @@ endif
 # XXX Please note that for now we ignore the result of this test.
 tests: $(objpfx)annexc.out
 ifeq (no,$(cross-compiling))
-tests:$(objpfx)bug-regex2-mem $(objpfx)tst-getconf.out
+tests:$(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem $(objpfx)tst-getconf.out
 endif
 
 $(objpfx)annexc.out: $(objpfx)annexc
@@ -164,6 +165,11 @@ bug-regex2-ENV = MALLOC_TRACE=$(objpfx)bug-regex2.mtrace
 
 $(objpfx)bug-regex2-mem: $(objpfx)bug-regex2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex2.mtrace > $@
+
+bug-regex14-ENV = MALLOC_TRACE=$(objpfx)bug-regex14.mtrace
+
+$(objpfx)bug-regex14-mem: $(objpfx)bug-regex14.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex14.mtrace > $@
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) -e $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)

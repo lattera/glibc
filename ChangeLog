@@ -1,4 +1,18 @@
+2002-10-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_comp): Call __regfree on re_comp_buf.
+	(free_mem): New function.
+	* posix/Makefile (tests): Add bug-regex14.  Add bug-regex14-mem
+	if not cross compiling.
+	(generated): Add bug-regex14-mem and bug-regex14.mtrace.
+	(bug-regex14-ENV): Set.
+	(bug-regex14-mem): New target.
+	* posix/bug-regex14.c: New file.
+
 2002-10-23  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile ($(objpfx)librtld.map): Use temporary file for output
+	target, so we don't touch it when the link fails.
 
 	* libio/ftello.c (ftello): Use _IO_off64_t for type of POS.
 	Check for the result overflowing off_t and fail with EOVERFLOW.
