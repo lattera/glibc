@@ -1,3 +1,8 @@
+2001-05-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/powerpc/elf/libc-start.c: Use __cxa_atexit.
+	Patch by ekato@ees.hokudai.ac.jp, closes PR libc/2271.
+
 2001-05-17  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: New file.
