@@ -1,3 +1,57 @@
+2000-03-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__sincos): Remove redundant
+	declaration, the prototype is defined via bits/mathcalls.h.
+	(__sincosf): Likewise.
+	(__sincosl): Likewise.
+	(ldexp): Likewise.
+	(ldexpf): Likewise.
+	(ldexpl): Likewise.
+	(__finite): Likewise.
+	(__inline_mathcode*NP*): New macros without prototype
+	declarations.
+	(__inline_mathop*NP*): Likewise.
+	(__inline_mathcode_): Use __inline_mathcodeNP_.
+	(__inline_mathcode2_): Use __inline_mathcodeNP2_.
+	(__inline_mathcode3_): Use __inline_mathcodeNP3_.
+	(__inline_mathop_decl_): Use __inline_mathop_declNP__.
+	(__expm1l): Don't define prototype, the prototype is defined via
+	bits/mathcalls.h.
+	(exp): Likewise.
+	(__expl): Likewise.
+	(tan): Likewise.
+	(atan2): Likewise.
+	(__atan2l): Likewise.
+	(fmod): Likewise.
+	(pow): Likewise.
+	(*fabs*): Likewise.
+	(asin): Likewise.
+	(acos): Likewise.
+	(sinh): Likewise.
+	(cosh): Likewise.
+	(tanh): Likewise.
+	(floor): Likewise.
+	(ceil): Likewise.
+	(expm1): Likewise.
+	(log1p): Likewise.
+	(asinh): Likewise.
+	(acosh): Likewise.
+	(atanh): Likewise.
+	(hypot): Likewise.
+	(logb): Likewise.
+	(fma): Likewise.
+	(drem): Likewise.
+	(sqrt): Likewise.
+	(__sqrtl): Likewise.
+	(sin): Likewise.
+	(cos): Likewise.
+	(atan): Likewise.
+	(log): Likewise.
+	(log10): Likewise.
+	(asinh): Likewise.
+	(log2): Likewise.
+	(rint): Likewise.
+
 2000-03-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules: If make variable md5 is defined to yes after

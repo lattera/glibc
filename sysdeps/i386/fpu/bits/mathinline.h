@@ -146,20 +146,30 @@ __signbitl (long double __x)
 /* A macro to define float, double, and long double versions of various
    math functions for the ix87 FPU.  FUNC is the function name (which will
    be suffixed with f and l for the float and long double version,
-   respectively).  OP is the name of the FPU operation.  */
+   respectively).  OP is the name of the FPU operation.
+   We define two sets of macros.  The set with the additional NP
+   doesn't add a prototype declaration.  */
 
 #if defined __USE_MISC || defined __USE_ISOC99
 # define __inline_mathop(func, op) \
   __inline_mathop_ (double, func, op)					      \
   __inline_mathop_ (float, __CONCAT(func,f), op)			      \
   __inline_mathop_ (long double, __CONCAT(func,l), op)
+# define __inline_mathopNP(func, op) \
+  __inline_mathopNP_ (double, func, op)					      \
+  __inline_mathopNP_ (float, __CONCAT(func,f), op)			      \
+  __inline_mathopNP_ (long double, __CONCAT(func,l), op)
 #else
 # define __inline_mathop(func, op) \
   __inline_mathop_ (double, func, op)
+# define __inline_mathopNP(func, op) \
+  __inline_mathopNP_ (double, func, op)
 #endif
 
 #define __inline_mathop_(float_type, func, op) \
   __inline_mathop_decl_ (float_type, func, op, "0" (__x))
+#define __inline_mathopNP_(float_type, func, op) \
+  __inline_mathop_declNP_ (float_type, func, op, "0" (__x))
 
 
 #if defined __USE_MISC || defined __USE_ISOC99
@@ -167,13 +177,22 @@ __signbitl (long double __x)
   __inline_mathop_decl_ (double, func, op, params)			      \
   __inline_mathop_decl_ (float, __CONCAT(func,f), op, params)		      \
   __inline_mathop_decl_ (long double, __CONCAT(func,l), op, params)
+# define __inline_mathop_declNP(func, op, params...) \
+  __inline_mathop_declNP_ (double, func, op, params)			      \
+  __inline_mathop_declNP_ (float, __CONCAT(func,f), op, params)		      \
+  __inline_mathop_declNP_ (long double, __CONCAT(func,l), op, params)
 #else
 # define __inline_mathop_decl(func, op, params...) \
   __inline_mathop_decl_ (double, func, op, params)
+# define __inline_mathop_declNP(func, op, params...) \
+  __inline_mathop_declNP_ (double, func, op, params)
 #endif
 
 #define __inline_mathop_decl_(float_type, func, op, params...) \
   __MATH_INLINE float_type func (float_type);				      \
+  __inline_mathop_declNP_ (float_type, func, op, params)
+
+#define __inline_mathop_declNP_(float_type, func, op, params...) \
   __MATH_INLINE float_type func (float_type __x)			      \
   {									      \
     register float_type __result;					      \
@@ -187,32 +206,57 @@ __signbitl (long double __x)
   __inline_mathcode_ (double, func, arg, code)				      \
   __inline_mathcode_ (float, __CONCAT(func,f), arg, code)		      \
   __inline_mathcode_ (long double, __CONCAT(func,l), arg, code)
+# define __inline_mathcodeNP(func, arg, code) \
+  __inline_mathcodeNP_ (double, func, arg, code)				      \
+  __inline_mathcodeNP_ (float, __CONCAT(func,f), arg, code)		      \
+  __inline_mathcodeNP_ (long double, __CONCAT(func,l), arg, code)
 # define __inline_mathcode2(func, arg1, arg2, code) \
   __inline_mathcode2_ (double, func, arg1, arg2, code)			      \
   __inline_mathcode2_ (float, __CONCAT(func,f), arg1, arg2, code)	      \
   __inline_mathcode2_ (long double, __CONCAT(func,l), arg1, arg2, code)
+# define __inline_mathcodeNP2(func, arg1, arg2, code) \
+  __inline_mathcodeNP2_ (double, func, arg1, arg2, code)			      \
+  __inline_mathcodeNP2_ (float, __CONCAT(func,f), arg1, arg2, code)	      \
+  __inline_mathcodeNP2_ (long double, __CONCAT(func,l), arg1, arg2, code)
 # define __inline_mathcode3(func, arg1, arg2, arg3, code) \
   __inline_mathcode3_ (double, func, arg1, arg2, arg3, code)		      \
   __inline_mathcode3_ (float, __CONCAT(func,f), arg1, arg2, arg3, code)	      \
   __inline_mathcode3_ (long double, __CONCAT(func,l), arg1, arg2, arg3, code)
+# define __inline_mathcodeNP3(func, arg1, arg2, arg3, code) \
+  __inline_mathcodeNP3_ (double, func, arg1, arg2, arg3, code)		      \
+  __inline_mathcodeNP3_ (float, __CONCAT(func,f), arg1, arg2, arg3, code)	      \
+  __inline_mathcodeNP3_ (long double, __CONCAT(func,l), arg1, arg2, arg3, code)
 #else
 # define __inline_mathcode(func, arg, code) \
   __inline_mathcode_ (double, func, (arg), code)
+# define __inline_mathcodeNP(func, arg, code) \
+  __inline_mathcodeNP_ (double, func, (arg), code)
 # define __inline_mathcode2(func, arg1, arg2, code) \
   __inline_mathcode2_ (double, func, arg1, arg2, code)
+# define __inline_mathcodeNP2(func, arg1, arg2, code) \
+  __inline_mathcodeNP2_ (double, func, arg1, arg2, code)
 # define __inline_mathcode3(func, arg1, arg2, arg3, code) \
   __inline_mathcode3_ (double, func, arg1, arg2, arg3, code)
+# define __inline_mathcodeNP3(func, arg1, arg2, arg3, code) \
+  __inline_mathcodeNP3_ (double, func, arg1, arg2, arg3, code)
 #endif
 
 #define __inline_mathcode_(float_type, func, arg, code) \
   __MATH_INLINE float_type func (float_type);				      \
+  __inline_mathcodeNP_(float_type, func, arg, code)
+
+#define __inline_mathcodeNP_(float_type, func, arg, code) \
   __MATH_INLINE float_type func (float_type arg)			      \
   {									      \
     code;								      \
   }
 
+
 #define __inline_mathcode2_(float_type, func, arg1, arg2, code) \
   __MATH_INLINE float_type func (float_type, float_type);		      \
+  __inline_mathcodeNP2_ (float_type, func, arg1, arg2, code)
+
+#define __inline_mathcodeNP2_(float_type, func, arg1, arg2, code) \
   __MATH_INLINE float_type func (float_type arg1, float_type arg2)	      \
   {									      \
     code;								      \
@@ -220,6 +264,9 @@ __signbitl (long double __x)
 
 #define __inline_mathcode3_(float_type, func, arg1, arg2, arg3, code) \
   __MATH_INLINE float_type func (float_type, float_type, float_type);	      \
+  __inline_mathcodeNP3_(float_type, func, arg1, arg2, arg3, code)
+
+#define __inline_mathcodeNP3_(float_type, func, arg1, arg2, arg3, code) \
   __MATH_INLINE float_type func (float_type arg1, float_type arg2,	      \
 				 float_type arg3)			      \
   {									      \
@@ -280,22 +327,18 @@ __inline_mathcode (__pow2, __x, \
   *__sinx = __sinr;							      \
   *__cosx = __cosr
 
-__MATH_INLINE void __sincos (double __x, double *__sinx, double *__cosx);
 __MATH_INLINE void
 __sincos (double __x, double *__sinx, double *__cosx)
 {
   __sincos_code;
 }
 
-__MATH_INLINE void __sincosf (float __x, float *__sinx, float *__cosx);
 __MATH_INLINE void
 __sincosf (float __x, float *__sinx, float *__cosx)
 {
   __sincos_code;
 }
 
-__MATH_INLINE void __sincosl (long double __x, long double *__sinx,
-			      long double *__cosx);
 __MATH_INLINE void
 __sincosl (long double __x, long double *__sinx, long double *__cosx)
 {
@@ -325,7 +368,7 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
      : "=t" (__temp) : "0" (1.0), "u" (__exponent));			      \
   __temp -= 1.0;							      \
   return __temp + __value ?: __x
-__inline_mathcode_ (long double, __expm1l, __x, __expm1_code)
+__inline_mathcodeNP_ (long double, __expm1l, __x, __expm1_code)
 
 
 #define __exp_code \
@@ -345,11 +388,11 @@ __inline_mathcode_ (long double, __expm1l, __x, __expm1_code)
     ("fscale"								      \
      : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
   return __value
-__inline_mathcode (exp, __x, __exp_code)
-__inline_mathcode_ (long double, __expl, __x, __exp_code)
+__inline_mathcodeNP (exp, __x, __exp_code)
+__inline_mathcodeNP_ (long double, __expl, __x, __exp_code)
 
 
-__inline_mathcode (tan, __x, \
+__inline_mathcodeNP (tan, __x, \
   register long double __value;						      \
   register long double __value2 __attribute__ ((__unused__));		      \
   __asm __volatile__							      \
@@ -364,11 +407,11 @@ __inline_mathcode (tan, __x, \
     ("fpatan"								      \
      : "=t" (__value) : "0" (__x), "u" (__y) : "st(1)");		      \
   return __value
-__inline_mathcode2 (atan2, __y, __x, __atan2_code)
-__inline_mathcode2_ (long double, __atan2l, __y, __x, __atan2_code)
+__inline_mathcodeNP2 (atan2, __y, __x, __atan2_code)
+__inline_mathcodeNP2_ (long double, __atan2l, __y, __x, __atan2_code)
 
 
-__inline_mathcode2 (fmod, __x, __y, \
+__inline_mathcodeNP2 (fmod, __x, __y, \
   register long double __value;						      \
   __asm __volatile__							      \
     ("1:	fprem\n\t"						      \
@@ -379,7 +422,7 @@ __inline_mathcode2 (fmod, __x, __y, \
   return __value)
 
 
-__inline_mathcode2 (pow, __x, __y, \
+__inline_mathcodeNP2 (pow, __x, __y, \
   register long double __value;						      \
   register long double __exponent;					      \
   __extension__ long long int __p = (long long int) __y;		      \
@@ -429,30 +472,30 @@ __inline_mathcode2 (pow, __x, __y, \
   return __value)
 
 
-__inline_mathop (sqrt, "fsqrt")
-__inline_mathop_ (long double, __sqrtl, "fsqrt")
+__inline_mathopNP (sqrt, "fsqrt")
+__inline_mathopNP_ (long double, __sqrtl, "fsqrt")
 
 #if __GNUC_PREREQ (2, 8)
-__inline_mathcode_ (double, fabs, __x, return __builtin_fabs (__x))
-__inline_mathcode_ (float, fabsf, __x, return __builtin_fabsf (__x))
-__inline_mathcode_ (long double, fabsl, __x, return __builtin_fabsl (__x))
-__inline_mathcode_ (long double, __fabsl, __x, return __builtin_fabsl (__x))
+__inline_mathcodeNP_ (double, fabs, __x, return __builtin_fabs (__x))
+__inline_mathcodeNP_ (float, fabsf, __x, return __builtin_fabsf (__x))
+__inline_mathcodeNP_ (long double, fabsl, __x, return __builtin_fabsl (__x))
+__inline_mathcodeNP_ (long double, __fabsl, __x, return __builtin_fabsl (__x))
 #else
 __inline_mathop (fabs, "fabs")
 __inline_mathop_ (long double, __fabsl, "fabs")
 #endif
 
 /* The argument range of this inline version is reduced.  */
-__inline_mathop (sin, "fsin")
+__inline_mathopNP (sin, "fsin")
 /* The argument range of this inline version is reduced.  */
-__inline_mathop (cos, "fcos")
+__inline_mathopNP (cos, "fcos")
 
-__inline_mathop_decl (atan, "fld1; fpatan", "0" (__x) : "st(1)")
-__inline_mathop_decl (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
-__inline_mathop_decl (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
+__inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
+__inline_mathop_declNP (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
+__inline_mathop_declNP (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
 
-__inline_mathcode (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
-__inline_mathcode (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
+__inline_mathcodeNP (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
+__inline_mathcodeNP (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
   union { long double __xld; unsigned int __xi[3]; } __n = { __xld: __x };  \
@@ -463,20 +506,20 @@ __inline_mathcode_ (long double, __sgn1l, __x, \
 
 
 /* The argument range of the inline version of sinhl is slightly reduced.  */
-__inline_mathcode (sinh, __x, \
+__inline_mathcodeNP (sinh, __x, \
   register long double __exm1 = __expm1l (__fabsl (__x));		      \
   return 0.5 * (__exm1 / (__exm1 + 1.0) + __exm1) * __sgn1l (__x))
 
-__inline_mathcode (cosh, __x, \
+__inline_mathcodeNP (cosh, __x, \
   register long double __ex = __expl (__x);				      \
   return 0.5 * (__ex + 1.0 / __ex))
 
-__inline_mathcode (tanh, __x, \
+__inline_mathcodeNP (tanh, __x, \
   register long double __exm1 = __expm1l (-__fabsl (__x + __x));	      \
   return __exm1 / (__exm1 + 2.0) * __sgn1l (-__x))
 
 
-__inline_mathcode (floor, __x, \
+__inline_mathcodeNP (floor, __x, \
   register long double __value;						      \
   __volatile unsigned short int __cw;					      \
   __volatile unsigned short int __cwtmp;				      \
@@ -487,7 +530,7 @@ __inline_mathcode (floor, __x, \
   __asm __volatile ("fldcw %0" : : "m" (__cw));				      \
   return __value)
 
-__inline_mathcode (ceil, __x, \
+__inline_mathcodeNP (ceil, __x, \
   register long double __value;						      \
   __volatile unsigned short int __cw;					      \
   __volatile unsigned short int __cwtmp;				      \
@@ -505,7 +548,6 @@ __inline_mathcode (ceil, __x, \
      : "=t" (__value) : "0" (__x), "u" ((long double) __y));		      \
   return __value
 
-__MATH_INLINE double ldexp (double __x, int __y);
 __MATH_INLINE double
 ldexp (double __x, int __y)
 {
@@ -516,13 +558,13 @@ ldexp (double __x, int __y)
 /* Optimized versions for some non-standardized functions.  */
 #if defined __USE_ISOC99 || defined __USE_MISC
 
-__inline_mathcode (expm1, __x, __expm1_code)
+__inline_mathcodeNP (expm1, __x, __expm1_code)
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
 # define __M_SQRT2	1.41421356237309504880L	/* sqrt(2) */
 
-__inline_mathcode (log1p, __x, \
+__inline_mathcodeNP (log1p, __x, \
   register long double __value;						      \
   if (__fabsl (__x) >= 1.0 - 0.5 * __M_SQRT2)				      \
     __value = logl (1.0 + __x);						      \
@@ -536,22 +578,22 @@ __inline_mathcode (log1p, __x, \
 
 
 /* The argument range of the inline version of asinhl is slightly reduced.  */
-__inline_mathcode (asinh, __x, \
+__inline_mathcodeNP (asinh, __x, \
   register long double  __y = __fabsl (__x);				      \
   return (log1pl (__y * __y / (__sqrtl (__y * __y + 1.0) + 1.0) + __y)	      \
 	  * __sgn1l (__x)))
 
-__inline_mathcode (acosh, __x, \
+__inline_mathcodeNP (acosh, __x, \
   return logl (__x + __sqrtl (__x - 1.0) * __sqrtl (__x + 1.0)))
 
-__inline_mathcode (atanh, __x, \
+__inline_mathcodeNP (atanh, __x, \
   register long double __y = __fabsl (__x);				      \
   return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
 
 /* The argument range of the inline version of hypotl is slightly reduced.  */
-__inline_mathcode2 (hypot, __x, __y, return __sqrtl (__x * __x + __y * __y))
+__inline_mathcodeNP2 (hypot, __x, __y, return __sqrtl (__x * __x + __y * __y))
 
-__inline_mathcode(logb, __x, \
+__inline_mathcodeNP(logb, __x, \
   register long double __value;						      \
   register long double __junk;						      \
   __asm __volatile__							      \
@@ -562,25 +604,23 @@ __inline_mathcode(logb, __x, \
 #endif
 
 #ifdef __USE_ISOC99
-__inline_mathop_decl (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
+__inline_mathop_declNP (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
 
-__MATH_INLINE float ldexpf (float __x, int __y);
 __MATH_INLINE float
 ldexpf (float __x, int __y)
 {
   __ldexp_code;
 }
 
-__MATH_INLINE long double ldexpl (long double __x, int __y);
 __MATH_INLINE long double
 ldexpl (long double __x, int __y)
 {
   __ldexp_code;
 }
 
-__inline_mathcode3 (fma, __x, __y, __z, return (__x * __y) + __z)
+__inline_mathcodeNP3 (fma, __x, __y, __z, return (__x * __y) + __z)
 
-__inline_mathop(rint, "frndint")
+__inline_mathopNP (rint, "frndint")
 
 #define __lrint_code \
   long int __lrintres;							      \
@@ -633,7 +673,7 @@ llrintl (long double __x)
 
 #ifdef __USE_MISC
 
-__inline_mathcode2 (drem, __x, __y, \
+__inline_mathcodeNP2 (drem, __x, __y, \
   register double __value;						      \
   register int __clobbered;						      \
   __asm __volatile__							      \
@@ -646,7 +686,6 @@ __inline_mathcode2 (drem, __x, __y, \
 
 
 /* This function is used in the `isfinite' macro.  */
-__MATH_INLINE int __finite (double __x) __attribute__ ((__const__));
 __MATH_INLINE int
 __finite (double __x)
 {
