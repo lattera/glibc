@@ -15,4 +15,5 @@ sizes.h
 sys/acct.h
 sys/io.h
 sys/procfs.h
+sys/user.h
 xstatconv.c

@@ -1,5 +1,7 @@
 1999-09-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add sys/user.h.
+
 	* time/ap.c: Removed.  It was not used.
 	* time/date.c: Likewise.
 	* sysdeps/unix/nlist.c: Likewise.
