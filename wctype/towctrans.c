@@ -21,22 +21,32 @@
 
 /* Define the lookup function.  */
 #include "cname-lookup.h"
+#include "wchar-lookup.h"
 
 wint_t
 __towctrans (wint_t wc, wctrans_t desc)
 {
-  size_t idx;
-
   /* If the user passes in an invalid DESC valid (the one returned from
      `wctrans' in case of an error) simply return the value.  */
   if (desc == (wctrans_t) 0)
     return wc;
 
-  idx = cname_lookup (wc);
-  if (idx == ~((size_t) 0))
-    /* Character is not known.  Default action is to simply return it.  */
-    return wc;
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
+    {
+      /* Old locale format.  */
+      size_t idx;
 
-  return (wint_t) desc[idx];
+      idx = cname_lookup (wc);
+      if (idx == ~((size_t) 0))
+	/* Character is not known.  Default action is to simply return it.  */
+	return wc;
+
+      return (wint_t) desc[idx];
+    }
+  else
+    {
+      /* New locale format.  */
+      return wctrans_table_lookup ((const char *) desc, wc);
+    }
 }
 weak_alias (__towctrans, towctrans)

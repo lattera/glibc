@@ -84,6 +84,8 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_CTYPE_CODESET_NAME, "charmap",		std, string)
   DEFINE_ELEMENT (_NL_CTYPE_TOUPPER32,    "ctype-toupper32",    std, string)
   DEFINE_ELEMENT (_NL_CTYPE_TOLOWER32,    "ctype-tolower32",    std, string)
+  DEFINE_ELEMENT (_NL_CTYPE_CLASS_OFFSET, "ctype-class-offset", std, word)
+  DEFINE_ELEMENT (_NL_CTYPE_MAP_OFFSET,   "ctype-map-offset",   std, word)
   DEFINE_ELEMENT (_NL_CTYPE_INDIGITS_MB_LEN, "ctype-indigits_mb-len", std, word)
   DEFINE_ELEMENT (_NL_CTYPE_INDIGITS0_MB, "ctype-indigits0_mb", std, string)
   DEFINE_ELEMENT (_NL_CTYPE_INDIGITS1_MB, "ctype-indigits1_mb", std, string)

@@ -78,18 +78,31 @@ typedef unsigned long int wctype_t;
 
 enum
 {
-  _ISwupper = _ISwbit (0),	/* UPPERCASE.  */
-  _ISwlower = _ISwbit (1),	/* lowercase.  */
-  _ISwalpha = _ISwbit (2),	/* Alphabetic.  */
-  _ISwdigit = _ISwbit (3),	/* Numeric.  */
-  _ISwxdigit = _ISwbit (4),	/* Hexadecimal numeric.  */
-  _ISwspace = _ISwbit (5),	/* Whitespace.  */
-  _ISwprint = _ISwbit (6),	/* Printing.  */
-  _ISwgraph = _ISwbit (7),	/* Graphical.  */
-  _ISwblank = _ISwbit (8),	/* Blank (usually SPC and TAB).  */
-  _ISwcntrl = _ISwbit (9),	/* Control character.  */
-  _ISwpunct = _ISwbit (10),	/* Punctuation.  */
-  _ISwalnum = _ISwbit (11)	/* Alphanumeric.  */
+  __ISwupper = 0,			/* UPPERCASE.  */
+  __ISwlower = 1,			/* lowercase.  */
+  __ISwalpha = 2,			/* Alphabetic.  */
+  __ISwdigit = 3,			/* Numeric.  */
+  __ISwxdigit = 4,			/* Hexadecimal numeric.  */
+  __ISwspace = 5,			/* Whitespace.  */
+  __ISwprint = 6,			/* Printing.  */
+  __ISwgraph = 7,			/* Graphical.  */
+  __ISwblank = 8,			/* Blank (usually SPC and TAB).  */
+  __ISwcntrl = 9,			/* Control character.  */
+  __ISwpunct = 10,			/* Punctuation.  */
+  __ISwalnum = 11,			/* Alphanumeric.  */
+
+  _ISwupper = _ISwbit (__ISwupper),	/* UPPERCASE.  */
+  _ISwlower = _ISwbit (__ISwlower),	/* lowercase.  */
+  _ISwalpha = _ISwbit (__ISwalpha),	/* Alphabetic.  */
+  _ISwdigit = _ISwbit (__ISwdigit),	/* Numeric.  */
+  _ISwxdigit = _ISwbit (__ISwxdigit),	/* Hexadecimal numeric.  */
+  _ISwspace = _ISwbit (__ISwspace),	/* Whitespace.  */
+  _ISwprint = _ISwbit (__ISwprint),	/* Printing.  */
+  _ISwgraph = _ISwbit (__ISwgraph),	/* Graphical.  */
+  _ISwblank = _ISwbit (__ISwblank),	/* Blank (usually SPC and TAB).  */
+  _ISwcntrl = _ISwbit (__ISwcntrl),	/* Control character.  */
+  _ISwpunct = _ISwbit (__ISwpunct),	/* Punctuation.  */
+  _ISwalnum = _ISwbit (__ISwalnum)	/* Alphanumeric.  */
 };
 # endif /* Not _ISwbit  */
 
@@ -226,11 +239,6 @@ extern unsigned int *__ctype32_b;
     (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
      ? (int) (__ctype32_b[(wint_t) (wc)] & _ISwblank) : iswblank (wc)))
 # endif
-
-# define iswctype(wc, desc) \
-  (__extension__							      \
-    (__builtin_constant_p (wc) && (wint_t) (wc) <= L'\xff'		      \
-     ? (int) (__ctype32_b[(wint_t) (wc)] & desc) : iswctype (wc, desc)))
 
 #endif	/* gcc && optimizing */
 

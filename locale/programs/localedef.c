@@ -55,6 +55,9 @@ int verbose;
 /* If not zero suppress warnings and information messages.  */
 int be_quiet;
 
+/* If not zero, produce old-style hash table instead of 3-level access tables.  */
+int oldstyle_tables;
+
 /* If not zero force output even if warning were issued.  */
 static int force_output;
 
@@ -77,6 +80,7 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
 #define OPT_POSIX 1
 #define OPT_QUIET 2
+#define OPT_OLDSTYLE 3
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -91,6 +95,7 @@ static const struct argp_option options[] =
   { NULL, 0, NULL, 0, N_("Output control:") },
   { "force", 'c', NULL, 0,
     N_("Create output even if warning messages were issued") },
+  { "old-style", OPT_OLDSTYLE, NULL, 0, N_("Create old-style tables") },
   { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
@@ -241,6 +246,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case OPT_POSIX:
       posix_conformance = 1;
+      break;
+    case OPT_OLDSTYLE:
+      oldstyle_tables = 1;
       break;
     case 'c':
       force_output = 1;

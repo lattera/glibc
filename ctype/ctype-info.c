@@ -37,3 +37,6 @@ const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
 const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
 const __uint32_t *__ctype_names = b (__uint32_t, names, 0);
 const unsigned char *__ctype_width = b (unsigned char, width, 0);
+const char *__ctype32_wctype[12];
+const char *__ctype32_wctrans[2];
+const char *__ctype32_width;

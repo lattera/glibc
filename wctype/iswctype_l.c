@@ -22,20 +22,35 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 #include "cname-lookup.h"
+#include "wchar-lookup.h"
 
 
 int
 __iswctype_l (wint_t wc, wctype_t desc, __locale_t locale)
 {
-  const uint32_t *class32_b;
-  size_t idx;
+  if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word != 0)
+    {
+      /* Old locale format.  */
+      const uint32_t *class32_b;
+      size_t idx;
 
-  idx = cname_lookup (wc, locale);
-  if (idx == ~((size_t) 0))
-    return 0;
+      idx = cname_lookup (wc, locale);
+      if (idx == ~((size_t) 0))
+	return 0;
 
-  class32_b = (uint32_t *)
-    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS32)].string;
+      class32_b = (uint32_t *)
+	locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS32)].string;
 
-  return class32_b[idx] & desc;
+      return class32_b[idx] & desc;
+    }
+  else
+    {
+      /* If the user passes in an invalid DESC valid (the one returned from
+	 `__wctype_l' in case of an error) simply return 0.  */
+      if (desc == (wctype_t) 0)
+	return 0;
+
+      /* New locale format.  */
+      return wctype_table_lookup ((const char *) desc, wc);
+    }
 }

@@ -1,5 +1,8 @@
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-wctype.input: Add more input text.
+	* tst-wctype.c: Test more classes.
+
 	* Makefile: Add rules to build, run, and distribute tst-langinfo.
 	* tst-langinfo.c: New file.
 	* tst-langinfo.sh: New file.

@@ -1,3 +1,74 @@
+2000-07-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* wctype/wchar-lookup.h: New file.
+	* wctype/iswctype.c: Include "wchar-lookup.h".
+	(__iswctype): Support alternate locale format with 3-level tables.
+	* wctype/iswctype_l.c (__iswctype_l): Likewise.
+	* wctype/towctrans.c (__towctrans): Likewise.
+	* wctype/towctrans_l.c (__towctrans_l): Likewise.
+	* wctype/wcfuncs.c: Include "wchar-lookup.h".
+	(__ctype32_wctype, __ctype32_wctrans): Declare external.
+	(__iswalnum, __iswalpha, __iswcntrl, __iswdigit, __iswlower,
+	__iswgraph, __iswprint, __iswpunct, __iswspace, __iswupper,
+	__iswxdigit, towlower, towupper): Support alternate locale format
+	with 3-level tables.
+	* wctype/wcextra.c (iswblank): Likewise.
+	* wctype/wcfuncs_l.c: Include "wchar-lookup.h".
+	(__iswalnum_l, __iswalpha_l, __iswcntrl_l, __iswdigit_l, __iswlower_l,
+	__iswgraph_l, __iswprint_l, __iswpunct_l, __iswspace_l, __iswupper_l,
+	__iswxdigit_l, __towlower_l, __towupper_l): Support alternate locale
+	format with 3-level tables.
+	* wctype/wcextra_l.c (__iswblank_l): Likewise.
+	* wctype/wctype.c (__wctype): Likewise.  In the alternate locale
+	format, return a 3-level table pointer.
+	* wctype/wctype_l.c (__wctype_l): Likewise.
+	* wctype/wctrans.c (wctrans): Likewise.
+	* wctype/wctype.h (__ISwupper, __ISwlower, __ISwalpha, __ISwdigit,
+	__ISwxdigit, __ISwspace, __ISwprint, __ISwgraph, __ISwblank,
+	__ISwcntrl, __ISwpunct, __ISwalnum): New enum values.
+	(iswctype): Remove macro definition.
+	* wcsmbs/wcwidth.h: Include "wchar-lookup.h".
+	(internal_wcwidth): Support alternate locale format with 3-level
+	tables.
+	* locale/langinfo.h (_NL_CTYPE_CLASS_OFFSET, _NL_CTYPE_MAP_OFFSET):
+	New nl_items.
+	* locale/categories.def (_NL_CTYPE_CLASS_OFFSET, _NL_CTYPE_MAP_OFFSET):
+	Define them as being type "word".
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Add initializers for them.
+	* ctype/ctype-info.c (__ctype32_wctype, __ctype32_wctrans,
+	__ctype32_width): New exported variables.
+	* locale/lc-ctype.c (_nl_postload_ctype): Initialize them in the
+	alternate locale format. Don't initialize __ctype_names and
+	__ctype_width in the alternate locale format.
+	* locale/programs/localedef.h (oldstyle_tables): New declaration.
+	* locale/programs/localedef.c (oldstyle_tables): New variable.
+	(OPT_OLDSTYLE): New macro.
+	(options): Add --old-style option.
+	(parse_opt): Handle --old-style option.
+	* locale/programs/ld-ctype.c (locale_ctype_t): Add class_offset,
+	map_offset, class_3level, map_3level, width_3level members.
+	(ctype_output): Support for alternate locale format: Computation of
+	nelems changes. _NL_CTYPE_TOUPPER32, _NL_CTYPE_TOLOWER32 and
+	_NL_CTYPE_CLASS32 only 256 characters. _NL_CTYPE_NAMES empty.
+	New fields _NL_CTYPE_CLASS_OFFSET, _NL_CTYPE_MAP_OFFSET. Field
+	_NL_CTYPE_WIDTH now contains the three-level table. Extra elems
+	now contain both class and map tables.
+	(struct wctype_table): New type.
+	(wctype_table_init, wctype_table_add, wctype_table_finalize): New
+	functions.
+	(struct wcwidth_table): New type.
+	(wcwidth_table_init, wcwidth_table_add, wcwidth_table_finalize): New
+	functions.
+	(struct wctrans_table): New type.
+	(wctrans_table_init, wctrans_table_add, wctrans_table_finalize): New
+	functions.
+	(allocate_arrays): Support for alternate locale format: Set
+	plane_size and plane_cnt to 0. Restrict ctype->ctype32_b to the first
+	256 characters. Compute ctype->class_3level. Restrict ctype->map32[idx]
+	to the first 256 characters. Compute ctype->map_3level. Set
+	ctype->class_offset and ctype->map_offset. Compute ctype->width_3level
+	instead of ctype->width.
+
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iogetwline.c (_IO_getwline_info): Use wide character

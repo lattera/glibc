@@ -22,53 +22,99 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL
 #include "cname-lookup.h"
+#include "wchar-lookup.h"
 
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
   int name (wint_t wc, __locale_t locale)				      \
-  { return __iswctype_l (wc, type, locale); }
+  {									      \
+    if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word != 0) \
+      {									      \
+	/* Old locale format.  */					      \
+	const uint32_t *class32_b;					      \
+	size_t idx;							      \
+									      \
+	idx = cname_lookup (wc, locale);				      \
+	if (idx == ~((size_t) 0))					      \
+	  return 0;							      \
+									      \
+	class32_b = (uint32_t *)					      \
+	  locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS32)].string; \
+									      \
+	return class32_b[idx] & _ISwbit (type);				      \
+      }									      \
+    else								      \
+      {									      \
+	/* New locale format.  */					      \
+	size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
+	const char *desc = locale->__locales[LC_CTYPE]->values[i].string;     \
+	return wctype_table_lookup (desc, wc);				      \
+      }									      \
+  }
 
-func (__iswalnum_l, _ISwalnum)
-func (__iswalpha_l, _ISwalpha)
-func (__iswcntrl_l, _ISwcntrl)
-func (__iswdigit_l, _ISwdigit)
-func (__iswlower_l, _ISwlower)
-func (__iswgraph_l, _ISwgraph)
-func (__iswprint_l, _ISwprint)
-func (__iswpunct_l, _ISwpunct)
-func (__iswspace_l, _ISwspace)
-func (__iswupper_l, _ISwupper)
-func (__iswxdigit_l, _ISwxdigit)
+func (__iswalnum_l, __ISwalnum)
+func (__iswalpha_l, __ISwalpha)
+func (__iswcntrl_l, __ISwcntrl)
+func (__iswdigit_l, __ISwdigit)
+func (__iswlower_l, __ISwlower)
+func (__iswgraph_l, __ISwgraph)
+func (__iswprint_l, __ISwprint)
+func (__iswpunct_l, __ISwpunct)
+func (__iswspace_l, __ISwspace)
+func (__iswupper_l, __ISwupper)
+func (__iswxdigit_l, __ISwxdigit)
 
 wint_t
 (__towlower_l) (wint_t wc, __locale_t locale)
 {
-  const int32_t *class32_tolower;
-  size_t idx;
+  if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word != 0)
+    {
+      /* Old locale format.  */
+      const int32_t *class32_tolower;
+      size_t idx;
 
-  idx = cname_lookup (wc, locale);
-  if (idx == ~((size_t) 0))
-    return 0;
+      idx = cname_lookup (wc, locale);
+      if (idx == ~((size_t) 0))
+	return 0;
 
-  class32_tolower = (const int32_t *)
-    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER32)].string;
+      class32_tolower = (const int32_t *)
+	locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER32)].string;
 
-  return class32_tolower[idx];
+      return class32_tolower[idx];
+    }
+  else
+    {
+      /* New locale format.  */
+      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + 1;
+      const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
+      return wctrans_table_lookup (desc, wc);
+    }
 }
 
 wint_t
 (__towupper_l) (wint_t wc, __locale_t locale)
 {
-  const int32_t *class32_toupper;
-  size_t idx;
+  if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word != 0)
+    {
+      /* Old locale format.  */
+      const int32_t *class32_toupper;
+      size_t idx;
 
-  idx = cname_lookup (wc, locale);
-  if (idx == ~((size_t) 0))
-    return 0;
+      idx = cname_lookup (wc, locale);
+      if (idx == ~((size_t) 0))
+	return 0;
 
-  class32_toupper = (const int32_t *)
-    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER32)].string;
+      class32_toupper = (const int32_t *)
+	locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER32)].string;
 
-  return class32_toupper[idx];
+      return class32_toupper[idx];
+    }
+  else
+    {
+      /* New locale format.  */
+      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + 0;
+      const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
+      return wctrans_table_lookup (desc, wc);
+    }
 }

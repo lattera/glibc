@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,9 @@ _nl_postload_ctype (void)
   extern const unsigned char *__ctype_width;
   extern const uint32_t *__ctype32_toupper;
   extern const uint32_t *__ctype32_tolower;
+  extern const char *__ctype32_wctype[12];
+  extern const char *__ctype32_wctrans[2];
+  extern const char *__ctype32_width;
 
   __ctype_b = current (uint16_t, CLASS, 128);
   __ctype_toupper = current (uint32_t, TOUPPER, 128);
@@ -52,6 +55,27 @@ _nl_postload_ctype (void)
   __ctype32_b = current (uint32_t, CLASS32, 0);
   __ctype32_toupper = current (uint32_t, TOUPPER32, 0);
   __ctype32_tolower = current (uint32_t, TOLOWER32, 0);
-  __ctype_names = current (uint32_t, NAMES, 0);
-  __ctype_width = current (unsigned char, WIDTH, 0);
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
+    {
+      /* Old locale format.  */
+      __ctype_names = current (uint32_t, NAMES, 0);
+      __ctype_width = current (unsigned char, WIDTH, 0);
+    }
+  else
+    {
+      /* New locale format.  */
+      size_t offset, cnt;
+
+      offset = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET);
+      for (cnt = 0; cnt < 12; cnt++)
+	__ctype32_wctype[cnt] =
+	  _nl_current_LC_CTYPE->values[offset + cnt].string;
+
+      offset = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET);
+      for (cnt = 0; cnt < 2; cnt++)
+	__ctype32_wctrans[cnt] =
+	  _nl_current_LC_CTYPE->values[offset + cnt].string;
+
+      __ctype32_width = current (char, WIDTH, 0);
+    }
 }

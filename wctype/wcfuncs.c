@@ -21,6 +21,7 @@
 #include <ctype.h>	/* For __ctype_tolower and __ctype_toupper.  */
 
 #include "cname-lookup.h"
+#include "wchar-lookup.h"
 
 /* If the program is compiled without optimization the following declaration
    is not visible in the header.   */
@@ -29,6 +30,8 @@ extern unsigned int *__ctype32_b;
 /* These are not exported.  */
 extern const uint32_t *__ctype32_toupper;
 extern const uint32_t *__ctype32_tolower;
+extern const char *__ctype32_wctype[12];
+extern const char *__ctype32_wctrans[2];
 
 /* Provide real-function versions of all the wctype macros.  */
 
@@ -36,63 +39,90 @@ extern const uint32_t *__ctype32_tolower;
   int									      \
   __##name (wint_t wc)							      \
   {									      \
-    size_t idx;								      \
+    if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)		      \
+      {									      \
+	/* Old locale format.  */					      \
+	size_t idx;							      \
 									      \
-    idx = cname_lookup (wc);						      \
-    if (idx == ~((size_t) 0))						      \
-      return 0;								      \
+	idx = cname_lookup (wc);					      \
+	if (idx == ~((size_t) 0))					      \
+	  return 0;							      \
 									      \
-    return __ctype32_b[idx] & type;					      \
+	return __ctype32_b[idx] & _ISwbit (type);			      \
+      }									      \
+    else								      \
+      {									      \
+	/* New locale format.  */					      \
+	return wctype_table_lookup (__ctype32_wctype[type], wc);	      \
+      }									      \
   }									      \
   weak_alias (__##name, name)
 
 #undef iswalnum
-func (iswalnum, _ISwalnum)
+func (iswalnum, __ISwalnum)
 #undef iswalpha
-func (iswalpha, _ISwalpha)
+func (iswalpha, __ISwalpha)
 #undef iswcntrl
-func (iswcntrl, _ISwcntrl)
+func (iswcntrl, __ISwcntrl)
 #undef iswdigit
-func (iswdigit, _ISwdigit)
+func (iswdigit, __ISwdigit)
 #undef iswlower
-func (iswlower, _ISwlower)
+func (iswlower, __ISwlower)
 #undef iswgraph
-func (iswgraph, _ISwgraph)
+func (iswgraph, __ISwgraph)
 #undef iswprint
-func (iswprint, _ISwprint)
+func (iswprint, __ISwprint)
 #undef iswpunct
-func (iswpunct, _ISwpunct)
+func (iswpunct, __ISwpunct)
 #undef iswspace
-func (iswspace, _ISwspace)
+func (iswspace, __ISwspace)
 #undef iswupper
-func (iswupper, _ISwupper)
+func (iswupper, __ISwupper)
 #undef iswxdigit
-func (iswxdigit, _ISwxdigit)
+func (iswxdigit, __ISwxdigit)
 
 wint_t
 (towlower) (wc)
      wint_t wc;
 {
-  size_t idx;
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
+    {
+      /* Old locale format.  */
+      size_t idx;
 
-  idx = cname_lookup (wc);
-  if (idx == ~((size_t) 0))
-    /* Character is not known.  Default action is to simply return it.  */
-    return wc;
+      idx = cname_lookup (wc);
+      if (idx == ~((size_t) 0))
+	/* Character is not known.  Default action is to simply return it.  */
+	return wc;
 
-  return (wint_t) __ctype32_tolower[idx];
+      return (wint_t) __ctype32_tolower[idx];
+    }
+  else
+    {
+      /* New locale format.  */
+      return wctrans_table_lookup (__ctype32_wctrans[1], wc);
+    }
 }
 
 wint_t
 (towupper) (wc)
      wint_t wc;
 {
-  size_t idx;
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
+    {
+      /* Old locale format.  */
+      size_t idx;
 
-  idx = cname_lookup (wc);
-  if (idx == ~((size_t) 0))
-    /* Character is not known.  Default action is to simply return it.  */
-    return wc;
+      idx = cname_lookup (wc);
+      if (idx == ~((size_t) 0))
+	/* Character is not known.  Default action is to simply return it.  */
+	return wc;
 
-  return (wint_t) __ctype32_toupper[idx];
+      return (wint_t) __ctype32_toupper[idx];
+    }
+  else
+    {
+      /* New locale format.  */
+      return wctrans_table_lookup (__ctype32_wctrans[0], wc);
+    }
 }

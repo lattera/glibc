@@ -32,7 +32,6 @@ wctrans (const char *property)
 {
   const char *names;
   size_t cnt;
-  int32_t *result;
 
   names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_MAP_NAMES);
   cnt = 0;
@@ -48,13 +47,21 @@ wctrans (const char *property)
   if (names[0] == '\0')
     return 0;
 
-  if (cnt == 0)
-    return (wctrans_t) __ctype32_toupper;
-  else if (cnt == 1)
-    return (wctrans_t) __ctype32_tolower;
+  if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
+    {
+      /* Old locale format.  */
+      if (cnt == 0)
+	return (wctrans_t) __ctype32_toupper;
+      else if (cnt == 1)
+	return (wctrans_t) __ctype32_tolower;
 
-  /* We have to search the table.  */
-  result = (int32_t *) _NL_CURRENT (LC_CTYPE, _NL_NUM_LC_CTYPE + cnt - 2);
-
-  return (wctrans_t) result;
+      /* We have to search the table.  */
+      return (wctrans_t) (const int32_t *) _NL_CURRENT (LC_CTYPE, _NL_NUM_LC_CTYPE + cnt - 2);
+    }
+  else
+    {
+      /* New locale format.  */
+      size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
+      return (wctrans_t) _nl_current_LC_CTYPE->values[i].string;
+    }
 }

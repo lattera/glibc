@@ -125,6 +125,7 @@ struct locale_ctype_t
   size_t class_collection_max;
   size_t class_collection_act;
   uint32_t class_done;
+  uint32_t class_offset;
 
   struct charseq **mbdigits;
   size_t mbdigits_act;
@@ -148,6 +149,7 @@ struct locale_ctype_t
   size_t map_collection_nr;
   size_t last_map_idx;
   int tomap_done[MAX_NR_CHARMAP];
+  uint32_t map_offset;
 
   /* Transliteration information.  */
   const char *translit_copy_locale;
@@ -168,9 +170,12 @@ struct locale_ctype_t
   uint32_t *names;
   uint32_t **map;
   uint32_t **map32;
+  struct iovec *class_3level;
+  struct iovec *map_3level;
   uint32_t *class_name_ptr;
   uint32_t *map_name_ptr;
   unsigned char *width;
+  struct iovec width_3level;
   uint32_t mb_cur_max;
   const char *codeset_name;
   uint32_t *translit_from_idx;
@@ -834,7 +839,9 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
   static const char nulbytes[4] = { 0, 0, 0, 0 };
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)
-			 + (ctype->map_collection_nr - 2));
+			 + (oldstyle_tables
+			    ? (ctype->map_collection_nr - 2)
+			    : (ctype->nr_charclass + ctype->map_collection_nr)));
   struct iovec iov[2 + nelems + ctype->nr_charclass
 		  + ctype->map_collection_nr + 2];
   struct locale_file data;
@@ -893,21 +900,28 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER32,
 		      ctype->map32[0],
-		      (ctype->plane_size * ctype->plane_cnt)
+		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
 		      * sizeof (uint32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER32,
 		      ctype->map32[1],
-		      (ctype->plane_size * ctype->plane_cnt)
+		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
 		      * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS32,
 		      ctype->ctype32_b,
-		      (ctype->plane_size * ctype->plane_cnt
-		       * sizeof (char_class32_t)));
+		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
+		      * sizeof (char_class32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_NAMES,
-		      ctype->names, (ctype->plane_size * ctype->plane_cnt
-				     * sizeof (uint32_t)));
+		      ctype->names,
+		      (oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 0)
+		      * sizeof (uint32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_CLASS_OFFSET,
+		      &ctype->class_offset, sizeof (uint32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_MAP_OFFSET,
+		      &ctype->map_offset, sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TAB_SIZE,
 		      &ctype->translit_idx_size, sizeof (uint32_t));
@@ -969,8 +983,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      ctype->width,
-		      (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul);
+		      (oldstyle_tables
+		       ? ctype->width
+		       : ctype->width_3level.iov_base),
+		      (oldstyle_tables
+		       ? (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul
+		       : ctype->width_3level.iov_len));
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (uint32_t));
@@ -1135,14 +1153,32 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
       else
 	{
 	  /* Handle extra maps.  */
-	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) + 2;
+	  if (oldstyle_tables)
+	    {
+	      size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) + 2;
 
-	  iov[2 + elem + offset].iov_base = ctype->map32[nr];
-	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
-					     * ctype->plane_cnt)
-					    * sizeof (uint32_t));
+	      iov[2 + elem + offset].iov_base = ctype->map32[nr];
+	      iov[2 + elem + offset].iov_len = ((ctype->plane_size
+						 * ctype->plane_cnt)
+						* sizeof (uint32_t));
 
-	  idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    }
+	  else
+	    {
+	      size_t nr = elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE);
+	      if (nr < ctype->nr_charclass)
+		{
+		  iov[2 + elem + offset] = ctype->class_3level[nr];
+		}
+	      else
+		{
+		  nr -= ctype->nr_charclass;
+		  assert (nr < ctype->map_collection_nr);
+		  iov[2 + elem + offset] = ctype->map_3level[nr];
+		}
+	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    }
 	}
     }
 
@@ -3194,6 +3230,628 @@ no output digits defined and none of the standard names in the charmap"));
 }
 
 
+/* Construction of sparse 3-level tables.
+   See wchar-lookup.h for their structure and the meaning of p and q.  */
+
+struct wctype_table
+{
+  /* Parameters.  */
+  unsigned int p;
+  unsigned int q;
+  /* Working representation.  */
+  size_t level1_alloc;
+  size_t level1_size;
+  uint32_t *level1;
+  size_t level2_alloc;
+  size_t level2_size;
+  uint32_t *level2;
+  size_t level3_alloc;
+  size_t level3_size;
+  uint32_t *level3;
+  /* Compressed representation.  */
+  size_t result_size;
+  char *result;
+};
+
+/* Initialize.  Assumes t->p and t->q have already been set.  */
+static inline void
+wctype_table_init (struct wctype_table *t)
+{
+  t->level1_alloc = t->level1_size = 0;
+  t->level2_alloc = t->level2_size = 0;
+  t->level3_alloc = t->level3_size = 0;
+}
+
+/* Add one entry.  */
+static void
+wctype_table_add (struct wctype_table *t, uint32_t wc)
+{
+  uint32_t index1 = wc >> (t->q + t->p + 5);
+  uint32_t index2 = (wc >> (t->p + 5)) & ((1 << t->q) - 1);
+  uint32_t index3 = (wc >> 5) & ((1 << t->p) - 1);
+  uint32_t index4 = wc & 0x1f;
+  size_t i, i1, i2;
+
+  if (index1 >= t->level1_size)
+    {
+      if (index1 >= t->level1_alloc)
+	{
+	  size_t alloc = 2 * t->level1_alloc;
+	  if (alloc <= index1)
+	    alloc = index1 + 1;
+	  t->level1 = (t->level1_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level1,
+						alloc * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
+	  t->level1_alloc = alloc;
+	}
+      while (index1 >= t->level1_size)
+	t->level1[t->level1_size++] = ~((uint32_t) 0);
+    }
+
+  if (t->level1[index1] == ~((uint32_t) 0))
+    {
+      if (t->level2_size == t->level2_alloc)
+	{
+	  size_t alloc = 2 * t->level2_alloc + 1;
+	  t->level2 = (t->level2_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level2,
+						(alloc << t->q) * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
+	  t->level2_alloc = alloc;
+	}
+      i1 = t->level2_size << t->q;
+      i2 = (t->level2_size + 1) << t->q;
+      for (i = i1; i < i2; i++)
+	t->level2[i] = ~((uint32_t) 0);
+      t->level1[index1] = t->level2_size++;
+    }
+
+  index2 += t->level1[index1] << t->q;
+
+  if (t->level2[index2] == ~((uint32_t) 0))
+    {
+      if (t->level3_size == t->level3_alloc)
+	{
+	  size_t alloc = 2 * t->level3_alloc + 1;
+	  t->level3 = (t->level3_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level3,
+						(alloc << t->p) * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc ((alloc << t->p) * sizeof (uint32_t)));
+	  t->level3_alloc = alloc;
+	}
+      i1 = t->level3_size << t->p;
+      i2 = (t->level3_size + 1) << t->p;
+      for (i = i1; i < i2; i++)
+	t->level3[i] = 0;
+      t->level2[index2] = t->level3_size++;
+    }
+
+  index3 += t->level2[index2] << t->p;
+
+  t->level3[index3] |= (uint32_t)1 << index4;
+}
+
+/* Finalize and shrink.  */
+static void
+wctype_table_finalize (struct wctype_table *t)
+{
+  size_t i, j, k;
+  uint32_t reorder3[t->level3_size];
+  uint32_t reorder2[t->level2_size];
+  uint32_t level1_offset, level2_offset, level3_offset;
+
+  /* Uniquify level3 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level3_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (uint32_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder3[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (uint32_t));
+	  k++;
+	}
+    }
+  t->level3_size = k;
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    if (t->level2[i] != ~((uint32_t) 0))
+      t->level2[i] = reorder3[t->level2[i]];
+
+  /* Uniquify level2 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level2_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder2[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t));
+	  k++;
+	}
+    }
+  t->level2_size = k;
+
+  for (i = 0; i < t->level1_size; i++)
+    if (t->level1[i] != ~((uint32_t) 0))
+      t->level1[i] = reorder2[t->level1[i]];
+
+  /* Create and fill the resulting compressed representation.  */
+  t->result_size =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t)
+    + (t->level3_size << t->p) * sizeof (uint32_t);
+  t->result = (char *) xmalloc (t->result_size);
+
+  level1_offset =
+    5 * sizeof (uint32_t);
+  level2_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t);
+  level3_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t);
+
+  ((uint32_t *) t->result)[0] = t->q + t->p + 5;
+  ((uint32_t *) t->result)[1] = t->level1_size;
+  ((uint32_t *) t->result)[2] = t->p + 5;
+  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
+  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
+
+  for (i = 0; i < t->level1_size; i++)
+    ((uint32_t *) (t->result + level1_offset))[i] =
+      (t->level1[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    ((uint32_t *) (t->result + level2_offset))[i] =
+      (t->level2[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level2[i] << t->p) * sizeof (uint32_t) + level3_offset);
+
+  for (i = 0; i < (t->level3_size << t->p); i++)
+    ((uint32_t *) (t->result + level3_offset))[i] = t->level3[i];
+
+  if (t->level1_alloc > 0)
+    free (t->level1);
+  if (t->level2_alloc > 0)
+    free (t->level2);
+  if (t->level3_alloc > 0)
+    free (t->level3);
+}
+
+struct wcwidth_table
+{
+  /* Parameters.  */
+  unsigned int p;
+  unsigned int q;
+  /* Working representation.  */
+  size_t level1_alloc;
+  size_t level1_size;
+  uint32_t *level1;
+  size_t level2_alloc;
+  size_t level2_size;
+  uint32_t *level2;
+  size_t level3_alloc;
+  size_t level3_size;
+  uint8_t *level3;
+  /* Compressed representation.  */
+  size_t result_size;
+  char *result;
+};
+
+/* Initialize.  Assumes t->p and t->q have already been set.  */
+static inline void
+wcwidth_table_init (struct wcwidth_table *t)
+{
+  t->level1_alloc = t->level1_size = 0;
+  t->level2_alloc = t->level2_size = 0;
+  t->level3_alloc = t->level3_size = 0;
+}
+
+/* Add one entry.  */
+static void
+wcwidth_table_add (struct wcwidth_table *t, uint32_t wc, uint8_t width)
+{
+  uint32_t index1 = wc >> (t->q + t->p);
+  uint32_t index2 = (wc >> t->p) & ((1 << t->q) - 1);
+  uint32_t index3 = wc & ((1 << t->p) - 1);
+  size_t i, i1, i2;
+
+  if (width == 0xff)
+    return;
+
+  if (index1 >= t->level1_size)
+    {
+      if (index1 >= t->level1_alloc)
+	{
+	  size_t alloc = 2 * t->level1_alloc;
+	  if (alloc <= index1)
+	    alloc = index1 + 1;
+	  t->level1 = (t->level1_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level1,
+						alloc * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
+	  t->level1_alloc = alloc;
+	}
+      while (index1 >= t->level1_size)
+	t->level1[t->level1_size++] = ~((uint32_t) 0);
+    }
+
+  if (t->level1[index1] == ~((uint32_t) 0))
+    {
+      if (t->level2_size == t->level2_alloc)
+	{
+	  size_t alloc = 2 * t->level2_alloc + 1;
+	  t->level2 = (t->level2_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level2,
+						(alloc << t->q) * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
+	  t->level2_alloc = alloc;
+	}
+      i1 = t->level2_size << t->q;
+      i2 = (t->level2_size + 1) << t->q;
+      for (i = i1; i < i2; i++)
+	t->level2[i] = ~((uint32_t) 0);
+      t->level1[index1] = t->level2_size++;
+    }
+
+  index2 += t->level1[index1] << t->q;
+
+  if (t->level2[index2] == ~((uint32_t) 0))
+    {
+      if (t->level3_size == t->level3_alloc)
+	{
+	  size_t alloc = 2 * t->level3_alloc + 1;
+	  t->level3 = (t->level3_alloc > 0
+		       ? (uint8_t *) xrealloc ((char *) t->level3,
+					       (alloc << t->p) * sizeof (uint8_t))
+		       : (uint8_t *) xmalloc ((alloc << t->p) * sizeof (uint8_t)));
+	  t->level3_alloc = alloc;
+	}
+      i1 = t->level3_size << t->p;
+      i2 = (t->level3_size + 1) << t->p;
+      for (i = i1; i < i2; i++)
+	t->level3[i] = 0xff;
+      t->level2[index2] = t->level3_size++;
+    }
+
+  index3 += t->level2[index2] << t->p;
+
+  t->level3[index3] = width;
+}
+
+/* Finalize and shrink.  */
+static void
+wcwidth_table_finalize (struct wcwidth_table *t)
+{
+  size_t i, j, k;
+  uint32_t reorder3[t->level3_size];
+  uint32_t reorder2[t->level2_size];
+  uint32_t level1_offset, level2_offset, level3_offset, last_offset;
+
+  /* Uniquify level3 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level3_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (uint8_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder3[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (uint8_t));
+	  k++;
+	}
+    }
+  t->level3_size = k;
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    if (t->level2[i] != ~((uint32_t) 0))
+      t->level2[i] = reorder3[t->level2[i]];
+
+  /* Uniquify level2 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level2_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder2[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t));
+	  k++;
+	}
+    }
+  t->level2_size = k;
+
+  for (i = 0; i < t->level1_size; i++)
+    if (t->level1[i] != ~((uint32_t) 0))
+      t->level1[i] = reorder2[t->level1[i]];
+
+  /* Create and fill the resulting compressed representation.  */
+  last_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t)
+    + (t->level3_size << t->p) * sizeof (uint8_t);
+  t->result_size = (last_offset + 3) & ~3ul;
+  t->result = (char *) xmalloc (t->result_size);
+
+  level1_offset =
+    5 * sizeof (uint32_t);
+  level2_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t);
+  level3_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t);
+
+  ((uint32_t *) t->result)[0] = t->q + t->p;
+  ((uint32_t *) t->result)[1] = t->level1_size;
+  ((uint32_t *) t->result)[2] = t->p;
+  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
+  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
+
+  for (i = 0; i < t->level1_size; i++)
+    ((uint32_t *) (t->result + level1_offset))[i] =
+      (t->level1[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    ((uint32_t *) (t->result + level2_offset))[i] =
+      (t->level2[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level2[i] << t->p) * sizeof (uint8_t) + level3_offset);
+
+  for (i = 0; i < (t->level3_size << t->p); i++)
+    ((uint8_t *) (t->result + level3_offset))[i] = t->level3[i];
+
+  if (last_offset < t->result_size)
+    memset (t->result + last_offset, 0, t->result_size - last_offset);
+
+  if (t->level1_alloc > 0)
+    free (t->level1);
+  if (t->level2_alloc > 0)
+    free (t->level2);
+  if (t->level3_alloc > 0)
+    free (t->level3);
+}
+
+struct wctrans_table
+{
+  /* Parameters.  */
+  unsigned int p;
+  unsigned int q;
+  /* Working representation.  */
+  size_t level1_alloc;
+  size_t level1_size;
+  uint32_t *level1;
+  size_t level2_alloc;
+  size_t level2_size;
+  uint32_t *level2;
+  size_t level3_alloc;
+  size_t level3_size;
+  int32_t *level3;
+  /* Compressed representation.  */
+  size_t result_size;
+  char *result;
+};
+
+/* Initialize.  Assumes t->p and t->q have already been set.  */
+static inline void
+wctrans_table_init (struct wctrans_table *t)
+{
+  t->level1_alloc = t->level1_size = 0;
+  t->level2_alloc = t->level2_size = 0;
+  t->level3_alloc = t->level3_size = 0;
+}
+
+/* Add one entry.  */
+static void
+wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
+{
+  uint32_t index1 = wc >> (t->q + t->p);
+  uint32_t index2 = (wc >> t->p) & ((1 << t->q) - 1);
+  uint32_t index3 = wc & ((1 << t->p) - 1);
+  int32_t value = (int32_t) mapped_wc - (int32_t) wc;
+  size_t i, i1, i2;
+
+  if (value == 0)
+    return;
+
+  if (index1 >= t->level1_size)
+    {
+      if (index1 >= t->level1_alloc)
+	{
+	  size_t alloc = 2 * t->level1_alloc;
+	  if (alloc <= index1)
+	    alloc = index1 + 1;
+	  t->level1 = (t->level1_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level1,
+						alloc * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
+	  t->level1_alloc = alloc;
+	}
+      while (index1 >= t->level1_size)
+	t->level1[t->level1_size++] = ~((uint32_t) 0);
+    }
+
+  if (t->level1[index1] == ~((uint32_t) 0))
+    {
+      if (t->level2_size == t->level2_alloc)
+	{
+	  size_t alloc = 2 * t->level2_alloc + 1;
+	  t->level2 = (t->level2_alloc > 0
+		       ? (uint32_t *) xrealloc ((char *) t->level2,
+						(alloc << t->q) * sizeof (uint32_t))
+		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
+	  t->level2_alloc = alloc;
+	}
+      i1 = t->level2_size << t->q;
+      i2 = (t->level2_size + 1) << t->q;
+      for (i = i1; i < i2; i++)
+	t->level2[i] = ~((uint32_t) 0);
+      t->level1[index1] = t->level2_size++;
+    }
+
+  index2 += t->level1[index1] << t->q;
+
+  if (t->level2[index2] == ~((uint32_t) 0))
+    {
+      if (t->level3_size == t->level3_alloc)
+	{
+	  size_t alloc = 2 * t->level3_alloc + 1;
+	  t->level3 = (t->level3_alloc > 0
+		       ? (int32_t *) xrealloc ((char *) t->level3,
+					       (alloc << t->p) * sizeof (int32_t))
+		       : (int32_t *) xmalloc ((alloc << t->p) * sizeof (int32_t)));
+	  t->level3_alloc = alloc;
+	}
+      i1 = t->level3_size << t->p;
+      i2 = (t->level3_size + 1) << t->p;
+      for (i = i1; i < i2; i++)
+	t->level3[i] = 0;
+      t->level2[index2] = t->level3_size++;
+    }
+
+  index3 += t->level2[index2] << t->p;
+
+  t->level3[index3] = value;
+}
+
+/* Finalize and shrink.  */
+static void
+wctrans_table_finalize (struct wctrans_table *t)
+{
+  size_t i, j, k;
+  uint32_t reorder3[t->level3_size];
+  uint32_t reorder2[t->level2_size];
+  uint32_t level1_offset, level2_offset, level3_offset;
+
+  /* Uniquify level3 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level3_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (int32_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder3[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level3[i << t->p], &t->level3[j << t->p],
+		    (1 << t->p) * sizeof (int32_t));
+	  k++;
+	}
+    }
+  t->level3_size = k;
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    if (t->level2[i] != ~((uint32_t) 0))
+      t->level2[i] = reorder3[t->level2[i]];
+
+  /* Uniquify level2 blocks.  */
+  k = 0;
+  for (j = 0; j < t->level2_size; j++)
+    {
+      for (i = 0; i < k; i++)
+	if (memcmp (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t)) == 0)
+	  break;
+      /* Relocate block j to block i.  */
+      reorder2[j] = i;
+      if (i == k)
+	{
+	  if (i != j)
+	    memcpy (&t->level2[i << t->q], &t->level2[j << t->q],
+		    (1 << t->q) * sizeof (uint32_t));
+	  k++;
+	}
+    }
+  t->level2_size = k;
+
+  for (i = 0; i < t->level1_size; i++)
+    if (t->level1[i] != ~((uint32_t) 0))
+      t->level1[i] = reorder2[t->level1[i]];
+
+  /* Create and fill the resulting compressed representation.  */
+  t->result_size =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t)
+    + (t->level3_size << t->p) * sizeof (int32_t);
+  t->result = (char *) xmalloc (t->result_size);
+
+  level1_offset =
+    5 * sizeof (uint32_t);
+  level2_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t);
+  level3_offset =
+    5 * sizeof (uint32_t)
+    + t->level1_size * sizeof (uint32_t)
+    + (t->level2_size << t->q) * sizeof (uint32_t);
+
+  ((uint32_t *) t->result)[0] = t->q + t->p;
+  ((uint32_t *) t->result)[1] = t->level1_size;
+  ((uint32_t *) t->result)[2] = t->p;
+  ((uint32_t *) t->result)[3] = (1 << t->q) - 1;
+  ((uint32_t *) t->result)[4] = (1 << t->p) - 1;
+
+  for (i = 0; i < t->level1_size; i++)
+    ((uint32_t *) (t->result + level1_offset))[i] =
+      (t->level1[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level1[i] << t->q) * sizeof (uint32_t) + level2_offset);
+
+  for (i = 0; i < (t->level2_size << t->q); i++)
+    ((uint32_t *) (t->result + level2_offset))[i] =
+      (t->level2[i] == ~((uint32_t) 0)
+       ? 0
+       : (t->level2[i] << t->p) * sizeof (int32_t) + level3_offset);
+
+  for (i = 0; i < (t->level3_size << t->p); i++)
+    ((int32_t *) (t->result + level3_offset))[i] = t->level3[i];
+
+  if (t->level1_alloc > 0)
+    free (t->level1);
+  if (t->level2_alloc > 0)
+    free (t->level2);
+  if (t->level3_alloc > 0)
+    free (t->level3);
+}
+
+
 static void
 allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 		 struct repertoire_t *repertoire)
@@ -3227,80 +3885,88 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
   size_t min_total = UINT_MAX;
   size_t act_size = 256;
 
-  if (!be_quiet && ctype->charnames_act > 512)
-    fputs (_("\
+  if (oldstyle_tables)
+    {
+      if (!be_quiet && ctype->charnames_act > 512)
+	fputs (_("\
 Computing table size for character classes might take a while..."),
-	   stderr);
+	       stderr);
 
-  /* While we want to have a small total size we are willing to use a
-     little bit larger table if this reduces the number of layers.
-     Therefore we add a little penalty to the number of planes.
-     Maybe this constant has to be adjusted a bit.  */
+      /* While we want to have a small total size we are willing to use a
+	 little bit larger table if this reduces the number of layers.
+	 Therefore we add a little penalty to the number of planes.
+	 Maybe this constant has to be adjusted a bit.  */
 #define PENALTY 128
-  do
-    {
-      size_t cnt[act_size];
-      size_t act_planes = 1;
-
-      memset (cnt, '\0', sizeof cnt);
-
-      for (idx = 0; idx < 256; ++idx)
-	cnt[idx] = 1;
-
-      for (idx = 0; idx < ctype->charnames_act; ++idx)
-	if (ctype->charnames[idx] >= 256)
-	  {
-	    size_t nr = ctype->charnames[idx] % act_size;
-
-	    if (++cnt[nr] > act_planes)
-	      {
-		act_planes = cnt[nr];
-		if ((act_size + PENALTY) * act_planes >= min_total)
-		  break;
-	      }
-	  }
-
-      if ((act_size + PENALTY) * act_planes < min_total)
+      do
 	{
-	  min_total = (act_size + PENALTY) * act_planes;
-	  ctype->plane_size = act_size;
-	  ctype->plane_cnt = act_planes;
+	  size_t cnt[act_size];
+	  size_t act_planes = 1;
+
+	  memset (cnt, '\0', sizeof cnt);
+
+	  for (idx = 0; idx < 256; ++idx)
+	    cnt[idx] = 1;
+
+	  for (idx = 0; idx < ctype->charnames_act; ++idx)
+	    if (ctype->charnames[idx] >= 256)
+	      {
+		size_t nr = ctype->charnames[idx] % act_size;
+
+		if (++cnt[nr] > act_planes)
+		  {
+		    act_planes = cnt[nr];
+		    if ((act_size + PENALTY) * act_planes >= min_total)
+		      break;
+		  }
+	      }
+
+	  if ((act_size + PENALTY) * act_planes < min_total)
+	    {
+	      min_total = (act_size + PENALTY) * act_planes;
+	      ctype->plane_size = act_size;
+	      ctype->plane_cnt = act_planes;
+	    }
+
+	  ++act_size;
 	}
+      while (act_size < min_total);
 
-      ++act_size;
+      if (!be_quiet && ctype->charnames_act > 512)
+	fputs (_(" done\n"), stderr);
+
+
+      ctype->names = (uint32_t *) xcalloc (ctype->plane_size
+					   * ctype->plane_cnt,
+					   sizeof (uint32_t));
+
+      for (idx = 1; idx < 256; ++idx)
+	ctype->names[idx] = idx;
+
+      /* Trick: change the 0th entry's name to 1 to mark the cell occupied.  */
+      ctype->names[0] = 1;
+
+      for (idx = 256; idx < ctype->charnames_act; ++idx)
+	{
+	  size_t nr = (ctype->charnames[idx] % ctype->plane_size);
+	  size_t depth = 0;
+
+	  while (ctype->names[nr + depth * ctype->plane_size])
+	    ++depth;
+	  assert (depth < ctype->plane_cnt);
+
+	  ctype->names[nr + depth * ctype->plane_size] = ctype->charnames[idx];
+
+	  /* Now for faster access remember the index in the NAMES_B array.  */
+	  ctype->charnames[idx] = nr + depth * ctype->plane_size;
+	}
+      ctype->names[0] = 0;
     }
-  while (act_size < min_total);
-
-  if (!be_quiet && ctype->charnames_act > 512)
-    fputs (_(" done\n"), stderr);
-
-
-  ctype->names = (uint32_t *) xcalloc (ctype->plane_size
-				       * ctype->plane_cnt,
-				       sizeof (uint32_t));
-
-  for (idx = 1; idx < 256; ++idx)
-    ctype->names[idx] = idx;
-
-  /* Trick: change the 0th entry's name to 1 to mark the cell occupied.  */
-  ctype->names[0] = 1;
-
-  for (idx = 256; idx < ctype->charnames_act; ++idx)
+  else
     {
-      size_t nr = (ctype->charnames[idx] % ctype->plane_size);
-      size_t depth = 0;
-
-      while (ctype->names[nr + depth * ctype->plane_size])
-	++depth;
-      assert (depth < ctype->plane_cnt);
-
-      ctype->names[nr + depth * ctype->plane_size] = ctype->charnames[idx];
-
-      /* Now for faster access remember the index in the NAMES_B array.  */
-      ctype->charnames[idx] = nr + depth * ctype->plane_size;
+      ctype->plane_size = 0;
+      ctype->plane_cnt = 0;
+      ctype->names = NULL;
     }
-  ctype->names[0] = 0;
-
 
   /* You wonder about this amount of memory?  This is only because some
      users do not manage to address the array with unsigned values or
@@ -3309,9 +3975,12 @@ Computing table size for character classes might take a while..."),
      128 up to 255 below the entry for \0.  */
   ctype->ctype_b = (char_class_t *) xcalloc (256 + 128,
 					     sizeof (char_class_t));
-  ctype->ctype32_b = (char_class32_t *) xcalloc (ctype->plane_size
-						 * ctype->plane_cnt,
-						 sizeof (char_class32_t));
+  ctype->ctype32_b = (char_class32_t *)
+    xcalloc ((oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256),
+	     sizeof (char_class32_t));
+  if (!oldstyle_tables)
+    ctype->class_3level = (struct iovec *)
+      xmalloc (ctype->nr_charclass * sizeof (struct iovec));
 
   /* This is the array accessed using the multibyte string elements.  */
   for (idx = 0; idx < 256; ++idx)
@@ -3322,14 +3991,55 @@ Computing table size for character classes might take a while..."),
   for (idx = 0; idx < 127; ++idx)
     ctype->ctype_b[idx] = ctype->ctype_b[256 + idx];
 
-  /* The 32 bit array contains all characters.  */
-  for (idx = 0; idx < ctype->class_collection_act; ++idx)
-    ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
+  if (oldstyle_tables)
+    {
+      /* The 32 bit array contains all characters.  */
+      for (idx = 0; idx < ctype->class_collection_act; ++idx)
+	ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
+    }
+  else
+    {
+      /* The 32 bit array contains all characters < 0x100.  */
+      for (idx = 0; idx < ctype->class_collection_act; ++idx)
+	if (ctype->charnames[idx] < 0x100)
+	  ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
+    }
+
+  if (!oldstyle_tables)
+    {
+      size_t nr;
+
+      for (nr = 0; nr < ctype->nr_charclass; nr++)
+	{
+	  struct wctype_table t;
+
+	  t.p = 4; /* or: 5 */
+	  t.q = 7; /* or: 6 */
+	  wctype_table_init (&t);
+
+	  for (idx = 0; idx < ctype->class_collection_act; ++idx)
+	    if (ctype->class_collection[idx] & _ISwbit (nr))
+	      wctype_table_add (&t, ctype->charnames[idx]);
+
+	  wctype_table_finalize (&t);
+
+	  if (verbose)
+	    fprintf (stderr, _("%s: table for class \"%s\": %lu bytes\n"),
+		     "LC_CTYPE", ctype->classnames[nr],
+		     (unsigned long int) t.result_size);
+
+	  ctype->class_3level[nr].iov_base = t.result;
+	  ctype->class_3level[nr].iov_len = t.result_size;
+	}
+    }
 
   /* Room for table of mappings.  */
   ctype->map = (uint32_t **) xmalloc (2 * sizeof (uint32_t *));
   ctype->map32 = (uint32_t **) xmalloc (ctype->map_collection_nr
-				      * sizeof (uint32_t *));
+					* sizeof (uint32_t *));
+  if (!oldstyle_tables)
+    ctype->map_3level = (struct iovec *)
+      xmalloc (ctype->map_collection_nr * sizeof (struct iovec));
 
   /* Fill in all mappings.  */
   for (idx = 0; idx < 2; ++idx)
@@ -3357,25 +4067,59 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map32[idx] = (uint32_t *) xmalloc (ctype->plane_size
-						* ctype->plane_cnt
-						* sizeof (uint32_t));
+      ctype->map32[idx] = (uint32_t *)
+	xmalloc ((oldstyle_tables ? ctype->plane_size * ctype->plane_cnt : 256)
+		 * sizeof (uint32_t));
 
       /* Copy default value (identity mapping).  */
-      memcpy (ctype->map32[idx], ctype->names,
-	      ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
+      if (oldstyle_tables)
+	memcpy (ctype->map32[idx], ctype->names,
+		ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
+      else
+	for (idx2 = 0; idx2 < 256; ++idx2)
+	  ctype->map32[idx][idx2] = idx2;
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
 	if (ctype->map_collection[idx][idx2] != 0)
 	  ctype->map32[idx][idx2] = ctype->map_collection[idx][idx2];
 
-      while (idx2 < ctype->map_collection_act[idx])
+      if (oldstyle_tables)
+	while (idx2 < ctype->map_collection_act[idx])
+	  {
+	    if (ctype->map_collection[idx][idx2] != 0)
+	      ctype->map32[idx][ctype->charnames[idx2]] =
+		ctype->map_collection[idx][idx2];
+	    ++idx2;
+	  }
+    }
+
+  if (!oldstyle_tables)
+    {
+      size_t nr;
+
+      for (nr = 0; nr < ctype->map_collection_nr; nr++)
 	{
-	  if (ctype->map_collection[idx][idx2] != 0)
-	    ctype->map32[idx][ctype->charnames[idx2]] =
-	      ctype->map_collection[idx][idx2];
-	  ++idx2;
+	  struct wctrans_table t;
+
+	  t.p = 7;
+	  t.q = 9;
+	  wctrans_table_init (&t);
+
+	  for (idx = 0; idx < ctype->map_collection_act[nr]; ++idx)
+	    if (ctype->map_collection[nr][idx] != 0)
+	      wctrans_table_add (&t, ctype->charnames[idx],
+				 ctype->map_collection[nr][idx]);
+
+	  wctrans_table_finalize (&t);
+
+	  if (verbose)
+	    fprintf (stderr, _("%s: table for map \"%s\": %lu bytes\n"),
+		     "LC_CTYPE", ctype->mapnames[nr],
+		     (unsigned long int) t.result_size);
+
+	  ctype->map_3level[nr].iov_base = t.result;
+	  ctype->map_3level[nr].iov_len = t.result_size;
 	}
     }
 
@@ -3385,119 +4129,228 @@ Computing table size for character classes might take a while..."),
   ctype->map_name_ptr = (uint32_t *) xmalloc (ctype->map_collection_nr
 					      * sizeof (uint32_t));
 
-  /* Array for width information.  Because the expected width are very
-     small we use only one single byte.  This save space and we need
-     not provide the information twice with both endianesses.  */
-  width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
-  ctype->width = (unsigned char *) xmalloc (width_table_size);
-
-  /* Initialize with -1.  */
-  memset (ctype->width, '\xff', width_table_size);
-  if (charmap->width_rules != NULL)
+  if (oldstyle_tables)
     {
-      size_t cnt;
+      ctype->class_offset = 0; /* not really used */
+      ctype->map_offset = 0; /* not really used */
+    }
+  else
+    {
+      ctype->class_offset = _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE);
+      ctype->map_offset = ctype->class_offset + ctype->nr_charclass;
+    }
 
-      for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
+  /* Array for width information.  Because the expected width are very
+     small we use only one single byte.  This saves space.  */
+  if (oldstyle_tables)
+    {
+      width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
+      ctype->width = (unsigned char *) xmalloc (width_table_size);
+
+      /* Initialize with -1.  */
+      memset (ctype->width, '\xff', width_table_size);
+      if (charmap->width_rules != NULL)
 	{
-	  unsigned char bytes[charmap->mb_cur_max];
-	  int nbytes = charmap->width_rules[cnt].from->nbytes;
+	  size_t cnt;
 
-	  /* We have the range of character for which the width is
-	     specified described using byte sequences of the multibyte
-	     charset.  We have to convert this to UCS4 now.  And we
-	     cannot simply convert the beginning and the end of the
-	     sequence, we have to iterate over the byte sequence and
-	     convert it for every single character.  */
-	  memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
-
-	  while (nbytes < charmap->width_rules[cnt].to->nbytes
-		 || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
-			    nbytes) <= 0)
+	  for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
 	    {
-	      /* Find the UCS value for `bytes'.  */
-	      int inner;
-	      uint32_t wch;
-	      struct charseq *seq =
-		charmap_find_symbol (charmap, bytes, nbytes);
+	      unsigned char bytes[charmap->mb_cur_max];
+	      int nbytes = charmap->width_rules[cnt].from->nbytes;
 
-	      if (seq == NULL)
-		wch = ILLEGAL_CHAR_VALUE;
-	      else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
-		wch = seq->ucs4;
-	      else
-		wch = repertoire_find_value (ctype->repertoire, seq->name,
-					     strlen (seq->name));
+	      /* We have the range of character for which the width is
+		 specified described using byte sequences of the multibyte
+		 charset.  We have to convert this to UCS4 now.  And we
+		 cannot simply convert the beginning and the end of the
+		 sequence, we have to iterate over the byte sequence and
+		 convert it for every single character.  */
+	      memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
 
-	      if (wch != ILLEGAL_CHAR_VALUE)
+	      while (nbytes < charmap->width_rules[cnt].to->nbytes
+		     || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
+				nbytes) <= 0)
 		{
-		  /* Store the value.  */
-		  size_t nr = wch % ctype->plane_size;
-		  size_t depth = 0;
+		  /* Find the UCS value for `bytes'.  */
+		  int inner;
+		  uint32_t wch;
+		  struct charseq *seq =
+		    charmap_find_symbol (charmap, bytes, nbytes);
 
-		  while (ctype->names[nr + depth * ctype->plane_size] != wch)
+		  if (seq == NULL)
+		    wch = ILLEGAL_CHAR_VALUE;
+		  else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+		    wch = seq->ucs4;
+		  else
+		    wch = repertoire_find_value (ctype->repertoire, seq->name,
+						 strlen (seq->name));
+
+		  if (wch != ILLEGAL_CHAR_VALUE)
 		    {
-		      ++depth;
-		      assert (depth < ctype->plane_cnt);
+		      /* Store the value.  */
+		      size_t nr = wch % ctype->plane_size;
+		      size_t depth = 0;
+
+		      while (ctype->names[nr + depth * ctype->plane_size] != wch)
+			{
+			  ++depth;
+			  assert (depth < ctype->plane_cnt);
+			}
+
+		      ctype->width[nr + depth * ctype->plane_size]
+			= charmap->width_rules[cnt].width;
 		    }
 
-		  ctype->width[nr + depth * ctype->plane_size]
-		    = charmap->width_rules[cnt].width;
+		  /* "Increment" the bytes sequence.  */
+		  inner = nbytes - 1;
+		  while (inner >= 0 && bytes[inner] == 0xff)
+		    --inner;
+
+		  if (inner < 0)
+		    {
+		      /* We have to extend the byte sequence.  */
+		      if (nbytes >= charmap->width_rules[cnt].to->nbytes)
+			break;
+
+		      bytes[0] = 1;
+		      memset (&bytes[1], 0, nbytes);
+		      ++nbytes;
+		    }
+		  else
+		    {
+		      ++bytes[inner];
+		      while (++inner < nbytes)
+			bytes[inner] = 0;
+		    }
 		}
+	    }
+	}
 
-	      /* "Increment" the bytes sequence.  */
-	      inner = nbytes - 1;
-	      while (inner >= 0 && bytes[inner] == 0xff)
-		--inner;
+      /* Now set all the other characters of the character set to the
+	 default width.  */
+      curs = NULL;
+      while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
+	{
+	  struct charseq *data = (struct charseq *) vdata;
+	  size_t nr;
+	  size_t depth;
 
-	      if (inner < 0)
+	  if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
+	    data->ucs4 = repertoire_find_value (ctype->repertoire,
+						data->name, len);
+
+	  if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+	    {
+	      nr = data->ucs4 % ctype->plane_size;
+	      depth = 0;
+
+	      while (ctype->names[nr + depth * ctype->plane_size] != data->ucs4)
 		{
-		  /* We have to extend the byte sequence.  */
-		  if (nbytes >= charmap->width_rules[cnt].to->nbytes)
-		    break;
+		  ++depth;
+		  assert (depth < ctype->plane_cnt);
+		}
 
-		  bytes[0] = 1;
-		  memset (&bytes[1], 0, nbytes);
-		  ++nbytes;
-		}
-	      else
-		{
-		  ++bytes[inner];
-		  while (++inner < nbytes)
-		    bytes[inner] = 0;
-		}
+	      if (ctype->width[nr + depth * ctype->plane_size]
+		  == (unsigned char) '\xff')
+		ctype->width[nr + depth * ctype->plane_size] =
+		  charmap->width_default;
 	    }
 	}
     }
-
-  /* Now set all the other characters of the character set to the
-     default width.  */
-  curs = NULL;
-  while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
+  else
     {
-      struct charseq *data = (struct charseq *) vdata;
-      size_t nr;
-      size_t depth;
+      struct wcwidth_table t;
 
-      if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
-	data->ucs4 = repertoire_find_value (ctype->repertoire,
-					    data->name, len);
+      t.p = 7;
+      t.q = 9;
+      wcwidth_table_init (&t);
 
-      if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+      /* First set all the characters of the character set to the default width.  */
+      curs = NULL;
+      while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
 	{
-	  nr = data->ucs4 % ctype->plane_size;
-	  depth = 0;
+	  struct charseq *data = (struct charseq *) vdata;
 
-	  while (ctype->names[nr + depth * ctype->plane_size] != data->ucs4)
-	    {
-	      ++depth;
-	      assert (depth < ctype->plane_cnt);
-	    }
+	  if (data->ucs4 == UNINITIALIZED_CHAR_VALUE)
+	    data->ucs4 = repertoire_find_value (ctype->repertoire,
+						data->name, len);
 
-	  if (ctype->width[nr + depth * ctype->plane_size]
-	      == (unsigned char) '\xff')
-	    ctype->width[nr + depth * ctype->plane_size] =
-	      charmap->width_default;
+	  if (data->ucs4 != ILLEGAL_CHAR_VALUE)
+	    wcwidth_table_add (&t, data->ucs4, charmap->width_default);
 	}
+
+      /* Now add the explicitly specified widths.  */
+      if (charmap->width_rules != NULL)
+	{
+	  size_t cnt;
+
+	  for (cnt = 0; cnt < charmap->nwidth_rules; ++cnt)
+	    {
+	      unsigned char bytes[charmap->mb_cur_max];
+	      int nbytes = charmap->width_rules[cnt].from->nbytes;
+
+	      /* We have the range of character for which the width is
+		 specified described using byte sequences of the multibyte
+		 charset.  We have to convert this to UCS4 now.  And we
+		 cannot simply convert the beginning and the end of the
+		 sequence, we have to iterate over the byte sequence and
+		 convert it for every single character.  */
+	      memcpy (bytes, charmap->width_rules[cnt].from->bytes, nbytes);
+
+	      while (nbytes < charmap->width_rules[cnt].to->nbytes
+		     || memcmp (bytes, charmap->width_rules[cnt].to->bytes,
+				nbytes) <= 0)
+		{
+		  /* Find the UCS value for `bytes'.  */
+		  int inner;
+		  uint32_t wch;
+		  struct charseq *seq =
+		    charmap_find_symbol (charmap, bytes, nbytes);
+
+		  if (seq == NULL)
+		    wch = ILLEGAL_CHAR_VALUE;
+		  else if (seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+		    wch = seq->ucs4;
+		  else
+		    wch = repertoire_find_value (ctype->repertoire, seq->name,
+						 strlen (seq->name));
+
+		  if (wch != ILLEGAL_CHAR_VALUE)
+		    /* Store the value.  */
+		    wcwidth_table_add (&t, wch, charmap->width_rules[cnt].width);
+
+		  /* "Increment" the bytes sequence.  */
+		  inner = nbytes - 1;
+		  while (inner >= 0 && bytes[inner] == 0xff)
+		    --inner;
+
+		  if (inner < 0)
+		    {
+		      /* We have to extend the byte sequence.  */
+		      if (nbytes >= charmap->width_rules[cnt].to->nbytes)
+			break;
+
+		      bytes[0] = 1;
+		      memset (&bytes[1], 0, nbytes);
+		      ++nbytes;
+		    }
+		  else
+		    {
+		      ++bytes[inner];
+		      while (++inner < nbytes)
+			bytes[inner] = 0;
+		    }
+		}
+	    }
+	}
+
+      wcwidth_table_finalize (&t);
+
+      if (verbose)
+	fprintf (stderr, _("%s: table for width: %lu bytes\n"),
+		 "LC_CTYPE", (unsigned long int) t.result_size);
+
+      ctype->width_3level.iov_base = t.result;
+      ctype->width_3level.iov_len = t.result_size;
     }
 
   /* Set MB_CUR_MAX.  */

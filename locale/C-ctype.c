@@ -380,6 +380,8 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "ANSI_X3.4-1968" },
     { string: (const char *) &_nl_C_LC_CTYPE_toupper[128] },
     { string: (const char *) &_nl_C_LC_CTYPE_tolower[128] },
+    { word: 0 },
+    { word: 0 },
     { word: 1 },
     { string: "0" },
     { string: "1" },
