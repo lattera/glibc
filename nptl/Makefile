@@ -21,8 +21,6 @@
 #
 subdir	:= nptl
 
-nptl-version := $(shell sed -n 's/^[^0-9]* \([0-9.]*\).*$$/\1/p' Banner)
-
 headers := pthread.h semaphore.h bits/semaphore.h
 
 extra-libs := libpthread
