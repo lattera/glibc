@@ -98,7 +98,7 @@ setutent_daemon (void)
       /* We have to make sure the socket is `closed on exec'.  */
       result = __fcntl (daemon_sock, F_GETFD, 0);
       if (result >= 0)
-	result = __fcntl (daemon_sock, F_SETFD, flags | FD_CLOEXEC);
+	result = __fcntl (daemon_sock, F_SETFD, result | FD_CLOEXEC);
       if (result == -1)
 	{
 	  close (daemon_sock);

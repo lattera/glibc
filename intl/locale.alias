@@ -26,6 +26,7 @@
 # it with the rest of us.  Send it using the `glibcbug' script to
 # bugs@gnu.org.
 
+croatian	hr_HR.ISO-8859-2
 czech		cs_CZ.ISO-8859-2
 danish          da_DK.ISO-8859-1
 dansk		da_DK.ISO-8859-1
@@ -37,6 +38,7 @@ french		fr_FR.ISO-8859-1
 german		de_DE.ISO-8859-1
 greek           el_GR.ISO-8859-7
 hebrew          iw_IL.ISO-8859-8
+hrvatski	hr_HR.ISO-8859-2
 hungarian       hu_HU.ISO-8859-2
 icelandic       is_IS.ISO-8859-1
 italian         it_IT.ISO-8859-1

@@ -1,3 +1,8 @@
+1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/locale.alias: Add entries for Croatian.
+	Patch by Tomislav Vujec <tvujec@CARNet.hr>.
+
 1999-03-13  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/bsd/getpt.c (__getpt): Do not use `isatty' to check
