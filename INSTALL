@@ -15,8 +15,8 @@ activate them, and they will be compiled into the library.  As of the
 unusual installation, you should get this.
 
    Support for POSIX threads is maintained by someone else, so it's in a
-separate package.  It is only available for Linux systems, but this will
-change in the future.  Get it from the same place you got the main
+separate package.  It is only available for GNU/Linux systems, but this
+will change in the future.  Get it from the same place you got the main
 bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.
 
    You will need recent versions of several GNU tools: definitely GCC
@@ -28,7 +28,7 @@ Configuring and compiling GNU Libc
 
    GNU libc can be compiled in the source directory, but we strongly
 advise building it in a separate build directory.  For example, if you
-have  unpacked the glibc sources in `/src/gnu/glibc-2.2.0', create a
+have  unpacked the glibc sources in `/src/gnu/glibc-2.3', create a
 directory `/src/gnu/glibc-build' to put the object files in.  This
 allows removing the whole build directory in case an error occurs,
 which is the safest way to get a fresh start and should always be done.
@@ -36,7 +36,7 @@ which is the safest way to get a fresh start and should always be done.
    From your object directory, run the shell script `configure' located
 at the top level of the source tree.  In the scenario above, you'd type
 
-     $ ../glibc-2.2.0/configure ARGS...
+     $ ../glibc-2.3/configure ARGS...
 
    Please note that even if you're building in a separate build
 directory, the compilation needs to modify a few files in the source
@@ -88,7 +88,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      `--enable-add-ons=linuxthreads'
 
 `--enable-kernel=VERSION'
-     This option is currently only useful on Linux systems.  The
+     This option is currently only useful on GNU/Linux systems.  The
      VERSION parameter should have the form X.Y.Z and describes the
      smallest version of the Linux kernel the generated library is
      expected to support.  The higher the VERSION number is, the less
@@ -169,11 +169,10 @@ but isn't.  Look for error messages from `make' containing `***'.
 Those indicate that something is seriously wrong.
 
    The compilation process can take several hours.  Expect at least two
-hours for the default configuration on i586 for Linux.  For Hurd, times
-are much longer.  Except for EGCS 1.1 and GCC 2.95 (and later versions
-of GCC), all supported versions of GCC have a problem which causes them
-to take several minutes to compile certain files in the iconvdata
-directory.  Do not panic if the compiler appears to hang.
+hours for the default configuration on i586 for GNU/Linux.  For Hurd,
+times are much longer.  Some complex modules may take a very long time
+to compile, as much as several minutes on slower machines.  Do not
+panic if the compiler appears to hang.
 
    If you want to run a parallel make, simply pass the `-j' option with
 an appropriate numeric parameter to `make'.  You need a recent GNU
@@ -247,7 +246,7 @@ order given above.
    You may also need to reconfigure GCC to work with the new library.
 The easiest way to do that is to figure out the compiler switches to
 make it work again (`-Wl,--dynamic-linker=/lib/ld-linux.so.2' should
-work on Linux systems) and use them to recompile gcc.  You can also
+work on GNU/Linux systems) and use them to recompile gcc.  You can also
 edit the specs file (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that
 is a bit of a black art.
 
@@ -303,19 +302,19 @@ build the GNU C library:
      recommend GNU `make' version 3.79.  All earlier versions have
      severe bugs or lack features.
 
-   * GCC 2.95 or newer
+   * GCC 3.2 or newer
 
      The GNU C library can only be compiled with the GNU C compiler
-     family.  As of the 2.2 release, GCC 2.95.2 or higher is required.
-     As of this writing, GCC 2.95.3 is the compiler we advise to use.
+     family.  As of the 2.3 release, GCC 3.2 or higher is required.  As
+     of this writing, GCC 3.2 is the compiler we advise to use.
 
      You can use whatever compiler you like to compile programs that
      use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
      their floating-point support that may be triggered by the math
      library.
 
-     For PPC you might need some patches even on top of the last GCC
-     version.  See the FAQ.
+     Check the FAQ for any special compiler issues on particular
+     platforms.
 
    * GNU `binutils' 2.10.1 or later
 
@@ -441,17 +440,17 @@ some `i686' specific instructions.  To generate code for other models,
 you have to configure for that model and give GCC the appropriate
 `-march=' and `-mcpu=' compiler switches via CFLAGS.
 
-Specific advice for Linux systems
-=================================
+Specific advice for GNU/Linux systems
+=====================================
 
-   If you are installing GNU libc on a Linux system, you need to have
-the header files from a 2.2 or newer kernel around for reference.  For
-some architectures, like ia64, sh and hppa, you need at least headers
-from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to
-use that kernel, just have its headers where glibc can access at them.
-The easiest way to do this is to unpack it in a directory such as
-`/usr/src/linux-2.2.1'.  In that directory, run `make config' and
-accept all the defaults.  Then run `make include/linux/version.h'.
+   If you are installing GNU libc on a GNU/Linux system, you need to
+have the header files from a 2.2 or newer kernel around for reference.
+For some architectures, like ia64, sh and hppa, you need at least
+headers from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not
+need to use that kernel, just have its headers where glibc can access
+at them.  The easiest way to do this is to unpack it in a directory
+such as `/usr/src/linux-2.2.1'.  In that directory, run `make config'
+and accept all the defaults.  Then run `make include/linux/version.h'.
 Finally, configure glibc with the option
 `--with-headers=/usr/src/linux-2.2.1/include'.  Use the most recent
 kernel you can get your hands on.
@@ -468,7 +467,7 @@ to get rid of the old header files anyway.
 symlinks into the kernel sources.  GNU libc provides its own versions
 of these files.
 
-   Linux expects some components of the libc installation to be in
+   GNU/Linux expects some components of the libc installation to be in
 `/lib' and some in `/usr/lib'.  This is handled automatically if you
 configure glibc with `--prefix=/usr'.  If you set some other prefix or
 allow it to default to `/usr/local', then all the components are

@@ -20,7 +20,7 @@ to activate them, and they will be compiled into the library.  As of the
 unusual installation, you should get this.
 
 Support for POSIX threads is maintained by someone else, so it's in a
-separate package.  It is only available for Linux systems, but this will
+separate package.  It is only available for GNU/Linux systems, but this will
 change in the future.  Get it from the same place you got the main
 bundle; the file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.
 
@@ -33,7 +33,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
  compiled.
 * Tools for Compilation::       You'll need these first.
 * Supported Configurations::    What it runs on, what it doesn't.
-* Linux::                       Specific advice for Linux systems.
+* Linux::                       Specific advice for GNU/Linux systems.
 * Reporting Bugs::              So they'll get fixed.
 @end menu
 
@@ -110,7 +110,7 @@ tree, give this option a list of the add-ons that you @emph{do} want
 used, like this: @samp{--enable-add-ons=linuxthreads}
 
 @item --enable-kernel=@var{version}
-This option is currently only useful on Linux systems.  The
+This option is currently only useful on GNU/Linux systems.  The
 @var{version} parameter should have the form X.Y.Z and describes the
 smallest version of the Linux kernel the generated library is expected
 to support.  The higher the @var{version} number is, the less
@@ -195,11 +195,10 @@ produce a lot of output, some of which may look like errors from
 containing @samp{***}.  Those indicate that something is seriously wrong.
 
 The compilation process can take several hours.  Expect at least two
-hours for the default configuration on i586 for Linux.  For Hurd, times
-are much longer.  Except for EGCS 1.1 and GCC 2.95 (and later versions
-of GCC), all supported versions of GCC have a problem which causes them
-to take several minutes to compile certain files in the iconvdata
-directory.  Do not panic if the compiler appears to hang.
+hours for the default configuration on i586 for GNU/Linux.  For Hurd,
+times are much longer.  Some complex modules may take a very long time
+to compile, as much as several minutes on slower machines.  Do not
+panic if the compiler appears to hang.
 
 If you want to run a parallel make, simply pass the @samp{-j} option
 with an appropriate numeric parameter to @code{make}.  You need a recent
@@ -276,7 +275,7 @@ order given above.
 You may also need to reconfigure GCC to work with the new library.  The
 easiest way to do that is to figure out the compiler switches to make it
 work again (@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on
-Linux systems) and use them to recompile gcc.  You can also edit the specs
+GNU/Linux systems) and use them to recompile gcc.  You can also edit the specs
 file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but that
 is a bit of a black art.
 
@@ -338,18 +337,17 @@ recommend GNU @code{make} version 3.79.  All earlier versions have severe
 bugs or lack features.
 
 @item
-GCC 2.95 or newer
+GCC 3.2 or newer
 
 The GNU C library can only be compiled with the GNU C compiler family.
-As of the 2.2 release, GCC 2.95.2 or higher is required.  As of this
-writing, GCC 2.95.3 is the compiler we advise to use.
+As of the 2.3 release, GCC 3.2 or higher is required.  As of this
+writing, GCC 3.2 is the compiler we advise to use.
 
 You can use whatever compiler you like to compile programs that use GNU
 libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
 floating-point support that may be triggered by the math library.
 
-For PPC you might need some patches even on top of the last GCC version.
-See the FAQ.
+Check the FAQ for any special compiler issues on particular platforms.
 
 @item
 GNU @code{binutils} 2.10.1 or later
@@ -498,11 +496,11 @@ and give GCC the appropriate @samp{-march=} and @samp{-mcpu=} compiler
 switches via @var{CFLAGS}.
 
 @node Linux
-@appendixsec Specific advice for Linux systems
+@appendixsec Specific advice for GNU/Linux systems
 @cindex upgrading from libc5
 @cindex kernel header files
 
-If you are installing GNU libc on a Linux system, you need to have the
+If you are installing GNU libc on a GNU/Linux system, you need to have the
 header files from a 2.2 or newer kernel around for reference.  For some
 architectures, like ia64, sh and hppa, you need at least headers from
 kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to use
@@ -526,7 +524,7 @@ Note that @file{/usr/include/net} and @file{/usr/include/scsi} should
 @strong{not} be symlinks into the kernel sources.  GNU libc provides its
 own versions of these files.
 
-Linux expects some components of the libc installation to be in
+GNU/Linux expects some components of the libc installation to be in
 @file{/lib} and some in @file{/usr/lib}.  This is handled automatically
 if you configure glibc with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the
