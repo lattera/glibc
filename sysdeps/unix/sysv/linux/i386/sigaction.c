@@ -131,14 +131,9 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       k_newact.sa_restorer = &restore;
     }
 
-  asm volatile ("pushl %%ebx\n\t"
-		"movl %2, %%ebx\n\t"
-		ENTER_KERNEL_STR "\n\t"
-		"popl %%ebx"
-		: "=a" (result)
-		: "0" (SYS_ify (sigaction)), "mr" (sig),
-		  "c" (act ? __ptrvalue (&k_newact) : 0),
-		  "d" (oact ? __ptrvalue (&k_oldact) : 0));
+  result = INTERNAL_SYCALL (sigaction, 3, sig,
+			    act ? __ptrvalue (&k_newact) : 0,
+			    oact ? __ptrvalue (&k_oldact) : 0);
 
   if (result < 0)
     {

@@ -43,6 +43,7 @@ typedef struct
   void *self;		/* Pointer to the thread descriptor.  */
   list_t list;
   int multiple_threads;
+  uintptr_t sysinfo;
 } tcbhead_t;
 #endif
 
@@ -61,6 +62,11 @@ typedef struct
 
 /* Offset of the MULTIPLE_THREADS element in tcbhead_t.  */
 #define MULTIPLE_THREADS_OFFSET 20
+
+#ifdef NEED_DL_SYSINFO
+/* Offset of the SYSINFO element in tcbhead_t.  */
+# define SYSINFO_OFFSET 24
+#endif
 
 
 #ifndef __ASSEMBLER__
@@ -160,6 +166,13 @@ union user_desc_init
 #  define TLS_LOAD_EBX
 # endif
 
+#if defined NEED_DL_SYSINFO && defined SHARED
+# define INIT_SYSINFO \
+  _head->sysinfo = GL(dl_sysinfo)
+#else
+# define INIT_SYSINFO
+#endif
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
@@ -172,6 +185,8 @@ union user_desc_init
      _head->tcb = _thrdescr;						      \
      /* For now the thread descriptor is at the same address.  */	      \
      _head->self = _thrdescr;						      \
+     /* New syscall handling support.  */				      \
+     INIT_SYSINFO;							      \
 									      \
      /* The 'entry_number' field.  Let the kernel pick a value.  */	      \
      if (secondcall)							      \

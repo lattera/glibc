@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <list.h>
 #include "fork.h"
+#include <dl-sysdep.h>
 #include <tls.h>
 #include <string.h>
 #include <pthreadP.h>
@@ -62,4 +63,12 @@ __libc_pthread_init (ptr, reclaim, functions)
 		    str_n_len ("*** MULTIPLE_THREADS_OFFSET out of date\n"));
       _exit (1);
     }
+#ifdef SYSINFO_OFFSET
+  if (offsetof (struct pthread, header.data.sysinfo) != SYSINFO_OFFSET)
+    {
+      __libc_write (STDERR_FILENO,
+		    str_n_len ("*** SYSINFO_OFFSET out of date\n"));
+      _exit (1);
+    }
+#endif
 }

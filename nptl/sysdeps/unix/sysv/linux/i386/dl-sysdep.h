@@ -1,0 +1,53 @@
+/* System-specific settings for dynamic linker code.  Generic version.
+   Copyright (C) 2002 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#ifndef _DL_SYSDEP_H
+#define _DL_SYSDEP_H	1
+
+/* This macro must be defined to either 0 or 1.
+
+   If 1, then an errno global variable hidden in ld.so will work right with
+   all the errno-using libc code compiled for ld.so, and there is never a
+   need to share the errno location with libc.  This is appropriate only if
+   all the libc functions that ld.so uses are called without PLT and always
+   get the versions linked into ld.so rather than the libc ones.  */
+
+#define RTLD_PRIVATE_ERRNO 1
+
+
+/* Traditionally system calls have been made using int $0x80.  A
+   second method was introduced which, if possible, will use the
+   sysenter/syscall instructions.  To signal the presence and where to
+   find the code the kernel passes an AT_SYSINFO value in the
+   auxiliary vector to the application.  */
+#define NEED_DL_SYSINFO	1
+
+#if defined NEED_DL_SYSINFO && !defined __ASSEMBLER__
+extern void _dl_sysinfo_int80 (void) attribute_hidden;
+# define DL_SYSINFO_DEFAULT _dl_sysinfo_int80
+# define DL_SYSINFO_IMPLEMENTATION \
+  asm (".type _dl_sysinfo_int80,@function\n\t"				      \
+       ".hidden _dl_sysinfo_int80\n"					      \
+       "_dl_sysinfo_int80:\n\t"						      \
+       "int $0x80;\n\t"							      \
+       "ret;\n\t"							      \
+       ".size _dl_sysinfo_int80,.-_dl_sysinfo_int80");
+#endif
+
+#endif	/* dl-sysdep.h */

@@ -1,3 +1,14 @@
+2002-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread) [NEED_DL_SYSINFO]: Add sysinfo member.
+	* sysdeps/i386/tls.h (tcbhead_t): Add sysinfo member.
+	Define SYSINFO_OFFSEET if NEED_DL_SYSINFO is defined.
+	(INIT_SYSINFO): New #define.
+	(TLS_TP_INIT): Use INIT_SYSINFO.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	At test to make sure SYSINFO_OFFSET value is correct.
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: New file.
+
 2002-12-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/flockfile.c (flockfile): Change into weak alias.

@@ -34,14 +34,9 @@ weak_alias (__curbrk, ___brk_addr)
 int
 __brk (void *addr)
 {
-  void *__unbounded newbrk, *__unbounded scratch;
+  void *__unbounded newbrk;
 
-  asm ("movl %%ebx, %1\n\t"	/* Save %ebx in scratch register.  */
-       "movl %3, %%ebx\n\t"	/* Put ADDR in %ebx to be syscall arg.  */
-       ENTER_KERNEL "\n\t"	/* Perform the system call.  */
-       "movl %1, %%ebx"		/* Restore %ebx from scratch register.  */
-       : "=a" (newbrk), "=r" (scratch)
-       : "0" (SYS_ify (brk)), "g" (__ptrvalue (addr)));
+  newbrk = INLINE_SYSCALL (brk, 1, __ptrvalue (addr));
 
   __curbrk = newbrk;
 
