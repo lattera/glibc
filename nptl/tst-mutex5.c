@@ -139,7 +139,7 @@ do_test (void)
   if (tv2.tv_sec > 0 || tv2.tv_usec > 100000)
     {
       puts ("3rd timedlock didn't return right away");
-      exit (1);
+      return 1;
     }
 
   if (pthread_mutex_destroy (&m) != 0)
