@@ -1405,6 +1405,8 @@ cannot allocate TLS data structures for initial thread");
 
   if (prelinked)
     {
+      struct link_map *l;
+
       if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
 	{
 	  ElfW(Rela) *conflict, *conflictend;
@@ -1416,14 +1418,19 @@ cannot allocate TLS data structures for initial thread");
 	  HP_TIMING_NOW (start);
 	  assert (GL(dl_loaded)->l_info [VALIDX (DT_GNU_CONFLICTSZ)] != NULL);
 	  conflict = (ElfW(Rela) *)
-		     GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_CONFLICT)]->d_un.d_ptr;
+	    GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_CONFLICT)]->d_un.d_ptr;
 	  conflictend = (ElfW(Rela) *)
-			((char *) conflict
-			 + GL(dl_loaded)->l_info [VALIDX (DT_GNU_CONFLICTSZ)]->d_un.d_val);
+	    ((char *) conflict
+	     + GL(dl_loaded)->l_info [VALIDX (DT_GNU_CONFLICTSZ)]->d_un.d_val);
 	  _dl_resolve_conflicts (GL(dl_loaded), conflict, conflictend);
 	  HP_TIMING_NOW (stop);
 	  HP_TIMING_DIFF (relocate_time, start, stop);
 	}
+
+
+      /* Mark all the objects so we know they have been already relocated.  */
+      for (l = GL(dl_loaded); l != NULL; l = l->l_next)
+	l->l_relocated = 1;
 
       _dl_sysdep_start_cleanup ();
     }
