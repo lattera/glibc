@@ -49,7 +49,7 @@ __lll_lock_wait:
 	xorq	%r10, %r10	/* No timeout.  */
 
 1:
-	leal	-1(%esi), %edx	/* account for the preceeded xadd.  */
+	leaq	-1(%rsi), %rdx	/* account for the preceeded xadd.  */
 	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
 	movq	$SYS_futex, %rax
 	syscall

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -55,6 +55,35 @@ __pthread_enable_asynccancel (void)
     }
 
   return oldval;
+}
+
+/* XXX Ideally we have only one version.  But this needs preparation.  */
+void
+internal_function attribute_hidden
+__pthread_enable_asynccancel_2 (int *oldvalp)
+{
+  struct pthread *self = THREAD_SELF;
+
+  while (1)
+    {
+      int oldval = *oldvalp = THREAD_GETMEM (self, cancelhandling);
+      int newval = oldval | CANCELTYPE_BITMASK;
+
+      if (newval == oldval)
+	break;
+
+      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
+					   oldval) == 0)
+	{
+	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
+	    {
+	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
+	      __do_cancel ();
+	    }
+
+	  break;
+	}
+    }
 }
 
 

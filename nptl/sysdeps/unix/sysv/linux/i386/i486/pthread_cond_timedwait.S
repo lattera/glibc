@@ -108,8 +108,8 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
-4:	call	__pthread_enable_asynccancel
-	movl	%eax, (%esp)
+4:	movl	%esp, %eax
+	call	__pthread_enable_asynccancel_2
 
 	/* Get the current time.  */
 	movl	%ebx, %edx
@@ -145,6 +145,7 @@ __pthread_cond_timedwait:
 	subl	$wakeup_seq, %ebx
 	movl	%eax, %esi
 
+	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
 
 	/* Lock.  */

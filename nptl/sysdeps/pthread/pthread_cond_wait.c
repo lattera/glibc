@@ -123,7 +123,7 @@ __pthread_cond_wait (cond, mutex)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      cbuffer.oldtype = __pthread_enable_asynccancel ();
+      __pthread_enable_asynccancel_2 (&cbuffer.oldtype);
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
@@ -133,7 +133,7 @@ __pthread_cond_wait (cond, mutex)
       __pthread_disable_asynccancel (cbuffer.oldtype);
 
       /* We are going to look at shared data again, so get the lock.  */
-      lll_mutex_lock(cond->__data.__lock);
+      lll_mutex_lock (cond->__data.__lock);
 
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;

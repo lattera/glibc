@@ -1,5 +1,16 @@
 2003-03-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* cancellation.c (__pthread_enable_asynccancel_2): New function.
+	* pthreadP.h: Declare __pthread_enable_asynccancel_2.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Use __pthread_enable_asynccancel_2
+	instead of __pthread_enable_asynccancel.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__pthread_cond_wait): Likewise.
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
 	(__condvar_cleanup): Wake up all waiters in case we got signaled
 	after being woken up but before disabling asynchronous

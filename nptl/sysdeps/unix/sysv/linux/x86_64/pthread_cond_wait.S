@@ -153,9 +153,10 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
-4:	callq	__pthread_enable_asynccancel
-	movq	%rax, (%rsp)
+4:	movq	%rsp, %edi
+	callq	__pthread_enable_asynccancel_2
 
+	movq	8(%rsp), %rdi
 	xorq	%r10, %r10
 	movq	%r12, %rdx
 	addq	$wakeup_seq-cond_lock, %rdi

@@ -165,8 +165,8 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
-4:	call	__pthread_enable_asynccancel
-	movl	%eax, (%esp)
+4:	movl	%esp, %eax
+	call	__pthread_enable_asynccancel_2
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
@@ -175,6 +175,7 @@ __pthread_cond_wait:
 	ENTER_KERNEL
 	subl	$wakeup_seq, %ebx
 
+	movl	(%esp), %eax
 	call	__pthread_disable_asynccancel
 
 	/* Lock.  */

@@ -319,6 +319,8 @@ extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 
 /* The two functions are in libc.so and not exported.  */
 extern int __libc_enable_asynccancel (void) attribute_hidden;
+extern void __libc_enable_asynccancel_2 (int *oldvalp)
+     internal_function attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
      internal_function attribute_hidden;
 

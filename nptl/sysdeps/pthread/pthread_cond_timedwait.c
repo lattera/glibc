@@ -120,7 +120,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      cbuffer.oldtype = __pthread_enable_asynccancel ();
+      __pthread_enable_asynccancel_2 (&cbuffer.oldtype);
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
