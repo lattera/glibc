@@ -214,9 +214,9 @@ static double atanMp(double x,const int pr[]){
 
 for (i=0; i<M; i++) {
     p = pr[i];
-    dbl_mp(x,&mpx,p);          __mpatan(&mpx,&mpy,p);
-    dbl_mp(u9[i].d,&mpt1,p);   mul(&mpy,&mpt1,&mperr,p);
-    add(&mpy,&mperr,&mpy1,p);  sub(&mpy,&mperr,&mpy2,p);
+    __dbl_mp(x,&mpx,p);          __mpatan(&mpx,&mpy,p);
+    __dbl_mp(u9[i].d,&mpt1,p);   __mul(&mpy,&mpt1,&mperr,p);
+    __add(&mpy,&mperr,&mpy1,p);  __sub(&mpy,&mperr,&mpy2,p);
     __mp_dbl(&mpy1,&y1,p);       __mp_dbl(&mpy2,&y2,p);
     if (y1==y2)   return y1;
   }

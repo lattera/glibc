@@ -1,16 +1,38 @@
+2001-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/e_remainder.c: Fix handling of boundary
+	conditions.
+
+	* sysdeps/ieee754/dbl-64/e_pow.c: Fix handling of boundary
+	conditions.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Handle Inf and NaN
+	correctly.
+	(__cos): Likewise.
+
+	* sysdeps/ieee754/dbl-64/e_asin.c (__ieee754_asin): Handle NaN
+	correctly.
+	(__ieee754_acos): Likewise.
+
 2001-03-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/sysdep.h (_LINUX_S390_SYSDEP_H):
 	Fix typo.  Patch by Martin Schwidefsky	<schwidefsky@de.ibm.com>.
 
 	* sysdeps/s390/bits/string.h: Protect __STRING_INLINE against
-	redefinition. 
+	redefinition.
 
 2001-03-11  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/configure.in: Add a sanity check on $prefix.
 
 2001-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/endian.h: Define also one of BIG_ENDI and
+	LITTLE_ENDI.
+
+	* sysdeps/ieee754/dbl-64/MathLib.h (Init_Lib): Use void as
+	parameter list.
 
 	Last-bit accurate math library implementation by IBM Haifa.
 	Contributed by Abraham Ziv <ziv@il.ibm.com>, Moshe Olshansky

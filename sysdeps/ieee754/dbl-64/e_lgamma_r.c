@@ -175,7 +175,7 @@ static double zero=  0.00000000000000000000e+00;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
 
-	if(ix<0x3fd00000) return __kernel_sin(pi*x,zero,0);
+	if(ix<0x3fd00000) return sin(pi*x);
 	y = -x;		/* x is assume negative */
 
     /*

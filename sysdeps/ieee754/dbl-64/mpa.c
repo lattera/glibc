@@ -62,7 +62,7 @@ static int mcr(const mp_no *x, const mp_no *y, int p) {
 
 
 /* acr() compares the absolute values of two multiple precision numbers */
-int acr(const mp_no *x, const mp_no *y, int p) {
+int __acr(const mp_no *x, const mp_no *y, int p) {
   int i;
 
   if      (X[0] == ZERO) {
@@ -81,20 +81,20 @@ int acr(const mp_no *x, const mp_no *y, int p) {
 
 
 /* cr90 compares the values of two multiple precision numbers           */
-int  cr(const mp_no *x, const mp_no *y, int p) {
+int  __cr(const mp_no *x, const mp_no *y, int p) {
   int i;
 
   if      (X[0] > Y[0])  i= 1;
   else if (X[0] < Y[0])  i=-1;
-  else if (X[0] < ZERO ) i= acr(y,x,p);
-  else                   i= acr(x,y,p);
+  else if (X[0] < ZERO ) i= __acr(y,x,p);
+  else                   i= __acr(x,y,p);
 
   return i;
 }
 
 
 /* Copy a multiple precision number. Set *y=*x. x=y is permissible.      */
-void cpy(const mp_no *x, mp_no *y, int p) {
+void __cpy(const mp_no *x, mp_no *y, int p) {
   int i;
 
   EY = EX;
@@ -110,7 +110,7 @@ void cpy(const mp_no *x, mp_no *y, int p) {
 /* n<m, the digits of x beyond the n'th are ignored.        */
 /* x=y is permissible.                                      */
 
-void cpymn(const mp_no *x, int m, mp_no *y, int n) {
+void __cpymn(const mp_no *x, int m, mp_no *y, int n) {
 
   int i,k;
 
@@ -246,7 +246,7 @@ void __mp_dbl(const mp_no *x, double *y, int p) {
 /* number *y. If the precision p is too small the result is truncated. x is */
 /* left unchanged.                                                          */
 
-void dbl_mp(double x, mp_no *y, int p) {
+void __dbl_mp(double x, mp_no *y, int p) {
 
   int i,n;
   double u;
@@ -286,7 +286,7 @@ static void add_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   i=p;    j=p+ EY - EX;    k=p+1;
 
   if (j<1)
-     {cpy(x,z,p);  return; }
+     {__cpy(x,z,p);  return; }
   else   Z[k] = ZERO;
 
   for (; j>0; i--,j--) {
@@ -330,7 +330,7 @@ static void sub_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     Z[k] = Z[k+1] = ZERO; }
   else {
     j= EX - EY;
-    if (j > p)  {cpy(x,z,p);  return; }
+    if (j > p)  {__cpy(x,z,p);  return; }
     else {
       i=p;   j=p+1-j;   k=p;
       if (Y[j] > ZERO) {
@@ -375,19 +375,19 @@ static void sub_magnitudes(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 /* but not x&z or y&z. One guard digit is used. The error is less than    */
 /* one ulp. *x & *y are left unchanged.                                   */
 
-void add(const mp_no *x, const mp_no *y, mp_no *z, int p) {
+void __add(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   int n;
 
-  if      (X[0] == ZERO)     {cpy(y,z,p);  return; }
-  else if (Y[0] == ZERO)     {cpy(x,z,p);  return; }
+  if      (X[0] == ZERO)     {__cpy(y,z,p);  return; }
+  else if (Y[0] == ZERO)     {__cpy(x,z,p);  return; }
 
   if (X[0] == Y[0])   {
-    if (acr(x,y,p) > 0)      {add_magnitudes(x,y,z,p);  Z[0] = X[0]; }
+    if (__acr(x,y,p) > 0)      {add_magnitudes(x,y,z,p);  Z[0] = X[0]; }
     else                     {add_magnitudes(y,x,z,p);  Z[0] = Y[0]; }
   }
   else                       {
-    if ((n=acr(x,y,p)) == 1) {sub_magnitudes(x,y,z,p);  Z[0] = X[0]; }
+    if ((n=__acr(x,y,p)) == 1) {sub_magnitudes(x,y,z,p);  Z[0] = X[0]; }
     else if (n == -1)        {sub_magnitudes(y,x,z,p);  Z[0] = Y[0]; }
     else                      Z[0] = ZERO;
   }
@@ -399,19 +399,19 @@ void add(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 /* overlap but not x&z or y&z. One guard digit is used. The error is      */
 /* less than one ulp. *x & *y are left unchanged.                         */
 
-void sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
+void __sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   int n;
 
-  if      (X[0] == ZERO)     {cpy(y,z,p);  Z[0] = -Z[0];  return; }
-  else if (Y[0] == ZERO)     {cpy(x,z,p);                 return; }
+  if      (X[0] == ZERO)     {__cpy(y,z,p);  Z[0] = -Z[0];  return; }
+  else if (Y[0] == ZERO)     {__cpy(x,z,p);                 return; }
 
   if (X[0] != Y[0])    {
-    if (acr(x,y,p) > 0)      {add_magnitudes(x,y,z,p);  Z[0] =  X[0]; }
+    if (__acr(x,y,p) > 0)      {add_magnitudes(x,y,z,p);  Z[0] =  X[0]; }
     else                     {add_magnitudes(y,x,z,p);  Z[0] = -Y[0]; }
   }
   else                       {
-    if ((n=acr(x,y,p)) == 1) {sub_magnitudes(x,y,z,p);  Z[0] =  X[0]; }
+    if ((n=__acr(x,y,p)) == 1) {sub_magnitudes(x,y,z,p);  Z[0] =  X[0]; }
     else if (n == -1)        {sub_magnitudes(y,x,z,p);  Z[0] = -Y[0]; }
     else                      Z[0] = ZERO;
   }
@@ -424,7 +424,7 @@ void sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 /* truncated to p digits. In case p>3 the error is bounded by 1.001 ulp.   */
 /* *x & *y are left unchanged.                                             */
 
-void mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
+void __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   int i, i1, i2, j, k, k2;
   double u;
@@ -464,7 +464,7 @@ void mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 /* 2.001*r**(1-p) for p>3.                                                  */
 /* *x=0 is not permissible. *x is left unchanged.                           */
 
-void inv(const mp_no *x, mp_no *y, int p) {
+void __inv(const mp_no *x, mp_no *y, int p) {
   int i;
 #if 0
   int l;
@@ -478,14 +478,14 @@ void inv(const mp_no *x, mp_no *y, int p) {
                          0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                          0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
 
-  cpy(x,&z,p);  z.e=0;  __mp_dbl(&z,&t,p);
-  t=ONE/t;   dbl_mp(t,y,p);    EY -= EX;
+  __cpy(x,&z,p);  z.e=0;  __mp_dbl(&z,&t,p);
+  t=ONE/t;   __dbl_mp(t,y,p);    EY -= EX;
 
   for (i=0; i<np1[p]; i++) {
-    cpy(y,&w,p);
-    mul(x,&w,y,p);
-    sub(&mptwo,y,&z,p);
-    mul(&w,&z,y,p);
+    __cpy(y,&w,p);
+    __mul(x,&w,y,p);
+    __sub(&mptwo,y,&z,p);
+    __mul(&w,&z,y,p);
   }
   return;
 }
@@ -496,11 +496,11 @@ void inv(const mp_no *x, mp_no *y, int p) {
 /* Relative error bound = 2.001*r**(1-p) for p=2, 2.063*r**(1-p) for p=3     */
 /* and 3.001*r**(1-p) for p>3. *y=0 is not permissible.                      */
 
-void dvd(const mp_no *x, const mp_no *y, mp_no *z, int p) {
+void __dvd(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   mp_no w;
 
   if (X[0] == ZERO)    Z[0] = ZERO;
-  else                {inv(y,&w,p);   mul(x,&w,z,p);}
+  else                {__inv(y,&w,p);   __mul(x,&w,z,p);}
   return;
 }

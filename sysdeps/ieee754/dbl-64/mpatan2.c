@@ -37,12 +37,12 @@
 
 #include "mpa.h"
 
-void mpsqrt(mp_no *, mp_no *, int);
-void mpatan(mp_no *, mp_no *, int);
+void __mpsqrt(mp_no *, mp_no *, int);
+void __mpatan(mp_no *, mp_no *, int);
 
 /* Multi-Precision Atan2(y,x) function subroutine, for p >= 4.    */
 /* y=0 is not permitted if x<=0. No error messages are given.     */
-void mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
+void __mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
 
   static const double ZERO = 0.0, ONE = 1.0;
 
@@ -54,15 +54,15 @@ void mpatan2(mp_no *y, mp_no *x, mp_no *z, int p) {
 
   if (X[0] <= ZERO) {
     mpone.e = 1;                 mpone.d[0] = mpone.d[1] = ONE;
-    dvd(x,y,&mpt1,p);            mul(&mpt1,&mpt1,&mpt2,p);
+    __dvd(x,y,&mpt1,p);          __mul(&mpt1,&mpt1,&mpt2,p);
     if (mpt1.d[0] != ZERO)       mpt1.d[0] = ONE;
-    add(&mpt2,&mpone,&mpt3,p);   mpsqrt(&mpt3,&mpt2,p);
-    add(&mpt1,&mpt2,&mpt3,p);    mpt3.d[0]=Y[0];
-    mpatan(&mpt3,&mpt1,p);       add(&mpt1,&mpt1,z,p);
+    __add(&mpt2,&mpone,&mpt3,p); __mpsqrt(&mpt3,&mpt2,p);
+    __add(&mpt1,&mpt2,&mpt3,p);  mpt3.d[0]=Y[0];
+    __mpatan(&mpt3,&mpt1,p);     __add(&mpt1,&mpt1,z,p);
   }
   else
-  { dvd(y,x,&mpt1,p);
-    mpatan(&mpt1,z,p);
+  { __dvd(y,x,&mpt1,p);
+    __mpatan(&mpt1,z,p);
   }
 
   return;

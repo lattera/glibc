@@ -37,23 +37,23 @@
 #include "endian.h"
 #include "mpa.h"
 
-int mpranred(double, mp_no *, int);
+int __mpranred(double, mp_no *, int);
 void __c32(mp_no *, mp_no *, mp_no *, int);
 
-void mptan(double x, mp_no *mpy, int p) {
+void __mptan(double x, mp_no *mpy, int p) {
 
   static const double MONE = -1.0;
 
   int n;
   mp_no mpw, mpc, mps;
 
-  n = mpranred(x, &mpw, p) & 0x00000001; /* negative or positive result */
+  n = __mpranred(x, &mpw, p) & 0x00000001; /* negative or positive result */
   __c32(&mpw, &mpc, &mps, p);              /* computing sin(x) and cos(x) */
   if (n)                     /* second or fourth quarter of unit circle */
-  { dvd(&mpc,&mps,mpy,p);
+  { __dvd(&mpc,&mps,mpy,p);
     mpy->d[0] *= MONE;
   }                          /* tan is negative in this area */
-  else  dvd(&mps,&mpc,mpy,p);
+  else  __dvd(&mps,&mpc,mpy,p);
 
   return;
 }

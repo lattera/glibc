@@ -61,17 +61,17 @@ static void ss32(mp_no *x, mp_no *y, int p) {
 #endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
-  mul(x,x,&x2,p);
-  cpy(&oofac27,&gor,p);
-  cpy(&gor,&sum,p);
+  __mul(x,x,&x2,p);
+  __cpy(&oofac27,&gor,p);
+  __cpy(&gor,&sum,p);
   for (a=27.0;a>1.0;a-=2.0) {
     mpk.d[1]=a*(a-1.0);
-    mul(&gor,&mpk,&mpt1,p);
-    cpy(&mpt1,&gor,p);
-    mul(&x2,&sum,&mpt1,p);
-    sub(&gor,&mpt1,&sum,p);
+    __mul(&gor,&mpk,&mpt1,p);
+    __cpy(&mpt1,&gor,p);
+    __mul(&x2,&sum,&mpt1,p);
+    __sub(&gor,&mpt1,&sum,p);
   }
-  mul(x,&sum,y,p);
+  __mul(x,&sum,y,p);
 }
 
 /**********************************************************************/
@@ -91,18 +91,18 @@ static void cc32(mp_no *x, mp_no *y, int p) {
 #endif
   for (i=1;i<=p;i++) mpk.d[i]=0;
 
-  mul(x,x,&x2,p);
+  __mul(x,x,&x2,p);
   mpk.d[1]=27.0;
-  mul(&oofac27,&mpk,&gor,p);
-  cpy(&gor,&sum,p);
+  __mul(&oofac27,&mpk,&gor,p);
+  __cpy(&gor,&sum,p);
   for (a=26.0;a>2.0;a-=2.0) {
     mpk.d[1]=a*(a-1.0);
-    mul(&gor,&mpk,&mpt1,p);
-    cpy(&mpt1,&gor,p);
-    mul(&x2,&sum,&mpt1,p);
-    sub(&gor,&mpt1,&sum,p);
+    __mul(&gor,&mpk,&mpt1,p);
+    __cpy(&mpt1,&gor,p);
+    __mul(&x2,&sum,&mpt1,p);
+    __sub(&gor,&mpt1,&sum,p);
   }
-  mul(&x2,&sum,y,p);
+  __mul(&x2,&sum,y,p);
 }
 
 /***************************************************************************/
@@ -112,20 +112,20 @@ void __c32(mp_no *x, mp_no *y, mp_no *z, int p) {
   static const mp_no mpt={1,{1.0,2.0}}, one={1,{1.0,1.0}};
   mp_no u,t,t1,t2,c,s;
   int i;
-  cpy(x,&u,p);
+  __cpy(x,&u,p);
   u.e=u.e-1;
   cc32(&u,&c,p);
   ss32(&u,&s,p);
   for (i=0;i<24;i++) {
-    mul(&c,&s,&t,p);
-    sub(&s,&t,&t1,p);
-    add(&t1,&t1,&s,p);
-    sub(&mpt,&c,&t1,p);
-    mul(&t1,&c,&t2,p);
-    add(&t2,&t2,&c,p);
+    __mul(&c,&s,&t,p);
+    __sub(&s,&t,&t1,p);
+    __add(&t1,&t1,&s,p);
+    __sub(&mpt,&c,&t1,p);
+    __mul(&t1,&c,&t2,p);
+    __add(&t2,&t2,&c,p);
   }
-  sub(&one,&c,y,p);
-  cpy(&s,z,p);
+  __sub(&one,&c,y,p);
+  __cpy(&s,z,p);
 }
 
 /************************************************************************/
@@ -137,16 +137,16 @@ double __sin32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
-  dbl_mp(res,&a,p);
-  dbl_mp(0.5*(res1-res),&b,p);
-  add(&a,&b,&c,p);
+  __dbl_mp(res,&a,p);
+  __dbl_mp(0.5*(res1-res),&b,p);
+  __add(&a,&b,&c,p);
   if (x>0.8)
-  { sub(&hp,&c,&a,p);
+  { __sub(&hp,&c,&a,p);
     __c32(&a,&b,&c,p);
   }
   else __c32(&c,&a,&b,p);     /* b=sin(0.5*(res+res1))  */
-  dbl_mp(x,&c,p);           /* c = x                  */
-  sub(&b,&c,&a,p);
+  __dbl_mp(x,&c,p);           /* c = x                  */
+  __sub(&b,&c,&a,p);
   /* if a>0 return min(res,res1), otherwise return max(res,res1) */
   if (a.d[0]>0)  return (res<res1)?res:res1;
   else  return (res>res1)?res:res1;
@@ -161,21 +161,21 @@ double __cos32(double x, double res, double res1) {
   int p;
   mp_no a,b,c;
   p=32;
-  dbl_mp(res,&a,p);
-  dbl_mp(0.5*(res1-res),&b,p);
-  add(&a,&b,&c,p);
+  __dbl_mp(res,&a,p);
+  __dbl_mp(0.5*(res1-res),&b,p);
+  __add(&a,&b,&c,p);
   if (x>2.4)
-  { sub(&pi,&c,&a,p);
+  { __sub(&pi,&c,&a,p);
     __c32(&a,&b,&c,p);
     b.d[0]=-b.d[0];
   }
   else if (x>0.8)
-       { sub(&hp,&c,&a,p);
+       { __sub(&hp,&c,&a,p);
          __c32(&a,&c,&b,p);
        }
   else __c32(&c,&b,&a,p);     /* b=cos(0.5*(res+res1))  */
-  dbl_mp(x,&c,p);    /* c = x                  */
-  sub(&b,&c,&a,p);
+  __dbl_mp(x,&c,p);    /* c = x                  */
+  __sub(&b,&c,&a,p);
              /* if a>0 return max(res,res1), otherwise return min(res,res1) */
   if (a.d[0]>0)  return (res>res1)?res:res1;
   else  return (res<res1)?res:res1;
@@ -190,10 +190,10 @@ double __mpsin(double x, double dx) {
   double y;
   mp_no a,b,c;
   p=32;
-  dbl_mp(x,&a,p);
-  dbl_mp(dx,&b,p);
-  add(&a,&b,&c,p);
-  if (x>0.8) { sub(&hp,&c,&a,p); __c32(&a,&b,&c,p); }
+  __dbl_mp(x,&a,p);
+  __dbl_mp(dx,&b,p);
+  __add(&a,&b,&c,p);
+  if (x>0.8) { __sub(&hp,&c,&a,p); __c32(&a,&b,&c,p); }
   else __c32(&c,&a,&b,p);     /* b = sin(x+dx)     */
   __mp_dbl(&b,&y,p);
   return y;
@@ -208,11 +208,11 @@ double __mpcos(double x, double dx) {
   double y;
   mp_no a,b,c;
   p=32;
-  dbl_mp(x,&a,p);
-  dbl_mp(dx,&b,p);
-  add(&a,&b,&c,p);
+  __dbl_mp(x,&a,p);
+  __dbl_mp(dx,&b,p);
+  __add(&a,&b,&c,p);
   if (x>0.8)
-  { sub(&hp,&c,&b,p);
+  { __sub(&hp,&c,&b,p);
     __c32(&b,&a,&c,p);
   }
   else __c32(&c,&a,&b,p);     /* a = cos(x+dx)     */
@@ -226,7 +226,7 @@ double __mpcos(double x, double dx) {
 /* n=0,+-1,+-2,....                                               */
 /* Return int which indicates in which quarter of circle x is     */
 /******************************************************************/
-int mpranred(double x, mp_no *y, int p)
+int __mpranred(double x, mp_no *y, int p)
 {
   number v;
   double t,xn;
@@ -239,31 +239,31 @@ int mpranred(double x, mp_no *y, int p)
     xn = t - toint.d;
     v.d = t;
     n =v.i[LOW_HALF]&3;
-    dbl_mp(xn,&a,p);
-    mul(&a,&hp,&b,p);
-    dbl_mp(x,&c,p);
-    sub(&c,&b,y,p);
+    __dbl_mp(xn,&a,p);
+    __mul(&a,&hp,&b,p);
+    __dbl_mp(x,&c,p);
+    __sub(&c,&b,y,p);
     return n;
   }
   else {                      /* if x is very big more precision required */
-    dbl_mp(x,&a,p);
+    __dbl_mp(x,&a,p);
     a.d[0]=1.0;
     k = a.e-5;
     if (k < 0) k=0;
     b.e = -k;
     b.d[0] = 1.0;
     for (i=0;i<p;i++) b.d[i+1] = toverp[i+k];
-    mul(&a,&b,&c,p);
+    __mul(&a,&b,&c,p);
     t = c.d[c.e];
     for (i=1;i<=p-c.e;i++) c.d[i]=c.d[i+c.e];
     for (i=p+1-c.e;i<=p;i++) c.d[i]=0;
     c.e=0;
     if (c.d[1] >=  8388608.0)
     { t +=1.0;
-      sub(&c,&one,&b,p);
-      mul(&b,&hp,y,p);
+      __sub(&c,&one,&b,p);
+      __mul(&b,&hp,y,p);
     }
-    else mul(&c,&hp,y,p);
+    else __mul(&c,&hp,y,p);
     n = (int) t;
     if (x < 0) { y->d[0] = - y->d[0]; n = -n; }
     return (n&3);
@@ -274,14 +274,14 @@ int mpranred(double x, mp_no *y, int p)
 /* Multi-Precision sin() function subroutine, for p=32.  It is     */
 /* based on the routines mpranred() and c32().                     */
 /*******************************************************************/
-double mpsin1(double x)
+double __mpsin1(double x)
 {
   int p;
   int n;
   mp_no u,s,c;
   double y;
   p=32;
-  n=mpranred(x,&u,p);               /* n is 0, 1, 2 or 3 */
+  n=__mpranred(x,&u,p);               /* n is 0, 1, 2 or 3 */
   __c32(&u,&c,&s,p);
   switch (n) {                      /* in which quarter of unit circle y is*/
   case 0:
@@ -313,7 +313,7 @@ double mpsin1(double x)
 /* based  on the routines mpranred() and c32().                  */
 /*****************************************************************/
 
-double mpcos1(double x)
+double __mpcos1(double x)
 {
   int p;
   int n;
@@ -321,7 +321,7 @@ double mpcos1(double x)
   double y;
 
   p=32;
-  n=mpranred(x,&u,p);              /* n is 0, 1, 2 or 3 */
+  n=__mpranred(x,&u,p);              /* n is 0, 1, 2 or 3 */
   __c32(&u,&c,&s,p);
   switch (n) {                     /* in what quarter of unit circle y is*/
 

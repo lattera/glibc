@@ -35,7 +35,7 @@
 
 /* Multi-Precision exponential function subroutine (for p >= 4,          */
 /* 2**(-55) <= abs(x) <= 1024).                                          */
-void mpexp(mp_no *x, mp_no *y, int p) {
+void __mpexp(mp_no *x, mp_no *y, int p) {
 
   int i,j,k,m,m1,m2,n;
   double a,b;
@@ -75,30 +75,30 @@ void mpexp(mp_no *x, mp_no *y, int p) {
   }
 
   /* Compute s=x*2**(-m). Put result in mps */
-  dbl_mp(a,&mpt1,p);
-  mul(x,&mpt1,&mps,p);
+  __dbl_mp(a,&mpt1,p);
+  __mul(x,&mpt1,&mps,p);
 
   /* Evaluate the polynomial. Put result in mpt2 */
   mpone.e=1;   mpone.d[0]=ONE;   mpone.d[1]=ONE;
   mpk.e = 1;   mpk.d[0] = ONE;   mpk.d[1]=nn[n].d;
-  dvd(&mps,&mpk,&mpt1,p);
-  add(&mpone,&mpt1,&mpak,p);
+  __dvd(&mps,&mpk,&mpt1,p);
+  __add(&mpone,&mpt1,&mpak,p);
   for (k=n-1; k>1; k--) {
-    mul(&mps,&mpak,&mpt1,p);
+    __mul(&mps,&mpak,&mpt1,p);
     mpk.d[1]=nn[k].d;
-    dvd(&mpt1,&mpk,&mpt2,p);
-    add(&mpone,&mpt2,&mpak,p);
+    __dvd(&mpt1,&mpk,&mpt2,p);
+    __add(&mpone,&mpt2,&mpak,p);
   }
-  mul(&mps,&mpak,&mpt1,p);
-  add(&mpone,&mpt1,&mpt2,p);
+  __mul(&mps,&mpak,&mpt1,p);
+  __add(&mpone,&mpt1,&mpt2,p);
 
   /* Raise polynomial value to the power of 2**m. Put result in y */
   for (k=0,j=0; k<m; ) {
-    mul(&mpt2,&mpt2,&mpt1,p);  k++;
+    __mul(&mpt2,&mpt2,&mpt1,p);  k++;
     if (k==m)  { j=1;  break; }
-    mul(&mpt1,&mpt1,&mpt2,p);  k++;
+    __mul(&mpt1,&mpt1,&mpt2,p);  k++;
   }
-  if (j)  cpy(&mpt1,y,p);
-  else    cpy(&mpt2,y,p);
+  if (j)  __cpy(&mpt1,y,p);
+  else    __cpy(&mpt2,y,p);
   return;
 }

@@ -33,9 +33,9 @@
 
 #include "endian.h"
 #include "mpa.h"
-void mpsqrt(mp_no *, mp_no *, int);
+void __mpsqrt(mp_no *, mp_no *, int);
 
-void mpatan(mp_no *x, mp_no *y, int p) {
+void __mpatan(mp_no *x, mp_no *y, int p) {
 #include "mpatan.h"
 
   int i,m,n;
@@ -66,36 +66,36 @@ void mpatan(mp_no *x, mp_no *y, int p) {
     mptwo.d[1] = TWO;
 
                                  /* Reduce x m times */
-    mul(x,x,&mpsm,p);
-    if (m==0) cpy(x,&mps,p);
+    __mul(x,x,&mpsm,p);
+    if (m==0) __cpy(x,&mps,p);
     else {
       for (i=0; i<m; i++) {
-	add(&mpone,&mpsm,&mpt1,p);
-	mpsqrt(&mpt1,&mpt2,p);
-	add(&mpt2,&mpt2,&mpt1,p);
-	add(&mptwo,&mpsm,&mpt2,p);
-	add(&mpt1,&mpt2,&mpt3,p);
-	dvd(&mpsm,&mpt3,&mpt1,p);
-	cpy(&mpt1,&mpsm,p);
+	__add(&mpone,&mpsm,&mpt1,p);
+	__mpsqrt(&mpt1,&mpt2,p);
+	__add(&mpt2,&mpt2,&mpt1,p);
+	__add(&mptwo,&mpsm,&mpt2,p);
+	__add(&mpt1,&mpt2,&mpt3,p);
+	__dvd(&mpsm,&mpt3,&mpt1,p);
+	__cpy(&mpt1,&mpsm,p);
       }
-      mpsqrt(&mpsm,&mps,p);    mps.d[0] = X[0];
+      __mpsqrt(&mpsm,&mps,p);    mps.d[0] = X[0];
     }
 
                     /* Evaluate a truncated power series for Atan(s) */
     n=np[p];    mptwoim1.d[1] = twonm1[p].d;
-    dvd(&mpsm,&mptwoim1,&mpt,p);
+    __dvd(&mpsm,&mptwoim1,&mpt,p);
     for (i=n-1; i>1; i--) {
       mptwoim1.d[1] -= TWO;
-      dvd(&mpsm,&mptwoim1,&mpt1,p);
-      mul(&mpsm,&mpt,&mpt2,p);
-      sub(&mpt1,&mpt2,&mpt,p);
+      __dvd(&mpsm,&mptwoim1,&mpt1,p);
+      __mul(&mpsm,&mpt,&mpt2,p);
+      __sub(&mpt1,&mpt2,&mpt,p);
     }
-    mul(&mps,&mpt,&mpt1,p);
-    sub(&mps,&mpt1,&mpt,p);
+    __mul(&mps,&mpt,&mpt1,p);
+    __sub(&mps,&mpt1,&mpt,p);
 
                           /* Compute Atan(x) */
     mptwoim1.d[1] = twom[m].d;
-    mul(&mptwoim1,&mpt,y,p);
+    __mul(&mptwoim1,&mpt,y,p);
 
   return;
 }

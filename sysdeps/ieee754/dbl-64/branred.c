@@ -45,7 +45,7 @@
 /* x=n*pi/2+(a+aa), abs(a+aa)<pi/4, n=0,+-1,+-2,....               */
 /* Routine return integer (n mod 4)                                */
 /*******************************************************************/
-int branred(double x, double *a, double *aa)
+int __branred(double x, double *a, double *aa)
 {
   int i,k;
 #if 0

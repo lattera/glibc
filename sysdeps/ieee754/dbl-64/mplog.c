@@ -37,9 +37,9 @@
 #include "endian.h"
 #include "mpa.h"
 
-void mpexp(mp_no *, mp_no *, int);
+void __mpexp(mp_no *, mp_no *, int);
 
-void mplog(mp_no *x, mp_no *y, int p) {
+void __mplog(mp_no *x, mp_no *y, int p) {
 #include "mplog.h"
   int i,m;
 #if 0
@@ -58,14 +58,14 @@ void mplog(mp_no *x, mp_no *y, int p) {
 
   /* Perform m newton iterations to solve for y: exp(y)-x=0.     */
   /* The iterations formula is:  y(n+1)=y(n)+(x*exp(-y(n))-1).   */
-  cpy(y,&mpt1,p);
+  __cpy(y,&mpt1,p);
   for (i=0; i<m; i++) {
     mpt1.d[0]=-mpt1.d[0];
-    mpexp(&mpt1,&mpt2,p);
-    mul(x,&mpt2,&mpt1,p);
-    sub(&mpt1,&mpone,&mpt2,p);
-    add(y,&mpt2,&mpt1,p);
-    cpy(&mpt1,y,p);
+    __mpexp(&mpt1,&mpt2,p);
+    __mul(x,&mpt2,&mpt1,p);
+    __sub(&mpt1,&mpone,&mpt2,p);
+    __add(y,&mpt2,&mpt1,p);
+    __cpy(&mpt1,y,p);
   }
   return;
 }

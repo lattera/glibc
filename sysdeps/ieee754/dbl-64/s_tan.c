@@ -53,8 +53,8 @@ double tan(double x) {
   mp_no mpy;
 #endif
 
-  int branred(double, double *, double *);
-  int mpranred(double, mp_no *, int);
+  int __branred(double, double *, double *);
+  int __mpranred(double, mp_no *, int);
 
   /* x=+-INF, x=NaN */
   num.d = x;  ux = num.i[HIGH_HALF];
@@ -361,7 +361,7 @@ double tan(double x) {
 
   /* (---) The case 1e8 < abs(x) < 2**1024 */
   /* Range reduction by algorithm iii */
-  n = (branred(x,&a,&da)) & 0x00000001;
+  n = (__branred(x,&a,&da)) & 0x00000001;
   EADD(a,da,t1,t2)   a=t1;  da=t2;
   if (a<ZERO)  {ya=-a;  yya=-da;  sy=MONE;}
   else         {ya= a;  yya= da;  sy= ONE;}
@@ -384,9 +384,9 @@ double tan(double x) {
 
     /* Second stage */
     /* Reduction by algorithm iv */
-    p=10;    n = (mpranred(x,&mpa,p)) & 0x00000001;
-    __mp_dbl(&mpa,&a,p);        dbl_mp(a,&mpt1,p);
-    sub(&mpa,&mpt1,&mpt2,p);  __mp_dbl(&mpt2,&da,p);
+    p=10;    n = (__mpranred(x,&mpa,p)) & 0x00000001;
+    __mp_dbl(&mpa,&a,p);        __dbl_mp(a,&mpt1,p);
+    __sub(&mpa,&mpt1,&mpt2,p);  __mp_dbl(&mpt2,&da,p);
 
     MUL2(a,da,a,da,x2,xx2,t1,t2,t3,t4,t5,t6,t7,t8)
     c1 = x2*(a15.d+x2*(a17.d+x2*(a19.d+x2*(a21.d+x2*(a23.d+x2*(a25.d+

@@ -45,7 +45,7 @@
 /*(x+dx) between 0 and PI/4                                            */
 /***********************************************************************/
 
-void dubsin(double x, double dx, double v[]) {
+void __dubsin(double x, double dx, double v[]) {
   double r,s,p,hx,tx,hy,ty,q,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
 #if 0
@@ -96,7 +96,7 @@ void dubsin(double x, double dx, double v[]) {
 /*(x+dx) between 0 and PI/4                                           */
 /**********************************************************************/
 
-void dubcos(double x, double dx, double v[]) {
+void __dubcos(double x, double dx, double v[]) {
   double r,s,p,hx,tx,hy,ty,q,c,cc,d,dd,d2,dd2,e,ee,
     sn,ssn,cs,ccs,ds,dss,dc,dcc;
 #if 0
@@ -159,20 +159,20 @@ void dubcos(double x, double dx, double v[]) {
 /* Routine receive Double-Length number (x+dx) and computes cos(x+dx) */
 /* as Double-Length number and store it in array v                    */
 /**********************************************************************/
-void docos(double x, double dx, double v[]) {
+void __docos(double x, double dx, double v[]) {
   double y,yy,p,w[2];
   if (x>0) {y=x; yy=dx;}
      else {y=-x; yy=-dx;}
   if (y<0.5*hp0.x)                                 /*  y< PI/4    */
-           {dubcos(y,yy,w); v[0]=w[0]; v[1]=w[1];}
+           {__dubcos(y,yy,w); v[0]=w[0]; v[1]=w[1];}
      else if (y<1.5*hp0.x) {                       /* y< 3/4 * PI */
        p=hp0.x-y;  /* p = PI/2 - y */
        yy=hp1.x-yy;
        y=p+yy;
        yy=(p-y)+yy;
-       if (y>0) {dubsin(y,yy,w); v[0]=w[0]; v[1]=w[1];}
+       if (y>0) {__dubsin(y,yy,w); v[0]=w[0]; v[1]=w[1];}
                                        /* cos(x) = sin ( 90 -  x ) */
-         else {dubsin(-y,-yy,w); v[0]=-w[0]; v[1]=-w[1];
+         else {__dubsin(-y,-yy,w); v[0]=-w[0]; v[1]=-w[1];
 	 }
      }
   else { /* y>= 3/4 * PI */
@@ -180,7 +180,7 @@ void docos(double x, double dx, double v[]) {
     yy=2.0*hp1.x-yy;
     y=p+yy;
     yy=(p-y)+yy;
-    dubcos(y,yy,w);
+    __dubcos(y,yy,w);
     v[0]=-w[0];
     v[1]=-w[1];
   }

@@ -5,9 +5,9 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,12 +15,12 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /**********************************************************************/
 /* MODULE_NAME: doasin.c                                              */
 /*                                                                    */
-/* FUNCTION: doasin                                                   */ 
+/* FUNCTION: doasin                                                   */
 /*                                                                    */
 /* FILES NEEDED:endian.h mydefs.h dla.h doasin.h                      */
 /*              mpa.c                                                 */
@@ -31,17 +31,17 @@
 
 #include "endian.h"
 #include "mydefs.h"
-#include "dla.h" 
+#include "dla.h"
 
 /********************************************************************/
 /* Compute arcsin(x,dx,v) of double-length number (x+dx) the result */
 /* stored in v where v= v[0]+v[1] =arcsin(x+dx)                     */
 /********************************************************************/
-void doasin(double x, double dx, double v[]) {
-  
+void __doasin(double x, double dx, double v[]) {
+
 #include "doasin.h"
 
-  static const double   
+  static const double
     d5 =  0.22372159090911789889975459505194491E-01,
     d6 =  0.17352764422456822913014975683014622E-01,
     d7 =  0.13964843843786693521653681033981614E-01,
@@ -49,10 +49,10 @@ void doasin(double x, double dx, double v[]) {
     d9 =  0.97622386568166960207425666787248914E-02,
     d10 = 0.83638737193775788576092749009744976E-02,
     d11 = 0.79470250400727425881446981833568758E-02;
-  
+
   double xx,p,pp,u,uu,r,s;
   double hx,tx,hy,ty,tp,tq,tc,tcc;
-  
+
 
 /* Taylor series for arcsin for Double-Length numbers         */
   xx = x*x+2.0*x*dx;
@@ -73,9 +73,3 @@ void doasin(double x, double dx, double v[]) {
   v[0]=p;
   v[1]=pp; /* arcsin(x+dx)=v[0]+v[1] */
 }
-
-
-
-
-
-

@@ -42,7 +42,7 @@
 
 double fastiroot(double);
 
-void mpsqrt(mp_no *x, mp_no *y, int p) {
+void __mpsqrt(mp_no *x, mp_no *y, int p) {
 #include "mpsqrt.h"
 
   int i,m,ex,ey;
@@ -60,19 +60,19 @@ void mpsqrt(mp_no *x, mp_no *y, int p) {
   mphalf.e  =0;  mphalf.d[0]  =ONE;  mphalf.d[1]  =HALFRAD;
   mp3halfs.e=1;  mp3halfs.d[0]=ONE;  mp3halfs.d[1]=ONE;  mp3halfs.d[2]=HALFRAD;
 
-  ex=EX;      ey=EX/2;     cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
-  __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    dbl_mp(dy,&mpu,p);
-  mul(&mpxn,&mphalf,&mpz,p);
+  ex=EX;      ey=EX/2;     __cpy(x,&mpxn,p);    mpxn.e -= (ey+ey);
+  __mp_dbl(&mpxn,&dx,p);   dy=fastiroot(dx);    __dbl_mp(dy,&mpu,p);
+  __mul(&mpxn,&mphalf,&mpz,p);
 
   m=mp[p];
   for (i=0; i<m; i++) {
-    mul(&mpu,&mpu,&mpt1,p);
-    mul(&mpt1,&mpz,&mpt2,p);
-    sub(&mp3halfs,&mpt2,&mpt1,p);
-    mul(&mpu,&mpt1,&mpt2,p);
-    cpy(&mpt2,&mpu,p);
+    __mul(&mpu,&mpu,&mpt1,p);
+    __mul(&mpt1,&mpz,&mpt2,p);
+    __sub(&mp3halfs,&mpt2,&mpt1,p);
+    __mul(&mpu,&mpt1,&mpt2,p);
+    __cpy(&mpt2,&mpu,p);
   }
-  mul(&mpxn,&mpu,y,p);  EY += ey;
+  __mul(&mpxn,&mpu,y,p);  EY += ey;
 
   return;
 }

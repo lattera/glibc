@@ -45,7 +45,7 @@
 double __exp1(double x, double xx, double error);
 static double log1(double x, double *delta, double *error);
 static double log2(double x, double *delta, double *error);
-double slowpow(double x, double y,double z);
+double __slowpow(double x, double y,double z);
 static double power1(double x, double y);
 static int checkint(double x);
 
@@ -69,8 +69,8 @@ double __ieee754_pow(double x, double y) {
     if (((qx==0x7ff00000)&&(u.i[LOW_HALF]!=0))||(qx>0x7ff00000)) return NaNQ.x;
     if (y == 1.0) return x;
     if (y == 2.0) return x*x;
-    if (y == -1.0) return (x!=0)?1.0/x:NaNQ.x;
-    if (y == 0) return ((x>0)&&(qx<0x7ff00000))?1.0:NaNQ.x;
+    if (y == -1.0) return 1.0/x;
+    if (y == 0) return 1.0;
   }
   /* else */
   if(((u.i[HIGH_HALF]>0 && u.i[HIGH_HALF]<0x7ff00000)||        /* x>0 and not x->0 */
@@ -94,16 +94,37 @@ double __ieee754_pow(double x, double y) {
   }
 
   if (x == 0) {
-    if (ABS(y) > 1.0e20) return (y>0)?0:NaNQ.x;
+    if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
+	|| (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)
+      return y;
+    if (ABS(y) > 1.0e20) return (y>0)?0:INF.x;
     k = checkint(y);
-    if (k == 0 || y < 0) return NaNQ.x;
-    else return (k==1)?0:x;                                            /* return 0 */
+    if (k == -1)
+      return y < 0 ? 1.0/x : x;
+    else
+      return y < 0 ? 1.0/ABS(x) : 0.0;                               /* return 0 */
   }
   /* if x<0 */
   if (u.i[HIGH_HALF] < 0) {
     k = checkint(y);
-    if (k==0) return NaNQ.x;                              /* y not integer and x<0 */
-    return (k==1)?upow(-x,y):-upow(-x,y);                      /* if y even or odd */
+    if (k==0) {
+      if ((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] == 0) {
+	if (x == -1.0) return 1.0;
+	else if (x > -1.0) return v.i[HIGH_HALF] < 0 ? INF.x : 0.0;
+	else return v.i[HIGH_HALF] < 0 ? 0.0 : INF.x;
+      }
+      else if (u.i[HIGH_HALF] == 0xfff00000 && u.i[LOW_HALF] == 0)
+	return y < 0 ? 0.0 : INF.x;
+      return NaNQ.x;                              /* y not integer and x<0 */
+    }
+    else if (u.i[HIGH_HALF] == 0xfff00000 && u.i[LOW_HALF] == 0)
+      {
+	if (k < 0)
+	  return y < 0 ? nZERO.x : nINF.x;
+	else
+	  return y < 0 ? 0.0 : INF.x;
+      }
+    return (k==1)?__ieee754_pow(-x,y):-__ieee754_pow(-x,y); /* if y even or odd */
   }
   /* x>0 */
   qx = u.i[HIGH_HALF]&0x7fffffff;  /*   no sign   */
@@ -111,7 +132,8 @@ double __ieee754_pow(double x, double y) {
 
   if (qx > 0x7ff00000 || (qx == 0x7ff00000 && u.i[LOW_HALF] != 0)) return NaNQ.x;
                                                                  /*  if 0<x<2^-0x7fe */
-  if (qy > 0x7ff00000 || (qy == 0x7ff00000 && v.i[LOW_HALF] != 0)) return NaNQ.x;
+  if (qy > 0x7ff00000 || (qy == 0x7ff00000 && v.i[LOW_HALF] != 0))
+    return x == 1.0 ? 1.0 : NaNQ.x;
                                                                  /*  if y<2^-0x7fe   */
 
   if (qx == 0x7ff00000)                              /* x= 2^-0x3ff */
@@ -124,7 +146,7 @@ double __ieee754_pow(double x, double y) {
     if (y<0) return (x<1.0)?INF.x:0;
   }
 
-  if (x == 1.0) return NaNQ.x;
+  if (x == 1.0) return 1.0;
   if (y>0) return (x>1.0)?INF.x:0;
   if (y<0) return (x<1.0)?INF.x:0;
   return 0;     /* unreachable, to make the compiler happy */
@@ -148,7 +170,7 @@ static double power1(double x, double y) {
   a2 = (a-a1)+aa;
   error = error*ABS(y);
   t = __exp1(a1,a2,1.9e16*error);
-  return (t >= 0)?t:slowpow(x,y,z);
+  return (t >= 0)?t:__slowpow(x,y,z);
 }
 
 /****************************************************************************/
