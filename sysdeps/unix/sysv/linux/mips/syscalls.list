@@ -35,7 +35,7 @@ socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
 
 getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresuid
+getresgid	-	getresgid	3	getresgid
 
 #
 # There are defined locally because the caller is also defined in this dir.

@@ -55,7 +55,7 @@ socketpair	-	socketpair	4	__socketpair	socketpair
 sysctl		-	_sysctl		6	sysctl
 
 getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresuid
+getresgid	-	getresgid	3	getresgid
 
 # access pci space protected from machine checks:
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
