@@ -1,3 +1,9 @@
+2000-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add oldsetrlimit
+	entry for GLIBC_2.0 version of setrlimit.
+	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 2000-03-16  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nis/nis-ethers.c: Return with error if malloc fails.
