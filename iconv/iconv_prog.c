@@ -410,7 +410,8 @@ process_block (iconv_t cd, char *addr, size_t len, FILE *output)
 	  /* We have something to write out.  */
 	  int errno_save = errno;
 
-	  if (fwrite (outbuf, 1, outptr - outbuf, output) < outptr - outbuf
+	  if (fwrite (outbuf, 1, outptr - outbuf, output)
+	      < (size_t) (outptr - outbuf)
 	      || ferror (output))
 	    {
 	      /* Error occurred while printing the result.  */
@@ -435,7 +436,8 @@ conversion stopped due to problem in writing the output"));
 	      /* We have something to write out.  */
 	      int errno_save = errno;
 
-	      if (fwrite (outbuf, 1, outptr - outbuf, output) < outptr - outbuf
+	      if (fwrite (outbuf, 1, outptr - outbuf, output)
+		  < (size_t) (outptr - outbuf)
 		  || ferror (output))
 		{
 		  /* Error occurred while printing the result.  */

@@ -373,7 +373,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  do
 	    {
 	      to = ranges[upper].from + ranges[upper].len;
-	      if (to > archive_stat.st_size)
+	      if (to > (size_t) archive_stat.st_size)
 		/* The archive locrectab contains bogus offsets.  */
 		return NULL;
 	      to = (to + ps - 1) & ~(ps - 1);

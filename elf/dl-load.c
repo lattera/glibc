@@ -857,13 +857,13 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   l->l_phnum = header->e_phnum;
 
   maplength = header->e_phnum * sizeof (ElfW(Phdr));
-  if (header->e_phoff + maplength <= fbp->len)
+  if (header->e_phoff + maplength <= (size_t) fbp->len)
     phdr = (void *) (fbp->buf + header->e_phoff);
   else
     {
       phdr = alloca (maplength);
       __lseek (fd, header->e_phoff, SEEK_SET);
-      if (__libc_read (fd, (void *) phdr, maplength) != maplength)
+      if ((size_t) __libc_read (fd, (void *) phdr, maplength) != maplength)
 	{
 	  errstring = N_("cannot read file data");
 	  goto call_lose_errno;
@@ -1040,8 +1040,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       postmap:
 	if (l->l_phdr == 0
-	    && c->mapoff <= header->e_phoff
-	    && (c->mapend - c->mapstart + c->mapoff
+	    && (ElfW(Off)) c->mapoff <= header->e_phoff
+	    && ((size_t) (c->mapend - c->mapstart + c->mapoff)
 		>= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
 	  /* Found the program header in this segment.  */
 	  l->l_phdr = (void *) (c->mapstart + header->e_phoff - c->mapoff);
@@ -1414,13 +1414,13 @@ open_verify (const char *name, struct filebuf *fbp)
 	}
 
       maplength = ehdr->e_phnum * sizeof (ElfW(Phdr));
-      if (ehdr->e_phoff + maplength <= fbp->len)
+      if (ehdr->e_phoff + maplength <= (size_t) fbp->len)
 	phdr = (void *) (fbp->buf + ehdr->e_phoff);
       else
 	{
 	  phdr = alloca (maplength);
 	  __lseek (fd, ehdr->e_phoff, SEEK_SET);
-	  if (__libc_read (fd, (void *) phdr, maplength) != maplength)
+	  if ((size_t) __libc_read (fd, (void *) phdr, maplength) != maplength)
 	    {
 	    read_error:
 	      errval = errno;
@@ -1433,7 +1433,7 @@ open_verify (const char *name, struct filebuf *fbp)
       for (ph = phdr; ph < &phdr[ehdr->e_phnum]; ++ph)
 	if (ph->p_type == PT_NOTE && ph->p_filesz == 32 && ph->p_align >= 4)
 	  {
-	    if (ph->p_offset + 32 <= fbp->len)
+	    if (ph->p_offset + 32 <= (size_t) fbp->len)
 	      abi_note = (void *) (fbp->buf + ph->p_offset);
 	    else
 	      {

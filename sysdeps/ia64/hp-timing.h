@@ -141,7 +141,8 @@ typedef unsigned long int hp_timing_t;
     char *__dest = (Buf);						      \
     while (__len-- > 0 && __cp < __buf + sizeof (__buf))		      \
       *__dest++ = *__cp++;						      \
-    memcpy (__dest, " clock cycles", MIN (__len, sizeof (" clock cycles")));  \
+    memcpy (__dest, " clock cycles", MIN (__len,			      \
+					  (int) sizeof (" clock cycles")));   \
   } while (0)
 
 #endif	/* hp-timing.h */

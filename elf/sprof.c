@@ -675,7 +675,7 @@ load_profdata (const char *name, struct shobj *shobj)
       return NULL;
     }
 
-  if (st.st_size != shobj->expected_size)
+  if ((size_t) st.st_size != shobj->expected_size)
     {
       error (0, 0,
 	     _("profiling data file `%s' does not match shared object `%s'"),

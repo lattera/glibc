@@ -244,9 +244,9 @@ default character map file `%s' not found"), DEFAULT_CHARMAP));
 
       do
 	{
-	  struct charseq * seq = charmap_find_symbol (result, p, 1);
+	  struct charseq *seq = charmap_find_symbol (result, p, 1);
 
-	  if (seq == NULL || seq->ucs4 != *p)
+	  if (seq == NULL || seq->ucs4 != (uint32_t) *p)
 	    failed = 1;
 	}
       while (*p++ != '\0');
@@ -962,7 +962,7 @@ charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 	  errno = 0;
 	  newp->ucs4 = strtoul (from + 1, &endp, 16);
 	  if (endp - from != len1
-	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
+	      || (newp->ucs4 == ~((uint32_t) 0) && errno == ERANGE)
 	      || newp->ucs4 >= 0x80000000)
 	    /* This wasn't successful.  Signal this name cannot be a
 	       correct UCS value.  */
@@ -1008,9 +1008,9 @@ hexadecimal range format should use only capital characters"));
 
   errno = 0;
   from_nr = strtoul (&from[prefix_len], &from_end, decimal_ellipsis ? 10 : 16);
-  if (*from_end != '\0' || (from_nr == ULONG_MAX && errno == ERANGE)
+  if (*from_end != '\0' || (from_nr == UINT_MAX && errno == ERANGE)
       || ((to_nr = strtoul (&to[prefix_len], &to_end,
-			    decimal_ellipsis ? 10 : 16)) == ULONG_MAX
+			    decimal_ellipsis ? 10 : 16)) == UINT_MAX
 	  && errno == ERANGE)
       || *to_end != '\0')
     {
@@ -1057,7 +1057,7 @@ hexadecimal range format should use only capital characters"));
 	  errno = 0;
 	  newp->ucs4 = strtoul (name_end + 1, &endp, 16);
 	  if (endp - name_end != len1
-	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
+	      || (newp->ucs4 == ~((uint32_t) 0) && errno == ERANGE)
 	      || newp->ucs4 >= 0x80000000)
 	    /* This wasn't successful.  Signal this name cannot be a
 	       correct UCS value.  */

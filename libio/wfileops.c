@@ -430,12 +430,12 @@ _IO_wfile_overflow (f, wch)
     return _IO_do_flush (f);
   if (f->_wide_data->_IO_write_ptr == f->_wide_data->_IO_buf_end)
     /* Buffer is really full */
-    if (_IO_do_flush (f) == WEOF)
+    if (_IO_do_flush (f) == EOF)
       return WEOF;
   *f->_wide_data->_IO_write_ptr++ = wch;
   if ((f->_flags & _IO_UNBUFFERED)
       || ((f->_flags & _IO_LINE_BUF) && wch == L'\n'))
-    if (_IO_do_flush (f) == WEOF)
+    if (_IO_do_flush (f) == EOF)
       return WEOF;
   return wch;
 }

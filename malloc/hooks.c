@@ -527,7 +527,7 @@ int
 public_sET_STATe(Void_t* msptr)
 {
   struct malloc_save_state* ms = (struct malloc_save_state*)msptr;
-  int i;
+  size_t i;
   mbinptr b;
 
   disallow_malloc_check = 1;

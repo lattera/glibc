@@ -291,7 +291,7 @@ _IO_wstr_pbackfail (fp, c)
      _IO_FILE *fp;
      _IO_wint_t c;
 {
-  if ((fp->_flags & _IO_NO_WRITES) && c != EOF)
+  if ((fp->_flags & _IO_NO_WRITES) && c != WEOF)
     return WEOF;
   return INTUSE(_IO_wdefault_pbackfail) (fp, c);
 }

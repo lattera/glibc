@@ -19,11 +19,10 @@
 #include <sysdep.h>
 #include <tls.h>
 
-/* Because the Linux version is in fact i386/ELF and the start.? file
-   for this system (sysdeps/i386/elf/start.S) is also used by The Hurd
-   and therefore this files must not contain the definition of the
-   `errno' variable (I don't know why, ask Roland), we have to define
-   it somewhere else.
+/* The Linux version is in fact i386/ELF and the start.? file for this
+   system (sysdeps/i386/elf/start.S) is also used by The Hurd.  This file
+   must not contain the definition of the `errno' variable, we have to
+   define it somewhere else.
 
    ...and this place is here.  */
 #if USE_TLS && HAVE___THREAD

@@ -5011,7 +5011,7 @@ size_t mUSABLe(mem) Void_t* mem;
 struct mallinfo mALLINFo(mstate av)
 {
   struct mallinfo mi;
-  int i;
+  size_t i;
   mbinptr b;
   mchunkptr p;
   INTERNAL_SIZE_T avail;

@@ -98,7 +98,7 @@ fmemopen_read (void *cookie, char *b, size_t s)
 
   if (c->pos + s > c->size)
     {
-      if (c->pos == c->size)
+      if ((size_t) c->pos == c->size)
 	return 0;
       s = c->size - c->pos;
     }
@@ -106,7 +106,7 @@ fmemopen_read (void *cookie, char *b, size_t s)
   memcpy (b, &(c->buffer[c->pos]), s);
 
   c->pos += s;
-  if (c->pos > c->maxpos)
+  if ((size_t) c->pos > c->maxpos)
     c->maxpos = c->pos;
 
   return s;
@@ -125,7 +125,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
   if (c->pos + s + addnullc > c->size)
     {
-      if (c->pos + addnullc == c->size)
+      if ((size_t) (c->pos + addnullc) == c->size)
 	{
 	  __set_errno (ENOSPC);
 	  return -1;
@@ -136,7 +136,7 @@ fmemopen_write (void *cookie, const char *b, size_t s)
   memcpy (&(c->buffer[c->pos]), b, s);
 
   c->pos += s;
-  if (c->pos > c->maxpos)
+  if ((size_t) c->pos > c->maxpos)
     {
       c->maxpos = c->pos;
       if (addnullc)
@@ -173,7 +173,7 @@ fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
       return -1;
     }
 
-  if (np < 0 || np > c->size)
+  if (np < 0 || (size_t) np > c->size)
     return -1;
 
   c->pos = np;

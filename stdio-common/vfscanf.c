@@ -81,7 +81,8 @@
 #  define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF				      \
-				    ? ++read_in : (inchar_errno = errno)), c))
+				    ? ++read_in				      \
+				    : (size_t) (inchar_errno = errno)), c))
 
 #  define MEMCPY(d, s, n) __wmemcpy (d, s, n)
 #  define ISSPACE(Ch)	  iswspace (Ch)
@@ -112,7 +113,8 @@
 #  define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF				      \
-				    ? ++read_in : (inchar_errno = errno)), c))
+				    ? ++read_in				      \
+				    : (size_t) (inchar_errno = errno)), c))
 #  define MEMCPY(d, s, n) memcpy (d, s, n)
 #  define ISSPACE(Ch)	  isspace (Ch)
 #  define ISDIGIT(Ch)	  isdigit (Ch)

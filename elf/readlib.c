@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -103,8 +103,8 @@ process_file (const char *real_file_name, const char *file_name,
 
   /* Check that the file is large enough so that we can access the
      information.  We're only checking the size of the headers here.  */
-  if (statbuf.st_size < sizeof (struct exec)
-      || statbuf.st_size < sizeof (ElfW(Ehdr)))
+  if ((size_t) statbuf.st_size < sizeof (struct exec)
+      || (size_t) statbuf.st_size < sizeof (ElfW(Ehdr)))
     {
       error (0, 0, _("File %s is too small, not checked."), file_name);
       fclose (file);

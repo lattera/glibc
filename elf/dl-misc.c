@@ -211,7 +211,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	      iov[niov].iov_base = va_arg (arg, char *);
 	      iov[niov].iov_len = strlen (iov[niov].iov_base);
 	      if (prec != -1)
-		iov[niov].iov_len = MIN (prec, iov[niov].iov_len );
+		iov[niov].iov_len = MIN ((size_t) prec, iov[niov].iov_len);
 	      ++niov;
 	      break;
 

@@ -477,7 +477,8 @@ _IO_new_do_write (fp, data, to_do)
      const char *data;
      _IO_size_t to_do;
 {
-  return (to_do == 0 || new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;
+  return (to_do == 0
+	  || (_IO_size_t) new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;
 }
 INTDEF2(_IO_new_do_write, _IO_do_write)
 
@@ -1423,7 +1424,8 @@ _IO_file_xsgetn (fp, data, n)
 	  /* If we now want less than a buffer, underflow and repeat
 	     the copy.  Otherwise, _IO_SYSREAD directly to
 	     the user buffer. */
-	  if (fp->_IO_buf_base && want < fp->_IO_buf_end - fp->_IO_buf_base)
+	  if (fp->_IO_buf_base
+	      && want < (size_t) (fp->_IO_buf_end - fp->_IO_buf_base))
 	    {
 	      if (__underflow (fp) == EOF)
 		break;

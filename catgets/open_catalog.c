@@ -194,7 +194,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
     goto close_unlock_return;
 
   if (__builtin_expect (!S_ISREG (st.st_mode), 0)
-      || st.st_size < sizeof (struct catalog_obj))
+      || (size_t) st.st_size < sizeof (struct catalog_obj))
     {
       /* `errno' is not set correctly but the file is not usable.
 	 Use an reasonable error value.  */
@@ -305,7 +305,8 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
 
   /* Now we can check whether the file is large enough to contain the
      tables it says it contains.  */
-  if (st.st_size <= (sizeof (struct catalog_obj) + 2 * tab_size + max_offset))
+  if ((size_t) st.st_size
+      <= (sizeof (struct catalog_obj) + 2 * tab_size + max_offset))
     /* The last string is not contained in the file.  */
     goto invalid_file;
 

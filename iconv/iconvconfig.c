@@ -441,8 +441,8 @@ add_alias (char *rp)
     return;
   *wp++ = '\0';
 
-  assert (strlen (from) + 1 == to - from);
-  assert (strlen (to) + 1 == wp - to);
+  assert (strlen (from) + 1 == (size_t) (to - from));
+  assert (strlen (to) + 1 == (size_t) (wp - to));
 
   new_alias (from, to - from, to, wp - to);
 }
@@ -604,15 +604,15 @@ add_module (char *rp, const char *directory)
 
   /* See whether we must add the ending.  */
   need_ext = 0;
-  if (wp - module < sizeof (gconv_module_ext)
+  if ((size_t) (wp - module) < sizeof (gconv_module_ext)
       || memcmp (wp - sizeof (gconv_module_ext), gconv_module_ext,
 		 sizeof (gconv_module_ext)) != 0)
     /* We must add the module extension.  */
     need_ext = sizeof (gconv_module_ext) - 1;
 
-  assert (strlen (from) + 1 == to - from);
-  assert (strlen (to) + 1 == module - to);
-  assert (strlen (module) + 1 == wp - module);
+  assert (strlen (from) + 1 == (size_t) (to - from));
+  assert (strlen (to) + 1 == (size_t) (module - to));
+  assert (strlen (module) + 1 == (size_t) (wp - module));
 
   new_module (from, to - from, to, module - to, directory, module, wp - module,
 	      cost, need_ext);
@@ -1179,7 +1179,7 @@ write_output (void)
   total += iov[idx].iov_len;
   ++idx;
 
-  assert (cur_extra_table - extra_table
+  assert ((size_t) (cur_extra_table - extra_table)
 	  <= ((sizeof (struct extra_entry) + sizeof (gidx_t)
 	       + sizeof (struct extra_entry_module))
 	      * nextra_modules));
@@ -1189,7 +1189,7 @@ write_output (void)
   total += iov[idx].iov_len;
   ++idx;
 
-  if (TEMP_FAILURE_RETRY (writev (fd, iov, idx)) != total
+  if ((size_t) TEMP_FAILURE_RETRY (writev (fd, iov, idx)) != total
       /* The file was created with mode 0600.  Make it world-readable.  */
       || fchmod (fd, 0644) != 0
       /* Rename the file, possibly replacing an old one.  */

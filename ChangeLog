@@ -1,3 +1,65 @@
+2002-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (charmap_new_char): Don't use
+	ULONG_MAX as maximum UCS4 value.
+
+	* sysdeps/unix/sysv/linux/ia64/sys/user.h: New file.
+
+	* sysdeps/generic/strtol.c: We don't need the isascii test in glibc.
+
+	* malloc/hooks.c (public_sET_STATe): use size_t as type for i.
+	* malloc/malloc.c (mALLINFo): Likewise.
+
+	* libio/wstrops.c (_IO_wstr_pbackfail): Use WEOF in comparison.
+
+	* libio/wfileops.c (_IO_wfile_overflow): Use EOF not WEOF when
+	examining result of _IO_do_flush call.
+
+	* stdio-common/vfprintf.c (vfprintf): Use correct type in va_arg.
+	Use prec not spec when sizing buffers.
+
+	* catgets/open_catalog.c (__open_catalog): Add casts to avoid warnings.
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Likewise.
+	* locale/loadlocale.c (_nl_intern_locale_data): Likewise.
+	* stdio-common/vfscanf.c (inchar): Likewise.
+	* misc/efgcvt_r.c (fcvt_r): Likewise.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Likewise.
+	* elf/readlib.c (process_file): Likewise.
+	* elf/sprof.c (load_profdata): Likewise.
+	* sysdeps/ia64/hp-timing.h (HP_TIMING_PRINT): Likewise.
+	* locale/programs/linereader.c (get_toplvl_escape): Likewise.
+	* locale/programs/charmap.c (charmap_read): Likewise.
+	* libio/fileops.c: Likewise.
+	* libio/fmemopen.c: Likewise.
+	* stdlib/strtod.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c (process_block): Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/Makefile: Define _ASM_IA64_CURRENT_H
+	macro to calm down the compiler.
+
+	* iconv/gconv_cache.c (__gconv_load_cache): Add cast to avoid warning.
+
+	* sysdeps/ia64/elf/initfini.c: Don't use newlines embedded in string.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Update comment regarding
+	placement of errno definition.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S: Likewise.
+
+	* resolv/nss_dns/dns-host.c (MAXPACKET): Increase minimum value
+	from 1024 to 65536, to avoid buffer overrun.
+
+2002-08-16  Paul Eggert  <eggert@twinsun.com>
+
+	* resolv/gethnamaddr.c (MAXPACKET): Increase minimum value
+	from 1024 to 65536, to avoid buffer overrun.
+	* resolv/res_query.c (MAXPACKET): Likewise.
+
 2002-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/Versions: Remove *xattr syscalls.
@@ -12,7 +74,7 @@
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs_conf):
 	Prefer reading /proc/stat since it is more uniform across
-	architectures.1
+	architectures.
 
 	* manual/texinfo.tex: Update to latest official version.
 
@@ -120,7 +182,6 @@
 2002-08-21  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Make GCC version check require 3.[2-9]* and no others.
-	* configure: Regenerated.
 	* manual/install.texi (Tools for Compilation): Say 3.2 is required.
 	(Configuring and compiling): Don't mention older GCC versions any more.
 	* INSTALL: Regenerated.

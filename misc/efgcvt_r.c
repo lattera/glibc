@@ -141,9 +141,9 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
   if (left)
     {
       *decpt += left;
-      if (--len > n)
+      if ((ssize_t) --len > n)
 	{
-	  while (left-- > 0 && n < len)
+	  while (left-- > 0 && n < (ssize_t) len)
 	    buf[n++] = '0';
 	  buf[n] = '\0';
 	}

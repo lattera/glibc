@@ -67,7 +67,7 @@ __gconv_load_cache (void)
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0
       /* We do not have to start looking at the file if it cannot contain
 	 at least the cache header.  */
-      || st.st_size < sizeof (struct gconvcache_header))
+      || (size_t) st.st_size < sizeof (struct gconvcache_header))
     {
     close_and_exit:
       __close (fd);

@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -105,7 +105,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
       size_t idx = filedata->strindex[cnt];
-      if (__builtin_expect (idx > newdata->filesize, 0))
+      if (__builtin_expect (idx > (size_t) newdata->filesize, 0))
 	{
 	puntdata:
 	  free (newdata);

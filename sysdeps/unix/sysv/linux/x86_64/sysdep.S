@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,11 +18,10 @@
 
 #include <sysdep.h>
 
-/* Because the Linux version is in fact x86-64/ELF and the start.? file
-   for this system (sysdeps/x86_64/elf/start.S) is also used by The Hurd
-   and therefore this files must not contain the definition of the
-   `errno' variable (I don't know why, ask Roland), we have to define
-   it somewhere else.
+/* The Linux version is in fact x86-64/ELF and the start.? file for this
+   system (sysdeps/x86_64/elf/start.S) is also used by The Hurd.  This file
+   must not contain the definition of the `errno' variable, we have to
+   define it somewhere else.
 
    ...and this place is here.  */
 	.bss

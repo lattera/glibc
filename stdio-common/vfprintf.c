@@ -993,7 +993,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	if (!left)							      \
 	  PAD (L' ');							      \
         if (fspec == NULL)						      \
-	  outchar (va_arg (ap, wint_t));				      \
+	  outchar (va_arg (ap, wchar_t));				      \
 	else								      \
 	  outchar (args_value[fspec->data_arg].pa_wchar);		      \
 	if (left)							      \
@@ -1113,7 +1113,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	size_t len;							      \
 									      \
 	memset (&mbstate, '\0', sizeof (mbstate_t));			      \
-	len = __wcrtomb (buf, (fspec == NULL ? va_arg (ap, wint_t)	      \
+	len = __wcrtomb (buf, (fspec == NULL ? va_arg (ap, wchar_t)	      \
 			       : args_value[fspec->data_arg].pa_wchar),	      \
 			 &mbstate);					      \
 	if (len == (size_t) -1)						      \
@@ -1452,7 +1452,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  {
 	    /* We have to use a special buffer.  The "32" is just a safe
 	       bet for all the output which is not counted in the width.  */
-	    if (width < 32768 / sizeof (CHAR_T))
+	    if (width < (int) (32768 / sizeof (CHAR_T)))
 	      workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 			 + (width + 32));
 	    else
@@ -1477,7 +1477,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	{
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
-	  if (width < 32768 / sizeof (CHAR_T))
+	  if (width < (int) (32768 / sizeof (CHAR_T)))
 	    workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
 		       + (width + 32));
 	  else
@@ -1520,17 +1520,17 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (prec > width
 	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
 	{
-	  if (spec < 32768 / sizeof (CHAR_T))
-	    workend = alloca (spec + 32) + (spec + 32);
+	  if (prec < (int) (32768 / sizeof (CHAR_T)))
+	    workend = alloca (prec + 32) + (prec + 32);
 	  else
 	    {
-	      workstart = (CHAR_T *) malloc ((spec + 32) * sizeof (CHAR_T));
+	      workstart = (CHAR_T *) malloc ((prec + 32) * sizeof (CHAR_T));
 	      if (workstart == NULL)
 		{
 		  done = -1;
 		  goto all_done;
 		}
-	      workend = workstart + (spec + 32);
+	      workend = workstart + (prec + 32);
 	    }
 	}
       JUMP (*f, step2_jumps);
@@ -1835,7 +1835,7 @@ do_positional:
 	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer)
 					    / sizeof (CHAR_T)))
 	  {
-	    if (MAX (prec, width) < 32768 / sizeof (CHAR_T))
+	    if (MAX (prec, width) < (int) (32768 / sizeof (CHAR_T)))
 	      workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
 					    * sizeof (CHAR_T))
 			 + (MAX (prec, width) + 32));

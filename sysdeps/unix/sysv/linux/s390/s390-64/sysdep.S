@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -19,11 +19,10 @@
 
 #include <sysdep.h>
 
-/* Because the Linux version is in fact m68k/ELF and the start.? file
-   for this system (sysdeps/m68k/elf/start.S) is also used by The Hurd
-   and therefore this files must not contain the definition of the
-   `errno' variable (I don't know why, ask Roland), we have to define
-   it somewhere else.
+/* The Linux version is in fact S390-64/ELF and the start.? file for this
+   system (sysdeps/s390/s390-64/elf/start.S) is also used by The Hurd.
+   This file must not contain the definition of the `errno' variable,
+   we have to define it somewhere else.
 
     ...and this place is here.  */
 	.bss
@@ -81,10 +80,9 @@ ENTRY(__syscall_error)
 	brasl   %r14,__errno_location@PLT
 	st      %r13,0(%r2)
 	lmg     %r13,%r15,264(%r15)
-	lghi    %r2,-1	
+	lghi    %r2,-1
 	br      %r14
 #endif
 #endif
 
 END (__syscall_error)
-

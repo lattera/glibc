@@ -556,7 +556,8 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   /* Return 0.0 if no legal string is found.
      No character is used even if a sign was found.  */
 #ifdef USE_WIDE_CHAR
-  if (c == decimal && cp[1] >= L'0' && cp[1] <= L'9')
+  if (c == (wint_t) decimal
+      && (wint_t) cp[1] >= L'0' && (wint_t) cp[1] <= L'9')
     {
       /* We accept it.  This funny construct is here only to indent
 	 the code directly.  */
@@ -648,7 +649,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
 #ifdef USE_WIDE_CHAR
-  while (c == L'0' || (thousands != L'\0' && c == thousands))
+  while (c == L'0' || ((wint_t) thousands != L'\0' && c == (wint_t) thousands))
     c = *++cp;
 #else
   if (thousands == NULL)
@@ -675,17 +676,19 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
   if ((c < L_('0') || c > L_('9'))
-      && (base == 16 && (c < TOLOWER (L_('a')) || c > TOLOWER (L_('f'))))
+      && (base == 16 && (c < (wint_t) TOLOWER (L_('a'))
+			 || c > (wint_t) TOLOWER (L_('f'))))
 #ifdef USE_WIDE_CHAR
-      && c != decimal
+      && c != (wint_t) decimal
 #else
       && ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
 	      if (decimal[cnt] != cp[cnt])
 		break;
 	    decimal[cnt] != '\0'; })
 #endif
-      && (base == 16 && (cp == start_of_digits || TOLOWER (c) != L_('p')))
-      && (base != 16 && TOLOWER (c) != L_('e')))
+      && (base == 16 && (cp == start_of_digits
+			 || (CHAR_TYPE) TOLOWER (c) != L_('p')))
+      && (base != 16 && (CHAR_TYPE) TOLOWER (c) != L_('e')))
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly
@@ -700,12 +703,13 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   while (1)
     {
       if ((c >= L_('0') && c <= L_('9'))
-	  || (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
+	  || (base == 16 && (wint_t) TOLOWER (c) >= L_('a')
+	      && (wint_t) TOLOWER (c) <= L_('f')))
 	++dig_no;
       else
 	{
 #ifdef USE_WIDE_CHAR
-	  if (thousands == L'\0' || c != thousands)
+	  if ((wint_t) thousands == L'\0' || c != (wint_t) thousands)
 	    /* Not a digit or separator: end of the integer part.  */
 	    break;
 #else
@@ -765,7 +769,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
      numbers like `16.' i.e. with decimal but without trailing digits.  */
   if (
 #ifdef USE_WIDE_CHAR
-      c == decimal
+      c == (wint_t) decimal
 #else
       ({ for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
 	   if (decimal[cnt] != cp[cnt])
