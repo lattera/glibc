@@ -422,7 +422,8 @@ __printf_fphex (FILE *fp,
 
   /* Now we can compute the exponent string.  */
   expstr = _itoa_word (exponent, expbuf + sizeof expbuf, 10, 0);
-  wexpstr = _itowa_word (exponent, wexpbuf + sizeof wexpbuf, 10, 0);
+  wexpstr = _itowa_word (exponent,
+			 wexpbuf + sizeof wexpbuf / sizeof (wchar_t), 10, 0);
 
   /* Now we have all information to compute the size.  */
   width -= ((negative || info->showsign || info->space)
