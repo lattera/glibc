@@ -37,6 +37,3 @@ long-double-fcts = yes
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 endif
-
-# Use a more reasonable inline limit
-sysdep-CFLAGS += --param max-inline-insns-single=4000
