@@ -844,7 +844,7 @@ _IO_new_file_overflow (f, ch)
       if (__builtin_expect (_IO_in_backup (f), 0))
 	{
 	  size_t nbackup = f->_IO_read_end - f->_IO_read_ptr;
-	  _IO_free_backup_area (f);
+	  INTUSE(_IO_free_backup_area) (f);
 	  f->_IO_read_base -= MIN (nbackup,
 				   f->_IO_read_base - f->_IO_buf_base);
 	  f->_IO_read_ptr = f->_IO_read_base;

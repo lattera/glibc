@@ -324,6 +324,7 @@ register void *__gp __asm__("$29");
          "ld8 r17=[r16]\n\t"						      \
          ";;\n\t"							      \
          "add %0=r13,r17\n\t"						      \
+         ";;\n\t"							      \
          : "=r" (__l) : "r" (__gp) : "r16", "r17" ); __l; })
 
 # define __TLS_CALL_CLOBBERS \
@@ -348,6 +349,7 @@ register void *__gp __asm__("$29");
          ";;\n\t"							      \
          "mov gp=loc0\n\t"						      \
          "mov %0=r8\n\t"						      \
+         ";;\n\t"							      \
          : "=r" (__l) : "r" (__gp) : "loc0", __TLS_CALL_CLOBBERS);	      \
      __l; })
 
@@ -365,6 +367,7 @@ register void *__gp __asm__("$29");
          ";;\n\t"							      \
          "mov gp=loc0\n\t"						      \
          "mov %0=r8\n\t"						      \
+         ";;\n\t"							      \
           : "=r" (__l) : "r" (__gp) : "loc0", __TLS_CALL_CLOBBERS);	      \
      __l; })
 

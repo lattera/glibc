@@ -1,3 +1,14 @@
+2003-09-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/tls-macros.h (TLS_IE): Add a stop bit for ia64.
+	(TLS_LD): Likewise.
+	(TLS_GD): Likewise.
+
+2003-09-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_overflow): Add INTUSE to
+	_IO_free_backup_area call.
+
 2003-09-10  Chris Demetriou  <cgd@broadcom.com>
 
 	* sysdeps/unix/sysv/linux/mips/pread64.c (__libc_pread64): Fix
