@@ -102,5 +102,5 @@ tests: $(objpfx)test-freopen.out
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
-	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' 	\
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'	\
 	$(common-objpfx)libio/
