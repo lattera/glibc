@@ -1,5 +1,10 @@
 2004-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/bits/stdio.h (fread_unlocked): Add a couple of (size_t)
+	casts to handle funny calls with floating point argument values
+	and signed values correctly and without warning.
+	(fwrite_unlocked): Likewise.  [BZ #309]
+
 	* malloc/memusage.c (me): Use creat64, not creat.
 	* malloc/memusagestat.c: Fix handling of very large sizes.  [BZ #285]
 	Patch by Guy Maor <guymaor@yahoo.com>.

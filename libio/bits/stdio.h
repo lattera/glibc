@@ -1,5 +1,5 @@
 /* Optimizing macros and inline functions for stdio functions.
-   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -129,20 +129,23 @@ ferror_unlocked (FILE *__stream) __THROW
 /* Perform some simple optimizations.  */
 # define fread_unlocked(ptr, size, n, stream) \
   (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \
-		   && (size_t) ((size) * (n)) <= 8 && (size) != 0)	      \
+		   && (size_t) (size) * (size_t) (n) <= 8		      \
+		   && (size_t) (size) != 0)				      \
 		  ? ({ char *__ptr = (char *) (ptr);			      \
 		       FILE *__stream = (stream);			      \
 		       size_t __cnt;					      \
-		       for (__cnt = (size) * (n); __cnt > 0; --__cnt)	      \
+		       for (__cnt = (size_t) (size) * (size_t) (n);	      \
+			    __cnt > 0; --__cnt)				      \
 			 {						      \
 			   int __c = _IO_getc_unlocked (__stream);	      \
 			   if (__c == EOF)				      \
 			     break;					      \
 			   *__ptr++ = __c;				      \
 			 }						      \
-		       ((size_t) ((size) * (n)) - __cnt) / (size); })	      \
-		  : (((__builtin_constant_p (size) && (size) == 0)	      \
-		      || (__builtin_constant_p (n) && (n) == 0))	      \
+		       ((size_t) (size) * (size_t) (n) - __cnt)		      \
+			/ (size_t) (size); })				      \
+		  : (((__builtin_constant_p (size) && (size_t) (size) == 0)   \
+		      || (__builtin_constant_p (n) && (size_t) (n) == 0))     \
 			/* Evaluate all parameters once.  */		      \
 		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
 			(void) (n), 0)					      \
@@ -150,18 +153,21 @@ ferror_unlocked (FILE *__stream) __THROW
 
 # define fwrite_unlocked(ptr, size, n, stream) \
   (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \
-		   && (size_t) ((size) * (n)) <= 8 && (size) != 0)	      \
+		   && (size_t) ((size) * (n)) <= 8 && (size_t) (size) != 0)   \
 		  ? ({ const char *__ptr = (const char *) (ptr);	      \
 		       FILE *__stream = (stream);			      \
 		       size_t __cnt;					      \
-		       for (__cnt = (size) * (n); __cnt > 0; --__cnt)	      \
+		       for (__cnt = (size_t) (size) * (size_t) (n);	      \
+			    __cnt > 0; --__cnt)				      \
 			 if (_IO_putc_unlocked (*__ptr++, __stream) == EOF)   \
 			   break;					      \
-		       ((size_t) ((size) * (n)) - __cnt) / (size); })	      \
-		  : (((__builtin_constant_p (size) && (size) == 0)	      \
-		      || (__builtin_constant_p (n) && (n) == 0))	      \
+		       ((size_t) (size) * (size_t) (n) - __cnt)		      \
+			/ (size_t) (size); })				      \
+		  : (((__builtin_constant_p (size) && (size_t) (size) == 0)   \
+		      || (__builtin_constant_p (n) && (size_t) (n) == 0))     \
 			/* Evaluate all parameters once.  */		      \
-		     ? ((void) (ptr), (void) (stream), (void) (size), n)      \
+		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
+			(size_t) n)					      \
 		     : fwrite_unlocked (ptr, size, n, stream))))
 #endif
 
