@@ -1,3 +1,7 @@
+2004-01-01  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (generated): Add missing files.
+
 2003-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (pthread_getattr_np): Make sure stack info returned for
