@@ -269,13 +269,21 @@
 #if DO_VERSIONING
 # ifdef __ASSEMBLER__
 #  define symbol_version(real, name, version) \
+     _symbol_version(real, name, version)
+#  define _symbol_version(real, name, version) \
      .symver real, name##@##version
 #  define default_symbol_version(real, name, version) \
+     _default_symbol_version(real, name, version)
+#  define _default_symbol_version(real, name, version) \
      .symver real, name##@##@##version
 # else
 #  define symbol_version(real, name, version) \
+     _symbol_version(real, name, version)
+#  define _symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@" #version)
 #  define default_symbol_version(real, name, version) \
+     _default_symbol_version(real, name, version)
+#  define _default_symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@@" #version)
 # endif
 #else
