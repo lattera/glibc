@@ -362,7 +362,13 @@ static void pthread_initialize(void)
   /* Play with the stack size limit to make sure that no stack ever grows
      beyond STACK_SIZE minus one page (to act as a guard page). */
   getrlimit(RLIMIT_STACK, &limit);
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  /* STACK_SIZE bytes hold both the main stack and register backing
+     store. The rlimit value applies to each individually.  */
+  max_stack = STACK_SIZE/2 - __getpagesize();
+#else
   max_stack = STACK_SIZE - __getpagesize();
+#endif
   if (limit.rlim_cur > max_stack) {
     limit.rlim_cur = max_stack;
     setrlimit(RLIMIT_STACK, &limit);
@@ -444,10 +450,18 @@ int __pthread_initialize_manager(void)
 		   | __pthread_initial_thread.p_eventbuf.eventmask.event_bits[idx]))
 	  != 0)
 	{
+#ifdef NEED_SEPARATE_REGISTER_STACK
+	  pid = __clone2(__pthread_manager_event,
+			 (void **) __pthread_manager_thread_bos,
+			 THREAD_MANAGER_STACK_SIZE,
+			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+			 (void *)(long)manager_pipe[0]);
+#else
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_tos,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
 			(void *)(long)manager_pipe[0]);
+#endif
 
 	  if (pid != -1)
 	    {
@@ -472,9 +486,18 @@ int __pthread_initialize_manager(void)
     }
 
   if (pid == 0)
-    pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-		  (void *)(long)manager_pipe[0]);
+    {
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      pid = __clone2(__pthread_manager, (void **) __pthread_manager_thread_bos,
+		     THREAD_MANAGER_STACK_SIZE,
+		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+		     (void *)(long)manager_pipe[0]);
+#else
+      pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+		    (void *)(long)manager_pipe[0]);
+#endif
+    }
   if (pid == -1) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);

@@ -82,6 +82,13 @@ static int main_thread_exiting = 0;
 
 static pthread_t pthread_threads_counter = 0;
 
+#ifdef NEED_SEPARATE_REGISTER_STACK
+/* Signal masks for the manager.  These have to be global only when clone2
+   is used since it's currently borken wrt signals in the child.  */
+static sigset_t manager_mask;		/* Manager normal signal mask	*/
+static sigset_t manager_mask_all;	/* All bits set.	*/
+#endif
+
 /* Forward declarations */
 
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
@@ -100,7 +107,9 @@ int __pthread_manager(void *arg)
 {
   int reqfd = (int) (long int) arg;
   struct pollfd ufd;
-  sigset_t mask;
+#ifndef NEED_SEPARATE_REGISTER_STACK
+  sigset_t manager_mask;
+#endif
   int n;
   struct pthread_request request;
 
@@ -112,12 +121,15 @@ int __pthread_manager(void *arg)
   __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
   __pthread_manager_thread.p_h_errnop = &__pthread_manager_thread.p_h_errno;
   /* Block all signals except __pthread_sig_cancel and SIGTRAP */
-  sigfillset(&mask);
-  sigdelset(&mask, __pthread_sig_cancel); /* for thread termination */
-  sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
+  sigfillset(&manager_mask);
+  sigdelset(&manager_mask, __pthread_sig_cancel); /* for thread termination */
+  sigdelset(&manager_mask, SIGTRAP);            /* for debugging purposes */
   if (__pthread_threads_debug && __pthread_sig_debug > 0)
-    sigdelset(&mask, __pthread_sig_debug);
-  sigprocmask(SIG_SETMASK, &mask, NULL);
+    sigdelset(&manager_mask, __pthread_sig_debug);
+  sigprocmask(SIG_SETMASK, &manager_mask, NULL);
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  sigfillset(&manager_mask_all);
+#endif
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
   /* Synchronize debugging of the thread manager */
@@ -294,7 +306,16 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
   if (attr != NULL && attr->__stackaddr_set)
     {
-      /* The user provided a stack. */
+      /* The user provided a stack.  For now we interpret the supplied
+	 address as 1 + the highest addr. in the stack segment.  If a
+	 separate register stack is needed, we place it at the low end
+	 of the segment, relying on the associated stacksize to
+	 determine the low end of the segment.  This differs from many
+	 (but not all) other pthreads implementations.  The intent is
+	 that on machines with a single stack growing toward higher
+	 addresses, stackaddr would be the lowest address in the stack
+	 segment, so that it is consistently close to the initial sp
+	 value. */
       new_thread =
         (pthread_descr) ((long)(attr->__stackaddr) & -sizeof(void *)) - 1;
       new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
@@ -304,11 +325,57 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
     }
   else
     {
-      stacksize = STACK_SIZE - pagesize;
-      if (attr != NULL)
-        stacksize = MIN (stacksize, roundup(attr->__stacksize, pagesize));
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      size_t granularity = 2 * pagesize;
+      /* Try to make stacksize/2 a multiple of pagesize */
+#else
+      size_t granularity = pagesize;
+#endif
       /* Allocate space for stack and thread descriptor at default address */
+      if (attr != NULL)
+	{
+	  guardsize = page_roundup (attr->__guardsize, granularity);
+	  stacksize = STACK_SIZE - guardsize;
+	  stacksize = MIN (stacksize,
+			   page_roundup (attr->__stacksize, granularity));
+	}
+      else
+	{
+	  guardsize = granularity;
+	  stacksize = STACK_SIZE - granularity;
+	}
       new_thread = default_new_thread;
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      new_thread_bottom = (char *) (new_thread + 1) - stacksize - guardsize;
+      /* Includes guard area, unlike the normal case.  Use the bottom
+       end of the segment as backing store for the register stack.
+       Needed on IA64.  In this case, we also map the entire stack at
+       once.  According to David Mosberger, that's cheaper.  It also
+       avoids the risk of intermittent failures due to other mappings
+       in the same region.  The cost is that we might be able to map
+       slightly fewer stacks.  */
+
+      /* First the main stack: */
+      if (mmap((caddr_t)((char *)(new_thread + 1) - stacksize / 2),
+	       stacksize / 2, PROT_READ | PROT_WRITE | PROT_EXEC,
+	       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0)
+	  == MAP_FAILED)
+	/* Bad luck, this segment is already mapped. */
+	return -1;
+      /* Then the register stack:	*/
+      if (mmap((caddr_t)new_thread_bottom, stacksize/2,
+	       PROT_READ | PROT_WRITE | PROT_EXEC,
+	       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0)
+	  == MAP_FAILED)
+	{
+	  munmap((caddr_t)((char *)(new_thread + 1) - stacksize/2),
+		 stacksize/2);
+	  return -1;
+	}
+
+      guardaddr = new_thread_bottom + stacksize/2;
+      /* We leave the guard area in the middle unmapped.	*/
+#else  /* !NEED_SEPARATE_REGISTER_STACK */
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
       if (mmap((caddr_t)((char *)(new_thread + 1) - INITIAL_STACK_SIZE),
                INITIAL_STACK_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
@@ -317,10 +384,10 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
         /* Bad luck, this segment is already mapped. */
         return -1;
       /* We manage to get a stack.  Now see whether we need a guard
-         and allocate it if necessary.  Notice that the default
-         attributes (stack_size = STACK_SIZE - pagesize) do not need
-	 a guard page, since the RLIMIT_STACK soft limit prevents stacks
-	 from running into one another. */
+	 and allocate it if necessary.  Notice that the default
+	 attributes (stack_size = STACK_SIZE - pagesize and guardsize
+	 = pagesize) do not need a guard page, since the RLIMIT_STACK
+	 soft limit prevents stacks from running into one another. */
       if (stacksize == STACK_SIZE - pagesize)
         {
           /* We don't need a guard page. */
@@ -330,7 +397,6 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       else
         {
           /* Put a bad page at the bottom of the stack */
-          guardsize = attr->__guardsize;
 	  guardaddr = (void *)new_thread_bottom - guardsize;
           if (mmap ((caddr_t) guardaddr, guardsize, 0, MAP_FIXED, -1, 0)
               == MAP_FAILED)
@@ -340,6 +406,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
               guardsize = 0;
             }
         }
+#endif /* !NEED_SEPARATE_REGISTER_STACK */
     }
   /* Clear the thread data structure.  */
   memset (new_thread, '\0', sizeof (*new_thread));
@@ -452,9 +519,30 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	  __pthread_lock(new_thread->p_lock, NULL);
 
 	  /* We have to report this event.  */
+#ifdef NEED_SEPARATE_REGISTER_STACK
+	  /* Perhaps this version should be used on all platforms. But
+	   this requires that __clone2 be uniformly supported
+	   everywhere.
+
+	   And there is some argument for changing the __clone2
+	   interface to pass sp and bsp instead, making it more IA64
+	   specific, but allowing stacks to grow outward from each
+	   other, to get less paging and fewer mmaps.  Clone2
+	   currently can't take signals in the child right after
+	   process creation.  Mask them in the child.  It resets the
+	   mask once it starts up.  */
+	  sigprocmask(SIG_SETMASK, &manager_mask_all, NULL);
+	  pid = __clone2(pthread_start_thread_event,
+  		 (void **)new_thread_bottom,
+			 (char *)new_thread - new_thread_bottom,
+			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+			 __pthread_sig_cancel, new_thread);
+	  sigprocmask(SIG_SETMASK, &manager_mask, NULL);
+#else
 	  pid = __clone(pthread_start_thread_event, (void **) new_thread,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			__pthread_sig_cancel, new_thread);
+#endif
 	  if (pid != -1)
 	    {
 	      /* Now fill in the information about the new thread in
@@ -479,18 +567,38 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	}
     }
   if (pid == 0)
-    pid = __clone(pthread_start_thread, (void **) new_thread,
-		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-		  __pthread_sig_cancel, new_thread);
+    {
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      sigprocmask(SIG_SETMASK, &manager_mask_all, NULL);
+      pid = __clone2(pthread_start_thread,
+		     (void **)new_thread_bottom,
+                     (char *)new_thread - new_thread_bottom,
+		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+		     __pthread_sig_cancel, new_thread);
+      sigprocmask(SIG_SETMASK, &manager_mask, NULL);
+#else
+      pid = __clone(pthread_start_thread, (void **) new_thread,
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+		    __pthread_sig_cancel, new_thread);
+#endif /* !NEED_SEPARATE_REGISTER_STACK */
+    }
   /* Check if cloning succeeded */
   if (pid == -1) {
     /* Free the stack if we allocated it */
     if (attr == NULL || !attr->__stackaddr_set)
       {
+#ifdef NEED_SEPARATE_REGISTER_STACK
+	size_t stacksize = ((char *)(new_thread->p_guardaddr)
+			    - new_thread_bottom);
+	munmap((caddr_t)new_thread_bottom, stacksize);
+	munmap((caddr_t)new_thread_bottom + stacksize
+	       + new_thread->p_guardsize, stacksize);
+#else
 	if (new_thread->p_guardsize != 0)
 	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
 	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
 	       INITIAL_STACK_SIZE);
+#endif
       }
     __pthread_handles[sseg].h_descr = NULL;
     __pthread_handles[sseg].h_bottom = NULL;
@@ -550,10 +658,27 @@ static void pthread_free(pthread_descr th)
   if (th == &__pthread_initial_thread) return;
   if (!th->p_userstack)
     {
+      size_t guardsize = th->p_guardsize;
       /* Free the stack and thread descriptor area */
-      if (th->p_guardsize != 0)
-	munmap(th->p_guardaddr, th->p_guardsize);
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      char *guardaddr = th->p_guardaddr;
+      /* We unmap exactly what we mapped, in case there was something
+	 else in the same region.  Guardaddr is always set, eve if
+	 guardsize is 0.  This allows us to compute everything else.  */
+      size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
+      /* Unmap the register stack, which is below guardaddr.  */
+      munmap((caddr_t)(guardaddr-stacksize), stacksize);
+      /* Unmap the main stack.	*/
+      munmap((caddr_t)(guardaddr+guardsize), stacksize);
+#else
+      /* The following assumes that we only allocate stacks of one
+	 size.  That's currently true but probably shouldn't be.  This
+	 looks like it fails for growing stacks if there was something
+	 else mapped just below the stack?  */
+      if (guardsize != 0)
+	munmap(th->p_guardaddr, guardsize);
       munmap((caddr_t) ((char *)(th+1) - STACK_SIZE), STACK_SIZE);
+#endif
     }
 }
 

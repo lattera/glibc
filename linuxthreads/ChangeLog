@@ -1,3 +1,73 @@
+2000-05-05  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/pt-machine.h (__compare_and_swap): Change it to
+	have acquire semantics.
+	(__compare_and_swap_with_release_semantics): New inline
+	function.
+	(HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS): New macro.
+
+2000-01-28  Hans Boehm  <hboehm@exch.hpl.hp.com>
+
+	* manager.c: Fix the problem with signals at startup.
+	Change the way that thread stacks are allocated on IA64.
+	Clean up some of the guard page allocation stuff.
+
+1999-12-19  H.J. Lu  <hjl@gnu.org>
+
+	* internals.h (page_roundup): New.
+	* attr.c (__pthread_attr_setguardsize); Use page_roundup
+	instead of roundup.
+	* manager.c (pthread_allocate_stack): Make sure guardaddr is
+	page aligned with page_roundup if NEED_SEPARATE_REGISTER_STACK
+	is define.
+
+1999-12-17  Hans Boehm  <hboehm@exch.hpl.hp.com>
+
+	* manager.c (pthread_allocate_stack): Unmap the stack top
+	if failed to map the stack bottom.
+	Fix the guard page.
+	(pthread_free): Fix the guard page.
+
+	* pthread.c (pthread_initialize): Set rlimit correctly for
+	NEED_SEPARATE_REGISTER_STACK.
+
+1999-12-16  H.J. Lu  <hjl@gnu.org>
+
+	* pthread.c (__pthread_initialize_manager): Pass
+	__pthread_manager_thread_bos instead of
+	__pthread_manager_thread_tos to __clone2.
+
+1999-12-16  H.J. Lu  <hjl@gnu.org>
+
+	* manager.c (pthread_allocate_stack): Correct the calculation
+	of "new_thread_bottom". Remove MAP_GROWSDOWN from mmap for
+	stack bottom.
+
+1999-12-13  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/pt-machine.h (__compare_and_swap): Added a stop
+	bit after setting ar.ccv.
+
+1999-12-12  H.J. Lu  <hjl@gnu.org>
+
+	* manager.c (pthread_allocate_stack): Make the starting
+	address of the stack bottom page aligned. FIXME: it may
+	need changes in other places.
+	(pthread_handle_create): Likewise.
+
+1999-12-11  Hans Boehm  <hboehm@exch.hpl.hp.com>
+
+	* manager.c (pthread_allocate_stack): Handle
+	NEED_SEPARATE_REGISTER_STACK.
+	(pthread_handle_create): Likewise.
+	* pthread.c (__pthread_initialize_manager): Likewise.
+
+	* sysdeps/ia64/pt-machine.h: Use r13 for thread pointer.
+
+1999-12-02  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/pt-machine.h: New.
+
 2000-07-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* wrapsyscall.c: Mark non-__ protected names as weak.

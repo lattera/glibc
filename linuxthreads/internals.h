@@ -311,6 +311,11 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 
 /* Fill in defaults left unspecified by pt-machine.h.  */
 
+/* We round up a value with page size. */
+#ifndef page_roundup
+#define page_roundup(v,p) ((((size_t) (v)) + (p) - 1) & ~((p) - 1))
+#endif
+
 /* The page size we can get from the system.  This should likely not be
    changed by the machine file but, you never know.  */
 #ifndef PAGE_SIZE
