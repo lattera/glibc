@@ -26,7 +26,7 @@
 
 int error_count;
 
-typedef struct 
+typedef struct
 {
   double value;
   int ndigit;
@@ -55,6 +55,7 @@ static testcase ecvt_tests[] =
   { 100.01, -4, 3, "" },
   { 123.01, -4, 3, "" },
   { 126.71, -4, 3, "" },
+  { 0.0, 4, 1, "0000" },
   /* -1.0 is end marker.  */
   { -1.0, 0, 0, "" }
 };
@@ -132,13 +133,13 @@ special (void)
 
 }
 
-  
+
 int
 main (void)
 {
   test (ecvt_tests, ecvt, "ecvt");
   test (fcvt_tests, fcvt, "fcvt");
   special ();
-  
+
   return error_count;
 }

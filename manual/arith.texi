@@ -1352,7 +1352,7 @@ returned string neither contains decimal point nor sign. The high-order
 digit of the string is non-zero (unless @var{value} is actually zero)
 and the low-order digit is rounded. The variable pointed to by
 @var{decpt} gets the position of the decimal character relative to the
-start of the string. If @var{value} is negativ, @var{sign} is set to a
+start of the string. If @var{value} is negative, @var{sign} is set to a
 non-zero value, otherwise to 0.
 
 The returned string is statically allocated and overwritten by each call
