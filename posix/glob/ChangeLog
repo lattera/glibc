@@ -1,3 +1,17 @@
+Sat Jul 20 21:55:31 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	Win32 hacks from <Rob_Tulloh@tivoli.com>.
+	* posix/glob.c [WIN32]: Don't include <pwd.h>; don't use d_ino;
+	use void * for my_realloc; include <malloc.h> for alloca.
+	(glob) [WIN32]: Use "c:/users/default" for ~ if no HOME variable.
+	* posix/fnmatch.h [WIN32]: Use prototypes even if [!__STDC__].
+	* posix/glob.h: Likewise.
+
+Fri Jul 19 16:56:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.h [!_AMIGA && !VMS]: Check this instead of just [!_AMIGA]
+	for `struct stat;' forward decl.
+
 Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/glob.c: Include <alloca.h> only [HAVE_ALLOCA_H], not [sparc].
@@ -6,153 +20,4 @@ Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
  	only for ?s, not for *s.  Fix from Chet Ramey.
-
-Wed May 22 17:22:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
-
-	* posix/glob.c [VMS]: Don't include <pwd.h>.
-	[HAVE_VMSDIR_H]: Include "vmsdir.h".
-	(glob) [VMS]: Don't grok ~.
-
-Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
-
-	* posix/glob.h [_AMIGA]: Remove `struct stat;' forward decl.
-
-	* posix/glob.c [_AMIGA]: Don't include <pwd.h>.
-	(glob): Remove bogus & in call to globfree.
-	[_AMIGA]: Use AmigaDOS file name conventions.
-
-Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
-
-	* posix/glob/SMakefile, posix/glob/SCOPTIONS, posix/glob/Makefile.ami:
-	New files, AmigaDOS support from Aaron Digulla.
-	* posix/Makefile (glob.tar): Add AmigaDOS support files.
-
-Tue Apr  2 21:27:01 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* posix/glob.c (glob_pattern_p): Avoid scanning past eos if
-	the pattern ends with a backslash and quoting is enabled.
-	* posix/fnmatch.c (fnmatch): Likewise; return FNM_NOMATCH for such
- 	patterns.
-
-Thu Mar 14 06:01:07 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): In GLOB_BRACE brace expansion, fix buffer size
-	calculation to include trailing invariant portion.  Don't use alloca;
-	instead use a dynamic auto array for GCC, malloc for non-GCC.
-	Handle nested braces properly.
-
-Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
-
-	* posix/glob.c: Use canonical code from autoconf manual for dirent
- 	include.
-	[_D_NAMLEN]: Redefine NAMLEN using this.
-	(glob_in_dir): Use NAMLEN macro.
-
-Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): Use prototype in getlogin decl.
-
-Thu Jan 18 00:32:43 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (_GNU_SOURCE): Define if undefined, so glob.h
-	defines GNU extensions.
-	* posix/fnmatch.c: Likewise.
-
-Fri Jan 12 13:40:01 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): Add parens in glob call flags arg for
-	GLOB_BRACE case.
-
-Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
-	and cast STREAM to DIR * before passing to readdir and closedir.
-
-Mon Dec 11 20:07:54 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c [! STDC_HEADERS]: Declare getenv.
-	(glob): Avoid using function as value.
-
-Fri Dec  8 13:04:51 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c: Implement new options GLOB_ALTDIRFUNC, GLOB_BRACE,
-	GLOB_TILDE, GLOB_NOMAGIC.
-	(glob): Use stat instead of lstat to determine directoriness.
-	* posix/glob.h (GLOB_ALTDIRFUNC, GLOB_BRACE, GLOB_NOMAGIC, GLOB_TILDE):
-	New flag bits.
-	(__GLOB_FLAGS): Include them.
-	(glob_t): New members gl_closedir, gl_readdir, gl_opendir, gl_lstat,
-	gl_stat.
-
-Mon Sep 11 14:00:14 1995  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): Comment fix.
-
-Wed Aug 30 16:44:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): Use realloc to extend strings for GLOB_MARK
-	slash.
-	(glob_in_dir): Don't allocate extra byte here.
-
-Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob_in_dir): Allocate GLOB_MARK byte in case when
- 	(NFOUND == 0 && (FLAGS & GLOB_NOCHECK)).
-
-Sat Apr 29 15:46:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (S_ISDIR): Define if undefined.
-
-Tue Apr 25 17:17:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob.c (glob): If GLOB_MARK set, stat names to find
- 	directories and append slashes to them in final pass before
- 	sorting.
-	(glob_in_dir): If GLOB_MARK set, just allocate the extra char for the
-	slash; never append it here.
-
-Wed Mar  8 13:38:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob/configure.bat: Fixes from DJ.
-
-Wed Feb 22 00:44:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob/configure.in: Put AC_ISC_POSIX before AC_CONST.
-
-Sun Feb  5 17:59:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* malloc/malloc.c (__malloc_extra_blocks): New variable.
-	(malloc): When getting more core, get __malloc_extra_blocks extra;
-	put the new block at the end of the free list and let the next loop
- 	iteration use the initial portion of it.
-	* malloc/free.c (_free_internal): Account for twice
- 	__malloc_extra_blocks in deciding if we have so much extra memory
- 	we should return it to the system.
-	* malloc/malloc.h (__malloc_extra_blocks): Declare it.
-	* posix/glob.c (prefix_array, glob_pattern_p): Remove gratuitous
- 	const in parameter decl.
-
-Fri Jan 27 17:53:49 1995  Jim Meyering  (meyering@comco.com)
-
-	* posix/fnmatch.c: Declare errno if it's not defined.
-	That's simpler than testing #if !defined(__GNU_LIBRARY__)
-	&& !defined(STDC_HEADERS).
-
-Thu Jan 26 00:02:01 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* io/ftw.c: Avoid `ret' as variable name.
-	* posix/glob.c: Likewise.
-
-Wed Jan 25 00:45:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob/configure.in: Put AC_AIX and AC_MINIX early, before
- 	any compile tests.
-
-Mon Jan 16 15:49:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob/Makefile.in: Remove config.h and config.log.
-
-Sun Jan 15 06:56:47 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
-
-	* posix/glob/configure.in: Add AC_CONST check.
 

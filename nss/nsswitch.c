@@ -39,7 +39,7 @@ static service_library *nss_new_service (name_database *database,
 					 const char *name);
 
 
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized (static, lock)
 
 
 /* Global variable.  */

@@ -49,7 +49,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 /* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the shared stream open on the database file.  */
 

@@ -40,7 +40,7 @@ struct __dirstream
 
     off_t filepos;		/* Position of next entry to read.  */
 
-    __libc_lock_define (, lock); /* Mutex lock for this structure.  */
+    __libc_lock_define (, lock) /* Mutex lock for this structure.  */
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->fd)

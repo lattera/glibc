@@ -36,7 +36,7 @@ struct __dirstream
     int __entry_ptr;		/* Entry number `__ptr' corresponds to.  */
     unsigned long int __allocation; /* Space allocated for the block.  */
     unsigned long int __size;	/* Total valid data in the block.  */
-    __libc_lock_define (, __lock); /* Mutex lock for this structure.  */
+    __libc_lock_define (, __lock) /* Mutex lock for this structure.  */
   };
 
 #endif	/* dirstream.h */

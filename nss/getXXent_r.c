@@ -94,7 +94,7 @@ static service_user *nip;
 static service_user *startp;
 
 /* Protect above variable against multiple uses at the same time.  */
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);

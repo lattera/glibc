@@ -36,7 +36,7 @@ struct record
 #define NBUCKETS 32
 static struct record *records[32];
 static off_t lastpos;
-__libc_lock_define_initialized(static, lock); /* Locks above data.  */
+__libc_lock_define_initialized(static, lock) /* Locks above data.  */
 
 
 /* Return the current position of DIRP.  */
