@@ -169,7 +169,9 @@
 	* grp/fgetgrent_r.c: Use explicit locking of the stream.
 
 	* elf/Makefile (rtld-routines): Add dl-environ.
-	* sysdeps/generic/dl-environ.c: New file.
+	* sysdeps/generic/dl-sysdep.c: Move _dl_next_ld_env_entry and unsetenv
+	to...
+	* sysdeps/generic/dl-environ.c: here.  New file.
 
 	* libio/Makefile [REENTRANT] (routines): Add iofputs_u.
 	* libio/Versions: Add fputs_unlocked.
