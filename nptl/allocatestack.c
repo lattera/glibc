@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -170,7 +170,7 @@ get_cached_stack (size_t *sizep, void **memp)
 
 /* Add a stack frame which is not used anymore to the stack.  Must be
    called with the cache lock held.  */
-static void
+static inline void
 queue_stack (struct pthread *stack)
 {
   /* We unconditionally add the stack to the list.  The memory may
@@ -256,24 +256,26 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd = (struct pthread *) (((uintptr_t) attr->stackaddr - adj)
 			       & ~(__alignof (struct pthread) - 1)) - 1;
 
-      /* The user provided stack memory need not be cleared.  */
+      /* The user provided stack memory needs to be cleared.  */
       memset (pd, '\0', sizeof (struct pthread));
 
       /* The first TSD block is included in the TCB.  */
       pd->specific[0] = pd->specific_1stblock;
 
+#if LLL_LOCK_INITIALIZER != 0
       /* Initialize the lock.  */
       pd->lock = LLL_LOCK_INITIALIZER;
+#endif
 
-      /* Remember the stack-related values.  Signal that this stack
-	 must not be put into the stack cache.  */
+      /* Remember the stack-related values.  */
       pd->stackblock = (char *) attr->stackaddr - size;
       pd->stackblock_size = size - adj;
 
-      /* This is a user-provided stack.  */
+      /* This is a user-provided stack.  It will not be queued in the
+	 stack cache nor will the memory (except the TLS memory) be freed.  */
       pd->user_stack = true;
 
-      /* There is at least one more thread.  */
+      /* This is at least the second thread.  */
       pd->header.data.multiple_threads = 1;
 
 #ifdef NEED_DL_SYSINFO
@@ -288,6 +290,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	return errno;
 
 
+      /* Prepare to modify global data.  */
       lll_lock (stack_cache_lock);
 
       /* And add to the list of stacks in use.  */
@@ -318,6 +321,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	/* The stack is too small (or the guard too large).  */
 	return EINVAL;
 
+      /* Try to get a stack from the cache.  */
       reqsize = size;
       pd = get_cached_stack (&size, &mem);
       if (pd == NULL)
@@ -344,10 +348,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	     descriptor.  */
 	  pd->specific[0] = pd->specific_1stblock;
 
+#if LLL_LOCK_INITIALIZER != 0
 	  /* Initialize the lock.  */
 	  pd->lock = LLL_LOCK_INITIALIZER;
+#endif
 
-	  /* There is at least one more thread.  */
+	  /* This is at least the second thread.  */
 	  pd->header.data.multiple_threads = 1;
 
 #ifdef NEED_DL_SYSINFO
@@ -363,12 +369,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      int err = errno;
 
 	      /* Free the stack memory we just allocated.  */
-	      munmap (mem, size);
+	      (void) munmap (mem, size);
 
 	      return err;
 	    }
 
 
+	  /* Prepare to modify global data.  */
 	  lll_lock (stack_cache_lock);
 
 	  /* And add to the list of stacks in use.  */
