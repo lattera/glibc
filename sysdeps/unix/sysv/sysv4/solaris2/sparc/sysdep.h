@@ -35,7 +35,7 @@ Cambridge, MA 02139, USA.  */
   bcs C_SYMBOL_NAME(syscall_error);					      \
   nop;									      \
   retl;									      \
-  mov %g0, %o0
+  nop
 
 #define	ret		retl; nop
 #define	r0		%o0
