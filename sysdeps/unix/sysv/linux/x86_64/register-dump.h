@@ -343,4 +343,4 @@ register_dump (int fd, struct ucontext *ctx)
 }
 
 
-#define REGISTER_DUMP register_dump (fd, &ctx)
+#define REGISTER_DUMP register_dump (fd, ctx)

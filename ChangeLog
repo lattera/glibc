@@ -1,3 +1,13 @@
+2003-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h (SIGCONTEXT): Add
+	siginfo_t * argument before, change into struct ucontext *.
+	(SIGCONTEXT_EXTRA_ARGS): Define to _si,.
+	(GET_PC, GET_FRAME, GET_STACK): Adjust for ctx being a pointer
+	instead of structure.
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (REGISTER_DUMP):
+	Likewise.
+
 2003-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/stratcliff.c (main): Check memccpy.
@@ -17,13 +27,13 @@
 
 2003-09-09  Chris Demetriou  <cgd@broadcom.com>
 
-        * sysdeps/unix/mips/sysdep.h (PSEUDO_END): Undef before defining.
+	* sysdeps/unix/mips/sysdep.h (PSEUDO_END): Undef before defining.
 
 2003-09-08  Chris Demetriou  <cgd@broadcom.com>
 
-        * sysdeps/mips/mips64/n32/Implies: Move ieee754/ldbl-128 to
-        the top of the list.
-        * sysdeps/mips/mips64/n64/Implies: Likewise.
+	* sysdeps/mips/mips64/n32/Implies: Move ieee754/ldbl-128 to
+	the top of the list.
+	* sysdeps/mips/mips64/n64/Implies: Likewise.
 
 2003-09-08  Roland McGrath  <roland@frob.com>
 
