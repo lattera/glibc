@@ -486,7 +486,7 @@ struct re_dfastate_t
   re_node_set non_eps_nodes;
   re_node_set inveclosure;
   re_node_set *entrance_nodes;
-  struct re_dfastate_t **trtable;
+  struct re_dfastate_t **trtable, **word_trtable;
   unsigned int context : 4;
   unsigned int halt : 1;
   /* If this state can accept `multi byte'.
@@ -496,7 +496,6 @@ struct re_dfastate_t
   /* If this state has backreference node(s).  */
   unsigned int has_backref : 1;
   unsigned int has_constraint : 1;
-  unsigned int word_trtable : 1;
 };
 typedef struct re_dfastate_t re_dfastate_t;
 

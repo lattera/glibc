@@ -175,8 +175,8 @@ static reg_errcode_t check_arrival_expand_ecl_sub (re_dfa_t *dfa,
 static reg_errcode_t expand_bkref_cache (re_match_context_t *mctx,
 					 re_node_set *cur_nodes, int cur_str,
 					 int subexp_num, int type) internal_function;
-static re_dfastate_t **build_trtable (re_dfa_t *dfa,
-				      re_dfastate_t *state) internal_function;
+static int build_trtable (re_dfa_t *dfa,
+			  re_dfastate_t *state) internal_function;
 #ifdef RE_ENABLE_I18N
 static int check_node_accept_bytes (re_dfa_t *dfa, int node_idx,
 				    const re_string_t *input, int idx) internal_function;
@@ -2218,7 +2218,6 @@ transit_state (err, mctx, state)
      re_match_context_t *mctx;
      re_dfastate_t *state;
 {
-  re_dfa_t *const dfa = mctx->dfa;
   re_dfastate_t **trtable;
   unsigned char ch;
 
@@ -2233,21 +2232,22 @@ transit_state (err, mctx, state)
 #endif /* RE_ENABLE_I18N */
 
   /* Then decide the next state with the single byte.  */
-  if (1)
+#if 0
+  if (0)
+    /* don't use transition table  */
+    return transit_state_sb (err, mctx, state);
+#endif
+
+  /* Use transition table  */
+  ch = re_string_fetch_byte (&mctx->input);
+  for (;;)
     {
-      /* Use transition table  */
-      ch = re_string_fetch_byte (&mctx->input);
       trtable = state->trtable;
-      if (trtable == NULL)
-        {
-          trtable = build_trtable (dfa, state);
-          if (trtable == NULL)
-	    {
-	      *err = REG_ESPACE;
-	      return NULL;
-	    }
-	}
-      if (BE (state->word_trtable, 0))
+      if (BE (trtable != NULL, 1))
+	return trtable[ch];
+
+      trtable = state->word_trtable;
+      if (BE (trtable != NULL, 1))
         {
 	  unsigned int context;
 	  context
@@ -2259,14 +2259,15 @@ transit_state (err, mctx, state)
 	  else
 	    return trtable[ch];
 	}
-      else
-	return trtable[ch];
+
+      if (!build_trtable (mctx->dfa, state))
+	{
+	  *err = REG_ESPACE;
+	  return NULL;
+	}
+
+      /* Retry, we now have a transition table.  */
     }
-#if 0
-  else
-    /* don't use transition table  */
-    return transit_state_sb (err, mctx, state);
-#endif
 }
 
 /* Update the state_log if we need */
@@ -3273,15 +3274,15 @@ expand_bkref_cache (mctx, cur_nodes, cur_str, subexp_num,
 }
 
 /* Build transition table for the state.
-   Return the new table if succeeded, otherwise return NULL.  */
+   Return 1 if succeeded, otherwise return NULL.  */
 
-static re_dfastate_t **
+static int
 build_trtable (dfa, state)
     re_dfa_t *dfa;
     re_dfastate_t *state;
 {
   reg_errcode_t err;
-  int i, j, ch;
+  int i, j, ch, need_word_trtable = 0;
   unsigned int elem, mask;
   int dests_node_malloced = 0, dest_states_malloced = 0;
   int ndests; /* Number of the destination states from `state'.  */
@@ -3298,20 +3299,20 @@ build_trtable (dfa, state)
 #ifdef _LIBC
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX))
     dests_node = (re_node_set *)
-		 alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+      alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
   else
 #endif
     {
       dests_node = (re_node_set *)
-		   malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+	malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
       if (BE (dests_node == NULL, 0))
-	return NULL;
+	return 0;
       dests_node_malloced = 1;
     }
   dests_ch = (bitset *) (dests_node + SBC_MAX);
 
   /* Initialize transiton table.  */
-  state->word_trtable = 0;
+  state->word_trtable = state->trtable = NULL;
 
   /* At first, group all nodes belonging to `state' into several
      destinations.  */
@@ -3320,14 +3321,14 @@ build_trtable (dfa, state)
     {
       if (dests_node_malloced)
 	free (dests_node);
-      /* Return NULL in case of an error, trtable otherwise.  */
+      /* Return 0 in case of an error, 1 otherwise.  */
       if (ndests == 0)
 	{
 	  state->trtable = (re_dfastate_t **)
-	    calloc (sizeof (re_dfastate_t *), SBC_MAX);;
-	  return state->trtable;
+	    calloc (sizeof (re_dfastate_t *), SBC_MAX);
+	  return 1;
 	}
-      return NULL;
+      return 0;
     }
 
   err = re_node_set_alloc (&follows, ndests + 1);
@@ -3338,12 +3339,12 @@ build_trtable (dfa, state)
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX
 			 + ndests * 3 * sizeof (re_dfastate_t *)))
     dest_states = (re_dfastate_t **)
-		  alloca (ndests * 3 * sizeof (re_dfastate_t *));
+      alloca (ndests * 3 * sizeof (re_dfastate_t *));
   else
 #endif
     {
       dest_states = (re_dfastate_t **)
-		    malloc (ndests * 3 * sizeof (re_dfastate_t *));
+	malloc (ndests * 3 * sizeof (re_dfastate_t *));
       if (BE (dest_states == NULL, 0))
 	{
 out_free:
@@ -3354,7 +3355,7 @@ out_free:
 	    re_node_set_free (dests_node + i);
 	  if (dests_node_malloced)
 	    free (dests_node);
-	  return NULL;
+	  return 0;
 	}
       dest_states_malloced = 1;
     }
@@ -3390,9 +3391,8 @@ out_free:
 	  if (BE (dest_states_word[i] == NULL && err != REG_NOERROR, 0))
 	    goto out_free;
 
-	  if (dest_states[i] != dest_states_word[i]
-	      && dfa->mb_cur_max > 1)
-	    state->word_trtable = 1;
+	  if (dest_states[i] != dest_states_word[i] && dfa->mb_cur_max > 1)
+	    need_word_trtable = 1;
 
 	  dest_states_nl[i] = re_acquire_state_context (&err, dfa, &follows,
 							CONTEXT_NEWLINE);
@@ -3407,13 +3407,14 @@ out_free:
       bitset_merge (acceptable, dests_ch[i]);
     }
 
-  if (!BE (state->word_trtable, 0))
+  if (!BE (need_word_trtable, 0))
     {
       /* We don't care about whether the following character is a word
 	 character, or we are in a single-byte character set so we can
 	 discern by looking at the character code: allocate a
 	 256-entry transition table.  */
-      trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
+      trtable = state->trtable =
+	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3443,8 +3444,8 @@ out_free:
 	 by looking at the character code: build two 256-entry
 	 transition tables, one starting at trtable[0] and one
 	 starting at trtable[SBC_MAX].  */
-      trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *),
-					   2 * SBC_MAX);
+      trtable = state->word_trtable =
+	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), 2 * SBC_MAX);
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3475,7 +3476,7 @@ out_free:
 	  {
 	    /* k-th destination accepts newline character.  */
 	    trtable[NEWLINE_CHAR] = dest_states_nl[j];
-	    if (state->word_trtable)
+	    if (need_word_trtable)
 	      trtable[NEWLINE_CHAR + SBC_MAX] = dest_states_nl[j];
 	    /* There must be only one destination which accepts
 	       newline.  See group_nodes_into_DFAstates.  */
@@ -3493,8 +3494,7 @@ out_free:
   if (dests_node_malloced)
     free (dests_node);
 
-  state->trtable = trtable;
-  return trtable;
+  return 1;
 }
 
 /* Group all nodes belonging to STATE into several destinations.

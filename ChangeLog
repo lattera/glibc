@@ -1,3 +1,13 @@
+2004-04-27  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (struct re_dfastate_t): Make
+	word_trtable a pointer to the 512-item transition table.
+	* posix/regexec.c (build_trtable): Fill in either state->trtable
+	or state->word_trtable.  Return a boolean indicating success.
+	(transit_state): Expect state->trtable to be a 256-item
+	transition table.  Reorganize code to have less tests in
+	the common case, and to save an indentation level.
+
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Make sure %esp when
