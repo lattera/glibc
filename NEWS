@@ -17,6 +17,13 @@ Version 2.1
 
 * Miles Bader provided the `argp' function family to support hierachical
   command line argument parsing, layered on top of getopt.
+
+* strtod accepts new hexadecimal floating-point format from ISO C 9X
+
+* printf has two new specifiers %a and %A to print hexadecimal flaoting-point
+  numbers
+
+* scanf recognizes the %A format for scanning floating point numbers
 
 Version 2.0.2
 

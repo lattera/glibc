@@ -21,15 +21,12 @@ $(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
 	mv $@-t $@
 
 # Turn into a version that works when cd'd into $(objdir).
-cded-objdir-includes = $(patsubst -I$$cwd//%,-I/%,\
-				  $(patsubst -I%,-I$$cwd/%,$(+includes)))
-# $(BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
+mk-stdiolim-CFLAGS = $(patsubst -I$(shell pwd)//%,-I/%,\
+				$(patsubst -I%,-I$(shell pwd)/%,$(+includes)))
+# $(ALL_BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			     $(..)posix/posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(objpfx).; \
-	$(BUILD_CC) $(cded-objdir-includes) $(BUILD_CFLAGS) \
-	  $$cwd/$< -o $(patsubst $(common-objpfx)%,$(..)%,$@)
-
+	$(common-objdir-compile)
 
 common-generated := $(common-generated) stdio_lim.h mk-stdiolim
 before-compile := $(before-compile) $(common-objpfx)stdio_lim.h

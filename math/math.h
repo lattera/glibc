@@ -44,20 +44,20 @@ __BEGIN_DECLS
    and can declare the float versions `namef' and `__namef'.  */
 
 #define __MATHCALL(function,suffix, args)	\
-  __MATHDECL (_Mdouble_, function,suffix, args)
+  __MATHDECL (_Mdouble_,function,suffix, args)
 #define __MATHDECL(type, function,suffix, args) \
   __MATHDECL_1(type, function,suffix, args); \
-  __MATHDECL_1(type, __##function,suffix, args)
+  __MATHDECL_1(type, __CONCAT(__,function),suffix, args)
 #define __MATHDECL_1(type, function,suffix, args) \
   extern type __MATH_PRECNAME(function,suffix) args
 
 #define _Mdouble_ 		double
-#define __MATH_PRECNAME(name,r)	name##r
+#define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_ISOC9X
 
 
 /* Include the file of declarations again, this time using `float'
@@ -67,11 +67,16 @@ __BEGIN_DECLS
 #define _Mfloat_		float
 #endif
 #define _Mdouble_ 		_Mfloat_
+#ifdef __STDC__
 #define __MATH_PRECNAME(name,r)	name##f##r
+#else
+#define __MATH_PRECNAME(name,r) name/**/f/**/r
+#endif
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
+#if __STDC__ - 0 || __GNUC__ - 0
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
@@ -79,13 +84,103 @@ __BEGIN_DECLS
 #define _Mlong_double_		long double
 #endif
 #define _Mdouble_ 		_Mlong_double_
+#ifdef __STDC__
 #define __MATH_PRECNAME(name,r)	name##l##r
+#else
+#define __MATH_PRECNAME(name,r) name/**/l/**/r
+#endif
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
-#endif	/* Use misc.  */
+#endif /* __STDC__ || __GNUC__ */
 
+#endif	/* Use misc or ISO C 9X.  */
+
+
+/* ISO C 9X defines some generic macros which work on any data type.  */
+#if __USE_ISOC9X
+
+/* All floating-point numbers can be put in one of these categories.  */
+enum
+  {
+    FP_NAN,
+#define FP_NAN FP_NAN
+    FP_INFINITE,
+#define FP_INFINITE FP_INFINITE
+    FP_ZERO,
+#define FP_ZERO FP_ZERO
+    FP_SUBNORMAL,
+#define FP_SUBNORMAL FP_SUBNORMAL
+    FP_NORMAL
+#define FP_NORMAL FP_NORMAL
+  };
+
+/* Return number of classification appropriate for X.  */
+#define fpclassify(x) \
+     (sizeof (x) == sizeof (float) ?					      \
+        __finitef (x)							      \
+      : sizeof (x) == sizeof (double) ?					      \
+        __finite (x) : __finitel (x))
+
+/* Return nonzero value if sign of X is negative.  */
+#define signbit(x) \
+     (sizeof (x) == sizeof (float) ?					      \
+        __signbitf (x)							      \
+      : sizeof (x) == sizeof (double) ?					      \
+        __signbit (x) : __signbitl (x))
+
+/* Return nonzero value if X is not +-Inf or NaN.  */
+#define isfinite(x) (fpclassify (x) >= FP_ZERO)
+
+/* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
+#define isnormal(x) (fpclassify (x) == FP_NORMAL)
+
+/* Return nonzero value if X is a NaN.  We could use `fpclassify' but
+   we already have this functions `__isnan' and it is faster.  */
+#define isnan(x) \
+     (sizeof (x) == sizeof (float) ?					      \
+        __isnanf (x)							      \
+      : sizeof (x) == sizeof (double) ?					      \
+        __isnan (x) : __isnanl (x))
+
+
+/* Conversion functions.  */
+
+/* Round X to nearest integral value according to current rounding
+   direction.  */
+extern long int rinttol __P ((double __x));
+extern long long int rinttoll __P ((double __x));
+
+/* Round X to nearest integral value, rounding halfway cases away from
+   zero.  */
+extern long int roundtol __P ((double __x));
+extern long long int roundtoll __P ((double __x));
+
+
+/* Comparison macros.  */
+
+/* Return nonzero value if X is greater than Y.  */
+#define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
+
+/* Return nonzero value if X is greater than or equal to Y.  */
+#define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
+
+/* Return nonzero value if X is less than Y.  */
+#define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
+
+/* Return nonzero value if X is less than or equal to Y.  */
+#define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
+
+/* Return nonzero value if either X is less than Y or Y is less than X.  */
+#define islessgreater(x, y) \
+     (!isunordered ((x), (y)) && ((x) < (y) || (y) < (x)))
+
+/* Return nonzero value if arguments are unordered.  */
+#define isunordered(x, y) \
+     (fpclassify (x) == FP_NAN || fpclassify (y) == FP_NAN)
+
+#endif /* Use ISO C 9X.  */
 
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */
@@ -140,6 +235,14 @@ extern int matherr __P ((struct exception *));
 #define HUGE		FLT_MAX
 #include <float.h>		/* Defines FLT_MAX.  */
 
+#else	/* !SVID */
+
+#ifdef __USE_XOPEN
+/* X/Open wants another strange constant.  */
+#define MAXFLOAT	FLT_MAX
+#include <float.h>
+#endif
+
 #endif	/* SVID */
 
 
@@ -173,7 +276,8 @@ extern int matherr __P ((struct exception *));
 
 
 /* Get machine-dependent inline versions (if there are any).  */
-#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+#if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
+    || defined __LIBC_M81_MATH_INLINES
 #include <__math.h>
 #endif
 

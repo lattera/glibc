@@ -338,6 +338,12 @@ else
 no-whole-archive =
 endif
 
+ifeq ($(versioning),yes)
+load-map-file = $($(@F:%.so=%)-map:%=-Wl,--version-script=%)
+else
+load-map-file =
+endif
+
 interp-obj = $(common-objpfx)interp.so
 $(interp-obj): $(common-objpfx)%.so: $(..)%.c
 	$(compile-command.c)
@@ -349,7 +355,7 @@ $(patsubst %,$(objpfx)%.so,$(extra-libs)): $(interp-obj)
 
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) \
+	  -B$(csu-objpfx) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
@@ -809,19 +815,23 @@ install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.
 define native-compile
-cwd=`pwd`; cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) \
-	   $(addprefix $$cwd/,$^) -o $(@F)
+$(make-target-directory)
+$(patsubst %/,cd %;,$(objpfx)) \
+$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
+	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(@F)
 endef
 
 # Command to compile $< in $(common-objdir) using the native libraries.
 # We must cd to $(objdir) anyway so that $(..)config.h is valid.
 define common-objdir-compile
-cd $(objpfx).; \
-$(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=$(..)%) -o $(..)$(@F)
+$(patsubst %/,cd %;,$(objpfx)) \
+$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
+	    $(firstword $(filter /%,$< $(shell pwd)/$<)) -o $(..)$(@F)
 endef
 
 # We always want to use configuration definitions.
-BUILD_CFLAGS = -include $(common-objpfx)config.h
+# Note that this is only used for commands running in $(objpfx).
+ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check

@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.81";
+static char	elsieid[] = "@(#)zic.c	7.82";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -2126,17 +2126,17 @@ char * const	argname;
 		if (!itsdir(name)) {
 			/*
 			** It doesn't seem to exist, so we try to create it.
-			** Double check the return. Someone may be one
-			** step ahead of us.
+			** Creation may fail because of the directory being
+			** created by some other multiprocessor, so we get
+			** to do extra checking.
 			*/
 			if (mkdir(name, 0755) != 0) {
-			  	int save_error = errno;
-				if (errno == EEXIST && !itsdir(name)) {
-					const char *e = strerror(save_error);
+				const char *e = strerror(errno);
 
+				if (errno != EEXIST || !itsdir(name)) {
 					(void) fprintf(stderr,
-				      _("%s: Can't create directory %s: %s\n"),
-						       progname, name, e);
+_("%s: Can't create directory %s: %s\n"),
+						progname, name, e);
 					ifree(name);
 					return -1;
 				}

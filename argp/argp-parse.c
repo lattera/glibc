@@ -612,6 +612,10 @@ parser_finalize (struct parser *parser,
 
 	if (err == EBADKEY)
 	  err = 0;		/* Some parser didn't understand.  */
+
+	/* Tell the user that all arguments are parsed.  */
+	if (end_index)
+	  *end_index = parser->state.next;
       }
     else if (end_index)
       /* Return any remaining arguments to the user.  */

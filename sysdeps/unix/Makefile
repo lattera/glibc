@@ -23,20 +23,20 @@ ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/local_lim.h))))))
 
 ifneq (,$(wildcard $(sysincludedir)/sys/param.h))
-local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_SYS_PARAM_H
+mk-local_lim-CFLAGS += -DHAVE_SYS_PARAM_H
 endif
 ifneq (,$(wildcard $(sysincludedir)/sys/limits.h))
-local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_SYS_LIMITS_H
+mk-local_lim-CFLAGS += -DHAVE_SYS_LIMITS_H
 endif
 ifneq (,$(wildcard $(sysincludedir)/limits.h))
-local_lim-CFLAGS := $(local_lim-CFLAGS) -DHAVE_LIMITS_H
+mk-local_lim-CFLAGS += -DHAVE_LIMITS_H
 endif
 
 $(common-objpfx)local_lim.h: $(common-objpfx)mk-local_lim
-	if $(dir $<)$(notdir $<) > $@-t; then mv $@-t $@; else XXX; fi
+	$(dir $<)$(notdir $<) > $@-t
+	mv -f $@-t $@
 $(common-objpfx)mk-local_lim: $(sysdep_dir)/unix/mk-local_lim.c
-	cwd=`pwd`; cd $(@D); \
-	$(BUILD_CC) $(BUILD_CFLAGS) $(local_lim-CFLAGS) $$cwd/$< -o $(@F)
+	$(common-objdir-compile)
 
 before-compile := $(before-compile) $(common-objpfx)local_lim.h
 common-generated := $(common-generated) local_lim.h mk-local_lim
@@ -50,7 +50,7 @@ ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
 before-compile := $(before-compile) $(common-objpfx)sys/param.h
 
 $(common-objpfx)sys/param.h: $(sysincludedir)/sys/param.h
-	-mkdir $(@D:%/=%)
+	$(make-target-directory)
 	(echo '#ifndef _GNU_SYS_PARAM_H';	\
 	 echo '#define _GNU_SYS_PARAM_H 1';	\
 	 echo '#include <endian.h>';		\
@@ -73,16 +73,17 @@ $(common-objpfx)param.h.c: $(sysincludedir)/sys/param.h
 $(common-objpfx)param.h.dep: $(common-objpfx)param.h.c \
 			     $(sysdep_dir)/unix/Makefile
 	$(+mkdep) -I$(sysincludedir) $<		\
-	| sed > $@				\
+	| sed > $@-t				\
 	      -e 's@^.*:@@'			\
 	      -e 's@$<@@g'			\
 	      -e 's@$(sysincludedir)/*@@g'	\
 	      -e 's@\\$$@@'			\
 	      -e 's@^@sys/param.h-includes := $$(sys/param.h-includes) @'
+	mv $@-t $@
 
 # Get the generated definition of sys/param.h-includes.
 ifndef no_deps
-include $(common-objpfx)param.h.dep
+-include $(common-objpfx)param.h.dep
 endif
 
 # Don't preempt our own headers.
@@ -100,7 +101,7 @@ ifdef sys/param.h-includes
 # Copy the system files to $(common-objdir).
 $(addprefix $(common-objpfx),$(sys/param.h-includes)): $(common-objpfx)%: \
 						       $(sysincludedir)/%
-	-mkdir $(@D:%/=%)
+	$(make-target-directory)
 # Some of these files sometimes contain conflicting declarations for htons,
 # ntohs, etc.  They also often contain definitions of *_ENDIAN and
 # BYTE_ORDER, which we define ourselves in <endian.h>.
@@ -146,7 +147,8 @@ $(common-objpfx)make-errnos.c: $(sysdep_dir)/unix/errnos-tmpl.c \
 
 $(common-objpfx)errnos: $(wildcard $(sysincludedir)/errno.h	\
 				   $(sysincludedir)/sys/errno.h)
-	cat $^ | sed -n 's/^#define[ 	]*\(E[A-Z0-9][A-Z0-9]*\)[ 	].*$$/\1/p' > $@-tmp
+	sed -n 's/^#define[ 	]*\(E[A-Z0-9][A-Z0-9]*\)[ 	].*$$/\1/p' \
+	    $^ > $@-tmp
 	mv $@-tmp $@
 
 common-generated := $(common-generated) \
@@ -169,8 +171,7 @@ make-ioctls-CFLAGS := $(subst /,_,$(subst .,_,\
 				   $(ioctl-includes))))
 
 $(common-objpfx)make-ioctls: $(common-objpfx)make-ioctls.c
-	cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(make-ioctls-CFLAGS) \
-			$(<:$(common-objpfx)%=%) -o $(@F)
+	$(common-objdir-compile)
 
 $(common-objpfx)make-ioctls.c: $(sysdep_dir)/unix/ioctls-tmpl.c \
 			       $(sysdep_dir)/unix/ioctls.awk \
@@ -247,7 +248,7 @@ ifdef syscall.h
 
 # Transmogrify any of several formats of the file into the one we want.
 $(common-objpfx)sys/syscall.h: $(syscall.h)
-	-mkdir $(common-objpfx)sys
+	$(make-target-directory)
 	tr '[A-Z]' '[a-z]' < $< | \
 	sed -e 's/[ 	]sys_/ /' \
 	    -e 's/^#define[ 	]*\([a-z0-9_]*\)[ 	]*/#define SYS_\1 /' \

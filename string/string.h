@@ -46,7 +46,7 @@ extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
    or NULL if C was not found in the first N bytes of SRC.  */
 extern __ptr_t __memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			       int __c, size_t __n));
-#if defined (__USE_SVID) || defined (__USE_BSD) || defined (__USE_XOPEN)
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN
 extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			     int __c, size_t __n));
 #endif /* SVID.  */
@@ -102,7 +102,7 @@ extern size_t __strxfrm_l __P ((char *__dest, __const char *__src, size_t __n,
 				__locale_t __l));
 #endif
 
-#if defined(__USE_SVID) || defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Duplicate S, returning an identical malloc'd string.  */
 extern char *__strdup __P ((__const char *__s));
 extern char *strdup __P ((__const char *__s));
@@ -112,11 +112,11 @@ extern char *strdup __P ((__const char *__s));
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
 extern char *__strndup __P ((__const char *__string, size_t __n));
-#if defined(__USE_GNU)
+#if defined __USE_GNU
 extern char *strndup __P ((__const char *__string, size_t __n));
 #endif
 
-#if defined (__USE_GNU) && defined (__GNUC__)
+#if defined __USE_GNU && defined __GNUC__
 /* Duplicate S, returning an identical alloca'd string.  */
 #define strdupa(s)							      \
   (__extension__							      \
@@ -202,7 +202,7 @@ extern char *__strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 #endif
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
 

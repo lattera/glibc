@@ -24,7 +24,7 @@ $(common-objpfx)bytesex.h: $(common-objpfx)det_endian
 	mv $@-tmp $@
 
 $(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
-	$(native-compile)
+	$(common-objdir-compile)
 
 before-compile := $(before-compile) $(common-objpfx)bytesex.h
 common-generated := $(common-generated) bytesex.h det_endian
@@ -40,12 +40,10 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	$(dir $<)$(notdir $<) > $@-tmp
 	mv $@-tmp $@
 
+make_siglist-CFLAGS = -DSIGNUM_H=\"$(shell pwd)/$(firstword $(wildcard \
+				   $(+sysdep_dirs:%=%/signum.h)))\"
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
-	$(make-target-directory)
-	signum_h=`cd $(dir $(firstword $(wildcard \
-			   $(+sysdep_dirs:%=%/signum.h)))); pwd`/signum.h; \
-	$(native-compile) \
-	-DSIGNUM_H=\"$${signum_h}\"
+	$(native-compile)
 
 generated := $(generated) make_siglist siglist.c
 endif

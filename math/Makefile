@@ -45,7 +45,8 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_sin s_tan s_tanh w_acos w_acosh w_asin			\
 	     w_atan2 w_atanh w_cabs w_cosh w_drem w_exp w_fmod w_gamma	\
 	     w_gamma_r w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
-	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt
+	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
+	     s_signbit s_fpclassify s_fmax s_fmin s_fdim
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))

@@ -1,5 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Return classification value corresponding to argument.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,25 +18,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_M81_MATH_INLINES
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC scalbn
-#endif
-#ifndef float_type
-#define float_type double
-#endif
+#include "math_private.h"
 
-#define __CONCATX(a,b) __CONCAT(a,b)
 
-float_type
-__CONCATX(__,FUNC) (x, exp)
-     float_type x;
-     int exp;
+int
+__fpclassify (double x)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x, exp);
-}
+  u_int32_t hx, lx;
+  int retval = FP_NORMAL;
 
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+  GET_WORDS (hx, lx, x);
+  lx |= hx & 0xfffff;
+  hx &= 0x7ff00000;
+  if ((hx | lx) == 0)
+    retval = FP_ZERO;
+  else if (hx == 0)
+    retval = FP_SUBNORMAL;
+  else if (hx == 0x7ff00000)
+    retval = lx != 0 ? FP_NAN : FP_INFINITE;
+
+  return retval;
+}

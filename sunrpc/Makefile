@@ -55,7 +55,8 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 	  $(rpcsvc:%=rpcsvc/%)
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) \
-	    $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp)
+	    $(rpcsvc:%.x=rpcsvc/%.stmp) $(rpcsvc:%.x=x%.stmp) \
+	    rpc-proto.c
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
@@ -142,4 +143,20 @@ $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 # The generated source files depend on the corresponding generated headers.
 # Gratuitous dependency on generated .c file here just gets it mentioned to
 # avoid being an intermediate file and getting removed.
-$(rpcsvc:%.x=$(objpfx)x%.o): $(objpfx)x%.o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h
+$(rpcsvc:%.x=$(objpfx)x%.o): $(objpfx)x%.o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h \
+					    $(objpfx)rpc-proto.d
+
+ifndef no_deps
+-include $(objpfx)rpc-proto.d
+endif
+
+$(objpfx)rpc-proto.d: $(objpfx)%.d: $(objpfx)%.c
+	$(+make-deps)
+# Special file to generate dependencies for the RPC service objects.
+# Collect all include directives from the source files.
+$(objpfx)rpc-proto.c: $(rpcsvc:%=rpcsvc/%)
+	{ echo '#include <rpc/types.h>'; \
+	  echo '#include <rpc/xdr.h>'; \
+	  echo '#include <rpc/rpc.h>'; \
+	  sed -n '/^%#include/s/%//p' $^; } > $@T
+	mv -f $@T $@

@@ -217,29 +217,19 @@ __printf_fphex (FILE *fp,
 	 52 bits are representable without rest using hexadecimal
 	 digits we use only the implicit digits for the number before
 	 the decimal point.  */
+      unsigned long long int num;
+
+      num = (((unsigned long long int) fpnum.dbl.ieee.mantissa0) << 32
+	     | fpnum.dbl.ieee.mantissa1);
+
+      zero_mantissa = num == 0;
+
       if (sizeof (unsigned long int) > 6)
-	{
-	  unsigned long int num;
-
-	  num = (((unsigned long int) fpnum.dbl.ieee.mantissa0) << 32
-		 | fpnum.dbl.ieee.mantissa1);
-
-	  zero_mantissa = num == 0;
-
-	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
-			       info->spec == 'A');
-	}
+	numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
+			     info->spec == 'A');
       else
-	{
-	  unsigned long long int num;
-
-	  num = (((unsigned long long int) fpnum.dbl.ieee.mantissa0) << 32
-		 | fpnum.dbl.ieee.mantissa1);
-
-	  zero_mantissa = num == 0;
-
-	  numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');
-	}
+	numstr = _itoa (num, numbuf + sizeof numbuf, 16,
+			info->spec == 'A');
 
       /* Fill with zeroes.  */
       while (numstr > numbuf + (sizeof numbuf - 13))	/* 52 ÷ 4 = 13 */
@@ -249,7 +239,8 @@ __printf_fphex (FILE *fp,
 
       exponent = fpnum.dbl.ieee.exponent;
 
-      if (exponent != 0 && exponent < IEEE754_DOUBLE_BIAS)
+      if ((exponent != 0 && exponent < IEEE754_DOUBLE_BIAS)
+	  || (exponent == 0 && !zero_mantissa))
 	{
 	  expnegative = 1;
 	  exponent = abs (exponent - IEEE754_DOUBLE_BIAS);
@@ -265,31 +256,20 @@ __printf_fphex (FILE *fp,
     {
       /* The "strange" 80 bit format on ix86 and m68k has an explicit
 	 leading digit in the 64 bit mantissa.  */
+      unsigned long long int num;
+
       assert (sizeof (long double) == 12);
 
+      num = (((unsigned long long int) fpnum.ldbl.ieee.mantissa0) << 32
+	     | fpnum.ldbl.ieee.mantissa1);
+
+      zero_mantissa = num == 0;
+
       if (sizeof (unsigned long int) > 6)
-	{
-	  unsigned long int num;
-
-	  num = (((unsigned long int) fpnum.dbl.ieee.mantissa0) << 32
-		 | fpnum.dbl.ieee.mantissa1);
-
-	  zero_mantissa = num == 0;
-
-	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
-			       info->spec == 'A');
-	}
+	numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
+			     info->spec == 'A');
       else
-	{
-	  unsigned long long int num;
-
-	  num = (((unsigned long long int) fpnum.ldbl.ieee.mantissa0) << 32
-		 | fpnum.ldbl.ieee.mantissa1);
-
-	  zero_mantissa = num == 0;
-
-	  numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');
-	}
+	numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');
 
       /* We use a full nibble for the leading digit.  */
       leading = *numstr++;
@@ -301,7 +281,8 @@ __printf_fphex (FILE *fp,
       /* We have 3 bits from the mantissa in the leading nibble.  */
       exponent = fpnum.ldbl.ieee.exponent - 3;
 
-      if (exponent != 0 && exponent < IEEE854_LONG_DOUBLE_BIAS)
+      if ((exponent != 0 && exponent < IEEE854_LONG_DOUBLE_BIAS)
+	  || (exponent == 0 && !zero_mantissa))
 	{
 	  expnegative = 1;
 	  exponent = abs (exponent - IEEE854_LONG_DOUBLE_BIAS);
@@ -414,10 +395,10 @@ __printf_fphex (FILE *fp,
   outchar (info->spec == 'A' ? 'X' : 'x');
   outchar (leading);
 
-  if (!zero_mantissa || precision != 0 || info->alt)
+  if (!zero_mantissa || precision > 0 || info->alt)
     outchar (decimal);
 
-  if (!zero_mantissa || precision != 0)
+  if (!zero_mantissa || precision > 0)
     {
       PRINT (numstr, MIN (numend - numstr, precision));
       if (precision > numend - numstr)

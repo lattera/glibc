@@ -1,5 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Return positive difference between arguments.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,25 +18,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_M81_MATH_INLINES
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC scalbn
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (x, exp)
-     float_type x;
-     int exp;
+long double
+__fdiml (long double x, long double y)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x, exp);
-}
+  int clsx = fpclassify (x);
+  int clsy = fpclassify (y);
 
-#define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx (__CONCATX(__,FUNC), FUNC)
+  if (clsx == FP_NAN || clsy == FP_NAN
+      || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
+    /* Raise invalid flag.  */
+    return x - y;
+
+  return x < y ? 0 : x - y;
+}
+weak_alias (__fdiml, fdiml)

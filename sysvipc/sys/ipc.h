@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -24,6 +24,10 @@
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <sys/ipc_buf.h>
+
+#if !defined __USE_SVID && !defined __USE_XOPEN && __GNUC__ >= 2
+# warning "Files using this header must be compiled with _SVID_SOURCE or _XOPEN_SOURCE"
+#endif
 
 __BEGIN_DECLS
 

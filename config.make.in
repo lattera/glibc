@@ -26,6 +26,8 @@ defines = @DEFINES@
 elf = @elf@
 have-initfini = @libc_cv_have_initfini@
 
+versioning = @VERSIONING@
+
 have-no-whole-archive = @libc_cv_ld_no_whole_archive@
 have-no-exceptions = @libc_cv_gcc_no_exceptions@
 have-bash2 = @libc_cv_have_bash2@

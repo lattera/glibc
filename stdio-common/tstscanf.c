@@ -150,5 +150,17 @@ main (int argc, char **argv)
       return 1;
   }
 
+  fputs ("Test 4:\n", out);
+  {
+    double a = 0, b = 0;
+    int res, n;
+
+    res = sscanf ("1234567", "%3lg%3lg%n", &a, &b, &n);
+    printf ("res = %d, a = %g, b = %g, n = %d\n", res, a, b, n);
+
+    if (res != 2 || a != 123 || b != 456 || n != 6)
+      return 1;
+  }
+
   exit(EXIT_SUCCESS);
 }

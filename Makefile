@@ -131,6 +131,9 @@ ifeq (yes,$(build-shared))
 lib: $(common-objpfx)libc.so
 endif
 
+# We have a versioning file for libc.so.
+#libc-map = libc.map
+
 all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
 	(echo define sysdep-subdirs;				\
@@ -279,7 +282,8 @@ parent_echo-distinfo:
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac
-	$(objpfx)isomac $(CC) '$(+sysdep-includes)' >$(common-objpfx)isomac.out
+	$(objpfx)./isomac $(CC) '$(+sysdep-includes)' \
+			  >$(common-objpfx)isomac.out
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)

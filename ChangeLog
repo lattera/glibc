@@ -1,4 +1,168 @@
-Sat Mar  1 20:21:31 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-03-04 04:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Add rules to handle versioning.
+	* config.h.in (DO_VERSIONING): New macro.
+	* config.make.in (versioning): New variable.
+	* configure.in: Add checks for .symver directive in gas and
+	--version-script option to ld.  Define DO_VERSIONING and
+	versioning if appropriate.
+
+	* math/Makefile (routines): Add s_signbit, s_fpclassify, s_fmax,
+	s_fmin, and s_fdim.
+	* math/math.h: Define ISO C 9X constants, macros and functions.
+	* math/mathcalls.h: Likewise.
+	* sysdeps/libm-ieee754/s_fdim.c: New file.
+	* sysdeps/libm-ieee754/s_fdimf.c: New file.
+	* sysdeps/libm-ieee754/s_fdiml.c: New file.
+	* sysdeps/libm-ieee754/s_fmax.c: New file.
+	* sysdeps/libm-ieee754/s_fmaxf.c: New file.
+	* sysdeps/libm-ieee754/s_fmaxl.c: New file.
+	* sysdeps/libm-ieee754/s_fmin.c: New file.
+	* sysdeps/libm-ieee754/s_fminf.c: New file.
+	* sysdeps/libm-ieee754/s_fminl.c: New file.
+	* sysdeps/libm-ieee754/s_fpclassify.c: New file.
+	* sysdeps/libm-ieee754/s_fpclassifyf.c: New file.
+	* sysdeps/libm-ieee754/s_fpclassifyl.c: New file.
+	* sysdeps/libm-ieee754/s_signbit.c: New file.
+	* sysdeps/libm-ieee754/s_signbitf.c: New file.
+	* sysdeps/libm-ieee754/s_signbitl.c: New file.
+
+	* stdio-common/printf_fphex.c: Correct printing of decimal point
+	character.
+	Simplify conversion of mantissa to string.
+	* stdio-common/vfscanf.c: Handle %A format.
+	Optimize termination of floating-point scanning.
+	* stdio-common/tstscanf.c (main): Add new test to scanf to test
+	scanning float values with given width.
+	* stdlib/strtod.c: Add handling of floating-point numbers in
+	hexadecimal notation.
+
+	* stdlib/stdlib.h: Use __USE_ISOC9X feature macro for new long long
+	functions.
+	Pretty print #if directives.
+	* string/string.h: Pretty print #if directives.
+
+	* sysdeps/ieee754/dbl2mpn.c: Update copyright.
+	* sysdeps/ieee754/ldbl2mpn.c: Likewise.
+	* sysdeps/ieee754/mpn2dbl.c: Likewise.
+	* sysdeps/ieee754/mpn2flt.c: Likewise.
+	* sysdeps/ieee754/mpn2ldbl.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/poll.c: Implement poll function by
+	falling back to select-based implementation if syscall isn't
+	available.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add s_poll.
+
+	* time/leapseconds: Update from tzdata1997b.
+	* time/zic.c: Update from tzcode1997b.
+
+1997-03-01 15:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/Makefile $(tzfiles:%=$(objpfx)z.%): Remove unneeded
+	depedencies between installed $(tzlinks) and $(tzbases) files.
+
+1997-03-01 14:27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/math.h: Make compatible with traditional preprocessor;
+	requires carefull placement of whitespace in macro arguments.
+	Use __CONCAT instead of ##.
+	Declare long double functions only if __STDC__ or __GNUC__.
+	* math/mathcall.h: Avoid whitespace before argument of macro call
+	that is used as function name.
+
+	* sysdeps/m68k/fpu/__math.h: Use __CONCAT instead of ##.
+	(__m81_u, __m81_inline): Depend on __LIBC_M81_MATH_INLINES instead
+	of __NO_M81_MATH_INLINES.
+	[!__LIBC_M81_MATH_INLINES]: Don't define internal functions
+	starting with __ieee754.
+	[!__NO_MATH_INLINES && __OPTIMIZE__]: Define user visible
+	functions as inlines.
+	(__m81_defun): Put __attribute__ between return type and function
+	name.
+	* math/math.h: Include <__math.h> also if __LIBC_M81_MATH_INLINES
+	is defined.
+	* sysdeps/m68k/fpu/e_acos.c: Define __LIBC_M81_MATH_INLINES
+	instead of __NO_M81_MATH_INLINES.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise. De-ANSI-declify.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
+
+1997-02-27 21:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (tests): Cope with $PATH not including the current
+	directory.
+
+1997-02-27 18:04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)mk-local_lim): Use
+	$(common-objdir-compile).
+	($(common-objpfx)make-ioctls): Likewise.
+	(mk-local_lim-CFLAGS): Set this instead of local_lim-CFLAGS.
+	($(common-objpfx)sys/param.h): Use $(make-target-directory).
+	($(addprefix $(common-objpfx),$(sys/param.h-includes))):
+	Likewise.
+	($(common-objpfx)sys/syscall.h): Likewise.
+	($(common-objpfx)local_lim.h): Let make deal with command
+	failure.
+	($(common-objpfx)param.h.dep): Use temporary file and update
+	target atomically.
+	($(common-objpfx)errnos): Avoid the Useless Use of cat Award.
+	(include $(common-objpfx)param.h.dep): Ignore error.
+
+	* sysdeps/posix/Makefile ($(common-objpfx)mk-stdiolim): Use
+	$(common-objdir-compile).
+	(mk-stdiolim-CFLAGS): Renamed from cded-objdir-includes, use
+	$(shell pwd) instead of $$cwd.
+
+	* sysdeps/generic/Makefile ($(common-objpfx)det_endian): Use
+	$(common-objdir-compile).
+	($(objpfx)make_siglist): Use $(native-compile).
+	(make_siglist-CFLAGS): New variable.
+
+	* Makerules (ALL_BUILD_CFLAGS): Renamed from BUILD_CFLAGS, leaving
+	the old name for the user to pass additional flags to the host
+	compiler.  Fix reference to config header.
+	(native-compile, common-objdir-compile): Rewritten to make more
+	generally usable.
+	* sysdeps/unix/sysv/sysv4/solaris2/Makefile: Set ALL_BUILD_CFLAGS
+	instead of BUILD_CFLAGS.
+
+	* sysvips/sys/ipc.h: Warn if needed feature select macro are not
+	defined.
+
+1997-02-27 17:11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/Makefile ($(objpfx)rpc-proto.d, $(objpfx)rpc-proto.c):
+	New rules to generate dependencies for the RPC service objects.
+
+1997-02-27 16:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* argp/argp-parse.c (parser_finalize): Always set *END_INDEX if
+	supplied.
+
+1997-02-28 03:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c (STRTOF): Make sure return value is large enough
+	so that clearing second word is necessary.
+
+	* sysdeps/unix/sysv/linux/netinet/in_systm.h: Don't use kernel
+	header since it is wrong for 64 bit systems.
+	Patch by a sun <asun@zoology.washington.edu>.
+
+1997-02-27 10:34:11  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Support both the Linux/i386
+	and OSF/1 style brk syscalls.  We may want to change Linux/Alpha
+	for the benefit of running foreign binaries.
+
+1997-03-01 20:21  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/utmp_file.c (pututline_file): Correctly decide whether
 	LAST_ENTRY matches DATA.
@@ -9,7 +173,7 @@ Sat Mar  1 20:21:31 1997  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/logout.c (logout): Change type of entry to be DEAD_PROCESS.
 
-Tue Feb 25 19:42:50 1997  Miles Bader  <miles@gnu.ai.mit.edu>
+1997-02-25 19:42  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/fcntlbits.h (O_NORW): New macro.
 

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO S Standard: 4.10 GENERAL UTILITIES	<stdlib.h>
+ *	ISO C Standard: 4.10 GENERAL UTILITIES	<stdlib.h>
  */
 
 #ifndef	_STDLIB_H
@@ -47,7 +47,7 @@ typedef struct
     long int rem;		/* Remainder.  */
   } ldiv_t;
 
-#ifdef __USE_GNU
+#ifdef __USE_ISOC9X
 /* Returned by `lldiv'.  */
 typedef struct
   {
@@ -160,7 +160,7 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 							int __group));
 #endif /* GCC */
 
-#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double strtod (__const char *__restrict __nptr,
@@ -211,14 +211,14 @@ extern __inline int atoi (__const char *__nptr)
 extern __inline long int atol (__const char *__nptr)
 { return strtol (__nptr, (char **) NULL, 10); }
 
-#ifdef __USE_MISC
+#if defined __USE_ISOC9X && (defined __GNUC__ || defined __USE_MISC)
 extern __inline long long int atoll (__const char *__nptr)
 { return strtoll (__nptr, (char **) NULL, 10); }
 #endif
 #endif /* Optimizing GCC >=2.  */
 
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
 /* Convert N to base 64 using the digits "./0-9A-Za-z", least-significant
    digit first.  Returns a pointer to static storage overwritten by the
    next call.  */
@@ -302,7 +302,7 @@ extern int rand_r __P ((unsigned int *__seed));
 #endif
 
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN)
+#if defined __USE_SVID || defined __USE_XOPEN
 /* System V style 48-bit random number generator functions.  */
 
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
@@ -377,11 +377,11 @@ extern void free __P ((__ptr_t __ptr));
 extern void cfree __P ((__ptr_t __ptr));
 #endif /* Use misc.  */
 
-#if defined(__USE_GNU) || defined(__USE_BSD) || defined(__USE_MISC)
+#if defined __USE_GNU || defined __USE_BSD || defined __USE_MISC
 #include <alloca.h>
 #endif /* Use GNU, BSD, or misc.  */
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Allocate SIZE bytes on a page boundary.  The storage cannot be freed.  */
 extern __ptr_t valloc __P ((size_t __size));
 #endif
@@ -416,7 +416,7 @@ extern char *getenv __P ((__const char *__name));
    programs is running with SUID or SGID enabled.  */
 extern char *__secure_getenv __P ((__const char *__name));
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN)
+#if defined __USE_SVID || defined __USE_XOPEN
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
@@ -441,7 +441,7 @@ extern int clearenv __P ((void));
 #endif
 
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the file name unique.
@@ -468,7 +468,7 @@ extern int system __P ((__const char *__command));
 extern char *canonicalize_file_name __P ((__const char *__name));
 #endif
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Return the canonical absolute name of file NAME.  The last file name
    component need not exist, and may be a symlink to a nonexistent file.
    If RESOLVED is null, the result is malloc'd; otherwise, if the canonical
@@ -522,7 +522,7 @@ extern lldiv_t lldiv __P ((long long int __numer, long long int __denom))
 #endif
 
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED
 /* Convert floating point numbers to strings.  The returned values are
    valid only until another call to the same function.  */
 
@@ -578,7 +578,7 @@ extern int mbtowc __P ((wchar_t *__restrict __pwc,
    by WCHAR in S, returning its length.  */
 extern int wctomb __P ((char *__s, wchar_t __wchar));
 
-#if defined (__OPTIMIZE__) && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && __GNUC__ >= 2
 extern __inline int mblen (__const char *__s, size_t __n)
 { return mbtowc ((wchar_t *) NULL, __s, __n); }
 #endif /* Optimizing GCC >=2.  */

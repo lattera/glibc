@@ -177,10 +177,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   char got_dot, got_e, negative;
   /* If a [...] is a [^...].  */
   char not_in;
+#define exp_char not_in
   /* Base for integral numbers.  */
   int base;
   /* Signedness for integral numbers.  */
   int number_signed;
+#define is_hexa number_signed
   /* Decimal point character.  */
   wchar_t decimal;
   /* The thousands character of the current locale.  */
@@ -889,6 +891,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'f':
 	case 'g':
 	case 'G':
+	case 'A':
 	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
@@ -906,17 +909,39 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    negative = 0;
 
+	  if (c == '0' && tolower (c == inchar ()) == 'x')
+	    {
+	      /* It is a number in hexadecimal format.  */
+	      ADDW ('0');
+	      ADDW ('x');
+
+	      is_hexa = 1;
+	      exp_char = 'p';
+
+	      /* Grouping is not allowed.  */
+	      flags &= ~GROUP;
+	      c = inchar ();
+	    }
+	  else
+	    {
+	      /* It not a hexadecimal prefix.  */
+	      is_hexa = 0;
+	      exp_char = 'e';
+	    }
+
 	  got_dot = got_e = 0;
 	  do
 	    {
 	      if (isdigit (c))
 		ADDW (c);
-	      else if (got_e && wp[wpsize - 1] == 'e'
+	      else if (!got_e && is_hexa && isxdigit (c))
+		ADDW (c);
+	      else if (got_e && wp[wpsize - 1] == exp_char
 		       && (c == '-' || c == '+'))
 		ADDW (c);
-	      else if (wpsize > 0 && !got_e && tolower (c) == 'e')
+	      else if (wpsize > 0 && !got_e && tolower (c) == exp_char)
 		{
-		  ADDW ('e');
+		  ADDW (exp_char);
 		  got_e = got_dot = 1;
 		}
 	      else if (c == decimal && !got_dot)
@@ -927,16 +952,21 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      else if ((flags & GROUP) && c == thousands && !got_dot)
 		ADDW (c);
 	      else
-		break;
+		{
+		  /* The last read character is not part of the number
+		     anymore.  */
+		  ungetc (c, s);
+		  break;
+		}
 	      if (width > 0)
 		--width;
 	    }
-	  while (inchar () != EOF && width != 0);
+	  while (width != 0 && inchar () != EOF);
 
-	  /* The last read character is not part of the number anymore.  */
-	  ungetc (c, s);
-
-	  if (wpsize == 0)
+	  /* Have we read any character?  If we try to read a number
+	     in hexadecimal notation and we have read only the `0x'
+	     prefix this is an error.  */
+	  if (wpsize == 0 || (is_hexa && wpsize == 2))
 	    conv_error ();
 
 	  /* Convert the number.  */

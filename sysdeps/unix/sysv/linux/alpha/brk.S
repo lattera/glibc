@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe <brendan@zen.org>, 1993.
 
@@ -50,20 +50,23 @@ LEAF(__brk, 0)
 	ldiq	v0, __NR_brk
 	call_pal PAL_callsys
 
+	/* Be prepared for an OSF-style brk.  */
+	bne	a3, $err1
+	beq	v0, $ok
+
 	/* Correctly handle the brk(0) query case.  */
 	cmoveq	a0, v0, a0
-
-	subq	a0, v0, t0
-	bne	t0, error
+	xor	a0, v0, t0
+	bne	t0, $err0
 
 	/* Update __curbrk and return cleanly.  */
-	stq	a0, __curbrk
 	mov	zero, v0
+$ok:	stq	a0, __curbrk
 	ret
 
 	/* What a horrible way to die.  */
-error:	ldi	v0, ENOMEM
-	jmp	zero, __syscall_error
+$err0:	ldi	v0, ENOMEM
+$err1:	jmp	zero, __syscall_error
 
 	END(__brk)
 

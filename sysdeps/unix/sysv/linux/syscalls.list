@@ -30,6 +30,7 @@ nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
+s_poll		EXTRA	poll		3	__syscall_poll
 query_module	EXTRA	query_module	5	query_module
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority

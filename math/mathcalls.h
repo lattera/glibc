@@ -73,7 +73,7 @@ __MATHCALL (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
 __MATHCALL (tanh,, (_Mdouble_ __x));
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 /* Hyperbolic arc cosine of X.  */
 __MATHCALL (acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
@@ -99,7 +99,10 @@ __MATHCALL (log,, (_Mdouble_ __x));
 /* Base-ten logarithm of X.  */
 __MATHCALL (log10,, (_Mdouble_ __x));
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+/* Break VALUE into integral and fractional parts.  */
+__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr));
+
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 /* Return exp(X) - 1.  */
 __MATHCALL (expm1,, (_Mdouble_ __x));
 
@@ -110,8 +113,13 @@ __MATHCALL (log1p,, (_Mdouble_ __x));
 __MATHCALL (logb,, (_Mdouble_ __x));
 #endif
 
-/* Break VALUE into integral and fractional parts.  */
-__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr));
+#ifdef __USE_ISOC9X
+/* Compute base-2 exponential of X.  */
+__MATHCALL (exp2,, (_Mdouble_ __x));
+
+/* Compute base-2 logarithm of X.  */
+__MATHCALL (log2,, (_Mdouble_ __x));
+#endif
 
 
 /* Power functions.  */
@@ -122,7 +130,12 @@ __MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 /* Return the square root of X.  */
 __MATHCALL (sqrt,, (_Mdouble_ __x));
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+/* Return `sqrt(X*X + Y*Y)'.  */
+__MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
+#endif
+
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
 #endif
@@ -144,13 +157,12 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
 
 
 #ifdef __USE_MISC
-
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL (int, isinf,, (_Mdouble_ __value));
+__MATHDECL (int,isinf,, (_Mdouble_ __value));
 
 /* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECL (int, finite,, (_Mdouble_ __value));
+__MATHDECL (int,finite,, (_Mdouble_ __value));
 
 /* Deal with an infinite or NaN result.
    If ERROR is ERANGE, result is +Inf;
@@ -159,9 +171,6 @@ __MATHDECL (int, finite,, (_Mdouble_ __value));
    This will set `errno' to either ERANGE or EDOM,
    and may return an infinity or NaN, or may do something else.  */
 __MATHCALL (infnan,, (int __error));
-
-/* Return X with its signed changed to Y's.  */
-__MATHCALL (copysign,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
@@ -182,36 +191,45 @@ __MATHCALL (cabs,, (struct __MATH_PRECNAME(__cabs_complex,)));
 __MATHCALL (significand,, (_Mdouble_ __x));
 #endif /* Use misc.  */
 
+#if defined __USE_MISC || defined __USE_ISOC9X
+/* Return X with its signed changed to Y's.  */
+__MATHCALL (copysign,, (_Mdouble_ __x, _Mdouble_ __y));
+#endif
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN)
+#ifdef __USE_ISOC9X
+/* Return representation of NaN for double type.  */
+__MATHCALL (nan,, (__const char *__tagb));
+#endif
 
+
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECL (int, isnan,, (_Mdouble_ __value));
+__MATHDECL (int,isnan,, (_Mdouble_ __value));
 
 /* Return the binary exponent of X, which must be nonzero.  */
-__MATHDECL (int, ilogb,, (_Mdouble_ __x));
+__MATHDECL (int,ilogb,, (_Mdouble_ __x));
 
-/* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
+/* Bessel functions.  */
+__MATHCALL (j0,, (_Mdouble_));
+__MATHCALL (j1,, (_Mdouble_));
+__MATHCALL (jn,, (int, _Mdouble_));
+__MATHCALL (y0,, (_Mdouble_));
+__MATHCALL (y1,, (_Mdouble_));
+__MATHCALL (yn,, (int, _Mdouble_));
+#endif
 
 
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
 /* Error, gamma, and Bessel functions.  */
 __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
 __MATHCALL (gamma,, (_Mdouble_));
-__MATHCALL (j0,, (_Mdouble_));
-__MATHCALL (j1,, (_Mdouble_));
-__MATHCALL (jn,, (int, _Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
-__MATHCALL (y0,, (_Mdouble_));
-__MATHCALL (y1,, (_Mdouble_));
-__MATHCALL (yn,, (int, _Mdouble_));
 
 /* This variable is used by `gamma' and `lgamma'.  */
 extern int signgam;
 
 #ifdef __USE_MISC
-
 /* Reentrant versions of gamma and lgamma.  Those functions use the global
    variable `signgam'.  The reentrant versions instead take a pointer and
    store the value through it.  */
@@ -219,15 +237,13 @@ __MATHCALL (gamma,_r, (_Mdouble_, int *));
 __MATHCALL (lgamma,_r, (_Mdouble_, int *));
 #endif
 
+#endif /* Use misc or X/Open.  */
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 /* Return the integer nearest X in the direction of the
    prevailing rounding mode.  */
 __MATHCALL (rint,, (_Mdouble_ __x));
-
-/* Return X times (2 to the Nth power).  */
-__MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
@@ -236,4 +252,43 @@ __MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 #endif
 
-#endif /* Use misc.  */
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+/* Return X times (2 to the Nth power).  */
+__MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
+#endif
+
+#ifdef __USE_ISOC9X
+/* Round X to integral valuein floating-point format using current
+   rounding direction, but do not raise inexact exception.  */
+__MATHCALL (nearbyint,, (_Mdouble_ __x));
+
+/* Round X to nearest integral value, rounding halfway cases away from
+   zero.  */
+__MATHCALL (round,, (_Mdouble_ __x));
+
+/* Round X to the integral value in floating-point format nearest but
+   not larger in magnitude.  */
+__MATHCALL (trunc,, (_Mdouble_ __x));
+
+/* Compute remainder of X and Y and put in *QUO a value with sign of x/y
+   and magnitude congruent `mod 2^n' to the magnitude of the integral
+   quotient x/y, with n >= 3.  */
+__MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
+
+
+/* Return positive difference between X and Y.  */
+__MATHCALL (fdim,, (_Mdouble_ __x, _Mdouble_ __y));
+
+/* Return minimum numeric value from X and Y.  */
+__MATHCALL (fmax,, (_Mdouble_ __x, _Mdouble_ __y));
+
+/* Return maximum numeric value from X and Y.  */
+__MATHCALL (fmin,, (_Mdouble_ __x, _Mdouble_ __y));
+
+
+/* Classify given number.  */
+__MATHDECL_1 (int, __fpclassify,, (_Mdouble_ __value));
+
+/* Test for negative number.  */
+__MATHDECL_1 (int, __signbit,, (_Mdouble_ __value));
+#endif /* Use ISO C 9X.  */

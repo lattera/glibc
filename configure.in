@@ -489,6 +489,54 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
+AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
+[cat > conftest.s <<EOF
+.text
+_sym: ret
+.symver _sym,sym@VERS
+EOF
+if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
+  libc_cv_asm_symver_directive=yes
+else
+  libc_cv_asm_symver_directive=no
+fi
+rm -f conftest*])
+AC_CACHE_CHECK(for ld --version-script, libc_cv_ld_version_script_option, [dnl
+if test $libc_cv_asm_symver_directive = yes; then
+  cat > conftest.s <<EOF
+.text
+_sym: ret
+.symver _sym,sym@VERS
+EOF
+  cat > conftest.map <<EOF
+VERS {
+	global: sym;
+};
+EOF
+  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
+    if AC_TRY_COMMAND([${CC-cc} $CFLAGS --shared -o conftest.so conftest.o
+					-Wl,--version-script,conftest.map]);
+    then
+      libc_cv_ld_version_script_option=yes
+    else
+      libc_cv_ld_version_script_option=no
+    fi
+  else
+    libc_cv_ld_version_script_option=no
+  fi
+else
+  libc_cv_ld_version_script_option=no
+fi
+rm -f conftest*])
+if test $libc_cv_asm_symver_directive = yes &&
+   test $libc_cv_ld_version_script_option = yes; then
+  VERSIONING=yes
+  AC_DEFINE(DO_VERSIONING)
+else
+  VERSIONING=no
+fi
+AC_SUBST(VERSIONING)
+
 if test $elf = yes; then
   AC_CACHE_CHECK(for .previous assembler directive,
 		 libc_cv_asm_previous_directive, [dnl

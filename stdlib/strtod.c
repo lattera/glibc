@@ -40,6 +40,8 @@
 # define CHAR_TYPE wint_t
 # define L_(Ch) L##Ch
 # define ISSPACE(Ch) iswspace (Ch)
+# define ISDIGIT(Ch) iswdigit (Ch)
+# define ISXDIGIT(Ch) iswxdigit (Ch)
 # define TOLOWER(Ch) towlower (Ch)
 # define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
 #else
@@ -47,6 +49,8 @@
 # define CHAR_TYPE char
 # define L_(Ch) Ch
 # define ISSPACE(Ch) isspace (Ch)
+# define ISDIGIT(Ch) isdigit (Ch)
+# define ISXDIGIT(Ch) isxdigit (Ch)
 # define TOLOWER(Ch) tolower (Ch)
 # define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
 #endif
@@ -125,6 +129,7 @@ static const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define SWAP(x, y)		({ typeof(x) _tmp = x; x = y; y = _tmp; })
 
 #define NDIG			(MAX_10_EXP - MIN_10_EXP + 2 * MANT_DIG)
+#define HEXNDIG			((MAX_EXP - MIN_EXP + 7) / 8 + 2 * MANT_DIG)
 #define	RETURN_LIMB_SIZE		howmany (MANT_DIG, BITS_PER_MP_LIMB)
 
 #define RETURN(val,end)							      \
@@ -239,7 +244,7 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
   /* Number of digits for actual limb.  */
   int cnt = 0;
   mp_limb_t low = 0;
-  mp_limb_t base;
+  mp_limb_t start;
 
   *nsize = 0;
   assert (digcnt > 0);
@@ -262,9 +267,10 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
 	  low = 0;
 	}
 
-      /* There might be thousands separators or radix characters in the string.
-	 But these all can be ignored because we know the format of the number
-	 is correct and we have an exact number of characters to read.  */
+      /* There might be thousands separators or radix characters in
+	 the string.  But these all can be ignored because we know the
+	 format of the number is correct and we have an exact number
+	 of characters to read.  */
       while (*str < L_('0') || *str > L_('9'))
 	++str;
       low = low * 10 + *str++ - L_('0');
@@ -275,11 +281,11 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
   if (*exponent > 0 && cnt + *exponent <= MAX_DIG_PER_LIMB)
     {
       low *= _tens_in_limb[*exponent];
-      base = _tens_in_limb[cnt + *exponent];
+      start = _tens_in_limb[cnt + *exponent];
       *exponent = 0;
     }
   else
-    base = _tens_in_limb[cnt];
+    start = _tens_in_limb[cnt];
 
   if (*nsize == 0)
     {
@@ -289,11 +295,12 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
   else
     {
       mp_limb_t cy;
-      cy = __mpn_mul_1 (n, n, *nsize, base);
+      cy = __mpn_mul_1 (n, n, *nsize, start);
       cy += __mpn_add_1 (n, n, *nsize, low);
       if (cy != 0)
 	n[(*nsize)++] = cy;
     }
+
   return str;
 }
 
@@ -345,6 +352,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   int negative;			/* The sign of the number.  */
   MPN_VAR (num);		/* MP representation of the number.  */
   int exponent;			/* Exponent of the number.  */
+
+  /* Numbers starting `0X' or `0x' have to be processed with base 16.  */
+  int base = 10;
 
   /* When we have to compute fractional digits we form a fraction with a
      second multi-precision number (and we sometimes need a second for
@@ -485,6 +495,18 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       RETURN (0.0, nptr);
     }
 
+  /* First look whether we are faced with a hexadecimal number.  */
+  if (c == L_('0') && TOLOWER (cp[1]) == L_('x'))
+    {
+      /* Okay, it is a hexa-decimal number.  Remember this and skip
+	 the characters.  BTW: hexadecimal numbers must not be
+	 grouped.  */
+      base = 16;
+      cp += 2;
+      c = *cp;
+      grouping = NULL;
+    }
+
   /* Record the start of the digits, in case we will check their grouping.  */
   start_of_digits = startp = cp;
 
@@ -494,25 +516,29 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if ((c < L_('0') || c > L_('9')) && (wint_t) c != decimal
-      && TOLOWER (c) != L_('e'))
+  if ((c < L_('0') || c > L_('9')) &&
+      (base == 16 && (c < TOLOWER (L_('a')) || c > TOLOWER (L_('f')))) &&
+      (wint_t) c != decimal &&
+      (base == 16 && (cp == start_of_digits || TOLOWER (c) != L_('p'))) &&
+      (base != 16 && TOLOWER (c) != L_('e')))
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly
 	 grouped prefix of the string; so no number found.  */
-      RETURN (0.0, tp == start_of_digits ? nptr : tp);
+      RETURN (0.0, tp == start_of_digits ? (base == 16 ? cp - 1 : nptr) : tp);
     }
 
   /* Remember first significant digit and read following characters until the
      decimal point, exponent character or any non-FP number character.  */
   startp = cp;
   dig_no = 0;
-  while (dig_no < NDIG ||
+  while (dig_no < (base == 16 ? HEXNDIG : NDIG) ||
 	 /* If parsing grouping info, keep going past useful digits
 	    so we can check all the grouping separators.  */
 	 grouping)
     {
-      if (c >= L_('0') && c <= L_('9'))
+      if ((c >= L_('0') && c <= L_('9'))
+	  || (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	++dig_no;
       else if (thousands == L'\0' || (wint_t) c != thousands)
 	/* Not a digit or separator: end of the integer part.  */
@@ -552,7 +578,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	}
     }
 
-  if (dig_no >= NDIG)
+  if (dig_no >= (base == 16 ? HEXNDIG : NDIG))
     /* Too many digits to be representable.  Assigning this to EXPONENT
        allows us to read the full number but return HUGE_VAL after parsing.  */
     exponent = MAX_10_EXP;
@@ -567,7 +593,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   if ((wint_t) c == decimal)
     {
       c = *++cp;
-      while (c >= L_('0') && c <= L_('9'))
+      while (c >= L_('0') && c <= L_('9') ||
+	     (base == 16 && TOLOWER (c) >= L_('a') && TOLOWER (c) <= L_('f')))
 	{
 	  if (c != L_('0') && lead_zero == -1)
 	    lead_zero = dig_no - int_no;
@@ -580,7 +607,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   expp = cp;
 
   /* Read exponent.  */
-  if (TOLOWER (c) == L_('e'))
+  if (TOLOWER (c) == (base == 16 ? L_('p') : L_('e')))
     {
       int exp_negative = 0;
 
@@ -598,9 +625,14 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	  int exp_limit;
 
 	  /* Get the exponent limit. */
-	  exp_limit = exp_negative ?
-		-MIN_10_EXP + MANT_DIG - int_no :
-		MAX_10_EXP - int_no + lead_zero;
+	  if (base == 16)
+	    exp_limit = (exp_negative ?
+			 -MIN_EXP + MANT_DIG - 4 * int_no :
+			 MAX_EXP - 4 * int_no + lead_zero);
+	  else
+	    exp_limit = (exp_negative ?
+			 -MIN_10_EXP + MANT_DIG - int_no :
+			 MAX_10_EXP - int_no + lead_zero);
 
 	  do
 	    {
@@ -610,11 +642,11 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		/* The exponent is too large/small to represent a valid
 		   number.  */
 		{
-	 	  FLOAT retval;
+	 	  FLOAT result;
 
 		  /* Overflow or underflow.  */
 		  __set_errno (ERANGE);
-		  retval = (exp_negative ? 0.0 :
+		  result = (exp_negative ? 0.0 :
 			    negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL);
 
 		  /* Accept all following digits as part of the exponent.  */
@@ -622,7 +654,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		    ++cp;
 		  while (*cp >= L_('0') && *cp <= L_('9'));
 
-		  RETURN (retval, cp);
+		  RETURN (result, cp);
 		  /* NOTREACHED */
 		}
 
@@ -664,8 +696,80 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       while ((wint_t) *startp != decimal)
 	++startp;
       startp += lead_zero + 1;
-      exponent -= lead_zero;
+      exponent -= base == 16 ? 4 * lead_zero : lead_zero;
       dig_no -= lead_zero;
+    }
+
+  /* If the BASE is 16 we can use a simpler algorithm.  */
+  if (base == 16)
+    {
+      static const int nbits[16] = { 0, 1, 2, 2, 3, 3, 3, 3,
+				     4, 4, 4, 4, 4, 4, 4, 4 };
+      int idx = (MANT_DIG - 1) / BITS_PER_MP_LIMB;
+      int pos = (MANT_DIG - 1) % BITS_PER_MP_LIMB;
+      mp_limb_t val;
+
+      while (!ISXDIGIT (*startp))
+	++startp;
+      if (ISDIGIT (*startp))
+	val = *startp++ - L_('0');
+      else
+	val = 10 + TOLOWER (*startp++) - L_('a');
+      bits = nbits[val];
+
+      if (pos + 1 >= 4)
+	{
+	  /* We don't have to care for wrapping.  This is the normal
+	     case so we add this optimization.  */
+	  retval[idx] = val << (pos - bits + 1);
+	  pos -= bits;
+	}
+      else
+	{
+	  if (pos + 1 >= bits)
+	    {
+	      retval[idx] = val << (pos - bits + 1);
+	      pos -= bits;
+	    }
+	  else
+	    {
+	      retval[idx--] = val >> (bits - pos - 1);
+	      retval[idx] = val << (BITS_PER_MP_LIMB - (bits - pos - 1));
+	      pos = BITS_PER_MP_LIMB - 1 - (bits - pos - 1);
+	    }
+	}
+
+      while (--dig_no > 0 && idx >= 0)
+	{
+	  while (!ISXDIGIT (*startp))
+	    ++startp;
+	  if (ISDIGIT (*startp))
+	    val = *startp++ - L_('0');
+	  else
+	    val = 10 + TOLOWER (*startp++) - L_('a');
+
+	  if (pos + 1 >= 4)
+	    {
+	      retval[idx] |= val << (pos - 4 + 1);
+	      pos -= 4;
+	    }
+	  else
+	    {
+	      retval[idx--] |= val >> (4 - pos - 1);
+	      val <<= BITS_PER_MP_LIMB - (4 - pos - 1);
+	      if (idx < 0)
+		return round_and_return (retval, exponent, negative, val,
+					 BITS_PER_MP_LIMB - 1, dig_no > 0);
+
+	      retval[idx] = val;
+	      pos = BITS_PER_MP_LIMB - 1 - (4 - pos - 1);
+	    }
+	}
+
+      /* We ran out of digits.  */
+      MPN_ZERO (retval, idx);
+
+      return round_and_return (retval, exponent, negative, 0, 0, 0);
     }
 
   /* Now we have the number of digits in total and the integer digits as well
@@ -673,8 +777,8 @@ INTERNAL (STRTOF) (nptr, endptr, group)
      really integer digits or belong to the fractional part; i.e. we normalize
      123e-2 to 1.23.  */
   {
-    register int incr = exponent < 0 ? MAX (-int_no, exponent)
-				     : MIN (dig_no - int_no, exponent);
+    register int incr = (exponent < 0 ? MAX (-int_no, exponent)
+			 : MIN (dig_no - int_no, exponent));
     int_no += incr;
     exponent -= incr;
   }
@@ -711,9 +815,10 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		  mp_limb_t cy;
 		  exponent ^= expbit;
 
-		  /* FIXME: not the whole multiplication has to be done.
-		     If we have the needed number of bits we only need the
-		     information whether more non-zero bits follow.  */
+		  /* FIXME: not the whole multiplication has to be
+		     done.  If we have the needed number of bits we
+		     only need the information whether more non-zero
+		     bits follow.  */
 		  if (numsize >= ttab->arraysize - _FPIO_CONST_OFFSET)
 		    cy = __mpn_mul (pdest, psrc, numsize,
 				    &ttab->array[_FPIO_CONST_OFFSET],
@@ -848,7 +953,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     assert (dig_no > int_no && exponent <= 0);
 
 
-    /* For the fractional part we need not process too much digits.  One
+    /* For the fractional part we need not process too many digits.  One
        decimal digits gives us log_2(10) ~ 3.32 bits.  If we now compute
                         ceil(BITS / 3) =: N
        digits we should have enough bits for the result.  The remaining
@@ -1126,7 +1231,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		      for (i = RETURN_LIMB_SIZE; i > empty; --i)
 			retval[i] = retval[i - empty];
 #endif
+#if RETURN_LIMB_SIZE > 1
 		      retval[1] = 0;
+#endif
 		      for (i = numsize; i > 0; --i)
 			num[i + empty] = num[i - 1];
 		      MPN_ZERO (num, empty + 1);
