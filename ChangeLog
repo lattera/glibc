@@ -1,3 +1,7 @@
+1999-02-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Versions: Add __strverscmp to GLIBC_2.1.1.
+
 1999-02-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* misc/syslog.c (vsyslog): Remember errno for %m format.  Fix

@@ -56,4 +56,8 @@ libc {
     # s*
     strcasestr; strverscmp;
   }
+  GLIBC_2.1.1 {
+    # s*
+    __strverscmp;
+  }
 }
