@@ -1,5 +1,8 @@
 2001-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/strncpy.S: Complete rewrite.
+	Contributed by Jakub Jelinek <jakub@redhat.com>.
+
 	* string/stratcliff.c (main): Add strncpy test.
 
 2001-08-22  Roland McGrath  <roland@frob.com>
