@@ -33,6 +33,9 @@
 
 #if defined (_LIBC)
 # include <string.h>
+# include <memcopy.h>
+#else
+# define reg_char char
 #endif
 
 #if defined (HAVE_LIMITS_H) || defined (_LIBC)
@@ -50,17 +53,18 @@
 #undef memchr
 
 
-/* Search no more than N bytes of S for C.  */
+/* Find the first occurrence of C in S.  */
 __ptr_t
-__rawmemchr (s, c)
+__rawmemchr (s, c_in)
      const __ptr_t s;
-     int c;
+     int c_in;
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
+  unsigned reg_char c;
 
-  c = (unsigned char) c;
+  c = (unsigned char) c_in;
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */

@@ -1,5 +1,14 @@
 1999-06-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
+	* sysdeps/generic/strchr.c: Include <memcopy.h> and use reg_char
+	for character to search, to help the compiler.
+	* sysdeps/generic/strchrnul.c: Likewise.
+	* sysdeps/generic/memchr.c: Likewise.
+	* sysdeps/generic/memccpy.c: Likewise.
+	* sysdeps/generic/rawmemchr.c: Likewise.  Fix comment.
+
+1999-06-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
 	* sysdeps/m68k/memchr.S: New file.
 	* sysdeps/m68k/rawmemchr.S: New file.
 	* sysdeps/m68k/strchr.S: New file.

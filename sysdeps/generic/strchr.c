@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    bug fix and commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -21,20 +21,22 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
+#include <memcopy.h>
 
 #undef strchr
 
 /* Find the first occurrence of C in S.  */
 char *
-strchr (s, c)
+strchr (s, c_in)
      const char *s;
-     int c;
+     int c_in;
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
+  unsigned reg_char c;
 
-  c = (unsigned char) c;
+  c = (unsigned char) c_in;
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */

@@ -21,21 +21,23 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
+#include <memcopy.h>
 
 #undef __strchrnul
 #undef strchrnul
 
 /* Find the first occurrence of C in S or the final NUL byte.  */
 char *
-__strchrnul (s, c)
+__strchrnul (s, c_in)
      const char *s;
-     int c;
+     int c_in;
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
+  unsigned reg_char c;
 
-  c = (unsigned char) c;
+  c = (unsigned char) c_in;
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
