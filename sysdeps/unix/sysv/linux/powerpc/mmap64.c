@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -39,28 +39,32 @@ static int have_no_mmap2;
 #endif
 #endif
 
-__ptr_t
-__mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
+void *
+__mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
+  if (! (offset & ((1 << PAGE_SHIFT)-1)))
+    {
+      __set_errno (EINVAL);
+      return MAP_FAILED;
+    }
 #ifdef __NR_mmap2
-  if (
 # ifndef __ASSUME_MMAP2_SYSCALL
-      ! have_no_mmap2 &&
+  if (! have_no_mmap2)
 # endif
-      ! (offset & ((1 << PAGE_SHIFT)-1)))
     {
 # ifndef __ASSUME_MMAP2_SYSCALL
       int saved_errno = errno;
 # endif
-      __ptr_t result;
-      __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len, prot,
-					    flags, fd, (off_t) (offset >> PAGE_SHIFT));
+      void *result;
+      __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len,
+					    prot, flags, fd,
+					    (off_t) (offset >> PAGE_SHIFT));
 # if __BOUNDED_POINTERS__
       __ptrlow (result) = __ptrvalue (result);
       __ptrhigh (result) = __ptrvalue (result) + len;
 # endif
 # ifndef __ASSUME_MMAP2_SYSCALL
-      if (result != (__ptr_t) -1 || errno != ENOSYS)
+      if (result != MAP_FAILED || errno != ENOSYS)
 # endif
 	return result;
 
@@ -70,6 +74,7 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 # endif
     }
 #endif
+#ifndef __ASSUME_MMAP2_SYSCALL
   if (offset != (off_t) offset || (offset + len) != (off_t) (offset + len))
     {
       __set_errno (EINVAL);
@@ -77,6 +82,7 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
     }
 
   return __mmap (addr, len, prot, flags, fd, (off_t) offset);
+#endif
 }
 
 weak_alias (__mmap64, mmap64)
