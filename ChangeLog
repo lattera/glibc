@@ -1,3 +1,8 @@
+2003-08-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Fold EISDIR error
+	into EINVAL.
+
 2003-08-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Use _dl_reloc_bad_type.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -181,6 +181,11 @@ shm_open (const char *name, int oflag, mode_t mode)
 	  __set_errno (save_errno);
 	}
     }
+  else if (__builtin_expect (errno == EISDIR, 0))
+    /* It might be better to fold this error with EINVAL since
+       directory names are just another example for unsuitable shared
+       object names and the standard does not mention EISDIR.  */
+    __set_errno (EINVAL);
 
   return fd;
 }
