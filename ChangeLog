@@ -1,3 +1,8 @@
+2002-10-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/posix/sigvec.c [SA_RESETHAND]: Disable wrapper hacks and
+	implement SV_RESETHAND by translating it to SA_RESETHAND.
+
 2002-10-23  Alexandre Oliva  <aoliva@redhat.com>
 
 	* elf/dl-reloc.c (_dl_reloc_bad_use): Print the full 32-bit relocation
