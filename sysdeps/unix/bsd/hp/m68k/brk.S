@@ -37,7 +37,7 @@ ENTRY (__brk)
 	cmpl sp@(4), d0
 	ble 0f
 	movel d0, sp@(4)
-0:	DO_CALL (brk, 1)
+0:	DO_CALL (#SYS_brk, 1)
 	movel sp@(4), ___curbrk
 	clrl d0
 	rts
