@@ -59,8 +59,13 @@ UHC-routines := uhc ksc5601
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 
-LDFLAGS-EUC-KR.so = -Wl,-rpath,$(gconvdir) -L$(objpfx) -lKSC
-LDFLAGS-JOHAB.so = -Wl,-rpath,$(gconvdir) -L$(objpfx) -lKSC
+LDFLAGS-EUC-KR.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)EUC-KR.so: $(objpfx)libKSC.so
+LDFLAGS-JOHAB.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)JOHAB.so: $(objpfx)libKSC.so
+
+LDFLAGS-libJIS.so = -Wl,-soname,libJIS.so
+LDFLAGS-libKSC.so = -Wl,-soname,libKSC.so
 
 distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \

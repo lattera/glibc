@@ -1,3 +1,8 @@
+1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Finally fix dependencies for JOHAB and
+	EUC-KR modules.
+
 1998-04-1 16:52  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/unix/sysv/linux/arm/socket.S: Correct test for error and
