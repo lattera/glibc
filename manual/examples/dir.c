@@ -19,7 +19,7 @@ main (void)
       (void) closedir (dp);
     }
   else
-    puts ("Couldn't open the directory.");
+    perror ("Couldn't open the directory");
 
   return 0;
 }

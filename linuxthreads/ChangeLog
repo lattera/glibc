@@ -1,3 +1,7 @@
+2001-05-25  Bruce Mitchener  <bruce@cubik.org>
+
+	* linuxthreads.texi: Spelling corrections.
+
 2001-05-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* oldsemaphore.c (__old_sem_wait): Clear p_nextwaiting before

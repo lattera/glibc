@@ -679,7 +679,7 @@ already supports generating such locale data files.
 @deftp {Data Type} wctrans_t
 This data type is defined as a scalar type which can hold a value
 representing the locale-dependent character mapping.  There is no way to
-construct such a value apar from using the return value of the
+construct such a value apart from using the return value of the
 @code{wctrans} function.
 
 @pindex wctype.h

@@ -1,3 +1,26 @@
+2001-05-25  Bruce Mitchener  <bruce@cubik.org>
+
+	* manual/ctype.texi: Minor fix.
+	* manual/install.texi: Likewise.
+	* manual/startup.texi: Likewise.
+	* manual/examples/dir.c: Use perror() rather than puts().
+
+2001-05-25  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Put stuff following
+	#endif directive inside a comment to avoid compiler warnings.
+
+2001-05-25  Philipp Thomas  <pthomas@suse.de>
+
+	* nis/nis_print.c (nis_nstype2str): Don't mark names of
+	naming services for translation, only UNKNOWN needs it.
+	Add comment to prevent it for the future.
+
+2001-05-25  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* misc/sys/cdefs.h (__restrict_arr): Define appropriately for GCC
+	3.1 and non-GCC C99 compilers.
+
 2001-05-22  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/memmove.S: Increase MEMLAT from 6 to 21 for better

@@ -19,7 +19,7 @@ use @var{errno}.
 * Thread Attributes::           Tuning thread scheduling.
 * Cancellation::                Stopping a thread before it's done.
 * Cleanup Handlers::            Deallocating resources when a thread is
-                                  cancelled.
+                                  canceled.
 * Mutexes::                     One way to synchronize threads.
 * Condition Variables::         Another way.
 * POSIX Semaphores::            And a third way.
@@ -102,12 +102,12 @@ returns 0. @xref{Cancellation}, for details.
 @deftypefun int pthread_join (pthread_t @var{th}, void **thread_@var{return})
 @code{pthread_join} suspends the execution of the calling thread until
 the thread identified by @var{th} terminates, either by calling
-@code{pthread_exit} or by being cancelled.
+@code{pthread_exit} or by being canceled.
 
 If @var{thread_return} is not @code{NULL}, the return value of @var{th}
 is stored in the location pointed to by @var{thread_return}.  The return
 value of @var{th} is either the argument it gave to @code{pthread_exit},
-or @code{PTHREAD_CANCELED} if @var{th} was cancelled.
+or @code{PTHREAD_CANCELED} if @var{th} was canceled.
 
 The joined thread @code{th} must be in the joinable state: it must not
 have been detached using @code{pthread_detach} or the
@@ -345,7 +345,7 @@ When a thread eventually honors a cancellation request, it behaves as if
 @code{pthread_exit(PTHREAD_CANCELED)} was called.  All cleanup handlers
 are executed in reverse order, finalization functions for
 thread-specific data are called, and finally the thread stops executing.
-If the cancelled thread was joinable, the return value
+If the canceled thread was joinable, the return value
 @code{PTHREAD_CANCELED} is provided to whichever thread calls
 @var{pthread_join} on it. See @code{pthread_exit} for more information.
 
@@ -428,7 +428,7 @@ stack-like discipline.
 
 The purpose of cleanup handlers is to free the resources that a thread
 may hold at the time it terminates. In particular, if a thread exits or
-is cancelled while it owns a locked mutex, the mutex will remain locked
+is canceled while it owns a locked mutex, the mutex will remain locked
 forever and prevent other threads from executing normally. The best way
 to avoid this is, just before locking the mutex, to install a cleanup
 handler whose effect is to unlock the mutex. Cleanup handlers can be
@@ -899,7 +899,7 @@ nothing.
 @end deftypefun
 
 @code{pthread_cond_wait} and @code{pthread_cond_timedwait} are
-cancellation points. If a thread is cancelled while suspended in one of
+cancellation points. If a thread is canceled while suspended in one of
 these functions, the thread immediately resumes execution, relocks the
 mutex specified by  @var{mutex}, and finally executes the cancellation.
 Consequently, cleanup handlers are assured that @var{mutex} is locked

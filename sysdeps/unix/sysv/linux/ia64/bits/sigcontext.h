@@ -54,4 +54,4 @@ struct sigcontext
   unsigned long int sc_mask;	/* signal mask to restore after handler returns */
 };
 
-#endif _BITS_SIGCONTEXT_H
+#endif /* _BITS_SIGCONTEXT_H */

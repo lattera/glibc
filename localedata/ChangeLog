@@ -1,3 +1,8 @@
+2001-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ro_RO: Correct abday, day, abmon, and mon info.
+	Patch by Ionel Mugurel Ciobîcã <tgakic@bambam.chem.tue.nl>.
+
 2001-05-21  Bruno Haible  <haible@clisp.cons.org>
 
 	* tests-mbwc/dat_mbrlen.c (tst_mbrlen_loc): Use a private mbstate_t

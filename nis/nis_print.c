@@ -26,24 +26,27 @@
 static const char *
 nis_nstype2str (const nstype type)
 {
+
+/* Name service names mustn't be translated, only UNKNOWN needs it */
+
   switch (type)
     {
     case NIS:
-      return N_("NIS");
+      return "NIS";
     case SUNYP:
-      return N_("SUNYP");
+      return "SUNYP";
     case IVY:
-      return N_("IVY");
+      return "IVY";
     case DNS:
-      return N_("DNS");
+      return "DNS";
     case X500:
-      return N_("X500");
+      return "X500";
     case DNANS:
-      return N_("DNANS");
+      return "DNANS";
     case XCHS:
-      return N_("XCHS");
+      return "XCHS";
     case CDS:
-      return N_("CDS");
+      return "CDS";
     default:
       return N_("UNKNOWN");
     }

@@ -381,7 +381,7 @@ The function return @code{-1} if @var{name} is a null pointer, points to
 an empty string, or points to a string containing a @code{=} character.
 It returns @code{0} if the call succeeded.
 
-This function was originall part of the BSD library but is now part of
+This function was originally part of the BSD library but is now part of
 the Unix standard.  The BSD version had no return value, though.
 @end deftypefun
 
