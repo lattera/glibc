@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -390,7 +390,7 @@ syntax error: not inside a locale definition section"));
 	  continue;
 
 	case 2:
-	  HANDLE_COPY (LC_CTYPE, tok_lc_ctype, "LC_CYTPE");
+	  HANDLE_COPY (LC_CTYPE, tok_lc_ctype, "LC_CTYPE");
 
 	  ctype_startup (ldfile, result, charset);
 	  /* FALLTHROUGH */

@@ -1,3 +1,8 @@
+1999-04-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/locfile.c (locfile_read): Fix typo.
+	Patch by Kaoru Fukui <k_fukui@highway.ne.jp>.
+
 1999-04-14 Scott Bambrough  <scottb@netwinder.org>
 
 	* sysdeps/unix/sysv/linux/arm/socket.S: Socket calls could not be
