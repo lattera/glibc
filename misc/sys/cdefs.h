@@ -88,6 +88,7 @@
 #ifndef __BOUNDED_POINTERS__
 # define __bounded	/* nothing */
 # define __unbounded	/* nothing */
+# define __ptrvalue	/* nothing */
 #endif
 
 

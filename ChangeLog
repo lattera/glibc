@@ -5,6 +5,11 @@
 
 2000-06-29  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/generic/libc-start.c (__libc_stack_end): Chop __unbounded.
+	* sysdeps/unix/make-syscalls.sh: Handle signatures of
+	length 7..9, just in case...
+	* misc/sys/cdefs.h (__ptrvalue): Define as nothing for non-BP.
+
 	* sysdeps/i386/bp-asm.h (PCOFF): New constant.
 	(POP_ERRNO_LOCATION_RETURN): Fold insns.
 	* sysdeps/i386/bits/setjmp.h (JB_SIZE): New constant.
