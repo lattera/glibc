@@ -46,10 +46,10 @@ versioned_symbol (libc, __sched_getaffinity_new, sched_getaffinity,
 # if SHLIB_COMPAT(libc, 2_3_3, 2_3_4)
 int
 attribute_compat_text_section
-__sched_getaffinity_old (const pthread_attr_t *attr, cpu_set_t *cpuset)
+__sched_getaffinity_old (pid_t pid, cpu_set_t *cpuset)
 {
   /* The old interface by default assumed a 1024 processor bitmap.  */
-  return __sched_getaffinity_new (attr, 128, cpuset);
+  return __sched_getaffinity_new (pid, 128, cpuset);
 }
 compat_symbol (libc, __sched_getaffinity_old, sched_getaffinity, GLIBC_2_3_3);
 # endif
