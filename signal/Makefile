@@ -38,7 +38,7 @@ routines	:= signal raise killpg \
 		   allocrtsig sigtimedwait sigwaitinfo sigqueue \
 		   sighold sigrelse sigignore sigset
 
-tests		:= tst-signal tst-sigset
+tests		:= tst-signal tst-sigset tst-sigsimple
 
 distribute	:= sigsetops.h testrtsig.h sigset-cvt-mask.h
 
