@@ -1,3 +1,7 @@
+2001-01-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Reduce .data size.
+
 2001-01-21  Andreas Jaeger  <aj@suse.de>
 
 	* elf/constload2.c: Add prototype for init.
