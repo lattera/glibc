@@ -5565,7 +5565,7 @@ else
 int main (void) { return 0; }
 EOF
   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -shared -o conftest.so conftest.c
+			      -shared -o conftest.so conftest.c -lgcc_s
 			      -Wl,--as-needed -nostdlib 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5

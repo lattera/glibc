@@ -1321,7 +1321,7 @@ EOF
 int main (void) { return 0; }
 EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			      -shared -o conftest.so conftest.c
+			      -shared -o conftest.so conftest.c -lgcc_s
 			      -Wl,--as-needed -nostdlib 1>&AS_MESSAGE_LOG_FD])
   then
     libc_cv_as_needed=yes

@@ -1,7 +1,8 @@
 2004-04-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
-	* sysv/linux/sh/pthread_cond_wait.S: Remove unneeded frame info.
-	* sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Remove unneeded
+	frame info.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
 
 2004-04-15  Jakub Jelinek  <jakub@redhat.com>
 
