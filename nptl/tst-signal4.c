@@ -1,6 +1,6 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,66 +17,44 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include <stdlib.h>
 
-
-static pid_t pid;
-
-static void *
-tf (void *a)
-{
-  if (getpid () != pid)
-    {
-      write (2, "pid mismatch\n", 13);
-      _exit (1);
-    }
-
-  return a;
-}
-
-
-int
+static int
 do_test (void)
 {
-  pid = getpid ();
+  sigset_t ss;
 
-#define N 2
-  pthread_t t[N];
+  sigemptyset (&ss);
+
   int i;
-
-  for (i = 0; i < N; ++i)
-    if (pthread_create (&t[i], NULL, tf, (void *) (i + 1)) != 0)
-      {
-	write (2, "create failed\n", 14);
-	_exit (1);
-      }
-    else
-      printf ("created thread %d\n", i);
-
-  for (i = 0; i < N; ++i)
+  for (i = 0; i < 10000; ++i)
     {
-      void *r;
-      int e;
-      if ((e = pthread_join (t[i], &r)) != 0)
+      long int r = random ();
+
+      if (r != SIG_BLOCK && r != SIG_SETMASK && r != SIG_UNBLOCK)
 	{
-	  printf ("join failed: %d\n", e);
-	  _exit (1);
+	  int e = pthread_sigmask (r, &ss, NULL);
+
+	  if (e == 0)
+	    {
+	      printf ("pthread_sigmask succeeded for how = %ld\n", r);
+	      exit (1);
+	    }
+
+	  if (e != EINVAL)
+	    {
+	      puts ("pthread_sigmask didn't return EINVAL");
+	      exit (1);
+	    }
 	}
-      else if (r != (void *) (i + 1))
-	{
-	  write (2, "result wrong\n", 13);
-	  _exit (1);
-	}
-      else
-	printf ("joined thread %d\n", i);
     }
 
   return 0;
 }
-
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

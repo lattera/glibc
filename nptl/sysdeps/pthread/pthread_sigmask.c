@@ -34,8 +34,7 @@ pthread_sigmask (how, newmask, oldmask)
   /* The only thing we have to make sure here is that SIGCANCEL is not
      blocked.  */
   if (newmask != NULL
-      && (how == SIG_SETMASK || how == SIG_BLOCK)
-      && sigismember (newmask, SIGCANCEL))
+      && __builtin_expect (__sigismember (newmask, SIGCANCEL), 0))
     {
       local_newmask = *newmask;
       sigdelset (&local_newmask, SIGCANCEL);

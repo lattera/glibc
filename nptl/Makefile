@@ -136,16 +136,16 @@ tests = tst-attr1 tst-attr2 \
 	tst-key1 tst-key2 tst-key3 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 \
 	tst-barrier1 tst-barrier2 tst-barrier3 \
-	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 \
+	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-tsd1 tst-tsd2 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
-	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 \
+	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	tst-flock1 tst-flock2 \
-	tst-signal1 tst-signal2 tst-signal3 \
+	tst-signal1 tst-signal2 tst-signal3 tst-signal4 \
 	tst-exec1 tst-exec2 tst-exec3 \
 	tst-exit1 \
 	tst-stdio1 tst-stdio2 \

@@ -1,3 +1,19 @@
+2003-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-basic6.
+	* tst-basic6.c: New file.
+
+	* tst-basic1.c: Add test for process ID.
+
+	* Makefile (tests): Add tst-cancel10.
+	* tst-cancel10.c: New file.
+
+	* Makefile (tests): Add tst-signal4.
+	* tst-signal4.c: New file.
+
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Use
+	__sigismember instead of sigismember.  Add __builtin_expect.
+
 2003-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-attr1.c (do_test): Add tests for pthread_setcanceltype,
