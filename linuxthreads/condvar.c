@@ -76,6 +76,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   enqueue(&cond->__c_waiting, self);
   __pthread_unlock(&cond->__c_lock);
   pthread_mutex_unlock(mutex);
+ continue_waiting:
   /* Set up a longjmp handler for the restart and cancel signals */
   if (sigsetjmp(jmpbuf, 1) == 0) {
     THREAD_SETMEM(self, p_signal_jmp, &jmpbuf);
@@ -113,13 +114,16 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     pthread_mutex_lock(mutex);
     pthread_exit(PTHREAD_CANCELED);
   }
-  /* If not signaled: also remove ourselves and return an error code */
+  /* If not signaled: also remove ourselves and return an error code, but
+     only if the timeout has elapsed.  If not, jsut continue waiting. */
   if (THREAD_GETMEM(self, p_signal) == 0) {
+    if (retsleep != 0)
+      goto continue_waiting;
     __pthread_lock(&cond->__c_lock, self);
     remove_from_queue(&cond->__c_waiting, self);
     __pthread_unlock(&cond->__c_lock);
     pthread_mutex_lock(mutex);
-    return retsleep == 0 ? ETIMEDOUT : EINTR;
+    return ETIMEDOUT;
   }
   /* Otherwise, return normally */
   pthread_mutex_lock(mutex);

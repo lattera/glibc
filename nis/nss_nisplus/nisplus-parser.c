@@ -231,9 +231,9 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
 	break;
 
       if (room_left < sizeof (char *))
-	  goto no_more_room;
+	goto no_more_room;
       room_left -= sizeof (char *);
-      gr->gr_mem[count] = line;
+      gr->gr_mem[count++] = line;
 
       while (*line != '\0' && *line != ',' && !isspace (*line))
 	++line;
@@ -248,13 +248,10 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
 	      ++line;
 	  else
 	    ++line;
-	  ++count;
 	}
-      else
-	gr->gr_mem[count+1] = NULL;
     }
   if (room_left < sizeof (char *))
-      goto no_more_room;
+    goto no_more_room;
   room_left -= sizeof (char *);
   gr->gr_mem[count] = NULL;
 

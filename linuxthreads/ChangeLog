@@ -1,3 +1,8 @@
+1999-09-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* condvar.c (pthread_cond_timedwait_relative): Never return with
+	EINTR.  Patch by Andreas Schwab.
+
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signals.c (sigaction): Correct last patch.  Don't select

@@ -1,3 +1,9 @@
+1999-09-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_grent): Do
+	not ovverwrite last group member with NULL pointer.
+	Reported by Thomas Winder <thomas.winder@newlogic.at>.
+
 1999-09-24  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/tst-printf.c (main): Add a testcase for large
