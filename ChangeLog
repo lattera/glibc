@@ -1,3 +1,7 @@
+2000-09-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: New file.
+
 2000-09-06  Andreas Jaeger  <aj@suse.de>
 
 	* soft-fp/Makefile (distribute): Remove ChangeLog.
