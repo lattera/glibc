@@ -1,3 +1,12 @@
+2004-12-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (process_envvars): Don't consider LD_SHOW_AUXV
+	and LD_DYNAMIC_WEAK if __libc_enable_secure.
+	If __libc_enable_secure, /etc/suid-debug doesn't exist and
+	program will be actually run, turn off all debugging.
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add LD_DEBUG,
+	LD_DYNAMIC_WEAK and LD_SHOW_AUXV.
+
 2004-12-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tzset.c (tzset_internal): If + or - is seen,

@@ -2158,7 +2158,8 @@ process_envvars (enum mode *modep)
 	case 9:
 	  /* Test whether we want to see the content of the auxiliary
 	     array passed up from the kernel.  */
-	  if (memcmp (envline, "SHOW_AUXV", 9) == 0)
+	  if (!INTUSE(__libc_enable_secure)
+	      && memcmp (envline, "SHOW_AUXV", 9) == 0)
 	    _dl_show_auxv ();
 	  break;
 
@@ -2191,7 +2192,8 @@ process_envvars (enum mode *modep)
 	      break;
 	    }
 
-	  if (memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
+	  if (!INTUSE(__libc_enable_secure)
+	      && memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    GLRO(dl_dynamic_weak) = 1;
 	  break;
 
@@ -2265,7 +2267,11 @@ process_envvars (enum mode *modep)
       while (*nextp != '\0');
 
       if (__access ("/etc/suid-debug", F_OK) != 0)
-	unsetenv ("MALLOC_CHECK_");
+        {
+	  unsetenv ("MALLOC_CHECK_");
+	  if (mode == normal)
+	    GLRO(dl_debug_mask) = 0;
+        }
     }
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug

@@ -5,9 +5,12 @@
   "LD_PRELOAD\0"							      \
   "LD_LIBRARY_PATH\0"							      \
   "LD_ORIGIN_PATH\0"							      \
+  "LD_DEBUG\0"								      \
   "LD_DEBUG_OUTPUT\0"							      \
   "LD_PROFILE\0"							      \
   "LD_USE_LOAD_BIAS\0"							      \
+  "LD_DYNAMIC_WEAK\0"							      \
+  "LD_SHOW_AUXV\0"							      \
   "GCONV_PATH\0"							      \
   "GETCONF_DIR\0"							      \
   "HOSTALIASES\0"							      \
