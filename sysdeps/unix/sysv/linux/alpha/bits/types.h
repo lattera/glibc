@@ -57,8 +57,8 @@ typedef __int64_t  __off64_t;		/*  "" (LFS) */
 typedef __int64_t  __loff_t;		/* Type of file sizes and offsets.  */
 typedef __int32_t  __pid_t;		/* Type of process identifications.  */
 typedef __int64_t  __ssize_t;		/* Type of a byte count, or error.  */
-typedef __int64_t  __rlim_t;		/* Type of resource counts.  */
-typedef __int64_t  __rlim64_t;		/*  "" (LFS) */
+typedef __uint64_t  __rlim_t;		/* Type of resource counts.  */
+typedef __uint64_t  __rlim64_t;		/*  "" (LFS) */
 typedef __uint32_t __blksize_t;		/* Type to represnet block size.  */
 typedef __uint32_t __blkcnt_t;		/* Type to count nr disk blocks.  */
 typedef __uint64_t __blkcnt64_t;	/*  "" (LFS) */
