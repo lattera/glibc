@@ -86,7 +86,7 @@ $do32:	ldi	v0, SYS_ify(osf_gettimeofday)
 	ldl	t0, 0(a0)
 	ldl	t1, 4(a0)
 	stq	t0, 0(a0)
-	stq	t1, 0(a0)
+	stq	t1, 8(a0)
 
 2:	addq	sp, 16, sp
 	ret
