@@ -6,6 +6,7 @@
 	* posix/spawn.h: Likewise.
 	* posix/spawnattr_getdefault.h: Likewise.
 	* posix/spawnattr_setdefault.h: Likewise.
+	* conform/data/spawn.h-data: Likewise.
 
 2000-05-01  Andreas Jaeger  <aj@suse.de>
 
