@@ -1,3 +1,14 @@
+2003-10-10  Simon Josefsson  <jas@extundo.com>
+
+	* argp/argp-namefrob.h [!_LIBC]: Include mempcpy.h, strcase.h,
+	strchrnul.h, strndup.h (from gnulib).
+	* argp/argp-parse.c: Add alloca.h include snippet verbatim from
+	Autoconf manual.
+	* argp/argp-help.c: Replace alloca.h include snipper with verbatim
+	Autoconf manual version.
+	* argp/argp.h: Map __restrict to restrict or empty string when
+	necessary, copied verbatim from posix/regex.h.
+
 2003-10-09  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* Makefile: Allow for c++-types-$(config-machine)-$(config-os).data in

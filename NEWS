@@ -22,7 +22,7 @@ Version 2.3.3
 * support for non-executable stacks on x86 has been added.  Changes mostly
   by Roland McGrath.
 
-* regex is now much faster for multibyte locaes.  Changes by Jakub Jelinek
+* regex is now much faster for multibyte locales.  Changes by Jakub Jelinek
   and Ulrich Drepper.
 
 * getaddrinfo now performs destination address selection according to
