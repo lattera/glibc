@@ -350,8 +350,8 @@
    For static linking, the set might be wholly absent and so we use
    weak references.  */
 #  define symbol_set_declare(set) \
-  extern void *const __start_##set __symbol_set_attribute; \
-  extern void *const __stop_##set __symbol_set_attribute;
+  extern char const __start_##set[] __symbol_set_attribute; \
+  extern char const __stop_##set[] __symbol_set_attribute;
 #  ifdef SHARED
 #   define __symbol_set_attribute attribute_hidden
 #  else
