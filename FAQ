@@ -59,9 +59,6 @@ please let me know.
 2.5.	When linking with the new libc I get unresolved symbols
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
-
-
-Removed.  Does not apply anymore.
 2.6.	When I use GNU libc on my Linux system by linking against
 	the libc.so which comes with glibc all I get is a core dump.
 2.7.	Looking through the shared libc file I haven't found the
@@ -147,8 +144,6 @@ Removed.  Does not apply anymore.
 3.13.	When using the db-2 library which comes with glibc is used in
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
-
-Removed.  Does not apply anymore.
 3.14.	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
 3.15.	The sys/sem.h file lacks the definition of `union semun'.
@@ -162,8 +157,6 @@ Removed.  Does not apply anymore.
 	libc5.  What can be done?
 3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
-
-Removed.  Does not apply anymore.
 3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
 	when I try to use it, it always returns -1 and sets errno to ENOSYS.
 3.22.	My program segfaults when I call fclose() on the FILE* returned
@@ -184,8 +177,6 @@ Removed.  Does not apply anymore.
 	daylight saving time is in effect the timezone string is EST.
 4.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
-
-Removed.  Does not apply anymore, use make 3.79 or newer.
 4.7.	Why do so many programs using math functions fail on my AlphaStation?
 4.8.	The conversion table for character set XX does not match with
 what I expect.
@@ -690,10 +681,7 @@ question 3.8 for details.
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
 
-
-Removed.  Does not apply anymore.
-
-
+{} Removed.  Does not apply anymore.
 
 
 2.6.	When I use GNU libc on my Linux system by linking against
@@ -1564,9 +1552,7 @@ completely.
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
 
-Removed.  Does not apply anymore.
-
-
+{} Removed.  Does not apply anymore.
 
 
 3.14.	The pow() inline function I get when including <math.h> is broken.
@@ -1664,9 +1650,7 @@ benchmark program for measuring disk access).
 3.20.	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
 
-Removed.  Does not apply anymore.
-
-
+{} Removed.  Does not apply anymore.
 
 
 3.21.	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
@@ -1787,9 +1771,7 @@ and regulations of the country this effects.  glibc behaves correctly.
 4.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 
-Removed.  Does not apply anymore, use make 3.79 or newer.
-
-
+{} Removed.  Does not apply anymore, use make 3.79 or newer.
 
 
 4.7.	Why do so many programs using math functions fail on my AlphaStation?
