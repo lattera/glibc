@@ -67,7 +67,10 @@ main (void)
   if (getcontext (&mctx) != 0)
     {
       if (errno == ENOSYS)
-	exit (0);
+	{
+	  puts ("context handling not supported");
+	  exit (0);
+	}
 
       printf ("%s: getcontext: %m\n", __FUNCTION__);
       exit (1);

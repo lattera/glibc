@@ -54,20 +54,20 @@ extern char *__dcgettext (__const char *__domainname,
    number N.  */
 extern char *ngettext (__const char *__msgid1, __const char *__msgid2,
 		       unsigned long int __n)
-     __THROW __attribute_format_arg__ (1);
+     __THROW __attribute_format_arg__ (1) __attribute_format_arg__ (2);
 
 /* Similar to `dgettext' but select the plural form corresponding to the
    number N.  */
 extern char *dngettext (__const char *__domainname, __const char *__msgid1,
 			__const char *__msgid2, unsigned long int __n)
-     __THROW __attribute_format_arg__ (2);
+     __THROW __attribute_format_arg__ (2) __attribute_format_arg__ (3);
 
 /* Similar to `dcgettext' but select the plural form corresponding to the
    number N.  */
 extern char *dcngettext (__const char *__domainname, __const char *__msgid1,
 			 __const char *__msgid2, unsigned long int __n,
 			 int __category)
-     __THROW __attribute_format_arg__ (2);
+     __THROW __attribute_format_arg__ (2) __attribute_format_arg__ (3);
 
 
 /* Set the current default message catalog to DOMAINNAME.

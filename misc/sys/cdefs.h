@@ -162,7 +162,10 @@
 
 /* At some point during the gcc 2.8 development the `format_arg' attribute
    for functions was introduced.  We don't want to use it unconditionally
-   (although this would be possible) since it generates warnings.  */
+   (although this would be possible) since it generates warnings.
+   If several `format_arg' attributes are given for the same function, in
+   gcc-3.0 and older, all but the last one are ignored.  In newer gccs,
+   all designated arguments are considered.  */
 #if __GNUC_PREREQ (2,8)
 # define __attribute_format_arg__(x) __attribute__ ((__format_arg__ (x)))
 #else
