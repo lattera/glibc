@@ -1,5 +1,8 @@
 1999-09-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (insert_value): Add hack to not
+	crash in incomplete collate implementation.
+
 	* locale/programs/ld-collate.c (read_directions): Read new token
 	after accepting sorting rule.
 

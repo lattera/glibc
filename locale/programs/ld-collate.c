@@ -423,7 +423,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
   /* Try to find the character in the charmap.  */
   seq = charmap_find_value (charmap, arg->val.str.startmb, arg->val.str.lenmb);
 
-  if (wc == ILLEGAL_CHAR_VALUE)
+  if (wc == ILLEGAL_CHAR_VALUE && seq == NULL)
     {
       /* It's no character, so look through the collation elements and
 	 symbol list.  */
@@ -435,17 +435,29 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	  /* It's a collation symbol.  */
 	  struct symbol_t *sym = (struct symbol_t *) result;
 	  elem = sym->order;
+
+	  if (elem == NULL)
+	    elem = sym->order = new_element (collate, arg->val.str.startmb,
+					     arg->val.str.startwc);
 	}
       else if (find_entry (&collate->elem_table, arg->val.str.startmb,
-			   arg->val.str.lenmb, &result) != 0)
+			   arg->val.str.lenmb, &elem) != 0)
 	/* It's also no collation element.  Therefore ignore it.  */
 	return;
     }
+  else
+    {
+      /* Otherwise the symbols stands for an character.  Make sure it is
+	 not already in the table.  */
 
-  /* XXX elem must be defined.  */
+    }
+
+  if (elem == NULL)
+    /* XXX HACK HACK HACK */
+    return;
 
   /* Test whether this element is not already in the list.  */
-  if (elem->next != NULL)
+  if (elem->next != NULL || elem->next == collate->cursor)
     {
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
 		arg->val.str.startmb, arg->val.str.lenmb,
