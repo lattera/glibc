@@ -133,7 +133,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 \
 	tst-once1 tst-once2 tst-once3 tst-once4 \
-	tst-key1 tst-key2 tst-key3 \
+	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 \
 	tst-barrier1 tst-barrier2 tst-barrier3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \

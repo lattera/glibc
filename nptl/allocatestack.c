@@ -145,7 +145,7 @@ get_cached_stack (size_t *sizep, void **memp)
   /* Release the lock early.  */
   lll_unlock (stack_cache_lock);
 
-
+  /* Report size and location of the stack to the caller.  */
   *sizep = result->stackblock_size;
   *memp = result->stackblock;
 
@@ -462,7 +462,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   *pdp = pd;
 
 #if TLS_TCB_AT_TP
-  /* The stack begin before the TCB and the static TLS block.  */
+  /* The stack begins before the TCB and the static TLS block.  */
   *stack = ((char *) (pd + 1) - __static_tls_size);
 #else
 # error "Implement me"

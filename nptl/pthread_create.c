@@ -162,8 +162,8 @@ deallocate_tsd (struct pthread *pd)
 		  }
 		else
 		  /* Clear the memory of the first block for reuse.  */
-		  memset (pd->specific[0], '\0',
-			  sizeof (struct pthread_key_data));
+		  memset (&pd->specific_1stblock, '\0',
+			  sizeof (pd->specific_1stblock));
 	      }
 	    else
 	      idx += PTHREAD_KEY_1STLEVEL_SIZE;
