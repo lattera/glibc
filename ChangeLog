@@ -1,5 +1,7 @@
 1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/elf.h: Update from last gABI draft.
+
 	* elf/elf.h: Remove EM_486 entry.
 	* sysdeps/i386/dl-machine.h (elf_machine_matches_host): Remove
 	test for EM_486.

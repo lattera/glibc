@@ -169,12 +169,9 @@ typedef struct
 #define EM_88K		 5		/* Motorola m88k family */
 #define EM_860		 7		/* Intel 80860 */
 #define EM_MIPS		 8		/* MIPS R3000 big-endian */
-#define EM_S370		 9		/* Amdahl */
-#define EM_MIPS_RS4_BE	10		/* MIPS R4000 big-endian */
-#define EM_RS6000	11		/* RS6000 */
+#define EM_MIPS_RS3_LE	10		/* MIPS R3000 little-endian */
 
 #define EM_PARISC	15		/* HPPA */
-#define EM_nCUBE	16		/* nCUBE */
 #define EM_VPP500	17		/* Fujitsu VPP500 */
 #define EM_SPARC32PLUS	18		/* Sun's "v8plus" */
 #define EM_960		19		/* Intel 80960 */
@@ -183,7 +180,7 @@ typedef struct
 
 #define EM_V800		36		/* NEC V800 series */
 #define EM_FR20		37		/* Fujitsu FR20 */
-#define EM_RH32		38		/* TRW RH32 */
+#define EM_RH32		38		/* TRW RH-32 */
 #define EM_RCE		39		/* Motorola RCE */
 #define EM_ARM		40		/* ARM */
 #define EM_FAKE_ALPHA	41		/* Digital Alpha */
@@ -207,6 +204,7 @@ typedef struct
 #define EM_ME16		59		/* Toyota ME16 processor */
 #define EM_ST100	60		/* STMicroelectronic ST100 processor */
 #define EM_TINYJ	61		/* Advanced Logic Corp. Tinyj emb.fam*/
+
 #define EM_FX66		66		/* Siemens FX66 microcontroller */
 #define EM_ST9PLUS	67		/* STMicroelectronics ST9+ 8/16 mc */
 #define EM_ST7		68		/* STmicroelectronics ST7 8 bit mc */
@@ -307,13 +305,17 @@ typedef struct
 
 /* Legal values for sh_flags (section flags).  */
 
-#define SHF_WRITE	(1 << 0)	/* Writable */
-#define SHF_ALLOC	(1 << 1)	/* Occupies memory during execution */
-#define SHF_EXECINSTR	(1 << 2)	/* Executable */
-#define SHF_MERGE	(1 << 4)	/* Might be merged */
-#define SHF_STRINGS	(1 << 5)	/* Contains nul-terminated strings */
-#define SHF_MASKOS	0x0ff00000	/* OS-specific.  */
-#define SHF_MASKPROC	0xf0000000	/* Processor-specific */
+#define SHF_WRITE	     (1 << 0)	/* Writable */
+#define SHF_ALLOC	     (1 << 1)	/* Occupies memory during execution */
+#define SHF_EXECINSTR	     (1 << 2)	/* Executable */
+#define SHF_MERGE	     (1 << 4)	/* Might be merged */
+#define SHF_STRINGS	     (1 << 5)	/* Contains nul-terminated strings */
+#define SHF_INFO_LINK	     (1 << 6)	/* `sh_info' contains SHT index */
+#define SHF_LINK_ORDER	     (1 << 7)	/* Preserve order after combining */
+#define SHF_OS_NONCONFORMING (1 << 8)	/* Non-standard OS specific handling
+					   required */
+#define SHF_MASKOS	     0x0ff00000	/* OS-specific.  */
+#define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
 
 /* Symbol table entry.  */
 
