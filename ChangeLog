@@ -1,3 +1,13 @@
+2000-08-21  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add getrlimit and
+	getrlimit to the list.
+
+2000-08-18  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/Implies: gcc now has support for the Intel 80 bit
+	long double format so use ldbl-96 instead of ldbl-128.
+
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap.S (__mmap): Return -EINVAL

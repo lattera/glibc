@@ -85,7 +85,7 @@ __libc_system (const char *line)
 	  return -1;
 	}
     }
-# define UNBLOCK  __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
+# define UNBLOCK __sigprocmask (SIG_SETMASK, &omask, (sigset_t *) NULL)
 #else
 # define UNBLOCK 0
 #endif
