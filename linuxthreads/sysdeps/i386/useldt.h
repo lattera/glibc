@@ -79,28 +79,53 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
    because we inherited the value set up in the main thread by TLS setup.
    We need to extract that value and set up the same segment in this
    thread.  */
-# define DO_SET_THREAD_AREA(descr)					      \
+# if USE_TLS
+#  define DO_SET_THREAD_AREA_REUSE(nr)	1
+# else
+/* Without TLS, we do the initialization of the main thread, where NR == 0.  */
+#  define DO_SET_THREAD_AREA_REUSE(nr)	(!__builtin_constant_p (nr) || (nr))
+# endif
+# define DO_SET_THREAD_AREA(descr, nr)					      \
 ({									      \
   int __gs;								      \
-  struct modify_ldt_ldt_s ldt_entry =					      \
-    { ({ asm ("movw %%gs, %w0" : "=q" (__gs)); (__gs & 0xffff) >> 3; }),      \
-      (unsigned long int) descr, sizeof (struct _pthread_descr_struct),	      \
-      1, 0, 0, 0, 0, 1, 0 };						      \
-  if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry) == 0, \
-      			1))						      \
-    asm ("movw %w0, %%gs" :: "q" (__gs));				      \
+  if (DO_SET_THREAD_AREA_REUSE (nr))					      \
+    {									      \
+      asm ("movw %%gs, %w0" : "=q" (__gs));				      \
+      struct modify_ldt_ldt_s ldt_entry =				      \
+	{ (__gs & 0xffff) >> 3,						      \
+	  (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
+	  1, 0, 0, 0, 0, 1, 0 };					      \
+      if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
+			    0) == 0)					      \
+	asm ("movw %w0, %%gs" :: "q" (__gs));				      \
+      else								      \
+	__gs = -1;							      \
+    }									      \
   else									      \
-    __gs = -1;								      \
-  __gs;		      							      \
+    {									      \
+      struct modify_ldt_ldt_s ldt_entry =				      \
+	{ -1,								      \
+	  (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
+	  1, 0, 0, 0, 0, 1, 0 };					      \
+      if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
+			    0) == 0)					      \
+	{								      \
+	  __gs = (ldt_entry.entry_number << 3) + 3;			      \
+	  asm ("movw %w0, %%gs" : : "q" (__gs));			      \
+	}								      \
+      else								      \
+	__gs = -1;							      \
+    }									      \
+  __gs;									      \
 })
 
-#if defined __ASSUME_SET_THREAD_AREA_SYSCALL && defined HAVE_TLS_SUPPORT
-# define INIT_THREAD_SELF(descr, nr)	DO_SET_THREAD_AREA (descr)
-#elif defined __NR_set_thread_area && defined HAVE_TLS_SUPPORT
+#if defined __ASSUME_SET_THREAD_AREA_SYSCALL
+# define INIT_THREAD_SELF(descr, nr)	DO_SET_THREAD_AREA (descr, nr)
+#elif defined __NR_set_thread_area
 # define INIT_THREAD_SELF(descr, nr)					      \
 ({									      \
   if (__builtin_expect (__have_no_set_thread_area, 0)			      \
-      || (DO_SET_THREAD_AREA (descr) == -1				      \
+      || (DO_SET_THREAD_AREA (descr, DO_SET_THREAD_AREA_REUSE (nr)) == -1     \
 	  && (__have_no_set_thread_area = 1)))				      \
     DO_MODIFY_LDT (descr, nr);						      \
 })
