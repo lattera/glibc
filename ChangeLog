@@ -1,3 +1,9 @@
+2002-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Optimize a bit for
+	starting ld.so itself.  Move l_addr variable initialization closer
+	to use.
+
 2002-02-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Versions.def (libc): Add GLIBC_PRIVATE.

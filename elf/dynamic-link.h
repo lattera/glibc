@@ -32,13 +32,13 @@ static inline void __attribute__ ((unused))
 elf_get_dynamic_info (struct link_map *l)
 {
   ElfW(Dyn) *dyn = l->l_ld;
-  ElfW(Addr) l_addr;
   ElfW(Dyn) **info;
 
-  if (! dyn)
+#ifndef RTLD_BOOTSTRAP
+  if (dyn == NULL)
     return;
+#endif
 
-  l_addr = l->l_addr;
   info = l->l_info;
 
   while (dyn->d_tag != DT_NULL)
@@ -65,8 +65,10 @@ elf_get_dynamic_info (struct link_map *l)
     }
 #ifndef DL_RO_DYN_SECTION
   /* Don't adjust .dynamic unnecessarily.  */
-  if (l_addr)
+  if (l->l_addr != 0)
     {
+      ElfW(Addr) l_addr = l->l_addr;
+
       if (info[DT_PLTGOT] != NULL)
 	info[DT_PLTGOT]->d_un.d_ptr += l_addr;
       if (info[DT_STRTAB] != NULL)
@@ -89,23 +91,27 @@ elf_get_dynamic_info (struct link_map *l)
 #endif
   if (info[DT_PLTREL] != NULL)
     {
-# if ELF_MACHINE_NO_RELA
+#if ELF_MACHINE_NO_RELA
       assert (info[DT_PLTREL]->d_un.d_val == DT_REL);
-# elif ELF_MACHINE_NO_REL
+#elif ELF_MACHINE_NO_REL
       assert (info[DT_PLTREL]->d_un.d_val == DT_RELA);
-# else
+#else
       assert (info[DT_PLTREL]->d_un.d_val == DT_REL
 	      || info[DT_PLTREL]->d_un.d_val == DT_RELA);
-# endif
+#endif
     }
-# if ! ELF_MACHINE_NO_RELA
+#if ! ELF_MACHINE_NO_RELA
   if (info[DT_RELA] != NULL)
     assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
 # endif
 # if ! ELF_MACHINE_NO_REL
   if (info[DT_REL] != NULL)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
-# endif
+#endif
+#ifdef RTLD_BOOTSTRAP
+  /* None of the flags should be set for the dynamic linker itself.  */
+  assert (info[DT_FLAGS] == NULL);
+#else
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
@@ -119,11 +125,18 @@ elf_get_dynamic_info (struct link_map *l)
       if (flags & DF_BIND_NOW)
 	info[DT_BIND_NOW] = info[DT_FLAGS];
     }
+#endif
   if (info[VERSYMIDX (DT_FLAGS_1)] != NULL)
     l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
+#ifdef RTLD_BOOTSTRAP
+  /* The dynamic linker should have none of these set.  */
+  assert (info[DT_RUNPATH] == NULL);
+  assert (info[DT_RPATH] == NULL);
+#else
   if (info[DT_RUNPATH] != NULL)
     /* If both RUNPATH and RPATH are given, the latter is ignored.  */
     info[DT_RPATH] = NULL;
+#endif
 }
 
 #ifdef RESOLVE
