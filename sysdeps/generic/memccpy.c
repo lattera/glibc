@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
-#include <memcopy.h>
 
 #undef __memccpy
 #undef memccpy
@@ -27,12 +26,14 @@
    NULL if C was not found in the first N bytes of SRC.  */
 void *
 __memccpy (dest, src, c, n)
-      void *dest; const void *src;
-      int c; size_t n;
+      void *dest;
+      const void *src;
+      int c;
+      size_t n;
 {
   register const char *s = src;
   register char *d = dest;
-  register const reg_char x = (unsigned char) c;
+  register const char x = c;
   register size_t i = n;
 
   while (i-- > 0)

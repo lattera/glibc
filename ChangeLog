@@ -1,5 +1,9 @@
 2000-05-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/memccpy.c (__memccpy): Don't use reg_char type
+	for x since promotion in comparison might leads to unexpected
+	results.  Reported by Dan Pop <Dan.Pop@cern.ch>.
+
 	* iconv/Makefile (tests): Add tst-iconv1.
 	* iconv/tst-iconv1.c: New file.
 	* iconv/gconv_simple.c (internal_ucs4_loop): Prefer reporting
