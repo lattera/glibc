@@ -1406,6 +1406,8 @@ a previous call to @var{initstate} or @var{setstate}.
 The return value is the previous value of the state information array.
 You can use this value later as an argument to @code{setstate} to
 restore that state.
+
+If the function fails the return value is @code{NULL}.
 @end deftypefun
 
 @node SVID Random

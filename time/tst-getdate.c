@@ -101,10 +101,10 @@ main (void)
 	{
 	  printf ("Failure for getdate (\"%s\"):\n", tests[i].str);
 	  printf ("struct tm is:  %d-%d-%d %d:%d:%d\n",
-		  tm->tm_year+1900, tm->tm_mon, tm->tm_mday,
+		  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 		  tm->tm_hour, tm->tm_min, tm->tm_sec);
 	  printf ("but should be: %d-%d-%d %d:%d:%d\n",
-		  tests[i].tm.tm_year+1900, tests[i].tm.tm_mon,
+		  tests[i].tm.tm_year + 1900, tests[i].tm.tm_mon + 1,
 		  tests[i].tm.tm_mday,
 		  tests[i].tm.tm_hour, tests[i].tm.tm_min, tests[i].tm.tm_sec);
 	  ++errors;
