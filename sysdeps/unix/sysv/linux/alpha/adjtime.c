@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -191,5 +191,6 @@ __adjtimex_tv64 (struct timex *tx)
 
 strong_alias (__adjtimex_tv64, __adjtimex_internal);
 strong_alias (__adjtimex_tv64, __adjtimex_tv64p);
+weak_alias (__adjtimex_tv64, ntp_adjtime);
 versioned_symbol (libc, __adjtimex_tv64, __adjtimex, GLIBC_2_1);
 versioned_symbol (libc, __adjtimex_tv64p, adjtimex, GLIBC_2_1);
