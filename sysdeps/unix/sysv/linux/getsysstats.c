@@ -57,7 +57,7 @@ get_proc_path (char *buffer, size_t bufsize)
     {
       while ((entry = __getmntent_r (fp, &mount_point, buffer, bufsize))
 	     != NULL)
-	if (strcmp (mount_point.mnt_type, path_proc) == 0)
+	if (strcmp (mount_point.mnt_type, "proc") == 0)
 	  {
 	    result = mount_point.mnt_dir;
 	    break;
@@ -78,7 +78,7 @@ get_proc_path (char *buffer, size_t bufsize)
   if (copy_result == NULL)
     return result;
 
-  /* Now strore the copied value.  But do it atomically.  */
+  /* Now store the copied value.  But do it atomically.  */
   assert (sizeof (long int) == sizeof (void *));
   if (compare_and_swap ((long int *) &mount_proc, (long int) 0,
 			(long int) copy_result) == 0)
