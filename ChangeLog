@@ -1,5 +1,9 @@
 2002-12-10  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/tst-array1.c (preinit_array, init_array, fini_array):
+	Explicitly align the array to sizeof (void *).
+	* elf/tst-array2dep.c (init_array, fini_array): Likewise.
+
 	* include/libc-symbols.h: Fix a comment typo.
 
 	* sysdeps/unix/sysv/linux/alpha/select.S (__libc_select): New alias.
