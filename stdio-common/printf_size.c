@@ -96,8 +96,8 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
   /* Units for the both formats.  */
   static const char units[2][8] =
   {
-    " kmgtps",	/* For binary format.  */
-    " KMGTPS"	/* For decimal format.  */
+    " kmgtpezy",	/* For binary format.  */
+    " KMGTPEZY"		/* For decimal format.  */
   };
   const char *tag = units[isupper (info->spec) != 0];
   int divisor = isupper (info->spec) ? 1000 : 1024;

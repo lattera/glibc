@@ -1968,6 +1968,7 @@ The facilities of this section are declared in the header file
                                          to @code{register_printf_function}.
 * Printf Extension Example::            How to define a @code{printf}
                                          handler function.
+* Predefined Printf Handlers::          Predefined @code{printf} handlers.
 @end menu
 
 @strong{Portability Note:} The ability to extend the syntax of
@@ -2211,6 +2212,79 @@ The output produced by this program looks like:
 |      <Widget 0xffeffb7c: mywidget>|
 |<Widget 0xffeffb7c: mywidget>      |
 @end smallexample
+
+@node Predefined Printf Handlers
+@subsection Predefined @code{printf} Handlers
+
+The GNU libc also contains a concrete and useful application of the
+@code{printf} handler extension.  There are two functions available
+which implement a special way to print floating-point numbers.
+
+@comment printf.h
+@comment GNU
+@deftypefun int printf_size (FILE *@var{fp}, const struct printf_info *@var{info}, const void *const *@var{args})
+Print a given floating point number as for the format @code{%f} except
+that there is a postfix character indicating the divisor for the
+number to make this less than 1000.  There are two possible divisors:
+powers of 1024 or powers to 1000.  Which one is used depends on the
+format character specified while registered this handler.  If the
+character is of lower case, 1024 is used.  For upper case characters,
+1000 is used.
+
+The postfix tag corresponds to bytes, kilobytes, megabytes, gigabytes,
+etc.  The full table is:
+
+@multitable {' '} {2^10 (1024)} {zetta} {Upper} {10^24 (1000)}
+@item low @tab Multiplier  @tab From  @tab Upper @tab Multiplier
+@item ' ' @tab 1           @tab       @tab ' '   @tab 1
+@item k   @tab 2^10 (1024) @tab kilo  @tab K     @tab 10^3 (1000)
+@item m   @tab 2^20        @tab mega  @tab M     @tab 10^6
+@item g   @tab 2^30        @tab giga  @tab G     @tab 10^9
+@item t   @tab 2^40        @tab tera  @tab T     @tab 10^12
+@item p   @tab 2^50        @tab peta  @tab P     @tab 10^15
+@item e   @tab 2^60        @tab exa   @tab E     @tab 10^18
+@item z   @tab 2^70        @tab zetta @tab Z     @tab 10^21
+@item y   @tab 2^80        @tab yotta @tab Y     @tab 10^24
+@end multitable
+
+The default precision is 3, i.e., 1024 is printed with a lower-case
+format character as if it were @code{%.3fk} and will yield @code{1.000k}.
+@end deftypefun
+
+Due to the requirements of @code{register_printf_function} we must also
+provide the function which return information about the arguments.
+
+@comment printf.h
+@comment GNU
+@deftypefun int printf_size_info (const struct printf_info *@var{info}, size_t @var{n}, int *@var{argtypes})
+This function will return in @var{argtypes} the information about the
+used parameters in the way the @code{vfprintf} implementation expects
+it.  The format always takes one argument.
+@end deftypefun
+
+To use these functions both functions must be registered with a call like
+
+@smallexample
+register_printf_function ('B', printf_size, printf_size_info);
+@end smallexample
+
+Here we register the functions to print numbers as powers of 1000 since
+the format character @code{'B'} is an upper-case characeter.  If we
+would additionally use @code{'b'} in a line like
+
+@smallexample
+register_printf_function ('b', printf_size, printf_size_info);
+@end smallexample
+
+@noindent
+we could also print using power of 1024.  Please note that all what is
+different in these both lines in the format specifier.  The
+@code{printf_size} function knows about the difference of low and upper
+case format specifiers.
+
+The use of @code{'B'} and @code{'b'} is no coincidence.  Rather it is
+the preferred way to use this functionality since it is available on
+some other systems also available using the format specifiers.
 
 @node Formatted Input
 @section Formatted Input
