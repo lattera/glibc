@@ -22,4 +22,7 @@
 
 #include <linux/rose.h>		/* Ask, and the kernel will provide.  */
 
+/* Socket level values.  */
+#define SOL_ROSE        260
+
 #endif

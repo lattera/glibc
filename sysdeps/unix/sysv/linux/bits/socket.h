@@ -74,6 +74,7 @@ enum __socket_type
 #define	PF_NETLINK	16
 #define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD */
 #define	PF_PACKET	17	/* Packet family                */
+#define	PF_ASH		18	/* Ash */
 #define	PF_MAX		32	/* For now.. */
 
 /* Address families.  */
@@ -98,6 +99,7 @@ enum __socket_type
 #define	AF_NETLINK	PF_NETLINK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
+#define	AF_ASH		PF_ASH
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -107,7 +109,6 @@ enum __socket_type
 #define SOL_IPV6        41
 #define SOL_ICMPV6      58
 #define SOL_RAW		255
-#define SOL_ROSE        260
 #define SOL_DECNET      261
 #define SOL_X25         262
 
