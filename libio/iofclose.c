@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -35,6 +35,12 @@ _IO_new_fclose (fp)
   int status;
 
   CHECK_FILE(fp, EOF);
+
+  /* We desperately try to help programs which are using streams in a
+     strange way and mix old and new functions.  Detect old streams
+     here.  */
+  if (fp->_vtable_offset != 0)
+    return _IO_old_fclose (fp);
 
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);

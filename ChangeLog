@@ -1,5 +1,9 @@
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/iofclose.c (_IO_new_fclose): Detect new streams and handle
+	them appropriately.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+
 	* misc/mntent_r.c: Allow spaces and tabs in entry names by
 	encoding these characters.
 	* misc/tst-mntent.c: Add test case for addmntent and getmntent.

@@ -495,6 +495,14 @@ a pointer to a static variable of type @code{struct mntent} which is
 filled with the information from the next entry from the file currently
 read.
 
+The file format used prescribes the use of spaces or tab characters to
+separate the fields.  This makes it harder to use name containing one of
+these characters (e.g., mount points using spaces).  Therefore these
+characters are encoded in the files and the @code{getmntent} function
+takes care of the decoding while reading the entries back in.
+@code{'\040'} is used to encode a space character, @code{'\012'} to
+encode a tab character and @code{'\\'} to encode a backslash.
+
 If there was an error or the end of the file is reached the return value
 is @code{NULL}.
 
@@ -513,6 +521,9 @@ static, though.  Instead the function stores the values in the variable
 pointed to by the @var{result} parameter.  Additional information (e.g.,
 the strings pointed to by the elements of the result) are kept in the
 buffer of size @var{bufsize} pointed to by @var{buffer}.
+
+Escaped characters (space, tab, backslash) are converted back in the
+same way as it happens for @code{getmentent}.
 
 The function returns a @code{NULL} pointer in error cases.  Errors could be:
 @itemize @bullet
@@ -538,6 +549,10 @@ The implication of this is that to remove an entry from a file one has
 to create a new file while leaving out the entry to be removed and after
 closing the file remove the old one and rename the new file to the
 chosen name.
+
+This function takes care of spaces and tab characters in the names to be
+written to the file.  It converts them and the backslash character into
+the format describe in the @code{getmntent} description above.
 
 This function returns @math{0} in case the operation was successful.
 Otherwise the return value is @math{1} and @code{errno} is set

@@ -41,6 +41,9 @@ please let me know.
 1.15.	What's the problem with configure --enable-omitfp?
 1.16.	I get failures during `make check'.  What should I do?
 1.17.	What is symbol versioning good for?  Do I need it?
+1.18.	How can I compile on my fast ix86 machine a working libc for my slow
+	i386?  After installing libc, programs abort with "Illegal
+	Instruction".
 
 2. Installation and configuration issues
 
@@ -513,6 +516,23 @@ We don't advise building without symbol versioning, since you lose binary
 compatibility - forever!  The binary compatibility you lose is not only
 against the previous version of the GNU libc (version 2.0) but also against
 all future versions.
+
+
+1.18.	How can I compile on my fast ix86 machine a working libc for my slow
+	i386?  After installing libc, programs abort with "Illegal
+	Instruction".
+
+{AJ} glibc and gcc might generate some instructions on your machine that
+aren't available on i386.  You've got to tell glibc that you're configuring
+for i386 with adding i386 as your machine, for example:
+
+	../configure --prefix=/usr i386-pc-linux-gnu
+
+And you need to tell gcc to only generate i386 code, just add `-mcpu=i386'
+(just -m386 doesn't work) to your CFLAGS.
+
+{UD} This applies not only to the i386.  Compiling on a i686 for any older
+model will also fail if the above  methods are not used.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
