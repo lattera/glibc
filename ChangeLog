@@ -1,3 +1,8 @@
+Sat Jul 27 11:23:59 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Quote
+	`..' dots in sed search string.
+
 Mon Jul 29 01:27:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sunrpc/rpc/rpc_msg.h: Fix botched patch for multiple inclusion
