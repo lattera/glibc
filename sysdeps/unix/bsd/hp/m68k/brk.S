@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,11 +37,8 @@ ENTRY (__brk)
 	cmpl sp@(4), d0
 	ble 0f
 	movel d0, sp@(4)
-0:	movel POUND(SYS_brk), d0
-	trap POUND(0)
-	bcs 1f
+0:	DO_CALL (brk, 1)
 	movel sp@(4), ___curbrk
 	clrl d0
 	rts
-1:
-	jmp syscall_error
+error:	jmp syscall_error
