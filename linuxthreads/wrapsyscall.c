@@ -78,11 +78,6 @@ CANCELABLE_SYSCALL (int, close, (int fd), (fd))
 strong_alias (close, __close)
 
 
-/* creat(2).  */
-CANCELABLE_SYSCALL (int, creat, (const char *pathname, mode_t mode),
-		    (pathname, mode))
-
-
 /* fcntl(2).  */
 CANCELABLE_SYSCALL_VA (int, fcntl, (int fd, int cmd, ...),
 		       (fd, cmd, va_arg (ap, long int)), cmd)
@@ -136,12 +131,6 @@ strong_alias (open64, __open64)
 CANCELABLE_SYSCALL (int, pause, (void), ())
 
 
-/* poll(2).  */
-CANCELABLE_SYSCALL (int, poll,
-		    (struct pollfd *ufds, nfds_t nfds, int timeout),
-		    (ufds, nfds, timeout))
-
-
 /* pread(3).  */
 CANCELABLE_SYSCALL (ssize_t, pread, (int fd, void *buf, size_t count,
 				     off_t offset),
@@ -153,14 +142,6 @@ CANCELABLE_SYSCALL (ssize_t, pread64, (int fd, void *buf, size_t count,
 				       off64_t offset),
 		    (fd, buf, count, offset))
 strong_alias (pread64, __pread64)
-
-
-/* pselect(3).  */
-CANCELABLE_SYSCALL (int, pselect, (int n, fd_set *readfds, fd_set *writefds,
-				   fd_set *exceptfds,
-				   const struct timespec *timeout,
-				   const sigset_t *sigmask),
-		    (n, readfds, writefds, exceptfds, timeout, sigmask))
 
 
 /* pwrite(3).  */
@@ -182,38 +163,6 @@ CANCELABLE_SYSCALL (ssize_t, read, (int fd, void *buf, size_t count),
 strong_alias (read, __read)
 
 
-/* readv(2).  */
-CANCELABLE_SYSCALL (ssize_t, readv,
-		    (int fd, const struct iovec *vector, int count),
-		    (fd, vector, count))
-
-
-/* select(2).  */
-CANCELABLE_SYSCALL (int, select, (int n, fd_set *readfds,
-				  fd_set *writefds,
-				  fd_set *exceptfds,
-				  struct timeval *timeout),
-		    (n, readfds, writefds, exceptfds, timeout))
-
-
-/* sigpause(3).  */
-#undef sigpause
-CANCELABLE_SYSCALL (int, sigpause, (int sigmask), (sigmask))
-
-
-/* __xpg_sigpause(3).  */
-CANCELABLE_SYSCALL (int, __xpg_sigpause, (int sigmask), (sigmask))
-
-
-/* sigsuspend(2).  */
-CANCELABLE_SYSCALL (int, sigsuspend, (const sigset_t *mask), (mask))
-
-
-/* sigwaitinfo(3).  */
-CANCELABLE_SYSCALL (int, sigwaitinfo, (const sigset_t *set, siginfo_t *info),
-		    (set, info))
-
-
 /* system(3).  */
 CANCELABLE_SYSCALL (int, system, (const char *line), (line))
 
@@ -227,12 +176,6 @@ CANCELABLE_SYSCALL (__pid_t, wait, (__WAIT_STATUS_DEFN stat_loc), (stat_loc))
 strong_alias (wait, __wait)
 
 
-/* waitid(3).  */
-CANCELABLE_SYSCALL (int, waitid,
-		    (idtype_t idtype, id_t id, siginfo_t *info, int options),
-		    (idtype, id, info, options))
-
-
 /* waitpid(2).  */
 CANCELABLE_SYSCALL (__pid_t, waitpid, (__pid_t pid, int *stat_loc,
 				       int options),
@@ -243,12 +186,6 @@ CANCELABLE_SYSCALL (__pid_t, waitpid, (__pid_t pid, int *stat_loc,
 CANCELABLE_SYSCALL (ssize_t, write, (int fd, const void *buf, size_t n),
 		    (fd, buf, n))
 strong_alias (write, __write)
-
-
-/* writev(2).  */
-CANCELABLE_SYSCALL (ssize_t, writev,
-		    (int fd, const struct iovec *vector, int count),
-		    (fd, vector, count))
 
 
 /* The following system calls are thread cancellation points specified
