@@ -1,3 +1,8 @@
+1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_hconf.c (_res_hconf_init): Don't use ENV_HOSTCONF for
+	SUID binaries.
+
 1999-02-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Don't declare __libc_allocate_rtsig.

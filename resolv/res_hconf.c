@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -320,7 +320,7 @@ _res_hconf_init (void)
 
   memset (&_res_hconf, '\0', sizeof (_res_hconf));
 
-  hconf_name = getenv (ENV_HOSTCONF);
+  hconf_name = __secure_getenv (ENV_HOSTCONF);
   if (hconf_name == NULL)
     hconf_name = _PATH_HOSTCONF;
 
