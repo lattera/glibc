@@ -1,3 +1,8 @@
+2000-02-24  Geoff Clare  <gwc@unisoft.com>
+
+	* posix/wordexp-test.c: Updated to include tests for all the
+	problems fixed by the last changes to wordexp.c.
+
 2000-02-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/sys/wait.h: Handle definitions duplicated in stdlib.h
@@ -39,11 +44,13 @@
 	* sysdeps/unix/sysv/sysv4/bits/waitflags.h: Likewise.
 	* sysdeps/generic/bits/waitstatus.h: Likewise.
 
-	* posix/wordexp.c: Use we_offs everywhere if WRDE_DOOFS.  Expand ~
-	correctly.  Detect syntax errors in command substitutions.  Delete
-	trailing newlines correctly.  Don't split fields in command
-	substitution situations.  Restore old structure in case of an
-	error.  Handle WRDE_APPEND correctly.
+	* posix/wordexp.c: Use $HOME to expand ~ (if set); fix off-by-one
+	error in expansion of ~user; correct handling of WRDE_APPEND and
+	WRDE_DOOFFS; return WRDE_SYNTAX for syntax errors in command
+	substitutions; limit removal of newlines to those that are
+	really `trailing'; allow for current word to continue after
+	a command substitution (e.g. "a$(echo b)c"); restore pwordexp
+	members properly on error returns.
 	Patch by Geoff Clare <gwc@unisoft.com>.
 
 	* locale/programs/ld-ctype.c (allocate_arrays): Make sure the end
