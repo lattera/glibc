@@ -1,3 +1,14 @@
+1998-11-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Removed.  There are too
+	many differences between the Linux 2.0 and 2.1 versions of this
+	file and it's too difficult to convert all calls.  The file should
+	only be needed by the ipfw program which has to take care of the
+	correct kernel version and include files.
+
+	* sysdeps/unix/sysv/linux/Dist: Remove netinet/ip_fw.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Likewise.
+
 1998-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Don't read sysd-sorted unless sysd-dirs is read.

@@ -34,7 +34,6 @@ netinet/if_fddi.h
 netinet/if_tr.h
 netinet/igmp.h
 netinet/in_systm.h
-netinet/ip_fw.h
 netlink/netlink.h
 netpacket/packet.h
 netipx/ipx.h

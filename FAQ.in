@@ -1094,6 +1094,14 @@ versions defined this but it was an error since it does not make much sense
 when thinking about it.  The standards describing the System V IPC functions
 define it this way and therefore programs must be adopted.
 
+??	Why has <netinet/ip_fw.h> disappeared?
+
+{AJ} The corresponding Linux kernel data structures and constants are
+totally different in Linux 2.0 and Linux 2.1.  This situation has to be
+taken care in user programs using the firewall structures and therefore
+those programs (ipfw is AFAIK the only one) should deal with this problem
+themselves.
+
 
 ? Miscellaneous
 
