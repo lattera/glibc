@@ -24,14 +24,16 @@
 #include "math.h"
 #include <fenv_libc.h>
 
-int __isnan(double x)
+int
+__isnan (x)
+     double x;
 {
   fenv_t savedstate;
   int result;
-  savedstate = fegetenv_register();
-  reset_fpscr_bit(FPSCR_VE);
+  savedstate = fegetenv_register ();
+  reset_fpscr_bit (FPSCR_VE);
   result = !(x == x);
-  fesetenv_register(savedstate);
+  fesetenv_register (savedstate);
   return result;
 }
 weak_alias (__isnan, isnan)

@@ -1,5 +1,7 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/fpu/s_isnan.c: Pretty printing.
+
 	* elf/dl-reloc.c (_dl_relocate_object): Add more __builtin_expect.
 	* elf/dl-lookup.c: Likewise.
 	* elf/dl-init.c (_dl_init): Likewise.
