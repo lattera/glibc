@@ -31,10 +31,10 @@ register char * stack_pointer __asm__ ("%esp");
 
 
 /* Spinlock implementation; required.  */
-PT_EI int
+PT_EI long int
 testandset (int *spinlock)
 {
-  int ret;
+  long int ret;
 
   __asm__ __volatile__ (
 	"xchgl %0, %1"
