@@ -75,7 +75,7 @@ vpath %.h $(subdir-dirs)
 
 # What to install.
 install-others = $(inst_includedir)/gnu/stubs.h
-install-bin = glibcbug
+install-bin-script = glibcbug
 
 ifeq (yes,$(build-shared))
 install-others += $(inst_includedir)/gnu/lib-names.h
@@ -84,7 +84,7 @@ endif
 include Makerules
 
 ifeq ($(build-programs),yes)
-others: $(addprefix $(objpfx),$(install-bin))
+others: $(addprefix $(objpfx),$(install-bin-script))
 endif
 
 # Install from subdirectories too.

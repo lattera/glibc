@@ -135,12 +135,10 @@ __nis_findfastest (dir_binding *bind)
   struct findserv_req *pings;
   struct sockaddr_in sin, saved_sin;
   int found = -1;
-  u_int32_t xid_seed, xid_lookup;
+  u_int32_t xid_seed;
   int sock, dontblock = 1;
   CLIENT *clnt;
-  char clnt_res;
-  void *foo = NULL;
-  u_long i, j, pings_count, pings_max;
+  u_long i, j, pings_count, pings_max, fastest = -1;
   struct cu_data *cu;
 
   pings_max = bind->server_len * 2;	/* Reserve a little bit more memory
@@ -188,10 +186,9 @@ __nis_findfastest (dir_binding *bind)
 	    memcpy ((char *) &pings[pings_count].sin, (char *) &sin,
 		    sizeof (sin));
 	    memcpy ((char *)&saved_sin, (char *)&sin, sizeof(sin));
-	    pings[pings_count].xid = xid_seed;
+	    pings[pings_count].xid = xid_seed + pings_count;
 	    pings[pings_count].server_nr = i;
 	    pings[pings_count].server_ep = j;
-	    ++xid_seed;
 	    ++pings_count;
 	  }
 
@@ -225,26 +222,30 @@ __nis_findfastest (dir_binding *bind)
       memcpy ((char *) &cu->cu_raddr, (char *) &pings[i].sin,
 	      sizeof (struct sockaddr_in));
       /* Transmit to NULLPROC, return immediately. */
-      clnt_call (clnt, NULLPROC, (xdrproc_t) xdr_void, (caddr_t) foo,
-		 (xdrproc_t) xdr_void, (caddr_t) & clnt_res, TIMEOUT00);
+      clnt_call (clnt, NULLPROC, 
+		 (xdrproc_t) xdr_void, (caddr_t) 0,
+		 (xdrproc_t) xdr_void, (caddr_t) 0, TIMEOUT00);
     }
-
+  
   /* Receive reply from NULLPROC asynchronously */
-  memset ((char *) &clnt_res, 0, sizeof (clnt_res));
-  clnt_call (clnt, NULLPROC, (xdrproc_t) NULL, (caddr_t) foo,
-	     (xdrproc_t) xdr_void, (caddr_t) &clnt_res, TIMEOUT00);
-
-  xid_lookup = *((u_int32_t *) (cu->cu_inbuf));
-  for (i = 0; i < pings_count; i++)
+  while (RPC_SUCCESS == clnt_call (clnt, NULLPROC,
+				   (xdrproc_t) NULL, (caddr_t) 0,
+				   (xdrproc_t) xdr_void, (caddr_t) 0,
+				   TIMEOUT00))
     {
-      if (pings[i].xid == xid_lookup)
-	{
-	  bind->server_used = pings[i].server_nr;
-	  bind->current_ep = pings[i].server_ep;
-	  found = 1;
-	}
+      fastest = *((u_int32_t *) (cu->cu_inbuf)) - xid_seed;
+      if (fastest < pings_count) {
+	break;
+      }
     }
-
+  
+  if (fastest < pings_count)
+    {
+      bind->server_used = pings[fastest].server_nr;
+      bind->current_ep = pings[fastest].server_ep;
+      found = 1;
+    }
+  
   auth_destroy (clnt->cl_auth);
   clnt_destroy (clnt);
   close (sock);

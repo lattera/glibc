@@ -76,11 +76,11 @@ ifeq (yes,$(build-shared))
 extra-objs	= $(all-rtld-routines:%=%.os) soinit.os sofini.os interp.os
 generated	+= librtld.os dl-allobjs.os ld.so ldd
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
-install-bin	= ldd
+install-bin-script = ldd
 endif
 
 others		= sprof sln
-install-bin	+= sprof
+install-bin	= sprof
 others-static   = sln
 install-rootsbin = sln
 

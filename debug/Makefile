@@ -40,14 +40,15 @@ libpcprofile-routines = pcprofile
 libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 others = pcprofiledump
-install-bin = pcprofiledump xtrace
+install-bin = pcprofiledump
+install-bin-script = xtrace
 
 include ../Makeconfig
 
 distribute += catchsegv.sh xtrace.sh
 ifeq ($(elf),yes)
 ifeq ($(build-shared),yes)
-install-bin += catchsegv
+install-bin-script += catchsegv
 endif
 endif
 generated = catchsegv xtrace

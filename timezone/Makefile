@@ -77,7 +77,7 @@ endif
 
 ifeq ($(have-ksh),yes)
 install-others += $(inst_zonedir)/iso3166.tab $(inst_zonedir)/zone.tab
-install-bin += tzselect
+install-bin-script = tzselect
 generated += tzselect
 endif
 

@@ -720,10 +720,10 @@ force-install:
 # files in $(install-lib) matching `lib%.a' are ranlib'd after installation
 # unless they also appear in $(non-lib.a).  $(install-data) are installed
 # as they are into $(datadir).  $(headers) are installed as they are in
-# $(includedir).  $(install-bin) and $(install-sbin) are installed from the
-# object directory into $(bindir) and $(sbindir), respectively.
-# $(install-others) are absolute path names of files to install; rules to
-# install them are defined elsewhere.
+# $(includedir).  $(install-bin), $(install-bin-script) and $(install-sbin)
+# are installed from the object directory into $(bindir), $(bindir) and
+# $(sbindir), respectively.  $(install-others) are absolute path names of
+# files to install; rules to install them are defined elsewhere.
 
 # The simple library name to install libc.a under.
 # This could be defined by a sysdep Makefile.
@@ -759,6 +759,12 @@ $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib $(+force)
 define do-install-program
 $(make-target-directory)
 $(INSTALL_PROGRAM) $< $@.new
+mv -f $@.new $@
+endef
+
+define do-install-script
+$(make-target-directory)
+$(INSTALL_SCRIPT) $< $@.new
 mv -f $@.new $@
 endef
 
@@ -929,6 +935,11 @@ $(addprefix $(inst_bindir)/,$(install-bin)): \
     $(inst_bindir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
 endif
+ifdef install-bin-script
+$(addprefix $(inst_bindir)/,$(install-bin-script)): \
+    $(inst_bindir)/%: $(objpfx)% $(+force)
+	$(do-install-script)
+endif
 ifdef install-rootsbin
 $(addprefix $(inst_rootsbindir)/,$(install-rootsbin)): \
    $(inst_rootsbindir)/%: $(objpfx)% $(+force)
@@ -964,9 +975,11 @@ $(addprefix $(inst_includedir)/,$(headers)): $(inst_includedir)/%: % $(+force)
 	$(do-install)
 endif	# headers
 
-.PHONY: install-bin-nosubdir install-rootsbin-nosubdir install-sbin-nosubdir \
-	install-lib-nosubdir install-data-nosubdir install-headers-nosubdir
+.PHONY: install-bin-nosubdir install-bin-script-nosubdir \
+	install-rootsbin-nosubdir install-sbin-nosubdir install-lib-nosubdir \
+	install-data-nosubdir install-headers-nosubdir
 install-bin-nosubdir: $(addprefix $(inst_bindir)/,$(install-bin))
+install-bin-script-nosubdir: $(addprefix $(inst_bindir)/,$(install-bin-script))
 install-rootsbin-nosubdir: \
 	$(addprefix $(inst_rootsbindir)/,$(install-rootsbin))
 install-sbin-nosubdir: $(addprefix $(inst_sbindir)/,$(install-sbin))
@@ -986,9 +999,9 @@ install-%:: install-%-nosubdir ;
 .PHONY: install install-no-libc.a-nosubdir
 ifeq ($(build-programs),yes)
 install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
-			    install-bin-nosubdir install-lib-nosubdir	\
-			    install-others-nosubdir install-rootsbin-nosubdir \
-			    install-sbin-nosubdir
+			    install-bin-nosubdir install-bin-script-nosubdir \
+			    install-lib-nosubdir install-others-nosubdir \
+			    install-rootsbin-nosubdir install-sbin-nosubdir
 else
 install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-lib-nosubdir install-others-nosubdir
@@ -1120,7 +1133,7 @@ $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
 	      versioned \
-	      $(addprefix install-,lib lib.so data bin sbin others),
+	      $(addprefix install-,lib lib.so data bin bin-script sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')
 endef

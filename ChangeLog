@@ -1,3 +1,38 @@
+2001-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_findserv.c (__nis_findfastest): Don't fail if reply received
+	first is from a previous call.
+	Patch by Alexander Belopolsky <alexb@rentec.com> for [PR libc/3670].
+
+2001-08-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Updated.
+
+2001-08-25  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* config.make.in (INSTALL_SCRIPT): Define.
+	* Makeconfig (INSTALL_SCRIPT): Define.
+	* Makerules (do-install-script): New macro to install scripts using
+	INSTALL_SCRIPT.
+	(install-bin-script): New rule to install scripts with
+	do-install-script.
+	(install-bin-script-nosubdir): New rule.
+	(install-no-libc.a-nosubdir): Add install-bin-script-nosubdir.
+	(distinfo-vars): Add $(install-bin-script).
+	* Rules (others): Likewise.
+	* Makefile (glibcbug): Install with install-bin-script.
+	* debug/Makefile (xtrace): Likewise.
+	(catchsegv): Likewise.
+	* elf/Makefile (ldd): Likewise.
+	* malloc/Makefile (mtrace): Likewise.
+	* timezone/Makefile (tzselect): Likewise.
+
+2001-08-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Pass
+	ELF_RTYPE_CLASS_PLT, instead of R_MIPS_REL32, to
+	_dl_lookup_versioned_symbol () and _dl_lookup_symbol ().
+
 2001-08-29  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Updated.
@@ -5,7 +40,7 @@
 2001-08-28  H.J. Lu  <hjl@gnu.org>
 
 	* Makeconfig (combreloc-LDFLAGS): New variable.
-	Add it to LDFALGS.so, LDFLAGS-rtld, and +link.
+	Add it to LDFLAGS.so, LDFLAGS-rtld, and +link.
 	* config.make.in (have-z-combreloc): New variable.
 	* configure.in: Substitute libc_cv_z_combreloc.
 

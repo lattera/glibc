@@ -41,7 +41,8 @@ all: objs lib others
 
 ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(extra-objs) \
-			      $(install-lib) $(install-bin) \
+			      $(install-lib) \
+			      $(install-bin) $(install-bin-script) \
 			      $(install-rootsbin) $(install-sbin))
 else
 others: $(addprefix $(objpfx),$(extra-objs) \

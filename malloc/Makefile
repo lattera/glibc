@@ -57,7 +57,7 @@ include ../Makeconfig
 
 # The Perl script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
-install-bin = mtrace
+install-bin-script = mtrace
 generated = mtrace
 
 # The Perl script will print addresses and to do this nicely we must know
@@ -75,7 +75,7 @@ endif
 ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
-install-bin += memusagestat memusage
+install-bin = memusagestat memusage
 generated += memusagestat memusage
 extra-objs += memusagestat.o
 endif
