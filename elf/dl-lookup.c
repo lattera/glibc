@@ -197,9 +197,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
 		   int reloc_type, int explicit)
 {
-  const char *reference_name = undef_map ? undef_map->l_name : NULL;
-  const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { NULL, NULL };
+  unsigned long int hash;
+  struct sym_val current_value;
   struct r_scope_elem **scope;
   int protected;
   int noexec = elf_machine_lookup_noexec_p (reloc_type);
@@ -217,6 +216,9 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
     }
 
   ++_dl_num_relocations;
+
+  hash = _dl_elf_hash (undef_name);
+  current_value = ((struct sym_val) { NULL, NULL });
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -251,6 +253,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
   if (__builtin_expect (current_value.s == NULL, 0))
     {
+      const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
 	/* XXX We cannot translate the messages.  */
@@ -267,12 +271,16 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
-    _dl_debug_printf ("binding file %s to %s: %s symbol `%s'\n",
-		      (reference_name && reference_name[0]
-		       ? reference_name : (_dl_argv[0] ?: "<main program>")),
-		       current_value.m->l_name[0]
-		       ? current_value.m->l_name : _dl_argv[0],
-		       protected ? "protected" : "normal", undef_name);
+    {
+      const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
+      _dl_debug_printf ("binding file %s to %s: %s symbol `%s'\n",
+			(reference_name && reference_name[0]
+			 ? reference_name : (_dl_argv[0] ?: "<main program>")),
+			current_value.m->l_name[0]
+			? current_value.m->l_name : _dl_argv[0],
+			protected ? "protected" : "normal", undef_name);
+    }
 
   if (__builtin_expect (protected == 0, 1))
     {
@@ -399,9 +407,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			     const struct r_found_version *version,
 			     int reloc_type, int explicit)
 {
-  const char *reference_name = undef_map ? undef_map->l_name : NULL;
-  const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct sym_val current_value = { NULL, NULL };
+  unsigned long int hash;
+  struct sym_val current_value;
   struct r_scope_elem **scope;
   int protected;
   int noexec = elf_machine_lookup_noexec_p (reloc_type);
@@ -420,6 +427,9 @@ _dl_lookup_versioned_symbol (const char *undef_name,
     }
 
   ++_dl_num_relocations;
+
+  hash = _dl_elf_hash (undef_name);
+  current_value = ((struct sym_val) { NULL, NULL });
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -454,6 +464,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	{
 	  /* Oh, oh.  The file named in the relocation entry does not
 	     contain the needed symbol.  */
+	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
 	  /* XXX We cannot translate the message.  */
 	  _dl_signal_cerror (0, (reference_name && reference_name[0]
 				 ? reference_name
@@ -479,13 +491,19 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
-	/* We could find no value for a strong reference.  */
-	/* XXX We cannot translate the message.  */
-	_dl_signal_cerror (0, (reference_name && reference_name[0]
-			       ? reference_name
-			       : (_dl_argv[0] ?: "<main program>")),
-			   make_string (undefined_msg, undef_name,
-					", version ", version->name ?: NULL));
+	{
+	  /* We could find no value for a strong reference.  */
+	  const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
+	  /* XXX We cannot translate the message.  */
+	  _dl_signal_cerror (0, (reference_name && reference_name[0]
+				 ? reference_name
+				 : (_dl_argv[0] ?: "<main program>")),
+			     make_string (undefined_msg, undef_name,
+					  ", version ",
+					  version->name ?: NULL));
+	}
+
       _dl_lookup_cache_versioned.ret = NULL;
       _dl_lookup_cache_versioned.value = 0;
       *ref = NULL;
@@ -495,13 +513,17 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
 
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_BINDINGS, 0))
-    _dl_debug_printf ("binding file %s to %s: %s symbol `%s' [%s]\n",
-		       (reference_name && reference_name[0]
-			? reference_name : (_dl_argv[0] ?: "<main program>")),
-		       current_value.m->l_name[0]
-		       ? current_value.m->l_name : _dl_argv[0],
-		       protected ? "protected" : "normal",
-		      undef_name, version->name);
+    {
+      const char *reference_name = undef_map ? undef_map->l_name : NULL;
+
+      _dl_debug_printf ("binding file %s to %s: %s symbol `%s' [%s]\n",
+			(reference_name && reference_name[0]
+			 ? reference_name : (_dl_argv[0] ?: "<main program>")),
+			current_value.m->l_name[0]
+			? current_value.m->l_name : _dl_argv[0],
+			protected ? "protected" : "normal",
+			undef_name, version->name);
+    }
 
   if (__builtin_expect (protected == 0, 1))
     {
