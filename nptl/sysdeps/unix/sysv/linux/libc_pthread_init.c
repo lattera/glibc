@@ -19,19 +19,29 @@
 
 #include <list.h>
 #include "fork.h"
+#include <bits/libc-lock.h>
 
 
 static struct fork_handler pthread_child_handler;
 
+/* Global variable signalled when locking is needed.  */
+int __libc_locking_needed;
+
 
 void
-__register_pthread_fork_handler (ptr, reclaim)
+__libc_pthread_init (ptr, reclaim)
      unsigned long int *ptr;
      void (*reclaim) (void);
 {
+  /* Remember the pointer to the generation counter in libpthread.  */
   __fork_generation_pointer = ptr;
 
+  /* Called by a child after fork.  */
   pthread_child_handler.handler = reclaim;
 
+  /* The fork handler needed by libpthread.  */
   list_add_tail (&pthread_child_handler.list, &__fork_child_list);
+
+  /* Signal the internal locking code that locking is needed now.  */
+  __libc_locking_needed = 1;
 }

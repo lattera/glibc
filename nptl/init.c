@@ -167,5 +167,5 @@ __pthread_initialize_minimal (void)
   __static_tls_size = roundup (__static_tls_size, __static_tls_align);
 
   /* Register the fork generation counter with the libc.  */
-  __register_pthread_fork_handler (&__fork_generation, __reclaim_stacks);
+  __libc_pthread_init (&__fork_generation, __reclaim_stacks);
 }

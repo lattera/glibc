@@ -139,7 +139,8 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    <0  -  taken by more users */
 
 
-#define lll_trylock(futex) \
+#if defined NOT_IN_libc || defined UP
+# define lll_trylock(futex) \
   ({ unsigned char ret;							      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (futex)			      \
@@ -148,7 +149,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
      ret; })
 
 
-#define lll_lock(futex) \
+# define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
 	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
 			      "jne 1f\n\t"				      \
@@ -163,7 +164,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      : "memory"); })
 
 
-#define lll_unlock(futex) \
+# define lll_unlock(futex) \
   (void) ({ int ignore;							      \
             __asm __volatile (LOCK_INSTR "incl %0\n\t"			      \
 			      "jng 1f\n\t"				      \
@@ -176,6 +177,59 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      : "=m" (futex), "=&a" (ignore)		      \
 			      : "0" (futex)				      \
 			      : "memory"); })
+#else
+/* Special versions of the macros for use in libc itself.  They avoid
+   the lock prefix when the thread library is not used.
+
+   XXX In future we might even want to avoid it on UP machines.  */
+
+# define lll_trylock(futex) \
+  ({ unsigned char ret;							      \
+     __asm __volatile ("cmpl $0, __libc_locking_needed\n\t"		      \
+		       "je,pt 0f\n\t"					      \
+		       "lock\n"						      \
+		       "0:\tcmpxchgl %2, %1; setne %0"			      \
+		       : "=a" (ret), "=m" (futex)			      \
+		       : "r" (0), "1" (futex), "0" (1)			      \
+		       : "memory");					      \
+     ret; })
+
+
+# define lll_lock(futex) \
+  (void) ({ int ignore1, ignore2;					      \
+	    __asm __volatile ("cmpl $0, __libc_locking_needed\n\t"	      \
+			      "je,pt 0f\n\t"				      \
+			      "lock\n"					      \
+			      "0:\txaddl %0, %2\n\t"			      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "call __lll_lock_wait\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
+			      : "0" (-1), "2" (futex)			      \
+			      : "memory"); })
+
+
+# define lll_unlock(futex) \
+  (void) ({ int ignore;							      \
+            __asm __volatile ("cmpl $0, __libc_locking_needed\n\t"	      \
+			      "je,pt 0f\n\t"				      \
+			      "lock\n"					      \
+			      "0:\tincl %0\n\t"				      \
+			      "jng 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %0, %%eax\n\t"			      \
+			      "call __lll_unlock_wake\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=m" (futex), "=&a" (ignore)		      \
+			      : "0" (futex)				      \
+			      : "memory"); })
+#endif
 
 
 #define lll_islocked(futex) \

@@ -1,3 +1,21 @@
+2002-12-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork-gen.c: Renamed to...
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: ...this.
+	Initialize __libc_locking_needed.
+	* init.c (__pthread_initialize_minimal): Call __libc_pthread_init
+	instead of __register_pthread_fork_handler.
+	* sysdeps/pthread/bits/libc-lock.h: Declare __libc_locking_needed.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routimes): Replace
+	fork-gen with libc_pthread_init.
+	* sysdeps/unix/sysv/linux/Versions: Use __libc_pthread_init instead
+	of __register_pthread_fork_handler.
+	* sysdeps/unix/sysv/linux/fork.h: Declare __libc_pthread_init instead
+	of __register_pthread_fork_handler.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Use
+	__libc_locking_needed to determine whether lock prefix can be avoided.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise.
+
 2002-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-cleanup1.

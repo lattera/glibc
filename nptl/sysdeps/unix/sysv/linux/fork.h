@@ -56,5 +56,5 @@ extern int __register_atfork (void (*__prepare) (void),
 			      void *dso_handle);
 
 /* Register the generation counter in the libpthread with the libc.  */
-extern void __register_pthread_fork_handler (unsigned long int *__ptr,
-					     void (*reclaim) (void));
+extern void __libc_pthread_int (unsigned long int *__ptr,
+				void (*reclaim) (void));

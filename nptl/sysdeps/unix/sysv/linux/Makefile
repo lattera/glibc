@@ -18,7 +18,7 @@
 # 02111-1307 USA.  */
 
 ifeq ($(subdir),nptl)
-sysdep_routines += register-atfork unregister-atfork fork-gen
+sysdep_routines += register-atfork unregister-atfork libc_pthread_init
 
 libpthread-sysdep_routines += pt-fork
 endif

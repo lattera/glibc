@@ -1,6 +1,6 @@
 libc {
   GLIBC_PRIVATE {
-    __register_atfork; __register_pthread_fork_handler;
+    __register_atfork; __libc_pthread_init;
     __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
     __libc_allocate_rtsig_private;
   }
