@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  LinuxThreads version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,9 +42,14 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_lock_define(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
 
-/* Define an initialized lock variable NAME with storage class CLASS.  */
+/* Define an initialized lock variable NAME with storage class CLASS.
+
+   For the C library we take a deeper look at the initializer.  For this
+   implementation all fields are initialized to zero.  Therefore we
+   don't initialize the variable which allows putting it into the BSS
+   section.  */
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = PTHREAD_MUTEX_INITIALIZER;
+  CLASS __libc_lock_t NAME;
 
 /* Define an initialized recursive lock variable NAME with storage
    class CLASS.  */
@@ -101,8 +106,15 @@ typedef pthread_key_t __libc_key_t;
 
 
 /* Define once control variable.  */
-#define __libc_once_define(CLASS, NAME) \
+#if PTHREAD_ONCE_INIT == 0
+/* Special case for static variables where we can avoid the initialization
+   if it is zero.  */
+# define __libc_once_define(CLASS, NAME) \
+  CLASS pthread_once_t NAME
+#else
+# define __libc_once_define(CLASS, NAME) \
   CLASS pthread_once_t NAME = PTHREAD_ONCE_INIT
+#endif
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \

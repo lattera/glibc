@@ -3,6 +3,10 @@
 	* manager.c (pthread_allocate_stack): Optimize initialization of new
 	thread descriptor.
 
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_define_initialized):
+	Don't use initializer since it is all zeroes.
+	(__libc_once_define): Likewise.
+
 1999-04-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/arm/Implies: Removed since cmpxchg/no-cmpxchg
