@@ -184,13 +184,9 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	  /* Call all initialization functions for the transformation
 	     step implementations.  */
-	  for (cnt = 0; cnt < nsteps - 1; ++cnt)
+	  for (cnt = 0; cnt < nsteps; ++cnt)
 	    {
 	      size_t size;
-
-	      /* If this is the last step we must not allocate an
-		 output buffer.  */
-	      result->__data[cnt].__flags = conv_flags;
 
 	      /* Would have to be done if we would not clear the whole
                  array above.  */
@@ -204,16 +200,6 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	      /* We use the `mbstate_t' member in DATA.  */
 	      result->__data[cnt].__statep = &result->__data[cnt].__state;
-
-	      /* Allocate the buffer.  */
-	      size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
-
-	      result->__data[cnt].__outbuf = (char *) malloc (size);
-	      if (result->__data[cnt].__outbuf == NULL)
-		goto bail;
-
-	      result->__data[cnt].__outbufend =
-		result->__data[cnt].__outbuf + size;
 
 	      /* Now see whether we can use any of the transliteration
 		 modules for this step.  */
@@ -255,57 +241,31 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			}
 		      break;
 		    }
-	    }
 
-	  /* Now handle the last entry.  */
-	  result->__data[cnt].__flags = conv_flags | __GCONV_IS_LAST;
-	  /* Would have to be done if we would not clear the whole
-	     array above.  */
-#if 0
-	  result->__data[cnt].__invocation_counter = 0;
-	  result->__data[cnt].__internal_use = 0;
-#endif
-	  result->__data[cnt].__statep = &result->__data[cnt].__state;
-
-	  /* Now see whether we can use the transliteration module
-	     for this step.  */
-	  for (runp = trans; runp != NULL; runp = runp->next)
-	    for (n = 0; n < runp->ncsnames; ++n)
-	      if (__strcasecmp (steps[cnt].__from_name, runp->csnames[n]) == 0)
+	      /* If this is the last step we must not allocate an
+		 output buffer.  */
+	      if (cnt < nsteps - 1)
 		{
-		  void *data = NULL;
+		  result->__data[cnt].__flags = conv_flags;
 
-		  /* Match!  Now try the initializer.  */
-		  if (runp->trans_init_fct == NULL
-		      || (runp->trans_init_fct (data, steps[cnt].__to_name)
-			  == __GCONV_OK))
-		    {
-		      /* Append at the end of the list.  */
-		      struct __gconv_trans_data *newp;
-		      struct __gconv_trans_data *endp;
-		      struct __gconv_trans_data *lastp;
+		  /* Allocate the buffer.  */
+		  size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
 
-		      newp = (struct __gconv_trans_data *)
-			malloc (sizeof (struct __gconv_trans_data));
-		      if (newp == NULL)
-			goto bail;
+		  result->__data[cnt].__outbuf = (char *) malloc (size);
+		  if (result->__data[cnt].__outbuf == NULL)
+		    goto bail;
 
-		      newp->__trans_fct = runp->trans_fct;
-		      newp->__trans_context_fct = runp->trans_context_fct;
-		      newp->__trans_end_fct = runp->trans_end_fct;
+		  result->__data[cnt].__outbufend =
+		    result->__data[cnt].__outbuf + size;
+		}
+	      else
+		{
+		  /* Handle the last entry.  */
+		  result->__data[cnt].__flags = conv_flags | __GCONV_IS_LAST;
 
-		      lastp = NULL;
-		      for (endp = result->__data[cnt].__trans;
-			   endp != NULL; endp = endp->__next)
-			lastp = endp;
-
-		      if (lastp == NULL)
-			result->__data[cnt].__trans = newp;
-		      else
-			lastp->__next = newp;
-		    }
 		  break;
 		}
+	    }
 	}
 
       if (res != __GCONV_OK)

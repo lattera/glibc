@@ -234,6 +234,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 				       &result[step_cnt]);
 
 	  /* Call the init function.  */
+	  result[step_cnt].__data = NULL;
 	  if (result[step_cnt].__init_fct != NULL)
 	     {
 	       status = DL_CALL_FCT (result[step_cnt].__init_fct,

@@ -1,5 +1,14 @@
 2000-07-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_db.c (gen_steps): Always initialize __data field of
+	step.
+
+	* iconv/gconv_open.c (__gconv_open): Reapply
+	2000-07-12 Bruno Haible <haible@clisp.cons.org>
+
+		* iconv/gconv_open.c (__gconv_open): Merge duplicated
+		code.
+
 	* iconv/gconv_open.c: Undo last two changes for now.  They break
 	everything.
 
