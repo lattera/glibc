@@ -1,3 +1,12 @@
+2000-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/bits/string2.h: Declare __strdup and __strndup if necessary.
+	Reported by Bruno Haible.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* manual/arith.texi: Remove @w from @itemize.
+
 2000-05-02  Andreas Jaeger  <aj@suse.de>
 
 	* conform/data/tar.h-data: Add some checks for specific values.

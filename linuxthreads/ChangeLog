@@ -1,3 +1,8 @@
+2000-04-29  Bruno Haible  <clisp.cons.org>
+
+	* join.c (pthread_exit): Use THREAD_GETMEM_NC instead of THREAD_GETMEM
+	for eventmask larger than 1 word.
+
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions [libpthread] (GLIBC_2.2): Add __pthread_initialize_minimal.

@@ -45,8 +45,8 @@ void pthread_exit(void * retval)
       uint32_t mask = __td_eventmask (TD_DEATH);
 
       if ((mask & (__pthread_threads_events.event_bits[idx]
-		   | THREAD_GETMEM(self,
-				   p_eventbuf.eventmask).event_bits[idx]))
+		   | THREAD_GETMEM_NC(self,
+				      p_eventbuf.eventmask.event_bits[idx])))
 	  != 0)
 	{
 	  /* Yep, we have to signal the death.  */

@@ -1188,6 +1188,7 @@ __strsep_g (char **__s, __const char *__reject)
 
 # ifndef _HAVE_STRING_ARCH_strdup
 
+extern char *__strdup (__const char *__string) __THROW __attribute_malloc__;
 #  define __strdup(s) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
@@ -1206,6 +1207,8 @@ __strsep_g (char **__s, __const char *__reject)
 
 # ifndef _HAVE_STRING_ARCH_strndup
 
+extern char *__strndup (__const char *__string, size_t __n)
+     __THROW __attribute_malloc__;
 #  define __strndup(s, n) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
