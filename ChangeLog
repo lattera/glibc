@@ -1,3 +1,19 @@
+1999-04-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/STATUS: File removed.  Moved items that are still relevant into
+	TODO list in hurd source.
+
+1999-03-26  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/bits/time.h: New file.
+	* sysdeps/mach/hurd/getrusage.c: New file.
+	* sysdeps/mach/hurd/clk_tck.c: New file.
+	* sysdeps/mach/hurd/Versions (libc) [GLIBC_2.1.1]: Add __libc_clk_tck.
+	* sysdeps/mach/hurd/Makefile [$(subdir) = posix]
+	(sysdep_routines): Add clk_tck.
+	* sysdeps/mach/hurd/times.c: Removed, since getrusage is now
+	implemented.
+
 1999-04-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/syslog.c (closelog_internal): Do not reset LogTag here.
