@@ -203,5 +203,9 @@ SYSCALL_ERROR_LABEL:							      \
   register int _d5 asm ("d5") = (int) (a5);	\
   LOAD_ARGS_4 (a1, a2, a3, a4)
 #define ASM_ARGS_5	ASM_ARGS_4, "d" (_d5)
+#define LOAD_ARGS_6(a1, a2, a3, a4, a5, a6)	\
+  register int _a0 asm ("a0") = (int) (a6);	\
+  LOAD_ARGS_5 (a1, a2, a3, a4, a5)
+#define ASM_ARGS_6	ASM_ARGS_5, "a" (_a0)
 
 #endif /* not __ASSEMBLER__ */
