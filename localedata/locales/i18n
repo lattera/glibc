@@ -1080,8 +1080,8 @@ LC_MESSAGES
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_MESSAGES category.
 %
-yesexpr "<U005B><U002B><U0031><U005D>"
-noexpr  "<U005B><U002D><U0030><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
