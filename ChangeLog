@@ -1,5 +1,8 @@
 2004-08-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/tst-gettext.sh: Adjust for change for de.po file to UTF-8.
+	* intl/tst-gettext.c: Likewise.
+
 	* nss/getent.c (ahosts_keys_int): Correctly print IPv6 addresses.
 
 	* nss/getent.c: Allow queries for getaddrinfo with AF_INET and

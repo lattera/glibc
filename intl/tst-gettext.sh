@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of gettext functions.
-# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -31,10 +31,10 @@ export LC_ALL
 # Create the locale directories.
 mkdir -p ${objpfx}localedir/existing-locale/LC_MESSAGES
 for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
-  cp -f ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
+  cp -f ${common_objpfx}localedata/de_DE.UTF-8/LC_$f \
         ${objpfx}localedir/existing-locale
 done
-cp -f ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
+cp -f ${common_objpfx}localedata/de_DE.UTF-8/LC_MESSAGES/SYS_LC_MESSAGES \
       ${objpfx}localedir/existing-locale/LC_MESSAGES
 
 # Create the domain directories.

@@ -87,8 +87,8 @@ main (int argc, char *argv[])
   setenv ("LC_MESSAGES", "non-existing-locale", 1);
   setenv ("LC_CTYPE", "non-existing-locale", 1);
   setenv ("LANG", "non-existing-locale", 1);
-  check_setlocale (LC_CTYPE, "de_DE.ISO-8859-1");
-  check_setlocale (LC_MESSAGES, "de_DE.ISO-8859-1");
+  check_setlocale (LC_CTYPE, "de_DE.UTF-8");
+  check_setlocale (LC_MESSAGES, "de_DE.UTF-8");
   unsetenv ("OUTPUT_CHARSET");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
