@@ -18,10 +18,17 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+/* In SVR4 the `stat' call is actually done by the `xstat' system call,
+   which takes an additional first argument giving a version number for
+   `struct stat'.  Likewise for `fstat' and `lstat' there are `fxstat' and
+   `lxstat' system calls.  This macro gives the SVR4 version number that
+   corresponds to the definition of `struct stat' in <statbuf.h>.  */
+#define	_STAT_VER	2
+
 .globl syscall_error
 ENTRY (__stat)
 	popl %eax		/* Pop return address into %eax.  */
-	pushl $2		/* Push extra first arg to syscall.  */
+	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
 	pushl %eax		/* Push back the return address.  */
 	DO_CALL (xstat, 3)	/* Do the syscall.   */
 	jb syscall_error	/* Check for error.  */
