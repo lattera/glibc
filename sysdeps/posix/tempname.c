@@ -69,14 +69,17 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
       else if (dir != NULL && direxists (dir))
 	/* nothing */ ;
     }
-  if (direxists (P_tmpdir))
-    dir = P_tmpdir;
-  else if (strcmp (P_tmpdir, "/tmp") != 0 && direxists ("/tmp"))
-    dir = "/tmp";
-  else
+  if (dir != NULL)
     {
-      __set_errno (ENOENT);
-      return -1;
+      if (direxists (P_tmpdir))
+	dir = P_tmpdir;
+      else if (strcmp (P_tmpdir, "/tmp") != 0 && direxists ("/tmp"))
+	dir = "/tmp";
+      else
+	{
+	  __set_errno (ENOENT);
+	  return -1;
+	}
     }
 
   dlen = strlen (dir);

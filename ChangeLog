@@ -1,3 +1,12 @@
+1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* stdio-common/tst-tmpnam.c (main): Use void as parameter to avoid  
+	warnings about unused args.  Fix comment. 
+ 
+1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/posix/tempname.c (__path_search): Correct last patch. 
+ 
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc/xdr.h (IXDR_GET_INT32): Case pointer before reading from

@@ -21,7 +21,7 @@
 #include <string.h>
 
 int
-main (int argc, char *argv[])
+main (void)
 {
   const char *name;
   int retval = 0;
@@ -33,7 +33,7 @@ main (int argc, char *argv[])
 
   printf ("name = %s\n", name);
 
-  /* Make sure the name is based on the value in TMPDIR.  */
+  /* Make sure the name is not based on the value in TMPDIR.  */
   if (strncmp (name, "/usr", 4) == 0)
     {
       puts ("error: `tmpnam' used TMPDIR value");
