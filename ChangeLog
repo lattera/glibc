@@ -1,8 +1,17 @@
+1999-10-04  Andreas Jaeger  <aj@suse.de>
+
+	* timezone/README: Change wording to not mention the current
+	version.  This way we can't forget to update the file.
+
+1999-10-04  Andreas Jaeger  <aj@suse.de>
+
+	* manual/time.texi (Basic CPU Time): Fix typo.
+	Reported by Ben Pfaff <pfaffben@msu.edu>.
+
 1999-10-04  Ulrich Drepper  <drepper@cygnus.com>
 
-	* include/string.h: Add __memrchr declaration.
-
-	* string/string.h: Moce __memrchr declaration to include/string.h.
+	* string/string.h: Move __memrchr declaration to ...
+	* include/string.h: ...here.
 
 1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
 
