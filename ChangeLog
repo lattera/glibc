@@ -1,3 +1,10 @@
+2000-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/test-fenv.c (feenv_tests): Clear all exceptions before
+	first test.
+	(feexcp_nomask_test): Correct printf args.
+	(feexcp_mask_test): Likewise.
+
 2000-08-19  Andreas Jaeger  <aj@suse.de>
 
 	* inet/tst-gethnm.c: Include string.h to provide prototype for
