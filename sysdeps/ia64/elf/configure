@@ -1,0 +1,6 @@
+ # Local configure fragment for sysdeps/ia64/elf.
+
+cat >> confdefs.h <<\EOF
+#define PI_STATIC_AND_HIDDEN 1
+EOF
+

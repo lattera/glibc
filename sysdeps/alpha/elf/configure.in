@@ -51,3 +51,29 @@ if test $libc_cv_alpha_tls = yes; then
   AC_DEFINE(HAVE_TLS_SUPPORT)
 fi
 fi
+
+AC_CACHE_CHECK(for GP relative module local relocs, libc_cv_alpha_hidden_gprel, [dnl
+cat > conftest.c <<\EOF
+static int bar;
+int baz __attribute__((visibility("hidden")));
+
+int foo (void)
+{
+  return bar + baz;
+}
+EOF
+dnl
+
+libc_cv_alpha_hidden_gprel=no
+if AC_TRY_COMMAND(${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&AC_FD_CC); then
+  if grep -q 'bar.*!gprel' conftest.s \
+     && grep -q 'baz.*!gprel' conftest.s \
+     && ! grep -q 'bar.*!literal' conftest.s \
+     && ! grep -q 'baz.*!literal' conftest.s; then
+    libc_cv_alpha_hidden_gprel=yes
+  fi
+fi
+rm -f conftest*])
+if test $libc_cv_alpha_hidden_gprel = yes; then
+  AC_DEFINE(PI_STATIC_AND_HIDDEN)
+fi

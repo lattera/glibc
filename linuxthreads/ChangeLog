@@ -1,3 +1,9 @@
+2002-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/timer_routines.c (thread_func): Change return
+	type to void and add casts in use to avoid warnings wit all gcc
+	versions.
+
 2002-08-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h (PTHREAD_THREADS_MAX):

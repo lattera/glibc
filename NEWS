@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-8-21
+GNU C Library NEWS -- history of user-visible changes.  2002-8-28
 Copyright (C) 1992-2000,01,02 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -47,6 +47,10 @@ Version 2.3
 
 * Loading of locale data is faster due to the introduction of a locale
   archive.  Implemented by Roland McGrath and Ulrich Drepper.
+
+* Startup times are significantly reduced by not using exported functions
+  inside the library itself.  Changes by Jakub Jelinek, Roland McGrath,
+  and Ulrich Drepper.
 
 Version 2.2.5
 

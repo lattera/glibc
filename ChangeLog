@@ -1,3 +1,18 @@
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/elf/configure.in (PI_STATIC_AND_HIDDEN): Define
+	unconditionally.
+	* sysdeps/alpha/elf/configure.in (libc_cv_alpha_hidden_gprel): New
+	check.
+	(PI_STATIC_AND_HIDDEN): Define if check succeeded.
+
+2002-08-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Add fd >= 0
+	check to close_and_out close.  Replace return NULL statements where
+	fd might be >= 0 with goto close_and_out.  Close the file descriptor
+	when it is no longer needed.
+
 2002-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/s390/s390-64/dl-machine.h: Avoid unescaped newlines in

@@ -369,7 +369,7 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
    function is to wait on the thread's timer queue and expire the
    timers in chronological order as close to their scheduled time as
    possible.  */
-static void *
+static void
 __attribute__ ((noreturn))
 thread_func (void *arg)
 {
@@ -449,9 +449,6 @@ thread_func (void *arg)
   /* This macro will never be executed since the while loop loops
      forever - but we have to add it for proper nesting.  */
   pthread_cleanup_pop (1);
-
-  /* NOTREACHED */
-  return NULL;
 }
 
 
@@ -492,7 +489,8 @@ __timer_thread_start (struct thread_node *thread)
   assert (!thread->exists);
   thread->exists = 1;
 
-  if (pthread_create (&thread->id, &thread->attr, thread_func, thread) != 0)
+  if (pthread_create (&thread->id, &thread->attr,
+		      (void (*) (void *)) thread_func, thread) != 0)
     {
       thread->exists = 0;
       retval = -1;

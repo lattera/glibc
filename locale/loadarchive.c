@@ -211,7 +211,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	{
 	  /* stat failed, very strange.  */
 	close_and_out:
-	  __close (fd);
+	  if (fd >= 0)
+	    __close (fd);
 	  return NULL;
 	}
 
@@ -262,7 +263,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 
   /* If there is no archive or it cannot be loaded for some reason fail.  */
   if (__builtin_expect (headmap.ptr == NULL, 0))
-    return NULL;
+    goto close_and_out;
 
   /* We have the archive available.  To find the name we first have to
      determine its hash value.  */
@@ -281,7 +282,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
     {
       if (namehashtab[idx].name_offset == 0)
 	/* Not found.  */
-	return NULL;
+	goto close_and_out;
 
       if (namehashtab[idx].hashval == hval
 	  && strcmp (name, headmap.ptr + namehashtab[idx].name_offset) == 0)
@@ -295,7 +296,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 
   /* We found an entry.  It might be a placeholder for a removed one.  */
   if (namehashtab[idx].locrec_offset == 0)
-    return NULL;
+    goto close_and_out;
 
   locrec = (struct locrecent *) (headmap.ptr + namehashtab[idx].locrec_offset);
 
@@ -309,7 +310,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	    if (locrec->record[cnt].offset + locrec->record[cnt].len
 		> headmap.len)
 	      /* The archive locrectab contains bogus offsets.  */
-	      return NULL;
+	      goto close_and_out;
 	    results[cnt].addr = headmap.ptr + locrec->record[cnt].offset;
 	    results[cnt].len = locrec->record[cnt].len;
 	  }
@@ -376,7 +377,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	      to = ranges[upper].from + ranges[upper].len;
 	      if (to > (size_t) archive_stat.st_size)
 		/* The archive locrectab contains bogus offsets.  */
-		return NULL;
+		goto close_and_out;
 	      to = (to + ps - 1) & ~(ps - 1);
 
 	      /* If a range is already mmaped in, stop.	 */
@@ -404,21 +405,21 @@ _nl_load_locale_from_archive (int category, const char **namep)
 		  || st.st_mtime != archive_stat.st_mtime
 		  || st.st_dev != archive_stat.st_dev
 		  || st.st_ino != archive_stat.st_ino)
-		return NULL;
+		goto close_and_out;
 	    }
 
 	  /* Map the range from the archive.  */
 	  addr = __mmap64 (NULL, to - from, PROT_READ, MAP_FILE|MAP_COPY,
 			   fd, from);
 	  if (addr == MAP_FAILED)
-	    return NULL;
+	    goto close_and_out;
 
 	  /* Allocate a record for this mapping.  */
 	  newp = (struct archmapped *) malloc (sizeof (struct archmapped));
 	  if (newp == NULL)
 	    {
 	      (void) __munmap (addr, to - from);
-	      return NULL;
+	      goto close_and_out;
 	    }
 
 	  /* And queue it.  */
@@ -442,6 +443,11 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  --cnt;		/* The 'for' will increase 'cnt' again.  */
 	}
     }
+
+  /* We don't need the file descriptor any longer.  */
+  if (fd >= 0)
+    __close (fd);
+  fd = -1;
 
   /* We succeeded in mapping all the necessary regions of the archive.
      Now we need the expected data structures to point into the data.  */
