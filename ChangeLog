@@ -1,5 +1,10 @@
 Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdlib/strtol.c: Use #ifdef, not #if, for HAVE_LIMITS_H.
+
+	* posix/glob.c (glob_in_dir): Allocate GLOB_MARK byte in case when
+ 	(NFOUND == 0 && (FLAGS & GLOB_NOCHECK)).
+
 	* sysdeps/generic/sysd-stdio.c (__stdio_reopen): Return failure
  	when __stdio_open fails with a code other than ENFILE or EMFILE.
 

@@ -635,7 +635,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       nfound = 1;
       names = (struct globlink *) __alloca (sizeof (struct globlink));
       names->next = NULL;
-      names->name = (char *) malloc (len + 1);
+      names->name = (char *) malloc (len + ((flags & GLOB_MARK) ? 1 : 0) + 1);
       if (names->name == NULL)
 	goto memory_error;
       memcpy (names->name, pattern, len);

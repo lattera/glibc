@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  27 March 1995
+GNU C Library NEWS -- history of user-visible changes.  26 July 1995
 
 Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -23,10 +23,14 @@ Version 1.10
   Run `configure --help' to see the details.
 
 * The library can now be configured to build profiling, highly-optimized
-  (but undebuggable), and/or shared libraries (ELF with GNU ld only).
-  The `--enable-profile', `--enable-omitfp', and `--enable-shared'
-  options to `configure' enable building these extra libraries.
-  The shared library is built by default when using both ELF and GNU ld.
+  (but undebuggable), and/or shared libraries (ELF with GNU ld only).  The
+  `--enable-profile', `--enable-omitfp', and `--enable-shared' options to
+  `configure' enable building these extra libraries.  The shared library is
+  built by default when using both ELF and GNU ld.  When shared libraries
+  are enabled, the new library `-ldl' is available for arbitrary run-time
+  loading of shared objects; its interface is defined in <dlfcn.h>.  The
+  new header file <link.h> gives access to the internals of the run-time
+  dynamic linker, `ld.so'.
 
 * The new functions `strtoq' and `strtouq' parse integer values from
   strings, like `strtol' and `strtoul', but they return `long long int' and
@@ -71,7 +75,7 @@ Version 1.10
 * The new header file <fts.h> and suite of functions simplify programs that
   operate on directory trees.  This code comes from 4.4 BSD.
 
-* The resolver code has been updated from the BIND-4.9.3-BETA14 release.
+* The resolver code has been updated from the BIND-4.9.3-BETA24 release.
 
 * The new function `malloc_find_object_address' finds the starting address
   of a malloc'd block, given any address within the block.  This can be

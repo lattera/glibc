@@ -33,7 +33,7 @@ Cambridge, MA 02139, USA.  */
 extern int errno;
 #endif
 
-#if HAVE_LIMITS_H
+#ifdef HAVE_LIMITS_H
 # include <limits.h>
 #endif
 
