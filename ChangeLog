@@ -1,6 +1,12 @@
+2002-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/Versions: Export libgcc functions for GLIBC_2.0.
+	* sysdeps/powerpc/libgcc-compat.c: Fix function names.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 2002-06-25  Ulrich Drepper  <drepper@redhat.com>
 
-	* libio/fileops.c (_IO_file_xsgetn_mmap): Always set EOF flag is
+	* libio/fileops.c (_IO_file_xsgetn_mmap): Always set EOF flag if
 	not enough content is available.
 	* libio/tst-eof.c: New file.
 	* libio/Makefile (tests): Add tst-eof.
