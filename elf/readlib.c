@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -158,11 +158,12 @@ process_file (const char *real_file_name, const char *file_name,
 	error (0, 0, _("%s is not an ELF file - it has the wrong magic bytes at the start.\n"),
 	       file_name);
       ret = 1;
-      goto done;
     }
-
-  if (process_elf_file (file_name, lib, flag, osversion, soname,
-			file_contents, statbuf.st_size))
+  /* Libraries have to be shared object files.  */
+  else if (elf_header->e_type != ET_DYN)
+    ret = 1;
+  else if (process_elf_file (file_name, lib, flag, osversion, soname,
+			     file_contents, statbuf.st_size))
     ret = 1;
 
  done:
