@@ -1,5 +1,8 @@
 2004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd.c: Define getaddrinfo hidden so that it is never found
+	outside.
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (si_segvflags):
 	Renamed from si_flags due to conflict with si_flags from <elf.h>.
 

@@ -488,6 +488,8 @@ write_pid (const char *file)
    into nscd.  There currently is no special getaddrinfo version for
    use in nscd.  In case it should be necessary such a version must be
    created and this dummy version should be removed.  */
+extern void getaddrinfo (void) __attribute ((visibility ("hidden")));
+
 void
 getaddrinfo (void)
 {
