@@ -1821,7 +1821,7 @@ cannot allocate TLS data structures for initial thread");
 	 needs to have _dl_profile_map set up by the relocator.  */
       if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
 	/* We must prepare the profiling.  */
-	_dl_start_profile (GL(dl_profile_map), GLRO(dl_profile_output));
+	_dl_start_profile ();
 
       if (GL(dl_rtld_map).l_opencount > 1)
 	{

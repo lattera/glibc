@@ -1,3 +1,12 @@
+2004-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c: No need to pass any parameter to _dl_start_profile.
+	They are the same in both places.
+	* elf/dl-profile.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* elf/dl-support.c: Define _dl_profile_output variable.  Initialize it.
+
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Versions: Remove functions which are not exported anymore.

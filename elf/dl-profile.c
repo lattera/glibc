@@ -173,7 +173,7 @@ static unsigned int log_hashfraction;
    file is found (or created) in OUTPUT_DIR.  */
 void
 internal_function
-_dl_start_profile (struct link_map *map, const char *output_dir)
+_dl_start_profile (void)
 {
   char *filename;
   int fd;
@@ -195,7 +195,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 #define SCALE_1_TO_1	0x10000L
 
   /* Compute the size of the sections which contain program code.  */
-  for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
+  for (ph = GL(dl_profile_map)->l_phdr;
+       ph < &GL(dl_profile_map)->l_phdr[GL(dl_profile_map)->l_phnum]; ++ph)
     if (ph->p_type == PT_LOAD && (ph->p_flags & PF_X))
       {
 	ElfW(Addr) start = (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1));
@@ -211,9 +212,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   /* Now we can compute the size of the profiling data.  This is done
      with the same formulars as in `monstartup' (see gmon.c).  */
   running = 0;
-  lowpc = ROUNDDOWN (mapstart + map->l_addr,
+  lowpc = ROUNDDOWN (mapstart + GL(dl_profile_map)->l_addr,
 		     HISTFRACTION * sizeof (HISTCOUNTER));
-  highpc = ROUNDUP (mapend + map->l_addr,
+  highpc = ROUNDUP (mapend + GL(dl_profile_map)->l_addr,
 		    HISTFRACTION * sizeof (HISTCOUNTER));
   textsize = highpc - lowpc;
   kcountsize = textsize / HISTFRACTION;
@@ -273,9 +274,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   /* First determine the output name.  We write in the directory
      OUTPUT_DIR and the name is composed from the shared objects
      soname (or the file name) and the ending ".profile".  */
-  filename = (char *) alloca (strlen (output_dir) + 1
+  filename = (char *) alloca (strlen (GLRO(dl_profile_output)) + 1
 			      + strlen (GLRO(dl_profile)) + sizeof ".profile");
-  cp = __stpcpy (filename, output_dir);
+  cp = __stpcpy (filename, GLRO(dl_profile_output));
   *cp++ = '/';
   __stpcpy (__stpcpy (cp, GLRO(dl_profile)), ".profile");
 

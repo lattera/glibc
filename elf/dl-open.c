@@ -305,7 +305,7 @@ dl_open_worker (void *a)
     return;
 
   /* It was already open.  */
-  if (new->l_searchlist.r_list != NULL)
+  if (__builtin_expect (new->l_searchlist.r_list != NULL, 0))
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
@@ -362,8 +362,7 @@ dl_open_worker (void *a)
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		/* We must prepare the profiling.  */
-		GLRO(dl_start_profile) (GL(dl_profile_map),
-					GLRO(dl_profile_output));
+		GLRO(dl_start_profile) ();
 	    }
 	  else
 #endif

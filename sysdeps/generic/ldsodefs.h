@@ -476,8 +476,7 @@ struct rtld_global_ro
 					    void (*) (void *), void *);
   void (internal_function *_dl_signal_error) (int, const char *, const char *,
 					      const char *);
-  void (internal_function *_dl_start_profile) (struct link_map *,
-					       const char *);
+  void (internal_function *_dl_start_profile) (void);
   void (*_dl_mcount) (ElfW(Addr) frompc, ElfW(Addr) selfpc);
   lookup_t (internal_function *_dl_lookup_symbol) (const char *,
 						   struct link_map *,
@@ -797,8 +796,7 @@ extern void _dl_init_paths (const char *library_path) internal_function;
 
 /* Gather the information needed to install the profiling tables and start
    the timers.  */
-extern void _dl_start_profile (struct link_map *map, const char *output_dir)
-     internal_function attribute_hidden;
+extern void _dl_start_profile (void) internal_function attribute_hidden;
 
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
