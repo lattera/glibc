@@ -23,10 +23,7 @@ Cambridge, MA 02139, USA.  */
    it somewhere else.
 
    ...and this place is here.  */
-	.data
-	.globl errno
-errno:
-	.long 0
+.comm errno,4,4
 
 /* The following code is not used at all in the shared library.
    The PIC system call stubs set errno themselves.  */

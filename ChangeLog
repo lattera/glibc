@@ -1,3 +1,7 @@
+Thu Nov  2 19:24:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (errno): Define as common.
+
 Tue Oct 31 00:07:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/getpriority.c (getpriority): Pass
