@@ -413,13 +413,14 @@ else
 default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
-rpath-link = $(common-objdir):$(mathobjdir):$(elfobjdir):$(nssobjdir):$(nisobjdir):$(dbobjdir):$(rtobjdir)
+rpath-link = $(common-objdir):$(mathobjdir):$(elfobjdir):$(nssobjdir):$(nisobjdir):$(dbobjdir):$(rtobjdir):$(resolvobjdir)
 mathobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)math)
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
 nisobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nis)
 dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db2)
 rtobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)rt)
+resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif

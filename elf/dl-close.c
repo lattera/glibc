@@ -47,29 +47,38 @@ _dl_close (struct link_map *map)
   __libc_lock_lock (_dl_load_lock);
 
   /* Decrement the reference count.  */
-  if (--map->l_opencount > 0 || map->l_type != lt_loaded)
+  if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
       /* There are still references to this object.  Do nothing more.  */
+      --map->l_opencount;
       __libc_lock_unlock (_dl_load_lock);
       return;
+    }
+
+  list = map->l_searchlist;
+
+  /* Call all termination functions at once.  */
+  for (i = 0; i < map->l_nsearchlist; ++i)
+    {
+      struct link_map *imap = list[i];
+      if (imap->l_opencount == 1 && imap->l_type == lt_loaded)
+	{
+	  if (imap->l_info[DT_FINI])
+	    /* Call its termination function.  */
+	    (*(void (*) (void)) ((void *) imap->l_addr
+				 + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
+	}
     }
 
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
   _dl_debug_state ();
 
-  list = map->l_searchlist;
-
   /* The search list contains a counted reference to each object it
      points to, the 0th elt being MAP itself.  Decrement the reference
      counts on all the objects MAP depends on.  */
-  for (i = 1; i < map->l_nsearchlist; ++i)
+  for (i = 0; i < map->l_nsearchlist; ++i)
     --list[i]->l_opencount;
-
-  /* Clear the search list so it doesn't get freed while we are still
-     using it.  We have cached it in LIST and will free it when
-     finished.  */
-  map->l_searchlist = NULL;
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
@@ -83,11 +92,6 @@ _dl_close (struct link_map *map)
 	  const ElfW(Phdr) *ph;
 	  const ElfW(Phdr) *first, *last;
 	  ElfW(Addr) mapstart, mapend;
-
-	  if (imap->l_info[DT_FINI])
-	    /* Call its termination function.  */
-	    (*(void (*) (void)) ((void *) imap->l_addr +
-				 imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 
 	  if (imap->l_global)
 	    {
@@ -126,7 +130,7 @@ _dl_close (struct link_map *map)
 	    imap->l_prev->l_next = imap->l_next;
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
-	  if (imap->l_searchlist)
+	  if (imap->l_searchlist && imap->l_searchlist != list)
 	    free (imap->l_searchlist);
 	  free (imap);
 	}

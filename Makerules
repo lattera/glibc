@@ -499,7 +499,7 @@ define o-iterator-doit
 $(objpfx)stamp$o: $(o-objects); $$(do-stamp)
 endef
 define do-stamp
-echo '$(patsubst $(common-objpfx)%,%,$^)' > $@T
+echo '$(patsubst $(objpfx)%,$(addsuffix /,$(subdir))%,$^)' > $@T
 mv -f $@T $@
 endef
 object-suffixes-left := $(object-suffixes-for-libc)
@@ -508,17 +508,15 @@ include $(o-iterator)
 endif
 
 # Now define explicit rules to build the library archives; these depend
-# on the stamp files built above.  The rule always destroys and recreates
-# the library from scratch; it's faster that way.
+# on the stamp files built above.
 define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c): \
 		$(subdirs-stamp-o) $(common-objpfx)stamp$o; $$(do-makelib)
 endef
 define do-makelib
 cd $(common-objdir) && \
-$(AR) $(CREATE_ARFLAGS) $(@F)T `cat $(patsubst $(common-objpfx)%,%,$^)`
-$(RANLIB) $@T
-mv -f $@T $@
+$(AR) $(CREATE_ARFLAGS) $(@F) `cat $(patsubst $(common-objpfx)%,%,$^)`
+$(RANLIB) $@
 endef
 subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
@@ -575,10 +573,8 @@ $(addprefix $(..)./scripts/mkinstalldirs ,\
 	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
-# Any directory (parent or subdir) that has any object files to build
-# should install libc.a; this way "make install" in a subdir is guaranteed
-# to install everything it changes.
-ifdef objects
+# Any directory (parent or subdir) should install libc.a; this way
+# "make install" in a subdir is guaranteed to install everything it changes.
 installed-libcs := $(foreach o,$(filter-out .os,$(object-suffixes-for-libc)),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
@@ -589,7 +585,6 @@ $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib $(+force)
 # Running ranlib after installing makes the __.SYMDEF time stamp up to
 # date, which avoids messages from some linkers.
 	$(RANLIB) $@
-endif
 
 define do-install-program
 $(make-target-directory)

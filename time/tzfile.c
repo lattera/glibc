@@ -415,13 +415,13 @@ find_transition (time_t timer)
 int
 __tzfile_compute (time_t timer, int use_localtime,
 		  long int *leap_correct, int *leap_hit,
-		  int *isdst, long int *offset)
+		  struct tm *tp)
 {
-  struct ttinfo *info = find_transition (timer);
   register size_t i;
 
   if (use_localtime)
     {
+      struct ttinfo *info = find_transition (timer);
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
       __tzname[1] = NULL;
@@ -432,10 +432,10 @@ __tzfile_compute (time_t timer, int use_localtime,
       if (__tzname[1] == NULL)
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
+      tp->tm_isdst = info->isdst;
+      tp->tm_zone = &zone_names[info->idx];
+      tp->tm_gmtoff = info->offset;
     }
-
-  *isdst = info->isdst;
-  *offset = info->offset;
 
   *leap_correct = 0L;
   *leap_hit = 0;

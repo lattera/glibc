@@ -234,8 +234,8 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  :=	README README.libm INSTALL FAQ NOTES NEWS PROJECTS	\
-		BUGS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
+distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
+		PROJECTS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
 		Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 		extra-lib.mk o-iterator.mk libc.map configure		\
 		configure.in aclocal.m4 config.h.in config.make.in	\
@@ -244,9 +244,9 @@ distribute  :=	README README.libm INSTALL FAQ NOTES NEWS PROJECTS	\
 		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
 		test-skeleton.c include/des.h				\
 		$(addprefix scripts/,					\
-			rellns-sh config.sub config.guess printsources	\
-			mkinstalldirs move-if-change install-sh	=__ify	\
-			test-installation.pl gen-FAQ.pl)
+			    rellns-sh config.sub config.guess		\
+			    mkinstalldirs move-if-change install-sh	\
+			    test-installation.pl gen-FAQ.pl)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
@@ -270,7 +270,7 @@ endif
 FORCE:
 
 rpm/%: subdir_distinfo
-	$(MAKE) $(PARALLELMFLAGS) -C $(@D) subdirs='$(subdirs)' $(@F)
+	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 
 iconvdata/%:
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)

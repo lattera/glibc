@@ -127,7 +127,7 @@ extern char *	optarg;
 extern int	optind;
 extern char *	tzname[2];
 
-static char *	abbr P((struct tm * tmp));
+static const char *abbr P((struct tm * tmp));
 static long	delta P((struct tm * newp, struct tm * oldp));
 static time_t	hunt P((char * name, time_t lot, time_t	hit));
 static size_t	longest;
@@ -358,15 +358,19 @@ int	v;
 	(void) printf("\n");
 }
 
-static char *
+static const char *
 abbr(tmp)
 struct tm *	tmp;
 {
-	register char *	result;
-	static char	nada;
+	register const char *result;
+	static const char nada;
 
+#ifdef TM_ZONE
+	result = tmp->TM_ZONE;
+#else /* !defined TM_ZONE */
 	if (tmp->tm_isdst != 0 && tmp->tm_isdst != 1)
 		return &nada;
 	result = tzname[tmp->tm_isdst];
+#endif /* !defined TM_ZONE */
 	return (result == NULL) ? &nada : result;
 }

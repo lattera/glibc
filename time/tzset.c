@@ -38,7 +38,7 @@ extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
 extern int __tzfile_compute __P ((time_t timer, int use_localtime,
 				  long int *leap_correct, int *leap_hit,
-				  int *isdst, long int *offset));
+				  struct tm *tp));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
 extern char *__tzstring __P ((const char *string));
@@ -595,8 +595,6 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 {
   long int leap_correction;
   int leap_extra_secs;
-  int isdst;
-  long int offset;
 
   if (timer == NULL)
     {
@@ -615,8 +613,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
   if (__use_tzfile)
     {
       if (! __tzfile_compute (*timer, use_localtime,
-			      &leap_correction, &leap_extra_secs,
-			      &isdst, &offset))
+			      &leap_correction, &leap_extra_secs, tp))
 	tp = NULL;
     }
   else
@@ -625,18 +622,20 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 	tp = NULL;
       leap_correction = 0L;
       leap_extra_secs = 0;
-
-      isdst = (*timer >= tz_rules[0].change && *timer < tz_rules[1].change);
-      offset = tz_rules[isdst].offset;
     }
 
   if (tp)
     {
       if (use_localtime)
 	{
-	  tp->tm_isdst = isdst;
-	  tp->tm_zone = __tzname[isdst];
-	  tp->tm_gmtoff = offset;
+	  if (!__use_tzfile)
+	    {
+	      int isdst = (*timer >= tz_rules[0].change
+			   && *timer < tz_rules[1].change);
+	      tp->tm_isdst = isdst;
+	      tp->tm_zone = __tzname[isdst];
+	      tp->tm_gmtoff = tz_rules[isdst].offset;
+	    }
 	}
       else
 	{

@@ -53,7 +53,7 @@ define nl
 
 
 endef
-ifneq ($(no_deps),t)
+ifndef avoid-generated
 -include $(addprefix $(objpfx)z.,$(tzfiles))
 endif
 
@@ -158,9 +158,10 @@ $(objpfx)zic: $(objpfx)scheck.o $(objpfx)ialloc.o
 
 tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
-	    -DTZDEFRULES='"$(posixrules-file)"'
+	    -DTZDEFRULES='"$(posixrules-file)"' \
+	    -DTM_GMTOFF=tm_gmtoff -DTM_ZONE=tm_zone
 
-CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID
+CFLAGS-zdump.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID

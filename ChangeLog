@@ -1,3 +1,64 @@
+1998-05-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makeconfig (rpath-link): Add resolvobjdir.
+	(resolvobjdir): New variable.
+	Reported by Peter Breitenlohner <peb@mppmu.mpg.de> [fixes PR libc/633].
+
+1998-05-20 09:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c: Call shared object terminators at the right time.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-05-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Make-dist (+tsrcs): Also add *.map for every member of
+	$(extra-libs).
+
+	* Makefile (distribute): Don't distribute scripts/printsources and
+	scripts/=__ify.  Distribute FAQ.in.
+	(rpm/%): Don't pass subdirs to sub-make.
+
+	* timezone/Makefile: Protect inclusion of z.* by $(avoid-generated)
+	instead of $(no_deps).
+
+1998-05-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/setenv.c: Protect against GNU C extension.
+	(KNOWN_VALUE, STORE_VALUE): Do it right.
+	(setenv): Remove unused variable.
+
+1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* timezone/Makefile (tz-cflags): Define TM_GMTOFF and TM_ZONE.
+	(CFLAGS-zdump.c): Add $(tz-cflags).
+
+	* timezone/zdump.c (abbr): Use TM_ZONE if defined.  Add const to
+	return type.
+
+1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/tzfile.c (__tzfile_compute): Undo last change.  Instead
+	take struct tm parameter and set tm_isdst, tm_zone and tm_offset
+	if use_localtime.
+	* time/tzset.c: Update prototype of __tzfile_compute.
+	(__tz_convert): Pass tp to __tzfile_compute.  Don't set tm_isdst,
+	tm_zone and tm_offset here if __use_tzfile.
+
+1998-05-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules: Install libc.a even if there are no object file.
+
+1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (do-makelib): Don't force creating library from
+	scratch, to avoid wasting time and space and to get correct
+	behaviour if $(subdirs) is incomplete.
+
+1998-05-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (do-stamp): Make it work when building in source
+	directory.
+
 1998-05-20 00:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c: Rename option and variable from ignore-rpath to

@@ -69,7 +69,8 @@ __libc_lock_define_initialized (static, envlock)
    allow arbitrary many changes of the environment given that the used
    values are from a small set.  Outside glibc this will eat up all
    memory after a while.  */
-#if defined _LIBC || (defined HAVE_SEARCH_H && defined HAVE_TSEARCH)
+#if defined _LIBC || (defined HAVE_SEARCH_H && defined HAVE_TSEARCH \
+		      && defined __GNUC__)
 # define USE_TSEARCH	1
 # include <search.h>
 
@@ -79,18 +80,11 @@ static void *known_values;
 
 # define KNOWN_VALUE(Str) \
   ({									      \
-    void **value = tfind (Str, &known_values, (__compar_fn_t) strcmp);	      \
-    if (value != NULL)							      \
-      value = *(const char **) value;					      \
-    value;								      \
+    void *value = tfind (Str, &known_values, (__compar_fn_t) strcmp);	      \
+    value != NULL ? *(char **) value : NULL;				      \
   })
 # define STORE_VALUE(Str) \
-  ({									      \
-    void **value = tsearch (Str, &known_values, (__compar_fn_t) strcmp);      \
-    if (value != NULL)							      \
-      value = *(const char **) value;					      \
-    value;								      \
-  })
+  tsearch (Str, &known_values, (__compar_fn_t) strcmp)
 
 #else
 # undef USE_TSEARCH
@@ -186,7 +180,6 @@ setenv (name, value, replace)
     }
   else if (replace)
     {
-      size_t len = strlen (*ep);
       char *new_value;
       char *np;
 
