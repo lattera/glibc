@@ -1,3 +1,8 @@
+Wed Mar 11 10:30:53 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/elf/start.S: Let __libc_start_main do most of the
+	init stuff.
+
 1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/iovdprintf.c (_IO_vdprintf): Set _IO_DELETE_DONT_CLOSE
