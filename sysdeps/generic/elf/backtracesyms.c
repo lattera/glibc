@@ -1,5 +1,5 @@
 /* Return list with names for address in backtrace.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,7 +51,7 @@ __backtrace_symbols (array, size)
       status[cnt] = _dl_addr (array[cnt], &info[cnt]);
       if (status[cnt] && info[cnt].dli_fname && info[cnt].dli_fname[0] != '\0')
 	/* We have some info, compute the length of the string which will be
-	   "<fct-name>(<sym-name>)[+offset].  */
+	   "<file-name>(<sym-name>) [+offset].  */
 	total += (strlen (info[cnt].dli_fname ?: "")
 		  + (info[cnt].dli_sname
 		     ? strlen (info[cnt].dli_sname) + 3 + WORD_WIDTH + 3
@@ -61,7 +62,7 @@ __backtrace_symbols (array, size)
     }
 
   /* Allocate memory for the result.  */
-  result = malloc (size * sizeof (char *) + total);
+  result = (char **) malloc (size * sizeof (char *) + total);
   if (result != NULL)
     {
       char *last = (char *) (result + size);
@@ -93,6 +94,7 @@ __backtrace_symbols (array, size)
 	  else
 	    last += 1 + sprintf (last, "[%p]", array[cnt]);
 	}
+      assert (last <= (char *) result + size * sizeof (char *) + total);
     }
 
   return result;

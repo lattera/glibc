@@ -1,5 +1,8 @@
 2001-01-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/elf/backtracesyms.c (__backtrace_symbols):
+	Minimal cleanups.  Add assert to ensure memory handling is correct.
+
 	* manual/conf.texi (File Minimums): Fix _POSIX_PATH_MAX value.
 	Reported by Ben Collins <bcollins@debian.org>.
 
