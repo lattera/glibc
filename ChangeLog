@@ -1,5 +1,9 @@
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (nscd_run): Remove bogus return which isn't
+	necessary with gcc 3.2+.
+	(nscd_init): Don't use error() to print message, use dbg_log.
+
 	* iconv/gconv_simple.c (STORE_REST): Explicitly store the total
 	expected size into state.
 	(UNPACK_BYTES): Do the reverse.

@@ -171,7 +171,10 @@ nscd_init (const char *conffile)
 	dbs[cnt].array = (struct hashentry **)
 	  calloc (dbs[cnt].module, sizeof (struct hashentry *));
 	if (dbs[cnt].array == NULL)
-	  error (EXIT_FAILURE, errno, "while allocating cache");
+	  {
+	    dbg_log (_("while allocating cache: %s"), strerror (errno));
+	    exit (1);
+	  }
 
 	if (dbs[cnt].check_file)
 	  {
@@ -180,11 +183,9 @@ nscd_init (const char *conffile)
 
 	    if (stat (dbs[cnt].filename, &st) < 0)
 	      {
-		char buf[128];
 		/* We cannot stat() the file, disable file checking.  */
 		dbg_log (_("cannot stat() file `%s': %s"),
-			 dbs[cnt].filename,
-			 strerror_r (errno, buf, sizeof (buf)));
+			 dbs[cnt].filename, strerror (errno));
 		dbs[cnt].check_file = 0;
 	      }
 	    else
@@ -548,8 +549,6 @@ nscd_run (void *p)
 	  timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
 	}
     }
-  /* Shut up bogus GCC warning.  */
-  return NULL;
 }
 
 
