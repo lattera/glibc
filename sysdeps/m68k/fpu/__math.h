@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,22 +18,10 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__GNUC__
 
-/* IGNORE($ */
-#ifdef	__STDC__
-/* $) IFANSI($ */
-#define	__m81_s(x)	#x
-#define	__m81_ul(x)	__ ## x
-/* $) IGNORE($ */
-#else
-/* $) IFTRAD($ */
-#define	__m81_s(x)	"x"
-#define	__m81_ul(x)	__/**/x
-/* $) IGNORE($ */
-#endif
-/* $) */
+#include <sys/cdefs.h>
 
 #ifdef	__NO_MATH_INLINES
-#define	__m81_u(x)	__m81_ul(x)
+#define	__m81_u(x)	__CONCAT(__,x)
 #else
 #define	__m81_u(x)	x
 #define	__MATH_INLINES	1
@@ -44,7 +32,7 @@ Cambridge, MA 02139, USA.  */
   __m81_u(func)(double __mathop_x)					      \
   {									      \
     double __result;							      \
-    __asm("f" __m81_s(op) "%.x %1, %0" : "=f" (__result) : "f" (__mathop_x)); \
+    __asm("f" __STRING(op) "%.x %1, %0" : "=f" (__result) : "f" (__mathop_x));\
     return __result;							      \
   }
 #define	__inline_mathop(op)		__inline_mathop2(op, op)
