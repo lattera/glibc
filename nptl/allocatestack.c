@@ -321,10 +321,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	 stack cache nor will the memory (except the TLS memory) be freed.  */
       pd->user_stack = true;
 
-#ifdef TLS_MULTIPLE_THREADS_IN_TCB
       /* This is at least the second thread.  */
       pd->header.multiple_threads = 1;
-#else
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
       __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
@@ -454,10 +453,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  pd->lock = LLL_LOCK_INITIALIZER;
 #endif
 
-#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 	  /* This is at least the second thread.  */
 	  pd->header.multiple_threads = 1;
-#else
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
 	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 

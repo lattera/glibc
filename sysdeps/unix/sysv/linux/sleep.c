@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 /* We are going to use the `nanosleep' syscall of the kernel.  But the
-   kernel does not implement the sstupid SysV SIGCHLD vs. SIG_IGN
+   kernel does not implement the stupid SysV SIGCHLD vs. SIG_IGN
    behaviour for this syscall.  Therefore we have to emulate it here.  */
 unsigned int
 __sleep (unsigned int seconds)
@@ -35,7 +35,12 @@ __sleep (unsigned int seconds)
 
   /* This is not necessary but some buggy programs depend on this.  */
   if (seconds == 0)
-    return 0;
+    {
+#ifdef CANCELLATION_P
+      CANCELLATION_P (THREAD_SELF);
+#endif
+      return 0;
+    }
 
   /* Linux will wake up the system call, nanosleep, when SIGCHLD
      arrives even if SIGCHLD is ignored.  We have to deal with it

@@ -1,3 +1,28 @@
+2003-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/createthread.c (create_thread): Set
+	header.multiple_threads unconditionally.
+	* allocatestack.c (allocate_stack): Likewise.
+	* descr.h (struct pthread): Add header.multiple_threads
+	unconditionally.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (CENABLE, CDISABLE):
+	Define for librt.  #error if neither libpthread, libc nor librt.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (CENABLE, CDISABLE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (CENABLE,
+	CDISABLE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (CENABLE,
+	CDISABLE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h (CENABLE,
+	CDISABLE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (CENABLE,
+	CDISABLE): Likewise.  Access header.multiple_threads outside of
+	libc and libpthread.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (CENABLE, CDISABLE):
+	Likewise.
+	* sysdeps/x86_64/tls.h (tcbhead_t): Add multiple_threads.
+	* sysdeps/x86_64/tcb-offsets.sym (MULTIPLE_THREADS_OFFSET): Define.
+
 2003-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c: Add tests for the socket and signal functions, pause.

@@ -94,18 +94,36 @@
 #  define CENABLE	call __pthread_enable_asynccancel;
 #  define CDISABLE	call __pthread_disable_asynccancel;
 #  define __local_multiple_threads __pthread_multiple_threads
-# else
+# elif !defined NOT_IN_libc
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel;
 #  define __local_multiple_threads __libc_multiple_threads
+# elif defined IS_IN_librt
+#  define CENABLE	call __librt_enable_asynccancel;
+#  define CDISABLE	call __librt_disable_asynccancel;
+# else
+#  error Unsupported library
 # endif
 
-# ifndef __ASSEMBLER__
+# if defined IS_IN_libpthread || !defined NOT_IN_libc
+#  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
 #   define SINGLE_THREAD_P \
   __builtin_expect (__local_multiple_threads == 0, 1)
+#  else
+#   define SINGLE_THREAD_P cmpl $0, __local_multiple_threads(%rip)
+#  endif
+
 # else
-#  define SINGLE_THREAD_P cmpl $0, __local_multiple_threads(%rip)
+
+#  ifndef __ASSEMBLER__
+#   define SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+				   header.multiple_threads) == 0, 1)
+#  else
+#   define SINGLE_THREAD_P cmpl $0, %fs:MULTIPLE_THREADS_OFFSET
+#  endif
+
 # endif
 
 #elif !defined __ASSEMBLER__

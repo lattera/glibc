@@ -1,3 +1,8 @@
+2003-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sleep.c: Use CANCELLATION_P if defined before
+	returning because seconds==0.
+
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/socket.S: Add unwind information.

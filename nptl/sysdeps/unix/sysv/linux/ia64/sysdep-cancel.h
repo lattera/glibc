@@ -85,9 +85,14 @@ __syscall_error_##args:							      \
 # ifdef IS_IN_libpthread
 #  define CENABLE	br.call.sptk.many b0 = __pthread_enable_asynccancel
 #  define CDISABLE	br.call.sptk.many b0 = __pthread_disable_asynccancel
-# else
+# elif !defined NOT_IN_libc
 #  define CENABLE	br.call.sptk.many b0 = __libc_enable_asynccancel
 #  define CDISABLE	br.call.sptk.many b0 = __libc_disable_asynccancel
+# elif defined IS_IN_librt
+#  define CENABLE	br.call.sptk.many b0 = __librt_enable_asynccancel
+#  define CDISABLE	br.call.sptk.many b0 = __librt_disable_asynccancel
+# else
+#  error Unsupported library
 # endif
 
 #define COPY_ARGS_0	/* Nothing */

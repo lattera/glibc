@@ -58,10 +58,15 @@ L(pseudo_end):
 #  define CENABLE	__pthread_enable_asynccancel
 #  define CDISABLE	__pthread_disable_asynccancel
 #  define __local_multiple_threads	__pthread_multiple_threads
-# else
+# elif !defined NOT_IN_libc
 #  define CENABLE	__libc_enable_asynccancel
 #  define CDISABLE	__libc_disable_asynccancel
 #  define __local_multiple_threads	__libc_multiple_threads
+# elif defined IS_IN_librt
+#  define CENABLE	__librt_enable_asynccancel
+#  define CDISABLE	__librt_disable_asynccancel
+# else
+#  error Unsupported library
 # endif
 
 #define STM_0		/* Nothing */
@@ -78,14 +83,31 @@ L(pseudo_end):
 #define LM_4		lmg %r2,%r5,16+160(%r15);
 #define LM_5		lmg %r2,%r5,16+160(%r15);
 
-# ifndef __ASSEMBLER__
+# if defined IS_IN_libpthread || !defined NOT_IN_libc
+#  ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;
-#  define SINGLE_THREAD_P \
+#   define SINGLE_THREAD_P \
   __builtin_expect (__local_multiple_threads == 0, 1)
-# else
-#  define SINGLE_THREAD_P \
+#  else
+#   define SINGLE_THREAD_P \
 	larl	%r1,__local_multiple_threads;				      \
 	icm	%r0,15,0(%r1);
+#  endif
+
+# else
+
+#  ifndef __ASSEMBLER__
+#   define SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
+				   header.multiple_threads) == 0, 1)
+#  else
+#   define SINGLE_THREAD_P \
+	ear	%r1,%a0;						      \
+	sllg	%r1,%r1,32;						      \
+	ear	%r1,%a1;						      \
+	icm	%r1,15,MULTIPLE_THREADS_OFFSET(%r1);
+#  endif
+
 # endif
 
 #elif !defined __ASSEMBLER__

@@ -62,9 +62,14 @@ L(pseudo_end):
 # ifdef IS_IN_libpthread
 #  define CENABLE	__pthread_enable_asynccancel
 #  define CDISABLE	__pthread_disable_asynccancel
-# else
+# elif !defined NOT_IN_libc
 #  define CENABLE	__libc_enable_asynccancel
 #  define CDISABLE	__libc_disable_asynccancel
+# elif defined IS_IN_librt
+#  define CENABLE	__librt_enable_asynccancel
+#  define CDISABLE	__librt_disable_asynccancel
+# else
+#  error Unsupported library
 # endif
 
 #define STM_0		/* Nothing */

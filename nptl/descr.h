@@ -99,7 +99,7 @@ struct pthread
 #if !TLS_DTV_AT_TP
     /* This overlaps the TCB as used for TLS without threads (see tls.h).  */
     tcbhead_t header;
-#elif TLS_MULTIPLE_THREADS_IN_TCB
+#else
     struct
     {
       int multiple_threads;
