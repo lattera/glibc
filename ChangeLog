@@ -1,3 +1,82 @@
+2000-12-27  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/printf_fp.c (__printf_fp): Add prototype for nested
+	function.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* locale/programs/locale.c (show_locale_vars): Likewise.
+	(show_info): Likewise.
+	* locale/programs/ld-collate.c (collate_output): Likewise.
+	* locale/programs/ld-ctype.c (set_class_defaults): Likewise.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+	* stdlib/rpmatch.c (rpmatch): Likewise.
+
+	* setjmp/tst-setjmp.c: Make local functions static.
+	* setjmp/jmpbug.c: Likewise.
+	* signal/tst-signal.c: Likewise.
+	* stdio-common/tfformat.c: Likewise.
+	* string/tst-svc.c: Likewise.
+	* time/clocktest.c: Likewise.
+	* time/tst-getdate.c: Likewise.
+	* dirent/list.c: Likewise.
+	* dirent/opendir-tst1.c: Likewise.
+	* posix/runtests.c: Likewise.
+	* posix/tst-getaddrinfo.c: Likewise.
+	* posix/tst-chmod.c: Likewise.
+	* posix/wordexp-test.c: Likewise.
+	* misc/tst-efgcvt.c: Likewise.
+	* timezone/tst-timezone.c: Likewise.
+	* rt/tst-clock.c: Likewise.
+	* rt/tst-shm.c: Likewise.
+	* rt/tst-aio2.c: Likewise.
+	* rt/tst-aio3.c: Likewise.
+	* rt/tst-aio4.c: Likewise.
+	* rt/tst-aio5.c: Likewise.
+
+	* dlfcn/failtest.c: Add prototype for foo.
+
+	* dlfcn/glrefmain.c: Add prototype for do_test.
+
+	* dlfcn/tst-dladdr.c: Add prototype for do_test.
+
+	* string/test-ffs.c (main): Add prototype for nested function.
+
+	* sunrpc/des_soft.c: Include rpc/des_crypt.h for prototype.
+
+	* nss/XXX-lookup.c: Add prototype to shut up GCC.
+
+	* include/netinet/ether.h (DECLARE_NSS_PROTOTYPES): Fix
+	setetherent prototype.
+	Add internal interfaces.
+
+	* nis/nss_nis/nis-ethers.c (_nss_nis_setetherent): Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_setetherent): Likewise.
+
+	* resolv/res_data.c: Don't add (conflicting) prototypes for _LIBC.
+
+	* nis/nis_intern.h: Add prototype for __pmap_getnisport.
+
+	* nss/nss_files/files-ethers.c: Include netinet/ether.h to get
+	prototypes, remove struct etherent since it's declared in ether.h.
+	Fix ntohost declaration.
+
+	* elf/dl-profile.c (_dl_mcount): Add empty statement to shut up GCC.
+
+	* include/getopt.h: Add internal interfaces.
+	* include/termios.h: Likewise.
+	* include/resolv.h: Likewise.
+	* include/netdb.h: Likewise.
+	* include/grp.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/shadow.h: Likewise.
+	* include/rpc/netdb.h: Likewise.
+
+	* include/stdio.h: Add prototypes for compatibility functions.
+	* include/grp.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/shadow.h: Likewise.
+
+	* include/fenv.h: Define internal interfaces.
+
 2000-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/byteswap.h (__bswap_64): Handle constant
