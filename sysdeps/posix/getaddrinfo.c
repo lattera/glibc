@@ -286,6 +286,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   int i;								      \
   int herrno;								      \
   struct hostent th;							      \
+  struct hostent *h;							      \
   no_data = 0;								      \
   while (1) {								      \
     rc = 0;								      \
@@ -578,7 +579,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
       if (at->family == AF_UNSPEC && (req->ai_flags & AI_NUMERICHOST) == 0)
 	{
-	  struct hostent *h = NULL;
 	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
