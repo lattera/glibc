@@ -99,6 +99,8 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
 
   newdata->filedata = (void *) filedata;
   newdata->filesize = datasize;
+  newdata->private.data = NULL;
+  newdata->private.cleanup = NULL;
   newdata->usage_count = 0;
   newdata->use_translit = 0;
   newdata->nstrings = filedata->nstrings;
@@ -251,6 +253,9 @@ void
 internal_function
 _nl_unload_locale (struct locale_data *locale)
 {
+  if (locale->private.cleanup)
+    (*locale->private.cleanup) (locale);
+
   switch (__builtin_expect (locale->alloc, ld_mapped))
     {
     case ld_malloced:

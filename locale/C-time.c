@@ -26,7 +26,8 @@
 const struct locale_data _nl_C_LC_TIME attribute_hidden =
 {
   _nl_C_name,
-  NULL, 0, 0, /* no file mapped */
+  NULL, 0, 0,			/* no file mapped */
+  { NULL, },			/* no cached data */
   UNDELETABLE,
   0,
   111,

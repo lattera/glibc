@@ -1,6 +1,6 @@
-/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Cleanup code for data structures kept by strftime/strptime helper functions.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,24 +17,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <endian.h>
+#include "../locale/localeinfo.h"
+#include <stdlib.h>
 
-#include "localeinfo.h"
-
-/* This table's entries are taken from ISO 14652, the table in section
-   4.8 "LC_PAPER".  */
-
-const struct locale_data _nl_C_LC_PAPER attribute_hidden =
+void internal_function
+_nl_cleanup_time (struct locale_data *locale)
 {
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  { NULL, },			/* no cached data */
-  UNDELETABLE,
-  0,
-  3,
-  {
-    { word: 297 },
-    { word: 210 },
-    { string: _nl_C_codeset }
-  }
-};
+  struct lc_time_data *const data = locale->private.time;
+  if (data != NULL)
+    {
+      locale->private.time = NULL;
+      locale->private.cleanup = NULL;
+
+      if (data->eras != NULL)
+	free (data->eras);
+      if (data->alt_digits != NULL)
+	free (data->alt_digits);
+      if (data->walt_digits != NULL)
+	free (data->walt_digits);
+
+      free (data);
+    }
+}

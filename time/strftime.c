@@ -315,10 +315,16 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 # define LOCALE_PARAM , loc
 # define LOCALE_ARG , loc
 # define LOCALE_PARAM_DECL __locale_t loc;
+# define HELPER_LOCALE_ARG , current
 #else
 # define LOCALE_PARAM
 # define LOCALE_ARG
 # define LOCALE_PARAM_DECL
+# ifdef _LIBC
+#  define HELPER_LOCALE_ARG , _NL_CURRENT_DATA (LC_TIME)
+# else
+#  define HELPER_LOCALE_ARG
+# endif
 #endif
 
 #ifdef COMPILE_WIDE
@@ -494,7 +500,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
       LOCALE_PARAM_DECL
 {
 #if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
-  const struct locale_data *const current = loc->__locales[LC_TIME];
+  struct locale_data *const current = loc->__locales[LC_TIME];
 #endif
 
   int hour12 = tp->tm_hour;
@@ -880,7 +886,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	  if (modifier == L_('E'))
 	    {
 #if HAVE_STRUCT_ERA_ENTRY
-	      struct era_entry *era = _nl_get_era_entry (tp);
+	      struct era_entry *era = _nl_get_era_entry (tp HELPER_LOCALE_ARG);
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
@@ -956,9 +962,11 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	      /* Get the locale specific alternate representation of
 		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
 # ifdef COMPILE_WIDE
-	      const wchar_t *cp = _nl_get_walt_digit (number_value);
+	      const wchar_t *cp = _nl_get_walt_digit (number_value
+						      HELPER_LOCALE_ARG);
 # else
-	      const char *cp = _nl_get_alt_digit (number_value);
+	      const char *cp = _nl_get_alt_digit (number_value
+						  HELPER_LOCALE_ARG);
 # endif
 
 	      if (cp != NULL)
@@ -1238,7 +1246,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	  if (modifier == 'E')
 	    {
 #if HAVE_STRUCT_ERA_ENTRY
-	      struct era_entry *era = _nl_get_era_entry (tp);
+	      struct era_entry *era = _nl_get_era_entry (tp HELPER_LOCALE_ARG);
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
@@ -1263,7 +1271,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	  if (modifier == L_('E'))
 	    {
 #if HAVE_STRUCT_ERA_ENTRY
-	      struct era_entry *era = _nl_get_era_entry (tp);
+	      struct era_entry *era = _nl_get_era_entry (tp HELPER_LOCALE_ARG);
 	      if (era)
 		{
 		  int delta = tp->tm_year - era->start_date[0];

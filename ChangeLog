@@ -1,3 +1,43 @@
+2002-08-28  Roland McGrath  <roland@redhat.com>
+
+	* locale/lc-time.c (_nl_init_era_entries, _nl_get_era_entry,
+	_nl_select_era_entry): Moved to ...
+	* time/era.c: ... here, new file.
+	(_nl_init_era_entries, _nl_get_era_entry, _nl_select_era_entry):
+	Add internal_function to definitions.  Take an additional argument
+	giving the `struct locale_data *' to use.
+	* locale/lc-time.c (_get_alt_digit, _nl_get_walt_digit,
+	_nl_parse_alt_digit): Moved to ...
+	* time/alt_digit.c: ... here, new file.
+	* time/lc-time-cleanup.c: New file.
+	* locale/lc-time.c (_nl_postload_time, free_mem): Functions removed.
+	* locale/localeinfo.h (_nl_postload_time): Remove decl.
+	(_nl_cleanup_time): Declare it.
+	(_nl_get_era_entry, _nl_select_era_entry): Update decls.
+	(_get_alt_digit, _nl_get_walt_digit, _nl_parse_alt_digit): Likewise.
+	* time/Makefile (aux): New variable: era, alt_digit, lc-time-cleanup.
+	* time/strftime.c: Pass locale data to helper functions.
+	* time/strptime.c: Likewise.
+
+	* locale/localeinfo.h (struct locale_data): New member `private'
+	* locale/loadlocale.c (_nl_intern_locale_data): Initialize it.
+	(_nl_unload_locale): Call LOCALE->private.cleanup if it is set.
+	* locale/C-collate.c: Update initializer.
+	* locale/C-identification.c: Likewise.
+	* locale/C-measurement.c: Likewise.
+	* locale/C-telephone.c: Likewise.
+	* locale/C-address.c: Likewise.
+	* locale/C-name.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/C-numeric.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-messages.c : Likewise.
+	* locale/C-ctype.c: Likewise.
+
+	* time/strptime.c [USE_IN_EXTENDED_LOCALE_MODEL] (_NL_CURRENT_WORD):
+	Redefine this too.
+
 2002-08-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/elf/configure.in (PI_STATIC_AND_HIDDEN): Define

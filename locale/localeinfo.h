@@ -54,6 +54,19 @@ struct locale_data
     ld_archive			/* Both point into mmap'd archive regions.  */
   } alloc;
 
+  /* This provides a slot for category-specific code to cache data computed
+     about this locale.  That code can set a cleanup function to deallocate
+     the data.  */
+  struct
+  {
+    void (*cleanup) (struct locale_data *) internal_function;
+    union
+    {
+      void *data;
+      struct lc_time_data *time;
+    };
+  } private;
+
   unsigned int usage_count;	/* Counter for users.  */
 
   int use_translit;		/* Nonzero if the mb*towv*() and wc*tomb()
@@ -122,6 +135,19 @@ struct era_entry
   /* absolute direction:
      +1 indicates that year number is higher in the future. (like A.D.)
      -1 indicates that year number is higher in the past. (like B.C.)  */
+};
+
+/* Structure caching computed data about information from LC_TIME.
+   The `private.time' member of `struct locale_data' points to this.  */
+struct lc_time_data
+{
+  struct era_entry *eras;
+  size_t num_eras;
+  int era_initialized;
+
+  const char **alt_digits;
+  const wchar_t **walt_digits;
+  int alt_digits_initialized, walt_digits_initialized;
 };
 
 
@@ -303,23 +329,36 @@ extern struct locale_data *_nl_intern_locale_data (int category,
 
 
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
-extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
+extern struct era_entry *_nl_get_era_entry (const struct tm *tp,
+					    struct locale_data *lc_time)
+     internal_function attribute_hidden;
 
 /* Return `era' cnt'th entry .  Used in strptime.  */
-extern struct era_entry *_nl_select_era_entry (int cnt);
+extern struct era_entry *_nl_select_era_entry (int cnt,
+					       struct locale_data *lc_time)
+          internal_function attribute_hidden;
 
 /* Return `alt_digit' which corresponds to NUMBER.  Used in strftime.  */
-extern const char *_nl_get_alt_digit (unsigned int number);
+extern const char *_nl_get_alt_digit (unsigned int number,
+				      struct locale_data *lc_time)
+          internal_function attribute_hidden;
 
 /* Similar, but now for wide characters.  */
-extern const wchar_t *_nl_get_walt_digit (unsigned int number);
+extern const wchar_t *_nl_get_walt_digit (unsigned int number,
+					  struct locale_data *lc_time)
+     internal_function attribute_hidden;
 
 /* Parse string as alternative digit and return numeric value.  */
-extern int _nl_parse_alt_digit (const char **strp);
+extern int _nl_parse_alt_digit (const char **strp,
+				struct locale_data *lc_time)
+     internal_function attribute_hidden;
 
 /* Postload processing.  */
 extern void _nl_postload_ctype (void);
-extern void _nl_postload_time (void);
+
+/* Functions used for the `private.cleanup' hook.  */
+extern void _nl_cleanup_time (struct locale_data *)
+     internal_function attribute_hidden;
 
 
 #endif	/* localeinfo.h */

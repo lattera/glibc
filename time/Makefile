@@ -30,6 +30,7 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    stime dysize timegm ftime			 \
 	    getdate strptime strptime_l			 \
 	    strftime wcsftime strftime_l wcsftime_l
+aux :=	    era alt_digit lc-time-cleanup
 distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \

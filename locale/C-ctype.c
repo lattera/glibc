@@ -541,7 +541,8 @@ typedef int assertion1[1 - 2 * (NR_FIXED != _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_
 const struct locale_data _nl_C_LC_CTYPE attribute_hidden =
 {
   _nl_C_name,
-  NULL, 0, 0,	/* no file mapped */
+  NULL, 0, 0,			/* no file mapped */
+  { NULL, },			/* no cached data */
   UNDELETABLE,
   1,		/* Enable transliteration by default.  */
   NR_FIXED + NR_CLASSES + NR_MAPS,
