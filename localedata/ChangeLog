@@ -1,5 +1,9 @@
 2000-09-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add mr_IN.UTF-8 and mt_MT.ISO-8859-3.
+	* locales/mr_IN: New file.
+	* locales/mt_MT: New file.
+
 	* charmaps/GB18030: Comment out entries in user-defined area.
 
 2000-09-11  Ulrich Drepper  <drepper@redhat.com>
