@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF x86-64 ABI.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2001.
 
@@ -74,6 +74,17 @@ _start:
 	   which grow downwards).  */
 	pushq %rsp
 
+#ifdef SHARED
+	/* Pass address of our own entry points to .fini and .init.  */
+	movq __libc_csu_fini@GOTPCREL(%rip), %r8
+	movq __libc_csu_init@GOTPCREL(%rip), %rcx
+
+	movq BP_SYM (main)@GOTPCREL(%rip), %rdi
+
+	/* Call the user's main function, and exit with its value.
+	   But let the libc call main.	  */
+	call BP_SYM (__libc_start_main)@PLT
+#else
 	/* Pass address of our own entry points to .fini and .init.  */
 	movq $__libc_csu_fini, %r8
 	movq $__libc_csu_init, %rcx
@@ -83,6 +94,7 @@ _start:
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.	  */
 	call BP_SYM (__libc_start_main)
+#endif
 
 	hlt			/* Crash if somehow `exit' does return.	 */
 
