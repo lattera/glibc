@@ -43,8 +43,8 @@ fesetround (int round)
       unsigned int xcw;
 
       __asm__ ("stmxcsr %0" : "=m" (*&xcw));
-      cw &= ~0x6000;
-      cw |= round << 3;
+      xcw &= ~0x6000;
+      xcw |= round << 3;
       __asm__ ("ldmxcsr %0" : : "m" (*&xcw));
     }
 

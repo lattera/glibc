@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,38 @@
 #define __USE_STRING_INLINES
 #define _FORCE_INLINES
 #define __STRING_INLINE /* empty */
+#define __NO_INLINE__
 
 /* This is to avoid PLT entries for the x86 version.  */
 #define __memcpy_g __memcpy_g_internal
 #define __strchr_g __strchr_g_internal
 
 #include <string.h>
+#undef index
+#undef rindex
+
+#undef __NO_INLINE__
+#include <bits/string.h>
+#include <bits/string2.h>
+
+void *
+(__memcpy_c) (void *d, const void *s, size_t n)
+{
+  return memcpy (d, s, n);
+}
+
+void *
+__memset_cc (void *s, unsigned long int pattern, size_t n)
+{
+  return memset (s, pattern & 0xff, n);
+}
+strong_alias (__memset_cc, __memset_cg)
+
+void *
+__memset_gg (void *s, char c, size_t n)
+{
+  return memset (s, c, n);
+}
 
 #ifdef __memcpy_c
 # undef __memcpy_g

@@ -346,3 +346,4 @@ ENTRY(strcat)
 	retl
 	 mov		%g2, %o0
 END(strcat)
+libc_hidden_builtin_def (strcat)

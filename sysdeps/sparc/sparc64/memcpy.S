@@ -917,3 +917,5 @@ END(memmove)
 weak_alias(memcpy, __align_cpy_1)
 weak_alias(memcpy, __align_cpy_2)
 #endif
+libc_hidden_builtin_def (memcpy)
+libc_hidden_builtin_def (memmove)

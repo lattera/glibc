@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Code contributed by Matthew Wilcox <willy@odie.barnet.ac.uk>
 
@@ -61,3 +61,4 @@ Llastword:				@ drop through to here once we find a
 	addne   r0, r0, $1              @  must be zero)
 	RETINSTR(mov,pc,lr)
 END(strlen)
+libc_hidden_builtin_def (strlen)

@@ -1,6 +1,6 @@
 /* Find character CH in a NUL terminated string.
    Highly optimized version for ix85, x>=5.
-   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -339,3 +339,4 @@ END (BP_SYM (strchr))
 
 #undef index
 weak_alias (BP_SYM (strchr), BP_SYM (index))
+libc_hidden_builtin_def (strchr)

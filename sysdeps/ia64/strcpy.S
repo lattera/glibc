@@ -1,6 +1,6 @@
 /* Optimized version of the standard strcpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -142,3 +142,4 @@ ENTRY(strcpy)
 	ld8	r[MEMLAT] = [tmp]
 	br.cond.sptk .back3
 END(strcpy)
+libc_hidden_builtin_def (strcpy)

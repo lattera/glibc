@@ -1,5 +1,5 @@
 /* Determine the length of a string.  For Intel 80x86, x>=3.
-   Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991,1992,1993,1996,1997,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -33,3 +33,4 @@ strlen (const char *str)
 
   return -2 - cnt;
 }
+libc_hidden_builtin_def (strlen)

@@ -277,3 +277,4 @@ ENTRY(strcmp)
 	ba,pt		%xcc, 11b				/* CTI		Group		*/
 	 ldxa		[%o1 + %o0] ASI_PNF, %g6		/* Load				*/
 END(strcmp)
+libc_hidden_builtin_def (strcmp)

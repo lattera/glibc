@@ -1,7 +1,7 @@
 /* strcspn (str, ss) -- Return the length of the initial segment of STR
                         which contains no characters from SS.
    For SPARC v9.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
 
@@ -210,3 +210,4 @@ ENTRY(strcspn)
 	retl						/* CTI+IEU1	Group		*/
 	 sub		%o0, %g4, %o0			/* IEU0				*/
 END(strcspn)
+libc_hidden_builtin_def (strcspn)

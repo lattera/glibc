@@ -208,3 +208,4 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     std   0,8(4)
     b .L8
 END_GEN_TB (BP_SYM (memcpy),TB_TOCLESS)
+libc_hidden_builtin_def (memcpy)

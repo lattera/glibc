@@ -98,6 +98,10 @@
 /* Define if the compiler supports __builtin_memset.  */
 #undef	HAVE_BUILTIN_MEMSET
 
+/* Define if __asm () on built-in function's prototype causes redirection of
+   the builtin.  */
+#undef	HAVE_BUILTIN_REDIRECTION
+
 /* Define if the __thread keyword is supported.  */
 #undef HAVE___THREAD
 

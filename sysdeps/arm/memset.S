@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>
 
@@ -65,3 +65,4 @@ ENTRY(memset)
 	strb	a2, [a4], $1
 	RETINSTR(mov,pc,lr)
 END(memset)
+libc_hidden_builtin_def (memset)

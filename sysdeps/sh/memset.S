@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@rr.iij4u.or.jp>
    Optimized by Toshiyasu Morita <toshiyasu.morita@hsa.hitachi.com>
@@ -85,3 +85,4 @@ L_byte_exit:
 	rts
 	mov	r7,r0
 END(memset)
+libc_hidden_builtin_def (memset)

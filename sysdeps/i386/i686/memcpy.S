@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to beginning of destination block
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,3 +59,4 @@ ENTRY (BP_SYM (memcpy))
 	LEAVE
 	RET_PTR
 END (BP_SYM (memcpy))
+libc_hidden_builtin_def (memcpy)

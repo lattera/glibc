@@ -269,6 +269,7 @@ L(medium_28t):
 	std	rCHR, -8(rMEMP)
 	blr
 END_GEN_TB (BP_SYM (memset),TB_TOCLESS)
+libc_hidden_builtin_def (memset)
 
 /* Copied from bzero.S to prevent the linker from inserting a stub
    between bzero and memset.  */

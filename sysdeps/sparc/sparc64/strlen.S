@@ -1,5 +1,5 @@
 /* Determine the length of a string.  For SPARC v9.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -171,3 +171,4 @@ ENTRY(strlen)
 	retl						/* CTI+IEU1	Group		*/
 	 sub		%o0, %o1, %o0			/* IEU0				*/
 END(strlen)
+libc_hidden_builtin_def (strlen)

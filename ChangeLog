@@ -1,5 +1,169 @@
 2003-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/ftestexcept.c: Also check SSE status word.
+
+	* include/signal.h: Use libc_hidden_proto for sigaddset and sigdelset.
+	* signal/sigaddset.c: Add libc_hidden_def.
+	* signal/sigdelset.c: Likewise.
+
+2003-04-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/i486/string-inlines.c (__memcpy_g, __strchr_g): Move
+	to the end of the file.
+
+	* configure.in: Change __oline__ to $LINENO.
+	(HAVE_BUILTIN_REDIRECTION): New check.
+	* config.h.in (HAVE_BUILTIN_REDIRECTION): Add.
+	* include/libc-symbols.h (libc_hidden_builtin_proto,
+	libc_hidden_builtin_def, libc_hidden_builtin_weak,
+	libc_hidden_builtin_ver): Define.
+	* include/string.h (memchr, memcpy, memmove, memset, strcat, strchr,
+	strcmp, strcpy, strcspn, strlen, strncmp, strncpy, strpbrk, strrchr,
+	strspn, strstr): Add libc_hidden_builtin_proto.
+	* intl/plural.y: Include string.h.
+	* sysdeps/alpha/alphaev6/memchr.S (memchr): Add
+	libc_hidden_builtin_def.
+	* sysdeps/alpha/alphaev6/memcpy.S (memcpy): Likewise.
+	* sysdeps/alpha/alphaev6/memset.S (memset): Likewise.
+	* sysdeps/alpha/alphaev67/strcat.S (strcat): Likewise.
+	* sysdeps/alpha/alphaev67/strchr.S (strchr): Likewise.
+	* sysdeps/alpha/alphaev67/strlen.S (strlen): Likewise.
+	* sysdeps/alpha/alphaev67/strrchr.S (strrchr): Likewise.
+	* sysdeps/alpha/memchr.S (memchr): Likewise.
+	* sysdeps/alpha/memset.S (memset): Likewise.
+	* sysdeps/alpha/strcat.S (strcat): Likewise.
+	* sysdeps/alpha/strchr.S (strchr): Likewise.
+	* sysdeps/alpha/strcmp.S (strcmp): Likewise.
+	* sysdeps/alpha/strcpy.S (strcpy): Likewise.
+	* sysdeps/alpha/strlen.S (strlen): Likewise.
+	* sysdeps/alpha/strncmp.S (strncmp): Likewise.
+	* sysdeps/alpha/strncpy.S (strncpy): Likewise.
+	* sysdeps/alpha/strrchr.S (strrchr): Likewise.
+	* sysdeps/arm/memset.S (memset): Likewise.
+	* sysdeps/arm/strlen.S (strlen): Likewise.
+	* sysdeps/generic/memchr.c (memchr): Likewise.
+	* sysdeps/generic/memcpy.c (memcpy): Likewise.
+	* sysdeps/generic/memmove.c (memmove): Likewise.
+	* sysdeps/generic/memset.c (memset): Likewise.
+	* sysdeps/generic/strcat.c (strcat): Likewise.
+	* sysdeps/generic/strchr.c (strchr): Likewise.
+	* sysdeps/generic/strcmp.c (strcmp): Likewise.
+	* sysdeps/generic/strcpy.c (strcpy): Likewise.
+	* sysdeps/generic/strcspn.c (strcspn): Likewise.
+	* sysdeps/generic/strlen.c (strlen): Likewise.
+	* sysdeps/generic/strncmp.c (strncmp): Likewise.
+	* sysdeps/generic/strncpy.c (strncpy): Likewise.
+	* sysdeps/generic/strpbrk.c (strpbrk): Likewise.
+	* sysdeps/generic/strrchr.c (strrchr): Likewise.
+	* sysdeps/generic/strspn.c (strspn): Likewise.
+	* sysdeps/generic/strstr.c (strstr): Likewise.
+	* sysdeps/i386/i486/strcat.S (strcat): Likewise.
+	* sysdeps/i386/i486/strlen.S (strlen): Likewise.
+	* sysdeps/i386/i586/memcpy.S (memcpy): Likewise.
+	* sysdeps/i386/i586/memset.S (memset): Likewise.
+	* sysdeps/i386/i586/strchr.S (strchr): Likewise.
+	* sysdeps/i386/i586/strcpy.S (strcpy): Likewise.
+	* sysdeps/i386/i586/strlen.S (strlen): Likewise.
+	* sysdeps/i386/i686/memcpy.S (memcpy): Likewise.
+	* sysdeps/i386/i686/memmove.S (memmove): Likewise.
+	* sysdeps/i386/i686/memset.S (memset): Likewise.
+	* sysdeps/i386/i686/strcmp.S (strcmp): Likewise.
+	* sysdeps/i386/memchr.S (memchr): Likewise.
+	* sysdeps/i386/memset.c (memset): Likewise.
+	* sysdeps/i386/strchr.S (strchr): Likewise.
+	* sysdeps/i386/strcspn.S (strcspn): Likewise.
+	* sysdeps/i386/strlen.c (strlen): Likewise.
+	* sysdeps/i386/strpbrk.S (strpbrk): Likewise.
+	* sysdeps/i386/strrchr.S (strrchr): Likewise.
+	* sysdeps/i386/strspn.S (strspn): Likewise.
+	* sysdeps/ia64/memchr.S (memchr): Likewise.
+	* sysdeps/ia64/memcpy.S (memcpy): Likewise.
+	* sysdeps/ia64/memmove.S (memmove): Likewise.
+	* sysdeps/ia64/memset.S (memset): Likewise.
+	* sysdeps/ia64/strcat.S (strcat): Likewise.
+	* sysdeps/ia64/strchr.S (strchr): Likewise.
+	* sysdeps/ia64/strcmp.S (strcmp): Likewise.
+	* sysdeps/ia64/strcpy.S (strcpy): Likewise.
+	* sysdeps/ia64/strlen.S (strlen): Likewise.
+	* sysdeps/ia64/strncmp.S (strncmp): Likewise.
+	* sysdeps/ia64/strncpy.S (strncpy): Likewise.
+	* sysdeps/m68k/memchr.S (memchr): Likewise.
+	* sysdeps/m68k/strchr.S (strchr): Likewise.
+	* sysdeps/mips/mips64/memcpy.S (memcpy): Likewise.
+	* sysdeps/mips/mips64/memset.S (memset): Likewise.
+	* sysdeps/mips/memcpy.S (memcpy): Likewise.
+	* sysdeps/mips/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc32/strchr.S (strchr): Likewise.
+	* sysdeps/powerpc/powerpc32/strcmp.S (strcmp): Likewise.
+	* sysdeps/powerpc/powerpc32/strcpy.S (strcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/strlen.S (strlen): Likewise.
+	* sysdeps/powerpc/powerpc64/memcpy.S (memcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/memset.S (memset): Likewise.
+	* sysdeps/powerpc/powerpc64/strchr.S (strchr): Likewise.
+	* sysdeps/powerpc/powerpc64/strcmp.S (strcmp): Likewise.
+	* sysdeps/powerpc/powerpc64/strcpy.S (strcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/strlen.S (strlen): Likewise.
+	* sysdeps/powerpc/strcat.c (strcat): Likewise.
+	* sysdeps/sparc/sparc32/memchr.S (memchr): Likewise.
+	* sysdeps/sparc/sparc32/memcpy.S (memcpy): Likewise.
+	* sysdeps/sparc/sparc32/memset.S (memset): Likewise.
+	* sysdeps/sparc/sparc32/strcat.S (strcat): Likewise.
+	* sysdeps/sparc/sparc32/strchr.S (strchr, strrchr): Likewise.
+	* sysdeps/sparc/sparc32/strcmp.S (strcmp): Likewise.
+	* sysdeps/sparc/sparc32/strcpy.S (strcpy): Likewise.
+	* sysdeps/sparc/sparc32/strlen.S (strlen): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (memcpy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/memchr.S (memchr): Likewise.
+	* sysdeps/sparc/sparc64/memcpy.S (memcpy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/memset.S (memset): Likewise.
+	* sysdeps/sparc/sparc64/strcat.S (strcat): Likewise.
+	* sysdeps/sparc/sparc64/strchr.S (strchr, strrchr): Likewise.
+	* sysdeps/sparc/sparc64/strcmp.S (strcmp): Likewise.
+	* sysdeps/sparc/sparc64/strcpy.S (strcpy): Likewise.
+	* sysdeps/sparc/sparc64/strcspn.S (strcspn): Likewise.
+	* sysdeps/sparc/sparc64/strlen.S (strlen): Likewise.
+	* sysdeps/sparc/sparc64/strncmp.S (strncmp): Likewise.
+	* sysdeps/sparc/sparc64/strncpy.S (strncpy): Likewise.
+	* sysdeps/sparc/sparc64/strpbrk.S (strpbrk): Likewise.
+	* sysdeps/sparc/sparc64/strspn.S (strspn): Likewise.
+	* sysdeps/sh/memcpy.S (memcpy): Likewise.
+	* sysdeps/sh/memset.S (memset): Likewise.
+	* sysdeps/sh/strlen.S (strlen): Likewise.
+	* sysdeps/s390/s390-32/memchr.S (memchr): Likewise.
+	* sysdeps/s390/s390-32/memcpy.S (memcpy): Likewise.
+	* sysdeps/s390/s390-32/memset.S (memset): Likewise.
+	* sysdeps/s390/s390-32/strcmp.S (strcmp): Likewise.
+	* sysdeps/s390/s390-32/strcpy.S (strcpy): Likewise.
+	* sysdeps/s390/s390-32/strncpy.S (strncpy): Likewise.
+	* sysdeps/s390/s390-64/memchr.S (memchr): Likewise.
+	* sysdeps/s390/s390-64/memcpy.S (memcpy): Likewise.
+	* sysdeps/s390/s390-64/memset.S (memset): Likewise.
+	* sysdeps/s390/s390-64/strcmp.S (strcmp): Likewise.
+	* sysdeps/s390/s390-64/strcpy.S (strcpy): Likewise.
+	* sysdeps/s390/s390-64/strncpy.S (strncpy): Likewise.
+	* sysdeps/x86_64/memcpy.S (memcpy): Likewise.
+	* sysdeps/x86_64/memset.S (memset): Likewise.
+	* sysdeps/x86_64/strcat.S (strcat): Likewise.
+	* sysdeps/x86_64/strchr.S (strchr): Likewise.
+	* sysdeps/x86_64/strcmp.S (strcmp): Likewise.
+	* sysdeps/x86_64/strcpy.S (strcpy): Likewise.
+	* sysdeps/x86_64/strcspn.S (strcspn): Likewise.
+	* sysdeps/x86_64/strlen.S (strlen): Likewise.
+	* sysdeps/x86_64/strspn.S (strspn): Likewise.
+	* string/string-inlines.c: Move...
+	* sysdeps/generic/string-inlines.c: ...here.
+	(__memcpy_g, __strchr_g): Remove.
+	(__NO_INLINE__): Define before including <string.h>,
+	undefine after.  Include bits/string.h and bits/string2.h.
+	* sysdeps/i386/i486/string-inlines.c: New file.
+	* sysdeps/i386/string-inlines.c: New file.
+	* sysdeps/i386/i486/Versions: Remove.
+	All GLIBC_2.1.1 symbols moved...
+	* sysdeps/i386/Versions (libc): ...here.
+
+2003-04-29  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/i386/fpu/Makefile: New file.
 	* sysdeps/i386/fpu/fedisblxcpt.c: Also set SSE control word.
 	* sysdeps/i386/fpu/feenablxcpt.c: Likewise.

@@ -1,6 +1,5 @@
-/* Copyright (C) 1996, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson <rth@tamu.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Copy a null-terminated string from SRC to DST.  Return a pointer
-   to the null-terminator in the source.  */
+/*  <bits/string.h> and <bits/string2.h> declare some extern inline
+    functions.  These functions are declared additionally here if
+    inlining is not possible.  */
 
-#include <sysdep.h>
+#undef __USE_STRING_INLINES
+#define __USE_STRING_INLINES
+#define _FORCE_INLINES
+#define __STRING_INLINE /* empty */
+#define __NO_INLINE__
 
-	.text
+#include <string.h>
+#undef index
+#undef rindex
 
-ENTRY(strcpy)
-	ldgp	gp, 0(pv)
-#ifdef PROF
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-#endif
-	.prologue 1
-
-	mov	a0, v0		# set up return value
-	mov	ra, t9
-	jmp	$31, __stxcpy	# do the copy
-
-	END(strcpy)
-libc_hidden_builtin_def (strcpy)
+#undef __NO_INLINE__
+#include <bits/string.h>
+#include <bits/string2.h>

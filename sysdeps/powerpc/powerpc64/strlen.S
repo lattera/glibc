@@ -171,3 +171,4 @@ L(done0):
 	/* GKM FIXME: check high bound.  */
 	blr
 END (BP_SYM (strlen))
+libc_hidden_builtin_def (strlen)

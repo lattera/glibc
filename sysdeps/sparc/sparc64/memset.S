@@ -1,6 +1,6 @@
 /* Set a block of memory to some byte value.
    For UltraSPARC.
-   Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1996, 97, 98, 99, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller (davem@caip.rutgers.edu) and
                   Jakub Jelinek (jj@ultra.linux.cz).
@@ -178,6 +178,7 @@ ENTRY(memset)
 	ba,pt		%xcc, 18b
 	 ldd		[%o0], %f0
 END(memset)
+libc_hidden_builtin_def (memset)
 
 #define ZERO_BLOCKS(base, offset, source)		\
 	stx		source, [base - offset - 0x38];	\

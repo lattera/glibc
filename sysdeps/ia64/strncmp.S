@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,3 +59,4 @@ ENTRY(strncmp)
 .restore_and_exit:
 	br.ret.sptk.many b0
 END(strncmp)	
+libc_hidden_builtin_def (strncmp)

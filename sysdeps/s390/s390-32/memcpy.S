@@ -1,5 +1,5 @@
 /* memcpy - copy a block from source to destination.  S/390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -56,4 +56,4 @@ ENTRY(memcpy)
 	lr      %r2,%r1             # return destination address
 	br	%r14
 END(memcpy)
-	
+libc_hidden_builtin_def (memcpy)

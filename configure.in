@@ -1384,8 +1384,8 @@ dnl AC_CHECK_ASM_UNDERSCORE([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 AC_DEFUN(AC_CHECK_ASM_UNDERSCORE,
 [cat > conftest.$ac_ext <<EOF
 dnl This sometimes fails to find confdefs.h, for some reason.
-dnl [#]line __oline__ "[$]0"
-[#]line __oline__ "configure"
+dnl [#]line $LINENO "[$]0"
+[#]line $LINENO "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -1587,7 +1587,7 @@ fi
 
 AC_CACHE_CHECK(for DWARF2 unwind info support, libc_cv_gcc_dwarf2_unwind_info,
 [cat > conftest.c <<EOF
-#line __oline__ "configure"
+#line $LINENO "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -1653,7 +1653,7 @@ esac
 dnl Check whether compiler understands __builtin_expect.
 AC_CACHE_CHECK(for __builtin_expect, libc_cv_gcc_builtin_expect,
 [cat > conftest.c <<EOF
-#line __oline__ "configure"
+#line $LINENO "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -1691,11 +1691,31 @@ if test "$libc_cv_gcc_builtin_memset" = yes ; then
   AC_DEFINE(HAVE_BUILTIN_MEMSET)
 fi
 
+AC_CACHE_CHECK(for redirection of built-in functions, libc_cv_gcc_builtin_redirection, [dnl
+cat > conftest.c <<\EOF
+extern char *strstr (const char *, const char *) __asm ("my_strstr");
+char *foo (const char *a, const char *b)
+{
+  return __builtin_strstr (a, b);
+}
+EOF
+dnl
+if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | fgrep "my_strstr" > /dev/null]);
+then
+  libc_cv_gcc_builtin_redirection=yes
+else
+  libc_cv_gcc_builtin_redirection=no
+fi
+rm -f conftest* ])
+if test "$libc_cv_gcc_builtin_redirection" = yes ; then
+  AC_DEFINE(HAVE_BUILTIN_REDIRECTION)
+fi
+
 dnl Check whether the compiler supports subtraction of local labels.
 AC_CACHE_CHECK(for local label subtraction, libc_cv_gcc_subtract_local_labels,
 [cat > conftest.c <<EOF
 changequote(,)dnl
-#line __oline__ "configure"
+#line $LINENO "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

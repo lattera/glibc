@@ -255,3 +255,4 @@ ENTRY(strcmp)
 	jmpl		%i7 + 8, %g0
 	 restore	%g4, %g0, %o0
 END(strcmp)
+libc_hidden_builtin_def (strcmp)

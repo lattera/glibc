@@ -1,7 +1,7 @@
 /* memchr (str, chr, len) -- Return pointer to first occurrence of CHR in STR less
    than LEN.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -330,3 +330,4 @@ weak_alias (BP_SYM (__memchr), BP_SYM (memchr))
 #if !__BOUNDED_POINTERS__
 weak_alias (__memchr, __ubp_memchr)
 #endif
+libc_hidden_builtin_def (memchr)

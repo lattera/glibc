@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,94,95,96,97,99,2000,03 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
@@ -187,3 +187,4 @@ strchr (s, c_in)
 #undef index
 weak_alias (strchr, index)
 #endif
+libc_hidden_builtin_def (strchr)

@@ -1,5 +1,5 @@
 /* Set a block of memory to some byte value.  For IBM S390
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
@@ -42,3 +42,4 @@ ENTRY(memset)
 .L1:
 	br      %r14
 END(memset)
+libc_hidden_builtin_def (memset)

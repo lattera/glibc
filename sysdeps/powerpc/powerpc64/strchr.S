@@ -138,3 +138,4 @@ L(foundit):
 END (BP_SYM (strchr))
 
 weak_alias (BP_SYM (strchr), BP_SYM (index))
+libc_hidden_builtin_def (strchr)

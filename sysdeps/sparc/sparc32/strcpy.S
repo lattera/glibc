@@ -272,3 +272,4 @@ ENTRY(strcpy)
 	retl
 	 mov		%g2, %o0
 END(strcpy)
+libc_hidden_builtin_def (strcpy)

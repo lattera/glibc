@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Optimized version for x86-64.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -129,3 +129,6 @@ ENTRY (memset)
 	jmp	4b
 
 END (memset)
+#if !BZERO_P
+libc_hidden_builtin_def (memset)
+#endif

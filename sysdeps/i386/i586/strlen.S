@@ -1,6 +1,6 @@
 /* strlen -- Compute length of NUL terminated string.
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -186,3 +186,4 @@ L(2):	CHECK_BOUNDS_HIGH (%eax, STR(%esp), jb)
 	LEAVE
 	ret
 END (BP_SYM (strlen))
+libc_hidden_builtin_def (strlen)

@@ -1,6 +1,6 @@
 /* Set a block of memory to some byte value.
    For SPARC v7.
-   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@caip.rutgers.edu> and
                   Jakub Jelinek <jj@ultra.linux.cz>.
@@ -150,5 +150,6 @@ ENTRY(memset)
 0:	retl
 	 nop
 END(memset)
+libc_hidden_builtin_def (memset)
 
 weak_alias(__bzero, bzero)

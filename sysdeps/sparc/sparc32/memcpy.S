@@ -966,3 +966,5 @@ ENTRY(memcpy)		/* %o0=dst %o1=src %o2=len */
 110:	retl
 	 sub		%o7, %g6, %o5
 END(memcpy)
+libc_hidden_builtin_def (memcpy)
+libc_hidden_builtin_def (memmove)

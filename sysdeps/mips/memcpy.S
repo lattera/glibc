@@ -133,3 +133,4 @@ L(shfth):
 
 	.set	reorder
 END (memcpy)
+libc_hidden_builtin_def (memcpy)

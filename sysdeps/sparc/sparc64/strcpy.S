@@ -242,3 +242,4 @@ ENTRY(strcpy)
 	retl						/* CTI+IEU1	Group		*/
 	 mov		%g6, %o0			/* IEU0				*/
 END(strcpy)
+libc_hidden_builtin_def (strcpy)

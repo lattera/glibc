@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>
 	      and Jakub Jelinek <jakub@redhat.com>.
 
@@ -229,3 +229,4 @@ ENTRY(strncpy)
 (p5)	mov	r[MEMLAT - 1] = r0
 	br.cond.sptk .back4
 END(strncpy)
+libc_hidden_builtin_def (strncpy)

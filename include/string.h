@@ -79,6 +79,23 @@ libc_hidden_proto (__strverscmp)
 libc_hidden_proto (basename)
 libc_hidden_proto (strcoll)
 
+libc_hidden_builtin_proto (memchr)
+libc_hidden_builtin_proto (memcpy)
+libc_hidden_builtin_proto (memmove)
+libc_hidden_builtin_proto (memset)
+libc_hidden_builtin_proto (strcat)
+libc_hidden_builtin_proto (strchr)
+libc_hidden_builtin_proto (strcmp)
+libc_hidden_builtin_proto (strcpy)
+libc_hidden_builtin_proto (strcspn)
+libc_hidden_builtin_proto (strlen)
+libc_hidden_builtin_proto (strncmp)
+libc_hidden_builtin_proto (strncpy)
+libc_hidden_builtin_proto (strpbrk)
+libc_hidden_builtin_proto (strrchr)
+libc_hidden_builtin_proto (strspn)
+libc_hidden_builtin_proto (strstr)
+
 # ifndef _ISOMAC
 #  ifndef index
 #   define index(s, c)	(strchr ((s), (c)))

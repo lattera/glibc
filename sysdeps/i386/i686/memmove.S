@@ -92,3 +92,4 @@ ENTRY (BP_SYM (memmove))
 	LEAVE
 	RET_PTR
 END (BP_SYM (memmove))
+libc_hidden_builtin_def (memmove)

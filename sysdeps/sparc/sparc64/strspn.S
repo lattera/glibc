@@ -1,7 +1,7 @@
 /* strspn (str, ss) -- Return the length of the maximum initial segment
 		       of S which contains only characters in ACCEPT.
    For SPARC v9.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
 
@@ -210,3 +210,4 @@ ENTRY(strspn)
 	retl						/* CTI+IEU1	Group		*/
 	 sub		%o0, %g4, %o0			/* IEU0				*/
 END(strspn)
+libc_hidden_builtin_def (strspn)

@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in the
    first N bytes of STR.
    For Motorola 68000.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@gnu.org>.
 
@@ -229,3 +229,4 @@ weak_alias (__memchr, memchr)
 #if !__BOUNDED_POINTERS__
 weak_alias (__memchr, __ubp_memchr)
 #endif
+libc_hidden_builtin_def (memchr)

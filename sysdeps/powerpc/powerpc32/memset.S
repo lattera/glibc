@@ -332,3 +332,4 @@ L(handletail32):
 	b		L(nondcbz)
 
 END (BP_SYM (memset))
+libc_hidden_builtin_def (memset)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu)
    This file is part of the GNU C Library.
 
@@ -192,3 +192,4 @@ $done:
 	ret			# e1    :
 
 	END(strcmp)
+libc_hidden_builtin_def (strcmp)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,3 +47,4 @@ strcpy (dest, src)
 
   return dest;
 }
+libc_hidden_builtin_def (strcpy)

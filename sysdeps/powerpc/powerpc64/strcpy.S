@@ -141,3 +141,4 @@ L(u1):	stb	rALT, 1(rDEST)
 	blr
 
 END (BP_SYM (strcpy))
+libc_hidden_builtin_def (strcpy)

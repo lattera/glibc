@@ -257,3 +257,4 @@ ENTRY (BP_SYM (strcat))
 	movq	%rdi, %rax	/* Source is return value.  */
 	retq
 END (BP_SYM (strcat))
+libc_hidden_builtin_def (strcat)

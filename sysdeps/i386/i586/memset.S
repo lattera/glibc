@@ -1,6 +1,6 @@
 /* memset/bzero -- set memory area to CH/0
    Highly optimized version for ix86, x>=5.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund, <tege@matematik.su.se>
 
@@ -114,3 +114,4 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	RET_PTR
 #endif
 END (BP_SYM (memset))
+libc_hidden_builtin_def (memset)

@@ -1,7 +1,7 @@
 /* strspn (str, ss) -- Return the length of the initial segment of STR
 			which contains only characters from SS.
    For AMD x86-64.
-   Copyright (C) 1994, 1995, 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
    Bug fixes by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>.
@@ -111,3 +111,4 @@ L(4):	addq $256, %rsp		/* remove stopset */
 				   non-valid character */
 	ret
 END (strspn)
+libc_hidden_builtin_def (strspn)

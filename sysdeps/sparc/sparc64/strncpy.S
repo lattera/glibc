@@ -394,3 +394,4 @@ ENTRY(strncpy)
 	ba,pt		%xcc, 3b			/* CTI				*/
 	 sllx		%o4, 56, %g3			/* IEU0		Group		*/
 END(strncpy)
+libc_hidden_builtin_def (strncpy)

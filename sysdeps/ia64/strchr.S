@@ -1,6 +1,6 @@
 /* Optimized version of the standard strchr() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,3 +109,4 @@ ENTRY(strchr)
 END(strchr)
 
 weak_alias(strchr, index)
+libc_hidden_builtin_def (strchr)

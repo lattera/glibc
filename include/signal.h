@@ -6,6 +6,8 @@
 
 libc_hidden_proto (sigemptyset)
 libc_hidden_proto (sigfillset)
+libc_hidden_proto (sigaddset)
+libc_hidden_proto (sigdelset)
 libc_hidden_proto (sigismember)
 libc_hidden_proto (__sigpause)
 libc_hidden_proto (raise)

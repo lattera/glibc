@@ -361,3 +361,4 @@ ENTRY(strncmp)
 	ba,pt		%xcc, 13b			/* CTI				*/
 	 add		%o1, 8, %o1			/* IEU0				*/
 END(strncmp)
+libc_hidden_builtin_def (strncmp)

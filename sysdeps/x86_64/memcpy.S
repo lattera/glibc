@@ -1,5 +1,5 @@
 /* Highly optimized version for x86-64.
-   Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i586 version contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -90,3 +90,4 @@ ENTRY (BP_SYM (memcpy))
 	ret
 
 END (BP_SYM (memcpy))
+libc_hidden_builtin_def (memcpy)

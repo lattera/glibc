@@ -720,4 +720,16 @@
 # define libm_hidden_data_ver(local, name)
 #endif
 
+#ifdef HAVE_BUILTIN_REDIRECTION
+# define libc_hidden_builtin_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
+# define libc_hidden_builtin_def(name) libc_hidden_def (name)
+# define libc_hidden_builtin_weak(name) libc_hidden_weak (name)
+# define libc_hidden_builtin_ver(local, name) libc_hidden_ver (local, name)
+#else
+# define libc_hidden_builtin_proto(name, attrs...)
+# define libc_hidden_builtin_def(name)
+# define libc_hidden_builtin_weak(name)
+# define libc_hidden_builtin_ver(local, name)
+#endif
+
 #endif /* libc-symbols.h */

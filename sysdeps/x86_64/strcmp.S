@@ -1,5 +1,5 @@
 /* Highly optimized version for x86-64.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i686 version contributed by Ulrich Drepper
    <drepper@cygnus.com>, 1999.
@@ -42,3 +42,4 @@ L(neq):	movl	$1, %eax
 	cmovbl	%ecx, %eax
 	ret
 END (BP_SYM (strcmp))
+libc_hidden_builtin_def (strcmp)

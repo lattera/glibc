@@ -337,3 +337,4 @@ ENTRY(strcat)
 	retl						/* CTI+IEU1	Group		*/
 	 mov		%g6, %o0			/* IEU0				*/
 END(strcat)
+libc_hidden_builtin_def (strcat)

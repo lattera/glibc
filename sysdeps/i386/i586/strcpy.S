@@ -1,5 +1,5 @@
 /* strcpy/stpcpy implementation for i586.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -159,3 +159,6 @@ L(end2):
 	LEAVE
 	RET_PTR
 END (BP_SYM (STRCPY))
+#ifndef USE_AS_STPCPY
+libc_hidden_builtin_def (strcpy)
+#endif

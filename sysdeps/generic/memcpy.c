@@ -1,6 +1,6 @@
 /* Copy memory to memory until the specified number of bytes
    has been copied.  Overlap is NOT handled correctly.
-   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -62,3 +62,4 @@ memcpy (dstpp, srcpp, len)
 
   return dstpp;
 }
+libc_hidden_builtin_def (memcpy)

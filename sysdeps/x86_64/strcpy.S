@@ -154,3 +154,6 @@ ENTRY (BP_SYM (STRCPY))
 #endif
 	retq
 END (BP_SYM (STRCPY))
+#ifndef USE_AS_STPCPY
+libc_hidden_builtin_def (strcpy)
+#endif

@@ -1,6 +1,6 @@
 /* strcat(dest, src) -- Append SRC on the end of DEST.
    For Intel 80x86, x>=4.
-   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1997,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@ipd.info.uni-karlsruhe.de>.
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -267,3 +267,4 @@ L(8):	/* GKM FIXME: check high bounds */
 	LEAVE
 	RET_PTR
 END (BP_SYM (strcat))
+libc_hidden_builtin_def (strcat)

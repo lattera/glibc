@@ -1,5 +1,5 @@
 /* Search a character in a block of memory.  64 bit S/390 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -38,3 +38,4 @@ ENTRY(memchr)
 	slgr  %r2,%r2
 1:	br    %r14
 END(memchr)
+libc_hidden_builtin_def (memchr)

@@ -1,7 +1,7 @@
 /* strpbrk (s, accept) -- Find the first occurrence in S of any character in
 			  ACCEPT.
    For SPARC v9.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
 
@@ -228,3 +228,4 @@ ENTRY(strpbrk)
 
 	 movrz		%g1, 0, %o0			/* Single	Group		*/
 END(strpbrk)
+libc_hidden_builtin_def (strpbrk)

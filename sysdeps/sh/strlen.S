@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@rr.iij4u.or.jp>
 
@@ -82,3 +82,4 @@ ENTRY(strlen)
 	rts
 	mov	r2, r0
 END(strlen)
+libc_hidden_builtin_def (strlen)

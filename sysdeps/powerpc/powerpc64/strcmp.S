@@ -144,3 +144,4 @@ L(u4):	lbz	rWORD1, -1(rSTR1)
 	/* GKM FIXME: check high bounds.  */
 	blr
 END (BP_SYM (strcmp))
+libc_hidden_builtin_def (strcmp)

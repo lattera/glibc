@@ -479,3 +479,5 @@ END(strrchr)
 
 weak_alias (strchr, index)
 weak_alias (strrchr, rindex)
+libc_hidden_builtin_def (strchr)
+libc_hidden_builtin_def (strrchr)

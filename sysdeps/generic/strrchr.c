@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,3 +47,4 @@ strrchr (const char *s, int c)
 #undef rindex
 weak_alias (strrchr, rindex)
 #endif
+libc_hidden_builtin_def (strrchr)
