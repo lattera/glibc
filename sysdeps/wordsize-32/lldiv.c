@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,13 @@
 #define imaxdiv __libc_imaxdiv
 
 #include <inttypes.h>
+
+#ifdef SHARED
+/* This is an ugly trick.  We cause the C code generated for the code
+   in lldiv.c to use __divdi3_internal instead of __divdi3 by defining
+   an alias on the assembler level.  */
+asm ("__divdi3 = __divdi3_internal");
+#endif
 
 #include <sysdeps/generic/lldiv.c>
 

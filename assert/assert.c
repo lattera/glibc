@@ -42,6 +42,7 @@ extern const char *__progname;
 # include FATAL_PREPARE_INCLUDE
 #endif
 
+#undef __assert_fail
 void
 __assert_fail (const char *assertion, const char *file, unsigned int line,
 	       const char *function)

@@ -294,6 +294,7 @@ __divdi3 (DWtype u, DWtype v)
     w = -w;
   return w;
 }
+INTDEF(__divdi3)
 
 DWtype
 __moddi3 (DWtype u, DWtype v)

@@ -53,6 +53,9 @@ distribute := nscd.h nscd-client.h dbg_log.h \
 
 include ../Rules
 
+CPPFLAGS-connections = -DNOT_IN_libc
+CPPFLAGS-hstcache = -DNOT_IN_libc
+
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 $(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 

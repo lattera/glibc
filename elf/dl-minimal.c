@@ -209,6 +209,7 @@ Inconsistency detected by ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
 		    assertion);
 
 }
+INTDEF(__assert_fail)
 
 void weak_function
 __assert_perror_fail (int errnum,

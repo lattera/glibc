@@ -1,3 +1,25 @@
+2002-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/wordsize-32/divdi3.c: Define __divdi3_internal.
+	* sysdeps/wordsize-32/lldiv.c: Make gcc use __divdi3_internal instead
+	of __divdi3.
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Use __adjtimex_internal.
+	* sysdeps/unix/sysv/linux/ntp_gettime.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __adjtimex_internal
+	alias for adjtimex syscall.
+
+	* elf/dl-minimal.c: Define __assert_fail_internal.
+	* assert/assert.c: Likewise.
+	* include/assert.h: Define __assert_file macro if !SHARED and not
+	NOT_IN_libc.
+
+	* iconv/Makefile: Define NOT_IN_libc for objects in standalone
+	programs.
+	* locale/Makefile: Likewise.
+	* nscd/Makefile: Likewise.
+	* catgets/Makefile: Likewise.
+
 2002-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/fileops.c (_IO_file_seekoff_mmap): Do use fp->_offset to
@@ -8,7 +30,7 @@
 	* libio/tst-freopen.c (main): Remove unused variable.
 
 	* libio/fileops.c (_IO_file_seekoff_mmap): Set fp->_offset after
-	succesful seek call.  Simply error checking.
+	succesful seek call.  Simplify error checking.
 
 2002-07-25  Jakub Jelinek  <jakub@redhat.com>
 

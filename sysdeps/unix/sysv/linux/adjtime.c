@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,8 @@
 
 #ifndef ADJTIMEX
 #define NO_LOCAL_ADJTIME
-#define ADJTIMEX(x) __adjtimex (x)
+#define ADJTIMEX(x) INTUSE(__adjtimex) (x)
+extern int INTUSE(__adjtimex) (struct timex *__ntx);
 #endif
 
 #ifndef LINKAGE
