@@ -833,10 +833,9 @@ will not affect your program unless it explicitly uses them for something.
 @comment signal.h
 @comment POSIX.1
 @deftypevr Macro int SIGUSR1
-@end deftypevr
 @comment signal.h
 @comment POSIX.1
-@deftypevr Macro int SIGUSR2
+@deftypevrx Macro int SIGUSR2
 @cindex user signals
 The @code{SIGUSR1} and @code{SIGUSR2} signals are set aside for you to
 use any way you want.  They're useful for simple interprocess

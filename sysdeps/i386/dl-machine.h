@@ -55,14 +55,14 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("	call here\n"
-       "here:	popl %0\n"
-       "	subl $here, %0"
+  asm ("	call .Lhere\n"
+       ".Lhere:	popl %0\n"
+       "	subl $.Lhere, %0"
        : "=r" (addr));
   return addr;
 }
 /* The `subl' insn above will contain an R_386_32 relocation entry
-   intended to insert the run-time address of the label `here'.
+   intended to insert the run-time address of the label `.Lhere'.
    This will be the first relocation in the text of the dynamic linker;
    we skip it to avoid trying to modify read-only text in this early stage.  */
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \

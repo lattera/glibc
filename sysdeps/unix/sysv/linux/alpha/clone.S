@@ -44,7 +44,7 @@ ENTRY(__clone)
 
 	/* Do the system call */
 	mov	a0,pv			/* get fn ptr out of the way */
-	mov	a3,a4			/* get fn arg out of the way */
+	mov	a3,t0			/* get fn arg out of the way */
 	mov	a2,a0
 	ldiq	v0,__NR_clone
 	call_pal PAL_callsys
@@ -74,7 +74,7 @@ thread_start:
 	.prologue 0
 
 	/* Call the user's function */
-	mov	a4,a0
+	mov	t0,a0
 	jsr	ra,(pv)
 	ldgp	gp,0(ra)
 

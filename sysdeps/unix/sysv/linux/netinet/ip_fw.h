@@ -41,14 +41,14 @@
  * 	flags and num_*_ports are stored in host byte order (of course).
  * 	Port numbers are stored in HOST byte order.
  */
- 
+
 #ifndef _NETINET_FW_H
 #define _NETINET_FW_H
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-#include <netinet/icmp.h>
+#include <netinet/ip_icmp.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
@@ -107,11 +107,11 @@ struct ip_fw {
 
 #define IP_FW_F_MASK	0x3FFF	/* All possible flag bits mask        */
 
-/*    
+/*
  *	New IP firewall options for [gs]etsockopt at the RAW IP level.
  *	Unlike BSD Linux inherits IP options so you don't have to use
  *	a raw socket for this. Instead we check rights in the calls.
- */     
+ */
 
 #define IP_FW_BASE_CTL  	64	/* base for firewall socket options */
 
@@ -181,7 +181,7 @@ struct ip_fwpkt
  */
 
 struct ip_fw_masq;
-  
+
 __END_DECLS
 
 #endif /* _NETINET_IP_FW_H */

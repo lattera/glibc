@@ -9,18 +9,18 @@ BEGIN {
 
 /^@deftypefun/ {
   printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypefun +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]+).*/, "\\2", 1),
+	  gensub (/@deftypefunx? +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]*).*/, "\\2", 1),
     last_node);
 }
 
 /^@deftypevr/ {
   printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypevr +([^{ ]+|\{[^}]+\}) +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]+).*/, "\\3", 1),
+	  gensub (/@deftypevrx? +([^{ ]+|\{[^}]+\}) +([^{ ]+|\{[^}]+\}) +([[:alpha:]_][[:alnum:]_]*).*/, "\\3", 1),
     last_node);
 }
 
 /^@deftypefn/ {
   printf ("* %s: (libc)%s.\n",
-	  gensub (/@deftypefn +([^{ ]+|\{[^}]+\}) +[^{ ]*(\{[^}]+\})? +([[:alpha:]_][[:alnum:]_]+).*/, "\\3", 1),
+	  gensub (/@deftypefnx? +([^{ ]+|\{[^}]+\}) +[^{ ]*(\{[^}]+\})? +([[:alpha:]_][[:alnum:]_]*).*/, "\\3", 1),
     last_node);
 }

@@ -56,12 +56,12 @@ struct in6_rtmsg
     struct in6_addr rtmsg_dst;
     struct in6_addr rtmsg_src;
     struct in6_addr rtmsg_gateway;
-    unsigned long int rtmsg_type;
-    unsigned short int rtmsg_dst_len;
-    unsigned short int rtmsg_src_len;
-    unsigned long int rtmsg_metric;
+    u_int32_t rtmsg_type;
+    u_int16_t rtmsg_dst_len;
+    u_int16_t rtmsg_src_len;
+    u_int32_t rtmsg_metric;
     unsigned long int rtmsg_info;
-    unsigned long int rtmsg_flags;
+    u_int32_t rtmsg_flags;
     int rtmsg_ifindex;
   };
 

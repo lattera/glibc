@@ -195,9 +195,9 @@ dist.tar: README $(tardir) $(+tsrcs)
 
 $(tardir).tar: dist.tar subdir_dist
 	@echo Files listed here have names exceeding 14 chars.
-	tar xfv $< -C /tmp | sed -n '/[^/]\{15,\}/p'
-	tar covf $@ -C /tmp $(tardir)
-	-rm -fr /tmp/$(tardir) dist.tar &
+	tar xfv $< -C $${TMPDIR-/tmp} | sed -n '/[^/]\{15,\}/p'
+	tar covf $@ -C $${TMPDIR-/tmp} $(tardir)
+	-rm -fr $${TMPDIR-/tmp}/$(tardir) dist.tar &
 
 %.Z: %
 	compress -c $< > $@

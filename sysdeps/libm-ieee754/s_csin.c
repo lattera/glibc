@@ -19,46 +19,110 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
+
+#include "math_private.h"
 
 
 __complex__ double
 __csin (__complex__ double x)
 {
-  __complex__ double res;
+  __complex__ double retval;
+  int negate = signbit (__real__ x);
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
-  if (!isfinite (__real__ x) || isnan (__imag__ x))
+  __real__ x = fabs (__real__ x);
+
+  if (icls >= FP_ZERO)
     {
-      if (__real__ x == 0.0 || __imag__ x == 0.0)
+      /* Imaginary part is finite.  */
+      if (rcls >= FP_ZERO)
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = 0.0;
-	}
-      else if (__isinf (__imag__ x))
-	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __imag__ x;
+	  /* Real part is finite.  */
+	  double sinh_val = __ieee754_sinh (__imag__ x);
+	  double cosh_val = __ieee754_cosh (__imag__ x);
+	  double sinix, cosix;
+
+	  __sincos (__real__ x, &sinix, &cosix);
+
+	  __real__ retval = cosh_val * sinix;
+	  __imag__ retval = sinh_val * cosix;
+
+	  if (negate)
+	    __real__ retval = -__real__ retval;
 	}
       else
 	{
-	  __real__ res = __nan ("");
-	  __imag__ res = __nan ("");
+	  if (icls == FP_ZERO)
+	    {
+	      /* Imaginary part is 0.0.  */
+	      __real__ retval = __nan ("");
+	      __imag__ retval = __imag__ x;
+
+#ifdef FE_INVALID
+	      if (rcls == FP_INFINITE)
+		feraiseexcept (FE_INVALID);
+#endif
+	    }
+	  else
+	    {
+	      __real__ retval = __nan ("");
+	      __imag__ retval = __nan ("");
+
+#ifdef FE_INVALID
+	      feraiseexcept (FE_INVALID);
+#endif
+	    }
+	}
+    }
+  else if (icls == FP_INFINITE)
+    {
+      /* Imaginary part is infinite.  */
+      if (rcls == FP_ZERO)
+	{
+	  /* Real part is 0.0.  */
+	  __real__ retval = __copysign (0.0, negate ? -1.0 : 1.0);
+	  __imag__ retval = __imag__ x;
+	}
+      else if (rcls > FP_ZERO)
+	{
+	  /* Real part is finite.  */
+	  double sinix, cosix;
+
+	  __sincos (__real__ x, &sinix, &cosix);
+
+	  __real__ retval = __copysign (HUGE_VAL, sinix);
+	  __imag__ retval = __copysign (HUGE_VAL, cosix);
+
+	  if (negate)
+	    __real__ retval = -__real__ retval;
+	  if (signbit (__imag__ x))
+	    __imag__ retval = -__imag__ retval;
+	}
+      else
+	{
+	  /* The addition raises the invalid exception.  */
+	  __real__ retval = __nan ("");
+	  __imag__ retval = HUGE_VAL;
+
+#ifdef FE_INVALID
+	  if (rcls == FP_INFINITE)
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else
     {
-      __complex__ double y;
-
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
-
-      y = __csinh (y);
-
-      __real__ res = __imag__ y;
-      __imag__ res = -__real__ y;
+      if (rcls == FP_ZERO)
+	__real__ retval = __copysign (0.0, negate ? -1.0 : 1.0);
+      else
+	__real__ retval = __nan ("");
+      __imag__ retval = __nan ("");
     }
 
-  return res;
+  return retval;
 }
 weak_alias (__csin, csin)
 #ifdef NO_LONG_DOUBLE

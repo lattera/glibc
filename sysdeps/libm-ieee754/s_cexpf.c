@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
 
 #include "math_private.h"
@@ -59,6 +60,10 @@ __cexpf (__complex__ float x)
 	     is not +-inf the result is NaN + iNaN.  */
 	  __real__ retval = __nanf ("");
 	  __imag__ retval = __nanf ("");
+
+#ifdef FE_INVALID
+	  feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else if (rcls == FP_INFINITE)
@@ -89,6 +94,11 @@ __cexpf (__complex__ float x)
 	{
 	  __real__ retval = HUGE_VALF;
 	  __imag__ retval = __nanf ("");
+
+#ifdef FE_INVALID
+	  if (icls == FP_INFINITE)
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
       else
 	{
@@ -101,6 +111,11 @@ __cexpf (__complex__ float x)
       /* If the real part is NaN the result is NaN + iNaN.  */
       __real__ retval = __nanf ("");
       __imag__ retval = __nanf ("");
+
+#ifdef FE_INVALID
+      if (rcls != FP_NAN || icls != FP_NAN)
+	feraiseexcept (FE_INVALID);
+#endif
     }
 
   return retval;

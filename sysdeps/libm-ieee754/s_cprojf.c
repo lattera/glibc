@@ -27,7 +27,7 @@ __cprojf (__complex__ float x)
 {
   __complex__ float res;
 
-  if (!finite (__real__ x) || !finite (__imag__ x))
+  if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
       __real__ res = INFINITY;
       __imag__ res = __copysignf (0.0, __imag__ x);

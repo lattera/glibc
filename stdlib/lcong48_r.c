@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 int
 __lcong48_r (param, buffer)

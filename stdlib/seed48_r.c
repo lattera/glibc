@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 int
 __seed48_r (seed16v, buffer)

@@ -233,8 +233,8 @@ extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
 /* Names of the signals.  This variable exists only for compatibility.
    Use `strsignal' instead (see <string.h>).  */
-extern __const char *__const _sys_siglist[NSIG];
-extern __const char *__const sys_siglist[NSIG];
+extern __const char *__const _sys_siglist[_NSIG];
+extern __const char *__const sys_siglist[_NSIG];
 
 /* Structure passed to `sigvec'.  */
 struct sigvec

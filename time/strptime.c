@@ -377,7 +377,7 @@ strptime_internal (buf, format, tm, decided)
 	case 'I':
 	  /* Match hour in 12-hour clock.  */
 	  get_number (1, 12);
-	  tm->tm_hour = val - 1;
+	  tm->tm_hour = val % 12;
 	  have_I = 1;
 	  break;
 	case 'j':

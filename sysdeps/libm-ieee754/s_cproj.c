@@ -27,7 +27,7 @@ __cproj (__complex__ double x)
 {
   __complex__ double res;
 
-  if (!finite (__real__ x) || !finite (__imag__ x))
+  if (!isfinite (__real__ x) || !isfinite (__imag__ x))
     {
       __real__ res = INFINITY;
       __imag__ res = __copysign (0.0, __imag__ x);

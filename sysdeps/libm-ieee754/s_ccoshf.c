@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
 
 #include "math_private.h"
@@ -39,18 +40,24 @@ __ccoshf (__complex__ float x)
       if (icls >= FP_ZERO)
 	{
 	  /* Imaginary part is finite.  */
+	  float sinh_val = __ieee754_sinhf (__real__ x);
 	  float cosh_val = __ieee754_coshf (__real__ x);
 	  float sinix, cosix;
 
 	  __sincosf (__imag__ x, &sinix, &cosix);
 
 	  __real__ retval = cosh_val * cosix;
-	  __imag__ retval = cosh_val * sinix;
+	  __imag__ retval = sinh_val * sinix;
 	}
       else
 	{
 	  __imag__ retval = __real__ x == 0.0 ? 0.0 : __nanf ("");
-	  __real__ retval = __nanf ("") + __nanf ("");
+	  __real__ retval = __nanf ("");
+
+#ifdef FE_INVALID
+	  if (icls == FP_INFINITE)
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else if (rcls == FP_INFINITE)
@@ -77,6 +84,11 @@ __ccoshf (__complex__ float x)
 	  /* The addition raises the invalid exception.  */
 	  __real__ retval = HUGE_VALF;
 	  __imag__ retval = __nanf ("") + __nanf ("");
+
+#ifdef FE_INVALID
+	  if (icls == FP_INFINITE)
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else

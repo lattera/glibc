@@ -1,3 +1,164 @@
+1997-04-30 17:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Implement test for exceptions.
+	Partly due to Andreas Jaeger.
+	(csin_test): New function.
+	* sysdeps/libm-i387/s_cexp.S: Raise correct exceptions.
+	* sysdeps/libm-i387/s_cexpf.S: Likewise.
+	* sysdeps/libm-i387/s_cexpl.S: Likewise.
+	* sysdeps/libm-ieee754/s_ccos.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccosf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccosl.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccosh.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinh.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanh.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ctanhl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_ccosh.c: Correct computation.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinh.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_csin.c: Rewrite.
+	* sysdeps/libm-ieee754/s_csinf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinl.c: Likewise.
+
+	* stdlib/random_r.c (__srandom_r): Don't use seed 0.  Use 1 in this
+	case.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_load_address): Use notation
+	for local label.
+
+	* time/strftime.c (add): Respect `0' padding flag.
+	Reported by Richard Stallman <rms@gnu.ai.mit.edu>.
+
+1997-04-30 15:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (start-installed-name): Define here, not in csu/Makefile.
+	Use in +link macro.
+	* csu/Makefile (distribute): Add abi-note.S and abi-tag.h.
+	(start-installed-name): Don't define here.
+	When ELF generate file named by start-installed-name from start.o
+	and abi-note.o.
+	* csu/abi-note.S: New file.
+	* sysdeps/stub/abi-tag.h: New file.
+	* sysdpes/unix/sysv/linux/abi-tag.h: New file.
+	Patches by Roland McGrath <roland@gnu.ai.mit.edu>.
+
+1997-04-30 01:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/stdio.texi: Use @vtable where possible.
+	Add TeX version of @multitable since texi2dvi cannot handle them
+	correct in the moment.
+
+	* po/de.po: Update.
+
+1997-04-29 21:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Don't set cross-compiling based on $(BUILD_CC) != $(CC).
+	* config.make.in: Set cross-compiling from configure result.
+	* configure.in: Emit definition of `cross_compiling'.
+	Patches by Marcus G. Daniels <marcus@cathcart.sysc.pdx.edu>.
+
+1997-04-27 21:50  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* sysdeps/unix/sysv/linux/net/route.h (struct in6_rtmsg): Use
+	correct `int' sizes for struct members.
+
+1997-04-29 19:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_powf.S Generate invalid exception correctly.
+	* sysdeps/libm-i387/e_pow.S: Likewise.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+1997-04-23 10:08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/fenv.h: Correct typos.
+
+1997-04-28 10:04  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Save the function argument
+	in t0 rather than a4 to avoid it being clobbered.
+
+1997-04-27 23:52  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/summary.awk: Recognize @defmumblex.
+
+	* manual/signal.texi (Miscellaneous Signals): Use @deftypevrx for
+	second description header.
+
+1997-04-27 23:29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/arith.texi (Floating-Point Classes): Don't indent text,
+	makeinfo doesn't like that.
+
+1997-04-27 20:52  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/obstack.h (obstack_specify_allocation_with_arg,
+	obstack_chunkfun, obstack_freefun): Fix casts.
+
+1997-04-27 18:21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/xtract-typefun.awk: Allow names with only one character.
+
+1997-04-26 14:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Use <netinet/ip_icmp.h>
+	not <netinet/icmp.h>.
+	Reported by Michael Deutschmann <ldeutsch@mail.netshop.net>.
+
+1997-04-25 12:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Makefile ($(objpfx)initfini.s): Add CPPFLAGS, CFLAGS and -g0
+	to command line of compiler.
+	Patch by Marcus G. Daniels <marcus@sysc.pdx.edu>.
+
+	* sysdeps/generic/sigset.h (__sigandset, __sigorset): Fix typos.
+	Patch by Marcus G. Daniels <marcus@sysc.pdx.edu>.
+
+	* signal/signal.h (_sys_siglist, sys_siglist): Use _NSIG, not NSIG
+	in declaration.
+	Patch by Michael Widenius <monty@tcx.se>.
+
+	* time/strptime.c (strptime_internal): Fix %I format specifier
+	being off by one.
+	Patch by Mark Kettenis <kettenis@phys.uva.nl>.
+
+1997-04-24 12:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/lcong48_r.c: Include <limits.h>.
+	* stdlib/seed48_r.c: Likewise.
+
+	* stdio-common/printf_size.c (printf_size): Correct type of
+	`units' and make robust against future changes.
+
+1997-04-23 18:58  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_cproj.c: Use isfinite instead of finite.
+	* sysdeps/libm-ieee754/s_cprojl.c: Likewise.
+	* sysdeps/libm-ieee754/s_cprojf.c: Likewise.
+
+1997-04-23 18:53  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/arith.texi, manual/math.texi: Use @defmumblex for
+	additional description headers.
+	* manual/xtract-typefun.awk: Recognize them.
+
+1997-04-22 15:58  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/printf_size.c (printf_size): Correct size of array
+	units.
+
 1997-04-21 07:50  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* libgen.h: New file.

@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
 
 
@@ -33,16 +34,31 @@ __ccos (__complex__ double x)
 	{
 	  __real__ res = __nan ("");
 	  __imag__ res = 0.0;
+
+#ifdef FE_INVALID
+	  if (__isinf (__real__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
       else if (__isinf (__imag__ x))
 	{
 	  __real__ res = HUGE_VAL;
 	  __imag__ res = __nan ("");
+
+#ifdef FE_INVALID
+	  if (__isinf (__real__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
       else
 	{
 	  __real__ res = __nan ("");
 	  __imag__ res = __nan ("");
+
+#ifdef FE_INVALID
+	  if (isfinite (__imag__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else

@@ -1765,47 +1765,40 @@ extract just the basic type code.
 Here are symbolic constants that represent the basic types; they stand
 for integer values.
 
-@table @code
+@vtable @code
 @comment printf.h
 @comment GNU
 @item PA_INT
-@vindex PA_INT
 This specifies that the base type is @code{int}.
 
 @comment printf.h
 @comment GNU
 @item PA_CHAR
-@vindex PA_CHAR
 This specifies that the base type is @code{int}, cast to @code{char}.
 
 @comment printf.h
 @comment GNU
 @item PA_STRING
-@vindex PA_STRING
 This specifies that the base type is @code{char *}, a null-terminated string.
 
 @comment printf.h
 @comment GNU
 @item PA_POINTER
-@vindex PA_POINTER
 This specifies that the base type is @code{void *}, an arbitrary pointer.
 
 @comment printf.h
 @comment GNU
 @item PA_FLOAT
-@vindex PA_FLOAT
 This specifies that the base type is @code{float}.
 
 @comment printf.h
 @comment GNU
 @item PA_DOUBLE
-@vindex PA_DOUBLE
 This specifies that the base type is @code{double}.
 
 @comment printf.h
 @comment GNU
 @item PA_LAST
-@vindex PA_LAST
 You can define additional base types for your own programs as offsets
 from @code{PA_LAST}.  For example, if you have data types @samp{foo}
 and @samp{bar} with their own specialized @code{printf} conversions,
@@ -1815,16 +1808,15 @@ you could define encodings for these types as:
 #define PA_FOO  PA_LAST
 #define PA_BAR  (PA_LAST + 1)
 @end smallexample
-@end table
+@end vtable
 
 Here are the flag bits that modify a basic type.  They are combined with
 the code for the basic type using inclusive-or.
 
-@table @code
+@vtable @code
 @comment printf.h
 @comment GNU
 @item PA_FLAG_PTR
-@vindex PA_FLAG_PTR
 If this bit is set, it indicates that the encoded type is a pointer to
 the base type, rather than an immediate value.
 For example, @samp{PA_INT|PA_FLAG_PTR} represents the type @samp{int *}.
@@ -1832,31 +1824,27 @@ For example, @samp{PA_INT|PA_FLAG_PTR} represents the type @samp{int *}.
 @comment printf.h
 @comment GNU
 @item PA_FLAG_SHORT
-@vindex PA_FLAG_SHORT
 If this bit is set, it indicates that the base type is modified with
 @code{short}.  (This corresponds to the @samp{h} type modifier.)
 
 @comment printf.h
 @comment GNU
 @item PA_FLAG_LONG
-@vindex PA_FLAG_LONG
 If this bit is set, it indicates that the base type is modified with
 @code{long}.  (This corresponds to the @samp{l} type modifier.)
 
 @comment printf.h
 @comment GNU
 @item PA_FLAG_LONG_LONG
-@vindex PA_FLAG_LONG_LONG
 If this bit is set, it indicates that the base type is modified with
 @code{long long}.  (This corresponds to the @samp{L} type modifier.)
 
 @comment printf.h
 @comment GNU
 @item PA_FLAG_LONG_DOUBLE
-@vindex PA_FLAG_LONG_DOUBLE
 This is a synonym for @code{PA_FLAG_LONG_LONG}, used by convention with
 a base type of @code{PA_DOUBLE} to indicate a type of @code{long double}.
-@end table
+@end vtable
 
 @ifinfo
 For an example of using these facilities, see @ref{Example of Parsing}.
@@ -2234,7 +2222,8 @@ character is of lower case, 1024 is used.  For upper case characters,
 The postfix tag corresponds to bytes, kilobytes, megabytes, gigabytes,
 etc.  The full table is:
 
-@multitable {' '} {2^10 (1024)} {zetta} {Upper} {10^24 (1000)}
+@ifinfo
+@multitable @hsep @vsep {' '} {2^10 (1024)} {zetta} {Upper} {10^24 (1000)}
 @item low @tab Multiplier  @tab From  @tab Upper @tab Multiplier
 @item ' ' @tab 1           @tab       @tab ' '   @tab 1
 @item k   @tab 2^10 (1024) @tab kilo  @tab K     @tab 10^3 (1000)
@@ -2246,6 +2235,29 @@ etc.  The full table is:
 @item z   @tab 2^70        @tab zetta @tab Z     @tab 10^21
 @item y   @tab 2^80        @tab yotta @tab Y     @tab 10^24
 @end multitable
+@end ifinfo
+@iftex
+@tex
+\hbox to\hsize{\hfil\vbox{\offinterlineskip
+\hrule
+\halign{\strut#& \vrule#\tabskip=1em plus2em& {\tt#}\hfil& \vrule#& #\hfil& \vrule#& #\hfil& \vrule#& {\tt#}\hfil& \vrule#& #\hfil& \vrule#\tabskip=0pt\cr
+\noalign{\hrule}
+\omit&height2pt&\omit&&\omit&&\omit&&\omit&&\omit&\cr
+&& \omit low && Multiplier && From && \omit Upper && Multiplier &\cr
+\omit&height2pt&\omit&&\omit&&\omit&&\omit&&\omit&\cr
+\noalign{\hrule}
+&& {\tt\char32} &&  1 && && {\tt\char32} && 1 &\cr
+&& k && $2^{10} = 1024$ && kilo && K && $10^3 = 1000$ &\cr
+&& m && $2^{20}$ && mega && M && $10^6$ &\cr
+&& g && $2^{30}$ && giga && G && $10^9$ &\cr
+&& t && $2^{40}$ && tera && T && $10^{12}$ &\cr
+&& p && $2^{50}$ && peta && P && $10^{15}$ &\cr
+&& e && $2^{60}$ && exa && E && $10^{18}$ &\cr
+&& z && $2^{70}$ && zetta && Z && $10^{21}$ &\cr
+&& y && $2^{80}$ && yotta && Y && $10^{24}$ &\cr
+\noalign{\hrule}}}\hfil}
+@end tex
+@end iftex
 
 The default precision is 3, i.e., 1024 is printed with a lower-case
 format character as if it were @code{%.3fk} and will yield @code{1.000k}.

@@ -94,10 +94,12 @@ int
 printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 {
   /* Units for the both formats.  */
-  static const char units[2][8] =
+#define BINARY_UNITS	" kmgtpezy"
+#define DECIMAL_UNITS	" KMGTPEZY"
+  static const char units[2][sizeof (BINARY_UNITS)] =
   {
-    " kmgtpezy",	/* For binary format.  */
-    " KMGTPEZY"		/* For decimal format.  */
+    BINARY_UNITS,	/* For binary format.  */
+    DECIMAL_UNITS	/* For decimal format.  */
   };
   const char *tag = units[isupper (info->spec) != 0];
   int divisor = isupper (info->spec) ? 1000 : 1024;

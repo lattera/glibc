@@ -42,6 +42,7 @@ build-omitfp = @omitfp@
 build-bounded = @bounded@
 stdio = @stdio@
 add-ons = @subdirs@
+cross-compiling = @cross_compiling@
 
 # Build tools.
 CC = @CC@

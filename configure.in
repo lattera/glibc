@@ -366,6 +366,7 @@ AC_CANONICAL_BUILD
 if test $host != $build; then
   AC_CHECK_PROGS(BUILD_CC, gcc cc)
 fi
+AC_SUBST(cross_compiling)
 AC_PROG_CPP
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)

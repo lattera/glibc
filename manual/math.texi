@@ -146,10 +146,8 @@ You can also compute the value of pi with the expression @code{acos
 @comment math.h
 @comment ISO
 @deftypefun double sin (double @var{x})
-@end deftypefun
-@deftypefun float sinf (float @var{x})
-@end deftypefun
-@deftypefun {long double} sinl (long double @var{x})
+@deftypefunx float sinf (float @var{x})
+@deftypefunx {long double} sinl (long double @var{x})
 These functions return the sine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
@@ -157,10 +155,8 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefun double cos (double @var{x})
-@end deftypefun
-@deftypefun float cosf (float @var{x})
-@end deftypefun
-@deftypefun {long double} cosl (long double @var{x})
+@deftypefunx float cosf (float @var{x})
+@deftypefunx {long double} cosl (long double @var{x})
 These functions return the cosine of @var{x}, where @var{x} is given in
 radians.  The return value is in the range @code{-1} to @code{1}.
 @end deftypefun
@@ -168,10 +164,8 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefun double tan (double @var{x})
-@end deftypefun
-@deftypefun float tanf (float @var{x})
-@end deftypefun
-@deftypefun {long double} tanl (long double @var{x})
+@deftypefunx float tanf (float @var{x})
+@deftypefunx {long double} tanl (long double @var{x})
 These functions return the tangent of @var{x}, where @var{x} is given in
 radians.
 
@@ -189,16 +183,14 @@ either positive or negative @code{HUGE_VAL}.
 In many applications where @code{sin} and @code{cos} are used, the value
 for the same argument of both of these functions is used at the same
 time.  Since the algorithm to compute these values is very similar for
-both functions there is an additional function with computes both values
+both functions there is an additional function which computes both values
 at the same time.
 
 @comment math.h
 @comment GNU
 @deftypefun void sincos (double @var{x}, double *@var{sinx}, double *@var{cosx})
-@end deftypefun
-@deftypefun void sincosf (float @var{x}, float *@var{sinx}, float *@var{cosx})
-@end deftypefun
-@deftypefun void sincosl (long double @var{x}, long double *@var{sinx}, long double *@var{cosx})
+@deftypefunx void sincosf (float @var{x}, float *@var{sinx}, float *@var{cosx})
+@deftypefunx void sincosl (long double @var{x}, long double *@var{sinx}, long double *@var{cosx})
 These functions return the sine of @var{x} in @code{*@var{sinx}} and the
 cosine of @var{x} in @code{*@var{cos}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
@@ -207,53 +199,62 @@ the range of @code{-1} to @code{1}.
 
 @cindex complex trigonometric functions
 
-The trigonometric functions are in mathematics not only on real numbers.
-They can be extended to complex numbers and the @w{ISO C 9X} standard
-introduces these variants in the standard math library.
+The trigonometric functions are in mathematics not only defined on real
+numbers.  They can be extended to complex numbers and the @w{ISO C 9X}
+standard introduces these variants in the standard math library.
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} csin (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} csinf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} csinl (complex long double @var{z})
+@deftypefunx {complex float} csinf (complex float @var{z})
+@deftypefunx {complex long double} csinl (complex long double @var{z})
 These functions return the complex sine of the complex value in @var{z}.
 The mathematical definition of the complex sine is
 
-@smallexample
-sin (z) = 1/(2*i) * (exp (z*i) - exp (-z*i))
-@end smallexample
+@ifinfo
+@math{sin (z) = 1/(2*i) * (exp (z*i) - exp (-z*i))}.
+@end ifinfo
+@iftex
+@tex
+$$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
+@end tex
+@end iftex
 @end deftypefun
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} ccos (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} ccosf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} ccosl (complex long double @var{z})
+@deftypefunx {complex float} ccosf (complex float @var{z})
+@deftypefunx {complex long double} ccosl (complex long double @var{z})
 These functions return the complex cosine of the complex value in @var{z}.
 The mathematical definition of the complex cosine is
 
-@smallexample
-cos (z) = 1/2 * (exp (z*i) + exp (-z*i))
-@end smallexample
+@ifinfo
+@math{cos (z) = 1/2 * (exp (z*i) + exp (-z*i))}
+@end ifinfo
+@iftex
+@tex
+$$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
+@end tex
+@end iftex
 @end deftypefun
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} ctan (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} ctanf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} ctanl (complex long double @var{z})
+@deftypefunx {complex float} ctanf (complex float @var{z})
+@deftypefunx {complex long double} ctanl (complex long double @var{z})
 These functions return the complex tangent of the complex value in @var{z}.
 The mathematical definition of the complex tangent is
 
-@smallexample
-tan (z) = 1/i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))
-@end smallexample
+@ifinfo
+@math{tan (z) = 1/i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))}
+@end ifinfo
+@iftex
+@tex
+$$\tan(z) = {1\over i} {e^{zi} - e^{-zi}\over e^{zi} + e^{-zi}}$$
+@end tex
+@end iftex
 @end deftypefun
 
 
@@ -268,10 +269,8 @@ respectively.
 @comment math.h
 @comment ISO
 @deftypefun double asin (double @var{x})
-@end deftypefun
-@deftypefun float asinf (float @var{x})
-@end deftypefun
-@deftypefun {long double} asinl (long double @var{x})
+@deftypefunx float asinf (float @var{x})
+@deftypefunx {long double} asinl (long double @var{x})
 These functions compute the arc sine of @var{x}---that is, the value whose
 sine is @var{x}.  The value is in units of radians.  Mathematically,
 there are infinitely many such values; the one actually returned is the
@@ -285,10 +284,8 @@ over the domain @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefun double acos (double @var{x})
-@end deftypefun
-@deftypefun float acosf (float @var{x})
-@end deftypefun
-@deftypefun {long double} acosl (long double @var{x})
+@deftypefunx float acosf (float @var{x})
+@deftypefunx {long double} acosl (long double @var{x})
 These functions compute the arc cosine of @var{x}---that is, the value
 whose cosine is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
@@ -303,10 +300,8 @@ over the domain @code{-1} to @code{1}.
 @comment math.h
 @comment ISO
 @deftypefun double atan (double @var{x})
-@end deftypefun
-@deftypefun float atanf (float @var{x})
-@end deftypefun
-@deftypefun {long double} atanl (long double @var{x})
+@deftypefunx float atanf (float @var{x})
+@deftypefunx {long double} atanl (long double @var{x})
 These functions compute the arc tangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
@@ -317,10 +312,8 @@ returned is the one between @code{-pi/2} and @code{pi/2}
 @comment math.h
 @comment ISO
 @deftypefun double atan2 (double @var{y}, double @var{x})
-@end deftypefun
-@deftypefun float atan2f (float @var{y}, float @var{x})
-@end deftypefun
-@deftypefun {long double} atan2l (long double @var{y}, long double @var{x})
+@deftypefunx float atan2f (float @var{y}, float @var{x})
+@deftypefunx {long double} atan2l (long double @var{y}, long double @var{x})
 This is the two argument arc tangent function.  It is similar to computing
 the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
 are used to determine the quadrant of the result, and @var{x} is
@@ -347,10 +340,8 @@ which are usable with complex numbers.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} casin (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} casinf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} casinl (complex long double @var{z})
+@deftypefunx {complex float} casinf (complex float @var{z})
+@deftypefunx {complex long double} casinl (complex long double @var{z})
 These functions compute the complex arc sine of @var{z}---that is, the
 value whose sine is @var{z}.  The value is in units of radians.
 
@@ -361,10 +352,8 @@ limitation on the argument @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cacos (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} cacosf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} cacosl (complex long double @var{z})
+@deftypefunx {complex float} cacosf (complex float @var{z})
+@deftypefunx {complex long double} cacosl (complex long double @var{z})
 These functions compute the complex arc cosine of @var{z}---that is, the
 value whose cosine is @var{z}.  The value is in units of radians.
 
@@ -376,10 +365,8 @@ limitation on the argument @var{z}.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} catan (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} catanf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} catanl (complex long double @var{z})
+@deftypefunx {complex float} catanf (complex float @var{z})
+@deftypefunx {complex long double} catanl (complex long double @var{z})
 These functions compute the complex arc tangent of @var{z}---that is,
 the value whose tangent is @var{z}.  The value is in units of radians.
 @end deftypefun
@@ -394,10 +381,8 @@ the value whose tangent is @var{z}.  The value is in units of radians.
 @comment math.h
 @comment ISO
 @deftypefun double exp (double @var{x})
-@end deftypefun
-@deftypefun float expf (float @var{x})
-@end deftypefun
-@deftypefun {long double} expl (long double @var{x})
+@deftypefunx float expf (float @var{x})
+@deftypefunx {long double} expl (long double @var{x})
 These functions return the value of @code{e} (the base of natural
 logarithms) raised to power @var{x}.
 
@@ -408,10 +393,8 @@ magnitude of the result is too large to be representable.
 @comment math.h
 @comment ISO
 @deftypefun double exp10 (double @var{x})
-@end deftypefun
-@deftypefun float exp10f (float @var{x})
-@end deftypefun
-@deftypefun {long double} exp10l (long double @var{x})
+@deftypefunx float exp10f (float @var{x})
+@deftypefunx {long double} exp10l (long double @var{x})
 These functions return the value of @code{10} raised to the power @var{x}.
 Mathematically, @code{exp10 (x)} is the same as @code{exp (x * log (10))}.
 
@@ -422,10 +405,8 @@ magnitude of the result is too large to be representable.
 @comment math.h
 @comment ISO
 @deftypefun double exp2 (double @var{x})
-@end deftypefun
-@deftypefun float exp2f (float @var{x})
-@end deftypefun
-@deftypefun {long double} exp2l (long double @var{x})
+@deftypefunx float exp2f (float @var{x})
+@deftypefunx {long double} exp2l (long double @var{x})
 These functions return the value of @code{2} raised to the power @var{x}.
 Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
 
@@ -437,10 +418,8 @@ magnitude of the result is too large to be representable.
 @comment math.h
 @comment ISO
 @deftypefun double log (double @var{x})
-@end deftypefun
-@deftypefun float logf (floatdouble @var{x})
-@end deftypefun
-@deftypefun {long double} logl (long double @var{x})
+@deftypefunx float logf (floatdouble @var{x})
+@deftypefunx {long double} logl (long double @var{x})
 These functions return the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
 C.
@@ -460,10 +439,8 @@ The argument is zero.  The log of zero is not defined.
 @comment math.h
 @comment ISO
 @deftypefun double log10 (double @var{x})
-@end deftypefun
-@deftypefun float log10f (float @var{x})
-@end deftypefun
-@deftypefun {long double} log10l (long double @var{x})
+@deftypefunx float log10f (float @var{x})
+@deftypefunx {long double} log10l (long double @var{x})
 These functions return the base-10 logarithm of @var{x}.  Except for the
 different base, it is similar to the @code{log} function.  In fact,
 @code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
@@ -472,10 +449,8 @@ different base, it is similar to the @code{log} function.  In fact,
 @comment math.h
 @comment ISO
 @deftypefun double log2 (double @var{x})
-@end deftypefun
-@deftypefun float log2f (float @var{x})
-@end deftypefun
-@deftypefun {long double} log2l (long double @var{x})
+@deftypefunx float log2f (float @var{x})
+@deftypefunx {long double} log2l (long double @var{x})
 These functions return the base-2 logarithm of @var{x}.  Except for the
 different base, it is similar to the @code{log} function.  In fact,
 @code{log2 (@var{x})} equals @code{log (@var{x}) / log (2)}.
@@ -484,10 +459,8 @@ different base, it is similar to the @code{log} function.  In fact,
 @comment math.h
 @comment ISO
 @deftypefun double pow (double @var{base}, double @var{power})
-@end deftypefun
-@deftypefun float powf (float @var{base}, float @var{power})
-@end deftypefun
-@deftypefun {long double} powl (long double @var{base}, long double @var{power})
+@deftypefunx float powf (float @var{base}, float @var{power})
+@deftypefunx {long double} powl (long double @var{base}, long double @var{power})
 These are general exponentiation functions, returning @var{base} raised
 to @var{power}.
 
@@ -508,10 +481,8 @@ An underflow or overflow condition was detected in the result.
 @comment math.h
 @comment ISO
 @deftypefun double sqrt (double @var{x})
-@end deftypefun
-@deftypefun float sqrtf (float @var{x})
-@end deftypefun
-@deftypefun {long double} sqrtl (long double @var{x})
+@deftypefunx float sqrtf (float @var{x})
+@deftypefunx {long double} sqrtl (long double @var{x})
 These functions return the nonnegative square root of @var{x}.
 
 The @code{sqrt} function fails, and sets @code{errno} to @code{EDOM}, if
@@ -524,10 +495,8 @@ number.
 @comment math.h
 @comment BSD
 @deftypefun double cbrt (double @var{x})
-@end deftypefun
-@deftypefun float cbrtf (float @var{x})
-@end deftypefun
-@deftypefun {long double} cbrtl (long double @var{x})
+@deftypefunx float cbrtf (float @var{x})
+@deftypefunx {long double} cbrtl (long double @var{x})
 These functions return the cube root of @var{x}.  They cannot
 fail; every representable real value has a representable real cube root.
 @end deftypefun
@@ -535,10 +504,8 @@ fail; every representable real value has a representable real cube root.
 @comment math.h
 @comment ISO
 @deftypefun double hypot (double @var{x}, double @var{y})
-@end deftypefun
-@deftypefun float hypotf (float @var{x}, float @var{y})
-@end deftypefun
-@deftypefun {long double} hypotl (long double @var{x}, long double @var{y})
+@deftypefunx float hypotf (float @var{x}, float @var{y})
+@deftypefunx {long double} hypotl (long double @var{x}, long double @var{y})
 These functions return @code{sqrt (@var{x}*@var{x} +
 @var{y}*@var{y})}.  (This is the length of the hypotenuse of a right
 triangle with sides of length @var{x} and @var{y}, or the distance
@@ -550,10 +517,8 @@ much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @comment math.h
 @comment ISO
 @deftypefun double expm1 (double @var{x})
-@end deftypefun
-@deftypefun float expm1f (float @var{x})
-@end deftypefun
-@deftypefun {long double} expm1l (long double @var{x})
+@deftypefunx float expm1f (float @var{x})
+@deftypefunx {long double} expm1l (long double @var{x})
 These functions return a value equivalent to @code{exp (@var{x}) - 1}.
 It is computed in a way that is accurate even if the value of @var{x} is
 near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate due
@@ -563,10 +528,8 @@ to subtraction of two numbers that are nearly equal.
 @comment math.h
 @comment ISO
 @deftypefun double log1p (double @var{x})
-@end deftypefun
-@deftypefun float log1pf (float @var{x})
-@end deftypefun
-@deftypefun {long double} log1pl (long double @var{x})
+@deftypefunx float log1pf (float @var{x})
+@deftypefunx {long double} log1pl (long double @var{x})
 This function returns a value equivalent to @w{@code{log (1 + @var{x})}}.
 It is computed in a way that is accurate even if the value of @var{x} is
 near zero.
@@ -584,45 +547,51 @@ definition.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cexp (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} cexpf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} cexpl (complex long double @var{z})
+@deftypefunx {complex float} cexpf (complex float @var{z})
+@deftypefunx {complex long double} cexpl (complex long double @var{z})
 These functions return the value of @code{e} (the base of natural
 logarithms) raised to power of the complex value @var{z}.
 
+@noindent
 Mathematically this corresponds to the value
 
-@smallexample
-exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))
-@end smallexample
+@ifinfo
+@math{exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))}
+@end ifinfo
+@iftex
+@tex
+$$\exp(z) = e^z = e^{{\rm Re} z} (\cos ({\rm Im} z) + i \sin ({\rm Im} z))$$
+@end tex
+@end iftex
 @end deftypefun
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} clog (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} clogf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} clogl (complex long double @var{z})
+@deftypefunx {complex float} clogf (complex float @var{z})
+@deftypefunx {complex long double} clogl (complex long double @var{z})
 These functions return the natural logarithm of the complex value
 @var{z}.  Unlike the real value version @code{log} and its variants,
 @code{clog} has no limit for the range of its argument @var{z}.
 
+@noindent
 Mathematically this corresponds to the value
 
-@smallexample
-log (z) = log (cabs (z)) + I * carg (z)
-@end smallexample
+@ifinfo
+@math{log (z) = log (cabs (z)) + I * carg (z)}
+@end ifinfo
+@iftex
+@tex
+$$\log(z) = \log(|z|) + i \arg(z)$$
+@end tex
+@end iftex
 @end deftypefun
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} csqrt (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} csqrtf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} csqrtl (complex long double @var{z})
+@deftypefunx {complex float} csqrtf (complex float @var{z})
+@deftypefunx {complex long double} csqrtl (complex long double @var{z})
 These functions return the complex root of the argument @var{z}.  Unlike
 the @code{sqrt} function these functions do not have any restriction on
 the value of the argument.
@@ -631,16 +600,19 @@ the value of the argument.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cpow (complex double @var{base}, complex double @var{power})
-@end deftypefun
-@deftypefun {complex float} cpowf (complex float @var{base}, complex float @var{power})
-@end deftypefun
-@deftypefun {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
+@deftypefunx {complex float} cpowf (complex float @var{base}, complex float @var{power})
+@deftypefunx {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
 These functions return the complex value @var{BASE} raised to the power of
 @var{power}.  This is computed as
 
-@smallexample
-cpow (x, y) = cexp (y * clog (x))
-@end smallexample
+@ifinfo
+@math{cpow (x, y) = cexp (y * clog (x))}
+@end ifinfo
+@iftex
+@tex
+$${\rm cpow}(x, y) = e^{y \log(x)}$$
+@end tex
+@end iftex
 @end deftypefun
 
 
@@ -654,10 +626,8 @@ see @ref{Exponents and Logarithms}.
 @comment math.h
 @comment ISO
 @deftypefun double sinh (double @var{x})
-@end deftypefun
-@deftypefun float sinhf (float @var{x})
-@end deftypefun
-@deftypefun {long double} sinhl (long double @var{x})
+@deftypefunx float sinhf (float @var{x})
+@deftypefunx {long double} sinhl (long double @var{x})
 These functions return the hyperbolic sine of @var{x}, defined
 mathematically as @w{@code{(exp (@var{x}) - exp (-@var{x})) / 2}}.  The
 function fails, and sets @code{errno} to @code{ERANGE}, if the value of
@@ -667,10 +637,8 @@ function fails, and sets @code{errno} to @code{ERANGE}, if the value of
 @comment math.h
 @comment ISO
 @deftypefun double cosh (double @var{x})
-@end deftypefun
-@deftypefun float coshf (float @var{x})
-@end deftypefun
-@deftypefun {long double} coshl (long double @var{x})
+@deftypefunx float coshf (float @var{x})
+@deftypefunx {long double} coshl (long double @var{x})
 These function return the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{(exp (@var{x}) + exp (-@var{x})) / 2}}.
 The function fails, and sets @code{errno} to @code{ERANGE}, if the value
@@ -680,10 +648,8 @@ of @var{x} is too large; that is, if overflow occurs.
 @comment math.h
 @comment ISO
 @deftypefun double tanh (double @var{x})
-@end deftypefun
-@deftypefun float tanhf (float @var{x})
-@end deftypefun
-@deftypefun {long double} tanhl (long double @var{x})
+@deftypefunx float tanhf (float @var{x})
+@deftypefunx {long double} tanhl (long double @var{x})
 These functions return the hyperbolic tangent of @var{x}, whose
 mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
 @end deftypefun
@@ -698,10 +664,8 @@ library are optimized for accuracy and speed.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} csinh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} csinhf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} csinhl (complex long double @var{z})
+@deftypefunx {complex float} csinhf (complex float @var{z})
+@deftypefunx {complex long double} csinhl (complex long double @var{z})
 These functions return the complex hyperbolic sine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.  The
 function fails, and sets @code{errno} to @code{ERANGE}, if the value of
@@ -711,10 +675,8 @@ result is too large.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} ccosh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} ccoshf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} ccoshl (complex long double @var{z})
+@deftypefunx {complex float} ccoshf (complex float @var{z})
+@deftypefunx {complex long double} ccoshl (complex long double @var{z})
 These functions return the complex hyperbolic cosine of @var{z}, defined
 mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.  The
 function fails, and sets @code{errno} to @code{ERANGE}, if the value of
@@ -724,10 +686,8 @@ result is too large.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} ctanh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} ctanhf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} ctanhl (complex long double @var{z})
+@deftypefunx {complex float} ctanhf (complex float @var{z})
+@deftypefunx {complex long double} ctanhl (complex long double @var{z})
 These functions return the complex hyperbolic tangent of @var{z}, whose
 mathematical definition is @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @end deftypefun
@@ -738,10 +698,8 @@ mathematical definition is @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @comment math.h
 @comment ISO
 @deftypefun double asinh (double @var{x})
-@end deftypefun
-@deftypefun float asinhf (float @var{x})
-@end deftypefun
-@deftypefun {long double} asinhl (long double @var{x})
+@deftypefunx float asinhf (float @var{x})
+@deftypefunx {long double} asinhl (long double @var{x})
 These functions return the inverse hyperbolic sine of @var{x}---the
 value whose hyperbolic sine is @var{x}.
 @end deftypefun
@@ -749,10 +707,8 @@ value whose hyperbolic sine is @var{x}.
 @comment math.h
 @comment ISO
 @deftypefun double acosh (double @var{x})
-@end deftypefun
-@deftypefun float acoshf (float @var{x})
-@end deftypefun
-@deftypefun {long double} acoshl (long double @var{x})
+@deftypefunx float acoshf (float @var{x})
+@deftypefunx {long double} acoshl (long double @var{x})
 These functions return the inverse hyperbolic cosine of @var{x}---the
 value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @code{1}, @code{acosh} returns @code{HUGE_VAL}.
@@ -761,10 +717,8 @@ value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @comment math.h
 @comment ISO
 @deftypefun double atanh (double @var{x})
-@end deftypefun
-@deftypefun float atanhf (float @var{x})
-@end deftypefun
-@deftypefun {long double} atanhl (long double @var{x})
+@deftypefunx float atanhf (float @var{x})
+@deftypefunx {long double} atanhl (long double @var{x})
 These functions return the inverse hyperbolic tangent of @var{x}---the
 value whose hyperbolic tangent is @var{x}.  If the absolute value of
 @var{x} is greater than or equal to @code{1}, @code{atanh} returns
@@ -776,10 +730,8 @@ value whose hyperbolic tangent is @var{x}.  If the absolute value of
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} casinh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} casinhf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} casinhl (complex long double @var{z})
+@deftypefunx {complex float} casinhf (complex float @var{z})
+@deftypefunx {complex long double} casinhl (complex long double @var{z})
 These functions return the inverse complex hyperbolic sine of
 @var{z}---the value whose complex hyperbolic sine is @var{z}.
 @end deftypefun
@@ -787,10 +739,8 @@ These functions return the inverse complex hyperbolic sine of
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cacosh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} cacoshf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} cacoshl (complex long double @var{z})
+@deftypefunx {complex float} cacoshf (complex float @var{z})
+@deftypefunx {complex long double} cacoshl (complex long double @var{z})
 These functions return the inverse complex hyperbolic cosine of
 @var{z}---the value whose complex hyperbolic cosine is @var{z}.  Unlike
 the real valued function @code{acosh} there is not limit for the range
@@ -800,10 +750,8 @@ of the argument.
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} catanh (complex double @var{z})
-@end deftypefun
-@deftypefun {complex float} catanhf (complex float @var{z})
-@end deftypefun
-@deftypefun {complex long double} catanhl (complex long double @var{z})
+@deftypefunx {complex float} catanhf (complex float @var{z})
+@deftypefunx {complex long double} catanhl (complex long double @var{z})
 These functions return the inverse complex hyperbolic tangent of
 @var{z}---the value whose complex hyperbolic tangent is @var{z}.  Unlike
 the real valued function @code{atanh} there is not limit for the range

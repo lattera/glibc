@@ -36,25 +36,12 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk
+distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S abi-tag.h
 
 all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
-ifneq ($(elf),yes)
-
-# When not using ELF, there is just one startfile, called crt0.o.
-start-installed-name = crt0.o
-
-else
-
-# In the ELF universe, crt0.o is called crt1.o, and there are
-# some additional bizarre files.
-start-installed-name = crt1.o
-have-initfini = yes
-
-endif
 
 ifeq ($(have-initfini),yes)
 
@@ -75,7 +62,8 @@ $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 	$(CC) -c -fPIC -g0 -I$(..) -I$(common-objpfx) -DASSEMBLER $< -o $@
 
 $(objpfx)initfini.s: initfini.c
-	$(CC) -S -fPIC -finhibit-size-directive $(no-exceptions) $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -g0 -S -fPIC -finhibit-size-directive \
+              $(no-exceptions) $< -o $@
 
 $(objpfx)crti.S: $(objpfx)initfini.s
 	sed -n -e '1,/@HEADER_ENDS/p' \
@@ -95,19 +83,31 @@ endif
 
 include ../Rules
 
+define link-relocatable
+$(CC) -nostdlib -nostartfiles -r -o $@ $^
+endef
+
 ifndef start-installed-name-rule
+ifeq (yes,$(elf))
+# We link the ELF startfile along with a SHT_NOTE section indicating
+# the the kernel ABI the binaries linked with this library will require.
+$(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o
+	$(link-relocatable)
+else
 # The startfile is installed under different names, so we just call our
 # source file `start.c' and copy to the installed name after compiling.
 $(objpfx)$(start-installed-name): $(objpfx)start.o
-	-rm -f $@
+	rm -f $@
 	ln $< $@
+endif
 endif
 
 # The profiling startfile is made by linking together the normal
 # startfile with gmon-start.o, which defines a constructor function
 # to turn on profiling code at startup.
-$(objpfx)g$(start-installed-name): $(objpfx)start.o $(objpfx)gmon-start.o
-	$(CC) -nostdlib -nostartfiles -r -o $@ $^
+$(objpfx)g$(start-installed-name): $(objpfx)$(start-installed-name) \
+				   $(objpfx)gmon-start.o
+	$(link-relocatable)
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.

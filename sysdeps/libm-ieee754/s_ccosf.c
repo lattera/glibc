@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
 
 
@@ -33,16 +34,31 @@ __ccosf (__complex__ float x)
 	{
 	  __real__ res = __nanf ("");
 	  __imag__ res = 0.0;
+
+#ifdef FE_INVALID
+	  if (__isinff (__real__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
       else if (__isinff (__imag__ x))
 	{
 	  __real__ res = HUGE_VALF;
 	  __imag__ res = __nanf ("");
+
+#ifdef FE_INVALID
+	  if (__isinff (__real__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
       else
 	{
 	  __real__ res = __nanf ("");
 	  __imag__ res = __nanf ("");
+
+#ifdef FE_INVALID
+	  if (isfinite (__imag__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else

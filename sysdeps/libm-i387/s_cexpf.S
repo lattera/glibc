@@ -31,7 +31,8 @@ huge_nan_null_null:
 	.byte 0, 0, 0x80, 0x7f
 	.byte 0, 0, 0xc0, 0x7f
 	.float	0.0
-	.float	0.0
+zero:	.float	0.0
+infinity:
 	.byte 0, 0, 0x80, 0x7f
 	.byte 0, 0, 0xc0, 0x7f
 	.float 0.0
@@ -90,7 +91,7 @@ ENTRY(__cexpf)
 	   Check your FPU manual for more information.  */
 	andb	$0x01, %ah
 	cmpb	$0x01, %ah
-	je	2f
+	je	20f
 
 	/* We have finite numbers in the real and imaginary part.  Do
 	   the real work now.  */
@@ -143,9 +144,8 @@ ENTRY(__cexpf)
 1:	fxam			/* y : x */
 	fnstsw
 	movb	%ah, %dl
-	andb	$0x01, %ah	/* See above why 0x01 is usable here.  */
-	cmpb	$0x01, %ah
-	je	3f
+	testb	$0x01, %ah	/* See above why 0x01 is usable here.  */
+	jne	3f
 
 
 	/* The real part is +-Inf and the imaginary part is finite.  */
@@ -222,7 +222,14 @@ ENTRY(__cexpf)
 	.align ALIGNARG(4)
 3:	fstp	%st(0)
 	fstp	%st(0)		/* <empty> */
-	movl	%edx, %eax
+	andb	$0x45, %ah
+	andb	$0x47, %dh
+	xorb	%dh, %ah
+	jnz	30f
+	flds	MO(infinity)	/* Raise invalid exception.  */
+	fmuls	MO(zero)
+	fstp	%st(0)
+30:	movl	%edx, %eax
 	shrl	$6, %edx
 	shll	$3, %eax
 	andl	$8, %edx
@@ -235,6 +242,9 @@ ENTRY(__cexpf)
 
 	/* The real part is NaN.  */
 	.align ALIGNARG(4)
+20:	flds	MO(infinity)		/* Raise invalid exception.  */
+	fmuls	MO(zero)
+	fstp	%st(0)
 2:	fstp	%st(0)
 	fstp	%st(0)
 	movl	MO(huge_nan_null_null+4), %eax

@@ -22,7 +22,7 @@
 
 #ifndef _FENV_H
 
-#define __FENV_H	1
+#define _FENV_H	1
 #include <features.h>
 
 /* Get the architecture dependend definitions.  The following definitions
@@ -40,7 +40,7 @@
 
    The following macros are defined iff the implementation supports this
    kind of exception.
-   FE_INEXACT		inxeact result
+   FE_INEXACT		inexact result
    FE_DIVBYZERO		devision by zero
    FE_UNDERFLOW		result not representable due to underflow
    FE_OVERFLOW		result not representable due to overflow
@@ -86,7 +86,7 @@ extern int fetestexcept __P ((int __excepts));
 extern int fegetround __P ((void));
 
 /* Establish the rounding direction represented by ROUND.  */
-extern int fesetround __P ((int __round));
+extern int fesetround __P ((int __rounding_direction));
 
 
 /* Floating-point environment.  */

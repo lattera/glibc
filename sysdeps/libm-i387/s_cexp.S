@@ -31,7 +31,8 @@ huge_nan_null_null:
 	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x7f
 	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f
 	.double	0.0
-	.double	0.0
+zero:	.double	0.0
+infinity:
 	.byte 0, 0, 0, 0, 0, 0, 0xf0, 0x7f
 	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f
 	.double 0.0
@@ -90,7 +91,7 @@ ENTRY(__cexp)
 	   Check your FPU manual for more information.  */
 	andb	$0x01, %ah
 	cmpb	$0x01, %ah
-	je	2f
+	je	20f
 
 	/* We have finite numbers in the real and imaginary part.  Do
 	   the real work now.  */
@@ -139,9 +140,8 @@ ENTRY(__cexp)
 1:	fxam			/* y : x */
 	fnstsw
 	movb	%ah, %dl
-	andb	$0x01, %ah	/* See above why 0x01 is usable here.  */
-	cmpb	$0x01, %ah
-	je	3f
+	testb	$0x01, %ah	/* See above why 0x01 is usable here.  */
+	jne	3f
 
 
 	/* The real part is +-Inf and the imaginary part is finite.  */
@@ -220,7 +220,14 @@ ENTRY(__cexp)
 	.align ALIGNARG(4)
 3:	fstp	%st(0)
 	fstp	%st(0)		/* <empty> */
-	movl	%edx, %eax
+	andb	$0x45, %ah
+	andb	$0x47, %dh
+	xorb	%dh, %ah
+	jnz	30f
+	fldl	MO(infinity)	/* Raise invalid exception.  */
+	fmull	MO(zero)
+	fstp	%st(0)
+30:	movl	%edx, %eax
 	shrl	$5, %edx
 	shll	$4, %eax
 	andl	$16, %edx
@@ -236,6 +243,9 @@ ENTRY(__cexp)
 
 	/* The real part is NaN.  */
 	.align ALIGNARG(4)
+20:	fldl	MO(infinity)		/* Raise invalid exception.  */
+	fmull	MO(zero)
+	fstp	%st(0)
 2:	fstp	%st(0)
 	fstp	%st(0)
 	movl	4(%esp), %eax		/* Pointer to memory for result.  */

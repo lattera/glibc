@@ -3,12 +3,15 @@
 @setfilename libc.info
 @settitle The GNU C Library
 @setchapternewpage odd
-@comment %**end of header (This is for running Texinfo on a region.)
 
 @c This tells texinfo.tex to use the real section titles in xrefs in
 @c place of the node name, when no section title is explicitly given.
 @set xref-automatic-section-title
-@smallbook
+@c @smallbook
+@iftex
+@afourpaper
+@end iftex
+@comment %**end of header (This is for running Texinfo on a region.)
 
 @c sold 0.06/1.09, print run out 21may96
 @set EDITION 0.07 DRAFT

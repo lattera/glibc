@@ -48,9 +48,6 @@ one:	.double 1.0
 	ASM_TYPE_DIRECTIVE(limit,@object)
 limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
-	ASM_TYPE_DIRECTIVE(nan,@object)
-nan:	.byte 0, 0, 0, 0, 0, 0, 0xff, 0x7f
-	ASM_SIZE_DIRECTIVE(nan)
 
 #ifdef PIC
 #define MO(op) op##@GOTOFF(%ecx)
@@ -191,8 +188,8 @@ ENTRY(__ieee754_pow)
 	ret
 
 	.align ALIGNARG(4)
-14:	fldl	MO(nan)
-	faddl	MO(zero)	// raise invalid exception
+14:	fldl	MO(infinity)
+	fmull	MO(zero)	// raise invalid exception
 	ret
 
 	.align ALIGNARG(4)

@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <complex.h>
+#include <fenv.h>
 #include <math.h>
 
 #include "math_private.h"
@@ -44,6 +45,11 @@ __ctanhl (__complex__ long double x)
 	{
 	  __real__ res = __nanl ("");
 	  __imag__ res = __nanl ("");
+
+#ifdef FE_INVALID
+	  if (__isinfl (__imag__ x))
+	    feraiseexcept (FE_INVALID);
+#endif
 	}
     }
   else

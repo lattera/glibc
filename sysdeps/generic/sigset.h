@@ -51,9 +51,9 @@ typedef unsigned long int __sigset_t;
 #ifdef _GNU_SOURCE
 # define __sigisemptyset(set)	(*(set) == (__sigset_t) 0)
 # define __sigandset(dest, left, right) \
-				((*(set) = (*(left) & *(right))), 0)
+				((*(dest) = (*(left) & *(right))), 0)
 # define __sigorset(dest, left, right) \
-				((*(set) = (*(left) | *(right))), 0)
+				((*(dest) = (*(left) | *(right))), 0)
 #endif
 
 /* These functions needn't check for a bogus signal number -- error

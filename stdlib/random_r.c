@@ -127,7 +127,8 @@ __srandom_r (x, buf)
   if (buf == NULL || buf->rand_type < TYPE_0 || buf->rand_type > TYPE_4)
     return -1;
 
-  buf->state[0] = x;
+  /* We must make sure the seed is not 0.  Take arbitrarily 1 in this case.  */
+  buf->state[0] = x ? x : 1;
   if (buf->rand_type != TYPE_0)
     {
       long int i;

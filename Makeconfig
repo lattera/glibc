@@ -318,13 +318,28 @@ ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif
 
+# Installed name of the startup code.
+ifneq ($(elf),yes)
+# When not using ELF, there is just one startfile, called crt0.o.
+start-installed-name = crt0.o
+else
+# In the ELF universe, crt0.o is called crt1.o, and there are
+# some additional bizarre files.
+start-installed-name = crt1.o
+have-initfini = yes
+endif
+
+
 # Command for linking programs with the C library.
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
-	      $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+prector) \
-	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit) \
-		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^) \
+	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
+	      $(+preinit) $(+prector) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+						     $(start-installed-name))\
+			   $(+preinit) $(link-extra-libs) \
+			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs) $(link-libc) $(+postctor) $(+postinit)
 endif
 ifndef config-LDFLAGS
@@ -535,12 +550,6 @@ endif
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)
-endif
-
-ifneq ($(BUILD_CC),$(CC))
-cross-compiling := yes
-else
-cross-compiling := no
 endif
 
 # Figure out the version numbers from version.h.
