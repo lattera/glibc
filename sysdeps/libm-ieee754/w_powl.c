@@ -44,7 +44,7 @@
 	if(x==0.0){
 	    if(y==0.0)
 	        return __kernel_standard(x,y,220); /* pow(0.0,0.0) */
-	    if(__finite(y)&&y<0.0)
+	    if(__finitel(y)&&y<0.0)
 	      if (signbit (x) && signbit (z))
 	        return __kernel_standard(x,y,223); /* pow(-0.0,negative) */
 	      else

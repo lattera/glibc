@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1091,10 +1091,15 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
     count_leading_zeros (cnt, den[densize - 1]);
 
-    (void) __mpn_lshift (den, den, densize, cnt);
-    cy = __mpn_lshift (num, num, numsize, cnt);
-    if (cy != 0)
-      num[numsize++] = cy;
+    if (cnt > 0)
+      {
+	/* Don't call `mpn_shift' with a count of zero since the specification
+	   does not allow this.  */
+	(void) __mpn_lshift (den, den, densize, cnt);
+	cy = __mpn_lshift (num, num, numsize, cnt);
+	if (cy != 0)
+	  num[numsize++] = cy;
+      }
 
     /* Now we are ready for the division.  But it is not necessary to
        do a full multi-precision division because we only need a small

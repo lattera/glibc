@@ -1,3 +1,8 @@
+1998-02-11 08:30  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/libm-ieee754/w_powl.c (__powl): Use __finitel instead
+	of __finite.
+
 1998-02-11 19:16  Richard Henderson  <rth@cygnus.com>
 
 	* stdlib/strtod.c (STRTOF): Don't call lshift with zero count.
