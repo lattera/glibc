@@ -1,9 +1,26 @@
+2000-01-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: New file, handles 32bit UIDs.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c (__xstat): Move
+	_STAT_VER_KERNEL handling up; don't save errno.
+	* sysdeps/unix/sysv/linux/arm/fxstat.c: New file.
+	* sysdeps/unix/sysv/linux/arm/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/xstat.c: Likewise.
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/loop.c (COUNT_CONVERTED): Remove macro, comment, and all uses.
 	Remove done variable and all uses.
 	* iconv/skeleton.c: Update comment for *written modification.
 	* iconv/gconv_int.h (__gconv): Update comment.
+	Reported by Bruno Haible.
 
 2000-01-18  Bruno Haible  <haible@ilog.fr>
 

@@ -1750,10 +1750,10 @@ desirable solution.  Therefore future versions will provide better ones
 but they are not yet finished.
 
 If all input from the input buffer is successfully converted and stored
-in the output buffer the function returns the number of conversions
-performed.  In all other cases the return value is @code{(size_t) -1}
-and @code{errno} is set appropriately.  In this case the value pointed
-to by @var{inbytesleft} is nonzero.
+in the output buffer the function returns the number of non-reversible
+conversions performed.  In all other cases the return value is
+@code{(size_t) -1} and @code{errno} is set appropriately.  In this case
+the value pointed to by @var{inbytesleft} is nonzero.
 
 @table @code
 @item EILSEQ
@@ -2674,7 +2674,7 @@ last written byte.  This gives the caller the information on how much
 text is available in the output buffer.  Beside this the variable
 pointed to by the fifth parameter, which is of type @code{size_t}, must
 be incremented by the number of characters (@emph{not bytes}) which were
-written in the output buffer.  Then the function can return.
+converted in a non-reversible way.  Then the function can return.
 
 In case the step is not the last one the later conversion functions have
 to get a chance to do their work.  Therefore the appropriate conversion
@@ -2713,7 +2713,7 @@ went wrong and we have to recover from this.
 
 A requirement for the conversion function is that the input buffer
 pointer (the third argument) always points to the last character which
-was put in the converted form in the output buffer.  This is trivial
+was put in the converted form in the output buffer.  This is trivially
 true after the conversion performed in the current step.  But if the
 conversion functions deeper down the stream stop prematurely not all
 characters from the output buffer are consumed and therefore the input
@@ -2795,10 +2795,6 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
       char *outend = data->__outbufend;
       char *outptr;
 
-      /* @r{This variable is used to count the number of characters}
-         @r{we actually converted.}  */
-      size_t converted = 0;
-
       do
         @{
           /* @r{Remember the start value for this round.}  */
@@ -2819,8 +2815,8 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
                  @r{available.}  */
               data->__outbuf = outbuf;
 
-             /* @r{Remember how many characters we converted.}  */
-             *written += converted;
+             /* @r{If any non-reversible conversions were performed,}
+                @r{add the number to @code{*written}.}  */
 
              break;
            @}
