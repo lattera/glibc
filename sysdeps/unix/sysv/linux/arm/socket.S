@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
 
 #define P(a, b) P2(a, b)
@@ -53,6 +53,10 @@
 #define NARGS 3			/* If we were called with no wrapper, this is really socket() */
 #endif
 
+#if defined NEED_CANCELLATION && defined CENABLE
+	PSEUDO_PROLOGUE
+#endif
+
 .globl __socket
 ENTRY (__socket)
 	/* This code previously moved sp into ip and stored the args using
@@ -68,6 +72,15 @@ ENTRY (__socket)
 	/* Push args onto the stack.  */
 	P(PUSHARGS_,NARGS)
 
+#if defined NEED_CANCELLATION && defined CENABLE
+#ifdef PIC
+	SINGLE_THREAD_P_PIC(r3)
+#else
+	SINGLE_THREAD_P
+#endif
+	bne 1f
+#endif
+
         /* Do the system call trap.  */
 	mov a1, $P(SOCKOP_,socket)
 	mov a2, sp
@@ -80,6 +93,30 @@ ENTRY (__socket)
 	cmn r0, $124
 	RETINSTR(movcc, pc, r14)
 	b PLTJMP(SYSCALL_ERROR)
+
+#if defined NEED_CANCELLATION && defined CENABLE
+1:
+	str lr, [sp, #-4]!
+	CENABLE
+	mov ip, r0
+
+	mov r0, #P(SOCKOP_,socket)
+	add r1, sp, #4
+	swi SYS_ify(socketcall)
+
+	str r0, [sp, #-4]!
+	mov r0, ip
+	CDISABLE
+	ldr r0, [sp], #4
+	ldr lr, [sp], #4
+
+	P(POPARGS_,NARGS)
+
+	/* r0 is < 0 if there was an error.  */
+	cmn r0, $124
+	RETINSTR(movcc, pc, r14)
+	b PLTJMP(SYSCALL_ERROR)
+#endif
 
 PSEUDO_END (__socket)
 
