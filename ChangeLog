@@ -1,7 +1,16 @@
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Move actual code in...
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: ...here.  New file.
+	* sysdeps/unix/sysv/linux/statvfs.c: Don't use fstatvfs since the
+	open call would require read permission.
+	Patch by James Antill <james@and.org>.
+
+	* sysdeps/unix/sysv/linux/Dist: Add internal_fnmatch.c.
+
+	* inet/getnameinfo.c: Terminate host name for NI_NOFQDN.
 	* sysdeps/posix/getaddrinfo.c: Correct modifications done for
-	PR1515.  Patch by Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>.
+	PR1515.  Patches by Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>.
 
 	* posix/regex.h (RE_SYNTAX_POSIX_EXTENDED): Add RE_CONTEXT_INVALID_OPS.
 	* posix/regex.c (regex_compile): Return appropriate errors for

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -37,86 +37,8 @@ fstatvfs (int fd, struct statvfs *buf)
   if (__fstatfs (fd, &fsbuf) < 0)
     return -1;
 
-  /* Now fill in the fields we have information for.  */
-  buf->f_bsize = fsbuf.f_bsize;
-  /* Linux does not support f_frsize, so set it to the full block size.  */
-  buf->f_frsize = fsbuf.f_bsize;
-  buf->f_blocks = fsbuf.f_blocks;
-  buf->f_bfree = fsbuf.f_bfree;
-  buf->f_bavail = fsbuf.f_bavail;
-  buf->f_files = fsbuf.f_files;
-  buf->f_ffree = fsbuf.f_ffree;
-  buf->f_fsid = fsbuf.f_fsid;
-  buf->f_namemax = fsbuf.f_namelen;
-  memset (buf->f_spare, '\0', 6 * sizeof (int));
-
-  /* What remains to do is to fill the fields f_favail and f_flag.  */
-
-  /* XXX I have no idea how to compute f_favail.  Any idea???  */
-  buf->f_favail = buf->f_ffree;
-
-  /* Determining the flags is tricky.  We have to read /proc/mounts or
-     the /etc/mtab file and search for the entry which matches the given
-     file.  The way we can test for matching filesystem is using the
-     device number.  */
-  buf->f_flag = 0;
-  if (fstat (fd, &st) >= 0)
-    {
-      int save_errno = errno;
-      struct mntent mntbuf;
-      FILE *mtab;
-
-      mtab = __setmntent ("/proc/mounts", "r");
-      if (mtab == NULL)
-	mtab = __setmntent (_PATH_MOUNTED, "r");
-
-      if (mtab != NULL)
-	{
-	  char tmpbuf[1024];
-
-	  while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
-	    {
-	      struct stat fsst;
-
-	      /* Find out about the device the current entry is for.  */
-	      if (stat (mntbuf.mnt_dir, &fsst) >= 0
-		  && st.st_dev == fsst.st_dev)
-		{
-		  /* Bingo, we found the entry for the device FD is on.
-		     Now interpret the option string.  */
-		  char *cp = mntbuf.mnt_opts;
-		  char *opt;
-
-		  while ((opt = strsep (&cp, ",")) != NULL)
-		    if (strcmp (opt, "ro") == 0)
-		      buf->f_flag |= ST_RDONLY;
-		    else if (strcmp (opt, "nosuid") == 0)
-		      buf->f_flag |= ST_NOSUID;
-		    else if (strcmp (opt, "noexec") == 0)
-		      buf->f_flag |= ST_NOEXEC;
-		    else if (strcmp (opt, "nodev") == 0)
-		      buf->f_flag |= ST_NODEV;
-		    else if (strcmp (opt, "sync") == 0)
-		      buf->f_flag |= ST_SYNCHRONOUS;
-		    else if (strcmp (opt, "mand") == 0)
-		      buf->f_flag |= ST_MANDLOCK;
-		    else if (strcmp (opt, "noatime") == 0)
-		      buf->f_flag |= ST_NOATIME;
-		    else if (strcmp (opt, "nodiratime") == 0)
-		      buf->f_flag |= ST_NODIRATIME;
-
-		  /* We can stop looking for more entries.  */
-		  break;
-		}
-	    }
-
-	  /* Close the file.  */
-	  __endmntent (mtab);
-	}
-
-      __set_errno (save_errno);
-    }
-
+#include "internal_statvfs.c"
+  
   /* We signal success if the statfs call succeeded.  */
   return 0;
 }

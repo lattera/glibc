@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -26,21 +26,15 @@
 int
 statvfs (const char *file, struct statvfs *buf)
 {
-  int save_errno;
-  int retval;
-  int fd;
+  struct statfs fsbuf;
+  struct stat st;
 
-  fd = __open (file, O_RDONLY);
-  if (fd < 0)
+  /* Get as much information as possible from the system.  */
+  if (__statfs (fd, &fsbuf) < 0)
     return -1;
 
-  /* Let fstatvfs do the real work.  */
-  retval = fstatvfs (fd, buf);
-
-  /* Close the file while preserving the error number.  */
-  save_errno = errno;
-  __close (fd);
-  __set_errno (save_errno);
-
-  return retval;
+#include "internal_statvfs.c"
+  
+  /* We signal success if the statfs call succeeded.  */
+  return 0;
 }

@@ -243,6 +243,8 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		      {
 			strncpy (host, h->h_name,
 				 min(hostlen, (size_t) (c - h->h_name)));
+			host[min(hostlen - 1, (size_t) (c - h->h_name))]
+			  = '\0';
 			break;
 		      }
 		  }
