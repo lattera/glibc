@@ -1,3 +1,71 @@
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#ifndef __NETINET_IP_H
+#define __NETINET_IP_H 1
+
+#include <features.h>
+#include <sys/types.h>
+
+#include <netinet/in.h>
+
+__BEGIN_DECLS
+
+struct timestamp
+  {
+    u_int8_t len;
+    u_int8_t ptr;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int flags:4;
+    unsigned int overflow:4;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int overflow:4;
+    unsigned int flags:4;
+#else
+# error	"Please fix <bits/endian.h>"
+#endif
+    u_int32_t data[9];
+  };
+
+struct iphdr
+  {
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int ihl:4;
+    unsigned int version:4;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int version:4;
+    unsigned int ihl:4;
+#else
+# error	"Please fix <bits/endian.h>"
+#endif
+    u_int8_t tos;
+    u_int16_t tot_len;
+    u_int16_t id;
+    u_int16_t frag_off;
+    u_int8_t ttl;
+    u_int8_t protocol;
+    u_int16_t check;
+    u_int32_t saddr;
+    u_int32_t daddr;
+    /*The options start here. */
+  };
+
+#ifdef __USE_BSD
 /*
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -29,50 +97,66 @@
  *	@(#)ip.h	8.1 (Berkeley) 6/10/93
  */
 
-#ifndef _NETINET_IP_H
-#define _NETINET_IP_H
-
-#include <bits/types.h>
-#include <endian.h>
-#include <netinet/in.h>
-
 /*
  * Definitions for internet protocol version 4.
  * Per RFC 791, September 1981.
  */
-#define	IPVERSION	4
 
 /*
  * Structure of an internet header, naked of options.
  */
-struct ip {
+struct ip
+  {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	__u_char  ip_hl:4,		/* header length */
-		  ip_v:4;		/* version */
+    unsigned int ip_hl:4;		/* header length */
+    unsigned int ip_v:4;		/* version */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-	__u_char  ip_v:4,		/* version */
-		  ip_hl:4;		/* header length */
+    unsigned int ip_v:4;		/* version */
+    unsigned int ip_hl:4;		/* header length */
 #endif
-	__u_char  ip_tos;		/* type of service */
-	__u_short ip_len;		/* total length */
-	__u_short ip_id;		/* identification */
-	__u_short ip_off;		/* fragment offset field */
+    u_int8_t ip_tos;			/* type of service */
+    u_short ip_len;			/* total length */
+    u_short ip_id;			/* identification */
+    u_short ip_off;			/* fragment offset field */
 #define	IP_RF 0x8000			/* reserved fragment flag */
 #define	IP_DF 0x4000			/* dont fragment flag */
 #define	IP_MF 0x2000			/* more fragments flag */
 #define	IP_OFFMASK 0x1fff		/* mask for fragmenting bits */
-	__u_char  ip_ttl;		/* time to live */
-	__u_char  ip_p;			/* protocol */
-	__u_short ip_sum;		/* checksum */
-	struct	  in_addr ip_src, ip_dst; /* source and dest address */
-};
+    u_int8_t ip_ttl;			/* time to live */
+    u_int8_t ip_p;			/* protocol */
+    u_short ip_sum;			/* checksum */
+    struct in_addr ip_src, ip_dst;	/* source and dest address */
+  };
 
+/*
+ * Time stamp option structure.
+ */
+struct ip_timestamp
+  {
+    u_int8_t ipt_code;			/* IPOPT_TS */
+    u_int8_t ipt_len;			/* size of structure (variable) */
+    u_int8_t ipt_ptr;			/* index of current entry */
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int ipt_flg:4;		/* flags, see below */
+    unsigned int ipt_oflw:4;		/* overflow counter */
+#endif
+#if __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int ipt_oflw:4;		/* overflow counter */
+    unsigned int ipt_flg:4;		/* flags, see below */
+#endif
+    u_int32_t data[9];
+  };
+#endif /* __USE_BSD */
+
+#define	IPVERSION	4               /* IP version number */
 #define	IP_MAXPACKET	65535		/* maximum packet size */
 
 /*
  * Definitions for IP type of service (ip_tos)
  */
+#define	IPTOS_TOS_MASK		0x1E
+#define	IPTOS_TOS(tos)		((tos) & IPTOS_TOS_MASK)
 #define	IPTOS_LOWDELAY		0x10
 #define	IPTOS_THROUGHPUT	0x08
 #define	IPTOS_RELIABILITY	0x04
@@ -82,6 +166,8 @@ struct ip {
 /*
  * Definitions for IP precedence (also in ip_tos) (hopefully unused)
  */
+#define	IPTOS_PREC_MASK			0xe0
+#define	IPTOS_PREC(tos)                ((tos) & IPTOS_PREC_MASK)
 #define	IPTOS_PREC_NETCONTROL		0xe0
 #define	IPTOS_PREC_INTERNETCONTROL	0xc0
 #define	IPTOS_PREC_CRITIC_ECP		0xa0
@@ -94,24 +180,35 @@ struct ip {
 /*
  * Definitions for options.
  */
-#define	IPOPT_COPIED(o)		((o)&0x80)
-#define	IPOPT_CLASS(o)		((o)&0x60)
-#define	IPOPT_NUMBER(o)		((o)&0x1f)
+#define	IPOPT_COPY		0x80
+#define	IPOPT_CLASS_MASK	0x60
+#define	IPOPT_NUMBER_MASK	0x1f
+
+#define	IPOPT_COPIED(o)		((o) & IPOPT_COPY)
+#define	IPOPT_CLASS(o)		((o) & IPOPT_CLASS_MASK)
+#define	IPOPT_NUMBER(o)		((o) & IPOPT_NUMBER_MASK)
 
 #define	IPOPT_CONTROL		0x00
 #define	IPOPT_RESERVED1		0x20
 #define	IPOPT_DEBMEAS		0x40
+#define	IPOPT_MEASUREMENT       IPOPT_DEBMEAS
 #define	IPOPT_RESERVED2		0x60
 
 #define	IPOPT_EOL		0		/* end of option list */
+#define	IPOPT_END		IPOPT_EOL
 #define	IPOPT_NOP		1		/* no operation */
+#define	IPOPT_NOOP		IPOPT_NOP
 
 #define	IPOPT_RR		7		/* record packet route */
 #define	IPOPT_TS		68		/* timestamp */
+#define	IPOPT_TIMESTAMP		IPOPT_TS
 #define	IPOPT_SECURITY		130		/* provide s,c,h,tcc */
+#define	IPOPT_SEC		IPOPT_SECURITY
 #define	IPOPT_LSRR		131		/* loose source route */
 #define	IPOPT_SATID		136		/* satnet id */
+#define	IPOPT_SID		IPOPT_SATID
 #define	IPOPT_SSRR		137		/* strict source route */
+#define	IPOPT_RA		148		/* router alert */
 
 /*
  * Offsets to fields in options other than EOL and NOP.
@@ -122,24 +219,6 @@ struct ip {
 #define	IPOPT_MINOFF		4		/* min value of above */
 
 #define	MAX_IPOPTLEN		40
-
-/*
- * Time stamp option structure.
- */
-struct	ip_timestamp {
-	__u_char ipt_code;		/* IPOPT_TS */
-	__u_char ipt_len;		/* size of structure (variable) */
-	__u_char ipt_ptr;		/* index of current entry */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-	__u_char ipt_flg:4,		/* flags, see below */
-		 ipt_oflw:4;		/* overflow counter */
-#endif
-#if __BYTE_ORDER == __BIG_ENDIAN
-	__u_char ipt_oflw:4,		/* overflow counter */
-		 ipt_flg:4;		/* flags, see below */
-#endif
-	__u_long data[9];
-};
 
 /* flag bits for ipt_flg */
 #define	IPOPT_TS_TSONLY		0		/* timestamps only */
@@ -165,4 +244,6 @@ struct	ip_timestamp {
 
 #define	IP_MSS		576		/* default maximum segment size */
 
-#endif /* netinet/ip.h. */
+__END_DECLS
+
+#endif /* netinet/ip.h */
