@@ -165,7 +165,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      koi8-t.c georgian-ps.c georgian-academy.c iso-ir-209.c	    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
-	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c
+	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
+	      tcvn5712-1.c armscii-8.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

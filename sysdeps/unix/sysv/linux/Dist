@@ -1,7 +1,6 @@
 bits/initspin.h
 bits/pthreadtypes.h
 cmsg_nxthdr.c
-errlist.h
 getdirentries.c
 getdirentries64.c
 ipc_priv.h

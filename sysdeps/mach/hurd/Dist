@@ -11,6 +11,7 @@ net/if_ether.h
 net/if_ppp.h
 net/route.h
 nfs/nfs.h
+set-init.c
 siglist.h
 statfsconv.c
 xstatconv.c

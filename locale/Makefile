@@ -26,7 +26,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 		  iso-4217.def weight.h weightwc.h strlen-hash.h elem-hash.h \
 		  indigits.h indigitswc.h outdigits.h outdigitswc.h \
 		  coll-lookup.h C-translit.h.in C-translit.h gen-translit.pl \
-		  locarchive.h \
+		  locarchive.h hashval.h \
 		  $(addprefix programs/, \
 			      locale.c localedef.c \
 			      $(localedef-modules:=.c) $(locale-modules:=.c) \
