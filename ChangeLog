@@ -1,3 +1,12 @@
+2003-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/common/pause.c (do_pause): New function.  Split
+	from __libc_pause.  Implement using sigsuspend.
+	(__libc_pause): Call do_pause to do the real work.
+
+	* sysdeps/posix/sigpause.c (do_sigpause): Check range of
+	sig_or_mask parameter is is_sig != 0.
+
 2003-01-21  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/bits/ioctls.h (SIOCSIFNAME): Define.

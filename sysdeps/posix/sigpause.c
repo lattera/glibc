@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94-98,2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94-98,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,8 @@ do_sigpause (int sig_or_mask, int is_sig)
     {
       /* The modern X/Open implementation is requested.  */
       if (__sigprocmask (0, NULL, &set) < 0
-	  /* Yes, we call `sigdelset' and not `__sigdelset'.  */
+	  /* Perform the tests from sigdelset ourselves.  */
+	  || sig_or_mask <= 0 || sig_or_mask >= NSIG
 	  || __sigdelset (&set, sig_or_mask) < 0)
 	return -1;
     }

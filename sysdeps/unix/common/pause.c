@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,16 +22,28 @@
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
+static void
+do_pause (void)
+{
+  sigset_t set;
+
+  sigemptyset (&set);
+
+  __sigsuspend (&set);
+}
 
 int
 __libc_pause (void)
 {
   if (SINGLE_THREAD_P)
-    return __sigpause (__sigblock (0), 0);
+    {
+      do_pause ();
+      return -1;
+    }
 
   int oldtype = LIBC_CANCEL_ASYNC ();
-  int result = __sigpause (__sigblock (0), 0);
+  (void) do_pause ();
   LIBC_CANCEL_RESET (oldtype);
-  return result;
+  return -1;
 }
 weak_alias (__libc_pause, pause)
