@@ -48,7 +48,8 @@ _dl_close (void *_map)
   unsigned int *new_opencount;
 
   /* First see whether we can remove the object at all.  */
-  if ((map->l_flags_1 & DF_1_NODELETE) && map->l_init_called)
+  if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0)
+      && map->l_init_called)
     /* Nope.  Do nothing.  */
     return;
 
@@ -63,14 +64,8 @@ _dl_close (void *_map)
     {
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-	{
-	  char buf[20];
-
-	  buf[sizeof buf - 1] = '\0';
-
-	  _dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
-			    map->l_name, map->l_opencount);
-	}
+	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
+			  map->l_name, map->l_opencount);
 
       /* One decrement the object itself, not the dependencies.  */
       --map->l_opencount;
@@ -82,8 +77,15 @@ _dl_close (void *_map)
   list = map->l_initfini;
 
   /* Compute the new l_opencount values.  */
-  new_opencount = (unsigned int *) alloca (map->l_searchlist.r_nlist
-					   * sizeof (unsigned int));
+  i = map->l_searchlist.r_nlist;
+  if (__builtin_expect (i == 0, 0))
+    /* This can happen if we handle relocation dependencies for an
+       object which wasn't loaded directly.  */
+    for (i = 1; list[i] != NULL; ++i)
+      ;
+
+  new_opencount = (unsigned int *) alloca (i * sizeof (unsigned int));
+
   for (i = 0; list[i] != NULL; ++i)
     {
       list[i]->l_idx = i;

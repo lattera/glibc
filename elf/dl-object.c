@@ -37,14 +37,18 @@ _dl_new_object (char *realname, const char *libname, int type,
   struct link_map *l;
   int idx;
   size_t libname_len = strlen (libname) + 1;
-  struct link_map *new = calloc (sizeof *new, 1);
-  struct libname_list *newname = malloc (sizeof *newname + libname_len);
-  if (! new || ! newname)
+  struct link_map *new;
+  struct libname_list *newname;
+
+  new = (struct link_map *) calloc (sizeof *new, 1);
+  newname = (struct libname_list *) malloc (sizeof *newname + libname_len);
+  if (new == NULL || newname == NULL)
     return NULL;
 
   new->l_name = realname;
-  newname->name = memcpy (newname + 1, libname, libname_len);
+  newname->name = (char *) memcpy (newname + 1, libname, libname_len);
   newname->next = NULL;
+  newname->dont_free = 0;
   new->l_libname = newname;
   new->l_type = type;
   new->l_loader = loader;

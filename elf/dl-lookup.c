@@ -79,92 +79,94 @@ internal_function
 add_dependency (struct link_map *undef_map, struct link_map *map)
 {
   struct link_map **list;
+  struct link_map *runp;
   unsigned int act;
   unsigned int i;
   int result = 0;
+
+  /* Avoid self-references.  */
+  if (undef_map == map)
+    return 0;
 
   /* Make sure nobody can unload the object while we are at it.  */
   __libc_lock_lock_recursive (_dl_load_lock);
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
-  list = undef_map->l_initfini;
-
-  for (i = 0; list[i] != NULL; ++i)
-    if (list[i] == map)
-      break;
-
-  if (__builtin_expect (list[i] == NULL, 1))
+  if (undef_map->l_searchlist.r_list != NULL)
     {
-      /* No normal dependency.  See whether we already had to add it
-	 to the special list of dynamic dependencies.  */
-      list = undef_map->l_reldeps;
-      act = undef_map->l_reldepsact;
+      list = undef_map->l_initfini;
 
-      for (i = 0; i < act; ++i)
+      for (i = 0; list[i] != NULL; ++i)
 	if (list[i] == map)
-	  break;
-
-      if (i == act)
-	{
-	  /* The object is not yet in the dependency list.  Before we add
-	     it make sure just one more time the object we are about to
-	     reference is still available.  There is a brief period in
-	     which the object could have been removed since we found the
-	     definition.  */
-	  struct link_map *runp = _dl_loaded;
-
-	  while (runp != NULL && runp != map)
-	    runp = runp->l_next;
-
-	  if (runp != NULL)
-	    {
-	      /* The object is still available.  Add the reference now.  */
-	      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
-		{
-		  /* Allocate more memory for the dependency list.  Since
-		     this can never happen during the startup phase we can
-		     use `realloc'.  */
-		  void *newp;
-
-		  undef_map->l_reldepsmax += 5;
-		  newp = realloc (undef_map->l_reldeps,
-				  undef_map->l_reldepsmax
-				  * sizeof(struct link_map *));
-
-		  if (__builtin_expect (newp != NULL, 1))
-		    undef_map->l_reldeps = (struct link_map **) newp;
-		  else
-		    /* Correct the addition.  */
-		    undef_map->l_reldepsmax -= 5;
-		}
-
-	      /* If we didn't manage to allocate memory for the list this
-		 is no fatal mistake.  We simply increment the use counter
-		 of the referenced object and don't record the dependencies.
-		 This means this increment can never be reverted and the
-		 object will never be unloaded.  This is semantically the
-		 correct behaviour.  */
-	      if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
-		undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
-
-	      /* And increment the counter in the referenced object.  */
-	      ++map->l_opencount;
-
-	      /* Display information if we are debugging.  */
-	      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
-		_dl_debug_printf ("\
-\nfile=%s;  needed by %s (relocation dependency)\n\n",
-				  map->l_name[0] ? map->l_name : _dl_argv[0],
-				  undef_map->l_name[0]
-				  ? undef_map->l_name : _dl_argv[0]);
-	    }
-	  else
-	    /* Whoa, that was bad luck.  We have to search again.  */
-	    result = -1;
-	}
+	  goto out;
     }
 
+  /* No normal dependency.  See whether we already had to add it
+     to the special list of dynamic dependencies.  */
+  list = undef_map->l_reldeps;
+  act = undef_map->l_reldepsact;
+
+  for (i = 0; i < act; ++i)
+    if (list[i] == map)
+      goto out;
+
+  /* The object is not yet in the dependency list.  Before we add
+     it make sure just one more time the object we are about to
+     reference is still available.  There is a brief period in
+     which the object could have been removed since we found the
+     definition.  */
+  runp = _dl_loaded;
+  while (runp != NULL && runp != map)
+    runp = runp->l_next;
+
+  if (runp != NULL)
+    {
+      /* The object is still available.  Add the reference now.  */
+      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
+	{
+	  /* Allocate more memory for the dependency list.  Since this
+	     can never happen during the startup phase we can use
+	     `realloc'.  */
+	  void *newp;
+
+	  undef_map->l_reldepsmax += 5;
+	  newp = realloc (undef_map->l_reldeps,
+			  undef_map->l_reldepsmax
+			  * sizeof (struct link_map *));
+
+	  if (__builtin_expect (newp != NULL, 1))
+	    undef_map->l_reldeps = (struct link_map **) newp;
+	  else
+	    /* Correct the addition.  */
+	    undef_map->l_reldepsmax -= 5;
+	}
+
+      /* If we didn't manage to allocate memory for the list this is
+	 no fatal mistake.  We simply increment the use counter of the
+	 referenced object and don't record the dependencies.  This
+	 means this increment can never be reverted and the object
+	 will never be unloaded.  This is semantically the correct
+	 behaviour.  */
+      if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
+	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
+
+      /* And increment the counter in the referenced object.  */
+      ++map->l_opencount;
+
+      /* Display information if we are debugging.  */
+      if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
+	_dl_debug_printf ("\
+\nfile=%s;  needed by %s (relocation dependency)\n\n",
+			  map->l_name[0] ? map->l_name : _dl_argv[0],
+			  undef_map->l_name[0]
+			  ? undef_map->l_name : _dl_argv[0]);
+    }
+  else
+    /* Whoa, that was bad luck.  We have to search again.  */
+    result = -1;
+
+ out:
   /* Release the lock.  */
   __libc_lock_unlock_recursive (_dl_load_lock);
 
@@ -212,8 +214,6 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	   we have to prevent the latter from being unloaded unless the
 	   UNDEF_MAP object is also unloaded.  */
 	if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
-	    && current_value.m->l_global
-	    && undef_map != current_value.m
 	    /* Don't do this for explicit lookups as opposed to implicit
 	       runtime lookups.  */
 	    && ! explicit
@@ -395,8 +395,6 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	     we have to prevent the latter from being unloaded unless the
 	     UNDEF_MAP object is also unloaded.  */
 	  if (__builtin_expect (current_value.m->l_type == lt_loaded, 0)
-	      && current_value.m->l_global
-	      && undef_map != current_value.m
 	      /* Don't do this for explicit lookups as opposed to implicit
 		 runtime lookups.  */
 	      && ! explicit

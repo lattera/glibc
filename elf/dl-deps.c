@@ -448,11 +448,13 @@ _dl_map_object_deps (struct link_map *map,
 	{
 	  needed[nneeded++] = NULL;
 
-	  l->l_initfini = malloc (nneeded * sizeof needed[0]);
+	  l->l_initfini = (struct link_map **)
+	    malloc ((nneeded + 1) * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
 	    _dl_signal_error (ENOMEM, map->l_name, NULL,
 			      N_("cannot allocate dependency list"));
-	  memcpy (l->l_initfini, needed, nneeded * sizeof needed[0]);
+	  l->l_initfini[0] = l;
+	  memcpy (&l->l_initfini[1], needed, nneeded * sizeof needed[0]);
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */
@@ -462,7 +464,7 @@ _dl_map_object_deps (struct link_map *map,
 	while (runp != NULL && runp->done);
     }
 
-out:
+ out:
   if (errno == 0 && errno_saved != 0)
     __set_errno (errno_saved);
 
@@ -489,7 +491,7 @@ out:
 
   for (nlist = 0, runp = known; runp; runp = runp->next)
     {
-      if (trace_mode && runp->map->l_faked)
+      if (__builtin_expect (trace_mode, 0) && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;
       else
@@ -498,6 +500,30 @@ out:
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
       runp->map->l_reserved = 0;
+    }
+
+  /* Maybe we can remove some relocation dependencies now.  */
+  assert (map->l_searchlist.r_list[0] == map);
+  for (i = 0; i < map->l_reldepsact; ++i)
+    {
+      unsigned int j;
+
+      for (j = 1; j < nlist; ++j)
+	if (map->l_searchlist.r_list[j] == map->l_reldeps[i])
+	  {
+	    /* A direct or transitive dependency is also on the list
+	       of relocation dependencies.  Remove the latter.  */
+	    --map->l_reldeps[i]->l_opencount;
+
+	    for (j = i + 1; j < map->l_reldepsact; ++j)
+	      map->l_reldeps[j - 1] = map->l_reldeps[j];
+
+	    --map->l_reldepsact;
+
+	    /* Account for the '++i' performed by the 'for'.  */
+	    --i;
+	    break;
+	  }
     }
 
   /* Now determine the order in which the initialization has to happen.  */

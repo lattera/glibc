@@ -1,8 +1,35 @@
+2001-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): If object has no r_list (i.e., wasn't
+	loaded directly) determine length if l_initfini list by iterating
+	over its elements.  Minor optimizations.
+	* elf/dl-deps.c (_dl_map_object_deps): Always add own map to l_initfini
+	for dependency objects.
+	If object was already loaded check whether any of the dependencies
+	is already on the relocation dependency list.  If yes, remove the
+	latter.  Minor optimizations.
+	* elf/dl-lookup.c (add_dependency): Add check for self reference of
+	maps here.  Search l_initfini list only if the object was loaded
+	directly and not only as a dependency.
+	(_dl_lookup_symbol): Add relocation dependency also if object
+	is not in global scope.  Remove test for self-reference here.
+	(_dl_lookup_versioned_symbol): Likewise.
+	* elf/dl-object (_dl_new_object): Cleanup.  Initialize dont_free
+	element of first name record.
+	* elf/loadtest.c: Add some more test to recognize early if an object
+	wasn't unloaded.
+	* elf/Makefile: Add rules to build and run reldep5.
+	* elf/reldep5.c: New file.
+	* elf/reldepmod5.c: New file.
+	* elf/reldepmod6.c: New file.
+
+	* elf/reldep2.c: Fix typo.
+
 2001-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h (struct link_map): Add l_scope_mem and l_scope_max
 	elements.  Change l_scope to be a pointer only.
-	* elf/dl-object.c (_dl_new_ojbect): Initialize l_scope and l_scope_max.
+	* elf/dl-object.c (_dl_new_object): Initialize l_scope and l_scope_max.
 	* elf/dl-open.c (dl_open_worker): If dependency wasn't just opened
 	here add searchlist of newly open file to the dependency's scope.
 	* elf/dl-close.c (_dl_close): If dependency is used otherwise remove

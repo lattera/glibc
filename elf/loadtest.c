@@ -5,6 +5,7 @@
 #include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 /* How many load/unload operations do we do.  */
@@ -139,6 +140,23 @@ main (int argc, char *argv[])
 		    testobjs[index].name, testobjs[index].handle);
 
 	  testobjs[index].handle = NULL;
+
+	  if (testobjs[0].handle == NULL
+	      && testobjs[1].handle == NULL
+	      && testobjs[5].handle == NULL)
+	    {
+	      /* In this case none of the objects above should be
+		 present.  */
+	      for (map = _r_debug.r_map; map != NULL; map = map->l_next)
+		if (map->l_type == lt_loaded
+		    && (strstr (map->l_name, testobjs[0].name) != NULL
+			|| strstr (map->l_name, testobjs[1].name) != NULL
+			|| strstr (map->l_name, testobjs[5].name) != NULL))
+		  {
+		    printf ("`%s' is still loaded\n", map->l_name);
+		    result = 1;
+		  }
+	    }
 	}
 
       if (debug)
@@ -151,8 +169,8 @@ main (int argc, char *argv[])
       {
 	printf ("\nclose: %s: l_initfini = %p, l_versions = %p\n",
 		testobjs[count].name,
-		((struct link_map*)testobjs[count].handle)->l_initfini,
-		((struct link_map*)testobjs[count].handle)->l_versions);
+		((struct link_map *) testobjs[count].handle)->l_initfini,
+		((struct link_map *) testobjs[count].handle)->l_versions);
 
 	if (dlclose (testobjs[count].handle) != 0)
 	  {

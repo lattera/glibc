@@ -55,6 +55,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
+		   reldepmod5.c reldepmod6.c \
 		   reldep4mod1.c reldep4mod2.c reldep4mod3.c reldep4mod4.c \
 		   nextmod1.c nextmod2.c pathoptobj.c tst-pathopt.sh \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
@@ -106,7 +107,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	restest2 next dblload dblunload
+	restest2 next dblload dblunload reldep5
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -122,7 +123,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
 		neededobj5 neededobj6 firstobj globalmod1 \
 		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj \
-		dblloadmod1 dblloadmod2 dblloadmod3
+		dblloadmod1 dblloadmod2 dblloadmod3 reldepmod5 reldepmod6
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -285,6 +286,8 @@ $(objpfx)reldep4mod1.so: $(objpfx)reldep4mod3.so
 $(objpfx)reldep4mod2.so: $(objpfx)reldep4mod4.so
 $(objpfx)dblloadmod1.so: $(objpfx)dblloadmod3.so
 $(objpfx)dblloadmod2.so: $(objpfx)dblloadmod3.so
+$(objpfx)reldepmod5.so: $(objpfx)reldepmod2.so
+$(objpfx)reldepmod6.so: $(objpfx)reldepmod2.so
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -423,3 +426,6 @@ $(objpfx)dblload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
 
 $(objpfx)dblunload: $(libdl)
 $(objpfx)dblunload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
+
+$(objpfx)reldep5: $(libdl)
+$(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod5.so
