@@ -29,7 +29,6 @@ extern __thread int h_errno;
 
 /* When threaded, h_errno may be a per-thread variable.  */
 int *
-weak_const_function
 __h_errno_location (void)
 {
   return &h_errno;
