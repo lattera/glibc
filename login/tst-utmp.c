@@ -1,5 +1,5 @@
 /* Tests for UTMP functions.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ do_prepare (int argc, char *argv[])
 
 struct utmp entry[] =
 {
-#if _HAVE_UT_TV
+#if _HAVE_UT_TV || defined UTMPX
 #define UT(a)  ut_tv:{tv_sec:(a)}
 #else
 #define UT(a)  ut_time:(a)
@@ -165,7 +165,7 @@ simulate_login (const char *line, const char *user)
 	    entry[n].ut_pid = (entry_pid += 27);
 	  entry[n].ut_type = USER_PROCESS;
 	  strcpy (entry[n].ut_user, user);
-#if _HAVE_UT_TV - 0
+#if _HAVE_UT_TV - 0 || defined UTMPX
 	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
           entry[n].ut_time = (entry_time += 1000);
@@ -199,7 +199,7 @@ simulate_logout (const char *line)
 	{
 	  entry[n].ut_type = DEAD_PROCESS;
 	  entry[n].ut_user[0] = '\0';
-#if _HAVE_UT_TV - 0
+#if _HAVE_UT_TV - 0 || defined UTMPX
           entry[n].ut_tv.tv_sec = (entry_time += 1000);
 #else
           entry[n].ut_time = (entry_time += 1000);

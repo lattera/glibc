@@ -1,6 +1,6 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-3-16
+GNU C Library NEWS -- history of user-visible changes.  2001-4-5
 
-Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
+Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -13,8 +13,9 @@ Version 2.2.3
   accurate implementatations for most basic and standard math functions
   in float, double, and long double format.
 
-* Stephen Moshier implemented j0, j1, jn, y0, y1, yn, lgamma, erf, and
-  erfc for the 96-bit long double format.
+* Stephen Moshier implemented j0, j1, jn, y0, y1, yn, lgamma, erf, erfc,
+  and asin for the 96-bit long double format and logl for the 128-bit
+  long double format.
 
 * The beginning of a last-bit accurate math library by IBM Haifa were added.
   The basic double functions exist today.  Contributed by Abraham Ziv
@@ -34,6 +35,9 @@ Version 2.2.3
 * The RPC code is now thread safe.  Threads can now use the same service
   of different services at the same time.  Patch by Eric Norum
   <eric.norum@usask.ca> with some help by Ulrich Drepper.
+
+* Martin Schwidefsky <schwidefsky@de.ibm.com> implemented the setcontext
+  family of functions for Linux/S390.
 
 Version 2.2.2
 

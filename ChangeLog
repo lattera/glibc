@@ -1,3 +1,7 @@
+2001-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/tst-utmp.c: Make file usable again in tst-utmpx.c.
+
 2001-04-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/aix/dl-libc.c: Don't use the ELF version,
