@@ -1,3 +1,8 @@
+2000-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-hosts.c: Implement multi handling.
+	* resolv/Versions: Export _res_hconf for GLIBC_2.2 from libc.
+
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/nss_files/files-parse.c: Don't pollute namespace by using

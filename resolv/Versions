@@ -20,7 +20,7 @@ libc {
   }
   GLIBC_2.2 {
     # r*
-    __res_state; __res_init; __res_nclose; __res_ninit;
+    __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
   }
 }
 
