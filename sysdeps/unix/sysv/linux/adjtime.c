@@ -43,10 +43,10 @@ __adjtime (itv, otv)
 	  return -1;
 	}
       tntx.offset = tmp.tv_usec + tmp.tv_sec * 1000000L;
-      tntx.mode = ADJ_OFFSET_SINGLESHOT;
+      tntx.modes = ADJ_OFFSET_SINGLESHOT;
     }
   else
-    tntx.mode = 0;
+    tntx.modes = 0;
 
   if (__adjtimex (&tntx) < 0) return -1;
 

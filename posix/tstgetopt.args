@@ -1,1 +1,2 @@
--a -b -cfoobar
+-a -b -cfoobar --required foobar --optional=bazbug --none random
+

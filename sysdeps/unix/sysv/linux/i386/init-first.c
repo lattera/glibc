@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <unistd.h>
+#include <sysdep.h>
 #include "fpu_control.h"
 
 extern void __libc_init (int, char **, char **);
@@ -31,9 +32,16 @@ init (int *data)
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
 
-  /* Make sure we are not using iBSC2 personality.  */
-  asm ("int $0x80 # syscall no %0, arg %1"
-       : : "a" (SYS_ify (personality)), "b" (0));
+  /* Make sure we are not using the iBSC2 personality.  The `personality'
+     syscall takes one argument; zero means the Linux personality.  The
+     argument arrives in %ebx; we have to save and restore %ebx by hand
+     here, because GCC (as of 2.7.0) cannot handle saving and restoring it
+     for us when it is the dedicated GOT register for PIC.  */
+  asm ("pushl %%ebx\n"
+       "xorl %%ebx, %%ebx\n"
+       "int $0x80 # syscall no %0\n"
+       "popl %%ebx"
+       : : "a" (SYS_ify (personality)));
 
   /* Set the FPU control word to the proper default value.  */
   __setfpucw (___fpu_control);
