@@ -1,3 +1,10 @@
+2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/link.h (La_ppc64_regs): Add lr_vrsave.
+	(La_ppc64_retval): Correct size of lrc_fp.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_profile_resolve):
+	Fix up ABI problems and complete function.
+
 2005-03-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* math/test-misc.c (main): Add some more tests.

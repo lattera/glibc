@@ -71,7 +71,8 @@ typedef struct La_ppc64_regs
 {
   uint64_t lr_reg[8];
   double lr_fp[13];
-  uint64_t __padding;
+  uint32_t __padding;
+  uint32_t lr_vrsave;
   uint32_t lr_vreg[12][4];
   uint64_t lr_r1;
   uint64_t lr_lr;
@@ -82,8 +83,8 @@ typedef struct La_ppc64_retval
 {
   uint64_t lrv_r3;
   uint64_t lrv_r4;
-  double lrv_fp[8];
-  uint32_t lrv_v2[4];
+  double lrv_fp[4];	/* f1-f4, float - complex long double.  */
+  uint32_t lrv_v2[4];	/* v2.  */ 
 } La_ppc64_retval;
 
 
