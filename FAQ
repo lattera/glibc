@@ -39,6 +39,7 @@ please let me know.
 	librt?  I don't even use threads.
 1.14.	What's the problem with configure --enable-omitfp?
 1.15.	I get failures during `make check'.  What shall I do?
+1.16.	What is symbol versioning good for?  Do I need it?
 
 2. Installation and configuration issues
 
@@ -182,8 +183,8 @@ a local mirror first.
 
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
-egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C library (for
-powerpc see question question 1.5).
+egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
+(for powerpc see question question 1.5).
 
 
 1.3.	When I try to compile glibc I get only error messages.
@@ -209,6 +210,10 @@ system's tools.
 
 Always get the newest release of GNU binutils available.  Older releases are
 known to have bugs that prevent a successful compilation.
+
+{AJ} Please don't use binutils 2.7.  That release contains some bugs which
+might make it necessary that you've got to recompile all your glibc2
+binaries when upgrading the GNU C library.
 
 {ZW} As of release 2.1 a linker supporting symbol versions is required.  For
 Linux, get binutils-2.8.1.0.23 or later.  Other systems may have native
@@ -300,11 +305,10 @@ new options.
 1.8.	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
-{ZW} This is a problem with all current releases of GCC.  Initialization of
-large static arrays is very slow.  The compiler will eventually finish; give
-it time.
+{ZW} This is a problem of older GCC.  Initialization of large static arrays
+is very slow.  The compiler will eventually finish; give it time.
 
-The problem will be fixed in egcs 1.1 but probably not before then.
+The problem is fixed in egcs 1.1 but not in earlier releases.
 
 
 1.9.	When I run `nm -u libc.so' on the produced library I still
@@ -426,14 +430,31 @@ command line which failed and run the test from the subdirectory for this
 test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
-- Some compiler produce buggy code.  The current egcs snapshots are ok and
-  the not yet released egcs 1.1 should be ok.  gcc 2.8.1 might cause some
-  failures, gcc 2.7.2.x is so buggy, that explicit checks have been used so
-  that you can't build with it.
+- Some compiler produce buggy code.  The egcs 1.1 release should be ok.  gcc
+  2.8.1 might cause some failures, gcc 2.7.2.x is so buggy, that explicit
+  checks have been used so that you can't build with it.
 - The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
   floating point handling has quite a number of bugs and therefore most of
   the test cases in the math subdirectory will fail.  The current Linux 2.1
   development kernels have fixes for the floating point support on Alpha.
+
+
+1.16.	What is symbol versioning good for?  Do I need it?
+
+{AJ} Symbol versioning solves problems that are related to interface
+changes.  One version of an interface might have been introduced in a
+previous version of the GNU C library but the interface or the semantics of
+the function has been changed in the meantime.  For binary compatibility
+with the old library, a newer library needs to still have the old interface
+for old programs.  On the other hand new programs should use the new
+interface.  Symbol versioning is the solution for this problem.  The GNU
+libc version 2.1 uses by default symbol versioning if the binutils support
+it.
+
+We don't advise to build without symbol versioning since you lose binary
+compatibility if you do - for ever!  The binary compatibility you lose is
+not only against the previous version of the GNU libc (version 2.0) but also
+against future versions.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -556,11 +577,14 @@ US.
 user specifies a -dynamic-linker argument.  This is the name of the libc5
 dynamic linker, which does not work with glibc.
 
-For casual use of GNU libc you can just specify
-    -dynamic-linker=/lib/ld-linux.so.2
+For casual use of GNU libc you can just specify to the linker
+    --dynamic-linker=/lib/ld-linux.so.2
 
 which is the glibc dynamic linker, on Linux systems.  On other systems the
-name is /lib/ld.so.1.
+name is /lib/ld.so.1.  When linking via gcc, you've got to add
+    -Wl,--dynamic-linker=/lib/ld-linux.so.2
+
+to the gcc command line.
 
 To change your environment to use GNU libc for compiling you need to change
 the `specs' file of your gcc.  This file is normally found at
@@ -749,7 +773,7 @@ file is usually the culprit.
 
 {AJ} If you have an entry "db" in /etc/nsswitch.conf you should also create
 the database files.  The glibc sources contain a Makefile which does the
-neccessary conversion and calls to create those files.  The file is
+necessary conversion and calls to create those files.  The file is
 `db-Makefile' in the subdirectory `nss' and you can call it with `make -f
 db-Makefile'.  Please note that not all services are capable of using a
 database.  Currently passwd, group, ethers, protocol, rpc, services shadow

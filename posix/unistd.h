@@ -718,37 +718,11 @@ extern int setlogin __P ((__const char *__name));
 
 
 #ifdef	__USE_POSIX2
-/* Process the arguments in ARGV (ARGC of them, minus
-   the program name) for options given in OPTS.
-
-   If `opterr' is zero, no messages are generated
-   for invalid options; it defaults to 1.
-   `optind' is the current index into ARGV.
-   `optarg' is the argument corresponding to the current option.
-   Return the option character from OPTS just read.
-   Return -1 when there are no more options.
-   For unrecognized options, or options missing arguments,
-   `optopt' is set to the option letter, and '?' is returned.
-
-   The OPTS string is a list of characters which are recognized option
-   letters, optionally followed by colons, specifying that that letter
-   takes an argument, to be placed in `optarg'.
-
-   If a letter in OPTS is followed by two colons, its argument is optional.
-   This behavior is specific to the GNU `getopt'.
-
-   The argument `--' causes premature termination of argument scanning,
-   explicitly telling `getopt' that there are no more options.
-
-   If OPTS begins with `--', then non-option arguments
-   are treated as arguments to the option '\0'.
-   This behavior is specific to the GNU `getopt'.  */
-extern int getopt __P ((int __argc, char *__const * __argv,
-			__const char *__opts));
-extern int opterr;
-extern int optind;
-extern int optopt;
-extern char *optarg;
+/* Get definitions and prototypes for functions to process the
+   arguments in ARGV (ARGC of them, minus the program name) for
+   options given in OPTS.  */
+# define __need_getopt
+# include <getopt.h>
 #endif
 
 

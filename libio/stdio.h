@@ -710,15 +710,8 @@ extern void funlockfile __P ((FILE *__stream));
 /* The X/Open standard requires some functions and variables to be
    declared here which do not belong into this header.  But we have to
    follow.  In GNU mode we don't do this nonsense.  */
-
-/* For more information on these symbols look in <getopt.h>.  */
-extern char *optarg;
-extern int optind;
-extern int opterr;
-extern int optopt;
-
-extern int getopt __P ((int __argc, char *__const *__argv,
-			__const char *__shortopts));
+# define __need_getopt
+# include <getopt.h>
 #endif
 
 __END_DECLS

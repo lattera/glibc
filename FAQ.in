@@ -59,8 +59,8 @@ a local mirror first.
 
 You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
-egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C library (for
-powerpc see question ?powerpc).
+egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
+(for powerpc see question ?powerpc).
 
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
@@ -176,11 +176,10 @@ new options.
 ??	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
-{ZW} This is a problem with all current releases of GCC.  Initialization of
-large static arrays is very slow.  The compiler will eventually finish; give
-it time.
+{ZW} This is a problem of older GCC.  Initialization of large static arrays
+is very slow.  The compiler will eventually finish; give it time.
 
-The problem will be fixed in egcs 1.1 but probably not before then.
+The problem is fixed in egcs 1.1 but not in earlier releases.
 
 ??	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
@@ -295,10 +294,9 @@ command line which failed and run the test from the subdirectory for this
 test in the sources.
 
 There are some failures which are not directly related to the GNU libc:
-- Some compiler produce buggy code.  The current egcs snapshots are ok and
-  the not yet released egcs 1.1 should be ok.  gcc 2.8.1 might cause some
-  failures, gcc 2.7.2.x is so buggy, that explicit checks have been used so
-  that you can't build with it.
+- Some compiler produce buggy code.  The egcs 1.1 release should be ok.  gcc
+  2.8.1 might cause some failures, gcc 2.7.2.x is so buggy, that explicit
+  checks have been used so that you can't build with it.
 - The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
   floating point handling has quite a number of bugs and therefore most of
   the test cases in the math subdirectory will fail.  The current Linux 2.1
@@ -435,11 +433,14 @@ US.
 user specifies a -dynamic-linker argument.  This is the name of the libc5
 dynamic linker, which does not work with glibc.
 
-For casual use of GNU libc you can just specify
-    -dynamic-linker=/lib/ld-linux.so.2
+For casual use of GNU libc you can just specify to the linker
+    --dynamic-linker=/lib/ld-linux.so.2
 
 which is the glibc dynamic linker, on Linux systems.  On other systems the
-name is /lib/ld.so.1.
+name is /lib/ld.so.1.  When linking via gcc, you've got to add
+    -Wl,--dynamic-linker=/lib/ld-linux.so.2
+
+to the gcc command line.
 
 To change your environment to use GNU libc for compiling you need to change
 the `specs' file of your gcc.  This file is normally found at

@@ -18,7 +18,10 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _GETOPT_H
-#define _GETOPT_H 1
+
+#ifndef __need_getopt
+# define _GETOPT_H 1
+#endif
 
 #ifdef	__cplusplus
 extern "C" {
@@ -55,7 +58,7 @@ extern int opterr;
 
 extern int optopt;
 
-#ifdef _GNU_SOURCE
+#ifndef __need_getopt
 /* Describe the long-named options requested by the application.
    The LONG_OPTIONS argument to getopt_long or getopt_long_only is a vector
    of `struct option' terminated by an element containing a name which is
@@ -96,8 +99,32 @@ struct option
 # define no_argument		0
 # define required_argument	1
 # define optional_argument	2
-#endif	/* GNU source */
+#endif	/* need getopt */
 
+
+/* Get definitions and prototypes for functions to process the
+   arguments in ARGV (ARGC of them, minus the program name) for
+   options given in OPTS.
+
+   Return the option character from OPTS just read.  Return -1 when
+   there are no more options.  For unrecognized options, or options
+   missing arguments, `optopt' is set to the option letter, and '?' is
+   returned.
+
+   The OPTS string is a list of characters which are recognized option
+   letters, optionally followed by colons, specifying that that letter
+   takes an argument, to be placed in `optarg'.
+
+   If a letter in OPTS is followed by two colons, its argument is
+   optional.  This behavior is specific to the GNU `getopt'.
+
+   The argument `--' causes premature termination of argument
+   scanning, explicitly telling `getopt' that there are no more
+   options.
+
+   If OPTS begins with `--', then non-option arguments are treated as
+   arguments to the option '\0'.  This behavior is specific to the GNU
+   `getopt'.  */
 
 #if defined __STDC__ && __STDC__
 # ifdef __GNU_LIBRARY__
@@ -109,7 +136,7 @@ extern int getopt (int argc, char *const *argv, const char *shortopts);
 extern int getopt ();
 # endif /* __GNU_LIBRARY__ */
 
-# ifdef _GNU_SOURCE
+# ifdef __need_getopt
 extern int getopt_long (int argc, char *const *argv, const char *shortopts,
 		        const struct option *longopts, int *longind);
 extern int getopt_long_only (int argc, char *const *argv,
@@ -124,7 +151,7 @@ extern int _getopt_internal (int argc, char *const *argv,
 # endif
 #else /* not __STDC__ */
 extern int getopt ();
-# ifdef _GNU_SOURCE
+# ifndef __need_getopt
 extern int getopt_long ();
 extern int getopt_long_only ();
 
@@ -135,5 +162,8 @@ extern int _getopt_internal ();
 #ifdef	__cplusplus
 }
 #endif
+
+/* Make sure we later can get all the definitions and  declarations.  */
+#undef __need_getopt
 
 #endif /* getopt.h */

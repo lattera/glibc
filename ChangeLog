@@ -1,3 +1,12 @@
+1998-09-23 15:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/stdio.h: Define __need_getopt and include getopt.h to define
+	getopt stuff.
+	* posix/unistd.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* posix/getopt.h: Remove _GNU_SOURCE use.  If __need_getopt is defined
+	define only getopt and the variables.
+
 1998-09-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* scripts/test-installation.pl (installation_problem): Don't link
@@ -14,7 +23,7 @@
 	(distribute): Add $(db1-headers).
 	(install-others): Define to install symlink libdb.so.NN and the
 	$(db1-headers).
-	(CPPFLAGS): Add -USE_LIBDB1
+	(CPPFLAGS): Add -DUSE_LIBDB1
 	Remove rules to build makedb.
 	* db/Versions: Rename libdb to libdb1.
 	* include/db.h: If USE_LIBDB1 is defined include db/db.h.
