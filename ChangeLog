@@ -2,6 +2,16 @@
 
 	* version.h (VERSION): Bump to 2.2.4.
 
+	* sysdeps/mips/Dist: Remove non-existing files.
+	* sysdeps/mips/mips64/Dist: Likewise.
+	* sysdeps/mips/mipsel/Dist: Removed.
+	* iconv/Makefile (distribute): Add strtab.c and iconvconfig.h.
+	* sysdeps/generic/Dist: Add bits/link.h.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Add sys/procfs.h.
+	* sysdeps/unix/sysv/aix/Dist: Add dl-support.c, dl-addr.c, and
+	dl-error.c.
+	* sysdeps/ia64/Dist: Add bits/link.h.
+
 	* libio/vasprintf.c (_IO_vasprintf): Don't copy uninitialized byte
 	from stream buffer to result buffer.
 	Reported by Michael Meeks <michael@ximian.com>.

@@ -1,3 +1,6 @@
+dl-support.c
+dl-error.c
+dl-addr.c
 dl-sym.c
 dl-open.c
 dl-close.c

@@ -5,3 +5,4 @@ elf/entry.h
 hp-timing.c
 ieee754.h
 softpipe.h
+bits/link.h

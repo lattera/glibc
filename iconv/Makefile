@@ -50,7 +50,8 @@ CFLAGS-charmap.c = -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 tests	= tst-iconv1 tst-iconv2 tst-iconv3
 
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c iconv_prog.h \
-		  iconv_charmap.c dummy-repertoire.c gconv_charset.h
+		  iconv_charmap.c dummy-repertoire.c gconv_charset.h strtab.c \
+		  iconvconfig.h
 
 others		= iconv_prog iconvconfig
 install-others	= $(inst_bindir)/iconv
