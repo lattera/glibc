@@ -174,7 +174,7 @@ print_group (struct group *grp)
 {
   unsigned int i = 0;
 
-  printf ("%s:%s:%ld:", grp->gr_name ? grp->gr_name : "",
+  printf ("%s:%s:%lu:", grp->gr_name ? grp->gr_name : "",
 	  grp->gr_passwd ? grp->gr_passwd : "",
 	  (unsigned long int) grp->gr_gid);
 
@@ -453,7 +453,7 @@ networks_keys (int number, char *key[])
 static inline void
 print_passwd (struct passwd *pwd)
 {
-  printf ("%s:%s:%ld:%ld:%s:%s:%s\n",
+  printf ("%s:%s:%lu:%lu:%s:%s:%s\n",
 	  pwd->pw_name ? pwd->pw_name : "",
 	  pwd->pw_passwd ? pwd->pw_passwd : "",
 	  (unsigned long int) pwd->pw_uid,

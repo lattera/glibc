@@ -1,3 +1,11 @@
+2004-07-06  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nss/getent.c (print_group, print_passwd): Use %lu format for
+	`unsigned long int' values.
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__fcntl_nocancel): Fix syntax
+	error typos in goto statements.
+
 2004-07-07  Roland McGrath  <roland@frob.com>
 
 	* Makefile (dist-separate): New variable.

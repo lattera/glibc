@@ -75,7 +75,7 @@ __fcntl_nocancel (int fd, int cmd, ...)
 	fl.l_len = (off_t) fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_len != fl64->l_len)
-	  goto eoverflow:
+	  goto eoverflow;
 
 	fl.l_type = fl64->l_type;
 	fl.l_whence = fl64->l_whence;
@@ -103,7 +103,7 @@ __fcntl_nocancel (int fd, int cmd, ...)
 	fl.l_start = (off_t) fl64->l_start;
 	/* Check if we can represent the values with the smaller type.  */
 	if ((off64_t) fl.l_start != fl64->l_start)
-	  goto eoverflow:
+	  goto eoverflow;
 
 	fl.l_len = (off_t)fl64->l_len;
 	/* Check if we can represent the values with the smaller type.  */
