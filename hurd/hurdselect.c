@@ -1,5 +1,5 @@
 /* Guts of both `select' and `poll' for Hurd.
-   Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,96,97,98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -172,8 +172,9 @@ _hurd_select (int nfds,
 		{
 		  /* If one descriptor is bogus, we fail completely.  */
 		  while (i-- > 0)
-		    _hurd_port_free (&d[i].cell->port, &d[i].ulink,
-				     d[i].io_port);
+		    if (d[i].type != 0)
+		      _hurd_port_free (&d[i].cell->port, &d[i].ulink,
+				       d[i].io_port);
 		  break;
 		}
 	      lastfd = i;
