@@ -1,3 +1,7 @@
+2003-05-26  Aldy Hernandez  <aldyh@redhat.com>
+
+	* soft-fp/soft-fp.h (FP_EX_UNDERFLOW): Define to 0.
+
 2003-05-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/setcontext.S: Pass fourth argument to

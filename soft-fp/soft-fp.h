@@ -1,5 +1,5 @@
 /* Software floating-point emulation.
-   Copyright (C) 1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@cygnus.com),
 		  Jakub Jelinek (jj@ultra.linux.cz),
@@ -55,7 +55,7 @@
 #define FP_EX_OVERFLOW		0
 #endif
 #ifndef FP_EX_UNDERFLOW
-#define FP_EX_UNDERFLOW		
+#define FP_EX_UNDERFLOW		0
 #endif
 #ifndef FP_EX_DIVZERO
 #define FP_EX_DIVZERO		0
@@ -74,7 +74,7 @@
 #else
 #define FP_DECL_EX int _fex = 0
 #endif
-  
+
 #ifndef FP_INIT_ROUNDMODE
 #define FP_INIT_ROUNDMODE do {} while (0)
 #endif
@@ -94,7 +94,7 @@
 
 #define FP_SET_EXCEPTION(ex)				\
   _fex |= (ex)
-  
+
 #define FP_UNSET_EXCEPTION(ex)				\
   _fex &= ~(ex)
 
