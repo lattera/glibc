@@ -1,3 +1,10 @@
+2002-12-12  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_thr_iter.c (iterate_thread_list): Handle special case of
+	uninitialized __stack_user (zeros), hard-wire just the main thread.
+
+	* td_thr_get_info.c (td_thr_get_info): Fix ti_lid initialization.
+
 2002-12-06  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_event_getmsg.c (td_ta_event_getmsg): Write the NEXT pointer
