@@ -1,3 +1,8 @@
+1998-05-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Avoid nasty
+	relocations.  Patch by Joe Keane <jgk@jgk.org>.
+
 1998-05-04 12:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c (ptmalloc_init_all): New function.  Similar to

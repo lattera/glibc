@@ -21,7 +21,9 @@
 #ifndef _DL_PROCINFO_H
 #define _DL_PROCINFO_H	1
 
-static const char *x86_cap_flags[] =
+/* If anything should be added here check whether the size of each string
+   is still ok with the given array size.  */
+static const char x86_cap_flags[][7] =
   {
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
