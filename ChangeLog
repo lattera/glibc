@@ -1,3 +1,10 @@
+1998-09-11 20:46  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/dl-machine.h (_dl_start_user): Pass pointer to
+	_dl_main_searchlist not _dl_default_scope to _dl_init_next.
+	* sysdeps/sparc/sparc32/dl-machine.h (_dl_start_user): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (_dl_start_user): Likewise.
+
 1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_init.c (res_init): Handle resolv.conf file with only

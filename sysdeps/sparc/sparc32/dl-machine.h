@@ -230,11 +230,11 @@ _dl_start_user:
 	st	%i4, [%i1+4]
 	bne	23b
 	 add	%i1, 8, %i1
-  /* Load _dl_default_scope[2] to pass to _dl_init_next.  */
-3:	sethi	%hi(_dl_default_scope), %g1
-	or	%g1, %lo(_dl_default_scope), %g1
+  /* Load _dl_main_searchlist to pass to _dl_init_next.  */
+3:	sethi	%hi(_dl_main_searchlist), %g1
+	or	%g1, %lo(_dl_main_searchlist), %g1
 	ld	[%l7+%g1], %l1
-	ld	[%l1+2*4], %l1
+	ld	[%l1], %l1
   /* Call _dl_init_next to return the address of an initializer to run.  */
 4:	call	_dl_init_next
 	 mov	%l1, %o0
