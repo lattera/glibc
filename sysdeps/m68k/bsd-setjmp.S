@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#if defined (MOTOROLA_SYNTAX) || defined (ELF_SYNTAX)
+#ifdef MOTOROLA_SYNTAX
 #define d0 %d0
 #define d1 %d1
 #define PUSH(reg)	move.l reg, -(%sp)
