@@ -1,3 +1,14 @@
+2000-05-22  Andreas Jaeger  <aj@suse.de>
+
+	* math/Makefile: Add -D__FAST_MATH__ to CFLAGS-test-ifloat.c,
+	CFLAGS-test-idouble.c, CFLAGS-test-ildoubl.c.
+
+	* manual/math.texi (FP Function Optimizations): Document gcc
+	-ffast-math behaviour with mathinlines.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Only use save inline
+	functions unless -ffast-math is given to gcc.
+
 2000-05-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__sincos, __sincosf,

@@ -1,3 +1,30 @@
+2000-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add pspinlock.
+	* cancel.c: Rename __pthread_spin_unlock back to __pthread_unlock.
+	Use struct _pthread_fastlock instead of pthread_spinlock_t.
+	* condvar.c: Likewise.
+	* internals.h: Likewise.
+	* join.c: Likewise.
+	* manager.c: Likewise.
+	* mutex.c: Likewise.
+	* pthread.c: Likewise.
+	* rwlock.c: Likewise.
+	* semaphore.c: Likewise.
+	* signals.c: Likewise.
+	* spinlock.h: Likewise.
+	* spinlock.c: Likewise.  Remove pthread_spin_lock functions.
+	* sysdeps/alpha/pspinlock.c: New file.
+	* sysdeps/arm/pspinlock.c: New file.
+	* sysdeps/i386/pspinlock.c: New file.
+	* sysdeps/m68k/pspinlock.c: New file.
+	* sysdeps/mips/pspinlock.c: New file.
+	* sysdeps/powerpc/pspinlock.c: New file.
+	* sysdeps/sparc/sparc32/pspinlock.c: New file.
+	* sysdeps/sparc/sparc64/pspinlock.c: New file.
+	* sysdeps/pthread/bits/pthreadtypes.h: Remove pthread_spinlock_t
+	back to _pthread_fastlock.  Define new pthread_spinlock_t.
+
 2000-05-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/i686/pt-machine.h: Only use LDT on newer kernels.

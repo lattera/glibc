@@ -116,9 +116,9 @@ endif
 CFLAGS-test-float.c = -fno-inline -ffloat-store
 CFLAGS-test-double.c = -fno-inline -ffloat-store
 CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
-CFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES
-CFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES
-CFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES
+CFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 LDLIBS-test-ifloat = math/libm
 LDLIBS-test-idouble = math/libm
 LDLIBS-test-ildoubl = math/libm

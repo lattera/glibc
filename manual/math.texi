@@ -1770,9 +1770,11 @@ This means that no calls to the library functions may be necessary, and
 can increase the speed of generated code significantly.  The drawback is
 that code size will increase, and the increase is not always negligible.
 
-The speed increase has one drawback: the inline functions might not set
-@code{errno} and might not have the same precission as the library
-functions.
+There are two kind of inline functions: Those that give the same result
+as the library functions and others that might not set @code{errno} and
+might have a reduced precision and/or argument range in comparison with
+the library functions.  The latter inline functions are only available
+if the flag @code{-ffast-math} is given to GNU CC.
 
 In cases where the inline functions and macros are not wanted the symbol
 @code{__NO_MATH_INLINES} should be defined before any system header is

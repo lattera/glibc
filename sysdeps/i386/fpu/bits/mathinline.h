@@ -281,6 +281,8 @@ __signbitl (long double __x)
 __inline_mathcode (__sgn, __x, \
   return __x == 0.0 ? 0.0 : (__x > 0.0 ? 1.0 : -1.0))
 
+/* __FAST_MATH__ is defined by gcc -ffast-math.  */
+#ifdef __FAST_MATH__
 __inline_mathcode (__pow2, __x, \
   register long double __value;						      \
   register long double __exponent;					      \
@@ -305,8 +307,8 @@ __inline_mathcode (__pow2, __x, \
      : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
   return __value)
 
-#ifdef __USE_GNU
-# define __sincos_code \
+# ifdef __USE_GNU
+#  define __sincos_code \
   register long double __cosr;						      \
   register long double __sinr;						      \
   __asm __volatile__							      \
@@ -345,13 +347,13 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
 {
   __sincos_code;
 }
-#endif
+# endif
 
 
 /* Optimized inline implementation, sometimes with reduced precision
    and/or argument range.  */
 
-#define __expm1_code \
+# define __expm1_code \
   register long double __value;						      \
   register long double __exponent;					      \
   register long double __temp;						      \
@@ -373,7 +375,7 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
 __inline_mathcodeNP_ (long double, __expm1l, __x, __expm1_code)
 
 
-#define __exp_code \
+# define __exp_code \
   register long double __value;						      \
   register long double __exponent;					      \
   __asm __volatile__							      \
@@ -400,27 +402,6 @@ __inline_mathcodeNP (tan, __x, \
   __asm __volatile__							      \
     ("fptan"								      \
      : "=t" (__value2), "=u" (__value) : "0" (__x));			      \
-  return __value)
-
-
-#define __atan2_code \
-  register long double __value;						      \
-  __asm __volatile__							      \
-    ("fpatan"								      \
-     : "=t" (__value) : "0" (__x), "u" (__y) : "st(1)");		      \
-  return __value
-__inline_mathcodeNP2 (atan2, __y, __x, __atan2_code)
-__inline_mathcodeNP2_ (long double, __atan2l, __y, __x, __atan2_code)
-
-
-__inline_mathcodeNP2 (fmod, __x, __y, \
-  register long double __value;						      \
-  __asm __volatile__							      \
-    ("1:	fprem\n\t"						      \
-     "fnstsw	%%ax\n\t"						      \
-     "sahf\n\t"								      \
-     "jp	1b"							      \
-     : "=t" (__value) : "0" (__x), "u" (__y) : "ax", "cc");		      \
   return __value)
 
 
@@ -472,6 +453,28 @@ __inline_mathcodeNP2 (pow, __x, __y, \
     ("fscale"								      \
      : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
   return __value)
+#endif /* __FAST_MATH__ */
+
+
+#define __atan2_code \
+  register long double __value;						      \
+  __asm __volatile__							      \
+    ("fpatan"								      \
+     : "=t" (__value) : "0" (__x), "u" (__y) : "st(1)");		      \
+  return __value
+__inline_mathcodeNP2 (atan2, __y, __x, __atan2_code)
+__inline_mathcodeNP2_ (long double, __atan2l, __y, __x, __atan2_code)
+
+
+__inline_mathcodeNP2 (fmod, __x, __y, \
+  register long double __value;						      \
+  __asm __volatile__							      \
+    ("1:	fprem\n\t"						      \
+     "fnstsw	%%ax\n\t"						      \
+     "sahf\n\t"								      \
+     "jp	1b"							      \
+     : "=t" (__value) : "0" (__x), "u" (__y) : "ax", "cc");		      \
+  return __value)
 
 
 __inline_mathopNP (sqrt, "fsqrt")
@@ -487,17 +490,20 @@ __inline_mathop (fabs, "fabs")
 __inline_mathop_ (long double, __fabsl, "fabs")
 #endif
 
+#ifdef __FAST_MATH__
 /* The argument range of this inline version is reduced.  */
 __inline_mathopNP (sin, "fsin")
 /* The argument range of this inline version is reduced.  */
 __inline_mathopNP (cos, "fcos")
 
-__inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
 __inline_mathop_declNP (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
 __inline_mathop_declNP (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
 
 __inline_mathcodeNP (asin, __x, return __atan2l (__x, __sqrtl (1.0 - __x * __x)))
 __inline_mathcodeNP (acos, __x, return __atan2l (__sqrtl (1.0 - __x * __x), __x))
+#endif /* __FAST_MATH__ */
+
+__inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
   union { long double __xld; unsigned int __xi[3]; } __n = { __xld: __x };  \
@@ -713,10 +719,12 @@ __inline_mathcode (__acosh1p, __x, \
 #endif /* __USE_MISC  */
 
 /* Undefine some of the large macros which are not used anymore.  */
-#undef __expm1_code
-#undef __exp_code
 #undef __atan2_code
-#undef __sincos_code
+#ifdef __FAST_MATH__
+# undef __expm1_code
+# undef __exp_code
+# undef __sincos_code
+#endif /* __FAST_MATH__ */
 
 #endif /* __NO_MATH_INLINES  */
 
