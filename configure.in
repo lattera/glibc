@@ -178,6 +178,10 @@ dnl Prevent unreasonable values.
 if test "$minimum_kernel" = yes || test "$minimum_kernel" = no; then
   # Better nothing than this.
   minimum_kernel=""
+else
+  if test "$minimum_kernel" = current; then
+    minimum_kernel=`uname -r 2>/dev/null` || minimum_kernel=
+  fi
 fi
 
 AC_CANONICAL_HOST

@@ -1,3 +1,7 @@
+1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Allow user so specify --enable-kernel=current.
+
 1999-11-12  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_nisplus/nisplus-publickey.c: Check for snprintf return value.
