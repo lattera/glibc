@@ -25,17 +25,17 @@
     (__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 7))
 /* gcc 2.7.2 and 2.7.2.1 have problems with inlining `long double'
    functions so we disable this now.  */
-#undef __NO_MATH_INLINES
-#define __NO_MATH_INLINES
+# undef __NO_MATH_INLINES
+# define __NO_MATH_INLINES
 #endif
 
 #ifdef	__GNUC__
 #ifndef __NO_MATH_INLINES
 
 #ifdef __cplusplus
-#define	__MATH_INLINE __inline
+# define __MATH_INLINE __inline
 #else
-#define	__MATH_INLINE extern __inline
+# define __MATH_INLINE extern __inline
 #endif
 
 __MATH_INLINE double cos (double);
@@ -384,7 +384,7 @@ hypot (double __x, double __y)
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
-#define __M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
+# define __M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
 
 __MATH_INLINE double log1p (double __x);
 __MATH_INLINE double
@@ -476,48 +476,42 @@ __finite (double __x)
    ix87 FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
-#undef isgreater
-#define isgreater(x, y) \
+# define isgreater(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; andb $0x45, %%ah; setz %%al;"	      \
 		 "andl $0xff, %0"					      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
 	result; })
 
-#undef isgreaterequal
-#define isgreaterequal(x, y) \
+# define isgreaterequal(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
 		 "andl $0xff, %0"					      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
 	result; })
 
-#undef isless
-#define isless(x, y) \
+# define isless(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
 		 "setz %%al; andl $0xff, %0"				      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
 	result; })
 
-#undef islessequal
-#define islessequal(x, y) \
+# define islessequal(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
 		 "setz %%al; andl $0xff, %0"				      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
 	result; })
 
-#undef islessgreater
-#define islessgreater(x, y) \
+# define islessgreater(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
 		 "andl $0xff, %0"					      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
 	result; })
 
-#undef isunordered
-#define isunordered(x, y) \
+# define isunordered(x, y) \
      ({ int result;							      \
 	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0xff, %0"	      \
 		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \

@@ -462,7 +462,11 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 						 * sizeof (struct dir_data *));
   memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
 
+#ifdef PATH_MAX
   data.dirbufsize = MAX (2 * strlen (dir), PATH_MAX);
+#else
+  data.dirbufsize = 2 * strlen (dir);
+#endif
   data.dirbuf = (char *) malloc (data.dirbufsize);
   if (data.dirbuf == NULL)
     return -1;

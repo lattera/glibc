@@ -25,12 +25,13 @@
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 int
-getsockname (fd, addr, len)
+getsockname (fd, addrarg, len)
      int fd;
-     struct sockaddr *addr;
+     __SOCKADDR_ARG addrarg;
      size_t *len;
 {
   error_t err;
+  struct sockaddr *addr = addrarg.__sockaddr__;
   char *buf = (char *) addr;
   mach_msg_type_number_t buflen = *len;
   int type;

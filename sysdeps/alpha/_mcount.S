@@ -1,37 +1,37 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  alpha
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Contributed by David Mosberger (davidm@cs.arizona.edu).
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Contributed by David Mosberger (davidm@cs.arizona.edu).
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Assembly stub to invoke _mcount().  Compiler generated code calls
-this stub after executing a function's prologue and without saving any
-registers.  It is therefore necessary to preserve a0..a5 as they may
-contain function arguments.  To work correctly with frame- less
-functions, it is also necessary to preserve ra.  Finally, division
-routines are invoked with a special calling convention and the
-compiler treats those calls as if they were instructions.  In
-particular, it doesn't save any of the temporary registers (caller
-saved registers).  It is therefore necessary to preserve all
-caller-saved registers as well
+   this stub after executing a function's prologue and without saving any
+   registers.  It is therefore necessary to preserve a0..a5 as they may
+   contain function arguments.  To work correctly with frame- less
+   functions, it is also necessary to preserve ra.  Finally, division
+   routines are invoked with a special calling convention and the
+   compiler treats those calls as if they were instructions.  In
+   particular, it doesn't save any of the temporary registers (caller
+   saved registers).  It is therefore necessary to preserve all
+   caller-saved registers as well
 
-Upon entering _mcount, register $at holds the return address and ra
-holds the return address of the function's caller (selfpc and frompc,
-respectively in gmon.c language...). */
+   Upon entering _mcount, register $at holds the return address and ra
+   holds the return address of the function's caller (selfpc and frompc,
+   respectively in gmon.c language...). */
 
 #include <sysdep.h>
 

@@ -27,6 +27,9 @@
 typedef struct __libc_lock_opaque__ __libc_lock_t;
 #endif
 
+/* Type for key of thread specific data.  */
+typedef cthread_key_t __libc_key_t;
+
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
    with __libc_lock_define_initialized, below).  Use `extern' for CLASS to

@@ -170,7 +170,7 @@ __stdio_open (filename, m, cookieptr)
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-__stdio_reopen (filename, m, cookieptr)
+__stdio_reopen (filename, m, cookieptr, closefn)
      const char *filename;
      __io_mode m;
      void **cookieptr;

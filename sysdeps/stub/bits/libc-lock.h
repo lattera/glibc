@@ -80,4 +80,7 @@
 /* We need portable names for some of the functions.  */
 #define __libc_mutex_unlock
 
+/* Type for key of thread specific data.  */
+typedef int __libc_key_t;
+
 #endif	/* bits/libc-lock.h */

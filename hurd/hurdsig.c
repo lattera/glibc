@@ -1214,6 +1214,8 @@ _hurdsig_init (void)
   err = __thread_resume (_hurd_msgport_thread);
   assert_perror (err);
 
+  (void) _hurd_self_sigstate ();
+
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);

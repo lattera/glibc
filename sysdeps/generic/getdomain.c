@@ -16,6 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Put the name of the current YP domain in no more than LEN bytes of NAME.
+   The result is null-terminated if LEN is large enough for the full
+   name and the terminator.  */
+
 #include <errno.h>
 #include <unistd.h>
 #include <sys/utsname.h>
@@ -24,11 +28,10 @@
 #if _UTSNAME_DOMAIN_LENGTH
 /* The `uname' information includes the domain name.  */
 
-/* Put the name of the current YP domain in no more than LEN bytes of NAME.
-   The result is null-terminated if LEN is large enough for the full
-   name and the terminator.  */
 int
-getdomainname (char *name, size_t len)
+getdomainname (name, len)
+    char *name;
+    size_t len;
 {
   struct utsname u;
 
@@ -40,5 +43,16 @@ getdomainname (char *name, size_t len)
 }
 
 #else
-#include <sysdeps/stub/getdomain.c>
+
+int
+getdomainname (name, len)
+     char *name;
+     size_t len;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+
+stub_warning (getdomainname)
+
 #endif

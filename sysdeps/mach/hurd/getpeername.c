@@ -28,15 +28,17 @@
 
 /* XXX should be __getpeername ? */
 int
-getpeername (fd, addr, len)
+getpeername (fd, addrarg, len)
      int fd;
      struct sockaddr *addr;
+     __SOCKADDR_ARG addrarg;
      size_t *len;
 {
   error_t err;
-  char *buf = (char *) addr;
   mach_msg_type_number_t buflen = *len;
   int type;
+  struct sockaddr *addr = addrarg.__sockaddr__;
+  char *buf = (char *) addr;
   addr_port_t aport;
 
   if (err = HURD_DPORT_USE (fd, __socket_peername (port, &aport)))

@@ -30,14 +30,15 @@
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
 int
-accept (fd, addr, addr_len)
+accept (fd, addrarg, addr_len)
       int fd;
-      struct sockaddr *addr;
+      __SOCKADDR_ARG addrarg;
       size_t *addr_len;
 {
   error_t err;
   socket_t new;
   addr_port_t aport;
+  struct sockaddr *addr = addrarg.__sockaddr__;
   char *buf = (char *) addr;
   mach_msg_type_number_t buflen;
   int type;

@@ -22,9 +22,8 @@
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-/* XXX should be __sigaltstack ? */
 int
-sigaltstack (ss, oss)
+sigaltstack (argss, oss)
      const struct sigaltstack *argss;
      struct sigaltstack *oss;
 {

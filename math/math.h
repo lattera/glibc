@@ -194,29 +194,6 @@ extern long long int llrint __P ((long double __x));
 extern long int lround __P ((long double __x));
 extern long long int llround __P ((long double __x));
 
-
-/* Comparison macros.  */
-
-/* Return nonzero value if X is greater than Y.  */
-# define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
-
-/* Return nonzero value if X is greater than or equal to Y.  */
-# define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
-
-/* Return nonzero value if X is less than Y.  */
-# define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
-
-/* Return nonzero value if X is less than or equal to Y.  */
-# define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
-
-/* Return nonzero value if either X is less than Y or Y is less than X.  */
-# define islessgreater(x, y) \
-     (!isunordered ((x), (y)) && ((x) < (y) || (y) < (x)))
-
-/* Return nonzero value if arguments are unordered.  */
-# define isunordered(x, y) \
-     (fpclassify (x) == FP_NAN || fpclassify (y) == FP_NAN)
-
 #endif /* Use ISO C 9X.  */
 
 #ifdef	__USE_MISC
@@ -326,6 +303,46 @@ extern int matherr __P ((struct exception *__exc));
 # include <bits/mathinline.h>
 #endif
 
+
+#if __USE_ISOC9X
+/* ISO C 9X defines some macros to compare number while taking care
+   for unordered numbers.  Since many FPUs provide special
+   instructions to support these and these tests are defined in
+   <bits/mathinline.h>, we define the macros at this late point.  */
+
+/* Return nonzero value if X is greater than Y.  */
+# ifndef isgreater
+#  define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
+# endif
+
+/* Return nonzero value if X is greater than or equal to Y.  */
+# ifndef isgreaterequal
+#  define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
+# endif
+
+/* Return nonzero value if X is less than Y.  */
+# ifndef isless
+#  define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
+# endif
+
+/* Return nonzero value if X is less than or equal to Y.  */
+# ifndef islessequal
+#  define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
+# endif
+
+/* Return nonzero value if either X is less than Y or Y is less than X.  */
+# ifndef islessgreater
+#  define islessgreater(x, y) \
+     (!isunordered ((x), (y)) && ((x) < (y) || (y) < (x)))
+# endif
+
+/* Return nonzero value if arguments are unordered.  */
+# ifndef isunordered
+#  define isunordered(x, y) \
+     (fpclassify (x) == FP_NAN || fpclassify (y) == FP_NAN)
+# endif
+
+#endif
 
 __END_DECLS
 

@@ -29,13 +29,14 @@
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 int
-__connect (fd, addr, len)
+__connect (fd, addrarg, len)
      int fd;
-     const struct sockaddr_un *addr;
+     __CONST_SOCKADDR_ARG addrarg;
      size_t len;
 {
   error_t err;
   addr_port_t aport;
+  const struct sockaddr_un *addr = addrarg.__sockaddr_un__;
 
   if (addr->sun_family == AF_LOCAL)
     {

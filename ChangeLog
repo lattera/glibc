@@ -1,3 +1,201 @@
+1997-06-26 21:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Move definition of macros for unordered comparison
+	after inclusion of <bits/mathinline.h>.
+	* sysdeps/i386/fpu/bits/mathinline.h: Don't undef macros for
+	unordered comparison before definition.
+	* sysdeps/m68k/fpu/bits/mathinline.h: Likewise.
+
+	* Makerules: Move definition of load-map-file before use.
+	(lib%.so): Depend on load-map-file, not lib%-map.
+
+	* manual/lgpl.texinfo: Likewise.
+
+1997-06-24 09:40  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Don't define __ilogb.
+	* sysdeps/m68k/fpu/s_ilogb.c: Define it here.  Handle zero, NaN
+	and infinity specially.
+	* sysdeps/m68k/fpu/s_ilogbf.c, sysdeps/m68k/fpu/s_ilogbl.c:
+	Adapted.
+
+	* sysdeps/m68k/fpu/bits/mathdef.h (FP_ILOGB0): Correct value.
+
+1997-06-26 17:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Don't use .long in tests since some strange
+	platforms without binutils don't know this.
+	Redirect output of test commands correctly.
+	Patch by Klaus Espenlaub <kespenla@hydra.informatik.uni-ulm.de>.
+
+	* hurd/hurdsig.c (_hurdsig_init): Call _hurd_self_sigstate.
+	Patch by Kazumoto Kojima <kkojima@kk.info.kanagawa-u.ac.jp>.
+
+1997-06-26 09:02  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/mach/hurd/abi-tag.h: New file.
+
+	* sysdeps/mach/bits/libc-lock.h: Add typedef for __libc_key_t.
+	* sysdeps/stub/bits/libc-lock.h: Likewise.
+
+	* sysdeps/mach/hurd/accept.c (accept): Fix type of parameter addrarg.
+	Add variable addr containing the desired part of the union.
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Likewise.
+	* sysdeps/mach/hurd/getsockname.c (getsockname): Likewise.
+	* sysdeps/mach/hurd/getpeername.c (getpeername): Likewise.
+	* sysdeps/mach/hurd/connect.c (__connect): Likewise.
+	* sysdeps/mach/hurd/bind.c (bind): Likewise.
+
+	* sysdeps/mach/hurd/select.c (__select): Change MACH_MSG_SIZE_INTEGER_T
+	to sizeof(MACH_MSG_TYPE_INTEGER_T).
+
+	* io/ftw.c (ftw_startup): Use PATH_MAX only if defined.
+
+	* sysdeps/mach/hurd/open.c (__open): Fix type of parameter file.
+
+	* sysdeps/mach/hurd/sysd-stdio.c (__stdio_reopen): Add closefn to
+	paramater list since it is used.
+
+	* sysdeps/mach/hurd/rename.c (rename): Fix type of paramater new.
+
+	* sysdeps/mach/hurd/sigaltstack.c (sigaltstack): Change parameter from
+	ss to argss.
+
+1997-06-24 14:02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Rules: Update copyright.
+	* mach/Machrules: Likewise.
+
+1997-06-26 14:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Fix accidently removed AC_OUTPUT line.
+	Reported by Andreas Jaeger.
+
+	* time/strftime.c: Don't define `memcpy' macro if HAVE_MEMCPY is
+	defined.  Reported by Akim Demaille <demaille@inf.enst.fr>.
+
+	* sysdeps/generic/getdomain.c: Include handling for stub case.
+	This eliminated the only case of a function in generic and stub.
+	* sysdeps/stub/getdomain.c: Removed.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-06-23 22:20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/alpha/_mcount.S: Update and reformat copyright,
+	remove trailing white spaces and send through unexpand.
+	* sysdeps/alpha/bb_init_func.S: Likewise.
+	* sysdeps/alpha/bzero.S: Likewise.
+	* sysdeps/alpha/ffs.S: Likewise.
+	* sysdeps/alpha/memset.S: Likewise.
+	* sysdeps/alpha/s_fabs.S: Likewise.
+	* sysdeps/alpha/strcmp.S: Likewise.
+	* sysdeps/alpha/strlen.S: Likewise.
+	* sysdeps/alpha/strncmp.S: Likewise.
+	* sysdeps/alpha/strncpy.S: Likewise.
+	* sysdeps/alpha/strrchr.S: Likewise.
+	* sysdeps/alpha/stxcpy.S: Likewise.
+	* sysdeps/alpha/stxncpy.S: Likewise.
+	* sysdeps/alpha/elf/start.S: Likewise.
+	* sysdeps/i386/strchr.S: Likewise.
+	* sysdeps/m68k/bsd-_setjmp.S: Likewise.
+	* sysdeps/m68k/bsd-setjmp.S: Likewise.
+	* sysdeps/m68k/elf/start.S: Likewise.
+	* sysdeps/mach/alpha/syscall.S: Likewise.
+	* sysdeps/mach/i386/syscall.S: Likewise.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/sparc/alloca.S: Likewise.
+	* sysdeps/standalone/i386/start.S: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/strtsupp.S: Likewise.
+	* sysdeps/standalone/i960/start.S: Likewise.
+	* sysdeps/standalone/m68k/m68020/start.S: Likewise.
+	* sysdeps/unix/_exit.S: Likewise.
+	* sysdeps/unix/fork.S: Likewise.
+	* sysdeps/unix/getegid.S: Likewise.
+	* sysdeps/unix/geteuid.S: Likewise.
+	* sysdeps/unix/getppid.S: Likewise.
+	* sysdeps/unix/syscall.S: Likewise.
+	* sysdeps/unix/arm/brk.S: Likewise.
+	* sysdeps/unix/arm/fork.S: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/brk.S: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/vfork.S: Likewise.
+	* sysdeps/unix/bsd/hp/m68k/wait3.S: Likewise.
+	* sysdeps/unix/bsd/i386/vfork.S: Likewise.
+	* sysdeps/unix/bsd/i386/wait3.S: Likewise.
+	* sysdeps/unix/bsd/m68k/pipe.S: Likewise.
+	* sysdeps/unix/bsd/m68k/syscall.S: Likewise.
+	* sysdeps/unix/bsd/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/bsd/m68k/wait.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/brk.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/fork.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/killpg.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/pipe.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/recv.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/send.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigblock.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigpause.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigsetmask.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigvec.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/start.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/vhangup.S: Likewise.
+	* sysdeps/unix/bsd/sequent/i386/getgroups.S: Likewise.
+	* sysdeps/unix/bsd/sequent/i386/sigvec.S: Likewise.
+	* sysdeps/unix/bsd/sequent/i386/syscall.S: Likewise.
+	* sysdeps/unix/bsd/sun/sigreturn.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/brk.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/syscall.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/vfork.S: Likewise.
+	* sysdeps/unix/bsd/sun/sparc/sethostid.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/wait3.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/__handler.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/start.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/vfork.S: Likewise.
+	* sysdeps/unix/bsd/vax/brk.S: Likewise.
+	* sysdeps/unix/bsd/vax/pipe.S: Likewise.
+	* sysdeps/unix/bsd/vax/sysdep.S: Likewise.
+	* sysdeps/unix/bsd/vax/vfork.S: Likewise.
+	* sysdeps/unix/bsd/vax/wait.S: Likewise.
+	* sysdeps/unix/bsd/vax/wait3.S: Likewise.
+	* sysdeps/unix/i386/brk.S: Likewise.
+	* sysdeps/unix/i386/fork.S: Likewise.
+	* sysdeps/unix/i386/pipe.S: Likewise.
+	* sysdeps/unix/i386/sigreturn.S: Likewise.
+	* sysdeps/unix/i386/syscall.S: Likewise.
+	* sysdeps/unix/i386/vfork.S: Likewise.
+	* sysdeps/unix/i386/wait.S: Likewise.
+	* sysdeps/unix/mips/brk.S: Likewise.
+	* sysdeps/unix/mips/fork.S: Likewise.
+	* sysdeps/unix/mips/pipe.S: Likewise.
+	* sysdeps/unix/mips/sigreturn.S: Likewise.
+	* sysdeps/unix/mips/sysdep.S: Likewise.
+	* sysdeps/unix/mips/wait.S: Likewise.
+	* sysdeps/unix/sparc/brk.S: Likewise.
+	* sysdeps/unix/sparc/fork.S: Likewise.
+	* sysdeps/unix/sparc/pipe.S: Likewise.
+	* sysdeps/unix/sparc/sysdep.S: Likewise.
+	* sysdeps/unix/sparc/vfork.S: Likewise.
+	* sysdeps/unix/sysv/i386/signal.S: Likewise.
+	* sysdeps/unix/sysv/i386/time.S: Likewise.
+	* sysdeps/unix/sysv/irix4/__handler.S: Likewise.
+	* sysdeps/unix/sysv/irix4/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/irix4/uname.S: Likewise.
+	* sysdeps/unix/sysv/irix4/wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pipe.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/fork.S: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sigaction.S: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sysconf.S: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/uname.S: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/waitpid.S: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/sys-sig.S: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/fsync.S: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.S: Likewise.
+	* sysdeps/vax/bsd-_setjmp.S: Likewise.
+	* sysdeps/vax/bsd-setjmp.S: Likewise.
+
 1997-06-26 02:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (CFLAGS-regex.c): -DDEBUG was not meant for the

@@ -30,13 +30,14 @@
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
-bind (fd, addr, len)
+bind (fd, addrarg, len)
      int fd;
-     const struct sockaddr_un *addr;
+     __CONST_SOCKADDR_ARG addrarg;
      size_t len;
 {
   addr_port_t aport;
   error_t err;
+  struct sockaddr_un *addr = addrarg.__sockaddr_un__;
 
   if (addr->sun_family == AF_LOCAL)
     {

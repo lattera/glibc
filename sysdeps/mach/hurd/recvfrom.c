@@ -29,12 +29,12 @@
 
 /* XXX should be __recvfrom ? */
 int
-recvfrom (fd, buf, n, flags, addr, addr_len)
+recvfrom (fd, buf, n, flags, addrarg, addr_len)
      int fd;
      void *buf;
      size_t n;
      int flags;
-     struct sockaddr *addr;
+     __SOCKADDR_ARG addrarg;
      size_t *addr_len;
 {
   error_t err;
@@ -45,6 +45,7 @@ recvfrom (fd, buf, n, flags, addr, addr_len)
   mach_msg_type_number_t nports;
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
+  struct sockaddr *addr = addrarg.__sockaddr__;
 
   if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
 					       flags, &bufp, &nread,

@@ -1,33 +1,33 @@
 /* Startup code compliant to the ELF Mips ABI.
-Copyright (C) 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* This is the canonical entry point, usually the first thing in the text
    segment.  The SVR4/Mips ABI (pages 3-31, 3-32) says that when the entry
    point runs, most registers' values are unspecified, except for:
 
    v1 ($2)	Contains a function pointer to be registered with `atexit'.
-   		This is how the dynamic linker arranges to have DT_FINI
+		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
 		before this code runs.
 
    sp ($29)	The stack contains the arguments and environment:
-   		0(%esp)			argc
+		0(%esp)			argc
 		4(%esp)			argv[0]
 		...
 		(4*argc)(%esp)		NULL
@@ -52,7 +52,7 @@ Cambridge, MA 02139, USA.  */
 	.set reorder;
 #endif
 
-	.text	
+	.text
 	.globl _start
 _start:
 #ifdef PIC
@@ -124,7 +124,7 @@ nofini:
 	lw $6, 8($29)
 	lw $7, 12($29)
 #endif  /* __mips64 */
-	
+
 	/* Call `_init', which is the entry point to our own `.init'
 	   section; and register with `atexit' to have `exit' call
 	   `_fini', which is the entry point to our own `.fini' section.  */

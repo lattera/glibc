@@ -464,7 +464,7 @@ for ac_globl in .globl .global; do
   cat > conftest.s <<EOF
 .text
 ${ac_globl} foo
-foo: .long 0
+foo:
 EOF
   if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
     libc_cv_asm_global_directive=${ac_globl}
@@ -481,7 +481,7 @@ fi
 AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
 .text
-foo: .long 0
+foo:
 .set glibc_conftest_frobozz,foo
 $libc_cv_asm_global_directive glibc_conftest_frobozz
 EOF
@@ -528,7 +528,8 @@ VERS {
 EOF
   if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&AC_FD_CC 2>&AC_FD_CC; then
     if AC_TRY_COMMAND([${CC-cc} $CFLAGS --shared -o conftest.so conftest.o
-					-Wl,--version-script,conftest.map]);
+					-Wl,--version-script,conftest.map
+		       1>&AC_FD_CC]);
     then
       libc_cv_ld_version_script_option=yes
     else
@@ -619,7 +620,7 @@ else
 cat > conftest.s <<EOF
 .text
 ${libc_cv_asm_global_directive} foo
-foo: .long 0
+foo:
 .weak foo
 .weak bar; bar = foo
 EOF
@@ -637,7 +638,7 @@ if test $libc_cv_asm_weak_directive = no; then
 cat > conftest.s <<EOF
 .text
 ${libc_cv_asm_global_directive} foo
-foo: .long 0
+foo:
 .weakext foo
 .weakext foo, bar
 EOF
@@ -666,7 +667,7 @@ EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c]); then
+			    -o conftest conftest.c 1>&AC_FD_CC]); then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -683,7 +684,7 @@ EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -fno-exceptions
-			    -o conftest conftest.c]); then
+			    -o conftest conftest.c 1>&AC_FD_CC]); then
   libc_cv_gcc_no_exceptions=yes
 else
   libc_cv_gcc_no_exceptions=no
@@ -833,5 +834,5 @@ fi
 VERSION=`sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < $srcdir/version.h`
 AC_SUBST(VERSION)
 
+AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
           [echo '$config_vars' >> config.make; test -d bits || mkdir bits])
-          [echo '$config_vars' >> config.make])

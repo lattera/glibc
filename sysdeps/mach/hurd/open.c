@@ -25,7 +25,7 @@
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
-__open (char *file, int oflag, ...)
+__open (const char *file, int oflag, ...)
 {
   mode_t mode;
   io_t port;

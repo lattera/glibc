@@ -20,11 +20,10 @@
 #include <hurd.h>
 
 /* Rename the file OLD to NEW.  */
-/* XXX should be __rename ? */
 int
 rename (old, new)
      const char *old;
-     const char **new;
+     const char *new;
 {
   error_t err;
   file_t olddir, newdir;

@@ -80,7 +80,9 @@ extern char *tzname[];
 # include <stdlib.h>
 # include <string.h>
 #else
-# define memcpy(d, s, n) bcopy ((s), (d), (n))
+# ifndef HAVE_MEMCPY
+#  define memcpy(d, s, n) bcopy ((s), (d), (n))
+# endif
 #endif
 
 #ifndef __P

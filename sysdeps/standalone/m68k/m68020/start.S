@@ -1,23 +1,22 @@
-/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
+   This file is part of the GNU C Library.
 
-This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
-
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*  entry.s
  *
@@ -27,7 +26,7 @@ Cambridge, MA 02139, USA.  */
  *  all initialization.
  */
 
-        .text
+	.text
 	      .globl   start                        | Default entry point
 	      .globl   _start                       | Default entry point
 	      .globl   M68Kvec                      | Vector Table
@@ -37,90 +36,90 @@ start:
 _start:
 M68Kvec:                               | standard location for vectors
 _M68Kvec:                               | standard location for vectors
-        nop                             | for linkers with problem
-                                        |   using location zero as entry
-        jmp      around
-        .space   4088                   | to avoid initial intr stack
-                                        |   from 135BUG on MVME13? as entry
-                                        |   and start code at 0x4000
+	nop                             | for linkers with problem
+					|   using location zero as entry
+	jmp      around
+	.space   4088                   | to avoid initial intr stack
+					|   from 135BUG on MVME13? as entry
+					|   and start code at 0x4000
 around:
-        move.w  %sr,initial_sr          | save initial values
-        movec   %isp,%a0
-        movel   %a0,initial_isp
-        movec   %usp,%a0
-        movel   %a0,initial_usp
-        movec   %msp,%a0
-        movel   %a0,initial_msp
-        oriw    #0x0700,%sr             | INTERRUPTS OFF!!!
+	move.w  %sr,initial_sr          | save initial values
+	movec   %isp,%a0
+	movel   %a0,initial_isp
+	movec   %usp,%a0
+	movel   %a0,initial_usp
+	movec   %msp,%a0
+	movel   %a0,initial_msp
+	oriw    #0x0700,%sr             | INTERRUPTS OFF!!!
 
 
 
-        |
-        | zero out uninitialized data area
-        |
+	|
+	| zero out uninitialized data area
+	|
 zerobss:
-        moveal  #end,%a0                | find end of .bss
-        moveal  #_bss_start,%a1         | find beginning of .bss
-        movel   #0,%d0
+	moveal  #end,%a0                | find end of .bss
+	moveal  #_bss_start,%a1         | find beginning of .bss
+	movel   #0,%d0
 
 loop:   movel   #0,%a1@+                | to zero out uninitialized
-        cmpal   %a0,%a1
-        jlt     loop                    | loop until _end reached
+	cmpal   %a0,%a1
+	jlt     loop                    | loop until _end reached
 
-        movel   #heap_size,__C_heap_size | set ___C_heap_size
-        movel   #heap_memory,__C_heap_start | set ___C_heap_start
-        moveal  #interrupt_stack_end,%a0 | set interrupt stack pointer
-        movec   %a0,%isp
-        moveal  #stack_end,%a0          | set master stack pointer
-        movec   %a0,%msp
-        moveal  #stack_end,%a6          | set base pointer
-        movw    #0x3000,%sr             | SUPV MODE,INTERRUPTS ON!!!
+	movel   #heap_size,__C_heap_size | set ___C_heap_size
+	movel   #heap_memory,__C_heap_start | set ___C_heap_start
+	moveal  #interrupt_stack_end,%a0 | set interrupt stack pointer
+	movec   %a0,%isp
+	moveal  #stack_end,%a0          | set master stack pointer
+	movec   %a0,%msp
+	moveal  #stack_end,%a6          | set base pointer
+	movw    #0x3000,%sr             | SUPV MODE,INTERRUPTS ON!!!
 
 #ifdef NEED_UNDERSCORES
-        jsr     __Board_Initialize      | initialize the board
+	jsr     __Board_Initialize      | initialize the board
 #else
-        jsr     _Board_Initialize       | initialize the board
+	jsr     _Board_Initialize       | initialize the board
 #endif
 
-        move.l  #0,%sp@-                | envp = NULL
-        move.l  #0,%sp@-                | argv = NULL
-        move.l  #0,%sp@-                | argc = NULL
+	move.l  #0,%sp@-                | envp = NULL
+	move.l  #0,%sp@-                | argv = NULL
+	move.l  #0,%sp@-                | argc = NULL
 #ifdef NEED_UNDERSCORES
-        jsr     ___libc_init            | initialize the library and
-                                        |   call main
+	jsr     ___libc_init            | initialize the library and
+					|   call main
 #else
-        jsr     __libc_init             | initialize the library and
-                                        |   call main
+	jsr     __libc_init             | initialize the library and
+					|   call main
 #endif
-        add.l   #12,%sp
+	add.l   #12,%sp
 
-        move.l  #0,%sp@-                | argc = NULL
-        jsr     __exit                  | call the Board specific exit
-        addq.l  #4,%sp
+	move.l  #0,%sp@-                | argc = NULL
+	jsr     __exit                  | call the Board specific exit
+	addq.l  #4,%sp
 
-        move.l  initial_isp,%a0         | if __exit returns then we can
-        movec   %a0,%isp                |   restore the initial values
-        move.l  initial_usp,%a0
-        movec   %a0,%usp
-        move.l  initial_msp,%a0
-        movec   %a0,%msp
-        move.w  initial_sr,%sr
-        rts
+	move.l  initial_isp,%a0         | if __exit returns then we can
+	movec   %a0,%isp                |   restore the initial values
+	move.l  initial_usp,%a0
+	movec   %a0,%usp
+	move.l  initial_msp,%a0
+	movec   %a0,%msp
+	move.w  initial_sr,%sr
+	rts
 
 
-        .bss
+	.bss
 
 /*
  *  So initial stack registers and status register can be saved.
  */
 
 #define DECLARE_SPACE(_name,_space,_align) \
-          .globl   _name ; \
-          .align   _align ; \
+	  .globl   _name ; \
+	  .align   _align ; \
 _name##:  .space _space
 
 #define DECLARE_LABEL(_name) \
-          .globl   _name ; \
+	  .globl   _name ; \
 _name##:
 
 #define DECLARE_PTR(_name) DECLARE_SPACE(_name,4,2)
@@ -147,7 +146,7 @@ DECLARE_U32(errno)
  *  Stack Size and Space
  */
 
-        .set stack_size, 0x20000
+	.set stack_size, 0x20000
 
 DECLARE_SPACE(stack_memory,stack_size,4)
 DECLARE_LABEL(stack_end)

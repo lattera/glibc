@@ -331,23 +331,25 @@ endif
 
 ifeq (yes,$(build-shared))
 
+# Reference map file only when versioning is selected and a map file name
+# is given.
+ifeq ($(versioning),yes)
+load-map-file = $($(@F:%.so=%)-map)
+else
+load-map-file =
+endif
+
 # Pattern rule to build a shared object from an archive of PIC objects.
 # This must come after the installation rules so Make doesn't try to
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a $(lib%-map); $(build-shlib)
+lib%.so: lib%_pic.a $(load-map-file); $(build-shlib)
 
 ifeq ($(have-no-whole-archive),yes)
 no-whole-archive = -Wl,--no-whole-archive
 else
 no-whole-archive =
-endif
-
-ifeq ($(versioning),yes)
-load-map-file = $($(@F:%.so=%)-map)
-else
-load-map-file =
 endif
 
 interp-obj = $(common-objpfx)interp.so
