@@ -83,6 +83,10 @@ extern char *tzname[];
 # include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
+#else
+# ifndef HAVE_MEMCPY
+#  define memcpy(d, s, n) bcopy ((s), (d), (n))
+# endif
 #endif
 
 #ifdef COMPILE_WIDE
@@ -816,6 +820,14 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    char *u = ufmt;
 	    char ubuf[1024]; /* enough for any single format in practice */
 	    size_t len;
+	    /* Make sure we're calling the actual underlying strftime.
+	       In some cases, config.h contains something like
+	       "#define strftime rpl_strftime".  */
+# ifdef strftime
+#  undef strftime
+	    size_t strftime ();
+# endif
+
 	    *u++ = '%';
 	    if (modifier != 0)
 	      *u++ = modifier;

@@ -1,5 +1,8 @@
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/strftime.c (my_strftime): Add compatibility code for use
+	outside glibc.  Patch by Jim Meyering <meyering@ascend.com>.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_local): uname does not everywhere
 	return 0 for success but always < 0 on failure.
 
