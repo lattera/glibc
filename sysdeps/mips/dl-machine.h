@@ -485,18 +485,46 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 {
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
-  int i, n;
+  int i, n, symidx;
   const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+  /*  This function is loaded in dl-reloc as a nested function and can
+      therefore access the variable scope from _dl_relocate_object.  */
+#ifdef RTLD_BOOTSTRAP
+# define RESOLVE_GOTSYM(sym,sym_index) 0
+#else
   /* FIXME: The macro RESOLVE_GOTSYM is not handling versioning.  */
-#define RESOLVE_GOTSYM(sym)						\
-    ({									\
-      const ElfW(Sym) *ref = sym;					\
-      ElfW(Addr) sym_loadaddr;						\
-      sym_loadaddr = _dl_lookup_symbol (strtab + sym->st_name, map,	\
-					&ref, map->l_scope,            	\
-					R_MIPS_REL32);			\
-      (ref)? sym_loadaddr + ref->st_value: 0;				\
+# define RESOLVE_GOTSYM(sym,sym_index)						\
+    ({										\
+      const ElfW(Sym) *ref = sym;						\
+      ElfW(Addr) value;								\
+										\
+      switch (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)			\
+	{									\
+	default:								\
+	  {									\
+	    const ElfW(Half) *vernum =						\
+	      (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);	\
+	    ElfW(Half) ndx = vernum[sym_index];					\
+	    const struct r_found_version *version = &l->l_versions[ndx];	\
+										\
+	    if (version->hash != 0)						\
+	      {									\
+		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,	\
+						    map,			\
+						    &ref, scope, version,	\
+						    R_MIPS_REL32);		\
+		break;								\
+	      }									\
+	    /* Fall through.  */						\
+	  }									\
+	case 0:									\
+	  value = _dl_lookup_symbol (strtab + sym->st_name, map, &ref,		\
+				     scope, R_MIPS_REL32);			\
+	}									\
+										\
+      (ref)? value + ref->st_value: 0;						\
     })
+#endif /* RTLD_BOOTSTRAP */
 
   got = (ElfW(Addr) *) D_PTR (map, l_info[DT_PLTGOT]);
 
@@ -510,8 +538,6 @@ elf_machine_got_rel (struct link_map *map, int lazy)
       while (i < n)
 	got[i++] += map->l_addr;
     }
-  else
-    i = n;
   
   /* Handle global got entries. */
   got += n;
@@ -519,7 +545,9 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   sym += map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
   i = (map->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val
        - map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val);
-
+  /* Keep track of the symbol index.  */
+  symidx = n;
+  
   while (i--)
     {
       if (sym->st_shndx == SHN_UNDEF)
@@ -529,13 +557,13 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	      if (sym->st_value && lazy)
 		*got = sym->st_value + map->l_addr;
 	      else
-		*got = RESOLVE_GOTSYM (sym);
+		*got = RESOLVE_GOTSYM (sym, symidx);
 	    }
 	  else /* if (*got == 0 || *got == QS) */
-	    *got = RESOLVE_GOTSYM (sym);
+	    *got = RESOLVE_GOTSYM (sym, symidx);
 	}
       else if (sym->st_shndx == SHN_COMMON)
-	*got = RESOLVE_GOTSYM (sym);
+	*got = RESOLVE_GOTSYM (sym, symidx);
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC
 	       && *got != sym->st_value
 	       && lazy)
@@ -546,10 +574,11 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	    *got += map->l_addr;
 	}
       else
-	*got = RESOLVE_GOTSYM (sym);
+	*got = RESOLVE_GOTSYM (sym, symidx);
 
-      got++;
-      sym++;
+      ++got;
+      ++sym;
+      ++symidx;
     }
 
 #undef RESOLVE_GOTSYM

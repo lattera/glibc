@@ -3,6 +3,7 @@
 	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Handle symbol
 	versioning.
 	(elf_machine_got_rel): Only add runtime display if needed.
+	(elf_machine_got_rel): Handle symbol versioning.
 
 2000-04-13  Andreas Jaeger  <aj@suse.de>
 
