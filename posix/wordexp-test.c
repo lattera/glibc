@@ -270,6 +270,17 @@ main (int argc, char *argv[])
 
       if (testit (&ts))
 	++fail;
+
+      ts.retval = 0;
+      ts.env = pw->pw_dir;
+      ts.words = "${var#~root}x";
+      ts.flags = 0;
+      ts.wordc = 1;
+      ts.wordv[0] = "x";
+      ts.ifs = IFS;
+
+      if (testit (&ts))
+	++fail;
     }
 
   /* "~" expands to value of $HOME when HOME is set */
@@ -299,17 +310,6 @@ main (int argc, char *argv[])
       ts.flags = 0;
       ts.wordc = 1;
       ts.wordv[0] = pw->pw_dir;
-      ts.ifs = IFS;
-
-      if (testit (&ts))
-	++fail;
-
-      ts.retval = 0;
-      ts.env = pw->pw_dir;
-      ts.words = "${var#~root}x";
-      ts.flags = 0;
-      ts.wordc = 1;
-      ts.wordv[0] = "x";
       ts.ifs = IFS;
 
       if (testit (&ts))
