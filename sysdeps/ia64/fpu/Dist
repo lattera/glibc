@@ -1,3 +1,4 @@
+libc_libm_error.c
 libm_atan2_reg.S
 libm_error.c
 libm_reduce.S

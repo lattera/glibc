@@ -1,3 +1,12 @@
+2001-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/fpu/Makefile (libm-sysdep-routines): Add libm_error,
+	libm_frexp4, libm_frexp4f, libm_frexp4l, and all the functions also
+	in libc.
+	(routines): Replace libm_error with libc_libm_error.
+	* sysdeps/ia64/fpu/Dist: Add libc_libm_error.c.
+	* sysdeps/ia64/fpu/libc_libm_error.c: New file.
+
 2001-02-18  Mark Kettenis  <kettenis@gnu.org>
 
 	* malloc/mtrace.c [USE_IN_LIBIO]: Define fopen as _IO_fopen64.
