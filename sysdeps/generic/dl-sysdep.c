@@ -168,8 +168,8 @@ _dl_sysdep_start (void **start_argptr,
   __libc_enable_secure = uid != euid || gid != egid;
 
 #ifndef HAVE_AUX_PAGESIZE
-  if (_dl_pagesize == 0)
-    _dl_pagesize = __getpagesize ();
+  if (GL(dl_pagesize) == 0)
+    GL(dl_pagesize) = __getpagesize ();
 #endif
 
 #ifdef DL_SYSDEP_INIT

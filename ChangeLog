@@ -1,3 +1,17 @@
+2002-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/readv.c: Don't use alloca if the memory requirements
+	are too high.
+
+2002-01-31  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/readv.c: Check for ssize_t overflow.
+
+2002-01-31  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Fix leftover
+	reference to _dl_pagesize.
+
 2002-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def [ld]: Add GLIBC_2.3.
