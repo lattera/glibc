@@ -1,3 +1,7 @@
+2004-02-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/dl-sysdep.h (DL_ARGV_NOT_RELRO): Define.
+
 2004-02-10  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* Makefile (libpthread-routines): Add ptcleanup.
