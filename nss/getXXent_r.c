@@ -53,6 +53,8 @@
 #define INTERNAL(Name) CONCAT2_2 (__, Name)
 #define CONCAT2_1(Pre, Post) CONCAT2_2 (Pre, Post)
 #define CONCAT2_2(Pre, Post) Pre##Post
+#define NEW(name) NEW1 (name)
+#define NEW1(name) __new_##name
 
 #define SETFUNC_NAME_STRING STRINGIZE (SETFUNC_NAME)
 #define GETFUNC_NAME_STRING STRINGIZE (REENTRANT_GETNAME)
@@ -189,7 +191,12 @@ OLD (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 do_symbol_version (OLD (REENTRANT_GETNAME), REENTRANT_GETNAME, GLIBC_2_0);
 #endif
 
+/* As INTERNAL (REENTRANT_GETNAME) may be hidden, we need an alias
+   in between so that the REENTRANT_GETNAME@@GLIBC_2.1.2 is not
+   hidden too.  */
+strong_alias (INTERNAL (REENTRANT_GETNAME), NEW (REENTRANT_GETNAME));
+
 #define do_default_symbol_version(real, name, version) \
   versioned_symbol (libc, real, name, version)
-do_default_symbol_version (INTERNAL (REENTRANT_GETNAME),
+do_default_symbol_version (NEW (REENTRANT_GETNAME),
 			   REENTRANT_GETNAME, GLIBC_2_1_2);

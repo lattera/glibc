@@ -1,3 +1,50 @@
+2002-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_debug_bindings): Use type_class 4 for TLS
+	lookups.
+	* elf/rtld.c (dl_main): Move TLS setup code before LD_TRACE_PRELINKING
+	code.  Print TLS modid and offset for modules containing PT_TLS
+	segments.
+
+2002-06-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-brk.c: Move...
+	* sysdeps/unix/sysv/linux/dl-brk.c: ...here.
+	* sysdeps/unix/sysv/linux/i386/dl-sbrk.c: Move...
+	* sysdeps/unix/sysv/linux/dl-sbrk.c: ...here.
+
+2002-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getXXbyYY_r.c (NEW, NEW1): Define.
+	(NEW (REENTRANT_NAME)): Strong alias to INTERNAL (REENTRANT_NAME).
+	(REENTRANT_NAME@@GLIBC_2.1.2): Use NEW (REENTRANT_NAME).
+	* nss/getXXent_r.c (NEW, NEW1): Define.
+	(NEW (REENTRANT_GETNAME)): Strong alias to
+	INTERNAL (REENTRANT_GETNAME).
+	(REENTRANT_GETNAME@@GLIBC_2.1.2): Use NEW (REENTRANT_GETNAME).
+
+2002-06-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_file_setbuf_mmap): New function.
+	(_IO_file_jumps_mmap): Use it.
+	* libio/iosetvbuf.c: Don't call _IO_WSETBUF.
+	* libio/libioP.h: Remove _IO_wdefault_setbuf and
+	_IO_wdefault_setbuf_internal prorotypes.  Add _IO_file_setbuf_mmap
+	prototype.
+	* libio/wfileops.c (_IO_wfile_setbuf): Removed.
+	(_IO_wfile_jumps_mmap): Don't use it anymore.
+	* libio/wgenops.c (_IO_wdefault_setbuf): Removed.
+	* libio/memstream.c (_IO_wmem_jumps): Use _IO_default_setbuf not
+	_IO_wdefault_setbuf.
+	* libio/vswprintf.c (_IO_wstrn_jumps): Likewise.
+	* libio/wstrops.c (_IO_wstr_jumps): Likewise.
+	* stdio-common/vfprintf.c (_IO_helper_jumps): Likewise.
+
+2002-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/Makefile (tests): Add tst-mmap-setvbuf.
+	* libio/tst-mmap-setvbuf.c: New test.
+
 2002-06-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Add some ulps from my P3.

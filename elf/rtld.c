@@ -1006,6 +1006,76 @@ of this helper program; chances are you did not intend to run this program.\n\
     _dl_receive_error (print_missing_version, version_check_doit, &args);
   }
 
+#ifdef USE_TLS
+  /* Now it is time to determine the layout of the static TLS block
+     and allocate it for the initial thread.  Note that we always
+     allocate the static block, we never defer it even if no
+     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
+     use the static model.  First add the dynamic linker to the list
+     if it also uses TLS.  */
+  if (GL(dl_rtld_map).l_tls_blocksize != 0)
+    /* Assign a module ID.  */
+    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+
+# ifndef SHARED
+  /* If dynamic loading of modules with TLS is impossible we do not
+     have to initialize any of the TLS functionality unless any of the
+     initial modules uses TLS.  */
+  if (GL(dl_tls_max_dtv_idx) > 0)
+# endif
+    {
+      struct link_map *l;
+      size_t nelem;
+      struct dtv_slotinfo *slotinfo;
+
+      /* Number of elements in the static TLS block.  */
+      GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
+
+      /* Allocate the array which contains the information about the
+	 dtv slots.  We allocate a few entries more than needed to
+	 avoid the need for reallocation.  */
+      nelem = GL(dl_tls_max_dtv_idx) + 1 + TLS_SLOTINFO_SURPLUS;
+
+      /* Allocate.  */
+      GL(dl_tls_dtv_slotinfo_list) = (struct dtv_slotinfo_list *)
+	malloc (sizeof (struct dtv_slotinfo_list)
+		+ nelem * sizeof (struct dtv_slotinfo));
+      /* No need to check the return value.  If memory allocation failed
+	 the program would have been terminated.  */
+
+      slotinfo = memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
+			 nelem * sizeof (struct dtv_slotinfo));
+      GL(dl_tls_dtv_slotinfo_list)->len = nelem;
+      GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+
+      /* Fill in the information from the loaded modules.  */
+      for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
+	if (l->l_tls_blocksize != 0)
+	  /* This is a module with TLS data.  Store the map reference.
+	     The generation counter is zero.  */
+	  slotinfo[++i].map = l;
+      assert (i == GL(dl_tls_max_dtv_idx));
+
+      /* Computer the TLS offsets for the various blocks.  We call this
+	 function even if none of the modules available at startup time
+	 uses TLS to initialize some variables.  */
+      _dl_determine_tlsoffset ();
+
+      /* Construct the static TLS block and the dtv for the initial
+	 thread.  For some platforms this will include allocating memory
+	 for the thread descriptor.  The memory for the TLS block will
+	 never be freed.  It should be allocated accordingly.  The dtv
+	 array can be changed if dynamic loading requires it.  */
+      tcbp = INTUSE(_dl_allocate_tls) ();
+      if (tcbp == NULL)
+	_dl_fatal_printf ("\
+cannot allocate TLS data structures for inital thread");
+
+      /* And finally install it for the main thread.  */
+      TLS_INIT_TP (tcbp);
+    }
+#endif
+
   if (__builtin_expect (mode, normal) != normal)
     {
       /* We were run just to list the shared libraries.  It is
@@ -1032,7 +1102,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		    }
 		  if (_dl_name_match_p (GL(dl_trace_prelink), l))
 		    GL(dl_trace_prelink_map) = l;
-		  _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)\n",
+		  _dl_printf ("\t%s => %s (0x%0*Zx, 0x%0*Zx)",
 			      l->l_libname->name[0] ? l->l_libname->name
 			      : rtld_progname ?: "<main program>",
 			      l->l_name[0] ? l->l_name
@@ -1041,6 +1111,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 			      l->l_map_start,
 			      (int) sizeof l->l_addr * 2,
 			      l->l_addr);
+#ifdef USE_TLS
+		  if (l->l_tls_modid)
+		    _dl_printf (" TLS(0x%Zx, 0x%0*Zx)\n", l->l_tls_modid,
+				(int) sizeof l->l_tls_offset * 2,
+				l->l_tls_offset);
+		  else
+#endif
+		    _dl_printf ("\n");
 		}
 	    }
 	  else
@@ -1181,76 +1259,6 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       _exit (0);
     }
-
-#ifdef USE_TLS
-  /* Now it is time to determine the layout of the static TLS block
-     and allocate it for the initial thread.  Note that we always
-     allocate the static block, we never defer it even if no
-     DF_STATIC_TLS bit is set.  The reason is that we know glibc will
-     use the static model.  First add the dynamic linker to the list
-     if it also uses TLS.  */
-  if (GL(dl_rtld_map).l_tls_blocksize != 0)
-    /* Assign a module ID.  */
-    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
-
-# ifndef SHARED
-  /* If dynamic loading of modules with TLS is impossible we do not
-     have to initialize any of the TLS functionality unless any of the
-     initial modules uses TLS.  */
-  if (GL(dl_tls_max_dtv_idx) > 0)
-# endif
-    {
-      struct link_map *l;
-      size_t nelem;
-      struct dtv_slotinfo *slotinfo;
-
-      /* Number of elements in the static TLS block.  */
-      GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
-
-      /* Allocate the array which contains the information about the
-	 dtv slots.  We allocate a few entries more than needed to
-	 avoid the need for reallocation.  */
-      nelem = GL(dl_tls_max_dtv_idx) + 1 + TLS_SLOTINFO_SURPLUS;
-
-      /* Allocate.  */
-      GL(dl_tls_dtv_slotinfo_list) = (struct dtv_slotinfo_list *)
-	malloc (sizeof (struct dtv_slotinfo_list)
-		+ nelem * sizeof (struct dtv_slotinfo));
-      /* No need to check the return value.  If memory allocation failed
-	 the program would have been terminated.  */
-
-      slotinfo = memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
-			 nelem * sizeof (struct dtv_slotinfo));
-      GL(dl_tls_dtv_slotinfo_list)->len = nelem;
-      GL(dl_tls_dtv_slotinfo_list)->next = NULL;
-
-      /* Fill in the information from the loaded modules.  */
-      for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
-	if (l->l_tls_blocksize != 0)
-	  /* This is a module with TLS data.  Store the map reference.
-	     The generation counter is zero.  */
-	  slotinfo[++i].map = l;
-      assert (i == GL(dl_tls_max_dtv_idx));
-
-      /* Computer the TLS offsets for the various blocks.  We call this
-	 function even if none of the modules available at startup time
-	 uses TLS to initialize some variables.  */
-      _dl_determine_tlsoffset ();
-
-      /* Construct the static TLS block and the dtv for the initial
-	 thread.  For some platforms this will include allocating memory
-	 for the thread descriptor.  The memory for the TLS block will
-	 never be freed.  It should be allocated accordingly.  The dtv
-	 array can be changed if dynamic loading requires it.  */
-      tcbp = INTUSE(_dl_allocate_tls) ();
-      if (tcbp == NULL)
-	_dl_fatal_printf ("\
-cannot allocate TLS data structures for inital thread");
-
-      /* And finally install it for the main thread.  */
-      TLS_INIT_TP (tcbp);
-    }
-#endif
 
   if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]
       && ! __builtin_expect (GL(dl_profile) != NULL, 0))

@@ -1,3 +1,8 @@
+2002-06-14  H.J. Lu  <hjl@gnu.org>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Don't include
+	"tls.h". Return TD_ERR if USE_TLS is not defined.
+
 2002-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_tls_get_addr.c: New file.

@@ -94,10 +94,6 @@ _IO_setvbuf (fp, buf, mode, size)
       goto unlock_return;
     }
   result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
-  if (result == 0 && fp->_vtable_offset == 0 && fp->_mode == 0
-      && _IO_CHECK_WIDE (fp))
-    /* We also have to set the buffer using the wide char function.  */
-    result = _IO_WSETBUF (fp, buf, size) == NULL ? EOF : 0;
 
 unlock_return:
   _IO_funlockfile (fp);

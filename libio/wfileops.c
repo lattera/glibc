@@ -52,24 +52,6 @@
 #endif
 
 
-_IO_FILE *
-_IO_wfile_setbuf (fp, p, len)
-     _IO_FILE *fp;
-     wchar_t *p;
-     _IO_ssize_t len;
-{
-  if (INTUSE(_IO_wdefault_setbuf) (fp, p, len) == NULL)
-    return NULL;
-
-  fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr =
-    fp->_wide_data->_IO_write_end = fp->_wide_data->_IO_buf_base;
-  _IO_wsetg (fp, fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base,
-	     fp->_wide_data->_IO_buf_base);
-
-  return fp;
-}
-
-
 /* Convert TO_DO wide character from DATA to FP.
    Then mark FP as having empty buffers. */
 int
@@ -877,7 +859,7 @@ struct _IO_jump_t _IO_wfile_jumps_mmap =
   JUMP_INIT(xsgetn, INTUSE(_IO_file_xsgetn)),
   JUMP_INIT(seekoff, INTUSE(_IO_wfile_seekoff)),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_new_file_setbuf),
+  JUMP_INIT(setbuf, _IO_file_setbuf_mmap),
   JUMP_INIT(sync, (_IO_sync_t) INTUSE(_IO_wfile_sync)),
   JUMP_INIT(doallocate, _IO_wfile_doallocate),
   JUMP_INIT(read, INTUSE(_IO_file_read)),

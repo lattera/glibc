@@ -87,7 +87,7 @@ static struct _IO_jump_t _IO_wstrn_jumps =
   JUMP_INIT(xsgetn, INTUSE(_IO_wdefault_xsgetn)),
   JUMP_INIT(seekoff, _IO_wstr_seekoff),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, (_IO_setbuf_t) INTUSE(_IO_wdefault_setbuf)),
+  JUMP_INIT(setbuf, _IO_default_setbuf),
   JUMP_INIT(sync, _IO_default_sync),
   JUMP_INIT(doallocate, INTUSE(_IO_wdefault_doallocate)),
   JUMP_INIT(read, _IO_default_read),

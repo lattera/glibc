@@ -440,6 +440,32 @@ _IO_new_file_setbuf (fp, p, len)
 }
 INTDEF2(_IO_new_file_setbuf, _IO_file_setbuf)
 
+
+_IO_FILE *
+_IO_file_setbuf_mmap (fp, p, len)
+     _IO_FILE *fp;
+     char *p;
+     _IO_ssize_t len;
+{
+  _IO_FILE *result;
+
+  /* Change the function table.  */
+  _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+  fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
+
+  /* And perform the normal operation.  */
+  result = _IO_new_file_setbuf (fp, p, len);
+
+  /* If the call failed, restore to using mmap.  */
+  if (result == NULL)
+    {
+      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
+      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
+    }
+
+  return result;
+}
+
 static int new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 
 /* Write TO_DO bytes from DATA to FP.
@@ -1293,7 +1319,7 @@ struct _IO_jump_t _IO_file_jumps_mmap =
   JUMP_INIT(xsgetn, _IO_file_xsgetn_mmap),
   JUMP_INIT(seekoff, _IO_file_seekoff_mmap),
   JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_new_file_setbuf),
+  JUMP_INIT(setbuf, (_IO_setbuf_t) _IO_file_setbuf_mmap),
   JUMP_INIT(sync, _IO_new_file_sync),
   JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
   JUMP_INIT(read, INTUSE(_IO_file_read)),

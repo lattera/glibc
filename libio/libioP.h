@@ -404,8 +404,6 @@ extern void _IO_wdefault_finish __P ((_IO_FILE *, int));
 extern int _IO_default_pbackfail __P ((_IO_FILE *, int));
 extern wint_t _IO_wdefault_pbackfail __P ((_IO_FILE *, wint_t));
 extern _IO_FILE* _IO_default_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
-extern _IO_FILE* _IO_wdefault_setbuf __P ((_IO_FILE *, wchar_t *,
-					   _IO_ssize_t));
 extern _IO_size_t _IO_default_xsputn __P ((_IO_FILE *, const void *,
 					   _IO_size_t));
 extern _IO_size_t _IO_wdefault_xsputn __P ((_IO_FILE *, const void *,
@@ -532,6 +530,7 @@ extern void _IO_no_init __P ((_IO_FILE *, int, int, struct _IO_wide_data *,
 			      struct _IO_jump_t *));
 extern void _IO_new_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_new_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
+extern _IO_FILE* _IO_file_setbuf_mmap __P ((_IO_FILE *, char *, _IO_ssize_t));
 extern int _IO_new_file_sync __P ((_IO_FILE *));
 extern int _IO_new_file_underflow __P ((_IO_FILE *));
 extern int _IO_new_file_overflow __P ((_IO_FILE *, int));
@@ -640,8 +639,6 @@ extern _IO_size_t _IO_wdefault_xsputn_internal __P ((_IO_FILE *, const void *,
 						     _IO_size_t));
 extern _IO_size_t _IO_wdefault_xsgetn_internal __P ((_IO_FILE *, void *,
 						     _IO_size_t));
-extern _IO_FILE* _IO_wdefault_setbuf_internal __P ((_IO_FILE *, wchar_t *,
-						    _IO_ssize_t));
 extern int _IO_wdefault_doallocate_internal __P ((_IO_FILE *));
 extern wint_t _IO_wdefault_uflow_internal __P ((_IO_FILE *));
 

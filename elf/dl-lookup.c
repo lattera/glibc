@@ -663,6 +663,12 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 			(int) sizeof (ElfW(Addr)) * 2,
 			(ElfW(Addr)) (val.s ? val.s->st_value : 0));
 
+#ifdef USE_TLS
+          if (value->s
+	      && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
+				    == STT_TLS, 0)))
+	    type_class = 4;
+#endif
 	  _dl_printf ("/%x %s\n", type_class, undef_name);
 	}
     }

@@ -423,34 +423,6 @@ _IO_wdoallocbuf (fp)
 INTDEF(_IO_wdoallocbuf)
 
 
-_IO_FILE *
-_IO_wdefault_setbuf (fp, p, len)
-     _IO_FILE *fp;
-     wchar_t *p;
-     _IO_ssize_t len;
-{
-  if (_IO_SYNC (fp) == EOF)
-    return NULL;
-  if (p == NULL || len == 0)
-    {
-      fp->_flags |= _IO_UNBUFFERED;
-      INTUSE(_IO_wsetb) (fp, fp->_wide_data->_shortbuf,
-			 fp->_wide_data->_shortbuf + 1, 0);
-    }
-  else
-    {
-      fp->_flags &= ~_IO_UNBUFFERED;
-      INTUSE(_IO_wsetb) (fp, p, p + len, 0);
-    }
-  fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_write_ptr
-    = fp->_wide_data->_IO_write_end = 0;
-  fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_ptr
-    = fp->_wide_data->_IO_read_end = 0;
-  return fp;
-}
-INTDEF(_IO_wdefault_setbuf)
-
-
 int
 _IO_wdefault_doallocate (fp)
      _IO_FILE *fp;

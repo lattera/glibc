@@ -63,6 +63,8 @@
 #define APPEND_R1(name) name##_r
 #define INTERNAL(name) INTERNAL1 (name)
 #define INTERNAL1(name) __##name
+#define NEW(name) NEW1 (name)
+#define NEW1(name) __new_##name
 
 #ifdef USE_NSCD
 # define NSCD_NAME ADD_NSCD (REENTRANT_NAME)
@@ -257,7 +259,12 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 do_symbol_version (OLD (REENTRANT_NAME), REENTRANT_NAME, GLIBC_2_0);
 #endif
 
+/* As INTERNAL (REENTRANT_NAME) may be hidden, we need an alias
+   in between so that the REENTRANT_NAME@@GLIBC_2.1.2 is not
+   hidden too.  */
+strong_alias (INTERNAL (REENTRANT_NAME), NEW (REENTRANT_NAME));
+
 #define do_default_symbol_version(real, name, version) \
   versioned_symbol (libc, real, name, version)
-do_default_symbol_version (INTERNAL (REENTRANT_NAME),
+do_default_symbol_version (NEW (REENTRANT_NAME),
 			   REENTRANT_NAME, GLIBC_2_1_2);
