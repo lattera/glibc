@@ -1,3 +1,8 @@
+2002-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define macros which
+	require it to 200112L.  Remove _POSIX_POLL and _POSIX_SELECT.
+
 2002-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.S: Change defined(USE___THREAD) to

@@ -47,12 +47,6 @@
 /* Setting of memory protections is supported.  */
 #define	_POSIX_MEMORY_PROTECTION	200112L
 
-/* Implementation supports `poll' function.  */
-#define	_POSIX_POLL	1
-
-/* Implementation supports `select' and `pselect' functions.  */
-#define	_POSIX_SELECT	1
-
 /* Only root can change owner of file.  */
 #define	_POSIX_CHOWN_RESTRICTED	1
 
@@ -88,14 +82,14 @@
 /* We support user-defined stacks.  */
 #define _POSIX_THREAD_ATTR_STACKADDR	200112L
 
-/* We support POSIX.1b semaphores, but only the non-shared form for now.  */
-#define _POSIX_SEMAPHORES	1
+/* We support POSIX.1b semaphores.  */
+#define _POSIX_SEMAPHORES	200112L
 
 /* Real-time signals are supported.  */
-#define _POSIX_REALTIME_SIGNALS	1
+#define _POSIX_REALTIME_SIGNALS	200112L
 
 /* We support asynchronous I/O.  */
-#define _POSIX_ASYNCHRONOUS_IO	1
+#define _POSIX_ASYNCHRONOUS_IO	200112L
 #define _POSIX_ASYNC_IO		1
 /* Alternative name for Unix98.  */
 #define _LFS_ASYNCHRONOUS_IO	1
@@ -130,7 +124,7 @@
 #define _POSIX_SPAWN	200112L
 
 /* We have POSIX timers.  */
-#define _POSIX_TIMERS	1
+#define _POSIX_TIMERS	200112L
 
 /* The barrier functions are available.  */
 #define _POSIX_BARRIERS	200112L

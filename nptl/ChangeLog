@@ -1,5 +1,14 @@
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: New file.
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define macros which
+	require it to 200112L.
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrwlock.S: Use cmov
+	instruction only if HAVE_CMOV is defined.
+	* sysdeps/unix/sysv/linux/i386/i686/lowlevelrwlock.S: Define HAVE_CMOV.
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: New file.
