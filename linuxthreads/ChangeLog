@@ -1,3 +1,7 @@
+1999-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/pthread.h: Fix typos, reformat comments.
+
 1999-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/alpha/pt-machine.h: Move stack_pointer definition to the

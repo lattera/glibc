@@ -1,3 +1,9 @@
+1999-12-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* soft-fp/*: Tons of new files to implement floating-point arithmetic
+	in software.
+	Contributed by  Richard Henderson, Jakub Jelinek and others.
+
 1999-12-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Don't include
