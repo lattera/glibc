@@ -348,6 +348,17 @@ struct _IO_FILE_plus
   const struct _IO_jump_t *vtable;
 };
 
+#ifdef _IO_USE_OLD_IO_FILE
+/* This structure is used by the compatibility code as if it were an
+   _IO_FILE_plus, but has enough space to initialize the _mode argument
+   of an _IO_FILE_complete.  */
+struct _IO_FILE_complete_plus
+{
+  struct _IO_FILE_complete file;
+  const struct _IO_jump_t *vtable;
+};
+#endif
+
 /* Special file type for fopencookie function.  */
 struct _IO_cookie_file
 {

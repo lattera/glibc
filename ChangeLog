@@ -1,3 +1,12 @@
+2003-10-27  Daniel Jacobowitz  <drow@mvista.com>
+
+	* libio/libioP.h [_IO_USE_OLD_IO_FILE]
+	(struct _IO_FILE_complete_plus): New type.
+	* libio/oldiofopen.c (_IO_old_fopen): Use _IO_FILE_complete_plus.
+	* libio/oldiofdopen.c (_IO_old_fdopen): Likewise.
+	* libio/oldiopopen.c (struct _IO_proc_file, _IO_old_popen): Likewise.
+	Call _IO_old_init instead of _IO_init.
+
 2003-11-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/locale.alias: nb_NO is now the correct name, not no_NO.

@@ -42,7 +42,7 @@ _IO_old_fopen (filename, mode)
 {
   struct locked_FILE
   {
-    struct _IO_FILE_plus fp;
+    struct _IO_FILE_complete_plus fp;
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
@@ -51,17 +51,17 @@ _IO_old_fopen (filename, mode)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->fp.file._lock = &new_f->lock;
+  new_f->fp.file._file._lock = &new_f->lock;
 #endif
-  _IO_old_init (&new_f->fp.file, 0);
-  _IO_JUMPS (&new_f->fp) = &_IO_old_file_jumps;
-  _IO_old_file_init (&new_f->fp);
+  _IO_old_init (&new_f->fp.file._file, 0);
+  _IO_JUMPS ((struct _IO_FILE_plus *) &new_f->fp) = &_IO_old_file_jumps;
+  _IO_old_file_init ((struct _IO_FILE_plus *) &new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
   if (_IO_old_file_fopen ((_IO_FILE *) &new_f->fp, filename, mode) != NULL)
     return (_IO_FILE *) &new_f->fp;
-  INTUSE(_IO_un_link) (&new_f->fp);
+  INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) &new_f->fp);
   free (new_f);
   return NULL;
 }
