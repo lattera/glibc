@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -89,7 +89,6 @@ login (const struct utmp *ut)
   int found_tty;
   const char *ttyp;
   struct utmp copy = *ut;
-  struct utmp utbuf;
 
   /* Fill in those fields we supply.  */
 #if _HAVE_UT_TYPE - 0
@@ -117,13 +116,8 @@ login (const struct utmp *ut)
       /* Tell that we want to use the UTMP file.  */
       if (utmpname (_PATH_UTMP) == 0)
 	{
-	  struct utmp *old;
-
 	  /* Open UTMP file.  */
 	  setutent ();
-
-	  /* Read the record.  */
-	  getutline_r (&copy, &utbuf, &old);
 
 	  /* Write the entry.  */
 	  pututline (&copy);

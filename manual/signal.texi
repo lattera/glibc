@@ -1046,7 +1046,7 @@ is deinstalled after an signal was delivered.  On BSD systems the
 handler must be explicitly deinstalled.  In the GNU C Library we use the
 BSD version by default.  To use the SVID version you can either use the
 function @code{sysv_signal} (see below) or use the @code{_XOPEN_SOURCE}
-feature select macro (@pxref{Feature Test Macros})  Generally it should
+feature select macro (@pxref{Feature Test Macros}).  Generally it should
 be avoided to use this functions due to the compatibility problems.  It
 is better to use @code{sigaction} if it is available since the results
 are much more reliable.

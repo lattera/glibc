@@ -123,7 +123,7 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 # linker, too.  It must be self-contained, so we link the needed PIC
 # objects directly into the shared object.
 ifeq (elf,$(subdir))
-$(objpfx)librtld.so: $(rpcuserlibs:.so=_pic.a)
+$(objpfx)librtld.os: $(rpcuserlibs:.so=_pic.a)
 endif
 
 

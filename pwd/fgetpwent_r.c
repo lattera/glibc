@@ -93,8 +93,7 @@ __fgetpwent_r (FILE *stream, struct passwd *resbuf, char *buffer,
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (p, resbuf, (void *) buffer, buflen,
-			   __errno_location ()));
+	     ! parse_line (p, resbuf, (void *) buffer, buflen, &errno));
 
   *result = resbuf;
   return 0;

@@ -741,7 +741,7 @@ described by the macro---thus, @code{ULONG_MAX} has type
 @w{@code{unsigned long int}}.
 
 @comment Extra blank lines make it look better.
-@table @code
+@vtable @code
 @comment limits.h
 @comment ISO
 @item SCHAR_MIN
@@ -1007,7 +1007,7 @@ principle GNU C actually satisfies the @w{ISO C} requirements only if the
 target machine is suitable.  In practice, all the machines currently
 supported are suitable.
 
-@table @code
+@vtable @code
 @comment float.h
 @comment ISO
 @item FLT_ROUNDS

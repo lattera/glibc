@@ -245,8 +245,7 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
     {
       int is_last_nip = nip == last_nip;
 
-      status = (*fct) (resbuf, buffer, buflen, __errno_location ()
-		       H_ERRNO_VAR);
+      status = (*fct) (resbuf, buffer, buflen, &errno H_ERRNO_VAR);
 
       /* The the status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give

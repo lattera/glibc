@@ -135,7 +135,7 @@ __internal_setnetgrent (const char *group, struct __netgrent *datap)
   /* Free list of all netgroup names from last run.  */
   free_memory (datap);
 
-  return __internal_setnetgrent_reuse (group, datap, __errno_location ());
+  return __internal_setnetgrent_reuse (group, datap, &errno);
 }
 
 int
@@ -283,7 +283,7 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
   __libc_lock_lock (lock);
 
   status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
-				     buffer, buflen, __errno_location ());
+				     buffer, buflen, &errno);
 
   __libc_lock_unlock (lock);
 

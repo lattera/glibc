@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 #include <sys/types.h>
 #include <errno.h>
+#include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
@@ -25,10 +26,12 @@
 int
 ftruncate (fd, length)
      int fd;
-     off_t length;
+     __off_t length;
 {
   error_t err;
   if (err = HURD_DPORT_USE (fd, __file_set_size (port, length)))
     return __hurd_dfail (fd, err);
   return 0;
 }
+
+weak_alias (__ftruncate, ftruncate)

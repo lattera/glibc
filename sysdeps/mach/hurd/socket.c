@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,8 @@
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
-/* XXX should be __socket ? */
 int
-socket (domain, type, protocol)
+__socket (domain, type, protocol)
      int domain;
      int type;
      int protocol;
@@ -65,3 +64,5 @@ socket (domain, type, protocol)
 
   return _hurd_intern_fd (sock, O_IGNORE_CTTY, 1);
 }
+
+weak_alias (__socket, socket)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ __sgetspent_r (const char *string, struct spwd *resbuf, char *buffer,
 	       size_t buflen, struct spwd **result)
 {
   int parse_result = parse_line (strncpy (buffer, string, buflen),
-				 resbuf, NULL, 0, __errno_location ());
+				 resbuf, NULL, 0, &errno);
   *result = parse_result > 0 ? resbuf : NULL;
 
   return *result == NULL ? errno : 0;

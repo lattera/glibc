@@ -43,6 +43,8 @@ distribute := utmp-private.h programs/xtmp.h programs/utmpd.h README.utmpd \
 subdir-dirs = programs
 vpath %.c programs
 
+tests := tst-utmp tst-utmpx
+
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil
 extra-libs-others := $(extra-libs)

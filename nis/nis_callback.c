@@ -155,8 +155,6 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
 	    *cp++ = '.';
 	    cp = stpcpy (cp, cbproc_entry(i)->zo_domain);
 
-	    fprintf (stderr, "name=%s\n", name);
-
 	    if ((data->callback) (name, cbproc_entry(i), data->userdata))
 	      {
 		bool_result = TRUE;

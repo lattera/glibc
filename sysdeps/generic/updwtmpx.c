@@ -21,7 +21,7 @@
 #include <utmpx.h>
 
 void
-__updwtmpx (const char *wtmpx_file, const struct utmpx *utmpx)
+updwtmpx (const char *wtmpx_file, const struct utmpx *utmpx)
 {
   __updwtmp (wtmpx_file, (const struct utmp *) utmpx);
 }

@@ -60,8 +60,7 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (buffer, (void *) resbuf, NULL, 0,
-			   __errno_location ()));
+	     ! parse_line (buffer, (void *) resbuf, NULL, 0, &errno));
 
   *result = resbuf;
   return 0;

@@ -162,7 +162,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   while (no_more == 0)
     {
       status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen,
-		       __errno_location () H_ERRNO_VAR);
+		       &errno H_ERRNO_VAR);
 
       /* The status is NSS_STATUS_TRYAGAIN and errno is ERANGE the
 	 provided buffer is too small.  In this case we should give

@@ -1,3 +1,104 @@
+1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* hurd/Makefile (routines): Add cthreads.
+
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/login.c (login): Let pututline take care of finding the
+	positin to insert the UTMP entry.  This corrects a bug where ssh
+	was not reusing UTMP entries marked as DEAD_PROCESS.
+	Reported by Herbert Xu <herbert@gondor.apana.org.au>.
+
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/Makefile (tests): New variable, add tst-utmp and
+	tst-utmpx.
+	* login/tst-utmp.c: New file.
+	* login/tst-utmpx.c: New file.
+
+1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/mach/hurd/errlist.c (sys_nerr, _sys_nerr): Make weak
+	aliases for _hurd_nerr, for programs that don't use sys_errlist,
+	but need sys_err.
+
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/generic/updwtmpx.c: Rename function to updwtmpx.
+	* libc.map: Add updwtmpx and utmpxname to GLIBC_2.1.
+
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/read.c: Rename function to __libc_read and
+	make __read a weak alias.  Use ANSI-style function definition.
+	* sysdeps/mach/hurd/write.c: Likewise.
+
+1998-05-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/err_hurd.sub: Use _hurd_errlist instead of
+	_sys_errlist.
+
+1998-05-30  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/Makefile ($(objpfx)librtld.os):
+	Renamed from librtld.so.
+
+1998-06-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Remove _IO_getline_info which was erroneously
+	introduced in section GLIBC_2.0.
+	Noticed by Horst von Brand <vonbrand@sleipnir.valparaiso.cl>.
+
+1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/generic/socket.c (__socket): Renamed from socket, and
+	created a weak alias.
+	* sysdeps/mach/hurd/socket.c (__socket): Likewise.
+
+1998-05-31  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/mach/hurd/ftruncate.c (__ftruncate): Rename from old
+	ftruncate function, and create a weak alias to ftruncate.
+
+1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* grp/fgetgrent_r.c: Use &errno instead of __errno_location ().
+	* inet/getnetgrent_r.c: Likewise.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* pwd/fgetpwent_r.c: Likewise.
+	* shadow/sgetspent_r.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+	* sunrpc/publickey.c: Likewise.
+
+1998-06-01  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* hurd/libhurduser.map: New file.
+	* mach/libmachuser.map: Likewise.
+
+	* libc.map: Add Hurd-specific functions to version 2.1.
+	Add __flshfp and __fillbf.
+
+1998-05-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/signal.texi (Basic Signal Handling): Fix typo.
+	* manual/errno.texi (Error Codes): Likewise.
+
+1998-06-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netipx/ipx.h: Include <bits/sockaddr.h>
+	instead of <sys/socket.h>.
+	Patch by NIIBE Yutaka <gniibe@mri.co.jp>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c (DL_FIND_ARG_COMPONENTS):
+	Finally make it working.
+	Patch by Mark Hatle <fray@kernel.crashing.org>.
+
+1998-03-22  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/regex.c: Include <wchar.h> before <wctype.h>, to work around
+	a Solaris 2.6 bug.
+
 1998-05-30  Philip Blundell  <Philip.Blundell@pobox.com>
 
 	* stdlib/gmp-impl.h: Support strange mixed-endian double format

@@ -78,7 +78,7 @@ GLIBC_2.0 {
     __select; __sched_get_priority_max; __sched_get_priority_min;
     __sched_getparam; __sched_getscheduler; __sched_setscheduler;
     __sched_yield; __on_exit; __gettimeofday; __fork; __clone;
-    __nss_configure_lookup; _dl_open; _dl_close; _dl_addr; 
+    __nss_configure_lookup; _dl_open; _dl_close; _dl_addr;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;  __getpid;
@@ -102,7 +102,7 @@ GLIBC_2.0 {
     _IO_flush_all; _IO_flush_all_linebuffered; _IO_fopen; _IO_fprintf;
     _IO_fputs; _IO_fread; _IO_free_backup_area; _IO_freopen;
     _IO_fscanf; _IO_fseek; _IO_fsetpos; _IO_ftell; _IO_funlockfile;
-    _IO_fwrite; _IO_getc; _IO_getline; _IO_getline_info; _IO_gets;
+    _IO_fwrite; _IO_getc; _IO_getline; _IO_gets;
     _IO_init; _IO_init_marker; _IO_link_in; _IO_marker_delta;
     _IO_marker_difference; _IO_padn; _IO_pclose; _IO_peekc_locked;
     _IO_perror; _IO_popen; _IO_printf; _IO_proc_close; _IO_proc_open;
@@ -121,6 +121,42 @@ GLIBC_2.0 {
 
     # Profiling support
     __monstartup; _mcleanup; __profile_frequency;
+
+    # Hurd-specific variables
+    __hurd_sigthread_stack_base; __hurd_sigthread_stack_end;
+    __hurd_sigthread_variables;
+    __hurd_threadvar_stack_mask; __hurd_threadvar_stack_offset;
+
+    # functions from stdio
+    __fillbf; __flshfp;
+
+    # Internal functions referenced by libmachuser and libhurduser.
+    __mach_msg;
+    __mig_allocate; __mig_deallocate;
+    __mig_get_reply_port; __mig_put_reply_port; __mig_dealloc_reply_port;
+    _S_catch_exception_raise;
+    _S_msg_add_auth; _S_msg_del_auth;
+    _S_msg_describe_ports;
+    _S_msg_get_dtable; _S_msg_set_dtable;
+    _S_msg_get_env_variable; _S_msg_set_env_variable;
+    _S_msg_get_environment; _S_msg_set_environment;
+    _S_msg_get_fd; _S_msg_set_fd;
+    _S_msg_get_init_int; _S_msg_set_init_int;
+    _S_msg_get_init_ints; _S_msg_set_init_ints;
+    _S_msg_get_init_port; _S_msg_set_init_port;
+    _S_msg_get_init_ports; _S_msg_set_init_ports;
+    _S_msg_proc_newids; _S_msg_report_wait;
+    _S_msg_sig_post; _S_msg_sig_post_untraced;
+    _hurd_intr_rpc_mach_msg; _hurdsig_fault_catch_exception_raise;
+
+    # Placeholders for the Hurd libthreads implementation.
+    cthread_getspecific; cthread_keycreate; cthread_setspecific;
+    __libc_getspecific;
+
+    # Function versions of Hurd macros.
+    __mutex_init; __mutex_trylock;
+    __mutex_lock; __mutex_unlock;
+    __mutex_lock_solid; __mutex_unlock_solid;
 
     # variables in normal name space
     argp_err_exit_status; argp_program_bug_address; argp_program_version;
@@ -566,7 +602,7 @@ GLIBC_2.1 {
     tcgetsid; tdestroy; tmpfile64; truncate64;
 
     # u*
-    unlockpt; utimes; user2netname;
+    unlockpt; updwtmpx; user2netname; utimes; utmpxname;
 
     # v*
     versionsort; versionsort64;

@@ -1,0 +1,155 @@
+GLIBC_2.0 {
+  global:
+
+    # These functions are used internally by libc.
+    _S_msg_server; __auth_getids; __auth_makeauth;
+    __auth_user_authenticate; __crash_dump_task; __dir_link;
+    __dir_lookup; __dir_mkdir; __dir_mkfile; __dir_readdir;
+    __dir_rename; __dir_rmdir; __dir_unlink; __exec_startup_get_info;
+    __file_check_access; __file_chflags; __file_chmod; __file_chown;
+    __file_exec; __file_getlinknode; __file_lock; __file_reparent;
+    __file_set_size; __file_set_translator; __file_statfs;
+    __file_sync; __file_syncfs; __file_utimes; __ifsock_getsockaddr;
+    __interrupt_operation; __io_clear_some_openmodes;
+    __io_get_icky_async_id; __io_get_openmodes; __io_get_owner;
+    __io_identity; __io_map; __io_mod_owner; __io_pathconf; __io_read;
+    __io_readable; __io_reauthenticate; __io_seek; __io_select;
+    __io_set_all_openmodes; __io_set_some_openmodes; __io_stat;
+    __io_write; __msg_set_init_int; __msg_sig_post;
+    __msg_sig_post_reply; __msg_sig_post_request;
+    __msg_sig_post_untraced; __msg_sig_post_untraced_reply;
+    __proc_child; __proc_dostop; __proc_get_arg_locations;
+    __proc_getallpids; __proc_getlogin; __proc_getmsgport;
+    __proc_getpgrp; __proc_getpgrppids; __proc_getpids;
+    __proc_getprivports; __proc_getprocinfo; __proc_getsid;
+    __proc_getsidport; __proc_handle_exceptions; __proc_mark_cont;
+    __proc_mark_exit; __proc_mark_stop; __proc_mark_traced;
+    __proc_mod_stopchild; __proc_pid2task; __proc_reauthenticate;
+    __proc_set_arg_locations; __proc_setlogin; __proc_setmsgport;
+    __proc_setowner; __proc_setpgrp; __proc_setsid; __proc_task2pid;
+    __proc_task2proc; __proc_uname; __proc_wait; __socket_accept;
+    __socket_bind; __socket_connect; __socket_connect2;
+    __socket_create; __socket_create_address; __socket_getopt;
+    __socket_listen; __socket_name; __socket_peername; __socket_recv;
+    __socket_send; __socket_setopt; __socket_shutdown;
+    __socket_whatis_address; __startup_reboot; __term_get_nodename;
+    __term_getctty; __term_open_ctty; __termctty_open_terminal;
+    __tioctl_tiocspgrp; _hurdsig_fault_exc_server;
+
+    # functions in normal name space
+    # Please keep them sorted by name!
+
+    # a*
+    auth_getids; auth_makeauth; auth_server_authenticate;
+    auth_user_authenticate;
+
+    # c*
+    crash_dump_task;
+
+    # d*
+    dir_link; dir_lookup; dir_mkdir; dir_mkfile; dir_notice_changes;
+    dir_readdir; dir_rename; dir_rmdir; dir_unlink;
+
+    # e*
+    exec_exec; exec_init; exec_setexecdata; exec_startup_get_info;
+
+    # f*
+    file_chauthor; file_check_access; file_chflags; file_chmod;
+    file_chown; file_exec; file_get_fs_options; file_get_storage_info;
+    file_get_translator; file_get_translator_cntl; file_getcontrol;
+    file_getfh; file_getlinknode; file_lock; file_lock_stat;
+    file_notice_changes; file_reparent; file_set_size;
+    file_set_translator; file_statfs; file_sync; file_syncfs;
+    file_utimes; fsys_forward; fsys_get_options; fsys_getfile;
+    fsys_getpriv; fsys_getroot; fsys_goaway; fsys_init;
+    fsys_set_options; fsys_startup; fsys_syncfs;
+
+    # i*
+    ifsock_getsockaddr; interrupt_operation; io_async;
+    io_clear_some_openmodes; io_duplicate; io_eofnotify; io_get_conch;
+    io_get_icky_async_id; io_get_openmodes; io_get_owner; io_identity;
+    io_map; io_map_cntl; io_mod_owner; io_pathconf; io_postnotify;
+    io_prenotify; io_read; io_readable; io_readnotify; io_readsleep;
+    io_reauthenticate; io_release_conch; io_restrict_auth; io_seek;
+    io_select; io_server_version; io_set_all_openmodes;
+    io_set_some_openmodes; io_sigio; io_stat; io_write;
+
+    # m*
+    msg_add_auth; msg_del_auth; msg_describe_ports; msg_get_dtable;
+    msg_get_env_variable; msg_get_environment; msg_get_fd;
+    msg_get_init_int; msg_get_init_ints; msg_get_init_port;
+    msg_get_init_ports; msg_proc_newids; msg_report_wait;
+    msg_set_dtable; msg_set_env_variable; msg_set_environment;
+    msg_set_fd; msg_set_init_int; msg_set_init_ints;
+    msg_set_init_port; msg_set_init_ports; msg_sig_post;
+    msg_sig_post_reply; msg_sig_post_request; msg_sig_post_untraced;
+    msg_sig_post_untraced_reply; msg_sig_post_untraced_request;
+
+    # p*
+    proc_child; proc_child_request; proc_dostop; proc_dostop_request;
+    proc_execdata_notify; proc_execdata_notify_request;
+    proc_get_arg_locations; proc_get_arg_locations_request;
+    proc_get_tty; proc_get_tty_request; proc_getallpids;
+    proc_getallpids_request; proc_getexecdata;
+    proc_getexecdata_request; proc_gethostid_request;
+    proc_gethostname_request; proc_getlogin; proc_getlogin_request;
+    proc_getloginid; proc_getloginid_request; proc_getloginpids;
+    proc_getloginpids_request; proc_getmsgport;
+    proc_getmsgport_request; proc_getpgrp; proc_getpgrp_request;
+    proc_getpgrppids; proc_getpgrppids_request; proc_getpids;
+    proc_getpids_request; proc_getprivports;
+    proc_getprivports_request; proc_getprocargs;
+    proc_getprocargs_request; proc_getprocenv;
+    proc_getprocenv_request; proc_getprocinfo;
+    proc_getprocinfo_request; proc_getsessionpgids;
+    proc_getsessionpgids_request; proc_getsessionpids;
+    proc_getsessionpids_request; proc_getsid; proc_getsid_request;
+    proc_getsidport; proc_getsidport_request; proc_handle_exceptions;
+    proc_handle_exceptions_request; proc_make_login_coll;
+    proc_make_login_coll_request; proc_mark_cont;
+    proc_mark_cont_request; proc_mark_exec; proc_mark_exec_request;
+    proc_mark_exit; proc_mark_exit_request; proc_mark_stop;
+    proc_mark_stop_request; proc_mark_traced;
+    proc_mark_traced_request; proc_mod_stopchild;
+    proc_mod_stopchild_request; proc_pid2proc; proc_pid2proc_request;
+    proc_pid2task; proc_pid2task_request; proc_proc2task;
+    proc_proc2task_request; proc_reassign; proc_reassign_request;
+    proc_reauthenticate; proc_reauthenticate_request;
+    proc_register_version; proc_register_version_request;
+    proc_set_arg_locations; proc_set_arg_locations_request;
+    proc_setexecdata; proc_setexecdata_request;
+    proc_sethostid_request; proc_sethostname_request; proc_setlogin;
+    proc_setlogin_request; proc_setmsgport; proc_setmsgport_request;
+    proc_setowner; proc_setowner_request; proc_setpgrp;
+    proc_setpgrp_request; proc_setsid; proc_setsid_request;
+    proc_task2pid; proc_task2pid_request; proc_task2proc;
+    proc_task2proc_request; proc_uname; proc_uname_request; proc_wait;
+    proc_wait_request;
+
+    # s*
+    socket_accept; socket_bind; socket_connect; socket_connect2;
+    socket_create; socket_create_address; socket_fabricate_address;
+    socket_getopt; socket_listen; socket_name; socket_peername;
+    socket_recv; socket_send; socket_setopt; socket_shutdown;
+    socket_whatis_address; startup_authinit; startup_essential_task;
+    startup_procinit; startup_reboot; startup_request_notification;
+
+    # t*
+    term_get_bottom_type; term_get_nodename; term_getctty;
+    term_on_hurddev; term_on_machdev; term_on_pty; term_open_ctty;
+    term_set_filenode; term_set_nodename; termctty_open_terminal;
+    tioctl_tioccbrk; tioctl_tioccdtr; tioctl_tiocdrain;
+    tioctl_tiocexcl; tioctl_tiocext; tioctl_tiocflush;
+    tioctl_tiocgeta; tioctl_tiocgetd; tioctl_tiocgpgrp;
+    tioctl_tiocgwinsz; tioctl_tiocmbic; tioctl_tiocmbis;
+    tioctl_tiocmget; tioctl_tiocmodg; tioctl_tiocmods;
+    tioctl_tiocmset; tioctl_tiocnxcl; tioctl_tiocoutq; tioctl_tiocpkt;
+    tioctl_tiocremote; tioctl_tiocsbrk; tioctl_tiocsdtr;
+    tioctl_tiocseta; tioctl_tiocsetaf; tioctl_tiocsetaw;
+    tioctl_tiocsetd; tioctl_tiocsig; tioctl_tiocspgrp;
+    tioctl_tiocstart; tioctl_tiocsti; tioctl_tiocstop;
+    tioctl_tiocswinsz; tioctl_tiocucntl;
+
+  local:
+    *;
+};

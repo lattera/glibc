@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,6 +42,7 @@ routines = hurdstartup hurdinit \
 	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
 	   get-host set-host \
 	   path-lookup \
+	   cthreads \
 	   setauth \
 	   pid2task task2pid \
 	   getuids setuids getumask fchroot \

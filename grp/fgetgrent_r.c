@@ -82,7 +82,7 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 		get the next line of the file to parse.  */
 	     || ! (parse_result = parse_line (p, resbuf,
 					      (void *) buffer, buflen,
-					      __errno_location ())));
+					      &errno)));
 
   if (parse_result == -1)
     {

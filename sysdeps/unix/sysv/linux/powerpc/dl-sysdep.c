@@ -24,13 +24,26 @@
 #define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
   do {								\
     char **_tmp;						\
+    size_t _test;						\
     (argc) = *(long *) cookie;					\
     (argv) = (char **) cookie + 1;				\
     (envp) = (argv) + (argc) + 1;				\
     for (_tmp = (envp); *_tmp; ++_tmp)				\
       continue;							\
-    (auxp) = (void *) ++_tmp;					\
-    (auxp) = (void *)(((size_t)(auxp) + 0xF) & 0xFFFFFFF0);	\
+    /* The following '++' is important!  */			\
+    ++_tmp;							\
+								\
+    _test = (size_t)_tmp;					\
+    _test = _test + 0xf & ~0xf;					\
+    /* Under some circumstances, MkLinux (up to at least DR3a5)	\
+       omits the padding.  To work around this, we make a	\
+       basic sanity check of the argument vector.  Of		\
+       course, this means that in future, the argument		\
+       vector will have to be laid out to allow for this	\
+       test :-(.  */						\
+     if (((ElfW(auxv_t) *)_test)->a_type <= 0x10)		\
+       _tmp = (char **)_test;					\
+    (auxp) = (ElfW(auxv_t) *) _tmp;				\
   } while (0)
 
 

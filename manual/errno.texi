@@ -515,7 +515,7 @@ particular protocol being used by the socket.  @xref{Socket Options}.
 @deftypevr Macro int EPROTONOSUPPORT
 @comment errno 43 @c DO NOT REMOVE
 The socket domain does not support the requested communications protocol
-(perhaps because the requested protocol is completely invalid.)
+(perhaps because the requested protocol is completely invalid).
 @xref{Creating a Socket}.
 @end deftypevr
 
