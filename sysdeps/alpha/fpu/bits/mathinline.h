@@ -58,7 +58,8 @@
       !isunordered(__x, __y) && __x != __y; }))
 #endif /* ISO C99 */
 
-#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+#if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) \
+    && defined __OPTIMIZE__
 
 #define __inline_copysign(NAME, TYPE)					\
 __MATH_INLINE TYPE							\
@@ -174,6 +175,19 @@ __MATH_INLINE double __fdim (double __x, double __y) __THROW
 __MATH_INLINE double fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0.0 : __x - __y;
+}
+
+/* Test for negative number.  Used in the signbit() macro.  */
+__MATH_INLINE int __signbitf (float __x) __THROW
+{
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
+  return __u.__i < 0;
+}
+
+__MATH_INLINE int __signbit (double __x) __THROW
+{
+  __extension__ union { double __d; long __i; } __u = { __d: __x };
+  return __u.__i < 0;
 }
 
 #endif /* C99 */

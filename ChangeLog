@@ -5,6 +5,9 @@
 
 	* sysdeps/alpha/setjmp.S (_setjmp, setjmp): Mark .prologue.
 
+	* sysdeps/alpha/fpu/bits/mathinline.h: Honor
+	__LIBC_INTERNAL_MATH_INLINES.  Implement __signbitf, __signbit.
+
 2003-06-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.
