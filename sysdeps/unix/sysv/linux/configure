@@ -128,16 +128,17 @@ if test $host = $build; then
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
 echo "configure:131: checking for symlinks in ${ac_prefix}/include" >&5
+  ac_message=
   if test -L ${ac_prefix}/include/net; then
-    message="   ${ac_prefix}/include/net is a symlink"
+    ac_message="$ac_message
+   ${ac_prefix}/include/net is a symlink"
   fi
   if test -L ${ac_prefix}/include/scsi; then
-    message="$message
+    ac_message="$ac_message
    ${ac_prefix}/include/scsi is a symlink"
   fi
-  if test -n "$message"; then
-    { echo "configure: error: 
-$message
+  if test -n "$ac_message"; then
+    { echo "configure: error: $ac_message
 \`make install' will destroy the target of the link(s).
 Delete the links and re-run configure, or better still, move the entire
 ${ac_prefix}/include directory out of the way." 1>&2; exit 1; }
