@@ -1,5 +1,5 @@
 /* Enable floating-point exceptions.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -31,7 +31,7 @@ feenableexcept (int excepts)
   excepts &= FE_ALL_EXCEPT;
   old_exc = new_exc & FE_ALL_EXCEPT;
 
-  new_exc |= excepts;
+  new_exc &= ~excepts;
   __asm__ ("fldcw %0" : : "m" (*&new_exc));
 
   return old_exc;
