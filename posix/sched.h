@@ -65,7 +65,7 @@ extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
 
 #ifdef __USE_GNU
 /* Access macros for `cpu_set'.  */
-#define NCPUBITS __NCPUBITS
+#define CPU_SETSIZE __CPU_SETSIZE
 #define CPU_SET(cpu, cpusetp)	__CPU_SET (cpu, cpusetp)
 #define CPU_CLR(cpu, cpusetp)	__CPU_CLR (cpu, cpusetp)
 #define CPU_ISSET(cpu, cpusetp)	__CPU_ISSET (cpu, cpusetp)
