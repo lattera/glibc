@@ -582,7 +582,7 @@ elf_machine_rela (struct link_map *map,
 	    }
 #endif
 	  else
-	    assert (! "unexpected dynamic reloc type");
+	    _dl_reloc_bad_type (map, r_type, 0);
 	}
       else
 	value = 0;
@@ -599,7 +599,7 @@ elf_machine_rela (struct link_map *map,
       reloc_addr[1] = 0;
     }
   else
-    assert (! "unexpected dynamic reloc format");
+    _dl_reloc_bad_type (map, r_type, 0);
 }
 
 /* Let do-rel.h know that on IA-64 if l_addr is 0, all RELATIVE relocs
@@ -633,7 +633,7 @@ elf_machine_lazy_rel (struct link_map *map,
   else if (r_type == R_IA64_NONE)
     return;
   else
-    assert (! "unexpected PLT reloc type");
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE_MAP */
