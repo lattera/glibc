@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,3 +25,4 @@ getpeername (int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
   return ngetpeername (fd, addr.__sockaddr__, len);
 }
+weak_alias (getpeername,__getpeername)
