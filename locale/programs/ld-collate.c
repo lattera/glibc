@@ -239,9 +239,13 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       else
 	value = 0;
 
-      if (value == 0 && !be_quiet)
-	error_at_line (0, 0, patch->fname, patch->lineno,
-		       _("no weight defined for symbol `%s'"), patch->token);
+      if (value == 0)
+	{
+	  if (!be_quiet)
+	    error_at_line (0, 0, patch->fname, patch->lineno,
+			   _("no weight defined for symbol `%s'"),
+			   patch->token);
+	}
       else
 	*patch->where.pos = value;
     }
@@ -1477,7 +1481,7 @@ line after ellipsis must contain character definition"));
 	      pelem->ordering
 		= (unsigned int *) obstack_copy (&collate->element_mem, data,
 						 (collate->nrules
-						  * pelem->ordering_len)
+						  + pelem->ordering_len)
 						 * sizeof (unsigned int));
 
 	      /* `...' weights need to be adjusted.  */
@@ -1490,13 +1494,16 @@ line after ellipsis must contain character definition"));
 			      (void *) &pelem->next) >= 0)
 		{
 		  if (set_entry (&collate->result, name, sizeof (wchar_t),
-				 (void *) pelem->next) < 0)
+				 (void *) pelem) < 0)
 		    error (4, 0, _("cannot insert into result table"));
 		}
 	      else
-		if (insert_entry (&collate->result, name, sizeof (wchar_t),
-				  (void *) pelem->next) < 0)
-		  error (4, 0, _("cannot insert into result table"));
+		{
+		  pelem->next = NULL;
+		  if (insert_entry (&collate->result, name, sizeof (wchar_t),
+				    (void *) pelem) < 0)
+		    error (4, 0, _("cannot insert into result table"));
+		}
 
 	      /* Increment counter.  */
 	      ++name[0];

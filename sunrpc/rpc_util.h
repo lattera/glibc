@@ -31,7 +31,7 @@
 /*      @(#)rpc_util.h  1.5  90/08/29  (C) 1987 SMI   */
 
 /*
- * rpc_util.h, Useful definitions for the RPC protocol compiler 
+ * rpc_util.h, Useful definitions for the RPC protocol compiler
  */
 
 #include <stdlib.h>
@@ -48,11 +48,18 @@ struct list {
 };
 typedef struct list list;
 
+struct xdrfunc {
+        char *name;
+        int pointerp;
+        struct xdrfunc *next;
+};
+typedef struct xdrfunc xdrfunc;
+
 #define PUT 1
 #define GET 2
 
 /*
- * Global variables 
+ * Global variables
  */
 #define MAXLINESIZE 1024
 extern char curline[MAXLINESIZE];
@@ -65,21 +72,23 @@ extern FILE *fin;
 
 extern list *defined;
 
-
 extern bas_type *typ_list_h;
 extern bas_type *typ_list_t;
+extern xdrfunc *xdrfunc_head, *xdrfunc_tail;
 
 /*
  * All the option flags
  */
 extern int inetdflag;
-extern int pmflag;   
+extern int pmflag;
 extern int tblflag;
 extern int logflag;
 extern int newstyle;
-extern int Cflag;     /* C++ flag */
-extern int tirpcflag; /* flag for generating tirpc code */
+extern int Cflag;      /* C++ flag */
+extern int CCflag;     /* C++ flag */
+extern int tirpcflag;  /* flag for generating tirpc code */
 extern int inlineflag; /* if this is 0, then do not generate inline code */
+extern int mtflag;
 
 /*
  * Other flags related with inetd jumpstart.
@@ -91,12 +100,12 @@ extern int timerflag;
 extern int nonfatalerrors;
 
 /*
- * rpc_util routines 
+ * rpc_util routines
  */
 void storeval(list **lstp, definition *val);
 #define STOREVAL(list,item) storeval(list,item)
 
-definition *findval(list *lst, const char *val, 
+definition *findval(list *lst, const char *val,
 		    int (*cmp)(const definition *, const char *));
 #define FINDVAL(list,item,finder) findval(list, item, finder)
 
@@ -115,18 +124,18 @@ bas_type *find_type(const char *type);
 
 
 /*
- * rpc_cout routines 
+ * rpc_cout routines
  */
 void emit(definition *def);
 
 /*
- * rpc_hout routines 
+ * rpc_hout routines
  */
 void print_datadef(definition *def);
 void print_funcdef(definition *def);
 
 /*
- * rpc_svcout routines 
+ * rpc_svcout routines
  */
 void write_most(const char *infile, int netflag, int nomain);
 void write_register(void);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -93,9 +93,9 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 	}
       else
 	{
-	  strncpy (buffer, NISENTRYVAL (entry, 1, result),
-		   NISENTRYLEN (entry, 1, result));
-	  buffer[NISENTRYLEN (entry, 1, result)] = '\0';
+	  cp = __stpncpy (buffer, NISENTRYVAL (entry, 1, result),
+			 NISENTRYLEN (entry, 1, result));
+	  *cp = '\0';
 	}
 
       if (NISENTRYLEN(entry, 0, result) >= room_left)
@@ -105,8 +105,9 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
       alias->alias_members_len = 0;
       *first_unused = '\0';
       ++first_unused;
-      strcpy (first_unused, NISENTRYVAL (entry, 0, result));
-      first_unused[NISENTRYLEN (entry, 0, result)] = '\0';
+      cp = __stpncpy (first_unused, NISENTRYVAL (entry, 0, result),
+		      NISENTRYLEN (entry, 0, result));
+      *cp = '\0';
       alias->alias_name = first_unused;
 
       /* Terminate the line for any case.  */

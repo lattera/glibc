@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -69,13 +69,13 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
            NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   rpc->r_name = first_unused;
-  room_left -= strlen (first_unused) + 1;
+  room_left -= (strlen (first_unused) + 1);
   first_unused += strlen (first_unused) + 1;
   rpc->r_number = atoi (NISENTRYVAL (0, 2, result));
   p = first_unused;
 
   line = p;
-  for (i = 0; i < result->objects.objects_len; i++)
+  for (i = 0; i < result->objects.objects_len; ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), rpc->r_name) != 0)
         {
@@ -106,7 +106,7 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
     {
       /* Skip leading blanks.  */
       while (isspace (*line))
-        line++;
+        ++line;
 
       if (*line == '\0')
         break;
@@ -120,17 +120,14 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
       while (*line != '\0' && *line != ' ')
         ++line;
 
-      if (line != rpc->r_aliases[i])
+      if (*line == ' ')
         {
-          if (*line != '\0')
-            {
-              *line = '\0';
-              ++line;
-            }
+	  *line = '\0';
+	  ++line;
           ++i;
         }
       else
-        rpc->r_aliases[i] = NULL;
+        rpc->r_aliases[i+1] = NULL;
     }
 
   return 1;

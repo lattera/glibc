@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -79,7 +79,7 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
   p = first_unused;
 
   line = p;
-  for (i = 0; i < result->objects.objects_len; i++)
+  for (i = 0; i < result->objects.objects_len; ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), proto->p_name) != 0)
         {
@@ -92,7 +92,7 @@ _nss_nisplus_parse_protoent (nis_result * result, struct protoent *proto,
           room_left -= (NISENTRYLEN (i, 1, result) + 1);
         }
     }
-  ++p;
+  *p++ = '\0';
   first_unused = p;
 
   /* Adjust the pointer so it is aligned for

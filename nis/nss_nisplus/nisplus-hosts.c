@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -107,7 +107,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   p = first_unused;
 
   line = p;
-  for (i = 0; i < result->objects.objects_len; i++)
+  for (i = 0; i < result->objects.objects_len; ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), host->h_name) != 0)
 	{
@@ -121,8 +121,9 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	  room_left -= (NISENTRYLEN (i, 1, result) + 1);
 	}
     }
-  ++p;
+  *p++ = '\0';
   first_unused = p;
+
   /* Adjust the pointer so it is aligned for
      storing pointers.  */
   first_unused += __alignof__ (char *) - 1;
@@ -142,7 +143,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
     {
       /* Skip leading blanks.  */
       while (isspace (*line))
-	line++;
+	++line;
 
       if (*line == '\0')
 	break;

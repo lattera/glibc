@@ -70,9 +70,7 @@ scan (tok_kind expect, token * tokp)
 {
   get_token (tokp);
   if (tokp->kind != expect)
-    {
-      expected1 (expect);
-    }
+    expected1 (expect);
 }
 
 /*
@@ -106,7 +104,7 @@ scan3 (tok_kind expect1, tok_kind expect2, tok_kind expect3, token * tokp)
  * scan expecting a constant, possibly symbolic
  */
 void
-scan_num (token * tokp)
+scan_num (token *tokp)
 {
   get_token (tokp);
   switch (tokp->kind)
@@ -114,7 +112,7 @@ scan_num (token * tokp)
     case TOK_IDENT:
       break;
     default:
-      error ("constant or identifier expected");
+      error (_("constant or identifier expected"));
     }
 }
 
@@ -122,7 +120,7 @@ scan_num (token * tokp)
  * Peek at the next token
  */
 void
-peek (token * tokp)
+peek (token *tokp)
 {
   get_token (tokp);
   unget_token (tokp);
@@ -132,22 +130,22 @@ peek (token * tokp)
  * Peek at the next token and scan it if it matches what you expect
  */
 int
-peekscan (tok_kind expect, token * tokp)
+peekscan (tok_kind expect, token *tokp)
 {
   peek (tokp);
   if (tokp->kind == expect)
     {
       get_token (tokp);
-      return (1);
+      return 1;
     }
-  return (0);
+  return 0;
 }
 
 /*
  * Get the next token, printing out any directive that are encountered.
  */
 void
-get_token (token * tokp)
+get_token (token *tokp)
 {
   int commenting;
 

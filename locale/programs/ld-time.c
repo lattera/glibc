@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -37,8 +37,8 @@
   (((w) << 24) | (((w) & 0xff00) << 8) | (((w) >> 8) & 0xff00) | ((w) >> 24))
 
 
-void *xmalloc (size_t __n);
-void *xrealloc (void *__p, size_t __n);
+extern void *xmalloc (size_t __n);
+extern void *xrealloc (void *__p, size_t __n);
 
 
 /* Entry describing an entry of the era specification.  */
@@ -154,21 +154,23 @@ time_finish (struct localedef_t *locale)
 	  memcpy (str, time->era[idx], era_len + 1);
 
 	  /* First character must be + or - for the direction.  */
-	  if (*str != '+' && *str != '-' && !be_quiet)
+	  if (*str != '+' && *str != '-')
 	    {
-	      error (0, 0, _("direction flag in string %d in `era' field"
-			     " in category `%s' is not '+' nor '-'"),
-		     idx + 1, "LC_TIME");
+	      if (!be_quiet)
+		error (0, 0, _("direction flag in string %d in `era' field"
+			       " in category `%s' is not '+' nor '-'"),
+		       idx + 1, "LC_TIME");
 	      /* Default arbitrarily to '+'.  */
 	      time->era_entries[idx].direction = '+';
 	    }
 	  else
 	    time->era_entries[idx].direction = *str;
-	  if (*++str != ':' && !be_quiet)
+	  if (*++str != ':')
 	    {
-	      error (0, 0, _("direction flag in string %d in `era' field"
-			     " in category `%s' is not a single character"),
-		     idx + 1, "LC_TIME");
+	      if (!be_quiet)
+		error (0, 0, _("direction flag in string %d in `era' field"
+			       " in category `%s' is not a single character"),
+		       idx + 1, "LC_TIME");
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -176,18 +178,20 @@ time_finish (struct localedef_t *locale)
 
 	  /* Now the offset year.  */
 	  time->era_entries[idx].offset = strtol (str, &endp, 10);
-	  if (endp == str && !be_quiet)
+	  if (endp == str)
 	    {
-	      error (0, 0, _("illegal number for offset in string %d in"
-			     " `era' field in category `%s'"),
-		     idx + 1, "LC_TIME");
+	      if (!be_quiet)
+		error (0, 0, _("illegal number for offset in string %d in"
+			       " `era' field in category `%s'"),
+		       idx + 1, "LC_TIME");
 	      (void) strsep (&str, ":");
 	    }
-	  else if (*endp != ':' && !be_quiet)
+	  else if (*endp != ':')
 	    {
-	      error (0, 0, _("garbage at end of offset value in string %d in"
-			     " `era' field in category `%s'"),
-		     idx + 1, "LC_TIME");
+	      if (!be_quiet)
+		error (0, 0, _("garbage at end of offset value in string %d in"
+			       " `era' field in category `%s'"),
+		       idx + 1, "LC_TIME");
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -229,20 +233,23 @@ time_finish (struct localedef_t *locale)
 	      time->era_entries[idx].start_date[1] -= 1;
 
 	      time->era_entries[idx].start_date[2] = strtol (str, &endp, 10);
-	      if (endp == str && !be_quiet)
+	      if (endp == str)
 		{
 		invalid_start_date:
-		  error (0, 0, _("illegal starting date in string %d in"
-				 " `era' field in category `%s'"),
-			 idx + 1, "LC_TIME");
+		  if (!be_quiet)
+		    error (0, 0, _("illegal starting date in string %d in"
+				   " `era' field in category `%s'"),
+			   idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
-	      else if (*endp != ':' && !be_quiet)
+	      else if (*endp != ':')
 		{
 		garbage_start_date:
-		  error (0, 0, _("garbage at end of starting date in string %d"
-				 " in `era' field in category `%s'"),
-			 idx + 1, "LC_TIME");
+		  if (!be_quiet)
+		    error (0, 0, _("garbage at end of starting date "
+				   "in string %d in `era' field "
+				   "in category `%s'"),
+			   idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -302,20 +309,23 @@ time_finish (struct localedef_t *locale)
 	      time->era_entries[idx].stop_date[1] -= 1;
 
 	      time->era_entries[idx].stop_date[2] = strtol (str, &endp, 10);
-	      if (endp == str && !be_quiet)
+	      if (endp == str)
 		{
 		invalid_stop_date:
-		  error (0, 0, _("illegal stopping date in string %d in"
-				 " `era' field in category `%s'"),
-			 idx + 1, "LC_TIME");
+		  if (!be_quiet)
+		    error (0, 0, _("illegal stopping date in string %d in"
+				   " `era' field in category `%s'"),
+			   idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
-	      else if (*endp != ':' && !be_quiet)
+	      else if (*endp != ':')
 		{
 		garbage_stop_date:
-		  error (0, 0, _("garbage at end of stopping date in string %d"
-				 " in `era' field in category `%s'"),
-			 idx + 1, "LC_TIME");
+		  if (!be_quiet)
+		    error (0, 0, _("garbage at end of stopping date "
+				   "in string %d in `era' field "
+				   "in category `%s'"),
+			   idx + 1, "LC_TIME");
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -339,10 +349,11 @@ time_finish (struct localedef_t *locale)
 		}
 	    }
 
-	  if ((str == NULL || *str == '\0') && !be_quiet)
+	  if (str == NULL || *str == '\0')
 	    {
-	      error (0, 0, _("missing era name in string %d in `era' field"
-			     " in category `%s'"), idx + 1, "LC_TIME");
+	      if (!be_quiet)
+		error (0, 0, _("missing era name in string %d in `era' field"
+			       " in category `%s'"), idx + 1, "LC_TIME");
 	      time->era_entries[idx].name =
 		time->era_entries[idx].format = "";
 	    }
@@ -350,11 +361,12 @@ time_finish (struct localedef_t *locale)
 	    {
 	      time->era_entries[idx].name = strsep (&str, ":");
 
-	      if ((str == NULL || *str == '\0') && !be_quiet)
+	      if (str == NULL || *str == '\0')
 		{
-		  error (0, 0, _("missing era format in string %d in `era'"
-				 " field in category `%s'"),
-			 idx + 1, "LC_TIME");
+		  if (!be_quiet)
+		    error (0, 0, _("missing era format in string %d in `era'"
+				   " field in category `%s'"),
+			   idx + 1, "LC_TIME");
 		  time->era_entries[idx].name =
 		    time->era_entries[idx].format = "";
 		}

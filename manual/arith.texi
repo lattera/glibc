@@ -46,6 +46,7 @@ These functions are declared in the header files @file{math.h} and
 				 division.
 * Parsing of Numbers::          Functions for ``reading'' numbers
 			         from strings.
+* Old-style number conversion:: Low-level number to string conversion.
 @end menu
 
 @node Infinity
@@ -1323,4 +1324,170 @@ This function is similar to the @code{strtod} function, except that it
 need not detect overflow and underflow errors.  The @code{atof} function
 is provided mostly for compatibility with existing code; using
 @code{strtod} is more robust.
+@end deftypefun
+
+
+@node Old-style number conversion
+@subsection Old-style way of converting numbers to strings
+
+The @w{System V} library provided three functions to convert numbers to
+strings which have a unusual and hard-to-be-used semantic.  The GNU C
+library also provides these functions together with some useful
+extensions in the same sense.
+
+Generally, you should avoid using these functions unless the really fit
+into the problem you have to to solve.  Otherwise it is almost always
+better to use @code{sprinf} since it's greater availability (it is an
+@w{ISO C} function).
+
+
+@comment stdlib.h
+@comment SVID, Unix98
+@deftypefun {char *} ecvt (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign})
+The function @code{ecvt} converts the floating-point number @var{value}
+to a string with at most @var{ndigit} decimal digits.  If @code{ndigit}
+is greater than the accuracy of the @code{double} floating-point type
+the implementation can shorten @var{ndigit} to a reasonable value. The
+returned string neither contains decimal point nor sign. The high-order
+digit of the string is non-zero (unless @var{value} is actually zero)
+and the low-order digit is rounded. The variable pointed to by
+@var{decpt} gets the position of the decimal character relative to the
+start of the string. If @var{value} is negativ, @var{sign} is set to a
+non-zero value, otherwise to 0.
+
+The returned string is statically allocated and overwritten by each call
+to @code{ecvt}.
+
+If @var{value} is zero, it's implementation defined if @var{decpt} is
+@code{0} or @code{1}.
+
+The prototype for this function can be found in @file{stdlib.h}.
+@end deftypefun
+
+As an example @code{ecvt (12.3, 5, &decpt, &sign)} returns @code{"12300"}
+and sets @var{decpt} to @code{2} and @var{sign} to @code{0}.
+
+@comment stdlib.h
+@comment SVID, Unix98
+@deftypefun {char *} fcvt (double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign})
+The function @code{fcvt} is similar to @code{ecvt} with the difference
+that @var{ndigit} specifies the digits after the decimal point.  If
+@var{ndigit} is less than zero, @var{value} is rounded to the left of
+the decimal point upto the reasonable limit (e.g., @math{123.45} is only
+rounded to the third digit before the decimal point, even if
+@var{ndigit} is less than @math{-3}).
+
+The returned string is statically allocated and overwritten by each call
+to @code{fcvt}.
+
+The prototype for this function can be found in @file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment SVID, Unix98
+@deftypefun {char *} gcvt (double @var{value}, int @var{ndigit}, char *@var{buf})
+The @code{gcvt} function also converts @var{value} to a NUL terminated
+string but does in a way similar to the @code{%g} format of
+@code{printf}.  It also does not use a static buffer but instead uses
+the user-provided buffer starting at @var{buf}.  It is the user's
+responsibility to make sure the buffer is long enough to contain the
+result.  Unlike the @code{ecvt} and @code{fcvt} function @code{gcvt}
+includes the sign and the decimal point character (which is determined
+according to the current locale) in the result.  Therefore there are yet
+less reasons to use this function instead of @code{printf}.
+
+The return value is @var{buf}.
+
+The prototype for this function can be found in @file{stdlib.h}.
+@end deftypefun
+
+
+All these three functions have in common that they use @code{double}
+values as the parameters.  Calling these functions using @code{long
+double} values would mean a loss of precision due to the implicit
+rounding.  Therefore the GNU C library contains three more functions
+with similar semantic which take @code{long double} values.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} qecvt (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign})
+This function is equivalent to the @code{ecvt} function except that it
+takes an @code{long double} value for the first parameter.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign})
+This function is equivalent to the @code{fcvt} function except that it
+takes an @code{long double} value for the first parameter.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} qgcvt (long double @var{value}, int @var{ndigit}, char *@var{buf})
+This function is equivalent to the @code{gcvt} function except that it
+takes an @code{long double} value for the first parameter.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+
+@cindex gcvt_r
+As said above the @code{ecvt} and @code{fcvt} function along with their
+@code{long double} equivalents have the problem that they return a value
+located in a static buffer which is overwritten by the next call of the
+function.  This limitation is lifted in yet another set of functions
+which also are GNU extensions.  These reentrant functions can be
+recognized by the by the conventional @code{_r} ending.  Obviously there
+is no need for a @code{gcvt_r} function.
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} ecvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
+The @code{ecvt_r} function is similar to the @code{ecvt} function except
+that it places its result into the user-specified buffer starting at
+@var{buf}.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment SVID, Unix98
+@deftypefun {char *} fcvt_r (double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
+The @code{fcvt_r} function is similar to the @code{fcvt} function except
+that it places its result into the user-specified buffer starting at
+@var{buf}.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} qecvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
+The @code{qecvt_r} function is similar to the @code{qecvt} function except
+that it places its result into the user-specified buffer starting at
+@var{buf}.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
+@end deftypefun
+
+@comment stdlib.h
+@comment GNU
+@deftypefun {char *} qfcvt (long double @var{value}, int @var{ndigit}, int @var{decpt}, int *@var{sign}, char *@var{buf}, size_t @var{len})
+The @code{qfcvt_r} function is similar to the @code{qfcvt} function except
+that it places its result into the user-specified buffer starting at
+@var{buf}.
+
+This function is a GNU extension.  The prototype can be found in
+@file{stdlib.h}.
 @end deftypefun

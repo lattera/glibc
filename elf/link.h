@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -443,7 +443,7 @@ extern void _dl_debug_state (void);
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase);
 
 /* Initialize the basic data structure for the search paths.  */
-extern void _dl_init_paths (void);
+extern void _dl_init_paths (const char *library_path);
 
 /* Gather the information needed to install the profiling tables and start
    the timers.  */

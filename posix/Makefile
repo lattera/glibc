@@ -77,7 +77,9 @@ lib: $(objpfx)libposix.a
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
 	mv -f $@T $@
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
+endif
 
 # Make the standalone glob/fnmatch package.
 
@@ -95,13 +97,17 @@ glob/%.h: %.h
 
 glob/configure: glob/configure.in
 	cd glob; autoconf $(ACFLAGS)
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
+endif
 
 glob/ChangeLog: ../ChangeLog
 	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
 	chmod a-w $@.new
 	mv -f $@.new $@
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
+endif
 
 %.Z: %
 	compress -c $< > $@-tmp

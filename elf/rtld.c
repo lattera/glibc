@@ -264,6 +264,7 @@ dl_main (const ElfW(Phdr) *phdr,
   size_t file_size;
   char *file;
   int has_interp = 0;
+  const char *library_path = NULL; /* Overwrites LD_LIBRARY_PATH if given.  */
 
   /* Test whether we want to see the content of the auxiliary array passed
      up from the kernel.  */
@@ -342,6 +343,15 @@ dl_main (const ElfW(Phdr) *phdr,
 	    ++_dl_skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
+	  }
+	else if (! strcmp (_dl_argv[1], "--library-path")
+		 && _dl_argc > 2)
+	  {
+	    library_path = _dl_argv[2];
+
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
 	  }
 	else
 	  break;
@@ -484,7 +494,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   /* Initialize the data structures for the search paths for shared
      objects.  */
-  _dl_init_paths ();
+  _dl_init_paths (library_path);
 
   preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)

@@ -176,7 +176,9 @@ $P/libc.pot: $(all-pot)
 	    po/header.pot > $@.new
 	$(XGETTEXT) -d - --omit-header -n -s $^ >> $@.new
 	mv -f $@.new $@
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) ci -m'Regenerated from source files' $@
+endif
 
 $(subdirs:%=$P/%.pot): $P/%.pot: FORCE
 	$(MAKE) -C $* no_deps=t ../$@

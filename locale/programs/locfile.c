@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -1015,11 +1015,12 @@ write_locale_data (const char *output_path, const char *category,
 	    save_err = errno;
 	}
 
-      if (fd == -1 && !be_quiet)
+      if (fd == -1)
 	{
-	  error (0, save_err, _("\
+	  if (!be_quiet)
+	    error (0, save_err, _("\
 cannot open output file `%s' for category `%s'"),
-		 fname, category);
+		   fname, category);
 	  return;
 	}
     }
@@ -1039,10 +1040,11 @@ cannot open output file `%s' for category `%s'"),
       if (maxiov > 0)
 	step = MIN (maxiov, step);
 
-      if (writev (fd, &vec[cnt], step) < 0 && !be_quiet)
+      if (writev (fd, &vec[cnt], step) < 0)
 	{
-	  error (0, errno, _("failure while writing data for category `%s'"),
-		 category);
+	  if (!be_quiet)
+	    error (0, errno, _("failure while writing data for category `%s'"),
+		   category);
 	  break;
 	}
     }

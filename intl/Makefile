@@ -42,12 +42,20 @@ ifdef gettext-srcdir
 %.h:: ../gpl2lgpl.sed $(gettext-srcdir)/intl/%.h; $(copysrc)
 locale.alias:: ../gpl2lgpl.sed $(gettext-srcdir)/misc/locale.alias; $(copysrc)
 
+ifeq ($(with-cvs),yes)
 define copysrc
 sed -f $^ > $@.new
 chmod a-w $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs $(CVSOPTS) commit -m'Updated from $<' $@
 endef
+else
+define copysrc
+sed -f $^ > $@.new
+chmod a-w $@.new
+mv -f $@.new $@
+endef
+endif
 
 endif
 

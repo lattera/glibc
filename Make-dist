@@ -185,11 +185,18 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
 +tsrcs := $(+tsrcs) $(+sysdep-tsrcs)
 
+ifeq ($(with-cvs),yes)
 define autoconf-it
 autoconf $(ACFLAGS) $< > $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
+else
+define autoconf-it
+autoconf $(ACFLAGS) $< > $@.new
+mv -f $@.new $@
+endef
+endif
 
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
@@ -225,7 +232,9 @@ README: README.template version.h
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
 	chmod 444 $@
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Remade for $(release)-$(version)' $@
+endif
 
 
 endif	# Subdirectory vs. parent makefile

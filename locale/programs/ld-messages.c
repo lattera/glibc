@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -41,7 +41,7 @@
 #include "localeinfo.h"
 
 
-void *xmalloc (size_t __n);
+extern void *xmalloc (size_t __n);
 
 
 /* The real definition of the struct for the LC_MESSAGES locale.  */
@@ -77,9 +77,12 @@ messages_finish (struct localedef_t *locale)
     = locale->categories[LC_MESSAGES].messages;
 
   /* The fields YESSTR and NOSTR are optional.  */
-  if (messages->yesexpr == NULL && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' undefined"),
-	   "yesexpr", "LC_MESSAGES");
+  if (messages->yesexpr == NULL)
+    {
+      if (!be_quiet)
+	error (0, 0, _("field `%s' in category `%s' undefined"),
+	       "yesexpr", "LC_MESSAGES");
+    }
   else
     {
       int result;
@@ -98,9 +101,12 @@ no correct regular expression for field `%s' in category `%s': %s"),
 	}
     }
 
-  if (messages->noexpr == NULL && !be_quiet)
-    error (0, 0, _("field `%s' in category `%s' undefined"),
-	   "noexpr", "LC_MESSAGES");
+  if (messages->noexpr == NULL)
+    {
+      if (!be_quiet)
+	error (0, 0, _("field `%s' in category `%s' undefined"),
+	       "noexpr", "LC_MESSAGES");
+    }
   else
     {
       int result;

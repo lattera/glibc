@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -91,8 +91,10 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
 	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || \
 	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
+endif
 	touch $@
 
 common-generated += errnos.d stamp-errnos

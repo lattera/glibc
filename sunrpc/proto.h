@@ -1,14 +1,12 @@
 /****** rpc_clntout.c ******/
 
 void write_stubs(void);
-void printarglist(proc_list *proc,
+void printarglist(proc_list *proc, const char *result,
 		  const char *addargname, const char *addargtype);
 
 /****** rpc_cout.c ******/
 
-void emit(definition *def);
-void emit_inline(declaration *decl, int flag);
-void emit_single_in_line(declaration *decl, int flag, relation rel);
+void emit (definition *def);
 
 /****** rpc_hout.c ******/
 
@@ -19,6 +17,7 @@ void pprocdef(proc_list *proc, version_list *vp,
 	      const char *addargtype, int server_p, int mode);
 void pdeclaration(const char *name, declaration *dec, int tab,
 		  const char *separator);
+void print_xdr_func_def (char* name, int pointerp, int i);
 
 /****** rpc_main.c ******/
 	/* nil */

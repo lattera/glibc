@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -79,7 +79,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
   p = first_unused;
 
   line = p;
-  for (i = 0; i < result->objects.objects_len; i++)
+  for (i = 0; i < result->objects.objects_len; ++i)
     {
       if (strcmp (NISENTRYVAL (i, 1, result), network->n_name) != 0)
         {
@@ -93,7 +93,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
           room_left -= (NISENTRYLEN (i, 1, result) + 1);
         }
     }
-  ++p;
+  *p++ = '\0';
   first_unused = p;
 
   /* Adjust the pointer so it is aligned for
@@ -106,7 +106,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
   room_left -= (2 * sizeof (char *));
   network->n_aliases[0] = NULL;
 
-    i = 0;
+  i = 0;
   while (*line != '\0')
     {
       /* Skip leading blanks.  */
@@ -125,17 +125,14 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
       while (*line != '\0' && *line != ' ')
         ++line;
 
-      if (line != network->n_aliases[i])
-        {
-          if (*line != '\0')
-            {
-              *line = '\0';
-              ++line;
-            }
+      if (*line == ' ')
+	{
+	  *line = '\0';
+	  ++line;
           ++i;
         }
       else
-        network->n_aliases[i] = NULL;
+        network->n_aliases[i+1] = NULL;
     }
 
   return 1;
@@ -385,39 +382,57 @@ _nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
     nis_result *result;
     char buf[1024 + tablename_len];
     struct in_addr in;
+    char buf2[256];
+    int b2len;
 
     in = inet_makeaddr (addr, 0);
-    sprintf (buf, "[addr=%s],%s", inet_ntoa (in), tablename_val);
+    strcpy (buf2, inet_ntoa (in));
+    b2len = strlen (buf2);
 
-    result = nis_list (buf, EXPAND_NAME, NULL, NULL);
-
-    retval = niserr2nss (result->status);
-    if (retval != NSS_STATUS_SUCCESS)
+    while (1)
       {
-	if (retval == NSS_STATUS_TRYAGAIN)
+	sprintf (buf, "[addr=%s],%s", buf2, tablename_val);
+	result = nis_list (buf, EXPAND_NAME, NULL, NULL);
+
+	retval = niserr2nss (result->status);
+	if (retval != NSS_STATUS_SUCCESS)
 	  {
-	    *errnop = errno;
-	    *herrnop = NETDB_INTERNAL;
+	    if (buf2[b2len -2] == '.' && buf2[b2len -1] == '0')
+	      {
+		/* Try again, but with trailing dot(s)
+		   removed (one by one) */
+		buf2[b2len - 2] = '\0';
+		b2len -= 2;
+		continue;
+	      }
+	    else
+	      return NSS_STATUS_NOTFOUND;
+
+	    if (retval == NSS_STATUS_TRYAGAIN)
+	      {
+		*errnop = errno;
+		*herrnop = NETDB_INTERNAL;
+	      }
+	    nis_freeresult (result);
+	    return retval;
 	  }
+
+	parse_res = _nss_nisplus_parse_netent (result, network, buffer,
+					       buflen, errnop);
+
 	nis_freeresult (result);
-	return retval;
+
+	if (parse_res > 0)
+	  return NSS_STATUS_SUCCESS;
+
+	*herrnop = NETDB_INTERNAL;
+	if (parse_res == -1)
+	  {
+	    *errnop = ERANGE;
+	    return NSS_STATUS_TRYAGAIN;
+	  }
+	else
+	  return NSS_STATUS_NOTFOUND;
       }
-
-    parse_res = _nss_nisplus_parse_netent (result, network, buffer, buflen,
-					   errnop);
-
-    nis_freeresult (result);
-
-    if (parse_res > 0)
-      return NSS_STATUS_SUCCESS;
-
-    *herrnop = NETDB_INTERNAL;
-    if (parse_res == -1)
-      {
-	*errnop = ERANGE;
-	return NSS_STATUS_TRYAGAIN;
-      }
-    else
-      return NSS_STATUS_NOTFOUND;
   }
 }

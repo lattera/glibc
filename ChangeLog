@@ -1,3 +1,100 @@
+1998-02-16 17:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Recognize --library-path parameter and
+	pass value (or NULL) to _dl_init_paths.
+	* elf/dl-load.c (_dl_init_paths): Change to take one parameter,
+	replacing local variable llp.  If llp is NULL examine LD_LIBRARY_PATH
+	environment variable.
+	* elf/link.h: Change prototype for _dl_init_paths.
+	* elf/dl-support.c: Pass NULL in _dl_init_paths call.
+
+	* localedata/Makefile (distribute): Add test files.
+
+1998-02-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* localedata/tests/{test1.cm, test2.cm, test3.cm, test4.cm,
+	test1.def, test2.def, test3.def, test4.def}: Simple input files
+	for localedef. Contributed by Yung-Ching Hsiao
+	<yhsiao@cae.wisc.edu>.
+
+	* localedata/Makefile (tests): Call tst-locale.sh.
+
+	* localedata/tst-locale.sh: New file, regression tests for some
+	localedef problems.
+
+1998-02-15  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-alias.c: Use __stpncpy.
+
+	* nis/nss_nisplus/nisplus-hosts.c: Make sure buffer is always NUL
+	terminated.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+
+	Add more changes from TI-RPC 2.3 for rpcgen to fix include/C++ bug
+	and support generating thread safe RPC code.
+	* sunrpc/rpc_main.c: Add changes.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sunrpc/rpc_util.h: Add new structs and prototypes.
+	* sunrpc/proto.h: Remove prototypes for static functions.
+
+1998-02-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/programs/ld-messages.c (messages_finish): Don't skip
+	error checking when being quiet.
+	* locale/programs/ld-ctype.c (ctype_finish): Likewise.
+	(set_class_defaults): Likewise.
+	* locale/programs/charmap.c (parse_charmap): Likewise.
+	* locale/programs/ld-collate.c (collate_finish): Likewise.
+	* locale/programs/ld-monetary.c (monetary_finish): Likewise.
+	* locale/programs/ld-time.c (time_finish): Likewise.
+	* locale/programs/locfile.c (write_locale_data): Likewise.
+
+	* locale/programs/ld-ctype.c (ctype_class_to): Silently ignore
+	unknown characters and empty ranges.
+	* locale/programs/ld-collate.c (collate_order_elem): When
+	processing an ellipsis properly form a linked list in the result
+	table, fix typo when allocating ordering array.
+	[PR libc/419]
+
+1998-02-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile (ld-map): Define.
+	(rtld-ldscript): Define.  Change all `$(objpfx)rtld-ldscript' to
+	`$(rtld-ldscript)'.
+	($(objpfx)ld.so): Combine the two versions of this rule.  Depend
+	on $(ld-map).
+	(rtld-link): Combine the two versions of this definition.  Fixed
+	to make it work when no symbol versioning is used.
+
+1998-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (build-program-cmd): Use --library-path parameter to
+	ld.so instead of environment variable.
+
+	* sunrpc/Makefile (rpcgen-cmd): Don't use -$ parameter.
+	* sunrpc/rpc_main.c: Remove support for -$$ option again.
+
+1998-02-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Make-dist: Respect with-cvs setting.
+	* MakeTAGS (all-pot): Likewise.
+	* sysdeps/sparc/sparc32/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	* stdlib/Makefile: Likewise.
+	* posix/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* po/Makefile (linguas): Likewise
+
 1998-02-15  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/ypclnt.c (yp_all): Remove error message, user should print it.

@@ -113,7 +113,9 @@ $(mpn-copy): %: $(ignore gmp2glibc.sed) $(gmp-srcdir)/%; $(gmp2glibc)
 .PHONY: copy-mpn clean-mpn mpn-stuff
 mpn-stuff: $(mpn-stuff)
 copy-mpn: $(mpn-stuff)
+ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Updated from $(gmp-srcdir)' $+
+endif
 clean-mpn:
 	rm -f $(mpn-stuff)
 

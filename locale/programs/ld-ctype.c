@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -309,27 +309,34 @@ character %s'%s' in class `%s' must not be in class `%s'"),
 
   /* ... and now test <SP> as a special case.  */
   space_value = charset_find_value (charset, "SP", 2);
-  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE && !be_quiet)
-    error (0, 0, _("character <SP> not defined in character map"));
+  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE)
+    {
+      if (!be_quiet)
+	error (0, 0, _("character <SP> not defined in character map"));
+    }
   else if (((cnt = BITPOS (tok_space),
 	     (ELEM (ctype, class_collection, , space_value)
 	      & BIT (tok_space)) == 0)
 	    || (cnt = BITPOS (tok_blank),
 		(ELEM (ctype, class_collection, , space_value)
-		 & BIT (tok_blank)) == 0))
-	   && !be_quiet)
-    error (0, 0, _("<SP> character not in class `%s'"),
-           valid_table[cnt].name);
+		 & BIT (tok_blank)) == 0)))
+    {
+      if (!be_quiet)
+	error (0, 0, _("<SP> character not in class `%s'"),
+	       valid_table[cnt].name);
+    }
   else if (((cnt = BITPOS (tok_punct),
 	     (ELEM (ctype, class_collection, , space_value)
 	      & BIT (tok_punct)) != 0)
 	    || (cnt = BITPOS (tok_graph),
 		(ELEM (ctype, class_collection, , space_value)
 		 & BIT (tok_graph))
-		!= 0))
-	   && !be_quiet)
-    error (0, 0, _("<SP> character must not be in class `%s'"),
-           valid_table[cnt].name);
+		!= 0)))
+    {
+      if (!be_quiet)
+	error (0, 0, _("<SP> character must not be in class `%s'"),
+	       valid_table[cnt].name);
+    }
   else
     ELEM (ctype, class_collection, , space_value) |= BIT (tok_print);
 
@@ -651,12 +658,14 @@ ctype_class_to (struct linereader *lr, struct localedef_t *locale,
 
   value = charset_find_value (charset, code->val.str.start, code->val.str.len);
 
-  assert (value >= ctype->last_class_char);
-
-  for (cnt = ctype->last_class_char + 1; cnt <= value; ++cnt)
-    *find_idx (ctype, &ctype->class_collection, &ctype->class_collection_max,
-	       &ctype->class_collection_act, cnt)
-      |= ctype->current_class_mask;
+  /* In the LC_CTYPE category it is no error when a character is
+     not found.  This has to be ignored silently.  */
+  if ((wchar_t) ctype->last_class_char != ILLEGAL_CHAR_VALUE
+      && (wchar_t) value != ILLEGAL_CHAR_VALUE)
+    for (cnt = ctype->last_class_char + 1; cnt <= value; ++cnt)
+      *find_idx (ctype, &ctype->class_collection, &ctype->class_collection_max,
+		 &ctype->class_collection_act, cnt)
+	|= ctype->current_class_mask;
 
   ctype->last_class_char = ILLEGAL_CHAR_VALUE;
 }
@@ -940,11 +949,12 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charset_t *charset)
 	  tmp[0] = ch;
 
 	  value = charset_find_value (charset, tmp, 1);
-	  if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
+	  if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
 	    {
-	      error (0, 0, _("\
+	      if (!be_quiet)
+		error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-		     tmp);
+		       tmp);
 	      continue;
 	    }
 	  else
@@ -1004,50 +1014,68 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<space>");
+		   "<space>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "form-feed", 9);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<form-feed>");
+		   "<form-feed>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "newline", 7);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<newline>");
+		   "<newline>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "carriage-return", 15);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<carriage-return>");
+		   "<carriage-return>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "tab", 3);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<tab>");
+		   "<tab>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
 
       value = charset_find_value (charset, "vertical-tab", 12);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<vertical-tab>");
+		   "<vertical-tab>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_space);
     }
@@ -1070,18 +1098,24 @@ character `%s' not defined while needed as default value"),
       unsigned int value;
 
       value = charset_find_value (charset, "space", 5);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<space>");
+		   "<space>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
 
       value = charset_find_value (charset, "tab", 3);
-      if ((wchar_t) value == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if ((wchar_t) value == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<tab>");
+		   "<tab>");
+	}
       else
 	ELEM (ctype, class_collection, , value) |= BIT (tok_blank);
     }
@@ -1116,10 +1150,13 @@ character `%s' not defined while needed as default value"),
 	  ctype->class_collection[cnt] |= BIT (tok_print);
 
       space = charset_find_value (charset, "space", 5);
-      if (space == ILLEGAL_CHAR_VALUE && !be_quiet)
-	error (0, 0, _("\
+      if (space == ILLEGAL_CHAR_VALUE)
+	{
+	  if (!be_quiet)
+	    error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-	       "<space>");
+		   "<space>");
+	}
       else
 	ELEM (ctype, class_collection, , space) |= BIT (tok_print);
     }
@@ -1142,22 +1179,24 @@ character `%s' not defined while needed as default value"),
 	  tmp[1] = (char) ch;
 
 	  value_from = charset_find_value (charset, &tmp[1], 1);
-	  if ((wchar_t) value_from == ILLEGAL_CHAR_VALUE && !be_quiet)
+	  if ((wchar_t) value_from == ILLEGAL_CHAR_VALUE)
 	    {
-	      error (0, 0, _("\
+	      if (!be_quiet)
+		error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-		     tmp);
+		       tmp);
 	      continue;
 	    }
 
 	  /* This conversion is implementation defined.  */
 	  tmp[1] = (char) (ch + ('A' - 'a'));
 	  value_to = charset_find_value (charset, &tmp[1], 1);
-	  if ((wchar_t) value_to == ILLEGAL_CHAR_VALUE && !be_quiet)
+	  if ((wchar_t) value_to == ILLEGAL_CHAR_VALUE)
 	    {
-	      error (0, 0, _("\
+	      if (!be_quiet)
+		error (0, 0, _("\
 character `%s' not defined while needed as default value"),
-		     tmp);
+		       tmp);
 	      continue;
 	    }
 

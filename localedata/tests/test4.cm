@@ -1,0 +1,12 @@
+<code_set_name> BIG5
+<escape_char> /
+<mb_cur_max>  2
+<mb_cur_min>  1
+CHARMAP
+<b0101>...<b0103>       /xa1/x40
+<B0101>...<B0103>       /xa1/xa1
+<b0901>...<b0903>       /xa1/x40
+<B0901>...<B0903>       /xa1/xa1
+<b1001>...<b1003>       /xaa/x40
+<B1001>...<B1003>       /xaa/xa1
+END CHARMAP

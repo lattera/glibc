@@ -95,7 +95,7 @@ streq (const char *a, const char *b)
  * find a value in a list
  */
 definition *
-findval (list * lst, const char *val,
+findval (list *lst, const char *val,
 	 int (*cmp) (const definition *, const char *))
 {
 
@@ -113,7 +113,7 @@ findval (list * lst, const char *val,
  * store a value in a list
  */
 void
-storeval (list ** lstp, definition * val)
+storeval (list **lstp, definition *val)
 {
   list **l;
   list *lst;
@@ -145,7 +145,10 @@ fixit (const char *type, const char *orig)
   switch (def->def.ty.rel)
     {
     case REL_VECTOR:
-      return (def->def.ty.old_type);
+      if (streq (def->def.ty.old_type, "opaque"))
+	return ("char");
+      else
+	return (def->def.ty.old_type);
     case REL_ALIAS:
       return (fixit (def->def.ty.old_type, orig));
     default:
@@ -227,7 +230,7 @@ isvectordef (const char *type, relation rel)
 	case REL_ARRAY:
 	  return 0;
 	case REL_POINTER:
-	  return (0);
+	  return 0;
 	case REL_ALIAS:
 	  def = findval (defined, type, typedefed);
 	  if (def == NULL)
@@ -290,7 +293,7 @@ crash (void)
 
   for (i = 0; i < nfiles; i++)
     {
-      (void) unlink (outfiles[i]);
+      unlink (outfiles[i]);
     }
   exit (1);
 }

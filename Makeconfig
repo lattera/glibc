@@ -467,8 +467,9 @@ $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 				       $(filter -Wl$(comma)-rpath-link=%,\
 						$(sysdep-LDFLAGS)))))
 define built-program-cmd
-LD_LIBRARY_PATH=$(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-$(elf-objpfx)$(rtld-installed-name) $(built-program-file)
+$(elf-objpfx)$(rtld-installed-name) \
+	--library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	$(built-program-file)
 endef
 endif
 

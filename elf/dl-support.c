@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ non_dynamic_init (void)
 
   /* Initialize the data structures for the search paths for shared
      objects.  */
-  _dl_init_paths ();
+  _dl_init_paths (NULL);
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;

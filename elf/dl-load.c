@@ -1,5 +1,5 @@
 /* Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -309,7 +309,7 @@ decompose_rpath (const char *rpath, size_t additional_room)
 
 
 void
-_dl_init_paths (void)
+_dl_init_paths (const char *llp)
 {
   static const char *trusted_dirs[] =
   {
@@ -325,10 +325,15 @@ _dl_init_paths (void)
      variable.  */
   struct link_map *l;
 
-  /* First determine how many elements the LD_LIBRARY_PATH contents has.  */
-  const char *llp = getenv ("LD_LIBRARY_PATH");
+  /* Number of elements in the library path.  */
   size_t nllp;
 
+  /* If the user has not specified a library path consider the environment
+     variable.  */
+  if (llp == NULL)
+    llp = getenv ("LD_LIBRARY_PATH");
+
+  /* First determine how many elements the LD_LIBRARY_PATH contents has.  */
   if (llp != NULL && *llp != '\0')
     {
       /* Simply count the number of colons.  */

@@ -253,11 +253,12 @@ parse_charmap (const char *filename)
 		result->mb_cur_max = 1;
 	      if (result->mb_cur_min == 0)
 		result->mb_cur_min = result->mb_cur_max;
-	      if (result->mb_cur_min > result->mb_cur_max && !be_quiet)
+	      if (result->mb_cur_min > result->mb_cur_max)
 		{
-		  error (0, 0, _("\
+		  if (!be_quiet)
+		    error (0, 0, _("\
 %s: <mb_cur_max> must be greater than <mb_cur_min>\n"),
-			 cmfile->fname);
+			   cmfile->fname);
 
 		  result->mb_cur_min = result->mb_cur_max;
 		}

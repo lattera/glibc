@@ -35,6 +35,7 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
+ld-map		= $(libc-map)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h
@@ -88,22 +89,22 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 # Do we need a linker script?
 rtld-ldscript-in := $(firstword $(wildcard $(+sysdep_dirs:%=%/rtld-ldscript.in)))
 
-ifeq ($(versioning),yes)
-RTLD-VERSIONS = -Wl,--version-script=$(libc-map)
-endif
-
 ifneq (,$(rtld-ldscript-in))
-LDFLAGS-rtld = -T $(objpfx)rtld-ldscript
+rtld-ldscript = $(objpfx)rtld-ldscript
+generated += rtld-ldscript
 
-before-compile += $(objpfx)rtld-ldscript
+LDFLAGS-rtld = -T $(rtld-ldscript)
+before-compile += $(rtld-ldscript)
+
 rtld-parms = $(wildcard $(+sysdep_dirs:%=%/rtld-parms))
 include $(rtld-parms)
-generated += rtld-ldscript
-$(objpfx)rtld-ldscript: $(rtld-ldscript-in) $(rtld-parms)
+
+$(rtld-ldscript): $(rtld-ldscript-in) $(rtld-parms)
 	sed -e 's#@@rtld-oformat@@#$(rtld-oformat)#' \
 	    -e 's#@@rtld-arch@@#$(rtld-arch)#' \
 	    -e 's#@@rtld-entry@@#$(rtld-entry)#' \
 	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
+endif
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
@@ -111,18 +112,9 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
-	  $(filter-out $(objpfx)rtld-ldscript,$^) \
-	  $(RTLD-VERSIONS)
+	  $(filter-out $(rtld-ldscript) $($(@F:.so=)-map),$^) \
+	  $(load-map-file:%=-Wl,--version-script=%)
 endef
-else
-$(objpfx)ld.so: $(objpfx)librtld.os
-	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
-
-define rtld-link
-$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
-	  -Wl,-rpath=$(default-rpath) $^ $(RTLD-VERSIONS)
-endef
-endif
 
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
