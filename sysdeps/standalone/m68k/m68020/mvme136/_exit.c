@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
 
@@ -44,15 +44,6 @@ DEFUN(_exit, (status), int status)
 {
   /* status is ignored */
 
-
-  M68Kvec[ 45 ] = exit_trap;   /* install exit_trap handler */
+  M68Kvec[ 45 ] = __exit_trap;   /* install exit_trap handler */
   asm volatile( "trap #13" );  /* insures SUPV mode */
 }
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(_exit);
-
-#endif	/* GNU stabs.  */
