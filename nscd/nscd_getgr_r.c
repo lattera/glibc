@@ -67,14 +67,18 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 }
 
 
-libc_locked_map_ptr (map_handle);
+libc_locked_map_ptr (,__gr_map_handle);
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
 libc_freeres_fn (gr_map_free)
 {
-  if (map_handle.mapped != NO_MAPPING)
-    free (map_handle.mapped);
+  if (__gr_map_handle.mapped != NO_MAPPING)
+    {
+      void *p = __gr_map_handle.mapped;
+      __gr_map_handle.mapped = NO_MAPPING;
+      free (p);
+    }
 }
 
 
@@ -91,7 +95,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped = __nscd_get_map_ref (GETFDGR, "group",
-						       &map_handle, &gc_cycle);
+						       &__gr_map_handle,
+						       &gc_cycle);
  retry:;
   const gr_response_header *gr_resp = NULL;
   const char *gr_name = NULL;

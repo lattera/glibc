@@ -29,15 +29,8 @@
 #include "nscd_proto.h"
 
 
-libc_locked_map_ptr (map_handle);
-/* Note that we only free the structure if necessary.  The memory
-   mapping is not removed since it is not visible to the malloc
-   handling.  */
-libc_freeres_fn (gr_map_free)
-{
-  if (map_handle.mapped != NO_MAPPING)
-    free (map_handle.mapped);
-}
+/* We use the same mapping as in nscd_getgr.   */
+libc_locked_map_ptr (extern, __gr_map_handle);
 
 
 int
@@ -50,7 +43,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
   /* If the mapping is available, try to search there instead of
      communicating with the nscd.  */
   struct mapped_database *mapped;
-  mapped = __nscd_get_map_ref (GETFDGR, "group", &map_handle, &gc_cycle);
+  mapped = __nscd_get_map_ref (GETFDGR, "group", &__gr_map_handle, &gc_cycle);
 
  retry:;
   const initgr_response_header *initgr_resp = NULL;
