@@ -1,5 +1,8 @@
 Wed Oct 11 00:00:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Use +=, not =, to
+	apply R_386_PC32 reloc.
+
 	* Makeconfig (config-LDFLAGS): Add missing slash.
 
 	* sysdeps/mach/hurd/profil.c (fork_profil): Only call

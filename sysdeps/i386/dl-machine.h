@@ -107,7 +107,7 @@ elf_machine_rel (struct link_map *map,
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
-      *reloc_addr = sym_value - (Elf32_Addr) reloc_addr;
+      *reloc_addr += sym_value - (Elf32_Addr) reloc_addr;
       break;
     case R_386_NONE:		/* Alright, Wilbur.  */
       break;
