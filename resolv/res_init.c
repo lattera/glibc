@@ -182,8 +182,10 @@ __res_vinit(res_state statp, int preinit) {
 	statp->_u._ext.nscount = 0;
 #ifdef _LIBC
 	statp->_u._ext.nscount6 = 0;
-	for (n = 0; n < MAXNS; n++)
-	    statp->_u._ext.nsaddrs[n] = NULL;
+	for (n = 0; n < MAXNS; n++) {
+		statp->_u._ext.nsaddrs[n] = NULL;
+		statp->_u._ext.nsmap[n] = MAXNS;
+	}
 #endif
 
 	/* Allow user to override the local domain definition */
@@ -323,8 +325,8 @@ __res_vinit(res_state statp, int preinit) {
                                 sa6->sin6_family = AF_INET6;
                                 sa6->sin6_port = htons(NAMESERVER_PORT);
 				statp->_u._ext.nsaddrs[nservall] = sa6;
-				statp->_u._ext.nstimes[nservall] = RES_MAXTIME;
 				statp->_u._ext.nssocks[nservall] = -1;
+				statp->_u._ext.nsmap[nservall] = MAXNS + 1;
                                 nservall++;
                             }
                         }
@@ -537,16 +539,14 @@ res_nclose(res_state statp) {
 		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
 	}
 #ifdef _LIBC
-	for (ns = 0; ns < statp->_u._ext.nscount + statp->_u._ext.nscount6;
-	     ns++)
+	for (ns = 0; ns < MAXNS; ns++)
 #else
 	for (ns = 0; ns < statp->_u._ext.nscount; ns++)
 #endif
-	{
-		if (statp->_u._ext.nssocks[ns] != -1) {
+		if (statp->_u._ext.nsaddrs[ns]
+		    && statp->_u._ext.nssocks[ns] != -1) {
 			(void) __close(statp->_u._ext.nssocks[ns]);
 			statp->_u._ext.nssocks[ns] = -1;
 		}
-	}
 	statp->_u._ext.nsinit = 0;
 }

@@ -400,12 +400,15 @@ res_nsend(res_state statp,
 		if (EXT(statp).nscount != statp->nscount)
 			needclose++;
 		else
-			for (ns = 0; ns < statp->nscount; ns++)
 #ifdef _LIBC
-				if (!sock_eq((struct sockaddr_in6 *)
-					     &statp->nsaddr_list[ns],
-					     EXT(statp).nsaddrs[ns]))
+			for (ns = 0; ns < MAXNS; ns++) {
+				unsigned int map = EXT(statp).nsmap[ns];
+				if (map < MAXNS
+				    && !sock_eq((struct sockaddr_in6 *)
+						&statp->nsaddr_list[map],
+						EXT(statp).nsaddrs[ns]))
 #else
+			for (ns = 0; ns < statp->nscount; ns++) {
 				if (!sock_eq(&statp->nsaddr_list[ns],
 					     &EXT(statp).nsaddrs[ns]))
 #endif
@@ -413,6 +416,7 @@ res_nsend(res_state statp,
 					needclose++;
 					break;
 				}
+			}
 		if (needclose)
 			res_nclose(statp);
 	}
@@ -422,20 +426,34 @@ res_nsend(res_state statp,
 	 */
 	if (EXT(statp).nsinit == 0) {
 #ifdef _LIBC
-		n = 0;
-#endif
-		for (ns = 0; ns < statp->nscount; ns++) {
-#ifdef _LIBC
-			/* find a hole */
-		  	while ((n < MAXNS) &&
-			    (EXT(statp).nsaddrs[n] != NULL) &&
-			    (EXT(statp).nsaddrs[n]->sin6_family == AF_INET6) &&
-			    !IN6_IS_ADDR_V4MAPPED(
-			        &EXT(statp).nsaddrs[n]->sin6_addr))
-				n++;
-			if (n == MAXNS)
-				break;
+		unsigned char map[MAXNS];
 
+		memset (map, MAXNS, sizeof (map));
+		for (n = 0; n < MAXNS; n++) {
+			ns = EXT(statp).nsmap[n];
+			if (ns < statp->nscount)
+				map[ns] = n;
+			else if (ns < MAXNS) {
+				free(EXT(statp).nsaddrs[n]);
+				EXT(statp).nsaddrs[n] = NULL;
+				EXT(statp).nsmap[n] = MAXNS;
+			}
+		}
+		n = statp->nscount;
+		if (statp->nscount > EXT(statp).nscount)
+			for (n = EXT(statp).nscount, ns = 0;
+			     n < statp->nscount; n++) {
+				while (ns < MAXNS
+				       && EXT(statp).nsmap[ns] != MAXNS)
+					ns++;
+				if (ns == MAXNS)
+					break;
+				EXT(statp).nsmap[ns] = n;
+				map[n] = ns++;
+			}
+		EXT(statp).nscount = n;
+		for (ns = 0; ns < EXT(statp).nscount; ns++) {
+			n = map[ns];
 			if (EXT(statp).nsaddrs[n] == NULL)
 				EXT(statp).nsaddrs[n] =
 				    malloc(sizeof (struct sockaddr_in6));
@@ -443,31 +461,18 @@ res_nsend(res_state statp,
 				memcpy(EXT(statp).nsaddrs[n],
 				       &statp->nsaddr_list[ns],
 				       sizeof (struct sockaddr_in));
-				EXT(statp).nstimes[n] = RES_MAXTIME;
 				EXT(statp).nssocks[n] = -1;
 				n++;
 			}
+		}
 #else
+		for (ns = 0; ns < statp->nscount; ns++) {
 			EXT(statp).nsaddrs[ns] = statp->nsaddr_list[ns];
-			EXT(statp).nstimes[ns] = RES_MAXTIME;
 			EXT(statp).nssocks[ns] = -1;
-#endif
 		}
-		EXT(statp).nscount = statp->nscount;
+		EXT(statp).nscount = ns;
+#endif
 		EXT(statp).nsinit = 1;
-#ifdef _LIBC
-		/* If holes left, free memory and set to NULL */
-		while (n < MAXNS) {
-			if ((EXT(statp).nsaddrs[n] != NULL) &&
-			    ((EXT(statp).nsaddrs[n]->sin6_family != AF_INET6)
-			    || IN6_IS_ADDR_V4MAPPED(
-				   &EXT(statp).nsaddrs[n]->sin6_addr))) {
-				free(EXT(statp).nsaddrs[n]);
-				EXT(statp).nsaddrs[n] = NULL;
-			}
-			n++;
-		}
-#endif
 	}
 
 	/*
@@ -478,12 +483,28 @@ res_nsend(res_state statp,
 	    (statp->options & RES_BLAST) == 0) {
 #ifdef _LIBC
 		struct sockaddr_in6 *ina;
-		int lastns = statp->nscount + EXT(statp).nscount6 - 1;
+		unsigned int map;
 
-		ina = EXT(statp).nsaddrs[0];
-		for (ns = 0; ns < lastns; ns++)
-			EXT(statp).nsaddrs[ns] = EXT(statp).nsaddrs[ns + 1];
-		EXT(statp).nsaddrs[lastns] = ina;
+		n = 0;
+		while (n < MAXNS && EXT(statp).nsmap[n] == MAXNS)
+			n++;
+		if (n < MAXNS) {
+			ina = EXT(statp).nsaddrs[n];
+			map = EXT(statp).nsmap[n];
+			for (;;) {
+				ns = n + 1;
+				while (ns < MAXNS
+				       && EXT(statp).nsmap[ns] == MAXNS)
+					ns++;
+				if (ns == MAXNS)
+					break;
+				EXT(statp).nsaddrs[n] = EXT(statp).nsaddrs[ns];
+				EXT(statp).nsmap[n] = EXT(statp).nsmap[ns];
+				n = ns;
+			}
+			EXT(statp).nsaddrs[n] = ina;
+			EXT(statp).nsmap[n] = map;
+		}
 #else
 		struct sockaddr_in ina;
 		int lastns = statp->nscount - 1;

@@ -130,7 +130,7 @@ struct __res_state {
 		char	pad[52];	/* On an i386 this means 512b total. */
 		struct {
 			u_int16_t		nscount;
-			u_int16_t		nstimes[MAXNS];	/* ms. */
+			u_int16_t		nsmap[MAXNS];
 			int			nssocks[MAXNS];
 			u_int16_t		nscount6;
 			u_int16_t		nsinit;

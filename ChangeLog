@@ -1,3 +1,15 @@
+2002-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/resolv.h (struct __res_state): Remove unused nstimes.
+	Add nsmap.
+	* resolv/res_init.c (__res_vinit): Initialize nsmap array.
+	Remove nstimes setting.
+	(res_nclose): Check all MAXNS nameservers with non-NULL nsaddrs.
+	* resolv/res_send.c (res_nsend): Don't close unconditionally if
+	there is mix of IPv6 and IPv4 nameservers.
+	Use nsmap array to find free slots and preserve nameserver ordering.
+	Fix RES_ROTATE.
+
 2002-05-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/sendfile.h: It is now possible to
