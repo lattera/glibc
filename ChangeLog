@@ -1,3 +1,9 @@
+1999-02-28  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurd-raise.c (_hurd_raise_signal): Send "poll request"
+	msg_sig_post RPC (with SIGNO=0), rather than generating signal (again)
+	with the RPC.
+
 1999-02-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/getsysstats.c (__get_nprocs_conf, __get_nprocs,

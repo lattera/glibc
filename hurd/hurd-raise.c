@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,11 @@ _hurd_raise_signal (struct hurd_sigstate *ss,
 
   __spin_unlock (&ss->lock);
 
-  /* Send a message to the signal thread so it
-     will wake up and check for pending signals.  */
-  __msg_sig_post (_hurd_msgport, signo, detail->code, __mach_task_self ());
+  /* Send a message to the signal thread so it will wake up and check for
+     pending signals.  This is a generic "poll request" message (SIGNO==0)
+     rather than delivering this signal and its detail, because we have
+     already marked the signal as pending for the particular thread we
+     want.  Generating the signal with an RPC might deliver it to some
+     other thread.  */
+  __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
 }
