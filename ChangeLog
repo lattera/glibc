@@ -1,3 +1,26 @@
+1998-10-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* rt/aio.h: Move __aio_init to... 
+	* include/aio.h: ...here. 
+         
+1998-10-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Remove duplicate 
+	definition of O_LARGEFILE. 
+ 
+1998-10-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c (__pathconf): Use path 
+	as first argument to statfs. 
+ 
+1998-10-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/generic/setenv.c (setenv): Add braces around ambiguous else. 
+ 
+1998-10-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* malloc/mtrace.c: Include <string.h> for strlen. 
+ 
 1998-10-24  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/bits/environments.h: New file.
