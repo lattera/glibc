@@ -3,6 +3,11 @@
 	* include/shlib-compat.h (versioned_symbol): Give preprocessor the
 	chance to expand VERSION_##lib##_##version.
 
+	* libio/fileops.c: Use new macros from shlib-compat.h to define
+	versions.
+	* libio/iofclose.c: Likewise.
+	* libio/oldiofclose.c: Likewise.
+
 2000-03-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h: Clean up namespace.

@@ -29,6 +29,7 @@
 #endif
 #if _LIBC
 # include "../iconv/gconv_int.h"
+# include <shlib-compat.h>
 #endif
 
 int
@@ -86,13 +87,6 @@ _IO_new_fclose (fp)
   return status;
 }
 
-#if defined PIC && DO_VERSIONING
+versioned_symbol (libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
 strong_alias (_IO_new_fclose, __new_fclose)
-default_symbol_version (_IO_new_fclose, _IO_fclose, GLIBC_2.1);
-default_symbol_version (__new_fclose, fclose, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (_IO_new_fclose, _IO_fclose)
-weak_alias (_IO_new_fclose, fclose)
-# endif
-#endif
+versioned_symbol (libc, __new_fclose, fclose, GLIBC_2_1);

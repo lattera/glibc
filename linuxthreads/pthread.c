@@ -26,6 +26,7 @@
 #endif
 #include <sys/wait.h>
 #include <sys/resource.h>
+#include <shlib-compat.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -514,8 +515,9 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   return THREAD_GETMEM(self, p_retcode);
 }
 
-#if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
-default_symbol_version (__pthread_create_2_1, pthread_create, GLIBC_2.1);
+versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0)
 
 int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
 			 void * (*start_routine)(void *), void *arg)
@@ -540,8 +542,6 @@ int __pthread_create_2_0(pthread_t *thread, const pthread_attr_t *attr,
   return __pthread_create_2_1 (thread, attr, start_routine, arg);
 }
 symbol_version (__pthread_create_2_0, pthread_create, GLIBC_2.0);
-#else
-strong_alias (__pthread_create_2_1, pthread_create)
 #endif
 
 /* Simple operations on thread identifiers */
