@@ -184,9 +184,16 @@ _dl_start_user:
 	| Jump to the user's entry point.
 	jmp (%a4)");
 
+/* Nonzero iff TYPE describes a relocation that should
+   skip the executable when looking up the symbol value.  */
+#define elf_machine_lookup_noexec_p(type) ((type) == R_68K_COPY)
+
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_68K_JMP_SLOT)
+#define elf_machine_lookup_noplt_p(type) ((type) == R_68K_JMP_SLOT)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_RELOC_NOPLT	R_68K_JMP_SLOT
 
 /* The m68k never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
@@ -203,60 +210,50 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  Elf32_Addr loadbase;
 
-  switch (ELF32_R_TYPE (reloc->r_info))
+  if (ELF32_R_TYPE (reloc->r_info) == R_68K_RELATIVE)
+    *reloc_addr = map->l_addr + reloc->r_addend;
+  else
     {
-    case R_68K_COPY:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
-      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
-      break;
-    case R_68K_GLOB_DAT:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_68K_JMP_SLOT:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_68K_8:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend);
-      break;
-    case R_68K_16:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend);
-      break;
-    case R_68K_32:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend);
-      break;
-    case R_68K_RELATIVE:
-      *reloc_addr = map->l_addr + reloc->r_addend;
-      break;
-    case R_68K_PC8:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_PC16:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_PC32:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_NONE:		/* Alright, Wilbur.  */
-      break;
-    default:
-      assert (! "unexpected dynamic reloc type");
-      break;
+      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      if (sym)
+	value += sym->st_value;
+
+      switch (ELF32_R_TYPE (reloc->r_info))
+	{
+	case R_68K_COPY:
+	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  break;
+	case R_68K_GLOB_DAT:
+	case R_68K_JMP_SLOT:
+	  *reloc_addr = value;
+	  break;
+	case R_68K_8:
+	  *(char *) reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_68K_16:
+	  *(short *) reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_68K_32:
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_68K_PC8:
+	  *(char *) reloc_addr
+	    = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
+	  break;
+	case R_68K_PC16:
+	  *(short *) reloc_addr
+	    = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
+	  break;
+	case R_68K_PC32:
+	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
+	  break;
+	case R_68K_NONE:		/* Alright, Wilbur.  */
+	  break;
+	default:
+	  assert (! "unexpected dynamic reloc type");
+	  break;
+	}
     }
 }
 
