@@ -133,8 +133,17 @@ endif
 rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
 	       $(common-objpfx)hurd/libhurduser.so
 link-rpcuserlibs := $(rpcuserlibs:%user.so=%user-link.so)
-$(common-objpfx)libc.so subdir_lib: $(link-rpcuserlibs)
+$(common-objpfx)libc.so: $(link-rpcuserlibs)
 rpath-dirs += mach hurd
+
+# Make sure the `lib' pass builds the dummy shared objects so
+# we can link libc against them.
+ifeq (mach,$(subdir))
+lib-noranlib: $(common-objpfx)mach/libmachuser-link.so
+endif
+ifeq (hurd,$(subdir))
+lib-noranlib: $(common-objpfx)hurd/libhurduser-link.so
+endif
 
 $(link-rpcuserlibs): %-link.so: %_pic.a
 	$(build-module) -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version)

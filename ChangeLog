@@ -1,3 +1,15 @@
+1999-03-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/Makefile: Undo last change.
+	[$(subdir) = mach] (lib-noranlib): Depend on libmachuser-link.so.
+	[$(subdir) = hurd] (lib-noranlib): Depend on libhurduser-link.so.
+
+	* mach/Machrules (+preinit, +postinit, +interp,
+	LDFLAGS-$(interface.so)): Variables removed.  Interface libraries get
+	linked just like other shared libraries.
+	(interface.so): Fix typo in defn, so it works.
+	($(objpfx)$(interface.so)): Make it depend on libc.so.
+
 1999-03-21  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/Makefile (subdir_lib): Depend on
