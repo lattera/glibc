@@ -1,3 +1,7 @@
+2003-04-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/tmpfile.c: Remove USE_IN_LIBIO conditionals.
+
 2003-04-26  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-close.c (remove_slotinfo): Fix missing parens.
