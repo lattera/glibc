@@ -41,10 +41,11 @@ ENTRY(__bb_init_func)
 	beq	t0, init		/* not initialized yet -> */
 	ret
 	
-	.end __bb_init_func
+END(__bb_init_func)
 
-
-LEAF(init, 0x38)
+.ent init
+init:
+	.frame	sp, 0x38, ra, 0
 	subq	sp, 0x38, sp
 	.prologue 0
 
@@ -84,4 +85,4 @@ leave:	ldq	pv, 0x30(sp)
 	addq	sp, 0x38, sp
 	ret
 
-	.end init
+.end init
