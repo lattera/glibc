@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ routines = bindtextdom dcgettext dgettext gettext	\
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias \
 	     plural.y plural-exp.h po2test.sed tst-gettext.sh tst-translit.sh \
 	     translit.po tst-gettext2.sh tstlang1.po tstlang2.po tstcodeset.po\
-	     tst-codeset.sh
+	     tst-codeset.sh plural-eval.c
 
 test-srcs := tst-gettext tst-translit tst-gettext2 tst-codeset
 tests = tst-ngettext

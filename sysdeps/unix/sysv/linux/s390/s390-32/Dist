@@ -4,5 +4,4 @@ setresuid.c
 setresgid.c
 setfsuid.c
 setfsgid.c
-sys/procfs.h
 ucontext_i.h

@@ -87,6 +87,7 @@ include ../Makeconfig
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
 endif
+distribute += thrsvc.c
 
 ifeq (yes,$(build-static-nss))
 otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \

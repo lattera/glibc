@@ -139,12 +139,6 @@ endif
 ####
 
 
-# Set this to the name of the subdirectory that implements stdio.
-# The only option right now is `libio'.
-ifndef stdio
-stdio = libio
-endif
-
 # Common prefix for machine-independent installation directories.
 ifeq ($(origin prefix),undefined) # ifndef would override explicit empty value.
 prefix = /usr/local
@@ -624,7 +618,7 @@ endif	# $(+cflags) == ""
 # `+sysdep-includes' will be defined by Makerules.
 +includes = -I$(..)include -I. \
 	    $(patsubst %/,-I%,$(objpfx)) $(patsubst %/,-I%,$(..)) \
-	    $($(stdio)-include) $(includes) \
+	    $(libio-include) $(includes) \
 	    $(+sysdep-includes) $(last-includes) $(sysincludes)
 
 # Since libio has several internal header files, we use a -I instead
@@ -888,7 +882,7 @@ endif
 # dependencies.  Only the $(binfmt-subdir) should always be kept at the
 # end of the list.
 all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
-	      stdlib stdio-common $(stdio) malloc string wcsmbs time dirent \
+	      stdlib stdio-common libio malloc string wcsmbs time dirent \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow po argp	    \
 	      crypt $(add-ons) nss localedata timezone rt conform debug	    \

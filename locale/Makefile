@@ -60,7 +60,8 @@ vpath %.h programs
 vpath %.gperf programs
 
 localedef-modules	:= $(categories:%=ld-%) charmap linereader locfile \
-			   repertoire md5 locarchive
+			   repertoire locarchive
+localedef-aux		:= md5
 locale-modules		:= locale-spec
 lib-modules		:= charmap-dir simple-hash xmalloc xstrdup
 
@@ -75,6 +76,7 @@ programs/%-kw.h: programs/%-kw.gperf
 	mv -f $@.new $@
 
 $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
+$(objpfx)localedef: $(localedef-aux:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 

@@ -12,7 +12,7 @@ understand what you are undertaking before you begin.
 If you have any questions you think should be answered in this document,
 please let me know.
 
-						  --drepper@cygnus.com
+						  --drepper@redhat.com
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -116,6 +116,8 @@ please let me know.
 2.33.	The makefiles want to do a CVS commit.
 2.34.	When compiling C++ programs, I get a compilation error in streambuf.h.
 2.35.	When recompiling GCC, I get compilation errors in libio.
+2.36.	Why shall glibc never get installed on GNU/Linux systems in
+/usr/local?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -854,7 +856,7 @@ files to the XPG4 form:
 
 -----------------------------------------------------------------------
 # Change catalog source in Linux specific format to standard XPG format.
-# Ulrich Drepper <drepper@cygnus.com>, 1996.
+# Ulrich Drepper <drepper@redhat.com>, 1996.
 #
 /^\$ #/ {
   h
@@ -1254,6 +1256,20 @@ http://clisp.cons.org/~haible/gccinclude-glibc-2.2-compat.diff
 {BH} You are trying to recompile gcc 2.95.2?  Use gcc 2.95.3 instead.
 This version is needed because the fpos_t type and a few libio internals
 have changed in glibc 2.2, and gcc 2.95.3 contains a corresponding patch.
+
+
+2.36.	Why shall glibc never get installed on GNU/Linux systems in
+/usr/local?
+
+{AJ} The GNU C compiler treats /usr/local/include and /usr/local/lib in a
+special way, these directories will be searched before the system
+directories.  Since on GNU/Linux the system directories /usr/include and
+/usr/lib contain a --- possibly different --- version of glibc and mixing
+certain files from different glibc installations is not supported and will
+break, you risk breaking your complete system.  If you want to test a glibc
+installation, use another directory as argument to --prefix.  If you like to
+install this glibc version as default version, overriding the existing one,
+use --prefix=/usr and everything will go in the right places.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

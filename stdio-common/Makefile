@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +21,14 @@
 #
 subdir	:= stdio-common
 
-headers	:= printf.h stdio_ext.h bits/stdio_lim.h
+headers	:= printf.h stdio_ext.h
 
 routines	:=							      \
 	ctermid cuserid							      \
 	_itoa _itowa itoa-digits itoa-udigits itowa-digits		      \
 	vfprintf vprintf printf_fp reg-printf printf-prs printf_fphex	      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
-	vfscanf								      \
+	vfwprintf vfscanf vfwscanf					      \
 	fscanf scanf sscanf						      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
@@ -36,11 +36,9 @@ routines	:=							      \
 	remove rename							      \
 	lockfile
 
-include ../Makeconfig
+install-others = $(inst_includedir)/bits/stdio_lim.h
 
-ifeq ($(stdio),libio)
-routines += vfwprintf vfwscanf
-endif
+include ../Makeconfig
 
 aux	:= errlist siglist
 distribute := _itoa.h _itowa.h _i18n_number.h \
@@ -59,6 +57,9 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 test-srcs = tst-unbputc tst-printf
 
 include ../Rules
+
+$(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.f $(+force)
+	$(do-install)
 
 ifeq ($(cross-compiling),no)
 .PHONY: do-tst-unbputc do-tst-printf
