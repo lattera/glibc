@@ -214,13 +214,9 @@ static inline long atomic_decrement(struct pthread_atomic *pa)
 static inline void
 __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif)
 {
-#if 0
+  /* The locks here are not ensuring an atomic update of the p_extricate
+     pointer.  They protect users of the pointer from using stale memory.  */
   __pthread_lock(THREAD_GETMEM(self, p_lock), self);
   THREAD_SETMEM(self, p_extricate, peif);
   __pthread_unlock(THREAD_GETMEM (self, p_lock));
-#else
-  /* I don't think that getting the lock is necessary.  All we do is an
-     atomic write.  */
-  THREAD_SETMEM(self, p_extricate, peif);
-#endif
 }
