@@ -12,6 +12,7 @@
 	* elf/rtld.c (process_dl_debug): Rewritten.  Optimized for size not
 	speed.
 	(process_envvars): Some more optimizations.
+	* sysdeps/generic/ldsodefs.h (DL_DEBUG_HELP): New macro.
 
 	* elf/elf.h: Add dynamic tag definitions for prelinking.
 
