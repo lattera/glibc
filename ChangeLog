@@ -1,5 +1,9 @@
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/vasprintf.c (_IO_vasprintf): Try to avoid memory
+	fragmentation by allocating new memory at the end instead of
+	reallocating.
+
 	* posix/globtest.sh: Fix last change.
 
 2000-04-10  Philip Blundell  <philb@gnu.org>
