@@ -233,22 +233,51 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
     = (const ElfW(Word)) l->l_info[DT_MIPS (LOCAL_GOTNO)]->d_un.d_val;	      \
   const ElfW(Word) gotsym						      \
     = (const ElfW(Word)) l->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;	      \
-  const ElfW(Sym) *definer;						      \
-  ElfW(Addr) loadbase;							      \
+  const ElfW(Sym) *sym;							      \
   ElfW(Addr) funcaddr;							      \
+  ElfW(Addr) value;							      \
 									      \
   /* Look up the symbol's run-time value.  */				      \
-  definer = &symtab[sym_index];						      \
+  sym = &symtab[sym_index];						      \
+  /* FIXME: The symbol versioning stuff is not tested yet.  */		      \
+  if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)	      \
+    {									      \
+      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)			      \
+	{								      \
+	default:							      \
+	  {								      \
+	    const ElfW(Half) *vernum =					      \
+	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);	      \
+	    ElfW(Half) ndx = vernum[sym_index];				      \
+	    const struct r_found_version *version = &l->l_versions[ndx];      \
 									      \
-  /* FIXME: Handle symbol versioning correctly.  */			      \
-  loadbase = _dl_lookup_symbol (strtab + definer->st_name, l, &definer,	      \
-				l->l_scope, R_MIPS_REL32);		      \
+	    if (version->hash != 0)					      \
+	      {								      \
+		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l, \
+						    &sym, l->l_scope, version,\
+						    R_MIPS_REL32);	      \
+		break;							      \
+	      }								      \
+	    /* Fall through.  */					      \
+	  }								      \
+	case 0:								      \
+	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
+				     l->l_scope, R_MIPS_REL32);		      \
+	}								      \
 									      \
+      /* Currently value contains the base load address of the object	      \
+	 that defines sym.  Now add in the symbol offset.  */		      \
+      value = (sym ? value + sym->st_value : 0);			      \
+    }									      \
+  else									      \
+    /* We already found the symbol.  The module (and therefore its load	      \
+       address) is also known.  */					      \
+    value = l->l_addr + sym->st_value;					      \
+  									      \
   /* Apply the relocation with that value.  */				      \
-  funcaddr = loadbase + definer->st_value;				      \
-  *(got + local_gotno + sym_index - gotsym) = funcaddr;			      \
+  *(got + local_gotno + sym_index - gotsym) = value;			      \
 									      \
-  return funcaddr;							      \
+  return value;							      \
 }									      \
 									      \
 asm ("\n								      \

@@ -1,5 +1,10 @@
 2000-04-13  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Handle symbol
+	versioning.
+
+2000-04-13  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/mips/clone.S: Fix function.
 
 	* sysdeps/unix/mips/pipe.S: Reorder instructions since .reorder is
