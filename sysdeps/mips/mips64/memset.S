@@ -36,8 +36,8 @@
 ENTRY (memset)
 	.set	noreorder
 
-	slti	t5, a2, 8		# Less than 8?
-	bne	t5, zero, L(last8)
+	slti	t5, a2, 16		# Less than 16?
+	bne	t5, zero, L(last16)
 	move	v0, a0			# Setup exit value before too late
 
 	beq	a1, zero, L(ueven)	# If zero pattern, no need to extend
@@ -64,24 +64,24 @@ L(chkw):
 	PTR_ADDU a3, a0			# a3 is last loop address +1
 	move	a2, t4			# a2 is now # of bytes left after loop
 L(loopw):
-	PTR_ADDIU a0, 16		# Handle 2 words pr. iteration
+	PTR_ADDIU a0, 16		# Handle 2 dwords pr. iteration
 	sd	a1, -16(a0)
 	bne	a0, a3, L(loopw)
 	sd	a1,  -8(a0)
 
 L(chkl):
 	andi	t4, a2, 0x8		# Check if there is at least a double
-	beq	t4, zero, L(last8)	#  word remaining after the loop
+	beq	t4, zero, L(last16)	#  word remaining after the loop
 	PTR_SUBU a2, t4
 	sd	a1, 0(a0)		# Yes...
 	PTR_ADDIU a0, 8
 
-L(last8):
-	blez	a2, L(exit)		# Handle last 8 bytes (if cnt>0)
+L(last16):
+	blez	a2, L(exit)		# Handle last 16 bytes (if cnt>0)
 	PTR_ADDU a3, a2, a0		# a3 is last address +1
-L(lst8l):
+L(lst16l):
 	PTR_ADDIU a0, 1
-	bne	a0, a3, L(lst8l)
+	bne	a0, a3, L(lst16l)
 	sb	a1, -1(a0)
 L(exit):
 	j	ra			# Bye, bye
