@@ -31,6 +31,7 @@
 #include "spinlock.h"
 #include "restart.h"
 #include <ldsodefs.h>
+#include <tls.h>
 
 /* We need the global/static resolver state here.  */
 #include <resolv.h>
@@ -47,12 +48,18 @@ extern struct __res_state _res;
 extern int _errno;
 extern int _h_errno;
 
+#ifdef USE_TLS
+
+/* We need only a few variables.  */
+static pthread_descr manager_thread;
+
+#else
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
   {
     {
-      &__pthread_initial_thread /* pthread_descr self */
+      .self = &__pthread_initial_thread /* pthread_descr self */
     }
   },
   &__pthread_initial_thread,  /* pthread_descr p_nextlive */
@@ -106,10 +113,11 @@ struct _pthread_descr_struct __pthread_initial_thread = {
    variables, the p_pid and p_priority fields,
    and the address for identification.  */
 
+#define manager_thread (&__pthread_manager_thread)
 struct _pthread_descr_struct __pthread_manager_thread = {
   {
     {
-      &__pthread_manager_thread /* pthread_descr self */
+      .self = &__pthread_manager_thread /* pthread_descr self */
     }
   },
   NULL,                       /* pthread_descr p_nextlive */
@@ -158,11 +166,16 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   NULL,                       /* pthread_readlock_info *p_readlock_free; */
   0                           /* int p_untracked_readlock_count; */
 };
+#endif
 
 /* Pointer to the main thread (the father of the thread manager thread) */
 /* Originally, this is the initial thread, but this changes after fork() */
 
+#ifdef USE_TLS
+pthread_descr __pthread_main_thread;
+#else
 pthread_descr __pthread_main_thread = &__pthread_initial_thread;
+#endif
 
 /* Limit between the stack of the initial thread (above) and the
    stacks of other threads (below). Aligned on a STACK_SIZE boundary. */
@@ -386,13 +399,44 @@ extern void *__dso_handle __attribute__ ((weak));
 void
 __pthread_initialize_minimal(void)
 {
+#ifdef USE_TLS
+  pthread_descr self = THREAD_SELF;
+
+  /* The memory for the thread descriptor was allocated elsewhere as
+     part of the TLS allocation.  We have to initialize the data
+     structure by hand.  This initialization must mirror the struct
+     definition above.  */
+  self->p_header.data.self = self;
+  self->p_nextlive = self->p_prevlive = self;
+  self->p_tid = PTHREAD_THREADS_MAX;
+  self->p_lock = &__pthread_handles[0].h_lock;
+  self->p_errnop = &_errno;
+  self->p_h_errnop = &_h_errno;
+  /* self->p_start_args need not be initialized, it's all zero.  */
+  self->p_userstack = 1;
+# if __LT_SPINLOCK_INIT != 0
+  self->p_resume_count = (struct pthread_atomic) __ATOMIC_INITIALIZER;
+# endif
+
+  /* Another variable which points to the thread descriptor.  */
+  __pthread_main_thread = self;
+
+  /* And fill in the pointer the the thread __pthread_handles array.  */
+  __pthread_handles[0].h_descr = self;
+#else
   /* If we have special thread_self processing, initialize that for the
      main thread now.  */
-#ifdef INIT_THREAD_SELF
+# ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(&__pthread_initial_thread, 0);
+# endif
 #endif
+
 #if HP_TIMING_AVAIL
+# ifdef USE_TLS
+  self->p_cpuclock_offset = GL(dl_cpuclock_offset);
+# else
   __pthread_initial_thread.p_cpuclock_offset = GL(dl_cpuclock_offset);
+# endif
 #endif
 }
 
@@ -461,10 +505,17 @@ static void pthread_initialize(void)
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
 # endif
 #endif
+#ifdef USE_TLS
+  /* Update the descriptor for the initial thread. */
+  THREAD_SETMEM (((pthread_descr) NULL), p_pid, __getpid());
+  /* Likewise for the resolver state _res.  */
+  THREAD_SETMEM (((pthread_descr) NULL), p_resp, &_res);
+#else
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
   /* Likewise for the resolver state _res.  */
   __pthread_initial_thread.p_resp = &_res;
+#endif
 #ifdef __SIGRTMIN
   /* Initialize real-time signals. */
   init_rtsigs ();
@@ -513,6 +564,8 @@ int __pthread_initialize_manager(void)
   int manager_pipe[2];
   int pid;
   struct pthread_request request;
+  int report_events;
+  pthread_descr tcb;
 
 #ifndef HAVE_Z_NODELETE
   if (__builtin_expect (&__dso_handle != NULL, 1))
@@ -535,37 +588,76 @@ int __pthread_initialize_manager(void)
     free(__pthread_manager_thread_bos);
     return -1;
   }
+
+#ifdef USE_TLS
+  /* Allocate memory for the thread descriptor and the dtv.  */
+  manager_thread = tcb = _dl_allocate_tls ();
+  if (tcb == NULL) {
+    free(__pthread_manager_thread_bos);
+    __libc_close(manager_pipe[0]);
+    __libc_close(manager_pipe[1]);
+    return -1;
+  }
+
+  /* Initialize the descriptor.  */
+  tcb->p_header.data.self = tcb;
+  tcb->p_lock = &__pthread_handles[1].h_lock;
+  tcb->p_errnop = &tcb->p_errno;
+  tcb->p_start_args = (struct pthread_start_args) PTHREAD_START_ARGS_INITIALIZER(__pthread_manager);
+  tcb->p_nr = 1;
+# if __LT_SPINLOCK_INIT != 0
+  self->p_resume_count = (struct pthread_atomic) __ATOMIC_INITIALIZER;
+# endif
+#else
+  tcb = &__pthread_manager_thread;
+#endif
+
+  __pthread_manager_request = manager_pipe[1]; /* writing end */
+  __pthread_manager_reader = manager_pipe[0]; /* reading end */
+
   /* Start the thread manager */
   pid = 0;
-  if (__builtin_expect (__pthread_initial_thread.p_report_events, 0))
+#ifdef USE_TLS
+  report_events = THREAD_GETMEM (((pthread_descr) NULL), p_report_events);
+#else
+  report_events = __pthread_initial_thread.p_report_events;
+#endif
+  if (__builtin_expect (report_events, 0))
     {
       /* It's a bit more complicated.  We have to report the creation of
 	 the manager thread.  */
       int idx = __td_eventword (TD_CREATE);
       uint32_t mask = __td_eventmask (TD_CREATE);
+      uint32_t event_bits;
 
-      if ((mask & (__pthread_threads_events.event_bits[idx]
-		   | __pthread_initial_thread.p_eventbuf.eventmask.event_bits[idx]))
+#ifdef USE_TLS
+      event_bits = THREAD_GETMEM_NC (((pthread_descr) NULL),
+				     p_eventbuf.eventmask.event_bits[idx]);
+#else
+      event_bits = __pthread_initial_thread.p_eventbuf.eventmask.event_bits[idx];
+#endif
+
+      if ((mask & (__pthread_threads_events.event_bits[idx] | event_bits))
 	  != 0)
 	{
-	  __pthread_lock(__pthread_manager_thread.p_lock, NULL);
+	  __pthread_lock(tcb->p_lock, NULL);
 
 #ifdef NEED_SEPARATE_REGISTER_STACK
 	  pid = __clone2(__pthread_manager_event,
 			 (void **) __pthread_manager_thread_bos,
 			 THREAD_MANAGER_STACK_SIZE,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			 (void *)(long)manager_pipe[0]);
+			 tcb);
 #elif _STACK_GROWS_UP
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_bos,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			(void *)(long)manager_pipe[0]);
+			tcb);
 #else
 	  pid = __clone(__pthread_manager_event,
 			(void **) __pthread_manager_thread_tos,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-			(void *)(long)manager_pipe[0]);
+			tcb);
 #endif
 
 	  if (pid != -1)
@@ -574,19 +666,18 @@ int __pthread_initialize_manager(void)
 	         the newly created thread's data structure.  We cannot let
 	         the new thread do this since we don't know whether it was
 	         already scheduled when we send the event.  */
-	      __pthread_manager_thread.p_eventbuf.eventdata =
-		&__pthread_manager_thread;
-	      __pthread_manager_thread.p_eventbuf.eventnum = TD_CREATE;
-	      __pthread_last_event = &__pthread_manager_thread;
-	      __pthread_manager_thread.p_tid = 2* PTHREAD_THREADS_MAX + 1;
-	      __pthread_manager_thread.p_pid = pid;
+	      tcb->p_eventbuf.eventdata = tcb;
+	      tcb->p_eventbuf.eventnum = TD_CREATE;
+	      __pthread_last_event = tcb;
+	      tcb->p_tid = 2* PTHREAD_THREADS_MAX + 1;
+	      tcb->p_pid = pid;
 
 	      /* Now call the function which signals the event.  */
 	      __linuxthreads_create_event ();
 	    }
 
 	  /* Now restart the thread.  */
-	  __pthread_unlock(__pthread_manager_thread.p_lock);
+	  __pthread_unlock(tcb->p_lock);
 	}
     }
 
@@ -595,16 +686,13 @@ int __pthread_initialize_manager(void)
 #ifdef NEED_SEPARATE_REGISTER_STACK
       pid = __clone2(__pthread_manager, (void **) __pthread_manager_thread_bos,
 		     THREAD_MANAGER_STACK_SIZE,
-		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-		     (void *)(long)manager_pipe[0]);
+		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
 #elif _STACK_GROWS_UP
       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_bos,
-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-		    (void *)(long)manager_pipe[0]);
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
 #else
       pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-		    (void *)(long)manager_pipe[0]);
+		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, tcb);
 #endif
     }
   if (__builtin_expect (pid, 0) == -1) {
@@ -613,10 +701,8 @@ int __pthread_initialize_manager(void)
     __libc_close(manager_pipe[1]);
     return -1;
   }
-  __pthread_manager_request = manager_pipe[1]; /* writing end */
-  __pthread_manager_reader = manager_pipe[0]; /* reading end */
-  __pthread_manager_thread.p_tid = 2* PTHREAD_THREADS_MAX + 1;
-  __pthread_manager_thread.p_pid = pid;
+  tcb->p_tid = 2* PTHREAD_THREADS_MAX + 1;
+  tcb->p_pid = pid;
   /* Make gdb aware of new thread manager */
   if (__builtin_expect (__pthread_threads_debug, 0) && __pthread_sig_debug > 0)
     {
@@ -725,7 +811,7 @@ static pthread_descr thread_self_stack(void)
   pthread_handle h;
 
   if (sp >= __pthread_manager_thread_bos && sp < __pthread_manager_thread_tos)
-    return &__pthread_manager_thread;
+    return manager_thread;
   h = __pthread_handles + 2;
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom))
     h++;
@@ -805,7 +891,11 @@ static void pthread_onexit_process(int retcode, void *arg)
        children, so that timings for main thread account for all threads. */
     if (self == __pthread_main_thread)
       {
+#ifdef USE_TLS
+	waitpid(manager_thread->p_pid, NULL, __WCLONE);
+#else
 	waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
+#endif
 	/* Since all threads have been asynchronously terminated
            (possibly holding locks), free cannot be used any more.  */
 	/*free (__pthread_manager_thread_bos);*/
@@ -850,7 +940,7 @@ static void pthread_handle_sigcancel(int sig)
   pthread_descr self = thread_self();
   sigjmp_buf * jmpbuf;
 
-  if (self == &__pthread_manager_thread)
+  if (self == manager_thread)
     {
 #ifdef THREAD_SELF
       /* A new thread might get a cancel signal before it is fully
@@ -858,7 +948,7 @@ static void pthread_handle_sigcancel(int sig)
 	 manager thread.  Double check that this is really the manager
 	 thread.  */
       pthread_descr real_self = thread_self_stack();
-      if (real_self == &__pthread_manager_thread)
+      if (real_self == manager_thread)
 	{
 	  __pthread_manager_sighandler(sig);
 	  return;
@@ -876,8 +966,13 @@ static void pthread_handle_sigcancel(int sig)
   if (__builtin_expect (__pthread_exit_requested, 0)) {
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
-    if (self == __pthread_main_thread)
+    if (self == __pthread_main_thread) {
+#ifdef USE_TLS
+      waitpid(manager_thread->p_pid, NULL, __WCLONE);
+#else
       waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
+#endif
+    }
     _exit(__pthread_exit_code);
   }
   if (__builtin_expect (THREAD_GETMEM(self, p_canceled), 0)

@@ -33,7 +33,7 @@
 # include "dl-osinfo.h"
 #endif
 
-extern void __libc_init (int, char **, char **);
+extern void __init_misc (int, char **, char **);
 
 /* The function is called from assembly stubs the compiler can't see.  */
 static void init (int, char **, char **) __attribute__ ((unused));
@@ -89,7 +89,7 @@ init (int argc, char **argv, char **envp)
   __libc_init_secure ();
 #endif
 
-  __libc_init (argc, argv, envp);
+  __init_misc (argc, argv, envp);
 
 #ifdef USE_NONOPTION_FLAGS
   /* This is a hack to make the special getopt in GNU libc working.  */

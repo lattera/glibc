@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  PowerPC/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
@@ -69,6 +70,7 @@ posixland_init (int argc, char **argv, char **envp)
   __libc_argv = argv;
   __environ = envp;
 
+  __init_misc (argc, argv, envp);
   __libc_init (argc, argv, envp);
 
 #ifdef USE_NONOPTION_FLAGS

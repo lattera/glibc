@@ -1,5 +1,5 @@
 /* Define and initialize `__progname' et. al.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,16 +25,6 @@ weak_alias (__progname_full, program_invocation_name)
 weak_alias (__progname, program_invocation_short_name)
 
 
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
-void __init_misc (int argc, char **argv, char **envp)
-  __attribute__ ((unused));
-
-
-#ifdef HAVE_GNU_LD
-static
-#endif /* HAVE_GNU_LD */
 void
 __init_misc (int argc, char **argv, char **envp)
 {
@@ -48,7 +38,3 @@ __init_misc (int argc, char **argv, char **envp)
       __progname_full = argv[0];
     }
 }
-
-#ifdef HAVE_GNU_LD
-text_set_element (__libc_subinit, __init_misc);
-#endif

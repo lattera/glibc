@@ -1,3 +1,16 @@
+2002-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct _pthread_descr_struct): Update p_header for TLS.
+	Add p_stackaddr element #if USE_TLS.
+	* internals.c: Include <tls.h>.
+	* manager.c: Integrate creating and handling of thread descriptor
+	for TLS.
+	* pthread.c: Likewise.
+	* sysdeps/i386/tls.h (tcbhead_t): Add self pointer.
+	Include <linuxthreads/descr.h> only if TLS is really used.
+	(GET_DTV): New macro.
+	(TLS_INIT_TP): Initialize self pointer.
+
 2002-02-17  Andreas Schwab  <schwab@suse.de>
 
 	* signals.c (sigwait): Check for old sighandler being SIG_ERR,

@@ -59,9 +59,7 @@ before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
 endif
 
-ifeq (yes,$(gnu-ld))
-libc-init = set-init
-else
+ifneq (yes,$(gnu-ld))
 libc-init = munch-init
 $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t

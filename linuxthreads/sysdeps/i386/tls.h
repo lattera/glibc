@@ -32,13 +32,11 @@ typedef union dtv
 
 typedef struct
 {
-  void *tcb;
+  void *tcb;		/* Pointer to the TCB.  Not necessary the
+			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
+  void *self;		/* Pointer to the thread descriptor.  */
 } tcbhead_t;
-
-
-/* Get the thread descriptor definition.  */
-#include <linuxthreads/descr.h>
 
 
 /* We can support TLS only if the floating-stack support is available.  */
@@ -49,6 +47,10 @@ typedef struct
 
 /* Signal that TLS support is available.  */
 # define USE_TLS	1
+
+
+/* Get the thread descriptor definition.  */
+# include <linuxthreads/descr.h>
 
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
@@ -77,6 +79,10 @@ typedef struct
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_SETMEM (__descr, p_header.data.dtvp, dtv); })
 
+/* Return dtv of given thread descriptor.  */
+# define GET_DTV(descr) \
+  (((tcbhead_t *) descr)->dtv)
+
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
@@ -89,6 +95,8 @@ typedef struct
     tcbhead_t *head = _descr;						      \
 									      \
     head->tcb = _descr;							      \
+    /* For now the thread descriptor isat the same address.  */		      \
+    head->self = _descr;						      \
 									      \
     asm ("pushl %%ebx\n\t"						      \
 	 "movl $1, %%ebx\n\t"						      \

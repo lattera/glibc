@@ -102,8 +102,10 @@ struct _pthread_descr_struct {
   /* XXX Remove this union for IA-64 style TLS module */
   union {
     struct {
-      pthread_descr self;	/* Pointer to this structure */
+      void *tcb;		/* Pointer to the TCB.  This is not always
+				   the address of this thread descriptor.  */
       union dtv *dtvp;
+      pthread_descr self;	/* Pointer to this structure */
     } data;
     void *__padding[16];
   } p_header;
@@ -157,6 +159,9 @@ struct _pthread_descr_struct {
   int p_inheritsched;           /* copied from the thread attribute */
 #if HP_TIMING_AVAIL
   hp_timing_t p_cpuclock_offset; /* Initial CPU clock for thread.  */
+#endif
+#ifdef USE_TLS
+  char *p_stackaddr;		/* Stack address.  */
 #endif
   /* New elements must be added at the end.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that

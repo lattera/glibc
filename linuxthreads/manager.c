@@ -14,6 +14,7 @@
 
 /* The "thread manager" thread: manages creation and termination of threads */
 
+#include <assert.h>
 #include <errno.h>
 #include <sched.h>
 #include <stddef.h>
@@ -27,6 +28,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
 
+#include <ldsodefs.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
@@ -34,9 +36,23 @@
 #include "semaphore.h"
 
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
-struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
-{ { __LOCK_INITIALIZER, &__pthread_initial_thread, 0},
-  { __LOCK_INITIALIZER, &__pthread_manager_thread, 0}, /* All NULLs */ };
+struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX]
+#ifdef USE_TLS
+# if __LT_SPINLOCK_INIT != 0
+= {
+  { __LOCK_INITIALIZER, NULL, 0},
+  { __LOCK_INITIALIZER, NULL, 0},
+  /* All NULLs */
+}
+# endif
+#else
+= {
+  { __LOCK_INITIALIZER, &__pthread_initial_thread, 0},
+  { __LOCK_INITIALIZER, &__pthread_manager_thread, 0},
+  /* All NULLs */
+}
+#endif
+;
 
 /* For debugging purposes put the maximum number of threads in a variable.  */
 const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
@@ -59,6 +75,8 @@ volatile td_thr_events_t __pthread_threads_events;
 
 /* Pointer to thread descriptor with last event.  */
 volatile pthread_descr __pthread_last_event;
+
+static pthread_descr manager_thread;
 
 /* Mapping from stack segment to thread descriptor. */
 /* Stack segment numbers are also indices into the __pthread_handles array. */
@@ -100,7 +118,7 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
      __attribute__ ((noreturn));
 static void pthread_reap_children(void);
 static void pthread_kill_all_threads(int sig, int main_thread_also);
-static void pthread_for_each_thread(void *arg, 
+static void pthread_for_each_thread(void *arg,
     void (*fn)(void *, pthread_descr));
 
 /* The server thread managing requests for thread creation and termination */
@@ -109,7 +127,8 @@ int
 __attribute__ ((noreturn))
 __pthread_manager(void *arg)
 {
-  int reqfd = (int) (long int) arg;
+  pthread_descr self = manager_thread = arg;
+  int reqfd = __pthread_manager_reader;
   struct pollfd ufd;
   sigset_t manager_mask;
   int n;
@@ -117,11 +136,11 @@ __pthread_manager(void *arg)
 
   /* If we have special thread_self processing, initialize it.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(&__pthread_manager_thread, 1);
+  INIT_THREAD_SELF(self, 1);
 #endif
   /* Set the error variable.  */
-  __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
-  __pthread_manager_thread.p_h_errnop = &__pthread_manager_thread.p_h_errno;
+  self->p_errnop = &self->p_errno;
+  self->p_h_errnop = &self->p_h_errno;
   /* Block all signals except __pthread_sig_cancel and SIGTRAP */
   sigfillset(&manager_mask);
   sigdelset(&manager_mask, __pthread_sig_cancel); /* for thread termination */
@@ -227,13 +246,13 @@ int __pthread_manager_event(void *arg)
 {
   /* If we have special thread_self processing, initialize it.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(&__pthread_manager_thread, 1);
+  INIT_THREAD_SELF(arg, 1);
 #endif
 
   /* Get the lock the manager will free once all is correctly set up.  */
-  __pthread_lock (THREAD_GETMEM((&__pthread_manager_thread), p_lock), NULL);
+  __pthread_lock (THREAD_GETMEM(((pthread_descr) arg), p_lock), NULL);
   /* Free it immediately.  */
-  __pthread_unlock (THREAD_GETMEM((&__pthread_manager_thread), p_lock));
+  __pthread_unlock (THREAD_GETMEM(((pthread_descr) arg), p_lock));
 
   return __pthread_manager(arg);
 }
@@ -270,7 +289,7 @@ pthread_start_thread(void *arg)
     __sched_setscheduler(THREAD_GETMEM(self, p_pid),
 			 THREAD_GETMEM(self, p_start_args.schedpolicy),
                          &self->p_start_args.schedparam);
-  else if (__pthread_manager_thread.p_priority > 0)
+  else if (manager_thread->p_priority > 0)
     /* Default scheduling required, but thread manager runs in realtime
        scheduling: switch new thread to SCHED_OTHER policy */
     {
@@ -315,10 +334,14 @@ pthread_start_thread_event(void *arg)
   pthread_start_thread (arg);
 }
 
+#if defined USE_TLS && !FLOATING_STACKS
+# error "TLS can only work with floating stacks"
+#endif
+
 static int pthread_allocate_stack(const pthread_attr_t *attr,
                                   pthread_descr default_new_thread,
                                   int pagesize,
-                                  pthread_descr * out_new_thread,
+                                  char ** out_new_thread,
                                   char ** out_new_thread_bottom,
                                   char ** out_guardaddr,
                                   size_t * out_guardsize)
@@ -328,12 +351,23 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
   char * guardaddr;
   size_t stacksize, guardsize;
 
+#ifdef USE_TLS
+  /* TLS cannot work with fixed thread descriptor addresses.  */
+  assert (default_new_thread == NULL);
+#endif
+
   if (attr != NULL && attr->__stackaddr_set)
     {
 #ifdef _STACK_GROWS_UP
       /* The user provided a stack. */
+# ifdef USE_TLS
+      /* This value is not needed.  */
+      new_thread = (pthread_descr) attr->__stackaddr;
+      new_thread_bottom = (char *) new_thread;
+# else
       new_thread = (pthread_descr) attr->__stackaddr;
       new_thread_bottom = (char *) (new_thread + 1);
+# endif
       guardaddr = attr->__stackaddr + attr->__stacksize;
       guardsize = 0;
 #else
@@ -347,8 +381,12 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	 addresses, stackaddr would be the lowest address in the stack
 	 segment, so that it is consistently close to the initial sp
 	 value. */
+# ifdef USE_TLS
+      new_thread = (pthread_descr) attr->__stackaddr;
+# else
       new_thread =
         (pthread_descr) ((long)(attr->__stackaddr) & -sizeof(void *)) - 1;
+# endif
       new_thread_bottom = (char *) attr->__stackaddr - attr->__stacksize;
       guardaddr = new_thread_bottom;
       guardsize = 0;
@@ -356,16 +394,18 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 #ifndef THREAD_SELF
       __pthread_nonstandard_stacks = 1;
 #endif
+#ifndef USE_TLS
       /* Clear the thread data structure.  */
       memset (new_thread, '\0', sizeof (*new_thread));
+#endif
     }
   else
     {
 #ifdef NEED_SEPARATE_REGISTER_STACK
-      size_t granularity = 2 * pagesize;
+      const size_t granularity = 2 * pagesize;
       /* Try to make stacksize/2 a multiple of pagesize */
 #else
-      size_t granularity = pagesize;
+      const size_t granularity = pagesize;
 #endif
       void *map_addr;
 
@@ -397,22 +437,35 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	mprotect (guardaddr, guardsize, PROT_NONE);
 
       new_thread_bottom = (char *) map_addr;
+#  ifdef USE_TLS
+      new_thread = ((pthread_descr) (new_thread_bottom + stacksize
+				     + guardsize));
+#  else
       new_thread = ((pthread_descr) (new_thread_bottom + stacksize
 				     + guardsize)) - 1;
+#  endif
 # elif _STACK_GROWS_DOWN
       guardaddr = map_addr;
       if (guardsize > 0)
 	mprotect (guardaddr, guardsize, PROT_NONE);
 
       new_thread_bottom = (char *) map_addr + guardsize;
+#  ifdef USE_TLS
+      new_thread = ((pthread_descr) (new_thread_bottom + stacksize));
+#  else
       new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
+#  endif
 # elif _STACK_GROWS_UP
       guardaddr = map_addr + stacksize;
       if (guardsize > 0)
 	mprotect (guardaddr, guardsize, PROT_NONE);
 
       new_thread = (pthread_descr) map_addr;
+#  ifdef USE_TLS
+      new_thread_bottom = (char *) new_thread;
+#  else
       new_thread_bottom = (char *) (new_thread + 1);
+#  endif
 # else
 #  error You must define a stack direction
 # endif /* Stack direction */
@@ -512,7 +565,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 # endif  /* !NEED_SEPARATE_REGISTER_STACK */
 #endif   /* !FLOATING_STACKS */
     }
-  *out_new_thread = new_thread;
+  *out_new_thread = (char *) new_thread;
   *out_new_thread_bottom = new_thread_bottom;
   *out_guardaddr = guardaddr;
   *out_guardsize = guardsize;
@@ -528,12 +581,19 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   size_t sseg;
   int pid;
   pthread_descr new_thread;
+  char *stack_addr;
   char * new_thread_bottom;
   pthread_t new_thread_id;
   char *guardaddr = NULL;
   size_t guardsize = 0;
   int pagesize = __getpagesize();
-  int saved_errno;
+  int saved_errno = 0;
+
+#ifdef USE_TLS
+  new_thread = _dl_allocate_tls ();
+  if (new_thread == NULL)
+    return EAGAIN;
+#endif
 
   /* First check whether we have to change the policy and if yes, whether
      we can  do this.  Normally this should be done by examining the
@@ -549,10 +609,16 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       if (__pthread_handles[sseg].h_descr != NULL)
 	continue;
       if (pthread_allocate_stack(attr, thread_segment(sseg),
-				 pagesize,
-                                 &new_thread, &new_thread_bottom,
+				 pagesize, &stack_addr, &new_thread_bottom,
                                  &guardaddr, &guardsize) == 0)
-        break;
+	{
+#ifdef USE_TLS
+	  new_thread->p_stackaddr = stack_addr;
+#else
+	  new_thread = (pthread_descr) stack_addr;
+#endif
+	  break;
+	}
     }
   __pthread_handles_num++;
   /* Allocate new thread identifier */
@@ -768,20 +834,32 @@ static void pthread_free(pthread_descr th)
       /* Free the stack and thread descriptor area */
       char *guardaddr = th->p_guardaddr;
 #ifdef _STACK_GROWS_UP
+# ifdef USE_TLS
+      size_t stacksize = guardaddr - th->p_stackaddr;
+# else
       size_t stacksize = guardaddr - (char *)th;
+# endif
       guardaddr = (char *)th;
 #else
       /* Guardaddr is always set, even if guardsize is 0.  This allows
 	 us to compute everything else.  */
+# ifdef USE_TLS
+      size_t stacksize = th->p_stackaddr - guardaddr - guardsize;
+# else
       size_t stacksize = (char *)(th+1) - guardaddr - guardsize;
-#ifdef NEED_SEPARATE_REGISTER_STACK
+# endif
+# ifdef NEED_SEPARATE_REGISTER_STACK
       /* Take account of the register stack, which is below guardaddr.  */
       guardaddr -= stacksize;
       stacksize *= 2;
-#endif
+# endif
 #endif
       /* Unmap the stack.  */
       munmap(guardaddr, stacksize + guardsize);
+
+#ifdef USE_TLS
+      _dl_deallocate_tls (th);
+#endif
     }
 }
 
@@ -896,7 +974,7 @@ static void pthread_kill_all_threads(int sig, int main_thread_also)
   }
 }
 
-static void pthread_for_each_thread(void *arg, 
+static void pthread_for_each_thread(void *arg,
     void (*fn)(void *, pthread_descr))
 {
   pthread_descr th;
@@ -974,10 +1052,10 @@ void __pthread_manager_adjust_prio(int thread_prio)
 {
   struct sched_param param;
 
-  if (thread_prio <= __pthread_manager_thread.p_priority) return;
+  if (thread_prio <= manager_thread->p_priority) return;
   param.sched_priority =
     thread_prio < __sched_get_priority_max(SCHED_FIFO)
     ? thread_prio + 1 : thread_prio;
-  __sched_setscheduler(__pthread_manager_thread.p_pid, SCHED_FIFO, &param);
-  __pthread_manager_thread.p_priority = thread_prio;
+  __sched_setscheduler(manager_thread->p_pid, SCHED_FIFO, &param);
+  manager_thread->p_priority = thread_prio;
 }

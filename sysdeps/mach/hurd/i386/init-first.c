@@ -29,6 +29,7 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
@@ -64,6 +65,7 @@ posixland_init (int argc, char **argv, char **envp)
   __libc_argv = argv;
   __environ = envp;
 
+  __init_misc (argc, argv, envp);
   __libc_init (argc, argv, envp);
 
 #ifdef USE_NONOPTION_FLAGS

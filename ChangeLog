@@ -1,3 +1,18 @@
+2002-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/set-init.c: Moved to...
+	* sysdeps/mach/hurd/set-init.c: ...here.  New file.
+	* csu/Makefile: Don't compile set-init.
+	* sysdeps/mach/hurd/Makefile: Compile set-init for subdir csu.
+	* sysdeps/mach/hurd/i386/init-first.c: Call __init_misc in addition
+	to __libc_init.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Call __init_misc instead of
+	__libc_init.
+	* misc/init-misc.c: Always export __init_misc.  Don't define hooks for
+	__libc_subinit.
+
 2002-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Versions: Add _dl_allocate_tls and _dl_deallocate_tls.

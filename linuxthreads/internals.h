@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <stackinfo.h>
 
+#include <tls.h>
 #include "descr.h"
 
 extern long int testandset (int *spinlock);
