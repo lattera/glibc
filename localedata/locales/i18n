@@ -351,7 +351,10 @@ alpha /
 digit /
    <U0030>..<U0039>
 
-outdigit <U0030>..<U0039>
+% The "outdigit" information is by default "0" to "9".  We don't have to
+% provide it here since localedef will fill in the bits and it would
+% prevent locales copy-ing this file define their own values.
+% outdigit <U0030>..<U0039>
 
 space /
 % ISO/IEC 6429/

@@ -1,3 +1,7 @@
+2001-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Don't define outdigit.
+
 2001-02-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/th_TH: Remove name_ms entry.
