@@ -85,9 +85,12 @@ case "$machine" in
     arch_minimum_kernel=2.4.0
     libc_cv_gcc_unwind_find_fde=yes
     ;;
-  powerpc*)
+  powerpc/powerpc32)
     libc_cv_gcc_unwind_find_fde=yes
     arch_minimum_kernel=2.0.10
+    ;;
+  powerpc/powerpc64)
+    arch_minimum_kernel=2.4.19
     ;;
   s390/s390-32)
     libc_cv_gcc_unwind_find_fde=yes
@@ -129,11 +132,11 @@ fi
 
 if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
-echo "configure:133: checking for kernel header at least $minimum_kernel" >&5
+echo "configure:136: checking for kernel header at least $minimum_kernel" >&5
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat > conftest.$ac_ext <<EOF
-#line 137 "configure"
+#line 140 "configure"
 #include "confdefs.h"
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -181,7 +184,8 @@ fi
 # in /lib and /etc.
 if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   # 64bit libraries on sparc go to /lib64 and not /lib
-  if test "$machine" = "sparc/sparc64" -o "$machine" = "x86_64"; then
+  if test "$machine" = "sparc/sparc64" -o "$machine" = "x86_64" \
+	  -o "$machine" = "powerpc/powerpc64"; then
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
@@ -265,6 +269,9 @@ case "$machine" in
   x86_64*)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed
     ;;
+  powerpc*)
+    ldd_rewrite_script=../sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
+    ;;
   *)
     ;;
 esac
@@ -280,7 +287,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:284: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:291: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message
