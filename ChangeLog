@@ -1,5 +1,7 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/readelflib.c: New file.
+
 	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h
 	(_KERNEL_NSIG_BPW): Define in terms of _MIPS_SZLONG.
 	* sysdeps/unix/sysv/linux/mips/sigaction.c: Define restore and
