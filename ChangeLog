@@ -1,3 +1,8 @@
+2000-05-09  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/dl-machine.h: Move DL_SYMBOL_ADDRESS definition to...
+	* sysdeps/ia64/dl-lookupcfg.h: ...here.
+
 2000-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/scsi/sg.h (sg_io_hdr_t): Remove duplicate

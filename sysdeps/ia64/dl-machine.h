@@ -60,10 +60,6 @@ elf_machine_matches_host (Elf64_Word e_machine)
   return e_machine == EM_IA_64;
 }
 
-void * _dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref);
-
-#define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)
-
 
 /* Return the link-time address of _DYNAMIC.  */
 static inline Elf64_Addr
