@@ -499,16 +499,14 @@ regcomp (preg, pattern, cflags)
 
   /* We have already checked preg->fastmap != NULL.  */
   if (BE (ret == REG_NOERROR, 1))
+    /* Compute the fastmap now, since regexec cannot modify the pattern
+       buffer.  This function nevers fails in this implementation.  */
+    (void) __re_compile_fastmap (preg);
+  else
     {
-      /* Compute the fastmap now, since regexec cannot modify the pattern
-	 buffer.  */
-      if (BE (re_compile_fastmap (preg) == -2, 0))
-	{
-	  /* Some error occurred while computing the fastmap, just forget
-	     about it.  */
-	  re_free (preg->fastmap);
-	  preg->fastmap = NULL;
-	}
+      /* Some error occurred while compiling the expression.  */
+      re_free (preg->fastmap);
+      preg->fastmap = NULL;
     }
 
   return (int) ret;
@@ -564,71 +562,80 @@ regerror (errcode, preg, errbuf, errbuf_size)
 weak_alias (__regerror, regerror)
 #endif
 
+
+static void
+free_dfa_content (re_dfa_t *dfa)
+{
+  int i, j;
+
+  re_free (dfa->subexps);
+
+  for (i = 0; i < dfa->nodes_len; ++i)
+    {
+      re_token_t *node = dfa->nodes + i;
+#ifdef RE_ENABLE_I18N
+      if (node->type == COMPLEX_BRACKET && node->duplicated == 0)
+	free_charset (node->opr.mbcset);
+      else
+#endif /* RE_ENABLE_I18N */
+	if (node->type == SIMPLE_BRACKET && node->duplicated == 0)
+	  re_free (node->opr.sbcset);
+    }
+  re_free (dfa->nexts);
+  for (i = 0; i < dfa->nodes_len; ++i)
+    {
+      if (dfa->eclosures != NULL)
+	re_node_set_free (dfa->eclosures + i);
+      if (dfa->inveclosures != NULL)
+	re_node_set_free (dfa->inveclosures + i);
+      if (dfa->edests != NULL)
+	re_node_set_free (dfa->edests + i);
+    }
+  re_free (dfa->edests);
+  re_free (dfa->eclosures);
+  re_free (dfa->inveclosures);
+  re_free (dfa->nodes);
+
+  for (i = 0; i <= dfa->state_hash_mask; ++i)
+    {
+      struct re_state_table_entry *entry = dfa->state_table + i;
+      for (j = 0; j < entry->num; ++j)
+	{
+	  re_dfastate_t *state = entry->array[j];
+	  if (state->entrance_nodes != &state->nodes)
+	    {
+	      re_node_set_free (state->entrance_nodes);
+	      re_free (state->entrance_nodes);
+	    }
+	  re_node_set_free (&state->nodes);
+	  re_free (state->trtable);
+	  re_free (state->trtable_search);
+	  re_free (state);
+	}
+      re_free (entry->array);
+    }
+  re_free (dfa->state_table);
+
+  if (dfa->word_char != NULL)
+    re_free (dfa->word_char);
+#ifdef DEBUG
+  re_free (dfa->re_str);
+#endif
+
+  re_free (dfa);
+}
+
+
 /* Free dynamically allocated space used by PREG.  */
 
 void
 regfree (preg)
     regex_t *preg;
 {
-  int i, j;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   if (BE (dfa != NULL, 1))
-    {
-      re_free (dfa->subexps);
+    free_dfa_content (dfa);
 
-      for (i = 0; i < dfa->nodes_len; ++i)
-        {
-          re_token_t *node = dfa->nodes + i;
-#ifdef RE_ENABLE_I18N
-          if (node->type == COMPLEX_BRACKET && node->duplicated == 0)
-            free_charset (node->opr.mbcset);
-          else
-#endif /* RE_ENABLE_I18N */
-          if (node->type == SIMPLE_BRACKET && node->duplicated == 0)
-            re_free (node->opr.sbcset);
-        }
-      re_free (dfa->nexts);
-      for (i = 0; i < dfa->nodes_len; ++i)
-        {
-          if (dfa->eclosures != NULL)
-            re_node_set_free (dfa->eclosures + i);
-          if (dfa->inveclosures != NULL)
-            re_node_set_free (dfa->inveclosures + i);
-          if (dfa->edests != NULL)
-            re_node_set_free (dfa->edests + i);
-        }
-      re_free (dfa->edests);
-      re_free (dfa->eclosures);
-      re_free (dfa->inveclosures);
-      re_free (dfa->nodes);
-
-      for (i = 0; i <= dfa->state_hash_mask; ++i)
-        {
-          struct re_state_table_entry *entry = dfa->state_table + i;
-          for (j = 0; j < entry->num; ++j)
-            {
-              re_dfastate_t *state = entry->array[j];
-              if (state->entrance_nodes != &state->nodes)
-                {
-                  re_node_set_free (state->entrance_nodes);
-                  re_free (state->entrance_nodes);
-                }
-              re_node_set_free (&state->nodes);
-              re_free (state->trtable);
-              re_free (state->trtable_search);
-              re_free (state);
-            }
-          re_free (entry->array);
-        }
-      re_free (dfa->state_table);
-
-      if (dfa->word_char != NULL)
-        re_free (dfa->word_char);
-#ifdef DEBUG
-      re_free (dfa->re_str);
-#endif
-      re_free (dfa);
-    }
   re_free (preg->fastmap);
 }
 #ifdef _LIBC
@@ -778,13 +785,17 @@ re_compile_internal (preg, pattern, length, syntax)
 
   /* Then create the initial state of the dfa.  */
   err = create_initial_state (dfa);
-  if (BE (err != REG_NOERROR, 0))
-    goto re_compile_internal_free_return;
 
- re_compile_internal_free_return:
   /* Release work areas.  */
   free_workarea_compile (preg);
   re_string_destruct (&regexp);
+
+  if (BE (err != REG_NOERROR, 0))
+    {
+    re_compile_internal_free_return:
+      free_dfa_content (dfa);
+      preg->buffer = NULL;
+    }
 
   return err;
 }
