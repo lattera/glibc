@@ -1,7 +1,12 @@
+2001-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): Handle collating-element
+	and reorder_after following copy statement correctly.
+
 2001-08-02  Andreas Jaeger  <aj@suse.de>
 
-        * libio/bits/stdio.h (printf): Remove printf optimization since
-        GCC 3.0 can optimize printf.
+	* libio/bits/stdio.h (printf): Remove printf optimization since
+	GCC 3.0 can optimize printf.
 
 2001-08-02  Ulrich Weigand  <uweigand@de.ibm.com>
 
