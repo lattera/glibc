@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,11 +59,23 @@
 #ifdef NEED_H_ERRNO
 # define H_ERRNO_PARM , int *h_errnop
 # define H_ERRNO_VAR , &h_errno_tmp
+# define H_ERRNO_VAR_P &h_errno_tmp
 #else
 # define H_ERRNO_PARM
 # define H_ERRNO_VAR
+# define H_ERRNO_VAR_P NULL
 #endif
 
+#ifndef HAVE_TYPE
+# define TYPE_VAR_P NULL
+# define FLAGS_VAR 0
+#endif
+
+#ifdef HAVE_AF
+# define AF_VAR_P &af
+#else
+# define AF_VAR_P NULL
+#endif
 
 /* Prototype for reentrant version we use here.  */
 extern int INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf,
@@ -86,9 +98,6 @@ FUNCTION_NAME (ADD_PARAMS)
   int save;
 #ifdef NEED_H_ERRNO
   int h_errno_tmp = 0;
-# ifdef HANDLE_DIGITS_DOTS
-  int *const h_errnop = &h_errno_tmp;;
-# endif
 #endif
 
   /* Get lock.  */
@@ -100,22 +109,17 @@ FUNCTION_NAME (ADD_PARAMS)
       buffer = malloc (buffer_size);
     }
 
+#ifdef HANDLE_DIGITS_DOTS
   if (buffer != NULL)
     {
-#ifdef HANDLE_DIGITS_DOTS
-      /* We have to test for the use of IPv6 which can only be done by
-	 examining `_res'.  */
-      if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
-	{
-# ifdef NEED_H_ERRNO
-	  h_errno_tmp = NETDB_INTERNAL;
-# endif
-	  result = NULL;
-	  goto done;
-	}
-# include "digits_dots.c"
-#endif
+      if (__nss_hostname_digits_dots (name, &resbuf, &buffer,
+				      &buffer_size,
+				      0, &result, NULL, TYPE_VAR_P,
+				      FLAGS_VAR, AF_VAR_P,
+				      H_ERRNO_VAR_P))
+	goto done;
     }
+#endif
 
   while (buffer != NULL
 	 && (INTERNAL (REENTRANT_NAME) (ADD_VARIABLES, &resbuf, buffer,

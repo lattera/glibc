@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -131,14 +131,13 @@ int __nss_next (service_user **ni, const char *fct_name, void **fctp,
 void *__nss_lookup_function (service_user *ni, const char *fct_name);
 
 
-typedef int (*db_lookup_function) (service_user **, const char *,
-				   void **);
+typedef int (*db_lookup_function) (service_user **, const char *, void **);
 typedef enum nss_status (*setent_function) (int);
-typedef enum nss_status (*endent_function) (void); 
+typedef enum nss_status (*endent_function) (void);
 typedef enum nss_status (*getent_function) (void *, char *, size_t,
-					    int *, int *); 
+					    int *, int *);
 typedef int (*getent_r_function) (void *, char *, size_t,
-				  void **result, int *); 
+				  void **result, int *);
 
 extern void __nss_setent (const char *func_name,
 			  db_lookup_function lookup_fct,
@@ -160,5 +159,12 @@ extern int __nss_getent_r (const char *getent_func_name,
 extern void *__nss_getent (getent_r_function func,
 			   void **resbuf, char **buffer, size_t buflen,
 			   size_t *buffer_size, int *h_errnop);
+struct hostent;
+extern int __nss_hostname_digits_dots (const char *name,
+				       struct hostent *resbuf, char **buffer,
+				       size_t *buffer_size, size_t buflen,
+				       struct hostent **result,
+				       enum nss_status *status, int *typep,
+				       int flags, int *afp, int *h_errnop);
 
 #endif	/* nsswitch.h */

@@ -5,6 +5,9 @@ libc {
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __nss_configure_lookup;
   }
+  GLIBC_2.2.2 {
+    __nss_hostname_digits_dots;
+  }
 }
 
 libnss_files {

@@ -1,3 +1,24 @@
+2000-12-09  H.J. Lu  <hjl@gnu.org>
+
+	* nss/Makefile (routines): Add digits_dots.
+	* nss/Versions (libc): Add __nss_hostname_digits_dots to GLIBC_2.2.2.
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Turn template
+	into a function.
+	* nss/nsswitch.h (__nss_hostname_digits_dots): New internal NSS
+	function.
+	* nss/getXXbyYY.c (H_ERRNO_VAR_P): New definition.
+	(TYPE_VAR_P): Likewise.
+	(FLAGS_VAR): Likewise.
+	(AF_VAR_P): Likewise.
+	(INTERNAL (REENTRANT_NAME)): Call __nss_hostname_digits_dots ()
+	instead of including digits_dots.c.
+	* nss/getXXbyYY_r.c (H_ERRNO_VAR_P): New definition.
+	(TYPE_VAR_P): Likewise.
+	(FLAGS_VAR): Likewise.
+	(AF_VAR_P): Likewise.
+	(INTERNAL (REENTRANT_NAME)): Call __nss_hostname_digits_dots ()
+	instead of including digits_dots.c.
+
 2001-01-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c: Reduce .data size.

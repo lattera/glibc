@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,97,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -87,11 +87,23 @@
 #ifdef NEED_H_ERRNO
 # define H_ERRNO_PARM , int *h_errnop
 # define H_ERRNO_VAR , h_errnop
+# define H_ERRNO_VAR_P h_errnop
 #else
 # define H_ERRNO_PARM
 # define H_ERRNO_VAR
+# define H_ERRNO_VAR_P NULL
 #endif
 
+#ifndef HAVE_TYPE
+# define TYPE_VAR_P NULL
+# define FLAGS_VAR 0
+#endif
+
+#ifdef HAVE_AF
+# define AF_VAR_P &af
+#else
+# define AF_VAR_P NULL
+#endif
 
 /* Type of the lookup function we need here.  */
 typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
@@ -123,19 +135,16 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif
 
 #ifdef HANDLE_DIGITS_DOTS
-  /* We have to test for the use of IPv6 which can only be done by
-     examining `_res'.  */
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  switch (__nss_hostname_digits_dots (name, resbuf, &buffer, NULL,
+				      buflen, result, &status,
+				      TYPE_VAR_P, FLAGS_VAR, AF_VAR_P,
+				      H_ERRNO_VAR_P))
     {
-      *h_errnop = NETDB_INTERNAL;
-      *result = NULL;
+    case -1:
       return errno;
+    case 1:
+      goto done;
     }
-# define resbuf (*resbuf)
-# define result *result
-# include "digits_dots.c"
-# undef resbuf
-# undef result
 #endif
 
 #ifdef USE_NSCD
