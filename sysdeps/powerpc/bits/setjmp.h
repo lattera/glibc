@@ -28,11 +28,11 @@
    either representation. */
 
 #if defined __USE_MISC || defined _ASM
-# define JB_GPR1   0   /* also known as the stack pointer */
+# define JB_GPR1   0  /* Also known as the stack pointer */
 # define JB_GPR2   1
-# define JB_LR     2
+# define JB_LR     2  /* The address we will return to */
 # define JB_GPRS   3  /* GPRs 14 through 31 are saved, 18 in total */
-# define JB_UNUSED 21 /* it's sometimes faster to store doubles word-aligned */
+# define JB_CR     21 /* Condition code registers. */
 # define JB_FPRS   22 /* FPRs 14 through 31 are saved, 18*2 words total */
 #endif
 

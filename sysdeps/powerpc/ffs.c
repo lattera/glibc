@@ -18,7 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#define ffsl __something_else
 #include <string.h>
+
+#undef	ffs
+
+#ifdef 	__GNUC__
 
 int
 __ffs (int x)
@@ -29,4 +34,9 @@ __ffs (int x)
   return 32 - cnt;
 }
 weak_alias (__ffs, ffs)
-weak_alais (__ffs, ffsl)
+#undef ffsl
+weak_alias (__ffs, ffsl)
+
+#else
+#include <sysdeps/generic/ffs.c>
+#endif
