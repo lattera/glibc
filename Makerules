@@ -172,6 +172,8 @@ endef
 $(common-objpfx)dummy.d:
 	echo '# .s files cannot contain includes, so they need no deps.' > $@
 
+object-suffixes-for-rules = $(object-suffixes) .oS
+
 # It matters that this set of rules, for compiling from sources in
 # the current directory (the $srcdir/$subdir) come before the
 # generated sysdep rules in included from sysd-rules below.  When
@@ -180,21 +182,21 @@ $(common-objpfx)dummy.d:
 define o-iterator-doit
 $(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: %.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
@@ -206,21 +208,21 @@ ifdef objpfx
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
 
 define o-iterator-doit
 $(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
 endef
-object-suffixes-left := $(object-suffixes)
+object-suffixes-left := $(object-suffixes-for-rules)
 include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
@@ -482,6 +484,11 @@ verbose	:=
 endif						# not -s
 
 ARFLAGS := r$(verbose)
+ifeq ($(have-ar-S),yes)
+CREATE_ARFLAGS := Scru$(verbose)
+else
+CREATE_ARFLAGS := cru$(verbose)
+endif
 
 # This makes all the object files in the parent library archive.
 
@@ -538,7 +545,7 @@ include $(o-iterator)
 define do-ar
 topdir=`cd $(..).; pwd`; \
 $(patsubst %/,cd %;,$(objpfx)) \
-$(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
+$(SHELL) $$topdir/autolock.sh ${O%-lib}.lck $(AR) $(CREATE_ARFLAGS) ${O%-lib} \
 						  $(patsubst $(objpfx)%,%,$^)
 rm -f $@
 touch $@
@@ -574,7 +581,7 @@ objects objs: $(foreach o,$(object-suffixes),$(o-objects)) \
 # Canned sequence for building an extra library archive.
 define build-extra-lib
 $(patsubst %/,cd %;,$(objpfx)) \
-$(AR) cru$(verbose) $(@:$(objpfx)%=%) \
+$(AR) $(CREATE_ARFLAGS) $(@:$(objpfx)%=%) \
       $(patsubst $(objpfx)%,%,$^)
 $(RANLIB) $@
 endef
@@ -594,6 +601,9 @@ endef
 # This could be defined by a sysdep Makefile.
 ifndef libc-name
 libc-name := c
+endif
+ifndef libc_nonshared-name
+libc_nonshared-name := $(libc-name)_nonshared
 endif
 
 define do-install
@@ -616,6 +626,10 @@ installed-libcs := $(foreach o,$(object-suffixes),\
 			     $(inst_libdir)/$(patsubst %,$(libtype$o),\
 						     $(libprefix)$(libc-name)))
 installed-libcs := $(filter-out %_pic.a,$(installed-libcs))
+ifdef libc.so-version
+installed-libcs += $(inst_libdir)/$(patsubst %,$(libtype.oS),\
+					     $(libprefix)$(libc_nonshared-name))
+endif
 install: $(installed-libcs)
 $(installed-libcs): $(inst_libdir)/lib$(libprefix)%: lib
 	$(make-target-directory)
@@ -693,7 +707,7 @@ ifndef subdir
 install: $(inst_libdir)/libc.so
 $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 			$(elfobjdir)/$(rtld-installed-name) \
-			$(inst_libdir)/lib$(libc-name).a
+			$(inst_libdir)/lib$(libc_nonshared-name).a
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.'; \
@@ -702,7 +716,7 @@ $(inst_libdir)/libc.so: $(common-objpfx)libc.so$(libc.so-version) \
 	 echo '   dependencies of $(<F) to find $(rtld-installed-name).  */';\
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
 	      '$(slibdir)/$(rtld-installed-name)' \
-	      '$(libdir)/lib$(libc-name).a )' \
+	      '$(libdir)/lib$(libc_nonshared-name).a )' \
 	      ) > $@.new
 	mv -f $@.new $@
 
@@ -906,6 +920,7 @@ common-mostlyclean:
 define rmobjs
 $(foreach o,$(object-suffixes),
 -rm -f $(objpfx)stamp$o $(o-objects))
+-rm -f $(objpfx)stamp.oS $(patsubst %,$(static-only-routines),$(objpfx)%.oS)
 endef
 
 # Also remove the dependencies and generated source files.

@@ -1,5 +1,5 @@
 /* Implementation of the textdomain(3) function.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -57,7 +57,9 @@ extern const char *_nl_current_default_domain;
    prefix.  So we have to make a difference here.  */
 #ifdef _LIBC
 # define TEXTDOMAIN __textdomain
-# define strdup(str) __strdup (str)
+# ifndef strdup
+#  define strdup(str) __strdup (str)
+# endif
 #else
 # define TEXTDOMAIN textdomain__
 #endif

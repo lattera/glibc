@@ -189,11 +189,11 @@ $(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 	ln $< $@
 	touch $@
 
-# Must build the routines as PIC, though, because they can end up in (users')
-# shared objects.  We don't want to use CFLAGS-os because users may, for
-# example, make that processor-specific.
-$(static-only-routines:%=$(objpfx)%.o): $(objpfx)%.o: %.c $(before-compile)
-	$(compile.c) $(pic-ccflag) $(OUTPUT_OPTION)
+subdir_lib: $(objpfx)stamp.oS
+$(objpfx)stamp.oS: $(objpfx)stamp%: $(static-only-routines:%=$(objpfx)%.oS)
+	$(do-ar)
+$(common-objpfx)$(patsubst %,$(libtype.oS),c)(\
+$(addsuffix .%,$(static-only-routines))): $(objpfx)stamp.%;
 endif
 
 ifdef shared-only-routines

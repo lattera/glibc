@@ -468,6 +468,20 @@ LIBC_PROG_BINUTILS
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 
+# check if ar takes S
+AC_CACHE_CHECK(for ar S, libc_cv_ar_S, [dnl
+tmpo=$$.o
+tmplib=lib$$.a
+rm -f $tmpo $tmplib
+touch $tmpo
+if AC_TRY_COMMAND([${AR-ar} rcuS $tmplib $tmpo > /dev/null 2>&1]); then
+  libc_cv_ar_S=yes
+else
+  libc_cv_ar_S=no
+fi
+rm -f $tmpo $tmplib])
+AC_SUBST(libc_cv_ar_S)dnl
+
 # check for recent compiler
 AC_MSG_CHECKING(compiler version)
 changequote(,)dnl

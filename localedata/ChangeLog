@@ -1,3 +1,8 @@
+1998-03-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* locales/ru_RU: Abbreviations must end with a consonant.  Fix for
+	Tuesday by Ilya Ovchinnikov <ilya@taspd13a.npi.msu.su>. [PR libc/517]
+
 1998-03-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (distribute): Add tst-locale.sh.

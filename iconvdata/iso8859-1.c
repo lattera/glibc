@@ -124,7 +124,8 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	      while (cnt < inchars
 		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
 		{
-		  *((wchar_t *) (outbuf + outwchars)) = inbuf[cnt];
+		  *((wchar_t *) (outbuf + outwchars)) =
+		    (unsigned char) inbuf[cnt];
 		  ++do_write;
 		  outwchars += sizeof (wchar_t);
 		  ++cnt;

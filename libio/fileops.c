@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -201,9 +201,10 @@ _IO_file_fopen (fp, filename, mode, is32not64)
   int oflags = 0, omode;
   int read_write;
   int oprot = 0666;
+  int i;
   if (_IO_file_is_open (fp))
     return 0;
-  switch (*mode++)
+  switch (*mode)
     {
     case 'r':
       omode = O_RDONLY;
@@ -223,11 +224,27 @@ _IO_file_fopen (fp, filename, mode, is32not64)
       __set_errno (EINVAL);
       return NULL;
     }
-  if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))
+  for (i = 1; i < 4; ++i)
     {
-      omode = O_RDWR;
-      read_write &= _IO_IS_APPENDING;
+      switch (*++mode)
+	{
+	case '\0':
+	  break;
+	case '+':
+	  omode = O_RDWR;
+	  read_write &= _IO_IS_APPENDING;
+	  continue;
+	case 'x':
+	  oflags |= O_EXCL;
+	  continue;
+	case 'b':
+	default:
+	  /* Ignore.  */
+	  continue;
+	}
+      break;
     }
+
   return _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
 			is32not64);
 }
