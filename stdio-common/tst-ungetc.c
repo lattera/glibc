@@ -1,6 +1,7 @@
 /* Test for ungetc bugs.  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #define assert(x) \
   if (!(x)) \

@@ -64,8 +64,10 @@ DB_LOOKUP (hostton, 1 + strlen (name), (".%s", name),
 	       break;
 	   }, const char *name)
 
-DB_LOOKUP (ntohost, 7, ("=%c%c%c%c%c%c",
-			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]),
+DB_LOOKUP (ntohost, 18, ("=%x:%x:%x:%x:%x:%x",
+			 addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+			 addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+			 addr->ether_addr_octet[4], addr->ether_addr_octet[5]),
 	   {
 	     if (memcmp (&result->e_addr, addr,
 			 sizeof (struct ether_addr)) == 0)

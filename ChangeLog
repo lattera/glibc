@@ -1,5 +1,7 @@
 Tue Jul  2 10:44:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* nss/nss_files/files-ethers.c (ntohost): Fix db key.
+
 	* nss/nss_files/files-network.c: Pass empty for new DB_LOOKUP args.
 	(DATABASE): Define this instead of DATAFILE.
 	* nss/nss_files/files-hosts.c: Likewise.
