@@ -6,6 +6,7 @@
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_mutex_timedlock_wait): Likewise.  Fix a few other problems
 	which might very well made the code not working at all before.
+	[BZ #417]
 
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
