@@ -149,26 +149,29 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       file = new;
     }
 
+  /* If we were already using tzfile, check whether the file changed.  */
+  struct stat64 st;
+  if (was_using_tzfile
+      && stat64 (file, &st) == 0
+      && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev
+      && tzfile_mtime == st.st_mtime)
+    {
+      /* Nothing to do.  */
+      __use_tzfile = 1;
+      return;
+    }
+
   /* Note the file is opened with cancellation in the I/O functions
      disabled.  */
   f = fopen (file, "rc");
   if (f == NULL)
     goto ret_free_transitions;
 
-  /* Get information about the file.  */
-  struct stat64 st;
+  /* Get information about the file we are actually using.  */
   if (fstat64 (fileno (f), &st) != 0)
     {
       fclose (f);
       goto ret_free_transitions;
-    }
-  if (was_using_tzfile && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev
-      && tzfile_mtime == st.st_mtime)
-    {
-      /* It's the same file.  No further work needed.  */
-      fclose (f);
-      __use_tzfile = 1;
-      return;
     }
 
   free ((void *) transitions);

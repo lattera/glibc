@@ -1,5 +1,8 @@
 2004-11-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/tzfile.c (__tzfile_read): Avoid open for checking whether
+	the file we already use changed.
+
 	* misc/syslog.c: Remove !USE_IN_LIBIO code.
 
 2004-11-20  Jakub Jelinek  <jakub@redhat.com>
