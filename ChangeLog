@@ -1,3 +1,12 @@
+2003-11-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (check_subexp_limits): Only check close
+	subexpression limitation if one is found.  Formatting.
+	(sift_states_backward, check_arrival, check_arrival_add_next_nodes):
+	Formatting.
+	* posix/bug-regex11.c (tests): Enable most #ifdefed out tests.
+	Add new test.
+
 2003-11-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h

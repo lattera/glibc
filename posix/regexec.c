@@ -1439,7 +1439,7 @@ sift_states_backward (preg, mctx, sctx)
 	  int naccepted = 0;
 	  re_token_type_t type = dfa->nodes[prev_node].type;
 
-	  if (IS_EPSILON_NODE(type))
+	  if (IS_EPSILON_NODE (type))
 	    continue;
 #ifdef RE_ENABLE_I18N
 	  /* If the node may accept `multi byte'.  */
@@ -1836,7 +1836,7 @@ check_subexp_limits (dfa, dest_nodes, candidates, limits, bkref_ents, str_idx)
 	  for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
 	    {
 	      int node = dest_nodes->elems[node_idx];
-	      re_token_type_t type= dfa->nodes[node].type;
+	      re_token_type_t type = dfa->nodes[node].type;
 	      if (type == OP_OPEN_SUBEXP
 		  && subexp_idx == dfa->nodes[node].opr.idx)
 		ops_node = node;
@@ -1849,34 +1849,38 @@ check_subexp_limits (dfa, dest_nodes, candidates, limits, bkref_ents, str_idx)
 	  /* Note that (ent->subexp_to = str_idx != ent->subexp_from).  */
 	  if (ops_node >= 0)
 	    {
-	      err = sub_epsilon_src_nodes(dfa, ops_node, dest_nodes,
-					  candidates);
+	      err = sub_epsilon_src_nodes (dfa, ops_node, dest_nodes,
+					   candidates);
 	      if (BE (err != REG_NOERROR, 0))
 		return err;
 	    }
+
 	  /* Check the limitation of the close subexpression.  */
-	  for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
-	    {
-	      int node = dest_nodes->elems[node_idx];
-	      if (!re_node_set_contains (dfa->inveclosures + node, cls_node)
-		  && !re_node_set_contains (dfa->eclosures + node, cls_node))
-		{
-		  /* It is against this limitation.
-		     Remove it form the current sifted state.  */
-		  err = sub_epsilon_src_nodes(dfa, node, dest_nodes,
-					      candidates);
-		  if (BE (err != REG_NOERROR, 0))
-		    return err;
-		  --node_idx;
-		}
-	    }
+	  if (cls_node >= 0)
+	    for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
+	      {
+		int node = dest_nodes->elems[node_idx];
+		if (!re_node_set_contains (dfa->inveclosures + node,
+					   cls_node)
+		    && !re_node_set_contains (dfa->eclosures + node,
+					      cls_node))
+		  {
+		    /* It is against this limitation.
+		       Remove it form the current sifted state.  */
+		    err = sub_epsilon_src_nodes (dfa, node, dest_nodes,
+						 candidates);
+		    if (BE (err != REG_NOERROR, 0))
+		      return err;
+		    --node_idx;
+		  }
+	      }
 	}
       else /* (ent->subexp_to != str_idx)  */
 	{
 	  for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
 	    {
 	      int node = dest_nodes->elems[node_idx];
-	      re_token_type_t type= dfa->nodes[node].type;
+	      re_token_type_t type = dfa->nodes[node].type;
 	      if (type == OP_CLOSE_SUBEXP || type == OP_OPEN_SUBEXP)
 		{
 		  if (subexp_idx != dfa->nodes[node].opr.idx)
@@ -1886,8 +1890,8 @@ check_subexp_limits (dfa, dest_nodes, candidates, limits, bkref_ents, str_idx)
 		    {
 		      /* It is against this limitation.
 			 Remove it form the current sifted state.  */
-		      err = sub_epsilon_src_nodes(dfa, node, dest_nodes,
-						  candidates);
+		      err = sub_epsilon_src_nodes (dfa, node, dest_nodes,
+						   candidates);
 		      if (BE (err != REG_NOERROR, 0))
 			return err;
 		    }
@@ -2756,8 +2760,8 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
 	}
       if (cur_state)
 	{
-	  err = check_arrival_add_next_nodes(preg, dfa, mctx, str_idx,
-					     &cur_state->nodes, &next_nodes);
+	  err = check_arrival_add_next_nodes (preg, dfa, mctx, str_idx,
+					      &cur_state->nodes, &next_nodes);
 	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
@@ -2835,7 +2839,7 @@ check_arrival_add_next_nodes (preg, dfa, mctx, str_idx, cur_nodes, next_nodes)
       int naccepted = 0;
       int cur_node = cur_nodes->elems[cur_idx];
       re_token_type_t type = dfa->nodes[cur_node].type;
-      if (IS_EPSILON_NODE(type))
+      if (IS_EPSILON_NODE (type))
 	continue;
 #ifdef RE_ENABLE_I18N
       /* If the node may accept `multi byte'.  */

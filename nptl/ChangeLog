@@ -1,3 +1,11 @@
+2003-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internaltypes.h (ATTR_FLAG_OLDATTR): Define.
+	* pthread_attr_destroy.c: Include shlib-compat.h.
+	(__pthread_attr_destroy): Return immediately if ATTR_FLAG_OLDATTR
+	is set in iattr->flags.
+	* pthread_attr_init.c (__pthread_attr_init_2_0): Set ATTR_FLAG_OLDATTR.
+
 2003-11-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (distribute): Add tst-cleanup4aux.c.

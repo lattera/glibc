@@ -63,14 +63,16 @@ struct
   { "()(b)c\\2", "bcb", REG_EXTENDED, 3, { { 0, 3 }, { 0, 0 }, { 0, 1 } } },
   { "a(b)()c\\1", "abcb", REG_EXTENDED, 3, { { 0, 4 }, { 1, 2 }, { 2, 2 } } },
   { "a()(b)c\\2", "abcb", REG_EXTENDED, 3, { { 0, 4 }, { 1, 1 }, { 1, 2 } } },
-#if 0
-  /* XXX Not used since they fail so far.  */
   { "()(b)\\1c\\2", "bcb", REG_EXTENDED, 3, { { 0, 3 }, { 0, 0 }, { 0, 1 } } },
   { "(b())\\2\\1", "bbbb", REG_EXTENDED, 3, { { 0, 2 }, { 0, 1 }, { 1, 1 } } },
   { "a()(b)\\1c\\2", "abcb", REG_EXTENDED, 3, { { 0, 4 }, { 1, 1 }, { 1, 2 } } },
   { "a()d(b)\\1c\\2", "adbcb", REG_EXTENDED, 3, { { 0, 5 }, { 1, 1 }, { 2, 3 } } },
   { "a(b())\\2\\1", "abbbb", REG_EXTENDED, 3, { { 0, 3 }, { 1, 2 }, { 2, 2 } } },
   { "(bb())\\2\\1", "bbbb", REG_EXTENDED, 3, { { 0, 4 }, { 0, 2 }, { 2, 2 } } },
+  { "^(.?)(.?)(.?)(.?)(.?).?\\5\\4\\3\\2\\1$",
+    "level", REG_NOSUB | REG_EXTENDED, 0, { { -1, -1 } } },
+#if 0
+  /* XXX Not used since they fail so far.  */
   { "^(.?)(.?)(.?)(.?)(.?)(.?)(.?)(.?)(.?).?\\9\\8\\7\\6\\5\\4\\3\\2\\1$",
     "level", REG_NOSUB | REG_EXTENDED, 0, { { -1, -1 } } },
 #endif
