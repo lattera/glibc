@@ -1,5 +1,7 @@
 2003-05-05  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/fpu_control.h: New from i386.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (__NR_semtimedop):
 	Define if not defined.
 
