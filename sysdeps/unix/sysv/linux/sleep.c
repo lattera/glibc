@@ -1,5 +1,5 @@
 /* Implementation of the POSIX sleep function using nanosleep.
-   Copyright (C) 1996, 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,12 +24,8 @@
 #include <unistd.h>
 
 /* We are going to use the `nanosleep' syscall of the kernel.  But the
-   kernel does not implement the stupid SysV SIGCHLD vs. SIG_IGN
-   behaviour for this syscall.  Therefore we have to emulate it here.
-
-   Also note that we use the syscall directly instead of using the
-   __nanosleep function.  The reason is that nanosleep() is a cancellation
-   point while sleep() isn't.  */
+   kernel does not implement the sstupid SysV SIGCHLD vs. SIG_IGN
+   behaviour for this syscall.  Therefore we have to emulate it here.  */
 unsigned int
 __sleep (unsigned int seconds)
 {
@@ -71,7 +67,7 @@ __sleep (unsigned int seconds)
       if (oact.sa_handler == SIG_IGN)
 	{
 	  /* We should leave SIGCHLD blocked.  */
-	  result = INLINE_SYSCALL (nanosleep, 2, &ts, &ts);
+	  result = __nanosleep (&ts, &ts);
 
 	  saved_errno = errno;
 	  /* Restore the original signal mask.  */
@@ -82,11 +78,11 @@ __sleep (unsigned int seconds)
 	{
 	  /* We should unblock SIGCHLD.  Restore the original signal mask.  */
 	  (void) __sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL);
-	  result = INLINE_SYSCALL (nanosleep, 2, &ts, &ts);
+	  result = __nanosleep (&ts, &ts);
 	}
     }
   else
-    result = INLINE_SYSCALL (nanosleep, 2, &ts, &ts);
+    result = __nanosleep (&ts, &ts);
 
   if (result != 0)
     /* Round remaining time.  */

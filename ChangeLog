@@ -1,9 +1,5 @@
 2003-06-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Use nanosleep syscall
-	directly to avoid cancellation in the regular nanosleep
-	implementation.
-
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (ASMFMT_2): Only allow
 	%edx for first parameter.  This means no pushl and therefore the
 	unwind info isn't screwed up.
