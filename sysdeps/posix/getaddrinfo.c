@@ -271,6 +271,7 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
   struct hostent th;						\
   char *tmpbuf;							\
   tmpbuflen = 512;						\
+  no_data = 0;							\
   do {								\
     tmpbuflen *= 2;						\
     tmpbuf = __alloca (tmpbuflen);				\
@@ -285,12 +286,11 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
 	  return -EAI_SYSTEM;					\
 	}							\
       if (herrno == TRY_AGAIN)					\
-	{							\
-	  __set_h_errno (herrno);				\
-	  return -EAI_AGAIN;					\
-	}							\
+	no_data = EAI_AGAIN;					\
+      else							\
+	no_data = herrno == NO_DATA;				\
     }								\
-  if (h != NULL)						\
+  else if (h != NULL)						\
     {								\
       for (i = 0; h->h_addr_list[i]; i++)			\
 	{							\
@@ -305,7 +305,6 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
 	  pat = &((*pat)->next);				\
 	}							\
     }								\
-  no_data = rc != 0 && herrno == NO_DATA;			\
  }
 
 static int
@@ -510,9 +509,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    gethosts (AF_INET, struct in_addr);
 
 	  if (no_data != 0 && no_inet6_data != 0)
-	    /* We made requests but they turned out no data.  The name
-	       is known, though.  */
-	    return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+	    {
+	      /* If both requests timed out report this.  */
+	      if (no_data == EAI_AGAIN && no_inet6_data == EAI_AGAIN)
+		return -EAI_AGAIN;
+
+	      /* We made requests but they turned out no data.  The name
+		 is known, though.  */
+	      return (GAIH_OKIFUNSPEC | -EAI_NODATA);
+	    }
 	}
 
       if (at->family == AF_UNSPEC)

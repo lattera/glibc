@@ -1,3 +1,8 @@
+2000-11-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return -EAI_AGAIN
+	if IPv4 and IPv6 requests timed out.
+
 2000-11-18  Akim Demaille  <akim@epita.fr>
 
 	* malloc/obstack.h: Formatting changes.
