@@ -1,5 +1,13 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/ksc5601.c (__ksc5601_sym_to_ucs): Add mapping for
+	0xa2e6 and 0xa2e7.
+	(__ksc5601_sym_from_ucs): Add mapping back from U00AE and U20AC.
+	* iconvdata/ksc5601.h (KSC5601_SYMBOL): Adjust for the two new
+	mappings.
+	* iconvdata/testdata/EUC-KR: Add Euro and Registered sign.
+	* iconvdata/testdata/ISO-2022-KR: Likewise.
+
 	* sysdeps/unix/sysv/linux/llseek.c: Formulate warning message stronger.
 
 	* iconvdata/gconv-modules: Remove BALTIC.  It's the same as
