@@ -1,5 +1,14 @@
 1999-11-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/setrlimit.c (__setrlimit): Don't modify
+	the rlimits structure passed in.
+
+1999-11-19  Andreas Jaeger  <aj@suse.de>
+
+	* include/sys/resource.h (__setrlimit): Add prototype.
+
+1999-11-19  Ulrich Drepper  <drepper@cygnus.com>
+
 	* elf/dl-load.c (_dl_init_paths): Allocate correct number of
 	entries for rtld_search_dirs[0].
 	Patch by David Mosberger <davidm@hpl.hp.com>.
