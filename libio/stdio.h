@@ -334,7 +334,7 @@ extern int scanf __P ((__const char *__restrict __format, ...));
 extern int sscanf __P ((__const char *__restrict __s,
 			__const char *__restrict __format, ...));
 
-#ifdef	__USE_GNU
+#ifdef	__USE_ISOC9X
 /* Read formatted input from S into argument list ARG.  */
 extern int vfscanf __P ((FILE *__restrict __s,
 			 __const char *__restrict __format,
@@ -346,10 +346,6 @@ extern int vscanf __P ((__const char *__restrict __format, _G_va_list __arg))
      __attribute__ ((__format__ (__scanf__, 1, 0)));
 
 /* Read formatted input from S into argument list ARG.  */
-extern int __vsscanf __P ((__const char *__restrict __s,
-			   __const char *__restrict __format,
-			   _G_va_list __arg))
-     __attribute__ ((__format__ (__scanf__, 2, 0)));
 extern int vsscanf __P ((__const char *__restrict __s,
 			 __const char *__restrict __format,
 			 _G_va_list __arg))
@@ -541,64 +537,70 @@ extern long int ftell __P ((FILE *__stream));
 /* Rewind to the beginning of STREAM.  */
 extern void rewind __P ((FILE *__stream));
 
-#if (defined __USE_LARGEFILE || defined __USE_LARGEFILE64 \
-     || defined __USE_FILE_OFFSET64)
 /* The Single Unix Specification, Version 2, specifies an alternative,
    more adequate interface for the two functions above which deal with
    file offset.  `long int' is not the right type.  These definitions
    are originally defined in the Large File Support API.  */
 
 /* Types needed in these functions.  */
-# ifndef off_t
-#  ifndef __USE_FILE_OFFSET64
-typedef __off_t off_t;
-#  else
-typedef __off64_t off_t;
-#  endif
-#  define off_t off_t
-# endif
-
-# if defined __USE_LARGEFILE64 && !defined off64_t
-typedef __off64_t off64_t;
-#  define off64_t off64_t
-# endif
-
-
+#ifndef off_t
 # ifndef __USE_FILE_OFFSET64
+typedef __off_t off_t;
+# else
+typedef __off64_t off_t;
+# endif
+# define off_t off_t
+#endif
+
+#if defined __USE_LARGEFILE64 && !defined off64_t
+typedef __off64_t off64_t;
+# define off64_t off64_t
+#endif
+
+
+#ifndef __USE_FILE_OFFSET64
+# ifndef __USE_UNIX98
 /* Seek to a certain position on STREAM.  */
 extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
 /* Return the current position of STREAM.  */
 extern __off_t ftello __P ((FILE *__stream));
+#endif
+
 /* Get STREAM's position.  */
 extern int fgetpos __P ((FILE *__restrict __stream,
 			 fpos_t *__restrict __pos));
 /* Set STREAM's position.  */
 extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
-# else
+#else
 # ifdef __REDIRECT
+#  ifndef __USE_UNIX98
 extern int __REDIRECT (fseeko,
 		       __P ((FILE *__stream, __off64_t __off, int __whence)),
 		       fseeko64);
 extern __off64_t __REDIRECT (ftello, __P ((FILE *__stream)), ftello64);
+#  endif
 extern int __REDIRECT (fgetpos, __P ((FILE *__restrict __stream,
 				      fpos_t *__restrict __pos)), fgetpos64);
 extern int __REDIRECT (fsetpos, __P ((FILE *__stream, __const fpos_t *__pos)),
 		       fsetpos64);
-#  else
+# else
+#  ifndef __USE_UNIX98
 #   define fseeko fseeko64
 #   define ftello ftello64
-#   define fgetpos fgetpos64
-#   define fsetpos fsetpos64
 #  endif
+#  define fgetpos fgetpos64
+#  define fsetpos fsetpos64
 # endif
+#endif
 
-# ifdef __USE_LARGEFILE64
+#ifdef __USE_LARGEFILE64
+# ifndef __USE_UNIX98
 extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
 extern __off64_t ftello64 __P ((FILE *__stream));
+# endif
 extern int fgetpos64 __P ((FILE *__restrict __stream,
 			   fpos64_t *__restrict __pos));
 extern int fsetpos64 __P ((FILE *__stream, __const fpos64_t *__pos));
-# endif
 #endif
 
 /* Clear the error and EOF indicators for STREAM.  */

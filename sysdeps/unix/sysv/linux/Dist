@@ -77,3 +77,5 @@ xstatconv.c
 getdents64.c
 getresuid.c
 getresgid.c
+umount.S
+umount2.S

@@ -82,6 +82,22 @@
 # define PRIoFAST32	"o"
 # define PRIoFAST64	"lo"
 
+ /* Unsigned integers.  */
+# define PRIu8		"u"
+# define PRIu16		"u"
+# define PRIu32		"u"
+# define PRIu64		"lu"
+
+# define PRIuLEAST8	"u"
+# define PRIuLEAST16	"u"
+# define PRIuLEAST32	"u"
+# define PRIuLEAST64	"lu"
+
+# define PRIuFAST8	"u"
+# define PRIuFAST16	"u"
+# define PRIuFAST32	"u"
+# define PRIuFAST64	"lu"
+
 /* lowercase hexadecimal notation.  */
 # define PRIx8		"x"
 # define PRIx16		"x"
@@ -115,54 +131,57 @@
 # define PRIXFAST64	"lX"
 
 
-/* Unsigned integers.  */
-# define PRIu8		"u"
-# define PRIu16		"u"
-# define PRIu32		"u"
-# define PRIu64		"lu"
-
-# define PRIuLEAST8	"u"
-# define PRIuLEAST16	"u"
-# define PRIuLEAST32	"u"
-# define PRIuLEAST64	"lu"
-
-# define PRIuFAST8	"u"
-# define PRIuFAST16	"u"
-# define PRIuFAST32	"u"
-# define PRIuFAST64	"lu"
-
-
 /* Macros for printing `intmax_t' and `uintmax_t'.  */
 # define PRIdMAX	"ld"
+# define PRIiMAX	"li"
 # define PRIoMAX	"lo"
-# define PRIxMAX	"lx"
 # define PRIuMAX	"lu"
+# define PRIxMAX	"lx"
+# define PRIXMAX	"lX"
 
 
 /* Macros for printing `intptr_t' and `uintptr_t'.  */
 # define PRIdPTR	"ld"
+# define PRIiPTR	"li"
 # define PRIoPTR	"lo"
-# define PRIxPTR	"lx"
 # define PRIuPTR	"lu"
+# define PRIxPTR	"lx"
+# define PRIXPTR	"lX"
 
 
 /* Macros for printing format specifiers.  */
 
-/* Decimal notation.  */
+/* Signed decimal notation.  */
 # define SCNd8		"hhd"
 # define SCNd16		"hd"
 # define SCNd32		"d"
 # define SCNd64		"ld"
 
+# define SCNdLEAST8	"hhd"
+# define SCNdLEAST16	"hd"
+# define SCNdLEAST32	"d"
+# define SCNdLEAST64	"ld"
+
+# define SCNdFAST8	"hhd"
+# define SCNdFAST16	"ld"
+# define SCNdFAST32	"ld"
+# define SCNdFAST64	"ld"
+
+/* Signed decimal notation.  */
 # define SCNi8		"hhi"
 # define SCNi16		"hi"
 # define SCNi32		"i"
 # define SCNi64		"li"
 
-# define SCNu8		"hhu"
-# define SCNu16		"hu"
-# define SCNu32		"u"
-# define SCNu64		"lu"
+# define SCNiLEAST8	"hhi"
+# define SCNiLEAST16	"hi"
+# define SCNiLEAST32	"i"
+# define SCNiLEAST64	"li"
+
+# define SCNiFAST8	"hhi"
+# define SCNiFAST16	"li"
+# define SCNiFAST32	"li"
+# define SCNiFAST64	"li"
 
 /* Octal notation.  */
 # define SCNo8		"hho"
@@ -170,23 +189,61 @@
 # define SCNo32		"o"
 # define SCNo64		"lo"
 
+# define SCNoLEAST8	"hho"
+# define SCNoLEAST16	"ho"
+# define SCNoLEAST32	"o"
+# define SCNoLEAST64	"lo"
+
+# define SCNoFAST8	"hho"
+# define SCNoFAST16	"lo"
+# define SCNoFAST32	"lo"
+# define SCNoFAST64	"lo"
+
+/* Unsigned decimal notation.  */
+# define SCNu8		"hhu"
+# define SCNu16		"hu"
+# define SCNu32		"u"
+# define SCNu64		"lu"
+
+# define SCNuLEAST8	"hhu"
+# define SCNuLEAST16	"hu"
+# define SCNuLEAST32	"u"
+# define SCNuLEAST64	"lu"
+
+# define SCNuFAST8	"hhu"
+# define SCNuFAST16	"lu"
+# define SCNuFAST32	"lu"
+# define SCNuFAST64	"lu"
+
 /* Hexadecimal notation.  */
 # define SCNx8		"hhx"
 # define SCNx16		"hx"
 # define SCNx32		"x"
 # define SCNx64		"lx"
 
+# define SCNxLEAST8	"hhx"
+# define SCNxLEAST16	"hx"
+# define SCNxLEAST32	"x"
+# define SCNxLEAST64	"lx"
 
-/* Macros for scaning `intfast_t' and `uintfast_t'.  */
-# define SCNdFAST	"ld"
-# define SCNiFAST	"li"
-# define SCNoFAST	"lo"
-# define SCNxFAST	"lx"
+# define SCNxFAST8	"hhx"
+# define SCNxFAST16	"lx"
+# define SCNxFAST32	"lx"
+# define SCNxFAST64	"lx"
 
-/* Macros for scaning `intptr_t' and `uintptr_t'.  */
+
+/* Macros for scanning `intmax_t' and `uintmax_t'.  */
+# define SCNdMAX	"ld"
+# define SCNiMAX	"li"
+# define SCNoMAX	"lo"
+# define SCNuMAX	"lu"
+# define SCNxMAX	"lx"
+
+/* Macros for scanning `intptr_t' and `uintptr_t'.  */
 # define SCNdPTR	"ld"
 # define SCNiPTR	"li"
 # define SCNoPTR	"lo"
+# define SCNuPTR	"lu"
 # define SCNxPTR	"lx"
 
 #endif	/* C++ && format macros */

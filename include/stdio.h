@@ -18,6 +18,10 @@ extern int __vscanf __P ((__const char *__restrict __format,
      __attribute__ ((__format__ (__scanf__, 1, 0)));
 extern _IO_ssize_t __getline __P ((char **__lineptr, size_t *__n,
 				   FILE *__stream));
+extern int __vsscanf __P ((__const char *__restrict __s,
+			   __const char *__restrict __format,
+			   _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 #endif
 #else

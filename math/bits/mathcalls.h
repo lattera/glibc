@@ -171,10 +171,14 @@ __MATHCALL (floor,, (_Mdouble_ __x));
 __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
 
 
+/* Return 0 if VALUE is finite or NaN, +1 if it
+   is +Infinity, -1 if it is -Infinity.  */
+__MATHDECL_1 (int,__isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
+
 #ifdef __USE_MISC
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECLX (int,isinf,, (_Mdouble_ __value), (__const__));
+__MATHDECL_1 (int,isinf,, (_Mdouble_ __value)) __attribute__ ((__const__));
 
 /* Return nonzero if VALUE is finite and not NaN.  */
 __MATHDECLX (int,finite,, (_Mdouble_ __value), (__const__));
@@ -248,15 +252,17 @@ __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
-#ifdef __USE_ISOC9X
+# ifdef __USE_ISOC9X
 __MATHCALLX (nextafterx,, (_Mdouble_ __x, long double __y), (__const__));
-#endif
+# endif
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
+#endif
 
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));

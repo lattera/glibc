@@ -88,7 +88,7 @@ extern long long int atoll __P ((__const char *__nptr));
 extern double strtod __P ((__const char *__restrict __nptr,
 			   char **__restrict __endptr));
 
-#ifdef	__USE_GNU
+#ifdef	__USE_ISOC9X
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float strtof __P ((__const char *__restrict __nptr,
 			  char **__restrict __endptr));
@@ -241,7 +241,7 @@ strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
   return __strtoul_internal (__nptr, __endptr, __base, 0);
 }
 
-# ifdef __USE_GNU
+# ifdef __USE_ISOC9X
 extern __inline float
 strtof (__const char *__restrict __nptr, char **__restrict __endptr)
 {

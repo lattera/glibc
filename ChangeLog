@@ -1,3 +1,39 @@
+1998-08-31 15:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/db_int.h: Use <db.h> instead of "db.h" to find header in include.
+
+	* include/stdio.h: Add __vsscanf.
+
+	* libio/stdio.h: Make vfscanf, scanf, and vsscanf available if
+	__USE_ISOC9X.
+	Remove __vsscanf declaration.
+	Always declare fgetpos and fsetpos.
+
+	* math/math.h: Define isinf as macro.
+	* math/bits/mathcalls.h: Change to declare __isinf all the time.
+	Don't declare scalb for ISO C 9x.
+
+	* math/tgmath.h: Define fma.  Rewrite the underlying macros.
+
+	* stdlib/stdlib.h: Declare strtof and strtold is __USE_ISOC9X.
+
+	* sysdeps/unix/sysv/linux/bits/sigcontext.h: Allow inclusion from
+	sys/ucontext.h.
+
+	* sysdeps/wordsize-32/inttypes.h: Define missing PRI* and SCN*
+	macros.
+
+1998-08-31  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/standalone/bits/errno.h (ENOMSG): Remove duplicate.
+	Reported by jreising@frequentis.com [PR libc/767].
+
+1998-08-31  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* io/lockf.c (lockf): Move initilisation of fl.l_whence and
+	fl.l_start at beginning of function.
+	Patch by Geoff. Dash <geoffd@zeta.org.au> [PR libc/769].
+
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/sys/stat.h (ALLPERMS): Fix type (S_ISTXT -> S_ISVTX).

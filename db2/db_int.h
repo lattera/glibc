@@ -10,7 +10,7 @@
 #ifndef _DB_INTERNAL_H_
 #define	_DB_INTERNAL_H_
 
-#include "db.h"				/* Standard DB include file. */
+#include <db.h>				/* Standard DB include file. */
 #include "queue.h"
 
 /*******************************************************

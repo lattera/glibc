@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
 
-
+#ifndef sigcontext_struct
 /* Kernel headers before 2.1.1 define a struct sigcontext_struct, but
    we need sigcontext.  */
-#define sigcontext_struct sigcontext
+# define sigcontext_struct sigcontext
 
-#include <asm/sigcontext.h>
+# include <asm/sigcontext.h>
+#endif

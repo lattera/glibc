@@ -31,6 +31,11 @@ lockf (int fd, int cmd, off_t len)
 
   memset ((char *) &fl, '\0', sizeof (fl));
 
+  /* lockf is always relative to the current file position.  */
+  fl.l_whence = SEEK_CUR;
+  fl.l_start = 0;
+  fl.l_len = len;
+
   switch (cmd)
     {
     case F_TEST:
@@ -60,12 +65,6 @@ lockf (int fd, int cmd, off_t len)
       __set_errno (EINVAL);
       return -1;
     }
-
-  /* lockf is always relative to the current file position.  */
-  fl.l_whence = SEEK_CUR;
-  fl.l_start = 0;
-
-  fl.l_len = len;
 
   return __fcntl (fd, cmd, &fl);
 }

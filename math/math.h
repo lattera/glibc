@@ -196,6 +196,13 @@ enum
       : sizeof (x) == sizeof (double) ?					      \
         __isnan (x) : __isnanl (x))
 
+/* Return nonzero value is X is positive or negative infinity.  */
+# define isinf(x) \
+     (sizeof (x) == sizeof (float) ?					      \
+        __isinff (x)							      \
+      : sizeof (x) == sizeof (double) ?					      \
+        __isinf (x) : __isinfl (x))
+
 #endif /* Use ISO C 9X.  */
 
 #ifdef	__USE_MISC

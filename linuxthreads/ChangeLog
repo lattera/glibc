@@ -1,3 +1,8 @@
+1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/pt-machine.h (testandset): Add memory clobber.
+	Suggested by Roland McGrath.
+
 1998-08-28 13:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h: Also define THREAD_GETMEM_NC and THREAD_SETMEM_NC to

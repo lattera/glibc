@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,70 +40,83 @@
    only defined on real valued parameters and those which are defined
    for complex functions as well.  */
 # define __TGMATH_UNARY_REAL_ONLY(Val, Fct) \
-     (__extension__ (sizeof (__real__ (Val)) == sizeof (double)		      \
+     (__extension__ (sizeof (Val) == sizeof (double)			      \
 		     ? Fct (Val)					      \
-		     : (sizeof (__real__ (Val)) == sizeof (long double)	      \
+		     : (sizeof (Val) == sizeof (long double)		      \
 			? Fct##l (Val)					      \
 			: Fct##f (Val))))
 
 # define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ (sizeof (__real__ (Val1)) == sizeof (double)	      \
-		     ? Fct (Val1, Val2)					      \
-		     : (sizeof (__real__ (Val1)) == sizeof (long double)      \
-			? Fct##l (Val1, Val2)				      \
+     (__extension__ (sizeof (Val1) > sizeof (double)			      \
+		     ? Fct##l (Val1, Val2)				      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			? Fct (Val1, Val2)				      \
 			: Fct##f (Val1, Val2))))
 
 # define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
-     (__extension__ (sizeof (Val1) == sizeof (double)			      \
-		     || sizeof (Val2) == sizeof (double)		      \
-		     ? Fct (Val1, Val2)					      \
-		     : (sizeof (Val1) == sizeof (long double)		      \
-			|| sizeof (Val2) == sizeof (long double)	      \
-			? Fct##l (Val1, Val2)				      \
+     (__extension__ (sizeof (Val1) > sizeof (double)			      \
+		     || sizeof (Val2) > sizeof (double)			      \
+		     ? Fct##l (Val1, Val2)				      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			? Fct (Val1, Val2)				      \
 			: Fct##f (Val1, Val2))))
 
 # define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
-     (__extension__ (sizeof (Val1) == sizeof (double)			      \
-		     || sizeof (Val2) == sizeof (double)		      \
-		     ? Fct (Val1, Val2, Val3)				      \
-		     : (sizeof (Val1) == sizeof (long double)		      \
-			|| sizeof (Val2) == sizeof (long double)	      \
-			? Fct##l (Val1, Val2, Val3)			      \
+     (__extension__ (sizeof (Val1) > sizeof (double)			      \
+		     || sizeof (Val2) > sizeof (double)			      \
+		     ? Fct##l (Val1, Val2, Val3)			      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			? Fct (Val1, Val2, Val3)			      \
+			: Fct##f (Val1, Val2, Val3))))
+
+# define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
+     (__extension__ (sizeof (Val1) > sizeof (double)			      \
+		     || sizeof (Val2) > sizeof (double)			      \
+		     || sizeof (Val3) > sizeof (double)			      \
+		     ? Fct##l (Val1, Val2, Val3)			      \
+		     : (sizeof (Val1) == sizeof (double)		      \
+			|| sizeof (Val2) == sizeof (double)		      \
+			|| sizeof (Val3) == sizeof (double)		      \
+			? Fct (Val1, Val2, Val3)			      \
 			: Fct##f (Val1, Val2, Val3))))
 
 # define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
-     (__extension__ (sizeof (__real__ (Val)) == sizeof (double)		      \
+     (__extension__ (sizeof (__real__ (val)) > sizeof (double)		      \
 		     ? (sizeof (__real__ (Val)) == sizeof (Val)		      \
-			? Fct (Val)					      \
-			: Cfct (Val))					      \
-		     : (sizeof (__real__ (Val)) == sizeof (long double)	      \
+			? Fct##l (Val)					      \
+			: Cfct##l (Val))				      \
+		     : (sizeof (__real__ (val)) == sizeof (double)	      \
 			? (sizeof (__real__ (Val)) == sizeof (Val)	      \
-			   ? Fct##l (Val)				      \
-			   : Cfct##l (Val))				      \
+			   ? Fct (Val)					      \
+			   : Cfct (Val))				      \
 			: (sizeof (__real__ (Val)) == sizeof (Val)	      \
 			   ? Fct##f (Val)				      \
 			   : Cfct##f (Val)))))
 
+/* XXX This definition has to be changed as soon as the compiler understands
+   the imaginary keyword.  */
 # define __TGMATH_UNARY_IMAG_ONLY(Val, Fct) \
-     (__extension__ (sizeof (Val) == sizeof (__complex__ double)	      \
-		     ? Fct (Val)					      \
-		     : (sizeof (Val) == sizeof (__complex__ long double)      \
-			? Fct##l (Val)					      \
+     (__extension__ (sizeof (Val) > sizeof (__complex__ double)		      \
+		     ? Fct##l (Val)					      \
+		     : (sizeof (Val) == sizeof (__complex__ double)	      \
+			? Fct (Val)					      \
 			: Fct##f (Val))))
 
 # define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
-     (__extension__ (sizeof (__real__ (Val1)) == sizeof (double)	      \
-		     || sizeof (__real__ (Val2)) == sizeof (double)	      \
+     (__extension__ (sizeof (__real__ (Val1)) > sizeof (double)		      \
+		     || sizeof (__real__ (Val2)) > sizeof (double)	      \
 		     ? (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
 			&& sizeof (__real__ (Val2)) == sizeof (Val2)	      \
-			? Fct (Val1, Val2)				      \
-			: Cfct (Val1, Val2))				      \
-		     : (sizeof (__real__ (Val1)) == sizeof (long double)      \
-			|| sizeof (__real__ (Val2)) == sizeof (long double)   \
+			? Fct##l (Val1, Val2)				      \
+			: Cfct##l (Val1, Val2))				      \
+		     : (sizeof (__real__ (Val1)) == sizeof (double)	      \
+			|| sizeof (__real__ (Val2)) == sizeof (double)	      \
 			? (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
 			   && sizeof (__real__ (Val2)) == sizeof (Val2)	      \
-			   ? Fct##l (Val1, Val2)			      \
-			   : Cfct##l (Val1, Val2))			      \
+			   ? Fct (Val1, Val2)				      \
+			   : Cfct (Val1, Val2))				      \
 			: (sizeof (__real__ (Val1)) == sizeof (Val1)	      \
 			   && sizeof (__real__ (Val2)) == sizeof (Val2)	      \
 			   ? Fct##f (Val1, Val2)			      \
@@ -291,6 +304,11 @@
 
 /* Return minimum numeric value from X and Y.  */
 #define fmin(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmin)
+
+
+/* Multiply-add function computed as a ternary operation.  */
+#define fma(Vat1, Val2, Val3) \
+     __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
 
 /* Absolute value, conjugates, and projection.  */
