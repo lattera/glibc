@@ -1,5 +1,8 @@
 1999-01-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/sparc/sparc32/__longjmp.S: Include bits/setjmp.h not
+	jmp_buf.h.  Patch by David S. Miller <davem@dm.cobaltmicro.com>.
+
 	* sysdeps/libm-i387/s_fdim.S: Reverse arguments of instruction
 	changed in last patch.
 	* sysdeps/libm-i387/s_fdimf.S: Likewise.
