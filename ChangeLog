@@ -1,5 +1,13 @@
 2000-08-15  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/xstatconv.c: New file.
+	* sysdeps/mach/hurd/fxstat64.c: New file.
+	* sysdeps/mach/hurd/lxstat64.c: New file.
+	* sysdeps/mach/hurd/xstat64.c: New file.
+	* sysdeps/mach/hurd/Dist: Add xstatconv.c.
+
+2000-08-15  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/dl-sysdep.c (__libc_multiple_libcs):
 	Initialize, needed for change in common symbol handling in newer
 	binutils.  Mirrors 2000-01-03 change made by Andreas Schwab.
