@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,7 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <stdio_ext.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
 
@@ -29,6 +36,7 @@ pthread_getattr_np (thread_id, attr)
 {
   struct pthread *thread = (struct pthread *) thread_id;
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
+  int ret = 0;
 
   /* We have to handle cancellation in the following code since we are
      locking another threads desriptor.  */
@@ -53,13 +61,75 @@ pthread_getattr_np (thread_id, attr)
   iattr->guardsize = thread->guardsize;
 
   /* The sizes are subject to alignment.  */
-  iattr->stacksize = thread->stackblock_size;
-  iattr->stackaddr = (char *) thread->stackblock + iattr->stacksize;
+  if (__builtin_expect (thread->stackblock != NULL, 1))
+    {
+      iattr->stacksize = thread->stackblock_size;
+      iattr->stackaddr = (char *) thread->stackblock + iattr->stacksize;
+    }
+  else
+    {
+      /* No stack information available.  This must be for the initial
+	 thread.  Get the info in some magical way.  */
+      assert (thread->pid == thread->tid);
+
+      /* Defined in ld.so.  */
+      extern void *__libc_stack_end;
+
+      /* Stack size limit.  */
+      struct rlimit rl;
+
+      /* The safest way to get the top of the stack is to read
+	 /proc/self/maps and locate the line into which
+	 __libc_stack_end falls.  */
+      FILE *fp = fopen ("/proc/self/maps", "rc");
+      if (fp == NULL)
+	ret = errno;
+      /* We need the limit of the stack in any case.  */
+      else if (getrlimit (RLIMIT_STACK, &rl) != 0)
+	ret = errno;
+      else
+	{
+	  /* We need no locking.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+	  /* Until we found an entry (which should always be the case)
+	     mark the result as a failure.  */
+	  ret = ENOENT;
+
+	  char *line = NULL;
+	  size_t linelen = 0;
+
+	  while (! feof_unlocked (fp))
+	    {
+	      if (__getdelim (&line, &linelen, '\n', fp) <= 0)
+		break;
+
+	      uintptr_t from;
+	      uintptr_t to;
+	      if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) == 2
+		  && from <= (uintptr_t) __libc_stack_end
+		  && (uintptr_t) __libc_stack_end < to)
+		{
+		  /* Found the entry.  Now we have the info we need.  */
+		  iattr->stacksize = rl.rlim_cur;
+		  iattr->stackaddr = (void *) to;
+
+		  /* We succeed and no need to look further.  */
+		  ret = 0;
+		  break;
+		}
+	    }
+
+	  fclose (fp);
+	  free (line);
+	}
+    }
+
   iattr->flags |= ATTR_FLAG_STACKADDR;
 
   lll_unlock (thread->lock);
 
   pthread_cleanup_pop (0);
 
-  return 0;
+  return ret;
 }

@@ -1,3 +1,8 @@
+2003-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* attr.c (pthread_getattr_np): Correctly fill in the stack-related
+	values for the initial thread.
+
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (manager_thread): Remove static, add attribute_hidden.

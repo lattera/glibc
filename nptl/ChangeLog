@@ -1,3 +1,8 @@
+2003-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_getattr_np.c (pthread_getattr_np): Correctly fill in the
+	stack-related values for the initial thread.
+
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (CFLAGS-pthread_once.c): Add $(uses-callbacks).

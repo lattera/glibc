@@ -15,6 +15,9 @@
 /* Handling of thread attributes */
 
 #include <errno.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <stdio_ext.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
@@ -344,6 +347,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 {
   pthread_handle handle = thread_handle (thread);
   pthread_descr descr;
+  int ret = 0;
 
   if (handle == NULL)
     return ENOENT;
@@ -364,6 +368,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 
   attr->__inheritsched = descr->p_inheritsched;
   attr->__scope = PTHREAD_SCOPE_SYSTEM;
+
 #ifdef _STACK_GROWS_DOWN
 # ifdef USE_TLS
   attr->__stacksize = descr->p_stackaddr - (char *)descr->p_guardaddr
@@ -399,5 +404,61 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 # endif
 #endif
 
+  if (attr->__stackaddr == NULL)
+    {
+      /* Defined in ld.so.  */
+      extern void *__libc_stack_end;
+
+      /* Stack size limit.  */
+      struct rlimit rl;
+
+      /* The safest way to get the top of the stack is to read
+	 /proc/self/maps and locate the line into which
+	 __libc_stack_end falls.  */
+      FILE *fp = fopen ("/proc/self/maps", "rc");
+      if (fp == NULL)
+	ret = errno;
+      /* We need the limit of the stack in any case.  */
+      else if (getrlimit (RLIMIT_STACK, &rl) != 0)
+	ret = errno;
+      else
+	{
+	  /* We need no locking.  */
+	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+	  /* Until we found an entry (which should always be the case)
+	     mark the result as a failure.  */
+	  ret = ENOENT;
+
+	  char *line = NULL;
+	  size_t linelen = 0;
+
+	  while (! feof_unlocked (fp))
+	    {
+	      if (__getdelim (&line, &linelen, '\n', fp) <= 0)
+		break;
+
+	      uintptr_t from;
+	      uintptr_t to;
+	      if (sscanf (line, "%" SCNxPTR "-%" SCNxPTR, &from, &to) == 2
+		  && from <= (uintptr_t) __libc_stack_end
+		  && (uintptr_t) __libc_stack_end < to)
+		{
+		  /* Found the entry.  Now we have the info we need.  */
+		  attr->__stacksize = rl.rlim_cur;
+		  attr->__stackaddr = (void *) to;
+
+		  /* We succeed and no need to look further.  */
+		  ret = 0;
+		  break;
+		}
+	    }
+
+	  fclose (fp);
+	  free (line);
+	}
+    }
+
   return 0;
+
 }
