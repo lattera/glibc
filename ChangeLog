@@ -2,7 +2,7 @@
 
 	* hesiod/Versions: Change _nss_hesiod_getpwuid and
 	_nss_hesiod_getgrgid to _nss_hesiod_getpwuid_r and
-	_nss_hesiod_getgrgid_r respectively.
+	_nss_hesiod_getgrgid_r respectively.  Fixes pr libc/1115.
 
 1999-05-09  Mark Kettenis  <kettenis@gnu.org>
 
