@@ -1,4 +1,18 @@
+2004-04-29  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/dl-machine.h (RTLD_START): Avoid unnecessary GOT
+	entries.
+
 2004-04-29  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #140]
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Remove linux/compiler.h
+	include.
+	(_LINUX_KERNEL_H, _LINUX_TYPES_H, _LINUX_LIST_H): Only define if not
+	yet defined, #undef back after including linux/sysctl.h if defined
+	here.
+	(__LINUX_COMPILER_H, __user): Define if not yet defined, #undef
+	back after including linux/sysctl.h if defined here.
 
 	* sysdeps/sparc/sparc64/soft-fp/qp_qtoi.c (_Qp_qtoi): Use %f31
 	for single precision register, add it to __asm clobbers [BZ #139].
