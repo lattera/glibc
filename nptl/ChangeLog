@@ -1,3 +1,9 @@
+2002-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* forward.c (pthread_attr_init_2_0, pthread_attr_init_2_1):
+	Use return 0 as 6th argument to FORWARD4.
+	* pthread_equal.c: Include pthreadP.h instead of pthread.h.
+
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread) [NEED_DL_SYSINFO]: Add sysinfo member.

@@ -1,5 +1,5 @@
 /* Mapping table for IBM1161.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2001.
 
@@ -80,11 +80,11 @@ static const uint32_t to_ucs4[256] =
 
 static const struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x007f, idx:     0 },
-  { start: 0x00a0, end: 0x00ac, idx:   -32 },
-  { start: 0x0e01, end: 0x0e5b, idx: -3444 },
-  { start: 0x20ac, end: 0x20ac, idx: -8132 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x007f, .idx =     0 },
+  { .start = 0x00a0, .end = 0x00ac, .idx =   -32 },
+  { .start = 0x0e01, .end = 0x0e5b, .idx = -3444 },
+  { .start = 0x20ac, .end = 0x20ac, .idx = -8132 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 static const char from_ucs4[] =

@@ -1,5 +1,5 @@
 /* Mapping table for CP775.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -295,28 +295,28 @@ static const uint32_t to_ucs4[256] =
  */
 static struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x007f, idx:     0 },
-  { start: 0x00a0, end: 0x00c9, idx:   -32 },
-  { start: 0x00d3, end: 0x00e9, idx:   -41 },
-  { start: 0x00f3, end: 0x0119, idx:   -50 },
-  { start: 0x0122, end: 0x0123, idx:   -58 },
-  { start: 0x012a, end: 0x012f, idx:   -64 },
-  { start: 0x0136, end: 0x014d, idx:   -70 },
-  { start: 0x0156, end: 0x0161, idx:   -78 },
-  { start: 0x016a, end: 0x016b, idx:   -86 },
-  { start: 0x0172, end: 0x017e, idx:   -92 },
-  { start: 0x2019, end: 0x201e, idx: -7926 },
-  { start: 0x2219, end: 0x2219, idx: -8432 },
-  { start: 0x2500, end: 0x2502, idx: -9174 },
-  { start: 0x250c, end: 0x251c, idx: -9183 },
-  { start: 0x2524, end: 0x2524, idx: -9190 },
-  { start: 0x252c, end: 0x252c, idx: -9197 },
-  { start: 0x2534, end: 0x2534, idx: -9204 },
-  { start: 0x253c, end: 0x253c, idx: -9211 },
-  { start: 0x2550, end: 0x256c, idx: -9230 },
-  { start: 0x2580, end: 0x2593, idx: -9249 },
-  { start: 0x25a0, end: 0x25a0, idx: -9261 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x007f, .idx =     0 },
+  { .start = 0x00a0, .end = 0x00c9, .idx =   -32 },
+  { .start = 0x00d3, .end = 0x00e9, .idx =   -41 },
+  { .start = 0x00f3, .end = 0x0119, .idx =   -50 },
+  { .start = 0x0122, .end = 0x0123, .idx =   -58 },
+  { .start = 0x012a, .end = 0x012f, .idx =   -64 },
+  { .start = 0x0136, .end = 0x014d, .idx =   -70 },
+  { .start = 0x0156, .end = 0x0161, .idx =   -78 },
+  { .start = 0x016a, .end = 0x016b, .idx =   -86 },
+  { .start = 0x0172, .end = 0x017e, .idx =   -92 },
+  { .start = 0x2019, .end = 0x201e, .idx = -7926 },
+  { .start = 0x2219, .end = 0x2219, .idx = -8432 },
+  { .start = 0x2500, .end = 0x2502, .idx = -9174 },
+  { .start = 0x250c, .end = 0x251c, .idx = -9183 },
+  { .start = 0x2524, .end = 0x2524, .idx = -9190 },
+  { .start = 0x252c, .end = 0x252c, .idx = -9197 },
+  { .start = 0x2534, .end = 0x2534, .idx = -9204 },
+  { .start = 0x253c, .end = 0x253c, .idx = -9211 },
+  { .start = 0x2550, .end = 0x256c, .idx = -9230 },
+  { .start = 0x2580, .end = 0x2593, .idx = -9249 },
+  { .start = 0x25a0, .end = 0x25a0, .idx = -9261 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 /* Table accessed through above index table.  It can be generated using:

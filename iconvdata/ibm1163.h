@@ -1,5 +1,5 @@
 /* Mapping table for IBM1163.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2001.
 
@@ -88,17 +88,17 @@ static const uint32_t to_ucs4[256] =
 
 static const struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x0103, idx:     0 },
-  { start: 0x0110, end: 0x0111, idx:   -12 },
-  { start: 0x0152, end: 0x0153, idx:   -76 },
-  { start: 0x0178, end: 0x0178, idx:  -112 },
-  { start: 0x01a0, end: 0x01a1, idx:  -151 },
-  { start: 0x01af, end: 0x01b0, idx:  -164 },
-  { start: 0x0300, end: 0x0309, idx:  -499 },
-  { start: 0x0323, end: 0x0323, idx:  -524 },
-  { start: 0x203e, end: 0x203e, idx: -7974 },
-  { start: 0x20ab, end: 0x20ac, idx: -8082 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x0103, .idx =     0 },
+  { .start = 0x0110, .end = 0x0111, .idx =   -12 },
+  { .start = 0x0152, .end = 0x0153, .idx =   -76 },
+  { .start = 0x0178, .end = 0x0178, .idx =  -112 },
+  { .start = 0x01a0, .end = 0x01a1, .idx =  -151 },
+  { .start = 0x01af, .end = 0x01b0, .idx =  -164 },
+  { .start = 0x0300, .end = 0x0309, .idx =  -499 },
+  { .start = 0x0323, .end = 0x0323, .idx =  -524 },
+  { .start = 0x203e, .end = 0x203e, .idx = -7974 },
+  { .start = 0x20ab, .end = 0x20ac, .idx = -8082 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 static const char from_ucs4[] =

@@ -548,6 +548,8 @@ nscd_run (void *p)
 	  timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
 	}
     }
+  /* Shut up bogus GCC warning.  */
+  return NULL;
 }
 
 

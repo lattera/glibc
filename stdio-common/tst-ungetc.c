@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#undef assert
 #define assert(x) \
   if (!(x)) \
     { \

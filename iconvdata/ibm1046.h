@@ -1,5 +1,5 @@
 /* Tables for conversion from and to IBM1046.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
 
@@ -88,31 +88,31 @@ static const uint32_t to_ucs4[256] =
 
 static const struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x007f, idx:      0 },
-  { start: 0x0088, end: 0x0088, idx:     -8 },
-  { start: 0x00a0, end: 0x00a0, idx:    -31 },
-  { start: 0x00a4, end: 0x00a4, idx:    -34 },
-  { start: 0x00ad, end: 0x00ad, idx:    -42 },
-  { start: 0x00d7, end: 0x00d7, idx:    -83 },
-  { start: 0x00f7, end: 0x00f7, idx:   -114 },
-  { start: 0x060c, end: 0x060c, idx:  -1414 },
-  { start: 0x061b, end: 0x061b, idx:  -1428 },
-  { start: 0x061f, end: 0x061f, idx:  -1431 },
-  { start: 0x0621, end: 0x063a, idx:  -1432 },
-  { start: 0x0640, end: 0x0652, idx:  -1437 },
-  { start: 0x0660, end: 0x066d, idx:  -1450 },
-  { start: 0x200b, end: 0x200b, idx:  -8007 },
-  { start: 0x2500, end: 0x2500, idx:  -9275 },
-  { start: 0x2502, end: 0x2502, idx:  -9276 },
-  { start: 0x250c, end: 0x250c, idx:  -9285 },
-  { start: 0x2510, end: 0x2510, idx:  -9288 },
-  { start: 0x2514, end: 0x2514, idx:  -9291 },
-  { start: 0x2518, end: 0x2518, idx:  -9294 },
-  { start: 0x25a0, end: 0x25a0, idx:  -9429 },
-  { start: 0xfe70, end: 0xfe72, idx: -64932 },
-  { start: 0xfe74, end: 0xfe74, idx: -64933 },
-  { start: 0xfe76, end: 0xfefc, idx: -64934 },
-  { start: 0xffff, end: 0xffff, idx:      0 }
+  { .start = 0x0000, .end = 0x007f, .idx =      0 },
+  { .start = 0x0088, .end = 0x0088, .idx =     -8 },
+  { .start = 0x00a0, .end = 0x00a0, .idx =    -31 },
+  { .start = 0x00a4, .end = 0x00a4, .idx =    -34 },
+  { .start = 0x00ad, .end = 0x00ad, .idx =    -42 },
+  { .start = 0x00d7, .end = 0x00d7, .idx =    -83 },
+  { .start = 0x00f7, .end = 0x00f7, .idx =   -114 },
+  { .start = 0x060c, .end = 0x060c, .idx =  -1414 },
+  { .start = 0x061b, .end = 0x061b, .idx =  -1428 },
+  { .start = 0x061f, .end = 0x061f, .idx =  -1431 },
+  { .start = 0x0621, .end = 0x063a, .idx =  -1432 },
+  { .start = 0x0640, .end = 0x0652, .idx =  -1437 },
+  { .start = 0x0660, .end = 0x066d, .idx =  -1450 },
+  { .start = 0x200b, .end = 0x200b, .idx =  -8007 },
+  { .start = 0x2500, .end = 0x2500, .idx =  -9275 },
+  { .start = 0x2502, .end = 0x2502, .idx =  -9276 },
+  { .start = 0x250c, .end = 0x250c, .idx =  -9285 },
+  { .start = 0x2510, .end = 0x2510, .idx =  -9288 },
+  { .start = 0x2514, .end = 0x2514, .idx =  -9291 },
+  { .start = 0x2518, .end = 0x2518, .idx =  -9294 },
+  { .start = 0x25a0, .end = 0x25a0, .idx =  -9429 },
+  { .start = 0xfe70, .end = 0xfe72, .idx = -64932 },
+  { .start = 0xfe74, .end = 0xfe74, .idx = -64933 },
+  { .start = 0xfe76, .end = 0xfefc, .idx = -64934 },
+  { .start = 0xffff, .end = 0xffff, .idx =      0 }
 };
 
 static const char from_ucs4[] =

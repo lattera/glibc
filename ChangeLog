@@ -1,10 +1,34 @@
+2002-12-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/connections.c (nscd_run): Shut up warning.
+	* tst-ungetc.c (assert): Undefined before redefining.
+
+2002-12-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Use __builtin_expect even outside glibc if gcc 3
+	is used.
+
+2002-12-17  Art Haas  <ahaas@airmail.net>
+
+	* iconvdata/cp737.h: Convert GCC extension initializer syntax to C99.
+	* iconvdata/cp775.h: Likewise.
+	* iconvdata/ibm1046.h: Likewise.
+	* iconvdata/ibm1124.h: Likewise.
+	* iconvdata/ibm1129.h: Likewise.
+	* iconvdata/ibm1132.h: Likewise.
+	* iconvdata/ibm1133.h: Likewise.
+	* iconvdata/ibm1160.h: Likewise.
+	* iconvdata/ibm1161.h: Likewise.
+	* iconvdata/ibm1162.h: Likewise.
+	* iconvdata/ibm1163.h: Likewise.
+	* iconvdata/ibm1164.h: Likewise.
+
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/system.c: Define FORK only if
 	__ASSUME_CLONE_THREAD_FLAGS is defined.
 	* sysdeps/unix/sysv/linux/kernel-features.h
-	(__ASSUME_CLONE_THREAD_FLAGS): Define for x86 and kernel >=
-	2.5.50.
+	(__ASSUME_CLONE_THREAD_FLAGS): Define for x86 and kernel >= 2.5.50.
 
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
 

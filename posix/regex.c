@@ -41,7 +41,7 @@
 #  define re_compile_fastmap(bufp) __re_compile_fastmap (bufp)
 #endif
 
-#if _LIBC || __GNUC__ >= 3
+#if __GNUC__ >= 3
 # define BE(expr, val) __builtin_expect (expr, val)
 #else
 # define BE(expr, val) (expr)

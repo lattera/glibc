@@ -1,5 +1,5 @@
 /* Mapping table for CP737.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -295,25 +295,25 @@ static const uint32_t to_ucs4[256] =
  */
 static struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x007f, idx:     0 },
-  { start: 0x00a0, end: 0x00a0, idx:   -32 },
-  { start: 0x00b0, end: 0x00b7, idx:   -47 },
-  { start: 0x00f7, end: 0x00f7, idx:  -110 },
-  { start: 0x0386, end: 0x03ce, idx:  -764 },
-  { start: 0x207f, end: 0x207f, idx: -8108 },
-  { start: 0x2219, end: 0x221a, idx: -8517 },
-  { start: 0x2248, end: 0x2248, idx: -8562 },
-  { start: 0x2264, end: 0x2265, idx: -8589 },
-  { start: 0x2500, end: 0x2502, idx: -9255 },
-  { start: 0x250c, end: 0x251c, idx: -9264 },
-  { start: 0x2524, end: 0x2524, idx: -9271 },
-  { start: 0x252c, end: 0x252c, idx: -9278 },
-  { start: 0x2534, end: 0x2534, idx: -9285 },
-  { start: 0x253c, end: 0x253c, idx: -9292 },
-  { start: 0x2550, end: 0x256c, idx: -9311 },
-  { start: 0x2580, end: 0x2593, idx: -9330 },
-  { start: 0x25a0, end: 0x25a0, idx: -9342 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x007f, .idx =     0 },
+  { .start = 0x00a0, .end = 0x00a0, .idx =   -32 },
+  { .start = 0x00b0, .end = 0x00b7, .idx =   -47 },
+  { .start = 0x00f7, .end = 0x00f7, .idx =  -110 },
+  { .start = 0x0386, .end = 0x03ce, .idx =  -764 },
+  { .start = 0x207f, .end = 0x207f, .idx = -8108 },
+  { .start = 0x2219, .end = 0x221a, .idx = -8517 },
+  { .start = 0x2248, .end = 0x2248, .idx = -8562 },
+  { .start = 0x2264, .end = 0x2265, .idx = -8589 },
+  { .start = 0x2500, .end = 0x2502, .idx = -9255 },
+  { .start = 0x250c, .end = 0x251c, .idx = -9264 },
+  { .start = 0x2524, .end = 0x2524, .idx = -9271 },
+  { .start = 0x252c, .end = 0x252c, .idx = -9278 },
+  { .start = 0x2534, .end = 0x2534, .idx = -9285 },
+  { .start = 0x253c, .end = 0x253c, .idx = -9292 },
+  { .start = 0x2550, .end = 0x256c, .idx = -9311 },
+  { .start = 0x2580, .end = 0x2593, .idx = -9330 },
+  { .start = 0x25a0, .end = 0x25a0, .idx = -9342 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 /* Table accessed through above index table.  It can be generated using:

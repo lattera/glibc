@@ -54,11 +54,11 @@ FORWARD (pthread_attr_destroy, (pthread_attr_t *attr), (attr), 0);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_1)
 FORWARD4 (pthread_attr_init_2_0, pthread_attr_init, int,
-	  (pthread_attr_t *attr), (attr), 0, GLIBC_2_0);
+	  (pthread_attr_t *attr), (attr), return 0, GLIBC_2_0);
 #endif
 
 FORWARD4 (pthread_attr_init_2_1, pthread_attr_init, int,
-	  (pthread_attr_t *attr), (attr), 0, GLIBC_2_1);
+	  (pthread_attr_t *attr), (attr), return 0, GLIBC_2_1);
 
 FORWARD (pthread_attr_getdetachstate,
 	 (const pthread_attr_t *attr, int *detachstate), (attr, detachstate),
