@@ -38,7 +38,7 @@ libc_locked_map_ptr (map_handle);
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
-libc_freeres_fn (gr_map_free)
+libc_freeres_fn (ai_map_free)
 {
 
   if (map_handle.mapped != NO_MAPPING)
@@ -63,7 +63,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
   struct mapped_database *mapped = __nscd_get_map_ref (GETFDHST, "hosts",
 						       &map_handle, &gc_cycle);
  retry:
-  if (mapped != MAP_FAILED)
+  if (mapped != NO_MAPPING)
     {
       const struct datahead *found = __nscd_cache_search (GETAI, key, keylen,
 							  mapped);
@@ -86,7 +86,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	{
 	  /* nscd not running or wrong version or hosts caching disabled.  */
 	  __nss_not_use_nscd_hosts = 1;
-	  goto out;;
+	  goto out;
 	}
 
       ai_resp = &ai_resp_mem;

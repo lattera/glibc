@@ -1,5 +1,8 @@
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_getai.c: Use NO_MAPPING instead of MAP_FAILED for test
+	of failing __nscd_get_map_ref.  Fix a few typos.
+
 	* sysdeps/unix/sysv/linux/sigwait.c (do_sigwait): Make sure
 	SIGSETXID is not blocked.
 	* sysdeps/unix/sysv/linux/sigwaitinfo.c (do_sigwaitinfo): Likewise.
