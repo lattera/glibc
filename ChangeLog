@@ -1,5 +1,7 @@
 2000-03-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/gconv-modules: Fix typo.
+
 	* sysdeps/unix/sysv/linux/configure.in: Remove `crypt´ from one
 	more messages.
 

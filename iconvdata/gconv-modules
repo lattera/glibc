@@ -650,7 +650,7 @@ alias	500//			IBM500//
 alias	500V1//			IBM500//
 alias	EBCDIC-CP-BE//		IBM500//
 alias	EBCDIC-CP-CH//		IBM500//
-alias	CSIBM599//		IBM500//
+alias	CSIBM500//		IBM500//
 alias	OSF100201F4//		IBM500//
 module	IBM500//		INTERNAL		IBM500		1
 module	INTERNAL		IBM500//		IBM500		1
