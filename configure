@@ -4357,7 +4357,12 @@ else
 #include "confdefs.h"
 /* Nothing whatsoever.  */
 EOF
-if ${CC-cc} $CFLAGS -c conftest.S 2>/dev/null; then
+if { ac_try='${CC-cc} $CFLAGS -c conftest.S 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   libc_cv_need_minus_P=no
 else
   libc_cv_need_minus_P=yes
@@ -4380,7 +4385,12 @@ else
 .text
 EOF
 libc_cv_dot_text=
-if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   libc_cv_dot_text=.text
 fi
 rm -f conftest*
@@ -4406,7 +4416,12 @@ for ac_globl in .globl .global .EXPORT; do
 	${ac_globl} foo
 foo:
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
     libc_cv_asm_global_directive=${ac_globl}
   fi
   rm -f conftest*
@@ -4475,7 +4490,12 @@ for ac_try_prefix in '@' '%' '#'; do
 foo:
 	.byte 1
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
     libc_cv_asm_type_prefix=${ac_try_prefix}
   fi
   rm -f conftest*
@@ -4692,7 +4712,12 @@ else
 		  int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
 		  libc_cv_visibility_attribute=no
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if { ac_try='${CC-cc} -Werror -S conftest.c -o conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
 		    if grep '\.hidden.*foo' conftest.s >/dev/null; then
 		      if grep '\.protected.*bar' conftest.s >/dev/null; then
 			libc_cv_visibility_attribute=yes
@@ -4724,7 +4749,12 @@ else
 		  int bar (int x) { return x; }
 EOF
 		  libc_cv_broken_visibility_attribute=yes
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if { ac_try='${CC-cc} -Werror -S conftest.c -o conftest.s1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
 		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
 		      libc_cv_broken_visibility_attribute=no
 		    fi
@@ -4756,7 +4786,12 @@ else
 		  int dfoo = 1;
 EOF
 		  libc_cv_broken_alias_attribute=yes
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if { ac_try='${CC-cc} -Werror -S conftest.c -o conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
 		    if grep 'xyzzy' conftest.s >/dev/null &&
 		       grep 'abccb' conftest.s >/dev/null; then
 		      libc_cv_broken_alias_attribute=no
@@ -5128,7 +5163,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5131 "configure"
+#line 5166 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5180,7 +5215,12 @@ foo:
 .weak foo
 .weak bar; bar = foo
 EOF
-if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   libc_cv_asm_weak_directive=yes
 else
   libc_cv_asm_weak_directive=no
@@ -5205,7 +5245,12 @@ foo:
 ${libc_cv_asm_global_directive} baz
 baz:
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
     libc_cv_asm_weakext_directive=yes
   else
     libc_cv_asm_weakext_directive=no
@@ -5444,7 +5489,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5447 "configure"
+#line 5492 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5544,7 +5589,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5547 "configure"
+#line 5592 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5612,7 +5657,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5615 "configure"
+#line 5660 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

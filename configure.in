@@ -889,7 +889,7 @@ cat > conftest.S <<EOF
 #include "confdefs.h"
 /* Nothing whatsoever.  */
 EOF
-if ${CC-cc} $CFLAGS -c conftest.S 2>/dev/null; then
+if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.S 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_need_minus_P=no
 else
   libc_cv_need_minus_P=yes
@@ -906,7 +906,7 @@ cat > conftest.s <<EOF
 .text
 EOF
 libc_cv_dot_text=
-if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_dot_text=.text
 fi
 rm -f conftest*])
@@ -925,7 +925,7 @@ for ac_globl in .globl .global .EXPORT; do
 	${ac_globl} foo
 foo:
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_global_directive=${ac_globl}
   fi
   rm -f conftest*
@@ -973,7 +973,7 @@ for ac_try_prefix in '@' '%' '#'; do
 foo:
 	.byte 1
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_type_prefix=${ac_try_prefix}
   fi
   rm -f conftest*
@@ -1111,7 +1111,7 @@ EOF
 		  int bar __attribute__ ((visibility ("protected"))) = 1;
 EOF
 		  libc_cv_visibility_attribute=no
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
 		    if grep '\.hidden.*foo' conftest.s >/dev/null; then
 		      if grep '\.protected.*bar' conftest.s >/dev/null; then
 			libc_cv_visibility_attribute=yes
@@ -1134,7 +1134,7 @@ EOF
 		  int bar (int x) { return x; }
 EOF
 		  libc_cv_broken_visibility_attribute=yes
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s1>&AS_MESSAGE_LOG_FD); then
 changequote(,)dnl
 		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
 changequote([,])dnl
@@ -1159,7 +1159,7 @@ changequote([,])dnl
 		  int dfoo = 1;
 EOF
 		  libc_cv_broken_alias_attribute=yes
-		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		  if AC_TRY_COMMAND(${CC-cc} -Werror -S conftest.c -o conftest.s 1>&AS_MESSAGE_LOG_FD); then
 		    if grep 'xyzzy' conftest.s >/dev/null &&
 		       grep 'abccb' conftest.s >/dev/null; then
 		      libc_cv_broken_alias_attribute=no
@@ -1398,7 +1398,7 @@ foo:
 .weak foo
 .weak bar; bar = foo
 EOF
-if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_asm_weak_directive=yes
 else
   libc_cv_asm_weak_directive=no
@@ -1418,7 +1418,7 @@ foo:
 ${libc_cv_asm_global_directive} baz
 baz:
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_weakext_directive=yes
   else
     libc_cv_asm_weakext_directive=no
