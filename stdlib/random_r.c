@@ -268,13 +268,13 @@ __setstate_r (arg_state, buf)
      struct random_data *buf;
 {
   int32_t *new_state = (int32_t *) arg_state;
-  int type = new_state[0] % MAX_TYPES;
+  int type;
   int old_type;
   int32_t *old_state;
   int degree;
   int separation;
 
-  if (buf == NULL || type < TYPE_0 || type >= TYPE_4)
+  if (buf == NULL)
     goto fail;
 
   old_type = buf->rand_type;
@@ -283,6 +283,10 @@ __setstate_r (arg_state, buf)
     old_state[-1] = TYPE_0;
   else
     old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
+
+  type = new_state[0] % MAX_TYPES;
+  if (type < TYPE_0 || type >= TYPE_4)
+    goto fail;
 
   buf->rand_deg = degree = random_poly_info.degrees[type];
   buf->rand_sep = separation = random_poly_info.seps[type];

@@ -1,5 +1,8 @@
 1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/random_r.c (__setstate_r): Allow call with same state
+	array as currently used (PR libc/774).
+
 	* include/limits.h: Include gcc's header even if this file is
 	found more than once before it (PR libc/778)
 
