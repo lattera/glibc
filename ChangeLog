@@ -1,5 +1,10 @@
 Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* gmon/Makefile (CFLAGS-mcount.c): New variable.
+	(mcount.po): New target.
+
+	* Makeconfig (CFLAGS): Append $(CFLAGS-$(<F)).
+
 	* csu/Makefile [have-initfini=yes] (CPPFLAGS): Append -DHAVE_INITFINI.
 	(initfini): Compile initfini.c with -fPIC.
 

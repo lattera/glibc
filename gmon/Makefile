@@ -1,4 +1,4 @@
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,3 +26,12 @@ headers	:= sys/gmon.h machine-gmon.h
 routines := gmon mcount profil
 
 include ../Rules
+
+# The mcount code won't work without a frame pointer.
+CFLAGS-mcount.c := -fno-omit-frame-pointer
+
+# We cannot compile mcount.c with -pg because that would
+# create resursive calls.  Just copy the normal static object.
+$(objpfx)mcount.po: $(objpfx)mcount.o
+	rm -f $@
+	ln $< $@
