@@ -62,6 +62,12 @@ __pthread_cond_timedwait:
 	add	r0, r12
 #endif
 
+	mov.l	@(4,r13), r0
+	mov.l	.L1g, r1
+	cmp/hs	r1, r0
+	bt/s	18f
+	 mov	#EINVAL, r0
+
 	/* Get internal lock.  */
 	mov	#0, r3
 	mov	#1, r4
