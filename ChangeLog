@@ -1,3 +1,8 @@
+1998-10-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/setfsuid.c: Add real contents.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add s_setfs[ug]id.
+
 1998-10-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add s_pread64 and
