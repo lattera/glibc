@@ -7,6 +7,8 @@
 
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/stdlib.h: Fix typo in comment.
+
 	* shlib-versions (mips.*-.*-linux.*): Support only GLIBC 2.0 and
 	2.2 for libdl, ld and libm.
 
