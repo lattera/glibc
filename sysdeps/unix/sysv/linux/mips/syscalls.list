@@ -8,8 +8,6 @@ cachectl	-	cachectl	i:pii	__cachectl	cachectl
 cacheflush	-	cacheflush	i:pii	_flush_cache	cacheflush
 sysmips		-	sysmips		i:iiii	__sysmips	sysmips
 
-s_sigsuspend	sigsuspend sigsuspend	i:p	__syscall_sigsuspend
-
 #
 # Socket functions; Linux/MIPS doesn't use the socketcall(2) wrapper;
 # it's provided for compatibility, though.
@@ -31,11 +29,3 @@ setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
-
-# System calls with wrappers.
-rt_sigaction	-	rt_sigaction	i:ippi	__syscall_rt_sigaction
-rt_sigpending	-	rt_sigpending	i:pi	__syscall_rt_sigpending
-rt_sigprocmask	-	rt_sigprocmask	i:ippi	__syscall_rt_sigprocmask
-rt_sigqueueinfo	-	rt_sigqueueinfo	i:iip	__syscall_rt_sigqueueinfo
-rt_sigsuspend	-	rt_sigsuspend	i:pi	__syscall_rt_sigsuspend
-rt_sigtimedwait	-	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait
