@@ -755,40 +755,35 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  {
 	    /* We have to convert the multibyte input sequence to wide
 	       characters.  */
-	    char buf[MB_LEN_MAX];
+	    char buf[0];
 	    mbstate_t cstate;
 
 	    memset (&cstate, '\0', sizeof (cstate));
 
 	    do
 	      {
-		size_t cnt;
-
 		/* This is what we present the mbrtowc function first.  */
 		buf[0] = c;
-		cnt = 1;
 
 		while (1)
 		  {
 		    size_t n;
 
 		    n = __mbrtowc (!(flags & SUPPRESS) ? wstr : NULL,
-				   buf, cnt, &cstate);
+				   buf, 1, &cstate);
 
 		    if (n == (size_t) -2)
 		      {
 			/* Possibly correct character, just not enough
 			   input.  */
-			assert (cnt < MB_CUR_MAX);
-
 			if (inchar () == EOF)
 			  encode_error ();
 
-			buf[cnt++] = c;
+			buf[0] = c;
 			continue;
 		      }
 
-		    if (n != cnt)
+		    if (n != 1)
 		      encode_error ();
 
 		    /* We have a match.  */
@@ -1063,36 +1058,33 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  }
 #else
 		{
-		  char buf[MB_LEN_MAX];
-		  size_t cnt;
+		  char buf[0];
 
 		  buf[0] = c;
-		  cnt = 1;
 
 		  while (1)
 		    {
 		      size_t n;
 
 		      n = __mbrtowc (!(flags & SUPPRESS) ? wstr : NULL,
-				     buf, cnt, &cstate);
+				     buf, 1, &cstate);
 
 		      if (n == (size_t) -2)
 			{
 			  /* Possibly correct character, just not enough
 			     input.  */
-			  assert (cnt < MB_CUR_MAX);
-
 			  if (inchar () == EOF)
 			    encode_error ();
 
-			  buf[cnt++] = c;
+			  buf[0] = c;
 			  continue;
 			}
 
-		      if (n != cnt)
+		      if (n != 1)
 			encode_error ();
 
 		      /* We have a match.  */
+		      ++wstr;
 		      break;
 		    }
 

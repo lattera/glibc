@@ -2295,11 +2295,11 @@ argument specifies the maximum number of characters to produce.  The
 trailing null character is counted towards this limit, so you should
 allocate at least @var{size} wide characters for the string @var{ws}.
 
-The return value is the number of characters which would be generated
-for the given input, excluding the trailing null.  If this value is
-greater or equal to @var{size}, not all characters from the result have
-been stored in @var{ws}.  You should try again with a bigger output
-string.
+The return value is the number of characters generated for the given
+input, excluding the trailing null.  If not all output fits into the
+provided buffer a negative value is returned.  You should try again with
+a bigger output string.  @emph{Note:} this is different from how
+@code{snprintf} handles this situation.
 
 Note that the corresponding narrow stream function takes fewer
 parameters.  @code{swprintf} in fact corresponds to the @code{snprintf}
