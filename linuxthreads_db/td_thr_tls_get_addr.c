@@ -40,7 +40,7 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 
   /* Get the DTV pointer from the thread descriptor.  */
   if (ps_pdread (th->th_ta_p->ph,
-		 &((struct _pthread_descr_struct *) th->th_unique)->dtv,
+		 &((struct _pthread_descr_struct *) th->th_unique)->p_header.data.dtvp,
 		 &dtvp, sizeof dtvp) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
