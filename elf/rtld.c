@@ -198,7 +198,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
       /* If it hasn't happen yet record the startup time.  */
       if (! HP_TIMING_INLINE)
 	HP_TIMING_NOW (start_time);
-#ifndef DONT_USE_BOOTSTRAP_MAP
+#if !defined DONT_USE_BOOTSTRAP_MAP && !defined HP_TIMING_NONAVAIL
       else
 	start_time = info->start_time;
 #endif

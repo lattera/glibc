@@ -1,5 +1,12 @@
 2002-09-16  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Add a cast.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (INLINE_SYSCALL):
+	New macro.
+
+	* elf/rtld.c [HP_TIMING_NONAVAIL]: Fix last change for this case.
+
 	* include/unistd.h: Uncomment libc_hidden_proto for _exit.
 	* sysdeps/mach/hurd/_exit.c: Add libc_hidden_def.
 	* sysdeps/generic/_exit.c: Likewise.

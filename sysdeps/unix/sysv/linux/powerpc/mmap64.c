@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -56,9 +56,10 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
       int saved_errno = errno;
 # endif
       void *result;
-      __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len,
-					    prot, flags, fd,
-					    (off_t) (offset >> PAGE_SHIFT));
+      __ptrvalue (result)
+	= (void *) INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len,
+				   prot, flags, fd,
+				   (off_t) (offset >> PAGE_SHIFT));
 # if __BOUNDED_POINTERS__
       __ptrlow (result) = __ptrvalue (result);
       __ptrhigh (result) = __ptrvalue (result) + len;
