@@ -153,13 +153,16 @@ xdr_u_int (XDR *xdrs, u_int *up)
 
 /*
  * XDR long integers
- * same as xdr_u_long - open coded to save a proc call!
+ * The definition of xdr_long() is kept for backward
+ * compatibility. Instead xdr_int() should be used.
  */
 bool_t
 xdr_long (XDR *xdrs, long *lp)
 {
 
-  if (xdrs->x_op == XDR_ENCODE)
+  if (xdrs->x_op == XDR_ENCODE
+      && (sizeof (int32_t) == sizeof (long)
+	  || (int32_t) *lp == *lp))
     return XDR_PUTLONG (xdrs, lp);
 
   if (xdrs->x_op == XDR_DECODE)
@@ -173,7 +176,8 @@ xdr_long (XDR *xdrs, long *lp)
 
 /*
  * XDR unsigned long integers
- * same as xdr_long - open coded to save a proc call!
+ * The definition of xdr_u_long() is kept for backward
+ * compatibility. Instead xdr_u_int() should be used.
  */
 bool_t
 xdr_u_long (XDR *xdrs, u_long *ulp)
@@ -192,6 +196,10 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
       }
 
     case XDR_ENCODE:
+      if (sizeof (uint32_t) != sizeof (u_long)
+	  && (uint32_t) *ulp != *ulp)
+	return FALSE;
+
       return XDR_PUTLONG (xdrs, (long *) ulp);
 
     case XDR_FREE:
