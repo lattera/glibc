@@ -1,3 +1,10 @@
+2002-06-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-brk.c: Move...
+	* sysdeps/unix/sysv/linux/dl-brk.c: ...here.
+	* sysdeps/unix/sysv/linux/i386/dl-sbrk.c: Move...
+	* sysdeps/unix/sysv/linux/dl-sbrk.c: ...here.
+
 2002-06-07  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/bits/environments.h: File removed.
