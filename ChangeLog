@@ -1,3 +1,30 @@
+2000-01-27  Geoff Keating  <geoffk@cygnus.com>
+
+	* csu/Makefile ($(objpfx)version-info.h): Don't use echo -n
+	unnecessarily.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_STAT64_SYSCALL, __ASSUME_TRUNCATE64_SYSCALL,
+	__ASSUME_NEW_GETRLIMIT_SYSCALL): Define on powerpc for kernels >=
+	2.3.35.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/resource.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/setrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add
+	s_fstat64, s_ftruncate64, s_lstat64, s_mmap2, s_stat64,
+	s_truncate64.
+	* sysdeps/unix/sysv/linux/powerpc/truncate64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Versions: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/brk.S [!PIC]: Don't access
+	__curbrk off the small data area register.  Reported by
+	Andrew Haley <aph@pasanda.cygnus.co.uk>.
+
 2000-01-26  Andreas Jaeger  <aj@suse.de>
 
 	* Make-dist (+sysdep-tscrs): Add libm-test-ulps.

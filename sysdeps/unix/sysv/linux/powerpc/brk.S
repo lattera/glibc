@@ -1,5 +1,5 @@
 /* brk system call for Linux/ppc.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,8 @@ ENTRY(__brk)
 	mtlr    r4
 	stw     r3,0(r5)
 #else
-	stw     r3,__curbrk@sdarel(r13)
+	lis     r4,__curbrk@ha
+	stw     r3,__curbrk@sdarel(r4)
 #endif
 	cmplw   r6,r3
 	addi    r1,r1,16

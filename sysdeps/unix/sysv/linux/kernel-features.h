@@ -103,6 +103,13 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
+/* I know for sure that these are in 2.3.35 on powerpc.  */
+#if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_STAT64_SYSCALL	1
+# define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
+#endif
+
 /* Linux 2.3.39 introduced 32bit UID/GIDs.  */
 #if __LINUX_KERNEL_VERSION >= 131879
 # define __ASSUME_32BITUIDS		1
