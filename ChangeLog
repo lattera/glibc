@@ -1,3 +1,8 @@
+2005-03-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/fnmatch.c (fnmatch): For short patterns or strings attempt to
+	avoid calling mbsrtowcs twice.
+
 2005-03-29  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_discover_osversion): New
