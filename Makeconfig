@@ -471,7 +471,7 @@ link-extra-libs-static = $(link-extra-libs)
 endif
 endif
 link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
-link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib)_b.a)
+link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
 gnulib := -lgcc
@@ -653,7 +653,7 @@ ifeq (yes,$(build-bounded))
 # and thus aid debugging, since after all, BPs are a debugging tool.
 object-suffixes += .ob
 CPPFLAGS-.ob = -fbounded-pointers $(pic-default)
-CFLAGS-.ob = -g -O2 -fno-optimize-sibling-calls
+CFLAGS-.ob = -g -O2 -fno-optimize-sibling-calls -fno-strict-aliasing
 libtype.ob = lib%_b.a
 endif
 
@@ -793,6 +793,7 @@ endif # build-shared
 ifneq (,$(findstring linuxthreads,$(add-ons)))
 shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so
 static-thread-library = $(common-objpfx)linuxthreads/libpthread.a
+bounded-thread-library = $(common-objpfx)linuxthreads/libpthread_b.a
 have-thread-library = yes
 rpath-dirs += linuxthreads
 endif

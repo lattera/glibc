@@ -46,14 +46,13 @@ $(objpfx)md5test: $(objpfx)md5.o
 include ../Rules
 
 ifeq (yes,$(build-shared))
-libcrypt-dep = $(objpfx)libcrypt.so
+$(addprefix $(objpfx),$(tests)): $(objpfx)libcrypt.so
 else
-libcrypt-dep = $(objpfx)libcrypt.a
+$(addprefix $(objpfx),$(tests)): $(objpfx)libcrypt.a
 endif
-
-$(objpfx)cert: $(libcrypt-dep)
-$(objpfx)md5c-test: $(libcrypt-dep)
-
+ifeq (yes,$(build-bounded))
+$(tests:%=$(objpfx)%-bp): $(objpfx)libcrypt_b.a
+endif
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

@@ -46,7 +46,7 @@ __sigprocmask (how, set, oset)
 {
 #if __ASSUME_REALTIME_SIGNALS > 0
   return INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET (set),
-			 CHECK_SIGSETopt (oset), _NSIG / 8);
+			 CHECK_SIGSET_NULL_OK (oset), _NSIG / 8);
 #else
 # ifdef __NR_rt_sigprocmask
   /* First try the RT signals.  */
@@ -56,7 +56,7 @@ __sigprocmask (how, set, oset)
 	 real size of the user-level sigset_t.  */
       int saved_errno = errno;
       int result = INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET (set),
-				   CHECK_SIGSETopt (oset), _NSIG / 8);
+				   CHECK_SIGSET_NULL_OK (oset), _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -67,7 +67,7 @@ __sigprocmask (how, set, oset)
 # endif
 
   return INLINE_SYSCALL (sigprocmask, 3, how,
-			 CHECK_SIGSET (set), CHECK_SIGSETopt (oset));
+			 CHECK_SIGSET (set), CHECK_SIGSET_NULL_OK (oset));
 #endif
 }
 weak_alias (__sigprocmask, sigprocmask)

@@ -84,3 +84,7 @@ $(objpfx)tst-tsearch: $(common-objpfx)math/libm.so$(libm.so-version)
 else
 $(objpfx)tst-tsearch: $(common-objpfx)math/libm.a
 endif
+
+ifeq ($(build-bounded),yes)
+$(objpfx)tst-tsearch-bp: $(common-objpfx)math/libm_b.a
+endif

@@ -119,17 +119,6 @@ CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
 CFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 CFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 CFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
-LDLIBS-test-ifloat = math/libm
-LDLIBS-test-idouble = math/libm
-LDLIBS-test-ildoubl = math/libm
-LDLIBS-test-float = math/libm
-LDLIBS-test-double = math/libm
-LDLIBS-test-ldouble = math/libm
-LDLIBS-test-matherr = math/libm
-LDLIBS-test-reduce = math/libm
-LDLIBS-atest-exp = math/libm
-LDLIBS-atest-sincos = math/libm
-LDLIBS-atest-exp2 = math/libm
 
 distribute += libm-test.inc gen-libm-test.pl README.libm-test
 
@@ -179,6 +168,9 @@ ifeq ($(build-shared),yes)
 $(addprefix $(objpfx),$(tests)): $(objpfx)libm.so$(libm.so-version)
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)libm.a
+endif
+ifeq ($(build-bounded),yes)
+$(tests:%=$(objpfx)%-bp): $(objpfx)libm_b.a
 endif
 
 ifeq ($(build-static),yes)

@@ -43,6 +43,6 @@ __sigprocmask (how, set, oset)
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
   return INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET (set),
-			 CHECK_SIGSETopt (oset), _NSIG / 8);
+			 CHECK_SIGSET_NULL_OK (oset), _NSIG / 8);
 }
 weak_alias (__sigprocmask, sigprocmask)

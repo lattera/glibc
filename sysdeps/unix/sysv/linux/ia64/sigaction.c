@@ -47,7 +47,7 @@ __libc_sigaction (sig, act, oact)
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
   return INLINE_SYSCALL (rt_sigaction, 4, sig,
-			 CHECK_1opt (act), CHECK_1opt (oact), _NSIG / 8);
+			 CHECK_1_NULL_OK (act), CHECK_1_NULL_OK (oact), _NSIG / 8);
 }
 
 weak_alias (__libc_sigaction, __sigaction)

@@ -65,7 +65,7 @@ int
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
   return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid,
-			 cmd, 0, CHECK_1opt (buf));
+			 cmd, 0, CHECK_1_NULL_OK (buf));
 }
 compat_symbol (libc, __old_shmctl, shmctl, GLIBC_2_0);
 #endif

@@ -41,7 +41,9 @@ nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete))
 
 vpath %.c Examples
-tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex12 joinrace tststack
+
+librt-tests = ex10 ex11
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 joinrace tststack
 
 include ../Rules
 
@@ -58,24 +60,13 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so
 
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
-libpthread = $(objpfx)libpthread.so
-librt = $(common-objpfx)rt/librt.so
+$(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.so
+$(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 else
-libpthread = $(objpfx)libpthread.a
-librt = $(common-objpfx)rt/librt.a
+$(addprefix $(objpfx),$(tests)): $(objpfx)libpthread.a
+$(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.a
 endif
-
-$(objpfx)ex1: $(libpthread)
-$(objpfx)ex2: $(libpthread)
-$(objpfx)ex3: $(libpthread)
-$(objpfx)ex4: $(libpthread)
-$(objpfx)ex5: $(libpthread)
-$(objpfx)ex6: $(libpthread)
-$(objpfx)ex7: $(libpthread)
-$(objpfx)ex8: $(libpthread)
-$(objpfx)ex9: $(libpthread)
-$(objpfx)ex10: $(libpthread) $(librt)
-$(objpfx)ex11: $(libpthread) $(librt)
-$(objpfx)ex12: $(libpthread)
-$(objpfx)joinrace: $(libpthread)
-$(objpfx)tststack: $(libpthread)
+ifeq ($(build-bounded),yes)
+$(tests:%=$(objpfx)%-bp): $(objpfx)libpthread_b.a
+$(librt-tests:%=$(objpfx)%-bp): $(common-objpfx)rt/librt_b.a
+endif

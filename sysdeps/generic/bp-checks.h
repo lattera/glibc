@@ -57,22 +57,22 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 /* Check bounds of a pointer seated to an array of N objects.  */
 # define CHECK_N(ARG, N) _CHECK_N ((ARG), (N), 1)
 /* Same as CHECK_N, but tolerate ARG == NULL.  */
-# define CHECK_Nopt(ARG, N) _CHECK_N ((ARG), (N), __ptrvalue (ARG))
+# define CHECK_N_NULL_OK(ARG, N) _CHECK_N ((ARG), (N), __ptrvalue (ARG))
 
 /* Check bounds of a pointer seated to a single object.  */
 # define CHECK_1(ARG) CHECK_N ((ARG), 1)
 /* Same as CHECK_1, but tolerate ARG == NULL.  */
-# define CHECK_1opt(ARG) CHECK_Nopt ((ARG), 1)
+# define CHECK_1_NULL_OK(ARG) CHECK_N_NULL_OK ((ARG), 1)
 
 /* Check for NUL-terminator within string's bounds.  */
 # define CHECK_STRING(ARG) _CHECK_STRING ((ARG), 1)
 /* Same as CHECK_STRING, but tolerate ARG == NULL.  */
-# define CHECK_STRINGopt(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
+# define CHECK_STRING_NULL_OK(ARG) _CHECK_STRING ((ARG), __ptrvalue (ARG))
 
 /* Check bounds of signal syscall args with type sigset_t.  */
 # define CHECK_SIGSET(SET) CHECK_N ((SET), _NSIG / (8 * sizeof *(SET)))
 /* Same as CHECK_SIGSET, but tolerate SET == NULL.  */
-# define CHECK_SIGSETopt(SET) CHECK_Nopt ((SET), _NSIG / (8 * sizeof *(SET)))
+# define CHECK_SIGSET_NULL_OK(SET) CHECK_N_NULL_OK ((SET), _NSIG / (8 * sizeof *(SET)))
 
 # if defined (_IOC_SIZESHIFT) && defined (_IOC_SIZEBITS)
 /* Extract the size of the ioctl data and check its bounds.  */
@@ -105,12 +105,12 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 # define CHECK_BOUNDS_LOW(ARG) (ARG)
 # define CHECK_BOUNDS_HIGH(ARG) (ARG)
 # define CHECK_1(ARG) (ARG)
-# define CHECK_1opt(ARG) (ARG)
+# define CHECK_1_NULL_OK(ARG) (ARG)
 # define CHECK_N(ARG, N) (ARG)
-# define CHECK_Nopt(ARG, N) (ARG)
+# define CHECK_N_NULL_OK(ARG, N) (ARG)
 # define CHECK_STRING(ARG) (ARG)
 # define CHECK_SIGSET(SET) (SET)
-# define CHECK_SIGSETopt(SET) (SET)
+# define CHECK_SIGSET_NULL_OK(SET) (SET)
 # define CHECK_IOCTL(ARG, CMD) (ARG)
 # define CHECK_FCNTL(ARG, CMD) (ARG)
 # define BOUNDED_N(PTR, N) (PTR)

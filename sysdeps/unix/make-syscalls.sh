@@ -257,15 +257,15 @@ shared-only-routines += $file
 	    sed -e 's/<\(a[1-9]\)>/__ptrvalue (\1a)/g' \
 		-e 's/<\(b[1-9]\)>, <\(n[1-9]\)>/CHECK_N (\1a, \2a), \2a/g' \
 		-e 's/<\(b[1-9]\)>, <\(N[1-9]\)>/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
-		-e 's/<\(B[1-9]\)>, <\(n[1-9]\)>/CHECK_Nopt (\1a, \2a), \2a/g' \
-		-e 's/<\(B[1-9]\)>, <\(N[1-9]\)>/CHECK_Nopt (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
+		-e 's/<\(B[1-9]\)>, <\(n[1-9]\)>/CHECK_N_NULL_OK (\1a, \2a), \2a/g' \
+		-e 's/<\(B[1-9]\)>, <\(N[1-9]\)>/CHECK_N_NULL_OK (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
 		-e 's/<\(f[1-9]\)>/CHECK_N (\1a, 2)/g' \
 		-e 's/<\(i[1-9]\)>, <\(F[1-9]\)>/\1a, CHECK_FCNTL (\2a, \1a)/g' \
 		-e 's/<\(i[1-9]\)>, <\(I[1-9]\)>/\1a, CHECK_IOCTL (\2a, \1a)/g' \
 		-e 's/<\(p[1-9]\)>/CHECK_1 (\1a)/g' \
-		-e 's/<\([PW][1-9]\)>/CHECK_1opt (\1a)/g' \
+		-e 's/<\([PW][1-9]\)>/CHECK_1_NULL_OK (\1a)/g' \
 		-e 's/<\(s[1-9]\)>/CHECK_STRING (\1a)/g' \
-		-e 's/<\(S[1-9]\)>/CHECK_STRINGopt (\1a)/g' \
+		-e 's/<\(S[1-9]\)>/CHECK_STRING_NULL_OK (\1a)/g' \
 		-e 's/<\([ivn][1-9]\)>/\1a/g'`)`echo $rtn $args |
 	    sed -e 's/<b0>.*<\(n[1-9]\)>.*/, \1a)/' \
 		-e 's/<.0>.*//'`; \\'; \\"

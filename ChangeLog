@@ -1,3 +1,54 @@
+2000-08-17  Greg McGary  <greg@mcgary.org>
+
+	* Makeconfig (link-extra-libs-bounded): Strip `-bp' suffix
+	from test program name when constructing suffix for $(LDLIBS-*).
+	(bounded-thread-library): New variable.
+	* crypt/Makefile
+	[build-shared, build-static] (libcrypt-dep): Remove variable.
+	($(addprefix $(objpfx),$(tests))): Consolidate individual dependencies.
+	[build-bounded] ($(tests:%=$(objpfx)%-bp)): Add dependencies.
+	* linuxthreads/Makefile (libpthread, librt): Remove variables.
+	(librt-tests): Add variable.  (tests): Use it.
+	[build-shared, build-static]
+	($(addprefix $(objpfx),$(tests)), $(addprefix $(objpfx),$(librt-tests))):
+	Consolidate individual dependencies.
+	[build-bounded]
+	($(tests:%=$(objpfx)%-bp), $(librt-tests:%=$(objpfx)%-bp)):
+	Add dependencies.
+	* math/Makefile (LDLIBS-*): Remove variables (they are redundant).
+	[build-bounded] ($(tests:%=$(objpfx)%-bp)): Add dependencies.
+	* misc/Makefile
+	[build-bounded] ($(objpfx)tst-tsearch-bp): Add dependencies.
+	* rt/Makefile
+	[build-shared, build-static]
+	($(addprefix $(objpfx),$(tests))): Consolidate individual dependencies.
+	[build-bounded] ($(tests:%=$(objpfx)%-bp)): Add dependencies.
+
+2000-08-17  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/generic/bp-checks.h: s/\(CHECK\w+\)opt/\1_NULL_OK/
+	* sysdeps/unix/make-syscalls.sh: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigprocmask.c: Likewise.
+
+2000-08-17  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/fpu/s_frexp.S: Check bounds.
+	Wrap extern symbols in BP_SYM ().
+	* sysdeps/i386/fpu/s_frexpf.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S: Likewise.
+	* sysdeps/i386/fpu/s_remquo.S: Likewise.
+	* sysdeps/i386/fpu/s_remquof.S: Likewise.
+	* sysdeps/i386/fpu/s_remquol.S: Likewise.
+	* sysdeps/i386/fpu/s_sincos.S: Likewise.
+	* sysdeps/i386/fpu/s_sincosf.S: Likewise.
+	* sysdeps/i386/fpu/s_sincosl.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+
 2000-08-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/fegetexcept.c: New file.
