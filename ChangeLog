@@ -2,6 +2,8 @@
 
 	* nss/digits_dots.c: Don't pass NULL in h_aliases for successful
 	lookup, pass pointer to array with NULL pointer [PR libc/1858].
+	* inet/Makefile (tests): Add tst-gethnm.
+	* inet/tst-gethnm.c: New file.
 
 	* rt/aio_cancel.c: If canceling a specific request which is running
 	*really* do nothing.
