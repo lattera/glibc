@@ -53,14 +53,12 @@
 
 __BEGIN_DECLS
 
-/* Error status for non-reentrant lookup functions.  */
-extern int h_errno;
+/* Error status for non-reentrant lookup functions.
+   We use a macro to access always the thread-specific `h_errno' variable.  */
+#define h_errno (*__h_errno_location ())
 
 /* Function to get address of global `h_errno' variable.  */
 extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
-
-/* Use a macro to access always the thread specific `h_errno' variable.  */
-#define h_errno (*__h_errno_location ())
 
 
 /* Possible values left in `h_errno'.  */
