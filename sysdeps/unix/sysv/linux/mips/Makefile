@@ -28,10 +28,10 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/s
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' \
 	     > $(@:.d=.h).newt; \
 	 if grep SYS_O32_ $(@:.d=.h).newt > /dev/null; then \
-	   echo '#if _MIPS_SIM == _MIPS_SIM_NABI32'; \
+	   echo '#if _MIPS_SIM == _ABIN32'; \
 	   sed -n 's/^\(#define SYS_\)N32_/\1/p' < $(@:.d=.h).newt | \
 		LC_ALL=C sort; \
-	   echo '#elif _MIPS_SIM == _MIPS_SIM_ABI64'; \
+	   echo '#elif _MIPS_SIM == _ABI64'; \
 	   sed -n 's/^\(#define SYS_\)N64_/\1/p' < $(@:.d=.h).newt | \
 		LC_ALL=C sort; \
 	   echo '#else'; \
