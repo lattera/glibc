@@ -1,3 +1,8 @@
+2000-06-13  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/elf/start.S (ENTRY_POINT): Remove mips64 defines.
+	Patch by Ralf Baechle <ralf@gnu.org>.
+
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add parameter information
