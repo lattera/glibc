@@ -219,6 +219,11 @@ if test -n "$datafile"; then
   add_env="$add_env MEMUSAGE_OUTPUT=$datafile"
 fi
 
+# Set program name.
+if test -n "$progname"; then
+  add_env="$add_env MEMUSAGE_PROG_NAME=$progname"
+fi
+
 # Set buffer size.
 if test -n "$buffer"; then
   add_env="$add_env MEMUSAGE_BUFFER_SIZE=$buffer"
