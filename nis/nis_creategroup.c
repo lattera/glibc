@@ -1,6 +1,6 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA. */
 
+#include <time.h>
 #include <string.h>
 #include <rpcsvc/nis.h>
 
@@ -45,14 +46,18 @@ nis_creategroup (const_nis_name group, unsigned int flags)
       else
 	return NIS_BADNAME;
 
-      obj = calloc (1, sizeof (nis_object));
+      obj = malloc (sizeof (nis_object));
       if (obj == NULL)
 	return NIS_NOMEMORY;
 
+      obj->zo_oid.ctime = obj->zo_oid.mtime = time (NULL);
       obj->zo_name = strdup (leafbuf);
       obj->zo_owner = strdup (__nis_default_owner (NULL));
       obj->zo_group = strdup (__nis_default_group (NULL));
       obj->zo_domain = strdup (domainbuf);
+      if (obj->zo_name == NULL || obj->zo_owner == NULL
+	  || obj->zo_group == NULL || obj->zo_domain == NULL)
+	return NIS_NOMEMORY;
       obj->zo_access = __nis_default_access (NULL, 0);
       obj->zo_ttl = 60 * 60;
       obj->zo_data.zo_type = NIS_GROUP_OBJ;
