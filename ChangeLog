@@ -27,6 +27,10 @@
 	_IO_file_attach.
 	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
 
+	* include/libc-symbols.h (symbol_set_declare): Revert 2000-06-26 mods.
+	* include/set-hooks.h (RUN_HOOK): Revert 2000-06-26 mods.  Qualify
+	ptr as __unbouned.
+
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): Initialize the __data

@@ -242,8 +242,8 @@
 
 /* Declare SET for use in this module, if defined in another module.  */
 #  define symbol_set_declare(set) \
-  extern void (*const __start_##set) (void) __attribute__ ((__weak__));	\
-  extern void (*const __stop_##set) (void) __attribute__ ((__weak__));	\
+  extern void *const __start_##set __attribute__ ((__weak__));		\
+  extern void *const __stop_##set __attribute__ ((__weak__));		\
   weak_extern (__start_##set) weak_extern (__stop_##set)
 
 /* Return a pointer (void *const *) to the first element of SET.  */
@@ -261,7 +261,7 @@
   asm(".stabs \"" __SYMBOL_PREFIX #set "\",25,0,0," __SYMBOL_PREFIX #symbol)
 #  define bss_set_element(set, symbol)	?error Must use initialized data.
 #  define symbol_set_define(set)	void *const (set)[1];
-#  define symbol_set_declare(set)	extern void (*const (set)[1]) (void);
+#  define symbol_set_declare(set)	extern void *const (set)[1];
 
 #  define symbol_set_first_element(set)	&(set)[1]
 #  define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
