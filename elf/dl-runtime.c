@@ -20,6 +20,54 @@ Cambridge, MA 02139, USA.  */
 #include <link.h>
 #include "dynamic-link.h"
 
+
+/* The global scope we will use for symbol lookups.
+   This will be modified by _dl_open if RTLD_GLOBAL is used.  */
+struct link_map **_dl_global_scope = _dl_default_scope;
+struct link_map **_dl_global_scope_end = &_dl_default_scope[3];
+
+
+/* Hack _dl_global_scope[0] and [1] as necessary, and return a pointer into
+   _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
+   references made in the object L's relocations.  */
+inline struct link_map **
+_dl_object_relocation_scope (struct link_map *l)
+{
+  if (l->l_info[DT_SYMBOLIC])
+    {
+      /* This object's global references are to be resolved first
+	 in the object itself, and only secondarily in more global
+	 scopes.  */
+
+      if (! l->l_searchlist)
+	/* We must construct the searchlist for this object.  */
+	_dl_map_object_deps (l);
+
+      /* The primary scope is this object itself and its
+	 dependencies.  */
+      _dl_global_scope[0] = l;
+
+      /* Secondary is the dependency tree that reached L; the object
+	 requested directly by the user is at the root of that tree.  */
+      while (l->l_loader)
+	l = l->l_loader;
+      _dl_global_scope[1] = l;
+
+      /* Finally, the global scope follows.  */
+
+      return _dl_global_scope;
+    }
+  else
+    {
+      /* Use first the global scope, and then the scope of the root of the
+	 dependency tree that first caused this object to be loaded.  */
+      while (l->l_loader)
+	l = l->l_loader;
+      *_dl_global_scope_end = l;
+      return &_dl_global_scope[2];
+    }
+}
+
 /* Figure out the right type, Rel or Rela.  */
 #define elf_machine_rel 1
 #define elf_machine_rela 2
@@ -67,17 +115,21 @@ fixup (
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
 
+  /* Set up the scope to find symbols referenced by this object.  */
+  struct link_map **scope = _dl_object_relocation_scope (l);
+
+  /* Perform the specified relocation.  */
   ElfW(Addr) resolve (const ElfW(Sym) **ref,
 		      ElfW(Addr) reloc_addr, int noplt)
     {
-      struct link_map *scope[2] = { _dl_loaded, NULL };
       return _dl_lookup_symbol (strtab + (*ref)->st_name, ref,
 				scope, l->l_name, reloc_addr, noplt);
     }
-
-  /* Perform the specified relocation.  */
   elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)], resolve);
 
+  *_dl_global_scope_end = NULL;
+
+  /* Return the address that was written by the relocation.  */
   return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
 }
 

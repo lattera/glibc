@@ -75,13 +75,6 @@ _dl_start (void *arg)
   /* Relocate ourselves so we can do normal function calls and
      data access using the global offset table.  */
 
-  /* We must initialize `l_type' to make sure it is not `lt_interpreter'.
-     That is the type to describe us, but not during bootstrapping--it
-     indicates to elf_machine_rel{,a} that we were already relocated during
-     bootstrapping, so it must anti-perform each bootstrapping relocation
-     before applying the final relocation when ld.so is linked in as
-     normal a shared library.  */
-  bootstrap_map.l_type = lt_library;
   ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, NULL);
 
 
@@ -178,7 +171,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       --_dl_argc;
       ++_dl_argv;
 
-      l = _dl_map_object (NULL, _dl_argv[0]);
+      l = _dl_map_object (NULL, _dl_argv[0], lt_library);
       phdr = l->l_phdr;
       phent = l->l_phnum;
       l->l_name = (char *) "";
@@ -188,7 +181,7 @@ of this helper program; chances are you did not intend to run this program.\n",
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      l = _dl_new_object ((char *) "", "", lt_executable);
+      l = _dl_new_object ((char *) "", "", lt_library);
       l->l_phdr = phdr;
       l->l_phnum = phent;
       interpreter_name = 0;
@@ -245,7 +238,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  */
   _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname = interpreter_name;
-  _dl_rtld_map.l_type = lt_interpreter;
+  _dl_rtld_map.l_type = lt_library;
   while (l->l_next)
     l = l->l_next;
   l->l_next = &_dl_rtld_map;
@@ -293,9 +286,9 @@ of this helper program; chances are you did not intend to run this program.\n",
       for (i = 1; i < _dl_argc; ++i)
 	{
 	  const ElfW(Sym) *ref = NULL;
-	  struct link_map *scope[2] ={ _dl_loaded, NULL };
-	  ElfW(Addr) loadbase
-	    = _dl_lookup_symbol (_dl_argv[i], &ref, scope, "argument", 0, 0);
+	  ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
+						   &_dl_default_scope[2],
+						   "argument", 0, 0);
 	  char buf[20], *bp;
 	  buf[sizeof buf - 1] = '\0';
 	  bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
@@ -314,35 +307,41 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
-  /* Now we have all the objects loaded.  Relocate them all except for
-     the dynamic linker itself.  We do this in reverse order so that
-     copy relocs of earlier objects overwrite the data written by later
-     objects.  We do not re-relocate the dynamic linker itself in this
-     loop because that could result in the GOT entries for functions we
-     call being changed, and that would break us.  It is safe to
-     relocate the dynamic linker out of order because it has no copy
-     relocs (we know that because it is self-contained).  */
-  l = _dl_loaded;
-  while (l->l_next)
-    l = l->l_next;
-  do
-    {
-      if (l != &_dl_rtld_map)
-	_dl_relocate_object (l, lazy);
-      l = l->l_prev;
-    } while (l);
+  {
+    /* Now we have all the objects loaded.  Relocate them all except for
+       the dynamic linker itself.  We do this in reverse order so that copy
+       relocs of earlier objects overwrite the data written by later
+       objects.  We do not re-relocate the dynamic linker itself in this
+       loop because that could result in the GOT entries for functions we
+       call being changed, and that would break us.  It is safe to relocate
+       the dynamic linker out of order because it has no copy relocs (we
+       know that because it is self-contained).  */
 
-  /* Do any necessary cleanups for the startup OS interface code.
-     We do these now so that no calls are made after rtld re-relocation
-     which might be resolved to different functions than we expect.
-     We cannot do this before relocating the other objects because
-     _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
-  _dl_sysdep_start_cleanup ();
+    l = _dl_loaded;
+    while (l->l_next)
+      l = l->l_next;
+    do
+      {
+	if (l != &_dl_rtld_map)
+	  {
+	    _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy);
+	    *_dl_global_scope_end = NULL;
+	  }
+	l = l->l_prev;
+      } while (l);
 
-  if (_dl_rtld_map.l_opencount > 0)
-    /* There was an explicit ref to the dynamic linker as a shared lib.
-       Re-relocate ourselves with user-controlled symbol definitions.  */
-    _dl_relocate_object (&_dl_rtld_map, lazy);
+    /* Do any necessary cleanups for the startup OS interface code.
+       We do these now so that no calls are made after rtld re-relocation
+       which might be resolved to different functions than we expect.
+       We cannot do this before relocating the other objects because
+       _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
+    _dl_sysdep_start_cleanup ();
+
+    if (_dl_rtld_map.l_opencount > 0)
+      /* There was an explicit ref to the dynamic linker as a shared lib.
+	 Re-relocate ourselves with user-controlled symbol definitions.  */
+      _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0);
+  }
 
   /* Tell the debugger where to find the map of loaded objects.  */
   _dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;

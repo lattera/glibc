@@ -50,7 +50,7 @@ _dl_elf_hash (const char *name)
 
 ElfW(Addr)
 _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
-		   struct link_map *symbol_scope[2],
+		   struct link_map *symbol_scope[],
 		   const char *reference_name,
 		   ElfW(Addr) reloc_addr,
 		   int noplt)
@@ -65,69 +65,68 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
   struct link_map **scope, *map;
 
   /* Search the relevant loaded objects for a definition.  */
-  for (scope = symbol_scope; scope < &symbol_scope[2]; ++scope)
-    if (*scope)
-      for (i = 0; i < (*scope)->l_nsearchlist; ++i)
-	{
-	  const ElfW(Sym) *symtab;
-	  const char *strtab;
-	  ElfW(Word) symidx;
+  for (scope = symbol_scope; *scope; ++scope)
+    for (i = 0; i < (*scope)->l_nsearchlist; ++i)
+      {
+	const ElfW(Sym) *symtab;
+	const char *strtab;
+	ElfW(Word) symidx;
 
-	  map = (*scope)->l_searchlist[i];
+	map = (*scope)->l_searchlist[i];
 
-	  symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-	  strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+	symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+	strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
 
-	  /* Search the appropriate hash bucket in this object's symbol table
-	     for a definition for the same symbol name.  */
-	  for (symidx = map->l_buckets[hash % map->l_nbuckets];
-	       symidx != STN_UNDEF;
-	       symidx = map->l_chain[symidx])
-	    {
-	      const ElfW(Sym) *sym = &symtab[symidx];
+	/* Search the appropriate hash bucket in this object's symbol table
+	   for a definition for the same symbol name.  */
+	for (symidx = map->l_buckets[hash % map->l_nbuckets];
+	     symidx != STN_UNDEF;
+	     symidx = map->l_chain[symidx])
+	  {
+	    const ElfW(Sym) *sym = &symtab[symidx];
 
-	      if (sym->st_value == 0 || /* No value.  */
-		  /* Cannot resolve to the location being filled in.  */
-		  reloc_addr == map->l_addr + sym->st_value ||
-		  (noplt && sym->st_shndx == SHN_UNDEF)) /* Reject PLT.  */
+	    if (sym->st_value == 0 || /* No value.  */
+		/* Cannot resolve to the location being filled in.  */
+		reloc_addr == map->l_addr + sym->st_value ||
+		(noplt && sym->st_shndx == SHN_UNDEF)) /* Reject PLT.  */
+	      continue;
+
+	    switch (ELFW(ST_TYPE) (sym->st_info))
+	      {
+	      case STT_NOTYPE:
+	      case STT_FUNC:
+	      case STT_OBJECT:
+		break;
+	      default:
+		/* Not a code/data definition.  */
 		continue;
+	      }
 
-	      switch (ELFW(ST_TYPE) (sym->st_info))
-		{
-		case STT_NOTYPE:
-		case STT_FUNC:
-		case STT_OBJECT:
-		  break;
-		default:
-		  /* Not a code/data definition.  */
-		  continue;
-		}
+	    if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
+	      /* Not the symbol we are looking for.  */
+	      continue;
 
-	      if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
-		/* Not the symbol we are looking for.  */
-		continue;
-
-	      switch (ELFW(ST_BIND) (sym->st_info))
-		{
-		case STB_GLOBAL:
-		  /* Global definition.  Just what we need.  */
-		  *ref = sym;
-		  return map->l_addr;
-		case STB_WEAK:
-		  /* Weak definition.  Use this value if we don't find
-		     another.  */
-		  if (! weak_value.s)
-		    {
-		      weak_value.s = sym;
-		      weak_value.a = map->l_addr;
-		    }
-		  break;
-		default:
-		  /* Local symbols are ignored.  */
-		  break;
-		}
-	    }
-	}
+	    switch (ELFW(ST_BIND) (sym->st_info))
+	      {
+	      case STB_GLOBAL:
+		/* Global definition.  Just what we need.  */
+		*ref = sym;
+		return map->l_addr;
+	      case STB_WEAK:
+		/* Weak definition.  Use this value if we don't find
+		   another.  */
+		if (! weak_value.s)
+		  {
+		    weak_value.s = sym;
+		    weak_value.a = map->l_addr;
+		  }
+		break;
+	      default:
+		/* Local symbols are ignored.  */
+		break;
+	      }
+	  }
+      }
 
   if (weak_value.s == NULL && ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
     {

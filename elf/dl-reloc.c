@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 
 
 void
-_dl_relocate_object (struct link_map *l, int lazy)
+_dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 {
   if (l->l_relocated)
     return;
@@ -52,44 +52,26 @@ _dl_relocate_object (struct link_map *l, int lazy)
     }
 
   {
-    struct link_map *scope[2];
+    /* Do the actual relocation of the object's GOT and other data.  */
 
-    const char *strtab
+    const char *strtab		/* String table object symbols.  */
       = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-
     ElfW(Addr) resolve (const ElfW(Sym) **ref,
 			ElfW(Addr) reloc_addr, int noplt)
       {
+	/* Look up the referenced symbol in the specified scope.  */
 	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,
 				  l->l_name, reloc_addr, noplt);
       }
 
-    if (l->l_info[DT_SYMBOLIC])
-      {
-	scope[0] = l;
-	scope[1] = _dl_loaded;
-      }
-    else
-      {
-	scope[0] = _dl_loaded;
-	scope[1] = l;
-      }
-
-    if (l->l_type == lt_interpreter)
-      /* We cannot be lazy when relocating the dynamic linker itself.  It
-	 was previously relocated eagerly (allowing us to be running now),
-	 and needs always to be fully relocated so it can run without the
-	 aid of run-time fixups (because it's the one to do them), so we
-	 must always re-relocate its PLT eagerly.  */
-      lazy = 0;
-
     ELF_DYNAMIC_RELOCATE (l, lazy, resolve);
   }
 
-  /* Set up the PLT so its unrelocated entries will
-     jump to _dl_runtime_resolve, which will relocate them.  */
+  /* Set up the PLT so its unrelocated entries will jump to
+     _dl_runtime_resolve (dl-runtime.c), which will relocate them.  */
   elf_machine_runtime_setup (l, lazy);
 
+  /* Mark the object so we know ths work has been done.  */
   l->l_relocated = 1;
 
   if (l->l_info[DT_TEXTREL])
@@ -114,5 +96,4 @@ _dl_relocate_object (struct link_map *l, int lazy)
 				"can't restore segment prot after reloc");
 	  }
     }
-
 }

@@ -106,6 +106,9 @@ struct link_map
     struct link_map **l_searchlist;
     unsigned int l_nsearchlist;
 
+    /* Dependent object that first caused this object to be loaded.  */
+    struct link_map *l_loader;
+
     /* Symbol hash table.  */
     ElfW(Word) l_nbuckets;
     const ElfW(Word) *l_buckets, *l_chain;
@@ -114,14 +117,14 @@ struct link_map
     enum			/* Where this object came from.  */
       {
 	lt_executable,		/* The main executable program.  */
-	lt_interpreter,		/* The interpreter: the dynamic linker.  */
 	lt_library,		/* Library needed by main executable.  */
 	lt_loaded,		/* Extra run-time loaded shared object.  */
       } l_type:2;
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_init_running:1; /* Nonzero while DT_INIT function runs.  */
-    unsigned int l_reserved:3;	/* Reserved for internal use.  */
+    unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
+    unsigned int l_reserved:2;	/* Reserved for internal use.  */
   };
 
 /* Internal functions of the run-time dynamic linker.
@@ -188,12 +191,7 @@ extern int _dlerror_run (void (*operate) (void));
    LOADER's DT_RPATH is used in searching for NAME.
    If the object is already opened, returns its existing map.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
-					const char *name);
-
-/* Similar, but file found at REALNAME and opened on FD.
-   REALNAME must malloc'd storage and is used in internal data structures.  */
-extern struct link_map *_dl_map_object_from_fd (const char *name,
-						int fd, char *realname);
+					const char *name, int type);
 
 /* Call _dl_map_object on the dependencies of MAP, and
    set up MAP->l_searchlist.  */
@@ -210,21 +208,24 @@ extern void _dl_setup_hash (struct link_map *map);
 extern struct link_map *_dl_open (struct link_map *loader,
 				  const char *name, int mode);
 
+/* Close an object previously opened by _dl_open.  */
+extern void _dl_close (struct link_map *map);
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    referred to by UNDEF.  *SYM is the symbol table entry containing the
    reference; it is replaced with the defining symbol, and the base load
-   address of the defining object is returned.  Each of SYMBOL_SCOPE[0] and
-   SYMBOL_SCOPE[1] that is not null and their dependencies are searched to
-   resolve the name.  REFERENCE_NAME should name the object containing the
-   reference; it is used in error messages.  RELOC_ADDR is the address
-   being fixed up and the chosen symbol cannot be one with this value.  If
-   NOPLT is nonzero, then the reference must not be resolved to a PLT
-   entry.  */
+   address of the defining object is returned.  SYMBOL_SCOPE is a
+   null-terminated list of object scopes to search; each object's
+   l_searchlist (i.e. the segment of the dependency tree starting at that
+   object) is searched in turn.  REFERENCE_NAME should name the object
+   containing the reference; it is used in error messages.  RELOC_ADDR is
+   the address being fixed up and the chosen symbol cannot be one with this
+   value.  If NOPLT is nonzero, then the reference must not be resolved to
+   a PLT entry.  */
 extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const ElfW(Sym) **sym,
-				     struct link_map *symbol_scope[2],
+				     struct link_map *symbol_scope[],
 				     const char *reference_name,
 				     ElfW(Addr) reloc_addr,
 				     int noplt);
@@ -236,11 +237,33 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);
 /* Structure describing the dynamic linker itself.  */
 extern struct link_map _dl_rtld_map;
 
-/* List of objects currently loaded.  */
-extern struct link_map *_dl_loaded;
+/* The list of objects currently loaded is the third element of the
+   `_dl_default_scope' array, and the fourth element is always null.
+   This leaves two slots before it that are used when resolving
+   DT_SYMBOLIC objects' references one after it for normal references
+   (see below).  */
+#define _dl_loaded	(_dl_default_scope[2])
+extern struct link_map *_dl_default_scope[5];
 
-/* Tail of that list which were loaded at startup.  */
-extern struct link_map *_dl_startup_loaded;
+/* Null-terminated list of objects in the dynamic `global scope'.  The
+   list starts at [2]; i.e. &_dl_global_scope[2] is the argument
+   passed to _dl_lookup_symbol to search the global scope.  To search
+   a specific object and its dependencies in preference to the global
+   scope, fill in the [1] slot and pass its address; for two specific
+   object scopes, fill [0] and [1].  The list is double-terminated; to
+   search the global scope and then a specific object and its
+   dependencies, set *_dl_global_scope_end.  This variable initially
+   points to _dl_default_scope, and _dl_loaded is always kept in [2]
+   of this list.  A new list is malloc'd when new objects are loaded
+   with RTLD_GLOBAL.  */
+extern struct link_map **_dl_global_scope, **_dl_global_scope_end;
+extern size_t _dl_global_scope_alloc; /* Number of slots malloc'd.  */
+
+/* Hack _dl_global_scope[0] and [1] as necessary, and return a pointer into
+   _dl_global_scope that should be passed to _dl_lookup_symbol for symbol
+   references made in the object MAP's relocations.  */
+extern struct link_map **_dl_object_relocation_scope (struct link_map *map);
+
 
 /* Allocate a `struct link_map' for a new object being loaded,
    and enter it into the _dl_loaded list.  */
@@ -248,8 +271,11 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
 					int type);
 
 /* Relocate the given object (if it hasn't already been).
+   SCOPE is passed to _dl_lookup_symbol in symbol lookups.
    If LAZY is nonzero, don't relocate its PLT.  */
-extern void _dl_relocate_object (struct link_map *map, int lazy);
+extern void _dl_relocate_object (struct link_map *map,
+				 struct link_map *scope[],
+				 int lazy);
 
 /* Return the address of the next initializer function for MAP or one of
    its dependencies that has not yet been run.  When there are no more

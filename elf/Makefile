@@ -21,7 +21,8 @@
 subdir		:= elf
 
 headers		= elf.h elfclass.h link.h dlfcn.h
-routines	= init-first $(dl-routines) dl-open dl-symbol dl-support
+routines	= init-first $(dl-routines) \
+		  dl-open dl-close dl-symbol dl-support
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -54,7 +55,7 @@ install-bin	= ldd
 # to run programs during the `make others' pass.
 lib-noranlib: $(objpfx)ld.so $(addprefix $(objpfx),$(extra-objs))
 
-ifneq (,$(filter linux%,$(config-os)))
+ifneq (,$(filter linux% linux,$(config-os)))
 extra-objs	+= linux-compat.so
 install-others	+= $(slibdir)/ld-linux.so.1
 lib-noranlib: $(objpfx)ld-linux.so.1
@@ -75,7 +76,7 @@ $(objpfx)dl-allobjs.so: $(rtld-routines:%=$(objpfx)%.so)
 # dynamic linker shared objects below.
 $(objpfx)librtld.so: $(objpfx)dl-allobjs.so \
 		     $(patsubst %,$(common-objpfx)lib%_pic.a,\
-				elf c $(LDLIBS-c.so:-l%=%))
+				c $(LDLIBS-c.so:-l%=%))
 	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so: $(objpfx)librtld.so

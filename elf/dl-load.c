@@ -63,152 +63,14 @@ int _dl_zerofd = -1;
 size_t _dl_pagesize;
 
 
-/* Try to open NAME in one of the directories in DIRPATH.
-   Return the fd, or -1.  If successful, fill in *REALNAME
-   with the malloc'd full directory name.  */
-
-static int
-open_path (const char *name, size_t namelen,
-	   const char *dirpath,
-	   char **realname)
-{
-  char *buf;
-  const char *p;
-  int fd;
-
-  p = dirpath;
-  if (p == NULL || *p == '\0')
-    {
-      errno = ENOENT;
-      return -1;
-    }
-
-  buf = __alloca (strlen (dirpath) + 1 + namelen);
-  do
-    {
-      size_t buflen;
-
-      dirpath = p;
-      p = strpbrk (dirpath, ":;");
-      if (p == NULL)
-	p = strchr (dirpath, '\0');
-
-      if (p == dirpath)
-	{
-	  /* Two adjacent colons, or a colon at the beginning or the end of
-	     the path means to search the current directory.  */
-	  (void) memcpy (buf, name, namelen);
-	  buflen = namelen;
-	}
-      else
-	{
-	  /* Construct the pathname to try.  */
-	  (void) memcpy (buf, dirpath, p - dirpath);
-	  buf[p - dirpath] = '/';
-	  (void) memcpy (&buf[(p - dirpath) + 1], name, namelen);
-	  buflen = p - dirpath + 1 + namelen;
-	}
-
-      fd = __open (buf, O_RDONLY);
-      if (fd != -1)
-	{
-	  *realname = malloc (buflen);
-	  if (*realname)
-	    {
-	      memcpy (*realname, buf, buflen);
-	      return fd;
-	    }
-	  else
-	    {
-	      /* No memory for the name, we certainly won't be able
-		 to load and link it.  */
-	      __close (fd);
-	      return -1;
-	    }
-	}
-      if (errno != ENOENT && errno != EACCES)
-	/* The file exists and is readable, but something went wrong.  */
-	return -1;
-    }
-  while (*p++ != '\0');
-
-  return -1;
-}
-
-/* Map in the shared object file NAME.  */
-
-struct link_map *
-_dl_map_object (struct link_map *loader, const char *name)
-{
-  int fd;
-  char *realname;
-  struct link_map *l;
-
-  /* Look for this name among those already loaded.  */
-  for (l = _dl_loaded; l; l = l->l_next)
-    if (! strcmp (name, l->l_libname))
-      {
-	/* The object is already loaded.
-	   Just bump its reference count and return it.  */
-	++l->l_opencount;
-	return l;
-      }
-
-  if (strchr (name, '/') == NULL)
-    {
-      /* Search for NAME in several places.  */
-
-      size_t namelen = strlen (name) + 1;
-
-      inline void trypath (const char *dirpath)
-	{
-	  fd = open_path (name, namelen, dirpath, &realname);
-	}
-
-      fd = -1;
-      if (loader && loader->l_info[DT_RPATH])
-	trypath ((const char *) (loader->l_addr +
-				 loader->l_info[DT_STRTAB]->d_un.d_ptr +
-				 loader->l_info[DT_RPATH]->d_un.d_val));
-      if (fd == -1 && ! _dl_secure)
-	trypath (getenv ("LD_LIBRARY_PATH"));
-      if (fd == -1)
-	{
-	  extern const char *_dl_rpath;	/* Set in rtld.c. */
-	  trypath (_dl_rpath);
-	}
-    }
-  else
-    {
-      fd = __open (name, O_RDONLY);
-      if (fd != -1)
-	{
-	  size_t len = strlen (name) + 1;
-	  realname = malloc (len);
-	  if (realname)
-	    memcpy (realname, name, len);
-	  else
-	    {
-	      __close (fd);
-	      fd = -1;
-	    }
-	}
-    }
-
-  if (fd == -1)
-    _dl_signal_error (errno, name, "cannot open shared object file");
-
-  return _dl_map_object_from_fd (name, fd, realname);
-}
-
-
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
 
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, char *realname)
+_dl_map_object_from_fd (const char *name, int fd, char *realname,
+			struct link_map *loader, int l_type)
 {
-  struct link_map *l = NULL;
+  struct link_map *l;
   void *file_mapping = NULL;
   size_t mapping_size = 0;
 
@@ -218,7 +80,17 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
       (void) __close (fd);
       if (file_mapping)
 	__munmap (file_mapping, mapping_size);
-      _dl_signal_error (code, l ? l->l_name : name, msg);
+      if (l)
+	{
+	  /* Remove the stillborn object from the list and free it.  */
+	  if (l->l_prev)
+	    l->l_prev->l_next = l->l_next;
+	  if (l->l_next)
+	    l->l_next->l_prev = l->l_prev;
+	  free (l);
+	}
+      free (realname);
+      _dl_signal_error (code, name, msg);
     }
 
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
@@ -304,16 +176,22 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   if (header->e_phentsize != sizeof (ElfW(Phdr)))
     LOSE ("ELF file's phentsize not the expected size");
 
-  /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, lt_loaded);
-  l->l_opencount = 1;
-
   if (_dl_zerofd == -1)
     {
       _dl_zerofd = _dl_sysdep_open_zero_fill ();
       if (_dl_zerofd == -1)
-	_dl_signal_error (errno, NULL, "cannot open zero fill device");
+	{
+	  __close (fd);
+	  _dl_signal_error (errno, NULL, "cannot open zero fill device");
+	}
     }
+
+  /* Enter the new object in the list of loaded objects.  */
+  l = _dl_new_object (realname, name, l_type);
+  if (! l)
+    lose (ENOMEM, "cannot create shared object descriptor");
+  l->l_opencount = 1;
+  l->l_loader = loader;
 
   /* Extract the remaining details we need from the ELF header
      and then map in the program header table.  */
@@ -464,7 +342,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   __close (fd);
 
-  l->l_type = type == ET_EXEC ? lt_executable : lt_library;
+  if (l->l_type == lt_library && type == ET_EXEC)
+    l->l_type = lt_executable;
 
   if (l->l_ld == 0)
     {
@@ -483,4 +362,143 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
     _dl_setup_hash (l);
 
   return l;
+}
+
+/* Try to open NAME in one of the directories in DIRPATH.
+   Return the fd, or -1.  If successful, fill in *REALNAME
+   with the malloc'd full directory name.  */
+
+static int
+open_path (const char *name, size_t namelen,
+	   const char *dirpath,
+	   char **realname)
+{
+  char *buf;
+  const char *p;
+  int fd;
+
+  p = dirpath;
+  if (p == NULL || *p == '\0')
+    {
+      errno = ENOENT;
+      return -1;
+    }
+
+  buf = __alloca (strlen (dirpath) + 1 + namelen);
+  do
+    {
+      size_t buflen;
+
+      dirpath = p;
+      p = strpbrk (dirpath, ":;");
+      if (p == NULL)
+	p = strchr (dirpath, '\0');
+
+      if (p == dirpath)
+	{
+	  /* Two adjacent colons, or a colon at the beginning or the end of
+	     the path means to search the current directory.  */
+	  (void) memcpy (buf, name, namelen);
+	  buflen = namelen;
+	}
+      else
+	{
+	  /* Construct the pathname to try.  */
+	  (void) memcpy (buf, dirpath, p - dirpath);
+	  buf[p - dirpath] = '/';
+	  (void) memcpy (&buf[(p - dirpath) + 1], name, namelen);
+	  buflen = p - dirpath + 1 + namelen;
+	}
+
+      fd = __open (buf, O_RDONLY);
+      if (fd != -1)
+	{
+	  *realname = malloc (buflen);
+	  if (*realname)
+	    {
+	      memcpy (*realname, buf, buflen);
+	      return fd;
+	    }
+	  else
+	    {
+	      /* No memory for the name, we certainly won't be able
+		 to load and link it.  */
+	      __close (fd);
+	      return -1;
+	    }
+	}
+      if (errno != ENOENT && errno != EACCES)
+	/* The file exists and is readable, but something went wrong.  */
+	return -1;
+    }
+  while (*p++ != '\0');
+
+  return -1;
+}
+
+/* Map in the shared object file NAME.  */
+
+struct link_map *
+_dl_map_object (struct link_map *loader, const char *name, int type)
+{
+  int fd;
+  char *realname;
+  struct link_map *l;
+
+  /* Look for this name among those already loaded.  */
+  for (l = _dl_loaded; l; l = l->l_next)
+    if (! strcmp (name, l->l_libname))
+      {
+	/* The object is already loaded.
+	   Just bump its reference count and return it.  */
+	++l->l_opencount;
+	return l;
+      }
+
+  if (strchr (name, '/') == NULL)
+    {
+      /* Search for NAME in several places.  */
+
+      size_t namelen = strlen (name) + 1;
+
+      inline void trypath (const char *dirpath)
+	{
+	  fd = open_path (name, namelen, dirpath, &realname);
+	}
+
+      fd = -1;
+      for (l = loader; l; l = l->l_loader)
+	if (l && l->l_info[DT_RPATH])
+	  trypath ((const char *) (l->l_addr +
+				   l->l_info[DT_STRTAB]->d_un.d_ptr +
+				   l->l_info[DT_RPATH]->d_un.d_val));
+      if (fd == -1 && ! _dl_secure)
+	trypath (getenv ("LD_LIBRARY_PATH"));
+      if (fd == -1)
+	{
+	  extern const char *_dl_rpath;	/* Set in rtld.c. */
+	  trypath (_dl_rpath);
+	}
+    }
+  else
+    {
+      fd = __open (name, O_RDONLY);
+      if (fd != -1)
+	{
+	  size_t len = strlen (name) + 1;
+	  realname = malloc (len);
+	  if (realname)
+	    memcpy (realname, name, len);
+	  else
+	    {
+	      __close (fd);
+	      fd = -1;
+	    }
+	}
+    }
+
+  if (fd == -1)
+    _dl_signal_error (errno, name, "cannot open shared object file");
+
+  return _dl_map_object_from_fd (name, fd, realname, loader, type);
 }

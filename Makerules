@@ -496,7 +496,7 @@ LDFLAGS-c.so += -e __libc_print_version
 elfobjdir := $(firstword $(objdir) $(..)elf)
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
-			 $(elfobjdir)/sofini.so
+			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so
 	$(build-shlib)
 
 ifdef libc.so-version

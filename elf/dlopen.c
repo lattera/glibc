@@ -28,7 +28,7 @@ dlopen (const char *file, int mode)
 
   void doit (void)
     {
-      new = _dl_open (_dl_loaded, file, mode);
+      new = _dl_open (_dl_loaded, file ?: "", mode);
     }
 
   return _dlerror_run (doit) ? NULL : new;

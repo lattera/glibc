@@ -100,7 +100,7 @@ elf_machine_rel (struct link_map *map,
       *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_32:
-      if (map->l_type == lt_interpreter)
+      if (resolve && map == &_dl_rtld_map)
 	{
 	  /* Undo the relocation done here during bootstrapping.  Now we will
 	     relocate it anew, possibly using a binding found in the user
@@ -117,7 +117,7 @@ elf_machine_rel (struct link_map *map,
       *reloc_addr += sym ? (loadbase + sym->st_value) : 0;
       break;
     case R_386_RELATIVE:
-      if (map->l_type != lt_interpreter) /* Already done in dynamic linker.  */
+      if (!resolve || map != &_dl_rtld_map) /* Already done in rtld itself.  */
 	*reloc_addr += map->l_addr;
       break;
     case R_386_PC32:
@@ -229,9 +229,9 @@ _dl_start_user:\n\
 	leal (%esp,%eax,4), %esp\n\
 	# Push back the modified argument count.\n\
 	pushl %ecx\n\
-	# Push _dl_loaded as argument in _dl_init_next call below.\n\
-	movl _dl_loaded@GOT(%ebx), %eax\n\
-	movl (%eax), %esi\n\
+	# Push _dl_default_scope[2] as argument in _dl_init_next call below.\n\
+	movl _dl_default_scope@GOT(%ebx), %eax\n\
+	movl 8(%eax), %esi\n\
 0:	pushl %esi\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\

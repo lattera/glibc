@@ -1,5 +1,89 @@
 Mon Jun 10 06:14:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules ($(common-objpfx)libc.so): Depend on $(elfobjdir)/ld.so.
+
+	* elf/dl-close.c: New file.
+	* elf/link.h: Declare _dl_close.
+	* elf/Makefile (routines): Add dl-close.
+	* elf/dlclose.c (dlclose): Use _dl_close.
+
+	* elf/Makefile ($(objpfx)librtld.so): Remove libelf from deps.
+
+	* elf/dl-runtime.c (_dl_global_scope): New variable.
+	(_dl_object_relocation_scope): New function.
+	(fixup): Use it.
+	* elf/rtld.c (dl_main): Use it.
+	* elf/dl-open.c (_dl_open): Use it.  If (MODE & RTLD_GLOBAL), set the
+	l_global bit and append the new map to _dl_global_scope.
+	* elf/link.h: Declare _dl_global_scope, _dl_global_scope_alloc,
+	and _dl_object_relocation_scope.
+
+	* elf/link.h (struct link_map): Add l_loader member.
+	Remove _dl_map_object_from_fd decl.
+	* elf/dl-load.c (_dl_map_object): Pass LOADER to ...
+	(_dl_map_object_from_fd): Take new arg LOADER and set l_loader member.
+	(_dl_map_object): Try DT_RPATH from all loaders up the chain.
+
+	* elf/dl-object.c (_dl_loaded): Variable removed.
+	(_dl_default_scope): New variable replaces it.
+	* elf/link.h (_dl_loaded): Remove variable decl; instead define as
+	macro for _dl_default_scope[2].
+	(_dl_default_scope): Declare it.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Use _dl_default_scope[2]
+	instead of _dl_loaded.
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Likewise.
+	* elf/rtld.c (dl_main): Use _dl_default_scope for symbol lookups.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Remove check for _dl_rtld_map.
+	* elf/rtld.c (dl_main): Pass 0 for LAZY flag when re-relocating self.
+
+	* elf/link.h (struct link_map.l_type): Remove lt_interpreter.
+ 	(struct link_map): Add new flag member l_global.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Check for _dl_rtld_map
+	directly instead of looking for lt_interpreter.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	* elf/rtld.c (_dl_start): Don't bother setting BOOTSTRAP_MAP.l_type.
+	(dl_main): Set _dl_rtld_map.l_type to lt_library.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Propagate MAP->l_type to
+	dependencies loaded, downgrading lt_executable -> lt_library.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Take new arg TYPE and set
+	l_type from that, translating lt_library->lt_executable based on the
+	file's ELF type.
+	(_dl_map_object): Likewise.
+	* elf/link.h: Update prototypes.
+	* elf/dl-open.c: Pass type lt_loaded.
+	* elf/rtld.c: Pass type lt_library.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Handle null return from
+	_dl_new_object.
+	(_dl_map_object_from_fd: lose): Unchain and free L if it's not null.
+	Free REALNAME, and just use NAME in error message.
+	* elf/dl-object.c (_dl_new_object): If malloc fails, return null
+	instead of calling _dl_signal_error.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Close FD before signalling
+	error for _dl_zerofd setup failure.
+
+	* elf/dl-object.c (_dl_startup_loaded): Variable removed.
+	* elf/link.h: Remove its decl.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Take new SCOPE arg and pass it
+	through to _dl_lookup_symbol.
+	* elf/link.h (_dl_relocate_object): Update comment and prototype.
+	* elf/rtld.c (dl_main): Pass scope vector to _dl_relocate_object.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Arg SYMBOL_SCOPE is now a
+	null-terminated vector of pointers, no longer a vector of exactly two.
+	* elf/link.h (_dl_lookup_symbol): Update comment and prototype.
+
+	* elf/dl-runtime.c (fixup): Set up scope for symbol lookup properly as
+	done in _dl_relocate_object.
+
+	* elf/dlopen.c: Pass "" to _dl_open when FILE is null.
+
 	* elf/link.h: Include elfclass.h to define __ELF_NATIVE_CLASS.
 	(ElfW, ELFW): Use it.
 	* elf/Makefile (headers): Add elfclass.h.

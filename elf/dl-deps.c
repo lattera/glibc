@@ -62,7 +62,9 @@ _dl_map_object_deps (struct link_map *map)
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep
-		  = _dl_map_object (l, strtab + d->d_un.d_val);
+		  = _dl_map_object (l, strtab + d->d_un.d_val,
+				    l->l_type == lt_executable ? lt_library :
+				    l->l_type);
 
 		if (dep->l_reserved)
 		  /* This object is already in the search list we are
