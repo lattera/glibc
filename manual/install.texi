@@ -350,20 +350,11 @@ floating-point support that may be triggered by the math library.
 Check the FAQ for any special compiler issues on particular platforms.
 
 @item
-GNU @code{binutils} 2.10.1 or later
+GNU @code{binutils} 2.13 or later
 
-You must use GNU @code{binutils} (as and ld) if you want to build a shared
-library.  Even if you don't want to build a shared library, we recommend
-you use them anyway.  No one has tested compilation with non-GNU
-@code{binutils} in a long time.
-
-The quality of @code{binutils} releases has varied a bit recently.  The
-bugs are in obscure features, but glibc uses quite a few of those.  2.10.1
-and later releases are known to work.  Versions after 2.8.1.0.23 may or
-may not work.  Older versions definitely don't.
-
-For PPC you might need some patches even on top of the last
-@code{binutils} version.  See the FAQ.
+You must use GNU @code{binutils} (as and ld) to build the GNU C library.
+No other assembler and linker has the necessary functionality in the
+moment.
 
 @item
 GNU @code{texinfo} 3.12f
