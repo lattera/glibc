@@ -1,3 +1,8 @@
+2001-08-15  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m68020/atomicity.h (atomic_add): Don't allow
+	address register for operand 0.
+
 2001-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/perror.c (perror): Use _IO_fwide instead of fwide.
