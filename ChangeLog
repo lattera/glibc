@@ -1,3 +1,17 @@
+Mon Nov 13 15:23:01 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/malloc.c (morecore): Fix inverted test in allocating new
+	info table.
+
+	* malloc/malloc.c (align): Fix assertion.
+
+	* malloc/malloc.c: Include assert.h.
+
+	* libc-symbols.h: Use __attribute__ for GCC 2.8, not 2.7.
+
+	* malloc/malloc.h [emacs] (emacs_loser_valloc): Macro removed.
+	(valloc): Protect decl with [! (_MALLOC_INTERNAL && emacs)].
+
 Fri Nov 10 14:15:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* malloc/malloc.c (align): Assert that space for alignment

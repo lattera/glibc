@@ -156,8 +156,8 @@ extern const char _libc_intl_domainname[];
 
 
 #if (!defined (ASSEMBLER) && \
-     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
-/* GCC 2.7 and later has special syntax for weak symbols and aliases.
+     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 8)))
+/* GCC 2.8 and later has special syntax for weak symbols and aliases.
    Using that is better when possible, because the compiler and assembler
    are better clued in to what we are doing.  */
 #undef	strong_alias
@@ -172,7 +172,7 @@ extern const char _libc_intl_domainname[];
 #define weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 #endif	/* HAVE_WEAK_SYMBOLS.  */
-#endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
+#endif	/* Not ASSEMBLER, and GCC 2.8 or later.  */
 
 
 
