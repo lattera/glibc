@@ -134,31 +134,37 @@ $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
 $(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))
 
-.PHONY: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans \
-	do-tst-mbswcs do-tst-ctype
-tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans \
-       do-tst-mbswcs do-tst-ctype
-do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
-		 $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(test-input)
-do-tst-fmon: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data do-collate-test \
-	     $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' tst-fmon.data
-do-tst-locale: tst-locale.sh $(common-objpfx)locale/localedef $(ld-test-srcs) \
-	       $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
-do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-tst-fmon \
-		$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
-do-tst-trans: tst-trans.sh $(objpfx)tst-trans \
-	      $(addprefix $(objpfx),$(CTYPE_FILES))
+tests: $(objpfx)sort-test.out $(objpfx)tst-fmon.out $(objpfx)tst-locale.out \
+       $(objpfx)tst-rpmatch.out $(objpfx)tst-trans.out \
+       $(objpfx)tst-mbswcs.out $(objpfx)tst-ctype.out
+
+$(objpfx)sort-test.out: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
+		       $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(test-input) \
+	  > $@
+$(objpfx)tst-fmon.out: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data \
+		       $(objpfx)sort-test.out \
+		       $(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' tst-fmon.data \
+	  > $@
+$(objpfx)tst-locale.out: tst-locale.sh $(common-objpfx)locale/localedef \
+			 $(ld-test-srcs) $(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)' > $@
+$(objpfx)tst-rpmatch.out: tst-rpmatch.sh $(objpfx)tst-rpmatch \
+			  $(objpfx)tst-fmon.out \
+			  $(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)' > $@
+$(objpfx)tst-trans.out: tst-trans.sh $(objpfx)tst-trans \
+			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'
-do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
-	       $(objpfx)tst-mbswcs3 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5 \
-	       $(addprefix $(objpfx),$(CTYPE_FILES))
+$(objpfx)tst-mbswcs.out: tst-mbswcs.sh $(objpfx)tst-mbswcs1 \
+			 $(objpfx)tst-mbswcs2 $(objpfx)tst-mbswcs3 \
+			 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5 \
+			 $(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'
-do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test \
-	      $(addprefix $(objpfx),$(CTYPE_FILES))
+$(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
+			$(objpfx)sort-test.out \
+			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 endif
 

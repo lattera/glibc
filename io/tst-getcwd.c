@@ -120,11 +120,19 @@ getcwd (NULL, sbs) = \"%s\", getcwd (thepath, sizeof thepath) = \"%s\"\n",
       free (bufs[2]);
     }
 
+  memset (thepath, '\xfe', sizeof (thepath));
   if (getcwd (thepath, len) != NULL)
     {
       puts ("getcwd (thepath, len) didn't failed");
       return 1;
     }
+
+  for (i = len; i < sizeof thepath; ++i)
+    if (thepath[i] != '\xfe')
+      {
+	puts ("thepath[i] != '\xfe'");
+	return 1;
+      }
 
   /* Now test handling of correctly sized buffers.  */
   bufs[0] = getcwd (NULL, len + 1);

@@ -1,3 +1,10 @@
+2000-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Rewrite rules for tests to run them only when necessary.
+	* sort-test.sh: Produce output for failed tests.
+	* tst-fmon.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+
 2000-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-ctype-de_DE.in: Renamed to...

@@ -130,7 +130,9 @@ endif
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 # Run a test on the header files we use.
-tests: $(objpfx)isomac
+tests: $(objpfx)isomac.out
+
+$(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)' '-I../include -I.. $(+sysdep-includes)' > $<.out
 
 $(objpfx)isomac: isomac.c

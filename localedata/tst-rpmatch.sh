@@ -28,12 +28,12 @@ while IFS=\& read locale string result dummy; do
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
 	${tst_rpmatch} $locale $string $result \
-	|| exit 1
+	|| { echo "$locale $string $result  FAILED"; exit 1; }
     fi
 done <<EOF
 #& These are the tests for rpmatch in glibc.  Each line contains one test,
 #& comments start with #& in the first column.  The fields are separated
-#& by paragraph signs and contain: the locale, the string, the expected
+#& by ampersand signs and contain: the locale, the string, the expected
 #& return value of rpmatch(3).  If the test fails, test-rpmatch prints
 #& all these informations
 C&Yes&1
@@ -57,9 +57,3 @@ de_DE.ISO-8859-1&Nein&0
 de_DE.ISO-8859-1&Fehler&-1
 de_DE.ISO-8859-1&jein&1
 EOF
-
-rc=$?
-if [ $rc -eq 1 ]; then
-    echo "Errors"
-fi
-exit $rc

@@ -19,11 +19,6 @@
 # not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-DEBUG=0
-case $1 in
--d) DEBUG=1; shift ;;
-esac
-
 common_objpfx=$1
 run_program_prefix=$2
 datafile=$3
@@ -51,16 +46,11 @@ while IFS="	" read locale format value expect; do
 	${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
 	    "$locale" "$format" "$value" "$expect"
 	if [ $? -eq 0 ]; then
-	    if [ $DEBUG -eq 1 ]; then
-		echo "Locale: \"${locale}\" Format: \"${format}\"" \
-		     "Value: \"${value}\" Expect: \"${expect}\"  passed"
-	    fi
+	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
+		 "Value: \"${value}\" Expect: \"${expect}\"  passed"
 	else
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
 		 "Value: \"${value}\" Expect: \"${expect}\"    failed"
-	    if [ $DEBUG -eq 0 ]; then
-		exit 1
-	    fi
 	fi
     fi
 done < $datafile
