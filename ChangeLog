@@ -1,3 +1,7 @@
+2001-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/tr.po: New file.
+
 2001-06-05  Andreas Jaeger  <aj@suse.de>
 
 	* manual/libm-err-tab.pl (parse_ulps): Fix typo.
