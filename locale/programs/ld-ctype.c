@@ -533,6 +533,10 @@ character '%s' in class `%s' must not be in class `%s'"),
     ELEM (ctype, class_collection, , space_value) |= BITw (tok_print);
 
   space_seq = charmap_find_value (charmap, "SP", 2);
+  if (space_req == NULL)
+    space_seq = charmap_find_value (charmap, "space", 5);
+  if (space_seq == NULL)
+    space_seq = charmap_find_value (charmap, "U00000020", 5);
   if (space_seq == NULL || space_seq->nbytes != 1)
     {
       if (!be_quiet)
@@ -2698,6 +2702,8 @@ set_class_defaults (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 
       seq = charmap_find_value (charmap, "space", 5);
       if (seq == NULL)
+	seq = charmap_find_value (charmap, "SP", 2);
+      if (seq == NULL)
 	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
 	{
@@ -2840,6 +2846,8 @@ character `%s' not defined while needed as default value"),
 
       seq = charmap_find_value (charmap, "space", 5);
       if (seq == NULL)
+	seq = charmap_find_value (charmap, "SP", 2);
+      if (seq == NULL)
 	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
 	{
@@ -2919,6 +2927,8 @@ character `%s' not defined while needed as default value"),
 
 
       seq = charmap_find_value (charmap, "space", 5);
+      if (seq == NULL)
+	seq = charmap_find_value (charmap, "SP", 2);
       if (seq == NULL)
 	seq = charmap_find_value (charmap, "U00000020", 9);
       if (seq == NULL)
