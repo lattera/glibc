@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -59,10 +59,8 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   /* Generate room on stack for parameter if needed and uc_link.  */
   sp = (long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
   sp -= (argc > 6 ? argc : 0) + 1;
-  /* Align stack.  */
-  sp = (long *) (((long) sp) & -16L);
-  /* Make space for trampoline address.  */
-  sp -= 8;
+  /* Align stack and make space for trampoline address.  */
+  sp = (long *) ((((long) sp) & -16L) - 8);
 
   idx_uc_link = (argc > 6 ? argc : 0) + 1;
 
