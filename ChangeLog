@@ -1,3 +1,8 @@
+2004-03-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Handle
+	_SC_SIGQUEUE_MAX.
+
 2004-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-caller.c: New file.

@@ -32,6 +32,8 @@ static long int posix_sysconf (int name);
 long int
 __sysconf (int name)
 {
+  const char *procfname = NULL;
+
   switch (name)
     {
 #ifdef __NR_clock_getres
@@ -47,37 +49,44 @@ __sysconf (int name)
 #endif
 
     case _SC_NGROUPS_MAX:
-      {
-	/* Try to read the information from the /proc/sys/kernel/ngroups_max
-	   file.  */
-	int fd = open_not_cancel_2 ("/proc/sys/kernel/ngroups_max", O_RDONLY);
-	if (fd != -1)
-	  {
-	    /* This is more than enough, the file contains a single
-	       integer.  */
-	    char buf[32];
-	    ssize_t n;
-	    n = TEMP_FAILURE_RETRY (read_not_cancel (fd, buf,
-						     sizeof (buf) - 1));
-	    close_not_cancel_no_status (fd);
+      /* Try to read the information from the /proc/sys/kernel/ngroups_max
+	 file.  */
+      procfname = "/proc/sys/kernel/ngroups_max";
+      break;
 
-	    if (n > 0)
-	      {
-		/* Terminate the string.  */
-		buf[n] = '\0';
-
-		char *endp;
-		long int res = strtol (buf, &endp, 10);
-		if (endp != buf && (*endp == '\0' || *endp == '\n'))
-		  return res;
-	      }
-	  }
-      }
+    case _SC_SIGQUEUE_MAX:
+      /* The /proc/sys/kernel/rtsig-max file contains the answer.  */
+      procfname = "/proc/sys/kernel/rtsig-max";
       break;
 
     default:
       break;
     }
+
+  if (procfname != NULL)
+    {
+      int fd = open_not_cancel_2 (procfname, O_RDONLY);
+      if (fd != -1)
+	{
+	  /* This is more than enough, the file contains a single integer.  */
+	  char buf[32];
+	  ssize_t n;
+	  n = TEMP_FAILURE_RETRY (read_not_cancel (fd, buf, sizeof (buf) - 1));
+	  close_not_cancel_no_status (fd);
+
+	  if (n > 0)
+	    {
+	      /* Terminate the string.  */
+	      buf[n] = '\0';
+
+	      char *endp;
+	      long int res = strtol (buf, &endp, 10);
+	      if (endp != buf && (*endp == '\0' || *endp == '\n'))
+		return res;
+	    }
+	}
+    }
+
   return posix_sysconf (name);
 }
 
