@@ -1,5 +1,14 @@
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/localealias.c (read_alias_file): Use unsigned char for
+	local variables.  Remove unused variable tp.
+	* intl/l10nflist.c (_nl_normalize_codeset): Use unsigned char *
+	for type of codeset.  For loosing Solaris systems.
+	* intl/loadinfo.h: Adapt prototype of _nl_normalize_codeset.
+	* intl/bindtextdom.c (BINDTEXTDOMAIN): Don't define local variable
+	len if not needed.
+	Patches by Jim Meyering.
+
 	* stdio-common/vfprintf.c [%S]: Don't clear mbstate twice;
 	wcsrtombs must put it into initial state.
 

@@ -139,7 +139,9 @@ BINDTEXTDOMAIN (domainname, dirname)
   else
     {
       /* We have to create a new binding.  */
+#if !defined _LIBC && !defined HAVE_STRDUP
       size_t len;
+#endif
       struct binding *new_binding =
 	(struct binding *) malloc (sizeof (*new_binding));
 

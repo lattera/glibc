@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -51,7 +51,7 @@ struct loaded_l10nfile
 };
 
 
-extern const char *_nl_normalize_codeset PARAMS ((const char *codeset,
+extern const char *_nl_normalize_codeset PARAMS ((const unsigned char *codeset,
 						  size_t name_len));
 
 extern struct loaded_l10nfile *

@@ -256,10 +256,10 @@ read_alias_file (fname, fname_len)
 	 b) these fields must be usable as file names and so must not
 	    be that long
        */
-      char buf[BUFSIZ];
-      char *alias;
-      char *value;
-      char *cp;
+      unsigned char buf[BUFSIZ];
+      unsigned char *alias;
+      unsigned char *value;
+      unsigned char *cp;
 
       if (fgets (buf, sizeof buf, fp) == NULL)
 	/* EOF reached.  */
@@ -299,7 +299,6 @@ read_alias_file (fname, fname_len)
 
 	  if (cp[0] != '\0')
 	    {
-	      char *tp;
 	      size_t alias_len;
 	      size_t value_len;
 
