@@ -24,6 +24,8 @@
 #include <sys/types.h>
 
 
+__BEGIN_DECLS
+
 /* Structure to represent one entry of the alias data base.  */
 struct aliasent
 {
@@ -57,5 +59,6 @@ extern int getaliasbyname_r __P ((__const char *__name,
 				  struct aliasent **__result));
 #endif /* reentrant */
 
+__END_DECLS
 
 #endif /* aliases.h */

@@ -46,6 +46,8 @@ routines := ntohl ntohs htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r
 
 # No warnings about losing BSD code.
-override +gccwarn := -w
+CFLAGS-rcmd.c = -w
+CFLAGS-rexec.c = -w
+CFLAGS-ruserpass.c = -w
 
 include ../Rules

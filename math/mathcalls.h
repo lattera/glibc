@@ -88,10 +88,10 @@ __MATHCALL (atanh,, (_Mdouble_ __x));
 __MATHCALL (exp,, (_Mdouble_ __x));
 
 /* Break VALUE into a normalized fraction and an integral power of 2.  */
-__MATHCALL (frexp,, (_Mdouble_ __value, int *__exp));
+__MATHCALL (frexp,, (_Mdouble_ __x, int *__exponent));
 
 /* X times (two to the EXP power).  */
-__MATHCALL (ldexp,, (_Mdouble_ __x, int __exp));
+__MATHCALL (ldexp,, (_Mdouble_ __x, int __exponent));
 
 /* Natural logarithm of X.  */
 __MATHCALL (log,, (_Mdouble_ __x));
@@ -111,7 +111,7 @@ __MATHCALL (logb,, (_Mdouble_ __x));
 #endif
 
 /* Break VALUE into integral and fractional parts.  */
-__MATHCALL (modf,, (_Mdouble_ __value, _Mdouble_ *__iptr));
+__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr));
 
 
 /* Power functions.  */

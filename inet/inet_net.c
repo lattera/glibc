@@ -49,10 +49,9 @@ u_int32_t
 inet_network(cp)
 	register const char *cp;
 {
-	register u_int32_t val, base, n;
+	register u_int32_t val, base, n, i;
 	register char c;
 	u_int32_t parts[4], *pp = parts;
-	register int i;
 
 again:
 	val = 0; base = 10;

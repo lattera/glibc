@@ -1,7 +1,7 @@
 setjmp_aux.c
 DEFS.h
 divrem.h
-divl.S divlu.S divq.S divqu.S reml.S remlu.S remq.S remqu.S
+divl.S divq.S reml.S remq.S
 _mcount.S
 stxcpy.S
 stxncpy.S

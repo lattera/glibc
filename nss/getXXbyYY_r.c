@@ -109,7 +109,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
 	    {
 	      *h_errnop = NETDB_INTERNAL;
-	      return NULL;
+	      *result = NULL;
+	      return -1;
 	    }
 #endif /* need _res */
 	}

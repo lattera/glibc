@@ -11,7 +11,8 @@ all: $(patsubst %,$(VAR_DB)/%.db,$(notdir $(DATABASES)))
 
 $(VAR_DB)/passwd.db: /etc/passwd
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
+	@$(AWK) 'BEGIN { FS=":"; OFS=":"; cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
 			   if (!uids[$$3]++) \
 			     { printf "=%s ", $$3; print } }' $^ | \
@@ -20,7 +21,8 @@ $(VAR_DB)/passwd.db: /etc/passwd
 
 $(VAR_DB)/group.db: /etc/group
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
+	@$(AWK) 'BEGIN { FS=":"; OFS=":"; cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
 			   printf "=%s ", $$3; print }' $^ | \
 	$(MAKEDB) -o $@ -
@@ -28,14 +30,18 @@ $(VAR_DB)/group.db: /etc/group
 
 $(VAR_DB)/ethers.db: /etc/ethers
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) '/^[^#]/ { printf ".%s ", $$1; print; \
+	@$(AWK) 'BEGIN { cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
+		 /^[^#]/ { printf ".%s ", $$1; print; \
 			   printf "=%s ", $$2; print }' $^ | \
 	$(MAKEDB) -o $@ -
 	@echo "done."
 
 $(VAR_DB)/protocols.db: /etc/protocols
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) '/^[^#]/ { printf ".%s ", $$1; print; \
+	@$(AWK) 'BEGIN { cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
+		 /^[^#]/ { printf ".%s ", $$1; print; \
 			   printf "=%s ", $$2; print; \
 			   for (i = 3; i <= NF && !($$i ~ /^#/); ++i) \
 			     { printf ".%s ", $$i; print } }' $^ | \
@@ -44,7 +50,9 @@ $(VAR_DB)/protocols.db: /etc/protocols
 
 $(VAR_DB)/rpc.db: /etc/rpc
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) '/^[^#]/ { printf ".%s ", $$1; print; \
+	@$(AWK) 'BEGIN { cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
+		 /^[^#]/ { printf ".%s ", $$1; print; \
 			   printf "=%s ", $$2; print; \
 			   for (i = 3; i <= NF && !($$i ~ /^#/); ++i) \
 			     { printf ".%s ", $$i; print } }' $^ | \
@@ -53,7 +61,8 @@ $(VAR_DB)/rpc.db: /etc/rpc
 
 $(VAR_DB)/services.db: /etc/services
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) 'BEGIN { FS="[ \t/]+" } \
+	@$(AWK) 'BEGIN { FS="[ \t/]+"; cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
 		 /^[^#]/ { printf ".%s/%s ", $$1, $$3; print; \
 			   printf "=%s/%s ", $$2, $$3; print; \
 			   for (i = 4; i <= NF && !($$i ~ /^#/); ++i) \
@@ -63,14 +72,17 @@ $(VAR_DB)/services.db: /etc/services
 
 $(VAR_DB)/shadow.db: /etc/shadow
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
+	@$(AWK) 'BEGIN { FS=":"; OFS=":"; cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
 		 /^[^#]/ { printf ".%s ", $$1; print }' $^ | \
 	$(MAKEDB) -o $@ -
 	@echo "done."
 
 $(VAR_DB)/netgroup.db: /etc/netgroup
 	@echo -n "$(patsubst %.db,%,$(@F))... "
-	@$(AWK) '/^[^#]/ { end=sub(/\\/, " "); \
+	@$(AWK) 'BEGIN { cnt=0 } \
+		 { printf "0%u ", cnt++; print } \
+		 /^[^#]/ { end=sub(/\\/, " "); \
 			   gsub(/[ \t]+/, " "); \
 			   if(end == 1) printf "%s", $$0; else print }' $^ | \
 	$(MAKEDB) -o $@ -

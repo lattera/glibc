@@ -149,7 +149,7 @@ get_next_alias (const char *match, struct aliasent *result,
 	  /* If we are in IGNORE mode and the first character in the
 	     line is a white space we ignore the line and start
 	     reading the next.  */
-	  if (ignore && isspace (first_unused))
+	  if (ignore && isspace (*first_unused))
 	    continue;
 
 	  /* Terminate the line for any case.  */
@@ -179,7 +179,7 @@ get_next_alias (const char *match, struct aliasent *result,
 	     looking for.  If it does not match we simply ignore all
 	     lines until the next line containing the start of a new
 	     alias is found.  */
-	  ignore = match != NULL && strcmp (result->alias_name, match) == 0;
+	  ignore = match != NULL && strcmp (result->alias_name, match) != 0;
 
 	  while (! ignore)
 	    {
@@ -192,16 +192,11 @@ get_next_alias (const char *match, struct aliasent *result,
 
 	      if (first_unused != cp)
 		{
+		  /* OK, we can have a regular entry or an include
+		     request.  */
 		  if (*line != '\0')
-		    {
-		      /* OK, we can have a regular entry or an include
-			 request.  */
-		      *first_unused++ = '\0';
-		      ++line;
-		    }
-		  else
-		    ++first_unused;
-
+		    ++line;
+		  *first_unused++ = '\0';
 
 		  if (strncmp (cp, ":include:", 9) != 0)
 		    {
@@ -295,10 +290,8 @@ get_next_alias (const char *match, struct aliasent *result,
 		     just read character.  */
 		  int ch;
 
-		  first_unused[room_left - 1] = '\0';
-		  line = first_unused;
 		  ch = fgetc (stream);
-		  if (ch == EOF || !isspace (ch))
+		  if (ch == EOF || ch == '\n' || !isspace (ch))
 		    {
 		      size_t cnt;
 
@@ -329,6 +322,10 @@ get_next_alias (const char *match, struct aliasent *result,
 
 		  /* The just read character is a white space and so
 		     can be ignored.  */
+		  first_unused[room_left - 1] = '\0';
+		  line = fgets (first_unused, room_left, stream);
+		  if (first_unused[room_left - 1] != '\0')
+		    goto no_more_room;
 		  cp = strpbrk (line, "#\n");
 		  if (cp != NULL)
 		    *cp = '\0';
@@ -418,6 +415,8 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
 	status = get_next_alias (name, result, buffer, buflen);
       while (status == NSS_STATUS_RETURN);
     }
+
+  internal_endent ();
 
   __libc_lock_unlock (lock);
 

@@ -445,7 +445,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
   /* If no other digit but a '0' is found the result is 0.0.
      Return current read pointer.  */
-  if ((c < L_('0') || c > L_('9')) && (wint_t) c != decimal)
+  if ((c < L_('0') || c > L_('9')) && (wint_t) c != decimal && !TOLOWER (c))
     {
       tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
       /* If TP is at the start of the digits, there was no correctly

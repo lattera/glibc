@@ -605,17 +605,53 @@ TRANS Go home and have a glass of warm, dairy-fresh milk. */
 TRANS This error code has no purpose. */
     [EGRATUITOUS] = N_("Gratuitous error"),
 #endif
-#ifdef ERESTART
+#ifdef EBADMSG
 /* */
-    [ERESTART] = N_("Interrupted system call should be restarted"),
+    [EBADMSG] = N_("Bad message"),
+#endif
+#ifdef EIDRM
+/* */
+    [EIDRM] = N_("Identifier removed"),
+#endif
+#ifdef EMULTIHOP
+/* */
+    [EMULTIHOP] = N_("Multihop attempted"),
+#endif
+#ifdef ENODATA
+/* */
+    [ENODATA] = N_("No data available"),
+#endif
+#ifdef ENOLINK
+/* */
+    [ENOLINK] = N_("Link has been severed"),
 #endif
 #ifdef ENOMSG
 /* */
     [ENOMSG] = N_("No message of desired type"),
 #endif
-#ifdef EIDRM
+#ifdef ENOSR
 /* */
-    [EIDRM] = N_("Identifier removed"),
+    [ENOSR] = N_("Out of streams resources"),
+#endif
+#ifdef ENOSTR
+/* */
+    [ENOSTR] = N_("Device not a stream"),
+#endif
+#ifdef EOVERFLOW
+/* */
+    [EOVERFLOW] = N_("Value too large for defined data type"),
+#endif
+#ifdef EPROTO
+/* */
+    [EPROTO] = N_("Protocol error"),
+#endif
+#ifdef ETIME
+/* */
+    [ETIME] = N_("Timer expired"),
+#endif
+#ifdef ERESTART
+/* */
+    [ERESTART] = N_("Interrupted system call should be restarted"),
 #endif
 #ifdef ECHRNG
 /* */
@@ -681,22 +717,6 @@ TRANS This error code has no purpose. */
 /* */
     [EBFONT] = N_("Bad font file format"),
 #endif
-#ifdef ENOSTR
-/* */
-    [ENOSTR] = N_("Device not a stream"),
-#endif
-#ifdef ENODATA
-/* */
-    [ENODATA] = N_("No data available"),
-#endif
-#ifdef ETIME
-/* */
-    [ETIME] = N_("Timer expired"),
-#endif
-#ifdef ENOSR
-/* */
-    [ENOSR] = N_("Out of streams resources"),
-#endif
 #ifdef ENONET
 /* */
     [ENONET] = N_("Machine is not on the network"),
@@ -704,10 +724,6 @@ TRANS This error code has no purpose. */
 #ifdef ENOPKG
 /* */
     [ENOPKG] = N_("Package not installed"),
-#endif
-#ifdef ENOLINK
-/* */
-    [ENOLINK] = N_("Link has been severed"),
 #endif
 #ifdef EADV
 /* */
@@ -721,25 +737,9 @@ TRANS This error code has no purpose. */
 /* */
     [ECOMM] = N_("Communication error on send"),
 #endif
-#ifdef EPROTO
-/* */
-    [EPROTO] = N_("Protocol error"),
-#endif
-#ifdef EMULTIHOP
-/* */
-    [EMULTIHOP] = N_("Multihop attempted"),
-#endif
 #ifdef EDOTDOT
 /* */
     [EDOTDOT] = N_("RFS specific error"),
-#endif
-#ifdef EBADMSG
-/* */
-    [EBADMSG] = N_("Not a data message"),
-#endif
-#ifdef EOVERFLOW
-/* */
-    [EOVERFLOW] = N_("Value too large for defined data type"),
 #endif
 #ifdef ENOTUNIQ
 /* */

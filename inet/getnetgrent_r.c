@@ -1,23 +1,24 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <libc-lock.h>
 #include <netdb.h>
+#include <stdlib.h>
 #include <string.h>
 #include "netgroup.h"
 #include "nsswitch.h"
@@ -34,10 +35,10 @@ static service_user *nip;
    kept in this structure.  */
 static struct __netgrent dataset;
 
-
 /* The lookup function for the first entry of this service.  */
 extern int __nss_netgroup_lookup (service_user **nip, const char *name,
 				  void **fctp);
+
 
 /* Set up NIP to run through the services.  If ALL is zero, use NIP's
    current location if it's not nil.  Return nonzero if there are no
@@ -76,7 +77,7 @@ free_memory (struct __netgrent *data)
     {
       struct name_list *tmp = data->known_groups;
       data->known_groups = data->known_groups->next;
-      free (tmp->name);
+      free ((void *) tmp->name);
       free (tmp);
     }
 
@@ -84,7 +85,7 @@ free_memory (struct __netgrent *data)
     {
       struct name_list *tmp = data->needed_groups;
       data->needed_groups = data->needed_groups->next;
-      free (tmp->name);
+      free ((void *) tmp->name);
       free (tmp);
     }
 }
@@ -113,7 +114,7 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap)
     {
       if (new_elem != NULL)
 	free (new_elem);
-      status == NSS_STATUS_UNAVAIL;
+      status = NSS_STATUS_UNAVAIL;
     }
   else
     {
@@ -260,9 +261,9 @@ __internal_getnetgrent (char **hostp, char **userp, char **domainp,
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      *hostp = datap->val.triple.host;
-      *userp = datap->val.triple.user;
-      *domainp = datap->val.triple.domain;
+      *hostp = (char *) datap->val.triple.host;
+      *userp = (char *) datap->val.triple.user;
+      *domainp = (char *) datap->val.triple.domain;
     }
 
   return status == NSS_STATUS_SUCCESS ? 1 : 0;
@@ -294,8 +295,8 @@ innetgr (const char *netgroup, const char *host, const char *user,
   int (*setfct) (const char *, struct __netgrent *);
   void (*endfct) (struct __netgrent *);
   int (*getfct) (struct __netgrent *, char *, size_t);
-  struct name_list *known;
-  struct name_list *needed;
+  struct name_list *known = NULL;
+  struct name_list *needed = NULL;
   int result = 0;
   int no_more;
   const char *current_group = netgroup;
@@ -407,14 +408,14 @@ innetgr (const char *netgroup, const char *host, const char *user,
     {
       struct name_list *tmp = known;
       known = known->next;
-      free (tmp->name);
+      free ((void *) tmp->name);
       free (tmp);
     }
   while (needed != NULL)
     {
       struct name_list *tmp = needed;
       needed = needed->next;
-      free (tmp->name);
+      free ((void *) tmp->name);
       free (tmp);
     }
 

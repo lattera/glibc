@@ -157,13 +157,13 @@ extern void seekdir __P ((DIR *__dirp, __off_t __pos));
 /* Return the current position of DIRP.  */
 extern __off_t telldir __P ((DIR *__dirp));
 
-/* Scan the directory DIR, calling SELECT on each directory entry.
+/* Scan the directory DIR, calling SELECTOR on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,
    sorted using qsort with CMP, and collected in a malloc'd array in
    *NAMELIST.  Returns the number of entries selected, or -1 on error.  */
 extern int scandir __P ((__const char *__dir,
 			 struct dirent ***__namelist,
-			 int (*__select) __P ((struct dirent *)),
+			 int (*__selector) __P ((struct dirent *)),
 			 int (*__cmp) __P ((__const __ptr_t,
 					    __const __ptr_t))));
 

@@ -59,7 +59,7 @@ Cambridge, MA 02139, USA.  */
 /* We need a sign, whether a new catalog was loaded, which can be associated
    with all translations.  This is important if the translations are
    cached by one of GCC's features.  */
-int _nl_msg_cat_cntr;
+int _nl_msg_cat_cntr = 0;
 
 
 /* Load the message catalogs specified by FILENAME.  If it is no valid

@@ -89,7 +89,7 @@ before-compile = $(objpfx)version-info.h
 echo-headers: subdir_echo-headers
 
 # What to install.
-install-others = $(includedir)/stubs.h $(includedir)/gnu/lib-names.h
+install-others = $(includedir)/stubs.h
 
 ifeq (yes,$(gnu-ld))
 libc-init = set-init
@@ -176,6 +176,8 @@ $(includedir)/stubs.h: subdir_install
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
 	rm -f $(objpfx)stubs.h
 
+ifeq (yes, $(build-shared))
+
 # Like stubs.h the gnu/lib-names.h header is not used while building the
 # libc itself.  So we generate it while installing.
 $(includedir)/gnu/lib-names.h: $(common-objpfx)soversions.mk
@@ -198,6 +200,9 @@ $(includedir)/gnu/lib-names.h: $(common-objpfx)soversions.mk
 	then echo 'gnu/lib-names.h unchanged'; \
 	else $(INSTALL_DATA) $(objpfx)lib-names.h $@; fi
 	rm -f $(objpfx)lib-names.h
+
+install-others += $(includedir)/gnu/lib-names.h
+endif
 
 # This makes the Info or DVI file of the documentation from the Texinfo source.
 .PHONY: info dvi

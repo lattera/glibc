@@ -24,7 +24,10 @@
 #include <sys/socket.h>
 #include <linux/in.h>
 
-/* Standard well-known ports.  */
+/* Standard well-known ports.  The use of these constants is
+   deprecated.  Instead use the contents of the file `/etc/services'
+   or similar databases by using the function getservbyname and
+   getservbyport.  */
 enum
   {
     IPPORT_ECHO = 7,		/* Echo service.  */
@@ -86,13 +89,13 @@ __BEGIN_DECLS
 
 /* Functions to convert between host and network byte order.  */
 
-extern unsigned long int ntohl __P ((unsigned long int));
-extern unsigned short int ntohs __P ((unsigned short int));
-extern unsigned long int htonl __P ((unsigned long int));
-extern unsigned short int htons __P ((unsigned short int));
+extern unsigned long int ntohl __P ((unsigned long int __long_word));
+extern unsigned short int ntohs __P ((unsigned short int __short_word));
+extern unsigned long int htonl __P ((unsigned long int __long_word));
+extern unsigned short int htons __P ((unsigned short int __short_word));
 
 /* Bind socket FD to a privileged IP address SIN.  */
-extern int bindresvport __P ((int __fd, struct sockaddr_in * __sin));
+extern int bindresvport __P ((int __fd, struct sockaddr_in * __sock_in));
 
 __END_DECLS
 
@@ -101,14 +104,14 @@ __END_DECLS
 #if __BYTE_ORDER == __BIG_ENDIAN
 /* The host byte order is the same as network byte order,
    so these functions are all just identity.  */
-#undef ntohl
-#define	ntohl(x)	(x)
-#undef ntohs
-#define	ntohs(x)	(x)
-#undef htonl
-#define	htonl(x)	(x)
-#undef htons
-#define	htons(x)	(x)
+# undef ntohl
+# define ntohl(x)	(x)
+# undef ntohs
+# define ntohs(x)	(x)
+# undef htonl
+# define htonl(x)	(x)
+# undef htons
+# define htons(x)	(x)
 #endif
 
 #endif	/* netinet/in.h */

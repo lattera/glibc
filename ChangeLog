@@ -1,3 +1,259 @@
+Sun Nov 17 03:13:57 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/makedb.c: Update and reformat copyright.
+	* elf/Makefile: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-minimal.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/dladdr.c: Likewise.
+	* elf/dlclose.c: Likewise.
+	* elf/dlerror.c: Likewise.
+	* elf/dlopen.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/do-rel.h: Likewise.
+	* elf/dynamic-link.h: Likewise.
+	* elf/eval.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* inet/ether_hton.c: Likewise.
+	* inet/ether_ntoh.c: Likewise.
+	* inet/ether_line.c: Likewise.
+	* inet/getnetgrent_r.c: Likewise.
+
+	* inet/Makefile (+gccwarn): Remove definition.
+	Instead set CFLAGS-rcmd.c, CFLAGS-rexec.c, and CFLAGS-ruserpass.c
+	to `-w'.
+	* inet/aliases.h: Add C++ protection.
+	* inet/ether_hton.c: Add prototype for __nss_ethers_lookup.
+	(ether_hostton): Remove unused variable result.
+	* inet/ether_ntoh.c: Likewise.
+	* inet/ether_line.c: Include <ctype.h> and <string.h>.
+	* inet/getnetgrent_r.c: Include <stdlib.h>.
+	Use casts to prevent warnings.
+	(innetgr): Initialize `known' and `needed'.
+	* inet/inet_net.c: Make local variable `i' of type u_int32_t.
+	* nss/getXXbyYY_r.c (INTERNAL (REENTRANT_NAME)) [NEED__RES]: Don't
+	return NULL.  Instead set *RESULT to NULL and return -1.
+	* nss/getXXent_r.c (INTERNAL (REENTRANT_GETNAME)): Likewise.
+	(SETFUNC_NAME, ENDFUNC_NAME) [NEED__RES]: Don't return anything.
+
+	* nss/nss_files/files-alias.c: Debug function.  I didn't worked at
+	all before.
+
+Sat Nov 16 15:25:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/readv.c: Don't use PTR anymore.
+	* sysdeps/posix/writev.c: Likewise.
+
+	* version.h (VERSION): Bump to 1.98.
+
+	* nss/db-Makefile: Generate lines for getXXXent iteration.
+
+	* sysdeps/alpha/Dist: Don't distribute removed files divlu.S,
+	divqu.S, remlu.S, and remqu.S.
+
+Fri Nov 15 08:55:54 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* posix/unistd.h: Correct typo in documentation.
+
+Thu Nov 14 18:08:14 1996  a sun  <asun@zoology.washington.edu>
+
+	* inet/netinet/tcp.h: Use __ protected versions instead of
+	BYTE_ORDER, LITTLE_ENDIAN, and BIG_ENDIAN directly.
+
+Sat Nov 16 13:44:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/loadmsgcat.c (_nl_msg_cat_cntr): Initialize so that
+	references in libc.so are not anymore undefined.
+
+Sat Nov 16 18:17:36 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* io/utime.h: Rename second parameter for utime to prevent warning
+	for -Wshadow.
+	* dirent/dirent.h: Same here for scandir prototype.
+	* math/mathcalls.h: Likewise for frexp and ldexp.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise for bindresvport.
+
+Sat Nov 16 03:49:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/tst-strtod.c: Add test for error case below.
+
+Sat Nov 16 03:48:39 1996  Wolfram Gloger  <Wolfram.Gloger@dent.med.uni-muenchen.de>
+
+	* stdlib/strtod.c: Recognize numbers like 0e-19.
+
+Fri Nov 15 08:38:43 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* time/Makefile ($(installed-localtime-file)): Fix path to
+	rellns-sh.
+
+	* Makefile: Don't generate and install gnu/lib-names.h if
+	$(build-shared) is not `yes'.
+
+Thu Nov 14 09:23:58 1996  H.J. Lu (hjl@gnu.ai.mit.edu)
+
+	* sysdeps/posix/Makefile ($(common-objpfx)mk-stdiolim): Depend
+	on $(..)posix/posix1_lim.h, not ../posix/posix1_lim.h.
+
+	* Makerules (REAL_MAKE_VERSION): New, use it instead of
+	MAKE_VERSION.
+
+Thu Nov 14 22:10:43 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-XXX.x (_nss_files_get,ENTNAME_r): Fix typo.
+	* nss/getXXent_r.c: Fix typo.  Set correct return value when
+	no further service is available.
+
+Thu Nov 14 17:48:13 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/recno/rec_put.c: Add cast to avoid warning.
+	* db/recno/rec_close.c: Likewise.
+	* db/mpool/mpool.c: Likewise.
+	* db/hash/hash_bigkey.h: Likewise.
+	* db/hash/hash.c: Likewise.
+	* db/btree/bt_split.c: Likewise.
+	* db/btree/bt_put.c: Likewise.
+
+Thu Nov 14 14:11:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/dirent.h: Update copyright.
+	* elf/elf.h: Likewise.
+	* elf/link.h: Likewise.
+	* gmon/sys/gmon_out.h: Likewise.
+	* gnu-versions.h: Likewise.
+	* intl/libintl.h: Likewise.
+	* io/fcntl.h: Likewise.
+	* io/ftw.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/utime.h: Likewise.
+	* locale/langinfo.h: Likewise.
+	* malloc/malloc.h: Likewise.
+	* malloc/obstack.h: Likewise.
+	* misc/ar.h: Likewise.
+	* misc/error.h: Likewise.
+	* misc/mntent.h: Likewise.
+	* misc/sgtty.h: Likewise.
+	* misc/sys/cdefs.h: Likewise.
+	* misc/sys/dir.h: Likewise.
+	* misc/sys/file.h: Likewise.
+	* misc/sys/ioctl.h: Likewise.
+	* misc/sys/ustat.h: Likewise.
+	* posix/fnmatch.h: Likewise.
+	* posix/getopt.h: Likewise.
+	* posix/glob.h: Likewise.
+	* posix/posix2_lim.h: Likewise.
+	* posix/regex.h: Likewise.
+	* posix/sys/times.h: Likewise.
+	* posix/sys/types.h: Likewise.
+	* posix/sys/utsname.h: Likewise.
+	* posix/tar.h: Likewise.
+	* posix/wordexp.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* resource/sys/vlimit.h: Likewise.
+	* resource/sys/vtimes.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* socket/sys/un.h: Likewise.
+	* stdio-common/printf.h: Likewise.
+	* stdlib/alloca.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/endian.h: Likewise.
+	* string/envz.h: Likewise.
+	* string/memory.h: Likewise.
+	* string/strings.h: Likewise.
+	* sysdeps/generic/crypt.h: Likewise.
+	* sysdeps/generic/direntry.h: Likewise.
+	* sysdeps/generic/gnu/types.h: Likewise.
+	* sysdeps/generic/ioctl-types.h: Likewise.
+	* sysdeps/generic/netinet/in.h: Likewise.
+	* sysdeps/generic/resourcebits.h: Likewise.
+	* sysdeps/generic/sigset.h: Likewise.
+	* sysdeps/generic/sockaddrcom.h: Likewise.
+	* sysdeps/generic/sys/mman.h: Likewise.
+	* sysdeps/generic/sys/ptrace.h: Likewise.
+	* sysdeps/generic/termbits.h: Likewise.
+	* sysdeps/generic/waitstatus.h: Likewise.
+	* sysdeps/ieee754/huge_val.h: Likewise.
+	* sysdeps/ieee754/nan.h: Likewise.
+	* sysdeps/mach/hurd/local_lim.h: Likewise.
+	* sysdeps/mach/hurd/statbuf.h: Likewise.
+	* sysdeps/stub/huge_val.h: Likewise.
+	* sysdeps/stub/libc-lock.h: Likewise.
+	* sysdeps/stub/signum.h: Likewise.
+	* sysdeps/stub/statbuf.h: Likewise.
+	* sysdeps/stub/waitflags.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/sockaddrcom.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/statbuf.h: Likewise.
+	* sysdeps/unix/bsd/osf/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/signum.h: Likewise.
+	* sysdeps/unix/bsd/statbuf.h: Likewise.
+	* sysdeps/unix/bsd/sun/signum.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/resourcebits.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/termbits.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/sys/mman.h: Likewise.
+	* sysdeps/unix/bsd/waitflags.h: Likewise.
+	* sysdeps/unix/sysv/irix4/signum.h: Likewise.
+	* sysdeps/unix/sysv/irix4/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/irix4/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/direntry.h: Likewise.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/ioctl-types.h: Likewise.
+	* sysdeps/unix/sysv/linux/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/resourcebits.h: Likewise.
+	* sysdeps/unix/sysv/linux/signum.h: Likewise.
+	* sysdeps/unix/sysv/linux/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/klog.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/syscall.h: Likewise.
+	* sysdeps/unix/sysv/linux/termbits.h: Likewise.
+	* sysdeps/unix/sysv/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/syscall.h: Likewise.
+	* sysdeps/unix/sysv/sco3.2/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/signum.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/signum.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/sigset.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/signum.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/waitflags.h: Likewise.
+	* sysdeps/vax/huge_val.h: Likewise.
+	* values.h: Likewise.
+
+Thu Nov 14 04:22:41 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/obstack.h: Use memcpy instead of bcopy and define a macro
+	`memcpy' using bcopy if memcpy is not available.
+
+	* manual/stdio.texi: Correct description of printf customization.
+	The argument info function is not optional anymore and the
+	interface for `printf_function' also changed.
+	* manual/examples/rprintf.c: Define and use argument info function.
+
+	* stdio-common/printf.h (struct printf_info): Change type for field
+	`pad' to wchar_t.
+	Correct comment for `register_printf_function'.
+
+	* nss/getXXbyYY.c [NEED_H_ERRNO]: Don't pass pointer to h_errno
+	to reentrant function.  Instead use temporary variable and set
+	h_errno if an error occured.
+	Reported by NIIBE Yutaka.
+
 Fri Nov 15 12:27:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/statbuf.h (S_IPTRANS, S_IATRANS, S_IROOT,
@@ -29,7 +285,7 @@ Thu Nov 14 12:53:16 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	prototyped definition.
 
 	* sysdeps/mach/hurd/select.c (__select): Deal properly when there
-	are no bits set in the masks.  Reported by baldazzi@csr.unibo.it. 
+	are no bits set in the masks.  Reported by baldazzi@csr.unibo.it.
 
 Thu Nov 14 02:00:33 1996  Ulrich Drepper  <drepper@cygnus.com>
 

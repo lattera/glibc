@@ -39,10 +39,10 @@ struct utimbuf
     __time_t modtime;		/* Modification time.  */
   };
 
-/* Set the access and modification times of FILE to those given in TIMES.
-   If TIMES is NULL, set them to the current time.  */
+/* Set the access and modification times of FILE to those given in
+   *FILE_TIMES.  If FILE_TIMES is NULL, set them to the current time.  */
 extern int utime __P ((__const char *__file,
-		       __const struct utimbuf *__times));
+		       __const struct utimbuf *__file_times));
 
 __END_DECLS
 

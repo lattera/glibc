@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -43,10 +43,10 @@ readv (fd, vector, count)
     bytes += vector[i].iov_len;
 
   /* Allocate a temporary buffer to hold the data.  */
-  buffer = (char *) __alloca(bytes);
+  buffer = (char *) __alloca (bytes);
 
   /* Read the data.  */
-  bytes_read = read(fd, buffer, bytes);
+  bytes_read = read (fd, buffer, bytes);
   if (bytes_read <= 0)
     return -1;
 
@@ -55,9 +55,9 @@ readv (fd, vector, count)
   for (i = 0; i < count; ++i)
     {
 #define	min(a, b)	((a) > (b) ? (b) : (a))
-      size_t copy = min(vector[i].iov_len, bytes);
+      size_t copy = min (vector[i].iov_len, bytes);
 
-      (void) memcpy((PTR) vector[i].iov_base, (PTR) buffer, copy);
+      (void) memcpy ((void *) vector[i].iov_base, (void *) buffer, copy);
 
       buffer += copy;
       bytes -= copy;
