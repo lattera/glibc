@@ -69,25 +69,32 @@ __extension__ typedef unsigned long long int __uint64_t;
 #endif
 typedef __quad_t *__qaddr_t;
 
+#if __WORDSIZE == 64
 typedef __uint64_t __dev_t;		/* Type of device numbers.  */
+#else
+typedef __u_quad_t __dev_t;		/* Type of device numbers.  */
+#endif
 typedef __uint32_t __uid_t;		/* Type of user identifications.  */
 typedef __uint32_t __gid_t;		/* Type of group identifications.  */
 #if __WORDSIZE == 64
 typedef __uint64_t __ino_t;		/* Type of file serial numbers.  */
-#else
-typedef __u_long__ino_t;		/* Type of file serial numbers.  */
-#endif
 typedef __uint64_t __ino64_t;		/*  "" (LFS) */
+#else
+typedef __u_long __ino_t;		/* Type of file serial numbers.  */
+typedef __u_quad_t __ino64_t;		/*  "" (LFS) */
+#endif
 typedef __uint32_t __mode_t;		/* Type of file attribute bitmasks.  */
 #if __WORDSIZE == 64
 typedef __uint64_t __nlink_t;		/* Type of file link counts.  */
 typedef __int64_t  __off_t;		/* Type of file sizes and offsets.  */
+typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
+typedef __loff_t  __off64_t;		/*  "" (LFS) */
 #else
 typedef __u_int __nlink_t;		/* Type of file link counts.  */
 typedef long int __off_t;		/* Type of file sizes and offsets.  */
-#endif
-typedef __int64_t  __off64_t;		/*  "" (LFS) */
 typedef __int64_t  __loff_t;		/* Type of file sizes and offsets.  */
+typedef __int64_t  __off64_t;		/*  "" (LFS) */
+#endif
 typedef __int32_t  __pid_t;		/* Type of process identifications.  */
 #if __WORDSIZE == 64
 typedef __int64_t  __ssize_t;		/* Type of a byte count, or error.  */
@@ -106,7 +113,7 @@ typedef __u_long __rlim_t;		/* Type of resource counts.  */
 typedef __u_quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
 typedef long int  __blkcnt_t;		/* Type to count nr disk blocks.  */
 typedef __quad_t  __blkcnt64_t;		/*  "" (LFS) */
-typedef __long __fsblkcnt_t;		/* Type to count file system blocks.  */
+typedef __u_long __fsblkcnt_t;		/* Type to count file system blocks.  */
 typedef __u_quad_t __fsblkcnt64_t;	/*  "" (LFS) */
 typedef __u_long __fsfilcnt_t;		/* Type to count file system inodes.  */
 typedef __u_quad_t __fsfilcnt64_t;	/*  "" (LFS) */
