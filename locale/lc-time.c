@@ -1,5 +1,5 @@
 /* Define current locale data for LC_TIME category.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -174,3 +174,16 @@ _nl_get_alt_digit (unsigned int number)
 
   return result;
 }
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (eras != NULL)
+    free (eras);
+  if (alt_digits != NULL)
+    free (alt_digits);
+}
+
+text_set_element (__libc_subfreeres, free_mem);
