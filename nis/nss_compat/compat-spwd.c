@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -89,6 +89,10 @@ give_spwd_free (struct spwd *pwd)
     free (pwd->sp_pwdp);
 
   memset (pwd, '\0', sizeof (struct spwd));
+  pwd->sp_warn = -1;
+  pwd->sp_inact = -1;
+  pwd->sp_expire = -1;
+  pwd->sp_flag = ~0ul;
 }
 
 static int
@@ -127,13 +131,13 @@ copy_spwd_changes (struct spwd *dest, struct spwd *src,
     dest->sp_min = src->sp_min;
   if (src->sp_max != 0)
     dest->sp_max = src->sp_max;
-  if (src->sp_warn != 0)
+  if (src->sp_warn != -1)
     dest->sp_warn = src->sp_warn;
-  if (src->sp_inact != 0)
+  if (src->sp_inact != -1)
     dest->sp_inact = src->sp_inact;
-  if (src->sp_expire != 0)
+  if (src->sp_expire != -1)
     dest->sp_expire = src->sp_expire;
-  if (src->sp_flag != 0)
+  if (src->sp_flag != ~0ul)
     dest->sp_flag = src->sp_flag;
 }
 
@@ -695,6 +699,10 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
   size_t plen;
 
   memset (&pwd, '\0', sizeof (struct spwd));
+  pwd.sp_warn = -1;
+  pwd.sp_inact = -1;
+  pwd.sp_expire = -1;
+  pwd.sp_flag = ~0ul;
 
   copy_spwd_changes (&pwd, result, NULL, 0);
 
