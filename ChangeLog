@@ -1,3 +1,14 @@
+1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdio-common/printf_fphex.c: Move to ...
+	* sysdeps/generic/printf_fphex.c: ... here.  Fix exponent of
+	extended precision number.
+	* sysdeps/m68k/printf_fphex.c: New file.
+
+1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/stdio.texi: Fix typos.
+
 1999-03-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.1.1.

@@ -1302,14 +1302,14 @@ exchanged as texts between different programs and/or machines.  The
 numbers are represented is the form
 @w{[@code{-}]@code{0x}@var{h}@code{.}@var{hhh}@code{p}[@code{+}|@code{-}]@var{dd}}.
 At the left of the decimal-point character exactly one digit is print.
-This character is only @code{0} is the number is denormalized.
+This character is only @code{0} if the number is denormalized.
 Otherwise the value is unspecified; it is implemention dependent how many
 bits are used.  The number of hexadecimal digits on the right side of
 the decimal-point character is equal to the precision.  If the precision
 is zero it is determined to be large enough to provide an exact
 representation of the number (or it is large enough to distinguish two
 adjacent values if the @code{FLT_RADIX} is not a power of 2,
-@pxref{Floating Point Parameters})  For the @samp{%a} conversion
+@pxref{Floating Point Parameters}).  For the @samp{%a} conversion
 lower-case characters are used to represent the hexadecimal number and
 the prefix and exponent sign are printed as @code{0x} and @code{p}
 respectively.  Otherwise upper-case characters are used and @code{0X}
@@ -1364,7 +1364,7 @@ is explicitly @code{0}, this suppresses the decimal point character
 entirely.  For the @samp{%g} and @samp{%G} conversions, the precision
 specifies how many significant digits to print.  Significant digits are
 the first digit before the decimal point, and all the digits after it.
-If the precision @code{0} or not specified for @samp{%g} or @samp{%G},
+If the precision is @code{0} or not specified for @samp{%g} or @samp{%G},
 it is treated like a value of @code{1}.  If the value being printed
 cannot be expressed accurately in the specified number of digits, the
 value is rounded to the nearest number that fits.

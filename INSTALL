@@ -197,11 +197,11 @@ from underneath.
    If you are upgrading from a previous installation of glibc 2.0 or
 2.1, `make install' will do the entire job.  If you're upgrading from
 Linux libc5 or some other C library, you need to rename the old
-`/usr/include' directory out of the way first, or you will end up with
-a mixture of header files from both libraries, and you won't be able to
-compile anything.  You may also need to reconfigure GCC to work with
-the new library.  The easiest way to do that is to figure out the
-compiler switches to make it work again
+`/usr/include' directory out of the way before running `make install',
+or you will end up with a mixture of header files from both libraries,
+and you won't be able to compile anything.  You may also need to
+reconfigure GCC to work with the new library.  The easiest way to do
+that is to figure out the compiler switches to make it work again
 (`-Wl,-dynamic-linker=/lib/ld-linux.so.2' should work on Linux systems)
 and use them to recompile gcc.  You can also edit the specs file
 (`/usr/lib/gcc-lib/TARGET/VERSION/specs'), but that is a bit of a black
@@ -217,8 +217,8 @@ environment or preparing a binary distribution.
 may not want to run.  `nscd' caches name service lookups; it can
 dramatically improve performance with NIS+, and may help with DNS as
 well.  `utmpd' allows programs that use the old format for the `utmp'
-file to coexist with new programs.  For more information see the files
-`nscd/README' and `login/README.utmpd'.
+file to coexist with new programs.  For more information see the file
+`login/README.utmpd'.
 
    One auxiliary program, `/usr/libexec/pt_chown', is installed setuid
 `root'.  This program is invoked by the `grantpt' function; it sets the
@@ -246,16 +246,17 @@ build the GNU C library:
      bugs which only show up in big projects like GNU `libc'.  Version
      3.76.1 seems OK but some people have reported problems.
 
-   * EGCS 1.1.1, 1.1 or 1.0.3
+   * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1
 
      The GNU C library can only be compiled with the GNU C compiler
      family.  As of the 2.1 release, EGCS 1.0.3 or higher is required.
-     GCC 2.8.1 cannot be used due to an incompatible implementation of
-     some internal compiler support routines; see the FAQ for details.
-     GCC 2.7.x is simply too buggy.  You can use whatever compiler you
-     like to compile programs that use GNU libc, but be aware that both
-     GCC 2.7 and 2.8 have bugs in their floating-point support that may
-     be triggered by the math library.
+     GCC 2.8.1 can also be used (but see the FAQ for reasons why you
+     might not want to).  Earlier versions simply are too buggy.
+
+     You can use whatever compiler you like to compile programs that
+     use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in
+     their floating-point support that may be triggered by the math
+     library.
 
      On Alpha machines you need at least EGCS 1.1.1.  Earlier versions
      don't work reliably.
@@ -279,7 +280,7 @@ build the GNU C library:
      For PPC you might need some patches even on top of the last
      binutils version.  See the FAQ.
 
-   * GNU `texinfo' 3.11
+   * GNU `texinfo' 3.12f
 
      To correctly translate and install the Texinfo documentation you
      need this version of the `texinfo' package.  Earlier versions do

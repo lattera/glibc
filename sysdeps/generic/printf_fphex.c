@@ -263,7 +263,7 @@ __printf_fphex (FILE *fp,
 	    {
 	      /* This is a denormalized number.  */
 	      expnegative = 1;
-	      exponent = -(1 - IEEE754_DOUBLE_BIAS);
+	      exponent = IEEE754_DOUBLE_BIAS - 1;
 	    }
 	}
       else if (exponent >= IEEE754_DOUBLE_BIAS)
@@ -315,13 +315,19 @@ __printf_fphex (FILE *fp,
 	    {
 	      /* This is a denormalized number.  */
 	      expnegative = 1;
-	      exponent = -(1 - (IEEE854_LONG_DOUBLE_BIAS + 3));
+	      /* This is a hook for the m68k long double format, where the
+		 exponent bias is the same for normalized and denormalized
+		 numbers.  */
+#ifndef LONG_DOUBLE_DENORM_BIAS
+# define LONG_DOUBLE_DENORM_BIAS (IEEE854_LONG_DOUBLE_BIAS - 1)
+#endif
+	      exponent = LONG_DOUBLE_DENORM_BIAS + 3;
 	    }
 	}
       else if (exponent >= IEEE854_LONG_DOUBLE_BIAS + 3)
 	{
 	  expnegative = 0;
-	  exponent -= IEEE854_LONG_DOUBLE_BIAS + 2;
+	  exponent -= IEEE854_LONG_DOUBLE_BIAS + 3;
 	}
       else
 	{

@@ -276,14 +276,15 @@ have bugs which only show up in big projects like GNU @code{libc}.
 Version 3.76.1 seems OK but some people have reported problems.
 
 @item
-EGCS 1.1.1, 1.1 or 1.0.3
+EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1
 
 The GNU C library can only be compiled with the GNU C compiler family.
-As of the 2.1 release, EGCS 1.0.3 or higher is required.  GCC 2.8.1 cannot
-be used due to an incompatible implementation of some internal compiler
-support routines; see the FAQ for details.  GCC 2.7.x is simply too
-buggy.  You can use whatever compiler you like to compile programs that
-use GNU libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
+As of the 2.1 release, EGCS 1.0.3 or higher is required.  GCC 2.8.1 can
+also be used (but see the FAQ for reasons why you might not want to).
+Earlier versions simply are too buggy.
+
+You can use whatever compiler you like to compile programs that use GNU
+libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
 floating-point support that may be triggered by the math library.
 
 On Alpha machines you need at least EGCS 1.1.1.  Earlier versions don't
