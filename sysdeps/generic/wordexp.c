@@ -554,16 +554,13 @@ static int
 internal_function
 eval_expr_val (char **expr, long int *result)
 {
-  int sgn = +1;
   char *digit;
 
   /* Skip white space */
   for (digit = *expr; digit && *digit && isspace (*digit); ++digit);
 
-  switch (*digit)
+  if (*digit == '(')
     {
-    case '(':
-
       /* Scan for closing paren */
       for (++digit; **expr && **expr != ')'; ++(*expr));
 
@@ -577,27 +574,14 @@ eval_expr_val (char **expr, long int *result)
 	return WRDE_SYNTAX;
 
       return 0;
-
-    case '+':	/* Positive value */
-      ++digit;
-      break;
-
-    case '-':	/* Negative value */
-      ++digit;
-      sgn = -1;
-      break;
-
-    default:
-      if (!isdigit (*digit))
-	return WRDE_SYNTAX;
     }
 
-  *result = 0;
-  for (; *digit && isdigit (*digit); ++digit)
-    *result = (*result * 10) + (*digit - '0');
+  /* POSIX requires that decimal, octal, and hexadecimal constants are
+     recognized.  Therefore we pass 0 as the third parameter to strtol.  */
+  *result = strtol (digit, expr, 0);
+  if (digit == *expr)
+    return WRDE_SYNTAX;
 
-  *expr = digit;
-  *result *= sgn;
   return 0;
 }
 

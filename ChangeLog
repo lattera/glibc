@@ -1,3 +1,11 @@
+2003-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/wordexp.c (eval_expr_val): Use strtol since we
+	have to recognize octal and hexadecimal numbers as well.  Simplify
+	function, signs are handled in strtol.
+	* posix/wordexp-test.c: Add tests for octal and hexadecimal
+	numbers in arithmetic expressions.
+
 2003-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile (distribute): Add tst-alignmod.c.

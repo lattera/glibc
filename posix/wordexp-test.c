@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,6 +109,11 @@ struct test_case_struct
     { 0, NULL, "$((-1))", 0, 1, { "-1", }, IFS },
     { 0, NULL, "$[50+20]", 0, 1, { "70", }, IFS },
     { 0, NULL, "$(((2+3)*(4+5)))", 0, 1, { "45", }, IFS },
+    { 0, NULL, "$((010))", 0, 1, { "8" }, IFS },
+    { 0, NULL, "$((0x10))", 0, 1, { "16" }, IFS },
+    { 0, NULL, "$((010+0x10))", 0, 1, { "24" }, IFS },
+    { 0, NULL, "$((-010+0x10))", 0, 1, { "8" }, IFS },
+    { 0, NULL, "$((-0x10+010))", 0, 1, { "-8" }, IFS },
 
     /* Advanced parameter expansion */
     { 0, NULL, "${var:-bar}", 0, 1, { "bar", }, IFS },
@@ -201,6 +206,7 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "$(for i in)", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, }, IFS },
+    { WRDE_SYNTAX, NULL, "$((010+4+))", 0, 0, { NULL }, IFS },
 
     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
