@@ -161,6 +161,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
+#ifdef NEED_DL_SYSINFO
+      case AT_SYSINFO:
+	GL(dl_sysinfo) = av->a_un.a_val;
+	break;
+#endif
       }
 }
 #endif
