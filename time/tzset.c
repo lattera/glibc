@@ -72,7 +72,7 @@ static tz_rule tz_rules[2];
 static void compute_change __P ((tz_rule *rule, int year)) internal_function;
 static void tz_compute __P ((const struct tm *tm))
      internal_function;
-static void tzset_internal __P ((int always)) internal_function;
+static void tzset_internal __P ((int always, int explicit)) internal_function;
 
 /* List of buffers containing time zone strings. */
 struct tzstring_l
@@ -131,7 +131,7 @@ __tzname_max ()
 {
   __libc_lock_lock (tzset_lock);
 
-  tzset_internal (0);
+  tzset_internal (0, 0);
 
   __libc_lock_unlock (tzset_lock);
 
@@ -143,8 +143,9 @@ static char *old_tz;
 /* Interpret the TZ envariable.  */
 static void
 internal_function
-tzset_internal (always)
+tzset_internal (always, explicit)
      int always;
+     int explicit;
 {
   static int is_initialized;
   register const char *tz;
@@ -159,6 +160,12 @@ tzset_internal (always)
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
+  if (tz == NULL && !explicit)
+    /* Use the site-wide default.  This is a file name which means we
+       would not see changes to the file if we compare only the file
+       name for change.  We want to notice file changes if tzset() has
+       been called explicitly.  Leave TZ as NULL in this case.  */
+    tz = TZDEFAULT;
   if (tz && *tz == '\0')
     /* User specified the empty string; use UTC explicitly.  */
     tz = "Universal";
@@ -532,7 +539,7 @@ __tzset (void)
 {
   __libc_lock_lock (tzset_lock);
 
-  tzset_internal (1);
+  tzset_internal (1, 1);
 
   if (!__use_tzfile)
     {
@@ -565,7 +572,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
      POSIX.1 8.3.7.2 says that localtime_r is not required to set tzname.
      This is a good idea since this allows at least a bit more parallelism.
      By analogy we apply the same rule to gmtime_r.  */
-  tzset_internal (tp == &_tmbuf);
+  tzset_internal (tp == &_tmbuf, 0);
 
   if (__use_tzfile)
     __tzfile_compute (*timer, use_localtime, &leap_correction,
