@@ -185,6 +185,16 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
       if (ch != lr->comment_char)
 	break;
 
+      /* Is there an newline at the end of the buffer?  */
+      if (lr->buf[lr->bufact - 1] != '\n')
+	{
+	  /* No.  Some people want this to mean that only the line in
+	     the file not the logical, concatenated line is ignored.
+	     Let's try this.  */
+	  lr->idx = lr->bufact;
+	  continue;
+	}
+
       /* Ignore rest of line.  */
       lr_ignore_rest (lr, 0);
       lr->token.tok = tok_eol;
@@ -198,6 +208,14 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
   /* Match ellipsis.  */
   if (ch == '.')
     {
+      if (strncmp (&lr->buf[lr->idx], "...(2)....", 10) == 0)
+	{
+	  int cnt;
+	  for (cnt = 0; cnt < 10; ++cnt)
+	    lr_getc (lr);
+	  lr->token.tok = tok_ellipsis4_2;
+	  return &lr->token;
+	}
       if (strncmp (&lr->buf[lr->idx], "...", 3) == 0)
 	{
 	  lr_getc (lr);
@@ -211,6 +229,14 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
 	  lr_getc (lr);
 	  lr_getc (lr);
 	  lr->token.tok = tok_ellipsis3;
+	  return &lr->token;
+	}
+      if (strncmp (&lr->buf[lr->idx], ".(2)..", 6) == 0)
+	{
+	  int cnt;
+	  for (cnt = 0; cnt < 6; ++cnt)
+	    lr_getc (lr);
+	  lr->token.tok = tok_ellipsis2_2;
 	  return &lr->token;
 	}
       if (lr->buf[lr->idx] == '.')

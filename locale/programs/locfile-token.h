@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -31,6 +31,8 @@ enum token_t
   tok_ellipsis2,
   tok_ellipsis3,
   tok_ellipsis4,
+  tok_ellipsis2_2,
+  tok_ellipsis4_2,
   tok_semicolon,
   tok_comma,
   tok_open_brace,

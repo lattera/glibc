@@ -97,6 +97,7 @@ struct translit_ignore_t
 {
   uint32_t from;
   uint32_t to;
+  uint32_t step;
 
   const char *fname;
   size_t lineno;
@@ -504,18 +505,13 @@ character '%s' in class `%s' must not be in class `%s'"),
     }
 
   /* ... and now test <SP> as a special case.  */
-  space_value = repertoire_find_value (ctype->repertoire, "SP", 2);
-  if (space_value == ILLEGAL_CHAR_VALUE)
-    {
-      if (!be_quiet)
-	error (0, 0, _("character <SP> not defined in character map"));
-    }
-  else if (((cnt = BITPOS (tok_space),
-	     (ELEM (ctype, class_collection, , space_value)
-	      & BITw (tok_space)) == 0)
-	    || (cnt = BITPOS (tok_blank),
-		(ELEM (ctype, class_collection, , space_value)
-		 & BITw (tok_blank)) == 0)))
+  space_value = 32;
+  if (((cnt = BITPOS (tok_space),
+	(ELEM (ctype, class_collection, , space_value)
+	 & BITw (tok_space)) == 0)
+       || (cnt = BITPOS (tok_blank),
+	   (ELEM (ctype, class_collection, , space_value)
+	    & BITw (tok_blank)) == 0)))
     {
       if (!be_quiet)
 	error (0, 0, _("<SP> character not in class `%s'"),
@@ -1236,7 +1232,8 @@ get_character (struct token *now, struct charmap_t *charmap,
 }
 
 
-/* Ellipsis like in `<foo123>..<foo12a>' or `<j1234>....<j1245>'.  */
+/* Ellipsis like in `<foo123>..<foo12a>' or `<j1234>....<j1245>' and
+   the .(2). counterparts.  */
 static void
 charclass_symbolic_ellipsis (struct linereader *ldfile,
 			     struct locale_ctype_t *ctype,
@@ -1246,7 +1243,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
 			     const char *last_str,
 			     unsigned long int class256_bit,
 			     unsigned long int class_bit, int base,
-			     int ignore_content, int handle_digits)
+			     int ignore_content, int handle_digits, int step)
 {
   const char *nowstr = now->val.str.startmb;
   char tmp[now->val.str.lenmb + 1];
@@ -1288,7 +1285,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
   if (!ignore_content)
     {
       now->val.str.startmb = tmp;
-      while (++from <= to)
+      while ((from += step) <= to)
 	{
 	  struct charseq *seq;
 	  uint32_t wch;
@@ -1346,7 +1343,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
 }
 
 
-/* Ellipsis like in `<U1234>..<U2345>'.  */
+/* Ellipsis like in `<U1234>..<U2345>' or `<U1234>..(2)..<U2345>'.  */
 static void
 charclass_ucs4_ellipsis (struct linereader *ldfile,
 			 struct locale_ctype_t *ctype,
@@ -1355,7 +1352,7 @@ charclass_ucs4_ellipsis (struct linereader *ldfile,
 			 struct token *now, uint32_t last_wch,
 			 unsigned long int class256_bit,
 			 unsigned long int class_bit, int ignore_content,
-			 int handle_digits)
+			 int handle_digits, int step)
 {
   if (last_wch > now->val.ucs4)
     {
@@ -1367,7 +1364,7 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
     }
 
   if (!ignore_content)
-    while (++last_wch <= now->val.ucs4)
+    while ((last_wch += step) <= now->val.ucs4)
       {
 	/* We have to find out whether there is a byte sequence corresponding
 	   to this UCS4 value.  */
@@ -1376,6 +1373,11 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
 
 	snprintf (utmp, sizeof (utmp), "U%08X", last_wch);
 	seq = charmap_find_value (charmap, utmp, 9);
+	if (seq == NULL)
+	  {
+	    snprintf (utmp, sizeof (utmp), "U%04X", last_wch);
+	    seq = charmap_find_value (charmap, utmp, 5);
+	  }
 
 	if (seq == NULL)
 	  /* Try looking in the repertoire map.  */
@@ -1779,6 +1781,7 @@ read_translit_ignore_entry (struct linereader *ldfile,
 	    obstack_alloc (&ctype->mempool, sizeof (struct translit_ignore_t));
 	  newp->from = from;
 	  newp->to = from;
+	  newp->step = 1;
 
 	  newp->next = ctype->translit_ignore;
 	  ctype->translit_ignore = newp;
@@ -1788,11 +1791,12 @@ read_translit_ignore_entry (struct linereader *ldfile,
 	 line.  */
       now = lr_token (ldfile, charmap, repertoire);
 
-      if (now->tok == tok_ellipsis2)
+      if (now->tok == tok_ellipsis2 || now->tok == tok_ellipsis2_2)
 	{
 	  /* XXX Should we bother implementing `....'?  `...' certainly
 	     will not be implemented.  */
 	  uint32_t to;
+	  int step = now->tok == tok_ellipsis2_2 ? 2 : 1;
 
 	  now = lr_token (ldfile, charmap, repertoire);
 
@@ -1823,7 +1827,10 @@ read_translit_ignore_entry (struct linereader *ldfile,
 	    {
 	      /* Make sure the `to'-value is larger.  */
 	      if (to >= from)
-		newp->to = to;
+		{
+		  newp->to = to;
+		  newp->step = step;
+		}
 	      else
 		lr_error (ldfile, _("\
 to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
@@ -1866,6 +1873,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
   uint32_t last_wch = 0;
   enum token_t last_token;
   enum token_t ellipsis_token;
+  int step;
   char last_charcode[16];
   size_t last_charcode_len = 0;
   const char *last_str = NULL;
@@ -2040,6 +2048,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 	  ctype->class_done |= class_bit;
 	  last_token = tok_none;
 	  ellipsis_token = tok_none;
+	  step = 1;
 	  now = lr_token (ldfile, charmap, NULL);
 	  while (now->tok != tok_eol && now->tok != tok_eof)
 	    {
@@ -2140,7 +2149,7 @@ the absolute ellipsis `...' must not be used"));
 						    == tok_ellipsis4
 						    ? 10 : 16),
 						   ignore_content,
-						   handle_digits);
+						   handle_digits, step);
 		    }
 		  else if (last_token == tok_ucs4)
 		    {
@@ -2151,7 +2160,8 @@ with UCS range values one must use the hexadecimal symbolic ellipsis `..'"));
 		      charclass_ucs4_ellipsis (ldfile, ctype, charmap,
 					       repertoire, now, last_wch,
 					       class256_bit, class_bit,
-					       ignore_content, handle_digits);
+					       ignore_content, handle_digits,
+					       step);
 		    }
 		  else
 		    {
@@ -2180,9 +2190,21 @@ with character code range values one must use the absolute ellipsis `...'"));
 		break;
 
 	      if (last_token != tok_none
-		  && now->tok >= tok_ellipsis2 && now->tok <= tok_ellipsis4)
+		  && now->tok >= tok_ellipsis2 && now->tok <= tok_ellipsis4_2)
 		{
+		  if (now->tok == tok_ellipsis2_2)
+		    {
+		      now->tok = tok_ellipsis2;
+		      step = 2;
+		    }
+		  else if (now->tok == tok_ellipsis4_2)
+		    {
+		      now->tok = tok_ellipsis4;
+		      step = 2;
+		    }
+
 		  ellipsis_token = now->tok;
+
 		  now = lr_token (ldfile, charmap, NULL);
 		  continue;
 		}
@@ -2194,6 +2216,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	      now = lr_token (ldfile, charmap, NULL);
 
 	      ellipsis_token = tok_none;
+	      step = 1;
 	    }
 	  break;
 

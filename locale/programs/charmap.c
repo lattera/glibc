@@ -53,7 +53,7 @@ static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       unsigned long int width);
 static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 			      int nbytes, char *bytes, const char *from,
-			      const char *to, int decimal_ellipsis);
+			      const char *to, int decimal_ellipsis, int step);
 
 
 struct charmap_t *
@@ -225,6 +225,7 @@ parse_charmap (struct linereader *cmfile)
   char *from_name = NULL;
   char *to_name = NULL;
   enum token_t ellipsis = 0;
+  int step = 1;
 
   /* We don't want symbolic names in string to be translated.  */
   cmfile->translate_strings = 0;
@@ -461,7 +462,7 @@ character sets with locking states are not supported"));
 						now->val.str.lenmb);
 	  else
 	    {
-	      obstack_printf (&result->mem_pool, "<%08X>",
+	      obstack_printf (&result->mem_pool, "U%08X",
 			      cmfile->token.val.ucs4);
 	      obstack_1grow (&result->mem_pool, '\0');
 	      from_name = (char *) obstack_finish (&result->mem_pool);
@@ -475,9 +476,20 @@ character sets with locking states are not supported"));
 	  /* We have two possibilities: We can see an ellipsis or an
 	     encoding value.  */
 	  if (nowtok == tok_ellipsis3 || nowtok == tok_ellipsis4
-	      || nowtok == tok_ellipsis2)
+	      || nowtok == tok_ellipsis2 || nowtok == tok_ellipsis4_2
+	      || nowtok == tok_ellipsis2_2)
 	    {
 	      ellipsis = nowtok;
+	      if (nowtok == tok_ellipsis4_2)
+		{
+		  step = 2;
+		  nowtok = tok_ellipsis4;
+		}
+	      else if (nowtok == tok_ellipsis2_2)
+		{
+		  step = 2;
+		  nowtok = tok_ellipsis2;
+		}
 	      state = 4;
 	      continue;
 	    }
@@ -502,13 +514,15 @@ character sets with locking states are not supported"));
 	  else
 	    charmap_new_char (cmfile, result, now->val.charcode.nbytes,
 			      now->val.charcode.bytes, from_name, to_name,
-			      ellipsis != tok_ellipsis2);
+			      ellipsis != tok_ellipsis2, step);
 
 	  /* Ignore trailing comment silently.  */
 	  lr_ignore_rest (cmfile, 0);
 
 	  from_name = NULL;
 	  to_name = NULL;
+	  ellipsis = tok_none;
+	  step = 1;
 
 	  state = 2;
 	  continue;
@@ -531,7 +545,7 @@ character sets with locking states are not supported"));
 					      cmfile->token.val.str.lenmb);
 	  else
 	    {
-	      obstack_printf (&result->mem_pool, "<%08X>",
+	      obstack_printf (&result->mem_pool, "U%08X",
 			      cmfile->token.val.ucs4);
 	      obstack_1grow (&result->mem_pool, '\0');
 	      to_name = (char *) obstack_finish (&result->mem_pool);
@@ -814,7 +828,7 @@ charmap_find_value (const struct charmap_t *cm, const char *name, size_t len)
 static void
 charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 		  int nbytes, char *bytes, const char *from, const char *to,
-		  int decimal_ellipsis)
+		  int decimal_ellipsis, int step)
 {
   hash_table *ht = &cm->char_table;
   hash_table *bt = &cm->byte_table;
@@ -833,7 +847,7 @@ charmap_new_char (struct linereader *lr, struct charmap_t *cm,
       newp = (struct charseq *) obstack_alloc (ob, sizeof (*newp) + nbytes);
       newp->nbytes = nbytes;
       memcpy (newp->bytes, bytes, nbytes);
-      newp->name = obstack_copy (ob, from, len1 + 1);
+      newp->name = from;
 
       newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
       if ((from[0] == 'U' || from[0] == 'P') && (len1 == 5 || len1 == 9))
@@ -852,7 +866,7 @@ charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 	  char *endp;
 
 	  errno = 0;
-	  newp->ucs4 = strtoul (from, &endp, 16);
+	  newp->ucs4 = strtoul (from + 1, &endp, 16);
 	  if (endp - from != len1
 	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
 	      || newp->ucs4 >= 0x80000000)
@@ -916,7 +930,7 @@ hexadecimal range format should use only capital characters"));
       return;
     }
 
-  for (cnt = from_nr; cnt <= to_nr; ++cnt)
+  for (cnt = from_nr; cnt <= to_nr; cnt += step)
     {
       char *name_end;
       obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",

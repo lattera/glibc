@@ -1,3 +1,26 @@
+2000-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (charmap_new_char): Add parameter step.
+	Support ..(2).. ellipsis.
+	(parse_charmap): Recognize ..(2).. etc and pass step down.
+	Correctly generate names for UCS4 characters.
+
+	* locale/programs/ld-ctype.c (struct translit_ignore_t): Add step.
+	(ctype_finish): We know the wide character value for <SP>,
+	don't search.
+	(charclass_symbolic_ellipsis): Handle ..(2).. ellipsis.
+	(charclass_ucs4_ellipsis): Likewise.
+	(read_translit_ignore_entry): Store ellipsis step.
+	(ctype_read): Recognize ..(2).. etc and pass step down.
+
+	* locale/programs/linereader.c (lr_token): When seeing comment
+	character ignore only rest of line in sources but stop at escaped
+	newline.
+	Recognize ..(2).. and ....(2).....
+
+	* locale/programs/locfile-token.h (enum token_t): Add tok_ellipsis2_2
+	and tok_ellipsis4_2.
+
 2000-04-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/Dist: init-first.h has been
