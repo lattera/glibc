@@ -632,13 +632,20 @@ do_lookup_alias (const char *name)
 }
 
 
-const char *
-__gconv_lookup_alias (const char *name)
+int
+internal_function
+__gconv_compare_alias (const char *name1, const char *name2)
 {
+  int result;
+
   /* Ensure that the configuration data is read.  */
   __libc_once (once, __gconv_read_conf);
 
-  return do_lookup_alias (name) ?: name;
+  if (__gconv_compare_alias_cache (name1, name2, &result) != 0)
+    result = strcmp (do_lookup_alias (name1) ?: name1,
+		     do_lookup_alias (name2) ?: name2);
+
+  return result;
 }
 
 

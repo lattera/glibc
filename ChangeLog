@@ -1,3 +1,14 @@
+2001-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_cache.c (__gconv_compare_alias_cache): New function.
+	* iconv/gconv_int.h: Add prototype for __gconv_compare_alias_cache.
+	* iconv/gconv_charset.h: Replace __gconv_lookup_alias prototype with
+	__gconv_compare_alias prototype.
+	* iconv/gconv_db.c (__gconv_lookup_alias): Removed.
+	(__gconv_compare_alias): New function.
+	* locale/findlocale.c (_nl_find_locale): Ise __gconv_compare_alias
+	instead of calling __gconv_lookup_alias twice and compare here.
+
 2001-07-26  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Fix handling of

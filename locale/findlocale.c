@@ -207,9 +207,9 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
       ccodeset = (char *) alloca (strlen (codeset) + 3);
       strip (ccodeset, codeset);
 
-      if (strcmp (__gconv_lookup_alias (upstr (ccodeset, ccodeset)),
-		  __gconv_lookup_alias (upstr (clocale_codeset,
-					       clocale_codeset))) != 0)
+      if (__gconv_compare_alias (upstr (ccodeset, ccodeset),
+				 upstr (clocale_codeset,
+					clocale_codeset)) != 0)
 	/* The codesets are not identical, don't use the locale.  */
 	return NULL;
     }

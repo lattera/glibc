@@ -188,6 +188,12 @@ extern int __gconv_lookup_cache (const char *toset, const char *fromset,
 				 int flags)
      internal_function;
 
+/* Compare the two name for whether they are after alias expansion the
+   same.  This function uses the cache and fails if none is
+   loaded.  */
+extern int __gconv_compare_alias_cache (const char *name1, const char *name2,
+					int *result) internal_function;
+
 /* Free data associated with a step's structure.  */
 extern void __gconv_release_step (struct __gconv_step *step)
      internal_function;

@@ -57,4 +57,5 @@ upstr (char *dst, const char *str)
 
 
 /* If NAME is an codeset alias expand it.  */
-extern const char *__gconv_lookup_alias (const char *name);
+extern int __gconv_compare_alias (const char *name1, const char *name2)
+     internal_function;
