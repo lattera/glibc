@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -19,6 +19,7 @@
 
 #include <endian.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -57,14 +58,14 @@ STRCOLL (s1, s2, l)
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = l->__locales[LC_COLLATE];
 # if BYTE_ORDER == BIG_ENDIAN
-  const u_int32_t *collate_table = (const u_int32_t *)
+  const uint32_t *collate_table = (const uint32_t *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].string;
-  const u_int32_t *collate_extra = (const u_int32_t *)
+  const uint32_t *collate_extra = (const uint32_t *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EB)].string;
 # elif BYTE_ORDER == LITTLE_ENDIAN
-  const u_int32_t *collate_table = (const u_int32_t *)
+  const uint32_t *collate_table = (const uint32_t *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EL)].string;
-  const u_int32_t *collate_extra = (const u_int32_t *)
+  const uint32_t *collate_extra = (const uint32_t *)
     current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EL)].string;
 # else
 #  error bizarre byte order
@@ -100,14 +101,14 @@ STRCOLL (s1, s2, l)
 	{
 	  int s1ignore = 0;
 	  int s2ignore = 0;
-	  u_int32_t w1 = 0;
-	  u_int32_t w2 = 0;
+	  uint32_t w1 = 0;
+	  uint32_t w2 = 0;
 
 	  /* Here we have to check for IGNORE entries.  If these are
 	     found we count them and go on with the next value.  */
 	  while (s1run != NULL
 		 && ((w1 = s1run->data[pass].value[s1idx])
-		     == (u_int32_t) IGNORE_CHAR))
+		     == (uint32_t) IGNORE_CHAR))
 	    {
 	      ++s1ignore;
 	      if ((forward && ++s1idx >= s1run->data[pass].number)
@@ -129,7 +130,7 @@ STRCOLL (s1, s2, l)
 
 	  while (s2run != NULL
 		 && ((w2 = s2run->data[pass].value[s2idx])
-		     == (u_int32_t) IGNORE_CHAR))
+		     == (uint32_t) IGNORE_CHAR))
 	    {
 	      ++s2ignore;
 	      if ((forward && ++s2idx >= s2run->data[pass].number)
