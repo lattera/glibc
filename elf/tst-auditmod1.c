@@ -124,10 +124,7 @@ la_i86_gnu_pltexit (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 
   return 0;
 }
-#endif
-
-
-#ifdef __x86_64__
+#elif defined __x86_64__
 uintptr_t
 la_x86_64_gnu_pltenter (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 			uintptr_t *defcook, La_x86_64_regs *regs,
@@ -150,4 +147,6 @@ la_x86_64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 
   return 0;
 }
+#else
+# error "architecture specific code needed"
 #endif
