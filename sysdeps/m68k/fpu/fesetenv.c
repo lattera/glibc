@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -31,17 +31,17 @@ fesetenv (const fenv_t *envp)
      we want to use from the environment specified by the parameter.  */
   __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*&temp));
 
-  temp.status_register &= ~FE_ALL_EXCEPT;
-  temp.control_register &= ~((FE_ALL_EXCEPT << 6) | FE_UPWARD);
+  temp.__status_register &= ~FE_ALL_EXCEPT;
+  temp.__control_register &= ~((FE_ALL_EXCEPT << 6) | FE_UPWARD);
   if (envp == FE_DFL_ENV)
     ;
   else if (envp == FE_NOMASK_ENV)
-    temp.control_register |= FE_ALL_EXCEPT << 6;
+    temp.__control_register |= FE_ALL_EXCEPT << 6;
   else
     {
-      temp.control_register |= (envp->control_register
-				& ((FE_ALL_EXCEPT << 6) | FE_UPWARD));
-      temp.status_register |= envp->status_register & FE_ALL_EXCEPT;
+      temp.__control_register |= (envp->__control_register
+				  & ((FE_ALL_EXCEPT << 6) | FE_UPWARD));
+      temp.__status_register |= envp->__status_register & FE_ALL_EXCEPT;
     }
 
   __asm__ __volatile__ ("fmovem%.l %0,%/fpcr/%/fpsr/%/fpiar" : : "m" (*&temp));

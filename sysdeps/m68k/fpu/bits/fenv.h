@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,9 +64,9 @@ typedef unsigned int fexcept_t;
    corresponds to the layout of the block written by `fmovem'.  */
 typedef struct
   {
-    unsigned int control_register;
-    unsigned int status_register;
-    unsigned int instruction_address;
+    unsigned int __control_register;
+    unsigned int __status_register;
+    unsigned int __instruction_address;
   }
 fenv_t;
 
