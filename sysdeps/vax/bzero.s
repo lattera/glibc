@@ -39,7 +39,7 @@
 
 #include "DEFS.h"
 
-ENTRY(bzero, 0)
+ENTRY(__bzero, 0)
 	movl	4(ap),r3
 	jbr	2f
 1:
@@ -51,3 +51,4 @@ ENTRY(bzero, 0)
 	jgtr	1b
 	movc5	$0,(r3),$0,8(ap),(r3)
 	ret
+weak_alias (__bzero, bzero)

@@ -78,7 +78,7 @@ $tail:	bne	t4, 1f		# is there a tail to do?
 
 	.end bzero_loop
 
-ENTRY(bzero)
+ENTRY(__bzero)
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
@@ -117,3 +117,4 @@ $oneq:
 $done:	ret
 
 	END(bzero)
+weak_alias (__bzero, bzero)
