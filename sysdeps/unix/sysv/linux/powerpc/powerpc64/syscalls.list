@@ -22,8 +22,6 @@ s_getdents	getdents getdents	i:ipi	__syscall_getdents
 s_getdents64	getdents getdents64	i:ipi	__syscall_getdents64
 s_getpmsg	getpmsg	getpmsg		i:ipppp	__syscall_getpmsg
 s_getpriority	getpriority getpriority	i:ii	__syscall_getpriority
-getresgid	-	getresgid	i:ppp	getresgid
-getresuid	-	getresuid	i:ppp	getresuid
 s_getrlimit	getrlimit getrlimit	i:ip	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
 s_mmap2		mmap64	mmap2		b:aniiii __syscall_mmap2

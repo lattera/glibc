@@ -1,3 +1,77 @@
+2002-10-13  Roland McGrath  <roland@frob.com>
+
+	* elf/rtld-Rules ($(objpfx)rtld-libc.a): Use $(verbose) in ar command.
+
+	* sysdeps/mach/hurd/getresuid.c: New file.
+	* sysdeps/mach/hurd/getresgid.c: New file.
+	* sysdeps/mach/hurd/setresuid.c: New file.
+	* sysdeps/mach/hurd/setresgid.c: New file.
+
+	* posix/unistd.h [__USE_GNU] (getresuid, getresgid, setresuid,
+	setresgid): Declare them.
+	* NEWS: Mention it.
+	* include/unistd.h
+	(__getresuid, __getresgid, __setresuid, __setresgid): Declare them,
+	add libc_hidden_proto.
+	* posix/Versions (libc: GLIBC_2.3.2): New set.  Add
+	getresuid, getresgid, setresuid, setresgid here.
+	* Versions.def (libc): Define GLIBC_2.3.2 set.
+	* sysdeps/generic/getresuid.c (__getresuid): Fix argument types.
+	Add libc_hidden_def.
+	* sysdeps/generic/getresgid.c (__getresgid): Likewise.
+	* sysdeps/generic/setresgid.c: New file.
+	* sysdeps/generic/setresuid.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_routines): Don't add getresuid and getresgid here.
+	* sysdeps/unix/sysv/linux/arm/Makefile [$(subdir) = misc]
+	(sysdep_routines): Don't add setresuid and setresgid here.
+	* sysdeps/unix/sysv/linux/cris/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sh/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+	* posix/Makefile (routines): Add them all here instead.
+	* sysdeps/unix/sysv/linux/i386/getresuid.c (getresuid): Renamed to
+	__getresuid.  Add libc_hidden_def for that, and weak alias to old name.
+	* sysdeps/unix/sysv/linux/i386/getresgid.c (getresgid): Renamed to
+	__getresgid.  Add libc_hidden_def for that, and weak alias to old name.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Add libc_hidden_def.
+	[! __NR_setresuid]: Include generic file.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c (setresgid): Renamed to
+	__setresgid.  Add libc_hidden_def for that, and weak alias to old name.
+	[! __NR_setresuid]: Include generic file.
+	* sysdeps/unix/sysv/linux/syscalls.list (setresuid, setresgid):
+	Caller is - now, not EXTRA.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list
+	(setresuid, setresgid, getresuid, getresgid): Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (getresuid, getresgid):
+	Add these calls here.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove them here.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_routines): Add setfsuid and setfsgid here.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Not here.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/cris/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sh/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Likewise.
+
+	* hurd/errno.c: Renamed to ...
+	* hurd/errno-loc.c: ... this.
+	* hurd/Makefile (routines): errno -> errno-loc
+
 2002-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/de.po: Update from translation team.

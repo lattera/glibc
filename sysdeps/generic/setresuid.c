@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
+/* setresuid -- set effective user ID, real user ID, and saved-set user ID
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,16 +20,16 @@
 #include <errno.h>
 #include <unistd.h>
 
-/* Fetch the effective user ID, real user ID, and saved-set user ID,
-   of the calling process.  */
+/* Set the effective user ID, real user ID, and saved-set user ID,
+   of the calling process to EUID, RUID, and SUID, respectively.  */
 int
-__getresuid (uid_t *euid, uid_t *ruid, uid_t *suid)
+__setresuid (uid_t euid, uid_t ruid, uid_t suid)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (__getresuid)
-stub_warning (getresuid)
+libc_hidden_def (__setresuid)
+stub_warning (setresuid)
 
-weak_alias (__getresuid, getresuid)
+weak_alias (__setresuid, setresuid)
 #include <stub-tag.h>

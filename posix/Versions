@@ -109,6 +109,13 @@ libc {
     # For syscall wrapper
     __nanosleep;
   }
+  GLIBC_2.3.2 {
+    # Note that these symbols appear in sysdeps/unix/sysv/linux/Versions
+    # under GLIBC_2.0; the first instance in the script is taken as the
+    # default, so linux configurations put them in GLIBC_2.0 while other
+    # configuration put them in GLIBC_2.3.2.
+    getresuid; getresgid; setresuid; setresgid;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,8 +41,6 @@ extern int __libc_missing_32bit_uids;
 #  endif
 # endif /* __NR_setresuid32 */
 
-extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
-
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
@@ -75,5 +73,11 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
   return INLINE_SYSCALL (setresuid, 3, ruid, euid, suid);
 # endif
 }
+libc_hidden_def (__setresuid)
 weak_alias (__setresuid, setresuid)
+
+#else
+
+#include <sysdeps/generic/setresuid.c>
+
 #endif

@@ -32,8 +32,5 @@ shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
-getresuid	-	getresuid	i:ppp	getresuid
-getresgid	-	getresgid	i:ppp	getresgid
-
 setrlimit	-	setrlimit	i:ip	__setrlimit	setrlimit	
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit	

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,10 +41,8 @@ extern int __libc_missing_32bit_uids;
 #  endif
 # endif /* __NR_setresgid32 */
 
-extern int setresgid (gid_t rgid, gid_t egid, gid_t sgid);
-
 int
-setresgid (gid_t rgid, gid_t egid, gid_t sgid)
+__setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
 # if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (setresgid32, 3, rgid, egid, sgid);
@@ -75,4 +73,11 @@ setresgid (gid_t rgid, gid_t egid, gid_t sgid)
   return INLINE_SYSCALL (setresgid, 3, rgid, egid, sgid);
 # endif
 }
+libc_hidden_def (__setresgid)
+weak_alias (__setresgid, setresgid)
+
+#else
+
+#include <sysdeps/generic/setresgid.c>
+
 #endif

@@ -55,9 +55,6 @@ shutdown	-	shutdown	2	__shutdown	shutdown
 socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
 
-getresuid	-	getresuid	3	getresuid
-getresgid	-	getresgid	3	getresgid
-
 # access pci space protected from machine checks:
 pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write

@@ -16,6 +16,8 @@ geteuid		-	geteuid		i:	__geteuid	geteuid
 getpgid		-	getpgid		i:i	__getpgid	getpgid
 getpgrp		-	getpgrp		i:	getpgrp
 getppid		-	getppid		i:	__getppid	getppid
+getresuid	-	getresuid	i:ppp	getresuid
+getresgid	-	getresgid	i:ppp	getresgid
 getsid		-	getsid		i:i	getsid
 init_module	EXTRA	init_module	5	init_module
 ioperm		-	ioperm		i:iii	ioperm
@@ -56,8 +58,8 @@ sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
-setresuid	EXTRA	setresuid	i:iii	__setresuid	setresuid
-setresgid	EXTRA	setresgid	i:iii	__setresgid	setresgid
+setresuid	-	setresuid	i:iii	__setresuid	setresuid
+setresgid	-	setresgid	i:iii	__setresgid	setresgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon

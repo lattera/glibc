@@ -42,9 +42,17 @@ $(objpfx)rtld-libc.a: $(foreach dir,$(rtld-subdirs),\
 				$(addprefix $(common-objpfx)$(dir)/rtld-,\
 					    $(rtld-$(dir))))
 	@-rm -f $@T
-	$(AR) cq $@T $^
+	$(AR) cq$(verbose) $@T $^
 	$(RANLIB) $@T
 	mv -f $@T $@
+
+# Use the verbose option of ar and tar when not running silently.
+ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
+verbose := v
+else	   					# -s
+verbose	:=
+endif						# not -s
+
 
 # For each subdirectory, define a pattern rule that makes all of that
 # subdirectory's modules at once with one recursive make command.

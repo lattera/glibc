@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1997,1998,2002 Free Software Foundation, Inc.
+/* getresuid -- fetch effective user ID, real user ID, and saved-set user ID
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +19,44 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <hurd.h>
+#include <hurd/id.h>
 
 /* Fetch the effective user ID, real user ID, and saved-set user ID,
    of the calling process.  */
 int
 __getresuid (uid_t *euid, uid_t *ruid, uid_t *suid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  error_t err;
+  uid_t eff, real, saved;
+
+  HURD_CRITICAL_BEGIN;
+  __mutex_lock (&_hurd_id.lock);
+
+  err = _hurd_check_ids ();
+  if (!err)
+    {
+      if (_hurd_id.aux.nuids < 1)
+	/* We do not even have a real UID.  */
+	err = EGRATUITOUS;
+      else
+	{
+	  real = _hurd_id.aux.uids[0];
+	  saved = _hurd_id.aux.nuids < 2 ? real :_hurd_id.aux.uids[1];
+	  eff = _hurd_id.gen.nuids < 1 ? real : _hurd_id.gen.uids[0];
+	}
+    }
+
+  __mutex_unlock (&_hurd_id.lock);
+  HURD_CRITICAL_END;
+
+  if (err)
+    return __hurd_fail (err);
+
+  *euid = eff;
+  *ruid = real;
+  *suid = saved;
+  return 0;
 }
 libc_hidden_def (__getresuid)
-stub_warning (getresuid)
-
 weak_alias (__getresuid, getresuid)
-#include <stub-tag.h>

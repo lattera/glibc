@@ -13,10 +13,10 @@ setrlimit	-	setrlimit	2	__setrlimit	setrlimit
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_setuid	setuid	setuid		1	__syscall_setuid
-setresuid	EXTRA	setresuid32	3	__setresuid	setresuid
-setresgid	EXTRA	setresgid32	3	__setresgid	setresgid
-getresuid	EXTRA	getresuid32	3	getresuid
-getresgid	EXTRA	getresgid32	3	getresgid
+setresuid	-	setresuid32	3	__setresuid	setresuid
+setresgid	-	setresgid32	3	__setresgid	setresgid
+getresuid	-	getresuid32	3	getresuid
+getresgid	-	getresgid32	3	getresgid
 
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction

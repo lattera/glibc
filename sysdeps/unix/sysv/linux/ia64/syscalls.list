@@ -57,9 +57,6 @@ pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 
 ptrace		-	ptrace		4	__ptrace	ptrace
 
-getresuid	-	getresuid	i:ppp	getresuid
-getresgid	-	getresgid	i:ppp	getresgid
-
 rt_sigaction	EXTRA	rt_sigaction	i:ippi	__syscall_rt_sigaction		rt_sigaction
 rt_sigpending	EXTRA	rt_sigpending	i:pi	__syscall_rt_sigpending		rt_sigpending
 rt_sigprocmask	EXTRA	rt_sigprocmask	i:ippi	__syscall_rt_sigprocmask	rt_sigprocmask

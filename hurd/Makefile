@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2001,2002
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -59,7 +59,7 @@ routines = hurdstartup hurdinit \
 	   fopenport \
 	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
-	   errno \
+	   errno-loc \
 	   $(sig) $(dtable) $(inlines) port-cleanup report-wait
 sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \

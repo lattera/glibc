@@ -2,10 +2,6 @@ asm-CPPFLAGS = -D__ASSEMBLY__
 ASFLAGS-.os += -fPIC
 LD += -melf32_sparc
 
-ifeq ($(subdir),misc)
-sysdep_routines += setfsgid setfsuid
-endif
-
 # When I get this to work, this is the right thing
 ifeq ($(subdir),elf)
 CFLAGS-rtld.c += -mv8
