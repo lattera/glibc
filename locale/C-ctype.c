@@ -920,6 +920,7 @@ const struct locale_data _nl_C_LC_CTYPE =
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0" },
     { string: "tolower\0" "toupper\0" },
     { string: _nl_C_LC_CTYPE_width },
-    { word: 2 }
+    { word: 2 },
+    { string: "ISO_646.IRV:1983" }
   }
 };

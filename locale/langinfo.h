@@ -134,6 +134,7 @@ typedef enum
   _NL_CTYPE_MAP_NAMES,
   _NL_CTYPE_WIDTH,
   _NL_CTYPE_MB_CUR_MAX,
+  _NL_CTYPE_CODESET_NAME,
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.

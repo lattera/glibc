@@ -367,8 +367,8 @@ setlocale (int category, const char *locale)
     }
   else
     {
-      const struct locale_data *newdata;
-      char *newname;
+      const struct locale_data *newdata = NULL;
+      char *newname = NULL;
 
       if (_nl_current[category] != NULL)
 	{

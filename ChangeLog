@@ -1,3 +1,24 @@
+Wed Jun 19 01:27:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* math/Makefile (distribute): Add ieee-math.c.
+
+Wed Jun 19 03:24:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/codeset_name.c: New file.  Provide function for information
+ 	about currently used character set.
+	* locale/Makefile (routines): Add codeset_name.
+	* locale/langinfo.h (_NL_CTYPE_CODESET_NAME): Add new constant.
+	* locale/localeinfo.h: Change magic number because of incompatible
+	change.
+	* locale/C-ctype.c: Add initializer for new field `codeset_name'.
+	* locale/programs/ld-ctype.c: Implement handling of `codeset_name'.
+
+	* locale/programs/locfile.c: Don't depend in pre-2.0 Linux specific
+ 	name `MAX_IOVEC'.  Instead use standard name `UIO_MAXIOV'.
+
+	* locale/setlocale.c (setlocale): Initialize local variables to
+	prevent warnings.
+
 Tue Jun 18 17:56:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Version 1.91 test release.

@@ -963,11 +963,7 @@ write_locale_data (const char *output_path, const char *category,
      limitation of the implementation.  */
   for (cnt = 0; cnt < n_elem; cnt += step)
     {
-      /* XXX Fixme: should be in libc header.  */
-#ifndef MAX_IOVEC
-# define MAX_IOVEC 8
-#endif
-      step = MIN (MAX_IOVEC, n_elem - cnt);
+      step = MIN (UIO_MAXIOV, n_elem - cnt);
 
       if (writev (fd, &vec[cnt], step) < 0)
 	{

@@ -109,6 +109,7 @@ struct locale_ctype_t
   u_int32_t *map_name_ptr;
   unsigned char *width;
   u_int32_t mb_cur_max;
+  const char *codeset_name;
 };
 
 
@@ -474,6 +475,9 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (u_int32_t));
+
+	  CTYPE_DATA (_NL_CTYPE_CODESET_NAME,
+		      ctype->codeset_name, strlen (ctype->codeset_name) + 1);
 
 	  default:
 	    assert (! "unknown CTYPE element");
@@ -1382,4 +1386,9 @@ Computing table size for character classes might take a while..."),
      character representation.  We compute the number of bytes used
      for the UTF-8 encoded form.  */
   ctype->mb_cur_max = ((int []) { 2, 3, 5, 6 }) [charset->mb_cur_max - 1];
+
+  /* We need the name of the currently used 8-bit character set to
+     make correct conversion between this 8-bit representation and the
+     ISO 10646 character set used internally for wide characters.  */
+  ctype->codeset_name = charset->code_set_name;
 }

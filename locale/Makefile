@@ -29,7 +29,7 @@ distribute	= localeinfo.h categories.def \
 		  locfile-kw.gperf locfile-kw.h linereader.h \
 		  locales.h locfile.h stringtrans.h weight.h charset.h
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
-		  mb_cur_max
+		  mb_cur_max codeset_name
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
 others		= localedef locale

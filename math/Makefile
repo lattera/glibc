@@ -66,6 +66,7 @@ distribute += $(long-c-yes:=.c)
 install-lib += libieee.a
 non-lib.a += libieee.a
 extra-objs += libieee.a ieee-math.o
+distribute += ieee-math.c
 
 include ../Rules
 

@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include "../intl/loadinfo.h"	/* For loaded_l10nfile definition.  */
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
-#define	LIMAGIC(category)	(0x960528de ^ (category))
+#define	LIMAGIC(category)	(0x960617de ^ (category))
 
 /* Two special weight constants for the collation data.  */
 #define FORWARD_CHAR ((wchar_t) 0xfffffffd)
