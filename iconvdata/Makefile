@@ -259,8 +259,10 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-tests: $(objpfx)iconv-test.out $(objpfx)tst-tables.out \
-       $(objpfx)mtrace-tst-loading
+tests: $(objpfx)iconv-test.out $(objpfx)tst-tables.out
+ifeq (no,$(PERL)
+tests: $(objpfx)mtrace-tst-loading
+endif
 endif
 endif
 
