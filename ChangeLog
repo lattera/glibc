@@ -1,3 +1,13 @@
+2003-03-21  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/mips64/memcpy.S: Fix porting bug that broke
+	unaligned copying of 8-15 bytes.  From Chris Demetriou
+	<cgd@broadcom.com>.  Fix label names.
+	* sysdeps/mips/mips64/memset.S: Fix label names.  Make similar
+	change as to memcpy.S.
+	* sysdeps/mips/memcpy.S: Formatting changes.
+	* sysdeps/mips/memset.S: Likewise.
+
 2003-03-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Add trailing semicolon.

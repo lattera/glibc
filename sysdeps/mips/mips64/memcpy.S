@@ -42,8 +42,8 @@
 ENTRY (memcpy)
 	.set	noreorder
 
-	slti	a4, a2, 8		# Less than 8?
-	bne	a4, zero, L(last8)
+	slti	a4, a2, 16		# Less than 16?
+	bne	a4, zero, L(last16)
 	move	v0, a0			# Setup exit value before too late
 
 	xor	a4, a1, a0		# Find a0/a1 displacement
@@ -86,53 +86,53 @@ L(lop8w):
 	sd	t7,  -8(a0)
 
 L(chk1w):
-	andi	a4, a2, 0x7		# 4 or more bytes left?
-	beq	a4, a2, L(last8)
-	PTR_SUBU a3, a2, a4		# Yes, handle them one word at a time
+	andi	a4, a2, 0x7		# 8 or more bytes left?
+	beq	a4, a2, L(last16)
+	PTR_SUBU a3, a2, a4		# Yes, handle them one dword at a time
 	PTR_ADDU a3, a1			# a3 again end address
 	move	a2, a4
-L(lop1w):	
+L(lop1w):
 	ld	a4, 0(a1)
 	PTR_ADDIU a0, 8
 	PTR_ADDIU a1, 8
 	bne	a1, a3, L(lop1w)
 	sd	a4, -8(a0)
 
-L(last8):
-	blez	a2, L(lst8e)		# Handle last 8 bytes, one at a time
+L(last16):
+	blez	a2, L(lst16e)		# Handle last 16 bytes, one at a time
 	PTR_ADDU a3, a2, a1
-L(lst8l):
+L(lst16l):
 	lb	a4, 0(a1)
 	PTR_ADDIU a0, 1
 	PTR_ADDIU a1, 1
-	bne	a1, a3, L(lst8l)
+	bne	a1, a3, L(lst16l)
 	sb	a4, -1(a0)
-L(lst8e):
+L(lst16e):
 	jr	ra			# Bye, bye
 	nop
 
 L(shift):
 	PTR_SUBU a3, zero, a0		# Src and Dest unaligned 
 	andi	a3, 0x7			#  (unoptimized case...)
-	beq	a3, zero, L(shfa5)
+	beq	a3, zero, L(shft1)
 	PTR_SUBU a2, a3			# a2 = bytes left
 	LDHI	a4, 0(a1)		# Take care of first odd part
 	LDLO	a4, 7(a1)
 	PTR_ADDU a1, a3
 	SDHI	a4, 0(a0)
 	PTR_ADDU a0, a3
-L(shfa5):
+L(shft1):
 	andi	a4, a2, 0x7
 	PTR_SUBU a3, a2, a4
 	PTR_ADDU a3, a1
 L(shfth):
-	LDHI	a5, 0(a1)		# Limp through, word by word
+	LDHI	a5, 0(a1)		# Limp through, dword by dword
 	LDLO	a5, 7(a1)
 	PTR_ADDIU a0, 8
 	PTR_ADDIU a1, 8
 	bne	a1, a3, L(shfth)
 	sd	a5, -8(a0)
-	b	L(last8)		# Handle anything which may be left
+	b	L(last16)		# Handle anything which may be left
 	move	a2, a4
 
 	.set	reorder

@@ -54,12 +54,14 @@ ENTRY (memcpy)
 	SWHI	t0, 0(a0)
 	addu	a0, t1
 
-L(chk8w):	andi	t0, a2, 0x1f		# 32 or more bytes left?
+L(chk8w):	
+	andi	t0, a2, 0x1f		# 32 or more bytes left?
 	beq	t0, a2, L(chk1w)
 	subu	a3, a2, t0		# Yes
 	addu	a3, a1			# a3 = end address of loop
 	move	a2, t0			# a2 = what will be left after loop
-L(lop8w):	lw	t0,  0(a1)		# Loop taking 8 words at a time
+L(lop8w):	
+	lw	t0,  0(a1)		# Loop taking 8 words at a time
 	lw	t1,  4(a1)
 	lw	t2,  8(a1)
 	lw	t3, 12(a1)
@@ -79,28 +81,34 @@ L(lop8w):	lw	t0,  0(a1)		# Loop taking 8 words at a time
 	bne	a1, a3, L(lop8w)
 	sw	t7,  -4(a0)
 
-L(chk1w):	andi	t0, a2, 0x3		# 4 or more bytes left?
+L(chk1w):	
+	andi	t0, a2, 0x3		# 4 or more bytes left?
 	beq	t0, a2, L(last8)
 	subu	a3, a2, t0		# Yes, handle them one word at a time
 	addu	a3, a1			# a3 again end address
 	move	a2, t0
-L(lop1w):	lw	t0, 0(a1)
+L(lop1w):	
+	lw	t0, 0(a1)
 	addiu	a0, 4
 	addiu	a1, 4
 	bne	a1, a3, L(lop1w)
 	sw	t0, -4(a0)
 
-L(last8):	blez	a2, L(lst8e)		# Handle last 8 bytes, one at a time
+L(last8):	
+	blez	a2, L(lst8e)		# Handle last 8 bytes, one at a time
 	addu	a3, a2, a1
-L(lst8l):	lb	t0, 0(a1)
+L(lst8l):	
+	lb	t0, 0(a1)
 	addiu	a0, 1
 	addiu	a1, 1
 	bne	a1, a3, L(lst8l)
 	sb	t0, -1(a0)
-L(lst8e):	jr	ra			# Bye, bye
+L(lst8e):	
+	jr	ra			# Bye, bye
 	nop
 
-L(shift):	subu	a3, zero, a0		# Src and Dest unaligned 
+L(shift):	
+	subu	a3, zero, a0		# Src and Dest unaligned 
 	andi	a3, 0x3			#  (unoptimized case...)
 	beq	a3, zero, L(shft1)
 	subu	a2, a3			# a2 = bytes left
@@ -109,16 +117,18 @@ L(shift):	subu	a3, zero, a0		# Src and Dest unaligned
 	addu	a1, a3
 	SWHI	t0, 0(a0)
 	addu	a0, a3
-L(shft1):	andi	t0, a2, 0x3
+L(shft1):	
+	andi	t0, a2, 0x3
 	subu	a3, a2, t0
 	addu	a3, a1
-L(shfth):	LWHI	t1, 0(a1)		# Limp through, word by word
+L(shfth):	
+	LWHI	t1, 0(a1)		# Limp through, word by word
 	LWLO	t1, 3(a1)
 	addiu	a0, 4
 	addiu	a1, 4
 	bne	a1, a3, L(shfth)
 	sw	t1, -4(a0)
-	b	L(last8)			# Handle anything which may be left
+	b	L(last8)		# Handle anything which may be left
 	move	a2, t0
 
 	.set	reorder
