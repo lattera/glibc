@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,5 +47,7 @@
 #define POLLHUP		0x010		/* Hung up.  */
 #define POLLNVAL	0x020		/* Invalid polling request.  */
 
+#ifdef __USE_MISC
 /* Canonical number of polling requests to read in at a time in poll.  */
-#define NPOLLFILE	30
+# define NPOLLFILE	30
+#endif
