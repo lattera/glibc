@@ -1,3 +1,8 @@
+1998-12-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* semaphore.c (sem_trywait): Don't forget to unlock the semaphore
+	lock.  Patch by Bernd Schmidt <crux@pool.informatik.rwth-aachen.de>.
+
 1998-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c: Threads now send __pthread_sig_cancel on termination.

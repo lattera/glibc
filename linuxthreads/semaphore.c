@@ -77,6 +77,7 @@ int sem_trywait(sem_t * sem)
     sem->sem_value--;
     retval = 0;
   }
+  __pthread_unlock((struct _pthread_fastlock *) &sem->sem_lock);
   return retval;
 }
 
