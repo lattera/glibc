@@ -48,15 +48,15 @@ alias	US-ASCII//		ANSI_X3.4-1968//
 alias	US//			ANSI_X3.4-1968//
 alias	IBM367//		ANSI_X3.4-1968//
 alias	CP367//			ANSI_X3.4-1968//
-module	ANSI_X3.4-1968//	ISO-10646/UCS4/		ISO646		1
-module	ISO-10646/UCS4/		ANSI_X3.4-1968//	ISO646		1
+module	ANSI_X3.4-1968//	ISO-10646/UCS4/		ISO646		2
+module	ISO-10646/UCS4/		ANSI_X3.4-1968//	ISO646		2
 
 alias	ISO-IR-4//		BS_4730//
 alias	ISO646-GB//		BS_4730//
 alias	GB//			BS_4730//
 alias	UK//			BS_4730//
-module	BS_4730//		ISO-10646/UCS4/		ISO646
-module	ISO-10646/UCS4/		BS_4730//		ISO646
+module	BS_4730//		ISO-10646/UCS4/		ISO646		2
+module	ISO-10646/UCS4/		BS_4730//		ISO646		2
 
 #	from			  to			  module	cost
 alias	ISO-IR-100//		ISO-8859-1//

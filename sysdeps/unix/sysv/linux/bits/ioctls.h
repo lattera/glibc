@@ -99,7 +99,7 @@
    names as their own. Because these are device dependent it is a good
    idea _NOT_ to issue them to random objects and hope.  */
 
-#define SIOCDEVPRIVATE	0x89F0	/* to 89FF */
+#define SIOCDEVPRIVATE 		0x89F0	/* to 89FF */
 
 /*
  *	These 16 ioctl calls are protocol private

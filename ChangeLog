@@ -1,6 +1,34 @@
+1998-04-02 11:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* localedata/Makefile: Correct testsuite rules.
+
+	* iconvdata/gconv-modules: Set cost of ISO646 module to 2.
+	* iconvdata/iso646.c: Fix conversion from UCS4.
+
+	* elf/ldsodefs.h: Mark internal function with internal_function.
+	* elf/dl-addr.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/dlerror.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+
 1998-04-01 17:38  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconv/gconv?simple.c: New builtins for UCS en/decoding.
+	* iconv/gconv_simple.c: New builtins for UCS en/decoding.
 	* iconv/gconv_builtin.h: Add definitions for new builtins.
 	* iconv/gconv.h: Add prototypes for new builtins.
 
@@ -29,7 +57,7 @@
 
 	* iconv/gconv_conf.c (builtin_aliases): New variable.
 	(__gconv_read_conf): Add builtin aliases.
-	* iconv/gconv_builtin.c (builtin_map): Define BUILTIN?ALIAS as an
+	* iconv/gconv_builtin.c (builtin_map): Define BUILTIN_ALIAS as an
 	noop macro before including gconv_builtin.h.
 	* iconv/gconv_builtin.h: Add alias names.
 

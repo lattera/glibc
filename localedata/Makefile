@@ -65,11 +65,11 @@ tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch
 do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		 $(test-input:.ISO-8859-1=.in)
 	$(SHELL) -e $< $(common-objpfx) $(test-input)
-do-tst-fmon: tst-locale.sh $(objpfx)tst-fmon $(ld-test-srcs)
+do-tst-fmon: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data
+	$(SHELL) -e $< $(common-objpfx) tst-fmon.data
+do-tst-locale: tst-locale.sh $(ld-test-srcs)
 	$(SHELL) -e $< $(common-objpfx)
-do-tst-locale: tst-locale.sh
-	$(SHELL) -e $< $(common-objpfx)
-do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch
+do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-collate-test
 	$(SHELL) -e $< $(common-objpfx)
 endif
 

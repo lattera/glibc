@@ -18,6 +18,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* The implementation of the conversion which can be performed by this
+   module are not very sophisticated and not tuned at all.  There are
+   zillions of ISO 646 derivates and supporting them all in a separate
+   module is overkill since these coded character sets are hardly ever
+   used anymore (except ANSI_X3.4-1968 == ASCII, which is compatible
+   with ISO 8859-1).  The European variants are superceded by the
+   various ISO 8859-? standards and the Asian variants are embedded in
+   larger character sets.  Therefore this implementation is simply
+   here to make it possible to do the conversion if it is necessary.
+   The cost in the gconv-modules file is set to `2' and therefore
+   allows one to easily provide a tuned implementation in case this
+   proofs to be necessary.  */
+
 #include <gconv.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,13 +38,14 @@
 /* Direction of the transformation.  */
 enum direction
 {
-  illegal,
+  illegal_dir,
   to_iso646,
   from_iso646
 };
 
 enum variant
 {
+  illegal_var,
   US,		/* ANSI_X3.4-1968 */
   GB,		/* BS_4730 */
 };
@@ -73,10 +87,13 @@ gconv_init (struct gconv_step *step, struct gconv_step_data *data)
       var = GB;
     }
   else
-    dir = illegal;
+    {
+      dir = illegal_dir;
+      var = illegal_var;
+    }
 
   result = GCONV_NOCONV;
-  if (dir != illegal
+  if (dir != illegal_dir
       && ((new_data
 	   = (struct iso646_data *) malloc (sizeof (struct iso646_data)))
 	  != NULL))
@@ -167,11 +184,16 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 		    default:
 		      *((wchar_t *) (outbuf + outwchars)) =
 			(unsigned char) inbuf[cnt];
+		    case '\x80' ... '\xff':
+		      /* Illegal character.  */
+		      result = GCONV_ILLEGAL_INPUT;
+		      goto out_from;
 		    }
 		  ++do_write;
 		  outwchars += sizeof (wchar_t);
 		  ++cnt;
 		}
+	    out_from:
 	      *inbufsize -= cnt;
 	      data->outbufavail = outwchars;
 	    }
@@ -179,24 +201,47 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	    {
 	      size_t inwchars = *inbufsize;
 	      size_t outchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
+	      unsigned char *outbuf = data->outbuf;
 	      size_t cnt = 0;
 
 	      while (inwchars >= cnt + sizeof (wchar_t)
 		     && outchars < data->outbufsize)
 		{
-		  if (*((wchar_t *) (inbuf + cnt)) >= L'\0'
-		      && *((wchar_t *) (inbuf + cnt)) <= L'\177')
-		    outbuf[outchars] = *((wchar_t *) (inbuf + cnt));
-		  else
-		    /* Here is where the transliteration would enter the
-		       scene.  */
-		    break;
+		  switch (*((wchar_t *) (inbuf + cnt)))
+		    {
+		    case 0x23:
+		      if (var == GB)
+			goto out_to;
+		      outbuf[outchars] = 0x23;
+		      break;
+		    case 0x75:
+		      if (var == GB)
+			goto out_to;
+		      outbuf[outchars] = 0x75;
+		      break;
+		    case 0xa3:
+		      if (var != GB)
+			goto out_to;
+		      outbuf[outchars] = 0x23;
+		      break;
+		    case 0x203e:
+		      if (var != GB)
+			goto out_to;
+		      outbuf[outchars] = 0x75;
+		      break;
+		    default:
+		      if (*((wchar_t *) (inbuf + cnt)) > 0x7f)
+			goto out_to;
+		      outbuf[outchars] =
+			(unsigned char) *((wchar_t *) (inbuf + cnt));
+		      break;
+		    }
 
 		  ++do_write;
 		  ++outchars;
 		  cnt += sizeof (wchar_t);
 		}
+	    out_to:
 	      *inbufsize -= cnt;
 	      data->outbufavail = outchars;
 
