@@ -27,7 +27,7 @@
    compiler treats those calls as if they were instructions.  In
    particular, it doesn't save any of the temporary registers (caller
    saved registers).  It is therefore necessary to preserve all
-   caller-saved registers as well
+   caller-saved registers as well.
 
    Upon entering _mcount, register $at holds the return address and ra
    holds the return address of the function's caller (selfpc and frompc,
