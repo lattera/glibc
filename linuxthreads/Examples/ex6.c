@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-void *
+static void *
 test_thread (void *v_param)
 {
   return NULL;

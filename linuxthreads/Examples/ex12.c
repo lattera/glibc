@@ -5,7 +5,8 @@
 #include <pthread.h>
 #include <unistd.h>
 
-void *
+static void *
+__attribute__ ((noreturn))
 test_thread (void *v_param)
 {
   pthread_exit (NULL);
