@@ -1570,7 +1570,8 @@ static boolean at_begline_loc_p _RE_ARGS ((const char *pattern, const char *p,
 					   reg_syntax_t syntax));
 static boolean at_endline_loc_p _RE_ARGS ((const char *p, const char *pend,
 					   reg_syntax_t syntax));
-static reg_errcode_t compile_range _RE_ARGS ((const char **p_ptr,
+static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
+					      const char **p_ptr,
 					      const char *pend,
 					      char *translate,
 					      reg_syntax_t syntax,
@@ -2174,6 +2175,7 @@ regex_compile (pattern, size, syntax, bufp)
         case '[':
           {
             boolean had_char_class = false;
+	    unsigned int range_start = 0xffffffff;
 
             if (p == pend) FREE_STACK_RETURN (REG_EBRACK);
 
@@ -2217,6 +2219,7 @@ regex_compile (pattern, size, syntax, bufp)
 
                     PATFETCH (c1);
                     SET_LIST_BIT (c1);
+		    range_start = c1;
                     continue;
                   }
 
@@ -2241,8 +2244,10 @@ regex_compile (pattern, size, syntax, bufp)
                     && *p != ']')
                   {
                     reg_errcode_t ret
-                      = compile_range (&p, pend, translate, syntax, b);
+                      = compile_range (range_start, &p, pend, translate,
+				       syntax, b);
                     if (ret != REG_NOERROR) FREE_STACK_RETURN (ret);
+		    range_start = 0xffffffff;
                   }
 
                 else if (p[0] == '-' && p[1] != ']')
@@ -2252,8 +2257,9 @@ regex_compile (pattern, size, syntax, bufp)
 		    /* Move past the `-'.  */
                     PATFETCH (c1);
 
-                    ret = compile_range (&p, pend, translate, syntax, b);
+                    ret = compile_range (c, &p, pend, translate, syntax, b);
                     if (ret != REG_NOERROR) FREE_STACK_RETURN (ret);
+		    range_start = 0xffffffff;
                   }
 
                 /* See if we're at the beginning of a possible character
@@ -2376,6 +2382,7 @@ regex_compile (pattern, size, syntax, bufp)
                           PATUNFETCH;
                         SET_LIST_BIT ('[');
                         SET_LIST_BIT (':');
+			range_start = ':';
                         had_char_class = false;
                       }
                   }
@@ -2503,6 +2510,16 @@ regex_compile (pattern, size, syntax, bufp)
 #endif
 			had_char_class = true;
 		      }
+                    else
+                      {
+                        c1++;
+                        while (c1--)
+                          PATUNFETCH;
+                        SET_LIST_BIT ('[');
+                        SET_LIST_BIT ('=');
+			range_start = '=';
+                        had_char_class = false;
+                      }
 		  }
                 else if (syntax & RE_CHAR_CLASSES && c == '[' && *p == '.')
 		  {
@@ -2553,6 +2570,7 @@ regex_compile (pattern, size, syntax, bufp)
 
 			    /* Set the bit for the character.  */
 			    SET_LIST_BIT (str[0]);
+			    range_start = ((const unsigned char *) str)[0];
 			  }
 #ifdef _LIBC
 			else
@@ -2561,9 +2579,7 @@ regex_compile (pattern, size, syntax, bufp)
 			       those known to the collate implementation.
 			       First find out whether the bytes in `str' are
 			       actually from exactly one character.  */
-			    const unsigned char *weights;
 			    int32_t table_size;
-			    const int32_t *table;
 			    const int32_t *symb_table;
 			    const unsigned char *extra;
 			    int32_t idx;
@@ -2574,10 +2590,6 @@ regex_compile (pattern, size, syntax, bufp)
 			    int32_t hash;
 			    int ch;
 
-			    table = (const int32_t *)
-			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
-			    weights = (const unsigned char *)
-			      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
 			    table_size =
 			      _NL_CURRENT_WORD (LC_COLLATE,
 						_NL_COLLATE_SYMB_HASH_SIZEMB);
@@ -2598,17 +2610,15 @@ regex_compile (pattern, size, syntax, bufp)
 			      {
 				/* First compare the hashing value.  */
 				if (symb_table[2 * elem] == hash
-				    && (c1 == extra[symb_table[2 * elem + 1]
-						   + sizeof (int32_t)])
+				    && c1 == extra[symb_table[2 * elem + 1]]
 				    && memcmp (str,
 					       &extra[symb_table[2 * elem + 1]
-						     + sizeof (int32_t) + 1],
+						     + 1],
 					       c1) == 0)
 				  {
 				    /* Yep, this is the entry.  */
-				    idx = *((int32_t *)
-					    (extra
-					     + symb_table[2 * elem + 1]));
+				    idx = symb_table[2 * elem + 1];
+				    idx += 1 + extra[idx];
 				    break;
 				  }
 
@@ -2624,40 +2634,21 @@ regex_compile (pattern, size, syntax, bufp)
 			       class.  */
 			    PATFETCH (c);
 
-			    /* Now we have to go throught the whole table
-			       and find all characters which have the same
-			       first level weight.
+			    /* Now add the multibyte character(s) we found
+			       to the acceptabed list.
 
 			       XXX Note that this is not entirely correct.
 			       we would have to match multibyte sequences
 			       but this is not possible with the current
-			       implementation.  */
-			    for (ch = 1; ch < 256; ++ch)
-			      /* XXX This test would have to be changed if we
-				 would allow matching multibyte sequences.  */
-			      if (table[ch] > 0)
-				{
-				  int32_t idx2 = table[ch];
-				  size_t len = weights[idx2];
-
-				  /* Test whether the lenghts match.  */
-				  if (weights[idx] == len)
-				    {
-				      /* They do.  New compare the bytes of
-					 the weight.  */
-				      size_t cnt = 0;
-
-				      while (cnt < len
-					     && (weights[idx + 1 + cnt]
-						 == weights[idx2 + 1 + cnt]))
-					++len;
-
-				      if (cnt == len)
-					/* They match.  Mark the character as
-					   acceptable.  */
-					SET_LIST_BIT (ch);
-				    }
-				}
+			       implementation.  Also, we have to match
+			       collating symbols, which expand to more than
+			       one file, as a whole and not allow the
+			       individual bytes.  */
+			    c1 = extra[idx++];
+			    if (c1 == 1)
+			      range_start = extra[idx];
+			    while (c1-- > 0)
+			      SET_LIST_BIT (extra[idx++]);
 			  }
 #endif
 			had_char_class = false;
@@ -2668,7 +2659,8 @@ regex_compile (pattern, size, syntax, bufp)
                         while (c1--)
                           PATUNFETCH;
                         SET_LIST_BIT ('[');
-                        SET_LIST_BIT ('=');
+                        SET_LIST_BIT ('.');
+			range_start = '.';
                         had_char_class = false;
                       }
 		  }
@@ -2676,6 +2668,7 @@ regex_compile (pattern, size, syntax, bufp)
                   {
                     had_char_class = false;
                     SET_LIST_BIT (c);
+		    range_start = c;
                   }
               }
 
@@ -3425,7 +3418,8 @@ group_in_compile_stack (compile_stack, regnum)
    `regex_compile' itself.  */
 
 static reg_errcode_t
-compile_range (p_ptr, pend, translate, syntax, b)
+compile_range (range_start, p_ptr, pend, translate, syntax, b)
+     unsigned int range_start;
     const char **p_ptr, *pend;
     RE_TRANSLATE_TYPE translate;
     reg_syntax_t syntax;
@@ -3434,7 +3428,7 @@ compile_range (p_ptr, pend, translate, syntax, b)
   unsigned this_char;
 
   const char *p = *p_ptr;
-  unsigned int range_start, range_end;
+  unsigned int range_end;
 
   if (p == pend)
     return REG_ERANGE;
@@ -3447,7 +3441,6 @@ compile_range (p_ptr, pend, translate, syntax, b)
      We also want to fetch the endpoints without translating them; the
      appropriate translation is done in the bit-setting loop below.  */
   /* The SVR4 compiler on the 3B2 had trouble with unsigned const char *.  */
-  range_start = ((const unsigned char *) p)[-2];
   range_end   = ((const unsigned char *) p)[0];
 
   /* Have to increment the pointer into the pattern string, so the

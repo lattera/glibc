@@ -115,7 +115,7 @@
 3¦3¦[][.-.]-0]¦ab0-]¦
 3¦3¦[A-[.].]c]¦ab]!¦
 # GA122
--2¦-2¦[[.ch]]¦abc¦
+-2¦-2¦[[.ch.]]¦abc¦
 -2¦-2¦[[.ab.][.CD.][.EF.]]¦yZabCDEFQ9¦
 # GA125
 2¦2¦[[=a=]b]¦Abc¦
@@ -163,12 +163,12 @@
 2¦6¦bc[d-w]xy¦abchxyz¦
 # GA129
 1¦1¦[a-cd-f]¦dbccde¦
--1¦-1¦[a-ce-f¦dBCCdE¦
+-1¦-1¦[a-ce-f]¦dBCCdE¦
 2¦4¦b[n-zA-M]Y¦absY9Z¦
 2¦4¦b[n-zA-M]Y¦abGY9Z¦
 # GA130
 3¦3¦[-xy]¦ac-¦
-2¦4¦[c[-xy]D¦ac-D+¦
+2¦4¦c[-xy]D¦ac-D+¦
 2¦2¦[--/]¦a.b¦
 2¦4¦c[--/]D¦ac.D+b¦
 2¦2¦[^-ac]¦abcde-¦
@@ -189,7 +189,7 @@
 3¦4¦[a-c][e-f]¦acbedf¦
 4¦8¦abc*XYZ¦890abXYZ#*¦
 4¦9¦abc*XYZ¦890abcXYZ#*¦
-4¦15¦abc*XYZ¦890abccccccccXYZ#*¦
+4¦15¦abc*XYZ¦890abcccccccXYZ#*¦
 -1¦-1¦abc*XYZ¦890abc*XYZ#*¦
 # GA132
 2¦4¦\(*bc\)¦a*bc¦
@@ -267,7 +267,7 @@
 1¦1¦^a¦abc¦
 -1¦-1¦^b¦abc¦
 -1¦-1¦^[a-zA-Z]¦99Nine¦
-1¦4¦^[a-zA-Z]¦Nine99¦
+1¦4¦^[a-zA-Z]*¦Nine99¦
 # GA145(1)
 1¦2¦\(^a\)\1¦aabc¦
 -1¦-1¦\(^a\)\1¦^a^abc¦
@@ -284,7 +284,7 @@
 3¦3¦a$¦cba¦
 -1¦-1¦a$¦abc¦
 5¦7¦[a-z]*$¦99ZZxyz¦
--1¦-1¦[a-z]*$¦99ZZxyz99¦
+9¦9¦[a-z]*$¦99ZZxyz99¦
 3¦3¦$$¦ab$¦
 -1¦-1¦$$¦$ab¦
 3¦3¦\$$¦ab$¦

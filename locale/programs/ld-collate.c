@@ -91,8 +91,6 @@ struct element_t
   unsigned int used_in_level;
 
   struct element_list_t *weights;
-  /* Index in the `weight' table in the output file for the character.  */
-  int32_t weights_idx;
 
   /* Nonzero if this is a real character definition.  */
   int is_character;
@@ -301,7 +299,6 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
 
   /* Will be allocated later.  */
   newp->weights = NULL;
-  newp->weights_idx = 0;
 
   newp->file = NULL;
   newp->line = 0;
@@ -1809,9 +1806,6 @@ output_weight (struct obstack *pool, struct locale_collate_t *collate,
       obstack_grow (pool, buf, len);
     }
 
-  /* Remember the index.  */
-  elem->weights_idx = retval;
-
   return retval | ((elem->section->ruleidx & 0x7f) << 24);
 }
 
@@ -1899,11 +1893,26 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   /* If we have no LC_COLLATE data emit only the number of rules as zero.  */
   if (collate == NULL)
     {
+      int32_t dummy = 0;
+
       while (cnt < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
 	{
-	  iov[2 + cnt].iov_base = (char *) "";
-	  iov[2 + cnt].iov_len = 0;
-	  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+	  /* The words have to be handled specially.  */
+	  if (cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)
+	      || cnt == _NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)
+	      || cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
+	    {
+	      iov[2 + cnt].iov_base = &dummy;
+	      iov[2 + cnt].iov_len = sizeof (int32_t);
+	    }
+	  else
+	    {
+	      iov[2 + cnt].iov_base = (char *) "";
+	      iov[2 + cnt].iov_len = 0;
+	    }
+
+	  if (cnt + 1 < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
+	    idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
 	  ++cnt;
 	}
 
@@ -2453,23 +2462,20 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      elem_table[idx * 2] = hash;
 	      elem_table[idx * 2 + 1] = obstack_object_size (&extrapool);
 
-	      /* Now add the index into the weights table.  We know the
-		 address is always 32bit aligned.  */
-	      if (sizeof (int) == sizeof (int32_t))
-		obstack_int_grow (&extrapool, runp->weights_idx);
-	      else
-		obstack_grow (&extrapool, &runp->weights_idx,
-			      sizeof (int32_t));
-
 	      /* The the string itself including length.  */
 	      obstack_1grow (&extrapool, namelen);
 	      obstack_grow (&extrapool, runp->name, namelen);
 
+	      /* And the multibyte representation.  */
+	      obstack_1grow (&extrapool, runp->nmbs);
+	      obstack_grow (&extrapool, runp->mbs, runp->nmbs);
+
 	      /* And align again to 32 bits.  */
-	      if ((1 + namelen) % sizeof (int32_t) != 0)
+	      if ((1 + namelen + 1 + runp->nmbs) % sizeof (int32_t) != 0)
 		obstack_grow (&extrapool, "\0\0",
 			      (sizeof (int32_t)
-			       - (1 + namelen) % sizeof (int32_t)));
+			       - ((1 + namelen + 1 + runp->nmbs)
+				  % sizeof (int32_t))));
 	    }
 	}
 
@@ -2492,7 +2498,6 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_EXTRAMB));
   iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
   iov[2 + cnt].iov_base = obstack_finish (&extrapool);
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
 
 

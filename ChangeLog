@@ -1,5 +1,12 @@
 1999-12-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (collate_output): Emit correct
+	information for collation elements.
+	Don't write over end of array idx.
+	* posix/regex.c: Handle also collation elements at end of range.
+
+	* posix/PTESTS: Fix a few typos.
+
 	* posix/bits/posix2_lim.h: Remove _POSIX2_EQUIV_CLASS_MAX.  I have
 	no idea where this came from.
 	* sysdeps/posix/sysconf.c: Remove _POSIX2_EQUIV_CLASS_MAX
