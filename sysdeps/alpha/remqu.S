@@ -52,19 +52,16 @@ __remqu:
 	   that's done, we have at least 22 cycles until its results are
 	   ready -- all the time in the world to figure out how we're
 	   going to use the results.  */
-	stq	X, 16(sp)
-	stq	Y, 24(sp)
 	subq	Y, 1, AT
-
 	stt	$f0, 0(sp)
 	and	Y, AT, AT
+
 	stt	$f1, 8(sp)
 	beq	AT, $powerof2
 	cfi_rel_offset ($f0, 0)
 	cfi_rel_offset ($f1, 8)
 
-	ldt	$f0, 16(sp)
-	ldt	$f1, 24(sp)
+	_ITOFT2	X, $f0, 16, Y, $f1, 24
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
 
@@ -82,9 +79,8 @@ __remqu:
 	/* If we get here, we're expecting exact results from the division.
 	   Do nothing else besides convert, compute remainder, clean up.  */
 	cvttq/c	$f0, $f0
-	stt	$f0, 16(sp)
+	_FTOIT	$f0, AT, 16
 
-	ldq	AT, 16(sp)
 	mulq	AT, Y, AT
 	ldt	$f0, 0(sp)
 	lda	sp, FRAME(sp)
@@ -93,6 +89,7 @@ __remqu:
 	cfi_restore ($f1)
 	cfi_def_cfa_offset (0)
 
+	.align	4
 	subq	X, AT, RV
 	ret	$31, (RA), 1
 
@@ -105,15 +102,13 @@ $x_is_neg:
 	ldah	AT, 0x5f80		/* 2**64 as float.  */
 	stt	$f2, 24(sp)
 	cfi_rel_offset ($f2, 24)
-	stl	AT, 16(sp)
-	lds	$f2, 16(sp)
+	_ITOFS	AT, $f2, 16
 
 	addt	$f0, $f2, $f0
-	unop
 	divt/c	$f0, $f1, $f0
-	unop
 
 	/* Ok, we've now the divide issued.  Continue with other checks.  */
+	.align	4
 	ldt	$f1, 8(sp)
 	unop
 	ldt	$f2, 24(sp)
@@ -144,10 +139,10 @@ $x_big:
 #define QY	t3		/* Q*Y */
 
 	cvttq/c	$f0, $f0
-	stt	$f0, 8(sp)
-	ldq	Q, 8(sp)
+	_FTOIT	$f0, Q, 8
 	mulq	Q, Y, QY
 
+	.align	4
 	stq	t4, 8(sp)
 	unop
 	ldt	$f0, 0(sp)
