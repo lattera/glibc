@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/sysinfo.h>
+#include <sys/types.h>
+#include <regex.h>
 
 
 /* Get the value of the system variable NAME.  */

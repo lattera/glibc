@@ -2,7 +2,7 @@
    version 0.12.
    (Implements POSIX draft P1003.2/D11.2, except for some of the
    internationalization features.)
-   Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -2910,7 +2910,7 @@ regex_compile (pattern, size, syntax, bufp)
 
                 if (p == pend)
                   {
-                    if (syntax & RE_NO_BK_BRACES)
+                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
                       goto unfetch_interval;
                     else
                       FREE_STACK_RETURN (REG_EBRACE);
@@ -2921,7 +2921,12 @@ regex_compile (pattern, size, syntax, bufp)
                 if (c == ',')
                   {
                     GET_UNSIGNED_NUMBER (upper_bound);
-                    if (upper_bound < 0) upper_bound = RE_DUP_MAX;
+		    if ((!(syntax & RE_NO_BK_BRACES) && c != '\\')
+			|| ((syntax & RE_NO_BK_BRACES) && c != '}'))
+		      FREE_STACK_RETURN (REG_BADBR);
+
+		    if (upper_bound < 0)
+		      upper_bound = RE_DUP_MAX;
                   }
                 else
                   /* Interval such as `{1}' => match exactly once. */
@@ -2930,7 +2935,7 @@ regex_compile (pattern, size, syntax, bufp)
                 if (lower_bound < 0 || upper_bound > RE_DUP_MAX
                     || lower_bound > upper_bound)
                   {
-                    if (syntax & RE_NO_BK_BRACES)
+                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
                       goto unfetch_interval;
                     else
                       FREE_STACK_RETURN (REG_BADBR);
@@ -2945,7 +2950,7 @@ regex_compile (pattern, size, syntax, bufp)
 
                 if (c != '}')
                   {
-                    if (syntax & RE_NO_BK_BRACES)
+                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
                       goto unfetch_interval;
                     else
                       FREE_STACK_RETURN (REG_BADBR);

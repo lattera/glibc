@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,12 +85,11 @@
 #ifndef	LINE_MAX
 #define	LINE_MAX		_POSIX2_LINE_MAX
 #endif
-#ifndef	RE_DUP_MAX
-#define	RE_DUP_MAX		_POSIX2_RE_DUP_MAX
-#endif
 #ifndef	CHARCLASS_NAME_MAX
 #define	CHARCLASS_NAME_MAX	_POSIX2_CHARCLASS_NAME_MAX
 #endif
 
+/* This value is defined like this in regex.h.  */
+#define	RE_DUP_MAX (0x7fff)
 
 #endif	/* bits/posix2_lim.h */
