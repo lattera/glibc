@@ -1,3 +1,8 @@
+2003-06-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/stat.h (_STAT_VER_LINUX): Avoid
+	redeclaration with 32-bit code.
+
 2003-05-19  Ed Connell  <ed.connell@sas.com>
 
 	* sysdeps/unix/sysv/linux/i386/getcontext.S (getcontext): Retain
