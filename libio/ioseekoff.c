@@ -53,7 +53,12 @@ _IO_seekoff_unlocked (fp, offset, dir, mode)
      callback may not know to do the right thing about it.
      This may be over-kill, but it'll do for now. TODO */
   if (mode != 0 && ((_IO_fwide (fp, 0) < 0 && _IO_have_backup (fp))
-		    || (_IO_fwide (fp, 0) > 0 && _IO_have_wbackup (fp))))
+		    || (
+#if defined _LIBC && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+			__builtin_expect (&_IO_stdin_used != NULL, 1) &&
+#endif
+			_IO_fwide (fp, 0) > 0 && _IO_have_wbackup (fp))
+		    ))
     {
       if (dir == _IO_seek_cur && _IO_in_backup (fp))
 	{
