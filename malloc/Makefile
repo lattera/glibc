@@ -69,7 +69,7 @@ endif
 
 # If the gd library is available we build the `memprofstat' program.
 ifneq ($(LIBGD),no)
-install-bin += memprofstat
+install-bin += memprofstat memprof
 endif
 
 # Another goal which can be used to override the configure decision.
@@ -97,7 +97,14 @@ $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
 	sed -e 's|@PERL@|$(PERL)|' -e 's|@XXX@|$(address-width)|' \
 	    -e 's|@VERSION@|$(version)|' $^ > $@.new \
-	&& rm -fr $@ && mv $@.new $@ && chmod +x $@
+	&& rm -f $@ && mv $@.new $@ && chmod +x $@
+
+$(objpfx)memprof: memprof.sh
+	rm -f $@.new
+	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(VERSION)|' \
+	    -e 's|@LIBDIR@|$(libdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	&& rm -f $@ && mv $@.new $@ && chmod +x $@
+
 
 # The implementation uses `dlsym'
 $(objpfx)libmemprof.so: $(common-objpfx)dlfcn/libdl.so

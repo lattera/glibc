@@ -44,7 +44,7 @@ Written by Roland McGrath and Ulrich Drepper."
     exit 0
     ;;
   --h | --he | --hel | --help)
-    echo $"ldd [OPTION]... FILE...
+    echo $"Usage: ldd [OPTION]... FILE...
       --help              print this help and exit
       --version           print version information and exit
   -d, --data-relocs       process data relocations
