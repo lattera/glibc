@@ -41,16 +41,16 @@ extern void _dl_unmap (struct link_map *map);
 
 #define DL_AUTO_FUNCTION_ADDRESS(map, addr)		\
 ({							\
-  unsigned long fptr[2];				\
-  fptr[0] = (addr);					\
+  unsigned long int fptr[2];				\
+  fptr[0] = (unsigned long int) (addr);			\
   fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
   (Elf64_Addr) fptr;					\
 })
 
 #define DL_STATIC_FUNCTION_ADDRESS(map, addr)		\
 ({							\
-  static unsigned long fptr[2];				\
-  fptr[0] = (addr);					\
+  static unsigned long int fptr[2];			\
+  fptr[0] = (unsigned long int) (addr);			\
   fptr[1] = (map)->l_info[DT_PLTGOT]->d_un.d_ptr;	\
   (Elf64_Addr) fptr;					\
 })

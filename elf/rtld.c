@@ -152,7 +152,9 @@ _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
   hp_timing_t start_time;
+#if !__GNUC_PREREQ (2, 96)
   size_t cnt;
+#endif
 
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */

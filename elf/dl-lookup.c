@@ -64,7 +64,7 @@ struct sym_val
 unsigned long int _dl_num_relocations;
 # define bump_num_relocation() ++_dl_num_relocations
 #else
-# define bump_num_relocation() 0
+# define bump_num_relocation() ((void) 0)
 #endif
 
 

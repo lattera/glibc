@@ -1,5 +1,9 @@
 2002-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ia64/dl-lookupcfg.h (DL_AUTO_FUNCTION_ADDRESS): Add cast
+	to avoid warning
+	(DL_STATIC_FUNCTION_ADDRESS): Likewise.
+
 	* elf/dl-lookup.c: Only define or handle _dl_num_relocations for the
 	SHARED version.
 	* elf/dl-reloc.c: Likewise for _dl_num_cache_relocations.
