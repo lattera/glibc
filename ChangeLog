@@ -1,5 +1,27 @@
 Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/sparc/elf/start.S: New file.
+	* sysdeps/sparc/dl-machine.h: New file.
+
+	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
+ 	only for ?s, not for *s.  Fix from Chet Ramey.
+
+	Fixes thanks to Raja R Harinath <harinath@cs.umn.edu>:
+	* sysdeps/unix/sysv/utmpbits.h: Define _HAVE_UT_{TYPE,ID,TV,HOST}.
+	Use __{BEGIN,END}_DECLS.
+	(_PATH_WTMP, _PATH_UTMP, _PATH_LASTLOG): New macros.
+	* login/utmp.h (UTMP_FILE, UTMP_FILENAME, WTMP_FILE, WTMP_FILENAME):
+	New macros, moved here from sysdeps/gnu/utmpbits.h.
+	* sysdeps/generic/utmpbits.h (_HAVE_UT_HOST): Define it.
+	* sysdeps/gnu/utmpbits.h (_HAVE_UT_HOST): Likewise.
+	* login/logout.c: Use ut_host only #if _HAVE_UT_HOST.
+	Use sizeof instead of UT_*SIZE.
+	* login/logwtmp.c: Likewise.
+
+	* misc/tsearch.c (tdelete): Define as weak alias to __tdelete.
+
+	* version.c (banner): Add trailing newline.
+
 	* login/utmp.h: Declare login_tty.
 
 Thu Jun 20 21:19:07 1996  Richard Henderson  <rth@tamu.edu>

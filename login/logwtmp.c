@@ -45,9 +45,11 @@ logwtmp (const char *line, const char *name, const char *host)
 #if _HAVE_UT_TYPE - 0
   ut.ut_type = USER_PROCESS;
 #endif
-  strncpy (ut.ut_line, line, UT_LINESIZE);
-  strncpy (ut.ut_name, name, UT_NAMESIZE);
-  strncpy (ut.ut_host, host, UT_HOSTSIZE);
+  strncpy (ut.ut_line, line, sizeof ut.ut_line);
+  strncpy (ut.ut_name, name, sizeof ut.ut_name);
+#if _HAVE_UT_HOST - 0
+  strncpy (ut.ut_host, host, sizeof ut.ut_host);
+#endif
 
 #if _HAVE_UT_TV - 0
   gettimeofday (&ut.ut_tv, NULL);
@@ -60,5 +62,4 @@ logwtmp (const char *line, const char *name, const char *host)
 
   /* Close UTMP file.  */
   endutent_r (&data);
-
 }

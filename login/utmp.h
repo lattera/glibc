@@ -28,6 +28,13 @@ Boston, MA 02111-1307, USA.  */
 /* Get system dependent values and data structures.  */
 #include <utmpbits.h>
 
+/* Compatibility names for the strings of the canonical file names.  */
+#define UTMP_FILE	_PATH_UTMP
+#define UTMP_FILENAME	_PATH_UTMP
+#define WTMP_FILE	_PATH_WTMP
+#define WTMP_FILENAME	_PATH_WTMP
+
+
 
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */

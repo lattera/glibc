@@ -170,7 +170,7 @@ __tdelete (key, vrootp, compar)
   *rootp = q;				/* link parent to new node */
   return p;
 }
-weak_alias (__tfind, tfind)
+weak_alias (__tdelete, tdelete)
 
 
 /* Walk the nodes of a tree

@@ -46,6 +46,10 @@ struct utmp {
 	long	ut_time;
 };
 
+
+#define _HAVE_UT_HOST 1		/* We have the ut_host field.  */
+
+
 __END_DECLS
 
 #endif /* utmpbits.h */

@@ -28,11 +28,6 @@ Boston, MA 02111-1307, USA.  */
 #define _PATH_WTMP	"/var/log/wtmp"
 #define _PATH_LASTLOG	"/var/log/lastlog"
 
-#define UTMP_FILE	_PATH_UTMP
-#define WTMP_FILE	_PATH_WTMP
-#define UTMP_FILENAME	UTMP_FILE
-#define WTMP_FILENAME	WTMP_FILE
-
 #define UT_UNKNOWN	0	/* for ut_type field */
 
 #define RUN_LVL		1
@@ -44,8 +39,6 @@ Boston, MA 02111-1307, USA.  */
 #define LOGIN_PROCESS	6
 #define USER_PROCESS	7
 #define DEAD_PROCESS	8
-
-#define ut_name	ut_user
 
 #define UT_LINESIZE	32
 #define UT_NAMESIZE	32
@@ -67,6 +60,7 @@ struct utmp
   char ut_line[UT_LINESIZE];	/* NUL-terminated devicename of tty.  */
   char ut_id[4];		/* Inittab id. */
   char ut_user[UT_NAMESIZE];	/* Username (not NUL terminated).  */
+#define ut_name	ut_user		/* Compatible field name for same.  */
   char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
   int ut_exit;			/* Process termination/exit status.  */
   long ut_session;		/* Session ID, used for windowing.  */
@@ -77,11 +71,12 @@ struct utmp
 
 #define ut_time	ut_tv.tv_sec	/* Backwards compatibility.  */
 
-/* Tell the user that we have a modern system with UT_TYPE, UT_ID
+/* Tell the user that we have a modern system with UT_HOST, UT_TYPE, UT_ID
    and UT_TV fields.  */
 #define _HAVE_UT_TYPE	1
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_TV	1
+#define _HAVE_UT_HOST	1
 
 __END_DECLS
 

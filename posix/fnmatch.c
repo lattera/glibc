@@ -92,10 +92,24 @@ fnmatch (pattern, string, flags)
 	      (n == string || ((flags & FNM_FILE_NAME) && n[-1] == '/')))
 	    return FNM_NOMATCH;
 
-	  for (c = *p++; c == '?' || c == '*'; c = *p++, ++n)
-	    if (((flags & FNM_FILE_NAME) && *n == '/') ||
-		(c == '?' && *n == '\0'))
-	      return FNM_NOMATCH;
+	  for (c = *p++; c == '?' || c == '*'; c = *p++)
+	    {
+	      if ((flags & FNM_FILE_NAME) && *n == '/')
+		/* A slash does not match a wildcard under FNM_FILE_NAME.  */
+		return FNM_NOMATCH;
+	      else if (c == '?')
+		{
+		  /* A ? needs to match one character.  */
+		  if (*n == '\0')
+		    /* There isn't another character; no match.  */
+		    return FNM_NOMATCH;
+		  else
+		    /* One character of the string is consumed in matching
+		       this ? wildcard, so *??? won't match if there are
+		       less than three characters.  */
+		    ++n;
+		}
+	    }
 
 	  if (c == '\0')
 	    return 0;

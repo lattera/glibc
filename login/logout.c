@@ -41,15 +41,16 @@ logout (const char *line)
 #if _HAVE_UT_TYPE - 0
   tmp.ut_type = USER_PROCESS;
 #endif
-  strncpy (tmp.ut_line, line, UT_LINESIZE);
+  strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
   if (getutline_r (&tmp, &ut, &data) >= 0 || errno == ESRCH)
     {
       /* Clear information about who & from where.  */
-      bzero (ut->ut_name, UT_NAMESIZE);
-      bzero (ut->ut_host, UT_HOSTSIZE);
-
+      bzero (ut->ut_name, sizeof ut->ut_name);
+#if _HAVE_UT_HOST - 0
+      bzero (ut->ut_host, sizeof ut->ut_host);
+#endif
 #if _HAVE_UT_TV - 0
       gettimeofday (&ut->ut_tv, NULL);
 #else

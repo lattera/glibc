@@ -23,6 +23,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <time.h>
 
+#define _PATH_UTMP      "/var/adm/utmp"
+#define _PATH_WTMP      "/var/adm/wtmp"
+#define _PATH_LASTLOG   "/var/adm/lastlog"
+
+__BEGIN_DECLS
+
 struct utmp
   {
 #define	ut_name	ut_user
@@ -38,5 +44,15 @@ struct utmp
       } ut_exit;
     time_t ut_time;
   };
+
+
+/* Tell the user that we have a modern system with UT_HOST, UT_TYPE, UT_ID
+   and UT_TV fields.  */
+#define _HAVE_UT_TYPE	1
+#define _HAVE_UT_ID	1
+#define _HAVE_UT_TV	1
+#define _HAVE_UT_HOST	1
+
+__END_DECLS
 
 #endif /* utmpbits.h  */
