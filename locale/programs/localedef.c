@@ -305,7 +305,7 @@ cannot `stat' locale file `%s'"),
 		    {
 		      long int n;
 		      n = read (fd, read_ptr, left);
-		      if (n == 1)
+		      if (n == -1)
 			error (5, errno, _("cannot read locale file `%s'"),
 			       fname);
 		      read_ptr += n;

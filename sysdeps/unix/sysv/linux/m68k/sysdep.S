@@ -46,7 +46,7 @@ __errno = errno	/* This name is expected by the MT code.  */
 
 /* The syscall stubs jump here when they detect an error.  */
 
-ENTRY(__syscall_error)
+ENTRY (__syscall_error)
 	neg.l %d0
 	move.l %d0, errno
 #ifdef _LIBC_REENTRANT
@@ -59,14 +59,15 @@ ENTRY(__syscall_error)
 	   return a pointer.  */
 	move.l %d0, %a0
 	rts
-	.size	__syscall_error, . - __syscall_error
+PSEUDO_END (__syscall_error)
 #endif /* PIC */
 
-ERRNO(__errno_location)
+ENTRY (__errno_location)
+	CALL_MCOUNT
 #ifdef PIC
 	move.l	(%pc, errno@GOTPC), %a0
 #else
 	lea	errno, %a0
 #endif
 	rts
-	.size	__errno_location, . - __errno_location
+PSEUDO_END (__errno_location)

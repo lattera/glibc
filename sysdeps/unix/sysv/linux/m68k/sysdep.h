@@ -33,8 +33,6 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef ASSEMBLER
 
-#define POUND #
-
 /* Define an entry point visible from C.  */
 #define	ENTRY(name)							      \
   .globl name;								      \
@@ -67,14 +65,26 @@ Cambridge, MA 02139, USA.  */
 #define	syscall_error	__syscall_error
 
 /* Linux uses a negative return value to indicate syscall errors, unlike
-   most Unices, which use the condition codes' carry flag.  */
+   most Unices, which use the condition codes' carry flag.
+
+   Since version 2.1 the return value of a system call might be negative
+   even if the call succeeded.  E.g., the `lseek' system call might return
+   a large offset.  Therefore we must not anymore test for < 0, but test
+   for a real error by making sure the value in %d0 is a real error
+   number.  For now (as of 2.1.1) 122 is the largest defined error number.
+   We allow for a bit of room for development and treat -128 to -1 as
+   error values.  */
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
-    DO_CALL (POUND SYS_ify (syscall_name), args);			      \
-    tst.l %d0;								      \
-    jmi syscall_error;
+    DO_CALL (&SYS_ify (syscall_name), args);				      \
+    moveq.l &-128, %d1;							      \
+    cmp.l %d1, %d0;							      \
+    jcc syscall_error
+
+#undef PSEUDO_END
+#define PSEUDO_END(name) .size name, . - name
 
 #ifdef PIC
 /* Store (- %d0) into errno through the GOT.  */
@@ -88,7 +98,7 @@ syscall_error:								      \
     move.l %d0, -(%sp);							      \
     jbsr __errno_location@PLTPC;					      \
     move.l (%sp)+, (%a0);						      \
-    move.l POUND -1, %d0;						      \
+    move.l &-1, %d0;							      \
     /* Copy return value to %a0 for syscalls that are declared to return      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
@@ -100,7 +110,7 @@ syscall_error:								      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
     move.l %d0, (%a0);							      \
-    move.l POUND -1, %d0;						      \
+    move.l &-1, %d0;							      \
     /* Copy return value to %a0 for syscalls that are declared to return      \
        a pointer (e.g., mmap).  */					      \
     move.l %d0, %a0;							      \
@@ -138,7 +148,7 @@ syscall_error:								      \
 #define DO_CALL(syscall, args)				      		      \
     move.l syscall, %d0;						      \
     DOARGS_##args							      \
-    trap POUND 0;							      \
+    trap &0;								      \
     UNDOARGS_##args
 
 #define	DOARGS_0	/* No arguments to frob.  */

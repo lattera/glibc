@@ -153,7 +153,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 #endif
 
 extern void __flockfile (FILE *);
-weak_extern (__flockfile);
 extern void __funlockfile (FILE *);
 
 /* Global variables.  */

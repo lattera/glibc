@@ -35,6 +35,7 @@ Cambridge, MA 02139, USA.  */
 
 .globl P(__,socket)
 ENTRY (P(__,socket))
+	CALL_MCOUNT
 
 	/* Save registers.  */
 	move.l %d2, %a0
@@ -58,5 +59,6 @@ ENTRY (P(__,socket))
 
 	/* Successful; return the syscall's value.  */
 	rts
+PSEUDO_END (P(__,socket))
 
 weak_alias (P(__,socket), socket)

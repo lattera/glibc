@@ -66,7 +66,7 @@ ENTRY(__clone)
 	jz	thread_start
 
 	ret
-	.size	__clone,.-__clone
+PSEUDO_END (__clone)
 
 	SYSCALL_ERROR_HANDLER
 
@@ -74,10 +74,6 @@ thread_start:
 	subl	%ebp,%ebp	/* terminate the stack frame */
 	call	*%ebx
 	pushl	%eax
-#ifdef PIC
-	call	_exit@PLT
-#else
-	call	_exit
-#endif
+	call	JUMPTARGET (_exit)
 
 weak_alias(__clone, clone)

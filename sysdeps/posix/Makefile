@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,9 +26,9 @@ cded-objdir-includes = $(patsubst -I$$cwd//%,-I/%,\
 # $(BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
 			     posix1_lim.h local_lim.h
-	cwd=`pwd`; cd $(common-objdir); \
+	cwd=`pwd`; cd $(objpfx).; \
 	$(BUILD_CC) $(cded-objdir-includes) $(BUILD_CFLAGS) \
-	  $$cwd/$< -o $(patsubst $(common-objpfx)%,%,$@)
+	  $$cwd/$< -o $(patsubst $(common-objpfx)%,$(..)%,$@)
 
 
 common-generated := $(common-generated) stdio_lim.h mk-stdiolim

@@ -1,3 +1,133 @@
+Thu Oct 17 01:55:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile ($(objpfx)rpcsvc/%.h, $(objpfx)x%.c): Write
+	output to $@T and move to $@ later since the new rpcgen will not
+	overwrite existing files.
+
+	* po/Makefile (libc.pot): Fix typo.
+
+Sun Oct 13 20:52:07 1996  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	Update rpcgen program to TI-rpc code.
+	* sunrpc/Makefile (rpcgen-objs): Add rpc_tblout.o and rpc_sample.o.
+	(distribute): Add proto.h.
+	* sunrpc/proto.h: New file.  Prototypes for all the RPC functions.
+	* sunrpc/rpc_clntout.c: Change to allow generation of ISO C code.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_parse.h: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_scan.h: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sunrpc/rpc_util.h: Likewise.
+
+	* sunrpc/rpc_tblout.c: New file.
+	* sunrpc/rpc_sample.c: Likewise.
+
+Thu Oct 17 00:26:20 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/unix/opendir.c: Add semicolon for consistency.
+
+Wed Oct 16 12:26:53 1996  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
+
+	* locale/progams/localedef.c (main): Test with -1 to find out
+ 	whether read failed.
+
+Wed Oct 16 14:54:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Use JUMPTARGET and
+ 	PSEUDO_END macro.
+
+Tue Oct 15 21:27:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sigcontext.h: Removed.
+
+Tue Oct 15 15:52:29 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Add CALL_MCOUNT.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S (__errno_location):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Likewise.
+	Correct generation of system call.
+
+Tue Oct 15 15:13:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (sysd-Makefile): Fix command so that it works in the
+	subdirectories.
+	(BUILD_CFLAGS): Change back using $(..) instead of
+	$(common-objpfx), the latter fails in the toplevel directory when
+	$(objdir) is relative.
+	(common-objdir-compile): Run compiler in $(objdir).
+	* sysdeps/posix/Makefile (mk-stdiolim): Likewise.
+
+Tue Oct 15 23:39:48 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/string.h [__USE_SVID]: Add prototype for swab.
+	* time/sys/time.h [__USE_BSD]: Add prototype for ualarm.
+	Reported by Andreas Jaeger.
+
+	The available nlist implementation is not generally usable.
+  	Especially on the currently supported ELF systems the nlist
+ 	function comes with the libelf.
+	* misc/Makefile (headers): Remove nlist.h.
+	(routines): Remove nlist.
+
+	* Makefile ($(objpfx)version-info.h): Include information about
+	system the libc is built on in version-info.h file.
+
+	* po/Makefile (distribute): Add header.pot.
+
+Tue Oct 15 16:34:15 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* sysdeps/unix/sysv/linux/sleep.c: Include file with prototype.
+	* sysdeps/unix/sysv/linux/reboot.c: Likewise.
+	* misc/error.c: Likewise.
+
+Tue Oct 15 22:41:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add {get,set}resuid.
+
+Tue Oct 15 08:06:02 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* crypt/Makefiel (rpath-link): Extend search path to current directory.
+
+Fri Oct 11 09:18:06 1996  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
+
+	* sysdeps/i386/i586/strlen.S: Correct handling of prolog for
+	aligning pointer.
+
+Tue Oct 15 02:13:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c: Don't declare __flockfile as weak.
+
+	* crypt/md5-crypt.c (md5_crypt_r): Add cast to prevent warning.
+
+Sun Oct 13 19:16:10 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (POUND): Macro removed,
+	replaced by `&'.
+	(PSEUDO_END): Provide definition to use .size directive.
+	(PSEUDO): Don't interpret negative return values less than -128 as
+	syscall error.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S (syscall): Likewise.
+
+	* sysdeps/m68k/bsd-_setjmp.S: Use PSEUDO_END macro to provide
+	.size directive.
+	* sysdeps/m68k/bsd-setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Use PSEUDO_END instead of
+	explicit .size directive.
+
 Sun Oct 13 22:52:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* shlib-versions: Add version number/name for ld.so.
@@ -8,7 +138,7 @@ Sun Oct 13 22:52:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Sat Oct 12 20:31:58 1996  Richard Henderson  <rth@tamu.edu>
 
-	* libio/iogets.c: Warn when gets used.
+	* libio/iogets.c: Warn when gets is used.
 	* stdio/gets.c: Strengthen the warning.
 
 Sat Oct 12 23:10:43 1996  Ulrich Drepper  <drepper@cygnus.com>
@@ -57,7 +187,7 @@ Sat Oct 12 23:10:43 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/fr.po: Update.
 
-	* time/strptime.c: Recognize %s, %u, %g, and %G format.
+cd	* time/strptime.c: Recognize %s, %u, %g, and %G format.
 
 	* posix/getopt.c: Add some more casts and initializations to
 	prevent warnings.

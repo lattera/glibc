@@ -4,33 +4,34 @@
  * media and as a part of the software program in whole or part.  Users
  * may copy or modify Sun RPC without charge, but are not authorized
  * to license or distribute it to anyone else except as part of a product or
- * program developed by the user.
- * 
+ * program developed by the user or with the express written consent of
+ * Sun Microsystems, Inc.
+ *
  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE
  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
- * 
+ *
  * Sun RPC is provided with no support and without any obligation on the
  * part of Sun Microsystems, Inc. to assist in its use, correction,
  * modification or enhancement.
- * 
+ *
  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC
  * OR ANY PART THEREOF.
- * 
+ *
  * In no event will Sun Microsystems, Inc. be liable for any lost revenue
  * or profits or other special, indirect and consequential damages, even if
  * Sun has been advised of the possibility of such damages.
- * 
+ *
  * Sun Microsystems, Inc.
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-/* @(#)rpc_parse.h 1.3 87/03/09 (C) 1987 SMI */
+
+/*      @(#)rpc_parse.h  1.3  90/08/29  (C) 1987 SMI   */
 
 /*
  * rpc_parse.h, Definitions for the RPCL parser 
- * Copyright (C) 1987, Sun Microsystems, Inc. 
  */
 
 enum defkind {
@@ -43,7 +44,7 @@ enum defkind {
 };
 typedef enum defkind defkind;
 
-typedef char *const_def;
+typedef const char *const_def;
 
 enum relation {
 	REL_VECTOR,	/* fixed length array */
@@ -54,17 +55,16 @@ enum relation {
 typedef enum relation relation;
 
 struct typedef_def {
-	char *old_prefix;
-	char *old_type;
+	const char *old_prefix;
+	const char *old_type;
 	relation rel;
-	char *array_max;
+	const char *array_max;
 };
 typedef struct typedef_def typedef_def;
 
-
 struct enumval_list {
-	char *name;
-	char *assignment;
+	const char *name;
+	const char *assignment;
 	struct enumval_list *next;
 };
 typedef struct enumval_list enumval_list;
@@ -74,16 +74,14 @@ struct enum_def {
 };
 typedef struct enum_def enum_def;
 
-
 struct declaration {
-	char *prefix;
-	char *type;
-	char *name;
+	const char *prefix;
+	const char *type;
+	const char *name;
 	relation rel;
-	char *array_max;
+	const char *array_max;
 };
 typedef struct declaration declaration;
-
 
 struct decl_list {
 	declaration decl;
@@ -96,9 +94,9 @@ struct struct_def {
 };
 typedef struct struct_def struct_def;
 
-
 struct case_list {
-	char *case_name;
+	const char *case_name;
+	int contflag;
 	declaration case_decl;
 	struct case_list *next;
 };
@@ -111,36 +109,40 @@ struct union_def {
 };
 typedef struct union_def union_def;
 
-
+struct arg_list {
+	const char *argname; /* name of struct for arg*/
+	decl_list *decls;
+};
+	
+typedef struct arg_list arg_list;
 
 struct proc_list {
-	char *proc_name;
-	char *proc_num;
-	char *arg_type;
-	char *arg_prefix;
-	char *res_type;
-	char *res_prefix;
+	const char *proc_name;
+	const char *proc_num;
+	arg_list args;
+	int arg_num;
+	const char *res_type;
+	const char *res_prefix;
 	struct proc_list *next;
 };
 typedef struct proc_list proc_list;
 
-
 struct version_list {
-	char *vers_name;
-	char *vers_num;
+	const char *vers_name;
+	const char *vers_num;
 	proc_list *procs;
 	struct version_list *next;
 };
 typedef struct version_list version_list;
 
 struct program_def {
-	char *prog_num;
+	const char *prog_num;
 	version_list *versions;
 };
 typedef struct program_def program_def;
 
 struct definition {
-	char *def_name;
+	const char *def_name;
 	defkind def_kind;
 	union {
 		const_def co;
@@ -153,5 +155,14 @@ struct definition {
 };
 typedef struct definition definition;
 
-/* @(#)rpc_parse.h	2.1 88/08/01 4.0 RPCSRC */
-definition *get_definition();
+definition *get_definition(void);
+
+
+struct bas_type
+{
+  const char *name;
+  int length;
+  struct bas_type *next;
+};
+
+typedef struct bas_type bas_type;

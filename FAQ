@@ -456,7 +456,7 @@ change the `specs' file of your gcc.  This file is normally found at
 
 In this file you have to change a few things:
 
-- change `ld-linux.so.1' to `ld.so.1'
+- change `ld-linux.so.1' to `ld.so.1' (or to ld-linux.so.2, see below)
 
 - remove all expression `%{...:-lgmon}';  there is no libgmon in glibc
 
@@ -516,6 +516,16 @@ example the gcc-2.7.2 specs file when GNU libc is installed at
 . ;
 
 -----------------------------------------------------------------------
+
+The above is currently correct for all systems but ix86/Linux.
+Because of compatibility issues on this platform the dynamic linker
+must have a different name: ld-linux.so.2.  So you have to replace
+
+	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}
+by
+	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld-linux.so.2}
+
+in the above example specs file.
 
 Future versions of GCC will automatically provide the correct specs.
 

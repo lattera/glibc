@@ -21,13 +21,15 @@
 #
 subdir	:= sunrpc
 
-# The code in this subdirectory is taken verbatim from Sun's RPCSRC-4.0
-# distribution.  A few files needed trivial modifications to compile in the
-# GNU environment; these changes are marked by comments that say
-# `roland@gnu'.  All the code from Sun's rpc, etc, and rpcgen
-# subdirectories is in this directory; the rpc subdirectory contains only
-# the header files.  Other than that, several files were renamed so as not
-# to exceed 14-character file name limits:
+# The code in this subdirectory is taken from Sun's RPCSRC-4.0
+# distribution with some additional changes from the TI-RPC package
+# which is also available from Sun.  A few files needed trivial
+# modifications to compile in the GNU environment; these changes are
+# marked by comments that say `roland@gnu'.  All the code from Sun's
+# rpc, etc, and rpcgen subdirectories is in this directory; the rpc
+# subdirectory contains only the header files.  Other than that,
+# several files were renamed so as not to exceed 14-character file
+# name limits:
 #
 #	authunix_prot.c -> authuxprot.c
 #	bindresvport.c -> bindrsvprt.c
@@ -68,9 +70,11 @@ others := portmap rpcinfo
 install-bin := rpcgen
 install-sbin := rpcinfo portmap
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
-	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
+	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
+	      rpc_tblout.o rpc_sample.o
 # These headers are part of rpcgen.
-distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
+distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
+	      $(rpcgen-objs:.o=.c) etc.rpc
 extra-objs = $(rpcgen-objs)
 
 all: # Make this the default target; it will be defined in Rules.
@@ -112,10 +116,16 @@ defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 # Generate the rpcsvc headers with rpcgen.
 $(objpfx)rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
-	$(rpcgen-cmd) -h $< -o $@
+	-@rm -f $@T
+	$(rpcgen-cmd) -h $< -o $@T
+	mv -f $@T $@
+
 # Generate the rpcsvc XDR functions with rpcgen.
 $(objpfx)x%.c: rpcsvc/%.x $(objpfx)rpcgen
-	$(rpcgen-cmd) -c $< -o $@
+	-@rm -f $@T
+	$(rpcgen-cmd) -c $< -o $@T
+	mv -f $@T $@
+
 # The generated source files depend on the corresponding generated headers.
 # Gratuitous dependency on generated .c file here just gets it mentioned to
 # avoid being an intermediate file and getting removed.

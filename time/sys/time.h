@@ -155,4 +155,13 @@ extern int utimes __P ((__const char *__file, struct timeval __tvp[2]));
 
 __END_DECLS
 
+#ifdef __USE_BSD
+/* Set an alarm to go off (generating a SIGALRM signal) in VALUE
+   microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
+   timer is reset to go off every INTERVAL microseconds thereafter.
+   Returns the number of microseconds remaining before the alarm.  */
+extern unsigned int ualarm __P ((unsigned int __value,
+				 unsigned int __interval));
+#endif
+
 #endif /* sys/time.h */

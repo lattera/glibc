@@ -104,13 +104,17 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
 	(echo 'sysd-Makefile-sysdirs := $(config-sysdirs)';		      \
 	 for dir in $(config-sysdirs); do	   			      \
 	   file=$$dir/Makefile;						      \
-	   if [ -f $(..)$$file ]; then					      \
+	   case $$dir in						      \
+	     /*) rel= ;;						      \
+	     *)  rel=$(..) ;;						      \
+	   esac;							      \
+	   if [ -f $$rel$$file ]; then					      \
 	     case $$dir in						      \
 	       /*) echo include "$$file" ;;				      \
 	       *)  echo include "\$$(..)$$file" ;;			      \
 	     esac;							      \
 	   else true; fi;						      \
-	 done; \
+	 done;								      \
 	 echo 'sysd-Makefile-done=t') > $@T
 	mv -f $@T $@
 endif
@@ -758,12 +762,14 @@ cwd=`pwd`; cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) \
 endef
 
 # Command to compile $< in $(common-objdir) using the native libraries.
+# We must cd to $(objdir) anyway so that $(..)config.h is valid.
 define common-objdir-compile
-cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
+cd $(objpfx).; \
+$(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=$(..)%) -o $(..)$(@F)
 endef
 
 # We always want to use configuration definitions.
-BUILD_CFLAGS = -include $(common-objpfx)config.h
+BUILD_CFLAGS = -include $(..)config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check

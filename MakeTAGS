@@ -169,9 +169,9 @@ include $(common-objpfx)version.mk
 # The following code requires GNU date.
 $P/libc.pot: $(all-pot)
 	@rm -f $@.new
-	disp='set `date -R`; echo $$6'; \
+	set `date -R`; disp="$$6"; \
 	sed -e 's/VERSION/$(version)/' \
-	    -e "s/DATE/`date +'%Y-%m-%d %I:%M'$$disp/" \
+	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
 	    po/header.pot > $@.new
 	$(XGETTEXT) -d - --omit-header -n -s $^ >> $@.new
 	mv -f $@.new $@

@@ -124,7 +124,23 @@ $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
 
 all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
 $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
-	(files="$(all-Banner-files)";				\
+	(case $(config-os) in \
+	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
+			     | $(CC)  -E -P - | \
+			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
+		   if [ -z "$$version" ]; then \
+		     if [ -r /proc/version ]; then \
+		       version=`sed 's/.*version \([^ ]*\) .*/>>\1<</' \
+				< /proc/version`; \
+		     else \
+		       version=`uname -r`; \
+		     fi; \
+		   fi; \
+		   echo -n "\"Compiled on a Linux $$version system "; \
+		   echo "on `date +%Y/%m/%d`.\\n\"" ;; \
+	   *) ;; \
+	 esac; \
+	 files="$(all-Banner-files)";				\
 	 if test -n "$$files"; then				\
 	   echo "\"Available extensions:";			\
 	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\

@@ -27,6 +27,8 @@ Cambridge, MA 02139, USA.  */
 
         .text
 ENTRY (__clone)
+	CALL_MCOUNT
+
 	/* Sanity check arguments.  */
 	movel	#-EINVAL, %d0
 	movel	4(%sp), %a0		/* no NULL function pointers */
@@ -72,5 +74,6 @@ thread_start:
 #else
 	jbsr	_exit
 #endif
+PSEUDO_END (__clone)
 
 weak_alias (__clone, clone)

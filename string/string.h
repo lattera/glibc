@@ -238,6 +238,14 @@ extern __ptr_t memfrob __P ((__ptr_t __s, size_t __n));
 extern char *basename __P ((__const char *__filename));
 #endif
 
+#ifdef __USE_SVID
+/* Swab pairs bytes in the first N bytes of the area pointed to by
+   FROM and copy the result to TO.  The value of TO must not be in the
+   range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
+   is without partner.  */
+extern void swab __P ((__const char *__from, __const char *__to, size_t __n));
+#endif
+
 __END_DECLS
 
 #endif /* string.h  */

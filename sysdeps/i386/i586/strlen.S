@@ -53,16 +53,16 @@ ENTRY(strlen)
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */
-	xorl $3, %edx		/* was alignment = 3? */
+	cmpb %dh, (%eax)	/* is byte NUL? */
 
-	jz L1			/* yes => now it is aligned and start loop */
-
-L0:	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */
+	xorl $2, %edx
 
-	cmpb %dh, (%eax)	/* is byte NUL? */
+	jz L1
+
+L0:	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */

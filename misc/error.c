@@ -47,6 +47,8 @@ Cambridge, MA 02139, USA.  */
 void exit ();
 #endif
 
+#include "error.h"
+
 #ifndef _
 #define _(String) String
 #endif

@@ -24,7 +24,7 @@ subdir	:= misc
 
 headers	:= sys/uio.h iovec.h sys/ioctl.h ioctls.h ioctl-types.h \
 	   sys/ptrace.h sys/file.h sys/dir.h sys/cdefs.h \
-	   ar.h a.out.h nlist.h stab.h stab.def sgtty.h \
+	   ar.h a.out.h stab.h stab.def sgtty.h \
 	   ttyent.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h err.h error.h\
 	   sys/queue.h sysexits.h syscall.h sys/syscall.h sys/swap.h \
@@ -44,7 +44,7 @@ routines := brk sbrk sstk ioctl \
 	    swapon swapoff mktemp mkstemp \
 	    ualarm usleep \
 	    gtty stty \
-	    ptrace nlist \
+	    ptrace \
 	    fstab mntent mntent_r \
 	    utimes \
 	    truncate ftruncate \

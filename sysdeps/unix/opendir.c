@@ -91,7 +91,7 @@ __opendir (const char *name)
 
   dirp->fd = fd;
 
-  __libc_lock_init (dirp->lock)
+  __libc_lock_init (dirp->lock);
 
   return dirp;
 }
