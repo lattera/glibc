@@ -1292,6 +1292,9 @@ EOF
     libc_cv_z_relro=no
   fi])
   AC_SUBST(libc_cv_z_relro)
+  if test $libc_cv_z_relro = yes; then
+    AC_DEFINE(HAVE_Z_RELRO)
+  fi
 
   AC_CACHE_CHECK(for -Bgroup option,
 		 libc_cv_Bgroup, [dnl
