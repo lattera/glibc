@@ -35,6 +35,7 @@ struct
   /* Test for newline handling in regex.  */
   { "[^~]*~", "\nx~y", 0, 2, { { 0, 3 }, { -1, -1 } } },
   /* Other tests.  */
+  { "a(.*)b", "a b", REG_EXTENDED, 2, { { 0, 3 }, { 1, 2 } } },
   { ".*|\\([KIO]\\)\\([^|]*\\).*|?[KIO]", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
     { { 0, 21 }, { 15, 16 }, { 16, 18 } } },
   { ".*|\\([KIO]\\)\\([^|]*\\).*|?\\1", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
@@ -52,6 +53,18 @@ struct
   /* Here ^ cannot be treated as an anchor according to POSIX.  */
   { "(^|foo)bar", "(^|foo)bar", 0, 2, { { 0, 10 }, { -1, -1 } } },
   { "(foo|^)bar", "(foo|^)bar", 0, 2, { { 0, 10 }, { -1, -1 } } },
+  /* More tests on backreferences.  */
+  { "()\\1*\\1*", "", REG_EXTENDED, 2, { { 0, 0 }, { 0, 0 } } },
+  { "([0-9]).*\\1(a*)", "7;7a6", REG_EXTENDED, 3, { { 0, 4 }, { 0, 1 }, { 3, 4 } } },
+  { "([0-9]).*\\1(a*)", "7;7a", REG_EXTENDED, 3, { { 0, 4 }, { 0, 1 }, { 3, 4 } } },
+#if 0
+  /* XXX This test seems wrong. --drepper */
+  { "()(b)\\1c\\2", "bcb", REG_EXTENDED, 3, { { 0, 3 }, { 0, 0 }, { 1, 2 } } },
+
+  /* XXX Not used since they fail so far.  */
+  { "(b())\\2\\1", "bbbb", REG_EXTENDED, 3, { { 0, 2 }, { 0, 1 }, { 1, 1 } } },
+  { "(bb())\\2\\1", "bbbb", REG_EXTENDED, 3, { { 0, 4 }, { 0, 2 }, { 2, 2 } } },
+#endif
 };
 
 int
@@ -71,14 +84,14 @@ main (void)
 	{
 	  char buf[500];
 	  regerror (n, &re, buf, sizeof (buf));
-	  printf ("regcomp %zd failed: %s\n", i, buf);
+	  printf ("%s: regcomp %zd failed: %s\n", tests[i].pattern, i, buf);
 	  ret = 1;
 	  continue;
 	}
 
       if (regexec (&re, tests[i].string, tests[i].nmatch, rm, 0))
 	{
-	  printf ("regexec %zd failed\n", i);
+	  printf ("%s: regexec %zd failed\n", tests[i].pattern, i);
 	  ret = 1;
 	  regfree (&re);
 	  continue;
@@ -90,8 +103,8 @@ main (void)
 	  {
 	    if (tests[i].rm[n].rm_so == -1 && tests[i].rm[n].rm_eo == -1)
 	      break;
-	    printf ("regexec match failure rm[%d] %d..%d\n",
-		    n, rm[n].rm_so, rm[n].rm_eo);
+	    printf ("%s: regexec %zd match failure rm[%d] %d..%d\n",
+		    tests[i].pattern, i, n, rm[n].rm_so, rm[n].rm_eo);
 	    ret = 1;
 	    break;
 	  }

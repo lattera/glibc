@@ -1387,7 +1387,7 @@ update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
 	   away the node `a'.
 	ii. If 'b' is in the STATE_LOG[STR_IDX+strlen('s')] but 'b' is
 	    throwed away, we throw away the node `a'.
-     3. When 0 <= STR_IDX < n and 'a' epsilon transit to 'b':
+     3. When 0 <= STR_IDX < MATCH_LAST and 'a' epsilon transit to 'b':
 	i. If 'b' isn't in the STATE_LOG[STR_IDX], we throw away the
 	   node `a'.
 	ii. If 'b' is in the STATE_LOG[STR_IDX] but 'b' is throwed away,
@@ -1724,60 +1724,98 @@ check_dst_limits (dfa, limits, mctx, dst_node, dst_idx, src_node, src_idx)
 }
 
 static int
-check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, node,
+check_dst_limits_calc_pos (dfa, mctx, limit, eclosures, subexp_idx, from_node,
 			   str_idx)
      re_dfa_t *dfa;
      re_match_context_t *mctx;
      re_node_set *eclosures;
-     int limit, subexp_idx, node, str_idx;
+     int limit, subexp_idx, from_node, str_idx;
 {
   struct re_backref_cache_entry *lim = mctx->bkref_ents + limit;
-  int pos = (str_idx < lim->subexp_from ? -1
-	     : (lim->subexp_to < str_idx ? 1 : 0));
-  if (pos == 0
-      && (str_idx == lim->subexp_from || str_idx == lim->subexp_to))
-    {
       int node_idx;
+
+  /* If we are outside the range of the subexpression, return -1 or 1.  */
+  if (str_idx < lim->subexp_from)
+    return -1;
+
+  if (lim->subexp_to < str_idx)
+    return 1;
+
+  /* If we are within the subexpression, return 0.  */
+  if (str_idx != lim->subexp_from && str_idx != lim->subexp_to)
+    return 0;
+
+  /* Else, we are on the boundary: examine the nodes on the epsilon
+     closure.  */
       for (node_idx = 0; node_idx < eclosures->nelem; ++node_idx)
 	{
 	  int node = eclosures->elems[node_idx];
-	  re_token_type_t type= dfa->nodes[node].type;
-	  if (type == OP_BACK_REF)
+      switch (dfa->nodes[node].type)
+	{
+	case OP_BACK_REF:
 	    {
 	      int bi = search_cur_bkref_entry (mctx, str_idx);
 	      for (; bi < mctx->nbkref_ents; ++bi)
 		{
 		  struct re_backref_cache_entry *ent = mctx->bkref_ents + bi;
+		int dst, cpos;
+		
+		/* If this backreference goes beyond the point we're
+		   examining, don't go any further.  */
 		  if (ent->str_idx > str_idx)
 		    break;
-		  if (ent->node == node && ent->subexp_from == ent->subexp_to)
-		    {
-		      int cpos, dst;
+
+		if (ent->node != node || ent->subexp_from != ent->subexp_to)
+		  continue;
+
+		/* Recurse trying to reach the OP_OPEN_SUBEXP and
+		   OP_CLOSE_SUBEXP cases below.  But, if the
+		   destination node is the same node as the source
+		   node, don't recurse because it would cause an
+		   infinite loop: a regex that exhibits this behavior
+		   is ()\1*\1*  */
 		      dst = dfa->edests[node].elems[0];
+		if (dst == from_node)
+		  {
+		    if (str_idx == lim->subexp_from)
+		      return -1;
+		    else /* if (str_idx == lim->subexp_to) */
+		      return 0;
+		  }
+
 		      cpos = check_dst_limits_calc_pos (dfa, mctx, limit,
 							dfa->eclosures + dst,
 							subexp_idx, dst,
 							str_idx);
-		      if ((str_idx == lim->subexp_from && cpos == -1)
-			  || (str_idx == lim->subexp_to && cpos == 0))
-			return cpos;
-		    }
-		}
+
+		if (cpos == -1 && str_idx == lim->subexp_from)
+		  return -1;
+
+		if (cpos == 0 /* && str_idx == lim->lim->subexp_to */)
+		  return 0;
 	    }
-	  if (type == OP_OPEN_SUBEXP && subexp_idx == dfa->nodes[node].opr.idx
-	      && str_idx == lim->subexp_from)
-	    {
-	      pos = -1;
 	      break;
 	    }
-	  if (type == OP_CLOSE_SUBEXP && subexp_idx == dfa->nodes[node].opr.idx
-	      && str_idx == lim->subexp_to)
+	  
+	case OP_OPEN_SUBEXP:
+	  if (str_idx == lim->subexp_from && subexp_idx == dfa->nodes[node].opr.idx)
+	    return -1;
+	  break;
+	  
+	case OP_CLOSE_SUBEXP:
+	  if (str_idx == lim->subexp_to && subexp_idx == dfa->nodes[node].opr.idx)
+	    return 0;
+	  break;
+
+	default:
 	    break;
 	}
-      if (node_idx == eclosures->nelem && str_idx == lim->subexp_to)
-	pos = 1;
     }
-  return pos;
+
+  if (str_idx == lim->subexp_to)
+    return 1;
+  else
+    return 0;
 }
 
 /* Check the limitations of sub expressions LIMITS, and remove the nodes

@@ -1,5 +1,24 @@
 2003-10-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/bug-regex11.c: Add some more tests which fail so far.
+	Disable them.  Patch by Paolo Bonzini <bonzini@gnu.org>.
+
+2003-10-05  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/bug-regex11.c: Add more backreference-related test cases.
+	(main): Show the failing regex in the error messages.
+	* posix/regexec.c (check_dst_limits_calc_pos):
+	Simplify some nested conditionals.  Replace if's with a switch
+	statement.
+	(check_dst_limits_calc_pos <TYPE_BKREF>): Rename parameter NODE to
+	FROM_NODE, it shadows a local variable; don't recurse if FROM_NODE
+	does not change in the recursive invocation, fixing an infinite loop
+	in the ()\1*\1* regex.
+	(sift_states_backward): Fix function comment.
+	* posix/regcomp.c (calc_epsdest): Add an assertion.
+
+2003-10-06  Ulrich Drepper  <drepper@redhat.com>
+
 	* manual/examples/testopt.c: Fix warnings.  Better error message
 	for missing -c argument.
 	Patch mostly by Gitonga Marete <bgmarete@comcast.net>.
