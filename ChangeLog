@@ -1,3 +1,15 @@
+2001-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss-nis.h: Move yperr2nss_tab definition into separate file
+	and rename to __yperr2nss_tab.  Change YPERR_COUNT into variable
+	__yperr2nss_count.
+	* nis/nss-nis.c: New file.
+	* nis/Makefile (libnss_compat-routines): Add nss-nis.
+	(libnss_nis-routines): Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Some more
+	optimizations.  Patch by Jakub Jelinek <jakub@redhat.com>.
+
 2001-04-26  Andreas Jaeger  <aj@suse.de>
 
 	* po/zh_TW.po: Update.
