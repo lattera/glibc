@@ -1,3 +1,8 @@
+2000-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-ctype.c (ctype_output): Don't generate unaligned
+	data files.
+
 2000-06-29  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/bp-asm.h (PCOFF): New constant.
