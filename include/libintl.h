@@ -9,10 +9,13 @@ extern char *__bindtextdomain __P ((__const char *__domainname,
 extern const char _libc_intl_domainname[];
 
 /* Define the macros `_' and `N_' for conveniently marking translatable
-   strings in the libc source code.  */
+   strings in the libc source code.  We have to make sure we get the
+   correct definitions so we undefine the macros first.  */
 
+# undef N_
 # define N_(msgid)	msgid
 
+# undef _
 # ifdef dgettext
 /* This is defined as an optimizing macro, so use it.  */
 #  define _(msgid)	dgettext (_libc_intl_domainname, (msgid))

@@ -1,5 +1,7 @@
 1999-07-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* include/libintl.h: Undefine N_ and _ first to avoid warnings.
+
 	* elf/elf.h: Add ET_LOOS and ET_HIOS.
 	Add various EM_* constants.
 	Add SHN_LOOS and SHN_HIOS.
