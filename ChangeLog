@@ -1,3 +1,10 @@
+2002-06-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (cexp_test): Add missing L suffix for
+	expected result.  Reported by 	Stephen L Moshier <steve@moshier.net>.
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust error for cexp (0.75 +
+	1.25 i).
+
 2002-05-29  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-error.c (_dl_signal_cerror): Report error if ld.so debug
