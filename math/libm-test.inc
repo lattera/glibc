@@ -164,11 +164,17 @@ static int output_points;	/* Should the single function results printed?  */
 static FLOAT minus_zero, plus_zero;
 static FLOAT plus_infty, minus_infty, nan_value;
 
-static FLOAT max_error;
+static FLOAT max_error, real_max_error, imag_max_error;
 
 
 #define BUILD_COMPLEX(real, imag) \
   ({ __complex__ FLOAT __retval;					      \
+     __real__ __retval = (real);					      \
+     __imag__ __retval = (imag);					      \
+     __retval; })
+
+#define BUILD_COMPLEX_INT(real, imag) \
+  ({ __complex__ int __retval;						      \
      __real__ __retval = (real);					      \
      __imag__ __retval = (imag);					      \
      __retval; })
@@ -181,13 +187,15 @@ static void
 init_max_error (void)
 {
   max_error = 0;
+  real_max_error = 0;
+  imag_max_error = 0;
 }
 
 static void
-set_max_error (FLOAT current)
+set_max_error (FLOAT current, FLOAT *curr_max_error)
 {
-  if (current > max_error)
-    max_error = current;
+  if (current > *curr_max_error)
+    *curr_max_error = current;
 }
 
 
@@ -246,10 +254,36 @@ print_function_ulps (const char *function_name, FLOAT ulp)
 {
   if (output_ulps)
     {
-      fprintf (ulps_file, "Function \"%s\":\n", function_name);
+      fprintf (ulps_file, "Function: \"%s\":\n", function_name);
       fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
 	       CHOOSE("ldouble", "double", "float",
 		      "ildouble", "idouble", "ifloat"), ulp);
+    }
+}
+
+
+static void
+print_complex_function_ulps (const char *function_name, FLOAT real_ulp,
+			     FLOAT imag_ulp)
+{
+  if (output_ulps)
+    {
+      if (real_ulp != 0.0)
+	{
+	  fprintf (ulps_file, "Function: Real part of \"%s\":\n", function_name);
+	  fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+		   CHOOSE("ldouble", "double", "float",
+			  "ildouble", "idouble", "ifloat"), real_ulp);
+	}
+      if (imag_ulp != 0.0)
+	{
+	  fprintf (ulps_file, "Function: Imaginary part of \"%s\":\n", function_name);
+	  fprintf (ulps_file, "%s: % .4" PRINTF_NEXPR "\n",
+		   CHOOSE("ldouble", "double", "float",
+			  "ildouble", "idouble", "ifloat"), imag_ulp);
+	}
+      
+	  
     }
 }
 
@@ -281,10 +315,7 @@ fpstack_test (const char *test_name)
 static void
 print_max_error (const char *func_name, FLOAT allowed, int xfail)
 {
-  char str[500];
   int ok = 0;
-
-  sprintf (str, "Maximal error of `%s':", func_name);
 
   if (max_error <= allowed)
     {
@@ -297,9 +328,39 @@ print_max_error (const char *func_name, FLOAT allowed, int xfail)
 
   if (print_screen_max_error (ok, xfail))
     {
-      printf ("%s\n", str);
+      printf ("Maximal error of `%s'\n", func_name);
       printf (" is      : % .4" PRINTF_NEXPR " ulp\n", max_error);
       printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", allowed);
+    }
+
+  update_stats (ok, xfail);
+}
+
+
+static void
+print_complex_max_error (const char *func_name, __complex__ FLOAT allowed,
+			 __complex__ int xfail)
+{
+  int ok = 0;
+
+  if ((real_max_error <= __real__ allowed)
+      && (imag_max_error <= __imag__ allowed))
+    {
+      ok = 1;
+    }
+
+  if (!ok)
+    print_complex_function_ulps (func_name, real_max_error, imag_max_error);
+
+
+  if (print_screen_max_error (ok, xfail))
+    {
+      printf ("Maximal error of real part of: %s\n", func_name);
+      printf (" is      : % .4" PRINTF_NEXPR " ulp\n", real_max_error);
+      printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", __real__ allowed);
+      printf ("Maximal error of imaginary part of: %s\n", func_name);
+      printf (" is      : % .4" PRINTF_NEXPR " ulp\n", imag_max_error);
+      printf (" accepted: % .4" PRINTF_NEXPR " ulp\n", __imag__ allowed);
     }
 
   update_stats (ok, xfail);
@@ -377,8 +438,9 @@ test_exceptions (const char *test_name, int exception)
 
 
 static void
-check_float (const char *test_name, FLOAT computed, FLOAT expected,
-	     FLOAT max_ulp, int xfail, int exceptions)
+check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
+		      FLOAT max_ulp, int xfail, int exceptions,
+		      FLOAT *curr_max_error)
 {
   int ok = 0;
   int print_diff = 0;
@@ -411,7 +473,7 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 	ulp = diff / FUNC(ldexp) (1.0, - MANT_DIG);
       else
 	ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
-      set_max_error (ulp);
+      set_max_error (ulp, curr_max_error);
       print_diff = 1;
       if (((exceptions & IGNORE_ZERO_INF_SIGN) == 0)
 	  && (computed == 0.0 && expected == 0.0
@@ -454,25 +516,44 @@ check_float (const char *test_name, FLOAT computed, FLOAT expected,
 
 
 static void
-check_complex (const char *test_name, FLOAT __complex__ computed,
-	       FLOAT __complex__ expected,
-	       FLOAT max_ulp, int xfail, int exception)
+check_float (const char *test_name, FLOAT computed, FLOAT expected,
+	     FLOAT max_ulp, int xfail, int exceptions)
 {
-  FLOAT part_comp, part_exp;
+  check_float_internal (test_name, computed, expected, max_ulp, xfail,
+			exceptions, &max_error);
+}
+
+
+static void
+check_complex (const char *test_name, __complex__ FLOAT computed,
+	       __complex__ FLOAT expected,
+	       __complex__ FLOAT max_ulp, __complex__ int xfail,
+	       int exception)
+{
+  FLOAT part_comp, part_exp, part_max_ulp;
+  int part_xfail;
   char str[200];
 
   sprintf (str, "Real part of: %s", test_name);
   part_comp = __real__ computed;
   part_exp = __real__ expected;
-  check_float (str, part_comp, part_exp, max_ulp, xfail, exception);
+  part_max_ulp = __real__ max_ulp;
+  part_xfail = __real__ xfail;
+  
+  check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
+			exception, &real_max_error);
 
   sprintf (str, "Imaginary part of: %s", test_name);
   part_comp = __imag__ computed;
   part_exp = __imag__ expected;
+  part_max_ulp = __imag__ max_ulp;
+  part_xfail = __imag__ xfail;
+  
   /* Don't check again for exceptions, just pass through the
      zero/inf sign test.  */
-  check_float (str, part_comp, part_exp, max_ulp, xfail,
-	       exception & IGNORE_ZERO_INF_SIGN);
+  check_float_internal (str, part_comp, part_exp, part_max_ulp, part_xfail,
+			exception & IGNORE_ZERO_INF_SIGN,
+			&imag_max_error);
 }
 
 
@@ -895,7 +976,7 @@ cacos_test (void)
   TEST_c_c (cacos, 0.7, 1.2, 1.1351827477151551089L, -1.0927647857577371459L);
   TEST_c_c (cacos, -2, -3, 2.1414491111159960199L, 1.9833870299165354323L);
 
-  END (cacos);
+  END (cacos, complex);
 }
 
 
@@ -952,7 +1033,7 @@ cacosh_test (void)
   TEST_c_c (cacosh, 0.7, 1.2, 1.0927647857577371459L, 1.1351827477151551089L);
   TEST_c_c (cacosh, -2, -3, -1.9833870299165354323L, 2.1414491111159960199L);
 
-  END (cacosh);
+  END (cacosh, complex);
 }
 
 static void
@@ -1074,7 +1155,7 @@ casin_test (void)
   TEST_c_c (casin, 0.7, 1.2, 0.4356135790797415103L, 1.0927647857577371459L);
   TEST_c_c (casin, -2, -3, -0.5706527843210994007L, -1.9833870299165354323L);
 
-  END (casin);
+  END (casin, complex);
 }
 
 
@@ -1132,7 +1213,7 @@ casinh_test (void)
   TEST_c_c (casinh, 0.7, 1.2, 0.9786545955936738768L, 0.9113541895315601156L);
   TEST_c_c (casinh, -2, -3, -1.9686379257930962917L, -0.9646585044076027920L);
 
-  END (casinh);
+  END (casinh, complex);
 }
 
 
@@ -1195,7 +1276,7 @@ catan_test (void)
 
   TEST_c_c (catan, -2, -3, -1.4099210495965755225L, -0.2290726829685387662L);
 
-  END (catan);
+  END (catan, complex);
 }
 
 static void
@@ -1255,7 +1336,7 @@ catanh_test (void)
   TEST_c_c (catanh, 0.7, 1.2, 0.2600749516525135959L, 0.9702403077950989849L);
   TEST_c_c (catanh, -2, -3, -0.1469466662255297520L, -1.3389725222944935611L);
 
-  END (catanh);
+  END (catanh, complex);
 }
 
 static void
@@ -1339,7 +1420,7 @@ ccos_test (void)
 
   TEST_c_c (ccos, -2, -3, -4.1896256909688072301L, -9.1092278937553365979L);
 
-  END (ccos);
+  END (ccos, complex);
 }
 
 
@@ -1403,7 +1484,7 @@ ccosh_test (void)
 
   TEST_c_c (ccosh, -2, -3, -3.7245455049153225654L, 0.5118225699873846088L);
 
-  END (ccosh);
+  END (ccosh, complex);
 }
 
 
@@ -1478,7 +1559,7 @@ cexp_test (void)
   TEST_c_c (cexp, 0.7, 1.2, 0.7296989091503236012L, 1.8768962328348102821L);
   TEST_c_c (cexp, -2.0, -3.0, -0.1339809149295426134L, -0.0190985162611351964L);
 
-  END (cexp);
+  END (cexp, complex);
 }
 
 static void
@@ -1536,7 +1617,7 @@ clog_test (void)
   TEST_c_c (clog, nan_value, nan_value, nan_value, nan_value);
   TEST_c_c (clog, -2, -3, 1.2824746787307683680L, -2.1587989303424641704L);
 
-  END (clog);
+  END (clog, complex);
 }
 
 
@@ -1596,7 +1677,7 @@ clog10_test (void)
   TEST_c_c (clog10, 0.7, 1.2, 0.1427786545038868803L, 0.4528483579352493248L);
   TEST_c_c (clog10, -2, -3, 0.5569716761534183846L, -0.9375544629863747085L);
 
-  END (clog10);
+  END (clog10, complex);
 }
 
 static void
@@ -1673,7 +1754,7 @@ cpow_test (void)
   TEST_cc_c (cpow, M_El, 0, 0, 2 * M_PIl, 1.0, 0.0);
   TEST_cc_c (cpow, 2, 3, 4, 0, -119.0, -120.0);
 
-  END (cpow);
+  END (cpow, complex);
 }
 
 static void
@@ -1695,7 +1776,7 @@ cproj_test (void)
   TEST_c_c (cproj, 1.0, 0.0, 1.0, 0.0);
   TEST_c_c (cproj, 2.0, 3.0, 0.28571428571428571429L, .42857142857142857143L);
 
-  END (cproj);
+  END (cproj, complex);
 }
 
 
@@ -1759,7 +1840,7 @@ csin_test (void)
 
   TEST_c_c (csin, -2, -3, -9.1544991469114295734L, 4.1689069599665643507L);
 
-  END (csin);
+  END (csin, complex);
 }
 
 
@@ -1822,7 +1903,7 @@ csinh_test (void)
   TEST_c_c (csinh, 0.7, 1.2, 0.27487868678117583582L, 1.1698665727426565139L);
   TEST_c_c (csinh, -2, -3, 3.5905645899857799520L, -0.5309210862485198052L);
 
-  END (csinh);
+  END (csinh, complex);
 }
 
 static void
@@ -1882,7 +1963,7 @@ csqrt_test (void)
   TEST_c_c (csqrt, -2, -3, 0.8959774761298381247L, -1.6741492280355400404L);
   TEST_c_c (csqrt, -2, 3, 0.8959774761298381247L, 1.6741492280355400404L);
 
-  END (csqrt);
+  END (csqrt, complex);
 }
 
 static void
@@ -1933,7 +2014,7 @@ ctan_test (void)
   TEST_c_c (ctan, 0.7, 1.2, 0.1720734197630349001L, 0.9544807059989405538L);
   TEST_c_c (ctan, -2, -3, 0.0037640256415042482L, -1.0032386273536098014L);
 
-  END (ctan);
+  END (ctan, complex);
 }
 
 
@@ -1986,7 +2067,7 @@ ctanh_test (void)
   TEST_c_c (ctanh, 0.7, 1.2, 1.3472197399061191630L, 0.4778641038326365540L);
   TEST_c_c (ctanh, -2, -3, -0.9653858790221331242L, 0.0098843750383224937L);
 
-  END (ctanh);
+  END (ctanh, complex);
 }
 
 static void
@@ -3721,10 +3802,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case 'f':
-      output_points = 0;
+      output_max_error = 0;
       break;
     case 'p':
-      output_max_error = 0;
+      output_points = 0;
       break;
     case 'u':
       output_ulps = 1;

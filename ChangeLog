@@ -1,3 +1,9 @@
+1999-10-20  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc: Rewrite to allow different deltas for real
+	and imaginary part of complex functions.
+	* math/gen-libm-test.pl: Likewise.
+
 1999-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/s_nextafterl.c: Add __nextafterl and nextafterl

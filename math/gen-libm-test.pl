@@ -22,16 +22,36 @@
 # This file needs to be tidied up
 # Note that functions and tests share the same namespace.
 
+# Information about tests are stored in: %results
+# $results{$test}{"type"} is the result type, e.g. normal or complex.
+# $results{$test}{"has_ulps"} is set if deltas exist.
+# $results{$test}{"has_fails"} is set if exptected failures exist.
+# In the following description $type and $float are:
+# - $type is either "normal", "real" (for the real part of a complex number)
+#   or "imag" (for the imaginary part # of a complex number).
+# - $float is either of float, ifloat, double, idouble, ldouble, ildouble;
+#   It represents the underlying floating point type (float, double or long
+#   double) and if inline functions (the leading i stands for inline)
+#   are used.
+# $results{$test}{$type}{"fail"}{$float} is defined and has a 1 if 
+# the test is expected to fail
+# $results{$test}{$type}{"ulp"}{$float} is defined and has a delta as value
+
+
 use Getopt::Std;
 
 use strict;
 
 use vars qw ($input $output);
+use vars qw (%results);
 use vars qw (@tests @functions);
 use vars qw ($count);
-use vars qw (%ulps %failures);
-use vars qw (%beautify);
+use vars qw (%beautify @all_floats);
 use vars qw ($output_dir $ulps_file);
+
+# all_floats is sorted and contains all recognised float types
+@all_floats = ('double', 'float', 'idouble', 
+	       'ifloat', 'ildouble', 'ldouble');
 
 %beautify =
   ( "minus_zero" => "-0",
@@ -157,12 +177,12 @@ sub new_test {
   my $rest;
 
   # Add ulp, xfail
-  if (exists $ulps{$test}) {
+  if (exists $results{$test}{'has_ulps'}) {
     $rest = ", DELTA$count";
   } else {
     $rest = ', 0';
   }
-  if (exists $failures{$test}) {
+  if (exists $results{$test}{'has_fails'}) {
     $rest .= ", FAIL$count";
   } else {
     $rest .= ', 0';
@@ -393,7 +413,7 @@ sub parse_args {
 
   print $file $pre if (defined $pre);
 
-  print $file "  $cline\n";
+  print $file "  $cline";
 
   print $file $post if (defined $post);
 }
@@ -425,15 +445,25 @@ sub generate_testfile {
     }
     # END (function)
     if (/END/) {
-      my ($fct, $line);
+      my ($fct, $line, $type);
+      if (/complex/) {
+	s/,\s*complex\s*//;
+	$type = 'complex';
+      } else {
+	$type = 'normal';
+      }
       ($fct) = ($_ =~ /END\s*\((.*)\)/);
-      $line = "  print_max_error (\"$fct\", ";
-      if (exists $ulps{$fct}) {
+      if ($type eq 'complex') {
+	$line = "  print_complex_max_error (\"$fct\", ";
+      } else {
+	$line = "  print_max_error (\"$fct\", ";
+      }
+      if (exists $results{$fct}{'has_ulps'}) {
 	$line .= "DELTA$fct";
       } else {
 	$line .= '0';
       }
-      if (exists $failures{$fct}) {
+      if (exists $results{$fct}{'has_fails'}) {
 	$line .= ", FAIL$fct";
       } else {
 	$line .= ', 0';
@@ -454,8 +484,12 @@ sub generate_testfile {
 # Parse ulps file
 sub parse_ulps {
   my ($file) = @_;
-  my ($test, $type, $eps);
+  my ($test, $type, $float, $eps);
 
+  # $type has the following values:
+  # "normal": No complex variable
+  # "real": Real part of complex result
+  # "imag": Imaginary part of complex result
   open ULP, $file  or die ("Can't open $file: $!");
   while (<ULP>) {
     chop;
@@ -463,20 +497,50 @@ sub parse_ulps {
     next if /^#/;
     next if /^\s*$/;
     if (/^Test/) {
+      if (/Real part of:/) {
+	s/Real part of: //;
+	$type = 'real';
+      } elsif (/Imaginary part of:/) {
+	s/Imaginary part of: //;
+	$type = 'imag';
+      } else {
+	$type = 'normal';
+      }
       s/^.+\"(.*)\".*$/$1/;
       $test = $_;
+      if ($type =~ /^real|imag$/) {
+	$results{$test}{'type'} = 'complex';
+      } elsif ($type eq 'normal') {
+	$results{$test}{'type'} = 'normal';
+      }
       next;
     }
-    if (/^Function/) {
-      ($test) = ($_ =~ /^Function\s*\"([a-zA-Z0-9_]+)\"/);
+    if (/^Function: /) {
+      if (/\Real part of/) {
+	s/Real part of //;
+	$type = 'real';
+      } elsif (/Imaginary part of/) {
+	s/Imaginary part of //;
+	$type = 'imag';
+      } else {
+	$type = 'normal';
+      }
+      ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
+      if ($type =~ /^real|imag$/) {
+	$results{$test}{'type'} = 'complex';
+      } elsif ($type eq 'normal') {
+	$results{$test}{'type'} = 'normal';
+      }
       next;
     }
     if (/^i?(float|double|ldouble):/) {
-      ($type, $eps) = split /\s*:\s*/,$_,2;
-      if ($eps eq "fail") {
-	$failures{$test}{$type} = 1;
+      ($float, $eps) = split /\s*:\s*/,$_,2;
+      if ($eps eq 'fail') {
+	$results{$test}{$type}{'fail'}{$float} = 1;
+	$results{$test}{'has_fails'} = 1;
       } else {
-	$ulps{$test}{$type} = $eps;
+	$results{$test}{$type}{'ulp'}{$float} = $eps;
+	$results{$test}{'has_ulps'} = 1;
       }
       next;
     }
@@ -485,17 +549,6 @@ sub parse_ulps {
   close ULP;
 }
 
-# Just for testing: Print all ulps
-sub print_ulps {
-  my ($test, $type, $eps);
-
-  foreach $test (keys %ulps) {
-    print "$test:\n";
-    foreach $type (keys %{$ulps{$test}}) {
-      print "$test: $type $ulps{$test}{$type}\n";
-    }
-  }
-}
 
 # Clean up a floating point number
 sub clean_up_number {
@@ -510,39 +563,65 @@ sub clean_up_number {
 # Output a file which can be read in as ulps file.
 sub print_ulps_file {
   my ($file) = @_;
-  my ($test, $type, $eps, $fct, $last_fct);
+  my ($test, $type, $float, $eps, $fct, $last_fct);
 
   $last_fct = '';
   open NEWULP, ">$file" or die ("Can't open $file: $!");
   print NEWULP "# Begin of automatic generation\n";
   foreach $test (sort @tests) {
-    if (defined $ulps{$test} || defined $failures{$test}) {
-      ($fct) = ($test =~ /^(\w+)\s/);
-      if ($fct ne $last_fct) {
-	$last_fct = $fct;
-	print NEWULP "\n# $fct\n";
-      }
-      print NEWULP "Test \"$test\":\n";
-      foreach $type (sort keys %{$ulps{$test}}) {
-	print NEWULP "$type: ", &clean_up_number ($ulps{$test}{$type}), "\n";
-      }
-      foreach $type (sort keys %{$failures{$test}}) {
-	print NEWULP "$type: fail\n";
+    foreach $type ('real', 'imag', 'normal') {
+      if (exists $results{$test}{$type}) {
+	if (defined $results{$test}) {
+	  ($fct) = ($test =~ /^(\w+)\s/);
+	  if ($fct ne $last_fct) {
+	    $last_fct = $fct;
+	    print NEWULP "\n# $fct\n";
+	  }
+	}
+	if ($type eq 'normal') {
+	  print NEWULP "Test \"$test\":\n";
+	} elsif ($type eq 'real') {
+	  print NEWULP "Test \"Real part of: $test\":\n";
+	} elsif ($type eq 'imag') {
+	  print NEWULP "Test \"Imaginary part of: $test\":\n";
+	}
+	foreach $float (@all_floats) {
+	  if (exists $results{$test}{$type}{'ulp'}{$float}) {
+	    print NEWULP "$float: ", 
+	    &clean_up_number ($results{$test}{$type}{'ulp'}{$float}), 
+	    "\n";
+	  }
+	  if (exists $results{$test}{$type}{'fail'}{$float}) {
+	    print NEWULP "$float: fail\n";
+	  }
+	}
       }
     }
   }
   print NEWULP "\n# Maximal error of functions:\n";
 
   foreach $fct (sort @functions) {
-    if (defined $ulps{$fct} || defined $failures{$fct}) {
-      print NEWULP "Function \"$fct\":\n";
-      foreach $type (sort keys %{$ulps{$fct}}) {
-	print NEWULP "$type: ", &clean_up_number ($ulps{$fct}{$type}), "\n";
+    foreach $type ('real', 'imag', 'normal') {
+      if (exists $results{$fct}{$type}) {
+	if ($type eq 'normal') {
+	  print NEWULP "Function: \"$fct\":\n";
+	} elsif ($type eq 'real') {
+	  print NEWULP "Function: Real part of \"$fct\":\n";
+	} elsif ($type eq 'imag') {
+	  print NEWULP "Function: Imaginary part of \"$fct\":\n";
+	}
+	foreach $float (@all_floats) {
+	  if (exists $results{$fct}{$type}{'ulp'}{$float}) {
+	    print NEWULP "$float: ", 
+	    &clean_up_number ($results{$fct}{$type}{'ulp'}{$float}), 
+	    "\n";
+	  }
+	  if (exists $results{$fct}{$type}{'fail'}{$float}) {
+	    print NEWULP "$float: fail\n";
+	  }
+	}
+	print NEWULP "\n";
       }
-      foreach $type (sort keys %{$failures{$fct}}) {
-	print NEWULP "$type: fail\n";
-      }
-      print NEWULP "\n";
     }
   }
   print NEWULP "# end of automatic generation\n";
@@ -550,30 +629,75 @@ sub print_ulps_file {
 }
 
 sub get_ulps {
-  my ($test, $float) = @_;
-  return exists $ulps{$test}{$float} ? $ulps{$test}{$float} : "0";
+  my ($test, $type, $float) = @_;
+
+  if ($type eq 'complex') {
+    my ($res);
+    # Return 0 instead of BUILD_COMPLEX (0,0)
+    if (!exists $results{$test}{'real'}{'ulp'}{$float} &&
+	!exists $results{$test}{'imag'}{'ulp'}{$float}) {
+      return "0";
+    }
+    $res = 'BUILD_COMPLEX (';
+    $res .= (exists $results{$test}{'real'}{'ulp'}{$float} 
+	     ? $results{$test}{'real'}{'ulp'}{$float} : "0");
+    $res .= ', ';
+    $res .= (exists $results{$test}{'imag'}{'ulp'}{$float}
+	     ? $results{$test}{'imag'}{'ulp'}{$float} : "0");
+    $res .= ')';
+    return $res;
+  }
+  return (exists $results{$test}{'normal'}{'ulp'}{$float}
+	  ? $results{$test}{'normal'}{'ulp'}{$float} : "0");
 }
 
 sub get_failure {
-  my ($test, $float) = @_;
-  return exists $failures{$test}{$float} ? $failures{$test}{$float} : "0";
+  my ($test, $type, $float) = @_;
+  if ($type eq 'complex') {
+    # return x,y
+    my ($res);
+    # Return 0 instead of BUILD_COMPLEX_INT (0,0)
+    if (!exists $results{$test}{'real'}{'ulp'}{$float} &&
+	!exists $results{$test}{'imag'}{'ulp'}{$float}) {
+      return "0";
+    }
+    $res = 'BUILD_COMPLEX_INT (';
+    $res .= (exists $results{$test}{'real'}{'fail'}{$float} 
+	     ? $results{$test}{'real'}{'fail'}{$float} : "0");
+    $res .= ', ';
+    $res .= (exists $results{$test}{'imag'}{'fail'}{$float}
+	     ? $results{$test}{'imag'}{'fail'}{$float} : "0");
+    $res .= ')';
+    return $res;
+  }
+  return (exists $results{$test}{'normal'}{'fail'}{$float}
+	  ? $results{$test}{'normal'}{'fail'}{$float} : "0");
+
 }
 
 # Output the defines for a single test
 sub output_test {
   my ($file, $test, $name) = @_;
   my ($ldouble, $double, $float, $ildouble, $idouble, $ifloat);
+  my ($type);
 
-  if (exists $ulps{$test}) {
-    $ldouble = &get_ulps ($test, "ldouble");
-    $double = &get_ulps ($test, "double");
-    $float = &get_ulps ($test, "float");
-    $ildouble = &get_ulps ($test, "ildouble");
-    $idouble = &get_ulps ($test, "idouble");
-    $ifloat = &get_ulps ($test, "ifloat");
+  # Do we have ulps/failures?
+  if (!exists $results{$test}{'type'}) {
+    return;
+  }
+  $type = $results{$test}{'type'};
+  if (exists $results{$test}{'has_ulps'}) {
+    # XXX use all_floats (change order!)
+    $ldouble = &get_ulps ($test, $type, "ldouble");
+    $double = &get_ulps ($test, $type, "double");
+    $float = &get_ulps ($test, $type, "float");
+    $ildouble = &get_ulps ($test, $type, "ildouble");
+    $idouble = &get_ulps ($test, $type, "idouble");
+    $ifloat = &get_ulps ($test, $type, "ifloat");
     print $file "#define DELTA$name CHOOSE($ldouble, $double, $float, $ildouble, $idouble, $ifloat)\t/* $test  */\n";
   }
-  if (exists $failures{$test}) {
+
+  if (exists $results{$test}{'has_fails'}) {
     $ldouble = &get_failure ($test, "ldouble");
     $double = &get_failure ($test, "double");
     $float = &get_failure ($test, "float");
