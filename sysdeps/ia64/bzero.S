@@ -1,6 +1,6 @@
 /* Optimized version of the standard bzero() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
    02111-1307 USA.  */
 
 /* Return: dest
-  
+
    Inputs:
         in0:    dest
         in1:    count
@@ -41,9 +41,9 @@
 #define	loopcnt		loc4
 #define save_lc		loc5
 
-ENTRY(bzero)
+ENTRY(__bzero)
 	.prologue
-	alloc	save_pfs = ar.pfs, 2, 6, 0, 0	
+	alloc	save_pfs = ar.pfs, 2, 6, 0, 0
 	.save ar.lc, save_lc
 	mov	save_lc = ar.lc
 	.body
@@ -59,7 +59,7 @@ ENTRY(bzero)
 (p6)	br.cond.sptk .dest_aligned
 	sub	cnt = cnt, loopcnt
 	adds	loopcnt = -1, loopcnt;;
-	mov	ar.lc = loopcnt;;	
+	mov	ar.lc = loopcnt;;
 .l1:
 	st1	[ptr1] = r0, 1
 	br.cloop.dptk	.l1 ;;
@@ -70,7 +70,7 @@ ENTRY(bzero)
 (p6)	br.cond.spnt	.one_more
 	and	cnt = 0xf, cnt		// compute the remaining cnt
 	adds	loopcnt = -1, loopcnt;;
-	mov     ar.lc = loopcnt;;	
+	mov     ar.lc = loopcnt;;
 .l2:
 	st8	[ptr1] = r0, 16
 	st8	[ptr2] = r0, 16
@@ -84,11 +84,12 @@ ENTRY(bzero)
 .set_few:
 	adds	loopcnt = -1, cnt;;
 	mov	ar.lc = loopcnt;;
-.l3:	
+.l3:
 	st1     [ptr1] = r0, 1
-	br.cloop.dptk   .l3 ;;	
+	br.cloop.dptk   .l3 ;;
 .restore_and_exit:
 	mov	ar.lc = save_lc
 	mov	ar.pfs = save_pfs
-	br.ret.sptk.many b0					
-END(bzero)
+	br.ret.sptk.many b0
+END(__bzero)
+weak_alias (__bzero, bzero)
