@@ -454,7 +454,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
     }
   else
     {
-      n = 1 << cnt;
+      n = 1 << (cnt - 1);
       do
 	{
 	  n -= 2;
