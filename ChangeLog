@@ -1,3 +1,8 @@
+2001-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strftime.c (my_strftime): Mark previous GNU extensions
+	which are now in C99 as such.
+
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (process_envvars): Place output files for profiling
