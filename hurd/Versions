@@ -138,9 +138,10 @@ libc {
   GLIBC_2.2.5 {
     # These always existed as inlines but the real functions were not exported.
     __hurd_fail;
-    __hurd_self_sigstate;
+    _hurd_self_sigstate;
 
     # Same for these "quasi-internal" functions
+    _hurd_port_init;
     _hurd_port_set;
 
     # internal symbols used by other libraries (e.g. librt)

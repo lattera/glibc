@@ -1,8 +1,9 @@
 2001-12-22  Roland McGrath  <roland@frob.com>
 
+	* hurd/Versions (libc: GLIBC_2.2.5): Add _hurd_port_set,
+	_hurd_port_init, and __hurd_self_sigstate.
+
 	* mach/Versions (libc: GLIBC_2.2.5): Add mig_strncpy.
-	* hurd/Versions (libc: GLIBC_2.2.5): Add _hurd_port_set
-	and __hurd_self_sigstate.
 
 2001-12-21  Andreas Jaeger  <aj@suse.de>
 
