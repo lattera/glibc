@@ -26,15 +26,40 @@
 #include <sys/stat.h>
 
 
-/* prototype for our test function.  */
+/* Prototype for our test function.  */
+extern void do_prepare (int argc, char *argv[]);
 extern int do_test (int argc, char *argv[]);
 
+/* We have a preparation function.  */
+#define PREPARE do_prepare
 
 /* We might need a bit longer timeout.  */
 #define TIMEOUT 20 /* sec */
 
 /* This defines the `main' function and some more.  */
 #include <test-skeleton.c>
+
+
+/* These are for the temporary file we generate.  */
+char *name;
+int fd;
+
+void
+do_prepare (int argc, char *argv[])
+{
+  char name_len;
+
+  name_len = strlen (test_dir);
+  name = malloc (name_len + sizeof ("/aioXXXXXX"));
+  mempcpy (mempcpy (name, test_dir, name_len),
+	   "/aioXXXXXX", sizeof ("/aioXXXXXX"));
+  add_temp_file (name);
+
+  /* Open our test file.   */
+  fd = mkstemp (name);
+  if (fd == -1)
+    error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
+}
 
 
 int
@@ -98,25 +123,11 @@ do_wait (struct aiocb **cbp, size_t nent)
 int
 do_test (int argc, char *argv[])
 {
-  char *name;
-  char name_len;
   struct aiocb cbs[10];
   struct aiocb *cbp[10];
   char buf[1000];
   size_t cnt;
-  int fd;
   int result = 0;
-
-  name_len = strlen (test_dir);
-  name = malloc (name_len + sizeof ("/aioXXXXXX"));
-  mempcpy (mempcpy (name, test_dir, name_len),
-	   "/aioXXXXXX", sizeof ("/aioXXXXXX"));
-  add_temp_file (name);
-
-  /* Open our test file.   */
-  fd = mkstemp (name);
-  if (fd == -1)
-    error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
 
   /* Preparation.  */
   for (cnt = 0; cnt < 10; ++cnt)

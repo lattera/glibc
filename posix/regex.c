@@ -966,15 +966,9 @@ printchar (c)
 /* Set by `re_set_syntax' to the current regexp syntax to recognize.  Can
    also be assigned to arbitrarily: each pattern buffer stores its own
    syntax, so it can be changed between regex compilations.  */
-#ifdef _LIBC
-reg_syntax_t __re_syntax_options = 0;
-weak_alias (__re_syntax_options, re_syntax_options)
-# define re_syntax_options __re_syntax_options
-#else
 /* This has no initializer because initialized variables in Emacs
    become read-only after dumping.  */
 reg_syntax_t re_syntax_options;
-#endif
 
 
 /* Specify the precise syntax of regexps for compilation.  This provides
@@ -2752,7 +2746,7 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case 'w':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               laststart = b;
               BUF_PUSH (wordchar);
@@ -2760,7 +2754,7 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case 'W':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               laststart = b;
               BUF_PUSH (notwordchar);
@@ -2768,37 +2762,37 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case '<':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordbeg);
               break;
 
             case '>':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordend);
               break;
 
             case 'b':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordbound);
               break;
 
             case 'B':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (notwordbound);
               break;
 
             case '`':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (begbuf);
               break;
 
             case '\'':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (endbuf);
               break;

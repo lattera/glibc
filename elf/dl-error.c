@@ -23,9 +23,6 @@
 #include <unistd.h>
 #include <elf/ldsodefs.h>
 
-/* This is the internal function we use to generate the error string.  */
-extern char *_strerror_internal __P ((int, char *, size_t));
-
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
 struct catch
@@ -89,7 +86,7 @@ _dl_signal_error (int errcode,
 			objname ?: "", objname && *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode
-			 ? _strerror_internal (errcode, buffer, sizeof buffer)
+			 ? __strerror_r (errcode, buffer, sizeof buffer)
 			 : ""), "\n", NULL);
     }
 }

@@ -23,8 +23,8 @@
 #include <stdio-common/_itoa.h>
 
 #ifndef HAVE_GNU_LD
-#define _sys_errlist sys_errlist
-#define _sys_nerr sys_nerr
+# define _sys_errlist sys_errlist
+# define _sys_nerr sys_nerr
 #endif
 
 /* It is critical here that we always use the `dcgettext' function for
@@ -38,7 +38,7 @@
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-_strerror_internal (int errnum, char *buf, size_t buflen)
+__strerror_r (int errnum, char *buf, size_t buflen)
 {
   if (errnum < 0 || errnum >= _sys_nerr)
     {
@@ -67,3 +67,4 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
   return (char *) _(_sys_errlist[errnum]);
 }
+weak_alias (__strerror_r, strerror_r)

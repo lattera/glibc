@@ -17,9 +17,9 @@ distinfo
 test-include
 analysis
 docs
+releases
 
 crypt
 linuxthreads
-secure_rpc
 
 aio

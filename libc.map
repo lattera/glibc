@@ -146,7 +146,8 @@ GLIBC_2.0 {
 
     # b*
     basename; bcmp; bcopy; bdflush; bind; bindresvport;
-    bindtextdomain; brk; bsd_signal; bsearch; btowc; bzero;
+    bindtextdomain; brk; bsd_signal; bsearch; btowc; bus_base; bus_base_sparse;
+    bzero;
 
     # c*
     cachectl; cacheflush; calloc; callrpc; canonicalize_file_name;
@@ -225,14 +226,14 @@ GLIBC_2.0 {
     globfree; gmtime; gmtime_r; group_member; gsignal; gtty;
 
     # h*
-    hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; herror;
+    hae_shift; hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; herror;
     hsearch; hsearch_r; hstrerror; htonl; htons;
 
     # i*
-    index; inet_addr; inet_aton; inet_lnaof; inet_makeaddr;
+    inb; index; inet_addr; inet_aton; inet_lnaof; inet_makeaddr;
     inet_netof; inet_network; inet_nsap_addr; inet_nsap_ntoa; inet_ntoa;
     inet_ntop; inet_pton; init_module; initgroups; initstate; initstate_r;
-    innetgr; insque; ioctl; ioperm; iopl; iruserok;
+    inl; innetgr; insque; inw; ioctl; ioperm; iopl; iruserok;
 
     isalnum; isalpha; isascii; isatty; isblank; iscntrl; isdigit;
     isfdtype; isgraph; isinf; isinff; isinfl; islower; isnan; isnanf;
@@ -275,7 +276,7 @@ GLIBC_2.0 {
 
     # o*
     obstack_free; obstack_printf; obstack_vprintf; on_exit; open;
-    open_memstream; opendir; openlog;
+    open_memstream; opendir; openlog; outb; outl; outw;
 
     # p*
     parse_printf_format; pathconf; pause; pciconfig_read;
@@ -328,7 +329,7 @@ GLIBC_2.0 {
     semctl; semget; semop; send; sendmsg; sendto; setaliasent; setbuf;
     setbuffer; setcontext;
     setdomainname; setegid; setenv; seteuid; setfsent;
-    setfsgid; setfsuid; setgid; setgrent; setgroups; sethostent;
+    setfsgid; setfsuid; setgid; setgrent; setgroups; sethae; sethostent;
     sethostid; sethostname; setitimer; setjmp; setlinebuf; setlocale;
     setlogin; setlogmask; setmntent; setnetent; setnetgrent; setpgid;
     setpgrp; setpriority; setprotoent; setpwent; setregid; setresgid;

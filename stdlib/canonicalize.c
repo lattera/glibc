@@ -45,10 +45,12 @@ canonicalize (const char *name, char *resolved)
   long int path_max;
   int num_links = 0;
 
-  if (name == NULL || resolved == NULL)
+  if (name == NULL)
     {
       /* As per Single Unix Specification V2 we must return an error if
-	 either parameter is a null pointer.  */
+	 either parameter is a null pointer.  We extend this to allow
+	 the RESOLVED parameter be NULL in case the we are expected to
+	 allocate the room for the return value.  */
       __set_errno (EINVAL);
       return NULL;
     }
@@ -133,7 +135,7 @@ canonicalize (const char *name, char *resolved)
 	  dest = __mempcpy (dest, start, end - start);
 	  *dest = '\0';
 
-	  if (__lstat (rpath, &st) < 0)
+	  if (__lxstat (_STAT_VER, rpath, &st) < 0)
 	    goto error;
 
 	  if (S_ISLNK (st.st_mode))
@@ -174,8 +176,6 @@ canonicalize (const char *name, char *resolved)
 		if (dest > rpath + 1)
 		  while ((--dest)[-1] != '/');
 	    }
-	  else
-	    num_links = 0;
 	}
     }
   if (dest > rpath + 1 && dest[-1] == '/')
@@ -191,8 +191,20 @@ error:
     free (rpath);
   return NULL;
 }
-strong_alias (canonicalize, __realpath)
-weak_alias (canonicalize, realpath)
+
+
+char *
+__realpath (const char *name, char *resolved)
+{
+  if (resolved == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  return canonicalize (name, resolved);
+}
+weak_alias (__realpath, realpath)
 
 
 char *

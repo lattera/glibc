@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sysdep.h>
-
-
-/* This is the internal function we use to generate the error string.  */
-extern char *_strerror_internal __P ((int, char *, size_t));
 
 
 extern const char *__assert_program_name; /* In assert.c.  */
@@ -53,7 +49,7 @@ __assert_perror_fail (int errnum,
 		  __assert_program_name ? ": " : "",
 		  file, line,
 		  function ? function : "", function ? ": " : "",
-		  _strerror_internal (errnum, errbuf, sizeof errbuf));
+		  __strerror_r (errnum, errbuf, sizeof errbuf));
   (void) fflush (stderr);
 
   abort ();

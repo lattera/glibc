@@ -341,7 +341,7 @@ extern struct _IO_jump_t _IO_str_jumps;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_flush_all __P ((void));
-extern void _IO_cleanup __P ((void));
+extern int _IO_cleanup __P ((void));
 extern void _IO_flush_all_linebuffered __P ((void));
 
 #define _IO_do_flush(_f) \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -35,7 +35,7 @@
 void
 __open_catalog (__nl_catd catalog)
 {
-  int fd;
+  int fd = -1;
   struct stat st;
   int swapping;
 
@@ -169,7 +169,8 @@ __open_catalog (__nl_catd catalog)
 	}
     }
 
-  if (fd < 0 || __fstat (fd, &st) < 0)
+  /* Avoid dealing with directories and block devices */
+  if (fd < 0 || __fstat (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       catalog->status = nonexisting;
       goto unlock_return;
@@ -225,6 +226,7 @@ __open_catalog (__nl_catd catalog)
 
   /* We don't need the file anymore.  */
   __close (fd);
+  fd = -1;
 
   /* Determine whether the file is a catalog file and if yes whether
      it is written using the correct byte order.  Else we have to swap
@@ -271,5 +273,7 @@ __open_catalog (__nl_catd catalog)
 
   /* Release the lock again.  */
  unlock_return:
+  if (fd != -1)
+    __close (fd);
   __libc_lock_unlock (catalog->lock);
 }

@@ -966,12 +966,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 									      \
     LABEL (form_strerror):						      \
       /* Print description of error ERRNO.  */				      \
-      {									      \
-	extern char *_strerror_internal __P ((int, char *buf, size_t));	      \
-									      \
-	string = (char *)						      \
-	  _strerror_internal (save_errno, work_buffer, sizeof work_buffer);   \
-      }									      \
+      string =								      \
+	(char *) __strerror_r (save_errno, work_buffer, sizeof work_buffer);  \
       is_long = 0;		/* This is no wide-char string.  */	      \
       goto LABEL (print_string)
 

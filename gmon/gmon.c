@@ -46,8 +46,6 @@
 #include <string.h>
 #include <unistd.h>
 
-extern char *_strerror_internal __P ((int, char *buf, size_t));
-
 extern int __profile_frequency __P ((void));
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
@@ -330,7 +328,7 @@ write_gmon (void)
 	    char buf[300];
 	    int errnum = errno;
 	    fprintf (stderr, "_mcleanup: gmon.out: %s\n",
-		     _strerror_internal (errnum, buf, sizeof buf));
+		     __strerror_r (errnum, buf, sizeof buf));
 	    return;
 	  }
       }

@@ -128,7 +128,7 @@ if test x"$static_nss" = xyes; then
 fi
 
 AC_ARG_ENABLE(force-install,
-[  --enable-force-install  force installation of files from this package,
+[  --disable-force-install don't force installation of files from this package,
 			  even if they are older than the installed files],
 	      force_install=$enableval, force_install=yes)
 AC_SUBST(force_install)

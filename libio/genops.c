@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -714,10 +714,10 @@ _IO_unbuffer_all ()
       _IO_SETBUF (fp, NULL, 0);
 }
 
-void
+int
 _IO_cleanup ()
 {
-  _IO_flush_all ();
+  int result = _IO_flush_all ();
 
   /* We currently don't have a reliable mechanism for making sure that
      C++ static destructors are executed in the correct order.
@@ -727,6 +727,8 @@ _IO_cleanup ()
      The following will make the standard streambufs be unbuffered,
      which forces any output from late destructors to be written out. */
   _IO_unbuffer_all ();
+
+  return result;
 }
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 
-extern char *_strerror_internal __P ((int, char *, size_t));
-
 /* Return a string describing the errno code in ERRNUM.
    The storage is good only until the next call to strerror.
    Writing to the storage causes undefined behavior.  */
@@ -29,5 +27,5 @@ strerror (errnum)
      int errnum;
 {
   static char buf[1024];
-  return _strerror_internal (errnum, buf, sizeof buf);
+  return __strerror_r (errnum, buf, sizeof buf);
 }

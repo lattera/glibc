@@ -124,8 +124,6 @@ extern ssize_t __libc_write __P ((int __fd, __const __ptr_t __buf,
    data structures at the program start.  To do this we'll simply visit all
    entries in the call graph table and add it to the appropriate list.  */
 
-extern char *_strerror_internal __P ((int, char *buf, size_t));
-
 extern int __profile_frequency __P ((void));
 
 /* We define a special type to address the elements of the arc table.
@@ -271,7 +269,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       /* We cannot write the profiling data so don't do anything.  */
       char buf[400];
       _dl_sysdep_message (filename, ": cannot open file: ",
-			  _strerror_internal (errno, buf, sizeof buf),
+			  __strerror_r (errno, buf, sizeof buf),
 			  "\n", NULL);
       return;
     }
@@ -283,7 +281,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       int errnum = errno;
       __close (fd);
       _dl_sysdep_message (filename, ": cannot stat file: ",
-			  _strerror_internal (errnum, buf, sizeof buf),
+			  __strerror_r (errnum, buf, sizeof buf),
 			  "\n", NULL);
       return;
     }
@@ -305,7 +303,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	  errnum = errno;
 	  __close (fd);
 	  _dl_sysdep_message (filename, ": cannot create file: ",
-			      _strerror_internal (errnum, buf, sizeof buf),
+			      __strerror_r (errnum, buf, sizeof buf),
 			      "\n", NULL);
 	  return;
 	}
@@ -337,7 +335,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       int errnum = errno;
       __close (fd);
       _dl_sysdep_message (filename, ": cannot map file: ",
-			  _strerror_internal (errnum, buf, sizeof buf),
+			  __strerror_r (errnum, buf, sizeof buf),
 			  "\n", NULL);
       return;
     }

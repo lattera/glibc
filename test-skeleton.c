@@ -158,12 +158,17 @@ main (int argc, char *argv[])
   /* Make sure we see all message, even those on stdout.  */
   setvbuf (stdout, NULL, _IONBF, 0);
 
+  /* make sure temporary files are deleted.  */
+  atexit (delete_temp_files);
+
+  /* Call the initializing function, if one is available.  */
+#ifdef PREPARE
+  PREPARE (argc, argv);
+#endif
+
   /* If we are not expected to fork run the function immediately.  */
   if (direct)
     return TEST_FUNCTION;
-
-  /* make sure temporary files are deleted.  */
-  atexit (delete_temp_files);
 
   /* Set up the test environment:
      - prevent core dumps

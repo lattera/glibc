@@ -131,7 +131,7 @@ This macro was introduced as part of the Large File Support extension (LFS).
 
 @comment (NONE)
 @comment X/Open
-@defvar Macro _LARGEFILE64_SOURCE
+@defvr Macro _LARGEFILE64_SOURCE
 If you define this macro an additional set of function gets available
 which enables to use on @w{32 bit} systems to use files of sizes beyond
 the usual limit of 2GB.  This interface is not available if the system
@@ -147,11 +147,11 @@ vs. @code{off64_t} and @code{fseeko} vs. @code{fseeko64}.
 This macro was introduced as part of the Large File Support extension
 (LFS).  It is a transition interface for the time @w{64 bit} offsets are
 not generally used (see @code{_FILE_OFFSET_BITS}.
-@end defvar
+@end defvr
 
 @comment (NONE)
 @comment X/Open
-@defvar _FILE_OFFSET_BITS
+@defvr _FILE_OFFSET_BITS
 This macro lets decide which file system interface shall be used, one
 replacing the other.  While @code{_LARGEFILE64_SOURCE} makes the @w{64
 bit} interface available as an additional interface
@@ -175,7 +175,7 @@ since the @code{*64} functions are identical to the normal functions.
 
 This macro was introduced as part of the Large File Support extension
 (LFS).
-@end defvar
+@end defvr
 
 @comment (none)
 @comment GNU

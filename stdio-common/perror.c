@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <errno.h>
 
-extern char *_strerror_internal __P ((int, char *buf, size_t));
-
 /* Print a line on stderr consisting of the text in S, a colon, a space,
    a message describing the meaning of the contents of `errno' and a newline.
    If S is NULL or "", the colon and space are omitted.  */
@@ -37,5 +35,5 @@ perror (const char *s)
     colon = ": ";
 
   (void) fprintf (stderr, "%s%s%s\n",
-		  s, colon, _strerror_internal (errnum, buf, sizeof buf));
+		  s, colon, __strerror_r (errnum, buf, sizeof buf));
 }

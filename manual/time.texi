@@ -1775,10 +1775,10 @@ operand must be less than @code{RLIM_NLIMITS}.
 
 @comment sys/resource.h
 @comment BSD
-@defvr Constant int RLIM_INFINITY
+@deftypevr Constant int RLIM_INFINITY
 This constant stands for a value of ``infinity'' when supplied as
 the limit value in @code{setrlimit}.
-@end defvr
+@end deftypevr
 
 @c ??? Someone want to finish these?
 Two historical functions for setting resource limits, @code{ulimit} and

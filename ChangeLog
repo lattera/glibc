@@ -1,3 +1,70 @@
+1998-04-14 16:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* test-skeleton.c: Provide hook for initializing code before the fork.
+	* rt/tst-aio.c: Use PREPARE hook to make suer temp files are always
+	removed.
+
+	* libio/fcloseall.c (__fcloseall): Return return value of _IO_cleanup.
+	* libio/genops.c (_IO_cleanup): Return return value of _IO_flush_all.
+	* libio/libioP.h: Adopt _IO_cleanup prototype.
+
+	* stdlib/Makefile (tests): Add test-canon2.
+	* stdlib/test-canon2.c: New file.
+	* stdlib/canonicalize.c (canonicalize): Allow RESOLVED parameter to
+	be NULL.  Use __lxstat, not __lstat.  Correctly recognize long
+	symlink sequences.
+	(__realpath): Make real function which checks RESOLVED parameter for
+	not being NULL.
+
+1998-04-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/open_catalog.c (__open_catalog): Fix problems with
+	reading non-files.  Always close file.
+	Reported by Cristian Gafton <gafton@redhat.com>.
+
+	* elf/dl-minimal.c (__strtol_internal): Prevent overflow warnings.
+
+1998-04-14 13:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add various low-level I/O functions.
+
+1998-04-14 10:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/Makefile (routines): Remove strerror_r.
+	* string/strerror_r.c: Removed.
+	* string/strerror.c: Call __strerror_r for doing the real work.
+	* sysdeps/generic/_strerror.c: Rename function to __strerror_r and
+	add weak alias strerror_r.
+	* sysdeps/mach/_strerror.c: Likewise.
+	* assert/assert-perr.c: Use __strerror_r instead of _strerror_internal.
+	* elf/dl-error.c (_dl_signal_error): Likewise.
+	* elf/dl-profile.c (_dl_start_profile): Likewise.
+	* gmon/gmon.c (write_gmon): Likewise.
+	* stdio-common/perror.c: Likewise.
+	* stdio-common/vfprintf.c: Likewise.
+
+1998-04-10  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
+	(sysdep_headers): Add netatalk/at.h.
+
+1998-04-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/socket.texi, manual/creature.texi, manual/time.texi:
+	Formatting fixes.
+
+1998-04-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/regex.c: Rename __re_syntax_options back to
+	re_syntax_options, aliases do not work with global variables due
+	to copy relocations.
+	(regex_compile): Use syntax parameter instead of
+	re_syntax_options.
+
+1998-04-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Document that enable-force-install is default.
+
 1998-04-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/mktemp.c: Increment `value' in a way which touches

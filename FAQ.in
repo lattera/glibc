@@ -945,7 +945,7 @@ Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
 
-??	When I set the timezone I'm by setting the TZ environment variable
+??	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 

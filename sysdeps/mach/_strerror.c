@@ -34,7 +34,7 @@
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-_strerror_internal (int errnum, char *buf, size_t buflen)
+__strerror_r (int errnum, char *buf, size_t buflen)
 {
   int system;
   int sub;
@@ -115,3 +115,4 @@ _strerror_internal (int errnum, char *buf, size_t buflen)
 
   return (char *) _(es->subsystem[sub].codes[code]);
 }
+weak_alias (__strerror_r, strerror_r)

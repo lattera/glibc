@@ -497,7 +497,7 @@ interface name, including its terminating zero byte.
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun unsigned int if_nametoindex (const char *ifname)
+@deftypefun {unsigned int} if_nametoindex (const char *ifname)
 This function yields the interface index corresponding to a particular
 name.  If no interface exists with the name given, it returns 0.
 @end deftypefun
@@ -530,7 +530,7 @@ This is the null-terminated index name.
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun struct if_nameindex *if_nameindex (void)
+@deftypefun {struct if_nameindex *} if_nameindex (void)
 This function returns an array of @code{if_nameindex} structures, one
 for every interface that is present.  The end of the list is indicated
 by a structure with an interface of 0 and a null name pointer.  If an
@@ -999,7 +999,7 @@ data, which can be accessed (via a union) in a variety of ways.
 
 @comment netinet/in.h
 @comment IPv6 basic API
-@deftypevr Constant {struct in6_addr} in6addr_loopback.
+@deftypevr Constant {struct in6_addr} in6addr_loopback
 This constant is the IPv6 address @samp{::1}, the loopback address.  See
 above for a description of what this means.  The macro
 @code{IN6ADDR_LOOPBACK_INIT} is provided to allow you to initialise your
