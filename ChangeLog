@@ -2,6 +2,11 @@
 
 	* sysdeps/unix/syscalls.list: Use __setrlimit as strong name.
 
+	* posix/unistd.h: Move internal prototypes from here ...
+	* include/unistd.h: ... to here.
+
+	* sysvipc/sys/shm.h: Add const attribute to __getpagesize.
+
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* grp/initgroups.c (initgroups): Deallocate groups array.

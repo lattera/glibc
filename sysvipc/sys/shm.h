@@ -45,7 +45,7 @@ __BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())
-extern int __getpagesize (void) __THROW;
+extern int __getpagesize (void) __THROW __attribute__ ((__const__));
 
 
 /* The following System V style IPC functions implement a shared memory
