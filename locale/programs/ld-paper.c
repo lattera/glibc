@@ -133,12 +133,12 @@ paper_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = sizeof (idx);
   ++cnt;
 
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
+  idx[cnt - 2] = iov[cnt - 2].iov_len + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = &paper->height;
   iov[cnt].iov_len = 4;
   ++cnt;
 
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  idx[cnt - 2] = idx[cnt - 2] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = &paper->width;
   iov[cnt].iov_len = 4;
   ++cnt;

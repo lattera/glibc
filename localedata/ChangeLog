@@ -1,3 +1,7 @@
+2001-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add zh_CN.GBK.
+
 2001-02-09  Andreas Jaeger  <aj@suse.de>
 
 	* locales/en_IN: Add newline at end of file.

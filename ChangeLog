@@ -1,5 +1,7 @@
 2001-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-paper.c (paper_output): Pretty printing.
+
 	* iconvdata/Makefile (modules): Add GBBIG5.
 	(distribute): Add gbbig5.c.
 	* iconvdata/gconv-modules: Add entries for GBBIG5 module.
@@ -19,7 +21,7 @@
 	* io/ftw64.c: Likewise.
 	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
 	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
-	* sysdeps/generic/glob.c: Likewise.  Convert results if gl_readdir
+	* sysdeps/generic/glob.c: Likewise.  Convert results of gl_readdir
 	callback to dirent.  Still allow compiling outside glibc.
 	* sysdeps/gnu/glob64.c: Define COMPILE_GLOB64.
 	* sysdeps/unix/sysv/linux/i386/glob64.c: Likewise.
@@ -40,7 +42,7 @@
 
 	* include/unistd.h: Declare __ftruncate64.
 
-	* sysdeps/generic/utmp_file.c: Use LFS functions and type.
+	* sysdeps/generic/utmp_file.c: Use LFS functions and types.
 
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): Use __lseek64
 	instead of __lseek.
