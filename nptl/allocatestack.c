@@ -249,6 +249,29 @@ queue_stack (struct pthread *stack)
 }
 
 
+static int
+internal_function
+change_stack_perm (struct pthread *pd
+#ifdef NEED_SEPARATE_REGISTER_STACK
+		   , size_t pagemask
+#endif
+		   )
+{
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  void *stack = (pd->stackblock
+		 + (((((pd->stackblock_size - pd->guardsize) / 2)
+		      & pagemask) + pd->guardsize) & pagemask));
+  size_t len = pd->stackblock + pd->stackblock_size - stack;
+#else
+  void *stack = pd->stackblock + pd->guardsize;
+  size_t len = pd->stackblock_size - pd->guardsize;
+#endif
+  if (mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+    return errno;
+
+  return 0;
+}
+
 
 static int
 allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
@@ -493,6 +516,28 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  lll_unlock (stack_cache_lock);
 
 
+	  /* There might have been a race.  Another thread might have
+	     caused the stacks to get exec permission while this new
+	     stack was prepared.  Detect if this was possible and
+	     change the permission if necessary.  */
+	  if (__builtin_expect ((GL(dl_stack_flags) & PF_X) != 0
+				&& (prot & PROT_EXEC) == 0, 0))
+	    {
+	      int err = change_stack_perm (pd
+#ifdef NEED_SEPARATE_REGISTER_STACK
+					   , ~pagesize_m1
+#endif
+					   );
+	      if (err != 0)
+		{
+		  /* Free the stack memory we just allocated.  */
+		  (void) munmap (mem, size);
+
+		  return err;
+		}
+	    }
+
+
 	  /* Note that all of the stack and the thread descriptor is
 	     zeroed.  This means we do not have to initialize fields
 	     with initial value zero.  This is specifically true for
@@ -630,26 +675,19 @@ __make_stacks_executable (void)
   list_t *runp;
   list_for_each (runp, &stack_used)
     {
-      struct pthread *const pd = list_entry (runp, struct pthread, list);
+      err = change_stack_perm (list_entry (runp, struct pthread, list)
 #ifdef NEED_SEPARATE_REGISTER_STACK
-      void *stack = (pd->stackblock
-		     + (((((pd->stackblock_size - pd->guardsize) / 2)
-			  & pagemask) + pd->guardsize) & pagemask));
-      size_t len = pd->stackblock + pd->stackblock_size - stack;
-#else
-      void *stack = pd->stackblock + pd->guardsize;
-      size_t len = pd->stackblock_size - pd->guardsize;
+			       , pagemask
 #endif
-      if (mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
-	{
-	  err = errno;
-	  break;
-	}
+			       );
+      if (err != 0)
+	break;
     }
 
   lll_unlock (stack_cache_lock);
 
-  _dl_make_stack_executable ();
+  if (err == 0)
+    _dl_make_stack_executable ();
 
   return err;
 }

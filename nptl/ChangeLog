@@ -1,5 +1,11 @@
 2003-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* allocatestack.c (change_stack_perm): Split out from
+	__make_stacks_executable.
+	(allocate_stack): If the required permission changed between the time
+	we started preparing the stack and queueing it, change the permission.
+	(__make_stacks_executable): Call change_stack_perm.
+
 	* Makefile: Build tst-execstack-mod locally.
 	* tst-execstack-mod.c: New file.
 
