@@ -1,5 +1,10 @@
 2000-12-06  Mark Kettenis  <kettenis@gnu.org>
 
+	* stdio-common/perror.c (perror): Conditionalize code dealing with
+	wide-oriented streams on USE_IN_LIBIO.
+
+2000-12-06  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start_cleanup): Mark
 	as internal_function.
 
