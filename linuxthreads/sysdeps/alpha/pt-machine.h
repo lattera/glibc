@@ -32,6 +32,10 @@
 register char *stack_pointer __asm__("$30");
 
 
+/* Memory barrier; default is to do nothing */
+#define MEMORY_BARRIER() __asm__ __volatile__("mb" : : : "memory")
+
+
 /* Spinlock implementation; required.  */
 PT_EI long int
 testandset (int *spinlock)
@@ -54,11 +58,6 @@ testandset (int *spinlock)
 
   return ret;
 }
-
-/* Spinlock release; default is just set to zero.  */
-#define RELEASE(spinlock) \
-  __asm__ __volatile__("mb" : : : "memory"); \
-  *spinlock = 0
 
 
 /* Begin allocating thread stacks at this address.  Default is to allocate
@@ -102,7 +101,8 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 	"2:\tmb\n"
 	"/* End compare & swap */"
 	: "=&r"(ret), "=m"(*p)
-	: "r"(oldval), "r"(newval), "m"(*p));
+	: "r"(oldval), "r"(newval), "m"(*p)
+        : "memory");
 
   return ret;
 }

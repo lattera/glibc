@@ -37,6 +37,12 @@ testandset (int *spinlock)
 }
 
 
+/* Memory barrier; default is to do nothing */
+/* FIXME: is stbar OK, or should we use the more general membar instruction?
+   If so, which mode to pass to membar? */
+#define MEMORY_BARRIER() __asm__ __volatile__("stbar" : : : "memory")
+
+
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
@@ -66,7 +72,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   __asm__ __volatile__ ("casx	[%4], %2, %0"
 			: "=r"(readval), "=m"(*p)
 			: "r"(oldval), "m"(*p), "r"(p), "0"(newval));
-
+  MEMORY_BARRIER();
   return readval == oldval;
 }
 

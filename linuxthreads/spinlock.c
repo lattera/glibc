@@ -54,6 +54,9 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
     if (self != NULL) {
       ASSERT(self->p_nextlock == NULL);
       THREAD_SETMEM(self, p_nextlock, (pthread_descr) oldstatus);
+      /* Make sure the store in p_nextlock completes before performing
+         the compare-and-swap */
+      MEMORY_BARRIER();
     }
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
@@ -108,8 +111,17 @@ again:
       maxprio = thr->p_priority;
     }
     ptr = &(thr->p_nextlock);
+    /* Prevent reordering of the load of lock->__status above and the
+       load of *ptr below, as well as reordering of *ptr between
+       several iterations of the while loop.  Some processors (e.g.
+       multiprocessor Alphas) could perform such reordering even though
+       the loads are dependent. */
+    MEMORY_BARRIER();
     thr = *ptr;
   }
+  /* Prevent reordering of the load of lock->__status above and
+     thr->p_nextlock below */
+  MEMORY_BARRIER();
   /* Remove max prio thread from waiting list. */
   if (maxptr == (pthread_descr *) &lock->__status) {
     /* If max prio thread is at head, remove it with compare-and-swap
@@ -124,6 +136,9 @@ again:
     thr = *maxptr;
     *maxptr = thr->p_nextlock;
   }
+  /* Prevent reordering of store to *maxptr above and store to thr->p_nextlock
+     below */
+  MEMORY_BARRIER();
   /* Wake up the selected waiting thread */
   thr->p_nextlock = NULL;
   restart(thr);
@@ -149,6 +164,8 @@ int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
   } else {
     res = 0;
   }
+  /* Prevent reordering of store to *ptr above and store to *spinlock below */
+  MEMORY_BARRIER();
   *spinlock = 0;
   return res;
 }

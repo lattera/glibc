@@ -1,3 +1,23 @@
+2000-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Define MEMORY_BARRIER as empty if not defined already.
+	* spinlock.c (__pthread_lock): Add memory barriers.
+	(__pthread_unlock): Likewise.
+	* sysdeps/alpha/pt-machine.h (MEMORY_BARRIER): Define using mb
+	instruction.
+	(RELEASE): Not needed anymore.
+	(__compare_and_swap): Mark asm as modifying memory.
+	* sysdeps/powerpc/pt-machine.h (sync): Remove.  Replace with definition
+	of MEMORY_BARRIER.
+	(__compare_and_swap): Use MEMORY_BARRIER instead of sync.
+	* sysdeps/sparc/sparc32/pt-machine.h (RELEASE): Not needed anymore.
+	(MEMORY_BARRIER): Define using stbar.
+	* sysdeps/sparc/sparc64/pt-machine.h (MEMORY_BARRIER): Define using
+	stbar.
+	(__compare_and_swap): Use MEMORY_BARRIER to ensure ordering.
+	Patch by Xavier Leroy <Xavier.Leroy@inria.fr> based on comments by
+	Mike Burrows <m3b@pa.dec.com>.
+
 2000-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* signals.c (sigaction): Fix return value for the case SIG is one

@@ -37,9 +37,8 @@ testandset (int *spinlock)
 }
 
 
-/* Spinlock release; default is just set to zero.  */
-#define RELEASE(spinlock) \
-  __asm__ __volatile__("stbar; stb %1,%0" : "=m"(*(spinlock)) : "r"(0));
+/* Memory barrier; default is to do nothing */
+#define MEMORY_BARRIER() __asm__ __volatile__("stbar" : : : "memory")
 
 
 /* Get some notion of the current stack.  Need not be exactly the top

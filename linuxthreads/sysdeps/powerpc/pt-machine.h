@@ -27,12 +27,7 @@
 
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  */
-#if 0
-/* on non multiprocessor systems, you can just: */
-#define sync() /* nothing */
-#else
-#define sync() __asm__ __volatile__ ("sync")
-#endif
+#define MEMORY_BARRIER() __asm__ __volatile__ ("sync" : : : "memory")
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -64,6 +59,6 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 	: "=&r"(ret)
 	: "r"(p), "r"(newval), "r"(oldval)
 	: "cr0", "memory");
-  sync();
+  MEMORY_BARRIER();
   return ret == 0;
 }

@@ -357,6 +357,13 @@ static inline pthread_descr thread_self (void)
 #endif
 }
 
+/* If MEMORY_BARRIER isn't defined in pt-machine.h, assume the architecture
+   doesn't need a memory barrier instruction (e.g. Intel x86) */
+
+#ifndef MEMORY_BARRIER
+#define MEMORY_BARRIER()
+#endif
+
 /* Max number of times we must spin on a spinlock calling sched_yield().
    After MAX_SPIN_COUNT iterations, we put the calling thread to sleep. */
 
