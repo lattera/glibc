@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
 ENTRY (uname)
 	pushl $0x0		/* Push the discriminator flag.  */
 	pushl $0x0		/* Push dummy placeholder.  */
-	pushl 12(%esp,1)	/* Push name (ptr to struct utsname)  */
+	pushl 12(%esp,1)	/* Push NAME (ptr to struct utsname)  */
 	subl $0x4, %esp		/* Adjust stack pointer.  */
 	DO_CALL (utssys, 3)
 	jb error		/* Test for error.  */

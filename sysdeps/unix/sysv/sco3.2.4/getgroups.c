@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <unistd.h>
 #include <limits.h>
+#include <alloca.h>
 
 extern int __sco_getgroups __P ((int size, unsigned short int *list));
 

@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #ifdef	_SIGNAL_H
 
 /* This file defines the fake signal functions and signal
-   number constants for 4.2 or 4.3 BSD-derived Unix system.  */
+   number constants for SunOS 3 and 4 Unix systems.  */
 
 /* Fake signal functions.  */
 #define	SIG_ERR	((__sighandler_t) -1) /* Error return.  */
