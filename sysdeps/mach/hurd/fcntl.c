@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <stdarg.h>
+#include <sys/file.h>		/* XXX for LOCK_* */
 
 
 /* Perform file control operations on FD.  */
@@ -123,10 +124,51 @@ __fcntl (int fd, int cmd, ...)
     case F_SETLK:
     case F_SETLKW:
       {
+	/* XXX
+	   We need new RPCs to support POSIX.1 fcntl file locking!!
+	   For the time being we support the whole-file case only,
+	   with all kinds of WRONG WRONG WRONG semantics,
+	   by using flock.  This is definitely the Wrong Thing,
+	   but it might be better than nothing (?).  */
 	struct flock *fl = va_arg (ap, struct flock *);
-	errno = fl?ENOSYS:EINVAL; /* XXX mib needs to implement io rpcs.  */
-	result = -1;
-	break;
+	va_end (ap);
+	switch (cmd)
+	  {
+	  case F_GETLK:
+	    errno = ENOSYS;
+	    return -1;
+	  case F_SETLK:
+	    cmd = LOCK_NB;
+	    break;
+	  default:
+	    cmd = 0;
+	    break;
+	  }
+	switch (fl->l_type)
+	  {
+	  case F_RDLCK: cmd |= LOCK_SH; break;
+	  case F_WRLCK: cmd |= LOCK_EX; break;
+	  case F_UNLCK: cmd |= LOCK_UN; break;
+	  default:
+	    errno = EINVAL;
+	    return -1;
+	  }
+	switch (fl->l_whence)
+	  {
+	  case SEEK_SET:
+	    if (fl->l_start == 0 && fl->l_len == 0)
+	      break;
+	    /* FALLTHROUGH */
+	  case SEEK_CUR:
+	  case SEEK_END:
+	    errno = ENOTSUP;
+	    return -1;
+	  default:
+	    errno = EINVAL;
+	    return -1;
+	  }
+
+	return __flock (fd, cmd);
       }
 
     case F_GETFL:		/* Get per-open flags.  */

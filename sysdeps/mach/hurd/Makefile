@@ -111,11 +111,33 @@ $(inst_libdir)/libc.a: $(hurd)/libc-ldscript $(+force); $(do-install)
 $(inst_libdir)/libc_p.a: $(hurd)/libc_p-ldscript $(+force); $(do-install)
 endif
 
-# Make sure these are used to build the libc.so shared object too.
+# Make sure these are used to build the libc.so shared object too.  There
+# is a circular dependency between each of these shared objects and libc
+# (many high-level libc functions call stubs, stubs call low-level libc
+# functions like memcpy and mach_msg).  This works out fine at run time
+# (all the objects are loaded before resolving their symbols, so these
+# interdependencies are fine).  But to create the shared objects we must
+# link them one at a time; since each needs one or both of the others to
+# produce its DT_NEEDED entries and to assign its undefined symbols the
+# right symbol versions, we can't do any of them before the others!  To
+# get around this, we link each lib*user.so shared object twice.  First,
+# we link an object without reference to libc.so (since we haven't linked
+# libc.so yet), so it lacks a DT_NEEDED record for the libc soname it
+# depends on, and its undefined symbol references lack the symbol version
+# assignments they should have.  We will use this shared object solely to
+# link libc.so against it; that gives libc.so the proper DT_NEEDED record,
+# and symbol versions assignments (if the lib*user.so object is using them).
+# Finally we link a second version of the same lib*user.so shared object,
+# this time linked normally against libc so it gets a proper DT_NEEDED
+# record and symbol version set; this one can be installed for run-time use.
 rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
 	       $(common-objpfx)hurd/libhurduser.so
-$(common-objpfx)libc.so: $(rpcuserlibs)
+link-rpcuserlibs := $(rpcuserlibs:%user.so=%user-link.so)
+$(common-objpfx)libc.so: $(link-rpcuserlibs)
 rpath-dirs += mach hurd
+
+$(link-rpcuserlibs): %-link.so: %_pic.a
+	$(build-module) -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version)
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)
