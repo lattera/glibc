@@ -27,7 +27,6 @@ raise (sig)
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (raise)
 weak_alias (raise, gsignal)
 
 stub_warning (raise)

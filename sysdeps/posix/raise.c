@@ -26,5 +26,4 @@ raise (sig)
 {
   return __kill (__getpid (), sig);
 }
-libc_hidden_def (raise)
 weak_alias (raise, gsignal)

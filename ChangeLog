@@ -1,5 +1,14 @@
 2002-08-11  Roland McGrath  <roland@redhat.com>
 
+	* include/sys/errno.h: New file.
+
+	* include/signal.h: No libc_hidden_proto for raise,
+	__libc_current_sigrtmin, __libc_current_sigrtmax.
+	These need to be overridden by linuxthreads.
+	* sysdeps/posix/raise.c: Reverted.
+	* sysdeps/generic/raise.c: Reverted.
+	* signal/allocrtsig.c: Reverted.
+
 	* locale/loadarchive.c (LOCALEDIR): Remove debugging defn.  Oops.
 
 2002-08-10  Roland McGrath  <roland@redhat.com>
