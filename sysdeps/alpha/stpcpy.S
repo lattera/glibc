@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1996.
 
@@ -53,3 +53,4 @@ ENTRY(__stpcpy)
 
 weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
+libc_hidden_builtin_def (stpcpy)
