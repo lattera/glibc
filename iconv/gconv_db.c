@@ -534,9 +534,9 @@ __gconv_find_transform (const char *toset, const char *fromset,
       do
 	if (steps[--cnt].counter++ == 0)
 	  {
-	    steps[--cnt].shlib_handle =
-	      __gconv_find_shlib (steps[--cnt].modname);
-	    if (steps[--cnt].shlib_handle == NULL)
+	    steps[cnt].shlib_handle =
+	      __gconv_find_shlib (steps[cnt].modname);
+	    if (steps[cnt].shlib_handle == NULL)
 	      {
 		/* Oops, this is the second time we use this module (after
 		   unloading) and this time loading failed!?  */

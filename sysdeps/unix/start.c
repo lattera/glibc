@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ weak_alias (__data_start, data_start)
 
 #ifndef errno
 volatile int __errno;
-string_alias (__errno, errno)
+strong_alias (__errno, errno)
 #endif
 
 extern void __libc_init __P ((int argc, char **argv, char **envp));

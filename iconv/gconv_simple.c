@@ -26,6 +26,24 @@
 #include <wchar.h>
 #include <sys/param.h>
 
+#ifndef EILSEQ
+# define EILSEQ EINVAL
+#endif
+
+
+/* These are definitions used by some of the functions for handling
+   UTF-8 encoding below.  */
+static const wchar_t encoding_mask[] =
+{
+  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
+};
+
+static const unsigned char encoding_byte[] =
+{
+  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
+};
+
+
 
 int
 __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
@@ -97,30 +115,70 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
       int save_errno = errno;
       do_write = 0;
 
+      result = GCONV_OK;
       do
 	{
-	  const char *newinbuf = inbuf;
-	  size_t actually;
+	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
+	  size_t actually = 0;
+	  size_t cnt = 0;
 
-	  errno = 0;
-	  actually = __wmemrtombs (&data->outbuf[data->outbufavail],
-				   (const wchar_t **) &newinbuf,
-				   *inlen / sizeof (wchar_t),
-				   data->outbufsize - data->outbufavail,
-				   data->statep);
+	  while (data->outbufavail < data->outbufsize
+		 && cnt * sizeof (wchar_t) <= *inlen)
+	    {
+	      wchar_t wc = newinbuf[cnt];
+
+	      if (wc < 0 && wc > 0x7fffffff)
+		{
+		  /* This is no correct ISO 10646 character.  */
+		  result = GCONV_ILLEGAL_INPUT;
+		  break;
+		}
+
+	      if (wc < 0x80)
+		{
+		  /* It's an one byte sequence.  */
+		  data->outbuf[data->outbufavail++] = (char) wc;
+		  ++actually;
+		}
+	      else
+		{
+		  size_t step;
+		  size_t start;
+
+		  for (step = 2; step < 6; ++step)
+		    if ((wc & encoding_mask[step - 2]) == 0)
+		      break;
+
+		  if (data->outbufavail + step >= data->outbufsize)
+		    /* Too long.  */
+		    break;
+
+		  start = data->outbufavail;
+		  data->outbufavail += step;
+		  actually += step;
+		  data->outbuf[start] = encoding_byte[step - 2];
+		  --step;
+		  do
+		    {
+		      data->outbuf[start + step] = 0x80 | (wc & 0x3f);
+		      wc >>= 6;
+		    }
+		  while (--step > 0);
+		  data->outbuf[start] |= wc;
+		}
+
+	      ++cnt;
+	    }
 
 	  /* Remember how much we converted.  */
-	  do_write += newinbuf - inbuf;
-	  *inlen -= newinbuf - inbuf;
+	  do_write += cnt * sizeof (wchar_t);
+	  *inlen -= cnt * sizeof (wchar_t);
 
 	  data->outbufavail += actually;
 
 	  /* Check whether an illegal character appeared.  */
-	  if (errno != 0)
-	    {
-	      result = GCONV_ILLEGAL_INPUT;
-	      break;
-	    }
+	  if (result != GCONV_OK)
+	    break;
 
 	  if (data->is_last)
 	    {
@@ -199,26 +257,101 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
       int save_errno = errno;
       do_write = 0;
 
+      result = GCONV_OK;
       do
 	{
-	  const char *newinbuf = inbuf;
-	  size_t actually;
+	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
+	  size_t cnt = 0;
+	  size_t actually = 0;
 
-	  errno = 0;
-	  actually = __wmemrtowcs ((wchar_t *) &data->outbuf[data->outbufavail],
-				   &newinbuf, *inlen,
-				   ((data->outbufsize
-				     - data->outbufavail) / sizeof (wchar_t)),
-				   data->statep);
+	  while (data->outbufavail + sizeof (wchar_t) <= data->outbufsize
+		 && cnt < *inlen)
+	    {
+	      size_t start = cnt;
+	      wchar_t value;
+	      unsigned char byte;
+	      int count;
+
+	      /* Next input byte.  */
+	      byte = inbuf[cnt++];
+
+	      if (byte < 0x80)
+		{
+		  /* One byte sequence.  */
+		  count = 0;
+		  value = byte;
+		}
+	      else if ((byte & 0xe0) == 0xc0)
+		{
+		  count = 1;
+		  value = byte & 0x1f;
+		}
+	      else if ((byte & 0xf0) == 0xe0)
+		{
+		  /* We expect three bytes.  */
+		  count = 2;
+		  value = byte & 0x0f;
+		}
+	      else if ((byte & 0xf8) == 0xf0)
+		{
+		  /* We expect four bytes.  */
+		  count = 3;
+		  value = byte & 0x07;
+		}
+	      else if ((byte & 0xfc) == 0xf8)
+		{
+		  /* We expect five bytes.  */
+		  count = 4;
+		  value = byte & 0x03;
+		}
+	      else if ((byte & 0xfe) == 0xfc)
+		{
+		  /* We expect six bytes.  */
+		  count = 5;
+		  value = byte & 0x01;
+		}
+	      else
+		{
+		  /* This is an illegal encoding.  */
+		  result = GCONV_ILLEGAL_INPUT;
+		  break;
+		}
+
+	      /* Read the possible remaining bytes.  */
+	      while (cnt < *inbuf && count > 0)
+		{
+		  byte = inbuf[cnt++];
+		  --count;
+
+		  if ((byte & 0xc0) != 0x80)
+		    {
+		      /* This is an illegal encoding.  */
+		      result = GCONV_ILLEGAL_INPUT;
+		      break;
+		    }
+
+		  value <<= 6;
+		  value |= byte & 0x3f;
+		}
+
+	      if (result != GCONV_OK)
+		{
+		  cnt = start;
+		  break;
+		}
+
+	      *outbuf++ = value;
+	      ++actually;
+	    }
 
 	  /* Remember how much we converted.  */
 	  do_write += actually;
-	  *inlen -= newinbuf - inbuf;
+	  *inlen -= cnt;
 
 	  data->outbufavail += actually * sizeof (wchar_t);
 
 	  /* Check whether an illegal character appeared.  */
-	  if (errno != 0)
+	  if (result != GCONV_OK)
 	    {
 	      result = GCONV_ILLEGAL_INPUT;
 	      break;
