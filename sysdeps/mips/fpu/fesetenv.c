@@ -39,3 +39,5 @@ fesetenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
+
+libm_hidden_def (fesetenv)
