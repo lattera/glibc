@@ -106,8 +106,8 @@ __printf_fphex (FILE *fp,
   const char *special = NULL;
 
   /* Buffer for the generated number string for the mantissa.  The
-     maximal size for the mantissa is 64 bits.  */
-  char numbuf[16];
+     maximal size for the mantissa is 128 bits.  */
+  char numbuf[32];
   char *numstr;
   char *numend;
   int negative;
@@ -229,8 +229,6 @@ __printf_fphex (FILE *fp,
       return done;
     }
 
-  /* We are handling here only 64 and 80 bit IEEE foating point
-     numbers.  */
   if (info->is_long_double == 0 || sizeof (double) == sizeof (long double))
     {
       /* We have 52 bits of mantissa plus one implicit digit.  Since
@@ -281,64 +279,10 @@ __printf_fphex (FILE *fp,
 	  exponent = -(exponent - IEEE754_DOUBLE_BIAS);
 	}
     }
+#ifdef PRINT_FPHEX_LONG_DOUBLE
   else
-    {
-      /* The "strange" 80 bit format on ix86 and m68k has an explicit
-	 leading digit in the 64 bit mantissa.  */
-      unsigned long long int num;
-
-      assert (sizeof (long double) == 12);
-
-      num = (((unsigned long long int) fpnum.ldbl.ieee.mantissa0) << 32
-	     | fpnum.ldbl.ieee.mantissa1);
-
-      zero_mantissa = num == 0;
-
-      if (sizeof (unsigned long int) > 6)
-	numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
-			     info->spec == 'A');
-      else
-	numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');
-
-      /* Fill with zeroes.  */
-      while (numstr > numbuf + (sizeof numbuf - 64 / 4))
-	*--numstr = '0';
-
-      /* We use a full nibble for the leading digit.  */
-      leading = *numstr++;
-
-      /* We have 3 bits from the mantissa in the leading nibble.
-	 Therefore we are here using `IEEE854_LONG_DOUBLE_BIAS + 3'.  */
-      exponent = fpnum.ldbl.ieee.exponent;
-
-      if (exponent == 0)
-	{
-	  if (zero_mantissa)
-	    expnegative = 0;
-	  else
-	    {
-	      /* This is a denormalized number.  */
-	      expnegative = 1;
-	      /* This is a hook for the m68k long double format, where the
-		 exponent bias is the same for normalized and denormalized
-		 numbers.  */
-#ifndef LONG_DOUBLE_DENORM_BIAS
-# define LONG_DOUBLE_DENORM_BIAS (IEEE854_LONG_DOUBLE_BIAS - 1)
+    PRINT_FPHEX_LONG_DOUBLE;
 #endif
-	      exponent = LONG_DOUBLE_DENORM_BIAS + 3;
-	    }
-	}
-      else if (exponent >= IEEE854_LONG_DOUBLE_BIAS + 3)
-	{
-	  expnegative = 0;
-	  exponent -= IEEE854_LONG_DOUBLE_BIAS + 3;
-	}
-      else
-	{
-	  expnegative = 1;
-	  exponent = -(exponent - (IEEE854_LONG_DOUBLE_BIAS + 3));
-	}
-    }
 
   /* Look for trailing zeroes.  */
   if (! zero_mantissa)

@@ -1,2 +1,2 @@
 #define DENORM_EXP (MIN_EXP - 1)
-#include <sysdeps/generic/strtold.c>
+#include <sysdeps/ieee754/ldbl-96/strtold.c>

@@ -439,9 +439,28 @@ __printf_fp (FILE *fp,
 	    {
 	      if (scalesize == 0)
 		{
-		  tmpsize = powers->arraysize;
-		  memcpy (tmp, &__tens[powers->arrayoff],
-			  tmpsize * sizeof (mp_limb_t));
+#ifndef __NO_LONG_DOUBLE_MATH
+		  if (LDBL_MANT_DIG > _FPIO_CONST_OFFSET * BITS_PER_MP_LIMB
+		      && info->is_long_double)
+		    {
+#define _FPIO_CONST_SHIFT \
+  (((LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
+   - _FPIO_CONST_OFFSET)
+		      /* 64bit const offset is not enough for
+			 IEEE quad long double.  */
+		      tmpsize = powers->arraysize + _FPIO_CONST_SHIFT;
+		      memcpy (tmp + _FPIO_CONST_SHIFT,
+			      &__tens[powers->arrayoff],
+			      tmpsize * sizeof (mp_limb_t));
+		      MPN_ZERO (tmp, _FPIO_CONST_SHIFT);
+		    }
+		  else
+#endif
+		    {
+		      tmpsize = powers->arraysize;
+		      memcpy (tmp, &__tens[powers->arrayoff],
+			      tmpsize * sizeof (mp_limb_t));
+		    }
 		}
 	      else
 		{
