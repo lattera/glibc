@@ -197,7 +197,7 @@ extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
-$(test-modules): $(objpfx)%.so: $(objpfx)%.os
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 	$(build-module)
 
 ifeq ($(build-shared),yes)
