@@ -69,6 +69,8 @@ __sigsetjmp_aux (sigjmp_buf env, int savemask, long int *sp, long int *fp)
   /* Save the signal mask if requested.  */
   __sigjmp_save (env, savemask);
 
+  retpc = env[0].__jmpbuf[0].__pc;	/* restore ra, ugly... */
+
   /* Return to the original caller of __sigsetjmp.  */
   return 0;
 }
