@@ -1,3 +1,23 @@
+2001-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c (vsyslog): Try a bit harder to use syslogd.  If
+	the connection went down after we first used it try to connect
+	again and resend the message before printing to the console.
+	Reported by Coserea Gh. Tudor <tudore@tudore.gecadsoftware.com>.
+
+2001-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/tst-strlen.c (main): Test strnlen (, -1) too.
+	* sysdeps/generic/strnlen.c (__strnlen): Fix for maxlens with top
+	bit set.
+
+2001-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/strtab.c (searchstring): Use correct length for
+	comparison.
+	(strtabadd): Account total size correct if new string has old string as
+	substring.
+
 2001-08-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (dl_main): Update call to _dl_lookup_symbol.

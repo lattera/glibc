@@ -239,17 +239,29 @@ vsyslog(pri, fmt, ap)
 
 	if (!connected || __send(LogFile, buf, bufsize, 0) < 0)
 	  {
-	    closelog_internal ();	/* attempt re-open next time */
-	    /*
-	     * Output the message to the console; don't worry about blocking,
-	     * if console blocks everything will.  Make sure the error reported
-	     * is the one from the syslogd failure.
-	     */
-	    if (LogStat & LOG_CONS &&
-		(fd = __open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
+	    if (connected)
 	      {
-		dprintf (fd, "%s\r\n", buf + msgoff);
-		(void)__close(fd);
+		/* Try to reopen the syslog connection.  Maybe it went
+		   down.  */
+		closelog_internal ();
+		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
+	      }
+
+	    if (!connect || __send(LogFile, buf, bufsize, 0) < 0)
+	      {
+		closelog_internal ();	/* attempt re-open next time */
+		/*
+		 * Output the message to the console; don't worry
+		 * about blocking, if console blocks everything will.
+		 * Make sure the error reported is the one from the
+		 * syslogd failure.
+		 */
+		if (LogStat & LOG_CONS &&
+		    (fd = __open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
+		  {
+		    dprintf (fd, "%s\r\n", buf + msgoff);
+		    (void)__close(fd);
+		  }
 	      }
 	  }
 

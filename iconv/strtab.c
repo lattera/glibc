@@ -193,7 +193,7 @@ searchstring (struct Strent **sep, struct Strent *newstr)
 
   /* Compare the strings.  */
   cmpres = memcmp ((*sep)->reverse, newstr->reverse,
-		   MIN ((*sep)->len, newstr->len));
+		   MIN ((*sep)->len, newstr->len) - 1);
   if (cmpres == 0)
     /* We found a matching string.  */
     return sep;
@@ -236,10 +236,9 @@ strtabadd (struct Strtab *st, const char *str, size_t len)
 	  /* When we get here it means that the string we are about to
 	     add has a common prefix with a string we already have but
 	     it is longer.  In this case we have to put it first.  */
+	  st->total += newstr->len - (*sep)->len;
 	  newstr->next = *sep;
 	  *sep = newstr;
-
-	  st->total += newstr->len - (*sep)->len;
 	}
       else
 	{

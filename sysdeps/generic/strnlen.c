@@ -36,6 +36,9 @@ __strnlen (const char *str, size_t maxlen)
   if (maxlen == 0)
     return 0;
 
+  if (__builtin_expect (end_ptr < str, 0))
+    end_ptr = (const char *) ~0UL;
+
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
   for (char_ptr = str; ((unsigned long int) char_ptr

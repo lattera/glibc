@@ -25,8 +25,12 @@
 /* Mutex type.  */
 #if defined(_LIBC) || defined(_IO_MTSAFE_IO)
 typedef pthread_mutex_t __libc_lock_t;
-typedef pthread_rwlock_t __libc_rwlock_t;
 typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
+# ifdef __USE_UNIX98
+typedef pthread_rwlock_t __libc_rwlock_t;
+# else
+typedef struct __libc_rwlock_opaque__ __libc_rwlock_t;
+# endif
 #else
 typedef struct __libc_lock_opaque__ __libc_lock_t;
 typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
