@@ -341,7 +341,9 @@ ifeq (yes,$(build-shared))
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
 lib%.so: lib%_pic.a
-	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< $(LDLIBS-$*.so)
+	$(LINK.o) -shared -o $@ -Wl,--whole-archive $< \
+		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
+		  $(LDLIBS-$*.so)
 endif
 
 libobjs: $(foreach o,$(object-suffixes),\

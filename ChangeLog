@@ -1,5 +1,12 @@
 Sat Apr  1 00:08:06 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makerules (lib%.so: lib%_pic.a): Pass -L options for subdir and
+ 	parent objdirs.
+
+	* extra-lib.mk (object-suffixes-$(lib)): New variable, produced by
+ 	filtering out $($(lib)-inhibit-o); use that instead of
+ 	$(object-suffixes) in all the other variables.
+
 	* locale/loadlocale.c (_nl_load_locale) [MAP_FILE]: Define it zero
  	if undefined.
 

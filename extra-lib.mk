@@ -8,13 +8,15 @@
 lib := $(firstword $(extra-libs-left))
 extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 
+object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
+
 # Add each flavor of library to the lists of things to build and install.
-install-lib += $(foreach o,$(object-suffixes),$(lib:lib%=$(libtype$o)))
-extra-objs += $(foreach o,$(object-suffixes),$($(lib)-routines:=$o))
-alltypes-$(lib) = $(foreach o,$(object-suffixes),\
+install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
+extra-objs += $(foreach o,$(object-suffixes-$(lib)),$($(lib)-routines:=$o))
+alltypes-$(lib) = $(foreach o,$(object-suffixes-$(lib)),\
 			    $(objpfx)$(patsubst %,$(libtype$o),\
 			    $(lib:lib%=%)))
-ifeq (yes,$(build-shared))
+ifneq (,$(filter .so,$(object-suffixes-$(lib))))
 alltypes-$(lib) += $(objpfx)$(lib).so
 endif
 
@@ -25,5 +27,5 @@ define o-iterator-doit
 $(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
   $($(lib)-routines:%=$(objpfx)%$o); $$(build-extra-lib)
 endef
-object-suffixes-left := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
+object-suffixes-left = $(object-suffixes-$(lib))
 include $(o-iterator)
