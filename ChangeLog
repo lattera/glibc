@@ -1,5 +1,15 @@
 2001-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/libm-test.inc (j0_test): Check whether sincos is available.
+	(j1_test): Likewise.
+	(jn_test): Likewise.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+	(yn_test): Likewise.
+
+	* posix/tst-gnuglob.c: Make a few entries DT_UNKNOWN and teach
+	fake filesystem routines to handle this.
+
 	* time/sys/time.h: Make settimeofday and adjtime available if
 	_BSD_SOURCE.
 

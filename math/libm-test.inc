@@ -2824,7 +2824,12 @@ isnormal_test (void)
 static void
 j0_test (void)
 {
+  FLOAT s, c;
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(j0) (0);
   if (errno == ENOSYS)
     /* Function not implemented.  */
@@ -2853,6 +2858,10 @@ static void
 j1_test (void)
 {
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(j1) (0);
   if (errno == ENOSYS)
     /* Function not implemented.  */
@@ -2882,6 +2891,10 @@ static void
 jn_test (void)
 {
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(jn) (1, 1);
   if (errno == ENOSYS)
     /* Function not implemented.  */
@@ -4002,6 +4015,10 @@ static void
 y0_test (void)
 {
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(y0) (1);
   if (errno == ENOSYS)
     /* Function not implemented.  */
@@ -4031,6 +4048,10 @@ static void
 y1_test (void)
 {
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(y1) (1);
   if (errno == ENOSYS)
     /* Function not implemented.  */
@@ -4059,6 +4080,10 @@ static void
 yn_test (void)
 {
   errno = 0;
+  FUNC (sincos) (0, &s, &c);
+  if (errno == ENOSYS)
+    /* Required function not implemented.  */
+    return;
   FUNC(yn) (1, 1);
   if (errno == ENOSYS)
     /* Function not implemented.  */

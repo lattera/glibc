@@ -47,8 +47,8 @@ static struct
   { ".", 1, DT_DIR },
   { "..", 1, DT_DIR },
   { "file1lev1", 1, DT_REG },
-  { "file2lev1", 1, DT_REG },
-  { "dir1lev1", 1, DT_DIR },
+  { "file2lev1", 1, DT_UNKNOWN },
+  { "dir1lev1", 1, DT_UNKNOWN },
     { ".", 2, DT_DIR },
     { "..", 2, DT_DIR },
     { "file1lev2", 2, DT_REG },
@@ -75,7 +75,7 @@ static struct
   { "dir2lev1", 1, DT_DIR },
     { ".", 2, DT_DIR },
     { "..", 2, DT_DIR },
-    { "dir1lev2", 2, DT_DIR },
+    { "dir1lev2", 2, DT_UNKNOWN },
       { ".", 3, DT_DIR },
       { "..", 3, DT_DIR },
       { ".foo", 3, DT_REG },
@@ -124,7 +124,9 @@ find_file (const char *s)
 	  errno = ENOENT;
 	  return -1;
 	}
-      if (filesystem[idx].type != DT_DIR)
+      if (filesystem[idx].type != DT_DIR
+	  && (idx + 1 >= nfiles
+	      || filesystem[idx].level >= filesystem[idx + 1].level))
 	{
 	  errno = ENOTDIR;
 	  return -1;
@@ -230,7 +232,12 @@ my_stat (const char *name, struct stat *st)
 
   memset (st, '\0', sizeof (*st));
 
-  st->st_mode = DTTOIF (filesystem[idx].type) | 0777;
+  if (filesystem[idx].type == DT_UNKNOWN)
+    st->st_mode = DTTOIF (idx + 1 < nfiles
+			  && filesystem[idx].level < filesystem[idx + 1].level
+			  ? DT_DIR : DT_REG) | 0777;
+  else
+    st->st_mode = DTTOIF (filesystem[idx].type) | 0777;
 
   PRINTF ("my_stat (\"%s\", { st_mode: %o }) = 0\n", name, st->st_mode);
 
