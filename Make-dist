@@ -113,7 +113,7 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 +tsrcs	:= $(filter-out $(+out) $(addprefix %/,$(+out)), \
 			$(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
-foo:=$(shell echo made +tsrcs >&2)
+foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo generated='$(generated)' >&2)
 generated := $(sort $(generated) $(generated:.S=.c) $(generated:.s=.c))
 foo:=$(shell echo now generated='$(generated)' >&2)
