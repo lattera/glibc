@@ -412,9 +412,9 @@ __printf_fphex (FILE *fp,
 	    + ((expbuf + sizeof expbuf) - expstr));
 	    /* Exponent.  */
 
-  /* A special case if when the mantissa is zero and the `#' is not
-     given.  In this case we must not print the decimal point.  */
-  if (zero_mantissa && precision == 0 && !info->alt)
+  /* A special case when the mantissa or the precision is zero and the `#'
+     is not given.  In this case we must not print the decimal point.  */
+  if ((zero_mantissa || precision == 0) && !info->alt)
     ++width;		/* This nihilates the +1 for the decimal-point
 			   character in the following equation.  */
 
@@ -432,10 +432,10 @@ __printf_fphex (FILE *fp,
   outchar (info->spec == 'A' ? 'X' : 'x');
   outchar (leading);
 
-  if (!zero_mantissa || precision > 0 || info->alt)
+  if ((!zero_mantissa && precision > 0) || info->alt)
     outchar (decimal);
 
-  if (!zero_mantissa || precision > 0)
+  if (!zero_mantissa && precision > 0)
     {
       PRINT (numstr, MIN (numend - numstr, precision));
       if (precision > numend - numstr)
