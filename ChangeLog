@@ -1,3 +1,9 @@
+2002-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/wordsize-64/wcstol_l.c (wcstoll_l): Define to something
+	else and undefine after including wcstol_l.c.
+	* sysdeps/wordsize-64/wcstoul_l.c (wcstoull_l): Similarly.
+
 2002-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* gmon/gmon.c (write_gmon): Use O_NOFOLLOW in open calls if available.
