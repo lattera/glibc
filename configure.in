@@ -3,6 +3,7 @@ AC_REVISION([$CVSid$])
 AC_PREREQ(2.11)dnl		dnl Minimum Autoconf version required.
 AC_INIT(include/features.h)
 AC_CONFIG_HEADER(config.h)
+AC_CONFIG_AUX_DIR(scripts)
 
 # This will get text that should go into config.make.
 config_vars=

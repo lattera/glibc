@@ -99,7 +99,7 @@ install:
 ifneq (no,$(PERL))
 ifeq (/usr,$(prefix))
 ifeq (,$(install_root))
-	CC="$(CC)" $(PERL) test-installation.pl $(common-objpfx)
+	CC="$(CC)" $(PERL) scripts/test-installation.pl $(common-objpfx)
 endif
 endif
 endif
@@ -234,17 +234,19 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  := README README.libm INSTALL FAQ NOTES NEWS PROJECTS BUGS	\
-	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
-	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       extra-lib.mk o-iterator.mk autolock.sh rellns-sh		\
-	       libc.map mkinstalldirs move-if-change install-sh		\
-	       configure configure.in aclocal.m4 config.sub config.guess\
-	       config.h.in config.make.in config-name.in Makefile.in	\
-	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
-	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags	\
-	       stub-tag.h test-installation.pl test-skeleton.c		\
-	       include/des.h
+distribute  :=	README README.libm INSTALL FAQ NOTES NEWS PROJECTS	\
+		BUGS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
+		Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
+		extra-lib.mk o-iterator.mk libc.map configure		\
+		configure.in aclocal.m4 config.h.in config.make.in	\
+		config-name.in Makefile.in sysdep.h set-hooks.h		\
+		libc-symbols.h version.h shlib-versions rpm/Makefile	\
+		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
+		test-skeleton.c include/des.h				\
+		$(addprefix scripts/,					\
+			rellns-sh config.sub config.guess printsources	\
+			mkinstalldirs move-if-change install-sh	=__ify	\
+			test-installation.pl gen-FAQ.pl)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
@@ -260,7 +262,7 @@ INSTALL: manual/install.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
 manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
-FAQ: gen-FAQ.pl FAQ.in
+FAQ: scripts/gen-FAQ.pl FAQ.in
 	$(PERL) $^ > $@.new && rm -f $@ && mv $@.new $@ && chmod a-w $@
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated:  $(PERL) $^' $@

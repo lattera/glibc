@@ -1,3 +1,30 @@
+1998-05-08 21:56  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* autolock.sh: Removed.
+	* manual/move-if-change: Removed.
+
+	* scripts: new directory.
+	* =__ify: moved to scripts.
+	* config.guess: Likewise.
+	* config.sub: Likewise.
+	* gen-FAQ.pl: Likewise.
+	* install-sh: Likewise.
+	* mkinstalldirs: Likewise.
+	* move-if-change: Likewise.
+	* printsources: Likewise.
+	* rellns.sh: Likewise.
+	* test-installation.pl: Likewise.
+
+	* configure.in: Look in scripts for config.guess, config.sub,
+	install-sh.
+	* Makefile: Distribute all above files in their
+	new home.  Find gen-FAQ.pl and test-installation.pl in scripts.
+	* manual/Makefile: Find mkinstalldirs and move-if-change in
+	$(..)scripts.  Drop them from distribute.  Minor cleanups.
+	* Makerules: Find mkinstalldirs and rellns-sh in scripts.
+	* sysdeps/mach/hurd/Makefile: Find move-if-change in scripts.
+	* timezone/Makefile: Find rellns-sh in scripts.
+
 1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/locale.alias: Change italian to it_IT.ISO-8859-1.

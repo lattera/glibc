@@ -143,7 +143,7 @@ $(installed-localtime-file): $(inst_zonedir)/$(localtime) $(objpfx)zic \
 	  echo Site timezone NOT reset to Factory.; \
 	else \
 	  rm -f $@T; \
-	  $(SHELL) $(..)/rellns-sh $< $@T; \
+	  $(SHELL) $(..)scripts/rellns-sh $< $@T; \
 	  mv -f $@T $@; \
 	fi
 endif

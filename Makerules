@@ -588,7 +588,7 @@ endef
 # Make the target directory if it doesn't exist, using the `mkinstalldirs'
 # script that does `mkdir -p' even if `mkdir' doesn't support that flag.
 define make-target-directory
-$(addprefix $(..)./mkinstalldirs ,\
+$(addprefix $(..)./scripts/mkinstalldirs ,\
 	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
@@ -631,7 +631,7 @@ $(addprefix $(inst_slibdir)/, $(filter-out $(versioned),$(install-lib.so))): \
 ifneq ($(findstring -s,$(LN_S)),)
 define make-link
 rm -f $@.new
-$(SHELL) $(..)rellns-sh $< $@.new
+$(SHELL) $(..)scripts/rellns-sh $< $@.new
 mv -f $@.new $@
 endef
 else

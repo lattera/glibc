@@ -64,6 +64,10 @@ define find-includes
 mv -f $@.new $@
 endef
 
+# scripts we use
+move-if-change = $(..)scripts/move-if-change
+mkinstalldirs = $(..)scripts/mkinstalldirs
+
 libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)
 libc.dvi: texinfo.tex
 
@@ -78,9 +82,8 @@ summary.texi: stamp-summary ;
 stamp-summary: summary.awk $(chapters) $(chapters-incl)
 	$(AWK) -f $^ \
 	| sort -df +1 -2 | tr '\014' '\012' > summary-tmp
-	./move-if-change summary-tmp summary.texi
-# touch is broken on our machines.  Sigh.
-	date > $@
+	$(move-if-change) summary-tmp summary.texi
+	touch $@
 
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
@@ -102,10 +105,10 @@ dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
 	mv -f $@.new $@
 
 
-minimal-dist = summary.awk move-if-change libc.texinfo $(chapters)	\
+minimal-dist = summary.awk libc.texinfo $(chapters)			\
 	       $(patsubst %.c.texi,examples/%.c,			\
 			  $(filter-out summary.texi,$(chapters-incl)))
-doc-only-dist = Makefile COPYING.LIB mkinstalldirs
+doc-only-dist = Makefile COPYING.LIB
 distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
@@ -171,8 +174,8 @@ $(inst_infodir)/libc.info: libc.info installdirs
 	    `echo $@ | sed "s,$<\$$,$$name,"`; \
 	done
 
-installdirs: $(firstword $(wildcard mkinstalldirs ../mkinstalldirs))
-	$(dir $<)$(notdir $<) $(inst_infodir)
+installdirs:
+	$(mkinstalldirs) $(inst_infodir)
 
 .PHONY: dist
 dist: # glibc-doc-$(edition).tar.gz
@@ -212,13 +215,12 @@ stubs: $(objpfx)stubs
 endif
 $(objpfx)stubs ../po/manual.pot $(objpfx)stamp%:
 	$(make-target-directory)
-	cp /dev/null $@
-
+	touch $@
 
 # Make the target directory if it doesn't exist, using the `mkinstalldirs'
 # script that does `mkdir -p' even if `mkdir' doesn't support that flag.
 define make-target-directory
-$(addprefix $(..)./mkinstalldirs ,\
+$(addprefix $(mkinstalldirs) ,\
 	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 

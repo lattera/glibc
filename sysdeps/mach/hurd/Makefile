@@ -90,7 +90,7 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 	$(AWK) -f $^ > $(hurd)/errnos.h-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $(hurd)/errnos.h-tmp
-	./$(..)move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
+	./$(..)scripts/move-if-change $(hurd)/errnos.h-tmp $(hurd)/errnos.h
 ifeq ($(with-cvs),yes)
 	test ! -d $(hurd)/CVS || \
 	  (cd $(hurd) && cvs commit -m'Regenerated from $^' errnos.h)
