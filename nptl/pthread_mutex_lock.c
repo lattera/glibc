@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
@@ -46,19 +47,14 @@ __pthread_mutex_lock (mutex)
 	    return EAGAIN;
 
 	  ++mutex->__data.__count;
-	}
-      else
-	{
-	  /* We have to get the mutex.  */
-	  LLL_MUTEX_LOCK (mutex->__data.__lock);
 
-	  /* Record the ownership.  */
-	  mutex->__data.__owner = id;
-	  mutex->__data.__count = 1;
-#ifndef NO_INCR
-	  ++mutex->__data.__nusers;
-#endif
+	  return 0;
 	}
+
+      /* We have to get the mutex.  */
+      LLL_MUTEX_LOCK (mutex->__data.__lock);
+
+      mutex->__data.__count = 1;
       break;
 
       /* Error checking mutex.  */
@@ -75,13 +71,15 @@ __pthread_mutex_lock (mutex)
     case PTHREAD_MUTEX_ADAPTIVE_NP:
       /* Normal mutex.  */
       LLL_MUTEX_LOCK (mutex->__data.__lock);
-      /* Record the ownership.  */
-      mutex->__data.__owner = id;
-#ifndef NO_INCR
-      ++mutex->__data.__nusers;
-#endif
       break;
     }
+
+  /* Record the ownership.  */
+  assert (mutex->__data.__owner == 0);
+  mutex->__data.__owner = id;
+#ifndef NO_INCR
+  ++mutex->__data.__nusers;
+#endif
 
   return 0;
 }
