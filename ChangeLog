@@ -1,3 +1,10 @@
+1999-03-05  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/dl-machine.c (__elf_machine_runtime_setup):
+	DT_PLTGOT has already been relocated.
+	(__elf_machine_fixup_plt): Likewise.
+	Minor cleanups.
+
 1999-03-04  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdlookup.c (__hurd_file_name_lookup): Comment fix.
