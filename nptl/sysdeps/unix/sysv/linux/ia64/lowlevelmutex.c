@@ -62,7 +62,7 @@ ___lll_mutex_timedlock (futex, abstime, newval)
     {
       /* Get the current time.  */
       struct timeval tv;
-      gettimeofday (&tv, NULL);
+      __gettimeofday (&tv, NULL);
 
       /* Compute relative timeout.  */
       struct timespec rt;

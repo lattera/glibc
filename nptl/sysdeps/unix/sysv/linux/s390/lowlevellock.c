@@ -72,7 +72,7 @@ ___lll_timedwait_tid (ptid, abstime)
     {
       /* Get current time.  */
       struct timeval tv;
-      gettimeofday (&tv, NULL);
+      __gettimeofday (&tv, NULL);
 
       /* Determine relative timeout.  */
       struct timespec rt;

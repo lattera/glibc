@@ -51,7 +51,7 @@ sem_timedwait (sem, abstime)
 
       /* Get the current time.  */
       struct timeval tv;
-      (void) gettimeofday (&tv, NULL);
+      (void) __gettimeofday (&tv, NULL);
 
       /* Compute the relative timeout.  */
       struct timespec rt;

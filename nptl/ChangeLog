@@ -1,3 +1,43 @@
+2003-03-17  Roland McGrath  <roland@redhat.com>
+
+	PowerPC port contributed by Paul Mackerras <paulus@samba.org>.
+	* sysdeps/pthread/pthread_spin_init.c: New file.
+	* sysdeps/pthread/pthread_spin_unlock.c: New file.
+	* sysdeps/powerpc/Makefile: New file.
+	* sysdeps/powerpc/pthread_spin_lock.c: New file.
+	* sysdeps/powerpc/pthread_spin_trylock.c: New file.
+	* sysdeps/powerpc/pthreaddef.h: New file.
+	* sysdeps/powerpc/tcb-offsets.sym: New file.
+	* sysdeps/powerpc/td_ta_map_lwp2thr.c: New file.
+	* sysdeps/powerpc/tls.h: New file.
+	* sysdeps/powerpc/bits/atomic.h: New file.
+	* sysdeps/unix/sysv/linux/libc-lowlevelmutex.c: New file.
+	* sysdeps/unix/sysv/linux/libc-lowlevellock.c: New file.
+	* sysdeps/unix/sysv/linux/lowlevellock.c: New file.
+	* sysdeps/unix/sysv/linux/lowlevelmutex.c: New file.
+	* sysdeps/unix/sysv/linux/sem_post.c: New file.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sem_trywait.c: New file.
+	* sysdeps/unix/sysv/linux/sem_wait.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: New file.
+	* sysdeps/unix/sysv/linux/powerpc/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/fork.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: New file.
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.c: Use __gettimeofday,
+	not gettimeofday.
+	* sysdeps/unix/sysv/linux/ia64/lowlevelmutex.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevelmutex.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c: Likewise.
+
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread_cond_wait.c: Correct exit criteria.

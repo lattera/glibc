@@ -29,7 +29,7 @@ lll_unlock_wake_cb (futex)
 {
   int oldval;
   int val = *futex;
-    
+
   do
     oldval = val;
   while ((val = lll_compare_and_swap (futex, oldval, 0)) != oldval);
@@ -55,7 +55,7 @@ ___lll_timedwait_tid (ptid, abstime)
     {
       /* Get current time.  */
       struct timeval tv;
-      gettimeofday (&tv, NULL);
+      __gettimeofday (&tv, NULL);
 
       /* Determine relative timeout.  */
       struct timespec rt;
