@@ -1,5 +1,8 @@
 2001-06-22  Andreas Jaeger  <aj@suse.de>
 
+	* elf/reldep4mod4.c: Add prototype to avoid warning.
+	* elf/reldep4mod2.c: Likewise.
+
 	* sysdeps/i386/fpu/e_expl.c: Include <math_private.h> for
 	prototypes.
 
