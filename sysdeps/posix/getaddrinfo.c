@@ -644,27 +644,30 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  if (inet6_status == NSS_STATUS_SUCCESS
 		      || status == NSS_STATUS_SUCCESS)
 		    {
-		      /* If we need the canonical name, get it from the same
-			 service as the result.  */
-		      nss_getcanonname_r cfct;
-		      int herrno;
-
-		      cfct = __nss_lookup_function (nip, "getcanonname_r");
-		      if (cfct != NULL)
+		      if ((req->ai_flags & AI_CANONNAME) != 0)
 			{
-			  const size_t max_fqdn_len = 256;
-			  char *buf = alloca (max_fqdn_len);
-			  char *s;
+			  /* If we need the canonical name, get it
+			     from the same service as the result.  */
+			  nss_getcanonname_r cfct;
+			  int herrno;
 
-			  if (DL_CALL_FCT (cfct, (h->h_name ?: name, buf,
-						  max_fqdn_len, &s, &rc,
-						  &herrno))
-			      == NSS_STATUS_SUCCESS)
-			    canon = s;
-			  else
-			    /* Set to name now to avoid using
-			       gethostbyaddr.  */
-			    canon = name;
+			  cfct = __nss_lookup_function (nip, "getcanonname_r");
+			  if (cfct != NULL)
+			    {
+			      const size_t max_fqdn_len = 256;
+			      char *buf = alloca (max_fqdn_len);
+			      char *s;
+
+			      if (DL_CALL_FCT (cfct, (h->h_name ?: name, buf,
+						      max_fqdn_len, &s, &rc,
+						      &herrno))
+				  == NSS_STATUS_SUCCESS)
+				canon = s;
+			      else
+				/* Set to name now to avoid using
+				   gethostbyaddr.  */
+				canon = name;
+			    }
 			}
 
 		      break;

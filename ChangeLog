@@ -1,5 +1,9 @@
 2004-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use
+	getcanonname_r function if AI_CANONNAME flag is not set in
+	request.
+
 	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss):
 	Initialize mysize with limits only if latter is >= 0.  Use mysize
 	in malloc call.

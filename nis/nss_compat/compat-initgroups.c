@@ -243,9 +243,9 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
     {
       long int mystart = 0;
       long int mysize = limit <= 0 ? *size : limit;
-      gid_t *mygroupsp = malloc (mysize * sizeof (gid_t));
+      gid_t *mygroups = malloc (mysize * sizeof (gid_t));
 
-      if (mygroupsp == NULL)
+      if (mygroups == NULL)
 	return NSS_STATUS_TRYAGAIN;
 
       /* For every gid in the list we get from the NSS module,
@@ -255,7 +255,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
          getgrent_r through the whole group database. But for large
          group databases this is faster, since the user can only be
          in a limited number of groups.  */
-      if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroupsp,
+      if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroups,
 			      limit, errnop) == NSS_STATUS_SUCCESS)
 	{
 	  /* A temporary buffer. We use the normal buffer, until we find
@@ -267,7 +267,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 
 	  for (i = 0; i < mystart; i++)
 	    {
-	      while ((status = nss_getgrgid_r (mygroupsp[i], &grpbuf, tmpbuf,
+	      while ((status = nss_getgrgid_r (mygroups[i], &grpbuf, tmpbuf,
 					       tmplen,
 					       errnop)) == NSS_STATUS_TRYAGAIN
 		     && *errnop == ERANGE)
@@ -285,12 +285,12 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 				     limit, &grpbuf);
 	    }
 
-	  free (mygroupsp);
+	  free (mygroups);
 
 	  return NSS_STATUS_NOTFOUND;
 	}
 
-      free (mygroupsp);
+      free (mygroups);
     }
 
   /* If we come here, the NSS module does not support initgroups_dyn
