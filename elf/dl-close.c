@@ -80,7 +80,7 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 	return true;
     }
 
-  while (idx - disp > disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0)
+  while (idx - disp > (disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0))
     {
       --idx;
 

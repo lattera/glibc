@@ -1,3 +1,7 @@
+2003-04-26  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-close.c (remove_slotinfo): Fix missing parens.
+
 2003-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_search): Keep track of how many chain links
