@@ -73,8 +73,7 @@ pthread_join (threadid, thread_return)
   pthread_cleanup_push (cleanup, &pd->joinid);
 
   /* Switch to asynchronous cancellation.  */
-  int oldtype;
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 
   /* Wait for the child.  */

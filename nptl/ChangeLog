@@ -1,5 +1,7 @@
 2002-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* pt-fcntl.c (__fcntl): Initialize oldtype to avoid warning.
+
 	* pthreadP.h: Declare __pthread_enable_asynccancel and
 	__pthread_disable_asynccancel.
 	(CANCEL_ASYNC): Use __pthread_enable_asynccancel.
@@ -48,6 +50,8 @@
 	* pt-waitpid.c: Likewise.
 	* pt-write.c: Likewise.
 	* pt-writev.c: Likewise.
+	* pthread_join.c: Likewise.
+	* pthread_timedjoin.c: Likewise.
 
 	* pt-sigpause.c (sigsuspend): Call __sigsuspend.
 	(__xpg_sigpause): New function.

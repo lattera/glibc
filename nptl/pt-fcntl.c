@@ -29,7 +29,7 @@
 int
 __fcntl (int fd, int cmd, ...)
 {
-  int oldtype;
+  int oldtype = 0;
   va_list ap;
 
   if (cmd == F_SETLKW)
