@@ -1,5 +1,10 @@
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/Makefile (tests): Add tst-clock_nanosleep.
+	* rt/tst-clock_nanosleep.c: New file.
+	* posix/Makefile (tests): Add tst-nanosleep.
+	* posix/tst-nanosleep.c: New file.
+
 	* sysdeps/unix/clock_nanosleep.c (CPUCLOCK_P): Fix definition.
 
 	* include/features.h (__USE_XOPEN2K): Define also for
