@@ -1,5 +1,5 @@
 /* Structure types for pre-termios terminal ioctls.  Linux/MIPS version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,3 +64,12 @@ struct termio
 #define N_PPP		3
 #define N_STRIP		4
 #define N_AX25		5
+#define N_X25		6	/* X.25 async  */
+#define N_6PACK		7
+#define N_MASC		8	/* Mobitex module  */
+#define N_R3964		9	/* Simatic R3964 module  */
+#define N_PROFIBUS_FDL	10	/* Profibus  */
+#define N_IRDA		11	/* Linux IR  */
+#define N_SMSBLOCK	12	/* SMS block mode  */
+#define N_HDLC		13	/* synchronous HDLC  */
+#define N_SYNC_PPP	14	/* synchronous PPP  */

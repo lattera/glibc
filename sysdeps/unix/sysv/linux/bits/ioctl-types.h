@@ -74,3 +74,4 @@ struct termio
 #define N_IRDA		11	/* Linux IR  */
 #define N_SMSBLOCK	12	/* SMS block mode  */
 #define N_HDLC		13	/* synchronous HDLC  */
+#define N_SYNC_PPP	14	/* synchronous PPP  */

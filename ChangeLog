@@ -1,5 +1,16 @@
 1999-10-29  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Added missing
+	N_* constants.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h (N_SYNC_PPP): Added
+	new constant from Linux 2.3.25pre1.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (BFS_MAGIC): Added.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
 	* math/libm-err-tab.pl: New file to generate a table of
 	libm-test-ulps values.
 

@@ -26,6 +26,7 @@
    appropriate definitions here.*/
 #define ADFS_SUPER_MAGIC	0xadf5
 #define AFFS_SUPER_MAGIC	0xadff
+#define BFS_MAGIC		0x1BADFACE
 #define CODA_SUPER_MAGIC	0x73757245
 #define DEVPTS_SUPER_MAGIC	0x1cd1
 #define EFS_SUPER_MAGIC		0x414A53
