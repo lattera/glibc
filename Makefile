@@ -277,23 +277,40 @@ files-for-dist := README FAQ INSTALL NOTES configure
 
 tag-of-stem = glibc-$(subst .,_,$*)
 
-glibc-%.tar glibc-linuxthreads-%.tar: $(files-for-dist)
+# Add-ons in the main repository but distributed in their own tar files.
+dist-separate = libidn linuxthreads
+
+# Directories in each add-on.
+dist-separate-libidn = libidn
+dist-separate-linuxthreads = linuxthreads linuxthreads_db
+
+glibc-%.tar $(dist-separate:%=glibc-%-%.tar): $(files-for-dist) \
+					      $(foreach D,$(dist-separate),\
+							$D/configure)
 	@rm -fr glibc-$*
 	cvs $(CVSOPTS) -Q export -d glibc-$* -r $(tag-of-stem) libc
-	tar cf glibc-linuxthreads-$*.tar -C glibc-$* \
-	    linuxthreads linuxthreads_db
-	rm -rf $(addprefix glibc-$*/,linuxthreads linuxthreads_db)
+	$(dist-do-separate-dirs)
 	tar cf glibc-$*.tar glibc-$*
 	rm -fr glibc-$*
+define dist-do-separate-dirs
+$(foreach dir,$(dist-separate),
+	tar cf glibc-$(dir)-$*.tar -C glibc-$* $(dist-separate-$(dir))
+	rm -rf $(addprefix glibc-$*/,$(dist-separate-$(dir)))
+)
+endef
 
 %.bz2: %; bzip2 -9vk $<
 %.gz: %; gzip -9vnc $< > $@.new && mv -f $@.new $@
 
-dist: $(foreach Z,.bz2 .gz,glibc-$(version).tar$Z \
-		           glibc-linuxthreads-$(version).tar$Z)
+# Do `make dist dist-version=X.Y.Z' to make tar files of an older version.
+dist-version = $(version)
+
+dist: $(foreach Z,.bz2 .gz,glibc-$(dist-version).tar$Z \
+		           $(foreach D,$(dist-separate),\
+				     glibc-$D-$(dist-version).tar$Z))
 	md5sum $^
 
-tag-for-dist: tag-$(version)
+tag-for-dist: tag-$(dist-version)
 tag-%: $(files-for-dist)
 	cvs $(CVSOPTS) -Q tag -c $(tag-of-stem)
 
