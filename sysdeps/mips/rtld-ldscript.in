@@ -1,4 +1,3 @@
-OUTPUT_FORMAT("@@rtld-oformat@@")
 OUTPUT_ARCH(@@rtld-arch@@)
 ENTRY(@@rtld-entry@@)
 SECTIONS
