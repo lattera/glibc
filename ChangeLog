@@ -1,5 +1,14 @@
 2004-09-27  Roland McGrath  <roland@redhat.com>
 
+	* posix/tst-waitid.c (do_test): Add tests for waitpid with WCONTINUED.
+
+	* posix/sys/wait.h [__WIFCONTINUED] (WIFCONTINUED): New macro.
+	* stdlib/stdlib.h [__WIFCONTINUED] (WIFCONTINUED): New macro.
+	* sysdeps/generic/bits/waitstatus.h (__W_CONTINUED): New macro.
+	[WCONTINUED] (__WIFCONTINUED): New macro.
+	(__WIFSIGNALED): Rewritten to exclude __W_CONTINUED value, and have no
+	branches.
+
 	* sysdeps/unix/sysv/linux/waitid.c (do_waitid): Add fifth argument to
 	all three syscall uses, not just one!
 

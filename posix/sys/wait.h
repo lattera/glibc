@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1994,1996-2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1994,1996-2001,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ __BEGIN_DECLS
 #include <signal.h>
 #include <sys/resource.h>
 
-/* These macros could also be defined int <stdlib.h>.  */
+/* These macros could also be defined in <stdlib.h>.  */
 #if !defined _STDLIB_H || !defined __USE_XOPEN
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
@@ -84,6 +84,9 @@ typedef union
 # define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
 # define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
 # define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
+# ifdef __WIFCONTINUED
+#  define WIFCONTINUED(status)	__WIFCONTINUED(__WAIT_INT(status))
+# endif
 #endif	/* <stdlib.h> not included.  */
 
 #ifdef	__USE_BSD

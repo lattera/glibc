@@ -1,5 +1,5 @@
 /* Definitions of status bits for `wait' et al.
-   Copyright (C) 1992, 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992,1994,1996,1997,2000,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,16 +38,17 @@
 #define	__WIFEXITED(status)	(__WTERMSIG(status) == 0)
 
 /* Nonzero if STATUS indicates termination by a signal.  */
-#ifdef	__GNUC__
-# define __WIFSIGNALED(status) \
-  (__extension__ ({ int __status = (status);				      \
-		    !__WIFSTOPPED(__status) && !__WIFEXITED(__status); }))
-#else	/* Not GCC.  */
-# define __WIFSIGNALED(status)	(!__WIFSTOPPED(status) && !__WIFEXITED(status))
-#endif	/* GCC.  */
+#define __WIFSIGNALED(status) \
+  (((signed char) ((((((status) + 1) & 0xffff) - 1) & 0x7f) + 1) >> 1) > 0)
 
 /* Nonzero if STATUS indicates the child is stopped.  */
 #define	__WIFSTOPPED(status)	(((status) & 0xff) == 0x7f)
+
+/* Nonzero if STATUS indicates the child continued after a stop.  We only
+   define this if <bits/waitflags.h> provides the WCONTINUED flag bit.  */
+#ifdef WCONTINUED
+# define __WIFCONTINUED(status)	((status) == __W_CONTINUED)
+#endif
 
 /* Nonzero if STATUS indicates the child dumped core.  */
 #define	__WCOREDUMP(status)	((status) & __WCOREFLAG)
@@ -55,6 +56,7 @@
 /* Macros for constructing status values.  */
 #define	__W_EXITCODE(ret, sig)	((ret) << 8 | (sig))
 #define	__W_STOPCODE(sig)	((sig) << 8 | 0x7f)
+#define __W_CONTINUED		0xffff
 #define	__WCOREFLAG		0x80
 
 

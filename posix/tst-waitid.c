@@ -335,6 +335,77 @@ do_test (int argc, char *argv[])
 	       info.si_signo);
       RETURN (EXIT_FAILURE);
     }
+
+  /* Now stop him again and test waitpid with WCONTINUED.  */
+  expecting_sigchld = 1;
+  if (kill (pid, SIGSTOP) != 0)
+    {
+      error (0, errno, "kill (%d, SIGSTOP)", pid);
+      RETURN (EXIT_FAILURE);
+    }
+  pid_t wpid = waitpid (pid, &fail, WUNTRACED);
+  if (wpid < 0)
+    {
+      error (0, errno, "waitpid WUNTRACED on stopped");
+      RETURN (EXIT_FAILURE);
+    }
+  else if (wpid != pid)
+    {
+      error (0, 0,
+	     "waitpid WUNTRACED on stopped returned %d != %d (status %x)",
+	     wpid, pid, fail);
+      RETURN (EXIT_FAILURE);
+    }
+  else if (!WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
+	   || WIFCONTINUED (fail) || WSTOPSIG (fail) != SIGSTOP)
+    {
+      error (0, 0, "waitpid WUNTRACED on stopped: status %x", fail);
+      RETURN (EXIT_FAILURE);
+    }
+  CHECK_SIGCHLD ("stopped", CLD_STOPPED, SIGSTOP);
+
+  expecting_sigchld = 1;
+  if (kill (pid, SIGCONT) != 0)
+    {
+      error (0, errno, "kill (%d, SIGCONT)", pid);
+      RETURN (EXIT_FAILURE);
+    }
+
+  /* Wait for the child to have continued.  */
+  sleep (2);
+
+  if (expecting_sigchld)
+    {
+      error (0, 0, "no SIGCHLD seen for SIGCONT (optional)");
+      expecting_sigchld = 0;
+    }
+  else
+    CHECK_SIGCHLD ("continued", CLD_CONTINUED, SIGCONT);
+
+  wpid = waitpid (pid, &fail, WCONTINUED);
+  if (wpid < 0)
+    {
+      if (errno == EINVAL)
+	error (0, 0, "waitpid does not support WCONTINUED");
+      else
+	{
+	  error (0, errno, "waitpid WCONTINUED on continued");
+	  RETURN (EXIT_FAILURE);
+	}
+    }
+  else if (wpid != pid)
+    {
+      error (0, 0,
+	     "waitpid WCONTINUED on continued returned %d != %d (status %x)",
+	     wpid, pid, fail);
+      RETURN (EXIT_FAILURE);
+    }
+  else if (WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
+	   || !WIFCONTINUED (fail))
+    {
+      error (0, 0, "waitpid WCONTINUED on continued: status %x", fail);
+      RETURN (EXIT_FAILURE);
+    }
 #endif
 
   expecting_sigchld = 1;
