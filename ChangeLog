@@ -1,3 +1,8 @@
+2001-06-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: New file.
+	Patch by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/argp.texi: Tons of cleanups.
