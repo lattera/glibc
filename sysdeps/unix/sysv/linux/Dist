@@ -20,6 +20,7 @@ net/if.h
 net/if_arp.h
 net/if_packet.h
 net/if_ppp.h
+net/if_shaper.h
 net/if_slip.h
 net/ppp-comp.h
 net/ppp_defs.h

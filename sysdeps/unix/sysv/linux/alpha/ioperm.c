@@ -104,6 +104,7 @@ static struct platform {
   {"Noname",	IOSYS_APECS,	5, APECS_DENSE_MEM,	APECS_SPARSE_MEM},
   {"Sable",	IOSYS_T2,	5, T2_DENSE_MEM,	T2_SPARSE_MEM},
   {"Miata",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
+  {"Ruffian",	IOSYS_CIA,	5, CIA_DENSE_MEM,	CIA_SPARSE_MEM},
 };
 
 

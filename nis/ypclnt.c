@@ -690,6 +690,7 @@ yp_all (const char *indomain, const char *inmap,
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
 	{
+	  __yp_unbind (ydb);
 	  __set_errno (saved_errno);
 	  return YPERR_PMAP;
 	}
@@ -711,6 +712,7 @@ yp_all (const char *indomain, const char *inmap,
       else
 	res = YPERR_SUCCESS;
 
+      __yp_unbind (ydb);
       clnt_destroy (clnt);
 
       if (status != YP_NOMORE)

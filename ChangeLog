@@ -1,3 +1,15 @@
+1998-09-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+ 
+	* nis/ypclnt.c (yp_all): Close UDP socket und give CLIENT handle free. 
+ 
+1998-09-29  Cristian Gafton  <gafton@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: List Ruffian in platforms[]. 
+	* sysdeps/unix/sysv/linux/net/if_shaper.h: New file. 
+	* sysdeps/unix/sysv/linux/Dist: Add net/if_shaper.h.
+	* sysdeps/unix/sysv/linux/Makefile [subdirs=inet] (sysdep_headers):
+	Add net/if_shaper.h.
+
 1998-09-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/ypclnt.c (yp_all): Close socket opened by __yp_bind.
@@ -23,6 +35,8 @@
 
 	* sysdeps/unix/sysv/linux/netinet/ip.h (IPOPT_NOOP): Fix typo.
 	Patch by ak@muc.de.
+
+	* libio/libio.h [!__STDC__]: Define const only if not defined.
 
 1998-09-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

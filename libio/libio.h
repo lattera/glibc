@@ -72,7 +72,9 @@
 #endif /*!_PARAMS*/
 
 #ifndef __STDC__
-# define const
+# ifndef const
+#  define const
+# endif
 #endif
 #define _IO_UNIFIED_JUMPTABLES 1
 #ifndef _G_HAVE_PRINTF_FP

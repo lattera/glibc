@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 #define TMPFILE             "/tmp/macros"
 #define HEADER_MAX          256
@@ -629,6 +631,7 @@ const char *INC;
 static char *xstrndup (const char *, size_t);
 static const char **get_null_defines (void);
 static int check_header (const struct header *, const char **);
+static int xsystem (const char *);
 
 int
 main (int argc, char *argv[])
@@ -674,6 +677,31 @@ xstrndup (const char *s, size_t n)
 }
 
 
+/* Like system but propagate interrupt and quit signals.  */
+int
+xsystem (const char *cmd)
+{
+  int status;
+
+  status = system (cmd);
+  if (status != -1)
+    {
+      if (WIFSIGNALED (status))
+	{
+	  if (WTERMSIG (status) == SIGINT || WTERMSIG (status) == SIGQUIT)
+	    raise (WTERMSIG (status));
+	}
+      else if (WIFEXITED (status))
+	{
+	  if (WEXITSTATUS (status) == SIGINT + 128
+	      || WEXITSTATUS (status) == SIGQUIT + 128)
+	    raise (WEXITSTATUS (status) - 128);
+	}
+    }
+  return status;
+}
+
+
 static const char **
 get_null_defines (void)
 {
@@ -695,7 +723,7 @@ get_null_defines (void)
 
   sprintf (command, fmt, "/dev/null", CC, INC, CC, TMPFILE);
 
-  if (system (command))
+  if (xsystem (command))
     {
       puts ("system() returned nonzero");
       return NULL;
@@ -787,14 +815,14 @@ check_header (const struct header *header, const char **except)
   if (header->subset != NULL)
     {
       sprintf (line, testfmt, header->subset, CC, INC, CC, TMPFILE);
-      if (system (line))
+      if (xsystem (line))
 	{
 	  printf ("!! not available\n");
 	  return 0;
 	}
     }
 
-  if (system (command))
+  if (xsystem (command))
     {
       puts ("system() returned nonzero");
       result = 1;

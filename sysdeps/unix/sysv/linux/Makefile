@@ -58,7 +58,7 @@ endif
 ifeq ($(subdir),socket)
 sysdep_headers += net/if.h net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
-		  net/if_slip.h net/if_packet.h
+		  net/if_slip.h net/if_packet.h net/if_shaper.h
 sysdep_routines += cmsg_nxthdr sa_len
 endif
 
@@ -101,4 +101,3 @@ endif
 ifeq ($(subdir),nis)
 CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
-
