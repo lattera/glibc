@@ -344,7 +344,7 @@ read_alias_file (fname, fname_len)
 	    /* Make sure the inner loop will be left.  The outer loop
 	       will exit at the `feof' test.  */
 	    break;
-	while (strchr (buf, '\n') == NULL)
+	while (strchr (buf, '\n') == NULL);
     }
 
   /* Should we test for ferror()?  I think we have to silently ignore

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include "pthreadP.h"
 
 
@@ -24,6 +25,11 @@ int
 __pthread_mutex_destroy (mutex)
      pthread_mutex_t *mutex;
 {
+  if (__builtin_expect (mutex->__data.__kind == PTHREAD_MUTEX_ERRORCHECK_NP,
+			0)
+      && lll_mutex_trylock (mutex->__data.__lock) != 0)
+    return EBUSY;
+
   return 0;
 }
 strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
