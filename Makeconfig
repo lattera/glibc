@@ -720,8 +720,11 @@ endif
 ifndef ASFLAGS
 ifeq ($(have-cpp-asm-debuginfo),yes)
 ASFLAGS := $(filter -g%,$(CFLAGS))
+else
+ASFLAGS :=
 endif
 endif
+ASFLAGS += $(ASFLAGS-config)
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
 

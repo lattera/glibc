@@ -534,11 +534,10 @@ ldexp (double __x, int __y) __THROW
 
 # ifdef __FAST_MATH__
 __inline_mathcodeNP (expm1, __x, __expm1_code)
-# endif
 
 /* We cannot rely on M_SQRT being defined.  So we do it for ourself
    here.  */
-# define __M_SQRT2	1.41421356237309504880L	/* sqrt(2) */
+#  define __M_SQRT2	1.41421356237309504880L	/* sqrt(2) */
 
 __inline_mathcodeNP (log1p, __x, \
   register long double __value;						      \
@@ -577,12 +576,12 @@ __inline_mathcodeNP(logb, __x, \
      : "=t" (__junk), "=u" (__value) : "0" (__x));			      \
   return __value)
 
+# endif
 #endif
 
 #ifdef __USE_ISOC99
 #ifdef __FAST_MATH__
 __inline_mathop_declNP (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
-#endif /* __FAST_MATH__ */
 
 __MATH_INLINE float
 ldexpf (float __x, int __y) __THROW
@@ -596,7 +595,6 @@ ldexpl (long double __x, int __y) __THROW
   __ldexp_code;
 }
 
-#ifdef __FAST_MATH__
 __inline_mathcodeNP3 (fma, __x, __y, __z, return (__x * __y) + __z)
 
 __inline_mathopNP (rint, "frndint")

@@ -1313,6 +1313,27 @@ EOF
   rm -f conftest*])
   AC_SUBST(libc_cv_Bgroup)
 
+  ASFLAGS_config=
+  AC_CACHE_CHECK(whether --noexecstack is desirable for .S files,
+		 libc_cv_as_noexecstack, [dnl
+  cat > conftest.c <<EOF
+void foo (void) { }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS
+		     -S -o conftest.s conftest.c 1>&AS_MESSAGE_LOG_FD]) \
+     && grep -q .note.GNU-stack conftest.s \
+     && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Wa,--noexecstack
+		       -c -o conftest.o conftest.s 1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_cv_as_noexecstack=yes
+  else
+    libc_cv_as_noexecstack=no
+  fi
+  rm -f conftest*])
+  if test $libc_cv_as_noexecstack = yes; then
+    ASFLAGS_config="$ASFLAGS_config -Wa,--noexecstack"
+  fi
+  AC_SUBST(ASFLAGS_config)
   AC_CACHE_CHECK(for -z combreloc,
 		 libc_cv_z_combreloc, [dnl
   cat > conftest.c <<EOF
