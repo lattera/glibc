@@ -1,3 +1,8 @@
+2002-05-28  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Don't add objects which
+	are not dlopened on the dependency list of a dlopened object.
+
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (add_dependency): It is not necessary to add

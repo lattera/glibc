@@ -254,6 +254,10 @@ _dl_map_object_deps (struct link_map *map,
 		else
 		  dep = args.aux;
 
+		/* Skip those are not dlopened if we are dlopened.  */
+		if (map->l_type == lt_loaded && dep->l_type != lt_loaded)
+		  continue;
+
 		if (! dep->l_reserved)
 		  {
 		    /* Allocate new entry.  */

@@ -158,7 +158,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	 referenced object and don't record the dependencies.  This
 	 means this increment can never be reverted and the object
 	 will never be unloaded.  This is semantically the correct
-	 behaviour.  */
+	 behavior.  */
       if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 	undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
 
