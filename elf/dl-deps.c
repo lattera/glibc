@@ -201,7 +201,8 @@ _dl_map_object_deps (struct link_map *map,
 
       /* Allocate a temporary record to contain the references to the
 	 dependencies of this object.  */
-      if (l->l_searchlist.r_list == NULL && l != map && l->l_ldnum > 0)
+      if (l->l_searchlist.r_list == NULL && l->l_initfini == NULL
+	  && l != map && l->l_ldnum > 0)
 	needed = (struct link_map **) alloca (l->l_ldnum
 					      * sizeof (struct link_map *));
 

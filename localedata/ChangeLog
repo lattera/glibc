@@ -1,3 +1,9 @@
+2000-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1: Rearrange cyrillic and greek sections to
+	separate uppercase from non-uppercase characters to enable correct
+	handling in range expressions.
+
 2000-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (install-locales): Use --prefix option of localedef to

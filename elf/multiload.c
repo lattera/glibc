@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <errno.h>
+#include <mcheck.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +16,8 @@ main (void)
   char *wd;
   char *base;
   char *buf;
+
+  mtrace ();
 
   /* Change to the binary directory.  */
   if (chdir (OBJDIR) != 0)
@@ -67,6 +70,29 @@ main (void)
       puts ("shared object loaded more than once");
       exit (EXIT_FAILURE);
     }
+
+  if (dlclose (a) != 0)
+    {
+      puts ("closing `a' failed");
+      exit (EXIT_FAILURE);
+    }
+  if (dlclose (b) != 0)
+    {
+      puts ("closing `a' failed");
+      exit (EXIT_FAILURE);
+    }
+  if (dlclose (c) != 0)
+    {
+      puts ("closing `a' failed");
+      exit (EXIT_FAILURE);
+    }
+  if (dlclose (d) != 0)
+    {
+      puts ("closing `a' failed");
+      exit (EXIT_FAILURE);
+    }
+
+  free (wd);
 
   return 0;
 }

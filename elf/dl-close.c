@@ -189,10 +189,10 @@ _dl_close (void *_map)
 	  /* Remove the searchlists.  */
 	  if (imap != map)
 	    {
-	    if (imap->l_searchlist.r_list != NULL)
-	      free (imap->l_searchlist.r_list);
-	    else if (imap->l_initfini != NULL)
-	      free (imap->l_initfini);
+	      if (imap->l_searchlist.r_list != NULL)
+		free (imap->l_searchlist.r_list);
+	      else if (imap->l_initfini != NULL)
+		free (imap->l_initfini);
 	    }
 
 	  if (imap->l_phdr_allocated)
