@@ -4,6 +4,7 @@
 	* elf/Versions: Remove _dl_preinit.
 	* elf/dl-preinit.c: Removed.  Move content into...
 	* elf/dl-init.c: ...here.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Remove call to _dl_preinit.
 
 	* sysdeps/generic/bits/shm.h (struct shmid_ds): Correct names of
 	with size of dynamic sectionelements.

@@ -218,27 +218,17 @@ _dl_start_user:\n\
 	movl (%eax), %eax\n\
 	# Pop the original argument count.\n\
 	popl %esi\n\
-	# Subtract _dl_skip_args from it.\n\
-	subl %eax, %esi\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
 	leal (%esp,%eax,4), %esp\n\
-	# Move the argv pointer in a register.\n\
-	leal 4(%esp,%esi,4), %edx\n\
-	movl %esp, %ecx\n\
-	pushl %edx\n\
-	movl %esi, %edx\n\
-	# Get the searchlist of the main object as argument for\n\
-	# _dl_preinit and _dl_init calls below.\n\
-	movl _dl_loaded@GOT(%ebx), %ebp\n\
-	movl (%ebp), %eax\n\
-	# Call the function to run the pre-initializers.\n\
-	call _dl_preinit@PLT\n\
+	# Subtract _dl_skip_args from it.\n\
+	subl %eax, %esi\n\
 	# Load the parameters again.\n\
 	leal 4(%esp,%esi,4), %edx\n\
 	movl %esp, %ecx\n\
 	pushl %edx\n\
 	movl %esi, %edx\n\
-	movl (%ebp), %eax\n\
+	movl _dl_loaded@GOT(%ebx), %eax\n\
+	movl (%eax), %eax\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init@PLT\n\
 	# Push argc back on the stack.\n\
