@@ -1,3 +1,7 @@
+2004-04-15  Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+
+	* sysdeps/mips/dl-machine.h (RTLD_START): Do not use nested .end.
+
 2004-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/Makefile (tests): Add tst-timer3.
