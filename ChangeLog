@@ -1,3 +1,10 @@
+2000-09-06  Andreas Jaeger  <aj@suse.de>
+
+	* soft-fp/Makefile (distribute): Remove ChangeLog.
+
+	* sysdeps/sparc/sparc32/Makefile [$(subdir) = gnulib]:  Use
+	sysdep_routines instead of routines for make dist.
+
 2000-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/libio.h (_IO_fwide_maybe_incompatible): For glibc 2.0
