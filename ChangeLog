@@ -1,3 +1,7 @@
+2005-01-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* dlfcn/dlfcn.c (init): Put it in .init_array section.
+
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
 	[BZ #632]

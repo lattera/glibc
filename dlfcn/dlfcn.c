@@ -23,11 +23,17 @@
 int __dlfcn_argc attribute_hidden;
 char **__dlfcn_argv attribute_hidden;
 
-
-void
-__attribute__ ((constructor))
+#ifdef HAVE_INITFINI_ARRAY
+static void
 init (int argc, char *argv[])
 {
   __dlfcn_argc = argc;
   __dlfcn_argv = argv;
 }
+
+static void (*const init_array []) (int argc, char *argv[])
+     __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
+     __attribute_used__ = { init };
+#else
+# error "Need linker with .init_array support."
+#endif
