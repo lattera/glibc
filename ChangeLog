@@ -1,3 +1,40 @@
+2001-08-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-reloc.c (RESOLVE_MAP, RESOLVE): Use elf_machine_type_class
+	instead of elf_machine_lookup_noexec_p and elf_machine_lookup_noplt_p.
+	Pass type_class to _dl_lookup_*.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Take type_clas parameter now.
+	Pass around just type_class instead of noexec, noplt pair.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_symbol_skip): Pass around just type_class instead of
+	noexec, noplt pair.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	(_dl_do_lookup, _dl_do_lookup_versioned): Likewise.
+	* elf/do-lookup.h (do_lookup): Likewise.
+	* include/link.h (struct link_map): Replace noexec and noplt fields
+	in l_lookup_cache with type_class field.
+	* sysdeps/generic/ldsodefs.h (ELF_RTYPE_CLASS_PLT,
+	ELF_RTYPE_CLASS_COPY): Define.
+	Adjust prototypes for _dl_lookup_symbol and
+	_dl_lookup_versioned_symbol.
+	* sysdeps/alpha/dl-machine.h (elf_machine_lookup_noplt_p,
+	elf_machine_lookup_noexec_p): Remove.
+	(elf_machine_type_class): Define.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+
 2001-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/message.texi (Advanced gettext functions): Change

@@ -264,18 +264,18 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 #define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) \
   __elf_preferred_address (loader, maplength, mapstartpref)
 
-/* Nonzero iff TYPE should not be allowed to resolve to one of
-   the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_lookup_noexec_p(type) ((type) == R_PPC_COPY)
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   of the main executable's symbols, as for a COPY reloc.  */
 /* We never want to use a PLT entry as the destination of a
    reloc, when what is being relocated is a branch. This is
    partly for efficiency, but mostly so we avoid loops.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_PPC_REL24 ||            \
-					  (type) == R_PPC_ADDR24 ||           \
-					  (type) == R_PPC_JMP_SLOT)
+#define elf_machine_type_class(type) \
+  ((((type) == R_PPC_JMP_SLOT				\
+    || (type) == R_PPC_REL24				\
+    || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC_JMP_SLOT

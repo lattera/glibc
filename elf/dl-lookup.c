@@ -175,14 +175,14 @@ internal_function
 _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       const ElfW(Sym) *ref, struct sym_val *result,
 	       struct r_scope_elem *scope, size_t i,
-	       struct link_map *skip, int noexec, int noplt);
+	       struct link_map *skip, int type_class);
 static int
 internal_function
 _dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
 			 const ElfW(Sym) *ref, struct sym_val *result,
 			 struct r_scope_elem *scope, size_t i,
 			 const struct r_found_version *const version,
-			 struct link_map *skip, int noexec, int noplt);
+			 struct link_map *skip, int type_class);
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
@@ -192,21 +192,19 @@ lookup_t
 internal_function
 _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		   int reloc_type, int explicit)
+		   int type_class, int explicit)
 {
   unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
   int protected;
-  int noexec = elf_machine_lookup_noexec_p (reloc_type);
-  int noplt = elf_machine_lookup_noplt_p (reloc_type);
 
   ++_dl_num_relocations;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, NULL,
-		   noexec, noplt))
+		   type_class))
       {
 	/* We have to check whether this would bind UNDEF_MAP to an object
 	   in the global scope which was dynamically loaded.  In this case
@@ -223,7 +221,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	  /* Something went wrong.  Perhaps the object we tried to reference
 	     was just removed.  Try finding another definition.  */
 	  return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
-				    reloc_type, 0);
+				    type_class, 0);
 
 	break;
       }
@@ -270,7 +268,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
       for (scope = symbol_scope; *scope; ++scope)
 	if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			   0, NULL, 0, 1))
+			   0, NULL, ELF_RTYPE_CLASS_PLT))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -311,10 +309,10 @@ _dl_lookup_symbol_skip (const char *undef_name,
     assert (i < (*scope)->r_nlist);
 
   if (! _dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
-		       skip_map, 0, 0))
+		       skip_map, 0))
     while (*++scope)
       if (_dl_do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
-			 skip_map, 0, 0))
+			 skip_map, 0))
 	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
@@ -346,10 +344,10 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
       if (i >= (*scope)->r_nlist
 	  || !_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     i, skip_map, 0, 1))
+			     i, skip_map, ELF_RTYPE_CLASS_PLT))
 	while (*++scope)
 	  if (_dl_do_lookup (undef_name, hash, *ref, &protected_value, *scope,
-			     0, skip_map, 0, 1))
+			     0, skip_map, ELF_RTYPE_CLASS_PLT))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -374,14 +372,12 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			     struct link_map *undef_map, const ElfW(Sym) **ref,
 			     struct r_scope_elem *symbol_scope[],
 			     const struct r_found_version *version,
-			     int reloc_type, int explicit)
+			     int type_class, int explicit)
 {
   unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
   int protected;
-  int noexec = elf_machine_lookup_noexec_p (reloc_type);
-  int noplt = elf_machine_lookup_noplt_p (reloc_type);
 
   ++_dl_num_relocations;
 
@@ -389,7 +385,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   for (scope = symbol_scope; *scope; ++scope)
     {
       int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				     *scope, 0, version, NULL, noexec, noplt);
+				     *scope, 0, version, NULL, type_class);
       if (res > 0)
 	{
 	  /* We have to check whether this would bind UNDEF_MAP to an object
@@ -408,7 +404,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	       was just removed.  Try finding another definition.  */
 	    return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
 						symbol_scope, version,
-						reloc_type, 0);
+						type_class, 0);
 
 	  break;
 	}
@@ -482,7 +478,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 
       for (scope = symbol_scope; *scope; ++scope)
 	if (_dl_do_lookup_versioned (undef_name, hash, *ref, &protected_value,
-				     *scope, 0, version, NULL, 0, 1))
+				     *scope, 0, version, NULL,
+				     ELF_RTYPE_CLASS_PLT))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -522,10 +519,10 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
     assert (i < (*scope)->r_nlist);
 
   if (! _dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				 *scope, i, version, skip_map, 0, 0))
+				 *scope, i, version, skip_map, 0))
     while (*++scope)
       if (_dl_do_lookup_versioned (undef_name, hash, *ref, &current_value,
-				   *scope, 0, version, skip_map, 0, 0))
+				   *scope, 0, version, skip_map, 0))
 	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
@@ -571,11 +568,11 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       if (i >= (*scope)->r_nlist
 	  || !_dl_do_lookup_versioned (undef_name, hash, *ref,
 				       &protected_value, *scope, i, version,
-				       skip_map, 0, 1))
+				       skip_map, ELF_RTYPE_CLASS_PLT))
 	while (*++scope)
 	  if (_dl_do_lookup_versioned (undef_name, hash, *ref,
 				       &protected_value, *scope, 0, version,
-				       skip_map, 0, 1))
+				       skip_map, ELF_RTYPE_CLASS_PLT))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -616,10 +613,10 @@ internal_function
 _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       const ElfW(Sym) *ref, struct sym_val *result,
 	       struct r_scope_elem *scope, size_t i,
-	       struct link_map *skip, int noexec, int noplt)
+	       struct link_map *skip, int type_class)
 {
-  return do_lookup (undef_name, hash, ref, result, scope, i, skip, noexec,
-		    noplt);
+  return do_lookup (undef_name, hash, ref, result, scope, i, skip,
+		    type_class);
 }
 
 static int
@@ -628,8 +625,8 @@ _dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
 			 const ElfW(Sym) *ref, struct sym_val *result,
 			 struct r_scope_elem *scope, size_t i,
 			 const struct r_found_version *const version,
-			 struct link_map *skip, int noexec, int noplt)
+			 struct link_map *skip, int type_class)
 {
   return do_lookup_versioned (undef_name, hash, ref, result, scope, i,
-			      version, skip, noexec, noplt);
+			      version, skip, type_class);
 }

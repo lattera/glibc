@@ -31,7 +31,7 @@
 static inline int
 FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
      struct sym_val *result, struct r_scope_elem *scope, size_t i, ARG
-     struct link_map *skip, int noexec, int noplt)
+     struct link_map *skip, int type_class)
 {
   struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
@@ -56,7 +56,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	continue;
 
       /* Don't search the executable when resolving a copy reloc.  */
-      if (noexec && map->l_type == lt_executable)
+      if ((type_class & ELF_RTYPE_CLASS_COPY) && map->l_type == lt_executable)
 	continue;
 
       /* Print some debugging info if wanted.  */
@@ -76,8 +76,11 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	{
 	  sym = &symtab[symidx];
 
+	  assert (ELF_RTYPE_CLASS_PLT == 1);
 	  if (sym->st_value == 0 || /* No value.  */
-	      (noplt && sym->st_shndx == SHN_UNDEF))
+	      /* ((type_class & ELF_RTYPE_CLASS_PLT)
+		  && (sym->st_shndx == SHN_UNDEF)) */
+	      (type_class & (sym->st_shndx == SHN_UNDEF)))
 	    continue;
 
 	  if (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC)

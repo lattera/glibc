@@ -88,6 +88,13 @@ typedef ElfW(Addr) lookup_t;
 # define DL_STATIC_INIT(map)
 #endif
 
+/* Reloc type classes as returned by elf_machine_type_class().
+   ELF_RTYPE_CLASS_PLT means this reloc should not be satisfied by
+   some PLT symbol, ELF_RTYPE_CLASS_COPY means this reloc should not be
+   satisfied by any symbol in the executable.  */
+#define ELF_RTYPE_CLASS_PLT 1
+#define ELF_RTYPE_CLASS_COPY 2
+
 /* For the version handling we need an array with only names and their
    hash values.  */
 struct r_found_version
@@ -336,14 +343,12 @@ extern void _dl_setup_hash (struct link_map *map) internal_function;
    l_searchlist (i.e. the segment of the dependency tree starting at that
    object) is searched in turn.  REFERENCE_NAME should name the object
    containing the reference; it is used in error messages.
-   RELOC_TYPE is a machine-dependent reloc type, which is passed to
-   the `elf_machine_lookup_*_p' macros in dl-machine.h to affect which
-   symbols can be chosen.  */
+   TYPE_CLASS describes the type of symbol we are looking for.  */
 extern lookup_t _dl_lookup_symbol (const char *undef,
 				   struct link_map *undef_map,
 				   const ElfW(Sym) **sym,
 				   struct r_scope_elem *symbol_scope[],
-				   int reloc_type, int explicit)
+				   int type_class, int explicit)
      internal_function;
 
 /* Lookup versioned symbol.  */
@@ -352,7 +357,7 @@ extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
 					     const ElfW(Sym) **sym,
 					     struct r_scope_elem *symbol_scope[],
 					     const struct r_found_version *version,
-					     int reloc_type, int explicit)
+					     int type_class, int explicit)
      internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */

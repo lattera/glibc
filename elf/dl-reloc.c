@@ -75,45 +75,43 @@ cannot make segment writable for relocation"));
     const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
-#define RESOLVE_MAP(ref, version, flags) \
+#define RESOLVE_MAP(ref, version, r_type) \
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
-	 && elf_machine_lookup_noexec_p (flags) == l->l_lookup_cache.noexec   \
-	 && elf_machine_lookup_noplt_p (flags) == l->l_lookup_cache.noplt)    \
+	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
 	? (++_dl_num_cache_relocations,					      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
 	   l->l_lookup_cache.value)					      \
 	: ({ lookup_t _lr;						      \
+	     int _tc = elf_machine_type_class (r_type);			      \
+	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
-	     l->l_lookup_cache.noexec = elf_machine_lookup_noexec_p (flags);  \
-	     l->l_lookup_cache.noplt = elf_machine_lookup_noplt_p (flags);    \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
 		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
 						   l, (ref), scope,	      \
-						   (version), (flags), 0)     \
+						   (version), _tc, 0)	      \
 		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, (flags), 0));		      \
+					 scope, _tc, 0));		      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
-#define RESOLVE(ref, version, flags) \
+#define RESOLVE(ref, version, r_type) \
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
-	 && elf_machine_lookup_noexec_p (flags) == l->l_lookup_cache.noexec   \
-	 && elf_machine_lookup_noplt_p (flags) == l->l_lookup_cache.noplt)    \
+	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
 	? (++_dl_num_cache_relocations,					      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
 	   l->l_lookup_cache.value)					      \
 	: ({ lookup_t _lr;						      \
+	     int _tc = elf_machine_type_class (r_type);			      \
+	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
-	     l->l_lookup_cache.noexec = elf_machine_lookup_noexec_p (flags);  \
-	     l->l_lookup_cache.noplt = elf_machine_lookup_noplt_p (flags);    \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
 		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
 						   l, (ref), scope,	      \
-						   (version), (flags), 0)     \
+						   (version), _tc, 0)	      \
 		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
-					 scope, (flags), 0));		      \
+					 scope, _tc, 0));		      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)

@@ -247,13 +247,13 @@ _dl_start_user:\n\
 #define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
-/* Nonzero iff TYPE should not be allowed to resolve to one of
-   the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_lookup_noexec_p(type) ((type) == R_386_COPY)
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_386_JMP_SLOT)
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   of the main executable's symbols, as for a COPY reloc.  */
+#define elf_machine_type_class(type) \
+  ((((type) == R_386_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_386_JMP_SLOT
@@ -371,8 +371,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 						   refsym->st_size));
 	  break;
 	default:
-	  /* We add these checks in the version to relocate ld.so only
-	     if we are still debugging.  */
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 	}

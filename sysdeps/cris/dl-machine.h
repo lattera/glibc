@@ -228,13 +228,13 @@ _dl_start_user:
 	.size _dl_start_user, . - _dl_start_user
 	.previous");
 
-/* Nonzero iff TYPE describes a relocation that should
-   skip the executable when looking up the symbol value.  */
-#define elf_machine_lookup_noexec_p(type) ((type) == R_CRIS_COPY)
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_CRIS_JUMP_SLOT)
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   of the main executable's symbols, as for a COPY reloc.  */
+#define elf_machine_type_class(type) \
+  ((((type) == R_CRIS_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_CRIS_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_CRIS_JUMP_SLOT

@@ -177,13 +177,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   TRAMPOLINE_TEMPLATE (_dl_runtime_profile, fixup);
 #endif
 
-/* Nonzero iff TYPE should not be allowed to resolve to one of
-   the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_lookup_noexec_p(type) ((type) == R_SPARC_COPY)
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_SPARC_JMP_SLOT)
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   of the main executable's symbols, as for a COPY reloc.  */
+#define elf_machine_type_class(type) \
+  ((((type) == R_SPARC_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_SPARC_JMP_SLOT

@@ -236,8 +236,7 @@ struct link_map
     struct
     {
       const ElfW(Sym) *sym;
-      int noexec;
-      int noplt;
+      int type_class;
 #ifdef DL_LOOKUP_RETURNS_MAP
       struct link_map *value;
 #else

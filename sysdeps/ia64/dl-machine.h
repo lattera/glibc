@@ -434,14 +434,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.
+   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
+   of the main executable's symbols, as for a COPY reloc, which we don't
+   use.  */
 /* ??? Ignore IPLTMSB for now.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_IA64_IPLTLSB)
-
-/* Nonzero iff TYPE should not be allowed to resolve to one of
-   the main executable's symbols, as for a COPY reloc, which we don't use.  */
-#define elf_machine_lookup_noexec_p(type)  (0)
+#define elf_machine_type_class(type) \
+  (((type) == R_IA64_IPLTLSB) * ELF_RTYPE_CLASS_PLT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	 R_IA64_IPLTLSB
