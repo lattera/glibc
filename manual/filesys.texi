@@ -1138,7 +1138,7 @@ call @code{readlink} again.  Here is an example:
 
 @smallexample
 char *
-readlink_malloc (char *filename)
+readlink_malloc (const char *filename)
 @{
   int size = 100;
 
@@ -1146,6 +1146,8 @@ readlink_malloc (char *filename)
     @{
       char *buffer = (char *) xmalloc (size);
       int nchars = readlink (filename, buffer, size);
+      if (nchars < 0)
+        return NULL;
       if (nchars < size)
         return buffer;
       free (buffer);
