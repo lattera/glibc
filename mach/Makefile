@@ -109,7 +109,7 @@ endif
 
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
 migdefines += $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
-mach/mach_interface.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
+mach/mach_interface.uh mach/mach_host.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
 $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: shortcut.awk \
@@ -123,6 +123,7 @@ endif	# mach-shortcuts
 # Generate mach-shortcuts.h, which will contain the prototypes for the
 # shortcutted kernel RPC functions.
 $(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
+			   $(objpfx)mach/mach_host.h \
 			   $(objpfx)mach/mach_port.h
 # The first line gets us one paragraph per line, with @s separating real lines.
 # The second line selects paragraphs for the shortcutted functions.

@@ -74,6 +74,8 @@ typedef struct
     unsigned long int fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
   } __fd_set;
 
+typedef unsigned long __fd_mask;
+
 /* This line MUST be split!  Otherwise m4 will not change it.  */
 #define	__FD_ZERO(set)	\
   ((void) memset ((__ptr_t) (set), 0, sizeof (fd_set)))
