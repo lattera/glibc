@@ -1,5 +1,14 @@
 2002-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* ctype/ctype.h: Undo the patch before the last one.  Put back the
+	macro definitions for the standard functions to access the
+	classification and mapping arrays.
+	* include/ctype.h: Partly revert last patch.  Move the macro
+	definitions for the exported functions back to the public header.
+	#undef all the macros defined here before redefining.
+	* ctype/ctype-info.c: Revert last patch.
+	* locale/lc-ctype.c: Revert last patch.
+
 	* ctype/Makefile (routines): Add isctype.
 	* ctype/Versions (libc): Export isctype and __isctype for GLIBC_2.3.
 	* ctype/ctype.h: Add declaration of isctype.
