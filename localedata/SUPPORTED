@@ -2,7 +2,12 @@
 # If you have any additions please use the glibcbug script to send an
 # appropriate message.
 SUPPORTED-LOCALES=\
+aa_DJ/ISO-8859-1 \
+aa_ER/UTF-8 \
+aa_ER@saaho/UTF-8 \
+aa_ET/UTF-8 \
 af_ZA/ISO-8859-1 \
+am_ET/UTF-8 \
 an_ES/ISO-8859-15 \
 ar_AE/ISO-8859-6 \
 ar_BH/ISO-8859-6 \
@@ -26,6 +31,7 @@ be_BY/CP1251 \
 bg_BG/CP1251 \
 br_FR/ISO-8859-1 \
 bs_BA/ISO-8859-2 \
+byn_ER/UTF-8 \
 ca_ES/ISO-8859-1 \
 ca_ES@euro/ISO-8859-15 \
 cs_CZ/ISO-8859-2 \
@@ -94,6 +100,11 @@ fr_LU/ISO-8859-1 \
 fr_LU@euro/ISO-8859-15 \
 ga_IE/ISO-8859-1 \
 ga_IE@euro/ISO-8859-15 \
+gd_GB/ISO-8859-15 \
+gez_ER/UTF-8 \
+gez_ER@abegede/UTF-8 \
+gez_ET/UTF-8 \
+gez_ET@abegede/UTF-8 \
 gl_ES/ISO-8859-1 \
 gl_ES@euro/ISO-8859-15 \
 gv_GB/ISO-8859-1 \
@@ -115,9 +126,12 @@ ko_KR.UTF-8/UTF-8 \
 kw_GB/ISO-8859-1 \
 lo_LA/UTF-8 \
 lt_LT/ISO-8859-13 \
+lug_UG/ISO-8859-10 \
 lv_LV/ISO-8859-13 \
 mi_NZ/ISO-8859-13 \
 mk_MK/ISO-8859-5 \
+ml_IN/UTF-8 \
+mn_MN/UTF-8 \
 mr_IN/UTF-8 \
 ms_MY/ISO-8859-1 \
 mt_MT/ISO-8859-3 \
@@ -128,6 +142,8 @@ nl_NL@euro/ISO-8859-15 \
 nn_NO/ISO-8859-1 \
 no_NO/ISO-8859-1 \
 oc_FR/ISO-8859-1 \
+om_ET/UTF-8 \
+om_KE/ISO-8859-1 \
 pl_PL/ISO-8859-2 \
 pt_BR/ISO-8859-1 \
 pt_PT/ISO-8859-1 \
@@ -137,11 +153,17 @@ ru_RU/ISO-8859-5 \
 ru_RU.KOI8-R/KOI8-R \
 ru_UA/KOI8-U \
 se_NO/UTF-8 \
+sid_ET/UTF-8 \
 sk_SK/ISO-8859-2 \
 sl_SI/ISO-8859-2 \
+so_DJ/ISO-8859-1 \
+so_ET/UTF-8 \
+so_KE/ISO-8859-1 \
+so_SO/ISO-8859-1 \
 sq_AL/ISO-8859-1 \
 sr_YU/ISO-8859-2 \
 sr_YU@cyrillic/ISO-8859-5 \
+st_ZA/ISO-8859-1 \
 sv_FI/ISO-8859-1 \
 sv_FI@euro/ISO-8859-15 \
 sv_SE/ISO-8859-1 \
@@ -149,6 +171,9 @@ ta_IN/UTF-8 \
 te_IN/UTF-8 \
 tg_TJ/KOI8-T \
 th_TH/TIS-620 \
+ti_ER/UTF-8 \
+ti_ET/UTF-8 \
+tig_ER/UTF-8 \
 tl_PH/ISO-8859-1 \
 tr_TR/ISO-8859-9 \
 uk_UA/KOI8-U \
@@ -159,6 +184,7 @@ vi_VN/UTF-8 \
 vi_VN.TCVN/TCVN5712-1 \
 wa_BE/ISO-8859-1 \
 wa_BE@euro/ISO-8859-15 \
+xh_ZA/ISO-8859-1 \
 yi_US/CP1255 \
 zh_CN/GB2312 \
 zh_CN.GB18030/GB18030 \
@@ -166,3 +192,4 @@ zh_CN.GBK/GBK \
 zh_HK/BIG5-HKSCS \
 zh_TW/BIG5 \
 zh_TW.EUC-TW/EUC-TW \
+zu_ZA/ISO-8859-1 \

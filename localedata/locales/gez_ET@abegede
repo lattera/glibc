@@ -55,7 +55,7 @@ END LC_IDENTIFICATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_COLLATE
-copy "gez_ER-Abegede"
+copy "gez_ER@abegede"
 END LC_COLLATE
 
 

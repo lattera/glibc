@@ -1,5 +1,9 @@
 2003-11-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add more support locales.
+
+2003-11-03  Ulrich Drepper  <drepper@redhat.com>
+
 	* locales/aa_DJ: New file.
 	* locales/aa_ER: New file.
 	* locales/aa_ER@saaho: New file.
