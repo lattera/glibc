@@ -10,6 +10,16 @@
 
 2000-08-23  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/i386/sys/io.h (_EXTERN_INLINE): Remove.
+	Use static __inline instead of _EXTERN_INLINE.
+
+	* misc/sys/select.h: Move prototypes of __select from here ...
+	* include/sys/select.h: ... to here.
+
+	* socket/sys/socket.h: Move prototypes of __send and __connect
+	from here....
+	* include/sys/socket.h: ... to here.
+
 	* locale/programs/ld-ctype.c (ctype_read): Fix parameter for
 	lr_error.
 
