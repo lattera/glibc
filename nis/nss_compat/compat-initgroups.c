@@ -327,17 +327,25 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
 	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
-	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	  if (p == NULL || __builtin_expect (buffer[buflen - 1] != '\xff', 0))
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -353,13 +361,9 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	     !(parse_res = _nss_files_parse_grent (p, &grpbuf, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      if (__builtin_expect (parse_res == -1, 0))
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       if (grpbuf.gr_name[0] != '+' && grpbuf.gr_name[0] != '-')
 	/* This is a real entry.  */

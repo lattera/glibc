@@ -83,7 +83,7 @@ enum
 
 
 /* Read-write lock types.  */
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 enum
 {
   PTHREAD_RWLOCK_PREFER_READER_NP,
@@ -91,21 +91,21 @@ enum
   PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
 };
-#endif  /* Unix98 */
 
 /* Read-write lock initializers.  */
-#define PTHREAD_RWLOCK_INITIALIZER \
+# define PTHREAD_RWLOCK_INITIALIZER \
   { }
-#ifdef __USE_GNU
-# if __WORDSIZE == 64
-#  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+# ifdef __USE_GNU
+#  if __WORDSIZE == 64
+#   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
   { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,					      \
       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
-# else
-#  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
+#  else
+#   define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
   { { 0, 0, 0, 0, 0, 0, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP } }
+#  endif
 # endif
-#endif
+#endif  /* Unix98 or XOpen2K */
 
 
 /* Scheduler inheritance.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -253,17 +253,25 @@ getgrent_next_file (struct group *result, ent_t *ent,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
 	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
-	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	  if (p == NULL || __builtin_expect (buffer[buflen - 1] != '\xff', 0))
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -279,13 +287,9 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      if (__builtin_expect (parse_res == -1, 0))
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
 	/* This is a real entry.  */
@@ -315,17 +319,15 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  blacklist_store_name (buf, ent);
 	  if (status == NSS_STATUS_SUCCESS)	/* We found the entry. */
 	    break;
-	  else if (status == NSS_STATUS_RETURN	/* We couldn't parse the entry */
+	  else if (status == NSS_STATUS_RETURN /* We couldn't parse the entry*/
 		   || status == NSS_STATUS_NOTFOUND)	/* No group in NIS */
 	    continue;
 	  else
 	    {
 	      if (status == NSS_STATUS_TRYAGAIN)
-		{
-		  /* The parser ran out of space.  */
-		  fsetpos (ent->stream, &pos);
-		  *errnop = ERANGE;
-		}
+		/* The parser ran out of space.  */
+		goto erange_reset;
+
 	      return status;
 	    }
 	}
@@ -384,17 +386,25 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
 	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
-	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	  if (p == NULL || __builtin_expect (buffer[buflen - 1] != '\xff', 0))
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -410,13 +420,9 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      if (__builtin_expect (parse_res == -1, 0))
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       /* This is a real entry.  */
       if (result->gr_name[0] != '+' && result->gr_name[0] != '-')
@@ -511,17 +517,25 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
 	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
-	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	  if (p == NULL || __builtin_expect (buffer[buflen - 1] != '\xff', 0))
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
 	  /* Terminate the line for any case.  */
@@ -538,12 +552,8 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 						   errnop)));
 
       if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       /* This is a real entry.  */
       if (result->gr_name[0] != '+' && result->gr_name[0] != '-')

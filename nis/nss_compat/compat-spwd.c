@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -451,17 +451,25 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
 	  if (p == NULL && feof_unlocked (ent->stream))
 	    return NSS_STATUS_NOTFOUND;
 
-	  if (p == NULL || buffer[buflen - 1] != '\xff')
+	  if (p == NULL || __builtin_expect (buffer[buflen - 1] != '\xff', 0))
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
 	  /* Skip leading blanks.  */
@@ -474,13 +482,9 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	     || !(parse_res = _nss_files_parse_spent (p, result, data,
 						      buflen, errnop)));
 
-      if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      if (__builtin_expect (parse_res == -1, 0))
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       if (result->sp_namp[0] != '+' && result->sp_namp[0] != '-')
 	/* This is a real entry.  */
@@ -645,6 +649,14 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 
       do
 	{
+	  /* We need at least 3 characters for one line.  */
+	  if (__builtin_expect (buflen < 3, 0))
+	    {
+	    erange:
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
 	  fgetpos (ent->stream, &pos);
 	  buffer[buflen - 1] = '\xff';
 	  p = fgets_unlocked (buffer, buflen, ent->stream);
@@ -653,9 +665,9 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 
 	  if (p == NULL || buffer[buflen - 1] != '\xff')
 	    {
+	    erange_reset:
 	      fsetpos (ent->stream, &pos);
-	      *errnop = ERANGE;
-	      return NSS_STATUS_TRYAGAIN;
+	      goto erange;
 	    }
 
           /* Terminate the line for any case.  */
@@ -671,13 +683,9 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	     !(parse_res = _nss_files_parse_spent (p, result, data, buflen,
 						   errnop)));
 
-      if (parse_res == -1)
-	{
-	  /* The parser ran out of space.  */
-	  fsetpos (ent->stream, &pos);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      if (__builtin_expect (parse_res == -1, 0))
+	/* The parser ran out of space.  */
+	goto erange_reset;
 
       /* This is a real entry.  */
       if (result->sp_namp[0] != '+' && result->sp_namp[0] != '-')
