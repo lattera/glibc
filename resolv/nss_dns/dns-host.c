@@ -284,6 +284,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
       break;
     default:
       /* Cannot happen.  */
+      break;
     }
 
   n = res_nquery (&_res, qbuf, C_IN, T_PTR, (u_char *)host_buffer.buf,

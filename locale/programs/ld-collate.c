@@ -1634,6 +1634,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	    (*eptr)->mblast = runp;
 	  *eptr = runp;
 	dont_insert:
+	  ;
 	}
 
       if (runp->used_in_level)
@@ -1734,6 +1735,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  if (eptr == &e)
 	    wchead_table_add (&collate->wcheads, runp->wcs[0], e);
 	dont_insertwc:
+	  ;
 	}
 
       /* Up to the next entry.  */

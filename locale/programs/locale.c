@@ -633,6 +633,8 @@ show_info (const char *name)
 	  /* We don't print wide character information since the same
 	     information is available in a multibyte string.  */
 	default:
+	  break;
+	  
 	}
     }
 
