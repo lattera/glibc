@@ -1,0 +1,23 @@
+#include <locale.h>
+#include <nl_types.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int
+main (void)
+{
+  nl_catd catalog;
+  setlocale (LC_ALL, "");
+
+  printf ("LC_MESSAGES = %s\n", setlocale (LC_MESSAGES, NULL));
+
+  catalog = catopen ("sample", NL_CAT_LOCALE);
+  printf ("%s\n", catgets(catalog, 1, 1, "sample 1"));
+  printf ("%s\n", catgets(catalog, 1, 2, "sample 2"));
+  printf ("%s\n", catgets(catalog, 1, 3, "sample 3"));
+  printf ("%s\n", catgets(catalog, 1, 4, "sample 4"));
+  printf ("%s\n", catgets(catalog, 1, 5, "sample 5"));
+  catclose (catalog);
+
+  return 0;
+}

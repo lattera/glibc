@@ -22,13 +22,15 @@
 subdir	:= catgets
 
 headers		= nl_types.h
-distribute	= catgetsinfo.h config.h xopen-msg.sed test1.msg
+distribute	= catgetsinfo.h config.h xopen-msg.sed test1.msg \
+		  test-gencat.sh sample.SJIS
 routines	= catgets open_catalog
 others		= gencat
 install-bin	= gencat
 extra-objs	= $(gencat-modules:=.o)
 
 tests = tst-catgets
+test-srcs = test-gencat
 
 gencat-modules	= xmalloc
 
@@ -49,7 +51,7 @@ generated-dirs = de
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 
 ifneq ($(cross-compiling),yes)
-tests: $(objpfx)de/libc.cat $(objpfx)test1.cat
+tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test-gencat.out
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
@@ -65,4 +67,12 @@ $(objpfx)tst-catgets.out: $(objpfx)de/libc.cat
 # Generate a non-simple input file.
 $(objpfx)de.msg: $(..)po/de.po
 	sed -f xopen-msg.sed $< > $@
+
+$(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
+			  $(objpfx)sample.SJIS.cat
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
+
+$(objpfx)sample.SJIS.cat: sample.SJIS $(objpfx)gencat
+	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+	$(built-program-cmd) < $(word 1,$^) > $@
 endif
