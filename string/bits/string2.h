@@ -178,10 +178,12 @@ __STRING2_COPY_TYPE (8);
 									      \
      __s; })
 # else
-#  define memset(s, c, n) \
+#  if ! __GNUC_PREREQ (3, 0)
+#   define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
 		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		  : memset (s, c, n)))
+#  endif
 # endif
 
 /* GCC optimizes memset(s, 0, n) but not bzero(s, n).

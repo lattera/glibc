@@ -708,25 +708,29 @@ static const cvlist_t conversion_lists[4] =
 	  }								      \
 	else if (set2 == ISO88597_set)					      \
 	  {								      \
-	    const struct gap *rp = from_idx;				      \
-									      \
-	    while (ch > rp->end)					      \
-	      ++rp;							      \
-	    if (ch >= rp->start)					      \
+	    if (__builtin_expect (ch < 0xffff, 1))			      \
 	      {								      \
-		unsigned char res = iso88597_from_ucs4[ch - 0xa0 + rp->idx];  \
-		if (res != '\0')					      \
-		  {							      \
-		    if (__builtin_expect (outptr + 3 > outend, 0))	      \
-		      {							      \
-			result = __GCONV_FULL_OUTPUT;			      \
-			break;						      \
-		      }							      \
+		const struct gap *rp = from_idx;			      \
 									      \
-		    *outptr++ = ESC;					      \
-		    *outptr++ = 'N';					      \
-		    *outptr++ = res;					      \
-		    written = 3;					      \
+		while (ch > rp->end)					      \
+		  ++rp;							      \
+		if (ch >= rp->start)					      \
+		  {							      \
+		    unsigned char res =					      \
+		      iso88597_from_ucs4[ch - 0xa0 + rp->idx];		      \
+		    if (res != '\0')					      \
+		      {							      \
+			if (__builtin_expect (outptr + 3 > outend, 0))	      \
+			  {						      \
+			    result = __GCONV_FULL_OUTPUT;		      \
+			    break;					      \
+			  }						      \
+									      \
+			*outptr++ = ESC;				      \
+			*outptr++ = 'N';				      \
+			*outptr++ = res;				      \
+			written = 3;					      \
+		      }							      \
 		  }							      \
 	      }								      \
 	  }								      \
@@ -817,43 +821,45 @@ static const cvlist_t conversion_lists[4] =
 		    }							      \
 									      \
 		  /* Try ISO 8859-7 upper half.  */			      \
-		  {							      \
-		    const struct gap *rp = from_idx;			      \
+		  if (__builtin_expect (ch < 0xffff, 1))		      \
+		    {							      \
+		      const struct gap *rp = from_idx;			      \
 									      \
-		    while (ch > rp->end)				      \
-		      ++rp;						      \
-		    if (ch >= rp->start)				      \
-		      {							      \
-			unsigned char res =				      \
-			  iso88597_from_ucs4[ch - 0xa0 + rp->idx];	      \
-			if (res != '\0')				      \
-			  {						      \
-			    if (set2 != ISO88597_set)			      \
-			      {						      \
-				if (__builtin_expect (outptr + 3 > outend, 0))\
-				  {					      \
-				    result = __GCONV_FULL_OUTPUT;	      \
-				    break;				      \
-				  }					      \
-				*outptr++ = ESC;			      \
-				*outptr++ = '.';			      \
-				*outptr++ = 'F';			      \
-				set2 = ISO88597_set;			      \
-			      }						      \
+		      while (ch > rp->end)				      \
+			++rp;						      \
+		      if (ch >= rp->start)				      \
+			{						      \
+			  unsigned char res =				      \
+			    iso88597_from_ucs4[ch - 0xa0 + rp->idx];	      \
+			  if (res != '\0')				      \
+			    {						      \
+			      if (set2 != ISO88597_set)			      \
+				{					      \
+				  if (__builtin_expect (outptr + 3 > outend,  \
+							0))		      \
+				    {					      \
+				      result = __GCONV_FULL_OUTPUT;	      \
+				      break;				      \
+				    }					      \
+				  *outptr++ = ESC;			      \
+				  *outptr++ = '.';			      \
+				  *outptr++ = 'F';			      \
+				  set2 = ISO88597_set;			      \
+				}					      \
 									      \
-			    if (__builtin_expect (outptr + 3 > outend, 0))    \
-			      {						      \
-				result = __GCONV_FULL_OUTPUT;		      \
-				break;					      \
-			      }						      \
-			    *outptr++ = ESC;				      \
-			    *outptr++ = 'N';				      \
-			    *outptr++ = res;				      \
-			    result = __GCONV_OK;			      \
-			    break;					      \
-			  }						      \
-		      }							      \
-		  }							      \
+			      if (__builtin_expect (outptr + 3 > outend, 0))  \
+				{					      \
+				  result = __GCONV_FULL_OUTPUT;		      \
+				  break;				      \
+				}					      \
+			      *outptr++ = ESC;				      \
+			      *outptr++ = 'N';				      \
+			      *outptr++ = res;				      \
+			      result = __GCONV_OK;			      \
+			      break;					      \
+			    }						      \
+			}						      \
+		    }							      \
 									      \
 		  break;						      \
 									      \

@@ -860,7 +860,7 @@ else
   static_nss=no
 fi
 
-if test x"$static_nss" = xyes; then
+if test x"$static_nss" = xyes || test x"$shared" = xno; then
   cat >> confdefs.h <<\EOF
 #define DO_STATIC_NSS 1
 EOF
