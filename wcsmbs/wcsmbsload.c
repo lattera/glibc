@@ -144,7 +144,7 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
   /* Acquire the lock.  */
   __libc_lock_lock (lock);
 
-  /* We should repest the test since while we waited some other thread
+  /* We should repeat the test since while we waited some other thread
      might have run this function.  */
   if (__wcsmbs_last_locale != new_category)
     {

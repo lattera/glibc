@@ -1,5 +1,5 @@
 /* setjmp for i386, ELF version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,10 @@ ENTRY (setjmp)
 	pushl $1		/* Push second argument of zero.  */
 	pushl %ecx		/* Push back first argument.  */
 	pushl %eax		/* Push back return PC.  */
-	jmp __sigsetjmp
+	/* Note that we have to use a non-exported symbol in the next
+	   jump since otherwise gas will emit it as a jump through the
+	   PLT which is what we cannot use here.  */
+	jmp .Linternal_sigsetjmp
 END (setjmp)
 
 	/* Binary compatibility entry point.  */
@@ -45,6 +48,7 @@ ENTRY (__setjmp)
 	pushl %eax		/* Push back return address.  */
 
 ENTRY (__sigsetjmp)
+.Linternal_sigsetjmp = __sigsetjmp
 	movl 4(%esp), %eax	/* User's jmp_buf in %eax.  */
      	/* Save registers.  */
 	movl %ebx, (JB_BX*4)(%eax)
