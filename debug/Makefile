@@ -24,17 +24,20 @@ subdir	:= debug
 headers	:= execinfo.h
 distribute = sigcontextinfo.h register-dump.h
 
-routines := backtrace backtracesyms backtracesymsfd
+routines := backtrace backtracesyms backtracesymsfd noophooks
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 
 tests = backtrace-tst
 
-extra-libs = libSegFault
+extra-libs = libSegFault libpcprofile
 extra-libs-others = $(extra-libs)
 
 libSegFault-routines = segfault
 libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+libpcprofile-routines = pcprofile
+libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 include ../Makeconfig
 
@@ -58,3 +61,4 @@ $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libSegFault.so: $(common-objpfx)libc.so $(common-objpfx)elf/ld.so
+$(objpfx)libpcprofile.so: $(common-objpfx)libc.so $(common-objpfx)elf/ld.so

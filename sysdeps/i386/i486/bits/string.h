@@ -230,54 +230,54 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
        {								      \
        case 15:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 11:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 7:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 3:								      \
 	 __u->__usi = (unsigned short int) __c;				      \
-	 __u = (void *) __u + 2;					      \
+	 __u = __extension__ ((void *) __u + 2);			      \
 	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 14:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 10:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 6:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 2:								      \
 	 __u->__usi = (unsigned short int) __c;				      \
 	 break;								      \
 									      \
        case 13:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 9:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 5:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 1:								      \
 	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 16:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 12:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 8:								      \
 	 __u->__ui = __c;						      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 4:								      \
 	 __u->__ui = __c;						      \
        case 0:								      \
@@ -529,7 +529,7 @@ __strlen_g (__const char *__str)
 			break;						      \
 		      case 3:						      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
-			__u = (void *) __u + 2;				      \
+			__u = __extension__ ((void *) __u + 2);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 4:						      \
@@ -537,24 +537,24 @@ __strlen_g (__const char *__str)
 			break;						      \
 		      case 5:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 6:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
 			break;						      \
 		      case 7:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
-			__u = (void *) __u + 2;				      \
+			__u = __extension__ ((void *) __u + 2);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 8:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 4);	      \
 			break;						      \
 		      }							      \
@@ -616,40 +616,40 @@ __strcpy_g (char *__dest, __const char *__src)
 			break;						      \
 		      case 2:						      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
-			__u = (void *) __u + 1;				      \
+			__u = __extension__ ((void *) __u + 1);		      \
 			break;						      \
 		      case 3:						      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
-			__u = (void *) __u + 2;				      \
+			__u = __extension__ ((void *) __u + 2);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 4:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 3;				      \
+			__u = __extension__ ((void *) __u + 3);		      \
 			break;						      \
 		      case 5:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 6:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
-			__u = (void *) __u + 1;				      \
+			__u = __extension__ ((void *) __u + 1);		      \
 			break;						      \
 		      case 7:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
-			__u = (void *) __u + 2;				      \
+			__u = __extension__ ((void *) __u + 2);		      \
 			__u->__uc = '\0';				      \
 			break;						      \
 		      case 8:						      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
-			__u = (void *) __u + 4;				      \
+			__u = __extension__ ((void *) __u + 4);		      \
 			__u->__ui = __STRING_SMALL_GET32 (src, 4);	      \
-			__u = (void *) __u + 3;				      \
+			__u = __extension__ ((void *) __u + 3);		      \
 			break;						      \
 		      }							      \
 		    (char *) __u; }))

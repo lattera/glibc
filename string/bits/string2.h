@@ -122,54 +122,54 @@ __STRING2_COPY_TYPE (8);
        {								      \
        case 15:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 11:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 7:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 3:								      \
 	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
-	 __u = (void *) __u + 2;					      \
+	 __u = __extension__ ((void *) __u + 2);			      \
 	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 14:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 10:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 6:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 2:								      \
 	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
 	 break;								      \
 									      \
        case 13:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 9:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 5:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 1:								      \
 	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 16:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 12:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 8:								      \
 	 __u->__ui = __c * 0x01010101;					      \
-	 __u = (void *) __u + 4;					      \
+	 __u = __extension__ ((void *) __u + 4);			      \
        case 4:								      \
 	 __u->__ui = __c * 0x01010101;					      \
        case 0:								      \
@@ -234,47 +234,47 @@ __mempcpy_small (void *__dest1,
     {
     case 1:
       __u->__c = __src0_1;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 2:
       __u->__usi = __src0_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       break;
     case 3:
       __u->__usi = __src0_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__c = __src2_1;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 4:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       break;
     case 5:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__c = __src4_1;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 6:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       break;
     case 7:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__c = __src6_1;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 8:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__ui = __src4_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       break;
     }
   return (void *) __u;
@@ -415,7 +415,7 @@ __strcpy_small (char *__dest,
       break;
     case 3:
       __u->__usi = __src0_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__uc = '\0';
       break;
     case 4:
@@ -423,24 +423,24 @@ __strcpy_small (char *__dest,
       break;
     case 5:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__uc = '\0';
       break;
     case 6:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
       break;
     case 7:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__uc = '\0';
       break;
     case 8:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__ui = __src4_4;
       break;
     }
@@ -571,40 +571,40 @@ __stpcpy_small (char *__dest,
       break;
     case 2:
       __u->__usi = __src0_2;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 3:
       __u->__usi = __src0_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__uc = '\0';
       break;
     case 4:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 3;
+      __u = __extension__ ((void *) __u + 3);
       break;
     case 5:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__uc = '\0';
       break;
     case 6:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
-      __u = (void *) __u + 1;
+      __u = __extension__ ((void *) __u + 1);
       break;
     case 7:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__usi = __src4_2;
-      __u = (void *) __u + 2;
+      __u = __extension__ ((void *) __u + 2);
       __u->__uc = '\0';
       break;
     case 8:
       __u->__ui = __src0_4;
-      __u = (void *) __u + 4;
+      __u = __extension__ ((void *) __u + 4);
       __u->__ui = __src4_4;
-      __u = (void *) __u + 3;
+      __u = __extension__ ((void *) __u + 3);
       break;
     }
   return &__u->__uc;

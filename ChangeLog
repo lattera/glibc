@@ -1,3 +1,13 @@
+1999-08-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Mark void* operations as extensions.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+
+	* debug/Makefile (routines): Add noophooks.
+	(extra-libs): Add libpcprofile.  Add rules to build libpcprofile.
+	* debug/noophooks.c: New file.
+	* debug/pcprofile.c: New file.
+
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* rt/aio_misc.c (handle_fildes_io): Imitate the behaviour on other
