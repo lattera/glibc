@@ -337,7 +337,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
 
   n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			 1024, &host_buffer.ptr);
-  if (n < 0 && af == AF_INET6)
+  if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0)
     {
       strcpy (qp, "ip6.int");
       n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,

@@ -1,3 +1,11 @@
+2004-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h (RES_NOIP6DOTINT): Define.
+	* resolv/res_init.c (res_setoptions): Handle no-ip6-dotint option.
+	* resolv/gethnamaddr.c (gethostbyaddr): Don't lookup with .ip6.int
+	if RES_NOIP6DOTINT flag is set.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Likewise.
+
 2004-06-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/fcntl.c: Move to...

@@ -201,6 +201,8 @@ struct res_sym {
 #define	RES_BLAST	0x00020000	/* blast all recursive servers */
 #define RES_USEBSTRING	0x00040000	/* IPv6 reverse lookup with byte
 					   strings */
+#define RES_NOIP6DOTINT	0x00080000	/* Do not use .ip6.int in IPv6
+					   reverse lookup */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 

@@ -492,6 +492,9 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		} else if (!strncmp(cp, "ip6-bytestring",
 				    sizeof("ip6-bytestring") - 1)) {
 			statp->options |= RES_USEBSTRING;
+		} else if (!strncmp(cp, "no-ip6-dotint",
+				    sizeof("no-ip6-dotint") - 1)) {
+			statp->options |= RES_NOIP6DOTINT;
 		} else if (!strncmp(cp, "rotate", sizeof("rotate") - 1)) {
 			statp->options |= RES_ROTATE;
 		} else if (!strncmp(cp, "no-check-names",
