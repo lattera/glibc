@@ -27,6 +27,7 @@
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/syslog.h>
+#include <sys/uio.h>
 #include <not-cancel.h>
 
 #ifdef FATAL_PREPARE_INCLUDE
