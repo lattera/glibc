@@ -479,6 +479,7 @@ ifeq (yes,$(elf))
 # not for shared objects
 $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	$(LINK.o) -shared -Wl,-O1 \
+		  -nostdlib -nostartfiles \
 		  $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS.so) \
 		  -Wl,--verbose 2>&1 | \
 	  sed > $@T \

@@ -1,3 +1,8 @@
+2003-09-26  Daniel Jacobowitz  <drow@mvista.com>
+
+	* Makerules (shlib.lds): Make sure that ld doesn't try to link
+	anything while generating the linker script.
+
 2003-10-31  Roland McGrath  <roland@redhat.com>
 
 	* locale/lc-ctype.c (_nl_postload_ctype): Update _nl_global_locale's
