@@ -858,7 +858,7 @@ Modifications on @var{x} and @var{y} that may cause @var{x} to become greater th
 @smallexample
 pthread_mutex_lock(&mut);
 /* modify x and y */
-if (x > y) pthread_mutex_broadcast(&cond);
+if (x > y) pthread_cond_broadcast(&cond);
 pthread_mutex_unlock(&mut);
 @end smallexample
 

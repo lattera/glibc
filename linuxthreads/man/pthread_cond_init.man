@@ -76,7 +76,7 @@ and the time it waits on the condition variable.
 |cond|, as !pthread_cond_wait! does, but it also bounds the duration
 of the wait. If |cond| has not been signaled within the amount of time
 specified by |abstime|, the mutex |mutex| is re-acquired and
-!pthread_cond_timedwait! returns the error !ETIMEDOUT!. 
+!pthread_cond_timedwait! returns the error !ETIMEDOUT!.
 The |abstime| parameter specifies an absolute time, with the same
 origin as !time!(2) and !gettimeofday!(2): an |abstime| of 0
 corresponds to 00:00:00 GMT, January 1, 1970.
@@ -190,7 +190,7 @@ Modifications on |x| and |y| that may cause |x| to become greater than
 .sp
 pthread_mutex_lock(&mut);
 /* modify x and y */
-if (x > y) pthread_mutex_broadcast(&cond);
+if (x > y) pthread_cond_broadcast(&cond);
 pthread_mutex_unlock(&mut);
 .ft
 .LP
@@ -232,4 +232,3 @@ pthread_mutex_unlock(&mut);
 .LP
 .RE
 .fi
-
