@@ -37,7 +37,8 @@ _dl_sym (void *handle, const char *name, void *who)
     result = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
   else
     {
-      struct link_map *l, *match;
+      struct link_map *l;
+      struct link_map *match;
       ElfW(Addr) caller = (ElfW(Addr)) who;
 
       /* Find the highest-addressed object that CALLER is not below.  */
@@ -101,7 +102,8 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 					  &vers, 0);
   else if (handle == RTLD_NEXT)
     {
-      struct link_map *l, *match;
+      struct link_map *l;
+      struct link_map *match;
       ElfW(Addr) caller = (ElfW(Addr)) who;
 
       /* Find the highest-addressed object that CALLER is not below.  */
@@ -132,5 +134,6 @@ RTLD_NEXT used in code not dynamically loaded"));
 
   if (ref)
     return DL_SYMBOL_ADDRESS (result, ref);
+
   return NULL;
 }
