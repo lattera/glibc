@@ -1,3 +1,10 @@
+2002-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-init.c (_dl_init): Fix test of the size of the
+	preinit_array section.
+	(call_init): Optimize access to DT_INIT_ARRAY entry a bit.
+	Reported by Brian Cabral <cabral@ikuni.com>.
+
 2002-09-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/sysdep.h: Remove powerpc32 specific macros.
